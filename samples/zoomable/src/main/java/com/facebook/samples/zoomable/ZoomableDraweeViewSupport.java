@@ -18,8 +18,8 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 
 /**
  * DraweeView that has zoomable capabilities.
- * <p>
- * Once the image loads, pinch-to-zoom and translation gestures are enabled.
+ *
+ * <p>Once the image loads, pinch-to-zoom and translation gestures are enabled.
  */
 public class ZoomableDraweeViewSupport extends ZoomableDraweeView {
 

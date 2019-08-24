@@ -28,9 +28,7 @@ import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.common.SimpleScaleTypeAdapter;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 
-/**
- * Simple drawee fragment that illustrates different scale types
- */
+/** Simple drawee fragment that illustrates different scale types */
 public class DraweeScaleTypeFragment extends BaseShowcaseFragment {
 
   private SimpleDraweeView mDraweeTop1;
@@ -41,18 +39,16 @@ public class DraweeScaleTypeFragment extends BaseShowcaseFragment {
   @Nullable
   @Override
   public View onCreateView(
-      LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+      LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     final View view = inflater.inflate(R.layout.fragment_drawee_scale_type, container, false);
 
     final ImageUriProvider imageUriProvider = sampleUris();
-    final Uri uri1 = imageUriProvider.createSampleUri(
-        ImageUriProvider.ImageSize.M,
-        ImageUriProvider.Orientation.LANDSCAPE);
-    final Uri uri2 = imageUriProvider.createSampleUri(
-        ImageUriProvider.ImageSize.M,
-        ImageUriProvider.Orientation.PORTRAIT);
+    final Uri uri1 =
+        imageUriProvider.createSampleUri(
+            ImageUriProvider.ImageSize.M, ImageUriProvider.Orientation.LANDSCAPE);
+    final Uri uri2 =
+        imageUriProvider.createSampleUri(
+            ImageUriProvider.ImageSize.M, ImageUriProvider.Orientation.PORTRAIT);
 
     mDraweeTop1 = (SimpleDraweeView) view.findViewById(R.id.drawee_view_top_1);
     mDraweeTop2 = (SimpleDraweeView) view.findViewById(R.id.drawee_view_top_2);
@@ -60,37 +56,39 @@ public class DraweeScaleTypeFragment extends BaseShowcaseFragment {
     mSpinner = (Spinner) view.findViewById(R.id.spinner);
 
     mDraweeTop1.setImageURI(uri1);
-    mDraweeTop1.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        changeMainDraweeUri(uri1);
-      }
-    });
+    mDraweeTop1.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            changeMainDraweeUri(uri1);
+          }
+        });
 
     mDraweeTop2.setImageURI(uri2);
-    mDraweeTop2.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        changeMainDraweeUri(uri2);
-      }
-    });
+    mDraweeTop2.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            changeMainDraweeUri(uri2);
+          }
+        });
 
     changeMainDraweeUri(uri1);
 
     final SimpleScaleTypeAdapter adapter = SimpleScaleTypeAdapter.createForAllScaleTypes();
     mSpinner.setAdapter(adapter);
-    mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-      @Override
-      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        final SimpleScaleTypeAdapter.Entry spinnerEntry =
-            (SimpleScaleTypeAdapter.Entry) adapter.getItem(position);
-        changeMainDraweeScaleType(spinnerEntry.scaleType, spinnerEntry.focusPoint);
-      }
+    mSpinner.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            final SimpleScaleTypeAdapter.Entry spinnerEntry =
+                (SimpleScaleTypeAdapter.Entry) adapter.getItem(position);
+            changeMainDraweeScaleType(spinnerEntry.scaleType, spinnerEntry.focusPoint);
+          }
 
-      @Override
-      public void onNothingSelected(AdapterView<?> parent) {
-      }
-    });
+          @Override
+          public void onNothingSelected(AdapterView<?> parent) {}
+        });
     mSpinner.setSelection(0);
 
     return view;

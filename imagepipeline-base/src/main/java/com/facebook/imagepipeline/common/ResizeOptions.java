@@ -16,12 +16,12 @@ import javax.annotation.Nullable;
 /**
  * Options for resizing.
  *
- * <p> Describes the target bounds for the image (width, height) in pixels, as well as the
+ * <p>Describes the target bounds for the image (width, height) in pixels, as well as the
  * downscaling policy to employ.
  */
 public class ResizeOptions {
 
-  public static final float DEFAULT_ROUNDUP_FRACTION = 2.0f/3;
+  public static final float DEFAULT_ROUNDUP_FRACTION = 2.0f / 3;
 
   /* target width (in pixels) */
   public final int width;
@@ -35,9 +35,7 @@ public class ResizeOptions {
   /* round-up fraction for resize process, defaults to DEFAULT_ROUNDUP_FRACTION */
   public final float roundUpFraction;
 
-  /**
-   * @return new ResizeOptions, if the width and height values are valid, and null otherwise
-   */
+  /** @return new ResizeOptions, if the width and height values are valid, and null otherwise */
   public @Nullable static ResizeOptions forDimensions(int width, int height) {
     if (width <= 0 || height <= 0) {
       return null;
@@ -45,9 +43,7 @@ public class ResizeOptions {
     return new ResizeOptions(width, height);
   }
 
-  /**
-   * @return new ResizeOptions, if the width and height values are valid, and null otherwise
-   */
+  /** @return new ResizeOptions, if the width and height values are valid, and null otherwise */
   public @Nullable static ResizeOptions forSquareSize(int size) {
     if (size <= 0) {
       return null;
@@ -55,24 +51,15 @@ public class ResizeOptions {
     return new ResizeOptions(size, size);
   }
 
-  public ResizeOptions(
-      int width,
-      int height) {
+  public ResizeOptions(int width, int height) {
     this(width, height, BitmapUtil.MAX_BITMAP_SIZE);
   }
 
-  public ResizeOptions(
-      int width,
-      int height,
-      float maxBitmapSize) {
+  public ResizeOptions(int width, int height, float maxBitmapSize) {
     this(width, height, maxBitmapSize, DEFAULT_ROUNDUP_FRACTION);
   }
 
-  public ResizeOptions(
-      int width,
-      int height,
-      float maxBitmapSize,
-      float roundUpFraction) {
+  public ResizeOptions(int width, int height, float maxBitmapSize, float roundUpFraction) {
     Preconditions.checkArgument(width > 0);
     Preconditions.checkArgument(height > 0);
     this.width = width;
@@ -83,9 +70,7 @@ public class ResizeOptions {
 
   @Override
   public int hashCode() {
-    return HashCodeUtil.hashCode(
-        width,
-        height);
+    return HashCodeUtil.hashCode(width, height);
   }
 
   @Override
@@ -97,8 +82,7 @@ public class ResizeOptions {
       return false;
     }
     ResizeOptions that = (ResizeOptions) other;
-    return this.width == that.width &&
-        this.height == that.height;
+    return this.width == that.width && this.height == that.height;
   }
 
   @Override

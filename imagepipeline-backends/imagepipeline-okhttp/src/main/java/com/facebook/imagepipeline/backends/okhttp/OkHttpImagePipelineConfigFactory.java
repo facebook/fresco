@@ -16,7 +16,7 @@ import com.squareup.okhttp.OkHttpClient;
  * {@link OkHttpNetworkFetcher}.
  *
  * @deprecated replaced with {@code
- * com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory}.
+ *     com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory}.
  */
 public class OkHttpImagePipelineConfigFactory {
 

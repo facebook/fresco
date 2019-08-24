@@ -48,27 +48,29 @@ public class BitmapPoolTest {
   public void setup() {
     MockitoAnnotations.initMocks(this);
     doAnswer(
-        new Answer() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            int size=(Integer) invocation.getArguments()[0];
-            return MockBitmapFactory.create(
-                1,
-                (int) Math.ceil(size / (double) BitmapUtil.RGB_565_BYTES_PER_PIXEL),
-                Bitmap.Config.RGB_565);
-          }
-        }).when(mPool).alloc(any(Integer.class));
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                int size = (Integer) invocation.getArguments()[0];
+                return MockBitmapFactory.create(
+                    1,
+                    (int) Math.ceil(size / (double) BitmapUtil.RGB_565_BYTES_PER_PIXEL),
+                    Bitmap.Config.RGB_565);
+              }
+            })
+        .when(mPool)
+        .alloc(any(Integer.class));
     doAnswer(
-        new Answer() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            final Bitmap bitmap = (Bitmap) invocation.getArguments()[0];
-            return BitmapUtil.getSizeInByteForBitmap(
-                bitmap.getWidth(),
-                bitmap.getHeight(),
-                bitmap.getConfig());
-          }
-        }).when(mPool).getBucketedSizeForValue(any(Bitmap.class));
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                final Bitmap bitmap = (Bitmap) invocation.getArguments()[0];
+                return BitmapUtil.getSizeInByteForBitmap(
+                    bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
+              }
+            })
+        .when(mPool)
+        .getBucketedSizeForValue(any(Bitmap.class));
   }
 
   @Test

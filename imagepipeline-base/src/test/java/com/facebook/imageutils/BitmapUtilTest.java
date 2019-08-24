@@ -16,9 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests {@link BitmapUtil}
- */
+/** Tests {@link BitmapUtil} */
 @RunWith(RobolectricTestRunner.class)
 public class BitmapUtilTest {
 
@@ -126,5 +124,4 @@ public class BitmapUtilTest {
         new Pair(240, 180),
         BitmapUtil.decodeDimensions(BitmapUtilTest.class.getResourceAsStream("bmps/3.bmp")));
   }
-
 }

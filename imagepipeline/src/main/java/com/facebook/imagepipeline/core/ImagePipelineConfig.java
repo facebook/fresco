@@ -53,8 +53,7 @@ import javax.annotation.Nullable;
 /**
  * Master configuration class for the image pipeline library.
  *
- * To use:
- * <code>
+ * <p>To use: <code>
  *   ImagePipelineConfig config = ImagePipelineConfig.newBuilder()
  *       .setXXX(xxx)
  *       .setYYY(yyy)
@@ -102,8 +101,8 @@ public class ImagePipelineConfig {
   @Nullable private final CallerContextVerifier mCallerContextVerifier;
   private final CloseableReferenceLeakTracker mCloseableReferenceLeakTracker;
 
-  private static DefaultImageRequestConfig
-      sDefaultImageRequestConfig = new DefaultImageRequestConfig();
+  private static DefaultImageRequestConfig sDefaultImageRequestConfig =
+      new DefaultImageRequestConfig();
 
   private ImagePipelineConfig(Builder builder) {
     if (FrescoSystrace.isTracing()) {
@@ -421,15 +420,12 @@ public class ImagePipelineConfig {
     }
   }
 
-  /**
-   * Contains default configuration that can be personalized for all the request
-   */
+  /** Contains default configuration that can be personalized for all the request */
   public static class DefaultImageRequestConfig {
 
     private boolean mProgressiveRenderingEnabled = false;
 
-    private DefaultImageRequestConfig() {
-    }
+    private DefaultImageRequestConfig() {}
 
     public void setProgressiveRenderingEnabled(boolean progressiveRenderingEnabled) {
       this.mProgressiveRenderingEnabled = progressiveRenderingEnabled;
@@ -469,8 +465,8 @@ public class ImagePipelineConfig {
     private FileCacheFactory mFileCacheFactory;
     private ImageDecoderConfig mImageDecoderConfig;
     private int mHttpConnectionTimeout = -1;
-    private final ImagePipelineExperiments.Builder mExperimentsBuilder
-        = new ImagePipelineExperiments.Builder(this);
+    private final ImagePipelineExperiments.Builder mExperimentsBuilder =
+        new ImagePipelineExperiments.Builder(this);
     private boolean mDiskCacheEnabled = true;
     private CallerContextVerifier mCallerContextVerifier;
     private CloseableReferenceLeakTracker mCloseableReferenceLeakTracker =

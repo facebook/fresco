@@ -7,17 +7,11 @@
 
 package com.facebook.common.disk;
 
-/**
- * Any class that uses a lot of disk space and should implement this interface.
- */
+/** Any class that uses a lot of disk space and should implement this interface. */
 public interface DiskTrimmable {
-  /**
-   * Called when there is very little disk space left.
-   */
+  /** Called when there is very little disk space left. */
   void trimToMinimum();
 
-  /**
-   * Called when there is almost no disk space left and the app is likely to crash soon
-   */
+  /** Called when there is almost no disk space left and the app is likely to crash soon */
   void trimToNothing();
 }

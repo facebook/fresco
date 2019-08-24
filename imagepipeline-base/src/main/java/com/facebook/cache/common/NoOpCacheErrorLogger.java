@@ -9,14 +9,11 @@ package com.facebook.cache.common;
 
 import javax.annotation.Nullable;
 
-/**
- * An implementation of {@link CacheErrorLogger} that doesn't do anything.
- */
+/** An implementation of {@link CacheErrorLogger} that doesn't do anything. */
 public class NoOpCacheErrorLogger implements CacheErrorLogger {
   private static @Nullable NoOpCacheErrorLogger sInstance = null;
 
-  private NoOpCacheErrorLogger() {
-  }
+  private NoOpCacheErrorLogger() {}
 
   public static synchronized NoOpCacheErrorLogger getInstance() {
     if (sInstance == null) {
@@ -27,6 +24,7 @@ public class NoOpCacheErrorLogger implements CacheErrorLogger {
 
   /**
    * Log an error of the specified category.
+   *
    * @param category Error category
    * @param clazz Class reporting the error
    * @param message An optional error message
@@ -34,9 +32,5 @@ public class NoOpCacheErrorLogger implements CacheErrorLogger {
    */
   @Override
   public void logError(
-      CacheErrorCategory category,
-      Class<?> clazz,
-      String message,
-      @Nullable Throwable throwable) {
-  }
+      CacheErrorCategory category, Class<?> clazz, String message, @Nullable Throwable throwable) {}
 }

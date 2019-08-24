@@ -15,9 +15,7 @@ import static org.junit.Assert.*;
 import com.facebook.imagepipeline.common.Priority;
 import org.junit.*;
 
-/**
- * Tests for Priority enum
- */
+/** Tests for Priority enum */
 public class PriorityTest {
 
   @Test

@@ -9,9 +9,7 @@ package com.facebook.imagepipeline.cache;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * Configuration for a memory cache.
- */
+/** Configuration for a memory cache. */
 public class MemoryCacheParams {
 
   public final int maxCacheSize;

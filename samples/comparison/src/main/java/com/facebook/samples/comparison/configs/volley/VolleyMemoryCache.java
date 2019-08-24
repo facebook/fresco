@@ -16,18 +16,17 @@ import android.graphics.Bitmap;
 import androidx.collection.LruCache;
 import com.android.volley.toolbox.ImageLoader;
 
-/**
- * Default bitmap memory cache for Volley.
- */
+/** Default bitmap memory cache for Volley. */
 public class VolleyMemoryCache implements ImageLoader.ImageCache {
   private final LruCache<String, Bitmap> mLruCache;
 
   public VolleyMemoryCache(int maxSize) {
-    mLruCache = new LruCache<String, Bitmap>(maxSize) {
-        protected int sizeOf(final String key, final Bitmap value) {
-          return value.getRowBytes() * value.getHeight();
-        }
-      };
+    mLruCache =
+        new LruCache<String, Bitmap>(maxSize) {
+          protected int sizeOf(final String key, final Bitmap value) {
+            return value.getRowBytes() * value.getHeight();
+          }
+        };
   }
 
   @Override

@@ -21,18 +21,17 @@ import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.conf.Const;
 import com.facebook.samples.scrollperf.internal.ScrollPerfExecutorSupplier;
 
-/**
- * Application for Fresco initialization
- */
+/** Application for Fresco initialization */
 public class ScrollPerfApplication extends Application {
 
   @Override
   public void onCreate() {
     super.onCreate();
     final Config config = Config.load(this);
-    ImagePipelineConfig.Builder imagePipelineConfigBuilder = ImagePipelineConfig.newBuilder(this)
-        .setResizeAndRotateEnabledForNetwork(false)
-        .setDownsampleEnabled(config.downsampling);
+    ImagePipelineConfig.Builder imagePipelineConfigBuilder =
+        ImagePipelineConfig.newBuilder(this)
+            .setResizeAndRotateEnabledForNetwork(false)
+            .setDownsampleEnabled(config.downsampling);
     if (WebpSupportStatus.sIsWebpSupportRequired) {
       imagePipelineConfigBuilder.experiment().setWebpSupportEnabled(config.webpSupportEnabled);
     }
@@ -44,9 +43,8 @@ public class ScrollPerfApplication extends Application {
           new ScrollPerfExecutorSupplier(Const.NUMBER_OF_PROCESSORS, config.decodingThreadCount));
     }
     imagePipelineConfigBuilder.experiment().setDecodeCancellationEnabled(config.decodeCancellation);
-    DraweeConfig draweeConfig = DraweeConfig.newBuilder()
-        .setDrawDebugOverlay(config.draweeOverlayEnabled)
-        .build();
+    DraweeConfig draweeConfig =
+        DraweeConfig.newBuilder().setDrawDebugOverlay(config.draweeOverlayEnabled).build();
     Fresco.initialize(this, imagePipelineConfigBuilder.build(), draweeConfig);
   }
 }

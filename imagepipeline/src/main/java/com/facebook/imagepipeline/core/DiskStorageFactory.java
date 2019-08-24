@@ -10,8 +10,8 @@ import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.cache.disk.DiskStorage;
 
 /**
- * Represents a factory for the DiskStorage to use in the ImagePipeline.
- * Used by ImagePipelineConfig/Factory
+ * Represents a factory for the DiskStorage to use in the ImagePipeline. Used by
+ * ImagePipelineConfig/Factory
  */
 public interface DiskStorageFactory {
 

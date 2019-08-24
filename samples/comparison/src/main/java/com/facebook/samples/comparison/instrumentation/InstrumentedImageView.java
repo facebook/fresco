@@ -23,7 +23,7 @@ import com.facebook.samples.comparison.Drawables;
  * {@link ImageView} that notifies its instance of {@link Instrumentation} whenever an image request
  * lifecycle event happens.
  *
- * <p> setImageResource and setImageURI methods are not expected to be used by any library,
+ * <p>setImageResource and setImageURI methods are not expected to be used by any library,
  * UnsupportedOperationException is thrown if those are called
  */
 public class InstrumentedImageView extends ImageView implements Instrumented {
@@ -50,7 +50,7 @@ public class InstrumentedImageView extends ImageView implements Instrumented {
 
   @Override
   public void setImageDrawable(final Drawable drawable) {
-    if (drawable == null) {// AQuery preset drawable to be null if not found in cache
+    if (drawable == null) { // AQuery preset drawable to be null if not found in cache
       return;
     }
     if (drawable == Drawables.sPlaceholderDrawable) {
@@ -63,17 +63,13 @@ public class InstrumentedImageView extends ImageView implements Instrumented {
     super.setImageDrawable(drawable);
   }
 
-  /**
-   * Throws UnsupportedOperationException
-   */
+  /** Throws UnsupportedOperationException */
   @Override
   public void setImageResource(int resourceId) {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * Throws UnsupportedOperationException
-   */
+  /** Throws UnsupportedOperationException */
   @Override
   public void setImageURI(Uri uri) {
     throw new UnsupportedOperationException();

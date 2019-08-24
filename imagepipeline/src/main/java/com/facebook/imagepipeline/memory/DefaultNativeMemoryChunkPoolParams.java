@@ -10,20 +10,15 @@ package com.facebook.imagepipeline.memory;
 import android.util.SparseIntArray;
 import com.facebook.common.util.ByteConstants;
 
-/**
- * Provides pool parameters ({@link PoolParams}) for {@link NativeMemoryChunkPool}
- *
- */
+/** Provides pool parameters ({@link PoolParams}) for {@link NativeMemoryChunkPool} */
 public class DefaultNativeMemoryChunkPoolParams {
   /**
-   * Length of 'small' sized buckets. Bucket lengths for these buckets are larger because
-   * they're smaller in size
+   * Length of 'small' sized buckets. Bucket lengths for these buckets are larger because they're
+   * smaller in size
    */
   private static final int SMALL_BUCKET_LENGTH = 5;
 
-  /**
-   * Bucket lengths for 'large' (> 256KB) buckets
-   */
+  /** Bucket lengths for 'large' (> 256KB) buckets */
   private static final int LARGE_BUCKET_LENGTH = 2;
 
   public static PoolParams get() {
@@ -39,10 +34,7 @@ public class DefaultNativeMemoryChunkPoolParams {
     DEFAULT_BUCKETS.put(256 * ByteConstants.KB, LARGE_BUCKET_LENGTH);
     DEFAULT_BUCKETS.put(512 * ByteConstants.KB, LARGE_BUCKET_LENGTH);
     DEFAULT_BUCKETS.put(1024 * ByteConstants.KB, LARGE_BUCKET_LENGTH);
-    return new PoolParams(
-        getMaxSizeSoftCap(),
-        getMaxSizeHardCap(),
-        DEFAULT_BUCKETS);
+    return new PoolParams(getMaxSizeSoftCap(), getMaxSizeHardCap(), DEFAULT_BUCKETS);
   }
 
   /**
@@ -51,7 +43,7 @@ public class DefaultNativeMemoryChunkPoolParams {
    * significantly more problematic than Dalvik OOMs, we would like to stay conservative.
    */
   private static int getMaxSizeSoftCap() {
-    final int maxMemory = (int)Math.min(Runtime.getRuntime().maxMemory(), Integer.MAX_VALUE);
+    final int maxMemory = (int) Math.min(Runtime.getRuntime().maxMemory(), Integer.MAX_VALUE);
     if (maxMemory < 16 * ByteConstants.MB) {
       return 3 * ByteConstants.MB;
     } else if (maxMemory < 32 * ByteConstants.MB) {

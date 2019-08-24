@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Implementation for the factory classes of the animation framework for the image pipeline
- */
+/** Implementation for the factory classes of the animation framework for the image pipeline */
 package com.facebook.imagepipeline.animated.factory;

@@ -11,9 +11,7 @@ import com.facebook.common.memory.PooledByteBuffer;
 import java.nio.ByteBuffer;
 import javax.annotation.Nullable;
 
-/**
- * A trivial implementation of {@link PooledByteBuffer}
- */
+/** A trivial implementation of {@link PooledByteBuffer} */
 public class TrivialPooledByteBuffer implements PooledByteBuffer {
   private byte[] mBuf;
   private long mNativePtr;

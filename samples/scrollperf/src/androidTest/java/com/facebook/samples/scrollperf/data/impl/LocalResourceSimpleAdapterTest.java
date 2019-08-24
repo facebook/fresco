@@ -19,9 +19,7 @@ import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
 import org.junit.Assert;
 
-/**
- * This is the Unit Test class for the LocalResourceSimpleAdapterTest
- */
+/** This is the Unit Test class for the LocalResourceSimpleAdapterTest */
 public class LocalResourceSimpleAdapterTest extends AndroidTestCase {
 
   public void testEagerAdapter() {
@@ -29,8 +27,8 @@ public class LocalResourceSimpleAdapterTest extends AndroidTestCase {
     final Resources res = context.getResources();
     final String[] uris = res.getStringArray(R.array.local_uri_test);
     Assert.assertNotNull(uris);
-    SimpleAdapter<Uri> simpleAdapter = LocalResourceSimpleAdapter
-        .getEagerAdapter(context, R.array.local_uri_test);
+    SimpleAdapter<Uri> simpleAdapter =
+        LocalResourceSimpleAdapter.getEagerAdapter(context, R.array.local_uri_test);
     checkSimpleAdapterData(simpleAdapter, uris.length);
     Assert.assertFalse(simpleAdapter.isLazy());
   }
@@ -40,8 +38,8 @@ public class LocalResourceSimpleAdapterTest extends AndroidTestCase {
     final Resources res = context.getResources();
     final String[] uris = res.getStringArray(R.array.local_uri_test);
     Assert.assertNotNull(uris);
-    SimpleAdapter<Uri> simpleAdapter = LocalResourceSimpleAdapter
-        .getEagerAdapter(context, R.array.local_uri_test);
+    SimpleAdapter<Uri> simpleAdapter =
+        LocalResourceSimpleAdapter.getEagerAdapter(context, R.array.local_uri_test);
     checkSimpleAdapterData(simpleAdapter, uris.length);
     Assert.assertTrue(simpleAdapter.isLazy());
   }

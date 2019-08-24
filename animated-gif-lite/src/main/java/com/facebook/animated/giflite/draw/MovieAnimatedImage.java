@@ -93,4 +93,3 @@ public class MovieAnimatedImage implements AnimatedImage {
         mFrames[frameNumber].getDisposalMode());
   }
 }
-

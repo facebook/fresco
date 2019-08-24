@@ -7,7 +7,6 @@
 
 package com.facebook.imageutils;
 
-
 import static com.facebook.imageutils.JfifTestUtils.*;
 import static org.junit.Assert.assertEquals;
 
@@ -15,9 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests {@link JfifUtil}
- */
+/** Tests {@link JfifUtil} */
 @RunWith(RobolectricTestRunner.class)
 public class JfifUtilTest {
 
@@ -35,6 +32,7 @@ public class JfifUtilTest {
   public void testGetOrientation_BigEndian() {
     testGetOrientation_WithEndian(false);
   }
+
   @Test
   public void testGetOrientation_LittleEndian() {
     testGetOrientation_WithEndian(true);
@@ -45,35 +43,35 @@ public class JfifUtilTest {
     final String IFD_ENTRY_2 = makeIfdEntry(IFD_ENTRY_TAG_2, TYPE_SHORT, 1, 255, 2, littleEnd);
     final String IFD_ENTRY_3 = makeIfdEntry(IFD_ENTRY_TAG_3, TYPE_SHORT, 1, 255, 2, littleEnd);
     final String TIFF_IFD_0 =
-        makeIfd(new String[]{IFD_ENTRY_1, IFD_ENTRY_2, IFD_ENTRY_3}, 0, littleEnd);
+        makeIfd(new String[] {IFD_ENTRY_1, IFD_ENTRY_2, IFD_ENTRY_3}, 0, littleEnd);
     final String TIFF_IFD_1 =
         makeIfd(
-            new String[]{makeOrientationEntry(1, littleEnd), IFD_ENTRY_1, IFD_ENTRY_2},
+            new String[] {makeOrientationEntry(1, littleEnd), IFD_ENTRY_1, IFD_ENTRY_2},
             0,
             littleEnd);
     final String TIFF_IFD_3 =
         makeIfd(
-            new String[]{makeOrientationEntry(3, littleEnd), IFD_ENTRY_1, IFD_ENTRY_2},
+            new String[] {makeOrientationEntry(3, littleEnd), IFD_ENTRY_1, IFD_ENTRY_2},
             0,
             littleEnd);
     final String TIFF_IFD_6A =
         makeIfd(
-            new String[]{makeOrientationEntry(6, littleEnd), IFD_ENTRY_1, IFD_ENTRY_2},
+            new String[] {makeOrientationEntry(6, littleEnd), IFD_ENTRY_1, IFD_ENTRY_2},
             0,
             littleEnd);
     final String TIFF_IFD_6B =
         makeIfd(
-            new String[]{IFD_ENTRY_1, makeOrientationEntry(6, littleEnd), IFD_ENTRY_2},
+            new String[] {IFD_ENTRY_1, makeOrientationEntry(6, littleEnd), IFD_ENTRY_2},
             0,
             littleEnd);
     final String TIFF_IFD_6C =
         makeIfd(
-            new String[]{IFD_ENTRY_1, IFD_ENTRY_2, makeOrientationEntry(6, littleEnd)},
+            new String[] {IFD_ENTRY_1, IFD_ENTRY_2, makeOrientationEntry(6, littleEnd)},
             0,
             littleEnd);
     final String TIFF_IFD_8 =
         makeIfd(
-            new String[]{makeOrientationEntry(8, littleEnd), IFD_ENTRY_1, IFD_ENTRY_2},
+            new String[] {makeOrientationEntry(8, littleEnd), IFD_ENTRY_1, IFD_ENTRY_2},
             0,
             littleEnd);
 
@@ -118,5 +116,4 @@ public class JfifUtilTest {
     assertEquals(expectOri, JfifUtil.getOrientation(hexStringToByteArray(IMAGE_WITH_STRUCT_9)));
     assertEquals(expectOri, JfifUtil.getOrientation(hexStringToByteArray(IMAGE_WITH_STRUCT_10)));
   }
-
 }

@@ -9,9 +9,7 @@ package com.facebook.fresco.animation.bitmap.preparation;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 
-/**
- * Frame preparation strategy to prepare next animation frames.
- */
+/** Frame preparation strategy to prepare next animation frames. */
 public interface BitmapFramePreparationStrategy {
 
   /**

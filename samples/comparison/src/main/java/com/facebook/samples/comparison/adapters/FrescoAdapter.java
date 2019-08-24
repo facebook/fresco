@@ -25,27 +25,24 @@ import com.facebook.samples.comparison.holders.FrescoHolder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedDraweeView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 
-/**
- * RecyclerView Adapter for Fresco
- */
+/** RecyclerView Adapter for Fresco */
 public class FrescoAdapter extends ImageListAdapter {
 
   public FrescoAdapter(
-      Context context,
-      PerfListener perfListener,
-      ImagePipelineConfig imagePipelineConfig) {
+      Context context, PerfListener perfListener, ImagePipelineConfig imagePipelineConfig) {
     super(context, perfListener);
     Fresco.initialize(context, imagePipelineConfig);
   }
 
   @Override
   public FrescoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    GenericDraweeHierarchy gdh = new GenericDraweeHierarchyBuilder(getContext().getResources())
-        .setPlaceholderImage(Drawables.sPlaceholderDrawable)
-        .setFailureImage(Drawables.sErrorDrawable)
-        .setProgressBarImage(new ProgressBarDrawable())
-        .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
-        .build();
+    GenericDraweeHierarchy gdh =
+        new GenericDraweeHierarchyBuilder(getContext().getResources())
+            .setPlaceholderImage(Drawables.sPlaceholderDrawable)
+            .setFailureImage(Drawables.sErrorDrawable)
+            .setProgressBarImage(new ProgressBarDrawable())
+            .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
+            .build();
     final InstrumentedDraweeView instrView = new InstrumentedDraweeView(getContext(), gdh);
 
     return new FrescoHolder(getContext(), parent, instrView, getPerfListener());

@@ -26,24 +26,20 @@ import java.io.InputStream;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 
-/**
- * Represents a local content Uri fetch producer.
- */
+/** Represents a local content Uri fetch producer. */
 public class LocalContentUriFetchProducer extends LocalFetchProducer {
 
   public static final String PRODUCER_NAME = "LocalContentUriFetchProducer";
 
-  private static final String[] PROJECTION = new String[] {
-          MediaStore.Images.Media._ID,
-          MediaStore.Images.ImageColumns.DATA
-  };
+  private static final String[] PROJECTION =
+      new String[] {MediaStore.Images.Media._ID, MediaStore.Images.ImageColumns.DATA};
 
   private final ContentResolver mContentResolver;
 
   public LocalContentUriFetchProducer(
-          Executor executor,
-          PooledByteBufferFactory pooledByteBufferFactory,
-          ContentResolver contentResolver) {
+      Executor executor,
+      PooledByteBufferFactory pooledByteBufferFactory,
+      ContentResolver contentResolver) {
     super(executor, pooledByteBufferFactory);
     mContentResolver = contentResolver;
   }
@@ -54,7 +50,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
     if (UriUtil.isLocalContactUri(uri)) {
       final InputStream inputStream;
       if (uri.toString().endsWith("/photo")) {
-        inputStream =  mContentResolver.openInputStream(uri);
+        inputStream = mContentResolver.openInputStream(uri);
       } else if (uri.toString().endsWith("/display_photo")) {
         try {
           AssetFileDescriptor fd = mContentResolver.openAssetFileDescriptor(uri, "r");
@@ -69,9 +65,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
         }
       }
       // If a Contact URI is provided, use the special helper to open that contact's photo.
-      return getEncodedImage(
-              inputStream,
-              EncodedImage.UNKNOWN_STREAM_SIZE);
+      return getEncodedImage(inputStream, EncodedImage.UNKNOWN_STREAM_SIZE);
     }
 
     if (UriUtil.isLocalCameraUri(uri)) {
@@ -81,9 +75,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
       }
     }
 
-    return getEncodedImage(
-            mContentResolver.openInputStream(uri),
-            EncodedImage.UNKNOWN_STREAM_SIZE);
+    return getEncodedImage(mContentResolver.openInputStream(uri), EncodedImage.UNKNOWN_STREAM_SIZE);
   }
 
   private @Nullable EncodedImage getCameraImage(Uri uri) throws IOException {
@@ -97,7 +89,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
       }
       cursor.moveToFirst();
       final String pathname =
-              cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
+          cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
       if (pathname != null) {
         ParcelFileDescriptor parcelFileDescriptor = mContentResolver.openFileDescriptor(uri, "r");
         FileDescriptor fd = parcelFileDescriptor.getFileDescriptor();

@@ -17,17 +17,14 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
 
-/**
- * This is a SimpleAdapter which which uses a set of elements from a ContentProvider
- */
+/** This is a SimpleAdapter which which uses a set of elements from a ContentProvider */
 public class ContentProviderSimpleAdapter implements SimpleAdapter<Uri> {
 
   private final Uri[] mUris;
 
   private ContentProviderSimpleAdapter(final Uri baseProvider, Context context) {
     String[] projection = {MediaStore.Images.Media._ID};
-    Cursor cursor = context.getContentResolver()
-            .query(baseProvider, projection, null, null, null);
+    Cursor cursor = context.getContentResolver().query(baseProvider, projection, null, null, null);
     final int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
     mUris = new Uri[cursor.getCount()];
     int i = 0;

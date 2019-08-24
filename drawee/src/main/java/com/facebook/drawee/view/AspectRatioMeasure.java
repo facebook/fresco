@@ -11,14 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import javax.annotation.Nullable;
 
-/**
- * A utility class that performs measuring based on the desired aspect ratio.
- */
+/** A utility class that performs measuring based on the desired aspect ratio. */
 public class AspectRatioMeasure {
 
-  /**
-   * Holder for width and height measure specs.
-   */
+  /** Holder for width and height measure specs. */
   public static class Spec {
     public int width;
     public int height;
@@ -30,16 +26,16 @@ public class AspectRatioMeasure {
    * <p>Note: Measure spec is not changed if the aspect ratio is not greater than zero or if
    * layoutParams is null.
    *
-   * <p>Measure spec of the layout dimension (width or height) specified as "0dp" is updated
-   * to match the measure spec of the other dimension adjusted by the aspect ratio. Exactly one
-   * layout dimension should be specified as "0dp".
+   * <p>Measure spec of the layout dimension (width or height) specified as "0dp" is updated to
+   * match the measure spec of the other dimension adjusted by the aspect ratio. Exactly one layout
+   * dimension should be specified as "0dp".
    *
    * <p>Padding is taken into account so that the aspect ratio refers to the content without
    * padding: {@code aspectRatio == (viewWidth - widthPadding) / (viewHeight - heightPadding)}
    *
-   * <p>Updated measure spec respects the parent's constraints. I.e. measure spec is not changed
-   * if the parent has specified mode {@code EXACTLY}, and it doesn't exceed measure size if parent
-   * has specified mode {@code AT_MOST}.
+   * <p>Updated measure spec respects the parent's constraints. I.e. measure spec is not changed if
+   * the parent has specified mode {@code EXACTLY}, and it doesn't exceed measure size if parent has
+   * specified mode {@code AT_MOST}.
    *
    * @param spec in/out measure spec to be updated
    * @param aspectRatio desired aspect ratio

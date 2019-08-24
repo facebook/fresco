@@ -27,8 +27,7 @@ import javax.annotation.Nullable;
  * Static utility methods pertaining to instances of {@link Throwable}.
  *
  * <p>See the Guava User Guide entry on <a href=
- * "http://code.google.com/p/guava-libraries/wiki/ThrowablesExplained">
- * Throwables</a>.
+ * "http://code.google.com/p/guava-libraries/wiki/ThrowablesExplained"> Throwables</a>.
  *
  * @author Kevin Bourrillion
  * @author Ben Yu
@@ -38,8 +37,9 @@ public final class Throwables {
   private Throwables() {}
 
   /**
-   * Propagates {@code throwable} exactly as-is, if and only if it is an
-   * instance of {@code declaredType}.  Example usage:
+   * Propagates {@code throwable} exactly as-is, if and only if it is an instance of {@code
+   * declaredType}. Example usage:
+   *
    * <pre>
    *   try {
    *     someMethodThatCouldThrowAnything();
@@ -61,8 +61,9 @@ public final class Throwables {
   }
 
   /**
-   * Propagates {@code throwable} exactly as-is, if and only if it is an
-   * instance of {@link RuntimeException} or {@link Error}.  Example usage:
+   * Propagates {@code throwable} exactly as-is, if and only if it is an instance of {@link
+   * RuntimeException} or {@link Error}. Example usage:
+   *
    * <pre>
    *   try {
    *     someMethodThatCouldThrowAnything();
@@ -80,9 +81,9 @@ public final class Throwables {
   }
 
   /**
-   * Propagates {@code throwable} exactly as-is, if and only if it is an
-   * instance of {@link RuntimeException}, {@link Error}, or
-   * {@code declaredType}. Example usage:
+   * Propagates {@code throwable} exactly as-is, if and only if it is an instance of {@link
+   * RuntimeException}, {@link Error}, or {@code declaredType}. Example usage:
+   *
    * <pre>
    *   try {
    *     someMethodThatCouldThrowAnything();
@@ -95,8 +96,7 @@ public final class Throwables {
    * </pre>
    *
    * @param throwable the Throwable to possibly propagate
-   * @param declaredType the single checked exception type declared by the
-   *     calling method
+   * @param declaredType the single checked exception type declared by the calling method
    */
   public static <X extends Throwable> void propagateIfPossible(
       @Nullable Throwable throwable, Class<X> declaredType) throws X {
@@ -105,35 +105,32 @@ public final class Throwables {
   }
 
   /**
-   * Propagates {@code throwable} exactly as-is, if and only if it is an
-   * instance of {@link RuntimeException}, {@link Error}, {@code declaredType1},
-   * or {@code declaredType2}.  In the unlikely case that you have three or more
-   * declared checked exception types, you can handle them all by invoking these
-   * methods repeatedly. See usage example in {@link
+   * Propagates {@code throwable} exactly as-is, if and only if it is an instance of {@link
+   * RuntimeException}, {@link Error}, {@code declaredType1}, or {@code declaredType2}. In the
+   * unlikely case that you have three or more declared checked exception types, you can handle them
+   * all by invoking these methods repeatedly. See usage example in {@link
    * #propagateIfPossible(Throwable, Class)}.
    *
    * @param throwable the Throwable to possibly propagate
-   * @param declaredType1 any checked exception type declared by the calling
-   *     method
-   * @param declaredType2 any other checked exception type declared by the
-   *     calling method
+   * @param declaredType1 any checked exception type declared by the calling method
+   * @param declaredType2 any other checked exception type declared by the calling method
    */
-  public static <X1 extends Throwable, X2 extends Throwable>
-  void propagateIfPossible(@Nullable Throwable throwable,
-      Class<X1> declaredType1, Class<X2> declaredType2) throws X1, X2 {
+  public static <X1 extends Throwable, X2 extends Throwable> void propagateIfPossible(
+      @Nullable Throwable throwable, Class<X1> declaredType1, Class<X2> declaredType2)
+      throws X1, X2 {
     Preconditions.checkNotNull(declaredType2);
     propagateIfInstanceOf(throwable, declaredType1);
     propagateIfPossible(throwable, declaredType2);
   }
 
   /**
-   * Propagates {@code throwable} as-is if it is an instance of
-   * {@link RuntimeException} or {@link Error}, or else as a last resort, wraps
-   * it in a {@code RuntimeException} then propagates.
-   * <p>
-   * This method always throws an exception. The {@code RuntimeException} return
-   * type is only for client code to make Java type system happy in case a
-   * return value is required by the enclosing method. Example usage:
+   * Propagates {@code throwable} as-is if it is an instance of {@link RuntimeException} or {@link
+   * Error}, or else as a last resort, wraps it in a {@code RuntimeException} then propagates.
+   *
+   * <p>This method always throws an exception. The {@code RuntimeException} return type is only for
+   * client code to make Java type system happy in case a return value is required by the enclosing
+   * method. Example usage:
+   *
    * <pre>
    *   T doSomething() {
    *     try {
@@ -147,8 +144,8 @@ public final class Throwables {
    * </pre>
    *
    * @param throwable the Throwable to propagate
-   * @return nothing will ever be returned; this return type is only for your
-   *     convenience, as illustrated in the example above
+   * @return nothing will ever be returned; this return type is only for your convenience, as
+   *     illustrated in the example above
    */
   public static RuntimeException propagate(Throwable throwable) {
     propagateIfPossible(Preconditions.checkNotNull(throwable));
@@ -156,9 +153,9 @@ public final class Throwables {
   }
 
   /**
-   * Returns the innermost cause of {@code throwable}. The first throwable in a
-   * chain provides context from when the error or exception was initially
-   * detected. Example usage:
+   * Returns the innermost cause of {@code throwable}. The first throwable in a chain provides
+   * context from when the error or exception was initially detected. Example usage:
+   *
    * <pre>
    *   assertEquals("Unable to assign a customer id",
    *       Throwables.getRootCause(e).getMessage());
@@ -173,21 +170,19 @@ public final class Throwables {
   }
 
   /**
-   * Gets a {@code Throwable} cause chain as a list.  The first entry in the
-   * list will be {@code throwable} followed by its cause hierarchy.  Note
-   * that this is a snapshot of the cause chain and will not reflect
-   * any subsequent changes to the cause chain.
+   * Gets a {@code Throwable} cause chain as a list. The first entry in the list will be {@code
+   * throwable} followed by its cause hierarchy. Note that this is a snapshot of the cause chain and
+   * will not reflect any subsequent changes to the cause chain.
    *
-   * <p>Here's an example of how it can be used to find specific types
-   * of exceptions in the cause chain:
+   * <p>Here's an example of how it can be used to find specific types of exceptions in the cause
+   * chain:
    *
    * <pre>
    * Iterables.filter(Throwables.getCausalChain(e), IOException.class));
    * </pre>
    *
    * @param throwable the non-null {@code Throwable} to extract causes from
-   * @return an unmodifiable list containing the cause chain starting with
-   *     {@code throwable}
+   * @return an unmodifiable list containing the cause chain starting with {@code throwable}
    */
   public static List<Throwable> getCausalChain(Throwable throwable) {
     Preconditions.checkNotNull(throwable);
@@ -200,11 +195,10 @@ public final class Throwables {
   }
 
   /**
-   * Returns a string containing the result of
-   * {@link Throwable#toString() toString()}, followed by the full, recursive
-   * stack trace of {@code throwable}. Note that you probably should not be
-   * parsing the resulting string; if you need programmatic access to the stack
-   * frames, you can call {@link Throwable#getStackTrace()}.
+   * Returns a string containing the result of {@link Throwable#toString() toString()}, followed by
+   * the full, recursive stack trace of {@code throwable}. Note that you probably should not be
+   * parsing the resulting string; if you need programmatic access to the stack frames, you can call
+   * {@link Throwable#getStackTrace()}.
    */
   public static String getStackTraceAsString(Throwable throwable) {
     StringWriter stringWriter = new StringWriter();

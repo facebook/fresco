@@ -12,8 +12,8 @@ import com.facebook.fresco.animation.backend.AnimationBackend;
 import javax.annotation.Nullable;
 
 /**
- * Bitmap frame renderer used by {@link BitmapAnimationBackend} to render
- * animated images (e.g. GIFs or animated WebPs).
+ * Bitmap frame renderer used by {@link BitmapAnimationBackend} to render animated images (e.g. GIFs
+ * or animated WebPs).
  */
 public interface BitmapFrameRenderer {
 
@@ -34,16 +34,16 @@ public interface BitmapFrameRenderer {
   void setBounds(@Nullable Rect bounds);
 
   /**
-   * Return the intrinsic width of bitmap frames.
-   * Return {@link AnimationBackend#INTRINSIC_DIMENSION_UNSET} if no specific width is set.
+   * Return the intrinsic width of bitmap frames. Return {@link
+   * AnimationBackend#INTRINSIC_DIMENSION_UNSET} if no specific width is set.
    *
    * @return the intrinsic width
    */
   int getIntrinsicWidth();
 
   /**
-   * Return the intrinsic height of bitmap frames.
-   * Return {@link AnimationBackend#INTRINSIC_DIMENSION_UNSET} if no specific height is set.
+   * Return the intrinsic height of bitmap frames. Return {@link
+   * AnimationBackend#INTRINSIC_DIMENSION_UNSET} if no specific height is set.
    *
    * @return the intrinsic height
    */

@@ -13,17 +13,16 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import javax.annotation.Nullable;
 
-/**
- * Performs scale type calculations.
- */
+/** Performs scale type calculations. */
 public class ScalingUtils {
 
   /**
    * Options for scaling the child bounds to the parent bounds.
-   * <p>
-   * Similar to {@link android.widget.ImageView.ScaleType}, but ScaleType.MATRIX is not supported.
-   * To use matrix scaling, use a {@link MatrixDrawable}. An additional scale type (FOCUS_CROP) is
-   * provided.
+   *
+   * <p>Similar to {@link android.widget.ImageView.ScaleType}, but ScaleType.MATRIX is not
+   * supported. To use matrix scaling, use a {@link MatrixDrawable}. An additional scale type
+   * (FOCUS_CROP) is provided.
+   *
    * <p>
    */
   public interface ScaleType {
@@ -133,10 +132,8 @@ public class ScalingUtils {
     return null;
   }
 
-  /**
-   * A convenience base class that has some common logic.
-   */
-  public static abstract class AbstractScaleType implements ScaleType {
+  /** A convenience base class that has some common logic. */
+  public abstract static class AbstractScaleType implements ScaleType {
 
     @Override
     public Matrix getTransform(
@@ -419,9 +416,7 @@ public class ScalingUtils {
     }
   }
 
-  /**
-   * Scaletypes that have some internal state and are not static.
-   */
+  /** Scaletypes that have some internal state and are not static. */
   public interface StatefulScaleType {
 
     /**
@@ -434,9 +429,7 @@ public class ScalingUtils {
     Object getState();
   }
 
-  /**
-   * Scale type that interpolates transform of the two underlying scale types.
-   */
+  /** Scale type that interpolates transform of the two underlying scale types. */
   public static class InterpolatingScaleType implements ScaleType, StatefulScaleType {
 
     private final ScaleType mScaleTypeFrom;
@@ -505,17 +498,15 @@ public class ScalingUtils {
     /**
      * Sets the interpolating value.
      *
-     * Value of 0.0 will produce the transform same as ScaleTypeFrom.
-     * Value of 1.0 will produce the transform same as ScaleTypeTo.
-     * Inbetween values will produce a transform that is a linear combination between the two.
+     * <p>Value of 0.0 will produce the transform same as ScaleTypeFrom. Value of 1.0 will produce
+     * the transform same as ScaleTypeTo. Inbetween values will produce a transform that is a linear
+     * combination between the two.
      */
     public void setValue(float value) {
       mInterpolatingValue = value;
     }
 
-    /**
-     * Gets the interpolating value.
-     */
+    /** Gets the interpolating value. */
     public float getValue() {
       return mInterpolatingValue;
     }
@@ -554,8 +545,9 @@ public class ScalingUtils {
       transform.getValues(mMatrixValuesTo);
 
       for (int i = 0; i < 9; i++) {
-        mMatrixValuesInterpolated[i] = mMatrixValuesFrom[i] * (1 - mInterpolatingValue) +
-            mMatrixValuesTo[i] * mInterpolatingValue;
+        mMatrixValuesInterpolated[i] =
+            mMatrixValuesFrom[i] * (1 - mInterpolatingValue)
+                + mMatrixValuesTo[i] * mInterpolatingValue;
       }
       transform.setValues(mMatrixValuesInterpolated);
       return transform;

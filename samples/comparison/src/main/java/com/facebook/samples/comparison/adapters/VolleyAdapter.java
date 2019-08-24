@@ -21,16 +21,12 @@ import com.facebook.samples.comparison.holders.VolleyHolder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedNetworkImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 
-/**
- * RecyclerView Adapter for Volley
- */
+/** RecyclerView Adapter for Volley */
 public class VolleyAdapter extends ImageListAdapter {
 
   private final ImageLoader mImageLoader;
 
-  public VolleyAdapter(
-      Context context,
-      PerfListener perfListener) {
+  public VolleyAdapter(Context context, PerfListener perfListener) {
     super(context, perfListener);
     mImageLoader = SampleVolleyFactory.getImageLoader(context);
   }
@@ -40,9 +36,7 @@ public class VolleyAdapter extends ImageListAdapter {
     InstrumentedNetworkImageView view = new InstrumentedNetworkImageView(getContext());
     view.setDefaultImageResId(R.color.placeholder);
     view.setErrorImageResId(R.color.error);
-    return new VolleyHolder(
-        getContext(), mImageLoader, parent,
-        view, getPerfListener());
+    return new VolleyHolder(getContext(), mImageLoader, parent, view, getPerfListener());
   }
 
   @Override

@@ -14,8 +14,8 @@ import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 /**
- * A Volley request that will return the raw content as a byte array and does not use
- * Volley's cache.
+ * A Volley request that will return the raw content as a byte array and does not use Volley's
+ * cache.
  */
 public class RawRequest extends Request<byte[]> {
 

@@ -28,16 +28,13 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
   private static final String NO_CONTROLLER_ID = "none";
 
   // Green if the image dimensions are OK
-  @VisibleForTesting
-  static final int OVERLAY_COLOR_IMAGE_OK = 0x664CAF50;
+  @VisibleForTesting static final int OVERLAY_COLOR_IMAGE_OK = 0x664CAF50;
 
   // Orange if the image dimensions are a bit off
-  @VisibleForTesting
-  static final int OVERLAY_COLOR_IMAGE_ALMOST_OK = 0x66FF9800;
+  @VisibleForTesting static final int OVERLAY_COLOR_IMAGE_ALMOST_OK = 0x66FF9800;
 
   // Red if the image dimensions are too far off
-  @VisibleForTesting
-  static final int OVERLAY_COLOR_IMAGE_NOT_OK = 0x66F44336;
+  @VisibleForTesting static final int OVERLAY_COLOR_IMAGE_NOT_OK = 0x66F44336;
 
   // Values are given in per cent. E.g. 0.1 means 10% smaller or larger.
   private static final float IMAGE_SIZE_THRESHOLD_OK = 0.1f;
@@ -106,10 +103,10 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
   }
 
   /**
-   * The text gravity / direction for the debug text.
-   * Currently supported: {@link Gravity#BOTTOM} and {@link Gravity#TOP}.
-   * If bottom is used, the text lines will also be drawn from bottom to top.
-   * Default: bottom
+   * The text gravity / direction for the debug text. Currently supported: {@link Gravity#BOTTOM}
+   * and {@link Gravity#TOP}. If bottom is used, the text lines will also be drawn from bottom to
+   * top. Default: bottom
+   *
    * @param textGravity the text gravity to use
    */
   public void setTextGravity(int textGravity) {
@@ -144,10 +141,7 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
     invalidateSelf();
   }
 
-  /**
-   *
-   * @param imageSizeBytes the image size in bytes
-   */
+  /** @param imageSizeBytes the image size in bytes */
   public void setImageSize(int imageSizeBytes) {
     mImageSizeBytes = imageSizeBytes;
   }
@@ -226,22 +220,17 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
   }
 
   @Override
-  public void setAlpha(int alpha) {
-  }
+  public void setAlpha(int alpha) {}
 
   @Override
-  public void setColorFilter(ColorFilter cf) {
-  }
+  public void setColorFilter(ColorFilter cf) {}
 
   @Override
   public int getOpacity() {
     return PixelFormat.TRANSLUCENT;
   }
 
-  private void prepareDebugTextParameters(
-      Rect bounds,
-      int numberOfLines,
-      int maxLineLengthEm) {
+  private void prepareDebugTextParameters(Rect bounds, int numberOfLines, int maxLineLengthEm) {
     int textSizePx = Math.min(bounds.width() / maxLineLengthEm, bounds.height() / numberOfLines);
     textSizePx = Math.min(MAX_TEXT_SIZE_PX, Math.max(MIN_TEXT_SIZE_PX, textSizePx));
     mPaint.setTextSize(textSizePx);
@@ -251,9 +240,10 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
       mLineIncrementPx *= -1;
     }
     mStartTextXPx = bounds.left + TEXT_PADDING_PX;
-    mStartTextYPx = mTextGravity == Gravity.BOTTOM
-        ? bounds.bottom - TEXT_PADDING_PX
-        : bounds.top + TEXT_PADDING_PX + MIN_TEXT_SIZE_PX;
+    mStartTextYPx =
+        mTextGravity == Gravity.BOTTOM
+            ? bounds.bottom - TEXT_PADDING_PX
+            : bounds.top + TEXT_PADDING_PX + MIN_TEXT_SIZE_PX;
   }
 
   private void addDebugText(Canvas canvas, String text, @Nullable Object... args) {
@@ -266,17 +256,14 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
   }
 
   @VisibleForTesting
-  int determineOverlayColor(
-      int imageWidth,
-      int imageHeight,
-      @Nullable ScaleType scaleType) {
+  int determineOverlayColor(int imageWidth, int imageHeight, @Nullable ScaleType scaleType) {
     int visibleDrawnAreaWidth = getBounds().width();
     int visibleDrawnAreaHeight = getBounds().height();
 
-    if (visibleDrawnAreaWidth <= 0 ||
-        visibleDrawnAreaHeight <= 0 ||
-        imageWidth <= 0 ||
-        imageHeight <= 0) {
+    if (visibleDrawnAreaWidth <= 0
+        || visibleDrawnAreaHeight <= 0
+        || imageWidth <= 0
+        || imageHeight <= 0) {
       return OVERLAY_COLOR_IMAGE_NOT_OK;
     }
 
@@ -315,11 +302,11 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
     int absHeightDifference = Math.abs(imageHeight - visibleDrawnAreaHeight);
 
     // Return corresponding color
-    if (absWidthDifference < scaledImageWidthThresholdOk &&
-        absHeightDifference < scaledImageHeightThresholdOk) {
+    if (absWidthDifference < scaledImageWidthThresholdOk
+        && absHeightDifference < scaledImageHeightThresholdOk) {
       return OVERLAY_COLOR_IMAGE_OK;
-    } else if (absWidthDifference < scaledImageWidthThresholdNotOk &&
-        absHeightDifference < scaledImageHeightThresholdNotOk) {
+    } else if (absWidthDifference < scaledImageWidthThresholdNotOk
+        && absHeightDifference < scaledImageHeightThresholdNotOk) {
       return OVERLAY_COLOR_IMAGE_ALMOST_OK;
     }
     return OVERLAY_COLOR_IMAGE_NOT_OK;

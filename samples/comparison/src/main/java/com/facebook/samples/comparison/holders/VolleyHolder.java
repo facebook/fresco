@@ -18,16 +18,17 @@ import com.android.volley.toolbox.ImageLoader;
 import com.facebook.samples.comparison.instrumentation.InstrumentedNetworkImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 
-/**
- * This is the Holder class for the RecycleView to use with Volley
- */
+/** This is the Holder class for the RecycleView to use with Volley */
 public class VolleyHolder extends BaseViewHolder<InstrumentedNetworkImageView> {
 
   private final ImageLoader mImageLoader;
 
   public VolleyHolder(
-      Context context, ImageLoader imageLoader, View layoutView,
-      InstrumentedNetworkImageView view, PerfListener perfListener) {
+      Context context,
+      ImageLoader imageLoader,
+      View layoutView,
+      InstrumentedNetworkImageView view,
+      PerfListener perfListener) {
     super(context, layoutView, view, perfListener);
     mImageLoader = imageLoader;
   }

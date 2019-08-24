@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Pool implementations for ByteBuffers and related Input/OutputStream implementations.
- */
+/** Pool implementations for ByteBuffers and related Input/OutputStream implementations. */
 package com.facebook.common.memory;

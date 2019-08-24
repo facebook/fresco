@@ -16,10 +16,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
-/**
- * An implementation of {@link PooledByteBuffer} that uses ({@link MemoryChunk}) to
- * store data
- */
+/** An implementation of {@link PooledByteBuffer} that uses ({@link MemoryChunk}) to store data */
 @ThreadSafe
 public class MemoryPooledByteBuffer implements PooledByteBuffer {
 

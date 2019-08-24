@@ -46,14 +46,14 @@ public class LruBitmapPoolTest {
     Bitmap expected = Bitmap.createBitmap(128, 128, Bitmap.Config.RGB_565);
     mPool.release(expected);
 
-    assertEquals(1, ((LruBucketsPoolBackend)mPool.mStrategy).valueCount());
+    assertEquals(1, ((LruBucketsPoolBackend) mPool.mStrategy).valueCount());
 
     mPool.trim(MemoryTrimType.OnAppBackgrounded);
 
     Bitmap actual = mPool.get(128 * 128 * 2);
 
     assertNotSame(actual, expected);
-    assertEquals(0, ((LruBucketsPoolBackend)mPool.mStrategy).valueCount());
+    assertEquals(0, ((LruBucketsPoolBackend) mPool.mStrategy).valueCount());
   }
 
   @Test
@@ -63,6 +63,6 @@ public class LruBitmapPoolTest {
     mPool.release(one);
     mPool.release(one);
 
-    assertEquals(1, ((LruBucketsPoolBackend)mPool.mStrategy).valueCount());
+    assertEquals(1, ((LruBucketsPoolBackend) mPool.mStrategy).valueCount());
   }
 }

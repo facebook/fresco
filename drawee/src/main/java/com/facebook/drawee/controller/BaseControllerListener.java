@@ -10,9 +10,7 @@ package com.facebook.drawee.controller;
 import android.graphics.drawable.Animatable;
 import javax.annotation.Nullable;
 
-/**
- * Convenience class that has empty implementation of {@link ControllerListener}.
- */
+/** Convenience class that has empty implementation of {@link ControllerListener}. */
 public class BaseControllerListener<INFO> implements ControllerListener<INFO> {
 
   private static final ControllerListener<Object> NO_OP_LISTENER =
@@ -25,29 +23,21 @@ public class BaseControllerListener<INFO> implements ControllerListener<INFO> {
   }
 
   @Override
-  public void onSubmit(String id, Object callerContext) {
-  }
+  public void onSubmit(String id, Object callerContext) {}
 
   @Override
   public void onFinalImageSet(
-      String id,
-      @Nullable INFO imageInfo,
-      @Nullable Animatable animatable) {
-  }
+      String id, @Nullable INFO imageInfo, @Nullable Animatable animatable) {}
 
   @Override
-  public void onIntermediateImageSet(String id, @Nullable INFO imageInfo) {
-  }
+  public void onIntermediateImageSet(String id, @Nullable INFO imageInfo) {}
 
   @Override
-  public void onIntermediateImageFailed(String id, Throwable throwable) {
-  }
+  public void onIntermediateImageFailed(String id, Throwable throwable) {}
 
   @Override
-  public void onFailure(String id, Throwable throwable) {
-  }
+  public void onFailure(String id, Throwable throwable) {}
 
   @Override
-  public void onRelease(String id) {
-  }
+  public void onRelease(String id) {}
 }

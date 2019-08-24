@@ -7,8 +7,5 @@
 
 package com.facebook.common.memory;
 
-/**
- * A pool of byte-arrays
- */
-public interface ByteArrayPool extends Pool<byte[]> {
-}
+/** A pool of byte-arrays */
+public interface ByteArrayPool extends Pool<byte[]> {}

@@ -25,11 +25,11 @@ public class CountingLruMapTest {
   public void setUp() {
     ValueDescriptor<Integer> valueDescriptor =
         new ValueDescriptor<Integer>() {
-      @Override
-      public int getSizeInBytes(Integer value) {
-        return value;
-      }
-    };
+          @Override
+          public int getSizeInBytes(Integer value) {
+            return value;
+          }
+        };
     mCountingLruMap = new CountingLruMap<>(valueDescriptor);
   }
 
@@ -211,13 +211,14 @@ public class CountingLruMapTest {
     mCountingLruMap.put("key3", 130);
     mCountingLruMap.put("key4", 140);
 
-    List<LinkedHashMap.Entry<String, Integer>> entries =  mCountingLruMap.getMatchingEntries(
-        new Predicate<String>() {
-          @Override
-          public boolean apply(String key) {
-            return key.equals("key2") || key.equals("key3");
-          }
-        });
+    List<LinkedHashMap.Entry<String, Integer>> entries =
+        mCountingLruMap.getMatchingEntries(
+            new Predicate<String>() {
+              @Override
+              public boolean apply(String key) {
+                return key.equals("key2") || key.equals("key3");
+              }
+            });
     assertNotNull(entries);
     assertEquals(2, entries.size());
     assertEquals("key2", entries.get(0).getKey());

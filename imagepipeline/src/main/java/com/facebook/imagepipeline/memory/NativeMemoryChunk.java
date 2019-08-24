@@ -31,14 +31,10 @@ public class NativeMemoryChunk implements MemoryChunk, Closeable {
     ImagePipelineNativeLoader.load();
   }
 
-  /**
-   * Address of memory chunk wrapped by this NativeMemoryChunk
-   */
+  /** Address of memory chunk wrapped by this NativeMemoryChunk */
   private final long mNativePtr;
 
-  /**
-   * size of the memory region
-   */
+  /** size of the memory region */
   private final int mSize;
 
   /** flag indicating if this object was closed @GuardedBy("this") */
@@ -140,12 +136,12 @@ public class NativeMemoryChunk implements MemoryChunk, Closeable {
       // lets log warning and not copy
       Log.w(
           TAG,
-          "Copying from NativeMemoryChunk " +
-              Integer.toHexString(System.identityHashCode(this)) +
-              " to NativeMemoryChunk " +
-              Integer.toHexString(System.identityHashCode(other)) +
-              " which share the same address " +
-              Long.toHexString(mNativePtr));
+          "Copying from NativeMemoryChunk "
+              + Integer.toHexString(System.identityHashCode(this))
+              + " to NativeMemoryChunk "
+              + Integer.toHexString(System.identityHashCode(other))
+              + " which share the same address "
+              + Long.toHexString(mNativePtr));
       Preconditions.checkArgument(false);
     }
 
@@ -206,49 +202,31 @@ public class NativeMemoryChunk implements MemoryChunk, Closeable {
     }
   }
 
-  /**
-   * Delegate to one of native memory allocation function
-   */
+  /** Delegate to one of native memory allocation function */
   @DoNotStrip
   private static native long nativeAllocate(int size);
 
-  /**
-   * Delegate to appropriate memory releasing function
-   */
+  /** Delegate to appropriate memory releasing function */
   @DoNotStrip
   private static native void nativeFree(long address);
 
-  /**
-   * Copy count bytes pointed by mNativePtr to array, starting at position offset
-   */
+  /** Copy count bytes pointed by mNativePtr to array, starting at position offset */
   @DoNotStrip
   private static native void nativeCopyToByteArray(
-      long address,
-      byte[] array,
-      int offset,
-      int count);
+      long address, byte[] array, int offset, int count);
 
-  /**
-   * Copy count bytes from byte array to native memory pointed by mNativePtr.
-   */
+  /** Copy count bytes from byte array to native memory pointed by mNativePtr. */
   @DoNotStrip
   private static native void nativeCopyFromByteArray(
-      long address,
-      byte[] array,
-      int offset,
-      int count);
+      long address, byte[] array, int offset, int count);
 
-  /**
-   * Copy count bytes from memory pointed by fromPtr to memory pointed by toPtr
-   */
+  /** Copy count bytes from memory pointed by fromPtr to memory pointed by toPtr */
   @DoNotStrip
-  private static native void nativeMemcpy(
-      long toPtr,
-      long fromPtr,
-      int count);
+  private static native void nativeMemcpy(long toPtr, long fromPtr, int count);
 
   /**
    * Read single byte from given address
+   *
    * @param fromPtr address to read byte from
    */
   @DoNotStrip

@@ -23,24 +23,21 @@ import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.conf.Const;
 
-/**
- * Utility class about Drawee
- */
+/** Utility class about Drawee */
 public final class DraweeUtil {
 
   /**
    * Creates the Hierarchy using the information into the Config
    *
    * @param context The Context
-   * @param config  The Config object
+   * @param config The Config object
    * @return The Hierarchy to use
    */
   public static GenericDraweeHierarchy createDraweeHierarchy(
-          final Context context,
-          final Config config) {
+      final Context context, final Config config) {
     FrescoSystrace.beginSection("DraweeUtil#createDraweeHierarchy");
     GenericDraweeHierarchyBuilder builder =
-            new GenericDraweeHierarchyBuilder(context.getResources())
+        new GenericDraweeHierarchyBuilder(context.getResources())
             .setFadeDuration(config.fadeDurationMs)
             .setPlaceholderImage(Const.PLACEHOLDER)
             .setFailureImage(Const.FAILURE)
@@ -101,6 +98,7 @@ public final class DraweeUtil {
 
   /**
    * Utility method which set the bgColor based on configuration values
+   *
    * @param view The View to change the bgColor to
    * @param config The Config object
    */

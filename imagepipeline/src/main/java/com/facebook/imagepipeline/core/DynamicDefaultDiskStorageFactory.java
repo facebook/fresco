@@ -10,9 +10,7 @@ import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.cache.disk.DiskStorage;
 import com.facebook.cache.disk.DynamicDefaultDiskStorage;
 
-/**
- * Factory for the default implementation of the DiskStorage.
- */
+/** Factory for the default implementation of the DiskStorage. */
 public class DynamicDefaultDiskStorageFactory implements DiskStorageFactory {
 
   @Override

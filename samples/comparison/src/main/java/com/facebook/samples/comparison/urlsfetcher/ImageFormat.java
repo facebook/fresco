@@ -12,9 +12,7 @@
 
 package com.facebook.samples.comparison.urlsfetcher;
 
-/**
- * Formats of images we download from imgur.
- */
+/** Formats of images we download from imgur. */
 public enum ImageFormat {
   JPEG("image/jpeg"),
   PNG("image/png"),

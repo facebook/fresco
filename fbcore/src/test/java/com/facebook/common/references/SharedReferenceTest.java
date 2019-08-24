@@ -16,15 +16,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Basic tests for shared references
- */
+/** Basic tests for shared references */
 @RunWith(RobolectricTestRunner.class)
 public class SharedReferenceTest {
 
-  /**
-   * Tests out the basic operations (isn't everything a basic operation?)
-   */
+  /** Tests out the basic operations (isn't everything a basic operation?) */
   @Test
   public void testBasic() {
 
@@ -110,9 +106,7 @@ public class SharedReferenceTest {
     }
   }
 
-  /**
-   * A subclass of Thing that throws an exception on close
-   */
+  /** A subclass of Thing that throws an exception on close */
   public static class Thing2 extends Thing {
     private String mValue;
 
@@ -125,15 +119,16 @@ public class SharedReferenceTest {
     }
   }
 
-  public final ResourceReleaser<Thing> THING_RELEASER = new ResourceReleaser<Thing>() {
-    @Override
-    public void release(Thing value) {
-      try {
-        Closeables.close(value, true);
-      } catch (IOException ioe) {
-        // this should not happen
-        Assert.fail();
-      }
-    }
-  };
+  public final ResourceReleaser<Thing> THING_RELEASER =
+      new ResourceReleaser<Thing>() {
+        @Override
+        public void release(Thing value) {
+          try {
+            Closeables.close(value, true);
+          } catch (IOException ioe) {
+            // this should not happen
+            Assert.fail();
+          }
+        }
+      };
 }

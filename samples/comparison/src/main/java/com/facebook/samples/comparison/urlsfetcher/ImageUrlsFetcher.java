@@ -30,18 +30,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Helper that asynchronously fetches the list of image URIs from Imgur.
- */
+/** Helper that asynchronously fetches the list of image URIs from Imgur. */
 public class ImageUrlsFetcher {
 
   /**
    * Imgur license key for use by the Fresco project.
    *
-   * The rest of this class may be used freely according to the licence file, with the sole
-   * exception of this variable. Any fork of this code or use in any other application,
-   * whether open- or closed-source, must use a different client ID obtained from Imgur.
-   * See the <a href="https://api.imgur.com/#register">Imgur API documentation</a>.
+   * <p>The rest of this class may be used freely according to the licence file, with the sole
+   * exception of this variable. Any fork of this code or use in any other application, whether
+   * open- or closed-source, must use a different client ID obtained from Imgur. See the <a
+   * href="https://api.imgur.com/#register">Imgur API documentation</a>.
    */
   private static final String IMGUR_CLIENT_ID = "Client-ID ccc6ca6a65ecdd8";
 
@@ -57,6 +55,7 @@ public class ImageUrlsFetcher {
       protected List<String> doInBackground(Void... params) {
         return getImageUrls(request);
       }
+
       @Override
       protected void onPostExecute(List<String> result) {
         callback.onFinish(result);
@@ -131,9 +130,8 @@ public class ImageUrlsFetcher {
     return writer.toString();
   }
 
-  private static String getThumbnailLink(
-      final JSONObject json,
-      final ImageSize imageSize) throws JSONException {
+  private static String getThumbnailLink(final JSONObject json, final ImageSize imageSize)
+      throws JSONException {
     Preconditions.checkNotNull(imageSize);
     final String originalUrl = json.getString("link");
     if (imageSize == ImageSize.ORIGINAL_IMAGE) {
@@ -142,9 +140,6 @@ public class ImageUrlsFetcher {
 
     final int dotPos = originalUrl.lastIndexOf('.');
     final StringBuilder linkBuilder = new StringBuilder(originalUrl.length() + 1);
-    return linkBuilder
-      .append(originalUrl)
-      .insert(dotPos, imageSize.suffix)
-      .toString();
+    return linkBuilder.append(originalUrl).insert(dotPos, imageSize.suffix).toString();
   }
 }

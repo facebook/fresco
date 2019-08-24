@@ -19,9 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests for {@link FlexByteArrayPool}
- */
+/** Tests for {@link FlexByteArrayPool} */
 @RunWith(RobolectricTestRunner.class)
 public class FlexByteArrayPoolTest {
 
@@ -33,18 +31,19 @@ public class FlexByteArrayPoolTest {
   @Before
   public void setup() {
     SparseIntArray buckets = new SparseIntArray();
-    for (int i = MIN_BUFFER_SIZE; i <= MAX_BUFFER_SIZE; i*=2) {
+    for (int i = MIN_BUFFER_SIZE; i <= MAX_BUFFER_SIZE; i *= 2) {
       buckets.put(i, 3);
     }
-    mPool = new FlexByteArrayPool(
-        mock(MemoryTrimmableRegistry.class),
-        new PoolParams(
-            Integer.MAX_VALUE,
-            Integer.MAX_VALUE,
-            buckets,
-            MIN_BUFFER_SIZE,
-            MAX_BUFFER_SIZE,
-            1));
+    mPool =
+        new FlexByteArrayPool(
+            mock(MemoryTrimmableRegistry.class),
+            new PoolParams(
+                Integer.MAX_VALUE,
+                Integer.MAX_VALUE,
+                buckets,
+                MIN_BUFFER_SIZE,
+                MAX_BUFFER_SIZE,
+                1));
     mDelegatePool = mPool.mDelegatePool;
   }
 

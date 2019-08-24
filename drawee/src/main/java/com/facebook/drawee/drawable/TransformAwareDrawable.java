@@ -7,9 +7,7 @@
 
 package com.facebook.drawee.drawable;
 
-/**
- * Interface that enables setting a transform callback.
- */
+/** Interface that enables setting a transform callback. */
 public interface TransformAwareDrawable {
 
   /**

@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * CloseableReference implementation for objects used into image pipeline.
- */
+/** CloseableReference implementation for objects used into image pipeline. */
 package com.facebook.imagepipeline.image;

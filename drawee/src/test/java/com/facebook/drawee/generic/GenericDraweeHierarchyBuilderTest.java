@@ -131,8 +131,7 @@ public class GenericDraweeHierarchyBuilderTest {
     // test backgrounds & overlays
     builder.setOverlays(Arrays.asList(mOverlayDrawable1, mOverlayDrawable2));
     assertArrayEquals(
-        builder.getOverlays().toArray(),
-        new Drawable[]{mOverlayDrawable1, mOverlayDrawable2});
+        builder.getOverlays().toArray(), new Drawable[] {mOverlayDrawable1, mOverlayDrawable2});
     builder.setBackground(mBackgroundDrawable2);
     builder.setOverlay(mOverlayDrawable2);
     builder.setPressedStateOverlay(mPressedStateDrawable);

@@ -23,21 +23,23 @@ import javax.annotation.Nullable;
  * checkNotNull}, an object reference which is expected to be non-null). When {@code false} (or
  * {@code null}) is passed instead, the {@code Preconditions} method throws an unchecked exception,
  * which helps the calling method communicate to <i>its</i> caller that <i>that</i> caller has made
- * a mistake. Example: <pre>   {@code
+ * a mistake. Example:
  *
- *   /**
- *    * Returns the positive square root of the given value.
- *    *
- *    * @throws IllegalArgumentException if the value is negative
- *    *}{@code /
- *   public static double sqrt(double value) {
- *     Preconditions.checkArgument(value >= 0.0, "negative value: %s", value);
- *     // calculate the square root
- *   }
+ * <pre>{@code
+ * /**
+ *  * Returns the positive square root of the given value.
+ *  *
+ *  * @throws IllegalArgumentException if the value is negative
+ *  *}{@code /
+ * public static double sqrt(double value) {
+ *   Preconditions.checkArgument(value >= 0.0, "negative value: %s", value);
+ *   // calculate the square root
+ * }
  *
- *   void exampleBadCaller() {
- *     double d = sqrt(-1.0);
- *   }}</pre>
+ * void exampleBadCaller() {
+ *   double d = sqrt(-1.0);
+ * }
+ * }</pre>
  *
  * In this example, {@code checkArgument} throws an {@code IllegalArgumentException} to indicate
  * that {@code exampleBadCaller} made an error in <i>its</i> call to {@code sqrt}.
@@ -50,11 +52,12 @@ import javax.annotation.Nullable;
  * when the precondition check then succeeds (as it should almost always do in production). In some
  * circumstances these wasted CPU cycles and allocations can add up to a real problem.
  * Performance-sensitive precondition checks can always be converted to the customary form:
- * <pre>   {@code
  *
- *   if (value < 0.0) {
- *     throw new IllegalArgumentException("negative value: " + value);
- *   }}</pre>
+ * <pre>{@code
+ * if (value < 0.0) {
+ *   throw new IllegalArgumentException("negative value: " + value);
+ * }
+ * }</pre>
  *
  * <h3>Other types of preconditions</h3>
  *
@@ -66,8 +69,8 @@ import javax.annotation.Nullable;
  *
  * <p>It is of course possible to use the methods of this class to check for invalid conditions
  * which are <i>not the caller's fault</i>. Doing so is <b>not recommended</b> because it is
- * misleading to future readers of the code and of stack traces. See
- * <a href="http://code.google.com/p/guava-libraries/wiki/ConditionalFailuresExplained">Conditional
+ * misleading to future readers of the code and of stack traces. See <a
+ * href="http://code.google.com/p/guava-libraries/wiki/ConditionalFailuresExplained">Conditional
  * failures explained</a> in the Guava User Guide for more advice.
  *
  * <h3>{@code java.util.Objects.requireNonNull()}</h3>
@@ -87,8 +90,8 @@ import javax.annotation.Nullable;
  *
  * <h3>More information</h3>
  *
- * <p>See the Guava User Guide on
- * <a href="http://code.google.com/p/guava-libraries/wiki/PreconditionsExplained">using {@code
+ * <p>See the Guava User Guide on <a
+ * href="http://code.google.com/p/guava-libraries/wiki/PreconditionsExplained">using {@code
  * Preconditions}</a>.
  *
  * @author Kevin Bourrillion
@@ -130,15 +133,16 @@ public final class Preconditions {
    * @param errorMessageTemplate a template for the exception message should the check fail. The
    *     message is formed by replacing each {@code %s} placeholder in the template with an
    *     argument. These are matched by position - the first {@code %s} gets {@code
-   *     errorMessageArgs[0]}, etc.  Unmatched arguments will be appended to the formatted message
-   *     in square braces. Unmatched placeholders will be left as-is.
+   *     errorMessageArgs[0]}, etc. Unmatched arguments will be appended to the formatted message in
+   *     square braces. Unmatched placeholders will be left as-is.
    * @param errorMessageArgs the arguments to be substituted into the message template. Arguments
    *     are converted to strings using {@link String#valueOf(Object)}.
    * @throws IllegalArgumentException if {@code expression} is false
    * @throws NullPointerException if the check fails and either {@code errorMessageTemplate} or
    *     {@code errorMessageArgs} is null (don't let this happen)
    */
-  public static void checkArgument(boolean expression,
+  public static void checkArgument(
+      boolean expression,
       @Nullable String errorMessageTemplate,
       @Nullable Object... errorMessageArgs) {
     if (!expression) {
@@ -182,15 +186,16 @@ public final class Preconditions {
    * @param errorMessageTemplate a template for the exception message should the check fail. The
    *     message is formed by replacing each {@code %s} placeholder in the template with an
    *     argument. These are matched by position - the first {@code %s} gets {@code
-   *     errorMessageArgs[0]}, etc.  Unmatched arguments will be appended to the formatted message
-   *     in square braces. Unmatched placeholders will be left as-is.
+   *     errorMessageArgs[0]}, etc. Unmatched arguments will be appended to the formatted message in
+   *     square braces. Unmatched placeholders will be left as-is.
    * @param errorMessageArgs the arguments to be substituted into the message template. Arguments
    *     are converted to strings using {@link String#valueOf(Object)}.
    * @throws IllegalStateException if {@code expression} is false
    * @throws NullPointerException if the check fails and either {@code errorMessageTemplate} or
    *     {@code errorMessageArgs} is null (don't let this happen)
    */
-  public static void checkState(boolean expression,
+  public static void checkState(
+      boolean expression,
       @Nullable String errorMessageTemplate,
       @Nullable Object... errorMessageArgs) {
     if (!expression) {
@@ -235,16 +240,15 @@ public final class Preconditions {
    * @param errorMessageTemplate a template for the exception message should the check fail. The
    *     message is formed by replacing each {@code %s} placeholder in the template with an
    *     argument. These are matched by position - the first {@code %s} gets {@code
-   *     errorMessageArgs[0]}, etc.  Unmatched arguments will be appended to the formatted message
-   *     in square braces. Unmatched placeholders will be left as-is.
+   *     errorMessageArgs[0]}, etc. Unmatched arguments will be appended to the formatted message in
+   *     square braces. Unmatched placeholders will be left as-is.
    * @param errorMessageArgs the arguments to be substituted into the message template. Arguments
    *     are converted to strings using {@link String#valueOf(Object)}.
    * @return the non-null reference that was validated
    * @throws NullPointerException if {@code reference} is null
    */
-  public static <T> T checkNotNull(T reference,
-      @Nullable String errorMessageTemplate,
-      @Nullable Object... errorMessageArgs) {
+  public static <T> T checkNotNull(
+      T reference, @Nullable String errorMessageTemplate, @Nullable Object... errorMessageArgs) {
     if (reference == null) {
       // If either of these parameters is null, the right thing happens anyway
       throw new NullPointerException(format(errorMessageTemplate, errorMessageArgs));
@@ -303,8 +307,7 @@ public final class Preconditions {
    * @throws IndexOutOfBoundsException if {@code index} is negative or is not less than {@code size}
    * @throws IllegalArgumentException if {@code size} is negative
    */
-  public static int checkElementIndex(
-      int index, int size, @Nullable String desc) {
+  public static int checkElementIndex(int index, int size, @Nullable String desc) {
     // Carefully optimized for execution by hotspot (explanatory comment above)
     if (index < 0 || index >= size) {
       throw new IndexOutOfBoundsException(badElementIndex(index, size, desc));
@@ -397,7 +400,7 @@ public final class Preconditions {
 
   /**
    * Substitutes each {@code %s} in {@code template} with an argument. These are matched by
-   * position: the first {@code %s} gets {@code args[0]}, etc.  If there are more arguments than
+   * position: the first {@code %s} gets {@code args[0]}, etc. If there are more arguments than
    * placeholders, the unmatched arguments will be appended to the end of the formatted message in
    * square braces.
    *

@@ -96,9 +96,7 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this)
-        .add("list", mDataSourceSuppliers)
-        .toString();
+    return Objects.toStringHelper(this).add("list", mDataSourceSuppliers).toString();
   }
 
   @ThreadSafe
@@ -106,6 +104,7 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
 
     @GuardedBy("IncreasingQualityDataSource.this")
     private @Nullable ArrayList<DataSource<T>> mDataSources;
+
     @GuardedBy("IncreasingQualityDataSource.this")
     private int mIndexOfDataSourceWithResult;
 
@@ -231,9 +230,7 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
     }
 
     private void maybeSetIndexOfDataSourceWithResult(
-        int index,
-        DataSource<T> dataSource,
-        boolean isFinished) {
+        int index, DataSource<T> dataSource, boolean isFinished) {
       int oldIndexOfDataSourceWithResult;
       int newIndexOfDataSourceWithResult;
       synchronized (IncreasingQualityDataSource.this) {
@@ -247,8 +244,8 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
         // If we did have a result which came from another data source,
         // we'll only set {@code mIndexOfDataSourceWithResult} to point to the current data source
         // if it has finished (i.e. the new result is final), and is of higher quality.
-        if (getDataSourceWithResult() == null ||
-            (isFinished && index < mIndexOfDataSourceWithResult)) {
+        if (getDataSourceWithResult() == null
+            || (isFinished && index < mIndexOfDataSourceWithResult)) {
           newIndexOfDataSourceWithResult = index;
           mIndexOfDataSourceWithResult = index;
         }
@@ -298,8 +295,7 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
       }
 
       @Override
-      public void onCancellation(DataSource<T> dataSource) {
-      }
+      public void onCancellation(DataSource<T> dataSource) {}
 
       @Override
       public void onProgressUpdate(DataSource<T> dataSource) {

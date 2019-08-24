@@ -20,9 +20,7 @@ import com.facebook.fresco.samples.showcase.imageformat.keyframes.KeyframesDecod
 import com.facebook.fresco.samples.showcase.imageformat.svg.SvgDecoderExample;
 import com.facebook.imagepipeline.decoder.ImageDecoderConfig;
 
-/**
- * Helper class to add custom decoders and drawable factories if enabled.
- */
+/** Helper class to add custom decoders and drawable factories if enabled. */
 public class CustomImageFormatConfigurator {
 
   private static final String IMAGE_FORMAT_PREFS = "fresco_image_format_prefs";
@@ -54,8 +52,7 @@ public class CustomImageFormatConfigurator {
   }
 
   public static void addCustomDrawableFactories(
-      Context context,
-      DraweeConfig.Builder draweeConfigBuilder) {
+      Context context, DraweeConfig.Builder draweeConfigBuilder) {
     // We always add the color drawable factory so that it can be used for image decoder overrides,
     // see ImageFormatOverrideExample.
     draweeConfigBuilder.addCustomDrawableFactory(ColorImageExample.createDrawableFactory());
@@ -88,12 +85,14 @@ public class CustomImageFormatConfigurator {
   }
 
   private static boolean getBoolean(Context context, String key, boolean defaultValue) {
-    return context.getSharedPreferences(IMAGE_FORMAT_PREFS, Context.MODE_PRIVATE)
+    return context
+        .getSharedPreferences(IMAGE_FORMAT_PREFS, Context.MODE_PRIVATE)
         .getBoolean(key, defaultValue);
   }
 
   private static void setBoolean(Context context, String key, boolean value) {
-    context.getSharedPreferences(IMAGE_FORMAT_PREFS, Context.MODE_PRIVATE)
+    context
+        .getSharedPreferences(IMAGE_FORMAT_PREFS, Context.MODE_PRIVATE)
         .edit()
         .putBoolean(key, value)
         .apply();

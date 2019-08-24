@@ -14,9 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Static methods for secure hashing.
- */
+/** Static methods for secure hashing. */
 public class SecureHashUtil {
 
   public static String makeSHA1Hash(String text) {
@@ -63,10 +61,10 @@ public class SecureHashUtil {
   }
 
   static final byte[] HEX_CHAR_TABLE = {
-      (byte) '0', (byte) '1', (byte) '2', (byte) '3',
-      (byte) '4', (byte) '5', (byte) '6', (byte) '7',
-      (byte) '8', (byte) '9', (byte) 'a', (byte) 'b',
-      (byte) 'c', (byte) 'd', (byte) 'e', (byte) 'f'
+    (byte) '0', (byte) '1', (byte) '2', (byte) '3',
+    (byte) '4', (byte) '5', (byte) '6', (byte) '7',
+    (byte) '8', (byte) '9', (byte) 'a', (byte) 'b',
+    (byte) 'c', (byte) 'd', (byte) 'e', (byte) 'f'
   };
 
   public static String convertToHex(byte[] raw) throws UnsupportedEncodingException {

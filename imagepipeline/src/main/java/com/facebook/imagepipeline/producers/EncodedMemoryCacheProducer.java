@@ -18,9 +18,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 
-/**
- * Memory cache producer for the encoded memory cache.
- */
+/** Memory cache producer for the encoded memory cache. */
 public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
 
   public static final String PRODUCER_NAME = "EncodedMemoryCacheProducer";

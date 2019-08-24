@@ -34,14 +34,10 @@ import com.facebook.litho.widget.Text;
 public class SimpleListItemSpec {
 
   private static final ImageOptions IMAGE_OPTIONS =
-      ImageOptions.create()
-          .placeholderRes(R.color.placeholder_color)
-          .build();
+      ImageOptions.create().placeholderRes(R.color.placeholder_color).build();
 
   private static final ImageOptions PROFILE_IMAGE_OPTIONS =
-      ImageOptions.extend(IMAGE_OPTIONS)
-          .round(RoundingOptions.asCircle())
-          .build();
+      ImageOptions.extend(IMAGE_OPTIONS).round(RoundingOptions.asCircle()).build();
 
   @OnCreateLayout
   static Component onCreateLayout(
@@ -66,10 +62,7 @@ public class SimpleListItemSpec {
                         .alignSelf(CENTER)
                         .paddingDip(START, 8))
                 .paddingDip(BOTTOM, 8))
-        .child(
-            FrescoVitoImage.create(c)
-            .uri(mainPicture)
-            .imageOptions(IMAGE_OPTIONS))
+        .child(FrescoVitoImage.create(c).uri(mainPicture).imageOptions(IMAGE_OPTIONS))
         .build();
   }
 }

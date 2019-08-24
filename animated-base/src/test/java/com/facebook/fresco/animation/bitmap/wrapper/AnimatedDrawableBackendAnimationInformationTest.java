@@ -15,9 +15,7 @@ import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * Tests {@link AnimatedDrawableBackendAnimationInformation}.
- */
+/** Tests {@link AnimatedDrawableBackendAnimationInformation}. */
 public class AnimatedDrawableBackendAnimationInformationTest {
 
   private AnimatedDrawableBackend mAnimatedDrawableBackend;

@@ -29,19 +29,17 @@ import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
 /**
  * This fragment displays different WebP images.
  *
- * For being able to do this in your applications, you need to add the following dependencies
- * to your build.gradle file (where X.X.X matches the used Fresco version):
- * - implementation 'com.facebook.fresco:animated-webp:X.X.X'
- * - implementation 'com.facebook.fresco:webpsupport:X.X.X'
+ * <p>For being able to do this in your applications, you need to add the following dependencies to
+ * your build.gradle file (where X.X.X matches the used Fresco version): - implementation
+ * 'com.facebook.fresco:animated-webp:X.X.X' - implementation
+ * 'com.facebook.fresco:webpsupport:X.X.X'
  */
 public class ImageFormatWebpFragment extends BaseShowcaseFragment {
 
   @Nullable
   @Override
   public View onCreateView(
-      LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+      LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_format_webp, container, false);
   }
 
@@ -55,14 +53,15 @@ public class ImageFormatWebpFragment extends BaseShowcaseFragment {
     draweeWebpTranslucent.setImageURI(sampleUris().createWebpTranslucentUri());
 
     final SwitchCompat switchBackground = view.findViewById(R.id.switch_background);
-    switchBackground.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-      @Override
-      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        draweeWebpTranslucent.getHierarchy().setBackgroundImage(isChecked
-            ? new CheckerBoardDrawable(getResources())
-            : null);
-      }
-    });
+    switchBackground.setOnCheckedChangeListener(
+        new CompoundButton.OnCheckedChangeListener() {
+          @Override
+          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            draweeWebpTranslucent
+                .getHierarchy()
+                .setBackgroundImage(isChecked ? new CheckerBoardDrawable(getResources()) : null);
+          }
+        });
 
     final SimpleDraweeView draweeWebpAnimated = view.findViewById(R.id.drawee_view_webp_animated);
     draweeWebpAnimated.setController(

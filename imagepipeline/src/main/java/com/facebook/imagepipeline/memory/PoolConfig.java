@@ -14,9 +14,7 @@ import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.imageutils.BitmapUtil;
 import javax.annotation.concurrent.Immutable;
 
-/**
- * Configuration class for pools.
- */
+/** Configuration class for pools. */
 @Immutable
 public class PoolConfig {
 
@@ -155,16 +153,14 @@ public class PoolConfig {
     private int mBitmapPoolMaxBitmapSize;
     private boolean mRegisterLruBitmapPoolAsMemoryTrimmable;
 
-    private Builder() {
-    }
+    private Builder() {}
 
     public Builder setBitmapPoolParams(PoolParams bitmapPoolParams) {
       mBitmapPoolParams = Preconditions.checkNotNull(bitmapPoolParams);
       return this;
     }
 
-    public Builder setBitmapPoolStatsTracker(
-        PoolStatsTracker bitmapPoolStatsTracker) {
+    public Builder setBitmapPoolStatsTracker(PoolStatsTracker bitmapPoolStatsTracker) {
       mBitmapPoolStatsTracker = Preconditions.checkNotNull(bitmapPoolStatsTracker);
       return this;
     }
@@ -197,8 +193,7 @@ public class PoolConfig {
 
     public Builder setSmallByteArrayPoolStatsTracker(
         PoolStatsTracker smallByteArrayPoolStatsTracker) {
-      mSmallByteArrayPoolStatsTracker =
-          Preconditions.checkNotNull(smallByteArrayPoolStatsTracker);
+      mSmallByteArrayPoolStatsTracker = Preconditions.checkNotNull(smallByteArrayPoolStatsTracker);
       return this;
     }
 

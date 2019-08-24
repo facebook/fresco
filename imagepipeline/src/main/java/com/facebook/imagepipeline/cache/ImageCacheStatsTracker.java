@@ -12,9 +12,9 @@ import com.facebook.cache.common.CacheKey;
 /**
  * Interface for stats tracking for the image cache.
  *
- * <p>An implementation of this interface, passed to
- * {@link com.facebook.imagepipeline.core.ImagePipelineConfig}, will be notified for each
- * of the following cache events. Use this to keep cache stats for your app.
+ * <p>An implementation of this interface, passed to {@link
+ * com.facebook.imagepipeline.core.ImagePipelineConfig}, will be notified for each of the following
+ * cache events. Use this to keep cache stats for your app.
  */
 public interface ImageCacheStatsTracker {
 
@@ -39,8 +39,8 @@ public interface ImageCacheStatsTracker {
   /**
    * Called on an staging area hit.
    *
-   * <p>The staging area stores encoded images. It gets the images before they are written
-   * to disk cache.
+   * <p>The staging area stores encoded images. It gets the images before they are written to disk
+   * cache.
    */
   void onStagingAreaHit(CacheKey cacheKey);
 

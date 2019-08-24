@@ -9,22 +9,22 @@ package com.facebook.imageformat;
 
 import javax.annotation.Nullable;
 
-/**
- * Class representing all used image formats.
- */
+/** Class representing all used image formats. */
 public class ImageFormat {
 
   public interface FormatChecker {
 
     /**
      * Get the number of header bytes the format checker requires
+     *
      * @return the number of header bytes needed
      */
     int getHeaderSize();
 
     /**
-     * Returns an {@link ImageFormat} if the checker is able to determine the format
-     * or null otherwise.
+     * Returns an {@link ImageFormat} if the checker is able to determine the format or null
+     * otherwise.
+     *
      * @param headerBytes the header bytes to check
      * @param headerSize the size of the header in bytes
      * @return the image format or null if unknown
@@ -46,6 +46,7 @@ public class ImageFormat {
 
   /**
    * Get the default file extension for the given image format.
+   *
    * @return file extension for the image format
    */
   @Nullable

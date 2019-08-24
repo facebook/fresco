@@ -15,9 +15,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
-/**
- * Map that keeps track of the elements order (according to the LRU policy) and their size.
- */
+/** Map that keeps track of the elements order (according to the LRU policy) and their size. */
 @ThreadSafe
 public class CountingLruMap<K, V> {
 
@@ -25,6 +23,7 @@ public class CountingLruMap<K, V> {
 
   @GuardedBy("this")
   private final LinkedHashMap<K, V> mMap = new LinkedHashMap<>();
+
   @GuardedBy("this")
   private int mSizeInBytes = 0;
 
@@ -70,7 +69,7 @@ public class CountingLruMap<K, V> {
     return matchingEntries;
   }
 
-  /** Returns whether the map contains an element with the given key.  */
+  /** Returns whether the map contains an element with the given key. */
   public synchronized boolean contains(K key) {
     return mMap.containsKey(key);
   }
@@ -96,9 +95,9 @@ public class CountingLruMap<K, V> {
   /** Removes the element from the map. */
   @Nullable
   public synchronized V remove(K key) {
-      V oldValue = mMap.remove(key);
-      mSizeInBytes -= getValueSizeInBytes(oldValue);
-      return oldValue;
+    V oldValue = mMap.remove(key);
+    mSizeInBytes -= getValueSizeInBytes(oldValue);
+    return oldValue;
   }
 
   /** Removes all the matching elements from the map. */

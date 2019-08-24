@@ -17,9 +17,7 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig;
  */
 public class VolleyImagePipelineConfigFactory {
 
-  public static ImagePipelineConfig.Builder newBuilder(
-      Context context,
-      RequestQueue requestQueue) {
+  public static ImagePipelineConfig.Builder newBuilder(Context context, RequestQueue requestQueue) {
     return ImagePipelineConfig.newBuilder(context)
         .setNetworkFetcher(new VolleyNetworkFetcher(requestQueue));
   }

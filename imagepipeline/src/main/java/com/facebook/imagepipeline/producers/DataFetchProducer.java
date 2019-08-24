@@ -21,12 +21,12 @@ import java.io.IOException;
 /**
  * Producer for data URIs.
  *
- * <p>Data URIs embed the data in the URI itself. They don't point to a file location;
- * the URI is the data. Data can be encoded in either base-64 or escaped ASCII.
- * See the <a href="http://tools.ietf.org/html/rfc2397">spec</a> for full details.
+ * <p>Data URIs embed the data in the URI itself. They don't point to a file location; the URI is
+ * the data. Data can be encoded in either base-64 or escaped ASCII. See the <a
+ * href="http://tools.ietf.org/html/rfc2397">spec</a> for full details.
  *
- * <p>Data URIs are intended for small pieces of data only, since the URI lives on the Java
- * heap. For large data, use a another URI type.
+ * <p>Data URIs are intended for small pieces of data only, since the URI lives on the Java heap.
+ * For large data, use a another URI type.
  *
  * <p>Charsets specified in the URI are ignored. Only UTF-8 encoding is currently supported.
  */
@@ -34,8 +34,7 @@ public class DataFetchProducer extends LocalFetchProducer {
 
   public static final String PRODUCER_NAME = "DataFetchProducer";
 
-  public DataFetchProducer(
-      PooledByteBufferFactory pooledByteBufferFactory) {
+  public DataFetchProducer(PooledByteBufferFactory pooledByteBufferFactory) {
     super(CallerThreadExecutor.getInstance(), pooledByteBufferFactory);
   }
 

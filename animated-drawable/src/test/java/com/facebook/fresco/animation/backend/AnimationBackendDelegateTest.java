@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests {@link AnimationBackendDelegate}
- */
+/** Tests {@link AnimationBackendDelegate} */
 @RunWith(RobolectricTestRunner.class)
 public class AnimationBackendDelegateTest {
 

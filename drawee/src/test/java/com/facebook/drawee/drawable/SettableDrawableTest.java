@@ -67,5 +67,4 @@ public class SettableDrawableTest {
     verify(mUnderlyingDrawable1).setCallback(isNotNull(Drawable.Callback.class));
     verify(callback).invalidateDrawable(mSettableDrawable);
   }
-
 }

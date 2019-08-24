@@ -32,23 +32,21 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 /**
- * Abstract Drawee controller that implements common functionality
- * regardless of the backend used to fetch the image.
+ * Abstract Drawee controller that implements common functionality regardless of the backend used to
+ * fetch the image.
  *
- * All methods should be called on the main UI thread.
+ * <p>All methods should be called on the main UI thread.
  *
  * @param <T> image type (e.g. Bitmap)
  * @param <INFO> image info type (can be same as T)
  */
 @NotThreadSafe
-public abstract class AbstractDraweeController<T, INFO> implements
-    DraweeController,
-    DeferredReleaser.Releasable,
-    GestureDetector.ClickListener {
+public abstract class AbstractDraweeController<T, INFO>
+    implements DraweeController, DeferredReleaser.Releasable, GestureDetector.ClickListener {
 
   /**
-   * This class is used to allow an optimization of not creating a ForwardingControllerListener
-   * when there is only a single controller listener.
+   * This class is used to allow an optimization of not creating a ForwardingControllerListener when
+   * there is only a single controller listener.
    */
   private static class InternalForwardingListener<INFO> extends ForwardingControllerListener<INFO> {
     public static <INFO> InternalForwardingListener<INFO> createInternal(
@@ -110,9 +108,10 @@ public abstract class AbstractDraweeController<T, INFO> implements
   }
 
   /**
-   * Initializes this controller with the new id and caller context.
-   * This allows for reusing of the existing controller instead of instantiating a new one.
-   * This method should be called when the controller is in detached state.
+   * Initializes this controller with the new id and caller context. This allows for reusing of the
+   * existing controller instead of instantiating a new one. This method should be called when the
+   * controller is in detached state.
+   *
    * @param id unique id for this controller
    * @param callerContext tag and context for this controller
    */
@@ -218,7 +217,8 @@ public abstract class AbstractDraweeController<T, INFO> implements
   }
 
   /** Gets retry manager. */
-  @ReturnsOwnership protected RetryManager getRetryManager() {
+  @ReturnsOwnership
+  protected RetryManager getRetryManager() {
     if (mRetryManager == null) {
       mRetryManager = new RetryManager();
     }
@@ -263,9 +263,8 @@ public abstract class AbstractDraweeController<T, INFO> implements
       return;
     }
     if (mControllerListener != null) {
-      mControllerListener = InternalForwardingListener.createInternal(
-          mControllerListener,
-          controllerListener);
+      mControllerListener =
+          InternalForwardingListener.createInternal(mControllerListener, controllerListener);
       return;
     }
     // Listener only receives <INFO>, it never produces one.
@@ -301,8 +300,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
 
   /** Gets the hierarchy */
   @Override
-  public @Nullable
-  DraweeHierarchy getHierarchy() {
+  public @Nullable DraweeHierarchy getHierarchy() {
     return mSettableDraweeHierarchy;
   }
 
@@ -310,17 +308,14 @@ public abstract class AbstractDraweeController<T, INFO> implements
    * Sets the hierarchy.
    *
    * <p>The controller should be detached when this method is called.
+   *
    * @param hierarchy This must be an instance of {@link SettableDraweeHierarchy}
    */
   @Override
   public void setHierarchy(@Nullable DraweeHierarchy hierarchy) {
     if (FLog.isLoggable(FLog.VERBOSE)) {
       FLog.v(
-          TAG,
-          "controller %x %s: setHierarchy: %s",
-          System.identityHashCode(this),
-          mId,
-          hierarchy);
+          TAG, "controller %x %s: setHierarchy: %s", System.identityHashCode(this), mId, hierarchy);
     }
     mEventTracker.recordEvent(
         (hierarchy != null) ? Event.ON_SET_HIERARCHY : Event.ON_CLEAR_HIERARCHY);
@@ -636,10 +631,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
   }
 
   private void onProgressUpdateInternal(
-      String id,
-      DataSource<T> dataSource,
-      float progress,
-      boolean isFinished) {
+      String id, DataSource<T> dataSource, float progress, boolean isFinished) {
     // ignore late callbacks (data source that failed is not the one we expected)
     if (!isExpectedDataSource(id, dataSource)) {
       logMessageAndFailure("ignore_old_datasource @ onProgress", null);

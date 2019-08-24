@@ -14,8 +14,8 @@ import java.util.concurrent.Executor;
 import javax.annotation.concurrent.GuardedBy;
 
 /**
- * Only permits a configurable number of requests to be kicked off simultaneously. If that number
- * is exceeded, then requests are queued up and kicked off once other requests complete.
+ * Only permits a configurable number of requests to be kicked off simultaneously. If that number is
+ * exceeded, then requests are queued up and kicked off once other requests complete.
  */
 public class ThrottlingProducer<T> implements Producer<T> {
 
@@ -26,14 +26,14 @@ public class ThrottlingProducer<T> implements Producer<T> {
 
   @GuardedBy("this")
   private int mNumCurrentRequests;
+
   @GuardedBy("this")
   private final ConcurrentLinkedQueue<Pair<Consumer<T>, ProducerContext>> mPendingRequests;
+
   private final Executor mExecutor;
 
   public ThrottlingProducer(
-      int maxSimultaneousRequests,
-      Executor executor,
-      final Producer<T> inputProducer) {
+      int maxSimultaneousRequests, Executor executor, final Producer<T> inputProducer) {
     mMaxSimultaneousRequests = maxSimultaneousRequests;
     mExecutor = Preconditions.checkNotNull(executor);
     mInputProducer = Preconditions.checkNotNull(inputProducer);

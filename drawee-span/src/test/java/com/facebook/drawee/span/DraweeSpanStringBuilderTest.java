@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-
 package com.facebook.drawee.span;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -24,9 +23,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests {@link DraweeSpanStringBuilder}
- */
+/** Tests {@link DraweeSpanStringBuilder} */
 @RunWith(RobolectricTestRunner.class)
 public class DraweeSpanStringBuilderTest {
 
@@ -83,10 +80,8 @@ public class DraweeSpanStringBuilderTest {
   @Test
   public void testDraweeSpanInSpannable() {
     addDraweeSpan(mDraweeSpanStringBuilder, mDraweeHolder, 3, 1);
-    DraweeSpan[] draweeSpans = mDraweeSpanStringBuilder.getSpans(
-        0,
-        mDraweeSpanStringBuilder.length(),
-        DraweeSpan.class);
+    DraweeSpan[] draweeSpans =
+        mDraweeSpanStringBuilder.getSpans(0, mDraweeSpanStringBuilder.length(), DraweeSpan.class);
 
     assertThat(draweeSpans).hasSize(1);
     assertThat(draweeSpans[0].getDrawable()).isEqualTo(mTopLevelDrawable);

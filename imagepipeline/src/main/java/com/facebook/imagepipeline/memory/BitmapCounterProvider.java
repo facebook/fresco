@@ -7,7 +7,6 @@
 
 package com.facebook.imagepipeline.memory;
 
-import com.facebook.common.logging.FLog;
 import com.facebook.infer.annotation.ThreadSafe;
 
 public class BitmapCounterProvider {
@@ -19,7 +18,7 @@ public class BitmapCounterProvider {
   /**
    * Our Bitmaps live in ashmem, meaning that they are pinned in Android's shared native memory.
    *
-   * <p> Therefore, we are not constrained by the max heap size of the dalvik heap, but we want to
+   * <p>Therefore, we are not constrained by the max heap size of the dalvik heap, but we want to
    * make sure we don't use too much memory on low end devices, so that we don't force other
    * background process to be killed.
    */
@@ -40,7 +39,8 @@ public class BitmapCounterProvider {
 
   public static void initialize(BitmapCounterConfig bitmapCounterConfig) {
     if (sBitmapCounter != null) {
-      throw new IllegalStateException("BitmapCounter has already been created! `BitmapCounterProvider.initialize(...)` should only be called before `BitmapCounterProvider.get()` or not at all!");
+      throw new IllegalStateException(
+          "BitmapCounter has already been created! `BitmapCounterProvider.initialize(...)` should only be called before `BitmapCounterProvider.get()` or not at all!");
     } else {
       sMaxBitmapCount = bitmapCounterConfig.getMaxBitmapCount();
     }

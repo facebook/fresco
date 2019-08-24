@@ -7,9 +7,7 @@
 
 package com.facebook.imagepipeline.image;
 
-/**
- * Implementation of {@link QualityInfo}
- */
+/** Implementation of {@link QualityInfo} */
 public class ImmutableQualityInfo implements QualityInfo {
 
   public static final QualityInfo FULL_QUALITY = of(Integer.MAX_VALUE, true, true);
@@ -19,9 +17,7 @@ public class ImmutableQualityInfo implements QualityInfo {
   boolean mIsOfFullQuality;
 
   private ImmutableQualityInfo(
-      int quality,
-      boolean isOfGoodEnoughQuality,
-      boolean isOfFullQuality) {
+      int quality, boolean isOfGoodEnoughQuality, boolean isOfFullQuality) {
     mQuality = quality;
     mIsOfGoodEnoughQuality = isOfGoodEnoughQuality;
     mIsOfFullQuality = isOfFullQuality;
@@ -56,15 +52,13 @@ public class ImmutableQualityInfo implements QualityInfo {
       return false;
     }
     ImmutableQualityInfo that = (ImmutableQualityInfo) other;
-    return mQuality == that.mQuality &&
-        mIsOfGoodEnoughQuality == that.mIsOfGoodEnoughQuality &&
-        mIsOfFullQuality == that.mIsOfFullQuality;
+    return mQuality == that.mQuality
+        && mIsOfGoodEnoughQuality == that.mIsOfGoodEnoughQuality
+        && mIsOfFullQuality == that.mIsOfFullQuality;
   }
 
   public static QualityInfo of(
-      int quality,
-      boolean isOfGoodEnoughQuality,
-      boolean isOfFullQuality) {
+      int quality, boolean isOfGoodEnoughQuality, boolean isOfFullQuality) {
     return new ImmutableQualityInfo(quality, isOfGoodEnoughQuality, isOfFullQuality);
   }
 }

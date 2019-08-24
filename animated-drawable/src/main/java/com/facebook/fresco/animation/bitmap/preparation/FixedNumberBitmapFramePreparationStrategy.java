@@ -10,11 +10,8 @@ import com.facebook.common.logging.FLog;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 
-/**
- * Frame preparation strategy to prepare the next n frames
- */
-public class FixedNumberBitmapFramePreparationStrategy
-    implements BitmapFramePreparationStrategy {
+/** Frame preparation strategy to prepare the next n frames */
+public class FixedNumberBitmapFramePreparationStrategy implements BitmapFramePreparationStrategy {
 
   private static final Class<?> TAG = FixedNumberBitmapFramePreparationStrategy.class;
   private static final int DEFAULT_FRAMES_TO_PREPARE = 3;
@@ -40,10 +37,7 @@ public class FixedNumberBitmapFramePreparationStrategy
       if (FLog.isLoggable(FLog.VERBOSE)) {
         FLog.v(TAG, "Preparing frame %d, last drawn: %d", nextFrameNumber, lastDrawnFrameNumber);
       }
-      if (!bitmapFramePreparer.prepareFrame(
-          bitmapFrameCache,
-          animationBackend,
-          nextFrameNumber)) {
+      if (!bitmapFramePreparer.prepareFrame(bitmapFrameCache, animationBackend, nextFrameNumber)) {
         // We cannot prepare more frames, so we return early
         return;
       }

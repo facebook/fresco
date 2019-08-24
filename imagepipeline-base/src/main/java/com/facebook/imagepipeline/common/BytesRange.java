@@ -17,18 +17,18 @@ import javax.annotation.concurrent.Immutable;
 /**
  * A representation of the range of bytes requested or contained in a piece of content.
  *
- * <p> This is based on the spec of the HTTP "Content-Range" header so includes methods to parse and
+ * <p>This is based on the spec of the HTTP "Content-Range" header so includes methods to parse and
  * output appropriate strings for the header.
  *
- * <p> The header spec is at https://tools.ietf.org/html/rfc2616#section-14.16
+ * <p>The header spec is at https://tools.ietf.org/html/rfc2616#section-14.16
  *
- *  <p> As per that spec, the from and to values are inclusive. Requesting the first 100 bytes of an
+ * <p>As per that spec, the from and to values are inclusive. Requesting the first 100 bytes of an
  * image can be achieved by calling <code>BytesRange.toMax(99)</code>.
  *
- * <p> This might be useful because you want to limit the maximum size of a specific download or it
+ * <p>This might be useful because you want to limit the maximum size of a specific download or it
  * might be that you already have part of the image data and only want the remainder.
  *
- * <p> These objects are currently only respected in image requests and only taken from responses if
+ * <p>These objects are currently only respected in image requests and only taken from responses if
  * {@code ImagePipelineExperiments.isPartialImageCachingEnabled()} is true in the image pipeline
  * config. It is also dependent on a {@code NetworkFetcher} which writes and reads these headers.
  */
@@ -39,14 +39,12 @@ public class BytesRange {
 
   private static @Nullable Pattern sHeaderParsingRegEx;
 
-  /**
-   * The first byte of the range. Values begin at 0.
-   */
+  /** The first byte of the range. Values begin at 0. */
   public final int from;
   /**
    * The final byte of the range inclusive, or {@link #TO_END_OF_CONTENT} if it reaches to the end.
    *
-   * <p> If not TO_END_OF_CONTENT, values are inclusive. e.g. for the first 100 bytes this is 99.
+   * <p>If not TO_END_OF_CONTENT, values are inclusive. e.g. for the first 100 bytes this is 99.
    */
   public final int to;
 
@@ -127,14 +125,14 @@ public class BytesRange {
    * Creates an instance of BytesRange by parsing the value of a returned HTTP "Content-Range"
    * header.
    *
-   * <p> If the range runs to the end of the available content, the end of the range will be set to
+   * <p>If the range runs to the end of the available content, the end of the range will be set to
    * TO_END_OF_CONTENT.
    *
-   * <p> The header spec is at https://tools.ietf.org/html/rfc2616#section-14.16
+   * <p>The header spec is at https://tools.ietf.org/html/rfc2616#section-14.16
    *
    * @param header
    * @throws IllegalArgumentException if the header is non-null but fails to match the format per
-   * the spec
+   *     the spec
    * @return the parsed range
    */
   @Nullable
@@ -166,8 +164,7 @@ public class BytesRange {
       }
     } catch (IllegalArgumentException x) {
       throw new IllegalArgumentException(
-          String.format((Locale) null, "Invalid Content-Range header value: \"%s\"", header),
-          x);
+          String.format((Locale) null, "Invalid Content-Range header value: \"%s\"", header), x);
     }
   }
 }

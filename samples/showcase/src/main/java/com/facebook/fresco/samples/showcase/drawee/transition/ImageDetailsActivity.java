@@ -25,9 +25,7 @@ import com.facebook.drawee.view.DraweeTransition;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.R;
 
-/**
- * Image details activity
- */
+/** Image details activity */
 public class ImageDetailsActivity extends AppCompatActivity {
 
   public static Intent getStartIntent(Context context, Uri imageUri) {
@@ -73,7 +71,7 @@ public class ImageDetailsActivity extends AppCompatActivity {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      // Respond to the action bar's Up/Home button
+        // Respond to the action bar's Up/Home button
       case android.R.id.home:
         supportFinishAfterTransition();
         return true;

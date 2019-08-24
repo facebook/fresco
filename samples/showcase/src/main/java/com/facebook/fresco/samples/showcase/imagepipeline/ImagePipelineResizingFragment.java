@@ -71,9 +71,7 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
   @Nullable
   @Override
   public View onCreateView(
-      LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+      LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_imagepipeline_resizing, container, false);
   }
 
@@ -183,10 +181,11 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
             .setImageDecodeOptions(new ImageDecodeOptionsBuilder().build())
             .build();
 
-    final DraweeController draweeController = Fresco.newDraweeControllerBuilder()
-        .setOldController(mDraweeMain.getController())
-        .setImageRequest(imageRequest)
-        .build();
+    final DraweeController draweeController =
+        Fresco.newDraweeControllerBuilder()
+            .setOldController(mDraweeMain.getController())
+            .setImageRequest(imageRequest)
+            .build();
 
     mDraweeMain.setController(draweeController);
   }
@@ -212,9 +211,11 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
     public View getView(int position, View convertView, ViewGroup parent) {
       final LayoutInflater layoutInflater = getLayoutInflater();
 
-      final View view = convertView != null
-          ? convertView
-          : layoutInflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
+      final View view =
+          convertView != null
+              ? convertView
+              : layoutInflater.inflate(
+                  android.R.layout.simple_spinner_dropdown_item, parent, false);
 
       final TextView textView = (TextView) view.findViewById(android.R.id.text1);
       textView.setText(SPINNER_ENTRIES_SIZE[position].toString());

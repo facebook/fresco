@@ -19,14 +19,10 @@ import com.facebook.samples.comparison.holders.GlideHolder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 
-/**
- * RecyclerView Adapter for Glide
- */
+/** RecyclerView Adapter for Glide */
 public class GlideAdapter extends ImageListAdapter {
 
-  public GlideAdapter(
-      Context context,
-      PerfListener perfListener) {
+  public GlideAdapter(Context context, PerfListener perfListener) {
     super(context, perfListener);
   }
 

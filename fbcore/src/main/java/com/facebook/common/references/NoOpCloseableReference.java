@@ -11,7 +11,10 @@ import javax.annotation.Nullable;
 public class NoOpCloseableReference<T> extends CloseableReference<T> {
 
   /*package*/ NoOpCloseableReference(
-          T t, ResourceReleaser<T> resourceReleaser, LeakHandler leakHandler, @Nullable Throwable stacktrace) {
+      T t,
+      ResourceReleaser<T> resourceReleaser,
+      LeakHandler leakHandler,
+      @Nullable Throwable stacktrace) {
     super(t, resourceReleaser, leakHandler, stacktrace);
   }
 

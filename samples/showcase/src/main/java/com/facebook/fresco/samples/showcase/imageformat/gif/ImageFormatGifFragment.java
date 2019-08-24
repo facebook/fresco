@@ -34,9 +34,7 @@ import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
-/**
- * GIF example that illustrates how to display a simple GIF file
- */
+/** GIF example that illustrates how to display a simple GIF file */
 public class ImageFormatGifFragment extends BaseShowcaseFragment {
 
   private Entry[] mSpinnerEntries;
@@ -48,9 +46,7 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
   @Nullable
   @Override
   public View onCreateView(
-      LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+      LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_format_gif, container, false);
   }
 
@@ -73,24 +69,26 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
     mSimpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
 
     final SwitchCompat switchBackground = (SwitchCompat) view.findViewById(R.id.switch_background);
-    switchBackground.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-      @Override
-      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        mSimpleDraweeView.getHierarchy().setBackgroundImage(isChecked
-            ? new CheckerBoardDrawable(getResources())
-            : null);
-      }
-    });
+    switchBackground.setOnCheckedChangeListener(
+        new CompoundButton.OnCheckedChangeListener() {
+          @Override
+          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            mSimpleDraweeView
+                .getHierarchy()
+                .setBackgroundImage(isChecked ? new CheckerBoardDrawable(getResources()) : null);
+          }
+        });
 
     final SwitchCompat switchAspect = (SwitchCompat) view.findViewById(R.id.switch_aspect_ratio);
-    switchAspect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-      @Override
-      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        ViewGroup.LayoutParams layoutParams = mSimpleDraweeView.getLayoutParams();
-        layoutParams.height = layoutParams.width * (isChecked ? 2 : 1);
-        mSimpleDraweeView.setLayoutParams(layoutParams);
-      }
-    });
+    switchAspect.setOnCheckedChangeListener(
+        new CompoundButton.OnCheckedChangeListener() {
+          @Override
+          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            ViewGroup.LayoutParams layoutParams = mSimpleDraweeView.getLayoutParams();
+            layoutParams.height = layoutParams.width * (isChecked ? 2 : 1);
+            mSimpleDraweeView.setLayoutParams(layoutParams);
+          }
+        });
 
     mSpinner = (Spinner) view.findViewById(R.id.spinner);
     mSpinner.setAdapter(new SimpleUriListAdapter());
@@ -178,9 +176,11 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
     public View getView(int position, View convertView, ViewGroup parent) {
       final LayoutInflater layoutInflater = getLayoutInflater(null);
 
-      final View view = convertView != null
-          ? convertView
-          : layoutInflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
+      final View view =
+          convertView != null
+              ? convertView
+              : layoutInflater.inflate(
+                  android.R.layout.simple_spinner_dropdown_item, parent, false);
 
       final TextView textView = (TextView) view.findViewById(android.R.id.text1);
       textView.setText(mSpinnerEntries[position].descriptionId);

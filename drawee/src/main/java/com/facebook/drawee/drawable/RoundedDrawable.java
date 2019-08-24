@@ -24,8 +24,7 @@ import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import java.util.Arrays;
 
-public abstract class RoundedDrawable extends Drawable
-    implements Rounded, TransformAwareDrawable {
+public abstract class RoundedDrawable extends Drawable implements Rounded, TransformAwareDrawable {
 
   private final Drawable mDelegate;
 
@@ -94,8 +93,9 @@ public abstract class RoundedDrawable extends Drawable
   }
 
   /**
-   * Specify radius for the corners of the rectangle. If this is > 0, then the
-   * drawable is drawn in a round-rectangle, rather than a rectangle.
+   * Specify radius for the corners of the rectangle. If this is > 0, then the drawable is drawn in
+   * a round-rectangle, rather than a rectangle.
+   *
    * @param radius the radius for the corners of the rectangle
    */
   @Override
@@ -108,9 +108,9 @@ public abstract class RoundedDrawable extends Drawable
   }
 
   /**
-   * Specify radii for each of the 4 corners. For each corner, the array
-   * contains 2 values, [X_radius, Y_radius]. The corners are ordered
-   * top-left, top-right, bottom-right, bottom-left
+   * Specify radii for each of the 4 corners. For each corner, the array contains 2 values,
+   * [X_radius, Y_radius]. The corners are ordered top-left, top-right, bottom-right, bottom-left
+   *
    * @param radii the x and y radii of the corners
    */
   @Override
@@ -138,6 +138,7 @@ public abstract class RoundedDrawable extends Drawable
 
   /**
    * Sets the border
+   *
    * @param color of the border
    * @param width of the border
    */
@@ -165,6 +166,7 @@ public abstract class RoundedDrawable extends Drawable
 
   /**
    * Sets the padding for the bitmap.
+   *
    * @param padding
    */
   @Override
@@ -205,9 +207,8 @@ public abstract class RoundedDrawable extends Drawable
   /**
    * Sets FILTER_BITMAP_FLAG flag to Paint. {@link android.graphics.Paint#FILTER_BITMAP_FLAG}
    *
-   * <p>This should generally be on when drawing bitmaps, unless performance-bound (rendering to software
-   * canvas) or preferring pixelation artifacts to blurriness when scaling
-   * significantly.
+   * <p>This should generally be on when drawing bitmaps, unless performance-bound (rendering to
+   * software canvas) or preferring pixelation artifacts to blurriness when scaling significantly.
    *
    * @param paintFilterBitmap whether to set FILTER_BITMAP_FLAG flag to Paint.
    */
@@ -262,7 +263,7 @@ public abstract class RoundedDrawable extends Drawable
     if (!mParentTransform.equals(mPrevParentTransform)
         || !mBoundsTransform.equals(mPrevBoundsTransform)
         || (mInsideBorderTransform != null
-        && !mInsideBorderTransform.equals(mPrevInsideBorderTransform))) {
+            && !mInsideBorderTransform.equals(mPrevInsideBorderTransform))) {
       mIsShaderTransformDirty = true;
 
       mParentTransform.invert(mInverseParentTransform);
@@ -333,9 +334,7 @@ public abstract class RoundedDrawable extends Drawable
     }
   }
 
-  /**
-   * If both the radii and border width are zero, there is nothing to round.
-   */
+  /** If both the radii and border width are zero, there is nothing to round. */
   @VisibleForTesting
   boolean shouldRound() {
     return (mIsCircle || mRadiiNonZero || mBorderWidth > 0);
@@ -362,14 +361,12 @@ public abstract class RoundedDrawable extends Drawable
   }
 
   @Override
-  public void setColorFilter(
-      int color, @NonNull PorterDuff.Mode mode) {
+  public void setColorFilter(int color, @NonNull PorterDuff.Mode mode) {
     mDelegate.setColorFilter(color, mode);
   }
 
   @Override
-  public void setColorFilter(
-      @Nullable ColorFilter colorFilter) {
+  public void setColorFilter(@Nullable ColorFilter colorFilter) {
     mDelegate.setColorFilter(colorFilter);
   }
 

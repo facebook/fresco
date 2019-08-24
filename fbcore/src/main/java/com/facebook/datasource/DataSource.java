@@ -19,30 +19,31 @@ import javax.annotation.Nullable;
  *
  * <p>DataSources MUST be closed (close() is called on the DataSource) else resources may leak.
  *
- *@param <T> the type of the result
+ * @param <T> the type of the result
  */
 public interface DataSource<T> {
 
-  /**
-   * @return true if the data source is closed, false otherwise
-   */
+  /** @return true if the data source is closed, false otherwise */
   boolean isClosed();
 
   /**
    * The most recent result of the asynchronous computation.
    *
-   * <p>The caller gains ownership of the object and is responsible for releasing it.
-   * Note that subsequent calls to getResult might give different results. Later results should be
-   * considered to be of higher quality.
+   * <p>The caller gains ownership of the object and is responsible for releasing it. Note that
+   * subsequent calls to getResult might give different results. Later results should be considered
+   * to be of higher quality.
    *
    * <p>This method will return null in the following cases:
+   *
    * <ul>
-   * <li>when the DataSource does not have a result ({@code hasResult} returns false).
-   * <li>when the last result produced was null.
+   *   <li>when the DataSource does not have a result ({@code hasResult} returns false).
+   *   <li>when the last result produced was null.
    * </ul>
+   *
    * @return current best result
    */
-  @Nullable T getResult();
+  @Nullable
+  T getResult();
 
   /**
    * @return true if any result (possibly of lower quality) is available right now, false otherwise
@@ -55,30 +56,24 @@ public interface DataSource<T> {
    */
   boolean hasMultipleResults();
 
-  /**
-   * @return true if request is finished, false otherwise
-   */
+  /** @return true if request is finished, false otherwise */
   boolean isFinished();
 
-  /**
-   * @return true if request finished due to error
-   */
+  /** @return true if request finished due to error */
   boolean hasFailed();
 
-  /**
-   * @return failure cause if the source has failed, else null
-   */
-  @Nullable Throwable getFailureCause();
+  /** @return failure cause if the source has failed, else null */
+  @Nullable
+  Throwable getFailureCause();
 
-  /**
-   * @return progress in range [0, 1]
-   */
+  /** @return progress in range [0, 1] */
   float getProgress();
 
   /**
    * Cancels the ongoing request and releases all associated resources.
    *
    * <p>Subsequent calls to {@link #getResult} will return null.
+   *
    * @return true if the data source is closed for the first time
    */
   boolean close();
@@ -87,6 +82,7 @@ public interface DataSource<T> {
    * Subscribe for notifications whenever the state of the DataSource changes.
    *
    * <p>All changes will be observed on the provided executor.
+   *
    * @param dataSubscriber
    * @param executor
    */

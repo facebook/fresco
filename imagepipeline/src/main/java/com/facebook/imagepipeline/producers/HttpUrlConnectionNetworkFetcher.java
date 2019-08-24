@@ -87,22 +87,25 @@ public class HttpUrlConnectionNetworkFetcher
   @Override
   public void fetch(final HttpUrlConnectionNetworkFetchState fetchState, final Callback callback) {
     fetchState.submitTime = mMonotonicClock.now();
-    final Future<?> future = mExecutorService.submit(
-        new Runnable() {
-          @Override
-          public void run() {
-            fetchSync(fetchState, callback);
-          }
-        });
-    fetchState.getContext().addCallbacks(
-        new BaseProducerContextCallbacks() {
-          @Override
-          public void onCancellationRequested() {
-            if (future.cancel(false)) {
-              callback.onCancellation();
-            }
-          }
-        });
+    final Future<?> future =
+        mExecutorService.submit(
+            new Runnable() {
+              @Override
+              public void run() {
+                fetchSync(fetchState, callback);
+              }
+            });
+    fetchState
+        .getContext()
+        .addCallbacks(
+            new BaseProducerContextCallbacks() {
+              @Override
+              public void onCancellationRequested() {
+                if (future.cancel(false)) {
+                  callback.onCancellation();
+                }
+              }
+            });
   }
 
   @VisibleForTesting
@@ -131,7 +134,6 @@ public class HttpUrlConnectionNetworkFetcher
         connection.disconnect();
       }
     }
-
   }
 
   private HttpURLConnection downloadFrom(Uri uri, int maxRedirects) throws IOException {
@@ -140,28 +142,30 @@ public class HttpUrlConnectionNetworkFetcher
     int responseCode = connection.getResponseCode();
 
     if (isHttpSuccess(responseCode)) {
-        return connection;
+      return connection;
 
     } else if (isHttpRedirect(responseCode)) {
-        String nextUriString = connection.getHeaderField("Location");
-        connection.disconnect();
+      String nextUriString = connection.getHeaderField("Location");
+      connection.disconnect();
 
-        Uri nextUri = (nextUriString == null) ? null : Uri.parse(nextUriString);
-        String originalScheme = uri.getScheme();
+      Uri nextUri = (nextUriString == null) ? null : Uri.parse(nextUriString);
+      String originalScheme = uri.getScheme();
 
-        if (maxRedirects > 0 && nextUri != null && !nextUri.getScheme().equals(originalScheme)) {
-          return downloadFrom(nextUri, maxRedirects - 1);
-        } else {
-          String message = maxRedirects == 0
-              ? error("URL %s follows too many redirects", uri.toString())
-              : error("URL %s returned %d without a valid redirect", uri.toString(), responseCode);
-          throw new IOException(message);
-        }
+      if (maxRedirects > 0 && nextUri != null && !nextUri.getScheme().equals(originalScheme)) {
+        return downloadFrom(nextUri, maxRedirects - 1);
+      } else {
+        String message =
+            maxRedirects == 0
+                ? error("URL %s follows too many redirects", uri.toString())
+                : error(
+                    "URL %s returned %d without a valid redirect", uri.toString(), responseCode);
+        throw new IOException(message);
+      }
 
     } else {
-        connection.disconnect();
-        throw new IOException(String
-            .format("Image URL %s returned HTTP code %d", uri.toString(), responseCode));
+      connection.disconnect();
+      throw new IOException(
+          String.format("Image URL %s returned HTTP code %d", uri.toString(), responseCode));
     }
   }
 
@@ -177,8 +181,8 @@ public class HttpUrlConnectionNetworkFetcher
   }
 
   private static boolean isHttpSuccess(int responseCode) {
-    return (responseCode >= HttpURLConnection.HTTP_OK &&
-        responseCode < HttpURLConnection.HTTP_MULT_CHOICE);
+    return (responseCode >= HttpURLConnection.HTTP_OK
+        && responseCode < HttpURLConnection.HTTP_MULT_CHOICE);
   }
 
   private static boolean isHttpRedirect(int responseCode) {

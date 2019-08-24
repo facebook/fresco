@@ -17,9 +17,7 @@ import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 
-/**
- * Memory cache producer for the bitmap memory cache.
- */
+/** Memory cache producer for the bitmap memory cache. */
 public class BitmapMemoryCacheProducer implements Producer<CloseableReference<CloseableImage>> {
 
   public static final String PRODUCER_NAME = "BitmapMemoryCacheProducer";

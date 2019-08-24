@@ -32,8 +32,7 @@ import org.robolectric.annotation.Config;
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 public class DataSourcesTest {
 
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
+  @Rule public PowerMockRule rule = new PowerMockRule();
 
   private CountDownLatch mCountDownLatch;
   private Exception mException;
@@ -67,15 +66,18 @@ public class DataSourcesTest {
     when(mDataSource.isFinished()).thenReturn(true);
     when(mDataSource.getResult()).thenReturn(mFinalResult);
 
-    doAnswer(new Answer<Void>() {
-      @Override
-      public Void answer(InvocationOnMock invocation) throws Throwable {
-        final Object[] args = invocation.getArguments();
-        DataSubscriber dataSubscriber = (DataSubscriber) args[0];
-        dataSubscriber.onNewResult(mDataSource);
-        return null;
-      }
-    }).when(mDataSource).subscribe(any(DataSubscriber.class), any(Executor.class));
+    doAnswer(
+            new Answer<Void>() {
+              @Override
+              public Void answer(InvocationOnMock invocation) throws Throwable {
+                final Object[] args = invocation.getArguments();
+                DataSubscriber dataSubscriber = (DataSubscriber) args[0];
+                dataSubscriber.onNewResult(mDataSource);
+                return null;
+              }
+            })
+        .when(mDataSource)
+        .subscribe(any(DataSubscriber.class), any(Executor.class));
 
     final Object actual = DataSources.waitForFinalResult(mDataSource);
     assertEquals(mFinalResult, actual);
@@ -89,15 +91,18 @@ public class DataSourcesTest {
     when(mDataSource.isFinished()).thenReturn(false);
     when(mDataSource.getResult()).thenReturn(mIntermediateResult);
 
-    doAnswer(new Answer<Void>() {
-      @Override
-      public Void answer(InvocationOnMock invocation) throws Throwable {
-        final Object[] args = invocation.getArguments();
-        DataSubscriber dataSubscriber = (DataSubscriber) args[0];
-        dataSubscriber.onNewResult(mDataSource);
-        return null;
-      }
-    }).when(mDataSource).subscribe(any(DataSubscriber.class), any(Executor.class));
+    doAnswer(
+            new Answer<Void>() {
+              @Override
+              public Void answer(InvocationOnMock invocation) throws Throwable {
+                final Object[] args = invocation.getArguments();
+                DataSubscriber dataSubscriber = (DataSubscriber) args[0];
+                dataSubscriber.onNewResult(mDataSource);
+                return null;
+              }
+            })
+        .when(mDataSource)
+        .subscribe(any(DataSubscriber.class), any(Executor.class));
 
     // the mocked one falls through, but the real one waits with the countdown latch for isFinished
     final Object actual = DataSources.waitForFinalResult(mDataSource);
@@ -109,15 +114,18 @@ public class DataSourcesTest {
 
   @Test
   public void testWaitForFinalResult_whenCancelled_thenReturnNull() throws Throwable {
-    doAnswer(new Answer<Void>() {
-      @Override
-      public Void answer(InvocationOnMock invocation) throws Throwable {
-        final Object[] args = invocation.getArguments();
-        DataSubscriber dataSubscriber = (DataSubscriber) args[0];
-        dataSubscriber.onCancellation(mDataSource);
-        return null;
-      }
-    }).when(mDataSource).subscribe(any(DataSubscriber.class), any(Executor.class));
+    doAnswer(
+            new Answer<Void>() {
+              @Override
+              public Void answer(InvocationOnMock invocation) throws Throwable {
+                final Object[] args = invocation.getArguments();
+                DataSubscriber dataSubscriber = (DataSubscriber) args[0];
+                dataSubscriber.onCancellation(mDataSource);
+                return null;
+              }
+            })
+        .when(mDataSource)
+        .subscribe(any(DataSubscriber.class), any(Executor.class));
 
     final Object actual = DataSources.waitForFinalResult(mDataSource);
     assertEquals(null, actual);
@@ -131,15 +139,18 @@ public class DataSourcesTest {
     final Exception expectedException = new IOException("failure failure");
     when(mDataSource.getFailureCause()).thenReturn(expectedException);
 
-    doAnswer(new Answer<Void>() {
-      @Override
-      public Void answer(InvocationOnMock invocation) throws Throwable {
-        final Object[] args = invocation.getArguments();
-        DataSubscriber dataSubscriber = (DataSubscriber) args[0];
-        dataSubscriber.onFailure(mDataSource);
-        return null;
-      }
-    }).when(mDataSource).subscribe(any(DataSubscriber.class), any(Executor.class));
+    doAnswer(
+            new Answer<Void>() {
+              @Override
+              public Void answer(InvocationOnMock invocation) throws Throwable {
+                final Object[] args = invocation.getArguments();
+                DataSubscriber dataSubscriber = (DataSubscriber) args[0];
+                dataSubscriber.onFailure(mDataSource);
+                return null;
+              }
+            })
+        .when(mDataSource)
+        .subscribe(any(DataSubscriber.class), any(Executor.class));
 
     try {
       DataSources.waitForFinalResult(mDataSource);

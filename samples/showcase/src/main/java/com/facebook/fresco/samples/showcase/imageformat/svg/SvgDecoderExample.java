@@ -26,17 +26,16 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.QualityInfo;
 import javax.annotation.Nullable;
 
-/**
- * SVG example that defines all classes required to decode and render SVG images.
- */
+/** SVG example that defines all classes required to decode and render SVG images. */
 public class SvgDecoderExample {
 
   public static final ImageFormat SVG_FORMAT = new ImageFormat("SVG_FORMAT", "svg");
 
   // We do not include the closing ">" since there can be additional information
   private static final String HEADER_TAG = "<svg";
-  private static final byte[][] POSSIBLE_HEADER_TAGS =
-      { ImageFormatCheckerUtils.asciiBytes("<?xml") };
+  private static final byte[][] POSSIBLE_HEADER_TAGS = {
+    ImageFormatCheckerUtils.asciiBytes("<?xml")
+  };
 
   public static class SvgFormatChecker implements ImageFormat.FormatChecker {
 
@@ -57,9 +56,10 @@ public class SvgDecoderExample {
         return SVG_FORMAT;
       }
       for (byte[] possibleHeaderTag : POSSIBLE_HEADER_TAGS) {
-        if (ImageFormatCheckerUtils.startsWithPattern(headerBytes, possibleHeaderTag) &&
-            ImageFormatCheckerUtils
-                .indexOfPattern(headerBytes, headerBytes.length, HEADER, HEADER.length) > -1) {
+        if (ImageFormatCheckerUtils.startsWithPattern(headerBytes, possibleHeaderTag)
+            && ImageFormatCheckerUtils.indexOfPattern(
+                    headerBytes, headerBytes.length, HEADER, HEADER.length)
+                > -1) {
           return SVG_FORMAT;
         }
       }
@@ -107,9 +107,7 @@ public class SvgDecoderExample {
     }
   }
 
-  /**
-   * Decodes a SVG_FORMAT image
-   */
+  /** Decodes a SVG_FORMAT image */
   public static class SvgDecoder implements ImageDecoder {
 
     @Override
@@ -128,9 +126,7 @@ public class SvgDecoderExample {
     }
   }
 
-  /**
-   * SVG drawable factory that creates {@link PictureDrawable}s for SVG images.
-   */
+  /** SVG drawable factory that creates {@link PictureDrawable}s for SVG images. */
   public static class SvgDrawableFactory implements DrawableFactory {
 
     @Override

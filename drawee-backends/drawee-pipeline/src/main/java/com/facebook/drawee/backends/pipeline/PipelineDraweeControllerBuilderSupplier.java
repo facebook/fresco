@@ -18,8 +18,8 @@ import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import java.util.Set;
 import javax.annotation.Nullable;
 
-public class PipelineDraweeControllerBuilderSupplier implements
-    Supplier<PipelineDraweeControllerBuilder> {
+public class PipelineDraweeControllerBuilderSupplier
+    implements Supplier<PipelineDraweeControllerBuilder> {
 
   private final Context mContext;
   private final ImagePipeline mImagePipeline;
@@ -32,8 +32,7 @@ public class PipelineDraweeControllerBuilderSupplier implements
   }
 
   public PipelineDraweeControllerBuilderSupplier(
-      Context context,
-      @Nullable DraweeConfig draweeConfig) {
+      Context context, @Nullable DraweeConfig draweeConfig) {
     this(context, ImagePipelineFactory.getInstance(), draweeConfig);
   }
 
@@ -63,12 +62,8 @@ public class PipelineDraweeControllerBuilderSupplier implements
         imagePipelineFactory.getAnimatedDrawableFactory(context),
         UiThreadImmediateExecutorService.getInstance(),
         mImagePipeline.getBitmapMemoryCache(),
-        draweeConfig != null
-            ? draweeConfig.getCustomDrawableFactories()
-            : null,
-        draweeConfig != null
-            ? draweeConfig.getDebugOverlayEnabledSupplier()
-            : null);
+        draweeConfig != null ? draweeConfig.getCustomDrawableFactories() : null,
+        draweeConfig != null ? draweeConfig.getDebugOverlayEnabledSupplier() : null);
     mBoundControllerListeners = boundControllerListeners;
 
     mDefaultImagePerfDataListener =

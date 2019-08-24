@@ -17,9 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Basic tests for GenericByteArrayPool
- */
+/** Basic tests for GenericByteArrayPool */
 @RunWith(RobolectricTestRunner.class)
 public class GenericByteArrayPoolTest {
   private GenericByteArrayPool mPool;
@@ -30,10 +28,11 @@ public class GenericByteArrayPoolTest {
     bucketSizes.put(32, 2);
     bucketSizes.put(64, 1);
     bucketSizes.put(128, 1);
-    mPool = new GenericByteArrayPool(
-        mock(MemoryTrimmableRegistry.class),
-        new PoolParams(128, bucketSizes),
-        mock(PoolStatsTracker.class));
+    mPool =
+        new GenericByteArrayPool(
+            mock(MemoryTrimmableRegistry.class),
+            new PoolParams(128, bucketSizes),
+            mock(PoolStatsTracker.class));
   }
 
   // Test out the alloc method
@@ -45,8 +44,7 @@ public class GenericByteArrayPoolTest {
   }
 
   @Test
-  public void testFree() throws Exception {
-  }
+  public void testFree() throws Exception {}
 
   // tests out the getBucketedSize method
   @Test
@@ -61,7 +59,7 @@ public class GenericByteArrayPoolTest {
     Assert.assertEquals(129, mPool.getBucketedSize(129));
 
     int[] invalidSizes = new int[] {-1, 0};
-    for (int size: invalidSizes) {
+    for (int size : invalidSizes) {
       try {
         mPool.getBucketedSize(size);
         Assert.fail();

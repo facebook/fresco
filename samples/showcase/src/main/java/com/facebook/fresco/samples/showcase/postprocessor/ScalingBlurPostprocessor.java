@@ -45,8 +45,7 @@ public class ScalingBlurPostprocessor extends BasePostprocessor {
 
   @Override
   public CloseableReference<Bitmap> process(
-      Bitmap sourceBitmap,
-      PlatformBitmapFactory bitmapFactory) {
+      Bitmap sourceBitmap, PlatformBitmapFactory bitmapFactory) {
     final CloseableReference<Bitmap> bitmapRef =
         bitmapFactory.createBitmap(
             sourceBitmap.getWidth() / mScaleRatio, sourceBitmap.getHeight() / mScaleRatio);

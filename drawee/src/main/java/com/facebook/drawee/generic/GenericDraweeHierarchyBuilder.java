@@ -22,9 +22,9 @@ import javax.annotation.Nullable;
 /**
  * Class to construct a {@link GenericDraweeHierarchy}.
  *
- * <p/> Drawables must not be reused by multiple hierarchies. Each hierarchy needs to have its own
- * drawable instances. Since this builder does not do deep copies of the input parameters, it is
- * the caller's responsibility to pass a different drawable instances for each hierarchy built.
+ * <p>Drawables must not be reused by multiple hierarchies. Each hierarchy needs to have its own
+ * drawable instances. Since this builder does not do deep copies of the input parameters, it is the
+ * caller's responsibility to pass a different drawable instances for each hierarchy built.
  * Likewise, hierarchies must not be reused by multiple views. Each view needs to have its own
  * instance of a hierarchy. The caller is responsible for building a new hierarchy for each view.
  */
@@ -74,9 +74,7 @@ public class GenericDraweeHierarchyBuilder {
     return new GenericDraweeHierarchyBuilder(resources);
   }
 
-  /**
-   * Initializes this builder to its defaults.
-   */
+  /** Initializes this builder to its defaults. */
   private void init() {
     mFadeDuration = DEFAULT_FADE_DURATION;
 
@@ -128,7 +126,7 @@ public class GenericDraweeHierarchyBuilder {
   /**
    * Sets the duration of the fade animation.
    *
-   * If not set, the default value of 300ms will be used.
+   * <p>If not set, the default value of 300ms will be used.
    *
    * @param fadeDuration duration in milliseconds
    * @return modified instance of this builder
@@ -138,9 +136,7 @@ public class GenericDraweeHierarchyBuilder {
     return this;
   }
 
-  /**
-   * Gets the duration of the fade animation.
-   */
+  /** Gets the duration of the fade animation. */
   public int getFadeDuration() {
     return mFadeDuration;
   }
@@ -148,8 +144,8 @@ public class GenericDraweeHierarchyBuilder {
   /**
    * Sets the desired aspect ratio.
    *
-   * Note, the hierarchy itself cannot enforce the aspect ratio.
-   * This is merely a suggestion to the view if it supports it.
+   * <p>Note, the hierarchy itself cannot enforce the aspect ratio. This is merely a suggestion to
+   * the view if it supports it.
    *
    * @param desiredAspectRatio the desired aspect ratio
    * @return modified instance of this builder
@@ -159,9 +155,7 @@ public class GenericDraweeHierarchyBuilder {
     return this;
   }
 
-  /**
-   * Gets the desired aspect ratio.
-   */
+  /** Gets the desired aspect ratio. */
   public float getDesiredAspectRatio() {
     return mDesiredAspectRatio;
   }
@@ -188,9 +182,7 @@ public class GenericDraweeHierarchyBuilder {
     return this;
   }
 
-  /**
-   * Gets the placeholder image.
-   */
+  /** Gets the placeholder image. */
   public @Nullable Drawable getPlaceholderImage() {
     return mPlaceholderImage;
   }
@@ -264,9 +256,7 @@ public class GenericDraweeHierarchyBuilder {
     return this;
   }
 
-  /**
-   * Gets the retry image.
-   */
+  /** Gets the retry image. */
   public @Nullable Drawable getRetryImage() {
     return mRetryImage;
   }
@@ -340,9 +330,7 @@ public class GenericDraweeHierarchyBuilder {
     return this;
   }
 
-  /**
-   * Gets the failure image.
-   */
+  /** Gets the failure image. */
   public @Nullable Drawable getFailureImage() {
     return mFailureImage;
   }
@@ -416,9 +404,7 @@ public class GenericDraweeHierarchyBuilder {
     return this;
   }
 
-  /**
-   * Gets the progress bar image.
-   */
+  /** Gets the progress bar image. */
   public @Nullable Drawable getProgressBarImage() {
     return mProgressBarImage;
   }
@@ -493,10 +479,10 @@ public class GenericDraweeHierarchyBuilder {
   /**
    * Sets the focus point for the actual image.
    *
-   * If a focus point aware scale type is used (e.g. FOCUS_CROP), the focus point of the image
-   * will be attempted to be centered within a view.
-   * Each coordinate is a real number in [0, 1] range, in the coordinate system where top-left
-   * corner of the image corresponds to (0, 0) and the bottom-right corner corresponds to (1, 1).
+   * <p>If a focus point aware scale type is used (e.g. FOCUS_CROP), the focus point of the image
+   * will be attempted to be centered within a view. Each coordinate is a real number in [0, 1]
+   * range, in the coordinate system where top-left corner of the image corresponds to (0, 0) and
+   * the bottom-right corner corresponds to (1, 1).
    *
    * @param focusPoint focus point of the image
    * @return modified instance of this builder
@@ -506,9 +492,7 @@ public class GenericDraweeHierarchyBuilder {
     return this;
   }
 
-  /**
-   * Gets the focus point for the actual image.
-   */
+  /** Gets the focus point for the actual image. */
   public @Nullable PointF getActualImageFocusPoint() {
     return mActualImageFocusPoint;
   }
@@ -519,14 +503,13 @@ public class GenericDraweeHierarchyBuilder {
    * @param colorFilter color filter to be set
    * @return modified instance of this builder
    */
-  public GenericDraweeHierarchyBuilder setActualImageColorFilter(@Nullable ColorFilter colorFilter) {
+  public GenericDraweeHierarchyBuilder setActualImageColorFilter(
+      @Nullable ColorFilter colorFilter) {
     mActualImageColorFilter = colorFilter;
     return this;
   }
 
-  /**
-   * Gets the color filter for the actual image.
-   */
+  /** Gets the color filter for the actual image. */
   public @Nullable ColorFilter getActualImageColorFilter() {
     return mActualImageColorFilter;
   }
@@ -542,9 +525,7 @@ public class GenericDraweeHierarchyBuilder {
     return this;
   }
 
-  /**
-   * Gets the background.
-   */
+  /** Gets the background. */
   public @Nullable Drawable getBackground() {
     return mBackground;
   }
@@ -552,7 +533,7 @@ public class GenericDraweeHierarchyBuilder {
   /**
    * Sets the overlays.
    *
-   * Overlays are drawn in list order after the backgrounds and the rest of the hierarchy. The
+   * <p>Overlays are drawn in list order after the backgrounds and the rest of the hierarchy. The
    * last overlay will be drawn at the top.
    *
    * @param overlays overlay drawables
@@ -578,9 +559,7 @@ public class GenericDraweeHierarchyBuilder {
     return this;
   }
 
-  /**
-   * Gets the overlays.
-   */
+  /** Gets the overlays. */
   public @Nullable List<Drawable> getOverlays() {
     return mOverlays;
   }
@@ -596,15 +575,13 @@ public class GenericDraweeHierarchyBuilder {
       mPressedStateOverlay = null;
     } else {
       StateListDrawable stateListDrawable = new StateListDrawable();
-      stateListDrawable.addState(new int[]{android.R.attr.state_pressed}, drawable);
+      stateListDrawable.addState(new int[] {android.R.attr.state_pressed}, drawable);
       mPressedStateOverlay = stateListDrawable;
     }
     return this;
   }
 
-  /**
-   * Gets the overlay for pressed state.
-   */
+  /** Gets the overlay for pressed state. */
   public @Nullable Drawable getPressedStateOverlay() {
     return mPressedStateOverlay;
   }
@@ -620,9 +597,7 @@ public class GenericDraweeHierarchyBuilder {
     return this;
   }
 
-  /**
-   * Gets the rounding params.
-   */
+  /** Gets the rounding params. */
   @Nullable
   public RoundingParams getRoundingParams() {
     return mRoundingParams;
@@ -636,9 +611,7 @@ public class GenericDraweeHierarchyBuilder {
     }
   }
 
-  /**
-   * Builds the hierarchy.
-   */
+  /** Builds the hierarchy. */
   public GenericDraweeHierarchy build() {
     validate();
     return new GenericDraweeHierarchy(this);

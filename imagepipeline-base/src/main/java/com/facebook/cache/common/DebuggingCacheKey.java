@@ -30,9 +30,7 @@ public class DebuggingCacheKey extends SimpleCacheKey {
     return mCallerContext;
   }
 
-  /**
-   * Original URI the image was fetched from.
-   */
+  /** Original URI the image was fetched from. */
   public Uri getSourceUri() {
     return mSourceUri;
   }

@@ -214,6 +214,7 @@ public class ImagePipelineExperiments {
 
     /**
      * If true we cancel decoding jobs when the related request has been cancelled
+     *
      * @param decodeCancellationEnabled If true the decoding of cancelled requests are cancelled
      * @return The Builder itself for chaining
      */
@@ -229,8 +230,7 @@ public class ImagePipelineExperiments {
       return mConfigBuilder;
     }
 
-    public ImagePipelineConfig.Builder setWebpBitmapFactory(
-        WebpBitmapFactory webpBitmapFactory) {
+    public ImagePipelineConfig.Builder setWebpBitmapFactory(WebpBitmapFactory webpBitmapFactory) {
       mWebpBitmapFactory = webpBitmapFactory;
       return mConfigBuilder;
     }
@@ -313,7 +313,8 @@ public class ImagePipelineExperiments {
       return mConfigBuilder;
     }
 
-    public ImagePipelineConfig.Builder setSuppressBitmapPrefetchingSupplier(Supplier<Boolean> suppressBitmapPrefetchingSupplier) {
+    public ImagePipelineConfig.Builder setSuppressBitmapPrefetchingSupplier(
+        Supplier<Boolean> suppressBitmapPrefetchingSupplier) {
       mSuppressBitmapPrefetchingSupplier = suppressBitmapPrefetchingSupplier;
       return mConfigBuilder;
     }

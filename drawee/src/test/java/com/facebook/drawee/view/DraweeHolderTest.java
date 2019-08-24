@@ -183,15 +183,12 @@ public class DraweeHolderTest {
     verify(mController, never()).onTouchEvent(any(MotionEvent.class));
   }
 
-  /** There are 8 possible state transitions with two variables
-   * 1. (visible, unattached)   -> (visible, attached)
-   * 2. (visible, attached)     -> (invisible, attached)
-   * 3. (invisible, attached)   -> (invisible, unattached)
-   * 4. (invisible, unattached) -> (visible, unattached)
-   * 5. (visible, unattached)   -> (invisible, unattached)
-   * 6. (invisible, unattached) -> (invisible, attached)
-   * 7. (invisible, attached)   -> (visible, attached)
-   * 8. (visible, attached)     -> (visible, unattached)
+  /**
+   * There are 8 possible state transitions with two variables 1. (visible, unattached) -> (visible,
+   * attached) 2. (visible, attached) -> (invisible, attached) 3. (invisible, attached) ->
+   * (invisible, unattached) 4. (invisible, unattached) -> (visible, unattached) 5. (visible,
+   * unattached) -> (invisible, unattached) 6. (invisible, unattached) -> (invisible, attached) 7.
+   * (invisible, attached) -> (visible, attached) 8. (visible, attached) -> (visible, unattached)
    */
   @Test
   public void testVisibilityStateTransitions() {

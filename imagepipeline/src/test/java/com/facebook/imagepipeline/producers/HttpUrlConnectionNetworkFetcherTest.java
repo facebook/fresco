@@ -70,22 +70,26 @@ public class HttpUrlConnectionNetworkFetcherTest {
     URL mockUrl = PowerMockito.mock(URL.class);
     PowerMockito.whenNew(URL.class).withAnyArguments().thenReturn(mockUrl);
 
-    PowerMockito.when(mockUrl.openConnection()).then(new Answer<URLConnection>() {
-      @Override
-      public URLConnection answer(InvocationOnMock invocation) throws Throwable {
-        return mConnectionsQueue.poll();
-      }
-    });
+    PowerMockito.when(mockUrl.openConnection())
+        .then(
+            new Answer<URLConnection>() {
+              @Override
+              public URLConnection answer(InvocationOnMock invocation) throws Throwable {
+                return mConnectionsQueue.poll();
+              }
+            });
   }
 
   private void mockUriParse() {
     PowerMockito.mockStatic(Uri.class);
-    PowerMockito.when(Uri.parse(anyString())).then(new Answer<Uri>() {
-      @Override
-      public Uri answer(InvocationOnMock invocation) throws Throwable {
-        return mockUri((String) invocation.getArguments()[0]);
-      }
-    });
+    PowerMockito.when(Uri.parse(anyString()))
+        .then(
+            new Answer<Uri>() {
+              @Override
+              public Uri answer(InvocationOnMock invocation) throws Throwable {
+                return mockUri((String) invocation.getArguments()[0]);
+              }
+            });
   }
 
   private void mockUriWithAppendedPath() {
@@ -102,23 +106,27 @@ public class HttpUrlConnectionNetworkFetcherTest {
   private Uri mockUri(final String url) {
     Uri mockUri = mock(Uri.class);
     when(mockUri.toString()).thenReturn(url);
-    when(mockUri.getScheme()).then(new Answer<String>() {
-      @Override
-      public String answer(InvocationOnMock invocation) throws Throwable {
-        return url.substring(0, url.indexOf(':'));
-      }
-    });
+    when(mockUri.getScheme())
+        .then(
+            new Answer<String>() {
+              @Override
+              public String answer(InvocationOnMock invocation) throws Throwable {
+                return url.substring(0, url.indexOf(':'));
+              }
+            });
     return mockUri;
   }
 
   private void mockFetchState() {
     when(mMockFetchState.getContext()).thenReturn(mMockProducerContext);
-    when(mMockFetchState.getUri()).then(new Answer<Uri>() {
-      @Override
-      public Uri answer(InvocationOnMock invocation) throws Throwable {
-        return mockUri(INITIAL_TEST_URL);
-      }
-    });
+    when(mMockFetchState.getUri())
+        .then(
+            new Answer<Uri>() {
+              @Override
+              public Uri answer(InvocationOnMock invocation) throws Throwable {
+                return mockUri(INITIAL_TEST_URL);
+              }
+            });
   }
 
   @Test
@@ -253,5 +261,4 @@ public class HttpUrlConnectionNetworkFetcherTest {
   private void runFetch() {
     mFetcher.fetchSync(mMockFetchState, mMockCallback);
   }
-
 }

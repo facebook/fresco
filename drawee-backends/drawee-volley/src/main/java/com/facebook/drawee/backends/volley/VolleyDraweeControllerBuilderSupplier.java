@@ -15,42 +15,34 @@ import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.ControllerListener;
 import java.util.Set;
 
-/**
- * Supplier of Volley Drawee controller builders.
- */
-public class VolleyDraweeControllerBuilderSupplier implements
-    Supplier<VolleyDraweeControllerBuilder> {
+/** Supplier of Volley Drawee controller builders. */
+public class VolleyDraweeControllerBuilderSupplier
+    implements Supplier<VolleyDraweeControllerBuilder> {
 
   private final Context mContext;
   private final ImageLoader mImageLoader;
   private final VolleyDraweeControllerFactory mVolleyDraweeControllerFactory;
   private final Set<ControllerListener> mBoundControllerListeners;
 
-  public VolleyDraweeControllerBuilderSupplier(
-      Context context,
-      ImageLoader imageLoader) {
+  public VolleyDraweeControllerBuilderSupplier(Context context, ImageLoader imageLoader) {
     this(context, imageLoader, null);
   }
 
   public VolleyDraweeControllerBuilderSupplier(
-      Context context,
-      ImageLoader imageLoader,
-      Set<ControllerListener> boundControllerListeners) {
+      Context context, ImageLoader imageLoader, Set<ControllerListener> boundControllerListeners) {
     mContext = context;
     mImageLoader = imageLoader;
-    mVolleyDraweeControllerFactory = new VolleyDraweeControllerFactory(
-        context.getResources(),
-        DeferredReleaser.getInstance(),
-        UiThreadImmediateExecutorService.getInstance());
+    mVolleyDraweeControllerFactory =
+        new VolleyDraweeControllerFactory(
+            context.getResources(),
+            DeferredReleaser.getInstance(),
+            UiThreadImmediateExecutorService.getInstance());
     mBoundControllerListeners = boundControllerListeners;
   }
 
   @Override
   public VolleyDraweeControllerBuilder get() {
     return new VolleyDraweeControllerBuilder(
-        mContext,
-        mImageLoader,
-        mVolleyDraweeControllerFactory,
-        mBoundControllerListeners);
+        mContext, mImageLoader, mVolleyDraweeControllerFactory, mBoundControllerListeners);
   }
 }

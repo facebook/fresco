@@ -20,8 +20,8 @@ import com.facebook.common.internal.Preconditions;
 import javax.annotation.Nullable;
 
 /**
- * A Drawable that contains an array of other Drawables (layers). These are drawn in array order,
- * so the element with the largest index will be drawn on top.
+ * A Drawable that contains an array of other Drawables (layers). These are drawn in array order, so
+ * the element with the largest index will be drawn on top.
  *
  * <p>Similar to android's LayerDrawable but it doesn't support adding/removing layers dynamically.
  */
@@ -48,6 +48,7 @@ public class ArrayDrawable extends Drawable
 
   /**
    * Constructs a new layer drawable.
+   *
    * @param layers the layers that this drawable displays
    */
   public ArrayDrawable(Drawable[] layers) {
@@ -61,6 +62,7 @@ public class ArrayDrawable extends Drawable
 
   /**
    * Gets the number of layers.
+   *
    * @return number of layers
    */
   public int getNumberOfLayers() {
@@ -69,6 +71,7 @@ public class ArrayDrawable extends Drawable
 
   /**
    * Gets the drawable at the specified index.
+   *
    * @param index index of drawable to get
    * @return drawable at the specified index
    */
@@ -101,7 +104,6 @@ public class ArrayDrawable extends Drawable
     }
     return oldDrawable;
   }
-
 
   @Override
   public int getIntrinsicWidth() {
@@ -287,9 +289,7 @@ public class ArrayDrawable extends Drawable
     return changed;
   }
 
-  /**
-   * Gets the {@code DrawableParent} for index.
-   */
+  /** Gets the {@code DrawableParent} for index. */
   public DrawableParent getDrawableParentForIndex(int index) {
     Preconditions.checkArgument(index >= 0);
     Preconditions.checkArgument(index < mDrawableParents.length);
@@ -313,10 +313,7 @@ public class ArrayDrawable extends Drawable
     };
   }
 
-  /**
-   * Drawable.Callback methods
-   */
-
+  /** Drawable.Callback methods */
   @Override
   public void invalidateDrawable(Drawable who) {
     invalidateSelf();
@@ -332,18 +329,13 @@ public class ArrayDrawable extends Drawable
     unscheduleSelf(what);
   }
 
-  /**
-   * TransformationCallbackSetter method
-   */
+  /** TransformationCallbackSetter method */
   @Override
   public void setTransformCallback(TransformCallback transformCallback) {
     mTransformCallback = transformCallback;
   }
 
-  /**
-   * TransformationCallback methods
-   */
-
+  /** TransformationCallback methods */
   @Override
   public void getTransform(Matrix transform) {
     if (mTransformCallback != null) {

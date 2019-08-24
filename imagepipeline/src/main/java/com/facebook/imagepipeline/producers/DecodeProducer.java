@@ -43,7 +43,7 @@ import javax.annotation.concurrent.GuardedBy;
 /**
  * Decodes images.
  *
- * <p/> Progressive JPEGs are decoded progressively as new data arrives.
+ * <p>Progressive JPEGs are decoded progressively as new data arrives.
  */
 public class DecodeProducer implements Producer<CloseableReference<CloseableImage>> {
 
@@ -125,8 +125,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     }
   }
 
-  private abstract class ProgressiveDecoder extends DelegatingConsumer<
-      EncodedImage, CloseableReference<CloseableImage>> {
+  private abstract class ProgressiveDecoder
+      extends DelegatingConsumer<EncodedImage, CloseableReference<CloseableImage>> {
 
     private final String TAG = "ProgressiveDecoder";
     private static final int DECODE_EXCEPTION_MESSAGE_NUM_HEADER_BYTES = 10;
@@ -272,12 +272,14 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       try {
         long queueTime = mJobScheduler.getQueuedTime();
         String requestUri = String.valueOf(mProducerContext.getImageRequest().getSourceUri());
-        int length = isLastAndComplete || isPlaceholder
-            ? encodedImage.getSize()
-            : getIntermediateImageEndOffset(encodedImage);
-        QualityInfo quality = isLastAndComplete || isPlaceholder
-            ? ImmutableQualityInfo.FULL_QUALITY
-            : getQualityInfo();
+        int length =
+            isLastAndComplete || isPlaceholder
+                ? encodedImage.getSize()
+                : getIntermediateImageEndOffset(encodedImage);
+        QualityInfo quality =
+            isLastAndComplete || isPlaceholder
+                ? ImmutableQualityInfo.FULL_QUALITY
+                : getQualityInfo();
 
         mProducerListener.onProducerStart(mProducerContext, PRODUCER_NAME);
         CloseableImage image = null;
@@ -300,29 +302,31 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             status |= Consumer.IS_RESIZING_DONE;
           }
         } catch (Exception e) {
-          Map<String, String> extraMap = getExtraMap(
-              image,
-              queueTime,
-              quality,
-              isLast,
-              imageFormatStr,
-              encodedImageSize,
-              requestedSizeStr,
-              sampleSize);
+          Map<String, String> extraMap =
+              getExtraMap(
+                  image,
+                  queueTime,
+                  quality,
+                  isLast,
+                  imageFormatStr,
+                  encodedImageSize,
+                  requestedSizeStr,
+                  sampleSize);
           mProducerListener.onProducerFinishWithFailure(
               mProducerContext, PRODUCER_NAME, e, extraMap);
           handleError(e);
           return;
         }
-        Map<String, String> extraMap = getExtraMap(
-            image,
-            queueTime,
-            quality,
-            isLast,
-            imageFormatStr,
-            encodedImageSize,
-            requestedSizeStr,
-            sampleSize);
+        Map<String, String> extraMap =
+            getExtraMap(
+                image,
+                queueTime,
+                quality,
+                isLast,
+                imageFormatStr,
+                encodedImageSize,
+                requestedSizeStr,
+                sampleSize);
         mProducerListener.onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, extraMap);
         handleResult(image, status);
       } finally {
@@ -373,16 +377,15 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       }
     }
 
-    /**
-     * @return true if producer is finished
-     */
+    /** @return true if producer is finished */
     private synchronized boolean isFinished() {
       return mIsFinished;
     }
 
     /**
      * Finishes if not already finished and <code>shouldFinish</code> is specified.
-     * <p> If just finished, the intermediate image gets released.
+     *
+     * <p>If just finished, the intermediate image gets released.
      */
     private void maybeFinish(boolean shouldFinish) {
       synchronized (ProgressiveDecoder.this) {
@@ -395,9 +398,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       mJobScheduler.clearJob();
     }
 
-    /**
-     * Notifies consumer of new result and finishes if the result is final.
-     */
+    /** Notifies consumer of new result and finishes if the result is final. */
     private void handleResult(final CloseableImage decodedImage, final @Status int status) {
       CloseableReference<CloseableImage> decodedImageRef =
           mCloseableReferenceFactory.create(decodedImage);
@@ -409,17 +410,13 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       }
     }
 
-    /**
-     * Notifies consumer about the failure and finishes.
-     */
+    /** Notifies consumer about the failure and finishes. */
     private void handleError(Throwable t) {
       maybeFinish(true);
       getConsumer().onFailure(t);
     }
 
-    /**
-     * Notifies consumer about the cancellation and finishes.
-     */
+    /** Notifies consumer about the cancellation and finishes. */
     private void handleCancellation() {
       maybeFinish(true);
       getConsumer().onCancellation();

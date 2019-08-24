@@ -14,8 +14,8 @@ import com.facebook.common.memory.MemoryTrimType;
  * CountingMemoryCache eviction strategy appropriate for caches that store resources off the Dalvik
  * heap.
  *
- * <p>In case of OnCloseToDalvikHeapLimit nothing will be done. In case of other trim types
- * eviction queue of the cache will be cleared.
+ * <p>In case of OnCloseToDalvikHeapLimit nothing will be done. In case of other trim types eviction
+ * queue of the cache will be cleared.
  */
 public class NativeMemoryCacheTrimStrategy implements CountingMemoryCache.CacheTrimStrategy {
   private static final String TAG = "NativeMemoryCacheTrimStrategy";

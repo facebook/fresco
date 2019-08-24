@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Base implementations for the animation framework abstractions.
- */
+/** Base implementations for the animation framework abstractions. */
 package com.facebook.imagepipeline.animated.impl;

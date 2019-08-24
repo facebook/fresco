@@ -19,10 +19,10 @@ import java.util.Map;
 /**
  * Builds ImageUrlsRequest.
  *
- * <p> Use addImageFormat to specify what image types you are interested in
+ * <p>Use addImageFormat to specify what image types you are interested in
  */
 public class ImageUrlsRequestBuilder {
-  final private String mEndpointUrl;
+  private final String mEndpointUrl;
   Map<ImageFormat, ImageSize> mRequestedImageFormats;
 
   public ImageUrlsRequestBuilder(final String endpointUrl) {

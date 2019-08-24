@@ -19,17 +19,13 @@ import javax.annotation.concurrent.ThreadSafe;
  * @param <T>
  */
 @ThreadSafe
-public class ProducerToDataSourceAdapter<T>
-    extends AbstractProducerToDataSourceAdapter<T> {
+public class ProducerToDataSourceAdapter<T> extends AbstractProducerToDataSourceAdapter<T> {
 
   public static <T> DataSource<T> create(
       Producer<T> producer,
       SettableProducerContext settableProducerContext,
       RequestListener2 listener) {
-    return new ProducerToDataSourceAdapter<T>(
-        producer,
-        settableProducerContext,
-        listener);
+    return new ProducerToDataSourceAdapter<T>(producer, settableProducerContext, listener);
   }
 
   private ProducerToDataSourceAdapter(

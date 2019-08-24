@@ -20,8 +20,8 @@ import javax.annotation.Nullable;
 /**
  * DraweeView that uses GenericDraweeHierarchy.
  *
- * The hierarchy can be set either programmatically or inflated from XML.
- * See {@link GenericDraweeHierarchyInflater} for supported XML attributes.
+ * <p>The hierarchy can be set either programmatically or inflated from XML. See {@link
+ * GenericDraweeHierarchyInflater} for supported XML attributes.
  */
 public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
 

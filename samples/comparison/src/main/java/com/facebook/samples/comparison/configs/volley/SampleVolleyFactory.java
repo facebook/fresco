@@ -21,9 +21,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.facebook.samples.comparison.configs.ConfigConstants;
 import java.io.File;
 
-/**
- * Creates singletons of relevant volley classes
- */
+/** Creates singletons of relevant volley classes */
 public class SampleVolleyFactory {
   private static final String VOLLEY_CACHE_DIR = "volley";
 
@@ -34,14 +32,14 @@ public class SampleVolleyFactory {
   public static RequestQueue getRequestQueue(Context context) {
     if (sRequestQueue == null) {
       File cacheDir = new File(context.getCacheDir(), VOLLEY_CACHE_DIR);
-      sRequestQueue = new RequestQueue(
-          new DiskBasedCache(cacheDir, ConfigConstants.MAX_DISK_CACHE_SIZE),
-          new BasicNetwork(new HurlStack()));
+      sRequestQueue =
+          new RequestQueue(
+              new DiskBasedCache(cacheDir, ConfigConstants.MAX_DISK_CACHE_SIZE),
+              new BasicNetwork(new HurlStack()));
       sRequestQueue.start();
     }
     return sRequestQueue;
   }
-
 
   public static VolleyMemoryCache getMemoryCache() {
     if (sMemoryCache == null) {

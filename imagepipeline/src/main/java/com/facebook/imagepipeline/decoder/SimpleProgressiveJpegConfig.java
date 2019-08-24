@@ -16,11 +16,12 @@ import java.util.List;
 /**
  * Simple {@link ProgressiveJpegConfig} with predefined scans to decode and good-enough scan number.
  *
- * <p/> If no specific scans to decode are provided, every scan is allowed to be decoded.
+ * <p>If no specific scans to decode are provided, every scan is allowed to be decoded.
  */
 public class SimpleProgressiveJpegConfig implements ProgressiveJpegConfig {
   public interface DynamicValueConfig {
     List<Integer> getScansToDecode();
+
     int getGoodEnoughScanNumber();
   }
 
@@ -37,10 +38,8 @@ public class SimpleProgressiveJpegConfig implements ProgressiveJpegConfig {
   private final DynamicValueConfig mDynamicValueConfig;
 
   public SimpleProgressiveJpegConfig() {
-    this (new DefaultDynamicValueConfig());
+    this(new DefaultDynamicValueConfig());
   }
-
-
 
   public SimpleProgressiveJpegConfig(DynamicValueConfig dynamicValueConfig) {
     mDynamicValueConfig = Preconditions.checkNotNull(dynamicValueConfig);

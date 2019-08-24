@@ -27,10 +27,10 @@ import javax.annotation.concurrent.ThreadSafe;
 /**
  * Layer of memory cache stack responsible for managing eviction of the the cached items.
  *
- * <p> This layer is responsible for LRU eviction strategy and for maintaining the size boundaries
- * of the cached items.
+ * <p>This layer is responsible for LRU eviction strategy and for maintaining the size boundaries of
+ * the cached items.
  *
- * <p> Only the exclusively owned elements, i.e. the elements not referenced by any client, can be
+ * <p>Only the exclusively owned elements, i.e. the elements not referenced by any client, can be
  * evicted.
  *
  * @param <K> the key type
@@ -39,29 +39,23 @@ import javax.annotation.concurrent.ThreadSafe;
 @ThreadSafe
 public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimmable {
 
-  /**
-   * Interface used to specify the trimming strategy for the cache.
-   */
+  /** Interface used to specify the trimming strategy for the cache. */
   public interface CacheTrimStrategy {
     double getTrimRatio(MemoryTrimType trimType);
   }
 
-  /**
-   * Interface used to observe the state changes of an entry.
-   */
+  /** Interface used to observe the state changes of an entry. */
   public interface EntryStateObserver<K> {
 
     /**
      * Called when the exclusivity status of the entry changes.
      *
-     * <p> The item can be reused if it is exclusively owned by the cache.
+     * <p>The item can be reused if it is exclusively owned by the cache.
      */
     void onExclusivityChanged(K key, boolean isExclusive);
   }
 
-  /**
-   * The internal representation of a key-value pair stored by the cache.
-   */
+  /** The internal representation of a key-value pair stored by the cache. */
   @VisibleForTesting
   static class Entry<K, V> {
     public final K key;
@@ -112,8 +106,10 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
 
   // Cache size constraints.
   private final Supplier<MemoryCacheParams> mMemoryCacheParamsSupplier;
+
   @GuardedBy("this")
   protected MemoryCacheParams mMemoryCacheParams;
+
   @GuardedBy("this")
   private long mLastCacheParamsCheck;
 
@@ -132,7 +128,7 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
 
   private ValueDescriptor<Entry<K, V>> wrapValueDescriptor(
       final ValueDescriptor<V> evictableValueDescriptor) {
-    return new ValueDescriptor<Entry<K,V>>() {
+    return new ValueDescriptor<Entry<K, V>>() {
       @Override
       public int getSizeInBytes(Entry<K, V> entry) {
         return evictableValueDescriptor.getSizeInBytes(entry.valueRef.get());
@@ -143,8 +139,8 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
   /**
    * Caches the given key-value pair.
    *
-   * <p> Important: the client should use the returned reference instead of the original one.
-   * It is the caller's responsibility to close the returned reference once not needed anymore.
+   * <p>Important: the client should use the returned reference instead of the original one. It is
+   * the caller's responsibility to close the returned reference once not needed anymore.
    *
    * @return the new reference to be used, null if the value cannot be cached
    */
@@ -195,15 +191,15 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
   /** Checks the cache constraints to determine whether the new value can be cached or not. */
   private synchronized boolean canCacheNewValue(V value) {
     int newValueSize = mValueDescriptor.getSizeInBytes(value);
-    return (newValueSize <= mMemoryCacheParams.maxCacheEntrySize) &&
-        (getInUseCount() <= mMemoryCacheParams.maxCacheEntries - 1) &&
-        (getInUseSizeInBytes() <= mMemoryCacheParams.maxCacheSize - newValueSize);
+    return (newValueSize <= mMemoryCacheParams.maxCacheEntrySize)
+        && (getInUseCount() <= mMemoryCacheParams.maxCacheEntries - 1)
+        && (getInUseSizeInBytes() <= mMemoryCacheParams.maxCacheSize - newValueSize);
   }
 
   /**
    * Gets the item with the given key, or null if there is no such item.
    *
-   * <p> It is the caller's responsibility to close the returned reference once not needed anymore.
+   * <p>It is the caller's responsibility to close the returned reference once not needed anymore.
    */
   @Nullable
   public CloseableReference<V> get(final K key) {
@@ -264,7 +260,7 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
   /**
    * Gets the value with the given key to be reused, or null if there is no such value.
    *
-   * <p> The item can be reused only if it is exclusively owned by the cache.
+   * <p>The item can be reused only if it is exclusively owned by the cache.
    */
   @Nullable
   public CloseableReference<V> reuse(K key) {
@@ -364,9 +360,7 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
     maybeEvictEntries();
   }
 
-  /**
-   * Updates the cache params (constraints) if enough time has passed since the last update.
-   */
+  /** Updates the cache params (constraints) if enough time has passed since the last update. */
   private synchronized void maybeUpdateCacheParams() {
     if (mLastCacheParamsCheck + mMemoryCacheParams.paramsCheckIntervalMs
         > SystemClock.uptimeMillis()) {
@@ -379,18 +373,20 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
   /**
    * Removes the exclusively owned items until the cache constraints are met.
    *
-   * <p> This method invokes the external {@link CloseableReference#close} method,
-   * so it must not be called while holding the <code>this</code> lock.
+   * <p>This method invokes the external {@link CloseableReference#close} method, so it must not be
+   * called while holding the <code>this</code> lock.
    */
   private void maybeEvictEntries() {
     ArrayList<Entry<K, V>> oldEntries;
     synchronized (this) {
-      int maxCount = Math.min(
-          mMemoryCacheParams.maxEvictionQueueEntries,
-          mMemoryCacheParams.maxCacheEntries - getInUseCount());
-      int maxSize = Math.min(
-          mMemoryCacheParams.maxEvictionQueueSize,
-          mMemoryCacheParams.maxCacheSize - getInUseSizeInBytes());
+      int maxCount =
+          Math.min(
+              mMemoryCacheParams.maxEvictionQueueEntries,
+              mMemoryCacheParams.maxCacheEntries - getInUseCount());
+      int maxSize =
+          Math.min(
+              mMemoryCacheParams.maxEvictionQueueSize,
+              mMemoryCacheParams.maxCacheSize - getInUseSizeInBytes());
       oldEntries = trimExclusivelyOwnedEntries(maxCount, maxSize);
       makeOrphans(oldEntries);
     }
@@ -399,11 +395,11 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
   }
 
   /**
-   * Removes the exclusively owned items until there is at most <code>count</code> of them
-   * and they occupy no more than <code>size</code> bytes.
+   * Removes the exclusively owned items until there is at most <code>count</code> of them and they
+   * occupy no more than <code>size</code> bytes.
    *
-   * <p> This method returns the removed items instead of actually closing them, so it is safe to
-   * be called while holding the <code>this</code> lock.
+   * <p>This method returns the removed items instead of actually closing them, so it is safe to be
+   * called while holding the <code>this</code> lock.
    */
   @Nullable
   private synchronized ArrayList<Entry<K, V>> trimExclusivelyOwnedEntries(int count, int size) {
@@ -425,8 +421,8 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
   /**
    * Notifies the client that the cache no longer tracks the given items.
    *
-   * <p> This method invokes the external {@link CloseableReference#close} method,
-   * so it must not be called while holding the <code>this</code> lock.
+   * <p>This method invokes the external {@link CloseableReference#close} method, so it must not be
+   * called while holding the <code>this</code> lock.
    */
   private void maybeClose(@Nullable ArrayList<Entry<K, V>> oldEntries) {
     if (oldEntries != null) {

@@ -54,8 +54,7 @@ import org.robolectric.RobolectricTestRunner;
 @RunWith(RobolectricTestRunner.class)
 public class AbstractDraweeControllerTest {
 
-  public static class FakeImageInfo {
-  }
+  public static class FakeImageInfo {}
 
   public static class FakeImage {
     private final Drawable mDrawable;
@@ -74,8 +73,7 @@ public class AbstractDraweeControllerTest {
       return mDrawable;
     }
 
-    public @Nullable
-    FakeImageInfo getImageInfo() {
+    public @Nullable FakeImageInfo getImageInfo() {
       return mImageInfo;
     }
 
@@ -147,9 +145,7 @@ public class AbstractDraweeControllerTest {
     }
 
     @Override
-    protected
-    @Nullable
-    FakeImageInfo getImageInfo(FakeImage image) {
+    protected @Nullable FakeImageInfo getImageInfo(FakeImage image) {
       return image.getImageInfo();
     }
 
@@ -161,8 +157,7 @@ public class AbstractDraweeControllerTest {
     }
 
     @Override
-    protected void releaseDrawable(@Nullable Drawable drawable) {
-    }
+    protected void releaseDrawable(@Nullable Drawable drawable) {}
 
     @Override
     public boolean isSameImageRequest(DraweeController other) {
@@ -185,20 +180,19 @@ public class AbstractDraweeControllerTest {
     mDataSourceSupplier = mock(Supplier.class);
     mDraweeHierarchy = mock(SettableDraweeHierarchy.class);
     mUiThreadExecutor = CallerThreadExecutor.getInstance();
-    mController = new FakeDraweeController(
-        mDeferredReleaser,
-        mUiThreadExecutor,
-        mDataSourceSupplier,
-        "id",
-        mCallerContext);
+    mController =
+        new FakeDraweeController(
+            mDeferredReleaser, mUiThreadExecutor, mDataSourceSupplier, "id", mCallerContext);
     doAnswer(
-        new Answer<Object>() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            ((DeferredReleaser.Releasable) invocation.getArguments()[0]).release();
-            return null;
-          }
-        }).when(mDeferredReleaser).scheduleDeferredRelease(any(DeferredReleaser.Releasable.class));
+            new Answer<Object>() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                ((DeferredReleaser.Releasable) invocation.getArguments()[0]).release();
+                return null;
+              }
+            })
+        .when(mDeferredReleaser)
+        .scheduleDeferredRelease(any(DeferredReleaser.Releasable.class));
     when(mDataSourceSupplier.get()).thenReturn(SimpleDataSource.<FakeImage>create());
   }
 
@@ -347,27 +341,29 @@ public class AbstractDraweeControllerTest {
     FakeImage image0 = FakeImage.create(mock(Drawable.class), mock(FakeImageInfo.class));
     finish(dataSource0, image0, outcome);
 
-    ControllerListener listener = new BaseControllerListener<FakeImageInfo>() {
-      @Override
-      public void onIntermediateImageSet(String id, @Nullable FakeImageInfo imageInfo) {
-        initializeAndAttachController("id_AfterIntermediateSet", dataSource);
-      }
-      @Override
-      public void onIntermediateImageFailed(String id, Throwable throwable) {
-        initializeAndAttachController("id_AfterIntermediateFailed", dataSource);
-      }
-      @Override
-      public void onFinalImageSet(
-          String id,
-          @Nullable FakeImageInfo imageInfo,
-          @Nullable Animatable animatable) {
-        initializeAndAttachController("id_AfterFinalSet", dataSource);
-      }
-      @Override
-      public void onFailure(String id, Throwable throwable) {
-        initializeAndAttachController("id_AfterFailure", dataSource);
-      }
-    };
+    ControllerListener listener =
+        new BaseControllerListener<FakeImageInfo>() {
+          @Override
+          public void onIntermediateImageSet(String id, @Nullable FakeImageInfo imageInfo) {
+            initializeAndAttachController("id_AfterIntermediateSet", dataSource);
+          }
+
+          @Override
+          public void onIntermediateImageFailed(String id, Throwable throwable) {
+            initializeAndAttachController("id_AfterIntermediateFailed", dataSource);
+          }
+
+          @Override
+          public void onFinalImageSet(
+              String id, @Nullable FakeImageInfo imageInfo, @Nullable Animatable animatable) {
+            initializeAndAttachController("id_AfterFinalSet", dataSource);
+          }
+
+          @Override
+          public void onFailure(String id, Throwable throwable) {
+            initializeAndAttachController("id_AfterFailure", dataSource);
+          }
+        };
 
     mController.addControllerListener(listener);
     mController.setHierarchy(mDraweeHierarchy);
@@ -432,130 +428,117 @@ public class AbstractDraweeControllerTest {
 
   @Test
   public void testLoadingS_S() {
-    testStreamedLoading(
-        new int[]{SUCCESS},
-        new int[]{SET_IMAGE_P100});
+    testStreamedLoading(new int[] {SUCCESS}, new int[] {SET_IMAGE_P100});
   }
 
   @Test
   public void testLoadingS_F() {
-    testStreamedLoading(
-        new int[]{FAILURE},
-        new int[]{SET_FAILURE});
+    testStreamedLoading(new int[] {FAILURE}, new int[] {SET_FAILURE});
   }
 
   @Test
   public void testLoadingS_LS() {
     testStreamedLoading(
-        new int[]{INTERMEDIATE_LOW, SUCCESS},
-        new int[]{SET_IMAGE_P20, SET_IMAGE_P100});
+        new int[] {INTERMEDIATE_LOW, SUCCESS}, new int[] {SET_IMAGE_P20, SET_IMAGE_P100});
   }
 
   @Test
   public void testLoadingS_GS() {
     testStreamedLoading(
-        new int[]{INTERMEDIATE_GOOD, SUCCESS},
-        new int[]{SET_IMAGE_P50, SET_IMAGE_P100});
+        new int[] {INTERMEDIATE_GOOD, SUCCESS}, new int[] {SET_IMAGE_P50, SET_IMAGE_P100});
   }
 
   @Test
   public void testLoadingS_FS() {
     testStreamedLoading(
-        new int[]{INTERMEDIATE_FAILURE, SUCCESS},
-        new int[]{IGNORE, SET_IMAGE_P100});
+        new int[] {INTERMEDIATE_FAILURE, SUCCESS}, new int[] {IGNORE, SET_IMAGE_P100});
   }
 
   @Test
   public void testLoadingS_LF() {
     testStreamedLoading(
-        new int[]{INTERMEDIATE_LOW, FAILURE},
-        new int[]{SET_IMAGE_P20, SET_FAILURE});
+        new int[] {INTERMEDIATE_LOW, FAILURE}, new int[] {SET_IMAGE_P20, SET_FAILURE});
   }
 
   @Test
   public void testLoadingS_GF() {
     testStreamedLoading(
-        new int[]{INTERMEDIATE_GOOD, FAILURE},
-        new int[]{SET_IMAGE_P50, SET_FAILURE});
+        new int[] {INTERMEDIATE_GOOD, FAILURE}, new int[] {SET_IMAGE_P50, SET_FAILURE});
   }
 
   @Test
   public void testLoadingS_FF() {
-    testStreamedLoading(
-        new int[]{INTERMEDIATE_FAILURE, FAILURE},
-        new int[]{IGNORE, SET_FAILURE});
+    testStreamedLoading(new int[] {INTERMEDIATE_FAILURE, FAILURE}, new int[] {IGNORE, SET_FAILURE});
   }
 
   @Test
   public void testLoadingS_LLS() {
     testStreamedLoading(
-        new int[]{INTERMEDIATE_LOW, INTERMEDIATE_LOW, SUCCESS},
-        new int[]{SET_IMAGE_P20, SET_IMAGE_P20, SET_IMAGE_P100});
+        new int[] {INTERMEDIATE_LOW, INTERMEDIATE_LOW, SUCCESS},
+        new int[] {SET_IMAGE_P20, SET_IMAGE_P20, SET_IMAGE_P100});
   }
 
   @Test
   public void testLoadingS_FLS() {
     testStreamedLoading(
-        new int[]{INTERMEDIATE_FAILURE, INTERMEDIATE_LOW, SUCCESS},
-        new int[]{IGNORE, SET_IMAGE_P20, SET_IMAGE_P100});
+        new int[] {INTERMEDIATE_FAILURE, INTERMEDIATE_LOW, SUCCESS},
+        new int[] {IGNORE, SET_IMAGE_P20, SET_IMAGE_P100});
   }
 
   @Test
   public void testLoadingS_LGS() {
     testStreamedLoading(
-        new int[]{INTERMEDIATE_LOW, INTERMEDIATE_GOOD, SUCCESS},
-        new int[]{SET_IMAGE_P20, SET_IMAGE_P50, SET_IMAGE_P100});
+        new int[] {INTERMEDIATE_LOW, INTERMEDIATE_GOOD, SUCCESS},
+        new int[] {SET_IMAGE_P20, SET_IMAGE_P50, SET_IMAGE_P100});
   }
 
   @Test
   public void testLoadingS_GGS() {
     testStreamedLoading(
         0,
-        new int[]{INTERMEDIATE_GOOD, INTERMEDIATE_GOOD, SUCCESS},
-        new int[]{SET_IMAGE_P50, SET_IMAGE_P50, SET_IMAGE_P100});
+        new int[] {INTERMEDIATE_GOOD, INTERMEDIATE_GOOD, SUCCESS},
+        new int[] {SET_IMAGE_P50, SET_IMAGE_P50, SET_IMAGE_P100});
   }
 
   @Test
   public void testLoadingS_FGS() {
     testStreamedLoading(
-        new int[]{INTERMEDIATE_FAILURE, INTERMEDIATE_GOOD, SUCCESS},
-        new int[]{IGNORE, SET_IMAGE_P50, SET_IMAGE_P100});
+        new int[] {INTERMEDIATE_FAILURE, INTERMEDIATE_GOOD, SUCCESS},
+        new int[] {IGNORE, SET_IMAGE_P50, SET_IMAGE_P100});
   }
 
   @Test
   public void testLoadingS_LFS() {
     testStreamedLoading(
-        new int[]{INTERMEDIATE_LOW, INTERMEDIATE_FAILURE, SUCCESS},
-        new int[]{SET_IMAGE_P20, IGNORE, SET_IMAGE_P100});
+        new int[] {INTERMEDIATE_LOW, INTERMEDIATE_FAILURE, SUCCESS},
+        new int[] {SET_IMAGE_P20, IGNORE, SET_IMAGE_P100});
   }
 
   @Test
   public void testLoadingS_GFS() {
     testStreamedLoading(
-        new int[]{INTERMEDIATE_GOOD, INTERMEDIATE_FAILURE, SUCCESS},
-        new int[]{SET_IMAGE_P50, IGNORE, SET_IMAGE_P100});
+        new int[] {INTERMEDIATE_GOOD, INTERMEDIATE_FAILURE, SUCCESS},
+        new int[] {SET_IMAGE_P50, IGNORE, SET_IMAGE_P100});
   }
 
   @Test
   public void testLoadingS_FFS() {
     testStreamedLoading(
-        new int[]{INTERMEDIATE_FAILURE, INTERMEDIATE_FAILURE, SUCCESS},
-        new int[]{IGNORE, IGNORE, SET_IMAGE_P100});
+        new int[] {INTERMEDIATE_FAILURE, INTERMEDIATE_FAILURE, SUCCESS},
+        new int[] {IGNORE, IGNORE, SET_IMAGE_P100});
   }
 
   /**
    * Tests a single loading scenario.
+   *
    * @param isImmediate whether the result is immediate or not
    * @param outcome outcomes of the submitted request
    * @param dhInteraction expected interaction with drawee hierarchy after the request finishes
    */
   private void testLoading(boolean isImmediate, int outcome, int dhInteraction) {
-    FakeDraweeController controller = new FakeDraweeController(
-        mDeferredReleaser,
-        mUiThreadExecutor,
-        mDataSourceSupplier,
-        "id2",
-        mCallerContext);
+    FakeDraweeController controller =
+        new FakeDraweeController(
+            mDeferredReleaser, mUiThreadExecutor, mDataSourceSupplier, "id2", mCallerContext);
 
     // create image and the corresponding data source
     FakeImage image = FakeImage.create(mock(Drawable.class), mock(FakeImageInfo.class));
@@ -592,6 +575,7 @@ public class AbstractDraweeControllerTest {
 
   /**
    * Tests a suite of loading scenarios with streaming.
+   *
    * @param outcomes outcomes of submitted requests
    * @param dhInteraction expected interaction with drawee hierarchy after each request finishes
    */
@@ -605,17 +589,19 @@ public class AbstractDraweeControllerTest {
 
   /**
    * Tests a single loading scenario with streaming.
+   *
    * @param numImmediate number of immediate results
    * @param outcomes outcomes of submitted requests
    * @param dhInteraction expected interaction with drawee hierarchy after each request finishes
    */
   private void testStreamedLoading(int numImmediate, int[] outcomes, int[] dhInteraction) {
-    FakeDraweeController controller = new FakeDraweeController(
-        mDeferredReleaser,
-        mUiThreadExecutor,
-        mDataSourceSupplier,
-        "id_streamed",
-        mCallerContext);
+    FakeDraweeController controller =
+        new FakeDraweeController(
+            mDeferredReleaser,
+            mUiThreadExecutor,
+            mDataSourceSupplier,
+            "id_streamed",
+            mCallerContext);
 
     int n = outcomes.length;
 

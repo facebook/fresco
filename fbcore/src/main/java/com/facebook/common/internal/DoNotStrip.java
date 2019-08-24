@@ -16,9 +16,8 @@ import java.lang.annotation.Target;
 /**
  * Add this annotation to a class, method, or field to instruct Proguard to not strip it out.
  *
- * This is useful for methods called via reflection that could appear as unused to Proguard.
+ * <p>This is useful for methods called via reflection that could appear as unused to Proguard.
  */
-@Target({ ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.CONSTRUCTOR })
+@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.CONSTRUCTOR})
 @Retention(CLASS)
-public @interface DoNotStrip {
-}
+public @interface DoNotStrip {}

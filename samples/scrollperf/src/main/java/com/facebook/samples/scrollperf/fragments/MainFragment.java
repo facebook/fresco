@@ -71,9 +71,7 @@ public class MainFragment extends Fragment {
 
   @Override
   public View onCreateView(
-      LayoutInflater inflater,
-      ViewGroup container,
-      Bundle savedInstanceState) {
+      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     mConfig = Config.load(getContext());
     // Initialize the SimpleAdapter
     mSimpleAdapter = initializeSimpleAdapter(mConfig);
@@ -134,16 +132,16 @@ public class MainFragment extends Fragment {
     SimpleAdapter<Uri> simpleAdapter = null;
     switch (config.dataSourceType) {
       case Const.LOCAL_RESOURCE_URIS:
-        simpleAdapter = LocalResourceSimpleAdapter
-                .getEagerAdapter(getContext(), R.array.example_uris);
+        simpleAdapter =
+            LocalResourceSimpleAdapter.getEagerAdapter(getContext(), R.array.example_uris);
         break;
       case Const.LOCAL_RESOURCE_WEBP_URIS:
-        simpleAdapter = LocalResourceSimpleAdapter
-            .getEagerAdapter(getContext(), R.array.example_webp_uris);
+        simpleAdapter =
+            LocalResourceSimpleAdapter.getEagerAdapter(getContext(), R.array.example_webp_uris);
         break;
       case Const.LOCAL_RESOURCE_PNG_URIS:
-        simpleAdapter = LocalResourceSimpleAdapter
-            .getEagerAdapter(getContext(), R.array.example_png_uris);
+        simpleAdapter =
+            LocalResourceSimpleAdapter.getEagerAdapter(getContext(), R.array.example_png_uris);
         break;
       case Const.LOCAL_INTERNAL_PHOTO_URIS:
         simpleAdapter = ContentProviderSimpleAdapter.getInternalPhotoSimpleAdapter(getActivity());
@@ -164,28 +162,22 @@ public class MainFragment extends Fragment {
     if (mConfig.infiniteDataSource) {
       mSimpleAdapter = SimpleAdapter.Util.makeItInfinite(mSimpleAdapter);
       if (mDistinctUriCompatible && mConfig.distinctUriDataSource) {
-        mSimpleAdapter = SimpleAdapter.Util
-            .decorate(mSimpleAdapter, DistinctUriDecorator.SINGLETON);
+        mSimpleAdapter =
+            SimpleAdapter.Util.decorate(mSimpleAdapter, DistinctUriDecorator.SINGLETON);
       }
     }
     switch (mConfig.recyclerLayoutType) {
       case Const.RECYCLER_VIEW_LAYOUT_VALUE:
       case Const.GRID_RECYCLER_VIEW_LAYOUT_VALUE:
         // Create the Adapter
-        mDraweeViewAdapter = new DraweeViewAdapter(
-            getContext(),
-            mSimpleAdapter,
-            mConfig,
-            mPerfListener);
+        mDraweeViewAdapter =
+            new DraweeViewAdapter(getContext(), mSimpleAdapter, mConfig, mPerfListener);
         mRecyclerView.setAdapter(mDraweeViewAdapter);
         break;
       case Const.LISTVIEW_LAYOUT_VALUE:
         // Create the Adapter
-        mListAdapter = new DraweeViewListAdapter(
-            getContext(),
-            mSimpleAdapter,
-            mConfig,
-            mPerfListener);
+        mListAdapter =
+            new DraweeViewListAdapter(getContext(), mSimpleAdapter, mConfig, mPerfListener);
         // Set the adapter
         mListView.setAdapter(mListAdapter);
         break;
@@ -200,8 +192,7 @@ public class MainFragment extends Fragment {
       return ContentProviderSimpleAdapter.getExternalPhotoSimpleAdapter(getActivity());
     } else {
       requestPermissions(
-          new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
-          REQUEST_READ_EXTERNAL_ID);
+          new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_READ_EXTERNAL_ID);
     }
     return SimpleAdapter.Util.EMPTY_ADAPTER;
   }
@@ -209,8 +200,8 @@ public class MainFragment extends Fragment {
   @Override
   public void onRequestPermissionsResult(
       int requestCode, String[] permissions, int[] grantResults) {
-    if (requestCode == REQUEST_READ_EXTERNAL_ID &&
-        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    if (requestCode == REQUEST_READ_EXTERNAL_ID
+        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       mSimpleAdapter = ContentProviderSimpleAdapter.getExternalPhotoSimpleAdapter(getActivity());
       updateAdapter();
     }

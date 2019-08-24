@@ -11,13 +11,12 @@
  */
 package com.facebook.samples.scrollperf.util;
 
-/**
- * Class with utility method which spend time
- */
+/** Class with utility method which spend time */
 public final class TimeWaster {
 
   /**
    * A not efficient calculation of the fibonacci sequence
+   *
    * @param n The position for the fibonacci sequence
    * @return The n-th fibonacci number
    */

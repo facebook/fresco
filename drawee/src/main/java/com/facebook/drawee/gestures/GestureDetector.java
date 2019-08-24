@@ -15,14 +15,15 @@ import javax.annotation.Nullable;
 
 /**
  * Gesture detector based on touch events.
- * <p>
- * This class allows us to get click events when we need them, but not to consume them when we are
- * temporarily not interested in them. Doing {@code View.setClickable(true)} will cause for the
+ *
+ * <p>This class allows us to get click events when we need them, but not to consume them when we
+ * are temporarily not interested in them. Doing {@code View.setClickable(true)} will cause for the
  * view always to consume click event, even if {@code View.performClick} is overridden to return
  * false. That means even though our view didn't handle the click event, the event will not get
  * propagated upwards. Result of {@code View.onTouchEvent} is handled correctly though so we use
  * that instead.
- * <p> This class currently only detects clicks.
+ *
+ * <p>This class currently only detects clicks.
  */
 public class GestureDetector {
 
@@ -59,7 +60,8 @@ public class GestureDetector {
 
   /**
    * Resets component.
-   * <p> This will drop any gesture recognition that might currently be in progress.
+   *
+   * <p>This will drop any gesture recognition that might currently be in progress.
    */
   public void reset() {
     mIsCapturingGesture = false;
@@ -87,8 +89,8 @@ public class GestureDetector {
         mActionDownY = event.getY();
         break;
       case MotionEvent.ACTION_MOVE:
-        if (Math.abs(event.getX() - mActionDownX) > mSingleTapSlopPx ||
-            Math.abs(event.getY() - mActionDownY) > mSingleTapSlopPx) {
+        if (Math.abs(event.getX() - mActionDownX) > mSingleTapSlopPx
+            || Math.abs(event.getY() - mActionDownY) > mSingleTapSlopPx) {
           mIsClickCandidate = false;
         }
         break;
@@ -98,8 +100,8 @@ public class GestureDetector {
         break;
       case MotionEvent.ACTION_UP:
         mIsCapturingGesture = false;
-        if (Math.abs(event.getX() - mActionDownX) > mSingleTapSlopPx ||
-            Math.abs(event.getY() - mActionDownY) > mSingleTapSlopPx) {
+        if (Math.abs(event.getX() - mActionDownX) > mSingleTapSlopPx
+            || Math.abs(event.getY() - mActionDownY) > mSingleTapSlopPx) {
           mIsClickCandidate = false;
         }
         if (mIsClickCandidate) {
@@ -116,5 +118,4 @@ public class GestureDetector {
     }
     return true;
   }
-
 }

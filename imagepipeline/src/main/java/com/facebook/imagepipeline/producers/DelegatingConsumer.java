@@ -6,9 +6,7 @@
  */
 package com.facebook.imagepipeline.producers;
 
-/**
- * Delegating consumer.
- */
+/** Delegating consumer. */
 public abstract class DelegatingConsumer<I, O> extends BaseConsumer<I> {
 
   private final Consumer<O> mConsumer;

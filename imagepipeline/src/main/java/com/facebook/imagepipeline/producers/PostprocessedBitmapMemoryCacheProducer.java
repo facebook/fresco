@@ -18,9 +18,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.Postprocessor;
 import com.facebook.imagepipeline.request.RepeatedPostprocessor;
 
-/**
- * Memory cache producer for the bitmap memory cache.
- */
+/** Memory cache producer for the bitmap memory cache. */
 public class PostprocessedBitmapMemoryCacheProducer
     implements Producer<CloseableReference<CloseableImage>> {
 
@@ -87,9 +85,9 @@ public class PostprocessedBitmapMemoryCacheProducer
     }
   }
 
-  public static class CachedPostprocessorConsumer extends DelegatingConsumer<
-      CloseableReference<CloseableImage>,
-      CloseableReference<CloseableImage>> {
+  public static class CachedPostprocessorConsumer
+      extends DelegatingConsumer<
+          CloseableReference<CloseableImage>, CloseableReference<CloseableImage>> {
 
     private final CacheKey mCacheKey;
     private final boolean mIsRepeatedProcessor;
@@ -111,8 +109,7 @@ public class PostprocessedBitmapMemoryCacheProducer
 
     @Override
     protected void onNewResultImpl(
-        CloseableReference<CloseableImage> newResult,
-        @Status int status) {
+        CloseableReference<CloseableImage> newResult, @Status int status) {
       // ignore invalid intermediate results and forward the null result if last
       if (newResult == null) {
         if (isLast(status)) {
@@ -131,8 +128,7 @@ public class PostprocessedBitmapMemoryCacheProducer
       }
       try {
         getConsumer().onProgressUpdate(1f);
-        getConsumer().onNewResult(
-            (newCachedResult != null) ? newCachedResult : newResult, status);
+        getConsumer().onNewResult((newCachedResult != null) ? newCachedResult : newResult, status);
       } finally {
         CloseableReference.closeSafely(newCachedResult);
       }

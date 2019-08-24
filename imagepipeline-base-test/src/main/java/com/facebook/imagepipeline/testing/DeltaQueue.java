@@ -8,8 +8,8 @@
 package com.facebook.imagepipeline.testing;
 
 /**
- * A queue of nodes sorted by timestamp for the purpose of implementing a scheduled executor.
- * Used for {@link ScheduledQueue}.
+ * A queue of nodes sorted by timestamp for the purpose of implementing a scheduled executor. Used
+ * for {@link ScheduledQueue}.
  *
  * @param <T> the type of node
  */
@@ -180,18 +180,14 @@ public class DeltaQueue<T> {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append(getClass().getSimpleName())
-        .append("[");
+    sb.append(getClass().getSimpleName()).append("[");
 
     Node<T> node = head;
     while (node != null) {
       if (node != head) {
         sb.append(", ");
       }
-      sb.append("+")
-          .append(node.delay)
-          .append(": ")
-          .append(node.value);
+      sb.append("+").append(node.delay).append(": ").append(node.value);
 
       node = node.next;
     }

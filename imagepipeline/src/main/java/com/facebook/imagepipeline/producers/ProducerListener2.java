@@ -13,8 +13,8 @@ import javax.annotation.Nullable;
 /**
  * Instrumentation for Producers.
  *
- * <p>Producer implementations should call these methods when appropriate to notify other
- * components interested in the execution progress.
+ * <p>Producer implementations should call these methods when appropriate to notify other components
+ * interested in the execution progress.
  */
 public interface ProducerListener2 {
 

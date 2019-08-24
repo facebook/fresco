@@ -31,9 +31,10 @@ public class MainActivity extends AppCompatActivity {
     setSupportActionBar(toolbar);
     if (savedInstanceState == null) {
       final MainFragment mainFragment = new MainFragment();
-      getSupportFragmentManager().beginTransaction()
-              .add(R.id.anchor_point, mainFragment, MainFragment.TAG)
-              .commit();
+      getSupportFragmentManager()
+          .beginTransaction()
+          .add(R.id.anchor_point, mainFragment, MainFragment.TAG)
+          .commit();
     }
   }
 
@@ -41,10 +42,11 @@ public class MainActivity extends AppCompatActivity {
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == R.id.action_settings) {
       final SettingsFragment settingsFragment = new SettingsFragment();
-      getSupportFragmentManager().beginTransaction()
-              .replace(R.id.anchor_point, settingsFragment, SettingsFragment.TAG)
-              .addToBackStack(SettingsFragment.TAG)
-              .commit();
+      getSupportFragmentManager()
+          .beginTransaction()
+          .replace(R.id.anchor_point, settingsFragment, SettingsFragment.TAG)
+          .addToBackStack(SettingsFragment.TAG)
+          .commit();
     }
     return super.onOptionsItemSelected(item);
   }

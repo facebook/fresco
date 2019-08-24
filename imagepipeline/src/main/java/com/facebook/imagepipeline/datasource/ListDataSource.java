@@ -21,15 +21,16 @@ import javax.annotation.concurrent.GuardedBy;
 
 /**
  * Data source that wraps number of other data sources and waits until all of them are finished.
- * After that each call to getResult() returns list of final results of wrapped data sources.
- * Caller of getResult() is responsible for closing all each of the results separately.
+ * After that each call to getResult() returns list of final results of wrapped data sources. Caller
+ * of getResult() is responsible for closing all each of the results separately.
  *
- * <p> This data source does not propagate intermediate results.
+ * <p>This data source does not propagate intermediate results.
  *
  * @param <T>
  */
 public class ListDataSource<T> extends AbstractDataSource<List<CloseableReference<T>>> {
   private final DataSource<CloseableReference<T>>[] mDataSources;
+
   @GuardedBy("this")
   private int mFinishedDataSources;
 
@@ -38,16 +39,14 @@ public class ListDataSource<T> extends AbstractDataSource<List<CloseableReferenc
     mFinishedDataSources = 0;
   }
 
-  public static <T> ListDataSource<T> create(
-      DataSource<CloseableReference<T>>... dataSources) {
+  public static <T> ListDataSource<T> create(DataSource<CloseableReference<T>>... dataSources) {
     Preconditions.checkNotNull(dataSources);
     Preconditions.checkState(dataSources.length > 0);
     ListDataSource<T> listDataSource = new ListDataSource<T>(dataSources);
     for (DataSource<CloseableReference<T>> dataSource : dataSources) {
       if (dataSource != null) {
         dataSource.subscribe(
-            listDataSource.new InternalDataSubscriber(),
-            CallerThreadExecutor.getInstance());
+            listDataSource.new InternalDataSubscriber(), CallerThreadExecutor.getInstance());
       }
     }
     return listDataSource;

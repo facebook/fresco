@@ -70,8 +70,7 @@ import org.robolectric.RuntimeEnvironment;
 @PrepareOnlyThisForTest({SystemClock.class})
 public class DiskStorageCacheTest {
 
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
+  @Rule public PowerMockRule rule = new PowerMockRule();
 
   private static final String CACHE_TYPE = "media_test";
 
@@ -129,13 +128,10 @@ public class DiskStorageCacheTest {
   }
 
   private DiskStorageCache createDiskCache(
-      DiskStorage diskStorage,
-      boolean indexPopulateAtStartupEnabled) {
+      DiskStorage diskStorage, boolean indexPopulateAtStartupEnabled) {
     DiskStorageCache.Params diskStorageCacheParams =
         new DiskStorageCache.Params(
-            0,
-            FILE_CACHE_MAX_SIZE_LOW_LIMIT,
-            FILE_CACHE_MAX_SIZE_HIGH_LIMIT);
+            0, FILE_CACHE_MAX_SIZE_LOW_LIMIT, FILE_CACHE_MAX_SIZE_HIGH_LIMIT);
 
     Context context = RuntimeEnvironment.application.getApplicationContext();
 
@@ -182,10 +178,8 @@ public class DiskStorageCacheTest {
     verifyNoMoreInteractions(mCacheEventListener);
   }
 
-  private BinaryResource getResource(
-      DiskStorage storage,
-      final CacheKey key) throws IOException {
-     return storage.getResource(CacheKeyUtil.getFirstResourceId(key), key);
+  private BinaryResource getResource(DiskStorage storage, final CacheKey key) throws IOException {
+    return storage.getResource(CacheKeyUtil.getFirstResourceId(key), key);
   }
 
   private BinaryResource getResource(final CacheKey key) throws IOException {
@@ -197,9 +191,9 @@ public class DiskStorageCacheTest {
   }
 
   /**
-   * Tests size based file eviction of cache files. Also tests that unexpected
-   * files (which are not in the format expected by the cache) do not count
-   * towards the cache size, and are also evicted during both evictions (LRU and Old).
+   * Tests size based file eviction of cache files. Also tests that unexpected files (which are not
+   * in the format expected by the cache) do not count towards the cache size, and are also evicted
+   * during both evictions (LRU and Old).
    *
    * @throws Exception
    */
@@ -337,7 +331,8 @@ public class DiskStorageCacheTest {
     final IOException writeException = new IOException();
     try {
       mCache.insert(
-          key1, new WriterCallback() {
+          key1,
+          new WriterCallback() {
             @Override
             public void write(OutputStream os) throws IOException {
               throw writeException;
@@ -392,8 +387,7 @@ public class DiskStorageCacheTest {
     String resourceId2 = verifyListenerOnWriteSuccessAndGetResourceId(key2, value2Size);
 
     // Increment clock by default expiration time + 1 day
-    when(mClock.now())
-        .thenReturn(cacheExpirationMs + TimeUnit.DAYS.toMillis(1));
+    when(mClock.now()).thenReturn(cacheExpirationMs + TimeUnit.DAYS.toMillis(1));
 
     CacheKey key3 = new SimpleCacheKey("ccc");
     int value3Size = 43;
@@ -401,8 +395,7 @@ public class DiskStorageCacheTest {
     value3[25] = 'c';
     mCache.insert(key3, WriterCallbacks.from(value3));
     long valueAge3 = TimeUnit.HOURS.toMillis(1);
-    when(mClock.now()).thenReturn(
-        cacheExpirationMs+ TimeUnit.DAYS.toMillis(1) + valueAge3);
+    when(mClock.now()).thenReturn(cacheExpirationMs + TimeUnit.DAYS.toMillis(1) + valueAge3);
 
     long oldestEntry = mCache.clearOldEntries(cacheExpirationMs);
     assertEquals(valueAge3, oldestEntry);
@@ -411,8 +404,8 @@ public class DiskStorageCacheTest {
     assertNull(getResource(key1));
     assertNull(getResource(key2));
 
-    String[] resourceIds = new String[] { resourceId1, resourceId2 };
-    long[] itemSizes = new long[] { value1Size, value2Size };
+    String[] resourceIds = new String[] {resourceId1, resourceId2};
+    long[] itemSizes = new long[] {value1Size, value2Size};
     long cacheSizeBeforeEviction = value1Size + value2Size + value3Size;
     verifyListenerOnEviction(
         resourceIds,
@@ -433,16 +426,15 @@ public class DiskStorageCacheTest {
     mCache.insert(key2, WriterCallbacks.from(value2));
 
     // Increment clock by default expiration time + 1 day
-    when(mClock.now())
-        .thenReturn(cacheExpirationMs+ TimeUnit.DAYS.toMillis(1));
+    when(mClock.now()).thenReturn(cacheExpirationMs + TimeUnit.DAYS.toMillis(1));
 
     long oldestEntry = mCache.clearOldEntries(cacheExpirationMs);
     assertEquals(0L, oldestEntry);
   }
 
   /**
-   * Test to make sure that the same item stored with two different versions
-   * of the cache will be stored with two different file names.
+   * Test to make sure that the same item stored with two different versions of the cache will be
+   * stored with two different file names.
    *
    * @throws UnsupportedEncodingException
    */
@@ -466,8 +458,7 @@ public class DiskStorageCacheTest {
     assertNotNull(resource1);
 
     // Set up cache with version == 2
-    DiskStorage storageSupplier2 =
-        createDiskStorage(TESTCACHE_NEXT_VERSION);
+    DiskStorage storageSupplier2 = createDiskStorage(TESTCACHE_NEXT_VERSION);
     DiskStorageCache cache2 = createDiskCache(storageSupplier2, false);
 
     // Write test data to cache 2
@@ -481,25 +472,24 @@ public class DiskStorageCacheTest {
     assertFalse(resource2.equals(resource1));
   }
 
-  /**
-   * Verify that multiple threads can write to the cache at the same time.
-   */
+  /** Verify that multiple threads can write to the cache at the same time. */
   @Test
   public void testConcurrency() throws Exception {
     final CyclicBarrier barrier = new CyclicBarrier(3);
-    WriterCallback writerCallback = new WriterCallback() {
-      @Override
-      public void write(OutputStream os) throws IOException {
-        try {
-          // Both threads will need to hit this barrier. If writing is serialized,
-          // the second thread will never reach here as the first will hold
-          // the write lock forever.
-          barrier.await(10, TimeUnit.SECONDS);
-        } catch (Exception e) {
-          throw new RuntimeException(e);
-        }
-      }
-    };
+    WriterCallback writerCallback =
+        new WriterCallback() {
+          @Override
+          public void write(OutputStream os) throws IOException {
+            try {
+              // Both threads will need to hit this barrier. If writing is serialized,
+              // the second thread will never reach here as the first will hold
+              // the write lock forever.
+              barrier.await(10, TimeUnit.SECONDS);
+            } catch (Exception e) {
+              throw new RuntimeException(e);
+            }
+          }
+        };
     CacheKey key1 = new SimpleCacheKey("concurrent1");
     CacheKey key2 = new SimpleCacheKey("concurrent2");
     Thread t1 = runInsertionInSeparateThread(key1, writerCallback);
@@ -519,19 +509,19 @@ public class DiskStorageCacheTest {
     assertFalse(cache.isEnabled());
   }
 
-  private Thread runInsertionInSeparateThread(final CacheKey key,
-      final WriterCallback callback) {
-    Runnable runnable = new Runnable() {
+  private Thread runInsertionInSeparateThread(final CacheKey key, final WriterCallback callback) {
+    Runnable runnable =
+        new Runnable() {
 
-      @Override
-      public void run() {
-        try {
-          mCache.insert(key, callback);
-        } catch (IOException e) {
-          fail();
-        }
-      }
-    };
+          @Override
+          public void run() {
+            try {
+              mCache.insert(key, callback);
+            } catch (IOException e) {
+              fail();
+            }
+          }
+        };
     Thread thread = new Thread(runnable);
     thread.setDaemon(true);
     thread.start();
@@ -696,10 +686,7 @@ public class DiskStorageCacheTest {
     mCacheEventListenerInOrder.verify(mCacheEventListener).onHit(cacheEventCaptor.capture());
 
     for (CacheEvent event : cacheEventCaptor.getAllValues()) {
-      CacheEventAssert.assertThat(event)
-          .isNotNull()
-          .hasCacheKey(key)
-          .hasResourceId(resourceId);
+      CacheEventAssert.assertThat(event).isNotNull().hasCacheKey(key).hasResourceId(resourceId);
     }
   }
 
@@ -708,27 +695,23 @@ public class DiskStorageCacheTest {
     mCacheEventListenerInOrder.verify(mCacheEventListener).onMiss(cacheEventCaptor.capture());
 
     for (CacheEvent event : cacheEventCaptor.getAllValues()) {
-      CacheEventAssert.assertThat(event)
-          .isNotNull()
-          .hasCacheKey(key);
+      CacheEventAssert.assertThat(event).isNotNull().hasCacheKey(key);
     }
   }
 
   private void verifyListenerOnWriteAttempt(CacheKey key) {
     ArgumentCaptor<CacheEvent> cacheEventCaptor = ArgumentCaptor.forClass(CacheEvent.class);
-    mCacheEventListenerInOrder.verify(mCacheEventListener)
+    mCacheEventListenerInOrder
+        .verify(mCacheEventListener)
         .onWriteAttempt(cacheEventCaptor.capture());
 
-    CacheEventAssert.assertThat(cacheEventCaptor.getValue())
-        .isNotNull()
-        .hasCacheKey(key);
+    CacheEventAssert.assertThat(cacheEventCaptor.getValue()).isNotNull().hasCacheKey(key);
   }
 
-  private String verifyListenerOnWriteSuccessAndGetResourceId(
-      CacheKey key,
-      long itemSize) {
+  private String verifyListenerOnWriteSuccessAndGetResourceId(CacheKey key, long itemSize) {
     ArgumentCaptor<CacheEvent> cacheEventCaptor = ArgumentCaptor.forClass(CacheEvent.class);
-    mCacheEventListenerInOrder.verify(mCacheEventListener)
+    mCacheEventListenerInOrder
+        .verify(mCacheEventListener)
         .onWriteSuccess(cacheEventCaptor.capture());
 
     CacheEvent cacheEvent = cacheEventCaptor.getValue();
@@ -743,7 +726,8 @@ public class DiskStorageCacheTest {
 
   private void verifyListenerOnWriteException(CacheKey key, IOException exception) {
     ArgumentCaptor<CacheEvent> cacheEventCaptor = ArgumentCaptor.forClass(CacheEvent.class);
-    mCacheEventListenerInOrder.verify(mCacheEventListener)
+    mCacheEventListenerInOrder
+        .verify(mCacheEventListener)
         .onWriteException(cacheEventCaptor.capture());
 
     CacheEventAssert.assertThat(cacheEventCaptor.getValue())
@@ -754,7 +738,8 @@ public class DiskStorageCacheTest {
 
   private void verifyListenerOnReadException(CacheKey key, IOException exception) {
     ArgumentCaptor<CacheEvent> cacheEventCaptor = ArgumentCaptor.forClass(CacheEvent.class);
-    mCacheEventListenerInOrder.verify(mCacheEventListener)
+    mCacheEventListenerInOrder
+        .verify(mCacheEventListener)
         .onReadException(cacheEventCaptor.capture());
 
     CacheEventAssert.assertThat(cacheEventCaptor.getValue())
@@ -770,7 +755,8 @@ public class DiskStorageCacheTest {
       long cacheSizeBeforeEviction) {
     int numberItems = resourceIds.length;
     ArgumentCaptor<CacheEvent> cacheEventCaptor = ArgumentCaptor.forClass(CacheEvent.class);
-    mCacheEventListenerInOrder.verify(mCacheEventListener, times(numberItems))
+    mCacheEventListenerInOrder
+        .verify(mCacheEventListener, times(numberItems))
         .onEviction(cacheEventCaptor.capture());
 
     boolean[] found = new boolean[numberItems];
@@ -783,15 +769,12 @@ public class DiskStorageCacheTest {
       for (int i = 0; i < numberItems; i++) {
         if (!found[i] && resourceIds[i].equals(event.getResourceId())) {
           found[i] = true;
-          CacheEventAssert.assertThat(event)
-              .hasItemSize(itemSizes[i])
-              .hasEvictionReason(reason);
+          CacheEventAssert.assertThat(event).hasItemSize(itemSizes[i]).hasEvictionReason(reason);
         }
       }
 
       runningCacheSize -= event.getItemSize();
-      CacheEventAssert.assertThat(event)
-          .hasCacheSize(runningCacheSize);
+      CacheEventAssert.assertThat(event).hasCacheSize(runningCacheSize);
     }
 
     // Ensure all resources were found
@@ -812,7 +795,8 @@ public class DiskStorageCacheTest {
     public DiskStorageWithReadFailures(
         int version,
         Supplier<File> baseDirectoryPathSupplier,
-        String baseDirectoryName, CacheErrorLogger cacheErrorLogger) {
+        String baseDirectoryName,
+        CacheErrorLogger cacheErrorLogger) {
       super(version, baseDirectoryPathSupplier, baseDirectoryName, cacheErrorLogger);
     }
 

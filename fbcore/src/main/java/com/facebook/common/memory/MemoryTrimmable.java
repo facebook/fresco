@@ -11,11 +11,8 @@ package com.facebook.common.memory;
  * A class can implement this interface to react to a {@link MemoryTrimmableRegistry}'s request to
  * trim memory.
  */
-
 public interface MemoryTrimmable {
 
-  /**
-   * Trim memory.
-   */
+  /** Trim memory. */
   void trim(MemoryTrimType trimType);
 }

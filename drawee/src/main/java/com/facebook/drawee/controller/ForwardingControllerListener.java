@@ -14,9 +14,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
-/**
- * Listener that forwards controller events to multiple listeners.
- */
+/** Listener that forwards controller events to multiple listeners. */
 @ThreadSafe
 public class ForwardingControllerListener<INFO> implements ControllerListener<INFO> {
   // lint only allows 23 characters in a tag
@@ -24,8 +22,7 @@ public class ForwardingControllerListener<INFO> implements ControllerListener<IN
 
   private final List<ControllerListener<? super INFO>> mListeners = new ArrayList<>(2);
 
-  public ForwardingControllerListener() {
-  }
+  public ForwardingControllerListener() {}
 
   public static <INFO> ForwardingControllerListener<INFO> create() {
     return new ForwardingControllerListener<INFO>();
@@ -83,9 +80,7 @@ public class ForwardingControllerListener<INFO> implements ControllerListener<IN
 
   @Override
   public synchronized void onFinalImageSet(
-      String id,
-      @Nullable INFO imageInfo,
-      @Nullable Animatable animatable) {
+      String id, @Nullable INFO imageInfo, @Nullable Animatable animatable) {
     final int numberOfListeners = mListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       try {

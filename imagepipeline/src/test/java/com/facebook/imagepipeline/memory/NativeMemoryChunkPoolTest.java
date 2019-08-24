@@ -28,8 +28,7 @@ public class NativeMemoryChunkPoolTest extends TestUsingNativeMemoryChunk {
     bucketSizes.put(32, 2);
     bucketSizes.put(64, 1);
     bucketSizes.put(128, 1);
-    mPool = new FakeNativeMemoryChunkPool(
-        new PoolParams(128, bucketSizes));
+    mPool = new FakeNativeMemoryChunkPool(new PoolParams(128, bucketSizes));
   }
 
   // Test out the alloc method
@@ -66,7 +65,7 @@ public class NativeMemoryChunkPoolTest extends TestUsingNativeMemoryChunk {
     Assert.assertEquals(129, mPool.getBucketedSize(129));
 
     int[] invalidSizes = new int[] {-1, 0};
-    for (int size: invalidSizes) {
+    for (int size : invalidSizes) {
       try {
         mPool.getBucketedSize(size);
         Assert.fail();
@@ -79,26 +78,14 @@ public class NativeMemoryChunkPoolTest extends TestUsingNativeMemoryChunk {
   // tests out the getBucketedSizeForValue method
   @Test
   public void testGetBucketedSizeForValue() {
-    Assert.assertEquals(
-        32,
-        mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(32)));
-    Assert.assertEquals(
-        64,
-        mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(64)));
-    Assert.assertEquals(
-        128,
-        mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(128)));
+    Assert.assertEquals(32, mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(32)));
+    Assert.assertEquals(64, mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(64)));
+    Assert.assertEquals(128, mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(128)));
 
     // test with non-bucket values
-    Assert.assertEquals(
-        1,
-        mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(1)));
-    Assert.assertEquals(
-        129,
-        mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(129)));
-    Assert.assertEquals(
-        31,
-        mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(31)));
+    Assert.assertEquals(1, mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(1)));
+    Assert.assertEquals(129, mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(129)));
+    Assert.assertEquals(31, mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(31)));
   }
 
   @Test

@@ -11,9 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests {@link DebugControllerOverlayDrawable}
- */
+/** Tests {@link DebugControllerOverlayDrawable} */
 @RunWith(RobolectricTestRunner.class)
 public class DebugControllerOverlayDrawableTest {
 

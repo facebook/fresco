@@ -20,9 +20,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 import javax.annotation.concurrent.ThreadSafe;
 
-/**
- * Factory implementation for Honeycomb through Kitkat
- */
+/** Factory implementation for Honeycomb through Kitkat */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @ThreadSafe
 public class HoneycombBitmapFactory extends PlatformBitmapFactory {
@@ -47,8 +45,8 @@ public class HoneycombBitmapFactory extends PlatformBitmapFactory {
    *
    * @param width the width of the bitmap
    * @param height the height of the bitmap
-   * @param bitmapConfig the {@link android.graphics.Bitmap.Config}
-   * used to create the decoded Bitmap
+   * @param bitmapConfig the {@link android.graphics.Bitmap.Config} used to create the decoded
+   *     Bitmap
    * @return a reference to the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
@@ -56,15 +54,12 @@ public class HoneycombBitmapFactory extends PlatformBitmapFactory {
   @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
   @Override
   public CloseableReference<Bitmap> createBitmapInternal(
-      int width,
-      int height,
-      Bitmap.Config bitmapConfig) {
+      int width, int height, Bitmap.Config bitmapConfig) {
     if (mImmutableBitmapFallback) {
       return createFallbackBitmap(width, height, bitmapConfig);
     }
-    CloseableReference<PooledByteBuffer> jpgRef = mJpegGenerator.generate(
-        (short) width,
-        (short) height);
+    CloseableReference<PooledByteBuffer> jpgRef =
+        mJpegGenerator.generate((short) width, (short) height);
     try {
       EncodedImage encodedImage = new EncodedImage(jpgRef);
       encodedImage.setImageFormat(DefaultImageFormats.JPEG);

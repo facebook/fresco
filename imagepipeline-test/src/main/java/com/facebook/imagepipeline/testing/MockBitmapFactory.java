@@ -13,17 +13,13 @@ import android.graphics.Bitmap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.imageutils.BitmapUtil;
 
-/**
- * Helper class for creating bitmap mocks in tests.
- */
+/** Helper class for creating bitmap mocks in tests. */
 public class MockBitmapFactory {
   public static int DEFAULT_BITMAP_WIDTH = 3;
   public static int DEFAULT_BITMAP_HEIGHT = 4;
   public static int DEFAULT_BITMAP_PIXELS = DEFAULT_BITMAP_WIDTH * DEFAULT_BITMAP_HEIGHT;
-  public static int DEFAULT_BITMAP_SIZE = bitmapSize(
-      DEFAULT_BITMAP_WIDTH,
-      DEFAULT_BITMAP_HEIGHT,
-      Bitmap.Config.ARGB_8888);
+  public static int DEFAULT_BITMAP_SIZE =
+      bitmapSize(DEFAULT_BITMAP_WIDTH, DEFAULT_BITMAP_HEIGHT, Bitmap.Config.ARGB_8888);
 
   public static Bitmap create() {
     return create(DEFAULT_BITMAP_WIDTH, DEFAULT_BITMAP_HEIGHT, Bitmap.Config.ARGB_8888);

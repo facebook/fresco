@@ -11,9 +11,7 @@ import android.graphics.Rect;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 
-/**
- * Assisted provider for {@link AnimatedDrawableBackend}.
- */
+/** Assisted provider for {@link AnimatedDrawableBackend}. */
 public interface AnimatedDrawableBackendProvider {
 
   /**

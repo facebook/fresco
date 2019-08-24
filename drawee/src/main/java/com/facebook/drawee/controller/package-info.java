@@ -6,7 +6,7 @@
  */
 
 /**
- * Abstraction and basic implementation for the Controller which is the
- * component responsible for the integration of Drawee with a specific backend.
+ * Abstraction and basic implementation for the Controller which is the component responsible for
+ * the integration of Drawee with a specific backend.
  */
 package com.facebook.drawee.controller;

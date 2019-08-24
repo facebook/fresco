@@ -16,9 +16,7 @@ import android.net.Uri;
 import androidx.annotation.ArrayRes;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
 
-/**
- * This is the implementation of a SimpleAdapter which reads data from an array resource
- */
+/** This is the implementation of a SimpleAdapter which reads data from an array resource */
 public class LocalResourceSimpleAdapter implements SimpleAdapter<Uri> {
 
   private Uri[] mUris;
@@ -28,14 +26,12 @@ public class LocalResourceSimpleAdapter implements SimpleAdapter<Uri> {
   private final boolean mLazy;
 
   public static LocalResourceSimpleAdapter getLazyAdapter(
-      final Context context,
-      @ArrayRes int arrayId) {
+      final Context context, @ArrayRes int arrayId) {
     return new LocalResourceSimpleAdapter(context, arrayId, true);
   }
 
   public static LocalResourceSimpleAdapter getEagerAdapter(
-      final Context context,
-      @ArrayRes int arrayId) {
+      final Context context, @ArrayRes int arrayId) {
     return new LocalResourceSimpleAdapter(context, arrayId, false);
   }
 

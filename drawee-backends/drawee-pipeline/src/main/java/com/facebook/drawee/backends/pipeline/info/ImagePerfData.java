@@ -167,7 +167,8 @@ public class ImagePerfData {
   }
 
   public long getIntermediateImageLoadTimeMs() {
-    if (getControllerIntermediateImageSetTimeMs() == UNSET || getControllerSubmitTimeMs() == UNSET) {
+    if (getControllerIntermediateImageSetTimeMs() == UNSET
+        || getControllerSubmitTimeMs() == UNSET) {
       return UNSET;
     }
 

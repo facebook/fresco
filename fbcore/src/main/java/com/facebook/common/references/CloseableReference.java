@@ -7,15 +7,13 @@
 
 package com.facebook.common.references;
 
-import androidx.annotation.IntDef;
 import android.graphics.Bitmap;
+import androidx.annotation.IntDef;
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.infer.annotation.PropagatesNullable;
-import com.facebook.infer.annotation.SuppressNullFieldAccess;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -124,11 +122,11 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
         @Override
         public void reportLeak(SharedReference<Object> reference, @Nullable Throwable stacktrace) {
           FLog.w(
-                  TAG,
-                  "Finalized without closing: %x %x (type = %s)",
-                  System.identityHashCode(this),
-                  System.identityHashCode(reference),
-                  reference.get().getClass().getName());
+              TAG,
+              "Finalized without closing: %x %x (type = %s)",
+              System.identityHashCode(this),
+              System.identityHashCode(reference),
+              reference.get().getClass().getName());
         }
 
         @Override
@@ -211,7 +209,10 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
    * t is null, this will just return null.
    */
   public static <T> CloseableReference<T> of(
-      @PropagatesNullable T t, ResourceReleaser<T> resourceReleaser, LeakHandler leakHandler, @Nullable Throwable stacktrace) {
+      @PropagatesNullable T t,
+      ResourceReleaser<T> resourceReleaser,
+      LeakHandler leakHandler,
+      @Nullable Throwable stacktrace) {
     if (t == null) {
       return null;
     } else {

@@ -17,7 +17,7 @@ import java.util.Locale;
 import javax.annotation.Nullable;
 
 /**
- * A fast and memory-efficient post processor performing an iterative box blur.  For details see
+ * A fast and memory-efficient post processor performing an iterative box blur. For details see
  * {@link NativeBlurFilter#iterativeBoxBlur(Bitmap, int, int)}.
  */
 public class IterativeBoxBlurPostProcessor extends BasePostprocessor {

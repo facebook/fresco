@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * All the Producer implementation which compose the image pipeline.
- */
+/** All the Producer implementation which compose the image pipeline. */
 package com.facebook.imagepipeline.producers;

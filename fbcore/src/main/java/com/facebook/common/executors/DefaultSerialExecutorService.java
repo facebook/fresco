@@ -23,8 +23,9 @@ public class DefaultSerialExecutorService extends ConstrainedExecutorService
   }
 
   /**
-   * Synchronized override of {@link ConstrainedExecutorService#execute(Runnable)} to
-   * ensure that view of memory is consistent between different threads executing tasks serially.
+   * Synchronized override of {@link ConstrainedExecutorService#execute(Runnable)} to ensure that
+   * view of memory is consistent between different threads executing tasks serially.
+   *
    * @param runnable The task to be executed.
    */
   @Override

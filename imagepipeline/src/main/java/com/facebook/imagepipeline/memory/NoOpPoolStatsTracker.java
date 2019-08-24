@@ -7,14 +7,11 @@
 
 package com.facebook.imagepipeline.memory;
 
-/**
- * Empty implementation of PoolStatsTracker that does not perform any tracking.
- */
+/** Empty implementation of PoolStatsTracker that does not perform any tracking. */
 public class NoOpPoolStatsTracker implements PoolStatsTracker {
   private static NoOpPoolStatsTracker sInstance = null;
 
-  private NoOpPoolStatsTracker() {
-  }
+  private NoOpPoolStatsTracker() {}
 
   public static synchronized NoOpPoolStatsTracker getInstance() {
     if (sInstance == null) {
@@ -24,30 +21,23 @@ public class NoOpPoolStatsTracker implements PoolStatsTracker {
   }
 
   @Override
-  public void setBasePool(BasePool basePool) {
-  }
+  public void setBasePool(BasePool basePool) {}
 
   @Override
-  public void onValueReuse(int bucketedSize) {
-  }
+  public void onValueReuse(int bucketedSize) {}
 
   @Override
-  public void onSoftCapReached() {
-  }
+  public void onSoftCapReached() {}
 
   @Override
-  public void onHardCapReached() {
-  }
+  public void onHardCapReached() {}
 
   @Override
-  public void onAlloc(int size) {
-  }
+  public void onAlloc(int size) {}
 
   @Override
-  public void onFree(int sizeInBytes) {
-  }
+  public void onFree(int sizeInBytes) {}
 
   @Override
-  public void onValueRelease(int sizeInBytes) {
-  }
+  public void onValueRelease(int sizeInBytes) {}
 }

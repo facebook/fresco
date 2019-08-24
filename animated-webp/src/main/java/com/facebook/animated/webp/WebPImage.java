@@ -20,9 +20,8 @@ import java.nio.ByteBuffer;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * A representation of a WebP image. An instance of this class will hold a copy of the encoded
- * data in memory along with the parsed header data. Frames are decoded on demand via
- * {@link WebPFrame}.
+ * A representation of a WebP image. An instance of this class will hold a copy of the encoded data
+ * in memory along with the parsed header data. Frames are decoded on demand via {@link WebPFrame}.
  */
 @ThreadSafe
 @DoNotStrip
@@ -34,8 +33,7 @@ public class WebPImage implements AnimatedImage, AnimatedImageDecoder {
   private long mNativeContext;
 
   @DoNotStrip
-  public WebPImage() {
-  }
+  public WebPImage() {}
 
   /**
    * Constructs the image with the native pointer. This is called by native code.
@@ -58,8 +56,8 @@ public class WebPImage implements AnimatedImage, AnimatedImageDecoder {
   }
 
   /**
-   * Creates a {@link WebPImage} from the specified encoded data. This will throw if it fails
-   * to create. This is meant to be called on a worker thread.
+   * Creates a {@link WebPImage} from the specified encoded data. This will throw if it fails to
+   * create. This is meant to be called on a worker thread.
    *
    * @param source the data to the image (a copy will be made)
    */
@@ -158,27 +156,38 @@ public class WebPImage implements AnimatedImage, AnimatedImageDecoder {
           frame.getYOffset(),
           frame.getWidth(),
           frame.getHeight(),
-          frame.isBlendWithPreviousFrame() ?
-              BlendOperation.BLEND_WITH_PREVIOUS :
-              BlendOperation.NO_BLEND,
-          frame.shouldDisposeToBackgroundColor() ?
-              DisposalMethod.DISPOSE_TO_BACKGROUND :
-              DisposalMethod.DISPOSE_DO_NOT);
+          frame.isBlendWithPreviousFrame()
+              ? BlendOperation.BLEND_WITH_PREVIOUS
+              : BlendOperation.NO_BLEND,
+          frame.shouldDisposeToBackgroundColor()
+              ? DisposalMethod.DISPOSE_TO_BACKGROUND
+              : DisposalMethod.DISPOSE_DO_NOT);
     } finally {
       frame.dispose();
     }
   }
 
   private static native WebPImage nativeCreateFromDirectByteBuffer(ByteBuffer buffer);
+
   private static native WebPImage nativeCreateFromNativeMemory(long nativePtr, int sizeInBytes);
+
   private native int nativeGetWidth();
+
   private native int nativeGetHeight();
+
   private native int nativeGetDuration();
+
   private native int nativeGetFrameCount();
+
   private native int[] nativeGetFrameDurations();
+
   private native int nativeGetLoopCount();
+
   private native WebPFrame nativeGetFrame(int frameNumber);
+
   private native int nativeGetSizeInBytes();
+
   private native void nativeDispose();
+
   private native void nativeFinalize();
 }

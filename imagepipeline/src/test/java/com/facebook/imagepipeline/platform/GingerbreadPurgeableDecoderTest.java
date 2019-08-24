@@ -54,10 +54,9 @@ import org.robolectric.RobolectricTestRunner;
 public class GingerbreadPurgeableDecoderTest {
 
   protected static final Bitmap.Config DEFAULT_BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
-//  protected FlexByteArrayPool mFlexByteArrayPool;
+  //  protected FlexByteArrayPool mFlexByteArrayPool;
 
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
+  @Rule public PowerMockRule rule = new PowerMockRule();
 
   static {
     SoLoader.setInTestMode();
@@ -95,9 +94,7 @@ public class GingerbreadPurgeableDecoderTest {
 
     mockStatic(BitmapFactory.class);
     when(BitmapFactory.decodeFileDescriptor(
-            any(FileDescriptor.class),
-            any(Rect.class),
-            any(BitmapFactory.Options.class)))
+            any(FileDescriptor.class), any(Rect.class), any(BitmapFactory.Options.class)))
         .thenReturn(mBitmap);
 
     mInputBuf = new byte[LENGTH];

@@ -18,9 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Test for {@link DefaultEntryEvictionComparatorSupplierTest}
- */
+/** Test for {@link DefaultEntryEvictionComparatorSupplierTest} */
 @RunWith(RobolectricTestRunner.class)
 public class DefaultEntryEvictionComparatorSupplierTest {
 
@@ -45,5 +43,4 @@ public class DefaultEntryEvictionComparatorSupplierTest {
     when(entry.getTimestamp()).thenReturn(time);
     return entry;
   }
-
 }

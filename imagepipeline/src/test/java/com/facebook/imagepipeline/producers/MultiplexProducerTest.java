@@ -34,22 +34,19 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 /**
- * Checks basic properties of the multiplex producer, that is:
- *   - identical keys should be combined into the same request.
- *   - non-identical keys get their own request.
- *   - requests should only be cancelled if all underlying requests are cancelled.
- *   - requests should be cleared when they finish.
+ * Checks basic properties of the multiplex producer, that is: - identical keys should be combined
+ * into the same request. - non-identical keys get their own request. - requests should only be
+ * cancelled if all underlying requests are cancelled. - requests should be cleared when they
+ * finish.
  *
  * <p>This test happens to use {@link BitmapMemoryCacheKeyMultiplexProducer}. The subclasses are so
  * similar that it's not worth doing a separate test for each one.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class MultiplexProducerTest {
 
-  /**
-   * An extra flag to check we maintain other flags than just whether this is the last result
-   */
+  /** An extra flag to check we maintain other flags than just whether this is the last result */
   private final @Consumer.Status int TEST_FLAG = 1 << 11;
 
   @Mock public CacheKeyFactory mCacheKeyFactory;
@@ -88,33 +85,36 @@ public class MultiplexProducerTest {
         new BitmapMemoryCacheKeyMultiplexProducer(mCacheKeyFactory, mInputProducer);
     mImageRequest1 = mock(ImageRequest.class);
     mImageRequest2 = mock(ImageRequest.class);
-    mProducerContext1 = new SettableProducerContext(
-        mImageRequest1,
-        "id1",
-        mProducerListener,
-        mCallerContext,
-        ImageRequest.RequestLevel.FULL_FETCH,
-        false,
-        true,
-        Priority.MEDIUM);
-    mProducerContext2 = new SettableProducerContext(
-        mImageRequest1,
-        "id2",
-        mProducerListener,
-        mCallerContext,
-        ImageRequest.RequestLevel.FULL_FETCH,
-        false,
-        true,
-        Priority.MEDIUM);
-    mProducerContext3 = new SettableProducerContext(
-        mImageRequest2,
-        "id3",
-        mProducerListener,
-        mCallerContext,
-        ImageRequest.RequestLevel.FULL_FETCH,
-        false,
-        true,
-        Priority.MEDIUM);
+    mProducerContext1 =
+        new SettableProducerContext(
+            mImageRequest1,
+            "id1",
+            mProducerListener,
+            mCallerContext,
+            ImageRequest.RequestLevel.FULL_FETCH,
+            false,
+            true,
+            Priority.MEDIUM);
+    mProducerContext2 =
+        new SettableProducerContext(
+            mImageRequest1,
+            "id2",
+            mProducerListener,
+            mCallerContext,
+            ImageRequest.RequestLevel.FULL_FETCH,
+            false,
+            true,
+            Priority.MEDIUM);
+    mProducerContext3 =
+        new SettableProducerContext(
+            mImageRequest2,
+            "id3",
+            mProducerListener,
+            mCallerContext,
+            ImageRequest.RequestLevel.FULL_FETCH,
+            false,
+            true,
+            Priority.MEDIUM);
     mBitmapMemoryCacheKey1 = mock(BitmapMemoryCacheKey.class);
     mBitmapMemoryCacheKey2 = mock(BitmapMemoryCacheKey.class);
     mConsumer1 = mock(Consumer.class);
@@ -135,21 +135,21 @@ public class MultiplexProducerTest {
         .thenReturn(mBitmapMemoryCacheKey2);
 
     doAnswer(
-        new Answer() {
-          @Override
-          public Void answer(InvocationOnMock invocation) throws Throwable {
-            if (mForwardingConsumer1 == null) {
-              mForwardingConsumer1 = (Consumer) invocation.getArguments()[0];
-              mMultiplexedContext1 =
-                  (BaseProducerContext) invocation.getArguments()[1];
-            } else {
-              mForwardingConsumer2 = (Consumer) invocation.getArguments()[0];
-              mMultiplexedContext2 =
-                  (BaseProducerContext) invocation.getArguments()[1];
-            }
-            return null;
-          }
-        }).when(mInputProducer).produceResults(any(Consumer.class), any(ProducerContext.class));
+            new Answer() {
+              @Override
+              public Void answer(InvocationOnMock invocation) throws Throwable {
+                if (mForwardingConsumer1 == null) {
+                  mForwardingConsumer1 = (Consumer) invocation.getArguments()[0];
+                  mMultiplexedContext1 = (BaseProducerContext) invocation.getArguments()[1];
+                } else {
+                  mForwardingConsumer2 = (Consumer) invocation.getArguments()[0];
+                  mMultiplexedContext2 = (BaseProducerContext) invocation.getArguments()[1];
+                }
+                return null;
+              }
+            })
+        .when(mInputProducer)
+        .produceResults(any(Consumer.class), any(ProducerContext.class));
   }
 
   @Test

@@ -39,7 +39,8 @@ public class WebpBitmapFactoryTest extends TestCase {
     mWebpBitmapFactory = new WebpBitmapFactoryImpl();
     ImagePipelineConfig.Builder configBuilder =
         ImagePipelineConfig.newBuilder(mInstrumentation.getContext())
-            .experiment().setWebpBitmapFactory(mWebpBitmapFactory);
+            .experiment()
+            .setWebpBitmapFactory(mWebpBitmapFactory);
     ImagePipelineFactory.initialize(configBuilder.build());
   }
 
@@ -66,6 +67,7 @@ public class WebpBitmapFactoryTest extends TestCase {
 
   /**
    * Return input stream for jpeg
+   *
    * @return InputStream instance
    */
   private InputStream getTestJpegInputStream() {
@@ -74,6 +76,7 @@ public class WebpBitmapFactoryTest extends TestCase {
 
   /**
    * Return input stream for lossless webp
+   *
    * @return InputStream instance
    */
   private InputStream getTestWebpInputStream() {
@@ -82,10 +85,7 @@ public class WebpBitmapFactoryTest extends TestCase {
 
   @Test
   public void testJpegFallback() throws Throwable {
-    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(
-        getTestJpegInputStream(),
-        null,
-        null);
+    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(getTestJpegInputStream(), null, null);
 
     assertNotNull("Bitmap should not be null", bitmap);
     assertEquals("Width should be decoded properly", 20, bitmap.getWidth());
@@ -99,10 +99,7 @@ public class WebpBitmapFactoryTest extends TestCase {
 
   @Test
   public void testWebpDecodeStream() throws Throwable {
-    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(
-        getTestWebpInputStream(),
-        null,
-        null);
+    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(getTestWebpInputStream(), null, null);
 
     assertNotNull("Bitmap should not be null", bitmap);
     assertEquals("Width should be decoded properly", 20, bitmap.getWidth());
@@ -122,10 +119,7 @@ public class WebpBitmapFactoryTest extends TestCase {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inJustDecodeBounds = true;
 
-    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(
-        getTestWebpInputStream(),
-        null,
-        options);
+    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(getTestWebpInputStream(), null, options);
 
     assertNull("Bitmap should be null", bitmap);
     assertEquals("Width should be decoded properly", 20, options.outWidth);
@@ -142,10 +136,8 @@ public class WebpBitmapFactoryTest extends TestCase {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inBitmap = inBitmap;
 
-    final Bitmap outBitmap = mWebpBitmapFactory.decodeStream(
-        getTestWebpInputStream(),
-        null,
-        options);
+    final Bitmap outBitmap =
+        mWebpBitmapFactory.decodeStream(getTestWebpInputStream(), null, options);
 
     assertNotNull("Bitmap should not be null", outBitmap);
     assertSame("Output bitmap shuold be the same as input bitmap", inBitmap, outBitmap);
@@ -155,11 +147,7 @@ public class WebpBitmapFactoryTest extends TestCase {
   @Test
   public void testByteArrayDecode() throws Throwable {
     byte[] data = ByteStreams.toByteArray(getTestWebpInputStream());
-    final Bitmap bitmap = mWebpBitmapFactory.decodeByteArray(
-        data,
-        0,
-        data.length,
-        null);
+    final Bitmap bitmap = mWebpBitmapFactory.decodeByteArray(data, 0, data.length, null);
 
     testBitmapDefault(bitmap, 20, 20);
   }
@@ -182,10 +170,7 @@ public class WebpBitmapFactoryTest extends TestCase {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inTempStorage = new byte[128 * 1024];
 
-    Bitmap bitmap = mWebpBitmapFactory.decodeStream(
-        getTestWebpInputStream(),
-        null,
-        options);
+    Bitmap bitmap = mWebpBitmapFactory.decodeStream(getTestWebpInputStream(), null, options);
     testBitmapDefault(bitmap, 20, 20);
   }
 
@@ -194,10 +179,7 @@ public class WebpBitmapFactoryTest extends TestCase {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inSampleSize = 2;
 
-    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(
-        getTestWebpInputStream(),
-        null,
-        options);
+    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(getTestWebpInputStream(), null, options);
 
     testBitmapDefault(bitmap, 10, 10);
   }
@@ -206,10 +188,7 @@ public class WebpBitmapFactoryTest extends TestCase {
   public void testOutWidthHeight() throws Throwable {
     BitmapFactory.Options options = new BitmapFactory.Options();
 
-    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(
-        getTestWebpInputStream(),
-        null,
-        options);
+    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(getTestWebpInputStream(), null, options);
 
     assertNotNull("Bitmap should not be null", bitmap);
     assertEquals("Width should be scaled", 20, options.outWidth);
@@ -220,10 +199,7 @@ public class WebpBitmapFactoryTest extends TestCase {
   public void testOutPadding() throws Throwable {
     Rect outPadding = new Rect();
 
-    mWebpBitmapFactory.decodeStream(
-        getTestWebpInputStream(),
-        outPadding,
-        null);
+    mWebpBitmapFactory.decodeStream(getTestWebpInputStream(), outPadding, null);
 
     assertNotNull("Padding rect should not be null", outPadding);
     assertEquals("Padding rect for webp should be not supported)", -1, outPadding.top);
@@ -235,10 +211,7 @@ public class WebpBitmapFactoryTest extends TestCase {
   @Test
   public void testWebpFileDescriptorDecode() throws Throwable {
     FileDescriptor fd = getImageFileDescriptor("redsquare.webp");
-    final Bitmap bitmap = mWebpBitmapFactory.decodeFileDescriptor(
-        fd,
-        null,
-        null);
+    final Bitmap bitmap = mWebpBitmapFactory.decodeFileDescriptor(fd, null, null);
 
     testBitmapDefault(bitmap, 20, 20);
   }
@@ -246,10 +219,7 @@ public class WebpBitmapFactoryTest extends TestCase {
   @Test
   public void testJpegFileDescriptorDecode() throws Throwable {
     FileDescriptor fd = getImageFileDescriptor("redsquare.jpg");
-    final Bitmap bitmap = mWebpBitmapFactory.decodeFileDescriptor(
-        fd,
-        null,
-        null);
+    final Bitmap bitmap = mWebpBitmapFactory.decodeFileDescriptor(fd, null, null);
 
     testBitmapDefault(bitmap, 20, 20);
   }
@@ -262,10 +232,7 @@ public class WebpBitmapFactoryTest extends TestCase {
     options.inDensity = 480;
     options.inTargetDensity = 240;
 
-    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(
-        getTestWebpInputStream(),
-        null,
-        options);
+    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(getTestWebpInputStream(), null, options);
 
     testBitmapDefault(bitmap, 10, 10);
   }
@@ -278,10 +245,7 @@ public class WebpBitmapFactoryTest extends TestCase {
     options.inDensity = 480;
     options.inTargetDensity = 240;
 
-    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(
-        getTestWebpInputStream(),
-        null,
-        options);
+    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(getTestWebpInputStream(), null, options);
 
     testBitmapDefault(bitmap, 20, 20);
   }
@@ -294,10 +258,7 @@ public class WebpBitmapFactoryTest extends TestCase {
     options.inDensity = 0;
     options.inTargetDensity = 240;
 
-    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(
-        getTestWebpInputStream(),
-        null,
-        options);
+    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(getTestWebpInputStream(), null, options);
 
     testBitmapDefault(bitmap, 20, 20);
   }

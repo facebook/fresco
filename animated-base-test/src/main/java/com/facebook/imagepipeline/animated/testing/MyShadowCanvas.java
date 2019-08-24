@@ -14,9 +14,7 @@ import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
 import org.robolectric.annotation.RealObject;
 
-/**
- * A shadow of {@link Canvas} that works with the tests in this package.
- */
+/** A shadow of {@link Canvas} that works with the tests in this package. */
 @Implements(Canvas.class)
 public class MyShadowCanvas {
 

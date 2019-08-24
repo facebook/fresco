@@ -29,10 +29,10 @@ import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.datasource.CloseableProducerToDataSourceAdapter;
 import com.facebook.imagepipeline.datasource.ProducerToDataSourceAdapter;
 import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.imagepipeline.listener.ForwardingRequestListener2;
-import com.facebook.imagepipeline.listener.RequestListener2;
 import com.facebook.imagepipeline.listener.ForwardingRequestListener;
+import com.facebook.imagepipeline.listener.ForwardingRequestListener2;
 import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.imagepipeline.listener.RequestListener2;
 import com.facebook.imagepipeline.producers.InternalRequestListener;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
@@ -795,8 +795,7 @@ public class ImagePipeline {
     }
     final RequestListener2 requestListener2 =
         new InternalRequestListener(
-            getRequestListenerForRequest(imageRequest, requestListener),
-            mRequestListener2);
+            getRequestListenerForRequest(imageRequest, requestListener), mRequestListener2);
 
     if (mCallerContextVerifier != null) {
       mCallerContextVerifier.verifyCallerContext(callerContext, false);

@@ -13,13 +13,13 @@ import java.util.List;
 /**
  * A cache key that wraps multiple cache keys.
  *
- * Note: {@code equals} and {@code hashcode} are implemented in a way that two MultiCacheKeys are
+ * <p>Note: {@code equals} and {@code hashcode} are implemented in a way that two MultiCacheKeys are
  * equal if and only if the underlying list of cache keys is equal. That implies AllOf semantics.
  * Unfortunately, it is not possible to implement AnyOf semantics for {@code equals} because the
- * transitivity requirement wouldn't be satisfied. I.e. we would have:
- * {A} = {A, B}, {A, B} = {B}, but {A} != {B}.
+ * transitivity requirement wouldn't be satisfied. I.e. we would have: {A} = {A, B}, {A, B} = {B},
+ * but {A} != {B}.
  *
- * It is fine to use this key with AnyOf semantics, but one should be aware of {@code equals} and
+ * <p>It is fine to use this key with AnyOf semantics, but one should be aware of {@code equals} and
  * {@code hashcode} behavior, and should implement AnyOf logic manually.
  */
 public class MultiCacheKey implements CacheKey {

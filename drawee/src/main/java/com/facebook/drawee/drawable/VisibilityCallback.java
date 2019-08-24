@@ -7,9 +7,7 @@
 
 package com.facebook.drawee.drawable;
 
-/**
- * Callback used to notify about drawable's visibility changes.
- */
+/** Callback used to notify about drawable's visibility changes. */
 public interface VisibilityCallback {
 
   /**
@@ -19,8 +17,6 @@ public interface VisibilityCallback {
    */
   void onVisibilityChange(boolean visible);
 
-  /**
-   * Called when the drawable gets drawn.
-   */
+  /** Called when the drawable gets drawn. */
   void onDraw();
 }

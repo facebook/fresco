@@ -12,9 +12,7 @@
 
 package com.facebook.samples.scrollperf.instrumentation;
 
-/**
- * Collects wait times and holds image loading stats.
- */
+/** Collects wait times and holds image loading stats. */
 public class PerfListener {
   private long mSumOfWaitTime;
   private long mStartedRequests;
@@ -30,17 +28,13 @@ public class PerfListener {
     mFailedRequests = 0;
   }
 
-  /**
-   * Called whenever image request finishes successfully, that is whenever final image is set.
-   */
+  /** Called whenever image request finishes successfully, that is whenever final image is set. */
   public void reportSuccess(long waitTime) {
     mSumOfWaitTime += waitTime;
     mSuccessfulRequests++;
   }
 
-  /**
-   * Called whenever image request fails, that is whenever failure drawable is set.
-   */
+  /** Called whenever image request fails, that is whenever failure drawable is set. */
   public void reportFailure(long waitTime) {
     mSumOfWaitTime += waitTime;
     mFailedRequests++;
@@ -55,39 +49,31 @@ public class PerfListener {
     mCancelledRequests++;
   }
 
-  /**
-   * Called whenver new request is started.
-   */
+  /** Called whenver new request is started. */
   public void reportStart() {
     mStartedRequests++;
   }
 
   /**
    * @return average wait time, that is sum of reported wait times divided by number of completed
-   *   requests
+   *     requests
    */
   public long getAverageWaitTime() {
     final long completedRequests = getCompletedRequests();
     return completedRequests > 0 ? mSumOfWaitTime / completedRequests : 0;
   }
 
-  /**
-   * @return difference between number of started requests and number of completed requests
-   */
+  /** @return difference between number of started requests and number of completed requests */
   public long getOutstandingRequests() {
     return mStartedRequests - getCompletedRequests();
   }
 
-  /**
-   * @return number of cancelled requests
-   */
+  /** @return number of cancelled requests */
   public long getCancelledRequests() {
     return mCancelledRequests;
   }
 
-  /**
-   * @return number of completed requests, either by seting final image, failure or cancellation
-   */
+  /** @return number of completed requests, either by seting final image, failure or cancellation */
   public long getCompletedRequests() {
     return mSuccessfulRequests + mCancelledRequests + mFailedRequests;
   }

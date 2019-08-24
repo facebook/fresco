@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Abstraction and classes related to disk cache.
- */
+/** Abstraction and classes related to disk cache. */
 package com.facebook.cache.disk;

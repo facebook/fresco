@@ -13,9 +13,7 @@ import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.image.CloseableImage;
 
-/**
- * Bitmap memory cache producer that is read-only.
- */
+/** Bitmap memory cache producer that is read-only. */
 public class BitmapMemoryCacheGetProducer extends BitmapMemoryCacheProducer {
 
   public static final String PRODUCER_NAME = "BitmapMemoryCacheGetProducer";

@@ -28,16 +28,13 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests for {@link StatFsHelper}.
- */
+/** Tests for {@link StatFsHelper}. */
 @RunWith(RobolectricTestRunner.class)
 @PrepareForTest({Environment.class, StatFsHelper.class, SystemClock.class})
 @Ignore("t6344387")
 public class StatFsHelperTest {
 
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
+  @Rule public PowerMockRule rule = new PowerMockRule();
 
   private File mMockFileInternal;
   private File mMockFileExternal;
@@ -140,8 +137,7 @@ public class StatFsHelperTest {
     statFsHelper.resetStats();
   }
 
-
-    @Test
+  @Test
   public void testShouldHandleExceptionOnExternalCacheCreate() {
 
     expectInternalSetup();

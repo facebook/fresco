@@ -24,11 +24,11 @@ import javax.annotation.Nullable;
 /**
  * Inflater for the {@code GenericDraweeHierarchy}.
  *
- * Fading animation parameters:
- * @attr ref com.facebook.R.styleable#GenericDraweeHierarchy_fadeDuration
- * Aspect ratio parameters:
- * @attr ref com.facebook.R.styleable#GenericDraweeHierarchy_viewAspectRatio
- * Images & scale types parameters:
+ * <p>Fading animation parameters:
+ *
+ * @attr ref com.facebook.R.styleable#GenericDraweeHierarchy_fadeDuration Aspect ratio parameters:
+ * @attr ref com.facebook.R.styleable#GenericDraweeHierarchy_viewAspectRatio Images & scale types
+ *     parameters:
  * @attr ref com.facebook.R.styleable#GenericDraweeHierarchy_placeholderImage
  * @attr ref com.facebook.R.styleable#GenericDraweeHierarchy_placeholderImageScaleType
  * @attr ref com.facebook.R.styleable#GenericDraweeHierarchy_retryImage
@@ -41,8 +41,8 @@ import javax.annotation.Nullable;
  * @attr ref com.facebook.R.styleable#GenericDraweeHierarchy_actualImageScaleType
  * @attr ref com.facebook.R.styleable#GenericDraweeHierarchy_backgroundImage
  * @attr ref com.facebook.R.styleable#GenericDraweeHierarchy_overlayImage
- * @attr ref com.facebook.R.styleable#GenericDraweeHierarchy_pressedStateOverlayImage
- * Rounding parameters:
+ * @attr ref com.facebook.R.styleable#GenericDraweeHierarchy_pressedStateOverlayImage Rounding
+ *     parameters:
  * @attr ref com.facebook.R.styleable#GenericDraweeHierarchy_roundAsCircle
  * @attr ref com.facebook.R.styleable#GenericDraweeHierarchy_roundedCornerRadius
  * @attr ref com.facebook.R.styleable#GenericDraweeHierarchy_roundTopLeft
@@ -60,12 +60,9 @@ import javax.annotation.Nullable;
  */
 public class GenericDraweeHierarchyInflater {
 
-  /**
-   * Inflates a new hierarchy from XML.
-   */
+  /** Inflates a new hierarchy from XML. */
   public static GenericDraweeHierarchy inflateHierarchy(
-      Context context,
-      @Nullable AttributeSet attrs) {
+      Context context, @Nullable AttributeSet attrs) {
     return inflateBuilder(context, attrs).build();
   }
 
@@ -90,18 +87,16 @@ public class GenericDraweeHierarchyInflater {
   /**
    * Updates the existing hierarchy builder based on the XML attributes.
    *
-   * This method is useful if a custom view uses different default values. In that case a
-   * builder with adjusted default values can be passed to this method and only the properties
-   * explicitly specified in XML will be overridden.
-   * The builder can be modified afterwards in case some XML attributes needs to be overridden.
+   * <p>This method is useful if a custom view uses different default values. In that case a builder
+   * with adjusted default values can be passed to this method and only the properties explicitly
+   * specified in XML will be overridden. The builder can be modified afterwards in case some XML
+   * attributes needs to be overridden.
    *
    * @param builder a hierarchy builder to be updated
    * @return the modified instance of the same builder
    */
   public static GenericDraweeHierarchyBuilder updateBuilder(
-      GenericDraweeHierarchyBuilder builder,
-      Context context,
-      @Nullable AttributeSet attrs) {
+      GenericDraweeHierarchyBuilder builder, Context context, @Nullable AttributeSet attrs) {
     // these paramters cannot be applied immediately so we store them first
     int progressBarAutoRotateInterval = 0;
     int roundedCornerRadius = 0;
@@ -115,9 +110,8 @@ public class GenericDraweeHierarchyInflater {
     boolean roundBottomEnd = true;
 
     if (attrs != null) {
-      TypedArray gdhAttrs = context.obtainStyledAttributes(
-        attrs,
-        R.styleable.GenericDraweeHierarchy);
+      TypedArray gdhAttrs =
+          context.obtainStyledAttributes(attrs, R.styleable.GenericDraweeHierarchy);
       try {
         final int indexCount = gdhAttrs.getIndexCount();
         for (int i = 0; i < indexCount; i++) {
@@ -135,7 +129,7 @@ public class GenericDraweeHierarchyInflater {
           } else if (attr == R.styleable.GenericDraweeHierarchy_progressBarImage) {
             builder.setProgressBarImage(getDrawable(context, gdhAttrs, attr));
 
-          // the remaining ones without any particular order
+            // the remaining ones without any particular order
           } else if (attr == R.styleable.GenericDraweeHierarchy_fadeDuration) {
             builder.setFadeDuration(gdhAttrs.getInt(attr, 0));
 
@@ -211,14 +205,14 @@ public class GenericDraweeHierarchyInflater {
 
           } else if (attr == R.styleable.GenericDraweeHierarchy_roundingBorderPadding) {
             getRoundingParams(builder).setPadding(gdhAttrs.getDimensionPixelSize(attr, 0));
-
           }
         }
       } finally {
         gdhAttrs.recycle();
 
-        if (android.os.Build.VERSION.SDK_INT >= 17 && context.getResources().getConfiguration()
-            .getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
+        if (android.os.Build.VERSION.SDK_INT >= 17
+            && context.getResources().getConfiguration().getLayoutDirection()
+                == View.LAYOUT_DIRECTION_RTL) {
           roundTopLeft = roundTopLeft && roundTopEnd;
           roundTopRight = roundTopRight && roundTopStart;
           roundBottomRight = roundBottomRight && roundBottomStart;
@@ -229,23 +223,23 @@ public class GenericDraweeHierarchyInflater {
           roundBottomRight = roundBottomRight && roundBottomEnd;
           roundBottomLeft = roundBottomLeft && roundBottomStart;
         }
-
       }
     }
 
     // wrap progress bar if auto-rotating requested
     if (builder.getProgressBarImage() != null && progressBarAutoRotateInterval > 0) {
       builder.setProgressBarImage(
-        new AutoRotateDrawable(builder.getProgressBarImage(), progressBarAutoRotateInterval));
+          new AutoRotateDrawable(builder.getProgressBarImage(), progressBarAutoRotateInterval));
     }
 
     // set rounded corner radii if requested
     if (roundedCornerRadius > 0) {
-      getRoundingParams(builder).setCornersRadii(
-        roundTopLeft ? roundedCornerRadius : 0,
-        roundTopRight ? roundedCornerRadius : 0,
-        roundBottomRight ? roundedCornerRadius : 0,
-        roundBottomLeft ? roundedCornerRadius : 0);
+      getRoundingParams(builder)
+          .setCornersRadii(
+              roundTopLeft ? roundedCornerRadius : 0,
+              roundTopRight ? roundedCornerRadius : 0,
+              roundBottomRight ? roundedCornerRadius : 0,
+              roundBottomLeft ? roundedCornerRadius : 0);
     }
 
     return builder;
@@ -260,10 +254,7 @@ public class GenericDraweeHierarchyInflater {
   }
 
   @Nullable
-  private static Drawable getDrawable(
-      Context context,
-      TypedArray gdhAttrs,
-      int attrId) {
+  private static Drawable getDrawable(Context context, TypedArray gdhAttrs, int attrId) {
     int resourceId = gdhAttrs.getResourceId(attrId, 0);
     return (resourceId == 0) ? null : context.getResources().getDrawable(resourceId);
   }
@@ -273,9 +264,7 @@ public class GenericDraweeHierarchyInflater {
    * Important: these values need to be in sync with GenericDraweeHierarchy styleable attributes.
    */
   @Nullable
-  private static ScaleType getScaleTypeFromXml(
-      TypedArray gdhAttrs,
-      int attrId) {
+  private static ScaleType getScaleTypeFromXml(TypedArray gdhAttrs, int attrId) {
     switch (gdhAttrs.getInt(attrId, -2)) {
       case -1: // none
         return null;

@@ -50,11 +50,7 @@ public class KitKatPurgeableDecoder extends DalvikPurgeableDecoder {
     try {
       final byte[] encodedBytesArray = encodedBytesArrayRef.get();
       pooledByteBuffer.read(0, encodedBytesArray, 0, length);
-      Bitmap bitmap = BitmapFactory.decodeByteArray(
-          encodedBytesArray,
-          0,
-          length,
-          options);
+      Bitmap bitmap = BitmapFactory.decodeByteArray(encodedBytesArray, 0, length, options);
       return Preconditions.checkNotNull(bitmap, "BitmapFactory returned null");
     } finally {
       CloseableReference.closeSafely(encodedBytesArrayRef);
@@ -84,11 +80,7 @@ public class KitKatPurgeableDecoder extends DalvikPurgeableDecoder {
         putEOI(encodedBytesArray, length);
         length += 2;
       }
-      Bitmap bitmap = BitmapFactory.decodeByteArray(
-          encodedBytesArray,
-          0,
-          length,
-          options);
+      Bitmap bitmap = BitmapFactory.decodeByteArray(encodedBytesArray, 0, length, options);
       return Preconditions.checkNotNull(bitmap, "BitmapFactory returned null");
     } finally {
       CloseableReference.closeSafely(encodedBytesArrayRef);

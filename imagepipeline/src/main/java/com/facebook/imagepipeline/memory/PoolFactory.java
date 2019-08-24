@@ -17,9 +17,7 @@ import com.facebook.common.memory.PooledByteStreams;
 import com.facebook.imagepipeline.core.MemoryChunkType;
 import javax.annotation.concurrent.NotThreadSafe;
 
-/**
- * Factory class for pools.
- */
+/** Factory class for pools. */
 @NotThreadSafe
 public class PoolFactory {
 
@@ -68,10 +66,11 @@ public class PoolFactory {
         case BitmapPoolType.LEGACY:
           // fall through
         default:
-          mBitmapPool = new BucketsBitmapPool(
-              mConfig.getMemoryTrimmableRegistry(),
-              mConfig.getBitmapPoolParams(),
-              mConfig.getBitmapPoolStatsTracker());
+          mBitmapPool =
+              new BucketsBitmapPool(
+                  mConfig.getMemoryTrimmableRegistry(),
+                  mConfig.getBitmapPoolParams(),
+                  mConfig.getBitmapPoolStatsTracker());
       }
     }
     return mBitmapPool;
@@ -90,9 +89,9 @@ public class PoolFactory {
 
   public FlexByteArrayPool getFlexByteArrayPool() {
     if (mFlexByteArrayPool == null) {
-      mFlexByteArrayPool = new FlexByteArrayPool(
-          mConfig.getMemoryTrimmableRegistry(),
-          mConfig.getFlexByteArrayPoolParams());
+      mFlexByteArrayPool =
+          new FlexByteArrayPool(
+              mConfig.getMemoryTrimmableRegistry(), mConfig.getFlexByteArrayPoolParams());
     }
     return mFlexByteArrayPool;
   }
@@ -134,19 +133,20 @@ public class PoolFactory {
 
   public SharedByteArray getSharedByteArray() {
     if (mSharedByteArray == null) {
-      mSharedByteArray = new SharedByteArray(
-          mConfig.getMemoryTrimmableRegistry(),
-          mConfig.getFlexByteArrayPoolParams());
+      mSharedByteArray =
+          new SharedByteArray(
+              mConfig.getMemoryTrimmableRegistry(), mConfig.getFlexByteArrayPoolParams());
     }
     return mSharedByteArray;
   }
 
   public ByteArrayPool getSmallByteArrayPool() {
     if (mSmallByteArrayPool == null) {
-      mSmallByteArrayPool = new GenericByteArrayPool(
-          mConfig.getMemoryTrimmableRegistry(),
-          mConfig.getSmallByteArrayPoolParams(),
-          mConfig.getSmallByteArrayPoolStatsTracker());
+      mSmallByteArrayPool =
+          new GenericByteArrayPool(
+              mConfig.getMemoryTrimmableRegistry(),
+              mConfig.getSmallByteArrayPoolParams(),
+              mConfig.getSmallByteArrayPoolStatsTracker());
     }
     return mSmallByteArrayPool;
   }

@@ -11,9 +11,7 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Reads the wrapped InputStream only until a specified number of bytes, the 'limit' is reached.
- */
+/** Reads the wrapped InputStream only until a specified number of bytes, the 'limit' is reached. */
 public class LimitedInputStream extends FilterInputStream {
   private int mBytesToRead;
   private int mBytesToReadWhenMarked;

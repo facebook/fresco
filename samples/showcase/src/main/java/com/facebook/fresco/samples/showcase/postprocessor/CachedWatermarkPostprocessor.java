@@ -22,18 +22,13 @@ import java.util.Locale;
  */
 public class CachedWatermarkPostprocessor extends WatermarkPostprocessor {
 
-  public CachedWatermarkPostprocessor(
-      int count,
-      String watermarkText) {
+  public CachedWatermarkPostprocessor(int count, String watermarkText) {
     super(count, watermarkText);
   }
 
   @Override
   public CacheKey getPostprocessorCacheKey() {
-    return new SimpleCacheKey(String.format(
-        (Locale) null,
-        "text=%s,count=%d",
-        mWatermarkText,
-        mCount));
+    return new SimpleCacheKey(
+        String.format((Locale) null, "text=%s,count=%d", mWatermarkText, mCount));
   }
 }

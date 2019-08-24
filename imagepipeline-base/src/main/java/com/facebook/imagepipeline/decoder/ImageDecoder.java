@@ -12,14 +12,9 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.QualityInfo;
 
-/**
- * Image decoder interface. Takes an {@link EncodedImage} and creates a {@link CloseableImage}.
- */
+/** Image decoder interface. Takes an {@link EncodedImage} and creates a {@link CloseableImage}. */
 public interface ImageDecoder {
 
   CloseableImage decode(
-      EncodedImage encodedImage,
-      int length,
-      QualityInfo qualityInfo,
-      ImageDecodeOptions options);
+      EncodedImage encodedImage, int length, QualityInfo qualityInfo, ImageDecodeOptions options);
 }

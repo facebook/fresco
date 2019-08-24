@@ -18,6 +18,7 @@ public class NullProducer<T> implements Producer<T> {
   /**
    * Start producing results for given context. Provided consumer is notified whenever progress is
    * made (new value is ready or error occurs).
+   *
    * @param consumer
    * @param context
    */

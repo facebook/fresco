@@ -50,9 +50,10 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
 /**
- * Drawee controller that bridges the image pipeline with {@link SettableDraweeHierarchy}. <p> The
- * hierarchy's actual image is set to the image(s) obtained by the provided data source. The data
- * source is automatically obtained and closed based on attach / detach calls.
+ * Drawee controller that bridges the image pipeline with {@link SettableDraweeHierarchy}.
+ *
+ * <p>The hierarchy's actual image is set to the image(s) obtained by the provided data source. The
+ * data source is automatically obtained and closed based on attach / detach calls.
  */
 public class PipelineDraweeController
     extends AbstractDraweeController<CloseableReference<CloseableImage>, ImageInfo> {
@@ -63,8 +64,7 @@ public class PipelineDraweeController
   private final Resources mResources;
   private final DrawableFactory mDefaultDrawableFactory;
   // Global drawable factories that are set when Fresco is initialized
-  @Nullable
-  private final ImmutableList<DrawableFactory> mGlobalDrawableFactories;
+  @Nullable private final ImmutableList<DrawableFactory> mGlobalDrawableFactories;
 
   private final @Nullable MemoryCache<CacheKey, CloseableImage> mMemoryCache;
 

@@ -14,11 +14,10 @@ import javax.annotation.Nullable;
 /**
  * {@link StatefulRunnable} intended to be used by producers.
  *
- * <p> Class implements common functionality related to handling producer instrumentation and
+ * <p>Class implements common functionality related to handling producer instrumentation and
  * resource management.
  */
-public abstract class StatefulProducerRunnable<T>
-    extends StatefulRunnable<T> {
+public abstract class StatefulProducerRunnable<T> extends StatefulRunnable<T> {
 
   private final Consumer<T> mConsumer;
   private final ProducerListener2 mProducerListener;

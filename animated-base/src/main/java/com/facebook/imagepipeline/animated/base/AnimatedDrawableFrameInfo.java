@@ -7,14 +7,10 @@
 
 package com.facebook.imagepipeline.animated.base;
 
-/**
- * Info per frame returned by {@link AnimatedDrawableBackend}.
- */
+/** Info per frame returned by {@link AnimatedDrawableBackend}. */
 public class AnimatedDrawableFrameInfo {
 
-  /**
-   * How to dispose of the current frame before rendering the next frame.
-   */
+  /** How to dispose of the current frame before rendering the next frame. */
   public enum DisposalMethod {
 
     /** Do not dipose the frame. Leave as-is. */
@@ -28,13 +24,13 @@ public class AnimatedDrawableFrameInfo {
   }
 
   /**
-   * Indicates how transparent pixels of the current frame are blended
-   * with those of the previous canvas.
+   * Indicates how transparent pixels of the current frame are blended with those of the previous
+   * canvas.
    */
   public enum BlendOperation {
-    /** Blend **/
+    /** Blend * */
     BLEND_WITH_PREVIOUS,
-    /** Do not blend **/
+    /** Do not blend * */
     NO_BLEND,
   }
 

@@ -14,9 +14,7 @@ import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-/**
- * A Drawable that draws nothing on Canvas
- */
+/** A Drawable that draws nothing on Canvas */
 public class NopDrawable extends Drawable {
 
   public static final NopDrawable INSTANCE = new NopDrawable();

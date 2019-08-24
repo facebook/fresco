@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Abstractions useful for trim data from the DiskCache
- */
+/** Abstractions useful for trim data from the DiskCache */
 package com.facebook.common.disk;

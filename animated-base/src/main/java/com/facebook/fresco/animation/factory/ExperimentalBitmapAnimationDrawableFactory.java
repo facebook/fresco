@@ -41,10 +41,7 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 
-/**
- * Animation factory for {@link AnimatedDrawable2}.
- *
- */
+/** Animation factory for {@link AnimatedDrawable2}. */
 public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFactory {
 
   public static final int CACHING_STRATEGY_NO_CACHE = 0;
@@ -88,8 +85,7 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
   @Override
   public AnimatedDrawable2 createDrawable(CloseableImage image) {
     return new AnimatedDrawable2(
-        createAnimationBackend(
-            ((CloseableAnimatedImage) image).getImageResult()));
+        createAnimationBackend(((CloseableAnimatedImage) image).getImageResult()));
   }
 
   private AnimationBackend createAnimationBackend(AnimatedImageResult animatedImageResult) {
@@ -109,18 +105,17 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
       bitmapFramePreparer = createBitmapFramePreparer(bitmapFrameRenderer);
     }
 
-    BitmapAnimationBackend bitmapAnimationBackend = new BitmapAnimationBackend(
-        mPlatformBitmapFactory,
-        bitmapFrameCache,
-        new AnimatedDrawableBackendAnimationInformation(animatedDrawableBackend),
-        bitmapFrameRenderer,
-        bitmapFramePreparationStrategy,
-        bitmapFramePreparer);
+    BitmapAnimationBackend bitmapAnimationBackend =
+        new BitmapAnimationBackend(
+            mPlatformBitmapFactory,
+            bitmapFrameCache,
+            new AnimatedDrawableBackendAnimationInformation(animatedDrawableBackend),
+            bitmapFrameRenderer,
+            bitmapFramePreparationStrategy,
+            bitmapFramePreparer);
 
     return AnimationBackendDelegateWithInactivityCheck.createForBackend(
-        bitmapAnimationBackend,
-        mMonotonicClock,
-        mScheduledExecutorServiceForUiThread);
+        bitmapAnimationBackend, mMonotonicClock, mScheduledExecutorServiceForUiThread);
   }
 
   private BitmapFramePreparer createBitmapFramePreparer(BitmapFrameRenderer bitmapFrameRenderer) {
@@ -155,8 +150,7 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
   private AnimatedFrameCache createAnimatedFrameCache(
       final AnimatedImageResult animatedImageResult) {
     return new AnimatedFrameCache(
-        new AnimationFrameCacheKey(animatedImageResult.hashCode()),
-        mBackingCache);
+        new AnimationFrameCacheKey(animatedImageResult.hashCode()), mBackingCache);
   }
 
   public static class AnimationFrameCacheKey implements CacheKey {

@@ -73,8 +73,7 @@ public class ArtDecoderTest {
 
   private static final Bitmap.Config DEFAULT_BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
 
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
+  @Rule public PowerMockRule rule = new PowerMockRule();
 
   static {
     SoLoader.setInTestMode();
@@ -113,16 +112,18 @@ public class ArtDecoderTest {
     mBitmap = MockBitmapFactory.create();
     doReturn(mBitmap).when(mBitmapPool).get(MockBitmapFactory.DEFAULT_BITMAP_SIZE);
 
-    mBitmapFactoryDefaultAnswer = new Answer<Bitmap>() {
-      @Override
-      public Bitmap answer(InvocationOnMock invocation) throws Throwable {
-        final BitmapFactory.Options options = (BitmapFactory.Options) invocation.getArguments()[2];
-        options.outWidth = MockBitmapFactory.DEFAULT_BITMAP_WIDTH;
-        options.outHeight = MockBitmapFactory.DEFAULT_BITMAP_HEIGHT;
-        verifyBitmapFactoryOptions(options);
-        return options.inJustDecodeBounds ? null : mBitmap;
-      }
-    };
+    mBitmapFactoryDefaultAnswer =
+        new Answer<Bitmap>() {
+          @Override
+          public Bitmap answer(InvocationOnMock invocation) throws Throwable {
+            final BitmapFactory.Options options =
+                (BitmapFactory.Options) invocation.getArguments()[2];
+            options.outWidth = MockBitmapFactory.DEFAULT_BITMAP_WIDTH;
+            options.outHeight = MockBitmapFactory.DEFAULT_BITMAP_HEIGHT;
+            verifyBitmapFactoryOptions(options);
+            return options.inJustDecodeBounds ? null : mBitmap;
+          }
+        };
     whenBitmapFactoryDecodeStream().thenAnswer(mBitmapFactoryDefaultAnswer);
 
     mBitmapRegionDecoder = mock(BitmapRegionDecoder.class);
@@ -131,7 +132,6 @@ public class ArtDecoderTest {
     ByteBuffer buf = mArtDecoder.mDecodeBuffers.acquire();
     mTempStorage = buf.array();
     mArtDecoder.mDecodeBuffers.release(buf);
-
   }
 
   @Test
@@ -325,14 +325,7 @@ public class ArtDecoderTest {
   private void verifyDecodedBytes(boolean complete, int length) {
     byte[] decodedBytes = getDecodedBytes();
     assertArrayEquals(
-        Arrays.copyOfRange(
-            mEncodedBytes,
-            0,
-            length),
-        Arrays.copyOfRange(
-            decodedBytes,
-            0,
-            length));
+        Arrays.copyOfRange(mEncodedBytes, 0, length), Arrays.copyOfRange(decodedBytes, 0, length));
     if (complete) {
       assertEquals(length, decodedBytes.length);
     } else {

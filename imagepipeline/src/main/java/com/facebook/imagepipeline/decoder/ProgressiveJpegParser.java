@@ -19,35 +19,31 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Progressively scans jpeg data and instructs caller when enough data is available to decode
- * a partial image.
+ * Progressively scans jpeg data and instructs caller when enough data is available to decode a
+ * partial image.
  *
- * <p> This class treats any sequence of bytes starting with 0xFFD8 as a valid jpeg image
+ * <p>This class treats any sequence of bytes starting with 0xFFD8 as a valid jpeg image
  *
- * <p> Users should call parseMoreData method each time new chunk of data is received. The buffer
+ * <p>Users should call parseMoreData method each time new chunk of data is received. The buffer
  * passed as a parameter should include entire image data received so far.
  */
 public class ProgressiveJpegParser {
 
-  /**
-   * Initial state of the parser. Next byte read by the parser should be 0xFF.
-   */
+  /** Initial state of the parser. Next byte read by the parser should be 0xFF. */
   private static final int READ_FIRST_JPEG_BYTE = 0;
 
-  /**
-   * Parser saw only one byte so far (0xFF). Next byte should be second byte of SOI marker
-   */
+  /** Parser saw only one byte so far (0xFF). Next byte should be second byte of SOI marker */
   private static final int READ_SECOND_JPEG_BYTE = 1;
 
   /**
-   * Next byte is either entropy coded data or first byte of a marker. First byte of marker
-   * cannot appear in entropy coded data, unless it is followed by 0x00 escape byte.
+   * Next byte is either entropy coded data or first byte of a marker. First byte of marker cannot
+   * appear in entropy coded data, unless it is followed by 0x00 escape byte.
    */
   private static final int READ_MARKER_FIRST_BYTE_OR_ENTROPY_DATA = 2;
 
   /**
-   * Last read byte is 0xFF, possible start of marker (possible, because next byte might be
-   * "escape byte" or 0xFF again)
+   * Last read byte is 0xFF, possible start of marker (possible, because next byte might be "escape
+   * byte" or 0xFF again)
    */
   private static final int READ_MARKER_SECOND_BYTE = 3;
 
@@ -63,9 +59,7 @@ public class ProgressiveJpegParser {
    */
   private static final int READ_SIZE_SECOND_BYTE = 5;
 
-  /**
-   * Parsed data is not a JPEG file
-   */
+  /** Parsed data is not a JPEG file */
   private static final int NOT_A_JPEG = 6;
 
   /** The buffer size in bytes to use. */
@@ -74,14 +68,10 @@ public class ProgressiveJpegParser {
   private int mParserState;
   private int mLastByteRead;
 
-  /**
-   * number of bytes consumed so far
-   */
+  /** number of bytes consumed so far */
   private int mBytesParsed;
 
-  /**
-   * number of next fully parsed scan after reaching next SOS or EOI markers
-   */
+  /** number of next fully parsed scan after reaching next SOS or EOI markers */
   private int mNextFullScanNumber;
 
   private int mBestScanNumber;
@@ -98,7 +88,6 @@ public class ProgressiveJpegParser {
     mBestScanEndOffset = 0;
     mBestScanNumber = 0;
     mParserState = READ_FIRST_JPEG_BYTE;
-
   }
 
   /**
@@ -106,7 +95,7 @@ public class ProgressiveJpegParser {
    * starts with SOI marker (0xffd8). If the image has been identified as a non-JPEG, data will be
    * ignored and false will be returned immediately on all subsequent calls.
    *
-   * This object maintains state of the position of the last read byte. On repeated calls to this
+   * <p>This object maintains state of the position of the last read byte. On repeated calls to this
    * method, it will continue from where it left off.
    *
    * @param encodedImage Next set of bytes received by the caller
@@ -126,10 +115,9 @@ public class ProgressiveJpegParser {
       return false;
     }
 
-    final InputStream bufferedDataStream = new PooledByteArrayBufferedInputStream(
-        encodedImage.getInputStream(),
-        mByteArrayPool.get(BUFFER_SIZE),
-        mByteArrayPool);
+    final InputStream bufferedDataStream =
+        new PooledByteArrayBufferedInputStream(
+            encodedImage.getInputStream(), mByteArrayPool.get(BUFFER_SIZE), mByteArrayPool);
     try {
       StreamUtil.skip(bufferedDataStream, mBytesParsed);
       return doParseMoreData(bufferedDataStream);
@@ -237,9 +225,7 @@ public class ProgressiveJpegParser {
     return mParserState != NOT_A_JPEG && mBestScanNumber != oldBestScanNumber;
   }
 
-  /**
-   * Not every marker is followed by associated segment
-   */
+  /** Not every marker is followed by associated segment */
   private static boolean doesMarkerStartSegment(int markerSecondByte) {
     if (markerSecondByte == JfifUtil.MARKER_TEM) {
       return false;
@@ -263,23 +249,17 @@ public class ProgressiveJpegParser {
     return mBytesParsed > 1 && mParserState != NOT_A_JPEG;
   }
 
-  /**
-   * @return offset at which parsed data should be cut to decode best available partial result
-   */
+  /** @return offset at which parsed data should be cut to decode best available partial result */
   public int getBestScanEndOffset() {
     return mBestScanEndOffset;
   }
 
-  /**
-   * @return number of the best scan found so far
-   */
+  /** @return number of the best scan found so far */
   public int getBestScanNumber() {
     return mBestScanNumber;
   }
 
-  /**
-   * Returns true if the end marker has been read.
-   */
+  /** Returns true if the end marker has been read. */
   public boolean isEndMarkerRead() {
     return mEndMarkerRead;
   }

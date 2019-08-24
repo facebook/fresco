@@ -11,13 +11,12 @@ import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import javax.annotation.Nullable;
 
-/**
- * Helper class containing functionality commonly used by drawables.
- */
+/** Helper class containing functionality commonly used by drawables. */
 public class DrawableUtils {
 
   /**
    * Clones the specified drawable.
+   *
    * @param drawable the drawable to clone.
    * @return a clone of the drawable or null if the drawable cannot be cloned.
    */
@@ -83,6 +82,7 @@ public class DrawableUtils {
 
   /**
    * Multiplies the color with the given alpha.
+   *
    * @param color color to be multiplied
    * @param alpha value between 0 and 255
    * @return multiplied color
@@ -102,6 +102,7 @@ public class DrawableUtils {
 
   /**
    * Gets the opacity from a color. Inspired by Android ColorDrawable.
+   *
    * @param color
    * @return opacity expressed by one of PixelFormat constants
    */

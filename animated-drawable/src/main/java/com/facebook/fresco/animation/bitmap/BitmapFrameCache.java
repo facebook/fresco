@@ -10,9 +10,7 @@ import android.graphics.Bitmap;
 import com.facebook.common.references.CloseableReference;
 import javax.annotation.Nullable;
 
-/**
- * Bitmap frame cache that is used for animated images.
- */
+/** Bitmap frame cache that is used for animated images. */
 public interface BitmapFrameCache {
 
   interface FrameCacheListener {
@@ -44,9 +42,8 @@ public interface BitmapFrameCache {
   CloseableReference<Bitmap> getCachedFrame(int frameNumber);
 
   /**
-   * Get a fallback frame for the given frame number. This method is called if all other attempts
-   * to draw a frame failed.
-   * The bitmap returned could for example be the last drawn frame (if any).
+   * Get a fallback frame for the given frame number. This method is called if all other attempts to
+   * draw a frame failed. The bitmap returned could for example be the last drawn frame (if any).
    *
    * @param frameNumber the frame number to get the fallback
    * @return the fallback frame or null if not cached
@@ -73,24 +70,19 @@ public interface BitmapFrameCache {
    */
   boolean contains(int frameNumber);
 
-  /**
-   * @return the size in bytes of all cached data
-   */
+  /** @return the size in bytes of all cached data */
   int getSizeInBytes();
 
-  /**
-   * Clear the cache.
-   */
+  /** Clear the cache. */
   void clear();
 
   /**
-   * Callback when the given bitmap has been drawn to a canvas.
-   * This bitmap can either be a reused bitmap returned by
-   * {@link #getBitmapToReuseForFrame(int, int, int)} or a new bitmap.
+   * Callback when the given bitmap has been drawn to a canvas. This bitmap can either be a reused
+   * bitmap returned by {@link #getBitmapToReuseForFrame(int, int, int)} or a new bitmap.
    *
-   * Note: the implementation of this interface must manually clone the given bitmap reference
-   * if it wants to hold on to the bitmap.
-   * The original reference will be automatically closed after this call.
+   * <p>Note: the implementation of this interface must manually clone the given bitmap reference if
+   * it wants to hold on to the bitmap. The original reference will be automatically closed after
+   * this call.
    *
    * @param frameNumber the frame number that has been rendered
    * @param bitmapReference the bitmap reference that has been rendered
@@ -104,17 +96,17 @@ public interface BitmapFrameCache {
   /**
    * Callback when a bitmap reference for a given frame has been prepared for future rendering.
    *
-   * This method is called ahead of render time (i.e. when future frames have been prepared
-   * in the background), whereas {@link #onFrameRendered(int, CloseableReference, int)}
-   * is invoked when the actual frame has been drawn on a Canvas.
+   * <p>This method is called ahead of render time (i.e. when future frames have been prepared in
+   * the background), whereas {@link #onFrameRendered(int, CloseableReference, int)} is invoked when
+   * the actual frame has been drawn on a Canvas.
    *
-   * The supplied bitmap reference can either hold a reused bitmap returned by
-   * {@link #getBitmapToReuseForFrame(int, int, int)} or a new bitmap as indicated by the
-   * frame type parameter.
+   * <p>The supplied bitmap reference can either hold a reused bitmap returned by {@link
+   * #getBitmapToReuseForFrame(int, int, int)} or a new bitmap as indicated by the frame type
+   * parameter.
    *
-   * Note: the implementation of this interface must manually clone the given bitmap reference
-   * if it wants to hold on to the bitmap.
-   * The original reference will be automatically closed after this call.
+   * <p>Note: the implementation of this interface must manually clone the given bitmap reference if
+   * it wants to hold on to the bitmap. The original reference will be automatically closed after
+   * this call.
    *
    * @param frameNumber the frame number of the passed bitmapReference
    * @param bitmapReference the bitmap reference that has been prepared for future rendering

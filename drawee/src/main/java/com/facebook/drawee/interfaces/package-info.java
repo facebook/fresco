@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Main abstractions for the Drawee framework
- */
+/** Main abstractions for the Drawee framework */
 package com.facebook.drawee.interfaces;

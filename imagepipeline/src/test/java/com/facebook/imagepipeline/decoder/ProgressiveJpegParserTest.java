@@ -42,10 +42,12 @@ public class ProgressiveJpegParserTest {
     when(byteArrayPool.get(anyInt())).thenReturn(new byte[10]);
     mProgressiveJpegParser = new ProgressiveJpegParser(byteArrayPool);
 
-    mJpegBytes = ByteStreams.toByteArray(
-        ProgressiveJpegParserTest.class.getResourceAsStream("images/image.jpg"));
-    mWebpBytes = ByteStreams.toByteArray(
-        ProgressiveJpegParserTest.class.getResourceAsStream(("images/image.webp")));
+    mJpegBytes =
+        ByteStreams.toByteArray(
+            ProgressiveJpegParserTest.class.getResourceAsStream("images/image.jpg"));
+    mWebpBytes =
+        ByteStreams.toByteArray(
+            ProgressiveJpegParserTest.class.getResourceAsStream(("images/image.webp")));
     mPartialWebpBytes = new byte[mWebpBytes.length / 2];
     System.arraycopy(mWebpBytes, 0, mPartialWebpBytes, 0, mPartialWebpBytes.length);
   }
@@ -66,8 +68,8 @@ public class ProgressiveJpegParserTest {
 
   @Test
   public void testOnTooShortImage() {
-    final TrivialPooledByteBuffer shortByteBuffer = new TrivialPooledByteBuffer(
-        new byte[] {(byte) 0xff});
+    final TrivialPooledByteBuffer shortByteBuffer =
+        new TrivialPooledByteBuffer(new byte[] {(byte) 0xff});
     assertFalse(mProgressiveJpegParser.isJpeg());
     assertFalse(mProgressiveJpegParser.parseMoreData(buildEncodedImage(shortByteBuffer)));
     assertFalse(mProgressiveJpegParser.isJpeg());
@@ -77,8 +79,8 @@ public class ProgressiveJpegParserTest {
 
   @Test
   public void testOnShortestJpeg() {
-    final TrivialPooledByteBuffer shortByteBuffer = new TrivialPooledByteBuffer(
-        new byte[] {(byte) 0xff, (byte) 0xd8});
+    final TrivialPooledByteBuffer shortByteBuffer =
+        new TrivialPooledByteBuffer(new byte[] {(byte) 0xff, (byte) 0xd8});
     assertFalse(mProgressiveJpegParser.parseMoreData(buildEncodedImage(shortByteBuffer)));
     assertTrue(mProgressiveJpegParser.isJpeg());
     assertEquals(0, mProgressiveJpegParser.getBestScanEndOffset());
@@ -87,11 +89,13 @@ public class ProgressiveJpegParserTest {
 
   @Test
   public void testBasic() {
-    byte[] veryFakeJpeg = new byte[] {
-        (byte) 0xff, (byte) 0xd8, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xda,
-        (byte) 0x00, (byte) 0x03, (byte) 0x00, (byte) 0xff, (byte) 0xff, (byte) 0xff,
-        (byte) 0xda, (byte) 0x00, (byte) 0x03, (byte) 0x00, (byte) 0xff, (byte) 0xda,
-        (byte) 0x00, (byte) 0x03, (byte) 0x00, (byte) 0xff, (byte) 0xda};
+    byte[] veryFakeJpeg =
+        new byte[] {
+          (byte) 0xff, (byte) 0xd8, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xda,
+          (byte) 0x00, (byte) 0x03, (byte) 0x00, (byte) 0xff, (byte) 0xff, (byte) 0xff,
+          (byte) 0xda, (byte) 0x00, (byte) 0x03, (byte) 0x00, (byte) 0xff, (byte) 0xda,
+          (byte) 0x00, (byte) 0x03, (byte) 0x00, (byte) 0xff, (byte) 0xda
+        };
 
     testFirstNBytes(veryFakeJpeg, 3, false, 0, 0);
     testFirstNBytes(veryFakeJpeg, 6, false, 0, 0);
@@ -120,15 +124,11 @@ public class ProgressiveJpegParserTest {
    * @param bestScanEndOffset offset of expected best scan found so far
    */
   private void testFirstNBytes(
-      byte[] byteArray,
-      int n,
-      boolean foundNewScan,
-      int expectedBestScan,
-      int bestScanEndOffset) {
+      byte[] byteArray, int n, boolean foundNewScan, int expectedBestScan, int bestScanEndOffset) {
     assertEquals(
         foundNewScan,
-        mProgressiveJpegParser.parseMoreData(buildEncodedImage(
-                new TrivialPooledByteBuffer(Arrays.copyOf(byteArray, n)))));
+        mProgressiveJpegParser.parseMoreData(
+            buildEncodedImage(new TrivialPooledByteBuffer(Arrays.copyOf(byteArray, n)))));
     assertTrue(mProgressiveJpegParser.isJpeg());
     assertEquals(expectedBestScan, mProgressiveJpegParser.getBestScanNumber());
     assertEquals(bestScanEndOffset, mProgressiveJpegParser.getBestScanEndOffset());

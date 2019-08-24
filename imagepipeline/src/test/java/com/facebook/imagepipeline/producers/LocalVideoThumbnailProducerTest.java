@@ -59,8 +59,7 @@ public class LocalVideoThumbnailProducerTest {
   @Mock public Exception mException;
   @Mock public Bitmap mBitmap;
 
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
+  @Rule public PowerMockRule rule = new PowerMockRule();
 
   private TestExecutorService mExecutor;
   private SettableProducerContext mProducerContext;
@@ -73,21 +72,22 @@ public class LocalVideoThumbnailProducerTest {
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
     mExecutor = new TestExecutorService(new FakeClock());
-    mLocalVideoThumbnailProducer = new LocalVideoThumbnailProducer(
-        mExecutor,
-        RuntimeEnvironment.application.getContentResolver());
+    mLocalVideoThumbnailProducer =
+        new LocalVideoThumbnailProducer(
+            mExecutor, RuntimeEnvironment.application.getContentResolver());
     mFile = new File(RuntimeEnvironment.application.getExternalFilesDir(null), TEST_FILENAME);
 
     mockStatic(ThumbnailUtils.class);
-    mProducerContext = new SettableProducerContext(
-        mImageRequest,
-        mRequestId,
-        mProducerListener,
-        mock(Object.class),
-        ImageRequest.RequestLevel.FULL_FETCH,
-        false,
-        false,
-        Priority.MEDIUM);
+    mProducerContext =
+        new SettableProducerContext(
+            mImageRequest,
+            mRequestId,
+            mProducerListener,
+            mock(Object.class),
+            ImageRequest.RequestLevel.FULL_FETCH,
+            false,
+            false,
+            Priority.MEDIUM);
     when(mImageRequest.getSourceFile()).thenReturn(mFile);
   }
 
@@ -96,7 +96,8 @@ public class LocalVideoThumbnailProducerTest {
     mLocalVideoThumbnailProducer.produceResults(mConsumer, mProducerContext);
     mProducerContext.cancel();
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithCancellation(mProducerContext, PRODUCER_NAME, null);
+    verify(mProducerListener)
+        .onProducerFinishWithCancellation(mProducerContext, PRODUCER_NAME, null);
     verify(mProducerListener, never())
         .onUltimateProducerReached(eq(mProducerContext), anyString(), anyBoolean());
     verify(mConsumer).onCancellation();
@@ -107,24 +108,24 @@ public class LocalVideoThumbnailProducerTest {
     when(mImageRequest.getPreferredWidth()).thenReturn(100);
     when(mImageRequest.getPreferredHeight()).thenReturn(100);
     when(mImageRequest.getSourceUri()).thenReturn(LOCAL_VIDEO_URI);
-    when(
-        android.media.ThumbnailUtils.createVideoThumbnail(
+    when(android.media.ThumbnailUtils.createVideoThumbnail(
             mFile.getPath(), MediaStore.Images.Thumbnails.MINI_KIND))
         .thenReturn(mBitmap);
     doAnswer(
-        new Answer() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            mCloseableReference = ((CloseableReference) invocation.getArguments()[0]).clone();
-            return null;
-          }
-        }).when(mConsumer).onNewResult(any(CloseableReference.class), eq(Consumer.IS_LAST));
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                mCloseableReference = ((CloseableReference) invocation.getArguments()[0]).clone();
+                return null;
+              }
+            })
+        .when(mConsumer)
+        .onNewResult(any(CloseableReference.class), eq(Consumer.IS_LAST));
     mLocalVideoThumbnailProducer.produceResults(mConsumer, mProducerContext);
     mExecutor.runUntilIdle();
     assertEquals(1, mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertEquals(
-        mBitmap,
-        mCloseableReference.getUnderlyingReferenceTestOnly().get().getUnderlyingBitmap());
+        mBitmap, mCloseableReference.getUnderlyingReferenceTestOnly().get().getUnderlyingBitmap());
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
     verify(mProducerListener).onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
     verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, true);
@@ -134,29 +135,29 @@ public class LocalVideoThumbnailProducerTest {
   public void testLocalVideoMicroThumbnailSuccess() throws Exception {
     when(mImageRequest.getSourceUri()).thenReturn(LOCAL_VIDEO_URI);
     when(mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)).thenReturn(true);
-    when(
-        android.media.ThumbnailUtils.createVideoThumbnail(
+    when(android.media.ThumbnailUtils.createVideoThumbnail(
             mFile.getPath(), MediaStore.Images.Thumbnails.MICRO_KIND))
         .thenReturn(mBitmap);
     doAnswer(
-        new Answer() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            mCloseableReference = ((CloseableReference) invocation.getArguments()[0]).clone();
-            return null;
-          }
-        }).when(mConsumer).onNewResult(any(CloseableReference.class), eq(Consumer.IS_LAST));
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                mCloseableReference = ((CloseableReference) invocation.getArguments()[0]).clone();
+                return null;
+              }
+            })
+        .when(mConsumer)
+        .onNewResult(any(CloseableReference.class), eq(Consumer.IS_LAST));
     mLocalVideoThumbnailProducer.produceResults(mConsumer, mProducerContext);
     mExecutor.runUntilIdle();
     assertEquals(1, mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertEquals(
-        mBitmap,
-        mCloseableReference.getUnderlyingReferenceTestOnly().get().getUnderlyingBitmap());
+        mBitmap, mCloseableReference.getUnderlyingReferenceTestOnly().get().getUnderlyingBitmap());
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
     Map<String, String> thumbnailFoundMap =
         ImmutableMap.of(LocalVideoThumbnailProducer.CREATED_THUMBNAIL, "true");
-    verify(mProducerListener).onProducerFinishWithSuccess(
-        mProducerContext, PRODUCER_NAME, thumbnailFoundMap);
+    verify(mProducerListener)
+        .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, thumbnailFoundMap);
     verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, true);
   }
 
@@ -164,8 +165,7 @@ public class LocalVideoThumbnailProducerTest {
   public void testLocalVideoMicroThumbnailReturnsNull() throws Exception {
     when(mImageRequest.getSourceUri()).thenReturn(LOCAL_VIDEO_URI);
     when(mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)).thenReturn(true);
-    when(
-        android.media.ThumbnailUtils.createVideoThumbnail(
+    when(android.media.ThumbnailUtils.createVideoThumbnail(
             mFile.getPath(), MediaStore.Images.Thumbnails.MICRO_KIND))
         .thenReturn(null);
     mLocalVideoThumbnailProducer.produceResults(mConsumer, mProducerContext);
@@ -174,21 +174,20 @@ public class LocalVideoThumbnailProducerTest {
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
     Map<String, String> thumbnailNotFoundMap =
         ImmutableMap.of(LocalVideoThumbnailProducer.CREATED_THUMBNAIL, "false");
-    verify(mProducerListener).onProducerFinishWithSuccess(
-        mProducerContext, PRODUCER_NAME, thumbnailNotFoundMap);
+    verify(mProducerListener)
+        .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, thumbnailNotFoundMap);
     verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, false);
   }
 
   @Test(expected = RuntimeException.class)
   public void testFetchLocalFileFailsByThrowing() throws Exception {
-    when(
-        android.media.ThumbnailUtils.createVideoThumbnail(
+    when(android.media.ThumbnailUtils.createVideoThumbnail(
             mFile.getPath(), MediaStore.Images.Thumbnails.MICRO_KIND))
         .thenThrow(mException);
     verify(mConsumer).onFailure(mException);
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithFailure(
-        mProducerContext, PRODUCER_NAME, mException, null);
+    verify(mProducerListener)
+        .onProducerFinishWithFailure(mProducerContext, PRODUCER_NAME, mException, null);
     verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, false);
   }
 

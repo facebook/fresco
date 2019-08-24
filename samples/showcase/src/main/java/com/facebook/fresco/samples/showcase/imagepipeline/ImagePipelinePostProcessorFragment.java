@@ -69,9 +69,7 @@ public class ImagePipelinePostProcessorFragment extends BaseShowcaseFragment
   @Nullable
   @Override
   public View onCreateView(
-      LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+      LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_imagepipeline_postprocessor, container, false);
   }
 
@@ -117,23 +115,25 @@ public class ImagePipelinePostProcessorFragment extends BaseShowcaseFragment
   public void showDuration(long startNs) {
     final float deltaMs = startNs / 1e6f;
     final String message = String.format((Locale) null, "Duration: %.1f ms", deltaMs);
-    getActivity().runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-      }
-    });
+    getActivity()
+        .runOnUiThread(
+            new Runnable() {
+              @Override
+              public void run() {
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+              }
+            });
   }
 
   private void setPostprocessor(Postprocessor postprocessor) {
-    final ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(mUri)
-        .setPostprocessor(postprocessor)
-        .build();
+    final ImageRequest imageRequest =
+        ImageRequestBuilder.newBuilderWithSource(mUri).setPostprocessor(postprocessor).build();
 
-    final DraweeController draweeController = Fresco.newDraweeControllerBuilder()
-        .setOldController(mDraweeMain.getController())
-        .setImageRequest(imageRequest)
-        .build();
+    final DraweeController draweeController =
+        Fresco.newDraweeControllerBuilder()
+            .setOldController(mDraweeMain.getController())
+            .setImageRequest(imageRequest)
+            .build();
 
     mDraweeMain.setController(draweeController);
   }
@@ -159,9 +159,11 @@ public class ImagePipelinePostProcessorFragment extends BaseShowcaseFragment
     public View getView(int position, View convertView, ViewGroup parent) {
       final LayoutInflater layoutInflater = getLayoutInflater(null);
 
-      final View view = convertView != null
-          ? convertView
-          : layoutInflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
+      final View view =
+          convertView != null
+              ? convertView
+              : layoutInflater.inflate(
+                  android.R.layout.simple_spinner_dropdown_item, parent, false);
 
       final TextView textView = (TextView) view.findViewById(android.R.id.text1);
       textView.setText(mSpinnerEntries.get(position).descriptionId);

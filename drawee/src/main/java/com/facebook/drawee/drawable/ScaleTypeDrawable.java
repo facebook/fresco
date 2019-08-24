@@ -20,9 +20,9 @@ import com.facebook.common.internal.VisibleForTesting;
 import javax.annotation.Nullable;
 
 /**
- * Drawable that can scale underlying drawable based on specified {@link ScaleType}
- * options.
- * <p/> Based on {@link android.widget.ImageView.ScaleType}.
+ * Drawable that can scale underlying drawable based on specified {@link ScaleType} options.
+ *
+ * <p>Based on {@link android.widget.ImageView.ScaleType}.
  */
 public class ScaleTypeDrawable extends ForwardingDrawable {
 
@@ -46,6 +46,7 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
 
   /**
    * Creates a new ScaleType drawable with given underlying drawable and scale type.
+   *
    * @param drawable underlying drawable to apply scale type on
    * @param scaleType scale type to be applied
    */
@@ -77,6 +78,7 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
 
   /**
    * Gets the current scale type.
+   *
    * @return scale type
    */
   public ScaleType getScaleType() {
@@ -85,6 +87,7 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
 
   /**
    * Sets the scale type.
+   *
    * @param scaleType scale type to set
    */
   public void setScaleType(ScaleType scaleType) {
@@ -109,10 +112,11 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
   }
 
   /**
-   * Sets the focus point.
-   * If ScaleType.FOCUS_CROP is used, focus point will attempted to be centered within a view.
-   * Each coordinate is a real number in [0,1] range, in the coordinate system where top-left
-   * corner of the image corresponds to (0, 0) and the bottom-right corner corresponds to (1, 1).
+   * Sets the focus point. If ScaleType.FOCUS_CROP is used, focus point will attempted to be
+   * centered within a view. Each coordinate is a real number in [0,1] range, in the coordinate
+   * system where top-left corner of the image corresponds to (0, 0) and the bottom-right corner
+   * corresponds to (1, 1).
+   *
    * @param focusPoint focus point of the image
    */
   public void setFocusPoint(PointF focusPoint) {
@@ -157,8 +161,8 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
       mScaleTypeState = state;
     }
     boolean underlyingChanged =
-        mUnderlyingWidth != getCurrent().getIntrinsicWidth() ||
-        mUnderlyingHeight != getCurrent().getIntrinsicHeight();
+        mUnderlyingWidth != getCurrent().getIntrinsicWidth()
+            || mUnderlyingHeight != getCurrent().getIntrinsicHeight();
     if (underlyingChanged || scaleTypeChanged) {
       configureBounds();
     }
@@ -168,7 +172,8 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
    * Determines bounds for the underlying drawable and a matrix that should be applied on it.
    * Adopted from android.widget.ImageView
    */
-  @VisibleForTesting void configureBounds() {
+  @VisibleForTesting
+  void configureBounds() {
     Drawable underlyingDrawable = getCurrent();
     Rect bounds = getBounds();
     int viewWidth = bounds.width();
@@ -212,6 +217,7 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
 
   /**
    * TransformationCallback method
+   *
    * @param transform
    */
   @Override

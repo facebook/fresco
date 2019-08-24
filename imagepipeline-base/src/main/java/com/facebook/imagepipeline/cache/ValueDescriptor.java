@@ -6,9 +6,7 @@
  */
 package com.facebook.imagepipeline.cache;
 
-/**
- * Interface used to get the information about the values.
- */
+/** Interface used to get the information about the values. */
 public interface ValueDescriptor<V> {
 
   /** Returns the size in bytes of the given value. */

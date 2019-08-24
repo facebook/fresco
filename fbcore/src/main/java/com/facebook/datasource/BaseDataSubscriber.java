@@ -10,8 +10,9 @@ package com.facebook.datasource;
 /**
  * Base implementation of {@link DataSubscriber} that ensures that the data source is closed when
  * the subscriber has finished with it.
- * <p>
- * Sample usage:
+ *
+ * <p>Sample usage:
+ *
  * <pre>
  * <code>
  * dataSource.subscribe(
@@ -61,12 +62,10 @@ public abstract class BaseDataSubscriber<T> implements DataSubscriber<T> {
   }
 
   @Override
-  public void onCancellation(DataSource<T> dataSource) {
-  }
+  public void onCancellation(DataSource<T> dataSource) {}
 
   @Override
-  public void onProgressUpdate(DataSource<T> dataSource) {
-  }
+  public void onProgressUpdate(DataSource<T> dataSource) {}
 
   protected abstract void onNewResultImpl(DataSource<T> dataSource);
 

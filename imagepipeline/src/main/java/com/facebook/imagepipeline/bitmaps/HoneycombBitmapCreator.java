@@ -19,9 +19,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.memory.PoolFactory;
 
-/**
- * This is the implementation of the BitmapCreator for the Honeycomb
- */
+/** This is the implementation of the BitmapCreator for the Honeycomb */
 public class HoneycombBitmapCreator implements BitmapCreator {
 
   private final EmptyJpegGenerator mJpegGenerator;
@@ -34,30 +32,22 @@ public class HoneycombBitmapCreator implements BitmapCreator {
 
   @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
   @Override
-  public Bitmap createNakedBitmap(
-      int width, int height, Bitmap.Config bitmapConfig) {
-    CloseableReference<PooledByteBuffer> jpgRef = mJpegGenerator.generate(
-        (short) width,
-        (short) height);
+  public Bitmap createNakedBitmap(int width, int height, Bitmap.Config bitmapConfig) {
+    CloseableReference<PooledByteBuffer> jpgRef =
+        mJpegGenerator.generate((short) width, (short) height);
     EncodedImage encodedImage = null;
     CloseableReference<byte[]> encodedBytesArrayRef = null;
     try {
       encodedImage = new EncodedImage(jpgRef);
       encodedImage.setImageFormat(DefaultImageFormats.JPEG);
-      BitmapFactory.Options options = getBitmapFactoryOptions(
-          encodedImage.getSampleSize(),
-          bitmapConfig);
+      BitmapFactory.Options options =
+          getBitmapFactoryOptions(encodedImage.getSampleSize(), bitmapConfig);
       int length = jpgRef.get().size();
       final PooledByteBuffer pooledByteBuffer = jpgRef.get();
-      encodedBytesArrayRef =
-          mFlexByteArrayPool.get(length + 2);
+      encodedBytesArrayRef = mFlexByteArrayPool.get(length + 2);
       byte[] encodedBytesArray = encodedBytesArrayRef.get();
       pooledByteBuffer.read(0, encodedBytesArray, 0, length);
-      Bitmap bitmap = BitmapFactory.decodeByteArray(
-          encodedBytesArray,
-          0,
-          length,
-          options);
+      Bitmap bitmap = BitmapFactory.decodeByteArray(encodedBytesArray, 0, length, options);
       bitmap.setHasAlpha(true);
       bitmap.eraseColor(Color.TRANSPARENT);
       return bitmap;
@@ -69,8 +59,7 @@ public class HoneycombBitmapCreator implements BitmapCreator {
   }
 
   private static BitmapFactory.Options getBitmapFactoryOptions(
-      int sampleSize,
-      Bitmap.Config bitmapConfig) {
+      int sampleSize, Bitmap.Config bitmapConfig) {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inDither = true; // known to improve picture quality at low cost
     options.inPreferredConfig = bitmapConfig;
@@ -81,7 +70,7 @@ public class HoneycombBitmapCreator implements BitmapCreator {
     // Sample size should ONLY be different than 1 when downsampling is enabled in the pipeline
     options.inSampleSize = sampleSize;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      options.inMutable = true;  // no known perf difference; allows postprocessing to work
+      options.inMutable = true; // no known perf difference; allows postprocessing to work
     }
     return options;
   }

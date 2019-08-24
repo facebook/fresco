@@ -18,22 +18,23 @@ public class EncodedMemoryCacheFactory {
 
     imageCacheStatsTracker.registerEncodedMemoryCache(encodedCountingMemoryCache);
 
-    MemoryCacheTracker memoryCacheTracker = new MemoryCacheTracker<CacheKey>() {
-      @Override
-      public void onCacheHit(CacheKey cacheKey) {
-        imageCacheStatsTracker.onMemoryCacheHit(cacheKey);
-      }
+    MemoryCacheTracker memoryCacheTracker =
+        new MemoryCacheTracker<CacheKey>() {
+          @Override
+          public void onCacheHit(CacheKey cacheKey) {
+            imageCacheStatsTracker.onMemoryCacheHit(cacheKey);
+          }
 
-      @Override
-      public void onCacheMiss() {
-        imageCacheStatsTracker.onMemoryCacheMiss();
-      }
+          @Override
+          public void onCacheMiss() {
+            imageCacheStatsTracker.onMemoryCacheMiss();
+          }
 
-      @Override
-      public void onCachePut() {
-        imageCacheStatsTracker.onMemoryCachePut();
-      }
-    };
+          @Override
+          public void onCachePut() {
+            imageCacheStatsTracker.onMemoryCachePut();
+          }
+        };
 
     return new InstrumentedMemoryCache<>(encodedCountingMemoryCache, memoryCacheTracker);
   }

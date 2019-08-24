@@ -10,9 +10,7 @@ package com.facebook.imagepipeline.bitmaps;
 import android.graphics.Bitmap;
 import com.facebook.common.references.ResourceReleaser;
 
-/**
- * A releaser that just recycles (frees) bitmap memory immediately.
- */
+/** A releaser that just recycles (frees) bitmap memory immediately. */
 public class SimpleBitmapReleaser implements ResourceReleaser<Bitmap> {
 
   private static SimpleBitmapReleaser sInstance;

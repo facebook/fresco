@@ -50,13 +50,14 @@ public class AnimatedFrameCacheTest {
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    MemoryCacheParams params = new MemoryCacheParams(
-        4 * ByteConstants.MB,
-        256,
-        Integer.MAX_VALUE,
-        Integer.MAX_VALUE,
-        Integer.MAX_VALUE,
-        TimeUnit.MINUTES.toMillis(5));
+    MemoryCacheParams params =
+        new MemoryCacheParams(
+            4 * ByteConstants.MB,
+            256,
+            Integer.MAX_VALUE,
+            Integer.MAX_VALUE,
+            Integer.MAX_VALUE,
+            TimeUnit.MINUTES.toMillis(5));
     when(mMemoryCacheParamsSupplier.get()).thenReturn(params);
     CountingMemoryCache<CacheKey, CloseableImage> countingMemoryCache =
         BitmapCountingMemoryCacheFactory.get(mMemoryCacheParamsSupplier, mMemoryTrimmableRegistry);

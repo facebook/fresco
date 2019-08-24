@@ -20,9 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests {@link ImageFormatChecker}
- */
+/** Tests {@link ImageFormatChecker} */
 @RunWith(RobolectricTestRunner.class)
 public class ImageFormatCheckerTest {
 
@@ -32,65 +30,48 @@ public class ImageFormatCheckerTest {
 
   @Test
   public void testSimpleWebps() throws Exception {
-    singleImageTypeTest(
-        getNames(2, "webps/%d_webp_plain.webp"),
-        DefaultImageFormats.WEBP_SIMPLE);
+    singleImageTypeTest(getNames(2, "webps/%d_webp_plain.webp"), DefaultImageFormats.WEBP_SIMPLE);
   }
 
   @Test
   public void testLosslessWebps() throws Exception {
-    singleImageTypeTest(
-        getNames(5, "webps/%d_webp_ll.webp"),
-        DefaultImageFormats.WEBP_LOSSLESS);
+    singleImageTypeTest(getNames(5, "webps/%d_webp_ll.webp"), DefaultImageFormats.WEBP_LOSSLESS);
   }
 
   @Test
   public void testExtendedWebpsWithAlpha() throws Exception {
     singleImageTypeTest(
-        getNames(5, "webps/%d_webp_ea.webp"),
-        DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA);
+        getNames(5, "webps/%d_webp_ea.webp"), DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA);
   }
 
   @Test
   public void testExtendedWebpsWithoutAlpha() throws Exception {
-    singleImageTypeTest(
-        getName("webps/1_webp_e.webp"),
-        DefaultImageFormats.WEBP_EXTENDED);
+    singleImageTypeTest(getName("webps/1_webp_e.webp"), DefaultImageFormats.WEBP_EXTENDED);
   }
 
   @Test
   public void testAnimatedWebps() throws Exception {
-    singleImageTypeTest(
-        getName("webps/1_webp_anim.webp"),
-        DefaultImageFormats.WEBP_ANIMATED);
+    singleImageTypeTest(getName("webps/1_webp_anim.webp"), DefaultImageFormats.WEBP_ANIMATED);
   }
 
   @Test
   public void testJpegs() throws Exception {
-    singleImageTypeTest(
-        getNames(5, "jpegs/%d.jpeg"),
-        DefaultImageFormats.JPEG);
+    singleImageTypeTest(getNames(5, "jpegs/%d.jpeg"), DefaultImageFormats.JPEG);
   }
 
   @Test
   public void testPngs() throws Exception {
-    singleImageTypeTest(
-        getNames(5, "pngs/%d.png"),
-        DefaultImageFormats.PNG);
+    singleImageTypeTest(getNames(5, "pngs/%d.png"), DefaultImageFormats.PNG);
   }
 
   @Test
   public void testGifs() throws Exception {
-    singleImageTypeTest(
-        getNames(5, "gifs/%d.gif"),
-        DefaultImageFormats.GIF);
+    singleImageTypeTest(getNames(5, "gifs/%d.gif"), DefaultImageFormats.GIF);
   }
 
   @Test
   public void testBmps() throws Exception {
-    singleImageTypeTest(
-        getNames(5, "bmps/%d.bmp"),
-        DefaultImageFormats.BMP);
+    singleImageTypeTest(getNames(5, "bmps/%d.bmp"), DefaultImageFormats.BMP);
   }
 
   @Test
@@ -99,9 +80,7 @@ public class ImageFormatCheckerTest {
   }
 
   private void singleImageTypeTest(
-      final List<String> resourceNames,
-      final ImageFormat expectedImageType)
-      throws Exception {
+      final List<String> resourceNames, final ImageFormat expectedImageType) throws Exception {
     for (String name : resourceNames) {
       final InputStream resourceStream = getResourceStream(name);
       try {

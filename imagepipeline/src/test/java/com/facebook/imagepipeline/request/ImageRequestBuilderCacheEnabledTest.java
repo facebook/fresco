@@ -21,14 +21,14 @@ public class ImageRequestBuilderCacheEnabledTest {
   @ParameterizedRobolectricTestRunner.Parameters(name = "URI of scheme \"{0}://\"")
   public static Collection<Object[]> data() {
     return Arrays.asList(
-        new Object[][]{
-            {"asset", false},
-            {"content", false},
-            {"data", false},
-            {"file", false},
-            {"http", true},
-            {"https", true},
-            {"res", false},
+        new Object[][] {
+          {"asset", false},
+          {"content", false},
+          {"data", false},
+          {"file", false},
+          {"http", true},
+          {"https", true},
+          {"res", false},
         });
   }
 
@@ -36,8 +36,7 @@ public class ImageRequestBuilderCacheEnabledTest {
   private final boolean mExpectedDefaultDiskCacheEnabled;
 
   public ImageRequestBuilderCacheEnabledTest(
-      String uriScheme,
-      Boolean expectedDefaultDiskCacheEnabled) {
+      String uriScheme, Boolean expectedDefaultDiskCacheEnabled) {
     mUriScheme = uriScheme;
     mExpectedDefaultDiskCacheEnabled = expectedDefaultDiskCacheEnabled;
   }

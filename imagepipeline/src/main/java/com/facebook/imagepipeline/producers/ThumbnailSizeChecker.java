@@ -22,7 +22,7 @@ public final class ThumbnailSizeChecker {
    * big enough. This will allow a thumbnail which is actually 75% of the requested size to be used
    * and scaled up.
    */
-  public static final float ACCEPTABLE_REQUESTED_TO_ACTUAL_SIZE_RATIO = 4.0f/3;
+  public static final float ACCEPTABLE_REQUESTED_TO_ACTUAL_SIZE_RATIO = 4.0f / 3;
 
   private static final int ROTATED_90_DEGREES_CLOCKWISE = 90;
   private static final int ROTATED_90_DEGREES_COUNTER_CLOCKWISE = 270;

@@ -13,11 +13,10 @@ import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import javax.annotation.Nullable;
 
 /**
- * Helper class to create {@link ValueAnimator}s for animated drawables.
- * Currently, this class only supports API 11 (Honeycomb) and above.
+ * Helper class to create {@link ValueAnimator}s for animated drawables. Currently, this class only
+ * supports API 11 (Honeycomb) and above.
  *
- * Supported drawable types:
- * - {@link AnimatedDrawable2}
+ * <p>Supported drawable types: - {@link AnimatedDrawable2}
  */
 public class AnimatedDrawableValueAnimatorHelper {
 
@@ -36,8 +35,7 @@ public class AnimatedDrawableValueAnimatorHelper {
 
     if (drawable instanceof AnimatedDrawable2) {
       return AnimatedDrawable2ValueAnimatorHelper.createValueAnimator(
-          (AnimatedDrawable2) drawable,
-          maxDurationMs);
+          (AnimatedDrawable2) drawable, maxDurationMs);
     }
     return null;
   }
@@ -80,6 +78,5 @@ public class AnimatedDrawableValueAnimatorHelper {
     return null;
   }
 
-  private AnimatedDrawableValueAnimatorHelper() {
-  }
+  private AnimatedDrawableValueAnimatorHelper() {}
 }

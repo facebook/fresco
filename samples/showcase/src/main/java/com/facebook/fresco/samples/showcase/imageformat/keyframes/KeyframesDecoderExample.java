@@ -28,13 +28,11 @@ import com.facebook.keyframes.model.KFImage;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Decoder and related classes for loading and displaying Keyframe animated images.
- */
+/** Decoder and related classes for loading and displaying Keyframe animated images. */
 public class KeyframesDecoderExample {
 
-  public static final ImageFormat IMAGE_FORMAT_KEYFRAMES
-      = new ImageFormat("KEYFRAMES", "keyframes");
+  public static final ImageFormat IMAGE_FORMAT_KEYFRAMES =
+      new ImageFormat("KEYFRAMES", "keyframes");
 
   public static ImageFormat.FormatChecker createFormatChecker() {
     return new KeyframesFormatChecker();
@@ -51,8 +49,7 @@ public class KeyframesDecoderExample {
   private static class KeyframesFormatChecker implements ImageFormat.FormatChecker {
 
     private static final int HEADER_SIZE = 100;
-    private static final byte[] JSON_OBJECT_FIRST_BYTE =
-        ImageFormatCheckerUtils.asciiBytes("{");
+    private static final byte[] JSON_OBJECT_FIRST_BYTE = ImageFormatCheckerUtils.asciiBytes("{");
 
     @Override
     public int getHeaderSize() {
@@ -67,9 +64,7 @@ public class KeyframesDecoderExample {
     @Override
     public ImageFormat determineFormat(byte[] headerBytes, int headerSize) {
       // JSON files must start with a opening curly brace
-      if (!ImageFormatCheckerUtils.startsWithPattern(
-          headerBytes,
-          JSON_OBJECT_FIRST_BYTE)) {
+      if (!ImageFormatCheckerUtils.startsWithPattern(headerBytes, JSON_OBJECT_FIRST_BYTE)) {
         return null;
       }
 
@@ -94,8 +89,7 @@ public class KeyframesDecoderExample {
       InputStream encodedInputStream = null;
       try {
         encodedInputStream = encodedImage.getInputStream();
-        return new CloseableKeyframesImage(
-            KFImageDeserializer.deserialize(encodedInputStream));
+        return new CloseableKeyframesImage(KFImageDeserializer.deserialize(encodedInputStream));
       } catch (IOException e) {
         e.printStackTrace();
         return null;

@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 
 public class DownsampleUtil {
   public static final int DEFAULT_SAMPLE_SIZE = 1;
-  private static final float INTERVAL_ROUNDING = 1.0f/3;
+  private static final float INTERVAL_ROUNDING = 1.0f / 3;
 
   private DownsampleUtil() {}
 
@@ -69,17 +69,20 @@ public class DownsampleUtil {
       @Nullable final ResizeOptions resizeOptions,
       final EncodedImage encodedImage) {
     Preconditions.checkArgument(EncodedImage.isMetaDataAvailable(encodedImage));
-    if (resizeOptions == null || resizeOptions.height <= 0 || resizeOptions.width <= 0
-        || encodedImage.getWidth() == 0 || encodedImage.getHeight() == 0) {
+    if (resizeOptions == null
+        || resizeOptions.height <= 0
+        || resizeOptions.width <= 0
+        || encodedImage.getWidth() == 0
+        || encodedImage.getHeight() == 0) {
       return 1.0f;
     }
 
     final int rotationAngle = getRotationAngle(rotationOptions, encodedImage);
     final boolean swapDimensions = rotationAngle == 90 || rotationAngle == 270;
-    final int widthAfterRotation = swapDimensions ?
-            encodedImage.getHeight() : encodedImage.getWidth();
-    final int heightAfterRotation = swapDimensions ?
-            encodedImage.getWidth() : encodedImage.getHeight();
+    final int widthAfterRotation =
+        swapDimensions ? encodedImage.getHeight() : encodedImage.getWidth();
+    final int heightAfterRotation =
+        swapDimensions ? encodedImage.getWidth() : encodedImage.getHeight();
 
     final float widthRatio = ((float) resizeOptions.width) / widthAfterRotation;
     final float heightRatio = ((float) resizeOptions.height) / heightAfterRotation;
@@ -136,8 +139,8 @@ public class DownsampleUtil {
       return 0;
     }
     int rotationAngle = encodedImage.getRotationAngle();
-    Preconditions.checkArgument(rotationAngle == 0 || rotationAngle == 90
-        || rotationAngle == 180 || rotationAngle == 270);
+    Preconditions.checkArgument(
+        rotationAngle == 0 || rotationAngle == 90 || rotationAngle == 180 || rotationAngle == 270);
     return rotationAngle;
   }
 

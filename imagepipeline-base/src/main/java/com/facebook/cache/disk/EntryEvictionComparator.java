@@ -8,8 +8,5 @@ package com.facebook.cache.disk;
 
 import java.util.Comparator;
 
-/**
- * Defines an order the items are being evicted from the cache.
- */
-public interface EntryEvictionComparator extends Comparator<DiskStorage.Entry> {
-}
+/** Defines an order the items are being evicted from the cache. */
+public interface EntryEvictionComparator extends Comparator<DiskStorage.Entry> {}

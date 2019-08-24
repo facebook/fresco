@@ -9,13 +9,12 @@ package com.facebook.drawee.drawable;
 
 import android.graphics.drawable.Drawable;
 
-/**
- * A drawable that is capable of cloning itself.
- */
+/** A drawable that is capable of cloning itself. */
 public interface CloneableDrawable {
 
   /**
    * Creates a copy of the drawable.
+   *
    * @return the drawable copy
    */
   Drawable cloneDrawable();

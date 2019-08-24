@@ -135,45 +135,46 @@ public class MainActivity extends AppCompatActivity {
     }
 
     mHandler = new Handler(Looper.getMainLooper());
-    mStatsClockTickRunnable = new Runnable() {
-      @Override
-      public void run() {
-        updateStats();
-        scheduleNextStatsClockTick();
-      }
-    };
+    mStatsClockTickRunnable =
+        new Runnable() {
+          @Override
+          public void run() {
+            updateStats();
+            scheduleNextStatsClockTick();
+          }
+        };
 
     mCurrentAdapter = null;
 
     mStatsDisplay = (TextView) findViewById(R.id.stats_display);
     mLoaderSelect = (Spinner) findViewById(R.id.loader_select);
-    mLoaderSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    mLoaderSelect.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
           @Override
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             setLoaderAdapter(position);
           }
 
           @Override
-          public void onNothingSelected(AdapterView<?> parent) {
-          }
+          public void onNothingSelected(AdapterView<?> parent) {}
         });
     mLoaderSelect.setSelection(mCurrentLoaderAdapterIndex);
 
     mSourceSelect = (Spinner) findViewById(R.id.source_select);
-    mSourceSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    mSourceSelect.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
           @Override
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             setSourceAdapter(position);
           }
 
           @Override
-          public void onNothingSelected(AdapterView<?> parent) {
-          }
+          public void onNothingSelected(AdapterView<?> parent) {}
         });
     mSourceSelect.setSelection(mCurrentSourceAdapterIndex);
     mHasStoragePermissions =
-        ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) ==
-            PackageManager.PERMISSION_GRANTED;
+        ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+            == PackageManager.PERMISSION_GRANTED;
   }
 
   @Override
@@ -249,16 +250,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     ActivityCompat.requestPermissions(
-        this,
-        new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
-        PERMISSION_REQUEST_CODE);
+        this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
   }
 
   @Override
   public void onRequestPermissionsResult(
-      int requestCode,
-      String[] permissions,
-      int[] grantResults) {
+      int requestCode, String[] permissions, int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     for (int i = 0; i < permissions.length; ++i) {
       if (permissions[i].equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
@@ -291,12 +288,13 @@ public class MainActivity extends AppCompatActivity {
     switch (index) {
       case FRESCO_INDEX:
       case FRESCO_OKHTTP_INDEX:
-        mCurrentAdapter = new FrescoAdapter(
-            this,
-            mPerfListener,
-            index == FRESCO_INDEX ?
-                ImagePipelineConfigFactory.getImagePipelineConfig(this) :
-                ImagePipelineConfigFactory.getOkHttpImagePipelineConfig(this));
+        mCurrentAdapter =
+            new FrescoAdapter(
+                this,
+                mPerfListener,
+                index == FRESCO_INDEX
+                    ? ImagePipelineConfigFactory.getImagePipelineConfig(this)
+                    : ImagePipelineConfigFactory.getOkHttpImagePipelineConfig(this));
         break;
       case GLIDE_INDEX:
         mCurrentAdapter = new GlideAdapter(this, mPerfListener);
@@ -308,9 +306,10 @@ public class MainActivity extends AppCompatActivity {
         mCurrentAdapter = new UilAdapter(this, mPerfListener);
         break;
       case VOLLEY_INDEX:
-        mCurrentAdapter = mUseDrawee ?
-            new VolleyDraweeAdapter(this, mPerfListener) :
-            new VolleyAdapter(this, mPerfListener);
+        mCurrentAdapter =
+            mUseDrawee
+                ? new VolleyDraweeAdapter(this, mPerfListener)
+                : new VolleyAdapter(this, mPerfListener);
         break;
       case AQUERY_INDEX:
         mCurrentAdapter = new AQueryAdapter(this, mPerfListener);
@@ -325,7 +324,6 @@ public class MainActivity extends AppCompatActivity {
 
     updateStats();
   }
-
 
   private void setSourceAdapter(int index) {
     FLog.v(TAG, "onImageSourceSelect: %d", index);
@@ -373,8 +371,8 @@ public class MainActivity extends AppCompatActivity {
 
   public static int calcDesiredSize(Context context, int parentWidth, int parentHeight) {
     int orientation = context.getResources().getConfiguration().orientation;
-    int desiredSize = (orientation == Configuration.ORIENTATION_LANDSCAPE) ?
-        parentHeight / 2 : parentHeight / 3;
+    int desiredSize =
+        (orientation == Configuration.ORIENTATION_LANDSCAPE) ? parentHeight / 2 : parentHeight / 3;
     return Math.min(desiredSize, parentWidth);
   }
 
@@ -402,13 +400,12 @@ public class MainActivity extends AppCompatActivity {
   private void loadNetworkUrls() {
     String url = "https://api.imgur.com/3/gallery/hot/viral/0.json";
     ImageSize staticSize = chooseImageSize();
-    ImageUrlsRequestBuilder builder = new ImageUrlsRequestBuilder(url)
-        .addImageFormat(ImageFormat.JPEG, staticSize)
-        .addImageFormat(ImageFormat.PNG, staticSize);
+    ImageUrlsRequestBuilder builder =
+        new ImageUrlsRequestBuilder(url)
+            .addImageFormat(ImageFormat.JPEG, staticSize)
+            .addImageFormat(ImageFormat.PNG, staticSize);
     if (mAllowAnimations) {
-      builder.addImageFormat(
-          ImageFormat.GIF,
-          ImageSize.ORIGINAL_IMAGE);
+      builder.addImageFormat(ImageFormat.GIF, ImageSize.ORIGINAL_IMAGE);
     }
     ImageUrlsFetcher.getImageUrls(
         builder.build(),
@@ -497,9 +494,7 @@ public class MainActivity extends AppCompatActivity {
     sb.append(prefix).append(value).append(suffix);
   }
 
-  /**
-   * Determines display's height.
-   */
+  /** Determines display's height. */
   public int getDisplayHeight() {
     Display display = getWindowManager().getDefaultDisplay();
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {

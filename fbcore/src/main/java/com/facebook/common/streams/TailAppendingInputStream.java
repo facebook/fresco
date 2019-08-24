@@ -10,7 +10,6 @@ package com.facebook.common.streams;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.Override;
 
 /**
  * InputStream that returns all bytes from another stream, then appends the specified 'tail' bytes.

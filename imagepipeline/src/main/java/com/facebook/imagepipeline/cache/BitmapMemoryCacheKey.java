@@ -20,9 +20,7 @@ import java.util.Locale;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
-/**
- * Cache key for BitmapMemoryCache
- */
+/** Cache key for BitmapMemoryCache */
 @Immutable
 public class BitmapMemoryCacheKey implements CacheKey {
 
@@ -50,13 +48,14 @@ public class BitmapMemoryCacheKey implements CacheKey {
     mImageDecodeOptions = imageDecodeOptions;
     mPostprocessorCacheKey = postprocessorCacheKey;
     mPostprocessorName = postprocessorName;
-    mHash = HashCodeUtil.hashCode(
-        sourceString.hashCode(),
-        (resizeOptions != null) ? resizeOptions.hashCode() : 0,
-        rotationOptions.hashCode(),
-        mImageDecodeOptions,
-        mPostprocessorCacheKey,
-        postprocessorName);
+    mHash =
+        HashCodeUtil.hashCode(
+            sourceString.hashCode(),
+            (resizeOptions != null) ? resizeOptions.hashCode() : 0,
+            rotationOptions.hashCode(),
+            mImageDecodeOptions,
+            mPostprocessorCacheKey,
+            postprocessorName);
     mCallerContext = callerContext;
     mCacheTime = RealtimeSinceBootClock.get().now();
   }
@@ -67,13 +66,13 @@ public class BitmapMemoryCacheKey implements CacheKey {
       return false;
     }
     BitmapMemoryCacheKey otherKey = (BitmapMemoryCacheKey) o;
-    return mHash == otherKey.mHash &&
-        mSourceString.equals(otherKey.mSourceString) &&
-        Objects.equal(this.mResizeOptions, otherKey.mResizeOptions) &&
-        Objects.equal(this.mRotationOptions, otherKey.mRotationOptions) &&
-        Objects.equal(mImageDecodeOptions, otherKey.mImageDecodeOptions) &&
-        Objects.equal(mPostprocessorCacheKey, otherKey.mPostprocessorCacheKey) &&
-        Objects.equal(mPostprocessorName, otherKey.mPostprocessorName);
+    return mHash == otherKey.mHash
+        && mSourceString.equals(otherKey.mSourceString)
+        && Objects.equal(this.mResizeOptions, otherKey.mResizeOptions)
+        && Objects.equal(this.mRotationOptions, otherKey.mRotationOptions)
+        && Objects.equal(mImageDecodeOptions, otherKey.mImageDecodeOptions)
+        && Objects.equal(mPostprocessorCacheKey, otherKey.mPostprocessorCacheKey)
+        && Objects.equal(mPostprocessorName, otherKey.mPostprocessorName);
   }
 
   @Override

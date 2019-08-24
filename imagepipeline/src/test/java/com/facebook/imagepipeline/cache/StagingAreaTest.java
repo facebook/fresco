@@ -68,9 +68,7 @@ public class StagingAreaTest {
 
   @Test
   public void testAnotherPut() {
-    mStagingArea.put(
-        mCacheKey,
-        mSecondEncodedImage);
+    mStagingArea.put(mCacheKey, mSecondEncodedImage);
     assertEquals(2, mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertSame(
         mCloseableReference2.getUnderlyingReferenceTestOnly(),

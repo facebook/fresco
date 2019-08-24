@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Common image decoder classes.
- */
+/** Common image decoder classes. */
 package com.facebook.imagepipeline.decoder;

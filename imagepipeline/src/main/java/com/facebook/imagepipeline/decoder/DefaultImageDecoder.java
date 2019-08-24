@@ -27,16 +27,16 @@ import javax.annotation.Nullable;
 /**
  * Decodes images.
  *
- * <p> ImageDecoder implements image type recognition and passes decode requests to
- * specialized methods implemented by subclasses.
+ * <p>ImageDecoder implements image type recognition and passes decode requests to specialized
+ * methods implemented by subclasses.
  *
- * On dalvik, it produces 'pinned' purgeable bitmaps.
+ * <p>On dalvik, it produces 'pinned' purgeable bitmaps.
  *
- * <p> Pinned purgeables behave as specified in
- * {@link android.graphics.BitmapFactory.Options#inPurgeable} with one modification. The bitmap is
- * 'pinned' so is never purged.
+ * <p>Pinned purgeables behave as specified in {@link
+ * android.graphics.BitmapFactory.Options#inPurgeable} with one modification. The bitmap is 'pinned'
+ * so is never purged.
  *
- * <p> For API 21 and higher, this class produces standard Bitmaps, as purgeability is not supported
+ * <p>For API 21 and higher, this class produces standard Bitmaps, as purgeability is not supported
  * on the most recent versions of Android.
  */
 public class DefaultImageDecoder implements ImageDecoder {
@@ -67,8 +67,7 @@ public class DefaultImageDecoder implements ImageDecoder {
         }
       };
 
-  @Nullable
-  private final Map<ImageFormat, ImageDecoder> mCustomDecoders;
+  @Nullable private final Map<ImageFormat, ImageDecoder> mCustomDecoders;
 
   public DefaultImageDecoder(
       final ImageDecoder animatedGifDecoder,
@@ -108,8 +107,8 @@ public class DefaultImageDecoder implements ImageDecoder {
     }
     ImageFormat imageFormat = encodedImage.getImageFormat();
     if (imageFormat == null || imageFormat == ImageFormat.UNKNOWN) {
-      imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
-          encodedImage.getInputStream());
+      imageFormat =
+          ImageFormatChecker.getImageFormat_WrapIOException(encodedImage.getInputStream());
       encodedImage.setImageFormat(imageFormat);
     }
     if (mCustomDecoders != null) {
@@ -147,8 +146,7 @@ public class DefaultImageDecoder implements ImageDecoder {
    * @return a CloseableStaticBitmap
    */
   public CloseableStaticBitmap decodeStaticImage(
-      final EncodedImage encodedImage,
-      ImageDecodeOptions options) {
+      final EncodedImage encodedImage, ImageDecodeOptions options) {
     CloseableReference<Bitmap> bitmapReference =
         mPlatformDecoder.decodeFromEncodedImageWithColorSpace(
             encodedImage, options.bitmapConfig, null, options.colorSpace);
@@ -195,7 +193,7 @@ public class DefaultImageDecoder implements ImageDecoder {
   /**
    * Decode a webp animated image into a CloseableImage.
    *
-   * <p> The image is decoded into a 'pinned' purgeable bitmap.
+   * <p>The image is decoded into a 'pinned' purgeable bitmap.
    *
    * @param encodedImage input image (encoded bytes plus meta data)
    * @param options

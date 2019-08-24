@@ -5,8 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Classes we use for reference counting through the CloseableReference
- * abstraction
- */
+/** Classes we use for reference counting through the CloseableReference abstraction */
 package com.facebook.common.references;

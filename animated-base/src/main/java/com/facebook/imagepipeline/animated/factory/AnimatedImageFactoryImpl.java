@@ -30,9 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
 
-/**
- * Decoder for animated images.
- */
+/** Decoder for animated images. */
 public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
 
   private final AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
@@ -64,6 +62,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
 
   /**
    * Decodes a GIF into a CloseableImage.
+   *
    * @param encodedImage encoded image (native byte array holding the encoded bytes and meta data)
    * @param options the options for the decode
    * @param bitmapConfig the Bitmap.Config used to generate the output bitmaps
@@ -74,8 +73,8 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
       final ImageDecodeOptions options,
       final Bitmap.Config bitmapConfig) {
     if (sGifAnimatedImageDecoder == null) {
-      throw new UnsupportedOperationException("To encode animated gif please add the dependency " +
-          "to the animated-gif module");
+      throw new UnsupportedOperationException(
+          "To encode animated gif please add the dependency " + "to the animated-gif module");
     }
     final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
     Preconditions.checkNotNull(bytesRef);
@@ -95,6 +94,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
 
   /**
    * Decode a WebP into a CloseableImage.
+   *
    * @param encodedImage encoded image (native byte array holding the encoded bytes and meta data)
    * @param options the options for the decode
    * @param bitmapConfig the Bitmap.Config used to generate the output bitmaps
@@ -105,8 +105,8 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
       final ImageDecodeOptions options,
       final Bitmap.Config bitmapConfig) {
     if (sWebpAnimatedImageDecoder == null) {
-      throw new UnsupportedOperationException("To encode animated webp please add the dependency " +
-          "to the animated-webp module");
+      throw new UnsupportedOperationException(
+          "To encode animated webp please add the dependency " + "to the animated-webp module");
     }
     final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
     Preconditions.checkNotNull(bytesRef);
@@ -125,9 +125,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
   }
 
   private CloseableImage getCloseableImage(
-      ImageDecodeOptions options,
-      AnimatedImage image,
-      Bitmap.Config bitmapConfig) {
+      ImageDecodeOptions options, AnimatedImage image, Bitmap.Config bitmapConfig) {
     List<CloseableReference<Bitmap>> decodedFrames = null;
     CloseableReference<Bitmap> previewBitmap = null;
     try {
@@ -147,11 +145,12 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
       if (options.decodePreviewFrame && previewBitmap == null) {
         previewBitmap = createPreviewBitmap(image, bitmapConfig, frameForPreview);
       }
-      AnimatedImageResult animatedImageResult = AnimatedImageResult.newBuilder(image)
-          .setPreviewBitmap(previewBitmap)
-          .setFrameForPreview(frameForPreview)
-          .setDecodedFrames(decodedFrames)
-          .build();
+      AnimatedImageResult animatedImageResult =
+          AnimatedImageResult.newBuilder(image)
+              .setPreviewBitmap(previewBitmap)
+              .setFrameForPreview(frameForPreview)
+              .setDecodedFrames(decodedFrames)
+              .build();
       return new CloseableAnimatedImage(animatedImageResult);
     } finally {
       CloseableReference.closeSafely(previewBitmap);
@@ -160,13 +159,9 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
   }
 
   private CloseableReference<Bitmap> createPreviewBitmap(
-      AnimatedImage image,
-      Bitmap.Config bitmapConfig,
-      int frameForPreview) {
-    CloseableReference<Bitmap> bitmap = createBitmap(
-        image.getWidth(),
-        image.getHeight(),
-        bitmapConfig);
+      AnimatedImage image, Bitmap.Config bitmapConfig, int frameForPreview) {
+    CloseableReference<Bitmap> bitmap =
+        createBitmap(image.getWidth(), image.getHeight(), bitmapConfig);
     AnimatedImageResult tempResult = AnimatedImageResult.forAnimatedImage(image);
     AnimatedDrawableBackend drawableBackend =
         mAnimatedDrawableBackendProvider.get(tempResult, null);
@@ -189,31 +184,29 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
   }
 
   private List<CloseableReference<Bitmap>> decodeAllFrames(
-      AnimatedImage image,
-      Bitmap.Config bitmapConfig) {
+      AnimatedImage image, Bitmap.Config bitmapConfig) {
     AnimatedImageResult tempResult = AnimatedImageResult.forAnimatedImage(image);
     AnimatedDrawableBackend drawableBackend =
         mAnimatedDrawableBackendProvider.get(tempResult, null);
     final List<CloseableReference<Bitmap>> bitmaps =
-            new ArrayList<>(drawableBackend.getFrameCount());
-    AnimatedImageCompositor animatedImageCompositor = new AnimatedImageCompositor(
-        drawableBackend,
-        new AnimatedImageCompositor.Callback() {
-          @Override
-          public void onIntermediateResult(int frameNumber, Bitmap bitmap) {
-            // Don't care.
-          }
+        new ArrayList<>(drawableBackend.getFrameCount());
+    AnimatedImageCompositor animatedImageCompositor =
+        new AnimatedImageCompositor(
+            drawableBackend,
+            new AnimatedImageCompositor.Callback() {
+              @Override
+              public void onIntermediateResult(int frameNumber, Bitmap bitmap) {
+                // Don't care.
+              }
 
-          @Override
-          public CloseableReference<Bitmap> getCachedBitmap(int frameNumber) {
-            return CloseableReference.cloneOrNull(bitmaps.get(frameNumber));
-          }
-        });
+              @Override
+              public CloseableReference<Bitmap> getCachedBitmap(int frameNumber) {
+                return CloseableReference.cloneOrNull(bitmaps.get(frameNumber));
+              }
+            });
     for (int i = 0; i < drawableBackend.getFrameCount(); i++) {
-      CloseableReference<Bitmap> bitmap = createBitmap(
-          drawableBackend.getWidth(),
-          drawableBackend.getHeight(),
-          bitmapConfig);
+      CloseableReference<Bitmap> bitmap =
+          createBitmap(drawableBackend.getWidth(), drawableBackend.getHeight(), bitmapConfig);
       animatedImageCompositor.renderFrame(i, bitmap.get());
       bitmaps.add(bitmap);
     }
@@ -222,9 +215,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
 
   @SuppressLint("NewApi")
   private CloseableReference<Bitmap> createBitmap(
-      int width,
-      int height,
-      Bitmap.Config bitmapConfig) {
+      int width, int height, Bitmap.Config bitmapConfig) {
     CloseableReference<Bitmap> bitmap =
         mBitmapFactory.createBitmapInternal(width, height, bitmapConfig);
     bitmap.get().eraseColor(Color.TRANSPARENT);

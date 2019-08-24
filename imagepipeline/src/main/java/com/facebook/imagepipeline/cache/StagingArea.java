@@ -22,8 +22,8 @@ import javax.annotation.concurrent.GuardedBy;
 
 /**
  * This is class encapsulates Map that maps ImageCacheKeys to EncodedImages pointing to
- * PooledByteBuffers. It is used by SimpleImageCache to store values that are being written
- * to disk cache, so that they can be returned by parallel cache get operations.
+ * PooledByteBuffers. It is used by SimpleImageCache to store values that are being written to disk
+ * cache, so that they can be returned by parallel cache get operations.
  */
 public class StagingArea {
   private static final Class<?> TAG = StagingArea.class;
@@ -40,8 +40,8 @@ public class StagingArea {
   }
 
   /**
-   * Stores key-value in this StagingArea. This call overrides previous value
-   * of stored reference if
+   * Stores key-value in this StagingArea. This call overrides previous value of stored reference if
+   *
    * @param key
    * @param encodedImage EncodedImage to be associated with key
    */
@@ -55,9 +55,7 @@ public class StagingArea {
     logStats();
   }
 
-  /**
-   * Removes all items from the StagingArea.
-   */
+  /** Removes all items from the StagingArea. */
   public void clearAll() {
     final List<EncodedImage> old;
     synchronized (this) {
@@ -74,6 +72,7 @@ public class StagingArea {
 
   /**
    * Removes item from the StagingArea.
+   *
    * @param key
    * @return true if item was removed
    */
@@ -95,6 +94,7 @@ public class StagingArea {
 
   /**
    * Removes key-value from the StagingArea. Both key and value must match.
+   *
    * @param key
    * @param encodedImage value corresponding to key
    * @return true if item was removed
@@ -155,9 +155,7 @@ public class StagingArea {
     return storedEncodedImage;
   }
 
-  /**
-   * Determine if an valid entry for the key exists in the staging area.
-   */
+  /** Determine if an valid entry for the key exists in the staging area. */
   public synchronized boolean containsKey(CacheKey key) {
     Preconditions.checkNotNull(key);
     if (!mMap.containsKey(key)) {
@@ -182,11 +180,8 @@ public class StagingArea {
     }
   }
 
-  /**
-   * Simple 'debug' logging of stats.
-   */
+  /** Simple 'debug' logging of stats. */
   private synchronized void logStats() {
     FLog.v(TAG, "Count = %d", mMap.size());
   }
-
 }

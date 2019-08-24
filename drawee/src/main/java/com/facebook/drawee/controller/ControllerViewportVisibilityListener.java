@@ -9,8 +9,8 @@ package com.facebook.drawee.controller;
 
 /**
  * A listener for {@link AbstractDraweeController} that listens to events regarding visibility of
- * the drawee in the viewport. As Android does not provide these events, the client must call
- * {@link AbstractDraweeController#onViewportVisibilityHint(boolean)} accordingly.
+ * the drawee in the viewport. As Android does not provide these events, the client must call {@link
+ * AbstractDraweeController#onViewportVisibilityHint(boolean)} accordingly.
  */
 public interface ControllerViewportVisibilityListener {
 
@@ -23,8 +23,8 @@ public interface ControllerViewportVisibilityListener {
   void onDraweeViewportEntry(String id);
 
   /**
-   * Called after a client has given the {@link AbstractDraweeController} a hint that the view
-   * is no longer visible in the viewport.
+   * Called after a client has given the {@link AbstractDraweeController} a hint that the view is no
+   * longer visible in the viewport.
    *
    * @param id controller id
    */

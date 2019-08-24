@@ -15,9 +15,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 
-/**
-* Drawable that displays a progress bar based on the level.
-*/
+/** Drawable that displays a progress bar based on the level. */
 public class ProgressBarDrawable extends Drawable implements CloneableDrawable {
 
   private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);

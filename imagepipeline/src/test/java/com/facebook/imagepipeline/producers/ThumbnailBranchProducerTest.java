@@ -89,8 +89,7 @@ public class ThumbnailBranchProducerTest {
 
     EncodedImage secondImage = mockEncodedImage(THUMBNAIL_WIDTHS[1], THUMBNAIL_HEIGHTS[1], 0);
     mockProducersToProduce(
-        mockEncodedImage(THUMBNAIL_WIDTHS[0] + 50, THUMBNAIL_HEIGHTS[0] + 50, 0),
-        secondImage);
+        mockEncodedImage(THUMBNAIL_WIDTHS[0] + 50, THUMBNAIL_HEIGHTS[0] + 50, 0), secondImage);
 
     mProducer.produceResults(mImageConsumer, mProducerContext);
 
@@ -180,8 +179,7 @@ public class ThumbnailBranchProducerTest {
     EncodedImage secondImage =
         mockEncodedImage(THUMBNAIL_HEIGHTS[1] * 3 / 4, THUMBNAIL_WIDTHS[1] * 3 / 4, 90);
     mockProducersToProduce(
-        mockEncodedImage(THUMBNAIL_WIDTHS[0], THUMBNAIL_HEIGHTS[0], 0),
-        secondImage);
+        mockEncodedImage(THUMBNAIL_WIDTHS[0], THUMBNAIL_HEIGHTS[0], 0), secondImage);
 
     mProducer.produceResults(mImageConsumer, mProducerContext);
 
@@ -218,45 +216,50 @@ public class ThumbnailBranchProducerTest {
   }
 
   private static void mockProducerToSupportSize(
-      ThumbnailProducer<EncodedImage> mockProducer,
-      final int width,
-      final int height) {
-    when(mockProducer.canProvideImageForSize(any(ResizeOptions.class))).then(new Answer<Boolean>() {
-      @Override
-      public Boolean answer(InvocationOnMock invocation) throws Throwable {
-        ResizeOptions resizeOptions = (ResizeOptions) invocation.getArguments()[0];
-        return resizeOptions.width <= width && resizeOptions.height <= height;
-      }
-    });
+      ThumbnailProducer<EncodedImage> mockProducer, final int width, final int height) {
+    when(mockProducer.canProvideImageForSize(any(ResizeOptions.class)))
+        .then(
+            new Answer<Boolean>() {
+              @Override
+              public Boolean answer(InvocationOnMock invocation) throws Throwable {
+                ResizeOptions resizeOptions = (ResizeOptions) invocation.getArguments()[0];
+                return resizeOptions.width <= width && resizeOptions.height <= height;
+              }
+            });
   }
 
   private void mockProducersToProduce(final EncodedImage... images) {
     for (int i = 0; i < images.length; i++) {
       final EncodedImage image = images[i];
-      whenProduceResultsCalledTrigger(mThumbnailProducers[i], new ConsumerCallback() {
-        @Override
-        public void callback(Consumer<EncodedImage> consumer) {
-          if (image == THROW_FAILURE) {
-            consumer.onFailure(new IOException("IMAGE FAILED"));
-          } else {
-            consumer.onNewResult(image, Consumer.IS_LAST);
-          }
-        }
-      });
+      whenProduceResultsCalledTrigger(
+          mThumbnailProducers[i],
+          new ConsumerCallback() {
+            @Override
+            public void callback(Consumer<EncodedImage> consumer) {
+              if (image == THROW_FAILURE) {
+                consumer.onFailure(new IOException("IMAGE FAILED"));
+              } else {
+                consumer.onNewResult(image, Consumer.IS_LAST);
+              }
+            }
+          });
     }
   }
 
   private static void whenProduceResultsCalledTrigger(
-      ThumbnailProducer<EncodedImage> mockProducer,
-      final ConsumerCallback callback) {
-    doAnswer(new Answer<Void>() {
-      @Override
-      public Void answer(InvocationOnMock invocation) throws Throwable {
-        Consumer<EncodedImage> consumer = (Consumer<EncodedImage>) invocation.getArguments()[0];
-        callback.callback(consumer);
-        return null;
-      }
-    }).when(mockProducer).produceResults(any(Consumer.class), any(ProducerContext.class));
+      ThumbnailProducer<EncodedImage> mockProducer, final ConsumerCallback callback) {
+    doAnswer(
+            new Answer<Void>() {
+              @Override
+              public Void answer(InvocationOnMock invocation) throws Throwable {
+                Consumer<EncodedImage> consumer =
+                    (Consumer<EncodedImage>) invocation.getArguments()[0];
+                callback.callback(consumer);
+                return null;
+              }
+            })
+        .when(mockProducer)
+        .produceResults(any(Consumer.class), any(ProducerContext.class));
   }
 
   private void verifyAllProducersRequestedForResults() {

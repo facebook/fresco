@@ -24,11 +24,11 @@ import com.facebook.samples.zoomable.ZoomableDraweeView;
 class MyPagerAdapter extends PagerAdapter {
 
   private static final String[] SAMPLE_URIS = {
-          "https://www.gstatic.com/webp/gallery/1.sm.jpg",
-          "https://www.gstatic.com/webp/gallery/2.sm.jpg",
-          "https://www.gstatic.com/webp/gallery/3.sm.jpg",
-          "https://www.gstatic.com/webp/gallery/4.sm.jpg",
-          "https://www.gstatic.com/webp/gallery/5.sm.jpg",
+    "https://www.gstatic.com/webp/gallery/1.sm.jpg",
+    "https://www.gstatic.com/webp/gallery/2.sm.jpg",
+    "https://www.gstatic.com/webp/gallery/3.sm.jpg",
+    "https://www.gstatic.com/webp/gallery/4.sm.jpg",
+    "https://www.gstatic.com/webp/gallery/5.sm.jpg",
   };
 
   private final int mItemCount;
@@ -57,15 +57,16 @@ class MyPagerAdapter extends PagerAdapter {
       return null;
     }
     ZoomableDraweeView zoomableDraweeView =
-            (ZoomableDraweeView) page.findViewById(R.id.zoomableView);
+        (ZoomableDraweeView) page.findViewById(R.id.zoomableView);
     zoomableDraweeView.setAllowTouchInterceptionWhileZoomed(mAllowSwipingWhileZoomed);
     // needed for double tap to zoom
     zoomableDraweeView.setIsLongpressEnabled(false);
     zoomableDraweeView.setTapListener(new DoubleTapGestureListener(zoomableDraweeView));
-    DraweeController controller = Fresco.newDraweeControllerBuilder()
-      .setUri(SAMPLE_URIS[position % SAMPLE_URIS.length])
-      .setCallerContext("ZoomableApp-MyPagerAdapter")
-      .build();
+    DraweeController controller =
+        Fresco.newDraweeControllerBuilder()
+            .setUri(SAMPLE_URIS[position % SAMPLE_URIS.length])
+            .setCallerContext("ZoomableApp-MyPagerAdapter")
+            .build();
     zoomableDraweeView.setController(controller);
     page.requestLayout();
     return page;

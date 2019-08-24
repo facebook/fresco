@@ -15,11 +15,8 @@ import android.net.Uri;
 import com.facebook.samples.scrollperf.data.Decorator;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
 
-/**
- * This decorates a Uri adding a distinct parameter
- */
+/** This decorates a Uri adding a distinct parameter */
 public enum DistinctUriDecorator implements Decorator<Uri> {
-
   SINGLETON;
 
   @Override

@@ -36,15 +36,14 @@ import org.robolectric.*;
 import org.robolectric.annotation.*;
 
 /**
- * Checks basic properties of encoded memory cache producer operation, that is:
- *   - it delegates to the {@link MemoryCache#get(Object)}
- *   - if {@link MemoryCache#get(Object)} is unsuccessful, then it passes the
- *   request to the next producer in the sequence.
- *   - if the next producer returns the value, then it is put into the disk cache.
- *   - responses from the next producer are passed back down to the consumer.
+ * Checks basic properties of encoded memory cache producer operation, that is: - it delegates to
+ * the {@link MemoryCache#get(Object)} - if {@link MemoryCache#get(Object)} is unsuccessful, then it
+ * passes the request to the next producer in the sequence. - if the next producer returns the
+ * value, then it is put into the disk cache. - responses from the next producer are passed back
+ * down to the consumer.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class EncodedMemoryCacheProducerTest {
   private static final String PRODUCER_NAME = EncodedMemoryCacheProducer.PRODUCER_NAME;
   @Mock public MemoryCache<CacheKey, PooledByteBuffer> mMemoryCache;
@@ -192,8 +191,7 @@ public class EncodedMemoryCacheProducerTest {
     mEncodedMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
 
     verify(mMemoryCache, never()).cache(any(CacheKey.class), any(CloseableReference.class));
-    verify(mConsumer)
-        .onNewResult(mIntermediateEncodedImage, statusFlags);
+    verify(mConsumer).onNewResult(mIntermediateEncodedImage, statusFlags);
     verify(mConsumer).onNewResult(mFinalEncodedImageFormatUnknown, Consumer.IS_LAST | statusFlags);
     Assert.assertTrue(EncodedImage.isValid(mFinalEncodedImageClone));
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
@@ -280,12 +278,14 @@ public class EncodedMemoryCacheProducerTest {
     final List<EncodedImage> nullArray = new ArrayList<EncodedImage>(1);
     nullArray.add(null);
     doAnswer(new ProduceResultsNewResultAnswer(nullArray, 0))
-        .when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+        .when(mInputProducer)
+        .produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   private void setupInputProducerFailure() {
-    doAnswer(new ProduceResultsFailureAnswer()).
-        when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+    doAnswer(new ProduceResultsFailureAnswer())
+        .when(mInputProducer)
+        .produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   private static class ProduceResultsNewResultAnswer implements Answer<Void> {
@@ -304,8 +304,7 @@ public class EncodedMemoryCacheProducerTest {
       while (iterator.hasNext()) {
         EncodedImage result = iterator.next();
         consumer.onNewResult(
-            result,
-            BaseConsumer.simpleStatusForIsLast(!iterator.hasNext()) | mExtraStatusFlags);
+            result, BaseConsumer.simpleStatusForIsLast(!iterator.hasNext()) | mExtraStatusFlags);
       }
       return null;
     }

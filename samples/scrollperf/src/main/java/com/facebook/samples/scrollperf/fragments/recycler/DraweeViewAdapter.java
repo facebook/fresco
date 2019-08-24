@@ -23,9 +23,7 @@ import com.facebook.samples.scrollperf.instrumentation.InstrumentedDraweeView;
 import com.facebook.samples.scrollperf.instrumentation.PerfListener;
 import com.facebook.samples.scrollperf.util.DraweeUtil;
 
-/**
- * The RecyclerView.Adapter for the DraweeView
- */
+/** The RecyclerView.Adapter for the DraweeView */
 public class DraweeViewAdapter extends RecyclerView.Adapter<DraweeViewHolder> {
 
   private final SimpleAdapter<Uri> mSimpleAdapter;
@@ -39,10 +37,7 @@ public class DraweeViewAdapter extends RecyclerView.Adapter<DraweeViewHolder> {
   private final PerfListener mPerfListener;
 
   public DraweeViewAdapter(
-      Context context,
-      SimpleAdapter<Uri> simpleAdapter,
-      Config config,
-      PerfListener perfListener) {
+      Context context, SimpleAdapter<Uri> simpleAdapter, Config config, PerfListener perfListener) {
     this.mContext = context;
     this.mSimpleAdapter = simpleAdapter;
     this.mConfig = config;

@@ -30,9 +30,7 @@ import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
-/**
- * Simple drawee fragment that just displays an image.
- */
+/** Simple drawee fragment that just displays an image. */
 public class DraweeRotationFragment extends BaseShowcaseFragment {
 
   private SimpleDraweeView mSimpleDraweeView;
@@ -55,18 +53,18 @@ public class DraweeRotationFragment extends BaseShowcaseFragment {
     final SimpleRotationOptionsAdapter adapter = new SimpleRotationOptionsAdapter();
 
     spinner.setAdapter(adapter);
-    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-      @Override
-      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        final SimpleRotationOptionsAdapter.Entry spinnerEntry =
-            (SimpleRotationOptionsAdapter.Entry) adapter.getItem(position);
-        setRotationOptions(spinnerEntry.rotationOptions);
-      }
+    spinner.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            final SimpleRotationOptionsAdapter.Entry spinnerEntry =
+                (SimpleRotationOptionsAdapter.Entry) adapter.getItem(position);
+            setRotationOptions(spinnerEntry.rotationOptions);
+          }
 
-      @Override
-      public void onNothingSelected(AdapterView<?> parent) {
-      }
-    });
+          @Override
+          public void onNothingSelected(AdapterView<?> parent) {}
+        });
     spinner.setSelection(0);
   }
 
@@ -86,15 +84,16 @@ public class DraweeRotationFragment extends BaseShowcaseFragment {
 
   public class SimpleRotationOptionsAdapter extends BaseAdapter {
 
-    private final Entry[] SPINNER_ENTRIES = new Entry[]{
-        new Entry(RotationOptions.disableRotation(), "disableRotation"),
-        new Entry(RotationOptions.autoRotate(), "autoRotate"),
-        new Entry(RotationOptions.autoRotateAtRenderTime(), "autoRotateAtRenderTime"),
-        new Entry(RotationOptions.forceRotation(RotationOptions.NO_ROTATION), "NO_ROTATION"),
-        new Entry(RotationOptions.forceRotation(RotationOptions.ROTATE_90), "ROTATE_90"),
-        new Entry(RotationOptions.forceRotation(RotationOptions.ROTATE_180), "ROTATE_180"),
-        new Entry(RotationOptions.forceRotation(RotationOptions.ROTATE_270), "ROTATE_270"),
-    };
+    private final Entry[] SPINNER_ENTRIES =
+        new Entry[] {
+          new Entry(RotationOptions.disableRotation(), "disableRotation"),
+          new Entry(RotationOptions.autoRotate(), "autoRotate"),
+          new Entry(RotationOptions.autoRotateAtRenderTime(), "autoRotateAtRenderTime"),
+          new Entry(RotationOptions.forceRotation(RotationOptions.NO_ROTATION), "NO_ROTATION"),
+          new Entry(RotationOptions.forceRotation(RotationOptions.ROTATE_90), "ROTATE_90"),
+          new Entry(RotationOptions.forceRotation(RotationOptions.ROTATE_180), "ROTATE_180"),
+          new Entry(RotationOptions.forceRotation(RotationOptions.ROTATE_270), "ROTATE_270"),
+        };
 
     @Override
     public int getCount() {
@@ -115,9 +114,11 @@ public class DraweeRotationFragment extends BaseShowcaseFragment {
     public View getView(int position, View convertView, ViewGroup parent) {
       final LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 
-      final View view = convertView != null
-          ? convertView
-          : layoutInflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
+      final View view =
+          convertView != null
+              ? convertView
+              : layoutInflater.inflate(
+                  android.R.layout.simple_spinner_dropdown_item, parent, false);
 
       final TextView textView = (TextView) view.findViewById(android.R.id.text1);
       textView.setText(SPINNER_ENTRIES[position].description);
@@ -130,9 +131,7 @@ public class DraweeRotationFragment extends BaseShowcaseFragment {
       final RotationOptions rotationOptions;
       final String description;
 
-      private Entry(
-          RotationOptions rotationOptions,
-          String description) {
+      private Entry(RotationOptions rotationOptions, String description) {
         this.rotationOptions = rotationOptions;
         this.description = description;
       }

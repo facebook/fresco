@@ -20,16 +20,14 @@ import com.facebook.imageutils.BitmapUtil;
 import javax.annotation.Nullable;
 
 /**
- * This naive implementation does not share Fresco's bitmap cache but has its own LRU.
- * This should just be used for testing.
- * The cache does not support fallback frames or frame re-using.
+ * This naive implementation does not share Fresco's bitmap cache but has its own LRU. This should
+ * just be used for testing. The cache does not support fallback frames or frame re-using.
  */
 public class NaiveCacheAllFramesCachingBackend implements BitmapFrameCache {
 
   private final SparseArray<CloseableReference<Bitmap>> mBitmapSparseArray = new SparseArray<>();
 
-  @Nullable
-  private FrameCacheListener mFrameCacheListener;
+  @Nullable private FrameCacheListener mFrameCacheListener;
 
   @Nullable
   @Override
@@ -47,9 +45,7 @@ public class NaiveCacheAllFramesCachingBackend implements BitmapFrameCache {
   @Nullable
   @Override
   public CloseableReference<Bitmap> getBitmapToReuseForFrame(
-      int frameNumber,
-      int width,
-      int height) {
+      int frameNumber, int width, int height) {
     // Not supported
     return null;
   }
@@ -84,7 +80,7 @@ public class NaiveCacheAllFramesCachingBackend implements BitmapFrameCache {
       int frameNumber,
       CloseableReference<Bitmap> bitmapReference,
       @BitmapAnimationBackend.FrameType int frameType) {
-      mBitmapSparseArray.put(frameNumber, CloseableReference.cloneOrNull(bitmapReference));
+    mBitmapSparseArray.put(frameNumber, CloseableReference.cloneOrNull(bitmapReference));
     if (mFrameCacheListener != null) {
       mFrameCacheListener.onFrameCached(this, frameNumber);
     }
@@ -94,8 +90,7 @@ public class NaiveCacheAllFramesCachingBackend implements BitmapFrameCache {
   public void onFramePrepared(
       int frameNumber,
       CloseableReference<Bitmap> bitmapReference,
-      @BitmapAnimationBackend.FrameType int frameType) {
-  }
+      @BitmapAnimationBackend.FrameType int frameType) {}
 
   @Override
   public void setFrameCacheListener(FrameCacheListener frameCacheListener) {

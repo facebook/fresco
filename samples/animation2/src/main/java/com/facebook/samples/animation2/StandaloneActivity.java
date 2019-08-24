@@ -14,9 +14,7 @@ package com.facebook.samples.animation2;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
-/**
- * Simple standalone activity that holds a Fragment.
- */
+/** Simple standalone activity that holds a Fragment. */
 public class StandaloneActivity extends AppCompatActivity {
 
   @Override

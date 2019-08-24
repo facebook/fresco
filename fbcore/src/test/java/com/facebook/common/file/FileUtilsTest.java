@@ -15,9 +15,7 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import org.junit.Test;
 
-/**
- * Unit tests for {@link FileUtils}
- */
+/** Unit tests for {@link FileUtils} */
 public class FileUtilsTest {
 
   @Test

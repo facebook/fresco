@@ -20,19 +20,16 @@ import com.facebook.imagepipeline.listener.RequestLoggingListener;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Animation Application implementation where we set up Fresco
- */
+/** Animation Application implementation where we set up Fresco */
 public class AnimationApplication extends Application {
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        FLog.setMinimumLoggingLevel(FLog.VERBOSE);
-        Set<RequestListener> listeners = new HashSet<>();
-        listeners.add(new RequestLoggingListener());
-        ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
-                .setRequestListeners(listeners)
-                .build();
-        Fresco.initialize(this, config);
-    }
+  @Override
+  public void onCreate() {
+    super.onCreate();
+    FLog.setMinimumLoggingLevel(FLog.VERBOSE);
+    Set<RequestListener> listeners = new HashSet<>();
+    listeners.add(new RequestLoggingListener());
+    ImagePipelineConfig config =
+        ImagePipelineConfig.newBuilder(this).setRequestListeners(listeners).build();
+    Fresco.initialize(this, config);
+  }
 }

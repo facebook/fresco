@@ -18,9 +18,8 @@ import java.nio.ByteBuffer;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * A representation of a GIF image. An instance of this class will hold a copy of the encoded
- * data in memory along with the parsed header data. Frames are decoded on demand via
- * {@link GifFrame}.
+ * A representation of a GIF image. An instance of this class will hold a copy of the encoded data
+ * in memory along with the parsed header data. Frames are decoded on demand via {@link GifFrame}.
  */
 @ThreadSafe
 @DoNotStrip
@@ -29,7 +28,7 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
   private static final int LOOP_COUNT_FOREVER = 0;
   private static final int LOOP_COUNT_MISSING = -1;
 
-  private volatile static boolean sInitialized;
+  private static volatile boolean sInitialized;
 
   // Accessed by native methods
   @SuppressWarnings("unused")
@@ -44,8 +43,8 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
   }
 
   /**
-   * Creates a {@link GifImage} from the specified encoded data. This will throw if it fails
-   * to create. This is meant to be called on a worker thread.
+   * Creates a {@link GifImage} from the specified encoded data. This will throw if it fails to
+   * create. This is meant to be called on a worker thread.
    *
    * @param source the data to the image (a copy will be made)
    */
@@ -90,8 +89,7 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
   }
 
   @DoNotStrip
-  public GifImage() {
-  }
+  public GifImage() {}
 
   /**
    * Constructs the image with the native pointer. This is called by native code.

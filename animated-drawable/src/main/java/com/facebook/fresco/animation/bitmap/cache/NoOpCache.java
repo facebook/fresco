@@ -12,9 +12,7 @@ import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import javax.annotation.Nullable;
 
-/**
- * No-op bitmap cache that doesn't do anything.
- */
+/** No-op bitmap cache that doesn't do anything. */
 public class NoOpCache implements BitmapFrameCache {
 
   @Nullable
@@ -32,9 +30,7 @@ public class NoOpCache implements BitmapFrameCache {
   @Nullable
   @Override
   public CloseableReference<Bitmap> getBitmapToReuseForFrame(
-      int frameNumber,
-      int width,
-      int height) {
+      int frameNumber, int width, int height) {
     return null;
   }
 

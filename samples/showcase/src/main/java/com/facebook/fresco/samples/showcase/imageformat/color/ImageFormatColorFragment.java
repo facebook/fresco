@@ -28,7 +28,7 @@ import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
 /**
  * Color XML example. It has a toggle to enable / disable Color XML support and displays 1 image.
  *
- * The supported XML color format is: <color>#rrggbb</color>
+ * <p>The supported XML color format is: <color>#rrggbb</color>
  */
 public class ImageFormatColorFragment extends BaseShowcaseFragment {
 
@@ -47,33 +47,35 @@ public class ImageFormatColorFragment extends BaseShowcaseFragment {
     mSimpleDraweeView1 = (SimpleDraweeView) view.findViewById(R.id.drawee1);
     mSimpleDraweeView2 = (SimpleDraweeView) view.findViewById(R.id.drawee2);
 
-
     // Set a simple custom color resource as the image.
     // The format of custom_color1 is <color>#rrggbb</color>
     mSimpleDraweeView1.setImageURI(UriUtil.getUriForResourceId(R.raw.custom_color1));
     mSimpleDraweeView2.setImageURI(UriUtil.getUriForResourceId(R.raw.custom_color2));
 
     final SwitchCompat switchBackground = (SwitchCompat) view.findViewById(R.id.switch_background);
-    switchBackground.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-      @Override
-      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        mSimpleDraweeView1.getHierarchy().setBackgroundImage(isChecked
-            ? new CheckerBoardDrawable(getResources())
-            : null);
-        mSimpleDraweeView2.getHierarchy().setBackgroundImage(isChecked
-            ? new CheckerBoardDrawable(getResources())
-            : null);
-      }
-    });
+    switchBackground.setOnCheckedChangeListener(
+        new CompoundButton.OnCheckedChangeListener() {
+          @Override
+          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            mSimpleDraweeView1
+                .getHierarchy()
+                .setBackgroundImage(isChecked ? new CheckerBoardDrawable(getResources()) : null);
+            mSimpleDraweeView2
+                .getHierarchy()
+                .setBackgroundImage(isChecked ? new CheckerBoardDrawable(getResources()) : null);
+          }
+        });
 
     SwitchCompat switchCompat = (SwitchCompat) view.findViewById(R.id.decoder_switch);
-    switchCompat.setChecked(CustomImageFormatConfigurator.isGlobalColorDecoderEnabled(getContext()));
-    switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-      @Override
-      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        CustomImageFormatConfigurator.setGlobalColorDecoderEnabled(getContext(), isChecked);
-      }
-    });
+    switchCompat.setChecked(
+        CustomImageFormatConfigurator.isGlobalColorDecoderEnabled(getContext()));
+    switchCompat.setOnCheckedChangeListener(
+        new CompoundButton.OnCheckedChangeListener() {
+          @Override
+          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            CustomImageFormatConfigurator.setGlobalColorDecoderEnabled(getContext(), isChecked);
+          }
+        });
   }
 
   @Override

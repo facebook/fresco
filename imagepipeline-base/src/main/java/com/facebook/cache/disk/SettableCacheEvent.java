@@ -50,8 +50,7 @@ public class SettableCacheEvent implements CacheEvent {
     return new SettableCacheEvent();
   }
 
-  private SettableCacheEvent() {
-  }
+  private SettableCacheEvent() {}
 
   @Nullable
   @Override

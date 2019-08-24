@@ -73,9 +73,7 @@ public class LimitedInputStreamTest {
     assertArrayEquals(
         Arrays.copyOfRange(mData, 0, LIMITED_LENGTH),
         Arrays.copyOfRange(mReadBuffer, 0, LIMITED_LENGTH));
-    assertArrayEquals(
-        mZeroTail,
-        Arrays.copyOfRange(mReadBuffer, LIMITED_LENGTH, BYTES_LENGTH));
+    assertArrayEquals(mZeroTail, Arrays.copyOfRange(mReadBuffer, LIMITED_LENGTH, BYTES_LENGTH));
   }
 
   @Test

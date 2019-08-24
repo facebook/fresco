@@ -30,7 +30,10 @@ public class BucketMap<T> {
     @Nullable LinkedEntry<I> next;
 
     private LinkedEntry(
-        @Nullable LinkedEntry<I> prev, int key, LinkedList<I> value, @Nullable LinkedEntry<I> next) {
+        @Nullable LinkedEntry<I> prev,
+        int key,
+        LinkedList<I> value,
+        @Nullable LinkedEntry<I> next) {
       this.prev = prev;
       this.key = key;
       this.value = value;
@@ -45,8 +48,8 @@ public class BucketMap<T> {
 
   /**
    * @param key
-   * @return Retrieve an object that corresponds to the specified {@code key}
-   * if present in the {@link BucketMap} or null otherwise
+   * @return Retrieve an object that corresponds to the specified {@code key} if present in the
+   *     {@link BucketMap} or null otherwise
    */
   @Nullable
   public synchronized T acquire(int key) {
@@ -61,8 +64,9 @@ public class BucketMap<T> {
   }
 
   /**
-   * Associates the object with the specified key and puts it into the {@link BucketMap}.
-   * Does not overwrite the previous object, if any.
+   * Associates the object with the specified key and puts it into the {@link BucketMap}. Does not
+   * overwrite the previous object, if any.
+   *
    * @param key
    */
   public synchronized void release(int key, T value) {
@@ -77,9 +81,7 @@ public class BucketMap<T> {
     moveToFront(bucket);
   }
 
-  /**
-   * @return number of objects contained in the {@link BucketMap}
-   */
+  /** @return number of objects contained in the {@link BucketMap} */
   @VisibleForTesting
   synchronized int valueCount() {
     int count = 0;

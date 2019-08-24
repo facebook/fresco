@@ -13,9 +13,7 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.common.util.ByteConstants;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Supplies {@link MemoryCacheParams} for the bitmap memory cache.
- */
+/** Supplies {@link MemoryCacheParams} for the bitmap memory cache. */
 public class DefaultBitmapMemoryCacheParamsSupplier implements Supplier<MemoryCacheParams> {
   private static final int MAX_CACHE_ENTRIES = 256;
   private static final int MAX_EVICTION_QUEUE_SIZE = Integer.MAX_VALUE;

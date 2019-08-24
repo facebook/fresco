@@ -14,17 +14,14 @@ import com.facebook.imageutils.BitmapUtil;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
-/**
- * Simple bitmap cache that keeps the last frame and reuses it if possible.
- */
+/** Simple bitmap cache that keeps the last frame and reuses it if possible. */
 public class KeepLastFrameCache implements BitmapFrameCache {
 
   private static final int FRAME_NUMBER_UNSET = -1;
 
   private int mLastFrameNumber = FRAME_NUMBER_UNSET;
 
-  @Nullable
-  private FrameCacheListener mFrameCacheListener;
+  @Nullable private FrameCacheListener mFrameCacheListener;
 
   @GuardedBy("this")
   @Nullable
@@ -47,9 +44,7 @@ public class KeepLastFrameCache implements BitmapFrameCache {
 
   @Override
   public synchronized CloseableReference<Bitmap> getBitmapToReuseForFrame(
-      int frameNumber,
-      int width,
-      int height) {
+      int frameNumber, int width, int height) {
     try {
       return CloseableReference.cloneOrNull(mLastBitmapReference);
     } finally {
@@ -64,9 +59,7 @@ public class KeepLastFrameCache implements BitmapFrameCache {
 
   @Override
   public synchronized int getSizeInBytes() {
-    return mLastBitmapReference == null
-        ? 0
-        : BitmapUtil.getSizeInBytes(mLastBitmapReference.get());
+    return mLastBitmapReference == null ? 0 : BitmapUtil.getSizeInBytes(mLastBitmapReference.get());
   }
 
   @Override
@@ -99,8 +92,7 @@ public class KeepLastFrameCache implements BitmapFrameCache {
   public void onFramePrepared(
       int frameNumber,
       CloseableReference<Bitmap> bitmapReference,
-      @BitmapAnimationBackend.FrameType int frameType) {
-  }
+      @BitmapAnimationBackend.FrameType int frameType) {}
 
   @Override
   public void setFrameCacheListener(FrameCacheListener frameCacheListener) {

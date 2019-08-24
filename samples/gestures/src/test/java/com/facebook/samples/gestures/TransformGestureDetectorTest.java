@@ -24,9 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests for {@link MultiPointerGestureDetector}
- */
+/** Tests for {@link MultiPointerGestureDetector} */
 @RunWith(RobolectricTestRunner.class)
 public class TransformGestureDetectorTest {
 
@@ -137,7 +135,6 @@ public class TransformGestureDetectorTest {
     when(mMultiPointerGestureDetector.getPointerCount()).thenReturn(1);
     assertEquals(0, mGestureDetector.getRotation(), 0);
     when(mMultiPointerGestureDetector.getPointerCount()).thenReturn(2);
-    assertEquals((float)-Math.PI/2, mGestureDetector.getRotation(), 1e-6);
+    assertEquals((float) -Math.PI / 2, mGestureDetector.getRotation(), 1e-6);
   }
-
 }

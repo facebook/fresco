@@ -7,23 +7,15 @@
 
 package com.facebook.imagepipeline.image;
 
-/**
- * Interface containing information about an image.
- */
+/** Interface containing information about an image. */
 public interface ImageInfo {
 
-  /**
-   * @return width of the image
-   */
+  /** @return width of the image */
   int getWidth();
 
-  /**
-   * @return height of the image
-   */
+  /** @return height of the image */
   int getHeight();
 
-  /**
-   * @return quality information for the image
-   */
+  /** @return quality information for the image */
   QualityInfo getQualityInfo();
 }

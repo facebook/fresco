@@ -23,9 +23,7 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-/**
- * Tests {@link FrescoFrameCache}.
- */
+/** Tests {@link FrescoFrameCache}. */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(CloseableReference.class)
 public class FrescoFrameCacheTest {
@@ -47,8 +45,7 @@ public class FrescoFrameCacheTest {
 
     when(mCloseableStaticBitmap.isClosed()).thenReturn(false);
     when(mCloseableStaticBitmap.getUnderlyingBitmap()).thenReturn(mUnderlyingBitmap);
-    when(mCloseableStaticBitmap.convertToBitmapReference())
-        .thenReturn(mBitmapReference);
+    when(mCloseableStaticBitmap.convertToBitmapReference()).thenReturn(mBitmapReference);
     when(mCloseableStaticBitmap.cloneUnderlyingBitmapReference()).thenReturn(mBitmapReferenceClone);
 
     when(mImageReference.isValid()).thenReturn(true);

@@ -13,39 +13,39 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Utility method for dealing with Streams.
- */
+/** Utility method for dealing with Streams. */
 public class StreamUtil {
 
   /**
-   * Efficiently fetch bytes from InputStream is by delegating to
-   * getBytesFromStream(is, is.available())
+   * Efficiently fetch bytes from InputStream is by delegating to getBytesFromStream(is,
+   * is.available())
    */
   public static byte[] getBytesFromStream(final InputStream is) throws IOException {
     return getBytesFromStream(is, is.available());
   }
 
   /**
-   * Efficiently fetch the bytes from the InputStream, provided that caller can guess
-   * exact numbers of bytes that can be read from inputStream. Avoids one extra byte[] allocation
-   * that ByteStreams.toByteArray() performs.
+   * Efficiently fetch the bytes from the InputStream, provided that caller can guess exact numbers
+   * of bytes that can be read from inputStream. Avoids one extra byte[] allocation that
+   * ByteStreams.toByteArray() performs.
+   *
    * @param hint - size of inputStream's content in bytes
    */
   public static byte[] getBytesFromStream(InputStream inputStream, int hint) throws IOException {
     // Subclass ByteArrayOutputStream to avoid an extra byte[] allocation and copy
-    ByteArrayOutputStream byteOutput = new ByteArrayOutputStream(hint) {
-      @Override
-      public byte[] toByteArray() {
-        // Can only use the raw buffer directly if the size is equal to the array we have.
-        // Otherwise we have no choice but to copy.
-        if (count == buf.length) {
-          return buf;
-        } else {
-          return super.toByteArray();
-        }
-      }
-    };
+    ByteArrayOutputStream byteOutput =
+        new ByteArrayOutputStream(hint) {
+          @Override
+          public byte[] toByteArray() {
+            // Can only use the raw buffer directly if the size is equal to the array we have.
+            // Otherwise we have no choice but to copy.
+            if (count == buf.length) {
+              return buf;
+            } else {
+              return super.toByteArray();
+            }
+          }
+        };
     ByteStreams.copy(inputStream, byteOutput);
     return byteOutput.toByteArray();
   }

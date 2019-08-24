@@ -22,9 +22,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-/**
- * Test for the score-based eviction comparator.
- */
+/** Test for the score-based eviction comparator. */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({System.class})
 public class ScoreBasedEvictionComparatorSupplierTest {
@@ -81,8 +79,9 @@ public class ScoreBasedEvictionComparatorSupplierTest {
     Collections.sort(entries, supplier.get());
 
     for (int i = 0; i < entries.size() - 1; i++) {
-      assertTrue(supplier.calculateScore(entries.get(i), 0) >
-          supplier.calculateScore(entries.get(i + 1), 0));
+      assertTrue(
+          supplier.calculateScore(entries.get(i), 0)
+              > supplier.calculateScore(entries.get(i + 1), 0));
     }
   }
 }

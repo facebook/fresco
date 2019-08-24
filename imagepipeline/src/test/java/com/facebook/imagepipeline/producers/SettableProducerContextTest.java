@@ -18,11 +18,9 @@ import org.mockito.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
 
-/**
- * Checks basic properties of NullProducer, that is that it always returns null.
- */
+/** Checks basic properties of NullProducer, that is that it always returns null. */
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class SettableProducerContextTest {
   @Mock public ImageRequest mImageRequest;
   private final String mRequestId = "mRequestId";

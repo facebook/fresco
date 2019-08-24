@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Classes which are commonly used into the image pipeline.
- */
+/** Classes which are commonly used into the image pipeline. */
 package com.facebook.imagepipeline.common;

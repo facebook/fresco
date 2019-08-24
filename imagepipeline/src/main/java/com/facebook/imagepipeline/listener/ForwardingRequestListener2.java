@@ -71,7 +71,10 @@ public class ForwardingRequestListener2 implements RequestListener2 {
   }
 
   @Override
-  public void onProducerFinishWithSuccess(ProducerContext producerContext, String producerName, @Nullable Map<String, String> extraMap) {
+  public void onProducerFinishWithSuccess(
+      ProducerContext producerContext,
+      String producerName,
+      @Nullable Map<String, String> extraMap) {
     final int numberOfListeners = mRequestListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       RequestListener2 listener = mRequestListeners.get(i);
@@ -104,7 +107,9 @@ public class ForwardingRequestListener2 implements RequestListener2 {
 
   @Override
   public void onProducerFinishWithCancellation(
-      ProducerContext producerContext, String producerName, @Nullable Map<String, String> extraMap) {
+      ProducerContext producerContext,
+      String producerName,
+      @Nullable Map<String, String> extraMap) {
     final int numberOfListeners = mRequestListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       RequestListener2 listener = mRequestListeners.get(i);
@@ -133,7 +138,8 @@ public class ForwardingRequestListener2 implements RequestListener2 {
   }
 
   @Override
-  public void onUltimateProducerReached(ProducerContext producerContext, String producerName, boolean successful) {
+  public void onUltimateProducerReached(
+      ProducerContext producerContext, String producerName, boolean successful) {
     final int numberOfListeners = mRequestListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       RequestListener2 listener = mRequestListeners.get(i);

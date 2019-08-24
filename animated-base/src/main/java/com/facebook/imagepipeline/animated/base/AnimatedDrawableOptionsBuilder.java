@@ -7,9 +7,7 @@
 
 package com.facebook.imagepipeline.animated.base;
 
-/**
- * Builder for {@link AnimatedDrawableOptions}.
- */
+/** Builder for {@link AnimatedDrawableOptions}. */
 public class AnimatedDrawableOptionsBuilder {
 
   private boolean mForceKeepAllFramesInMemory;
@@ -61,8 +59,8 @@ public class AnimatedDrawableOptionsBuilder {
   /**
    * Gets the maximum bytes that the backend can use to cache image frames in memory.
    *
-   * @return maximumBytes maximum bytes that the backend can use to cache image frames in memory
-   *    or -1 to use the default
+   * @return maximumBytes maximum bytes that the backend can use to cache image frames in memory or
+   *     -1 to use the default
    */
   public int getMaximumBytes() {
     return mMaximumBytes;

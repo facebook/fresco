@@ -11,8 +11,8 @@ import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.cache.disk.FileCache;
 
 /**
- * Represents a factory for the FileCache to use in the ImagePipeline.
- * Used by ImagePipelineConfig/Factory
+ * Represents a factory for the FileCache to use in the ImagePipeline. Used by
+ * ImagePipelineConfig/Factory
  */
 public interface FileCacheFactory {
 

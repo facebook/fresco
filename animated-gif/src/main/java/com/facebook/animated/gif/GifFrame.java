@@ -12,9 +12,7 @@ import com.facebook.common.internal.DoNotStrip;
 import com.facebook.imagepipeline.animated.base.AnimatedImageFrame;
 import javax.annotation.concurrent.ThreadSafe;
 
-/**
- * A single frame of a {@link GifImage}.
- */
+/** A single frame of a {@link GifImage}. */
 @ThreadSafe
 public class GifFrame implements AnimatedImageFrame {
 

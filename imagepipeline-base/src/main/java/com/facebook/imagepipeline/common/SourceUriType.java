@@ -22,21 +22,20 @@ import androidx.annotation.IntDef;
 import java.lang.annotation.Retention;
 
 /**
- * This is the interface we use in order to define different types of Uri an ImageRequest
- * can have.
+ * This is the interface we use in order to define different types of Uri an ImageRequest can have.
  */
 @Retention(SOURCE)
 @IntDef({
-    SOURCE_TYPE_UNKNOWN,
-    SOURCE_TYPE_NETWORK,
-    SOURCE_TYPE_LOCAL_FILE,
-    SOURCE_TYPE_LOCAL_VIDEO_FILE,
-    SOURCE_TYPE_LOCAL_IMAGE_FILE,
-    SOURCE_TYPE_LOCAL_CONTENT,
-    SOURCE_TYPE_LOCAL_ASSET,
-    SOURCE_TYPE_LOCAL_RESOURCE,
-    SOURCE_TYPE_DATA,
-    SOURCE_TYPE_QUALIFIED_RESOURCE
+  SOURCE_TYPE_UNKNOWN,
+  SOURCE_TYPE_NETWORK,
+  SOURCE_TYPE_LOCAL_FILE,
+  SOURCE_TYPE_LOCAL_VIDEO_FILE,
+  SOURCE_TYPE_LOCAL_IMAGE_FILE,
+  SOURCE_TYPE_LOCAL_CONTENT,
+  SOURCE_TYPE_LOCAL_ASSET,
+  SOURCE_TYPE_LOCAL_RESOURCE,
+  SOURCE_TYPE_DATA,
+  SOURCE_TYPE_QUALIFIED_RESOURCE
 })
 public @interface SourceUriType {
 

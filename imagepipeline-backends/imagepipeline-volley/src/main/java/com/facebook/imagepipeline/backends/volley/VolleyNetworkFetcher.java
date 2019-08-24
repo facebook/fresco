@@ -28,12 +28,12 @@ import java.util.Map;
 /**
  * Network fetcher that uses Volley as its backend. The request being made will bypass Volley's
  * cache.
- * <p>
- * Volley does not allow access to a {@link InputStream}. Therefore, responses will be passed
+ *
+ * <p>Volley does not allow access to a {@link InputStream}. Therefore, responses will be passed
  * along as complete byte arrays, which will not allow for progressive JPEG streaming.
  */
-public class VolleyNetworkFetcher extends
-    BaseNetworkFetcher<VolleyNetworkFetcher.VolleyNetworkFetchState> {
+public class VolleyNetworkFetcher
+    extends BaseNetworkFetcher<VolleyNetworkFetcher.VolleyNetworkFetchState> {
 
   public static class VolleyNetworkFetchState extends FetchState {
     long submitTime;
@@ -41,8 +41,7 @@ public class VolleyNetworkFetcher extends
     long fetchCompleteTime;
 
     public VolleyNetworkFetchState(
-        Consumer<EncodedImage> consumer,
-        ProducerContext producerContext) {
+        Consumer<EncodedImage> consumer, ProducerContext producerContext) {
       super(consumer, producerContext);
     }
   }
@@ -54,17 +53,14 @@ public class VolleyNetworkFetcher extends
 
   private final RequestQueue mRequestQueue;
 
-  /**
-   * @param requestQueue The Volley {@link RequestQueue} to use
-   */
+  /** @param requestQueue The Volley {@link RequestQueue} to use */
   public VolleyNetworkFetcher(RequestQueue requestQueue) {
     mRequestQueue = requestQueue;
   }
 
   @Override
   public VolleyNetworkFetchState createFetchState(
-      Consumer<EncodedImage> consumer,
-      ProducerContext context) {
+      Consumer<EncodedImage> consumer, ProducerContext context) {
     return new VolleyNetworkFetchState(consumer, context);
   }
 
@@ -72,40 +68,45 @@ public class VolleyNetworkFetcher extends
   public void fetch(final VolleyNetworkFetchState fetchState, final Callback callback) {
     fetchState.submitTime = SystemClock.elapsedRealtime();
 
-    final RawRequest request = new RawRequest(
-        fetchState.getUri().toString(),
-        new Response.Listener<byte[]>() {
-          @Override
-          public void onResponse(byte[] bytes) {
-            fetchState.responseTime = SystemClock.uptimeMillis();
-
-            try {
-              InputStream is = new ByteArrayInputStream(bytes);
-              callback.onResponse(is, bytes.length);
-            } catch (IOException e) {
-              callback.onFailure(e);
-            }
-          }
-        },
-        new Response.ErrorListener() {
-          @Override
-          public void onErrorResponse(VolleyError volleyError) {
-            callback.onFailure(volleyError);
-          }
-        });
-
-    fetchState.getContext().addCallbacks(
-        new BaseProducerContextCallbacks() {
-          @Override
-          public void onCancellationRequested() {
-            mRequestQueue.cancelAll(new RequestFilter() {
+    final RawRequest request =
+        new RawRequest(
+            fetchState.getUri().toString(),
+            new Response.Listener<byte[]>() {
               @Override
-              public boolean apply(Request<?> candidate) {
-                return candidate != null && request.getSequence() == candidate.getSequence();
+              public void onResponse(byte[] bytes) {
+                fetchState.responseTime = SystemClock.uptimeMillis();
+
+                try {
+                  InputStream is = new ByteArrayInputStream(bytes);
+                  callback.onResponse(is, bytes.length);
+                } catch (IOException e) {
+                  callback.onFailure(e);
+                }
+              }
+            },
+            new Response.ErrorListener() {
+              @Override
+              public void onErrorResponse(VolleyError volleyError) {
+                callback.onFailure(volleyError);
               }
             });
-          }
-        });
+
+    fetchState
+        .getContext()
+        .addCallbacks(
+            new BaseProducerContextCallbacks() {
+              @Override
+              public void onCancellationRequested() {
+                mRequestQueue.cancelAll(
+                    new RequestFilter() {
+                      @Override
+                      public boolean apply(Request<?> candidate) {
+                        return candidate != null
+                            && request.getSequence() == candidate.getSequence();
+                      }
+                    });
+              }
+            });
 
     mRequestQueue.add(request);
   }
@@ -124,5 +125,4 @@ public class VolleyNetworkFetcher extends
     extraMap.put(IMAGE_SIZE, Integer.toString(byteSize));
     return extraMap;
   }
-
 }

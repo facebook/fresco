@@ -213,8 +213,8 @@ public class ScaleTypeDrawableTest {
 
   /**
    * Underlying drawable's aspect ratio is smaller than view's, so it has to be slided vertically
-   * after scaling. Focus point is too much top, so it cannot be completely centered. Top-most
-   * part of the image is displayed.
+   * after scaling. Focus point is too much top, so it cannot be completely centered. Top-most part
+   * of the image is displayed.
    */
   @Test
   public void testConfigureBounds_FOCUS_CROP_VT() {
@@ -303,8 +303,8 @@ public class ScaleTypeDrawableTest {
 
   private void testActualImageBounds(RectF expectedActualImageBounds) {
     // TODO(5469563): enable this once we have a decent implementation of ShadowMatrix
-    //RectF actualImageBounds = new RectF();
-    //mScaleTypeDrawable.getTransformedBounds(actualImageBounds);
-    //Assert.assertEquals(expectedActualImageBounds, actualImageBounds);
+    // RectF actualImageBounds = new RectF();
+    // mScaleTypeDrawable.getTransformedBounds(actualImageBounds);
+    // Assert.assertEquals(expectedActualImageBounds, actualImageBounds);
   }
 }

@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-
 package com.facebook.drawee.span;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -23,9 +22,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests {@link DraweeSpan}
- */
+/** Tests {@link DraweeSpan} */
 @RunWith(RobolectricTestRunner.class)
 public class DraweeSpanTest {
 

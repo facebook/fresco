@@ -24,9 +24,8 @@ import javax.annotation.Nullable;
 /**
  * This Transition animates changes of {@link GenericDraweeView} between two ScaleTypes
  *
- * In combination with ChangeBounds, DraweeTransition allows GenericDraweeViews
- * that change size, shape, or {@link ScalingUtils.ScaleType} to animate contents
- * smoothly.
+ * <p>In combination with ChangeBounds, DraweeTransition allows GenericDraweeViews that change size,
+ * shape, or {@link ScalingUtils.ScaleType} to animate contents smoothly.
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class DraweeTransition extends Transition {
@@ -39,8 +38,7 @@ public class DraweeTransition extends Transition {
   private final @Nullable PointF mToFocusPoint;
 
   public static TransitionSet createTransitionSet(
-      ScalingUtils.ScaleType fromScale,
-      ScalingUtils.ScaleType toScale) {
+      ScalingUtils.ScaleType fromScale, ScalingUtils.ScaleType toScale) {
     return createTransitionSet(fromScale, toScale, null, null);
   }
 
@@ -102,13 +100,14 @@ public class DraweeTransition extends Transition {
     draweeView.getHierarchy().setActualImageScaleType(scaleType);
 
     ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
-    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-      @Override
-      public void onAnimationUpdate(ValueAnimator animation) {
-        float fraction = (float) animation.getAnimatedValue();
-        scaleType.setValue(fraction);
-      }
-    });
+    animator.addUpdateListener(
+        new ValueAnimator.AnimatorUpdateListener() {
+          @Override
+          public void onAnimationUpdate(ValueAnimator animation) {
+            float fraction = (float) animation.getAnimatedValue();
+            scaleType.setValue(fraction);
+          }
+        });
     animator.addListener(
         new AnimatorListenerAdapter() {
           @Override

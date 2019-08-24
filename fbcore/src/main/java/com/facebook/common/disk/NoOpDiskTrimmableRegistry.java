@@ -8,14 +8,12 @@
 package com.facebook.common.disk;
 
 import javax.annotation.Nullable;
-/**
- * Implementation of {@link DiskTrimmableRegistry} that does not do anything.
- */
+
+/** Implementation of {@link DiskTrimmableRegistry} that does not do anything. */
 public class NoOpDiskTrimmableRegistry implements DiskTrimmableRegistry {
   private static @Nullable NoOpDiskTrimmableRegistry sInstance = null;
 
-  private NoOpDiskTrimmableRegistry() {
-  }
+  private NoOpDiskTrimmableRegistry() {}
 
   public static synchronized NoOpDiskTrimmableRegistry getInstance() {
     if (sInstance == null) {
@@ -25,10 +23,8 @@ public class NoOpDiskTrimmableRegistry implements DiskTrimmableRegistry {
   }
 
   @Override
-  public void registerDiskTrimmable(DiskTrimmable trimmable) {
-  }
+  public void registerDiskTrimmable(DiskTrimmable trimmable) {}
 
   @Override
-  public void unregisterDiskTrimmable(DiskTrimmable trimmable) {
-  }
+  public void unregisterDiskTrimmable(DiskTrimmable trimmable) {}
 }

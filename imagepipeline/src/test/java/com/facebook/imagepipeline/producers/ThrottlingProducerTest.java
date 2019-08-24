@@ -20,7 +20,7 @@ import org.robolectric.*;
 import org.robolectric.annotation.*;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class ThrottlingProducerTest {
   private static final String PRODUCER_NAME = ThrottlingProducer.PRODUCER_NAME;
   private static final int MAX_SIMULTANEOUS_REQUESTS = 2;
@@ -39,10 +39,9 @@ public class ThrottlingProducerTest {
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    mThrottlingProducer = new ThrottlingProducer<Object>(
-        MAX_SIMULTANEOUS_REQUESTS,
-        CallerThreadExecutor.getInstance(),
-        mInputProducer);
+    mThrottlingProducer =
+        new ThrottlingProducer<Object>(
+            MAX_SIMULTANEOUS_REQUESTS, CallerThreadExecutor.getInstance(), mInputProducer);
     for (int i = 0; i < 5; i++) {
       mConsumers[i] = mock(Consumer.class);
       mProducerContexts[i] = mock(ProducerContext.class);
@@ -52,14 +51,15 @@ public class ThrottlingProducerTest {
       when(mProducerContexts[i].getId()).thenReturn(mRequestIds[i]);
       final int iFinal = i;
       doAnswer(
-          new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-              mThrottlerConsumers[iFinal] =
-                  (Consumer<Object>) invocation.getArguments()[0];
-              return null;
-            }
-          }).when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContexts[i]));
+              new Answer() {
+                @Override
+                public Object answer(InvocationOnMock invocation) throws Throwable {
+                  mThrottlerConsumers[iFinal] = (Consumer<Object>) invocation.getArguments()[0];
+                  return null;
+                }
+              })
+          .when(mInputProducer)
+          .produceResults(any(Consumer.class), eq(mProducerContexts[i]));
     }
   }
 

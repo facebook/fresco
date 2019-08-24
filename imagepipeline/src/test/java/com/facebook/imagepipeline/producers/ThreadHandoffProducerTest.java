@@ -20,7 +20,7 @@ import org.robolectric.*;
 import org.robolectric.annotation.*;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class ThreadHandoffProducerTest {
   @Mock public Producer mInputProducer;
   @Mock public Consumer mConsumer;
@@ -35,19 +35,20 @@ public class ThreadHandoffProducerTest {
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    mProducerContext = new SettableProducerContext(
-        mImageRequest,
-        mRequestId,
-        mProducerListener,
-        mock(Object.class),
-        ImageRequest.RequestLevel.FULL_FETCH,
-        false,
-        true,
-        Priority.MEDIUM);
+    mProducerContext =
+        new SettableProducerContext(
+            mImageRequest,
+            mRequestId,
+            mProducerListener,
+            mock(Object.class),
+            ImageRequest.RequestLevel.FULL_FETCH,
+            false,
+            true,
+            Priority.MEDIUM);
     mTestExecutorService = new TestExecutorService(new FakeClock());
-    mThreadHandoffProducer = new ThreadHandoffProducer(
-        mInputProducer,
-        new ThreadHandoffProducerQueueImpl(mTestExecutorService));
+    mThreadHandoffProducer =
+        new ThreadHandoffProducer(
+            mInputProducer, new ThreadHandoffProducerQueueImpl(mTestExecutorService));
   }
 
   @Test

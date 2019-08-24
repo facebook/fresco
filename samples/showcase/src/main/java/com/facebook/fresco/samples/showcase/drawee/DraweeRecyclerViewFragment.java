@@ -35,14 +35,10 @@ import java.util.Random;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
-/**
- * Simple drawee recycler view fragment that displays a grid of images.
- */
+/** Simple drawee recycler view fragment that displays a grid of images. */
 public class DraweeRecyclerViewFragment extends BaseShowcaseFragment {
 
-  /**
-   * Number of recycler view spans
-   */
+  /** Number of recycler view spans */
   private static final int SPAN_COUNT = 3;
 
   private @Nullable ResizeOptions mResizeOptions;
@@ -50,9 +46,7 @@ public class DraweeRecyclerViewFragment extends BaseShowcaseFragment {
   @Nullable
   @Override
   public View onCreateView(
-      LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+      LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_drawee_recycler, container, false);
   }
 
@@ -112,11 +106,10 @@ public class DraweeRecyclerViewFragment extends BaseShowcaseFragment {
     }
 
     @Override
-    public SimpleViewHolder onCreateViewHolder(
-        ViewGroup parent,
-        int viewType) {
-      View itemView = LayoutInflater.from(
-          parent.getContext()).inflate(R.layout.drawee_recycler_item, parent, false);
+    public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+      View itemView =
+          LayoutInflater.from(parent.getContext())
+              .inflate(R.layout.drawee_recycler_item, parent, false);
       return new SimpleViewHolder(itemView);
     }
 

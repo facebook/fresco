@@ -16,14 +16,13 @@ import java.util.Map;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
-/**
- * Logging for {@link ImageRequest}s.
- */
+/** Logging for {@link ImageRequest}s. */
 public class RequestLoggingListener implements RequestListener {
   private static final String TAG = "RequestLoggingListener";
 
   @GuardedBy("this")
   private final Map<Pair<String, String>, Long> mProducerStartTimeMap;
+
   @GuardedBy("this")
   private final Map<String, Long> mRequestStartTimeMap;
 
@@ -34,10 +33,7 @@ public class RequestLoggingListener implements RequestListener {
 
   @Override
   public synchronized void onRequestStart(
-      ImageRequest request,
-      Object callerContextObject,
-      String requestId,
-      boolean isPrefetch) {
+      ImageRequest request, Object callerContextObject, String requestId, boolean isPrefetch) {
     if (FLog.isLoggable(FLog.VERBOSE)) {
       FLog.v(
           TAG,
@@ -67,17 +63,15 @@ public class RequestLoggingListener implements RequestListener {
 
   @Override
   public synchronized void onProducerFinishWithSuccess(
-      String requestId,
-      String producerName,
-      @Nullable Map<String, String> extraMap) {
+      String requestId, String producerName, @Nullable Map<String, String> extraMap) {
     if (FLog.isLoggable(FLog.VERBOSE)) {
       Pair<String, String> mapKey = Pair.create(requestId, producerName);
       Long startTime = mProducerStartTimeMap.remove(mapKey);
       long currentTime = getTime();
       FLog.v(
           TAG,
-          "time %d: onProducerFinishWithSuccess: " +
-              "{requestId: %s, producer: %s, elapsedTime: %d ms, extraMap: %s}",
+          "time %d: onProducerFinishWithSuccess: "
+              + "{requestId: %s, producer: %s, elapsedTime: %d ms, extraMap: %s}",
           currentTime,
           requestId,
           producerName,
@@ -99,8 +93,8 @@ public class RequestLoggingListener implements RequestListener {
       FLog.w(
           TAG,
           throwable,
-          "time %d: onProducerFinishWithFailure: " +
-              "{requestId: %s, stage: %s, elapsedTime: %d ms, extraMap: %s, throwable: %s}",
+          "time %d: onProducerFinishWithFailure: "
+              + "{requestId: %s, stage: %s, elapsedTime: %d ms, extraMap: %s, throwable: %s}",
           currentTime,
           requestId,
           producerName,
@@ -112,17 +106,15 @@ public class RequestLoggingListener implements RequestListener {
 
   @Override
   public synchronized void onProducerFinishWithCancellation(
-      String requestId,
-      String producerName,
-      @Nullable Map<String, String> extraMap) {
+      String requestId, String producerName, @Nullable Map<String, String> extraMap) {
     if (FLog.isLoggable(FLog.VERBOSE)) {
       Pair<String, String> mapKey = Pair.create(requestId, producerName);
       Long startTime = mProducerStartTimeMap.remove(mapKey);
       long currentTime = getTime();
       FLog.v(
           TAG,
-          "time %d: onProducerFinishWithCancellation: " +
-              "{requestId: %s, stage: %s, elapsedTime: %d ms, extraMap: %s}",
+          "time %d: onProducerFinishWithCancellation: "
+              + "{requestId: %s, stage: %s, elapsedTime: %d ms, extraMap: %s}",
           currentTime,
           requestId,
           producerName,
@@ -151,17 +143,15 @@ public class RequestLoggingListener implements RequestListener {
 
   @Override
   public synchronized void onUltimateProducerReached(
-      String requestId,
-      String producerName,
-      boolean successful) {
+      String requestId, String producerName, boolean successful) {
     if (FLog.isLoggable(FLog.VERBOSE)) {
       Pair<String, String> mapKey = Pair.create(requestId, producerName);
       Long startTime = mProducerStartTimeMap.remove(mapKey);
       long currentTime = getTime();
       FLog.v(
           TAG,
-          "time %d: onUltimateProducerReached: " +
-              "{requestId: %s, producer: %s, elapsedTime: %d ms, success: %b}",
+          "time %d: onUltimateProducerReached: "
+              + "{requestId: %s, producer: %s, elapsedTime: %d ms, success: %b}",
           currentTime,
           requestId,
           producerName,
@@ -172,9 +162,7 @@ public class RequestLoggingListener implements RequestListener {
 
   @Override
   public synchronized void onRequestSuccess(
-      ImageRequest request,
-      String requestId,
-      boolean isPrefetch) {
+      ImageRequest request, String requestId, boolean isPrefetch) {
     if (FLog.isLoggable(FLog.VERBOSE)) {
       Long startTime = mRequestStartTimeMap.remove(requestId);
       long currentTime = getTime();
@@ -189,10 +177,7 @@ public class RequestLoggingListener implements RequestListener {
 
   @Override
   public synchronized void onRequestFailure(
-      ImageRequest request,
-      String requestId,
-      Throwable throwable,
-      boolean isPrefetch) {
+      ImageRequest request, String requestId, Throwable throwable, boolean isPrefetch) {
     if (FLog.isLoggable(FLog.WARN)) {
       Long startTime = mRequestStartTimeMap.remove(requestId);
       long currentTime = getTime();

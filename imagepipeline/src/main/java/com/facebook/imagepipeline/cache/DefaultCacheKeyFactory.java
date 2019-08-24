@@ -14,15 +14,12 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.Postprocessor;
 import javax.annotation.Nullable;
 
-/**
- * Default implementation of {@link CacheKeyFactory}.
- */
+/** Default implementation of {@link CacheKeyFactory}. */
 public class DefaultCacheKeyFactory implements CacheKeyFactory {
 
   private static DefaultCacheKeyFactory sInstance = null;
 
-  protected DefaultCacheKeyFactory() {
-  }
+  protected DefaultCacheKeyFactory() {}
 
   public static synchronized DefaultCacheKeyFactory getInstance() {
     if (sInstance == null) {
@@ -72,15 +69,11 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
 
   @Override
   public CacheKey getEncodedCacheKey(
-      ImageRequest request,
-      Uri sourceUri,
-      @Nullable Object callerContext) {
+      ImageRequest request, Uri sourceUri, @Nullable Object callerContext) {
     return new SimpleCacheKey(getCacheKeySourceUri(sourceUri).toString());
   }
 
-  /**
-   * @return a {@link Uri} that unambiguously indicates the source of the image.
-   */
+  /** @return a {@link Uri} that unambiguously indicates the source of the image. */
   protected Uri getCacheKeySourceUri(Uri sourceUri) {
     return sourceUri;
   }

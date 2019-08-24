@@ -20,9 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests for BasePool
- */
+/** Tests for BasePool */
 @RunWith(RobolectricTestRunner.class)
 public class BasePoolTest {
   private TestPool mPool;
@@ -43,8 +41,7 @@ public class BasePoolTest {
   }
 
   @Test
-  public void testFree() throws Exception {
-  }
+  public void testFree() throws Exception {}
 
   // tests out the getBucketedSize method
   @Test
@@ -60,7 +57,7 @@ public class BasePoolTest {
   @Test
   public void testGetBucketedSize_Invalid() throws Exception {
     int[] sizes = new int[] {-1, 0};
-    for (int s: sizes) {
+    for (int s : sizes) {
       try {
         mPool.getBucketedSize(s);
         Assert.fail("Failed size: " + s);
@@ -96,9 +93,7 @@ public class BasePoolTest {
     Assert.assertEquals(2, b1.length);
     Assert.assertTrue(mPool.mInUseValues.contains(b1));
     mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(2, new IntPair(1, 0)),
-        mStats.mBucketStats);
+    Assert.assertEquals(ImmutableMap.of(2, new IntPair(1, 0)), mStats.mBucketStats);
     Assert.assertEquals(0, mStats.mFreeBytes);
     Assert.assertEquals(2, mStats.mUsedBytes);
     Assert.assertEquals(0, mStats.mFreeCount);
@@ -172,9 +167,7 @@ public class BasePoolTest {
     Assert.assertNotNull(b1);
     Assert.assertEquals(2, b1.length);
     mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(2, new IntPair(0, 1)),
-        mStats.mBucketStats);
+    Assert.assertEquals(ImmutableMap.of(2, new IntPair(0, 1)), mStats.mBucketStats);
     Assert.assertEquals(2, mStats.mFreeBytes);
     Assert.assertEquals(0, mStats.mUsedBytes);
     Assert.assertEquals(1, mStats.mFreeCount);
@@ -186,9 +179,7 @@ public class BasePoolTest {
     Assert.assertEquals(2, b2.length);
     Assert.assertTrue(mPool.mInUseValues.contains(b2));
     mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(2, new IntPair(1, 0)),
-        mStats.mBucketStats);
+    Assert.assertEquals(ImmutableMap.of(2, new IntPair(1, 0)), mStats.mBucketStats);
     Assert.assertEquals(0, mStats.mFreeBytes);
     Assert.assertEquals(2, mStats.mUsedBytes);
     Assert.assertEquals(0, mStats.mFreeCount);
@@ -218,9 +209,7 @@ public class BasePoolTest {
 
     // verify stats
     mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(2, new IntPair(0, 1)),
-        mStats.mBucketStats);
+    Assert.assertEquals(ImmutableMap.of(2, new IntPair(0, 1)), mStats.mBucketStats);
     Assert.assertEquals(2, mStats.mFreeBytes);
     Assert.assertEquals(0, mStats.mUsedBytes);
     Assert.assertEquals(1, mStats.mFreeCount);
@@ -237,9 +226,7 @@ public class BasePoolTest {
     mPool.release(b3);
 
     mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(6, new IntPair(1, 0)),
-        mStats.mBucketStats);
+    Assert.assertEquals(ImmutableMap.of(6, new IntPair(1, 0)), mStats.mBucketStats);
     Assert.assertEquals(0, mStats.mFreeBytes);
     Assert.assertEquals(6, mStats.mUsedBytes);
     Assert.assertEquals(0, mStats.mFreeCount);
@@ -258,10 +245,7 @@ public class BasePoolTest {
     mPool.release(b1);
 
     mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(
-            4, new IntPair(0, 0)),
-        mStats.mBucketStats);
+    Assert.assertEquals(ImmutableMap.of(4, new IntPair(0, 0)), mStats.mBucketStats);
     Assert.assertEquals(0, mStats.mFreeBytes);
     Assert.assertEquals(0, mStats.mUsedBytes);
     Assert.assertEquals(0, mStats.mFreeCount);
@@ -278,10 +262,7 @@ public class BasePoolTest {
     mPool.get(2);
     mPool.get(2);
     mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(
-            2, new IntPair(3, 0)),
-        mStats.mBucketStats);
+    Assert.assertEquals(ImmutableMap.of(2, new IntPair(3, 0)), mStats.mBucketStats);
     Assert.assertEquals(6, mStats.mUsedBytes);
     Assert.assertEquals(3, mStats.mUsedCount);
     Assert.assertEquals(0, mStats.mFreeBytes);
@@ -291,10 +272,7 @@ public class BasePoolTest {
     mPool.release(b0);
 
     mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(
-            2, new IntPair(2, 0)),
-        mStats.mBucketStats);
+    Assert.assertEquals(ImmutableMap.of(2, new IntPair(2, 0)), mStats.mBucketStats);
     Assert.assertEquals(4, mStats.mUsedBytes);
     Assert.assertEquals(2, mStats.mUsedCount);
     Assert.assertEquals(0, mStats.mFreeBytes);
@@ -314,9 +292,7 @@ public class BasePoolTest {
 
     // verify stats
     mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(2, new IntPair(1, 0)),
-        mStats.mBucketStats);
+    Assert.assertEquals(ImmutableMap.of(2, new IntPair(1, 0)), mStats.mBucketStats);
     Assert.assertEquals(0, mStats.mFreeBytes);
     Assert.assertEquals(2, mStats.mUsedBytes);
     Assert.assertEquals(0, mStats.mFreeCount);
@@ -336,14 +312,11 @@ public class BasePoolTest {
 
     // verify stats
     mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(2, new IntPair(0, 0)),
-        mStats.mBucketStats);
+    Assert.assertEquals(ImmutableMap.of(2, new IntPair(0, 0)), mStats.mBucketStats);
     Assert.assertEquals(0, mStats.mFreeBytes);
     Assert.assertEquals(0, mStats.mUsedBytes);
     Assert.assertEquals(0, mStats.mFreeCount);
     Assert.assertEquals(0, mStats.mUsedCount);
-
   }
 
   // test buffers outside the 'normal' bucket sizes
@@ -377,7 +350,7 @@ public class BasePoolTest {
   @Test
   public void testGetWithErrors() throws Exception {
     int[] sizes = new int[] {-1, 0};
-    for (int s: sizes) {
+    for (int s : sizes) {
       try {
         mPool.get(s);
         Assert.fail("Failed size: " + s);
@@ -470,8 +443,8 @@ public class BasePoolTest {
   }
 
   /**
-   * A simple test pool that allocates byte arrays, and always allocates buffers of double
-   * the size requested
+   * A simple test pool that allocates byte arrays, and always allocates buffers of double the size
+   * requested
    */
   public static class TestPool extends BasePool<byte[]> {
     public boolean mIsReusable;
@@ -480,10 +453,7 @@ public class BasePoolTest {
       this(maxPoolSizeSoftCap, maxPoolSizeHardCap, null);
     }
 
-    public TestPool(
-        int maxPoolSizeSoftCap,
-        int maxPoolSizeHardCap,
-        SparseIntArray bucketSizes) {
+    public TestPool(int maxPoolSizeSoftCap, int maxPoolSizeHardCap, SparseIntArray bucketSizes) {
       super(
           mock(MemoryTrimmableRegistry.class),
           new PoolParams(maxPoolSizeSoftCap, maxPoolSizeHardCap, bucketSizes),
@@ -498,8 +468,7 @@ public class BasePoolTest {
     }
 
     @Override
-    protected void free(byte[] value) {
-    }
+    protected void free(byte[] value) {}
 
     @Override
     protected boolean isReusable(byte[] value) {
@@ -508,6 +477,7 @@ public class BasePoolTest {
 
     /**
      * Allocate the smallest even number than is greater than or equal to the requested size
+     *
      * @param requestSize the logical request size
      * @return the slightly higher size
      */
@@ -540,4 +510,3 @@ public class BasePoolTest {
     return bucketSizes;
   }
 }
-

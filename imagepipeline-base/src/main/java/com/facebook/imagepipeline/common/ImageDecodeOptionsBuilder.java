@@ -13,9 +13,7 @@ import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.transformation.BitmapTransformation;
 import javax.annotation.Nullable;
 
-/**
- * Builder for {@link ImageDecodeOptions}.
- */
+/** Builder for {@link ImageDecodeOptions}. */
 public class ImageDecodeOptionsBuilder {
 
   private int mMinDecodeIntervalMs = 100;
@@ -28,8 +26,7 @@ public class ImageDecodeOptionsBuilder {
   private @Nullable BitmapTransformation mBitmapTransformation;
   private @Nullable ColorSpace mColorSpace;
 
-  public ImageDecodeOptionsBuilder() {
-  }
+  public ImageDecodeOptionsBuilder() {}
 
   /**
    * Sets the builder to be equivalent to the specified options.
@@ -52,9 +49,10 @@ public class ImageDecodeOptionsBuilder {
   /**
    * Sets the minimum decode interval.
    *
-   * <p/> Decoding of intermediate results won't happen more often that intervalMs. If another
+   * <p>Decoding of intermediate results won't happen more often that intervalMs. If another
    * intermediate result comes too soon, it will be decoded only after intervalMs since the last
    * decode. If there were more intermediate results in between, only the last one gets decoded.
+   *
    * @param intervalMs the minimum decode interval in milliseconds
    * @return this builder
    */
@@ -114,8 +112,8 @@ public class ImageDecodeOptionsBuilder {
 
   /**
    * Gets whether to decode all the frames and store them in memory. This should only ever be used
-   * for animations that are known to be small (e.g. stickers). Caching dozens of large Bitmaps
-   * in memory for general GIFs or WebP's will not fit in memory.
+   * for animations that are known to be small (e.g. stickers). Caching dozens of large Bitmaps in
+   * memory for general GIFs or WebP's will not fit in memory.
    *
    * @return whether to decode all the frames and store them in memory
    */
@@ -125,8 +123,8 @@ public class ImageDecodeOptionsBuilder {
 
   /**
    * Sets whether to decode all the frames and store them in memory. This should only ever be used
-   * for animations that are known to be small (e.g. stickers). Caching dozens of large Bitmaps
-   * in memory for general GIFs or WebP's will not fit in memory.
+   * for animations that are known to be small (e.g. stickers). Caching dozens of large Bitmaps in
+   * memory for general GIFs or WebP's will not fit in memory.
    *
    * @param decodeAllFrames whether to decode all the frames and store them in memory
    * @return this builder
@@ -148,9 +146,8 @@ public class ImageDecodeOptionsBuilder {
   }
 
   /**
-   * Set a custom image decoder override to be used for the given image.
-   * This will bypass all default decoders and only use the provided custom image decoder
-   * for the given image.
+   * Set a custom image decoder override to be used for the given image. This will bypass all
+   * default decoders and only use the provided custom image decoder for the given image.
    *
    * @param customImageDecoder the custom decoder to use
    * @return this builder
@@ -191,6 +188,7 @@ public class ImageDecodeOptionsBuilder {
 
   /**
    * Sets which config static image will be decode with;
+   *
    * @param bitmapConfig which config static image will be decode with;
    */
   public ImageDecodeOptionsBuilder setBitmapConfig(Bitmap.Config bitmapConfig) {

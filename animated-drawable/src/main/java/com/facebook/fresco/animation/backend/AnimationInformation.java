@@ -6,9 +6,7 @@
  */
 package com.facebook.fresco.animation.backend;
 
-/**
- * Basic animation metadata: Frame and loop count & duration
- */
+/** Basic animation metadata: Frame and loop count & duration */
 public interface AnimationInformation {
 
   /**

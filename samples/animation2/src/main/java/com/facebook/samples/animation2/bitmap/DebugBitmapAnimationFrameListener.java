@@ -15,8 +15,8 @@ import com.facebook.common.logging.FLog;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 
 /**
- * {@link com.facebook.fresco.animation.bitmap.BitmapAnimationBackend.FrameListener}
- * that logs animation statistics.
+ * {@link com.facebook.fresco.animation.bitmap.BitmapAnimationBackend.FrameListener} that logs
+ * animation statistics.
  */
 public class DebugBitmapAnimationFrameListener implements BitmapAnimationBackend.FrameListener {
 

@@ -15,9 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests for {@link PooledByteBufferInputStream}
- */
+/** Tests for {@link PooledByteBufferInputStream} */
 @RunWith(RobolectricTestRunner.class)
 public class PooledByteBufferInputStreamTest {
   private static final byte[] BYTES = new byte[] {1, 123, -20, 3, 6, 23, 1};
@@ -126,7 +124,7 @@ public class PooledByteBufferInputStreamTest {
 
   @Test
   public void testRead_ToByteArray3() {
-    byte[] buf = new byte[BYTES.length -1];
+    byte[] buf = new byte[BYTES.length - 1];
     assertEquals(buf.length, mStream.read(buf));
     assertEquals(buf.length, mStream.mOffset);
     assertArrayEquals(BYTES, buf, buf.length);
@@ -134,8 +132,8 @@ public class PooledByteBufferInputStreamTest {
 
   @Test
   public void testCreateEmptyStream() throws Exception {
-    PooledByteBufferInputStream is = new PooledByteBufferInputStream(
-        new TrivialPooledByteBuffer(new byte[] {}));
+    PooledByteBufferInputStream is =
+        new PooledByteBufferInputStream(new TrivialPooledByteBuffer(new byte[] {}));
     assertEquals(-1, is.read());
   }
 

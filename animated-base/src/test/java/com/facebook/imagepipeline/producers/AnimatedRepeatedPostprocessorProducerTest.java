@@ -39,7 +39,7 @@ import org.robolectric.*;
 import org.robolectric.annotation.*;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class AnimatedRepeatedPostprocessorProducerTest {
 
   private static final String POSTPROCESSOR_NAME = "postprocessor_name";
@@ -73,10 +73,7 @@ public class AnimatedRepeatedPostprocessorProducerTest {
     MockitoAnnotations.initMocks(this);
     mTestExecutorService = new TestExecutorService(new FakeClock());
     mPostprocessorProducer =
-        new PostprocessorProducer(
-            mInputProducer,
-            mPlatformBitmapFactory,
-            mTestExecutorService);
+        new PostprocessorProducer(mInputProducer, mPlatformBitmapFactory, mTestExecutorService);
     mProducerContext =
         new SettableProducerContext(
             mImageRequest,
@@ -92,15 +89,16 @@ public class AnimatedRepeatedPostprocessorProducerTest {
     when(mPostprocessor.getName()).thenReturn(POSTPROCESSOR_NAME);
     when(mProducerListener.requiresExtraMap(mProducerContext, POSTPROCESSOR_NAME)).thenReturn(true);
     doAnswer(
-        new Answer<Object>() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            mResults.add(
-                ((CloseableReference<CloseableImage>) invocation.getArguments()[0]).clone());
-            return null;
-          }
-        }
-    ).when(mConsumer).onNewResult(any(CloseableReference.class), anyInt());
+            new Answer<Object>() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                mResults.add(
+                    ((CloseableReference<CloseableImage>) invocation.getArguments()[0]).clone());
+                return null;
+              }
+            })
+        .when(mConsumer)
+        .onNewResult(any(CloseableReference.class), anyInt());
     mInOrder = inOrder(mPostprocessor, mProducerListener, mConsumer);
   }
 
@@ -133,8 +131,7 @@ public class AnimatedRepeatedPostprocessorProducerTest {
     mSourceBitmap = mock(Bitmap.class);
     mSourceCloseableStaticBitmap = mock(CloseableStaticBitmap.class);
     when(mSourceCloseableStaticBitmap.getUnderlyingBitmap()).thenReturn(mSourceBitmap);
-    mSourceCloseableImageRef =
-        CloseableReference.<CloseableImage>of(mSourceCloseableStaticBitmap);
+    mSourceCloseableImageRef = CloseableReference.<CloseableImage>of(mSourceCloseableStaticBitmap);
   }
 
   private void setupNewDestinationImage() {
@@ -142,7 +139,8 @@ public class AnimatedRepeatedPostprocessorProducerTest {
     mDestinationCloseableBitmapRef =
         CloseableReference.of(mDestinationBitmap, mBitmapResourceReleaser);
     doReturn(mDestinationCloseableBitmapRef)
-        .when(mPostprocessor).process(mSourceBitmap, mPlatformBitmapFactory);
+        .when(mPostprocessor)
+        .process(mSourceBitmap, mPlatformBitmapFactory);
   }
 
   private RepeatedPostprocessorConsumer produceResults() {
@@ -180,22 +178,26 @@ public class AnimatedRepeatedPostprocessorProducerTest {
   private void performUpdateDuringTheNextPostprocessing(
       final RepeatedPostprocessorRunner repeatedPostprocessorRunner) {
     doAnswer(
-        new Answer<CloseableReference<Bitmap>>() {
-          @Override
-          public CloseableReference<Bitmap> answer(InvocationOnMock invocation) throws Throwable {
-            CloseableReference<Bitmap> destBitmapRef = mDestinationCloseableBitmapRef;
-            performUpdate(repeatedPostprocessorRunner, false);
-            // the following call should be ignored
-            performUpdate(repeatedPostprocessorRunner, false);
-            return destBitmapRef;
-          }
-        }).when(mPostprocessor).process(mSourceBitmap, mPlatformBitmapFactory);
+            new Answer<CloseableReference<Bitmap>>() {
+              @Override
+              public CloseableReference<Bitmap> answer(InvocationOnMock invocation)
+                  throws Throwable {
+                CloseableReference<Bitmap> destBitmapRef = mDestinationCloseableBitmapRef;
+                performUpdate(repeatedPostprocessorRunner, false);
+                // the following call should be ignored
+                performUpdate(repeatedPostprocessorRunner, false);
+                return destBitmapRef;
+              }
+            })
+        .when(mPostprocessor)
+        .process(mSourceBitmap, mPlatformBitmapFactory);
   }
 
   private void performFailure(RepeatedPostprocessorRunner repeatedPostprocessorRunner) {
     setupNewDestinationImage();
     doThrow(new RuntimeException())
-        .when(mPostprocessor).process(mSourceBitmap, mPlatformBitmapFactory);
+        .when(mPostprocessor)
+        .process(mSourceBitmap, mPlatformBitmapFactory);
     repeatedPostprocessorRunner.update();
     mTestExecutorService.runUntilIdle();
   }

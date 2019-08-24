@@ -10,8 +10,9 @@ package com.facebook.datasource;
 /**
  * Base implementation of {@link DataSubscriber} that ensures that the data source is closed when
  * the subscriber has finished with it.
- * <p>
- * Sample usage:
+ *
+ * <p>Sample usage:
+ *
  * <pre>
  * <code>
  * imagePipeline.isInDiskCache(
@@ -24,7 +25,7 @@ package com.facebook.datasource;
  * </code>
  * </pre>
  */
-public abstract class BaseBooleanSubscriber implements DataSubscriber<Boolean>{
+public abstract class BaseBooleanSubscriber implements DataSubscriber<Boolean> {
   @Override
   public void onNewResult(DataSource<Boolean> dataSource) {
     try {
@@ -44,12 +45,10 @@ public abstract class BaseBooleanSubscriber implements DataSubscriber<Boolean>{
   }
 
   @Override
-  public void onCancellation(DataSource<Boolean> dataSource) {
-  }
+  public void onCancellation(DataSource<Boolean> dataSource) {}
 
   @Override
-  public void onProgressUpdate(DataSource<Boolean> dataSource) {
-  }
+  public void onProgressUpdate(DataSource<Boolean> dataSource) {}
 
   protected abstract void onNewResultImpl(boolean isFoundInDisk);
 

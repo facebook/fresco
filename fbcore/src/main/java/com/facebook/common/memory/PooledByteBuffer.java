@@ -12,19 +12,21 @@ import java.nio.ByteBuffer;
 import javax.annotation.Nullable;
 
 /**
- * A 'pooled' byte-buffer abstraction. Represents an immutable sequence of bytes stored off the
- * java heap.
+ * A 'pooled' byte-buffer abstraction. Represents an immutable sequence of bytes stored off the java
+ * heap.
  */
 public interface PooledByteBuffer extends Closeable {
 
   /**
    * Get the size of the byte buffer
+   *
    * @return the size of the byte buffer
    */
   int size();
 
   /**
    * Read byte at given offset
+   *
    * @param offset
    * @return byte at given offset
    */
@@ -53,21 +55,18 @@ public interface PooledByteBuffer extends Closeable {
   @Nullable
   ByteBuffer getByteBuffer();
 
-  /**
-   * Close this PooledByteBuffer and release all underlying resources
-   */
+  /** Close this PooledByteBuffer and release all underlying resources */
   @Override
   void close();
 
   /**
    * Check if this instance has already been closed
+   *
    * @return true, if the instance has been closed
    */
   boolean isClosed();
 
-  /**
-   * Exception indicating that the PooledByteBuffer is closed
-   */
+  /** Exception indicating that the PooledByteBuffer is closed */
   class ClosedException extends RuntimeException {
     public ClosedException() {
       super("Invalid bytebuf. Already closed");

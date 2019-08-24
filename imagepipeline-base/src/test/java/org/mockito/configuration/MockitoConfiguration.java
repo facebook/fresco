@@ -7,11 +7,10 @@
 
 package org.mockito.configuration;
 
-
 /**
  * To build the imagepipeline-base module on gradle we need this class which must be in the
- * classpath and disable caching for classes. We need this to avoid ClassCastException related
- * to Mockito and PowerMockito
+ * classpath and disable caching for classes. We need this to avoid ClassCastException related to
+ * Mockito and PowerMockito
  */
 public class MockitoConfiguration extends DefaultMockitoConfiguration {
 

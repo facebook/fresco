@@ -59,7 +59,7 @@ public class FakeNativeMemoryChunk extends NativeMemoryChunk {
 
   @Override
   public void copy(int offset, MemoryChunk other, int otherOffset, int count) {
-    FakeNativeMemoryChunk that = (FakeNativeMemoryChunk)other;
+    FakeNativeMemoryChunk that = (FakeNativeMemoryChunk) other;
     int numToCopy = Math.min(count, mBuf.length - offset);
     System.arraycopy(mBuf, offset, that.mBuf, otherOffset, numToCopy);
   }

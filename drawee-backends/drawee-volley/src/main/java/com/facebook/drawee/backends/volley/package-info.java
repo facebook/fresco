@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Drawee backend implementation for the integration with Volley.
- */
+/** Drawee backend implementation for the integration with Volley. */
 package com.facebook.drawee.backends.volley;

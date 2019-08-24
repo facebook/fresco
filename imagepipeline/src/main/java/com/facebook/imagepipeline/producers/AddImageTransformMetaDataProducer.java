@@ -27,8 +27,8 @@ public class AddImageTransformMetaDataProducer implements Producer<EncodedImage>
     mInputProducer.produceResults(new AddImageTransformMetaDataConsumer(consumer), context);
   }
 
-  private static class AddImageTransformMetaDataConsumer extends DelegatingConsumer<
-      EncodedImage, EncodedImage> {
+  private static class AddImageTransformMetaDataConsumer
+      extends DelegatingConsumer<EncodedImage, EncodedImage> {
 
     private AddImageTransformMetaDataConsumer(Consumer<EncodedImage> consumer) {
       super(consumer);

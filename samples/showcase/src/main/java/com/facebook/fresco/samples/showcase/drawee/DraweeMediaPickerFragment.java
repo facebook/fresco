@@ -31,9 +31,7 @@ import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.common.ToggleAnimationClickListener;
 
-/**
- * Display images from media pickers.
- */
+/** Display images from media pickers. */
 public class DraweeMediaPickerFragment extends BaseShowcaseFragment {
 
   private static final int PERMISSION_REQUEST_READ_EXTERNAL_STORAGE = 0;
@@ -45,9 +43,7 @@ public class DraweeMediaPickerFragment extends BaseShowcaseFragment {
   @Nullable
   @Override
   public View onCreateView(
-      LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+      LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_drawee_media_picker, container, false);
   }
 
@@ -59,46 +55,51 @@ public class DraweeMediaPickerFragment extends BaseShowcaseFragment {
     mSimpleDraweeView.setOnClickListener(new ToggleAnimationClickListener(mSimpleDraweeView));
 
     View actionOpenDocumentButton = view.findViewById(R.id.pick_action_open_document);
-    actionOpenDocumentButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-          Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-          intent.addCategory(Intent.CATEGORY_OPENABLE);
-          intent.setType("image/*");
-          startActivityForResult(intent, REQUEST_CODE_PICK_MEDIA);
-        } else {
-          Toast.makeText(
-              getContext(),
-              R.string.drawee_media_picker_action_open_document_not_supported,
-              Toast.LENGTH_SHORT).show();
-        }
-      }
-    });
+    actionOpenDocumentButton.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+              Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+              intent.addCategory(Intent.CATEGORY_OPENABLE);
+              intent.setType("image/*");
+              startActivityForResult(intent, REQUEST_CODE_PICK_MEDIA);
+            } else {
+              Toast.makeText(
+                      getContext(),
+                      R.string.drawee_media_picker_action_open_document_not_supported,
+                      Toast.LENGTH_SHORT)
+                  .show();
+            }
+          }
+        });
 
     View actionGetContent = view.findViewById(R.id.pick_action_get_content);
-    actionGetContent.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(intent, REQUEST_CODE_PICK_MEDIA);
-      }
-    });
+    actionGetContent.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            startActivityForResult(intent, REQUEST_CODE_PICK_MEDIA);
+          }
+        });
 
     View actionPickButton = view.findViewById(R.id.pick_action_pick);
-    actionPickButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        if (!ensureExternalStoragePermissionGranted()) {
-          return;
-        }
-        Intent intent = new Intent(
-            Intent.ACTION_PICK,
-            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, REQUEST_CODE_PICK_MEDIA);
-      }
-    });
+    actionPickButton.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            if (!ensureExternalStoragePermissionGranted()) {
+              return;
+            }
+            Intent intent =
+                new Intent(
+                    Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, REQUEST_CODE_PICK_MEDIA);
+          }
+        });
   }
 
   @Override
@@ -126,7 +127,7 @@ public class DraweeMediaPickerFragment extends BaseShowcaseFragment {
         != PackageManager.PERMISSION_GRANTED) {
       ActivityCompat.requestPermissions(
           getActivity(),
-          new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+          new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
           PERMISSION_REQUEST_READ_EXTERNAL_STORAGE);
       return false;
     }

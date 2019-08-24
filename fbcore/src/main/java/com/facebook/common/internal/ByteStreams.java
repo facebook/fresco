@@ -37,8 +37,7 @@ public final class ByteStreams {
 
   private static final int BUF_SIZE = 0x1000; // 4K
 
-  private ByteStreams() {
-  }
+  private ByteStreams() {}
 
   /**
    * Copies all bytes from the input stream to the output stream. Does not close or flush either
@@ -49,8 +48,7 @@ public final class ByteStreams {
    * @return the number of bytes copied
    * @throws IOException if an I/O error occurs
    */
-  public static long copy(InputStream from, OutputStream to)
-      throws IOException {
+  public static long copy(InputStream from, OutputStream to) throws IOException {
     checkNotNull(from);
     checkNotNull(to);
     byte[] buf = new byte[BUF_SIZE];
@@ -67,21 +65,19 @@ public final class ByteStreams {
   }
 
   /**
-   * Reads some bytes from an input stream and stores them into the buffer array
-   * {@code b}. This method blocks until {@code len} bytes of input data have
-   * been read into the array, or end of file is detected. The number of bytes
-   * read is returned, possibly zero. Does not close the stream.
+   * Reads some bytes from an input stream and stores them into the buffer array {@code b}. This
+   * method blocks until {@code len} bytes of input data have been read into the array, or end of
+   * file is detected. The number of bytes read is returned, possibly zero. Does not close the
+   * stream.
    *
-   * <p>A caller can detect EOF if the number of bytes read is less than
-   * {@code len}. All subsequent calls on the same stream will return zero.
+   * <p>A caller can detect EOF if the number of bytes read is less than {@code len}. All subsequent
+   * calls on the same stream will return zero.
    *
-   * <p>If {@code b} is null, a {@code NullPointerException} is thrown. If
-   * {@code off} is negative, or {@code len} is negative, or {@code off+len} is
-   * greater than the length of the array {@code b}, then an
-   * {@code IndexOutOfBoundsException} is thrown. If {@code len} is zero, then
-   * no bytes are read. Otherwise, the first byte read is stored into element
-   * {@code b[off]}, the next one into {@code b[off+1]}, and so on. The number
-   * of bytes read is, at most, equal to {@code len}.
+   * <p>If {@code b} is null, a {@code NullPointerException} is thrown. If {@code off} is negative,
+   * or {@code len} is negative, or {@code off+len} is greater than the length of the array {@code
+   * b}, then an {@code IndexOutOfBoundsException} is thrown. If {@code len} is zero, then no bytes
+   * are read. Otherwise, the first byte read is stored into element {@code b[off]}, the next one
+   * into {@code b[off+1]}, and so on. The number of bytes read is, at most, equal to {@code len}.
    *
    * @param in the input stream to read from
    * @param b the buffer into which the data is read
@@ -90,8 +86,7 @@ public final class ByteStreams {
    * @return the number of bytes read
    * @throws IOException if an I/O error occurs
    */
-  public static int read(InputStream in, byte[] b, int off, int len)
-      throws IOException {
+  public static int read(InputStream in, byte[] b, int off, int len) throws IOException {
     checkNotNull(in);
     checkNotNull(b);
     if (len < 0) {
@@ -109,8 +104,7 @@ public final class ByteStreams {
   }
 
   /**
-   * Reads all bytes from an input stream into a byte array.
-   * Does not close the stream.
+   * Reads all bytes from an input stream into a byte array. Does not close the stream.
    *
    * @param in the input stream to read from
    * @return a byte array containing all the bytes from the stream
@@ -123,14 +117,11 @@ public final class ByteStreams {
   }
 
   /**
-   * Reads all bytes from an input stream into a byte array. The given
-   * expected size is used to create an initial byte array, but if the actual
-   * number of bytes read from the stream differs, the correct result will be
-   * returned anyway.
+   * Reads all bytes from an input stream into a byte array. The given expected size is used to
+   * create an initial byte array, but if the actual number of bytes read from the stream differs,
+   * the correct result will be returned anyway.
    */
-  public static byte[] toByteArray(
-      InputStream in,
-      int expectedSize) throws IOException {
+  public static byte[] toByteArray(InputStream in, int expectedSize) throws IOException {
     byte[] bytes = new byte[expectedSize];
     int remaining = expectedSize;
 
@@ -162,42 +153,34 @@ public final class ByteStreams {
     return result;
   }
 
-
-  /**
-   * BAOS that provides limited access to its internal byte array.
-   */
-  private static final class FastByteArrayOutputStream
-      extends ByteArrayOutputStream {
+  /** BAOS that provides limited access to its internal byte array. */
+  private static final class FastByteArrayOutputStream extends ByteArrayOutputStream {
     /**
-     * Writes the contents of the internal buffer to the given array starting
-     * at the given offset. Assumes the array has space to hold count bytes.
+     * Writes the contents of the internal buffer to the given array starting at the given offset.
+     * Assumes the array has space to hold count bytes.
      */
     void writeTo(byte[] b, int off) {
       System.arraycopy(buf, 0, b, off, count);
     }
   }
 
-
   /**
-   * Attempts to read {@code len} bytes from the stream into the given array
-   * starting at {@code off}, with the same behavior as
-   * {@link DataInput#readFully(byte[], int, int)}. Does not close the
-   * stream.
+   * Attempts to read {@code len} bytes from the stream into the given array starting at {@code
+   * off}, with the same behavior as {@link DataInput#readFully(byte[], int, int)}. Does not close
+   * the stream.
    *
    * @param in the input stream to read from.
    * @param b the buffer into which the data is read.
    * @param off an int specifying the offset into the data.
    * @param len an int specifying the number of bytes to read.
-   * @throws EOFException if this stream reaches the end before reading all
-   *     the bytes.
+   * @throws EOFException if this stream reaches the end before reading all the bytes.
    * @throws IOException if an I/O error occurs.
    */
-  public static void readFully(
-      InputStream in, byte[] b, int off, int len) throws IOException {
+  public static void readFully(InputStream in, byte[] b, int off, int len) throws IOException {
     int read = read(in, b, off, len);
     if (read != len) {
-      throw new EOFException("reached end of stream after reading "
-          + read + " bytes; " + len + " bytes expected");
+      throw new EOFException(
+          "reached end of stream after reading " + read + " bytes; " + len + " bytes expected");
     }
   }
 }

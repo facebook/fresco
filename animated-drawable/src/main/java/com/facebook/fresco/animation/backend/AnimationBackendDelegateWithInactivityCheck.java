@@ -16,13 +16,13 @@ import javax.annotation.Nullable;
 
 /**
  * Animation backend delegate for animation backends that implement {@link InactivityListener}.
- * After a certain inactivity period (default = {@link #INACTIVITY_THRESHOLD_MS},
- * {@link InactivityListener#onInactive()} will be called.
+ * After a certain inactivity period (default = {@link #INACTIVITY_THRESHOLD_MS}, {@link
+ * InactivityListener#onInactive()} will be called.
  *
- * This can for example be used to drop caches if needed.
+ * <p>This can for example be used to drop caches if needed.
  *
- * New instances can be created with
- * {@link #createForBackend(AnimationBackend, MonotonicClock, ScheduledExecutorService)}.
+ * <p>New instances can be created with {@link #createForBackend(AnimationBackend, MonotonicClock,
+ * ScheduledExecutorService)}.
  */
 public class AnimationBackendDelegateWithInactivityCheck<T extends AnimationBackend>
     extends AnimationBackendDelegate<T> {
@@ -30,38 +30,33 @@ public class AnimationBackendDelegateWithInactivityCheck<T extends AnimationBack
   public interface InactivityListener {
 
     /**
-     * Called when the animation backend has not been used to draw frames within
-     * the given threshold.
+     * Called when the animation backend has not been used to draw frames within the given
+     * threshold.
      */
     void onInactive();
   }
 
-  public static <T extends AnimationBackend &
-      AnimationBackendDelegateWithInactivityCheck.InactivityListener>
-  AnimationBackendDelegate<T> createForBackend(
-      T backend,
-      MonotonicClock monotonicClock,
-      ScheduledExecutorService scheduledExecutorServiceForUiThread) {
+  public static <
+          T extends
+              AnimationBackend & AnimationBackendDelegateWithInactivityCheck.InactivityListener>
+      AnimationBackendDelegate<T> createForBackend(
+          T backend,
+          MonotonicClock monotonicClock,
+          ScheduledExecutorService scheduledExecutorServiceForUiThread) {
     return createForBackend(backend, backend, monotonicClock, scheduledExecutorServiceForUiThread);
   }
 
-  public static <T extends AnimationBackend>
-  AnimationBackendDelegate<T> createForBackend(
+  public static <T extends AnimationBackend> AnimationBackendDelegate<T> createForBackend(
       T backend,
       InactivityListener inactivityListener,
       MonotonicClock monotonicClock,
       ScheduledExecutorService scheduledExecutorServiceForUiThread) {
     return new AnimationBackendDelegateWithInactivityCheck<>(
-        backend,
-        inactivityListener,
-        monotonicClock,
-        scheduledExecutorServiceForUiThread);
+        backend, inactivityListener, monotonicClock, scheduledExecutorServiceForUiThread);
   }
 
-  @VisibleForTesting
-  static final long INACTIVITY_THRESHOLD_MS = 2000;
-  @VisibleForTesting
-  static final long INACTIVITY_CHECK_POLLING_TIME_MS = 1000;
+  @VisibleForTesting static final long INACTIVITY_THRESHOLD_MS = 2000;
+  @VisibleForTesting static final long INACTIVITY_CHECK_POLLING_TIME_MS = 1000;
 
   private final MonotonicClock mMonotonicClock;
   private final ScheduledExecutorService mScheduledExecutorServiceForUiThread;
@@ -69,28 +64,28 @@ public class AnimationBackendDelegateWithInactivityCheck<T extends AnimationBack
   private long mLastDrawnTimeMs;
   private long mInactivityThresholdMs = INACTIVITY_THRESHOLD_MS;
   private long mInactivityCheckPollingTimeMs = INACTIVITY_CHECK_POLLING_TIME_MS;
-  @Nullable
-  private InactivityListener mInactivityListener;
+  @Nullable private InactivityListener mInactivityListener;
 
   /**
-   * Watchdog runnable that calls {@link InactivityListener#onInactive()} if necessary
-   * or schedules a new watchdog task otherwise.
+   * Watchdog runnable that calls {@link InactivityListener#onInactive()} if necessary or schedules
+   * a new watchdog task otherwise.
    */
-  private final Runnable mIsInactiveCheck = new Runnable() {
-    @Override
-    public void run() {
-      synchronized (AnimationBackendDelegateWithInactivityCheck.this) {
-        mInactivityCheckScheduled = false;
-        if (isInactive()) {
-          if (mInactivityListener != null) {
-            mInactivityListener.onInactive();
+  private final Runnable mIsInactiveCheck =
+      new Runnable() {
+        @Override
+        public void run() {
+          synchronized (AnimationBackendDelegateWithInactivityCheck.this) {
+            mInactivityCheckScheduled = false;
+            if (isInactive()) {
+              if (mInactivityListener != null) {
+                mInactivityListener.onInactive();
+              }
+            } else {
+              maybeScheduleInactivityCheck();
+            }
           }
-        } else {
-          maybeScheduleInactivityCheck();
         }
-      }
-    }
-  };
+      };
 
   private AnimationBackendDelegateWithInactivityCheck(
       @Nullable T animationBackend,
@@ -139,9 +134,7 @@ public class AnimationBackendDelegateWithInactivityCheck<T extends AnimationBack
     if (!mInactivityCheckScheduled) {
       mInactivityCheckScheduled = true;
       mScheduledExecutorServiceForUiThread.schedule(
-          mIsInactiveCheck,
-          mInactivityCheckPollingTimeMs,
-          TimeUnit.MILLISECONDS);
+          mIsInactiveCheck, mInactivityCheckPollingTimeMs, TimeUnit.MILLISECONDS);
     }
   }
 }

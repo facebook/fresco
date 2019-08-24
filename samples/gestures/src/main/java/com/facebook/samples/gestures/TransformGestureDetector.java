@@ -16,10 +16,10 @@ import android.view.MotionEvent;
 
 /**
  * Component that detects translation, scale and rotation based on touch events.
- * <p>
- * This class notifies its listeners whenever a gesture begins, updates or ends.
- * The instance of this detector is passed to the listeners, so it can be queried
- * for pivot, translation, scale or rotation.
+ *
+ * <p>This class notifies its listeners whenever a gesture begins, updates or ends. The instance of
+ * this detector is passed to the listeners, so it can be queried for pivot, translation, scale or
+ * rotation.
  */
 public class TransformGestureDetector implements MultiPointerGestureDetector.Listener {
 
@@ -51,21 +51,21 @@ public class TransformGestureDetector implements MultiPointerGestureDetector.Lis
 
   /**
    * Sets the listener.
+   *
    * @param listener listener to set
    */
   public void setListener(Listener listener) {
     mListener = listener;
   }
 
-  /**
-   * Resets the component to the initial state.
-   */
+  /** Resets the component to the initial state. */
   public void reset() {
     mDetector.reset();
   }
 
   /**
    * Handles the given motion event.
+   *
    * @param event event to handle
    * @return whether or not the event was handled
    */
@@ -102,7 +102,7 @@ public class TransformGestureDetector implements MultiPointerGestureDetector.Lis
     return (len > 0) ? sum / len : 0;
   }
 
-  /** Restarts the current gesture (if any).  */
+  /** Restarts the current gesture (if any). */
   public void restartGesture() {
     mDetector.restartGesture();
   }
@@ -134,14 +134,14 @@ public class TransformGestureDetector implements MultiPointerGestureDetector.Lis
 
   /** Gets the X component of the translation */
   public float getTranslationX() {
-    return calcAverage(mDetector.getCurrentX(), mDetector.getPointerCount()) -
-        calcAverage(mDetector.getStartX(), mDetector.getPointerCount());
+    return calcAverage(mDetector.getCurrentX(), mDetector.getPointerCount())
+        - calcAverage(mDetector.getStartX(), mDetector.getPointerCount());
   }
 
   /** Gets the Y component of the translation */
   public float getTranslationY() {
-    return calcAverage(mDetector.getCurrentY(), mDetector.getPointerCount()) -
-        calcAverage(mDetector.getStartY(), mDetector.getPointerCount());
+    return calcAverage(mDetector.getCurrentY(), mDetector.getPointerCount())
+        - calcAverage(mDetector.getStartY(), mDetector.getPointerCount());
   }
 
   /** Gets the scale */

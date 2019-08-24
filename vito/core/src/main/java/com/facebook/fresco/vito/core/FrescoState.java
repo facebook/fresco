@@ -466,7 +466,6 @@ public class FrescoState
     mExtras = extras;
   }
 
-
   public String getStringId() {
     return getStringId(getId());
   }

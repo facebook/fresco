@@ -18,9 +18,7 @@ import javax.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * Tests {@link DropFramesFrameScheduler}.
- */
+/** Tests {@link DropFramesFrameScheduler}. */
 public class DropFramesFrameSchedulerTest {
 
   private DummyAnimationBackend mDummyAnimationBackend;
@@ -104,12 +102,18 @@ public class DropFramesFrameSchedulerTest {
     assertThat(mFrameScheduler.getFrameNumberToRender(animationDurationMs + 1, -1))
         .isEqualTo(FrameScheduler.FRAME_NUMBER_DONE);
 
-    assertThat(mFrameScheduler.getFrameNumberToRender(
-        animationDurationMs + mDummyAnimationBackend.getFrameDurationMs(lastFrameNumber), -1))
+    assertThat(
+            mFrameScheduler.getFrameNumberToRender(
+                animationDurationMs + mDummyAnimationBackend.getFrameDurationMs(lastFrameNumber),
+                -1))
         .isEqualTo(FrameScheduler.FRAME_NUMBER_DONE);
 
-    assertThat(mFrameScheduler.getFrameNumberToRender(
-        animationDurationMs + mDummyAnimationBackend.getFrameDurationMs(lastFrameNumber) + 100, -1))
+    assertThat(
+            mFrameScheduler.getFrameNumberToRender(
+                animationDurationMs
+                    + mDummyAnimationBackend.getFrameDurationMs(lastFrameNumber)
+                    + 100,
+                -1))
         .isEqualTo(FrameScheduler.FRAME_NUMBER_DONE);
   }
 
@@ -170,25 +174,18 @@ public class DropFramesFrameSchedulerTest {
     }
 
     @Override
-    public boolean drawFrame(
-        Drawable parent, Canvas canvas, int frameNumber) {
+    public boolean drawFrame(Drawable parent, Canvas canvas, int frameNumber) {
       return false;
     }
 
     @Override
-    public void setAlpha(@IntRange(from = 0, to = 255) int alpha) {
-
-    }
+    public void setAlpha(@IntRange(from = 0, to = 255) int alpha) {}
 
     @Override
-    public void setColorFilter(@Nullable ColorFilter colorFilter) {
-
-    }
+    public void setColorFilter(@Nullable ColorFilter colorFilter) {}
 
     @Override
-    public void setBounds(Rect bounds) {
-
-    }
+    public void setBounds(Rect bounds) {}
 
     @Override
     public int getIntrinsicWidth() {
@@ -206,7 +203,6 @@ public class DropFramesFrameSchedulerTest {
     }
 
     @Override
-    public void clear() {
-    }
+    public void clear() {}
   }
 }

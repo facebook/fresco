@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * DataSource implementations to use unto the image pipeline controller implementations.
- */
+/** DataSource implementations to use unto the image pipeline controller implementations. */
 package com.facebook.imagepipeline.datasource;

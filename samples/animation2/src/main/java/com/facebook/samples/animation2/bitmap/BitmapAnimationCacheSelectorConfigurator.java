@@ -27,8 +27,8 @@ import com.facebook.imagepipeline.animated.impl.AnimatedFrameCache;
 import com.facebook.samples.animation2.R;
 
 /**
- * Manages a {@link Spinner} that can be used to switch the used caching implementation for
- * {@link BitmapAnimationBackend}s.
+ * Manages a {@link Spinner} that can be used to switch the used caching implementation for {@link
+ * BitmapAnimationBackend}s.
  */
 public class BitmapAnimationCacheSelectorConfigurator {
 
@@ -134,19 +134,19 @@ public class BitmapAnimationCacheSelectorConfigurator {
   }
 
   private void setupSelector() {
-    mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-      @Override
-      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        BitmapFrameCache bitmapFrameCache =
-            mArrayAdapter.getItem(position).createBitmapFrameCache();
-        bitmapFrameCache.setFrameCacheListener(mFrameCacheListener);
-        updateBitmapFrameCache(bitmapFrameCache);
-      }
+    mSpinner.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            BitmapFrameCache bitmapFrameCache =
+                mArrayAdapter.getItem(position).createBitmapFrameCache();
+            bitmapFrameCache.setFrameCacheListener(mFrameCacheListener);
+            updateBitmapFrameCache(bitmapFrameCache);
+          }
 
-      @Override
-      public void onNothingSelected(AdapterView<?> adapterView) {
-      }
-    });
+          @Override
+          public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
   }
 
   private void updateBitmapFrameCache(BitmapFrameCache bitmapFrameCache) {

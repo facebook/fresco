@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
-public class PooledByteStreamsTest  {
+public class PooledByteStreamsTest {
   private static final int POOLED_ARRAY_SIZE = 4;
 
   private ByteArrayPool mByteArrayPool;
@@ -40,7 +40,7 @@ public class PooledByteStreamsTest  {
   @Before
   public void setUp() {
     mByteArrayPool = mock(ByteArrayPool.class);
-    mData = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 115};
+    mData = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 115};
     mIs = new ByteArrayInputStream(mData);
     mOs = new ByteArrayOutputStream();
 
@@ -91,7 +91,8 @@ public class PooledByteStreamsTest  {
             public void write(int oneByte) throws IOException {
               throw new IOException();
             }
-          }, 3);
+          },
+          3);
       fail();
     } catch (IOException ioe) {
       // expected

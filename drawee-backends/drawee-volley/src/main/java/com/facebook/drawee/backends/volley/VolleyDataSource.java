@@ -17,9 +17,7 @@ import com.facebook.datasource.AbstractDataSource;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
 
-/**
- * {@link DataSource} that wraps Volley {@link ImageLoader}.
- */
+/** {@link DataSource} that wraps Volley {@link ImageLoader}. */
 public class VolleyDataSource extends AbstractDataSource<Bitmap> {
   private final Handler mHandler = new Handler(Looper.getMainLooper());
   private ImageLoader.ImageContainer mImageContainer;
@@ -41,36 +39,40 @@ public class VolleyDataSource extends AbstractDataSource<Bitmap> {
       }
     }
 
-    mImageContainer = imageLoader.get(
-        uriString,
-        new ImageLoader.ImageListener() {
-          @Override
-          public void onErrorResponse(VolleyError error) {
-            setFailure(error.getCause());
-          }
-          @Override
-          public void onResponse(final ImageLoader.ImageContainer response, boolean isImmediate) {
-            if (response.getBitmap() != null) {
-              setResult(response.getBitmap(), true);
-            }
-          }
-        },
-        maxWidth,
-        maxHeight);
+    mImageContainer =
+        imageLoader.get(
+            uriString,
+            new ImageLoader.ImageListener() {
+              @Override
+              public void onErrorResponse(VolleyError error) {
+                setFailure(error.getCause());
+              }
+
+              @Override
+              public void onResponse(
+                  final ImageLoader.ImageContainer response, boolean isImmediate) {
+                if (response.getBitmap() != null) {
+                  setResult(response.getBitmap(), true);
+                }
+              }
+            },
+            maxWidth,
+            maxHeight);
   }
 
   @Override
   public boolean close() {
     if (mImageContainer != null) {
       // Prevent ConcurrentModificationException in Volley
-      mHandler.post(new Runnable() {
-        @Override
-        public void run() {
-          if (mImageContainer != null) {
-            mImageContainer.cancelRequest();
-          }
-        }
-      });
+      mHandler.post(
+          new Runnable() {
+            @Override
+            public void run() {
+              if (mImageContainer != null) {
+                mImageContainer.cancelRequest();
+              }
+            }
+          });
     }
     return super.close();
   }

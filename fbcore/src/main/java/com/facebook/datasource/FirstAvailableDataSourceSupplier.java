@@ -61,9 +61,7 @@ public class FirstAvailableDataSourceSupplier<T> implements Supplier<DataSource<
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this)
-        .add("list", mDataSourceSuppliers)
-        .toString();
+    return Objects.toStringHelper(this).add("list", mDataSourceSuppliers).toString();
   }
 
   @ThreadSafe
@@ -153,9 +151,7 @@ public class FirstAvailableDataSourceSupplier<T> implements Supplier<DataSource<
       return mDataSourceWithResult;
     }
 
-    private void maybeSetDataSourceWithResult(
-        DataSource<T> dataSource,
-        boolean isFinished) {
+    private void maybeSetDataSourceWithResult(DataSource<T> dataSource, boolean isFinished) {
       DataSource<T> oldDataSource = null;
       synchronized (FirstAvailableDataSource.this) {
         if (dataSource != mCurrentDataSource || dataSource == mDataSourceWithResult) {
@@ -209,8 +205,7 @@ public class FirstAvailableDataSourceSupplier<T> implements Supplier<DataSource<
       }
 
       @Override
-      public void onCancellation(DataSource<T> dataSource) {
-      }
+      public void onCancellation(DataSource<T> dataSource) {}
 
       @Override
       public void onNewResult(DataSource<T> dataSource) {

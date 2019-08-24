@@ -76,8 +76,8 @@ public class AnimatedImageResult {
   }
 
   /**
-   * Gets a decoded frame. This will only return non-null if the {@code ImageDecodeOptions}
-   * were configured to decode all frames at decode time.
+   * Gets a decoded frame. This will only return non-null if the {@code ImageDecodeOptions} were
+   * configured to decode all frames at decode time.
    *
    * @param index the index of the frame to get
    * @return a reference to the preview bitmap which must be released by the caller when done or
@@ -91,8 +91,8 @@ public class AnimatedImageResult {
   }
 
   /**
-   * Gets whether it has the decoded frame. This will only return true if the
-   * {@code ImageDecodeOptions} were configured to decode all frames at decode time.
+   * Gets whether it has the decoded frame. This will only return true if the {@code
+   * ImageDecodeOptions} were configured to decode all frames at decode time.
    *
    * @param index the index of the frame to get
    * @return true if the result has the decoded frame
@@ -102,8 +102,8 @@ public class AnimatedImageResult {
   }
 
   /**
-   * Gets the bitmap for the preview frame. This will only return non-null if the
-   * {@code ImageDecodeOptions} were configured to decode the preview frame.
+   * Gets the bitmap for the preview frame. This will only return non-null if the {@code
+   * ImageDecodeOptions} were configured to decode the preview frame.
    *
    * @return a reference to the preview bitmap which must be released by the caller when done or
    *     null if there is no preview bitmap set
@@ -112,9 +112,7 @@ public class AnimatedImageResult {
     return CloseableReference.cloneOrNull(mPreviewBitmap);
   }
 
-  /**
-   * Disposes the result, which releases the reference to any bitmaps.
-   */
+  /** Disposes the result, which releases the reference to any bitmaps. */
   public synchronized void dispose() {
     CloseableReference.closeSafely(mPreviewBitmap);
     mPreviewBitmap = null;

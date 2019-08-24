@@ -24,9 +24,7 @@ import com.facebook.samples.animation2.bitmap.ExampleBitmapAnimationFactory;
 import com.facebook.samples.animation2.color.ExampleColorBackend;
 import com.facebook.samples.animation2.local.LocalDrawableAnimationBackend;
 
-/**
- * Animation backend configurator that holds all sample animation backends.
- */
+/** Animation backend configurator that holds all sample animation backends. */
 public class SampleAnimationBackendConfigurator {
 
   private final Spinner mSpinner;
@@ -39,8 +37,7 @@ public class SampleAnimationBackendConfigurator {
   }
 
   public SampleAnimationBackendConfigurator(
-      Spinner spinner,
-      BackendChangedListener backendChangedListener) {
+      Spinner spinner, BackendChangedListener backendChangedListener) {
     mSpinner = spinner;
     mBackendChangedListener = backendChangedListener;
 
@@ -99,13 +96,11 @@ public class SampleAnimationBackendConfigurator {
       @Override
       public AnimationBackend createBackend() {
         // Get the animation duration in ms for each color frame
-        final int frameDurationMs = mContext.getResources()
-            .getInteger(android.R.integer.config_mediumAnimTime);
+        final int frameDurationMs =
+            mContext.getResources().getInteger(android.R.integer.config_mediumAnimTime);
         // Create and return the backend
         return ExampleBitmapAnimationFactory.createColorBitmapAnimationBackend(
-            SampleData.COLORS,
-            frameDurationMs,
-            new NoOpCache());
+            SampleData.COLORS, frameDurationMs, new NoOpCache());
       }
 
       @Override
@@ -116,16 +111,16 @@ public class SampleAnimationBackendConfigurator {
   }
 
   private void setupBackendSelector() {
-    mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-      @Override
-      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        updateAnimationBackend(mArrayAdapter.getItem(position).createBackend());
-      }
+    mSpinner.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            updateAnimationBackend(mArrayAdapter.getItem(position).createBackend());
+          }
 
-      @Override
-      public void onNothingSelected(AdapterView<?> adapterView) {
-      }
-    });
+          @Override
+          public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
   }
 
   private void updateAnimationBackend(AnimationBackend animationBackend) {

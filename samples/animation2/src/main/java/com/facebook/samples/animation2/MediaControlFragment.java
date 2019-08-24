@@ -26,9 +26,7 @@ import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.samples.animation2.utils.AnimationControlsManager;
 import com.facebook.samples.animation2.utils.SampleAnimationBackendConfigurator;
 
-/**
- * Sample that displays an animated image and media controls to start / stop / seek.
- */
+/** Sample that displays an animated image and media controls to start / stop / seek. */
 public class MediaControlFragment extends Fragment
     implements SampleAnimationBackendConfigurator.BackendChangedListener {
 
@@ -38,9 +36,7 @@ public class MediaControlFragment extends Fragment
   @Nullable
   @Override
   public View onCreateView(
-      LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+      LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_media_controls, container, false);
   }
 
@@ -53,15 +49,14 @@ public class MediaControlFragment extends Fragment
 
     imageView.setImageDrawable(mAnimatedDrawable);
 
-    mAnimationControlsManager = new AnimationControlsManager(
-        mAnimatedDrawable,
-        (SeekBar) view.findViewById(R.id.seekbar),
-        (ToggleButton) view.findViewById(R.id.playpause),
-        view.findViewById(R.id.reset));
+    mAnimationControlsManager =
+        new AnimationControlsManager(
+            mAnimatedDrawable,
+            (SeekBar) view.findViewById(R.id.seekbar),
+            (ToggleButton) view.findViewById(R.id.playpause),
+            view.findViewById(R.id.reset));
 
-    new SampleAnimationBackendConfigurator(
-        (Spinner) view.findViewById(R.id.spinner),
-        this);
+    new SampleAnimationBackendConfigurator((Spinner) view.findViewById(R.id.spinner), this);
   }
 
   @Override

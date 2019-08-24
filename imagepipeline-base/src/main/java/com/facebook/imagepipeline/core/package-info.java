@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Supplier implementations for Executors and thread priorities
- */
+/** Supplier implementations for Executors and thread priorities */
 package com.facebook.imagepipeline.core;

@@ -36,7 +36,7 @@ public class RoundedCornersDrawableTest {
   public void testInitialSetup() {
     assertEquals(RoundedCornersDrawable.Type.OVERLAY_COLOR, mRoundedCornersDrawable.mType);
     assertFalse(mRoundedCornersDrawable.isCircle());
-    assertArrayEquals(new float[]{0, 0, 0, 0, 0, 0, 0, 0}, mRoundedCornersDrawable.getRadii(), 0);
+    assertArrayEquals(new float[] {0, 0, 0, 0, 0, 0, 0, 0}, mRoundedCornersDrawable.getRadii(), 0);
     assertEquals(0, mRoundedCornersDrawable.mPaint.getColor());
   }
 
@@ -57,7 +57,7 @@ public class RoundedCornersDrawableTest {
 
   @Test
   public void testSetRadii() {
-    mRoundedCornersDrawable.setRadii(new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+    mRoundedCornersDrawable.setRadii(new float[] {1, 2, 3, 4, 5, 6, 7, 8});
     verify(mCallback).invalidateDrawable(mRoundedCornersDrawable);
     assertArrayEquals(new float[] {1, 2, 3, 4, 5, 6, 7, 8}, mRoundedCornersDrawable.getRadii(), 0);
   }
@@ -66,7 +66,7 @@ public class RoundedCornersDrawableTest {
   public void testSetRadius() {
     mRoundedCornersDrawable.setRadius(9);
     verify(mCallback).invalidateDrawable(mRoundedCornersDrawable);
-    assertArrayEquals(new float[]{9, 9, 9, 9, 9, 9, 9, 9}, mRoundedCornersDrawable.getRadii(), 0);
+    assertArrayEquals(new float[] {9, 9, 9, 9, 9, 9, 9, 9}, mRoundedCornersDrawable.getRadii(), 0);
   }
 
   @Test

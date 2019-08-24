@@ -62,8 +62,7 @@ public class CountingMemoryCacheTest {
   @Mock public CountingMemoryCache.EntryStateObserver<String> mEntryStateObserver;
   @Mock public Bitmap mBitmap;
 
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
+  @Rule public PowerMockRule rule = new PowerMockRule();
 
   private ValueDescriptor<Integer> mValueDescriptor;
   private MemoryCacheParams mParams;
@@ -78,8 +77,7 @@ public class CountingMemoryCacheTest {
       new ResourceReleaser<Bitmap>() {
 
         @Override
-        public void release(Bitmap value) {
-        }
+        public void release(Bitmap value) {}
       };
 
   @Before
@@ -531,13 +529,14 @@ public class CountingMemoryCacheTest {
     CloseableReference<Integer> valueRef4 = mCache.cache(KEYS[4], originalRef4);
     originalRef4.close();
 
-    int numEvictedEntries = mCache.removeAll(
-        new Predicate<String>() {
-          @Override
-          public boolean apply(String key) {
-            return key.equals(KEYS[2]) || key.equals(KEYS[3]);
-          }
-        });
+    int numEvictedEntries =
+        mCache.removeAll(
+            new Predicate<String>() {
+              @Override
+              public boolean apply(String key) {
+                return key.equals(KEYS[2]) || key.equals(KEYS[3]);
+              }
+            });
 
     assertEquals(2, numEvictedEntries);
 

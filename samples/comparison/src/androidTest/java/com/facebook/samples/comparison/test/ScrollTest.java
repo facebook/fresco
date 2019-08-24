@@ -22,8 +22,8 @@ import com.facebook.samples.comparison.R;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Instrumentation test that tests glide, picasso, uil and volley in the sample
- * app by scrolling down SCROLLS times.
+ * Instrumentation test that tests glide, picasso, uil and volley in the sample app by scrolling
+ * down SCROLLS times.
  */
 public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
   private static final int SCROLLS = 10;
@@ -112,9 +112,7 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
     runScenario(MainActivity.AQUERY_INDEX, MainActivity.LOCAL_INDEX, false);
   }
 
-  /**
-   * Runs the test for given library.
-   */
+  /** Runs the test for given library. */
   private void runScenario(int libraryIndex, int sourceIndex, boolean useDrawee) throws Exception {
     disableAnimatedImages();
     setUseDrawee(useDrawee);
@@ -126,90 +124,86 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
     Thread.sleep(WAIT_BEFORE_TEST_END_MS);
   }
 
-  /**
-   * Disables animated images in list view.
-   */
+  /** Disables animated images in list view. */
   private void disableAnimatedImages() {
-    getInstrumentation().runOnMainSync(
-        new Runnable() {
-          @Override
-          public void run() {
-            mActivity.setAllowAnimations(false);
-          }
-        });
+    getInstrumentation()
+        .runOnMainSync(
+            new Runnable() {
+              @Override
+              public void run() {
+                mActivity.setAllowAnimations(false);
+              }
+            });
   }
 
-  /**
-   * Disables or enables Drawee.
-   */
+  /** Disables or enables Drawee. */
   private void setUseDrawee(final boolean useDrawee) {
-    getInstrumentation().runOnMainSync(
-        new Runnable() {
-          @Override
-          public void run() {
-            mActivity.setUseDrawee(useDrawee);
-          }
-        });
+    getInstrumentation()
+        .runOnMainSync(
+            new Runnable() {
+              @Override
+              public void run() {
+                mActivity.setUseDrawee(useDrawee);
+              }
+            });
   }
 
-  /**
-   * Selects give library in the select component.
-   */
+  /** Selects give library in the select component. */
   private void selectFramework(final int libraryIndex) {
-    getInstrumentation().runOnMainSync(
-        new Runnable() {
-          @Override
-          public void run() {
-            mLoaderSelect.setSelection(libraryIndex, true);
-          }
-        });
+    getInstrumentation()
+        .runOnMainSync(
+            new Runnable() {
+              @Override
+              public void run() {
+                mLoaderSelect.setSelection(libraryIndex, true);
+              }
+            });
   }
 
-  /**
-   * Selects the source from which to fetch the images.
-   */
+  /** Selects the source from which to fetch the images. */
   private void selectSource(final int sourceIndex) {
-    getInstrumentation().runOnMainSync(
-        new Runnable() {
-          @Override
-          public void run() {
-            mSourceSelect.setSelection(sourceIndex, true);
-          }
-        });
+    getInstrumentation()
+        .runOnMainSync(
+            new Runnable() {
+              @Override
+              public void run() {
+                mSourceSelect.setSelection(sourceIndex, true);
+              }
+            });
   }
 
   /**
-   * Waits until the list view is populated with content, that is
-   * until list of images is downloaded.
+   * Waits until the list view is populated with content, that is until list of images is
+   * downloaded.
    */
   private void waitForImages() throws Exception {
     final AtomicBoolean mImagesLoaded = new AtomicBoolean();
     while (!mImagesLoaded.get()) {
       Thread.sleep(WAIT_FOR_IMAGES_INTERCHECK_MS);
-      getInstrumentation().runOnMainSync(
-          new Runnable() {
-            @Override
-            public void run() {
-              mImagesLoaded.set(mImageList.getAdapter().getItemCount() > 0);
-            }
-          });
+      getInstrumentation()
+          .runOnMainSync(
+              new Runnable() {
+                @Override
+                public void run() {
+                  mImagesLoaded.set(mImageList.getAdapter().getItemCount() > 0);
+                }
+              });
     }
   }
 
-  /**
-   * Scrolls the list view given number of times.
-   */
+  /** Scrolls the list view given number of times. */
   private void scrollMultipleTimes(int times) throws Exception {
     final int height = mActivity.getDisplayHeight();
     for (int i = 0; i < times; i++) {
       Thread.sleep(BEFORE_SCROLL_TIME_MS);
-      getInstrumentation().runOnMainSync(
-          new Runnable() {
-            @Override
-            public void run() {
-              mImageList.smoothScrollBy(0, height / 2);
-            }
-          });
+      getInstrumentation()
+          .runOnMainSync(
+              new Runnable() {
+                @Override
+                public void run() {
+                  mImageList.smoothScrollBy(0, height / 2);
+                }
+              });
       Thread.sleep(SCROLL_TIME_MS);
     }
   }

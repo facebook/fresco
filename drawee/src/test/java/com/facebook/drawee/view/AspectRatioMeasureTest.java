@@ -23,8 +23,7 @@ public class AspectRatioMeasureTest {
   AspectRatioMeasure.Spec mSpec = new AspectRatioMeasure.Spec();
 
   @Before
-  public void setUp() {
-  }
+  public void setUp() {}
 
   @Test
   public void testAspectRatio() {

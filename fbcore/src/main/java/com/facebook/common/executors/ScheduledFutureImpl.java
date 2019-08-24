@@ -18,9 +18,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.annotation.Nullable;
 
-/**
- * A {@link ScheduledFuture} for {@link HandlerExecutorServiceImpl}.
- */
+/** A {@link ScheduledFuture} for {@link HandlerExecutorServiceImpl}. */
 public class ScheduledFutureImpl<V> implements RunnableFuture<V>, ScheduledFuture<V> {
 
   private final Handler mHandler;

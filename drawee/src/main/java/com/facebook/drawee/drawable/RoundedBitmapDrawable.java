@@ -91,14 +91,11 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
    * @return the RoundedBitmapDrawable that is created
    */
   public static RoundedBitmapDrawable fromBitmapDrawable(
-      Resources res,
-      BitmapDrawable bitmapDrawable) {
+      Resources res, BitmapDrawable bitmapDrawable) {
     return new RoundedBitmapDrawable(res, bitmapDrawable.getBitmap(), bitmapDrawable.getPaint());
   }
 
-  /**
-   * If both the radii and border width are zero or bitmap is null, there is nothing to round.
-   */
+  /** If both the radii and border width are zero or bitmap is null, there is nothing to round. */
   @VisibleForTesting
   boolean shouldRound() {
     return super.shouldRound() && mBitmap != null;
@@ -123,5 +120,4 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
   Paint getPaint() {
     return mPaint;
   }
-
 }

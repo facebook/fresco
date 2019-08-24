@@ -9,8 +9,8 @@ package com.facebook.common.webp;
 import android.graphics.Bitmap;
 
 /**
- * This is a utility class we use in order to allocate a Bitmap that will be wrapped later
- * with a CloseableReference
+ * This is a utility class we use in order to allocate a Bitmap that will be wrapped later with a
+ * CloseableReference
  */
 public interface BitmapCreator {
 
@@ -22,8 +22,5 @@ public interface BitmapCreator {
    * @param bitmapConfig The Config object to use
    * @return The Bitmap
    */
-  Bitmap createNakedBitmap(
-      int width,
-      int height,
-      Bitmap.Config bitmapConfig);
+  Bitmap createNakedBitmap(int width, int height, Bitmap.Config bitmapConfig);
 }

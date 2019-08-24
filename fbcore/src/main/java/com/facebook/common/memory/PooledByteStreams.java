@@ -14,13 +14,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Helper class for interacting with java streams, similar to guava's ByteSteams.
- * To prevent numerous allocations of temp buffers pool of byte arrays is used.
+ * Helper class for interacting with java streams, similar to guava's ByteSteams. To prevent
+ * numerous allocations of temp buffers pool of byte arrays is used.
  */
 public class PooledByteStreams {
-  /**
-   * Size of temporary buffer to use for copying (16 kb)
-   */
+  /** Size of temporary buffer to use for copying (16 kb) */
   private static final int DEFAULT_TEMP_BUF_SIZE = 16 * 1024;
 
   private final int mTempBufSize;
@@ -39,6 +37,7 @@ public class PooledByteStreams {
 
   /**
    * Copy all bytes from InputStream to OutputStream.
+   *
    * @param from InputStream
    * @param to OutputStream
    * @return number of copied bytes
@@ -64,16 +63,15 @@ public class PooledByteStreams {
 
   /**
    * Copy at most number of bytes from InputStream to OutputStream.
+   *
    * @param from InputStream
    * @param to OutputStream
    * @param bytesToCopy bytes to copy
    * @return number of copied bytes
    * @throws IOException
    */
-  public long copy(
-      final InputStream from,
-      final OutputStream to,
-      final long bytesToCopy) throws IOException {
+  public long copy(final InputStream from, final OutputStream to, final long bytesToCopy)
+      throws IOException {
     Preconditions.checkState(bytesToCopy > 0);
     long copied = 0;
     byte[] tmp = mByteArrayPool.get(mTempBufSize);

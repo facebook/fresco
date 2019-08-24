@@ -10,29 +10,21 @@ package com.facebook.cache.common;
 /**
  * An interface for logging various cache events.
  *
- * <p> In all callback methods, the {@link CacheEvent} object should not be held beyond the method
+ * <p>In all callback methods, the {@link CacheEvent} object should not be held beyond the method
  * itself as they may be automatically recycled.
  */
 public interface CacheEventListener {
 
-  /**
-  * Triggered by a cache hit.
-  */
+  /** Triggered by a cache hit. */
   void onHit(CacheEvent cacheEvent);
 
-  /**
-   * Triggered by a cache miss for the given key.
-   */
+  /** Triggered by a cache miss for the given key. */
   void onMiss(CacheEvent cacheEvent);
 
-  /**
-   * Triggered at the start of the process to save a resource in cache.
-   */
+  /** Triggered at the start of the process to save a resource in cache. */
   void onWriteAttempt(CacheEvent cacheEvent);
 
-  /**
-   * Triggered after a resource has been successfully written to cache.
-   */
+  /** Triggered after a resource has been successfully written to cache. */
   void onWriteSuccess(CacheEvent cacheEvent);
 
   /**
@@ -47,14 +39,10 @@ public interface CacheEventListener {
    */
   void onWriteException(CacheEvent cacheEvent);
 
-  /**
-   * Triggered by an eviction from cache.
-   */
+  /** Triggered by an eviction from cache. */
   void onEviction(CacheEvent cacheEvent);
 
-  /**
-   * Triggered by a full cache clearance.
-   */
+  /** Triggered by a full cache clearance. */
   void onCleared();
 
   enum EvictionReason {

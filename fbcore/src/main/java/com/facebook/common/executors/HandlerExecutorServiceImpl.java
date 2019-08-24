@@ -15,9 +15,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 
-/**
- * A {@link HandlerExecutorService} implementation.
- */
+/** A {@link HandlerExecutorService} implementation. */
 public class HandlerExecutorServiceImpl extends AbstractExecutorService
     implements HandlerExecutorService {
 

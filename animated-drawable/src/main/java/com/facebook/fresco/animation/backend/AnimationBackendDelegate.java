@@ -14,26 +14,20 @@ import android.graphics.drawable.Drawable;
 import androidx.annotation.IntRange;
 import javax.annotation.Nullable;
 
-/**
- * Animation backend delegate that forwards all calls to a given {@link AnimationBackend}
- */
+/** Animation backend delegate that forwards all calls to a given {@link AnimationBackend} */
 public class AnimationBackendDelegate<T extends AnimationBackend> implements AnimationBackend {
 
   private static final int ALPHA_UNSET = -1;
 
-  /**
-   * Current animation backend in use
-   */
-  @Nullable
-  private T mAnimationBackend;
+  /** Current animation backend in use */
+  @Nullable private T mAnimationBackend;
 
   // Animation backend parameters
   @IntRange(from = -1, to = 255)
   private int mAlpha = ALPHA_UNSET;
-  @Nullable
-  private ColorFilter mColorFilter;
-  @Nullable
-  private Rect mBounds;
+
+  @Nullable private ColorFilter mColorFilter;
+  @Nullable private Rect mBounds;
 
   public AnimationBackendDelegate(@Nullable T animationBackend) {
     mAnimationBackend = animationBackend;
@@ -110,8 +104,8 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
   }
 
   /**
-   * Set the animation backend to forward calls to.
-   * If called with null, the current backend will be removed.
+   * Set the animation backend to forward calls to. If called with null, the current backend will be
+   * removed.
    *
    * @param animationBackend the backend to use or null to remove the current backend
    */

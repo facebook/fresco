@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Classes for the NetworkFetcher implementation with OkHttp3
- */
+/** Classes for the NetworkFetcher implementation with OkHttp3 */
 package com.facebook.imagepipeline.backends.okhttp3;

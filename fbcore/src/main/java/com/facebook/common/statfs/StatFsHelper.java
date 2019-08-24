@@ -23,8 +23,9 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Helper class that periodically checks the amount of free space available.
- * <p>To keep the overhead low, it caches the free space information, and
- * only updates that info after two minutes.
+ *
+ * <p>To keep the overhead low, it caches the free space information, and only updates that info
+ * after two minutes.
  *
  * <p>It is a singleton, and is thread-safe.
  *
@@ -62,7 +63,7 @@ public class StatFsHelper {
   private final Lock lock;
   private volatile boolean mInitialized = false;
 
-  public synchronized static StatFsHelper getInstance() {
+  public static synchronized StatFsHelper getInstance() {
     if (sStatsFsHelper == null) {
       sStatsFsHelper = new StatFsHelper();
     }
@@ -72,19 +73,17 @@ public class StatFsHelper {
   /**
    * Constructor.
    *
-   * <p>Initialization is delayed until first use, so we must call {@link #ensureInitialized()}
-   * when implementing member methods.
+   * <p>Initialization is delayed until first use, so we must call {@link #ensureInitialized()} when
+   * implementing member methods.
    */
   protected StatFsHelper() {
     lock = new ReentrantLock();
   }
 
-  /**
-   * Initialization code that can sometimes take a long time.
-   */
+  /** Initialization code that can sometimes take a long time. */
   private void ensureInitialized() {
     if (!mInitialized) {
-     lock.lock();
+      lock.lock();
       try {
         if (!mInitialized) {
           mInternalPath = Environment.getDataDirectory();
@@ -99,15 +98,15 @@ public class StatFsHelper {
   }
 
   /**
-   * Check if available space in the filesystem is greater than the given threshold.
-   * Note that the free space stats are cached and updated in intervals of RESTAT_INTERVAL_MS.
-   * If the amount of free space has crossed over the threshold since the last update, it will
-   * return incorrect results till the space stats are updated again.
+   * Check if available space in the filesystem is greater than the given threshold. Note that the
+   * free space stats are cached and updated in intervals of RESTAT_INTERVAL_MS. If the amount of
+   * free space has crossed over the threshold since the last update, it will return incorrect
+   * results till the space stats are updated again.
    *
    * @param storageType StorageType (internal or external) to test
    * @param freeSpaceThreshold compare the available free space to this size
-   * @return whether free space is lower than the input freeSpaceThreshold,
-   * returns true if disk information is not available
+   * @return whether free space is lower than the input freeSpaceThreshold, returns true if disk
+   *     information is not available
    */
   public boolean testLowDiskSpace(StorageType storageType, long freeSpaceThreshold) {
     ensureInitialized();
@@ -120,8 +119,9 @@ public class StatFsHelper {
   }
 
   /**
-   * Gets the information about the free storage space, including reserved blocks,
-   * either internal or external depends on the given input
+   * Gets the information about the free storage space, including reserved blocks, either internal
+   * or external depends on the given input
+   *
    * @param storageType Internal or external storage type
    * @return available space in bytes, -1 if no information is available
    */
@@ -147,8 +147,9 @@ public class StatFsHelper {
   }
 
   /**
-   * Gets the information about the total storage space,
-   * either internal or external depends on the given input
+   * Gets the information about the total storage space, either internal or external depends on the
+   * given input
+   *
    * @param storageType Internal or external storage type
    * @return available space in bytes, -1 if no information is available
    */
@@ -174,8 +175,9 @@ public class StatFsHelper {
   }
 
   /**
-   * Gets the information about the available storage space
-   * either internal or external depends on the give input
+   * Gets the information about the available storage space either internal or external depends on
+   * the give input
+   *
    * @param storageType Internal or external storage type
    * @return available space in bytes, 0 if no information is available
    */
@@ -201,10 +203,10 @@ public class StatFsHelper {
   }
 
   /**
-   * Thread-safe call to update disk stats. Update occurs if the thread is able to acquire
-   * the lock (i.e., no other thread is updating it at the same time), and it has been
-   * at least RESTAT_INTERVAL_MS since the last update.
-   * Assumes that initialization has been completed before this method is called.
+   * Thread-safe call to update disk stats. Update occurs if the thread is able to acquire the lock
+   * (i.e., no other thread is updating it at the same time), and it has been at least
+   * RESTAT_INTERVAL_MS since the last update. Assumes that initialization has been completed before
+   * this method is called.
    */
   private void maybeUpdateStats() {
     // Update the free space if able to get the lock,
@@ -221,18 +223,17 @@ public class StatFsHelper {
   }
 
   /**
-   * Thread-safe call to reset the disk stats.
-   * If we know that the free space has changed recently (for example, if we have
-   * deleted files), use this method to reset the internal state and
-   * start tracking disk stats afresh, resetting the internal timer for updating stats.
+   * Thread-safe call to reset the disk stats. If we know that the free space has changed recently
+   * (for example, if we have deleted files), use this method to reset the internal state and start
+   * tracking disk stats afresh, resetting the internal timer for updating stats.
    */
   public void resetStats() {
     // Update the free space if able to get the lock
     if (lock.tryLock()) {
       try {
-          ensureInitialized();
+        ensureInitialized();
 
-          updateStats();
+        updateStats();
       } finally {
         lock.unlock();
       }
@@ -240,9 +241,8 @@ public class StatFsHelper {
   }
 
   /**
-   * (Re)calculate the stats.
-   * It is the callers responsibility to ensure thread-safety.
-   * Assumes that it is called after initialization (or at the end of it).
+   * (Re)calculate the stats. It is the callers responsibility to ensure thread-safety. Assumes that
+   * it is called after initialization (or at the end of it).
    */
   @GuardedBy("lock")
   private void updateStats() {
@@ -257,7 +257,7 @@ public class StatFsHelper {
    * object is returned.
    */
   private @Nullable StatFs updateStatsHelper(@Nullable StatFs statfs, @Nullable File dir) {
-    if(dir == null || !dir.exists()) {
+    if (dir == null || !dir.exists()) {
       // The path does not exist, do not track stats for it.
       return null;
     }

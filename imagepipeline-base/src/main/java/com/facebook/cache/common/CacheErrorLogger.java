@@ -9,14 +9,10 @@ package com.facebook.cache.common;
 
 import javax.annotation.Nullable;
 
-/**
- * An interface for logging various cache errors.
- */
+/** An interface for logging various cache errors. */
 public interface CacheErrorLogger {
 
-  /**
-   * A categorizaton of different cache and storage related errors.
-   */
+  /** A categorizaton of different cache and storage related errors. */
   enum CacheErrorCategory {
     READ_DECODE,
     READ_FILE,
@@ -42,14 +38,12 @@ public interface CacheErrorLogger {
 
   /**
    * Log an error of the specified category.
+   *
    * @param category Error category
    * @param clazz Class reporting the error
    * @param message An optional error message
    * @param throwable An optional exception
    */
   void logError(
-      CacheErrorCategory category,
-      Class<?> clazz,
-      String message,
-      @Nullable Throwable throwable);
+      CacheErrorCategory category, Class<?> clazz, String message, @Nullable Throwable throwable);
 }

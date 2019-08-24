@@ -9,6 +9,7 @@ package com.facebook.datasource;
 
 /**
  * Subscribes to DataSource<T>.
+ *
  * @param <T>
  */
 public interface DataSubscriber<T> {
@@ -29,8 +30,8 @@ public interface DataSubscriber<T> {
    *
    * <p>No further results will be produced after this method is called.
    *
-   * <p>The throwable resulting from the failure can be obtained using
-   * {@code dataSource.getFailureCause}.
+   * <p>The throwable resulting from the failure can be obtained using {@code
+   * dataSource.getFailureCause}.
    *
    * @param dataSource
    */

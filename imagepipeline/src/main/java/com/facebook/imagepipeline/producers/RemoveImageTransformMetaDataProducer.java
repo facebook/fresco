@@ -21,20 +21,18 @@ public class RemoveImageTransformMetaDataProducer
     implements Producer<CloseableReference<PooledByteBuffer>> {
   private final Producer<EncodedImage> mInputProducer;
 
-  public RemoveImageTransformMetaDataProducer(
-      Producer<EncodedImage> inputProducer) {
+  public RemoveImageTransformMetaDataProducer(Producer<EncodedImage> inputProducer) {
     mInputProducer = inputProducer;
   }
 
   @Override
   public void produceResults(
-      Consumer<CloseableReference<PooledByteBuffer>> consumer,
-      ProducerContext context) {
+      Consumer<CloseableReference<PooledByteBuffer>> consumer, ProducerContext context) {
     mInputProducer.produceResults(new RemoveImageTransformMetaDataConsumer(consumer), context);
   }
 
-  private class RemoveImageTransformMetaDataConsumer extends DelegatingConsumer<EncodedImage,
-          CloseableReference<PooledByteBuffer>> {
+  private class RemoveImageTransformMetaDataConsumer
+      extends DelegatingConsumer<EncodedImage, CloseableReference<PooledByteBuffer>> {
 
     private RemoveImageTransformMetaDataConsumer(
         Consumer<CloseableReference<PooledByteBuffer>> consumer) {

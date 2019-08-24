@@ -7,9 +7,7 @@
 
 package com.facebook.drawee.drawable;
 
-/**
- * Interface that enables setting a visibility callback.
- */
+/** Interface that enables setting a visibility callback. */
 public interface VisibilityAwareDrawable {
 
   /**

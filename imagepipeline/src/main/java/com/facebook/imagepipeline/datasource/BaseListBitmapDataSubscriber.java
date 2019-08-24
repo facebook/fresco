@@ -18,12 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implementation of {@link DataSubscriber} for cases where the client wants to access
- * a list of bitmaps.
+ * Implementation of {@link DataSubscriber} for cases where the client wants to access a list of
+ * bitmaps.
  *
- * <p>
- * Sample usage:
- * <code>
+ * <p>Sample usage: <code>
  *   dataSource.subscribe(
  *     new BaseListBitmapDataSubscriber() {
  *       @Override
@@ -40,8 +38,8 @@ import java.util.List;
  *     }
  * </code>
  */
-public abstract class BaseListBitmapDataSubscriber extends
-    BaseDataSubscriber<List<CloseableReference<CloseableImage>>> {
+public abstract class BaseListBitmapDataSubscriber
+    extends BaseDataSubscriber<List<CloseableReference<CloseableImage>>> {
 
   @Override
   public void onNewResultImpl(DataSource<List<CloseableReference<CloseableImage>>> dataSource) {
@@ -55,17 +53,17 @@ public abstract class BaseListBitmapDataSubscriber extends
     }
     try {
       List<Bitmap> bitmapList = new ArrayList<>(imageRefList.size());
-      for (CloseableReference<CloseableImage> closeableImageRef: imageRefList) {
+      for (CloseableReference<CloseableImage> closeableImageRef : imageRefList) {
         if (closeableImageRef != null && closeableImageRef.get() instanceof CloseableBitmap) {
           bitmapList.add(((CloseableBitmap) closeableImageRef.get()).getUnderlyingBitmap());
         } else {
-          //This is so that client gets list with same length
+          // This is so that client gets list with same length
           bitmapList.add(null);
         }
       }
       onNewResultListImpl(bitmapList);
     } finally {
-      for (CloseableReference<CloseableImage> closeableImageRef: imageRefList) {
+      for (CloseableReference<CloseableImage> closeableImageRef : imageRefList) {
         CloseableReference.closeSafely(closeableImageRef);
       }
     }
@@ -76,6 +74,7 @@ public abstract class BaseListBitmapDataSubscriber extends
    * method. This list can be null or the elements in it can be null.
    *
    * <p>The framework will free the bitmaps in the list from memory after this method has completed.
+   *
    * @param bitmapList
    */
   protected abstract void onNewResultListImpl(List<Bitmap> bitmapList);

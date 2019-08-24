@@ -12,9 +12,7 @@ import com.facebook.common.internal.DoNotStrip;
 import com.facebook.imagepipeline.animated.base.AnimatedImageFrame;
 import javax.annotation.concurrent.ThreadSafe;
 
-/**
- * A single frame of a {@link WebPImage}.
- */
+/** A single frame of a {@link WebPImage}. */
 @ThreadSafe
 public class WebPFrame implements AnimatedImageFrame {
 
@@ -82,13 +80,22 @@ public class WebPFrame implements AnimatedImageFrame {
   }
 
   private native void nativeRenderFrame(int width, int height, Bitmap bitmap);
+
   private native int nativeGetDurationMs();
+
   private native int nativeGetWidth();
+
   private native int nativeGetHeight();
+
   private native int nativeGetXOffset();
+
   private native int nativeGetYOffset();
+
   private native boolean nativeShouldDisposeToBackgroundColor();
+
   private native boolean nativeIsBlendWithPreviousFrame();
+
   private native void nativeDispose();
+
   private native void nativeFinalize();
 }

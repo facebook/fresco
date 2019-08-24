@@ -77,7 +77,7 @@ public class MediaUtilsTest {
   }
 
   @Test
-   public void testIsNonNativeSupportedMimeTypeNative() {
+  public void testIsNonNativeSupportedMimeTypeNative() {
     assertThat(MediaUtils.isNonNativeSupportedMimeType("image/jpg")).isFalse();
   }
 

@@ -25,9 +25,7 @@ public class FetchState {
   private int mOnNewResultStatusFlags;
   private @Nullable BytesRange mResponseBytesRange;
 
-  public FetchState(
-      Consumer<EncodedImage> consumer,
-      ProducerContext context) {
+  public FetchState(Consumer<EncodedImage> consumer, ProducerContext context) {
     mConsumer = consumer;
     mContext = context;
     mLastIntermediateResultTimeMs = 0;
@@ -61,13 +59,14 @@ public class FetchState {
     mLastIntermediateResultTimeMs = lastIntermediateResultTimeMs;
   }
 
-  @Consumer.Status public int getOnNewResultStatusFlags() {
+  @Consumer.Status
+  public int getOnNewResultStatusFlags() {
     return mOnNewResultStatusFlags;
   }
 
   /**
-   * EXPERIMENTAL: Allows the fetcher to set extra status flags to be included in calls to
-   * {@link Consumer#onNewResult(Object, int)}.
+   * EXPERIMENTAL: Allows the fetcher to set extra status flags to be included in calls to {@link
+   * Consumer#onNewResult(Object, int)}.
    */
   public void setOnNewResultStatusFlags(@Consumer.Status int onNewResultStatusFlags) {
     mOnNewResultStatusFlags = onNewResultStatusFlags;

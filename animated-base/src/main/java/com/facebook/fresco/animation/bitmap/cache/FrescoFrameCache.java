@@ -23,15 +23,14 @@ import com.facebook.imageutils.BitmapUtil;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
-/**
- * Bitmap frame cache that uses Fresco's {@link AnimatedFrameCache} to cache frames.
- */
+/** Bitmap frame cache that uses Fresco's {@link AnimatedFrameCache} to cache frames. */
 public class FrescoFrameCache implements BitmapFrameCache {
 
   private static final Class<?> TAG = FrescoFrameCache.class;
 
   private final AnimatedFrameCache mAnimatedFrameCache;
   private final boolean mEnableBitmapReusing;
+
   @GuardedBy("this")
   private final SparseArray<CloseableReference<CloseableImage>> mPreparedPendingFrames;
 
@@ -60,9 +59,7 @@ public class FrescoFrameCache implements BitmapFrameCache {
   @Nullable
   @Override
   public synchronized CloseableReference<Bitmap> getBitmapToReuseForFrame(
-      int frameNumber,
-      int width,
-      int height) {
+      int frameNumber, int width, int height) {
     if (!mEnableBitmapReusing) {
       return null;
     }
@@ -173,8 +170,8 @@ public class FrescoFrameCache implements BitmapFrameCache {
   }
 
   /**
-   * Converts the given image reference to a bitmap reference
-   * and closes the original image reference.
+   * Converts the given image reference to a bitmap reference and closes the original image
+   * reference.
    *
    * @param closeableImage the image to convert. It will be closed afterwards and will be invalid
    * @return the closeable bitmap reference to be used
@@ -184,8 +181,8 @@ public class FrescoFrameCache implements BitmapFrameCache {
   static CloseableReference<Bitmap> convertToBitmapReferenceAndClose(
       final @Nullable CloseableReference<CloseableImage> closeableImage) {
     try {
-      if (CloseableReference.isValid(closeableImage) &&
-          closeableImage.get() instanceof CloseableStaticBitmap) {
+      if (CloseableReference.isValid(closeableImage)
+          && closeableImage.get() instanceof CloseableStaticBitmap) {
 
         CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) closeableImage.get();
         if (closeableStaticBitmap != null) {

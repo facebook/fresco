@@ -11,9 +11,7 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.common.util.ByteConstants;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Supplies {@link MemoryCacheParams} for the encoded image memory cache
- */
+/** Supplies {@link MemoryCacheParams} for the encoded image memory cache */
 public class DefaultEncodedMemoryCacheParamsSupplier implements Supplier<MemoryCacheParams> {
 
   // We want memory cache to be bound only by its memory consumption

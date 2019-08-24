@@ -7,9 +7,7 @@
 
 package com.facebook.common.internal;
 
-/**
- * Additional predicates.
- */
+/** Additional predicates. */
 public class AndroidPredicates {
 
   private AndroidPredicates() {}

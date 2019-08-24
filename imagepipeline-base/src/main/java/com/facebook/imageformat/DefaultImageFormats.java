@@ -10,9 +10,7 @@ import com.facebook.common.internal.ImmutableList;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Default image formats that Fresco supports.
- */
+/** Default image formats that Fresco supports. */
 public final class DefaultImageFormats {
 
   public static final ImageFormat JPEG = new ImageFormat("JPEG", "jpeg");
@@ -37,8 +35,7 @@ public final class DefaultImageFormats {
    * @return true if WebP format
    */
   public static boolean isWebpFormat(ImageFormat imageFormat) {
-    return isStaticWebpFormat(imageFormat) ||
-        imageFormat == WEBP_ANIMATED;
+    return isStaticWebpFormat(imageFormat) || imageFormat == WEBP_ANIMATED;
   }
 
   /**
@@ -48,15 +45,14 @@ public final class DefaultImageFormats {
    * @return true if static WebP
    */
   public static boolean isStaticWebpFormat(ImageFormat imageFormat) {
-    return imageFormat == WEBP_SIMPLE ||
-        imageFormat == WEBP_LOSSLESS ||
-        imageFormat == WEBP_EXTENDED ||
-        imageFormat == WEBP_EXTENDED_WITH_ALPHA;
+    return imageFormat == WEBP_SIMPLE
+        || imageFormat == WEBP_LOSSLESS
+        || imageFormat == WEBP_EXTENDED
+        || imageFormat == WEBP_EXTENDED_WITH_ALPHA;
   }
 
   /**
-   * Get all default formats supported by Fresco.
-   * Does not include {@link ImageFormat#UNKNOWN}.
+   * Get all default formats supported by Fresco. Does not include {@link ImageFormat#UNKNOWN}.
    *
    * @return all supported default formats
    */
@@ -79,6 +75,5 @@ public final class DefaultImageFormats {
     return sAllDefaultFormats;
   }
 
-  private DefaultImageFormats() {
-  }
+  private DefaultImageFormats() {}
 }

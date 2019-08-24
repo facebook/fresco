@@ -7,9 +7,7 @@
 
 package com.facebook.common.activitylistener;
 
-/**
- * Interface for activities that support dynamic addition of ActivityListeners
- */
+/** Interface for activities that support dynamic addition of ActivityListeners */
 public interface ListenableActivity {
 
   /**

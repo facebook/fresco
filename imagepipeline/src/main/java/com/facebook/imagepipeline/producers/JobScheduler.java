@@ -16,8 +16,8 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.concurrent.GuardedBy;
 
 /**
- * Manages jobs so that only one can be executed at a time and no more often than once in
- * <code>mMinimumJobIntervalMs</code> milliseconds.
+ * Manages jobs so that only one can be executed at a time and no more often than once in <code>
+ * mMinimumJobIntervalMs</code> milliseconds.
  */
 public class JobScheduler {
 
@@ -47,38 +47,54 @@ public class JobScheduler {
   private final int mMinimumJobIntervalMs;
 
   @VisibleForTesting
-  enum JobState { IDLE, QUEUED, RUNNING, RUNNING_AND_PENDING }
+  enum JobState {
+    IDLE,
+    QUEUED,
+    RUNNING,
+    RUNNING_AND_PENDING
+  }
 
   // job data
   @GuardedBy("this")
-  @VisibleForTesting EncodedImage mEncodedImage;
+  @VisibleForTesting
+  EncodedImage mEncodedImage;
+
   @GuardedBy("this")
-  @VisibleForTesting @Consumer.Status int mStatus;
+  @VisibleForTesting
+  @Consumer.Status
+  int mStatus;
 
   // job state
   @GuardedBy("this")
-  @VisibleForTesting JobState mJobState;
+  @VisibleForTesting
+  JobState mJobState;
+
   @GuardedBy("this")
-  @VisibleForTesting long mJobSubmitTime;
+  @VisibleForTesting
+  long mJobSubmitTime;
+
   @GuardedBy("this")
-  @VisibleForTesting long mJobStartTime;
+  @VisibleForTesting
+  long mJobStartTime;
 
   public JobScheduler(Executor executor, JobRunnable jobRunnable, int minimumJobIntervalMs) {
     mExecutor = executor;
     mJobRunnable = jobRunnable;
     mMinimumJobIntervalMs = minimumJobIntervalMs;
-    mDoJobRunnable = new Runnable() {
-      @Override
-      public void run() {
-        doJob();
-      }
-    };
-    mSubmitJobRunnable = new Runnable() {
-      @Override
-      public void run() {
-        submitJob();
-      }
-    };
+    mDoJobRunnable =
+        new Runnable() {
+          @Override
+          public void run() {
+            doJob();
+          }
+        };
+    mSubmitJobRunnable =
+        new Runnable() {
+          @Override
+          public void run() {
+            submitJob();
+          }
+        };
     mEncodedImage = null;
     mStatus = 0;
     mJobState = JobState.IDLE;
@@ -89,7 +105,7 @@ public class JobScheduler {
   /**
    * Clears the currently set job.
    *
-   * <p> In case the currently set job has been scheduled but not started yet, the job won't be
+   * <p>In case the currently set job has been scheduled but not started yet, the job won't be
    * executed.
    */
   public void clearJob() {
@@ -105,7 +121,7 @@ public class JobScheduler {
   /**
    * Updates the job.
    *
-   * <p> This just updates the job, but it doesn't schedule it. In order to be executed, the job has
+   * <p>This just updates the job, but it doesn't schedule it. In order to be executed, the job has
    * to be scheduled after being set. In case there was a previous job scheduled that has not yet
    * started, this new job will be executed instead.
    *
@@ -128,10 +144,11 @@ public class JobScheduler {
   /**
    * Schedules the currently set job (if any).
    *
-   * <p> This method can be called multiple times. It is guaranteed that each job set will be
-   * executed no more than once. It is guaranteed that the last job set will be executed, unless
-   * the job was cleared first.
-   * <p> The job will be scheduled no sooner than <code>minimumJobIntervalMs</code> milliseconds
+   * <p>This method can be called multiple times. It is guaranteed that each job set will be
+   * executed no more than once. It is guaranteed that the last job set will be executed, unless the
+   * job was cleared first.
+   *
+   * <p>The job will be scheduled no sooner than <code>minimumJobIntervalMs</code> milliseconds
    * since the last job started.
    *
    * @return true if the job was scheduled, false if there was no valid job to be scheduled
@@ -237,7 +254,7 @@ public class JobScheduler {
   /**
    * Gets the queued time in milliseconds for the currently running job.
    *
-   * <p> The result is only valid if called from {@link JobRunnable#run}.
+   * <p>The result is only valid if called from {@link JobRunnable#run}.
    */
   public synchronized long getQueuedTime() {
     return mJobStartTime - mJobSubmitTime;

@@ -14,8 +14,8 @@ import java.util.Map;
 /**
  * Utility class to create immutable maps.
  *
- * <p>We do not replicate Guava's ImmutableMap class here. This class merely returns standard
- * {@link HashMap}s wrapped so that they throw UnsupportedOperationExceptions on any write method.
+ * <p>We do not replicate Guava's ImmutableMap class here. This class merely returns standard {@link
+ * HashMap}s wrapped so that they throw UnsupportedOperationExceptions on any write method.
  */
 public class ImmutableMap<K, V> extends HashMap<K, V> {
 
@@ -40,8 +40,7 @@ public class ImmutableMap<K, V> extends HashMap<K, V> {
     return Collections.unmodifiableMap(map);
   }
 
-  public static <K, V> Map<K, V> of(
-      K k1, V v1, K k2, V v2, K k3, V v3) {
+  public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3) {
     Map<K, V> map = new HashMap<>(3);
     map.put(k1, v1);
     map.put(k2, v2);
@@ -49,8 +48,7 @@ public class ImmutableMap<K, V> extends HashMap<K, V> {
     return Collections.unmodifiableMap(map);
   }
 
-  public static <K, V> Map<K, V> of(
-      K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
+  public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
     Map<K, V> map = new HashMap<>(4);
     map.put(k1, v1);
     map.put(k2, v2);
@@ -59,8 +57,7 @@ public class ImmutableMap<K, V> extends HashMap<K, V> {
     return Collections.unmodifiableMap(map);
   }
 
-  public static <K, V> Map<K, V> of(
-      K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
+  public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
     Map<K, V> map = new HashMap<>(5);
     map.put(k1, v1);
     map.put(k2, v2);

@@ -23,36 +23,35 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedDraweeView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 
-/**
- * This is the Holder class for the RecycleView to use with Fresco
- */
+/** This is the Holder class for the RecycleView to use with Fresco */
 public class FrescoHolder extends BaseViewHolder<InstrumentedDraweeView> {
 
   public FrescoHolder(
-      Context context, View parentView,
-      InstrumentedDraweeView intrumentedDraweeView, PerfListener perfListener) {
+      Context context,
+      View parentView,
+      InstrumentedDraweeView intrumentedDraweeView,
+      PerfListener perfListener) {
     super(context, parentView, intrumentedDraweeView, perfListener);
   }
 
   @Override
   protected void onBind(String uriString) {
     Uri uri = Uri.parse(uriString);
-    ImageRequestBuilder imageRequestBuilder =
-        ImageRequestBuilder.newBuilderWithSource(uri);
+    ImageRequestBuilder imageRequestBuilder = ImageRequestBuilder.newBuilderWithSource(uri);
     if (UriUtil.isNetworkUri(uri)) {
       imageRequestBuilder.setProgressiveRenderingEnabled(true);
     } else {
-      imageRequestBuilder.setResizeOptions(new ResizeOptions(
-          mImageView.getLayoutParams().width,
-          mImageView.getLayoutParams().height));
+      imageRequestBuilder.setResizeOptions(
+          new ResizeOptions(
+              mImageView.getLayoutParams().width, mImageView.getLayoutParams().height));
     }
-    DraweeController draweeController = Fresco.newDraweeControllerBuilder()
-        .setImageRequest(imageRequestBuilder.build())
-        .setOldController(mImageView.getController())
-        .setControllerListener(mImageView.getListener())
-        .setAutoPlayAnimations(true)
-        .build();
+    DraweeController draweeController =
+        Fresco.newDraweeControllerBuilder()
+            .setImageRequest(imageRequestBuilder.build())
+            .setOldController(mImageView.getController())
+            .setControllerListener(mImageView.getListener())
+            .setAutoPlayAnimations(true)
+            .build();
     mImageView.setController(draweeController);
   }
-
 }

@@ -26,9 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-/**
- * Static utility methods pertaining to {@link Set} instances.
- */
+/** Static utility methods pertaining to {@link Set} instances. */
 public final class Sets {
   private Sets() {}
 
@@ -42,8 +40,8 @@ public final class Sets {
   }
 
   /**
-   * Creates a <i>mutable</i> {@code HashSet} instance containing the given
-   * elements in unspecified order.
+   * Creates a <i>mutable</i> {@code HashSet} instance containing the given elements in unspecified
+   * order.
    *
    * @param elements the elements that the set should contain
    * @return a new {@code HashSet} containing those elements (minus duplicates)
@@ -55,16 +53,14 @@ public final class Sets {
   }
 
   /**
-   * Creates a {@code HashSet} instance, with a high enough "initial capacity"
-   * that it <i>should</i> hold {@code expectedSize} elements without growth.
-   * This behavior cannot be broadly guaranteed, but it is observed to be true
-   * for OpenJDK 1.6. It also can't be guaranteed that the method isn't
-   * inadvertently <i>oversizing</i> the returned set.
+   * Creates a {@code HashSet} instance, with a high enough "initial capacity" that it <i>should</i>
+   * hold {@code expectedSize} elements without growth. This behavior cannot be broadly guaranteed,
+   * but it is observed to be true for OpenJDK 1.6. It also can't be guaranteed that the method
+   * isn't inadvertently <i>oversizing</i> the returned set.
    *
-   * @param capacity the number of elements you expect to add to the
-   *        returned set
-   * @return a new, empty {@code HashSet} with enough capacity to hold {@code
-   *         expectedSize} elements without resizing
+   * @param capacity the number of elements you expect to add to the returned set
+   * @return a new, empty {@code HashSet} with enough capacity to hold {@code expectedSize} elements
+   *     without resizing
    * @throws IllegalArgumentException if {@code expectedSize} is negative
    */
   public static <E> HashSet<E> newHashSetWithCapacity(int capacity) {
@@ -72,8 +68,8 @@ public final class Sets {
   }
 
   /**
-   * Creates a <i>mutable</i> {@code HashSet} instance containing the given
-   * elements in unspecified order.
+   * Creates a <i>mutable</i> {@code HashSet} instance containing the given elements in unspecified
+   * order.
    *
    * @param elements the elements that the set should contain
    * @return a new {@code HashSet} containing those elements (minus duplicates)
@@ -85,8 +81,8 @@ public final class Sets {
   }
 
   /**
-   * Creates a <i>mutable</i> {@code HashSet} instance containing the given
-   * elements in unspecified order.
+   * Creates a <i>mutable</i> {@code HashSet} instance containing the given elements in unspecified
+   * order.
    *
    * @param elements the elements that the set should contain
    * @return a new {@code HashSet} containing those elements (minus duplicates)
@@ -100,43 +96,40 @@ public final class Sets {
   }
 
   /**
-   * Creates an empty {@code Set} that uses identity to determine equality. It
-   * compares object references, instead of calling {@code equals}, to
-   * determine whether a provided object matches an element in the set. For
-   * example, {@code contains} returns {@code false} when passed an object that
-   * equals a set member, but isn't the same instance. This behavior is similar
-   * to the way {@code IdentityHashMap} handles key lookups.
+   * Creates an empty {@code Set} that uses identity to determine equality. It compares object
+   * references, instead of calling {@code equals}, to determine whether a provided object matches
+   * an element in the set. For example, {@code contains} returns {@code false} when passed an
+   * object that equals a set member, but isn't the same instance. This behavior is similar to the
+   * way {@code IdentityHashMap} handles key lookups.
    */
   public static <E> Set<E> newIdentityHashSet() {
     return Sets.newSetFromMap(new IdentityHashMap<E, Boolean>());
   }
 
   /**
-   * Returns a set backed by the specified map. The resulting set displays
-   * the same ordering, concurrency, and performance characteristics as the
-   * backing map. In essence, this factory method provides a {@link Set}
-   * implementation corresponding to any {@link Map} implementation. There is no
-   * need to use this method on a {@link Map} implementation that already has a
-   * corresponding {@link Set} implementation (such as {@link java.util.HashMap}
-   * or {@link java.util.TreeMap}).
+   * Returns a set backed by the specified map. The resulting set displays the same ordering,
+   * concurrency, and performance characteristics as the backing map. In essence, this factory
+   * method provides a {@link Set} implementation corresponding to any {@link Map} implementation.
+   * There is no need to use this method on a {@link Map} implementation that already has a
+   * corresponding {@link Set} implementation (such as {@link java.util.HashMap} or {@link
+   * java.util.TreeMap}).
    *
-   * <p>Each method invocation on the set returned by this method results in
-   * exactly one method invocation on the backing map or its {@code keySet}
-   * view, with one exception. The {@code addAll} method is implemented as a
-   * sequence of {@code put} invocations on the backing map.
+   * <p>Each method invocation on the set returned by this method results in exactly one method
+   * invocation on the backing map or its {@code keySet} view, with one exception. The {@code
+   * addAll} method is implemented as a sequence of {@code put} invocations on the backing map.
    *
-   * <p>The specified map must be empty at the time this method is invoked,
-   * and should not be accessed directly after this method returns. These
-   * conditions are ensured if the map is created empty, passed directly
-   * to this method, and no reference to the map is retained, as illustrated
-   * in the following code fragment: <pre>  {@code
+   * <p>The specified map must be empty at the time this method is invoked, and should not be
+   * accessed directly after this method returns. These conditions are ensured if the map is created
+   * empty, passed directly to this method, and no reference to the map is retained, as illustrated
+   * in the following code fragment:
    *
-   *   Set<Object> identityHashSet = Sets.newSetFromMap(
-   *       new IdentityHashMap<Object, Boolean>());}</pre>
+   * <pre>{@code
+   * Set<Object> identityHashSet = Sets.newSetFromMap(
+   *     new IdentityHashMap<Object, Boolean>());
+   * }</pre>
    *
-   * <p>This method has the same behavior as the JDK 6 method
-   * {@code Collections.newSetFromMap()}. The returned set is serializable if
-   * the backing map is.
+   * <p>This method has the same behavior as the JDK 6 method {@code Collections.newSetFromMap()}.
+   * The returned set is serializable if the backing map is.
    *
    * @param map the backing map
    * @return the set backed by the map
@@ -149,8 +142,8 @@ public final class Sets {
   /**
    * Creates an empty {@code CopyOnWriteArraySet} instance.
    *
-   * <p><b>Note:</b> if you need an immutable empty {@link Set}, use
-   * {@link Collections#emptySet} instead.
+   * <p><b>Note:</b> if you need an immutable empty {@link Set}, use {@link Collections#emptySet}
+   * instead.
    *
    * @return a new, empty {@code CopyOnWriteArraySet}
    * @since 12.0
@@ -158,7 +151,6 @@ public final class Sets {
   public static <E> CopyOnWriteArraySet<E> newCopyOnWriteArraySet() {
     return new CopyOnWriteArraySet<E>();
   }
-
 
   /**
    * Creates a <i>mutable</i>, empty {@code LinkedHashSet} instance.

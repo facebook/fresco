@@ -49,16 +49,15 @@ public class ImagePipelineNotificationFragment extends BaseShowcaseFragment {
   @Nullable
   @Override
   public View onCreateView(
-      LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+      LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_imagepipeline_notification, container, false);
   }
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     if (Build.VERSION.SDK_INT >= 26) {
-      // newer versions of android require the creation of notification channels to show notifications to the user.
+      // newer versions of android require the creation of notification channels to show
+      // notifications to the user.
       createNotificationChannel();
     }
 
@@ -137,7 +136,6 @@ public class ImagePipelineNotificationFragment extends BaseShowcaseFragment {
     final NotificationManager notificationManager =
         (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
-
     notificationManager.notify(NOTIFICATION_ID, notification);
   }
 
@@ -149,5 +147,4 @@ public class ImagePipelineNotificationFragment extends BaseShowcaseFragment {
   public int getTitleId() {
     return R.string.imagepipeline_notification_title;
   }
-
 }

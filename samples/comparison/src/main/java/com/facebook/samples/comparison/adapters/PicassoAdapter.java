@@ -20,16 +20,12 @@ import com.facebook.samples.comparison.instrumentation.InstrumentedImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 import com.squareup.picasso.Picasso;
 
-/**
- * RecyclerView Adapter for Picasso
- */
+/** RecyclerView Adapter for Picasso */
 public class PicassoAdapter extends ImageListAdapter {
 
   private final Picasso mPicasso;
 
-  public PicassoAdapter(
-      Context context,
-      PerfListener perfListener) {
+  public PicassoAdapter(Context context, PerfListener perfListener) {
     super(context, perfListener);
     mPicasso = SamplePicassoFactory.getPicasso(context);
   }

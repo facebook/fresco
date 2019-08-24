@@ -16,14 +16,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Inspects values cached in bitmap memory cache.
- */
+/** Inspects values cached in bitmap memory cache. */
 public class CountingMemoryCacheInspector<K, V> {
 
-  /**
-   * Cache entry info for use by dumpers.
-   */
+  /** Cache entry info for use by dumpers. */
   public static class DumpInfoEntry<K, V> {
     // The key is immutable, so it's safe to store that directly
     public final K key;
@@ -31,9 +27,7 @@ public class CountingMemoryCacheInspector<K, V> {
     // The value
     public final CloseableReference<V> value;
 
-    public DumpInfoEntry(
-        final K key,
-        final CloseableReference<V> valueRef) {
+    public DumpInfoEntry(final K key, final CloseableReference<V> valueRef) {
       this.key = Preconditions.checkNotNull(key);
       this.value = CloseableReference.cloneOrNull(valueRef);
     }
@@ -43,9 +37,7 @@ public class CountingMemoryCacheInspector<K, V> {
     }
   }
 
-  /**
-   * Info about the status of the cache for use by dumpers.
-   */
+  /** Info about the status of the cache for use by dumpers. */
   public static class DumpInfo<K, V> {
     public final int maxSize;
     public final int maxEntriesCount;
@@ -88,17 +80,19 @@ public class CountingMemoryCacheInspector<K, V> {
   }
 
   /**
-   * Iterates through all entries cached in counting cache and builds snapshot of its content.
-   * This should be used by tools that need to know current content of given cache.
-   * <p> Caller should call release method on returned DumpInfo after it is done with
-   * examining cache contents
+   * Iterates through all entries cached in counting cache and builds snapshot of its content. This
+   * should be used by tools that need to know current content of given cache.
+   *
+   * <p>Caller should call release method on returned DumpInfo after it is done with examining cache
+   * contents
    */
   public DumpInfo dumpCacheContent() {
     synchronized (mCountingBitmapCache) {
-      DumpInfo<K, V> dumpInfo = new DumpInfo<>(
-          mCountingBitmapCache.getSizeInBytes(),
-          mCountingBitmapCache.getEvictionQueueSizeInBytes(),
-          mCountingBitmapCache.mMemoryCacheParams);
+      DumpInfo<K, V> dumpInfo =
+          new DumpInfo<>(
+              mCountingBitmapCache.getSizeInBytes(),
+              mCountingBitmapCache.getEvictionQueueSizeInBytes(),
+              mCountingBitmapCache.mMemoryCacheParams);
 
       final List<LinkedHashMap.Entry<K, CountingMemoryCache.Entry<K, V>>> cachedEntries =
           mCountingBitmapCache.mCachedEntries.getMatchingEntries(null);
@@ -111,8 +105,7 @@ public class CountingMemoryCacheInspector<K, V> {
           dumpInfo.lruEntries.add(dumpEntry);
         }
       }
-      for (Map.Entry<Bitmap, Object> entry
-          : mCountingBitmapCache.mOtherEntries.entrySet()) {
+      for (Map.Entry<Bitmap, Object> entry : mCountingBitmapCache.mOtherEntries.entrySet()) {
         if (entry != null && !entry.getKey().isRecycled()) {
           dumpInfo.otherEntries.put(entry.getKey(), entry.getValue());
         }

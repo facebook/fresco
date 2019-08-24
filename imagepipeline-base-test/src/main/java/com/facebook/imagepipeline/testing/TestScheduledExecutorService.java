@@ -22,36 +22,24 @@ public class TestScheduledExecutorService extends TestExecutorService
   @Override
   public ScheduledFuture<?> schedule(final Runnable runnable, long delay, TimeUnit timeUnit) {
     return new TestScheduledFuture(
-        getFakeClock(),
-        scheduledQueue,
-        TimeUnit.MILLISECONDS.convert(delay, timeUnit),
-        runnable);
+        getFakeClock(), scheduledQueue, TimeUnit.MILLISECONDS.convert(delay, timeUnit), runnable);
   }
 
   @Override
   public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit timeUnit) {
     return new TestScheduledFuture<V>(
-        getFakeClock(),
-        scheduledQueue,
-        TimeUnit.MILLISECONDS.convert(delay, timeUnit),
-        callable);
+        getFakeClock(), scheduledQueue, TimeUnit.MILLISECONDS.convert(delay, timeUnit), callable);
   }
 
   @Override
   public ScheduledFuture<?> scheduleAtFixedRate(
-      Runnable runnable,
-      long initialDelay,
-      long period,
-      TimeUnit timeUnit) {
+      Runnable runnable, long initialDelay, long period, TimeUnit timeUnit) {
     throw new UnsupportedOperationException();
   }
 
   @Override
   public ScheduledFuture<?> scheduleWithFixedDelay(
-      Runnable runnable,
-      long initialDelay,
-      long delay,
-      TimeUnit timeUnit) {
+      Runnable runnable, long initialDelay, long delay, TimeUnit timeUnit) {
     throw new UnsupportedOperationException();
   }
 }

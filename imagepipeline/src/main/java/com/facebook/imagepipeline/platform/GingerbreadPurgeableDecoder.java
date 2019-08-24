@@ -29,7 +29,9 @@ import javax.annotation.Nullable;
 
 /**
  * Bitmap decoder (Gingerbread to Jelly Bean).
- * <p/>
+ *
+ * <p>
+ *
  * <p>This copies incoming encoded bytes into a MemoryFile, and then decodes them using a file
  * descriptor, thus avoiding using any Java memory at all. This technique only works in JellyBean
  * and below.
@@ -76,9 +78,8 @@ public class GingerbreadPurgeableDecoder extends DalvikPurgeableDecoder {
   }
 
   private static MemoryFile copyToMemoryFile(
-      CloseableReference<PooledByteBuffer> bytesRef,
-      int inputLength,
-      @Nullable byte[] suffix) throws IOException {
+      CloseableReference<PooledByteBuffer> bytesRef, int inputLength, @Nullable byte[] suffix)
+      throws IOException {
     int outputLength = inputLength + (suffix == null ? 0 : suffix.length);
     MemoryFile memoryFile = new MemoryFile(null, outputLength);
     memoryFile.allowPurging(false);

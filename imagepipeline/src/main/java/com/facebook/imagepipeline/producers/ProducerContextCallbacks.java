@@ -7,28 +7,18 @@
 
 package com.facebook.imagepipeline.producers;
 
-/**
- * Callbacks that are called when something changes in a request sequence.
- */
+/** Callbacks that are called when something changes in a request sequence. */
 public interface ProducerContextCallbacks {
 
-  /**
-   * Method that is called when a client cancels the request.
-   */
+  /** Method that is called when a client cancels the request. */
   void onCancellationRequested();
 
-  /**
-   * Method that is called when a request is no longer a prefetch, or vice versa.
-   */
+  /** Method that is called when a request is no longer a prefetch, or vice versa. */
   void onIsPrefetchChanged();
 
-  /**
-   * Method that is called when intermediate results start or stop being expected.
-   */
+  /** Method that is called when intermediate results start or stop being expected. */
   void onIsIntermediateResultExpectedChanged();
 
-  /**
-   * Method that is called when the priority of the request changes.
-   */
+  /** Method that is called when the priority of the request changes. */
   void onPriorityChanged();
 }

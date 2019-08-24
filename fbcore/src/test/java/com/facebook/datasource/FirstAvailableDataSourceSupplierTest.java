@@ -15,9 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests for FirstAvailableDataSourceSupplier
- */
+/** Tests for FirstAvailableDataSourceSupplier */
 @RunWith(RobolectricTestRunner.class)
 public class FirstAvailableDataSourceSupplierTest extends AbstractDataSourceSupplier {
 
@@ -27,9 +25,7 @@ public class FirstAvailableDataSourceSupplierTest extends AbstractDataSourceSupp
     mDataSourceSupplier = FirstAvailableDataSourceSupplier.create(mSuppliers);
   }
 
-  /**
-   * All data sources failed, no intermediate results.
-   */
+  /** All data sources failed, no intermediate results. */
   @Test
   public void testLifecycle_F1_F2_F3_C() {
     DataSource<Object> dataSource = getAndSubscribe();
@@ -58,9 +54,7 @@ public class FirstAvailableDataSourceSupplierTest extends AbstractDataSourceSupp
     verifyState(dataSource, null, CLOSED, FINISHED, WITHOUT_RESULT, null, FAILED, throwable);
   }
 
-  /**
-   * All data sources failed, second data source produced multiple intermediate results.
-   */
+  /** All data sources failed, second data source produced multiple intermediate results. */
   @Test
   public void testLifecycle_F1_I2_I2_F2_F3_C() {
     DataSource<Object> dataSource = getAndSubscribe();
@@ -143,9 +137,7 @@ public class FirstAvailableDataSourceSupplierTest extends AbstractDataSourceSupp
     verifyState(dataSource, null, CLOSED, FINISHED, WITHOUT_RESULT, null, FAILED, throwable);
   }
 
-  /**
-   * First data source failed, second succeeded, no intermediate results.
-   */
+  /** First data source failed, second succeeded, no intermediate results. */
   @Test
   public void testLifecycle_F1_S2_C() {
     DataSource<Object> dataSource = getAndSubscribe();
@@ -167,9 +159,7 @@ public class FirstAvailableDataSourceSupplierTest extends AbstractDataSourceSupp
     verifyState(dataSource, null, CLOSED, FINISHED, WITHOUT_RESULT, null, NOT_FAILED, null);
   }
 
-  /**
-   * First data source succeeded, no intermediate results.
-   */
+  /** First data source succeeded, no intermediate results. */
   @Test
   public void testLifecycle_S1_C() {
     DataSource<Object> dataSource = getAndSubscribe();
@@ -185,9 +175,7 @@ public class FirstAvailableDataSourceSupplierTest extends AbstractDataSourceSupp
     verifyState(dataSource, null, CLOSED, FINISHED, WITHOUT_RESULT, null, NOT_FAILED, null);
   }
 
-  /**
-   * First data source succeeded, with multiple intermediate results.
-   */
+  /** First data source succeeded, with multiple intermediate results. */
   @Test
   public void testLifecycle_I1_I1_S1_C() {
     DataSource<Object> dataSource = getAndSubscribe();
@@ -283,9 +271,7 @@ public class FirstAvailableDataSourceSupplierTest extends AbstractDataSourceSupp
     verifyState(dataSource, null, CLOSED, NOT_FINISHED, WITHOUT_RESULT, null, NOT_FAILED, null);
   }
 
-  /**
-   * Early close with no results.
-   */
+  /** Early close with no results. */
   @Test
   public void testLifecycle_C() {
     DataSource<Object> dataSource = getAndSubscribe();
@@ -296,9 +282,7 @@ public class FirstAvailableDataSourceSupplierTest extends AbstractDataSourceSupp
     verifyState(dataSource, null, CLOSED, NOT_FINISHED, WITHOUT_RESULT, null, NOT_FAILED, null);
   }
 
-  /**
-   * Ignore callbacks after closed.
-   */
+  /** Ignore callbacks after closed. */
   @Test
   public void testLifecycle_I1_C_S1() {
     DataSource<Object> dataSource = getAndSubscribe();
@@ -321,9 +305,7 @@ public class FirstAvailableDataSourceSupplierTest extends AbstractDataSourceSupp
     verifyState(dataSource, null, CLOSED, NOT_FINISHED, WITHOUT_RESULT, null, NOT_FAILED, null);
   }
 
-  /**
-   * Test data source without result
-   */
+  /** Test data source without result */
   @Test
   public void testLifecycle_WithoutResult_NI1_NS1_I2_S2_C() {
     DataSource<Object> dataSource = getAndSubscribe();

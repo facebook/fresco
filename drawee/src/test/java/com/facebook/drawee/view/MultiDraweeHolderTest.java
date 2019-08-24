@@ -18,9 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests for {@link MultiDraweeHolder}
- */
+/** Tests for {@link MultiDraweeHolder} */
 @RunWith(RobolectricTestRunner.class)
 public class MultiDraweeHolderTest {
 

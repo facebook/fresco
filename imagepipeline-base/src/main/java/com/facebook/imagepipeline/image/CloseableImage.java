@@ -10,31 +10,24 @@ package com.facebook.imagepipeline.image;
 import com.facebook.common.logging.FLog;
 import java.io.Closeable;
 
-/**
- * A simple wrapper around an image that implements {@link Closeable}
- */
+/** A simple wrapper around an image that implements {@link Closeable} */
 public abstract class CloseableImage implements Closeable, ImageInfo {
   private static final String TAG = "CloseableImage";
 
-  /**
-   * @return size in bytes of the bitmap(s)
-   */
+  /** @return size in bytes of the bitmap(s) */
   public abstract int getSizeInBytes();
 
-  /**
-   * Closes this instance and releases the resources.
-   */
+  /** Closes this instance and releases the resources. */
   @Override
   public abstract void close();
 
-  /**
-   * Returns whether this instance is closed.
-   */
+  /** Returns whether this instance is closed. */
   public abstract boolean isClosed();
 
   /**
    * Returns quality information for the image.
-   * <p> Image classes that can contain intermediate results should override this as appropriate.
+   *
+   * <p>Image classes that can contain intermediate results should override this as appropriate.
    */
   @Override
   public QualityInfo getQualityInfo() {
@@ -42,17 +35,15 @@ public abstract class CloseableImage implements Closeable, ImageInfo {
   }
 
   /**
-   * Whether or not this image contains state for a particular view of the image (for example,
-   * the image for an animated GIF might contain the current frame being viewed). This means
-   * that the image should not be stored in the bitmap cache.
+   * Whether or not this image contains state for a particular view of the image (for example, the
+   * image for an animated GIF might contain the current frame being viewed). This means that the
+   * image should not be stored in the bitmap cache.
    */
   public boolean isStateful() {
     return false;
   }
 
-  /**
-   * Ensures that the underlying resources are always properly released.
-   */
+  /** Ensures that the underlying resources are always properly released. */
   @Override
   protected void finalize() throws Throwable {
     if (isClosed()) {

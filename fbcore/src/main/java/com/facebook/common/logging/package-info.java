@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Some utility classes for logging
- */
+/** Some utility classes for logging */
 package com.facebook.common.logging;

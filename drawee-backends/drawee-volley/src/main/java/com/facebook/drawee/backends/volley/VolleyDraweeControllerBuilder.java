@@ -20,13 +20,11 @@ import java.util.Set;
 
 /**
  * Concrete implementation of Volley Drawee controller builder.
- * <p/> See {@link AbstractDraweeControllerBuilder} for more details.
+ *
+ * <p>See {@link AbstractDraweeControllerBuilder} for more details.
  */
-public class VolleyDraweeControllerBuilder extends AbstractDraweeControllerBuilder<
-    VolleyDraweeControllerBuilder,
-    Uri,
-    Bitmap,
-    Bitmap> {
+public class VolleyDraweeControllerBuilder
+    extends AbstractDraweeControllerBuilder<VolleyDraweeControllerBuilder, Uri, Bitmap, Bitmap> {
 
   private final ImageLoader mImageLoader;
   private final VolleyDraweeControllerFactory mVolleyDraweeControllerFactory;

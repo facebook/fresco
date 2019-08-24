@@ -23,12 +23,11 @@ import javax.annotation.Nullable;
 
 /**
  * Drawee controller that bridges Volley with {@link SettableDraweeHierarchy}.
- * <p>
- * The hierarchy's actual image is set to the image(s) obtained by the provided data source.
- * The data source is automatically obtained and closed based on attach / detach calls.
+ *
+ * <p>The hierarchy's actual image is set to the image(s) obtained by the provided data source. The
+ * data source is automatically obtained and closed based on attach / detach calls.
  */
-public class VolleyDraweeController
-    extends AbstractDraweeController<Bitmap, Bitmap> {
+public class VolleyDraweeController extends AbstractDraweeController<Bitmap, Bitmap> {
 
   // Components
   private final Resources mResources;
@@ -43,17 +42,16 @@ public class VolleyDraweeController
   }
 
   /**
-   * Initializes this controller with the new data source supplier, id and caller context.
-   * This allows for reusing of the existing controller instead of instantiating a new one.
-   * This method should be called when the controller is in detached state.
+   * Initializes this controller with the new data source supplier, id and caller context. This
+   * allows for reusing of the existing controller instead of instantiating a new one. This method
+   * should be called when the controller is in detached state.
+   *
    * @param dataSourceSupplier data source supplier
    * @param id unique id for this controller
    * @param callerContext tag and context for this controller
    */
   public void initialize(
-      Supplier<DataSource<Bitmap>> dataSourceSupplier,
-      String id,
-      Object callerContext) {
+      Supplier<DataSource<Bitmap>> dataSourceSupplier, String id, Object callerContext) {
     super.initialize(id, callerContext);
     init(dataSourceSupplier);
   }

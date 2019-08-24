@@ -13,21 +13,19 @@ package com.facebook.samples.animation2;
 
 import android.graphics.Color;
 
-/**
- * Sample data for various animation backends.
- */
+/** Sample data for various animation backends. */
 public class SampleData {
 
   public static final int[] COLORS = {
-      Color.RED,
-      Color.GREEN,
-      Color.BLUE,
-      Color.CYAN,
-      Color.BLACK,
-      Color.GRAY,
-      Color.DKGRAY,
-      Color.LTGRAY,
-      Color.YELLOW,
-      Color.MAGENTA,
+    Color.RED,
+    Color.GREEN,
+    Color.BLUE,
+    Color.CYAN,
+    Color.BLACK,
+    Color.GRAY,
+    Color.DKGRAY,
+    Color.LTGRAY,
+    Color.YELLOW,
+    Color.MAGENTA,
   };
 }

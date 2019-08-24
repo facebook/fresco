@@ -38,15 +38,14 @@ import org.robolectric.*;
 import org.robolectric.annotation.*;
 
 /**
- * Checks basic properties of disk cache producer operation, that is:
- *   - it delegates to the {@link BufferedDiskCache#get(CacheKey key, AtomicBoolean isCancelled)}
- *   - it returns a 'copy' of the cached value
- *   - if {@link BufferedDiskCache#get(CacheKey key, AtomicBoolean isCancelled)} is unsuccessful,
- *   then it passes the request to the next producer in the sequence.
- *   - if the next producer returns the value, then it is put into the disk cache.
+ * Checks basic properties of disk cache producer operation, that is: - it delegates to the {@link
+ * BufferedDiskCache#get(CacheKey key, AtomicBoolean isCancelled)} - it returns a 'copy' of the
+ * cached value - if {@link BufferedDiskCache#get(CacheKey key, AtomicBoolean isCancelled)} is
+ * unsuccessful, then it passes the request to the next producer in the sequence. - if the next
+ * producer returns the value, then it is put into the disk cache.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class DiskCacheReadProducerTest {
   private static final String PRODUCER_NAME = DiskCacheReadProducer.PRODUCER_NAME;
 
@@ -58,8 +57,7 @@ public class DiskCacheReadProducerTest {
   @Mock public ProducerListener2 mProducerListener;
   @Mock public Exception mException;
   private final BufferedDiskCache mDefaultBufferedDiskCache = mock(BufferedDiskCache.class);
-  private final BufferedDiskCache mSmallImageBufferedDiskCache =
-      mock(BufferedDiskCache.class);
+  private final BufferedDiskCache mSmallImageBufferedDiskCache = mock(BufferedDiskCache.class);
   private SettableProducerContext mProducerContext;
   private SettableProducerContext mLowestLevelProducerContext;
   private final String mRequestId = "mRequestId";
@@ -77,12 +75,12 @@ public class DiskCacheReadProducerTest {
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    mDiskCacheReadProducer = new DiskCacheReadProducer(
-        mDefaultBufferedDiskCache,
-        mSmallImageBufferedDiskCache,
-        mCacheKeyFactory,
-        mInputProducer
-    );
+    mDiskCacheReadProducer =
+        new DiskCacheReadProducer(
+            mDefaultBufferedDiskCache,
+            mSmallImageBufferedDiskCache,
+            mCacheKeyFactory,
+            mInputProducer);
     List<CacheKey> keys = new ArrayList<>(1);
     keys.add(new SimpleCacheKey("http://dummy.uri"));
     mCacheKey = new MultiCacheKey(keys);
@@ -94,24 +92,26 @@ public class DiskCacheReadProducerTest {
     mFinalEncodedImage = new EncodedImage(mFinalImageReference);
     mIsCancelled = ArgumentCaptor.forClass(AtomicBoolean.class);
 
-    mProducerContext = new SettableProducerContext(
-        mImageRequest,
-        mRequestId,
-        mProducerListener,
-        mCallerContext,
-        ImageRequest.RequestLevel.FULL_FETCH,
-        false,
-        true,
-        Priority.MEDIUM);
-    mLowestLevelProducerContext = new SettableProducerContext(
-        mImageRequest,
-        mRequestId,
-        mProducerListener,
-        mCallerContext,
-        ImageRequest.RequestLevel.DISK_CACHE,
-        false,
-        true,
-        Priority.MEDIUM);
+    mProducerContext =
+        new SettableProducerContext(
+            mImageRequest,
+            mRequestId,
+            mProducerListener,
+            mCallerContext,
+            ImageRequest.RequestLevel.FULL_FETCH,
+            false,
+            true,
+            Priority.MEDIUM);
+    mLowestLevelProducerContext =
+        new SettableProducerContext(
+            mImageRequest,
+            mRequestId,
+            mProducerListener,
+            mCallerContext,
+            ImageRequest.RequestLevel.DISK_CACHE,
+            false,
+            true,
+            Priority.MEDIUM);
     when(mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)).thenReturn(true);
     when(mCacheKeyFactory.getEncodedCacheKey(mImageRequest, mCallerContext)).thenReturn(mCacheKey);
     when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.DEFAULT);
@@ -155,9 +155,7 @@ public class DiskCacheReadProducerTest {
         .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
     Map<String, String> resultMap = captor.getValue();
     assertEquals("true", resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND));
-    assertEquals(
-        "0",
-        resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE));
+    assertEquals("0", resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE));
     verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, true);
     Assert.assertFalse(EncodedImage.isValid(mFinalEncodedImage));
   }
@@ -174,9 +172,7 @@ public class DiskCacheReadProducerTest {
         .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
     Map<String, String> resultMap = captor.getValue();
     assertEquals("true", resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND));
-    assertEquals(
-        "0",
-        resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE));
+    assertEquals("0", resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE));
     verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, true);
     Assert.assertFalse(EncodedImage.isValid(mFinalEncodedImage));
   }
@@ -344,17 +340,17 @@ public class DiskCacheReadProducerTest {
   @Test
   public void testGetExtraMap() {
     when(mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)).thenReturn(true);
-    final Map<String, String> trueValue = ImmutableMap.of(
-        DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND,
-        "true",
-        DiskCacheReadProducer.ENCODED_IMAGE_SIZE,
-        "123");
+    final Map<String, String> trueValue =
+        ImmutableMap.of(
+            DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND,
+            "true",
+            DiskCacheReadProducer.ENCODED_IMAGE_SIZE,
+            "123");
     assertEquals(
         trueValue,
         DiskCacheReadProducer.getExtraMap(mProducerListener, mProducerContext, true, 123));
-    final Map<String, String> falseValue = ImmutableMap.of(
-        DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND,
-        "false");
+    final Map<String, String> falseValue =
+        ImmutableMap.of(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND, "false");
     assertEquals(
         falseValue,
         DiskCacheReadProducer.getExtraMap(mProducerListener, mProducerContext, false, 0));
@@ -406,38 +402,44 @@ public class DiskCacheReadProducerTest {
 
   private void setupInputProducerSuccess() {
     doAnswer(
-        new Answer<Object>() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            Consumer consumer = (Consumer) invocation.getArguments()[0];
-            consumer.onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
-            consumer.onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
-            return null;
-          }
-        }).when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+            new Answer<Object>() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                Consumer consumer = (Consumer) invocation.getArguments()[0];
+                consumer.onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
+                consumer.onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
+                return null;
+              }
+            })
+        .when(mInputProducer)
+        .produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   private void setupInputProducerFailure() {
     doAnswer(
-        new Answer<Object>() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            Consumer consumer = (Consumer) invocation.getArguments()[0];
-            consumer.onFailure(mException);
-            return null;
-          }
-        }).when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+            new Answer<Object>() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                Consumer consumer = (Consumer) invocation.getArguments()[0];
+                consumer.onFailure(mException);
+                return null;
+              }
+            })
+        .when(mInputProducer)
+        .produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   private void setupInputProducerNotFound() {
     doAnswer(
-        new Answer<Object>() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            Consumer consumer = (Consumer) invocation.getArguments()[0];
-            consumer.onNewResult(null, Consumer.IS_LAST);
-            return null;
-          }
-        }).when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+            new Answer<Object>() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                Consumer consumer = (Consumer) invocation.getArguments()[0];
+                consumer.onNewResult(null, Consumer.IS_LAST);
+                return null;
+              }
+            })
+        .when(mInputProducer)
+        .produceResults(any(Consumer.class), eq(mProducerContext));
   }
 }

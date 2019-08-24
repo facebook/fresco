@@ -16,20 +16,18 @@ import javax.annotation.Nullable;
 /**
  * Interface that specifies network fetcher used by the image pipeline.
  *
- * <p>It is strongly recommended that implementations use an {@link Executor} in their
- * {@link #fetch} method to execute the network request on a different thread.
+ * <p>It is strongly recommended that implementations use an {@link Executor} in their {@link
+ * #fetch} method to execute the network request on a different thread.
  *
- * <p> When the fetch from the network fails or is cancelled, the subclass is responsible for
- * calling {@link Callback} methods. If these are not called, the pipeline will not know that the
- * image fetch has failed and the application may not behave properly.
+ * <p>When the fetch from the network fails or is cancelled, the subclass is responsible for calling
+ * {@link Callback} methods. If these are not called, the pipeline will not know that the image
+ * fetch has failed and the application may not behave properly.
  *
  * @param <FETCH_STATE> The type to store fetch state. {@link FetchState} can be used or extended.
  */
 public interface NetworkFetcher<FETCH_STATE extends FetchState> {
 
-  /**
-   * Callback used to inform the network fetch producer.
-   */
+  /** Callback used to inform the network fetch producer. */
   interface Callback {
 
     /**
@@ -47,9 +45,7 @@ public interface NetworkFetcher<FETCH_STATE extends FetchState> {
      */
     void onFailure(Throwable throwable);
 
-    /**
-     * Called upon a cancellation of the request.
-     */
+    /** Called upon a cancellation of the request. */
     void onCancellation();
   }
 
@@ -60,9 +56,7 @@ public interface NetworkFetcher<FETCH_STATE extends FetchState> {
    * @param producerContext the producer's context
    * @return a new fetch state instance
    */
-  FETCH_STATE createFetchState(
-      Consumer<EncodedImage> consumer,
-      ProducerContext producerContext);
+  FETCH_STATE createFetchState(Consumer<EncodedImage> consumer, ProducerContext producerContext);
 
   /**
    * Initiates the network fetch and informs the producer when a response is received via the
@@ -89,7 +83,7 @@ public interface NetworkFetcher<FETCH_STATE extends FetchState> {
   /**
    * Called after the fetch completes.
    *
-   * <p> Implementing this method is optional and is useful for instrumentation purposes.
+   * <p>Implementing this method is optional and is useful for instrumentation purposes.
    *
    * @param fetchState the fetch-specific state
    * @param byteSize size of the data in bytes
@@ -99,9 +93,9 @@ public interface NetworkFetcher<FETCH_STATE extends FetchState> {
   /**
    * Gets a map containing extra parameters to pass to the listeners.
    *
-   * <p> Returning map is optional and is useful for instrumentation purposes.
+   * <p>Returning map is optional and is useful for instrumentation purposes.
    *
-   * <p> This map won't be modified by the caller.
+   * <p>This map won't be modified by the caller.
    *
    * @param fetchState the fetch-specific state
    * @param byteSize size of the data in bytes

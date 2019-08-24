@@ -30,11 +30,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-/**
- * Network fetcher that uses OkHttp 3 as a backend.
- */
-public class OkHttpNetworkFetcher extends
-    BaseNetworkFetcher<OkHttpNetworkFetcher.OkHttpNetworkFetchState> {
+/** Network fetcher that uses OkHttp 3 as a backend. */
+public class OkHttpNetworkFetcher
+    extends BaseNetworkFetcher<OkHttpNetworkFetcher.OkHttpNetworkFetchState> {
 
   public static class OkHttpNetworkFetchState extends FetchState {
 
@@ -43,8 +41,7 @@ public class OkHttpNetworkFetcher extends
     public long fetchCompleteTime;
 
     public OkHttpNetworkFetchState(
-        Consumer<EncodedImage> consumer,
-        ProducerContext producerContext) {
+        Consumer<EncodedImage> consumer, ProducerContext producerContext) {
       super(consumer, producerContext);
     }
   }
@@ -59,9 +56,7 @@ public class OkHttpNetworkFetcher extends
 
   private Executor mCancellationExecutor;
 
-  /**
-   * @param okHttpClient client to use
-   */
+  /** @param okHttpClient client to use */
   public OkHttpNetworkFetcher(OkHttpClient okHttpClient) {
     this(okHttpClient, okHttpClient.dispatcher().executorService());
   }
@@ -69,7 +64,7 @@ public class OkHttpNetworkFetcher extends
   /**
    * @param callFactory custom {@link Call.Factory} for fetching image from the network
    * @param cancellationExecutor executor on which fetching cancellation is performed if
-   * cancellation is requested from the UI Thread
+   *     cancellation is requested from the UI Thread
    */
   public OkHttpNetworkFetcher(Call.Factory callFactory, Executor cancellationExecutor) {
     this(callFactory, cancellationExecutor, true);
@@ -90,8 +85,7 @@ public class OkHttpNetworkFetcher extends
 
   @Override
   public OkHttpNetworkFetchState createFetchState(
-      Consumer<EncodedImage> consumer,
-      ProducerContext context) {
+      Consumer<EncodedImage> consumer, ProducerContext context) {
     return new OkHttpNetworkFetchState(consumer, context);
   }
 
@@ -102,9 +96,7 @@ public class OkHttpNetworkFetcher extends
     final Uri uri = fetchState.getUri();
 
     try {
-      final Request.Builder requestBuilder = new Request.Builder()
-          .url(uri.toString())
-          .get();
+      final Request.Builder requestBuilder = new Request.Builder().url(uri.toString()).get();
 
       if (mCacheControl != null) {
         requestBuilder.cacheControl(mCacheControl);
@@ -208,9 +200,9 @@ public class OkHttpNetworkFetcher extends
   /**
    * Handles exceptions.
    *
-   * <p> OkHttp notifies callers of cancellations via an IOException. If IOException is caught
-   * after request cancellation, then the exception is interpreted as successful cancellation
-   * and onCancellation is called. Otherwise onFailure is called.
+   * <p>OkHttp notifies callers of cancellations via an IOException. If IOException is caught after
+   * request cancellation, then the exception is interpreted as successful cancellation and
+   * onCancellation is called. Otherwise onFailure is called.
    */
   private void handleException(final Call call, final Exception e, final Callback callback) {
     if (call.isCanceled()) {

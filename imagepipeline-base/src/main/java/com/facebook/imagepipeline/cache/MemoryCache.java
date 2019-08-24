@@ -22,10 +22,10 @@ public interface MemoryCache<K, V> {
   /**
    * Caches the the given key-value pair.
    *
-   * <p> The cache returns a new copy of the provided reference which should be used instead of the
+   * <p>The cache returns a new copy of the provided reference which should be used instead of the
    * original one. The client should close the returned reference when it is not required anymore.
    *
-   * <p> If the cache failed to cache the given value, then the null reference is returned.
+   * <p>If the cache failed to cache the given value, then the null reference is returned.
    *
    * @param key
    * @param value

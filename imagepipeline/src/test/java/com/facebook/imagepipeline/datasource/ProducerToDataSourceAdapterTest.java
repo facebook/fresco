@@ -72,10 +72,8 @@ public class ProducerToDataSourceAdapterTest {
     when(mSettableProducerContext.getId()).thenReturn(mRequestId);
     when(mSettableProducerContext.isPrefetch()).thenReturn(true);
     mProducer = mock(Producer.class);
-    mDataSource = ProducerToDataSourceAdapter.create(
-        mProducer,
-        mSettableProducerContext,
-        mRequestListener);
+    mDataSource =
+        ProducerToDataSourceAdapter.create(mProducer, mSettableProducerContext, mRequestListener);
     ArgumentCaptor<Consumer> captor = ArgumentCaptor.forClass(Consumer.class);
     verify(mRequestListener).onRequestStart(mSettableProducerContext);
     verify(mProducer).produceResults(captor.capture(), any(SettableProducerContext.class));
@@ -149,10 +147,7 @@ public class ProducerToDataSourceAdapterTest {
     verifyNoMoreInteractionsAndReset();
   }
 
-  private void testNewResult(
-      Object result,
-      boolean isLast,
-      int numSubscribers) {
+  private void testNewResult(Object result, boolean isLast, int numSubscribers) {
     mInternalConsumer.onNewResult(result, BaseConsumer.simpleStatusForIsLast(isLast));
     if (isLast) {
       verify(mRequestListener).onRequestSuccess(mSettableProducerContext);

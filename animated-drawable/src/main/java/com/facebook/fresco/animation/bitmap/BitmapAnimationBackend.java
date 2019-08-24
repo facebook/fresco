@@ -30,13 +30,13 @@ import javax.annotation.Nullable;
 /**
  * Bitmap animation backend that renders bitmap frames.
  *
- * The given {@link BitmapFrameCache} is used to cache frames and create new bitmaps. {@link
+ * <p>The given {@link BitmapFrameCache} is used to cache frames and create new bitmaps. {@link
  * AnimationInformation} defines the main animation parameters, like frame and loop count. {@link
  * BitmapFrameRenderer} is used to render frames to the bitmaps aquired from the {@link
  * BitmapFrameCache}.
  */
-public class BitmapAnimationBackend implements AnimationBackend,
-    AnimationBackendDelegateWithInactivityCheck.InactivityListener {
+public class BitmapAnimationBackend
+    implements AnimationBackend, AnimationBackendDelegateWithInactivityCheck.InactivityListener {
 
   public interface FrameListener {
 
@@ -66,20 +66,16 @@ public class BitmapAnimationBackend implements AnimationBackend,
     void onFrameDropped(BitmapAnimationBackend backend, int frameNumber);
   }
 
-  /**
-   * Frame type that has been drawn. Can be used for logging.
-   */
+  /** Frame type that has been drawn. Can be used for logging. */
   @Retention(SOURCE)
   @IntDef({
-      FRAME_TYPE_UNKNOWN,
-      FRAME_TYPE_CACHED,
-      FRAME_TYPE_REUSED,
-      FRAME_TYPE_CREATED,
-      FRAME_TYPE_FALLBACK,
+    FRAME_TYPE_UNKNOWN,
+    FRAME_TYPE_CACHED,
+    FRAME_TYPE_REUSED,
+    FRAME_TYPE_CREATED,
+    FRAME_TYPE_FALLBACK,
   })
-  public @interface FrameType {
-
-  }
+  public @interface FrameType {}
 
   public static final int FRAME_TYPE_UNKNOWN = -1;
   public static final int FRAME_TYPE_CACHED = 0;
@@ -93,19 +89,15 @@ public class BitmapAnimationBackend implements AnimationBackend,
   private final BitmapFrameCache mBitmapFrameCache;
   private final AnimationInformation mAnimationInformation;
   private final BitmapFrameRenderer mBitmapFrameRenderer;
-  @Nullable
-  private final BitmapFramePreparationStrategy mBitmapFramePreparationStrategy;
-  @Nullable
-  private final BitmapFramePreparer mBitmapFramePreparer;
+  @Nullable private final BitmapFramePreparationStrategy mBitmapFramePreparationStrategy;
+  @Nullable private final BitmapFramePreparer mBitmapFramePreparer;
   private final Paint mPaint;
 
-  @Nullable
-  private Rect mBounds;
+  @Nullable private Rect mBounds;
   private int mBitmapWidth;
   private int mBitmapHeight;
   private Bitmap.Config mBitmapConfig = Bitmap.Config.ARGB_8888;
-  @Nullable
-  private FrameListener mFrameListener;
+  @Nullable private FrameListener mFrameListener;
 
   public BitmapAnimationBackend(
       PlatformBitmapFactory platformBitmapFactory,
@@ -154,10 +146,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
   }
 
   @Override
-  public boolean drawFrame(
-      Drawable parent,
-      Canvas canvas,
-      int frameNumber) {
+  public boolean drawFrame(Drawable parent, Canvas canvas, int frameNumber) {
     if (mFrameListener != null) {
       mFrameListener.onDrawFrameStart(this, frameNumber);
     }
@@ -172,10 +161,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
     // Prepare next frames
     if (mBitmapFramePreparationStrategy != null && mBitmapFramePreparer != null) {
       mBitmapFramePreparationStrategy.prepareFrames(
-          mBitmapFramePreparer,
-          mBitmapFrameCache,
-          this,
-          frameNumber);
+          mBitmapFramePreparer, mBitmapFrameCache, this, frameNumber);
     }
 
     return drawn;
@@ -198,8 +184,9 @@ public class BitmapAnimationBackend implements AnimationBackend,
           bitmapReference =
               mBitmapFrameCache.getBitmapToReuseForFrame(frameNumber, mBitmapWidth, mBitmapHeight);
           // Try to render the frame and draw on the canvas immediately after
-          drawn = renderFrameInBitmap(frameNumber, bitmapReference) &&
-              drawBitmapAndCache(frameNumber, bitmapReference, canvas, FRAME_TYPE_REUSED);
+          drawn =
+              renderFrameInBitmap(frameNumber, bitmapReference)
+                  && drawBitmapAndCache(frameNumber, bitmapReference, canvas, FRAME_TYPE_REUSED);
           nextFrameType = FRAME_TYPE_CREATED;
           break;
 
@@ -214,8 +201,9 @@ public class BitmapAnimationBackend implements AnimationBackend,
             return false;
           }
           // Try to render the frame and draw on the canvas immediately after
-          drawn = renderFrameInBitmap(frameNumber, bitmapReference) &&
-              drawBitmapAndCache(frameNumber, bitmapReference, canvas, FRAME_TYPE_CREATED);
+          drawn =
+              renderFrameInBitmap(frameNumber, bitmapReference)
+                  && drawBitmapAndCache(frameNumber, bitmapReference, canvas, FRAME_TYPE_CREATED);
           nextFrameType = FRAME_TYPE_FALLBACK;
           break;
 
@@ -303,14 +291,12 @@ public class BitmapAnimationBackend implements AnimationBackend,
    * @return true if rendering successful
    */
   private boolean renderFrameInBitmap(
-      int frameNumber,
-      @Nullable CloseableReference<Bitmap> targetBitmap) {
+      int frameNumber, @Nullable CloseableReference<Bitmap> targetBitmap) {
     if (!CloseableReference.isValid(targetBitmap)) {
       return false;
     }
     // Render the image
-    boolean frameRendered =
-        mBitmapFrameRenderer.renderFrame(frameNumber, targetBitmap.get());
+    boolean frameRendered = mBitmapFrameRenderer.renderFrame(frameNumber, targetBitmap.get());
     if (!frameRendered) {
       CloseableReference.closeSafely(targetBitmap);
     }
@@ -320,7 +306,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
   /**
    * Helper method that draws the given bitmap on the canvas respecting the bounds (if set).
    *
-   * If rendering was successful, it notifies the cache that the frame has been rendered with the
+   * <p>If rendering was successful, it notifies the cache that the frame has been rendered with the
    * given bitmap. In addition, it will notify the {@link FrameListener} if set.
    *
    * @param frameNumber the current frame number passed to the cache
@@ -346,10 +332,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
     // Notify the cache that a frame has been rendered.
     // We should not cache fallback frames since they do not represent the actual frame.
     if (frameType != FRAME_TYPE_FALLBACK) {
-      mBitmapFrameCache.onFrameRendered(
-          frameNumber,
-          bitmapReference,
-          frameType);
+      mBitmapFrameCache.onFrameRendered(frameNumber, bitmapReference, frameType);
     }
 
     if (mFrameListener != null) {

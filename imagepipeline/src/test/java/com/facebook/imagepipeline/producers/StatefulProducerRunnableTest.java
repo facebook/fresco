@@ -22,7 +22,7 @@ import org.robolectric.*;
 import org.robolectric.annotation.*;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class StatefulProducerRunnableTest {
 
   private static final String PRODUCER_NAME = "aBitLessAwesomeButStillAwesomeProducerName";
@@ -135,7 +135,6 @@ public class StatefulProducerRunnableTest {
     verify(mProducerListener, never())
         .onUltimateProducerReached(eq(mProducerContext), anyString(), anyBoolean());
   }
-
 
   @Test
   public void testOnFailure_extraMap() {

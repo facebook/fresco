@@ -8,21 +8,12 @@
 package com.facebook.imagepipeline.memory;
 
 import android.graphics.Bitmap;
-import android.os.Build;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.Throwables;
-import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
-import com.facebook.imagepipeline.common.TooManyBitmapsException;
-import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imageutils.BitmapUtil;
-import java.util.ArrayList;
-import java.util.List;
 import javax.annotation.concurrent.GuardedBy;
 
-/**
- * Counts bitmaps - keeps track of both, count and total size in bytes.
- */
+/** Counts bitmaps - keeps track of both, count and total size in bytes. */
 public class BitmapCounter {
 
   @GuardedBy("this")
@@ -40,21 +31,22 @@ public class BitmapCounter {
     Preconditions.checkArgument(maxSize > 0);
     mMaxCount = maxCount;
     mMaxSize = maxSize;
-    mUnpooledBitmapsReleaser = new ResourceReleaser<Bitmap>() {
-      @Override
-      public void release(Bitmap value) {
-        try {
-          decrease(value);
-        } finally {
-          value.recycle();
-        }
-      }
-    };
+    mUnpooledBitmapsReleaser =
+        new ResourceReleaser<Bitmap>() {
+          @Override
+          public void release(Bitmap value) {
+            try {
+              decrease(value);
+            } finally {
+              value.recycle();
+            }
+          }
+        };
   }
 
   /**
-   * Includes given bitmap in the bitmap count. The bitmap is included only if doing so
-   * does not violate configured limit
+   * Includes given bitmap in the bitmap count. The bitmap is included only if doing so does not
+   * violate configured limit
    *
    * @param bitmap to include in the count
    * @return true if and only if bitmap is successfully included in the count
@@ -86,19 +78,15 @@ public class BitmapCounter {
     mCount--;
   }
 
-  /**
-   * @return number of counted bitmaps
-   */
+  /** @return number of counted bitmaps */
   public synchronized int getCount() {
-        return mCount;
-      }
+    return mCount;
+  }
 
-  /**
-   * @return total size in bytes of counted bitmaps
-   */
+  /** @return total size in bytes of counted bitmaps */
   public synchronized long getSize() {
-        return mSize;
-      }
+    return mSize;
+  }
 
   public synchronized int getMaxCount() {
     return mMaxCount;

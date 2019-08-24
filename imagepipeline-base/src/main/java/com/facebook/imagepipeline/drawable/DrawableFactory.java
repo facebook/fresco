@@ -10,9 +10,7 @@ import android.graphics.drawable.Drawable;
 import com.facebook.imagepipeline.image.CloseableImage;
 import javax.annotation.Nullable;
 
-/**
- * Drawable factory to create Drawables for given images.
- */
+/** Drawable factory to create Drawables for given images. */
 public interface DrawableFactory {
 
   /**
@@ -24,8 +22,7 @@ public interface DrawableFactory {
   boolean supportsImageType(CloseableImage image);
 
   /**
-   * Create a drawable for the given image.
-   * It is guaranteed that this method is only called if
+   * Create a drawable for the given image. It is guaranteed that this method is only called if
    * {@link #supportsImageType(CloseableImage)} returned true.
    *
    * @param image the image to create the drawable for

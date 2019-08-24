@@ -30,16 +30,14 @@ import org.robolectric.*;
 import org.robolectric.annotation.*;
 
 /**
- * Checks basic properties of bitmap memory cache producer operation, that is:
- *   - it delegates to the {@link MemoryCache#get(Object)}.
- *   - if get is successful, then returned reference is closed.
- *   - if {@link MemoryCache#get(Object)} is unsuccessful, then it passes the
- *   request to the next producer in the sequence.
- *   - responses from the next producer are passed directly to the consumer.
- *   - listener methods are called as expected.
+ * Checks basic properties of bitmap memory cache producer operation, that is: - it delegates to the
+ * {@link MemoryCache#get(Object)}. - if get is successful, then returned reference is closed. - if
+ * {@link MemoryCache#get(Object)} is unsuccessful, then it passes the request to the next producer
+ * in the sequence. - responses from the next producer are passed directly to the consumer. -
+ * listener methods are called as expected.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class BitmapMemoryCacheGetProducerTest {
   private static final String PRODUCER_NAME = BitmapMemoryCacheGetProducer.PRODUCER_NAME;
   @Mock public MemoryCache<CacheKey, CloseableImage> mMemoryCache;
@@ -72,8 +70,7 @@ public class BitmapMemoryCacheGetProducerTest {
         .thenReturn(true);
     when(mProducerContext.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
-    when(mProducerContext.getCallerContext())
-        .thenReturn(PRODUCER_NAME);
+    when(mProducerContext.getCallerContext()).thenReturn(PRODUCER_NAME);
     when(mCacheKeyFactory.getBitmapCacheKey(mImageRequest, PRODUCER_NAME)).thenReturn(mCacheKey);
   }
 
@@ -164,17 +161,20 @@ public class BitmapMemoryCacheGetProducerTest {
 
   private void setupInputProducerStreamingSuccess() {
     doAnswer(new ProduceResultsNewResultAnswer(mFinalImageReference))
-        .when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+        .when(mInputProducer)
+        .produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   private void setupInputProducerNotFound() {
     doAnswer(new ProduceResultsNewResultAnswer(null))
-        .when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+        .when(mInputProducer)
+        .produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   private void setupInputProducerFailure() {
-    doAnswer(new ProduceResultsFailureAnswer()).
-        when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+    doAnswer(new ProduceResultsFailureAnswer())
+        .when(mInputProducer)
+        .produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   private static class ProduceResultsNewResultAnswer implements Answer<Void> {

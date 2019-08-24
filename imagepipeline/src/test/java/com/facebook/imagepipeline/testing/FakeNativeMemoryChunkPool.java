@@ -16,19 +16,14 @@ import com.facebook.imagepipeline.memory.NativeMemoryChunkPool;
 import com.facebook.imagepipeline.memory.PoolParams;
 import com.facebook.imagepipeline.memory.PoolStatsTracker;
 
-/**
- * A 'fake' {@link NativeMemoryChunkPool} instance as a test helper
- */
+/** A 'fake' {@link NativeMemoryChunkPool} instance as a test helper */
 public class FakeNativeMemoryChunkPool extends NativeMemoryChunkPool {
   public FakeNativeMemoryChunkPool() {
     this(new PoolParams(128, getBucketSizes()));
   }
 
   public FakeNativeMemoryChunkPool(PoolParams poolParams) {
-    super(
-        mock(MemoryTrimmableRegistry.class),
-        poolParams,
-        mock(PoolStatsTracker.class));
+    super(mock(MemoryTrimmableRegistry.class), poolParams, mock(PoolStatsTracker.class));
   }
 
   @Override

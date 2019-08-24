@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Classes for the DataSource abstraction and related observers
- */
+/** Classes for the DataSource abstraction and related observers */
 package com.facebook.datasource;

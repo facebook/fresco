@@ -12,9 +12,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * A trivial implementation of BinaryResource that wraps a byte array
- */
+/** A trivial implementation of BinaryResource that wraps a byte array */
 public class ByteArrayBinaryResource implements BinaryResource {
   private final byte[] mBytes;
 
@@ -34,6 +32,7 @@ public class ByteArrayBinaryResource implements BinaryResource {
 
   /**
    * Get the underlying byte array
+   *
    * @return the underlying byte array of this resource
    */
   @Override

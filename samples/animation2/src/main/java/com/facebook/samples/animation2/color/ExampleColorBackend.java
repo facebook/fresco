@@ -22,9 +22,7 @@ import androidx.annotation.Nullable;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.samples.animation2.SampleData;
 
-/**
- * Example color backend that takes a list of colors and cycles through them.
- */
+/** Example color backend that takes a list of colors and cycles through them. */
 public class ExampleColorBackend implements AnimationBackend {
 
   /**
@@ -66,8 +64,7 @@ public class ExampleColorBackend implements AnimationBackend {
   }
 
   @Override
-  public boolean drawFrame(
-      Drawable parent, Canvas canvas, int frameNumber) {
+  public boolean drawFrame(Drawable parent, Canvas canvas, int frameNumber) {
     if (mBounds == null) {
       return false;
     }
@@ -97,8 +94,7 @@ public class ExampleColorBackend implements AnimationBackend {
   }
 
   @Override
-  public void clear() {
-  }
+  public void clear() {}
 
   @Override
   public int getIntrinsicWidth() {

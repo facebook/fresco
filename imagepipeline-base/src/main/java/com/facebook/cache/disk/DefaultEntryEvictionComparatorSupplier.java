@@ -6,9 +6,7 @@
  */
 package com.facebook.cache.disk;
 
-/**
- * Sorts entries by date of the last access, evicting old ones first
- */
+/** Sorts entries by date of the last access, evicting old ones first */
 public class DefaultEntryEvictionComparatorSupplier implements EntryEvictionComparatorSupplier {
 
   @Override

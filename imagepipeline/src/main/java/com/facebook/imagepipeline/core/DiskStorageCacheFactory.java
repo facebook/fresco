@@ -14,9 +14,7 @@ import com.facebook.cache.disk.FileCache;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-/**
- * Factory for the default implementation of the FileCache.
- */
+/** Factory for the default implementation of the FileCache. */
 public class DiskStorageCacheFactory implements FileCacheFactory {
 
   private DiskStorageFactory mDiskStorageFactory;
@@ -26,8 +24,7 @@ public class DiskStorageCacheFactory implements FileCacheFactory {
   }
 
   public static DiskStorageCache buildDiskStorageCache(
-      DiskCacheConfig diskCacheConfig,
-      DiskStorage diskStorage) {
+      DiskCacheConfig diskCacheConfig, DiskStorage diskStorage) {
     return buildDiskStorageCache(diskCacheConfig, diskStorage, Executors.newSingleThreadExecutor());
   }
 
@@ -35,10 +32,11 @@ public class DiskStorageCacheFactory implements FileCacheFactory {
       DiskCacheConfig diskCacheConfig,
       DiskStorage diskStorage,
       Executor executorForBackgroundInit) {
-    DiskStorageCache.Params params = new DiskStorageCache.Params(
-        diskCacheConfig.getMinimumSizeLimit(),
-        diskCacheConfig.getLowDiskSpaceSizeLimit(),
-        diskCacheConfig.getDefaultSizeLimit());
+    DiskStorageCache.Params params =
+        new DiskStorageCache.Params(
+            diskCacheConfig.getMinimumSizeLimit(),
+            diskCacheConfig.getLowDiskSpaceSizeLimit(),
+            diskCacheConfig.getDefaultSizeLimit());
 
     return new DiskStorageCache(
         diskStorage,

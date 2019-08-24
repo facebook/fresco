@@ -21,14 +21,14 @@ import com.facebook.samples.comparison.configs.glide.GlideApp;
 import com.facebook.samples.comparison.instrumentation.InstrumentedImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 
-/**
- * This is the Holder class for the RecycleView to use with Glide
- */
+/** This is the Holder class for the RecycleView to use with Glide */
 public class GlideHolder extends BaseViewHolder<InstrumentedImageView> {
 
   public GlideHolder(
-      Context context, View layoutView,
-      InstrumentedImageView instrumentedImageView, PerfListener perfListener) {
+      Context context,
+      View layoutView,
+      InstrumentedImageView instrumentedImageView,
+      PerfListener perfListener) {
     super(context, layoutView, instrumentedImageView, perfListener);
   }
 
@@ -41,5 +41,4 @@ public class GlideHolder extends BaseViewHolder<InstrumentedImageView> {
         .transition(withCrossFade())
         .into(mImageView);
   }
-
 }

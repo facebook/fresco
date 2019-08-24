@@ -28,9 +28,7 @@ import com.facebook.fresco.samples.showcase.CustomImageFormatConfigurator;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
 
-/**
- * SVG example. It has a toggle to enable / disable SVG support and displays 1 image.
- */
+/** SVG example. It has a toggle to enable / disable SVG support and displays 1 image. */
 public class ImageFormatSvgFragment extends BaseShowcaseFragment {
 
   private SimpleDraweeView mSimpleDraweeView;
@@ -49,24 +47,26 @@ public class ImageFormatSvgFragment extends BaseShowcaseFragment {
     mSimpleDraweeView.setImageURI(sampleUris().createSvgUri());
 
     final SwitchCompat switchBackground = (SwitchCompat) view.findViewById(R.id.switch_background);
-    switchBackground.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-      @Override
-      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        mSimpleDraweeView.getHierarchy().setBackgroundImage(isChecked
-            ? new CheckerBoardDrawable(getResources())
-            : null);
-      }
-    });
+    switchBackground.setOnCheckedChangeListener(
+        new CompoundButton.OnCheckedChangeListener() {
+          @Override
+          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            mSimpleDraweeView
+                .getHierarchy()
+                .setBackgroundImage(isChecked ? new CheckerBoardDrawable(getResources()) : null);
+          }
+        });
 
     SwitchCompat switchCompat = (SwitchCompat) view.findViewById(R.id.decoder_switch);
     switchCompat.setChecked(CustomImageFormatConfigurator.isSvgEnabled(getContext()));
-    switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-      @Override
-      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        CustomImageFormatConfigurator.setSvgEnabled(getContext(), isChecked);
-        getShowRestartMessageDialog().show(getChildFragmentManager(), null);
-      }
-    });
+    switchCompat.setOnCheckedChangeListener(
+        new CompoundButton.OnCheckedChangeListener() {
+          @Override
+          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            CustomImageFormatConfigurator.setSvgEnabled(getContext(), isChecked);
+            getShowRestartMessageDialog().show(getChildFragmentManager(), null);
+          }
+        });
   }
 
   @Override
@@ -87,14 +87,17 @@ public class ImageFormatSvgFragment extends BaseShowcaseFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
       // Use the Builder class for convenient dialog construction
       AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-      builder.setMessage(R.string.message_application_needs_restart)
+      builder
+          .setMessage(R.string.message_application_needs_restart)
           .setPositiveButton(android.R.string.ok, null)
-          .setNeutralButton(R.string.message_restart_now, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              System.exit(0);
-            }
-          });
+          .setNeutralButton(
+              R.string.message_restart_now,
+              new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                  System.exit(0);
+                }
+              });
       return builder.create();
     }
   }

@@ -18,25 +18,20 @@ import java.io.InputStream;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 
-/**
- * Represents a local fetch producer.
- */
+/** Represents a local fetch producer. */
 public abstract class LocalFetchProducer implements Producer<EncodedImage> {
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
 
-  protected LocalFetchProducer(
-      Executor executor,
-      PooledByteBufferFactory pooledByteBufferFactory) {
+  protected LocalFetchProducer(Executor executor, PooledByteBufferFactory pooledByteBufferFactory) {
     mExecutor = executor;
     mPooledByteBufferFactory = pooledByteBufferFactory;
   }
 
   @Override
   public void produceResults(
-      final Consumer<EncodedImage> consumer,
-      final ProducerContext producerContext) {
+      final Consumer<EncodedImage> consumer, final ProducerContext producerContext) {
 
     final ProducerListener2 listener = producerContext.getProducerListener();
     final ImageRequest imageRequest = producerContext.getImageRequest();
@@ -73,9 +68,8 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
   }
 
   /** Creates a memory-backed encoded image from the stream. The stream is closed. */
-  protected EncodedImage getByteBufferBackedEncodedImage(
-      InputStream inputStream,
-      int length) throws IOException {
+  protected EncodedImage getByteBufferBackedEncodedImage(InputStream inputStream, int length)
+      throws IOException {
     CloseableReference<PooledByteBuffer> ref = null;
     try {
       if (length <= 0) {
@@ -90,22 +84,19 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
     }
   }
 
-  protected EncodedImage getEncodedImage(
-      InputStream inputStream,
-      int length) throws IOException {
+  protected EncodedImage getEncodedImage(InputStream inputStream, int length) throws IOException {
     return getByteBufferBackedEncodedImage(inputStream, length);
   }
 
   /**
    * Gets an encoded image from the local resource. It can be either backed by a FileInputStream or
    * a PooledByteBuffer
+   *
    * @param imageRequest request that includes the local resource that is being accessed
    * @throws IOException
    */
   protected abstract EncodedImage getEncodedImage(ImageRequest imageRequest) throws IOException;
 
-  /**
-   * @return name of the Producer
-   */
+  /** @return name of the Producer */
   protected abstract String getProducerName();
 }

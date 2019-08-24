@@ -24,8 +24,8 @@ public class LogcatImagePerfDataListener implements ImagePerfDataListener {
   private static final String TAG = "ImagePerf";
 
   @Override
-  public void onImageLoadStatusUpdated(ImagePerfData imagePerfData,
-      @ImageLoadStatus int imageLoadStatus) {
+  public void onImageLoadStatusUpdated(
+      ImagePerfData imagePerfData, @ImageLoadStatus int imageLoadStatus) {
     Log.d(
         TAG,
         String.format(

@@ -11,7 +11,7 @@ package com.facebook.imagepipeline.producers;
  * Constants to be used various {@link Producer}s for logging purposes in the extra maps for the
  * {@link com.facebook.imagepipeline.listener.RequestListener}.
  *
- * The elements are package visible on purpose such that the individual producers create public
+ * <p>The elements are package visible on purpose such that the individual producers create public
  * constants of the ones that they actually use.
  */
 class ProducerConstants {

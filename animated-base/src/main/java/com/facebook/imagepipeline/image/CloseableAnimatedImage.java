@@ -12,8 +12,8 @@ import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 import javax.annotation.Nullable;
 
 /**
- * Encapsulates the data needed in order for {@code AnimatedDrawable} to render a
- * {@code AnimatedImage}.
+ * Encapsulates the data needed in order for {@code AnimatedDrawable} to render a {@code
+ * AnimatedImage}.
  */
 public class CloseableAnimatedImage extends CloseableImage {
 

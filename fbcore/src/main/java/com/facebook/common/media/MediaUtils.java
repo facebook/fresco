@@ -12,9 +12,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.annotation.Nullable;
 
-/**
- * Utility class.
- */
+/** Utility class. */
 public class MediaUtils {
   // Additional mime types that we know to be a particular media type but which may not be
   // supported natively on the device.
@@ -59,8 +57,8 @@ public class MediaUtils {
   }
 
   /**
-   * @return true if the mime type is one of our whitelisted mimetypes that we support beyond
-   *         what the native platform supports.
+   * @return true if the mime type is one of our whitelisted mimetypes that we support beyond what
+   *     the native platform supports.
    */
   public static boolean isNonNativeSupportedMimeType(String mimeType) {
     return ADDITIONAL_ALLOWED_MIME_TYPES.containsValue(mimeType);

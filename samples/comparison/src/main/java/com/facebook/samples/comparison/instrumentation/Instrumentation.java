@@ -23,7 +23,7 @@ import com.facebook.common.logging.FLog;
 /**
  * Tracks state of image request.
  *
- * <p/> Components that implement {@link Instrumented} interface can use this class to track their
+ * <p>Components that implement {@link Instrumented} interface can use this class to track their
  * requests.
  */
 public class Instrumentation {

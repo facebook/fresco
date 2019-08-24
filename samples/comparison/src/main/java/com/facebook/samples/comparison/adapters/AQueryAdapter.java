@@ -19,16 +19,12 @@ import com.facebook.samples.comparison.holders.AQueryHolder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 
-/**
- * RecyclerView Adapter for Android Query
- */
+/** RecyclerView Adapter for Android Query */
 public class AQueryAdapter extends ImageListAdapter {
 
   private AQuery mAQuery;
 
-  public AQueryAdapter(
-      Context context,
-      PerfListener perfListener) {
+  public AQueryAdapter(Context context, PerfListener perfListener) {
     super(context, perfListener);
     mAQuery = new AQuery(context);
   }

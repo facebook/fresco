@@ -12,8 +12,9 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * This class keeps a record of internal events that take place in the Drawee.
- * <p/> Having a record of a last few events is useful for debugging purposes. If you want to
- * disable it, call {@link DraweeEventTracker.disable()} before {@link Fresco.initialize()}.
+ *
+ * <p>Having a record of a last few events is useful for debugging purposes. If you want to disable
+ * it, call {@link DraweeEventTracker.disable()} before {@link Fresco.initialize()}.
  */
 public class DraweeEventTracker {
 
@@ -51,16 +52,13 @@ public class DraweeEventTracker {
     ON_SUBMIT_CACHE_HIT
   }
 
-  private DraweeEventTracker() {
-  }
+  private DraweeEventTracker() {}
 
   public static DraweeEventTracker newInstance() {
     return sEnabled ? new DraweeEventTracker() : sInstance;
   }
 
-  /**
-   * Disable DraweeEventTracker. Need to call before initialize Fresco.
-   */
+  /** Disable DraweeEventTracker. Need to call before initialize Fresco. */
   public static void disable() {
     sEnabled = false;
   }

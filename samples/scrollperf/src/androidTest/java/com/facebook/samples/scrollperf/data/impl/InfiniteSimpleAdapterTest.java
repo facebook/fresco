@@ -21,21 +21,17 @@ import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
 import org.mockito.Mock;
 
-/**
- * We test the InfiniteSimpleAdapter
- */
+/** We test the InfiniteSimpleAdapter */
 public class InfiniteSimpleAdapterTest extends AndroidTestCase {
 
-  @Mock
-  private SimpleAdapter mSimpleAdapter;
+  @Mock private SimpleAdapter mSimpleAdapter;
 
-  @Mock
-  private Uri mUri;
+  @Mock private Uri mUri;
 
   public void testInfiniteAdapterWhichIsEmpty() {
     final Context context = getContext();
     final Resources res = context.getResources();
-    final String[] uris = new String[]{};
+    final String[] uris = new String[] {};
     when(mSimpleAdapter.getSize()).thenReturn(0);
     when(mSimpleAdapter.isLazy()).thenReturn(true);
     final SimpleAdapter infinite = SimpleAdapter.Util.makeItInfinite(mSimpleAdapter);

@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Drawable implementations used by Drawee through a DraweeHierarchy.
- */
+/** Drawable implementations used by Drawee through a DraweeHierarchy. */
 package com.facebook.drawee.drawable;

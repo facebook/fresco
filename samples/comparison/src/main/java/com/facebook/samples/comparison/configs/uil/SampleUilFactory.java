@@ -28,17 +28,19 @@ public class SampleUilFactory {
 
   public static ImageLoader getImageLoader(Context context) {
     if (sImageLoader == null) {
-      DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
-          .showImageOnLoading(Drawables.sPlaceholderDrawable)
-          .showImageOnFail(Drawables.sErrorDrawable)
-          .cacheInMemory(true)
-          .cacheOnDisk(true)
-          .build();
-      ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
-          .defaultDisplayImageOptions(displayImageOptions)
-          .diskCacheSize(ConfigConstants.MAX_DISK_CACHE_SIZE)
-          .memoryCacheSize(ConfigConstants.MAX_MEMORY_CACHE_SIZE)
-          .build();
+      DisplayImageOptions displayImageOptions =
+          new DisplayImageOptions.Builder()
+              .showImageOnLoading(Drawables.sPlaceholderDrawable)
+              .showImageOnFail(Drawables.sErrorDrawable)
+              .cacheInMemory(true)
+              .cacheOnDisk(true)
+              .build();
+      ImageLoaderConfiguration config =
+          new ImageLoaderConfiguration.Builder(context)
+              .defaultDisplayImageOptions(displayImageOptions)
+              .diskCacheSize(ConfigConstants.MAX_DISK_CACHE_SIZE)
+              .memoryCacheSize(ConfigConstants.MAX_MEMORY_CACHE_SIZE)
+              .build();
       sImageLoader = ImageLoader.getInstance();
       sImageLoader.init(config);
     }

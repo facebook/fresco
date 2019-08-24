@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Decoder abstraction and some implementations for the main image formats.
- */
+/** Decoder abstraction and some implementations for the main image formats. */
 package com.facebook.imagepipeline.decoder;

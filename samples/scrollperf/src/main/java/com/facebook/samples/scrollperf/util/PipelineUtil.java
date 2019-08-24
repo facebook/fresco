@@ -17,16 +17,14 @@ import com.facebook.imagepipeline.request.Postprocessor;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.postprocessor.DelayPostprocessor;
 
-/**
- * Utility class in order to manage Pipeline objects
- */
+/** Utility class in order to manage Pipeline objects */
 public final class PipelineUtil {
 
   /**
    * Utility method which adds optional configuration to ImageRequest
    *
    * @param imageRequestBuilder The Builder for ImageRequest
-   * @param config              The Config
+   * @param config The Config
    */
   public static void addOptionalFeatures(ImageRequestBuilder imageRequestBuilder, Config config) {
     if (config.usePostprocessor) {
@@ -46,8 +44,8 @@ public final class PipelineUtil {
     if (config.rotateUsingMetaData) {
       imageRequestBuilder.setRotationOptions(RotationOptions.autoRotateAtRenderTime());
     } else {
-      imageRequestBuilder
-          .setRotationOptions(RotationOptions.forceRotation(config.forcedRotationAngle));
+      imageRequestBuilder.setRotationOptions(
+          RotationOptions.forceRotation(config.forcedRotationAngle));
     }
   }
 }

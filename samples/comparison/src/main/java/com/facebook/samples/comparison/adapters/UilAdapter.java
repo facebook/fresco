@@ -20,16 +20,12 @@ import com.facebook.samples.comparison.instrumentation.InstrumentedImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-/**
- * RecyclerView Adapter for Universal ImageLoader
- */
+/** RecyclerView Adapter for Universal ImageLoader */
 public class UilAdapter extends ImageListAdapter {
 
   private final ImageLoader mImageLoader;
 
-  public UilAdapter(
-      Context context,
-      PerfListener perfListener) {
+  public UilAdapter(Context context, PerfListener perfListener) {
     super(context, perfListener);
     mImageLoader = SampleUilFactory.getImageLoader(context);
   }
@@ -38,8 +34,7 @@ public class UilAdapter extends ImageListAdapter {
   public UilHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     final InstrumentedImageView instrumentedImageView = new InstrumentedImageView(getContext());
     return new UilHolder(
-        getContext(), mImageLoader, parent,
-        instrumentedImageView, getPerfListener());
+        getContext(), mImageLoader, parent, instrumentedImageView, getPerfListener());
   }
 
   @Override

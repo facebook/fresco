@@ -35,7 +35,7 @@ import org.robolectric.*;
 import org.robolectric.annotation.*;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class AnimatedSingleUsePostprocessorProducerTest {
 
   private static final String POSTPROCESSOR_NAME = "postprocessor_name";
@@ -69,10 +69,7 @@ public class AnimatedSingleUsePostprocessorProducerTest {
     MockitoAnnotations.initMocks(this);
     mTestExecutorService = new TestExecutorService(new FakeClock());
     mPostprocessorProducer =
-        new PostprocessorProducer(
-            mInputProducer,
-            mPlatformBitmapFactory,
-            mTestExecutorService);
+        new PostprocessorProducer(mInputProducer, mPlatformBitmapFactory, mTestExecutorService);
 
     when(mImageRequest.getPostprocessor()).thenReturn(mPostprocessor);
     when(mProducerContext.getId()).thenReturn(mRequestId);
@@ -84,22 +81,22 @@ public class AnimatedSingleUsePostprocessorProducerTest {
     when(mProducerListener.requiresExtraMap(eq(mProducerContext), eq(POSTPROCESSOR_NAME)))
         .thenReturn(true);
     doAnswer(
-        new Answer<Object>() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            mResults.add(
-                ((CloseableReference<CloseableImage>) invocation.getArguments()[0]).clone());
-            return null;
-          }
-        }
-    ).when(mConsumer).onNewResult(any(CloseableReference.class), anyInt());
+            new Answer<Object>() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                mResults.add(
+                    ((CloseableReference<CloseableImage>) invocation.getArguments()[0]).clone());
+                return null;
+              }
+            })
+        .when(mConsumer)
+        .onNewResult(any(CloseableReference.class), anyInt());
     mInOrder = inOrder(mPostprocessor, mProducerListener, mConsumer);
 
     mSourceBitmap = mock(Bitmap.class);
     mSourceCloseableStaticBitmap = mock(CloseableStaticBitmap.class);
     when(mSourceCloseableStaticBitmap.getUnderlyingBitmap()).thenReturn(mSourceBitmap);
-    mSourceCloseableImageRef =
-        CloseableReference.<CloseableImage>of(mSourceCloseableStaticBitmap);
+    mSourceCloseableImageRef = CloseableReference.<CloseableImage>of(mSourceCloseableStaticBitmap);
     mDestinationBitmap = mock(Bitmap.class);
     mDestinationCloseableBitmapRef =
         CloseableReference.of(mDestinationBitmap, mBitmapResourceReleaser);

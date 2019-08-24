@@ -15,9 +15,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-/**
- * Test for TimeWaster
- */
+/** Test for TimeWaster */
 public class TimeWasterTest {
 
   @Test

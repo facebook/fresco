@@ -17,7 +17,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 /**
  * InputStream that wraps another input stream and buffers all reads.
  *
- * <p> For purpose of buffering a byte array is used. It is provided during construction time
+ * <p>For purpose of buffering a byte array is used. It is provided during construction time
  * together with ResourceReleaser responsible for releasing it when the stream is closed.
  */
 @NotThreadSafe
@@ -29,23 +29,19 @@ public class PooledByteArrayBufferedInputStream extends InputStream {
   private final byte[] mByteArray;
   private final ResourceReleaser<byte[]> mResourceReleaser;
 
-  /**
-   * how many bytes in mByteArray were set by last call to mInputStream.read
-   */
+  /** how many bytes in mByteArray were set by last call to mInputStream.read */
   private int mBufferedSize;
   /**
    * position of next buffered byte in mByteArray to be read
    *
-   * <p> invariant: 0 <= mBufferOffset <= mBufferedSize
+   * <p>invariant: 0 <= mBufferOffset <= mBufferedSize
    */
   private int mBufferOffset;
 
   private boolean mClosed;
 
   public PooledByteArrayBufferedInputStream(
-      InputStream inputStream,
-      byte[] byteArray,
-      ResourceReleaser<byte[]> resourceReleaser) {
+      InputStream inputStream, byte[] byteArray, ResourceReleaser<byte[]> resourceReleaser) {
     mInputStream = Preconditions.checkNotNull(inputStream);
     mByteArray = Preconditions.checkNotNull(byteArray);
     mResourceReleaser = Preconditions.checkNotNull(resourceReleaser);
@@ -110,11 +106,11 @@ public class PooledByteArrayBufferedInputStream extends InputStream {
   }
 
   /**
-   * Checks if there is some data left in the buffer. If not but buffered stream still has some
-   * data to be read, then more data is buffered.
+   * Checks if there is some data left in the buffer. If not but buffered stream still has some data
+   * to be read, then more data is buffered.
    *
    * @return false if and only if there is no more data and underlying input stream has no more data
-   *   to be read
+   *     to be read
    * @throws IOException
    */
   private boolean ensureDataInBuffer() throws IOException {

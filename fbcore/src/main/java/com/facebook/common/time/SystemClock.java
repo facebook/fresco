@@ -7,15 +7,12 @@
 
 package com.facebook.common.time;
 
-/**
- * Implementation of {@link Clock} that delegates to the system clock.
- */
+/** Implementation of {@link Clock} that delegates to the system clock. */
 public class SystemClock implements Clock {
 
   private static final SystemClock INSTANCE = new SystemClock();
 
-  private SystemClock() {
-  }
+  private SystemClock() {}
 
   public static SystemClock get() {
     return INSTANCE;

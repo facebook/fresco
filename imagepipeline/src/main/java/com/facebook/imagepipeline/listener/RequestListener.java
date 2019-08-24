@@ -10,25 +10,22 @@ package com.facebook.imagepipeline.listener;
 import com.facebook.imagepipeline.producers.ProducerListener;
 import com.facebook.imagepipeline.request.ImageRequest;
 
-/**
- * Listener for {@link ImageRequest}.
- */
+/** Listener for {@link ImageRequest}. */
 public interface RequestListener extends ProducerListener {
   /**
    * Called when request is about to be submitted to the Orchestrator's executor queue.
+   *
    * @param request which triggered the event
    * @param callerContext context of the caller of the request
    * @param requestId unique id generated automatically for each request submission
    * @param isPrefetch whether the request is a prefetch or not
    */
   void onRequestStart(
-      ImageRequest request,
-      Object callerContext,
-      String requestId,
-      boolean isPrefetch);
+      ImageRequest request, Object callerContext, String requestId, boolean isPrefetch);
 
   /**
    * Called after successful completion of the request (all producers completed successfully).
+   *
    * @param request which triggered the event
    * @param requestId unique id generated automatically for each request submission
    * @param isPrefetch whether the request is a prefetch or not
@@ -37,19 +34,18 @@ public interface RequestListener extends ProducerListener {
 
   /**
    * Called after failure to complete the request (some producer failed).
+   *
    * @param request which triggered the event
    * @param requestId unique id generated automatically for each request submission
    * @param throwable cause of failure
    * @param isPrefetch whether the request is a prefetch or not
    */
   void onRequestFailure(
-      ImageRequest request,
-      String requestId,
-      Throwable throwable,
-      boolean isPrefetch);
+      ImageRequest request, String requestId, Throwable throwable, boolean isPrefetch);
 
   /**
    * Called after the request is cancelled.
+   *
    * @param requestId unique id generated automatically for each request submission
    */
   void onRequestCancellation(String requestId);

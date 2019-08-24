@@ -34,10 +34,9 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 /**
  * Example that overrides the decoder for a given image request.
  *
- * If your decoder needs a custom {@link DrawableFactory}
- * to render the image, don't forget to add it when you initialize Fresco.
- * For this color example, we add this factory in
- * {@link CustomImageFormatConfigurator#addCustomDrawableFactories(Context, DraweeConfig.Builder)}.
+ * <p>If your decoder needs a custom {@link DrawableFactory} to render the image, don't forget to
+ * add it when you initialize Fresco. For this color example, we add this factory in {@link
+ * CustomImageFormatConfigurator#addCustomDrawableFactories(Context, DraweeConfig.Builder)}.
  */
 public class ImageFormatOverrideExample extends BaseShowcaseFragment {
 
@@ -46,9 +45,7 @@ public class ImageFormatOverrideExample extends BaseShowcaseFragment {
   @Nullable
   @Override
   public View onCreateView(
-      LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+      LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_format_override, container, false);
   }
 
@@ -56,16 +53,16 @@ public class ImageFormatOverrideExample extends BaseShowcaseFragment {
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     SimpleDraweeView simpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
 
-    ImageDecodeOptions imageDecodeOptionsWithCustomDecoder = new ImageDecodeOptionsBuilder()
-        .setCustomImageDecoder(CUSTOM_COLOR_DECODER)
-        .build();
+    ImageDecodeOptions imageDecodeOptionsWithCustomDecoder =
+        new ImageDecodeOptionsBuilder().setCustomImageDecoder(CUSTOM_COLOR_DECODER).build();
 
-    AbstractDraweeController controller = Fresco.newDraweeControllerBuilder()
-        .setImageRequest(
-            ImageRequestBuilder.newBuilderWithResourceId(R.raw.custom_color1)
-                .setImageDecodeOptions(imageDecodeOptionsWithCustomDecoder)
-                .build())
-        .build();
+    AbstractDraweeController controller =
+        Fresco.newDraweeControllerBuilder()
+            .setImageRequest(
+                ImageRequestBuilder.newBuilderWithResourceId(R.raw.custom_color1)
+                    .setImageDecodeOptions(imageDecodeOptionsWithCustomDecoder)
+                    .build())
+            .build();
     simpleDraweeView.setController(controller);
   }
 

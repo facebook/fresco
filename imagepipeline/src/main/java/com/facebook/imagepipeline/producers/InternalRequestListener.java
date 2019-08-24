@@ -8,19 +8,17 @@
  */
 package com.facebook.imagepipeline.producers;
 
-import com.facebook.imagepipeline.listener.RequestListener2;
 import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.imagepipeline.listener.RequestListener2;
 import javax.annotation.Nullable;
 
-public class InternalRequestListener extends InternalProducerListener
-    implements RequestListener2 {
+public class InternalRequestListener extends InternalProducerListener implements RequestListener2 {
 
   private final @Nullable RequestListener mRequestListener;
   private final @Nullable RequestListener2 mRequestListener2;
 
   public InternalRequestListener(
-      @Nullable RequestListener requestListener,
-      @Nullable RequestListener2 requestListener2) {
+      @Nullable RequestListener requestListener, @Nullable RequestListener2 requestListener2) {
     super(requestListener, requestListener2);
     mRequestListener = requestListener;
     mRequestListener2 = requestListener2;

@@ -15,9 +15,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import java.io.IOException;
 import java.util.concurrent.Executor;
 
-/**
- * Executes a local fetch from an asset.
- */
+/** Executes a local fetch from an asset. */
 public class LocalAssetFetchProducer extends LocalFetchProducer {
 
   public static final String PRODUCER_NAME = "LocalAssetFetchProducer";

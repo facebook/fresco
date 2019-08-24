@@ -69,9 +69,9 @@ public class ResizableFrameLayout extends FrameLayout {
   @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
   @Override
   public boolean onInterceptTouchEvent(MotionEvent event) {
-    if (event.getAction() == MotionEvent.ACTION_DOWN &&
-        event.getX() >= mCornerIndicator.getX() &&
-        event.getY() >= mCornerIndicator.getY()) {
+    if (event.getAction() == MotionEvent.ACTION_DOWN
+        && event.getX() >= mCornerIndicator.getX()
+        && event.getY() >= mCornerIndicator.getY()) {
       ViewGroup.LayoutParams layoutParams = getLayoutParams();
       layoutParams.width = getWidth();
       layoutParams.height = getHeight();
@@ -104,12 +104,13 @@ public class ResizableFrameLayout extends FrameLayout {
         setLayoutParams(layoutParams);
     }
 
-    mLastX = Math.max(
-        Math.min(event.getX(), mMaximumWidth),
-        getMinimumWidth() - mCornerIndicator.getWidth());
-    mLastY = Math.max(
-        Math.min(event.getY(), mMaximumHeight),
-        getMinimumHeight() - mCornerIndicator.getHeight());
+    mLastX =
+        Math.max(
+            Math.min(event.getX(), mMaximumWidth), getMinimumWidth() - mCornerIndicator.getWidth());
+    mLastY =
+        Math.max(
+            Math.min(event.getY(), mMaximumHeight),
+            getMinimumHeight() - mCornerIndicator.getHeight());
     return true;
   }
 

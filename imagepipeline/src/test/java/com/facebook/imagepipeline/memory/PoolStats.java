@@ -10,9 +10,7 @@ package com.facebook.imagepipeline.memory;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Helper class to get pool stats
-*/
+/** Helper class to get pool stats */
 public class PoolStats<V> {
   public BasePool<V> mPool;
 
@@ -32,9 +30,7 @@ public class PoolStats<V> {
     mPool = pool;
   }
 
-  /**
-   * Refresh all pool stats
-   */
+  /** Refresh all pool stats */
   public void refresh() {
     refreshBasic();
     refreshBucketStats();

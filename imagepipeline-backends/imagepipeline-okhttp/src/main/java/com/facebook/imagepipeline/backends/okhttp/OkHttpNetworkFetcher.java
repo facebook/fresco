@@ -34,10 +34,10 @@ import javax.annotation.Nullable;
  * Network fetcher that uses OkHttp as a backend.
  *
  * @deprecated replaced with {@code
- * com.facebook.imagepipeline.backends.okhttp3.OkHttpNetworkFetcher}.
+ *     com.facebook.imagepipeline.backends.okhttp3.OkHttpNetworkFetcher}.
  */
-public class OkHttpNetworkFetcher extends
-    BaseNetworkFetcher<OkHttpNetworkFetcher.OkHttpNetworkFetchState> {
+public class OkHttpNetworkFetcher
+    extends BaseNetworkFetcher<OkHttpNetworkFetcher.OkHttpNetworkFetchState> {
 
   public static class OkHttpNetworkFetchState extends FetchState {
     public long submitTime;
@@ -45,8 +45,7 @@ public class OkHttpNetworkFetcher extends
     public long fetchCompleteTime;
 
     public OkHttpNetworkFetchState(
-        Consumer<EncodedImage> consumer,
-        ProducerContext producerContext) {
+        Consumer<EncodedImage> consumer, ProducerContext producerContext) {
       super(consumer, producerContext);
     }
   }
@@ -62,9 +61,7 @@ public class OkHttpNetworkFetcher extends
 
   private Executor mCancellationExecutor;
 
-  /**
-   * @param okHttpClient client to use
-   */
+  /** @param okHttpClient client to use */
   public OkHttpNetworkFetcher(OkHttpClient okHttpClient) {
     this(okHttpClient, true);
   }
@@ -81,8 +78,7 @@ public class OkHttpNetworkFetcher extends
 
   @Override
   public OkHttpNetworkFetchState createFetchState(
-      Consumer<EncodedImage> consumer,
-      ProducerContext context) {
+      Consumer<EncodedImage> consumer, ProducerContext context) {
     return new OkHttpNetworkFetchState(consumer, context);
   }
 
@@ -111,21 +107,25 @@ public class OkHttpNetworkFetcher extends
 
     final Call call = mOkHttpClient.newCall(request);
 
-    fetchState.getContext().addCallbacks(
-        new BaseProducerContextCallbacks() {
-          @Override
-          public void onCancellationRequested() {
-            if (Looper.myLooper() != Looper.getMainLooper()) {
-              call.cancel();
-            } else {
-              mCancellationExecutor.execute(new Runnable() {
-                @Override public void run() {
+    fetchState
+        .getContext()
+        .addCallbacks(
+            new BaseProducerContextCallbacks() {
+              @Override
+              public void onCancellationRequested() {
+                if (Looper.myLooper() != Looper.getMainLooper()) {
                   call.cancel();
+                } else {
+                  mCancellationExecutor.execute(
+                      new Runnable() {
+                        @Override
+                        public void run() {
+                          call.cancel();
+                        }
+                      });
                 }
-              });
-            }
-          }
-        });
+              }
+            });
 
     call.enqueue(
         new com.squareup.okhttp.Callback() {
@@ -136,9 +136,7 @@ public class OkHttpNetworkFetcher extends
             try {
               if (!response.isSuccessful()) {
                 handleException(
-                        call,
-                        new IOException("Unexpected HTTP code " + response),
-                        callback);
+                    call, new IOException("Unexpected HTTP code " + response), callback);
                 return;
               }
 
@@ -183,9 +181,9 @@ public class OkHttpNetworkFetcher extends
   /**
    * Handles exceptions.
    *
-   * <p> OkHttp notifies callers of cancellations via an IOException. If IOException is caught
-   * after request cancellation, then the exception is interpreted as successful cancellation
-   * and onCancellation is called. Otherwise onFailure is called.
+   * <p>OkHttp notifies callers of cancellations via an IOException. If IOException is caught after
+   * request cancellation, then the exception is interpreted as successful cancellation and
+   * onCancellation is called. Otherwise onFailure is called.
    */
   private void handleException(final Call call, final Exception e, final Callback callback) {
     if (call.isCanceled()) {

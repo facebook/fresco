@@ -31,11 +31,9 @@ import org.mockito.stubbing.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
 
-/**
- * Basic tests for LocalResourceFetchProducer
- */
+/** Basic tests for LocalResourceFetchProducer */
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class LocalAssetFetchProducerTest {
 
   private static final String PRODUCER_NAME = LocalAssetFetchProducer.PRODUCER_NAME;
@@ -66,31 +64,29 @@ public class LocalAssetFetchProducerTest {
         .thenReturn(mPooledByteBuffer);
 
     mExecutor = new TestExecutorService(new FakeClock());
-    mLocalAssetFetchProducer = new LocalAssetFetchProducer(
-        mExecutor,
-        mPooledByteBufferFactory,
-        mAssetManager
-    );
+    mLocalAssetFetchProducer =
+        new LocalAssetFetchProducer(mExecutor, mPooledByteBufferFactory, mAssetManager);
 
-    mProducerContext = new SettableProducerContext(
-        mImageRequest,
-        mRequestId,
-        mProducerListener,
-        mock(Object.class),
-        ImageRequest.RequestLevel.FULL_FETCH,
-        false,
-        true,
-        Priority.MEDIUM);
+    mProducerContext =
+        new SettableProducerContext(
+            mImageRequest,
+            mRequestId,
+            mProducerListener,
+            mock(Object.class),
+            ImageRequest.RequestLevel.FULL_FETCH,
+            false,
+            true,
+            Priority.MEDIUM);
     when(mImageRequest.getSourceUri()).thenReturn(Uri.parse("asset:///" + TEST_FILENAME));
     doAnswer(
-        new Answer() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            mCapturedEncodedImage =
-                EncodedImage.cloneOrNull((EncodedImage) invocation.getArguments()[0]);
-            return null;
-          }
-        })
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                mCapturedEncodedImage =
+                    EncodedImage.cloneOrNull((EncodedImage) invocation.getArguments()[0]);
+                return null;
+              }
+            })
         .when(mConsumer)
         .onNewResult(notNull(EncodedImage.class), anyInt());
   }
@@ -114,8 +110,10 @@ public class LocalAssetFetchProducerTest {
 
     assertEquals(
         2,
-        mCapturedEncodedImage.getByteBufferRef()
-            .getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+        mCapturedEncodedImage
+            .getByteBufferRef()
+            .getUnderlyingReferenceTestOnly()
+            .getRefCountTestOnly());
     assertSame(pooledByteBuffer, mCapturedEncodedImage.getByteBufferRef().get());
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
     verify(mProducerListener).onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
@@ -135,5 +133,4 @@ public class LocalAssetFetchProducerTest {
         .onProducerFinishWithFailure(mProducerContext, PRODUCER_NAME, mException, null);
     verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, false);
   }
-
 }

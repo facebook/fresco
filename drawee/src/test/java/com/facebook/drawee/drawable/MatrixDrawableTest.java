@@ -52,5 +52,4 @@ public class MatrixDrawableTest {
     Assert.assertEquals(mUnderlyingDrawable, mMatrixDrawable.getCurrent());
     Assert.assertEquals(mMatrixDrawable.getMatrix(), mMatrix2);
   }
-
 }

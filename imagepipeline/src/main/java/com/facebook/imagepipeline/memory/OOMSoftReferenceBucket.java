@@ -11,9 +11,7 @@ import com.facebook.common.references.OOMSoftReference;
 import java.util.LinkedList;
 import javax.annotation.concurrent.NotThreadSafe;
 
-/**
- * A Bucket that uses OOMSoftReferences to store its free list.
- */
+/** A Bucket that uses OOMSoftReferences to store its free list. */
 @NotThreadSafe
 class OOMSoftReferenceBucket<V> extends Bucket<V> {
 

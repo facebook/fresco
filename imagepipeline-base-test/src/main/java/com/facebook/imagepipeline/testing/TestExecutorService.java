@@ -14,9 +14,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.RunnableFuture;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Implementation of {@link java.util.concurrent.ExecutorService} for unit tests.
- */
+/** Implementation of {@link java.util.concurrent.ExecutorService} for unit tests. */
 public class TestExecutorService extends AbstractExecutorService implements SerialExecutorService {
 
   protected final ScheduledQueue scheduledQueue;
@@ -41,8 +39,7 @@ public class TestExecutorService extends AbstractExecutorService implements Seri
   }
 
   @Override
-  public void shutdown() {
-  }
+  public void shutdown() {}
 
   @Override
   public List<Runnable> shutdownNow() {

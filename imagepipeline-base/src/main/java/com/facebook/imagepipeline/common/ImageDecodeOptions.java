@@ -15,9 +15,7 @@ import java.util.Locale;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
-/**
- * Options for changing the behavior of the {@code ImageDecoder}.
- */
+/** Options for changing the behavior of the {@code ImageDecoder}. */
 @Immutable
 public class ImageDecodeOptions {
 
@@ -28,38 +26,30 @@ public class ImageDecodeOptions {
    */
   public final int minDecodeIntervalMs;
 
-  /**
-   * Whether to decode a preview frame for animated images.
-   */
+  /** Whether to decode a preview frame for animated images. */
   public final boolean decodePreviewFrame;
 
-  /**
-   * Indicates that the last frame should be used as the preview frame instead of the first.
-   */
+  /** Indicates that the last frame should be used as the preview frame instead of the first. */
   public final boolean useLastFrameForPreview;
 
   /**
-   * Whether to decode all the frames and store them in memory. This should only ever be used
-   * for animations that are known to be small (e.g. stickers). Caching dozens of large Bitmaps
-   * in memory for general GIFs or WebP's will not fit in memory.
+   * Whether to decode all the frames and store them in memory. This should only ever be used for
+   * animations that are known to be small (e.g. stickers). Caching dozens of large Bitmaps in
+   * memory for general GIFs or WebP's will not fit in memory.
    */
   public final boolean decodeAllFrames;
 
   /**
    * Force image to be rendered as a static image, even if it is an animated format.
    *
-   * This flag will force animated GIFs to be rendered as static images
+   * <p>This flag will force animated GIFs to be rendered as static images
    */
   public final boolean forceStaticImage;
 
-  /**
-   * StaticImage and JPEG will decode with this config;
-   */
+  /** StaticImage and JPEG will decode with this config; */
   public final Bitmap.Config bitmapConfig;
 
-  /**
-   * Custom image decoder override.
-   */
+  /** Custom image decoder override. */
   public final @Nullable ImageDecoder customImageDecoder;
 
   /** Bitmap transformation override */

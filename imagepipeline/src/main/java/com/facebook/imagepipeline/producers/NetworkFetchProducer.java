@@ -25,9 +25,9 @@ import javax.annotation.Nullable;
 /**
  * A producer to actually fetch images from the network.
  *
- * <p> Downloaded bytes may be passed to the consumer as they are downloaded, but not more often
- * than {@link #TIME_BETWEEN_PARTIAL_RESULTS_MS}.
-
+ * <p>Downloaded bytes may be passed to the consumer as they are downloaded, but not more often than
+ * {@link #TIME_BETWEEN_PARTIAL_RESULTS_MS}.
+ *
  * <p>Clients should provide an instance of {@link NetworkFetcher} to make use of their networking
  * stack. Use {@link HttpUrlConnectionNetworkFetcher} as a model.
  */
@@ -40,7 +40,7 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
   /**
    * Time between two consecutive partial results are propagated upstream
    *
-   * TODO 5399646: make this configurable
+   * <p>TODO 5399646: make this configurable
    */
   @VisibleForTesting static final long TIME_BETWEEN_PARTIAL_RESULTS_MS = 100;
 
@@ -137,8 +137,9 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
   protected void maybeHandleIntermediateResult(
       PooledByteBufferOutputStream pooledOutputStream, FetchState fetchState) {
     final long nowMs = SystemClock.uptimeMillis();
-    if (shouldPropagateIntermediateResults(fetchState) &&
-        nowMs - fetchState.getLastIntermediateResultTimeMs() >= TIME_BETWEEN_PARTIAL_RESULTS_MS) {
+    if (shouldPropagateIntermediateResults(fetchState)
+        && nowMs - fetchState.getLastIntermediateResultTimeMs()
+            >= TIME_BETWEEN_PARTIAL_RESULTS_MS) {
       fetchState.setLastIntermediateResultTimeMs(nowMs);
       fetchState
           .getListener()

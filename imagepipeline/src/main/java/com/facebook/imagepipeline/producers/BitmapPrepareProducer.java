@@ -18,7 +18,8 @@ import com.facebook.imagepipeline.image.CloseableStaticBitmap;
  * RendererThread upload the bitmap to GPU asynchronously before it is used. This has no affect on
  * Android versions before N.
  *
- * Controlled via {@link com.facebook.imagepipeline.core.ImagePipelineExperiments#mUseBitmapPrepareToDraw}
+ * <p>Controlled via {@link
+ * com.facebook.imagepipeline.core.ImagePipelineExperiments#mUseBitmapPrepareToDraw}
  */
 public class BitmapPrepareProducer implements Producer<CloseableReference<CloseableImage>> {
 
@@ -62,8 +63,9 @@ public class BitmapPrepareProducer implements Producer<CloseableReference<Closea
     }
   }
 
-  private static class BitmapPrepareConsumer extends
-      DelegatingConsumer<CloseableReference<CloseableImage>, CloseableReference<CloseableImage>> {
+  private static class BitmapPrepareConsumer
+      extends DelegatingConsumer<
+          CloseableReference<CloseableImage>, CloseableReference<CloseableImage>> {
 
     private final int mMinBitmapSizeBytes;
     private final int mMaxBitmapSizeBytes;
@@ -79,8 +81,7 @@ public class BitmapPrepareProducer implements Producer<CloseableReference<Closea
 
     @Override
     protected void onNewResultImpl(
-        CloseableReference<CloseableImage> newResult,
-        @Status int status) {
+        CloseableReference<CloseableImage> newResult, @Status int status) {
       internalPrepareBitmap(newResult);
       getConsumer().onNewResult(newResult, status);
     }

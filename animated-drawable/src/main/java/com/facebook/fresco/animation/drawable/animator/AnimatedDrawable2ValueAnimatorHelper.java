@@ -13,9 +13,7 @@ import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import javax.annotation.Nullable;
 
-/**
- * Helper class to create {@link ValueAnimator}s for {@link AnimatedDrawable2}.
- */
+/** Helper class to create {@link ValueAnimator}s for {@link AnimatedDrawable2}. */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class AnimatedDrawable2ValueAnimatorHelper {
 
@@ -57,6 +55,5 @@ public class AnimatedDrawable2ValueAnimatorHelper {
     };
   }
 
-  private AnimatedDrawable2ValueAnimatorHelper() {
-  }
+  private AnimatedDrawable2ValueAnimatorHelper() {}
 }

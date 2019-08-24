@@ -213,9 +213,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
 
     private void doTransform(
         EncodedImage encodedImage, @Status int status, ImageTranscoder imageTranscoder) {
-      mProducerContext
-          .getProducerListener()
-          .onProducerStart(mProducerContext, PRODUCER_NAME);
+      mProducerContext.getProducerListener().onProducerStart(mProducerContext, PRODUCER_NAME);
       ImageRequest imageRequest = mProducerContext.getImageRequest();
       PooledByteBufferOutputStream outputStream = mPooledByteBufferFactory.newOutputStream();
       Map<String, String> extraMap = null;

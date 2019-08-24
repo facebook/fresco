@@ -23,9 +23,7 @@ import com.facebook.imagepipeline.core.ImagePipelineExperiments;
 import com.facebook.imagepipeline.listener.RequestListener;
 import javax.annotation.Nullable;
 
-/**
- * Builder class for {@link ImageRequest}s.
- */
+/** Builder class for {@link ImageRequest}s. */
 public class ImageRequestBuilder {
 
   private Uri mSourceUri = null;
@@ -48,6 +46,7 @@ public class ImageRequestBuilder {
 
   /**
    * Creates a new request builder instance. The setting will be done according to the source type.
+   *
    * @param uri the uri to fetch
    * @return a new request builder instance
    */
@@ -60,13 +59,14 @@ public class ImageRequestBuilder {
    *
    * <p>Only image resources can be used with the image pipeline (PNG, JPG, GIF). Other resource
    * types such as Strings or XML Drawables make no sense in the context of the image pipeline and
-   * so cannot be supported. Attempts to do so will throw an
-   * {@link java.lang.IllegalArgumentException} when the pipeline tries to decode the resource.
+   * so cannot be supported. Attempts to do so will throw an {@link
+   * java.lang.IllegalArgumentException} when the pipeline tries to decode the resource.
    *
    * <p>One potentially confusing case is drawable declared in XML (e.g. ShapeDrawable). This is not
    * an image. If you want to display an XML drawable as the main image, then set it as a
    * placeholder and do not set a URI.
-   * <p/>
+   *
+   * <p>
    *
    * @param resId local image resource id.
    * @return a new request builder instance.
@@ -97,12 +97,12 @@ public class ImageRequestBuilder {
         .setShouldDecodePrefetches(imageRequest.shouldDecodePrefetches());
   }
 
-  private ImageRequestBuilder() {
-  }
+  private ImageRequestBuilder() {}
 
   /**
-   * Sets the source uri (both network and local uris are supported).
-   * Note: this will enable disk caching for network sources, and disable it for local sources.
+   * Sets the source uri (both network and local uris are supported). Note: this will enable disk
+   * caching for network sources, and disable it for local sources.
+   *
    * @param uri the uri to fetch the image from
    * @return the updated builder instance
    */
@@ -120,6 +120,7 @@ public class ImageRequestBuilder {
 
   /**
    * Sets the lowest level that is permitted to request the image from.
+   *
    * @param requestLevel the lowest request level that is allowed
    * @return the updated builder instance
    */
@@ -135,6 +136,7 @@ public class ImageRequestBuilder {
 
   /**
    * Enables or disables auto-rotate for the image in case image has orientation.
+   *
    * @return the updated builder instance
    * @param enabled
    * @deprecated Use #setRotationOptions(RotationOptions)
@@ -150,6 +152,7 @@ public class ImageRequestBuilder {
 
   /**
    * Sets resize options in case resize should be performed.
+   *
    * @param resizeOptions resize options
    * @return the modified builder instance
    */
@@ -187,7 +190,7 @@ public class ImageRequestBuilder {
    * only used if {@link ImagePipelineExperiments#isPartialImageCachingEnabled()} is true and your
    * {@link com.facebook.imagepipeline.producers.NetworkFetcher} makes use of it.
    *
-   * <p> Even where this is supported, there is no contract that this must be followed. The response
+   * <p>Even where this is supported, there is no contract that this must be followed. The response
    * may contain the full image data, more than is requested or less, depending on what's already in
    * cache and external factors.
    *
@@ -215,8 +218,9 @@ public class ImageRequestBuilder {
   }
 
   /**
-   * Sets the cache option. Pipeline might use different caches and eviction policies for each
-   * image type.
+   * Sets the cache option. Pipeline might use different caches and eviction policies for each image
+   * type.
+   *
    * @param cacheChoice the cache choice to set
    * @return the modified builder instance
    */
@@ -232,6 +236,7 @@ public class ImageRequestBuilder {
 
   /**
    * Enables or disables progressive rendering.
+   *
    * @param enabled
    * @return the modified builder instance
    */
@@ -247,6 +252,7 @@ public class ImageRequestBuilder {
 
   /**
    * Enables or disables the use of local thumbnails as previews.
+   *
    * @param enabled
    * @return the modified builder instance
    */
@@ -284,6 +290,7 @@ public class ImageRequestBuilder {
 
   /**
    * Set priority for the request.
+   *
    * @param requestPriority
    * @return the modified builder instance
    */
@@ -299,6 +306,7 @@ public class ImageRequestBuilder {
 
   /**
    * Sets the postprocessor.
+   *
    * @param postprocessor postprocessor to postprocess the output bitmap with.
    * @return the modified builder instance
    */
@@ -316,7 +324,7 @@ public class ImageRequestBuilder {
    * Sets a request listener to use for just this image request
    *
    * @param requestListener a request listener to use in addition to the global ones set in the
-   * {@link com.facebook.imagepipeline.core.ImagePipelineConfig}
+   *     {@link com.facebook.imagepipeline.core.ImagePipelineConfig}
    * @return the modified builder instance
    */
   public ImageRequestBuilder setRequestListener(RequestListener requestListener) {
@@ -324,15 +332,14 @@ public class ImageRequestBuilder {
     return this;
   }
 
-  /**
-   * @return the additional request listener to use for this image request
-   */
+  /** @return the additional request listener to use for this image request */
   public @Nullable RequestListener getRequestListener() {
     return mRequestListener;
   }
 
   /**
    * Builds the Request.
+   *
    * @return a valid image request
    */
   public ImageRequest build() {

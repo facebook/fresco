@@ -12,13 +12,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 
-/**
- * Static utility methods pertaining to the {@link DataSource} interface.
- */
+/** Static utility methods pertaining to the {@link DataSource} interface. */
 public class DataSources {
 
-  private DataSources() {
-  }
+  private DataSources() {}
 
   public static <T> DataSource<T> immediateFailedDataSource(Throwable failure) {
     SimpleDataSource<T> simpleDataSource = SimpleDataSource.create();
@@ -46,12 +43,10 @@ public class DataSources {
    * been cancelled or has failed.
    *
    * @param dataSource The {@link DataSource} to wait for. The caller MUST close the data source
-   * after this method returned!
+   *     after this method returned!
    * @param <T> The type parameter for the {@link DataSource}
-   *
    * @return The final result of the {@link DataSource}. Intermediate results are ignored. Might be
-   * <code>null</code> if the data source has been cancelled.
-   *
+   *     <code>null</code> if the data source has been cancelled.
    * @throws Throwable if the {@link DataSource} has failed
    */
   @Nullable
@@ -118,7 +113,6 @@ public class DataSources {
 
   private static class ValueHolder<T> {
 
-    @Nullable
-    public T value = null;
+    @Nullable public T value = null;
   }
 }

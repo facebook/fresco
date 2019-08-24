@@ -13,9 +13,7 @@ import org.robolectric.annotation.Implements;
 import org.robolectric.internal.Shadow;
 import org.robolectric.internal.ShadowExtractor;
 
-/**
- * A shadow of {@link Bitmap} that works with the tests in this package.
- */
+/** A shadow of {@link Bitmap} that works with the tests in this package. */
 @Implements(Bitmap.class)
 public class MyShadowBitmap {
 

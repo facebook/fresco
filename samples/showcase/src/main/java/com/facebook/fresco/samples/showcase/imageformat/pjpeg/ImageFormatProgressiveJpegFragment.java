@@ -44,9 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Progressive JPEG example that logs which frames of a progressive JPEG are rendered
- */
+/** Progressive JPEG example that logs which frames of a progressive JPEG are rendered */
 public class ImageFormatProgressiveJpegFragment extends BaseShowcaseFragment {
 
   private Entry[] mSpinnerEntries;
@@ -62,9 +60,7 @@ public class ImageFormatProgressiveJpegFragment extends BaseShowcaseFragment {
   @Nullable
   @Override
   public View onCreateView(
-      LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+      LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_format_progressive_jpeg, container, false);
   }
 
@@ -126,9 +122,10 @@ public class ImageFormatProgressiveJpegFragment extends BaseShowcaseFragment {
 
   private void setImageUri(Uri uri) {
     mDebugOutput.setText("");
-    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-        .setProgressiveRenderingEnabled(mProgressiveRenderingEnabled)
-        .build();
+    ImageRequest request =
+        ImageRequestBuilder.newBuilderWithSource(uri)
+            .setProgressiveRenderingEnabled(mProgressiveRenderingEnabled)
+            .build();
     DraweeController controller =
         Fresco.newDraweeControllerBuilder()
             .setImageRequest(request)
@@ -180,12 +177,13 @@ public class ImageFormatProgressiveJpegFragment extends BaseShowcaseFragment {
             qualityInfo.isOfFullQuality(),
             qualityInfo.getQuality()));
     // Scroll to the bottom
-    mDebugOutputScrollView.post(new Runnable() {
-      @Override
-      public void run() {
-        mDebugOutputScrollView.scrollTo(0, mDebugOutputScrollView.getBottom());
-      }
-    });
+    mDebugOutputScrollView.post(
+        new Runnable() {
+          @Override
+          public void run() {
+            mDebugOutputScrollView.scrollTo(0, mDebugOutputScrollView.getBottom());
+          }
+        });
   }
 
   @Override
@@ -214,9 +212,11 @@ public class ImageFormatProgressiveJpegFragment extends BaseShowcaseFragment {
     public View getView(int position, View convertView, ViewGroup parent) {
       final LayoutInflater layoutInflater = getLayoutInflater(null);
 
-      final View view = convertView != null
-          ? convertView
-          : layoutInflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
+      final View view =
+          convertView != null
+              ? convertView
+              : layoutInflater.inflate(
+                  android.R.layout.simple_spinner_dropdown_item, parent, false);
 
       final TextView textView = (TextView) view.findViewById(android.R.id.text1);
       textView.setText(mSpinnerEntries[position].descriptionId);

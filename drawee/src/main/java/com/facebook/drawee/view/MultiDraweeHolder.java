@@ -21,13 +21,13 @@ import java.util.ArrayList;
  *
  * <p>Intended for use in custom views that are showing more than one hierarchy.
  *
- * Users of this class must< call {@link Drawable#setBounds} on the top-level drawable
- * of each DraweeHierarchy in this holder. Otherwise the drawables will not be drawn.
-
- * <p>The containing view must also call {@link #onDetach()} from its
- * {@link View#onStartTemporaryDetach()} and {@link View#onDetachedFromWindow()} methods. It must
- * call {@link #onAttach} from its  {@link View#onFinishTemporaryDetach()} and
- * {@link View#onAttachedToWindow()} methods.
+ * <p>Users of this class must< call {@link Drawable#setBounds} on the top-level drawable of each
+ * DraweeHierarchy in this holder. Otherwise the drawables will not be drawn.
+ *
+ * <p>The containing view must also call {@link #onDetach()} from its {@link
+ * View#onStartTemporaryDetach()} and {@link View#onDetachedFromWindow()} methods. It must call
+ * {@link #onAttach} from its {@link View#onFinishTemporaryDetach()} and {@link
+ * View#onAttachedToWindow()} methods.
  */
 public class MultiDraweeHolder<DH extends DraweeHierarchy> {
 

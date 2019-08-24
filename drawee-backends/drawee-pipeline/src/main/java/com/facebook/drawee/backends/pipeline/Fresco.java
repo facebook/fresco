@@ -21,8 +21,8 @@ import javax.annotation.Nullable;
 /**
  * Fresco entry point.
  *
- * <p/> You must initialize this class before use. The simplest way is to just do
- * {#code Fresco.initialize(Context)}.
+ * <p>You must initialize this class before use. The simplest way is to just do {#code
+ * Fresco.initialize(Context)}.
  */
 public class Fresco {
 
@@ -40,8 +40,7 @@ public class Fresco {
 
   /** Initializes Fresco with the default Drawee config. */
   public static void initialize(
-      Context context,
-      @Nullable ImagePipelineConfig imagePipelineConfig) {
+      Context context, @Nullable ImagePipelineConfig imagePipelineConfig) {
     initialize(context, imagePipelineConfig, null);
   }
 

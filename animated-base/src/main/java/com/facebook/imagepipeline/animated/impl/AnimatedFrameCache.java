@@ -22,7 +22,7 @@ import javax.annotation.concurrent.GuardedBy;
 /**
  * Facade to the image memory cache for frames of an animated image.
  *
- * <p> Each animated image should have its own instance of this class.
+ * <p>Each animated image should have its own instance of this class.
  */
 public class AnimatedFrameCache {
 
@@ -77,21 +77,22 @@ public class AnimatedFrameCache {
   private final CacheKey mImageCacheKey;
   private final CountingMemoryCache<CacheKey, CloseableImage> mBackingCache;
   private final CountingMemoryCache.EntryStateObserver<CacheKey> mEntryStateObserver;
+
   @GuardedBy("this")
   private final LinkedHashSet<CacheKey> mFreeItemsPool;
 
   public AnimatedFrameCache(
-      CacheKey imageCacheKey,
-      final CountingMemoryCache<CacheKey, CloseableImage> backingCache) {
+      CacheKey imageCacheKey, final CountingMemoryCache<CacheKey, CloseableImage> backingCache) {
     mImageCacheKey = imageCacheKey;
     mBackingCache = backingCache;
     mFreeItemsPool = new LinkedHashSet<>();
-    mEntryStateObserver = new CountingMemoryCache.EntryStateObserver<CacheKey>() {
-      @Override
-      public void onExclusivityChanged(CacheKey key, boolean isExclusive) {
-        AnimatedFrameCache.this.onReusabilityChange(key, isExclusive);
-      }
-    };
+    mEntryStateObserver =
+        new CountingMemoryCache.EntryStateObserver<CacheKey>() {
+          @Override
+          public void onExclusivityChanged(CacheKey key, boolean isExclusive) {
+            AnimatedFrameCache.this.onReusabilityChange(key, isExclusive);
+          }
+        };
   }
 
   public synchronized void onReusabilityChange(CacheKey key, boolean isReusable) {
@@ -105,31 +106,28 @@ public class AnimatedFrameCache {
   /**
    * Caches the image for the given frame index.
    *
-   * <p> Important: the client should use the returned reference instead of the original one.
-   * It is the caller's responsibility to close the returned reference once not needed anymore.
+   * <p>Important: the client should use the returned reference instead of the original one. It is
+   * the caller's responsibility to close the returned reference once not needed anymore.
    *
    * @return the new reference to be used, null if the value cannot be cached
    */
   @Nullable
   public CloseableReference<CloseableImage> cache(
-      int frameIndex,
-      CloseableReference<CloseableImage> imageRef) {
+      int frameIndex, CloseableReference<CloseableImage> imageRef) {
     return mBackingCache.cache(keyFor(frameIndex), imageRef, mEntryStateObserver);
   }
 
   /**
    * Gets the image for the given frame index.
    *
-   * <p> It is the caller's responsibility to close the returned reference once not needed anymore.
+   * <p>It is the caller's responsibility to close the returned reference once not needed anymore.
    */
   @Nullable
   public CloseableReference<CloseableImage> get(int frameIndex) {
     return mBackingCache.get(keyFor(frameIndex));
   }
 
-  /**
-   * Check whether the cache contains an image for the given frame index.
-   */
+  /** Check whether the cache contains an image for the given frame index. */
   public boolean contains(int frameIndex) {
     return mBackingCache.contains(keyFor(frameIndex));
   }
@@ -137,17 +135,17 @@ public class AnimatedFrameCache {
   /**
    * Gets the image to be reused, or null if there is no such image.
    *
-   * <p> The returned image is the least recently used image that has no more clients referencing
-   * it, and it has not yet been evicted from the cache.
+   * <p>The returned image is the least recently used image that has no more clients referencing it,
+   * and it has not yet been evicted from the cache.
    *
-   * <p> The client can freely modify the bitmap of the returned image and can cache it again
-   * without any restrictions.
+   * <p>The client can freely modify the bitmap of the returned image and can cache it again without
+   * any restrictions.
    */
   @Nullable
   public CloseableReference<CloseableImage> getForReuse() {
     while (true) {
       CacheKey key = popFirstFreeItemKey();
-      if (key == null)  {
+      if (key == null) {
         return null;
       }
       CloseableReference<CloseableImage> imageRef = mBackingCache.reuse(key);
@@ -168,7 +166,7 @@ public class AnimatedFrameCache {
     return cacheKey;
   }
 
-  private FrameKey keyFor(int frameIndex)   {
+  private FrameKey keyFor(int frameIndex) {
     return new FrameKey(mImageCacheKey, frameIndex);
   }
 }

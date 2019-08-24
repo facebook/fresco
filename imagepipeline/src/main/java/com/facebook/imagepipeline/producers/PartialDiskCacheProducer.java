@@ -71,8 +71,7 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
   }
 
   public void produceResults(
-      final Consumer<EncodedImage> consumer,
-      final ProducerContext producerContext) {
+      final Consumer<EncodedImage> consumer, final ProducerContext producerContext) {
     final ImageRequest imageRequest = producerContext.getImageRequest();
     if (!imageRequest.isDiskCacheEnabled()) {
       mInputProducer.produceResults(consumer, producerContext);
@@ -82,10 +81,9 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
     producerContext.getProducerListener().onProducerStart(producerContext, PRODUCER_NAME);
 
     final Uri uriForPartialCacheKey = createUriForPartialCacheKey(imageRequest);
-    final CacheKey partialImageCacheKey = mCacheKeyFactory.getEncodedCacheKey(
-        imageRequest,
-        uriForPartialCacheKey,
-        producerContext.getCallerContext());
+    final CacheKey partialImageCacheKey =
+        mCacheKeyFactory.getEncodedCacheKey(
+            imageRequest, uriForPartialCacheKey, producerContext.getCallerContext());
     final AtomicBoolean isCancelled = new AtomicBoolean(false);
 
     final Task<EncodedImage> diskLookupTask =
@@ -159,20 +157,21 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
       ProducerContext producerContext,
       CacheKey partialImageCacheKey,
       @Nullable EncodedImage partialResultFromCache) {
-    Consumer<EncodedImage> consumer = new PartialDiskCacheConsumer(
-        consumerOfPartialDiskCacheProducer,
-        mDefaultBufferedDiskCache,
-        partialImageCacheKey,
-        mPooledByteBufferFactory,
-        mByteArrayPool,
-        partialResultFromCache);
+    Consumer<EncodedImage> consumer =
+        new PartialDiskCacheConsumer(
+            consumerOfPartialDiskCacheProducer,
+            mDefaultBufferedDiskCache,
+            partialImageCacheKey,
+            mPooledByteBufferFactory,
+            mByteArrayPool,
+            partialResultFromCache);
 
     mInputProducer.produceResults(consumer, producerContext);
   }
 
   private static boolean isTaskCancelled(Task<?> task) {
-    return task.isCancelled() ||
-        (task.isFaulted() && task.getError() instanceof CancellationException);
+    return task.isCancelled()
+        || (task.isFaulted() && task.getError() instanceof CancellationException);
   }
 
   @Nullable
@@ -192,15 +191,12 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
           ENCODED_IMAGE_SIZE,
           String.valueOf(sizeInBytes));
     } else {
-      return ImmutableMap.of(
-          EXTRA_CACHED_VALUE_FOUND,
-          String.valueOf(valueFound));
+      return ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, String.valueOf(valueFound));
     }
   }
 
   private void subscribeTaskForRequestCancellation(
-      final AtomicBoolean isCancelled,
-      ProducerContext producerContext) {
+      final AtomicBoolean isCancelled, ProducerContext producerContext) {
     producerContext.addCallbacks(
         new BaseProducerContextCallbacks() {
           @Override
@@ -211,7 +207,9 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
   }
 
   private static Uri createUriForPartialCacheKey(ImageRequest imageRequest) {
-    return imageRequest.getSourceUri().buildUpon()
+    return imageRequest
+        .getSourceUri()
+        .buildUpon()
         .appendQueryParameter("fresco_partial", "true")
         .build();
   }
@@ -302,8 +300,8 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
       final byte[] ioArray = mByteArrayPool.get(READ_SIZE);
       try {
         int bufferLength;
-        while (bytesStillToRead > 0 &&
-            (bufferLength = from.read(ioArray, 0, Math.min(READ_SIZE, bytesStillToRead))) >= 0) {
+        while (bytesStillToRead > 0
+            && (bufferLength = from.read(ioArray, 0, Math.min(READ_SIZE, bytesStillToRead))) >= 0) {
           if (bufferLength > 0) {
             to.write(ioArray, 0, bufferLength);
             bytesStillToRead -= bufferLength;
@@ -314,11 +312,12 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
       }
 
       if (bytesStillToRead > 0) {
-        throw new IOException(String.format(
-            (Locale) null,
-            "Failed to read %d bytes - finished %d short",
-            length,
-            bytesStillToRead));
+        throw new IOException(
+            String.format(
+                (Locale) null,
+                "Failed to read %d bytes - finished %d short",
+                length,
+                bytesStillToRead));
       }
     }
 

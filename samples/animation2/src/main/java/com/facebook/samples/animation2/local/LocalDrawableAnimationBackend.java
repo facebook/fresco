@@ -23,9 +23,7 @@ import com.facebook.fresco.animation.backend.AnimationBackend;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Local drawable animation backend that chains local drawables together.
- */
+/** Local drawable animation backend that chains local drawables together. */
 public class LocalDrawableAnimationBackend implements AnimationBackend {
 
   private final Resources mResources;

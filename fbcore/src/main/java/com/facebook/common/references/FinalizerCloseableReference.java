@@ -6,9 +6,7 @@
  */
 package com.facebook.common.references;
 
-
 import com.facebook.common.logging.FLog;
-
 import javax.annotation.Nullable;
 
 public class FinalizerCloseableReference<T> extends CloseableReference<T> {
@@ -16,7 +14,10 @@ public class FinalizerCloseableReference<T> extends CloseableReference<T> {
   private static final String TAG = "FinalizerCloseableReference";
 
   /*package*/ FinalizerCloseableReference(
-          T t, ResourceReleaser<T> resourceReleaser, LeakHandler leakHandler, @Nullable Throwable stacktrace) {
+      T t,
+      ResourceReleaser<T> resourceReleaser,
+      LeakHandler leakHandler,
+      @Nullable Throwable stacktrace) {
     super(t, resourceReleaser, leakHandler, stacktrace);
   }
 

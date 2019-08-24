@@ -12,9 +12,7 @@
 
 package com.facebook.samples.scrollperf.instrumentation;
 
-/**
- * Interface implemented by instrumented components
- */
+/** Interface implemented by instrumented components */
 public interface Instrumented {
 
   /**

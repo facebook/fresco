@@ -11,9 +11,7 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import org.junit.Assert;
 
-/**
- * Test utils for android.graphics classes.
- */
+/** Test utils for android.graphics classes. */
 public class AndroidGraphicsTestUtils {
 
   public static void assertEquals(Matrix expectedMatrix, Matrix actualMatrix) {

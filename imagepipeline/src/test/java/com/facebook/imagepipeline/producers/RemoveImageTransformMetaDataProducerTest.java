@@ -24,7 +24,7 @@ import org.robolectric.*;
 import org.robolectric.annotation.*;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class RemoveImageTransformMetaDataProducerTest {
   @Mock public Producer mInputProducer;
   @Mock public Consumer<CloseableReference<PooledByteBuffer>> mConsumer;
@@ -52,13 +52,15 @@ public class RemoveImageTransformMetaDataProducerTest {
 
     mRemoveMetaDataConsumer = null;
     doAnswer(
-        new Answer() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            mRemoveMetaDataConsumer = (Consumer<EncodedImage>) invocation.getArguments()[0];
-            return null;
-          }
-        }).when(mInputProducer).produceResults(any(Consumer.class), any(ProducerContext.class));
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                mRemoveMetaDataConsumer = (Consumer<EncodedImage>) invocation.getArguments()[0];
+                return null;
+              }
+            })
+        .when(mInputProducer)
+        .produceResults(any(Consumer.class), any(ProducerContext.class));
     mRemoveMetaDataProducer.produceResults(mConsumer, mProducerContext);
   }
 

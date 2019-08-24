@@ -16,8 +16,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
  * <p>The first producer is kicked off, and once it has returned all its results, the second
  * producer is kicked off if necessary.
  */
-public class BranchOnSeparateImagesProducer
-    implements Producer<EncodedImage> {
+public class BranchOnSeparateImagesProducer implements Producer<EncodedImage> {
   private final Producer<EncodedImage> mInputProducer1;
   private final Producer<EncodedImage> mInputProducer2;
 
@@ -28,9 +27,7 @@ public class BranchOnSeparateImagesProducer
   }
 
   @Override
-  public void produceResults(
-      Consumer<EncodedImage> consumer,
-      ProducerContext context) {
+  public void produceResults(Consumer<EncodedImage> consumer, ProducerContext context) {
     OnFirstImageConsumer onFirstImageConsumer = new OnFirstImageConsumer(consumer, context);
     mInputProducer1.produceResults(onFirstImageConsumer, context);
   }
@@ -39,9 +36,7 @@ public class BranchOnSeparateImagesProducer
 
     private ProducerContext mProducerContext;
 
-    private OnFirstImageConsumer(
-        Consumer<EncodedImage> consumer,
-        ProducerContext producerContext) {
+    private OnFirstImageConsumer(Consumer<EncodedImage> consumer, ProducerContext producerContext) {
       super(consumer);
       mProducerContext = producerContext;
     }

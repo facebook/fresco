@@ -14,8 +14,8 @@ import java.util.concurrent.Executors;
 /**
  * Basic implementation of {@link ExecutorSupplier}.
  *
- * <p> Provides one thread pool for the CPU-bound operations and another thread pool for the
- * IO-bound operations.
+ * <p>Provides one thread pool for the CPU-bound operations and another thread pool for the IO-bound
+ * operations.
  */
 public class DefaultExecutorSupplier implements ExecutorSupplier {
   // Allows for simultaneous reads and writes.
@@ -48,7 +48,6 @@ public class DefaultExecutorSupplier implements ExecutorSupplier {
             NUM_LIGHTWEIGHT_BACKGROUND_THREADS,
             new PriorityThreadFactory(
                 Process.THREAD_PRIORITY_BACKGROUND, "FrescoLightWeightBackgroundExecutor", true));
-
   }
 
   @Override

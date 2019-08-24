@@ -14,22 +14,19 @@ import com.facebook.widget.text.span.BetterImageSpan;
 /**
  * Span that contains a Drawee.
  *
- * <p>The containing view must also call {@link #onDetach()} from its
- * {@link View#onStartTemporaryDetach()} and {@link View#onDetachedFromWindow()}
- * methods.
- * Similarly, it must call {@link #onAttach} from its
- * {@link View#onFinishTemporaryDetach()} and {@link View#onAttachedToWindow()}
- * methods.
+ * <p>The containing view must also call {@link #onDetach()} from its {@link
+ * View#onStartTemporaryDetach()} and {@link View#onDetachedFromWindow()} methods. Similarly, it
+ * must call {@link #onAttach} from its {@link View#onFinishTemporaryDetach()} and {@link
+ * View#onAttachedToWindow()} methods.
  *
- * {@see DraweeHolder}
+ * <p>{@see DraweeHolder}
  */
 public class DraweeSpan extends BetterImageSpan {
 
   private final DraweeHolder mDraweeHolder;
 
   public DraweeSpan(
-      DraweeHolder draweeHolder,
-      @BetterImageSpan.BetterImageSpanAlignment int verticalAlignment) {
+      DraweeHolder draweeHolder, @BetterImageSpan.BetterImageSpanAlignment int verticalAlignment) {
     super(draweeHolder.getTopLevelDrawable(), verticalAlignment);
     mDraweeHolder = draweeHolder;
   }
@@ -47,8 +44,7 @@ public class DraweeSpan extends BetterImageSpan {
   /**
    * Checks whether the view that uses this holder is currently attached to a window.
    *
-   * {@see #onAttach()}
-   * {@see #onDetach()}
+   * <p>{@see #onAttach()} {@see #onDetach()}
    *
    * @return true if the holder is currently attached
    */

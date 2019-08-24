@@ -15,9 +15,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import java.io.IOException;
 import java.util.concurrent.Executor;
 
-/**
- * Executes a local fetch from a resource.
- */
+/** Executes a local fetch from a resource. */
 public class LocalResourceFetchProducer extends LocalFetchProducer {
 
   public static final String PRODUCER_NAME = "LocalResourceFetchProducer";
@@ -25,9 +23,7 @@ public class LocalResourceFetchProducer extends LocalFetchProducer {
   private final Resources mResources;
 
   public LocalResourceFetchProducer(
-      Executor executor,
-      PooledByteBufferFactory pooledByteBufferFactory,
-      Resources resources) {
+      Executor executor, PooledByteBufferFactory pooledByteBufferFactory, Resources resources) {
     super(executor, pooledByteBufferFactory);
     mResources = resources;
   }
@@ -35,8 +31,7 @@ public class LocalResourceFetchProducer extends LocalFetchProducer {
   @Override
   protected EncodedImage getEncodedImage(ImageRequest imageRequest) throws IOException {
     return getEncodedImage(
-        mResources.openRawResource(getResourceId(imageRequest)),
-        getLength(imageRequest));
+        mResources.openRawResource(getResourceId(imageRequest)), getLength(imageRequest));
   }
 
   private int getLength(ImageRequest imageRequest) {

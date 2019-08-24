@@ -13,9 +13,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import com.facebook.common.internal.Preconditions;
 
-/**
- * Drawable that can adjust underlying drawable based on specified {@link Matrix}.
- */
+/** Drawable that can adjust underlying drawable based on specified {@link Matrix}. */
 public class MatrixDrawable extends ForwardingDrawable {
 
   // Specified matrix.
@@ -32,6 +30,7 @@ public class MatrixDrawable extends ForwardingDrawable {
 
   /**
    * Creates a new MatrixDrawable with given underlying drawable and matrix.
+   *
    * @param drawable underlying drawable to apply the matrix to
    * @param matrix matrix to be applied to the drawable
    */
@@ -50,6 +49,7 @@ public class MatrixDrawable extends ForwardingDrawable {
 
   /**
    * Gets the current matrix.
+   *
    * @return matrix
    */
   public Matrix getMatrix() {
@@ -58,6 +58,7 @@ public class MatrixDrawable extends ForwardingDrawable {
 
   /**
    * Sets the matrix.
+   *
    * @param matrix matrix to set
    */
   public void setMatrix(Matrix matrix) {
@@ -88,15 +89,13 @@ public class MatrixDrawable extends ForwardingDrawable {
   }
 
   private void configureBoundsIfUnderlyingChanged() {
-    if (mUnderlyingWidth != getCurrent().getIntrinsicWidth() ||
-        mUnderlyingHeight != getCurrent().getIntrinsicHeight()) {
+    if (mUnderlyingWidth != getCurrent().getIntrinsicWidth()
+        || mUnderlyingHeight != getCurrent().getIntrinsicHeight()) {
       configureBounds();
     }
   }
 
-  /**
-   * Determines bounds for the underlying drawable and a matrix that should be applied on it.
-   */
+  /** Determines bounds for the underlying drawable and a matrix that should be applied on it. */
   private void configureBounds() {
     Drawable underlyingDrawable = getCurrent();
     Rect bounds = getBounds();
@@ -117,6 +116,7 @@ public class MatrixDrawable extends ForwardingDrawable {
 
   /**
    * TransformationCallback method
+   *
    * @param transform
    */
   @Override

@@ -20,19 +20,20 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLooper;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class HandlerExecutorServiceImplTest {
 
   private AtomicInteger mCounter = new AtomicInteger();
 
   private HandlerExecutorServiceImpl mExecutorService;
 
-  Runnable mIncrementCounterRunnable = new Runnable() {
-    @Override
-    public void run() {
-      mCounter.incrementAndGet();
-    }
-  };
+  Runnable mIncrementCounterRunnable =
+      new Runnable() {
+        @Override
+        public void run() {
+          mCounter.incrementAndGet();
+        }
+      };
 
   @Before
   public void setup() {

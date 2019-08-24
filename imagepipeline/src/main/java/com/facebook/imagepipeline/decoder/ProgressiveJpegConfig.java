@@ -9,18 +9,12 @@ package com.facebook.imagepipeline.decoder;
 
 import com.facebook.imagepipeline.image.QualityInfo;
 
-/**
- * Progressive JPEG config.
- */
+/** Progressive JPEG config. */
 public interface ProgressiveJpegConfig {
 
-  /**
-   * Gets the next scan-number that should be decoded after the given scan-number.
-   */
+  /** Gets the next scan-number that should be decoded after the given scan-number. */
   int getNextScanNumberToDecode(int scanNumber);
 
-  /**
-   * Gets the quality information for the given scan-number.
-   */
+  /** Gets the quality information for the given scan-number. */
   QualityInfo getQualityInfo(int scanNumber);
 }

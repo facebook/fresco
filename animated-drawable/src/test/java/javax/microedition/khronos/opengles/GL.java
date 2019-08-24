@@ -7,8 +7,5 @@
 
 package javax.microedition.khronos.opengles;
 
-/**
- * Dummy interface to get Canvas mocks to work.
- */
-public interface GL {
-}
+/** Dummy interface to get Canvas mocks to work. */
+public interface GL {}

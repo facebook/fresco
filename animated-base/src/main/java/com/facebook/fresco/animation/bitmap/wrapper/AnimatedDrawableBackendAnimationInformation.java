@@ -9,11 +9,8 @@ package com.facebook.fresco.animation.bitmap.wrapper;
 import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 
-/**
- * {@link AnimationInformation} that wraps an {@link AnimatedDrawableBackend}.
- */
-public class AnimatedDrawableBackendAnimationInformation
-    implements AnimationInformation {
+/** {@link AnimationInformation} that wraps an {@link AnimatedDrawableBackend}. */
+public class AnimatedDrawableBackendAnimationInformation implements AnimationInformation {
 
   private final AnimatedDrawableBackend mAnimatedDrawableBackend;
 

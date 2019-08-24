@@ -8,19 +8,22 @@ package com.facebook.common.references;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
-
 import javax.annotation.Nullable;
 
 public class DefaultCloseableReference<T> extends CloseableReference<T> {
 
   private static final String TAG = "DefaultCloseableReference";
 
-  private DefaultCloseableReference(SharedReference<T> sharedReference, LeakHandler leakHandler, @Nullable Throwable stacktrace) {
+  private DefaultCloseableReference(
+      SharedReference<T> sharedReference, LeakHandler leakHandler, @Nullable Throwable stacktrace) {
     super(sharedReference, leakHandler, stacktrace);
   }
 
   /*package*/ DefaultCloseableReference(
-          T t, ResourceReleaser<T> resourceReleaser, LeakHandler leakHandler, @Nullable Throwable stacktrace) {
+      T t,
+      ResourceReleaser<T> resourceReleaser,
+      LeakHandler leakHandler,
+      @Nullable Throwable stacktrace) {
     super(t, resourceReleaser, leakHandler, stacktrace);
   }
 

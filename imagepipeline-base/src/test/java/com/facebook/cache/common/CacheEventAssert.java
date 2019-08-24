@@ -14,8 +14,8 @@ import org.fest.assertions.api.Assertions;
 /**
  * Assertion methods for {@link CacheEvent}s.
  *
- * <p> To create an instance of this class, invoke
- * <code>{@link CacheEventAssert#assertThat(CacheEvent)}</code>.
+ * <p>To create an instance of this class, invoke <code>
+ * {@link CacheEventAssert#assertThat(CacheEvent)}</code>.
  */
 public class CacheEventAssert extends AbstractAssert<CacheEventAssert, CacheEvent> {
 
@@ -31,8 +31,7 @@ public class CacheEventAssert extends AbstractAssert<CacheEventAssert, CacheEven
     Assertions.assertThat(actual.getCacheKey())
         .overridingErrorMessage(
             "Cache event mismatch - cache key <%s> does not match <%s>",
-            actual.getCacheKey(),
-            expected)
+            actual.getCacheKey(), expected)
         .isEqualTo(expected);
     return this;
   }
@@ -41,8 +40,7 @@ public class CacheEventAssert extends AbstractAssert<CacheEventAssert, CacheEven
     Assertions.assertThat(actual.getException())
         .overridingErrorMessage(
             "Cache event mismatch - exception <%s> does not match <%s>",
-            actual.getCacheKey(),
-            expected)
+            actual.getCacheKey(), expected)
         .isEqualTo(expected);
     return this;
   }
@@ -51,8 +49,7 @@ public class CacheEventAssert extends AbstractAssert<CacheEventAssert, CacheEven
     Assertions.assertThat(actual.getEvictionReason())
         .overridingErrorMessage(
             "Cache event mismatch - exception <%s> does not match <%s>",
-            actual.getEvictionReason(),
-            expected)
+            actual.getEvictionReason(), expected)
         .isEqualTo(expected);
     return this;
   }
@@ -61,8 +58,7 @@ public class CacheEventAssert extends AbstractAssert<CacheEventAssert, CacheEven
     Assertions.assertThat(actual.getItemSize())
         .overridingErrorMessage(
             "Cache event mismatch - item size <%s> does not match <%s>",
-            actual.getItemSize(),
-            expected)
+            actual.getItemSize(), expected)
         .isEqualTo(expected);
     return this;
   }
@@ -71,8 +67,7 @@ public class CacheEventAssert extends AbstractAssert<CacheEventAssert, CacheEven
     Assertions.assertThat(actual.getCacheSize())
         .overridingErrorMessage(
             "Cache event mismatch - cache size <%s> does not match <%s>",
-            actual.getCacheSize(),
-            expected)
+            actual.getCacheSize(), expected)
         .isEqualTo(expected);
     return this;
   }
@@ -81,8 +76,7 @@ public class CacheEventAssert extends AbstractAssert<CacheEventAssert, CacheEven
     Assertions.assertThat(actual.getResourceId())
         .overridingErrorMessage(
             "Cache event mismatch - resource ID:%s does not match:%s",
-            actual.getResourceId(),
-            expected)
+            actual.getResourceId(), expected)
         .isEqualTo(expected);
     return this;
   }

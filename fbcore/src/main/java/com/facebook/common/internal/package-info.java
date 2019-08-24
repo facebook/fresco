@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Some internal classes
- */
+/** Some internal classes */
 package com.facebook.common.internal;

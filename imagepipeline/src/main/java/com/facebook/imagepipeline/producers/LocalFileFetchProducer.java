@@ -14,16 +14,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.concurrent.Executor;
 
-/**
- * Represents a local file fetch producer.
- */
+/** Represents a local file fetch producer. */
 public class LocalFileFetchProducer extends LocalFetchProducer {
 
   public static final String PRODUCER_NAME = "LocalFileFetchProducer";
 
   public LocalFileFetchProducer(
-      Executor executor,
-      PooledByteBufferFactory pooledByteBufferFactory) {
+      Executor executor, PooledByteBufferFactory pooledByteBufferFactory) {
     super(executor, pooledByteBufferFactory);
   }
 

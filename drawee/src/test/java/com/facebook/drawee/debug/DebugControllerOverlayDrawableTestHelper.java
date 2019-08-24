@@ -28,10 +28,7 @@ public class DebugControllerOverlayDrawableTestHelper {
     mOverlayDrawable.setBounds(0, 0, drawableWidth, drawableHeight);
     assertEquals(
         DebugControllerOverlayDrawable.OVERLAY_COLOR_IMAGE_OK,
-        mOverlayDrawable.determineOverlayColor(
-            imageWidth,
-            imageHeight,
-            scaleType));
+        mOverlayDrawable.determineOverlayColor(imageWidth, imageHeight, scaleType));
   }
 
   public void assertOverlayColorAlmostOk(
@@ -43,10 +40,7 @@ public class DebugControllerOverlayDrawableTestHelper {
     mOverlayDrawable.setBounds(0, 0, drawableWidth, drawableHeight);
     assertEquals(
         DebugControllerOverlayDrawable.OVERLAY_COLOR_IMAGE_ALMOST_OK,
-        mOverlayDrawable.determineOverlayColor(
-            imageWidth,
-            imageHeight,
-            scaleType));
+        mOverlayDrawable.determineOverlayColor(imageWidth, imageHeight, scaleType));
   }
 
   public void assertOverlayColorNotOk(
@@ -58,9 +52,6 @@ public class DebugControllerOverlayDrawableTestHelper {
     mOverlayDrawable.setBounds(0, 0, drawableWidth, drawableHeight);
     assertEquals(
         DebugControllerOverlayDrawable.OVERLAY_COLOR_IMAGE_NOT_OK,
-        mOverlayDrawable.determineOverlayColor(
-            imageWidth,
-            imageHeight,
-            scaleType));
+        mOverlayDrawable.determineOverlayColor(imageWidth, imageHeight, scaleType));
   }
 }

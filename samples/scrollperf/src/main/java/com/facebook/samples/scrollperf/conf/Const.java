@@ -15,9 +15,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 
-/**
- * Constants for the Application
- */
+/** Constants for the Application */
 public final class Const {
 
   public static final String LOCAL_RESOURCE_URIS = "local_resource_uris";
@@ -40,31 +38,31 @@ public final class Const {
 
   public static final String DATA_SOURCE_KEY = "uris_data_source";
   public static final String INFINITE_DATA_SOURCE_KEY = "infinite_data_source";
-  public static final String DISTINCT_DATA_SOURCE_KEY ="distinct_uri_data_source";
+  public static final String DISTINCT_DATA_SOURCE_KEY = "distinct_uri_data_source";
   public static final String RECYCLER_LAYOUT_KEY = "recycler_layout";
-  public static final String REUSE_OLD_CONTROLLER_KEY= "reuse_old_controller";
-  public static final String ROUNDED_CORNERS_KEY= "rounded_corners";
-  public static final String ROUNDED_AS_CIRCLE_KEY= "rounded_as_circle";
-  public static final String USE_POSTPROCESSOR_KEY= "use_postprocessor";
-  public static final String POSTPROCESSOR_TYPE_KEY= "postprocessor_type";
-  public static final String SCALE_TYPE_KEY= "scale_type";
-  public static final String AUTO_ROTATE_KEY= "auto_rotate";
-  public static final String FORCED_ROTATION_ANGLE_KEY= "rotation_angle";
-  public static final String DOWNSAMPLING_KEY= "downsampling";
-  public static final String OVERRIDE_SIZE_KEY= "auto_size_override";
-  public static final String OVERRIDEN_WIDTH_KEY= "width_size_key";
-  public static final String OVERRIDEN_HEIGHT_KEY= "height_size_key";
+  public static final String REUSE_OLD_CONTROLLER_KEY = "reuse_old_controller";
+  public static final String ROUNDED_CORNERS_KEY = "rounded_corners";
+  public static final String ROUNDED_AS_CIRCLE_KEY = "rounded_as_circle";
+  public static final String USE_POSTPROCESSOR_KEY = "use_postprocessor";
+  public static final String POSTPROCESSOR_TYPE_KEY = "postprocessor_type";
+  public static final String SCALE_TYPE_KEY = "scale_type";
+  public static final String AUTO_ROTATE_KEY = "auto_rotate";
+  public static final String FORCED_ROTATION_ANGLE_KEY = "rotation_angle";
+  public static final String DOWNSAMPLING_KEY = "downsampling";
+  public static final String OVERRIDE_SIZE_KEY = "auto_size_override";
+  public static final String OVERRIDEN_WIDTH_KEY = "width_size_key";
+  public static final String OVERRIDEN_HEIGHT_KEY = "height_size_key";
   public static final String FADE_DURATION_KEY = "fade_duration";
   public static final String DRAW_BORDER_KEY = "draw_border";
-  public static final String GRID_SPAN_COUNT_KEY= "grid_span_count_key";
+  public static final String GRID_SPAN_COUNT_KEY = "grid_span_count_key";
   public static final String BG_COLOR_KEY = "bg_color_key";
 
   public static final String WEBP_SUPPORT_KEY = "webp_support_key";
 
-  public static final String DECODING_THREAD_KEY= "decoding_thread_key";
+  public static final String DECODING_THREAD_KEY = "decoding_thread_key";
 
-  public static final String DECODE_CANCELLATION_KEY= "decode_cancellation_key";
+  public static final String DECODE_CANCELLATION_KEY = "decode_cancellation_key";
 
-  public static final String DRAWEE_OVERLAY_KEY= "drawee_overlay_key";
-  public static final String INSTRUMENTATION_ENABLED_KEY= "instrumentation_key";
+  public static final String DRAWEE_OVERLAY_KEY = "drawee_overlay_key";
+  public static final String INSTRUMENTATION_ENABLED_KEY = "instrumentation_key";
 }

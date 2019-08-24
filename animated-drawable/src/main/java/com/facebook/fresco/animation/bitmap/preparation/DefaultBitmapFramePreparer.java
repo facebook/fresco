@@ -18,11 +18,10 @@ import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import java.util.concurrent.ExecutorService;
 
 /**
- * Default bitmap frame preparer that uses the given {@link ExecutorService} to schedule jobs.
- * An instance of this class can be shared between multiple animated images.
+ * Default bitmap frame preparer that uses the given {@link ExecutorService} to schedule jobs. An
+ * instance of this class can be shared between multiple animated images.
  */
-public class DefaultBitmapFramePreparer
-    implements BitmapFramePreparer {
+public class DefaultBitmapFramePreparer implements BitmapFramePreparer {
 
   private static final Class<?> TAG = DefaultBitmapFramePreparer.class;
 
@@ -46,9 +45,7 @@ public class DefaultBitmapFramePreparer
 
   @Override
   public boolean prepareFrame(
-      BitmapFrameCache bitmapFrameCache,
-      AnimationBackend animationBackend,
-      int frameNumber) {
+      BitmapFrameCache bitmapFrameCache, AnimationBackend animationBackend, int frameNumber) {
     // Create a unique ID to identify the frame for the given backend.
     int frameId = getUniqueId(animationBackend, frameNumber);
     synchronized (mPendingFrameDecodeJobs) {
@@ -62,11 +59,8 @@ public class DefaultBitmapFramePreparer
         FLog.v(TAG, "Frame %d is cached already.", frameNumber);
         return true;
       }
-      Runnable frameDecodeRunnable = new FrameDecodeRunnable(
-          animationBackend,
-          bitmapFrameCache,
-          frameNumber,
-          frameId);
+      Runnable frameDecodeRunnable =
+          new FrameDecodeRunnable(animationBackend, bitmapFrameCache, frameNumber, frameId);
       mPendingFrameDecodeJobs.put(frameId, frameDecodeRunnable);
       mExecutorService.execute(frameDecodeRunnable);
     }
@@ -120,8 +114,7 @@ public class DefaultBitmapFramePreparer
     }
 
     private boolean prepareFrameAndCache(
-        int frameNumber,
-        @BitmapAnimationBackend.FrameType int frameType) {
+        int frameNumber, @BitmapAnimationBackend.FrameType int frameType) {
       CloseableReference<Bitmap> bitmapReference = null;
       boolean created;
       int nextFrameType;

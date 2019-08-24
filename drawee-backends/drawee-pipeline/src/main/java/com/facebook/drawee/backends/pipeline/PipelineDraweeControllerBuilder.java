@@ -34,19 +34,20 @@ import javax.annotation.Nullable;
 
 /**
  * Concrete implementation of ImagePipeline Drawee controller builder.
- * <p/> See {@link AbstractDraweeControllerBuilder} for more details.
+ *
+ * <p>See {@link AbstractDraweeControllerBuilder} for more details.
  */
-public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBuilder<
-    PipelineDraweeControllerBuilder,
-    ImageRequest,
-    CloseableReference<CloseableImage>,
-    ImageInfo> {
+public class PipelineDraweeControllerBuilder
+    extends AbstractDraweeControllerBuilder<
+        PipelineDraweeControllerBuilder,
+        ImageRequest,
+        CloseableReference<CloseableImage>,
+        ImageInfo> {
 
   private final ImagePipeline mImagePipeline;
   private final PipelineDraweeControllerFactory mPipelineDraweeControllerFactory;
 
-  @Nullable
-  private ImmutableList<DrawableFactory> mCustomDrawableFactories;
+  @Nullable private ImmutableList<DrawableFactory> mCustomDrawableFactories;
   @Nullable private ImageOriginListener mImageOriginListener;
   @Nullable private ImagePerfDataListener mImagePerfDataListener;
 
@@ -65,9 +66,10 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
     if (uri == null) {
       return super.setImageRequest(null);
     }
-    ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(uri)
-        .setRotationOptions(RotationOptions.autoRotateAtRenderTime())
-        .build();
+    ImageRequest imageRequest =
+        ImageRequestBuilder.newBuilderWithSource(uri)
+            .setRotationOptions(RotationOptions.autoRotateAtRenderTime())
+            .build();
     return super.setImageRequest(imageRequest);
   }
 
@@ -144,13 +146,9 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
     CacheKey cacheKey = null;
     if (cacheKeyFactory != null && imageRequest != null) {
       if (imageRequest.getPostprocessor() != null) {
-        cacheKey = cacheKeyFactory.getPostprocessedBitmapCacheKey(
-            imageRequest,
-            getCallerContext());
+        cacheKey = cacheKeyFactory.getPostprocessedBitmapCacheKey(imageRequest, getCallerContext());
       } else {
-        cacheKey = cacheKeyFactory.getBitmapCacheKey(
-            imageRequest,
-            getCallerContext());
+        cacheKey = cacheKeyFactory.getBitmapCacheKey(imageRequest, getCallerContext());
       }
     }
     return cacheKey;

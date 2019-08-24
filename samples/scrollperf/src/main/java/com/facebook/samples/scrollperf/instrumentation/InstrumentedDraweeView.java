@@ -26,9 +26,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.util.DraweeUtil;
 
-/**
- * {@link SimpleDraweeView} with instrumentation.
- */
+/** {@link SimpleDraweeView} with instrumentation. */
 public class InstrumentedDraweeView extends SimpleDraweeView implements Instrumented {
 
   private Instrumentation mInstrumentation;
@@ -44,27 +42,29 @@ public class InstrumentedDraweeView extends SimpleDraweeView implements Instrume
   private void init() {
     mInstrumentation = new Instrumentation(this);
     if (mConfig.instrumentationEnabled) {
-      mListener = new BaseControllerListener<Object>() {
-        @Override
-        public void onSubmit(String id, Object callerContext) {
-          mInstrumentation.onStart();
-        }
-        @Override
-        public void onFinalImageSet(
-            String id,
-            @Nullable Object imageInfo,
-            @Nullable Animatable animatable) {
-          mInstrumentation.onSuccess();
-        }
-        @Override
-        public void onFailure(String id, Throwable throwable) {
-          mInstrumentation.onFailure();
-        }
-        @Override
-        public void onRelease(String id) {
-          mInstrumentation.onCancellation();
-        }
-      };
+      mListener =
+          new BaseControllerListener<Object>() {
+            @Override
+            public void onSubmit(String id, Object callerContext) {
+              mInstrumentation.onStart();
+            }
+
+            @Override
+            public void onFinalImageSet(
+                String id, @Nullable Object imageInfo, @Nullable Animatable animatable) {
+              mInstrumentation.onSuccess();
+            }
+
+            @Override
+            public void onFailure(String id, Throwable throwable) {
+              mInstrumentation.onFailure();
+            }
+
+            @Override
+            public void onRelease(String id) {
+              mInstrumentation.onCancellation();
+            }
+          };
     }
     DraweeUtil.setBgColor(this, mConfig);
   }
@@ -86,13 +86,14 @@ public class InstrumentedDraweeView extends SimpleDraweeView implements Instrume
 
   @Override
   public void setImageURI(Uri uri, @Nullable Object callerContext) {
-    SimpleDraweeControllerBuilder controllerBuilder = getControllerBuilder()
-        .setUri(uri)
-        .setCallerContext(callerContext)
-        .setOldController(getController());
-    if (mConfig.instrumentationEnabled &&
-        controllerBuilder instanceof AbstractDraweeControllerBuilder) {
-      ((AbstractDraweeControllerBuilder<?,?,?,?>) controllerBuilder)
+    SimpleDraweeControllerBuilder controllerBuilder =
+        getControllerBuilder()
+            .setUri(uri)
+            .setCallerContext(callerContext)
+            .setOldController(getController());
+    if (mConfig.instrumentationEnabled
+        && controllerBuilder instanceof AbstractDraweeControllerBuilder) {
+      ((AbstractDraweeControllerBuilder<?, ?, ?, ?>) controllerBuilder)
           .setControllerListener(mListener);
     }
     setController(controllerBuilder.build());

@@ -7,10 +7,7 @@
 
 package com.facebook.imagepipeline.animated.base;
 
-
-/**
- * Common interface for an animated image.
- */
+/** Common interface for an animated image. */
 public interface AnimatedImage {
 
   int LOOP_COUNT_INFINITE = 0;
@@ -75,8 +72,8 @@ public interface AnimatedImage {
   AnimatedImageFrame getFrame(int frameNumber);
 
   /**
-   * Returns whether {@link AnimatedImageFrame#renderFrame} supports scaling to arbitrary
-   * sizes or whether scaling must be done externally.
+   * Returns whether {@link AnimatedImageFrame#renderFrame} supports scaling to arbitrary sizes or
+   * whether scaling must be done externally.
    *
    * @return whether rendering supports scaling
    */

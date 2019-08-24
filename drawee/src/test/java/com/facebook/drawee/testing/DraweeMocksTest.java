@@ -28,14 +28,12 @@ import org.robolectric.RobolectricTestRunner;
 public class DraweeMocksTest {
 
   @Before
-  public void setUp() {
-  }
+  public void setUp() {}
 
   @Test
   public void testMockProviderOf() {
     Object obj = mock(Object.class);
-    Supplier<Object> provider =
-        DraweeMocks.supplierOf(obj);
+    Supplier<Object> provider = DraweeMocks.supplierOf(obj);
     assertEquals(obj, provider.get());
     assertEquals(obj, provider.get());
     assertEquals(obj, provider.get());
@@ -45,8 +43,7 @@ public class DraweeMocksTest {
     Object obj1 = mock(Object.class);
     Object obj2 = mock(Object.class);
     Object obj3 = mock(Object.class);
-    Supplier<Object> multiProvider =
-        DraweeMocks.supplierOf(obj1, obj2, obj3);
+    Supplier<Object> multiProvider = DraweeMocks.supplierOf(obj1, obj2, obj3);
     assertEquals(obj1, multiProvider.get());
     assertEquals(obj2, multiProvider.get());
     assertEquals(obj3, multiProvider.get());
@@ -57,8 +54,7 @@ public class DraweeMocksTest {
   @Test
   public void testMockBuilderOfDrawableHierarchies() {
     GenericDraweeHierarchy gdh = DraweeMocks.mockDraweeHierarchy();
-    GenericDraweeHierarchyBuilder builder =
-        DraweeMocks.mockBuilderOf(gdh);
+    GenericDraweeHierarchyBuilder builder = DraweeMocks.mockBuilderOf(gdh);
     assertEquals(gdh, builder.build());
     assertEquals(gdh, builder.build());
     assertEquals(gdh, builder.build());
@@ -68,8 +64,7 @@ public class DraweeMocksTest {
     GenericDraweeHierarchy gdh1 = DraweeMocks.mockDraweeHierarchy();
     GenericDraweeHierarchy gdh2 = DraweeMocks.mockDraweeHierarchy();
     GenericDraweeHierarchy gdh3 = DraweeMocks.mockDraweeHierarchy();
-    GenericDraweeHierarchyBuilder multiBuilder =
-        DraweeMocks.mockBuilderOf(gdh1, gdh2, gdh3);
+    GenericDraweeHierarchyBuilder multiBuilder = DraweeMocks.mockBuilderOf(gdh1, gdh2, gdh3);
     assertEquals(gdh1, multiBuilder.build());
     assertEquals(gdh2, multiBuilder.build());
     assertEquals(gdh3, multiBuilder.build());

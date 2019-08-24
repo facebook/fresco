@@ -81,10 +81,9 @@ public class ImageRequest {
   private final boolean mIsMemoryCacheEnabled;
 
   /**
-   * Whether to decode prefetched images.
-   * true -> Cache both encoded image and bitmap.
-   * false -> Cache only encoded image and do not decode until image is needed to be shown.
-   * null -> Use pipeline's default
+   * Whether to decode prefetched images. true -> Cache both encoded image and bitmap. false ->
+   * Cache only encoded image and do not decode until image is needed to be shown. null -> Use
+   * pipeline's default
    */
   private final @Nullable Boolean mDecodePrefetches;
 
@@ -95,10 +94,8 @@ public class ImageRequest {
   private final @Nullable RequestListener mRequestListener;
 
   /**
-   * Controls whether resizing is allowed for this request.
-   * true  -> allow for this request.
-   * false -> disallow for this request.
-   * null  -> use default pipeline's setting.
+   * Controls whether resizing is allowed for this request. true -> allow for this request. false ->
+   * disallow for this request. null -> use default pipeline's setting.
    */
   private final @Nullable Boolean mResizingAllowedOverride;
 
@@ -125,8 +122,10 @@ public class ImageRequest {
     mImageDecodeOptions = builder.getImageDecodeOptions();
 
     mResizeOptions = builder.getResizeOptions();
-    mRotationOptions = builder.getRotationOptions() == null
-        ? RotationOptions.autoRotate() : builder.getRotationOptions();
+    mRotationOptions =
+        builder.getRotationOptions() == null
+            ? RotationOptions.autoRotate()
+            : builder.getRotationOptions();
     mBytesRange = builder.getBytesRange();
 
     mRequestPriority = builder.getRequestPriority();
@@ -170,9 +169,7 @@ public class ImageRequest {
     return mRotationOptions;
   }
 
-  /**
-   * @deprecated Use {@link #getRotationOptions()}
-   */
+  /** @deprecated Use {@link #getRotationOptions()} */
   @Deprecated
   public boolean getAutoRotateEnabled() {
     return mRotationOptions.useImageMetadata();
@@ -287,9 +284,7 @@ public class ImageRequest {
         .toString();
   }
 
-  /**
-   * An enum describing the cache choice.
-   */
+  /** An enum describing the cache choice. */
   public enum CacheChoice {
 
     /* Indicates that this image should go in the small disk cache, if one is being used */
@@ -333,6 +328,7 @@ public class ImageRequest {
 
   /**
    * This is a utility method which returns the type of Uri
+   *
    * @param uri The Uri to test
    * @return The type of the given Uri if available or SOURCE_TYPE_UNKNOWN if not
    */
@@ -356,7 +352,7 @@ public class ImageRequest {
       return SOURCE_TYPE_LOCAL_RESOURCE;
     } else if (UriUtil.isDataUri(uri)) {
       return SOURCE_TYPE_DATA;
-    } else if (UriUtil.isQualifiedResourceUri(uri))  {
+    } else if (UriUtil.isQualifiedResourceUri(uri)) {
       return SOURCE_TYPE_QUALIFIED_RESOURCE;
     } else {
       return SOURCE_TYPE_UNKNOWN;

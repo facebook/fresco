@@ -73,10 +73,9 @@ public class CloseableProducerToDataSourceAdapterTest {
 
     mSettableProducerContext = mock(SettableProducerContext.class);
     mProducer = mock(Producer.class);
-    mDataSource = CloseableProducerToDataSourceAdapter.create(
-        mProducer,
-        mSettableProducerContext,
-        mRequestListener);
+    mDataSource =
+        CloseableProducerToDataSourceAdapter.create(
+            mProducer, mSettableProducerContext, mRequestListener);
     ArgumentCaptor<Consumer> captor = ArgumentCaptor.forClass(Consumer.class);
     verify(mRequestListener).onRequestStart(mSettableProducerContext);
     verify(mProducer).produceResults(captor.capture(), any(SettableProducerContext.class));
@@ -92,9 +91,7 @@ public class CloseableProducerToDataSourceAdapterTest {
   }
 
   private static <T> void assertReferencesSame(
-      String errorMessage,
-      CloseableReference<T> expectedRef,
-      CloseableReference<T> actualRef) {
+      String errorMessage, CloseableReference<T> expectedRef, CloseableReference<T> actualRef) {
     if (expectedRef == null) {
       assertNull(errorMessage, actualRef);
     } else {
@@ -182,9 +179,7 @@ public class CloseableProducerToDataSourceAdapterTest {
   }
 
   private void testNewResult(
-      CloseableReference<Object> resultRef,
-      boolean isLast,
-      int numSubscribers) {
+      CloseableReference<Object> resultRef, boolean isLast, int numSubscribers) {
     mInternalConsumer.onNewResult(resultRef, BaseConsumer.simpleStatusForIsLast(isLast));
     if (isLast) {
       verify(mRequestListener).onRequestSuccess(mSettableProducerContext);

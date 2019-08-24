@@ -12,7 +12,7 @@ import android.net.Uri;
 /**
  * Strongly typed cache key to be used instead of {@link Object}.
  *
- * <p> {@link #toString}, {@link #equals} and {@link #hashCode} methods must be implemented.
+ * <p>{@link #toString}, {@link #equals} and {@link #hashCode} methods must be implemented.
  */
 public interface CacheKey {
 
@@ -28,7 +28,7 @@ public interface CacheKey {
   /**
    * Returns true if this key was constructed from this {@link Uri}.
    *
-   * Used for cases like deleting all keys for a given uri.
+   * <p>Used for cases like deleting all keys for a given uri.
    */
   boolean containsUri(Uri uri);
 

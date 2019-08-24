@@ -22,9 +22,7 @@ import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
-/**
- * An {@link AnimatedDrawableBackend} that renders {@link AnimatedImage}.
- */
+/** An {@link AnimatedDrawableBackend} that renders {@link AnimatedImage}. */
 public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
 
   private final AnimatedDrawableUtil mAnimatedDrawableUtil;
@@ -173,7 +171,7 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
 
   @Override
   public void renderFrame(int frameNumber, Canvas canvas) {
-    AnimatedImageFrame frame  = mAnimatedImage.getFrame(frameNumber);
+    AnimatedImageFrame frame = mAnimatedImage.getFrame(frameNumber);
     try {
       if (mAnimatedImage.doesRenderSupportScaling()) {
         renderImageSupportsScaling(canvas, frame);

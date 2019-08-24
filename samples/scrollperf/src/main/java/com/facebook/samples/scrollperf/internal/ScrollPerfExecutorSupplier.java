@@ -18,10 +18,8 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
-/**
- * An ExecutorSupplier we use just for ScrollPerf
- */
-public class ScrollPerfExecutorSupplier  implements ExecutorSupplier {
+/** An ExecutorSupplier we use just for ScrollPerf */
+public class ScrollPerfExecutorSupplier implements ExecutorSupplier {
 
   // Allows for simultaneous reads and writes.
   private static final int NUM_IO_BOUND_THREADS = 2;
@@ -37,15 +35,13 @@ public class ScrollPerfExecutorSupplier  implements ExecutorSupplier {
         new PriorityThreadFactory(Process.THREAD_PRIORITY_BACKGROUND);
 
     mIoBoundExecutor = Executors.newFixedThreadPool(NUM_IO_BOUND_THREADS);
-    mDecodeExecutor = Executors.newFixedThreadPool(
-        numDecodingThread,
-        backgroundPriorityThreadFactory);
-    mBackgroundExecutor = Executors.newFixedThreadPool(
-        numCpuBoundThreads,
-        backgroundPriorityThreadFactory);
-    mLightWeightBackgroundExecutor = Executors.newFixedThreadPool(
-        NUM_LIGHTWEIGHT_BACKGROUND_THREADS,
-        backgroundPriorityThreadFactory);
+    mDecodeExecutor =
+        Executors.newFixedThreadPool(numDecodingThread, backgroundPriorityThreadFactory);
+    mBackgroundExecutor =
+        Executors.newFixedThreadPool(numCpuBoundThreads, backgroundPriorityThreadFactory);
+    mLightWeightBackgroundExecutor =
+        Executors.newFixedThreadPool(
+            NUM_LIGHTWEIGHT_BACKGROUND_THREADS, backgroundPriorityThreadFactory);
   }
 
   @Override

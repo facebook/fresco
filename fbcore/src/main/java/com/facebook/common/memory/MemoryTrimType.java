@@ -38,7 +38,7 @@ public enum MemoryTrimType {
   }
 
   /** Get the recommended percentage by which to trim the cache on receiving this event. */
-  public double getSuggestedTrimRatio () {
+  public double getSuggestedTrimRatio() {
     return mSuggestedTrimRatio;
   }
 }

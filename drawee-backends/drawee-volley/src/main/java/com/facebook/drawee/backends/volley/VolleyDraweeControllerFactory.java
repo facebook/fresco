@@ -11,9 +11,7 @@ import android.content.res.Resources;
 import com.facebook.drawee.components.DeferredReleaser;
 import java.util.concurrent.Executor;
 
-/**
- * Factory for Volley Drawee controllers.
- */
+/** Factory for Volley Drawee controllers. */
 public class VolleyDraweeControllerFactory {
 
   private Resources mResources;
@@ -21,9 +19,7 @@ public class VolleyDraweeControllerFactory {
   private Executor mUiThreadExecutor;
 
   public VolleyDraweeControllerFactory(
-      Resources resources,
-      DeferredReleaser deferredReleaser,
-      Executor uiThreadExecutor) {
+      Resources resources, DeferredReleaser deferredReleaser, Executor uiThreadExecutor) {
     mResources = resources;
     mDeferredReleaser = deferredReleaser;
     mUiThreadExecutor = uiThreadExecutor;

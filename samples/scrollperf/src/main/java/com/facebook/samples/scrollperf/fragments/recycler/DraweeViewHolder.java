@@ -24,9 +24,7 @@ import com.facebook.samples.scrollperf.instrumentation.PerfListener;
 import com.facebook.samples.scrollperf.util.PipelineUtil;
 import com.facebook.samples.scrollperf.util.SizeUtil;
 
-/**
- * This is the ViewHolder for the RecyclerView in order to contain the DraweeView
- */
+/** This is the ViewHolder for the RecyclerView in order to contain the DraweeView */
 public class DraweeViewHolder extends RecyclerView.ViewHolder {
 
   private final View mParentView;
@@ -50,21 +48,18 @@ public class DraweeViewHolder extends RecyclerView.ViewHolder {
     mPerfListener = perfListener;
   }
 
-  /**
-   * @param uri The Uri to show into the DraweeView for this Holder
-   */
+  /** @param uri The Uri to show into the DraweeView for this Holder */
   public void bind(Uri uri) {
     mDraweeView.initInstrumentation(uri.toString(), mPerfListener);
-    ImageRequestBuilder imageRequestBuilder = ImageRequestBuilder
-        .newBuilderWithSource(uri)
-        .setResizeOptions(
-            new ResizeOptions(
-              mDraweeView.getLayoutParams().width,
-              mDraweeView.getLayoutParams().height));
+    ImageRequestBuilder imageRequestBuilder =
+        ImageRequestBuilder.newBuilderWithSource(uri)
+            .setResizeOptions(
+                new ResizeOptions(
+                    mDraweeView.getLayoutParams().width, mDraweeView.getLayoutParams().height));
     PipelineUtil.addOptionalFeatures(imageRequestBuilder, mConfig);
     // Create the Builder
-    PipelineDraweeControllerBuilder builder = Fresco.newDraweeControllerBuilder()
-                                                      .setImageRequest(imageRequestBuilder.build());
+    PipelineDraweeControllerBuilder builder =
+        Fresco.newDraweeControllerBuilder().setImageRequest(imageRequestBuilder.build());
     if (mConfig.reuseOldController) {
       builder.setOldController(mDraweeView.getController());
     }

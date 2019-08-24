@@ -9,9 +9,7 @@ package com.facebook.fresco.animation.frame;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.fresco.animation.backend.AnimationInformation;
 
-/**
- * Frame scheduler that maps time values to frames.
- */
+/** Frame scheduler that maps time values to frames. */
 public class DropFramesFrameScheduler implements FrameScheduler {
 
   private static final int UNSET = -1;

@@ -17,10 +17,9 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
 /**
- * A {@link java.util.concurrent.ExecutorService} that delegates to an existing {@link Executor}
- * but constrains the number of concurrently executing tasks to a pre-configured value.
+ * A {@link java.util.concurrent.ExecutorService} that delegates to an existing {@link Executor} but
+ * constrains the number of concurrently executing tasks to a pre-configured value.
  */
 public class ConstrainedExecutorService extends AbstractExecutorService {
 
@@ -37,16 +36,14 @@ public class ConstrainedExecutorService extends AbstractExecutorService {
 
   /**
    * Creates a new {@code ConstrainedExecutorService}.
+   *
    * @param name Friendly name to identify the executor in logging and reporting.
    * @param maxConcurrency Maximum number of tasks to execute in parallel on the delegate executor.
    * @param executor Delegate executor for actually running tasks.
    * @param workQueue Queue to hold {@link Runnable}s for eventual execution.
    */
   public ConstrainedExecutorService(
-      String name,
-      int maxConcurrency,
-      Executor executor,
-      BlockingQueue<Runnable> workQueue) {
+      String name, int maxConcurrency, Executor executor, BlockingQueue<Runnable> workQueue) {
     if (maxConcurrency <= 0) {
       throw new IllegalArgumentException("max concurrency must be > 0");
     }
@@ -60,8 +57,9 @@ public class ConstrainedExecutorService extends AbstractExecutorService {
   }
 
   /**
-   * Factory method to create a new {@code ConstrainedExecutorService} with an unbounded
-   * {@link LinkedBlockingQueue} queue.
+   * Factory method to create a new {@code ConstrainedExecutorService} with an unbounded {@link
+   * LinkedBlockingQueue} queue.
+   *
    * @param name Friendly name to identify the executor in logging and reporting.
    * @param maxConcurrency Maximum number of tasks to execute in parallel on the delegate executor.
    * @param queueSize Number of items that can be queued before new submissions are rejected.
@@ -69,19 +67,14 @@ public class ConstrainedExecutorService extends AbstractExecutorService {
    * @return new {@code ConstrainedExecutorService} instance.
    */
   public static ConstrainedExecutorService newConstrainedExecutor(
-      String name,
-      int maxConcurrency,
-      int queueSize,
-      Executor executor) {
+      String name, int maxConcurrency, int queueSize, Executor executor) {
     return new ConstrainedExecutorService(
-        name,
-        maxConcurrency,
-        executor,
-        new LinkedBlockingQueue<Runnable>(queueSize));
+        name, maxConcurrency, executor, new LinkedBlockingQueue<Runnable>(queueSize));
   }
 
   /**
    * Determine whether or not the queue is idle.
+   *
    * @return true if there is no work being executed and the work queue is empty, false otherwise.
    */
   public boolean isIdle() {
@@ -90,6 +83,7 @@ public class ConstrainedExecutorService extends AbstractExecutorService {
 
   /**
    * Submit a task to be executed in the future.
+   *
    * @param runnable The task to be executed.
    */
   @Override
@@ -99,8 +93,7 @@ public class ConstrainedExecutorService extends AbstractExecutorService {
     }
 
     if (!mWorkQueue.offer(runnable)) {
-      throw new RejectedExecutionException(
-          mName + " queue is full, size=" + mWorkQueue.size());
+      throw new RejectedExecutionException(mName + " queue is full, size=" + mWorkQueue.size());
     }
 
     final int queueSize = mWorkQueue.size();
@@ -162,8 +155,8 @@ public class ConstrainedExecutorService extends AbstractExecutorService {
 
   /**
    * Private worker class that removes one task from the work queue and runs it. This class
-   * maintains no state of its own, so a single instance may be submitted to an executor
-   * multiple times.
+   * maintains no state of its own, so a single instance may be submitted to an executor multiple
+   * times.
    */
   private class Worker implements Runnable {
 

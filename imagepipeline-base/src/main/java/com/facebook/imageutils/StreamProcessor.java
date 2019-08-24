@@ -10,18 +10,17 @@ package com.facebook.imageutils;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Util for processing Stream.
- */
+/** Util for processing Stream. */
 class StreamProcessor {
 
   /**
-   *  Consumes up to 4 bytes and returns them as int (taking into account endianess).
-   *  Throws exception if specified number of bytes cannot be consumed.
-   *  @param is the input stream to read bytes from
-   *  @param numBytes the number of bytes to read
-   *  @param isLittleEndian whether the bytes should be interpreted in little or big endian format
-   *  @return packed int read from input stream and constructed according to endianness
+   * Consumes up to 4 bytes and returns them as int (taking into account endianess). Throws
+   * exception if specified number of bytes cannot be consumed.
+   *
+   * @param is the input stream to read bytes from
+   * @param numBytes the number of bytes to read
+   * @param isLittleEndian whether the bytes should be interpreted in little or big endian format
+   * @return packed int read from input stream and constructed according to endianness
    */
   public static int readPackedInt(InputStream is, int numBytes, boolean isLittleEndian)
       throws IOException {
@@ -39,5 +38,4 @@ class StreamProcessor {
     }
     return value;
   }
-
 }

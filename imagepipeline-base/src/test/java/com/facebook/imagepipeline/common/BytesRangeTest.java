@@ -47,7 +47,7 @@ public class BytesRangeTest {
     assertValidFromContentRangeHeader("bytes 0-499/1234", 0, 499);
     assertValidFromContentRangeHeader("bytes 500-999/1234", 500, 999);
     assertValidFromContentRangeHeader("bytes 500-1233/1234", 500, BytesRange.TO_END_OF_CONTENT);
-    assertValidFromContentRangeHeader("bytes 734-1233/1234",734, BytesRange.TO_END_OF_CONTENT);
+    assertValidFromContentRangeHeader("bytes 734-1233/1234", 734, BytesRange.TO_END_OF_CONTENT);
   }
 
   @Test
@@ -62,9 +62,7 @@ public class BytesRangeTest {
   }
 
   private static void assertValidFromContentRangeHeader(
-      String header,
-      int expectedFrom,
-      int expectedEnd) {
+      String header, int expectedFrom, int expectedEnd) {
     final BytesRange bytesRange = BytesRange.fromContentRangeHeader(header);
     assertThat(bytesRange.from).isEqualTo(expectedFrom);
     assertThat(bytesRange.to).isEqualTo(expectedEnd);

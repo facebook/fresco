@@ -32,9 +32,7 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-/**
- * Basic tests for QualifiedResourceFetchProducer
- */
+/** Basic tests for QualifiedResourceFetchProducer */
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
 public class QualifiedResourceFetchProducerTest {
@@ -63,21 +61,20 @@ public class QualifiedResourceFetchProducerTest {
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
     mExecutor = new TestExecutorService(new FakeClock());
-    mQualifiedResourceFetchProducer = new QualifiedResourceFetchProducer(
-        mExecutor,
-        mPooledByteBufferFactory,
-        mContentResolver);
+    mQualifiedResourceFetchProducer =
+        new QualifiedResourceFetchProducer(mExecutor, mPooledByteBufferFactory, mContentResolver);
     mContentUri = UriUtil.getUriForQualifiedResource(PACKAGE_NAME, RESOURCE_ID);
 
-    mProducerContext = new SettableProducerContext(
-        mImageRequest,
-        REQUEST_ID,
-        mProducerListener,
-        CALLER_CONTEXT,
-        ImageRequest.RequestLevel.FULL_FETCH,
-        false,
-        true,
-        Priority.MEDIUM);
+    mProducerContext =
+        new SettableProducerContext(
+            mImageRequest,
+            REQUEST_ID,
+            mProducerListener,
+            CALLER_CONTEXT,
+            ImageRequest.RequestLevel.FULL_FETCH,
+            false,
+            true,
+            Priority.MEDIUM);
     when(mImageRequest.getSourceUri()).thenReturn(mContentUri);
   }
 
@@ -87,8 +84,7 @@ public class QualifiedResourceFetchProducerTest {
     when(mPooledByteBufferFactory.newByteBuffer(any(InputStream.class)))
         .thenReturn(pooledByteBuffer);
 
-    when(mContentResolver.openInputStream(mContentUri))
-        .thenReturn(mock(InputStream.class));
+    when(mContentResolver.openInputStream(mContentUri)).thenReturn(mock(InputStream.class));
 
     mQualifiedResourceFetchProducer.produceResults(mConsumer, mProducerContext);
     mExecutor.runUntilIdle();

@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Memory cache implementations for image pipeline.
- */
+/** Memory cache implementations for image pipeline. */
 package com.facebook.imagepipeline.cache;

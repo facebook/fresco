@@ -14,16 +14,14 @@ package com.facebook.samples.scrollperf.util;
 import android.app.Activity;
 import android.view.View;
 
-/**
- * Utility class to get View references using type inference
- */
+/** Utility class to get View references using type inference */
 public final class UI {
 
   /**
-   * This method returns the reference of the View with the given Id in the layout of the
-   * Activity passed as parameter
+   * This method returns the reference of the View with the given Id in the layout of the Activity
+   * passed as parameter
    *
-   * @param act    The Activity that is using the layout with the given View
+   * @param act The Activity that is using the layout with the given View
    * @param viewId The id of the View we want to get a reference
    * @return The View with the given id and type
    */
@@ -33,11 +31,10 @@ public final class UI {
   }
 
   /**
-   * This method returns the reference of the View with the given Id in the view passed
-   * as parameter
+   * This method returns the reference of the View with the given Id in the view passed as parameter
    *
    * @param containerView The container View
-   * @param viewId        The id of the View we want to get a reference
+   * @param viewId The id of the View we want to get a reference
    * @return The View with the given id and type
    */
   @SuppressWarnings("unchecked")

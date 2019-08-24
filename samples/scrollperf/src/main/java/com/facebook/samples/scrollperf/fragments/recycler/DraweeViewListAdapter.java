@@ -31,9 +31,7 @@ import com.facebook.samples.scrollperf.util.DraweeUtil;
 import com.facebook.samples.scrollperf.util.PipelineUtil;
 import com.facebook.samples.scrollperf.util.SizeUtil;
 
-/**
- * This is the implementation of the Adapter for the ListView
- */
+/** This is the implementation of the Adapter for the ListView */
 public class DraweeViewListAdapter extends BaseAdapter {
 
   private final SimpleAdapter<Uri> mSimpleAdapter;
@@ -45,10 +43,7 @@ public class DraweeViewListAdapter extends BaseAdapter {
   private final PerfListener mPerfListener;
 
   public DraweeViewListAdapter(
-      Context context,
-      SimpleAdapter<Uri> simpleAdapter,
-      Config config,
-      PerfListener perfListener) {
+      Context context, SimpleAdapter<Uri> simpleAdapter, Config config, PerfListener perfListener) {
     this.mSimpleAdapter = simpleAdapter;
     this.mConfig = config;
     this.mPaddingPx = context.getResources().getDimensionPixelSize(R.dimen.drawee_padding);
@@ -84,16 +79,15 @@ public class DraweeViewListAdapter extends BaseAdapter {
     }
     final Uri uri = getItem(position);
     draweeView.initInstrumentation(uri.toString(), mPerfListener);
-    ImageRequestBuilder imageRequestBuilder = ImageRequestBuilder
-            .newBuilderWithSource(uri)
+    ImageRequestBuilder imageRequestBuilder =
+        ImageRequestBuilder.newBuilderWithSource(uri)
             .setResizeOptions(
-                    new ResizeOptions(
-                            draweeView.getLayoutParams().width,
-                            draweeView.getLayoutParams().height));
+                new ResizeOptions(
+                    draweeView.getLayoutParams().width, draweeView.getLayoutParams().height));
     PipelineUtil.addOptionalFeatures(imageRequestBuilder, mConfig);
     // Create the Builder
-    PipelineDraweeControllerBuilder builder = Fresco.newDraweeControllerBuilder()
-            .setImageRequest(imageRequestBuilder.build());
+    PipelineDraweeControllerBuilder builder =
+        Fresco.newDraweeControllerBuilder().setImageRequest(imageRequestBuilder.build());
     if (mConfig.reuseOldController) {
       builder.setOldController(draweeView.getController());
     }

@@ -54,8 +54,7 @@ public class NetworkFetchProducerTest {
   @Mock public NetworkFetcher mNetworkFetcher;
   @Mock public Map<String, String> mExtrasMap;
 
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
+  @Rule public PowerMockRule rule = new PowerMockRule();
 
   private byte[] mCommonByteArray;
   private final String mRequestId = "mRequestId";
@@ -68,26 +67,24 @@ public class NetworkFetchProducerTest {
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     PowerMockito.mockStatic(SystemClock.class);
-    mNetworkFetchProducer = new NetworkFetchProducer(
-        mPooledByteBufferFactory,
-        mByteArrayPool,
-        mNetworkFetcher);
-    mProducerContext = new SettableProducerContext(
-        mImageRequest,
-        mRequestId,
-        mProducerListener,
-        mock(Object.class),
-        ImageRequest.RequestLevel.FULL_FETCH,
-        false /* isPrefetch */,
-        true /* isIntermediateResultExpected */,
-        Priority.MEDIUM);
+    mNetworkFetchProducer =
+        new NetworkFetchProducer(mPooledByteBufferFactory, mByteArrayPool, mNetworkFetcher);
+    mProducerContext =
+        new SettableProducerContext(
+            mImageRequest,
+            mRequestId,
+            mProducerListener,
+            mock(Object.class),
+            ImageRequest.RequestLevel.FULL_FETCH,
+            false /* isPrefetch */,
+            true /* isIntermediateResultExpected */,
+            Priority.MEDIUM);
     mFetchState = new FetchState(mConsumer, mProducerContext);
     mCommonByteArray = new byte[10];
     when(mByteArrayPool.get(anyInt())).thenReturn(mCommonByteArray);
     when(mPooledByteBufferFactory.newOutputStream(anyInt()))
         .thenReturn(mPooledByteBufferOutputStream);
-    when(mPooledByteBufferFactory.newOutputStream())
-        .thenReturn(mPooledByteBufferOutputStream);
+    when(mPooledByteBufferFactory.newOutputStream()).thenReturn(mPooledByteBufferOutputStream);
     when(mPooledByteBufferOutputStream.toByteBuffer()).thenReturn(mPooledByteBuffer);
     when(mProducerListener.requiresExtraMap(mProducerContext, NetworkFetchProducer.PRODUCER_NAME))
         .thenReturn(true);
@@ -259,9 +256,7 @@ public class NetworkFetchProducerTest {
   }
 
   private Future performResponse(
-      final InputStream inputStream,
-      final int length,
-      final NetworkFetcher.Callback callback) {
+      final InputStream inputStream, final int length, final NetworkFetcher.Callback callback) {
     return mTestExecutor.submit(
         new Callable() {
           @Override
@@ -276,8 +271,10 @@ public class NetworkFetchProducerTest {
 
     @GuardedBy("BlockingInputStream.this")
     private int mBytesLeft = 0;
+
     @GuardedBy("BlockingInputStream.this")
     private boolean mFinished = false;
+
     @GuardedBy("BlockingInputStream.this")
     private boolean mReaderBlocked = false;
 

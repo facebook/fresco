@@ -7,9 +7,7 @@
 
 package com.facebook.imagepipeline.common;
 
-/**
- * Thrown if a bitmap pool cap or other limit on the number of bitmaps is exceeded.
- */
+/** Thrown if a bitmap pool cap or other limit on the number of bitmaps is exceeded. */
 public class TooManyBitmapsException extends RuntimeException {
 
   public TooManyBitmapsException() {

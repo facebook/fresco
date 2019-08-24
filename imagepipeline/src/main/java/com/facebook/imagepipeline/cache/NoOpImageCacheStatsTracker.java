@@ -9,14 +9,11 @@ package com.facebook.imagepipeline.cache;
 
 import com.facebook.cache.common.CacheKey;
 
-/**
- * Class that does no stats tracking at all
- */
+/** Class that does no stats tracking at all */
 public class NoOpImageCacheStatsTracker implements ImageCacheStatsTracker {
   private static NoOpImageCacheStatsTracker sInstance = null;
 
-  private NoOpImageCacheStatsTracker() {
-  }
+  private NoOpImageCacheStatsTracker() {}
 
   public static synchronized NoOpImageCacheStatsTracker getInstance() {
     if (sInstance == null) {
@@ -26,53 +23,41 @@ public class NoOpImageCacheStatsTracker implements ImageCacheStatsTracker {
   }
 
   @Override
-  public void onBitmapCachePut() {
-  }
+  public void onBitmapCachePut() {}
 
   @Override
-  public void onBitmapCacheHit(CacheKey cacheKey) {
-  }
+  public void onBitmapCacheHit(CacheKey cacheKey) {}
 
   @Override
-  public void onBitmapCacheMiss() {
-  }
+  public void onBitmapCacheMiss() {}
 
   @Override
-  public void onMemoryCachePut() {
-  }
+  public void onMemoryCachePut() {}
 
   @Override
-  public void onMemoryCacheHit(CacheKey cacheKey) {
-  }
+  public void onMemoryCacheHit(CacheKey cacheKey) {}
 
   @Override
-  public void onMemoryCacheMiss() {
-  }
+  public void onMemoryCacheMiss() {}
 
   @Override
-  public void onStagingAreaHit(CacheKey cacheKey) {
-  }
+  public void onStagingAreaHit(CacheKey cacheKey) {}
 
   @Override
-  public void onStagingAreaMiss() {
-  }
+  public void onStagingAreaMiss() {}
 
   @Override
   public void onDiskCacheHit(CacheKey cacheKey) {}
 
   @Override
-  public void onDiskCacheMiss() {
-  }
+  public void onDiskCacheMiss() {}
 
   @Override
-  public void onDiskCacheGetFail() {
-  }
+  public void onDiskCacheGetFail() {}
 
   @Override
-  public void registerBitmapMemoryCache(CountingMemoryCache<?, ?> bitmapMemoryCache) {
-  }
+  public void registerBitmapMemoryCache(CountingMemoryCache<?, ?> bitmapMemoryCache) {}
 
   @Override
-  public void registerEncodedMemoryCache(CountingMemoryCache<?, ?> encodedMemoryCache) {
-  }
+  public void registerEncodedMemoryCache(CountingMemoryCache<?, ?> encodedMemoryCache) {}
 }

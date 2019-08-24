@@ -62,20 +62,10 @@ public class DoubleTapGestureListener extends GestureDetector.SimpleOnGestureLis
           final float minScale = zc.getMinScaleFactor();
           if (zc.getScaleFactor() < (maxScale + minScale) / 2) {
             zc.zoomToPoint(
-                maxScale,
-                ip,
-                vp,
-                DefaultZoomableController.LIMIT_ALL,
-                DURATION_MS,
-                null);
+                maxScale, ip, vp, DefaultZoomableController.LIMIT_ALL, DURATION_MS, null);
           } else {
             zc.zoomToPoint(
-                minScale,
-                ip,
-                vp,
-                DefaultZoomableController.LIMIT_ALL,
-                DURATION_MS,
-                null);
+                minScale, ip, vp, DefaultZoomableController.LIMIT_ALL, DURATION_MS, null);
           }
         }
         mDoubleTapScroll = false;
@@ -85,9 +75,8 @@ public class DoubleTapGestureListener extends GestureDetector.SimpleOnGestureLis
   }
 
   private boolean shouldStartDoubleTapScroll(PointF viewPoint) {
-    double dist = Math.hypot(
-        viewPoint.x - mDoubleTapViewPoint.x,
-        viewPoint.y - mDoubleTapViewPoint.y);
+    double dist =
+        Math.hypot(viewPoint.x - mDoubleTapViewPoint.x, viewPoint.y - mDoubleTapViewPoint.y);
     return dist > DOUBLE_TAP_SCROLL_THRESHOLD;
   }
 

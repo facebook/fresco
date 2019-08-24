@@ -19,9 +19,7 @@ import org.junit.runner.*;
 import org.mockito.*;
 import org.robolectric.*;
 
-/**
- * Tests for {@link ForwardingRequestListener}
- */
+/** Tests for {@link ForwardingRequestListener} */
 @RunWith(RobolectricTestRunner.class)
 public class ForwardingRequestListenerTest {
   @Mock public ImageRequest mRequest;
@@ -46,8 +44,9 @@ public class ForwardingRequestListenerTest {
     when(mRequestListener1.requiresExtraMap(mRequestId)).thenReturn(false);
     when(mRequestListener2.requiresExtraMap(mRequestId)).thenReturn(false);
     when(mRequestListener3.requiresExtraMap(mRequestId)).thenReturn(false);
-    mListenerManager = new ForwardingRequestListener(
-        Sets.newHashSet(mRequestListener1, mRequestListener2, mRequestListener3));
+    mListenerManager =
+        new ForwardingRequestListener(
+            Sets.newHashSet(mRequestListener1, mRequestListener2, mRequestListener3));
   }
 
   @Test
@@ -85,12 +84,9 @@ public class ForwardingRequestListenerTest {
   @Test
   public void testOnProducerFinishWithSuccess() {
     mListenerManager.onProducerFinishWithSuccess(mRequestId, mProducerName, mImmutableMap);
-    verify(mRequestListener1)
-        .onProducerFinishWithSuccess(mRequestId, mProducerName, mImmutableMap);
-    verify(mRequestListener2)
-        .onProducerFinishWithSuccess(mRequestId, mProducerName, mImmutableMap);
-    verify(mRequestListener3)
-        .onProducerFinishWithSuccess(mRequestId, mProducerName, mImmutableMap);
+    verify(mRequestListener1).onProducerFinishWithSuccess(mRequestId, mProducerName, mImmutableMap);
+    verify(mRequestListener2).onProducerFinishWithSuccess(mRequestId, mProducerName, mImmutableMap);
+    verify(mRequestListener3).onProducerFinishWithSuccess(mRequestId, mProducerName, mImmutableMap);
   }
 
   @Test
@@ -119,18 +115,9 @@ public class ForwardingRequestListenerTest {
   @Test
   public void testOnProducerEvent() {
     mListenerManager.onProducerEvent(mRequestId, mProducerName, mProducerEventName);
-    verify(mRequestListener1).onProducerEvent(
-        mRequestId,
-        mProducerName,
-        mProducerEventName);
-    verify(mRequestListener2).onProducerEvent(
-        mRequestId,
-        mProducerName,
-        mProducerEventName);
-    verify(mRequestListener3).onProducerEvent(
-        mRequestId,
-        mProducerName,
-        mProducerEventName);
+    verify(mRequestListener1).onProducerEvent(mRequestId, mProducerName, mProducerEventName);
+    verify(mRequestListener2).onProducerEvent(mRequestId, mProducerName, mProducerEventName);
+    verify(mRequestListener3).onProducerEvent(mRequestId, mProducerName, mProducerEventName);
   }
 
   @Test

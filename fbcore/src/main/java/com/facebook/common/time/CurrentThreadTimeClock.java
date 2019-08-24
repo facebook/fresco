@@ -8,8 +8,8 @@
 package com.facebook.common.time;
 
 /**
- * A clock that returns milliseconds running in the current thread.
- * See {@link android.os.SystemClock}
+ * A clock that returns milliseconds running in the current thread. See {@link
+ * android.os.SystemClock}
  */
 public class CurrentThreadTimeClock implements Clock {
 

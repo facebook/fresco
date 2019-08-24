@@ -18,16 +18,17 @@ import com.facebook.samples.comparison.instrumentation.InstrumentedImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-/**
- * This is the Holder class for the RecycleView to use with Universal Image Loader
- */
+/** This is the Holder class for the RecycleView to use with Universal Image Loader */
 public class UilHolder extends BaseViewHolder<InstrumentedImageView> {
 
   private final ImageLoader mImageLoader;
 
   public UilHolder(
-      Context context, ImageLoader imageLoader, View layoutView,
-      InstrumentedImageView view, PerfListener perfListener) {
+      Context context,
+      ImageLoader imageLoader,
+      View layoutView,
+      InstrumentedImageView view,
+      PerfListener perfListener) {
     super(context, layoutView, view, perfListener);
     this.mImageLoader = imageLoader;
   }

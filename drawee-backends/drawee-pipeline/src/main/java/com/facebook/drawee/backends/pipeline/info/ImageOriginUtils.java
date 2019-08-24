@@ -40,7 +40,6 @@ public class ImageOriginUtils {
         // fall through
       default:
         return "unknown";
-
     }
   }
 

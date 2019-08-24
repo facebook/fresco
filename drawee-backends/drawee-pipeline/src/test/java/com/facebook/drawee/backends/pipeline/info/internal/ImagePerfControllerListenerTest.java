@@ -69,7 +69,8 @@ public class ImagePerfControllerListenerTest {
     expectedNumOfTimestamps++;
 
     verify(mMonotonicClock, times(expectedNumOfTimestamps)).now();
-    verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
+    verify(mImagePerfMonitor)
+        .notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
     verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.SUCCESS));
     verify(mImagePerfMonitor)
         .notifyListenersOfVisibilityStateUpdate(eq(mImagePerfState), eq(VisibilityState.VISIBLE));
@@ -103,7 +104,8 @@ public class ImagePerfControllerListenerTest {
     expectedNumOfTimestamps++;
 
     verify(mMonotonicClock, times(expectedNumOfTimestamps)).now();
-    verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
+    verify(mImagePerfMonitor)
+        .notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
     verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.ERROR));
     verify(mImagePerfState).setControllerSubmitTimeMs(startTime);
     verify(mImagePerfState).setControllerFailureTimeMs(imageLoadTime);
@@ -125,8 +127,10 @@ public class ImagePerfControllerListenerTest {
     expectedNumOfTimestamps++;
 
     verify(mMonotonicClock, times(expectedNumOfTimestamps)).now();
-    verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
-    verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.CANCELED));
+    verify(mImagePerfMonitor)
+        .notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
+    verify(mImagePerfMonitor)
+        .notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.CANCELED));
     verify(mImagePerfState).setControllerSubmitTimeMs(startTime);
     verify(mImagePerfState).setControllerCancelTimeMs(imageReleaseTime);
   }
@@ -159,7 +163,8 @@ public class ImagePerfControllerListenerTest {
     expectedNumOfTimestamps++;
 
     verify(mMonotonicClock, times(expectedNumOfTimestamps)).now();
-    verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
+    verify(mImagePerfMonitor)
+        .notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
     verify(mImagePerfMonitor)
         .notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.INTERMEDIATE_AVAILABLE));
     verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.SUCCESS));

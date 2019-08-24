@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Utility classes for the animation framework
- */
+/** Utility classes for the animation framework */
 package com.facebook.imagepipeline.animated.util;

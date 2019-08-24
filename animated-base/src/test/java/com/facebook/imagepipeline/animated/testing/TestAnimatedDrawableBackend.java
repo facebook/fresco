@@ -15,9 +15,7 @@ import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 
-/**
- * Implementation of {@link AnimatedDrawableBackend} for unit tests.
- */
+/** Implementation of {@link AnimatedDrawableBackend} for unit tests. */
 public class TestAnimatedDrawableBackend implements AnimatedDrawableBackend {
 
   private final int mWidth;

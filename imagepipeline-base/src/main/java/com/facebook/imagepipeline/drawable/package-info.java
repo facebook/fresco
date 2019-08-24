@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Common drawable classes.
- */
+/** Common drawable classes. */
 package com.facebook.imagepipeline.drawable;

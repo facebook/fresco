@@ -16,7 +16,7 @@ import java.util.Set;
 public class DummyTrackingInUseBitmapPool implements BitmapPool {
 
   /** An Identity hash-set to keep track of values by reference equality */
-private final Set<Bitmap> mInUseValues;
+  private final Set<Bitmap> mInUseValues;
 
   public DummyTrackingInUseBitmapPool() {
     mInUseValues = Sets.newIdentityHashSet();

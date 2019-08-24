@@ -49,7 +49,7 @@ public class FileBinaryResource implements BinaryResource {
     if (obj == null || !(obj instanceof FileBinaryResource)) {
       return false;
     }
-    FileBinaryResource that = (FileBinaryResource)obj;
+    FileBinaryResource that = (FileBinaryResource) obj;
     return mFile.equals(that.mFile);
   }
 

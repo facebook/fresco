@@ -10,8 +10,7 @@ package com.facebook.common.executors;
 import java.util.concurrent.ExecutorService;
 
 /**
- * The interface of the executors that execute tasks serially. The tasks submitted are executed
- * in FIFO order.
+ * The interface of the executors that execute tasks serially. The tasks submitted are executed in
+ * FIFO order.
  */
-public interface SerialExecutorService extends ExecutorService {
-}
+public interface SerialExecutorService extends ExecutorService {}

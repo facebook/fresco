@@ -318,10 +318,10 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   /**
    * Gets the lowest parent drawable for the layer at the specified index.
    *
-   * Following drawables are considered as parents: FadeDrawable, MatrixDrawable, ScaleTypeDrawable.
-   * This is because those drawables are added automatically by the hierarchy (if specified),
-   * whereas their children are created externally by the client code. When we need to change the
-   * previously set drawable this is the parent whose child needs to be replaced.
+   * <p>Following drawables are considered as parents: FadeDrawable, MatrixDrawable,
+   * ScaleTypeDrawable. This is because those drawables are added automatically by the hierarchy (if
+   * specified), whereas their children are created externally by the client code. When we need to
+   * change the previously set drawable this is the parent whose child needs to be replaced.
    */
   private DrawableParent getParentDrawableAtIndex(int index) {
     DrawableParent parent = mFadeDrawable.getDrawableParentForIndex(index);
@@ -335,8 +335,8 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   }
 
   /**
-   * Sets the drawable at the specified index while keeping the old scale type and rounding.
-   * In case the given drawable is null, scale type gets cleared too.
+   * Sets the drawable at the specified index while keeping the old scale type and rounding. In case
+   * the given drawable is null, scale type gets cleared too.
    */
   private void setChildDrawableAtIndex(int index, @Nullable Drawable drawable) {
     if (drawable == null) {
@@ -348,10 +348,9 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   }
 
   /**
-   * Gets the ScaleTypeDrawable at the specified index.
-   * In case there is no child at the specified index, a NullPointerException is thrown.
-   * In case there is a child, but the ScaleTypeDrawable does not exist,
-   * the child will be wrapped with a new ScaleTypeDrawable.
+   * Gets the ScaleTypeDrawable at the specified index. In case there is no child at the specified
+   * index, a NullPointerException is thrown. In case there is a child, but the ScaleTypeDrawable
+   * does not exist, the child will be wrapped with a new ScaleTypeDrawable.
    */
   private ScaleTypeDrawable getScaleTypeDrawableAtIndex(int index) {
     DrawableParent parent = getParentDrawableAtIndex(index);
@@ -362,9 +361,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     }
   }
 
-  /**
-   * Returns whether the given layer has a scale type drawable.
-   */
+  /** Returns whether the given layer has a scale type drawable. */
   private boolean hasScaleTypeDrawableAtIndex(int index) {
     DrawableParent parent = getParentDrawableAtIndex(index);
     return (parent instanceof ScaleTypeDrawable);
@@ -422,9 +419,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     getScaleTypeDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX).setScaleType(scaleType);
   }
 
-  /**
-   * @return true if there is a placeholder image set.
-   */
+  /** @return true if there is a placeholder image set. */
   public boolean hasPlaceholderImage() {
     return mFadeDrawable.getDrawable(PLACEHOLDER_IMAGE_INDEX) != null;
   }
@@ -464,7 +459,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     setChildDrawableAtIndex(FAILURE_IMAGE_INDEX, drawable);
     getScaleTypeDrawableAtIndex(FAILURE_IMAGE_INDEX).setScaleType(scaleType);
   }
-  
+
   /**
    * Sets a new failure drawable with old scale type.
    *
@@ -494,7 +489,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     setChildDrawableAtIndex(RETRY_IMAGE_INDEX, drawable);
     getScaleTypeDrawableAtIndex(RETRY_IMAGE_INDEX).setScaleType(scaleType);
   }
-  
+
   /**
    * Sets a new retry drawable with old scale type.
    *
@@ -524,7 +519,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     setChildDrawableAtIndex(PROGRESS_BAR_IMAGE_INDEX, drawable);
     getScaleTypeDrawableAtIndex(PROGRESS_BAR_IMAGE_INDEX).setScaleType(scaleType);
   }
-  
+
   /**
    * Sets a new progress bar drawable with old scale type.
    *
@@ -552,7 +547,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   /**
    * Sets a new overlay image at the specified index.
    *
-   * This method will throw if the given index is out of bounds.
+   * <p>This method will throw if the given index is out of bounds.
    *
    * @param drawable background image
    */

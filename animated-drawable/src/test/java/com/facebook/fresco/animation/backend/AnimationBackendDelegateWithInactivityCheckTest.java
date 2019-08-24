@@ -18,13 +18,10 @@ import com.facebook.imagepipeline.testing.TestScheduledExecutorService;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * Tests {@link AnimationBackendDelegateWithInactivityCheck}
- */
+/** Tests {@link AnimationBackendDelegateWithInactivityCheck} */
 public class AnimationBackendDelegateWithInactivityCheckTest {
 
-  private AnimationBackendDelegate<AnimationBackend>
-      mAnimationBackendDelegateWithInactivityCheck;
+  private AnimationBackendDelegate<AnimationBackend> mAnimationBackendDelegateWithInactivityCheck;
 
   private AnimationBackend mAnimationBackend;
   private AnimationBackendDelegateWithInactivityCheck.InactivityListener mInactivityListener;
@@ -46,10 +43,7 @@ public class AnimationBackendDelegateWithInactivityCheckTest {
 
     mAnimationBackendDelegateWithInactivityCheck =
         AnimationBackendDelegateWithInactivityCheck.createForBackend(
-            mAnimationBackend,
-            mInactivityListener,
-            mFakeClock,
-            mTestScheduledExecutorService);
+            mAnimationBackend, mInactivityListener, mFakeClock, mTestScheduledExecutorService);
   }
 
   @Test

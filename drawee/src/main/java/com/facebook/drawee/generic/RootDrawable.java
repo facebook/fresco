@@ -18,29 +18,28 @@ import javax.annotation.Nullable;
 /**
  * The root drawable of a DraweeHierarchy.
  *
- * Root drawable has several functions:
+ * <p>Root drawable has several functions:
+ *
  * <ul>
- * <li> A hierarchy always has the same instance of a root drawable. That means that internal
- * structural changes within the hierarchy don't require setting a new drawable to the view.
- * <li> Root drawable prevents intrinsic dimensions to escape the hierarchy. This in turn prevents
- * view to do any erroneous scaling based on those intrinsic dimensions, as the hierarchy is in
- * charge of all the required scaling.
- * <li> Root drawable is visibility aware. Visibility callback is used to attach the controller
- * (if not already attached) when the hierarchy needs to be drawn. This prevents photo-not-loading
- * issues in case attach event has not been called (for whatever reason). It also helps with
- * memory management as the controller will get detached if the drawable is not visible.
- * <li> Root drawable supports controller overlay, a special overlay set by the controller. Typical
- * usages are debugging, diagnostics and other cases where controller-specific overlay is required.
+ *   <li>A hierarchy always has the same instance of a root drawable. That means that internal
+ *       structural changes within the hierarchy don't require setting a new drawable to the view.
+ *   <li>Root drawable prevents intrinsic dimensions to escape the hierarchy. This in turn prevents
+ *       view to do any erroneous scaling based on those intrinsic dimensions, as the hierarchy is
+ *       in charge of all the required scaling.
+ *   <li>Root drawable is visibility aware. Visibility callback is used to attach the controller (if
+ *       not already attached) when the hierarchy needs to be drawn. This prevents photo-not-loading
+ *       issues in case attach event has not been called (for whatever reason). It also helps with
+ *       memory management as the controller will get detached if the drawable is not visible.
+ *   <li>Root drawable supports controller overlay, a special overlay set by the controller. Typical
+ *       usages are debugging, diagnostics and other cases where controller-specific overlay is
+ *       required.
  * </ul>
  */
 public class RootDrawable extends ForwardingDrawable implements VisibilityAwareDrawable {
 
-  @VisibleForTesting
-  @Nullable
-  Drawable mControllerOverlay = null;
+  @VisibleForTesting @Nullable Drawable mControllerOverlay = null;
 
-  @Nullable
-  private VisibilityCallback mVisibilityCallback;
+  @Nullable private VisibilityCallback mVisibilityCallback;
 
   public RootDrawable(Drawable drawable) {
     super(drawable);

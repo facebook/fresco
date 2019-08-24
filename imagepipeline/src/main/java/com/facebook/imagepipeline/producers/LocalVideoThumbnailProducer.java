@@ -34,11 +34,10 @@ import javax.annotation.Nullable;
 /**
  * A producer that creates video thumbnails.
  *
- * <p>At present, these thumbnails are created on the java heap rather than being pinned
- * purgeables. This is deemed okay as the thumbnails are only very small.
+ * <p>At present, these thumbnails are created on the java heap rather than being pinned purgeables.
+ * This is deemed okay as the thumbnails are only very small.
  */
-public class LocalVideoThumbnailProducer implements
-    Producer<CloseableReference<CloseableImage>> {
+public class LocalVideoThumbnailProducer implements Producer<CloseableReference<CloseableImage>> {
 
   public static final String PRODUCER_NAME = "VideoThumbnailProducer";
   @VisibleForTesting static final String CREATED_THUMBNAIL = "createdThumbnail";
@@ -127,7 +126,8 @@ public class LocalVideoThumbnailProducer implements
     return MediaStore.Images.Thumbnails.MICRO_KIND;
   }
 
-  @Nullable private String getLocalFilePath(ImageRequest imageRequest) {
+  @Nullable
+  private String getLocalFilePath(ImageRequest imageRequest) {
     Uri uri = imageRequest.getSourceUri();
     if (UriUtil.isLocalFileUri(uri)) {
       return imageRequest.getSourceFile().getPath();

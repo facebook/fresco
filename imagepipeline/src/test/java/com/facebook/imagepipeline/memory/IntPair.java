@@ -9,9 +9,7 @@ package com.facebook.imagepipeline.memory;
 
 import com.facebook.common.internal.Objects;
 
-/**
- * Surprise! A pair of integers
- */
+/** Surprise! A pair of integers */
 public class IntPair {
   public final int a;
   public final int b;
@@ -29,7 +27,7 @@ public class IntPair {
   @Override
   public boolean equals(Object other) {
     if (other instanceof IntPair) {
-      IntPair that = (IntPair)other;
+      IntPair that = (IntPair) other;
       return this.a == that.a && this.b == that.b;
     }
     return false;

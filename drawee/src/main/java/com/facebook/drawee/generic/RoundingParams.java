@@ -14,9 +14,7 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import java.util.Arrays;
 import javax.annotation.Nullable;
 
-/**
- * Class that encapsulates rounding parameters.
- */
+/** Class that encapsulates rounding parameters. */
 public class RoundingParams {
 
   public enum RoundingMethod {
@@ -36,9 +34,9 @@ public class RoundingParams {
      * {@link ScalingUtils.ScaleType#CENTER_CROP}, {@link ScalingUtils.ScaleType#FOCUS_CROP} and
      * {@link ScalingUtils.ScaleType#FIT_XY}.
      *
-     * If you use this rounding method with other scale types, such as
-     * {@link ScalingUtils.ScaleType#CENTER}, you won't get an Exception but the image might look
-     * wrong (e.g. repeated edges), especially in cases the source image is smaller than the view.
+     * <p>If you use this rounding method with other scale types, such as {@link
+     * ScalingUtils.ScaleType#CENTER}, you won't get an Exception but the image might look wrong
+     * (e.g. repeated edges), especially in cases the source image is smaller than the view.
      */
     BITMAP_ONLY
   }
@@ -54,7 +52,7 @@ public class RoundingParams {
   private boolean mPaintFilterBitmap = false;
 
   /**
-   *  Sets whether to round as circle.
+   * Sets whether to round as circle.
    *
    * @param roundAsCircle whether or not to round as circle
    * @return modified instance
@@ -73,7 +71,7 @@ public class RoundingParams {
    * Sets the rounded corners radius.
    *
    * @param radius corner radius in pixels
-   * @return  modified instance
+   * @return modified instance
    */
   public RoundingParams setCornersRadius(float radius) {
     Arrays.fill(getOrCreateRoundedCornersRadii(), radius);
@@ -90,10 +88,7 @@ public class RoundingParams {
    * @return modified instance
    */
   public RoundingParams setCornersRadii(
-      float topLeft,
-      float topRight,
-      float bottomRight,
-      float bottomLeft) {
+      float topLeft, float topRight, float bottomRight, float bottomLeft) {
     float[] radii = getOrCreateRoundedCornersRadii();
     radii[0] = radii[1] = topLeft;
     radii[2] = radii[3] = topRight;
@@ -177,12 +172,8 @@ public class RoundingParams {
 
   /** Factory method that creates new RoundingParams with the specified corners radii. */
   public static RoundingParams fromCornersRadii(
-      float topLeft,
-      float topRight,
-      float bottomRight,
-      float bottomLeft) {
-    return (new RoundingParams())
-        .setCornersRadii(topLeft, topRight, bottomRight, bottomLeft);
+      float topLeft, float topRight, float bottomRight, float bottomLeft) {
+    return (new RoundingParams()).setCornersRadii(topLeft, topRight, bottomRight, bottomLeft);
   }
 
   /** Factory method that creates new RoundingParams with the specified corners radii. */
@@ -192,6 +183,7 @@ public class RoundingParams {
 
   /**
    * Sets the border width
+   *
    * @param width of the width
    */
   public RoundingParams setBorderWidth(float width) {
@@ -207,6 +199,7 @@ public class RoundingParams {
 
   /**
    * Sets the border color
+   *
    * @param color of the border
    */
   public RoundingParams setBorderColor(@ColorInt int color) {
@@ -221,6 +214,7 @@ public class RoundingParams {
 
   /**
    * Sets the border around the rounded drawable
+   *
    * @param color of the border
    * @param width of the width
    */
@@ -233,9 +227,10 @@ public class RoundingParams {
 
   /**
    * Sets the padding on rounded drawable. Works only with {@code RoundingMethod.BITMAP_ONLY}
+   *
    * @param padding the padding in pixels
    */
-  public RoundingParams setPadding(float padding){
+  public RoundingParams setPadding(float padding) {
     Preconditions.checkArgument(padding >= 0, "the padding cannot be < 0");
     mPadding = padding;
     return this;
@@ -266,9 +261,8 @@ public class RoundingParams {
   /**
    * Sets FILTER_BITMAP_FLAG flag to Paint. {@link android.graphics.Paint#FILTER_BITMAP_FLAG}
    *
-   * <p>This should generally be on when drawing bitmaps, unless performance-bound (rendering to software
-   * canvas) or preferring pixelation artifacts to blurriness when scaling
-   * significantly.
+   * <p>This should generally be on when drawing bitmaps, unless performance-bound (rendering to
+   * software canvas) or preferring pixelation artifacts to blurriness when scaling significantly.
    *
    * @param paintFilterBitmap whether to set FILTER_BITMAP_FLAG flag to Paint.
    * @return modified instance

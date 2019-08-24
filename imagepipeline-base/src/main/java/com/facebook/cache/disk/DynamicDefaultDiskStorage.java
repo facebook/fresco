@@ -20,9 +20,7 @@ import java.io.IOException;
 import java.util.Collection;
 import javax.annotation.Nullable;
 
-/**
- * A supplier of a DiskStorage concrete implementation.
- */
+/** A supplier of a DiskStorage concrete implementation. */
 public class DynamicDefaultDiskStorage implements DiskStorage {
   private static final Class<?> TAG = DynamicDefaultDiskStorage.class;
 
@@ -31,17 +29,16 @@ public class DynamicDefaultDiskStorage implements DiskStorage {
   private final String mBaseDirectoryName;
   private final CacheErrorLogger mCacheErrorLogger;
 
-  @VisibleForTesting
-  volatile State mCurrentState;
+  @VisibleForTesting volatile State mCurrentState;
 
-  /**
-   * Represents the current 'cached' state.
-   */
-  @VisibleForTesting static class State {
+  /** Represents the current 'cached' state. */
+  @VisibleForTesting
+  static class State {
     public final @Nullable DiskStorage delegate;
     public final @Nullable File rootDirectory;
 
-    @VisibleForTesting State(@Nullable File rootDirectory, @Nullable DiskStorage delegate) {
+    @VisibleForTesting
+    State(@Nullable File rootDirectory, @Nullable DiskStorage delegate) {
       this.delegate = delegate;
       this.rootDirectory = rootDirectory;
     }
@@ -68,7 +65,7 @@ public class DynamicDefaultDiskStorage implements DiskStorage {
     }
   }
 
- @Override
+  @Override
   public boolean isExternal() {
     try {
       return get().isExternal();
@@ -143,8 +140,9 @@ public class DynamicDefaultDiskStorage implements DiskStorage {
   }
 
   /**
-   * Gets a concrete disk-storage instance. If nothing has changed since the last call, then
-   * the last state is returned
+   * Gets a concrete disk-storage instance. If nothing has changed since the last call, then the
+   * last state is returned
+   *
    * @return an instance of the appropriate DiskStorage class
    * @throws IOException
    */
@@ -160,9 +158,9 @@ public class DynamicDefaultDiskStorage implements DiskStorage {
 
   private boolean shouldCreateNewStorage() {
     State currentState = mCurrentState;
-    return (currentState.delegate == null ||
-        currentState.rootDirectory == null ||
-        !currentState.rootDirectory.exists());
+    return (currentState.delegate == null
+        || currentState.rootDirectory == null
+        || !currentState.rootDirectory.exists());
   }
 
   @VisibleForTesting

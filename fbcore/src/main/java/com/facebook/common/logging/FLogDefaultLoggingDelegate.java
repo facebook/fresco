@@ -11,9 +11,7 @@ import android.util.Log;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-/**
- * Default implementation of {@link LoggingDelegate}.
- */
+/** Default implementation of {@link LoggingDelegate}. */
 public class FLogDefaultLoggingDelegate implements LoggingDelegate {
 
   public static final FLogDefaultLoggingDelegate sInstance = new FLogDefaultLoggingDelegate();
@@ -25,19 +23,17 @@ public class FLogDefaultLoggingDelegate implements LoggingDelegate {
     return sInstance;
   }
 
-  private FLogDefaultLoggingDelegate() {
-  }
+  private FLogDefaultLoggingDelegate() {}
 
   /**
-   * Sets an application tag that is used for checking if a log line is loggable and also
-   * to prefix to all log lines.
+   * Sets an application tag that is used for checking if a log line is loggable and also to prefix
+   * to all log lines.
    *
    * @param tag the tag
    */
   public void setApplicationTag(String tag) {
     mApplicationTag = tag;
   }
-
 
   @Override
   public void setMinimumLoggingLevel(int level) {
@@ -105,8 +101,8 @@ public class FLogDefaultLoggingDelegate implements LoggingDelegate {
   }
 
   /**
-   * <p> Note: this gets forwarded to {@code android.util.Log.e} as {@code android.util.Log.wtf}
-   * might crash the app.
+   * Note: this gets forwarded to {@code android.util.Log.e} as {@code android.util.Log.wtf} might
+   * crash the app.
    */
   @Override
   public void wtf(String tag, String msg) {
@@ -114,8 +110,8 @@ public class FLogDefaultLoggingDelegate implements LoggingDelegate {
   }
 
   /**
-   * <p> Note: this gets forwarded to {@code android.util.Log.e} as {@code android.util.Log.wtf}
-   * might crash the app.
+   * Note: this gets forwarded to {@code android.util.Log.e} as {@code android.util.Log.wtf} might
+   * crash the app.
    */
   @Override
   public void wtf(String tag, String msg, Throwable tr) {

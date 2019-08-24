@@ -28,10 +28,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import robolectric3.shadows.ShadowMotionEvent;
 
-/**
- * Tests for {@link MultiPointerGestureDetector}
- */
-@Config(shadows={ShadowMotionEvent.class})
+/** Tests for {@link MultiPointerGestureDetector} */
+@Config(shadows = {ShadowMotionEvent.class})
 @RunWith(RobolectricTestRunner.class)
 public class MultiPointerGestureDetectorTest {
 
@@ -174,5 +172,4 @@ public class MultiPointerGestureDetectorTest {
     event3.recycle();
     event4.recycle();
   }
-
 }

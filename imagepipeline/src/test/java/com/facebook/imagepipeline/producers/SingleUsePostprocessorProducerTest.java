@@ -34,7 +34,7 @@ import org.robolectric.*;
 import org.robolectric.annotation.*;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class SingleUsePostprocessorProducerTest {
 
   private static final String PRODUCER_NAME = PostprocessorProducer.NAME;
@@ -69,10 +69,7 @@ public class SingleUsePostprocessorProducerTest {
     MockitoAnnotations.initMocks(this);
     mTestExecutorService = new TestExecutorService(new FakeClock());
     mPostprocessorProducer =
-        new PostprocessorProducer(
-            mInputProducer,
-            mPlatformBitmapFactory,
-            mTestExecutorService);
+        new PostprocessorProducer(mInputProducer, mPlatformBitmapFactory, mTestExecutorService);
 
     when(mImageRequest.getPostprocessor()).thenReturn(mPostprocessor);
     when(mProducerContext.getId()).thenReturn(mRequestId);
@@ -83,22 +80,22 @@ public class SingleUsePostprocessorProducerTest {
     when(mPostprocessor.getName()).thenReturn(POSTPROCESSOR_NAME);
     when(mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)).thenReturn(true);
     doAnswer(
-        new Answer<Object>() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            mResults.add(
-                ((CloseableReference<CloseableImage>) invocation.getArguments()[0]).clone());
-            return null;
-          }
-        }
-    ).when(mConsumer).onNewResult(any(CloseableReference.class), anyInt());
+            new Answer<Object>() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                mResults.add(
+                    ((CloseableReference<CloseableImage>) invocation.getArguments()[0]).clone());
+                return null;
+              }
+            })
+        .when(mConsumer)
+        .onNewResult(any(CloseableReference.class), anyInt());
     mInOrder = inOrder(mPostprocessor, mProducerListener, mConsumer);
 
     mSourceBitmap = mock(Bitmap.class);
     mSourceCloseableStaticBitmap = mock(CloseableStaticBitmap.class);
     when(mSourceCloseableStaticBitmap.getUnderlyingBitmap()).thenReturn(mSourceBitmap);
-    mSourceCloseableImageRef =
-        CloseableReference.<CloseableImage>of(mSourceCloseableStaticBitmap);
+    mSourceCloseableImageRef = CloseableReference.<CloseableImage>of(mSourceCloseableStaticBitmap);
     mDestinationBitmap = mock(Bitmap.class);
     mDestinationCloseableBitmapRef =
         CloseableReference.of(mDestinationBitmap, mBitmapResourceReleaser);
@@ -115,14 +112,14 @@ public class SingleUsePostprocessorProducerTest {
     assertEquals(0, mResults.size());
 
     verify(mSourceCloseableStaticBitmap).close();
-
   }
 
   @Test
   public void testSuccess() {
     SingleUsePostprocessorConsumer postprocessorConsumer = produceResults();
     doReturn(mDestinationCloseableBitmapRef)
-        .when(mPostprocessor).process(mSourceBitmap, mPlatformBitmapFactory);
+        .when(mPostprocessor)
+        .process(mSourceBitmap, mPlatformBitmapFactory);
     postprocessorConsumer.onNewResult(mSourceCloseableImageRef, Consumer.IS_LAST);
     mSourceCloseableImageRef.close();
     mTestExecutorService.runUntilIdle();
@@ -154,7 +151,8 @@ public class SingleUsePostprocessorProducerTest {
   public void testFailure() {
     SingleUsePostprocessorConsumer postprocessorConsumer = produceResults();
     doThrow(new RuntimeException())
-        .when(mPostprocessor).process(eq(mSourceBitmap), eq(mPlatformBitmapFactory));
+        .when(mPostprocessor)
+        .process(eq(mSourceBitmap), eq(mPlatformBitmapFactory));
     postprocessorConsumer.onNewResult(mSourceCloseableImageRef, Consumer.IS_LAST);
     mSourceCloseableImageRef.close();
     mTestExecutorService.runUntilIdle();

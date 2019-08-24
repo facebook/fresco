@@ -41,23 +41,12 @@ public class HashCodeUtilTest {
   }
 
   private void testCase(Object o1, Object o2, Object o3, Object o4, Object o5, Object o6) {
+    assertEquals(Objects.hashCode(o1), HashCodeUtil.hashCode(o1));
+    assertEquals(Objects.hashCode(o1, o2), HashCodeUtil.hashCode(o1, o2));
+    assertEquals(Objects.hashCode(o1, o2, o3), HashCodeUtil.hashCode(o1, o2, o3));
+    assertEquals(Objects.hashCode(o1, o2, o3, o4), HashCodeUtil.hashCode(o1, o2, o3, o4));
+    assertEquals(Objects.hashCode(o1, o2, o3, o4, o5), HashCodeUtil.hashCode(o1, o2, o3, o4, o5));
     assertEquals(
-        Objects.hashCode(o1),
-        HashCodeUtil.hashCode(o1));
-    assertEquals(
-        Objects.hashCode(o1, o2),
-        HashCodeUtil.hashCode(o1, o2));
-    assertEquals(
-        Objects.hashCode(o1, o2, o3),
-        HashCodeUtil.hashCode(o1, o2, o3));
-    assertEquals(
-        Objects.hashCode(o1, o2, o3, o4),
-        HashCodeUtil.hashCode(o1, o2, o3, o4));
-    assertEquals(
-        Objects.hashCode(o1, o2, o3, o4, o5),
-        HashCodeUtil.hashCode(o1, o2, o3, o4, o5));
-    assertEquals(
-        Objects.hashCode(o1, o2, o3, o4, o5, o6),
-        HashCodeUtil.hashCode(o1, o2, o3, o4, o5, o6));
+        Objects.hashCode(o1, o2, o3, o4, o5, o6), HashCodeUtil.hashCode(o1, o2, o3, o4, o5, o6));
   }
 }

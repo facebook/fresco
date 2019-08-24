@@ -29,11 +29,9 @@ import org.mockito.stubbing.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
 
-/**
- * Basic tests for LocalFileFetchProducer
- */
+/** Basic tests for LocalFileFetchProducer */
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class LocalFileFetchProducerTest {
   private static final String PRODUCER_NAME = LocalFileFetchProducer.PRODUCER_NAME;
   private static final int INPUT_STREAM_LENGTH = 100;
@@ -54,32 +52,32 @@ public class LocalFileFetchProducerTest {
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
     mExecutor = new TestExecutorService(new FakeClock());
-    mLocalFileFetchProducer =
-        new LocalFileFetchProducer(mExecutor, mPooledByteBufferFactory);
+    mLocalFileFetchProducer = new LocalFileFetchProducer(mExecutor, mPooledByteBufferFactory);
     mFile = new File(RuntimeEnvironment.application.getExternalFilesDir(null), TEST_FILENAME);
     BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(mFile));
-    bos.write(new byte[INPUT_STREAM_LENGTH], 0 , INPUT_STREAM_LENGTH);
+    bos.write(new byte[INPUT_STREAM_LENGTH], 0, INPUT_STREAM_LENGTH);
     bos.close();
 
-    mProducerContext = new SettableProducerContext(
-        mImageRequest,
-        mRequestId,
-        mProducerListener,
-        mock(Object.class),
-        ImageRequest.RequestLevel.FULL_FETCH,
-        false,
-        true,
-        Priority.MEDIUM);
+    mProducerContext =
+        new SettableProducerContext(
+            mImageRequest,
+            mRequestId,
+            mProducerListener,
+            mock(Object.class),
+            ImageRequest.RequestLevel.FULL_FETCH,
+            false,
+            true,
+            Priority.MEDIUM);
     when(mImageRequest.getSourceFile()).thenReturn(mFile);
     doAnswer(
-        new Answer() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            mCapturedEncodedImage =
-                EncodedImage.cloneOrNull((EncodedImage) invocation.getArguments()[0]);
-            return null;
-          }
-        })
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                mCapturedEncodedImage =
+                    EncodedImage.cloneOrNull((EncodedImage) invocation.getArguments()[0]);
+                return null;
+              }
+            })
         .when(mConsumer)
         .onNewResult(notNull(EncodedImage.class), anyInt());
   }
@@ -105,8 +103,10 @@ public class LocalFileFetchProducerTest {
     mExecutor.runUntilIdle();
     assertEquals(
         2,
-        mCapturedEncodedImage.getByteBufferRef()
-            .getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+        mCapturedEncodedImage
+            .getByteBufferRef()
+            .getUnderlyingReferenceTestOnly()
+            .getRefCountTestOnly());
     assertSame(pooledByteBuffer, mCapturedEncodedImage.getByteBufferRef().get());
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
     verify(mProducerListener).onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);

@@ -15,12 +15,9 @@ package com.facebook.samples.comparison.urlsfetcher;
 import com.facebook.common.internal.Preconditions;
 import java.util.Map;
 
-/**
- * Encapsulates url and set of image types together with corresponding
- * resizing options.
- */
+/** Encapsulates url and set of image types together with corresponding resizing options. */
 public class ImageUrlsRequest {
-  final private String mEndpointUrl;
+  private final String mEndpointUrl;
   Map<ImageFormat, ImageSize> mRequestedImageFormats;
 
   ImageUrlsRequest(final String endpointUrl, Map<ImageFormat, ImageSize> requestedTypes) {

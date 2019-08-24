@@ -66,6 +66,7 @@ public class MemoryPooledByteBufferOutputStream extends PooledByteBufferOutputSt
 
   /**
    * Returns the total number of bytes written to this stream so far.
+   *
    * @return the number of bytes written to this stream.
    */
   @Override
@@ -75,6 +76,7 @@ public class MemoryPooledByteBufferOutputStream extends PooledByteBufferOutputSt
 
   /**
    * Write one byte to the underlying stream. The underlying stream MUST be valid
+   *
    * @param oneByte the one byte to write
    * @throws InvalidStreamException if the stream is invalid
    * @throws IOException in case of an I/O error during the write
@@ -82,29 +84,26 @@ public class MemoryPooledByteBufferOutputStream extends PooledByteBufferOutputSt
   @Override
   public void write(int oneByte) throws IOException {
     byte[] buf = new byte[1];
-    buf[0] = (byte)oneByte;
+    buf[0] = (byte) oneByte;
     this.write(buf);
   }
 
   /**
-   * Writes {@code count} bytes from the byte array {@code buffer} starting at
-   * position {@code offset} to this stream.
-   * The underlying stream MUST be valid
+   * Writes {@code count} bytes from the byte array {@code buffer} starting at position {@code
+   * offset} to this stream. The underlying stream MUST be valid
    *
    * @param buffer the source buffer to read from
    * @param offset the start position in {@code buffer} from where to get bytes.
    * @param count the number of bytes from {@code buffer} to write to this stream.
    * @throws IOException if an error occurs while writing to this stream.
-   * @throws IndexOutOfBoundsException
-   *             if {@code offset < 0} or {@code count < 0}, or if
-   *             {@code offset + count} is bigger than the length of
-   *             {@code buffer}.
+   * @throws IndexOutOfBoundsException if {@code offset < 0} or {@code count < 0}, or if {@code
+   *     offset + count} is bigger than the length of {@code buffer}.
    * @throws InvalidStreamException if the stream is invalid
    */
   public void write(byte[] buffer, int offset, int count) throws IOException {
     if (offset < 0 || count < 0 || offset + count > buffer.length) {
-      throw new ArrayIndexOutOfBoundsException("length=" + buffer.length + "; regionStart=" + offset
-          + "; regionLength=" + count);
+      throw new ArrayIndexOutOfBoundsException(
+          "length=" + buffer.length + "; regionStart=" + offset + "; regionLength=" + count);
     }
     ensureValid();
     realloc(mCount + count);
@@ -115,6 +114,7 @@ public class MemoryPooledByteBufferOutputStream extends PooledByteBufferOutputSt
   /**
    * Closes the stream. Owned resources are released back to the pool. It is not allowed to call
    * toByteBuffer after call to this method.
+   *
    * @throws IOException
    */
   @Override
@@ -126,8 +126,9 @@ public class MemoryPooledByteBufferOutputStream extends PooledByteBufferOutputSt
   }
 
   /**
-   * Reallocate the local buffer to hold the new length specified.
-   * Also copy over existing data to this new buffer
+   * Reallocate the local buffer to hold the new length specified. Also copy over existing data to
+   * this new buffer
+   *
    * @param newLength new length of buffer
    * @throws InvalidStreamException if the stream is invalid
    * @throws BasePool.SizeTooLargeException if the allocation from the pool fails
@@ -146,8 +147,9 @@ public class MemoryPooledByteBufferOutputStream extends PooledByteBufferOutputSt
   }
 
   /**
-   * Ensure that the current stream is valid, that is underlying closeable reference is not null
-   * and is valid
+   * Ensure that the current stream is valid, that is underlying closeable reference is not null and
+   * is valid
+   *
    * @throws InvalidStreamException if the stream is invalid
    */
   private void ensureValid() {
@@ -156,9 +158,7 @@ public class MemoryPooledByteBufferOutputStream extends PooledByteBufferOutputSt
     }
   }
 
-  /**
-   * An exception indicating that this stream is no longer valid
-   */
+  /** An exception indicating that this stream is no longer valid */
   public static class InvalidStreamException extends RuntimeException {
     public InvalidStreamException() {
       super("OutputStream no longer valid");

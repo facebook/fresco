@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 /**
  * Instrumentation for Producers.
  *
- * <p> Implementation of a producer should call these methods when appropriate to notify other
+ * <p>Implementation of a producer should call these methods when appropriate to notify other
  * components interested in execution progress.
  */
 public interface ProducerListener {
@@ -35,41 +35,34 @@ public interface ProducerListener {
   /**
    * Called when a producer successfully finishes processing current unit of work.
    *
-   * @param extraMap Additional parameters about the producer. This map is immutable and will
-   * throw an exception if attempts are made to modify it.
+   * @param extraMap Additional parameters about the producer. This map is immutable and will throw
+   *     an exception if attempts are made to modify it.
    */
   void onProducerFinishWithSuccess(
-      String requestId,
-      String producerName,
-      @Nullable Map<String, String> extraMap);
+      String requestId, String producerName, @Nullable Map<String, String> extraMap);
 
   /**
    * Called when producer finishes processing current unit of work due to an error.
    *
-   * @param extraMap Additional parameters about the producer. This map is immutable and will
-   * throw an exception if attempts are made to modify it.
+   * @param extraMap Additional parameters about the producer. This map is immutable and will throw
+   *     an exception if attempts are made to modify it.
    */
   void onProducerFinishWithFailure(
-      String requestId,
-      String producerName,
-      Throwable t,
-      @Nullable Map<String, String> extraMap);
+      String requestId, String producerName, Throwable t, @Nullable Map<String, String> extraMap);
 
   /**
    * Called once when producer finishes due to cancellation.
    *
-   * @param extraMap Additional parameters about the producer. This map is immutable and will
-   * throw an exception if attempts are made to modify it.
+   * @param extraMap Additional parameters about the producer. This map is immutable and will throw
+   *     an exception if attempts are made to modify it.
    */
   void onProducerFinishWithCancellation(
-      String requestId,
-      String producerName,
-      @Nullable Map<String, String> extraMap);
+      String requestId, String producerName, @Nullable Map<String, String> extraMap);
 
   /**
    * Called when the producer which can create the final result for a given request has completed.
    *
-   * <p> This can be used to determine which producer was best able to satisfy the request.
+   * <p>This can be used to determine which producer was best able to satisfy the request.
    */
   void onUltimateProducerReached(String requestId, String producerName, boolean successful);
 

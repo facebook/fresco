@@ -11,9 +11,7 @@ import android.graphics.Bitmap;
 import com.facebook.common.references.CloseableReference;
 import java.util.List;
 
-/**
- * Builder for {@link AnimatedImageResult}.
- */
+/** Builder for {@link AnimatedImageResult}. */
 public class AnimatedImageResultBuilder {
 
   private final AnimatedImage mImage;
@@ -38,7 +36,7 @@ public class AnimatedImageResultBuilder {
    * Gets the preview bitmap. This method returns a new reference. The caller must close it.
    *
    * @return the reference to the preview bitmap or null if none was set. This returns a reference
-   *    that must be released by the caller
+   *     that must be released by the caller
    */
   public CloseableReference<Bitmap> getPreviewBitmap() {
     return CloseableReference.cloneOrNull(mPreviewBitmap);
@@ -77,19 +75,19 @@ public class AnimatedImageResultBuilder {
   }
 
   /**
-   * Gets the decoded frames. Only used if the {@code ImageDecodeOptions} were configured to
-   * decode all frames at decode time.
+   * Gets the decoded frames. Only used if the {@code ImageDecodeOptions} were configured to decode
+   * all frames at decode time.
    *
    * @return the references to the decoded frames or null if none was set. This returns references
-   *    that must be released by the caller
+   *     that must be released by the caller
    */
   public List<CloseableReference<Bitmap>> getDecodedFrames() {
     return CloseableReference.cloneOrNull(mDecodedFrames);
   }
 
   /**
-   * Sets the decoded frames. Only used if the {@code ImageDecodeOptions} were configured to
-   * decode all frames at decode time.
+   * Sets the decoded frames. Only used if the {@code ImageDecodeOptions} were configured to decode
+   * all frames at decode time.
    *
    * @param decodedFrames the decoded frames. The method clones the references.
    */

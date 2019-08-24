@@ -7,8 +7,8 @@
 package com.facebook.fresco.animation.drawable;
 
 /**
- * Animation listener that can be used to get notified about {@link AnimatedDrawable2} events.
- * Call {@link AnimatedDrawable2#setAnimationListener(AnimationListener)} to set a listener.
+ * Animation listener that can be used to get notified about {@link AnimatedDrawable2} events. Call
+ * {@link AnimatedDrawable2#setAnimationListener(AnimationListener)} to set a listener.
  */
 public interface AnimationListener {
 
@@ -34,9 +34,8 @@ public interface AnimationListener {
   void onAnimationReset(AnimatedDrawable2 drawable);
 
   /**
-   * Called when the animation is repeated for the given drawable.
-   * Animations have a loop count, and frame count, so this is called when
-   * the frame count is 0 and the loop count is increased.
+   * Called when the animation is repeated for the given drawable. Animations have a loop count, and
+   * frame count, so this is called when the frame count is 0 and the loop count is increased.
    *
    * @param drawable the affected drawable
    */

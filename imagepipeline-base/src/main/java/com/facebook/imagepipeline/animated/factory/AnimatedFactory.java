@@ -17,9 +17,12 @@ import javax.annotation.concurrent.NotThreadSafe;
 @NotThreadSafe
 public interface AnimatedFactory {
 
-  @Nullable DrawableFactory getAnimatedDrawableFactory(Context context);
+  @Nullable
+  DrawableFactory getAnimatedDrawableFactory(Context context);
 
-  @Nullable ImageDecoder getGifDecoder(Bitmap.Config config);
+  @Nullable
+  ImageDecoder getGifDecoder(Bitmap.Config config);
 
-  @Nullable ImageDecoder getWebPDecoder(Bitmap.Config config);
+  @Nullable
+  ImageDecoder getWebPDecoder(Bitmap.Config config);
 }

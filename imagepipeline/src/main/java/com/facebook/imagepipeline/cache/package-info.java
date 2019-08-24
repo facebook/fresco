@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Implementations for the cache abstractions related to memory and disk.
- */
+/** Implementations for the cache abstractions related to memory and disk. */
 package com.facebook.imagepipeline.cache;

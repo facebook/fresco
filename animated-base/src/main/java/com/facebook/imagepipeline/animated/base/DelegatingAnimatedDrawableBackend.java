@@ -12,8 +12,8 @@ import android.graphics.Canvas;
 import com.facebook.common.references.CloseableReference;
 
 /**
- * A convenience base class that implements {@link AnimatedDrawableBackend} and delegates
- * to another class.
+ * A convenience base class that implements {@link AnimatedDrawableBackend} and delegates to another
+ * class.
  */
 public abstract class DelegatingAnimatedDrawableBackend implements AnimatedDrawableBackend {
 

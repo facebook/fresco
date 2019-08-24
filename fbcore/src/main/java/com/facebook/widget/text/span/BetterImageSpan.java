@@ -20,30 +20,29 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * A better implementation of image spans that also supports centering images against the text.
  *
- * In order to migrate from ImageSpan, replace {@code new ImageSpan(drawable, alignment)} with
+ * <p>In order to migrate from ImageSpan, replace {@code new ImageSpan(drawable, alignment)} with
  * {@code new BetterImageSpan(drawable, BetterImageSpan.normalizeAlignment(alignment))}.
  *
- * There are 2 main differences between BetterImageSpan and ImageSpan:
- * 1. Pass in ALIGN_CENTER to center images against the text.
- * 2. ALIGN_BOTTOM no longer unnecessarily increases the size of the text:
- *    DynamicDrawableSpan (ImageSpan's parent) adjusts sizes as if alignment was ALIGN_BASELINE
- *    which can lead to unnecessary whitespace.
+ * <p>There are 2 main differences between BetterImageSpan and ImageSpan: 1. Pass in ALIGN_CENTER to
+ * center images against the text. 2. ALIGN_BOTTOM no longer unnecessarily increases the size of the
+ * text: DynamicDrawableSpan (ImageSpan's parent) adjusts sizes as if alignment was ALIGN_BASELINE
+ * which can lead to unnecessary whitespace.
  */
 public class BetterImageSpan extends ReplacementSpan {
 
   @IntDef({ALIGN_BASELINE, ALIGN_BOTTOM, ALIGN_CENTER})
   @Retention(RetentionPolicy.SOURCE)
   public @interface BetterImageSpanAlignment {}
+
   public static final int ALIGN_BOTTOM = 0;
   public static final int ALIGN_BASELINE = 1;
   public static final int ALIGN_CENTER = 2;
 
   /**
-   * A helper function to allow dropping in BetterImageSpan as a replacement to ImageSpan,
-   * and allowing for center alignment if passed in.
+   * A helper function to allow dropping in BetterImageSpan as a replacement to ImageSpan, and
+   * allowing for center alignment if passed in.
    */
-  public static final @BetterImageSpanAlignment
-  int normalizeAlignment(int alignment) {
+  public static final @BetterImageSpanAlignment int normalizeAlignment(int alignment) {
     switch (alignment) {
       case DynamicDrawableSpan.ALIGN_BOTTOM:
         return ALIGN_BOTTOM;
@@ -76,16 +75,10 @@ public class BetterImageSpan extends ReplacementSpan {
     return mDrawable;
   }
 
-  /**
-   * Returns the width of the image span and increases the height if font metrics are available.
-   */
+  /** Returns the width of the image span and increases the height if font metrics are available. */
   @Override
   public int getSize(
-      Paint paint,
-      CharSequence text,
-      int start,
-      int end,
-      Paint.FontMetricsInt fontMetrics) {
+      Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fontMetrics) {
     updateBounds();
     if (fontMetrics == null) {
       return mWidth;

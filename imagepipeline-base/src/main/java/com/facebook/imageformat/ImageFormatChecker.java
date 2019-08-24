@@ -17,17 +17,14 @@ import java.io.InputStream;
 import java.util.List;
 import javax.annotation.Nullable;
 
-/**
- * Detects the format of an encoded image.
- */
+/** Detects the format of an encoded image. */
 public class ImageFormatChecker {
 
   private static ImageFormatChecker sInstance;
 
   private int mMaxHeaderLength;
 
-  @Nullable
-  private List<ImageFormat.FormatChecker> mCustomImageFormatCheckers;
+  @Nullable private List<ImageFormat.FormatChecker> mCustomImageFormatCheckers;
 
   private final ImageFormat.FormatChecker mDefaultFormatChecker = new DefaultImageFormatChecker();
 
@@ -72,10 +69,10 @@ public class ImageFormatChecker {
   }
 
   /**
-   * Reads up to maxHeaderLength bytes from is InputStream. If mark is supported by is, it is
-   * used to restore content of the stream after appropriate amount of data is read.
-   * Read bytes are stored in imageHeaderBytes, which should be capable of storing
-   * maxHeaderLength bytes.
+   * Reads up to maxHeaderLength bytes from is InputStream. If mark is supported by is, it is used
+   * to restore content of the stream after appropriate amount of data is read. Read bytes are
+   * stored in imageHeaderBytes, which should be capable of storing maxHeaderLength bytes.
+   *
    * @param maxHeaderLength the maximum header length
    * @param is
    * @param imageHeaderBytes
@@ -83,10 +80,7 @@ public class ImageFormatChecker {
    * @throws IOException
    */
   private static int readHeaderFromStream(
-      int maxHeaderLength,
-      final InputStream is,
-      final byte[] imageHeaderBytes)
-      throws IOException {
+      int maxHeaderLength, final InputStream is, final byte[] imageHeaderBytes) throws IOException {
     Preconditions.checkNotNull(is);
     Preconditions.checkNotNull(imageHeaderBytes);
     Preconditions.checkArgument(imageHeaderBytes.length >= maxHeaderLength);
@@ -107,6 +101,7 @@ public class ImageFormatChecker {
 
   /**
    * Get the currently used instance of the image format checker
+   *
    * @return the image format checker to use
    */
   public static synchronized ImageFormatChecker getInstance() {
@@ -117,11 +112,11 @@ public class ImageFormatChecker {
   }
 
   /**
-   * Tries to read up to MAX_HEADER_LENGTH bytes from InputStream is and use read bytes to
-   * determine type of the image contained in is. If provided input stream does not support mark,
-   * then this method consumes data from is and it is not safe to read further bytes from is after
-   * this method returns. Otherwise, if mark is supported, it will be used to preserve original
-   * content of is.
+   * Tries to read up to MAX_HEADER_LENGTH bytes from InputStream is and use read bytes to determine
+   * type of the image contained in is. If provided input stream does not support mark, then this
+   * method consumes data from is and it is not safe to read further bytes from is after this method
+   * returns. Otherwise, if mark is supported, it will be used to preserve original content of is.
+   *
    * @param is
    * @return ImageFormat matching content of is InputStream or UNKNOWN if no type is suitable
    * @throws IOException if exception happens during read
@@ -143,9 +138,10 @@ public class ImageFormatChecker {
   }
 
   /**
-   * Reads image header from a file indicated by provided filename and determines
-   * its format. This method does not throw IOException if one occurs. In this case,
-   * {@link ImageFormat#UNKNOWN} will be returned.
+   * Reads image header from a file indicated by provided filename and determines its format. This
+   * method does not throw IOException if one occurs. In this case, {@link ImageFormat#UNKNOWN} will
+   * be returned.
+   *
    * @param filename
    * @return ImageFormat for image stored in filename
    */

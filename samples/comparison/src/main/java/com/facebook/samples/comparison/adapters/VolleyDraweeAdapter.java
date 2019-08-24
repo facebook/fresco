@@ -23,28 +23,24 @@ import com.facebook.samples.comparison.holders.VolleyDraweeHolder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedDraweeView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 
-/**
- * RecyclerView Adapter for Volley using Drawee
- */
+/** RecyclerView Adapter for Volley using Drawee */
 public class VolleyDraweeAdapter extends ImageListAdapter {
 
-  public VolleyDraweeAdapter(
-      Context context,
-      PerfListener perfListener) {
+  public VolleyDraweeAdapter(Context context, PerfListener perfListener) {
     super(context, perfListener);
     final VolleyDraweeControllerBuilderSupplier supplier =
         new VolleyDraweeControllerBuilderSupplier(
-            context,
-            SampleVolleyFactory.getImageLoader(context));
+            context, SampleVolleyFactory.getImageLoader(context));
     InstrumentedDraweeView.initialize(supplier);
   }
 
   @Override
   public VolleyDraweeHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    GenericDraweeHierarchy gdh = new GenericDraweeHierarchyBuilder(getContext().getResources())
-        .setPlaceholderImage(Drawables.sPlaceholderDrawable)
-        .setFailureImage(Drawables.sErrorDrawable)
-        .build();
+    GenericDraweeHierarchy gdh =
+        new GenericDraweeHierarchyBuilder(getContext().getResources())
+            .setPlaceholderImage(Drawables.sPlaceholderDrawable)
+            .setFailureImage(Drawables.sErrorDrawable)
+            .build();
     InstrumentedDraweeView view = new InstrumentedDraweeView(getContext());
     view.setHierarchy(gdh);
     return new VolleyDraweeHolder(getContext(), parent, view, getPerfListener());

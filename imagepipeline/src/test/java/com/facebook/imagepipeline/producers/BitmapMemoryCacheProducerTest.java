@@ -34,16 +34,14 @@ import org.robolectric.*;
 import org.robolectric.annotation.*;
 
 /**
- * Checks basic properties of bitmap memory cache producer operation, that is:
- *   - it delegates to the {@link MemoryCache#get(Object)}
- *   - if {@link MemoryCache#get(Object)} is unsuccessful, then it passes the
- *   request to the next producer in the sequence.
- *   - if the next producer returns the value of higher quality,
- *   then it is put into the bitmap cache.
- *   - responses from the next producer are passed back down to the consumer.
+ * Checks basic properties of bitmap memory cache producer operation, that is: - it delegates to the
+ * {@link MemoryCache#get(Object)} - if {@link MemoryCache#get(Object)} is unsuccessful, then it
+ * passes the request to the next producer in the sequence. - if the next producer returns the value
+ * of higher quality, then it is put into the bitmap cache. - responses from the next producer are
+ * passed back down to the consumer.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class BitmapMemoryCacheProducerTest {
   private static final String PRODUCER_NAME = BitmapMemoryCacheProducer.PRODUCER_NAME;
   private static final int INTERMEDIATE_SCAN_1 = 2;
@@ -124,9 +122,7 @@ public class BitmapMemoryCacheProducerTest {
     Assert.assertTrue(!mFinalImageReference.isValid());
   }
 
-  /**
-   * Verify that stateful image results, both intermediate and final, are never cached.
-   */
+  /** Verify that stateful image results, both intermediate and final, are never cached. */
   @Test
   public void testDoNotCacheStatefulImage() {
     when(mCloseableImage1.isStateful()).thenReturn(true);
@@ -140,9 +136,8 @@ public class BitmapMemoryCacheProducerTest {
 
     verify(mConsumer).onNewResult(mIntermediateImageReference, Consumer.NO_FLAGS);
     verify(mConsumer).onNewResult(mFinalImageReference, Consumer.IS_LAST);
-    verify(mMemoryCache, never()).cache(
-        any(BitmapMemoryCacheKey.class),
-        any(CloseableReference.class));
+    verify(mMemoryCache, never())
+        .cache(any(BitmapMemoryCacheKey.class), any(CloseableReference.class));
   }
 
   @Test
@@ -156,9 +151,8 @@ public class BitmapMemoryCacheProducerTest {
     verify(mConsumer).onNewResult(mIntermediateImageReference, Consumer.IS_PARTIAL_RESULT);
     verify(mConsumer)
         .onNewResult(mFinalImageReference, Consumer.IS_LAST | Consumer.IS_PARTIAL_RESULT);
-    verify(mMemoryCache, never()).cache(
-        any(BitmapMemoryCacheKey.class),
-        any(CloseableReference.class));
+    verify(mMemoryCache, never())
+        .cache(any(BitmapMemoryCacheKey.class), any(CloseableReference.class));
   }
 
   @Test
@@ -215,8 +209,7 @@ public class BitmapMemoryCacheProducerTest {
     Assert.assertTrue(!mIntermediateImageReferenceClone.isValid());
     Assert.assertTrue(!mFinalImageReferenceClone.isValid());
     Assert.assertEquals(
-        0,
-        closeableImageRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+        0, closeableImageRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
     Map<String, String> extraMap =
         ImmutableMap.of(BitmapMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
@@ -241,8 +234,7 @@ public class BitmapMemoryCacheProducerTest {
     verify(mConsumer).onNewResult(mFinalImageReferenceClone, Consumer.IS_LAST);
     Assert.assertTrue(!mFinalImageReferenceClone.isValid());
     Assert.assertEquals(
-        0,
-        closeableImageRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+        0, closeableImageRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
     Map<String, String> extraMap =
         ImmutableMap.of(BitmapMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
@@ -267,8 +259,7 @@ public class BitmapMemoryCacheProducerTest {
     verify(mConsumer).onNewResult(mFinalImageReferenceClone, Consumer.IS_LAST);
     Assert.assertTrue(!mFinalImageReferenceClone.isValid());
     Assert.assertEquals(
-        0,
-        closeableImageRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+        0, closeableImageRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
     Map<String, String> extraMap =
         ImmutableMap.of(BitmapMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
@@ -343,8 +334,7 @@ public class BitmapMemoryCacheProducerTest {
   }
 
   private void setupBitmapMemoryCacheGetSuccess() {
-    when(mMemoryCache.get(eq(mBitmapMemoryCacheKey)))
-        .thenReturn(mFinalImageReference);
+    when(mMemoryCache.get(eq(mBitmapMemoryCacheKey))).thenReturn(mFinalImageReference);
   }
 
   private void setupBitmapMemoryCacheGetNotFound() {
@@ -352,15 +342,12 @@ public class BitmapMemoryCacheProducerTest {
   }
 
   private void setupBitmapMemoryCacheGetIntermediateImage() {
-    when(mMemoryCache.get(eq(mBitmapMemoryCacheKey)))
-        .thenReturn(mIntermediateImageReference);
+    when(mMemoryCache.get(eq(mBitmapMemoryCacheKey))).thenReturn(mIntermediateImageReference);
   }
 
   private void setupBitmapMemoryCacheGetSuccessOnSecondRead(
       CloseableReference<CloseableImage> closeableImageRef) {
-    when(mMemoryCache.get(mBitmapMemoryCacheKey))
-        .thenReturn(null)
-        .thenReturn(closeableImageRef);
+    when(mMemoryCache.get(mBitmapMemoryCacheKey)).thenReturn(null).thenReturn(closeableImageRef);
   }
 
   private void setupInputProducerStreamingSuccess() {
@@ -369,10 +356,11 @@ public class BitmapMemoryCacheProducerTest {
 
   private void setupInputProducerStreamingSuccessWithStatusFlags(
       final @Consumer.Status int statusFlags) {
-    doAnswer(new ProduceResultsNewResultAnswer(
-            statusFlags,
-            Arrays.asList(mIntermediateImageReference, mFinalImageReference)))
-        .when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+    doAnswer(
+            new ProduceResultsNewResultAnswer(
+                statusFlags, Arrays.asList(mIntermediateImageReference, mFinalImageReference)))
+        .when(mInputProducer)
+        .produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   private void setupInputProducerNotFound() {
@@ -380,12 +368,14 @@ public class BitmapMemoryCacheProducerTest {
         new ArrayList<CloseableReference<CloseableImage>>(1);
     nullArray.add(null);
     doAnswer(new ProduceResultsNewResultAnswer(Consumer.NO_FLAGS, nullArray))
-        .when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+        .when(mInputProducer)
+        .produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   private void setupInputProducerFailure() {
-    doAnswer(new ProduceResultsFailureAnswer()).
-        when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+    doAnswer(new ProduceResultsFailureAnswer())
+        .when(mInputProducer)
+        .produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   private static class ProduceResultsNewResultAnswer implements Answer<Void> {
@@ -394,8 +384,7 @@ public class BitmapMemoryCacheProducerTest {
     private final List<CloseableReference<CloseableImage>> mResults;
 
     private ProduceResultsNewResultAnswer(
-        final @Consumer.Status int statusFlags,
-        List<CloseableReference<CloseableImage>> results) {
+        final @Consumer.Status int statusFlags, List<CloseableReference<CloseableImage>> results) {
       mStatusFlags = statusFlags;
       mResults = results;
     }
@@ -407,8 +396,7 @@ public class BitmapMemoryCacheProducerTest {
       while (iterator.hasNext()) {
         CloseableReference<CloseableImage> result = iterator.next();
         consumer.onNewResult(
-            result,
-            iterator.hasNext() ? mStatusFlags : Consumer.IS_LAST | mStatusFlags);
+            result, iterator.hasNext() ? mStatusFlags : Consumer.IS_LAST | mStatusFlags);
       }
       return null;
     }

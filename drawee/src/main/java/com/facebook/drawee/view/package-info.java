@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Classes Drawee uses for the customization and interaction with Views
- */
+/** Classes Drawee uses for the customization and interaction with Views */
 package com.facebook.drawee.view;

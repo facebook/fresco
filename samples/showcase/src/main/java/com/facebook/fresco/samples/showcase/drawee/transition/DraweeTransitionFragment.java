@@ -26,9 +26,7 @@ import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 
-/**
- * Simple drawee fragment that just displays an image.
- */
+/** Simple drawee fragment that just displays an image. */
 public class DraweeTransitionFragment extends BaseShowcaseFragment {
 
   public static final PointF FOCUS_POINT = new PointF(1, 0.5f);
@@ -51,12 +49,13 @@ public class DraweeTransitionFragment extends BaseShowcaseFragment {
     simpleDraweeView.setImageURI(imageUri);
     simpleDraweeView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.FOCUS_CROP);
     simpleDraweeView.getHierarchy().setActualImageFocusPoint(FOCUS_POINT);
-    simpleDraweeView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        startTransition(v, imageUri);
-      }
-    });
+    simpleDraweeView.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            startTransition(v, imageUri);
+          }
+        });
   }
 
   @Override
@@ -67,10 +66,8 @@ public class DraweeTransitionFragment extends BaseShowcaseFragment {
   public void startTransition(View startView, Uri uri) {
     Intent intent = ImageDetailsActivity.getStartIntent(getContext(), uri);
     final String transitionName = getString(R.string.transition_name);
-    final ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
-        getActivity(),
-        startView,
-        transitionName);
+    final ActivityOptions options =
+        ActivityOptions.makeSceneTransitionAnimation(getActivity(), startView, transitionName);
     startActivity(intent, options.toBundle());
   }
 }

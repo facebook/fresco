@@ -5,7 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Listeners for the image pipeline.
- */
+/** Listeners for the image pipeline. */
 package com.facebook.imagepipeline.listener;

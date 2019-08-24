@@ -65,8 +65,7 @@ public class KitKatPurgeableDecoderTest {
   protected static final Bitmap.Config DEFAULT_BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
   protected FlexByteArrayPool mFlexByteArrayPool;
 
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
+  @Rule public PowerMockRule rule = new PowerMockRule();
 
   static {
     SoLoader.setInTestMode();
@@ -105,10 +104,7 @@ public class KitKatPurgeableDecoderTest {
 
     mockStatic(BitmapFactory.class);
     when(BitmapFactory.decodeByteArray(
-            any(byte[].class),
-            anyInt(),
-            anyInt(),
-            any(BitmapFactory.Options.class)))
+            any(byte[].class), anyInt(), anyInt(), any(BitmapFactory.Options.class)))
         .thenReturn(mBitmap);
 
     mInputBuf = new byte[LENGTH];
@@ -152,10 +148,7 @@ public class KitKatPurgeableDecoderTest {
     verify(mFlexByteArrayPool).get(IMAGE_SIZE + 2);
     verifyStatic();
     BitmapFactory.decodeByteArray(
-        same(mDecodeBuf),
-        eq(0),
-        eq(IMAGE_SIZE + 2),
-        argThat(new BitmapFactoryOptionsMatcher()));
+        same(mDecodeBuf), eq(0), eq(IMAGE_SIZE + 2), argThat(new BitmapFactoryOptionsMatcher()));
     assertEquals((byte) 0xff, mDecodeBuf[5]);
     assertEquals((byte) 0xd9, mDecodeBuf[6]);
     assertEquals(2, mByteBufferRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
@@ -164,7 +157,6 @@ public class KitKatPurgeableDecoderTest {
     assertEquals(1, mBitmapCounter.getCount());
     assertEquals(MockBitmapFactory.DEFAULT_BITMAP_SIZE, mBitmapCounter.getSize());
   }
-
 
   @Test(expected = TooManyBitmapsException.class)
   public void testHitBitmapLimit_static() {
@@ -202,16 +194,14 @@ public class KitKatPurgeableDecoderTest {
     when(mFlexByteArrayPool.get(IMAGE_SIZE + 2)).thenReturn(mDecodeBufRef);
   }
 
-  private static class BitmapFactoryOptionsMatcher
-      extends ArgumentMatcher<BitmapFactory.Options> {
+  private static class BitmapFactoryOptionsMatcher extends ArgumentMatcher<BitmapFactory.Options> {
     @Override
     public boolean matches(Object argument) {
       if (argument == null) {
         return false;
       }
       BitmapFactory.Options options = (BitmapFactory.Options) argument;
-      return options.inDither &&
-          options.inPurgeable;
+      return options.inDither && options.inPurgeable;
     }
   }
 }

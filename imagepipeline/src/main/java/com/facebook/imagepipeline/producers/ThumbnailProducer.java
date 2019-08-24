@@ -13,9 +13,9 @@ import com.facebook.imagepipeline.common.ResizeOptions;
  * Implemented producers can be queried for whether they are likely to be able to produce a result
  * of the desired size.
  *
- * <p> {@link #produceResults(Consumer, ProducerContext)} may send a null image to the consumer,
- * even if an image is available, if the ultimate image is smaller than wanted. This may happen even
- * if the producer thought it would be able to satisfy the request.
+ * <p>{@link #produceResults(Consumer, ProducerContext)} may send a null image to the consumer, even
+ * if an image is available, if the ultimate image is smaller than wanted. This may happen even if
+ * the producer thought it would be able to satisfy the request.
  */
 public interface ThumbnailProducer<T> extends Producer<T> {
 

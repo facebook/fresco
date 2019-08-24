@@ -8,17 +8,15 @@ package com.facebook.imagepipeline.image;
 
 import android.graphics.Bitmap;
 
-/**
- * {@link CloseableImage} that wraps a bitmap.
- */
+/** {@link CloseableImage} that wraps a bitmap. */
 public abstract class CloseableBitmap extends CloseableImage {
 
   /**
-   * Gets the underlying bitmap.
-   * Note: care must be taken because subclasses might be more sophisticated than that. For example,
-   * animated bitmap may have many frames and this method will only return the first one.
+   * Gets the underlying bitmap. Note: care must be taken because subclasses might be more
+   * sophisticated than that. For example, animated bitmap may have many frames and this method will
+   * only return the first one.
+   *
    * @return the underlying bitmap
    */
   public abstract Bitmap getUnderlyingBitmap();
-
 }

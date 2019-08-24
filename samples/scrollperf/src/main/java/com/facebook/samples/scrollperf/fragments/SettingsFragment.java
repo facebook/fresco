@@ -29,15 +29,11 @@ import com.facebook.samples.scrollperf.conf.Const;
 import com.facebook.samples.scrollperf.preferences.SizePreferences;
 import com.facebook.samples.scrollperf.util.SizeUtil;
 
-/**
- * The Fragment for settings
- */
+/** The Fragment for settings */
 public class SettingsFragment extends PreferenceFragmentCompat
     implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-  /**
-   * The Tag for this Fragment
-   */
+  /** The Tag for this Fragment */
   public static final String TAG = SettingsFragment.class.getSimpleName();
 
   private ShowRestartMessageDialog mShowRestartMessageDialog;
@@ -72,8 +68,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateInstrumentationSummary(findPreference(Const.INSTRUMENTATION_ENABLED_KEY));
     updateNumberOfDecodingThreadSummary(findPreference(Const.DECODING_THREAD_KEY));
     // Set sizes
-    SizePreferences widthPreferences =
-        (SizePreferences) findPreference(Const.OVERRIDEN_WIDTH_KEY);
+    SizePreferences widthPreferences = (SizePreferences) findPreference(Const.OVERRIDEN_WIDTH_KEY);
     widthPreferences.setSeekBarMaxValue(SizeUtil.DISPLAY_WIDTH);
     SizePreferences heightPreferences =
         (SizePreferences) findPreference(Const.OVERRIDEN_HEIGHT_KEY);
@@ -178,17 +173,16 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   private void updateDataSourceSummary(final Preference preference) {
     updateListPreference(
-        getResources(),
-        (ListPreference) preference,
-        R.array.data_source_summaries);
+        getResources(), (ListPreference) preference, R.array.data_source_summaries);
   }
 
   private void updateInfiniteDataSourceSummary(final Preference preference) {
-    final boolean currentState = updateCheckBoxPreference(
-        getResources(),
-        (CheckBoxPreference) preference,
-        R.string.checked_infinite_data_source_summary,
-        R.string.unchecked_infinite_data_source_summary);
+    final boolean currentState =
+        updateCheckBoxPreference(
+            getResources(),
+            (CheckBoxPreference) preference,
+            R.string.checked_infinite_data_source_summary,
+            R.string.unchecked_infinite_data_source_summary);
     // We disableDistinct Uris if infinite is not enabled
     findPreference(Const.DISTINCT_DATA_SOURCE_KEY).setEnabled(currentState);
   }
@@ -203,9 +197,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   private void updateRecyclerLayoutSummary(final Preference preference) {
     updateListPreference(
-        getResources(),
-        (ListPreference) preference,
-        R.array.recycler_layout_summaries);
+        getResources(), (ListPreference) preference, R.array.recycler_layout_summaries);
     updateGridRecyclerLayoutSummary();
   }
 
@@ -260,23 +252,15 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   private void updateWhatPostprocessorSummary(final Preference preference) {
     updateListPreference(
-        getResources(),
-        (ListPreference) preference,
-        R.array.postprocessor_summaries);
+        getResources(), (ListPreference) preference, R.array.postprocessor_summaries);
   }
 
   private void updateBgColorSummary(final Preference preference) {
-    updateListPreference(
-        getResources(),
-        (ListPreference) preference,
-        R.array.bg_color_summaries);
+    updateListPreference(getResources(), (ListPreference) preference, R.array.bg_color_summaries);
   }
 
   private void updateWhatScaleTypeSummary(final Preference preference) {
-    updateListPreference(
-        getResources(),
-        (ListPreference) preference,
-        R.array.scale_type_summaries);
+    updateListPreference(getResources(), (ListPreference) preference, R.array.scale_type_summaries);
   }
 
   private void updateDecodeCancellationSummary(final Preference preference) {
@@ -310,28 +294,25 @@ public class SettingsFragment extends PreferenceFragmentCompat
   }
 
   private static void updateListPreference(
-      Resources resources,
-      ListPreference preference,
-      int arrayValuesId) {
+      Resources resources, ListPreference preference, int arrayValuesId) {
     final int valueIndex = preference.findIndexOfValue(preference.getValue());
     final String summary = resources.getStringArray(arrayValuesId)[valueIndex];
     preference.setSummary(summary);
   }
 
   private void updateAutoRotateSummary(final Preference preference) {
-    boolean currentState = updateCheckBoxPreference(
-        getResources(),
-        (CheckBoxPreference) preference,
-        R.string.checked_auto_rotate_summary,
-        R.string.unchecked_auto_rotate_summary);
+    boolean currentState =
+        updateCheckBoxPreference(
+            getResources(),
+            (CheckBoxPreference) preference,
+            R.string.checked_auto_rotate_summary,
+            R.string.unchecked_auto_rotate_summary);
     findPreference(Const.FORCED_ROTATION_ANGLE_KEY).setEnabled(!currentState);
   }
 
   private void updateRotationAngleSummary(final Preference preference) {
     updateListPreference(
-        getResources(),
-        (ListPreference) preference,
-        R.array.rotation_angle_summaries);
+        getResources(), (ListPreference) preference, R.array.rotation_angle_summaries);
   }
 
   private void updateDownsamplingSummary(final Preference preference) {
@@ -369,19 +350,18 @@ public class SettingsFragment extends PreferenceFragmentCompat
   }
 
   private void updateOverrideSizeSummary(final Preference preference) {
-    boolean currentState = updateCheckBoxPreference(
-        getResources(),
-        (CheckBoxPreference) preference,
-        R.string.checked_auto_size_override,
-        R.string.unchecked_auto_size_override);
+    boolean currentState =
+        updateCheckBoxPreference(
+            getResources(),
+            (CheckBoxPreference) preference,
+            R.string.checked_auto_size_override,
+            R.string.unchecked_auto_size_override);
     findPreference(Const.FORCED_ROTATION_ANGLE_KEY).setEnabled(!currentState);
   }
 
   private void updateFadeDurationSummary(final Preference preference) {
     updateListPreference(
-        getResources(),
-        (ListPreference) preference,
-        R.array.fade_duration_summaries);
+        getResources(), (ListPreference) preference, R.array.fade_duration_summaries);
   }
 
   private void updateDrawBorderSummary(final Preference preference) {
@@ -405,14 +385,17 @@ public class SettingsFragment extends PreferenceFragmentCompat
     public Dialog onCreateDialog(Bundle savedInstanceState) {
       // Use the Builder class for convenient dialog construction
       AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-      builder.setMessage(R.string.message_application_needs_restart)
+      builder
+          .setMessage(R.string.message_application_needs_restart)
           .setPositiveButton(android.R.string.ok, null)
-          .setNeutralButton(R.string.message_restart_now, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              System.exit(0);
-            }
-          });
+          .setNeutralButton(
+              R.string.message_restart_now,
+              new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                  System.exit(0);
+                }
+              });
       return builder.create();
     }
   }

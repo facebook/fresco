@@ -26,9 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests {@link AnimatedDrawableBackendFrameRenderer}
- */
+/** Tests {@link AnimatedDrawableBackendFrameRenderer} */
 @RunWith(RobolectricTestRunner.class)
 public class AnimatedDrawableBackendFrameRendererTest {
 
@@ -40,9 +38,8 @@ public class AnimatedDrawableBackendFrameRendererTest {
   public void setup() {
     mAnimatedDrawableBackend = mock(AnimatedDrawableBackend.class);
     mBitmapFrameCache = mock(BitmapFrameCache.class);
-    mAnimatedDrawableBackendFrameRenderer = new AnimatedDrawableBackendFrameRenderer(
-        mBitmapFrameCache,
-        mAnimatedDrawableBackend);
+    mAnimatedDrawableBackendFrameRenderer =
+        new AnimatedDrawableBackendFrameRenderer(mBitmapFrameCache, mAnimatedDrawableBackend);
   }
 
   @Test
@@ -58,8 +55,7 @@ public class AnimatedDrawableBackendFrameRendererTest {
 
   @Test
   public void testGetIntrinsicWidth() {
-    when(mAnimatedDrawableBackend.getWidth())
-        .thenReturn(123);
+    when(mAnimatedDrawableBackend.getWidth()).thenReturn(123);
 
     assertThat(mAnimatedDrawableBackendFrameRenderer.getIntrinsicWidth()).isEqualTo(123);
     assertThat(mAnimatedDrawableBackendFrameRenderer.getIntrinsicHeight()).isNotEqualTo(123);
@@ -67,8 +63,7 @@ public class AnimatedDrawableBackendFrameRendererTest {
 
   @Test
   public void testGetIntrinsicHeight() {
-    when(mAnimatedDrawableBackend.getHeight())
-        .thenReturn(1200);
+    when(mAnimatedDrawableBackend.getHeight()).thenReturn(1200);
 
     assertThat(mAnimatedDrawableBackendFrameRenderer.getIntrinsicHeight()).isEqualTo(1200);
     assertThat(mAnimatedDrawableBackendFrameRenderer.getIntrinsicWidth()).isNotEqualTo(1200);
@@ -76,8 +71,7 @@ public class AnimatedDrawableBackendFrameRendererTest {
 
   @Test
   public void testRenderFrame() {
-    when(mAnimatedDrawableBackend.getHeight())
-        .thenReturn(1200);
+    when(mAnimatedDrawableBackend.getHeight()).thenReturn(1200);
     Bitmap bitmap = mock(Bitmap.class);
     AnimatedDrawableFrameInfo animatedDrawableFrameInfo = mock(AnimatedDrawableFrameInfo.class);
     when(mAnimatedDrawableBackend.getFrameInfo(anyInt())).thenReturn(animatedDrawableFrameInfo);

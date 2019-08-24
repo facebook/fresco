@@ -10,9 +10,7 @@ package com.facebook.imagepipeline.nativecode;
 import android.os.Build;
 import com.facebook.soloader.SoLoader;
 
-/**
- * Single place responsible for ensuring that `static-webp.so` is loaded
- */
+/** Single place responsible for ensuring that `static-webp.so` is loaded */
 public class StaticWebpNativeLoader {
 
   private static boolean sInitialized;

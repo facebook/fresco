@@ -15,9 +15,8 @@ import java.util.List;
 /**
  * Single place responsible for loading libimagepipeline.so and its dependencies.
  *
- * If your class has a native method whose implementation lives in libimagepipeline.so then call
- * {@link ImagePipelineNativeLoader#load} in its static initializer:
- * <code>
+ * <p>If your class has a native method whose implementation lives in libimagepipeline.so then call
+ * {@link ImagePipelineNativeLoader#load} in its static initializer: <code>
  *   public class ClassWithNativeMethod {
  *     static {
  *       ImagePipelineNativeLoader.load();
@@ -31,6 +30,7 @@ public class ImagePipelineNativeLoader {
   public static final String DSO_NAME = "imagepipeline";
 
   public static final List<String> DEPENDENCIES;
+
   static {
     List<String> dependencies = new ArrayList<String>();
     DEPENDENCIES = Collections.unmodifiableList(dependencies);

@@ -101,18 +101,16 @@ public class DataSourceTestUtils {
       when(mDataSourceSupplier3.get()).thenReturn(mSrc3);
       mDataSubscriber = mock(DataSubscriber.class);
       mExecutor = CallerThreadExecutor.getInstance();
-      mInOrder = inOrder(
-          mSrc1,
-          mSrc2,
-          mSrc3,
-          mDataSourceSupplier1,
-          mDataSourceSupplier2,
-          mDataSourceSupplier3,
-          mDataSubscriber);
-      mSuppliers = Arrays.asList(
-          mDataSourceSupplier1,
-          mDataSourceSupplier2,
-          mDataSourceSupplier3);
+      mInOrder =
+          inOrder(
+              mSrc1,
+              mSrc2,
+              mSrc3,
+              mDataSourceSupplier1,
+              mDataSourceSupplier2,
+              mDataSourceSupplier3,
+              mDataSubscriber);
+      mSuppliers = Arrays.asList(mDataSourceSupplier1, mDataSourceSupplier2, mDataSourceSupplier3);
     }
 
     protected void verifyNoMoreInteractionsAll() {
@@ -157,24 +155,18 @@ public class DataSourceTestUtils {
     }
 
     protected DataSubscriber<Object> verifyGetAndSubscribe(
-        Supplier<DataSource<Object>> dataSourceSupplier,
-        DataSource<Object> underlyingDataSource) {
+        Supplier<DataSource<Object>> dataSourceSupplier, DataSource<Object> underlyingDataSource) {
       return verifyGetAndSubscribe(dataSourceSupplier, underlyingDataSource, false);
     }
 
     protected DataSubscriber<Object> verifyGetAndSubscribeM(
-        Supplier<DataSource<Object>> dataSourceSupplier,
-        DataSource<Object> underlyingDataSource) {
+        Supplier<DataSource<Object>> dataSourceSupplier, DataSource<Object> underlyingDataSource) {
       return verifyGetAndSubscribe(dataSourceSupplier, underlyingDataSource, true);
     }
 
-    /**
-     * Verifies that data source provided by our mDataSourceSupplier notified mDataSubscriber.
-     */
+    /** Verifies that data source provided by our mDataSourceSupplier notified mDataSubscriber. */
     protected void verifySubscriber(
-        DataSource<Object> dataSource,
-        DataSource<Object> underlyingDataSource,
-        int expected) {
+        DataSource<Object> dataSource, DataSource<Object> underlyingDataSource, int expected) {
       switch (expected) {
         case NO_INTERACTIONS:
           verifyNoMoreInteractionsAll();
@@ -195,9 +187,7 @@ public class DataSourceTestUtils {
       }
     }
 
-    /**
-     * Verifies the state of the data source provided by our mDataSourceSupplier.
-     */
+    /** Verifies the state of the data source provided by our mDataSourceSupplier. */
     protected void verifyState(
         DataSource<Object> dataSource,
         @Nullable DataSource<Object> dataSourceWithResult,
@@ -218,12 +208,11 @@ public class DataSourceTestUtils {
     }
 
     /**
-     * Verifies that the underlying data sources get closed when data source provided by
-     * our mDataSourceSupplier gets closed.
+     * Verifies that the underlying data sources get closed when data source provided by our
+     * mDataSourceSupplier gets closed.
      */
     protected void testClose(
-        DataSource<Object> dataSource,
-        DataSource<Object>... underlyingDataSources) {
+        DataSource<Object> dataSource, DataSource<Object>... underlyingDataSources) {
       dataSource.close();
       if (underlyingDataSources != null) {
         for (DataSource<Object> underlyingDataSource : underlyingDataSources) {
@@ -233,8 +222,8 @@ public class DataSourceTestUtils {
     }
 
     /**
-     * Gets data source from our mDataSourceSupplier and subscribes mDataSubscriber to it.
-     * Obtained data source is returned.
+     * Gets data source from our mDataSourceSupplier and subscribes mDataSubscriber to it. Obtained
+     * data source is returned.
      */
     protected DataSource<Object> getAndSubscribe() {
       DataSource<Object> dataSource = mDataSourceSupplier.get();
@@ -244,9 +233,7 @@ public class DataSourceTestUtils {
 
     /** Respond to subscriber with given data source and response. */
     protected static <T> void respond(
-        DataSubscriber<T> subscriber,
-        DataSource<T> dataSource,
-        int response) {
+        DataSubscriber<T> subscriber, DataSource<T> dataSource, int response) {
       switch (response) {
         case NO_INTERACTIONS:
           break;
@@ -264,17 +251,18 @@ public class DataSourceTestUtils {
 
     /** Schedule response on subscribe. */
     protected static <T> void respondOnSubscribe(
-        final DataSource<T> dataSource,
-        final int response) {
+        final DataSource<T> dataSource, final int response) {
       doAnswer(
-          new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-              DataSubscriber<T> subscriber = (DataSubscriber<T>) invocation.getArguments()[0];
-              respond(subscriber, dataSource, response);
-              return subscriber;
-            }
-          }).when(dataSource).subscribe(any(DataSubscriber.class), any(Executor.class));
+              new Answer() {
+                @Override
+                public Object answer(InvocationOnMock invocation) throws Throwable {
+                  DataSubscriber<T> subscriber = (DataSubscriber<T>) invocation.getArguments()[0];
+                  respond(subscriber, dataSource, response);
+                  return subscriber;
+                }
+              })
+          .when(dataSource)
+          .subscribe(any(DataSubscriber.class), any(Executor.class));
     }
   }
 }

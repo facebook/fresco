@@ -23,14 +23,12 @@ public class WatermarkPostprocessor extends BasePostprocessor {
   private static final int TEXT_COLOR = 0xBBFFFFFF;
   private static final int FONT_SIZE = 80;
 
-  final protected int mCount;
-  final protected String mWatermarkText;
+  protected final int mCount;
+  protected final String mWatermarkText;
   private final Random mRandom = new Random();
   private final Paint mPaint = new Paint();
 
-  public WatermarkPostprocessor(
-      int count,
-      String watermarkText) {
+  public WatermarkPostprocessor(int count, String watermarkText) {
     mCount = count;
     mWatermarkText = watermarkText;
   }

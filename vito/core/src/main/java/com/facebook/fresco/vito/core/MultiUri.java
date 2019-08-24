@@ -131,7 +131,8 @@ public class MultiUri {
       Object callerContext,
       @Nullable RequestListener requestListener,
       @Nullable String uiComponentId) {
-    return imagePipeline.fetchDecodedImage(imageRequest,
+    return imagePipeline.fetchDecodedImage(
+        imageRequest,
         callerContext,
         ImageRequest.RequestLevel.FULL_FETCH,
         requestListener,

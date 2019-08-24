@@ -23,8 +23,8 @@ import org.robolectric.ParameterizedRobolectricTestRunner;
 
 /**
  * Tests the dimensions assigned by {@link BetterImageSpan} ensuring the width/height of is
- * calculated correctly for different combinations of image and text height,
- * as well as span alignment.
+ * calculated correctly for different combinations of image and text height, as well as span
+ * alignment.
  */
 @RunWith(ParameterizedRobolectricTestRunner.class)
 public class BetterImageSpanTest {

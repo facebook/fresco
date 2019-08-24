@@ -7,9 +7,7 @@
 
 package com.facebook.imagepipeline.memory;
 
-/**
- * Listener that logs pool statistics.
- */
+/** Listener that logs pool statistics. */
 public interface PoolStatsTracker {
   String BUCKETS_USED_PREFIX = "buckets_used_";
   String USED_COUNT = "used_count";

@@ -5,14 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-
 package com.facebook.common.lifecycle;
 
 import android.view.View;
 
-/**
- * Attach detach listener.
- */
+/** Attach detach listener. */
 public interface AttachDetachListener {
 
   void onAttachToView(View view);

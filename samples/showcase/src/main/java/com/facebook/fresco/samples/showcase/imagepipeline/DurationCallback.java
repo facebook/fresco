@@ -11,9 +11,7 @@
  */
 package com.facebook.fresco.samples.showcase.imagepipeline;
 
-/**
- * Call back for passing along durations of computations.
- */
+/** Call back for passing along durations of computations. */
 public interface DurationCallback {
 
   void showDuration(long startNs);

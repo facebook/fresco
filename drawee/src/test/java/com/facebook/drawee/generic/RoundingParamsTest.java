@@ -46,13 +46,13 @@ public class RoundingParamsTest {
   @Test
   public void testSetRadii() {
     mRoundingParams.setCornersRadius(9);
-    assertArrayEquals(new float[]{9, 9, 9, 9, 9, 9, 9, 9}, mRoundingParams.getCornersRadii(), 0f);
+    assertArrayEquals(new float[] {9, 9, 9, 9, 9, 9, 9, 9}, mRoundingParams.getCornersRadii(), 0f);
 
     mRoundingParams.setCornersRadii(8, 7, 2, 1);
-    assertArrayEquals(new float[]{8, 8, 7, 7, 2, 2, 1, 1}, mRoundingParams.getCornersRadii(), 0f);
+    assertArrayEquals(new float[] {8, 8, 7, 7, 2, 2, 1, 1}, mRoundingParams.getCornersRadii(), 0f);
 
-    mRoundingParams.setCornersRadii(new float[]{1, 2, 3, 4, 5, 6, 7, 8});
-    assertArrayEquals(new float[]{1, 2, 3, 4, 5, 6, 7, 8}, mRoundingParams.getCornersRadii(), 0f);
+    mRoundingParams.setCornersRadii(new float[] {1, 2, 3, 4, 5, 6, 7, 8});
+    assertArrayEquals(new float[] {1, 2, 3, 4, 5, 6, 7, 8}, mRoundingParams.getCornersRadii(), 0f);
   }
 
   @Test
@@ -103,14 +103,14 @@ public class RoundingParamsTest {
 
     RoundingParams params2 = RoundingParams.fromCornersRadius(9);
     assertFalse(params2.getRoundAsCircle());
-    assertArrayEquals(new float[]{9, 9, 9, 9, 9, 9, 9, 9}, params2.getCornersRadii(), 0f);
+    assertArrayEquals(new float[] {9, 9, 9, 9, 9, 9, 9, 9}, params2.getCornersRadii(), 0f);
 
     RoundingParams params3 = RoundingParams.fromCornersRadii(8, 7, 2, 1);
     assertFalse(params3.getRoundAsCircle());
-    assertArrayEquals(new float[]{8, 8, 7, 7, 2, 2, 1, 1}, params3.getCornersRadii(), 0f);
+    assertArrayEquals(new float[] {8, 8, 7, 7, 2, 2, 1, 1}, params3.getCornersRadii(), 0f);
 
-    RoundingParams params4 = RoundingParams.fromCornersRadii(new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+    RoundingParams params4 = RoundingParams.fromCornersRadii(new float[] {1, 2, 3, 4, 5, 6, 7, 8});
     assertFalse(params4.getRoundAsCircle());
-    assertArrayEquals(new float[]{1, 2, 3, 4, 5, 6, 7, 8}, params4.getCornersRadii(), 0f);
+    assertArrayEquals(new float[] {1, 2, 3, 4, 5, 6, 7, 8}, params4.getCornersRadii(), 0f);
   }
 }
