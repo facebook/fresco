@@ -262,6 +262,118 @@ static void toCircle(
   }
 }
 
+enum Corner{TOP_LEFT, TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT};
+
+static void addRoundCorner(
+    JNIEnv* env,
+    pixel_t* pixelPtr,
+    const int w,
+    const int h,
+    const int radius,
+    const enum Corner corner) {
+
+  int centerX, centerY;
+
+  switch (corner) {
+    case TOP_LEFT:
+      centerX = radius;
+      centerY = radius;
+      break;
+    case TOP_RIGHT:
+      centerX = w - radius;
+      centerY = radius;
+      break;
+    case BOTTOM_RIGHT:
+      centerX = w - radius;
+      centerY = h - radius;
+      break;
+    case BOTTOM_LEFT:
+      centerX = radius;
+      centerY = h - radius;
+  }
+
+  if (radius < 1) {
+    safe_throw_exception(env, "Circle radius too small!");
+    return;
+  }
+  if (w <= 0 || h <= 0 || w > BITMAP_MAX_DIMENSION || h > BITMAP_MAX_DIMENSION) {
+    safe_throw_exception(env, "Invalid bitmap dimensions!");
+    return;
+  }
+  if (centerX < 0 || centerY < 0 || centerX >= w || centerY >= h) {
+    safe_throw_exception(env, "Invalid circle center coordinates!");
+    return;
+  }
+
+  int x = radius;
+  int y = 0;
+
+  int dx = 1;
+  int dy = 1;
+
+  const int rInc = - radius * 2;
+  int err = dx + rInc;
+
+  while (x >= y) {
+
+    const int cXpX = centerX + x;
+    const int cXmX = centerX - x;
+    const int cXpY = centerX + y;
+    const int cXmY = centerX - y;
+
+    const int cYpX = centerY + x;
+    const int cYmX = centerY - x;
+    const int cYpY = centerY + y;
+    const int cYmY = centerY - y;
+
+    if (x < 0 || cXpY >= w || cXmY < 0 || cYpY >= h || cYmY < 0) {
+      safe_throw_exception(env, "Invalid internal state!");
+      return;
+    }
+
+    const int offA = w * cYpY;
+    const int offB = w * cYmY;
+    const int offC = w * cYpX;
+    const int offD = w * cYmX;
+
+    const size_t leftBytesX = sizeof(pixel_t) * cXmX;
+    const size_t leftBytesY = sizeof(pixel_t) * cXmY;
+    const size_t rightBytesX = sizeof(pixel_t) * (w-cXpX);
+    const size_t rightBytesY = sizeof(pixel_t) * (w-cXpY);
+
+    switch (corner) {
+      case TOP_LEFT:
+        memset(pixelPtr + offB, TRANSPARENT_PIXEL_COLOR, leftBytesX);
+        memset(pixelPtr + offD, TRANSPARENT_PIXEL_COLOR, leftBytesY);
+        break;
+      case TOP_RIGHT:
+        memset(pixelPtr + offB + cXpX, TRANSPARENT_PIXEL_COLOR, rightBytesX);
+        memset(pixelPtr + offD + cXpY, TRANSPARENT_PIXEL_COLOR, rightBytesY);
+        break;
+      case BOTTOM_RIGHT:
+        memset(pixelPtr + offA + cXpX, TRANSPARENT_PIXEL_COLOR, rightBytesX);
+        memset(pixelPtr + offC + cXpY, TRANSPARENT_PIXEL_COLOR, rightBytesY);
+        break;
+      case BOTTOM_LEFT:
+        memset(pixelPtr + offA, TRANSPARENT_PIXEL_COLOR, leftBytesX);
+        memset(pixelPtr + offC, TRANSPARENT_PIXEL_COLOR, leftBytesY);
+    }
+
+    if (err <= 0) {
+      y++;
+
+      dy += 2;
+      err += dy;
+    }
+    if (err > 0) {
+      x--;
+
+      dx += 2;
+      err += dx + rInc;
+    }
+  }
+}
+
 static float getBorderPixelWeight(const int x, const int y, const int centerX, const int centerY, const float innerRadius) {
   const float distance = POW2(centerX - x) + POW2(centerY - y);
   const float targetDistUpper = POW2(innerRadius);
@@ -460,6 +572,59 @@ static void toCircleWithOptionalBorder(
     safe_throw_exception(env, "Failed to unlock Bitmap pixels");
   }
 }
+
+static void addRoundedCorners(
+    JNIEnv* env,
+    jclass clazz,
+    jobject bitmap,
+    jint radiusTopLeft,
+    jint radiusTopRight,
+    jint radiusBottomRight,
+    jint radiusBottomLeft) {
+  UNUSED(clazz);
+
+  AndroidBitmapInfo bitmapInfo;
+
+  int rc = AndroidBitmap_getInfo(env, bitmap, &bitmapInfo);
+  if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
+    safe_throw_exception(env, "Failed to get Bitmap info");
+    return;
+  }
+
+  if (bitmapInfo.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
+    safe_throw_exception(env, "Unexpected bitmap format");
+    return;
+  }
+
+  const int w = bitmapInfo.width;
+  const int h = bitmapInfo.height;
+
+  if (w > BITMAP_MAX_DIMENSION || h > BITMAP_MAX_DIMENSION) {
+    safe_throw_exception(env, "Bitmap dimensions too large");
+    return;
+  }
+
+  pixel_t* pixelPtr;
+
+  // Locking pixels such that they will not get moved around during processing
+  rc = AndroidBitmap_lockPixels(env, bitmap, (void*) &pixelPtr);
+  if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
+    safe_throw_exception(env, "Failed to lock Bitmap pixels");
+    return;
+  }
+
+  addRoundCorner(env, pixelPtr, w, h, radiusTopLeft, TOP_LEFT);
+  addRoundCorner(env, pixelPtr, w, h, radiusTopRight, TOP_RIGHT);
+  addRoundCorner(env, pixelPtr, w, h, radiusBottomRight, BOTTOM_RIGHT);
+  addRoundCorner(env, pixelPtr, w, h, radiusBottomLeft, BOTTOM_LEFT);
+
+  // Unlocking the pixels
+  rc = AndroidBitmap_unlockPixels(env, bitmap);
+  if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
+    safe_throw_exception(env, "Failed to unlock Bitmap pixels");
+  }
+}
+
 /**
  * A native implementation for rounding a given bitmap to a circular shape.
  * The underlying implementation uses a modified midpoint circle algorithm but instead of
@@ -473,11 +638,6 @@ static void RoundingFilter_toCircle(
   toCircleWithOptionalBorder(env, clazz, bitmap, 0, 0, anti_aliased);
 }
 
-/**
- * A native implementation for rounding a given bitmap to a circular shape and adds a border around
- * it. The underlying implementation uses a modified midpoint circle algorithm to draw the round
- * border and then clears all pixels starting from the circle all the way to the bitmap edges.
- */
 static void RoundingFilter_toCircleWithBorder(
     JNIEnv* env,
     jclass clazz,
@@ -488,6 +648,23 @@ static void RoundingFilter_toCircleWithBorder(
   toCircleWithOptionalBorder(env, clazz, bitmap, colorARGB, border_width, anti_aliased);
 }
 
+/**
+ * A native implementation for rounding corners of a given bitmap.
+ * The underlying implementation uses a modified midpoint circle algorithm to draw the round
+ * border and then clears all pixels starting from the circle all the way to the bitmap edges.
+ */
+
+static void RoundingFilter_addRoundedCorners(
+    JNIEnv* env,
+    jclass clazz,
+    jobject bitmap,
+    jint radiusTopLeft,
+    jint radiusTopRight,
+    jint radiusBottomRight,
+    jint radiusBottomLeft) {
+  addRoundedCorners(env, clazz, bitmap, radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft);
+}
+
 static JNINativeMethod rounding_native_methods[] = {
   { "nativeToCircleFilter",
     "(Landroid/graphics/Bitmap;Z)V",
@@ -495,6 +672,9 @@ static JNINativeMethod rounding_native_methods[] = {
   { "nativeToCircleWithBorderFilter",
         "(Landroid/graphics/Bitmap;IIZ)V",
         (void*) RoundingFilter_toCircleWithBorder },
+  { "nativeAddRoundedCornersFilter",
+          "(Landroid/graphics/Bitmap;IIII)V",
+          (void*) RoundingFilter_addRoundedCorners },
 };
 
 jint registerRoundingFilterMethods(JNIEnv* env) {

@@ -41,6 +41,7 @@ import com.facebook.imagepipeline.postprocessors.BlurPostProcessor;
 import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor;
 import com.facebook.imagepipeline.postprocessors.RoundAsCirclePostprocessor;
 import com.facebook.imagepipeline.postprocessors.RoundPostprocessor;
+import com.facebook.imagepipeline.postprocessors.RoundedCornersPostprocessor;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.request.Postprocessor;
@@ -211,6 +212,10 @@ public class ImagePipelinePostProcessorFragment extends BaseShowcaseFragment
             R.string.imagepipeline_postprocessor_set_round_as_aa_circle,
             new BenchmarkPostprocessorForDuplicatedBitmapInPlace(
                 this, new RoundAsCirclePostprocessor(true))),
+        new Entry(
+            R.string.imagepipeline_postprocessor_set_rounded_corners,
+            new BenchmarkPostprocessorForDuplicatedBitmapInPlace(
+                this, new RoundedCornersPostprocessor())),
         new Entry(
             R.string.imagepipeline_postprocessor_set_round_as_circle,
             new BenchmarkPostprocessorForDuplicatedBitmap(this, new RoundPostprocessor())));

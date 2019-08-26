@@ -23,6 +23,15 @@ public class NativeRoundingFilter {
     toCircle(bitmap, false);
   }
 
+  public static void addRoundedCorners(
+      Bitmap bitmap,
+      int radiusTopLeft,
+      int radiusTopRight,
+      int radiusBottomRight,
+      int radiusBottomLeft) {
+    nativeAddRoundedCornersFilter(
+        bitmap, radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft);
+  }
   /**
    * This is a fast, native implementation for rounding a bitmap. It takes the given bitmap and
    * modifies it to be circular.
@@ -49,4 +58,12 @@ public class NativeRoundingFilter {
   @DoNotStrip
   private static native void nativeToCircleWithBorderFilter(
       Bitmap bitmap, int colorARGB, int borderWidthPx, boolean antiAliased);
+
+  @DoNotStrip
+  private static native void nativeAddRoundedCornersFilter(
+      Bitmap bitmap,
+      int radiusTopLeft,
+      int radiusTopRight,
+      int radiusBottomRight,
+      int radiusBottomLeft);
 }

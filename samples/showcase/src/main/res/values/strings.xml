@@ -70,6 +70,7 @@
   <string name="imagepipeline_postprocessor_set_native_round_as_circle">Native Round As Circle Post-Processor</string>
   <string name="imagepipeline_postprocessor_set_round_as_circle">Round As Circle Post-Processor</string>
   <string name="imagepipeline_postprocessor_set_round_as_aa_circle">Antialiased Circle Post-Processor</string>
+  <string name="imagepipeline_postprocessor_set_rounded_corners">Rounded Corners Post-Processor</string>
   <string name="imagepipeline_postprocessor_refresh">Refresh</string>
 
   <string name="imagepipeline_prefetch_title">Prefetch</string>
