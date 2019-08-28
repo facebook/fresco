@@ -861,7 +861,8 @@ public class ImagePipeline {
       Object callerContext,
       Priority priority) {
     final RequestListener2 requestListener =
-        new InternalRequestListener(getRequestListenerForRequest(imageRequest, null), null);
+        new InternalRequestListener(
+            getRequestListenerForRequest(imageRequest, null), mRequestListener2);
 
     if (mCallerContextVerifier != null) {
       mCallerContextVerifier.verifyCallerContext(callerContext, true);
