@@ -153,8 +153,18 @@ public class FrescoContext {
         imageRequestBuilder.setImageDecodeOptions(
             ImageDecodeOptions.newBuilder()
                 .setBitmapConfig(imageOptions.getBitmapConfig())
+                .setCustomImageDecoder(
+                    imageOptions.getImageDecodeOptions() != null
+                        ? imageOptions.getImageDecodeOptions().customImageDecoder
+                        : null)
                 .build());
       }
+    } else if (imageOptions.getImageDecodeOptions() != null
+        && imageOptions.getImageDecodeOptions().customImageDecoder != null) {
+      imageRequestBuilder.setImageDecodeOptions(
+          ImageDecodeOptions.newBuilder()
+              .setCustomImageDecoder(imageOptions.getImageDecodeOptions().customImageDecoder)
+              .build());
     }
 
     imageRequestBuilder.setLocalThumbnailPreviewsEnabled(
