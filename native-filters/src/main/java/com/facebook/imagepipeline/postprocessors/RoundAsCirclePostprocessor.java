@@ -7,6 +7,7 @@
 package com.facebook.imagepipeline.postprocessors;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.imagepipeline.nativecode.NativeRoundingFilter;
@@ -30,7 +31,7 @@ public class RoundAsCirclePostprocessor extends BasePostprocessor {
 
   @Override
   public void process(Bitmap bitmap) {
-    NativeRoundingFilter.toCircle(bitmap, mEnableAntiAliasing);
+    NativeRoundingFilter.toCircleFast(bitmap, mEnableAntiAliasing);
   }
 
   @Nullable

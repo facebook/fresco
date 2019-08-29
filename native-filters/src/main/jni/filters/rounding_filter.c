@@ -262,6 +262,127 @@ static void toCircle(
   }
 }
 
+static void toCircleFast(
+    JNIEnv* env,
+    pixel_t* pixelPtr,
+    const int w,
+    const int h) {
+  const int centerX = w / 2;
+  const int centerY = h / 2;
+  const int radius = min(w,h) / 2;
+
+  if (radius < 1) {
+    safe_throw_exception(env, "Circle radius too small!");
+    return;
+  }
+  if (w <= 0 || h <= 0 || w > BITMAP_MAX_DIMENSION || h > BITMAP_MAX_DIMENSION) {
+    safe_throw_exception(env, "Invalid bitmap dimensions!");
+    return;
+  }
+  if (centerX < 0 || centerY < 0 || centerX >= w || centerY >= h) {
+    safe_throw_exception(env, "Invalid circle center coordinates!");
+    return;
+  }
+
+  int x = radius - 1;
+  int y = 0;
+
+  const int maxX = centerX + x;
+  const int maxY = centerY + x;
+  const int minX = centerX - x;
+  const int minY = centerY - x;
+
+  if (minX < 0 || minY < 0 || maxX >= w || maxY >= h) {
+    safe_throw_exception(env, "Circle must be fully visible!");
+    return;
+  }
+
+  int dx = 1;
+  int dy = 1;
+
+  const int rInc = - radius * 2;
+  int err = dx + rInc;
+
+  memset(pixelPtr + (centerY + radius - 1)*w, TRANSPARENT_PIXEL_COLOR, centerX*sizeof(pixel_t));
+  memset(pixelPtr + (centerY - radius + 1)*w, TRANSPARENT_PIXEL_COLOR, centerX*sizeof(pixel_t));
+
+  memset(pixelPtr + (centerY + radius - 1)*w + centerX, TRANSPARENT_PIXEL_COLOR, (w - centerX)*sizeof(pixel_t));
+  memset(pixelPtr + (centerY - radius + 1)*w + centerX, TRANSPARENT_PIXEL_COLOR, (w - centerX)*sizeof(pixel_t));
+
+  while (x >= y) {
+
+    const int cXpX = centerX + x;
+    const int cXmX = centerX - x;
+    const int cXpY = centerX + y;
+    const int cXmY = centerX - y;
+
+    const int cYpX = centerY + x;
+    const int cYmX = centerY - x;
+    const int cYpY = centerY + y;
+    const int cYmY = centerY - y;
+
+    if (x < 0 || cXpY >= w || cXmY < 0 || cYpY >= h || cYmY < 0) {
+      safe_throw_exception(env, "Invalid internal state!");
+      return;
+    }
+
+    const int offA = w * cYpY;
+    const int offB = w * cYmY;
+    const int offC = w * cYpX;
+    const int offD = w * cYmX;
+
+    const size_t leftBytesX = sizeof(pixel_t) * cXmX;
+    const size_t leftBytesY = sizeof(pixel_t) * cXmY;
+    const size_t rightBytesX = sizeof(pixel_t) * (w-cXpX);
+    const size_t rightBytesY = sizeof(pixel_t) * (w-cXpY);
+
+    if (err <= 0 && err + dy + 2 > 0 && x > y + 1) {
+        memset(pixelPtr + offC - w, TRANSPARENT_PIXEL_COLOR, leftBytesY - sizeof(pixel_t));
+        memset(pixelPtr + offD + w, TRANSPARENT_PIXEL_COLOR, leftBytesY - sizeof(pixel_t));
+
+        memset(pixelPtr + offC - w + cXpY + 1, TRANSPARENT_PIXEL_COLOR, rightBytesY - sizeof(pixel_t));
+        memset(pixelPtr + offD + w + cXpY + 1, TRANSPARENT_PIXEL_COLOR, rightBytesY - sizeof(pixel_t));
+    }
+    if (err > 0 && x > y) {
+        memset(pixelPtr + offC - w, TRANSPARENT_PIXEL_COLOR, leftBytesY);
+        memset(pixelPtr + offD + w, TRANSPARENT_PIXEL_COLOR, leftBytesY);
+
+        memset(pixelPtr + offC - w + cXpY, TRANSPARENT_PIXEL_COLOR, rightBytesY);
+        memset(pixelPtr + offD + w + cXpY, TRANSPARENT_PIXEL_COLOR, rightBytesY);
+    }
+
+    if (err <= 0) {
+      y++;
+
+      dy += 2;
+      err += dy;
+
+      memset(pixelPtr + offA, TRANSPARENT_PIXEL_COLOR, leftBytesX);
+      memset(pixelPtr + offB, TRANSPARENT_PIXEL_COLOR, leftBytesX);
+
+      memset(pixelPtr + offA + cXpX, TRANSPARENT_PIXEL_COLOR, rightBytesX);
+      memset(pixelPtr + offB + cXpX, TRANSPARENT_PIXEL_COLOR, rightBytesX);
+    }
+    if (err > 0) {
+      x--;
+
+      dx += 2;
+      err += dx + rInc;
+    }
+  }
+
+  const size_t lineBytes = sizeof(pixel_t) * w;
+
+  // clear top / bottom if height > width
+  for (int i = centerY - radius; i >= 0; i--) {
+    memset(pixelPtr + i * w, TRANSPARENT_PIXEL_COLOR, lineBytes);
+  }
+
+  for (int i = centerY + radius; i < h; i++) {
+    memset(pixelPtr + i * w, TRANSPARENT_PIXEL_COLOR, lineBytes);
+  }
+}
+
 enum Corner{TOP_LEFT, TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT};
 
 static void addRoundCorner(
@@ -638,6 +759,81 @@ static void RoundingFilter_toCircle(
   toCircleWithOptionalBorder(env, clazz, bitmap, 0, 0, anti_aliased);
 }
 
+
+static void toCircleFastWithOptionalBorder(
+    JNIEnv* env,
+    jclass clazz,
+    jobject bitmap,
+    jint colorARGB,
+    jint border_width,
+    jboolean anti_aliased) {
+  UNUSED(clazz);
+
+  AndroidBitmapInfo bitmapInfo;
+
+  int rc = AndroidBitmap_getInfo(env, bitmap, &bitmapInfo);
+  if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
+    safe_throw_exception(env, "Failed to get Bitmap info");
+    return;
+  }
+
+  if (bitmapInfo.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
+    safe_throw_exception(env, "Unexpected bitmap format");
+    return;
+  }
+
+  const int w = bitmapInfo.width;
+  const int h = bitmapInfo.height;
+
+  if (w > BITMAP_MAX_DIMENSION || h > BITMAP_MAX_DIMENSION) {
+    safe_throw_exception(env, "Bitmap dimensions too large");
+    return;
+  }
+
+  pixel_t* pixelPtr;
+
+  // Locking pixels such that they will not get moved around during processing
+  rc = AndroidBitmap_lockPixels(env, bitmap, (void*) &pixelPtr);
+  if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
+    safe_throw_exception(env, "Failed to lock Bitmap pixels");
+    return;
+  }
+
+  // DRAW THE BORDER
+  if(border_width > 0) {
+    drawBorder(env, pixelPtr, w, h, argbToABGR(colorARGB), border_width);
+  }
+
+  if (anti_aliased) {
+    toAntiAliasedCircle(env, pixelPtr, w, h);
+  } else {
+    toCircleFast(env, pixelPtr, w, h);
+  }
+
+  // Unlocking the pixels
+  rc = AndroidBitmap_unlockPixels(env, bitmap);
+  if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
+    safe_throw_exception(env, "Failed to unlock Bitmap pixels");
+  }
+}
+/**
+ * A native implementation for rounding a given bitmap to a circular shape.
+ * The underlying implementation uses a modified midpoint circle algorithm but instead of
+ * drawing a circle, it clears all pixels starting from the circle all the way to the bitmap edges.
+ */
+static void RoundingFilter_toCircleFast(
+    JNIEnv* env,
+    jclass clazz,
+    jobject bitmap,
+    jboolean anti_aliased) {
+    toCircleFastWithOptionalBorder(env, clazz, bitmap, 0, 0, anti_aliased);
+}
+
+/**
+ * A native implementation for rounding a given bitmap to a circular shape and adds a border around
+ * it. The underlying implementation uses a modified midpoint circle algorithm to draw the round
+ * border and then clears all pixels starting from the circle all the way to the bitmap edges.
+ */
 static void RoundingFilter_toCircleWithBorder(
     JNIEnv* env,
     jclass clazz,
@@ -675,6 +871,9 @@ static JNINativeMethod rounding_native_methods[] = {
   { "nativeAddRoundedCornersFilter",
           "(Landroid/graphics/Bitmap;IIII)V",
           (void*) RoundingFilter_addRoundedCorners },
+  { "nativeToCircleFastFilter",
+        "(Landroid/graphics/Bitmap;Z)V",
+        (void*) RoundingFilter_toCircleFast },
 };
 
 jint registerRoundingFilterMethods(JNIEnv* env) {
