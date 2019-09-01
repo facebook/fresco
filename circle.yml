@@ -18,7 +18,7 @@ jobs:
   build:
     working_directory: ~/fresco
     docker:
-      - image: circleci/android:api-28
+      - image: circleci/android@sha256:698557baed28b90b19f9988fb214e94376e5c04b44eec96423975d464b59a53e
     steps:
       - checkout
       - run: yes | sdkmanager --licenses || exit 0
