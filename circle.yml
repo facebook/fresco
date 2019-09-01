@@ -42,30 +42,7 @@ jobs:
           command: |
             cd ${ANDROID_HOME}/emulator;ls
             export LD_LIBRARY_PATH=${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib
+            ldd emulator
+            ldd `which pulseaudio`
             emulator -avd test -no-audio -no-window            
           background: true
-      - run:
-          name: Wait for emulator
-          command: |
-            chmod +x android-wait-for-emulator
-            ./android-wait-for-emulator
-      - run:
-          name: Remove lock screen
-          command: adb shell input keyevent 82
-      - restore-cache: *restore-cache-gradle
-      - run:
-          name: Run Tests
-          command: ./gradlew test assembleDebug -PdisablePreDex
-      - save-cache: *save-cache-gradle
-      - run:
-          name: Run Instrumentation Tests
-          command: |
-            ./gradlew :samples:showcase:connectedInternalInstrumentationAndroidTest -PdisablePreDex
-      - run:
-          name: Copy Results
-          command: |
-            mkdir -p /home/circleci/test-results/junit
-            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} /home/circleci/test-results/junit \;
-            cp -r samples/showcase/build/reports/androidTests /home/circleci/test-results
-      - test-results-store:
-          path: /home/circleci/test-results
