@@ -44,5 +44,4 @@ jobs:
             export LD_LIBRARY_PATH=${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib
             ldd emulator
             ldd `which pulseaudio`
-            emulator -avd test -no-audio -no-window            
-          background: true
+            emulator -avd test -no-audio -no-window
