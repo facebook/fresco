@@ -39,7 +39,10 @@ jobs:
             echo "no" | avdmanager create avd -n test -k "system-images;android-19;default;armeabi-v7a"
       - run:
           name: Launch emulator
-          command: emulator -avd test -no-audio -no-window
+          command: |
+            cd ${ANDROID_HOME}/emulator;ls
+            export LD_LIBRARY_PATH=${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib
+            emulator -avd test -no-audio -no-window            
           background: true
       - run:
           name: Wait for emulator
