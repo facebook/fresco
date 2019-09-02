@@ -9,7 +9,6 @@ package com.facebook.drawee.components;
 
 import android.os.Handler;
 import android.os.Looper;
-import com.facebook.common.internal.Preconditions;
 import java.util.ArrayList;
 
 /**
@@ -31,15 +30,11 @@ import java.util.ArrayList;
 public class DeferredReleaserConcurrentImpl extends DeferredReleaser {
 
   private static final IReleaser IMMEDIATE = new ImmediateImpl();
-  private static final ThreadLocal<IReleaser> mReleaserThreadLocal =
-      new ThreadLocal<IReleaser>() {
-        @Override
-        protected IReleaser initialValue() {
-          Looper looper = Looper.myLooper();
-          if (looper == null) return IMMEDIATE;
-          else return new DeferredImpl(looper);
-        }
-      };
+
+  // looks like ThreadLocal.get is pretty expensive, there's stat-sig scroll perf regression despite
+  // other optimizations. Use a dedicated main releaser
+  private final DeferredImpl mainReleaser = new DeferredImpl(Looper.getMainLooper());
+  private final ThreadLocal<IReleaser> threadLocalReleaser = new ThreadLocal<>();
 
   /**
    * Schedules deferred release.
@@ -51,7 +46,7 @@ public class DeferredReleaserConcurrentImpl extends DeferredReleaser {
    */
   @Override
   public void scheduleDeferredRelease(Releasable releasable) {
-    Preconditions.checkNotNull(mReleaserThreadLocal.get()).release(releasable);
+    getReleaser().release(releasable);
   }
 
   /**
@@ -61,7 +56,21 @@ public class DeferredReleaserConcurrentImpl extends DeferredReleaser {
    */
   @Override
   public void cancelDeferredRelease(Releasable releasable) {
-    Preconditions.checkNotNull(mReleaserThreadLocal.get()).cancel(releasable);
+    getReleaser().cancel(releasable);
+  }
+
+  private IReleaser getReleaser() {
+    if (isOnUiThread()) {
+      return mainReleaser;
+    } else {
+      IReleaser releaser = threadLocalReleaser.get();
+      if (releaser == null) {
+        Looper looper = Looper.myLooper();
+        releaser = looper == null ? IMMEDIATE : new DeferredImpl(looper);
+        threadLocalReleaser.set(releaser);
+      }
+      return releaser;
+    }
   }
 
   interface IReleaser {
@@ -105,12 +114,7 @@ public class DeferredReleaserConcurrentImpl extends DeferredReleaser {
 
     @Override
     public void cancel(Releasable releasable) {
-      int index = mPendingReleasables.indexOf(releasable);
-      if (index >= 0) {
-        int lastIndex = mPendingReleasables.size() - 1;
-        mPendingReleasables.set(index, mPendingReleasables.get(lastIndex));
-        mPendingReleasables.remove(lastIndex);
-      }
+      mPendingReleasables.remove(releasable);
     }
   }
 
