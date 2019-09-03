@@ -19,7 +19,6 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
 import com.facebook.imageutils.BitmapUtil;
-import com.facebook.soloader.SoLoader;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,10 +35,6 @@ import org.robolectric.RobolectricTestRunner;
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 @org.robolectric.annotation.Config(manifest = org.robolectric.annotation.Config.NONE)
 public class BitmapPoolTest {
-
-  static {
-    SoLoader.setInTestMode();
-  }
 
   @Mock(answer = Answers.CALLS_REAL_METHODS)
   public BucketsBitmapPool mPool;
