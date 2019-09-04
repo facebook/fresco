@@ -25,6 +25,21 @@ public class ForwardingImageListener implements ImageListener {
     return new ForwardingImageListener(a, b);
   }
 
+  @Nullable
+  public static ImageListener create(
+      @Nullable ImageListener a, @Nullable ImageListener b, @Nullable ImageListener c) {
+    if (a == null) {
+      return create(b, c);
+    }
+    if (b == null) {
+      return create(a, c);
+    }
+    if (c == null) {
+      return create(a, b);
+    }
+    return new ForwardingImageListener(a, b, c);
+  }
+
   private final ImageListener[] mListeners;
 
   public ForwardingImageListener(ImageListener... listeners) {
