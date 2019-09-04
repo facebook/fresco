@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import javax.annotation.Nullable;
 
 /** Uses ExecutorService to move further computation to different thread */
@@ -27,31 +28,40 @@ public class ThreadHandoffProducer<T> implements Producer<T> {
 
   @Override
   public void produceResults(final Consumer<T> consumer, final ProducerContext context) {
-    final ProducerListener2 producerListener = context.getProducerListener();
-    final StatefulProducerRunnable<T> statefulRunnable =
-        new StatefulProducerRunnable<T>(consumer, producerListener, context, PRODUCER_NAME) {
-          @Override
-          protected void onSuccess(T ignored) {
-            producerListener.onProducerFinishWithSuccess(context, PRODUCER_NAME, null);
-            mInputProducer.produceResults(consumer, context);
-          }
+    try {
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("ThreadHandoffProducer#produceResults");
+      }
+      final ProducerListener2 producerListener = context.getProducerListener();
+      final StatefulProducerRunnable<T> statefulRunnable =
+          new StatefulProducerRunnable<T>(consumer, producerListener, context, PRODUCER_NAME) {
+            @Override
+            protected void onSuccess(T ignored) {
+              producerListener.onProducerFinishWithSuccess(context, PRODUCER_NAME, null);
+              mInputProducer.produceResults(consumer, context);
+            }
 
-          @Override
-          protected void disposeResult(T ignored) {}
+            @Override
+            protected void disposeResult(T ignored) {}
 
-          @Override
-          protected @Nullable T getResult() throws Exception {
-            return null;
-          }
-        };
-    context.addCallbacks(
-        new BaseProducerContextCallbacks() {
-          @Override
-          public void onCancellationRequested() {
-            statefulRunnable.cancel();
-            mThreadHandoffProducerQueue.remove(statefulRunnable);
-          }
-        });
-    mThreadHandoffProducerQueue.addToQueueOrExecute(statefulRunnable);
+            @Override
+            protected @Nullable T getResult() throws Exception {
+              return null;
+            }
+          };
+      context.addCallbacks(
+          new BaseProducerContextCallbacks() {
+            @Override
+            public void onCancellationRequested() {
+              statefulRunnable.cancel();
+              mThreadHandoffProducerQueue.remove(statefulRunnable);
+            }
+          });
+      mThreadHandoffProducerQueue.addToQueueOrExecute(statefulRunnable);
+    } finally {
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
+    }
   }
 }
