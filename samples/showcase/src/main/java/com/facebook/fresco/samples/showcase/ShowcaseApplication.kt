@@ -12,7 +12,6 @@
 package com.facebook.fresco.samples.showcase
 
 import android.app.Application
-import android.content.Context
 import com.facebook.common.logging.FLog
 import com.facebook.common.memory.manager.NoOpDebugMemoryManager
 import com.facebook.drawee.backends.pipeline.DraweeConfig
@@ -21,7 +20,6 @@ import com.facebook.drawee.backends.pipeline.info.ImagePerfData
 import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener
 import com.facebook.flipper.android.AndroidFlipperClient
 import com.facebook.flipper.android.utils.FlipperUtils
-import com.facebook.flipper.core.FlipperClient
 import com.facebook.flipper.perflogger.NoOpFlipperPerfLogger
 import com.facebook.flipper.plugins.fresco.FrescoFlipperPlugin
 import com.facebook.flipper.plugins.fresco.FrescoFlipperRequestListener
@@ -29,6 +27,7 @@ import com.facebook.flipper.plugins.inspector.DescriptorMapping
 import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
 import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
+import com.facebook.fresco.samples.showcase.misc.LogcatRequestListener2
 import com.facebook.fresco.vito.provider.DefaultFrescoContext
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
 import com.facebook.imagepipeline.core.ImagePipelineConfig
@@ -41,9 +40,7 @@ import com.facebook.imagepipeline.listener.RequestLoggingListener
 import com.facebook.imagepipeline.memory.BitmapCounterConfig
 import com.facebook.imagepipeline.memory.BitmapCounterProvider
 import com.facebook.imagepipeline.stetho.FrescoStethoPlugin
-import com.facebook.stetho.DumperPluginsProvider
 import com.facebook.stetho.Stetho
-import com.facebook.stetho.dumpapp.DumperPlugin
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import java.util.HashSet
 import okhttp3.OkHttpClient
@@ -65,12 +62,15 @@ class ShowcaseApplication : Application() {
             add(RequestLoggingListener())
         }
 
+        val requestListener2s = setOf(LogcatRequestListener2())
+
         val okHttpClient = OkHttpClient.Builder()
                 .addNetworkInterceptor(StethoInterceptor())
                 .build()
 
         val imagePipelineConfigBuilder = OkHttpImagePipelineConfigFactory.newBuilder(this, okHttpClient)
                 .setRequestListeners(requestListeners)
+                .setRequestListener2s(requestListener2s)
                 .setProgressiveJpegConfig(SimpleProgressiveJpegConfig())
                 .setImageDecoderConfig(CustomImageFormatConfigurator.createImageDecoderConfig(this))
                 .experiment()
