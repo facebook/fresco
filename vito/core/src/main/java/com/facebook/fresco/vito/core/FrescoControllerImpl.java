@@ -260,15 +260,18 @@ public class FrescoControllerImpl implements FrescoController {
       frescoState.onSubmit(frescoState.getId(), frescoState.getCallerContext());
 
       // Check if we have a cached image in the state
-      CloseableReference<CloseableImage> cachedImage = frescoState.getCachedImage();
-      try {
-        if (CloseableReference.isValid(cachedImage)) {
-          frescoState.setImageOrigin(ImageOrigin.MEMORY_BITMAP);
-          displayResultOrError(frescoState, cachedImage, true);
-          return;
+      CloseableReference<CloseableImage> cachedImage = null;
+      if (experiments.checkStateCacheInAttach()) {
+        cachedImage = frescoState.getCachedImage();
+        try {
+          if (CloseableReference.isValid(cachedImage)) {
+            frescoState.setImageOrigin(ImageOrigin.MEMORY_BITMAP);
+            displayResultOrError(frescoState, cachedImage, true);
+            return;
+          }
+        } finally {
+          CloseableReference.closeSafely(cachedImage);
         }
-      } finally {
-        CloseableReference.closeSafely(cachedImage);
       }
 
       // Check if the image is in cache now
