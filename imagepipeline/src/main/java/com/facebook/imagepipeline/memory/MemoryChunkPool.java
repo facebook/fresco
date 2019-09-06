@@ -23,7 +23,7 @@ public abstract class MemoryChunkPool extends BasePool<MemoryChunk> {
    * @param poolParams provider for pool parameters
    * @param memoryChunkPoolStatsTracker the pool stats tracker
    */
-  MemoryChunkPool(
+  protected MemoryChunkPool(
       MemoryTrimmableRegistry memoryTrimmableRegistry,
       PoolParams poolParams,
       PoolStatsTracker memoryChunkPoolStatsTracker) {
@@ -37,26 +37,26 @@ public abstract class MemoryChunkPool extends BasePool<MemoryChunk> {
   }
 
   /** Gets the smallest buffer size */
-  int getMinBufferSize() {
+  public int getMinBufferSize() {
     return mBucketSizes[0];
   }
 
   @Override
-  protected abstract MemoryChunk alloc(int bucketedSize);
+  public abstract MemoryChunk alloc(int bucketedSize);
 
   @Override
-  protected void free(MemoryChunk value) {
+  public void free(MemoryChunk value) {
     Preconditions.checkNotNull(value);
     value.close();
   }
 
   @Override
-  protected int getSizeInBytes(int bucketedSize) {
+  public int getSizeInBytes(int bucketedSize) {
     return bucketedSize;
   }
 
   @Override
-  protected int getBucketedSize(int requestSize) {
+  public int getBucketedSize(int requestSize) {
     if (requestSize <= 0) {
       throw new InvalidSizeException(requestSize);
     }
@@ -74,13 +74,13 @@ public abstract class MemoryChunkPool extends BasePool<MemoryChunk> {
   }
 
   @Override
-  protected int getBucketedSizeForValue(MemoryChunk value) {
+  public int getBucketedSizeForValue(MemoryChunk value) {
     Preconditions.checkNotNull(value);
     return value.getSize();
   }
 
   @Override
-  protected boolean isReusable(MemoryChunk value) {
+  public boolean isReusable(MemoryChunk value) {
     Preconditions.checkNotNull(value);
     return !value.isClosed();
   }

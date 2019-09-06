@@ -30,7 +30,7 @@ public class FakeBufferMemoryChunkPool extends BufferMemoryChunkPool {
   }
 
   @Override
-  protected BufferMemoryChunk alloc(int bucketedSize) {
+  public BufferMemoryChunk alloc(int bucketedSize) {
     return new BufferMemoryChunk(bucketedSize);
   }
 

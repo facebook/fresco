@@ -102,4 +102,8 @@ public class MemoryPooledByteBuffer implements PooledByteBuffer {
       throw new ClosedException();
     }
   }
+
+  public CloseableReference<MemoryChunk> getCloseableReference() {
+    return mBufRef;
+  }
 }
