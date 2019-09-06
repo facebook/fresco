@@ -11,6 +11,8 @@ dependencies {
     api project(':fbcore')
     api project(':imagepipeline-base')
     api project(':imagepipeline')
+    api project(':memory-types:nativememory')
+    api project(':memory-types:simple')
     api project(':animated-drawable')
     implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
 

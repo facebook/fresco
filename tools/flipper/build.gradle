@@ -10,6 +10,8 @@ dependencies {
 
     implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':imagepipeline')
+    implementation project(':memory-types:nativememory')
+    implementation project(':memory-types:simple')
 }
 
 apply from: rootProject.file('release.gradle')

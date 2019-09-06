@@ -12,6 +12,8 @@ dependencies {
     implementation project(':drawee')
     implementation project(':fbcore')
     implementation project(':imagepipeline')
+    implementation project(':memory-types:nativememory')
+    implementation project(':memory-types:simple')
 
     testImplementation "junit:junit:${JUNIT_VERSION}"
     testImplementation "org.assertj:assertj-core:${versions.assertjCore}"

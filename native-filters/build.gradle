@@ -12,6 +12,9 @@ dependencies {
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
 
     implementation project(':imagepipeline')
+    implementation project(':memory-types:nativememory')
+    implementation project(':memory-types:simple')
+
     implementation "com.facebook.soloader:nativeloader:${SOLOADER_VERSION}"
 
     implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
