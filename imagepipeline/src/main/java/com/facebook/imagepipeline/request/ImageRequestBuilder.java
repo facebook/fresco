@@ -310,7 +310,7 @@ public class ImageRequestBuilder {
    * @param postprocessor postprocessor to postprocess the output bitmap with.
    * @return the modified builder instance
    */
-  public ImageRequestBuilder setPostprocessor(Postprocessor postprocessor) {
+  public ImageRequestBuilder setPostprocessor(@Nullable Postprocessor postprocessor) {
     mPostprocessor = postprocessor;
     return this;
   }
