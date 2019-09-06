@@ -10,7 +10,7 @@ package com.facebook.imageformat;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
-import com.facebook.soloader.SoLoader;
+import com.facebook.imagepipeline.testing.TestNativeLoader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import org.robolectric.RobolectricTestRunner;
 public class ImageFormatCheckerTest {
 
   static {
-    SoLoader.setInTestMode();
+    TestNativeLoader.init();
   }
 
   @Test

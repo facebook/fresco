@@ -41,10 +41,10 @@ import com.facebook.imagepipeline.nativecode.NativeJpegTranscoderFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
+import com.facebook.imagepipeline.testing.TestNativeLoader;
 import com.facebook.imagepipeline.testing.TestScheduledExecutorService;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 import com.facebook.imagepipeline.transcoder.JpegTranscoderUtils;
-import com.facebook.soloader.SoLoader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -76,7 +76,7 @@ import org.robolectric.annotation.Config;
 })
 public class ResizeAndRotateProducerTest {
   static {
-    SoLoader.setInTestMode();
+    TestNativeLoader.init();
   }
 
   @Mock public Producer mInputProducer;

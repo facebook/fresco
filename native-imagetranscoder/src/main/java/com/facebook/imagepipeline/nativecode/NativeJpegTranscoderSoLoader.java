@@ -7,7 +7,7 @@
 package com.facebook.imagepipeline.nativecode;
 
 import android.os.Build;
-import com.facebook.soloader.SoLoader;
+import com.facebook.soloader.nativeloader.NativeLoader;
 
 /** Single place responsible for ensuring that native-imagetranscoder.so is loaded */
 public class NativeJpegTranscoderSoLoader {
@@ -20,12 +20,12 @@ public class NativeJpegTranscoderSoLoader {
       // library
       if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
         try {
-          SoLoader.loadLibrary("fb_jpegturbo");
+          NativeLoader.loadLibrary("fb_jpegturbo");
         } catch (UnsatisfiedLinkError error) {
           // Head in the sand
         }
       }
-      SoLoader.loadLibrary("native-imagetranscoder");
+      NativeLoader.loadLibrary("native-imagetranscoder");
       sInitialized = true;
     }
   }

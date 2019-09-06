@@ -7,7 +7,7 @@
 
 package com.facebook.imagepipeline.nativecode;
 
-import com.facebook.soloader.SoLoader;
+import com.facebook.soloader.nativeloader.NativeLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,6 +37,6 @@ public class ImagePipelineNativeLoader {
   }
 
   public static void load() {
-    SoLoader.loadLibrary("imagepipeline");
+    NativeLoader.loadLibrary("imagepipeline");
   }
 }

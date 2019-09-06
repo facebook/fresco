@@ -12,7 +12,8 @@ dependencies {
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
 
     api project(':imagepipeline-base')
-    implementation "com.facebook.soloader:soloader:${SOLOADER_VERSION}"
+    implementation "com.facebook.soloader:nativeloader:${SOLOADER_VERSION}"
+    implementation "com.facebook.soloader:annotation:${SOLOADER_VERSION}"
 
     implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
     implementation project(':fbcore')

@@ -14,7 +14,8 @@ import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
-import com.facebook.soloader.SoLoader;
+import com.facebook.soloader.nativeloader.NativeLoader;
+import com.facebook.soloader.nativeloader.soloader.SoLoaderDelegateImpl;
 import java.io.IOException;
 import javax.annotation.Nullable;
 
@@ -64,7 +65,8 @@ public class Fresco {
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.beginSection("Fresco.initialize->SoLoader.init");
       }
-      SoLoader.init(context, 0);
+      NativeLoader.set(new SoLoaderDelegateImpl());
+      NativeLoader.init(context);
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.endSection();
       }
