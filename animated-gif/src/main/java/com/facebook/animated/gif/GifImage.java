@@ -13,7 +13,7 @@ import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.BlendOperation;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageDecoder;
-import com.facebook.soloader.nativeloader.NativeLoader;
+import com.facebook.soloader.SoLoader;
 import java.nio.ByteBuffer;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -38,7 +38,7 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
   private static synchronized void ensure() {
     if (!sInitialized) {
       sInitialized = true;
-      NativeLoader.loadLibrary("gifimage");
+      SoLoader.loadLibrary("gifimage");
     }
   }
 

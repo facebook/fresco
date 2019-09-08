@@ -7,12 +7,12 @@
 
 package com.facebook.imagepipeline.nativecode;
 
-import com.facebook.soloader.nativeloader.NativeLoader;
+import com.facebook.soloader.SoLoader;
 
 /** Single place responsible for loading libnative-filters.so and its dependencies. */
 public class NativeFiltersLoader {
 
   public static void load() {
-    NativeLoader.loadLibrary("native-filters");
+    SoLoader.loadLibrary("native-filters");
   }
 }

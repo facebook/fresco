@@ -6,7 +6,7 @@
  */
 package com.facebook.imagepipeline.memory;
 
-import com.facebook.imagepipeline.testing.TestNativeLoader;
+import com.facebook.soloader.SoLoader;
 import org.junit.BeforeClass;
 
 /**
@@ -18,6 +18,6 @@ public class TestUsingNativeMemoryChunk {
 
   @BeforeClass
   public static void allowNativeStaticInitializers() {
-    TestNativeLoader.init();
+    SoLoader.setInTestMode();
   }
 }

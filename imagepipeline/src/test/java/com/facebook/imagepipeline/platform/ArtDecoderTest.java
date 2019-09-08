@@ -39,9 +39,9 @@ import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
-import com.facebook.imagepipeline.testing.TestNativeLoader;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 import com.facebook.imageutils.JfifUtil;
+import com.facebook.soloader.SoLoader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -76,7 +76,7 @@ public class ArtDecoderTest {
   @Rule public PowerMockRule rule = new PowerMockRule();
 
   static {
-    TestNativeLoader.init();
+    SoLoader.setInTestMode();
   }
 
   private static final int RANDOM_SEED = 10101;

@@ -35,8 +35,8 @@ import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imagepipeline.nativecode.DalvikPurgeableDecoder;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
-import com.facebook.imagepipeline.testing.TestNativeLoader;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
+import com.facebook.soloader.SoLoader;
 import java.util.ConcurrentModificationException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -68,7 +68,7 @@ public class KitKatPurgeableDecoderTest {
   @Rule public PowerMockRule rule = new PowerMockRule();
 
   static {
-    TestNativeLoader.init();
+    SoLoader.setInTestMode();
   }
 
   protected static final int IMAGE_SIZE = 5;
