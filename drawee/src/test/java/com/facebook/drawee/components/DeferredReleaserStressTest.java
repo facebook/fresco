@@ -25,13 +25,8 @@ public class DeferredReleaserStressTest {
   private static final int K = 1000;
 
   @Test
-  public void concurrentImplTest() {
-    stressTest(new DeferredReleaserConcurrentImpl());
-  }
-
-  @Test
-  public void legacyImplTest() {
-    stressTest(new DeferredReleaserLegacyImpl());
+  public void test() {
+    stressTest(DeferredReleaser.getInstance());
   }
 
   private static void stressTest(final DeferredReleaser deferredReleaser) {

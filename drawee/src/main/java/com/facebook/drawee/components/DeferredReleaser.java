@@ -7,7 +7,11 @@
 
 package com.facebook.drawee.components;
 
+import android.os.Handler;
 import android.os.Looper;
+import com.facebook.common.internal.Preconditions;
+import java.util.HashSet;
+import java.util.Set;
 import javax.annotation.Nullable;
 
 /**
@@ -23,32 +27,42 @@ import javax.annotation.Nullable;
  * release / acquire cycle. If onAttach doesn't happen before the deferred message gets executed,
  * the resources will be released.
  */
-public abstract class DeferredReleaser {
+public class DeferredReleaser {
+
+  public interface Releasable {
+    void release();
+  }
 
   private static @Nullable DeferredReleaser sInstance = null;
 
-  private static boolean useConcurrentImpl = false;
+  protected final Set<Releasable> mPendingReleasables;
+  protected final Handler mUiHandler;
+  /*
+   * Walks through the set of pending releasables, and calls release on them.
+   * Resets the pending list to an empty list when done.
+   */
+  private final Runnable releaseRunnable =
+      new Runnable() {
+        @Override
+        public void run() {
+          ensureOnUiThread();
+          for (Releasable releasable : mPendingReleasables) {
+            releasable.release();
+          }
+          mPendingReleasables.clear();
+        }
+      };
 
-  public static synchronized void setUseConcurrentImpl(boolean useConcurrentImpl) {
-    DeferredReleaser.useConcurrentImpl = useConcurrentImpl;
+  public DeferredReleaser() {
+    mPendingReleasables = new HashSet<>();
+    mUiHandler = new Handler(Looper.getMainLooper());
   }
 
   public static synchronized DeferredReleaser getInstance() {
     if (sInstance == null) {
-      sInstance =
-          useConcurrentImpl
-              ? new DeferredReleaserConcurrentImpl()
-              : new DeferredReleaserLegacyImpl();
+      sInstance = new DeferredReleaser();
     }
     return sInstance;
-  }
-
-  static boolean isOnUiThread() {
-    return Looper.getMainLooper().getThread() == Thread.currentThread();
-  }
-
-  public interface Releasable {
-    void release();
   }
 
   /**
@@ -59,12 +73,39 @@ public abstract class DeferredReleaser {
    *
    * @param releasable Object to release.
    */
-  public abstract void scheduleDeferredRelease(Releasable releasable);
+  public void scheduleDeferredRelease(Releasable releasable) {
+    if (!isOnUiThread()) {
+      releasable.release();
+      return;
+    }
+
+    if (!mPendingReleasables.add(releasable)) {
+      return;
+    }
+    // Posting to the UI queue is an O(n) operation, so we only do it once.
+    // The one runnable does all the releases.
+    if (mPendingReleasables.size() == 1) {
+      mUiHandler.post(releaseRunnable);
+    }
+  }
 
   /**
    * Cancels a pending release for this object.
    *
    * @param releasable Object to cancel release of.
    */
-  public abstract void cancelDeferredRelease(Releasable releasable);
+  public void cancelDeferredRelease(Releasable releasable) {
+    // releasable from BG threads are released immediately
+    if (!isOnUiThread()) return;
+
+    mPendingReleasables.remove(releasable);
+  }
+
+  private static boolean isOnUiThread() {
+    return Looper.getMainLooper().getThread() == Thread.currentThread();
+  }
+
+  private static void ensureOnUiThread() {
+    Preconditions.checkState(isOnUiThread());
+  }
 }
