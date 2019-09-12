@@ -105,6 +105,6 @@ public class FrescoExperiments {
   }
 
   public boolean useNativeRounding() {
-    return false;
+    return true;
   }
 }
