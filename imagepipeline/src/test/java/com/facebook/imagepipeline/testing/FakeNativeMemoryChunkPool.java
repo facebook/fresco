@@ -27,7 +27,7 @@ public class FakeNativeMemoryChunkPool extends NativeMemoryChunkPool {
   }
 
   @Override
-  public NativeMemoryChunk alloc(int bucketedSize) {
+  protected NativeMemoryChunk alloc(int bucketedSize) {
     return new FakeNativeMemoryChunk(bucketedSize);
   }
 

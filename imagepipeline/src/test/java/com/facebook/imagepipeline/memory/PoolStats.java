@@ -51,8 +51,4 @@ public class PoolStats<V> {
       mBucketStats.put(bucketedSize, new IntPair(bucket.getInUseCount(), bucket.getFreeListSize()));
     }
   }
-
-  public Map<Integer, IntPair> getBucketStats() {
-    return mBucketStats;
-  }
 }

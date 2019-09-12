@@ -21,7 +21,7 @@ public class BufferMemoryChunkPool extends MemoryChunkPool {
   }
 
   @Override
-  public BufferMemoryChunk alloc(int bucketedSize) {
+  protected BufferMemoryChunk alloc(int bucketedSize) {
     return new BufferMemoryChunk(bucketedSize);
   }
 }
