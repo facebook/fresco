@@ -37,6 +37,10 @@ public class MemoryPooledByteBufferTest extends TestUsingNativeMemoryChunk {
   private NativeMemoryChunk mNativeChunk;
   private MemoryPooledByteBuffer mNativePooledByteBuffer;
 
+  @Mock private BufferMemoryChunkPool mBufferPool;
+  private BufferMemoryChunk mBufferChunk;
+  private MemoryPooledByteBuffer mBufferPooledByteBuffer;
+
   @Before
   public void setUp() {
     mNativeChunk = new FakeNativeMemoryChunk(BYTES.length);
@@ -46,16 +50,26 @@ public class MemoryPooledByteBufferTest extends TestUsingNativeMemoryChunk {
         CloseableReference.of(mNativeChunk, mNativePool);
     mNativePooledByteBuffer = new MemoryPooledByteBuffer(nativePoolRef, BUFFER_LENGTH);
     nativePoolRef.close();
+
+    mBufferChunk = new BufferMemoryChunk(BYTES.length);
+    mBufferChunk.write(0, BYTES, 0, BYTES.length);
+    mBufferPool = mock(BufferMemoryChunkPool.class);
+    CloseableReference<MemoryChunk> bufferPoolRef =
+        CloseableReference.of(mBufferChunk, mBufferPool);
+    mBufferPooledByteBuffer = new MemoryPooledByteBuffer(bufferPoolRef, BUFFER_LENGTH);
+    bufferPoolRef.close();
   }
 
   @Test
   public void testBasic() {
     testBasic(mNativePooledByteBuffer, mNativeChunk);
+    testBasic(mBufferPooledByteBuffer, mBufferChunk);
   }
 
   @Test
   public void testSimpleRead() {
     testSimpleRead(mNativePooledByteBuffer);
+    testSimpleRead(mBufferPooledByteBuffer);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -63,9 +77,15 @@ public class MemoryPooledByteBufferTest extends TestUsingNativeMemoryChunk {
     mNativePooledByteBuffer.read(BUFFER_LENGTH);
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testSimpleReadOutOfBoundsUsingBufferPool() {
+    mBufferPooledByteBuffer.read(BUFFER_LENGTH);
+  }
+
   @Test
   public void testRangeRead() {
     testRangeRead(mNativePooledByteBuffer);
+    testRangeRead(mBufferPooledByteBuffer);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -73,14 +93,21 @@ public class MemoryPooledByteBufferTest extends TestUsingNativeMemoryChunk {
     testRangeReadOutOfBounds(mNativePooledByteBuffer);
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testRangeReadOutOfBoundsUsingBufferPool() {
+    testRangeReadOutOfBounds(mBufferPooledByteBuffer);
+  }
+
   @Test
   public void testReadFromStream() throws Exception {
     testReadFromStream(mNativePooledByteBuffer);
+    testReadFromStream(mBufferPooledByteBuffer);
   }
 
   @Test
   public void testClose() {
     testClose(mNativePooledByteBuffer, mNativeChunk, mNativePool);
+    testClose(mBufferPooledByteBuffer, mBufferChunk, mBufferPool);
   }
 
   @Test(expected = PooledByteBuffer.ClosedException.class)
@@ -89,10 +116,16 @@ public class MemoryPooledByteBufferTest extends TestUsingNativeMemoryChunk {
     mNativePooledByteBuffer.size();
   }
 
+  @Test(expected = PooledByteBuffer.ClosedException.class)
+  public void testGettingSizeAfterCloseUsingBufferPool() {
+    mBufferPooledByteBuffer.close();
+    mBufferPooledByteBuffer.size();
+  }
+
   private static void testBasic(
       final MemoryPooledByteBuffer mPooledByteBuffer, final MemoryChunk mChunk) {
     assertFalse(mPooledByteBuffer.isClosed());
-    assertSame(mChunk, mPooledByteBuffer.getCloseableReference().get());
+    assertSame(mChunk, mPooledByteBuffer.mBufRef.get());
     assertEquals(BUFFER_LENGTH, mPooledByteBuffer.size());
   }
 
@@ -136,7 +169,7 @@ public class MemoryPooledByteBufferTest extends TestUsingNativeMemoryChunk {
       final MemoryChunkPool mPool) {
     mPooledByteBuffer.close();
     assertTrue(mPooledByteBuffer.isClosed());
-    assertNull(mPooledByteBuffer.getCloseableReference());
+    assertNull(mPooledByteBuffer.mBufRef);
     verify(mPool).release(mChunk);
   }
 }

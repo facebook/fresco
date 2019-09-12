@@ -11,9 +11,9 @@ import com.facebook.imagepipeline.memory.MemoryChunk;
 import com.facebook.imagepipeline.memory.NativeMemoryChunk;
 
 /**
- * A fake implementation of {@link com.facebook.imagepipeline.memory.NativeMemoryChunk} to allow us
- * to test out pools and other functionality. This uses byte arrays instead of actual native memory,
- * but supports the same public interface
+ * A fake implementation of {@link NativeMemoryChunk} to allow us to test out pools and other
+ * functionality. This uses byte arrays instead of actual native memory, but supports the same
+ * public interface
  */
 public class FakeNativeMemoryChunk extends NativeMemoryChunk {
   private byte[] mBuf;

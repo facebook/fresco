@@ -11,7 +11,7 @@ import android.util.Log;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
-import com.facebook.soloader.SoLoader;
+import com.facebook.imagepipeline.nativecode.ImagePipelineNativeLoader;
 import java.io.Closeable;
 import java.nio.ByteBuffer;
 import javax.annotation.Nullable;
@@ -28,7 +28,7 @@ public class NativeMemoryChunk implements MemoryChunk, Closeable {
   private static final String TAG = "NativeMemoryChunk";
 
   static {
-    SoLoader.loadLibrary("imagepipeline");
+    ImagePipelineNativeLoader.load();
   }
 
   /** Address of memory chunk wrapped by this NativeMemoryChunk */
