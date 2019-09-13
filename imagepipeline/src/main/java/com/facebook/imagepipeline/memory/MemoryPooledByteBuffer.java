@@ -102,4 +102,10 @@ public class MemoryPooledByteBuffer implements PooledByteBuffer {
       throw new ClosedException();
     }
   }
+
+  @GuardedBy("this")
+  @VisibleForTesting
+  CloseableReference<MemoryChunk> getCloseableReference() {
+    return mBufRef;
+  }
 }
