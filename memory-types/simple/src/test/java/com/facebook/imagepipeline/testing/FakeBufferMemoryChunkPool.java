@@ -7,18 +7,15 @@
 
 package com.facebook.imagepipeline.testing;
 
-import static org.mockito.Mockito.mock;
-
 import android.util.SparseIntArray;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
-import com.facebook.imagepipeline.memory.BufferMemoryChunk;
-import com.facebook.imagepipeline.memory.BufferMemoryChunkPool;
 import com.facebook.imagepipeline.memory.PoolParams;
 import com.facebook.imagepipeline.memory.PoolStatsTracker;
+import com.facebook.imagepipeline.memory.BufferMemoryChunk;
+import com.facebook.imagepipeline.memory.BufferMemoryChunkPool;
+import org.mockito.Mockito;
 
-/**
- * A 'fake' {@link com.facebook.imagepipeline.memory.BufferMemoryChunk} instance as a test helper
- */
+/** A 'fake' {@link com.facebook.imagepipeline.memory.BufferMemoryChunk} instance as a test helper */
 public class FakeBufferMemoryChunkPool extends BufferMemoryChunkPool {
 
   public FakeBufferMemoryChunkPool() {
@@ -26,7 +23,10 @@ public class FakeBufferMemoryChunkPool extends BufferMemoryChunkPool {
   }
 
   public FakeBufferMemoryChunkPool(PoolParams poolParams) {
-    super(mock(MemoryTrimmableRegistry.class), poolParams, mock(PoolStatsTracker.class));
+    super(
+        Mockito.mock(MemoryTrimmableRegistry.class),
+        poolParams,
+        Mockito.mock(PoolStatsTracker.class));
   }
 
   @Override

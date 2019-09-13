@@ -9,7 +9,6 @@ dependencies {
 
     implementation project(':fbcore')
     implementation project(':imagepipeline')
-    implementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
     
     testImplementation "junit:junit:${JUNIT_VERSION}"
     testImplementation "org.assertj:assertj-core:${versions.assertjCore}"
@@ -18,6 +17,7 @@ dependencies {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
+    testImplementation project(':imagepipeline-test')
 }
 
 android {

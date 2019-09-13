@@ -28,7 +28,7 @@ public class PoolFactory {
   private final PoolConfig mConfig;
 
   private BitmapPool mBitmapPool;
-  private BufferMemoryChunkPool mBufferMemoryChunkPool;
+  private @Nullable MemoryChunkPool mBufferMemoryChunkPool;
   private FlexByteArrayPool mFlexByteArrayPool;
   private @Nullable MemoryChunkPool mNativeMemoryChunkPool;
   private PooledByteBufferFactory mPooledByteBufferFactory;
@@ -80,13 +80,31 @@ public class PoolFactory {
     return mBitmapPool;
   }
 
-  public BufferMemoryChunkPool getBufferMemoryChunkPool() {
+  @Nullable
+  public MemoryChunkPool getBufferMemoryChunkPool() {
     if (mBufferMemoryChunkPool == null) {
-      mBufferMemoryChunkPool =
-          new BufferMemoryChunkPool(
-              mConfig.getMemoryTrimmableRegistry(),
-              mConfig.getMemoryChunkPoolParams(),
-              mConfig.getMemoryChunkPoolStatsTracker());
+      try {
+        Class<?> clazz = Class.forName("com.facebook.imagepipeline.memory.BufferMemoryChunkPool");
+        Constructor<?> cons =
+                clazz.getConstructor(
+                        MemoryTrimmableRegistry.class, PoolParams.class, PoolStatsTracker.class);
+        mBufferMemoryChunkPool =
+                (MemoryChunkPool)
+                        cons.newInstance(
+                                mConfig.getMemoryTrimmableRegistry(),
+                                mConfig.getMemoryChunkPoolParams(),
+                                mConfig.getMemoryChunkPoolStatsTracker());
+      } catch (ClassNotFoundException e) {
+        mBufferMemoryChunkPool = null;
+      } catch (IllegalAccessException e) {
+        mBufferMemoryChunkPool = null;
+      } catch (InstantiationException e) {
+        mBufferMemoryChunkPool = null;
+      } catch (NoSuchMethodException e) {
+        mBufferMemoryChunkPool = null;
+      } catch (InvocationTargetException e) {
+        mBufferMemoryChunkPool = null;
+      }
     }
     return mBufferMemoryChunkPool;
   }

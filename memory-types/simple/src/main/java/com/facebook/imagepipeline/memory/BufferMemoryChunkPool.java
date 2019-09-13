@@ -6,11 +6,13 @@
  */
 package com.facebook.imagepipeline.memory;
 
+import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** Manages a pool of buffer memory chunks ({@link BufferMemoryChunk}) */
 @ThreadSafe
+@DoNotStrip
 public class BufferMemoryChunkPool extends MemoryChunkPool {
 
   public BufferMemoryChunkPool(
