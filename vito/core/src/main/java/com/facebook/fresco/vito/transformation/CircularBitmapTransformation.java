@@ -15,13 +15,24 @@ public class CircularBitmapTransformation implements BitmapTransformation {
 
   private final boolean mAntiAliased;
 
+  private final boolean mUseFastNativeRounding;
+
   public CircularBitmapTransformation(boolean antiAliased) {
+    this(antiAliased, false);
+  }
+
+  public CircularBitmapTransformation(boolean antiAliased, boolean useFastNativeRounding) {
     mAntiAliased = antiAliased;
+    mUseFastNativeRounding = useFastNativeRounding;
   }
 
   @Override
   public void transform(Bitmap bitmap) {
-    NativeRoundingFilter.toCircle(bitmap, mAntiAliased);
+    if (mUseFastNativeRounding) {
+      NativeRoundingFilter.toCircleFast(bitmap, mAntiAliased);
+    } else {
+      NativeRoundingFilter.toCircle(bitmap, mAntiAliased);
+    }
   }
 
   @Override

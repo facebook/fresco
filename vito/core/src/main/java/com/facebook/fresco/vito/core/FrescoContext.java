@@ -190,11 +190,13 @@ public class FrescoContext {
   }
 
   private synchronized ImageDecodeOptions getCircularImageDecodeOptions(boolean antiAliased) {
+    final boolean useFastNativeRounding = mExperiments.useFastNativeRounding();
     if (antiAliased) {
       if (mCircularImageDecodeOptionsAntiAliased == null) {
         mCircularImageDecodeOptionsAntiAliased =
             ImageDecodeOptions.newBuilder()
-                .setBitmapTransformation(new CircularBitmapTransformation(true))
+                .setBitmapTransformation(
+                    new CircularBitmapTransformation(true, useFastNativeRounding))
                 .build();
       }
       return mCircularImageDecodeOptionsAntiAliased;
@@ -202,7 +204,8 @@ public class FrescoContext {
       if (mCircularImageDecodeOptions == null) {
         mCircularImageDecodeOptions =
             ImageDecodeOptions.newBuilder()
-                .setBitmapTransformation(new CircularBitmapTransformation(false))
+                .setBitmapTransformation(
+                    new CircularBitmapTransformation(false, useFastNativeRounding))
                 .build();
       }
       return mCircularImageDecodeOptions;
