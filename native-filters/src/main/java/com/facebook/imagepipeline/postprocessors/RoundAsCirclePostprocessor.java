@@ -7,7 +7,6 @@
 package com.facebook.imagepipeline.postprocessors;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.imagepipeline.nativecode.NativeRoundingFilter;

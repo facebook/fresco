@@ -31,7 +31,10 @@ public interface ProducerListener2 {
    * onProducerStart has been called, but corresponding onProducerFinishWith* method has not been
    * called yet.
    */
-  void onProducerEvent(@NonNull ProducerContext producerContext, @NonNull String producerName, @NonNull String eventName);
+  void onProducerEvent(
+      @NonNull ProducerContext producerContext,
+      @NonNull String producerName,
+      @NonNull String eventName);
 
   /**
    * Called when a producer successfully finishes processing current unit of work.
@@ -40,7 +43,9 @@ public interface ProducerListener2 {
    *     an exception if attempts are made to modify it.
    */
   void onProducerFinishWithSuccess(
-      @NonNull ProducerContext producerContext, @NonNull String producerName, @Nullable Map<String, String> extraMap);
+      @NonNull ProducerContext producerContext,
+      @NonNull String producerName,
+      @Nullable Map<String, String> extraMap);
 
   /**
    * Called when producer finishes processing current unit of work due to an error.
@@ -61,7 +66,9 @@ public interface ProducerListener2 {
    *     an exception if attempts are made to modify it.
    */
   void onProducerFinishWithCancellation(
-      @NonNull ProducerContext producerContext, @NonNull String producerName, @Nullable Map<String, String> extraMap);
+      @NonNull ProducerContext producerContext,
+      @NonNull String producerName,
+      @Nullable Map<String, String> extraMap);
 
   /**
    * Called when the producer which can create the final result for a given request has completed.
