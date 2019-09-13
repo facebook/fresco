@@ -7,7 +7,7 @@
 
 package com.facebook.imagepipeline.testing;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 
 import android.util.SparseIntArray;
 import com.facebook.common.memory.MemoryTrimmableRegistry;

@@ -6,13 +6,16 @@
  */
 package com.facebook.imagepipeline.memory;
 
+import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** Manages a pool of native memory chunks ({@link NativeMemoryChunk}) */
 @ThreadSafe
+@DoNotStrip
 public class NativeMemoryChunkPool extends MemoryChunkPool {
 
+  @DoNotStrip
   public NativeMemoryChunkPool(
       MemoryTrimmableRegistry memoryTrimmableRegistry,
       PoolParams poolParams,

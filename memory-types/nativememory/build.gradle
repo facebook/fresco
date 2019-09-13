@@ -5,41 +5,38 @@ project.group = GROUP
 version = VERSION_NAME
 
 dependencies {
+    implementation project(':fbcore')
+    implementation project(':imagepipeline')
+    
+    implementation "com.facebook.soloader:soloader:${SOLOADER_VERSION}"
+
+    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+
     testImplementation "junit:junit:${JUNIT_VERSION}"
 
-    testImplementation "com.facebook.soloader:soloader:${SOLOADER_VERSION}"
     testImplementation "org.assertj:assertj-core:${versions.assertjCore}"
     testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
     testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
-    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    testImplementation project(':imagepipeline-base-test')
+    testImplementation project(':imagepipeline-test')
 
-    implementation project(':fbcore')
-    implementation project(':imagepipeline')
-    implementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    implementation "com.facebook.soloader:soloader:${SOLOADER_VERSION}"
-    
 }
 
 android {
-    def ndkLibs = [
-            ['memory', []],
-            ['memchunk', []]]
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
+
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
     }
-    sourceSets {
-        main {
-            jni.srcDirs = []
-            jniLibs.srcDirs = ndkLibs.collect { "$buildDir/${it[0]}" }
-        }
+
+    lintOptions {
+        abortOnError false
     }
-    ndkLibs.each { lib -> makeNdkTasks lib[0], lib[1] }
 }
 
 task sourcesJar(type: Jar) {
