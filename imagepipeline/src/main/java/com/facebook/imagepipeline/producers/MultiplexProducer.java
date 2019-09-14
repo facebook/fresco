@@ -95,7 +95,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
     }
   }
 
-  private synchronized Multiplexer getExistingMultiplexer(K key) {
+  protected synchronized Multiplexer getExistingMultiplexer(K key) {
     return mMultiplexers.get(key);
   }
 
@@ -105,7 +105,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
     return multiplexer;
   }
 
-  private synchronized void removeMultiplexer(K key, Multiplexer multiplexer) {
+  protected synchronized void removeMultiplexer(K key, Multiplexer multiplexer) {
     if (mMultiplexers.get(key) == multiplexer) {
       mMultiplexers.remove(key);
     }
