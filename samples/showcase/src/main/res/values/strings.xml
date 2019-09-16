@@ -249,4 +249,7 @@
   <string name="drawee_hierarchy_switch_rounded">Round corners</string>
   <string name="drawee_hierarchy_switch_ninepatch">Use ninepatch</string>
   <string name="load_random_uri">Load Random URI</string>
+  <string name="vito_view_simple">Vito View Simple</string>
+  <string name="vito_view_view_recycler">Vito Recycler</string>
+  <string name="vito_view_simple_help">Basic Vito View example that just sets the image URI</string>
 </resources>

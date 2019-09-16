@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.drawable.FadeDrawable;
+import com.facebook.drawee.drawable.VisibilityCallback;
 import com.facebook.imagepipeline.image.CloseableImage;
 import java.io.Closeable;
 
@@ -27,6 +28,7 @@ public class FrescoDrawable extends FadeDrawable implements Closeable {
   private static final int OVERLAY_DRAWABLE_INDEX = 3;
 
   private @Nullable FrescoState mFrescoState;
+  private @Nullable VisibilityCallback mVisibilityCallback;
 
   public FrescoDrawable() {
     super(new Drawable[LAYER_COUNT], true);
@@ -94,5 +96,17 @@ public class FrescoDrawable extends FadeDrawable implements Closeable {
 
   public void setFrescoState(@Nullable FrescoState frescoState) {
     mFrescoState = frescoState;
+  }
+
+  @Override
+  public boolean setVisible(boolean visible, boolean restart) {
+    if (mVisibilityCallback != null) {
+      mVisibilityCallback.onVisibilityChange(visible);
+    }
+    return super.setVisible(visible, restart);
+  }
+
+  public void setVisibilityCallback(@Nullable VisibilityCallback visibilityCallback) {
+    this.mVisibilityCallback = visibilityCallback;
   }
 }

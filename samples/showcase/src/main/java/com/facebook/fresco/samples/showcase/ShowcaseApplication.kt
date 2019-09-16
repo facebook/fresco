@@ -29,6 +29,7 @@ import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.samples.showcase.misc.LogcatRequestListener2
 import com.facebook.fresco.vito.provider.DefaultFrescoContext
+import com.facebook.fresco.vito.view.VitoView
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.facebook.imagepipeline.debug.FlipperCacheKeyFactory
@@ -111,6 +112,7 @@ class ShowcaseApplication : Application() {
                         .setMaxBitmapCount(BitmapCounterConfig.DEFAULT_MAX_BITMAP_COUNT)
                         .build())
         Fresco.initialize(this, imagePipelineConfig, draweeConfigBuilder.build())
+        VitoView.init(resources)
 
         val context = this
         Stetho.initialize(

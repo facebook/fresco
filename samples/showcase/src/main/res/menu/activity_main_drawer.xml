@@ -152,6 +152,14 @@
             android:id="@+id/nav_vito_litho_gallery"
             android:title="@string/vito_litho_gallery"
             />
+        <item
+            android:id="@+id/nav_vito_view_simple"
+            android:title="@string/vito_view_simple"
+            />
+        <item
+            android:id="@+id/nav_vito_view_recycler"
+            android:title="@string/vito_view_view_recycler"
+            />
       </group>
     </menu>
   </item>
