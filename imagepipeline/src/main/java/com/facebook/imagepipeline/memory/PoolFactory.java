@@ -86,14 +86,14 @@ public class PoolFactory {
       try {
         Class<?> clazz = Class.forName("com.facebook.imagepipeline.memory.BufferMemoryChunkPool");
         Constructor<?> cons =
-                clazz.getConstructor(
-                        MemoryTrimmableRegistry.class, PoolParams.class, PoolStatsTracker.class);
+            clazz.getConstructor(
+                MemoryTrimmableRegistry.class, PoolParams.class, PoolStatsTracker.class);
         mBufferMemoryChunkPool =
-                (MemoryChunkPool)
-                        cons.newInstance(
-                                mConfig.getMemoryTrimmableRegistry(),
-                                mConfig.getMemoryChunkPoolParams(),
-                                mConfig.getMemoryChunkPoolStatsTracker());
+            (MemoryChunkPool)
+                cons.newInstance(
+                    mConfig.getMemoryTrimmableRegistry(),
+                    mConfig.getMemoryChunkPoolParams(),
+                    mConfig.getMemoryChunkPoolStatsTracker());
       } catch (ClassNotFoundException e) {
         mBufferMemoryChunkPool = null;
       } catch (IllegalAccessException e) {
