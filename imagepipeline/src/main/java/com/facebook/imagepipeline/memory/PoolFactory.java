@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.memory;
 
+import static com.facebook.imagepipeline.core.MemoryChunkType.ASHMEM_MEMORY;
 import static com.facebook.imagepipeline.core.MemoryChunkType.BUFFER_MEMORY;
 import static com.facebook.imagepipeline.core.MemoryChunkType.NATIVE_MEMORY;
 
@@ -27,6 +28,7 @@ public class PoolFactory {
 
   private final PoolConfig mConfig;
 
+  private @Nullable MemoryChunkPool mAshmemMemoryChunkPool;
   private BitmapPool mBitmapPool;
   private @Nullable MemoryChunkPool mBufferMemoryChunkPool;
   private FlexByteArrayPool mFlexByteArrayPool;
@@ -151,6 +153,35 @@ public class PoolFactory {
     return mNativeMemoryChunkPool;
   }
 
+  @Nullable
+  private MemoryChunkPool getAshmemMemoryChunkPool() {
+    if (mAshmemMemoryChunkPool == null) {
+      try {
+        Class<?> clazz = Class.forName("com.facebook.imagepipeline.memory.AshmemMemoryChunkPool");
+        Constructor<?> cons =
+            clazz.getConstructor(
+                MemoryTrimmableRegistry.class, PoolParams.class, PoolStatsTracker.class);
+        mAshmemMemoryChunkPool =
+            (MemoryChunkPool)
+                cons.newInstance(
+                    mConfig.getMemoryTrimmableRegistry(),
+                    mConfig.getMemoryChunkPoolParams(),
+                    mConfig.getMemoryChunkPoolStatsTracker());
+      } catch (ClassNotFoundException e) {
+        mAshmemMemoryChunkPool = null;
+      } catch (IllegalAccessException e) {
+        mAshmemMemoryChunkPool = null;
+      } catch (InstantiationException e) {
+        mAshmemMemoryChunkPool = null;
+      } catch (NoSuchMethodException e) {
+        mAshmemMemoryChunkPool = null;
+      } catch (InvocationTargetException e) {
+        mAshmemMemoryChunkPool = null;
+      }
+    }
+    return mAshmemMemoryChunkPool;
+  }
+
   public PooledByteBufferFactory getPooledByteBufferFactory() {
     return getPooledByteBufferFactory(NATIVE_MEMORY);
   }
@@ -198,6 +229,8 @@ public class PoolFactory {
         return getNativeMemoryChunkPool();
       case BUFFER_MEMORY:
         return getBufferMemoryChunkPool();
+      case ASHMEM_MEMORY:
+        return getAshmemMemoryChunkPool();
       default:
         throw new IllegalArgumentException("Invalid MemoryChunkType");
     }
