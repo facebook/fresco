@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.core;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.callercontext.CallerContextVerifier;
 import com.facebook.common.internal.Preconditions;
@@ -413,8 +414,13 @@ public class ImagePipelineConfig {
       final Builder builder, final ImagePipelineExperiments imagePipelineExperiments) {
     if (builder.mMemoryChunkType != null) {
       return builder.mMemoryChunkType;
-    } else if (imagePipelineExperiments.isNativeCodeDisabled()) {
+    } else if (imagePipelineExperiments.getMemoryType() == MemoryChunkType.ASHMEM_MEMORY
+        && Build.VERSION.SDK_INT >= 27) {
+      return MemoryChunkType.ASHMEM_MEMORY;
+    } else if (imagePipelineExperiments.getMemoryType() == MemoryChunkType.BUFFER_MEMORY) {
       return MemoryChunkType.BUFFER_MEMORY;
+    } else if (imagePipelineExperiments.getMemoryType() == MemoryChunkType.NATIVE_MEMORY) {
+      return MemoryChunkType.NATIVE_MEMORY;
     } else {
       return MemoryChunkType.NATIVE_MEMORY;
     }

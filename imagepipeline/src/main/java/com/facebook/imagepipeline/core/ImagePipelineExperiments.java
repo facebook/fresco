@@ -52,6 +52,7 @@ public class ImagePipelineExperiments {
   private final int mBitmapCloseableRefType;
   private final Supplier<Boolean> mSuppressBitmapPrefetchingSupplier;
   private final boolean mExperimentalThreadHandoffQueueEnabled;
+  private final long mMemoryType;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -77,6 +78,7 @@ public class ImagePipelineExperiments {
     mBitmapCloseableRefType = builder.mBitmapCloseableRefType;
     mSuppressBitmapPrefetchingSupplier = builder.mSuppressBitmapPrefetchingSupplier;
     mExperimentalThreadHandoffQueueEnabled = builder.mExperimentalThreadHandoffQueueEnabled;
+    mMemoryType = builder.mMemoryType;
   }
 
   public boolean getUseDownsamplingRatioForResizing() {
@@ -160,6 +162,10 @@ public class ImagePipelineExperiments {
     return mSuppressBitmapPrefetchingSupplier;
   }
 
+  public long getMemoryType() {
+    return mMemoryType;
+  }
+
   public static class Builder {
 
     private final ImagePipelineConfig.Builder mConfigBuilder;
@@ -182,6 +188,7 @@ public class ImagePipelineExperiments {
     public int mBitmapCloseableRefType;
     public Supplier<Boolean> mSuppressBitmapPrefetchingSupplier = Suppliers.of(false);
     public boolean mExperimentalThreadHandoffQueueEnabled;
+    public long mMemoryType = 0;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -322,6 +329,11 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setExperimentalThreadHandoffQueueEnabled(
         boolean experimentalThreadHandoffQueueEnabled) {
       mExperimentalThreadHandoffQueueEnabled = experimentalThreadHandoffQueueEnabled;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setExperimentalMemoryType(long MemoryType) {
+      mMemoryType = MemoryType;
       return mConfigBuilder;
     }
 
