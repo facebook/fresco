@@ -6,20 +6,9 @@ version = VERSION_NAME
 
 dependencies {
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
-    compileOnly "com.facebook.infer.annotation:infer-annotation:${INFER_ANNOTATION_VERSION}"
 
-    implementation "androidx.core:core:${versions.androidx.core}"
-
-    implementation project(':animated-drawable')
-    implementation project(':drawee')
-    implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':fbcore')
     implementation project(':imagepipeline')
-    implementation project(':memory-types:ashmem')
-    implementation project(':memory-types:nativememory')
-    implementation project(':memory-types:simple')
-    implementation project(':vito:options')
 
     testImplementation "junit:junit:${JUNIT_VERSION}"
     testImplementation "org.assertj:assertj-core:${versions.assertjCore}"
@@ -28,6 +17,7 @@ dependencies {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
+    testImplementation project(':imagepipeline-test')
 }
 
 android {

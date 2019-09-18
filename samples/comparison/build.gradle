@@ -19,6 +19,7 @@ dependencies {
     implementation project(':drawee-backends:drawee-volley')
     implementation project(':fbcore')
     implementation project(':imagepipeline')
+    implementation project(':memory-types:ashmem')
     implementation project(':memory-types:nativememory')
     implementation project(':memory-types:simple')
     implementation project(':imagepipeline-backends:imagepipeline-okhttp3')

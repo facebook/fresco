@@ -12,6 +12,7 @@ dependencies {
     api project(':fbcore')
     api project(':drawee')
     api project(':imagepipeline')
+    api project(':memory-types:ashmem')
     api project(':memory-types:nativememory')
     api project(':memory-types:simple')
     api project(':native-filters')
