@@ -15,6 +15,7 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.soloader.SoLoader;
+import com.facebook.soloader.nativeloader.NativeLoader;
 import java.io.IOException;
 import javax.annotation.Nullable;
 
@@ -60,19 +61,20 @@ public class Fresco {
     } else {
       sIsInitialized = true;
     }
-    try {
+    if (!NativeLoader.isInitialized()) {
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.beginSection("Fresco.initialize->SoLoader.init");
       }
-      SoLoader.init(context, 0);
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.endSection();
+
+      try {
+        SoLoader.init(context, 0);
+      } catch (IOException e) {
+        throw new RuntimeException("Failed to initialize SoLoader", e);
+      } finally {
+        if (FrescoSystrace.isTracing()) {
+          FrescoSystrace.endSection();
+        }
       }
-    } catch (IOException e) {
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.endSection();
-      }
-      throw new RuntimeException("Could not initialize SoLoader", e);
     }
     // we should always use the application context to avoid memory leaks
     context = context.getApplicationContext();
