@@ -9,6 +9,7 @@ dependencies {
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
 
     implementation "androidx.legacy:legacy-support-core-utils:${versions.androidx.legacy_support_core_utils}"
+    implementation "com.facebook.soloader:soloader:$SOLOADER_VERSION"
     implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
     implementation project(':fbcore')
 }
