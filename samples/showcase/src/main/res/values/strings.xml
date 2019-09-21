@@ -212,6 +212,9 @@
   <string name="button_prefetch_disk">Prefetch Disk</string>
   <string name="button_prefetch_encoded">Prefetch Encoded</string>
   <string name="button_prefetch_bitmap">Prefetch Bitmap</string>
+  <string name="button_prefetch_disk_short">Disk</string>
+  <string name="button_prefetch_encoded_short">Encoded</string>
+  <string name="button_prefetch_bitmap_short">Bitmap</string>
   <string name="button_toggle_images">Toggle images</string>
   <string name="prefetch_status"><xliff:g id="name1">%d</xliff:g>/<xliff:g id="name2">%d</xliff:g> prefetched, <xliff:g id="name3">%d</xliff:g> failed.</string>
 
@@ -250,6 +253,8 @@
   <string name="drawee_hierarchy_switch_ninepatch">Use ninepatch</string>
   <string name="load_random_uri">Load Random URI</string>
   <string name="vito_view_simple">Vito View Simple</string>
-  <string name="vito_view_view_recycler">Vito Recycler</string>
   <string name="vito_view_simple_help">Basic Vito View example that just sets the image URI</string>
+  <string name="vito_view_view_recycler">Vito Recycler</string>
+  <string name="vito_view_prefetch">Vito Prefetch</string>
+  <string name="vito_view_prefetch_title">Prefetch to cache:</string>
 </resources>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:gravity="center_horizontal" android:orientation="vertical"
+    >
+
+  <TextView
+      android:layout_width="wrap_content" android:layout_height="wrap_content"
+      android:gravity="center"
+      android:text="@string/vito_view_prefetch_title"
+      android:textAppearance="?android:attr/textAppearanceMedium"
+      />
+
+  <LinearLayout
+      android:layout_width="match_parent" android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:gravity="center"
+      android:layout_marginBottom="@dimen/margin_medium"
+      >
+
+    <Button
+        android:id="@+id/button_prefetch_bitmap" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:text="@string/button_prefetch_bitmap_short"
+        />
+
+    <Button
+        android:id="@+id/button_prefetch_encoded" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_prefetch_encoded_short"
+        />
+
+    <Button
+        android:id="@+id/button_prefetch_disk" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:text="@string/button_prefetch_disk_short"
+        />
+  </LinearLayout>
+
+
+  <View
+      android:id="@+id/view" android:layout_width="@dimen/drawee_width_medium"
+      android:layout_height="@dimen/drawee_height_medium"
+      />
+
+  <LinearLayout
+      android:layout_width="match_parent" android:layout_height="wrap_content"
+      android:orientation="horizontal" android:gravity="center"
+      >
+
+    <Button
+        android:id="@+id/button_toggle_images" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:text="@string/button_toggle_images"
+        />
+
+    <Button
+        android:id="@+id/button_clear_cache" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:text="@string/button_clear_cache"
+        />
+  </LinearLayout>
+</LinearLayout>

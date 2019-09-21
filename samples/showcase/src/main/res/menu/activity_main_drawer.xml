@@ -160,6 +160,10 @@
             android:id="@+id/nav_vito_view_recycler"
             android:title="@string/vito_view_view_recycler"
             />
+        <item
+            android:id="@+id/nav_vito_view_prefetch"
+            android:title="@string/vito_view_prefetch"
+            />
       </group>
     </menu>
   </item>
