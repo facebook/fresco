@@ -53,6 +53,7 @@ public class ImagePipelineExperiments {
   private final Supplier<Boolean> mSuppressBitmapPrefetchingSupplier;
   private final boolean mExperimentalThreadHandoffQueueEnabled;
   private final long mMemoryType;
+  private boolean mKeepCancelledFetchAsLowPriority;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -79,6 +80,7 @@ public class ImagePipelineExperiments {
     mSuppressBitmapPrefetchingSupplier = builder.mSuppressBitmapPrefetchingSupplier;
     mExperimentalThreadHandoffQueueEnabled = builder.mExperimentalThreadHandoffQueueEnabled;
     mMemoryType = builder.mMemoryType;
+    mKeepCancelledFetchAsLowPriority = builder.mKeepCancelledFetchAsLowPriority;
   }
 
   public boolean getUseDownsamplingRatioForResizing() {
@@ -166,6 +168,10 @@ public class ImagePipelineExperiments {
     return mMemoryType;
   }
 
+  public boolean shouldKeepCancelledFetchAsLowPriority() {
+    return mKeepCancelledFetchAsLowPriority;
+  }
+
   public static class Builder {
 
     private final ImagePipelineConfig.Builder mConfigBuilder;
@@ -189,6 +195,7 @@ public class ImagePipelineExperiments {
     public Supplier<Boolean> mSuppressBitmapPrefetchingSupplier = Suppliers.of(false);
     public boolean mExperimentalThreadHandoffQueueEnabled;
     public long mMemoryType = 0;
+    private boolean mKeepCancelledFetchAsLowPriority;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -337,6 +344,11 @@ public class ImagePipelineExperiments {
       return mConfigBuilder;
     }
 
+    public ImagePipelineConfig.Builder setKeepCancelledFetchAsLowPriority(boolean keepCancelledFetchAsLowPriority) {
+      mKeepCancelledFetchAsLowPriority = keepCancelledFetchAsLowPriority;
+      return mConfigBuilder;
+    }
+
     public ImagePipelineExperiments build() {
       return new ImagePipelineExperiments(this);
     }
@@ -364,7 +376,8 @@ public class ImagePipelineExperiments {
         int bitmapPrepareToDrawMaxSizeBytes,
         boolean bitmapPrepareToDrawForPrefetch,
         int maxBitmapSize,
-        CloseableReferenceFactory closeableReferenceFactory);
+        CloseableReferenceFactory closeableReferenceFactory,
+        boolean keepCancelledFetchAsLowPriority);
   }
 
   public static class DefaultProducerFactoryMethod implements ProducerFactoryMethod {
@@ -390,7 +403,8 @@ public class ImagePipelineExperiments {
         int bitmapPrepareToDrawMaxSizeBytes,
         boolean bitmapPrepareToDrawForPrefetch,
         int maxBitmapSize,
-        CloseableReferenceFactory closeableReferenceFactory) {
+        CloseableReferenceFactory closeableReferenceFactory,
+        boolean keepCancelledFetchAsLowPriority) {
       return new ProducerFactory(
           context,
           byteArrayPool,
@@ -411,7 +425,8 @@ public class ImagePipelineExperiments {
           bitmapPrepareToDrawMaxSizeBytes,
           bitmapPrepareToDrawForPrefetch,
           maxBitmapSize,
-          closeableReferenceFactory);
+          closeableReferenceFactory,
+          keepCancelledFetchAsLowPriority);
     }
   }
 }

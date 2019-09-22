@@ -102,6 +102,8 @@ public class ProducerFactory {
 
   private final int mMaxBitmapSize;
 
+  private final boolean mKeepCancelledFetchAsLowPriority;
+
   public ProducerFactory(
       Context context,
       ByteArrayPool byteArrayPool,
@@ -122,7 +124,8 @@ public class ProducerFactory {
       int bitmapPrepareToDrawMaxSizeBytes,
       boolean bitmapPrepareToDrawForPrefetch,
       int maxBitmapSize,
-      CloseableReferenceFactory closeableReferenceFactory) {
+      CloseableReferenceFactory closeableReferenceFactory,
+      boolean keepCancelledFetchAsLowPriority) {
     mContentResolver = context.getApplicationContext().getContentResolver();
     mResources = context.getApplicationContext().getResources();
     mAssetManager = context.getApplicationContext().getAssets();
@@ -150,6 +153,8 @@ public class ProducerFactory {
 
     mMaxBitmapSize = maxBitmapSize;
     mCloseableReferenceFactory = closeableReferenceFactory;
+
+    mKeepCancelledFetchAsLowPriority = keepCancelledFetchAsLowPriority;
   }
 
   public static AddImageTransformMetaDataProducer newAddImageTransformMetaDataProducer(
@@ -217,7 +222,7 @@ public class ProducerFactory {
 
   public EncodedCacheKeyMultiplexProducer newEncodedCacheKeyMultiplexProducer(
       Producer<EncodedImage> inputProducer) {
-    return new EncodedCacheKeyMultiplexProducer(mCacheKeyFactory, inputProducer);
+    return new EncodedCacheKeyMultiplexProducer(mCacheKeyFactory, mKeepCancelledFetchAsLowPriority, inputProducer);
   }
 
   public EncodedMemoryCacheProducer newEncodedMemoryCacheProducer(

@@ -53,9 +53,18 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
 
   private final Producer<T> mInputProducer;
 
+  private final boolean mKeepCancelledFetchAsLowPriority;
+
   protected MultiplexProducer(Producer<T> inputProducer) {
     mInputProducer = inputProducer;
     mMultiplexers = new HashMap<>();
+    mKeepCancelledFetchAsLowPriority = false;
+  }
+
+  protected MultiplexProducer(Producer<T> inputProducer, boolean keepCancelledFetchAsLowPriority) {
+    mInputProducer = inputProducer;
+    mMultiplexers = new HashMap<>();
+    mKeepCancelledFetchAsLowPriority = keepCancelledFetchAsLowPriority;
   }
 
   @Override
@@ -290,7 +299,13 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
                   isIntermediateResultExpectedCallbacks);
 
               if (contextToCancel != null) {
-                contextToCancel.cancel();
+                if (mKeepCancelledFetchAsLowPriority && !contextToCancel.isPrefetch()) {
+                  List<ProducerContextCallbacks> callbacks =
+                      contextToCancel.setPriorityNoCallbacks(Priority.LOW);
+                  BaseProducerContext.callOnPriorityChanged(callbacks);
+                } else {
+                  contextToCancel.cancel();
+                }
               }
               if (pairWasRemoved) {
                 consumerContextPair.first.onCancellation();
