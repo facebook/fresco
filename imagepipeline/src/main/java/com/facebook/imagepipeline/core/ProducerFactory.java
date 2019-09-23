@@ -222,7 +222,8 @@ public class ProducerFactory {
 
   public EncodedCacheKeyMultiplexProducer newEncodedCacheKeyMultiplexProducer(
       Producer<EncodedImage> inputProducer) {
-    return new EncodedCacheKeyMultiplexProducer(mCacheKeyFactory, mKeepCancelledFetchAsLowPriority, inputProducer);
+    return new EncodedCacheKeyMultiplexProducer(
+        mCacheKeyFactory, mKeepCancelledFetchAsLowPriority, inputProducer);
   }
 
   public EncodedMemoryCacheProducer newEncodedMemoryCacheProducer(

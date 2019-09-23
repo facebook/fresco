@@ -344,7 +344,8 @@ public class ImagePipelineExperiments {
       return mConfigBuilder;
     }
 
-    public ImagePipelineConfig.Builder setKeepCancelledFetchAsLowPriority(boolean keepCancelledFetchAsLowPriority) {
+    public ImagePipelineConfig.Builder setKeepCancelledFetchAsLowPriority(
+        boolean keepCancelledFetchAsLowPriority) {
       mKeepCancelledFetchAsLowPriority = keepCancelledFetchAsLowPriority;
       return mConfigBuilder;
     }

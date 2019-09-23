@@ -7,9 +7,7 @@
 
 package com.facebook.fresco.vito.core;
 
-import android.annotation.TargetApi;
 import android.net.Uri;
-import android.os.Build;
 import com.facebook.callercontext.CallerContextVerifier;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
@@ -125,7 +123,8 @@ public class FrescoContext {
   }
 
   @Nullable
-  public ImageRequest buildEncodedImageRequest(@Nullable Uri uri, EncodedImageOptions imageOptions) {
+  public ImageRequest buildEncodedImageRequest(
+      @Nullable Uri uri, EncodedImageOptions imageOptions) {
     ImageRequestBuilder builder = createEncodedImageRequestBuilder(uri, imageOptions);
     return builder != null ? builder.build() : null;
   }
@@ -142,7 +141,8 @@ public class FrescoContext {
     if (uri == null) {
       return null;
     }
-    final ImageRequestBuilder imageRequestBuilder = createEncodedImageRequestBuilder(uri, imageOptions);
+    final ImageRequestBuilder imageRequestBuilder =
+        createEncodedImageRequestBuilder(uri, imageOptions);
 
     if (mExperiments.useNativeRounding()) {
       setupNativeRounding(imageRequestBuilder, imageOptions.getRoundingOptions());
