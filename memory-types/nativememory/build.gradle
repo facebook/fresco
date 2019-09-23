@@ -8,7 +8,7 @@ dependencies {
     implementation project(':fbcore')
     implementation project(':imagepipeline')
     
-    implementation "com.facebook.soloader:soloader:${SOLOADER_VERSION}"
+    implementation "com.facebook.soloader:nativeloader:${SOLOADER_VERSION}"
 
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
 
@@ -22,7 +22,6 @@ dependencies {
     }
     testImplementation project(':imagepipeline-base-test')
     testImplementation project(':imagepipeline-test')
-
 }
 
 android {

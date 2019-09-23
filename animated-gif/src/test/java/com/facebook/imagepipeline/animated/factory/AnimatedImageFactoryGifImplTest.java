@@ -37,7 +37,6 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
 import com.facebook.imagepipeline.testing.TrivialBufferPooledByteBuffer;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
-import com.facebook.soloader.SoLoader;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -61,10 +60,6 @@ public class AnimatedImageFactoryGifImplTest {
   private static final Bitmap.Config DEFAULT_BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
 
   @Rule public PowerMockRule rule = new PowerMockRule();
-
-  static {
-    SoLoader.setInTestMode();
-  }
 
   private static ResourceReleaser<PooledByteBuffer> FAKE_RESOURCE_RELEASER =
       new ResourceReleaser<PooledByteBuffer>() {

@@ -8,7 +8,7 @@
 package com.facebook.imagepipeline.nativecode;
 
 import android.os.Build;
-import com.facebook.soloader.SoLoader;
+import com.facebook.soloader.nativeloader.NativeLoader;
 
 /** Single place responsible for ensuring that `static-webp.so` is loaded */
 public class StaticWebpNativeLoader {
@@ -22,12 +22,12 @@ public class StaticWebpNativeLoader {
       // library
       if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
         try {
-          SoLoader.loadLibrary("fb_jpegturbo");
+          NativeLoader.loadLibrary("fb_jpegturbo");
         } catch (UnsatisfiedLinkError error) {
           // Head in the sand
         }
       }
-      SoLoader.loadLibrary("static-webp");
+      NativeLoader.loadLibrary("static-webp");
       sInitialized = true;
     }
   }
