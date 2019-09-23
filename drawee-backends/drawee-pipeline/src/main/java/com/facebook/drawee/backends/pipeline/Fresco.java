@@ -14,9 +14,9 @@ import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
-import com.facebook.soloader.SoLoader;
 import com.facebook.soloader.nativeloader.NativeLoader;
-import java.io.IOException;
+import com.facebook.soloader.nativeloader.SystemDelegate;
+import java.lang.reflect.InvocationTargetException;
 import javax.annotation.Nullable;
 
 /**
@@ -65,11 +65,21 @@ public class Fresco {
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.beginSection("Fresco.initialize->SoLoader.init");
       }
-
       try {
-        SoLoader.init(context, 0);
-      } catch (IOException e) {
-        throw new RuntimeException("Failed to initialize SoLoader", e);
+        Class<?> clazz = Class.forName("com.facebook.soloader.SoLoader");
+        clazz.getMethod("init", Context.class, int.class).invoke(null, context, 0);
+      } catch (ClassNotFoundException e) {
+        // Failed to initialize SoLoader
+        NativeLoader.init(new SystemDelegate());
+      } catch (IllegalAccessException e) {
+        // Failed to initialize SoLoader
+        NativeLoader.init(new SystemDelegate());
+      } catch (InvocationTargetException e) {
+        // Failed to initialize SoLoader
+        NativeLoader.init(new SystemDelegate());
+      } catch (NoSuchMethodException e) {
+        // Failed to initialize SoLoader
+        NativeLoader.init(new SystemDelegate());
       } finally {
         if (FrescoSystrace.isTracing()) {
           FrescoSystrace.endSection();
