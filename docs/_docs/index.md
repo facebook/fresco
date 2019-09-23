@@ -106,3 +106,19 @@ draweeView.setImageURI(uri);
 and Fresco does the rest.
 
 The placeholder is shown until the image is ready. The image will be downloaded, cached, displayed, and cleared from memory when your view goes off-screen.
+
+
+## 4. Setting non-default native library loader (Only for Fresco 2.1 and above)
+
+Currently we are using SoLoader for loading native libraries. Since some our users prefer using System (or even their own loaders) to load native libraries since version 2.1 we support this option.
+While adding a dependency to fresco you should exclude SoLoader. To do this, simply edit your 'build.gradle' file in the following way:
+```groovy
+dependencies {
+  // your app's other dependencies
+  implementation 'com.facebook.fresco:fresco:{{site.current_version}}' {
+    exclude group: 'com.facebook.soloader', module: 'soloader'
+  }
+}
+```
+Be sure to exclude soloader from all dependencies that are using it, even if they are multiple times nested. This solution will set System as loader.
+For example you should look at 'samples/scrollperf/build.gradle', where are settings for two variants of scrollperf - with and without SoLoader.
