@@ -14,7 +14,14 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-scrollperf.pro'
+        }
+    }
+    flavorDimensions "useSoLoader"
+    productFlavors {
+        soLoader {
+        }
+        noSoLoader {
         }
     }
 
@@ -34,12 +41,21 @@ android {
 }
 
 dependencies {
-    implementation project(':static-webp')
-    implementation project(':drawee-backends:drawee-pipeline')
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
     implementation "androidx.recyclerview:recyclerview:${versions.androidx.recyclerview}"
     implementation "androidx.preference:preference:${versions.androidx.preference}"
+
+    implementation (fileTree(dir: 'libs', include: ['*.jar']))
+
+    noSoLoaderImplementation (project(':static-webp')) {
+        exclude group: 'com.facebook.soloader', module: 'soloader'
+    }
+    noSoLoaderImplementation (project(':drawee-backends:drawee-pipeline')) {
+        exclude group: 'com.facebook.soloader', module: 'soloader'
+    }
+
+    soLoaderImplementation project(':static-webp')
+    soLoaderImplementation project(':drawee-backends:drawee-pipeline')
 
     testImplementation "junit:junit:${JUNIT_VERSION}"
 
