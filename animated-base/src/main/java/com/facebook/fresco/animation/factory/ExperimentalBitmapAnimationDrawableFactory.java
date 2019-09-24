@@ -9,7 +9,6 @@ package com.facebook.fresco.animation.factory;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.net.Uri;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.time.MonotonicClock;
@@ -18,6 +17,7 @@ import com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactiv
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer;
+import com.facebook.fresco.animation.bitmap.cache.AnimationFrameCacheKey;
 import com.facebook.fresco.animation.bitmap.cache.FrescoFrameCache;
 import com.facebook.fresco.animation.bitmap.cache.KeepLastFrameCache;
 import com.facebook.fresco.animation.bitmap.cache.NoOpCache;
@@ -151,26 +151,5 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
       final AnimatedImageResult animatedImageResult) {
     return new AnimatedFrameCache(
         new AnimationFrameCacheKey(animatedImageResult.hashCode()), mBackingCache);
-  }
-
-  public static class AnimationFrameCacheKey implements CacheKey {
-
-    private static final String URI_PREFIX = "anim://";
-
-    private final String mAnimationUriString;
-
-    public AnimationFrameCacheKey(int imageId) {
-      mAnimationUriString = URI_PREFIX + imageId;
-    }
-
-    @Override
-    public boolean containsUri(Uri uri) {
-      return uri.toString().startsWith(mAnimationUriString);
-    }
-
-    @Override
-    public String getUriString() {
-      return mAnimationUriString;
-    }
   }
 }
