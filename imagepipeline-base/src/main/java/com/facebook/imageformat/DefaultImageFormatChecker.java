@@ -79,6 +79,10 @@ public class DefaultImageFormatChecker implements ImageFormat.FormatChecker {
       return DefaultImageFormats.HEIF;
     }
 
+    if (isDngHeader(headerBytes, headerSize)) {
+      return DefaultImageFormats.DNG;
+    }
+
     return ImageFormat.UNKNOWN;
   }
 
@@ -274,5 +278,34 @@ public class DefaultImageFormatChecker implements ImageFormat.FormatChecker {
     }
 
     return false;
+  }
+
+  /**
+   * DNG has TIFF format which begins with binary order ('II' or 'MM' (stands for intel and motorola
+   * binary order respectively)) then a word containing the number 42
+   * http://www.fileformat.info/format/tiff/corion.htm
+   */
+  private static final byte[] DNG_HEADER_II =
+      new byte[] {(byte) 0x49, (byte) 0x49, (byte) 0x2A, (byte) 0x00};
+
+  private static final byte[] DNG_HEADER_MM =
+      new byte[] {(byte) 0x4D, (byte) 0x4D, (byte) 0x00, (byte) 0x2A};
+  private static final int DNG_HEADER_LENGTH = DNG_HEADER_II.length;
+
+  /**
+   * Checks if imageHeaderBytes starts with 'II' or 'MM' then followed by a word containing 42
+   * respecting the binary order. If headerSize is lower than 4 false is returned. Description of
+   * DNG format can be found here: <a
+   * href="https://www.adobe.com/content/dam/acom/en/products/photoshop/pdfs/dng_spec_1.4.0.0.pdf">
+   * </a>
+   *
+   * @param imageHeaderBytes
+   * @param headerSize
+   * @return true if imageHeaderBytes starts with ('II' or 'MM') then 42 and headerSize >= 4
+   */
+  private static boolean isDngHeader(final byte[] imageHeaderBytes, final int headerSize) {
+    return headerSize >= DNG_HEADER_LENGTH
+        && (ImageFormatCheckerUtils.startsWithPattern(imageHeaderBytes, DNG_HEADER_II)
+            || ImageFormatCheckerUtils.startsWithPattern(imageHeaderBytes, DNG_HEADER_MM));
   }
 }

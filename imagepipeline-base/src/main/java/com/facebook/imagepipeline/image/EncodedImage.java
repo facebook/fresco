@@ -261,11 +261,11 @@ public class EncodedImage implements Closeable {
   }
 
   /**
-   * Returns true if the image is a JPEG and its data is already complete at the specified length,
-   * false otherwise.
+   * Returns true if the image is a JPEG or DNG and its data is already complete at the specified
+   * length, false otherwise.
    */
   public boolean isCompleteAt(int length) {
-    if (mImageFormat != DefaultImageFormats.JPEG) {
+    if (mImageFormat != DefaultImageFormats.JPEG && mImageFormat != DefaultImageFormats.DNG) {
       return true;
     }
     // If the image is backed by FileInputStreams return true since they will always be complete.

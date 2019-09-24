@@ -25,6 +25,7 @@ public final class DefaultImageFormats {
       new ImageFormat("WEBP_EXTENDED_WITH_ALPHA", "webp");
   public static final ImageFormat WEBP_ANIMATED = new ImageFormat("WEBP_ANIMATED", "webp");
   public static final ImageFormat HEIF = new ImageFormat("HEIF", "heif");
+  public static final ImageFormat DNG = new ImageFormat("DNG", "dng");
 
   private static ImmutableList<ImageFormat> sAllDefaultFormats;
 
