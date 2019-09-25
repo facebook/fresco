@@ -16,6 +16,8 @@ import javax.annotation.concurrent.ThreadSafe;
 @DoNotStrip
 @TargetApi(27)
 public class AshmemMemoryChunkPool extends MemoryChunkPool {
+
+  @DoNotStrip
   public AshmemMemoryChunkPool(
       MemoryTrimmableRegistry memoryTrimmableRegistry,
       PoolParams poolParams,

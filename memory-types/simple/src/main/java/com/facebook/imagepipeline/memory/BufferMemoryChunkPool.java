@@ -15,6 +15,7 @@ import javax.annotation.concurrent.ThreadSafe;
 @DoNotStrip
 public class BufferMemoryChunkPool extends MemoryChunkPool {
 
+  @DoNotStrip
   public BufferMemoryChunkPool(
       MemoryTrimmableRegistry memoryTrimmableRegistry,
       PoolParams poolParams,
