@@ -238,13 +238,17 @@ public class DefaultImageFormatChecker implements ImageFormat.FormatChecker {
    * byte of the header gives us the size of the box, then we have "ftyp" followed by the exact
    * image format which can be one of: heic, heix, hevc, hevx.
    */
-  private static final String HEIF_HEADER_PREFIX = "ftyp";
+  private static final byte[] HEIF_HEADER_PREFIX = ImageFormatCheckerUtils.asciiBytes("ftyp");
 
-  private static final String[] HEIF_HEADER_SUFFIXES = {
-    "heic", "heix", "hevc", "hevx", "mif1", "msf1"
+  private static final byte[][] HEIF_HEADER_SUFFIXES = {
+    ImageFormatCheckerUtils.asciiBytes("heic"),
+    ImageFormatCheckerUtils.asciiBytes("heix"),
+    ImageFormatCheckerUtils.asciiBytes("hevc"),
+    ImageFormatCheckerUtils.asciiBytes("hevx"),
+    ImageFormatCheckerUtils.asciiBytes("mif1"),
+    ImageFormatCheckerUtils.asciiBytes("msf1")
   };
-  private static final int HEIF_HEADER_LENGTH =
-      ImageFormatCheckerUtils.asciiBytes(HEIF_HEADER_PREFIX + HEIF_HEADER_SUFFIXES[0]).length;
+  private static final int HEIF_HEADER_LENGTH = 12;
 
   /**
    * Checks if first headerSize bytes of imageHeaderBytes constitute a valid header for a HEIF
@@ -265,14 +269,12 @@ public class DefaultImageFormatChecker implements ImageFormat.FormatChecker {
       return false;
     }
 
-    for (final String heifFtype : HEIF_HEADER_SUFFIXES) {
-      final int indexOfHeaderPattern =
-          ImageFormatCheckerUtils.indexOfPattern(
-              imageHeaderBytes,
-              imageHeaderBytes.length,
-              ImageFormatCheckerUtils.asciiBytes(HEIF_HEADER_PREFIX + heifFtype),
-              HEIF_HEADER_LENGTH);
-      if (indexOfHeaderPattern > -1) {
+    if (!ImageFormatCheckerUtils.hasPatternAt(imageHeaderBytes, HEIF_HEADER_PREFIX, 4)) {
+      return false;
+    }
+
+    for (final byte[] heifFtype : HEIF_HEADER_SUFFIXES) {
+      if (ImageFormatCheckerUtils.hasPatternAt(imageHeaderBytes, heifFtype, 8)) {
         return true;
       }
     }
