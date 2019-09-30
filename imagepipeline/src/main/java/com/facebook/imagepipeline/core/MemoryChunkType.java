@@ -4,6 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.imagepipeline.core;
 
 import static com.facebook.imagepipeline.core.MemoryChunkType.ASHMEM_MEMORY;

@@ -4,6 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.drawee.drawable;
 
 /** Interface for Drawables that round corners or form a circle. */
