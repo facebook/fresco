@@ -38,7 +38,7 @@ class DeferredReleaserConcurrentImpl extends DeferredReleaser {
           }
 
           //noinspection ForLoopReplaceableByForEach
-          for (int i = 0; i < mTempList.size(); i++) {
+          for (int i = 0, size = mTempList.size(); i < size; i++) {
             mTempList.get(i).release();
           }
           mTempList.clear();
