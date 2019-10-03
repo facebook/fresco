@@ -43,7 +43,7 @@ For full details, visit the documentation on our web site, available in English,
 
 Please use our [issues page](https://github.com/facebook/fresco/issues) to let us know of any problems.
 
-For pull requests, please see the [CONTRIBUTING](https://github.com/facebook/fresco/blob/master/CONTRIBUTING.md) file for information on how to help out. See our [documentation](http://frescolib.org/docs/building-from-source.html) for information how to build from source.
+For pull requests, please see the [CONTRIBUTING](https://github.com/facebook/fresco/blob/master/CONTRIBUTING.md) file for information on how to help out. See our [documentation](http://frescolib.org/docs/building-from-source.html) for information on how to build from source.
 
 
 ## License
