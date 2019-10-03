@@ -26,13 +26,13 @@ public class EncodedMemoryCacheFactory {
           }
 
           @Override
-          public void onCacheMiss() {
-            imageCacheStatsTracker.onMemoryCacheMiss();
+          public void onCacheMiss(CacheKey cacheKey) {
+            imageCacheStatsTracker.onMemoryCacheMiss(cacheKey);
           }
 
           @Override
-          public void onCachePut() {
-            imageCacheStatsTracker.onMemoryCachePut();
+          public void onCachePut(CacheKey cacheKey) {
+            imageCacheStatsTracker.onMemoryCachePut(cacheKey);
           }
         };
 

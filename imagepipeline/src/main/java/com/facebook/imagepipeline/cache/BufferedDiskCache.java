@@ -160,7 +160,7 @@ public class BufferedDiskCache {
       return true;
     } else {
       FLog.v(TAG, "Did not find image for %s in staging area", key.getUriString());
-      mImageCacheStatsTracker.onStagingAreaMiss();
+      mImageCacheStatsTracker.onStagingAreaMiss(key);
       try {
         return mFileCache.hasKey(key);
       } catch (Exception exception) {
@@ -188,7 +188,7 @@ public class BufferedDiskCache {
                   mImageCacheStatsTracker.onStagingAreaHit(key);
                 } else {
                   FLog.v(TAG, "Did not find image for %s in staging area", key.getUriString());
-                  mImageCacheStatsTracker.onStagingAreaMiss();
+                  mImageCacheStatsTracker.onStagingAreaMiss(key);
 
                   try {
                     final PooledByteBuffer buffer = readFromDiskCache(key);
@@ -356,7 +356,7 @@ public class BufferedDiskCache {
       final BinaryResource diskCacheResource = mFileCache.getResource(key);
       if (diskCacheResource == null) {
         FLog.v(TAG, "Disk cache miss for %s", key.getUriString());
-        mImageCacheStatsTracker.onDiskCacheMiss();
+        mImageCacheStatsTracker.onDiskCacheMiss(key);
         return null;
       } else {
         FLog.v(TAG, "Found entry in disk cache for %s", key.getUriString());
@@ -378,7 +378,7 @@ public class BufferedDiskCache {
       // TODO: 5258772 - uncomment line below
       // mFileCache.remove(key);
       FLog.w(TAG, ioe, "Exception reading from cache for %s", key.getUriString());
-      mImageCacheStatsTracker.onDiskCacheGetFail();
+      mImageCacheStatsTracker.onDiskCacheGetFail(key);
       throw ioe;
     }
   }

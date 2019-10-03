@@ -26,13 +26,13 @@ public class BitmapMemoryCacheFactory {
           }
 
           @Override
-          public void onCacheMiss() {
-            imageCacheStatsTracker.onBitmapCacheMiss();
+          public void onCacheMiss(CacheKey cacheKey) {
+            imageCacheStatsTracker.onBitmapCacheMiss(cacheKey);
           }
 
           @Override
-          public void onCachePut() {
-            imageCacheStatsTracker.onBitmapCachePut();
+          public void onCachePut(CacheKey cacheKey) {
+            imageCacheStatsTracker.onBitmapCachePut(cacheKey);
           }
         };
 

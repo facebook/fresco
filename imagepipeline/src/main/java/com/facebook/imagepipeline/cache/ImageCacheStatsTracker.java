@@ -19,22 +19,22 @@ import com.facebook.cache.common.CacheKey;
 public interface ImageCacheStatsTracker {
 
   /** Called whenever decoded images are put into the bitmap cache. */
-  void onBitmapCachePut();
+  void onBitmapCachePut(CacheKey cacheKey);
 
   /** Called on a bitmap cache hit. */
   void onBitmapCacheHit(CacheKey cacheKey);
 
   /** Called on a bitmap cache miss. */
-  void onBitmapCacheMiss();
+  void onBitmapCacheMiss(CacheKey cacheKey);
 
   /** Called whenever encoded images are put into the encoded memory cache. */
-  void onMemoryCachePut();
+  void onMemoryCachePut(CacheKey cacheKey);
 
   /** Called on an encoded memory cache hit. */
   void onMemoryCacheHit(CacheKey cacheKey);
 
   /** Called on an encoded memory cache hit. */
-  void onMemoryCacheMiss();
+  void onMemoryCacheMiss(CacheKey cacheKey);
 
   /**
    * Called on an staging area hit.
@@ -45,16 +45,16 @@ public interface ImageCacheStatsTracker {
   void onStagingAreaHit(CacheKey cacheKey);
 
   /** Called on a staging area miss hit. */
-  void onStagingAreaMiss();
+  void onStagingAreaMiss(CacheKey cacheKey);
 
   /** Called on a disk cache hit. */
   void onDiskCacheHit(CacheKey cacheKey);
 
   /** Called on a disk cache miss. */
-  void onDiskCacheMiss();
+  void onDiskCacheMiss(CacheKey cacheKey);
 
   /** Called if an exception is thrown on a disk cache read. */
-  void onDiskCacheGetFail();
+  void onDiskCacheGetFail(CacheKey cacheKey);
 
   /**
    * Registers a bitmap cache with this tracker.

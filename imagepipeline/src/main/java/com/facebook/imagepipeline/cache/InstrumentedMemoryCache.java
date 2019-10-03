@@ -24,7 +24,7 @@ public class InstrumentedMemoryCache<K, V> implements MemoryCache<K, V> {
   public CloseableReference<V> get(K key) {
     CloseableReference<V> result = mDelegate.get(key);
     if (result == null) {
-      mTracker.onCacheMiss();
+      mTracker.onCacheMiss(key);
     } else {
       mTracker.onCacheHit(key);
     }
@@ -33,7 +33,7 @@ public class InstrumentedMemoryCache<K, V> implements MemoryCache<K, V> {
 
   @Override
   public CloseableReference<V> cache(K key, CloseableReference<V> value) {
-    mTracker.onCachePut();
+    mTracker.onCachePut(key);
     return mDelegate.cache(key, value);
   }
 
