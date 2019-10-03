@@ -399,6 +399,7 @@ public class BufferedDiskCache {
               mPooledByteStreams.copy(encodedImage.getInputStream(), os);
             }
           });
+      mImageCacheStatsTracker.onDiskCachePut(key);
       FLog.v(TAG, "Successful disk-cache write for key %s", key.getUriString());
     } catch (IOException ioe) {
       // Log failure

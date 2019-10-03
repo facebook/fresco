@@ -56,6 +56,9 @@ public interface ImageCacheStatsTracker {
   /** Called if an exception is thrown on a disk cache read. */
   void onDiskCacheGetFail(CacheKey cacheKey);
 
+  /** called whenever new files are written to disk */
+  void onDiskCachePut(CacheKey cacheKey);
+
   /**
    * Registers a bitmap cache with this tracker.
    *

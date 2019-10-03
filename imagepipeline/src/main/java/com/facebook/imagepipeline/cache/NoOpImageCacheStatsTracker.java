@@ -56,6 +56,9 @@ public class NoOpImageCacheStatsTracker implements ImageCacheStatsTracker {
   public void onDiskCacheGetFail(CacheKey cacheKey) {}
 
   @Override
+  public void onDiskCachePut(CacheKey cacheKey) {}
+
+  @Override
   public void registerBitmapMemoryCache(CountingMemoryCache<?, ?> bitmapMemoryCache) {}
 
   @Override
