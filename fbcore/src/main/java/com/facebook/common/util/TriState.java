@@ -8,11 +8,9 @@
 package com.facebook.common.util;
 
 import com.facebook.infer.annotation.Functional;
-import com.facebook.proguard.annotations.DoNotStrip;
 import javax.annotation.Nullable;
 
 /** Generic tri-state enum for boolean values that can also be unset. */
-@DoNotStrip
 public enum TriState {
   YES,
   NO,
