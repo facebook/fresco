@@ -66,8 +66,9 @@ public class Fresco {
         FrescoSystrace.beginSection("Fresco.initialize->SoLoader.init");
       }
       try {
-        Class<?> clazz = Class.forName("com.facebook.soloader.SoLoader");
-        clazz.getMethod("init", Context.class, int.class).invoke(null, context, 0);
+        Class<?> clazz =
+            Class.forName("com.facebook.imagepipeline.nativecode.NativeCodeInitializer");
+        clazz.getMethod("init", Context.class).invoke(null, context);
       } catch (ClassNotFoundException e) {
         // Failed to initialize SoLoader
         NativeLoader.init(new SystemDelegate());
