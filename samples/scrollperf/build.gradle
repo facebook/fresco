@@ -49,9 +49,11 @@ dependencies {
 
     noSoLoaderImplementation (project(':static-webp')) {
         exclude group: 'com.facebook.soloader', module: 'soloader'
+        exclude module: 'soloader'
     }
     noSoLoaderImplementation (project(':drawee-backends:drawee-pipeline')) {
         exclude group: 'com.facebook.soloader', module: 'soloader'
+        exclude module: 'soloader'
     }
 
     soLoaderImplementation project(':static-webp')
