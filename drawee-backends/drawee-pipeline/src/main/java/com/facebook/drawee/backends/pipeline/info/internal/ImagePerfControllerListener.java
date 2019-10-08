@@ -35,6 +35,8 @@ public class ImagePerfControllerListener extends BaseControllerListener<ImageInf
   public void onSubmit(String id, Object callerContext) {
     final long now = mClock.now();
 
+    mImagePerfState.resetPointsTimestamps();
+
     mImagePerfState.setControllerSubmitTimeMs(now);
     mImagePerfState.setControllerId(id);
     mImagePerfState.setCallerContext(callerContext);

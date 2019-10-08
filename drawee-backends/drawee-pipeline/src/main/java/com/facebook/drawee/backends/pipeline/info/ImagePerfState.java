@@ -57,14 +57,6 @@ public class ImagePerfState {
     mCallerContext = null;
     mImageInfo = null;
 
-    mControllerSubmitTimeMs = UNSET;
-    mControllerFinalImageSetTimeMs = UNSET;
-    mControllerFailureTimeMs = UNSET;
-    mControllerCancelTimeMs = UNSET;
-
-    mImageRequestStartTimeMs = UNSET;
-    mImageRequestEndTimeMs = UNSET;
-
     mImageOrigin = ImageOrigin.UNKNOWN;
     mUltimateProducerName = null;
     mIsPrefetch = false;
@@ -75,10 +67,26 @@ public class ImagePerfState {
     mImageLoadStatus = ImageLoadStatus.UNKNOWN;
 
     mVisibilityState = VisibilityState.UNKNOWN;
-    mVisibilityEventTimeMs = UNSET;
-    mInvisibilityEventTimeMs = UNSET;
 
     mComponentTag = null;
+
+    resetPointsTimestamps();
+  }
+
+  /**
+   * Useful when reusing the same {@link ImagePerfState} when component is being remounted
+   */
+  public void resetPointsTimestamps() {
+    mImageRequestStartTimeMs = UNSET;
+    mImageRequestEndTimeMs = UNSET;
+
+    mControllerSubmitTimeMs = UNSET;
+    mControllerFinalImageSetTimeMs = UNSET;
+    mControllerFailureTimeMs = UNSET;
+    mControllerCancelTimeMs = UNSET;
+
+    mVisibilityEventTimeMs = UNSET;
+    mInvisibilityEventTimeMs = UNSET;
   }
 
   public void setImageLoadStatus(@ImageLoadStatus int imageLoadStatus) {
