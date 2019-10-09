@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.core;
+package com.facebook.imagepipeline.multiuri;
 
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
@@ -76,11 +76,12 @@ public class MultiUri {
 
   public static Supplier<DataSource<CloseableReference<CloseableImage>>>
       getMultiUriDatasourceSupplier(
-          final ImagePipeline imagePipeline, final FrescoState frescoState) {
-    final MultiUri multiUri = frescoState.getMultiUri();
-    final ImageRequest imageRequest = frescoState.getImageRequest();
-    final Object callerContext = frescoState.getCallerContext();
-    final RequestListener requestListener = frescoState.getRequestListener();
+          final ImagePipeline imagePipeline,
+          final MultiUri multiUri,
+          final ImageRequest imageRequest,
+          final Object callerContext,
+          final RequestListener requestListener,
+          final String id) {
 
     Supplier<DataSource<CloseableReference<CloseableImage>>> supplier = null;
 
@@ -88,11 +89,7 @@ public class MultiUri {
     if (imageRequest != null) {
       supplier =
           getImageRequestDataSourceSupplier(
-              imagePipeline,
-              imageRequest,
-              callerContext,
-              requestListener,
-              frescoState.getStringId());
+              imagePipeline, imageRequest, callerContext, requestListener, id);
     } else if (multiUri.getMultiImageRequests() != null) {
       supplier =
           getFirstAvailableDataSourceSupplier(
@@ -101,7 +98,7 @@ public class MultiUri {
               requestListener,
               multiUri.getMultiImageRequests(),
               true,
-              frescoState.getStringId());
+              id);
     }
 
     // increasing-quality supplier; highest-quality supplier goes first
@@ -110,11 +107,7 @@ public class MultiUri {
       suppliers.add(supplier);
       suppliers.add(
           getImageRequestDataSourceSupplier(
-              imagePipeline,
-              multiUri.getLowResImageRequest(),
-              callerContext,
-              requestListener,
-              frescoState.getStringId()));
+              imagePipeline, multiUri.getLowResImageRequest(), callerContext, requestListener, id));
       supplier = IncreasingQualityDataSourceSupplier.create(suppliers, false);
     }
 
@@ -126,7 +119,7 @@ public class MultiUri {
     return supplier;
   }
 
-  /*package*/ static DataSource<CloseableReference<CloseableImage>> getImageRequestDataSource(
+  public static DataSource<CloseableReference<CloseableImage>> getImageRequestDataSource(
       ImagePipeline imagePipeline,
       ImageRequest imageRequest,
       Object callerContext,

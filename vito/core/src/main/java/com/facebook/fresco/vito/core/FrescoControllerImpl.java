@@ -27,6 +27,7 @@ import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.imagepipeline.multiuri.MultiUri;
 import com.facebook.imagepipeline.producers.InternalProducerListener;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -330,7 +331,12 @@ public class FrescoControllerImpl implements FrescoController {
           } else {
             dataSource =
                 MultiUri.getMultiUriDatasourceSupplier(
-                        mFrescoContext.getImagePipeline(), frescoState)
+                        mFrescoContext.getImagePipeline(),
+                        frescoState.getMultiUri(),
+                        frescoState.getImageRequest(),
+                        frescoState.getCallerContext(),
+                        frescoState.getRequestListener(),
+                        frescoState.getStringId())
                     .get();
           }
           // multiUri is not set

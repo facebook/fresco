@@ -12,8 +12,8 @@ import static org.mockito.Mockito.mock;
 
 import android.net.Uri;
 import com.facebook.fresco.vito.core.FrescoContext;
-import com.facebook.fresco.vito.core.MultiUri;
 import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.imagepipeline.multiuri.MultiUri;
 import com.facebook.litho.Diff;
 import com.facebook.litho.annotations.Prop;
 import java.lang.reflect.Field;

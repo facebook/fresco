@@ -14,6 +14,7 @@ import com.facebook.datasource.DataSource;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.multiuri.MultiUri;
 import com.facebook.infer.annotation.ThreadSafe;
 import javax.annotation.Nullable;
 
