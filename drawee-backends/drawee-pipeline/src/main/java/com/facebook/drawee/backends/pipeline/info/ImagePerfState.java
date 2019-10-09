@@ -73,9 +73,7 @@ public class ImagePerfState {
     resetPointsTimestamps();
   }
 
-  /**
-   * Useful when reusing the same {@link ImagePerfState} when component is being remounted
-   */
+  /** Useful when reusing the same {@link ImagePerfState} when component is being remounted */
   public void resetPointsTimestamps() {
     mImageRequestStartTimeMs = UNSET;
     mImageRequestEndTimeMs = UNSET;
