@@ -312,7 +312,7 @@ public class FrescoControllerImpl implements FrescoController {
                 .buildPlaceholderDrawable(
                     frescoState.getResources(), frescoState.getImageOptions());
       }
-      frescoState.getFrescoDrawable().setImageDrawable(placeholderDrawable);
+      frescoState.getFrescoDrawable().setPlaceholderDrawable(placeholderDrawable);
 
       final Drawable progressDrawable =
           mFrescoContext
