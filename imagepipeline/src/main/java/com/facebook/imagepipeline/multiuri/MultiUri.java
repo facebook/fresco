@@ -68,7 +68,7 @@ public class MultiUri {
       return this;
     }
 
-    public Builder setMultiImageRequests(@Nullable ImageRequest... multiImageRequests) {
+    public Builder setImageRequests(@Nullable ImageRequest... multiImageRequests) {
       mMultiImageRequests = multiImageRequests;
       return this;
     }

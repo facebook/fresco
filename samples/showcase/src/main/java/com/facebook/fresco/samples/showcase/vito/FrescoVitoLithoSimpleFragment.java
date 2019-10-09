@@ -67,7 +67,7 @@ public class FrescoVitoLithoSimpleFragment extends BaseShowcaseFragment {
         .multiUri(
             MultiUri.create()
                 .setLowResImageRequest(ImageRequest.fromUri(uri0))
-                .setMultiImageRequests(
+                .setImageRequests(
                     ImageRequest.fromUri(uri0),
                     ImageRequest.fromUri(uri1),
                     ImageRequest.fromUri(uri2))
