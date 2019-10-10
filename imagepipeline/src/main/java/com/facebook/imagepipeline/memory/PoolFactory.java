@@ -13,6 +13,7 @@ import static com.facebook.imagepipeline.core.MemoryChunkType.NATIVE_MEMORY;
 
 import android.os.Build;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.memory.PooledByteBufferFactory;
@@ -144,14 +145,19 @@ public class PoolFactory {
                     mConfig.getMemoryChunkPoolParams(),
                     mConfig.getMemoryChunkPoolStatsTracker());
       } catch (ClassNotFoundException e) {
+        FLog.e("PoolFactory", "", e);
         mNativeMemoryChunkPool = null;
       } catch (IllegalAccessException e) {
+        FLog.e("PoolFactory", "", e);
         mNativeMemoryChunkPool = null;
       } catch (InstantiationException e) {
+        FLog.e("PoolFactory", "", e);
         mNativeMemoryChunkPool = null;
       } catch (NoSuchMethodException e) {
+        FLog.e("PoolFactory", "", e);
         mNativeMemoryChunkPool = null;
       } catch (InvocationTargetException e) {
+        FLog.e("PoolFactory", "", e);
         mNativeMemoryChunkPool = null;
       }
     }
@@ -193,6 +199,9 @@ public class PoolFactory {
 
   public PooledByteBufferFactory getPooledByteBufferFactory(@MemoryChunkType int memoryChunkType) {
     if (mPooledByteBufferFactory == null) {
+      MemoryChunkPool memoryChunkPool = getMemoryChunkPool(memoryChunkType);
+      Preconditions.checkNotNull(
+          memoryChunkPool, "failed to get pool for chunk type: " + memoryChunkType);
       mPooledByteBufferFactory =
           new MemoryPooledByteBufferFactory(
               getMemoryChunkPool(memoryChunkType), getPooledByteStreams());
