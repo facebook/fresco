@@ -18,7 +18,7 @@ jobs:
   build:
     working_directory: ~/fresco
     docker:
-      - image: circleci/android:api-28
+      - image: reactnativecommunity/react-native-android:2019-5-29
     steps:
       - checkout
       - run: yes | sdkmanager --licenses || exit 0
@@ -35,11 +35,15 @@ jobs:
       - run:
           name: Setup emulator
           command: |
-            sdkmanager "system-images;android-19;default;armeabi-v7a"
-            echo "no" | avdmanager create avd -n test -k "system-images;android-19;default;armeabi-v7a"
+            source ".circleci/scripts/.tests.env"
+            AVD_PACKAGES="system-images;android-$ANDROID_SDK_TARGET_API_LEVEL;google_apis;$AVD_ABI"
+            echo "Creating AVD with packages $AVD_PACKAGES"
+            echo no | avdmanager create avd --name "$AVD_NAME" --force --package "$AVD_PACKAGES" --tag google_apis --abi "$AVD_ABI"
       - run:
           name: Launch emulator
-          command: emulator -avd test -no-audio -no-window
+          command: |
+            source ".tests.env"
+            "$ANDROID_HOME/emulator/emulator" -avd "$AVD_NAME" -no-audio -no-window
           background: true
       - run:
           name: Wait for emulator
