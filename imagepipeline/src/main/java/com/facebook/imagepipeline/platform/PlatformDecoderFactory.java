@@ -9,10 +9,12 @@ package com.facebook.imagepipeline.platform;
 
 import android.os.Build;
 import androidx.core.util.Pools;
+import com.facebook.imagepipeline.core.NativeCodeSetup;
+import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.memory.PoolFactory;
+import java.lang.reflect.InvocationTargetException;
 
 public class PlatformDecoderFactory {
-
   /**
    * Provide the implementation of the PlatformDecoder for the current platform using the provided
    * PoolFactory
@@ -26,15 +28,35 @@ public class PlatformDecoderFactory {
       int maxNumThreads = poolFactory.getFlexByteArrayPoolMaxNumThreads();
       return new OreoDecoder(
           poolFactory.getBitmapPool(), maxNumThreads, new Pools.SynchronizedPool<>(maxNumThreads));
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+        || NativeCodeSetup.getUseNativeCode() == false) {
       int maxNumThreads = poolFactory.getFlexByteArrayPoolMaxNumThreads();
       return new ArtDecoder(
           poolFactory.getBitmapPool(), maxNumThreads, new Pools.SynchronizedPool<>(maxNumThreads));
     } else {
-      if (gingerbreadDecoderEnabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-        return new GingerbreadPurgeableDecoder();
-      } else {
-        return new KitKatPurgeableDecoder(poolFactory.getFlexByteArrayPool());
+      try {
+        if (gingerbreadDecoderEnabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+          Class<?> clazz =
+              Class.forName("com.facebook.imagepipeline.platform.GingerbreadPurgeableDecoder");
+          return (PlatformDecoder) clazz.getConstructor().newInstance();
+        } else {
+          Class<?> clazz =
+              Class.forName("com.facebook.imagepipeline.platform.KitKatPurgeableDecoder");
+          return (PlatformDecoder)
+              clazz
+                  .getConstructor(FlexByteArrayPool.class)
+                  .newInstance(poolFactory.getFlexByteArrayPool());
+        }
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException("Wrong Native code setup, reflection failed.", e);
+      } catch (IllegalAccessException e) {
+        throw new RuntimeException("Wrong Native code setup, reflection failed.", e);
+      } catch (NoSuchMethodException e) {
+        throw new RuntimeException("Wrong Native code setup, reflection failed.", e);
+      } catch (InvocationTargetException e) {
+        throw new RuntimeException("Wrong Native code setup, reflection failed.", e);
+      } catch (InstantiationException e) {
+        throw new RuntimeException("Wrong Native code setup, reflection failed.", e);
       }
     }
   }

@@ -11,6 +11,7 @@ import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
@@ -28,9 +29,11 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
 @ThreadSafe
+@DoNotStrip
 public class KitKatPurgeableDecoder extends DalvikPurgeableDecoder {
   private final FlexByteArrayPool mFlexByteArrayPool;
 
+  @DoNotStrip
   public KitKatPurgeableDecoder(FlexByteArrayPool flexByteArrayPool) {
     mFlexByteArrayPool = flexByteArrayPool;
   }

@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** Bitmap decoder for ART VM (Lollipop and up). */
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @ThreadSafe
 public abstract class DefaultDecoder implements PlatformDecoder {
 
@@ -236,7 +236,9 @@ public abstract class DefaultDecoder implements PlatformDecoder {
     }
     try {
       options.inTempStorage = byteBuffer.array();
-      if (regionToDecode != null && bitmapToReuse != null) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+          && regionToDecode != null
+          && bitmapToReuse != null) {
         BitmapRegionDecoder bitmapRegionDecoder = null;
         try {
           bitmapToReuse.reconfigure(targetWidth, targetHeight, options.inPreferredConfig);
@@ -312,7 +314,6 @@ public abstract class DefaultDecoder implements PlatformDecoder {
     options.inDither = true;
     options.inPreferredConfig = bitmapConfig;
     options.inMutable = true;
-
     return options;
   }
 

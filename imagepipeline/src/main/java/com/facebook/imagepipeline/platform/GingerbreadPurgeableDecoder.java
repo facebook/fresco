@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.os.MemoryFile;
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Closeables;
+import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
 import com.facebook.common.memory.PooledByteBuffer;
@@ -36,12 +37,14 @@ import javax.annotation.Nullable;
  * descriptor, thus avoiding using any Java memory at all. This technique only works in JellyBean
  * and below.
  */
+@DoNotStrip
 public class GingerbreadPurgeableDecoder extends DalvikPurgeableDecoder {
 
   private static Method sGetFileDescriptorMethod;
 
   private final @Nullable WebpBitmapFactory mWebpBitmapFactory;
 
+  @DoNotStrip
   public GingerbreadPurgeableDecoder() {
     super();
     mWebpBitmapFactory = WebpSupportStatus.loadWebpBitmapFactoryIfExists();

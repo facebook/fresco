@@ -11,6 +11,7 @@ import static com.facebook.imagepipeline.core.MemoryChunkType.ASHMEM_MEMORY;
 import static com.facebook.imagepipeline.core.MemoryChunkType.BUFFER_MEMORY;
 import static com.facebook.imagepipeline.core.MemoryChunkType.NATIVE_MEMORY;
 
+import android.os.Build;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
@@ -72,11 +73,15 @@ public class PoolFactory {
         case BitmapPoolType.LEGACY:
           // fall through
         default:
-          mBitmapPool =
-              new BucketsBitmapPool(
-                  mConfig.getMemoryTrimmableRegistry(),
-                  mConfig.getBitmapPoolParams(),
-                  mConfig.getBitmapPoolStatsTracker());
+          if (Build.VERSION.SDK_INT >= 21) {
+            mBitmapPool =
+                new BucketsBitmapPool(
+                    mConfig.getMemoryTrimmableRegistry(),
+                    mConfig.getBitmapPoolParams(),
+                    mConfig.getBitmapPoolStatsTracker());
+          } else {
+            mBitmapPool = new DummyBitmapPool();
+          }
       }
     }
     return mBitmapPool;
