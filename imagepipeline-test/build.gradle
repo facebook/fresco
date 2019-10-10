@@ -12,6 +12,7 @@ dependencies {
     implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
     implementation project(':fbcore')
     implementation project(':imagepipeline')
+    implementation project(':imagepipeline-native')
     implementation project(':imagepipeline-base')
     implementation "junit:junit:${JUNIT_VERSION}"
     implementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"

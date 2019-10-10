@@ -17,7 +17,7 @@ dependencies {
     
     implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
     implementation project(':fbcore')
-
+    
     testImplementation "androidx.legacy:legacy-support-core-utils:${versions.androidx.legacy_support_core_utils}"
     testImplementation "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     testImplementation project(':imagepipeline-test')
@@ -40,11 +40,6 @@ dependencies {
 apply from: rootProject.file('release.gradle')
 
 android {
-    def ndkLibs = [
-        ['bitmaps', []],
-        ['imagepipeline', []],
-        ['memchunk', []]]
-
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
@@ -52,26 +47,6 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
     }
-
-    sourceSets {
-        main {
-            jni.srcDirs = []
-            jniLibs.srcDirs = ndkLibs.collect { "$buildDir/${it[0]}" }
-        }
-        test {
-            java {
-                exclude '**/LocalVideoThumbnailProducerTest.java'
-                exclude '**/DecodeProducerTest.java'
-                exclude '**/ProgressiveJpegParserTest.java'
-                exclude '**/AnimatedImageFactoryTest.java'
-
-            }
-            resources {
-                exclude '**/BUCK'
-            }
-        }
-    }
-    ndkLibs.each { lib -> makeNdkTasks lib[0], lib[1] }
 }
 
 task sourcesJar(type: Jar) {

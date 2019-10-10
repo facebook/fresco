@@ -9,6 +9,7 @@ dependencies {
 
     implementation project(':fbcore')
     implementation project(':imagepipeline')
+    implementation project(':imagepipeline-native')
     
     testImplementation "junit:junit:${JUNIT_VERSION}"
     testImplementation "org.assertj:assertj-core:${versions.assertjCore}"

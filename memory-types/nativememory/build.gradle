@@ -7,6 +7,7 @@ version = VERSION_NAME
 dependencies {
     implementation project(':fbcore')
     implementation project(':imagepipeline')
+    implementation project(':imagepipeline-native')
     
     implementation "com.facebook.soloader:nativeloader:${SOLOADER_VERSION}"
 
