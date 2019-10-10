@@ -12,7 +12,10 @@ import android.graphics.Canvas;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
-import com.facebook.imagepipeline.nativecode.Bitmaps;
+import com.facebook.imagepipeline.core.NativeCodeSetup;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import javax.annotation.Nullable;
 
 /**
@@ -27,6 +30,8 @@ public abstract class BasePostprocessor implements Postprocessor {
    * bitmap has <code>config==null</code>. This is the case for preview images for GIF animations.
    */
   public static final Bitmap.Config FALLBACK_BITMAP_CONFIGURATION = Bitmap.Config.ARGB_8888;
+
+  private static Method sCopyBitmap;
 
   @Override
   public String getName() {
@@ -110,14 +115,31 @@ public abstract class BasePostprocessor implements Postprocessor {
    * copied. Otherwise, the {@code sourceBitmap} is drawn into {@code destBitmap}.
    */
   private static void internalCopyBitmap(Bitmap destBitmap, Bitmap sourceBitmap) {
-    if (destBitmap.getConfig() == sourceBitmap.getConfig()) {
-      Bitmaps.copyBitmap(destBitmap, sourceBitmap);
-    } else {
-      // The bitmap configurations might be different when the source bitmap's configuration is
-      // null, because it uses an internal configuration and the destination bitmap's configuration
-      // is the FALLBACK_BITMAP_CONFIGURATION. This is the case for static images for animated GIFs.
-      Canvas canvas = new Canvas(destBitmap);
-      canvas.drawBitmap(sourceBitmap, 0, 0, null);
+    if (NativeCodeSetup.getUseNativeCode() && destBitmap.getConfig() == sourceBitmap.getConfig()) {
+      try {
+        if (sCopyBitmap == null) {
+          Class<?> clazz = Class.forName("com.facebook.imagepipeline.nativecode.Bitmaps");
+          sCopyBitmap = clazz.getDeclaredMethod("copyBitmap", Bitmap.class, Bitmap.class);
+        }
+        sCopyBitmap.invoke(null, destBitmap, sourceBitmap);
+        return;
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException("Wrong Native code setup, reflection failed.", e);
+      } catch (IllegalAccessException e) {
+        throw new RuntimeException("Wrong Native code setup, reflection failed.", e);
+      } catch (NoSuchMethodException e) {
+        throw new RuntimeException("Wrong Native code setup, reflection failed.", e);
+      } catch (InvocationTargetException e) {
+        throw new RuntimeException("Wrong Native code setup, reflection failed.", e);
+      }
     }
+
+    // This code will be run only if we fail to use native version with any reason (configuration or
+    // reflection fail).
+    // The bitmap configurations might be different when the source bitmap's configuration is
+    // null, because it uses an internal configuration and the destination bitmap's configuration
+    // is the FALLBACK_BITMAP_CONFIGURATION. This is the case for static images for animated GIFs.
+    Canvas canvas = new Canvas(destBitmap);
+    canvas.drawBitmap(sourceBitmap, 0, 0, null);
   }
 }
