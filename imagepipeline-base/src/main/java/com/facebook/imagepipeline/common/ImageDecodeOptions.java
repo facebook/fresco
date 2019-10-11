@@ -9,9 +9,9 @@ package com.facebook.imagepipeline.common;
 
 import android.graphics.Bitmap;
 import android.graphics.ColorSpace;
+import com.facebook.common.internal.Objects;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.transformation.BitmapTransformation;
-import java.util.Locale;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
@@ -126,17 +126,19 @@ public class ImageDecodeOptions {
 
   @Override
   public String toString() {
-    return String.format(
-        (Locale) null,
-        "%d-%b-%b-%b-%b-%b-%s-%s-%s",
-        minDecodeIntervalMs,
-        decodePreviewFrame,
-        useLastFrameForPreview,
-        decodeAllFrames,
-        forceStaticImage,
-        bitmapConfig.name(),
-        customImageDecoder,
-        bitmapTransformation,
-        colorSpace);
+    return "ImageDecodeOptions{" + toStringHelper().toString() + "}";
+  }
+
+  protected Objects.ToStringHelper toStringHelper() {
+    return Objects.toStringHelper(this)
+        .add("minDecodeIntervalMs", minDecodeIntervalMs)
+        .add("decodePreviewFrame", decodePreviewFrame)
+        .add("useLastFrameForPreview", useLastFrameForPreview)
+        .add("decodeAllFrames", decodeAllFrames)
+        .add("forceStaticImage", forceStaticImage)
+        .add("bitmapConfigName", bitmapConfig.name())
+        .add("customImageDecoder", customImageDecoder)
+        .add("bitmapTransformation", bitmapTransformation)
+        .add("colorSpace", colorSpace);
   }
 }
