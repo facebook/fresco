@@ -46,11 +46,13 @@ public class NativeRoundingFilter {
    *
    * @param bitmap the bitmap to modify
    */
+  @DoNotStrip
   public static void toCircle(Bitmap bitmap, boolean antiAliased) {
     Preconditions.checkNotNull(bitmap);
     nativeToCircleFilter(bitmap, antiAliased);
   }
 
+  @DoNotStrip
   public static void toCircleFast(Bitmap bitmap, boolean antiAliased) {
     Preconditions.checkNotNull(bitmap);
     nativeToCircleFastFilter(bitmap, antiAliased);

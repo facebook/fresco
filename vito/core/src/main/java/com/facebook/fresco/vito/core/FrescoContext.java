@@ -22,6 +22,7 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
+import com.facebook.imagepipeline.core.NativeCodeSetup;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.infer.annotation.ThreadSafe;
@@ -144,7 +145,7 @@ public class FrescoContext {
     final ImageRequestBuilder imageRequestBuilder =
         createEncodedImageRequestBuilder(uri, imageOptions);
 
-    if (mExperiments.useNativeRounding()) {
+    if (mExperiments.useNativeRounding() && NativeCodeSetup.getUseNativeCode()) {
       setupNativeRounding(imageRequestBuilder, imageOptions.getRoundingOptions());
     }
 
