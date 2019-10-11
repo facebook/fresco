@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.transcoder;
 
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.core.ImageTranscoderType;
+import com.facebook.imagepipeline.core.NativeCodeSetup;
 import com.facebook.imagepipeline.nativecode.NativeImageTranscoderFactory;
 import javax.annotation.Nullable;
 
@@ -45,7 +46,7 @@ public class MultiImageTranscoderFactory implements ImageTranscoderFactory {
       imageTranscoder = getImageTranscoderWithType(imageFormat, isResizingEnabled);
     }
     // First fallback using native ImageTranscoder
-    if (imageTranscoder == null) {
+    if (imageTranscoder == null && NativeCodeSetup.getUseNativeCode()) {
       imageTranscoder = getNativeImageTranscoder(imageFormat, isResizingEnabled);
     }
 

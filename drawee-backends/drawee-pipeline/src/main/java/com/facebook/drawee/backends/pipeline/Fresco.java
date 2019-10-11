@@ -13,6 +13,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
+import com.facebook.imagepipeline.core.NativeCodeSetup;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.soloader.nativeloader.NativeLoader;
 import com.facebook.soloader.nativeloader.SystemDelegate;
@@ -45,11 +46,20 @@ public class Fresco {
     initialize(context, imagePipelineConfig, null);
   }
 
-  /** Initializes Fresco with the specified config. */
+  /** Initializes Fresco with the specified config and native code enabled. */
   public static void initialize(
       Context context,
       @Nullable ImagePipelineConfig imagePipelineConfig,
       @Nullable DraweeConfig draweeConfig) {
+    initialize(context, imagePipelineConfig, draweeConfig, true);
+  }
+
+  /** Initializes Fresco with the specified config. */
+  public static void initialize(
+      Context context,
+      @Nullable ImagePipelineConfig imagePipelineConfig,
+      @Nullable DraweeConfig draweeConfig,
+      boolean useNativeCode) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("Fresco#initialize");
     }
@@ -61,6 +71,9 @@ public class Fresco {
     } else {
       sIsInitialized = true;
     }
+
+    NativeCodeSetup.setUseNativeCode(useNativeCode);
+
     if (!NativeLoader.isInitialized()) {
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.beginSection("Fresco.initialize->SoLoader.init");
