@@ -155,6 +155,10 @@
   <string name="vito_litho_sections">Litho Sections (RecyclerView)</string>
   <string name="vito_litho_gallery">Litho Gallery</string>
 
+  <string name="vito_litho_region_decode">Vito region decode example</string>
+  <string name="vito_litho_region_decode_help">Choose a focus point with the smaller square and parent bounds with the bigger</string>
+
+
   <!-- Preferences -->
 
   <string name="preferences_category_cache">Cache</string>
