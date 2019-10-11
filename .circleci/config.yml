@@ -1,3 +1,10 @@
+# Copyright (c) Facebook, Inc. and its affiliates.
+
+#
+# GENERAL CONFIG
+#
+version: 2.1
+
 aliases:
 # Cache Management
   - &restore-cache-gradle
@@ -13,16 +20,18 @@ aliases:
       - ~/.gradle
     key: v1-gradle-{{ arch }}-{{ .Branch }}-{{ checksum "build.gradle" }}-{{ checksum "gradle.properties" }}
 
-version: 2
-jobs:
-  build:
-    working_directory: ~/fresco
+#
+# EXECUTORS & COMMANDS
+#
+executors:
+  frescoandroid:
     docker:
       - image: reactnativecommunity/react-native-android:2019-5-29
+    working_directory: ~/fresco
+
+commands:
+  setup-emulator:
     steps:
-      - checkout
-      - run: yes | sdkmanager --licenses || exit 0
-      - run: yes | sdkmanager --update || exit 0
       - run:
           name: Setup emulator
           command: |
@@ -30,34 +39,64 @@ jobs:
             AVD_PACKAGES="system-images;android-$ANDROID_SDK_TARGET_API_LEVEL;google_apis;$AVD_ABI"
             echo "Creating AVD with packages $AVD_PACKAGES"
             echo no | avdmanager create avd --name "$AVD_NAME" --force --package "$AVD_PACKAGES" --tag google_apis --abi "$AVD_ABI"
+  launch-emulator:
+    steps:
       - run:
           name: Launch emulator
           command: |
-            source ".tests.env"
+            source ".circleci/scripts/.tests.env"
             "$ANDROID_HOME/emulator/emulator" -avd "$AVD_NAME" -no-audio -no-window
           background: true
+  wait-emulator:
+    steps:
       - run:
           name: Wait for emulator
           command: |
-            chmod +x android-wait-for-emulator
-            ./android-wait-for-emulator
+            chmod +x .circleci/scripts/android-wait-for-emulator
+            .circleci/scripts/android-wait-for-emulator
+  remove-lock-screen:
+    steps:
       - run:
           name: Remove lock screen
           command: adb shell input keyevent 82
-      - restore-cache: *restore-cache-gradle
+  run-tests:
+    steps:
       - run:
           name: Run Tests
           command: ./gradlew test assembleDebug -PdisablePreDex
-      - save-cache: *save-cache-gradle
+  run-instrumentation-tests:
+    steps:
       - run:
           name: Run Instrumentation Tests
           command: |
             ./gradlew :samples:showcase:connectedInternalInstrumentationAndroidTest -PdisablePreDex
+  copy-results:
+    steps:
       - run:
           name: Copy Results
           command: |
             mkdir -p /home/circleci/test-results/junit
             find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} /home/circleci/test-results/junit \;
             cp -r samples/showcase/build/reports/androidTests /home/circleci/test-results
-      - test-results-store:
+
+#
+# JOBS
+#
+jobs:
+  build:
+    executor: frescoandroid
+    steps:
+      - checkout
+      - run: yes | sdkmanager --licenses || exit 0
+      - run: yes | sdkmanager --update || exit 0
+      - setup-emulator
+      - launch-emulator
+      - wait-emulator
+      - remove-lock-screen
+      - restore_cache: *restore-cache-gradle
+      - run-tests
+      - save_cache: *save-cache-gradle
+      - run-instrumentation-tests
+      - copy-results
+      - store_test_results:
           path: /home/circleci/test-results
