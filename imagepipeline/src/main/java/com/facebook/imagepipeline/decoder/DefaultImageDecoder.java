@@ -94,7 +94,7 @@ public class DefaultImageDecoder implements ImageDecoder {
    * @param length if image type supports decoding incomplete image then determines where the image
    *     data should be cut for decoding.
    * @param qualityInfo quality information for the image
-   * @param options options that cange decode behavior
+   * @param options options that can change decode behavior
    */
   @Override
   public CloseableImage decode(
