@@ -74,6 +74,21 @@ public class MultiUri {
     }
   }
 
+  /**
+   * Convenience method for creating a low res preview + main request datasource supplier
+   */
+  public static Supplier<DataSource<CloseableReference<CloseableImage>>> getMultiUriDatasource(
+      final ImagePipeline imagePipeline,
+      final ImageRequest lowResImageRequest,
+      final ImageRequest mainImageRequest,
+      Object callerContext) {
+    MultiUri multiUri = MultiUri.create()
+        .setLowResImageRequest(lowResImageRequest)
+        .setImageRequests(mainImageRequest)
+        .build();
+    return getMultiUriDatasourceSupplier(imagePipeline, multiUri, null, callerContext, null, null);
+  }
+
   public static Supplier<DataSource<CloseableReference<CloseableImage>>>
       getMultiUriDatasourceSupplier(
           final ImagePipeline imagePipeline,
