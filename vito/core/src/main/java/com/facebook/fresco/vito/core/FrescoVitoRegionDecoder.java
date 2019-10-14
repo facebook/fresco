@@ -66,7 +66,8 @@ public class FrescoVitoRegionDecoder implements ImageDecoder {
     }
   }
 
-  private @Nullable Rect computeRegionToDecode(EncodedImage encodedImage, ImageDecodeOptions options) {
+  private @Nullable Rect computeRegionToDecode(
+      EncodedImage encodedImage, ImageDecodeOptions options) {
     if (!(options instanceof FrescoVitoImageDecodeOptions)) {
       return null;
     }

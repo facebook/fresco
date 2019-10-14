@@ -23,7 +23,6 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.testing.TestNativeLoader;
-
 import java.util.concurrent.Executor;
 import org.junit.Before;
 import org.junit.Test;
