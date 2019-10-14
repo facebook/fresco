@@ -78,10 +78,10 @@ public class MultiUri {
       getMultiUriDatasourceSupplier(
           final ImagePipeline imagePipeline,
           final MultiUri multiUri,
-          final ImageRequest imageRequest,
+          final @Nullable ImageRequest imageRequest,
           final Object callerContext,
-          final RequestListener requestListener,
-          final String id) {
+          final @Nullable RequestListener requestListener,
+          final @Nullable String id) {
 
     Supplier<DataSource<CloseableReference<CloseableImage>>> supplier = null;
 
@@ -137,7 +137,7 @@ public class MultiUri {
       getFirstAvailableDataSourceSupplier(
           final ImagePipeline imagePipeline,
           final Object callerContext,
-          final RequestListener requestListener,
+          final @Nullable RequestListener requestListener,
           ImageRequest[] imageRequests,
           boolean tryBitmapCacheOnlyFirst,
           final @Nullable String uiComponentId) {
