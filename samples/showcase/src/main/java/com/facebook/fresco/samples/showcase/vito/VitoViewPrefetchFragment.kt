@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.samples.showcase.vito
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -58,7 +59,7 @@ class VitoViewPrefetchFragment : BaseShowcaseFragment() {
 
         button_toggle_images.setOnClickListener {
             if (imageVisible) {
-                VitoView.show(null, view)
+                VitoView.show(null as? Uri, view)
             } else {
                 VitoView.show(uri, imageOptions, view)
             }
