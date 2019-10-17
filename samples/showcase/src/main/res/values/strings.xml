@@ -47,6 +47,9 @@
   <string name="drawee_retaining_supplier_title">Retaining Data Source Supplier</string>
   <string name="drawee_retaining_supplier_help">Click on the image to show the next one. The previous one will be retained until the new image is ready.</string>
 
+  <string name="drawee_multi_uri_title">Multi URI</string>
+  <string name="drawee_multi_uri_help">Example to load an image based on a set of URIs, either as "first available" or with "increasing quality".</string>
+
   <string name="category_pipeline">Image Pipeline</string>
 
   <string name="imagepipeline_notification_title">Notifications</string>
@@ -256,9 +259,14 @@
   <string name="drawee_hierarchy_switch_rounded">Round corners</string>
   <string name="drawee_hierarchy_switch_ninepatch">Use ninepatch</string>
   <string name="load_random_uri">Load Random URI</string>
+  <string name="load_first_available">Load URIs: first available</string>
+  <string name="load_increasing_quality">Load URIs: increasing quality</string>
+  <string name="load_multi_uri_both">Load URIs: Both</string>
+
   <string name="vito_view_simple">Vito View Simple</string>
   <string name="vito_view_simple_help">Basic Vito View example that just sets the image URI</string>
   <string name="vito_view_view_recycler">Vito Recycler</string>
   <string name="vito_view_prefetch">Vito Prefetch</string>
   <string name="vito_view_prefetch_title">Prefetch to cache:</string>
+  <string name="use_vito">Use Fresco Vito</string>
 </resources>
