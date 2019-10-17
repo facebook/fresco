@@ -202,6 +202,11 @@ public class StatFsHelper {
     return 0;
   }
 
+  public boolean isLowSpaceCondition() {
+    return getAvailableStorageSpace(StatFsHelper.StorageType.INTERNAL)
+        < DEFAULT_DISK_YELLOW_LEVEL_IN_BYTES;
+  }
+
   /**
    * Thread-safe call to update disk stats. Update occurs if the thread is able to acquire the lock
    * (i.e., no other thread is updating it at the same time), and it has been at least
