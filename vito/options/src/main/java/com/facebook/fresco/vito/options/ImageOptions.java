@@ -227,7 +227,8 @@ public class ImageOptions extends DecodedImageOptions {
         .add("actualImageColorFilter", mActualImageColorFilter)
         .add("overlayRes", mOverlayRes)
         .add("resizeToViewport", mResizeToViewport)
-        .add("autoPlay", mAutoPlay);
+        .add("autoPlay", mAutoPlay)
+        .add("fadeDurationMs", mFadeDurationMs);
   }
 
   public static final class Builder extends DecodedImageOptions.Builder<Builder> {
