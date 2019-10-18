@@ -37,12 +37,14 @@ public class ImagePerfData {
   private final int mOnScreenWidthPx;
   private final int mOnScreenHeightPx;
 
+  private final @Nullable Throwable mErrorThrowable;
+
   // Visibility
   @VisibilityState private final int mVisibilityState;
   private final long mVisibilityEventTimeMs;
   private final long mInvisibilityEventTimeMs;
 
-  @Nullable private final String mComponentTag;
+  private final @Nullable String mComponentTag;
 
   public ImagePerfData(
       @Nullable String controllerId,
@@ -62,6 +64,7 @@ public class ImagePerfData {
       boolean isPrefetch,
       int onScreenWidthPx,
       int onScreenHeightPx,
+      @Nullable Throwable errorThrowable,
       int visibilityState,
       long visibilityEventTimeMs,
       long invisibilityEventTime,
@@ -83,6 +86,7 @@ public class ImagePerfData {
     mIsPrefetch = isPrefetch;
     mOnScreenWidthPx = onScreenWidthPx;
     mOnScreenHeightPx = onScreenHeightPx;
+    mErrorThrowable = errorThrowable;
     mVisibilityState = visibilityState;
     mVisibilityEventTimeMs = visibilityEventTimeMs;
     mInvisibilityEventTimeMs = invisibilityEventTime;
@@ -157,6 +161,11 @@ public class ImagePerfData {
 
   public int getOnScreenHeightPx() {
     return mOnScreenHeightPx;
+  }
+
+  @Nullable
+  public Throwable getErrorThrowable() {
+    return mErrorThrowable;
   }
 
   public long getFinalImageLoadTimeMs() {

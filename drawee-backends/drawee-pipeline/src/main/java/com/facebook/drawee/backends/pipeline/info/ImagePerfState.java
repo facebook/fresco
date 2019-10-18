@@ -42,6 +42,9 @@ public class ImagePerfState {
   private int mOnScreenWidthPx = UNSET;
   private int mOnScreenHeightPx = UNSET;
 
+  // Error data
+  private @Nullable Throwable mErrorThrowable;
+
   // Internal parameters
   private @ImageLoadStatus int mImageLoadStatus = ImageLoadStatus.UNKNOWN;
   // Visibility
@@ -63,6 +66,8 @@ public class ImagePerfState {
 
     mOnScreenWidthPx = UNSET;
     mOnScreenHeightPx = UNSET;
+
+    mErrorThrowable = null;
 
     mImageLoadStatus = ImageLoadStatus.UNKNOWN;
 
@@ -172,6 +177,10 @@ public class ImagePerfState {
     mOnScreenHeightPx = onScreenHeightPx;
   }
 
+  public void setErrorThrowable(@Nullable Throwable errorThrowable) {
+    mErrorThrowable = errorThrowable;
+  }
+
   public void setVisible(boolean visible) {
     mVisibilityState = visible ? VisibilityState.VISIBLE : VisibilityState.INVISIBLE;
   }
@@ -199,6 +208,7 @@ public class ImagePerfState {
         mIsPrefetch,
         mOnScreenWidthPx,
         mOnScreenHeightPx,
+        mErrorThrowable,
         mVisibilityState,
         mVisibilityEventTimeMs,
         mInvisibilityEventTimeMs,
