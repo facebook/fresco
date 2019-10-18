@@ -13,6 +13,7 @@ import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.core.MemoryChunkType;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.conf.Const;
 import com.facebook.samples.scrollperf.internal.ScrollPerfExecutorSupplier;
@@ -41,6 +42,11 @@ public class ScrollPerfApplication extends Application {
     imagePipelineConfigBuilder.experiment().setDecodeCancellationEnabled(config.decodeCancellation);
     DraweeConfig draweeConfig =
         DraweeConfig.newBuilder().setDrawDebugOverlay(config.draweeOverlayEnabled).build();
-    Fresco.initialize(this, imagePipelineConfigBuilder.build(), draweeConfig);
+    if (BuildConfig.FLAVOR == "noNativeCode") {
+      imagePipelineConfigBuilder.setMemoryChunkType(MemoryChunkType.BUFFER_MEMORY);
+      Fresco.initialize(this, imagePipelineConfigBuilder.build(), draweeConfig, false);
+    } else {
+      Fresco.initialize(this, imagePipelineConfigBuilder.build(), draweeConfig, true);
+    }
   }
 }

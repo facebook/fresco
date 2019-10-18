@@ -54,6 +54,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   public static final String EXTRA_HAS_GOOD_QUALITY = ProducerConstants.EXTRA_HAS_GOOD_QUALITY;
   public static final String EXTRA_IS_FINAL = ProducerConstants.EXTRA_IS_FINAL;
   public static final String EXTRA_IMAGE_FORMAT_NAME = ProducerConstants.EXTRA_IMAGE_FORMAT_NAME;
+  public static final String EXTRA_BITMAP_BYTES = ProducerConstants.EXTRA_BYTES;
   public static final String ENCODED_IMAGE_SIZE = ProducerConstants.ENCODED_IMAGE_SIZE;
   public static final String REQUESTED_IMAGE_SIZE = ProducerConstants.REQUESTED_IMAGE_SIZE;
   public static final String SAMPLE_SIZE = ProducerConstants.SAMPLE_SIZE;
@@ -363,6 +364,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         tmpMap.put(EXTRA_IMAGE_FORMAT_NAME, imageFormatName);
         tmpMap.put(REQUESTED_IMAGE_SIZE, requestImageSize);
         tmpMap.put(SAMPLE_SIZE, sampleSize);
+        tmpMap.put(EXTRA_BITMAP_BYTES, bitmap.getByteCount() + "");
         return ImmutableMap.copyOf(tmpMap);
       } else {
         final Map<String, String> tmpMap = new HashMap<>(7);

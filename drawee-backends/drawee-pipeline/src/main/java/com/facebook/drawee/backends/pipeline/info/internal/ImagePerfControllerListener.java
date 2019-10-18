@@ -75,6 +75,7 @@ public class ImagePerfControllerListener extends BaseControllerListener<ImageInf
 
     mImagePerfState.setControllerFailureTimeMs(now);
     mImagePerfState.setControllerId(id);
+    mImagePerfState.setErrorThrowable(throwable);
 
     mImagePerfMonitor.notifyStatusUpdated(mImagePerfState, ImageLoadStatus.ERROR);
 

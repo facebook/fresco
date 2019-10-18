@@ -23,6 +23,8 @@ android {
         }
         noSoLoader {
         }
+        noNativeCode {
+        }
     }
 
     lintOptions {
@@ -54,6 +56,21 @@ dependencies {
     noSoLoaderImplementation (project(':drawee-backends:drawee-pipeline')) {
         exclude group: 'com.facebook.soloader', module: 'soloader'
         exclude module: 'soloader'
+    }
+
+    noNativeCodeImplementation (project(':static-webp')) {
+        exclude group: 'com.facebook.soloader', module: 'soloader'
+        exclude module: 'native-filters'
+        exclude module: 'imagepipeline-native'
+        exclude module: 'nativememory'
+        exclude module: 'native-imagetranscoder'
+    }
+    noNativeCodeImplementation (project(':drawee-backends:drawee-pipeline')) {
+        exclude group: 'com.facebook.soloader', module: 'soloader'
+        exclude module: 'native-filters'
+        exclude module: 'imagepipeline-native'
+        exclude module: 'nativememory'
+        exclude module: 'native-imagetranscoder'
     }
 
     soLoaderImplementation project(':static-webp')

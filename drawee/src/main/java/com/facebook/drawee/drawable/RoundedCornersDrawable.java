@@ -31,10 +31,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
      */
     OVERLAY_COLOR,
 
-    /**
-     * Clips the drawable to be rounded. This option is not supported right now but is expected to
-     * be made available in the future.
-     */
+    /** Clips the drawing of the drawable to be rounded. */
     CLIPPING
   }
 
@@ -72,6 +69,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
    */
   public void setType(Type type) {
     mType = type;
+    updatePath();
     invalidateSelf();
   }
 
@@ -130,7 +128,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
   }
 
   /**
-   * Sets the overlay color.
+   * Sets the overlay color for corner type {@link Type#OVERLAY_COLOR}
    *
    * @param overlayColor the color to filled outside the rounded corners
    */
@@ -235,7 +233,9 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
     mTempRectangle.set(getBounds());
 
     mTempRectangle.inset(mPadding, mPadding);
-    mPath.addRect(mTempRectangle, Path.Direction.CW);
+    if (mType == Type.OVERLAY_COLOR) {
+      mPath.addRect(mTempRectangle, Path.Direction.CW);
+    }
     if (mIsCircle) {
       mPath.addCircle(
           mTempRectangle.centerX(),
@@ -267,8 +267,6 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
     switch (mType) {
       case CLIPPING:
         int saveCount = canvas.save();
-        // clip, note: doesn't support anti-aliasing
-        mPath.setFillType(Path.FillType.EVEN_ODD);
         canvas.clipPath(mPath);
         super.draw(canvas);
         canvas.restoreToCount(saveCount);

@@ -13,7 +13,6 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.core.NativeCodeSetup;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import javax.annotation.Nullable;

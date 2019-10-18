@@ -74,14 +74,28 @@ public class MultiUri {
     }
   }
 
+  /** Convenience method for creating a low res preview + main request datasource supplier */
+  public static Supplier<DataSource<CloseableReference<CloseableImage>>> getMultiUriDatasource(
+      final ImagePipeline imagePipeline,
+      final ImageRequest lowResImageRequest,
+      final ImageRequest mainImageRequest,
+      Object callerContext) {
+    MultiUri multiUri =
+        MultiUri.create()
+            .setLowResImageRequest(lowResImageRequest)
+            .setImageRequests(mainImageRequest)
+            .build();
+    return getMultiUriDatasourceSupplier(imagePipeline, multiUri, null, callerContext, null, null);
+  }
+
   public static Supplier<DataSource<CloseableReference<CloseableImage>>>
       getMultiUriDatasourceSupplier(
           final ImagePipeline imagePipeline,
           final MultiUri multiUri,
-          final ImageRequest imageRequest,
+          final @Nullable ImageRequest imageRequest,
           final Object callerContext,
-          final RequestListener requestListener,
-          final String id) {
+          final @Nullable RequestListener requestListener,
+          final @Nullable String id) {
 
     Supplier<DataSource<CloseableReference<CloseableImage>>> supplier = null;
 
@@ -137,7 +151,7 @@ public class MultiUri {
       getFirstAvailableDataSourceSupplier(
           final ImagePipeline imagePipeline,
           final Object callerContext,
-          final RequestListener requestListener,
+          final @Nullable RequestListener requestListener,
           ImageRequest[] imageRequests,
           boolean tryBitmapCacheOnlyFirst,
           final @Nullable String uiComponentId) {

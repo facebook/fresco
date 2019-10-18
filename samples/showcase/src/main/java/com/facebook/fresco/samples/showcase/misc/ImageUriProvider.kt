@@ -137,14 +137,23 @@ class ImageUriProvider constructor(context: Context) {
             imageSize: ImageSize = ImageSize.M,
             orientation: Orientation = Orientation.ANY,
             urlModification: UriModification = UriModification.NONE): Uri {
-        val baseUri: String = when (orientation) {
-            Orientation.PORTRAIT -> chooseRandom(*SAMPLE_URIS_PORTRAIT)
-            Orientation.LANDSCAPE -> chooseRandom(*SAMPLE_URIS_LANDSCAPE)
-            Orientation.ANY -> chooseRandom(*SAMPLE_URIS_LANDSCAPE, *SAMPLE_URIS_PORTRAIT)
-        }
-
-        val fullUri = String.format(baseUri, imageSize.sizeSuffix)
+        val fullUri = String.format(randomBaseJpegUri(orientation), imageSize.sizeSuffix)
         return applyOverrideSettings(fullUri, urlModification)
+    }
+
+    @JvmOverloads
+    fun createSampleUriSet(
+            orientation: Orientation = Orientation.ANY,
+            urlModification: UriModification = UriModification.NONE) : List<Uri> {
+        val baseUri: String = randomBaseJpegUri(orientation)
+        return listOf(
+                applyOverrideSettings(String.format(baseUri, ImageSize.XS.sizeSuffix), urlModification),
+                applyOverrideSettings(String.format(baseUri, ImageSize.S.sizeSuffix), urlModification),
+                applyOverrideSettings(String.format(baseUri, ImageSize.M.sizeSuffix), urlModification),
+                applyOverrideSettings(String.format(baseUri, ImageSize.L.sizeSuffix), urlModification),
+                applyOverrideSettings(String.format(baseUri, ImageSize.XL.sizeSuffix), urlModification),
+                applyOverrideSettings(String.format(baseUri, ImageSize.XXL.sizeSuffix), urlModification)
+        )
     }
 
     fun createPJPEGSlow(): Uri = applyOverrideSettings(SAMPLE_URI_PJPEG_SLOW, UriModification.NONE)
@@ -239,6 +248,14 @@ class ImageUriProvider constructor(context: Context) {
                     .build()
         }
         return result
+    }
+
+    private fun randomBaseJpegUri(orientation: Orientation = Orientation.ANY): String {
+        return when (orientation) {
+            Orientation.PORTRAIT -> chooseRandom(*SAMPLE_URIS_PORTRAIT)
+            Orientation.LANDSCAPE -> chooseRandom(*SAMPLE_URIS_LANDSCAPE)
+            Orientation.ANY -> chooseRandom(*SAMPLE_URIS_LANDSCAPE, *SAMPLE_URIS_PORTRAIT)
+        }
     }
 
     /**

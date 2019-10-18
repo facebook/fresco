@@ -31,6 +31,7 @@ import com.facebook.fresco.samples.showcase.drawee.DraweeRoundedCornersFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeScaleTypeFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeSimpleFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeSpanSimpleTextFragment;
+import com.facebook.fresco.samples.showcase.drawee.MultiUriFragment;
 import com.facebook.fresco.samples.showcase.drawee.RetainingDataSourceSupplierFragment;
 import com.facebook.fresco.samples.showcase.drawee.transition.DraweeTransitionFragment;
 import com.facebook.fresco.samples.showcase.imageformat.color.ImageFormatColorFragment;
@@ -53,6 +54,7 @@ import com.facebook.fresco.samples.showcase.misc.WelcomeFragment;
 import com.facebook.fresco.samples.showcase.settings.SettingsFragment;
 import com.facebook.fresco.samples.showcase.vito.FrescoVitoLithoGalleryFragment;
 import com.facebook.fresco.samples.showcase.vito.FrescoVitoLithoImageOptionsConfigFragment;
+import com.facebook.fresco.samples.showcase.vito.FrescoVitoLithoRegionDecodeFragment;
 import com.facebook.fresco.samples.showcase.vito.FrescoVitoLithoSectionsFragment;
 import com.facebook.fresco.samples.showcase.vito.FrescoVitoLithoSimpleFragment;
 import com.facebook.fresco.samples.showcase.vito.VitoViewPrefetchFragment;
@@ -184,6 +186,9 @@ public class MainActivity extends AppCompatActivity
       case R.id.nav_drawee_retaining_supplier:
         fragment = new RetainingDataSourceSupplierFragment();
         break;
+      case R.id.nav_drawee_multi_uri:
+        fragment = new MultiUriFragment();
+        break;
 
         // Imagepipline
       case R.id.nav_imagepipeline_notification:
@@ -240,6 +245,9 @@ public class MainActivity extends AppCompatActivity
         // Experimental Fresco Vito samples
       case R.id.nav_vito_litho_simple:
         fragment = new FrescoVitoLithoSimpleFragment();
+        break;
+      case R.id.nav_vito_litho_region_decode:
+        fragment = new FrescoVitoLithoRegionDecodeFragment();
         break;
       case R.id.nav_vito_image_options_config:
         fragment = new FrescoVitoLithoImageOptionsConfigFragment();

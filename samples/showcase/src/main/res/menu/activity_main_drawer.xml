@@ -50,6 +50,11 @@
             android:id="@+id/nav_drawee_retaining_supplier"
             android:title="@string/drawee_retaining_supplier_title"
             />
+
+        <item
+            android:id="@+id/nav_drawee_multi_uri"
+            android:title="@string/drawee_multi_uri_title"
+            />
       </group>
     </menu>
   </item>
@@ -139,6 +144,10 @@
         <item
             android:id="@+id/nav_vito_litho_simple"
             android:title="@string/vito_litho_simple"
+            />
+        <item
+            android:id="@+id/nav_vito_litho_region_decode"
+            android:title="@string/vito_litho_region_decode"
             />
         <item
             android:id="@+id/nav_vito_image_options_config"

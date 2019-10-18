@@ -14,6 +14,7 @@ import android.os.Build;
 import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.drawable.VisibilityCallback;
 import com.facebook.fresco.vito.core.FrescoController;
@@ -21,6 +22,7 @@ import com.facebook.fresco.vito.core.FrescoDrawable;
 import com.facebook.fresco.vito.core.FrescoState;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.provider.DefaultFrescoContext;
+import com.facebook.imagepipeline.multiuri.MultiUri;
 
 /** You must initialize this class before use by calling {#code VitoView.init()}. */
 @Deprecated /* Experimental */
@@ -64,14 +66,40 @@ public class VitoView {
   /*
    * Display an image with default options
    */
-  public static void show(Uri uri, View target) {
-    show(uri, ImageOptions.defaults(), target);
+  public static void show(@Nullable Uri uri, View target) {
+    showInternal(uri, null, ImageOptions.defaults(), target);
   }
 
   /*
    * Display an image
    */
-  public static void show(Uri uri, ImageOptions imageOptions, final View target) {
+  public static void show(@Nullable Uri uri, ImageOptions imageOptions, final View target) {
+    showInternal(uri, null, imageOptions, target);
+  }
+
+  /*
+   * Display an image with default options
+   */
+  public static void show(@Nullable MultiUri multiUri, final View target) {
+    showInternal(null, multiUri, ImageOptions.defaults(), target);
+  }
+
+  /*
+   * Display an image
+   */
+  public static void show(
+      @Nullable MultiUri multiUri, ImageOptions imageOptions, final View target) {
+    showInternal(null, multiUri, imageOptions, target);
+  }
+
+  private static void showInternal(
+      @Nullable Uri uri,
+      @Nullable MultiUri multiUri,
+      ImageOptions imageOptions,
+      final View target) {
+    Preconditions.checkArgument(
+        !(uri != null && multiUri != null), "Setting both a Uri and MultiUri is not allowed!");
+
     FrescoDrawable frescoDrawable;
     final Drawable background = target.getBackground();
     if (background instanceof FrescoDrawable) {
@@ -98,7 +126,8 @@ public class VitoView {
 
     final FrescoState oldState = getState(target);
     final FrescoState state =
-        sController.onPrepare(oldState, uri, null, imageOptions, null, target.getResources(), null);
+        sController.onPrepare(
+            oldState, uri, multiUri, imageOptions, null, target.getResources(), null);
     state.setFrescoDrawable(frescoDrawable);
     setState(target, state);
 
