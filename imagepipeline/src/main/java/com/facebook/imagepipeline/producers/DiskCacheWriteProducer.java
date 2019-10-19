@@ -29,7 +29,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
  * enable another producer to sit between cache read and write.
  */
 public class DiskCacheWriteProducer implements Producer<EncodedImage> {
-  @VisibleForTesting static final String PRODUCER_NAME = "DiskCacheProducer";
+  @VisibleForTesting static final String PRODUCER_NAME = "DiskCacheWriteProducer";
 
   private final BufferedDiskCache mDefaultBufferedDiskCache;
   private final BufferedDiskCache mSmallImageBufferedDiskCache;
@@ -104,12 +104,16 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
 
     @Override
     public void onNewResultImpl(EncodedImage newResult, @Status int status) {
+      mProducerContext.getProducerListener().onProducerStart(mProducerContext, PRODUCER_NAME);
       // intermediate, null or uncacheable results are not cached, so we just forward them
       // as well as the images with unknown format which could be html response from the server
       if (isNotLast(status)
           || newResult == null
           || statusHasAnyFlag(status, DO_NOT_CACHE_ENCODED | IS_PARTIAL_RESULT)
           || newResult.getImageFormat() == ImageFormat.UNKNOWN) {
+        mProducerContext
+            .getProducerListener()
+            .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
         getConsumer().onNewResult(newResult, status);
         return;
       }
@@ -123,6 +127,9 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
       } else {
         mDefaultBufferedDiskCache.put(cacheKey, newResult);
       }
+      mProducerContext
+          .getProducerListener()
+          .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
 
       getConsumer().onNewResult(newResult, status);
     }
