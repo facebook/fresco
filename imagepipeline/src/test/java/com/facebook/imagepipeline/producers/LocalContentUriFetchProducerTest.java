@@ -16,6 +16,7 @@ import android.net.Uri;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.testing.FakeClock;
@@ -41,6 +42,7 @@ public class LocalContentUriFetchProducerTest {
   @Mock public ImageRequest mImageRequest;
   @Mock public ProducerListener2 mProducerListener;
   @Mock public Exception mException;
+  @Mock public ImagePipelineConfig mConfig;
   private TestExecutorService mExecutor;
   private SettableProducerContext mProducerContext;
   private final String mRequestId = "mRequestId";
@@ -65,7 +67,8 @@ public class LocalContentUriFetchProducerTest {
             ImageRequest.RequestLevel.FULL_FETCH,
             false,
             true,
-            Priority.MEDIUM);
+            Priority.MEDIUM,
+            mConfig);
     when(mImageRequest.getSourceUri()).thenReturn(mContentUri);
     doAnswer(
             new Answer() {

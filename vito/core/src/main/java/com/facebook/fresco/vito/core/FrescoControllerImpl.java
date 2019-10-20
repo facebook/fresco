@@ -204,7 +204,8 @@ public class FrescoControllerImpl implements FrescoController {
               /* isPrefetch */ false,
               imageRequest.getProgressiveRenderingEnabled()
                   || !UriUtil.isNetworkUri(imageRequest.getSourceUri()),
-              imageRequest.getPriority()));
+              imageRequest.getPriority(),
+              mFrescoContext.getImagePipeline().getConfig()));
     } catch (Exception exception) {
       // This is how ImagePipeline handles the error case.
       // Something went wrong and we can't prepare components ahead of time.

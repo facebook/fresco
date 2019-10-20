@@ -283,7 +283,8 @@ public class ImagePipelineFactory {
               mThreadHandoffProducerQueue,
               mConfig.getExperiments().getSuppressBitmapPrefetchingSupplier(),
               mConfig.getExperiments().isLazyDataSource(),
-              mConfig.getCallerContextVerifier());
+              mConfig.getCallerContextVerifier(),
+              mConfig);
     }
     return mImagePipeline;
   }

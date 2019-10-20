@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.request.ImageRequest;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -26,7 +27,8 @@ public class SettableProducerContext extends BaseProducerContext {
         context.getLowestPermittedRequestLevel(),
         context.isPrefetch(),
         context.isIntermediateResultExpected(),
-        context.getPriority());
+        context.getPriority(),
+        context.getImagePipelineConfig());
   }
 
   public SettableProducerContext(ImageRequest overrideRequest, ProducerContext context) {
@@ -39,7 +41,8 @@ public class SettableProducerContext extends BaseProducerContext {
         context.getLowestPermittedRequestLevel(),
         context.isPrefetch(),
         context.isIntermediateResultExpected(),
-        context.getPriority());
+        context.getPriority(),
+        context.getImagePipelineConfig());
   }
 
   public SettableProducerContext(
@@ -50,7 +53,8 @@ public class SettableProducerContext extends BaseProducerContext {
       ImageRequest.RequestLevel lowestPermittedRequestLevel,
       boolean isPrefetch,
       boolean isIntermediateResultExpected,
-      Priority priority) {
+      Priority priority,
+      ImagePipelineConfig imagePipelineConfig) {
     super(
         imageRequest,
         id,
@@ -59,7 +63,8 @@ public class SettableProducerContext extends BaseProducerContext {
         lowestPermittedRequestLevel,
         isPrefetch,
         isIntermediateResultExpected,
-        priority);
+        priority,
+        imagePipelineConfig);
   }
 
   public SettableProducerContext(
@@ -71,7 +76,8 @@ public class SettableProducerContext extends BaseProducerContext {
       ImageRequest.RequestLevel lowestPermittedRequestLevel,
       boolean isPrefetch,
       boolean isIntermediateResultExpected,
-      Priority priority) {
+      Priority priority,
+      ImagePipelineConfig imagePipelineConfig) {
     super(
         imageRequest,
         id,
@@ -81,7 +87,8 @@ public class SettableProducerContext extends BaseProducerContext {
         lowestPermittedRequestLevel,
         isPrefetch,
         isIntermediateResultExpected,
-        priority);
+        priority,
+        imagePipelineConfig);
   }
 
   /**

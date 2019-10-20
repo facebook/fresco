@@ -59,6 +59,7 @@ public class ImagePipelineTest {
   @Mock public ProducerSequenceFactory mProducerSequenceFactory;
   @Mock public CacheKeyFactory mCacheKeyFactory;
   @Mock public Object mCallerContext;
+  @Mock public ImagePipelineConfig mConfig;
 
   private Supplier<Boolean> mPrefetchEnabledSupplier;
   private Supplier<Boolean> mSuppressBitmapPrefetchingSupplier;
@@ -102,7 +103,8 @@ public class ImagePipelineTest {
             mThreadHandoffProducerQueue,
             mSuppressBitmapPrefetchingSupplier,
             mLazyDataSourceSupplier,
-            null);
+            null,
+            mConfig);
 
     when(mImageRequest.getProgressiveRenderingEnabled()).thenReturn(true);
     when(mImageRequest.getPriority()).thenReturn(Priority.HIGH);

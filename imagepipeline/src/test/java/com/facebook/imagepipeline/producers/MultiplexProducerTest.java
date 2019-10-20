@@ -23,6 +23,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheKey;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import org.junit.*;
@@ -54,6 +55,7 @@ public class MultiplexProducerTest {
   @Mock public Exception mException;
   @Mock public ProducerListener2 mProducerListener;
   @Mock public Object mCallerContext;
+  @Mock public ImagePipelineConfig mConfig;
   private SettableProducerContext mProducerContext1;
   private SettableProducerContext mProducerContext2;
   private SettableProducerContext mProducerContext3;
@@ -94,7 +96,8 @@ public class MultiplexProducerTest {
             ImageRequest.RequestLevel.FULL_FETCH,
             false,
             true,
-            Priority.MEDIUM);
+            Priority.MEDIUM,
+            mConfig);
     mProducerContext2 =
         new SettableProducerContext(
             mImageRequest1,
@@ -104,7 +107,8 @@ public class MultiplexProducerTest {
             ImageRequest.RequestLevel.FULL_FETCH,
             false,
             true,
-            Priority.MEDIUM);
+            Priority.MEDIUM,
+            mConfig);
     mProducerContext3 =
         new SettableProducerContext(
             mImageRequest2,
@@ -114,7 +118,8 @@ public class MultiplexProducerTest {
             ImageRequest.RequestLevel.FULL_FETCH,
             false,
             true,
-            Priority.MEDIUM);
+            Priority.MEDIUM,
+            mConfig);
     mBitmapMemoryCacheKey1 = mock(BitmapMemoryCacheKey.class);
     mBitmapMemoryCacheKey2 = mock(BitmapMemoryCacheKey.class);
     mConsumer1 = mock(Consumer.class);

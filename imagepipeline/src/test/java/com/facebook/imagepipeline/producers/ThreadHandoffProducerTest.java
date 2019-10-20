@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.producers;
 import static org.mockito.Mockito.*;
 
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
@@ -26,6 +27,7 @@ public class ThreadHandoffProducerTest {
   @Mock public Consumer mConsumer;
   @Mock public ImageRequest mImageRequest;
   @Mock public ProducerListener2 mProducerListener;
+  @Mock public ImagePipelineConfig mConfig;
 
   private final String mRequestId = "mRequestId";
   private SettableProducerContext mProducerContext;
@@ -44,7 +46,8 @@ public class ThreadHandoffProducerTest {
             ImageRequest.RequestLevel.FULL_FETCH,
             false,
             true,
-            Priority.MEDIUM);
+            Priority.MEDIUM,
+            mConfig);
     mTestExecutorService = new TestExecutorService(new FakeClock());
     mThreadHandoffProducer =
         new ThreadHandoffProducer(

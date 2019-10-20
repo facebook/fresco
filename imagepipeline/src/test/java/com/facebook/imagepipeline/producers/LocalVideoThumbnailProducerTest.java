@@ -24,6 +24,7 @@ import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -58,6 +59,7 @@ public class LocalVideoThumbnailProducerTest {
   @Mock public ProducerListener2 mProducerListener;
   @Mock public Exception mException;
   @Mock public Bitmap mBitmap;
+  @Mock public ImagePipelineConfig mConfig;
 
   @Rule public PowerMockRule rule = new PowerMockRule();
 
@@ -87,7 +89,8 @@ public class LocalVideoThumbnailProducerTest {
             ImageRequest.RequestLevel.FULL_FETCH,
             false,
             false,
-            Priority.MEDIUM);
+            Priority.MEDIUM,
+            mConfig);
     when(mImageRequest.getSourceFile()).thenReturn(mFile);
   }
 

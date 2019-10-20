@@ -358,7 +358,8 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
                 producerContext.getLowestPermittedRequestLevel(),
                 computeIsPrefetch(),
                 computeIsIntermediateResultExpected(),
-                computePriority());
+                computePriority(),
+                producerContext.getImagePipelineConfig());
 
         mForwardingConsumer = new ForwardingConsumer();
         multiplexProducerContext = mMultiplexProducerContext;

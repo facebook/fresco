@@ -18,6 +18,7 @@ import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.testing.FakeClock;
@@ -55,6 +56,7 @@ public class LocalContentUriThumbnailFetchProducerTest {
   @Mock public Exception mException;
   @Mock public Cursor mCursor;
   @Mock public File mThumbnailFile;
+  @Mock public ImagePipelineConfig mConfig;
 
   private TestExecutorService mExecutor;
   private SettableProducerContext mProducerContext;
@@ -81,7 +83,8 @@ public class LocalContentUriThumbnailFetchProducerTest {
             ImageRequest.RequestLevel.FULL_FETCH,
             false,
             true,
-            Priority.MEDIUM);
+            Priority.MEDIUM,
+            mConfig);
     when(mImageRequest.getSourceUri()).thenReturn(mContentUri);
 
     mockMediaStoreCursor();

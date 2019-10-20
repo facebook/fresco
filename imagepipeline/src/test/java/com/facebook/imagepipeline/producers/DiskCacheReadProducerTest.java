@@ -22,6 +22,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ public class DiskCacheReadProducerTest {
   @Mock public Object mCallerContext;
   @Mock public ProducerListener2 mProducerListener;
   @Mock public Exception mException;
+  @Mock public ImagePipelineConfig mConfig;
   private final BufferedDiskCache mDefaultBufferedDiskCache = mock(BufferedDiskCache.class);
   private final BufferedDiskCache mSmallImageBufferedDiskCache = mock(BufferedDiskCache.class);
   private SettableProducerContext mProducerContext;
@@ -101,7 +103,8 @@ public class DiskCacheReadProducerTest {
             ImageRequest.RequestLevel.FULL_FETCH,
             false,
             true,
-            Priority.MEDIUM);
+            Priority.MEDIUM,
+            mConfig);
     mLowestLevelProducerContext =
         new SettableProducerContext(
             mImageRequest,
@@ -111,7 +114,8 @@ public class DiskCacheReadProducerTest {
             ImageRequest.RequestLevel.DISK_CACHE,
             false,
             true,
-            Priority.MEDIUM);
+            Priority.MEDIUM,
+            mConfig);
     when(mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)).thenReturn(true);
     when(mCacheKeyFactory.getEncodedCacheKey(mImageRequest, mCallerContext)).thenReturn(mCacheKey);
     when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.DEFAULT);

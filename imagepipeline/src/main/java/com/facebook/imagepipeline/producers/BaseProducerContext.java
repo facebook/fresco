@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,8 @@ public class BaseProducerContext implements ProducerContext {
   @GuardedBy("this")
   private final List<ProducerContextCallbacks> mCallbacks;
 
+  private final ImagePipelineConfig mImagePipelineConfig;
+
   public BaseProducerContext(
       ImageRequest imageRequest,
       String id,
@@ -49,7 +52,8 @@ public class BaseProducerContext implements ProducerContext {
       ImageRequest.RequestLevel lowestPermittedRequestLevel,
       boolean isPrefetch,
       boolean isIntermediateResultExpected,
-      Priority priority) {
+      Priority priority,
+      ImagePipelineConfig imagePipelineConfig) {
     this(
         imageRequest,
         id,
@@ -59,7 +63,8 @@ public class BaseProducerContext implements ProducerContext {
         lowestPermittedRequestLevel,
         isPrefetch,
         isIntermediateResultExpected,
-        priority);
+        priority,
+        imagePipelineConfig);
   }
 
   public BaseProducerContext(
@@ -71,7 +76,8 @@ public class BaseProducerContext implements ProducerContext {
       ImageRequest.RequestLevel lowestPermittedRequestLevel,
       boolean isPrefetch,
       boolean isIntermediateResultExpected,
-      Priority priority) {
+      Priority priority,
+      ImagePipelineConfig imagePipelineConfig) {
     mImageRequest = imageRequest;
     mId = id;
     mUiComponentId = uiComponentId;
@@ -85,6 +91,8 @@ public class BaseProducerContext implements ProducerContext {
 
     mIsCancelled = false;
     mCallbacks = new ArrayList<>();
+
+    mImagePipelineConfig = imagePipelineConfig;
   }
 
   @Override
@@ -149,6 +157,11 @@ public class BaseProducerContext implements ProducerContext {
     if (cancelImmediately) {
       callbacks.onCancellationRequested();
     }
+  }
+
+  @Override
+  public ImagePipelineConfig getImagePipelineConfig() {
+    return mImagePipelineConfig;
   }
 
   /** Cancels the request processing and calls appropriate callbacks. */

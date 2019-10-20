@@ -19,6 +19,7 @@ import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.memory.PooledByteBufferOutputStream;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,6 +54,7 @@ public class NetworkFetchProducerTest {
   @Mock public Consumer mConsumer;
   @Mock public NetworkFetcher mNetworkFetcher;
   @Mock public Map<String, String> mExtrasMap;
+  @Mock public ImagePipelineConfig mConfig;
 
   @Rule public PowerMockRule rule = new PowerMockRule();
 
@@ -78,7 +80,8 @@ public class NetworkFetchProducerTest {
             ImageRequest.RequestLevel.FULL_FETCH,
             false /* isPrefetch */,
             true /* isIntermediateResultExpected */,
-            Priority.MEDIUM);
+            Priority.MEDIUM,
+            mConfig);
     mFetchState = new FetchState(mConsumer, mProducerContext);
     mCommonByteArray = new byte[10];
     when(mByteArrayPool.get(anyInt())).thenReturn(mCommonByteArray);

@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.request.ImageRequest;
 import javax.annotation.Nullable;
 
@@ -59,4 +60,6 @@ public interface ProducerContext {
    * @param callbacks callbacks to be executed
    */
   void addCallbacks(ProducerContextCallbacks callbacks);
+
+  ImagePipelineConfig getImagePipelineConfig();
 }

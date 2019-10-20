@@ -20,6 +20,7 @@ import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.core.CloseableReferenceFactory;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.debug.NoOpCloseableReferenceLeakTracker;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
@@ -78,6 +79,8 @@ public class DecodeProducerTest {
 
   @Mock public ProgressiveJpegParser mProgressiveJpegParser;
   @Mock public JobScheduler mJobScheduler;
+
+  @Mock public ImagePipelineConfig mConfig;
 
   private DecodeProducer mDecodeProducer;
 
@@ -427,7 +430,8 @@ public class DecodeProducerTest {
             ImageRequest.RequestLevel.FULL_FETCH,
             /* isPrefetch */ false,
             /* isIntermediateResultExpected */ true,
-            Priority.MEDIUM);
+            Priority.MEDIUM,
+            mConfig);
   }
 
   private void setupNetworkUri() {

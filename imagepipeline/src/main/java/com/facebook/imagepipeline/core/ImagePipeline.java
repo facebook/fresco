@@ -67,6 +67,7 @@ public class ImagePipeline {
   private AtomicLong mIdCounter;
   private final Supplier<Boolean> mLazyDataSource;
   private final @Nullable CallerContextVerifier mCallerContextVerifier;
+  private final ImagePipelineConfig mConfig;
 
   public ImagePipeline(
       ProducerSequenceFactory producerSequenceFactory,
@@ -81,7 +82,8 @@ public class ImagePipeline {
       ThreadHandoffProducerQueue threadHandoffProducerQueue,
       Supplier<Boolean> suppressBitmapPrefetchingSupplier,
       Supplier<Boolean> lazyDataSource,
-      @Nullable CallerContextVerifier callerContextVerifier) {
+      @Nullable CallerContextVerifier callerContextVerifier,
+      ImagePipelineConfig config) {
     mIdCounter = new AtomicLong();
     mProducerSequenceFactory = producerSequenceFactory;
     mRequestListener = new ForwardingRequestListener(requestListeners);
@@ -96,6 +98,7 @@ public class ImagePipeline {
     mSuppressBitmapPrefetchingSupplier = suppressBitmapPrefetchingSupplier;
     mLazyDataSource = lazyDataSource;
     mCallerContextVerifier = callerContextVerifier;
+    mConfig = config;
   }
 
   /**
@@ -816,7 +819,8 @@ public class ImagePipeline {
               /* isPrefetch */ false,
               imageRequest.getProgressiveRenderingEnabled()
                   || !UriUtil.isNetworkUri(imageRequest.getSourceUri()),
-              imageRequest.getPriority());
+              imageRequest.getPriority(),
+              mConfig);
       return CloseableProducerToDataSourceAdapter.create(
           producerSequence, settableProducerContext, requestListener2);
     } catch (Exception exception) {
@@ -880,7 +884,8 @@ public class ImagePipeline {
               lowestPermittedRequestLevel,
               /* isPrefetch */ true,
               /* isIntermediateResultExpected */ false,
-              priority);
+              priority,
+              mConfig);
       return ProducerToDataSourceAdapter.create(
           producerSequence, settableProducerContext, requestListener);
     } catch (Exception exception) {
@@ -932,5 +937,9 @@ public class ImagePipeline {
   /** @return The CacheKeyFactory implementation used by ImagePipeline */
   public CacheKeyFactory getCacheKeyFactory() {
     return mCacheKeyFactory;
+  }
+
+  public ImagePipelineConfig getConfig() {
+      return mConfig;
   }
 }

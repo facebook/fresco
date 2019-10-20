@@ -11,6 +11,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.request.ImageRequest;
 import org.junit.*;
 import org.junit.runner.*;
@@ -27,6 +28,7 @@ public class SettableProducerContextTest {
   private ProducerContextCallbacks mCallbacks1;
   private ProducerContextCallbacks mCallbacks2;
   private SettableProducerContext mSettableProducerContext;
+  @Mock public ImagePipelineConfig mConfig;
 
   @Before
   public void setUp() {
@@ -39,7 +41,8 @@ public class SettableProducerContextTest {
             ImageRequest.RequestLevel.FULL_FETCH,
             false,
             true,
-            Priority.MEDIUM);
+            Priority.MEDIUM,
+            mConfig);
     mCallbacks1 = mock(ProducerContextCallbacks.class);
     mCallbacks2 = mock(ProducerContextCallbacks.class);
   }

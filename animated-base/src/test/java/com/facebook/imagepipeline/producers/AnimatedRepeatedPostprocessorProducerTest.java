@@ -18,6 +18,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
@@ -55,6 +56,8 @@ public class AnimatedRepeatedPostprocessorProducerTest {
 
   @Mock public ImageRequest mImageRequest;
 
+  @Mock public ImagePipelineConfig mConfig;
+
   private SettableProducerContext mProducerContext;
   private String mRequestId = "mRequestId";
   private Bitmap mSourceBitmap;
@@ -83,7 +86,8 @@ public class AnimatedRepeatedPostprocessorProducerTest {
             ImageRequest.RequestLevel.FULL_FETCH,
             false /* isPrefetch */,
             false /* isIntermediateResultExpected */,
-            Priority.MEDIUM);
+            Priority.MEDIUM,
+            mConfig);
     when(mImageRequest.getPostprocessor()).thenReturn(mPostprocessor);
     mResults = new ArrayList<>();
     when(mPostprocessor.getName()).thenReturn(POSTPROCESSOR_NAME);
