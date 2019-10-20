@@ -55,6 +55,7 @@ public class ImagePipelineExperiments {
   private final boolean mExperimentalThreadHandoffQueueEnabled;
   private final long mMemoryType;
   private boolean mKeepCancelledFetchAsLowPriority;
+  private boolean mDownsampleIfLargeBitmap;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -82,6 +83,11 @@ public class ImagePipelineExperiments {
     mExperimentalThreadHandoffQueueEnabled = builder.mExperimentalThreadHandoffQueueEnabled;
     mMemoryType = builder.mMemoryType;
     mKeepCancelledFetchAsLowPriority = builder.mKeepCancelledFetchAsLowPriority;
+    mDownsampleIfLargeBitmap = builder.mDownsampleIfLargeBitmap;
+  }
+
+  public boolean shouldDownsampleIfLargeBitmap() {
+    return mDownsampleIfLargeBitmap;
   }
 
   public boolean getUseDownsamplingRatioForResizing() {
@@ -197,6 +203,7 @@ public class ImagePipelineExperiments {
     public boolean mExperimentalThreadHandoffQueueEnabled;
     public long mMemoryType = 0;
     private boolean mKeepCancelledFetchAsLowPriority;
+    public boolean mDownsampleIfLargeBitmap;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -348,6 +355,11 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setKeepCancelledFetchAsLowPriority(
         boolean keepCancelledFetchAsLowPriority) {
       mKeepCancelledFetchAsLowPriority = keepCancelledFetchAsLowPriority;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setDownsampleIfLargeBitmap(boolean downsampleIfLargeBitmap) {
+      mDownsampleIfLargeBitmap = downsampleIfLargeBitmap;
       return mConfigBuilder;
     }
 

@@ -21,6 +21,7 @@ import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.core.CloseableReferenceFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.core.ImagePipelineExperiments;
 import com.facebook.imagepipeline.debug.NoOpCloseableReferenceLeakTracker;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
@@ -81,6 +82,7 @@ public class DecodeProducerTest {
   @Mock public JobScheduler mJobScheduler;
 
   @Mock public ImagePipelineConfig mConfig;
+  @Mock public ImagePipelineExperiments mPipelineExperiments;
 
   private DecodeProducer mDecodeProducer;
 
@@ -107,6 +109,8 @@ public class DecodeProducerTest {
         .thenReturn(mProgressiveJpegParser);
     PowerMockito.mockStatic(JobScheduler.class);
     PowerMockito.whenNew(JobScheduler.class).withAnyArguments().thenReturn(mJobScheduler);
+
+    when(mConfig.getExperiments()).thenReturn(mPipelineExperiments);
 
     mDecodeProducer =
         new DecodeProducer(

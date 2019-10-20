@@ -37,6 +37,7 @@ import com.facebook.imagepipeline.transcoder.DownsampleUtil;
 import com.facebook.imageutils.BitmapUtil;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
@@ -174,7 +175,12 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
                   }
                 }
 
-                maybeIncreaseSampleSize(encodedImage);
+                if (producerContext
+                    .getImagePipelineConfig()
+                    .getExperiments()
+                    .shouldDownsampleIfLargeBitmap()) {
+                  maybeIncreaseSampleSize(encodedImage);
+                }
 
                 doDecode(encodedImage, status);
               }

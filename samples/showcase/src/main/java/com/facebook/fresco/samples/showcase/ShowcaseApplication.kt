@@ -78,6 +78,8 @@ class ShowcaseApplication : Application() {
                     FlipperCacheKeyFactory(sFlipperImageTracker))
         }
 
+        imagePipelineConfigBuilder.experiment().setDownsampleIfLargeBitmap(true)
+
         val imagePipelineConfig = imagePipelineConfigBuilder.build()
         ImagePipelineConfig.getDefaultImageRequestConfig().isProgressiveRenderingEnabled = true
 
