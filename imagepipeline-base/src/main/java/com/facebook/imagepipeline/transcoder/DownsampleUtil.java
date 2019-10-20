@@ -64,6 +64,18 @@ public class DownsampleUtil {
     return sampleSize;
   }
 
+  public static int determineSampleSizeJPEG(
+      final EncodedImage encodedImage, final int pixelSize, final int maxBitmapSizeInBytes) {
+    int sampleSize = encodedImage.getSampleSize();
+    final int base = encodedImage.getWidth() * encodedImage.getHeight() * pixelSize;
+
+    while (base / sampleSize / sampleSize > maxBitmapSizeInBytes) {
+      sampleSize *= 2;
+    }
+
+    return sampleSize;
+  }
+
   @VisibleForTesting
   public static float determineDownsampleRatio(
       final RotationOptions rotationOptions,

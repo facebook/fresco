@@ -34,6 +34,7 @@ import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.imagepipeline.transcoder.DownsampleUtil;
+import com.facebook.imageutils.BitmapUtil;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -48,6 +49,10 @@ import javax.annotation.concurrent.GuardedBy;
 public class DecodeProducer implements Producer<CloseableReference<CloseableImage>> {
 
   public static final String PRODUCER_NAME = "DecodeProducer";
+
+  // In recent versions of Android you cannot draw bitmap that is bigger than 100MB bytes:
+  // https://web.archive.org/web/20191017003524/https://chromium.googlesource.com/android_tools/+/refs/heads/master/sdk/sources/android-25/android/view/DisplayListCanvas.java
+  private static final int MAX_BITMAP_SIZE = 100 * 1024 * 1024; // 100 MB
 
   // keys for extra map
   public static final String EXTRA_BITMAP_SIZE = ProducerConstants.EXTRA_BITMAP_SIZE;
@@ -168,6 +173,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
                             maxBitmapSize));
                   }
                 }
+
+                maybeIncreaseSampleSize(encodedImage);
+
                 doDecode(encodedImage, status);
               }
             }
@@ -189,6 +197,18 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
               }
             }
           });
+    }
+
+    private void maybeIncreaseSampleSize(final EncodedImage encodedImage) {
+      if (encodedImage.getImageFormat() != DefaultImageFormats.JPEG) {
+        return;
+      }
+
+      final int pixelSize =
+          BitmapUtil.getPixelSizeForBitmapConfig(mImageDecodeOptions.bitmapConfig);
+      final int sampleSize =
+          DownsampleUtil.determineSampleSizeJPEG(encodedImage, pixelSize, MAX_BITMAP_SIZE);
+      encodedImage.setSampleSize(sampleSize);
     }
 
     @Override
