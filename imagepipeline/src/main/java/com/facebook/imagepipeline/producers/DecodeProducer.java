@@ -37,7 +37,6 @@ import com.facebook.imagepipeline.transcoder.DownsampleUtil;
 import com.facebook.imageutils.BitmapUtil;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;

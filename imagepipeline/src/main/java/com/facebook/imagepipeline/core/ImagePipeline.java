@@ -940,6 +940,6 @@ public class ImagePipeline {
   }
 
   public ImagePipelineConfig getConfig() {
-      return mConfig;
+    return mConfig;
   }
 }
