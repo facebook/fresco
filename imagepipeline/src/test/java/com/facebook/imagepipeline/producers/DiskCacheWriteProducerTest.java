@@ -13,6 +13,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -144,7 +145,9 @@ public class DiskCacheWriteProducerTest {
         mFinalImageReference.getUnderlyingReferenceTestOnly());
     verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
     verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
-    verifyZeroInteractions(mProducerListener);
+    verify(mProducerListener, times(2)).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener, times(2))
+        .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
   }
 
   @Test
@@ -156,7 +159,9 @@ public class DiskCacheWriteProducerTest {
     verify(mSmallImageBufferedDiskCache).put(mCacheKey, mFinalEncodedImage);
     verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
     verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
-    verifyZeroInteractions(mProducerListener);
+    verify(mProducerListener, times(2)).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener, times(2))
+        .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
   }
 
   @Test
@@ -168,7 +173,9 @@ public class DiskCacheWriteProducerTest {
     verify(mSmallImageBufferedDiskCache, never()).put(mCacheKey, mFinalEncodedImageFormatUnknown);
     verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
     verify(mConsumer).onNewResult(mFinalEncodedImageFormatUnknown, Consumer.IS_LAST);
-    verifyZeroInteractions(mProducerListener);
+    verify(mProducerListener, times(2)).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener, times(2))
+        .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
   }
 
   @Test
@@ -191,8 +198,9 @@ public class DiskCacheWriteProducerTest {
     setupInputProducerNotFound();
     mDiskCacheWriteProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(null, Consumer.IS_LAST);
-    verifyZeroInteractions(
-        mProducerListener, mDefaultBufferedDiskCache, mSmallImageBufferedDiskCache);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener).onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
+    verifyZeroInteractions(mDefaultBufferedDiskCache, mSmallImageBufferedDiskCache);
   }
 
   @Test
@@ -227,11 +235,11 @@ public class DiskCacheWriteProducerTest {
     verify(mConsumer)
         .onNewResult(
             mFinalEncodedImageFormatUnknown, Consumer.IS_LAST | Consumer.DO_NOT_CACHE_ENCODED);
+    verify(mProducerListener, times(2)).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener, times(2))
+        .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
     verifyNoMoreInteractions(
-        mProducerListener,
-        mCacheKeyFactory,
-        mDefaultBufferedDiskCache,
-        mSmallImageBufferedDiskCache);
+        mCacheKeyFactory, mDefaultBufferedDiskCache, mSmallImageBufferedDiskCache);
   }
 
   @Test
