@@ -13,6 +13,7 @@ import java.io.Closeable;
 /** A simple wrapper around an image that implements {@link Closeable} */
 public abstract class CloseableImage implements Closeable, ImageInfo {
   private static final String TAG = "CloseableImage";
+  private OriginalEncodedImageInfo mOriginalEncodedImageInfo;
 
   /** @return size in bytes of the bitmap(s) */
   public abstract int getSizeInBytes();
@@ -41,6 +42,14 @@ public abstract class CloseableImage implements Closeable, ImageInfo {
    */
   public boolean isStateful() {
     return false;
+  }
+
+  public OriginalEncodedImageInfo getOriginalEncodedImageInfo() {
+    return mOriginalEncodedImageInfo;
+  }
+
+  public void setOriginalEncodedImageInfo(OriginalEncodedImageInfo originalEncodedImageInfo) {
+    mOriginalEncodedImageInfo = originalEncodedImageInfo;
   }
 
   /** Ensures that the underlying resources are always properly released. */
