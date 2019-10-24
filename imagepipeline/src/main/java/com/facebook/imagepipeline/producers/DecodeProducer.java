@@ -30,6 +30,7 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
+import com.facebook.imagepipeline.image.OriginalEncodedImageInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
@@ -354,6 +355,13 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
                 requestedSizeStr,
                 sampleSize);
         mProducerListener.onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, extraMap);
+
+        if (image != null) {
+          image.setOriginalEncodedImageInfo(
+              new OriginalEncodedImageInfo(
+                  encodedImage.getWidth(), encodedImage.getHeight(), encodedImage.getSize()));
+        }
+
         handleResult(image, status);
       } finally {
         EncodedImage.closeSafely(encodedImage);
