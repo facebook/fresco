@@ -187,9 +187,12 @@ public class ImagePipelineFactory {
 
   public InstrumentedMemoryCache<CacheKey, CloseableImage> getBitmapMemoryCache() {
     if (mBitmapMemoryCache == null) {
+      MemoryCache<CacheKey, CloseableImage> backingCache =
+          mConfig.getBitmapCacheOverride() != null
+              ? mConfig.getBitmapCacheOverride()
+              : getBitmapCountingMemoryCache();
       mBitmapMemoryCache =
-          BitmapMemoryCacheFactory.get(
-              getBitmapCountingMemoryCache(), mConfig.getImageCacheStatsTracker());
+          BitmapMemoryCacheFactory.get(backingCache, mConfig.getImageCacheStatsTracker());
     }
     return mBitmapMemoryCache;
   }

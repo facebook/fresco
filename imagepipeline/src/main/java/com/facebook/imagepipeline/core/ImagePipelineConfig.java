@@ -11,6 +11,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
+import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.callercontext.CallerContextVerifier;
 import com.facebook.common.internal.Preconditions;
@@ -39,6 +40,7 @@ import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ImageDecoderConfig;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
+import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestListener2;
 import com.facebook.imagepipeline.memory.PoolConfig;
@@ -102,6 +104,7 @@ public class ImagePipelineConfig {
   private final boolean mDiskCacheEnabled;
   @Nullable private final CallerContextVerifier mCallerContextVerifier;
   private final CloseableReferenceLeakTracker mCloseableReferenceLeakTracker;
+  @Nullable private final MemoryCache<CacheKey, CloseableImage> mBitmapCache;
 
   private static DefaultImageRequestConfig sDefaultImageRequestConfig =
       new DefaultImageRequestConfig();
@@ -207,6 +210,7 @@ public class ImagePipelineConfig {
     mDiskCacheEnabled = builder.mDiskCacheEnabled;
     mCallerContextVerifier = builder.mCallerContextVerifier;
     mCloseableReferenceLeakTracker = builder.mCloseableReferenceLeakTracker;
+    mBitmapCache = builder.mBitmapMemoryCache;
     // Here we manage the WebpBitmapFactory implementation if any
     WebpBitmapFactory webpBitmapFactory = mImagePipelineExperiments.getWebpBitmapFactory();
     if (webpBitmapFactory != null) {
@@ -427,6 +431,11 @@ public class ImagePipelineConfig {
     }
   }
 
+  @Nullable
+  public MemoryCache<CacheKey, CloseableImage> getBitmapCacheOverride() {
+    return mBitmapCache;
+  }
+
   /** Contains default configuration that can be personalized for all the request */
   public static class DefaultImageRequestConfig {
 
@@ -478,6 +487,7 @@ public class ImagePipelineConfig {
     private CallerContextVerifier mCallerContextVerifier;
     private CloseableReferenceLeakTracker mCloseableReferenceLeakTracker =
         new NoOpCloseableReferenceLeakTracker();
+    @Nullable private MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
 
     private Builder(Context context) {
       // Doesn't use a setter as always required.
@@ -651,6 +661,12 @@ public class ImagePipelineConfig {
     public Builder setCloseableReferenceLeakTracker(
         CloseableReferenceLeakTracker closeableReferenceLeakTracker) {
       mCloseableReferenceLeakTracker = closeableReferenceLeakTracker;
+      return this;
+    }
+
+    public Builder setBitmapMemoryCache(
+        @Nullable MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache) {
+      mBitmapMemoryCache = bitmapMemoryCache;
       return this;
     }
 
