@@ -29,6 +29,7 @@ import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.cache.EncodedCountingMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.EncodedMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.InstrumentedMemoryCache;
+import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.decoder.DefaultImageDecoder;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
@@ -193,7 +194,7 @@ public class ImagePipelineFactory {
     return mBitmapMemoryCache;
   }
 
-  public CountingMemoryCache<CacheKey, PooledByteBuffer> getEncodedCountingMemoryCache() {
+  public MemoryCache<CacheKey, PooledByteBuffer> getEncodedCountingMemoryCache() {
     if (mEncodedCountingMemoryCache == null) {
       mEncodedCountingMemoryCache =
           EncodedCountingMemoryCacheFactory.get(

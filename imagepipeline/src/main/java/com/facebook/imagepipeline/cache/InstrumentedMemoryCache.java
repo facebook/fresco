@@ -51,4 +51,14 @@ public class InstrumentedMemoryCache<K, V> implements MemoryCache<K, V> {
   public boolean contains(K key) {
     return mDelegate.contains(key);
   }
+
+  @Override
+  public int getCount() {
+    return mDelegate.getCount();
+  }
+
+  @Override
+  public int getSizeInBytes() {
+    return mDelegate.getSizeInBytes();
+  }
 }

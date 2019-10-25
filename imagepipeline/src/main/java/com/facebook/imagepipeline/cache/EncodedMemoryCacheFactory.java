@@ -13,10 +13,10 @@ import com.facebook.common.memory.PooledByteBuffer;
 public class EncodedMemoryCacheFactory {
 
   public static InstrumentedMemoryCache<CacheKey, PooledByteBuffer> get(
-      final CountingMemoryCache<CacheKey, PooledByteBuffer> encodedCountingMemoryCache,
+      final MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
       final ImageCacheStatsTracker imageCacheStatsTracker) {
 
-    imageCacheStatsTracker.registerEncodedMemoryCache(encodedCountingMemoryCache);
+    imageCacheStatsTracker.registerEncodedMemoryCache(encodedMemoryCache);
 
     MemoryCacheTracker memoryCacheTracker =
         new MemoryCacheTracker<CacheKey>() {
@@ -36,6 +36,6 @@ public class EncodedMemoryCacheFactory {
           }
         };
 
-    return new InstrumentedMemoryCache<>(encodedCountingMemoryCache, memoryCacheTracker);
+    return new InstrumentedMemoryCache<>(encodedMemoryCache, memoryCacheTracker);
   }
 }

@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.cache;
 
 import com.facebook.common.internal.Predicate;
+import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.references.CloseableReference;
 import javax.annotation.Nullable;
 
@@ -18,6 +19,11 @@ import javax.annotation.Nullable;
  * @param <V> the value type
  */
 public interface MemoryCache<K, V> {
+
+  /** Interface used to specify the trimming strategy for the cache. */
+  interface CacheTrimStrategy {
+    double getTrimRatio(MemoryTrimType trimType);
+  }
 
   /**
    * Caches the the given key-value pair.
@@ -66,4 +72,10 @@ public interface MemoryCache<K, V> {
    * @return true if the key was found in the cache, false otherwise
    */
   boolean contains(K key);
+
+  /** Gets the total number of all currently cached items. */
+  int getCount();
+
+  /** Gets the total size in bytes of all currently cached items. */
+  int getSizeInBytes();
 }

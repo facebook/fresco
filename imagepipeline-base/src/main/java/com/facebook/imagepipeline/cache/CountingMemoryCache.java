@@ -39,11 +39,6 @@ import javax.annotation.concurrent.ThreadSafe;
 @ThreadSafe
 public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimmable {
 
-  /** Interface used to specify the trimming strategy for the cache. */
-  public interface CacheTrimStrategy {
-    double getTrimRatio(MemoryTrimType trimType);
-  }
-
   /** Interface used to observe the state changes of an entry. */
   public interface EntryStateObserver<K> {
 
@@ -490,11 +485,13 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
   }
 
   /** Gets the total number of all currently cached items. */
+  @Override
   public synchronized int getCount() {
     return mCachedEntries.getCount();
   }
 
   /** Gets the total size in bytes of all currently cached items. */
+  @Override
   public synchronized int getSizeInBytes() {
     return mCachedEntries.getSizeInBytes();
   }

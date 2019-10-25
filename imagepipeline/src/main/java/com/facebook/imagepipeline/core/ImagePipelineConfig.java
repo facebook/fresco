@@ -30,6 +30,7 @@ import com.facebook.imagepipeline.cache.DefaultBitmapMemoryCacheParamsSupplier;
 import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
 import com.facebook.imagepipeline.cache.DefaultEncodedMemoryCacheParamsSupplier;
 import com.facebook.imagepipeline.cache.ImageCacheStatsTracker;
+import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.cache.MemoryCacheParams;
 import com.facebook.imagepipeline.cache.NoOpImageCacheStatsTracker;
 import com.facebook.imagepipeline.debug.CloseableReferenceLeakTracker;
@@ -495,8 +496,7 @@ public class ImagePipelineConfig {
       return this;
     }
 
-    public Builder setBitmapMemoryCacheTrimStrategy(
-        CountingMemoryCache.CacheTrimStrategy trimStrategy) {
+    public Builder setBitmapMemoryCacheTrimStrategy(MemoryCache.CacheTrimStrategy trimStrategy) {
       mBitmapMemoryCacheTrimStrategy = trimStrategy;
       return this;
     }
