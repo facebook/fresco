@@ -7,6 +7,8 @@
 
 package com.facebook.datasource;
 
+import javax.annotation.Nonnull;
+
 /**
  * Subscribes to DataSource<T>.
  *
@@ -23,7 +25,7 @@ public interface DataSubscriber<T> {
    *
    * @param dataSource
    */
-  void onNewResult(DataSource<T> dataSource);
+  void onNewResult(@Nonnull DataSource<T> dataSource);
 
   /**
    * Called whenever an error occurs inside of the pipeline.
@@ -35,7 +37,7 @@ public interface DataSubscriber<T> {
    *
    * @param dataSource
    */
-  void onFailure(DataSource<T> dataSource);
+  void onFailure(@Nonnull DataSource<T> dataSource);
 
   /**
    * Called whenever the request is cancelled (a request being cancelled means that is was closed
@@ -45,12 +47,12 @@ public interface DataSubscriber<T> {
    *
    * @param dataSource
    */
-  void onCancellation(DataSource<T> dataSource);
+  void onCancellation(@Nonnull DataSource<T> dataSource);
 
   /**
    * Called when the progress updates.
    *
    * @param dataSource
    */
-  void onProgressUpdate(DataSource<T> dataSource);
+  void onProgressUpdate(@Nonnull DataSource<T> dataSource);
 }

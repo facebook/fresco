@@ -11,10 +11,14 @@ import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.QualityInfo;
+import javax.annotation.Nonnull;
 
 /** Image decoder interface. Takes an {@link EncodedImage} and creates a {@link CloseableImage}. */
 public interface ImageDecoder {
 
   CloseableImage decode(
-      EncodedImage encodedImage, int length, QualityInfo qualityInfo, ImageDecodeOptions options);
+      @Nonnull EncodedImage encodedImage,
+      int length,
+      @Nonnull QualityInfo qualityInfo,
+      @Nonnull ImageDecodeOptions options);
 }

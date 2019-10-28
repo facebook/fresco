@@ -7,6 +7,8 @@
 
 package com.facebook.datasource;
 
+import javax.annotation.Nonnull;
+
 /**
  * Base implementation of {@link DataSubscriber} that ensures that the data source is closed when
  * the subscriber has finished with it.
@@ -37,7 +39,7 @@ package com.facebook.datasource;
 public abstract class BaseDataSubscriber<T> implements DataSubscriber<T> {
 
   @Override
-  public void onNewResult(DataSource<T> dataSource) {
+  public void onNewResult(@Nonnull DataSource<T> dataSource) {
     // isFinished() should be checked before calling onNewResultImpl(), otherwise
     // there would be a race condition: the final data source result might be ready before
     // we call isFinished() here, which would lead to the loss of the final result
@@ -53,7 +55,7 @@ public abstract class BaseDataSubscriber<T> implements DataSubscriber<T> {
   }
 
   @Override
-  public void onFailure(DataSource<T> dataSource) {
+  public void onFailure(@Nonnull DataSource<T> dataSource) {
     try {
       onFailureImpl(dataSource);
     } finally {
@@ -62,12 +64,12 @@ public abstract class BaseDataSubscriber<T> implements DataSubscriber<T> {
   }
 
   @Override
-  public void onCancellation(DataSource<T> dataSource) {}
+  public void onCancellation(@Nonnull DataSource<T> dataSource) {}
 
   @Override
-  public void onProgressUpdate(DataSource<T> dataSource) {}
+  public void onProgressUpdate(@Nonnull DataSource<T> dataSource) {}
 
-  protected abstract void onNewResultImpl(DataSource<T> dataSource);
+  protected abstract void onNewResultImpl(@Nonnull DataSource<T> dataSource);
 
-  protected abstract void onFailureImpl(DataSource<T> dataSource);
+  protected abstract void onFailureImpl(@Nonnull DataSource<T> dataSource);
 }
