@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
@@ -38,6 +39,7 @@ public class DraweeHierarchyFragment extends BaseShowcaseFragment {
   @Override
   public View onCreateView(
       LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+      AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     return inflater.inflate(R.layout.fragment_drawee_hierarchy, container, false);
   }
 
