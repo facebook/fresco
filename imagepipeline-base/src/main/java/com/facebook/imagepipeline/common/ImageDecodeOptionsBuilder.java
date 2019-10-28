@@ -25,6 +25,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
   private @Nullable ImageDecoder mCustomImageDecoder;
   private @Nullable BitmapTransformation mBitmapTransformation;
   private @Nullable ColorSpace mColorSpace;
+  private boolean mUseMediaStoreVideoThumbnail;
 
   public ImageDecodeOptionsBuilder() {}
 
@@ -43,6 +44,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
     mCustomImageDecoder = options.customImageDecoder;
     mBitmapTransformation = options.bitmapTransformation;
     mColorSpace = options.colorSpace;
+    mUseMediaStoreVideoThumbnail = options.useMediaStoreVideoThumbnail;
     return getThis();
   }
 
@@ -230,6 +232,28 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
   @Nullable
   public ColorSpace getColorSpace() {
     return mColorSpace;
+  }
+
+  /**
+   * Sets whether the media store video thumbnail should be used when a local video content uri is
+   * requested.
+   *
+   * @param useMediaStoreVideoThumbnail whether to use the media store video thumbnail
+   * @return the builder
+   */
+  public T setUseMediaStoreVideoThumbnail(boolean useMediaStoreVideoThumbnail) {
+    mUseMediaStoreVideoThumbnail = useMediaStoreVideoThumbnail;
+    return getThis();
+  }
+
+  /**
+   * Gets whether the media store video thumbnail should be used when a local video content uri is *
+   * requested.
+   *
+   * @return whether to use the media store video thumbnail
+   */
+  public boolean getUseMediaStoreVideoThumbnail() {
+    return mUseMediaStoreVideoThumbnail;
   }
 
   /**
