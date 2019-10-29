@@ -151,6 +151,6 @@ public class FrescoVitoLithoRegionDecodeFragment extends BaseShowcaseFragment {
   }
 
   private ImageDecoder createRegionDecoder() {
-    return new FrescoVitoRegionDecoder(Fresco.getImagePipelineFactory().getPlatformDecoder());
+    return new FrescoVitoRegionDecoder(Fresco.getImagePipelineFactory().getPlatformDecoder(), null);
   }
 }

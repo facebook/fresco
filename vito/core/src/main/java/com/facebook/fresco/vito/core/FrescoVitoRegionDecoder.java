@@ -13,7 +13,9 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Build;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
+import com.facebook.imagepipeline.decoder.DefaultImageDecoder;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
@@ -31,9 +33,11 @@ import javax.annotation.Nullable;
 public class FrescoVitoRegionDecoder implements ImageDecoder {
 
   private final PlatformDecoder mPlatformDecoder;
+  private final @Nullable DefaultImageDecoder mImageDecoder;
 
-  public FrescoVitoRegionDecoder(PlatformDecoder platformDecoder) {
+  public FrescoVitoRegionDecoder(PlatformDecoder platformDecoder, @Nullable DefaultImageDecoder imageDecoder) {
     mPlatformDecoder = platformDecoder;
+    mImageDecoder = imageDecoder;
   }
 
   /**
@@ -48,6 +52,11 @@ public class FrescoVitoRegionDecoder implements ImageDecoder {
   @Override
   public CloseableImage decode(
       EncodedImage encodedImage, int length, QualityInfo qualityInfo, ImageDecodeOptions options) {
+
+    if (encodedImage.getImageFormat() != DefaultImageFormats.JPEG &&
+        mImageDecoder != null) {
+      return mImageDecoder.decode(encodedImage, length, qualityInfo, options);
+    }
 
     Rect regionToDecode = computeRegionToDecode(encodedImage, options);
 
@@ -69,7 +78,7 @@ public class FrescoVitoRegionDecoder implements ImageDecoder {
   private @Nullable Rect computeRegionToDecode(
       EncodedImage encodedImage, ImageDecodeOptions options) {
     if (!(options instanceof FrescoVitoImageDecodeOptions)) {
-      return null;
+      return null; //this value means that we will decode full image.
     }
     FrescoVitoImageDecodeOptions frescoVitoOptions = (FrescoVitoImageDecodeOptions) options;
 
