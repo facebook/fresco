@@ -10,7 +10,7 @@ package com.facebook.imagepipeline.memory;
 import com.facebook.infer.annotation.ThreadSafe;
 
 public class BitmapCounterProvider {
-  
+
   private static final long KB = 1024;
   private static final long MB = 1024 * KB;
 

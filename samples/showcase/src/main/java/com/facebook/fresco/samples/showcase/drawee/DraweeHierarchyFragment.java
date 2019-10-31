@@ -39,7 +39,7 @@ public class DraweeHierarchyFragment extends BaseShowcaseFragment {
   @Override
   public View onCreateView(
       LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-      AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     return inflater.inflate(R.layout.fragment_drawee_hierarchy, container, false);
   }
 
