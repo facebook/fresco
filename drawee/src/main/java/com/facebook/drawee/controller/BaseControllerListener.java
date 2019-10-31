@@ -8,10 +8,13 @@
 package com.facebook.drawee.controller;
 
 import android.graphics.drawable.Animatable;
+import com.facebook.fresco.ui.common.DimensionsInfo;
+import com.facebook.fresco.ui.common.OnDrawControllerListener;
 import javax.annotation.Nullable;
 
 /** Convenience class that has empty implementation of {@link ControllerListener}. */
-public class BaseControllerListener<INFO> implements ControllerListener<INFO> {
+public class BaseControllerListener<INFO>
+    implements ControllerListener<INFO> {
 
   private static final ControllerListener<Object> NO_OP_LISTENER =
       new BaseControllerListener<Object>();

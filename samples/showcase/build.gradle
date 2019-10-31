@@ -106,6 +106,8 @@ dependencies {
 
     implementation 'com.facebook.keyframes:keyframes:1.0'
 
+    implementation project(':ui-common')
+
     // Litho
     compileOnly "com.facebook.litho:litho-annotations:${versions.litho}"
     implementation "com.facebook.litho:litho-core:${versions.litho}"

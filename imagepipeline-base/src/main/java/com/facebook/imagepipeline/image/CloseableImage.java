@@ -11,7 +11,7 @@ import com.facebook.common.logging.FLog;
 import java.io.Closeable;
 
 /** A simple wrapper around an image that implements {@link Closeable} */
-public abstract class CloseableImage implements Closeable, ImageInfo {
+public abstract class CloseableImage implements Closeable, ImageInfo, HasImageMetadata {
   private static final String TAG = "CloseableImage";
   private OriginalEncodedImageInfo mOriginalEncodedImageInfo;
 

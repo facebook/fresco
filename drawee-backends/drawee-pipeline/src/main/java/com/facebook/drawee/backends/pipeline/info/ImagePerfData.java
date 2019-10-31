@@ -8,6 +8,7 @@
 package com.facebook.drawee.backends.pipeline.info;
 
 import com.facebook.common.internal.Objects;
+import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import javax.annotation.Nullable;
@@ -46,6 +47,10 @@ public class ImagePerfData {
 
   private final @Nullable String mComponentTag;
 
+  private final long mImageDrawTimeMs;
+
+  private final @Nullable DimensionsInfo mDimensionsInfo;
+
   public ImagePerfData(
       @Nullable String controllerId,
       @Nullable String requestId,
@@ -68,7 +73,9 @@ public class ImagePerfData {
       int visibilityState,
       long visibilityEventTimeMs,
       long invisibilityEventTime,
-      @Nullable String componentTag) {
+      @Nullable String componentTag,
+      long imageDrawTimeMs,
+      @Nullable DimensionsInfo dimensionsInfo) {
     mControllerId = controllerId;
     mRequestId = requestId;
     mImageRequest = imageRequest;
@@ -91,6 +98,12 @@ public class ImagePerfData {
     mVisibilityEventTimeMs = visibilityEventTimeMs;
     mInvisibilityEventTimeMs = invisibilityEventTime;
     mComponentTag = componentTag;
+    mImageDrawTimeMs = imageDrawTimeMs;
+    mDimensionsInfo = dimensionsInfo;
+  }
+
+  public long getImageDrawTimeMs() {
+    return mImageDrawTimeMs;
   }
 
   @Nullable
@@ -202,6 +215,11 @@ public class ImagePerfData {
     return mComponentTag;
   }
 
+  @Nullable
+  public DimensionsInfo getDimensionsInfo() {
+    return mDimensionsInfo;
+  }
+
   public String createDebugString() {
     return Objects.toStringHelper(this)
         .add("controller ID", mControllerId)
@@ -222,6 +240,10 @@ public class ImagePerfData {
         .add("on-screen height", mOnScreenHeightPx)
         .add("visibility state", mVisibilityState)
         .add("component tag", mComponentTag)
+        .add("visibility event", mVisibilityEventTimeMs)
+        .add("invisibility event", mInvisibilityEventTimeMs)
+        .add("image draw event", mImageDrawTimeMs)
+        .add("dimensions info", mDimensionsInfo)
         .toString();
   }
 }

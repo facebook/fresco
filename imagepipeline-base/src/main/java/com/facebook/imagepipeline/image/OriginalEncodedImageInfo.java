@@ -7,13 +7,20 @@
 
 package com.facebook.imagepipeline.image;
 
-public class OriginalEncodedImageInfo {
-  private static final int UNSET = -1;
-  private int mWidth = UNSET;
-  private int mHeight = UNSET;
-  private int mSize = UNSET;
+import android.net.Uri;
+import javax.annotation.Nullable;
 
-  public OriginalEncodedImageInfo(int width, int height, int size) {
+public class OriginalEncodedImageInfo {
+  private final Uri mUri;
+  private final int mWidth;
+  private final int mHeight;
+  private final int mSize;
+  private final @Nullable Object mCallerContext;
+
+  public OriginalEncodedImageInfo(
+      Uri sourceUri, @Nullable Object callerContext, int width, int height, int size) {
+    mUri = sourceUri;
+    mCallerContext = callerContext;
     mWidth = width;
     mHeight = height;
     mSize = size;
@@ -29,5 +36,13 @@ public class OriginalEncodedImageInfo {
 
   public int getSize() {
     return mSize;
+  }
+
+  public Uri getUri() {
+    return mUri;
+  }
+
+  public @Nullable Object getCallerContext() {
+    return mCallerContext;
   }
 }

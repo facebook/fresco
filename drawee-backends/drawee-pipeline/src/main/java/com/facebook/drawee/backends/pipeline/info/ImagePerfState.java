@@ -9,6 +9,7 @@ package com.facebook.drawee.backends.pipeline.info;
 
 import static com.facebook.drawee.backends.pipeline.info.ImagePerfData.UNSET;
 
+import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import javax.annotation.Nullable;
@@ -52,7 +53,11 @@ public class ImagePerfState {
   private long mVisibilityEventTimeMs = UNSET;
   private long mInvisibilityEventTimeMs = UNSET;
 
+  private long mImageDrawTimeMs = UNSET;
+
   private @Nullable String mComponentTag;
+
+  private @Nullable DimensionsInfo mDimensionsInfo;
 
   public void reset() {
     mRequestId = null;
@@ -75,6 +80,8 @@ public class ImagePerfState {
 
     mComponentTag = null;
 
+    mDimensionsInfo = null;
+
     resetPointsTimestamps();
   }
 
@@ -90,6 +97,8 @@ public class ImagePerfState {
 
     mVisibilityEventTimeMs = UNSET;
     mInvisibilityEventTimeMs = UNSET;
+
+    mImageDrawTimeMs = UNSET;
   }
 
   public void setImageLoadStatus(@ImageLoadStatus int imageLoadStatus) {
@@ -189,6 +198,10 @@ public class ImagePerfState {
     mComponentTag = componentTag;
   }
 
+  public void setImageDrawTimeMs(long imageDrawTimeMs) {
+    mImageDrawTimeMs = imageDrawTimeMs;
+  }
+
   public ImagePerfData snapshot() {
     return new ImagePerfData(
         mControllerId,
@@ -212,6 +225,20 @@ public class ImagePerfState {
         mVisibilityState,
         mVisibilityEventTimeMs,
         mInvisibilityEventTimeMs,
-        mComponentTag);
+        mComponentTag,
+        mImageDrawTimeMs,
+        mDimensionsInfo);
+  }
+
+  public long getImageDrawTimeMs() {
+    return mImageDrawTimeMs;
+  }
+
+  public void setDimensionsInfo(DimensionsInfo dimensionsInfo) {
+    mDimensionsInfo = dimensionsInfo;
+  }
+
+  public @Nullable DimensionsInfo getDimensionsInfo() {
+    return mDimensionsInfo;
   }
 }

@@ -15,10 +15,13 @@ import com.facebook.drawee.backends.pipeline.info.ImagePerfMonitor;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfState;
 import com.facebook.drawee.backends.pipeline.info.VisibilityState;
 import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.fresco.ui.common.DimensionsInfo;
+import com.facebook.fresco.ui.common.OnDrawControllerListener;
 import com.facebook.imagepipeline.image.ImageInfo;
 import javax.annotation.Nullable;
 
-public class ImagePerfControllerListener extends BaseControllerListener<ImageInfo> {
+public class ImagePerfControllerListener extends BaseControllerListener<ImageInfo>
+    implements OnDrawControllerListener<ImageInfo> {
 
   private final MonotonicClock mClock;
   private final ImagePerfState mImagePerfState;
@@ -89,7 +92,8 @@ public class ImagePerfControllerListener extends BaseControllerListener<ImageInf
 
     int lastImageLoadStatus = mImagePerfState.getImageLoadStatus();
     if (lastImageLoadStatus != ImageLoadStatus.SUCCESS
-        && lastImageLoadStatus != ImageLoadStatus.ERROR) {
+        && lastImageLoadStatus != ImageLoadStatus.ERROR
+        && lastImageLoadStatus != ImageLoadStatus.DRAW) {
       mImagePerfState.setControllerCancelTimeMs(now);
       mImagePerfState.setControllerId(id);
       // The image request was canceled
@@ -97,6 +101,13 @@ public class ImagePerfControllerListener extends BaseControllerListener<ImageInf
     }
 
     reportViewInvisible(now);
+  }
+
+  @Override
+  public void onImageDrawn(String id, ImageInfo info, DimensionsInfo dimensionsInfo) {
+    mImagePerfState.setImageDrawTimeMs(mClock.now());
+    mImagePerfState.setDimensionsInfo(dimensionsInfo);
+    mImagePerfMonitor.notifyStatusUpdated(mImagePerfState, ImageLoadStatus.DRAW);
   }
 
   @VisibleForTesting
