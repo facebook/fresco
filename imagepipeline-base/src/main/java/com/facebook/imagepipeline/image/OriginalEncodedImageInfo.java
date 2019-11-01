@@ -12,14 +12,21 @@ import javax.annotation.Nullable;
 
 public class OriginalEncodedImageInfo {
   private final Uri mUri;
+  private final @Nullable EncodedImageOrigin mOrigin;
+  private final @Nullable Object mCallerContext;
   private final int mWidth;
   private final int mHeight;
   private final int mSize;
-  private final @Nullable Object mCallerContext;
 
   public OriginalEncodedImageInfo(
-      Uri sourceUri, @Nullable Object callerContext, int width, int height, int size) {
+      Uri sourceUri,
+      EncodedImageOrigin origin,
+      @Nullable Object callerContext,
+      int width,
+      int height,
+      int size) {
     mUri = sourceUri;
+    mOrigin = origin;
     mCallerContext = callerContext;
     mWidth = width;
     mHeight = height;
@@ -44,5 +51,9 @@ public class OriginalEncodedImageInfo {
 
   public @Nullable Object getCallerContext() {
     return mCallerContext;
+  }
+
+  public EncodedImageOrigin getOrigin() {
+    return mOrigin;
   }
 }

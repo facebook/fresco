@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.producers;
 
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.image.EncodedImageOrigin;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,8 @@ public class BaseProducerContext implements ProducerContext {
   private final List<ProducerContextCallbacks> mCallbacks;
 
   private final ImagePipelineConfig mImagePipelineConfig;
+
+  private EncodedImageOrigin mEncodedImageOrigin = EncodedImageOrigin.NOT_SET;
 
   public BaseProducerContext(
       ImageRequest imageRequest,
@@ -162,6 +165,15 @@ public class BaseProducerContext implements ProducerContext {
   @Override
   public ImagePipelineConfig getImagePipelineConfig() {
     return mImagePipelineConfig;
+  }
+
+  @Override
+  public EncodedImageOrigin getEncodedImageOrigin() {
+    return mEncodedImageOrigin;
+  }
+
+  public void setEncodedImageOrigin(EncodedImageOrigin encodedImageOrigin) {
+    mEncodedImageOrigin = encodedImageOrigin;
   }
 
   /** Cancels the request processing and calls appropriate callbacks. */

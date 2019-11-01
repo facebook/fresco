@@ -361,6 +361,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
           image.setOriginalEncodedImageInfo(
               new OriginalEncodedImageInfo(
                   mProducerContext.getImageRequest().getSourceUri(),
+                  mProducerContext.getEncodedImageOrigin(),
                   mProducerContext.getCallerContext(),
                   encodedImage.getWidth(),
                   encodedImage.getHeight(),

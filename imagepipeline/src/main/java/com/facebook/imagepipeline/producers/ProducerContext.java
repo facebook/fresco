@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.producers;
 
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.image.EncodedImageOrigin;
 import com.facebook.imagepipeline.request.ImageRequest;
 import javax.annotation.Nullable;
 
@@ -62,4 +63,8 @@ public interface ProducerContext {
   void addCallbacks(ProducerContextCallbacks callbacks);
 
   ImagePipelineConfig getImagePipelineConfig();
+
+  EncodedImageOrigin getEncodedImageOrigin();
+
+  void setEncodedImageOrigin(EncodedImageOrigin encodedImageOrigin);
 }

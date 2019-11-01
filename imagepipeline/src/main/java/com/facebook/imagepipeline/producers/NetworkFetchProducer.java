@@ -16,6 +16,7 @@ import com.facebook.common.memory.PooledByteBufferOutputStream;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.image.EncodedImageOrigin;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import java.io.IOException;
 import java.io.InputStream;
@@ -149,7 +150,8 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
           pooledOutputStream,
           fetchState.getOnNewResultStatusFlags(),
           fetchState.getResponseBytesRange(),
-          fetchState.getConsumer());
+          fetchState.getConsumer(),
+          fetchState.getContext());
     }
   }
 
@@ -163,14 +165,16 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
         pooledOutputStream,
         Consumer.IS_LAST | fetchState.getOnNewResultStatusFlags(),
         fetchState.getResponseBytesRange(),
-        fetchState.getConsumer());
+        fetchState.getConsumer(),
+        fetchState.getContext());
   }
 
   protected static void notifyConsumer(
       PooledByteBufferOutputStream pooledOutputStream,
       @Consumer.Status int status,
       @Nullable BytesRange responseBytesRange,
-      Consumer<EncodedImage> consumer) {
+      Consumer<EncodedImage> consumer,
+      ProducerContext context) {
     CloseableReference<PooledByteBuffer> result =
         CloseableReference.of(pooledOutputStream.toByteBuffer());
     EncodedImage encodedImage = null;
@@ -178,6 +182,7 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
       encodedImage = new EncodedImage(result);
       encodedImage.setBytesRange(responseBytesRange);
       encodedImage.parseMetaData();
+      context.setEncodedImageOrigin(EncodedImageOrigin.NETWORK);
       consumer.onNewResult(encodedImage, status);
     } finally {
       EncodedImage.closeSafely(encodedImage);
