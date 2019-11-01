@@ -34,6 +34,20 @@ public class ScalingUtils {
     ScaleType FIT_XY = ScaleTypeFitXY.INSTANCE;
 
     /**
+     * Scales the child so that the child's width fits exactly. The height will be cropped if it
+     * exceeds parent's bounds. Aspect ratio is preserved. Child is centered within the parent's
+     * bounds.
+     */
+    ScaleType FIT_X = ScaleTypeFitX.INSTANCE;
+
+    /**
+     * Scales the child so that the child's height fits exactly. The width will be cropped if it
+     * exceeds parent's bounds. Aspect ratio is preserved. Child is centered within the parent's
+     * bounds.
+     */
+    ScaleType FIT_Y = ScaleTypeFitY.INSTANCE;
+
+    /**
      * Scales the child so that it fits entirely inside the parent. At least one dimension (width or
      * height) will fit exactly. Aspect ratio is preserved. Child is aligned to the top-left corner
      * of the parent.
@@ -413,6 +427,62 @@ public class ScalingUtils {
     @Override
     public String toString() {
       return "focus_crop";
+    }
+  }
+
+  private static class ScaleTypeFitX extends AbstractScaleType {
+
+    public static final ScaleType INSTANCE = new ScaleTypeFitX();
+
+    @Override
+    public void getTransformImpl(
+        Matrix outTransform,
+        Rect parentRect,
+        int childWidth,
+        int childHeight,
+        float focusX,
+        float focusY,
+        float scaleX,
+        float scaleY) {
+      float scale, dx, dy;
+      scale = scaleX;
+      dx = parentRect.left;
+      dy = parentRect.top + (parentRect.height() - childHeight * scale) * 0.5f;
+      outTransform.setScale(scale, scale);
+      outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+    }
+
+    @Override
+    public String toString() {
+      return "fit_x";
+    }
+  }
+
+  private static class ScaleTypeFitY extends AbstractScaleType {
+
+    public static final ScaleType INSTANCE = new ScaleTypeFitY();
+
+    @Override
+    public void getTransformImpl(
+        Matrix outTransform,
+        Rect parentRect,
+        int childWidth,
+        int childHeight,
+        float focusX,
+        float focusY,
+        float scaleX,
+        float scaleY) {
+      float scale, dx, dy;
+      scale = scaleY;
+      dx = parentRect.left + (parentRect.width() - childWidth * scale) * 0.5f;
+      dy = parentRect.top;
+      outTransform.setScale(scale, scale);
+      outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+    }
+
+    @Override
+    public String toString() {
+      return "fit_y";
     }
   }
 
