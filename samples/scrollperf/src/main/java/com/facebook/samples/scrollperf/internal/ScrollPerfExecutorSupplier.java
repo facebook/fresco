@@ -64,4 +64,9 @@ public class ScrollPerfExecutorSupplier implements ExecutorSupplier {
   public Executor forLightweightBackgroundTasks() {
     return mLightWeightBackgroundExecutor;
   }
+
+  @Override
+  public Executor forThumbnailProducer() {
+    return mIoBoundExecutor;
+  }
 }

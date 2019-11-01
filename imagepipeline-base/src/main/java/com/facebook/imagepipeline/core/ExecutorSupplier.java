@@ -43,4 +43,6 @@ public interface ExecutorSupplier {
    * thread.
    */
   Executor forLightweightBackgroundTasks();
+
+  Executor forThumbnailProducer();
 }

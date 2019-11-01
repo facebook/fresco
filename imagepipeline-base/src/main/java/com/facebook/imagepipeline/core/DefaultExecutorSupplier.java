@@ -74,4 +74,9 @@ public class DefaultExecutorSupplier implements ExecutorSupplier {
   public Executor forLightweightBackgroundTasks() {
     return mLightWeightBackgroundExecutor;
   }
+
+  @Override
+  public Executor forThumbnailProducer() {
+    return mIoBoundExecutor;
+  }
 }

@@ -248,7 +248,7 @@ public class ProducerFactory {
 
   public LocalExifThumbnailProducer newLocalExifThumbnailProducer() {
     return new LocalExifThumbnailProducer(
-        mExecutorSupplier.forLocalStorageRead(), mPooledByteBufferFactory, mContentResolver);
+        mExecutorSupplier.forThumbnailProducer(), mPooledByteBufferFactory, mContentResolver);
   }
 
   public ThumbnailBranchProducer newThumbnailBranchProducer(
