@@ -9,12 +9,25 @@ package com.facebook.fresco.ui.common;
 
 public class DimensionsInfo {
 
-  private int mViewportWidth;
-  private int mViewportHeight;
+  private final int mViewportWidth;
+  private final int mViewportHeight;
 
-  public DimensionsInfo(int viewportWidth, int viewportHeight) {
+  private final int mEncodedImageWidth;
+  private final int mEncodedImageHeight;
+
+  private final int mDecodedImageWidth;
+  private final int mDecodedImageHeight;
+
+  public DimensionsInfo(
+      int viewportWidth, int viewportHeight,
+      int encodedImageWidth, int encodedImageHeight,
+      int decodedImageWidth, int decodedImageHeight) {
     mViewportWidth = viewportWidth;
     mViewportHeight = viewportHeight;
+    mEncodedImageWidth = encodedImageWidth;
+    mEncodedImageHeight = encodedImageHeight;
+    mDecodedImageWidth = decodedImageWidth;
+    mDecodedImageHeight = decodedImageHeight;
   }
 
   public int getViewportWidth() {
@@ -25,13 +38,31 @@ public class DimensionsInfo {
     return mViewportHeight;
   }
 
+  public int getEncodedImageWidth() {
+    return mEncodedImageWidth;
+  }
+
+  public int getEncodedImageHeight() {
+    return mEncodedImageHeight;
+  }
+
+  public int getDecodedImageWidth() {
+    return mDecodedImageWidth;
+  }
+
+  public int getDecodedImageHeight() {
+    return mDecodedImageHeight;
+  }
+
   @Override
   public String toString() {
-    return "DimensionsInfo{"
-        + "mViewportWidth="
-        + mViewportWidth
-        + ", mViewportHeight="
-        + mViewportHeight
-        + '}';
+    return "DimensionsInfo{" +
+        "mViewportWidth=" + mViewportWidth +
+        ", mViewportHeight=" + mViewportHeight +
+        ", mEncodedImageWidth=" + mEncodedImageWidth +
+        ", mEncodedImageHeight=" + mEncodedImageHeight +
+        ", mDecodedImageWidth=" + mDecodedImageWidth +
+        ", mDecodedImageHeight=" + mDecodedImageHeight +
+        '}';
   }
 }
