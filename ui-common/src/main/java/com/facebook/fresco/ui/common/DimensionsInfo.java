@@ -19,9 +19,12 @@ public class DimensionsInfo {
   private final int mDecodedImageHeight;
 
   public DimensionsInfo(
-      int viewportWidth, int viewportHeight,
-      int encodedImageWidth, int encodedImageHeight,
-      int decodedImageWidth, int decodedImageHeight) {
+      int viewportWidth,
+      int viewportHeight,
+      int encodedImageWidth,
+      int encodedImageHeight,
+      int decodedImageWidth,
+      int decodedImageHeight) {
     mViewportWidth = viewportWidth;
     mViewportHeight = viewportHeight;
     mEncodedImageWidth = encodedImageWidth;
@@ -56,13 +59,19 @@ public class DimensionsInfo {
 
   @Override
   public String toString() {
-    return "DimensionsInfo{" +
-        "mViewportWidth=" + mViewportWidth +
-        ", mViewportHeight=" + mViewportHeight +
-        ", mEncodedImageWidth=" + mEncodedImageWidth +
-        ", mEncodedImageHeight=" + mEncodedImageHeight +
-        ", mDecodedImageWidth=" + mDecodedImageWidth +
-        ", mDecodedImageHeight=" + mDecodedImageHeight +
-        '}';
+    return "DimensionsInfo{"
+        + "mViewportWidth="
+        + mViewportWidth
+        + ", mViewportHeight="
+        + mViewportHeight
+        + ", mEncodedImageWidth="
+        + mEncodedImageWidth
+        + ", mEncodedImageHeight="
+        + mEncodedImageHeight
+        + ", mDecodedImageWidth="
+        + mDecodedImageWidth
+        + ", mDecodedImageHeight="
+        + mDecodedImageHeight
+        + '}';
   }
 }
