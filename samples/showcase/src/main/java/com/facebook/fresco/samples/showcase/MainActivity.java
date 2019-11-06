@@ -257,6 +257,7 @@ public class MainActivity extends AppCompatActivity
         break;
       case R.id.nav_vito_litho_gallery:
         fragment = new FrescoVitoLithoGalleryFragment();
+        break;
       case R.id.nav_vito_view_simple:
         fragment = new VitoViewSimpleFragment();
         break;
