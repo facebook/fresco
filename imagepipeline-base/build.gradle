@@ -22,6 +22,7 @@ dependencies {
     implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
     implementation project(':fbcore')
 
+    testImplementation project(':imagepipeline-base-test')
     testImplementation "junit:junit:${JUNIT_VERSION}"
     testImplementation "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
     testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"

@@ -54,6 +54,14 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
     }
+    sourceSets {
+        test {
+            java {
+                exclude '**/LocalVideoThumbnailProducerTest.java'
+                exclude '**/DecodeProducerTest.java'
+            }
+        }
+    }
 }
 
 task sourcesJar(type: Jar) {

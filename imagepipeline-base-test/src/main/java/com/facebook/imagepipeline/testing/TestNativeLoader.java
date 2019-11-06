@@ -19,7 +19,9 @@ public class TestNativeLoader {
    * setInTestMode for SoLoader
    */
   public static void init() {
-    NativeLoader.init(new NativeLoaderToSoLoaderDelegate());
+    if (!NativeLoader.isInitialized()) {
+      NativeLoader.init(new NativeLoaderToSoLoaderDelegate());
+    }
     SoLoader.setInTestMode();
   }
 }
