@@ -35,6 +35,8 @@ dependencies {
     testImplementation project(':imagepipeline-test')
 }
 
+apply from: rootProject.file('release.gradle')
+
 android {
     def ndkLibs = [
             ['bitmaps', []],

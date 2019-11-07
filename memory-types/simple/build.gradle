@@ -28,6 +28,8 @@ dependencies {
     testImplementation project(':imagepipeline-test')
 }
 
+apply from: rootProject.file('release.gradle')
+
 android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
