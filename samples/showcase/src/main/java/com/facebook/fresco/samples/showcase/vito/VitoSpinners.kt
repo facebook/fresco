@@ -80,6 +80,7 @@ object VitoSpinners {
     )
 
     val postprocessorOptions = listOf(
+            "no postprocessor" to {builder: ImageOptions.Builder -> builder.postprocess(null)},
             "Grey Scale Post-Processor(Slow)" to {builder: ImageOptions.Builder -> builder.postprocess(SlowGreyScalePostprocessor())},
             "Grey Scale Post-Processor" to {builder: ImageOptions.Builder -> builder.postprocess(FasterGreyScalePostprocessor())},
             "Watermark Post-Processor" to {builder: ImageOptions.Builder -> builder.postprocess(WatermarkPostprocessor(10, "FRESCO"))},
