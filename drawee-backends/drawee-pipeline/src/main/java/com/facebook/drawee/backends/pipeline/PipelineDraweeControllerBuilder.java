@@ -131,7 +131,7 @@ public class PipelineDraweeControllerBuilder
           getCallerContext(),
           mCustomDrawableFactories,
           mImageOriginListener);
-      controller.initializePerformanceMonitoring(mImagePerfDataListener);
+      controller.initializePerformanceMonitoring(mImagePerfDataListener, this);
       return controller;
     } finally {
       if (FrescoSystrace.isTracing()) {

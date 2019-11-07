@@ -23,6 +23,11 @@ public class ImagePerfData {
   private final @Nullable ImageRequest mImageRequest;
   private final @Nullable ImageInfo mImageInfo;
 
+  // Controller image metadata
+  private final @Nullable ImageRequest mControllerImageRequest;
+  private final @Nullable ImageRequest mControllerLowResImageRequest;
+  private final @Nullable ImageRequest[] mControllerFirstAvailableImageRequests;
+
   private final long mControllerSubmitTimeMs;
   private final long mControllerIntermediateImageSetTimeMs;
   private final long mControllerFinalImageSetTimeMs;
@@ -57,6 +62,9 @@ public class ImagePerfData {
       @Nullable ImageRequest imageRequest,
       @Nullable Object callerContext,
       @Nullable ImageInfo imageInfo,
+      @Nullable ImageRequest controllerImageRequest,
+      @Nullable ImageRequest controllerLowResImageRequest,
+      @Nullable ImageRequest[] controllerFirstAvailableImageRequests,
       long controllerSubmitTimeMs,
       long controllerIntermediateImageSetTimeMs,
       long controllerFinalImageSetTimeMs,
@@ -81,6 +89,9 @@ public class ImagePerfData {
     mImageRequest = imageRequest;
     mCallerContext = callerContext;
     mImageInfo = imageInfo;
+    mControllerImageRequest = controllerImageRequest;
+    mControllerLowResImageRequest = controllerLowResImageRequest;
+    mControllerFirstAvailableImageRequests = controllerFirstAvailableImageRequests;
     mControllerSubmitTimeMs = controllerSubmitTimeMs;
     mControllerIntermediateImageSetTimeMs = controllerIntermediateImageSetTimeMs;
     mControllerFinalImageSetTimeMs = controllerFinalImageSetTimeMs;
@@ -145,6 +156,21 @@ public class ImagePerfData {
 
   public long getControllerFailureTimeMs() {
     return mControllerFailureTimeMs;
+  }
+
+  @Nullable
+  public ImageRequest getControllerImageRequest() {
+    return mControllerImageRequest;
+  }
+
+  @Nullable
+  public ImageRequest getControllerLowResImageRequest() {
+    return mControllerLowResImageRequest;
+  }
+
+  @Nullable
+  public ImageRequest[] getControllerFirstAvailableImageRequests() {
+    return mControllerFirstAvailableImageRequests;
   }
 
   public long getImageRequestStartTimeMs() {
@@ -224,6 +250,9 @@ public class ImagePerfData {
     return Objects.toStringHelper(this)
         .add("controller ID", mControllerId)
         .add("request ID", mRequestId)
+        .add("controller image request", mControllerImageRequest)
+        .add("controller low res image request", mControllerLowResImageRequest)
+        .add("controller first available image requests", mControllerFirstAvailableImageRequests)
         .add("controller submit", mControllerSubmitTimeMs)
         .add("controller final image", mControllerFinalImageSetTimeMs)
         .add("controller failure", mControllerFailureTimeMs)

@@ -8,13 +8,19 @@
 package com.facebook.drawee.backends.pipeline.info;
 
 import android.graphics.Rect;
+import com.facebook.common.references.CloseableReference;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfRequestListener;
+import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
+import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.listener.ForwardingRequestListener;
+import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -40,6 +46,19 @@ public class ImagePerfMonitor {
     mMonotonicClock = monotonicClock;
     mPipelineDraweeController = pipelineDraweeController;
     mImagePerfState = new ImagePerfState();
+  }
+
+  public void updateImageRequestData(
+      AbstractDraweeControllerBuilder<
+              PipelineDraweeControllerBuilder,
+              ImageRequest,
+              CloseableReference<CloseableImage>,
+              ImageInfo>
+          pipelineDraweeControllerBuilder) {
+    mImagePerfState.setControllerImageRequests(
+        pipelineDraweeControllerBuilder.getImageRequest(),
+        pipelineDraweeControllerBuilder.getLowResImageRequest(),
+        pipelineDraweeControllerBuilder.getFirstAvailableImageRequests());
   }
 
   public void setEnabled(boolean enabled) {

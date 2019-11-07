@@ -28,6 +28,7 @@ import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfMonitor;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.AbstractDraweeController;
+import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
 import com.facebook.drawee.debug.DebugControllerOverlayDrawable;
 import com.facebook.drawee.debug.listener.ImageLoadingTimeControllerListener;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
@@ -42,6 +43,7 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.listener.ForwardingRequestListener;
 import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import java.util.HashSet;
 import java.util.Set;
@@ -136,7 +138,13 @@ public class PipelineDraweeController
   }
 
   protected synchronized void initializePerformanceMonitoring(
-      @Nullable ImagePerfDataListener imagePerfDataListener) {
+      @Nullable ImagePerfDataListener imagePerfDataListener,
+      AbstractDraweeControllerBuilder<
+              PipelineDraweeControllerBuilder,
+              ImageRequest,
+              CloseableReference<CloseableImage>,
+              ImageInfo>
+          builder) {
     if (mImagePerfMonitor != null) {
       mImagePerfMonitor.reset();
     }
@@ -146,6 +154,7 @@ public class PipelineDraweeController
       }
       mImagePerfMonitor.addImagePerfDataListener(imagePerfDataListener);
       mImagePerfMonitor.setEnabled(true);
+      mImagePerfMonitor.updateImageRequestData(builder);
     }
   }
 

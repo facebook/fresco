@@ -23,6 +23,11 @@ public class ImagePerfState {
   private @Nullable Object mCallerContext;
   private @Nullable ImageInfo mImageInfo;
 
+  // Controller image metadata
+  private @Nullable ImageRequest mControllerImageRequest;
+  private @Nullable ImageRequest mControllerLowResImageRequest;
+  private @Nullable ImageRequest[] mControllerFirstAvailableImageRequests;
+
   // Controller timings
   private long mControllerSubmitTimeMs = UNSET;
   private long mControllerIntermediateImageSetTimeMs = UNSET;
@@ -64,6 +69,10 @@ public class ImagePerfState {
     mImageRequest = null;
     mCallerContext = null;
     mImageInfo = null;
+
+    mControllerImageRequest = null;
+    mControllerLowResImageRequest = null;
+    mControllerFirstAvailableImageRequests = null;
 
     mImageOrigin = ImageOrigin.UNKNOWN;
     mUltimateProducerName = null;
@@ -120,6 +129,15 @@ public class ImagePerfState {
 
   public void setImageRequest(@Nullable ImageRequest imageRequest) {
     mImageRequest = imageRequest;
+  }
+
+  public void setControllerImageRequests(
+      @Nullable ImageRequest imageRequest,
+      @Nullable ImageRequest lowResImageRequest,
+      @Nullable ImageRequest[] firstAvailableImageRequests) {
+    mControllerImageRequest = imageRequest;
+    mControllerLowResImageRequest = lowResImageRequest;
+    mControllerFirstAvailableImageRequests = firstAvailableImageRequests;
   }
 
   public void setCallerContext(@Nullable Object callerContext) {
@@ -209,6 +227,9 @@ public class ImagePerfState {
         mImageRequest,
         mCallerContext,
         mImageInfo,
+        mControllerImageRequest,
+        mControllerLowResImageRequest,
+        mControllerFirstAvailableImageRequests,
         mControllerSubmitTimeMs,
         mControllerIntermediateImageSetTimeMs,
         mControllerFinalImageSetTimeMs,
