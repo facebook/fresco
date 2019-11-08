@@ -8,11 +8,9 @@
 package com.facebook.fresco.vito.drawable;
 
 import android.content.res.Resources;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import com.facebook.drawee.drawable.OrientedDrawable;
-import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.options.BorderOptions;
 import com.facebook.fresco.vito.options.ImageOptions;
@@ -27,10 +25,12 @@ public class BitmapDrawableFactory implements VitoDrawableFactory {
 
   private final Resources mResources;
   private final FrescoExperiments mExperiments;
+  private final RoundingUtils mRoundingUtils;
 
   public BitmapDrawableFactory(Resources resources, FrescoExperiments frescoExperiments) {
     mResources = resources;
     mExperiments = frescoExperiments;
+    mRoundingUtils = new RoundingUtils();
   }
 
   @Override
@@ -72,98 +72,15 @@ public class BitmapDrawableFactory implements VitoDrawableFactory {
       CloseableStaticBitmap closeableStaticBitmap, ImageOptions imageOptions) {
     RoundingOptions roundingOptions = imageOptions.getRoundingOptions();
     BorderOptions borderOptions = imageOptions.getBorderOptions();
+    mRoundingUtils.setAlreadyRounded(mExperiments.useNativeRounding());
 
-    if (borderOptions != null && borderOptions.width > 0) {
-      return rotatedDrawable(
-          closeableStaticBitmap,
-          roundedDrawableWithBorder(closeableStaticBitmap, borderOptions, roundingOptions));
-    } else {
-      return rotatedDrawable(
-          closeableStaticBitmap,
-          roundedDrawableWithoutBorder(closeableStaticBitmap, roundingOptions));
-    }
-  }
-
-  protected Drawable roundedDrawableWithoutBorder(
-      CloseableStaticBitmap closeableStaticBitmap, @Nullable RoundingOptions roundingOptions) {
-    // We need to return a rounded corner drawable if needed
-    if (roundingOptions != null && !roundingOptions.isCircular()) {
-      return roundedCornerDrawableWithBorder(closeableStaticBitmap, null, roundingOptions);
-    }
-    if (!mExperiments.useNativeRounding()
-        && roundingOptions != null
-        && roundingOptions.isCircular()) {
-      return circularAtRenderTimeDrawable(closeableStaticBitmap, null);
-    }
-    return new BitmapDrawable(mResources, closeableStaticBitmap.getUnderlyingBitmap());
-  }
-
-  protected Drawable roundedDrawableWithBorder(
-      CloseableStaticBitmap closeableStaticBitmap,
-      BorderOptions borderOptions,
-      @Nullable RoundingOptions roundingOptions) {
-    if (roundingOptions != null) {
-      if (roundingOptions.isCircular()) {
-        if (mExperiments.useNativeRounding()) {
-          // Circular rounding is performed on the bitmap, so we only need to draw a circular border
-          return circularNativeDrawableWithBorder(closeableStaticBitmap, borderOptions);
-        }
-        return circularAtRenderTimeDrawable(closeableStaticBitmap, borderOptions);
-      } else {
-        return roundedCornerDrawableWithBorder(
-            closeableStaticBitmap, borderOptions, roundingOptions);
-      }
-    } else {
-      return squareDrawableWithBorder(closeableStaticBitmap, borderOptions);
-    }
-  }
-
-  protected Drawable circularNativeDrawableWithBorder(
-      CloseableStaticBitmap closeableStaticBitmap, BorderOptions borderOptions) {
-    CircularBorderBitmapDrawable drawable =
-        new CircularBorderBitmapDrawable(mResources, closeableStaticBitmap.getUnderlyingBitmap());
-    drawable.setBorder(borderOptions);
-    return drawable;
-  }
-
-  protected Drawable circularAtRenderTimeDrawable(
-      CloseableStaticBitmap closeableStaticBitmap, @Nullable BorderOptions borderOptions) {
-    RoundedBitmapDrawable roundedBitmapDrawable =
-        new RoundedBitmapDrawable(mResources, closeableStaticBitmap.getUnderlyingBitmap());
-
-    roundedBitmapDrawable.setCircle(true);
-
-    if (borderOptions != null) {
-      roundedBitmapDrawable.setBorder(borderOptions.color, borderOptions.width);
-    }
-    return roundedBitmapDrawable;
-  }
-
-  protected Drawable roundedCornerDrawableWithBorder(
-      CloseableStaticBitmap closeableStaticBitmap,
-      @Nullable BorderOptions borderOptions,
-      @Nullable RoundingOptions roundingOptions) {
-    RoundedBitmapDrawable roundedBitmapDrawable =
-        new RoundedBitmapDrawable(mResources, closeableStaticBitmap.getUnderlyingBitmap());
-    if (roundingOptions != null) {
-      float[] radii = roundingOptions.getCornerRadii();
-      if (radii != null) {
-        roundedBitmapDrawable.setRadii(radii);
-      } else {
-        roundedBitmapDrawable.setRadius(roundingOptions.getCornerRadius());
-      }
-    }
-    if (borderOptions != null) {
-      roundedBitmapDrawable.setBorder(borderOptions.color, borderOptions.width);
-      roundedBitmapDrawable.setPadding(borderOptions.padding);
-    }
-    return roundedBitmapDrawable;
-  }
-
-  protected Drawable squareDrawableWithBorder(
-      CloseableStaticBitmap closeableStaticBitmap, BorderOptions borderOptions) {
-    // We use the same rounded corner drawable to draw the border without applying rounding
-    return roundedCornerDrawableWithBorder(closeableStaticBitmap, borderOptions, null);
+    return rotatedDrawable(
+        closeableStaticBitmap,
+        mRoundingUtils.roundedDrawable(
+            mResources,
+            closeableStaticBitmap.getUnderlyingBitmap(),
+            borderOptions,
+            roundingOptions));
   }
 
   protected Drawable rotatedDrawable(

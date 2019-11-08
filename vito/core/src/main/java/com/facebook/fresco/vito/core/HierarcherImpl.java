@@ -15,8 +15,11 @@ import androidx.annotation.Nullable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.drawable.ForwardingDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
+import com.facebook.fresco.vito.drawable.RoundingUtils;
 import com.facebook.fresco.vito.drawable.VitoDrawableFactory;
+import com.facebook.fresco.vito.options.BorderOptions;
 import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.options.RoundingOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 
@@ -24,9 +27,11 @@ public class HierarcherImpl implements Hierarcher {
   private static final Drawable NOP_DRAWABLE = NopDrawable.INSTANCE;
 
   private final VitoDrawableFactory mDrawableFactory;
+  private final RoundingUtils mRoundingUtils;
 
   public HierarcherImpl(VitoDrawableFactory drawableFactory) {
     mDrawableFactory = drawableFactory;
+    mRoundingUtils = new RoundingUtils();
   }
 
   @Override
@@ -42,6 +47,9 @@ public class HierarcherImpl implements Hierarcher {
       if (placeholderDrawable == null) {
         return NOP_DRAWABLE;
       }
+      if (imageOptions.getPlaceholderApplyRoundingOptions()) {
+        placeholderDrawable = applyRoundingOptions(resources, placeholderDrawable, imageOptions);
+      }
       if (imageOptions.getPlaceholderScaleType() != null) {
         return new ScaleTypeDrawable(placeholderDrawable, imageOptions.getPlaceholderScaleType());
       }
@@ -51,6 +59,15 @@ public class HierarcherImpl implements Hierarcher {
         FrescoSystrace.endSection();
       }
     }
+  }
+
+  protected Drawable applyRoundingOptions(
+      Resources resources, Drawable placeholderDrawable, ImageOptions imageOptions) {
+    RoundingOptions roundingOptions = imageOptions.getRoundingOptions();
+    BorderOptions borderOptions = imageOptions.getBorderOptions();
+
+    return mRoundingUtils.roundedDrawable(
+        resources, placeholderDrawable, borderOptions, roundingOptions);
   }
 
   @Override

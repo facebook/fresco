@@ -48,6 +48,7 @@ public class ImageOptions extends DecodedImageOptions {
   private final @Nullable Drawable mPlaceholderDrawable;
   private final @Nullable ScalingUtils.ScaleType mPlaceholderScaleType;
   private final @Nullable PointF mPlaceholderFocusPoint;
+  private final boolean mPlaceholderApplyRoundingOptions;
 
   // Progress bar
   private final @DrawableRes int mProgressRes;
@@ -77,6 +78,7 @@ public class ImageOptions extends DecodedImageOptions {
     mPlaceholderDrawable = builder.mPlaceholderDrawable;
     mPlaceholderScaleType = builder.mPlaceholderScaleType;
     mPlaceholderFocusPoint = builder.mPlaceholderFocusPoint;
+    mPlaceholderApplyRoundingOptions = builder.mPlaceholderApplyRoundingOptions;
 
     mErrorRes = builder.mErrorRes;
     mErrorScaleType = builder.mErrorScaleType;
@@ -111,6 +113,10 @@ public class ImageOptions extends DecodedImageOptions {
 
   public @Nullable PointF getPlaceholderFocusPoint() {
     return mPlaceholderFocusPoint;
+  }
+
+  public boolean getPlaceholderApplyRoundingOptions() {
+    return mPlaceholderApplyRoundingOptions;
   }
 
   public @DrawableRes int getErrorRes() {
@@ -237,6 +243,7 @@ public class ImageOptions extends DecodedImageOptions {
     private @Nullable Drawable mPlaceholderDrawable;
     private @Nullable ScalingUtils.ScaleType mPlaceholderScaleType;
     private @Nullable PointF mPlaceholderFocusPoint;
+    private boolean mPlaceholderApplyRoundingOptions;
 
     private @DrawableRes int mProgressRes;
     private @Nullable Drawable mProgressDrawable;
@@ -318,6 +325,11 @@ public class ImageOptions extends DecodedImageOptions {
 
     public Builder placeholderFocusPoint(@Nullable PointF placeholderFocusPoint) {
       mPlaceholderFocusPoint = placeholderFocusPoint;
+      return getThis();
+    }
+
+    public Builder placeholderApplyRoundingOptions(boolean placeholderApplyRoundingOptions) {
+      mPlaceholderApplyRoundingOptions = placeholderApplyRoundingOptions;
       return getThis();
     }
 

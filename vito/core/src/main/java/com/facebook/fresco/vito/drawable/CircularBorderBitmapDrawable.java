@@ -56,6 +56,10 @@ public class CircularBorderBitmapDrawable extends BitmapDrawable {
     }
   }
 
+  public @Nullable BorderOptions getBorder() {
+    return mBorderOptions;
+  }
+
   @Override
   public void setAlpha(int alpha) {
     super.setAlpha(alpha);

@@ -14,14 +14,20 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
+import com.facebook.drawee.drawable.RoundedBitmapDrawable;
+import com.facebook.drawee.drawable.RoundedColorDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.fresco.vito.drawable.VitoDrawableFactory;
 import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.options.RoundingOptions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +40,7 @@ public class HierarcherImplTest {
   private static final int INVALID_RES_ID = 999;
 
   private Resources mResources;
+  private DisplayMetrics mDisplayMetrics;
   private Drawable mDrawable;
 
   private Hierarcher mHierarcher;
@@ -45,6 +52,8 @@ public class HierarcherImplTest {
     mResources = mock(Resources.class);
     mDrawable = mock(Drawable.class);
     mVitoDrawableFactory = mock(VitoDrawableFactory.class);
+    mDisplayMetrics = new DisplayMetrics();
+    when(mResources.getDisplayMetrics()).thenReturn(mDisplayMetrics);
     when(mResources.getDrawable(eq(RES_ID))).thenReturn(mDrawable);
     when(mResources.getDrawable(not(eq(RES_ID)))).thenThrow(new Resources.NotFoundException());
 
@@ -92,6 +101,66 @@ public class HierarcherImplTest {
 
     assertThat(result).isExactlyInstanceOf(ScaleTypeDrawable.class);
     assertThat(result.getCurrent()).isEqualTo(expected);
+  }
+
+  @Test
+  public void testApplyRoundingOptions_whenRoundAsCircle_thenReturnDrawable() {
+    final Drawable drawable = new ColorDrawable(Color.YELLOW);
+    when(mResources.getDrawable(RES_ID)).thenReturn(drawable);
+
+    ImageOptions options = mock(ImageOptions.class);
+    when(options.getRoundingOptions()).thenReturn(RoundingOptions.asCircle());
+    when(options.getPlaceholderDrawable()).thenReturn(drawable);
+    when(options.getPlaceholderApplyRoundingOptions()).thenReturn(true);
+
+    Drawable result = mHierarcher.buildPlaceholderDrawable(mResources, options);
+
+    assertThat(result).isExactlyInstanceOf(RoundedColorDrawable.class);
+
+    when(options.getPlaceholderDrawable()).thenReturn(null);
+    when(options.getPlaceholderRes()).thenReturn(RES_ID);
+
+    result = mHierarcher.buildPlaceholderDrawable(mResources, options);
+
+    assertThat(result).isExactlyInstanceOf(RoundedColorDrawable.class);
+  }
+
+  @Test
+  public void testApplyRoundingOptions_whenRoundWithCornerRadius_thenReturnDrawable() {
+    final BitmapDrawable drawable = mock(BitmapDrawable.class);
+    final Bitmap bitmap = mock(Bitmap.class);
+    when(drawable.getBitmap()).thenReturn(bitmap);
+
+    ImageOptions options = mock(ImageOptions.class);
+    when(options.getRoundingOptions()).thenReturn(RoundingOptions.forCornerRadiusPx(123));
+    when(options.getPlaceholderDrawable()).thenReturn(drawable);
+    when(options.getPlaceholderApplyRoundingOptions()).thenReturn(true);
+
+    Drawable result = mHierarcher.buildPlaceholderDrawable(mResources, options);
+
+    assertThat(result).isNotNull();
+    assertThat(result).isInstanceOf(RoundedBitmapDrawable.class);
+    assertThat(((RoundedBitmapDrawable) result).getRadii())
+        .isEqualTo(new float[] {123, 123, 123, 123, 123, 123, 123, 123});
+  }
+
+  @Test
+  public void testApplyRoundingOptions_whenRoundWithCornerRadii_thenReturnDrawable() {
+    final BitmapDrawable drawable = mock(BitmapDrawable.class);
+    final Bitmap bitmap = mock(Bitmap.class);
+    when(drawable.getBitmap()).thenReturn(bitmap);
+
+    ImageOptions options = mock(ImageOptions.class);
+    when(options.getRoundingOptions()).thenReturn(RoundingOptions.forCornerRadii(1, 2, 3, 4));
+    when(options.getPlaceholderDrawable()).thenReturn(drawable);
+    when(options.getPlaceholderApplyRoundingOptions()).thenReturn(true);
+
+    Drawable result = mHierarcher.buildPlaceholderDrawable(mResources, options);
+
+    assertThat(result).isNotNull();
+    assertThat(result).isInstanceOf(RoundedBitmapDrawable.class);
+    assertThat(((RoundedBitmapDrawable) result).getRadii())
+        .isEqualTo(new float[] {1, 1, 2, 2, 3, 3, 4, 4});
   }
 
   @Test
