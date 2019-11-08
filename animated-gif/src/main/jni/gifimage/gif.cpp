@@ -69,8 +69,7 @@ public:
       std::shared_ptr<DataWrapper>& pData) :
           m_spGifFile(std::move(pGifFile)),
           m_spData(pData),
-          m_reservedBufferSize(m_spGifFile->SWidth * m_spGifFile->SHeight) {
-    m_rasterBits.reserve(m_reservedBufferSize);
+          m_rasterBits(m_spGifFile->SWidth * m_spGifFile->SHeight) {
   }
 
   virtual ~GifWrapper() {
@@ -105,15 +104,12 @@ public:
     return m_rasterBits.data();
   }
 
-  size_t getRasterBitsSize() {
-    return m_rasterBits.size();
+  size_t getRasterBitsCapacity() {
+    return m_rasterBits.capacity();
   }
 
-  void reserveRasterBuffer(size_t bufferSize) {
-    if (m_reservedBufferSize < bufferSize) {
-      m_rasterBits.reserve(bufferSize);
-      m_reservedBufferSize = bufferSize;
-    }
+  void resizeRasterBuffer(size_t bufferSize) {
+    m_rasterBits.resize(bufferSize);
   }
 
   std::mutex& getRasterMutex() {
@@ -131,7 +127,6 @@ private:
   std::vector<int> m_vectorFrameByteOffsets;
   std::vector<uint8_t> m_rasterBits;
   std::mutex m_rasterMutex;
-  size_t m_reservedBufferSize;
 };
 
 /**
@@ -338,7 +333,7 @@ int readSingleFrame(
   if (decodeFramePixels) {
     // Reserve larger raster bits buffer if needed
     size_t imageSize = pSavedImage->ImageDesc.Width * pSavedImage->ImageDesc.Height;
-    pGifWrapper->reserveRasterBuffer(imageSize);
+    pGifWrapper->resizeRasterBuffer(imageSize);
 
     // Decode frame image and save it to temporary raster bits buffer
     uint8_t* pRasterBits = pGifWrapper->getRasterBits();
@@ -942,7 +937,7 @@ jint GifImage_nativeGetSizeInBytes(JNIEnv* pEnv, jobject thiz) {
   // This is an approximate amount based on the data buffer and the saved images
   int size = 0;
   size += spNativeContext->spGifWrapper->getData()->getBufferSize();
-  size += spNativeContext->spGifWrapper->getRasterBitsSize();
+  size += spNativeContext->spGifWrapper->getRasterBitsCapacity();
   return size;
 }
 
