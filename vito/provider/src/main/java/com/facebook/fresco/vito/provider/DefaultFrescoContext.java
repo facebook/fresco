@@ -66,6 +66,7 @@ public class DefaultFrescoContext {
         actualFrescoExperiments,
         UiThreadImmediateExecutorService.getInstance(),
         null,
+        null,
         sDebugOverlayEnabledSupplier == null
             ? new NoOpDebugOverlayFactory()
             : new DefaultDebugOverlayFactory(sDebugOverlayEnabledSupplier));

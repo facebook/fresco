@@ -61,6 +61,7 @@ public class FrescoContextTest {
             mFrescoExperiments,
             mUiThreadExecutor,
             mImageListener,
+            null,
             new NoOpDebugOverlayFactory());
   }
 

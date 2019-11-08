@@ -38,6 +38,7 @@ public class FrescoContext {
   private final @Nullable CallerContextVerifier mCallerContextVerifier;
   private final FrescoExperiments mExperiments;
   private final @Nullable ImageListener mGlobalImageListener;
+  private final @Nullable ImageStateListener mGlobalImageStateListener;
   private final Hierarcher mHierarcher;
   private final Executor mUiThreadExecutor;
 
@@ -54,13 +55,15 @@ public class FrescoContext {
       @Nullable CallerContextVerifier callerContextVerifier,
       FrescoExperiments frescoExperiments,
       Executor uiThreadExecutor,
-      @Nullable ImageListener globalImageListener) {
+      @Nullable ImageListener globalImageListener,
+      @Nullable ImageStateListener globalImageStateListener) {
     mController = controller;
     mHierarcher = hierarcher;
     mCallerContextVerifier = callerContextVerifier;
     mExperiments = frescoExperiments;
     mUiThreadExecutor = uiThreadExecutor;
     mGlobalImageListener = globalImageListener;
+    mGlobalImageStateListener = globalImageStateListener;
   }
 
   public FrescoContext(
@@ -69,6 +72,7 @@ public class FrescoContext {
       FrescoExperiments frescoExperiments,
       Executor uiThreadExecutor,
       @Nullable ImageListener globalImageListener,
+      @Nullable ImageStateListener globalImageStateListener,
       DebugOverlayFactory debugOverlayFactory) {
     mController = new FrescoControllerImpl(this, debugOverlayFactory);
     mHierarcher = hierarcher;
@@ -76,6 +80,7 @@ public class FrescoContext {
     mExperiments = frescoExperiments;
     mUiThreadExecutor = uiThreadExecutor;
     mGlobalImageListener = globalImageListener;
+    mGlobalImageStateListener = globalImageStateListener;
   }
 
   public ImagePipelineFactory getImagePipelineFactory() {
@@ -108,6 +113,10 @@ public class FrescoContext {
   @Nullable
   public ImageListener getGlobalImageListener() {
     return mGlobalImageListener;
+  }
+
+  public ImageStateListener getGlobalImageStateListener() {
+    return mGlobalImageStateListener;
   }
 
   public FrescoVitoPrefetcher getPrefetcher() {

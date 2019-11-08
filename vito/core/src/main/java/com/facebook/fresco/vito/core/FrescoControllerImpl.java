@@ -120,7 +120,8 @@ public class FrescoControllerImpl implements FrescoController {
               imageListener,
               new ForwardingImageListener(
                   mFrescoContext.getGlobalImageListener(),
-                  imageOptions.shouldAutoPlay() ? AutoPlayImageListener.getInstance() : null));
+                  imageOptions.shouldAutoPlay() ? AutoPlayImageListener.getInstance() : null),
+              mFrescoContext.getGlobalImageStateListener());
       if (frescoExperiments.prepareActualImageWrapperInBackground()) {
         prepareActualImageInBackground(frescoState);
       }
