@@ -327,7 +327,8 @@ public class FrescoControllerImpl implements FrescoController {
           FrescoSystrace.beginSection("FrescoControllerImpl#onAttach->fetch");
         }
         try {
-          if (mFrescoContext.getExperiments().fireOffRequestInBackground() && mFrescoContext.getLightweightBackgroundThreadExecutor() != null) {
+          if (mFrescoContext.getExperiments().fireOffRequestInBackground()
+              && mFrescoContext.getLightweightBackgroundThreadExecutor() != null) {
             Runnable fetchRunnable =
                 new Runnable() {
                   @Override
