@@ -130,12 +130,12 @@ public class FrescoState
   }
 
   @UiThread
-  public boolean isAttached() {
+  public synchronized boolean isAttached() {
     return mIsAttached;
   }
 
   @UiThread
-  public void setAttached(boolean isAttached) {
+  public synchronized void setAttached(boolean isAttached) {
     mIsAttached = isAttached;
   }
 

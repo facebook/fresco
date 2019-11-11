@@ -111,4 +111,8 @@ public class FrescoExperiments {
   public boolean useFastNativeRounding() {
     return false;
   }
+
+  public boolean fireOffRequestInBackground() {
+    return true;
+  }
 }

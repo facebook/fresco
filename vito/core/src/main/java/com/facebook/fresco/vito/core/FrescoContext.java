@@ -41,6 +41,7 @@ public class FrescoContext {
   private final @Nullable ImageStateListener mGlobalImageStateListener;
   private final Hierarcher mHierarcher;
   private final Executor mUiThreadExecutor;
+  private final Executor mLightweightBackgroundThreadExecutor;
 
   private FrescoController mController;
   private FrescoVitoPrefetcher mPrefetcher;
@@ -55,6 +56,7 @@ public class FrescoContext {
       @Nullable CallerContextVerifier callerContextVerifier,
       FrescoExperiments frescoExperiments,
       Executor uiThreadExecutor,
+      Executor lightweightBackgroundThreadExecutor,
       @Nullable ImageListener globalImageListener,
       @Nullable ImageStateListener globalImageStateListener) {
     mController = controller;
@@ -63,6 +65,7 @@ public class FrescoContext {
     mExperiments = frescoExperiments;
     mUiThreadExecutor = uiThreadExecutor;
     mGlobalImageListener = globalImageListener;
+    mLightweightBackgroundThreadExecutor = lightweightBackgroundThreadExecutor;
     mGlobalImageStateListener = globalImageStateListener;
   }
 
@@ -71,6 +74,7 @@ public class FrescoContext {
       @Nullable CallerContextVerifier callerContextVerifier,
       FrescoExperiments frescoExperiments,
       Executor uiThreadExecutor,
+      Executor lightweightBackgroundThreadExecutor,
       @Nullable ImageListener globalImageListener,
       @Nullable ImageStateListener globalImageStateListener,
       DebugOverlayFactory debugOverlayFactory) {
@@ -81,6 +85,7 @@ public class FrescoContext {
     mUiThreadExecutor = uiThreadExecutor;
     mGlobalImageListener = globalImageListener;
     mGlobalImageStateListener = globalImageStateListener;
+    mLightweightBackgroundThreadExecutor = lightweightBackgroundThreadExecutor;
   }
 
   public ImagePipelineFactory getImagePipelineFactory() {
@@ -246,6 +251,10 @@ public class FrescoContext {
 
   public Executor getUiThreadExecutorService() {
     return mUiThreadExecutor;
+  }
+
+  public Executor getLightweightBackgroundThreadExecutor() {
+    return mLightweightBackgroundThreadExecutor;
   }
 
   public void setController(FrescoController controller) {

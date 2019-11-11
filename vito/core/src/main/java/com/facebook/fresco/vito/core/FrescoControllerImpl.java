@@ -218,7 +218,7 @@ public class FrescoControllerImpl implements FrescoController {
   }
 
   @Override
-  public void onAttach(FrescoState frescoState, @Nullable ImageListener imageListener) {
+  public void onAttach(final FrescoState frescoState, @Nullable ImageListener imageListener) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("FrescoControllerImpl#onAttach");
     }
@@ -327,24 +327,42 @@ public class FrescoControllerImpl implements FrescoController {
           FrescoSystrace.beginSection("FrescoControllerImpl#onAttach->fetch");
         }
         try {
-          DataSource<CloseableReference<CloseableImage>> dataSource;
-          if (frescoState.getUri() != null) {
-            dataSource = fireOffRequest(frescoState);
+          if (mFrescoContext.getExperiments().fireOffRequestInBackground() && mFrescoContext.getLightweightBackgroundThreadExecutor() != null) {
+            Runnable fetchRunnable =
+                new Runnable() {
+                  @Override
+                  public void run() {
+                    // If the runnable is executed after the image has been detached, we don't do
+                    // anything.
+                    if (!frescoState.isAttached()) {
+                      return;
+                    }
+                    if (FrescoSystrace.isTracing()) {
+                      FrescoSystrace.beginSection("FrescoControllerImpl#onAttach->fetchRunnable");
+                    }
+                    try {
+                      DataSource<CloseableReference<CloseableImage>> dataSource =
+                          createDataSource(frescoState);
+                      dataSource.subscribe(
+                          frescoState, mFrescoContext.getUiThreadExecutorService());
+                      if (experiments.keepRefToMainFetchDatasouce()) {
+                        frescoState.setMainFetchDatasource(dataSource);
+                      }
+                    } finally {
+                      if (FrescoSystrace.isTracing()) {
+                        FrescoSystrace.endSection();
+                      }
+                    }
+                  }
+                };
+            mFrescoContext.getLightweightBackgroundThreadExecutor().execute(fetchRunnable);
           } else {
-            dataSource =
-                MultiUri.getMultiUriDatasourceSupplier(
-                        mFrescoContext.getImagePipeline(),
-                        frescoState.getMultiUri(),
-                        frescoState.getImageRequest(),
-                        frescoState.getCallerContext(),
-                        frescoState.getRequestListener(),
-                        frescoState.getStringId())
-                    .get();
-          }
-          // multiUri is not set
-          dataSource.subscribe(frescoState, mFrescoContext.getUiThreadExecutorService());
-          if (experiments.keepRefToMainFetchDatasouce()) {
-            frescoState.setMainFetchDatasource(dataSource);
+            DataSource<CloseableReference<CloseableImage>> dataSource =
+                createDataSource(frescoState);
+            dataSource.subscribe(frescoState, mFrescoContext.getUiThreadExecutorService());
+            if (experiments.keepRefToMainFetchDatasouce()) {
+              frescoState.setMainFetchDatasource(dataSource);
+            }
           }
         } finally {
           if (FrescoSystrace.isTracing()) {
@@ -356,6 +374,21 @@ public class FrescoControllerImpl implements FrescoController {
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.endSection();
       }
+    }
+  }
+
+  private DataSource<CloseableReference<CloseableImage>> createDataSource(FrescoState frescoState) {
+    if (frescoState.getUri() != null) {
+      return fireOffRequest(frescoState);
+    } else {
+      return MultiUri.getMultiUriDatasourceSupplier(
+              mFrescoContext.getImagePipeline(),
+              frescoState.getMultiUri(),
+              frescoState.getImageRequest(),
+              frescoState.getCallerContext(),
+              frescoState.getRequestListener(),
+              frescoState.getStringId())
+          .get();
     }
   }
 

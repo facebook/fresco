@@ -35,6 +35,7 @@ import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import java.util.concurrent.Executor;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,6 +61,7 @@ public class FrescoControllerImplTest {
   private Resources mResources;
   private ImageOptions mImageOptions;
   private Drawable mOverlayDrawable;
+  private Executor mLightweightBackgroundThreadExecutor;
 
   private FrescoControllerImpl mFrescoController;
 
@@ -73,12 +75,21 @@ public class FrescoControllerImplTest {
     mResources = mock(Resources.class);
     mImageOptions = mock(ImageOptions.class);
     mOverlayDrawable = mock(Drawable.class);
+    mLightweightBackgroundThreadExecutor =
+        new Executor() {
+          @Override
+          public void execute(Runnable command) {
+            command.run();
+          }
+        };
 
     mFrescoExperiments = new FrescoExperiments();
 
     when(mFrescoContext.getHierarcher()).thenReturn(mHierarcher);
     when(mFrescoContext.getExperiments()).thenReturn(mFrescoExperiments);
     when(mFrescoContext.getImagePipeline()).thenReturn(mImagePipeline);
+    when(mFrescoContext.getLightweightBackgroundThreadExecutor())
+        .thenReturn(mLightweightBackgroundThreadExecutor);
 
     when(mFrescoState.getId()).thenReturn(IMAGE_ID);
     when(mFrescoState.getStringId()).thenReturn(IMAGE_ID_STRING);
@@ -87,6 +98,7 @@ public class FrescoControllerImplTest {
     when(mFrescoState.getResources()).thenReturn(mResources);
     when(mFrescoState.getImageOptions()).thenReturn(mImageOptions);
     when(mFrescoState.getOverlayDrawable()).thenReturn(mOverlayDrawable);
+    when(mFrescoState.isAttached()).thenReturn(true);
 
     mFrescoController = new FrescoControllerImpl(mFrescoContext, new NoOpDebugOverlayFactory());
   }

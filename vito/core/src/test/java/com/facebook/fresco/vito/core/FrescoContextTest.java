@@ -43,6 +43,7 @@ public class FrescoContextTest {
   private FrescoExperiments mFrescoExperiments;
   private ImageListener mImageListener;
   private Executor mUiThreadExecutor;
+  private Executor mBackgroundThreadExecutor;
 
   private FrescoContext mFrescoContext;
 
@@ -53,6 +54,7 @@ public class FrescoContextTest {
     mFrescoExperiments = mock(FrescoExperiments.class);
     mImageListener = mock(ImageListener.class);
     mUiThreadExecutor = mock(Executor.class);
+    mBackgroundThreadExecutor = mock(Executor.class);
 
     mFrescoContext =
         new FrescoContext(
@@ -60,6 +62,7 @@ public class FrescoContextTest {
             mCallerContextVerifier,
             mFrescoExperiments,
             mUiThreadExecutor,
+            mBackgroundThreadExecutor,
             mImageListener,
             null,
             new NoOpDebugOverlayFactory());

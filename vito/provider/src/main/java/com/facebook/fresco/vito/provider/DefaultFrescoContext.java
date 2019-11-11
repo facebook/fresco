@@ -65,6 +65,7 @@ public class DefaultFrescoContext {
         new NoOpCallerContextVerifier(),
         actualFrescoExperiments,
         UiThreadImmediateExecutorService.getInstance(),
+        Fresco.getImagePipeline().getConfig().getExecutorSupplier().forLightweightBackgroundTasks(),
         null,
         null,
         sDebugOverlayEnabledSupplier == null
