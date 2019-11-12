@@ -7,9 +7,6 @@
 
 apply plugin: 'com.android.library'
 
-project.group = GROUP
-version = VERSION_NAME
-
 dependencies {
   implementation "com.android.volley:volley:${VOLLEY_VERSION}"
 

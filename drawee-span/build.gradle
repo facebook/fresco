@@ -8,9 +8,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
-project.group = GROUP
-version = VERSION_NAME
-
 dependencies {
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
 

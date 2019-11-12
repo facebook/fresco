@@ -8,9 +8,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
-project.group = GROUP
-version = VERSION_NAME
-
 dependencies {
     compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
     compileOnly "androidx.legacy:legacy-support-core-utils:${versions.androidx.legacy_support_core_utils}"

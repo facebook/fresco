@@ -8,9 +8,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
-project.group = GROUP
-version = VERSION_NAME
-
 dependencies {
     implementation project(':fbcore')
     implementation project(':imagepipeline')
