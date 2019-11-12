@@ -47,6 +47,13 @@ public class DefaultFrescoContext {
     set(createDefaultContext(resources, frescoExperiments));
   }
 
+  /**
+   * Shut down the default Fresco context if no longer needed or if it needs to be re-initialized.
+   */
+  public static synchronized void shutdown() {
+    sInstance = null;
+  }
+
   public static synchronized void setDebugOverlayEnabledSupplier(
       @Nullable Supplier<Boolean> debugOverlayEnabledSupplier) {
     sDebugOverlayEnabledSupplier = debugOverlayEnabledSupplier;
