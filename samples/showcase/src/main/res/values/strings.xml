@@ -268,5 +268,8 @@
   <string name="vito_view_view_recycler">Vito Recycler</string>
   <string name="vito_view_prefetch">Vito Prefetch</string>
   <string name="vito_view_prefetch_title">Prefetch to cache:</string>
-  <string name="use_vito">Use Fresco Vito</string>
+  <string name="vito_view_ktx">Vito View Kotlin Extensions</string>
+  <string name="vito_view_ktx_help">Vito View Kotlin Extensions examples</string>
+
+  <string name="use_vito">Use Vito</string>
 </resources>

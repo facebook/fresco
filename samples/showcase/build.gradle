@@ -120,6 +120,7 @@ dependencies {
 
     // Experimental Fresco Vito
     implementation project(':vito:core')
+    implementation project(':vito:ktx')
     implementation project(':vito:litho')
     implementation project(':vito:options')
     implementation project(':vito:provider')

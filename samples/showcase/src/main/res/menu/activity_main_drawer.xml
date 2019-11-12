@@ -173,6 +173,10 @@
             android:id="@+id/nav_vito_view_prefetch"
             android:title="@string/vito_view_prefetch"
             />
+        <item
+            android:id="@+id/nav_vito_view_ktx"
+            android:title="@string/vito_view_ktx"
+            />
       </group>
     </menu>
   </item>

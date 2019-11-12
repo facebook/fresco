@@ -57,6 +57,7 @@ import com.facebook.fresco.samples.showcase.vito.FrescoVitoLithoImageOptionsConf
 import com.facebook.fresco.samples.showcase.vito.FrescoVitoLithoRegionDecodeFragment;
 import com.facebook.fresco.samples.showcase.vito.FrescoVitoLithoSectionsFragment;
 import com.facebook.fresco.samples.showcase.vito.FrescoVitoLithoSimpleFragment;
+import com.facebook.fresco.samples.showcase.vito.VitoViewKtxFragment;
 import com.facebook.fresco.samples.showcase.vito.VitoViewPrefetchFragment;
 import com.facebook.fresco.samples.showcase.vito.VitoViewRecyclerFragment;
 import com.facebook.fresco.samples.showcase.vito.VitoViewSimpleFragment;
@@ -266,6 +267,9 @@ public class MainActivity extends AppCompatActivity
         break;
       case R.id.nav_vito_view_prefetch:
         fragment = new VitoViewPrefetchFragment();
+        break;
+      case R.id.nav_vito_view_ktx:
+        fragment = new VitoViewKtxFragment();
         break;
 
         // More
