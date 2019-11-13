@@ -8,6 +8,7 @@
 package com.facebook.common.references;
 
 import android.graphics.Bitmap;
+import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
@@ -229,5 +230,11 @@ public class SharedReference<T> {
     public NullReferenceException() {
       super("Null shared reference");
     }
+  }
+
+  public static String reportData() {
+    return Objects.toStringHelper("SharedReference")
+        .add("live_objects_count", sLiveObjects.size())
+        .toString();
   }
 }

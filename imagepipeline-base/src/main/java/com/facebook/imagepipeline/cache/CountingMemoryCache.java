@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.cache;
 
 import android.graphics.Bitmap;
 import android.os.SystemClock;
+import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Predicate;
 import com.facebook.common.internal.Supplier;
@@ -514,5 +515,12 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
   /** Gets the total size in bytes of the exclusively owned items. */
   public synchronized int getEvictionQueueSizeInBytes() {
     return mExclusiveEntries.getSizeInBytes();
+  }
+
+  public String reportData() {
+    return Objects.toStringHelper("CountingMemoryCache")
+        .add("cached_entries_count:", mCachedEntries.getCount())
+        .add("exclusive_entries_count", mExclusiveEntries.getCount())
+        .toString();
   }
 }

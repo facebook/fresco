@@ -13,6 +13,7 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.cache.disk.FileCache;
 import com.facebook.common.internal.AndroidPredicates;
+import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.PooledByteBuffer;
@@ -418,5 +419,13 @@ public class ImagePipelineFactory {
       }
     }
     return mImageTranscoderFactory;
+  }
+
+  @Nullable
+  public String reportData() {
+    return Objects.toStringHelper("ImagePipelineFactory")
+        .add("bitmapCountingMemoryCache", mBitmapCountingMemoryCache.reportData())
+        .add("encodedCountingMemoryCache", mEncodedCountingMemoryCache.reportData())
+        .toString();
   }
 }
