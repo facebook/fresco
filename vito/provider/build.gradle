@@ -8,6 +8,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
+apply from: rootProject.file('release.gradle')
+
 dependencies {
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
