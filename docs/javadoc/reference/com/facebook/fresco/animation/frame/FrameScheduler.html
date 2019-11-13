@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="selected api apilevel-">
   <a href="../../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -474,8 +482,7 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Frame scheduler used to calculate which frame to display for given animation times.
-</p>
+<p>Frame scheduler used to calculate which frame to display for given animation times. </p>
 
 
 
@@ -570,8 +577,8 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../../com/facebook/fresco/animation/frame/FrameScheduler.html#getFrameNumberToRender(long, long)">getFrameNumberToRender</a></span>(long animationTimeMs, long lastFrameTimeMs)
         
-        <div class="jd-descrdiv">Get the frame number for the given animation time or <code><a href="../../../../../com/facebook/fresco/animation/frame/FrameScheduler.html#FRAME_NUMBER_DONE">FRAME_NUMBER_DONE</a></code>
- if the animation is over.</div>
+        <div class="jd-descrdiv">Get the frame number for the given animation time or <code><a href="../../../../../com/facebook/fresco/animation/frame/FrameScheduler.html#FRAME_NUMBER_DONE">FRAME_NUMBER_DONE</a></code> if the
+ animation is over.</div>
   
   </td></tr>
 
@@ -806,8 +813,8 @@ Summary:
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Get the frame number for the given animation time or <code><a href="../../../../../com/facebook/fresco/animation/frame/FrameScheduler.html#FRAME_NUMBER_DONE">FRAME_NUMBER_DONE</a></code>
- if the animation is over.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Get the frame number for the given animation time or <code><a href="../../../../../com/facebook/fresco/animation/frame/FrameScheduler.html#FRAME_NUMBER_DONE">FRAME_NUMBER_DONE</a></code> if the
+ animation is over.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -892,8 +899,8 @@ Summary:
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>For a given animation time, calculate the target render time for the next frame in ms.
- If the animation is over, this will return <code><a href="../../../../../com/facebook/fresco/animation/frame/FrameScheduler.html#NO_NEXT_TARGET_RENDER_TIME">NO_NEXT_TARGET_RENDER_TIME</a></code></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>For a given animation time, calculate the target render time for the next frame in ms. If the
+ animation is over, this will return <code><a href="../../../../../com/facebook/fresco/animation/frame/FrameScheduler.html#NO_NEXT_TARGET_RENDER_TIME">NO_NEXT_TARGET_RENDER_TIME</a></code></p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -906,7 +913,7 @@ Summary:
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>the target animation time in ms for the next frame after the given animation time or
-         <code><a href="../../../../../com/facebook/fresco/animation/frame/FrameScheduler.html#NO_NEXT_TARGET_RENDER_TIME">NO_NEXT_TARGET_RENDER_TIME</a></code> if the animation is over
+     <code><a href="../../../../../com/facebook/fresco/animation/frame/FrameScheduler.html#NO_NEXT_TARGET_RENDER_TIME">NO_NEXT_TARGET_RENDER_TIME</a></code> if the animation is over
 </li></ul>
   </div>
 
@@ -987,8 +994,7 @@ Summary:
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>true if the animation is infinite
-</li></ul>
+      <ul class="nolist"><li>true if the animation is infinite </li></ul>
   </div>
 
     </div>

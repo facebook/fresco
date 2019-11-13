@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -522,8 +530,7 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Scale type that interpolates transform of the two underlying scale types.
-</p>
+<p>Scale type that interpolates transform of the two underlying scale types. </p>
 
 
 
@@ -680,8 +687,30 @@ Summary:
           static
           final
           <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#FIT_X">FIT_X</a></td>
+          <td class="jd-descrcol" width="100%">Scales the child so that the child's width fits exactly.</td>
+      </tr>
+      
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          public
+          static
+          final
+          <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></td>
           <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#FIT_XY">FIT_XY</a></td>
           <td class="jd-descrcol" width="100%">Scales width and height independently, so that the child matches the parent exactly.</td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
+          public
+          static
+          final
+          <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#FIT_Y">FIT_Y</a></td>
+          <td class="jd-descrcol" width="100%">Scales the child so that the child's height fits exactly.</td>
       </tr>
       
     
@@ -1718,8 +1747,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the interpolating value.
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the interpolating value. </p></div>
 
     </div>
 </div>
@@ -1752,9 +1780,9 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Sets the interpolating value.
 
- Value of 0.0 will produce the transform same as ScaleTypeFrom.
- Value of 1.0 will produce the transform same as ScaleTypeTo.
- Inbetween values will produce a transform that is a linear combination between the two.
+ <p>Value of 0.0 will produce the transform same as ScaleTypeFrom. Value of 1.0 will produce
+ the transform same as ScaleTypeTo. Inbetween values will produce a transform that is a linear
+ combination between the two.
 </p></div>
 
     </div>

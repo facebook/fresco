@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -486,8 +494,7 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Builder class for <code><a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a></code>s.
-</p>
+<p>Builder class for <code><a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a></code>s. </p>
 
 
 
@@ -1835,8 +1842,7 @@ From class
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>the additional request listener to use for this image request
-</li></ul>
+      <ul class="nolist"><li>the additional request listener to use for this image request </li></ul>
   </div>
 
     </div>
@@ -2151,13 +2157,13 @@ From class
 
  <p>Only image resources can be used with the image pipeline (PNG, JPG, GIF). Other resource
  types such as Strings or XML Drawables make no sense in the context of the image pipeline and
- so cannot be supported. Attempts to do so will throw an
- java.lang.IllegalArgumentException when the pipeline tries to decode the resource.
+ so cannot be supported. Attempts to do so will throw an java.lang.IllegalArgumentException when the pipeline tries to decode the resource.
 
  <p>One potentially confusing case is drawable declared in XML (e.g. ShapeDrawable). This is not
  an image. If you want to display an XML drawable as the main image, then set it as a
  placeholder and do not set a URI.
- <p/></p></div>
+
+ <p></p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -2291,7 +2297,7 @@ From class
  only used if <code><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.html#isPartialImageCachingEnabled()">isPartialImageCachingEnabled()</a></code> is true and your
  <code><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a></code> makes use of it.
 
- <p> Even where this is supported, there is no contract that this must be followed. The response
+ <p>Even where this is supported, there is no contract that this must be followed. The response
  may contain the full image data, more than is requested or less, depending on what's already in
  cache and external factors.</p></div>
   <div class="jd-tagdata">
@@ -2338,8 +2344,8 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Sets the cache option. Pipeline might use different caches and eviction policies for each
- image type.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Sets the cache option. Pipeline might use different caches and eviction policies for each image
+ type.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -2584,7 +2590,7 @@ From class
         <tr>
           <th>requestListener</th>
           <td>a request listener to use in addition to the global ones set in the
- <code><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.html">ImagePipelineConfig</a></code></td>
+     <code><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.html">ImagePipelineConfig</a></code></td>
         </tr>
       </table>
   </div>
@@ -2814,8 +2820,8 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Sets the source uri (both network and local uris are supported).
- Note: this will enable disk caching for network sources, and disable it for local sources.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Sets the source uri (both network and local uris are supported). Note: this will enable disk
+ caching for network sources, and disable it for local sources.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">

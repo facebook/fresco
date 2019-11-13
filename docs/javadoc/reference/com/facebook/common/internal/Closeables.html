@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -574,8 +582,8 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/internal/Closeables.html#closeQuietly(java.io.InputStream)">closeQuietly</a></span>(InputStream inputStream)
         
-        <div class="jd-descrdiv">Closes the given InputStream, logging any <code>IOException</code> that's thrown rather
- than propagating it.</div>
+        <div class="jd-descrdiv">Closes the given InputStream, logging any <code>IOException</code> that's thrown rather than
+ propagating it.</div>
   
   </td></tr>
 
@@ -889,17 +897,20 @@ From class
  <p>If <code>swallowIOException</code> is true then we never throw <code>IOException</code> but merely log
  it.
 
- <p>Example: <pre>   <code>public void useStreamNicely() throws IOException {
-     SomeStream stream = new SomeStream("foo");
-     boolean threw = true;
-     try {
-       // ... code which does something with the stream ...
-       threw = false;
-     </code> finally {
-       // If an exception occurs, rethrow it only if threw==false:
-       Closeables.close(stream, threw);
-     }
-   }}</pre></p></div>
+ <p>Example:
+
+ <pre><code>public void useStreamNicely() throws IOException {
+   SomeStream stream = new SomeStream("foo");
+   boolean threw = true;
+   try {
+     // ... code which does something with the stream ...
+     threw = false;
+   </code> finally {
+     // If an exception occurs, rethrow it only if threw==false:
+     Closeables.close(stream, threw);
+   }
+ }
+ }</pre></p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -920,8 +931,7 @@ From class
       <table class="jd-tagtable">  
         <tr>
             <th>IOException</td>
-            <td>if <code>swallowIOException</code> is false and <code>close</code> throws an
-     <code>IOException</code>.
+            <td>if <code>swallowIOException</code> is false and <code>close</code> throws an <code>IOException</code>.
 </td>
         </tr>
       </table>
@@ -956,14 +966,14 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Closes the given InputStream, logging any <code>IOException</code> that's thrown rather
- than propagating it.
+  <div class="jd-tagdata jd-tagdescr"><p>Closes the given InputStream, logging any <code>IOException</code> that's thrown rather than
+ propagating it.
 
- <p>While it's not safe in the general case to ignore exceptions that are thrown when closing
- an I/O resource, it should generally be safe in the case of a resource that's being used only
- for reading, such as an <code>InputStream</code>. Unlike with writable resources, there's no
- chance that a failure that occurs when closing the stream indicates a meaningful problem such
- as a failure to flush all bytes to the underlying resource.</p></div>
+ <p>While it's not safe in the general case to ignore exceptions that are thrown when closing an
+ I/O resource, it should generally be safe in the case of a resource that's being used only for
+ reading, such as an <code>InputStream</code>. Unlike with writable resources, there's no chance that
+ a failure that occurs when closing the stream indicates a meaningful problem such as a failure
+ to flush all bytes to the underlying resource.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1007,11 +1017,11 @@ From class
   <div class="jd-tagdata jd-tagdescr"><p>Closes the given Reader, logging any <code>IOException</code> that's thrown rather than
  propagating it.
 
- <p>While it's not safe in the general case to ignore exceptions that are thrown when closing
- an I/O resource, it should generally be safe in the case of a resource that's being used only
- for reading, such as a <code>Reader</code>. Unlike with writable resources, there's no chance that
- a failure that occurs when closing the reader indicates a meaningful problem such as a failure
- to flush all bytes to the underlying resource.</p></div>
+ <p>While it's not safe in the general case to ignore exceptions that are thrown when closing an
+ I/O resource, it should generally be safe in the case of a resource that's being used only for
+ reading, such as a <code>Reader</code>. Unlike with writable resources, there's no chance that a
+ failure that occurs when closing the reader indicates a meaningful problem such as a failure to
+ flush all bytes to the underlying resource.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">

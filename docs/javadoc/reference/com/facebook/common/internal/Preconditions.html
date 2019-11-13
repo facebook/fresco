@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -489,19 +497,22 @@ Summary:
  <code>boolean</code> expression which is expected to be <code>true</code> (or in the case of <code>checkNotNull</code>, an object reference which is expected to be non-null). When <code>false</code> (or
  <code>null</code>) is passed instead, the <code>Preconditions</code> method throws an unchecked exception,
  which helps the calling method communicate to <i>its</i> caller that <i>that</i> caller has made
- a mistake. Example: <pre>   <code>/**
-    * Returns the positive square root of the given value.
-    *
-    * @throws IllegalArgumentException if the value is negative
-    *</code><code>/
-   public static double sqrt(double value) {
-     Preconditions.checkArgument(value &gt;= 0.0, "negative value: %s", value);
-     // calculate the square root
-   </code>
+ a mistake. Example:
 
-   void exampleBadCaller() {
-     double d = sqrt(-1.0);
-   }}</pre>
+ <pre><code>/**
+  * Returns the positive square root of the given value.
+  *
+  * @throws IllegalArgumentException if the value is negative
+  *</code><code>/
+ public static double sqrt(double value) {
+   Preconditions.checkArgument(value &gt;= 0.0, "negative value: %s", value);
+   // calculate the square root
+ </code>
+
+ void exampleBadCaller() {
+   double d = sqrt(-1.0);
+ }
+ }</pre>
 
  In this example, <code>checkArgument</code> throws an <code>IllegalArgumentException</code> to indicate
  that <code>exampleBadCaller</code> made an error in <i>its</i> call to <code>sqrt</code>.
@@ -514,9 +525,11 @@ Summary:
  when the precondition check then succeeds (as it should almost always do in production). In some
  circumstances these wasted CPU cycles and allocations can add up to a real problem.
  Performance-sensitive precondition checks can always be converted to the customary form:
- <pre>   <code>if (value &lt; 0.0) {
-     throw new IllegalArgumentException("negative value: " + value);
-   </code>}</pre>
+
+ <pre><code>if (value &lt; 0.0) {
+   throw new IllegalArgumentException("negative value: " + value);
+ </code>
+ }</pre>
 
  <h3>Other types of preconditions</h3>
 
@@ -527,8 +540,8 @@ Summary:
 
  <p>It is of course possible to use the methods of this class to check for invalid conditions
  which are <i>not the caller's fault</i>. Doing so is <b>not recommended</b> because it is
- misleading to future readers of the code and of stack traces. See
- <a href="http://code.google.com/p/guava-libraries/wiki/ConditionalFailuresExplained">Conditional
+ misleading to future readers of the code and of stack traces. See <a
+ href="http://code.google.com/p/guava-libraries/wiki/ConditionalFailuresExplained">Conditional
  failures explained</a> in the Guava User Guide for more advice.
 
  <h3><code>java.util.Objects.requireNonNull()</code></h3>
@@ -546,8 +559,8 @@ Summary:
 
  <h3>More information</h3>
 
- <p>See the Guava User Guide on
- <a href="http://code.google.com/p/guava-libraries/wiki/PreconditionsExplained">using <code>Preconditions</code></a>.</p>
+ <p>See the Guava User Guide on <a
+ href="http://code.google.com/p/guava-libraries/wiki/PreconditionsExplained">using <code>Preconditions</code></a>.</p>
 
 
 
@@ -1161,8 +1174,8 @@ From class
           <th>errorMessageTemplate</th>
           <td>a template for the exception message should the check fail. The
      message is formed by replacing each <code>%s</code> placeholder in the template with an
-     argument. These are matched by position - the first <code>%s</code> gets <code>errorMessageArgs[0]</code>, etc.  Unmatched arguments will be appended to the formatted message
-     in square braces. Unmatched placeholders will be left as-is.</td>
+     argument. These are matched by position - the first <code>%s</code> gets <code>errorMessageArgs[0]</code>, etc. Unmatched arguments will be appended to the formatted message in
+     square braces. Unmatched placeholders will be left as-is.</td>
         </tr>
         <tr>
           <th>errorMessageArgs</th>
@@ -1522,8 +1535,8 @@ From class
           <th>errorMessageTemplate</th>
           <td>a template for the exception message should the check fail. The
      message is formed by replacing each <code>%s</code> placeholder in the template with an
-     argument. These are matched by position - the first <code>%s</code> gets <code>errorMessageArgs[0]</code>, etc.  Unmatched arguments will be appended to the formatted message
-     in square braces. Unmatched placeholders will be left as-is.</td>
+     argument. These are matched by position - the first <code>%s</code> gets <code>errorMessageArgs[0]</code>, etc. Unmatched arguments will be appended to the formatted message in
+     square braces. Unmatched placeholders will be left as-is.</td>
         </tr>
         <tr>
           <th>errorMessageArgs</th>
@@ -1894,8 +1907,8 @@ From class
           <th>errorMessageTemplate</th>
           <td>a template for the exception message should the check fail. The
      message is formed by replacing each <code>%s</code> placeholder in the template with an
-     argument. These are matched by position - the first <code>%s</code> gets <code>errorMessageArgs[0]</code>, etc.  Unmatched arguments will be appended to the formatted message
-     in square braces. Unmatched placeholders will be left as-is.</td>
+     argument. These are matched by position - the first <code>%s</code> gets <code>errorMessageArgs[0]</code>, etc. Unmatched arguments will be appended to the formatted message in
+     square braces. Unmatched placeholders will be left as-is.</td>
         </tr>
         <tr>
           <th>errorMessageArgs</th>

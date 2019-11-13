@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="selected api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -497,13 +505,13 @@ Summary:
 <h2>Class Overview</h2>
 <p>A cache key that wraps multiple cache keys.
 
- Note: <code>equals</code> and <code>hashcode</code> are implemented in a way that two MultiCacheKeys are
+ <p>Note: <code>equals</code> and <code>hashcode</code> are implemented in a way that two MultiCacheKeys are
  equal if and only if the underlying list of cache keys is equal. That implies AllOf semantics.
  Unfortunately, it is not possible to implement AnyOf semantics for <code>equals</code> because the
- transitivity requirement wouldn't be satisfied. I.e. we would have:
- {A} = {A, B}, {A, B} = {B}, but {A} != {B}.
+ transitivity requirement wouldn't be satisfied. I.e. we would have: {A} = {A, B}, {A, B} = {B},
+ but {A} != {B}.
 
- It is fine to use this key with AnyOf semantics, but one should be aware of <code>equals</code> and
+ <p>It is fine to use this key with AnyOf semantics, but one should be aware of <code>equals</code> and
  <code>hashcode</code> behavior, and should implement AnyOf logic manually.
 </p>
 
@@ -1128,7 +1136,7 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Returns true if this key was constructed from this Uri.
 
- Used for cases like deleting all keys for a given uri.
+ <p>Used for cases like deleting all keys for a given uri.
 </p></div>
 
     </div>

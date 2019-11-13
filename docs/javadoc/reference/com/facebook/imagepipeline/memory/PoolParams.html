@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -283,6 +289,8 @@
     <li class="selected api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/platform/package-summary.html">com.facebook.imagepipeline.platform</a></li>
@@ -320,6 +328,8 @@
               
     <li><h2>Classes</h2>
       <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/AshmemMemoryChunk.html">AshmemMemoryChunk</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/AshmemMemoryChunkPool.html">AshmemMemoryChunkPool</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.html">BasePool</a>&lt;V&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BitmapCounter.html">BitmapCounter</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BitmapCounterConfig.html">BitmapCounterConfig</a></li>
@@ -335,6 +345,7 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DefaultFlexByteArrayPoolParams.html">DefaultFlexByteArrayPoolParams</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DefaultNativeMemoryChunkPoolParams.html">DefaultNativeMemoryChunkPoolParams</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DummyBitmapPool.html">DummyBitmapPool</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DummyTrackingInUseBitmapPool.html">DummyTrackingInUseBitmapPool</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/FlexByteArrayPool.html">FlexByteArrayPool</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/GenericByteArrayPool.html">GenericByteArrayPool</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/LruBitmapPool.html">LruBitmapPool</a></li>
@@ -517,35 +528,29 @@ Summary:
 
 <h2>Class Overview</h2>
 <p>Config parameters for pools (<code><a href="../../../../com/facebook/imagepipeline/memory/BasePool.html">BasePool</a></code>. Supplied via a provider.
- <p>
- <code><a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html#maxSizeSoftCap">maxSizeSoftCap</a></code>
- This represents a soft cap on the size of the pool. When the pool size hits this limit, the pool
- tries to trim its free space until either the pool size is below the soft cap, or the
- free space is zero.
- Note that allocations will not fail because we have exceeded the soft cap
- <p>
- <code><a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html#maxSizeHardCap">maxSizeHardCap</a></code>
- The hard cap represents a hard cap on the size of the pool. When the pool size exceeds this cap,
- allocations will start failing with a <code><a href="../../../../com/facebook/imagepipeline/memory/BasePool.PoolSizeViolationException.html">BasePool.PoolSizeViolationException</a></code>
- <p>
- <code><a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html#bucketSizes">bucketSizes</a></code>
- The pool can be configured with a set of 'sizes' - a bucket is created for each such size.
- Additionally, each bucket can have a a max-length specified, which is the sum of the used and
- free items in that bucket. As with the MaxSize parameter above, the maxLength here is a soft
- cap, in that it will not cause an exception on get; it simply controls the release path
- When the bucket sizes are specified upfront, the pool may still get requests for non standard
- sizes. Such cases are treated as plain alloc/free calls i.e. the values are not maintained in
- the pool.
- If this parameter is null, then the pool will create buckets on demand
- <p>
- <code><a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html#minBucketSize">minBucketSize</a></code>
- This represents the minimum size of the buckets in the pool. This assures that all buckets can
- hold any element larger or equal to this size.
- <p>
- <code><a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html#maxBucketSize">maxBucketSize</a></code>
- This represents the maximum size of the buckets in the pool. This restricts all buckets to only
- accept elements smaller or equal to this size. If this size is exceeded, an exception will be
- thrown.
+
+ <p><code><a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html#maxSizeSoftCap">maxSizeSoftCap</a></code> This represents a soft cap on the size of the pool. When the pool size
+ hits this limit, the pool tries to trim its free space until either the pool size is below the
+ soft cap, or the free space is zero. Note that allocations will not fail because we have exceeded
+ the soft cap
+
+ <p><code><a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html#maxSizeHardCap">maxSizeHardCap</a></code> The hard cap represents a hard cap on the size of the pool. When the
+ pool size exceeds this cap, allocations will start failing with a <code><a href="../../../../com/facebook/imagepipeline/memory/BasePool.PoolSizeViolationException.html">BasePool.PoolSizeViolationException</a></code>
+
+ <p><code><a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html#bucketSizes">bucketSizes</a></code> The pool can be configured with a set of 'sizes' - a bucket is created
+ for each such size. Additionally, each bucket can have a a max-length specified, which is the sum
+ of the used and free items in that bucket. As with the MaxSize parameter above, the maxLength
+ here is a soft cap, in that it will not cause an exception on get; it simply controls the release
+ path When the bucket sizes are specified upfront, the pool may still get requests for non
+ standard sizes. Such cases are treated as plain alloc/free calls i.e. the values are not
+ maintained in the pool. If this parameter is null, then the pool will create buckets on demand
+
+ <p><code><a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html#minBucketSize">minBucketSize</a></code> This represents the minimum size of the buckets in the pool. This
+ assures that all buckets can hold any element larger or equal to this size.
+
+ <p><code><a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html#maxBucketSize">maxBucketSize</a></code> This represents the maximum size of the buckets in the pool. This
+ restricts all buckets to only accept elements smaller or equal to this size. If this size is
+ exceeded, an exception will be thrown.
 </p>
 
 

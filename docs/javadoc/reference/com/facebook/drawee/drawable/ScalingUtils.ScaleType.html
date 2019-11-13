@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -511,10 +519,11 @@ Summary:
 
 <h2>Class Overview</h2>
 <p>Options for scaling the child bounds to the parent bounds.
- <p>
- Similar to android.widget.ImageView.ScaleType, but ScaleType.MATRIX is not supported.
- To use matrix scaling, use a <code><a href="../../../../com/facebook/drawee/drawable/MatrixDrawable.html">MatrixDrawable</a></code>. An additional scale type (FOCUS_CROP) is
- provided.
+
+ <p>Similar to android.widget.ImageView.ScaleType, but ScaleType.MATRIX is not
+ supported. To use matrix scaling, use a <code><a href="../../../../com/facebook/drawee/drawable/MatrixDrawable.html">MatrixDrawable</a></code>. An additional scale type
+ (FOCUS_CROP) is provided.
+
  <p>
 </p>
 
@@ -650,8 +659,30 @@ Summary:
           static
           final
           <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#FIT_X">FIT_X</a></td>
+          <td class="jd-descrcol" width="100%">Scales the child so that the child's width fits exactly.</td>
+      </tr>
+      
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          public
+          static
+          final
+          <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></td>
           <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#FIT_XY">FIT_XY</a></td>
           <td class="jd-descrcol" width="100%">Scales width and height independently, so that the child matches the parent exactly.</td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
+          public
+          static
+          final
+          <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#FIT_Y">FIT_Y</a></td>
+          <td class="jd-descrcol" width="100%">Scales the child so that the child's height fits exactly.</td>
       </tr>
       
     
@@ -969,6 +1000,39 @@ Summary:
 
 
 
+<a id="FIT_X"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a>
+      </span>
+        FIT_X
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Scales the child so that the child's width fits exactly. The height will be cropped if it
+ exceeds parent's bounds. Aspect ratio is preserved. Child is centered within the parent's
+ bounds.
+</p></div>
+
+    
+    </div>
+</div>
+
+
+
 <a id="FIT_XY"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -993,6 +1057,39 @@ Summary:
       
   <div class="jd-tagdata jd-tagdescr"><p>Scales width and height independently, so that the child matches the parent exactly. This may
  change the aspect ratio of the child.
+</p></div>
+
+    
+    </div>
+</div>
+
+
+
+<a id="FIT_Y"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a>
+      </span>
+        FIT_Y
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Scales the child so that the child's height fits exactly. The width will be cropped if it
+ exceeds parent's bounds. Aspect ratio is preserved. Child is centered within the parent's
+ bounds.
 </p></div>
 
     

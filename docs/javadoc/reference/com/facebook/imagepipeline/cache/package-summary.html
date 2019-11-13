@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -283,6 +289,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/platform/package-summary.html">com.facebook.imagepipeline.platform</a></li>
@@ -313,10 +321,10 @@
     <li><h2>Interfaces</h2>
       <ul>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a></li>
-        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</li>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.CacheTrimStrategy.html">MemoryCache.CacheTrimStrategy</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html">MemoryCacheTracker</a>&lt;K&gt;</li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ValueDescriptor.html">ValueDescriptor</a>&lt;V&gt;</li>
       </ul>
@@ -402,8 +410,7 @@
 
 
   <div class="jd-descr">
-    Memory cache implementations for image pipeline.
-
+    Memory cache implementations for image pipeline. 
   </div>
 
 
@@ -420,20 +427,20 @@
               <td class="jd-descrcol" width="100%">Factory methods for creating cache keys for the pipeline.&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a></td>
-              <td class="jd-descrcol" width="100%">Interface used to specify the trimming strategy for the cache.&nbsp;</td>
-          </tr>
-        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</td>
               <td class="jd-descrcol" width="100%">Interface used to observe the state changes of an entry.&nbsp;</td>
           </tr>
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></td>
               <td class="jd-descrcol" width="100%">Interface for stats tracking for the image cache.&nbsp;</td>
           </tr>
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</td>
               <td class="jd-descrcol" width="100%">Interface for the image pipeline memory cache.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.CacheTrimStrategy.html">MemoryCache.CacheTrimStrategy</a></td>
+              <td class="jd-descrcol" width="100%">Interface used to specify the trimming strategy for the cache.&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html">MemoryCacheTracker</a>&lt;K&gt;</td>
@@ -463,8 +470,7 @@
           </tr>
         <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html">BitmapMemoryCacheKey</a></td>
-              <td class="jd-descrcol" width="100%">Cache key for BitmapMemoryCache
-&nbsp;</td>
+              <td class="jd-descrcol" width="100%">Cache key for BitmapMemoryCache &nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheTrimStrategy.html">BitmapMemoryCacheTrimStrategy</a></td>
@@ -493,8 +499,7 @@
           </tr>
         <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/DefaultEncodedMemoryCacheParamsSupplier.html">DefaultEncodedMemoryCacheParamsSupplier</a></td>
-              <td class="jd-descrcol" width="100%">Supplies <code><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a></code> for the encoded image memory cache
-&nbsp;</td>
+              <td class="jd-descrcol" width="100%">Supplies <code><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a></code> for the encoded image memory cache &nbsp;</td>
           </tr>
         <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/EncodedCountingMemoryCacheFactory.html">EncodedCountingMemoryCacheFactory</a></td>
@@ -519,8 +524,7 @@
           </tr>
         <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html">NoOpImageCacheStatsTracker</a></td>
-              <td class="jd-descrcol" width="100%">Class that does no stats tracking at all
-&nbsp;</td>
+              <td class="jd-descrcol" width="100%">Class that does no stats tracking at all &nbsp;</td>
           </tr>
         <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/StagingArea.html">StagingArea</a></td>

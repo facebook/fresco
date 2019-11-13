@@ -57,7 +57,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  CountingMemoryCache.CacheTrimStrategy - Fresco API
+  CloseableReferenceFactory - Fresco API
 
 
 | Fresco
@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -260,11 +266,11 @@
   <a href="../../../../com/facebook/imagepipeline/backends/volley/package-summary.html">com.facebook.imagepipeline.backends.volley</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/bitmaps/package-summary.html">com.facebook.imagepipeline.bitmaps</a></li>
-    <li class="selected api apilevel-">
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/cache/package-summary.html">com.facebook.imagepipeline.cache</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/common/package-summary.html">com.facebook.imagepipeline.common</a></li>
-    <li class="api apilevel-">
+    <li class="selected api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/core/package-summary.html">com.facebook.imagepipeline.core</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/datasource/package-summary.html">com.facebook.imagepipeline.datasource</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -312,38 +320,40 @@
               
     <li><h2>Interfaces</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a></li>
-          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html">MemoryCacheTracker</a>&lt;K&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ValueDescriptor.html">ValueDescriptor</a>&lt;V&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/DiskStorageFactory.html">DiskStorageFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ExecutorSupplier.html">ExecutorSupplier</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/FileCacheFactory.html">FileCacheFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.ProducerFactoryMethod.html">ImagePipelineExperiments.ProducerFactoryMethod</a></li>
       </ul>
     </li>
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapCountingMemoryCacheFactory.html">BitmapCountingMemoryCacheFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheFactory.html">BitmapMemoryCacheFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html">BitmapMemoryCacheKey</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheTrimStrategy.html">BitmapMemoryCacheTrimStrategy</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingLruMap.html">CountingLruMap</a>&lt;K,&nbsp;V&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;K,&nbsp;V&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/DefaultBitmapMemoryCacheParamsSupplier.html">DefaultBitmapMemoryCacheParamsSupplier</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/DefaultCacheKeyFactory.html">DefaultCacheKeyFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/DefaultEncodedMemoryCacheParamsSupplier.html">DefaultEncodedMemoryCacheParamsSupplier</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/EncodedCountingMemoryCacheFactory.html">EncodedCountingMemoryCacheFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/EncodedMemoryCacheFactory.html">EncodedMemoryCacheFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/InstrumentedMemoryCache.html">InstrumentedMemoryCache</a>&lt;K,&nbsp;V&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NativeMemoryCacheTrimStrategy.html">NativeMemoryCacheTrimStrategy</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html">NoOpImageCacheStatsTracker</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/StagingArea.html">StagingArea</a></li>
+          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/CloseableReferenceFactory.html">CloseableReferenceFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/DefaultExecutorSupplier.html">DefaultExecutorSupplier</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/DiskStorageCacheFactory.html">DiskStorageCacheFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/DynamicDefaultDiskStorageFactory.html">DynamicDefaultDiskStorageFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html">ImagePipeline</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.html">ImagePipelineConfig</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.DefaultImageRequestConfig.html">ImagePipelineConfig.DefaultImageRequestConfig</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.html">ImagePipelineExperiments</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html">ImagePipelineExperiments.Builder</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.DefaultProducerFactoryMethod.html">ImagePipelineExperiments.DefaultProducerFactoryMethod</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html">ImagePipelineFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/NativeCodeSetup.html">NativeCodeSetup</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/PriorityThreadFactory.html">PriorityThreadFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ProducerFactory.html">ProducerFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ProducerSequenceFactory.html">ProducerSequenceFactory</a></li>
       </ul>
     </li>
               
+    <li><h2>Annotations</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImageTranscoderType.html">ImageTranscoderType</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/MemoryChunkType.html">MemoryChunkType</a></li>
+      </ul>
+    </li>
               
               
               
@@ -384,6 +394,13 @@
 
 
 
+  
+   
+  
+  
+  
+  
+
 
 <div class="sum-details-links">
 
@@ -398,12 +415,17 @@ Summary:
 
 
 
-
-
-  <a href="#pubmethods">Methods</a>
+  <a href="#pubctors">Ctors</a>
   
 
 
+
+  &#124; <a href="#pubmethods">Methods</a>
+  
+
+
+
+  &#124; <a href="#inhmethods">Inherited Methods</a>
 
 &#124; <a href="#" onclick="return toggleAllClassInherited()" id="toggleAllClassInherited">[Expand All]</a>
 
@@ -423,13 +445,19 @@ Summary:
 
 <div id="jd-header">
     public
-    static 
+     
      
     
-    interface
-<h1>CountingMemoryCache.CacheTrimStrategy</h1>
+    class
+<h1>CloseableReferenceFactory</h1>
 
 
+
+  
+    extends Object<br/>
+  
+  
+  
 
   
   
@@ -446,7 +474,15 @@ Summary:
 
     <tr>
          	
-        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.cache.CountingMemoryCache.CacheTrimStrategy</td>
+        <td colspan="2" class="jd-inheritance-class-cell">java.lang.Object</td>
+    </tr>
+    
+
+    <tr>
+        
+            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
+         	
+        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.core.CloseableReferenceFactory</td>
     </tr>
     
 
@@ -457,51 +493,9 @@ Summary:
 
 
 
-<table class="jd-sumtable jd-sumtable-subclasses"><tr><td colspan="12" style="border:none;margin:0;padding:0;">
-
-  <a href="#" onclick="return toggleInherited(this, null)" id="subclasses-indirect" class="jd-expando-trigger closed"
-          ><img id="subclasses-indirect-trigger"
-          src="../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>Known Indirect Subclasses
-
-  <div id="subclasses-indirect">
-      <div id="subclasses-indirect-list"
-              class="jd-inheritedlinks"
-              
-              >
-          
-            
-              <a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheTrimStrategy.html">BitmapMemoryCacheTrimStrategy</a>,
-            
-              <a href="../../../../com/facebook/imagepipeline/cache/NativeMemoryCacheTrimStrategy.html">NativeMemoryCacheTrimStrategy</a>
-            
-          
-      </div>
-      <div id="subclasses-indirect-summary"
-              style="display: none;"
-              >
-  <table class="jd-sumtable-expando">
-        <tr class="alt-color api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheTrimStrategy.html">BitmapMemoryCacheTrimStrategy</a></td>
-              <td class="jd-descrcol" width="100%">CountingMemoryCache eviction strategy appropriate for bitmap caches.&nbsp;</td>
-          </tr>
-        <tr class=" api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/NativeMemoryCacheTrimStrategy.html">NativeMemoryCacheTrimStrategy</a></td>
-              <td class="jd-descrcol" width="100%">CountingMemoryCache eviction strategy appropriate for caches that store resources off the Dalvik
- heap.&nbsp;</td>
-          </tr>
-  </table>
-      </div>
-  </div>
-</td></tr></table>
-
 
 <div class="jd-descr">
 
-
-<h2>Class Overview</h2>
-<p>Interface used to specify the trimming strategy for the cache.
-</p>
 
 
 
@@ -551,6 +545,31 @@ Summary:
 
 
 
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<table id="pubctors" class="jd-sumtable"><tr><th colspan="12">Public Constructors</th></tr>
+
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/CloseableReferenceFactory.html#CloseableReferenceFactory(com.facebook.imagepipeline.debug.CloseableReferenceLeakTracker)">CloseableReferenceFactory</a></span>(<a href="../../../../com/facebook/imagepipeline/debug/CloseableReferenceLeakTracker.html">CloseableReferenceLeakTracker</a> closeableReferenceLeakTracker)
+        
+  </td></tr>
+
+
+
+</table>
+
+
 
 
 
@@ -563,15 +582,31 @@ Summary:
 	 
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
-            abstract
             
             
             
             
-            double
+            &lt;T&gt;
+            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html#getTrimRatio(com.facebook.common.memory.MemoryTrimType)">getTrimRatio</a></span>(<a href="../../../../com/facebook/common/memory/MemoryTrimType.html">MemoryTrimType</a> trimType)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/CloseableReferenceFactory.html#create(T, com.facebook.common.references.ResourceReleaser<T>)">create</a></span>(T t, <a href="../../../../com/facebook/common/references/ResourceReleaser.html">ResourceReleaser</a>&lt;T&gt; resourceReleaser)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            &lt;U&nbsp;extends&nbsp;Closeable&gt;
+            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;U&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/CloseableReferenceFactory.html#create(U)">create</a></span>(U u)
         
   </td></tr>
 
@@ -583,6 +618,216 @@ Summary:
 
 
 
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+<table id="inhmethods" class="jd-sumtable"><tr><th>
+  <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
+  <div style="clear:left;">Inherited Methods</div></th></tr>
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-java.lang.Object" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-java.lang.Object-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From class
+
+  java.lang.Object
+
+<div id="inherited-methods-java.lang.Object">
+  <div id="inherited-methods-java.lang.Object-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-java.lang.Object-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            Object
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">clone</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">equals</span>(Object arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">finalize</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            Class&lt;?&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">getClass</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            int
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">hashCode</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">notify</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">notifyAll</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            String
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">toString</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">wait</span>(long arg0, int arg1)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">wait</span>(long arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">wait</span>()
+        
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+</table>
 
 
 </div><!-- jd-descr (summary) -->
@@ -611,6 +856,44 @@ Summary:
 <!-- Public ctors -->
 
 
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<h2>Public Constructors</h2>
+
+
+
+<a id="CloseableReferenceFactory(com.facebook.imagepipeline.debug.CloseableReferenceLeakTracker)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        
+      </span>
+      <span class="sympad">CloseableReferenceFactory</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/debug/CloseableReferenceLeakTracker.html">CloseableReferenceLeakTracker</a> closeableReferenceLeakTracker)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+
+
 
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <!-- Protected ctors -->
@@ -624,7 +907,7 @@ Summary:
 
 
 
-<a id="getTrimRatio(com.facebook.common.memory.MemoryTrimType)"></a>
+<a id="create(T, com.facebook.common.references.ResourceReleaser<T>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -632,12 +915,43 @@ Summary:
         public 
          
          
-        abstract 
          
-        double
+         
+        <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt;
       </span>
-      <span class="sympad">getTrimRatio</span>
-      <span class="normal">(<a href="../../../../com/facebook/common/memory/MemoryTrimType.html">MemoryTrimType</a> trimType)</span>
+      <span class="sympad">create</span>
+      <span class="normal">(T t, <a href="../../../../com/facebook/common/references/ResourceReleaser.html">ResourceReleaser</a>&lt;T&gt; resourceReleaser)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="create(U)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;U&gt;
+      </span>
+      <span class="sympad">create</span>
+      <span class="normal">(U u)</span>
     </h4>
       <div class="api-level">
         <div>

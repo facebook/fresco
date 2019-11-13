@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -283,6 +289,8 @@
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/imagepipeline/platform/package-summary.html">com.facebook.imagepipeline.platform</a></li>
@@ -320,6 +328,7 @@
     <li><h2>Classes</h2>
       <ul>
           <li class="api apilevel-"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ForwardingImageOriginListener.html">ForwardingImageOriginListener</a></li>
+          <li class="api apilevel-"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ForwardingImagePerfDataListener.html">ForwardingImagePerfDataListener</a></li>
           <li class="api apilevel-"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageOriginRequestListener.html">ImageOriginRequestListener</a></li>
           <li class="api apilevel-"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageOriginUtils.html">ImageOriginUtils</a></li>
           <li class="api apilevel-"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfData.html">ImagePerfData</a></li>
@@ -519,40 +528,47 @@ Summary:
     
     <tr class=" api apilevel-" >
         <td class="jd-typecol">int</td>
-        <td class="jd-linkcol"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageLoadStatus.html#ERROR">ERROR</a></td>
+        <td class="jd-linkcol"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageLoadStatus.html#DRAW">DRAW</a></td>
         <td class="jd-descrcol" width="100%"></td>
     </tr>
     
     
     <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">int</td>
+        <td class="jd-linkcol"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageLoadStatus.html#ERROR">ERROR</a></td>
+        <td class="jd-descrcol" width="100%"></td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">int</td>
         <td class="jd-linkcol"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageLoadStatus.html#INTERMEDIATE_AVAILABLE">INTERMEDIATE_AVAILABLE</a></td>
         <td class="jd-descrcol" width="100%"></td>
     </tr>
     
     
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">int</td>
         <td class="jd-linkcol"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageLoadStatus.html#ORIGIN_AVAILABLE">ORIGIN_AVAILABLE</a></td>
         <td class="jd-descrcol" width="100%"></td>
     </tr>
     
     
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">int</td>
         <td class="jd-linkcol"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageLoadStatus.html#REQUESTED">REQUESTED</a></td>
         <td class="jd-descrcol" width="100%"></td>
     </tr>
     
     
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">int</td>
         <td class="jd-linkcol"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageLoadStatus.html#SUCCESS">SUCCESS</a></td>
         <td class="jd-descrcol" width="100%"></td>
     </tr>
     
     
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">int</td>
         <td class="jd-linkcol"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageLoadStatus.html#UNKNOWN">UNKNOWN</a></td>
         <td class="jd-descrcol" width="100%"></td>
@@ -737,6 +753,46 @@ From interface
             
                 4
                 (0x00000004)
+            
+        </span>
+        </div>
+    
+    </div>
+</div>
+
+
+
+<a id="DRAW"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        int
+      </span>
+        DRAW
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+        <div class="jd-tagdata">
+        <span class="jd-tagtitle">Constant Value: </span>
+        <span>
+            
+                6
+                (0x00000006)
             
         </span>
         </div>

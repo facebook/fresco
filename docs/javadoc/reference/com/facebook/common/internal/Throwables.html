@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -487,8 +495,7 @@ Summary:
 <p>Static utility methods pertaining to instances of Throwable.
 
  <p>See the Guava User Guide entry on <a href=
- "http://code.google.com/p/guava-libraries/wiki/ThrowablesExplained">
- Throwables</a>.</p>
+ "http://code.google.com/p/guava-libraries/wiki/ThrowablesExplained"> Throwables</a>.</p>
 
 
 
@@ -596,9 +603,8 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/internal/Throwables.html#getStackTraceAsString(java.lang.Throwable)">getStackTraceAsString</a></span>(Throwable throwable)
         
-        <div class="jd-descrdiv">Returns a string containing the result of
- <code><a href="null#toString()">toString()</a></code>, followed by the full, recursive
- stack trace of <code>throwable</code>.</div>
+        <div class="jd-descrdiv">Returns a string containing the result of <code><a href="null#toString()">toString()</a></code>, followed by
+ the full, recursive stack trace of <code>throwable</code>.</div>
   
   </td></tr>
 
@@ -616,9 +622,7 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/internal/Throwables.html#propagate(java.lang.Throwable)">propagate</a></span>(Throwable throwable)
         
-        <div class="jd-descrdiv">Propagates <code>throwable</code> as-is if it is an instance of
- RuntimeException or Error, or else as a last resort, wraps
- it in a <code>RuntimeException</code> then propagates.</div>
+        <div class="jd-descrdiv">Propagates <code>throwable</code> as-is if it is an instance of RuntimeException or Error, or else as a last resort, wraps it in a <code>RuntimeException</code> then propagates.</div>
   
   </td></tr>
 
@@ -636,8 +640,7 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/internal/Throwables.html#propagateIfInstanceOf(java.lang.Throwable, java.lang.Class<X>)">propagateIfInstanceOf</a></span>(Throwable throwable, Class&lt;X&gt; declaredType)
         
-        <div class="jd-descrdiv">Propagates <code>throwable</code> exactly as-is, if and only if it is an
- instance of <code>declaredType</code>.</div>
+        <div class="jd-descrdiv">Propagates <code>throwable</code> exactly as-is, if and only if it is an instance of <code>declaredType</code>.</div>
   
   </td></tr>
 
@@ -655,9 +658,7 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/internal/Throwables.html#propagateIfPossible(java.lang.Throwable, java.lang.Class<X1>, java.lang.Class<X2>)">propagateIfPossible</a></span>(Throwable throwable, Class&lt;X1&gt; declaredType1, Class&lt;X2&gt; declaredType2)
         
-        <div class="jd-descrdiv">Propagates <code>throwable</code> exactly as-is, if and only if it is an
- instance of RuntimeException, Error, <code>declaredType1</code>,
- or <code>declaredType2</code>.</div>
+        <div class="jd-descrdiv">Propagates <code>throwable</code> exactly as-is, if and only if it is an instance of RuntimeException, Error, <code>declaredType1</code>, or <code>declaredType2</code>.</div>
   
   </td></tr>
 
@@ -675,8 +676,7 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/internal/Throwables.html#propagateIfPossible(java.lang.Throwable)">propagateIfPossible</a></span>(Throwable throwable)
         
-        <div class="jd-descrdiv">Propagates <code>throwable</code> exactly as-is, if and only if it is an
- instance of RuntimeException or Error.</div>
+        <div class="jd-descrdiv">Propagates <code>throwable</code> exactly as-is, if and only if it is an instance of RuntimeException or Error.</div>
   
   </td></tr>
 
@@ -694,9 +694,7 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/internal/Throwables.html#propagateIfPossible(java.lang.Throwable, java.lang.Class<X>)">propagateIfPossible</a></span>(Throwable throwable, Class&lt;X&gt; declaredType)
         
-        <div class="jd-descrdiv">Propagates <code>throwable</code> exactly as-is, if and only if it is an
- instance of RuntimeException, Error, or
- <code>declaredType</code>.</div>
+        <div class="jd-descrdiv">Propagates <code>throwable</code> exactly as-is, if and only if it is an instance of RuntimeException, Error, or <code>declaredType</code>.</div>
   
   </td></tr>
 
@@ -984,13 +982,11 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Gets a <code>Throwable</code> cause chain as a list.  The first entry in the
- list will be <code>throwable</code> followed by its cause hierarchy.  Note
- that this is a snapshot of the cause chain and will not reflect
- any subsequent changes to the cause chain.
+  <div class="jd-tagdata jd-tagdescr"><p>Gets a <code>Throwable</code> cause chain as a list. The first entry in the list will be <code>throwable</code> followed by its cause hierarchy. Note that this is a snapshot of the cause chain and
+ will not reflect any subsequent changes to the cause chain.
 
- <p>Here's an example of how it can be used to find specific types
- of exceptions in the cause chain:
+ <p>Here's an example of how it can be used to find specific types of exceptions in the cause
+ chain:
 
  <pre>
  Iterables.filter(Throwables.getCausalChain(e), IOException.class));
@@ -1006,8 +1002,7 @@ From class
   </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>an unmodifiable list containing the cause chain starting with
-     <code>throwable</code>
+      <ul class="nolist"><li>an unmodifiable list containing the cause chain starting with <code>throwable</code>
 </li></ul>
   </div>
 
@@ -1040,9 +1035,9 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Returns the innermost cause of <code>throwable</code>. The first throwable in a
- chain provides context from when the error or exception was initially
- detected. Example usage:
+  <div class="jd-tagdata jd-tagdescr"><p>Returns the innermost cause of <code>throwable</code>. The first throwable in a chain provides
+ context from when the error or exception was initially detected. Example usage:
+
  <pre>
    assertEquals("Unable to assign a customer id",
        Throwables.getRootCause(e).getMessage());
@@ -1078,11 +1073,10 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Returns a string containing the result of
- <code><a href="null#toString()">toString()</a></code>, followed by the full, recursive
- stack trace of <code>throwable</code>. Note that you probably should not be
- parsing the resulting string; if you need programmatic access to the stack
- frames, you can call <code><a href="null#getStackTrace()">getStackTrace()</a></code>.
+  <div class="jd-tagdata jd-tagdescr"><p>Returns a string containing the result of <code><a href="null#toString()">toString()</a></code>, followed by
+ the full, recursive stack trace of <code>throwable</code>. Note that you probably should not be
+ parsing the resulting string; if you need programmatic access to the stack frames, you can call
+ <code><a href="null#getStackTrace()">getStackTrace()</a></code>.
 </p></div>
 
     </div>
@@ -1114,13 +1108,12 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Propagates <code>throwable</code> as-is if it is an instance of
- RuntimeException or Error, or else as a last resort, wraps
- it in a <code>RuntimeException</code> then propagates.
- <p>
- This method always throws an exception. The <code>RuntimeException</code> return
- type is only for client code to make Java type system happy in case a
- return value is required by the enclosing method. Example usage:
+  <div class="jd-tagdata jd-tagdescr"><p>Propagates <code>throwable</code> as-is if it is an instance of RuntimeException or Error, or else as a last resort, wraps it in a <code>RuntimeException</code> then propagates.
+
+ <p>This method always throws an exception. The <code>RuntimeException</code> return type is only for
+ client code to make Java type system happy in case a return value is required by the enclosing
+ method. Example usage:
+
  <pre>
    T doSomething() {
      try {
@@ -1143,8 +1136,8 @@ From class
   </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>nothing will ever be returned; this return type is only for your
-     convenience, as illustrated in the example above
+      <ul class="nolist"><li>nothing will ever be returned; this return type is only for your convenience, as
+     illustrated in the example above
 </li></ul>
   </div>
 
@@ -1177,8 +1170,8 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Propagates <code>throwable</code> exactly as-is, if and only if it is an
- instance of <code>declaredType</code>.  Example usage:
+  <div class="jd-tagdata jd-tagdescr"><p>Propagates <code>throwable</code> exactly as-is, if and only if it is an instance of <code>declaredType</code>. Example usage:
+
  <pre>
    try {
      someMethodThatCouldThrowAnything();
@@ -1230,11 +1223,9 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Propagates <code>throwable</code> exactly as-is, if and only if it is an
- instance of RuntimeException, Error, <code>declaredType1</code>,
- or <code>declaredType2</code>.  In the unlikely case that you have three or more
- declared checked exception types, you can handle them all by invoking these
- methods repeatedly. See usage example in <code><a href="../../../../com/facebook/common/internal/Throwables.html#propagateIfPossible(java.lang.Throwable, java.lang.Class<X>)">propagateIfPossible(Throwable, Class)</a></code>.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Propagates <code>throwable</code> exactly as-is, if and only if it is an instance of RuntimeException, Error, <code>declaredType1</code>, or <code>declaredType2</code>. In the
+ unlikely case that you have three or more declared checked exception types, you can handle them
+ all by invoking these methods repeatedly. See usage example in <code><a href="../../../../com/facebook/common/internal/Throwables.html#propagateIfPossible(java.lang.Throwable, java.lang.Class<X>)">propagateIfPossible(Throwable, Class)</a></code>.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1244,13 +1235,11 @@ From class
         </tr>
         <tr>
           <th>declaredType1</th>
-          <td>any checked exception type declared by the calling
-     method</td>
+          <td>any checked exception type declared by the calling method</td>
         </tr>
         <tr>
           <th>declaredType2</th>
-          <td>any other checked exception type declared by the
-     calling method
+          <td>any other checked exception type declared by the calling method
 </td>
         </tr>
       </table>
@@ -1298,8 +1287,8 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Propagates <code>throwable</code> exactly as-is, if and only if it is an
- instance of RuntimeException or Error.  Example usage:
+  <div class="jd-tagdata jd-tagdescr"><p>Propagates <code>throwable</code> exactly as-is, if and only if it is an instance of RuntimeException or Error. Example usage:
+
  <pre>
    try {
      someMethodThatCouldThrowAnything();
@@ -1341,9 +1330,8 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Propagates <code>throwable</code> exactly as-is, if and only if it is an
- instance of RuntimeException, Error, or
- <code>declaredType</code>. Example usage:
+  <div class="jd-tagdata jd-tagdescr"><p>Propagates <code>throwable</code> exactly as-is, if and only if it is an instance of RuntimeException, Error, or <code>declaredType</code>. Example usage:
+
  <pre>
    try {
      someMethodThatCouldThrowAnything();
@@ -1363,8 +1351,7 @@ From class
         </tr>
         <tr>
           <th>declaredType</th>
-          <td>the single checked exception type declared by the
-     calling method
+          <td>the single checked exception type declared by the calling method
 </td>
         </tr>
       </table>

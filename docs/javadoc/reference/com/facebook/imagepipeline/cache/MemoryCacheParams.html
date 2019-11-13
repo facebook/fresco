@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -283,6 +289,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/platform/package-summary.html">com.facebook.imagepipeline.platform</a></li>
@@ -313,10 +321,10 @@
     <li><h2>Interfaces</h2>
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.CacheTrimStrategy.html">MemoryCache.CacheTrimStrategy</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html">MemoryCacheTracker</a>&lt;K&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ValueDescriptor.html">ValueDescriptor</a>&lt;V&gt;</li>
       </ul>
@@ -488,8 +496,7 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Configuration for a memory cache.
-</p>
+<p>Configuration for a memory cache. </p>
 
 
 
@@ -594,6 +601,17 @@ Summary:
       </tr>
       
     
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
+          public
+          
+          final
+          long</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html#paramsCheckIntervalMs">paramsCheckIntervalMs</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
 
 </table>
 
@@ -620,6 +638,24 @@ Summary:
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html#MemoryCacheParams(int, int, int, int, int)">MemoryCacheParams</a></span>(int maxCacheSize, int maxCacheEntries, int maxEvictionQueueSize, int maxEvictionQueueEntries, int maxCacheEntrySize)
+        
+        <div class="jd-descrdiv">Pass arguments to control the cache's behavior in the constructor.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html#MemoryCacheParams(int, int, int, int, int, long)">MemoryCacheParams</a></span>(int maxCacheSize, int maxCacheEntries, int maxEvictionQueueSize, int maxEvictionQueueEntries, int maxCacheEntrySize, long paramsCheckIntervalMs)
         
         <div class="jd-descrdiv">Pass arguments to control the cache's behavior in the constructor.</div>
   
@@ -1028,6 +1064,36 @@ From class
 
 
 
+<a id="paramsCheckIntervalMs"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+        final 
+        long
+      </span>
+        paramsCheckIntervalMs
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
 
 <!-- Public ctors -->
 
@@ -1076,9 +1142,8 @@ From class
         </tr>
         <tr>
           <th>maxEvictionQueueSize</th>
-          <td>The eviction queue is an area of memory that stores items ready
-                             for eviction but have not yet been deleted. This is the maximum
-                             size of that queue in bytes.</td>
+          <td>The eviction queue is an area of memory that stores items ready for
+     eviction but have not yet been deleted. This is the maximum size of that queue in bytes.</td>
         </tr>
         <tr>
           <th>maxEvictionQueueEntries</th>
@@ -1087,6 +1152,68 @@ From class
         <tr>
           <th>maxCacheEntrySize</th>
           <td>The maximum size of a single cache entry.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="MemoryCacheParams(int, int, int, int, int, long)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        
+      </span>
+      <span class="sympad">MemoryCacheParams</span>
+      <span class="normal">(int maxCacheSize, int maxCacheEntries, int maxEvictionQueueSize, int maxEvictionQueueEntries, int maxCacheEntrySize, long paramsCheckIntervalMs)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Pass arguments to control the cache's behavior in the constructor.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>maxCacheSize</th>
+          <td>The maximum size of the cache, in bytes.</td>
+        </tr>
+        <tr>
+          <th>maxCacheEntries</th>
+          <td>The maximum number of items that can live in the cache.</td>
+        </tr>
+        <tr>
+          <th>maxEvictionQueueSize</th>
+          <td>The eviction queue is an area of memory that stores items ready for
+     eviction but have not yet been deleted. This is the maximum size of that queue in bytes.</td>
+        </tr>
+        <tr>
+          <th>maxEvictionQueueEntries</th>
+          <td>The maximum number of entries in the eviction queue.</td>
+        </tr>
+        <tr>
+          <th>maxCacheEntrySize</th>
+          <td>The maximum size of a single cache entry.</td>
+        </tr>
+        <tr>
+          <th>paramsCheckIntervalMs</th>
+          <td>Interval between checking parameters for updated values in ms.
 </td>
         </tr>
       </table>

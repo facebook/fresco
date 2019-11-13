@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -530,8 +538,7 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Base implementation for Drawee controller builders.
-</p>
+<p>Base implementation for Drawee controller builders. </p>
 
 
 
@@ -2000,8 +2007,8 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Gets the data source supplier if set.
 
- <p/>Important: this only returns the externally set data source (if any). Subclasses should
- use {#code obtainDataSourceSupplier()} to obtain a data source to be passed to the controller.
+ <p>Important: this only returns the externally set data source (if any). Subclasses should use
+ {#code obtainDataSourceSupplier()} to obtain a data source to be passed to the controller.
 </p></div>
 
     </div>
@@ -2034,8 +2041,9 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Gets the array of first-available image requests.
- <p> For performance reasons, the array is not deep-copied, but only stored by reference.
- Please don't modify.
+
+ <p>For performance reasons, the array is not deep-copied, but only stored by reference. Please
+ don't modify.
 </p></div>
 
     </div>
@@ -2410,7 +2418,7 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Sets the data source supplier to be used.
 
-  <p/> Note: This is mutually exclusive with other image request setters.
+ <p>Note: This is mutually exclusive with other image request setters.
 </p></div>
 
     </div>
@@ -2443,8 +2451,9 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Sets the array of first-available image requests that will be probed in order.
- <p> For performance reasons, the array is not deep-copied, but only stored by reference.
- Please don't modify once submitted.
+
+ <p>For performance reasons, the array is not deep-copied, but only stored by reference. Please
+ don't modify once submitted.
 </p></div>
 
     </div>
@@ -2477,15 +2486,16 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Sets the array of first-available image requests that will be probed in order.
- <p> For performance reasons, the array is not deep-copied, but only stored by reference.
- Please don't modify once submitted.</p></div>
+
+ <p>For performance reasons, the array is not deep-copied, but only stored by reference. Please
+ don't modify once submitted.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
           <th>tryCacheOnlyFirst</th>
-          <td>if set, bitmap cache only requests will be tried in order before
-    the supplied requests.
+          <td>if set, bitmap cache only requests will be tried in order before the
+     supplied requests.
 </td>
         </tr>
       </table>

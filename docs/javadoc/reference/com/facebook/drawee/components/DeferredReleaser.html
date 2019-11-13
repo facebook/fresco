@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -425,7 +433,7 @@ Summary:
     public
      
      
-    
+    abstract
     class
 <h1>DeferredReleaser</h1>
 
@@ -480,15 +488,13 @@ Summary:
  message. Although we would like for defer <code>release</code> to happen immediately after the current
  message is done, this is not guaranteed as there might be other messages after the current one,
  but before the deferred one, pending in the Looper's queue.
- <p>
- onDetach / onAttach events are used for releasing / acquiring resources. However, sometimes we
+
+ <p>onDetach / onAttach events are used for releasing / acquiring resources. However, sometimes we
  get an onDetach event followed by an onAttach event within the same loop. In order to avoid
- overaggressive resource releasing / acquiring, we defer releasing. If onAttach happens within
- the same loop, we will simply cancel corresponding deferred release, avoiding an unnecessary
- resource release / acquire cycle. If onAttach doesn't happen before the deferred message gets
- executed, the resources will be released.
- <p>
- This class is not thread-safe and should only be used from the main thread (UI thread).
+ overaggressive resource releasing / acquiring, we defer releasing. If onAttach happens within the
+ same loop, we will simply cancel corresponding deferred release, avoiding an unnecessary resource
+ release / acquire cycle. If onAttach doesn't happen before the deferred message gets executed,
+ the resources will be released.
 </p>
 
 
@@ -597,7 +603,7 @@ Summary:
 	 
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
-            
+            abstract
             
             
             
@@ -631,7 +637,7 @@ Summary:
 	 
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
-            
+            abstract
             
             
             
@@ -643,6 +649,22 @@ Summary:
         
         <div class="jd-descrdiv">Schedules deferred release.</div>
   
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/components/DeferredReleaser.html#setUseConcurrentImpl(boolean)">setUseConcurrentImpl</a></span>(boolean useConcurrentImpl)
+        
   </td></tr>
 
 
@@ -950,7 +972,7 @@ From class
         public 
          
          
-         
+        abstract 
          
         void
       </span>
@@ -1022,7 +1044,7 @@ From class
         public 
          
          
-         
+        abstract 
          
         void
       </span>
@@ -1040,9 +1062,8 @@ From class
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Schedules deferred release.
- <p>
- The object will be released after the current Looper's loop,
- unless <code>cancelDeferredRelease</code> is called before then.</p></div>
+
+ <p>The object will be released after the current Looper's loop, unless <code>cancelDeferredRelease</code> is called before then.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1053,6 +1074,37 @@ From class
         </tr>
       </table>
   </div>
+
+    </div>
+</div>
+
+
+<a id="setUseConcurrentImpl(boolean)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setUseConcurrentImpl</span>
+      <span class="normal">(boolean useConcurrentImpl)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>

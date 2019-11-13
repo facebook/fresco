@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -522,8 +530,7 @@ Summary:
           </tr>
         <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../com/facebook/imagepipeline/datasource/SettableDataSource.html">SettableDataSource</a>&lt;T&gt;</td>
-              <td class="jd-descrcol" width="100%">A <code><a href="../../../com/facebook/datasource/DataSource.html">DataSource</a></code> whose result may be set by a #set(CloseableReference<T>) or
- <code><a href="../../../com/facebook/imagepipeline/datasource/SettableDataSource.html#setException(java.lang.Throwable)">setException(Throwable)</a></code> call.&nbsp;</td>
+              <td class="jd-descrcol" width="100%">A <code><a href="../../../com/facebook/datasource/DataSource.html">DataSource</a></code> whose result may be set by a #set(CloseableReference<T>) or <code><a href="../../../com/facebook/imagepipeline/datasource/SettableDataSource.html#setException(java.lang.Throwable)">setException(Throwable)</a></code> call.&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../com/facebook/datasource/SimpleDataSource.html">SimpleDataSource</a>&lt;T&gt;</td>
@@ -584,10 +591,10 @@ Summary:
 <h2>Class Overview</h2>
 <p>An abstract implementation of <code><a href="../../../com/facebook/datasource/DataSource.html">DataSource</a></code> interface.
 
- <p> It is highly recommended that other data sources extend this class as it takes care of the
+ <p>It is highly recommended that other data sources extend this class as it takes care of the
  state, as well as of notifying listeners when the state changes.
 
- <p> Subclasses should override <code><a href="../../../com/facebook/datasource/AbstractDataSource.html#closeResult(T)">closeResult(T)</a></code> if results need clean up</p>
+ <p>Subclasses should override <code><a href="../../../com/facebook/datasource/AbstractDataSource.html#closeResult(T)">closeResult(T)</a></code> if results need clean up</p>
 
 
 
@@ -1547,14 +1554,15 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>The most recent result of the asynchronous computation.
 
- <p>The caller gains ownership of the object and is responsible for releasing it.
- Note that subsequent calls to getResult might give different results. Later results should be
- considered to be of higher quality.
+ <p>The caller gains ownership of the object and is responsible for releasing it. Note that
+ subsequent calls to getResult might give different results. Later results should be considered
+ to be of higher quality.
 
  <p>This method will return null in the following cases:
+
  <ul>
- <li>when the DataSource does not have a result (<code>hasResult</code> returns false).
- <li>when the last result produced was null.
+   <li>when the DataSource does not have a result (<code>hasResult</code> returns false).
+   <li>when the last result produced was null.
  </ul></p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
@@ -1790,9 +1798,8 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Subclasses should override this method to close the result that is not needed anymore.
 
- <p> This method is called in two cases:
- 1. to clear the result when data source gets closed
- 2. to clear the previous result when a new result is set
+ <p>This method is called in two cases: 1. to clear the result when data source gets closed 2.
+ to clear the previous result when a new result is set
 </p></div>
 
     </div>
@@ -1857,15 +1864,14 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Subclasses should invoke this method to set the failure.
 
- <p> This method will return <code>true</code> if the failure was successfully set, or
- <code>false</code> if the data source has already been set, failed or closed.
+ <p>This method will return <code>true</code> if the failure was successfully set, or <code>false</code>
+ if the data source has already been set, failed or closed.
 
- <p> If the failure was successfully set, state of the data source will be set to
- AbstractDataSource.DataSourceStatus#FAILURE.
+ <p>If the failure was successfully set, state of the data source will be set to AbstractDataSource.DataSourceStatus#FAILURE.
 
- <p> This will also notify the subscribers if the failure was successfully set.
+ <p>This will also notify the subscribers if the failure was successfully set.
 
- <p> Do NOT call this method from a synchronized block as it invokes external code of the
+ <p>Do NOT call this method from a synchronized block as it invokes external code of the
  subscribers.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
@@ -1913,12 +1919,12 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Subclasses should invoke this method to set the progress.
 
- <p> This method will return <code>true</code> if the progress was successfully set, or
- <code>false</code> if the data source has already been set, failed or closed.
+ <p>This method will return <code>true</code> if the progress was successfully set, or <code>false</code>
+ if the data source has already been set, failed or closed.
 
- <p> This will also notify the subscribers if the progress was successfully set.
+ <p>This will also notify the subscribers if the progress was successfully set.
 
- <p> Do NOT call this method from a synchronized block as it invokes external code of the
+ <p>Do NOT call this method from a synchronized block as it invokes external code of the
  subscribers.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
@@ -1966,18 +1972,18 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Subclasses should invoke this method to set the result to <code>value</code>.
 
- <p> This method will return <code>true</code> if the value was successfully set, or
- <code>false</code> if the data source has already been set, failed or closed.
+ <p>This method will return <code>true</code> if the value was successfully set, or <code>false</code> if
+ the data source has already been set, failed or closed.
 
- <p> If the value was successfully set and <code>isLast</code> is <code>true</code>, state of the
- data source will be set to AbstractDataSource.DataSourceStatus#SUCCESS.
+ <p>If the value was successfully set and <code>isLast</code> is <code>true</code>, state of the data
+ source will be set to AbstractDataSource.DataSourceStatus#SUCCESS.
 
- <p> <code><a href="../../../com/facebook/datasource/AbstractDataSource.html#closeResult(T)">closeResult(T)</a></code> will be called for the previous result if the new value was
+ <p><code><a href="../../../com/facebook/datasource/AbstractDataSource.html#closeResult(T)">closeResult(T)</a></code> will be called for the previous result if the new value was
  successfully set, OR for the new result otherwise.
 
- <p> This will also notify the subscribers if the value was successfully set.
+ <p>This will also notify the subscribers if the value was successfully set.
 
- <p> Do NOT call this method from a synchronized block as it invokes external code of the
+ <p>Do NOT call this method from a synchronized block as it invokes external code of the
  subscribers.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>

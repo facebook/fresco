@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="selected api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -1263,7 +1271,7 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Gets the cache key related to this event.
 
- <p> This should be present for all events other than eviction.
+ <p>This should be present for all events other than eviction.
 </p></div>
 
     </div>
@@ -1297,7 +1305,7 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Gets the current size limit for the cache, in bytes.
 
- <p> This is present in eviction events where the eviction is due to the need to trim for size.
+ <p>This is present in eviction events where the eviction is due to the need to trim for size.
 </p></div>
 
     </div>
@@ -1331,7 +1339,7 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Gets the total size of the resources currently in storage, in bytes.
 
- <p> This is present in write success and eviction events.
+ <p>This is present in write success and eviction events.
 </p></div>
 
     </div>
@@ -1363,8 +1371,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the reason for an item's eviction in eviction events.
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the reason for an item's eviction in eviction events. </p></div>
 
     </div>
 </div>
@@ -1395,8 +1402,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the exception which occurred to trigger a read or write exception event.
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the exception which occurred to trigger a read or write exception event. </p></div>
 
     </div>
 </div>
@@ -1429,7 +1435,7 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Gets the size of the new resource in storage, in bytes.
 
- <p> This is present in write success and eviction events.
+ <p>This is present in write success and eviction events.
 </p></div>
 
     </div>
@@ -1463,9 +1469,9 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Gets the resource ID for the cached item.
 
- <p> This is present in cache hit, write success, read and write exceptions and evictions.
+ <p>This is present in cache hit, write success, read and write exceptions and evictions.
 
- <p> It may also be present in cache miss events if an ID was found in the cache's index but the
+ <p>It may also be present in cache miss events if an ID was found in the cache's index but the
  resource wasn't then found in storage.
 </p></div>
 

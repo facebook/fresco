@@ -57,7 +57,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="../../../../../favicon.ico" />
 <title>
 
-  ExperimentalBitmapAnimationDrawableFactory.AnimationFrameCacheKey - Fresco API
+  com.facebook.fresco.ui.common - Fresco API
 
 
 | Fresco
@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -240,10 +244,12 @@
   <a href="../../../../../com/facebook/fresco/animation/drawable/package-summary.html">com.facebook.fresco.animation.drawable</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/fresco/animation/drawable/animator/package-summary.html">com.facebook.fresco.animation.drawable.animator</a></li>
-    <li class="selected api apilevel-">
+    <li class="api apilevel-">
   <a href="../../../../../com/facebook/fresco/animation/factory/package-summary.html">com.facebook.fresco.animation.factory</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
+    <li class="selected api apilevel-">
+  <a href="../../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
@@ -283,6 +289,8 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/platform/package-summary.html">com.facebook.imagepipeline.platform</a></li>
@@ -310,12 +318,15 @@
           <div id="classes-nav">
             <ul>
               
+    <li><h2>Interfaces</h2>
+      <ul>
+        <li class="api apilevel-"><a href="../../../../../com/facebook/fresco/ui/common/OnDrawControllerListener.html">OnDrawControllerListener</a>&lt;INFO&gt;</li>
+      </ul>
+    </li>
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../../com/facebook/fresco/animation/factory/AnimatedFactoryV2Impl.html">AnimatedFactoryV2Impl</a></li>
-          <li class="api apilevel-"><a href="../../../../../com/facebook/fresco/animation/factory/ExperimentalBitmapAnimationDrawableFactory.html">ExperimentalBitmapAnimationDrawableFactory</a></li>
-          <li class="selected api apilevel-"><a href="../../../../../com/facebook/fresco/animation/factory/ExperimentalBitmapAnimationDrawableFactory.AnimationFrameCacheKey.html">ExperimentalBitmapAnimationDrawableFactory.AnimationFrameCacheKey</a></li>
+        <li class="api apilevel-"><a href="../../../../../com/facebook/fresco/ui/common/DimensionsInfo.html">DimensionsInfo</a></li>
       </ul>
     </li>
               
@@ -356,52 +367,6 @@
 <div class="g-unit" id="doc-content">
 
 <div id="api-info-block">
-
-
-
-  
-   
-  
-  
-  
-  
-
-  
-   
-  
-  
-  
-  
-
-
-<div class="sum-details-links">
-
-
-Summary:
-
-
-
-
-
-
-
-
-
-  <a href="#pubctors">Ctors</a>
-  
-
-
-
-  &#124; <a href="#pubmethods">Methods</a>
-  
-
-
-
-  &#124; <a href="#inhmethods">Inherited Methods</a>
-
-&#124; <a href="#" onclick="return toggleAllClassInherited()" id="toggleAllClassInherited">[Expand All]</a>
-
-</div><!-- end sum-details-links -->
 <div class="api-level">
   
 
@@ -410,684 +375,65 @@ Summary:
   
 
 </div>
-</div><!-- end api-info-block -->
-
-
-<!-- ======== START OF CLASS DATA ======== -->
+</div>
 
 <div id="jd-header">
-    public
-    static 
-     
-    
-    class
-<h1>ExperimentalBitmapAnimationDrawableFactory.AnimationFrameCacheKey</h1>
-
-
-
-  
-    extends Object<br/>
-  
-  
-  
-
-  
-  
-      implements 
-      
-        <a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> 
-      
-  
-  
-
-
+  package
+  <h1>com.facebook.fresco.ui.common</h1>
 </div><!-- end header -->
 
 <div id="naMessage"></div>
 
 <div id="jd-content" class="api apilevel-">
-<table class="jd-inheritance-table">
 
 
-    <tr>
-         	
-        <td colspan="2" class="jd-inheritance-class-cell">java.lang.Object</td>
-    </tr>
+
+
+
+
+  
+    <h2>Interfaces</h2>
+    <div class="jd-sumtable">
     
-
-    <tr>
-        
-            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
-         	
-        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.fresco.animation.factory.ExperimentalBitmapAnimationDrawableFactory.AnimationFrameCacheKey</td>
-    </tr>
-    
-
-</table>
-
-
-
-
-
-
-
-<div class="jd-descr">
-
-
-
-
-
-
-</div><!-- jd-descr -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="jd-descr">
-
-
-<h2>Summary</h2>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- ======== CONSTRUCTOR SUMMARY ======== -->
-<table id="pubctors" class="jd-sumtable"><tr><th colspan="12">Public Constructors</th></tr>
-
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/fresco/animation/factory/ExperimentalBitmapAnimationDrawableFactory.AnimationFrameCacheKey.html#AnimationFrameCacheKey(int)">AnimationFrameCacheKey</a></span>(int imageId)
-        
-  </td></tr>
-
-
-
-</table>
-
-
-
-
-
-
-<!-- ========== METHOD SUMMARY =========== -->
-<table id="pubmethods" class="jd-sumtable"><tr><th colspan="12">Public Methods</th></tr>
-
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/fresco/animation/factory/ExperimentalBitmapAnimationDrawableFactory.AnimationFrameCacheKey.html#containsUri(android.net.Uri)">containsUri</a></span>(Uri uri)
-        
-        <div class="jd-descrdiv">Returns true if this key was constructed from this Uri.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            String
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/fresco/animation/factory/ExperimentalBitmapAnimationDrawableFactory.AnimationFrameCacheKey.html#getUriString()">getUriString</a></span>()
-        
-        <div class="jd-descrdiv">Returns a string representation of the URI at the heart of the cache key.</div>
-  
-  </td></tr>
-
-
-
-</table>
-
-
-
-
-
-
-
-<!-- ========== METHOD SUMMARY =========== -->
-<table id="inhmethods" class="jd-sumtable"><tr><th>
-  <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
-  <div style="clear:left;">Inherited Methods</div></th></tr>
-
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-java.lang.Object" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-java.lang.Object-trigger"
-          src="../../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From class
-
-  java.lang.Object
-
-<div id="inherited-methods-java.lang.Object">
-  <div id="inherited-methods-java.lang.Object-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-java.lang.Object-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            Object
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">clone</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">equals</span>(Object arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">finalize</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            Class&lt;?&gt;
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">getClass</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            int
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">hashCode</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">notify</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">notifyAll</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            String
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">toString</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
-        
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
-
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.cache.common.CacheKey" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-com.facebook.cache.common.CacheKey-trigger"
-          src="../../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From interface
-
-  <a href="../../../../../com/facebook/cache/common/CacheKey.html">com.facebook.cache.common.CacheKey</a>
-
-<div id="inherited-methods-com.facebook.cache.common.CacheKey">
-  <div id="inherited-methods-com.facebook.cache.common.CacheKey-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-com.facebook.cache.common.CacheKey-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/cache/common/CacheKey.html#containsUri(android.net.Uri)">containsUri</a></span>(Uri uri)
-        
-        <div class="jd-descrdiv">Returns true if this key was constructed from this Uri.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/cache/common/CacheKey.html#equals(java.lang.Object)">equals</a></span>(Object o)
-        
-        <div class="jd-descrdiv">This method must be implemented, otherwise the cache keys will be be compared by reference.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            String
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/cache/common/CacheKey.html#getUriString()">getUriString</a></span>()
-        
-        <div class="jd-descrdiv">Returns a string representation of the URI at the heart of the cache key.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            int
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/cache/common/CacheKey.html#hashCode()">hashCode</a></span>()
-        
-        <div class="jd-descrdiv">This method must be implemented with accordance to the <code><a href="../../../../../com/facebook/cache/common/CacheKey.html#equals(java.lang.Object)">equals(Object)</a></code> method.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            String
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/cache/common/CacheKey.html#toString()">toString</a></span>()
-        
-        <div class="jd-descrdiv">This is useful for instrumentation and debugging purposes.</div>
-  
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
-
-</table>
-
-
-</div><!-- jd-descr (summary) -->
-
-<!-- Details -->
-
-
-
-
-
-
-
-
-<!-- XML Attributes -->
-
-
-<!-- Enum Values -->
-
-
-<!-- Constants -->
-
-
-<!-- Fields -->
-
-
-<!-- Public ctors -->
-
-
-<!-- ========= CONSTRUCTOR DETAIL ======== -->
-<h2>Public Constructors</h2>
-
-
-
-<a id="AnimationFrameCacheKey(int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        
-      </span>
-      <span class="sympad">AnimationFrameCacheKey</span>
-      <span class="normal">(int imageId)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
+  <table class="jd-sumtable-expando">
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../com/facebook/fresco/ui/common/OnDrawControllerListener.html">OnDrawControllerListener</a>&lt;INFO&gt;</td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+  </table>
     </div>
-</div>
-
-
-
-
-
-<!-- ========= CONSTRUCTOR DETAIL ======== -->
-<!-- Protected ctors -->
-
-
-
-<!-- ========= METHOD DETAIL ======== -->
-<!-- Public methdos -->
-
-<h2>Public Methods</h2>
-
-
-
-<a id="containsUri(android.net.Uri)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        boolean
-      </span>
-      <span class="sympad">containsUri</span>
-      <span class="normal">(Uri uri)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
   
 
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Returns true if this key was constructed from this Uri.
 
- Used for cases like deleting all keys for a given uri.
-</p></div>
-
+  
+    <h2>Classes</h2>
+    <div class="jd-sumtable">
+    
+  <table class="jd-sumtable-expando">
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../com/facebook/fresco/ui/common/DimensionsInfo.html">DimensionsInfo</a></td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+  </table>
     </div>
-</div>
-
-
-<a id="getUriString()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        String
-      </span>
-      <span class="sympad">getUriString</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
   
 
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Returns a string representation of the URI at the heart of the cache key. In cases of multiple
- keys being contained, the first is returned.
-</p></div>
 
-    </div>
-</div>
+  
 
 
+  
 
 
+  
 
-<!-- ========= METHOD DETAIL ======== -->
-
-
-
-<!-- ========= END OF CLASS DATA ========= -->
-<a id="navbar_top"></a>
 
 <div id="footer">
  +Generated by <a href="http://code.google.com/p/doclava/">Doclava</a>.
  +</div> <!-- end footer - @generated -->
 
-</div> <!-- jd-content -->
-
-</div><!-- end doc-content -->
+</div><!-- end jd-content -->
+</div><!-- doc-content -->
 
 </div> <!-- end body-content --> 
 

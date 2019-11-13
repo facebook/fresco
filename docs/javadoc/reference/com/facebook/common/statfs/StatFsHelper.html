@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -476,8 +484,9 @@ Summary:
 
 <h2>Class Overview</h2>
 <p>Helper class that periodically checks the amount of free space available.
- <p>To keep the overhead low, it caches the free space information, and
- only updates that info after two minutes.
+
+ <p>To keep the overhead low, it caches the free space information, and only updates that info
+ after two minutes.
 
  <p>It is a singleton, and is thread-safe.
 
@@ -548,6 +557,20 @@ Summary:
 <table id="constants" class="jd-sumtable"><tr><th colspan="12">Constants</th></tr>
 
 
+    
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">long</td>
+        <td class="jd-linkcol"><a href="../../../../com/facebook/common/statfs/StatFsHelper.html#DEFAULT_DISK_RED_LEVEL_IN_BYTES">DEFAULT_DISK_RED_LEVEL_IN_BYTES</a></td>
+        <td class="jd-descrcol" width="100%"></td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">int</td>
+        <td class="jd-linkcol"><a href="../../../../com/facebook/common/statfs/StatFsHelper.html#DEFAULT_DISK_RED_LEVEL_IN_MB">DEFAULT_DISK_RED_LEVEL_IN_MB</a></td>
+        <td class="jd-descrcol" width="100%"></td>
+    </tr>
+    
     
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">long</td>
@@ -626,8 +649,8 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/statfs/StatFsHelper.html#getAvailableStorageSpace(com.facebook.common.statfs.StatFsHelper.StorageType)">getAvailableStorageSpace</a></span>(<a href="../../../../com/facebook/common/statfs/StatFsHelper.StorageType.html">StatFsHelper.StorageType</a> storageType)
         
-        <div class="jd-descrdiv">Gets the information about the available storage space
- either internal or external depends on the give input</div>
+        <div class="jd-descrdiv">Gets the information about the available storage space either internal or external depends on
+ the give input</div>
   
   </td></tr>
 
@@ -645,8 +668,8 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/statfs/StatFsHelper.html#getFreeStorageSpace(com.facebook.common.statfs.StatFsHelper.StorageType)">getFreeStorageSpace</a></span>(<a href="../../../../com/facebook/common/statfs/StatFsHelper.StorageType.html">StatFsHelper.StorageType</a> storageType)
         
-        <div class="jd-descrdiv">Gets the information about the free storage space, including reserved blocks,
- either internal or external depends on the given input</div>
+        <div class="jd-descrdiv">Gets the information about the free storage space, including reserved blocks, either internal
+ or external depends on the given input</div>
   
   </td></tr>
 
@@ -680,9 +703,41 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/statfs/StatFsHelper.html#getTotalStorageSpace(com.facebook.common.statfs.StatFsHelper.StorageType)">getTotalStorageSpace</a></span>(<a href="../../../../com/facebook/common/statfs/StatFsHelper.StorageType.html">StatFsHelper.StorageType</a> storageType)
         
-        <div class="jd-descrdiv">Gets the information about the total storage space,
- either internal or external depends on the given input</div>
+        <div class="jd-descrdiv">Gets the information about the total storage space, either internal or external depends on the
+ given input</div>
   
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/statfs/StatFsHelper.html#isLowSpaceCondition()">isLowSpaceCondition</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/statfs/StatFsHelper.html#isVeryLowSpaceCondition()">isVeryLowSpaceCondition</a></span>()
+        
   </td></tr>
 
 
@@ -992,6 +1047,86 @@ From class
 
 
 
+<a id="DEFAULT_DISK_RED_LEVEL_IN_BYTES"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        long
+      </span>
+        DEFAULT_DISK_RED_LEVEL_IN_BYTES
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+        <div class="jd-tagdata">
+        <span class="jd-tagtitle">Constant Value: </span>
+        <span>
+            
+                104857600
+                (0x0000000006400000)
+            
+        </span>
+        </div>
+    
+    </div>
+</div>
+
+
+
+<a id="DEFAULT_DISK_RED_LEVEL_IN_MB"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        int
+      </span>
+        DEFAULT_DISK_RED_LEVEL_IN_MB
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+        <div class="jd-tagdata">
+        <span class="jd-tagtitle">Constant Value: </span>
+        <span>
+            
+                100
+                (0x00000064)
+            
+        </span>
+        </div>
+    
+    </div>
+</div>
+
+
+
 <a id="DEFAULT_DISK_YELLOW_LEVEL_IN_BYTES"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1114,8 +1249,8 @@ From class
       
   <div class="jd-tagdata jd-tagdescr"><p>Constructor.
 
- <p>Initialization is delayed until first use, so we must call #ensureInitialized()
- when implementing member methods.
+ <p>Initialization is delayed until first use, so we must call #ensureInitialized() when
+ implementing member methods.
 </p></div>
 
     </div>
@@ -1157,8 +1292,8 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the information about the available storage space
- either internal or external depends on the give input</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the information about the available storage space either internal or external depends on
+ the give input</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1203,8 +1338,8 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the information about the free storage space, including reserved blocks,
- either internal or external depends on the given input</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the information about the free storage space, including reserved blocks, either internal
+ or external depends on the given input</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1280,8 +1415,8 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the information about the total storage space,
- either internal or external depends on the given input</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the information about the total storage space, either internal or external depends on the
+ given input</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1296,6 +1431,68 @@ From class
       <ul class="nolist"><li>available space in bytes, -1 if no information is available
 </li></ul>
   </div>
+
+    </div>
+</div>
+
+
+<a id="isLowSpaceCondition()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">isLowSpaceCondition</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="isVeryLowSpaceCondition()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">isVeryLowSpaceCondition</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>
@@ -1326,10 +1523,9 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Thread-safe call to reset the disk stats.
- If we know that the free space has changed recently (for example, if we have
- deleted files), use this method to reset the internal state and
- start tracking disk stats afresh, resetting the internal timer for updating stats.
+  <div class="jd-tagdata jd-tagdescr"><p>Thread-safe call to reset the disk stats. If we know that the free space has changed recently
+ (for example, if we have deleted files), use this method to reset the internal state and start
+ tracking disk stats afresh, resetting the internal timer for updating stats.
 </p></div>
 
     </div>
@@ -1361,10 +1557,10 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Check if available space in the filesystem is greater than the given threshold.
- Note that the free space stats are cached and updated in intervals of RESTAT_INTERVAL_MS.
- If the amount of free space has crossed over the threshold since the last update, it will
- return incorrect results till the space stats are updated again.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Check if available space in the filesystem is greater than the given threshold. Note that the
+ free space stats are cached and updated in intervals of RESTAT_INTERVAL_MS. If the amount of
+ free space has crossed over the threshold since the last update, it will return incorrect
+ results till the space stats are updated again.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1380,8 +1576,8 @@ From class
   </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>whether free space is lower than the input freeSpaceThreshold,
- returns true if disk information is not available
+      <ul class="nolist"><li>whether free space is lower than the input freeSpaceThreshold, returns true if disk
+     information is not available
 </li></ul>
   </div>
 

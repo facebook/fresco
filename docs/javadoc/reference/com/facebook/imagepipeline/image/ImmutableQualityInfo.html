@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -283,6 +289,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/platform/package-summary.html">com.facebook.imagepipeline.platform</a></li>
@@ -312,6 +320,7 @@
               
     <li><h2>Interfaces</h2>
       <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/image/HasImageMetadata.html">HasImageMetadata</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/image/ImageInfo.html">ImageInfo</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/image/QualityInfo.html">QualityInfo</a></li>
       </ul>
@@ -325,10 +334,16 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/image/CloseableStaticBitmap.html">CloseableStaticBitmap</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a></li>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/image/ImmutableQualityInfo.html">ImmutableQualityInfo</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/image/OriginalEncodedImageInfo.html">OriginalEncodedImageInfo</a></li>
       </ul>
     </li>
               
               
+    <li><h2>Enums</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/image/EncodedImageOrigin.html">EncodedImageOrigin</a></li>
+      </ul>
+    </li>
               
               
             </ul><br/>
@@ -484,8 +499,7 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Implementation of <code><a href="../../../../com/facebook/imagepipeline/image/QualityInfo.html">QualityInfo</a></code>
-</p>
+<p>Implementation of <code><a href="../../../../com/facebook/imagepipeline/image/QualityInfo.html">QualityInfo</a></code> </p>
 
 
 
@@ -1098,9 +1112,11 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Used only to compare quality of two images that points to the same resource (uri).
- <p> Higher number means higher quality.
- <p> This is useful for caching in order to determine whether the new result is of higher
- quality than what's already in the cache.
+
+ <p>Higher number means higher quality.
+
+ <p>This is useful for caching in order to determine whether the new result is of higher quality
+ than what's already in the cache.
 </p></div>
 
     </div>
@@ -1164,7 +1180,8 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Whether the image is of full quality.
- <p> For progressive JPEGs, this is the final scan. For other image types, this is always true.
+
+ <p>For progressive JPEGs, this is the final scan. For other image types, this is always true.
 </p></div>
 
     </div>
@@ -1197,8 +1214,9 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Whether the image is of good-enough quality.
- <p> When fetching image progressively, the few first results can be of really poor quality,
- but eventually, they get really close to original image, and we mark those as good-enough.
+
+ <p>When fetching image progressively, the few first results can be of really poor quality, but
+ eventually, they get really close to original image, and we mark those as good-enough.
 </p></div>
 
     </div>

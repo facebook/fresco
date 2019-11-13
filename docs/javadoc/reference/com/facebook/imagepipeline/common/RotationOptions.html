@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -283,6 +289,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/platform/package-summary.html">com.facebook.imagepipeline.platform</a></li>
@@ -315,7 +323,7 @@
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html">BytesRange</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptions.html">ImageDecodeOptions</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptionsBuilder.html">ImageDecodeOptionsBuilder</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptionsBuilder.html">ImageDecodeOptionsBuilder</a>&lt;T&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptionsBuilder.html">ImageDecodeOptionsBuilder</a>&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/ResizeOptions.html">ResizeOptions</a></li>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/RotationOptions.html">RotationOptions</a></li>
       </ul>
@@ -486,15 +494,15 @@ Summary:
 <h2>Class Overview</h2>
 <p>Options for rotation.
 
- <p> These options are applied to JPEG images only.
+ <p>These options are applied to JPEG images only.
 
- <p> Describes how the image should be rotated, whether following image meta-data or a specified
+ <p>Describes how the image should be rotated, whether following image meta-data or a specified
  amount.
 
- <p> These options are only relevant for JPEG images. Fresco doesn't support rotation of other
+ <p>These options are only relevant for JPEG images. Fresco doesn't support rotation of other
  image formats.
 
- <p> The options also include whether the rotation can be deferred until the bitmap is rendered.
+ <p>The options also include whether the rotation can be deferred until the bitmap is rendered.
  This should be be false if a post-processor is used which needs to operate on the bitmap
  correctly oriented but can otherwise generally be true, particularly if using drawee.
 </p>
@@ -1255,9 +1263,9 @@ From class
   <div class="jd-tagdata jd-tagdescr"><p>Creates a new set of rotation options for JPEG images to use the rotation angle in the image
  metadata.
 
- <p> This is the default option for requests which don't specify rotation options.
+ <p>This is the default option for requests which don't specify rotation options.
 
- <p> The rotation will not be deferred for defensiveness but that can improve performance. To
+ <p>The rotation will not be deferred for defensiveness but that can improve performance. To
  defer, use <code><a href="../../../../com/facebook/imagepipeline/common/RotationOptions.html#autoRotateAtRenderTime()">autoRotateAtRenderTime()</a></code>.
 </p></div>
 
@@ -1293,7 +1301,7 @@ From class
   <div class="jd-tagdata jd-tagdescr"><p>Creates a new set of rotation options for JPEG images to use the rotation angle in the image
  metadata.
 
- <p> The rotation may be deferred until the image is rendered.
+ <p>The rotation may be deferred until the image is rendered.
 </p></div>
 
     </div>
@@ -1356,9 +1364,7 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Creates a new set of rotation options for JPEG images to load image without any rotation.
-
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Creates a new set of rotation options for JPEG images to load image without any rotation. </p></div>
 
     </div>
 </div>
@@ -1422,7 +1428,7 @@ From class
       
   <div class="jd-tagdata jd-tagdescr"><p>Creates a new set of rotation options to use a specific rotation angle.
 
- <p> The rotation will be carried out in the pipeline.</p></div>
+ <p>The rotation will be carried out in the pipeline.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1469,8 +1475,8 @@ From class
       <table class="jd-tagtable">  
         <tr>
             <th>IllegalStateException</td>
-            <td>if the instance was create using one of the
- <code>autoRotate()</code> constructors.
+            <td>if the instance was create using one of the <code>autoRotate()</code>
+     constructors.
 </td>
         </tr>
       </table>

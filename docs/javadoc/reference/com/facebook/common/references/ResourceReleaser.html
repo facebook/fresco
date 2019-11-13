@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -283,6 +289,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/platform/package-summary.html">com.facebook.imagepipeline.platform</a></li>
@@ -312,6 +320,8 @@
               
     <li><h2>Interfaces</h2>
       <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/references/CloseableReference.LeakHandler.html">CloseableReference.LeakHandler</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/references/HasBitmap.html">HasBitmap</a></li>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/common/references/ResourceReleaser.html">ResourceReleaser</a>&lt;T&gt;</li>
       </ul>
     </li>
@@ -319,11 +329,20 @@
     <li><h2>Classes</h2>
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/references/DefaultCloseableReference.html">DefaultCloseableReference</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/references/FinalizerCloseableReference.html">FinalizerCloseableReference</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/references/NoOpCloseableReference.html">NoOpCloseableReference</a>&lt;T&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/common/references/OOMSoftReference.html">OOMSoftReference</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/references/RefCountCloseableReference.html">RefCountCloseableReference</a>&lt;T&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/common/references/SharedReference.html">SharedReference</a>&lt;T&gt;</li>
       </ul>
     </li>
               
+    <li><h2>Annotations</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/references/CloseableReference.CloseableRefType.html">CloseableReference.CloseableRefType</a></li>
+      </ul>
+    </li>
               
               
     <li><h2>Exceptions</h2>
@@ -456,6 +475,8 @@ Summary:
               >
           
             
+              <a href="../../../../com/facebook/imagepipeline/memory/AshmemMemoryChunkPool.html">AshmemMemoryChunkPool</a>,
+            
               <a href="../../../../com/facebook/imagepipeline/memory/BasePool.html">BasePool</a>&lt;V&gt;,
             
               <a href="../../../../com/facebook/imagepipeline/memory/BitmapPool.html">BitmapPool</a>,
@@ -467,6 +488,8 @@ Summary:
               <a href="../../../../com/facebook/common/memory/ByteArrayPool.html">ByteArrayPool</a>,
             
               <a href="../../../../com/facebook/imagepipeline/memory/DummyBitmapPool.html">DummyBitmapPool</a>,
+            
+              <a href="../../../../com/facebook/imagepipeline/memory/DummyTrackingInUseBitmapPool.html">DummyTrackingInUseBitmapPool</a>,
             
               <a href="../../../../com/facebook/imagepipeline/memory/GenericByteArrayPool.html">GenericByteArrayPool</a>,
             
@@ -487,28 +510,35 @@ Summary:
               >
   <table class="jd-sumtable-expando">
         <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/AshmemMemoryChunkPool.html">AshmemMemoryChunkPool</a></td>
+              <td class="jd-descrcol" width="100%">Manages a pool of ashmem memory chunks (<code><a href="../../../../com/facebook/imagepipeline/memory/AshmemMemoryChunk.html">AshmemMemoryChunk</a></code>) &nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.html">BasePool</a>&lt;V&gt;</td>
               <td class="jd-descrcol" width="100%">A base pool class that manages a pool of values (of type V).&nbsp;</td>
           </tr>
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/BitmapPool.html">BitmapPool</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/BucketsBitmapPool.html">BucketsBitmapPool</a></td>
               <td class="jd-descrcol" width="100%">Manages a pool of bitmaps.&nbsp;</td>
           </tr>
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/BufferMemoryChunkPool.html">BufferMemoryChunkPool</a></td>
               <td class="jd-descrcol" width="100%">Manages a pool of buffer memory chunks (<code><a href="../../../../com/facebook/imagepipeline/memory/BufferMemoryChunk.html">BufferMemoryChunk</a></code>) &nbsp;</td>
           </tr>
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/common/memory/ByteArrayPool.html">ByteArrayPool</a></td>
-              <td class="jd-descrcol" width="100%">A pool of byte-arrays
-&nbsp;</td>
+              <td class="jd-descrcol" width="100%">A pool of byte-arrays &nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/DummyBitmapPool.html">DummyBitmapPool</a></td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/DummyBitmapPool.html">DummyBitmapPool</a></td>
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/DummyTrackingInUseBitmapPool.html">DummyTrackingInUseBitmapPool</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
         <tr class="alt-color api apilevel-" >
@@ -548,8 +578,8 @@ Summary:
 <p>Interface that abstracts the action of releasing a resource.
 
  <p>There are multiple components that own resources that are shared by others, like pools and
- caches. This interface should be implemented by classes that want to perform some action
- when a particular resource is no longer needed.</p>
+ caches. This interface should be implemented by classes that want to perform some action when a
+ particular resource is no longer needed.</p>
 
 
 
@@ -621,7 +651,7 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/references/ResourceReleaser.html#release(T)">release</a></span>(T value)
         
-        <div class="jd-descrdiv"><p>Release the given value.</div>
+        <div class="jd-descrdiv">Release the given value.</div>
   
   </td></tr>
 
@@ -699,13 +729,14 @@ Summary:
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p><p>Release the given value.
+  <div class="jd-tagdata jd-tagdescr"><p>Release the given value.
 
- <p>After calling this method, the caller is no longer responsible for
- managing lifetime of the value.
- <p>This method is not permitted to throw an exception and is always required to succeed.
- It is often called from contexts like catch blocks or finally blocks to cleanup resources.
- Throwing an exception could result in swallowing the original exception.</p></p></div>
+ <p>After calling this method, the caller is no longer responsible for managing lifetime of the
+ value.
+
+ <p>This method is not permitted to throw an exception and is always required to succeed. It is
+ often called from contexts like catch blocks or finally blocks to cleanup resources. Throwing
+ an exception could result in swallowing the original exception.</p></div>
 
     </div>
 </div>

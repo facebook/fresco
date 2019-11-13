@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -430,10 +438,9 @@
 
 
 <h2>Class Overview</h2>
-<p>An instance of this interface must be passed to FileTree.walkFileTree method in order
- to execute some logic while iterating over the directory descendants.
- Java 7 provides a FileVisitor interface and a Files.walkFileTree method that does this same
- thing (with more options).
+<p>An instance of this interface must be passed to FileTree.walkFileTree method in order to execute
+ some logic while iterating over the directory descendants. Java 7 provides a FileVisitor
+ interface and a Files.walkFileTree method that does this same thing (with more options).
 </p>
 
 
@@ -506,8 +513,7 @@
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/file/FileTreeVisitor.html#postVisitDirectory(java.io.File)">postVisitDirectory</a></span>(File directory)
         
-        <div class="jd-descrdiv">Called after iterating over a directory (including the root directory of the iteration)
-</div>
+        <div class="jd-descrdiv">Called after iterating over a directory (including the root directory of the iteration) </div>
   
   </td></tr>
 
@@ -525,8 +531,7 @@
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/file/FileTreeVisitor.html#preVisitDirectory(java.io.File)">preVisitDirectory</a></span>(File directory)
         
-        <div class="jd-descrdiv">Called before iterating over a directory (including the root directory of the iteration)
-</div>
+        <div class="jd-descrdiv">Called before iterating over a directory (including the root directory of the iteration) </div>
   
   </td></tr>
 
@@ -544,8 +549,7 @@
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/file/FileTreeVisitor.html#visitFile(java.io.File)">visitFile</a></span>(File file)
         
-        <div class="jd-descrdiv">Called for each file contained in a directory (after preVisitDirectory)
-</div>
+        <div class="jd-descrdiv">Called for each file contained in a directory (after preVisitDirectory) </div>
   
   </td></tr>
 
@@ -623,8 +627,7 @@
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Called after iterating over a directory (including the root directory of the iteration)
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Called after iterating over a directory (including the root directory of the iteration) </p></div>
 
     </div>
 </div>
@@ -655,8 +658,7 @@
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Called before iterating over a directory (including the root directory of the iteration)
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Called before iterating over a directory (including the root directory of the iteration) </p></div>
 
     </div>
 </div>
@@ -687,8 +689,7 @@
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Called for each file contained in a directory (after preVisitDirectory)
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Called for each file contained in a directory (after preVisitDirectory) </p></div>
 
     </div>
 </div>

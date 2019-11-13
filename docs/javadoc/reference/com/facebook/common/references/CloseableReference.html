@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -283,6 +289,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/platform/package-summary.html">com.facebook.imagepipeline.platform</a></li>
@@ -312,6 +320,8 @@
               
     <li><h2>Interfaces</h2>
       <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/references/CloseableReference.LeakHandler.html">CloseableReference.LeakHandler</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/references/HasBitmap.html">HasBitmap</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/common/references/ResourceReleaser.html">ResourceReleaser</a>&lt;T&gt;</li>
       </ul>
     </li>
@@ -319,11 +329,20 @@
     <li><h2>Classes</h2>
       <ul>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/references/DefaultCloseableReference.html">DefaultCloseableReference</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/references/FinalizerCloseableReference.html">FinalizerCloseableReference</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/references/NoOpCloseableReference.html">NoOpCloseableReference</a>&lt;T&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/common/references/OOMSoftReference.html">OOMSoftReference</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/references/RefCountCloseableReference.html">RefCountCloseableReference</a>&lt;T&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/common/references/SharedReference.html">SharedReference</a>&lt;T&gt;</li>
       </ul>
     </li>
               
+    <li><h2>Annotations</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/references/CloseableReference.CloseableRefType.html">CloseableReference.CloseableRefType</a></li>
+      </ul>
+    </li>
               
               
     <li><h2>Exceptions</h2>
@@ -401,17 +420,29 @@
 
 Summary:
 
+  <a href="#nestedclasses">Nested Classes</a>
+  
 
 
 
 
 
+  &#124; <a href="#constants">Constants</a>
+  
+
+
+
+  &#124; <a href="#lfields">Fields</a>
+  
 
 
 
 
+  &#124; <a href="#proctors">Protected Ctors</a>
+  
 
-  <a href="#pubmethods">Methods</a>
+
+  &#124; <a href="#pubmethods">Methods</a>
   
 
 
@@ -440,8 +471,8 @@ Summary:
 <div id="jd-header">
     public
      
-    final 
-    
+     
+    abstract
     class
 <h1>CloseableReference</h1>
 
@@ -492,6 +523,55 @@ Summary:
 
 
 
+<table class="jd-sumtable jd-sumtable-subclasses"><tr><td colspan="12" style="border:none;margin:0;padding:0;">
+
+  <a href="#" onclick="return toggleInherited(this, null)" id="subclasses-direct" class="jd-expando-trigger closed"
+          ><img id="subclasses-direct-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>Known Direct Subclasses
+
+  <div id="subclasses-direct">
+      <div id="subclasses-direct-list"
+              class="jd-inheritedlinks"
+              
+              >
+          
+            
+              <a href="../../../../com/facebook/common/references/DefaultCloseableReference.html">DefaultCloseableReference</a>&lt;T&gt;,
+            
+              <a href="../../../../com/facebook/common/references/FinalizerCloseableReference.html">FinalizerCloseableReference</a>&lt;T&gt;,
+            
+              <a href="../../../../com/facebook/common/references/NoOpCloseableReference.html">NoOpCloseableReference</a>&lt;T&gt;,
+            
+              <a href="../../../../com/facebook/common/references/RefCountCloseableReference.html">RefCountCloseableReference</a>&lt;T&gt;
+            
+          
+      </div>
+      <div id="subclasses-direct-summary"
+              style="display: none;"
+              >
+  <table class="jd-sumtable-expando">
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/common/references/DefaultCloseableReference.html">DefaultCloseableReference</a>&lt;T&gt;</td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/common/references/FinalizerCloseableReference.html">FinalizerCloseableReference</a>&lt;T&gt;</td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/common/references/NoOpCloseableReference.html">NoOpCloseableReference</a>&lt;T&gt;</td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/common/references/RefCountCloseableReference.html">RefCountCloseableReference</a>&lt;T&gt;</td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+  </table>
+      </div>
+  </div>
+</td></tr></table>
+
 
 
 
@@ -501,40 +581,43 @@ Summary:
 <h2>Class Overview</h2>
 <p>A smart pointer-like class for Java.
 
- <p>This class allows reference-counting semantics in a Java-friendlier way. A single object
- can have any number of CloseableReferences pointing to it. When all of these have been closed,
- the object either has its <code><a href="null#close()">close()</a></code> method called, if it implements
- Closeable, or its designated <code><a href="../../../../com/facebook/common/references/ResourceReleaser.html#release(T)">release(T)</a></code>,
- if it does not.
+ <p>This class allows reference-counting semantics in a Java-friendlier way. A single object can
+ have any number of CloseableReferences pointing to it. When all of these have been closed, the
+ object either has its <code><a href="null#close()">close()</a></code> method called, if it implements Closeable,
+ or its designated <code><a href="../../../../com/facebook/common/references/ResourceReleaser.html#release(T)">release(T)</a></code>, if it does not.
 
  <p>Callers can construct a CloseableReference wrapping a Closeable with:
+
  <pre>
  Closeable foo;
  CloseableReference c = CloseableReference.of(foo);
  </pre>
- <p>Objects that do not implement Closeable can still use this class, but must supply a
- <code><a href="../../../../com/facebook/common/references/ResourceReleaser.html">ResourceReleaser</a></code>:
- <pre>
- <code>Object foo;
+
+ <p>Objects that do not implement Closeable can still use this class, but must supply a <code><a href="../../../../com/facebook/common/references/ResourceReleaser.html">ResourceReleaser</a></code>:
+
+ <pre><code>Object foo;
  ResourceReleaser&lt;Object&gt; fooReleaser;
  CloseableReference c = CloseableReference.of(foo, fooReleaser);
- </code>
- </pre>
+ </code></pre>
+
  <p>When making a logical copy, callers should call <code><a href="../../../../com/facebook/common/references/CloseableReference.html#clone()">clone()</a></code>:
+
  <pre>
  CloseableReference copy = c.clone();
  </pre>
- <p>
- When each copy of CloseableReference is no longer needed, close should be called:
+
+ <p>When each copy of CloseableReference is no longer needed, close should be called:
+
  <pre>
  copy.close();
  c.close();
  </pre>
 
  <p>As with any Closeable, try-finally semantics may be needed to ensure that close is called.
- <p>Do not rely upon the finalizer; the purpose of this class is for expensive resources to
- be released without waiting for the garbage collector. The finalizer will log an error if
- the close method has not been called.
+
+ <p>Do not rely upon the finalizer; the purpose of this class is for expensive resources to be
+ released without waiting for the garbage collector. The finalizer will log an error if the close
+ method has not been called.
 </p>
 
 
@@ -565,6 +648,37 @@ Summary:
 
 
 
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<table id="nestedclasses" class="jd-sumtable"><tr><th colspan="12">Nested Classes</th></tr>
+
+
+  
+    <tr class="alt-color api apilevel-" >
+      <td class="jd-typecol">
+        
+         
+         
+        
+        @interface</td>
+      <td class="jd-linkcol"><a href="../../../../com/facebook/common/references/CloseableReference.CloseableRefType.html">CloseableReference.CloseableRefType</a></td>
+      <td class="jd-descrcol" width="100%">&nbsp;</td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+      <td class="jd-typecol">
+        
+         
+         
+        
+        interface</td>
+      <td class="jd-linkcol"><a href="../../../../com/facebook/common/references/CloseableReference.LeakHandler.html">CloseableReference.LeakHandler</a></td>
+      <td class="jd-descrcol" width="100%">&nbsp;</td>
+    </tr>
+    
+    
+
+</table>
 
 
 
@@ -577,6 +691,99 @@ Summary:
 
 
 
+<!-- =========== ENUM CONSTANT SUMMARY =========== -->
+<table id="constants" class="jd-sumtable"><tr><th colspan="12">Constants</th></tr>
+
+
+    
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">int</td>
+        <td class="jd-linkcol"><a href="../../../../com/facebook/common/references/CloseableReference.html#REF_TYPE_DEFAULT">REF_TYPE_DEFAULT</a></td>
+        <td class="jd-descrcol" width="100%"></td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">int</td>
+        <td class="jd-linkcol"><a href="../../../../com/facebook/common/references/CloseableReference.html#REF_TYPE_FINALIZER">REF_TYPE_FINALIZER</a></td>
+        <td class="jd-descrcol" width="100%"></td>
+    </tr>
+    
+    
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">int</td>
+        <td class="jd-linkcol"><a href="../../../../com/facebook/common/references/CloseableReference.html#REF_TYPE_NOOP">REF_TYPE_NOOP</a></td>
+        <td class="jd-descrcol" width="100%"></td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">int</td>
+        <td class="jd-linkcol"><a href="../../../../com/facebook/common/references/CloseableReference.html#REF_TYPE_REF_COUNT">REF_TYPE_REF_COUNT</a></td>
+        <td class="jd-descrcol" width="100%"></td>
+    </tr>
+    
+    
+
+</table>
+
+
+
+
+
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+<table id="lfields" class="jd-sumtable"><tr><th colspan="12">Fields</th></tr>
+
+
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          protected
+          
+          
+          boolean</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/common/references/CloseableReference.html#mIsClosed">mIsClosed</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
+          protected
+          
+          final
+          <a href="../../../../com/facebook/common/references/CloseableReference.LeakHandler.html">CloseableReference.LeakHandler</a></td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/common/references/CloseableReference.html#mLeakHandler">mLeakHandler</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          protected
+          
+          final
+          <a href="../../../../com/facebook/common/references/SharedReference.html">SharedReference</a>&lt;T&gt;</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/common/references/CloseableReference.html#mSharedReference">mSharedReference</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
+          protected
+          
+          final
+          Throwable</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/common/references/CloseableReference.html#mStacktrace">mStacktrace</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+
+</table>
 
 
 
@@ -585,6 +792,46 @@ Summary:
 
 
 
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<table id="proctors" class="jd-sumtable"><tr><th colspan="12">Protected Constructors</th></tr>
+
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#CloseableReference(com.facebook.common.references.SharedReference<T>, com.facebook.common.references.CloseableReference.LeakHandler, java.lang.Throwable)">CloseableReference</a></span>(<a href="../../../../com/facebook/common/references/SharedReference.html">SharedReference</a>&lt;T&gt; sharedReference, <a href="../../../../com/facebook/common/references/CloseableReference.LeakHandler.html">CloseableReference.LeakHandler</a> leakHandler, Throwable stacktrace)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#CloseableReference(T, com.facebook.common.references.ResourceReleaser<T>, com.facebook.common.references.CloseableReference.LeakHandler, java.lang.Throwable)">CloseableReference</a></span>(T t, <a href="../../../../com/facebook/common/references/ResourceReleaser.html">ResourceReleaser</a>&lt;T&gt; resourceReleaser, <a href="../../../../com/facebook/common/references/CloseableReference.LeakHandler.html">CloseableReference.LeakHandler</a> leakHandler, Throwable stacktrace)
+        
+  </td></tr>
+
+
+
+</table>
 
 
 
@@ -597,8 +844,8 @@ Summary:
 	 
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
+            abstract
             
-            synchronized
             
             
             
@@ -842,6 +1089,92 @@ Summary:
         <div class="jd-descrdiv">Constructs a CloseableReference (wrapping a SharedReference) of T with provided
  ResourceReleaser<T>.</div>
   
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            &lt;T&gt;
+            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#of(T, com.facebook.common.references.ResourceReleaser<T>, com.facebook.common.references.CloseableReference.LeakHandler)">of</a></span>(T t, <a href="../../../../com/facebook/common/references/ResourceReleaser.html">ResourceReleaser</a>&lt;T&gt; resourceReleaser, <a href="../../../../com/facebook/common/references/CloseableReference.LeakHandler.html">CloseableReference.LeakHandler</a> leakHandler)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            &lt;T&gt;
+            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#of(T, com.facebook.common.references.ResourceReleaser<T>, com.facebook.common.references.CloseableReference.LeakHandler, java.lang.Throwable)">of</a></span>(T t, <a href="../../../../com/facebook/common/references/ResourceReleaser.html">ResourceReleaser</a>&lt;T&gt; resourceReleaser, <a href="../../../../com/facebook/common/references/CloseableReference.LeakHandler.html">CloseableReference.LeakHandler</a> leakHandler, Throwable stacktrace)
+        
+        <div class="jd-descrdiv">Constructs a CloseableReference (wrapping a SharedReference) of T with provided
+ ResourceReleaser<T> and a custom handler that's run if a leak is detected in the finalizer.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            &lt;T&nbsp;extends&nbsp;Closeable&gt;
+            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#of(T, com.facebook.common.references.CloseableReference.LeakHandler)">of</a></span>(T t, <a href="../../../../com/facebook/common/references/CloseableReference.LeakHandler.html">CloseableReference.LeakHandler</a> leakHandler)
+        
+        <div class="jd-descrdiv">Constructs a CloseableReference with a custom <code><a href="../../../../com/facebook/common/references/CloseableReference.LeakHandler.html">CloseableReference.LeakHandler</a></code> that's run if a reference is
+ not closed when the finalizer is called.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#setDisableCloseableReferencesForBitmaps(int)">setDisableCloseableReferencesForBitmaps</a></span>(int bitmapCloseableRefType)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#useGc()">useGc</a></span>()
+        
   </td></tr>
 
 
@@ -1195,7 +1528,301 @@ From interface
 <!-- Constants -->
 
 
+<!-- ========= ENUM CONSTANTS DETAIL ======== -->
+<h2>Constants</h2>
+
+
+
+
+<a id="REF_TYPE_DEFAULT"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        int
+      </span>
+        REF_TYPE_DEFAULT
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+        <div class="jd-tagdata">
+        <span class="jd-tagtitle">Constant Value: </span>
+        <span>
+            
+                0
+                (0x00000000)
+            
+        </span>
+        </div>
+    
+    </div>
+</div>
+
+
+
+<a id="REF_TYPE_FINALIZER"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        int
+      </span>
+        REF_TYPE_FINALIZER
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+        <div class="jd-tagdata">
+        <span class="jd-tagtitle">Constant Value: </span>
+        <span>
+            
+                1
+                (0x00000001)
+            
+        </span>
+        </div>
+    
+    </div>
+</div>
+
+
+
+<a id="REF_TYPE_NOOP"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        int
+      </span>
+        REF_TYPE_NOOP
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+        <div class="jd-tagdata">
+        <span class="jd-tagtitle">Constant Value: </span>
+        <span>
+            
+                3
+                (0x00000003)
+            
+        </span>
+        </div>
+    
+    </div>
+</div>
+
+
+
+<a id="REF_TYPE_REF_COUNT"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        int
+      </span>
+        REF_TYPE_REF_COUNT
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+        <div class="jd-tagdata">
+        <span class="jd-tagtitle">Constant Value: </span>
+        <span>
+            
+                2
+                (0x00000002)
+            
+        </span>
+        </div>
+    
+    </div>
+</div>
+
+
+
+
 <!-- Fields -->
+
+
+<!-- ========= FIELD DETAIL ======== -->
+<h2>Fields</h2>
+
+
+
+
+<a id="mIsClosed"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+        boolean
+      </span>
+        mIsClosed
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<a id="mLeakHandler"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+        final 
+        <a href="../../../../com/facebook/common/references/CloseableReference.LeakHandler.html">CloseableReference.LeakHandler</a>
+      </span>
+        mLeakHandler
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<a id="mSharedReference"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+        final 
+        <a href="../../../../com/facebook/common/references/SharedReference.html">SharedReference</a>&lt;T&gt;
+      </span>
+        mSharedReference
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<a id="mStacktrace"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+        final 
+        Throwable
+      </span>
+        mStacktrace
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
 
 
 <!-- Public ctors -->
@@ -1204,6 +1831,73 @@ From interface
 
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <!-- Protected ctors -->
+
+<h2>Protected Constructors</h2>
+
+
+
+<a id="CloseableReference(com.facebook.common.references.SharedReference<T>, com.facebook.common.references.CloseableReference.LeakHandler, java.lang.Throwable)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+         
+         
+        
+      </span>
+      <span class="sympad">CloseableReference</span>
+      <span class="normal">(<a href="../../../../com/facebook/common/references/SharedReference.html">SharedReference</a>&lt;T&gt; sharedReference, <a href="../../../../com/facebook/common/references/CloseableReference.LeakHandler.html">CloseableReference.LeakHandler</a> leakHandler, Throwable stacktrace)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="CloseableReference(T, com.facebook.common.references.ResourceReleaser<T>, com.facebook.common.references.CloseableReference.LeakHandler, java.lang.Throwable)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+         
+         
+        
+      </span>
+      <span class="sympad">CloseableReference</span>
+      <span class="normal">(T t, <a href="../../../../com/facebook/common/references/ResourceReleaser.html">ResourceReleaser</a>&lt;T&gt; resourceReleaser, <a href="../../../../com/facebook/common/references/CloseableReference.LeakHandler.html">CloseableReference.LeakHandler</a> leakHandler, Throwable stacktrace)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 
 
 
@@ -1222,8 +1916,8 @@ From interface
         public 
          
          
+        abstract 
          
-        synchronized 
         <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt;
       </span>
       <span class="sympad">clone</span>
@@ -1393,8 +2087,8 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Closes this CloseableReference.
 
- <p>Decrements the reference count of the underlying object. If it is zero, the object
- will be released.
+ <p>Decrements the reference count of the underlying object. If it is zero, the object will be
+ released.
 
  <p>This method is idempotent. Calling it multiple times on the same instance has no effect.
 </p></div>
@@ -1510,8 +2204,8 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Returns the underlying Closeable if this reference is not closed yet.
- Otherwise IllegalStateException is thrown.
+  <div class="jd-tagdata jd-tagdescr"><p>Returns the underlying Closeable if this reference is not closed yet. Otherwise
+ IllegalStateException is thrown.
 </p></div>
 
     </div>
@@ -1577,8 +2271,8 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Method used for tracking Closeables pointed by CloseableReference.
- Use only for debugging and logging.
+  <div class="jd-tagdata jd-tagdescr"><p>Method used for tracking Closeables pointed by CloseableReference. Use only for debugging and
+ logging.
 </p></div>
 
     </div>
@@ -1719,6 +2413,168 @@ From interface
   <div class="jd-tagdata jd-tagdescr"><p>Constructs a CloseableReference (wrapping a SharedReference) of T with provided
  ResourceReleaser<T>. If t is null, this will just return null.
 </p></div>
+
+    </div>
+</div>
+
+
+<a id="of(T, com.facebook.common.references.ResourceReleaser<T>, com.facebook.common.references.CloseableReference.LeakHandler)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt;
+      </span>
+      <span class="sympad">of</span>
+      <span class="normal">(T t, <a href="../../../../com/facebook/common/references/ResourceReleaser.html">ResourceReleaser</a>&lt;T&gt; resourceReleaser, <a href="../../../../com/facebook/common/references/CloseableReference.LeakHandler.html">CloseableReference.LeakHandler</a> leakHandler)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="of(T, com.facebook.common.references.ResourceReleaser<T>, com.facebook.common.references.CloseableReference.LeakHandler, java.lang.Throwable)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt;
+      </span>
+      <span class="sympad">of</span>
+      <span class="normal">(T t, <a href="../../../../com/facebook/common/references/ResourceReleaser.html">ResourceReleaser</a>&lt;T&gt; resourceReleaser, <a href="../../../../com/facebook/common/references/CloseableReference.LeakHandler.html">CloseableReference.LeakHandler</a> leakHandler, Throwable stacktrace)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Constructs a CloseableReference (wrapping a SharedReference) of T with provided
+ ResourceReleaser<T> and a custom handler that's run if a leak is detected in the finalizer. If
+ t is null, this will just return null.
+</p></div>
+
+    </div>
+</div>
+
+
+<a id="of(T, com.facebook.common.references.CloseableReference.LeakHandler)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt;
+      </span>
+      <span class="sympad">of</span>
+      <span class="normal">(T t, <a href="../../../../com/facebook/common/references/CloseableReference.LeakHandler.html">CloseableReference.LeakHandler</a> leakHandler)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Constructs a CloseableReference with a custom <code><a href="../../../../com/facebook/common/references/CloseableReference.LeakHandler.html">CloseableReference.LeakHandler</a></code> that's run if a reference is
+ not closed when the finalizer is called.
+
+ <p>Returns null if the parameter is null.
+</p></div>
+
+    </div>
+</div>
+
+
+<a id="setDisableCloseableReferencesForBitmaps(int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setDisableCloseableReferencesForBitmaps</span>
+      <span class="normal">(int bitmapCloseableRefType)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="useGc()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">useGc</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>

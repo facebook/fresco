@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -574,8 +582,7 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/internal/ByteStreams.html#read(java.io.InputStream, byte[], int, int)">read</a></span>(InputStream in, byte[] b, int off, int len)
         
-        <div class="jd-descrdiv">Reads some bytes from an input stream and stores them into the buffer array
- <code>b</code>.</div>
+        <div class="jd-descrdiv">Reads some bytes from an input stream and stores them into the buffer array <code>b</code>.</div>
   
   </td></tr>
 
@@ -593,9 +600,7 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/internal/ByteStreams.html#readFully(java.io.InputStream, byte[], int, int)">readFully</a></span>(InputStream in, byte[] b, int off, int len)
         
-        <div class="jd-descrdiv">Attempts to read <code>len</code> bytes from the stream into the given array
- starting at <code>off</code>, with the same behavior as
- <code><a href="null#readFully(byte[], int, int)">readFully(byte[], int, int)</a></code>.</div>
+        <div class="jd-descrdiv">Attempts to read <code>len</code> bytes from the stream into the given array starting at <code>off</code>, with the same behavior as <code><a href="null#readFully(byte[], int, int)">readFully(byte[], int, int)</a></code>.</div>
   
   </td></tr>
 
@@ -978,21 +983,18 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Reads some bytes from an input stream and stores them into the buffer array
- <code>b</code>. This method blocks until <code>len</code> bytes of input data have
- been read into the array, or end of file is detected. The number of bytes
- read is returned, possibly zero. Does not close the stream.
+  <div class="jd-tagdata jd-tagdescr"><p>Reads some bytes from an input stream and stores them into the buffer array <code>b</code>. This
+ method blocks until <code>len</code> bytes of input data have been read into the array, or end of
+ file is detected. The number of bytes read is returned, possibly zero. Does not close the
+ stream.
 
- <p>A caller can detect EOF if the number of bytes read is less than
- <code>len</code>. All subsequent calls on the same stream will return zero.
+ <p>A caller can detect EOF if the number of bytes read is less than <code>len</code>. All subsequent
+ calls on the same stream will return zero.
 
- <p>If <code>b</code> is null, a <code>NullPointerException</code> is thrown. If
- <code>off</code> is negative, or <code>len</code> is negative, or <code>off+len</code> is
- greater than the length of the array <code>b</code>, then an
- <code>IndexOutOfBoundsException</code> is thrown. If <code>len</code> is zero, then
- no bytes are read. Otherwise, the first byte read is stored into element
- <code>b[off]</code>, the next one into <code>b[off+1]</code>, and so on. The number
- of bytes read is, at most, equal to <code>len</code>.</p></div>
+ <p>If <code>b</code> is null, a <code>NullPointerException</code> is thrown. If <code>off</code> is negative,
+ or <code>len</code> is negative, or <code>off+len</code> is greater than the length of the array <code>b</code>, then an <code>IndexOutOfBoundsException</code> is thrown. If <code>len</code> is zero, then no bytes
+ are read. Otherwise, the first byte read is stored into element <code>b[off]</code>, the next one
+ into <code>b[off+1]</code>, and so on. The number of bytes read is, at most, equal to <code>len</code>.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1058,10 +1060,8 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Attempts to read <code>len</code> bytes from the stream into the given array
- starting at <code>off</code>, with the same behavior as
- <code><a href="null#readFully(byte[], int, int)">readFully(byte[], int, int)</a></code>. Does not close the
- stream.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Attempts to read <code>len</code> bytes from the stream into the given array starting at <code>off</code>, with the same behavior as <code><a href="null#readFully(byte[], int, int)">readFully(byte[], int, int)</a></code>. Does not close
+ the stream.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1088,8 +1088,7 @@ From class
       <table class="jd-tagtable">  
         <tr>
             <th>EOFException</td>
-            <td>if this stream reaches the end before reading all
-     the bytes.</td>
+            <td>if this stream reaches the end before reading all the bytes.</td>
         </tr>  
         <tr>
             <th>IOException</td>
@@ -1128,10 +1127,9 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Reads all bytes from an input stream into a byte array. The given
- expected size is used to create an initial byte array, but if the actual
- number of bytes read from the stream differs, the correct result will be
- returned anyway.
+  <div class="jd-tagdata jd-tagdescr"><p>Reads all bytes from an input stream into a byte array. The given expected size is used to
+ create an initial byte array, but if the actual number of bytes read from the stream differs,
+ the correct result will be returned anyway.
 </p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Throws</h5>
@@ -1172,8 +1170,7 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Reads all bytes from an input stream into a byte array.
- Does not close the stream.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Reads all bytes from an input stream into a byte array. Does not close the stream.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">

@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -283,6 +289,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/platform/package-summary.html">com.facebook.imagepipeline.platform</a></li>
@@ -315,7 +323,7 @@
       <ul>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html">BytesRange</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptions.html">ImageDecodeOptions</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptionsBuilder.html">ImageDecodeOptionsBuilder</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptionsBuilder.html">ImageDecodeOptionsBuilder</a>&lt;T&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptionsBuilder.html">ImageDecodeOptionsBuilder</a>&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/ResizeOptions.html">ResizeOptions</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/RotationOptions.html">RotationOptions</a></li>
       </ul>
@@ -489,18 +497,18 @@ Summary:
 <h2>Class Overview</h2>
 <p>A representation of the range of bytes requested or contained in a piece of content.
 
- <p> This is based on the spec of the HTTP "Content-Range" header so includes methods to parse and
+ <p>This is based on the spec of the HTTP "Content-Range" header so includes methods to parse and
  output appropriate strings for the header.
 
- <p> The header spec is at https://tools.ietf.org/html/rfc2616#section-14.16
+ <p>The header spec is at https://tools.ietf.org/html/rfc2616#section-14.16
 
-  <p> As per that spec, the from and to values are inclusive. Requesting the first 100 bytes of an
+ <p>As per that spec, the from and to values are inclusive. Requesting the first 100 bytes of an
  image can be achieved by calling <code>BytesRange.toMax(99)</code>.
 
- <p> This might be useful because you want to limit the maximum size of a specific download or it
+ <p>This might be useful because you want to limit the maximum size of a specific download or it
  might be that you already have part of the image data and only want the remainder.
 
- <p> These objects are currently only respected in image requests and only taken from responses if
+ <p>These objects are currently only respected in image requests and only taken from responses if
  <code>ImagePipelineExperiments.isPartialImageCachingEnabled()</code> is true in the image pipeline
  config. It is also dependent on a <code>NetworkFetcher</code> which writes and reads these headers.
 </p>
@@ -1089,8 +1097,7 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>The first byte of the range. Values begin at 0.
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>The first byte of the range. Values begin at 0. </p></div>
 
     
     </div>
@@ -1122,7 +1129,7 @@ From class
       
   <div class="jd-tagdata jd-tagdescr"><p>The final byte of the range inclusive, or <code><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html#TO_END_OF_CONTENT">TO_END_OF_CONTENT</a></code> if it reaches to the end.
 
- <p> If not TO_END_OF_CONTENT, values are inclusive. e.g. for the first 100 bytes this is 99.
+ <p>If not TO_END_OF_CONTENT, values are inclusive. e.g. for the first 100 bytes this is 99.
 </p></div>
 
     
@@ -1323,10 +1330,10 @@ From class
   <div class="jd-tagdata jd-tagdescr"><p>Creates an instance of BytesRange by parsing the value of a returned HTTP "Content-Range"
  header.
 
- <p> If the range runs to the end of the available content, the end of the range will be set to
+ <p>If the range runs to the end of the available content, the end of the range will be set to
  TO_END_OF_CONTENT.
 
- <p> The header spec is at https://tools.ietf.org/html/rfc2616#section-14.16</p></div>
+ <p>The header spec is at https://tools.ietf.org/html/rfc2616#section-14.16</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>the parsed range
@@ -1338,7 +1345,7 @@ From class
         <tr>
             <th>IllegalArgumentException</td>
             <td>if the header is non-null but fails to match the format per
- the spec</td>
+     the spec</td>
         </tr>
       </table>
   </div>

@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -321,6 +329,7 @@
               
     <li><h2>Classes</h2>
       <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/CloseableReferenceFactory.html">CloseableReferenceFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/DefaultExecutorSupplier.html">DefaultExecutorSupplier</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/DiskStorageCacheFactory.html">DiskStorageCacheFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/DynamicDefaultDiskStorageFactory.html">DynamicDefaultDiskStorageFactory</a></li>
@@ -332,6 +341,7 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html">ImagePipelineExperiments.Builder</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.DefaultProducerFactoryMethod.html">ImagePipelineExperiments.DefaultProducerFactoryMethod</a></li>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html">ImagePipelineFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/NativeCodeSetup.html">NativeCodeSetup</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/PriorityThreadFactory.html">PriorityThreadFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ProducerFactory.html">ProducerFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ProducerSequenceFactory.html">ProducerSequenceFactory</a></li>
@@ -492,9 +502,8 @@ Summary:
 
  <p>This class constructs the pipeline and its dependencies from other libraries.
 
- <p>As the pipeline object can be quite expensive to create, it is strongly
- recommended that applications create just one instance of this class
- and of the pipeline.
+ <p>As the pipeline object can be quite expensive to create, it is strongly recommended that
+ applications create just one instance of this class and of the pipeline.
 </p>
 
 
@@ -635,7 +644,23 @@ Summary:
             
             
             
-            <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/common/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt;
+            <a href="../../../../com/facebook/imagepipeline/core/CloseableReferenceFactory.html">CloseableReferenceFactory</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html#getCloseableReferenceFactory()">getCloseableReferenceFactory</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/common/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt;
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html#getEncodedCountingMemoryCache()">getEncodedCountingMemoryCache</a></span>()
@@ -644,7 +669,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -660,7 +685,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -676,7 +701,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -694,7 +719,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -710,7 +735,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -726,7 +751,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -742,7 +767,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -758,7 +783,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -774,7 +799,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -792,7 +817,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -810,7 +835,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -828,7 +853,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -846,7 +871,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -1252,6 +1277,37 @@ From class
 </div>
 
 
+<a id="getCloseableReferenceFactory()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/core/CloseableReferenceFactory.html">CloseableReferenceFactory</a>
+      </span>
+      <span class="sympad">getCloseableReferenceFactory</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 <a id="getEncodedCountingMemoryCache()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1262,7 +1318,7 @@ From class
          
          
          
-        <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/common/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt;
+        <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/common/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt;
       </span>
       <span class="sympad">getEncodedCountingMemoryCache</span>
       <span class="normal">()</span>
@@ -1370,8 +1426,7 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the instance of <code><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html">ImagePipelineFactory</a></code>.
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the instance of <code><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html">ImagePipelineFactory</a></code>. </p></div>
 
     </div>
 </div>

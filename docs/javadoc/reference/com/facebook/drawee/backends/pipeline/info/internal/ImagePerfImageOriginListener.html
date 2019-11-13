@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -567,7 +575,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/internal/ImagePerfImageOriginListener.html#onImageLoaded(java.lang.String, int, boolean)">onImageLoaded</a></span>(String controllerId, int imageOrigin, boolean successful)
+        <span class="sympad"><a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/internal/ImagePerfImageOriginListener.html#onImageLoaded(java.lang.String, int, boolean, java.lang.String)">onImageLoaded</a></span>(String controllerId, int imageOrigin, boolean successful, String ultimateProducerName)
         
         <div class="jd-descrdiv">Called when an image has been loaded for the controller with the given controller ID that also
  includes the <code><a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/ImageOrigin.html">ImageOrigin</a></code> and whether the image has been loaded successfully.</div>
@@ -822,7 +830,7 @@ From interface
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/ImageOriginListener.html#onImageLoaded(java.lang.String, int, boolean)">onImageLoaded</a></span>(String controllerId, int imageOrigin, boolean successful)
+        <span class="sympad"><a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/ImageOriginListener.html#onImageLoaded(java.lang.String, int, boolean, java.lang.String)">onImageLoaded</a></span>(String controllerId, int imageOrigin, boolean successful, String ultimateProducerName)
         
         <div class="jd-descrdiv">Called when an image has been loaded for the controller with the given controller ID that also
  includes the <code><a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/ImageOrigin.html">ImageOrigin</a></code> and whether the image has been loaded successfully.</div>
@@ -916,7 +924,7 @@ From interface
 
 
 
-<a id="onImageLoaded(java.lang.String, int, boolean)"></a>
+<a id="onImageLoaded(java.lang.String, int, boolean, java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -929,7 +937,7 @@ From interface
         void
       </span>
       <span class="sympad">onImageLoaded</span>
-      <span class="normal">(String controllerId, int imageOrigin, boolean successful)</span>
+      <span class="normal">(String controllerId, int imageOrigin, boolean successful, String ultimateProducerName)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -956,7 +964,11 @@ From interface
         </tr>
         <tr>
           <th>successful</th>
-          <td>true if the image has been loaded successfully
+          <td>true if the image has been loaded successfully</td>
+        </tr>
+        <tr>
+          <th>ultimateProducerName</th>
+          <td>the name of the producer that delivered the final result
 </td>
         </tr>
       </table>

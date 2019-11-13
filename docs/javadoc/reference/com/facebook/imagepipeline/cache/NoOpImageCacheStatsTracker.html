@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -283,6 +289,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/platform/package-summary.html">com.facebook.imagepipeline.platform</a></li>
@@ -313,10 +321,10 @@
     <li><h2>Interfaces</h2>
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.CacheTrimStrategy.html">MemoryCache.CacheTrimStrategy</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html">MemoryCacheTracker</a>&lt;K&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ValueDescriptor.html">ValueDescriptor</a>&lt;V&gt;</li>
       </ul>
@@ -497,8 +505,7 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Class that does no stats tracking at all
-</p>
+<p>Class that does no stats tracking at all </p>
 
 
 
@@ -602,7 +609,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#onBitmapCacheMiss()">onBitmapCacheMiss</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#onBitmapCacheMiss(com.facebook.cache.common.CacheKey)">onBitmapCacheMiss</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
         
         <div class="jd-descrdiv">Called on a bitmap cache miss.</div>
   
@@ -620,7 +627,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#onBitmapCachePut()">onBitmapCachePut</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#onBitmapCachePut(com.facebook.cache.common.CacheKey)">onBitmapCachePut</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
         
         <div class="jd-descrdiv">Called whenever decoded images are put into the bitmap cache.</div>
   
@@ -638,7 +645,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#onDiskCacheGetFail()">onDiskCacheGetFail</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#onDiskCacheGetFail(com.facebook.cache.common.CacheKey)">onDiskCacheGetFail</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
         
         <div class="jd-descrdiv">Called if an exception is thrown on a disk cache read.</div>
   
@@ -674,7 +681,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#onDiskCacheMiss()">onDiskCacheMiss</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#onDiskCacheMiss(com.facebook.cache.common.CacheKey)">onDiskCacheMiss</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
         
         <div class="jd-descrdiv">Called on a disk cache miss.</div>
   
@@ -692,9 +699,9 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#onMemoryCacheHit(com.facebook.cache.common.CacheKey)">onMemoryCacheHit</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#onDiskCachePut(com.facebook.cache.common.CacheKey)">onDiskCachePut</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
         
-        <div class="jd-descrdiv">Called on an encoded memory cache hit.</div>
+        <div class="jd-descrdiv">called whenever new files are written to disk </div>
   
   </td></tr>
 
@@ -710,7 +717,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#onMemoryCacheMiss()">onMemoryCacheMiss</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#onMemoryCacheHit(com.facebook.cache.common.CacheKey)">onMemoryCacheHit</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
         
         <div class="jd-descrdiv">Called on an encoded memory cache hit.</div>
   
@@ -728,7 +735,25 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#onMemoryCachePut()">onMemoryCachePut</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#onMemoryCacheMiss(com.facebook.cache.common.CacheKey)">onMemoryCacheMiss</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
+        
+        <div class="jd-descrdiv">Called on an encoded memory cache hit.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#onMemoryCachePut(com.facebook.cache.common.CacheKey)">onMemoryCachePut</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
         
         <div class="jd-descrdiv">Called whenever encoded images are put into the encoded memory cache.</div>
   
@@ -736,7 +761,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -754,6 +779,24 @@ Summary:
 
 
 	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#onStagingAreaMiss(com.facebook.cache.common.CacheKey)">onStagingAreaMiss</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
+        
+        <div class="jd-descrdiv">Called on a staging area miss hit.</div>
+  
+  </td></tr>
+
+
+	 
     <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
@@ -764,9 +807,9 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#onStagingAreaMiss()">onStagingAreaMiss</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#registerBitmapMemoryCache(com.facebook.imagepipeline.cache.MemoryCache<?, ?>)">registerBitmapMemoryCache</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;?,&nbsp;?&gt; bitmapMemoryCache)
         
-        <div class="jd-descrdiv">Called on a staging area miss hit.</div>
+        <div class="jd-descrdiv">Registers a bitmap cache with this tracker.</div>
   
   </td></tr>
 
@@ -782,25 +825,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#registerBitmapMemoryCache(com.facebook.imagepipeline.cache.CountingMemoryCache<?, ?>)">registerBitmapMemoryCache</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;?,&nbsp;?&gt; bitmapMemoryCache)
-        
-        <div class="jd-descrdiv">Registers a bitmap cache with this tracker.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#registerEncodedMemoryCache(com.facebook.imagepipeline.cache.CountingMemoryCache<?, ?>)">registerEncodedMemoryCache</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;?,&nbsp;?&gt; encodedMemoryCache)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html#registerEncodedMemoryCache(com.facebook.imagepipeline.cache.MemoryCache<?, ?>)">registerEncodedMemoryCache</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;?,&nbsp;?&gt; encodedMemoryCache)
         
         <div class="jd-descrdiv">Registers an encoded memory cache with this tracker.</div>
   
@@ -1072,7 +1097,7 @@ From interface
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onBitmapCacheMiss()">onBitmapCacheMiss</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onBitmapCacheMiss(com.facebook.cache.common.CacheKey)">onBitmapCacheMiss</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
         
         <div class="jd-descrdiv">Called on a bitmap cache miss.</div>
   
@@ -1090,7 +1115,7 @@ From interface
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onBitmapCachePut()">onBitmapCachePut</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onBitmapCachePut(com.facebook.cache.common.CacheKey)">onBitmapCachePut</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
         
         <div class="jd-descrdiv">Called whenever decoded images are put into the bitmap cache.</div>
   
@@ -1108,7 +1133,7 @@ From interface
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onDiskCacheGetFail()">onDiskCacheGetFail</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onDiskCacheGetFail(com.facebook.cache.common.CacheKey)">onDiskCacheGetFail</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
         
         <div class="jd-descrdiv">Called if an exception is thrown on a disk cache read.</div>
   
@@ -1144,7 +1169,7 @@ From interface
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onDiskCacheMiss()">onDiskCacheMiss</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onDiskCacheMiss(com.facebook.cache.common.CacheKey)">onDiskCacheMiss</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
         
         <div class="jd-descrdiv">Called on a disk cache miss.</div>
   
@@ -1162,9 +1187,9 @@ From interface
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onMemoryCacheHit(com.facebook.cache.common.CacheKey)">onMemoryCacheHit</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onDiskCachePut(com.facebook.cache.common.CacheKey)">onDiskCachePut</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
         
-        <div class="jd-descrdiv">Called on an encoded memory cache hit.</div>
+        <div class="jd-descrdiv">called whenever new files are written to disk </div>
   
   </td></tr>
 
@@ -1180,7 +1205,7 @@ From interface
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onMemoryCacheMiss()">onMemoryCacheMiss</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onMemoryCacheHit(com.facebook.cache.common.CacheKey)">onMemoryCacheHit</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
         
         <div class="jd-descrdiv">Called on an encoded memory cache hit.</div>
   
@@ -1198,7 +1223,25 @@ From interface
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onMemoryCachePut()">onMemoryCachePut</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onMemoryCacheMiss(com.facebook.cache.common.CacheKey)">onMemoryCacheMiss</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
+        
+        <div class="jd-descrdiv">Called on an encoded memory cache hit.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onMemoryCachePut(com.facebook.cache.common.CacheKey)">onMemoryCachePut</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
         
         <div class="jd-descrdiv">Called whenever encoded images are put into the encoded memory cache.</div>
   
@@ -1206,7 +1249,7 @@ From interface
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1224,6 +1267,24 @@ From interface
 
 
 	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onStagingAreaMiss(com.facebook.cache.common.CacheKey)">onStagingAreaMiss</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
+        
+        <div class="jd-descrdiv">Called on a staging area miss hit.</div>
+  
+  </td></tr>
+
+
+	 
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
@@ -1234,9 +1295,9 @@ From interface
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onStagingAreaMiss()">onStagingAreaMiss</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#registerBitmapMemoryCache(com.facebook.imagepipeline.cache.MemoryCache<?, ?>)">registerBitmapMemoryCache</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;?,&nbsp;?&gt; bitmapMemoryCache)
         
-        <div class="jd-descrdiv">Called on a staging area miss hit.</div>
+        <div class="jd-descrdiv">Registers a bitmap cache with this tracker.</div>
   
   </td></tr>
 
@@ -1252,25 +1313,7 @@ From interface
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#registerBitmapMemoryCache(com.facebook.imagepipeline.cache.CountingMemoryCache<?, ?>)">registerBitmapMemoryCache</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;?,&nbsp;?&gt; bitmapMemoryCache)
-        
-        <div class="jd-descrdiv">Registers a bitmap cache with this tracker.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#registerEncodedMemoryCache(com.facebook.imagepipeline.cache.CountingMemoryCache<?, ?>)">registerEncodedMemoryCache</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;?,&nbsp;?&gt; encodedMemoryCache)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#registerEncodedMemoryCache(com.facebook.imagepipeline.cache.MemoryCache<?, ?>)">registerEncodedMemoryCache</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;?,&nbsp;?&gt; encodedMemoryCache)
         
         <div class="jd-descrdiv">Registers an encoded memory cache with this tracker.</div>
   
@@ -1387,7 +1430,7 @@ From interface
 </div>
 
 
-<a id="onBitmapCacheMiss()"></a>
+<a id="onBitmapCacheMiss(com.facebook.cache.common.CacheKey)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1400,7 +1443,7 @@ From interface
         void
       </span>
       <span class="sympad">onBitmapCacheMiss</span>
-      <span class="normal">()</span>
+      <span class="normal">(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1418,7 +1461,7 @@ From interface
 </div>
 
 
-<a id="onBitmapCachePut()"></a>
+<a id="onBitmapCachePut(com.facebook.cache.common.CacheKey)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1431,7 +1474,7 @@ From interface
         void
       </span>
       <span class="sympad">onBitmapCachePut</span>
-      <span class="normal">()</span>
+      <span class="normal">(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1449,7 +1492,7 @@ From interface
 </div>
 
 
-<a id="onDiskCacheGetFail()"></a>
+<a id="onDiskCacheGetFail(com.facebook.cache.common.CacheKey)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1462,7 +1505,7 @@ From interface
         void
       </span>
       <span class="sympad">onDiskCacheGetFail</span>
-      <span class="normal">()</span>
+      <span class="normal">(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1511,7 +1554,7 @@ From interface
 </div>
 
 
-<a id="onDiskCacheMiss()"></a>
+<a id="onDiskCacheMiss(com.facebook.cache.common.CacheKey)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1524,7 +1567,7 @@ From interface
         void
       </span>
       <span class="sympad">onDiskCacheMiss</span>
-      <span class="normal">()</span>
+      <span class="normal">(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1537,6 +1580,37 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Called on a disk cache miss. </p></div>
+
+    </div>
+</div>
+
+
+<a id="onDiskCachePut(com.facebook.cache.common.CacheKey)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">onDiskCachePut</span>
+      <span class="normal">(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>called whenever new files are written to disk </p></div>
 
     </div>
 </div>
@@ -1573,7 +1647,7 @@ From interface
 </div>
 
 
-<a id="onMemoryCacheMiss()"></a>
+<a id="onMemoryCacheMiss(com.facebook.cache.common.CacheKey)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1586,7 +1660,7 @@ From interface
         void
       </span>
       <span class="sympad">onMemoryCacheMiss</span>
-      <span class="normal">()</span>
+      <span class="normal">(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1604,7 +1678,7 @@ From interface
 </div>
 
 
-<a id="onMemoryCachePut()"></a>
+<a id="onMemoryCachePut(com.facebook.cache.common.CacheKey)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1617,7 +1691,7 @@ From interface
         void
       </span>
       <span class="sympad">onMemoryCachePut</span>
-      <span class="normal">()</span>
+      <span class="normal">(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1662,15 +1736,15 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Called on an staging area hit.
 
- <p>The staging area stores encoded images. It gets the images before they are written
- to disk cache.
+ <p>The staging area stores encoded images. It gets the images before they are written to disk
+ cache.
 </p></div>
 
     </div>
 </div>
 
 
-<a id="onStagingAreaMiss()"></a>
+<a id="onStagingAreaMiss(com.facebook.cache.common.CacheKey)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1683,7 +1757,7 @@ From interface
         void
       </span>
       <span class="sympad">onStagingAreaMiss</span>
-      <span class="normal">()</span>
+      <span class="normal">(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1701,7 +1775,7 @@ From interface
 </div>
 
 
-<a id="registerBitmapMemoryCache(com.facebook.imagepipeline.cache.CountingMemoryCache<?, ?>)"></a>
+<a id="registerBitmapMemoryCache(com.facebook.imagepipeline.cache.MemoryCache<?, ?>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1714,7 +1788,7 @@ From interface
         void
       </span>
       <span class="sympad">registerBitmapMemoryCache</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;?,&nbsp;?&gt; bitmapMemoryCache)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;?,&nbsp;?&gt; bitmapMemoryCache)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1735,7 +1809,7 @@ From interface
 </div>
 
 
-<a id="registerEncodedMemoryCache(com.facebook.imagepipeline.cache.CountingMemoryCache<?, ?>)"></a>
+<a id="registerEncodedMemoryCache(com.facebook.imagepipeline.cache.MemoryCache<?, ?>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1748,7 +1822,7 @@ From interface
         void
       </span>
       <span class="sympad">registerEncodedMemoryCache</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;?,&nbsp;?&gt; encodedMemoryCache)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;?,&nbsp;?&gt; encodedMemoryCache)</span>
     </h4>
       <div class="api-level">
         <div>

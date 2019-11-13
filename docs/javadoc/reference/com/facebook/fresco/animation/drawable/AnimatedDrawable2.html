@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -517,8 +525,8 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Experimental new animated drawable that uses a supplied
- <code><a href="../../../../../com/facebook/fresco/animation/backend/AnimationBackend.html">AnimationBackend</a></code> for drawing frames.
+<p>Experimental new animated drawable that uses a supplied <code><a href="../../../../../com/facebook/fresco/animation/backend/AnimationBackend.html">AnimationBackend</a></code> for drawing
+ frames.
 </p>
 
 
@@ -975,8 +983,8 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2.html#setFrameSchedulingDelayMs(long)">setFrameSchedulingDelayMs</a></span>(long frameSchedulingDelayMs)
         
-        <div class="jd-descrdiv">Frame scheduling delay to shift the target render time for a frame within the frame's
- visible window.</div>
+        <div class="jd-descrdiv">Frame scheduling delay to shift the target render time for a frame within the frame's visible
+ window.</div>
   
   </td></tr>
 
@@ -2709,8 +2717,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Informs the Drawable to drop its caches.
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Informs the Drawable to drop its caches. </p></div>
 
     </div>
 </div>
@@ -2803,8 +2810,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Get the number of frames for the animation.
- If no animation backend is set, 0 will be returned.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Get the number of frames for the animation. If no animation backend is set, 0 will be returned.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>the number of frames of the animation
@@ -2902,11 +2908,8 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Get the loop count of the animation.
- The returned value is either <code><a href="../../../../../com/facebook/fresco/animation/backend/AnimationInformation.html#LOOP_COUNT_INFINITE">LOOP_COUNT_INFINITE</a></code> if the animation
- is repeated infinitely or a positive integer that corresponds to the number of loops.
- If no animation backend is set, <code><a href="../../../../../com/facebook/fresco/animation/backend/AnimationInformation.html#LOOP_COUNT_INFINITE">LOOP_COUNT_INFINITE</a></code>
- will be returned.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Get the loop count of the animation. The returned value is either <code><a href="../../../../../com/facebook/fresco/animation/backend/AnimationInformation.html#LOOP_COUNT_INFINITE">LOOP_COUNT_INFINITE</a></code> if the animation is repeated infinitely or a positive
+ integer that corresponds to the number of loops. If no animation backend is set, <code><a href="../../../../../com/facebook/fresco/animation/backend/AnimationInformation.html#LOOP_COUNT_INFINITE">LOOP_COUNT_INFINITE</a></code> will be returned.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>the loop count of the animation or <code><a href="../../../../../com/facebook/fresco/animation/backend/AnimationInformation.html#LOOP_COUNT_INFINITE">LOOP_COUNT_INFINITE</a></code>
@@ -3107,8 +3110,8 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Jump immediately to the given frame number. The animation will not be paused if
- it is running. If the animation is not running, the animation will not be started.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Jump immediately to the given frame number. The animation will not be paused if it is running.
+ If the animation is not running, the animation will not be started.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -3180,8 +3183,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Update the animation backend to be used for the animation.
- This will also stop the animation.
+  <div class="jd-tagdata jd-tagdescr"><p>Update the animation backend to be used for the animation. This will also stop the animation.
  In order to remove the current animation backend, call this method with null.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
@@ -3336,9 +3338,9 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Frame scheduling delay to shift the target render time for a frame within the frame's
- visible window. If the value is set to 0, the frame will be scheduled right at the beginning
- of the frame's visible window.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Frame scheduling delay to shift the target render time for a frame within the frame's visible
+ window. If the value is set to 0, the frame will be scheduled right at the beginning of the
+ frame's visible window.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -3379,9 +3381,9 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Frame scheduling offset to shift the animation time by the given offset.
- This is similar to #mFrameSchedulingDelayMs but instead of delaying the invalidation,
- this offsets the animation time by the given value.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Frame scheduling offset to shift the animation time by the given offset. This is similar to
+ #mFrameSchedulingDelayMs but instead of delaying the invalidation, this offsets the
+ animation time by the given value.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -3422,8 +3424,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Start the animation.
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Start the animation. </p></div>
 
     </div>
 </div>
@@ -3526,12 +3527,12 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Set the animation to the given level. The level represents the animation time in ms.
- If the animation time is greater than the last frame time for the last loop, the last
- frame will be displayed.
+  <div class="jd-tagdata jd-tagdescr"><p>Set the animation to the given level. The level represents the animation time in ms. If the
+ animation time is greater than the last frame time for the last loop, the last frame will be
+ displayed.
 
- If the animation is running (e.g. if <code><a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2.html#start()">start()</a></code> has been called, the level change
- will be ignored. In this case, <code><a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2.html#stop()">stop()</a></code> the animation first.</p></div>
+ <p>If the animation is running (e.g. if <code><a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2.html#start()">start()</a></code> has been called, the level change will
+ be ignored. In this case, <code><a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2.html#stop()">stop()</a></code> the animation first.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">

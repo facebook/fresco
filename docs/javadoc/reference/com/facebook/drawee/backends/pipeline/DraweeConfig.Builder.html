@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -562,8 +570,7 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/DraweeConfig.Builder.html#addCustomDrawableFactory(com.facebook.imagepipeline.drawable.DrawableFactory)">addCustomDrawableFactory</a></span>(<a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a> factory)
         
-        <div class="jd-descrdiv">Add a custom drawable factory that will be used to create
- Drawables for <code><a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a></code>s.</div>
+        <div class="jd-descrdiv">Add a custom drawable factory that will be used to create Drawables for <code><a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a></code>s.</div>
   
   </td></tr>
 
@@ -597,8 +604,8 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/DraweeConfig.Builder.html#setDebugOverlayEnabledSupplier(com.facebook.common.internal.Supplier<java.lang.Boolean>)">setDebugOverlayEnabledSupplier</a></span>(<a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; debugOverlayEnabledSupplier)
         
-        <div class="jd-descrdiv">Set whether a debug overlay that displays image information, like dimensions and size
- should be drawn on top of a Drawee view.</div>
+        <div class="jd-descrdiv">Set whether a debug overlay that displays image information, like dimensions and size should
+ be drawn on top of a Drawee view.</div>
   
   </td></tr>
 
@@ -616,14 +623,30 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/DraweeConfig.Builder.html#setDrawDebugOverlay(boolean)">setDrawDebugOverlay</a></span>(boolean drawDebugOverlay)
         
-        <div class="jd-descrdiv">Set whether a debug overlay that displays image information, like dimensions and size
- should be drawn on top of a Drawee view.</div>
+        <div class="jd-descrdiv">Set whether a debug overlay that displays image information, like dimensions and size should
+ be drawn on top of a Drawee view.</div>
   
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../../com/facebook/drawee/backends/pipeline/DraweeConfig.Builder.html">DraweeConfig.Builder</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/DraweeConfig.Builder.html#setImagePerfDataListener(com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener)">setImagePerfDataListener</a></span>(<a href="../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfDataListener.html">ImagePerfDataListener</a> imagePerfDataListener)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -961,8 +984,7 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Add a custom drawable factory that will be used to create
- Drawables for <code><a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a></code>s.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Add a custom drawable factory that will be used to create Drawables for <code><a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a></code>s.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1038,15 +1060,15 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Set whether a debug overlay that displays image information, like dimensions and size
- should be drawn on top of a Drawee view.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Set whether a debug overlay that displays image information, like dimensions and size should
+ be drawn on top of a Drawee view.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
           <th>debugOverlayEnabledSupplier</th>
           <td>should return <code>true</code> if the debug overlay
- should be drawn</td>
+     should be drawn</td>
         </tr>
       </table>
   </div>
@@ -1085,8 +1107,8 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Set whether a debug overlay that displays image information, like dimensions and size
- should be drawn on top of a Drawee view.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Set whether a debug overlay that displays image information, like dimensions and size should
+ be drawn on top of a Drawee view.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1101,6 +1123,37 @@ From class
       <ul class="nolist"><li>the builder
 </li></ul>
   </div>
+
+    </div>
+</div>
+
+
+<a id="setImagePerfDataListener(com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../../com/facebook/drawee/backends/pipeline/DraweeConfig.Builder.html">DraweeConfig.Builder</a>
+      </span>
+      <span class="sympad">setImagePerfDataListener</span>
+      <span class="normal">(<a href="../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfDataListener.html">ImagePerfDataListener</a> imagePerfDataListener)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>

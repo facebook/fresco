@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -562,19 +570,21 @@ Summary:
 <h2>Class Overview</h2>
 <p>The root drawable of a DraweeHierarchy.
 
- Root drawable has several functions:
+ <p>Root drawable has several functions:
+
  <ul>
- <li> A hierarchy always has the same instance of a root drawable. That means that internal
- structural changes within the hierarchy don't require setting a new drawable to the view.
- <li> Root drawable prevents intrinsic dimensions to escape the hierarchy. This in turn prevents
- view to do any erroneous scaling based on those intrinsic dimensions, as the hierarchy is in
- charge of all the required scaling.
- <li> Root drawable is visibility aware. Visibility callback is used to attach the controller
- (if not already attached) when the hierarchy needs to be drawn. This prevents photo-not-loading
- issues in case attach event has not been called (for whatever reason). It also helps with
- memory management as the controller will get detached if the drawable is not visible.
- <li> Root drawable supports controller overlay, a special overlay set by the controller. Typical
- usages are debugging, diagnostics and other cases where controller-specific overlay is required.
+   <li>A hierarchy always has the same instance of a root drawable. That means that internal
+       structural changes within the hierarchy don't require setting a new drawable to the view.
+   <li>Root drawable prevents intrinsic dimensions to escape the hierarchy. This in turn prevents
+       view to do any erroneous scaling based on those intrinsic dimensions, as the hierarchy is
+       in charge of all the required scaling.
+   <li>Root drawable is visibility aware. Visibility callback is used to attach the controller (if
+       not already attached) when the hierarchy needs to be drawn. This prevents photo-not-loading
+       issues in case attach event has not been called (for whatever reason). It also helps with
+       memory management as the controller will get detached if the drawable is not visible.
+   <li>Root drawable supports controller overlay, a special overlay set by the controller. Typical
+       usages are debugging, diagnostics and other cases where controller-specific overlay is
+       required.
  </ul>
 </p>
 

@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -479,11 +487,11 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>A clock that returns number of milliseconds since boot. It guarantees that every next
- call to now() will return a value that is not less that was returned from previous call to now().
- This happens regardless system time changes, time zone changes, daylight saving changes etc.
+<p>A clock that returns number of milliseconds since boot. It guarantees that every next call to
+ now() will return a value that is not less that was returned from previous call to now(). This
+ happens regardless system time changes, time zone changes, daylight saving changes etc.
 
- DO USE THIS CLOCK FOR PERFORMANCE MEASUREMENT.  IT STOPS TICKING WHILE THE DEVICE SLEEPS, THAT
+ <p>DO USE THIS CLOCK FOR PERFORMANCE MEASUREMENT. IT STOPS TICKING WHILE THE DEVICE SLEEPS, THAT
  IS, WHILE THE DEVICE CANNOT RUN THE CODE WE ARE PURPORTEDLY MEASURING.
 </p>
 
@@ -943,11 +951,11 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Produce a timestamp.  Values returned from this method may only be compared to other values
- returned from this clock in this process.  They have no meaning outside of this process
- and should not be written to disk.
+  <div class="jd-tagdata jd-tagdescr"><p>Produce a timestamp. Values returned from this method may only be compared to other values
+ returned from this clock in this process. They have no meaning outside of this process and
+ should not be written to disk.
 
- The difference between two timestamps is an interval, in milliseconds.</p></div>
+ <p>The difference between two timestamps is an interval, in milliseconds.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>A timestamp for the current time, in ms.

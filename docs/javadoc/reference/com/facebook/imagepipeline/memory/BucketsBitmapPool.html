@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -283,6 +289,8 @@
     <li class="selected api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/platform/package-summary.html">com.facebook.imagepipeline.platform</a></li>
@@ -320,6 +328,8 @@
               
     <li><h2>Classes</h2>
       <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/AshmemMemoryChunk.html">AshmemMemoryChunk</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/AshmemMemoryChunkPool.html">AshmemMemoryChunkPool</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.html">BasePool</a>&lt;V&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BitmapCounter.html">BitmapCounter</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BitmapCounterConfig.html">BitmapCounterConfig</a></li>
@@ -335,6 +345,7 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DefaultFlexByteArrayPoolParams.html">DefaultFlexByteArrayPoolParams</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DefaultNativeMemoryChunkPoolParams.html">DefaultNativeMemoryChunkPoolParams</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DummyBitmapPool.html">DummyBitmapPool</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DummyTrackingInUseBitmapPool.html">DummyTrackingInUseBitmapPool</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/FlexByteArrayPool.html">FlexByteArrayPool</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/GenericByteArrayPool.html">GenericByteArrayPool</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/LruBitmapPool.html">LruBitmapPool</a></li>
@@ -565,13 +576,12 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Manages a pool of bitmaps. This allows us to reuse bitmaps instead of constantly allocating
- them (and pressuring the Java GC to garbage collect unused bitmaps).
- <p>
- The pool supports a get/release paradigm.
- get() allows for a bitmap in the pool to be reused if it matches the desired
- dimensions; if no such bitmap is found in the pool, a new one is allocated.
- release() returns a bitmap to the pool.
+<p>Manages a pool of bitmaps. This allows us to reuse bitmaps instead of constantly allocating them
+ (and pressuring the Java GC to garbage collect unused bitmaps).
+
+ <p>The pool supports a get/release paradigm. get() allows for a bitmap in the pool to be reused
+ if it matches the desired dimensions; if no such bitmap is found in the pool, a new one is
+ allocated. release() returns a bitmap to the pool.
 </p>
 
 
@@ -779,8 +789,8 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/BucketsBitmapPool.html#isReusable(android.graphics.Bitmap)">isReusable</a></span>(Bitmap value)
         
-        <div class="jd-descrdiv">Determine if this bitmap is reusable (i.e.) if subsequent <code><a href="../../../../com/facebook/imagepipeline/memory/BasePool.html#get(int)">get(int)</a></code> requests can
- use this value.</div>
+        <div class="jd-descrdiv">Determine if this bitmap is reusable (i.e.) if subsequent <code><a href="../../../../com/facebook/imagepipeline/memory/BasePool.html#get(int)">get(int)</a></code> requests can use
+ this value.</div>
   
   </td></tr>
 
@@ -1044,8 +1054,8 @@ From class
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.html#trim(com.facebook.common.memory.MemoryTrimType)">trim</a></span>(<a href="../../../../com/facebook/common/memory/MemoryTrimType.html">MemoryTrimType</a> memoryTrimType)
         
-        <div class="jd-descrdiv">Trims the pool in response to low-memory states (invoked from MemoryManager)
- For now, we'll do the simplest thing, and simply clear out the entire pool.</div>
+        <div class="jd-descrdiv">Trims the pool in response to low-memory states (invoked from MemoryManager) For now, we'll do
+ the simplest thing, and simply clear out the entire pool.</div>
   
   </td></tr>
 
@@ -1397,7 +1407,7 @@ From interface
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/references/ResourceReleaser.html#release(T)">release</a></span>(T value)
         
-        <div class="jd-descrdiv"><p>Release the given value.</div>
+        <div class="jd-descrdiv">Release the given value.</div>
   
   </td></tr>
 
@@ -1533,8 +1543,8 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Allocate a bitmap that has a backing memory allocation of 'size' bytes.
- This is configuration agnostic so the size is the actual size in bytes of the bitmap.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Allocate a bitmap that has a backing memory allocation of 'size' bytes. This is configuration
+ agnostic so the size is the actual size in bytes of the bitmap.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1665,9 +1675,8 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the bucketed size of the value.
- We don't check the 'validity' of the value (beyond the not-null check). That's handled
- in <code><a href="../../../../com/facebook/imagepipeline/memory/BucketsBitmapPool.html#isReusable(android.graphics.Bitmap)">isReusable(Bitmap)</a></code></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the bucketed size of the value. We don't check the 'validity' of the value (beyond the
+ not-null check). That's handled in <code><a href="../../../../com/facebook/imagepipeline/memory/BucketsBitmapPool.html#isReusable(android.graphics.Bitmap)">isReusable(Bitmap)</a></code></p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1788,11 +1797,8 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Determine if this bitmap is reusable (i.e.) if subsequent <code><a href="../../../../com/facebook/imagepipeline/memory/BasePool.html#get(int)">get(int)</a></code> requests can
- use this value.
- The bitmap is reusable if
-  - it has not already been recycled AND
-  - it is mutable</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Determine if this bitmap is reusable (i.e.) if subsequent <code><a href="../../../../com/facebook/imagepipeline/memory/BasePool.html#get(int)">get(int)</a></code> requests can use
+ this value. The bitmap is reusable if - it has not already been recycled AND - it is mutable</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">

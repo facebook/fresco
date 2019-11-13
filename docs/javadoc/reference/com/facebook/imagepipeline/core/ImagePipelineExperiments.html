@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -321,6 +329,7 @@
               
     <li><h2>Classes</h2>
       <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/CloseableReferenceFactory.html">CloseableReferenceFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/DefaultExecutorSupplier.html">DefaultExecutorSupplier</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/DiskStorageCacheFactory.html">DiskStorageCacheFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/DynamicDefaultDiskStorageFactory.html">DynamicDefaultDiskStorageFactory</a></li>
@@ -332,6 +341,7 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html">ImagePipelineExperiments.Builder</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.DefaultProducerFactoryMethod.html">ImagePipelineExperiments.DefaultProducerFactoryMethod</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html">ImagePipelineFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/NativeCodeSetup.html">NativeCodeSetup</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/PriorityThreadFactory.html">PriorityThreadFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ProducerFactory.html">ProducerFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ProducerSequenceFactory.html">ProducerSequenceFactory</a></li>
@@ -605,10 +615,10 @@ Summary:
             
             
             
-            boolean
+            int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.html#getBitmapPrepareToDrawForPrefetch()">getBitmapPrepareToDrawForPrefetch</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.html#getBitmapCloseableRefType()">getBitmapCloseableRefType</a></span>()
         
   </td></tr>
 
@@ -621,10 +631,10 @@ Summary:
             
             
             
-            int
+            boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.html#getBitmapPrepareToDrawMaxSizeBytes()">getBitmapPrepareToDrawMaxSizeBytes</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.html#getBitmapPrepareToDrawForPrefetch()">getBitmapPrepareToDrawForPrefetch</a></span>()
         
   </td></tr>
 
@@ -640,7 +650,7 @@ Summary:
             int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.html#getBitmapPrepareToDrawMinSizeBytes()">getBitmapPrepareToDrawMinSizeBytes</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.html#getBitmapPrepareToDrawMaxSizeBytes()">getBitmapPrepareToDrawMaxSizeBytes</a></span>()
         
   </td></tr>
 
@@ -656,7 +666,39 @@ Summary:
             int
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.html#getBitmapPrepareToDrawMinSizeBytes()">getBitmapPrepareToDrawMinSizeBytes</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            int
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.html#getMaxBitmapSize()">getMaxBitmapSize</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            long
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.html#getMemoryType()">getMemoryType</a></span>()
         
   </td></tr>
 
@@ -685,6 +727,22 @@ Summary:
             
             
             
+            <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.html#getSuppressBitmapPrefetchingSupplier()">getSuppressBitmapPrefetchingSupplier</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
@@ -694,7 +752,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -710,7 +768,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -726,7 +784,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -742,7 +800,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -753,6 +811,22 @@ Summary:
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.html#isDecodeCancellationEnabled()">isDecodeCancellationEnabled</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.html#isExperimentalThreadHandoffQueueEnabled()">isExperimentalThreadHandoffQueueEnabled</a></span>()
         
   </td></tr>
 
@@ -864,7 +938,39 @@ Summary:
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.html#shouldDownsampleIfLargeBitmap()">shouldDownsampleIfLargeBitmap</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.html#shouldDownscaleFrameToDrawableDimensions()">shouldDownscaleFrameToDrawableDimensions</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.html#shouldKeepCancelledFetchAsLowPriority()">shouldKeepCancelledFetchAsLowPriority</a></span>()
         
   </td></tr>
 
@@ -1127,6 +1233,37 @@ From class
 
 
 
+<a id="getBitmapCloseableRefType()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        int
+      </span>
+      <span class="sympad">getBitmapCloseableRefType</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 <a id="getBitmapPrepareToDrawForPrefetch()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1251,6 +1388,37 @@ From class
 </div>
 
 
+<a id="getMemoryType()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        long
+      </span>
+      <span class="sympad">getMemoryType</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 <a id="getProducerFactoryMethod()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1264,6 +1432,37 @@ From class
         <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.ProducerFactoryMethod.html">ImagePipelineExperiments.ProducerFactoryMethod</a>
       </span>
       <span class="sympad">getProducerFactoryMethod</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="getSuppressBitmapPrefetchingSupplier()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt;
+      </span>
+      <span class="sympad">getSuppressBitmapPrefetchingSupplier</span>
       <span class="normal">()</span>
     </h4>
       <div class="api-level">
@@ -1419,6 +1618,37 @@ From class
         boolean
       </span>
       <span class="sympad">isDecodeCancellationEnabled</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="isExperimentalThreadHandoffQueueEnabled()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">isExperimentalThreadHandoffQueueEnabled</span>
       <span class="normal">()</span>
     </h4>
       <div class="api-level">
@@ -1623,6 +1853,37 @@ From class
 </div>
 
 
+<a id="shouldDownsampleIfLargeBitmap()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">shouldDownsampleIfLargeBitmap</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 <a id="shouldDownscaleFrameToDrawableDimensions()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1636,6 +1897,37 @@ From class
         boolean
       </span>
       <span class="sympad">shouldDownscaleFrameToDrawableDimensions</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="shouldKeepCancelledFetchAsLowPriority()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">shouldKeepCancelledFetchAsLowPriority</span>
       <span class="normal">()</span>
     </h4>
       <div class="api-level">

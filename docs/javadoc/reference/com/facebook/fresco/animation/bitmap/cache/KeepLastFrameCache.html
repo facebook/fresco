@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -283,6 +289,8 @@
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/imagepipeline/platform/package-summary.html">com.facebook.imagepipeline.platform</a></li>
@@ -313,6 +321,7 @@
               
     <li><h2>Classes</h2>
       <ul>
+          <li class="api apilevel-"><a href="../../../../../../com/facebook/fresco/animation/bitmap/cache/AnimationFrameCacheKey.html">AnimationFrameCacheKey</a></li>
           <li class="api apilevel-"><a href="../../../../../../com/facebook/fresco/animation/bitmap/cache/FrescoFrameCache.html">FrescoFrameCache</a></li>
           <li class="selected api apilevel-"><a href="../../../../../../com/facebook/fresco/animation/bitmap/cache/KeepLastFrameCache.html">KeepLastFrameCache</a></li>
           <li class="api apilevel-"><a href="../../../../../../com/facebook/fresco/animation/bitmap/cache/NoOpCache.html">NoOpCache</a></li>
@@ -475,8 +484,7 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Simple bitmap cache that keeps the last frame and reuses it if possible.
-</p>
+<p>Simple bitmap cache that keeps the last frame and reuses it if possible. </p>
 
 
 
@@ -1227,8 +1235,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Clear the cache.
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Clear the cache. </p></div>
 
     </div>
 </div>
@@ -1402,9 +1409,8 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Get a fallback frame for the given frame number. This method is called if all other attempts
- to draw a frame failed.
- The bitmap returned could for example be the last drawn frame (if any).</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Get a fallback frame for the given frame number. This method is called if all other attempts to
+ draw a frame failed. The bitmap returned could for example be the last drawn frame (if any).</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1482,17 +1488,16 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Callback when a bitmap reference for a given frame has been prepared for future rendering.
 
- This method is called ahead of render time (i.e. when future frames have been prepared
- in the background), whereas <code><a href="../../../../../../com/facebook/fresco/animation/bitmap/BitmapFrameCache.html#onFrameRendered(int, com.facebook.common.references.CloseableReference<android.graphics.Bitmap>, int)">onFrameRendered(int, CloseableReference, int)</a></code>
- is invoked when the actual frame has been drawn on a Canvas.
+ <p>This method is called ahead of render time (i.e. when future frames have been prepared in
+ the background), whereas <code><a href="../../../../../../com/facebook/fresco/animation/bitmap/BitmapFrameCache.html#onFrameRendered(int, com.facebook.common.references.CloseableReference<android.graphics.Bitmap>, int)">onFrameRendered(int, CloseableReference, int)</a></code> is invoked when
+ the actual frame has been drawn on a Canvas.
 
- The supplied bitmap reference can either hold a reused bitmap returned by
- <code><a href="../../../../../../com/facebook/fresco/animation/bitmap/BitmapFrameCache.html#getBitmapToReuseForFrame(int, int, int)">getBitmapToReuseForFrame(int, int, int)</a></code> or a new bitmap as indicated by the
- frame type parameter.
+ <p>The supplied bitmap reference can either hold a reused bitmap returned by <code><a href="../../../../../../com/facebook/fresco/animation/bitmap/BitmapFrameCache.html#getBitmapToReuseForFrame(int, int, int)">getBitmapToReuseForFrame(int, int, int)</a></code> or a new bitmap as indicated by the frame type
+ parameter.
 
- Note: the implementation of this interface must manually clone the given bitmap reference
- if it wants to hold on to the bitmap.
- The original reference will be automatically closed after this call.</p></div>
+ <p>Note: the implementation of this interface must manually clone the given bitmap reference if
+ it wants to hold on to the bitmap. The original reference will be automatically closed after
+ this call.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1545,13 +1550,12 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Callback when the given bitmap has been drawn to a canvas.
- This bitmap can either be a reused bitmap returned by
- <code><a href="../../../../../../com/facebook/fresco/animation/bitmap/BitmapFrameCache.html#getBitmapToReuseForFrame(int, int, int)">getBitmapToReuseForFrame(int, int, int)</a></code> or a new bitmap.
+  <div class="jd-tagdata jd-tagdescr"><p>Callback when the given bitmap has been drawn to a canvas. This bitmap can either be a reused
+ bitmap returned by <code><a href="../../../../../../com/facebook/fresco/animation/bitmap/BitmapFrameCache.html#getBitmapToReuseForFrame(int, int, int)">getBitmapToReuseForFrame(int, int, int)</a></code> or a new bitmap.
 
- Note: the implementation of this interface must manually clone the given bitmap reference
- if it wants to hold on to the bitmap.
- The original reference will be automatically closed after this call.</p></div>
+ <p>Note: the implementation of this interface must manually clone the given bitmap reference if
+ it wants to hold on to the bitmap. The original reference will be automatically closed after
+ this call.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">

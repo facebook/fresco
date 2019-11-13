@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -467,8 +475,8 @@ Summary:
 <h2>Class Overview</h2>
 <p>Fresco entry point.
 
- <p/> You must initialize this class before use. The simplest way is to just do
- {#code Fresco.initialize(Context)}.
+ <p>You must initialize this class before use. The simplest way is to just do {#code
+ Fresco.initialize(Context)}.
 </p>
 
 
@@ -611,7 +619,7 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/Fresco.html#initialize(android.content.Context, com.facebook.imagepipeline.core.ImagePipelineConfig, com.facebook.drawee.backends.pipeline.DraweeConfig)">initialize</a></span>(Context context, <a href="../../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.html">ImagePipelineConfig</a> imagePipelineConfig, <a href="../../../../../com/facebook/drawee/backends/pipeline/DraweeConfig.html">DraweeConfig</a> draweeConfig)
         
-        <div class="jd-descrdiv">Initializes Fresco with the specified config.</div>
+        <div class="jd-descrdiv">Initializes Fresco with the specified config and native code enabled.</div>
   
   </td></tr>
 
@@ -645,6 +653,24 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/Fresco.html#initialize(android.content.Context, com.facebook.imagepipeline.core.ImagePipelineConfig, com.facebook.drawee.backends.pipeline.DraweeConfig, boolean)">initialize</a></span>(Context context, <a href="../../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.html">ImagePipelineConfig</a> imagePipelineConfig, <a href="../../../../../com/facebook/drawee/backends/pipeline/DraweeConfig.html">DraweeConfig</a> draweeConfig, boolean useNativeCode)
+        
+        <div class="jd-descrdiv">Initializes Fresco with the specified config.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/Fresco.html#initialize(android.content.Context)">initialize</a></span>(Context context)
         
         <div class="jd-descrdiv">Initializes Fresco with the default config.</div>
@@ -653,7 +679,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -671,7 +697,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1095,7 +1121,7 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Initializes Fresco with the specified config. </p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Initializes Fresco with the specified config and native code enabled. </p></div>
 
     </div>
 </div>
@@ -1127,6 +1153,37 @@ From class
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Initializes Fresco with the default Drawee config. </p></div>
+
+    </div>
+</div>
+
+
+<a id="initialize(android.content.Context, com.facebook.imagepipeline.core.ImagePipelineConfig, com.facebook.drawee.backends.pipeline.DraweeConfig, boolean)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">initialize</span>
+      <span class="normal">(Context context, <a href="../../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.html">ImagePipelineConfig</a> imagePipelineConfig, <a href="../../../../../com/facebook/drawee/backends/pipeline/DraweeConfig.html">DraweeConfig</a> draweeConfig, boolean useNativeCode)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Initializes Fresco with the specified config. </p></div>
 
     </div>
 </div>

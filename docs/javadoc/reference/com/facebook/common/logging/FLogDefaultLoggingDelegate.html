@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -479,8 +487,7 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Default implementation of <code><a href="../../../../com/facebook/common/logging/LoggingDelegate.html">LoggingDelegate</a></code>.
-</p>
+<p>Default implementation of <code><a href="../../../../com/facebook/common/logging/LoggingDelegate.html">LoggingDelegate</a></code>. </p>
 
 
 
@@ -750,8 +757,8 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/logging/FLogDefaultLoggingDelegate.html#setApplicationTag(java.lang.String)">setApplicationTag</a></span>(String tag)
         
-        <div class="jd-descrdiv">Sets an application tag that is used for checking if a log line is loggable and also
- to prefix to all log lines.</div>
+        <div class="jd-descrdiv">Sets an application tag that is used for checking if a log line is loggable and also to prefix
+ to all log lines.</div>
   
   </td></tr>
 
@@ -859,8 +866,8 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/logging/FLogDefaultLoggingDelegate.html#wtf(java.lang.String, java.lang.String)">wtf</a></span>(String tag, String msg)
         
-        <div class="jd-descrdiv"><p> Note: this gets forwarded to <code>android.util.Log.e</code> as <code>android.util.Log.wtf</code>
- might crash the app.</div>
+        <div class="jd-descrdiv">Note: this gets forwarded to <code>android.util.Log.e</code> as <code>android.util.Log.wtf</code> might
+ crash the app.</div>
   
   </td></tr>
 
@@ -878,8 +885,8 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/logging/FLogDefaultLoggingDelegate.html#wtf(java.lang.String, java.lang.String, java.lang.Throwable)">wtf</a></span>(String tag, String msg, Throwable tr)
         
-        <div class="jd-descrdiv"><p> Note: this gets forwarded to <code>android.util.Log.e</code> as <code>android.util.Log.wtf</code>
- might crash the app.</div>
+        <div class="jd-descrdiv">Note: this gets forwarded to <code>android.util.Log.e</code> as <code>android.util.Log.wtf</code> might
+ crash the app.</div>
   
   </td></tr>
 
@@ -1524,8 +1531,8 @@ From interface
       <table class="jd-tagtable">
         <tr>
           <th>tag</th>
-          <td>Used to identify the source of a log message.  It usually identifies
-            the class or activity where the log call occurs.</td>
+          <td>Used to identify the source of a log message. It usually identifies the class or
+     activity where the log call occurs.</td>
         </tr>
         <tr>
           <th>msg</th>
@@ -1574,8 +1581,8 @@ From interface
       <table class="jd-tagtable">
         <tr>
           <th>tag</th>
-          <td>Used to identify the source of a log message.  It usually identifies
-            the class or activity where the log call occurs.</td>
+          <td>Used to identify the source of a log message. It usually identifies the class or
+     activity where the log call occurs.</td>
         </tr>
         <tr>
           <th>msg</th>
@@ -1620,8 +1627,8 @@ From interface
       <table class="jd-tagtable">
         <tr>
           <th>tag</th>
-          <td>Used to identify the source of a log message.  It usually identifies
-            the class or activity where the log call occurs.</td>
+          <td>Used to identify the source of a log message. It usually identifies the class or
+     activity where the log call occurs.</td>
         </tr>
         <tr>
           <th>msg</th>
@@ -1666,8 +1673,8 @@ From interface
       <table class="jd-tagtable">
         <tr>
           <th>tag</th>
-          <td>Used to identify the source of a log message.  It usually identifies
-            the class or activity where the log call occurs.</td>
+          <td>Used to identify the source of a log message. It usually identifies the class or
+     activity where the log call occurs.</td>
         </tr>
         <tr>
           <th>msg</th>
@@ -1783,8 +1790,8 @@ From interface
       <table class="jd-tagtable">
         <tr>
           <th>tag</th>
-          <td>Used to identify the source of a log message.  It usually identifies
-            the class or activity where the log call occurs.</td>
+          <td>Used to identify the source of a log message. It usually identifies the class or
+     activity where the log call occurs.</td>
         </tr>
         <tr>
           <th>msg</th>
@@ -1833,8 +1840,8 @@ From interface
       <table class="jd-tagtable">
         <tr>
           <th>tag</th>
-          <td>Used to identify the source of a log message.  It usually identifies
-            the class or activity where the log call occurs.</td>
+          <td>Used to identify the source of a log message. It usually identifies the class or
+     activity where the log call occurs.</td>
         </tr>
         <tr>
           <th>msg</th>
@@ -1967,8 +1974,8 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Sets an application tag that is used for checking if a log line is loggable and also
- to prefix to all log lines.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Sets an application tag that is used for checking if a log line is loggable and also to prefix
+ to all log lines.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -2056,8 +2063,8 @@ From interface
       <table class="jd-tagtable">
         <tr>
           <th>tag</th>
-          <td>Used to identify the source of a log message.  It usually identifies
-            the class or activity where the log call occurs.</td>
+          <td>Used to identify the source of a log message. It usually identifies the class or
+     activity where the log call occurs.</td>
         </tr>
         <tr>
           <th>msg</th>
@@ -2102,8 +2109,8 @@ From interface
       <table class="jd-tagtable">
         <tr>
           <th>tag</th>
-          <td>Used to identify the source of a log message.  It usually identifies
-            the class or activity where the log call occurs.</td>
+          <td>Used to identify the source of a log message. It usually identifies the class or
+     activity where the log call occurs.</td>
         </tr>
         <tr>
           <th>msg</th>
@@ -2152,8 +2159,8 @@ From interface
       <table class="jd-tagtable">
         <tr>
           <th>tag</th>
-          <td>Used to identify the source of a log message.  It usually identifies
-            the class or activity where the log call occurs.</td>
+          <td>Used to identify the source of a log message. It usually identifies the class or
+     activity where the log call occurs.</td>
         </tr>
         <tr>
           <th>msg</th>
@@ -2202,8 +2209,8 @@ From interface
       <table class="jd-tagtable">
         <tr>
           <th>tag</th>
-          <td>Used to identify the source of a log message.  It usually identifies
-            the class or activity where the log call occurs.</td>
+          <td>Used to identify the source of a log message. It usually identifies the class or
+     activity where the log call occurs.</td>
         </tr>
         <tr>
           <th>msg</th>
@@ -2242,8 +2249,8 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p><p> Note: this gets forwarded to <code>android.util.Log.e</code> as <code>android.util.Log.wtf</code>
- might crash the app.
+  <div class="jd-tagdata jd-tagdescr"><p>Note: this gets forwarded to <code>android.util.Log.e</code> as <code>android.util.Log.wtf</code> might
+ crash the app.
 </p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
@@ -2289,8 +2296,8 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p><p> Note: this gets forwarded to <code>android.util.Log.e</code> as <code>android.util.Log.wtf</code>
- might crash the app.
+  <div class="jd-tagdata jd-tagdescr"><p>Note: this gets forwarded to <code>android.util.Log.e</code> as <code>android.util.Log.wtf</code> might
+ crash the app.
 </p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
@@ -2305,7 +2312,7 @@ From interface
         </tr>
         <tr>
           <th>tr</th>
-          <td>An exception to log.  May be null.
+          <td>An exception to log. May be null.
 </td>
         </tr>
       </table>

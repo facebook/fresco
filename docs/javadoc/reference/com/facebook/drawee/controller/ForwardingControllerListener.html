@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -385,6 +393,13 @@
   
   
 
+  
+   
+  
+  
+  
+  
+
 
 <div class="sum-details-links">
 
@@ -449,6 +464,8 @@ Summary:
       
         <a href="../../../../com/facebook/drawee/controller/ControllerListener.html">ControllerListener</a>&lt;INFO&gt; 
       
+        <a href="../../../../com/facebook/fresco/ui/common/OnDrawControllerListener.html">OnDrawControllerListener</a>&lt;INFO&gt; 
+      
   
   
 
@@ -487,8 +504,7 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Listener that forwards controller events to multiple listeners.
-</p>
+<p>Listener that forwards controller events to multiple listeners. </p>
 
 
 
@@ -699,6 +715,24 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/controller/ForwardingControllerListener.html#onImageDrawn(java.lang.String, INFO, com.facebook.fresco.ui.common.DimensionsInfo)">onImageDrawn</a></span>(String id, INFO imageInfo, <a href="../../../../com/facebook/fresco/ui/common/DimensionsInfo.html">DimensionsInfo</a> dimensionsInfo)
+        
+        <div class="jd-descrdiv">Called when the image is drawn</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/drawee/controller/ForwardingControllerListener.html#onIntermediateImageFailed(java.lang.String, java.lang.Throwable)">onIntermediateImageFailed</a></span>(String id, Throwable throwable)
         
         <div class="jd-descrdiv">Called after the fetch of the intermediate image failed.</div>
@@ -707,7 +741,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -725,7 +759,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -743,7 +777,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -761,7 +795,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -1126,6 +1160,50 @@ From interface
 </td></tr>
 
 
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.fresco.ui.common.OnDrawControllerListener" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.facebook.fresco.ui.common.OnDrawControllerListener-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From interface
+
+  <a href="../../../../com/facebook/fresco/ui/common/OnDrawControllerListener.html">com.facebook.fresco.ui.common.OnDrawControllerListener</a>
+
+<div id="inherited-methods-com.facebook.fresco.ui.common.OnDrawControllerListener">
+  <div id="inherited-methods-com.facebook.fresco.ui.common.OnDrawControllerListener-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-com.facebook.fresco.ui.common.OnDrawControllerListener-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/fresco/ui/common/OnDrawControllerListener.html#onImageDrawn(java.lang.String, INFO, com.facebook.fresco.ui.common.DimensionsInfo)">onImageDrawn</a></span>(String id, INFO imageInfo, <a href="../../../../com/facebook/fresco/ui/common/DimensionsInfo.html">DimensionsInfo</a> dimensionsInfo)
+        
+        <div class="jd-descrdiv">Called when the image is drawn</div>
+  
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
 </table>
 
 
@@ -1450,6 +1528,55 @@ From interface
 </div>
 
 
+<a id="onImageDrawn(java.lang.String, INFO, com.facebook.fresco.ui.common.DimensionsInfo)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">onImageDrawn</span>
+      <span class="normal">(String id, INFO imageInfo, <a href="../../../../com/facebook/fresco/ui/common/DimensionsInfo.html">DimensionsInfo</a> dimensionsInfo)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Called when the image is drawn</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>id</th>
+          <td>controller id</td>
+        </tr>
+        <tr>
+          <th>imageInfo</th>
+          <td>image info</td>
+        </tr>
+        <tr>
+          <th>dimensionsInfo</th>
+          <td>viewport and encoded image dimensions
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="onIntermediateImageFailed(java.lang.String, java.lang.Throwable)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1566,7 +1693,8 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Called after the controller released the fetched image.
- <p> IMPORTANT: It is not safe to reuse the controller from within this callback!</p></div>
+
+ <p>IMPORTANT: It is not safe to reuse the controller from within this callback!</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1608,7 +1736,8 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Called before the image request is submitted.
- <p> IMPORTANT: It is not safe to reuse the controller from within this callback!</p></div>
+
+ <p>IMPORTANT: It is not safe to reuse the controller from within this callback!</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">

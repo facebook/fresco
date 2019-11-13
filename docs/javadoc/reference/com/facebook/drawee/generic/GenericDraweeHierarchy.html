@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -1180,8 +1188,8 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setRetry(java.lang.Throwable)">setRetry</a></span>(Throwable throwable)
         
-        <div class="jd-descrdiv">Called by controller when the future that provides the actual image completes with failure,
- but the controller is prepared to kick off a retry when the user clicks on the image.</div>
+        <div class="jd-descrdiv">Called by controller when the future that provides the actual image completes with failure, but
+ the controller is prepared to kick off a retry when the user clicks on the image.</div>
   
   </td></tr>
 
@@ -1659,8 +1667,8 @@ From interface
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/drawee/interfaces/SettableDraweeHierarchy.html#setRetry(java.lang.Throwable)">setRetry</a></span>(Throwable throwable)
         
-        <div class="jd-descrdiv">Called by controller when the future that provides the actual image completes with failure,
- but the controller is prepared to kick off a retry when the user clicks on the image.</div>
+        <div class="jd-descrdiv">Called by controller when the future that provides the actual image completes with failure, but
+ the controller is prepared to kick off a retry when the user clicks on the image.</div>
   
   </td></tr>
 
@@ -1862,8 +1870,8 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Returns the top level drawable in the corresponding hierarchy. Hierarchy should always have
- the same instance of its top level drawable.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Returns the top level drawable in the corresponding hierarchy. Hierarchy should always have the
+ same instance of its top level drawable.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>top level drawable
@@ -1933,8 +1941,7 @@ From interface
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>true if there is a placeholder image set.
-</li></ul>
+      <ul class="nolist"><li>true if there is a placeholder image set. </li></ul>
   </div>
 
     </div>
@@ -2432,7 +2439,7 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Sets a new overlay image at the specified index.
 
- This method will throw if the given index is out of bounds.</p></div>
+ <p>This method will throw if the given index is out of bounds.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -2678,8 +2685,8 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Called by controller to update the progress.
- Hierarchy can choose to hide the progressbar when progress is set to its final value of 1.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Called by controller to update the progress. Hierarchy can choose to hide the progressbar when
+ progress is set to its final value of 1.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -2867,9 +2874,9 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Called by controller when the future that provides the actual image completes with failure,
- but the controller is prepared to kick off a retry when the user clicks on the image.
- Hierarchy can choose to display a retry image.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Called by controller when the future that provides the actual image completes with failure, but
+ the controller is prepared to kick off a retry when the user clicks on the image. Hierarchy can
+ choose to display a retry image.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">

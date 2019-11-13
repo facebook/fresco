@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -283,6 +289,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/platform/package-summary.html">com.facebook.imagepipeline.platform</a></li>
@@ -313,10 +321,10 @@
     <li><h2>Interfaces</h2>
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.CacheTrimStrategy.html">MemoryCache.CacheTrimStrategy</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html">MemoryCacheTracker</a>&lt;K&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ValueDescriptor.html">ValueDescriptor</a>&lt;V&gt;</li>
       </ul>
@@ -596,7 +604,7 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/BitmapCountingMemoryCacheFactory.html#get(com.facebook.common.internal.Supplier<com.facebook.imagepipeline.cache.MemoryCacheParams>, com.facebook.common.memory.MemoryTrimmableRegistry, com.facebook.imagepipeline.cache.CountingMemoryCache.CacheTrimStrategy)">get</a></span>(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; bitmapMemoryCacheParamsSupplier, <a href="../../../../com/facebook/common/memory/MemoryTrimmableRegistry.html">MemoryTrimmableRegistry</a> memoryTrimmableRegistry, <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a> trimStrategy)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/BitmapCountingMemoryCacheFactory.html#get(com.facebook.common.internal.Supplier<com.facebook.imagepipeline.cache.MemoryCacheParams>, com.facebook.common.memory.MemoryTrimmableRegistry, com.facebook.imagepipeline.cache.MemoryCache.CacheTrimStrategy)">get</a></span>(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; bitmapMemoryCacheParamsSupplier, <a href="../../../../com/facebook/common/memory/MemoryTrimmableRegistry.html">MemoryTrimmableRegistry</a> memoryTrimmableRegistry, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.CacheTrimStrategy.html">MemoryCache.CacheTrimStrategy</a> trimStrategy)
         
   </td></tr>
 
@@ -928,7 +936,7 @@ From class
 </div>
 
 
-<a id="get(com.facebook.common.internal.Supplier<com.facebook.imagepipeline.cache.MemoryCacheParams>, com.facebook.common.memory.MemoryTrimmableRegistry, com.facebook.imagepipeline.cache.CountingMemoryCache.CacheTrimStrategy)"></a>
+<a id="get(com.facebook.common.internal.Supplier<com.facebook.imagepipeline.cache.MemoryCacheParams>, com.facebook.common.memory.MemoryTrimmableRegistry, com.facebook.imagepipeline.cache.MemoryCache.CacheTrimStrategy)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -941,7 +949,7 @@ From class
         <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;
       </span>
       <span class="sympad">get</span>
-      <span class="normal">(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; bitmapMemoryCacheParamsSupplier, <a href="../../../../com/facebook/common/memory/MemoryTrimmableRegistry.html">MemoryTrimmableRegistry</a> memoryTrimmableRegistry, <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a> trimStrategy)</span>
+      <span class="normal">(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; bitmapMemoryCacheParamsSupplier, <a href="../../../../com/facebook/common/memory/MemoryTrimmableRegistry.html">MemoryTrimmableRegistry</a> memoryTrimmableRegistry, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.CacheTrimStrategy.html">MemoryCache.CacheTrimStrategy</a> trimStrategy)</span>
     </h4>
       <div class="api-level">
         <div>

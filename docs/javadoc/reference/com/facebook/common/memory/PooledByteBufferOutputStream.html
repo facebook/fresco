@@ -157,11 +157,15 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
     <li class="api apilevel-">
@@ -245,6 +249,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -282,6 +288,8 @@
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
@@ -561,14 +569,14 @@ Summary:
 <h2>Class Overview</h2>
 <p>An OutputStream that produces a PooledByteBuffer.
 
- <p> Expected use for such stream is to first write sequence of bytes to the stream and then call
+ <p>Expected use for such stream is to first write sequence of bytes to the stream and then call
  toByteBuffer to produce PooledByteBuffer containing written data. After toByteBuffer returns
  client can continue writing new data and call toByteBuffer over and over again.
 
- <p> Streams implementing this interface are closeable resources and need to be closed in order
- to release underlying resources. Close is idempotent operation and after stream was closed, no
- other method should be called. Streams subclassing PooledByteBufferOutputStream are not allowed
- to throw IOException from close method.
+ <p>Streams implementing this interface are closeable resources and need to be closed in order to
+ release underlying resources. Close is idempotent operation and after stream was closed, no other
+ method should be called. Streams subclassing PooledByteBufferOutputStream are not allowed to
+ throw IOException from close method.
 </p>
 
 
@@ -1260,8 +1268,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Closes the stream.
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Closes the stream. </p></div>
 
     </div>
 </div>
