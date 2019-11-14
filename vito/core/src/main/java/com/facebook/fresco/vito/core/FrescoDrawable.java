@@ -107,6 +107,6 @@ public class FrescoDrawable extends FadeDrawable implements Closeable {
   }
 
   public void setVisibilityCallback(@Nullable VisibilityCallback visibilityCallback) {
-    this.mVisibilityCallback = visibilityCallback;
+    mVisibilityCallback = visibilityCallback;
   }
 }
