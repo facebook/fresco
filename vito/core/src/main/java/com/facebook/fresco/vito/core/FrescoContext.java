@@ -158,6 +158,9 @@ public class FrescoContext {
     }
     final ImageRequestBuilder imageRequestBuilder =
         createEncodedImageRequestBuilder(uri, imageOptions);
+    if (imageRequestBuilder == null) {
+      return null;
+    }
 
     if (mExperiments.useNativeRounding() && NativeCodeSetup.getUseNativeCode()) {
       setupNativeRounding(imageRequestBuilder, imageOptions.getRoundingOptions());
