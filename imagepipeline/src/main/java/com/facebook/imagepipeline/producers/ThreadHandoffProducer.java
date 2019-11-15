@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.imagepipeline.instrumentation.FrescoInstrumenter;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import javax.annotation.Nullable;
 
@@ -57,11 +58,20 @@ public class ThreadHandoffProducer<T> implements Producer<T> {
               mThreadHandoffProducerQueue.remove(statefulRunnable);
             }
           });
-      mThreadHandoffProducerQueue.addToQueueOrExecute(statefulRunnable);
+
+      mThreadHandoffProducerQueue.addToQueueOrExecute(
+          FrescoInstrumenter.decorateRunnable(statefulRunnable, getInstrumentationTag(context)));
     } finally {
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.endSection();
       }
     }
+  }
+
+  @Nullable
+  private static String getInstrumentationTag(ProducerContext context) {
+    return FrescoInstrumenter.isTracing()
+        ? "ThreadHandoffProducer_produceResults_" + context.getId()
+        : null;
   }
 }
