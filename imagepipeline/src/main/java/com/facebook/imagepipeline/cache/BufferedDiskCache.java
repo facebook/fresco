@@ -19,6 +19,7 @@ import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.memory.PooledByteStreams;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.instrumentation.FrescoInstrumenter;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import java.io.IOException;
 import java.io.InputStream;
@@ -89,11 +90,17 @@ public class BufferedDiskCache {
 
   private Task<Boolean> containsAsync(final CacheKey key) {
     try {
+      final Object token = FrescoInstrumenter.onBeforeSubmitWork("BufferedDiskCache_containsAsync");
       return Task.call(
           new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-              return checkInStagingAreaAndFileCache(key);
+              final Object currentToken = FrescoInstrumenter.onBeginWork(token, null);
+              try {
+                return checkInStagingAreaAndFileCache(key);
+              } finally {
+                FrescoInstrumenter.onEndWork(currentToken);
+              }
             }
           },
           mReadExecutor);
@@ -171,14 +178,13 @@ public class BufferedDiskCache {
 
   private Task<EncodedImage> getAsync(final CacheKey key, final AtomicBoolean isCancelled) {
     try {
+      final Object token = FrescoInstrumenter.onBeforeSubmitWork("BufferedDiskCache_getAsync");
       return Task.call(
           new Callable<EncodedImage>() {
             @Override
             public @Nullable EncodedImage call() throws Exception {
+              final Object currentToken = FrescoInstrumenter.onBeginWork(token, null);
               try {
-                if (FrescoSystrace.isTracing()) {
-                  FrescoSystrace.beginSection("BufferedDiskCache#getAsync");
-                }
                 if (isCancelled.get()) {
                   throw new CancellationException();
                 }
@@ -216,9 +222,7 @@ public class BufferedDiskCache {
                   return result;
                 }
               } finally {
-                if (FrescoSystrace.isTracing()) {
-                  FrescoSystrace.endSection();
-                }
+                FrescoInstrumenter.onEndWork(currentToken);
               }
             }
           },
@@ -251,22 +255,18 @@ public class BufferedDiskCache {
       // ref count again.
       final EncodedImage finalEncodedImage = EncodedImage.cloneOrNull(encodedImage);
       try {
-
+        final Object token = FrescoInstrumenter.onBeforeSubmitWork("BufferedDiskCache_putAsync");
         mWriteExecutor.execute(
             new Runnable() {
               @Override
               public void run() {
+                final Object currentToken = FrescoInstrumenter.onBeginWork(token, null);
                 try {
-                  if (FrescoSystrace.isTracing()) {
-                    FrescoSystrace.beginSection("BufferedDiskCache#putAsync");
-                  }
                   writeToDiskCache(key, finalEncodedImage);
                 } finally {
                   mStagingArea.remove(key, finalEncodedImage);
                   EncodedImage.closeSafely(finalEncodedImage);
-                  if (FrescoSystrace.isTracing()) {
-                    FrescoSystrace.endSection();
-                  }
+                  FrescoInstrumenter.onEndWork(currentToken);
                 }
               }
             });
@@ -289,20 +289,17 @@ public class BufferedDiskCache {
     Preconditions.checkNotNull(key);
     mStagingArea.remove(key);
     try {
+      final Object token = FrescoInstrumenter.onBeforeSubmitWork("BufferedDiskCache_remove");
       return Task.call(
           new Callable<Void>() {
             @Override
             public Void call() throws Exception {
+              final Object currentToken = FrescoInstrumenter.onBeginWork(token, null);
               try {
-                if (FrescoSystrace.isTracing()) {
-                  FrescoSystrace.beginSection("BufferedDiskCache#remove");
-                }
                 mStagingArea.remove(key);
                 mFileCache.remove(key);
               } finally {
-                if (FrescoSystrace.isTracing()) {
-                  FrescoSystrace.endSection();
-                }
+                FrescoInstrumenter.onEndWork(currentToken);
               }
               return null;
             }
@@ -319,14 +316,20 @@ public class BufferedDiskCache {
   /** Clears the disk cache and the staging area. */
   public Task<Void> clearAll() {
     mStagingArea.clearAll();
+    final Object token = FrescoInstrumenter.onBeforeSubmitWork("BufferedDiskCache_clearAll");
     try {
       return Task.call(
           new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-              mStagingArea.clearAll();
-              mFileCache.clearAll();
-              return null;
+              final Object currentToken = FrescoInstrumenter.onBeginWork(token, null);
+              try {
+                mStagingArea.clearAll();
+                mFileCache.clearAll();
+                return null;
+              } finally {
+                FrescoInstrumenter.onEndWork(currentToken);
+              }
             }
           },
           mWriteExecutor);
