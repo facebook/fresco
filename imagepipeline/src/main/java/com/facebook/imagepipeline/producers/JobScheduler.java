@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.producers;
 import android.os.SystemClock;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.instrumentation.FrescoInstrumenter;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -190,15 +191,18 @@ public class JobScheduler {
     // If we make mExecutor be a {@link ScheduledexecutorService}, we could just have
     // `mExecutor.schedule(mDoJobRunnable, delay)` and avoid mSubmitJobRunnable and
     // JobStartExecutorSupplier altogether. That would require some refactoring though.
+    final Runnable submitJobRunnable =
+        FrescoInstrumenter.decorateRunnable(mSubmitJobRunnable, "JobScheduler_enqueueJob");
     if (delay > 0) {
-      JobStartExecutorSupplier.get().schedule(mSubmitJobRunnable, delay, TimeUnit.MILLISECONDS);
+      JobStartExecutorSupplier.get().schedule(submitJobRunnable, delay, TimeUnit.MILLISECONDS);
     } else {
-      mSubmitJobRunnable.run();
+      submitJobRunnable.run();
     }
   }
 
   private void submitJob() {
-    mExecutor.execute(mDoJobRunnable);
+    mExecutor.execute(
+        FrescoInstrumenter.decorateRunnable(mDoJobRunnable, "JobScheduler_submitJob"));
   }
 
   private void doJob() {
