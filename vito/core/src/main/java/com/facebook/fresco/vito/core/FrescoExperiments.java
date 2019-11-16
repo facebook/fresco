@@ -92,6 +92,10 @@ public class FrescoExperiments {
     return true;
   }
 
+  public boolean delayedReleaseInUnbind() {
+    return false;
+  }
+
   public boolean useMountContentOverState() {
     return false;
   }

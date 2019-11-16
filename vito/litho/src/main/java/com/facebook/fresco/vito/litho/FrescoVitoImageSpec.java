@@ -9,6 +9,8 @@ package com.facebook.fresco.vito.litho;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import androidx.core.util.ObjectsCompat;
 import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoController;
@@ -49,6 +51,9 @@ import javax.annotation.Nullable;
 public class FrescoVitoImageSpec {
 
   @PropDefault protected static final float imageAspectRatio = 1f;
+
+  private static final Handler sHandler = new Handler(Looper.getMainLooper());
+  private static final long RELEASE_DELAY_MS = 16 * 5; // Roughly 5 frames.
 
   @OnCreateMountContent(mountingType = MountingType.DRAWABLE)
   static FrescoDrawable onCreateMountContent(Context c) {
@@ -122,6 +127,9 @@ public class FrescoVitoImageSpec {
       @Prop(optional = true) final @Nullable ImageListener imageListener,
       @FromPrepare final FrescoState frescoState) {
     FrescoContext actualFrescoContext = resolveContext(context, frescoContext);
+    if (actualFrescoContext.getExperiments().delayedReleaseInUnbind()) {
+      cancelDetachRunnable(frescoState);
+    }
     if (!actualFrescoContext.getExperiments().useBindCallbacks()) {
       frescoState.setFrescoDrawable(frescoDrawable);
       actualFrescoContext.getController().onAttach(frescoState, imageListener);
@@ -137,6 +145,9 @@ public class FrescoVitoImageSpec {
     FrescoContext actualFrescoContext = resolveContext(context, frescoContext);
     if (!actualFrescoContext.getExperiments().useBindCallbacks()
         && actualFrescoContext.getExperiments().releaseInUnmount()) {
+      if (actualFrescoContext.getExperiments().delayedReleaseInUnbind()) {
+        cancelDetachRunnable(frescoState);
+      }
       frescoState.setFrescoDrawable(frescoDrawable);
       actualFrescoContext.getController().onDetach(frescoState);
     }
@@ -150,6 +161,9 @@ public class FrescoVitoImageSpec {
       @Prop(optional = true) final @Nullable ImageListener imageListener,
       @FromPrepare final FrescoState frescoState) {
     FrescoContext actualFrescoContext = resolveContext(context, frescoContext);
+    if (actualFrescoContext.getExperiments().delayedReleaseInUnbind()) {
+      cancelDetachRunnable(frescoState);
+    }
     if (actualFrescoContext.getExperiments().useBindCallbacks()) {
       frescoState.setFrescoDrawable(frescoDrawable);
       actualFrescoContext.getController().onAttach(frescoState, imageListener);
@@ -159,11 +173,26 @@ public class FrescoVitoImageSpec {
   @OnUnbind
   static void onUnbind(
       ComponentContext context,
-      FrescoDrawable frescoDrawable,
+      final FrescoDrawable frescoDrawable,
       @Prop(optional = true) final @Nullable FrescoContext frescoContext,
       @FromPrepare final FrescoState frescoState) {
-    FrescoContext actualFrescoContext = resolveContext(context, frescoContext);
-    if (actualFrescoContext.getExperiments().useBindCallbacks()) {
+    final FrescoContext actualFrescoContext = resolveContext(context, frescoContext);
+    if (actualFrescoContext.getExperiments().delayedReleaseInUnbind()) {
+
+      cancelDetachRunnable(frescoState);
+
+      Runnable newDetachRunnable =
+          new Runnable() {
+            @Override
+            public void run() {
+              frescoState.setFrescoDrawable(frescoDrawable);
+              actualFrescoContext.getController().onDetach(frescoState);
+            }
+          };
+      frescoState.setDetachRunnable(newDetachRunnable);
+      sHandler.postDelayed(newDetachRunnable, RELEASE_DELAY_MS);
+
+    } else if (actualFrescoContext.getExperiments().useBindCallbacks()) {
       frescoState.setFrescoDrawable(frescoDrawable);
       actualFrescoContext.getController().onDetach(frescoState);
     }
@@ -212,5 +241,12 @@ public class FrescoVitoImageSpec {
   static FrescoController getController(
       ComponentContext context, @Nullable FrescoContext contextOverride) {
     return resolveContext(context, contextOverride).getController();
+  }
+
+  static void cancelDetachRunnable(FrescoState state) {
+    Runnable runnable = state.removeDetachRunnable();
+    if (runnable != null) {
+      sHandler.removeCallbacks(runnable);
+    }
   }
 }

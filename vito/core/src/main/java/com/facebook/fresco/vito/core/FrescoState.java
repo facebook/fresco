@@ -86,6 +86,8 @@ public class FrescoState
 
   private @ImageOrigin int mImageOrigin = ImageOrigin.UNKNOWN;
 
+  private @Nullable Runnable mDetachRunnable;
+
   public FrescoState(
       long id,
       FrescoContext frescoContext,
@@ -264,6 +266,17 @@ public class FrescoState
 
   public void setImageOrigin(@ImageOrigin int imageOrigin) {
     mImageOrigin = imageOrigin;
+  }
+
+  @Nullable
+  public synchronized Runnable removeDetachRunnable() {
+    Runnable r = mDetachRunnable;
+    mDetachRunnable = null;
+    return r;
+  }
+
+  public synchronized void setDetachRunnable(@Nullable Runnable detachRunnable) {
+    mDetachRunnable = detachRunnable;
   }
 
   @Override
