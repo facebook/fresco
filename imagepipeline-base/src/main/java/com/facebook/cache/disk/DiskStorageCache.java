@@ -7,7 +7,6 @@
 
 package com.facebook.cache.disk;
 
-import android.content.Context;
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.CacheEventListener;
@@ -51,7 +50,6 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   private static final long FILECACHE_SIZE_UPDATE_PERIOD_MS = TimeUnit.MINUTES.toMillis(30);
   private static final double TRIMMING_LOWER_BOUND = 0.02;
   private static final long UNINITIALIZED = -1;
-  private static final String SHARED_PREFS_FILENAME_PREFIX = "disk_entries_list";
 
   private final long mLowDiskSpaceCacheSizeLimit;
   private final long mDefaultCacheSizeLimit;
@@ -147,7 +145,6 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       CacheEventListener cacheEventListener,
       CacheErrorLogger cacheErrorLogger,
       @Nullable DiskTrimmableRegistry diskTrimmableRegistry,
-      final Context context,
       final Executor executorForBackgrountInit,
       boolean indexPopulateAtStartupEnabled) {
     this.mLowDiskSpaceCacheSizeLimit = params.mLowDiskSpaceCacheSizeLimit;

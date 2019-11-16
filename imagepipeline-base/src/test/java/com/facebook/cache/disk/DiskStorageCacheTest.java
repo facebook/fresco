@@ -23,7 +23,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import android.content.Context;
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.CacheEvent;
@@ -133,8 +132,6 @@ public class DiskStorageCacheTest {
         new DiskStorageCache.Params(
             0, FILE_CACHE_MAX_SIZE_LOW_LIMIT, FILE_CACHE_MAX_SIZE_HIGH_LIMIT);
 
-    Context context = RuntimeEnvironment.application.getApplicationContext();
-
     return new DiskStorageCache(
         diskStorage,
         new DefaultEntryEvictionComparatorSupplier(),
@@ -142,7 +139,6 @@ public class DiskStorageCacheTest {
         new DuplicatingCacheEventListener(mCacheEventListener),
         mock(CacheErrorLogger.class),
         mDiskTrimmableRegistry,
-        context,
         mBackgroundExecutor,
         indexPopulateAtStartupEnabled);
   }
