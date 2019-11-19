@@ -25,7 +25,7 @@ public class DebugOverlayDrawable extends Drawable {
   private static final int TEXT_COLOR = 0xFFFFFFFF;
   private static final int OUTLINE_STROKE_WIDTH_PX = 2;
   private static final int MAX_TEXT_SIZE_PX = 72;
-  private static final int MIN_TEXT_SIZE_PX = 12;
+  private static final int MIN_TEXT_SIZE_PX = 16;
   private static final int TEXT_LINE_SPACING_PX = 8;
   private static final int TEXT_PADDING_PX = 10;
   private static final int INITIAL_MAX_LINE_LENGTH = 4;
