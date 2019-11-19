@@ -7,6 +7,9 @@
 
 package com.facebook.fresco.vito.core;
 
+import static org.mockito.Mockito.mock;
+
+import android.graphics.drawable.Drawable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -23,45 +26,110 @@ public class FrescoDrawableTest {
 
   private FrescoDrawable mFrescoDrawable;
 
+  private CountDownLatch mLatch;
+  private CloseableImage mCloseableImage;
+  private CloseableReference<CloseableImage> mCloseableReference;
+
   @Before
   public void setup() {
     mFrescoDrawable = new FrescoDrawable(true);
-  }
-
-  @Test
-  public void testFrescoDrawableReleaseActualImageReference() throws InterruptedException {
-    final CountDownLatch latch = new CountDownLatch(1);
-    final CloseableImage closeableImage = new DummyCloseableImage();
-    final CloseableReference<CloseableImage> closeableReference =
+    mLatch = new CountDownLatch(1);
+    mCloseableImage = new DummyCloseableImage();
+    mCloseableReference =
         CloseableReference.of(
-            closeableImage,
+            mCloseableImage,
             new ResourceReleaser<CloseableImage>() {
               @Override
               public void release(CloseableImage value) {
-                latch.countDown();
+                value.close();
+                mLatch.countDown();
               }
             });
+  }
 
-    mFrescoDrawable.setImage(NopDrawable.INSTANCE, closeableReference);
-    closeableReference.close();
+  @Test
+  public void testFrescoDrawable_whenDrawableClosed_thenReleaseActualImageReference()
+      throws InterruptedException {
+    mFrescoDrawable.setImage(NopDrawable.INSTANCE, mCloseableReference);
+    mCloseableReference.close();
+    Assert.assertFalse(mCloseableImage.isClosed());
+
     mFrescoDrawable.close();
 
     Assert.assertNull(mFrescoDrawable.mImageReference);
-    Assert.assertTrue(latch.await(3, TimeUnit.SECONDS));
+    Assert.assertTrue(mCloseableImage.isClosed());
+    Assert.assertTrue(mLatch.await(3, TimeUnit.SECONDS));
+  }
+
+  @Test
+  public void testFrescoDrawable_whenNewImageDrawableSet_thenReleaseOldImageReference()
+      throws InterruptedException {
+    mFrescoDrawable.setImage(NopDrawable.INSTANCE, mCloseableReference);
+    mCloseableReference.close();
+
+    final CloseableImage closeableImage = new DummyCloseableImage();
+    mFrescoDrawable.setImage(NopDrawable.INSTANCE, CloseableReference.of(closeableImage));
+
+    Assert.assertTrue(mCloseableImage.isClosed());
+    Assert.assertTrue(mLatch.await(3, TimeUnit.SECONDS));
+  }
+
+  @Test
+  public void testFrescoDrawable_whenNewNullImageDrawableSet_thenReleaseOldImageReference()
+      throws InterruptedException {
+    mFrescoDrawable.setImage(NopDrawable.INSTANCE, mCloseableReference);
+    mCloseableReference.close();
+
+    mFrescoDrawable.setImage(null, null);
+
+    Assert.assertTrue(mCloseableImage.isClosed());
+    Assert.assertTrue(mLatch.await(3, TimeUnit.SECONDS));
+  }
+
+  @Test
+  public void testFrescoDrawable_whenImageDrawableSet_thenReleaseImageReference()
+      throws InterruptedException {
+    mFrescoDrawable.setImage(NopDrawable.INSTANCE, mCloseableReference);
+    mCloseableReference.close();
+
+    Drawable drawable = mock(Drawable.class);
+    mFrescoDrawable.setImageDrawable(drawable);
+
+    Assert.assertNull(mFrescoDrawable.mImageReference);
+    Assert.assertTrue(mCloseableImage.isClosed());
+    Assert.assertTrue(mLatch.await(3, TimeUnit.SECONDS));
+  }
+
+  @Test
+  public void testFrescoDrawable_whenImageDrawableReset_thenReleaseImageReference()
+      throws InterruptedException {
+    mFrescoDrawable.setImage(NopDrawable.INSTANCE, mCloseableReference);
+    mCloseableReference.close();
+
+    mFrescoDrawable.setImageDrawable(null);
+
+    Assert.assertNull(mFrescoDrawable.mImageReference);
+    Assert.assertTrue(mCloseableImage.isClosed());
+    Assert.assertTrue(mLatch.await(3, TimeUnit.SECONDS));
   }
 
   static class DummyCloseableImage extends CloseableImage {
+
+    private boolean mClosed = false;
+
     @Override
     public int getSizeInBytes() {
       return 0;
     }
 
     @Override
-    public void close() {}
+    public void close() {
+      mClosed = true;
+    }
 
     @Override
     public boolean isClosed() {
-      return false;
+      return mClosed;
     }
 
     @Override
