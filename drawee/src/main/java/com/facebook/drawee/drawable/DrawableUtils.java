@@ -8,6 +8,7 @@
 package com.facebook.drawee.drawable;
 
 import android.graphics.PixelFormat;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import javax.annotation.Nullable;
 
@@ -114,6 +115,19 @@ public class DrawableUtils {
       return PixelFormat.TRANSPARENT;
     } else {
       return PixelFormat.TRANSLUCENT;
+    }
+  }
+
+  /**
+   * @return Checks if `drawable` is {@link Animatable} or if `drawable` is {@link
+   *     ForwardingDrawable} looks for Animatable drawable in ForwardingDrawable's hierarchy.
+   *     Returns null if Animatable drawable was not found.
+   */
+  public static @Nullable Animatable getAnimatableOrNull(@Nullable Drawable drawable) {
+    if (drawable instanceof ForwardingDrawable) {
+      return getAnimatableOrNull(drawable.getCurrent());
+    } else {
+      return drawable instanceof Animatable ? (Animatable) drawable : null;
     }
   }
 }

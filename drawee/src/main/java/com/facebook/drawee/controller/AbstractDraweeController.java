@@ -21,6 +21,7 @@ import com.facebook.datasource.DataSubscriber;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.components.DraweeEventTracker;
 import com.facebook.drawee.components.RetryManager;
+import com.facebook.drawee.drawable.DrawableUtils;
 import com.facebook.drawee.gestures.GestureDetector;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
@@ -681,7 +682,7 @@ public abstract class AbstractDraweeController<T, INFO>
 
   @Override
   public @Nullable Animatable getAnimatable() {
-    return (mDrawable instanceof Animatable) ? (Animatable) mDrawable : null;
+    return DrawableUtils.getAnimatableOrNull(mDrawable);
   }
 
   protected abstract DataSource<T> getDataSource();
