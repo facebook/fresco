@@ -38,7 +38,11 @@ public class FrescoExperiments {
     return false;
   }
 
-  public boolean keepRefToPrefetchDatasouce() {
+  public boolean enqueuePrefetchInOnPrepare() {
+    return false;
+  }
+
+  public boolean keepRefToPrefetchDatasource() {
     return false;
   }
 
@@ -50,7 +54,7 @@ public class FrescoExperiments {
     return false;
   }
 
-  public boolean keepRefToMainFetchDatasouce() {
+  public boolean keepRefToMainFetchDatasource() {
     return true;
   }
 

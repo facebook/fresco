@@ -105,7 +105,7 @@ public class FrescoControllerImpl implements FrescoController {
       } else {
         isImageCached = mFrescoContext.getImagePipeline().hasCachedImage(cacheKey);
       }
-      FrescoState frescoState =
+      final FrescoState frescoState =
           new FrescoState(
               FrescoContext.generateIdentifier(),
               mFrescoContext,
@@ -132,10 +132,33 @@ public class FrescoControllerImpl implements FrescoController {
         }
 
         if (frescoExperiments.prefetchInOnPrepare()) {
-          DataSource<CloseableReference<CloseableImage>> datasource = fireOffRequest(frescoState);
-          datasource.subscribe(frescoState, mFrescoContext.getUiThreadExecutorService());
-          if (frescoExperiments.keepRefToPrefetchDatasouce()) {
-            frescoState.setPrefetchDatasource(datasource);
+          Runnable runnable =
+              new Runnable() {
+                @Override
+                public void run() {
+                  if (FrescoSystrace.isTracing()) {
+                    FrescoSystrace.beginSection(
+                        "FrescoControllerImpl#createState->prefetchInOnPrepare");
+                  }
+                  try {
+                    DataSource<CloseableReference<CloseableImage>> datasource =
+                        fireOffRequest(frescoState);
+                    datasource.subscribe(frescoState, mFrescoContext.getUiThreadExecutorService());
+                    if (frescoExperiments.keepRefToPrefetchDatasource()) {
+                      frescoState.setPrefetchDatasource(datasource);
+                    }
+                  } finally {
+                    if (FrescoSystrace.isTracing()) {
+                      FrescoSystrace.endSection();
+                    }
+                  }
+                }
+              };
+          if (mFrescoContext.getExperiments().enqueuePrefetchInOnPrepare()
+              && mFrescoContext.getLightweightBackgroundThreadExecutor() != null) {
+            mFrescoContext.getLightweightBackgroundThreadExecutor().execute(runnable);
+          } else {
+            runnable.run();
           }
         }
 
@@ -346,7 +369,7 @@ public class FrescoControllerImpl implements FrescoController {
                           createDataSource(frescoState);
                       dataSource.subscribe(
                           frescoState, mFrescoContext.getUiThreadExecutorService());
-                      if (experiments.keepRefToMainFetchDatasouce()) {
+                      if (experiments.keepRefToMainFetchDatasource()) {
                         frescoState.setMainFetchDatasource(dataSource);
                       }
                     } finally {
@@ -361,7 +384,7 @@ public class FrescoControllerImpl implements FrescoController {
             DataSource<CloseableReference<CloseableImage>> dataSource =
                 createDataSource(frescoState);
             dataSource.subscribe(frescoState, mFrescoContext.getUiThreadExecutorService());
-            if (experiments.keepRefToMainFetchDatasouce()) {
+            if (experiments.keepRefToMainFetchDatasource()) {
               frescoState.setMainFetchDatasource(dataSource);
             }
           }
