@@ -88,7 +88,7 @@ public class PoolParams {
    * @param bucketSizes (optional) bucket sizes and lengths for the pool
    * @param minBucketSize min bucket size for the pool
    * @param maxBucketSize max bucket size for the pool
-   * @param maxNumThreads the maximum number of threads in th epool, or -1 if the pool doesn't care
+   * @param maxNumThreads the maximum number of threads in the pool, or -1 if the pool doesn't care
    */
   public PoolParams(
       int maxSizeSoftCap,
