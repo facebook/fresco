@@ -366,6 +366,10 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
     mMemoryCacheParams = mMemoryCacheParamsSupplier.get();
   }
 
+  public MemoryCacheParams getMemoryCacheParams() {
+    return mMemoryCacheParams;
+  }
+
   /**
    * Removes the exclusively owned items until the cache constraints are met.
    *
