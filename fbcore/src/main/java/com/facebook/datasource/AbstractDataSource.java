@@ -54,6 +54,12 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
 
   private final ConcurrentLinkedQueue<Pair<DataSubscriber<T>, Executor>> mSubscribers;
 
+  @Nullable private static volatile DataSourceInstrumenter sDataSourceInstrumenter;
+
+  public static void provideInstrumenter(@Nullable DataSourceInstrumenter dataSourceInstrumenter) {
+    sDataSourceInstrumenter = dataSourceInstrumenter;
+  }
+
   protected AbstractDataSource() {
     mIsClosed = false;
     mDataSourceStatus = DataSourceStatus.IN_PROGRESS;
@@ -166,7 +172,7 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
       final Executor executor,
       final boolean isFailure,
       final boolean isCancellation) {
-    executor.execute(
+    Runnable runnable =
         new Runnable() {
           @Override
           public void run() {
@@ -178,7 +184,12 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
               dataSubscriber.onNewResult(AbstractDataSource.this);
             }
           }
-        });
+        };
+    final DataSourceInstrumenter instrumenter = getDataSourceInstrumenter();
+    if (instrumenter != null) {
+      runnable = instrumenter.decorateRunnable(runnable, "AbstractDataSource_notifyDataSubscriber");
+    }
+    executor.execute(runnable);
   }
 
   private synchronized boolean wasCancelled() {
@@ -322,8 +333,26 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
     }
   }
 
+  @Nullable
+  public static DataSourceInstrumenter getDataSourceInstrumenter() {
+    return sDataSourceInstrumenter;
+  }
+
   @Override
   public boolean hasMultipleResults() {
     return false;
+  }
+
+  /** Allows to capture unit of works for instrumentation purposes. */
+  public interface DataSourceInstrumenter {
+
+    /**
+     * Called when a unit of work is about to be scheduled.
+     *
+     * @param runnable that will be executed.
+     * @param tag name.
+     * @return the wrapped input runnable or just the input one.
+     */
+    Runnable decorateRunnable(Runnable runnable, String tag);
   }
 }
