@@ -14,7 +14,6 @@ import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import javax.annotation.Nullable;
@@ -29,11 +28,7 @@ import javax.annotation.Nullable;
  * others don't allow changing the member drawables.
  */
 public class ForwardingDrawable extends Drawable
-    implements Drawable.Callback,
-        TransformCallback,
-        TransformAwareDrawable,
-        DrawableParent,
-        Animatable {
+    implements Drawable.Callback, TransformCallback, TransformAwareDrawable, DrawableParent {
 
   /** The current drawable to be drawn by this drawable when drawing is needed */
   private @Nullable Drawable mCurrentDelegate;
@@ -312,27 +307,5 @@ public class ForwardingDrawable extends Drawable
     if (mCurrentDelegate != null) {
       mCurrentDelegate.setHotspot(x, y);
     }
-  }
-
-  @Override
-  public void start() {
-    if (mCurrentDelegate instanceof Animatable) {
-      ((Animatable) mCurrentDelegate).start();
-    }
-  }
-
-  @Override
-  public void stop() {
-    if (mCurrentDelegate instanceof Animatable) {
-      ((Animatable) mCurrentDelegate).stop();
-    }
-  }
-
-  @Override
-  public boolean isRunning() {
-    if (mCurrentDelegate instanceof Animatable) {
-      return ((Animatable) mCurrentDelegate).isRunning();
-    }
-    return false;
   }
 }

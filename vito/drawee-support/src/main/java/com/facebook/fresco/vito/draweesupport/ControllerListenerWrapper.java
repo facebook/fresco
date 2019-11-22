@@ -7,12 +7,12 @@
 
 package com.facebook.fresco.vito.draweesupport;
 
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
 import com.facebook.drawee.controller.ControllerListener;
-import com.facebook.drawee.drawable.DrawableUtils;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.ImageInfo;
 import javax.annotation.Nullable;
@@ -64,9 +64,8 @@ public class ControllerListenerWrapper implements ImageListener {
     if (mImageOriginListener != null) {
       mImageOriginListener.onImageLoaded(stringId, imageOrigin, true, "ControllerListenerWrapper");
     }
-
-    mControllerListener.onFinalImageSet(
-        stringId, imageInfo, DrawableUtils.getAnimatableOrNull(drawable));
+    Animatable animatable = drawable instanceof Animatable ? (Animatable) drawable : null;
+    mControllerListener.onFinalImageSet(stringId, imageInfo, animatable);
   }
 
   @Override
