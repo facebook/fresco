@@ -94,8 +94,9 @@ public abstract class AbstractDraweeController<T, INFO>
   private @Nullable String mContentDescription;
   private @Nullable DataSource<T> mDataSource;
   private @Nullable T mFetchedImage;
-  private @Nullable Drawable mDrawable;
   private boolean mJustConstructed = true;
+
+  protected @Nullable Drawable mDrawable;
 
   public AbstractDraweeController(
       DeferredReleaser deferredReleaser,
