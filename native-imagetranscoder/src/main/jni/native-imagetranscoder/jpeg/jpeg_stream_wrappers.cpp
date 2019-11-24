@@ -133,10 +133,10 @@ static void osInitDestination(j_compress_ptr cinfo) {
 
   // allocate java byte array
   dest->javaBuffer = env->NewByteArray(kStreamBufferSize);
-  if (dest->buffer == NULL) {
+  if (dest->javaBuffer == NULL) {
       jpegSafeThrow(
           (j_common_ptr) cinfo,
-          "Failed to allocate memory for byte buffer.");
+          "Failed to allocate memory for java byte buffer.");
   }
   jpegJumpOnException((j_common_ptr) cinfo);
 
