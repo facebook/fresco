@@ -19,11 +19,13 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.time.AwakeTimeSinceBootClock;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawable.base.DrawableWithCaches;
+import com.facebook.drawee.backends.pipeline.debug.DebugOverlayImageOriginColor;
 import com.facebook.drawee.backends.pipeline.debug.DebugOverlayImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.ForwardingImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginRequestListener;
+import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfMonitor;
 import com.facebook.drawee.components.DeferredReleaser;
@@ -359,7 +361,13 @@ public class PipelineDraweeController
       scaleType = scaleTypeDrawable != null ? scaleTypeDrawable.getScaleType() : null;
     }
     debugOverlay.setScaleType(scaleType);
-    debugOverlay.setOrigin(mDebugOverlayImageOriginListener.getImageOrigin());
+
+    // fill in image origin text and color hint
+    final int origin = mDebugOverlayImageOriginListener.getImageOrigin();
+    final String originText = ImageOriginUtils.toString(origin);
+    final int originColor = DebugOverlayImageOriginColor.getImageOriginColor(origin);
+    debugOverlay.setOrigin(originText, originColor);
+
     if (image != null) {
       debugOverlay.setDimensions(image.getWidth(), image.getHeight());
       debugOverlay.setImageSize(image.getSizeInBytes());

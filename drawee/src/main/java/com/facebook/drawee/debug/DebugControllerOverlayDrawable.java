@@ -8,6 +8,7 @@
 package com.facebook.drawee.debug;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -20,6 +21,7 @@ import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.drawee.debug.listener.ImageLoadingTimeListener;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import javax.annotation.Nullable;
 
@@ -29,19 +31,20 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
   private static final String NO_CONTROLLER_ID = "none";
 
   // Green if the image dimensions are OK
-  @VisibleForTesting static final int OVERLAY_COLOR_IMAGE_OK = 0x664CAF50;
+  @VisibleForTesting static final int TEXT_COLOR_IMAGE_OK = Color.GREEN;
 
-  // Orange if the image dimensions are a bit off
-  @VisibleForTesting static final int OVERLAY_COLOR_IMAGE_ALMOST_OK = 0x66FF9800;
+  // Yellow if the image dimensions are a bit off
+  @VisibleForTesting static final int TEXT_COLOR_IMAGE_ALMOST_OK = Color.YELLOW;
 
   // Red if the image dimensions are too far off
-  @VisibleForTesting static final int OVERLAY_COLOR_IMAGE_NOT_OK = 0x66F44336;
+  @VisibleForTesting static final int TEXT_COLOR_IMAGE_NOT_OK = Color.RED;
 
   // Values are given in per cent. E.g. 0.1 means 10% smaller or larger.
   private static final float IMAGE_SIZE_THRESHOLD_OK = 0.1f;
   private static final float IMAGE_SIZE_THRESHOLD_NOT_OK = 0.5f;
 
   private static final int OUTLINE_COLOR = 0xFFFF9800;
+  private static final int TEXT_BACKGROUND_COLOR = 0x66000000;
   private static final int TEXT_COLOR = 0xFFFFFFFF;
   private static final int OUTLINE_STROKE_WIDTH_PX = 2;
   private static final int MAX_TEXT_SIZE_PX = 40;
@@ -83,7 +86,8 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
   private int mCurrentTextYPx;
 
   private long mFinalImageTimeMs;
-  private String mOrigin;
+  private String mOriginText;
+  private int mOriginColor = TEXT_COLOR;
 
   public DebugControllerOverlayDrawable() {
     reset();
@@ -99,7 +103,8 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
     mImageFormat = null;
     setControllerId(null);
     mFinalImageTimeMs = -1;
-    mOrigin = null;
+    mOriginText = null;
+    mOriginColor = TEXT_COLOR;
     invalidateSelf();
   }
 
@@ -137,8 +142,9 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
     invalidateSelf();
   }
 
-  public void setOrigin(String s) {
-    mOrigin = s;
+  public void setOrigin(String text, int color) {
+    mOriginText = text;
+    mOriginColor = color;
     invalidateSelf();
   }
 
@@ -179,11 +185,6 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
     mPaint.setColor(OUTLINE_COLOR);
     canvas.drawRect(bounds.left, bounds.top, bounds.right, bounds.bottom, mPaint);
 
-    // Draw overlay
-    mPaint.setStyle(Paint.Style.FILL);
-    mPaint.setColor(determineOverlayColor(mWidthPx, mHeightPx, mScaleType));
-    canvas.drawRect(bounds.left, bounds.top, bounds.right, bounds.bottom, mPaint);
-
     // Draw text
     mPaint.setStyle(Paint.Style.FILL);
     mPaint.setStrokeWidth(0);
@@ -193,30 +194,34 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
     mCurrentTextYPx = mStartTextYPx;
 
     if (mImageId != null) {
-      addDebugText(canvas, "IDs: %s, %s", mControllerId, mImageId);
+      addDebugText(canvas, "IDs", format("%s, %s", mControllerId, mImageId));
     } else {
-      addDebugText(canvas, "ID: %s", mControllerId);
+      addDebugText(canvas, "ID", mControllerId);
     }
-    addDebugText(canvas, "D: %dx%d", bounds.width(), bounds.height());
-    addDebugText(canvas, "I: %dx%d", mWidthPx, mHeightPx);
-    addDebugText(canvas, "I: %d KiB", (mImageSizeBytes / 1024));
+    addDebugText(canvas, "D", format("%dx%d", bounds.width(), bounds.height()));
+
+    // use text color to indicate dimension differences
+    final int sizeColor = determineSizeHintColor(mWidthPx, mHeightPx, mScaleType);
+    addDebugText(canvas, "I", format("%dx%d", mWidthPx, mHeightPx), sizeColor);
+
+    addDebugText(canvas, "I", format("%d KiB", (mImageSizeBytes / 1024)));
     if (mImageFormat != null) {
-      addDebugText(canvas, "i format: %s", mImageFormat);
+      addDebugText(canvas, "i format", mImageFormat);
     }
     if (mFrameCount > 0) {
-      addDebugText(canvas, "anim: f %d, l %d", mFrameCount, mLoopCount);
+      addDebugText(canvas, "anim", format("f %d, l %d", mFrameCount, mLoopCount));
     }
     if (mScaleType != null) {
-      addDebugText(canvas, "scale: %s", mScaleType);
+      addDebugText(canvas, "scale", mScaleType);
     }
     if (mFinalImageTimeMs >= 0) {
-      addDebugText(canvas, "t: %d ms", mFinalImageTimeMs);
+      addDebugText(canvas, "t", format("%d ms", mFinalImageTimeMs));
     }
-    if (mOrigin != null) {
-      addDebugText(canvas, "origin: %s", mOrigin);
+    if (mOriginText != null) {
+      addDebugText(canvas, "origin", mOriginText, mOriginColor);
     }
     for (Map.Entry<String, String> entry : mAdditionalData.entrySet()) {
-      addDebugText(canvas, "%s: %s", entry.getKey(), entry.getValue());
+      addDebugText(canvas, entry.getKey(), entry.getValue());
     }
   }
 
@@ -247,17 +252,43 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
             : bounds.top + TEXT_PADDING_PX + MIN_TEXT_SIZE_PX;
   }
 
-  private void addDebugText(Canvas canvas, String text, @Nullable Object... args) {
-    if (args == null) {
-      canvas.drawText(text, mCurrentTextXPx, mCurrentTextYPx, mPaint);
-    } else {
-      canvas.drawText(String.format(text, args), mCurrentTextXPx, mCurrentTextYPx, mPaint);
-    }
+  private static String format(String text, @Nullable Object... args) {
+    return args == null ? text : String.format(Locale.US, text, args);
+  }
+
+  private void addDebugText(Canvas canvas, String label, Object value) {
+    addDebugText(canvas, label, String.valueOf(value), TEXT_COLOR);
+  }
+
+  private void addDebugText(Canvas canvas, String label, String value) {
+    addDebugText(canvas, label, value, TEXT_COLOR);
+  }
+
+  private void addDebugText(Canvas canvas, String label, String value, int valueColor) {
+    final String labelColon = label + ": ";
+    final float labelWidth = mPaint.measureText(labelColon);
+    final float valueWidth = mPaint.measureText(value);
+
+    final int margin = TEXT_LINE_SPACING_PX / 2;
+
+    mPaint.setColor(TEXT_BACKGROUND_COLOR);
+    canvas.drawRect(
+        mCurrentTextXPx - margin,
+        mCurrentTextYPx + TEXT_LINE_SPACING_PX,
+        mCurrentTextXPx + labelWidth + valueWidth + margin,
+        mCurrentTextYPx + mLineIncrementPx + TEXT_LINE_SPACING_PX,
+        mPaint);
+
+    mPaint.setColor(TEXT_COLOR);
+    canvas.drawText(labelColon, mCurrentTextXPx, mCurrentTextYPx, mPaint);
+    mPaint.setColor(valueColor);
+    canvas.drawText(value, mCurrentTextXPx + labelWidth, mCurrentTextYPx, mPaint);
+
     mCurrentTextYPx += mLineIncrementPx;
   }
 
   @VisibleForTesting
-  int determineOverlayColor(int imageWidth, int imageHeight, @Nullable ScaleType scaleType) {
+  int determineSizeHintColor(int imageWidth, int imageHeight, @Nullable ScaleType scaleType) {
     int visibleDrawnAreaWidth = getBounds().width();
     int visibleDrawnAreaHeight = getBounds().height();
 
@@ -265,7 +296,7 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
         || visibleDrawnAreaHeight <= 0
         || imageWidth <= 0
         || imageHeight <= 0) {
-      return OVERLAY_COLOR_IMAGE_NOT_OK;
+      return TEXT_COLOR_IMAGE_NOT_OK;
     }
 
     if (scaleType != null) {
@@ -305,12 +336,12 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
     // Return corresponding color
     if (absWidthDifference < scaledImageWidthThresholdOk
         && absHeightDifference < scaledImageHeightThresholdOk) {
-      return OVERLAY_COLOR_IMAGE_OK;
+      return TEXT_COLOR_IMAGE_OK;
     } else if (absWidthDifference < scaledImageWidthThresholdNotOk
         && absHeightDifference < scaledImageHeightThresholdNotOk) {
-      return OVERLAY_COLOR_IMAGE_ALMOST_OK;
+      return TEXT_COLOR_IMAGE_ALMOST_OK;
     }
-    return OVERLAY_COLOR_IMAGE_NOT_OK;
+    return TEXT_COLOR_IMAGE_NOT_OK;
   }
 
   public void setFinalImageTimeMs(long finalImageTimeMs) {
