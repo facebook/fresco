@@ -63,7 +63,8 @@ object VitoSpinners {
             "WebP simple" to DefaultImageFormats.WEBP_SIMPLE,
             "WebP with alpha" to DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA,
             "Animated WebP" to DefaultImageFormats.WEBP_ANIMATED,
-            "Keyframes" to KeyframesDecoderExample.IMAGE_FORMAT_KEYFRAMES
+            "Keyframes" to KeyframesDecoderExample.IMAGE_FORMAT_KEYFRAMES,
+            "none" to null
     )
 
     val colorFilters = listOf(
@@ -76,7 +77,8 @@ object VitoSpinners {
     val placeholderOptions = listOf(
             "none" to {builder: ImageOptions.Builder -> builder.placeholder(null)},
             "image" to {builder: ImageOptions.Builder -> builder.placeholderRes(R.drawable.logo, ScalingUtils.ScaleType.FIT_CENTER)},
-            "block color" to {builder: ImageOptions.Builder -> builder.placeholder(ColorDrawable(Color.RED))}
+            "block color" to {builder: ImageOptions.Builder -> builder.placeholder(ColorDrawable(Color.RED))},
+            "color res" to {builder: ImageOptions.Builder -> builder.placeholderRes(R.color.placeholder_color)}
     )
 
     val postprocessorOptions = listOf(

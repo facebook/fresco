@@ -56,7 +56,7 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
             refresh(imageOptionsBuilder.scale(it.first).focusPoint(it.second))
         }
         spinner_image_format.setupWithList(VitoSpinners.imageFormats) {
-            refresh(uri = sampleUris().create(it))
+            refresh(uri = if (it != null) sampleUris().create(it) else null)
         }
 
         spinner_color_filter.setupWithList(VitoSpinners.colorFilters) {
