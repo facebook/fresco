@@ -133,6 +133,11 @@ static void osInitDestination(j_compress_ptr cinfo) {
 
   // allocate java byte array
   dest->javaBuffer = env->NewByteArray(kStreamBufferSize);
+  if (dest->javaBuffer == NULL) {
+      jpegSafeThrow(
+          (j_common_ptr) cinfo,
+          "Failed to allocate memory for java byte buffer.");
+  }
   jpegJumpOnException((j_common_ptr) cinfo);
 
   // allocate the output buffer --- it will be released when done with image
@@ -143,7 +148,7 @@ static void osInitDestination(j_compress_ptr cinfo) {
   if (dest->buffer == NULL) {
     jpegSafeThrow(
         (j_common_ptr) cinfo,
-        "Failed to allcoate memory for byte buffer.");
+        "Failed to allocate memory for byte buffer.");
   }
   dest->public_fields.next_output_byte = dest->buffer;
   dest->public_fields.free_in_buffer = kStreamBufferSize;
