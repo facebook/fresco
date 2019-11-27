@@ -45,4 +45,7 @@ public interface ExecutorSupplier {
   Executor forLightweightBackgroundTasks();
 
   Executor forThumbnailProducer();
+
+  /** Executor used for LocalVideoThumbnailProducer. */
+  Executor forVideoThumbnailProducer();
 }

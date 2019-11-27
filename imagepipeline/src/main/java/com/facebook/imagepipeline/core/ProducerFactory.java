@@ -273,7 +273,7 @@ public class ProducerFactory {
 
   public LocalVideoThumbnailProducer newLocalVideoThumbnailProducer() {
     return new LocalVideoThumbnailProducer(
-        mExecutorSupplier.forLocalStorageRead(), mContentResolver);
+        mExecutorSupplier.forVideoThumbnailProducer(), mContentResolver);
   }
 
   public NetworkFetchProducer newNetworkFetchProducer(NetworkFetcher networkFetcher) {
