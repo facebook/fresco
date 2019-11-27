@@ -26,7 +26,7 @@ buildscript {
             ],
             'flipper'   : '0.21.1',
             'kotlin'    : '1.3.31',
-            'litho'     : '0.26.1',
+            'litho'     : '0.32.0',
             'material'  : '1.0.0',
             // Testing
             assertjCore : '2.9.0',
