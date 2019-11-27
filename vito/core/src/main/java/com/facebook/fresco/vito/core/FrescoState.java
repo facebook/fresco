@@ -32,6 +32,7 @@ import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import javax.annotation.Nonnull;
 
 public class FrescoState
     implements DataSubscriber<CloseableReference<CloseableImage>>,
@@ -45,6 +46,7 @@ public class FrescoState
   private final ImageOptions mImageOptions;
   private final @Nullable Object mCallerContext;
   private final @Nullable CacheKey mCacheKey;
+  private final Resources mResources;
 
   // ImageListener passed as @Prop to Litho component
   private @Nullable ImageListener mImageListener;
@@ -54,8 +56,8 @@ public class FrescoState
   private @Nullable ImageRequest mImageRequest;
   private @Px int mTargetWidthPx;
   private @Px int mTargetHeightPx;
-  private Resources mResources;
-  private FrescoDrawable mFrescoDrawable;
+
+  private @Nullable FrescoDrawable mFrescoDrawable;
   private @Nullable CloseableReference<CloseableImage> mCachedImage;
   private boolean mIsAttached;
   private boolean mImageFetched;
@@ -94,7 +96,7 @@ public class FrescoState
       @Nullable Uri uri,
       @Nullable MultiUri multiUri,
       ImageOptions imageOptions,
-      Object callerContext,
+      @Nullable Object callerContext,
       @Nullable ImageRequest imageRequest,
       @Nullable CacheKey cacheKey,
       @Nullable CloseableReference<CloseableImage> cachedImage,
@@ -122,12 +124,13 @@ public class FrescoState
   }
 
   @UiThread
+  @Nullable
   public FrescoDrawable getFrescoDrawable() {
     return mFrescoDrawable;
   }
 
   @UiThread
-  public void setFrescoDrawable(FrescoDrawable frescoDrawable) {
+  public void setFrescoDrawable(@Nullable FrescoDrawable frescoDrawable) {
     mFrescoDrawable = frescoDrawable;
   }
 
@@ -170,7 +173,8 @@ public class FrescoState
     return CloseableReference.cloneOrNull(mCachedImage);
   }
 
-  public synchronized void setCachedImage(CloseableReference<CloseableImage> cachedImage) {
+  public synchronized void setCachedImage(
+      @Nullable CloseableReference<CloseableImage> cachedImage) {
     CloseableReference.closeSafely(mCachedImage);
     mCachedImage = CloseableReference.cloneOrNull(cachedImage);
   }
@@ -182,10 +186,6 @@ public class FrescoState
 
   public Resources getResources() {
     return mResources;
-  }
-
-  public void setResources(Resources resources) {
-    mResources = resources;
   }
 
   @Nullable
@@ -280,22 +280,22 @@ public class FrescoState
   }
 
   @Override
-  public void onNewResult(DataSource<CloseableReference<CloseableImage>> dataSource) {
+  public void onNewResult(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
     mFrescoContext.getController().onNewResult(this, dataSource);
   }
 
   @Override
-  public void onFailure(DataSource<CloseableReference<CloseableImage>> dataSource) {
+  public void onFailure(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
     mFrescoContext.getController().onFailure(this, dataSource);
   }
 
   @Override
-  public void onCancellation(DataSource<CloseableReference<CloseableImage>> dataSource) {
+  public void onCancellation(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
     mFrescoContext.getController().onCancellation(this, dataSource);
   }
 
   @Override
-  public void onProgressUpdate(DataSource<CloseableReference<CloseableImage>> dataSource) {
+  public void onProgressUpdate(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
     mFrescoContext.getController().onProgressUpdate(this, dataSource);
   }
 
@@ -420,7 +420,7 @@ public class FrescoState
     return mImageListener;
   }
 
-  public void setImageListener(ImageListener imageListener) {
+  public void setImageListener(@Nullable ImageListener imageListener) {
     mImageListener = imageListener;
   }
 
