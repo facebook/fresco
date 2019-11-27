@@ -18,7 +18,7 @@ import com.facebook.common.internal.DoNotStrip;
  * IS, WHILE THE DEVICE CANNOT RUN THE CODE WE ARE PURPORTEDLY MEASURING.
  */
 @DoNotStrip
-public class AwakeTimeSinceBootClock implements MonotonicClock {
+public class AwakeTimeSinceBootClock implements MonotonicClock, MonotonicNanoClock {
   @DoNotStrip private static final AwakeTimeSinceBootClock INSTANCE = new AwakeTimeSinceBootClock();
 
   private AwakeTimeSinceBootClock() {}
@@ -38,5 +38,11 @@ public class AwakeTimeSinceBootClock implements MonotonicClock {
   public long now() {
     // Guaranteed to be monotonic according to documentation.
     return android.os.SystemClock.uptimeMillis();
+  }
+
+  @Override
+  @DoNotStrip
+  public long nowNanos() {
+    return java.lang.System.nanoTime();
   }
 }
