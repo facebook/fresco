@@ -198,7 +198,7 @@ public class ImagePipelineFactory {
     return mBitmapMemoryCache;
   }
 
-  public MemoryCache<CacheKey, PooledByteBuffer> getEncodedCountingMemoryCache() {
+  public CountingMemoryCache<CacheKey, PooledByteBuffer> getEncodedCountingMemoryCache() {
     if (mEncodedCountingMemoryCache == null) {
       mEncodedCountingMemoryCache =
           EncodedCountingMemoryCacheFactory.get(
