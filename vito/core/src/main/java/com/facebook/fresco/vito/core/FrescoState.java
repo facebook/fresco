@@ -21,6 +21,7 @@ import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.drawable.ForwardingDrawable;
+import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -511,5 +512,18 @@ public class FrescoState
   public static String getStringId(long id) {
     // Vito IDs and Drawee IDs overlap. We add a prefix to distinguish between them.
     return "v" + id;
+  }
+
+  @Override
+  public void onImageDrawn(String id, ImageInfo imageInfo, DimensionsInfo dimensionsInfo) {
+    if (mImageListener != null) {
+      mImageListener.onImageDrawn(id, imageInfo, dimensionsInfo);
+    }
+    if (mOtherListeners != null) {
+      mOtherListeners.onImageDrawn(id, imageInfo, dimensionsInfo);
+    }
+    if (mImageStateListener != null) {
+      mImageStateListener.onImageDrawn(id, imageInfo, dimensionsInfo);
+    }
   }
 }

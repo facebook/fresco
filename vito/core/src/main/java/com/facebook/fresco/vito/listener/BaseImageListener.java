@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.listener;
 
 import android.graphics.drawable.Drawable;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
+import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.imagepipeline.image.ImageInfo;
 import javax.annotation.Nullable;
 
@@ -38,4 +39,7 @@ public class BaseImageListener implements ImageListener {
 
   @Override
   public void onRelease(long id) {}
+
+  @Override
+  public void onImageDrawn(String id, ImageInfo imageInfo, DimensionsInfo dimensionsInfo) {}
 }

@@ -78,7 +78,7 @@ public class FrescoContext {
       @Nullable ImageListener globalImageListener,
       @Nullable ImageStateListener globalImageStateListener,
       DebugOverlayFactory debugOverlayFactory) {
-    mController = new FrescoControllerImpl(this, debugOverlayFactory);
+    mController = new FrescoControllerImpl(this, debugOverlayFactory, false);
     mHierarcher = hierarcher;
     mCallerContextVerifier = callerContextVerifier;
     mExperiments = frescoExperiments;

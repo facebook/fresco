@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import androidx.annotation.Nullable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.drawable.ForwardingDrawable;
+import com.facebook.drawee.drawable.InstrumentedDrawable;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.infer.annotation.ThreadSafe;
@@ -82,7 +83,8 @@ public interface Hierarcher {
       ImageOptions imageOptions,
       CloseableReference<CloseableImage> closeableImage,
       @Nullable ForwardingDrawable actualImageWrapperDrawable,
-      boolean wasImmediate);
+      boolean wasImmediate,
+      @Nullable InstrumentedDrawable.Listener instrumentedListener);
 
   /**
    * Sets up the overlay drawable for a given fresco drawable.

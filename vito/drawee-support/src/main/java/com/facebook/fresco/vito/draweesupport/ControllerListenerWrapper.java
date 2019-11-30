@@ -13,6 +13,8 @@ import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
 import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.fresco.ui.common.DimensionsInfo;
+import com.facebook.fresco.ui.common.OnDrawControllerListener;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.ImageInfo;
 import javax.annotation.Nullable;
@@ -90,5 +92,12 @@ public class ControllerListenerWrapper implements ImageListener {
 
   private static String toStringId(long id) {
     return "v" + id;
+  }
+
+  @Override
+  public void onImageDrawn(String id, ImageInfo imageInfo, DimensionsInfo dimensionsInfo) {
+    if (mControllerListener instanceof OnDrawControllerListener) {
+      ((OnDrawControllerListener) mControllerListener).onImageDrawn(id, imageInfo, dimensionsInfo);
+    }
   }
 }

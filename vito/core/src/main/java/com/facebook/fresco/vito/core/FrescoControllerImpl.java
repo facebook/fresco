@@ -14,11 +14,14 @@ import androidx.core.util.ObjectsCompat;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.components.DeferredReleaser;
+import com.facebook.drawee.drawable.InstrumentedDrawable;
+import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.fresco.vito.core.debug.DebugOverlayFactory;
 import com.facebook.fresco.vito.listener.AutoPlayImageListener;
 import com.facebook.fresco.vito.listener.ForwardingImageListener;
@@ -26,6 +29,9 @@ import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.image.HasImageMetadata;
+import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.imagepipeline.image.OriginalEncodedImageInfo;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.multiuri.MultiUri;
 import com.facebook.imagepipeline.producers.InternalProducerListener;
@@ -39,11 +45,15 @@ public class FrescoControllerImpl implements FrescoController {
 
   private final FrescoContext mFrescoContext;
   private final DebugOverlayFactory mDebugOverlayFactory;
+  private boolean mShouldInstrumentDrawable;
 
   public FrescoControllerImpl(
-      FrescoContext frescoContext, DebugOverlayFactory debugOverlayFactory) {
+      FrescoContext frescoContext,
+      DebugOverlayFactory debugOverlayFactory,
+      boolean shouldInstrumentDrawable) {
     mFrescoContext = frescoContext;
     mDebugOverlayFactory = debugOverlayFactory;
+    mShouldInstrumentDrawable = shouldInstrumentDrawable;
   }
 
   @Override
@@ -575,6 +585,10 @@ public class FrescoControllerImpl implements FrescoController {
       }
 
       frescoState.getFrescoDrawable().setProgressDrawable(null);
+
+      InstrumentedDrawable.Listener instrumentedListener =
+          maybeGetInstrumentedListener(frescoState, result);
+
       Drawable actualDrawable =
           mFrescoContext
               .getHierarcher()
@@ -585,7 +599,8 @@ public class FrescoControllerImpl implements FrescoController {
                   frescoState.getImageOptions(),
                   result,
                   frescoState.getActualImageWrapper(),
-                  wasImmediate);
+                  wasImmediate,
+                  instrumentedListener);
 
       frescoState.onFinalImageSet(
           frescoState.getId(), frescoState.getImageOrigin(), closeableImage, actualDrawable);
@@ -594,6 +609,16 @@ public class FrescoControllerImpl implements FrescoController {
         FrescoSystrace.endSection();
       }
     }
+  }
+
+  private @Nullable InstrumentedDrawable.Listener maybeGetInstrumentedListener(
+      FrescoState frescoState, CloseableReference<CloseableImage> result) {
+    InstrumentedDrawable.Listener instrumentedListener = null;
+    if (mShouldInstrumentDrawable) {
+      ImageInfo imageInfo = result.get();
+      instrumentedListener = createListener(frescoState, imageInfo, frescoState.getStringId());
+    }
+    return instrumentedListener;
   }
 
   private void setupRequestListener(FrescoState frescoState, ImageRequest imageRequest) {
@@ -606,5 +631,46 @@ public class FrescoControllerImpl implements FrescoController {
             .getImagePipeline()
             .getRequestListenerForRequest(imageRequest, frescoState.getImageOriginListener());
     frescoState.setRequestListener(requestListener);
+  }
+
+  private InstrumentedDrawable.Listener createListener(
+      final ImageListener imageListener, final ImageInfo info, final String id) {
+    return new InstrumentedDrawable.Listener() {
+
+      public static final String TAG = "InstrumentedDrawable.Listener";
+
+      @Override
+      public void track(
+          int viewWidth,
+          int viewHeight,
+          int imageWidth,
+          int imageHeight,
+          int scaledWidth,
+          int scaledHeight) {
+        if (imageListener != null) {
+          if (!(info instanceof HasImageMetadata)) {
+            FLog.wtf(TAG, "mInfo does not implement HasImageMetadata: " + info);
+          } else {
+            int encodedImageWidth = -1;
+            int encodedImageHeight = -1;
+            OriginalEncodedImageInfo encodedImageInfo =
+                ((HasImageMetadata) info).getOriginalEncodedImageInfo();
+            if (encodedImageInfo != null) {
+              encodedImageWidth = encodedImageInfo.getWidth();
+              encodedImageHeight = encodedImageInfo.getHeight();
+            }
+            DimensionsInfo dimensionsInfo =
+                new DimensionsInfo(
+                    viewWidth, viewHeight,
+                    encodedImageWidth, encodedImageHeight,
+                    imageWidth, imageHeight);
+
+            if (imageListener != null) {
+              imageListener.onImageDrawn(id, info, dimensionsInfo);
+            }
+          }
+        }
+      }
+    };
   }
 }

@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.core;
 
 import android.graphics.drawable.Drawable;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
+import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.imagepipeline.image.ImageInfo;
 import javax.annotation.Nullable;
 
@@ -76,4 +77,6 @@ public interface ImageStateListener {
    * @param state image state
    */
   void onRelease(FrescoState state);
+
+  void onImageDrawn(String id, ImageInfo info, DimensionsInfo dimensionsInfo);
 }

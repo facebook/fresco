@@ -100,7 +100,7 @@ public class FrescoControllerImplTest {
     when(mFrescoState.getOverlayDrawable()).thenReturn(mOverlayDrawable);
     when(mFrescoState.isAttached()).thenReturn(true);
 
-    mFrescoController = new FrescoControllerImpl(mFrescoContext, new NoOpDebugOverlayFactory());
+    mFrescoController = new FrescoControllerImpl(mFrescoContext, new NoOpDebugOverlayFactory(), false);
   }
 
   @Test

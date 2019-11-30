@@ -14,6 +14,7 @@ import android.graphics.drawable.LayerDrawable;
 import androidx.annotation.Nullable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.drawable.ForwardingDrawable;
+import com.facebook.drawee.drawable.InstrumentedDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.fresco.vito.drawable.RoundingUtils;
 import com.facebook.fresco.vito.drawable.VitoDrawableFactory;
@@ -28,6 +29,7 @@ public class HierarcherImpl implements Hierarcher {
 
   private final VitoDrawableFactory mDrawableFactory;
   private final RoundingUtils mRoundingUtils;
+  private boolean mShouldInstrumentDrawable;
 
   public HierarcherImpl(VitoDrawableFactory drawableFactory) {
     mDrawableFactory = drawableFactory;
@@ -147,7 +149,8 @@ public class HierarcherImpl implements Hierarcher {
       ImageOptions imageOptions,
       CloseableReference<CloseableImage> closeableImage,
       @Nullable ForwardingDrawable actualImageWrapperDrawable,
-      boolean wasImmediate) {
+      boolean wasImmediate,
+      InstrumentedDrawable.Listener instrumentedListener) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("HierarcherImpl#setupActualImageDrawable");
     }
@@ -158,6 +161,11 @@ public class HierarcherImpl implements Hierarcher {
         actualImageWrapperDrawable = buildActualImageWrapper(imageOptions);
       }
       actualImageWrapperDrawable.setCurrent(actualDrawable != null ? actualDrawable : NOP_DRAWABLE);
+
+      if (instrumentedListener != null) {
+        actualImageWrapperDrawable = new InstrumentedDrawable(actualDrawable, instrumentedListener);
+      }
+
       frescoDrawable.setImage(actualImageWrapperDrawable, closeableImage);
 
       if (!frescoDrawable.isDefaultLayerIsOn()) {

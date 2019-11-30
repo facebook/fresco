@@ -14,7 +14,7 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import javax.annotation.Nullable;
 
 /** Autoplays animated images */
-public class AutoPlayImageListener implements ImageListener {
+public class AutoPlayImageListener extends BaseImageListener {
 
   private static @Nullable AutoPlayImageListener INSTANCE;
 

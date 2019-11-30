@@ -9,11 +9,12 @@ package com.facebook.fresco.vito.listener;
 
 import android.graphics.drawable.Drawable;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
+import com.facebook.fresco.ui.common.OnDrawControllerListener;
 import com.facebook.imagepipeline.image.ImageInfo;
 import javax.annotation.Nullable;
 
 /** Interface for an image status listener. */
-public interface ImageListener {
+public interface ImageListener extends OnDrawControllerListener<ImageInfo> {
 
   /**
    * Called before the image request is submitted.
