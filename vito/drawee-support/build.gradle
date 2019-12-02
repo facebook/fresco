@@ -15,6 +15,7 @@ dependencies {
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
 
     implementation project(':drawee-backends:drawee-pipeline')
+    implementation project(':ui-common')
     implementation project(':vito:core')
     implementation project(':vito:options')
 
