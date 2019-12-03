@@ -6,9 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 
-/**
- * Used to log image params at draw-time.
- */
+/** Used to log image params at draw-time. */
 public class InstrumentedDrawable extends ForwardingDrawable {
 
   public interface Listener {

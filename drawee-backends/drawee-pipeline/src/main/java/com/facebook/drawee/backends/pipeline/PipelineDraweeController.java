@@ -198,7 +198,7 @@ public class PipelineDraweeController
   public synchronized void removeImageOriginListener(ImageOriginListener imageOriginListener) {
     if (mImageOriginListener instanceof ForwardingImageOriginListener) {
       ((ForwardingImageOriginListener) mImageOriginListener)
-              .removeImageOriginListener(imageOriginListener);
+          .removeImageOriginListener(imageOriginListener);
       return;
     }
     if (mImageOriginListener == imageOriginListener) {
