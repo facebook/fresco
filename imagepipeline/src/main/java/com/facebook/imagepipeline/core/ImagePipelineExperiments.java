@@ -56,7 +56,6 @@ public class ImagePipelineExperiments {
   private final long mMemoryType;
   private boolean mKeepCancelledFetchAsLowPriority;
   private boolean mDownsampleIfLargeBitmap;
-  private boolean mEncodedCacheEnabled;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -85,11 +84,6 @@ public class ImagePipelineExperiments {
     mMemoryType = builder.mMemoryType;
     mKeepCancelledFetchAsLowPriority = builder.mKeepCancelledFetchAsLowPriority;
     mDownsampleIfLargeBitmap = builder.mDownsampleIfLargeBitmap;
-    mEncodedCacheEnabled = builder.mEncodedCacheEnabled;
-  }
-
-  public boolean isEncodedCacheEnabled() {
-    return mEncodedCacheEnabled;
   }
 
   public boolean shouldDownsampleIfLargeBitmap() {
@@ -210,7 +204,6 @@ public class ImagePipelineExperiments {
     public long mMemoryType = 0;
     private boolean mKeepCancelledFetchAsLowPriority;
     public boolean mDownsampleIfLargeBitmap;
-    public boolean mEncodedCacheEnabled;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -367,11 +360,6 @@ public class ImagePipelineExperiments {
 
     public ImagePipelineConfig.Builder setDownsampleIfLargeBitmap(boolean downsampleIfLargeBitmap) {
       mDownsampleIfLargeBitmap = downsampleIfLargeBitmap;
-      return mConfigBuilder;
-    }
-
-    public ImagePipelineConfig.Builder setEncodedCacheEnabled(boolean encodedCacheEnabled) {
-      mEncodedCacheEnabled = encodedCacheEnabled;
       return mConfigBuilder;
     }
 

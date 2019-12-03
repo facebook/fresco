@@ -86,12 +86,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
         final boolean isMemoryCacheEnabled =
             producerContext.getImageRequest().isMemoryCacheEnabled();
         Consumer consumerOfInputProducer =
-            new EncodedMemoryCacheConsumer(
-                consumer,
-                mMemoryCache,
-                cacheKey,
-                isMemoryCacheEnabled,
-                producerContext.getImagePipelineConfig().getExperiments().isEncodedCacheEnabled());
+            new EncodedMemoryCacheConsumer(consumer, mMemoryCache, cacheKey, isMemoryCacheEnabled);
 
         listener.onProducerFinishWithSuccess(
             producerContext,
@@ -116,19 +111,16 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
     private final MemoryCache<CacheKey, PooledByteBuffer> mMemoryCache;
     private final CacheKey mRequestedCacheKey;
     private final boolean mIsMemoryCacheEnabled;
-    private final boolean mEncodedCacheEnabled;
 
     public EncodedMemoryCacheConsumer(
         Consumer<EncodedImage> consumer,
         MemoryCache<CacheKey, PooledByteBuffer> memoryCache,
         CacheKey requestedCacheKey,
-        boolean isMemoryCacheEnabled,
-        boolean encodedCacheEnabled) {
+        boolean isMemoryCacheEnabled) {
       super(consumer);
       mMemoryCache = memoryCache;
       mRequestedCacheKey = requestedCacheKey;
       mIsMemoryCacheEnabled = isMemoryCacheEnabled;
-      mEncodedCacheEnabled = encodedCacheEnabled;
     }
 
     @Override
@@ -152,7 +144,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
         if (ref != null) {
           CloseableReference<PooledByteBuffer> cachedResult = null;
           try {
-            if (mEncodedCacheEnabled && mIsMemoryCacheEnabled) {
+            if (mIsMemoryCacheEnabled) {
               cachedResult = mMemoryCache.cache(mRequestedCacheKey, ref);
             }
           } finally {
