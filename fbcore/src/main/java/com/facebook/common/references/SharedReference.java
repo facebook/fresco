@@ -178,6 +178,14 @@ public class SharedReference<T> {
     return false;
   }
 
+  public synchronized boolean deleteReferenceIfValid() {
+    if (isValid()) {
+      deleteReference();
+      return true;
+    }
+    return false;
+  }
+
   /**
    * Decrement the reference count for the shared reference. If the reference count drops to zero,
    * then dispose of the referenced value
