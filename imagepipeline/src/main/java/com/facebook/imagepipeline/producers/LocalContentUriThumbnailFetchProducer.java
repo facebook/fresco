@@ -65,32 +65,29 @@ public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer
     Uri uri = imageRequest.getSourceUri();
 
     if (UriUtil.isLocalCameraUri(uri)) {
-      EncodedImage cameraImage = getCameraImage(uri, imageRequest.getResizeOptions());
-      if (cameraImage != null) {
-        return cameraImage;
-      }
+      return getCameraImage(uri, imageRequest.getResizeOptions());
     }
 
     return null;
   }
 
-  private @Nullable EncodedImage getCameraImage(Uri uri, ResizeOptions resizeOptions)
+  private @Nullable EncodedImage getCameraImage(Uri uri, @Nullable ResizeOptions resizeOptions)
       throws IOException {
-    Cursor cursor = mContentResolver.query(uri, PROJECTION, null, null, null);
+    if (resizeOptions == null) {
+      return null;
+    }
+    @Nullable Cursor cursor = mContentResolver.query(uri, PROJECTION, null, null, null);
     if (cursor == null) {
       return null;
     }
     try {
-      if (cursor.getCount() == 0) {
-        return null;
-      }
-      cursor.moveToFirst();
-      final String pathname =
-          cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
-      if (resizeOptions != null) {
-        int imageIdColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
-        EncodedImage thumbnail = getThumbnail(resizeOptions, cursor.getInt(imageIdColumnIndex));
+      if (cursor.moveToFirst()) {
+        final int imageIdColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
+        final EncodedImage thumbnail =
+            getThumbnail(resizeOptions, cursor.getLong(imageIdColumnIndex));
         if (thumbnail != null) {
+          final String pathname =
+              cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
           thumbnail.setRotationAngle(getRotationAngle(pathname));
           return thumbnail;
         }
@@ -104,22 +101,21 @@ public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer
   // Gets the smallest possible thumbnail that is bigger than the requested size in the resize
   // options or null if either the thumbnails are smaller than the requested size or there are no
   // stored thumbnails.
-  private @Nullable EncodedImage getThumbnail(ResizeOptions resizeOptions, int imageId)
+  private @Nullable EncodedImage getThumbnail(ResizeOptions resizeOptions, long imageId)
       throws IOException {
     int thumbnailKind = getThumbnailKind(resizeOptions);
     if (thumbnailKind == NO_THUMBNAIL) {
       return null;
     }
-    Cursor thumbnailCursor = null;
+    @Nullable
+    Cursor thumbnailCursor =
+        MediaStore.Images.Thumbnails.queryMiniThumbnail(
+            mContentResolver, imageId, thumbnailKind, THUMBNAIL_PROJECTION);
+    if (thumbnailCursor == null) {
+      return null;
+    }
     try {
-      thumbnailCursor =
-          MediaStore.Images.Thumbnails.queryMiniThumbnail(
-              mContentResolver, imageId, thumbnailKind, THUMBNAIL_PROJECTION);
-      if (thumbnailCursor == null) {
-        return null;
-      }
-      thumbnailCursor.moveToFirst();
-      if (thumbnailCursor.getCount() > 0) {
+      if (thumbnailCursor.moveToFirst()) {
         final String thumbnailUri =
             thumbnailCursor.getString(
                 thumbnailCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA));
@@ -128,9 +124,7 @@ public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer
         }
       }
     } finally {
-      if (thumbnailCursor != null) {
-        thumbnailCursor.close();
-      }
+      thumbnailCursor.close();
     }
     return null;
   }

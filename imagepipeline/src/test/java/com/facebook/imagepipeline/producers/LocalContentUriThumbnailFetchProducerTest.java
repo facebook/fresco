@@ -102,7 +102,7 @@ public class LocalContentUriThumbnailFetchProducerTest {
     final int dataColumnIndex = 5;
     when(mCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA)).thenReturn(dataColumnIndex);
     when(mCursor.getString(dataColumnIndex)).thenReturn(THUMBNAIL_FILE_NAME);
-    when(mCursor.getCount()).thenReturn(1);
+    when(mCursor.moveToFirst()).thenReturn(true);
   }
 
   private void mockThumbnailFile() throws Exception {
