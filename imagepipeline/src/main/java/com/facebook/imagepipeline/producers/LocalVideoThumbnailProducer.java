@@ -77,7 +77,7 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
           @Override
           protected @Nullable CloseableReference<CloseableImage> getResult() throws Exception {
             Bitmap thumbnailBitmap;
-            if (imageRequest.getImageDecodeOptions().useMediaStoreVideoThumbnail
+            if (imageRequest.getUseMediaStoreVideoThumbnail()
                 && UriUtil.isLocalContentUri(imageRequest.getSourceUri())) {
               long id = ContentUris.parseId(imageRequest.getSourceUri());
               thumbnailBitmap =

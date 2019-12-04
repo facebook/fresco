@@ -23,7 +23,6 @@ import android.provider.MediaStore;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.references.CloseableReference;
-import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -93,7 +92,6 @@ public class LocalVideoThumbnailProducerTest {
             Priority.MEDIUM,
             mConfig);
     when(mImageRequest.getSourceFile()).thenReturn(mFile);
-    when(mImageRequest.getImageDecodeOptions()).thenReturn(mock(ImageDecodeOptions.class));
   }
 
   @Test

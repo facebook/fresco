@@ -62,12 +62,6 @@ public class ImageDecodeOptions {
    */
   public final @Nullable ColorSpace colorSpace;
 
-  /**
-   * Indicates that the media store video thumbnail should be used when a local video content uri is
-   * requested.
-   */
-  public final boolean useMediaStoreVideoThumbnail;
-
   public ImageDecodeOptions(ImageDecodeOptionsBuilder b) {
     this.minDecodeIntervalMs = b.getMinDecodeIntervalMs();
     this.decodePreviewFrame = b.getDecodePreviewFrame();
@@ -78,7 +72,6 @@ public class ImageDecodeOptions {
     this.customImageDecoder = b.getCustomImageDecoder();
     this.bitmapTransformation = b.getBitmapTransformation();
     this.colorSpace = b.getColorSpace();
-    this.useMediaStoreVideoThumbnail = b.getUseMediaStoreVideoThumbnail();
   }
 
   /**
@@ -114,7 +107,6 @@ public class ImageDecodeOptions {
     if (customImageDecoder != that.customImageDecoder) return false;
     if (bitmapTransformation != that.bitmapTransformation) return false;
     if (colorSpace != that.colorSpace) return false;
-    if (useMediaStoreVideoThumbnail != that.useMediaStoreVideoThumbnail) return false;
     return true;
   }
 
@@ -129,7 +121,6 @@ public class ImageDecodeOptions {
     result = 31 * result + (customImageDecoder != null ? customImageDecoder.hashCode() : 0);
     result = 31 * result + (bitmapTransformation != null ? bitmapTransformation.hashCode() : 0);
     result = 31 * result + (colorSpace != null ? colorSpace.hashCode() : 0);
-    result = 31 * result + (useMediaStoreVideoThumbnail ? 1 : 0);
     return result;
   }
 
@@ -148,7 +139,6 @@ public class ImageDecodeOptions {
         .add("bitmapConfigName", bitmapConfig.name())
         .add("customImageDecoder", customImageDecoder)
         .add("bitmapTransformation", bitmapTransformation)
-        .add("colorSpace", colorSpace)
-        .add("useMediaStoreVideoThumbnail", useMediaStoreVideoThumbnail);
+        .add("colorSpace", colorSpace);
   }
 }

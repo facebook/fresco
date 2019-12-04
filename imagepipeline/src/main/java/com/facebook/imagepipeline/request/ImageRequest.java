@@ -99,6 +99,18 @@ public class ImageRequest {
    */
   private final @Nullable Boolean mResizingAllowedOverride;
 
+  /**
+   * Indicates that the media store video thumbnail should be used when a local video content uri is
+   * requested.
+   */
+  private final boolean mUseMediaStoreVideoThumbnail;
+
+  /**
+   * Indicates that the media store photo thumbnail should be used when a local photo content uri is
+   * requested.
+   */
+  private final boolean mUseMediaStorePhotoThumbnail;
+
   public static @Nullable ImageRequest fromFile(@Nullable File file) {
     return (file == null) ? null : ImageRequest.fromUri(UriUtil.getUriForFile(file));
   }
@@ -139,6 +151,8 @@ public class ImageRequest {
     mRequestListener = builder.getRequestListener();
 
     mResizingAllowedOverride = builder.getResizingAllowedOverride();
+    mUseMediaStoreVideoThumbnail = builder.getUseMediaStoreVideoThumbnail();
+    mUseMediaStorePhotoThumbnail = builder.getUseMediaStorePhotoThumbnail();
   }
 
   public CacheChoice getCacheChoice() {
@@ -229,6 +243,14 @@ public class ImageRequest {
 
   public @Nullable RequestListener getRequestListener() {
     return mRequestListener;
+  }
+
+  public boolean getUseMediaStoreVideoThumbnail() {
+    return mUseMediaStoreVideoThumbnail;
+  }
+
+  public boolean getUseMediaStorePhotoThumbnail() {
+    return mUseMediaStorePhotoThumbnail;
   }
 
   @Override
