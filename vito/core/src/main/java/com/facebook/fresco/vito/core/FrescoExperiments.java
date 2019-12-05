@@ -38,8 +38,16 @@ public class FrescoExperiments {
     return false;
   }
 
+  public boolean useFetchApiForPrefetch() {
+    return true;
+  }
+
   public boolean enqueuePrefetchInOnPrepare() {
     return false;
+  }
+
+  public PrefetchTarget onPreparePrefetchTarget() {
+    return PrefetchTarget.MEMORY_DECODED;
   }
 
   public boolean keepRefToPrefetchDatasource() {

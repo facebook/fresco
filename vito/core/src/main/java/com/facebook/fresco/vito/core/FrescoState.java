@@ -67,7 +67,7 @@ public class FrescoState
   private @Nullable Producer<CloseableReference<CloseableImage>> mProducerSequence;
   private @Nullable SettableProducerContext mSettableProducerContext;
   private @Nullable RequestListener mRequestListener;
-  private @Nullable DataSource<CloseableReference<CloseableImage>> mPrefetchDatasource;
+  private @Nullable DataSource mPrefetchDatasource;
   private @Nullable DataSource<CloseableReference<CloseableImage>> mMainFetchDatasource;
   private @Nullable Drawable mPlaceholderDrawable;
 
@@ -458,7 +458,7 @@ public class FrescoState
   }
 
   public void setPrefetchDatasource(
-      @Nullable DataSource<CloseableReference<CloseableImage>> prefetchDatasource) {
+      @Nullable DataSource prefetchDatasource) {
     if (mPrefetchDatasource != null) {
       mPrefetchDatasource.close();
     }

@@ -90,12 +90,12 @@ public class FrescoControllerImpl implements FrescoController {
 
   @Override
   public FrescoState createState(
-      @Nullable Uri uri,
-      @Nullable MultiUri multiUri,
-      ImageOptions imageOptions,
-      @Nullable Object callerContext,
-      Resources resources,
-      @Nullable ImageListener imageListener) {
+      final @Nullable Uri uri,
+      final @Nullable MultiUri multiUri,
+      final ImageOptions imageOptions,
+      final @Nullable Object callerContext,
+      final Resources resources,
+      final @Nullable ImageListener imageListener) {
     mFrescoContext.verifyCallerContext(callerContext);
     validateUris(uri, multiUri);
     if (FrescoSystrace.isTracing()) {
@@ -151,11 +151,26 @@ public class FrescoControllerImpl implements FrescoController {
                         "FrescoControllerImpl#createState->prefetchInOnPrepare");
                   }
                   try {
-                    DataSource<CloseableReference<CloseableImage>> datasource =
-                        fireOffRequest(frescoState);
-                    datasource.subscribe(frescoState, mFrescoContext.getUiThreadExecutorService());
-                    if (frescoExperiments.keepRefToPrefetchDatasource()) {
-                      frescoState.setPrefetchDatasource(datasource);
+                    if (frescoExperiments.useFetchApiForPrefetch()) {
+                      DataSource<CloseableReference<CloseableImage>> dataSource =
+                          fireOffRequest(frescoState);
+                      dataSource.subscribe(
+                          frescoState, mFrescoContext.getUiThreadExecutorService());
+                      if (frescoExperiments.keepRefToPrefetchDatasource()) {
+                        frescoState.setPrefetchDatasource(dataSource);
+                      }
+                    } else {
+                      DataSource<Void> dataSource =
+                          mFrescoContext
+                              .getPrefetcher()
+                              .prefetch(
+                                  frescoExperiments.onPreparePrefetchTarget(),
+                                  uri,
+                                  imageOptions,
+                                  callerContext);
+                      if (frescoExperiments.keepRefToPrefetchDatasource()) {
+                        frescoState.setPrefetchDatasource(dataSource);
+                      }
                     }
                   } finally {
                     if (FrescoSystrace.isTracing()) {
