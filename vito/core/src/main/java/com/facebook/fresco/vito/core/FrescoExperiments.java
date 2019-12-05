@@ -123,4 +123,16 @@ public class FrescoExperiments {
   public boolean fireOffRequestInBackground() {
     return true;
   }
+
+  public boolean enableWorkingRangePrefetching() {
+    return false;
+  }
+
+  public int workingRangePrefetchingSize() {
+    return 3;
+  }
+
+  public PrefetchTarget workingRangePrefetchTarget() {
+    return PrefetchTarget.MEMORY_DECODED;
+  }
 }

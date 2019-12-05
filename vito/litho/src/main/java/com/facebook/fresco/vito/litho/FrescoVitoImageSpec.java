@@ -12,14 +12,17 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.core.util.ObjectsCompat;
+import com.facebook.datasource.DataSource;
 import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoController;
 import com.facebook.fresco.vito.core.FrescoDrawable;
+import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.core.FrescoState;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.provider.DefaultFrescoContext;
 import com.facebook.imagepipeline.multiuri.MultiUri;
+import com.facebook.litho.BoundaryWorkingRange;
 import com.facebook.litho.ComponentContext;
 import com.facebook.litho.ComponentLayout;
 import com.facebook.litho.Diff;
@@ -34,9 +37,12 @@ import com.facebook.litho.annotations.OnBoundsDefined;
 import com.facebook.litho.annotations.OnCreateInitialState;
 import com.facebook.litho.annotations.OnCreateMountContent;
 import com.facebook.litho.annotations.OnDetached;
+import com.facebook.litho.annotations.OnEnteredRange;
+import com.facebook.litho.annotations.OnExitedRange;
 import com.facebook.litho.annotations.OnMeasure;
 import com.facebook.litho.annotations.OnMount;
 import com.facebook.litho.annotations.OnPrepare;
+import com.facebook.litho.annotations.OnRegisterRanges;
 import com.facebook.litho.annotations.OnUnbind;
 import com.facebook.litho.annotations.OnUnmount;
 import com.facebook.litho.annotations.Prop;
@@ -45,6 +51,7 @@ import com.facebook.litho.annotations.ResType;
 import com.facebook.litho.annotations.ShouldUpdate;
 import com.facebook.litho.annotations.State;
 import com.facebook.litho.utils.MeasureUtils;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.Nullable;
 
 @MountSpec(isPureRender = true)
@@ -64,6 +71,7 @@ public class FrescoVitoImageSpec {
   static void onCreateInitialState(
       ComponentContext context,
       StateValue<FrescoState> lastFrescoState,
+      StateValue<AtomicReference<DataSource<Void>>> prefetchData,
       @Prop(optional = true) final @Nullable Uri uri,
       @Prop(optional = true) final @Nullable MultiUri multiUri,
       @Prop(optional = true) final @Nullable ImageOptions imageOptions,
@@ -79,6 +87,7 @@ public class FrescoVitoImageSpec {
                 callerContext,
                 context.getResources(),
                 imageListener));
+    prefetchData.set(new AtomicReference<DataSource<Void>>());
   }
 
   @OnMeasure
@@ -228,6 +237,35 @@ public class FrescoVitoImageSpec {
         || !ObjectsCompat.equals(imageOptions.getPrevious(), imageOptions.getNext())
         || !ObjectsCompat.equals(imageAspectRatio.getPrevious(), imageAspectRatio.getNext())
         || !ObjectsCompat.equals(frescoContext.getPrevious(), frescoContext.getNext());
+  }
+
+  @OnEnteredRange(name = "imagePrefetch")
+  static void onEnteredWorkingRange(
+      ComponentContext c,
+      @Prop(optional = true) final @Nullable Uri uri,
+      @Prop(optional = true) final @Nullable MultiUri multiUri,
+      @Prop(optional = true) final @Nullable ImageOptions imageOptions,
+      @Prop(optional = true) final @Nullable Object callerContext,
+      @Prop(optional = true) final @Nullable FrescoContext frescoContext,
+      @State final AtomicReference<DataSource<Void>> prefetchData) {
+    LithoPrefetchUtils.startPrefetch(
+        resolveContext(c, frescoContext), uri, multiUri, imageOptions, callerContext, prefetchData);
+  }
+
+  @OnExitedRange(name = "imagePrefetch")
+  static void onExitedWorkingRange(
+      ComponentContext c, final AtomicReference<DataSource<Void>> prefetchData) {
+    LithoPrefetchUtils.cancelPrefetch(prefetchData);
+  }
+
+  @OnRegisterRanges
+  static void registerWorkingRanges(
+      ComponentContext context, @Prop(optional = true) final FrescoContext frescoContext) {
+    FrescoExperiments experiments = resolveContext(context, frescoContext).getExperiments();
+    if (experiments.enableWorkingRangePrefetching()) {
+      FrescoVitoImage.registerImagePrefetchWorkingRange(
+          context, new BoundaryWorkingRange(experiments.workingRangePrefetchingSize()));
+    }
   }
 
   static FrescoContext resolveContext(

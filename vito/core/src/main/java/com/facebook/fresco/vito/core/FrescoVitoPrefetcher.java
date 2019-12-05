@@ -9,10 +9,12 @@ package com.facebook.fresco.vito.core;
 
 import android.net.Uri;
 import com.facebook.datasource.DataSource;
+import com.facebook.datasource.DataSources;
 import com.facebook.fresco.vito.options.DecodedImageOptions;
 import com.facebook.fresco.vito.options.EncodedImageOptions;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
+import java.util.concurrent.CancellationException;
 import javax.annotation.Nullable;
 
 public class FrescoVitoPrefetcher {
@@ -21,6 +23,35 @@ public class FrescoVitoPrefetcher {
 
   public FrescoVitoPrefetcher(FrescoContext frescoContext) {
     mFrescoContext = frescoContext;
+  }
+
+  /**
+   * Prefetch an image to the given {@link PrefetchTarget}
+   *
+   * <p>Beware that if your network fetcher doesn't support priorities prefetch requests may slow
+   * down images which are immediately required on screen.
+   *
+   * @param prefetchTarget the target to prefetch to
+   * @param uri the image URI to prefetch
+   * @param imageOptions the image options used to display the image
+   * @param callerContext the caller context for the given image
+   * @return a DataSource that can safely be ignored.
+   */
+  public DataSource<Void> prefetch(
+      PrefetchTarget prefetchTarget,
+      final Uri uri,
+      final @Nullable ImageOptions imageOptions,
+      final @Nullable Object callerContext) {
+    switch (prefetchTarget) {
+      case MEMORY_DECODED:
+        return prefetchToBitmapCache(uri, imageOptions, callerContext);
+      case MEMORY_ENCODED:
+        return prefetchToEncodedCache(uri, imageOptions, callerContext);
+      case DISK:
+        return prefetchToDiskCache(uri, imageOptions, callerContext);
+    }
+    return DataSources.immediateFailedDataSource(
+        new CancellationException("Prefetching is not enabled"));
   }
 
   /**
