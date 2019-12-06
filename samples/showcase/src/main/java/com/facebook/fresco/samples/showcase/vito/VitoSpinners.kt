@@ -41,7 +41,11 @@ object VitoSpinners {
     val borderOptions = listOf(
             "no border" to null,
             "red border" to BorderOptions.create(Color.RED, 20f),
-            "blue border" to BorderOptions.create(Color.BLUE, 40f))
+            "blue border" to BorderOptions.create(Color.BLUE, 40f),
+            "border with no padding" to BorderOptions.create(Color.GREEN, 20f, 0f),
+            "border with small padding" to BorderOptions.create(Color.GREEN, 20f, 10f),
+            "border with same padding" to BorderOptions.create(Color.GREEN, 20f, 20f),
+            "border with more padding" to BorderOptions.create(Color.GREEN, 20f, 40f))
 
     val scaleTypes = listOf(
             "center" to Pair(ScalingUtils.ScaleType.CENTER, null),
