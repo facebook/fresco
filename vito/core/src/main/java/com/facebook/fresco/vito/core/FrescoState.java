@@ -457,8 +457,7 @@ public class FrescoState
         + '}';
   }
 
-  public void setPrefetchDatasource(
-      @Nullable DataSource prefetchDatasource) {
+  public void setPrefetchDatasource(@Nullable DataSource prefetchDatasource) {
     if (mPrefetchDatasource != null) {
       mPrefetchDatasource.close();
     }
