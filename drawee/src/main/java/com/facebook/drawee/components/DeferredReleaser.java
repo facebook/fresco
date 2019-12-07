@@ -28,19 +28,11 @@ public abstract class DeferredReleaser {
     void release();
   }
 
-  private static boolean useConcurrentImpl = false;
   private static @Nullable DeferredReleaser sInstance = null;
-
-  public static void setUseConcurrentImpl(boolean useConcurrentImpl) {
-    DeferredReleaser.useConcurrentImpl = useConcurrentImpl;
-  }
 
   public static synchronized DeferredReleaser getInstance() {
     if (sInstance == null) {
-      sInstance =
-          useConcurrentImpl
-              ? new DeferredReleaserConcurrentImpl()
-              : new DeferredReleaserLegacyImpl();
+      sInstance = new DeferredReleaserConcurrentImpl();
     }
     return sInstance;
   }
