@@ -20,6 +20,8 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.core.ImagePipelineExperiments;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.ArrayList;
@@ -66,6 +68,8 @@ public class EncodedMemoryCacheProducerTest {
   private EncodedImage mIntermediateEncodedImage;
   private EncodedImage mFinalEncodedImageClone;
   private EncodedMemoryCacheProducer mEncodedMemoryCacheProducer;
+  private ImagePipelineConfig mImagePipelineConfig;
+  private ImagePipelineExperiments mImagePipelineExperiments;
 
   @Before
   public void setUp() {
@@ -81,6 +85,8 @@ public class EncodedMemoryCacheProducerTest {
     mFinalEncodedImage.setImageFormat(new ImageFormat("jpeg", null));
     mFinalEncodedImage.setWidth(100);
     mFinalEncodedImage.setHeight(100);
+    mImagePipelineConfig = mock(ImagePipelineConfig.class);
+    mImagePipelineExperiments = mock(ImagePipelineExperiments.class);
 
     mFinalEncodedImageFormatUnknown = new EncodedImage(mFinalImageReference);
     mIntermediateEncodedImage = new EncodedImage(mIntermediateImageReference);
@@ -97,6 +103,9 @@ public class EncodedMemoryCacheProducerTest {
     when(mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)).thenReturn(true);
     when(mProducerContext.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
+    when(mProducerContext.getImagePipelineConfig()).thenReturn(mImagePipelineConfig);
+    when(mImagePipelineConfig.getExperiments()).thenReturn(mImagePipelineExperiments);
+    when(mImagePipelineExperiments.isEncodedCacheEnabled()).thenReturn(true);
 
     when(mImageRequest.isMemoryCacheEnabled()).thenReturn(true);
   }
