@@ -9,8 +9,10 @@ package com.facebook.fresco.vito.core.debug;
 
 import android.graphics.drawable.Drawable;
 import com.facebook.common.internal.Supplier;
+import com.facebook.drawee.backends.pipeline.debug.DebugOverlayImageOriginColor;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
 import com.facebook.fresco.vito.core.FrescoState;
+import java.util.Locale;
 import javax.annotation.Nullable;
 
 public class DefaultDebugOverlayFactory implements DebugOverlayFactory {
@@ -27,10 +29,24 @@ public class DefaultDebugOverlayFactory implements DebugOverlayFactory {
     if (!mDebugOverlayEnabled.get()) {
       return null;
     }
-    DebugOverlayDrawable drawable = new DebugOverlayDrawable();
+    DebugOverlayDrawable drawable = new DebugOverlayDrawable("Vito");
     drawable.addDebugData("ID", "" + frescoState.getStringId());
-    drawable.addDebugData("origin", ImageOriginUtils.toString(frescoState.getImageOrigin()));
+    final int origin = frescoState.getImageOrigin();
+    drawable.addDebugData(
+        "origin",
+        ImageOriginUtils.toString(origin),
+        DebugOverlayImageOriginColor.getImageOriginColor(origin));
     drawable.addDebugData("URI", "" + frescoState.getUri());
+    drawable.addDebugData(
+        "D",
+        String.format(
+            Locale.US, "%dx%d", frescoState.getTargetHeightPx(), frescoState.getTargetWidthPx()));
+
+    if (frescoState.getImageOptions().getActualImageScaleType() != null) {
+      drawable.addDebugData(
+          "scale", String.valueOf(frescoState.getImageOptions().getActualImageScaleType()));
+    }
+
     return drawable;
   }
 }
