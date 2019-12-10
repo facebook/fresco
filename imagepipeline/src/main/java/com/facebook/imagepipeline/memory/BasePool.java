@@ -136,6 +136,8 @@ public abstract class BasePool<V> implements Pool<V> {
 
   private final PoolStatsTracker mPoolStatsTracker;
 
+  private boolean mIgnoreHardCap;
+
   /**
    * Creates a new instance of the pool.
    *
@@ -162,6 +164,13 @@ public abstract class BasePool<V> implements Pool<V> {
 
     mFree = new Counter();
     mUsed = new Counter();
+  }
+
+  public BasePool(
+      MemoryTrimmableRegistry memoryTrimmableRegistry,
+      PoolParams poolParams, PoolStatsTracker poolStatsTracker, boolean ignoreHardCap) {
+    this(memoryTrimmableRegistry, poolParams, poolStatsTracker);
+    mIgnoreHardCap = ignoreHardCap;
   }
 
   /** Finish pool initialization. */
@@ -712,6 +721,10 @@ public abstract class BasePool<V> implements Pool<V> {
    */
   @VisibleForTesting
   synchronized boolean canAllocate(int sizeInBytes) {
+    if (mIgnoreHardCap) {
+      return true;
+    }
+
     int hardCap = mPoolParams.maxSizeHardCap;
 
     // even with our best effort we cannot ensure hard cap limit.

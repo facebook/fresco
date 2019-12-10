@@ -37,8 +37,9 @@ public class BucketsBitmapPool extends BasePool<Bitmap> implements BitmapPool {
   public BucketsBitmapPool(
       MemoryTrimmableRegistry memoryTrimmableRegistry,
       PoolParams poolParams,
-      PoolStatsTracker poolStatsTracker) {
-    super(memoryTrimmableRegistry, poolParams, poolStatsTracker);
+      PoolStatsTracker poolStatsTracker,
+      boolean ignoreHardCap) {
+    super(memoryTrimmableRegistry, poolParams, poolStatsTracker, ignoreHardCap);
     initialize();
   }
 
