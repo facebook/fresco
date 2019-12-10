@@ -69,7 +69,8 @@ public class PoolFactory {
               new BucketsBitmapPool(
                   mConfig.getMemoryTrimmableRegistry(),
                   DefaultBitmapPoolParams.get(),
-                  mConfig.getBitmapPoolStatsTracker());
+                  mConfig.getBitmapPoolStatsTracker(),
+                  mConfig.isIgnoreBitmapPoolHardCap());
           break;
         case BitmapPoolType.LEGACY:
           // fall through
@@ -79,7 +80,8 @@ public class PoolFactory {
                 new BucketsBitmapPool(
                     mConfig.getMemoryTrimmableRegistry(),
                     mConfig.getBitmapPoolParams(),
-                    mConfig.getBitmapPoolStatsTracker());
+                    mConfig.getBitmapPoolStatsTracker(),
+                    mConfig.isIgnoreBitmapPoolHardCap());
           } else {
             mBitmapPool = new DummyBitmapPool();
           }
