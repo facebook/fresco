@@ -108,7 +108,11 @@ public class DebugOverlayDrawable extends Drawable {
     // Draw identifier
     if (mIdentifier != null) {
       mPaint.setColor(Color.BLACK);
-      canvas.drawText(mIdentifier, TEXT_PADDING_PX, TEXT_PADDING_PX + MIN_TEXT_SIZE_PX, mPaint);
+      canvas.drawText(
+          mIdentifier,
+          bounds.left + TEXT_PADDING_PX,
+          bounds.top + TEXT_PADDING_PX + MIN_TEXT_SIZE_PX,
+          mPaint);
     }
 
     mPaint.setColor(TEXT_COLOR);
