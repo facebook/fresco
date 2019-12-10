@@ -174,6 +174,7 @@ public class ImageOptions extends DecodedImageOptions {
         || !Objects.equal(mPlaceholderDrawable, other.mPlaceholderDrawable)
         || !Objects.equal(mPlaceholderScaleType, other.mPlaceholderScaleType)
         || !Objects.equal(mPlaceholderFocusPoint, other.mPlaceholderFocusPoint)
+        || mPlaceholderApplyRoundingOptions != other.mPlaceholderApplyRoundingOptions
         || mErrorRes != other.mErrorRes
         || !Objects.equal(mErrorScaleType, other.mErrorScaleType)
         || !Objects.equal(mErrorFocusPoint, other.mErrorFocusPoint)
@@ -197,6 +198,7 @@ public class ImageOptions extends DecodedImageOptions {
     result = 31 * result + (mPlaceholderDrawable != null ? mPlaceholderDrawable.hashCode() : 0);
     result = 31 * result + (mPlaceholderScaleType != null ? mPlaceholderScaleType.hashCode() : 0);
     result = 31 * result + (mPlaceholderFocusPoint != null ? mPlaceholderFocusPoint.hashCode() : 0);
+    result = 31 * result + (mPlaceholderApplyRoundingOptions ? 1 : 0);
     result = 31 * result + mErrorRes;
     result = 31 * result + (mErrorScaleType != null ? mErrorScaleType.hashCode() : 0);
     result = 31 * result + (mErrorFocusPoint != null ? mErrorFocusPoint.hashCode() : 0);
@@ -224,6 +226,7 @@ public class ImageOptions extends DecodedImageOptions {
         .add("placeholderDrawable", mPlaceholderDrawable)
         .add("placeholderScaleType", mPlaceholderScaleType)
         .add("placeholderFocusPoint", mPlaceholderFocusPoint)
+        .add("placeholderApplyRoundingOptions", mPlaceholderApplyRoundingOptions)
         .add("progressRes", mProgressRes)
         .add("progressDrawable", mProgressDrawable)
         .add("progressScaleType", mProgressScaleType)
@@ -272,6 +275,7 @@ public class ImageOptions extends DecodedImageOptions {
       mPlaceholderDrawable = defaultOptions.getPlaceholderDrawable();
       mPlaceholderScaleType = defaultOptions.getPlaceholderScaleType();
       mPlaceholderFocusPoint = defaultOptions.getPlaceholderFocusPoint();
+      mPlaceholderApplyRoundingOptions = defaultOptions.getPlaceholderApplyRoundingOptions();
 
       mProgressRes = defaultOptions.getProgressRes();
       mProgressDrawable = defaultOptions.getProgressDrawable();
