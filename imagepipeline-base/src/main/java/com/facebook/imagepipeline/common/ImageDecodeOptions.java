@@ -99,6 +99,7 @@ public class ImageDecodeOptions {
 
     ImageDecodeOptions that = (ImageDecodeOptions) o;
 
+    if (minDecodeIntervalMs != that.minDecodeIntervalMs) return false;
     if (decodePreviewFrame != that.decodePreviewFrame) return false;
     if (useLastFrameForPreview != that.useLastFrameForPreview) return false;
     if (decodeAllFrames != that.decodeAllFrames) return false;

@@ -133,6 +133,7 @@ public class DecodedImageOptions extends EncodedImageOptions {
         || !Objects.equal(mActualImageFocusPoint, other.mActualImageFocusPoint)
         || mLocalThumbnailPreviewsEnabled != other.mLocalThumbnailPreviewsEnabled
         || mUseMediaStoreVideoThumbnail != other.mUseMediaStoreVideoThumbnail
+        || mUseMediaStorePhotoThumbnail != other.mUseMediaStorePhotoThumbnail
         || !Objects.equal(mBitmapConfig, other.mBitmapConfig)) {
       return false;
     }
@@ -152,6 +153,7 @@ public class DecodedImageOptions extends EncodedImageOptions {
     result = 31 * result + (mActualImageFocusPoint != null ? mActualImageFocusPoint.hashCode() : 0);
     result = 31 * result + (mLocalThumbnailPreviewsEnabled ? 1 : 0);
     result = 31 * result + (mUseMediaStoreVideoThumbnail ? 1 : 0);
+    result = 31 * result + (mUseMediaStorePhotoThumbnail ? 1 : 0);
     result = 31 * result + (mBitmapConfig != null ? mBitmapConfig.hashCode() : 0);
     return result;
   }
@@ -172,6 +174,9 @@ public class DecodedImageOptions extends EncodedImageOptions {
         .add("borderOptions", mBorderOptions)
         .add("actualImageScaleType", mActualImageScaleType)
         .add("actualImageFocusPoint", mActualImageFocusPoint)
+        .add("localThumbnailPreviewsEnabled", mLocalThumbnailPreviewsEnabled)
+        .add("useMediaStoreVideoThumbnail", mUseMediaStoreVideoThumbnail)
+        .add("useMediaStorePhotoThumbnail", mUseMediaStorePhotoThumbnail)
         .add("bitmapConfig", mBitmapConfig);
   }
 
@@ -203,6 +208,10 @@ public class DecodedImageOptions extends EncodedImageOptions {
       mRoundingOptions = defaultOptions.getRoundingOptions();
       mBorderOptions = defaultOptions.getBorderOptions();
       mActualImageScaleType = defaultOptions.getActualImageScaleType();
+      mActualFocusPoint = defaultOptions.getActualImageFocusPoint();
+      mLocalThumbnailPreviewsEnabled = defaultOptions.areLocalThumbnailPreviewsEnabled();
+      mUseMediaStoreVideoThumbnail = defaultOptions.getUseMediaStoreVideoThumbnail();
+      mUseMediaStorePhotoThumbnail = defaultOptions.getUseMediaStorePhotoThumbnail();
       mBitmapConfig = defaultOptions.getBitmapConfig();
     }
 

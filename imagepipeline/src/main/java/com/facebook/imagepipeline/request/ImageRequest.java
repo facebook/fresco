@@ -259,12 +259,22 @@ public class ImageRequest {
       return false;
     }
     ImageRequest request = (ImageRequest) o;
+    if (mProgressiveRenderingEnabled != request.mProgressiveRenderingEnabled) return false;
+    if (mLocalThumbnailPreviewsEnabled != request.mLocalThumbnailPreviewsEnabled) return false;
+    if (mIsDiskCacheEnabled != request.mIsDiskCacheEnabled) return false;
+    if (mIsMemoryCacheEnabled != request.mIsMemoryCacheEnabled) return false;
+    if (mUseMediaStoreVideoThumbnail != request.mUseMediaStoreVideoThumbnail) return false;
+    if (mUseMediaStorePhotoThumbnail != request.mUseMediaStorePhotoThumbnail) return false;
     if (!Objects.equal(mSourceUri, request.mSourceUri)
         || !Objects.equal(mCacheChoice, request.mCacheChoice)
         || !Objects.equal(mSourceFile, request.mSourceFile)
         || !Objects.equal(mBytesRange, request.mBytesRange)
         || !Objects.equal(mImageDecodeOptions, request.mImageDecodeOptions)
         || !Objects.equal(mResizeOptions, request.mResizeOptions)
+        || !Objects.equal(mRequestPriority, request.mRequestPriority)
+        || !Objects.equal(mLowestPermittedRequestLevel, request.mLowestPermittedRequestLevel)
+        || !Objects.equal(mDecodePrefetches, request.mDecodePrefetches)
+        || !Objects.equal(mResizingAllowedOverride, request.mResizingAllowedOverride)
         || !Objects.equal(mRotationOptions, request.mRotationOptions)) {
       return false;
     }
@@ -282,13 +292,21 @@ public class ImageRequest {
     return Objects.hashCode(
         mCacheChoice,
         mSourceUri,
-        mSourceFile,
+        mProgressiveRenderingEnabled,
+        mLocalThumbnailPreviewsEnabled,
         mBytesRange,
+        mRequestPriority,
+        mLowestPermittedRequestLevel,
+        mIsDiskCacheEnabled,
+        mIsMemoryCacheEnabled,
         mImageDecodeOptions,
+        mDecodePrefetches,
         mResizeOptions,
         mRotationOptions,
         postprocessorCacheKey,
-        mResizingAllowedOverride);
+        mResizingAllowedOverride,
+        mUseMediaStoreVideoThumbnail,
+        mUseMediaStorePhotoThumbnail);
   }
 
   @Override
@@ -303,6 +321,14 @@ public class ImageRequest {
         .add("rotationOptions", mRotationOptions)
         .add("bytesRange", mBytesRange)
         .add("resizingAllowedOverride", mResizingAllowedOverride)
+        .add("progressiveRenderingEnabled", mProgressiveRenderingEnabled)
+        .add("localThumbnailPreviewsEnabled", mLocalThumbnailPreviewsEnabled)
+        .add("lowestPermittedRequestLevel", mLowestPermittedRequestLevel)
+        .add("isDiskCacheEnabled", mIsDiskCacheEnabled)
+        .add("isMemoryCacheEnabled", mIsMemoryCacheEnabled)
+        .add("decodePrefetches", mDecodePrefetches)
+        .add("useMediaStoreVideoThumbnail", mUseMediaStoreVideoThumbnail)
+        .add("useMediaStoreVideoThumbnail", mUseMediaStorePhotoThumbnail)
         .toString();
   }
 

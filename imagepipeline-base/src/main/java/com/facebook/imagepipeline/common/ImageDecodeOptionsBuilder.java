@@ -35,6 +35,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
    * @return this builder
    */
   public ImageDecodeOptionsBuilder setFrom(ImageDecodeOptions options) {
+    mMinDecodeIntervalMs = options.minDecodeIntervalMs;
     mDecodePreviewFrame = options.decodePreviewFrame;
     mUseLastFrameForPreview = options.useLastFrameForPreview;
     mDecodeAllFrames = options.decodeAllFrames;
