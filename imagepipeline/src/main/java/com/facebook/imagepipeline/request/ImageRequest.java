@@ -259,7 +259,6 @@ public class ImageRequest {
       return false;
     }
     ImageRequest request = (ImageRequest) o;
-    if (mProgressiveRenderingEnabled != request.mProgressiveRenderingEnabled) return false;
     if (mLocalThumbnailPreviewsEnabled != request.mLocalThumbnailPreviewsEnabled) return false;
     if (mIsDiskCacheEnabled != request.mIsDiskCacheEnabled) return false;
     if (mIsMemoryCacheEnabled != request.mIsMemoryCacheEnabled) return false;
@@ -292,7 +291,6 @@ public class ImageRequest {
     return Objects.hashCode(
         mCacheChoice,
         mSourceUri,
-        mProgressiveRenderingEnabled,
         mLocalThumbnailPreviewsEnabled,
         mBytesRange,
         mRequestPriority,
