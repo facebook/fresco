@@ -34,7 +34,7 @@ import com.facebook.fresco.samples.showcase.postprocessor.ScalingBlurPostprocess
 import com.facebook.fresco.samples.showcase.postprocessor.SlowGreyScalePostprocessor;
 import com.facebook.fresco.samples.showcase.postprocessor.WatermarkPostprocessor;
 import com.facebook.imagepipeline.postprocessors.BlurPostProcessor;
-import com.facebook.imagepipeline.postprocessors.ElipsePostprocessor;
+import com.facebook.imagepipeline.postprocessors.EllipsePostprocessor;
 import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor;
 import com.facebook.imagepipeline.postprocessors.RoundAsCirclePostprocessor;
 import com.facebook.imagepipeline.postprocessors.RoundPostprocessor;
@@ -214,9 +214,9 @@ public class ImagePipelinePostProcessorFragment extends BaseShowcaseFragment
             new BenchmarkPostprocessorForDuplicatedBitmapInPlace(
                 this, new RoundedCornersPostprocessor())),
         new Entry(
-            R.string.imagepipeline_postprocessor_set_elipse,
+            R.string.imagepipeline_postprocessor_set_ellipse,
             new BenchmarkPostprocessorForDuplicatedBitmapInPlace(
-               this, new ElipsePostprocessor())),
+               this, new EllipsePostprocessor())),
         new Entry(
             R.string.imagepipeline_postprocessor_set_round_as_circle,
             new BenchmarkPostprocessorForDuplicatedBitmap(this, new RoundPostprocessor())));
