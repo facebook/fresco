@@ -5,20 +5,18 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.imageutils.BitmapUtil;
 
 /**
- * Filter for rounding to elipse.
+ * Filter for rounding to ellipse.
  */
-public final class InPlaceElipseRoundFilter {
+public final class InPlaceEllipseRoundFilter {
 
-    private InPlaceElipseRoundFilter() {}
+    private InPlaceEllipseRoundFilter() {}
 
     /**
-     * An implementation for rounding a given bitmap to a circular shape. The underlying
-     * implementation uses a modified midpoint circle algorithm but instead of drawing a circle, it
-     * clears all pixels starting from the circle all the way to the bitmap edges.
+     * An implementation for rounding a given bitmap to an ellipse shape.
      *
      * @param bitmap The input {@link Bitmap}
      */
-    public static void roundElipseBitmapInPlace(Bitmap bitmap) {
+    public static void roundEllipseBitmapInPlace(Bitmap bitmap) {
         Preconditions.checkNotNull(bitmap);
         final int w = bitmap.getWidth();
         final int h = bitmap.getHeight();
