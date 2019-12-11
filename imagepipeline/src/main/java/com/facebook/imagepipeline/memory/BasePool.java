@@ -168,7 +168,9 @@ public abstract class BasePool<V> implements Pool<V> {
 
   public BasePool(
       MemoryTrimmableRegistry memoryTrimmableRegistry,
-      PoolParams poolParams, PoolStatsTracker poolStatsTracker, boolean ignoreHardCap) {
+      PoolParams poolParams,
+      PoolStatsTracker poolStatsTracker,
+      boolean ignoreHardCap) {
     this(memoryTrimmableRegistry, poolParams, poolStatsTracker);
     mIgnoreHardCap = ignoreHardCap;
   }
