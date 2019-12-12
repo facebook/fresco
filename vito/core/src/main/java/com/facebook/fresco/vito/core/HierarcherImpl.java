@@ -163,7 +163,7 @@ public class HierarcherImpl implements Hierarcher {
       actualImageWrapperDrawable.setCurrent(actualDrawable != null ? actualDrawable : NOP_DRAWABLE);
 
       if (instrumentedListener != null) {
-        actualImageWrapperDrawable = new InstrumentedDrawable(actualDrawable, instrumentedListener);
+        actualImageWrapperDrawable = new InstrumentedDrawable(actualImageWrapperDrawable, instrumentedListener);
       }
 
       frescoDrawable.setImage(actualImageWrapperDrawable, closeableImage);

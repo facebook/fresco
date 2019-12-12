@@ -45,7 +45,9 @@ public class InstrumentedDrawable extends ForwardingDrawable {
       int scaledHeight = (int) bounds.height();
       int imageWidth = getIntrinsicWidth();
       int imageHeight = getIntrinsicHeight();
-      mListener.track(viewWidth, viewHeight, imageWidth, imageHeight, scaledWidth, scaledHeight);
+      if (mListener != null) {
+        mListener.track(viewWidth, viewHeight, imageWidth, imageHeight, scaledWidth, scaledHeight);
+      }
     }
     super.draw(canvas);
   }
