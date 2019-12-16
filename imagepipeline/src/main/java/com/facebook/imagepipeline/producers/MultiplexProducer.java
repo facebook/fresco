@@ -55,16 +55,18 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
 
   private final boolean mKeepCancelledFetchAsLowPriority;
 
-  protected MultiplexProducer(Producer<T> inputProducer) {
-    mInputProducer = inputProducer;
-    mMultiplexers = new HashMap<>();
-    mKeepCancelledFetchAsLowPriority = false;
+  private final String mProducerName;
+
+  protected MultiplexProducer(Producer<T> inputProducer, String producerName) {
+    this(inputProducer, producerName, false);
   }
 
-  protected MultiplexProducer(Producer<T> inputProducer, boolean keepCancelledFetchAsLowPriority) {
+  protected MultiplexProducer(
+      Producer<T> inputProducer, String producerName, boolean keepCancelledFetchAsLowPriority) {
     mInputProducer = inputProducer;
     mMultiplexers = new HashMap<>();
     mKeepCancelledFetchAsLowPriority = keepCancelledFetchAsLowPriority;
+    mProducerName = producerName;
   }
 
   @Override
@@ -73,6 +75,9 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.beginSection("MultiplexProducer#produceResults");
       }
+
+      context.getProducerListener().onProducerStart(context, mProducerName);
+
       K key = getKey(context);
       Multiplexer multiplexer;
       boolean createdNewMultiplexer;
@@ -438,6 +443,9 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
       while (iterator.hasNext()) {
         Pair<Consumer<T>, ProducerContext> pair = iterator.next();
         synchronized (pair) {
+          pair.second
+              .getProducerListener()
+              .onProducerFinishWithFailure(pair.second, mProducerName, t, null);
           pair.first.onFailure(t);
         }
       }
@@ -470,6 +478,11 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
       while (iterator.hasNext()) {
         Pair<Consumer<T>, ProducerContext> pair = iterator.next();
         synchronized (pair) {
+          if (BaseConsumer.isLast(status)) {
+            pair.second
+                .getProducerListener()
+                .onProducerFinishWithSuccess(pair.second, mProducerName, null);
+          }
           pair.first.onNewResult(closeableObject, status);
         }
       }
