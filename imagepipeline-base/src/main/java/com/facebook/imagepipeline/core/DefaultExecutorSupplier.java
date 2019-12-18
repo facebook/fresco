@@ -79,9 +79,4 @@ public class DefaultExecutorSupplier implements ExecutorSupplier {
   public Executor forThumbnailProducer() {
     return mIoBoundExecutor;
   }
-
-  @Override
-  public Executor forVideoThumbnailProducer() {
-    return mIoBoundExecutor;
-  }
 }

@@ -69,9 +69,4 @@ public class ScrollPerfExecutorSupplier implements ExecutorSupplier {
   public Executor forThumbnailProducer() {
     return mIoBoundExecutor;
   }
-
-  @Override
-  public Executor forVideoThumbnailProducer() {
-    return mIoBoundExecutor;
-  }
 }
