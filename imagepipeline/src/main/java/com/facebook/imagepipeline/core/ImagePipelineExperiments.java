@@ -210,7 +210,7 @@ public class ImagePipelineExperiments {
     public long mMemoryType = 0;
     private boolean mKeepCancelledFetchAsLowPriority;
     public boolean mDownsampleIfLargeBitmap;
-    public boolean mEncodedCacheEnabled;
+    public boolean mEncodedCacheEnabled = true;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
