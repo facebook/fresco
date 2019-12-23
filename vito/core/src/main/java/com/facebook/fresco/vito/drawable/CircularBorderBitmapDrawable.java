@@ -32,13 +32,35 @@ public class CircularBorderBitmapDrawable extends BitmapDrawable {
 
   @Override
   public void draw(Canvas canvas) {
-    super.draw(canvas);
-    if (mBorderOptions != null) {
-      canvas.drawCircle(
-          getBounds().exactCenterX(),
-          getBounds().exactCenterY(),
-          mRadius - mBorderOptions.width / 2,
-          mBorderPaint);
+    if (mRadius == 0) return;
+
+    if (mBorderOptions == null || mBorderOptions.padding < 0.0f || mBorderOptions.width < 0.0f) {
+      super.draw(canvas);
+      return;
+    }
+
+    float widthReduction =
+        mBorderOptions.scaleDownInsideBorders
+            ? mBorderOptions.width + mBorderOptions.padding
+            : mBorderOptions.padding;
+
+    if (widthReduction > mRadius) return;
+
+    float centerX = getBounds().exactCenterX();
+    float centerY = getBounds().exactCenterY();
+
+    if (widthReduction > 0.0f) {
+      float scale = (mRadius - widthReduction) / mRadius;
+      canvas.save();
+      canvas.scale(scale, scale, centerX, centerY);
+      super.draw(canvas);
+      canvas.restore();
+    } else {
+      super.draw(canvas);
+    }
+
+    if (mBorderOptions.width > 0.0f) {
+      canvas.drawCircle(centerX, centerY, mRadius - mBorderOptions.width / 2, mBorderPaint);
     }
   }
 
