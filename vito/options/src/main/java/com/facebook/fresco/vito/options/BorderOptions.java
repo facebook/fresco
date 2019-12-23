@@ -38,18 +38,40 @@ public class BorderOptions {
     return new BorderOptions(color, width, padding);
   }
 
+  /**
+   * Create border options with padding and scaleDownInsideBorders. Note that currently padding is
+   * not supported with RoundingOptions.asCircle().
+   *
+   * @param color The color of the border
+   * @param width The width of the border, in pixels
+   * @param padding The width around the edge of the image that will get chopped, in pixels
+   * @param scaleDownInsideBorders true if scaled down inside border, false otherwise
+   * @return BorderOptions
+   */
+  public static BorderOptions create(
+      @ColorInt int color, float width, float padding, boolean scaleDownInsideBorders) {
+    return new BorderOptions(color, width, padding, scaleDownInsideBorders);
+  }
+
   public final @ColorInt int color;
   public final float width;
   public final float padding;
+  public final boolean scaleDownInsideBorders;
 
   public BorderOptions(@ColorInt int color, float width) {
-    this(color, width, 0);
+    this(color, width, 0, false);
   }
 
   public BorderOptions(@ColorInt int color, float width, float padding) {
+    this(color, width, padding, false);
+  }
+
+  public BorderOptions(
+      @ColorInt int color, float width, float padding, boolean scaleDownInsideBorders) {
     this.color = color;
     this.width = width;
     this.padding = padding;
+    this.scaleDownInsideBorders = scaleDownInsideBorders;
   }
 
   @Override
@@ -62,7 +84,10 @@ public class BorderOptions {
     }
 
     BorderOptions that = (BorderOptions) obj;
-    return color == that.color && width == that.width && padding == that.padding;
+    return color == that.color
+        && width == that.width
+        && padding == that.padding
+        && scaleDownInsideBorders == that.scaleDownInsideBorders;
   }
 
   @Override
@@ -70,6 +95,7 @@ public class BorderOptions {
     int result = color;
     result = 31 * result + Float.floatToIntBits(width);
     result = 31 * result + Float.floatToIntBits(padding);
+    result = 31 * result + (scaleDownInsideBorders ? 0 : 1);
     return result;
   }
 }
