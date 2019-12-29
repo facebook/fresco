@@ -36,7 +36,7 @@ public class GifAnimationBackend implements AnimationBackend {
       is = new BufferedInputStream(new FileInputStream(filePath));
       is.mark(Integer.MAX_VALUE);
 
-      GifMetadataDecoder decoder = GifMetadataDecoder.create(is);
+      GifMetadataDecoder decoder = GifMetadataDecoder.create(is, null);
       is.reset();
 
       Movie movie = Movie.decodeStream(is);

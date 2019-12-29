@@ -20,6 +20,8 @@ import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.QualityInfo;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -34,12 +36,20 @@ public class GifDecoder implements ImageDecoder {
       ImageDecodeOptions options) {
     InputStream is = encodedImage.getInputStream();
     try {
-      Movie movie = Movie.decodeStream(is);
-      MovieDrawer drawer = new MovieDrawer(movie);
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+      GifMetadataDecoder decoder = GifMetadataDecoder.create(is, out);
+
+      if (out.size() > 0) { // let's use the fixed gif version if exists
+        is.close();
+        is = new ByteArrayInputStream(out.toByteArray());
+      }
 
       is.reset();
 
-      GifMetadataDecoder decoder = GifMetadataDecoder.create(is);
+      Movie movie = Movie.decodeStream(is);
+
+      MovieDrawer drawer = new MovieDrawer(movie);
 
       MovieFrame[] frames = new MovieFrame[decoder.getFrameCount()];
       int currTime = 0;
