@@ -10,9 +10,11 @@ package com.facebook.animated.giflite.decoder;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.annotation.Nullable;
 
 public class GifMetadataDecoder {
 
@@ -21,21 +23,31 @@ public class GifMetadataDecoder {
       new char[] {'N', 'E', 'T', 'S', 'C', 'A', 'P', 'E', '2', '.', '0'};
   private static final int CONTROL_INDEX_DISPOSE = 0;
   private static final int CONTROL_INDEX_DELAY = 1;
+  private static final int DEFAULT_FRAME_DURATION_MS = 100;
 
   private final byte[] block = new byte[MAX_BLOCK_SIZE];
   private final InputStream mInputStream;
+  @Nullable private final OutputStream mOutputStream;
+  private boolean shouldFixStream;
   private final List<int[]> mFrameControls = new ArrayList<>();
   private int mLoopCount = 1; // default loop count is 1
   private boolean mDecoded = false;
+  private int mCurrentOffset = 0;
 
-  public static GifMetadataDecoder create(InputStream is) throws IOException {
-    GifMetadataDecoder decoder = new GifMetadataDecoder(is);
+  public static GifMetadataDecoder create(InputStream is, @Nullable OutputStream os)
+      throws IOException {
+    GifMetadataDecoder decoder = new GifMetadataDecoder(is, os);
     decoder.decode();
     return decoder;
   }
 
-  private GifMetadataDecoder(InputStream is) {
+  /**
+   * @param is InputStream to decode
+   * @param os OutputStream to write fixed version of gif, if needed. (optional)
+   */
+  private GifMetadataDecoder(InputStream is, @Nullable OutputStream os) {
     mInputStream = is;
+    mOutputStream = os;
   }
 
   public void decode() throws IOException {
@@ -88,10 +100,10 @@ public class GifMetadataDecoder {
 
     boolean done = false;
     while (!done) {
-      int code = readNextByte();
+      int code = readAndWriteNextByte();
       switch (code) {
         case 0x21: // extension
-          int extCode = readNextByte();
+          int extCode = readAndWriteNextByte();
           switch (extCode) {
             case 0xff: // application extension
               readBlock();
@@ -143,15 +155,13 @@ public class GifMetadataDecoder {
       throw new IOException("Illegal header for gif");
     }
 
-    readTwoByteInt(); // width
-    readTwoByteInt(); // height
+    skipAndWriteBytes(4); // width, height
 
-    int fields = readNextByte();
+    int fields = readAndWriteNextByte();
     boolean hasGlobalColorTable = (fields & 0x80) != 0;
     int globalColorTableSize = 2 << (fields & 7);
 
-    readNextByte(); // bgc index
-    readNextByte(); // aspect ratio
+    skipAndWriteBytes(2); // bgc index, aspect ratio
 
     if (hasGlobalColorTable) {
       ignoreColorTable(globalColorTableSize);
@@ -159,13 +169,11 @@ public class GifMetadataDecoder {
   }
 
   private void ignoreColorTable(int numColors) throws IOException {
-    for (int i = 0, N = 3 * numColors; i < N; i++) {
-      readNextByte();
-    }
+    skipAndWriteBytes(3 * numColors);
   }
 
   private int readBlock() throws IOException {
-    int blockSize = readNextByte();
+    int blockSize = readAndWriteNextByte();
     int n = 0;
     if (blockSize > 0) {
       while (n < blockSize) {
@@ -183,18 +191,15 @@ public class GifMetadataDecoder {
   }
 
   private void skipImage() throws IOException {
-    readTwoByteInt();
-    readTwoByteInt();
-    readTwoByteInt();
-    readTwoByteInt();
+    skipAndWriteBytes(8);
 
-    int flags = readNextByte();
+    int flags = readAndWriteNextByte();
     boolean hasLct = (flags & 0x80) != 0;
     if (hasLct) {
       int lctSize = 2 << (flags & 7);
       ignoreColorTable(lctSize);
     }
-    readNextByte();
+    skipAndWriteBytes(1);
     skipExtension();
   }
 
@@ -222,16 +227,21 @@ public class GifMetadataDecoder {
   }
 
   private void readGraphicsControlExtension(int[] control) throws IOException {
-    readNextByte();
-    int flags = readNextByte();
+    skipAndWriteBytes(1);
+    int flags = readAndWriteNextByte();
     control[CONTROL_INDEX_DISPOSE] = (flags & 0x1c) >> 2; // dispose
     control[CONTROL_INDEX_DELAY] = readTwoByteInt() * 10; // delay
-    readNextByte();
-    readNextByte();
+    if (control[CONTROL_INDEX_DELAY] == 0) {
+      control[CONTROL_INDEX_DELAY] = DEFAULT_FRAME_DURATION_MS;
+      initFixedOutputStream();
+    }
+    writeTwoByteInt(control[CONTROL_INDEX_DELAY] / 10);
+    skipAndWriteBytes(2);
   }
 
   private int readNextByte() throws IOException {
     int read = mInputStream.read();
+    mCurrentOffset++;
     if (read == -1) {
       throw new EOFException("Unexpected end of gif file");
     }
@@ -244,9 +254,57 @@ public class GifMetadataDecoder {
 
   private int readIntoBlock(int offset, int length) throws IOException {
     int count = mInputStream.read(block, offset, length);
+    mCurrentOffset += length;
+    if (shouldFixStream) {
+      mOutputStream.write(block, offset, length);
+    }
     if (count == -1) {
       throw new EOFException("Unexpected end of gif file");
     }
     return count;
+  }
+
+  private int readAndWriteNextByte() throws IOException {
+    int read = readNextByte();
+    writeNextByte(read);
+    return read;
+  }
+
+  private void writeNextByte(int b) throws IOException {
+    if (shouldFixStream) {
+      mOutputStream.write(b);
+    }
+  }
+
+  private void writeTwoByteInt(int content) throws IOException {
+    writeNextByte(content);
+    writeNextByte(content >> 8);
+  }
+
+  private void skipAndWriteBytes(int length) throws IOException {
+    if (shouldFixStream) {
+      copyFromIsToOs(mInputStream, mOutputStream, length);
+    } else {
+      mInputStream.skip(length);
+    }
+    mCurrentOffset += length;
+  }
+
+  private void initFixedOutputStream() throws IOException {
+    if (shouldFixStream || mOutputStream == null) {
+      return;
+    }
+    shouldFixStream = true;
+    mInputStream.reset();
+    copyFromIsToOs(mInputStream, mOutputStream, mCurrentOffset - 2);
+    mInputStream.skip(2);
+  }
+
+  private void copyFromIsToOs(InputStream in, OutputStream out, int length) throws IOException {
+    while (length > 0) {
+      int bytesRead = in.read(block, 0, Math.min(MAX_BLOCK_SIZE, length));
+      length -= MAX_BLOCK_SIZE;
+      out.write(block, 0, bytesRead);
+    }
   }
 }
