@@ -63,7 +63,7 @@ import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 
 public class ProducerFactory {
 
-  private static final int MAX_SIMULTANEOUS_REQUESTS = 900;
+  private static final int MAX_SIMULTANEOUS_REQUESTS = 5;
 
   // Local dependencies
   private ContentResolver mContentResolver;
