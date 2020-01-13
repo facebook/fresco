@@ -69,7 +69,8 @@ public class GifDecoder implements ImageDecoder {
       return new CloseableAnimatedImage(
           AnimatedImageResult.forAnimatedImage(
               new MovieAnimatedImage(
-                  frames, encodedImage.getSize(), movie.duration(), decoder.getLoopCount())));
+                  frames, encodedImage.getSize(), movie.duration(), decoder.getLoopCount())),
+          false);
     } catch (IOException e) {
       throw new RuntimeException("Error while decoding gif", e);
     } finally {

@@ -19,8 +19,15 @@ public class CloseableAnimatedImage extends CloseableImage {
 
   private AnimatedImageResult mImageResult;
 
+  private boolean mIsStateful;
+
   public CloseableAnimatedImage(AnimatedImageResult imageResult) {
+    this(imageResult, true);
+  }
+
+  public CloseableAnimatedImage(AnimatedImageResult imageResult, boolean isStateful) {
     mImageResult = imageResult;
+    mIsStateful = isStateful;
   }
 
   @Override
@@ -58,7 +65,7 @@ public class CloseableAnimatedImage extends CloseableImage {
 
   @Override
   public boolean isStateful() {
-    return true;
+    return mIsStateful;
   }
 
   public synchronized AnimatedImageResult getImageResult() {
