@@ -62,9 +62,14 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
   // Animation parameters
   private volatile boolean mIsRunning;
   private long mStartTimeMs;
+
   private long mLastFrameAnimationTimeMs;
   private long mExpectedRenderTimeMs;
   private int mLastDrawnFrameNumber;
+
+  private long mPausedStartTimeMsDifference;
+  private long mPausedLastFrameAnimationTimeMsDifference;
+  private int mPausedLastDrawnFrameNumber;
 
   private long mFrameSchedulingDelayMs = DEFAULT_FRAME_SCHEDULING_DELAY_MS;
   private long mFrameSchedulingOffsetMs = DEFAULT_FRAME_SCHEDULING_OFFSET_MS;
@@ -128,10 +133,12 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
       return;
     }
     mIsRunning = true;
-    mStartTimeMs = now();
+
+    final long now = now();
+    mStartTimeMs = now - mPausedStartTimeMsDifference;
     mExpectedRenderTimeMs = mStartTimeMs;
-    mLastFrameAnimationTimeMs = -1;
-    mLastDrawnFrameNumber = -1;
+    mLastFrameAnimationTimeMs = now - mPausedLastFrameAnimationTimeMsDifference;
+    mLastDrawnFrameNumber = mPausedLastDrawnFrameNumber;
     invalidateSelf();
     mAnimationListener.onAnimationStart(this);
   }
@@ -144,6 +151,11 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     if (!mIsRunning) {
       return;
     }
+    final long now = now();
+    mPausedStartTimeMsDifference = now - mStartTimeMs;
+    mPausedLastFrameAnimationTimeMsDifference = now - mLastFrameAnimationTimeMs;
+    mPausedLastDrawnFrameNumber = mLastDrawnFrameNumber;
+
     mIsRunning = false;
     mStartTimeMs = 0;
     mExpectedRenderTimeMs = mStartTimeMs;
