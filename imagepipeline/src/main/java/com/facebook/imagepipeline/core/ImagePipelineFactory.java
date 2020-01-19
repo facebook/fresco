@@ -209,9 +209,12 @@ public class ImagePipelineFactory {
 
   public InstrumentedMemoryCache<CacheKey, PooledByteBuffer> getEncodedMemoryCache() {
     if (mEncodedMemoryCache == null) {
+      MemoryCache<CacheKey, PooledByteBuffer> backingCache =
+          mConfig.getEncodedMemoryCacheOverride() != null
+              ? mConfig.getEncodedMemoryCacheOverride()
+              : getEncodedCountingMemoryCache();
       mEncodedMemoryCache =
-          EncodedMemoryCacheFactory.get(
-              getEncodedCountingMemoryCache(), mConfig.getImageCacheStatsTracker());
+          EncodedMemoryCacheFactory.get(backingCache, mConfig.getImageCacheStatsTracker());
     }
     return mEncodedMemoryCache;
   }
