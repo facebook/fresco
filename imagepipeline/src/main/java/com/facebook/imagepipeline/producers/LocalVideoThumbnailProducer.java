@@ -8,7 +8,6 @@
 package com.facebook.imagepipeline.producers;
 
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
@@ -77,25 +76,17 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
           @Override
           protected @Nullable CloseableReference<CloseableImage> getResult() throws Exception {
             Bitmap thumbnailBitmap;
-            if (imageRequest.getUseMediaStoreVideoThumbnail()
-                && UriUtil.isLocalContentUri(imageRequest.getSourceUri())) {
-              long id = ContentUris.parseId(imageRequest.getSourceUri());
-              thumbnailBitmap =
-                  MediaStore.Video.Thumbnails.getThumbnail(
-                      mContentResolver, id, calculateKind(imageRequest), null /* options */);
-            } else {
-              String path;
-              try {
-                path = getLocalFilePath(imageRequest);
-              } catch (IllegalArgumentException e) {
-                path = null;
-              }
-              thumbnailBitmap =
-                  path != null
-                      ? ThumbnailUtils.createVideoThumbnail(path, calculateKind(imageRequest))
-                      : createThumbnailFromContentProvider(
-                          mContentResolver, imageRequest.getSourceUri());
+            String path;
+            try {
+              path = getLocalFilePath(imageRequest);
+            } catch (IllegalArgumentException e) {
+              path = null;
             }
+            thumbnailBitmap =
+                path != null
+                    ? ThumbnailUtils.createVideoThumbnail(path, calculateKind(imageRequest))
+                    : createThumbnailFromContentProvider(
+                        mContentResolver, imageRequest.getSourceUri());
 
             if (thumbnailBitmap == null) {
               return null;

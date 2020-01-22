@@ -100,12 +100,6 @@ public class ImageRequest {
   private final @Nullable Boolean mResizingAllowedOverride;
 
   /**
-   * Indicates that the media store video thumbnail should be used when a local video content uri is
-   * requested.
-   */
-  private final boolean mUseMediaStoreVideoThumbnail;
-
-  /**
    * Indicates that the media store photo thumbnail should be used when a local photo content uri is
    * requested.
    */
@@ -151,7 +145,6 @@ public class ImageRequest {
     mRequestListener = builder.getRequestListener();
 
     mResizingAllowedOverride = builder.getResizingAllowedOverride();
-    mUseMediaStoreVideoThumbnail = builder.getUseMediaStoreVideoThumbnail();
     mUseMediaStorePhotoThumbnail = builder.getUseMediaStorePhotoThumbnail();
   }
 
@@ -245,10 +238,6 @@ public class ImageRequest {
     return mRequestListener;
   }
 
-  public boolean getUseMediaStoreVideoThumbnail() {
-    return mUseMediaStoreVideoThumbnail;
-  }
-
   public boolean getUseMediaStorePhotoThumbnail() {
     return mUseMediaStorePhotoThumbnail;
   }
@@ -262,7 +251,6 @@ public class ImageRequest {
     if (mLocalThumbnailPreviewsEnabled != request.mLocalThumbnailPreviewsEnabled) return false;
     if (mIsDiskCacheEnabled != request.mIsDiskCacheEnabled) return false;
     if (mIsMemoryCacheEnabled != request.mIsMemoryCacheEnabled) return false;
-    if (mUseMediaStoreVideoThumbnail != request.mUseMediaStoreVideoThumbnail) return false;
     if (mUseMediaStorePhotoThumbnail != request.mUseMediaStorePhotoThumbnail) return false;
     if (!Objects.equal(mSourceUri, request.mSourceUri)
         || !Objects.equal(mCacheChoice, request.mCacheChoice)
@@ -303,7 +291,6 @@ public class ImageRequest {
         mRotationOptions,
         postprocessorCacheKey,
         mResizingAllowedOverride,
-        mUseMediaStoreVideoThumbnail,
         mUseMediaStorePhotoThumbnail);
   }
 
@@ -325,8 +312,7 @@ public class ImageRequest {
         .add("isDiskCacheEnabled", mIsDiskCacheEnabled)
         .add("isMemoryCacheEnabled", mIsMemoryCacheEnabled)
         .add("decodePrefetches", mDecodePrefetches)
-        .add("useMediaStoreVideoThumbnail", mUseMediaStoreVideoThumbnail)
-        .add("useMediaStoreVideoThumbnail", mUseMediaStorePhotoThumbnail)
+        .add("useMediaStorePhotoThumbnail", mUseMediaStorePhotoThumbnail)
         .toString();
   }
 

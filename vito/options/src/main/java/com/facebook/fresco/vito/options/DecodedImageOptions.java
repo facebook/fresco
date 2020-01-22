@@ -32,7 +32,6 @@ public class DecodedImageOptions extends EncodedImageOptions {
   private final @Nullable ScalingUtils.ScaleType mActualImageScaleType;
   private final @Nullable PointF mActualImageFocusPoint;
   private final boolean mLocalThumbnailPreviewsEnabled;
-  private final boolean mUseMediaStoreVideoThumbnail;
   private final boolean mUseMediaStorePhotoThumbnail;
   private final @Nullable Bitmap.Config mBitmapConfig;
 
@@ -47,7 +46,6 @@ public class DecodedImageOptions extends EncodedImageOptions {
     mActualImageScaleType = builder.mActualImageScaleType;
     mActualImageFocusPoint = builder.mActualFocusPoint;
     mLocalThumbnailPreviewsEnabled = builder.mLocalThumbnailPreviewsEnabled;
-    mUseMediaStoreVideoThumbnail = builder.mUseMediaStoreVideoThumbnail;
     mUseMediaStorePhotoThumbnail = builder.mUseMediaStorePhotoThumbnail;
     mBitmapConfig = builder.mBitmapConfig;
   }
@@ -89,16 +87,6 @@ public class DecodedImageOptions extends EncodedImageOptions {
   }
 
   /**
-   * Gets whether the media store video thumbnail should be used when a local video content uri is
-   * requested.
-   *
-   * @return whether to use the media store video thumbnail
-   */
-  public boolean getUseMediaStoreVideoThumbnail() {
-    return mUseMediaStoreVideoThumbnail;
-  }
-
-  /**
    * Gets whether the media store photo thumbnail should be used when a local photo content uri is
    * requested.
    *
@@ -132,7 +120,6 @@ public class DecodedImageOptions extends EncodedImageOptions {
         || !Objects.equal(mActualImageScaleType, other.mActualImageScaleType)
         || !Objects.equal(mActualImageFocusPoint, other.mActualImageFocusPoint)
         || mLocalThumbnailPreviewsEnabled != other.mLocalThumbnailPreviewsEnabled
-        || mUseMediaStoreVideoThumbnail != other.mUseMediaStoreVideoThumbnail
         || mUseMediaStorePhotoThumbnail != other.mUseMediaStorePhotoThumbnail
         || !Objects.equal(mBitmapConfig, other.mBitmapConfig)) {
       return false;
@@ -152,7 +139,6 @@ public class DecodedImageOptions extends EncodedImageOptions {
     result = 31 * result + (mActualImageScaleType != null ? mActualImageScaleType.hashCode() : 0);
     result = 31 * result + (mActualImageFocusPoint != null ? mActualImageFocusPoint.hashCode() : 0);
     result = 31 * result + (mLocalThumbnailPreviewsEnabled ? 1 : 0);
-    result = 31 * result + (mUseMediaStoreVideoThumbnail ? 1 : 0);
     result = 31 * result + (mUseMediaStorePhotoThumbnail ? 1 : 0);
     result = 31 * result + (mBitmapConfig != null ? mBitmapConfig.hashCode() : 0);
     return result;
@@ -175,7 +161,6 @@ public class DecodedImageOptions extends EncodedImageOptions {
         .add("actualImageScaleType", mActualImageScaleType)
         .add("actualImageFocusPoint", mActualImageFocusPoint)
         .add("localThumbnailPreviewsEnabled", mLocalThumbnailPreviewsEnabled)
-        .add("useMediaStoreVideoThumbnail", mUseMediaStoreVideoThumbnail)
         .add("useMediaStorePhotoThumbnail", mUseMediaStorePhotoThumbnail)
         .add("bitmapConfig", mBitmapConfig);
   }
@@ -191,7 +176,6 @@ public class DecodedImageOptions extends EncodedImageOptions {
     private @Nullable ScalingUtils.ScaleType mActualImageScaleType;
     private @Nullable PointF mActualFocusPoint;
     private boolean mLocalThumbnailPreviewsEnabled = false;
-    private boolean mUseMediaStoreVideoThumbnail = false;
     private boolean mUseMediaStorePhotoThumbnail = false;
     public @Nullable Bitmap.Config mBitmapConfig;
 
@@ -210,7 +194,6 @@ public class DecodedImageOptions extends EncodedImageOptions {
       mActualImageScaleType = defaultOptions.getActualImageScaleType();
       mActualFocusPoint = defaultOptions.getActualImageFocusPoint();
       mLocalThumbnailPreviewsEnabled = defaultOptions.areLocalThumbnailPreviewsEnabled();
-      mUseMediaStoreVideoThumbnail = defaultOptions.getUseMediaStoreVideoThumbnail();
       mUseMediaStorePhotoThumbnail = defaultOptions.getUseMediaStorePhotoThumbnail();
       mBitmapConfig = defaultOptions.getBitmapConfig();
     }
@@ -269,15 +252,6 @@ public class DecodedImageOptions extends EncodedImageOptions {
      */
     public T localThumbnailPreviewsEnabled(boolean localThumbnailPreviewsEnabled) {
       mLocalThumbnailPreviewsEnabled = localThumbnailPreviewsEnabled;
-      return getThis();
-    }
-
-    /**
-     * Indicates that the media store video thumbnail should be used when a local video content uri
-     * is requested.
-     */
-    public T useMediaStoreVideoThumbnail(boolean useMediaStoreVideoThumbnail) {
-      mUseMediaStoreVideoThumbnail = useMediaStoreVideoThumbnail;
       return getThis();
     }
 
