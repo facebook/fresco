@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.animated.base;
 import android.graphics.Bitmap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imagepipeline.transformation.BitmapTransformation;
 import java.util.List;
 import javax.annotation.Nullable;
 
@@ -23,12 +24,14 @@ public class AnimatedImageResult {
   private final int mFrameForPreview;
   private @Nullable CloseableReference<Bitmap> mPreviewBitmap;
   private @Nullable List<CloseableReference<Bitmap>> mDecodedFrames;
+  private @Nullable BitmapTransformation mBitmapTransformation;
 
   AnimatedImageResult(AnimatedImageResultBuilder builder) {
     mImage = Preconditions.checkNotNull(builder.getImage());
     mFrameForPreview = builder.getFrameForPreview();
     mPreviewBitmap = builder.getPreviewBitmap();
     mDecodedFrames = builder.getDecodedFrames();
+    mBitmapTransformation = builder.getBitmapTransformation();
   }
 
   private AnimatedImageResult(AnimatedImage image) {
@@ -99,6 +102,15 @@ public class AnimatedImageResult {
    */
   public synchronized boolean hasDecodedFrame(int index) {
     return mDecodedFrames != null && mDecodedFrames.get(index) != null;
+  }
+
+  /**
+   * Gets the transformation that is to be applied to the image, or null if none.
+   *
+   * @return the transformation that is to be applied to the image, or null if none
+   */
+  public @Nullable BitmapTransformation getBitmapTransformation() {
+    return mBitmapTransformation;
   }
 
   /**

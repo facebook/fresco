@@ -9,7 +9,9 @@ package com.facebook.imagepipeline.animated.base;
 
 import android.graphics.Bitmap;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imagepipeline.transformation.BitmapTransformation;
 import java.util.List;
+import javax.annotation.Nullable;
 
 /** Builder for {@link AnimatedImageResult}. */
 public class AnimatedImageResultBuilder {
@@ -18,6 +20,7 @@ public class AnimatedImageResultBuilder {
   private CloseableReference<Bitmap> mPreviewBitmap;
   private List<CloseableReference<Bitmap>> mDecodedFrames;
   private int mFrameForPreview;
+  private @Nullable BitmapTransformation mBitmapTransformation;
 
   AnimatedImageResultBuilder(AnimatedImage image) {
     mImage = image;
@@ -94,6 +97,27 @@ public class AnimatedImageResultBuilder {
   public AnimatedImageResultBuilder setDecodedFrames(
       List<CloseableReference<Bitmap>> decodedFrames) {
     mDecodedFrames = CloseableReference.cloneOrNull(decodedFrames);
+    return this;
+  }
+
+  /**
+   * Gets the transformation that is to be applied to the image, or null if none.
+   *
+   * @return the transformation that is to be applied to the image, or null if none
+   */
+  @Nullable
+  public BitmapTransformation getBitmapTransformation() {
+    return mBitmapTransformation;
+  }
+
+  /**
+   * Sets the transformation that is to be applied to the image.
+   *
+   * @param bitmapTransformation the transformation that is to be applied to the image
+   */
+  public AnimatedImageResultBuilder setBitmapTransformation(
+      @Nullable BitmapTransformation bitmapTransformation) {
+    mBitmapTransformation = bitmapTransformation;
     return this;
   }
 

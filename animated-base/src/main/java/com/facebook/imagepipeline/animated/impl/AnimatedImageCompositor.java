@@ -19,6 +19,8 @@ import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.BlendOperation;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.DisposalMethod;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
+import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
+import com.facebook.imagepipeline.transformation.BitmapTransformation;
 
 /**
  * Contains the logic for compositing the frames of an {@link AnimatedImage}. Animated image formats
@@ -113,6 +115,7 @@ public class AnimatedImageCompositor {
     }
     // Finally, we render the current frame. We don't dispose it.
     mAnimatedDrawableBackend.renderFrame(frameNumber, canvas);
+    maybeApplyTransformation(bitmap);
   }
 
   /** Return value for {@link #isFrameNeededForRendering} used in the compositing logic. */
@@ -234,5 +237,21 @@ public class AnimatedImageCompositor {
         && frameInfo.yOffset == 0
         && frameInfo.width == mAnimatedDrawableBackend.getRenderedWidth()
         && frameInfo.height == mAnimatedDrawableBackend.getRenderedHeight();
+  }
+
+  private void maybeApplyTransformation(Bitmap bitmap) {
+    AnimatedImageResult animatedImageResult = mAnimatedDrawableBackend.getAnimatedImageResult();
+
+    if (animatedImageResult == null) {
+      return;
+    }
+
+    BitmapTransformation tr = animatedImageResult.getBitmapTransformation();
+
+    if (tr == null) {
+      return;
+    }
+
+    tr.transform(bitmap);
   }
 }
