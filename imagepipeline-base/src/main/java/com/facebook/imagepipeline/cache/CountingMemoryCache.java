@@ -524,7 +524,9 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
   public String reportData() {
     return Objects.toStringHelper("CountingMemoryCache")
         .add("cached_entries_count:", mCachedEntries.getCount())
+        .add("cached_entries_size_bytes", mCachedEntries.getSizeInBytes())
         .add("exclusive_entries_count", mExclusiveEntries.getCount())
+        .add("exclusive_entries_size_bytes", mExclusiveEntries.getSizeInBytes())
         .toString();
   }
 }
