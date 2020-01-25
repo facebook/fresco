@@ -204,9 +204,6 @@ public class FrescoContext {
 
     imageRequestBuilder.setPostprocessor(imageOptions.getPostprocessor());
 
-    imageRequestBuilder.setUseMediaStorePhotoThumbnail(
-        imageOptions.getUseMediaStorePhotoThumbnail());
-
     return imageRequestBuilder;
   }
 

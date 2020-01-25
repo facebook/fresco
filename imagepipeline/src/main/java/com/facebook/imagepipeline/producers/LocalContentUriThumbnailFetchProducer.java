@@ -8,7 +8,6 @@
 package com.facebook.imagepipeline.producers;
 
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.database.Cursor;
 import android.graphics.Rect;
 import android.media.ExifInterface;
@@ -66,22 +65,16 @@ public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer
     Uri uri = imageRequest.getSourceUri();
 
     if (UriUtil.isLocalCameraUri(uri)) {
-      return getCameraImage(
-          uri, imageRequest.getResizeOptions(), imageRequest.getUseMediaStorePhotoThumbnail());
+      return getCameraImage(uri, imageRequest.getResizeOptions());
     }
 
     return null;
   }
 
-  private @Nullable EncodedImage getCameraImage(
-      Uri uri, @Nullable ResizeOptions resizeOptions, boolean useMediaStorePhotoThumbnail)
+  private @Nullable EncodedImage getCameraImage(Uri uri, @Nullable ResizeOptions resizeOptions)
       throws IOException {
     if (resizeOptions == null) {
       return null;
-    }
-    if (useMediaStorePhotoThumbnail && UriUtil.isLocalContentUri(uri)) {
-      final long imageId = ContentUris.parseId(uri);
-      return getThumbnail(resizeOptions, imageId);
     }
     @Nullable Cursor cursor = mContentResolver.query(uri, PROJECTION, null, null, null);
     if (cursor == null) {

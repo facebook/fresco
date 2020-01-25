@@ -43,7 +43,6 @@ public class ImageRequestBuilder {
   private @Nullable RequestListener mRequestListener;
   private @Nullable BytesRange mBytesRange = null;
   private @Nullable Boolean mResizingAllowedOverride = null;
-  private boolean mUseMediaStorePhotoThumbnail = false;
 
   /**
    * Creates a new request builder instance. The setting will be done according to the source type.
@@ -364,28 +363,6 @@ public class ImageRequestBuilder {
 
   public @Nullable Boolean getResizingAllowedOverride() {
     return mResizingAllowedOverride;
-  }
-
-  /**
-   * Sets whether the media store photo thumbnail should be used when a local photo content uri is
-   * requested.
-   *
-   * @param useMediaStorePhotoThumbnail whether to use the media store photo thumbnail
-   * @return the builder
-   */
-  public ImageRequestBuilder setUseMediaStorePhotoThumbnail(boolean useMediaStorePhotoThumbnail) {
-    mUseMediaStorePhotoThumbnail = useMediaStorePhotoThumbnail;
-    return this;
-  }
-
-  /**
-   * Gets whether the media store photo thumbnail should be used when a local photo content uri is *
-   * requested.
-   *
-   * @return whether to use the media store photo thumbnail
-   */
-  public boolean getUseMediaStorePhotoThumbnail() {
-    return mUseMediaStorePhotoThumbnail;
   }
 
   /** An exception class for builder methods. */

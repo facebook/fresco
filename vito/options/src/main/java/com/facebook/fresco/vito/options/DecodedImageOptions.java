@@ -32,7 +32,6 @@ public class DecodedImageOptions extends EncodedImageOptions {
   private final @Nullable ScalingUtils.ScaleType mActualImageScaleType;
   private final @Nullable PointF mActualImageFocusPoint;
   private final boolean mLocalThumbnailPreviewsEnabled;
-  private final boolean mUseMediaStorePhotoThumbnail;
   private final @Nullable Bitmap.Config mBitmapConfig;
 
   public DecodedImageOptions(Builder builder) {
@@ -46,7 +45,6 @@ public class DecodedImageOptions extends EncodedImageOptions {
     mActualImageScaleType = builder.mActualImageScaleType;
     mActualImageFocusPoint = builder.mActualFocusPoint;
     mLocalThumbnailPreviewsEnabled = builder.mLocalThumbnailPreviewsEnabled;
-    mUseMediaStorePhotoThumbnail = builder.mUseMediaStorePhotoThumbnail;
     mBitmapConfig = builder.mBitmapConfig;
   }
 
@@ -86,16 +84,6 @@ public class DecodedImageOptions extends EncodedImageOptions {
     return mLocalThumbnailPreviewsEnabled;
   }
 
-  /**
-   * Gets whether the media store photo thumbnail should be used when a local photo content uri is
-   * requested.
-   *
-   * @return whether to use the media store photo thumbnail
-   */
-  public boolean getUseMediaStorePhotoThumbnail() {
-    return mUseMediaStorePhotoThumbnail;
-  }
-
   public @Nullable Bitmap.Config getBitmapConfig() {
     return mBitmapConfig;
   }
@@ -120,7 +108,6 @@ public class DecodedImageOptions extends EncodedImageOptions {
         || !Objects.equal(mActualImageScaleType, other.mActualImageScaleType)
         || !Objects.equal(mActualImageFocusPoint, other.mActualImageFocusPoint)
         || mLocalThumbnailPreviewsEnabled != other.mLocalThumbnailPreviewsEnabled
-        || mUseMediaStorePhotoThumbnail != other.mUseMediaStorePhotoThumbnail
         || !Objects.equal(mBitmapConfig, other.mBitmapConfig)) {
       return false;
     }
@@ -139,7 +126,6 @@ public class DecodedImageOptions extends EncodedImageOptions {
     result = 31 * result + (mActualImageScaleType != null ? mActualImageScaleType.hashCode() : 0);
     result = 31 * result + (mActualImageFocusPoint != null ? mActualImageFocusPoint.hashCode() : 0);
     result = 31 * result + (mLocalThumbnailPreviewsEnabled ? 1 : 0);
-    result = 31 * result + (mUseMediaStorePhotoThumbnail ? 1 : 0);
     result = 31 * result + (mBitmapConfig != null ? mBitmapConfig.hashCode() : 0);
     return result;
   }
@@ -161,7 +147,6 @@ public class DecodedImageOptions extends EncodedImageOptions {
         .add("actualImageScaleType", mActualImageScaleType)
         .add("actualImageFocusPoint", mActualImageFocusPoint)
         .add("localThumbnailPreviewsEnabled", mLocalThumbnailPreviewsEnabled)
-        .add("useMediaStorePhotoThumbnail", mUseMediaStorePhotoThumbnail)
         .add("bitmapConfig", mBitmapConfig);
   }
 
@@ -176,7 +161,6 @@ public class DecodedImageOptions extends EncodedImageOptions {
     private @Nullable ScalingUtils.ScaleType mActualImageScaleType;
     private @Nullable PointF mActualFocusPoint;
     private boolean mLocalThumbnailPreviewsEnabled = false;
-    private boolean mUseMediaStorePhotoThumbnail = false;
     public @Nullable Bitmap.Config mBitmapConfig;
 
     protected Builder() {
@@ -194,7 +178,6 @@ public class DecodedImageOptions extends EncodedImageOptions {
       mActualImageScaleType = defaultOptions.getActualImageScaleType();
       mActualFocusPoint = defaultOptions.getActualImageFocusPoint();
       mLocalThumbnailPreviewsEnabled = defaultOptions.areLocalThumbnailPreviewsEnabled();
-      mUseMediaStorePhotoThumbnail = defaultOptions.getUseMediaStorePhotoThumbnail();
       mBitmapConfig = defaultOptions.getBitmapConfig();
     }
 
@@ -252,15 +235,6 @@ public class DecodedImageOptions extends EncodedImageOptions {
      */
     public T localThumbnailPreviewsEnabled(boolean localThumbnailPreviewsEnabled) {
       mLocalThumbnailPreviewsEnabled = localThumbnailPreviewsEnabled;
-      return getThis();
-    }
-
-    /**
-     * Indicates that the media store photo thumbnail should be used when a local photo content uri
-     * is requested.
-     */
-    public T useMediaStorePhotoThumbnail(boolean useMediaStorePhotoThumbnail) {
-      mUseMediaStorePhotoThumbnail = useMediaStorePhotoThumbnail;
       return getThis();
     }
 

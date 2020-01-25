@@ -99,12 +99,6 @@ public class ImageRequest {
    */
   private final @Nullable Boolean mResizingAllowedOverride;
 
-  /**
-   * Indicates that the media store photo thumbnail should be used when a local photo content uri is
-   * requested.
-   */
-  private final boolean mUseMediaStorePhotoThumbnail;
-
   public static @Nullable ImageRequest fromFile(@Nullable File file) {
     return (file == null) ? null : ImageRequest.fromUri(UriUtil.getUriForFile(file));
   }
@@ -145,7 +139,6 @@ public class ImageRequest {
     mRequestListener = builder.getRequestListener();
 
     mResizingAllowedOverride = builder.getResizingAllowedOverride();
-    mUseMediaStorePhotoThumbnail = builder.getUseMediaStorePhotoThumbnail();
   }
 
   public CacheChoice getCacheChoice() {
@@ -238,10 +231,6 @@ public class ImageRequest {
     return mRequestListener;
   }
 
-  public boolean getUseMediaStorePhotoThumbnail() {
-    return mUseMediaStorePhotoThumbnail;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (!(o instanceof ImageRequest)) {
@@ -251,7 +240,6 @@ public class ImageRequest {
     if (mLocalThumbnailPreviewsEnabled != request.mLocalThumbnailPreviewsEnabled) return false;
     if (mIsDiskCacheEnabled != request.mIsDiskCacheEnabled) return false;
     if (mIsMemoryCacheEnabled != request.mIsMemoryCacheEnabled) return false;
-    if (mUseMediaStorePhotoThumbnail != request.mUseMediaStorePhotoThumbnail) return false;
     if (!Objects.equal(mSourceUri, request.mSourceUri)
         || !Objects.equal(mCacheChoice, request.mCacheChoice)
         || !Objects.equal(mSourceFile, request.mSourceFile)
@@ -290,8 +278,7 @@ public class ImageRequest {
         mResizeOptions,
         mRotationOptions,
         postprocessorCacheKey,
-        mResizingAllowedOverride,
-        mUseMediaStorePhotoThumbnail);
+        mResizingAllowedOverride);
   }
 
   @Override
@@ -312,7 +299,6 @@ public class ImageRequest {
         .add("isDiskCacheEnabled", mIsDiskCacheEnabled)
         .add("isMemoryCacheEnabled", mIsMemoryCacheEnabled)
         .add("decodePrefetches", mDecodePrefetches)
-        .add("useMediaStorePhotoThumbnail", mUseMediaStorePhotoThumbnail)
         .toString();
   }
 
