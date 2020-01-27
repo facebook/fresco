@@ -14,7 +14,7 @@ dependencies {
     compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
     compileOnly "com.facebook.infer.annotation:infer-annotation:${INFER_ANNOTATION_VERSION}"
     compileOnly Deps.jsr305
-    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compileOnly Deps.javaxAnnotation
 
     implementation project(':fbcore')
     implementation project(':imagepipeline')

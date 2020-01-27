@@ -30,7 +30,7 @@ android {
 dependencies {
     compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
     compileOnly Deps.jsr305
-    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compileOnly Deps.javaxAnnotation
 
     testImplementation "androidx.annotation:annotation:${versions.androidx.annotation}"
     testImplementation Deps.jsr305

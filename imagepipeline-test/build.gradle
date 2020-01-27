@@ -12,7 +12,7 @@ apply plugin: 'maven'
 
 dependencies {
     compileOnly Deps.jsr305
-    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compileOnly Deps.javaxAnnotation
 
     api project(':imagepipeline-base-test')
     implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"

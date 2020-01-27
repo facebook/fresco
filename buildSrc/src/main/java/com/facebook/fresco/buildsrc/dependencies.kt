@@ -8,5 +8,6 @@
 package com.facebook.fresco.buildsrc
 
 object Deps {
+    const val javaxAnnotation = "javax.annotation:javax.annotation-api:1.2"
     const val jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
 }

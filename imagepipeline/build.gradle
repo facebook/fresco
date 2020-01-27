@@ -15,7 +15,7 @@ dependencies {
     compileOnly "androidx.legacy:legacy-support-core-utils:${versions.androidx.legacy_support_core_utils}"
     compileOnly Deps.jsr305
     compileOnly "com.facebook.infer.annotation:infer-annotation:${INFER_ANNOTATION_VERSION}"
-    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compileOnly Deps.javaxAnnotation
 
     api project(':imagepipeline-base')
     implementation "com.facebook.soloader:nativeloader:${SOLOADER_VERSION}"

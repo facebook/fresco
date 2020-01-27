@@ -13,7 +13,7 @@ apply plugin: 'maven'
 dependencies {
     compileOnly Deps.jsr305
     implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
-    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compileOnly Deps.javaxAnnotation
     implementation "com.facebook.soloader:nativeloader:${SOLOADER_VERSION}"
     implementation project(':fbcore')
     implementation project(':animated-base')

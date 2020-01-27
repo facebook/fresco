@@ -11,7 +11,7 @@ apply plugin: 'com.android.application'
 
 dependencies {
     compileOnly Deps.jsr305
-    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compileOnly Deps.javaxAnnotation
 
     implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
 

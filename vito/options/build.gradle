@@ -14,7 +14,7 @@ apply from: rootProject.file('release.gradle')
 
 dependencies {
     compileOnly Deps.jsr305
-    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compileOnly Deps.javaxAnnotation
     compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
 
     implementation project(':drawee')

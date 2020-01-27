@@ -12,7 +12,7 @@ apply plugin: 'maven'
 
 dependencies {
     compileOnly Deps.jsr305
-    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compileOnly Deps.javaxAnnotation
     implementation "com.facebook.stetho:stetho:${STETHO_VERSION}"
 
     implementation project(':drawee-backends:drawee-pipeline')
