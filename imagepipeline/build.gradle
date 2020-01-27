@@ -5,13 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import com.facebook.fresco.buildsrc.Deps
+
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 dependencies {
     compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
     compileOnly "androidx.legacy:legacy-support-core-utils:${versions.androidx.legacy_support_core_utils}"
-    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    compileOnly Deps.jsr305
     compileOnly "com.facebook.infer.annotation:infer-annotation:${INFER_ANNOTATION_VERSION}"
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
 
@@ -23,7 +25,7 @@ dependencies {
     implementation project(':fbcore')
     
     testImplementation "androidx.legacy:legacy-support-core-utils:${versions.androidx.legacy_support_core_utils}"
-    testImplementation "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    testImplementation Deps.jsr305
     testImplementation project(':imagepipeline-test')
     testImplementation project(':imagepipeline-base-test')
     testImplementation project(':native-imagetranscoder')

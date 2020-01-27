@@ -5,13 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import com.facebook.fresco.buildsrc.Deps
+
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 dependencies {
     compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
     compileOnly "com.facebook.infer.annotation:infer-annotation:${INFER_ANNOTATION_VERSION}"
-    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    compileOnly Deps.jsr305
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
 
     implementation project(':fbcore')
@@ -22,7 +24,7 @@ dependencies {
     implementation project(':memory-types:simple')
     implementation project(':ui-common')
 
-    testImplementation "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    testImplementation Deps.jsr305
     testImplementation "junit:junit:${JUNIT_VERSION}"
     testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
     testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {

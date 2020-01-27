@@ -5,10 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import com.facebook.fresco.buildsrc.Deps
+
 apply plugin: 'com.android.application'
 
 dependencies {
-    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    compileOnly Deps.jsr305
     implementation "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
     annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
     annotationProcessor "androidx.annotation:annotation:${versions.androidx.annotation}"

@@ -7,6 +7,7 @@
 
 import de.undercouch.gradle.tasks.download.Download
 import org.apache.tools.ant.taskdefs.condition.Os
+import com.facebook.fresco.buildsrc.Deps
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
@@ -68,7 +69,7 @@ subprojects {
     }
 
     configurations.all {
-        resolutionStrategy.force "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+        resolutionStrategy.force Deps.jsr305
     }
 
     task allclean {

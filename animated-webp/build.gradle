@@ -5,11 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import com.facebook.fresco.buildsrc.Deps
+
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 dependencies {
-    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    compileOnly Deps.jsr305
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
 
     implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"

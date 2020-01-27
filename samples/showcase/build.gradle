@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import com.facebook.fresco.buildsrc.Deps
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -79,7 +81,7 @@ android {
 }
 
 dependencies {
-    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    compileOnly Deps.jsr305
 
     implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
     implementation "androidx.preference:preference:${versions.androidx.preference}"

@@ -5,11 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import com.facebook.fresco.buildsrc.Deps
+
 apply plugin: 'com.android.library'
 
 dependencies {
     compileOnly "androidx.legacy:legacy-support-core-utils:${versions.androidx.legacy_support_core_utils}"
-    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    compileOnly Deps.jsr305
 
     implementation project (':soloader')
     implementation "com.facebook.soloader:nativeloader:${SOLOADER_VERSION}"
