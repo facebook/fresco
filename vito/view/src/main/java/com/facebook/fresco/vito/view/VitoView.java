@@ -20,6 +20,7 @@ import com.facebook.drawee.drawable.VisibilityCallback;
 import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoDrawable;
 import com.facebook.fresco.vito.core.FrescoState;
+import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.provider.DefaultFrescoContext;
 import com.facebook.imagepipeline.multiuri.MultiUri;
@@ -67,21 +68,33 @@ public class VitoView {
    * Display an image with default options
    */
   public static void show(@Nullable Uri uri, View target) {
-    showInternal(uri, null, ImageOptions.defaults(), target);
+    showInternal(uri, null, ImageOptions.defaults(), null, null, target);
   }
 
   /*
    * Display an image
    */
   public static void show(@Nullable Uri uri, ImageOptions imageOptions, final View target) {
-    showInternal(uri, null, imageOptions, target);
+    showInternal(uri, null, imageOptions, null, null, target);
+  }
+
+  /*
+   * Display an image
+   */
+  public static void show(
+      @Nullable Uri uri,
+      ImageOptions imageOptions,
+      @Nullable Object callerContext,
+      @Nullable ImageListener imageListener,
+      final View target) {
+    showInternal(uri, null, imageOptions, callerContext, imageListener, target);
   }
 
   /*
    * Display an image with default options
    */
   public static void show(@Nullable MultiUri multiUri, final View target) {
-    showInternal(null, multiUri, ImageOptions.defaults(), target);
+    showInternal(null, multiUri, ImageOptions.defaults(), null, null, target);
   }
 
   /*
@@ -89,13 +102,15 @@ public class VitoView {
    */
   public static void show(
       @Nullable MultiUri multiUri, ImageOptions imageOptions, final View target) {
-    showInternal(null, multiUri, imageOptions, target);
+    showInternal(null, multiUri, imageOptions, null, null, target);
   }
 
   private static void showInternal(
       @Nullable Uri uri,
       @Nullable MultiUri multiUri,
       ImageOptions imageOptions,
+      @Nullable Object callerContext,
+      @Nullable ImageListener imageListener,
       final View target) {
     Preconditions.checkArgument(
         !(uri != null && multiUri != null), "Setting both a Uri and MultiUri is not allowed!");
@@ -128,7 +143,14 @@ public class VitoView {
     final FrescoState state =
         sFrescoContext
             .getController()
-            .onPrepare(oldState, uri, multiUri, imageOptions, null, target.getResources(), null);
+            .onPrepare(
+                oldState,
+                uri,
+                multiUri,
+                imageOptions,
+                callerContext,
+                target.getResources(),
+                imageListener);
     state.setFrescoDrawable(frescoDrawable);
     setState(target, state);
 
