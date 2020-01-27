@@ -17,7 +17,7 @@ import androidx.core.view.ViewCompat;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.drawable.VisibilityCallback;
-import com.facebook.fresco.vito.core.FrescoController;
+import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoDrawable;
 import com.facebook.fresco.vito.core.FrescoState;
 import com.facebook.fresco.vito.options.ImageOptions;
@@ -31,10 +31,7 @@ public class VitoView {
   private static final Class<?> TAG = VitoView.class;
   private static volatile boolean sIsInitialized = false;
 
-  @SuppressWarnings("deprecation")
-  private static VitoView sInstance;
-
-  private static @Nullable FrescoController sController = null;
+  private static @Nullable FrescoContext sFrescoContext = null;
 
   private static final View.OnAttachStateChangeListener sOnAttachStateChangeListenerCallback =
       new View.OnAttachStateChangeListener() {
@@ -52,6 +49,10 @@ public class VitoView {
   private VitoView() {}
 
   public static void init(Resources resources) {
+    init(DefaultFrescoContext.get(resources));
+  }
+
+  public static void init(FrescoContext frescoContext) {
     if (sIsInitialized) {
       FLog.w(TAG, "VitoView has already been initialized!");
       return;
@@ -59,8 +60,7 @@ public class VitoView {
       sIsInitialized = true;
     }
 
-    sInstance = new VitoView();
-    sController = DefaultFrescoContext.get(resources).getController();
+    sFrescoContext = frescoContext;
   }
 
   /*
@@ -126,8 +126,9 @@ public class VitoView {
 
     final FrescoState oldState = getState(target);
     final FrescoState state =
-        sController.onPrepare(
-            oldState, uri, multiUri, imageOptions, null, target.getResources(), null);
+        sFrescoContext
+            .getController()
+            .onPrepare(oldState, uri, multiUri, imageOptions, null, target.getResources(), null);
     state.setFrescoDrawable(frescoDrawable);
     setState(target, state);
 
@@ -157,13 +158,13 @@ public class VitoView {
 
   private static void onAttach(FrescoState state) {
     if (!state.isAttached()) {
-      sController.onAttach(state, null);
+      sFrescoContext.getController().onAttach(state, null);
     }
   }
 
   private static void onDetach(FrescoState state) {
     if (state.isAttached()) {
-      sController.onDetach(state);
+      sFrescoContext.getController().onDetach(state);
     }
   }
 
