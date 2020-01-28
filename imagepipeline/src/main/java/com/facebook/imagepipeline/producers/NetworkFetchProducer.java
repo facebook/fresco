@@ -161,6 +161,7 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
     ProducerListener2 listener = fetchState.getListener();
     listener.onProducerFinishWithSuccess(fetchState.getContext(), PRODUCER_NAME, extraMap);
     listener.onUltimateProducerReached(fetchState.getContext(), PRODUCER_NAME, true);
+    fetchState.getContext().setExtra(ProducerContext.ExtraKeys.ORIGIN, "network");
     notifyConsumer(
         pooledOutputStream,
         Consumer.IS_LAST | fetchState.getOnNewResultStatusFlags(),
@@ -197,6 +198,7 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
     fetchState
         .getListener()
         .onUltimateProducerReached(fetchState.getContext(), PRODUCER_NAME, false);
+    fetchState.getContext().setExtra(ProducerContext.ExtraKeys.ORIGIN, "network");
     fetchState.getConsumer().onFailure(e);
   }
 

@@ -62,6 +62,7 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
                   ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "true")
                   : null);
           listener.onUltimateProducerReached(producerContext, getProducerName(), true);
+          producerContext.setExtra(ProducerContext.ExtraKeys.ORIGIN, "memory_bitmap");
           consumer.onProgressUpdate(1f);
         }
         consumer.onNewResult(cachedReference, BaseConsumer.simpleStatusForIsLast(isFinal));
@@ -80,6 +81,7 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
                 ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "false")
                 : null);
         listener.onUltimateProducerReached(producerContext, getProducerName(), false);
+        producerContext.setExtra(ProducerContext.ExtraKeys.ORIGIN, "memory_bitmap");
         consumer.onNewResult(null, Consumer.IS_LAST);
         return;
       }

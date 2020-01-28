@@ -44,10 +44,12 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
             EncodedImage encodedImage = getEncodedImage(imageRequest);
             if (encodedImage == null) {
               listener.onUltimateProducerReached(producerContext, getProducerName(), false);
+              producerContext.setExtra(ProducerContext.ExtraKeys.ORIGIN, "local");
               return null;
             }
             encodedImage.parseMetaData();
             listener.onUltimateProducerReached(producerContext, getProducerName(), true);
+            producerContext.setExtra(ProducerContext.ExtraKeys.ORIGIN, "local");
             return encodedImage;
           }
 

@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.producers;
 
+import androidx.annotation.IntDef;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.EncodedImageOrigin;
@@ -25,6 +26,11 @@ import javax.annotation.Nullable;
  * pipeline client cancels the image request.
  */
 public interface ProducerContext {
+
+  @IntDef({ExtraKeys.ORIGIN})
+  @interface ExtraKeys {
+    int ORIGIN = 1;
+  }
 
   /** @return image request that is being executed */
   ImageRequest getImageRequest();
@@ -67,4 +73,8 @@ public interface ProducerContext {
   EncodedImageOrigin getEncodedImageOrigin();
 
   void setEncodedImageOrigin(EncodedImageOrigin encodedImageOrigin);
+
+  void setExtra(@ExtraKeys int key, String value);
+
+  String getExtra(@ExtraKeys int key);
 }

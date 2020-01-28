@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.producers;
 
+import android.util.SparseArray;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.EncodedImageOrigin;
@@ -27,6 +28,7 @@ public class BaseProducerContext implements ProducerContext {
   private final ProducerListener2 mProducerListener;
   private final Object mCallerContext;
   private final ImageRequest.RequestLevel mLowestPermittedRequestLevel;
+  private final SparseArray<String> mExtras = new SparseArray<>();
 
   @GuardedBy("this")
   private boolean mIsPrefetch;
@@ -299,5 +301,15 @@ public class BaseProducerContext implements ProducerContext {
     for (ProducerContextCallbacks callback : callbacks) {
       callback.onPriorityChanged();
     }
+  }
+
+  @Override
+  public void setExtra(@ExtraKeys int key, String value) {
+    mExtras.put(key, value);
+  }
+
+  @Override
+  public String getExtra(int key) {
+    return mExtras.get(key, "");
   }
 }
