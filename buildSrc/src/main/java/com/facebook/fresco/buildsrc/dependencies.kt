@@ -10,4 +10,11 @@ package com.facebook.fresco.buildsrc
 object Deps {
     const val javaxAnnotation = "javax.annotation:javax.annotation-api:1.2"
     const val jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
+    
+    object SoLoader {
+        private const val version = "0.8.1"
+        const val soloaderAnnotation = "com.facebook.soloader:annotation:$version"
+        const val nativeloader = "com.facebook.soloader:nativeloader:$version"
+        const val soloader = "com.facebook.soloader:soloader:$version"
+    }
 }

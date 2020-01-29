@@ -14,7 +14,7 @@ dependencies {
     compileOnly Deps.jsr305
 
     implementation project(':fbcore')
-    implementation "com.facebook.soloader:soloader:${SOLOADER_VERSION}"
+    implementation Deps.SoLoader.soloader
 
 }
 

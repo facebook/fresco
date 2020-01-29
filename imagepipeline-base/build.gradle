@@ -17,7 +17,7 @@ dependencies {
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
 
-    implementation "com.facebook.soloader:annotation:${SOLOADER_VERSION}"
+    implementation Deps.SoLoader.soloaderAnnotation
     implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
     implementation project(':fbcore')
 

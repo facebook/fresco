@@ -15,7 +15,7 @@ dependencies {
     implementation project(':imagepipeline')
     implementation project(':imagepipeline-native')
     
-    implementation "com.facebook.soloader:nativeloader:${SOLOADER_VERSION}"
+    implementation Deps.SoLoader.nativeloader
 
     compileOnly Deps.jsr305
 

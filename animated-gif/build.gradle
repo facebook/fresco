@@ -14,7 +14,7 @@ dependencies {
     compileOnly Deps.jsr305
     implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
     compileOnly Deps.javaxAnnotation
-    implementation "com.facebook.soloader:nativeloader:${SOLOADER_VERSION}"
+    implementation Deps.SoLoader.nativeloader
     implementation project(':fbcore')
     implementation project(':animated-base')
 
