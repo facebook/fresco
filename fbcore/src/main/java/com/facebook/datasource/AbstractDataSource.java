@@ -167,7 +167,7 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
     }
   }
 
-  private void notifyDataSubscriber(
+  protected void notifyDataSubscriber(
       final DataSubscriber<T> dataSubscriber,
       final Executor executor,
       final boolean isFailure,
