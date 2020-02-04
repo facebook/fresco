@@ -56,10 +56,6 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
   private final LinkedList<Entry<FETCH_STATE>> mLowPriQueue = new LinkedList<>();
   private final HashSet<FetchState> mCurrentlyFetching = new HashSet<>();
 
-  static {
-    FLog.setMinimumLoggingLevel(FLog.VERBOSE);
-  }
-
   /**
    * @param isHiPriFifo if true, hi-pri requests are dequeued in the order they were enqueued.
    *     Otherwise, they're dequeued in reverse order.
