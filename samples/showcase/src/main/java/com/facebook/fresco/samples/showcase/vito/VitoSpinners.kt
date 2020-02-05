@@ -32,22 +32,24 @@ import com.facebook.imagepipeline.postprocessors.RoundPostprocessor
 
 object VitoSpinners {
 
-    val roundingOptions = listOf(
-            "no rounding" to null,
+    val roundingOptions = Pair(listOf(
+            "none" to null,
             "as circle" to RoundingOptions.asCircle(),
             "corner radius" to RoundingOptions.forCornerRadiusPx(20f),
-            "different radii" to RoundingOptions.forCornerRadii(0f, 20f, 30f, 40f))
+            "different radii" to RoundingOptions.forCornerRadii(0f, 20f, 30f, 40f)
+    ), "Rounding")
 
-    val borderOptions = listOf(
-            "no border" to null,
+    val borderOptions = Pair(listOf(
+            "none" to null,
             "red border" to BorderOptions.create(Color.RED, 20f),
             "blue border" to BorderOptions.create(Color.BLUE, 40f),
             "border with no padding" to BorderOptions.create(Color.GREEN, 20f, 0f),
             "border with small padding" to BorderOptions.create(Color.GREEN, 20f, 10f),
             "border with same padding" to BorderOptions.create(Color.GREEN, 20f, 20f),
-            "border with more padding" to BorderOptions.create(Color.GREEN, 20f, 40f))
+            "border with more padding" to BorderOptions.create(Color.GREEN, 20f, 40f)
+    ), "Border")
 
-    val scaleTypes = listOf(
+    val scaleTypes = Pair(listOf(
             "center" to Pair(ScalingUtils.ScaleType.CENTER, null),
             "center_crop" to Pair(ScalingUtils.ScaleType.CENTER_CROP, null),
             "center_inside" to Pair(ScalingUtils.ScaleType.CENTER_INSIDE, null),
@@ -58,9 +60,10 @@ object VitoSpinners {
             "focus_crop (0, 0)" to Pair(ScalingUtils.ScaleType.FOCUS_CROP, PointF(0f, 0f)),
             "focus_crop (1, 0.5)" to Pair(ScalingUtils.ScaleType.FOCUS_CROP, PointF(1f, 0.5f)),
             "custom: fit_x" to Pair(CustomScaleTypes.FIT_X, null),
-            "custom: fit_y" to Pair(CustomScaleTypes.FIT_Y, null))
+            "custom: fit_y" to Pair(CustomScaleTypes.FIT_Y, null)
+    ), "Scale type")
 
-    val imageFormats = listOf(
+    val imageFormats = Pair(listOf(
             "JPEG" to DefaultImageFormats.JPEG,
             "PNG" to DefaultImageFormats.PNG,
             "Animated GIF" to DefaultImageFormats.GIF,
@@ -69,24 +72,24 @@ object VitoSpinners {
             "Animated WebP" to DefaultImageFormats.WEBP_ANIMATED,
             "Keyframes" to KeyframesDecoderExample.IMAGE_FORMAT_KEYFRAMES,
             "none" to null
-    )
+    ), "Image format")
 
-    val colorFilters = listOf(
+    val colorFilters = Pair(listOf(
             "none" to PorterDuffColorFilter(Color.TRANSPARENT, PorterDuff.Mode.ADD),
             "red" to PorterDuffColorFilter(Color.RED, PorterDuff.Mode.DARKEN),
             "green" to PorterDuffColorFilter(Color.GREEN, PorterDuff.Mode.DARKEN),
             "blue" to PorterDuffColorFilter(Color.BLUE, PorterDuff.Mode.DARKEN)
-    )
+    ), "Color filter")
 
-    val placeholderOptions = listOf(
+    val placeholderOptions = Pair(listOf(
             "none" to {builder: ImageOptions.Builder -> builder.placeholder(null)},
             "image" to {builder: ImageOptions.Builder -> builder.placeholderRes(R.drawable.logo, ScalingUtils.ScaleType.FIT_CENTER)},
             "block color" to {builder: ImageOptions.Builder -> builder.placeholder(ColorDrawable(Color.RED))},
             "color res" to {builder: ImageOptions.Builder -> builder.placeholderRes(R.color.placeholder_color)}
-    )
+    ), "Placeholder")
 
-    val postprocessorOptions = listOf(
-            "no postprocessor" to {builder: ImageOptions.Builder -> builder.postprocess(null)},
+    val postprocessorOptions = Pair(listOf(
+            "none" to {builder: ImageOptions.Builder -> builder.postprocess(null)},
             "Grey Scale Post-Processor(Slow)" to {builder: ImageOptions.Builder -> builder.postprocess(SlowGreyScalePostprocessor())},
             "Grey Scale Post-Processor" to {builder: ImageOptions.Builder -> builder.postprocess(FasterGreyScalePostprocessor())},
             "Watermark Post-Processor" to {builder: ImageOptions.Builder -> builder.postprocess(WatermarkPostprocessor(10, "FRESCO"))},
@@ -96,15 +99,15 @@ object VitoSpinners {
             "Native Round As Circle Postprocessor" to {builder: ImageOptions.Builder -> builder.postprocess(RoundAsCirclePostprocessor(false))},
             "Antialiased As Circle Postprocessor" to {builder: ImageOptions.Builder -> builder.postprocess(RoundAsCirclePostprocessor(true))},
             "Round As Circle Postprocessor" to {builder: ImageOptions.Builder -> builder.postprocess(RoundPostprocessor())}
-    )
+    ), "Postprocessor")
 
-    val rotationOptions = listOf(
-      "disable rotation" to RotationOptions.disableRotation(),
+    val rotationOptions = Pair(listOf(
+      "disabled" to RotationOptions.disableRotation(),
       "auto rotate" to RotationOptions.autoRotate(),
       "auto rotate at render time" to RotationOptions.autoRotateAtRenderTime(),
       "no rotation" to RotationOptions.forceRotation(RotationOptions.NO_ROTATION),
       "rotate 90" to RotationOptions.forceRotation(RotationOptions.ROTATE_90),
       "rotate 180" to RotationOptions.forceRotation(RotationOptions.ROTATE_180),
       "rotate 270" to RotationOptions.forceRotation(RotationOptions.ROTATE_270)
-    )
+    ), "Rotation")
 }
