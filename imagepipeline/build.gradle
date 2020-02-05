@@ -42,6 +42,7 @@ dependencies {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
+    testImplementation "com.google.truth:truth:1.0.1"
 }
 apply from: rootProject.file('release.gradle')
 
