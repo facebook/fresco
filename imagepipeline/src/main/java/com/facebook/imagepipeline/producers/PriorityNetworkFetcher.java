@@ -11,11 +11,13 @@ import static com.facebook.imagepipeline.common.Priority.HIGH;
 
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
+import com.facebook.common.time.MonotonicClock;
+import com.facebook.common.time.RealtimeSinceBootClock;
 import com.facebook.imagepipeline.image.EncodedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +44,7 @@ import javax.annotation.Nullable;
  * </ul>
  */
 public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
-    implements NetworkFetcher<FETCH_STATE> {
+    implements NetworkFetcher<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> {
   public static final String TAG = PriorityNetworkFetcher.class.getSimpleName();
 
   private final NetworkFetcher<FETCH_STATE> mDelegate;
@@ -50,11 +52,15 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
   private final boolean mIsHiPriFifo;
   private final int mMaxOutstandingHiPri;
   private final int mMaxOutstandingLowPri;
+  private final MonotonicClock mClock;
 
   private final Object mLock = new Object();
-  private final LinkedList<Entry<FETCH_STATE>> mHiPriQueue = new LinkedList<>();
-  private final LinkedList<Entry<FETCH_STATE>> mLowPriQueue = new LinkedList<>();
-  private final HashSet<FetchState> mCurrentlyFetching = new HashSet<>();
+  private final LinkedList<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> mHiPriQueue =
+      new LinkedList<>();
+  private final LinkedList<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> mLowPriQueue =
+      new LinkedList<>();
+  private final HashSet<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> mCurrentlyFetching =
+      new HashSet<>();
 
   /**
    * @param isHiPriFifo if true, hi-pri requests are dequeued in the order they were enqueued.
@@ -65,6 +71,21 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       boolean isHiPriFifo,
       int maxOutstandingHiPri,
       int maxOutstandingLowPri) {
+    this(
+        delegate,
+        isHiPriFifo,
+        maxOutstandingHiPri,
+        maxOutstandingLowPri,
+        RealtimeSinceBootClock.get());
+  }
+
+  @VisibleForTesting
+  public PriorityNetworkFetcher(
+      NetworkFetcher<FETCH_STATE> delegate,
+      boolean isHiPriFifo,
+      int maxOutstandingHiPri,
+      int maxOutstandingLowPri,
+      MonotonicClock clock) {
     mDelegate = delegate;
     mIsHiPriFifo = isHiPriFifo;
 
@@ -73,10 +94,13 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     if (maxOutstandingHiPri <= maxOutstandingLowPri) {
       throw new IllegalArgumentException("maxOutstandingHiPri should be > maxOutstandingLowPri");
     }
+    this.mClock = clock;
   }
 
   @Override
-  public void fetch(final FETCH_STATE fetchState, final Callback callback) {
+  public void fetch(
+      final PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState,
+      final Callback callback) {
     fetchState
         .getContext()
         .addCallbacks(
@@ -101,44 +125,33 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
 
       boolean isHiPri = fetchState.getContext().getPriority() == HIGH;
       FLog.v(TAG, "enqueue: %s %s", isHiPri ? "HI-PRI" : "LOW-PRI", fetchState.getUri());
-      putInQueue(new Entry<>(fetchState, callback), isHiPri);
+      fetchState.callback = callback;
+      putInQueue(fetchState, isHiPri);
     }
     dequeueIfAvailableSlots();
   }
 
   @Override
-  public void onFetchCompletion(FETCH_STATE fetchState, int byteSize) {
+  public void onFetchCompletion(
+      PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState, int byteSize) {
     removeFromQueue(fetchState, "SUCCESS");
-    mDelegate.onFetchCompletion(fetchState, byteSize);
+    mDelegate.onFetchCompletion(fetchState.delegatedState, byteSize);
   }
 
-  private void removeFromQueue(FETCH_STATE fetchState, String reasonForLogging) {
+  private void removeFromQueue(
+      PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState, String reasonForLogging) {
     synchronized (mLock) {
       FLog.v(TAG, "remove: %s %s", reasonForLogging, fetchState.getUri());
       mCurrentlyFetching.remove(fetchState);
-      if (findAndRemoveFetchState(mHiPriQueue, fetchState) == null) {
-        findAndRemoveFetchState(mLowPriQueue, fetchState);
+      if (!mHiPriQueue.remove(fetchState)) {
+        mLowPriQueue.remove(fetchState);
       }
     }
     dequeueIfAvailableSlots();
   }
 
-  @Nullable
-  private Entry<FETCH_STATE> findAndRemoveFetchState(
-      List<Entry<FETCH_STATE>> queue, FETCH_STATE fetchState) {
-    Iterator<Entry<FETCH_STATE>> i = queue.iterator();
-    while (i.hasNext()) {
-      Entry<FETCH_STATE> e = i.next();
-      if (e.fetchState.equals(fetchState)) {
-        i.remove();
-        return e;
-      }
-    }
-    return null;
-  }
-
   private void dequeueIfAvailableSlots() {
-    Entry<FETCH_STATE> toFetch = null;
+    PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> toFetch = null;
     synchronized (mLock) {
       int outstandingRequests = mCurrentlyFetching.size();
 
@@ -152,65 +165,67 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       if (toFetch == null) {
         return;
       }
-      mCurrentlyFetching.add(toFetch.fetchState);
+      toFetch.dequeuedTimestamp = mClock.now();
+      mCurrentlyFetching.add(toFetch);
 
       FLog.v(
           TAG,
           "fetching: %s (concurrent: %s hi-pri queue: %s low-pri queue: %s)",
-          toFetch.fetchState.getUri(),
+          toFetch.getUri(),
           outstandingRequests,
           mHiPriQueue.size(),
           mLowPriQueue.size());
     }
 
-    delegateFetch(toFetch.fetchState, toFetch.callback);
+    delegateFetch(toFetch);
   }
 
-  private void delegateFetch(final FETCH_STATE fetchState, final NetworkFetcher.Callback callback) {
+  private void delegateFetch(
+      final PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState) {
     try {
       NetworkFetcher.Callback callbackWrapper =
           new NetworkFetcher.Callback() {
             @Override
             public void onResponse(InputStream response, int responseLength) throws IOException {
-              callback.onResponse(response, responseLength);
+              fetchState.callback.onResponse(response, responseLength);
             }
 
             @Override
             public void onFailure(Throwable throwable) {
               removeFromQueue(fetchState, "FAIL");
-              callback.onFailure(throwable);
+              fetchState.callback.onFailure(throwable);
             }
 
             @Override
             public void onCancellation() {
               removeFromQueue(fetchState, "CANCEL");
-              callback.onCancellation();
+              fetchState.callback.onCancellation();
             }
           };
-      mDelegate.fetch(fetchState, callbackWrapper);
+      mDelegate.fetch(fetchState.delegatedState, callbackWrapper);
     } catch (Exception e) {
       removeFromQueue(fetchState, "FAIL");
     }
   }
 
-  private void changePriority(FETCH_STATE fetchState, boolean isNewHiPri) {
+  private void changePriority(
+      PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState, boolean isNewHiPri) {
     synchronized (mLock) {
-      Entry<FETCH_STATE> entry =
-          isNewHiPri
-              ? findAndRemoveFetchState(mLowPriQueue, fetchState)
-              : findAndRemoveFetchState(mHiPriQueue, fetchState);
-      if (entry == null) {
+      boolean existed =
+          isNewHiPri ? mLowPriQueue.remove(fetchState) : mHiPriQueue.remove(fetchState);
+      if (!existed) {
         return;
       }
 
       FLog.v(TAG, "change-pri: %s %s", isNewHiPri ? "HIPRI" : "LOWPRI", fetchState.getUri());
 
-      putInQueue(entry, isNewHiPri);
+      putInQueue(fetchState, isNewHiPri);
     }
     dequeueIfAvailableSlots();
   }
 
-  private void putInQueue(Entry<FETCH_STATE> entry, boolean isHiPri) {
+  private void putInQueue(
+      PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> entry, boolean isHiPri) {
     if (isHiPri) {
       if (mIsHiPriFifo) {
         mHiPriQueue.addLast(entry);
@@ -223,46 +238,63 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
   }
 
   @VisibleForTesting
-  List<Entry<FETCH_STATE>> getHiPriQueue() {
+  List<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> getHiPriQueue() {
     return mHiPriQueue;
   }
 
   @VisibleForTesting
-  List<Entry<FETCH_STATE>> getLowPriQueue() {
+  List<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> getLowPriQueue() {
     return mLowPriQueue;
   }
 
   @VisibleForTesting
-  HashSet<FetchState> getCurrentlyFetching() {
+  HashSet<PriorityFetchState<FETCH_STATE>> getCurrentlyFetching() {
     return mCurrentlyFetching;
   }
 
   @VisibleForTesting
-  static class Entry<FETCH_STATE extends FetchState> {
-    final FETCH_STATE fetchState;
-    final NetworkFetcher.Callback callback;
+  static class PriorityFetchState<FETCH_STATE extends FetchState> extends FetchState {
+    final FETCH_STATE delegatedState;
+    final long enqueuedTimestamp;
+    NetworkFetcher.Callback callback;
+    long dequeuedTimestamp;
 
-    @VisibleForTesting
-    Entry(FETCH_STATE fetchState, NetworkFetcher.Callback callback) {
-      this.fetchState = fetchState;
-      this.callback = callback;
+    private PriorityFetchState(
+        Consumer<EncodedImage> consumer,
+        ProducerContext producerContext,
+        FETCH_STATE delegatedState,
+        long enqueuedTimestamp) {
+      super(consumer, producerContext);
+      this.delegatedState = delegatedState;
+      this.enqueuedTimestamp = enqueuedTimestamp;
     }
   }
 
   @Override
-  public FETCH_STATE createFetchState(
+  public PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> createFetchState(
       Consumer<EncodedImage> consumer, ProducerContext producerContext) {
-    return mDelegate.createFetchState(consumer, producerContext);
+    return new PriorityFetchState<>(
+        consumer,
+        producerContext,
+        mDelegate.createFetchState(consumer, producerContext),
+        mClock.now());
   }
 
   @Override
-  public boolean shouldPropagate(FETCH_STATE fetchState) {
-    return mDelegate.shouldPropagate(fetchState);
+  public boolean shouldPropagate(
+      PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState) {
+    return mDelegate.shouldPropagate(fetchState.delegatedState);
   }
 
   @Nullable
   @Override
-  public Map<String, String> getExtraMap(FETCH_STATE fetchState, int byteSize) {
-    return mDelegate.getExtraMap(fetchState, byteSize);
+  public Map<String, String> getExtraMap(
+      PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState, int byteSize) {
+    Map<String, String> delegateExtras = mDelegate.getExtraMap(fetchState.delegatedState, byteSize);
+    HashMap<String, String> extras =
+        delegateExtras != null ? new HashMap<>(delegateExtras) : new HashMap<String, String>();
+    extras.put(
+        "pri_queue_time", "" + (fetchState.dequeuedTimestamp - fetchState.enqueuedTimestamp));
+    return extras;
   }
 }
