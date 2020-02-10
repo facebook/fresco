@@ -136,7 +136,7 @@ dependencies {
     androidTestImplementation "androidx.test:runner:${versions.androidx.test}"
     androidTestImplementation "junit:junit:${JUNIT_VERSION}"
 
-    implementation("com.facebook.flipper:flipper:${versions.flipper}") {
+    implementation(Deps.Tools.Flipper.flipper) {
         exclude group: 'com.facebook.fresco'
         exclude group: 'com.squareup.okhttp3'
     }

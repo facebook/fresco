@@ -19,6 +19,10 @@ object Deps {
     }
 
     object Tools {
+        object Flipper {
+            private const val version = "0.21.1"
+            const val flipper = "com.facebook.flipper:flipper:$version"
+        }
         object Stetho {
             private const val version = "1.3.1"
             const val stetho = "com.facebook.stetho:stetho:$version"
