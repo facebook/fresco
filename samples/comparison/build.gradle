@@ -6,21 +6,22 @@
  */
 
 import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.SampleDeps.Comparison
 
 apply plugin: 'com.android.application'
 
 dependencies {
     compileOnly Deps.jsr305
-    implementation "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
-    annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
+    implementation Comparison.Glide.glide
+    annotationProcessor Comparison.Glide.compiler
     annotationProcessor "androidx.annotation:annotation:${versions.androidx.annotation}"
     implementation "com.android.volley:volley:${VOLLEY_VERSION}"
-    implementation "com.nostra13.universalimageloader:universal-image-loader:${UIL_VERSION}"
-    implementation "com.squareup.picasso:picasso:${PICASSO_VERSION}"
+    implementation Comparison.Uil.uil
+    implementation Comparison.Picasso.picasso
     implementation "com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2"
     implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
     implementation "androidx.recyclerview:recyclerview:${versions.androidx.recyclerview}"
-    implementation "com.googlecode.android-query:android-query:${AQUERY_VERSION}"
+    implementation Comparison.AndroidQuery.aquery
     implementation "com.facebook.stetho:stetho-okhttp3:${STETHO_VERSION}"
 
     implementation project(':drawee')
