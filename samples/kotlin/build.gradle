@@ -61,7 +61,7 @@ dependencies {
     implementation "com.google.android.material:material:${versions.material}"
     implementation "androidx.recyclerview:recyclerview:${versions.androidx.recyclerview}"
     implementation "androidx.cardview:cardview:${versions.androidx.cardview}"
-    implementation "com.facebook.stetho:stetho-okhttp3:${STETHO_VERSION}"
+    implementation Deps.Tools.Stetho.okhttp3
 
     implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':drawee-span')

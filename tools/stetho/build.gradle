@@ -13,7 +13,7 @@ apply plugin: 'maven'
 dependencies {
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
-    implementation "com.facebook.stetho:stetho:${STETHO_VERSION}"
+    implementation Deps.Tools.Stetho.stetho
 
     implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':fbcore')

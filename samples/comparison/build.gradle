@@ -22,7 +22,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
     implementation "androidx.recyclerview:recyclerview:${versions.androidx.recyclerview}"
     implementation Comparison.AndroidQuery.aquery
-    implementation "com.facebook.stetho:stetho-okhttp3:${STETHO_VERSION}"
+    implementation Deps.Tools.Stetho.okhttp3
 
     implementation project(':drawee')
     implementation project(':drawee-backends:drawee-pipeline')

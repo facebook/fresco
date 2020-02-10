@@ -17,4 +17,12 @@ object Deps {
         const val nativeloader = "com.facebook.soloader:nativeloader:$version"
         const val soloader = "com.facebook.soloader:soloader:$version"
     }
+
+    object Tools {
+        object Stetho {
+            private const val version = "1.3.1"
+            const val stetho = "com.facebook.stetho:stetho:$version"
+            const val okhttp3 = "com.facebook.stetho:stetho-okhttp3:$version"
+        }
+    }
 }
