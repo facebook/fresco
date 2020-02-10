@@ -129,7 +129,9 @@ class ShowcaseApplication : Application() {
                     Fresco.getImagePipelineFactory().platformBitmapFactory,
                     null,
                     NoOpDebugMemoryManager(),
-                    NoOpFlipperPerfLogger(), null)
+                    NoOpFlipperPerfLogger(),
+                    null,
+                    null)
             forwardingRequestListener.addRequestListener(
                     FrescoFlipperRequestListener(frescoFlipperPlugin!!.flipperImageTracker))
             AndroidFlipperClient.getInstance(context).apply {
