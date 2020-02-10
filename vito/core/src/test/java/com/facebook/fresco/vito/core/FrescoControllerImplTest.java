@@ -120,8 +120,7 @@ public class FrescoControllerImplTest {
             eq(mFrescoDrawable),
             eq(mResources),
             eq(mImageOptions),
-            eq(mOverlayDrawable),
-            isNull(Drawable.class));
+            eq(mOverlayDrawable));
     verify(mFrescoContext).getImagePipeline();
     verify(mImagePipeline).getCachedImage(eq(cacheKey));
     assertThat(imageReference.isValid()).isFalse();
@@ -139,8 +138,7 @@ public class FrescoControllerImplTest {
             eq(mFrescoDrawable),
             eq(mResources),
             eq(mImageOptions),
-            eq(mOverlayDrawable),
-            isNull(Drawable.class));
+            eq(mOverlayDrawable));
     verify(mFrescoContext, atLeast(1)).getExperiments();
     verify(mFrescoContext).getImagePipeline();
     verify(mFrescoState).onSubmit(eq(IMAGE_ID), eq(CALLER_CONTEXT));

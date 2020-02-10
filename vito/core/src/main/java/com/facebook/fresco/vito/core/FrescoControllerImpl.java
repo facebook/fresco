@@ -305,8 +305,7 @@ public class FrescoControllerImpl implements FrescoController {
               frescoState.getFrescoDrawable(),
               frescoState.getResources(),
               frescoState.getImageOptions(),
-              frescoState.getOverlayDrawable(),
-              mDebugOverlayFactory.create(frescoState));
+              frescoState.getOverlayDrawable());
 
       frescoState.onSubmit(frescoState.getId(), frescoState.getCallerContext());
 
@@ -619,6 +618,14 @@ public class FrescoControllerImpl implements FrescoController {
 
       frescoState.onFinalImageSet(
           frescoState.getId(), frescoState.getImageOrigin(), closeableImage, actualDrawable);
+
+      mFrescoContext
+          .getHierarcher()
+          .setupDebugOverlayDrawable(
+              frescoState.getFrescoDrawable(),
+              frescoState.getFrescoDrawable().getOverlayDrawable(),
+              mDebugOverlayFactory.create(frescoState));
+
     } finally {
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.endSection();

@@ -192,18 +192,29 @@ public class HierarcherImpl implements Hierarcher {
       FrescoDrawable frescoDrawable,
       Resources resources,
       ImageOptions imageOptions,
-      @Nullable Drawable overlayDrawable,
-      @Nullable Drawable debugOverlayDrawable) {
+      @Nullable Drawable overlayDrawable) {
     if (overlayDrawable == null) {
       overlayDrawable = buildOverlayDrawable(resources, imageOptions);
     }
-    if (debugOverlayDrawable != null) {
-      if (overlayDrawable == null) {
-        overlayDrawable = debugOverlayDrawable;
-      } else {
-        overlayDrawable = new LayerDrawable(new Drawable[] {overlayDrawable, debugOverlayDrawable});
-      }
+    frescoDrawable.setOverlayDrawable(overlayDrawable);
+    frescoDrawable.showOverlayImmediately();
+  }
+
+  @Override
+  public void setupDebugOverlayDrawable(
+      FrescoDrawable frescoDrawable,
+      @Nullable Drawable overlayDrawable,
+      @Nullable Drawable debugOverlayDrawable) {
+    if (debugOverlayDrawable == null) {
+      return;
     }
+
+    if (overlayDrawable == null) {
+      overlayDrawable = debugOverlayDrawable;
+    } else {
+      overlayDrawable = new LayerDrawable(new Drawable[] {overlayDrawable, debugOverlayDrawable});
+    }
+
     frescoDrawable.setOverlayDrawable(overlayDrawable);
     frescoDrawable.showOverlayImmediately();
   }
