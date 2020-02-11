@@ -304,12 +304,14 @@ bool getGraphicsControlBlockForImage(SavedImage* pSavedImage, GraphicsControlBlo
        otherwise it will only decode frame data and skip it
  * @param addToSavedImages if set to true, will add an additional SavedImage to
  *     pGifFile->SavedImages
+ * @param maxDimension Maximum allowed dimension of each decoded frame
  * @return a gif error code
  */
 int readSingleFrame(
     GifWrapper* pGifWrapper,
     bool decodeFramePixels,
-    bool addToSavedImages) {
+    bool addToSavedImages,
+    int maxDimension) {
 
   GifFileType *pGifFile = pGifWrapper->get();
 
@@ -326,7 +328,8 @@ int readSingleFrame(
   SavedImage* pSavedImage = &pGifFile->SavedImages[imageCount];
 
   // Check size of image. Note: Frames with 0 width or height should be allowed.
-  if (pSavedImage->ImageDesc.Width < 0 || pSavedImage->ImageDesc.Height < 0) {
+  if (pSavedImage->ImageDesc.Width < 0 || pSavedImage->ImageDesc.Height < 0 ||
+      pSavedImage->ImageDesc.Width > maxDimension || pSavedImage->ImageDesc.Height > maxDimension) {
     return GIF_ERROR;
   }
 
@@ -493,9 +496,11 @@ void parseApplicationExtensions(SavedImage* pSavedImage, GifWrapper* pGifWrapper
  * SavedImage.RasterBits.
  *
  * @param pGifWrapper the gif wrapper containing the giflib struct and additional data
+ * @param maxDimension Maximum allowed dimension of each frame
+ * @param forceStatic whether GIF will be loaded as static image
  * @return a gif error code
  */
-int modifiedDGifSlurp(GifWrapper* pGifWrapper) {
+int modifiedDGifSlurp(GifWrapper* pGifWrapper, int maxDimension, bool forceStatic) {
   GifFileType* pGifFile = pGifWrapper->get();
   GifRecordType recordType;
 
@@ -516,8 +521,9 @@ int modifiedDGifSlurp(GifWrapper* pGifWrapper) {
         if (readSingleFrame(
               pGifWrapper,
               false, // Don't decode frame pixels
-              true  // Add to saved images
-              ) == GIF_ERROR) {
+              true,  // Add to saved images
+              maxDimension // Max dimension
+              ) == GIF_ERROR || forceStatic) {
           isStop = true;
         }
         break;
@@ -551,9 +557,11 @@ int modifiedDGifSlurp(GifWrapper* pGifWrapper) {
  * Creates a new GifImage from the specified buffer.
  *
  * @param vBuffer the vector containing the bytes
+ * @param maxDimension Maximum allowed dimension of canvas and each decoded frame
+ * @param forceStatic Whether GIF should be decoded as static image
  * @return a newly allocated GifImage
  */
-jobject GifImage_nativeCreateFromByteVector(JNIEnv* pEnv, std::vector<uint8_t>& vBuffer) {
+jobject GifImage_nativeCreateFromByteVector(JNIEnv* pEnv, std::vector<uint8_t>& vBuffer, int maxDimension, bool forceStatic) {
   std::unique_ptr<GifImageNativeContext> spNativeContext(new GifImageNativeContext());
   if (!spNativeContext) {
     throwOutOfMemoryError(pEnv, "Unable to allocate native context");
@@ -581,7 +589,7 @@ jobject GifImage_nativeCreateFromByteVector(JNIEnv* pEnv, std::vector<uint8_t>& 
   int width = spGifFileIn->SWidth;
   int height = spGifFileIn->SHeight;
   size_t wxh = width * height;
-  if (wxh < 1 || wxh > SIZE_MAX) {
+  if (wxh < 1 || wxh > SIZE_MAX || width > maxDimension || height > maxDimension) {
     throwIllegalStateException(pEnv, "Invalid dimensions");
     return nullptr;
   }
@@ -595,7 +603,7 @@ jobject GifImage_nativeCreateFromByteVector(JNIEnv* pEnv, std::vector<uint8_t>& 
   spNativeContext->pixelWidth = width;
   spNativeContext->pixelHeight = height;
 
-  int error = modifiedDGifSlurp(spNativeContext->spGifWrapper.get());
+  int error = modifiedDGifSlurp(spNativeContext->spGifWrapper.get(), maxDimension, forceStatic);
   if (error != GIF_OK) {
     throwIllegalStateException(pEnv, "Failed to slurp image %d", error);
     return nullptr;
@@ -695,9 +703,11 @@ std::unique_ptr<GifImageNativeContext, GifImageNativeContextReleaser>
  *
  * @param byteBuffer A java.nio.ByteBuffer. Must be direct. Assumes data is the entire capacity
  *      of the buffer
+ * @param maxDimension Maximum allowed dimension of canvas and each decoded frame
+ * @param forceStatic Whether GIF should be decoded as static image
  * @return a newly allocated GifImage
  */
-jobject GifImage_nativeCreateFromDirectByteBuffer(JNIEnv* pEnv, jclass clazz, jobject byteBuffer) {
+jobject GifImage_nativeCreateFromDirectByteBuffer(JNIEnv* pEnv, jclass clazz, jobject byteBuffer, jint maxDimension, jboolean forceStatic) {
   jbyte* bbufInput = (jbyte*) pEnv->GetDirectBufferAddress(byteBuffer);
   if (!bbufInput) {
     throwIllegalArgumentException(pEnv, "ByteBuffer must be direct");
@@ -710,7 +720,7 @@ jobject GifImage_nativeCreateFromDirectByteBuffer(JNIEnv* pEnv, jclass clazz, jo
   }
 
   std::vector<uint8_t> vBuffer(bbufInput, bbufInput + capacity);
-  return GifImage_nativeCreateFromByteVector(pEnv, vBuffer);
+  return GifImage_nativeCreateFromByteVector(pEnv, vBuffer, maxDimension, forceStatic);
 }
 
 /**
@@ -719,17 +729,21 @@ jobject GifImage_nativeCreateFromDirectByteBuffer(JNIEnv* pEnv, jclass clazz, jo
  *
  * @param nativePtr the native memory pointer
  * @param sizeInBytes size in bytes of the buffer
+* @param maxDimension Maximum allowed dimension of canvas and each decoded frame
+ * @param forceStatic whether GIF will be loaded as static image
  * @return a newly allocated GifImage
  */
 jobject GifImage_nativeCreateFromNativeMemory(
     JNIEnv* pEnv,
     jclass clazz,
     jlong nativePtr,
-    jint sizeInBytes) {
+    jint sizeInBytes,
+    jint maxDimension,
+    jboolean forceStatic) {
 
   jbyte* const pointer = (jbyte*) nativePtr;
   std::vector<uint8_t> vBuffer(pointer, pointer + sizeInBytes);
-  return GifImage_nativeCreateFromByteVector(pEnv, vBuffer);
+  return GifImage_nativeCreateFromByteVector(pEnv, vBuffer, maxDimension, forceStatic);
 }
 
 /**
@@ -1127,7 +1141,8 @@ void GifFrame_nativeRenderFrame(
   // Now we kick off the decoding process.
   int readRes = readSingleFrame(pGifWrapper,
                                 true, // Decode frame pixels
-                                false // Don't add frame to saved images
+                                false, // Don't add frame to saved images
+                                INT_MAX // Don't limit the size, it was checked in modifiedDGifSlurp
                                 );
   if (readRes != GIF_OK) {
     // Probably, broken canvas, and we can ignore it
@@ -1326,10 +1341,10 @@ void GifFrame_nativeFinalize(JNIEnv* pEnv, jobject thiz) {
 
 static JNINativeMethod sGifImageMethods[] = {
   { "nativeCreateFromDirectByteBuffer",
-    "(Ljava/nio/ByteBuffer;)Lcom/facebook/animated/gif/GifImage;",
+    "(Ljava/nio/ByteBuffer;IZ)Lcom/facebook/animated/gif/GifImage;",
     (void*)GifImage_nativeCreateFromDirectByteBuffer },
   { "nativeCreateFromNativeMemory",
-    "(JI)Lcom/facebook/animated/gif/GifImage;",
+    "(JIIZ)Lcom/facebook/animated/gif/GifImage;",
     (void*)GifImage_nativeCreateFromNativeMemory },
   { "nativeGetWidth",
     "()I",

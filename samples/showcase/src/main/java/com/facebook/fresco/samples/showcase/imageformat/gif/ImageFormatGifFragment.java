@@ -28,6 +28,7 @@ import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
+import com.facebook.imagepipeline.common.ImageDecodeOptionsBuilder;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 /** GIF example that illustrates how to display a simple GIF file */
@@ -134,15 +135,17 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
         Fresco.newDraweeControllerBuilder()
             .setAutoPlayAnimations(true)
             .setOldController(mSimpleDraweeView.getController());
+    final ImageDecodeOptionsBuilder optionsBuilder =
+        ImageDecodeOptions.newBuilder().setMaxDimensionPx(4000);
+
     if (mGifDecoder != null) {
-      controllerBuilder.setImageRequest(
-          ImageRequestBuilder.newBuilderWithSource(uri)
-              .setImageDecodeOptions(
-                  ImageDecodeOptions.newBuilder().setCustomImageDecoder(mGifDecoder).build())
-              .build());
-    } else {
-      controllerBuilder.setUri(uri).build();
+      optionsBuilder.setCustomImageDecoder(mGifDecoder);
     }
+
+    controllerBuilder.setImageRequest(
+        ImageRequestBuilder.newBuilderWithSource(uri)
+            .setImageDecodeOptions(optionsBuilder.build())
+            .build());
     mSimpleDraweeView.setController(controllerBuilder.build());
   }
 

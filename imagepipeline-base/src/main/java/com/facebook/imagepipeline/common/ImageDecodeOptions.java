@@ -26,6 +26,9 @@ public class ImageDecodeOptions {
    */
   public final int minDecodeIntervalMs;
 
+  /** Maximum image dimension to decode */
+  public final int maxDimensionPx;
+
   /** Whether to decode a preview frame for animated images. */
   public final boolean decodePreviewFrame;
 
@@ -64,6 +67,7 @@ public class ImageDecodeOptions {
 
   public ImageDecodeOptions(ImageDecodeOptionsBuilder b) {
     this.minDecodeIntervalMs = b.getMinDecodeIntervalMs();
+    this.maxDimensionPx = b.getMaxDimensionPx();
     this.decodePreviewFrame = b.getDecodePreviewFrame();
     this.useLastFrameForPreview = b.getUseLastFrameForPreview();
     this.decodeAllFrames = b.getDecodeAllFrames();
@@ -100,6 +104,7 @@ public class ImageDecodeOptions {
     ImageDecodeOptions that = (ImageDecodeOptions) o;
 
     if (minDecodeIntervalMs != that.minDecodeIntervalMs) return false;
+    if (maxDimensionPx != that.maxDimensionPx) return false;
     if (decodePreviewFrame != that.decodePreviewFrame) return false;
     if (useLastFrameForPreview != that.useLastFrameForPreview) return false;
     if (decodeAllFrames != that.decodeAllFrames) return false;
@@ -114,6 +119,7 @@ public class ImageDecodeOptions {
   @Override
   public int hashCode() {
     int result = minDecodeIntervalMs;
+    result = 31 * result + maxDimensionPx;
     result = 31 * result + (decodePreviewFrame ? 1 : 0);
     result = 31 * result + (useLastFrameForPreview ? 1 : 0);
     result = 31 * result + (decodeAllFrames ? 1 : 0);
@@ -133,6 +139,7 @@ public class ImageDecodeOptions {
   protected Objects.ToStringHelper toStringHelper() {
     return Objects.toStringHelper(this)
         .add("minDecodeIntervalMs", minDecodeIntervalMs)
+        .add("maxDimensionPx", maxDimensionPx)
         .add("decodePreviewFrame", decodePreviewFrame)
         .add("useLastFrameForPreview", useLastFrameForPreview)
         .add("decodeAllFrames", decodeAllFrames)

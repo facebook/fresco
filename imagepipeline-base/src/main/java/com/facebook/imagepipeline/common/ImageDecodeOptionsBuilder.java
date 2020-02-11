@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
 public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
 
   private int mMinDecodeIntervalMs = 100;
+  private int mMaxDimensionPx = Integer.MAX_VALUE;
   private boolean mDecodePreviewFrame;
   private boolean mUseLastFrameForPreview;
   private boolean mDecodeAllFrames;
@@ -36,6 +37,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
    */
   public ImageDecodeOptionsBuilder setFrom(ImageDecodeOptions options) {
     mMinDecodeIntervalMs = options.minDecodeIntervalMs;
+    mMaxDimensionPx = options.maxDimensionPx;
     mDecodePreviewFrame = options.decodePreviewFrame;
     mUseLastFrameForPreview = options.useLastFrameForPreview;
     mDecodeAllFrames = options.decodeAllFrames;
@@ -69,6 +71,26 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
    */
   public int getMinDecodeIntervalMs() {
     return mMinDecodeIntervalMs;
+  }
+
+  /**
+   * Sets the maximum image dimension (width or height).
+   *
+   * @param maxDimensionPx the maximum image dimension in pixels
+   * @return this builder
+   */
+  public T setMaxDimensionPx(int maxDimensionPx) {
+    mMaxDimensionPx = maxDimensionPx;
+    return getThis();
+  }
+
+  /**
+   * Gets the maximum image dimension (width or height).
+   *
+   * @return the maxinum image dimension in pixels
+   */
+  public int getMaxDimensionPx() {
+    return mMaxDimensionPx;
   }
 
   /**

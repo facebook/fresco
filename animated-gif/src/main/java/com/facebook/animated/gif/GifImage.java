@@ -79,13 +79,15 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
     ensure();
     byteBuffer.rewind();
 
-    return nativeCreateFromDirectByteBuffer(byteBuffer);
+    return nativeCreateFromDirectByteBuffer(
+        byteBuffer, options.maxDimensionPx, options.forceStaticImage);
   }
 
   public static GifImage create(long nativePtr, int sizeInBytes, ImageDecodeOptions options) {
     ensure();
     Preconditions.checkArgument(nativePtr != 0);
-    return nativeCreateFromNativeMemory(nativePtr, sizeInBytes);
+    return nativeCreateFromNativeMemory(
+        nativePtr, sizeInBytes, options.maxDimensionPx, options.forceStaticImage);
   }
 
   @Override
@@ -211,10 +213,12 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
   }
 
   @DoNotStrip
-  private static native GifImage nativeCreateFromDirectByteBuffer(ByteBuffer buffer);
+  private static native GifImage nativeCreateFromDirectByteBuffer(
+      ByteBuffer buffer, int maxDimension, boolean forceStatic);
 
   @DoNotStrip
-  private static native GifImage nativeCreateFromNativeMemory(long nativePtr, int sizeInBytes);
+  private static native GifImage nativeCreateFromNativeMemory(
+      long nativePtr, int sizeInBytes, int maxDimension, boolean forceStatic);
 
   @DoNotStrip
   private native int nativeGetWidth();
