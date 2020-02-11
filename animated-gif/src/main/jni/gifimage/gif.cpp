@@ -313,10 +313,17 @@ int readSingleFrame(
 
   GifFileType *pGifFile = pGifWrapper->get();
 
-  if (DGifGetImageDesc(pGifFile) == GIF_ERROR) {
+  int imageCount = pGifFile->ImageCount;
+  int imageDescResult = DGifGetImageDesc(pGifFile);
+
+  // DGifGetImageDesc may have changed the count, temporarily restoring until we know whether
+  // the frame was read successfully.
+  pGifFile->ImageCount = imageCount;
+
+  if (imageDescResult == GIF_ERROR) {
     return GIF_ERROR;
   }
-  SavedImage* pSavedImage = &pGifFile->SavedImages[pGifFile->ImageCount - 1];
+  SavedImage* pSavedImage = &pGifFile->SavedImages[imageCount];
 
   // Check size of image. Note: Frames with 0 width or height should be allowed.
   if (pSavedImage->ImageDesc.Width < 0 || pSavedImage->ImageDesc.Height < 0) {
@@ -380,12 +387,12 @@ int readSingleFrame(
     pGifFile->ExtensionBlockCount = 0;
   }
 
-  if (!addToSavedImages) {
-    // giflib wasn't designed to work with decoding arbitrary frames on the fly. By default, it will
-    // keep adding more images to the SavedImages array. To avoid that, we just decrement the image
-    // count. It basically means the array remains larger by one GifFileType. We decrement it so
-    // it doesn't grow by one every time we decode.
-    pGifFile->ImageCount--;
+  if (addToSavedImages) {
+    // giflib wasn't designed to work with decoding arbitrary frames on the fly. By default, it
+    // keeps adding more images to the SavedImages array, and we reset the value after calling
+    // DGifGetImageDesc. Now, as the result of decoding is known to be successful, we can increment
+    // the value to represent correct number of images.
+    pGifFile->ImageCount = imageCount + 1;
   }
 
   return GIF_OK;
