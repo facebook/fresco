@@ -11,6 +11,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.mock;
@@ -102,7 +103,8 @@ public class AnimatedImageFactoryWebPImplTest {
 
     // Expect a call to WebPImage.create
     TrivialPooledByteBuffer byteBuffer = createByteBuffer();
-    when(mWebPImageMock.decode(byteBuffer.getNativePtr(), byteBuffer.size()))
+    when(mWebPImageMock.decode(
+            eq(byteBuffer.getNativePtr()), eq(byteBuffer.size()), any(ImageDecodeOptions.class)))
         .thenReturn(mockWebPImage);
 
     testCreateDefaults(mockWebPImage, byteBuffer);
@@ -114,7 +116,8 @@ public class AnimatedImageFactoryWebPImplTest {
 
     // Expect a call to WebPImage.create
     TrivialBufferPooledByteBuffer byteBuffer = createDirectByteBuffer();
-    when(mWebPImageMock.decode(byteBuffer.getByteBuffer())).thenReturn(mockWebPImage);
+    when(mWebPImageMock.decode(eq(byteBuffer.getByteBuffer()), any(ImageDecodeOptions.class)))
+        .thenReturn(mockWebPImage);
 
     testCreateDefaults(mockWebPImage, byteBuffer);
   }
@@ -126,7 +129,8 @@ public class AnimatedImageFactoryWebPImplTest {
 
     // Expect a call to WebPImage.create
     TrivialPooledByteBuffer byteBuffer = createByteBuffer();
-    when(mWebPImageMock.decode(byteBuffer.getNativePtr(), byteBuffer.size()))
+    when(mWebPImageMock.decode(
+            eq(byteBuffer.getNativePtr()), eq(byteBuffer.size()), any(ImageDecodeOptions.class)))
         .thenReturn(mockWebPImage);
     when(mockWebPImage.getWidth()).thenReturn(50);
     when(mockWebPImage.getHeight()).thenReturn(50);
@@ -141,7 +145,8 @@ public class AnimatedImageFactoryWebPImplTest {
 
     // Expect a call to WebPImage.create
     TrivialBufferPooledByteBuffer byteBuffer = createDirectByteBuffer();
-    when(mWebPImageMock.decode(byteBuffer.getByteBuffer())).thenReturn(mockWebPImage);
+    when(mWebPImageMock.decode(eq(byteBuffer.getByteBuffer()), any(ImageDecodeOptions.class)))
+        .thenReturn(mockWebPImage);
     when(mockWebPImage.getWidth()).thenReturn(50);
     when(mockWebPImage.getHeight()).thenReturn(50);
 
@@ -157,7 +162,8 @@ public class AnimatedImageFactoryWebPImplTest {
 
     // Expect a call to WebPImage.create
     TrivialPooledByteBuffer byteBuffer = createByteBuffer();
-    when(mWebPImageMock.decode(byteBuffer.getNativePtr(), byteBuffer.size()))
+    when(mWebPImageMock.decode(
+            eq(byteBuffer.getNativePtr()), eq(byteBuffer.size()), any(ImageDecodeOptions.class)))
         .thenReturn(mockWebPImage);
     when(mockWebPImage.getWidth()).thenReturn(50);
     when(mockWebPImage.getHeight()).thenReturn(50);
@@ -174,7 +180,8 @@ public class AnimatedImageFactoryWebPImplTest {
 
     // Expect a call to WebPImage.create
     TrivialBufferPooledByteBuffer byteBuffer = createDirectByteBuffer();
-    when(mWebPImageMock.decode(byteBuffer.getByteBuffer())).thenReturn(mockWebPImage);
+    when(mWebPImageMock.decode(eq(byteBuffer.getByteBuffer()), any(ImageDecodeOptions.class)))
+        .thenReturn(mockWebPImage);
     when(mockWebPImage.getWidth()).thenReturn(50);
     when(mockWebPImage.getHeight()).thenReturn(50);
 

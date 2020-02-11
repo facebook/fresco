@@ -11,6 +11,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.mock;
@@ -102,7 +103,8 @@ public class AnimatedImageFactoryGifImplTest {
 
     // Expect a call to GifImage.create
     TrivialPooledByteBuffer byteBuffer = createByteBuffer();
-    when(mGifImageMock.decode(byteBuffer.getNativePtr(), byteBuffer.size()))
+    when(mGifImageMock.decode(
+            eq(byteBuffer.getNativePtr()), eq(byteBuffer.size()), any(ImageDecodeOptions.class)))
         .thenReturn(mockGifImage);
 
     testCreateDefaults(mockGifImage, byteBuffer);
@@ -114,7 +116,8 @@ public class AnimatedImageFactoryGifImplTest {
 
     // Expect a call to GifImage.create
     TrivialBufferPooledByteBuffer byteBuffer = createDirectByteBuffer();
-    when(mGifImageMock.decode(byteBuffer.getByteBuffer())).thenReturn(mockGifImage);
+    when(mGifImageMock.decode(eq(byteBuffer.getByteBuffer()), any(ImageDecodeOptions.class)))
+        .thenReturn(mockGifImage);
 
     testCreateDefaults(mockGifImage, byteBuffer);
   }
@@ -126,7 +129,8 @@ public class AnimatedImageFactoryGifImplTest {
 
     // Expect a call to WebPImage.create
     TrivialPooledByteBuffer byteBuffer = createByteBuffer();
-    when(mGifImageMock.decode(byteBuffer.getNativePtr(), byteBuffer.size()))
+    when(mGifImageMock.decode(
+            eq(byteBuffer.getNativePtr()), eq(byteBuffer.size()), any(ImageDecodeOptions.class)))
         .thenReturn(mockGifImage);
     when(mockGifImage.getWidth()).thenReturn(50);
     when(mockGifImage.getHeight()).thenReturn(50);
@@ -141,7 +145,8 @@ public class AnimatedImageFactoryGifImplTest {
 
     // Expect a call to WebPImage.create
     TrivialBufferPooledByteBuffer byteBuffer = createDirectByteBuffer();
-    when(mGifImageMock.decode(byteBuffer.getByteBuffer())).thenReturn(mockGifImage);
+    when(mGifImageMock.decode(eq(byteBuffer.getByteBuffer()), any(ImageDecodeOptions.class)))
+        .thenReturn(mockGifImage);
     when(mockGifImage.getWidth()).thenReturn(50);
     when(mockGifImage.getHeight()).thenReturn(50);
 
@@ -157,7 +162,8 @@ public class AnimatedImageFactoryGifImplTest {
 
     // Expect a call to GifImage.create
     TrivialPooledByteBuffer byteBuffer = createByteBuffer();
-    when(mGifImageMock.decode(byteBuffer.getNativePtr(), byteBuffer.size()))
+    when(mGifImageMock.decode(
+            eq(byteBuffer.getNativePtr()), eq(byteBuffer.size()), any(ImageDecodeOptions.class)))
         .thenReturn(mockGifImage);
     when(mockGifImage.getWidth()).thenReturn(50);
     when(mockGifImage.getHeight()).thenReturn(50);
@@ -174,7 +180,8 @@ public class AnimatedImageFactoryGifImplTest {
 
     // Expect a call to GifImage.create
     TrivialBufferPooledByteBuffer byteBuffer = createDirectByteBuffer();
-    when(mGifImageMock.decode(byteBuffer.getByteBuffer())).thenReturn(mockGifImage);
+    when(mGifImageMock.decode(eq(byteBuffer.getByteBuffer()), any(ImageDecodeOptions.class)))
+        .thenReturn(mockGifImage);
     when(mockGifImage.getWidth()).thenReturn(50);
     when(mockGifImage.getHeight()).thenReturn(50);
 

@@ -16,6 +16,7 @@ import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.BlendO
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.DisposalMethod;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageDecoder;
+import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import java.nio.ByteBuffer;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -92,12 +93,12 @@ public class WebPImage implements AnimatedImage, AnimatedImageDecoder {
   }
 
   @Override
-  public AnimatedImage decode(long nativePtr, int sizeInBytes) {
+  public AnimatedImage decode(long nativePtr, int sizeInBytes, ImageDecodeOptions options) {
     return WebPImage.create(nativePtr, sizeInBytes);
   }
 
   @Override
-  public AnimatedImage decode(ByteBuffer byteBuffer) {
+  public AnimatedImage decode(ByteBuffer byteBuffer, ImageDecodeOptions options) {
     return WebPImage.create(byteBuffer);
   }
 

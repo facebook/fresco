@@ -82,9 +82,9 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
       final PooledByteBuffer input = bytesRef.get();
       AnimatedImage gifImage;
       if (input.getByteBuffer() != null) {
-        gifImage = sGifAnimatedImageDecoder.decode(input.getByteBuffer());
+        gifImage = sGifAnimatedImageDecoder.decode(input.getByteBuffer(), options);
       } else {
-        gifImage = sGifAnimatedImageDecoder.decode(input.getNativePtr(), input.size());
+        gifImage = sGifAnimatedImageDecoder.decode(input.getNativePtr(), input.size(), options);
       }
       return getCloseableImage(options, gifImage, bitmapConfig);
     } finally {
@@ -114,9 +114,9 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
       final PooledByteBuffer input = bytesRef.get();
       AnimatedImage webPImage;
       if (input.getByteBuffer() != null) {
-        webPImage = sWebpAnimatedImageDecoder.decode(input.getByteBuffer());
+        webPImage = sWebpAnimatedImageDecoder.decode(input.getByteBuffer(), options);
       } else {
-        webPImage = sWebpAnimatedImageDecoder.decode(input.getNativePtr(), input.size());
+        webPImage = sWebpAnimatedImageDecoder.decode(input.getNativePtr(), input.size(), options);
       }
       return getCloseableImage(options, webPImage, bitmapConfig);
     } finally {

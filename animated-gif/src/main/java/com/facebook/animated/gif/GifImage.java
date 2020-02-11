@@ -13,6 +13,7 @@ import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.BlendOperation;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageDecoder;
+import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.soloader.nativeloader.NativeLoader;
 import java.nio.ByteBuffer;
 import javax.annotation.concurrent.ThreadSafe;
@@ -49,14 +50,13 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
    * @param source the data to the image (a copy will be made)
    */
   public static GifImage create(byte[] source) {
-    ensure();
     Preconditions.checkNotNull(source);
 
     ByteBuffer byteBuffer = ByteBuffer.allocateDirect(source.length);
     byteBuffer.put(source);
     byteBuffer.rewind();
 
-    return nativeCreateFromDirectByteBuffer(byteBuffer);
+    return create(byteBuffer, ImageDecodeOptions.defaults());
   }
 
   /**
@@ -66,26 +66,36 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
    * @param byteBuffer the ByteBuffer containing the image (a copy will be made)
    */
   public static GifImage create(ByteBuffer byteBuffer) {
+    return create(byteBuffer, ImageDecodeOptions.defaults());
+  }
+
+  /**
+   * Creates a {@link GifImage} from a ByteBuffer containing the image. This will throw if it fails
+   * to create.
+   *
+   * @param byteBuffer the ByteBuffer containing the image (a copy will be made)
+   */
+  public static GifImage create(ByteBuffer byteBuffer, ImageDecodeOptions options) {
     ensure();
     byteBuffer.rewind();
 
     return nativeCreateFromDirectByteBuffer(byteBuffer);
   }
 
-  public static GifImage create(long nativePtr, int sizeInBytes) {
+  public static GifImage create(long nativePtr, int sizeInBytes, ImageDecodeOptions options) {
     ensure();
     Preconditions.checkArgument(nativePtr != 0);
     return nativeCreateFromNativeMemory(nativePtr, sizeInBytes);
   }
 
   @Override
-  public AnimatedImage decode(long nativePtr, int sizeInBytes) {
-    return GifImage.create(nativePtr, sizeInBytes);
+  public AnimatedImage decode(long nativePtr, int sizeInBytes, ImageDecodeOptions options) {
+    return GifImage.create(nativePtr, sizeInBytes, options);
   }
 
   @Override
-  public AnimatedImage decode(ByteBuffer byteBuffer) {
-    return GifImage.create(byteBuffer);
+  public AnimatedImage decode(ByteBuffer byteBuffer, ImageDecodeOptions options) {
+    return GifImage.create(byteBuffer, options);
   }
 
   @DoNotStrip
