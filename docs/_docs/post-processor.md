@@ -87,6 +87,24 @@ public class CachedWatermarkPostprocessor extends WatermarkPostprocessor {
 }
 ```
 
+### In-place Bitmap transformation
+As an alternative to post-processors, you can use a `BitmapTransformation` instead. Compared to normal post-processors, a `BitmapTransformation` will be applied to the original Bitmap immediately after it is decoded, which also means that the original image will not be cached and no additional Bitmap has to be allocated. In-place Bitmap transformations are the preferred way for images where you never need the original version. An example would be a `BitmapTransformation` for fully circular profile pictures:
+
+```java
+public class CircularBitmapTransformation implements BitmapTransformation {
+
+  @Override
+  public void transform(Bitmap bitmap) {
+    NativeRoundingFilter.toCircle(bitmap);
+  }
+
+  @Override
+  public boolean modifiesTransparency() {
+    return true; // We have transparent pixels
+  }
+}
+```
+
 ### Advanced: JNI and Blurring
 
 One of the most commonly asked for post-processing effects is blurring. Luckily, Fresco ships with a very efficient implementation in native C code  accessible through `NativeBlurFilter#iterativeBoxBlur`.
