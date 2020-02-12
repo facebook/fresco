@@ -17,7 +17,6 @@
   - id: caching
   - id: closeable-references
   - id: configure-image-pipeline
-  - id: customizing-image-formats
   - id: datasources-datasubscribers
   - id: image-requests
   - id: images-in-notifications
@@ -35,6 +34,7 @@
   - id: progressive-jpegs
   - id: animations
   - id: webp-support
+  - id: customizing-image-formats
 - title: Troubleshooting & FAQ
   items:
   - id: faq
