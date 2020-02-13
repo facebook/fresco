@@ -11,6 +11,7 @@ import static com.facebook.imagepipeline.common.Priority.HIGH;
 import static com.facebook.imagepipeline.common.Priority.LOW;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -19,10 +20,12 @@ import static org.mockito.Mockito.when;
 
 import com.facebook.common.logging.FLog;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.producers.PriorityNetworkFetcher.Entry;
+import com.facebook.imagepipeline.producers.PriorityNetworkFetcher.PriorityFetchState;
 import com.facebook.imagepipeline.request.ImageRequest;
-import com.google.common.base.Objects;
+import com.facebook.imagepipeline.testing.FakeClock;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -61,27 +64,26 @@ public class PriorityNetworkFetcherTest {
 
     // Enqueue hi-pri image; since there are less than 4 concurrent downloads, it's dequeued
     // immediately.
-    FetchState one = fetch(fetcher, "1", callback, true);
+    PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, true);
     assertThat(fetcher.getHiPriQueue()).isEmpty();
     assertThat(fetcher.getLowPriQueue()).isEmpty();
     assertThat(fetcher.getCurrentlyFetching()).containsExactly(one);
-    verify(delegate).fetch(eq(one), any(NetworkFetcher.Callback.class));
+    verify(delegate).fetch(eq(one.delegatedState), any(NetworkFetcher.Callback.class));
 
     // Enqueue another hi-pri image
-    FetchState two = fetch(fetcher, "2", callback, true);
+    PriorityFetchState<FetchState> two = fetch(fetcher, "2", callback, true);
     assertThat(fetcher.getHiPriQueue()).isEmpty();
     assertThat(fetcher.getLowPriQueue()).isEmpty();
     assertThat(fetcher.getCurrentlyFetching()).containsExactly(one, two);
-    verify(delegate).fetch(eq(two), any(NetworkFetcher.Callback.class));
+    verify(delegate).fetch(eq(two.delegatedState), any(NetworkFetcher.Callback.class));
 
     // Enqueue an low-pri image. Since there are already 2 outstanding requests, this one
     // will not be dequeued.
-    FetchState three = fetch(fetcher, "3", callback, false);
+    PriorityFetchState<FetchState> three = fetch(fetcher, "3", callback, false);
     assertThat(fetcher.getHiPriQueue()).isEmpty();
-    assertThat(toTestEntry(fetcher.getLowPriQueue()))
-        .containsExactly(new TestEntry(three, callback));
+    assertThat(toTestEntry(fetcher.getLowPriQueue())).containsExactlyElementsIn(toTestEntry(three));
     assertThat(fetcher.getCurrentlyFetching()).containsExactly(one, two);
-    verify(delegate, never()).fetch(eq(three), any(NetworkFetcher.Callback.class));
+    verify(delegate, never()).fetch(eq(three.delegatedState), any(NetworkFetcher.Callback.class));
 
     // Now, 'one' completes downloading. We expect it to be removed entirely, and 'three' to be sent
     // to the fetcher.
@@ -89,7 +91,7 @@ public class PriorityNetworkFetcherTest {
     assertThat(fetcher.getHiPriQueue()).isEmpty();
     assertThat(fetcher.getLowPriQueue()).isEmpty();
     assertThat(fetcher.getCurrentlyFetching()).containsExactly(two, three);
-    verify(delegate).fetch(eq(three), any(NetworkFetcher.Callback.class));
+    verify(delegate).fetch(eq(three.delegatedState), any(NetworkFetcher.Callback.class));
 
     // Now, 'two' and 'three' complete; we expect the queue to become empty.
     fetcher.onFetchCompletion(two, 4317);
@@ -108,25 +110,22 @@ public class PriorityNetworkFetcherTest {
     PriorityNetworkFetcher<FetchState> fetcher = new PriorityNetworkFetcher<>(delegate, true, 2, 1);
 
     // Fill the currently-fetching set, so additional requests are not sent to network.
-    FetchState dontcare1 = fetch(fetcher, "dontcare1", callback, true);
+    PriorityFetchState<FetchState> dontcare1 = fetch(fetcher, "dontcare1", callback, true);
     fetch(fetcher, "dontcare2", callback, true);
 
-    FetchState one = fetch(fetcher, "1", callback, true);
-    FetchState two = fetch(fetcher, "2", callback, true);
-    FetchState three = fetch(fetcher, "3", callback, true);
+    PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, true);
+    PriorityFetchState<FetchState> two = fetch(fetcher, "2", callback, true);
+    PriorityFetchState<FetchState> three = fetch(fetcher, "3", callback, true);
 
     // Assert that the insertion order is LIFO for hi-pri, FIFO for low-pri.
     assertThat(toTestEntry(fetcher.getHiPriQueue()))
-        .containsExactly(
-            new TestEntry(one, callback),
-            new TestEntry(two, callback),
-            new TestEntry(three, callback))
+        .containsExactlyElementsIn(toTestEntry(one, two, three))
         .inOrder();
     assertThat(fetcher.getLowPriQueue()).isEmpty();
 
     // Now, 'dontcare1' completes downloading. We expect 'one' to be sent to the fetcher.
     fetcher.onFetchCompletion(dontcare1, 4317);
-    verify(delegate).fetch(eq(one), any(NetworkFetcher.Callback.class));
+    verify(delegate).fetch(eq(one.delegatedState), any(NetworkFetcher.Callback.class));
   }
 
   /**
@@ -139,25 +138,22 @@ public class PriorityNetworkFetcherTest {
         new PriorityNetworkFetcher<>(delegate, false, 2, 1);
 
     // Fill the currently-fetching set, so additional requests are not sent to network.
-    FetchState dontcare1 = fetch(fetcher, "dontcare1", callback, true);
+    PriorityFetchState<FetchState> dontcare1 = fetch(fetcher, "dontcare1", callback, true);
     fetch(fetcher, "dontcare2", callback, true);
 
-    FetchState one = fetch(fetcher, "1", callback, true);
-    FetchState two = fetch(fetcher, "2", callback, true);
-    FetchState three = fetch(fetcher, "3", callback, true);
+    PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, true);
+    PriorityFetchState<FetchState> two = fetch(fetcher, "2", callback, true);
+    PriorityFetchState<FetchState> three = fetch(fetcher, "3", callback, true);
 
     // Assert that the insertion order is LIFO for hi-pri, FIFO for low-pri.
     assertThat(toTestEntry(fetcher.getHiPriQueue()))
-        .containsExactly(
-            new TestEntry(three, callback),
-            new TestEntry(two, callback),
-            new TestEntry(one, callback))
+        .containsExactlyElementsIn(toTestEntry(three, two, one))
         .inOrder();
     assertThat(fetcher.getLowPriQueue()).isEmpty();
 
     // Now, 'dontcare1' completes downloading. We expect 'three' to be sent to the fetcher.
     fetcher.onFetchCompletion(dontcare1, 4317);
-    verify(delegate).fetch(eq(three), any(NetworkFetcher.Callback.class));
+    verify(delegate).fetch(eq(three.delegatedState), any(NetworkFetcher.Callback.class));
   }
 
   /** Assert that low-pri requests are FIFO. */
@@ -167,20 +163,17 @@ public class PriorityNetworkFetcherTest {
     PriorityNetworkFetcher<FetchState> fetcher = new PriorityNetworkFetcher<>(delegate, true, 2, 1);
 
     // Fill the currently-fetching set, so additional requests are not sent to network.
-    FetchState dontcare1 = fetch(fetcher, "dontcare1", callback, true);
-    FetchState dontcare2 = fetch(fetcher, "dontcare2", callback, true);
+    PriorityFetchState<FetchState> dontcare1 = fetch(fetcher, "dontcare1", callback, true);
+    PriorityFetchState<FetchState> dontcare2 = fetch(fetcher, "dontcare2", callback, true);
 
-    FetchState one = fetch(fetcher, "1", callback, false);
-    FetchState two = fetch(fetcher, "2", callback, false);
-    FetchState three = fetch(fetcher, "3", callback, false);
+    PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, false);
+    PriorityFetchState<FetchState> two = fetch(fetcher, "2", callback, false);
+    PriorityFetchState<FetchState> three = fetch(fetcher, "3", callback, false);
 
     // Assert that the insertion order is LIFO for hi-pri, FIFO for low-pri.
 
     assertThat(toTestEntry(fetcher.getLowPriQueue()))
-        .containsExactly(
-            new TestEntry(one, callback),
-            new TestEntry(two, callback),
-            new TestEntry(three, callback))
+        .containsExactlyElementsIn(toTestEntry(one, two, three))
         .inOrder();
     assertThat(fetcher.getHiPriQueue()).isEmpty();
 
@@ -188,7 +181,7 @@ public class PriorityNetworkFetcherTest {
     // We expect 'one' to be sent to the fetcher.
     fetcher.onFetchCompletion(dontcare1, 4317);
     fetcher.onFetchCompletion(dontcare2, 4317);
-    verify(delegate).fetch(eq(one), any(NetworkFetcher.Callback.class));
+    verify(delegate).fetch(eq(one.delegatedState), any(NetworkFetcher.Callback.class));
   }
 
   /**
@@ -214,26 +207,23 @@ public class PriorityNetworkFetcherTest {
     fetch(fetcher, "dontcare2", callback, true);
 
     // Add 3 requests; they all should remain in the fetcher
-    FetchState one = fetch(fetcher, "1", callback, true);
-    FetchState two = fetch(fetcher, "2", callback, true);
-    FetchState three = fetch(fetcher, "3", callback, true);
+    PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, true);
+    PriorityFetchState<FetchState> two = fetch(fetcher, "2", callback, true);
+    PriorityFetchState<FetchState> three = fetch(fetcher, "3", callback, true);
 
     // Change priority of 'two' to low-pri; expect to find it at the end of the low-pri queue.
     ((SettableProducerContext) two.getContext()).setPriority(LOW);
     assertThat(toTestEntry(fetcher.getHiPriQueue()))
-        .containsExactly(new TestEntry(three, callback), new TestEntry(one, callback))
+        .containsExactlyElementsIn(toTestEntry(three, one))
         .inOrder();
     assertThat(toTestEntry(fetcher.getLowPriQueue()))
-        .containsExactly(new TestEntry(two, callback))
+        .containsExactlyElementsIn(toTestEntry(two))
         .inOrder();
 
     // Change priority of 'two' to hi-pri; expect to find it at the beginning of the hi-pri queue.
     ((SettableProducerContext) two.getContext()).setPriority(HIGH);
     assertThat(toTestEntry(fetcher.getHiPriQueue()))
-        .containsExactly(
-            new TestEntry(two, callback),
-            new TestEntry(three, callback),
-            new TestEntry(one, callback))
+        .containsExactlyElementsIn(toTestEntry(two, three, one))
         .inOrder();
     assertThat(toTestEntry(fetcher.getLowPriQueue())).isEmpty();
 
@@ -241,10 +231,7 @@ public class PriorityNetworkFetcherTest {
     // queue.
     ((SettableProducerContext) three.getContext()).setPriority(HIGH);
     assertThat(toTestEntry(fetcher.getHiPriQueue()))
-        .containsExactly(
-            new TestEntry(two, callback),
-            new TestEntry(three, callback),
-            new TestEntry(one, callback))
+        .containsExactlyElementsIn(toTestEntry(two, three, one))
         .inOrder();
     assertThat(toTestEntry(fetcher.getLowPriQueue())).isEmpty();
   }
@@ -263,12 +250,69 @@ public class PriorityNetworkFetcherTest {
     // Hi-pri is LIFO, Max hi-pri: 2, max low-pri: 1
     PriorityNetworkFetcher<FetchState> fetcher =
         new PriorityNetworkFetcher<>(delegate, false, 2, 1);
-    FetchState one = fetch(fetcher, "1", callback, true);
+    PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, true);
     ((SettableProducerContext) one.getContext()).cancel();
     verify(callback).onCancellation();
   }
 
-  private FetchState fetch(
+  /** Make sure we tolerate when delegate.getExtraMap() returns 'null'. */
+  @Test
+  public void getExtraMapToleratesDelegateNullMap() {
+    PriorityNetworkFetcher<FetchState> fetcher =
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1);
+
+    PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, true);
+
+    // Explicitly return a null.
+    when(delegate.getExtraMap(eq(one.delegatedState), anyInt())).thenReturn(null);
+
+    fetcher.getExtraMap(one, 123);
+    // Implicitly assert we don't crash.
+  }
+
+  /**
+   * Scenario: the delegate fetcher returns a map in getExtraMap(), assert that we return it from
+   * PriorityNetworkFetcher's getExtraMap().
+   */
+  @Test
+  public void getExtraMapIsDelegated() {
+    PriorityNetworkFetcher<FetchState> fetcher =
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1);
+
+    PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, true);
+
+    when(delegate.getExtraMap(eq(one.delegatedState), anyInt()))
+        .thenReturn(Collections.singletonMap("foo", "bar"));
+
+    assertThat(fetcher.getExtraMap(one, 123)).containsEntry("foo", "bar");
+  }
+
+  @Test
+  public void queueTimeIsReturnedInExtraMap() {
+    FakeClock clock = new FakeClock();
+
+    PriorityNetworkFetcher<FetchState> fetcher =
+        new PriorityNetworkFetcher<>(delegate, false, 1, 0, clock);
+
+    // The queue is empty, so enqueuing a request immediately executes it. Therefore, the queue time
+    // is 0.
+    PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, true);
+    assertThat(fetcher.getExtraMap(one, 123)).containsEntry("pri_queue_time", "0");
+
+    // Enqueueing another fetch. The queue is now full (it allows at most 1 hi-pri concurrent
+    // requests), so the request waits.
+    PriorityFetchState<FetchState> two = fetch(fetcher, "1", callback, true);
+
+    // 'one' completes, which causes 'two' to be dequeued 43ms after it was enqueued.
+    clock.incrementBy(43);
+    fetcher.onFetchCompletion(one, 123);
+
+    // Complete 'two' and request its extras map.
+    fetcher.onFetchCompletion(two, 123);
+    assertThat(fetcher.getExtraMap(two, 123)).containsEntry("pri_queue_time", "43");
+  }
+
+  private PriorityFetchState<FetchState> fetch(
       PriorityNetworkFetcher<FetchState> fetcher,
       String uri,
       NetworkFetcher.Callback callback,
@@ -285,45 +329,59 @@ public class PriorityNetworkFetcherTest {
             false,
             isHiPri ? HIGH : LOW,
             null);
-    FetchState fetchState = new FetchState(consumer, context);
-    when(delegate.createFetchState(eq(consumer), eq(context))).thenReturn(fetchState);
-    fetcher.fetch(fetcher.createFetchState(consumer, context), callback);
+    FetchState delegateFetchState = new FetchState(consumer, context);
+    when(delegate.createFetchState(eq(consumer), eq(context))).thenReturn(delegateFetchState);
+    PriorityFetchState<FetchState> fetchState = fetcher.createFetchState(consumer, context);
+    fetcher.fetch(fetchState, callback);
     return fetchState;
   }
 
-  private static List<TestEntry> toTestEntry(List<Entry<FetchState>> entries) {
-    ArrayList<TestEntry> result = new ArrayList<>();
-    for (Entry<FetchState> entry : entries) {
-      result.add(new TestEntry(entry.fetchState, entry.callback));
+  @SafeVarargs
+  private static List<TestFetchState> toTestEntry(PriorityFetchState<FetchState>... fetchStates) {
+    return toTestEntry(Arrays.asList(fetchStates));
+  }
+
+  private static List<TestFetchState> toTestEntry(
+      List<PriorityFetchState<FetchState>> fetchStates) {
+    ArrayList<TestFetchState> result = new ArrayList<>();
+    for (PriorityFetchState<FetchState> fetchState : fetchStates) {
+      result.add(new TestFetchState(fetchState));
     }
     return result;
   }
 
   /**
-   * TestEntry is wrapped around Entry<> to provide it with equals() and toString(), so it's easier
-   * to write tests and make assertions.
+   * TestFetchState is wrapped around PriorityFetchState<> to provide it with equals() and
+   * toString(), so it's easier to write tests and make assertions.
    */
-  private static class TestEntry extends PriorityNetworkFetcher.Entry<FetchState> {
-    TestEntry(FetchState fetchState, NetworkFetcher.Callback callback) {
-      super(fetchState, callback);
+  private static class TestFetchState {
+
+    private final PriorityFetchState<FetchState> fetchState;
+
+    public TestFetchState(PriorityFetchState<FetchState> fetchState) {
+      this.fetchState = fetchState;
     }
 
     @Override
     public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
-      Entry<?> entry = (Entry<?>) o;
-      return fetchState.equals(entry.fetchState) && callback.equals(entry.callback);
+      return fetchState.equals(((TestFetchState) o).fetchState);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(fetchState, callback);
+      return fetchState.hashCode();
     }
 
     @Override
     public String toString() {
-      return String.format("TestEntry{fetchState=%s, callback=%s}", fetchState, callback);
+      return String.format(
+          "[%s %s %s %s]",
+          fetchState.delegatedState,
+          fetchState.callback,
+          fetchState.enqueuedTimestamp,
+          fetchState.dequeuedTimestamp);
     }
   }
 }
