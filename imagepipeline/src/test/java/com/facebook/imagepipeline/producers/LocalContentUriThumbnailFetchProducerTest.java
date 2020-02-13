@@ -12,6 +12,7 @@ import static org.mockito.Mockito.*;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import com.facebook.common.memory.PooledByteBuffer;
@@ -33,6 +34,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.*;
 
@@ -98,7 +100,10 @@ public class LocalContentUriThumbnailFetchProducerTest {
             MediaStore.Images.Thumbnails.queryMiniThumbnail(
                 any(ContentResolver.class), anyLong(), anyInt(), any(String[].class)))
         .thenReturn(mCursor);
-
+    Whitebox.setInternalState(
+        MediaStore.Images.Media.class,
+        "EXTERNAL_CONTENT_URI",
+        Uri.parse("content://media/external/images/media"));
     final int dataColumnIndex = 5;
     when(mCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA)).thenReturn(dataColumnIndex);
     when(mCursor.getString(dataColumnIndex)).thenReturn(THUMBNAIL_FILE_NAME);
@@ -113,6 +118,10 @@ public class LocalContentUriThumbnailFetchProducerTest {
     PowerMockito.whenNew(FileInputStream.class)
         .withArguments(THUMBNAIL_FILE_NAME)
         .thenReturn(mock(FileInputStream.class));
+
+    PowerMockito.whenNew(ExifInterface.class)
+        .withArguments(THUMBNAIL_FILE_NAME)
+        .thenReturn(mock(ExifInterface.class));
 
     EncodedImage encodedImage = mock(EncodedImage.class);
     when(encodedImage.getSize()).thenReturn((int) THUMBNAIL_FILE_SIZE);
