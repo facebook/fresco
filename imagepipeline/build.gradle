@@ -49,9 +49,10 @@ apply from: rootProject.file('release.gradle')
 android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
+    testOptions.unitTests.includeAndroidResources = true
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
+        minSdkVersion 14
         targetSdkVersion rootProject.ext.targetSdkVersion
     }
     sourceSets {
