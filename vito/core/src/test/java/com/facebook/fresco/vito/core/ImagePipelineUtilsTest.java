@@ -12,9 +12,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import android.net.Uri;
-import com.facebook.callercontext.CallerContextVerifier;
-import com.facebook.fresco.vito.core.debug.NoOpDebugOverlayFactory;
-import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.RoundingOptions;
 import com.facebook.fresco.vito.transformation.CircularBitmapTransformation;
@@ -23,14 +20,13 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.testing.TestNativeLoader;
-import java.util.concurrent.Executor;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
-public class FrescoContextTest {
+public class ImagePipelineUtilsTest {
 
   static {
     TestNativeLoader.init();
@@ -38,46 +34,27 @@ public class FrescoContextTest {
 
   private static final Uri URI = Uri.parse("test");
 
-  private Hierarcher mHierarcher;
-  private CallerContextVerifier mCallerContextVerifier;
   private FrescoExperiments mFrescoExperiments;
-  private ImageListener mImageListener;
-  private Executor mUiThreadExecutor;
-  private Executor mBackgroundThreadExecutor;
 
-  private FrescoContext mFrescoContext;
+  private ImagePipelineUtils mImagePipelineUtils;
 
   @Before
   public void setup() {
-    mHierarcher = mock(Hierarcher.class);
-    mCallerContextVerifier = mock(CallerContextVerifier.class);
     mFrescoExperiments = mock(FrescoExperiments.class);
-    mImageListener = mock(ImageListener.class);
-    mUiThreadExecutor = mock(Executor.class);
-    mBackgroundThreadExecutor = mock(Executor.class);
 
-    mFrescoContext =
-        new FrescoContext(
-            mHierarcher,
-            mCallerContextVerifier,
-            mFrescoExperiments,
-            mUiThreadExecutor,
-            mBackgroundThreadExecutor,
-            mImageListener,
-            null,
-            new NoOpDebugOverlayFactory());
+    mImagePipelineUtils = new ImagePipelineUtils(mFrescoExperiments);
   }
 
   @Test
   public void testBuildImageRequest_whenUriNull_thenReturnNull() {
-    ImageRequest imageRequest = mFrescoContext.buildImageRequest(null, ImageOptions.defaults());
+    ImageRequest imageRequest = mImagePipelineUtils.buildImageRequest(null, ImageOptions.defaults());
 
     assertThat(imageRequest).isNull();
   }
 
   @Test
   public void testBuildImageRequest_whenUriNotNull_thenReturnRequest() {
-    ImageRequest imageRequest = mFrescoContext.buildImageRequest(URI, ImageOptions.defaults());
+    ImageRequest imageRequest = mImagePipelineUtils.buildImageRequest(URI, ImageOptions.defaults());
 
     assertThat(imageRequest).isNotNull();
     assertThat(imageRequest.getSourceUri()).isEqualTo(URI);
@@ -87,7 +64,7 @@ public class FrescoContextTest {
   public void testBuildImageRequest_whenNoRoundingOptions_thenDoNotRound() {
     final ImageOptions imageOptions = ImageOptions.create().build();
 
-    ImageRequest imageRequest = mFrescoContext.buildImageRequest(URI, imageOptions);
+    ImageRequest imageRequest = mImagePipelineUtils.buildImageRequest(URI, imageOptions);
 
     assertThat(imageRequest).isNotNull();
     assertThat(imageRequest.getSourceUri()).isEqualTo(URI);
@@ -101,7 +78,7 @@ public class FrescoContextTest {
     final ImageOptions imageOptions =
         ImageOptions.create().round(RoundingOptions.asCircle()).build();
 
-    ImageRequest imageRequest = mFrescoContext.buildImageRequest(URI, imageOptions);
+    ImageRequest imageRequest = mImagePipelineUtils.buildImageRequest(URI, imageOptions);
 
     assertThat(imageRequest).isNotNull();
     assertThat(imageRequest.getSourceUri()).isEqualTo(URI);
@@ -124,7 +101,7 @@ public class FrescoContextTest {
     final ImageOptions imageOptions =
         ImageOptions.create().round(RoundingOptions.asCircle(true)).build();
 
-    ImageRequest imageRequest = mFrescoContext.buildImageRequest(URI, imageOptions);
+    ImageRequest imageRequest = mImagePipelineUtils.buildImageRequest(URI, imageOptions);
 
     assertThat(imageRequest).isNotNull();
     assertThat(imageRequest.getSourceUri()).isEqualTo(URI);
@@ -144,7 +121,7 @@ public class FrescoContextTest {
     ResizeOptions resizeOptions = ResizeOptions.forDimensions(123, 234);
     final ImageOptions imageOptions = ImageOptions.create().resize(resizeOptions).build();
 
-    ImageRequest imageRequest = mFrescoContext.buildImageRequest(URI, imageOptions);
+    ImageRequest imageRequest = mImagePipelineUtils.buildImageRequest(URI, imageOptions);
 
     assertThat(imageRequest).isNotNull();
     assertThat(imageRequest.getSourceUri()).isEqualTo(URI);
@@ -156,7 +133,7 @@ public class FrescoContextTest {
     RotationOptions rotationOptions = RotationOptions.forceRotation(RotationOptions.ROTATE_270);
     final ImageOptions imageOptions = ImageOptions.create().rotate(rotationOptions).build();
 
-    ImageRequest imageRequest = mFrescoContext.buildImageRequest(URI, imageOptions);
+    ImageRequest imageRequest = mImagePipelineUtils.buildImageRequest(URI, imageOptions);
 
     assertThat(imageRequest).isNotNull();
     assertThat(imageRequest.getSourceUri()).isEqualTo(URI);

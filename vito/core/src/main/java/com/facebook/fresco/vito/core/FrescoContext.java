@@ -7,24 +7,11 @@
 
 package com.facebook.fresco.vito.core;
 
-import android.net.Uri;
 import com.facebook.callercontext.CallerContextVerifier;
-import com.facebook.common.internal.VisibleForTesting;
-import com.facebook.common.logging.FLog;
 import com.facebook.fresco.vito.core.debug.DebugOverlayFactory;
 import com.facebook.fresco.vito.listener.ImageListener;
-import com.facebook.fresco.vito.options.DecodedImageOptions;
-import com.facebook.fresco.vito.options.EncodedImageOptions;
-import com.facebook.fresco.vito.options.RoundingOptions;
-import com.facebook.fresco.vito.transformation.CircularBitmapTransformation;
-import com.facebook.imagepipeline.common.ImageDecodeOptions;
-import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
-import com.facebook.imagepipeline.core.NativeCodeSetup;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.infer.annotation.ThreadSafe;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicLong;
@@ -32,7 +19,6 @@ import javax.annotation.Nullable;
 
 @ThreadSafe
 public class FrescoContext {
-  private static final String TAG = "FrescoContext";
   private static final AtomicLong sIdCounter = new AtomicLong();
 
   private final @Nullable CallerContextVerifier mCallerContextVerifier;
@@ -42,13 +28,12 @@ public class FrescoContext {
   private final Hierarcher mHierarcher;
   private final Executor mUiThreadExecutor;
   private final Executor mLightweightBackgroundThreadExecutor;
+  private final ImagePipelineUtils mImagePipelineUtils;
 
   private FrescoController mController;
   private FrescoVitoPrefetcher mPrefetcher;
 
   private @Nullable ImagePipelineFactory mImagePipelineFactory;
-  private @Nullable ImageDecodeOptions mCircularImageDecodeOptions;
-  private @Nullable ImageDecodeOptions mCircularImageDecodeOptionsAntiAliased;
 
   public FrescoContext(
       FrescoController controller,
@@ -67,6 +52,7 @@ public class FrescoContext {
     mGlobalImageListener = globalImageListener;
     mLightweightBackgroundThreadExecutor = lightweightBackgroundThreadExecutor;
     mGlobalImageStateListener = globalImageStateListener;
+    mImagePipelineUtils = new ImagePipelineUtils(mExperiments);
   }
 
   public FrescoContext(
@@ -86,6 +72,7 @@ public class FrescoContext {
     mGlobalImageListener = globalImageListener;
     mGlobalImageStateListener = globalImageStateListener;
     mLightweightBackgroundThreadExecutor = lightweightBackgroundThreadExecutor;
+    mImagePipelineUtils = new ImagePipelineUtils(mExperiments);
   }
 
   public ImagePipelineFactory getImagePipelineFactory() {
@@ -131,124 +118,13 @@ public class FrescoContext {
     return mPrefetcher;
   }
 
-  @Nullable
-  public ImageRequest buildImageRequest(@Nullable Uri uri, DecodedImageOptions imageOptions) {
-    ImageRequestBuilder builder = createDecodedImageRequestBuilder(uri, imageOptions);
-    return builder != null ? builder.build() : null;
-  }
-
-  @Nullable
-  public ImageRequest buildEncodedImageRequest(
-      @Nullable Uri uri, EncodedImageOptions imageOptions) {
-    ImageRequestBuilder builder = createEncodedImageRequestBuilder(uri, imageOptions);
-    return builder != null ? builder.build() : null;
+  public ImagePipelineUtils getImagePipelineUtils() {
+    return mImagePipelineUtils;
   }
 
   public void verifyCallerContext(@Nullable Object callerContext) {
     if (mCallerContextVerifier != null) {
       mCallerContextVerifier.verifyCallerContext(callerContext, false);
-    }
-  }
-
-  @Nullable
-  protected ImageRequestBuilder createDecodedImageRequestBuilder(
-      @Nullable Uri uri, DecodedImageOptions imageOptions) {
-    if (uri == null) {
-      return null;
-    }
-    final ImageRequestBuilder imageRequestBuilder =
-        createEncodedImageRequestBuilder(uri, imageOptions);
-    if (imageRequestBuilder == null) {
-      return null;
-    }
-
-    if (mExperiments.useNativeRounding() && NativeCodeSetup.getUseNativeCode()) {
-      setupNativeRounding(imageRequestBuilder, imageOptions.getRoundingOptions());
-    }
-
-    ResizeOptions resizeOptions = imageOptions.getResizeOptions();
-    if (resizeOptions != null) {
-      imageRequestBuilder.setResizeOptions(resizeOptions);
-    }
-
-    RotationOptions rotationOptions = imageOptions.getRotationOptions();
-    if (rotationOptions != null) {
-      imageRequestBuilder.setRotationOptions(rotationOptions);
-    }
-
-    if (imageOptions.getBitmapConfig() != null) {
-      if (imageOptions.getRoundingOptions() != null || imageOptions.getPostprocessor() != null) {
-        FLog.wtf(TAG, "Trying to use bitmap config incompatible with rounding.");
-      } else {
-        imageRequestBuilder.setImageDecodeOptions(
-            ImageDecodeOptions.newBuilder()
-                .setBitmapConfig(imageOptions.getBitmapConfig())
-                .setCustomImageDecoder(
-                    imageOptions.getImageDecodeOptions() != null
-                        ? imageOptions.getImageDecodeOptions().customImageDecoder
-                        : null)
-                .build());
-      }
-    } else if (imageOptions.getImageDecodeOptions() != null
-        && imageOptions.getImageDecodeOptions().customImageDecoder != null) {
-      imageRequestBuilder.setImageDecodeOptions(
-          ImageDecodeOptions.newBuilder()
-              .setCustomImageDecoder(imageOptions.getImageDecodeOptions().customImageDecoder)
-              .build());
-    }
-
-    imageRequestBuilder.setLocalThumbnailPreviewsEnabled(
-        imageOptions.areLocalThumbnailPreviewsEnabled());
-
-    imageRequestBuilder.setShouldDecodePrefetches(getExperiments().prefetchToBitmapCache());
-
-    imageRequestBuilder.setPostprocessor(imageOptions.getPostprocessor());
-
-    return imageRequestBuilder;
-  }
-
-  @Nullable
-  protected ImageRequestBuilder createEncodedImageRequestBuilder(
-      @Nullable Uri uri, EncodedImageOptions imageOptions) {
-    if (uri == null) {
-      return null;
-    }
-    return ImageRequestBuilder.newBuilderWithSource(uri)
-        .setRequestPriority(imageOptions.getPriority());
-  }
-
-  @VisibleForTesting
-  protected void setupNativeRounding(
-      final ImageRequestBuilder imageRequestBuilder, @Nullable RoundingOptions roundingOptions) {
-    if (roundingOptions == null) {
-      return;
-    }
-    if (roundingOptions.isCircular()) {
-      imageRequestBuilder.setImageDecodeOptions(
-          getCircularImageDecodeOptions(roundingOptions.isAntiAliased()));
-    }
-  }
-
-  private synchronized ImageDecodeOptions getCircularImageDecodeOptions(boolean antiAliased) {
-    final boolean useFastNativeRounding = mExperiments.useFastNativeRounding();
-    if (antiAliased) {
-      if (mCircularImageDecodeOptionsAntiAliased == null) {
-        mCircularImageDecodeOptionsAntiAliased =
-            ImageDecodeOptions.newBuilder()
-                .setBitmapTransformation(
-                    new CircularBitmapTransformation(true, useFastNativeRounding))
-                .build();
-      }
-      return mCircularImageDecodeOptionsAntiAliased;
-    } else {
-      if (mCircularImageDecodeOptions == null) {
-        mCircularImageDecodeOptions =
-            ImageDecodeOptions.newBuilder()
-                .setBitmapTransformation(
-                    new CircularBitmapTransformation(false, useFastNativeRounding))
-                .build();
-      }
-      return mCircularImageDecodeOptions;
     }
   }
 

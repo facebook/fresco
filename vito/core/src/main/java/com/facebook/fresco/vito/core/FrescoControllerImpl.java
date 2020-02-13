@@ -104,7 +104,8 @@ public class FrescoControllerImpl implements FrescoController {
     try {
       final FrescoExperiments frescoExperiments = mFrescoContext.getExperiments();
 
-      final ImageRequest imageRequest = mFrescoContext.buildImageRequest(uri, imageOptions); // TODO
+      final ImageRequest imageRequest =
+          mFrescoContext.getImagePipelineUtils().buildImageRequest(uri, imageOptions);
       final CacheKey cacheKey =
           mFrescoContext.getImagePipeline().getCacheKey(imageRequest, callerContext);
       CloseableReference<CloseableImage> cachedImage = null;

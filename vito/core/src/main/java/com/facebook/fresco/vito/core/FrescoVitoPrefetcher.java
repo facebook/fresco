@@ -72,8 +72,9 @@ public class FrescoVitoPrefetcher {
       final @Nullable Object callerContext) {
     mFrescoContext.verifyCallerContext(callerContext);
     ImageRequest imageRequest =
-        mFrescoContext.buildImageRequest(
-            uri, imageOptions != null ? imageOptions : ImageOptions.defaults());
+        mFrescoContext
+            .getImagePipelineUtils()
+            .buildImageRequest(uri, imageOptions != null ? imageOptions : ImageOptions.defaults());
     return mFrescoContext.getImagePipeline().prefetchToBitmapCache(imageRequest, callerContext);
   }
 
@@ -95,8 +96,10 @@ public class FrescoVitoPrefetcher {
       final @Nullable Object callerContext) {
     mFrescoContext.verifyCallerContext(callerContext);
     ImageRequest imageRequest =
-        mFrescoContext.buildEncodedImageRequest(
-            uri, imageOptions != null ? imageOptions : ImageOptions.defaults());
+        mFrescoContext
+            .getImagePipelineUtils()
+            .buildEncodedImageRequest(
+                uri, imageOptions != null ? imageOptions : ImageOptions.defaults());
     return mFrescoContext.getImagePipeline().prefetchToEncodedCache(imageRequest, callerContext);
   }
 
@@ -118,8 +121,10 @@ public class FrescoVitoPrefetcher {
       final @Nullable Object callerContext) {
     mFrescoContext.verifyCallerContext(callerContext);
     ImageRequest imageRequest =
-        mFrescoContext.buildEncodedImageRequest(
-            uri, imageOptions != null ? imageOptions : ImageOptions.defaults());
+        mFrescoContext
+            .getImagePipelineUtils()
+            .buildEncodedImageRequest(
+                uri, imageOptions != null ? imageOptions : ImageOptions.defaults());
     return mFrescoContext.getImagePipeline().prefetchToDiskCache(imageRequest, callerContext);
   }
 }
