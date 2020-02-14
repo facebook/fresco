@@ -256,6 +256,13 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
   static class PriorityFetchState<FETCH_STATE extends FetchState> extends FetchState {
     final FETCH_STATE delegatedState;
     final long enqueuedTimestamp;
+
+    /** Size of hi-pri queue when this request was added. */
+    final int hiPriCountWhenCreated;
+
+    /** Size of low-pri queue when this request was added. */
+    final int lowPriCountWhenCreated;
+
     NetworkFetcher.Callback callback;
     long dequeuedTimestamp;
 
@@ -263,10 +270,14 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
         Consumer<EncodedImage> consumer,
         ProducerContext producerContext,
         FETCH_STATE delegatedState,
-        long enqueuedTimestamp) {
+        long enqueuedTimestamp,
+        int hiPriCountWhenCreated,
+        int lowPriCountWhenCreated) {
       super(consumer, producerContext);
       this.delegatedState = delegatedState;
       this.enqueuedTimestamp = enqueuedTimestamp;
+      this.hiPriCountWhenCreated = hiPriCountWhenCreated;
+      this.lowPriCountWhenCreated = lowPriCountWhenCreated;
     }
   }
 
@@ -277,7 +288,9 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
         consumer,
         producerContext,
         mDelegate.createFetchState(consumer, producerContext),
-        mClock.now());
+        mClock.now(),
+        mHiPriQueue.size(),
+        mLowPriQueue.size());
   }
 
   @Override
@@ -295,6 +308,8 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
         delegateExtras != null ? new HashMap<>(delegateExtras) : new HashMap<String, String>();
     extras.put(
         "pri_queue_time", "" + (fetchState.dequeuedTimestamp - fetchState.enqueuedTimestamp));
+    extras.put("hipri_queue_size", "" + fetchState.hiPriCountWhenCreated);
+    extras.put("lowpri_queue_size", "" + fetchState.lowPriCountWhenCreated);
     return extras;
   }
 }

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -310,6 +311,48 @@ public class PriorityNetworkFetcherTest {
     // Complete 'two' and request its extras map.
     fetcher.onFetchCompletion(two, 123);
     assertThat(fetcher.getExtraMap(two, 123)).containsEntry("pri_queue_time", "43");
+  }
+
+  @Test
+  public void queueSizesAreReturnedInExtraMap() {
+    FakeClock clock = new FakeClock();
+
+    // Max hi-pri: 1, max low-pri: 0
+    PriorityNetworkFetcher<FetchState> fetcher =
+        new PriorityNetworkFetcher<>(delegate, false, 1, 0, clock);
+
+    PriorityFetchState<FetchState> hipri1 = fetch(fetcher, "hipri1", callback, true);
+    PriorityFetchState<FetchState> hipri2 = fetch(fetcher, "hipri2", callback, true);
+    PriorityFetchState<FetchState> hipri3 = fetch(fetcher, "hipri3", callback, true);
+    PriorityFetchState<FetchState> lowpri1 = fetch(fetcher, "lowpri1", callback, false);
+    PriorityFetchState<FetchState> lowpri2 = fetch(fetcher, "lowpri2", callback, false);
+
+    // When hipri1 is created, there hasn't been other requests yet.
+    Map<String, String> hipri1Extras = fetcher.getExtraMap(hipri1, 123);
+    assertThat(hipri1Extras).containsEntry("hipri_queue_size", "0");
+    assertThat(hipri1Extras).containsEntry("lowpri_queue_size", "0");
+
+    // When hipri2 is created, only hipri1 has previously been created, and it was immediately
+    // dequeued, so the queue size is 0.
+    Map<String, String> hipri2Extras = fetcher.getExtraMap(hipri2, 123);
+    assertThat(hipri2Extras).containsEntry("hipri_queue_size", "0");
+    assertThat(hipri2Extras).containsEntry("lowpri_queue_size", "0");
+
+    // When hipri3 is created, hipri2 is in the queue.
+    Map<String, String> hipri3Extras = fetcher.getExtraMap(hipri3, 123);
+    assertThat(hipri3Extras).containsEntry("hipri_queue_size", "1");
+    assertThat(hipri3Extras).containsEntry("lowpri_queue_size", "0");
+
+    // When lowpri1 is created, hipri2 and hipri3 are in the queue.
+    Map<String, String> lowpri1Extras = fetcher.getExtraMap(lowpri1, 123);
+    assertThat(lowpri1Extras).containsEntry("hipri_queue_size", "2");
+    assertThat(lowpri1Extras).containsEntry("lowpri_queue_size", "0");
+
+    // When lowpri2 is created, hipri2 and hipri3 are in the hipri queue, and lowpri1 is in the
+    // low-pri queue.
+    Map<String, String> lowpri2Extras = fetcher.getExtraMap(lowpri2, 123);
+    assertThat(lowpri2Extras).containsEntry("hipri_queue_size", "2");
+    assertThat(lowpri2Extras).containsEntry("lowpri_queue_size", "1");
   }
 
   private PriorityFetchState<FetchState> fetch(
