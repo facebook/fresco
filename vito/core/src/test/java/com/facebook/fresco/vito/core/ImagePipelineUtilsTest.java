@@ -47,7 +47,8 @@ public class ImagePipelineUtilsTest {
 
   @Test
   public void testBuildImageRequest_whenUriNull_thenReturnNull() {
-    ImageRequest imageRequest = mImagePipelineUtils.buildImageRequest(null, ImageOptions.defaults());
+    ImageRequest imageRequest =
+        mImagePipelineUtils.buildImageRequest(null, ImageOptions.defaults());
 
     assertThat(imageRequest).isNull();
   }
