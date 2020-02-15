@@ -34,19 +34,14 @@ static void DGifCloseFile2(GifFileType* pGifFile) {
 }
 
 class DataWrapper {
-
 public:
-  DataWrapper(std::vector<uint8_t>&& pBuffer) :
-    m_pBuffer(std::move(pBuffer)), m_position(0) {
-  }
+  DataWrapper() : m_position(0) {}
 
-  uint8_t* getBuffer() {
-    return m_pBuffer.data();
-  }
+  virtual ~DataWrapper() {}
 
-  size_t getBufferSize() {
-    return m_pBuffer.size();
-  }
+  virtual void copy(GifByteType* dest, int size) = 0;
+
+  virtual size_t getBufferSize() = 0;
 
   size_t getPosition() {
     return m_position;
@@ -56,9 +51,26 @@ public:
     m_position = position;
   }
 
+protected:
+  size_t m_position;
+};
+
+class BytesDataWrapper : public DataWrapper {
+public:
+  BytesDataWrapper(std::vector<uint8_t>&& pBuffer) : DataWrapper(),
+    m_pBuffer(std::move(pBuffer)) {
+  }
+
+  void copy(GifByteType* dest, int size) override {
+    memcpy(dest, m_pBuffer.data() + m_position, size);
+  }
+
+  size_t getBufferSize() override {
+    return m_pBuffer.size();
+  }
+
 private:
   std::vector<uint8_t> m_pBuffer;
-  size_t m_position;
 };
 
 class GifWrapper {
@@ -222,7 +234,7 @@ static int directByteBufferReadFun(
     size = bufferSize - position;
   }
   if (size > 0) {
-    memcpy(bytes, pData->getBuffer() + position, size);
+    pData->copy(bytes, size);
     pData->setPosition(position + size);
   }
   return size;
@@ -554,23 +566,19 @@ int modifiedDGifSlurp(GifWrapper* pGifWrapper, int maxDimension, bool forceStati
 }
 
 /**
- * Creates a new GifImage from the specified buffer.
+ * Creates a new GifImage from the specified data.
  *
- * @param vBuffer the vector containing the bytes
+ * @param spDataWrapper the wrapper providing bytes
  * @param maxDimension Maximum allowed dimension of canvas and each decoded frame
  * @param forceStatic Whether GIF should be decoded as static image
  * @return a newly allocated GifImage
  */
-jobject GifImage_nativeCreateFromByteVector(JNIEnv* pEnv, std::vector<uint8_t>& vBuffer, int maxDimension, bool forceStatic) {
+jobject createFromDataWrapper(JNIEnv* pEnv, std::shared_ptr<DataWrapper> spDataWrapper, int maxDimension, bool forceStatic) {
   std::unique_ptr<GifImageNativeContext> spNativeContext(new GifImageNativeContext());
   if (!spNativeContext) {
     throwOutOfMemoryError(pEnv, "Unable to allocate native context");
     return 0;
   }
-
-  // Create the DataWrapper
-  std::shared_ptr<DataWrapper> spDataWrapper =
-      std::shared_ptr<DataWrapper>(new DataWrapper(std::move(vBuffer)));
 
   int gifError = 0;
   auto spGifFileIn = std::unique_ptr<GifFileType, decltype(&DGifCloseFile2)> {
@@ -646,6 +654,19 @@ jobject GifImage_nativeCreateFromByteVector(JNIEnv* pEnv, std::vector<uint8_t>& 
     spNativeContext.release();
   }
   return ret;
+}
+
+/**
+ * Creates a new GifImage from the specified buffer.
+ *
+ * @param vBuffer the vector containing the bytes
+ * @return a newly allocated GifImage
+ */
+jobject GifImage_nativeCreateFromByteVector(JNIEnv* pEnv, std::vector<uint8_t>& vBuffer, int maxDimension, bool forceStatic) {
+  // Create the DataWrapper
+  std::shared_ptr<DataWrapper> spDataWrapper =
+      std::shared_ptr<DataWrapper>(new BytesDataWrapper(std::move(vBuffer)));
+  return createFromDataWrapper(pEnv, spDataWrapper, maxDimension, forceStatic);
 }
 
 /**
