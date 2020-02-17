@@ -119,16 +119,18 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
    *
    * @param focusPoint focus point of the image
    */
-  public void setFocusPoint(PointF focusPoint) {
+  public void setFocusPoint(@Nullable PointF focusPoint) {
     if (Objects.equal(mFocusPoint, focusPoint)) {
       return;
     }
-
-    if (mFocusPoint == null) {
-      mFocusPoint = new PointF();
+    if (focusPoint == null) {
+      mFocusPoint = null;
+    } else {
+      if (mFocusPoint == null) {
+        mFocusPoint = new PointF();
+      }
+      mFocusPoint.set(focusPoint);
     }
-
-    mFocusPoint.set(focusPoint);
     configureBounds();
     invalidateSelf();
   }
