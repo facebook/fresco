@@ -10,6 +10,22 @@ package com.facebook.fresco.buildsrc
 object Deps {
     const val javaxAnnotation = "javax.annotation:javax.annotation-api:1.2"
     const val jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
+
+    object Litho {
+        private const val version = "0.34.0"
+
+        const val core = "com.facebook.litho:litho-core:$version"
+        const val lithoAnnotations = "com.facebook.litho:litho-annotations:$version"
+        const val processor ="com.facebook.litho:litho-processor:$version"
+        const val widget = "com.facebook.litho:litho-widget:$version"
+
+        object Sections {
+            const val core = "com.facebook.litho:litho-sections-core:$version"
+            const val processor =  "com.facebook.litho:litho-sections-processor:$version"
+            const val sectionsAnnotations =  "com.facebook.litho:litho-sections-annotations:$version"
+            const val widget =  "com.facebook.litho:litho-sections-widget:$version"
+        }
+    }
     
     object SoLoader {
         private const val version = "0.8.1"

@@ -17,11 +17,11 @@ dependencies {
     compileOnly Deps.javaxAnnotation
 
     implementation "androidx.core:core:${versions.androidx.core}"
-    implementation "com.facebook.litho:litho-annotations:${versions.litho}"
-    implementation "com.facebook.litho:litho-core:${versions.litho}"
-    implementation "com.facebook.litho:litho-widget:${versions.litho}"
+    implementation Deps.Litho.lithoAnnotations
+    implementation Deps.Litho.core
+    implementation Deps.Litho.widget
 
-    annotationProcessor "com.facebook.litho:litho-processor:${versions.litho}"
+    annotationProcessor Deps.Litho.processor
 
     implementation project(':drawee')
     implementation project(':fbcore')

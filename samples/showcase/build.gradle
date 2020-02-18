@@ -111,14 +111,15 @@ dependencies {
     implementation project(':ui-common')
 
     // Litho
-    compileOnly "com.facebook.litho:litho-annotations:${versions.litho}"
-    implementation "com.facebook.litho:litho-core:${versions.litho}"
-    implementation "com.facebook.litho:litho-widget:${versions.litho}"
+    compileOnly Deps.Litho.lithoAnnotations
+    implementation Deps.Litho.core
+    implementation Deps.Litho.widget
+
     // Litho Sections
-    implementation "com.facebook.litho:litho-sections-core:${versions.litho}"
-    implementation "com.facebook.litho:litho-sections-widget:${versions.litho}"
-    compileOnly "com.facebook.litho:litho-sections-annotations:${versions.litho}"
-    annotationProcessor "com.facebook.litho:litho-sections-processor:${versions.litho}"
+    implementation Deps.Litho.Sections.core
+    implementation Deps.Litho.Sections.widget
+    compileOnly Deps.Litho.Sections.sectionsAnnotations
+    annotationProcessor Deps.Litho.Sections.processor
 
     // Experimental Fresco Vito
     implementation project(':vito:core')
