@@ -26,9 +26,9 @@ object Deps {
             const val widget =  "com.facebook.litho:litho-sections-widget:$version"
         }
     }
-    
+
     object SoLoader {
-        private const val version = "0.8.1"
+        private const val version = "0.8.2"
         const val soloaderAnnotation = "com.facebook.soloader:annotation:$version"
         const val nativeloader = "com.facebook.soloader:nativeloader:$version"
         const val soloader = "com.facebook.soloader:soloader:$version"
