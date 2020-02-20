@@ -8,18 +8,11 @@
 package com.facebook.fresco.vito.view;
 
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.view.View;
 import androidx.annotation.Nullable;
-import androidx.core.view.ViewCompat;
-import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
-import com.facebook.drawee.drawable.VisibilityCallback;
 import com.facebook.fresco.vito.core.FrescoContext;
-import com.facebook.fresco.vito.core.FrescoDrawable;
-import com.facebook.fresco.vito.core.FrescoState;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.provider.DefaultFrescoContext;
@@ -29,23 +22,20 @@ import com.facebook.imagepipeline.multiuri.MultiUri;
 @Deprecated /* Experimental */
 public class VitoView {
 
+  public interface Implementation {
+    void show(
+        @Nullable Uri uri,
+        @Nullable MultiUri multiUri,
+        ImageOptions imageOptions,
+        @Nullable Object callerContext,
+        @Nullable ImageListener imageListener,
+        final View target);
+  }
+
   private static final Class<?> TAG = VitoView.class;
   private static volatile boolean sIsInitialized = false;
 
-  private static @Nullable FrescoContext sFrescoContext = null;
-
-  private static final View.OnAttachStateChangeListener sOnAttachStateChangeListenerCallback =
-      new View.OnAttachStateChangeListener() {
-        @Override
-        public void onViewAttachedToWindow(View view) {
-          onAttach(view);
-        }
-
-        @Override
-        public void onViewDetachedFromWindow(View view) {
-          onDetach(view);
-        }
-      };
+  private static Implementation sImplementation;
 
   private VitoView() {}
 
@@ -54,28 +44,31 @@ public class VitoView {
   }
 
   public static void init(FrescoContext frescoContext) {
+    init(new VitoViewImpl(frescoContext));
+  }
+
+  public static void init(Implementation implementation) {
     if (sIsInitialized) {
       FLog.w(TAG, "VitoView has already been initialized!");
       return;
     } else {
       sIsInitialized = true;
     }
-
-    sFrescoContext = frescoContext;
+    sImplementation = implementation;
   }
 
   /*
    * Display an image with default options
    */
   public static void show(@Nullable Uri uri, View target) {
-    showInternal(uri, null, ImageOptions.defaults(), null, null, target);
+    sImplementation.show(uri, null, ImageOptions.defaults(), null, null, target);
   }
 
   /*
    * Display an image
    */
   public static void show(@Nullable Uri uri, ImageOptions imageOptions, final View target) {
-    showInternal(uri, null, imageOptions, null, null, target);
+    sImplementation.show(uri, null, imageOptions, null, null, target);
   }
 
   /*
@@ -87,14 +80,14 @@ public class VitoView {
       @Nullable Object callerContext,
       @Nullable ImageListener imageListener,
       final View target) {
-    showInternal(uri, null, imageOptions, callerContext, imageListener, target);
+    sImplementation.show(uri, null, imageOptions, callerContext, imageListener, target);
   }
 
   /*
    * Display an image with default options
    */
   public static void show(@Nullable MultiUri multiUri, final View target) {
-    showInternal(null, multiUri, ImageOptions.defaults(), null, null, target);
+    sImplementation.show(null, multiUri, ImageOptions.defaults(), null, null, target);
   }
 
   /*
@@ -102,99 +95,6 @@ public class VitoView {
    */
   public static void show(
       @Nullable MultiUri multiUri, ImageOptions imageOptions, final View target) {
-    showInternal(null, multiUri, imageOptions, null, null, target);
-  }
-
-  private static void showInternal(
-      @Nullable Uri uri,
-      @Nullable MultiUri multiUri,
-      ImageOptions imageOptions,
-      @Nullable Object callerContext,
-      @Nullable ImageListener imageListener,
-      final View target) {
-    Preconditions.checkArgument(
-        !(uri != null && multiUri != null), "Setting both a Uri and MultiUri is not allowed!");
-
-    FrescoDrawable frescoDrawable;
-    final Drawable background = target.getBackground();
-    if (background instanceof FrescoDrawable) {
-      frescoDrawable = (FrescoDrawable) background;
-    } else {
-      frescoDrawable = new FrescoDrawable(true);
-      ViewCompat.setBackground(target, frescoDrawable);
-    }
-
-    frescoDrawable.setVisibilityCallback(
-        new VisibilityCallback() {
-          @Override
-          public void onVisibilityChange(boolean visible) {
-            if (!visible) {
-              onDetach(target);
-            }
-          }
-
-          @Override
-          public void onDraw() {
-            // NOP
-          }
-        });
-
-    final FrescoState oldState = getState(target);
-    final FrescoState state =
-        sFrescoContext
-            .getController()
-            .onPrepare(
-                oldState,
-                uri,
-                multiUri,
-                imageOptions,
-                callerContext,
-                target.getResources(),
-                imageListener);
-    state.setFrescoDrawable(frescoDrawable);
-    setState(target, state);
-
-    // `addOnAttachStateChangeListener` is not idempotent
-    target.removeOnAttachStateChangeListener(sOnAttachStateChangeListenerCallback);
-    target.addOnAttachStateChangeListener(sOnAttachStateChangeListenerCallback);
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      // If the view is already attached, we should tell this to controller.
-      if (target.isAttachedToWindow()) {
-        onAttach(target);
-      }
-    } else {
-      // Before Kitkat we don't have a good way to know.
-      // Normally we expect the view to be already attached, thus we always call `onAttach`.
-      onAttach(target);
-    }
-  }
-
-  private static void onAttach(View view) {
-    onAttach(getState(view));
-  }
-
-  private static void onDetach(View view) {
-    onDetach(getState(view));
-  }
-
-  private static void onAttach(FrescoState state) {
-    if (!state.isAttached()) {
-      sFrescoContext.getController().onAttach(state, null);
-    }
-  }
-
-  private static void onDetach(FrescoState state) {
-    if (state.isAttached()) {
-      sFrescoContext.getController().onDetach(state);
-    }
-  }
-
-  private static void setState(View view, FrescoState state) {
-    view.setTag(R.id.fresco_vito_tag_state, state);
-  }
-
-  private static FrescoState getState(View view) {
-    return (FrescoState) view.getTag(R.id.fresco_vito_tag_state);
+    sImplementation.show(null, multiUri, imageOptions, null, null, target);
   }
 }
