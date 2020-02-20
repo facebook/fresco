@@ -25,6 +25,8 @@ import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.samples.showcase.misc.LogcatRequestListener2
 import com.facebook.fresco.vito.provider.DefaultFrescoContext
+import com.facebook.fresco.vito.provider.DefaultFrescoContextProvider
+import com.facebook.fresco.vito.provider.FrescoContextProvider
 import com.facebook.fresco.vito.view.VitoView
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
 import com.facebook.imagepipeline.core.ImagePipelineConfig
@@ -90,6 +92,7 @@ class ShowcaseApplication : Application() {
                 DebugOverlaySupplierSingleton.getInstance(applicationContext))
 
         DefaultFrescoContext.setDebugOverlayEnabledSupplier(DebugOverlaySupplierSingleton.getInstance(applicationContext))
+        FrescoContextProvider.setImplementation(DefaultFrescoContextProvider())
 
         if (shouldEnableFlipper()) {
             draweeConfigBuilder.setImagePerfDataListener(
