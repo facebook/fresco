@@ -149,16 +149,16 @@
 
   <string name="category_vito">Experimental Fresco Vito</string>
 
-  <string name="vito_litho_simple">Simple Litho example</string>
+  <string name="vito_litho_simple">Vito Litho: Simple</string>
   <string name="vito_litho_simple_help">Experimental Fresco Vito Litho component.</string>
 
-  <string name="vito_litho_image_options_config">Image Options configurator</string>
+  <string name="vito_litho_image_options_config">Vito Litho: Image Options configurator</string>
   <string name="vito_litho_image_options_config_help">Configure image options to change the image\'s appearance</string>
 
-  <string name="vito_litho_sections">Litho Sections (RecyclerView)</string>
-  <string name="vito_litho_gallery">Litho Gallery</string>
+  <string name="vito_litho_sections">Vito Litho: Sections (RecyclerView)</string>
+  <string name="vito_litho_gallery">Vito Litho: Gallery</string>
 
-  <string name="vito_litho_region_decode">Vito region decode example</string>
+  <string name="vito_litho_region_decode">Vito Litho: Region decoding</string>
   <string name="vito_litho_region_decode_help">Choose a focus point with the smaller square and parent bounds with the bigger</string>
 
 
@@ -263,12 +263,12 @@
   <string name="load_increasing_quality">Load URIs: increasing quality</string>
   <string name="load_multi_uri_both">Load URIs: Both</string>
 
-  <string name="vito_view_simple">Vito View Simple</string>
+  <string name="vito_view_simple">Vito View: Simple</string>
   <string name="vito_view_simple_help">Basic Vito View example that just sets the image URI</string>
-  <string name="vito_view_view_recycler">Vito Recycler</string>
-  <string name="vito_view_prefetch">Vito Prefetch</string>
+  <string name="vito_view_view_recycler">Vito View: Recycler</string>
+  <string name="vito_view_prefetch">Vito View: Prefetch</string>
   <string name="vito_view_prefetch_title">Prefetch to cache:</string>
-  <string name="vito_view_ktx">Vito View Kotlin Extensions</string>
+  <string name="vito_view_ktx">Vito View: Kotlin Extensions</string>
   <string name="vito_view_ktx_help">Vito View Kotlin Extensions examples</string>
 
   <string name="use_vito">Use Vito</string>
