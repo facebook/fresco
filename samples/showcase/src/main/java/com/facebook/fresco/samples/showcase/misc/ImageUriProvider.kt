@@ -269,8 +269,8 @@ class ImageUriProvider constructor(context: Context) {
         private const val PREF_KEY_URI_OVERRIDE = "uri_override"
 
         private const val RANDOM_URI_MAX_IMAGE_ID = 1000
-        private const val RANDOM_URI_PATTERN_S = "https://picsum.photos/400/400?image=%d"
-        private const val RANDOM_URI_PATTERN_M = "https://picsum.photos/800/800?image=%d"
+        private const val RANDOM_URI_PATTERN_S = "https://picsum.photos/400/400?random=%d"
+        private const val RANDOM_URI_PATTERN_M = "https://picsum.photos/800/800?random=%d"
 
         private val SAMPLE_URIS_LANDSCAPE = arrayOf("https://frescolib.org/static/sample-images/animal_a_%s.jpg", "https://frescolib.org/static/sample-images/animal_b_%s.jpg", "https://frescolib.org/static/sample-images/animal_c_%s.jpg", "https://frescolib.org/static/sample-images/animal_e_%s.jpg", "https://frescolib.org/static/sample-images/animal_f_%s.jpg", "https://frescolib.org/static/sample-images/animal_g_%s.jpg")
 
