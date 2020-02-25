@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.drawable.ForwardingDrawable;
 import com.facebook.drawee.drawable.InstrumentedDrawable;
+import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.infer.annotation.ThreadSafe;
@@ -69,6 +70,14 @@ public interface Hierarcher {
   Drawable buildOverlayDrawable(Resources resources, ImageOptions imageOptions);
 
   /**
+   * Set up the actual image wrapper scale type Drawable.
+   *
+   * @param actualImageWrapper the wrapper to set up
+   * @param imageOptions image options to be used
+   */
+  void setupActualImageWrapper(ScaleTypeDrawable actualImageWrapper, ImageOptions imageOptions);
+
+  /**
    * Sets up the actual image drawable for a given fresco drawable.
    *
    * @return actual image drawable for given {@code closeableImage} or null
@@ -77,8 +86,7 @@ public interface Hierarcher {
    */
   @Nullable
   Drawable setupActualImageDrawable(
-      FrescoContext frescoContext,
-      FrescoDrawable frescoDrawable,
+      BaseFrescoDrawable frescoDrawable,
       Resources resources,
       ImageOptions imageOptions,
       CloseableReference<CloseableImage> closeableImage,

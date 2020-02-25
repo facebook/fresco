@@ -608,7 +608,6 @@ public class FrescoControllerImpl implements FrescoController {
           mFrescoContext
               .getHierarcher()
               .setupActualImageDrawable(
-                  mFrescoContext,
                   frescoState.getFrescoDrawable(),
                   frescoState.getResources(),
                   frescoState.getImageOptions(),

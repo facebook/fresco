@@ -14,8 +14,10 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.drawee.drawable.VisibilityCallback;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.OkToExtend;
 import java.io.Closeable;
 
+@OkToExtend
 public class BaseFrescoDrawable extends FadeDrawable implements Closeable {
 
   @VisibleForTesting @Nullable CloseableReference<CloseableImage> mImageReference;

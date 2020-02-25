@@ -29,7 +29,6 @@ public class HierarcherImpl implements Hierarcher {
 
   private final VitoDrawableFactory mDrawableFactory;
   private final RoundingUtils mRoundingUtils;
-  private boolean mShouldInstrumentDrawable;
 
   public HierarcherImpl(VitoDrawableFactory drawableFactory) {
     mDrawableFactory = drawableFactory;
@@ -134,6 +133,14 @@ public class HierarcherImpl implements Hierarcher {
   }
 
   @Override
+  public void setupActualImageWrapper(
+      ScaleTypeDrawable actualImageWrapper, ImageOptions imageOptions) {
+    actualImageWrapper.setScaleType(imageOptions.getActualImageScaleType());
+    actualImageWrapper.setFocusPoint(imageOptions.getActualImageFocusPoint());
+    actualImageWrapper.setColorFilter(imageOptions.getActualImageColorFilter());
+  }
+
+  @Override
   @Nullable
   public Drawable buildOverlayDrawable(Resources resources, ImageOptions imageOptions) {
     int resId = imageOptions.getOverlayRes();
@@ -143,8 +150,7 @@ public class HierarcherImpl implements Hierarcher {
   @Nullable
   @Override
   public Drawable setupActualImageDrawable(
-      FrescoContext frescoContext,
-      FrescoDrawable frescoDrawable,
+      BaseFrescoDrawable frescoDrawable,
       Resources resources,
       ImageOptions imageOptions,
       CloseableReference<CloseableImage> closeableImage,

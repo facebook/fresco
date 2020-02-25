@@ -16,7 +16,7 @@ import com.facebook.fresco.samples.showcase.BaseShowcaseFragment
 import com.facebook.fresco.samples.showcase.R
 import com.facebook.fresco.samples.showcase.common.SpinnerUtils.setupWithList
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
-import com.facebook.fresco.vito.litho.FrescoVitoImage
+import com.facebook.fresco.vito.litho.FrescoVitoImage2
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.litho.ComponentContext
 import com.facebook.litho.LithoView
@@ -81,7 +81,7 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
         lithoView?.setComponentAsync(createImage(builder.build(), uri))
     }
 
-    private fun createImage(imageOptions: ImageOptions, uri: Uri?) = FrescoVitoImage.create(componentContext)
+    private fun createImage(imageOptions: ImageOptions, uri: Uri?) = FrescoVitoImage2.create(componentContext)
             .uri(uri)
             .imageOptions(imageOptions)
             .build()

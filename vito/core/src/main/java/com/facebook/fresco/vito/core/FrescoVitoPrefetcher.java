@@ -127,4 +127,11 @@ public class FrescoVitoPrefetcher {
                 uri, imageOptions != null ? imageOptions : ImageOptions.defaults());
     return mFrescoContext.getImagePipeline().prefetchToDiskCache(imageRequest, callerContext);
   }
+
+  public DataSource<Void> prefetch(
+      final PrefetchTarget prefetchTarget,
+      final VitoImageRequest imageRequest,
+      @Nullable final Object callerContext) {
+    return prefetch(prefetchTarget, imageRequest.uri, imageRequest.imageOptions, callerContext);
+  }
 }
