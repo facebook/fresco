@@ -56,6 +56,37 @@ public class VitoViewImpl implements VitoView.Implementation {
     Preconditions.checkArgument(
         !(uri != null && multiUri != null), "Setting both a Uri and MultiUri is not allowed!");
 
+    final FrescoState oldState = getState(target);
+    final FrescoState state =
+        mFrescoContext
+            .getController()
+            .onPrepare(
+                oldState,
+                uri,
+                multiUri,
+                imageOptions,
+                callerContext,
+                target.getResources(),
+                imageListener);
+    setState(target, state);
+
+    // `addOnAttachStateChangeListener` is not idempotent
+    target.removeOnAttachStateChangeListener(sOnAttachStateChangeListenerCallback);
+    target.addOnAttachStateChangeListener(sOnAttachStateChangeListenerCallback);
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      // If the view is already attached, we should tell this to controller.
+      if (target.isAttachedToWindow()) {
+        onAttach(target);
+      }
+    } else {
+      // Before Kitkat we don't have a good way to know.
+      // Normally we expect the view to be already attached, thus we always call `onAttach`.
+      onAttach(target);
+    }
+  }
+
+  private FrescoDrawable createFrescoDrawable(final View target) {
     FrescoDrawable frescoDrawable;
     final Drawable background = target.getBackground();
     if (background instanceof FrescoDrawable) {
@@ -79,40 +110,14 @@ public class VitoViewImpl implements VitoView.Implementation {
             // NOP
           }
         });
-
-    final FrescoState oldState = getState(target);
-    final FrescoState state =
-        mFrescoContext
-            .getController()
-            .onPrepare(
-                oldState,
-                uri,
-                multiUri,
-                imageOptions,
-                callerContext,
-                target.getResources(),
-                imageListener);
-    state.setFrescoDrawable(frescoDrawable);
-    setState(target, state);
-
-    // `addOnAttachStateChangeListener` is not idempotent
-    target.removeOnAttachStateChangeListener(sOnAttachStateChangeListenerCallback);
-    target.addOnAttachStateChangeListener(sOnAttachStateChangeListenerCallback);
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      // If the view is already attached, we should tell this to controller.
-      if (target.isAttachedToWindow()) {
-        onAttach(target);
-      }
-    } else {
-      // Before Kitkat we don't have a good way to know.
-      // Normally we expect the view to be already attached, thus we always call `onAttach`.
-      onAttach(target);
-    }
+    return frescoDrawable;
   }
 
   private void onAttach(View view) {
-    onAttach(getState(view));
+    FrescoDrawable frescoDrawable = createFrescoDrawable(view);
+    FrescoState state = getState(view);
+    state.setFrescoDrawable(frescoDrawable);
+    onAttach(state);
   }
 
   private void onDetach(View view) {
