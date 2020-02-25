@@ -79,10 +79,8 @@ public class FrescoContext {
     mLightweightBackgroundThreadExecutor = lightweightBackgroundThreadExecutor;
     mGlobalImageStateListener = globalImageStateListener;
     mImagePipelineUtils = new ImagePipelineUtils(mExperiments);
-    mVitoImagePipeline = new VitoImagePipeline(getImagePipeline(), mImagePipelineUtils);
-    mController2 =
-        new FrescoController2(
-            hierarcher, lightweightBackgroundThreadExecutor, uiThreadExecutor, mVitoImagePipeline);
+    mVitoImagePipeline = null;
+    mController2 = null;
   }
 
   public FrescoContext(
@@ -103,10 +101,8 @@ public class FrescoContext {
     mGlobalImageStateListener = globalImageStateListener;
     mLightweightBackgroundThreadExecutor = lightweightBackgroundThreadExecutor;
     mImagePipelineUtils = new ImagePipelineUtils(mExperiments);
-    mVitoImagePipeline = new VitoImagePipeline(getImagePipeline(), mImagePipelineUtils);
-    mController2 =
-        new FrescoController2(
-            hierarcher, lightweightBackgroundThreadExecutor, uiThreadExecutor, mVitoImagePipeline);
+    mVitoImagePipeline = null;
+    mController2 = null;
   }
 
   public ImagePipelineFactory getImagePipelineFactory() {
