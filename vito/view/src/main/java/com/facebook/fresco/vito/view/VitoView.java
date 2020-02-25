@@ -44,7 +44,7 @@ public class VitoView {
   }
 
   public static void init(FrescoContext frescoContext) {
-    init(new VitoViewImpl(frescoContext));
+    init(new VitoViewImpl2(frescoContext));
   }
 
   public static void init(Implementation implementation) {
