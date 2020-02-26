@@ -35,6 +35,13 @@ public class DefaultFrescoContext {
     return sInstance;
   }
 
+  public static synchronized FrescoContext get() {
+    if (sInstance == null) {
+      throw new RuntimeException("FrescoContext must be initialized!");
+    }
+    return sInstance;
+  }
+
   public static synchronized void set(FrescoContext context) {
     if (sInstance != null) {
       throw new RuntimeException("Fresco has already been initialized!");

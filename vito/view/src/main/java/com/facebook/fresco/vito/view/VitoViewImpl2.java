@@ -17,7 +17,9 @@ import androidx.core.view.ViewCompat;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.VisibilityCallback;
 import com.facebook.fresco.vito.core.FrescoContext;
+import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
+import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
@@ -26,8 +28,6 @@ import com.facebook.imagepipeline.multiuri.MultiUri;
 /** You must initialize this class before use by calling {#code VitoView.init()}. */
 @Deprecated /* Experimental */
 public class VitoViewImpl2 implements VitoView.Implementation {
-
-  private final FrescoContext mFrescoContext;
 
   private final View.OnAttachStateChangeListener sOnAttachStateChangeListenerCallback =
       new View.OnAttachStateChangeListener() {
@@ -48,8 +48,12 @@ public class VitoViewImpl2 implements VitoView.Implementation {
         }
       };
 
-  public VitoViewImpl2(FrescoContext frescoContext) {
-    mFrescoContext = frescoContext;
+  private final FrescoController2 mController;
+  private final VitoImagePipeline mVitoImagePipeline;
+
+  public VitoViewImpl2(FrescoController2 controller, VitoImagePipeline vitoImagePipeline) {
+    mController = controller;
+    mVitoImagePipeline = vitoImagePipeline;
   }
 
   @Override
@@ -64,14 +68,13 @@ public class VitoViewImpl2 implements VitoView.Implementation {
         !(uri != null && multiUri != null), "Setting both a Uri and MultiUri is not allowed!");
 
     VitoImageRequest imageRequest =
-        mFrescoContext
-            .getVitoImagePipeline()
-            .createImageRequest(target.getResources(), uri, multiUri, imageOptions, callerContext);
+        mVitoImagePipeline.createImageRequest(
+            target.getResources(), uri, multiUri, imageOptions, callerContext);
 
     final FrescoDrawable2 frescoDrawable = ensureDrawableSet(target);
 
     // Check if we already fetched the image
-    if (frescoDrawable.getDrawableDataSubscriber() == mFrescoContext.getController2()
+    if (frescoDrawable.getDrawableDataSubscriber() != null
         && frescoDrawable.isFetchSubmitted()
         && imageRequest.equals(frescoDrawable.getImageRequest())) {
       return; // already set
@@ -101,7 +104,7 @@ public class VitoViewImpl2 implements VitoView.Implementation {
     drawable.cancelReleaseNextFrame();
     VitoImageRequest request = drawable.getImageRequest();
     if (request != null) {
-      mFrescoContext.getController2().fetch(drawable, request, drawable.getCallerContext());
+      mController.fetch(drawable, request, drawable.getCallerContext());
     }
   }
 
@@ -111,6 +114,7 @@ public class VitoViewImpl2 implements VitoView.Implementation {
 
   /**
    * Ensure that a {@link FrescoDrawable2} is set for the given View target
+   *
    * @param target the target to use
    * @return The drawable to use for the given target
    */

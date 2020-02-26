@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.view.View;
 import androidx.core.util.ObjectsCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
-import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.PrefetchTarget;
 import com.facebook.fresco.vito.core.VitoImageRequest;
@@ -71,14 +70,8 @@ public class FrescoVitoImage2Spec {
       @Prop(optional = true) final @Nullable MultiUri multiUri,
       @Prop(optional = true) final @Nullable ImageOptions imageOptions,
       @Prop(optional = true) final @Nullable Object callerContext) {
-    return FrescoContextProvider.get(c.getAndroidContext(), callerContext)
-        .getVitoImagePipeline()
-        .createImageRequest(
-            c.getResources(),
-            uri,
-            multiUri,
-            imageOptions,
-            callerContext);
+    return FrescoContextProvider.getImagePipeline()
+        .createImageRequest(c.getResources(), uri, multiUri, imageOptions, callerContext);
   }
 
   @OnPrepare
@@ -86,10 +79,8 @@ public class FrescoVitoImage2Spec {
       ComponentContext c,
       @Prop(optional = true) final @Nullable Object callerContext,
       @CachedValue VitoImageRequest imageRequest) {
-    FrescoContext context = FrescoContextProvider.get(c.getAndroidContext(), callerContext);
-    if (context.getExperiments().prefetchInOnPrepare()) {
-      context.getPrefetcher().prefetch(PrefetchTarget.MEMORY_DECODED, imageRequest, callerContext);
-    }
+    FrescoContextProvider.getPrefetcher()
+        .prefetch(PrefetchTarget.MEMORY_DECODED, imageRequest, callerContext);
   }
 
   @OnMount
@@ -98,9 +89,7 @@ public class FrescoVitoImage2Spec {
       final FrescoDrawable2 frescoDrawable,
       @Prop(optional = true) final @Nullable Object callerContext,
       @CachedValue VitoImageRequest imageRequest) {
-    FrescoContextProvider.get(c.getAndroidContext(), callerContext)
-        .getController2()
-        .fetch(frescoDrawable, imageRequest, callerContext);
+    FrescoContextProvider.getController().fetch(frescoDrawable, imageRequest, callerContext);
   }
 
   @OnBind
@@ -111,9 +100,7 @@ public class FrescoVitoImage2Spec {
       @CachedValue VitoImageRequest imageRequest) {
     // We fetch in both mount and bind in case an unbind event triggered a delayed release.
     // We'll only trigger an actual fetch if needed. Most of the time, this will be a no-op.
-    FrescoContextProvider.get(c.getAndroidContext(), callerContext)
-        .getController2()
-        .fetch(frescoDrawable, imageRequest, callerContext);
+    FrescoContextProvider.getController().fetch(frescoDrawable, imageRequest, callerContext);
   }
 
   @OnUnbind

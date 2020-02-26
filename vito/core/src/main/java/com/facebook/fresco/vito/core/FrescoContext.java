@@ -29,37 +29,11 @@ public class FrescoContext {
   private final Executor mUiThreadExecutor;
   private final Executor mLightweightBackgroundThreadExecutor;
   private final ImagePipelineUtils mImagePipelineUtils;
-  private final VitoImagePipeline mVitoImagePipeline;
-  private final FrescoController2 mController2;
 
   private FrescoController mController;
   private FrescoVitoPrefetcher mPrefetcher;
 
   private @Nullable ImagePipelineFactory mImagePipelineFactory;
-
-  public FrescoContext(
-      FrescoController controller,
-      Hierarcher hierarcher,
-      @Nullable CallerContextVerifier callerContextVerifier,
-      FrescoExperiments frescoExperiments,
-      Executor uiThreadExecutor,
-      Executor lightweightBackgroundThreadExecutor,
-      @Nullable ImageListener globalImageListener,
-      @Nullable ImageStateListener globalImageStateListener,
-      VitoImagePipeline vitoImagePipeline,
-      FrescoController2 frescoController2) {
-    mController = controller;
-    mHierarcher = hierarcher;
-    mCallerContextVerifier = callerContextVerifier;
-    mExperiments = frescoExperiments;
-    mUiThreadExecutor = uiThreadExecutor;
-    mGlobalImageListener = globalImageListener;
-    mLightweightBackgroundThreadExecutor = lightweightBackgroundThreadExecutor;
-    mGlobalImageStateListener = globalImageStateListener;
-    mImagePipelineUtils = new ImagePipelineUtils(mExperiments);
-    mVitoImagePipeline = vitoImagePipeline;
-    mController2 = frescoController2;
-  }
 
   public FrescoContext(
       FrescoController controller,
@@ -79,8 +53,6 @@ public class FrescoContext {
     mLightweightBackgroundThreadExecutor = lightweightBackgroundThreadExecutor;
     mGlobalImageStateListener = globalImageStateListener;
     mImagePipelineUtils = new ImagePipelineUtils(mExperiments);
-    mVitoImagePipeline = null;
-    mController2 = null;
   }
 
   public FrescoContext(
@@ -101,8 +73,6 @@ public class FrescoContext {
     mGlobalImageStateListener = globalImageStateListener;
     mLightweightBackgroundThreadExecutor = lightweightBackgroundThreadExecutor;
     mImagePipelineUtils = new ImagePipelineUtils(mExperiments);
-    mVitoImagePipeline = null;
-    mController2 = null;
   }
 
   public ImagePipelineFactory getImagePipelineFactory() {
@@ -128,10 +98,6 @@ public class FrescoContext {
     return mController;
   }
 
-  public FrescoController2 getController2() {
-    return mController2;
-  }
-
   public FrescoExperiments getExperiments() {
     return mExperiments;
   }
@@ -154,10 +120,6 @@ public class FrescoContext {
 
   public ImagePipelineUtils getImagePipelineUtils() {
     return mImagePipelineUtils;
-  }
-
-  public VitoImagePipeline getVitoImagePipeline() {
-    return mVitoImagePipeline;
   }
 
   public void verifyCallerContext(@Nullable Object callerContext) {

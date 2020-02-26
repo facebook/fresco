@@ -7,15 +7,13 @@
 
 package com.facebook.fresco.vito.view;
 
-import android.content.res.Resources;
 import android.net.Uri;
 import android.view.View;
 import androidx.annotation.Nullable;
 import com.facebook.common.logging.FLog;
-import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
-import com.facebook.fresco.vito.provider.DefaultFrescoContext;
+import com.facebook.fresco.vito.provider.FrescoContextProvider;
 import com.facebook.imagepipeline.multiuri.MultiUri;
 
 /** You must initialize this class before use by calling {#code VitoView.init()}. */
@@ -39,12 +37,10 @@ public class VitoView {
 
   private VitoView() {}
 
-  public static void init(Resources resources) {
-    init(DefaultFrescoContext.get(resources));
-  }
-
-  public static void init(FrescoContext frescoContext) {
-    init(new VitoViewImpl2(frescoContext));
+  public static void init() {
+    init(
+        new VitoViewImpl2(
+            FrescoContextProvider.getController(), FrescoContextProvider.getImagePipeline()));
   }
 
   public static void init(Implementation implementation) {

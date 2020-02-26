@@ -92,7 +92,6 @@ class ShowcaseApplication : Application() {
                 DebugOverlaySupplierSingleton.getInstance(applicationContext))
 
         DefaultFrescoContext.setDebugOverlayEnabledSupplier(DebugOverlaySupplierSingleton.getInstance(applicationContext))
-        FrescoContextProvider.setImplementation(DefaultFrescoContextProvider())
 
         if (shouldEnableFlipper()) {
             draweeConfigBuilder.setImagePerfDataListener(
@@ -113,7 +112,8 @@ class ShowcaseApplication : Application() {
                         .setMaxBitmapCount(BitmapCounterConfig.DEFAULT_MAX_BITMAP_COUNT)
                         .build())
         Fresco.initialize(this, imagePipelineConfig, draweeConfigBuilder.build())
-        VitoView.init(resources)
+        FrescoContextProvider.setImplementation(DefaultFrescoContextProvider(DefaultFrescoContext.get(resources)))
+        VitoView.init()
 
         val context = this
         Stetho.initialize(
