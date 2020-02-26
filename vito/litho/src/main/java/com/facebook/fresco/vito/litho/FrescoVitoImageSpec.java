@@ -11,7 +11,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import androidx.core.util.ObjectsCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import com.facebook.datasource.DataSource;
 import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoController;
@@ -22,6 +24,7 @@ import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.provider.DefaultFrescoContext;
 import com.facebook.imagepipeline.multiuri.MultiUri;
+import com.facebook.litho.AccessibilityRole;
 import com.facebook.litho.BoundaryWorkingRange;
 import com.facebook.litho.ComponentContext;
 import com.facebook.litho.ComponentLayout;
@@ -41,6 +44,7 @@ import com.facebook.litho.annotations.OnEnteredRange;
 import com.facebook.litho.annotations.OnExitedRange;
 import com.facebook.litho.annotations.OnMeasure;
 import com.facebook.litho.annotations.OnMount;
+import com.facebook.litho.annotations.OnPopulateAccessibilityNode;
 import com.facebook.litho.annotations.OnPrepare;
 import com.facebook.litho.annotations.OnRegisterRanges;
 import com.facebook.litho.annotations.OnUnbind;
@@ -237,6 +241,11 @@ public class FrescoVitoImageSpec {
         || !ObjectsCompat.equals(imageOptions.getPrevious(), imageOptions.getNext())
         || !ObjectsCompat.equals(imageAspectRatio.getPrevious(), imageAspectRatio.getNext())
         || !ObjectsCompat.equals(frescoContext.getPrevious(), frescoContext.getNext());
+  }
+
+  @OnPopulateAccessibilityNode
+  static void onPopulateAccessibilityNode(View host, AccessibilityNodeInfoCompat node) {
+    node.setClassName(AccessibilityRole.IMAGE);
   }
 
   @OnEnteredRange(name = "imagePrefetch")
