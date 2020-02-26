@@ -133,7 +133,10 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
         AssetFileDescriptor assetFileDescriptor =
             UriUtil.getAssetFileDescriptor(mContentResolver, uri);
         if (assetFileDescriptor != null && Build.VERSION.SDK_INT >= 24) {
-          return (new Api24Utils()).getExifInterface(assetFileDescriptor.getFileDescriptor());
+          final ExifInterface exifInterface =
+              (new Api24Utils()).getExifInterface(assetFileDescriptor.getFileDescriptor());
+          assetFileDescriptor.close();
+          return exifInterface;
         }
       }
     } catch (IOException e) {
