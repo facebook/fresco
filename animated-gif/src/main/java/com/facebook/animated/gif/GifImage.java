@@ -181,6 +181,10 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
     return nativeGetSizeInBytes();
   }
 
+  public boolean isAnimated() {
+    return nativeIsAnimated();
+  }
+
   @Override
   public AnimatedDrawableFrameInfo getFrameInfo(int frameNumber) {
     GifFrame frame = getFrame(frameNumber);
@@ -243,6 +247,9 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
 
   @DoNotStrip
   private native int nativeGetSizeInBytes();
+
+  @DoNotStrip
+  private native boolean nativeIsAnimated();
 
   @DoNotStrip
   private native void nativeDispose();

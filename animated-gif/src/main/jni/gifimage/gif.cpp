@@ -132,8 +132,17 @@ public:
     m_loopCount = pLoopCount;
   }
 
+  bool isAnimated() {
+    return m_animated;
+  }
+
+  void setAnimated(bool animated) {
+    m_animated = animated;
+  }
+
 private:
   int m_loopCount = LOOP_COUNT_MISSING;
+  bool m_animated = false;
   std::unique_ptr<GifFileType, decltype(&DGifCloseFile2)> m_spGifFile;
   std::shared_ptr<DataWrapper> m_spData;
   std::vector<int> m_vectorFrameByteOffsets;
@@ -526,6 +535,16 @@ int modifiedDGifSlurp(GifWrapper* pGifWrapper, int maxDimension, bool forceStati
 
     switch (recordType) {
       case IMAGE_DESC_RECORD_TYPE:
+        // Set the flag whether gif is animated, but give up slurping after the first frame,
+        // when static image is requested.
+        if (pGifFile->ImageCount >= 1) {
+          pGifWrapper->setAnimated(true);
+          if (forceStatic) {
+            isStop = true;
+            break;
+          }
+        }
+
         // We save the byte offset where each frame begins. This allows us to avoid storing
         // the pixel data for each frame and instead decode it on the fly.
         pGifWrapper->addFrameByteOffset(pGifWrapper->getData()->getPosition());
@@ -535,7 +554,7 @@ int modifiedDGifSlurp(GifWrapper* pGifWrapper, int maxDimension, bool forceStati
               false, // Don't decode frame pixels
               true,  // Add to saved images
               maxDimension // Max dimension
-              ) == GIF_ERROR || forceStatic) {
+              ) == GIF_ERROR) {
           isStop = true;
         }
         break;
@@ -984,6 +1003,22 @@ jint GifImage_nativeGetSizeInBytes(JNIEnv* pEnv, jobject thiz) {
 }
 
 /**
+ * Gets information whether {@link GifImage} is animated (has more than 1 frame).
+ * It will return `true`, even if animated file was opened as static image.
+ *
+ * @return whether {@link GifImage} is animated image
+ */
+jint GifImage_nativeIsAnimated(JNIEnv* pEnv, jobject thiz) {
+  auto spNativeContext = getGifImageNativeContext(pEnv, thiz);
+  if (!spNativeContext) {
+    throwIllegalStateException(pEnv, "Already disposed");
+    return 0;
+  }
+
+  return spNativeContext->spGifWrapper->isAnimated();
+}
+
+/**
  * Disposes the GifImage, freeing native resources.
  */
 void GifImage_nativeDispose(JNIEnv* pEnv, jobject thiz) {
@@ -1391,6 +1426,9 @@ static JNINativeMethod sGifImageMethods[] = {
   { "nativeGetSizeInBytes",
     "()I",
     (void*)GifImage_nativeGetSizeInBytes },
+  { "nativeIsAnimated",
+    "()Z",
+    (void*)GifImage_nativeIsAnimated },
   { "nativeDispose",
     "()V",
     (void*)GifImage_nativeDispose },
