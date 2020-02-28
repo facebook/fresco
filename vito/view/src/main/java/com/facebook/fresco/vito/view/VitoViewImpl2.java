@@ -77,6 +77,8 @@ public class VitoViewImpl2 implements VitoView.Implementation {
     if (frescoDrawable.getDrawableDataSubscriber() != null
         && frescoDrawable.isFetchSubmitted()
         && imageRequest.equals(frescoDrawable.getImageRequest())) {
+      frescoDrawable.cancelReleaseNextFrame();
+      frescoDrawable.cancelReleaseDelayed();
       return; // already set
     }
 
