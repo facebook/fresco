@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.provider;
 
 import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoController2;
+import com.facebook.fresco.vito.core.FrescoController2Impl;
 import com.facebook.fresco.vito.core.FrescoVitoPrefetcher;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
@@ -32,7 +33,7 @@ public class DefaultFrescoContextProvider implements FrescoContextProvider.Imple
     mVitoImagePipeline =
         new VitoImagePipeline(context.getImagePipeline(), context.getImagePipelineUtils());
     mFrescoController =
-        new FrescoController2(
+        new FrescoController2Impl(
             context.getHierarcher(),
             context.getLightweightBackgroundThreadExecutor(),
             context.getUiThreadExecutorService(),

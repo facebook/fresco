@@ -105,12 +105,12 @@ public class FrescoVitoImage2Spec {
 
   @OnUnbind
   static void onUnbind(ComponentContext c, FrescoDrawable2 frescoDrawable) {
-    frescoDrawable.scheduleReleaseDelayed();
+    FrescoContextProvider.getController().releaseDelayed(frescoDrawable);
   }
 
   @OnUnmount
   static void onUnmount(ComponentContext c, FrescoDrawable2 frescoDrawable) {
-    frescoDrawable.scheduleReleaseNextFrame();
+    FrescoContextProvider.getController().release(frescoDrawable);
   }
 
   @ShouldUpdate(onMount = true)
