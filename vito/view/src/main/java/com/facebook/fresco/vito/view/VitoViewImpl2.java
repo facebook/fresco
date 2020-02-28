@@ -16,11 +16,11 @@ import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.VisibilityCallback;
-import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.VitoImageRequest;
+import com.facebook.fresco.vito.core.VitoUtils;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.multiuri.MultiUri;
@@ -82,7 +82,7 @@ public class VitoViewImpl2 implements VitoView.Implementation {
 
     frescoDrawable.setImageRequest(imageRequest);
     frescoDrawable.setCallerContext(callerContext);
-    frescoDrawable.setImageId(FrescoContext.generateIdentifier());
+    frescoDrawable.setImageId(VitoUtils.generateIdentifier());
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       // If the view is already attached, we should tell this to controller.

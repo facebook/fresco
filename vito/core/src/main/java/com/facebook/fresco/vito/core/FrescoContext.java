@@ -14,12 +14,10 @@ import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.infer.annotation.ThreadSafe;
 import java.util.concurrent.Executor;
-import java.util.concurrent.atomic.AtomicLong;
 import javax.annotation.Nullable;
 
 @ThreadSafe
 public class FrescoContext {
-  private static final AtomicLong sIdCounter = new AtomicLong();
 
   private final @Nullable CallerContextVerifier mCallerContextVerifier;
   private final FrescoExperiments mExperiments;
@@ -138,9 +136,5 @@ public class FrescoContext {
 
   public void setController(FrescoController controller) {
     mController = controller;
-  }
-
-  public static long generateIdentifier() {
-    return sIdCounter.incrementAndGet();
   }
 }

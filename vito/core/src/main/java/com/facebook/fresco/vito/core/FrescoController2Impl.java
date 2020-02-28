@@ -80,7 +80,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
           public void run() {
             DataSource<CloseableReference<CloseableImage>> dataSource =
                 mImagePipeline.fetchDecodedImage(imageRequest, callerContext);
-            frescoDrawable.setImageId(FrescoContext.generateIdentifier());
+            frescoDrawable.setImageId(VitoUtils.generateIdentifier());
             frescoDrawable.setDataSource(dataSource);
             dataSource.subscribe(frescoDrawable, mUiThreadExecutor);
           }

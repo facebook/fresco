@@ -118,7 +118,7 @@ public class FrescoControllerImpl implements FrescoController {
       }
       final FrescoState frescoState =
           new FrescoState(
-              FrescoContext.generateIdentifier(),
+              VitoUtils.generateIdentifier(),
               mFrescoContext,
               uri,
               multiUri,
