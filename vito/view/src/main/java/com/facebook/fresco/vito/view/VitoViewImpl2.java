@@ -106,7 +106,7 @@ public class VitoViewImpl2 implements VitoView.Implementation {
     drawable.cancelReleaseNextFrame();
     VitoImageRequest request = drawable.getImageRequest();
     if (request != null) {
-      mController.fetch(drawable, request, drawable.getCallerContext());
+      mController.fetch(drawable, request, drawable.getCallerContext(), null);
     }
   }
 

@@ -15,6 +15,7 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.PrefetchTarget;
 import com.facebook.fresco.vito.core.VitoImageRequest;
+import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.provider.FrescoContextProvider;
 import com.facebook.imagepipeline.multiuri.MultiUri;
@@ -88,8 +89,10 @@ public class FrescoVitoImage2Spec {
       ComponentContext c,
       final FrescoDrawable2 frescoDrawable,
       @Prop(optional = true) final @Nullable Object callerContext,
+      @Prop(optional = true) final @Nullable ImageListener imageListener,
       @CachedValue VitoImageRequest imageRequest) {
-    FrescoContextProvider.getController().fetch(frescoDrawable, imageRequest, callerContext);
+    FrescoContextProvider.getController()
+        .fetch(frescoDrawable, imageRequest, callerContext, imageListener);
   }
 
   @OnBind
@@ -97,10 +100,12 @@ public class FrescoVitoImage2Spec {
       ComponentContext c,
       final FrescoDrawable2 frescoDrawable,
       @Prop(optional = true) final @Nullable Object callerContext,
+      @Prop(optional = true) final @Nullable ImageListener imageListener,
       @CachedValue VitoImageRequest imageRequest) {
     // We fetch in both mount and bind in case an unbind event triggered a delayed release.
     // We'll only trigger an actual fetch if needed. Most of the time, this will be a no-op.
-    FrescoContextProvider.getController().fetch(frescoDrawable, imageRequest, callerContext);
+    FrescoContextProvider.getController()
+        .fetch(frescoDrawable, imageRequest, callerContext, imageListener);
   }
 
   @OnUnbind
@@ -118,11 +123,13 @@ public class FrescoVitoImage2Spec {
       @Prop(optional = true) Diff<Uri> uri,
       @Prop(optional = true) Diff<MultiUri> multiUri,
       @Prop(optional = true) Diff<ImageOptions> imageOptions,
-      @Prop(optional = true, resType = ResType.FLOAT) Diff<Float> imageAspectRatio) {
+      @Prop(optional = true, resType = ResType.FLOAT) Diff<Float> imageAspectRatio,
+      @Prop(optional = true) Diff<ImageListener> imageListener) {
     return !ObjectsCompat.equals(uri.getPrevious(), uri.getNext())
         || !ObjectsCompat.equals(multiUri.getPrevious(), multiUri.getNext())
         || !ObjectsCompat.equals(imageOptions.getPrevious(), imageOptions.getNext())
-        || !ObjectsCompat.equals(imageAspectRatio.getPrevious(), imageAspectRatio.getNext());
+        || !ObjectsCompat.equals(imageAspectRatio.getPrevious(), imageAspectRatio.getNext())
+        || !ObjectsCompat.equals(imageListener.getPrevious(), imageListener.getNext());
   }
 
   @OnPopulateAccessibilityNode

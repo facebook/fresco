@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.core;
 
+import com.facebook.fresco.vito.listener.ImageListener;
 import javax.annotation.Nullable;
 
 public interface FrescoController2 {
@@ -14,7 +15,8 @@ public interface FrescoController2 {
   boolean fetch(
       FrescoDrawable2 frescoDrawable,
       VitoImageRequest imageRequest,
-      @Nullable Object callerContext);
+      @Nullable Object callerContext,
+      @Nullable ImageListener listener);
 
   void releaseDelayed(FrescoDrawable2 drawable);
 

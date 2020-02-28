@@ -10,6 +10,7 @@ package com.facebook.fresco.vito.core;
 import android.graphics.drawable.Drawable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
+import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.CloseableImage;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
@@ -36,7 +37,8 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   public boolean fetch(
       final FrescoDrawable2 frescoDrawable,
       final VitoImageRequest imageRequest,
-      final @Nullable Object callerContext) {
+      final @Nullable Object callerContext,
+      final @Nullable ImageListener listener) {
     // Check if we already fetched the image
     if (frescoDrawable.getDrawableDataSubscriber() == this
         && frescoDrawable.isFetchSubmitted()
