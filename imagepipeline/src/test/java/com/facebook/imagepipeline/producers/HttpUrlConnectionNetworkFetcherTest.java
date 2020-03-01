@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -58,7 +59,7 @@ public class HttpUrlConnectionNetworkFetcherTest {
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
 
-    mFetcher = new HttpUrlConnectionNetworkFetcher(mock(MonotonicClock.class));
+    mFetcher = new HttpUrlConnectionNetworkFetcher("user-agent-blabla", mock(MonotonicClock.class));
     mConnectionsQueue = new LinkedList<>();
     mockUrlConnections();
     mockUriParse();
@@ -219,6 +220,15 @@ public class HttpUrlConnectionNetworkFetcherTest {
     PowerMockito.when(mockConnection.getResponseCode()).thenThrow(expectedException);
 
     verify(mockConnection).setConnectTimeout(30000);
+  }
+
+  @Test
+  public void testUserAgent() throws Exception {
+    HttpURLConnection mockConnection = mockSuccessWithStream(mock(InputStream.class));
+
+    runFetch();
+
+    verify(mockConnection).setRequestProperty(eq("User-Agent"), eq("user-agent-blabla"));
   }
 
   private HttpURLConnection mockSuccess() throws IOException {

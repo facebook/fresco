@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import javax.annotation.Nullable;
 
 /**
  * Network fetcher that uses the simplest Android stack.
@@ -59,23 +60,30 @@ public class HttpUrlConnectionNetworkFetcher
   public static final int HTTP_DEFAULT_TIMEOUT = 30000;
 
   private int mHttpConnectionTimeout;
+  @Nullable private String mUserAgent;
 
   private final ExecutorService mExecutorService;
   private final MonotonicClock mMonotonicClock;
 
   public HttpUrlConnectionNetworkFetcher() {
-    this(RealtimeSinceBootClock.get());
+    this(null, RealtimeSinceBootClock.get());
   }
 
   public HttpUrlConnectionNetworkFetcher(int httpConnectionTimeout) {
-    this(RealtimeSinceBootClock.get());
+    this(null, RealtimeSinceBootClock.get());
+    mHttpConnectionTimeout = httpConnectionTimeout;
+  }
+
+  public HttpUrlConnectionNetworkFetcher(String userAgent, int httpConnectionTimeout) {
+    this(userAgent, RealtimeSinceBootClock.get());
     mHttpConnectionTimeout = httpConnectionTimeout;
   }
 
   @VisibleForTesting
-  HttpUrlConnectionNetworkFetcher(MonotonicClock monotonicClock) {
+  HttpUrlConnectionNetworkFetcher(@Nullable String userAgent, MonotonicClock monotonicClock) {
     mExecutorService = Executors.newFixedThreadPool(NUM_NETWORK_THREADS);
     mMonotonicClock = monotonicClock;
+    mUserAgent = userAgent;
   }
 
   @Override
@@ -138,6 +146,9 @@ public class HttpUrlConnectionNetworkFetcher
 
   private HttpURLConnection downloadFrom(Uri uri, int maxRedirects) throws IOException {
     HttpURLConnection connection = openConnectionTo(uri);
+    if (mUserAgent != null) {
+      connection.setRequestProperty("User-Agent", mUserAgent);
+    }
     connection.setConnectTimeout(mHttpConnectionTimeout);
     int responseCode = connection.getResponseCode();
 
