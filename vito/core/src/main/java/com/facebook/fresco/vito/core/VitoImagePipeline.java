@@ -78,7 +78,7 @@ public class VitoImagePipeline {
         imageRequest.imageRequest,
         callerContext,
         ImageRequest.RequestLevel.FULL_FETCH,
-        requestListener,
+        mImagePipeline.getRequestListenerForRequest(imageRequest.imageRequest, requestListener),
         VitoUtils.getStringId(uiComponentId));
   }
 }
