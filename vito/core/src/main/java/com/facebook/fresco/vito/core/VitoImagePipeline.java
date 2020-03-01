@@ -14,6 +14,7 @@ import com.facebook.datasource.DataSource;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.multiuri.MultiUri;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
@@ -69,7 +70,15 @@ public class VitoImagePipeline {
   }
 
   public DataSource<CloseableReference<CloseableImage>> fetchDecodedImage(
-      VitoImageRequest imageRequest, @Nullable Object callerContext) {
-    return mImagePipeline.fetchDecodedImage(imageRequest.imageRequest, callerContext);
+      VitoImageRequest imageRequest,
+      @Nullable Object callerContext,
+      @Nullable RequestListener requestListener,
+      @Nullable long uiComponentId) {
+    return mImagePipeline.fetchDecodedImage(
+        imageRequest.imageRequest,
+        callerContext,
+        ImageRequest.RequestLevel.FULL_FETCH,
+        requestListener,
+        VitoUtils.getStringId(uiComponentId));
   }
 }

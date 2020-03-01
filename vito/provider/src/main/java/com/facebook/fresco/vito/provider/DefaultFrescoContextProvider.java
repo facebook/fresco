@@ -37,7 +37,8 @@ public class DefaultFrescoContextProvider implements FrescoContextProvider.Imple
             context.getHierarcher(),
             context.getLightweightBackgroundThreadExecutor(),
             context.getUiThreadExecutorService(),
-            mVitoImagePipeline);
+            mVitoImagePipeline,
+            null);
   }
 
   @Override
