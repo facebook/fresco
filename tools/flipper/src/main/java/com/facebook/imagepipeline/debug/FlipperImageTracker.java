@@ -54,8 +54,14 @@ public class FlipperImageTracker implements DebugImageTracker, ImagePerfDataList
     imageDebugData.addRequestId(requestId);
   }
 
+  public synchronized ImageDebugData trackImage(String localPath, CacheKey key) {
+    ImageDebugData data = new ImageDebugData(localPath);
+    mImageDebugDataMap.put(key, data);
+    return data;
+  }
+
   public synchronized ImageDebugData trackImage(CacheKey key) {
-    ImageDebugData data = new ImageDebugData(null);
+    ImageDebugData data = new ImageDebugData();
     mImageDebugDataMap.put(key, data);
     return data;
   }
@@ -69,6 +75,15 @@ public class FlipperImageTracker implements DebugImageTracker, ImagePerfDataList
       }
     }
     return key.getUriString();
+  }
+
+  @Nullable
+  public synchronized String getLocalPath(CacheKey key) {
+    ImageDebugData imageDebugData = getImageDebugData(key);
+    if (imageDebugData != null) {
+      return imageDebugData.getLocalPath();
+    }
+    return null;
   }
 
   @Nullable
@@ -140,9 +155,23 @@ public class FlipperImageTracker implements DebugImageTracker, ImagePerfDataList
     private @Nullable Set<CacheKey> mCacheKeys;
     private @Nullable Set<String> mRequestIds;
     private @Nullable Set<String> mResourceIds;
+    private @Nullable String mLocalPath;
+
+    public ImageDebugData() {
+      this(null, null);
+    }
 
     public ImageDebugData(@Nullable ImageRequest imageRequest) {
+      this(imageRequest, null);
+    }
+
+    public ImageDebugData(@Nullable String localPath) {
+      this(null, localPath);
+    }
+
+    public ImageDebugData(@Nullable ImageRequest imageRequest, @Nullable String localPath) {
       mImageRequest = imageRequest;
+      mLocalPath = localPath;
     }
 
     @Nullable
@@ -200,6 +229,11 @@ public class FlipperImageTracker implements DebugImageTracker, ImagePerfDataList
     @Nullable
     public Set<String> getResourceIds() {
       return mResourceIds;
+    }
+
+    @Nullable
+    public String getLocalPath() {
+      return mLocalPath;
     }
   }
 }
