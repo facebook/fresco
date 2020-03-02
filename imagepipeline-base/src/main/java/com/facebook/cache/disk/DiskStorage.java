@@ -23,12 +23,14 @@ import java.util.Map;
 public interface DiskStorage {
 
   class DiskDumpInfoEntry {
+    public final String id;
     public final String path;
     public final String type;
     public final float size;
     public final String firstBits;
 
-    protected DiskDumpInfoEntry(String path, String type, float size, String firstBits) {
+    protected DiskDumpInfoEntry(String id, String path, String type, float size, String firstBits) {
+      this.id = id;
       this.path = path;
       this.type = type;
       this.size = size;
