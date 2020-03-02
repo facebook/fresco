@@ -30,4 +30,9 @@ public class AnimationFrameCacheKey implements CacheKey {
   public String getUriString() {
     return mAnimationUriString;
   }
+
+  @Override
+  public boolean isResourceIdForDebugging() {
+    return false;
+  }
 }

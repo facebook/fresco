@@ -109,6 +109,11 @@ public class BitmapMemoryCacheKey implements CacheKey {
         mHash);
   }
 
+  @Override
+  public boolean isResourceIdForDebugging() {
+    return false;
+  }
+
   public Object getCallerContext() {
     return mCallerContext;
   }

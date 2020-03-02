@@ -37,4 +37,10 @@ public interface CacheKey {
    * keys being contained, the first is returned.
    */
   String getUriString();
+
+  /**
+   * Returns true if this key was constructed from a resource ID. If this ever changes, the disk
+   * cache entries corresponding to this cache key would be invalidated.
+   */
+  boolean isResourceIdForDebugging();
 }

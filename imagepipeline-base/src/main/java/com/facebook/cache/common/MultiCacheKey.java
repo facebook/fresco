@@ -71,4 +71,9 @@ public class MultiCacheKey implements CacheKey {
   public String getUriString() {
     return mCacheKeys.get(0).getUriString();
   }
+
+  @Override
+  public boolean isResourceIdForDebugging() {
+    return false;
+  }
 }

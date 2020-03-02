@@ -18,9 +18,15 @@ import com.facebook.common.internal.Preconditions;
  */
 public class SimpleCacheKey implements CacheKey {
   final String mKey;
+  final boolean mIsResourceIdForDebugging;
 
   public SimpleCacheKey(final String key) {
+    this(key, false);
+  }
+
+  public SimpleCacheKey(final String key, boolean isResourceIdForDebugging) {
     mKey = Preconditions.checkNotNull(key);
+    mIsResourceIdForDebugging = isResourceIdForDebugging;
   }
 
   @Override
@@ -53,5 +59,10 @@ public class SimpleCacheKey implements CacheKey {
   @Override
   public String getUriString() {
     return mKey;
+  }
+
+  @Override
+  public boolean isResourceIdForDebugging() {
+    return mIsResourceIdForDebugging;
   }
 }

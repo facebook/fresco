@@ -28,7 +28,7 @@ public final class CacheKeyUtil {
         }
       } else {
         ids = new ArrayList<>(1);
-        ids.add(secureHashKey(key));
+        ids.add(key.isResourceIdForDebugging() ? key.getUriString() : secureHashKey(key));
       }
       return ids;
     } catch (UnsupportedEncodingException e) {

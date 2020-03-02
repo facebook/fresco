@@ -72,6 +72,11 @@ public class AnimatedFrameCache {
     public @Nullable String getUriString() {
       return null;
     }
+
+    @Override
+    public boolean isResourceIdForDebugging() {
+      return false;
+    }
   }
 
   private final CacheKey mImageCacheKey;
