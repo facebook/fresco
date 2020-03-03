@@ -182,6 +182,7 @@ public class FrescoDrawable2 extends BaseFrescoDrawable
     mFetchSubmitted = false;
     mActualImageWrapper.setCurrent(NopDrawable.INSTANCE);
     mImageOrigin = ImageOrigin.UNKNOWN;
+    mImageId = 0;
   }
 
   public void scheduleReleaseDelayed() {

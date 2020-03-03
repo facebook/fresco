@@ -99,6 +99,9 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
         new Runnable() {
           @Override
           public void run() {
+            if (imageId != frescoDrawable.getImageId()) {
+              return; // We're trying to load a different image -> ignore
+            }
             DataSource<CloseableReference<CloseableImage>> dataSource =
                 mImagePipeline.fetchDecodedImage(
                     imageRequest, callerContext, frescoDrawable.getImageOriginListener(), imageId);
