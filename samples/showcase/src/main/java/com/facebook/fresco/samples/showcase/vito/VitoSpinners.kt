@@ -7,11 +7,16 @@
 
 package com.facebook.fresco.samples.showcase.vito
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.PointF
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.InsetDrawable
+import androidx.core.content.ContextCompat
+import com.facebook.drawee.drawable.AutoRotateDrawable
+import com.facebook.drawee.drawable.ProgressBarDrawable
 import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.fresco.samples.showcase.R
 import com.facebook.fresco.samples.showcase.common.CustomScaleTypes
@@ -87,6 +92,20 @@ object VitoSpinners {
             "block color" to {builder: ImageOptions.Builder -> builder.placeholder(ColorDrawable(Color.RED))},
             "color res" to {builder: ImageOptions.Builder -> builder.placeholderRes(R.color.placeholder_color)}
     ), "Placeholder")
+
+    val progressOptions = Pair(listOf(
+            "none" to {_, builder: ImageOptions.Builder -> builder.progress(null)},
+            "image" to {_, builder: ImageOptions.Builder -> builder.progressRes(R.drawable.logo)},
+            "color drawable" to {_, builder: ImageOptions.Builder -> builder.progress(ColorDrawable(Color.YELLOW))},
+            "color res" to {_, builder: ImageOptions.Builder -> builder.progressRes(R.color.progress_bar_color)},
+            "indeterminate" to {_, builder: ImageOptions.Builder -> builder.progress(AutoRotateDrawable(InsetDrawable(ColorDrawable(Color.BLUE), 50), 1000))},
+            "progress bar" to { c: Context, builder: ImageOptions.Builder ->
+                builder.progress(ProgressBarDrawable().apply {
+                    color = ContextCompat.getColor(c, R.color.progress_bar_color)
+                    backgroundColor = ContextCompat.getColor(c, R.color.progress_bar_background)
+                })
+            }
+    ), "Progress")
 
     val postprocessorOptions = Pair(listOf(
             "none" to {builder: ImageOptions.Builder -> builder.postprocess(null)},

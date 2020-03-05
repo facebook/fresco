@@ -67,6 +67,9 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
         spinner_placeholder.setupWithList(VitoSpinners.placeholderOptions) {
             refresh(it(imageOptionsBuilder))
         }
+        spinner_progress.setupWithList(VitoSpinners.progressOptions) {
+            refresh(it(context!!, imageOptionsBuilder))
+        }
         spinner_postprocessor.setupWithList(VitoSpinners.postprocessorOptions) {
             refresh(it(imageOptionsBuilder))
         }
