@@ -148,6 +148,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             drawable.getImageOrigin(),
             image.get(),
             actualDrawable);
+    drawable.setProgressDrawable(null);
   }
 
   @Override
