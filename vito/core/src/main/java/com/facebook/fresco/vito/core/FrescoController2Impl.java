@@ -10,6 +10,7 @@ package com.facebook.fresco.vito.core;
 import android.graphics.drawable.Drawable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
+import com.facebook.datasource.DataSources;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -18,11 +19,15 @@ import javax.annotation.Nullable;
 
 public class FrescoController2Impl implements DrawableDataSubscriber, FrescoController2 {
 
+  private static final NullPointerException NO_REQUEST_EXCEPTION =
+      new NullPointerException("No image request was specified!");
+
   private final Hierarcher mHierarcher;
   private final Executor mLightweightBackgroundThreadExecutor;
   private final Executor mUiThreadExecutor;
   private final VitoImagePipeline mImagePipeline;
   private final @Nullable VitoImageRequestListener mGlobalImageListener;
+
 
   public FrescoController2Impl(
       Hierarcher hierarcher,
@@ -102,9 +107,17 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             if (imageId != frescoDrawable.getImageId()) {
               return; // We're trying to load a different image -> ignore
             }
-            DataSource<CloseableReference<CloseableImage>> dataSource =
-                mImagePipeline.fetchDecodedImage(
-                    imageRequest, callerContext, frescoDrawable.getImageOriginListener(), imageId);
+            DataSource<CloseableReference<CloseableImage>> dataSource;
+            if (imageRequest.imageRequest == null) {
+              dataSource = DataSources.immediateFailedDataSource(NO_REQUEST_EXCEPTION);
+            } else {
+              dataSource =
+                  mImagePipeline.fetchDecodedImage(
+                      imageRequest,
+                      callerContext,
+                      frescoDrawable.getImageOriginListener(),
+                      imageId);
+            }
             frescoDrawable.setDataSource(dataSource);
             dataSource.subscribe(frescoDrawable, mUiThreadExecutor);
           }
