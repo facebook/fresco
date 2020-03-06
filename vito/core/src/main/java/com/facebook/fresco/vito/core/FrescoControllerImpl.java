@@ -420,6 +420,9 @@ public class FrescoControllerImpl implements FrescoController {
         }
       }
     } finally {
+      if (mFrescoContext.getExperiments().closePrefetchDataSource())
+        // In any case, we can now cancel the prefetch
+        frescoState.setPrefetchDatasource(null);
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.endSection();
       }

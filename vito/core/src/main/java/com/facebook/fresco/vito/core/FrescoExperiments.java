@@ -74,6 +74,10 @@ public class FrescoExperiments {
     return true;
   }
 
+  public boolean closePrefetchDataSource() {
+    return false;
+  }
+
   public boolean cacheImageInState() {
     return false;
   }
