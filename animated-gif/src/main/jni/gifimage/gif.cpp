@@ -35,42 +35,54 @@ static void DGifCloseFile2(GifFileType* pGifFile) {
 
 class DataWrapper {
 public:
-  DataWrapper() : m_position(0) {}
+  DataWrapper() {}
 
   virtual ~DataWrapper() {}
 
-  virtual void copy(GifByteType* dest, int size) = 0;
+  virtual size_t read(GifByteType* dest, size_t size) = 0;
 
   virtual size_t getBufferSize() = 0;
 
-  size_t getPosition() {
-    return m_position;
-  }
+  virtual size_t getPosition() = 0;
 
-  void setPosition(size_t position) {
-    m_position = position;
-  }
-
-protected:
-  size_t m_position;
+  virtual bool setPosition(size_t position) = 0;
 };
 
 class BytesDataWrapper : public DataWrapper {
 public:
   BytesDataWrapper(std::vector<uint8_t>&& pBuffer) : DataWrapper(),
-    m_pBuffer(std::move(pBuffer)) {
+    m_pBuffer(std::move(pBuffer)), m_position(0) {
+    m_length = m_pBuffer.size();
   }
 
-  void copy(GifByteType* dest, int size) override {
-    memcpy(dest, m_pBuffer.data() + m_position, size);
+  size_t read(GifByteType* dest, size_t size) override {
+    size_t readSize = m_position + size > m_length ? m_length - m_position : size;
+    memcpy(dest, m_pBuffer.data() + m_position, readSize);
+    m_position += readSize;
+    return readSize;
   }
 
   size_t getBufferSize() override {
-    return m_pBuffer.size();
+    return m_length;
+  }
+
+  size_t getPosition() override {
+    return m_position;
+  }
+
+  bool setPosition(size_t position) override {
+    if (position < m_length) {
+      m_position = position;
+      return true;
+    } else {
+      return false;
+    }
   }
 
 private:
   std::vector<uint8_t> m_pBuffer;
+  size_t m_position;
+  size_t m_length;
 };
 
 class GifWrapper {
@@ -230,23 +242,17 @@ struct GifFrameNativeContext {
 };
 
 /**
- * giflib takes a callback function for reading fromt the file.
+ * giflib takes a callback function for reading from the file.
  */
 static int directByteBufferReadFun(
    GifFileType* gifFileType,
    GifByteType* bytes,
    int size) {
   DataWrapper* pData = (DataWrapper*) gifFileType->UserData;
-  size_t position = pData->getPosition();
-  size_t bufferSize = pData->getBufferSize();
-  if (position + size > bufferSize) {
-    size = bufferSize - position;
-  }
   if (size > 0) {
-    pData->copy(bytes, size);
-    pData->setPosition(position + size);
+    return pData->read(bytes, size);
   }
-  return size;
+  return 0;
 }
 
 /**
@@ -1192,7 +1198,10 @@ void GifFrame_nativeRenderFrame(
   // the GIF.
   int frameNum = spNativeContext->frameNum;
   int byteOffset = pGifWrapper->getFrameByteOffset(frameNum);
-  pGifWrapper->getData()->setPosition(byteOffset);
+  if (!pGifWrapper->getData()->setPosition(byteOffset)) {
+    // Unable to position to frame, ignore it
+    return;
+  }
 
   // Now we kick off the decoding process.
   int readRes = readSingleFrame(pGifWrapper,
