@@ -252,9 +252,8 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     return mCurrentlyFetching;
   }
 
-  @VisibleForTesting
-  static class PriorityFetchState<FETCH_STATE extends FetchState> extends FetchState {
-    final FETCH_STATE delegatedState;
+  public static class PriorityFetchState<FETCH_STATE extends FetchState> extends FetchState {
+    public final FETCH_STATE delegatedState;
     final long enqueuedTimestamp;
 
     /** Size of hi-pri queue when this request was added. */
