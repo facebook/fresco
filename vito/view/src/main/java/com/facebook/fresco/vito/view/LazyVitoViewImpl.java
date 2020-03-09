@@ -9,11 +9,11 @@ package com.facebook.fresco.vito.view;
 
 import android.net.Uri;
 import android.view.View;
+import androidx.annotation.Nullable;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.provider.FrescoContextProvider;
 import com.facebook.imagepipeline.multiuri.MultiUri;
-import javax.annotation.Nullable;
 
 public abstract class LazyVitoViewImpl implements VitoView.Implementation {
 
