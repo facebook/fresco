@@ -251,7 +251,7 @@ subprojects {
             "https://launchpad.net/ubuntu/+archive/primary/+files/giflib_${GIFLIB_VERSION}.orig.tar.bz2", // The Url for download
             "giflib_${GIFLIB_VERSION}.orig.tar.bz2", // The downloaded file
             'giflib', // The folder where the file is downloaded
-            "giflib-${GIFLIB_VERSION}/lib", // The first dir where we have put our customisation
+            "giflib-${GIFLIB_VERSION}", // The first dir where we have put our customisation
             ['*.c', '*.h', '*.mk'], // Files to compile
             "giflib" // Final destination dir
     )
