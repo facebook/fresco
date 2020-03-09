@@ -28,7 +28,6 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   private final VitoImagePipeline mImagePipeline;
   private final @Nullable VitoImageRequestListener mGlobalImageListener;
 
-
   public FrescoController2Impl(
       Hierarcher hierarcher,
       Executor lightweightBackgroundThreadExecutor,
