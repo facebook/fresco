@@ -33,8 +33,9 @@ executors:
       - TERM: dumb
       - ADB_INSTALL_TIMEOUT: 10
       - _JAVA_OPTIONS: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
-      - GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-XX:+HeapDumpOnOutOfMemoryError"
+      - GRADLE_OPTS: -Xmx1536m -Dkotlin.incremental=false -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-XX:+HeapDumpOnOutOfMemoryError"
       - BUILD_THREADS: 2
+      - JVM_OPTS: -Xmx2048m
 
 commands:
   setup-emulator:
