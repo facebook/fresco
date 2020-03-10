@@ -90,6 +90,19 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
         nativePtr, sizeInBytes, options.maxDimensionPx, options.forceStaticImage);
   }
 
+  /**
+   * Creates a {@link GifImage} from a file descriptor containing the image. This will throw if it
+   * fails to create.
+   *
+   * @param fileDescriptor the file descriptor containing the image (a copy will be made)
+   */
+  public static GifImage create(int fileDescriptor, ImageDecodeOptions options) {
+    ensure();
+
+    return nativeCreateFromFileDescriptor(
+        fileDescriptor, options.maxDimensionPx, options.forceStaticImage);
+  }
+
   @Override
   public AnimatedImage decode(long nativePtr, int sizeInBytes, ImageDecodeOptions options) {
     return GifImage.create(nativePtr, sizeInBytes, options);
@@ -223,6 +236,10 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
   @DoNotStrip
   private static native GifImage nativeCreateFromNativeMemory(
       long nativePtr, int sizeInBytes, int maxDimension, boolean forceStatic);
+
+  @DoNotStrip
+  private static native GifImage nativeCreateFromFileDescriptor(
+      int fileDescriptor, int maxDimension, boolean forceStatic);
 
   @DoNotStrip
   private native int nativeGetWidth();

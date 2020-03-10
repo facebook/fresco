@@ -9,8 +9,10 @@
 
 #include <jni.h>
 #include <algorithm>
+#include <cstdio>
 #include <memory>
 #include <mutex>
+#include <unistd.h>
 #include <utility>
 #include <vector>
 #include <android/bitmap.h>
@@ -82,6 +84,59 @@ public:
 private:
   std::vector<uint8_t> m_pBuffer;
   size_t m_position;
+  size_t m_length;
+};
+
+class FileDataWrapper : public DataWrapper {
+public:
+  static FileDataWrapper* create(JNIEnv* pEnv, int fd) {
+    fd = dup(fd);
+    FILE* file = fdopen(fd, "rb");
+    if (file == nullptr) {
+      throwIllegalStateException(pEnv, "Unable to open file: %s", strerror(errno));
+      return nullptr;
+    }
+    if (fseek(file, 0, SEEK_END) != 0) {
+      throwIllegalStateException(pEnv, "Unable to seek to end of file: %s", strerror(errno));
+      return nullptr;
+    }
+    long size = ftell(file);
+    if (size < 0) {
+      throwIllegalStateException(pEnv, "Unable to get file size: %s", strerror(errno));
+      return nullptr;
+    }
+    if (fseek(file, 0, SEEK_SET) != 0) {
+      throwIllegalStateException(pEnv, "Unable to seek to beginning of file: %s", strerror(errno));
+      return nullptr;
+    }
+    return new FileDataWrapper(file, size);
+  }
+
+  FileDataWrapper(FILE* file, size_t length) : DataWrapper(), m_file(file), m_length(length) {}
+
+  ~FileDataWrapper() override {
+    fclose(m_file);
+  }
+
+  size_t read(GifByteType* dest, size_t size) override {
+    return fread(dest, 1, size, m_file);
+  }
+
+  size_t getBufferSize() override {
+    return m_length;
+  }
+
+  size_t getPosition() override {
+    long position = ftell(m_file);
+    return position >= 0 ? position : 0;
+  }
+
+  bool setPosition(size_t position) override {
+    return fseek(m_file, position, SEEK_SET) == 0;
+  }
+
+private:
+  FILE* m_file;
   size_t m_length;
 };
 
@@ -793,6 +848,25 @@ jobject GifImage_nativeCreateFromNativeMemory(
 }
 
 /**
+ * Creates a new GifImage from the specified byte buffer. The data from the byte buffer is copied
+ * into native memory managed by GifImage.
+ *
+ * @param fileDescriptor File descriptor to open
+ * @param maxDimension Maximum allowed dimension of canvas and each decoded frame
+ * @param forceStatic Whether GIF should be decoded as static image
+ * @return a newly allocated GifImage
+ */
+jobject GifImage_nativeCreateFromFileDescriptor(JNIEnv* pEnv, jclass clazz, jint fileDescriptor, jint maxDimension, jboolean forceStatic) {
+  // Create the DataWrapper
+  std::shared_ptr<FileDataWrapper> spDataWrapper =
+      std::shared_ptr<FileDataWrapper>(FileDataWrapper::create(pEnv, fileDescriptor));
+  if (pEnv->ExceptionCheck() || !spDataWrapper) {
+    return 0;
+  }
+  return createFromDataWrapper(pEnv, spDataWrapper, maxDimension, forceStatic);
+}
+
+/**
  * Gets the width of the image.
  *
  * @return the width of the image
@@ -1411,6 +1485,9 @@ static JNINativeMethod sGifImageMethods[] = {
   { "nativeCreateFromNativeMemory",
     "(JIIZ)Lcom/facebook/animated/gif/GifImage;",
     (void*)GifImage_nativeCreateFromNativeMemory },
+  { "nativeCreateFromFileDescriptor",
+    "(IIZ)Lcom/facebook/animated/gif/GifImage;",
+    (void*)GifImage_nativeCreateFromFileDescriptor },
   { "nativeGetWidth",
     "()I",
     (void*)GifImage_nativeGetWidth },
