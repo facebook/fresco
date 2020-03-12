@@ -62,7 +62,7 @@ public class WebPImage implements AnimatedImage, AnimatedImageDecoder {
    *
    * @param source the data to the image (a copy will be made)
    */
-  public static WebPImage create(byte[] source) {
+  public static WebPImage createFromByteArray(byte[] source) {
     ensure();
     Preconditions.checkNotNull(source);
 
@@ -79,27 +79,28 @@ public class WebPImage implements AnimatedImage, AnimatedImageDecoder {
    *
    * @param byteBuffer the ByteBuffer containing the image
    */
-  public static WebPImage create(ByteBuffer byteBuffer) {
+  public static WebPImage createFromByteBuffer(ByteBuffer byteBuffer) {
     ensure();
     byteBuffer.rewind();
 
     return nativeCreateFromDirectByteBuffer(byteBuffer);
   }
 
-  public static WebPImage create(long nativePtr, int sizeInBytes) {
+  public static WebPImage createFromNativeMemory(long nativePtr, int sizeInBytes) {
     ensure();
     Preconditions.checkArgument(nativePtr != 0);
     return nativeCreateFromNativeMemory(nativePtr, sizeInBytes);
   }
 
   @Override
-  public AnimatedImage decode(long nativePtr, int sizeInBytes, ImageDecodeOptions options) {
-    return WebPImage.create(nativePtr, sizeInBytes);
+  public AnimatedImage decodeFromNativeMemory(
+      long nativePtr, int sizeInBytes, ImageDecodeOptions options) {
+    return WebPImage.createFromNativeMemory(nativePtr, sizeInBytes);
   }
 
   @Override
-  public AnimatedImage decode(ByteBuffer byteBuffer, ImageDecodeOptions options) {
-    return WebPImage.create(byteBuffer);
+  public AnimatedImage decodeFromByteBuffer(ByteBuffer byteBuffer, ImageDecodeOptions options) {
+    return WebPImage.createFromByteBuffer(byteBuffer);
   }
 
   @Override

@@ -101,9 +101,9 @@ public class AnimatedImageFactoryWebPImplTest {
   public void testCreateDefaultsUsingPointer() {
     WebPImage mockWebPImage = mock(WebPImage.class);
 
-    // Expect a call to WebPImage.create
+    // Expect a call to WebPImage.createFromByteBuffer
     TrivialPooledByteBuffer byteBuffer = createByteBuffer();
-    when(mWebPImageMock.decode(
+    when(mWebPImageMock.decodeFromNativeMemory(
             eq(byteBuffer.getNativePtr()), eq(byteBuffer.size()), any(ImageDecodeOptions.class)))
         .thenReturn(mockWebPImage);
 
@@ -114,9 +114,10 @@ public class AnimatedImageFactoryWebPImplTest {
   public void testCreateDefaultsUsingByteBuffer() {
     WebPImage mockWebPImage = mock(WebPImage.class);
 
-    // Expect a call to WebPImage.create
+    // Expect a call to WebPImage.createFromByteBuffer
     TrivialBufferPooledByteBuffer byteBuffer = createDirectByteBuffer();
-    when(mWebPImageMock.decode(eq(byteBuffer.getByteBuffer()), any(ImageDecodeOptions.class)))
+    when(mWebPImageMock.decodeFromByteBuffer(
+            eq(byteBuffer.getByteBuffer()), any(ImageDecodeOptions.class)))
         .thenReturn(mockWebPImage);
 
     testCreateDefaults(mockWebPImage, byteBuffer);
@@ -127,9 +128,9 @@ public class AnimatedImageFactoryWebPImplTest {
     WebPImage mockWebPImage = mock(WebPImage.class);
     Bitmap mockBitmap = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
 
-    // Expect a call to WebPImage.create
+    // Expect a call to WebPImage.createFromByteBuffer
     TrivialPooledByteBuffer byteBuffer = createByteBuffer();
-    when(mWebPImageMock.decode(
+    when(mWebPImageMock.decodeFromNativeMemory(
             eq(byteBuffer.getNativePtr()), eq(byteBuffer.size()), any(ImageDecodeOptions.class)))
         .thenReturn(mockWebPImage);
     when(mockWebPImage.getWidth()).thenReturn(50);
@@ -143,9 +144,10 @@ public class AnimatedImageFactoryWebPImplTest {
     WebPImage mockWebPImage = mock(WebPImage.class);
     Bitmap mockBitmap = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
 
-    // Expect a call to WebPImage.create
+    // Expect a call to WebPImage.createFromByteBuffer
     TrivialBufferPooledByteBuffer byteBuffer = createDirectByteBuffer();
-    when(mWebPImageMock.decode(eq(byteBuffer.getByteBuffer()), any(ImageDecodeOptions.class)))
+    when(mWebPImageMock.decodeFromByteBuffer(
+            eq(byteBuffer.getByteBuffer()), any(ImageDecodeOptions.class)))
         .thenReturn(mockWebPImage);
     when(mockWebPImage.getWidth()).thenReturn(50);
     when(mockWebPImage.getHeight()).thenReturn(50);
@@ -160,9 +162,9 @@ public class AnimatedImageFactoryWebPImplTest {
     Bitmap mockBitmap1 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
     Bitmap mockBitmap2 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
 
-    // Expect a call to WebPImage.create
+    // Expect a call to WebPImage.createFromByteBuffer
     TrivialPooledByteBuffer byteBuffer = createByteBuffer();
-    when(mWebPImageMock.decode(
+    when(mWebPImageMock.decodeFromNativeMemory(
             eq(byteBuffer.getNativePtr()), eq(byteBuffer.size()), any(ImageDecodeOptions.class)))
         .thenReturn(mockWebPImage);
     when(mockWebPImage.getWidth()).thenReturn(50);
@@ -178,9 +180,10 @@ public class AnimatedImageFactoryWebPImplTest {
     Bitmap mockBitmap1 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
     Bitmap mockBitmap2 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
 
-    // Expect a call to WebPImage.create
+    // Expect a call to WebPImage.createFromByteBuffer
     TrivialBufferPooledByteBuffer byteBuffer = createDirectByteBuffer();
-    when(mWebPImageMock.decode(eq(byteBuffer.getByteBuffer()), any(ImageDecodeOptions.class)))
+    when(mWebPImageMock.decodeFromByteBuffer(
+            eq(byteBuffer.getByteBuffer()), any(ImageDecodeOptions.class)))
         .thenReturn(mockWebPImage);
     when(mockWebPImage.getWidth()).thenReturn(50);
     when(mockWebPImage.getHeight()).thenReturn(50);

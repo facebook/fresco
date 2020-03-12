@@ -21,7 +21,7 @@ public interface AnimatedImageDecoder {
    * @param options The options for decoding
    * @return The AnimatedImage allocation
    */
-  AnimatedImage decode(long nativePtr, int sizeInBytes, ImageDecodeOptions options);
+  AnimatedImage decodeFromNativeMemory(long nativePtr, int sizeInBytes, ImageDecodeOptions options);
 
   /**
    * Factory method to create the AnimatedImage from a ByteBuffer
@@ -30,5 +30,5 @@ public interface AnimatedImageDecoder {
    * @param options The options for decoding
    * @return The AnimatedImage allocation
    */
-  AnimatedImage decode(ByteBuffer byteBuffer, ImageDecodeOptions options);
+  AnimatedImage decodeFromByteBuffer(ByteBuffer byteBuffer, ImageDecodeOptions options);
 }

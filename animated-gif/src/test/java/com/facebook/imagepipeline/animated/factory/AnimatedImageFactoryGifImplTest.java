@@ -101,9 +101,9 @@ public class AnimatedImageFactoryGifImplTest {
   public void testCreateDefaultsUsingPointer() {
     GifImage mockGifImage = mock(GifImage.class);
 
-    // Expect a call to GifImage.create
+    // Expect a call to GifImage.createFromByteBuffer
     TrivialPooledByteBuffer byteBuffer = createByteBuffer();
-    when(mGifImageMock.decode(
+    when(mGifImageMock.decodeFromNativeMemory(
             eq(byteBuffer.getNativePtr()), eq(byteBuffer.size()), any(ImageDecodeOptions.class)))
         .thenReturn(mockGifImage);
 
@@ -114,9 +114,10 @@ public class AnimatedImageFactoryGifImplTest {
   public void testCreateDefaultsUsingByteBuffer() {
     GifImage mockGifImage = mock(GifImage.class);
 
-    // Expect a call to GifImage.create
+    // Expect a call to GifImage.createFromByteBuffer
     TrivialBufferPooledByteBuffer byteBuffer = createDirectByteBuffer();
-    when(mGifImageMock.decode(eq(byteBuffer.getByteBuffer()), any(ImageDecodeOptions.class)))
+    when(mGifImageMock.decodeFromByteBuffer(
+            eq(byteBuffer.getByteBuffer()), any(ImageDecodeOptions.class)))
         .thenReturn(mockGifImage);
 
     testCreateDefaults(mockGifImage, byteBuffer);
@@ -127,9 +128,9 @@ public class AnimatedImageFactoryGifImplTest {
     GifImage mockGifImage = mock(GifImage.class);
     Bitmap mockBitmap = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
 
-    // Expect a call to WebPImage.create
+    // Expect a call to GifImage.createFromByteBuffer
     TrivialPooledByteBuffer byteBuffer = createByteBuffer();
-    when(mGifImageMock.decode(
+    when(mGifImageMock.decodeFromNativeMemory(
             eq(byteBuffer.getNativePtr()), eq(byteBuffer.size()), any(ImageDecodeOptions.class)))
         .thenReturn(mockGifImage);
     when(mockGifImage.getWidth()).thenReturn(50);
@@ -143,9 +144,10 @@ public class AnimatedImageFactoryGifImplTest {
     GifImage mockGifImage = mock(GifImage.class);
     Bitmap mockBitmap = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
 
-    // Expect a call to WebPImage.create
+    // Expect a call to GifImage.createFromByteBuffer
     TrivialBufferPooledByteBuffer byteBuffer = createDirectByteBuffer();
-    when(mGifImageMock.decode(eq(byteBuffer.getByteBuffer()), any(ImageDecodeOptions.class)))
+    when(mGifImageMock.decodeFromByteBuffer(
+            eq(byteBuffer.getByteBuffer()), any(ImageDecodeOptions.class)))
         .thenReturn(mockGifImage);
     when(mockGifImage.getWidth()).thenReturn(50);
     when(mockGifImage.getHeight()).thenReturn(50);
@@ -160,9 +162,9 @@ public class AnimatedImageFactoryGifImplTest {
     Bitmap mockBitmap1 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
     Bitmap mockBitmap2 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
 
-    // Expect a call to GifImage.create
+    // Expect a call to GifImage.createFromByteBuffer
     TrivialPooledByteBuffer byteBuffer = createByteBuffer();
-    when(mGifImageMock.decode(
+    when(mGifImageMock.decodeFromNativeMemory(
             eq(byteBuffer.getNativePtr()), eq(byteBuffer.size()), any(ImageDecodeOptions.class)))
         .thenReturn(mockGifImage);
     when(mockGifImage.getWidth()).thenReturn(50);
@@ -178,9 +180,10 @@ public class AnimatedImageFactoryGifImplTest {
     Bitmap mockBitmap1 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
     Bitmap mockBitmap2 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
 
-    // Expect a call to GifImage.create
+    // Expect a call to GifImage.createFromByteBuffer
     TrivialBufferPooledByteBuffer byteBuffer = createDirectByteBuffer();
-    when(mGifImageMock.decode(eq(byteBuffer.getByteBuffer()), any(ImageDecodeOptions.class)))
+    when(mGifImageMock.decodeFromByteBuffer(
+            eq(byteBuffer.getByteBuffer()), any(ImageDecodeOptions.class)))
         .thenReturn(mockGifImage);
     when(mockGifImage.getWidth()).thenReturn(50);
     when(mockGifImage.getHeight()).thenReturn(50);

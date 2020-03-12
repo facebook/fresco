@@ -49,14 +49,14 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
    *
    * @param source the data to the image (a copy will be made)
    */
-  public static GifImage create(byte[] source) {
+  public static GifImage createFromByteArray(byte[] source) {
     Preconditions.checkNotNull(source);
 
     ByteBuffer byteBuffer = ByteBuffer.allocateDirect(source.length);
     byteBuffer.put(source);
     byteBuffer.rewind();
 
-    return create(byteBuffer, ImageDecodeOptions.defaults());
+    return createFromByteBuffer(byteBuffer, ImageDecodeOptions.defaults());
   }
 
   /**
@@ -65,8 +65,8 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
    *
    * @param byteBuffer the ByteBuffer containing the image (a copy will be made)
    */
-  public static GifImage create(ByteBuffer byteBuffer) {
-    return create(byteBuffer, ImageDecodeOptions.defaults());
+  public static GifImage createFromByteBuffer(ByteBuffer byteBuffer) {
+    return createFromByteBuffer(byteBuffer, ImageDecodeOptions.defaults());
   }
 
   /**
@@ -75,7 +75,7 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
    *
    * @param byteBuffer the ByteBuffer containing the image (a copy will be made)
    */
-  public static GifImage create(ByteBuffer byteBuffer, ImageDecodeOptions options) {
+  public static GifImage createFromByteBuffer(ByteBuffer byteBuffer, ImageDecodeOptions options) {
     ensure();
     byteBuffer.rewind();
 
@@ -83,7 +83,8 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
         byteBuffer, options.maxDimensionPx, options.forceStaticImage);
   }
 
-  public static GifImage create(long nativePtr, int sizeInBytes, ImageDecodeOptions options) {
+  public static GifImage createFromNativeMemory(
+      long nativePtr, int sizeInBytes, ImageDecodeOptions options) {
     ensure();
     Preconditions.checkArgument(nativePtr != 0);
     return nativeCreateFromNativeMemory(
@@ -96,7 +97,7 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
    *
    * @param fileDescriptor the file descriptor containing the image (a copy will be made)
    */
-  public static GifImage create(int fileDescriptor, ImageDecodeOptions options) {
+  public static GifImage createFromFileDescriptor(int fileDescriptor, ImageDecodeOptions options) {
     ensure();
 
     return nativeCreateFromFileDescriptor(
@@ -104,13 +105,14 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
   }
 
   @Override
-  public AnimatedImage decode(long nativePtr, int sizeInBytes, ImageDecodeOptions options) {
-    return GifImage.create(nativePtr, sizeInBytes, options);
+  public AnimatedImage decodeFromNativeMemory(
+      long nativePtr, int sizeInBytes, ImageDecodeOptions options) {
+    return GifImage.createFromNativeMemory(nativePtr, sizeInBytes, options);
   }
 
   @Override
-  public AnimatedImage decode(ByteBuffer byteBuffer, ImageDecodeOptions options) {
-    return GifImage.create(byteBuffer, options);
+  public AnimatedImage decodeFromByteBuffer(ByteBuffer byteBuffer, ImageDecodeOptions options) {
+    return GifImage.createFromByteBuffer(byteBuffer, options);
   }
 
   @DoNotStrip
