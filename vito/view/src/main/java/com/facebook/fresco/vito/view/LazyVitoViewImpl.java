@@ -12,15 +12,15 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
-import com.facebook.fresco.vito.provider.FrescoContextProvider;
+import com.facebook.fresco.vito.provider.FrescoVitoProvider;
 import com.facebook.imagepipeline.multiuri.MultiUri;
 
 public abstract class LazyVitoViewImpl implements VitoView.Implementation {
 
-  private final FrescoContextProvider.Implementation mProvider;
+  private final FrescoVitoProvider.Implementation mProvider;
   private @Nullable VitoView.Implementation mImplementation;
 
-  public LazyVitoViewImpl(FrescoContextProvider.Implementation provider) {
+  public LazyVitoViewImpl(FrescoVitoProvider.Implementation provider) {
     mProvider = provider;
   }
 
@@ -42,5 +42,5 @@ public abstract class LazyVitoViewImpl implements VitoView.Implementation {
     return mImplementation;
   }
 
-  protected abstract VitoView.Implementation create(FrescoContextProvider.Implementation provider);
+  protected abstract VitoView.Implementation create(FrescoVitoProvider.Implementation provider);
 }

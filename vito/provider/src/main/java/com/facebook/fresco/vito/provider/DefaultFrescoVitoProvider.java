@@ -14,20 +14,20 @@ import com.facebook.fresco.vito.core.FrescoVitoPrefetcher;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 
-public class DefaultFrescoContextProvider implements FrescoContextProvider.Implementation {
+public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementation {
 
   private FrescoController2 mFrescoController;
   private VitoImagePipeline mVitoImagePipeline;
   private FrescoVitoPrefetcher mFrescoVitoPrefetcher;
 
-  public DefaultFrescoContextProvider() {
+  public DefaultFrescoVitoProvider() {
     this(DefaultFrescoContext.get());
   }
 
-  public DefaultFrescoContextProvider(FrescoContext context) {
+  public DefaultFrescoVitoProvider(FrescoContext context) {
     if (!ImagePipelineFactory.hasBeenInitialized()) {
       throw new RuntimeException(
-          "Fresco must be initialized before DefaultFrescoContextProvider can be used!");
+          "Fresco must be initialized before DefaultFrescoVitoProvider can be used!");
     }
     mFrescoVitoPrefetcher = context.getPrefetcher();
     mVitoImagePipeline =

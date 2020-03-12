@@ -12,7 +12,7 @@ import com.facebook.fresco.vito.core.FrescoVitoPrefetcher;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import javax.annotation.Nullable;
 
-public class FrescoContextProvider {
+public class FrescoVitoProvider {
 
   public interface Implementation {
     FrescoController2 getController();

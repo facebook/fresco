@@ -18,7 +18,7 @@ import com.facebook.fresco.vito.core.PrefetchTarget;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
-import com.facebook.fresco.vito.provider.FrescoContextProvider;
+import com.facebook.fresco.vito.provider.FrescoVitoProvider;
 import com.facebook.imagepipeline.multiuri.MultiUri;
 import com.facebook.litho.AccessibilityRole;
 import com.facebook.litho.ComponentContext;
@@ -74,7 +74,7 @@ public class FrescoVitoImage2Spec {
       @Prop(optional = true) final @Nullable MultiUri multiUri,
       @Prop(optional = true) final @Nullable ImageOptions imageOptions,
       @Prop(optional = true) final @Nullable Object callerContext) {
-    return FrescoContextProvider.getImagePipeline()
+    return FrescoVitoProvider.getImagePipeline()
         .createImageRequest(c.getResources(), uri, multiUri, imageOptions, callerContext);
   }
 
@@ -85,7 +85,7 @@ public class FrescoVitoImage2Spec {
       @CachedValue VitoImageRequest imageRequest,
       Output<DataSource<Void>> prefetchDataSource) {
     prefetchDataSource.set(
-        FrescoContextProvider.getPrefetcher()
+        FrescoVitoProvider.getPrefetcher()
             .prefetch(PrefetchTarget.MEMORY_DECODED, imageRequest, callerContext));
   }
 
@@ -97,7 +97,7 @@ public class FrescoVitoImage2Spec {
       @Prop(optional = true) final @Nullable ImageListener imageListener,
       @CachedValue VitoImageRequest imageRequest,
       @FromPrepare DataSource<Void> prefetchDataSource) {
-    FrescoContextProvider.getController()
+    FrescoVitoProvider.getController()
         .fetch(frescoDrawable, imageRequest, callerContext, imageListener);
     if (prefetchDataSource != null) {
       prefetchDataSource.close();
@@ -114,7 +114,7 @@ public class FrescoVitoImage2Spec {
       @FromPrepare DataSource<Void> prefetchDataSource) {
     // We fetch in both mount and bind in case an unbind event triggered a delayed release.
     // We'll only trigger an actual fetch if needed. Most of the time, this will be a no-op.
-    FrescoContextProvider.getController()
+    FrescoVitoProvider.getController()
         .fetch(frescoDrawable, imageRequest, callerContext, imageListener);
     if (prefetchDataSource != null) {
       prefetchDataSource.close();
@@ -126,7 +126,7 @@ public class FrescoVitoImage2Spec {
       ComponentContext c,
       FrescoDrawable2 frescoDrawable,
       @FromPrepare DataSource<Void> prefetchDataSource) {
-    FrescoContextProvider.getController().releaseDelayed(frescoDrawable);
+    FrescoVitoProvider.getController().releaseDelayed(frescoDrawable);
     if (prefetchDataSource != null) {
       prefetchDataSource.close();
     }
@@ -137,7 +137,7 @@ public class FrescoVitoImage2Spec {
       ComponentContext c,
       FrescoDrawable2 frescoDrawable,
       @FromPrepare DataSource<Void> prefetchDataSource) {
-    FrescoContextProvider.getController().release(frescoDrawable);
+    FrescoVitoProvider.getController().release(frescoDrawable);
     if (prefetchDataSource != null) {
       prefetchDataSource.close();
     }
