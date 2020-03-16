@@ -65,12 +65,14 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
           protected void onSuccess(CloseableReference<CloseableImage> result) {
             super.onSuccess(result);
             listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, result != null);
+            producerContext.setExtra(ProducerContext.ExtraKeys.ORIGIN, "local");
           }
 
           @Override
           protected void onFailure(Exception e) {
             super.onFailure(e);
             listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, false);
+            producerContext.setExtra(ProducerContext.ExtraKeys.ORIGIN, "local");
           }
 
           @Override
