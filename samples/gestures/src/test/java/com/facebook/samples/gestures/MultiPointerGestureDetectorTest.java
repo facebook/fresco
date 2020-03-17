@@ -20,11 +20,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-import robolectric3.shadows.ShadowMotionEvent;
 
 /** Tests for {@link MultiPointerGestureDetector} */
-@Config(shadows = {ShadowMotionEvent.class})
 @RunWith(RobolectricTestRunner.class)
 public class MultiPointerGestureDetectorTest {
 
