@@ -12,14 +12,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-import robolectric3.shadows.ShadowMatrix;
 
 /**
  * Test cases for {@link DebugControllerOverlayDrawable} that are not included in the gradle build
  * as they depend on a working `ShadowMatrix` implementation.
  */
-@Config(shadows = {ShadowMatrix.class})
 @RunWith(RobolectricTestRunner.class)
 public class DebugControllerOverlayDrawableInternalTest {
 

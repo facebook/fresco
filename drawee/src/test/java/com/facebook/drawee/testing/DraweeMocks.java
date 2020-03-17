@@ -62,7 +62,7 @@ public class DraweeMocks {
               }
             })
         .when(controller)
-        .setHierarchy(any(DraweeHierarchy.class));
+        .setHierarchy((DraweeHierarchy) any());
   }
 
   /**
