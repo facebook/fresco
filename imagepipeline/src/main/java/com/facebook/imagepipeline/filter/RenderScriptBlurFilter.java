@@ -54,6 +54,10 @@ public abstract class RenderScriptBlurFilter {
       blurScript.setInput(allIn);
       blurScript.forEach(allOut);
       allOut.copyTo(dest);
+
+      blurScript.destroy();
+      allIn.destroy();
+      allOut.destroy();
     } finally {
       if (rs != null) {
         rs.destroy();
