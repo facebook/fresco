@@ -10,8 +10,6 @@ apply plugin: 'maven'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-apply from: rootProject.file('release.gradle')
-
 dependencies {
     implementation project(':vito:core')
     implementation project(':vito:options')

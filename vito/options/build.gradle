@@ -10,8 +10,6 @@ import com.facebook.fresco.buildsrc.Deps
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
-apply from: rootProject.file('release.gradle')
-
 dependencies {
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation

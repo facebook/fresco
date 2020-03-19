@@ -7,8 +7,6 @@
 
 apply plugin: 'com.android.library'
 
-apply from: rootProject.file('release.gradle')
-
 android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
