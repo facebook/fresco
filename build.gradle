@@ -226,7 +226,7 @@ subprojects {
     // Libjpeg-turbo
     createNativeLibrariesTasks(
             'Libjpeg',      // Name for the tasks
-            "https://github.com/libjpeg-turbo/libjpeg-turbo/archive/${LIBJPEG_TURBO_VERSION}.tar.gz", // The Url for download
+            "https://github.com/libjpeg-turbo/libjpeg-turbo/releases/${LIBJPEG_TURBO_VERSION}.tar.gz", // The Url for download
             "${LIBJPEG_TURBO_VERSION}.tar.gz", // The downloaded file
             'libjpeg', // The folder where the file is downloaded
             "libjpeg-turbo-${LIBJPEG_TURBO_VERSION}", // The first dir where we have put our customisation
