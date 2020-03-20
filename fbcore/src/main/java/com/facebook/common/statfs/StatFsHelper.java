@@ -51,6 +51,8 @@ public class StatFsHelper {
   public static final long DEFAULT_DISK_RED_LEVEL_IN_BYTES =
       DEFAULT_DISK_RED_LEVEL_IN_MB * 1024 * 1024;
 
+  public static final long DEFAULT_DISK_OLIVE_LEVEL_IN_BYTES = 1000 * 1024 * 1024;
+
   private static StatFsHelper sStatsFsHelper;
 
   // Time interval for updating disk information
@@ -215,6 +217,11 @@ public class StatFsHelper {
   public boolean isVeryLowSpaceCondition() {
     return getAvailableStorageSpace(StatFsHelper.StorageType.INTERNAL)
         < DEFAULT_DISK_RED_LEVEL_IN_BYTES;
+  }
+
+  public boolean isHighSpaceCondition() {
+    return getAvailableStorageSpace(StatFsHelper.StorageType.INTERNAL)
+        > DEFAULT_DISK_OLIVE_LEVEL_IN_BYTES;
   }
 
   /**
