@@ -73,10 +73,10 @@
 #define JPEG_LIB_VERSION 80
 
 /* libjpeg-turbo version */
-#define LIBJPEG_TURBO_VERSION 1.5.3
+#define LIBJPEG_TURBO_VERSION 2.0.4
 
 /* libjpeg-turbo version in integer form */
-#define LIBJPEG_TURBO_VERSION_NUMBER 1005003
+#define LIBJPEG_TURBO_VERSION_NUMBER 2000004
 
 /* Define to the sub-directory where libtool stores uninstalled libraries. */
 #define LT_OBJDIR ".libs/"
@@ -101,7 +101,7 @@
 #define PACKAGE_NAME "libjpeg-turbo"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libjpeg-turbo 1.5.3"
+#define PACKAGE_STRING "libjpeg-turbo 2.0.4"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "libjpeg-turbo"
@@ -110,7 +110,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.5.3"
+#define PACKAGE_VERSION "2.0.4"
 
 /* Define if your (broken) compiler shifts signed values as if they were
    unsigned. */
@@ -127,7 +127,7 @@
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "1.5.3"
+#define VERSION "2.0.4"
 
 /* Use accelerated SIMD routines. */
 #define WITH_SIMD 1
