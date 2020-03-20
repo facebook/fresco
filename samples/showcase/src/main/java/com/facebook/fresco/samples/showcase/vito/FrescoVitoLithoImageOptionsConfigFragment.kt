@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.fragment_vito_image_options_config.*
 /** Experimental Fresco Vito fragment that allows to configure ImageOptions via a simple UI.  */
 class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
 
+    private val imageListener = DebugImageListener()
     private val imageOptionsBuilder = ImageOptions.create().autoPlay(true).placeholderApplyRoundingOptions(true)
 
     private var currentUri: Uri? = null
@@ -88,6 +89,6 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
     private fun createImage(imageOptions: ImageOptions, uri: Uri?) = FrescoVitoImage2.create(componentContext)
             .uri(uri)
             .imageOptions(imageOptions)
-            .imageListener(DebugImageListener())
+            .imageListener(imageListener)
             .build()
 }
