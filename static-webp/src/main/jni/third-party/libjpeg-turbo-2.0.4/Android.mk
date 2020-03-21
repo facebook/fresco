@@ -17,7 +17,7 @@ JPEGTURBO_SRC_FILES := \
 # switch between SIMD supported and non supported architectures
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 JPEGTURBO_SRC_FILES += \
-	simd/arm/jsimd_arm_neon.S.neon \
+	simd/arm/jsimd_neon.S \
 	simd/arm/jsimd.c
 else
 JPEGTURBO_SRC_FILES += jsimd_none.c
