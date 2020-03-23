@@ -276,7 +276,7 @@ public class ProducerFactory {
         mExecutorSupplier.forLocalStorageRead(), mContentResolver);
   }
 
-  public NetworkFetchProducer newNetworkFetchProducer(NetworkFetcher networkFetcher) {
+  public Producer<EncodedImage> newNetworkFetchProducer(NetworkFetcher networkFetcher) {
     return new NetworkFetchProducer(mPooledByteBufferFactory, mByteArrayPool, networkFetcher);
   }
 
