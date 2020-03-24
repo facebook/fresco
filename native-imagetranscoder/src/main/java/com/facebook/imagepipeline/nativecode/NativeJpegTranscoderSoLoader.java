@@ -7,6 +7,8 @@
 
 package com.facebook.imagepipeline.nativecode;
 
+import static com.facebook.soloader.nativeloader.NativeLoaderDelegate.SKIP_MERGED_JNI_ONLOAD;
+
 import android.os.Build;
 import com.facebook.soloader.nativeloader.NativeLoader;
 
@@ -21,7 +23,7 @@ public class NativeJpegTranscoderSoLoader {
       // library
       if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
         try {
-          NativeLoader.loadLibrary("fb_jpegturbo");
+          NativeLoader.loadLibrary("fb_jpegturbo", SKIP_MERGED_JNI_ONLOAD);
         } catch (UnsatisfiedLinkError error) {
           // Head in the sand
         }
