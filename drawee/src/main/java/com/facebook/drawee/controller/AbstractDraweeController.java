@@ -21,10 +21,13 @@ import com.facebook.datasource.DataSubscriber;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.components.DraweeEventTracker;
 import com.facebook.drawee.components.RetryManager;
+import com.facebook.drawee.drawable.FadeDrawable;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.gestures.GestureDetector;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
+import com.facebook.fresco.ui.common.LoggingListener;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.ReturnsOwnership;
 import java.util.concurrent.Executor;
@@ -76,6 +79,7 @@ public abstract class AbstractDraweeController<T, INFO>
   private @Nullable GestureDetector mGestureDetector;
   private @Nullable ControllerViewportVisibilityListener mControllerViewportVisibilityListener;
   protected @Nullable ControllerListener<INFO> mControllerListener;
+  protected @Nullable LoggingListener mLoggingListener;
 
   // Hierarchy
   private @Nullable SettableDraweeHierarchy mSettableDraweeHierarchy;
@@ -164,6 +168,10 @@ public abstract class AbstractDraweeController<T, INFO>
     mCallerContext = callerContext;
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.endSection();
+    }
+
+    if (mLoggingListener != null) {
+      setUpLoggingListener();
     }
   }
 
@@ -273,6 +281,14 @@ public abstract class AbstractDraweeController<T, INFO>
     mControllerListener = (ControllerListener<INFO>) controllerListener;
   }
 
+  public void setLoggingListener(final LoggingListener loggingListener) {
+    mLoggingListener = loggingListener;
+  }
+
+  protected @Nullable LoggingListener getLoggingListener() {
+    return mLoggingListener;
+  }
+
   /** Removes controller listener. */
   public void removeControllerListener(ControllerListener<? super INFO> controllerListener) {
     Preconditions.checkNotNull(controllerListener);
@@ -335,6 +351,25 @@ public abstract class AbstractDraweeController<T, INFO>
       Preconditions.checkArgument(hierarchy instanceof SettableDraweeHierarchy);
       mSettableDraweeHierarchy = (SettableDraweeHierarchy) hierarchy;
       mSettableDraweeHierarchy.setControllerOverlay(mControllerOverlay);
+    }
+
+    if (mLoggingListener != null) {
+      setUpLoggingListener();
+    }
+  }
+
+  private void setUpLoggingListener() {
+    if (mSettableDraweeHierarchy instanceof GenericDraweeHierarchy) {
+      ((GenericDraweeHierarchy) mSettableDraweeHierarchy)
+          .setOnFadeFinishedListener(
+              new FadeDrawable.OnFadeFinishedListener() {
+                @Override
+                public void onFadeFinished() {
+                  if (mLoggingListener != null) {
+                    mLoggingListener.onFadeFinished(mId);
+                  }
+                }
+              });
     }
   }
 

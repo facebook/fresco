@@ -13,6 +13,7 @@ import android.os.SystemClock;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import java.util.Arrays;
+import javax.annotation.Nullable;
 
 /**
  * A drawable that fades to the specific layer.
@@ -38,6 +39,8 @@ public class FadeDrawable extends ArrayDrawable {
   /** Layers. */
   private final Drawable[] mLayers;
 
+  private final int ACTUAL_IMAGE_INDEX = 2;
+
   private final boolean mDefaultLayerIsOn;
   private final int mDefaultLayerAlpha;
 
@@ -58,6 +61,9 @@ public class FadeDrawable extends ArrayDrawable {
 
   /** When in batch mode, drawable won't invalidate self until batch mode finishes. */
   @VisibleForTesting int mPreventInvalidateCount;
+
+  private @Nullable OnFadeFinishedListener mOnFadeFinishedListener;
+  private boolean mCallOnFadeFinishedListener;
 
   /**
    * Creates a new fade drawable. The first layer is displayed with full opacity whereas all other
@@ -150,6 +156,7 @@ public class FadeDrawable extends ArrayDrawable {
    * @param index the index of the layer to fade in.
    */
   public void fadeInLayer(int index) {
+    mCallOnFadeFinishedListener = index == ACTUAL_IMAGE_INDEX;
     mTransitionState = TRANSITION_STARTING;
     mIsLayerOn[index] = true;
     invalidateSelf();
@@ -281,6 +288,10 @@ public class FadeDrawable extends ArrayDrawable {
         // if all the layers have reached their target opacity, transition is done
         done = updateAlphas(ratio);
         mTransitionState = done ? TRANSITION_NONE : TRANSITION_RUNNING;
+
+        if (done) {
+          maybeNotifyOnFadeFinished();
+        }
         break;
 
       case TRANSITION_RUNNING:
@@ -290,11 +301,17 @@ public class FadeDrawable extends ArrayDrawable {
         // if all the layers have reached their target opacity, transition is done
         done = updateAlphas(ratio);
         mTransitionState = done ? TRANSITION_NONE : TRANSITION_RUNNING;
+
+        if (done) {
+          maybeNotifyOnFadeFinished();
+        }
         break;
 
       case TRANSITION_NONE:
         // there is no transition in progress and mAlphas should be left as is.
         done = true;
+
+        maybeNotifyOnFadeFinished();
         break;
     }
 
@@ -304,6 +321,13 @@ public class FadeDrawable extends ArrayDrawable {
 
     if (!done) {
       invalidateSelf();
+    }
+  }
+
+  private void maybeNotifyOnFadeFinished() {
+    if (mOnFadeFinishedListener != null && mCallOnFadeFinishedListener) {
+      mOnFadeFinishedListener.onFadeFinished();
+      mCallOnFadeFinishedListener = false;
     }
   }
 
@@ -354,5 +378,13 @@ public class FadeDrawable extends ArrayDrawable {
 
   public boolean isDefaultLayerIsOn() {
     return mDefaultLayerIsOn;
+  }
+
+  public void setOnFadeFinishedListener(OnFadeFinishedListener onFadeFinishedListener) {
+    mOnFadeFinishedListener = onFadeFinishedListener;
+  }
+
+  public interface OnFadeFinishedListener {
+    void onFadeFinished();
   }
 }

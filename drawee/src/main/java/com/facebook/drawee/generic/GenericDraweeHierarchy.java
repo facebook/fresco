@@ -583,4 +583,8 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   public boolean hasImage() {
     return mActualImageWrapper.getDrawable() != mEmptyActualImageDrawable;
   }
+
+  public void setOnFadeFinishedListener(FadeDrawable.OnFadeFinishedListener onFadeFinished) {
+    mFadeDrawable.setOnFadeFinishedListener(onFadeFinished);
+  }
 }

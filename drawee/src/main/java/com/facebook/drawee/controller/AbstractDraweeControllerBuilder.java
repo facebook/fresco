@@ -19,6 +19,7 @@ import com.facebook.datasource.IncreasingQualityDataSourceSupplier;
 import com.facebook.drawee.gestures.GestureDetector;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.SimpleDraweeControllerBuilder;
+import com.facebook.fresco.ui.common.LoggingListener;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.ReturnsOwnership;
 import java.util.ArrayList;
@@ -60,6 +61,7 @@ public abstract class AbstractDraweeControllerBuilder<
   private boolean mTryCacheOnlyFirst;
   private @Nullable Supplier<DataSource<IMAGE>> mDataSourceSupplier;
   private @Nullable ControllerListener<? super INFO> mControllerListener;
+  private @Nullable LoggingListener mLoggingListener;
   private @Nullable ControllerViewportVisibilityListener mControllerViewportVisibilityListener;
   private boolean mTapToRetryEnabled;
   private boolean mAutoPlayAnimations;
@@ -85,6 +87,7 @@ public abstract class AbstractDraweeControllerBuilder<
     mMultiImageRequests = null;
     mTryCacheOnlyFirst = true;
     mControllerListener = null;
+    mLoggingListener = null;
     mControllerViewportVisibilityListener = null;
     mTapToRetryEnabled = false;
     mAutoPlayAnimations = false;
@@ -234,6 +237,16 @@ public abstract class AbstractDraweeControllerBuilder<
       @Nullable ControllerListener<? super INFO> controllerListener) {
     mControllerListener = controllerListener;
     return getThis();
+  }
+
+  public BUILDER setLoggingListener(@Nullable LoggingListener loggingListener) {
+    mLoggingListener = loggingListener;
+    return getThis();
+  }
+
+  @Nullable
+  public LoggingListener getLoggingListener() {
+    return mLoggingListener;
   }
 
   /** Gets the controller listener */
