@@ -428,7 +428,7 @@ public class PipelineDraweeController
     synchronized (this) {
       if (mImageOriginListener != null) {
         mImageOriginListener.onImageLoaded(
-            id, ImageOrigin.MEMORY_BITMAP, true, "PipelineDraweeController");
+            id, ImageOrigin.MEMORY_BITMAP_SHORTCUT, true, "PipelineDraweeController");
       }
     }
   }

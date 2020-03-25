@@ -316,7 +316,7 @@ public class FrescoControllerImpl implements FrescoController {
         cachedImage = frescoState.getCachedImage();
         try {
           if (CloseableReference.isValid(cachedImage)) {
-            frescoState.setImageOrigin(ImageOrigin.MEMORY_BITMAP);
+            frescoState.setImageOrigin(ImageOrigin.MEMORY_BITMAP_SHORTCUT);
             displayResultOrError(frescoState, cachedImage, true);
             return;
           }
@@ -342,7 +342,7 @@ public class FrescoControllerImpl implements FrescoController {
             if (experiments.cacheImageInState()) {
               frescoState.setCachedImage(cachedImage);
             }
-            frescoState.setImageOrigin(ImageOrigin.MEMORY_BITMAP);
+            frescoState.setImageOrigin(ImageOrigin.MEMORY_BITMAP_SHORTCUT);
             displayResultOrError(frescoState, cachedImage, true);
             return;
           }

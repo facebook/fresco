@@ -79,7 +79,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     CloseableReference<CloseableImage> cachedImage = mImagePipeline.getCachedImage(imageRequest);
     try {
       if (CloseableReference.isValid(cachedImage)) {
-        frescoDrawable.setImageOrigin(ImageOrigin.MEMORY_BITMAP);
+        frescoDrawable.setImageOrigin(ImageOrigin.MEMORY_BITMAP_SHORTCUT);
         // Immediately display the actual image.
         setActualImage(frescoDrawable, imageRequest, cachedImage, true);
         return true;
