@@ -671,7 +671,8 @@ public class FrescoControllerImpl implements FrescoController {
           int imageWidth,
           int imageHeight,
           int scaledWidth,
-          int scaledHeight) {
+          int scaledHeight,
+          String scaleType) {
         if (imageListener != null) {
           if (!(info instanceof HasImageMetadata)) {
             FLog.wtf(TAG, "mInfo does not implement HasImageMetadata: " + info);
@@ -686,9 +687,13 @@ public class FrescoControllerImpl implements FrescoController {
             }
             DimensionsInfo dimensionsInfo =
                 new DimensionsInfo(
-                    viewWidth, viewHeight,
-                    encodedImageWidth, encodedImageHeight,
-                    imageWidth, imageHeight);
+                    viewWidth,
+                    viewHeight,
+                    encodedImageWidth,
+                    encodedImageHeight,
+                    imageWidth,
+                    imageHeight,
+                    scaleType);
 
             if (imageListener != null) {
               imageListener.onImageDrawn(id, info, dimensionsInfo);

@@ -14,6 +14,8 @@ import android.graphics.drawable.Drawable;
 /** Used to log image params at draw-time. */
 public class InstrumentedDrawable extends ForwardingDrawable {
 
+  private final String mScaleType;
+
   public interface Listener {
     void track(
         int viewWidth,
@@ -21,7 +23,8 @@ public class InstrumentedDrawable extends ForwardingDrawable {
         int imageWidth,
         int imageHeight,
         int scaledWidth,
-        int scaledHeight);
+        int scaledHeight,
+        String scaleType);
   }
 
   private final Listener mListener;
@@ -30,6 +33,15 @@ public class InstrumentedDrawable extends ForwardingDrawable {
   public InstrumentedDrawable(Drawable drawable, Listener listener) {
     super(drawable);
     mListener = listener;
+    mScaleType = getScaleType(drawable);
+  }
+
+  private String getScaleType(Drawable drawable) {
+    if (drawable instanceof ScaleTypeDrawable) {
+      ScalingUtils.ScaleType type = ((ScaleTypeDrawable) drawable).getScaleType();
+      return type.toString();
+    }
+    return "none";
   }
 
   @Override
@@ -46,7 +58,8 @@ public class InstrumentedDrawable extends ForwardingDrawable {
       int imageWidth = getIntrinsicWidth();
       int imageHeight = getIntrinsicHeight();
       if (mListener != null) {
-        mListener.track(viewWidth, viewHeight, imageWidth, imageHeight, scaledWidth, scaledHeight);
+        mListener.track(
+            viewWidth, viewHeight, imageWidth, imageHeight, scaledWidth, scaledHeight, mScaleType);
       }
     }
     super.draw(canvas);

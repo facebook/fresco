@@ -17,6 +17,7 @@ public class DimensionsInfo {
 
   private final int mDecodedImageWidth;
   private final int mDecodedImageHeight;
+  private final String mScaleType;
 
   public DimensionsInfo(
       int viewportWidth,
@@ -24,13 +25,15 @@ public class DimensionsInfo {
       int encodedImageWidth,
       int encodedImageHeight,
       int decodedImageWidth,
-      int decodedImageHeight) {
+      int decodedImageHeight,
+      String scaleType) {
     mViewportWidth = viewportWidth;
     mViewportHeight = viewportHeight;
     mEncodedImageWidth = encodedImageWidth;
     mEncodedImageHeight = encodedImageHeight;
     mDecodedImageWidth = decodedImageWidth;
     mDecodedImageHeight = decodedImageHeight;
+    mScaleType = scaleType;
   }
 
   public int getViewportWidth() {
@@ -57,6 +60,10 @@ public class DimensionsInfo {
     return mDecodedImageHeight;
   }
 
+  public String getScaleType() {
+    return mScaleType;
+  }
+
   @Override
   public String toString() {
     return "DimensionsInfo{"
@@ -72,6 +79,9 @@ public class DimensionsInfo {
         + mDecodedImageWidth
         + ", mDecodedImageHeight="
         + mDecodedImageHeight
+        + ", mScaleType='"
+        + mScaleType
+        + '\''
         + '}';
   }
 }
