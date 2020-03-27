@@ -53,7 +53,7 @@ android {
     def ndkLibs = [
             ['native-imagetranscoder', [copyLibjpeg]]]
 
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {

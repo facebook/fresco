@@ -53,7 +53,6 @@ plugins {
 }
 
 project.ext {
-    buildToolsVersion = "${BUILD_TOOLS_VERSION}"
     compileSdkVersion = COMPILE_SDK_VERSION.toInteger()
     minSdkVersion = MIN_SDK_VERSION
     samplesMinSdkVersion = SAMPLES_MIN_SDK_VERSION

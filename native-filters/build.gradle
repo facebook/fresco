@@ -52,7 +52,7 @@ android {
             ['filters', []],
             ['native-filters', []]]
 
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {

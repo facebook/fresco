@@ -43,7 +43,7 @@ task fetchNativeDeps(dependsOn: [copyGiflib]) {
 android {
     def ndkLibs = [['gifimage', [copyGiflib]]]
 
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {

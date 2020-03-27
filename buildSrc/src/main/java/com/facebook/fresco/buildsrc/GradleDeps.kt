@@ -8,7 +8,7 @@
 package com.facebook.fresco.buildsrc
 
 object GradleDeps {
-
+    
     object Android {
         private const val version = "3.5.3"
 

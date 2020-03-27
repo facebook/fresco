@@ -37,7 +37,7 @@ android {
 
     def ndkLibs = [['static-webp', [copyLibjpeg, copyLibpng, copyLibwebp]]]
 
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
