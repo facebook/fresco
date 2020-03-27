@@ -16,6 +16,7 @@ dependencies {
     compileOnly Deps.javaxAnnotation
     compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
 
+    testImplementation project(':mockito-config')
     testImplementation Deps.jsr305
     testImplementation "junit:junit:${JUNIT_VERSION}"
     testImplementation "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
