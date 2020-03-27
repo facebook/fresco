@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 /** Fresco image tracker for Sonar */
 public class FlipperImageTracker implements DebugImageTracker, ImagePerfDataListener {
 
-  private static final int MAX_IMAGES_TO_TRACK = 200;
+  private static final int MAX_IMAGES_TO_TRACK = 1000;
 
   private final Map<ImageRequest, ImageDebugData> mImageRequestDebugDataMap;
   private final Map<CacheKey, ImageDebugData> mImageDebugDataMap;
