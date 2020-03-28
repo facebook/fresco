@@ -7,9 +7,11 @@
 
 package com.facebook.fresco.vito.provider;
 
+import com.facebook.fresco.vito.core.DefaultFrescoVitoConfig;
 import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoController2Impl;
+import com.facebook.fresco.vito.core.FrescoVitoConfig;
 import com.facebook.fresco.vito.core.FrescoVitoPrefetcher;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
@@ -19,16 +21,22 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
   private FrescoController2 mFrescoController;
   private VitoImagePipeline mVitoImagePipeline;
   private FrescoVitoPrefetcher mFrescoVitoPrefetcher;
+  private FrescoVitoConfig mFrescoVitoConfig;
 
   public DefaultFrescoVitoProvider() {
-    this(DefaultFrescoContext.get());
+    this(DefaultFrescoContext.get(), new DefaultFrescoVitoConfig());
   }
 
-  public DefaultFrescoVitoProvider(FrescoContext context) {
+  public DefaultFrescoVitoProvider(FrescoVitoConfig config) {
+    this(DefaultFrescoContext.get(), config);
+  }
+
+  public DefaultFrescoVitoProvider(FrescoContext context, FrescoVitoConfig config) {
     if (!ImagePipelineFactory.hasBeenInitialized()) {
       throw new RuntimeException(
           "Fresco must be initialized before DefaultFrescoVitoProvider can be used!");
     }
+    mFrescoVitoConfig = config;
     mFrescoVitoPrefetcher = context.getPrefetcher();
     mVitoImagePipeline =
         new VitoImagePipeline(context.getImagePipeline(), context.getImagePipelineUtils());
@@ -54,5 +62,10 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
   @Override
   public VitoImagePipeline getImagePipeline() {
     return mVitoImagePipeline;
+  }
+
+  @Override
+  public FrescoVitoConfig getConfig() {
+    return mFrescoVitoConfig;
   }
 }

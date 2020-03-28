@@ -84,9 +84,11 @@ public class FrescoVitoImage2Spec {
       @Prop(optional = true) final @Nullable Object callerContext,
       @CachedValue VitoImageRequest imageRequest,
       Output<DataSource<Void>> prefetchDataSource) {
-    prefetchDataSource.set(
-        FrescoVitoProvider.getPrefetcher()
-            .prefetch(PrefetchTarget.MEMORY_DECODED, imageRequest, callerContext));
+    if (FrescoVitoProvider.getConfig().prefetchInOnPrepare()) {
+      prefetchDataSource.set(
+          FrescoVitoProvider.getPrefetcher()
+              .prefetch(PrefetchTarget.MEMORY_DECODED, imageRequest, callerContext));
+    }
   }
 
   @OnMount

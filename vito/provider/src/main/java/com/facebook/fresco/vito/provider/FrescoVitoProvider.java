@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.provider;
 
 import com.facebook.fresco.vito.core.FrescoController2;
+import com.facebook.fresco.vito.core.FrescoVitoConfig;
 import com.facebook.fresco.vito.core.FrescoVitoPrefetcher;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import javax.annotation.Nullable;
@@ -20,6 +21,8 @@ public class FrescoVitoProvider {
     FrescoVitoPrefetcher getPrefetcher();
 
     VitoImagePipeline getImagePipeline();
+
+    FrescoVitoConfig getConfig();
   }
 
   @Nullable private static Implementation sImplementation;
@@ -34,6 +37,10 @@ public class FrescoVitoProvider {
 
   public static synchronized VitoImagePipeline getImagePipeline() {
     return getImplementation().getImagePipeline();
+  }
+
+  public static synchronized FrescoVitoConfig getConfig() {
+    return getImplementation().getConfig();
   }
 
   public static synchronized void setImplementation(Implementation implementation) {
