@@ -14,6 +14,7 @@ import androidx.core.util.ObjectsCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import com.facebook.datasource.DataSource;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
+import com.facebook.fresco.vito.core.FrescoVitoConfig;
 import com.facebook.fresco.vito.core.PrefetchTarget;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.listener.ImageListener;
@@ -84,10 +85,11 @@ public class FrescoVitoImage2Spec {
       @Prop(optional = true) final @Nullable Object callerContext,
       @CachedValue VitoImageRequest imageRequest,
       Output<DataSource<Void>> prefetchDataSource) {
-    if (FrescoVitoProvider.getConfig().prefetchInOnPrepare()) {
+    FrescoVitoConfig config = FrescoVitoProvider.getConfig();
+    if (config.prefetchInOnPrepare()) {
       prefetchDataSource.set(
           FrescoVitoProvider.getPrefetcher()
-              .prefetch(PrefetchTarget.MEMORY_DECODED, imageRequest, callerContext));
+              .prefetch(config.prefetchTargetOnPrepare(), imageRequest, callerContext));
     }
   }
 
