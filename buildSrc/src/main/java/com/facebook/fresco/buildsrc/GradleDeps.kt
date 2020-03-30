@@ -14,4 +14,9 @@ object GradleDeps {
 
         const val gradlePlugin = "com.android.tools.build:gradle:$version"
     }
+    
+    object Publishing {
+        const val bintrayGradlePlugin = "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
+        const val androidMavenGradlePlugin = "com.github.dcendents:android-maven-gradle-plugin:2.1"
+    }
 }

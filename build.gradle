@@ -39,8 +39,8 @@ buildscript {
     }
     dependencies {
         classpath GradleDeps.Android.gradlePlugin
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:${GRADLE_BINTRAY_PLUGIN_VERSION}"
-        classpath "com.github.dcendents:android-maven-gradle-plugin:${ANDROID_MAVEN_GRADLE_PLUGIN_VERSION}"
+        classpath GradleDeps.Publishing.bintrayGradlePlugin
+        classpath GradleDeps.Publishing.androidMavenGradlePlugin
 
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         // NOTE: Do not place your application dependencies here; they belong
