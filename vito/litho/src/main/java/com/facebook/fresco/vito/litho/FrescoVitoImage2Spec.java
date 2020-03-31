@@ -15,7 +15,6 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import com.facebook.datasource.DataSource;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.FrescoVitoConfig;
-import com.facebook.fresco.vito.core.PrefetchTarget;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
