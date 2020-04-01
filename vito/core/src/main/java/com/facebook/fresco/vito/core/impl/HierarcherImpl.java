@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.core;
+package com.facebook.fresco.vito.core.impl;
 
 import android.content.res.Resources;
 import android.graphics.ColorFilter;
@@ -16,6 +16,11 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.drawable.ForwardingDrawable;
 import com.facebook.drawee.drawable.InstrumentedDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
+import com.facebook.fresco.vito.core.BaseFrescoDrawable;
+import com.facebook.fresco.vito.core.FrescoContext;
+import com.facebook.fresco.vito.core.FrescoDrawable;
+import com.facebook.fresco.vito.core.Hierarcher;
+import com.facebook.fresco.vito.core.NopDrawable;
 import com.facebook.fresco.vito.drawable.RoundingUtils;
 import com.facebook.fresco.vito.drawable.VitoDrawableFactory;
 import com.facebook.fresco.vito.options.BorderOptions;

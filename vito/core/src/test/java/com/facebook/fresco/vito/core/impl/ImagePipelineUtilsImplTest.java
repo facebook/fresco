@@ -5,13 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.core;
+package com.facebook.fresco.vito.core.impl;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import android.net.Uri;
+import com.facebook.fresco.vito.core.FrescoExperiments;
+import com.facebook.fresco.vito.core.ImagePipelineUtils;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.RoundingOptions;
 import com.facebook.fresco.vito.transformation.CircularBitmapTransformation;
@@ -26,7 +28,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
-public class ImagePipelineUtilsTest {
+public class ImagePipelineUtilsImplTest {
 
   static {
     TestNativeLoader.init();
@@ -42,7 +44,7 @@ public class ImagePipelineUtilsTest {
   public void setup() {
     mFrescoExperiments = mock(FrescoExperiments.class);
 
-    mImagePipelineUtils = new ImagePipelineUtils(mFrescoExperiments);
+    mImagePipelineUtils = new ImagePipelineUtilsImpl(mFrescoExperiments);
   }
 
   @Test

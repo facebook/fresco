@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.core;
+package com.facebook.fresco.vito.core.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -24,6 +24,11 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.SimpleDataSource;
+import com.facebook.fresco.vito.core.FrescoContext;
+import com.facebook.fresco.vito.core.FrescoDrawable;
+import com.facebook.fresco.vito.core.FrescoExperiments;
+import com.facebook.fresco.vito.core.FrescoState;
+import com.facebook.fresco.vito.core.Hierarcher;
 import com.facebook.fresco.vito.core.debug.NoOpDebugOverlayFactory;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.core.ImagePipeline;

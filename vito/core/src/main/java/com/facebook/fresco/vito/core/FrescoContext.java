@@ -7,134 +7,40 @@
 
 package com.facebook.fresco.vito.core;
 
-import com.facebook.callercontext.CallerContextVerifier;
-import com.facebook.fresco.vito.core.debug.DebugOverlayFactory;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
-import com.facebook.infer.annotation.ThreadSafe;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 
-@ThreadSafe
-public class FrescoContext {
+public interface FrescoContext {
 
-  private final @Nullable CallerContextVerifier mCallerContextVerifier;
-  private final FrescoExperiments mExperiments;
-  private final @Nullable ImageListener mGlobalImageListener;
-  private final @Nullable ImageStateListener mGlobalImageStateListener;
-  private final Hierarcher mHierarcher;
-  private final Executor mUiThreadExecutor;
-  private final Executor mLightweightBackgroundThreadExecutor;
-  private final ImagePipelineUtils mImagePipelineUtils;
+  ImagePipelineFactory getImagePipelineFactory();
 
-  private FrescoController mController;
-  private FrescoVitoPrefetcher mPrefetcher;
+  void setImagePipelineFactory(@Nullable ImagePipelineFactory imagePipelineFactory);
 
-  private @Nullable ImagePipelineFactory mImagePipelineFactory;
+  Hierarcher getHierarcher();
 
-  public FrescoContext(
-      FrescoController controller,
-      Hierarcher hierarcher,
-      @Nullable CallerContextVerifier callerContextVerifier,
-      FrescoExperiments frescoExperiments,
-      Executor uiThreadExecutor,
-      Executor lightweightBackgroundThreadExecutor,
-      @Nullable ImageListener globalImageListener,
-      @Nullable ImageStateListener globalImageStateListener) {
-    mController = controller;
-    mHierarcher = hierarcher;
-    mCallerContextVerifier = callerContextVerifier;
-    mExperiments = frescoExperiments;
-    mUiThreadExecutor = uiThreadExecutor;
-    mGlobalImageListener = globalImageListener;
-    mLightweightBackgroundThreadExecutor = lightweightBackgroundThreadExecutor;
-    mGlobalImageStateListener = globalImageStateListener;
-    mImagePipelineUtils = new ImagePipelineUtils(mExperiments);
-  }
+  ImagePipeline getImagePipeline();
 
-  public FrescoContext(
-      Hierarcher hierarcher,
-      @Nullable CallerContextVerifier callerContextVerifier,
-      FrescoExperiments frescoExperiments,
-      Executor uiThreadExecutor,
-      Executor lightweightBackgroundThreadExecutor,
-      @Nullable ImageListener globalImageListener,
-      @Nullable ImageStateListener globalImageStateListener,
-      DebugOverlayFactory debugOverlayFactory) {
-    mController = new FrescoControllerImpl(this, debugOverlayFactory, false);
-    mHierarcher = hierarcher;
-    mCallerContextVerifier = callerContextVerifier;
-    mExperiments = frescoExperiments;
-    mUiThreadExecutor = uiThreadExecutor;
-    mGlobalImageListener = globalImageListener;
-    mGlobalImageStateListener = globalImageStateListener;
-    mLightweightBackgroundThreadExecutor = lightweightBackgroundThreadExecutor;
-    mImagePipelineUtils = new ImagePipelineUtils(mExperiments);
-  }
+  FrescoController getController();
 
-  public ImagePipelineFactory getImagePipelineFactory() {
-    if (mImagePipelineFactory == null) {
-      mImagePipelineFactory = ImagePipelineFactory.getInstance();
-    }
-    return mImagePipelineFactory;
-  }
-
-  public void setImagePipelineFactory(@Nullable ImagePipelineFactory imagePipelineFactory) {
-    mImagePipelineFactory = imagePipelineFactory;
-  }
-
-  public Hierarcher getHierarcher() {
-    return mHierarcher;
-  }
-
-  public ImagePipeline getImagePipeline() {
-    return getImagePipelineFactory().getImagePipeline();
-  }
-
-  public FrescoController getController() {
-    return mController;
-  }
-
-  public FrescoExperiments getExperiments() {
-    return mExperiments;
-  }
+  FrescoExperiments getExperiments();
 
   @Nullable
-  public ImageListener getGlobalImageListener() {
-    return mGlobalImageListener;
-  }
+  ImageListener getGlobalImageListener();
 
-  public ImageStateListener getGlobalImageStateListener() {
-    return mGlobalImageStateListener;
-  }
+  ImageStateListener getGlobalImageStateListener();
 
-  public FrescoVitoPrefetcher getPrefetcher() {
-    if (mPrefetcher == null) {
-      mPrefetcher = new FrescoVitoPrefetcher(this);
-    }
-    return mPrefetcher;
-  }
+  FrescoVitoPrefetcher getPrefetcher();
 
-  public ImagePipelineUtils getImagePipelineUtils() {
-    return mImagePipelineUtils;
-  }
+  ImagePipelineUtils getImagePipelineUtils();
 
-  public void verifyCallerContext(@Nullable Object callerContext) {
-    if (mCallerContextVerifier != null) {
-      mCallerContextVerifier.verifyCallerContext(callerContext, false);
-    }
-  }
+  void verifyCallerContext(@Nullable Object callerContext);
 
-  public Executor getUiThreadExecutorService() {
-    return mUiThreadExecutor;
-  }
+  Executor getUiThreadExecutorService();
 
-  public Executor getLightweightBackgroundThreadExecutor() {
-    return mLightweightBackgroundThreadExecutor;
-  }
+  Executor getLightweightBackgroundThreadExecutor();
 
-  public void setController(FrescoController controller) {
-    mController = controller;
-  }
+  void setController(FrescoController controller);
 }

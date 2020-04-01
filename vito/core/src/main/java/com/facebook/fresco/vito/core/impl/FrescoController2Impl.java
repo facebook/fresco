@@ -5,13 +5,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.core;
+package com.facebook.fresco.vito.core.impl;
 
 import android.graphics.drawable.Drawable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSources;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
+import com.facebook.fresco.vito.core.DrawableDataSubscriber;
+import com.facebook.fresco.vito.core.FrescoController2;
+import com.facebook.fresco.vito.core.FrescoDrawable2;
+import com.facebook.fresco.vito.core.Hierarcher;
+import com.facebook.fresco.vito.core.VitoImagePipeline;
+import com.facebook.fresco.vito.core.VitoImageRequest;
+import com.facebook.fresco.vito.core.VitoImageRequestListener;
+import com.facebook.fresco.vito.core.VitoUtils;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.CloseableImage;
 import java.util.concurrent.Executor;

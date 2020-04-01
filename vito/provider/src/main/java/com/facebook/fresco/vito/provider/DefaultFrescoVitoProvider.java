@@ -10,10 +10,11 @@ package com.facebook.fresco.vito.provider;
 import com.facebook.fresco.vito.core.DefaultFrescoVitoConfig;
 import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoController2;
-import com.facebook.fresco.vito.core.FrescoController2Impl;
 import com.facebook.fresco.vito.core.FrescoVitoConfig;
 import com.facebook.fresco.vito.core.FrescoVitoPrefetcher;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
+import com.facebook.fresco.vito.core.impl.FrescoController2Impl;
+import com.facebook.fresco.vito.core.impl.VitoImagePipelineImpl;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 
 public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementation {
@@ -39,7 +40,7 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
     mFrescoVitoConfig = config;
     mFrescoVitoPrefetcher = context.getPrefetcher();
     mVitoImagePipeline =
-        new VitoImagePipeline(context.getImagePipeline(), context.getImagePipelineUtils());
+        new VitoImagePipelineImpl(context.getImagePipeline(), context.getImagePipelineUtils());
     mFrescoController =
         new FrescoController2Impl(
             context.getHierarcher(),

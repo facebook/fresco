@@ -18,7 +18,6 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSubscriber;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
-import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.drawable.ForwardingDrawable;
 import com.facebook.fresco.ui.common.DimensionsInfo;
@@ -26,498 +25,176 @@ import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.ImageInfo;
-import com.facebook.imagepipeline.listener.BaseRequestListener;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.multiuri.MultiUri;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
 import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import javax.annotation.Nonnull;
 
-public class FrescoState
-    implements DataSubscriber<CloseableReference<CloseableImage>>,
+public interface FrescoState
+    extends DataSubscriber<CloseableReference<CloseableImage>>,
         ImageListener,
         DeferredReleaser.Releasable {
 
-  private final FrescoContext mFrescoContext;
-  private final long mId;
-  private final @Nullable Uri mUri;
-  private final @Nullable MultiUri mMultiUri;
-  private final ImageOptions mImageOptions;
-  private final @Nullable Object mCallerContext;
-  private final @Nullable CacheKey mCacheKey;
-  private final Resources mResources;
-
-  // ImageListener passed as @Prop to Litho component
-  private @Nullable ImageListener mImageListener;
-  // Other global and ad-hoc ImageListener(s)
-  private final @Nullable ImageListener mOtherListeners;
-  private final @Nullable ImageStateListener mImageStateListener;
-  private @Nullable ImageRequest mImageRequest;
-  private @Px int mTargetWidthPx;
-  private @Px int mTargetHeightPx;
-
-  private @Nullable FrescoDrawable mFrescoDrawable;
-  private @Nullable CloseableReference<CloseableImage> mCachedImage;
-  private boolean mIsAttached;
-  private boolean mImageFetched;
-
-  // Experimental fields
-  private @Nullable Producer<CloseableReference<CloseableImage>> mProducerSequence;
-  private @Nullable SettableProducerContext mSettableProducerContext;
-  private @Nullable RequestListener mRequestListener;
-  private @Nullable DataSource mPrefetchDatasource;
-  private @Nullable DataSource<CloseableReference<CloseableImage>> mMainFetchDatasource;
-  private @Nullable Drawable mPlaceholderDrawable;
-
-  // Experimental hierarchy fields
-  private @Nullable ForwardingDrawable mActualImageWrapper;
-  private @Nullable Drawable mOverlayDrawable;
-
-  private @Nullable Object mExtras;
-
-  // Image perf data fields
-  private final RequestListener mImageOriginListener =
-      new BaseRequestListener() {
-        @Override
-        public void onUltimateProducerReached(
-            String requestId, String producerName, boolean successful) {
-          mImageOrigin = ImageOriginUtils.mapProducerNameToImageOrigin(producerName);
-        }
-      };
-
-  private @ImageOrigin int mImageOrigin = ImageOrigin.UNKNOWN;
-
-  private @Nullable Runnable mDetachRunnable;
-
-  public FrescoState(
-      long id,
-      FrescoContext frescoContext,
-      @Nullable Uri uri,
-      @Nullable MultiUri multiUri,
-      ImageOptions imageOptions,
-      @Nullable Object callerContext,
-      @Nullable ImageRequest imageRequest,
-      @Nullable CacheKey cacheKey,
-      @Nullable CloseableReference<CloseableImage> cachedImage,
-      Resources resources,
-      @Nullable ImageListener imageListener,
-      @Nullable ImageListener otherListeners,
-      @Nullable ImageStateListener imageStateListener) {
-    mId = id;
-    mFrescoContext = frescoContext;
-    mUri = uri;
-    mMultiUri = multiUri;
-    mImageOptions = imageOptions;
-    mCallerContext = callerContext;
-    mImageRequest = imageRequest;
-    mCacheKey = cacheKey;
-    mCachedImage = cachedImage;
-    mResources = resources;
-    mImageListener = imageListener;
-    mOtherListeners = otherListeners;
-    mImageStateListener = imageStateListener;
-  }
-
-  public long getId() {
-    return mId;
-  }
+  long getId();
 
   @UiThread
   @Nullable
-  public FrescoDrawable getFrescoDrawable() {
-    return mFrescoDrawable;
-  }
+  FrescoDrawable getFrescoDrawable();
 
   @UiThread
-  public void setFrescoDrawable(@Nullable FrescoDrawable frescoDrawable) {
-    mFrescoDrawable = frescoDrawable;
-  }
+  void setFrescoDrawable(@Nullable FrescoDrawable frescoDrawable);
 
   @UiThread
-  public synchronized boolean isAttached() {
-    return mIsAttached;
-  }
+  boolean isAttached();
 
   @UiThread
-  public synchronized void setAttached(boolean isAttached) {
-    mIsAttached = isAttached;
-  }
+  void setAttached(boolean isAttached);
 
-  public ImageOptions getImageOptions() {
-    return mImageOptions;
-  }
+  ImageOptions getImageOptions();
 
   @Nullable
-  public ImageRequest getImageRequest() {
-    return mImageRequest;
-  }
+  ImageRequest getImageRequest();
 
   @Nullable
-  public CacheKey getCacheKey() {
-    return mCacheKey;
-  }
+  CacheKey getCacheKey();
 
   @UiThread
-  public boolean isImageFetched() {
-    return mImageFetched;
-  }
+  boolean isImageFetched();
 
   @UiThread
-  public void setImageFetched(boolean imageFetched) {
-    mImageFetched = imageFetched;
-  }
+  void setImageFetched(boolean imageFetched);
 
   @Nullable
-  public synchronized CloseableReference<CloseableImage> getCachedImage() {
-    return CloseableReference.cloneOrNull(mCachedImage);
-  }
+  CloseableReference<CloseableImage> getCachedImage();
 
-  public synchronized void setCachedImage(
-      @Nullable CloseableReference<CloseableImage> cachedImage) {
-    CloseableReference.closeSafely(mCachedImage);
-    mCachedImage = CloseableReference.cloneOrNull(cachedImage);
-  }
+  void setCachedImage(@Nullable CloseableReference<CloseableImage> cachedImage);
 
   @Nullable
-  public Object getCallerContext() {
-    return mCallerContext;
-  }
+  Object getCallerContext();
 
-  public Resources getResources() {
-    return mResources;
-  }
+  Resources getResources();
 
   @Nullable
-  public Uri getUri() {
-    return mUri;
-  }
+  Uri getUri();
 
   @Nullable
-  public MultiUri getMultiUri() {
-    return mMultiUri;
-  }
+  MultiUri getMultiUri();
 
-  public void setProducerSequence(
-      @Nullable Producer<CloseableReference<CloseableImage>> producerSequence) {
-    mProducerSequence = producerSequence;
-  }
+  void setProducerSequence(@Nullable Producer<CloseableReference<CloseableImage>> producerSequence);
 
   @Nullable
-  public Producer<CloseableReference<CloseableImage>> getProducerSequence() {
-    return mProducerSequence;
-  }
+  Producer<CloseableReference<CloseableImage>> getProducerSequence();
 
-  public void setSettableProducerContext(
-      @Nullable SettableProducerContext settableProducerContext) {
-    mSettableProducerContext = settableProducerContext;
-  }
+  void setSettableProducerContext(@Nullable SettableProducerContext settableProducerContext);
 
   @Nullable
-  public SettableProducerContext getSettableProducerContext() {
-    return mSettableProducerContext;
-  }
+  SettableProducerContext getSettableProducerContext();
 
-  public void setRequestListener(@Nullable RequestListener requestListener) {
-    mRequestListener = requestListener;
-  }
+  void setRequestListener(@Nullable RequestListener requestListener);
 
   @Nullable
-  public RequestListener getRequestListener() {
-    return mRequestListener;
-  }
+  RequestListener getRequestListener();
 
   @Nullable
-  public RequestListener getImageOriginListener() {
-    return mImageOriginListener;
-  }
+  RequestListener getImageOriginListener();
 
   @Nullable
-  public ForwardingDrawable getActualImageWrapper() {
-    return mActualImageWrapper;
-  }
+  ForwardingDrawable getActualImageWrapper();
 
-  public void setActualImageWrapper(@Nullable ForwardingDrawable actualImageWrapper) {
-    mActualImageWrapper = actualImageWrapper;
-  }
+  void setActualImageWrapper(@Nullable ForwardingDrawable actualImageWrapper);
 
   @Nullable
-  public Drawable getOverlayDrawable() {
-    return mOverlayDrawable;
-  }
+  Drawable getOverlayDrawable();
 
-  public void setOverlayDrawable(@Nullable Drawable overlayDrawable) {
-    mOverlayDrawable = overlayDrawable;
-  }
+  void setOverlayDrawable(@Nullable Drawable overlayDrawable);
 
-  public void setPlaceholderDrawable(@Nullable Drawable placeholderDrawable) {
-    mPlaceholderDrawable = placeholderDrawable;
-  }
+  void setPlaceholderDrawable(@Nullable Drawable placeholderDrawable);
 
   @Nullable
-  public Drawable getPlaceholderDrawable() {
-    return mPlaceholderDrawable;
-  }
+  Drawable getPlaceholderDrawable();
 
   @ImageOrigin
-  public int getImageOrigin() {
-    return mImageOrigin;
-  }
+  int getImageOrigin();
 
-  public void setImageOrigin(@ImageOrigin int imageOrigin) {
-    mImageOrigin = imageOrigin;
-  }
+  void setImageOrigin(@ImageOrigin int imageOrigin);
 
   @Nullable
-  public synchronized Runnable removeDetachRunnable() {
-    Runnable r = mDetachRunnable;
-    mDetachRunnable = null;
-    return r;
-  }
+  Runnable removeDetachRunnable();
 
-  public synchronized void setDetachRunnable(@Nullable Runnable detachRunnable) {
-    mDetachRunnable = detachRunnable;
-  }
+  void setDetachRunnable(@Nullable Runnable detachRunnable);
 
   @Override
-  public void onNewResult(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
-    mFrescoContext.getController().onNewResult(this, dataSource);
-  }
+  void onNewResult(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource);
 
   @Override
-  public void onFailure(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
-    mFrescoContext.getController().onFailure(this, dataSource);
-  }
+  void onFailure(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource);
 
   @Override
-  public void onCancellation(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
-    mFrescoContext.getController().onCancellation(this, dataSource);
-  }
+  void onCancellation(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource);
 
   @Override
-  public void onProgressUpdate(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
-    mFrescoContext.getController().onProgressUpdate(this, dataSource);
-  }
+  void onProgressUpdate(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource);
 
   @Override
-  public void onSubmit(long id, Object callerContext) {
-    if (FrescoSystrace.isTracing()) {
-      FrescoSystrace.beginSection("FrescoState#onSubmit");
-    }
-    if (mImageListener != null) {
-      mImageListener.onSubmit(id, callerContext);
-    }
-    if (mOtherListeners != null) {
-      mOtherListeners.onSubmit(id, callerContext);
-    }
-    if (mImageStateListener != null) {
-      mImageStateListener.onSubmit(this, callerContext);
-    }
-    if (FrescoSystrace.isTracing()) {
-      FrescoSystrace.endSection();
-    }
-  }
+  void onSubmit(long id, Object callerContext);
 
   @Override
-  public void onPlaceholderSet(long id, @Nullable Drawable placeholder) {
-    if (mImageListener != null) {
-      mImageListener.onPlaceholderSet(id, placeholder);
-    }
-    if (mOtherListeners != null) {
-      mOtherListeners.onPlaceholderSet(id, placeholder);
-    }
-    if (mImageStateListener != null) {
-      mImageStateListener.onPlaceholderSet(this, placeholder);
-    }
-  }
+  void onPlaceholderSet(long id, @Nullable Drawable placeholder);
 
   @Override
-  public void onFinalImageSet(
+  void onFinalImageSet(
       long id,
       @ImageOrigin int imageOrigin,
       @Nullable ImageInfo imageInfo,
-      @Nullable Drawable drawable) {
-    if (mImageListener != null) {
-      mImageListener.onFinalImageSet(id, imageOrigin, imageInfo, drawable);
-    }
-    if (mOtherListeners != null) {
-      mOtherListeners.onFinalImageSet(id, imageOrigin, imageInfo, drawable);
-    }
-    if (mImageStateListener != null) {
-      mImageStateListener.onFinalImageSet(this, imageOrigin, imageInfo, drawable);
-    }
-  }
+      @Nullable Drawable drawable);
 
   @Override
-  public void onIntermediateImageSet(long id, @Nullable ImageInfo imageInfo) {
-    if (mImageListener != null) {
-      mImageListener.onIntermediateImageSet(id, imageInfo);
-    }
-    if (mOtherListeners != null) {
-      mOtherListeners.onIntermediateImageSet(id, imageInfo);
-    }
-    if (mImageStateListener != null) {
-      mImageStateListener.onIntermediateImageSet(this, imageInfo);
-    }
-  }
+  void onIntermediateImageSet(long id, @Nullable ImageInfo imageInfo);
 
   @Override
-  public void onIntermediateImageFailed(long id, Throwable throwable) {
-    if (mImageListener != null) {
-      mImageListener.onIntermediateImageFailed(id, throwable);
-    }
-    if (mOtherListeners != null) {
-      mOtherListeners.onIntermediateImageFailed(id, throwable);
-    }
-    if (mImageStateListener != null) {
-      mImageStateListener.onIntermediateImageFailed(this, throwable);
-    }
-  }
+  void onIntermediateImageFailed(long id, Throwable throwable);
 
   @Override
-  public void onFailure(long id, @Nullable Drawable error, @Nullable Throwable throwable) {
-    if (mImageListener != null) {
-      mImageListener.onFailure(id, error, throwable);
-    }
-    if (mOtherListeners != null) {
-      mOtherListeners.onFailure(id, error, throwable);
-    }
-    if (mImageStateListener != null) {
-      mImageStateListener.onFailure(this, error, throwable);
-    }
-  }
+  void onFailure(long id, @Nullable Drawable error, @Nullable Throwable throwable);
 
   @Override
-  public void onRelease(long id) {
-    if (mImageListener != null) {
-      mImageListener.onRelease(id);
-    }
-    if (mOtherListeners != null) {
-      mOtherListeners.onRelease(id);
-    }
-    if (mImageStateListener != null) {
-      mImageStateListener.onRelease(this);
-    }
-  }
+  void onRelease(long id);
 
-  public @Px int getTargetWidthPx() {
-    return mTargetWidthPx;
-  }
+  @Px
+  int getTargetWidthPx();
 
-  public void setTargetWidthPx(@Px int targetWidthPx) {
-    mTargetWidthPx = targetWidthPx;
-  }
+  void setTargetWidthPx(@Px int targetWidthPx);
 
-  public @Px int getTargetHeightPx() {
-    return mTargetHeightPx;
-  }
+  @Px
+  int getTargetHeightPx();
 
-  public void setTargetHeightPx(@Px int targetHeightPx) {
-    mTargetHeightPx = targetHeightPx;
-  }
+  void setTargetHeightPx(@Px int targetHeightPx);
 
-  public @Nullable ImageListener getImageListener() {
-    return mImageListener;
-  }
+  @Nullable
+  ImageListener getImageListener();
 
-  public void setImageListener(@Nullable ImageListener imageListener) {
-    mImageListener = imageListener;
-  }
+  void setImageListener(@Nullable ImageListener imageListener);
 
-  @Override
-  public String toString() {
-    return "FrescoState{"
-        + "mFrescoContext="
-        + mFrescoContext
-        + ", mId="
-        + mId
-        + ", mUri="
-        + mUri
-        + ", mMultiUri="
-        + mMultiUri
-        + ", mImageOptions="
-        + mImageOptions
-        + ", mCallerContext="
-        + mCallerContext
-        + ", mImageRequest="
-        + mImageRequest
-        + ", mResources="
-        + mResources
-        + ", mCachedImage="
-        + mCachedImage
-        + ", mIsAttached="
-        + mIsAttached
-        + ", mImageFetched="
-        + mImageFetched
-        + ", mTargetWidthPx="
-        + mTargetWidthPx
-        + ", mTargetHeightPx="
-        + mTargetHeightPx
-        + '}';
-  }
+  void setPrefetchDatasource(@Nullable DataSource prefetchDatasource);
 
-  public void setPrefetchDatasource(@Nullable DataSource prefetchDatasource) {
-    if (mPrefetchDatasource != null) {
-      mPrefetchDatasource.close();
-    }
-    mPrefetchDatasource = prefetchDatasource;
-  }
-
-  public void setMainFetchDatasource(
-      @Nullable DataSource<CloseableReference<CloseableImage>> mainFetchDatasource) {
-    if (mMainFetchDatasource != null) {
-      mMainFetchDatasource.close();
-    }
-    mMainFetchDatasource = mainFetchDatasource;
-  }
+  void setMainFetchDatasource(
+      @Nullable DataSource<CloseableReference<CloseableImage>> mainFetchDatasource);
 
   @Override
   @UiThread
-  public void release() {
-    DataSource dataSource;
-    if ((dataSource = mMainFetchDatasource) != null) {
-      dataSource.close();
-    }
-    if ((dataSource = mPrefetchDatasource) != null) {
-      dataSource.close();
-    }
+  void release();
 
-    CloseableReference.closeSafely(mCachedImage);
+  void setImageRequest(@Nullable ImageRequest imageRequest);
 
-    if (mFrescoContext.getExperiments().resetState()) {
-      mPrefetchDatasource = null;
-      mMainFetchDatasource = null;
-      mActualImageWrapper = null;
-    }
-  }
+  @Nullable
+  Object getExtras();
 
-  public void setImageRequest(@Nullable ImageRequest imageRequest) {
-    mImageRequest = imageRequest;
-  }
+  void setExtras(@Nullable Object extras);
 
-  public @Nullable Object getExtras() {
-    return mExtras;
-  }
-
-  public void setExtras(@Nullable Object extras) {
-    mExtras = extras;
-  }
-
-  public String getStringId() {
-    return VitoUtils.getStringId(getId());
-  }
+  String getStringId();
 
   @Override
-  public void onImageDrawn(String id, ImageInfo imageInfo, DimensionsInfo dimensionsInfo) {
-    if (mImageListener != null) {
-      mImageListener.onImageDrawn(id, imageInfo, dimensionsInfo);
-    }
-    if (mOtherListeners != null) {
-      mOtherListeners.onImageDrawn(id, imageInfo, dimensionsInfo);
-    }
-    if (mImageStateListener != null) {
-      mImageStateListener.onImageDrawn(id, imageInfo, dimensionsInfo);
-    }
-  }
+  void onImageDrawn(String id, ImageInfo imageInfo, DimensionsInfo dimensionsInfo);
 }

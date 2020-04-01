@@ -14,9 +14,10 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoExperiments;
-import com.facebook.fresco.vito.core.HierarcherImpl;
-import com.facebook.fresco.vito.core.debug.DefaultDebugOverlayFactory;
 import com.facebook.fresco.vito.core.debug.NoOpDebugOverlayFactory;
+import com.facebook.fresco.vito.core.impl.FrescoContextImpl;
+import com.facebook.fresco.vito.core.impl.HierarcherImpl;
+import com.facebook.fresco.vito.core.impl.debug.DefaultDebugOverlayFactory;
 import com.facebook.fresco.vito.drawable.ArrayVitoDrawableFactory;
 import com.facebook.fresco.vito.drawable.BitmapDrawableFactory;
 import com.facebook.fresco.vito.drawable.VitoDrawableFactory;
@@ -74,7 +75,7 @@ public class DefaultFrescoContext {
       Resources resources, @Nullable FrescoExperiments frescoExperiments) {
     FrescoExperiments actualFrescoExperiments =
         frescoExperiments != null ? frescoExperiments : new FrescoExperiments();
-    return new FrescoContext(
+    return new FrescoContextImpl(
         new HierarcherImpl(createDefaultDrawableFactory(resources, actualFrescoExperiments)),
         new NoOpCallerContextVerifier(),
         actualFrescoExperiments,

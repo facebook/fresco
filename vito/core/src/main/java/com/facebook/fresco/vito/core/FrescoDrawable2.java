@@ -8,233 +8,116 @@
 package com.facebook.fresco.vito.core;
 
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.os.Looper;
 import androidx.annotation.Nullable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSubscriber;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
-import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
-import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.drawable.TransformAwareDrawable;
+import com.facebook.drawee.drawable.TransformCallback;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.imagepipeline.listener.BaseRequestListener;
 import com.facebook.imagepipeline.listener.RequestListener;
+import java.io.Closeable;
 import javax.annotation.Nonnull;
 
-public class FrescoDrawable2 extends BaseFrescoDrawable
-    implements DeferredReleaser.Releasable, DataSubscriber<CloseableReference<CloseableImage>> {
+public abstract class FrescoDrawable2 extends BaseFrescoDrawable
+    implements Drawable.Callback,
+        TransformCallback,
+        TransformAwareDrawable,
+        Closeable,
+        DeferredReleaser.Releasable,
+        DataSubscriber<CloseableReference<CloseableImage>> {
 
-  private static final long RELEASE_DELAY = 16 * 5; // Roughly 5 frames.
-  private static final Handler sHandler = new Handler(Looper.getMainLooper());
-  private static final DeferredReleaser sDeferredReleaser = DeferredReleaser.getInstance();
-
-  private @Nullable VitoImageRequest mImageRequest;
-  private @Nullable Object mCallerContext;
-  private @Nullable DrawableDataSubscriber mDrawableDataSubscriber;
-  private long mImageId;
-
-  private @Nullable DataSource<CloseableReference<CloseableImage>> mDataSource;
-  private boolean mFetchSubmitted;
-
-  private final CombinedImageListener mImageListener = new CombinedImageListener();
-
-  private final Runnable mReleaseRunnable =
-      new Runnable() {
-        @Override
-        public void run() {
-          scheduleReleaseNextFrame();
-        }
-      };
-  private boolean mDelayedReleasePending;
-
-  private final ScaleTypeDrawable mActualImageWrapper =
-      new ScaleTypeDrawable(NopDrawable.INSTANCE, ScalingUtils.ScaleType.CENTER_CROP);
-
-  // Image perf data fields
-  private final RequestListener mImageOriginListener =
-      new BaseRequestListener() {
-        @Override
-        public void onUltimateProducerReached(
-            String requestId, String producerName, boolean successful) {
-          mImageOrigin = ImageOriginUtils.mapProducerNameToImageOrigin(producerName);
-        }
-      };
-
-  private @ImageOrigin int mImageOrigin = ImageOrigin.UNKNOWN;
-
-  public FrescoDrawable2() {
-    super(true);
+  protected FrescoDrawable2(boolean allLayersVisible) {
+    super(allLayersVisible);
   }
 
   @Override
-  public @Nullable Drawable setImage(
+  @Nullable
+  public Drawable setImage(
       @Nullable Drawable imageDrawable,
       @Nullable CloseableReference<CloseableImage> imageReference) {
-    cancelReleaseNextFrame();
-    cancelReleaseDelayed();
-    if (imageDrawable != mActualImageWrapper) {
-      mActualImageWrapper.setCurrent(NopDrawable.INSTANCE);
-    }
     return super.setImage(imageDrawable, imageReference);
   }
 
-  public ScaleTypeDrawable getActualImageWrapper() {
-    return mActualImageWrapper;
-  }
+  public abstract ScaleTypeDrawable getActualImageWrapper();
 
-  public void setDataSource(@Nullable DataSource<CloseableReference<CloseableImage>> dataSource) {
-    mDataSource = dataSource;
-  }
+  public abstract void setDataSource(
+      @Nullable DataSource<CloseableReference<CloseableImage>> dataSource);
 
-  public void setFetchSubmitted(boolean fetchSubmitted) {
-    mFetchSubmitted = fetchSubmitted;
-  }
+  public abstract void setFetchSubmitted(boolean fetchSubmitted);
 
-  public boolean isFetchSubmitted() {
-    return mFetchSubmitted;
-  }
+  public abstract boolean isFetchSubmitted();
 
-  public void setDrawableDataSubscriber(@Nullable DrawableDataSubscriber drawableDataSubscriber) {
-    mDrawableDataSubscriber = drawableDataSubscriber;
-  }
+  public abstract void setDrawableDataSubscriber(
+      @Nullable DrawableDataSubscriber drawableDataSubscriber);
 
   @Nullable
-  public DrawableDataSubscriber getDrawableDataSubscriber() {
-    return mDrawableDataSubscriber;
-  }
+  public abstract DrawableDataSubscriber getDrawableDataSubscriber();
 
-  public void setImageRequest(@Nullable VitoImageRequest imageRequest) {
-    mImageRequest = imageRequest;
-  }
+  public abstract void setImageRequest(@Nullable VitoImageRequest imageRequest);
 
-  public void setCallerContext(@Nullable Object callerContext) {
-    mCallerContext = callerContext;
-  }
+  public abstract void setCallerContext(@Nullable Object callerContext);
 
   @Nullable
-  public Object getCallerContext() {
-    return mCallerContext;
-  }
+  public abstract Object getCallerContext();
 
-  public void setImageListener(@Nullable ImageListener imageListener) {
-    mImageListener.setImageListener(imageListener);
-  }
+  public abstract void setImageListener(@Nullable ImageListener imageListener);
 
-  public void setVitoImageRequestListener(@Nullable VitoImageRequestListener listener) {
-    mImageListener.setVitoImageRequestListener(listener);
-  }
+  public abstract void setVitoImageRequestListener(@Nullable VitoImageRequestListener listener);
 
-  public CombinedImageListener getImageListener() {
-    return mImageListener;
-  }
+  public abstract CombinedImageListener getImageListener();
 
-  public RequestListener getImageOriginListener() {
-    return mImageOriginListener;
-  }
+  public abstract RequestListener getImageOriginListener();
 
   @Nullable
-  public VitoImageRequest getImageRequest() {
-    return mImageRequest;
-  }
+  public abstract VitoImageRequest getImageRequest();
 
-  public void setImageId(long imageId) {
-    mImageId = imageId;
-  }
+  public abstract void setImageId(long imageId);
 
-  public long getImageId() {
-    return mImageId;
-  }
+  public abstract long getImageId();
 
-  public void setImageOrigin(@ImageOrigin int imageOrigin) {
-    mImageOrigin = imageOrigin;
-  }
+  public abstract void setImageOrigin(@ImageOrigin int imageOrigin);
 
-  public @ImageOrigin int getImageOrigin() {
-    return mImageOrigin;
-  }
+  @ImageOrigin
+  public abstract int getImageOrigin();
 
   @Override
-  public void release() {
-    close();
-  }
+  public abstract void release();
 
-  @Override
   public void reset() {
-    // Close calls super.reset()
-    close();
+    super.reset();
   }
 
   @Override
   public void close() {
-    cancelReleaseNextFrame();
-    cancelReleaseDelayed();
     super.close();
-    super.reset();
-    mDrawableDataSubscriber = null;
-    if (mDataSource != null) {
-      mDataSource.close();
-    }
-    mDataSource = null;
-    mFetchSubmitted = false;
-    mActualImageWrapper.setCurrent(NopDrawable.INSTANCE);
-    mImageOrigin = ImageOrigin.UNKNOWN;
-    mImageId = 0;
   }
 
-  public void scheduleReleaseDelayed() {
-    if (mDelayedReleasePending) {
-      return;
-    }
-    sHandler.postDelayed(mReleaseRunnable, RELEASE_DELAY);
-    mDelayedReleasePending = true;
-  }
+  public abstract void scheduleReleaseDelayed();
 
-  public void cancelReleaseDelayed() {
-    if (mDelayedReleasePending) {
-      sHandler.removeCallbacks(mReleaseRunnable);
-      mDelayedReleasePending = false;
-    }
-  }
+  public abstract void cancelReleaseDelayed();
 
-  public void scheduleReleaseNextFrame() {
-    cancelReleaseDelayed();
-    sDeferredReleaser.scheduleDeferredRelease(this);
-  }
+  public abstract void scheduleReleaseNextFrame();
 
-  public void cancelReleaseNextFrame() {
-    sDeferredReleaser.cancelDeferredRelease(this);
-  }
+  public abstract void cancelReleaseNextFrame();
 
   @Override
-  public void onNewResult(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
-    if (dataSource != mDataSource || mImageRequest == null || mDrawableDataSubscriber == null) {
-      return; // We don't care
-    }
-    mDrawableDataSubscriber.onNewResult(this, mImageRequest, dataSource);
-  }
+  public abstract void onNewResult(
+      @Nonnull DataSource<CloseableReference<CloseableImage>> dataSource);
 
   @Override
-  public void onFailure(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
-    if (dataSource != mDataSource || mImageRequest == null || mDrawableDataSubscriber == null) {
-      return; // wrong image
-    }
-    mDrawableDataSubscriber.onFailure(this, mImageRequest, dataSource);
-  }
+  public abstract void onFailure(
+      @Nonnull DataSource<CloseableReference<CloseableImage>> dataSource);
 
   @Override
-  public void onCancellation(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
-    // no-op
-  }
+  public abstract void onCancellation(
+      @Nonnull DataSource<CloseableReference<CloseableImage>> dataSource);
 
   @Override
-  public void onProgressUpdate(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
-    if (dataSource != mDataSource || mImageRequest == null || mDrawableDataSubscriber == null) {
-      return; // wrong image
-    }
-    mDrawableDataSubscriber.onProgressUpdate(this, mImageRequest, dataSource);
-  }
+  public abstract void onProgressUpdate(
+      @Nonnull DataSource<CloseableReference<CloseableImage>> dataSource);
 }

@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.core;
+package com.facebook.fresco.vito.core.impl;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -22,6 +22,12 @@ import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.drawable.InstrumentedDrawable;
 import com.facebook.fresco.ui.common.DimensionsInfo;
+import com.facebook.fresco.vito.core.FrescoContext;
+import com.facebook.fresco.vito.core.FrescoController;
+import com.facebook.fresco.vito.core.FrescoExperiments;
+import com.facebook.fresco.vito.core.FrescoState;
+import com.facebook.fresco.vito.core.Hierarcher;
+import com.facebook.fresco.vito.core.VitoUtils;
 import com.facebook.fresco.vito.core.debug.DebugOverlayFactory;
 import com.facebook.fresco.vito.listener.AutoPlayImageListener;
 import com.facebook.fresco.vito.listener.ForwardingImageListener;
@@ -117,7 +123,7 @@ public class FrescoControllerImpl implements FrescoController {
         isImageCached = mFrescoContext.getImagePipeline().hasCachedImage(cacheKey);
       }
       final FrescoState frescoState =
-          new FrescoState(
+          new FrescoStateImpl(
               VitoUtils.generateIdentifier(),
               mFrescoContext,
               uri,

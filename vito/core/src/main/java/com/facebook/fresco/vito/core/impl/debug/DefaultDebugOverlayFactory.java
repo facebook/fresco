@@ -5,13 +5,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.core.debug;
+package com.facebook.fresco.vito.core.impl.debug;
 
 import android.graphics.drawable.Drawable;
 import com.facebook.common.internal.Supplier;
 import com.facebook.drawee.backends.pipeline.debug.DebugOverlayImageOriginColor;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
 import com.facebook.fresco.vito.core.FrescoState;
+import com.facebook.fresco.vito.core.debug.DebugOverlayFactory;
 import java.util.Locale;
 import javax.annotation.Nullable;
 
