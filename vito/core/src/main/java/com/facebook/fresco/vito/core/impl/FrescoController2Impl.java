@@ -50,6 +50,11 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   }
 
   @Override
+  public FrescoDrawable2 createDrawable() {
+    return new FrescoDrawable2Impl();
+  }
+
+  @Override
   public boolean fetch(
       final FrescoDrawable2 frescoDrawable,
       final VitoImageRequest imageRequest,

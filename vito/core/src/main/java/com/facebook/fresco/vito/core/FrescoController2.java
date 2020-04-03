@@ -12,6 +12,8 @@ import javax.annotation.Nullable;
 
 public interface FrescoController2 {
 
+  FrescoDrawable2 createDrawable();
+
   boolean fetch(
       FrescoDrawable2 frescoDrawable,
       VitoImageRequest imageRequest,

@@ -21,7 +21,6 @@ import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.core.VitoUtils;
-import com.facebook.fresco.vito.core.impl.FrescoDrawable2Impl;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.multiuri.MultiUri;
@@ -150,7 +149,7 @@ public class VitoViewImpl2 implements VitoView.Implementation {
   }
 
   private FrescoDrawable2 createDrawable() {
-    final FrescoDrawable2 frescoDrawable = new FrescoDrawable2Impl();
+    final FrescoDrawable2 frescoDrawable = mController.createDrawable();
 
     frescoDrawable.setVisibilityCallback(
         new VisibilityCallback() {

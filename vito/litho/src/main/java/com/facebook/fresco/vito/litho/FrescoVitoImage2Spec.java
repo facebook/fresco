@@ -16,7 +16,6 @@ import com.facebook.datasource.DataSource;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.FrescoVitoConfig;
 import com.facebook.fresco.vito.core.VitoImageRequest;
-import com.facebook.fresco.vito.core.impl.FrescoDrawable2Impl;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.provider.FrescoVitoProvider;
@@ -54,7 +53,7 @@ public class FrescoVitoImage2Spec {
 
   @OnCreateMountContent
   static FrescoDrawable2 onCreateMountContent(Context c) {
-    return new FrescoDrawable2Impl();
+    return FrescoVitoProvider.getController().createDrawable();
   }
 
   @OnMeasure
