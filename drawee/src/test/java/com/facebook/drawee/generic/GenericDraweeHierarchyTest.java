@@ -26,6 +26,8 @@ import com.facebook.drawee.drawable.Rounded;
 import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.drawee.drawable.RoundedCornersDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
@@ -953,6 +955,20 @@ public class GenericDraweeHierarchyTest {
   @Test
   public void testSetRoundingParams_RoundedLeafsToRoundedLeafs() {
     testSetRoundingParams_ToRoundedLeafsFrom(RoundingParams.fromCornersRadius(10));
+  }
+
+  @Test
+  public void testSetOverlaysImages() {
+    GenericDraweeHierarchy dh = mBuilder.setOverlays(new ArrayList<Drawable>()).build();
+
+    Drawable drawable = DrawableTestUtils.mockDrawable();
+    dh.setOverlayImage(drawable);
+
+    try {
+      dh.setOverlayImage(1, drawable);
+    } catch (Exception e) {
+      assertTrue(e instanceof IllegalArgumentException);
+    }
   }
 
   private void testSetRoundingParams_ToRoundedLeafsFrom(RoundingParams prev) {

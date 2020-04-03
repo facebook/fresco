@@ -109,6 +109,13 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     mActualImageWrapper = new ForwardingDrawable(mEmptyActualImageDrawable);
 
     int numOverlays = (builder.getOverlays() != null) ? builder.getOverlays().size() : 1;
+
+    // make sure there is at least one overlay to make setOverlayImage(Drawable)
+    // method work.
+    if (numOverlays == 0) {
+      numOverlays = 1;
+    }
+
     numOverlays += (builder.getPressedStateOverlay() != null) ? 1 : 0;
 
     // layer indices and count
