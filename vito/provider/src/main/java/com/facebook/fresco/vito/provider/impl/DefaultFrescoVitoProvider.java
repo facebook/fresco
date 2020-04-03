@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.provider;
+package com.facebook.fresco.vito.provider.impl;
 
 import com.facebook.fresco.vito.core.DefaultFrescoVitoConfig;
 import com.facebook.fresco.vito.core.FrescoContext;
@@ -15,6 +15,7 @@ import com.facebook.fresco.vito.core.FrescoVitoPrefetcher;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.impl.FrescoController2Impl;
 import com.facebook.fresco.vito.core.impl.VitoImagePipelineImpl;
+import com.facebook.fresco.vito.provider.FrescoVitoProvider;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 
 public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementation {

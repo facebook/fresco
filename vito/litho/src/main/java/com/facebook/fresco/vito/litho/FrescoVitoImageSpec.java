@@ -22,7 +22,7 @@ import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.core.FrescoState;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
-import com.facebook.fresco.vito.provider.DefaultFrescoContext;
+import com.facebook.fresco.vito.provider.impl.DefaultFrescoContext;
 import com.facebook.imagepipeline.multiuri.MultiUri;
 import com.facebook.litho.AccessibilityRole;
 import com.facebook.litho.BoundaryWorkingRange;

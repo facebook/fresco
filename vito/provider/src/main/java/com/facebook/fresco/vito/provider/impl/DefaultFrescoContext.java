@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.provider;
+package com.facebook.fresco.vito.provider.impl;
 
 import android.content.res.Resources;
 import com.facebook.callercontext.CallerContextVerifier;
