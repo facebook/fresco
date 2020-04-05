@@ -57,6 +57,7 @@ public class ImagePipelineExperiments {
   private boolean mKeepCancelledFetchAsLowPriority;
   private boolean mDownsampleIfLargeBitmap;
   private boolean mEncodedCacheEnabled;
+  private final boolean mEnsureTranscoderLibraryLoaded;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -86,6 +87,7 @@ public class ImagePipelineExperiments {
     mKeepCancelledFetchAsLowPriority = builder.mKeepCancelledFetchAsLowPriority;
     mDownsampleIfLargeBitmap = builder.mDownsampleIfLargeBitmap;
     mEncodedCacheEnabled = builder.mEncodedCacheEnabled;
+    mEnsureTranscoderLibraryLoaded = builder.mEnsureTranscoderLibraryLoaded;
   }
 
   public boolean isEncodedCacheEnabled() {
@@ -161,6 +163,10 @@ public class ImagePipelineExperiments {
     return mLazyDataSource;
   }
 
+  public boolean isEnsureTranscoderLibraryLoaded() {
+    return mEnsureTranscoderLibraryLoaded;
+  }
+
   public boolean isGingerbreadDecoderEnabled() {
     return mGingerbreadDecoderEnabled;
   }
@@ -211,6 +217,7 @@ public class ImagePipelineExperiments {
     private boolean mKeepCancelledFetchAsLowPriority;
     public boolean mDownsampleIfLargeBitmap;
     public boolean mEncodedCacheEnabled = true;
+    public boolean mEnsureTranscoderLibraryLoaded = true;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -372,6 +379,12 @@ public class ImagePipelineExperiments {
 
     public ImagePipelineConfig.Builder setEncodedCacheEnabled(boolean encodedCacheEnabled) {
       mEncodedCacheEnabled = encodedCacheEnabled;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setEnsureTranscoderLibraryLoaded(
+        boolean ensureTranscoderLibraryLoaded) {
+      mEnsureTranscoderLibraryLoaded = ensureTranscoderLibraryLoaded;
       return mConfigBuilder;
     }
 

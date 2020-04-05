@@ -418,7 +418,8 @@ public class ImagePipelineFactory {
                 mConfig.getExperiments().getMaxBitmapSize(),
                 mConfig.getExperiments().getUseDownsamplingRatioForResizing(),
                 mConfig.getImageTranscoderFactory(),
-                mConfig.getImageTranscoderType());
+                mConfig.getImageTranscoderType(),
+                mConfig.getExperiments().isEnsureTranscoderLibraryLoaded());
       }
     }
     return mImageTranscoderFactory;

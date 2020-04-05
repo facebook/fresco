@@ -720,7 +720,7 @@ public class ResizeAndRotateProducerTest {
 
   private void whenResizingEnabledIs(boolean resizingEnabled) {
     NativeJpegTranscoder nativeJpegTranscoder =
-        new NativeJpegTranscoder(resizingEnabled, MAX_BITMAP_SIZE, false);
+        new NativeJpegTranscoder(resizingEnabled, MAX_BITMAP_SIZE, false, false);
     NativeJpegTranscoderFactory jpegTranscoderFactory = mock(NativeJpegTranscoderFactory.class);
     when(jpegTranscoderFactory.createImageTranscoder(any(ImageFormat.class), anyBoolean()))
         .thenReturn(nativeJpegTranscoder);

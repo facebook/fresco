@@ -25,16 +25,19 @@ public class MultiImageTranscoderFactory implements ImageTranscoderFactory {
   private final boolean mUseDownSamplingRatio;
   @Nullable private final ImageTranscoderFactory mPrimaryImageTranscoderFactory;
   @Nullable @ImageTranscoderType private final Integer mImageTranscoderType;
+  private final boolean mEnsureTranscoderLibraryLoaded;
 
   public MultiImageTranscoderFactory(
       final int maxBitmapSize,
       final boolean useDownSamplingRatio,
       @Nullable final ImageTranscoderFactory primaryImageTranscoderFactory,
-      @Nullable @ImageTranscoderType final Integer imageTranscoderType) {
+      @Nullable @ImageTranscoderType final Integer imageTranscoderType,
+      final boolean ensureTranscoderLibraryLoaded) {
     mMaxBitmapSize = maxBitmapSize;
     mUseDownSamplingRatio = useDownSamplingRatio;
     mPrimaryImageTranscoderFactory = primaryImageTranscoderFactory;
     mImageTranscoderType = imageTranscoderType;
+    mEnsureTranscoderLibraryLoaded = ensureTranscoderLibraryLoaded;
   }
 
   @Override
@@ -69,7 +72,7 @@ public class MultiImageTranscoderFactory implements ImageTranscoderFactory {
   private ImageTranscoder getNativeImageTranscoder(
       ImageFormat imageFormat, boolean isResizingEnabled) {
     return NativeImageTranscoderFactory.getNativeImageTranscoderFactory(
-            mMaxBitmapSize, mUseDownSamplingRatio)
+            mMaxBitmapSize, mUseDownSamplingRatio, mEnsureTranscoderLibraryLoaded)
         .createImageTranscoder(imageFormat, isResizingEnabled);
   }
 

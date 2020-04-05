@@ -16,12 +16,14 @@ public final class NativeImageTranscoderFactory {
   private NativeImageTranscoderFactory() {}
 
   public static ImageTranscoderFactory getNativeImageTranscoderFactory(
-      final int maxBitmapSize, final boolean useDownSamplingRatio) {
+      final int maxBitmapSize,
+      final boolean useDownSamplingRatio,
+      final boolean ensureTranscoderLibraryLoaded) {
     try {
       return (ImageTranscoderFactory)
           Class.forName("com.facebook.imagepipeline.nativecode.NativeJpegTranscoderFactory")
-              .getConstructor(Integer.TYPE, Boolean.TYPE)
-              .newInstance(maxBitmapSize, useDownSamplingRatio);
+              .getConstructor(Integer.TYPE, Boolean.TYPE, Boolean.TYPE)
+              .newInstance(maxBitmapSize, useDownSamplingRatio, ensureTranscoderLibraryLoaded);
     } catch (NoSuchMethodException
         | SecurityException
         | InstantiationException

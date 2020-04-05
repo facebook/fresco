@@ -19,11 +19,16 @@ public class NativeJpegTranscoderFactory implements ImageTranscoderFactory {
 
   private final int mMaxBitmapSize;
   private final boolean mUseDownSamplingRatio;
+  private final boolean mEnsureTranscoderLibraryLoaded;
 
   @DoNotStrip
-  public NativeJpegTranscoderFactory(final int maxBitmapSize, final boolean useDownSamplingRatio) {
+  public NativeJpegTranscoderFactory(
+      final int maxBitmapSize,
+      final boolean useDownSamplingRatio,
+      final boolean ensureTranscoderLibraryLoaded) {
     mMaxBitmapSize = maxBitmapSize;
     mUseDownSamplingRatio = useDownSamplingRatio;
+    mEnsureTranscoderLibraryLoaded = ensureTranscoderLibraryLoaded;
   }
 
   @DoNotStrip
@@ -33,6 +38,7 @@ public class NativeJpegTranscoderFactory implements ImageTranscoderFactory {
     if (imageFormat != DefaultImageFormats.JPEG) {
       return null;
     }
-    return new NativeJpegTranscoder(isResizingEnabled, mMaxBitmapSize, mUseDownSamplingRatio);
+    return new NativeJpegTranscoder(
+        isResizingEnabled, mMaxBitmapSize, mUseDownSamplingRatio, mEnsureTranscoderLibraryLoaded);
   }
 }

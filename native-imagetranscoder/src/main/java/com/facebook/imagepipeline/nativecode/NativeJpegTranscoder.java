@@ -44,15 +44,18 @@ public class NativeJpegTranscoder implements ImageTranscoder {
   private int mMaxBitmapSize;
   private boolean mUseDownsamplingRatio;
 
-  static {
-    NativeJpegTranscoderSoLoader.ensure();
-  }
-
   public NativeJpegTranscoder(
-      final boolean resizingEnabled, final int maxBitmapSize, final boolean useDownsamplingRatio) {
+      final boolean resizingEnabled,
+      final int maxBitmapSize,
+      final boolean useDownsamplingRatio,
+      final boolean ensureTranscoderLibraryLoaded) {
     mResizingEnabled = resizingEnabled;
     mMaxBitmapSize = maxBitmapSize;
     mUseDownsamplingRatio = useDownsamplingRatio;
+
+    if (ensureTranscoderLibraryLoaded) {
+      NativeJpegTranscoderSoLoader.ensure();
+    }
   }
 
   @Override
