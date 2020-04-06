@@ -37,7 +37,7 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
     final ImageRequest imageRequest = producerContext.getImageRequest();
     final StatefulProducerRunnable cancellableProducerRunnable =
         new StatefulProducerRunnable<EncodedImage>(
-            consumer, listener, producerContext, getProducerName()) {
+            consumer, listener, producerContext, getProducerName(), "local_fetch") {
 
           @Override
           protected @Nullable EncodedImage getResult() throws Exception {
