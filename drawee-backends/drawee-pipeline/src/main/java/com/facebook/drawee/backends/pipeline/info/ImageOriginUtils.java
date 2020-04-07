@@ -35,6 +35,8 @@ public class ImageOriginUtils {
         return "memory_encoded";
       case ImageOrigin.MEMORY_BITMAP:
         return "memory_bitmap";
+      case ImageOrigin.MEMORY_BITMAP_SHORTCUT:
+        return "memory_bitmap_shortcut";
       case ImageOrigin.LOCAL:
         return "local";
       case ImageOrigin.UNKNOWN:
