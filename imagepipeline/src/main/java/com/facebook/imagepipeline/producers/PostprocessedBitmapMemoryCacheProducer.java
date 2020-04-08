@@ -65,6 +65,7 @@ public class PostprocessedBitmapMemoryCacheProducer
               ? ImmutableMap.of(VALUE_FOUND, "true")
               : null);
       listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, true);
+      producerContext.setExtra(ProducerContext.ExtraKeys.ORIGIN, "memory_bitmap");
       consumer.onProgressUpdate(1.0f);
       consumer.onNewResult(cachedReference, Consumer.IS_LAST);
       cachedReference.close();
