@@ -98,6 +98,9 @@ public class BufferedDiskCache {
               final Object currentToken = FrescoInstrumenter.onBeginWork(token, null);
               try {
                 return checkInStagingAreaAndFileCache(key);
+              } catch (Throwable th) {
+                FrescoInstrumenter.markFailure(token, th);
+                throw th;
               } finally {
                 FrescoInstrumenter.onEndWork(currentToken);
               }
@@ -221,6 +224,9 @@ public class BufferedDiskCache {
                 } else {
                   return result;
                 }
+              } catch (Throwable th) {
+                FrescoInstrumenter.markFailure(token, th);
+                throw th;
               } finally {
                 FrescoInstrumenter.onEndWork(currentToken);
               }
@@ -263,6 +269,9 @@ public class BufferedDiskCache {
                 final Object currentToken = FrescoInstrumenter.onBeginWork(token, null);
                 try {
                   writeToDiskCache(key, finalEncodedImage);
+                } catch (Throwable th) {
+                  FrescoInstrumenter.markFailure(token, th);
+                  throw th;
                 } finally {
                   mStagingArea.remove(key, finalEncodedImage);
                   EncodedImage.closeSafely(finalEncodedImage);
@@ -298,6 +307,9 @@ public class BufferedDiskCache {
               try {
                 mStagingArea.remove(key);
                 mFileCache.remove(key);
+              } catch (Throwable th) {
+                FrescoInstrumenter.markFailure(token, th);
+                throw th;
               } finally {
                 FrescoInstrumenter.onEndWork(currentToken);
               }
@@ -327,6 +339,9 @@ public class BufferedDiskCache {
                 mStagingArea.clearAll();
                 mFileCache.clearAll();
                 return null;
+              } catch (Throwable th) {
+                FrescoInstrumenter.markFailure(token, th);
+                throw th;
               } finally {
                 FrescoInstrumenter.onEndWork(currentToken);
               }

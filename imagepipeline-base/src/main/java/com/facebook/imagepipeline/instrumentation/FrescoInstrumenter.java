@@ -55,6 +55,16 @@ public final class FrescoInstrumenter {
     void onEndWork(Object token);
 
     /**
+     * Reports a failure while executing work.
+     *
+     * <p><note>{@link Instrumenter#onEndWork(Object)} still needs to be invoked.
+     *
+     * @param token returned by {@link Instrumenter#onBeginWork(Object, String)}.
+     * @param th containing the failure.
+     */
+    void markFailure(Object token, Throwable th);
+
+    /**
      * Called when a unit of work is about to be scheduled.
      *
      * @param runnable that will be executed.
@@ -108,6 +118,14 @@ public final class FrescoInstrumenter {
       return;
     }
     instrumenter.onEndWork(token);
+  }
+
+  public static void markFailure(@Nullable Object token, Throwable th) {
+    final Instrumenter instrumenter = sInstance;
+    if (instrumenter == null || token == null) {
+      return;
+    }
+    instrumenter.markFailure(token, th);
   }
 
   @Nullable
