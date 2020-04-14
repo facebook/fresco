@@ -12,6 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.anyInt;
@@ -257,9 +258,9 @@ public class ArtDecoderTest {
   private static byte[] getDecodedBytes() {
     ArgumentCaptor<InputStream> inputStreamArgumentCaptor =
         ArgumentCaptor.forClass(InputStream.class);
-    verifyStatic(times(2));
+    verifyStatic(BitmapFactory.class, times(2));
     BitmapFactory.decodeStream(
-        inputStreamArgumentCaptor.capture(), any(Rect.class), any(BitmapFactory.Options.class));
+        inputStreamArgumentCaptor.capture(), isNull(Rect.class), any(BitmapFactory.Options.class));
     InputStream decodedStream = inputStreamArgumentCaptor.getValue();
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     try {
@@ -312,9 +313,9 @@ public class ArtDecoderTest {
   }
 
   private static void verifyDecodedFromStream() {
-    verifyStatic(times(2));
+    verifyStatic(BitmapFactory.class, times(2));
     BitmapFactory.decodeStream(
-        any(ByteArrayInputStream.class), any(Rect.class), any(BitmapFactory.Options.class));
+        (ByteArrayInputStream) anyObject(), isNull(Rect.class), any(BitmapFactory.Options.class));
   }
 
   private void verifyDecodedBytes(boolean complete, int length) {

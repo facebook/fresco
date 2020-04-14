@@ -41,7 +41,11 @@ import org.robolectric.annotation.*;
 /** Basic tests for LocalContentUriThumbnailFetchProducer */
 @RunWith(RobolectricTestRunner.class)
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
-@PrepareForTest({LocalContentUriThumbnailFetchProducer.class, MediaStore.Images.class})
+@PrepareForTest({
+  LocalContentUriThumbnailFetchProducer.class,
+  MediaStore.class,
+  MediaStore.Images.class
+})
 @Config(manifest = Config.NONE)
 public class LocalContentUriThumbnailFetchProducerTest {
   private static final String PRODUCER_NAME = LocalContentUriThumbnailFetchProducer.PRODUCER_NAME;
@@ -132,10 +136,10 @@ public class LocalContentUriThumbnailFetchProducerTest {
   private void mockContentResolver() throws Exception {
     when(mContentResolver.query(
             eq(mContentUri),
-            any(String[].class),
-            any(String.class),
-            any(String[].class),
-            any(String.class)))
+            nullable(String[].class),
+            nullable(String.class),
+            nullable(String[].class),
+            nullable(String.class)))
         .thenReturn(mCursor);
     when(mContentResolver.openInputStream(mContentUri)).thenReturn(mock(InputStream.class));
   }

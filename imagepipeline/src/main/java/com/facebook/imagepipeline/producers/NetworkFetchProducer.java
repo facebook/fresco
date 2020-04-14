@@ -137,7 +137,7 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
 
   protected void maybeHandleIntermediateResult(
       PooledByteBufferOutputStream pooledOutputStream, FetchState fetchState) {
-    final long nowMs = SystemClock.uptimeMillis();
+    final long nowMs = getSystemUptime();
     if (shouldPropagateIntermediateResults(fetchState)
         && nowMs - fetchState.getLastIntermediateResultTimeMs()
             >= TIME_BETWEEN_PARTIAL_RESULTS_MS) {
@@ -222,5 +222,10 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
       return null;
     }
     return mNetworkFetcher.getExtraMap(fetchState, byteSize);
+  }
+
+  @VisibleForTesting
+  protected long getSystemUptime() {
+    return SystemClock.uptimeMillis();
   }
 }

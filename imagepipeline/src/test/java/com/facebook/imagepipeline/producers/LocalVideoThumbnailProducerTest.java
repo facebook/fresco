@@ -8,7 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.eq;
@@ -51,7 +51,6 @@ import org.robolectric.annotation.*;
 public class LocalVideoThumbnailProducerTest {
   private static final String PRODUCER_NAME = LocalVideoThumbnailProducer.PRODUCER_NAME;
   private static final String TEST_FILENAME = "dummy.jpg";
-  private static final android.net.Uri LOCAL_VIDEO_URI = Uri.parse("file:///dancing_hotdog.mp4");
 
   @Mock public PooledByteBufferFactory mPooledByteBufferFactory;
   @Mock public Consumer<CloseableReference<CloseableImage>> mConsumer;
@@ -69,6 +68,7 @@ public class LocalVideoThumbnailProducerTest {
   private File mFile;
   private LocalVideoThumbnailProducer mLocalVideoThumbnailProducer;
   private CloseableReference<CloseableStaticBitmap> mCloseableReference;
+  private android.net.Uri mLocalVideoUri;
 
   @Before
   public void setUp() throws Exception {
@@ -92,6 +92,7 @@ public class LocalVideoThumbnailProducerTest {
             Priority.MEDIUM,
             mConfig);
     when(mImageRequest.getSourceFile()).thenReturn(mFile);
+    mLocalVideoUri = Uri.parse("file:///dancing_hotdog.mp4");
   }
 
   @Test
@@ -110,7 +111,7 @@ public class LocalVideoThumbnailProducerTest {
   public void testLocalVideoMiniThumbnailSuccess() throws Exception {
     when(mImageRequest.getPreferredWidth()).thenReturn(100);
     when(mImageRequest.getPreferredHeight()).thenReturn(100);
-    when(mImageRequest.getSourceUri()).thenReturn(LOCAL_VIDEO_URI);
+    when(mImageRequest.getSourceUri()).thenReturn(mLocalVideoUri);
     when(android.media.ThumbnailUtils.createVideoThumbnail(
             mFile.getPath(), MediaStore.Images.Thumbnails.MINI_KIND))
         .thenReturn(mBitmap);
@@ -136,7 +137,7 @@ public class LocalVideoThumbnailProducerTest {
 
   @Test
   public void testLocalVideoMicroThumbnailSuccess() throws Exception {
-    when(mImageRequest.getSourceUri()).thenReturn(LOCAL_VIDEO_URI);
+    when(mImageRequest.getSourceUri()).thenReturn(mLocalVideoUri);
     when(mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)).thenReturn(true);
     when(android.media.ThumbnailUtils.createVideoThumbnail(
             mFile.getPath(), MediaStore.Images.Thumbnails.MICRO_KIND))
@@ -166,7 +167,7 @@ public class LocalVideoThumbnailProducerTest {
 
   @Test
   public void testLocalVideoMicroThumbnailReturnsNull() throws Exception {
-    when(mImageRequest.getSourceUri()).thenReturn(LOCAL_VIDEO_URI);
+    when(mImageRequest.getSourceUri()).thenReturn(mLocalVideoUri);
     when(mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)).thenReturn(true);
     when(android.media.ThumbnailUtils.createVideoThumbnail(
             mFile.getPath(), MediaStore.Images.Thumbnails.MICRO_KIND))

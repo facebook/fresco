@@ -8,9 +8,10 @@
 package com.facebook.fresco.vito.core.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -213,7 +214,7 @@ public class FrescoControllerImplTest {
     when(request.getLowestPermittedRequestLevel()).thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
     when(mImagePipeline.generateUniqueFutureId()).thenReturn(imageId);
     when(mImagePipeline.getProducerSequenceFactory()).thenReturn(producerSequenceFactory);
-    when(mImagePipeline.getRequestListenerForRequest(eq(request), any(RequestListener.class)))
+    when(mImagePipeline.getRequestListenerForRequest(eq(request), nullable(RequestListener.class)))
         .thenReturn(requestListener);
     when(producerSequenceFactory.getDecodedImageProducerSequence(eq(request)))
         .thenReturn(producerSequence);

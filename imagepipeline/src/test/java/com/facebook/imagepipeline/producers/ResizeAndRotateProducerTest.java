@@ -10,7 +10,7 @@ package com.facebook.imagepipeline.producers;
 import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.DEFAULT_JPEG_QUALITY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.anyLong;
@@ -621,7 +621,7 @@ public class ResizeAndRotateProducerTest {
   }
 
   private static void verifyJpegTranscoderInteractions(int numerator, int rotationAngle) {
-    PowerMockito.verifyStatic();
+    PowerMockito.verifyStatic(NativeJpegTranscoder.class);
     try {
       NativeJpegTranscoder.transcodeJpeg(
           any(InputStream.class),
@@ -636,7 +636,7 @@ public class ResizeAndRotateProducerTest {
 
   private static void verifyJpegTranscoderExifOrientationInteractions(
       int numerator, int exifOrientation) {
-    PowerMockito.verifyStatic();
+    PowerMockito.verifyStatic(NativeJpegTranscoder.class);
     try {
       NativeJpegTranscoder.transcodeJpegWithExifOrientation(
           any(InputStream.class),
@@ -650,7 +650,7 @@ public class ResizeAndRotateProducerTest {
   }
 
   private static void verifyZeroJpegTranscoderInteractions() {
-    PowerMockito.verifyStatic(never());
+    PowerMockito.verifyStatic(NativeJpegTranscoder.class, never());
     try {
       NativeJpegTranscoder.transcodeJpeg(
           any(InputStream.class), any(OutputStream.class), anyInt(), anyInt(), anyInt());
@@ -660,7 +660,7 @@ public class ResizeAndRotateProducerTest {
   }
 
   private static void verifyZeroJpegTranscoderExifOrientationInteractions() {
-    PowerMockito.verifyStatic(never());
+    PowerMockito.verifyStatic(NativeJpegTranscoder.class, never());
     try {
       NativeJpegTranscoder.transcodeJpegWithExifOrientation(
           any(InputStream.class), any(OutputStream.class), anyInt(), anyInt(), anyInt());

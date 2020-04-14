@@ -8,7 +8,7 @@
 package com.facebook.imagepipeline.decoder;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 import com.facebook.common.internal.ByteStreams;

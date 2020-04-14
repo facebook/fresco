@@ -9,9 +9,12 @@ package com.facebook.imagepipeline.platform;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assume.assumeNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyObject;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -36,7 +39,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
@@ -111,10 +113,8 @@ public class GingerbreadPurgeableDecoderTest {
 
   @Test(expected = ConcurrentModificationException.class)
   public void testPinBitmapFailure() {
-    GingerbreadPurgeableDecoder decoder = mock(GingerbreadPurgeableDecoder.class);
-    PowerMockito.doThrow(new ConcurrentModificationException())
-        .when(decoder)
-        .pinBitmap(any(Bitmap.class));
+    GingerbreadPurgeableDecoder decoder = spy(mGingerbreadPurgeableDecoder);
+    doThrow(new ConcurrentModificationException()).when(decoder).pinBitmap((Bitmap) anyObject());
     decoder.pinBitmap(any(Bitmap.class));
     try {
       decoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG, null);

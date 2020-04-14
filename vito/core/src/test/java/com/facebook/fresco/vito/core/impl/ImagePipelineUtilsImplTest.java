@@ -34,7 +34,7 @@ public class ImagePipelineUtilsImplTest {
     TestNativeLoader.init();
   }
 
-  private static final Uri URI = Uri.parse("test");
+  private final Uri URI = Uri.parse("test");
 
   private FrescoExperiments mFrescoExperiments;
 

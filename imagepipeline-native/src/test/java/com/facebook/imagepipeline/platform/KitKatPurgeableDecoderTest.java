@@ -10,12 +10,15 @@ package com.facebook.imagepipeline.platform;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.same;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyObject;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -43,7 +46,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
@@ -128,7 +130,7 @@ public class KitKatPurgeableDecoderTest {
         mKitKatPurgeableDecoder.decodeJPEGFromEncodedImage(
             mEncodedImage, DEFAULT_BITMAP_CONFIG, null, IMAGE_SIZE);
     verify(mFlexByteArrayPool).get(IMAGE_SIZE + 2);
-    verifyStatic();
+    verifyStatic(BitmapFactory.class);
     BitmapFactory.decodeByteArray(
         same(mDecodeBuf), eq(0), eq(IMAGE_SIZE), argThat(new BitmapFactoryOptionsMatcher()));
     assertEquals(2, mByteBufferRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
@@ -146,7 +148,7 @@ public class KitKatPurgeableDecoderTest {
         mKitKatPurgeableDecoder.decodeJPEGFromEncodedImage(
             mEncodedImage, DEFAULT_BITMAP_CONFIG, null, IMAGE_SIZE);
     verify(mFlexByteArrayPool).get(IMAGE_SIZE + 2);
-    verifyStatic();
+    verifyStatic(BitmapFactory.class);
     BitmapFactory.decodeByteArray(
         same(mDecodeBuf), eq(0), eq(IMAGE_SIZE + 2), argThat(new BitmapFactoryOptionsMatcher()));
     assertEquals((byte) 0xff, mDecodeBuf[5]);
@@ -174,10 +176,8 @@ public class KitKatPurgeableDecoderTest {
 
   @Test(expected = ConcurrentModificationException.class)
   public void testPinBitmapFailure() {
-    KitKatPurgeableDecoder decoder = mock(KitKatPurgeableDecoder.class);
-    PowerMockito.doThrow(new ConcurrentModificationException())
-        .when(decoder)
-        .pinBitmap(any(Bitmap.class));
+    KitKatPurgeableDecoder decoder = spy(mKitKatPurgeableDecoder);
+    doThrow(new ConcurrentModificationException()).when(decoder).pinBitmap((Bitmap) anyObject());
     decoder.pinBitmap(any(Bitmap.class));
     try {
       decoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG, null);
@@ -194,13 +194,10 @@ public class KitKatPurgeableDecoderTest {
     when(mFlexByteArrayPool.get(IMAGE_SIZE + 2)).thenReturn(mDecodeBufRef);
   }
 
-  private static class BitmapFactoryOptionsMatcher extends ArgumentMatcher<BitmapFactory.Options> {
+  private static class BitmapFactoryOptionsMatcher
+      implements ArgumentMatcher<BitmapFactory.Options> {
     @Override
-    public boolean matches(Object argument) {
-      if (argument == null) {
-        return false;
-      }
-      BitmapFactory.Options options = (BitmapFactory.Options) argument;
+    public boolean matches(BitmapFactory.Options options) {
       return options.inDither && options.inPurgeable;
     }
   }

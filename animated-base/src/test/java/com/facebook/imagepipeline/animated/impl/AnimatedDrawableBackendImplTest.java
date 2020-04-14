@@ -7,8 +7,8 @@
 
 package com.facebook.imagepipeline.animated.impl;
 
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -20,17 +20,21 @@ import com.facebook.imagepipeline.animated.base.AnimatedImageFrame;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.RobolectricTestRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({Bitmap.class, Rect.class})
+@RunWith(RobolectricTestRunner.class)
+@PrepareForTest({Bitmap.class, Rect.class, Canvas.class})
 public class AnimatedDrawableBackendImplTest {
+
+  @Rule public PowerMockRule mPowerMockRule = new PowerMockRule();
 
   @Mock public AnimatedDrawableUtil mAnimatedDrawableUtil;
   @Mock public AnimatedImageResult mAnimatedImageResult;

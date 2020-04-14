@@ -171,7 +171,7 @@ public class SingleUsePostprocessorProducerTest {
             eq(PostprocessorProducer.NAME),
             any(RuntimeException.class),
             eq(mExtraMap));
-    mInOrder.verify(mConsumer).onFailure(any(IllegalStateException.class));
+    mInOrder.verify(mConsumer).onFailure(nullable(Throwable.class));
     mInOrder.verifyNoMoreInteractions();
     assertEquals(0, mResults.size());
 

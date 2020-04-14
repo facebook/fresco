@@ -7,7 +7,7 @@
 
 package com.facebook.imagepipeline.memory;
 
-import static org.mockito.Matchers.*;
+import static org.mockito.ArgumentMatchers.*;
 
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.SharedReference;
@@ -17,7 +17,7 @@ import org.mockito.*;
 /** Utilities for testing {@link CloseableReference}. */
 public class CloseableReferences {
   private static class CloseableReferenceMatcher<T extends Closeable>
-      extends ArgumentMatcher<CloseableReference<T>> {
+      implements ArgumentMatcher<CloseableReference<T>> {
 
     private final CloseableReference<T> mCloseableReference;
 
@@ -26,13 +26,9 @@ public class CloseableReferences {
     }
 
     @Override
-    public boolean matches(Object argument) {
-      if (!(argument instanceof CloseableReference)) {
-        return false;
-      }
-
+    public boolean matches(CloseableReference argument) {
       return mCloseableReference.getUnderlyingReferenceTestOnly()
-          == ((CloseableReference) argument).getUnderlyingReferenceTestOnly();
+          == argument.getUnderlyingReferenceTestOnly();
     }
   }
 

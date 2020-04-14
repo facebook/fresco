@@ -11,8 +11,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -498,14 +499,14 @@ public class ImagePipelineTest {
   @Test
   public void testIsInDiskCacheFromMainDiskCache() {
     when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.DEFAULT);
-    when(mMainDiskStorageCache.diskCheckSync(any(CacheKey.class))).thenReturn(true);
+    when(mMainDiskStorageCache.diskCheckSync(isNull(CacheKey.class))).thenReturn(true);
     assertTrue(mImagePipeline.isInDiskCacheSync(mImageRequest));
   }
 
   @Test
   public void testIsInDiskCacheFromSmallDiskCache() {
     when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.SMALL);
-    when(mSmallImageDiskStorageCache.diskCheckSync(any(CacheKey.class))).thenReturn(true);
+    when(mSmallImageDiskStorageCache.diskCheckSync(isNull(CacheKey.class))).thenReturn(true);
     assertTrue(mImagePipeline.isInDiskCacheSync(mImageRequest));
   }
 

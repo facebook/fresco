@@ -21,7 +21,7 @@ dependencies {
     testImplementation "junit:junit:${JUNIT_VERSION}"
     testImplementation "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
     testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    testImplementation "org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}"
+    testImplementation "org.powermock:powermock-api-mockito2:${POWERMOCK_VERSION}"
     testImplementation "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
     testImplementation "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
     testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {

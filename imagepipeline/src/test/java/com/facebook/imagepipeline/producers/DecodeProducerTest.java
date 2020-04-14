@@ -329,7 +329,7 @@ public class DecodeProducerTest {
     inOrder
         .verify(mProducerListener)
         .onProducerFinishWithSuccess(
-            eq(mProducerContext), eq(DecodeProducer.PRODUCER_NAME), any(Map.class));
+            eq(mProducerContext), eq(DecodeProducer.PRODUCER_NAME), nullable(Map.class));
     verify(mProducerListener, never())
         .onUltimateProducerReached(eq(mProducerContext), anyString(), anyBoolean());
   }
@@ -359,7 +359,7 @@ public class DecodeProducerTest {
     inOrder
         .verify(mProducerListener)
         .onProducerFinishWithSuccess(
-            eq(mProducerContext), eq(DecodeProducer.PRODUCER_NAME), any(Map.class));
+            eq(mProducerContext), eq(DecodeProducer.PRODUCER_NAME), nullable(Map.class));
     inOrder.verifyNoMoreInteractions();
   }
 
@@ -385,7 +385,10 @@ public class DecodeProducerTest {
     inOrder
         .verify(mProducerListener)
         .onProducerFinishWithFailure(
-            eq(mProducerContext), eq(DecodeProducer.PRODUCER_NAME), eq(exception), any(Map.class));
+            eq(mProducerContext),
+            eq(DecodeProducer.PRODUCER_NAME),
+            eq(exception),
+            nullable(Map.class));
     verify(mProducerListener, never())
         .onUltimateProducerReached(eq(mProducerContext), anyString(), anyBoolean());
   }

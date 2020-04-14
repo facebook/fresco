@@ -7,8 +7,8 @@
 
 package com.facebook.imagepipeline.producers;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -18,6 +18,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import android.net.Uri;
+import android.provider.ContactsContract;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.producers.HttpUrlConnectionNetworkFetcher.HttpUrlConnectionNetworkFetchState;
@@ -30,6 +31,7 @@ import java.net.URLConnection;
 import java.util.LinkedList;
 import java.util.Queue;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -39,14 +41,22 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.RobolectricTestRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({HttpUrlConnectionNetworkFetcher.class, Uri.class, UriUtil.class})
+@RunWith(RobolectricTestRunner.class)
+@PrepareForTest({
+  HttpUrlConnectionNetworkFetcher.class,
+  Uri.class,
+  UriUtil.class,
+  ContactsContract.class
+})
 public class HttpUrlConnectionNetworkFetcherTest {
 
   public static final String INITIAL_TEST_URL = "http://localhost/";
   public static final String HTTPS_URL = "https://localhost/";
+
+  @Rule public PowerMockRule mPowerMockRule = new PowerMockRule();
 
   @Mock private HttpUrlConnectionNetworkFetchState mMockFetchState;
   @Mock private ProducerContext mMockProducerContext;
