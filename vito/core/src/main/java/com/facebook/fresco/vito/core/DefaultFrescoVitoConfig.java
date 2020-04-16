@@ -17,4 +17,9 @@ public class DefaultFrescoVitoConfig implements FrescoVitoConfig {
   public PrefetchTarget prefetchTargetOnPrepare() {
     return PrefetchTarget.MEMORY_DECODED;
   }
+
+  @Override
+  public boolean submitFetchOnBgThread() {
+    return true;
+  }
 }

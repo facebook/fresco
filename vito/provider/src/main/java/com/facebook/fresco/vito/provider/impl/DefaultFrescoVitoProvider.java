@@ -44,6 +44,7 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
         new VitoImagePipelineImpl(context.getImagePipeline(), context.getImagePipelineUtils());
     mFrescoController =
         new FrescoController2Impl(
+            mFrescoVitoConfig,
             context.getHierarcher(),
             context.getLightweightBackgroundThreadExecutor(),
             context.getUiThreadExecutorService(),

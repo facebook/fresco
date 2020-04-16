@@ -15,6 +15,7 @@ import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.fresco.vito.core.DrawableDataSubscriber;
 import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
+import com.facebook.fresco.vito.core.FrescoVitoConfig;
 import com.facebook.fresco.vito.core.Hierarcher;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.VitoImageRequest;
@@ -30,6 +31,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   private static final NullPointerException NO_REQUEST_EXCEPTION =
       new NullPointerException("No image request was specified!");
 
+  private final FrescoVitoConfig mConfig;
   private final Hierarcher mHierarcher;
   private final Executor mLightweightBackgroundThreadExecutor;
   private final Executor mUiThreadExecutor;
@@ -37,11 +39,13 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   private final @Nullable VitoImageRequestListener mGlobalImageListener;
 
   public FrescoController2Impl(
+      FrescoVitoConfig config,
       Hierarcher hierarcher,
       Executor lightweightBackgroundThreadExecutor,
       Executor uiThreadExecutor,
       VitoImagePipeline imagePipeline,
       @Nullable VitoImageRequestListener globalImageListener) {
+    mConfig = config;
     mHierarcher = hierarcher;
     mLightweightBackgroundThreadExecutor = lightweightBackgroundThreadExecutor;
     mUiThreadExecutor = uiThreadExecutor;
@@ -112,7 +116,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     frescoDrawable.getImageListener().onPlaceholderSet(imageId, imageRequest, placeholder);
 
     // Fetch the image
-    mLightweightBackgroundThreadExecutor.execute(
+    final Runnable fetchRunnable =
         new Runnable() {
           @Override
           public void run() {
@@ -133,7 +137,13 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             frescoDrawable.setDataSource(dataSource);
             dataSource.subscribe(frescoDrawable, mUiThreadExecutor);
           }
-        });
+        };
+
+    if (mConfig.submitFetchOnBgThread()) {
+      mLightweightBackgroundThreadExecutor.execute(fetchRunnable);
+    } else {
+      fetchRunnable.run();
+    }
     frescoDrawable.setFetchSubmitted(true);
     return false;
   }

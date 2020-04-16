@@ -12,4 +12,6 @@ public interface FrescoVitoConfig {
   boolean prefetchInOnPrepare();
 
   PrefetchTarget prefetchTargetOnPrepare();
+
+  boolean submitFetchOnBgThread();
 }
