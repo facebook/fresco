@@ -18,7 +18,7 @@ import com.facebook.fresco.samples.showcase.R
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.RoundingOptions
-import com.facebook.fresco.vito.provider.DefaultFrescoContext
+import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.fresco.vito.view.VitoView
 import kotlinx.android.synthetic.main.fragment_vito_view_prefetch.*
 
@@ -43,7 +43,7 @@ class VitoViewPrefetchFragment : BaseShowcaseFragment() {
         val uri = sampleUris().createSampleUri(ImageUriProvider.ImageSize.M)
         val view = container.findViewById<View>(R.id.view)
 
-        val prefetcher = DefaultFrescoContext.get(resources).prefetcher
+        val prefetcher = FrescoVitoProvider.getPrefetcher()
 
         button_prefetch_bitmap.setOnClickListener {
             prefetcher.prefetchToBitmapCache(uri, imageOptions, "prefetch_bitmap")
