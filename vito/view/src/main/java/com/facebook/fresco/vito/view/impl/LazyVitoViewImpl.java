@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.view;
+package com.facebook.fresco.vito.view.impl;
 
 import android.net.Uri;
 import android.view.View;
@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.provider.FrescoVitoProvider;
+import com.facebook.fresco.vito.view.VitoView;
 import com.facebook.imagepipeline.multiuri.MultiUri;
 
 public abstract class LazyVitoViewImpl implements VitoView.Implementation {

@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.view;
+package com.facebook.fresco.vito.view.impl;
 
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -20,6 +20,8 @@ import com.facebook.fresco.vito.core.FrescoDrawable;
 import com.facebook.fresco.vito.core.FrescoState;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.view.R;
+import com.facebook.fresco.vito.view.VitoView;
 import com.facebook.imagepipeline.multiuri.MultiUri;
 
 /** You must initialize this class before use by calling {#code VitoView.init()}. */

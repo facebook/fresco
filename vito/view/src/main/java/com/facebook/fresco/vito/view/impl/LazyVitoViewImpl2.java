@@ -5,9 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.view;
+package com.facebook.fresco.vito.view.impl;
 
 import com.facebook.fresco.vito.provider.FrescoVitoProvider;
+import com.facebook.fresco.vito.view.VitoView;
 
 public class LazyVitoViewImpl2 extends LazyVitoViewImpl {
 

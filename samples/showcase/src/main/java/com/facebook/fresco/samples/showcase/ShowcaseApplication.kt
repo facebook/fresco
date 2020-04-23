@@ -28,7 +28,7 @@ import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.fresco.vito.provider.impl.DefaultFrescoContext
 import com.facebook.fresco.vito.provider.impl.DefaultFrescoVitoProvider
 import com.facebook.fresco.vito.view.VitoView
-import com.facebook.fresco.vito.view.VitoViewImpl2
+import com.facebook.fresco.vito.view.impl.VitoViewImpl2
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.facebook.imagepipeline.debug.FlipperCacheKeyFactory
