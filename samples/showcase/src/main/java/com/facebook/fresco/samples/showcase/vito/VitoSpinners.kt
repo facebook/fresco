@@ -86,6 +86,18 @@ object VitoSpinners {
             "blue" to PorterDuffColorFilter(Color.BLUE, PorterDuff.Mode.DARKEN)
     ), "Color filter")
 
+    val fadingOptions = Pair(listOf(
+            "none" to 0,
+            "50 ms" to 50,
+            "100 ms" to 100,
+            "200 ms" to 200,
+            "500 ms" to 500,
+            "1000 ms" to 1000,
+            "2000 ms" to 2000,
+            "5000 ms" to 5000,
+            "10000 ms" to 10000
+    ), "Fading")
+
     val placeholderOptions = Pair(listOf(
             "none" to {builder: ImageOptions.Builder -> builder.placeholder(null)},
             "image" to {builder: ImageOptions.Builder -> builder.placeholderRes(R.drawable.logo, ScalingUtils.ScaleType.FIT_CENTER)},

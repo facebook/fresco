@@ -60,13 +60,14 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
         spinner_image_format.setupWithList(VitoSpinners.imageFormats) {
             refresh(uri = if (it != null) sampleUris().create(it) else null)
         }
-
         spinner_color_filter.setupWithList(VitoSpinners.colorFilters) {
             refresh(imageOptionsBuilder.colorFilter(it))
         }
-
         spinner_placeholder.setupWithList(VitoSpinners.placeholderOptions) {
             refresh(it(imageOptionsBuilder))
+        }
+        spinner_fading.setupWithList(VitoSpinners.fadingOptions) {
+            refresh(imageOptionsBuilder.fadeDurationMs(it))
         }
         spinner_progress.setupWithList(VitoSpinners.progressOptions) {
             refresh(it(context!!, imageOptionsBuilder))
