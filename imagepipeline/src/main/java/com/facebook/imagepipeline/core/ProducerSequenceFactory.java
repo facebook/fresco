@@ -26,11 +26,13 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.webp.WebpSupportStatus;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.producers.BitmapMemoryCacheGetProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheKeyMultiplexProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.DecodeProducer;
 import com.facebook.imagepipeline.producers.DiskCacheReadProducer;
 import com.facebook.imagepipeline.producers.EncodedMemoryCacheProducer;
+import com.facebook.imagepipeline.producers.EncodedProbeProducer;
 import com.facebook.imagepipeline.producers.LocalAssetFetchProducer;
 import com.facebook.imagepipeline.producers.LocalContentUriFetchProducer;
 import com.facebook.imagepipeline.producers.LocalFileFetchProducer;
@@ -67,6 +69,7 @@ public class ProducerSequenceFactory {
   private final boolean mUseBitmapPrepareToDraw;
   private final boolean mDiskCacheEnabled;
   private final ImageTranscoderFactory mImageTranscoderFactory;
+  private final boolean mIsProbingEnabled;
 
   // Saved sequences
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
@@ -117,7 +120,8 @@ public class ProducerSequenceFactory {
       boolean useBitmapPrepareToDraw,
       boolean partialImageCachingEnabled,
       boolean diskCacheEnabled,
-      ImageTranscoderFactory imageTranscoderFactory) {
+      ImageTranscoderFactory imageTranscoderFactory,
+      boolean isProbingEnabled) {
     mContentResolver = contentResolver;
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
@@ -132,6 +136,7 @@ public class ProducerSequenceFactory {
     mPartialImageCachingEnabled = partialImageCachingEnabled;
     mDiskCacheEnabled = diskCacheEnabled;
     mImageTranscoderFactory = imageTranscoderFactory;
+    mIsProbingEnabled = isProbingEnabled;
   }
 
   /**
@@ -764,6 +769,11 @@ public class ProducerSequenceFactory {
     }
     EncodedMemoryCacheProducer encodedMemoryCacheProducer =
         mProducerFactory.newEncodedMemoryCacheProducer(inputProducer);
+    if (mIsProbingEnabled) {
+      EncodedProbeProducer probeProducer =
+          mProducerFactory.newEncodedProbeProducer(encodedMemoryCacheProducer);
+      return mProducerFactory.newEncodedCacheKeyMultiplexProducer(probeProducer);
+    }
     return mProducerFactory.newEncodedCacheKeyMultiplexProducer(encodedMemoryCacheProducer);
   }
 
@@ -801,6 +811,11 @@ public class ProducerSequenceFactory {
     ThreadHandoffProducer<CloseableReference<CloseableImage>> threadHandoffProducer =
         mProducerFactory.newBackgroundThreadHandoffProducer(
             bitmapKeyMultiplexProducer, mThreadHandoffProducerQueue);
+    if (mIsProbingEnabled) {
+      BitmapMemoryCacheGetProducer bitmapMemoryCacheGetProducer =
+          mProducerFactory.newBitmapMemoryCacheGetProducer(threadHandoffProducer);
+      return mProducerFactory.newBitmapProbeProducer(bitmapMemoryCacheGetProducer);
+    }
     return mProducerFactory.newBitmapMemoryCacheGetProducer(threadHandoffProducer);
   }
 

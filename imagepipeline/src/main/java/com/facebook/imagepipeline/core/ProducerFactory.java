@@ -17,6 +17,7 @@ import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import com.facebook.imagepipeline.cache.BoundedLinkedHashSet;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
@@ -29,6 +30,7 @@ import com.facebook.imagepipeline.producers.BitmapMemoryCacheGetProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheKeyMultiplexProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.BitmapPrepareProducer;
+import com.facebook.imagepipeline.producers.BitmapProbeProducer;
 import com.facebook.imagepipeline.producers.BranchOnSeparateImagesProducer;
 import com.facebook.imagepipeline.producers.DataFetchProducer;
 import com.facebook.imagepipeline.producers.DecodeProducer;
@@ -36,6 +38,7 @@ import com.facebook.imagepipeline.producers.DiskCacheReadProducer;
 import com.facebook.imagepipeline.producers.DiskCacheWriteProducer;
 import com.facebook.imagepipeline.producers.EncodedCacheKeyMultiplexProducer;
 import com.facebook.imagepipeline.producers.EncodedMemoryCacheProducer;
+import com.facebook.imagepipeline.producers.EncodedProbeProducer;
 import com.facebook.imagepipeline.producers.LocalAssetFetchProducer;
 import com.facebook.imagepipeline.producers.LocalContentUriFetchProducer;
 import com.facebook.imagepipeline.producers.LocalContentUriThumbnailFetchProducer;
@@ -88,6 +91,8 @@ public class ProducerFactory {
   private final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
   private final MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
+  private final BoundedLinkedHashSet<CacheKey> mEncodedMemoryCacheHistory;
+  private final BoundedLinkedHashSet<CacheKey> mDiskCacheHistory;
 
   // Postproc dependencies
   private final PlatformBitmapFactory mPlatformBitmapFactory;
@@ -146,6 +151,8 @@ public class ProducerFactory {
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mCacheKeyFactory = cacheKeyFactory;
     mPlatformBitmapFactory = platformBitmapFactory;
+    mEncodedMemoryCacheHistory = new BoundedLinkedHashSet<>(20);
+    mDiskCacheHistory = new BoundedLinkedHashSet<>(20);
 
     mBitmapPrepareToDrawMinSizeBytes = bitmapPrepareToDrawMinSizeBytes;
     mBitmapPrepareToDrawMaxSizeBytes = bitmapPrepareToDrawMaxSizeBytes;
@@ -224,6 +231,28 @@ public class ProducerFactory {
       Producer<EncodedImage> inputProducer) {
     return new EncodedCacheKeyMultiplexProducer(
         mCacheKeyFactory, mKeepCancelledFetchAsLowPriority, inputProducer);
+  }
+
+  public BitmapProbeProducer newBitmapProbeProducer(
+      Producer<CloseableReference<CloseableImage>> inputProducer) {
+    return new BitmapProbeProducer(
+        mEncodedMemoryCache,
+        mDefaultBufferedDiskCache,
+        mSmallImageBufferedDiskCache,
+        mCacheKeyFactory,
+        mEncodedMemoryCacheHistory,
+        mDiskCacheHistory,
+        inputProducer);
+  }
+
+  public EncodedProbeProducer newEncodedProbeProducer(Producer<EncodedImage> inputProducer) {
+    return new EncodedProbeProducer(
+        mDefaultBufferedDiskCache,
+        mSmallImageBufferedDiskCache,
+        mCacheKeyFactory,
+        mEncodedMemoryCacheHistory,
+        mDiskCacheHistory,
+        inputProducer);
   }
 
   public EncodedMemoryCacheProducer newEncodedMemoryCacheProducer(

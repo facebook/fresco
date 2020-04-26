@@ -366,7 +366,8 @@ public class ImagePipelineFactory {
               useBitmapPrepareToDraw,
               mConfig.getExperiments().isPartialImageCachingEnabled(),
               mConfig.isDiskCacheEnabled(),
-              getImageTranscoderFactory());
+              getImageTranscoderFactory(),
+              mConfig.getExperiments().isProbingEnabled());
     }
     return mProducerSequenceFactory;
   }
