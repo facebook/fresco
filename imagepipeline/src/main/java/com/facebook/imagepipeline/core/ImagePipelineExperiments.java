@@ -58,6 +58,7 @@ public class ImagePipelineExperiments {
   private boolean mDownsampleIfLargeBitmap;
   private boolean mEncodedCacheEnabled;
   private final boolean mEnsureTranscoderLibraryLoaded;
+  private final boolean mIsProbingEnabled;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -88,6 +89,7 @@ public class ImagePipelineExperiments {
     mDownsampleIfLargeBitmap = builder.mDownsampleIfLargeBitmap;
     mEncodedCacheEnabled = builder.mEncodedCacheEnabled;
     mEnsureTranscoderLibraryLoaded = builder.mEnsureTranscoderLibraryLoaded;
+    mIsProbingEnabled = builder.mIsProbingEnabled;
   }
 
   public boolean isEncodedCacheEnabled() {
@@ -167,6 +169,10 @@ public class ImagePipelineExperiments {
     return mEnsureTranscoderLibraryLoaded;
   }
 
+  public boolean isProbingEnabled() {
+    return mIsProbingEnabled;
+  }
+
   public boolean isGingerbreadDecoderEnabled() {
     return mGingerbreadDecoderEnabled;
   }
@@ -218,6 +224,7 @@ public class ImagePipelineExperiments {
     public boolean mDownsampleIfLargeBitmap;
     public boolean mEncodedCacheEnabled = true;
     public boolean mEnsureTranscoderLibraryLoaded = true;
+    private boolean mIsProbingEnabled = false;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -385,6 +392,11 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setEnsureTranscoderLibraryLoaded(
         boolean ensureTranscoderLibraryLoaded) {
       mEnsureTranscoderLibraryLoaded = ensureTranscoderLibraryLoaded;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setIsProbingEnabled(boolean isProbingEnabled) {
+      mIsProbingEnabled = isProbingEnabled;
       return mConfigBuilder;
     }
 
