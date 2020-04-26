@@ -63,6 +63,8 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   public void onFinalImageSet(String id, ImageInfo imageInfo, Object extraData) {
     final long now = mClock.now();
 
+    mImagePerfState.setExtraData(extraData);
+
     mImagePerfState.setControllerFinalImageSetTimeMs(now);
     mImagePerfState.setImageRequestEndTimeMs(now);
     mImagePerfState.setControllerId(id);

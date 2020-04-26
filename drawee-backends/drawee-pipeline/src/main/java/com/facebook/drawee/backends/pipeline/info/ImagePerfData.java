@@ -56,6 +56,8 @@ public class ImagePerfData {
 
   private final @Nullable DimensionsInfo mDimensionsInfo;
 
+  private final @Nullable Object mExtraData;
+
   public ImagePerfData(
       @Nullable String controllerId,
       @Nullable String requestId,
@@ -83,7 +85,8 @@ public class ImagePerfData {
       long invisibilityEventTime,
       @Nullable String componentTag,
       long imageDrawTimeMs,
-      @Nullable DimensionsInfo dimensionsInfo) {
+      @Nullable DimensionsInfo dimensionsInfo,
+      @Nullable Object extraData) {
     mControllerId = controllerId;
     mRequestId = requestId;
     mImageRequest = imageRequest;
@@ -111,6 +114,7 @@ public class ImagePerfData {
     mComponentTag = componentTag;
     mImageDrawTimeMs = imageDrawTimeMs;
     mDimensionsInfo = dimensionsInfo;
+    mExtraData = extraData;
   }
 
   public long getImageDrawTimeMs() {
@@ -246,6 +250,11 @@ public class ImagePerfData {
     return mDimensionsInfo;
   }
 
+  @Nullable
+  public Object getExtraData() {
+    return mExtraData;
+  }
+
   public String createDebugString() {
     return Objects.toStringHelper(this)
         .add("controller ID", mControllerId)
@@ -273,6 +282,7 @@ public class ImagePerfData {
         .add("invisibility event", mInvisibilityEventTimeMs)
         .add("image draw event", mImageDrawTimeMs)
         .add("dimensions info", mDimensionsInfo)
+        .add("extra data", mExtraData)
         .toString();
   }
 }

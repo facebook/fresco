@@ -64,6 +64,8 @@ public class ImagePerfState {
 
   private @Nullable DimensionsInfo mDimensionsInfo;
 
+  private @Nullable Object mExtraData;
+
   public void reset() {
     mRequestId = null;
     mImageRequest = null;
@@ -90,6 +92,8 @@ public class ImagePerfState {
     mComponentTag = null;
 
     mDimensionsInfo = null;
+
+    mExtraData = null;
 
     resetPointsTimestamps();
   }
@@ -248,7 +252,8 @@ public class ImagePerfState {
         mInvisibilityEventTimeMs,
         mComponentTag,
         mImageDrawTimeMs,
-        mDimensionsInfo);
+        mDimensionsInfo,
+        mExtraData);
   }
 
   public long getImageDrawTimeMs() {
@@ -261,5 +266,13 @@ public class ImagePerfState {
 
   public @Nullable DimensionsInfo getDimensionsInfo() {
     return mDimensionsInfo;
+  }
+
+  public void setExtraData(@Nullable Object extraData) {
+    mExtraData = extraData;
+  }
+
+  public @Nullable Object getExtraData() {
+    return mExtraData;
   }
 }
