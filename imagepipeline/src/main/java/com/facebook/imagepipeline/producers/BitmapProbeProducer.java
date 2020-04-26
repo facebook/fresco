@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.producers;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imagepipeline.cache.BoundedLinkedHashSet;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
@@ -29,17 +30,23 @@ public class BitmapProbeProducer implements Producer<CloseableReference<Closeabl
   private final BufferedDiskCache mSmallImageBufferedDiskCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Producer<CloseableReference<CloseableImage>> mInputProducer;
+  private final BoundedLinkedHashSet<CacheKey> mEncodedMemoryCacheHistory;
+  private final BoundedLinkedHashSet<CacheKey> mDiskCacheHistory;
 
   public BitmapProbeProducer(
       MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
       CacheKeyFactory cacheKeyFactory,
+      BoundedLinkedHashSet<CacheKey> encodedMemoryCacheHistory,
+      BoundedLinkedHashSet<CacheKey> diskCacheHistory,
       Producer<CloseableReference<CloseableImage>> inputProducer) {
     mEncodedMemoryCache = encodedMemoryCache;
     mDefaultBufferedDiskCache = defaultBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mCacheKeyFactory = cacheKeyFactory;
+    mEncodedMemoryCacheHistory = encodedMemoryCacheHistory;
+    mDiskCacheHistory = diskCacheHistory;
     mInputProducer = inputProducer;
   }
 
@@ -60,7 +67,9 @@ public class BitmapProbeProducer implements Producer<CloseableReference<Closeabl
               mEncodedMemoryCache,
               mDefaultBufferedDiskCache,
               mSmallImageBufferedDiskCache,
-              mCacheKeyFactory);
+              mCacheKeyFactory,
+              mEncodedMemoryCacheHistory,
+              mDiskCacheHistory);
 
       listener.onProducerFinishWithSuccess(producerContext, PRODUCER_NAME, null);
       if (FrescoSystrace.isTracing()) {
@@ -86,6 +95,8 @@ public class BitmapProbeProducer implements Producer<CloseableReference<Closeabl
     private final BufferedDiskCache mDefaultBufferedDiskCache;
     private final BufferedDiskCache mSmallImageBufferedDiskCache;
     private final CacheKeyFactory mCacheKeyFactory;
+    private final BoundedLinkedHashSet<CacheKey> mEncodedMemoryCacheHistory;
+    private final BoundedLinkedHashSet<CacheKey> mDiskCacheHistory;
 
     public ProbeConsumer(
         Consumer<CloseableReference<CloseableImage>> consumer,
@@ -93,13 +104,17 @@ public class BitmapProbeProducer implements Producer<CloseableReference<Closeabl
         MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
         BufferedDiskCache defaultBufferedDiskCache,
         BufferedDiskCache smallImageBufferedDiskCache,
-        CacheKeyFactory cacheKeyFactory) {
+        CacheKeyFactory cacheKeyFactory,
+        BoundedLinkedHashSet<CacheKey> encodedMemoryCacheHistory,
+        BoundedLinkedHashSet<CacheKey> diskCacheHistory) {
       super(consumer);
       mProducerContext = producerContext;
       mEncodedMemoryCache = encodedMemoryCache;
       mDefaultBufferedDiskCache = defaultBufferedDiskCache;
       mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
       mCacheKeyFactory = cacheKeyFactory;
+      mEncodedMemoryCacheHistory = encodedMemoryCacheHistory;
+      mDiskCacheHistory = diskCacheHistory;
     }
 
     @Override
@@ -115,17 +130,22 @@ public class BitmapProbeProducer implements Producer<CloseableReference<Closeabl
           return;
         }
 
+        final ImageRequest imageRequest = mProducerContext.getImageRequest();
+        final CacheKey cacheKey =
+            mCacheKeyFactory.getEncodedCacheKey(imageRequest, mProducerContext.getCallerContext());
         if (mProducerContext.getExtra(ProducerContext.ExtraKeys.ORIGIN).equals("memory_bitmap")) {
-          final ImageRequest imageRequest = mProducerContext.getImageRequest();
-          final CacheKey cacheKey =
-              mCacheKeyFactory.getEncodedCacheKey(
-                  imageRequest, mProducerContext.getCallerContext());
-          mEncodedMemoryCache.probe(cacheKey);
-          final boolean isSmallRequest =
-              (imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL);
-          final BufferedDiskCache preferredCache =
-              isSmallRequest ? mSmallImageBufferedDiskCache : mDefaultBufferedDiskCache;
-          preferredCache.probe(cacheKey);
+          if (!mEncodedMemoryCacheHistory.contains(cacheKey)) {
+            mEncodedMemoryCache.probe(cacheKey);
+            mEncodedMemoryCacheHistory.add(cacheKey);
+          }
+          if (!mDiskCacheHistory.contains(cacheKey)) {
+            final boolean isSmallRequest =
+                (imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL);
+            final BufferedDiskCache preferredCache =
+                isSmallRequest ? mSmallImageBufferedDiskCache : mDefaultBufferedDiskCache;
+            preferredCache.probe(cacheKey);
+            mDiskCacheHistory.add(cacheKey);
+          }
         }
 
         getConsumer().onNewResult(newResult, status);

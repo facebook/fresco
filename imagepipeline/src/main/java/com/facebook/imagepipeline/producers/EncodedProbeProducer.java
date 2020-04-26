@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.producers;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.imageformat.ImageFormat;
+import com.facebook.imagepipeline.cache.BoundedLinkedHashSet;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
@@ -24,15 +25,21 @@ public class EncodedProbeProducer implements Producer<EncodedImage> {
   private final BufferedDiskCache mSmallImageBufferedDiskCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Producer<EncodedImage> mInputProducer;
+  private final BoundedLinkedHashSet<CacheKey> mEncodedMemoryCacheHistory;
+  private final BoundedLinkedHashSet<CacheKey> mDiskCacheHistory;
 
   public EncodedProbeProducer(
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
       CacheKeyFactory cacheKeyFactory,
+      BoundedLinkedHashSet encodedMemoryCacheHistory,
+      BoundedLinkedHashSet diskCacheHistory,
       Producer<EncodedImage> inputProducer) {
     mDefaultBufferedDiskCache = defaultBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mCacheKeyFactory = cacheKeyFactory;
+    mEncodedMemoryCacheHistory = encodedMemoryCacheHistory;
+    mDiskCacheHistory = diskCacheHistory;
     mInputProducer = inputProducer;
   }
 
@@ -51,7 +58,9 @@ public class EncodedProbeProducer implements Producer<EncodedImage> {
               producerContext,
               mDefaultBufferedDiskCache,
               mSmallImageBufferedDiskCache,
-              mCacheKeyFactory);
+              mCacheKeyFactory,
+              mEncodedMemoryCacheHistory,
+              mDiskCacheHistory);
 
       listener.onProducerFinishWithSuccess(producerContext, PRODUCER_NAME, null);
       if (FrescoSystrace.isTracing()) {
@@ -74,18 +83,24 @@ public class EncodedProbeProducer implements Producer<EncodedImage> {
     private final BufferedDiskCache mDefaultBufferedDiskCache;
     private final BufferedDiskCache mSmallImageBufferedDiskCache;
     private final CacheKeyFactory mCacheKeyFactory;
+    private final BoundedLinkedHashSet<CacheKey> mEncodedMemoryCacheHistory;
+    private final BoundedLinkedHashSet<CacheKey> mDiskCacheHistory;
 
     public ProbeConsumer(
         Consumer<EncodedImage> consumer,
         ProducerContext producerContext,
         BufferedDiskCache defaultBufferedDiskCache,
         BufferedDiskCache smallImageBufferedDiskCache,
-        CacheKeyFactory cacheKeyFactory) {
+        CacheKeyFactory cacheKeyFactory,
+        BoundedLinkedHashSet<CacheKey> encodedMemoryCacheHistory,
+        BoundedLinkedHashSet<CacheKey> diskCacheHistory) {
       super(consumer);
       mProducerContext = producerContext;
       mDefaultBufferedDiskCache = defaultBufferedDiskCache;
       mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
       mCacheKeyFactory = cacheKeyFactory;
+      mEncodedMemoryCacheHistory = encodedMemoryCacheHistory;
+      mDiskCacheHistory = diskCacheHistory;
     }
 
     @Override
@@ -104,16 +119,22 @@ public class EncodedProbeProducer implements Producer<EncodedImage> {
           return;
         }
 
+        final ImageRequest imageRequest = mProducerContext.getImageRequest();
+        final CacheKey cacheKey =
+            mCacheKeyFactory.getEncodedCacheKey(imageRequest, mProducerContext.getCallerContext());
+
+        mEncodedMemoryCacheHistory.add(cacheKey);
         if (mProducerContext.getExtra(ProducerContext.ExtraKeys.ORIGIN).equals("memory_encoded")) {
-          final ImageRequest imageRequest = mProducerContext.getImageRequest();
-          final CacheKey cacheKey =
-              mCacheKeyFactory.getEncodedCacheKey(
-                  imageRequest, mProducerContext.getCallerContext());
-          final boolean isSmallRequest =
-              (imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL);
-          final BufferedDiskCache preferredCache =
-              isSmallRequest ? mSmallImageBufferedDiskCache : mDefaultBufferedDiskCache;
-          preferredCache.probe(cacheKey);
+          if (!mDiskCacheHistory.contains(cacheKey)) {
+            final boolean isSmallRequest =
+                (imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL);
+            final BufferedDiskCache preferredCache =
+                isSmallRequest ? mSmallImageBufferedDiskCache : mDefaultBufferedDiskCache;
+            preferredCache.probe(cacheKey);
+            mDiskCacheHistory.add(cacheKey);
+          }
+        } else {
+          mDiskCacheHistory.add(cacheKey);
         }
 
         getConsumer().onNewResult(newResult, status);
