@@ -7,13 +7,15 @@
 
 package com.facebook.imagepipeline.producers;
 
-import android.util.SparseArray;
+import androidx.annotation.NonNull;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.EncodedImageOrigin;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
@@ -28,7 +30,7 @@ public class BaseProducerContext implements ProducerContext {
   private final ProducerListener2 mProducerListener;
   private final Object mCallerContext;
   private final ImageRequest.RequestLevel mLowestPermittedRequestLevel;
-  private final SparseArray<String> mExtras = new SparseArray<>();
+  private final Map<String, Object> mExtras = new HashMap<>();
 
   @GuardedBy("this")
   private boolean mIsPrefetch;
@@ -304,12 +306,35 @@ public class BaseProducerContext implements ProducerContext {
   }
 
   @Override
-  public void setExtra(@ExtraKeys int key, String value) {
+  public void setExtra(String key, @Nullable Object value) {
     mExtras.put(key, value);
   }
 
   @Override
-  public String getExtra(int key) {
-    return mExtras.get(key, "");
+  public void putExtras(@NonNull Map<String, ?> extras) {
+    mExtras.putAll(extras);
+  }
+
+  @Nullable
+  @Override
+  public <T> T getExtra(String key) {
+    //noinspection unchecked
+    return (T) mExtras.get(key);
+  }
+
+  @Nullable
+  @Override
+  public <E> E getExtra(String key, E valueIfNotFound) {
+    Object maybeValue = mExtras.get(key);
+    if (maybeValue == null) {
+      return valueIfNotFound;
+    }
+    //noinspection unchecked
+    return (E) maybeValue;
+  }
+
+  @Override
+  public Map<String, Object> getExtras() {
+    return mExtras;
   }
 }

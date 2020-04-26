@@ -483,9 +483,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
                 .getProducerListener()
                 .onProducerFinishWithSuccess(pair.second, mProducerName, null);
             if (mMultiplexProducerContext != null) {
-              pair.second.setExtra(
-                  ProducerContext.ExtraKeys.ORIGIN,
-                  mMultiplexProducerContext.getExtra(ProducerContext.ExtraKeys.ORIGIN));
+              pair.second.putExtras(mMultiplexProducerContext.getExtras());
             }
           }
           pair.first.onNewResult(closeableObject, status);

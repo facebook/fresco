@@ -7,7 +7,6 @@
 
 package com.facebook.imagepipeline.datasource;
 
-import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.datasource.AbstractDataSource;
 import com.facebook.imagepipeline.listener.RequestListener2;
@@ -97,7 +96,7 @@ public abstract class AbstractProducerToDataSourceAdapter<T> extends AbstractDat
   }
 
   protected Object getExtras(ProducerContext producerContext) {
-    return ImmutableMap.of("origin", producerContext.getExtra(ProducerContext.ExtraKeys.ORIGIN));
+    return producerContext.getExtras();
   }
 
   private void onFailureImpl(Throwable throwable) {

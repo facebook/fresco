@@ -7,11 +7,13 @@
 
 package com.facebook.imagepipeline.producers;
 
-import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringDef;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.EncodedImageOrigin;
 import com.facebook.imagepipeline.request.ImageRequest;
+import java.util.Map;
 import javax.annotation.Nullable;
 
 /**
@@ -27,9 +29,17 @@ import javax.annotation.Nullable;
  */
 public interface ProducerContext {
 
-  @IntDef({ExtraKeys.ORIGIN})
+  @StringDef({
+    ExtraKeys.ORIGIN,
+    ExtraKeys.ENCODED_WIDTH,
+    ExtraKeys.ENCODED_HEIGHT,
+    ExtraKeys.ENCODED_SIZE
+  })
   @interface ExtraKeys {
-    int ORIGIN = 1;
+    String ORIGIN = "origin";
+    String ENCODED_WIDTH = "encoded_width";
+    String ENCODED_HEIGHT = "encoded_height";
+    String ENCODED_SIZE = "encoded_size";
   }
 
   /** @return image request that is being executed */
@@ -74,7 +84,15 @@ public interface ProducerContext {
 
   void setEncodedImageOrigin(EncodedImageOrigin encodedImageOrigin);
 
-  void setExtra(@ExtraKeys int key, String value);
+  <E> void setExtra(String key, @Nullable E value);
 
-  String getExtra(@ExtraKeys int key);
+  void putExtras(@NonNull Map<String, ?> extras);
+
+  @Nullable
+  <E> E getExtra(String key);
+
+  @Nullable
+  <E> E getExtra(String key, @Nullable E valueIfNotFound);
+
+  Map<String, ?> getExtras();
 }

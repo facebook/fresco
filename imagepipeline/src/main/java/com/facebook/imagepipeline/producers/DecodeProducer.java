@@ -368,6 +368,11 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
                   encodedImage.getSize()));
         }
 
+        mProducerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_WIDTH, encodedImage.getWidth());
+        mProducerContext.setExtra(
+            ProducerContext.ExtraKeys.ENCODED_HEIGHT, encodedImage.getHeight());
+        mProducerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_SIZE, encodedImage.getSize());
+
         handleResult(image, status);
       } finally {
         EncodedImage.closeSafely(encodedImage);
