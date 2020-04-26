@@ -12,7 +12,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
-import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener;
+import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfRequestListener;
 import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
@@ -34,7 +34,7 @@ public class ImagePerfMonitor {
   private @Nullable ImageOriginRequestListener mImageOriginRequestListener;
   private @Nullable ImageOriginListener mImageOriginListener;
   private @Nullable ImagePerfRequestListener mImagePerfRequestListener;
-  private @Nullable ImagePerfControllerListener mImagePerfControllerListener;
+  private @Nullable ImagePerfControllerListener2 mImagePerfControllerListener2;
   private @Nullable ForwardingRequestListener mForwardingRequestListener;
 
   private @Nullable List<ImagePerfDataListener> mImagePerfDataListeners;
@@ -68,8 +68,8 @@ public class ImagePerfMonitor {
       if (mImageOriginListener != null) {
         mPipelineDraweeController.addImageOriginListener(mImageOriginListener);
       }
-      if (mImagePerfControllerListener != null) {
-        mPipelineDraweeController.addControllerListener(mImagePerfControllerListener);
+      if (mImagePerfControllerListener2 != null) {
+        mPipelineDraweeController.addControllerListener2(mImagePerfControllerListener2);
       }
       if (mForwardingRequestListener != null) {
         mPipelineDraweeController.addRequestListener(mForwardingRequestListener);
@@ -78,8 +78,8 @@ public class ImagePerfMonitor {
       if (mImageOriginListener != null) {
         mPipelineDraweeController.removeImageOriginListener(mImageOriginListener);
       }
-      if (mImagePerfControllerListener != null) {
-        mPipelineDraweeController.removeControllerListener(mImagePerfControllerListener);
+      if (mImagePerfControllerListener2 != null) {
+        mPipelineDraweeController.removeControllerListener2();
       }
       if (mForwardingRequestListener != null) {
         mPipelineDraweeController.removeRequestListener(mForwardingRequestListener);
@@ -146,9 +146,9 @@ public class ImagePerfMonitor {
   }
 
   private void setupListeners() {
-    if (mImagePerfControllerListener == null) {
-      mImagePerfControllerListener =
-          new ImagePerfControllerListener(mMonotonicClock, mImagePerfState, this);
+    if (mImagePerfControllerListener2 == null) {
+      mImagePerfControllerListener2 =
+          new ImagePerfControllerListener2(mMonotonicClock, mImagePerfState, this);
     }
     if (mImagePerfRequestListener == null) {
       mImagePerfRequestListener = new ImagePerfRequestListener(mMonotonicClock, mImagePerfState);

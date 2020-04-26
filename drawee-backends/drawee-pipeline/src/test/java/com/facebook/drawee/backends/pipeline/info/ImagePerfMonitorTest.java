@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
-import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener;
+import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfImageOriginListener;
 import com.facebook.imagepipeline.listener.RequestListener;
 import org.junit.Before;
@@ -47,7 +47,7 @@ public class ImagePerfMonitorTest {
     mImagePerfMonitor.setEnabled(true);
 
     verify(mController).addImageOriginListener(any(ImagePerfImageOriginListener.class));
-    verify(mController).addControllerListener(any(ImagePerfControllerListener.class));
+    verify(mController).addControllerListener2(any(ImagePerfControllerListener2.class));
     verify(mController).addRequestListener(any(RequestListener.class));
     verify(mController).getId();
     verifyNoMoreInteractions(mController);
@@ -59,11 +59,11 @@ public class ImagePerfMonitorTest {
     mImagePerfMonitor.setEnabled(false);
 
     verify(mController).addImageOriginListener(any(ImagePerfImageOriginListener.class));
-    verify(mController).addControllerListener(any(ImagePerfControllerListener.class));
+    verify(mController).addControllerListener2(any(ImagePerfControllerListener2.class));
     verify(mController).addRequestListener(any(RequestListener.class));
     verify(mController).getId();
     verify(mController).removeImageOriginListener(any(ImagePerfImageOriginListener.class));
-    verify(mController).removeControllerListener(any(ImagePerfControllerListener.class));
+    verify(mController).removeControllerListener2();
     verify(mController).removeRequestListener(any(RequestListener.class));
     verifyNoMoreInteractions(mController);
   }
