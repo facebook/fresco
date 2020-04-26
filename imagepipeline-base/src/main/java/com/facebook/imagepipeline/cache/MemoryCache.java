@@ -50,6 +50,14 @@ public interface MemoryCache<K, V> {
   CloseableReference<V> get(K key);
 
   /**
+   * Probes whether the object corresponding to the key is in the cache. Note that the act of
+   * probing touches the item (if present in cache), thus changing its LRU timestamp.
+   *
+   * @param key
+   */
+  void probe(K key);
+
+  /**
    * Removes all the items from the cache whose keys match the specified predicate.
    *
    * @param predicate returns true if an item with the given key should be removed

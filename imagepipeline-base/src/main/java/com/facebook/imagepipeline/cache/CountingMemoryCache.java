@@ -215,6 +215,22 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
     return clientRef;
   }
 
+  /**
+   * Probes whether the object corresponding to the key is in the cache. Note that the act of
+   * probing touches the item (if present in cache), thus changing its LRU timestamp.
+   */
+  @Override
+  public void probe(final K key) {
+    Preconditions.checkNotNull(key);
+    Entry<K, V> oldExclusive;
+    synchronized (this) {
+      oldExclusive = mExclusiveEntries.remove(key);
+      if (oldExclusive != null) {
+        mExclusiveEntries.put(key, oldExclusive);
+      }
+    }
+  }
+
   /** Creates a new reference for the client. */
   private synchronized CloseableReference<V> newClientReference(final Entry<K, V> entry) {
     increaseClientCount(entry);

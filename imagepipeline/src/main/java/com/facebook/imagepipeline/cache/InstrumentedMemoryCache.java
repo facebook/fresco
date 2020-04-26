@@ -32,6 +32,11 @@ public class InstrumentedMemoryCache<K, V> implements MemoryCache<K, V> {
   }
 
   @Override
+  public void probe(K key) {
+    mDelegate.probe(key);
+  }
+
+  @Override
   public CloseableReference<V> cache(K key, CloseableReference<V> value) {
     mTracker.onCachePut(key);
     return mDelegate.cache(key, value);

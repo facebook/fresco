@@ -155,6 +155,36 @@ public class BufferedDiskCache {
   }
 
   /**
+   * Performs key-value look up in disk cache. If value is not found in disk cache staging area then
+   * disk cache probing is scheduled on background thread.
+   *
+   * @param key
+   */
+  public Task<Void> probe(final CacheKey key) {
+    Preconditions.checkNotNull(key);
+    try {
+      final Object token = FrescoInstrumenter.onBeforeSubmitWork("BufferedDiskCache_probe");
+      return Task.call(
+          new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+              final Object currentToken = FrescoInstrumenter.onBeginWork(token, null);
+              try {
+                mFileCache.probe(key);
+              } finally {
+                FrescoInstrumenter.onEndWork(currentToken);
+              }
+              return null;
+            }
+          },
+          mWriteExecutor);
+    } catch (Exception exception) {
+      FLog.w(TAG, exception, "Failed to schedule disk-cache probe for %s", key.getUriString());
+      return Task.forError(exception);
+    }
+  }
+
+  /**
    * Performs key-value loop up in staging area and file cache. Any error manifests itself as a
    * miss, i.e. returns false.
    *
