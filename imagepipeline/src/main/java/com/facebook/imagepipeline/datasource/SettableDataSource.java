@@ -44,7 +44,7 @@ public final class SettableDataSource<T> extends AbstractDataSource<CloseableRef
    */
   public boolean set(@Nullable CloseableReference<T> valueRef) {
     CloseableReference<T> clonedRef = CloseableReference.cloneOrNull(valueRef);
-    return super.setResult(clonedRef, /* isLast */ true);
+    return super.setResult(clonedRef, /* isLast */ true, null);
   }
 
   /**

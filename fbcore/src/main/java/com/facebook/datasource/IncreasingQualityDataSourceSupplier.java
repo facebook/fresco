@@ -209,7 +209,7 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
       // If the data source with the new result is our {@code mIndexOfDataSourceWithResult},
       // we have to notify our subscribers about the new result.
       if (dataSource == getDataSourceWithResult()) {
-        setResult(null, (index == 0) && dataSource.isFinished());
+        setResult(null, (index == 0) && dataSource.isFinished(), dataSource.getExtras());
       }
       maybeSetFailure();
     }

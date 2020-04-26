@@ -7,12 +7,14 @@
 
 package com.facebook.imagepipeline.datasource;
 
+import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.datasource.AbstractDataSource;
 import com.facebook.imagepipeline.listener.RequestListener2;
 import com.facebook.imagepipeline.producers.BaseConsumer;
 import com.facebook.imagepipeline.producers.Consumer;
 import com.facebook.imagepipeline.producers.Producer;
+import com.facebook.imagepipeline.producers.ProducerContext;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
 import com.facebook.imagepipeline.request.HasImageRequest;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -64,7 +66,8 @@ public abstract class AbstractProducerToDataSourceAdapter<T> extends AbstractDat
     return new BaseConsumer<T>() {
       @Override
       protected void onNewResultImpl(@Nullable T newResult, @Status int status) {
-        AbstractProducerToDataSourceAdapter.this.onNewResultImpl(newResult, status);
+        AbstractProducerToDataSourceAdapter.this.onNewResultImpl(
+            newResult, status, mSettableProducerContext);
       }
 
       @Override
@@ -84,13 +87,17 @@ public abstract class AbstractProducerToDataSourceAdapter<T> extends AbstractDat
     };
   }
 
-  protected void onNewResultImpl(@Nullable T result, int status) {
+  protected void onNewResultImpl(@Nullable T result, int status, ProducerContext producerContext) {
     boolean isLast = BaseConsumer.isLast(status);
-    if (super.setResult(result, isLast)) {
+    if (super.setResult(result, isLast, getExtras(producerContext))) {
       if (isLast) {
         mRequestListener.onRequestSuccess(mSettableProducerContext);
       }
     }
+  }
+
+  protected Object getExtras(ProducerContext producerContext) {
+    return ImmutableMap.of("origin", producerContext.getExtra(ProducerContext.ExtraKeys.ORIGIN));
   }
 
   private void onFailureImpl(Throwable throwable) {

@@ -97,7 +97,7 @@ public class RetainingDataSourceSupplier<T> implements Supplier<DataSource<T>> {
 
     private void onDataSourceNewResult(DataSource<T> dataSource) {
       if (dataSource == mDataSource) {
-        setResult(null, false);
+        setResult(null, false, dataSource.getExtras());
       }
     }
 

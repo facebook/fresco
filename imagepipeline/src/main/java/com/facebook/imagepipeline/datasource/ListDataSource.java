@@ -83,7 +83,7 @@ public class ListDataSource<T> extends AbstractDataSource<List<CloseableReferenc
 
   private void onDataSourceFinished() {
     if (increaseAndCheckIfLast()) {
-      setResult(null, /* isLast */ true);
+      setResult(null, /* isLast */ true, null);
     }
   }
 

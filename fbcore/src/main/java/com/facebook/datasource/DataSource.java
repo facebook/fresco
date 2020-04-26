@@ -50,6 +50,10 @@ public interface DataSource<T> {
    */
   boolean hasResult();
 
+  /** @return an object with extra data for this datasource */
+  @Nullable
+  Object getExtras();
+
   /**
    * @return true if the data source has multiple results (e.g. multiple images). This can be used
    *     for example by a RetainingDataSource to correctly display images.

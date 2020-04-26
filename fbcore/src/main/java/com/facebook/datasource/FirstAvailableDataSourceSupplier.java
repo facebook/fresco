@@ -187,7 +187,7 @@ public class FirstAvailableDataSourceSupplier<T> implements Supplier<DataSource<
       // If the data source with the new result is our {@code mDataSourceWithResult},
       // we have to notify our subscribers about the new result.
       if (dataSource == getDataSourceWithResult()) {
-        setResult(null, dataSource.isFinished());
+        setResult(null, dataSource.isFinished(), dataSource.getExtras());
       }
     }
 

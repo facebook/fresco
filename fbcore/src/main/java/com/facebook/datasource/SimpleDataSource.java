@@ -35,8 +35,8 @@ public class SimpleDataSource<T> extends AbstractDataSource<T> {
    * @return true if the value was successfully set.
    */
   @Override
-  public boolean setResult(T value, boolean isLast) {
-    return super.setResult(Preconditions.checkNotNull(value), isLast);
+  public boolean setResult(T value, boolean isLast, Object extras) {
+    return super.setResult(Preconditions.checkNotNull(value), isLast, extras);
   }
 
   /**
@@ -45,7 +45,7 @@ public class SimpleDataSource<T> extends AbstractDataSource<T> {
    * <p>See {@link #setResult(T value, boolean isLast)}.
    */
   public boolean setResult(T value) {
-    return super.setResult(Preconditions.checkNotNull(value), /* isLast */ true);
+    return super.setResult(Preconditions.checkNotNull(value), /* isLast */ true, null);
   }
 
   /**

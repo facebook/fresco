@@ -130,9 +130,11 @@ public class DataSourceTestUtils {
 
     protected void verifyOptionals(DataSource<Object> underlyingDataSource) {
       mInOrder.verify(underlyingDataSource, optional()).isFinished();
+      mInOrder.verify(underlyingDataSource, optional()).getExtras();
       mInOrder.verify(underlyingDataSource, optional()).hasResult();
       mInOrder.verify(underlyingDataSource, optional()).hasFailed();
       verify(underlyingDataSource, optional()).isFinished();
+      verify(underlyingDataSource, optional()).getExtras();
       verify(underlyingDataSource, optional()).hasResult();
       verify(underlyingDataSource, optional()).hasFailed();
     }

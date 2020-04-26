@@ -25,6 +25,9 @@ import javax.annotation.concurrent.GuardedBy;
  * @param <T>
  */
 public abstract class AbstractDataSource<T> implements DataSource<T> {
+
+  private @Nullable Object mExtras;
+
   /** Describes state of data source */
   private enum DataSourceStatus {
     // data source has not finished yet
@@ -85,6 +88,11 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
   @Nullable
   public synchronized T getResult() {
     return mResult;
+  }
+
+  @Override
+  public @Nullable Object getExtras() {
+    return mExtras;
   }
 
   @Override
@@ -215,14 +223,20 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
    *
    * @param value the value that was the result of the task.
    * @param isLast whether or not the value is last.
+   * @param extras an object with extra data for this datasource
    * @return true if the value was successfully set.
    */
-  protected boolean setResult(@Nullable T value, boolean isLast) {
+  protected boolean setResult(@Nullable T value, boolean isLast, @Nullable Object extras) {
+    mExtras = extras;
     boolean result = setResultInternal(value, isLast);
     if (result) {
       notifyDataSubscribers();
     }
     return result;
+  }
+
+  public boolean setResult(@Nullable T value, boolean isLast) {
+    return setResult(value, isLast, null);
   }
 
   /**
