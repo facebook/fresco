@@ -77,6 +77,8 @@ public class ImagePipelineConfig {
   private final Bitmap.Config mBitmapConfig;
   private final Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
   private final CountingMemoryCache.CacheTrimStrategy mBitmapMemoryCacheTrimStrategy;
+  private final CountingMemoryCache.EntryStateObserver<CacheKey>
+      mBitmapMemoryCacheEntryStateObserver;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Context mContext;
   private final boolean mDownsampleEnabled;
@@ -126,6 +128,7 @@ public class ImagePipelineConfig {
         builder.mBitmapMemoryCacheTrimStrategy == null
             ? new BitmapMemoryCacheTrimStrategy()
             : builder.mBitmapMemoryCacheTrimStrategy;
+    mBitmapMemoryCacheEntryStateObserver = builder.mBitmapMemoryCacheEntryStateObserver;
     mBitmapConfig = builder.mBitmapConfig == null ? Bitmap.Config.ARGB_8888 : builder.mBitmapConfig;
     mCacheKeyFactory =
         builder.mCacheKeyFactory == null
@@ -278,6 +281,10 @@ public class ImagePipelineConfig {
 
   public CountingMemoryCache.CacheTrimStrategy getBitmapMemoryCacheTrimStrategy() {
     return mBitmapMemoryCacheTrimStrategy;
+  }
+
+  public CountingMemoryCache.EntryStateObserver<CacheKey> getBitmapMemoryCacheEntryStateObserver() {
+    return mBitmapMemoryCacheEntryStateObserver;
   }
 
   public CacheKeyFactory getCacheKeyFactory() {
@@ -464,6 +471,7 @@ public class ImagePipelineConfig {
 
     private Bitmap.Config mBitmapConfig;
     private Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
+    private CountingMemoryCache.EntryStateObserver<CacheKey> mBitmapMemoryCacheEntryStateObserver;
     private CountingMemoryCache.CacheTrimStrategy mBitmapMemoryCacheTrimStrategy;
     private CacheKeyFactory mCacheKeyFactory;
     private final Context mContext;
@@ -512,6 +520,12 @@ public class ImagePipelineConfig {
         Supplier<MemoryCacheParams> bitmapMemoryCacheParamsSupplier) {
       mBitmapMemoryCacheParamsSupplier =
           Preconditions.checkNotNull(bitmapMemoryCacheParamsSupplier);
+      return this;
+    }
+
+    public Builder setBitmapMemoryCacheEntryStateObserver(
+        CountingMemoryCache.EntryStateObserver<CacheKey> bitmapMemoryCacheEntryStateObserver) {
+      mBitmapMemoryCacheEntryStateObserver = bitmapMemoryCacheEntryStateObserver;
       return this;
     }
 

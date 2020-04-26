@@ -102,7 +102,7 @@ public class CountingMemoryCacheTest {
             PARAMS_CHECK_INTERVAL_MS);
     when(mParamsSupplier.get()).thenReturn(mParams);
     mBitmapReference = CloseableReference.of(mBitmap, FAKE_BITMAP_RESOURCE_RELEASER);
-    mCache = new CountingMemoryCache<>(mValueDescriptor, mCacheTrimStrategy, mParamsSupplier);
+    mCache = new CountingMemoryCache<>(mValueDescriptor, mCacheTrimStrategy, mParamsSupplier, null);
   }
 
   @Test

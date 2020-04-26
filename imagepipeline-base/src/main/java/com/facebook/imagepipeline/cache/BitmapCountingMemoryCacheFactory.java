@@ -11,22 +11,26 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.imagepipeline.image.CloseableImage;
+import javax.annotation.Nullable;
 
 public class BitmapCountingMemoryCacheFactory {
 
   public static CountingMemoryCache<CacheKey, CloseableImage> get(
       Supplier<MemoryCacheParams> bitmapMemoryCacheParamsSupplier,
-      MemoryTrimmableRegistry memoryTrimmableRegistry) {
+      MemoryTrimmableRegistry memoryTrimmableRegistry,
+      @Nullable CountingMemoryCache.EntryStateObserver<CacheKey> observer) {
     return get(
         bitmapMemoryCacheParamsSupplier,
         memoryTrimmableRegistry,
-        new BitmapMemoryCacheTrimStrategy());
+        new BitmapMemoryCacheTrimStrategy(),
+        observer);
   }
 
   public static CountingMemoryCache<CacheKey, CloseableImage> get(
       Supplier<MemoryCacheParams> bitmapMemoryCacheParamsSupplier,
       MemoryTrimmableRegistry memoryTrimmableRegistry,
-      CountingMemoryCache.CacheTrimStrategy trimStrategy) {
+      CountingMemoryCache.CacheTrimStrategy trimStrategy,
+      @Nullable CountingMemoryCache.EntryStateObserver<CacheKey> observer) {
 
     ValueDescriptor<CloseableImage> valueDescriptor =
         new ValueDescriptor<CloseableImage>() {
@@ -37,7 +41,8 @@ public class BitmapCountingMemoryCacheFactory {
         };
 
     CountingMemoryCache<CacheKey, CloseableImage> countingCache =
-        new CountingMemoryCache<>(valueDescriptor, trimStrategy, bitmapMemoryCacheParamsSupplier);
+        new CountingMemoryCache<>(
+            valueDescriptor, trimStrategy, bitmapMemoryCacheParamsSupplier, observer);
 
     memoryTrimmableRegistry.registerMemoryTrimmable(countingCache);
 

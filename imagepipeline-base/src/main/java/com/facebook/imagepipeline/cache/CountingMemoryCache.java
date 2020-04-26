@@ -82,6 +82,8 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
     }
   }
 
+  private final @Nullable EntryStateObserver<K> mEntryStateObserver;
+
   // Contains the items that are not being used by any client and are hence viable for eviction.
   @GuardedBy("this")
   @VisibleForTesting
@@ -112,7 +114,8 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
   public CountingMemoryCache(
       ValueDescriptor<V> valueDescriptor,
       CacheTrimStrategy cacheTrimStrategy,
-      Supplier<MemoryCacheParams> memoryCacheParamsSupplier) {
+      Supplier<MemoryCacheParams> memoryCacheParamsSupplier,
+      @Nullable EntryStateObserver<K> entryStateObserver) {
     mValueDescriptor = valueDescriptor;
     mExclusiveEntries = new CountingLruMap<>(wrapValueDescriptor(valueDescriptor));
     mCachedEntries = new CountingLruMap<>(wrapValueDescriptor(valueDescriptor));
@@ -120,6 +123,7 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
     mMemoryCacheParamsSupplier = memoryCacheParamsSupplier;
     mMemoryCacheParams = mMemoryCacheParamsSupplier.get();
     mLastCacheParamsCheck = SystemClock.uptimeMillis();
+    mEntryStateObserver = entryStateObserver;
   }
 
   private ValueDescriptor<Entry<K, V>> wrapValueDescriptor(
@@ -141,7 +145,7 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
    * @return the new reference to be used, null if the value cannot be cached
    */
   public CloseableReference<V> cache(final K key, final CloseableReference<V> valueRef) {
-    return cache(key, valueRef, null);
+    return cache(key, valueRef, mEntryStateObserver);
   }
 
   /**
