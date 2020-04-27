@@ -11,6 +11,12 @@ object Deps {
     const val javaxAnnotation = "javax.annotation:javax.annotation-api:1.2"
     const val jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
 
+    object Kotlin {
+        const val version = "1.3.72"
+
+        const val stdlibJdk = "org.jetbrains.kotlin:kotlin-stdlib:$version"
+    }
+
     object Litho {
         private const val version = "0.34.0"
 

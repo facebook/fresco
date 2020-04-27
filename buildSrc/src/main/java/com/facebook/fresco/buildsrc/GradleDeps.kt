@@ -14,6 +14,10 @@ object GradleDeps {
 
         const val gradlePlugin = "com.android.tools.build:gradle:$version"
     }
+
+    object Kotlin {
+        const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Deps.Kotlin.version}"
+    }
     
     object Publishing {
         const val bintrayGradlePlugin = "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"

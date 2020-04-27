@@ -56,7 +56,7 @@ android {
 
 dependencies {
     compileOnly Deps.jsr305
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
+    implementation Deps.Kotlin.stdlibJdk
     implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
     implementation "com.google.android.material:material:${versions.material}"
     implementation "androidx.recyclerview:recyclerview:${versions.androidx.recyclerview}"
