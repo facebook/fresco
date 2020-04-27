@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import com.facebook.fresco.buildsrc.Deps
+
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
@@ -18,11 +20,10 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
     }
+}
 
-    defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-    }
+dependencies {
+    compileOnly Deps.jsr305
 }
 
 task sourcesJar(type: Jar) {
