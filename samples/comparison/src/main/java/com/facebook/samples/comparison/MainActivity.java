@@ -42,7 +42,6 @@ import com.facebook.samples.comparison.adapters.ImageListAdapter;
 import com.facebook.samples.comparison.adapters.PicassoAdapter;
 import com.facebook.samples.comparison.adapters.UilAdapter;
 import com.facebook.samples.comparison.adapters.VolleyAdapter;
-import com.facebook.samples.comparison.adapters.VolleyDraweeAdapter;
 import com.facebook.samples.comparison.configs.imagepipeline.ImagePipelineConfigFactory;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 import com.facebook.samples.comparison.urlsfetcher.ImageFormat;
@@ -80,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
   private static final int BYTES_IN_MEGABYTE = 1024 * 1024;
 
   private static final String EXTRA_ALLOW_ANIMATIONS = "allow_animations";
-  private static final String EXTRA_USE_DRAWEE = "use_drawee";
   private static final String EXTRA_CURRENT_ADAPTER_INDEX = "current_adapter_index";
   private static final String EXTRA_CURRENT_SOURCE_ADAPTER_INDEX = "current_source_adapter_index";
 
@@ -93,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
 
   private boolean mHasStoragePermissions;
   private boolean mRequestedLocalSource;
-  private boolean mUseDrawee;
   private boolean mAllowAnimations;
   private int mCurrentLoaderAdapterIndex;
   private int mCurrentSourceAdapterIndex;
@@ -119,12 +116,10 @@ public class MainActivity extends AppCompatActivity {
 
     mPerfListener = new PerfListener();
     mAllowAnimations = true;
-    mUseDrawee = true;
     mCurrentLoaderAdapterIndex = 0;
     mCurrentSourceAdapterIndex = 0;
     if (savedInstanceState != null) {
       mAllowAnimations = savedInstanceState.getBoolean(EXTRA_ALLOW_ANIMATIONS);
-      mUseDrawee = savedInstanceState.getBoolean(EXTRA_USE_DRAWEE);
       mCurrentLoaderAdapterIndex = savedInstanceState.getInt(EXTRA_CURRENT_ADAPTER_INDEX);
       mCurrentSourceAdapterIndex = savedInstanceState.getInt(EXTRA_CURRENT_SOURCE_ADAPTER_INDEX);
     }
@@ -176,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
   protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putBoolean(EXTRA_ALLOW_ANIMATIONS, mAllowAnimations);
-    outState.putBoolean(EXTRA_USE_DRAWEE, mUseDrawee);
     outState.putInt(EXTRA_CURRENT_ADAPTER_INDEX, mCurrentLoaderAdapterIndex);
     outState.putInt(EXTRA_CURRENT_SOURCE_ADAPTER_INDEX, mCurrentSourceAdapterIndex);
   }
@@ -190,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
     menu.findItem(R.id.allow_animations).setChecked(mAllowAnimations);
-    menu.findItem(R.id.use_drawee).setChecked(mUseDrawee);
     return super.onPrepareOptionsMenu(menu);
   }
 
@@ -202,12 +195,6 @@ public class MainActivity extends AppCompatActivity {
       setAllowAnimations(!item.isChecked());
       return true;
     }
-
-    if (id == R.id.use_drawee) {
-      setUseDrawee(!item.isChecked());
-      return true;
-    }
-
     return super.onOptionsItemSelected(item);
   }
 
@@ -229,14 +216,6 @@ public class MainActivity extends AppCompatActivity {
     supportInvalidateOptionsMenu();
     updateAdapter(null);
     loadUrls();
-  }
-
-  @VisibleForTesting
-  public void setUseDrawee(boolean useDrawee) {
-    mUseDrawee = useDrawee;
-    supportInvalidateOptionsMenu();
-    setLoaderAdapter(mCurrentLoaderAdapterIndex);
-    setSourceAdapter(mCurrentSourceAdapterIndex);
   }
 
   private void requestStoragePermissions() {
@@ -301,10 +280,7 @@ public class MainActivity extends AppCompatActivity {
         mCurrentAdapter = new UilAdapter(this, mPerfListener);
         break;
       case VOLLEY_INDEX:
-        mCurrentAdapter =
-            mUseDrawee
-                ? new VolleyDraweeAdapter(this, mPerfListener)
-                : new VolleyAdapter(this, mPerfListener);
+        mCurrentAdapter = new VolleyAdapter(this, mPerfListener);
         break;
       case AQUERY_INDEX:
         mCurrentAdapter = new AQueryAdapter(this, mPerfListener);

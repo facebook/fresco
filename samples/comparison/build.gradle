@@ -26,7 +26,6 @@ dependencies {
 
     implementation project(':drawee')
     implementation project(':drawee-backends:drawee-pipeline')
-    implementation project(':drawee-backends:drawee-volley')
     implementation project(':fbcore')
     implementation project(':imagepipeline')
     implementation project(':imagepipeline-native')

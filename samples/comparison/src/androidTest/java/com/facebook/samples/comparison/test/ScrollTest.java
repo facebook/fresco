@@ -52,65 +52,64 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
   }
 
   public void testFrescoNetwork() throws Exception {
-    runScenario(MainActivity.FRESCO_INDEX, MainActivity.NETWORK_INDEX, true);
+    runScenario(MainActivity.FRESCO_INDEX, MainActivity.NETWORK_INDEX);
   }
 
   public void testFrescoOkhttpNetwork() throws Exception {
-    runScenario(MainActivity.FRESCO_OKHTTP_INDEX, MainActivity.NETWORK_INDEX, true);
+    runScenario(MainActivity.FRESCO_OKHTTP_INDEX, MainActivity.NETWORK_INDEX);
   }
 
   public void testGlideNetwork() throws Exception {
-    runScenario(MainActivity.GLIDE_INDEX, MainActivity.NETWORK_INDEX, false);
+    runScenario(MainActivity.GLIDE_INDEX, MainActivity.NETWORK_INDEX);
   }
 
   public void testPicassoNetwork() throws Exception {
-    runScenario(MainActivity.PICASSO_INDEX, MainActivity.NETWORK_INDEX, false);
+    runScenario(MainActivity.PICASSO_INDEX, MainActivity.NETWORK_INDEX);
   }
 
   public void testUilNetwork() throws Exception {
-    runScenario(MainActivity.UIL_INDEX, MainActivity.NETWORK_INDEX, false);
+    runScenario(MainActivity.UIL_INDEX, MainActivity.NETWORK_INDEX);
   }
 
   public void testVolleyNetwork() throws Exception {
-    runScenario(MainActivity.VOLLEY_INDEX, MainActivity.NETWORK_INDEX, false);
+    runScenario(MainActivity.VOLLEY_INDEX, MainActivity.NETWORK_INDEX);
   }
 
   public void testDraweeVolleyNetwork() throws Exception {
-    runScenario(MainActivity.VOLLEY_INDEX, MainActivity.NETWORK_INDEX, true);
+    runScenario(MainActivity.VOLLEY_INDEX, MainActivity.NETWORK_INDEX);
   }
 
   public void testAqueryNetwork() throws Exception {
-    runScenario(MainActivity.AQUERY_INDEX, MainActivity.NETWORK_INDEX, false);
+    runScenario(MainActivity.AQUERY_INDEX, MainActivity.NETWORK_INDEX);
   }
 
   public void testFrescoLocal() throws Exception {
-    runScenario(MainActivity.FRESCO_INDEX, MainActivity.LOCAL_INDEX, true);
+    runScenario(MainActivity.FRESCO_INDEX, MainActivity.LOCAL_INDEX);
   }
 
   public void testFrescoOkhttpLocal() throws Exception {
-    runScenario(MainActivity.FRESCO_OKHTTP_INDEX, MainActivity.LOCAL_INDEX, true);
+    runScenario(MainActivity.FRESCO_OKHTTP_INDEX, MainActivity.LOCAL_INDEX);
   }
 
   public void testGlideLocal() throws Exception {
-    runScenario(MainActivity.GLIDE_INDEX, MainActivity.LOCAL_INDEX, false);
+    runScenario(MainActivity.GLIDE_INDEX, MainActivity.LOCAL_INDEX);
   }
 
   public void testPicassoLocal() throws Exception {
-    runScenario(MainActivity.PICASSO_INDEX, MainActivity.LOCAL_INDEX, false);
+    runScenario(MainActivity.PICASSO_INDEX, MainActivity.LOCAL_INDEX);
   }
 
   public void testUilLocal() throws Exception {
-    runScenario(MainActivity.UIL_INDEX, MainActivity.LOCAL_INDEX, false);
+    runScenario(MainActivity.UIL_INDEX, MainActivity.LOCAL_INDEX);
   }
 
   public void testAqueryLocal() throws Exception {
-    runScenario(MainActivity.AQUERY_INDEX, MainActivity.LOCAL_INDEX, false);
+    runScenario(MainActivity.AQUERY_INDEX, MainActivity.LOCAL_INDEX);
   }
 
   /** Runs the test for given library. */
-  private void runScenario(int libraryIndex, int sourceIndex, boolean useDrawee) throws Exception {
+  private void runScenario(int libraryIndex, int sourceIndex) throws Exception {
     disableAnimatedImages();
-    setUseDrawee(useDrawee);
     selectFramework(libraryIndex);
     selectSource(sourceIndex);
     TouchUtils.tapView(this, mImageList);
@@ -127,18 +126,6 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
               @Override
               public void run() {
                 mActivity.setAllowAnimations(false);
-              }
-            });
-  }
-
-  /** Disables or enables Drawee. */
-  private void setUseDrawee(final boolean useDrawee) {
-    getInstrumentation()
-        .runOnMainSync(
-            new Runnable() {
-              @Override
-              public void run() {
-                mActivity.setUseDrawee(useDrawee);
               }
             });
   }
