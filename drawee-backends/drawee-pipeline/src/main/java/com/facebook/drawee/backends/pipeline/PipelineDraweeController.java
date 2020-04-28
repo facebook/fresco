@@ -146,13 +146,14 @@ public class PipelineDraweeController
               ImageRequest,
               CloseableReference<CloseableImage>,
               ImageInfo>
-          builder) {
+          builder,
+      Supplier<Boolean> asyncLogging) {
     if (mImagePerfMonitor != null) {
       mImagePerfMonitor.reset();
     }
     if (imagePerfDataListener != null) {
       if (mImagePerfMonitor == null) {
-        mImagePerfMonitor = new ImagePerfMonitor(AwakeTimeSinceBootClock.get(), this);
+        mImagePerfMonitor = new ImagePerfMonitor(AwakeTimeSinceBootClock.get(), this, asyncLogging);
       }
       mImagePerfMonitor.addImagePerfDataListener(imagePerfDataListener);
       mImagePerfMonitor.setEnabled(true);

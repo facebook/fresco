@@ -8,6 +8,7 @@
 package com.facebook.drawee.backends.pipeline.info;
 
 import android.graphics.Rect;
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
@@ -30,6 +31,7 @@ public class ImagePerfMonitor {
   private final PipelineDraweeController mPipelineDraweeController;
   private final MonotonicClock mMonotonicClock;
   private final ImagePerfState mImagePerfState;
+  private final Supplier<Boolean> mAsyncLogging;
 
   private @Nullable ImageOriginRequestListener mImageOriginRequestListener;
   private @Nullable ImageOriginListener mImageOriginListener;
@@ -42,10 +44,13 @@ public class ImagePerfMonitor {
   private boolean mEnabled;
 
   public ImagePerfMonitor(
-      MonotonicClock monotonicClock, PipelineDraweeController pipelineDraweeController) {
+      MonotonicClock monotonicClock,
+      PipelineDraweeController pipelineDraweeController,
+      Supplier<Boolean> asyncLogging) {
     mMonotonicClock = monotonicClock;
     mPipelineDraweeController = pipelineDraweeController;
     mImagePerfState = new ImagePerfState();
+    mAsyncLogging = asyncLogging;
   }
 
   public void updateImageRequestData(
@@ -148,7 +153,7 @@ public class ImagePerfMonitor {
   private void setupListeners() {
     if (mImagePerfControllerListener2 == null) {
       mImagePerfControllerListener2 =
-          new ImagePerfControllerListener2(mMonotonicClock, mImagePerfState, this);
+          new ImagePerfControllerListener2(mMonotonicClock, mImagePerfState, this, mAsyncLogging);
     }
     if (mImagePerfRequestListener == null) {
       mImagePerfRequestListener = new ImagePerfRequestListener(mMonotonicClock, mImagePerfState);

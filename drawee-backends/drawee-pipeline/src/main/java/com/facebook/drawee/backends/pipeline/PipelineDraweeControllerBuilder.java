@@ -12,6 +12,7 @@ import android.net.Uri;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableList;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.Suppliers;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
@@ -131,7 +132,8 @@ public class PipelineDraweeControllerBuilder
           getCallerContext(),
           mCustomDrawableFactories,
           mImageOriginListener);
-      controller.initializePerformanceMonitoring(mImagePerfDataListener, this);
+      controller.initializePerformanceMonitoring(
+          mImagePerfDataListener, this, Suppliers.BOOLEAN_FALSE);
       return controller;
     } finally {
       if (FrescoSystrace.isTracing()) {

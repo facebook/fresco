@@ -15,6 +15,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import com.facebook.common.internal.Suppliers;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
@@ -39,7 +40,7 @@ public class ImagePerfMonitorTest {
     mController = mock(PipelineDraweeController.class);
     when(mController.getId()).thenReturn(CONTROLLER_ID);
 
-    mImagePerfMonitor = new ImagePerfMonitor(mMonotonicClock, mController);
+    mImagePerfMonitor = new ImagePerfMonitor(mMonotonicClock, mController, Suppliers.BOOLEAN_FALSE);
   }
 
   @Test

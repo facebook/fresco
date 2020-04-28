@@ -7,6 +7,12 @@
 
 package com.facebook.drawee.backends.pipeline.info.internal;
 
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
+import androidx.annotation.NonNull;
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawee.backends.pipeline.info.ImageLoadStatus;
@@ -23,15 +29,49 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     implements OnDrawControllerListener<ImageInfo> {
 
   private static final String TAG = "ImagePerfControllerListener2";
+
+  private static final int WHAT_STATUS = 1;
+  private static final int WHAT_VISIBILITY = 2;
+
   private final MonotonicClock mClock;
   private final ImagePerfState mImagePerfState;
   private final ImagePerfMonitor mImagePerfMonitor;
+  private final Supplier<Boolean> mAsyncLogging;
+
+  private @Nullable Handler mHandler;
+
+  static class LogHandler extends Handler {
+
+    private final ImagePerfMonitor mMonitor;
+
+    public LogHandler(@NonNull Looper looper, @NonNull ImagePerfMonitor monitor) {
+      super(looper);
+      mMonitor = monitor;
+    }
+
+    @Override
+    public void handleMessage(@NonNull Message msg) {
+      switch (msg.what) {
+        case WHAT_STATUS:
+          mMonitor.notifyStatusUpdated((ImagePerfState) msg.obj, msg.arg1);
+          break;
+        case WHAT_VISIBILITY:
+          mMonitor.notifyListenersOfVisibilityStateUpdate((ImagePerfState) msg.obj, msg.arg1);
+          break;
+      }
+    }
+  };
 
   public ImagePerfControllerListener2(
-      MonotonicClock clock, ImagePerfState imagePerfState, ImagePerfMonitor imagePerfMonitor) {
+      MonotonicClock clock,
+      ImagePerfState imagePerfState,
+      ImagePerfMonitor imagePerfMonitor,
+      Supplier<Boolean> asyncLogging) {
     mClock = clock;
     mImagePerfState = imagePerfState;
     mImagePerfMonitor = imagePerfMonitor;
+
+    mAsyncLogging = asyncLogging;
   }
 
   @Override
@@ -44,7 +84,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     mImagePerfState.setControllerId(id);
     mImagePerfState.setCallerContext(callerContext);
 
-    mImagePerfMonitor.notifyStatusUpdated(mImagePerfState, ImageLoadStatus.REQUESTED);
+    updateStatus(ImageLoadStatus.REQUESTED);
     reportViewVisible(now);
   }
 
@@ -56,7 +96,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     mImagePerfState.setControllerId(id);
     mImagePerfState.setImageInfo(imageInfo);
 
-    mImagePerfMonitor.notifyStatusUpdated(mImagePerfState, ImageLoadStatus.INTERMEDIATE_AVAILABLE);
+    updateStatus(ImageLoadStatus.INTERMEDIATE_AVAILABLE);
   }
 
   @Override
@@ -70,7 +110,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     mImagePerfState.setControllerId(id);
     mImagePerfState.setImageInfo(imageInfo);
 
-    mImagePerfMonitor.notifyStatusUpdated(mImagePerfState, ImageLoadStatus.SUCCESS);
+    updateStatus(ImageLoadStatus.SUCCESS);
   }
 
   @Override
@@ -81,7 +121,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     mImagePerfState.setControllerId(id);
     mImagePerfState.setErrorThrowable(throwable);
 
-    mImagePerfMonitor.notifyStatusUpdated(mImagePerfState, ImageLoadStatus.ERROR);
+    updateStatus(ImageLoadStatus.ERROR);
 
     reportViewInvisible(now);
   }
@@ -97,7 +137,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
       mImagePerfState.setControllerCancelTimeMs(now);
       mImagePerfState.setControllerId(id);
       // The image request was canceled
-      mImagePerfMonitor.notifyStatusUpdated(mImagePerfState, ImageLoadStatus.CANCELED);
+      updateStatus(ImageLoadStatus.CANCELED);
     }
 
     reportViewInvisible(now);
@@ -107,7 +147,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   public void onImageDrawn(String id, ImageInfo info, DimensionsInfo dimensionsInfo) {
     mImagePerfState.setImageDrawTimeMs(mClock.now());
     mImagePerfState.setDimensionsInfo(dimensionsInfo);
-    mImagePerfMonitor.notifyStatusUpdated(mImagePerfState, ImageLoadStatus.DRAW);
+    updateStatus(ImageLoadStatus.DRAW);
   }
 
   @VisibleForTesting
@@ -115,8 +155,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     mImagePerfState.setVisible(true);
     mImagePerfState.setVisibilityEventTimeMs(now);
 
-    mImagePerfMonitor.notifyListenersOfVisibilityStateUpdate(
-        mImagePerfState, VisibilityState.VISIBLE);
+    updateVisibility(VisibilityState.VISIBLE);
   }
 
   @VisibleForTesting
@@ -124,7 +163,48 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     mImagePerfState.setVisible(false);
     mImagePerfState.setInvisibilityEventTimeMs(time);
 
-    mImagePerfMonitor.notifyListenersOfVisibilityStateUpdate(
-        mImagePerfState, VisibilityState.INVISIBLE);
+    updateVisibility(VisibilityState.INVISIBLE);
+  }
+
+  private void updateStatus(@ImageLoadStatus int imageLoadStatus) {
+    if (shouldDispatchAsync()) {
+      Message msg = mHandler.obtainMessage();
+      msg.what = WHAT_STATUS;
+      msg.arg1 = imageLoadStatus;
+      msg.obj = mImagePerfState;
+      mHandler.sendMessage(msg);
+    } else {
+      mImagePerfMonitor.notifyStatusUpdated(mImagePerfState, imageLoadStatus);
+    }
+  }
+
+  private void updateVisibility(@VisibilityState int visibilityState) {
+    if (shouldDispatchAsync()) {
+      Message msg = mHandler.obtainMessage();
+      msg.what = WHAT_VISIBILITY;
+      msg.arg1 = visibilityState;
+      msg.obj = mImagePerfState;
+      mHandler.sendMessage(msg);
+    } else {
+      // sync
+      mImagePerfMonitor.notifyListenersOfVisibilityStateUpdate(mImagePerfState, visibilityState);
+    }
+  }
+
+  private synchronized void initHandler() {
+    if (mHandler != null) {
+      return;
+    }
+    HandlerThread handlerThread = new HandlerThread("ImagePerfControllerListener2Thread");
+    handlerThread.start();
+    mHandler = new LogHandler(handlerThread.getLooper(), mImagePerfMonitor);
+  }
+
+  private boolean shouldDispatchAsync() {
+    boolean enabled = mAsyncLogging.get();
+    if (enabled && mHandler == null) {
+      initHandler();
+    }
+    return enabled;
   }
 }
