@@ -88,6 +88,7 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
   private long mFinalImageTimeMs;
   private String mOriginText;
   private int mOriginColor = TEXT_COLOR;
+  private int mOverlayColor = Color.TRANSPARENT;
 
   public DebugControllerOverlayDrawable() {
     reset();
@@ -165,6 +166,11 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
     mScaleType = scaleType;
   }
 
+  /** Pass a semi-transparency color (e.g., 0x66RRGGBB) to give the overlay a color shade. */
+  public void setOverlayColor(int overlayColor) {
+    this.mOverlayColor = overlayColor;
+  }
+
   @Override
   protected void onBoundsChange(Rect bounds) {
     super.onBoundsChange(bounds);
@@ -183,6 +189,11 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
     mPaint.setStyle(Paint.Style.STROKE);
     mPaint.setStrokeWidth(OUTLINE_STROKE_WIDTH_PX);
     mPaint.setColor(OUTLINE_COLOR);
+    canvas.drawRect(bounds.left, bounds.top, bounds.right, bounds.bottom, mPaint);
+
+    // Draw overlay
+    mPaint.setStyle(Paint.Style.FILL);
+    mPaint.setColor(mOverlayColor);
     canvas.drawRect(bounds.left, bounds.top, bounds.right, bounds.bottom, mPaint);
 
     // Draw text
