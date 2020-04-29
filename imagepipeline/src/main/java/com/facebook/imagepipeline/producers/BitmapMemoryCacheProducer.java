@@ -191,8 +191,8 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
       return;
     }
 
-    producerContext.setExtra(ExtraKeys.ENCODED_WIDTH,  info.getWidth());
+    producerContext.setExtra(ExtraKeys.ENCODED_WIDTH, info.getWidth());
     producerContext.setExtra(ExtraKeys.ENCODED_HEIGHT, info.getHeight());
-    producerContext.setExtra(ExtraKeys.ENCODED_SIZE,   info.getSize());
+    producerContext.setExtra(ExtraKeys.ENCODED_SIZE, info.getSize());
   }
 }
