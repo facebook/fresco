@@ -1,17 +1,15 @@
 /*
- * Copyright (C) 2007 The Guava Authors
+ * Copyright (C) 2014 The Guava Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 package com.facebook.common.internal;
@@ -23,17 +21,17 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 
 /**
- * Helper functions that can operate on any {@code Object}.
+ * Helper functions that operate on any {@code Object}, and are not already provided in {@link
+ * java.util.Objects}.
  *
  * <p>See the Guava User Guide on <a
- * href="http://code.google.com/p/guava-libraries/wiki/CommonObjectUtilitiesExplained">writing
- * {@code Object} methods with {@code Objects}</a>.
+ * href="https://github.com/google/guava/wiki/CommonObjectUtilitiesExplained">writing {@code Object}
+ * methods with {@code Objects}</a>.
  *
  * @author Laurence Gonsalves
- * @since 2.0 (imported from Google Collections Library)
+ * @since 18.0 (since 2.0 as {@code Objects})
  */
 public final class Objects {
-  private Objects() {}
 
   /**
    * Determines whether two possibly-null objects are equal. Returns:
@@ -107,64 +105,42 @@ public final class Objects {
    *     .add("x", 1)
    *     .add("y", null)
    *     .toString();
-   * }
    * }</pre>
    *
    * <p>Note that in GWT, class names are often obfuscated.
    *
    * @param self the object to generate the string for (typically {@code this}), used only for its
    *     class name
-   * @since 2.0
+   * @since 18.0 (since 2.0 as {@code Objects.toStringHelper()}).
    */
   public static ToStringHelper toStringHelper(Object self) {
-    return new ToStringHelper(simpleName(self.getClass()));
+    return new ToStringHelper(self.getClass().getSimpleName());
   }
 
   /**
    * Creates an instance of {@link ToStringHelper} in the same manner as {@link
-   * Objects#toStringHelper(Object)}, but using the name of {@code clazz} instead of using an
+   * #toStringHelper(Object)}, but using the simple name of {@code clazz} instead of using an
    * instance's {@link Object#getClass()}.
    *
    * <p>Note that in GWT, class names are often obfuscated.
    *
    * @param clazz the {@link Class} of the instance
-   * @since 7.0 (source-compatible since 2.0)
+   * @since 18.0 (since 7.0 as {@code Objects.toStringHelper()}).
    */
   public static ToStringHelper toStringHelper(Class<?> clazz) {
-    return new ToStringHelper(simpleName(clazz));
+    return new ToStringHelper(clazz.getSimpleName());
   }
 
   /**
    * Creates an instance of {@link ToStringHelper} in the same manner as {@link
-   * Objects#toStringHelper(Object)}, but using {@code className} instead of using an instance's
-   * {@link Object#getClass()}.
+   * #toStringHelper(Object)}, but using {@code className} instead of using an instance's {@link
+   * Object#getClass()}.
    *
    * @param className the name of the instance type
-   * @since 7.0 (source-compatible since 2.0)
+   * @since 18.0 (since 7.0 as {@code Objects.toStringHelper()}).
    */
   public static ToStringHelper toStringHelper(String className) {
     return new ToStringHelper(className);
-  }
-
-  /**
-   * {@link Class#getSimpleName()} is not GWT compatible yet, so we provide our own implementation.
-   */
-  private static String simpleName(Class<?> clazz) {
-    String name = clazz.getName();
-
-    // the nth anonymous class has a class name ending in "Outer$n"
-    // and local inner classes have names ending in "Outer.$1Inner"
-    name = name.replaceAll("\\$[0-9]+", "\\$");
-
-    // we want the name of the inner class all by its lonesome
-    int start = name.lastIndexOf('$');
-
-    // if this isn't an inner class, just find the start of the
-    // top level class name.
-    if (start == -1) {
-      start = name.lastIndexOf('.');
-    }
-    return name.substring(start + 1);
   }
 
   /**
@@ -189,11 +165,11 @@ public final class Objects {
    * Support class for {@link Objects#toStringHelper}.
    *
    * @author Jason Lee
-   * @since 2.0
+   * @since 18.0 (since 2.0 as {@code Objects.ToStringHelper}).
    */
   public static final class ToStringHelper {
     private final String className;
-    private ValueHolder holderHead = new ValueHolder();
+    private final ValueHolder holderHead = new ValueHolder();
     private ValueHolder holderTail = holderHead;
     private boolean omitNullValues = false;
 
@@ -207,7 +183,7 @@ public final class Objects {
      * value. The order of calling this method, relative to the {@code add()}/{@code addValue()}
      * methods, is not significant.
      *
-     * @since 12.0
+     * @since 18.0 (since 12.0 as {@code Objects.ToStringHelper.omitNullValues()}).
      */
     public ToStringHelper omitNullValues() {
       omitNullValues = true;
@@ -226,7 +202,7 @@ public final class Objects {
     /**
      * Adds a name/value pair to the formatted output in {@code name=value} format.
      *
-     * @since 11.0 (source-compatible since 2.0)
+     * @since 18.0 (since 11.0 as {@code Objects.ToStringHelper.add()}).
      */
     public ToStringHelper add(String name, boolean value) {
       return addHolder(name, String.valueOf(value));
@@ -235,7 +211,7 @@ public final class Objects {
     /**
      * Adds a name/value pair to the formatted output in {@code name=value} format.
      *
-     * @since 11.0 (source-compatible since 2.0)
+     * @since 18.0 (since 11.0 as {@code Objects.ToStringHelper.add()}).
      */
     public ToStringHelper add(String name, char value) {
       return addHolder(name, String.valueOf(value));
@@ -244,7 +220,7 @@ public final class Objects {
     /**
      * Adds a name/value pair to the formatted output in {@code name=value} format.
      *
-     * @since 11.0 (source-compatible since 2.0)
+     * @since 18.0 (since 11.0 as {@code Objects.ToStringHelper.add()}).
      */
     public ToStringHelper add(String name, double value) {
       return addHolder(name, String.valueOf(value));
@@ -253,7 +229,7 @@ public final class Objects {
     /**
      * Adds a name/value pair to the formatted output in {@code name=value} format.
      *
-     * @since 11.0 (source-compatible since 2.0)
+     * @since 18.0 (since 11.0 as {@code Objects.ToStringHelper.add()}).
      */
     public ToStringHelper add(String name, float value) {
       return addHolder(name, String.valueOf(value));
@@ -262,7 +238,7 @@ public final class Objects {
     /**
      * Adds a name/value pair to the formatted output in {@code name=value} format.
      *
-     * @since 11.0 (source-compatible since 2.0)
+     * @since 18.0 (since 11.0 as {@code Objects.ToStringHelper.add()}).
      */
     public ToStringHelper add(String name, int value) {
       return addHolder(name, String.valueOf(value));
@@ -271,7 +247,7 @@ public final class Objects {
     /**
      * Adds a name/value pair to the formatted output in {@code name=value} format.
      *
-     * @since 11.0 (source-compatible since 2.0)
+     * @since 18.0 (since 11.0 as {@code Objects.ToStringHelper.add()}).
      */
     public ToStringHelper add(String name, long value) {
       return addHolder(name, String.valueOf(value));
@@ -293,7 +269,7 @@ public final class Objects {
      * <p>It is strongly encouraged to use {@link #add(String, boolean)} instead and give value a
      * readable name.
      *
-     * @since 11.0 (source-compatible since 2.0)
+     * @since 18.0 (since 11.0 as {@code Objects.ToStringHelper.addValue()}).
      */
     public ToStringHelper addValue(boolean value) {
       return addHolder(String.valueOf(value));
@@ -305,7 +281,7 @@ public final class Objects {
      * <p>It is strongly encouraged to use {@link #add(String, char)} instead and give value a
      * readable name.
      *
-     * @since 11.0 (source-compatible since 2.0)
+     * @since 18.0 (since 11.0 as {@code Objects.ToStringHelper.addValue()}).
      */
     public ToStringHelper addValue(char value) {
       return addHolder(String.valueOf(value));
@@ -317,7 +293,7 @@ public final class Objects {
      * <p>It is strongly encouraged to use {@link #add(String, double)} instead and give value a
      * readable name.
      *
-     * @since 11.0 (source-compatible since 2.0)
+     * @since 18.0 (since 11.0 as {@code Objects.ToStringHelper.addValue()}).
      */
     public ToStringHelper addValue(double value) {
       return addHolder(String.valueOf(value));
@@ -329,7 +305,7 @@ public final class Objects {
      * <p>It is strongly encouraged to use {@link #add(String, float)} instead and give value a
      * readable name.
      *
-     * @since 11.0 (source-compatible since 2.0)
+     * @since 18.0 (since 11.0 as {@code Objects.ToStringHelper.addValue()}).
      */
     public ToStringHelper addValue(float value) {
       return addHolder(String.valueOf(value));
@@ -341,7 +317,7 @@ public final class Objects {
      * <p>It is strongly encouraged to use {@link #add(String, int)} instead and give value a
      * readable name.
      *
-     * @since 11.0 (source-compatible since 2.0)
+     * @since 18.0 (since 11.0 as {@code Objects.ToStringHelper.addValue()}).
      */
     public ToStringHelper addValue(int value) {
       return addHolder(String.valueOf(value));
@@ -353,7 +329,7 @@ public final class Objects {
      * <p>It is strongly encouraged to use {@link #add(String, long)} instead and give value a
      * readable name.
      *
-     * @since 11.0 (source-compatible since 2.0)
+     * @since 18.0 (since 11.0 as {@code Objects.ToStringHelper.addValue()}).
      */
     public ToStringHelper addValue(long value) {
       return addHolder(String.valueOf(value));
@@ -376,14 +352,21 @@ public final class Objects {
       for (ValueHolder valueHolder = holderHead.next;
           valueHolder != null;
           valueHolder = valueHolder.next) {
-        if (!omitNullValuesSnapshot || valueHolder.value != null) {
+        Object value = valueHolder.value;
+        if (!omitNullValuesSnapshot || value != null) {
           builder.append(nextSeparator);
           nextSeparator = ", ";
 
           if (valueHolder.name != null) {
             builder.append(valueHolder.name).append('=');
           }
-          builder.append(valueHolder.value);
+          if (value != null && value.getClass().isArray()) {
+            Object[] objectArray = {value};
+            String arrayString = Arrays.deepToString(objectArray);
+            builder.append(arrayString, 1, arrayString.length() - 1);
+          } else {
+            builder.append(value);
+          }
         }
       }
       return builder.append('}').toString();
@@ -411,7 +394,9 @@ public final class Objects {
     private static final class ValueHolder {
       @Nullable String name;
       @Nullable Object value;
-      ValueHolder next;
+      @Nullable ValueHolder next;
     }
   }
+
+  private Objects() {}
 }
