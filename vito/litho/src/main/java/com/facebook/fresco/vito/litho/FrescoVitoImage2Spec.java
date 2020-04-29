@@ -29,6 +29,7 @@ import com.facebook.litho.Size;
 import com.facebook.litho.annotations.CachedValue;
 import com.facebook.litho.annotations.FromPrepare;
 import com.facebook.litho.annotations.MountSpec;
+import com.facebook.litho.annotations.MountingType;
 import com.facebook.litho.annotations.OnBind;
 import com.facebook.litho.annotations.OnCalculateCachedValue;
 import com.facebook.litho.annotations.OnCreateMountContent;
@@ -51,7 +52,7 @@ public class FrescoVitoImage2Spec {
 
   @PropDefault protected static final float imageAspectRatio = 1f;
 
-  @OnCreateMountContent
+  @OnCreateMountContent(mountingType = MountingType.DRAWABLE)
   static FrescoDrawable2 onCreateMountContent(Context c) {
     return FrescoVitoProvider.getController().createDrawable();
   }
