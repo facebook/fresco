@@ -23,8 +23,11 @@ import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfImageOriginL
 import com.facebook.imagepipeline.listener.RequestListener;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 /** Tests {@link ImagePerfMonitor} */
+@RunWith(RobolectricTestRunner.class)
 public class ImagePerfMonitorTest {
 
   private static final String CONTROLLER_ID = "abc";

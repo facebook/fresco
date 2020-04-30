@@ -9,6 +9,7 @@ package com.facebook.drawee.controller;
 
 import static com.facebook.drawee.components.DraweeEventTracker.Event;
 
+import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
@@ -34,6 +35,8 @@ import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.ui.common.LoggingListener;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.ReturnsOwnership;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -51,8 +54,10 @@ import javax.annotation.concurrent.NotThreadSafe;
 public abstract class AbstractDraweeController<T, INFO>
     implements DraweeController, DeferredReleaser.Releasable, GestureDetector.ClickListener {
 
-  private static final Object SHORCUT_EXTRADATA =
-      ImmutableMap.<String, Object>of("origin", "shorcut");
+  private static final Map<String, Object> SHORTCUT_EXTRAS =
+      ImmutableMap.<String, Object>of("origin", "shortcut");
+
+  private static final Rect RECT_ZEROES = new Rect();
 
   /**
    * This class is used to allow an optimization of not creating a ForwardingControllerListener when
@@ -808,7 +813,32 @@ public abstract class AbstractDraweeController<T, INFO>
     getControllerListener2().onRelease(mId);
   }
 
-  private Extras obtainExtras(DataSource<T> dataSource) {
-    return new Extras();
+  private ControllerListener2.Extras obtainExtras(@Nullable DataSource<T> dataSource) {
+    ControllerListener2.Extras extras = new ControllerListener2.Extras();
+    if (dataSource != null) {
+      extras.pipe = dataSource.getExtras();
+    }
+
+    extras.view = new HashMap<>(2);
+    addDimensions(extras.view);
+
+    if (dataSource == null) {
+      extras.view.putAll(SHORTCUT_EXTRAS);
+    }
+
+    return extras;
+  }
+
+  private void addDimensions(Map<String, Object> extras) {
+    Rect r = getDimensions();
+    extras.put("viewport_width", r != null ? r.width() : -1);
+    extras.put("viewport_height", r != null ? r.height() : -1);
+  }
+
+  private Rect getDimensions() {
+    if (mSettableDraweeHierarchy == null) {
+      return RECT_ZEROES;
+    }
+    return mSettableDraweeHierarchy.getBounds();
   }
 }
