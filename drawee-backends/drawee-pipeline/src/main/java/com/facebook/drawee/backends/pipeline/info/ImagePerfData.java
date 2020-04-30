@@ -8,6 +8,8 @@
 package com.facebook.drawee.backends.pipeline.info;
 
 import com.facebook.common.internal.Objects;
+import com.facebook.fresco.ui.common.ControllerListener2;
+import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -56,7 +58,7 @@ public class ImagePerfData {
 
   private final @Nullable DimensionsInfo mDimensionsInfo;
 
-  private final @Nullable Object mExtraData;
+  private final @Nullable Extras mExtraData;
 
   public ImagePerfData(
       @Nullable String controllerId,
@@ -86,7 +88,7 @@ public class ImagePerfData {
       @Nullable String componentTag,
       long imageDrawTimeMs,
       @Nullable DimensionsInfo dimensionsInfo,
-      @Nullable Object extraData) {
+      @Nullable Extras extraData) {
     mControllerId = controllerId;
     mRequestId = requestId;
     mImageRequest = imageRequest;
@@ -251,7 +253,7 @@ public class ImagePerfData {
   }
 
   @Nullable
-  public Object getExtraData() {
+  public Extras getExtraData() {
     return mExtraData;
   }
 

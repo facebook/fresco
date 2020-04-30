@@ -9,6 +9,8 @@ package com.facebook.drawee.backends.pipeline.info;
 
 import static com.facebook.drawee.backends.pipeline.info.ImagePerfData.UNSET;
 
+import com.facebook.fresco.ui.common.ControllerListener2;
+import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -64,7 +66,7 @@ public class ImagePerfState {
 
   private @Nullable DimensionsInfo mDimensionsInfo;
 
-  private @Nullable Object mExtraData;
+  private @Nullable Extras mExtraData;
 
   public void reset() {
     mRequestId = null;
@@ -268,7 +270,7 @@ public class ImagePerfState {
     return mDimensionsInfo;
   }
 
-  public void setExtraData(@Nullable Object extraData) {
+  public void setExtraData(@Nullable Extras extraData) {
     mExtraData = extraData;
   }
 
