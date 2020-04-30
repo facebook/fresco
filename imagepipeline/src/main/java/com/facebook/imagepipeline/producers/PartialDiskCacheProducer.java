@@ -125,7 +125,7 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
             final ImageRequest originalRequest = producerContext.getImageRequest();
 
             if (cachedRange.contains(originalRequest.getBytesRange())) {
-              producerContext.setExtra(ProducerContext.ExtraKeys.ORIGIN, "disk_partial");
+              producerContext.putOriginExtra("disk", "partial");
               listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, true);
               consumer.onNewResult(cachedReference, Consumer.IS_LAST | Consumer.IS_PARTIAL_RESULT);
             } else {

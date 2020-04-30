@@ -24,6 +24,9 @@ import javax.annotation.concurrent.GuardedBy;
  * ProducerContext.
  */
 public class BaseProducerContext implements ProducerContext {
+
+  private static final String ORIGIN_SUBCATEGORY_DEFAULT = "default";
+
   private final ImageRequest mImageRequest;
   private final String mId;
   private final @Nullable String mUiComponentId;
@@ -336,5 +339,17 @@ public class BaseProducerContext implements ProducerContext {
   @Override
   public Map<String, Object> getExtras() {
     return mExtras;
+  }
+
+  @Override
+  public void putOriginExtra(@Nullable String origin, @Nullable String subcategory) {
+    mExtras.put(ExtraKeys.ORIGIN, origin);
+    mExtras.put(ExtraKeys.ORIGIN_SUBCATEGORY, subcategory);
+  }
+
+  @Override
+  public void putOriginExtra(@Nullable String origin) {
+    mExtras.put(ExtraKeys.ORIGIN, origin);
+    mExtras.put(ExtraKeys.ORIGIN_SUBCATEGORY, ORIGIN_SUBCATEGORY_DEFAULT);
   }
 }

@@ -18,6 +18,8 @@ public class BitmapMemoryCacheGetProducer extends BitmapMemoryCacheProducer {
 
   public static final String PRODUCER_NAME = "BitmapMemoryCacheGetProducer";
 
+  private static final String ORIGIN_SUBCATEGORY = "pipe_ui";
+
   public BitmapMemoryCacheGetProducer(
       MemoryCache<CacheKey, CloseableImage> memoryCache,
       CacheKeyFactory cacheKeyFactory,
@@ -37,5 +39,10 @@ public class BitmapMemoryCacheGetProducer extends BitmapMemoryCacheProducer {
   @Override
   protected String getProducerName() {
     return PRODUCER_NAME;
+  }
+
+  @Override
+  protected String getOriginSubcategory() {
+    return ORIGIN_SUBCATEGORY;
   }
 }

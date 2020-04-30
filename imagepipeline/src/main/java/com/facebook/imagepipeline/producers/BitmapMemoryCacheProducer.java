@@ -26,6 +26,8 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
   public static final String PRODUCER_NAME = "BitmapMemoryCacheProducer";
   public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
 
+  private static final String ORIGIN_SUBCATEGORY = "pipe_bg";
+
   private final MemoryCache<CacheKey, CloseableImage> mMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Producer<CloseableReference<CloseableImage>> mInputProducer;
@@ -66,7 +68,7 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
                   ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "true")
                   : null);
           listener.onUltimateProducerReached(producerContext, getProducerName(), true);
-          producerContext.setExtra(ProducerContext.ExtraKeys.ORIGIN, "memory_bitmap");
+          producerContext.putOriginExtra("memory_bitmap", getOriginSubcategory());
           consumer.onProgressUpdate(1f);
         }
         consumer.onNewResult(cachedReference, BaseConsumer.simpleStatusForIsLast(isFinal));
@@ -85,7 +87,7 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
                 ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "false")
                 : null);
         listener.onUltimateProducerReached(producerContext, getProducerName(), false);
-        producerContext.setExtra(ProducerContext.ExtraKeys.ORIGIN, "memory_bitmap");
+        producerContext.putOriginExtra("memory_bitmap", getOriginSubcategory());
         consumer.onNewResult(null, Consumer.IS_LAST);
         return;
       }
@@ -194,5 +196,9 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
     producerContext.setExtra(ExtraKeys.ENCODED_WIDTH, info.getWidth());
     producerContext.setExtra(ExtraKeys.ENCODED_HEIGHT, info.getHeight());
     producerContext.setExtra(ExtraKeys.ENCODED_SIZE, info.getSize());
+  }
+
+  protected String getOriginSubcategory() {
+    return ORIGIN_SUBCATEGORY;
   }
 }

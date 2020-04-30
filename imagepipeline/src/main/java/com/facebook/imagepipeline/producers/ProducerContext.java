@@ -31,12 +31,14 @@ public interface ProducerContext {
 
   @StringDef({
     ExtraKeys.ORIGIN,
+    ExtraKeys.ORIGIN_SUBCATEGORY,
     ExtraKeys.ENCODED_WIDTH,
     ExtraKeys.ENCODED_HEIGHT,
     ExtraKeys.ENCODED_SIZE
   })
   @interface ExtraKeys {
     String ORIGIN = "origin";
+    String ORIGIN_SUBCATEGORY = "origin_sub";
     String ENCODED_WIDTH = "encoded_width";
     String ENCODED_HEIGHT = "encoded_height";
     String ENCODED_SIZE = "encoded_size";
@@ -95,4 +97,10 @@ public interface ProducerContext {
   <E> E getExtra(String key, @Nullable E valueIfNotFound);
 
   Map<String, Object> getExtras();
+
+  /** Helper to set {@link ExtraKeys#ORIGIN} and {@link ExtraKeys#ORIGIN_SUBCATEGORY} */
+  void putOriginExtra(@Nullable String origin, @Nullable String subcategory);
+
+  /** Helper to set {@link ExtraKeys#ORIGIN} */
+  void putOriginExtra(@Nullable String origin);
 }

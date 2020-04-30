@@ -100,12 +100,11 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
                 PRODUCER_NAME,
                 getExtraMap(listener, producerContext, true, cachedReference.getSize()));
             listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, true);
-            producerContext.setExtra(ProducerContext.ExtraKeys.ORIGIN, "disk");
+            producerContext.putOriginExtra("disk");
             consumer.onProgressUpdate(1);
             consumer.onNewResult(cachedReference, Consumer.IS_LAST);
             cachedReference.close();
           } else {
-            producerContext.setExtra(ProducerContext.ExtraKeys.ORIGIN, "disk_none");
             listener.onProducerFinishWithSuccess(
                 producerContext, PRODUCER_NAME, getExtraMap(listener, producerContext, false, 0));
             mInputProducer.produceResults(consumer, producerContext);
@@ -125,7 +124,7 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
       Consumer<EncodedImage> consumer, ProducerContext producerContext) {
     if (producerContext.getLowestPermittedRequestLevel().getValue()
         >= ImageRequest.RequestLevel.DISK_CACHE.getValue()) {
-      producerContext.setExtra(ProducerContext.ExtraKeys.ORIGIN, "disk_null");
+      producerContext.putOriginExtra("disk", "result-is-nil");
       consumer.onNewResult(null, Consumer.IS_LAST);
       return;
     }
