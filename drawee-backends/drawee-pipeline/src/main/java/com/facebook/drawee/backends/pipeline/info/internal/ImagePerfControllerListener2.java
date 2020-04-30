@@ -100,7 +100,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   }
 
   @Override
-  public void onFinalImageSet(String id, ImageInfo imageInfo, Object extraData) {
+  public void onFinalImageSet(String id, ImageInfo imageInfo, Extras extraData) {
     final long now = mClock.now();
 
     mImagePerfState.setExtraData(extraData);

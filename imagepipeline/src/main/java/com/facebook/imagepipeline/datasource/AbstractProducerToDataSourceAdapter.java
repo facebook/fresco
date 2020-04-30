@@ -18,6 +18,7 @@ import com.facebook.imagepipeline.producers.SettableProducerContext;
 import com.facebook.imagepipeline.request.HasImageRequest;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import java.util.Map;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -95,7 +96,7 @@ public abstract class AbstractProducerToDataSourceAdapter<T> extends AbstractDat
     }
   }
 
-  protected Object getExtras(ProducerContext producerContext) {
+  protected Map<String, Object> getExtras(ProducerContext producerContext) {
     return producerContext.getExtras();
   }
 

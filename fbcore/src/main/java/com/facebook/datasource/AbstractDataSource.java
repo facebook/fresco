@@ -9,6 +9,7 @@ package com.facebook.datasource;
 
 import android.util.Pair;
 import com.facebook.common.internal.Preconditions;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
@@ -26,7 +27,7 @@ import javax.annotation.concurrent.GuardedBy;
  */
 public abstract class AbstractDataSource<T> implements DataSource<T> {
 
-  private @Nullable Object mExtras;
+  private @Nullable Map<String, Object> mExtras;
 
   /** Describes state of data source */
   private enum DataSourceStatus {
@@ -91,7 +92,7 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
   }
 
   @Override
-  public @Nullable Object getExtras() {
+  public @Nullable Map<String, Object> getExtras() {
     return mExtras;
   }
 
@@ -226,7 +227,7 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
    * @param extras an object with extra data for this datasource
    * @return true if the value was successfully set.
    */
-  protected boolean setResult(@Nullable T value, boolean isLast, @Nullable Object extras) {
+  protected boolean setResult(@Nullable T value, boolean isLast, @Nullable Map<String, Object> extras) {
     mExtras = extras;
     boolean result = setResultInternal(value, isLast);
     if (result) {

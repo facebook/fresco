@@ -30,6 +30,7 @@ import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
 import com.facebook.fresco.ui.common.BaseControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2;
+import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.ui.common.LoggingListener;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.ReturnsOwnership;
@@ -807,7 +808,7 @@ public abstract class AbstractDraweeController<T, INFO>
     getControllerListener2().onRelease(mId);
   }
 
-  private Object obtainExtras(DataSource<T> dataSource) {
-    return dataSource == null ? SHORCUT_EXTRADATA : dataSource.getExtras();
+  private Extras obtainExtras(DataSource<T> dataSource) {
+    return new Extras();
   }
 }

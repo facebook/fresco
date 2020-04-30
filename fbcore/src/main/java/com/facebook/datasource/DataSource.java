@@ -7,6 +7,7 @@
 
 package com.facebook.datasource;
 
+import java.util.Map;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 
@@ -52,7 +53,7 @@ public interface DataSource<T> {
 
   /** @return an object with extra data for this datasource */
   @Nullable
-  Object getExtras();
+  Map<String, Object> getExtras();
 
   /**
    * @return true if the data source has multiple results (e.g. multiple images). This can be used

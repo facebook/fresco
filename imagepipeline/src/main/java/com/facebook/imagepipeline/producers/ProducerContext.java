@@ -84,7 +84,7 @@ public interface ProducerContext {
 
   void setEncodedImageOrigin(EncodedImageOrigin encodedImageOrigin);
 
-  <E> void setExtra(String key, @Nullable E value);
+  <E> void setExtra(@ExtraKeys String key, @Nullable E value);
 
   void putExtras(@NonNull Map<String, ?> extras);
 
@@ -94,5 +94,5 @@ public interface ProducerContext {
   @Nullable
   <E> E getExtra(String key, @Nullable E valueIfNotFound);
 
-  Map<String, ?> getExtras();
+  Map<String, Object> getExtras();
 }

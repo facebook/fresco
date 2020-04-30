@@ -8,6 +8,7 @@
 package com.facebook.datasource;
 
 import com.facebook.common.internal.Preconditions;
+import java.util.Map;
 
 /** Settable {@link DataSource}. */
 public class SimpleDataSource<T> extends AbstractDataSource<T> {
@@ -35,7 +36,7 @@ public class SimpleDataSource<T> extends AbstractDataSource<T> {
    * @return true if the value was successfully set.
    */
   @Override
-  public boolean setResult(T value, boolean isLast, Object extras) {
+  public boolean setResult(T value, boolean isLast, Map<String, Object> extras) {
     return super.setResult(Preconditions.checkNotNull(value), isLast, extras);
   }
 

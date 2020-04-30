@@ -2,11 +2,17 @@
 
 package com.facebook.fresco.ui.common;
 
+import java.util.Map;
 import javax.annotation.Nullable;
 
 /* Experimental */
 @Deprecated
 public interface ControllerListener2<INFO> {
+
+  class Extras {
+    public @Nullable Map<String, Object> pipe;
+    public @Nullable Map<String, Object> view;
+  }
 
   /**
    * Called before the image request is submitted.
@@ -25,7 +31,7 @@ public interface ControllerListener2<INFO> {
    * @param imageInfo image info
    * @param extraData extra data
    */
-  void onFinalImageSet(String id, @Nullable INFO imageInfo, Object extraData);
+  void onFinalImageSet(String id, @Nullable INFO imageInfo, Extras extraData);
 
   /**
    * Called after any intermediate image has been set.
