@@ -7,6 +7,7 @@
 
 package com.facebook.drawee.interfaces;
 
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -34,4 +35,9 @@ public interface DraweeHierarchy {
    * @return top level drawable
    */
   Drawable getTopLevelDrawable();
+
+  /**
+   * @return bounds of the top drawable
+   */
+  Rect getBounds();
 }

@@ -11,6 +11,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.ColorDrawable;
@@ -318,6 +319,11 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   @Override
   public void setControllerOverlay(@Nullable Drawable drawable) {
     mTopLevelDrawable.setControllerOverlay(drawable);
+  }
+
+  @Override
+  public Rect getBounds() {
+    return mTopLevelDrawable.getBounds();
   }
 
   // Helper methods for accessing layers
