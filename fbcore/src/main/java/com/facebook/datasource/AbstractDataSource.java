@@ -227,7 +227,8 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
    * @param extras an object with extra data for this datasource
    * @return true if the value was successfully set.
    */
-  protected boolean setResult(@Nullable T value, boolean isLast, @Nullable Map<String, Object> extras) {
+  protected boolean setResult(
+      @Nullable T value, boolean isLast, @Nullable Map<String, Object> extras) {
     mExtras = extras;
     boolean result = setResultInternal(value, isLast);
     if (result) {

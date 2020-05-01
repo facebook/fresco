@@ -8,7 +8,6 @@
 package com.facebook.drawee.backends.pipeline.info;
 
 import com.facebook.common.internal.Objects;
-import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.imagepipeline.image.ImageInfo;
