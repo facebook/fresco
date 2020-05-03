@@ -169,7 +169,6 @@ class TiffUtil {
       return 0;
     }
     int value = StreamProcessor.readPackedInt(is, 2, isLittleEndian);
-    int padding = StreamProcessor.readPackedInt(is, 2, isLittleEndian);
     return value;
   }
 }
