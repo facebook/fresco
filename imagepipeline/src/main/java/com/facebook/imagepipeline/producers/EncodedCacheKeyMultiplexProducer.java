@@ -23,7 +23,11 @@ public class EncodedCacheKeyMultiplexProducer
       CacheKeyFactory cacheKeyFactory,
       boolean keepCancelledFetchAsLowPriority,
       Producer inputProducer) {
-    super(inputProducer, "EncodedCacheKeyMultiplexProducer", keepCancelledFetchAsLowPriority);
+    super(
+        inputProducer,
+        "EncodedCacheKeyMultiplexProducer",
+        ProducerContext.ExtraKeys.MULTIPLEX_ENCODED_COUNT,
+        keepCancelledFetchAsLowPriority);
     mCacheKeyFactory = cacheKeyFactory;
   }
 

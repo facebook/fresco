@@ -23,7 +23,10 @@ public class BitmapMemoryCacheKeyMultiplexProducer
 
   public BitmapMemoryCacheKeyMultiplexProducer(
       CacheKeyFactory cacheKeyFactory, Producer inputProducer) {
-    super(inputProducer, "BitmapMemoryCacheKeyMultiplexProducer");
+    super(
+        inputProducer,
+        "BitmapMemoryCacheKeyMultiplexProducer",
+        ProducerContext.ExtraKeys.MULTIPLEX_BITMAP_COUNT);
     mCacheKeyFactory = cacheKeyFactory;
   }
 

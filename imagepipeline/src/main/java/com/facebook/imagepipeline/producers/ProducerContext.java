@@ -34,7 +34,9 @@ public interface ProducerContext {
     ExtraKeys.ORIGIN_SUBCATEGORY,
     ExtraKeys.ENCODED_WIDTH,
     ExtraKeys.ENCODED_HEIGHT,
-    ExtraKeys.ENCODED_SIZE
+    ExtraKeys.ENCODED_SIZE,
+    ExtraKeys.MULTIPLEX_BITMAP_COUNT,
+    ExtraKeys.MULTIPLEX_ENCODED_COUNT,
   })
   @interface ExtraKeys {
     String ORIGIN = "origin";
@@ -42,6 +44,10 @@ public interface ProducerContext {
     String ENCODED_WIDTH = "encoded_width";
     String ENCODED_HEIGHT = "encoded_height";
     String ENCODED_SIZE = "encoded_size";
+    /* number of deduped request in BitmapMemoryCacheKeyMultiplexProducer */
+    String MULTIPLEX_BITMAP_COUNT = "multiplex_bmp_cnt";
+    /* number of deduped request in EncodedCacheKeyMultiplexProducer */
+    String MULTIPLEX_ENCODED_COUNT = "multiplex_enc_cnt";
   }
 
   /** @return image request that is being executed */

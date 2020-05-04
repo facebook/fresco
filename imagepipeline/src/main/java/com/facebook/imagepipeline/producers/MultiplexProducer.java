@@ -56,17 +56,25 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
   private final boolean mKeepCancelledFetchAsLowPriority;
 
   private final String mProducerName;
+  private final String mDedupedRequestsCountKey;
 
-  protected MultiplexProducer(Producer<T> inputProducer, String producerName) {
-    this(inputProducer, producerName, false);
+  protected MultiplexProducer(
+      Producer<T> inputProducer,
+      String producerName,
+      @ProducerContext.ExtraKeys String dedupedRequestsCountKey) {
+    this(inputProducer, producerName, dedupedRequestsCountKey, false);
   }
 
   protected MultiplexProducer(
-      Producer<T> inputProducer, String producerName, boolean keepCancelledFetchAsLowPriority) {
+      Producer<T> inputProducer,
+      String producerName,
+      @ProducerContext.ExtraKeys String dedupedRequestsCountKey,
+      boolean keepCancelledFetchAsLowPriority) {
     mInputProducer = inputProducer;
     mMultiplexers = new HashMap<>();
     mKeepCancelledFetchAsLowPriority = keepCancelledFetchAsLowPriority;
     mProducerName = producerName;
+    mDedupedRequestsCountKey = dedupedRequestsCountKey;
   }
 
   @Override
@@ -456,6 +464,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
         final T closeableObject,
         @Consumer.Status final int status) {
       Iterator<Pair<Consumer<T>, ProducerContext>> iterator;
+      final int size;
       synchronized (Multiplexer.this) {
         // check for late callbacks
         if (mForwardingConsumer != consumer) {
@@ -466,6 +475,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
         mLastIntermediateResult = null;
 
         iterator = mConsumerContextPairs.iterator();
+        size = mConsumerContextPairs.size();
         if (BaseConsumer.isNotLast(status)) {
           mLastIntermediateResult = cloneOrNull(closeableObject);
           mLastStatus = status;
@@ -485,6 +495,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
             if (mMultiplexProducerContext != null) {
               pair.second.putExtras(mMultiplexProducerContext.getExtras());
             }
+            pair.second.setExtra(mDedupedRequestsCountKey, size);
           }
           pair.first.onNewResult(closeableObject, status);
         }
