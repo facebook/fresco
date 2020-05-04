@@ -54,7 +54,9 @@ public abstract class AbstractDraweeController<T, INFO>
     implements DraweeController, DeferredReleaser.Releasable, GestureDetector.ClickListener {
 
   private static final Map<String, Object> SHORTCUT_EXTRAS =
-      ImmutableMap.<String, Object>of("origin", "shortcut");
+      ImmutableMap.<String, Object>of(
+          "origin", "memory_bitmap",
+          "origin_sub", "drawee");
 
   private static final Rect RECT_ZEROES = new Rect();
 
