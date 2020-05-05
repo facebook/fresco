@@ -12,7 +12,6 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.drawee.backends.pipeline.debug.DebugOverlayImageOriginColor;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
 import com.facebook.fresco.vito.core.FrescoState;
-import com.facebook.fresco.vito.core.debug.DebugOverlayFactory;
 import java.util.Locale;
 import javax.annotation.Nullable;
 

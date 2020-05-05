@@ -15,7 +15,7 @@ import com.facebook.fresco.vito.core.FrescoVitoPrefetcher;
 import com.facebook.fresco.vito.core.Hierarcher;
 import com.facebook.fresco.vito.core.ImagePipelineUtils;
 import com.facebook.fresco.vito.core.ImageStateListener;
-import com.facebook.fresco.vito.core.debug.DebugOverlayFactory;
+import com.facebook.fresco.vito.core.impl.debug.DebugOverlayFactory;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;

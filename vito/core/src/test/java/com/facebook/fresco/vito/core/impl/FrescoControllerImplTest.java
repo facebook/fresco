@@ -30,7 +30,7 @@ import com.facebook.fresco.vito.core.FrescoDrawable;
 import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.core.FrescoState;
 import com.facebook.fresco.vito.core.Hierarcher;
-import com.facebook.fresco.vito.core.debug.NoOpDebugOverlayFactory;
+import com.facebook.fresco.vito.core.impl.debug.NoOpDebugOverlayFactory;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ProducerSequenceFactory;

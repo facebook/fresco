@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.core.debug;
+package com.facebook.fresco.vito.core.impl.debug;
 
 import android.graphics.drawable.Drawable;
 import com.facebook.fresco.vito.core.FrescoState;
