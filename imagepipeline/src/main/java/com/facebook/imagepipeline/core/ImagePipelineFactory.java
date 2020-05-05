@@ -62,6 +62,8 @@ public class ImagePipelineFactory {
   private static final Class<?> TAG = ImagePipelineFactory.class;
 
   private static ImagePipelineFactory sInstance = null;
+  private static boolean sForceSinglePipelineInstance;
+  private static ImagePipeline sImagePipeline;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
 
   /** Gets the instance of {@link ImagePipelineFactory}. */
@@ -88,6 +90,19 @@ public class ImagePipelineFactory {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.endSection();
     }
+  }
+
+  /** Initializes {@link ImagePipelineFactory} with the specified config. */
+  public static synchronized void initialize(
+      ImagePipelineConfig imagePipelineConfig, boolean forceSinglePipelineInstance) {
+    if (sInstance != null) {
+      FLog.w(
+          TAG,
+          "ImagePipelineFactory has already been initialized! `ImagePipelineFactory.initialize(...)` should only be called once to avoid unexpected behavior.");
+    }
+
+    sForceSinglePipelineInstance = forceSinglePipelineInstance;
+    sInstance = new ImagePipelineFactory(imagePipelineConfig);
   }
 
   /** Initializes {@link ImagePipelineFactory} with the specified config. */
@@ -277,25 +292,35 @@ public class ImagePipelineFactory {
   }
 
   public ImagePipeline getImagePipeline() {
+    if (sForceSinglePipelineInstance) {
+      if (sImagePipeline == null) {
+        sImagePipeline = createImagePipeline();
+        mImagePipeline = sImagePipeline;
+      }
+      return sImagePipeline;
+    }
     if (mImagePipeline == null) {
-      mImagePipeline =
-          new ImagePipeline(
-              getProducerSequenceFactory(),
-              mConfig.getRequestListeners(),
-              mConfig.getRequestListener2s(),
-              mConfig.getIsPrefetchEnabledSupplier(),
-              getBitmapMemoryCache(),
-              getEncodedMemoryCache(),
-              getMainBufferedDiskCache(),
-              getSmallImageBufferedDiskCache(),
-              mConfig.getCacheKeyFactory(),
-              mThreadHandoffProducerQueue,
-              mConfig.getExperiments().getSuppressBitmapPrefetchingSupplier(),
-              mConfig.getExperiments().isLazyDataSource(),
-              mConfig.getCallerContextVerifier(),
-              mConfig);
+      mImagePipeline = createImagePipeline();
     }
     return mImagePipeline;
+  }
+
+  private ImagePipeline createImagePipeline() {
+    return new ImagePipeline(
+        getProducerSequenceFactory(),
+        mConfig.getRequestListeners(),
+        mConfig.getRequestListener2s(),
+        mConfig.getIsPrefetchEnabledSupplier(),
+        getBitmapMemoryCache(),
+        getEncodedMemoryCache(),
+        getMainBufferedDiskCache(),
+        getSmallImageBufferedDiskCache(),
+        mConfig.getCacheKeyFactory(),
+        mThreadHandoffProducerQueue,
+        mConfig.getExperiments().getSuppressBitmapPrefetchingSupplier(),
+        mConfig.getExperiments().isLazyDataSource(),
+        mConfig.getCallerContextVerifier(),
+        mConfig);
   }
 
   public PlatformBitmapFactory getPlatformBitmapFactory() {
