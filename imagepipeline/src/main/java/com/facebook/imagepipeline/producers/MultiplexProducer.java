@@ -11,6 +11,7 @@ import android.util.Pair;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Sets;
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.util.TriState;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import java.io.Closeable;
@@ -37,6 +38,9 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @ThreadSafe
 public abstract class MultiplexProducer<K, T extends Closeable> implements Producer<T> {
+
+  /* Specifies if the first of the multiplex requests of the group that the marked request belongs to is a prefetch */
+  public static final String EXTRAS_STARTED_AS_PREFETCH = "started_as_prefetch";
 
   /**
    * Map of multiplexers guarded by "this" lock. The lock should be used only to synchronize
@@ -108,7 +112,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
       } while (!multiplexer.addNewConsumer(consumer, context));
 
       if (createdNewMultiplexer) {
-        multiplexer.startInputProducerIfHasAttachedConsumers();
+        multiplexer.startInputProducerIfHasAttachedConsumers(TriState.valueOf(context.isPrefetch()));
       }
     } finally {
       if (FrescoSystrace.isTracing()) {
@@ -348,7 +352,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
      * the data. If all consumers are cancelled, then this multiplexer is removed from mRequest map
      * to clean up.
      */
-    private void startInputProducerIfHasAttachedConsumers() {
+    private void startInputProducerIfHasAttachedConsumers(TriState startedAsPrefetch) {
       BaseProducerContext multiplexProducerContext;
       ForwardingConsumer forwardingConsumer;
       synchronized (Multiplexer.this) {
@@ -373,6 +377,9 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
                 computeIsIntermediateResultExpected(),
                 computePriority(),
                 producerContext.getImagePipelineConfig());
+        if (startedAsPrefetch.isSet()) {
+          mMultiplexProducerContext.setExtra(EXTRAS_STARTED_AS_PREFETCH, startedAsPrefetch.asBoolean());
+        }
 
         mForwardingConsumer = new ForwardingConsumer();
         multiplexProducerContext = mMultiplexProducerContext;
@@ -515,7 +522,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
         mLastIntermediateResult = null;
       }
 
-      startInputProducerIfHasAttachedConsumers();
+      startInputProducerIfHasAttachedConsumers(TriState.UNSET);
     }
 
     public void onProgressUpdate(ForwardingConsumer forwardingConsumer, float progress) {
