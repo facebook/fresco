@@ -21,6 +21,7 @@ import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.core.VitoImageRequestListener;
 import com.facebook.fresco.vito.core.VitoUtils;
+import com.facebook.fresco.vito.core.impl.debug.DebugOverlayFactory2;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.CloseableImage;
 import java.util.concurrent.Executor;
@@ -37,6 +38,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   private final Executor mUiThreadExecutor;
   private final VitoImagePipeline mImagePipeline;
   private final @Nullable VitoImageRequestListener mGlobalImageListener;
+  private final DebugOverlayFactory2 mDebugOverlayFactory;
 
   public FrescoController2Impl(
       FrescoVitoConfig config,
@@ -44,13 +46,15 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       Executor lightweightBackgroundThreadExecutor,
       Executor uiThreadExecutor,
       VitoImagePipeline imagePipeline,
-      @Nullable VitoImageRequestListener globalImageListener) {
+      @Nullable VitoImageRequestListener globalImageListener,
+      DebugOverlayFactory2 debugOverlayFactory) {
     mConfig = config;
     mHierarcher = hierarcher;
     mLightweightBackgroundThreadExecutor = lightweightBackgroundThreadExecutor;
     mUiThreadExecutor = uiThreadExecutor;
     mImagePipeline = imagePipeline;
     mGlobalImageListener = globalImageListener;
+    mDebugOverlayFactory = debugOverlayFactory;
   }
 
   @Override
@@ -99,6 +103,9 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
         frescoDrawable.setImageOrigin(ImageOrigin.MEMORY_BITMAP_SHORTCUT);
         // Immediately display the actual image.
         setActualImage(frescoDrawable, imageRequest, cachedImage, true);
+
+        mDebugOverlayFactory.update(frescoDrawable);
+
         return true;
       }
     } finally {
@@ -145,6 +152,9 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       fetchRunnable.run();
     }
     frescoDrawable.setFetchSubmitted(true);
+
+    mDebugOverlayFactory.update(frescoDrawable);
+
     return false;
   }
 
@@ -184,6 +194,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             image.get(),
             actualDrawable);
     drawable.setProgressDrawable(null);
+    mDebugOverlayFactory.update(drawable);
   }
 
   @Override
@@ -223,6 +234,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             drawable.getImageRequest(),
             errorDrawable,
             dataSource.getFailureCause());
+    mDebugOverlayFactory.update(drawable);
   }
 
   @Override

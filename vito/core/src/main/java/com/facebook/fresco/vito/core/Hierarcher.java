@@ -116,7 +116,7 @@ public interface Hierarcher {
    * @param debugOverlayDrawable a debug overlay drawable if enabled
    */
   void setupDebugOverlayDrawable(
-      FrescoDrawable frescoDrawable,
+      BaseFrescoDrawable frescoDrawable,
       @Nullable Drawable overlayDrawable,
       @Nullable Drawable debugOverlayDrawable);
 }

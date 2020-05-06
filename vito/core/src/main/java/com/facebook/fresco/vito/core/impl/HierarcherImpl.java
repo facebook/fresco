@@ -211,7 +211,7 @@ public class HierarcherImpl implements Hierarcher {
 
   @Override
   public void setupDebugOverlayDrawable(
-      FrescoDrawable frescoDrawable,
+      BaseFrescoDrawable frescoDrawable,
       @Nullable Drawable overlayDrawable,
       @Nullable Drawable debugOverlayDrawable) {
     if (debugOverlayDrawable == null) {
