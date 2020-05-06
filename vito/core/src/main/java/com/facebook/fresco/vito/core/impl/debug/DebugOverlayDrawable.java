@@ -63,7 +63,6 @@ public class DebugOverlayDrawable extends Drawable {
   public void addDebugData(String key, String value, Integer color) {
     mDebugData.put(key, new Pair<>(value, color));
     mMaxLineLength = Math.max(value.length(), mMaxLineLength);
-    prepareDebugTextParameters(getBounds());
   }
 
   public void reset() {
@@ -139,9 +138,6 @@ public class DebugOverlayDrawable extends Drawable {
   }
 
   private void prepareDebugTextParameters(Rect bounds) {
-    if (mDebugData.isEmpty() || mMaxLineLength <= 0) {
-      return;
-    }
     int textSizePx = Math.min(bounds.width() / mMaxLineLength, bounds.height() / mDebugData.size());
     textSizePx = Math.min(MAX_TEXT_SIZE_PX, Math.max(MIN_TEXT_SIZE_PX, textSizePx));
     mPaint.setTextSize(textSizePx);

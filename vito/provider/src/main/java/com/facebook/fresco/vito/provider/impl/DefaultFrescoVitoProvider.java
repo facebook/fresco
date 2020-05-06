@@ -7,7 +7,6 @@
 
 package com.facebook.fresco.vito.provider.impl;
 
-import com.facebook.common.internal.Supplier;
 import com.facebook.fresco.vito.core.DefaultFrescoVitoConfig;
 import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoController2;
@@ -16,11 +15,8 @@ import com.facebook.fresco.vito.core.FrescoVitoPrefetcher;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.impl.FrescoController2Impl;
 import com.facebook.fresco.vito.core.impl.VitoImagePipelineImpl;
-import com.facebook.fresco.vito.core.impl.debug.DefaultDebugOverlayFactory2;
-import com.facebook.fresco.vito.core.impl.debug.NoOpDebugOverlayFactory2;
 import com.facebook.fresco.vito.provider.FrescoVitoProvider;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
-import javax.annotation.Nullable;
 
 public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementation {
 
@@ -30,16 +26,14 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
   private FrescoVitoConfig mFrescoVitoConfig;
 
   public DefaultFrescoVitoProvider() {
-    this(
-        DefaultFrescoContext.get(),
-        new DefaultFrescoVitoConfig(),
-        DefaultFrescoContext.getDebugOverlayEnabledSupplier());
+    this(DefaultFrescoContext.get(), new DefaultFrescoVitoConfig());
   }
 
-  public DefaultFrescoVitoProvider(
-      FrescoContext context,
-      FrescoVitoConfig config,
-      @Nullable Supplier<Boolean> debugOverlayEnabledSupplier) {
+  public DefaultFrescoVitoProvider(FrescoVitoConfig config) {
+    this(DefaultFrescoContext.get(), config);
+  }
+
+  public DefaultFrescoVitoProvider(FrescoContext context, FrescoVitoConfig config) {
     if (!ImagePipelineFactory.hasBeenInitialized()) {
       throw new RuntimeException(
           "Fresco must be initialized before DefaultFrescoVitoProvider can be used!");
@@ -55,10 +49,7 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
             context.getLightweightBackgroundThreadExecutor(),
             context.getUiThreadExecutorService(),
             mVitoImagePipeline,
-            null,
-            debugOverlayEnabledSupplier == null
-                ? new NoOpDebugOverlayFactory2()
-                : new DefaultDebugOverlayFactory2(debugOverlayEnabledSupplier));
+            null);
   }
 
   @Override

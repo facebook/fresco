@@ -67,11 +67,6 @@ public class DefaultFrescoContext {
     sDebugOverlayEnabledSupplier = debugOverlayEnabledSupplier;
   }
 
-  @Nullable
-  public static Supplier<Boolean> getDebugOverlayEnabledSupplier() {
-    return sDebugOverlayEnabledSupplier;
-  }
-
   public static synchronized boolean isInitialized() {
     return sInstance != null;
   }
