@@ -17,7 +17,6 @@ import com.facebook.drawee.drawable.ForwardingDrawable;
 import com.facebook.drawee.drawable.InstrumentedDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.fresco.vito.core.BaseFrescoDrawable;
-import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoDrawable;
 import com.facebook.fresco.vito.core.Hierarcher;
 import com.facebook.fresco.vito.core.NopDrawable;
@@ -199,15 +198,14 @@ public class HierarcherImpl implements Hierarcher {
 
   @Override
   public void setupOverlayDrawable(
-      FrescoContext frescoContext,
-      FrescoDrawable frescoDrawable,
+      BaseFrescoDrawable frescoDrawable,
       Resources resources,
       ImageOptions imageOptions,
-      @Nullable Drawable overlayDrawable) {
-    if (overlayDrawable == null) {
-      overlayDrawable = buildOverlayDrawable(resources, imageOptions);
+      @Nullable Drawable cachedOverlayDrawable) {
+    if (cachedOverlayDrawable == null) {
+      cachedOverlayDrawable = buildOverlayDrawable(resources, imageOptions);
     }
-    frescoDrawable.setOverlayDrawable(overlayDrawable);
+    frescoDrawable.setOverlayDrawable(cachedOverlayDrawable);
     frescoDrawable.showOverlayImmediately();
   }
 

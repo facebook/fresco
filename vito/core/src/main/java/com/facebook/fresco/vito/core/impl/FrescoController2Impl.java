@@ -82,8 +82,8 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     frescoDrawable.setVitoImageRequestListener(mGlobalImageListener);
 
     // Set layers that are always visible
-    frescoDrawable.setOverlayDrawable(
-        mHierarcher.buildOverlayDrawable(imageRequest.resources, imageRequest.imageOptions));
+    mHierarcher.setupOverlayDrawable(
+        frescoDrawable, imageRequest.resources, imageRequest.imageOptions, null);
 
     // We're fetching a new image, so we're updating the ID
     final long imageId = VitoUtils.generateIdentifier();

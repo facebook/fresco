@@ -97,18 +97,16 @@ public interface Hierarcher {
   /**
    * Sets up the overlay drawable for a given fresco drawable.
    *
-   * @param frescoContext the Fresco context to use
    * @param frescoDrawable the Fresco drawable to set up
    * @param resources resources to be used to load drawables
    * @param imageOptions image options to be used to create the overlay
-   * @param overlayDrawable a cached overlay drawable to be used instead of creating a new one
+   * @param cachedOverlayDrawable a cached overlay drawable to be used instead of creating a new one
    */
   void setupOverlayDrawable(
-      FrescoContext frescoContext,
-      FrescoDrawable frescoDrawable,
+      BaseFrescoDrawable frescoDrawable,
       Resources resources,
       ImageOptions imageOptions,
-      @Nullable Drawable overlayDrawable);
+      @Nullable Drawable cachedOverlayDrawable);
 
   /**
    * Sets up the debug overlay drawable for a given fresco drawable.

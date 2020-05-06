@@ -68,7 +68,7 @@ public class FrescoVitoImageSpec {
 
   @OnCreateMountContent(mountingType = MountingType.DRAWABLE)
   static FrescoDrawable onCreateMountContent(Context c) {
-    return new FrescoDrawable(true);
+    return new FrescoDrawable(false);
   }
 
   @OnCreateInitialState

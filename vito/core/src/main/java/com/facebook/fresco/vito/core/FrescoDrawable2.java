@@ -88,15 +88,6 @@ public abstract class FrescoDrawable2 extends BaseFrescoDrawable
   @Override
   public abstract void release();
 
-  public void reset() {
-    super.reset();
-  }
-
-  @Override
-  public void close() {
-    super.close();
-  }
-
   public abstract void scheduleReleaseDelayed();
 
   public abstract void cancelReleaseDelayed();
