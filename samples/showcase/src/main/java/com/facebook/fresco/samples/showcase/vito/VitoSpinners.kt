@@ -119,6 +119,13 @@ object VitoSpinners {
             }
     ), "Progress")
 
+    val overlayOptions = Pair(listOf(
+            "none" to {builder: ImageOptions.Builder -> builder.overlayRes(0)},
+            "logo" to {builder: ImageOptions.Builder -> builder.overlayRes(R.drawable.logo)},
+            "orange color res" to {builder: ImageOptions.Builder -> builder.overlayRes(R.color.overlay_color)},
+            "9-patch" to {builder: ImageOptions.Builder -> builder.overlayRes(R.drawable.ninepatch)}
+    ), "Overlay")
+
     val postprocessorOptions = Pair(listOf(
             "none" to {builder: ImageOptions.Builder -> builder.postprocess(null)},
             "Grey Scale Post-Processor(Slow)" to {builder: ImageOptions.Builder -> builder.postprocess(SlowGreyScalePostprocessor())},
