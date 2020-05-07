@@ -20,6 +20,7 @@ import com.facebook.drawee.backends.pipeline.info.ImagePerfNotifier;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfState;
 import com.facebook.drawee.backends.pipeline.info.VisibilityState;
 import com.facebook.fresco.ui.common.BaseControllerListener2;
+import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.fresco.ui.common.OnDrawControllerListener;
 import com.facebook.imagepipeline.image.ImageInfo;
@@ -100,7 +101,8 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   }
 
   @Override
-  public void onFinalImageSet(String id, ImageInfo imageInfo, Extras extraData) {
+  public void onFinalImageSet(
+      String id, ImageInfo imageInfo, ControllerListener2.Extras extraData) {
     final long now = mClock.now();
 
     mImagePerfState.setExtraData(extraData);

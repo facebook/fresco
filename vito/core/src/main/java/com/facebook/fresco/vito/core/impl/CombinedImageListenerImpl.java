@@ -9,9 +9,12 @@ package com.facebook.fresco.vito.core.impl;
 
 import android.graphics.drawable.Drawable;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
+import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
+import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.vito.core.CombinedImageListener;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.core.VitoImageRequestListener;
+import com.facebook.fresco.vito.core.VitoUtils;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.ImageInfo;
 import javax.annotation.Nullable;
@@ -20,6 +23,8 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
 
   private @Nullable VitoImageRequestListener mVitoImageRequestListener;
   private @Nullable ImageListener mImageListener;
+  private ControllerListener2<ImageInfo> mControllerListener2 =
+      ImagePerfControllerListener2.getNoOpListener();
 
   @Override
   public void setImageListener(@Nullable ImageListener imageListener) {
@@ -33,6 +38,11 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
   }
 
   @Override
+  public void setControllerListener2(ControllerListener2<ImageInfo> controllerListener2) {
+    mControllerListener2 = controllerListener2;
+  }
+
+  @Override
   public void onSubmit(long id, VitoImageRequest imageRequest, @Nullable Object callerContext) {
     if (mVitoImageRequestListener != null) {
       mVitoImageRequestListener.onSubmit(id, imageRequest, callerContext);
@@ -40,6 +50,7 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
     if (mImageListener != null) {
       mImageListener.onSubmit(id, callerContext);
     }
+    mControllerListener2.onSubmit(VitoUtils.getStringId(id), callerContext);
   }
 
   @Override
@@ -59,13 +70,16 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
       VitoImageRequest imageRequest,
       @ImageOrigin int imageOrigin,
       @Nullable ImageInfo imageInfo,
+      @Nullable ControllerListener2.Extras extras,
       @Nullable Drawable drawable) {
     if (mVitoImageRequestListener != null) {
-      mVitoImageRequestListener.onFinalImageSet(id, imageRequest, imageOrigin, imageInfo, drawable);
+      mVitoImageRequestListener.onFinalImageSet(
+          id, imageRequest, imageOrigin, imageInfo, extras, drawable);
     }
     if (mImageListener != null) {
       mImageListener.onFinalImageSet(id, imageOrigin, imageInfo, drawable);
     }
+    mControllerListener2.onFinalImageSet(VitoUtils.getStringId(id), imageInfo, extras);
   }
 
   @Override
@@ -77,6 +91,7 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
     if (mImageListener != null) {
       mImageListener.onIntermediateImageSet(id, imageInfo);
     }
+    mControllerListener2.onIntermediateImageSet(VitoUtils.getStringId(id), imageInfo);
   }
 
   @Override
@@ -88,6 +103,7 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
     if (mImageListener != null) {
       mImageListener.onIntermediateImageFailed(id, throwable);
     }
+    mControllerListener2.onIntermediateImageFailed(VitoUtils.getStringId(id));
   }
 
   @Override
@@ -102,6 +118,7 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
     if (mImageListener != null) {
       mImageListener.onFailure(id, error, throwable);
     }
+    mControllerListener2.onFailure(VitoUtils.getStringId(id), throwable);
   }
 
   @Override
@@ -112,5 +129,6 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
     if (mImageListener != null) {
       mImageListener.onRelease(id);
     }
+    mControllerListener2.onRelease(VitoUtils.getStringId(id));
   }
 }

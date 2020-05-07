@@ -23,6 +23,7 @@ dependencies {
     implementation project(':memory-types:nativememory')
     implementation project(':memory-types:simple')
     implementation project(':ui-common')
+    implementation project(':middleware')
 
     testImplementation Deps.jsr305
     testImplementation "junit:junit:${JUNIT_VERSION}"

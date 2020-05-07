@@ -83,6 +83,7 @@ public class DefaultFrescoContext {
         Fresco.getImagePipeline().getConfig().getExecutorSupplier().forLightweightBackgroundTasks(),
         null,
         null,
+        null,
         sDebugOverlayEnabledSupplier == null
             ? new NoOpDebugOverlayFactory()
             : new DefaultDebugOverlayFactory(sDebugOverlayEnabledSupplier));

@@ -29,12 +29,13 @@ import com.facebook.drawee.gestures.GestureDetector;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
+import com.facebook.fresco.middleware.MiddlewareUtils;
 import com.facebook.fresco.ui.common.BaseControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2;
+import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.ui.common.LoggingListener;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.ReturnsOwnership;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
@@ -53,12 +54,12 @@ import javax.annotation.concurrent.NotThreadSafe;
 public abstract class AbstractDraweeController<T, INFO>
     implements DraweeController, DeferredReleaser.Releasable, GestureDetector.ClickListener {
 
+  private static final Map<String, Object> COMPONENT_EXTRAS =
+      ImmutableMap.<String, Object>of("component_tag", "drawee");
   private static final Map<String, Object> SHORTCUT_EXTRAS =
       ImmutableMap.<String, Object>of(
           "origin", "memory_bitmap",
-          "origin_sub", "drawee");
-
-  private static final Rect RECT_ZEROES = new Rect();
+          "origin_sub", "shortcut");
 
   /**
    * This class is used to allow an optimization of not creating a ForwardingControllerListener when
@@ -814,31 +815,14 @@ public abstract class AbstractDraweeController<T, INFO>
     getControllerListener2().onRelease(mId);
   }
 
-  private ControllerListener2.Extras obtainExtras(@Nullable DataSource<T> dataSource) {
-    ControllerListener2.Extras extras = new ControllerListener2.Extras();
-    if (dataSource != null) {
-      extras.pipe = dataSource.getExtras();
-    }
-
-    extras.view = new HashMap<>(2);
-    addDimensions(extras.view);
-
-    if (dataSource == null) {
-      extras.view.putAll(SHORTCUT_EXTRAS);
-    }
-
-    return extras;
+  private Extras obtainExtras(@Nullable DataSource<T> dataSource) {
+    return MiddlewareUtils.obtainExtras(
+        COMPONENT_EXTRAS, SHORTCUT_EXTRAS, dataSource, getDimensions());
   }
 
-  private void addDimensions(Map<String, Object> extras) {
-    Rect r = getDimensions();
-    extras.put("viewport_width", r != null ? r.width() : -1);
-    extras.put("viewport_height", r != null ? r.height() : -1);
-  }
-
-  private Rect getDimensions() {
+  private @Nullable Rect getDimensions() {
     if (mSettableDraweeHierarchy == null) {
-      return RECT_ZEROES;
+      return null;
     }
     return mSettableDraweeHierarchy.getBounds();
   }

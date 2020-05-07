@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.core;
 
 import android.graphics.drawable.Drawable;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
+import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.imagepipeline.image.ImageInfo;
 import javax.annotation.Nullable;
 
@@ -44,6 +45,7 @@ public interface VitoImageRequestListener {
       VitoImageRequest imageRequest,
       @ImageOrigin int imageOrigin,
       @Nullable ImageInfo imageInfo,
+      @Nullable ControllerListener2.Extras extras,
       @Nullable Drawable drawable);
 
   /**

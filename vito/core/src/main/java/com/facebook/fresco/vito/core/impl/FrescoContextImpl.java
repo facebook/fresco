@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.core.impl;
 
 import com.facebook.callercontext.CallerContextVerifier;
+import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
 import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoController;
 import com.facebook.fresco.vito.core.FrescoExperiments;
@@ -68,8 +69,10 @@ public class FrescoContextImpl implements FrescoContext {
       Executor lightweightBackgroundThreadExecutor,
       @Nullable ImageListener globalImageListener,
       @Nullable ImageStateListener globalImageStateListener,
+      @Nullable ImagePerfControllerListener2 imagePerfControllerListener2,
       DebugOverlayFactory debugOverlayFactory) {
-    mController = new FrescoControllerImpl(this, debugOverlayFactory, false);
+    mController =
+        new FrescoControllerImpl(this, debugOverlayFactory, false, imagePerfControllerListener2);
     mHierarcher = hierarcher;
     mCallerContextVerifier = callerContextVerifier;
     mExperiments = frescoExperiments;

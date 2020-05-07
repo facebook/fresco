@@ -10,8 +10,9 @@ public class BaseControllerListener2<INFO> implements ControllerListener2<INFO> 
 
   private static final ControllerListener2 NO_OP_LISTENER = new BaseControllerListener2();
 
-  public static ControllerListener2 getNoOpListener() {
-    return NO_OP_LISTENER;
+  public static <I> ControllerListener2<I> getNoOpListener() {
+    //noinspection unchecked
+    return (ControllerListener2<I>) NO_OP_LISTENER;
   }
 
   @Override

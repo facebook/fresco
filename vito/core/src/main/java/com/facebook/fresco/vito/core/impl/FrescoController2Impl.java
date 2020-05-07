@@ -8,10 +8,13 @@
 package com.facebook.fresco.vito.core.impl;
 
 import android.graphics.drawable.Drawable;
+import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSources;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
+import com.facebook.fresco.middleware.MiddlewareUtils;
+import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.vito.core.DrawableDataSubscriber;
 import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
@@ -23,6 +26,7 @@ import com.facebook.fresco.vito.core.VitoImageRequestListener;
 import com.facebook.fresco.vito.core.VitoUtils;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.CloseableImage;
+import java.util.Map;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 
@@ -30,6 +34,10 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
 
   private static final NullPointerException NO_REQUEST_EXCEPTION =
       new NullPointerException("No image request was specified!");
+  private static final Map<String, Object> COMPONENT_EXTRAS =
+      ImmutableMap.<String, Object>of("component_tag", "vito2");
+  private static final Map<String, Object> SHORTCUT_EXTRAS =
+      ImmutableMap.<String, Object>of("origin", "memory_bitmap", "origin_sub", "shortcut");
 
   private final FrescoVitoConfig mConfig;
   private final Hierarcher mHierarcher;
@@ -98,7 +106,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       if (CloseableReference.isValid(cachedImage)) {
         frescoDrawable.setImageOrigin(ImageOrigin.MEMORY_BITMAP_SHORTCUT);
         // Immediately display the actual image.
-        setActualImage(frescoDrawable, imageRequest, cachedImage, true);
+        setActualImage(frescoDrawable, imageRequest, cachedImage, true, null);
         return true;
       }
     } finally {
@@ -163,7 +171,8 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       FrescoDrawable2 drawable,
       VitoImageRequest imageRequest,
       CloseableReference<CloseableImage> image,
-      boolean isImmediate) {
+      boolean isImmediate,
+      @Nullable DataSource<CloseableReference<CloseableImage>> dataSource) {
     mHierarcher.setupActualImageWrapper(
         drawable.getActualImageWrapper(), imageRequest.imageOptions);
     Drawable actualDrawable =
@@ -182,6 +191,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             drawable.getImageRequest(),
             drawable.getImageOrigin(),
             image.get(),
+            obtainExtras(dataSource),
             actualDrawable);
     drawable.setProgressDrawable(null);
   }
@@ -200,7 +210,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       if (!CloseableReference.isValid(image)) {
         onFailure(drawable, imageRequest, dataSource);
       } else {
-        setActualImage(drawable, imageRequest, image, false);
+        setActualImage(drawable, imageRequest, image, false, dataSource);
       }
     } finally {
       CloseableReference.closeSafely(image);
@@ -231,5 +241,10 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       VitoImageRequest imageRequest,
       DataSource<CloseableReference<CloseableImage>> dataSource) {
     // TODO: implement
+  }
+
+  private static Extras obtainExtras(
+      @Nullable DataSource<CloseableReference<CloseableImage>> dataSource) {
+    return MiddlewareUtils.obtainExtras(COMPONENT_EXTRAS, SHORTCUT_EXTRAS, dataSource, null);
   }
 }
