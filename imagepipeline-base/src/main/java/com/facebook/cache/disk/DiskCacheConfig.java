@@ -38,7 +38,20 @@ public class DiskCacheConfig {
   private final Context mContext;
   private final boolean mIndexPopulateAtStartupEnabled;
 
-  private DiskCacheConfig(Builder builder) {
+  protected DiskCacheConfig(Builder builder) {
+    mContext = builder.mContext;
+    Preconditions.checkState(
+        builder.mBaseDirectoryPathSupplier != null || mContext != null,
+        "Either a non-null context or a base directory path or supplier must be provided.");
+    if (builder.mBaseDirectoryPathSupplier == null && mContext != null) {
+      builder.mBaseDirectoryPathSupplier =
+          new Supplier<File>() {
+            @Override
+            public File get() {
+              return mContext.getApplicationContext().getCacheDir();
+            }
+          };
+    }
     mVersion = builder.mVersion;
     mBaseDirectoryName = Preconditions.checkNotNull(builder.mBaseDirectoryName);
     mBaseDirectoryPathSupplier = Preconditions.checkNotNull(builder.mBaseDirectoryPathSupplier);
@@ -59,7 +72,6 @@ public class DiskCacheConfig {
         builder.mDiskTrimmableRegistry == null
             ? NoOpDiskTrimmableRegistry.getInstance()
             : builder.mDiskTrimmableRegistry;
-    mContext = builder.mContext;
     mIndexPopulateAtStartupEnabled = builder.mIndexPopulateAtStartupEnabled;
   }
 
@@ -237,18 +249,6 @@ public class DiskCacheConfig {
     }
 
     public DiskCacheConfig build() {
-      Preconditions.checkState(
-          mBaseDirectoryPathSupplier != null || mContext != null,
-          "Either a non-null context or a base directory path or supplier must be provided.");
-      if (mBaseDirectoryPathSupplier == null && mContext != null) {
-        mBaseDirectoryPathSupplier =
-            new Supplier<File>() {
-              @Override
-              public File get() {
-                return mContext.getApplicationContext().getCacheDir();
-              }
-            };
-      }
       return new DiskCacheConfig(this);
     }
   }
