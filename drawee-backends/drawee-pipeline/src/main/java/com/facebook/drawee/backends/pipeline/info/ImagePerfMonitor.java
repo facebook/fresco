@@ -26,7 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.Nullable;
 
-public class ImagePerfMonitor {
+public class ImagePerfMonitor implements ImagePerfNotifier {
 
   private final PipelineDraweeController mPipelineDraweeController;
   private final MonotonicClock mMonotonicClock;
@@ -115,6 +115,7 @@ public class ImagePerfMonitor {
     }
   }
 
+  @Override
   public void notifyStatusUpdated(ImagePerfState state, @ImageLoadStatus int imageLoadStatus) {
     state.setImageLoadStatus(imageLoadStatus);
     if (!mEnabled || mImagePerfDataListeners == null || mImagePerfDataListeners.isEmpty()) {
@@ -129,6 +130,7 @@ public class ImagePerfMonitor {
     }
   }
 
+  @Override
   public void notifyListenersOfVisibilityStateUpdate(
       ImagePerfState state, @VisibilityState int visibilityState) {
     if (!mEnabled || mImagePerfDataListeners == null || mImagePerfDataListeners.isEmpty()) {

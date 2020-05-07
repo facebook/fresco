@@ -16,7 +16,7 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawee.backends.pipeline.info.ImageLoadStatus;
-import com.facebook.drawee.backends.pipeline.info.ImagePerfMonitor;
+import com.facebook.drawee.backends.pipeline.info.ImagePerfNotifier;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfState;
 import com.facebook.drawee.backends.pipeline.info.VisibilityState;
 import com.facebook.fresco.ui.common.BaseControllerListener2;
@@ -35,28 +35,28 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
 
   private final MonotonicClock mClock;
   private final ImagePerfState mImagePerfState;
-  private final ImagePerfMonitor mImagePerfMonitor;
+  private final ImagePerfNotifier mImagePerfNotifier;
   private final Supplier<Boolean> mAsyncLogging;
 
   private @Nullable Handler mHandler;
 
   static class LogHandler extends Handler {
 
-    private final ImagePerfMonitor mMonitor;
+    private final ImagePerfNotifier mNotifier;
 
-    public LogHandler(@NonNull Looper looper, @NonNull ImagePerfMonitor monitor) {
+    public LogHandler(@NonNull Looper looper, @NonNull ImagePerfNotifier notifier) {
       super(looper);
-      mMonitor = monitor;
+      mNotifier = notifier;
     }
 
     @Override
     public void handleMessage(@NonNull Message msg) {
       switch (msg.what) {
         case WHAT_STATUS:
-          mMonitor.notifyStatusUpdated((ImagePerfState) msg.obj, msg.arg1);
+          mNotifier.notifyStatusUpdated((ImagePerfState) msg.obj, msg.arg1);
           break;
         case WHAT_VISIBILITY:
-          mMonitor.notifyListenersOfVisibilityStateUpdate((ImagePerfState) msg.obj, msg.arg1);
+          mNotifier.notifyListenersOfVisibilityStateUpdate((ImagePerfState) msg.obj, msg.arg1);
           break;
       }
     }
@@ -65,11 +65,11 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   public ImagePerfControllerListener2(
       MonotonicClock clock,
       ImagePerfState imagePerfState,
-      ImagePerfMonitor imagePerfMonitor,
+      ImagePerfNotifier imagePerfNotifier,
       Supplier<Boolean> asyncLogging) {
     mClock = clock;
     mImagePerfState = imagePerfState;
-    mImagePerfMonitor = imagePerfMonitor;
+    mImagePerfNotifier = imagePerfNotifier;
 
     mAsyncLogging = asyncLogging;
   }
@@ -174,7 +174,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
       msg.obj = mImagePerfState;
       mHandler.sendMessage(msg);
     } else {
-      mImagePerfMonitor.notifyStatusUpdated(mImagePerfState, imageLoadStatus);
+      mImagePerfNotifier.notifyStatusUpdated(mImagePerfState, imageLoadStatus);
     }
   }
 
@@ -187,7 +187,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
       mHandler.sendMessage(msg);
     } else {
       // sync
-      mImagePerfMonitor.notifyListenersOfVisibilityStateUpdate(mImagePerfState, visibilityState);
+      mImagePerfNotifier.notifyListenersOfVisibilityStateUpdate(mImagePerfState, visibilityState);
     }
   }
 
@@ -197,7 +197,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     }
     HandlerThread handlerThread = new HandlerThread("ImagePerfControllerListener2Thread");
     handlerThread.start();
-    mHandler = new LogHandler(handlerThread.getLooper(), mImagePerfMonitor);
+    mHandler = new LogHandler(handlerThread.getLooper(), mImagePerfNotifier);
   }
 
   private boolean shouldDispatchAsync() {
