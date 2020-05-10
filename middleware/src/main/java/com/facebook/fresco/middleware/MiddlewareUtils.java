@@ -13,7 +13,8 @@ public class MiddlewareUtils {
       Map<String, Object> componentAttribution,
       Map<String, Object> shortcutAttribution,
       @Nullable DataSource<?> dataSource,
-      @Nullable Rect viewportDimensions) {
+      @Nullable Rect viewportDimensions,
+      @Nullable Map<String, Object> imageExtras) {
     final Extras extras = new Extras();
     extras.view = new HashMap<>();
 
@@ -30,6 +31,7 @@ public class MiddlewareUtils {
     if (dataSource != null) {
       extras.pipe = dataSource.getExtras();
     } else {
+      extras.pipe = imageExtras;
       extras.view.putAll(shortcutAttribution);
     }
 

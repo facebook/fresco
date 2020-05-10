@@ -191,7 +191,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             drawable.getImageRequest(),
             drawable.getImageOrigin(),
             image.get(),
-            obtainExtras(dataSource),
+            obtainExtras(dataSource, image),
             actualDrawable);
     drawable.setProgressDrawable(null);
   }
@@ -244,7 +244,13 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   }
 
   private static Extras obtainExtras(
-      @Nullable DataSource<CloseableReference<CloseableImage>> dataSource) {
-    return MiddlewareUtils.obtainExtras(COMPONENT_EXTRAS, SHORTCUT_EXTRAS, dataSource, null);
+      @Nullable DataSource<CloseableReference<CloseableImage>> dataSource,
+      CloseableReference<CloseableImage> image) {
+    Map<String, Object> imageExtras = null;
+    if (image != null && image.get() != null) {
+      imageExtras = image.get().getAsExtras();
+    }
+    return MiddlewareUtils.obtainExtras(
+        COMPONENT_EXTRAS, SHORTCUT_EXTRAS, dataSource, null, imageExtras);
   }
 }

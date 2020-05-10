@@ -801,8 +801,9 @@ public abstract class AbstractDraweeController<T, INFO>
   }
 
   private void reportSuccess(String id, @Nullable T image, @Nullable DataSource<T> dataSource) {
-    getControllerListener().onFinalImageSet(id, getImageInfo(image), getAnimatable());
-    getControllerListener2().onFinalImageSet(id, getImageInfo(image), obtainExtras(dataSource));
+    INFO info = getImageInfo(image);
+    getControllerListener().onFinalImageSet(id, info, getAnimatable());
+    getControllerListener2().onFinalImageSet(id, info, obtainExtras(dataSource, info));
   }
 
   private void reportFailure(Throwable throwable) {
@@ -815,9 +816,13 @@ public abstract class AbstractDraweeController<T, INFO>
     getControllerListener2().onRelease(mId);
   }
 
-  private Extras obtainExtras(@Nullable DataSource<T> dataSource) {
+  private Extras obtainExtras(@Nullable DataSource<T> dataSource, INFO info) {
     return MiddlewareUtils.obtainExtras(
-        COMPONENT_EXTRAS, SHORTCUT_EXTRAS, dataSource, getDimensions());
+        COMPONENT_EXTRAS,
+        SHORTCUT_EXTRAS,
+        dataSource,
+        getDimensions(),
+        obtainExtrasFromImage(info));
   }
 
   private @Nullable Rect getDimensions() {
@@ -826,4 +831,6 @@ public abstract class AbstractDraweeController<T, INFO>
     }
     return mSettableDraweeHierarchy.getBounds();
   }
+
+  public abstract @Nullable Map<String, Object> obtainExtrasFromImage(INFO info);
 }

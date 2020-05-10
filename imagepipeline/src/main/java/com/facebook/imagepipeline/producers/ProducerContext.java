@@ -7,7 +7,6 @@
 
 package com.facebook.imagepipeline.producers;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
@@ -94,7 +93,7 @@ public interface ProducerContext {
 
   <E> void setExtra(@ExtraKeys String key, @Nullable E value);
 
-  void putExtras(@NonNull Map<String, ?> extras);
+  void putExtras(@Nullable Map<String, ?> extras);
 
   @Nullable
   <E> E getExtra(String key);

@@ -48,6 +48,7 @@ import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
@@ -444,5 +445,10 @@ public class PipelineDraweeController
         .add("super", super.toString())
         .add("dataSourceSupplier", mDataSourceSupplier)
         .toString();
+  }
+
+  @Override
+  public @Nullable Map<String, Object> obtainExtrasFromImage(ImageInfo info) {
+    return info.getAsExtras();
   }
 }

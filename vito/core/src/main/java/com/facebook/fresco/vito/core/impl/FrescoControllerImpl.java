@@ -644,7 +644,9 @@ public class FrescoControllerImpl implements FrescoController {
 
       if (mControllerListener2 != null) {
         mControllerListener2.onFinalImageSet(
-            VitoUtils.getStringId(frescoState.getId()), closeableImage, obtainExtras(dataSource));
+            VitoUtils.getStringId(frescoState.getId()),
+            closeableImage,
+            obtainExtras(dataSource, closeableImage));
       }
       frescoState.onFinalImageSet(
           frescoState.getId(), frescoState.getImageOrigin(), closeableImage, actualDrawable);
@@ -732,7 +734,9 @@ public class FrescoControllerImpl implements FrescoController {
   }
 
   private static Extras obtainExtras(
-      @Nullable DataSource<CloseableReference<CloseableImage>> dataSource) {
-    return MiddlewareUtils.obtainExtras(COMPONENT_EXTRAS, SHORTCUT_EXTRAS, dataSource, null);
+      @Nullable DataSource<CloseableReference<CloseableImage>> dataSource,
+      CloseableImage closeableImage) {
+    return MiddlewareUtils.obtainExtras(
+        COMPONENT_EXTRAS, SHORTCUT_EXTRAS, dataSource, null, closeableImage.getAsExtras());
   }
 }

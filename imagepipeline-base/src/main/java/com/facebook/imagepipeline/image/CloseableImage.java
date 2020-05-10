@@ -9,6 +9,10 @@ package com.facebook.imagepipeline.image;
 
 import com.facebook.common.logging.FLog;
 import java.io.Closeable;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import javax.annotation.Nonnull;
 
 /** A simple wrapper around an image that implements {@link Closeable} */
 public abstract class CloseableImage implements Closeable, ImageInfo, HasImageMetadata {
@@ -46,6 +50,19 @@ public abstract class CloseableImage implements Closeable, ImageInfo, HasImageMe
 
   public OriginalEncodedImageInfo getOriginalEncodedImageInfo() {
     return mOriginalEncodedImageInfo;
+  }
+
+  @Override
+  public @Nonnull Map<String, Object> getAsExtras() {
+    if (mOriginalEncodedImageInfo == null) {
+      return Collections.emptyMap();
+    }
+
+    HashMap<String, Object> extras = new HashMap<>();
+    extras.put("encoded_width", mOriginalEncodedImageInfo.getWidth());
+    extras.put("encoded_height", mOriginalEncodedImageInfo.getHeight());
+    extras.put("encoded_size", mOriginalEncodedImageInfo.getSize());
+    return extras;
   }
 
   public void setOriginalEncodedImageInfo(OriginalEncodedImageInfo originalEncodedImageInfo) {

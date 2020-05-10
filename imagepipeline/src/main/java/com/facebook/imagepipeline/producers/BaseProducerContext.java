@@ -7,7 +7,6 @@
 
 package com.facebook.imagepipeline.producers;
 
-import androidx.annotation.NonNull;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.EncodedImageOrigin;
@@ -314,8 +313,10 @@ public class BaseProducerContext implements ProducerContext {
   }
 
   @Override
-  public void putExtras(@NonNull Map<String, ?> extras) {
-    mExtras.putAll(extras);
+  public void putExtras(@Nullable Map<String, ?> extras) {
+    if (extras != null) {
+      mExtras.putAll(extras);
+    }
   }
 
   @Nullable
