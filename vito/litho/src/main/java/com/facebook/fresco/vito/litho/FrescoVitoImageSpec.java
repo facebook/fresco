@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.litho;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -32,6 +33,7 @@ import com.facebook.litho.Diff;
 import com.facebook.litho.Output;
 import com.facebook.litho.Size;
 import com.facebook.litho.StateValue;
+import com.facebook.litho.annotations.FromBoundsDefined;
 import com.facebook.litho.annotations.FromPrepare;
 import com.facebook.litho.annotations.MountSpec;
 import com.facebook.litho.annotations.MountingType;
@@ -138,7 +140,8 @@ public class FrescoVitoImageSpec {
       final FrescoDrawable frescoDrawable,
       @Prop(optional = true) final @Nullable FrescoContext frescoContext,
       @Prop(optional = true) final @Nullable ImageListener imageListener,
-      @FromPrepare final FrescoState frescoState) {
+      @FromPrepare final FrescoState frescoState,
+      @FromBoundsDefined Rect viewportDimensions) {
     FrescoContext actualFrescoContext = resolveContext(context, frescoContext);
     if (actualFrescoContext.getExperiments().delayedReleaseInUnbind()) {
       cancelDetachRunnable(frescoState);
@@ -172,7 +175,8 @@ public class FrescoVitoImageSpec {
       final FrescoDrawable frescoDrawable,
       @Prop(optional = true) final @Nullable FrescoContext frescoContext,
       @Prop(optional = true) final @Nullable ImageListener imageListener,
-      @FromPrepare final FrescoState frescoState) {
+      @FromPrepare final FrescoState frescoState,
+      @FromBoundsDefined Rect viewportDimensions) {
     FrescoContext actualFrescoContext = resolveContext(context, frescoContext);
     if (actualFrescoContext.getExperiments().delayedReleaseInUnbind()) {
       cancelDetachRunnable(frescoState);
@@ -220,13 +224,6 @@ public class FrescoVitoImageSpec {
     if (actualFrescoContext.getExperiments().releaseInDetach()) {
       actualFrescoContext.getController().onDetach(frescoState);
     }
-  }
-
-  @OnBoundsDefined
-  static void onBoundDefined(
-      ComponentContext c, ComponentLayout layout, @FromPrepare final FrescoState frescoState) {
-    frescoState.setTargetWidthPx(layout.getWidth());
-    frescoState.setTargetHeightPx(layout.getHeight());
   }
 
   @ShouldUpdate(onMount = true)
@@ -294,6 +291,28 @@ public class FrescoVitoImageSpec {
     Runnable runnable = state.removeDetachRunnable();
     if (runnable != null) {
       sHandler.removeCallbacks(runnable);
+    }
+  }
+
+  @OnBoundsDefined
+  static void onBoundsDefined(
+      ComponentContext c,
+      ComponentLayout layout,
+      Output<Rect> viewportDimensions,
+      @FromPrepare final FrescoState frescoState) {
+    final int width = layout.getWidth();
+    final int height = layout.getHeight();
+    int paddingX = 0, paddingY = 0;
+    if (layout.isPaddingSet()) {
+      paddingX = layout.getPaddingLeft() + layout.getPaddingRight();
+      paddingY = layout.getPaddingTop() + layout.getPaddingBottom();
+    }
+
+    viewportDimensions.set(new Rect(0, 0, width - paddingX, height - paddingY));
+
+    if (frescoState != null) {
+      frescoState.setTargetWidthPx(width);
+      frescoState.setTargetHeightPx(height);
     }
   }
 }

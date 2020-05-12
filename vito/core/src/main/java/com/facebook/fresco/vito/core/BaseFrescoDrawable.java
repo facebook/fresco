@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.core;
 
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -28,6 +29,8 @@ public class BaseFrescoDrawable extends FadeDrawable implements Closeable {
   private static final int IMAGE_DRAWABLE_INDEX = 1;
   private static final int PROGRESS_DRAWABLE_INDEX = 2;
   private static final int OVERLAY_DRAWABLE_INDEX = 3;
+
+  private @Nullable Rect mViewportDimensions;
 
   private @Nullable VisibilityCallback mVisibilityCallback;
 
@@ -104,5 +107,14 @@ public class BaseFrescoDrawable extends FadeDrawable implements Closeable {
 
   public Drawable getOverlayDrawable() {
     return getDrawable(OVERLAY_DRAWABLE_INDEX);
+  }
+
+  @Nullable
+  public Rect getViewportDimensions() {
+    return mViewportDimensions;
+  }
+
+  public void setViewportDimensions(@Nullable Rect viewportDimensions) {
+    mViewportDimensions = viewportDimensions;
   }
 }

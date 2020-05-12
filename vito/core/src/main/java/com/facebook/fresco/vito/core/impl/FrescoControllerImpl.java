@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.core.impl;
 
 import android.content.res.Resources;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import androidx.core.util.ObjectsCompat;
@@ -646,7 +647,10 @@ public class FrescoControllerImpl implements FrescoController {
         mControllerListener2.onFinalImageSet(
             VitoUtils.getStringId(frescoState.getId()),
             closeableImage,
-            obtainExtras(dataSource, closeableImage));
+            obtainExtras(
+                dataSource,
+                closeableImage,
+                frescoState.getFrescoDrawable().getViewportDimensions()));
       }
       frescoState.onFinalImageSet(
           frescoState.getId(), frescoState.getImageOrigin(), closeableImage, actualDrawable);
@@ -735,8 +739,13 @@ public class FrescoControllerImpl implements FrescoController {
 
   private static Extras obtainExtras(
       @Nullable DataSource<CloseableReference<CloseableImage>> dataSource,
-      CloseableImage closeableImage) {
+      CloseableImage closeableImage,
+      @Nullable Rect viewportDimensions) {
     return MiddlewareUtils.obtainExtras(
-        COMPONENT_EXTRAS, SHORTCUT_EXTRAS, dataSource, null, closeableImage.getAsExtras());
+        COMPONENT_EXTRAS,
+        SHORTCUT_EXTRAS,
+        dataSource,
+        viewportDimensions,
+        closeableImage.getAsExtras());
   }
 }

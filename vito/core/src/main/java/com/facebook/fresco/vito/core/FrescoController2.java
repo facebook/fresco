@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.core;
 
+import android.graphics.Rect;
 import com.facebook.fresco.vito.listener.ImageListener;
 import javax.annotation.Nullable;
 
@@ -18,7 +19,8 @@ public interface FrescoController2 {
       FrescoDrawable2 frescoDrawable,
       VitoImageRequest imageRequest,
       @Nullable Object callerContext,
-      @Nullable ImageListener listener);
+      @Nullable ImageListener listener,
+      @Nullable Rect viewportDimensions);
 
   void releaseDelayed(FrescoDrawable2 drawable);
 

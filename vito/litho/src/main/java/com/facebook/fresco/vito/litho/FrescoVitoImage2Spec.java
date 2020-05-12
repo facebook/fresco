@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.litho;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.view.View;
 import androidx.core.util.ObjectsCompat;
@@ -27,10 +28,12 @@ import com.facebook.litho.Diff;
 import com.facebook.litho.Output;
 import com.facebook.litho.Size;
 import com.facebook.litho.annotations.CachedValue;
+import com.facebook.litho.annotations.FromBoundsDefined;
 import com.facebook.litho.annotations.FromPrepare;
 import com.facebook.litho.annotations.MountSpec;
 import com.facebook.litho.annotations.MountingType;
 import com.facebook.litho.annotations.OnBind;
+import com.facebook.litho.annotations.OnBoundsDefined;
 import com.facebook.litho.annotations.OnCalculateCachedValue;
 import com.facebook.litho.annotations.OnCreateMountContent;
 import com.facebook.litho.annotations.OnMeasure;
@@ -100,9 +103,10 @@ public class FrescoVitoImage2Spec {
       @Prop(optional = true) final @Nullable Object callerContext,
       @Prop(optional = true) final @Nullable ImageListener imageListener,
       @CachedValue VitoImageRequest imageRequest,
-      @FromPrepare DataSource<Void> prefetchDataSource) {
+      @FromPrepare DataSource<Void> prefetchDataSource,
+      @FromBoundsDefined Rect viewportDimensions) {
     FrescoVitoProvider.getController()
-        .fetch(frescoDrawable, imageRequest, callerContext, imageListener);
+        .fetch(frescoDrawable, imageRequest, callerContext, imageListener, viewportDimensions);
     if (prefetchDataSource != null) {
       prefetchDataSource.close();
     }
@@ -115,11 +119,12 @@ public class FrescoVitoImage2Spec {
       @Prop(optional = true) final @Nullable Object callerContext,
       @Prop(optional = true) final @Nullable ImageListener imageListener,
       @CachedValue VitoImageRequest imageRequest,
-      @FromPrepare DataSource<Void> prefetchDataSource) {
+      @FromPrepare DataSource<Void> prefetchDataSource,
+      @FromBoundsDefined Rect viewportDimensions) {
     // We fetch in both mount and bind in case an unbind event triggered a delayed release.
     // We'll only trigger an actual fetch if needed. Most of the time, this will be a no-op.
     FrescoVitoProvider.getController()
-        .fetch(frescoDrawable, imageRequest, callerContext, imageListener);
+        .fetch(frescoDrawable, imageRequest, callerContext, imageListener, viewportDimensions);
     if (prefetchDataSource != null) {
       prefetchDataSource.close();
     }
@@ -164,5 +169,19 @@ public class FrescoVitoImage2Spec {
   @OnPopulateAccessibilityNode
   static void onPopulateAccessibilityNode(View host, AccessibilityNodeInfoCompat node) {
     node.setClassName(AccessibilityRole.IMAGE);
+  }
+
+  @OnBoundsDefined
+  static void onBoundsDefined(
+      ComponentContext c, ComponentLayout layout, Output<Rect> viewportDimensions) {
+    final int width = layout.getWidth();
+    final int height = layout.getHeight();
+    int paddingX = 0, paddingY = 0;
+    if (layout.isPaddingSet()) {
+      paddingX = layout.getPaddingLeft() + layout.getPaddingRight();
+      paddingY = layout.getPaddingTop() + layout.getPaddingBottom();
+    }
+
+    viewportDimensions.set(new Rect(0, 0, width - paddingX, height - paddingY));
   }
 }

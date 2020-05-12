@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.core.impl;
 
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.references.CloseableReference;
@@ -71,7 +72,11 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       final FrescoDrawable2 frescoDrawable,
       final VitoImageRequest imageRequest,
       final @Nullable Object callerContext,
-      final @Nullable ImageListener listener) {
+      final @Nullable ImageListener listener,
+      final @Nullable Rect viewportDimensions) {
+    // Save viewport dimension for future use
+    frescoDrawable.setViewportDimensions(viewportDimensions);
+
     // Check if we already fetched the image
     if (frescoDrawable.getDrawableDataSubscriber() == this
         && frescoDrawable.isFetchSubmitted()
@@ -191,7 +196,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             drawable.getImageRequest(),
             drawable.getImageOrigin(),
             image.get(),
-            obtainExtras(dataSource, image),
+            obtainExtras(dataSource, image, drawable.getViewportDimensions()),
             actualDrawable);
     drawable.setProgressDrawable(null);
   }
@@ -245,12 +250,13 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
 
   private static Extras obtainExtras(
       @Nullable DataSource<CloseableReference<CloseableImage>> dataSource,
-      CloseableReference<CloseableImage> image) {
+      CloseableReference<CloseableImage> image,
+      @Nullable Rect viewportDimensions) {
     Map<String, Object> imageExtras = null;
     if (image != null && image.get() != null) {
       imageExtras = image.get().getAsExtras();
     }
     return MiddlewareUtils.obtainExtras(
-        COMPONENT_EXTRAS, SHORTCUT_EXTRAS, dataSource, null, imageExtras);
+        COMPONENT_EXTRAS, SHORTCUT_EXTRAS, dataSource, viewportDimensions, imageExtras);
   }
 }
