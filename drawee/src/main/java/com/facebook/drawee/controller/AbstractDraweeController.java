@@ -791,8 +791,9 @@ public abstract class AbstractDraweeController<T, INFO>
   }
 
   private void reportIntermediateSet(String id, @Nullable T image) {
-    getControllerListener().onIntermediateImageSet(id, getImageInfo(image));
-    getControllerListener2().onIntermediateImageSet(id, getImageInfo(image));
+    INFO info = getImageInfo(image);
+    getControllerListener().onIntermediateImageSet(id, info);
+    getControllerListener2().onIntermediateImageSet(id, info);
   }
 
   private void reportIntermediateFailure(Throwable throwable) {
