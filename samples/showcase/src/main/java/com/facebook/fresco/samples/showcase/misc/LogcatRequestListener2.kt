@@ -54,6 +54,6 @@ class LogcatRequestListener2(val logExtraMap: Boolean = true, val tag : String =
     }
 
     override fun requiresExtraMap(producerContext: ProducerContext, producerName: String) = logExtraMap
-    
-    private fun toString(producerContext: ProducerContext) = "id=${producerContext.id}, request=${producerContext.imageRequest}"
+
+    private fun toString(producerContext: ProducerContext) = producerContext.run { "id=$id, extras=$extras, request=$imageRequest" }
 }
