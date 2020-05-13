@@ -80,7 +80,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
                   ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "false")
                   : null);
           listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, false);
-          producerContext.putOriginExtra("memory_encoded");
+          producerContext.putOriginExtra("memory_encoded", "nil-result");
           consumer.onNewResult(null, Consumer.IS_LAST);
           return;
         }

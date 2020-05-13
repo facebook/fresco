@@ -124,7 +124,7 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
       Consumer<EncodedImage> consumer, ProducerContext producerContext) {
     if (producerContext.getLowestPermittedRequestLevel().getValue()
         >= ImageRequest.RequestLevel.DISK_CACHE.getValue()) {
-      producerContext.putOriginExtra("disk", "result-is-nil");
+      producerContext.putOriginExtra("disk", "nil-result_read");
       consumer.onNewResult(null, Consumer.IS_LAST);
       return;
     }

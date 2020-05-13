@@ -56,6 +56,7 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
       Consumer<EncodedImage> consumerOfDiskCacheWriteProducer, ProducerContext producerContext) {
     if (producerContext.getLowestPermittedRequestLevel().getValue()
         >= ImageRequest.RequestLevel.DISK_CACHE.getValue()) {
+      producerContext.putOriginExtra("disk", "nil-result_write");
       consumerOfDiskCacheWriteProducer.onNewResult(null, Consumer.IS_LAST);
     } else {
       Consumer<EncodedImage> consumer;
