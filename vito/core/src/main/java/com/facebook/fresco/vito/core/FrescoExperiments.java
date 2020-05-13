@@ -88,10 +88,6 @@ public class FrescoExperiments {
 
   public void setupPropDiffingExperiment() {}
 
-  public boolean fadeInImages() {
-    return false;
-  }
-
   public boolean enablePropDiffing() {
     return true;
   }

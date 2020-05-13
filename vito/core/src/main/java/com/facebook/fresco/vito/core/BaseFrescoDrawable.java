@@ -35,11 +35,7 @@ public class BaseFrescoDrawable extends FadeDrawable implements Closeable {
   private @Nullable VisibilityCallback mVisibilityCallback;
 
   public BaseFrescoDrawable() {
-    super(new Drawable[LAYER_COUNT], true);
-  }
-
-  public BaseFrescoDrawable(boolean allLayersVisible) {
-    super(new Drawable[LAYER_COUNT], allLayersVisible);
+    super(new Drawable[LAYER_COUNT], false);
   }
 
   public @Nullable Drawable setImage(

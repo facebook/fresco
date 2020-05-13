@@ -14,14 +14,6 @@ public class FrescoDrawable extends BaseFrescoDrawable implements Closeable {
 
   private @Nullable FrescoState mFrescoState;
 
-  public FrescoDrawable() {
-    super();
-  }
-
-  public FrescoDrawable(boolean allLayersVisible) {
-    super(allLayersVisible);
-  }
-
   @Nullable
   public FrescoState getFrescoState() {
     return mFrescoState;

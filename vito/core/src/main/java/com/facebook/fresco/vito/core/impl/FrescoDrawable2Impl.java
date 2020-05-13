@@ -70,10 +70,6 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
 
   private @ImageOrigin int mImageOrigin = ImageOrigin.UNKNOWN;
 
-  public FrescoDrawable2Impl() {
-    super(false);
-  }
-
   @Override
   public @Nullable Drawable setImage(
       @Nullable Drawable imageDrawable,

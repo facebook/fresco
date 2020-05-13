@@ -94,7 +94,7 @@ public class VitoViewImpl implements VitoView.Implementation {
     if (background instanceof FrescoDrawable) {
       frescoDrawable = (FrescoDrawable) background;
     } else {
-      frescoDrawable = new FrescoDrawable(true);
+      frescoDrawable = new FrescoDrawable();
       ViewCompat.setBackground(target, frescoDrawable);
     }
 
