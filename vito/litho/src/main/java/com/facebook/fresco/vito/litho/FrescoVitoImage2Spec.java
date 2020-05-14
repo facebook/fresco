@@ -50,7 +50,7 @@ import com.facebook.litho.utils.MeasureUtils;
 import javax.annotation.Nullable;
 
 /** Simple Fresco Vito component for Litho */
-@MountSpec(isPureRender = true)
+@MountSpec(isPureRender = true, canPreallocate = true, poolSize = 15)
 public class FrescoVitoImage2Spec {
 
   @PropDefault protected static final float imageAspectRatio = 1f;
