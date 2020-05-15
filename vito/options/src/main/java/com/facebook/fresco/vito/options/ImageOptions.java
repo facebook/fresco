@@ -99,6 +99,10 @@ public class ImageOptions extends DecodedImageOptions {
     mAutoPlay = builder.mAutoPlay;
   }
 
+  public Builder extend() {
+    return ImageOptions.extend(this);
+  }
+
   public @DrawableRes int getPlaceholderRes() {
     return mPlaceholderRes;
   }
