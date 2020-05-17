@@ -60,6 +60,7 @@ public class ImagePipelineExperiments {
   private final boolean mEnsureTranscoderLibraryLoaded;
   private final boolean mIsEncodedMemoryCacheProbingEnabled;
   private final boolean mIsDiskCacheProbingEnabled;
+  private final int mTrackedKeysSize;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -92,6 +93,7 @@ public class ImagePipelineExperiments {
     mEnsureTranscoderLibraryLoaded = builder.mEnsureTranscoderLibraryLoaded;
     mIsEncodedMemoryCacheProbingEnabled = builder.mIsEncodedMemoryCacheProbingEnabled;
     mIsDiskCacheProbingEnabled = builder.mIsDiskCacheProbingEnabled;
+    mTrackedKeysSize = builder.mTrackedKeysSize;
   }
 
   public boolean isEncodedCacheEnabled() {
@@ -199,6 +201,10 @@ public class ImagePipelineExperiments {
     return mMemoryType;
   }
 
+  public int getTrackedKeysSize() {
+    return mTrackedKeysSize;
+  }
+
   public boolean shouldKeepCancelledFetchAsLowPriority() {
     return mKeepCancelledFetchAsLowPriority;
   }
@@ -232,6 +238,7 @@ public class ImagePipelineExperiments {
     public boolean mEnsureTranscoderLibraryLoaded = true;
     private boolean mIsEncodedMemoryCacheProbingEnabled = false;
     private boolean mIsDiskCacheProbingEnabled = false;
+    private int mTrackedKeysSize = 20;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -414,6 +421,11 @@ public class ImagePipelineExperiments {
       return mConfigBuilder;
     }
 
+    public ImagePipelineConfig.Builder setTrackedKeysSize(int trackedKeysSize) {
+      mTrackedKeysSize = trackedKeysSize;
+      return mConfigBuilder;
+    }
+
     public ImagePipelineExperiments build() {
       return new ImagePipelineExperiments(this);
     }
@@ -442,7 +454,8 @@ public class ImagePipelineExperiments {
         boolean bitmapPrepareToDrawForPrefetch,
         int maxBitmapSize,
         CloseableReferenceFactory closeableReferenceFactory,
-        boolean keepCancelledFetchAsLowPriority);
+        boolean keepCancelledFetchAsLowPriority,
+        int trackedKeysSize);
   }
 
   public static class DefaultProducerFactoryMethod implements ProducerFactoryMethod {
@@ -469,7 +482,8 @@ public class ImagePipelineExperiments {
         boolean bitmapPrepareToDrawForPrefetch,
         int maxBitmapSize,
         CloseableReferenceFactory closeableReferenceFactory,
-        boolean keepCancelledFetchAsLowPriority) {
+        boolean keepCancelledFetchAsLowPriority,
+        int trackedKeysSize) {
       return new ProducerFactory(
           context,
           byteArrayPool,
@@ -491,7 +505,8 @@ public class ImagePipelineExperiments {
           bitmapPrepareToDrawForPrefetch,
           maxBitmapSize,
           closeableReferenceFactory,
-          keepCancelledFetchAsLowPriority);
+          keepCancelledFetchAsLowPriority,
+          trackedKeysSize);
     }
   }
 }

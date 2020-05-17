@@ -130,7 +130,8 @@ public class ProducerFactory {
       boolean bitmapPrepareToDrawForPrefetch,
       int maxBitmapSize,
       CloseableReferenceFactory closeableReferenceFactory,
-      boolean keepCancelledFetchAsLowPriority) {
+      boolean keepCancelledFetchAsLowPriority,
+      int trackedKeysSize) {
     mContentResolver = context.getApplicationContext().getContentResolver();
     mResources = context.getApplicationContext().getResources();
     mAssetManager = context.getApplicationContext().getAssets();
@@ -151,8 +152,8 @@ public class ProducerFactory {
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mCacheKeyFactory = cacheKeyFactory;
     mPlatformBitmapFactory = platformBitmapFactory;
-    mEncodedMemoryCacheHistory = new BoundedLinkedHashSet<>(20);
-    mDiskCacheHistory = new BoundedLinkedHashSet<>(20);
+    mEncodedMemoryCacheHistory = new BoundedLinkedHashSet<>(trackedKeysSize);
+    mDiskCacheHistory = new BoundedLinkedHashSet<>(trackedKeysSize);
 
     mBitmapPrepareToDrawMinSizeBytes = bitmapPrepareToDrawMinSizeBytes;
     mBitmapPrepareToDrawMaxSizeBytes = bitmapPrepareToDrawMaxSizeBytes;

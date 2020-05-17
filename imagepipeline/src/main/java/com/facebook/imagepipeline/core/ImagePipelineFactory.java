@@ -368,7 +368,8 @@ public class ImagePipelineFactory {
                   mConfig.getExperiments().getBitmapPrepareToDrawForPrefetch(),
                   mConfig.getExperiments().getMaxBitmapSize(),
                   getCloseableReferenceFactory(),
-                  mConfig.getExperiments().shouldKeepCancelledFetchAsLowPriority());
+                  mConfig.getExperiments().shouldKeepCancelledFetchAsLowPriority(),
+                  mConfig.getExperiments().getTrackedKeysSize());
     }
     return mProducerFactory;
   }
