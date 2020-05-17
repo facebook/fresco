@@ -58,7 +58,8 @@ public class ImagePipelineExperiments {
   private boolean mDownsampleIfLargeBitmap;
   private boolean mEncodedCacheEnabled;
   private final boolean mEnsureTranscoderLibraryLoaded;
-  private final boolean mIsProbingEnabled;
+  private final boolean mIsEncodedMemoryCacheProbingEnabled;
+  private final boolean mIsDiskCacheProbingEnabled;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -89,7 +90,8 @@ public class ImagePipelineExperiments {
     mDownsampleIfLargeBitmap = builder.mDownsampleIfLargeBitmap;
     mEncodedCacheEnabled = builder.mEncodedCacheEnabled;
     mEnsureTranscoderLibraryLoaded = builder.mEnsureTranscoderLibraryLoaded;
-    mIsProbingEnabled = builder.mIsProbingEnabled;
+    mIsEncodedMemoryCacheProbingEnabled = builder.mIsEncodedMemoryCacheProbingEnabled;
+    mIsDiskCacheProbingEnabled = builder.mIsDiskCacheProbingEnabled;
   }
 
   public boolean isEncodedCacheEnabled() {
@@ -169,8 +171,12 @@ public class ImagePipelineExperiments {
     return mEnsureTranscoderLibraryLoaded;
   }
 
-  public boolean isProbingEnabled() {
-    return mIsProbingEnabled;
+  public boolean isDiskCacheProbingEnabled() {
+    return mIsDiskCacheProbingEnabled;
+  }
+
+  public boolean isEncodedMemoryCacheProbingEnabled() {
+    return mIsEncodedMemoryCacheProbingEnabled;
   }
 
   public boolean isGingerbreadDecoderEnabled() {
@@ -224,7 +230,8 @@ public class ImagePipelineExperiments {
     public boolean mDownsampleIfLargeBitmap;
     public boolean mEncodedCacheEnabled = true;
     public boolean mEnsureTranscoderLibraryLoaded = true;
-    private boolean mIsProbingEnabled = false;
+    private boolean mIsEncodedMemoryCacheProbingEnabled = false;
+    private boolean mIsDiskCacheProbingEnabled = false;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -395,8 +402,15 @@ public class ImagePipelineExperiments {
       return mConfigBuilder;
     }
 
-    public ImagePipelineConfig.Builder setIsProbingEnabled(boolean isProbingEnabled) {
-      mIsProbingEnabled = isProbingEnabled;
+    public ImagePipelineConfig.Builder setIsDiskCacheProbingEnabled(
+        boolean isDiskCacheProbingEnabled) {
+      mIsDiskCacheProbingEnabled = isDiskCacheProbingEnabled;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setIsEncodedMemoryCacheProbingEnabled(
+        boolean isEncodedMemoryCacheProbingEnabled) {
+      mIsEncodedMemoryCacheProbingEnabled = isEncodedMemoryCacheProbingEnabled;
       return mConfigBuilder;
     }
 
