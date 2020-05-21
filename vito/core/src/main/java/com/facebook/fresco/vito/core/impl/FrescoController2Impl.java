@@ -116,7 +116,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
         frescoDrawable.setImageOrigin(ImageOrigin.MEMORY_BITMAP_SHORTCUT);
         // Immediately display the actual image.
         setActualImage(frescoDrawable, imageRequest, cachedImage, true, null);
-
+        frescoDrawable.setFetchSubmitted(true);
         mDebugOverlayFactory.update(frescoDrawable);
 
         return true;
