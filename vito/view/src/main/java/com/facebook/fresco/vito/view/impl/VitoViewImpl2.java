@@ -36,7 +36,7 @@ public class VitoViewImpl2 implements VitoView.Implementation {
         public void onViewAttachedToWindow(View view) {
           FrescoDrawable2 current = getDrawable(view);
           if (current != null) {
-            onAttach(current);
+            onAttach(current, current.getImageRequest());
           }
         }
 
@@ -74,28 +74,15 @@ public class VitoViewImpl2 implements VitoView.Implementation {
 
     final FrescoDrawable2 frescoDrawable = ensureDrawableSet(target);
 
-    // Check if we already fetched the image
-    if (frescoDrawable.getDrawableDataSubscriber() != null
-        && frescoDrawable.isFetchSubmitted()
-        && imageRequest.equals(frescoDrawable.getImageRequest())) {
-      frescoDrawable.cancelReleaseNextFrame();
-      frescoDrawable.cancelReleaseDelayed();
-      return; // already set
-    }
-
-    frescoDrawable.setImageRequest(imageRequest);
-    frescoDrawable.setCallerContext(callerContext);
-    frescoDrawable.setImageId(VitoUtils.generateIdentifier());
-
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       // If the view is already attached, we should tell this to controller.
       if (target.isAttachedToWindow()) {
-        onAttach(frescoDrawable);
+        onAttach(frescoDrawable, imageRequest);
       }
     } else {
       // Before Kitkat we don't have a good way to know.
       // Normally we expect the view to be already attached, thus we always call `onAttach`.
-      onAttach(frescoDrawable);
+      onAttach(frescoDrawable, imageRequest);
     }
 
     // `addOnAttachStateChangeListener` is not idempotent
@@ -103,9 +90,7 @@ public class VitoViewImpl2 implements VitoView.Implementation {
     target.addOnAttachStateChangeListener(sOnAttachStateChangeListenerCallback);
   }
 
-  private void onAttach(final FrescoDrawable2 drawable) {
-    drawable.cancelReleaseNextFrame();
-    VitoImageRequest request = drawable.getImageRequest();
+  private void onAttach(final FrescoDrawable2 drawable, final VitoImageRequest request) {
     if (request != null) {
       mController.fetch(drawable, request, drawable.getCallerContext(), null, null);
     }
@@ -159,7 +144,7 @@ public class VitoViewImpl2 implements VitoView.Implementation {
             if (!visible) {
               onDetach(frescoDrawable);
             } else {
-              onAttach(frescoDrawable);
+              onAttach(frescoDrawable, frescoDrawable.getImageRequest());
             }
           }
 
