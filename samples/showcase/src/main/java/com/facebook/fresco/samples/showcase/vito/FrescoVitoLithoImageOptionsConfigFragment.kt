@@ -48,6 +48,8 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
         lithoView = LithoView.create(componentContext, createImage(imageOptionsBuilder.build(), currentUri))
         container.addView(lithoView)
 
+        container.setOnClickListener { refresh() }
+
         spinner_rounding.setupWithList(VitoSpinners.roundingOptions) {
             refresh(imageOptionsBuilder.round(it))
         }
