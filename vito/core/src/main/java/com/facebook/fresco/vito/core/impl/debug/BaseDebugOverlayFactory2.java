@@ -48,7 +48,7 @@ public abstract class BaseDebugOverlayFactory2 implements DebugOverlayFactory2 {
       }
     }
     if (overlay == null) {
-      overlay = new DebugOverlayDrawable("Vito 2");
+      overlay = new DebugOverlayDrawable("V2");
       drawable.setOverlayDrawable(new LayerDrawable(new Drawable[] {existingOverlay, overlay}));
       drawable.showOverlayImmediately();
     }
