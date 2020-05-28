@@ -130,7 +130,7 @@ public class EncodedProbeProducer implements Producer<EncodedImage> {
                 (imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL);
             final BufferedDiskCache preferredCache =
                 isSmallRequest ? mSmallImageBufferedDiskCache : mDefaultBufferedDiskCache;
-            preferredCache.probe(cacheKey);
+            preferredCache.addKeyForAsyncProbing(cacheKey);
             mDiskCacheHistory.add(cacheKey);
           }
         } else {
