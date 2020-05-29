@@ -8,7 +8,6 @@
 package com.facebook.fresco.vito.core.impl.debug;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
@@ -16,7 +15,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.Pair;
 import android.view.Gravity;
-import androidx.annotation.ColorInt;
 import java.util.HashMap;
 import java.util.Map;
 
