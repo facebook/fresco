@@ -51,7 +51,7 @@ class MultiUriFragment : BaseShowcaseFragment() {
             val lowRes = ImageRequest.fromUri(sampleUris().createSampleUri(ImageUriProvider.ImageSize.XS))
             val highRes = ImageRequest.fromUri(sampleUris().createSampleUri(ImageUriProvider.ImageSize.XXL))
             if (switch_use_vito.isChecked) {
-                VitoView.show(MultiUri.create().setImageRequests(highRes).setLowResImageRequest(lowRes).build(), drawee_view)
+                VitoView.show(MultiUri.create().setHighResImageRequest(highRes).setLowResImageRequest(lowRes).build(), drawee_view)
             } else {
                 drawee_view.setController(
                         Fresco.newDraweeControllerBuilder()

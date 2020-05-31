@@ -30,18 +30,25 @@ import javax.annotation.Nullable;
 public class MultiUri {
   private @Nullable ImageRequest mLowResImageRequest;
   private @Nullable ImageRequest[] mMultiImageRequests;
+  private @Nullable ImageRequest mHighResImageRequest;
 
   private static final NullPointerException NO_REQUEST_EXCEPTION =
       new NullPointerException("No image request was specified!");
 
   private MultiUri(Builder builder) {
     mLowResImageRequest = builder.mLowResImageRequest;
+    mHighResImageRequest = builder.mHighResImageRequest;
     mMultiImageRequests = builder.mMultiImageRequests;
   }
 
   @Nullable
   public ImageRequest getLowResImageRequest() {
     return mLowResImageRequest;
+  }
+
+  @Nullable
+  public ImageRequest getHighResImageRequest() {
+    return mHighResImageRequest;
   }
 
   @Nullable
@@ -55,6 +62,7 @@ public class MultiUri {
 
   public static class Builder {
     private @Nullable ImageRequest mLowResImageRequest;
+    private @Nullable ImageRequest mHighResImageRequest;
     private @Nullable ImageRequest[] mMultiImageRequests;
 
     private Builder() {}
@@ -68,31 +76,21 @@ public class MultiUri {
       return this;
     }
 
+    public Builder setHighResImageRequest(@Nullable ImageRequest highResImageRequest) {
+      mHighResImageRequest = highResImageRequest;
+      return this;
+    }
+
     public Builder setImageRequests(@Nullable ImageRequest... multiImageRequests) {
       mMultiImageRequests = multiImageRequests;
       return this;
     }
   }
 
-  /** Convenience method for creating a low res preview + main request datasource supplier */
-  public static Supplier<DataSource<CloseableReference<CloseableImage>>> getMultiUriDatasource(
-      final ImagePipeline imagePipeline,
-      final ImageRequest lowResImageRequest,
-      final ImageRequest mainImageRequest,
-      Object callerContext) {
-    MultiUri multiUri =
-        MultiUri.create()
-            .setLowResImageRequest(lowResImageRequest)
-            .setImageRequests(mainImageRequest)
-            .build();
-    return getMultiUriDatasourceSupplier(imagePipeline, multiUri, null, callerContext, null, null);
-  }
-
   public static Supplier<DataSource<CloseableReference<CloseableImage>>>
       getMultiUriDatasourceSupplier(
           final ImagePipeline imagePipeline,
           final MultiUri multiUri,
-          final @Nullable ImageRequest imageRequest,
           final Object callerContext,
           final @Nullable RequestListener requestListener,
           final @Nullable String id) {
@@ -100,10 +98,10 @@ public class MultiUri {
     Supplier<DataSource<CloseableReference<CloseableImage>>> supplier = null;
 
     // final image supplier;
-    if (imageRequest != null) {
+    if (multiUri.getHighResImageRequest() != null) {
       supplier =
           getImageRequestDataSourceSupplier(
-              imagePipeline, imageRequest, callerContext, requestListener, id);
+              imagePipeline, multiUri.getHighResImageRequest(), callerContext, requestListener, id);
     } else if (multiUri.getMultiImageRequests() != null) {
       supplier =
           getFirstAvailableDataSourceSupplier(

@@ -459,7 +459,6 @@ public class FrescoControllerImpl implements FrescoController {
       return MultiUri.getMultiUriDatasourceSupplier(
               mFrescoContext.getImagePipeline(),
               frescoState.getMultiUri(),
-              frescoState.getImageRequest(),
               frescoState.getCallerContext(),
               frescoState.getRequestListener(),
               frescoState.getStringId())
