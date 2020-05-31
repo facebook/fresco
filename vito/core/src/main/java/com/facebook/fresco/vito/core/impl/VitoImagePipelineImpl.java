@@ -11,6 +11,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
+import com.facebook.datasource.DataSources;
 import com.facebook.fresco.vito.core.ImagePipelineUtils;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.VitoImageRequest;
@@ -26,6 +27,9 @@ import javax.annotation.Nullable;
 
 /** Vito image pipeline to fetch an image for a given VitoImageRequest. */
 public class VitoImagePipelineImpl implements VitoImagePipeline {
+
+  public static final NullPointerException NO_REQUEST_EXCEPTION =
+      new NullPointerException("No image request was specified!");
 
   private final ImagePipeline mImagePipeline;
   private final ImagePipelineUtils mImagePipelineUtils;
@@ -45,7 +49,15 @@ public class VitoImagePipelineImpl implements VitoImagePipeline {
     if (options == null) {
       options = ImageOptions.defaults();
     }
-    ImageRequest imageRequest = mImagePipelineUtils.buildImageRequest(uri, options);
+    ImageRequest imageRequest;
+
+    if (multiUri != null) {
+      // For multi URI, we can consider the high res image request as the final image request.
+      // If the user specified a first available list of image requests, we just skip this section.
+      imageRequest = multiUri.getHighResImageRequest();
+    } else {
+      imageRequest = mImagePipelineUtils.buildImageRequest(uri, options);
+    }
     return new VitoImageRequest(
         resources,
         uri,
@@ -80,12 +92,24 @@ public class VitoImagePipelineImpl implements VitoImagePipeline {
       VitoImageRequest imageRequest,
       @Nullable Object callerContext,
       @Nullable RequestListener requestListener,
-      @Nullable long uiComponentId) {
-    return mImagePipeline.fetchDecodedImage(
-        imageRequest.imageRequest,
-        callerContext,
-        ImageRequest.RequestLevel.FULL_FETCH,
-        mImagePipeline.getRequestListenerForRequest(imageRequest.imageRequest, requestListener),
-        VitoUtils.getStringId(uiComponentId));
+      long uiComponentId) {
+    if (imageRequest.multiUri != null) {
+      return ImagePipelineMultiUriHelper.getMultiUriDatasourceSupplier(
+              mImagePipeline,
+              imageRequest.multiUri,
+              callerContext,
+              requestListener, // TODO: CHECK IF THIS IS CORRECT
+              VitoUtils.getStringId(uiComponentId))
+          .get();
+    } else if (imageRequest.imageRequest != null) {
+      return mImagePipeline.fetchDecodedImage(
+          imageRequest.imageRequest,
+          callerContext,
+          ImageRequest.RequestLevel.FULL_FETCH,
+          requestListener, // TODO: Check if this is correct
+          VitoUtils.getStringId(uiComponentId));
+    } else {
+      return DataSources.immediateFailedDataSource(NO_REQUEST_EXCEPTION);
+    }
   }
 }

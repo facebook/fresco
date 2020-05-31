@@ -12,7 +12,6 @@ import android.graphics.drawable.Drawable;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
-import com.facebook.datasource.DataSources;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.fresco.middleware.MiddlewareUtils;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
@@ -143,17 +142,9 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             if (imageId != frescoDrawable.getImageId()) {
               return; // We're trying to load a different image -> ignore
             }
-            DataSource<CloseableReference<CloseableImage>> dataSource;
-            if (imageRequest.imageRequest == null) {
-              dataSource = DataSources.immediateFailedDataSource(NO_REQUEST_EXCEPTION);
-            } else {
-              dataSource =
-                  mImagePipeline.fetchDecodedImage(
-                      imageRequest,
-                      callerContext,
-                      frescoDrawable.getImageOriginListener(),
-                      imageId);
-            }
+            DataSource<CloseableReference<CloseableImage>> dataSource =
+                mImagePipeline.fetchDecodedImage(
+                    imageRequest, callerContext, frescoDrawable.getImageOriginListener(), imageId);
             frescoDrawable.setDataSource(dataSource);
             dataSource.subscribe(frescoDrawable, mUiThreadExecutor);
           }

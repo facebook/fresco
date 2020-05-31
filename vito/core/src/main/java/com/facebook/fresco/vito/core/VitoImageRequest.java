@@ -22,8 +22,8 @@ public class VitoImageRequest {
   public final @Nullable Uri uri;
   public final @Nullable MultiUri multiUri;
   public final ImageOptions imageOptions;
-  public final ImageRequest imageRequest;
-  public final CacheKey cacheKey;
+  public final @Nullable ImageRequest imageRequest;
+  public final @Nullable CacheKey cacheKey;
 
   public VitoImageRequest(
       Resources resources,

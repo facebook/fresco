@@ -909,6 +909,13 @@ public class ImagePipeline {
     }
   }
 
+  public RequestListener getCombinedRequestListener(@Nullable RequestListener listener) {
+    if (listener == null) {
+      return mRequestListener;
+    }
+    return new ForwardingRequestListener(mRequestListener, listener);
+  }
+
   private Predicate<CacheKey> predicateForUri(final Uri uri) {
     return new Predicate<CacheKey>() {
       @Override
