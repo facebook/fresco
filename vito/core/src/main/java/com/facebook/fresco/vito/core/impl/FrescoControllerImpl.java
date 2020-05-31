@@ -456,7 +456,7 @@ public class FrescoControllerImpl implements FrescoController {
     if (frescoState.getUri() != null) {
       return fireOffRequest(frescoState);
     } else {
-      return MultiUri.getMultiUriDatasourceSupplier(
+      return ImagePipelineMultiUriHelper.getMultiUriDatasourceSupplier(
               mFrescoContext.getImagePipeline(),
               frescoState.getMultiUri(),
               frescoState.getCallerContext(),
@@ -484,7 +484,7 @@ public class FrescoControllerImpl implements FrescoController {
     } else {
       setupRequestListener(frescoState, frescoState.getImageRequest());
       dataSource =
-          MultiUri.getImageRequestDataSource(
+          ImagePipelineMultiUriHelper.getImageRequestDataSource(
               mFrescoContext.getImagePipeline(),
               frescoState.getImageRequest(),
               frescoState.getCallerContext(),

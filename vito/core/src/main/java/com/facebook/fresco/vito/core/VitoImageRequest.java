@@ -19,16 +19,16 @@ import javax.annotation.Nullable;
 public class VitoImageRequest {
 
   public final Resources resources;
-  public final Uri uri;
-  public final MultiUri multiUri;
+  public final @Nullable Uri uri;
+  public final @Nullable MultiUri multiUri;
   public final ImageOptions imageOptions;
   public final ImageRequest imageRequest;
   public final CacheKey cacheKey;
 
   public VitoImageRequest(
       Resources resources,
-      Uri uri,
-      MultiUri multiUri,
+      @Nullable Uri uri,
+      @Nullable MultiUri multiUri,
       ImageOptions imageOptions,
       ImageRequest imageRequest,
       CacheKey cacheKey) {
