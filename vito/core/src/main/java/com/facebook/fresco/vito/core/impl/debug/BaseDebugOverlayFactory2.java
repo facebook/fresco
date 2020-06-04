@@ -16,9 +16,6 @@ import com.facebook.infer.annotation.OkToExtend;
 @OkToExtend
 public abstract class BaseDebugOverlayFactory2 implements DebugOverlayFactory2 {
 
-  private static final int NUMBER_OF_DEBUG_OVERLAY_WRAPPER_LAYERS = 2;
-  private static final int DEBUG_OVERLAY_DRAWABLE_INDEX = 1;
-
   private final Supplier<Boolean> mDebugOverlayEnabled;
 
   public BaseDebugOverlayFactory2(Supplier<Boolean> debugOverlayEnabled) {
@@ -39,19 +36,34 @@ public abstract class BaseDebugOverlayFactory2 implements DebugOverlayFactory2 {
 
   private DebugOverlayDrawable extractOrCreate(FrescoDrawable2 drawable) {
     Drawable existingOverlay = drawable.getOverlayDrawable();
-    DebugOverlayDrawable overlay = null;
-    if (existingOverlay instanceof LayerDrawable) {
-      LayerDrawable layers = (LayerDrawable) existingOverlay;
-      if (layers.getNumberOfLayers() == NUMBER_OF_DEBUG_OVERLAY_WRAPPER_LAYERS
-          && layers.getDrawable(DEBUG_OVERLAY_DRAWABLE_INDEX) instanceof DebugOverlayDrawable) {
-        overlay = (DebugOverlayDrawable) layers.getDrawable(DEBUG_OVERLAY_DRAWABLE_INDEX);
-      }
+    if (existingOverlay instanceof DebugOverlayDrawable) {
+      return (DebugOverlayDrawable) existingOverlay;
+    } else if (existingOverlay instanceof DebugOverlayDrawableWrapper) {
+      DebugOverlayDrawableWrapper wrapper = (DebugOverlayDrawableWrapper) existingOverlay;
+      return wrapper.getDebugOverlayDrawable();
     }
-    if (overlay == null) {
-      overlay = new DebugOverlayDrawable("V2");
-      drawable.setOverlayDrawable(new LayerDrawable(new Drawable[] {existingOverlay, overlay}));
-      drawable.showOverlayImmediately();
+
+    DebugOverlayDrawable debugOverlay = new DebugOverlayDrawable("V2");
+    if (existingOverlay != null) {
+      drawable.setOverlayDrawable(new DebugOverlayDrawableWrapper(existingOverlay, debugOverlay));
+    } else {
+      drawable.setOverlayDrawable(debugOverlay);
     }
-    return overlay;
+    drawable.showOverlayImmediately();
+    return debugOverlay;
+  }
+
+  private class DebugOverlayDrawableWrapper extends LayerDrawable {
+    private DebugOverlayDrawable mDebugOverlayDrawable;
+
+    public DebugOverlayDrawableWrapper(
+        Drawable existingOverlayDrawable, DebugOverlayDrawable debugOverlayDrawable) {
+      super(new Drawable[] {existingOverlayDrawable, debugOverlayDrawable});
+      mDebugOverlayDrawable = debugOverlayDrawable;
+    }
+
+    public DebugOverlayDrawable getDebugOverlayDrawable() {
+      return mDebugOverlayDrawable;
+    }
   }
 }
