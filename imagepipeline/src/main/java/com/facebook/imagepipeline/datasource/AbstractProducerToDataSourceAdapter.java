@@ -43,6 +43,7 @@ public abstract class AbstractProducerToDataSourceAdapter<T> extends AbstractDat
     }
     mSettableProducerContext = settableProducerContext;
     mRequestListener = requestListener;
+    setInitialExtras();
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("AbstractProducerToDataSourceAdapter()->onRequestStart");
     }
@@ -125,5 +126,14 @@ public abstract class AbstractProducerToDataSourceAdapter<T> extends AbstractDat
       mSettableProducerContext.cancel();
     }
     return true;
+  }
+
+  private void setInitialExtras() {
+    ImageRequest request = mSettableProducerContext.getImageRequest();
+    if (request != null) {
+      mSettableProducerContext.setExtra(
+          ProducerContext.ExtraKeys.SOURCE_URI,
+          mSettableProducerContext.getImageRequest().getSourceUri());
+    }
   }
 }

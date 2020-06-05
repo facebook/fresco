@@ -31,6 +31,8 @@ public interface ProducerContext {
   @StringDef({
     ExtraKeys.ORIGIN,
     ExtraKeys.ORIGIN_SUBCATEGORY,
+    ExtraKeys.NORMALIZED_URI,
+    ExtraKeys.SOURCE_URI,
     ExtraKeys.ENCODED_WIDTH,
     ExtraKeys.ENCODED_HEIGHT,
     ExtraKeys.ENCODED_SIZE,
@@ -40,6 +42,8 @@ public interface ProducerContext {
   @interface ExtraKeys {
     String ORIGIN = "origin";
     String ORIGIN_SUBCATEGORY = "origin_sub";
+    String SOURCE_URI = "uri_source";
+    String NORMALIZED_URI = "uri_norm";
     String ENCODED_WIDTH = "encoded_width";
     String ENCODED_HEIGHT = "encoded_height";
     String ENCODED_SIZE = "encoded_size";
