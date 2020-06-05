@@ -19,6 +19,7 @@ import com.facebook.datasource.IncreasingQualityDataSourceSupplier;
 import com.facebook.drawee.gestures.GestureDetector;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.SimpleDraweeControllerBuilder;
+import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.LoggingListener;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.ReturnsOwnership;
@@ -52,6 +53,7 @@ public abstract class AbstractDraweeControllerBuilder<
   // components
   private final Context mContext;
   private final Set<ControllerListener> mBoundControllerListeners;
+  private final Set<ControllerListener2> mBoundControllerListeners2;
 
   // builder parameters
   private @Nullable Object mCallerContext;
@@ -73,9 +75,12 @@ public abstract class AbstractDraweeControllerBuilder<
   private static final AtomicLong sIdCounter = new AtomicLong();
 
   protected AbstractDraweeControllerBuilder(
-      Context context, Set<ControllerListener> boundControllerListeners) {
+      Context context,
+      Set<ControllerListener> boundControllerListeners,
+      Set<ControllerListener2> boundControllerListeners2) {
     mContext = context;
     mBoundControllerListeners = boundControllerListeners;
+    mBoundControllerListeners2 = boundControllerListeners2;
     init();
   }
 
@@ -429,6 +434,11 @@ public abstract class AbstractDraweeControllerBuilder<
     if (mBoundControllerListeners != null) {
       for (ControllerListener<? super INFO> listener : mBoundControllerListeners) {
         controller.addControllerListener(listener);
+      }
+    }
+    if (mBoundControllerListeners2 != null) {
+      for (ControllerListener2<INFO> listener : mBoundControllerListeners2) {
+        controller.addControllerListener2(listener);
       }
     }
     if (mControllerListener != null) {

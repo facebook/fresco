@@ -84,7 +84,7 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
         mPipelineDraweeController.removeImageOriginListener(mImageOriginListener);
       }
       if (mImagePerfControllerListener2 != null) {
-        mPipelineDraweeController.removeControllerListener2();
+        mPipelineDraweeController.removeControllerListener2(mImagePerfControllerListener2);
       }
       if (mForwardingRequestListener != null) {
         mPipelineDraweeController.removeRequestListener(mForwardingRequestListener);

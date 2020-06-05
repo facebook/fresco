@@ -33,6 +33,7 @@ import com.facebook.fresco.middleware.MiddlewareUtils;
 import com.facebook.fresco.ui.common.BaseControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
+import com.facebook.fresco.ui.common.ForwardingControllerListener2;
 import com.facebook.fresco.ui.common.LoggingListener;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.ReturnsOwnership;
@@ -93,7 +94,8 @@ public abstract class AbstractDraweeController<T, INFO>
   private @Nullable GestureDetector mGestureDetector;
   private @Nullable ControllerViewportVisibilityListener mControllerViewportVisibilityListener;
   protected @Nullable ControllerListener<INFO> mControllerListener;
-  protected @Nullable ControllerListener2 mControllerListener2;
+  protected ForwardingControllerListener2<INFO> mControllerListener2 =
+      new ForwardingControllerListener2<>();
   protected @Nullable LoggingListener mLoggingListener;
 
   // Hierarchy
@@ -296,12 +298,12 @@ public abstract class AbstractDraweeController<T, INFO>
     mControllerListener = (ControllerListener<INFO>) controllerListener;
   }
 
-  public void addControllerListener2(ControllerListener2 controllerListener2) {
-    mControllerListener2 = controllerListener2;
+  public void addControllerListener2(ControllerListener2<INFO> controllerListener2) {
+    mControllerListener2.addListener(controllerListener2);
   }
 
-  public void removeControllerListener2() {
-    mControllerListener2 = BaseControllerListener2.getNoOpListener();
+  public void removeControllerListener2(ControllerListener2<INFO> controllerListener2) {
+    mControllerListener2.removeListener(controllerListener2);
   }
 
   public void setLoggingListener(final LoggingListener loggingListener) {
@@ -333,9 +335,6 @@ public abstract class AbstractDraweeController<T, INFO>
   }
 
   protected ControllerListener2 getControllerListener2() {
-    if (mControllerListener2 == null) {
-      mControllerListener2 = BaseControllerListener2.getNoOpListener();
-    }
     return mControllerListener2;
   }
 
