@@ -334,7 +334,7 @@ public abstract class AbstractDraweeController<T, INFO>
     return mControllerListener;
   }
 
-  protected ControllerListener2 getControllerListener2() {
+  protected ControllerListener2<INFO> getControllerListener2() {
     return mControllerListener2;
   }
 
