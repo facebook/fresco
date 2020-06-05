@@ -29,7 +29,7 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
   }
 
   @Override
-  public CacheKey getBitmapCacheKey(ImageRequest request, Object callerContext) {
+  public CacheKey getBitmapCacheKey(ImageRequest request, @Nullable Object callerContext) {
     return new BitmapMemoryCacheKey(
         getCacheKeySourceUri(request.getSourceUri()).toString(),
         request.getResizeOptions(),
@@ -41,7 +41,8 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
   }
 
   @Override
-  public CacheKey getPostprocessedBitmapCacheKey(ImageRequest request, Object callerContext) {
+  public CacheKey getPostprocessedBitmapCacheKey(
+      ImageRequest request, @Nullable Object callerContext) {
     final Postprocessor postprocessor = request.getPostprocessor();
     final CacheKey postprocessorCacheKey;
     final String postprocessorName;

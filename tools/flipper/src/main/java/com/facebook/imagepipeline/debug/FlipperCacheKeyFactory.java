@@ -21,7 +21,7 @@ public class FlipperCacheKeyFactory extends DefaultCacheKeyFactory {
   }
 
   @Override
-  public CacheKey getBitmapCacheKey(ImageRequest request, Object callerContext) {
+  public CacheKey getBitmapCacheKey(ImageRequest request, @Nullable Object callerContext) {
     CacheKey bitmapCacheKey = super.getBitmapCacheKey(request, callerContext);
     if (mDebugImageTracker != null) {
       mDebugImageTracker.trackImage(request, bitmapCacheKey);
