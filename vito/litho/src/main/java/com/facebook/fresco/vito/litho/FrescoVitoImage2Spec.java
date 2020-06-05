@@ -76,10 +76,9 @@ public class FrescoVitoImage2Spec {
       ComponentContext c,
       @Prop(optional = true) final @Nullable Uri uri,
       @Prop(optional = true) final @Nullable MultiUri multiUri,
-      @Prop(optional = true) final @Nullable ImageOptions imageOptions,
-      @Prop(optional = true) final @Nullable Object callerContext) {
+      @Prop(optional = true) final @Nullable ImageOptions imageOptions) {
     return FrescoVitoProvider.getImagePipeline()
-        .createImageRequest(c.getResources(), uri, multiUri, imageOptions, callerContext);
+        .createImageRequest(c.getResources(), uri, multiUri, imageOptions);
   }
 
   @OnPrepare

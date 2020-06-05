@@ -23,8 +23,7 @@ public interface VitoImagePipeline {
       Resources resources,
       @Nullable Uri uri,
       @Nullable MultiUri multiUri,
-      @Nullable ImageOptions options,
-      @Nullable Object callerContext);
+      @Nullable ImageOptions options);
 
   @Nullable
   CloseableReference<CloseableImage> getCachedImage(VitoImageRequest imageRequest);

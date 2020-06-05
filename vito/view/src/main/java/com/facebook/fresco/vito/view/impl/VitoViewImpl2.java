@@ -68,8 +68,7 @@ public class VitoViewImpl2 implements VitoView.Implementation {
         !(uri != null && multiUri != null), "Setting both a Uri and MultiUri is not allowed!");
 
     VitoImageRequest imageRequest =
-        mVitoImagePipeline.createImageRequest(
-            target.getResources(), uri, multiUri, imageOptions, callerContext);
+        mVitoImagePipeline.createImageRequest(target.getResources(), uri, multiUri, imageOptions);
 
     final FrescoDrawable2 frescoDrawable = ensureDrawableSet(target);
 

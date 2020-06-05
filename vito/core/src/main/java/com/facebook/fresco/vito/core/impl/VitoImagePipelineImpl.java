@@ -44,8 +44,7 @@ public class VitoImagePipelineImpl implements VitoImagePipeline {
       Resources resources,
       @Nullable Uri uri,
       @Nullable MultiUri multiUri,
-      @Nullable ImageOptions options,
-      @Nullable Object callerContext) {
+      @Nullable ImageOptions options) {
     if (options == null) {
       options = ImageOptions.defaults();
     }
@@ -64,7 +63,7 @@ public class VitoImagePipelineImpl implements VitoImagePipeline {
         multiUri,
         options,
         imageRequest,
-        mImagePipeline.getCacheKey(imageRequest, callerContext));
+        mImagePipeline.getCacheKey(imageRequest, null));
   }
 
   @Override
