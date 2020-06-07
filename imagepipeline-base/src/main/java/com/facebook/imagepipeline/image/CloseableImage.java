@@ -62,7 +62,7 @@ public abstract class CloseableImage implements Closeable, ImageInfo, HasImageMe
     extras.put("encoded_width", mOriginalEncodedImageInfo.getWidth());
     extras.put("encoded_height", mOriginalEncodedImageInfo.getHeight());
     extras.put("encoded_size", mOriginalEncodedImageInfo.getSize());
-    extras.put("uri", mOriginalEncodedImageInfo.getUri());
+    extras.put("uri_source", mOriginalEncodedImageInfo.getUri());
     return extras;
   }
 
