@@ -11,7 +11,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 dependencies {
-    compileOnly "com.facebook.infer.annotation:infer-annotation:${INFER_ANNOTATION_VERSION}"
+    compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
     compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"

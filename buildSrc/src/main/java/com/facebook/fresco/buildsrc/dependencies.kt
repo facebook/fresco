@@ -11,6 +11,8 @@ object Deps {
     const val javaxAnnotation = "javax.annotation:javax.annotation-api:1.2"
     const val jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
 
+    const val inferAnnotation = "com.facebook.infer.annotation:infer-annotation:0.17.2"
+
     object Kotlin {
         const val version = "1.3.72"
 
