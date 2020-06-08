@@ -95,7 +95,7 @@ public class DebugOverlayDrawable extends Drawable {
     mCurrentTextXPx = mStartTextXPx;
     mCurrentTextYPx = mStartTextYPx;
 
-    addDebugText(canvas, "Vito", "v2", IDENTIFIER_COLOR);
+    addDebugText(canvas, "Vito", mIdentifier, IDENTIFIER_COLOR);
     for (Map.Entry<String, Pair<String, Integer>> entry : mDebugData.entrySet()) {
       addDebugText(canvas, entry.getKey(), entry.getValue().first, entry.getValue().second);
     }

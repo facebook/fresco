@@ -29,7 +29,7 @@ public class DefaultDebugOverlayFactory implements DebugOverlayFactory {
     if (!mDebugOverlayEnabled.get()) {
       return null;
     }
-    DebugOverlayDrawable drawable = new DebugOverlayDrawable("Vito");
+    DebugOverlayDrawable drawable = new DebugOverlayDrawable("v1");
     drawable.addDebugData("ID", "" + frescoState.getStringId());
     final int origin = frescoState.getImageOrigin();
     drawable.addDebugData(

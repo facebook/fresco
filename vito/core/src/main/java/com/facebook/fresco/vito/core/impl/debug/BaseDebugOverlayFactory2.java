@@ -43,7 +43,7 @@ public abstract class BaseDebugOverlayFactory2 implements DebugOverlayFactory2 {
       return wrapper.getDebugOverlayDrawable();
     }
 
-    DebugOverlayDrawable debugOverlay = new DebugOverlayDrawable("V2");
+    DebugOverlayDrawable debugOverlay = new DebugOverlayDrawable("v2");
     if (existingOverlay != null) {
       drawable.setOverlayDrawable(new DebugOverlayDrawableWrapper(existingOverlay, debugOverlay));
     } else {
