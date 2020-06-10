@@ -6,6 +6,7 @@
  */
 
 import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.SampleDeps
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -129,7 +130,7 @@ dependencies {
     implementation project(':vito:provider')
 
     // Only used for the custom SVG decoder
-    implementation 'com.caverock:androidsvg:1.2.1'
+    implementation SampleDeps.Showcase.caverockSvg
 
     // Testing-only dependencies
     androidTestImplementation "androidx.test.espresso:espresso-core:${versions.androidx.espresso}"

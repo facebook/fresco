@@ -31,4 +31,9 @@ object SampleDeps {
             const val aquery = "com.googlecode.android-query:android-query:$version"
         }
     }
+
+    object Showcase {
+
+        const val caverockSvg = "com.caverock:androidsvg-aar:1.4"
+    }
 }
