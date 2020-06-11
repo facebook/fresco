@@ -33,13 +33,13 @@ public class ForwardingControllerListener2<I> extends BaseControllerListener2<I>
   }
 
   @Override
-  public void onSubmit(String id, Object callerContext) {
+  public void onSubmit(String id, Object callerContext, Extras extras) {
     final int numberOfListeners = mListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       try {
         ControllerListener2<I> listener = mListeners.get(i);
         if (listener != null) {
-          listener.onSubmit(id, callerContext);
+          listener.onSubmit(id, callerContext, extras);
         }
       } catch (Exception exception) {
         // Don't punish the other listeners if we're given a bad one.
@@ -65,13 +65,13 @@ public class ForwardingControllerListener2<I> extends BaseControllerListener2<I>
   }
 
   @Override
-  public void onFailure(String id, Throwable throwable) {
+  public void onFailure(String id, Throwable throwable, Extras extras) {
     final int numberOfListeners = mListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       try {
         ControllerListener2<I> listener = mListeners.get(i);
         if (listener != null) {
-          listener.onFailure(id, throwable);
+          listener.onFailure(id, throwable, extras);
         }
       } catch (Exception exception) {
         // Don't punish the other listeners if we're given a bad one.
@@ -81,13 +81,13 @@ public class ForwardingControllerListener2<I> extends BaseControllerListener2<I>
   }
 
   @Override
-  public void onRelease(String id) {
+  public void onRelease(String id, Extras extras) {
     final int numberOfListeners = mListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       try {
         ControllerListener2<I> listener = mListeners.get(i);
         if (listener != null) {
-          listener.onRelease(id);
+          listener.onRelease(id, extras);
         }
       } catch (Exception exception) {
         // Don't punish the other listeners if we're given a bad one.

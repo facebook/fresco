@@ -96,6 +96,10 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
     return mExtras;
   }
 
+  protected void setExtras(@Nullable Map<String, Object> extras) {
+    mExtras = extras;
+  }
+
   @Override
   public synchronized boolean hasFailed() {
     return mDataSourceStatus == DataSourceStatus.FAILURE;
@@ -229,7 +233,7 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
    */
   protected boolean setResult(
       @Nullable T value, boolean isLast, @Nullable Map<String, Object> extras) {
-    mExtras = extras;
+    setExtras(extras);
     boolean result = setResultInternal(value, isLast);
     if (result) {
       notifyDataSubscribers();
@@ -259,7 +263,11 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
    * @return true if the failure was successfully set.
    */
   protected boolean setFailure(Throwable throwable) {
-    boolean result = setFailureInternal(throwable);
+    return setFailure(throwable, null);
+  }
+
+  protected boolean setFailure(Throwable throwable, @Nullable Map<String, Object> extras) {
+    boolean result = setFailureInternal(throwable, extras);
     if (result) {
       notifyDataSubscribers();
     }
@@ -314,12 +322,14 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
     }
   }
 
-  private synchronized boolean setFailureInternal(Throwable throwable) {
+  private synchronized boolean setFailureInternal(
+      Throwable throwable, @Nullable Map<String, Object> extras) {
     if (mIsClosed || mDataSourceStatus != DataSourceStatus.IN_PROGRESS) {
       return false;
     } else {
       mDataSourceStatus = DataSourceStatus.FAILURE;
       mFailureThrowable = throwable;
+      mExtras = extras;
       return true;
     }
   }

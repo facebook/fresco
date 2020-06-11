@@ -8,7 +8,6 @@
 package com.facebook.fresco.vito.core.impl;
 
 import android.content.res.Resources;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import androidx.core.util.ObjectsCompat;
@@ -29,6 +28,7 @@ import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoController;
+import com.facebook.fresco.vito.core.FrescoDrawable;
 import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.core.FrescoState;
 import com.facebook.fresco.vito.core.Hierarcher;
@@ -59,6 +59,7 @@ public class FrescoControllerImpl implements FrescoController {
       ImmutableMap.<String, Object>of("component_tag", "vito1");
   private static final Map<String, Object> SHORTCUT_EXTRAS =
       ImmutableMap.<String, Object>of("origin", "memory_bitmap", "origin_sub", "shortcut");
+  private static final Extras ON_SUBMIT_EXTRAS = Extras.of(null, COMPONENT_EXTRAS);
 
   private final FrescoContext mFrescoContext;
   private final DebugOverlayFactory mDebugOverlayFactory;
@@ -329,7 +330,9 @@ public class FrescoControllerImpl implements FrescoController {
 
       if (mControllerListener2 != null) {
         mControllerListener2.onSubmit(
-            VitoUtils.getStringId(frescoState.getId()), frescoState.getCallerContext());
+            VitoUtils.getStringId(frescoState.getId()),
+            frescoState.getCallerContext(),
+            ON_SUBMIT_EXTRAS);
       }
       frescoState.onSubmit(frescoState.getId(), frescoState.getCallerContext());
 
@@ -514,6 +517,9 @@ public class FrescoControllerImpl implements FrescoController {
     }
     CloseableReference.closeSafely(frescoState.getCachedImage());
 
+    if (mControllerListener2 != null) {
+      mControllerListener2.onRelease(VitoUtils.getStringId(frescoState.getId()), null);
+    }
     frescoState.onRelease(frescoState.getId());
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.endSection();
@@ -549,6 +555,12 @@ public class FrescoControllerImpl implements FrescoController {
             .getHierarcher()
             .buildErrorDrawable(frescoState.getResources(), frescoState.getImageOptions());
     displayErrorImage(frescoState, errorDrawable);
+    if (mControllerListener2 != null) {
+      mControllerListener2.onFailure(
+          VitoUtils.getStringId(frescoState.getId()),
+          dataSource.getFailureCause(),
+          obtainExtras(dataSource, null, frescoState.getFrescoDrawable()));
+    }
     frescoState.onFailure(frescoState.getId(), errorDrawable, dataSource.getFailureCause());
   }
 
@@ -621,6 +633,12 @@ public class FrescoControllerImpl implements FrescoController {
                 .getHierarcher()
                 .buildErrorDrawable(frescoState.getResources(), frescoState.getImageOptions());
         displayErrorImage(frescoState, errorDrawable);
+        if (mControllerListener2 != null) {
+          mControllerListener2.onFailure(
+              VitoUtils.getStringId(frescoState.getId()),
+              null,
+              obtainExtras(dataSource, null, frescoState.getFrescoDrawable()));
+        }
         frescoState.onFailure(frescoState.getId(), errorDrawable, null);
         return;
       }
@@ -646,10 +664,7 @@ public class FrescoControllerImpl implements FrescoController {
         mControllerListener2.onFinalImageSet(
             VitoUtils.getStringId(frescoState.getId()),
             closeableImage,
-            obtainExtras(
-                dataSource,
-                closeableImage,
-                frescoState.getFrescoDrawable().getViewportDimensions()));
+            obtainExtras(dataSource, closeableImage, frescoState.getFrescoDrawable()));
       }
       frescoState.onFinalImageSet(
           frescoState.getId(), frescoState.getImageOrigin(), closeableImage, actualDrawable);
@@ -738,13 +753,13 @@ public class FrescoControllerImpl implements FrescoController {
 
   private static Extras obtainExtras(
       @Nullable DataSource<CloseableReference<CloseableImage>> dataSource,
-      CloseableImage closeableImage,
-      @Nullable Rect viewportDimensions) {
+      @Nullable CloseableImage closeableImage,
+      @Nullable FrescoDrawable frescoDrawable) {
     return MiddlewareUtils.obtainExtras(
         COMPONENT_EXTRAS,
         SHORTCUT_EXTRAS,
         dataSource,
-        viewportDimensions,
-        closeableImage.getAsExtras());
+        frescoDrawable == null ? null : frescoDrawable.getViewportDimensions(),
+        closeableImage == null ? null : closeableImage.getAsExtras());
   }
 }

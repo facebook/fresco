@@ -49,14 +49,18 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
   }
 
   @Override
-  public void onSubmit(long id, VitoImageRequest imageRequest, @Nullable Object callerContext) {
+  public void onSubmit(
+      long id,
+      VitoImageRequest imageRequest,
+      @Nullable Object callerContext,
+      @Nullable ControllerListener2.Extras extras) {
     if (mVitoImageRequestListener != null) {
-      mVitoImageRequestListener.onSubmit(id, imageRequest, callerContext);
+      mVitoImageRequestListener.onSubmit(id, imageRequest, callerContext, extras);
     }
     if (mImageListener != null) {
       mImageListener.onSubmit(id, callerContext);
     }
-    mControllerListener2.onSubmit(VitoUtils.getStringId(id), callerContext);
+    mControllerListener2.onSubmit(VitoUtils.getStringId(id), callerContext, extras);
   }
 
   @Override
@@ -117,24 +121,25 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
       long id,
       VitoImageRequest imageRequest,
       @Nullable Drawable error,
-      @Nullable Throwable throwable) {
+      @Nullable Throwable throwable,
+      @Nullable ControllerListener2.Extras extras) {
     if (mVitoImageRequestListener != null) {
-      mVitoImageRequestListener.onFailure(id, imageRequest, error, throwable);
+      mVitoImageRequestListener.onFailure(id, imageRequest, error, throwable, extras);
     }
     if (mImageListener != null) {
       mImageListener.onFailure(id, error, throwable);
     }
-    mControllerListener2.onFailure(VitoUtils.getStringId(id), throwable);
+    mControllerListener2.onFailure(VitoUtils.getStringId(id), throwable, extras);
   }
 
   @Override
-  public void onRelease(long id, VitoImageRequest imageRequest) {
+  public void onRelease(long id, VitoImageRequest imageRequest, ControllerListener2.Extras extras) {
     if (mVitoImageRequestListener != null) {
-      mVitoImageRequestListener.onRelease(id, imageRequest);
+      mVitoImageRequestListener.onRelease(id, imageRequest, extras);
     }
     if (mImageListener != null) {
       mImageListener.onRelease(id);
     }
-    mControllerListener2.onRelease(VitoUtils.getStringId(id));
+    mControllerListener2.onRelease(VitoUtils.getStringId(id), extras);
   }
 }

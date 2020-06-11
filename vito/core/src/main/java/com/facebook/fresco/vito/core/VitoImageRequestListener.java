@@ -22,7 +22,11 @@ public interface VitoImageRequestListener {
    * @param id image id
    * @param callerContext caller context
    */
-  void onSubmit(long id, VitoImageRequest imageRequest, @Nullable Object callerContext);
+  void onSubmit(
+      long id,
+      VitoImageRequest imageRequest,
+      @Nullable Object callerContext,
+      @Nullable ControllerListener2.Extras extras);
 
   /**
    * Called after a placeholder image has been set
@@ -76,12 +80,13 @@ public interface VitoImageRequestListener {
       long id,
       VitoImageRequest imageRequest,
       @Nullable Drawable error,
-      @Nullable Throwable throwable);
+      @Nullable Throwable throwable,
+      @Nullable ControllerListener2.Extras extras);
 
   /**
    * Called after the controller released the fetched image.
    *
    * @param id image id
    */
-  void onRelease(long id, VitoImageRequest imageRequest);
+  void onRelease(long id, VitoImageRequest imageRequest, ControllerListener2.Extras extras);
 }

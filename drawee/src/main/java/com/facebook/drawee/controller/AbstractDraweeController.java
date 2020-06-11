@@ -210,7 +210,9 @@ public abstract class AbstractDraweeController<T, INFO>
     boolean wasRequestSubmitted = mIsRequestSubmitted;
     mIsRequestSubmitted = false;
     mHasFetchFailed = false;
+    Map<String, Object> extras = null;
     if (mDataSource != null) {
+      extras = mDataSource.getExtras();
       mDataSource.close();
       mDataSource = null;
     }
@@ -227,7 +229,7 @@ public abstract class AbstractDraweeController<T, INFO>
       mFetchedImage = null;
     }
     if (wasRequestSubmitted) {
-      reportRelease();
+      reportRelease(extras);
     }
   }
 
@@ -521,7 +523,7 @@ public abstract class AbstractDraweeController<T, INFO>
       mIsRequestSubmitted = true;
       mHasFetchFailed = false;
       mEventTracker.recordEvent(Event.ON_SUBMIT_CACHE_HIT);
-      reportSubmit();
+      reportSubmit(mDataSource);
       onImageLoadedFromCacheImmediately(mId, closeableImage);
       onNewResultInternal(mId, mDataSource, closeableImage, 1.0f, true, true, true);
       if (FrescoSystrace.isTracing()) {
@@ -533,11 +535,11 @@ public abstract class AbstractDraweeController<T, INFO>
       return;
     }
     mEventTracker.recordEvent(Event.ON_DATASOURCE_SUBMIT);
-    reportSubmit();
     mSettableDraweeHierarchy.setProgress(0, true);
     mIsRequestSubmitted = true;
     mHasFetchFailed = false;
     mDataSource = getDataSource();
+    reportSubmit(mDataSource);
     if (FLog.isLoggable(FLog.VERBOSE)) {
       FLog.v(
           TAG,
@@ -682,7 +684,7 @@ public abstract class AbstractDraweeController<T, INFO>
       } else {
         mSettableDraweeHierarchy.setFailure(throwable);
       }
-      reportFailure(throwable);
+      reportFailure(throwable, dataSource);
       // IMPORTANT: do not execute any instance-specific code after this point
     } else {
       logMessageAndFailure("intermediate_failed @ onFailure", throwable);
@@ -783,9 +785,9 @@ public abstract class AbstractDraweeController<T, INFO>
 
   protected void onImageLoadedFromCacheImmediately(String id, T cachedImage) {}
 
-  private void reportSubmit() {
+  protected void reportSubmit(DataSource<T> dataSource) {
     getControllerListener().onSubmit(mId, mCallerContext);
-    getControllerListener2().onSubmit(mId, mCallerContext);
+    getControllerListener2().onSubmit(mId, mCallerContext, obtainExtras(dataSource, null));
   }
 
   private void reportIntermediateSet(String id, @Nullable T image) {
@@ -805,14 +807,15 @@ public abstract class AbstractDraweeController<T, INFO>
     getControllerListener2().onFinalImageSet(id, info, obtainExtras(dataSource, info));
   }
 
-  private void reportFailure(Throwable throwable) {
+  private void reportFailure(Throwable throwable, @Nullable DataSource<T> dataSource) {
+    final Extras extras = obtainExtras(dataSource, null);
     getControllerListener().onFailure(mId, throwable);
-    getControllerListener2().onFailure(mId, throwable);
+    getControllerListener2().onFailure(mId, throwable, extras);
   }
 
-  private void reportRelease() {
+  private void reportRelease(@Nullable Map<String, Object> extras) {
     getControllerListener().onRelease(mId);
-    getControllerListener2().onRelease(mId);
+    getControllerListener2().onRelease(mId, obtainExtras(extras));
   }
 
   private Extras obtainExtras(@Nullable DataSource<T> dataSource, INFO info) {
@@ -822,6 +825,10 @@ public abstract class AbstractDraweeController<T, INFO>
         dataSource,
         getDimensions(),
         obtainExtrasFromImage(info));
+  }
+
+  private static Extras obtainExtras(@Nullable Map<String, Object> dataSourceExtras) {
+    return MiddlewareUtils.obtainExtras(COMPONENT_EXTRAS, SHORTCUT_EXTRAS, dataSourceExtras, null);
   }
 
   private @Nullable Rect getDimensions() {

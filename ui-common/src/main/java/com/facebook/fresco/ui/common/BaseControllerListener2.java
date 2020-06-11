@@ -16,7 +16,7 @@ public class BaseControllerListener2<INFO> implements ControllerListener2<INFO> 
   }
 
   @Override
-  public void onSubmit(String id, Object callerContext) {}
+  public void onSubmit(String id, Object callerContext, @Nullable Extras extras) {}
 
   @Override
   public void onFinalImageSet(String id, @Nullable INFO imageInfo, Extras extraData) {}
@@ -28,8 +28,8 @@ public class BaseControllerListener2<INFO> implements ControllerListener2<INFO> 
   public void onIntermediateImageFailed(String id) {}
 
   @Override
-  public void onFailure(String id, Throwable throwable) {}
+  public void onFailure(String id, Throwable throwable, Extras extras) {}
 
   @Override
-  public void onRelease(String id) {}
+  public void onRelease(String id, Extras extras) {}
 }

@@ -12,6 +12,19 @@ public interface ControllerListener2<INFO> {
   class Extras {
     public @Nullable Map<String, Object> pipe;
     public @Nullable Map<String, Object> view;
+
+    public static Extras of(
+        @Nullable Map<String, Object> pipe, @Nullable Map<String, Object> view) {
+      Extras extras = new Extras();
+      extras.pipe = pipe;
+      extras.view = view;
+      return extras;
+    }
+
+    @Override
+    public String toString() {
+      return "pipe: " + pipe + ", view: " + view;
+    }
   }
 
   /**
@@ -21,8 +34,9 @@ public interface ControllerListener2<INFO> {
    *
    * @param id controller id
    * @param callerContext caller context
+   * @param extraData extra data
    */
-  void onSubmit(String id, Object callerContext);
+  void onSubmit(String id, Object callerContext, @Nullable Extras extraData);
 
   /**
    * Called after the final image has been set.
@@ -52,8 +66,9 @@ public interface ControllerListener2<INFO> {
    *
    * @param id controller id
    * @param throwable failure cause
+   * @param extraData extra data
    */
-  void onFailure(String id, Throwable throwable);
+  void onFailure(String id, Throwable throwable, @Nullable Extras extraData);
 
   /**
    * Called after the controller released the fetched image.
@@ -61,6 +76,7 @@ public interface ControllerListener2<INFO> {
    * <p>IMPORTANT: It is not safe to reuse the controller from within this callback!
    *
    * @param id controller id
+   * @param extraData extra data
    */
-  void onRelease(String id);
+  void onRelease(String id, @Nullable Extras extraData);
 }

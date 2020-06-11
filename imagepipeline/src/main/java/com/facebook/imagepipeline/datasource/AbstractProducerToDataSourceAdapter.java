@@ -102,7 +102,7 @@ public abstract class AbstractProducerToDataSourceAdapter<T> extends AbstractDat
   }
 
   private void onFailureImpl(Throwable throwable) {
-    if (super.setFailure(throwable)) {
+    if (super.setFailure(throwable, getExtras(mSettableProducerContext))) {
       mRequestListener.onRequestFailure(mSettableProducerContext, throwable);
     }
   }
@@ -130,10 +130,9 @@ public abstract class AbstractProducerToDataSourceAdapter<T> extends AbstractDat
 
   private void setInitialExtras() {
     ImageRequest request = mSettableProducerContext.getImageRequest();
-    if (request != null) {
-      mSettableProducerContext.setExtra(
-          ProducerContext.ExtraKeys.SOURCE_URI,
-          mSettableProducerContext.getImageRequest().getSourceUri());
-    }
+    mSettableProducerContext.setExtra(
+        ProducerContext.ExtraKeys.SOURCE_URI,
+        request == null ? "null-request" : request.getSourceUri());
+    setExtras(mSettableProducerContext.getExtras());
   }
 }

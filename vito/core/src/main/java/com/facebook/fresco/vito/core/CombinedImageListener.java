@@ -26,7 +26,11 @@ public interface CombinedImageListener extends VitoImageRequestListener {
   ImageListener getImageListener();
 
   @Override
-  void onSubmit(long id, VitoImageRequest imageRequest, @Nullable Object callerContext);
+  void onSubmit(
+      long id,
+      VitoImageRequest imageRequest,
+      @Nullable Object callerContext,
+      @Nullable ControllerListener2.Extras extras);
 
   @Override
   void onPlaceholderSet(long id, VitoImageRequest imageRequest, @Nullable Drawable placeholder);
@@ -52,8 +56,9 @@ public interface CombinedImageListener extends VitoImageRequestListener {
       long id,
       VitoImageRequest imageRequest,
       @Nullable Drawable error,
-      @Nullable Throwable throwable);
+      @Nullable Throwable throwable,
+      @Nullable ControllerListener2.Extras extras);
 
   @Override
-  void onRelease(long id, VitoImageRequest imageRequest);
+  void onRelease(long id, VitoImageRequest imageRequest, ControllerListener2.Extras extras);
 }

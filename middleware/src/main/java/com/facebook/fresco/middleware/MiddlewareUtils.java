@@ -37,4 +37,27 @@ public class MiddlewareUtils {
 
     return extras;
   }
+
+  public static Extras obtainExtras(
+      Map<String, Object> componentAttribution,
+      Map<String, Object> shortcutAttribution,
+      @Nullable Map<String, Object> dataSourceExtras,
+      @Nullable Rect viewportDimensions) {
+    final Extras extras = new Extras();
+    extras.view = new HashMap<>();
+
+    extras.view.putAll(componentAttribution);
+
+    if (viewportDimensions != null) {
+      extras.view.put("viewport_width", viewportDimensions.width());
+      extras.view.put("viewport_height", viewportDimensions.height());
+    } else {
+      extras.view.put("viewport_width", -1);
+      extras.view.put("viewport_height", -1);
+    }
+
+    extras.pipe = dataSourceExtras;
+
+    return extras;
+  }
 }
