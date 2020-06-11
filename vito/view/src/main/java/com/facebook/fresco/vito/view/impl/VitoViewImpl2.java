@@ -76,6 +76,11 @@ public class VitoViewImpl2 implements VitoView.Implementation {
       // If the view is already attached, we should tell this to controller.
       if (target.isAttachedToWindow()) {
         onAttach(frescoDrawable, imageRequest);
+      } else {
+        // The fetch will be submitted later when / if the View is attached.
+        frescoDrawable.setImageRequest(imageRequest);
+        frescoDrawable.setCallerContext(callerContext);
+        frescoDrawable.setImageListener(imageListener);
       }
     } else {
       // Before Kitkat we don't have a good way to know.
@@ -90,7 +95,12 @@ public class VitoViewImpl2 implements VitoView.Implementation {
 
   private void onAttach(final FrescoDrawable2 drawable, final VitoImageRequest request) {
     if (request != null) {
-      mController.fetch(drawable, request, drawable.getCallerContext(), null, null);
+      mController.fetch(
+          drawable,
+          request,
+          drawable.getCallerContext(),
+          drawable.getImageListener().getImageListener(),
+          null);
     }
   }
 

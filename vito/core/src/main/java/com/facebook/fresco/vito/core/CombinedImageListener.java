@@ -22,6 +22,9 @@ public interface CombinedImageListener extends VitoImageRequestListener {
 
   void setControllerListener2(ControllerListener2<ImageInfo> controllerListener2);
 
+  @Nullable
+  ImageListener getImageListener();
+
   @Override
   void onSubmit(long id, VitoImageRequest imageRequest, @Nullable Object callerContext);
 

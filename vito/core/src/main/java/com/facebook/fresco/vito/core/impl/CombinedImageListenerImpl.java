@@ -38,6 +38,12 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
   }
 
   @Override
+  @Nullable
+  public ImageListener getImageListener() {
+    return mImageListener;
+  }
+
+  @Override
   public void setControllerListener2(ControllerListener2<ImageInfo> controllerListener2) {
     mControllerListener2 = controllerListener2;
   }
