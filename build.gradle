@@ -53,10 +53,6 @@ plugins {
 }
 
 project.ext {
-    compileSdkVersion = COMPILE_SDK_VERSION.toInteger()
-    minSdkVersion = MIN_SDK_VERSION
-    samplesMinSdkVersion = SAMPLES_MIN_SDK_VERSION
-    targetSdkVersion = TARGET_SDK_VERSION
     preDexLibs = !project.hasProperty('disablePreDex')
 }
 

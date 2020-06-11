@@ -9,11 +9,11 @@ apply plugin: 'com.android.library'
 
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
     }
 
     lintOptions {

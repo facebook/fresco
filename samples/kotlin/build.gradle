@@ -13,12 +13,12 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
 
     defaultConfig {
         applicationId "com.facebook.fresco.samples.kotlin"
-        minSdkVersion rootProject.ext.samplesMinSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion FrescoConfig.samplesMinSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
         versionCode 1
         versionName "${VERSION_NAME}"
 
