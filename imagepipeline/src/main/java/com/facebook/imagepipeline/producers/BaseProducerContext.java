@@ -350,7 +350,6 @@ public class BaseProducerContext implements ProducerContext {
 
   @Override
   public void putOriginExtra(@Nullable String origin) {
-    mExtras.put(ExtraKeys.ORIGIN, origin);
-    mExtras.put(ExtraKeys.ORIGIN_SUBCATEGORY, ORIGIN_SUBCATEGORY_DEFAULT);
+    putOriginExtra(origin, ORIGIN_SUBCATEGORY_DEFAULT);
   }
 }

@@ -100,9 +100,7 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
             consumer,
             producerContext.getProducerListener(),
             producerContext,
-            PRODUCER_NAME,
-            null,
-            null) {
+            PRODUCER_NAME) {
           @Override
           protected EncodedImage getResult() throws Exception {
             PooledByteBufferOutputStream outputStream = mPooledByteBufferFactory.newOutputStream();

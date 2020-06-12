@@ -23,22 +23,16 @@ public abstract class StatefulProducerRunnable<T> extends StatefulRunnable<T> {
   private final ProducerListener2 mProducerListener;
   private final String mProducerName;
   private final ProducerContext mProducerContext;
-  private final @Nullable String mOrigin;
-  private final @Nullable String mOriginSubcategory;
 
   public StatefulProducerRunnable(
       Consumer<T> consumer,
       ProducerListener2 producerListener,
       ProducerContext producerContext,
-      String producerName,
-      @Nullable String origin,
-      @Nullable String originSubcategory) {
+      String producerName) {
     mConsumer = consumer;
     mProducerListener = producerListener;
     mProducerName = producerName;
     mProducerContext = producerContext;
-    mOrigin = origin;
-    mOriginSubcategory = originSubcategory;
 
     mProducerListener.onProducerStart(mProducerContext, mProducerName);
   }
@@ -51,7 +45,6 @@ public abstract class StatefulProducerRunnable<T> extends StatefulRunnable<T> {
         mProducerListener.requiresExtraMap(mProducerContext, mProducerName)
             ? getExtraMapOnSuccess(result)
             : null);
-    mProducerContext.putOriginExtra(mOrigin, mOriginSubcategory);
     mConsumer.onNewResult(result, Consumer.IS_LAST);
   }
 
@@ -64,7 +57,6 @@ public abstract class StatefulProducerRunnable<T> extends StatefulRunnable<T> {
         mProducerListener.requiresExtraMap(mProducerContext, mProducerName)
             ? getExtraMapOnFailure(e)
             : null);
-    mProducerContext.putOriginExtra(mOrigin, mOriginSubcategory);
     mConsumer.onFailure(e);
   }
 
@@ -76,7 +68,6 @@ public abstract class StatefulProducerRunnable<T> extends StatefulRunnable<T> {
         mProducerListener.requiresExtraMap(mProducerContext, mProducerName)
             ? getExtraMapOnCancellation()
             : null);
-    mProducerContext.putOriginExtra(mOrigin, mOriginSubcategory);
     mConsumer.onCancellation();
   }
 
