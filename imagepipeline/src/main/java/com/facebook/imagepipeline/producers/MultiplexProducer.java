@@ -378,6 +378,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
                 computeIsIntermediateResultExpected(),
                 computePriority(),
                 producerContext.getImagePipelineConfig());
+        mMultiplexProducerContext.putExtras(producerContext.getExtras());
         if (startedAsPrefetch.isSet()) {
           mMultiplexProducerContext.setExtra(
               EXTRAS_STARTED_AS_PREFETCH, startedAsPrefetch.asBoolean());
