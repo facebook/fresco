@@ -153,7 +153,8 @@
   <string name="vito_litho_simple_help">Experimental Fresco Vito Litho component.</string>
 
   <string name="vito_litho_image_options_config">Vito Litho: Image Options configurator</string>
-  <string name="vito_litho_image_options_config_help">Configure image options to change the image\'s appearance</string>
+  <string name="vito_litho_image_options_config_help_source">Configure the image source to be displayed</string>
+  <string name="vito_litho_image_options_config_help_options">Configure image options to change the image\'s appearance</string>
 
   <string name="vito_litho_sections">Vito Litho: Sections (RecyclerView)</string>
   <string name="vito_litho_gallery">Vito Litho: Gallery</string>

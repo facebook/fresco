@@ -20,7 +20,6 @@ import com.facebook.drawee.drawable.ProgressBarDrawable
 import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.fresco.samples.showcase.R
 import com.facebook.fresco.samples.showcase.common.CustomScaleTypes
-import com.facebook.fresco.samples.showcase.imageformat.keyframes.KeyframesDecoderExample
 import com.facebook.fresco.samples.showcase.postprocessor.CachedWatermarkPostprocessor
 import com.facebook.fresco.samples.showcase.postprocessor.FasterGreyScalePostprocessor
 import com.facebook.fresco.samples.showcase.postprocessor.ScalingBlurPostprocessor
@@ -29,7 +28,6 @@ import com.facebook.fresco.samples.showcase.postprocessor.WatermarkPostprocessor
 import com.facebook.fresco.vito.options.BorderOptions
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.RoundingOptions
-import com.facebook.imageformat.DefaultImageFormats
 import com.facebook.imagepipeline.common.RotationOptions
 import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor
 import com.facebook.imagepipeline.postprocessors.RoundAsCirclePostprocessor
@@ -67,17 +65,6 @@ object VitoSpinners {
             "custom: fit_x" to Pair(CustomScaleTypes.FIT_X, null),
             "custom: fit_y" to Pair(CustomScaleTypes.FIT_Y, null)
     ), "Scale type")
-
-    val imageFormats = Pair(listOf(
-            "JPEG" to DefaultImageFormats.JPEG,
-            "PNG" to DefaultImageFormats.PNG,
-            "Animated GIF" to DefaultImageFormats.GIF,
-            "WebP simple" to DefaultImageFormats.WEBP_SIMPLE,
-            "WebP with alpha" to DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA,
-            "Animated WebP" to DefaultImageFormats.WEBP_ANIMATED,
-            "Keyframes" to KeyframesDecoderExample.IMAGE_FORMAT_KEYFRAMES,
-            "none" to null
-    ), "Image format")
 
     val colorFilters = Pair(listOf(
             "none" to PorterDuffColorFilter(Color.TRANSPARENT, PorterDuff.Mode.ADD),

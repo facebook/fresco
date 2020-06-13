@@ -2,8 +2,8 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     >
@@ -14,27 +14,45 @@
       android:layout_height="@dimen/drawee_height_medium"
       />
 
-  <TextView
-      android:id="@+id/text_view"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_medium"
-      android:gravity="center"
-      android:text="@string/vito_litho_image_options_config_help"
-      android:textAppearance="?android:attr/textAppearanceSmall"
-      />
-
   <ScrollView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       >
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:orientation="vertical"
         >
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/margin_medium"
+          android:gravity="center"
+          android:text="@string/vito_litho_image_options_config_help_source"
+          android:textAppearance="?android:attr/textAppearanceSmall"
+          />
+
+      <Spinner
+          android:id="@+id/spinner_image_source"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+
+      <Spinner
+          android:id="@+id/spinner_image_format"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/margin_medium"
+          android:gravity="center"
+          android:text="@string/vito_litho_image_options_config_help_options"
+          android:textAppearance="?android:attr/textAppearanceSmall"
+          />
 
       <Spinner
           android:id="@+id/spinner_rounding"
@@ -50,12 +68,6 @@
 
       <Spinner
           android:id="@+id/spinner_scale_type"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          />
-
-      <Spinner
-          android:id="@+id/spinner_image_format"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           />
