@@ -128,6 +128,7 @@ dependencies {
     implementation project(':vito:litho')
     implementation project(':vito:options')
     implementation project(':vito:provider')
+    implementation project(':vito:source')
 
     // Only used for the custom SVG decoder
     implementation SampleDeps.Showcase.caverockSvg

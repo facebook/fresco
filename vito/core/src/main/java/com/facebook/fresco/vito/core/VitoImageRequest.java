@@ -8,36 +8,32 @@
 package com.facebook.fresco.vito.core;
 
 import android.content.res.Resources;
-import android.net.Uri;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Objects;
 import com.facebook.fresco.vito.options.ImageOptions;
-import com.facebook.imagepipeline.multiuri.MultiUri;
+import com.facebook.fresco.vito.source.ImageSource;
 import com.facebook.imagepipeline.request.ImageRequest;
 import javax.annotation.Nullable;
 
 public class VitoImageRequest {
 
   public final Resources resources;
-  public final @Nullable Uri uri;
-  public final @Nullable MultiUri multiUri;
+  public final ImageSource imageSource;
   public final ImageOptions imageOptions;
-  public final @Nullable ImageRequest imageRequest;
-  public final @Nullable CacheKey cacheKey;
+  public final @Nullable ImageRequest finalImageRequest;
+  public final @Nullable CacheKey finalImageCacheKey;
 
   public VitoImageRequest(
       Resources resources,
-      @Nullable Uri uri,
-      @Nullable MultiUri multiUri,
+      ImageSource imageSource,
       ImageOptions imageOptions,
-      ImageRequest imageRequest,
-      CacheKey cacheKey) {
+      @Nullable ImageRequest finalImageRequest,
+      @Nullable CacheKey finalImageCacheKey) {
     this.resources = resources;
-    this.uri = uri;
-    this.multiUri = multiUri;
+    this.imageSource = imageSource;
     this.imageOptions = imageOptions;
-    this.imageRequest = imageRequest;
-    this.cacheKey = cacheKey;
+    this.finalImageRequest = finalImageRequest;
+    this.finalImageCacheKey = finalImageCacheKey;
   }
 
   @Override
@@ -48,22 +44,16 @@ public class VitoImageRequest {
     if (obj == null || getClass() != obj.getClass()) return false;
     VitoImageRequest other = (VitoImageRequest) obj;
     return resources == other.resources
-        && Objects.equal(uri, other.uri)
-        && Objects.equal(multiUri, other.multiUri)
-        && Objects.equal(imageOptions, other.imageOptions)
-        && Objects.equal(imageRequest, other.imageRequest)
-        && Objects.equal(cacheKey, other.cacheKey);
+        && Objects.equal(imageSource, other.imageSource)
+        && Objects.equal(imageOptions, other.imageOptions);
   }
 
   @Override
   public int hashCode() {
     int result = super.hashCode();
     result = 31 * result + (resources != null ? resources.hashCode() : 0);
-    result = 31 * result + (uri != null ? uri.hashCode() : 0);
-    result = 31 * result + (multiUri != null ? multiUri.hashCode() : 0);
+    result = 31 * result + (imageSource != null ? imageSource.hashCode() : 0);
     result = 31 * result + (imageOptions != null ? imageOptions.hashCode() : 0);
-    result = 31 * result + (imageRequest != null ? imageRequest.hashCode() : 0);
-    result = 31 * result + (cacheKey != null ? cacheKey.hashCode() : 0);
     return result;
   }
 }

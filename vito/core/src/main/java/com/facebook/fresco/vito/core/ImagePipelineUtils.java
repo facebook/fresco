@@ -19,5 +19,9 @@ public interface ImagePipelineUtils {
   ImageRequest buildImageRequest(@Nullable Uri uri, DecodedImageOptions imageOptions);
 
   @Nullable
+  ImageRequest wrapDecodedImageRequest(
+      ImageRequest originalRequest, DecodedImageOptions imageOptions);
+
+  @Nullable
   ImageRequest buildEncodedImageRequest(@Nullable Uri uri, EncodedImageOptions imageOptions);
 }

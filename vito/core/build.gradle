@@ -29,6 +29,7 @@ dependencies {
     implementation project(':ui-common')
     implementation project(':middleware')
     implementation project(':vito:options')
+    implementation project(':vito:source')
 
     testImplementation "junit:junit:${JUNIT_VERSION}"
     testImplementation "org.assertj:assertj-core:${versions.assertjCore}"

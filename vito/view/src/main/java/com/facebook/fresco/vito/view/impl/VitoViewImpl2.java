@@ -22,6 +22,8 @@ import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.source.ImageSource;
+import com.facebook.fresco.vito.source.ImageSourceProvider;
 import com.facebook.fresco.vito.view.VitoView;
 import com.facebook.imagepipeline.multiuri.MultiUri;
 
@@ -67,8 +69,10 @@ public class VitoViewImpl2 implements VitoView.Implementation {
     Preconditions.checkArgument(
         !(uri != null && multiUri != null), "Setting both a Uri and MultiUri is not allowed!");
 
+    // TODO(T68473224): multiUri -> ImageSource
+    ImageSource source = ImageSourceProvider.forUri(uri);
     VitoImageRequest imageRequest =
-        mVitoImagePipeline.createImageRequest(target.getResources(), uri, multiUri, imageOptions);
+        mVitoImagePipeline.createImageRequest(target.getResources(), source, imageOptions);
 
     final FrescoDrawable2 frescoDrawable = ensureDrawableSet(target);
 

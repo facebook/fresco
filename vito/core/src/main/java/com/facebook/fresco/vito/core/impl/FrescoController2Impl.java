@@ -33,8 +33,6 @@ import javax.annotation.Nullable;
 
 public class FrescoController2Impl implements DrawableDataSubscriber, FrescoController2 {
 
-  private static final NullPointerException NO_REQUEST_EXCEPTION =
-      new NullPointerException("No image request was specified!");
   private static final Map<String, Object> COMPONENT_EXTRAS =
       ImmutableMap.<String, Object>of("component_tag", "vito2");
   private static final Map<String, Object> SHORTCUT_EXTRAS =

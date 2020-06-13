@@ -44,7 +44,23 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
   @Override
   @Nullable
   public ImageRequest buildImageRequest(@Nullable Uri uri, DecodedImageOptions imageOptions) {
-    ImageRequestBuilder builder = createDecodedImageRequestBuilder(uri, imageOptions);
+    if (uri == null) {
+      return null;
+    }
+    final ImageRequestBuilder imageRequestBuilder =
+        createEncodedImageRequestBuilder(uri, imageOptions);
+    ImageRequestBuilder builder =
+        createDecodedImageRequestBuilder(imageRequestBuilder, imageOptions);
+    return builder != null ? builder.build() : null;
+  }
+
+  @Override
+  @Nullable
+  public ImageRequest wrapDecodedImageRequest(
+      ImageRequest imageRequest, DecodedImageOptions imageOptions) {
+    ImageRequestBuilder builder =
+        createDecodedImageRequestBuilder(
+            createEncodedImageRequestBuilder(imageRequest, imageOptions), imageOptions);
     return builder != null ? builder.build() : null;
   }
 
@@ -58,12 +74,7 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
 
   @Nullable
   protected ImageRequestBuilder createDecodedImageRequestBuilder(
-      @Nullable Uri uri, DecodedImageOptions imageOptions) {
-    if (uri == null) {
-      return null;
-    }
-    final ImageRequestBuilder imageRequestBuilder =
-        createEncodedImageRequestBuilder(uri, imageOptions);
+      @Nullable ImageRequestBuilder imageRequestBuilder, DecodedImageOptions imageOptions) {
     if (imageRequestBuilder == null) {
       return null;
     }
@@ -120,6 +131,16 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
       return null;
     }
     return ImageRequestBuilder.newBuilderWithSource(uri)
+        .setRequestPriority(imageOptions.getPriority());
+  }
+
+  @Nullable
+  protected ImageRequestBuilder createEncodedImageRequestBuilder(
+      ImageRequest imageRequest, EncodedImageOptions imageOptions) {
+    if (imageRequest == null) {
+      return null;
+    }
+    return ImageRequestBuilder.fromRequest(imageRequest)
         .setRequestPriority(imageOptions.getPriority());
   }
 

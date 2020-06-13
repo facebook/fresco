@@ -24,9 +24,11 @@ import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
 import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.samples.showcase.misc.LogcatRequestListener2
+import com.facebook.fresco.vito.core.impl.source.ImageSourceProviderImpl
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.fresco.vito.provider.impl.DefaultFrescoContext
 import com.facebook.fresco.vito.provider.impl.DefaultFrescoVitoProvider
+import com.facebook.fresco.vito.source.ImageSourceProvider
 import com.facebook.fresco.vito.view.VitoView
 import com.facebook.fresco.vito.view.impl.VitoViewImpl2
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
@@ -115,6 +117,7 @@ class ShowcaseApplication : Application() {
         Fresco.initialize(this, imagePipelineConfig, draweeConfigBuilder.build())
         DefaultFrescoContext.initialize(resources, null)
         FrescoVitoProvider.setImplementation(DefaultFrescoVitoProvider())
+        ImageSourceProvider.setImplementation(ImageSourceProviderImpl())
         VitoView.init(VitoViewImpl2(
                 FrescoVitoProvider.getController(), FrescoVitoProvider.getImagePipeline()))
 

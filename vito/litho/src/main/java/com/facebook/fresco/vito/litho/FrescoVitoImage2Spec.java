@@ -20,7 +20,8 @@ import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.provider.FrescoVitoProvider;
-import com.facebook.imagepipeline.multiuri.MultiUri;
+import com.facebook.fresco.vito.source.ImageSource;
+import com.facebook.fresco.vito.source.ImageSourceProvider;
 import com.facebook.litho.AccessibilityRole;
 import com.facebook.litho.ComponentContext;
 import com.facebook.litho.ComponentLayout;
@@ -75,10 +76,16 @@ public class FrescoVitoImage2Spec {
   static VitoImageRequest onCalculateImageRequest(
       ComponentContext c,
       @Prop(optional = true) final @Nullable Uri uri,
-      @Prop(optional = true) final @Nullable MultiUri multiUri,
+      @Prop(optional = true) final @Nullable ImageSource imageSource,
       @Prop(optional = true) final @Nullable ImageOptions imageOptions) {
+    ImageSource finalImageSource;
+    if (imageSource != null) {
+      finalImageSource = imageSource;
+    } else {
+      finalImageSource = ImageSourceProvider.forUri(uri);
+    }
     return FrescoVitoProvider.getImagePipeline()
-        .createImageRequest(c.getResources(), uri, multiUri, imageOptions);
+        .createImageRequest(c.getResources(), finalImageSource, imageOptions);
   }
 
   @OnPrepare
@@ -154,12 +161,12 @@ public class FrescoVitoImage2Spec {
   @ShouldUpdate(onMount = true)
   static boolean shouldUpdate(
       @Prop(optional = true) Diff<Uri> uri,
-      @Prop(optional = true) Diff<MultiUri> multiUri,
+      @Prop(optional = true) Diff<ImageSource> imageSource,
       @Prop(optional = true) Diff<ImageOptions> imageOptions,
       @Prop(optional = true, resType = ResType.FLOAT) Diff<Float> imageAspectRatio,
       @Prop(optional = true) Diff<ImageListener> imageListener) {
     return !ObjectsCompat.equals(uri.getPrevious(), uri.getNext())
-        || !ObjectsCompat.equals(multiUri.getPrevious(), multiUri.getNext())
+        || !ObjectsCompat.equals(imageSource.getPrevious(), imageSource.getNext())
         || !ObjectsCompat.equals(imageOptions.getPrevious(), imageOptions.getNext())
         || !ObjectsCompat.equals(imageAspectRatio.getPrevious(), imageAspectRatio.getNext())
         || !ObjectsCompat.equals(imageListener.getPrevious(), imageListener.getNext());
