@@ -20,7 +20,7 @@ public abstract class CloseableImage implements Closeable, ImageInfo, HasImageMe
   /* Extras we want to set to the image */
   private static final String[] mImageExtrasList =
       new String[] {
-        "encoded_size", "encoded_width", "encoded_height", "uri_source",
+        "encoded_size", "encoded_width", "encoded_height", "uri_source", "image_format"
       };
 
   /** @return size in bytes of the bitmap(s) */

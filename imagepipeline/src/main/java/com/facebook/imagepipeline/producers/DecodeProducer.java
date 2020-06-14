@@ -162,6 +162,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             @Override
             public void run(EncodedImage encodedImage, @Status int status) {
               if (encodedImage != null) {
+                mProducerContext.setExtra("image_format", encodedImage.getImageFormat().getName());
                 if (mDownsampleEnabled || !statusHasFlag(status, Consumer.IS_RESIZING_DONE)) {
                   ImageRequest request = producerContext.getImageRequest();
                   if (mDownsampleEnabledForNetwork
