@@ -9,7 +9,6 @@ package com.facebook.imagepipeline.image;
 
 import com.facebook.common.logging.FLog;
 import java.io.Closeable;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nonnull;
@@ -17,7 +16,12 @@ import javax.annotation.Nonnull;
 /** A simple wrapper around an image that implements {@link Closeable} */
 public abstract class CloseableImage implements Closeable, ImageInfo, HasImageMetadata {
   private static final String TAG = "CloseableImage";
-  private OriginalEncodedImageInfo mOriginalEncodedImageInfo;
+  private Map<String, Object> mExtras = new HashMap<>();
+  /* Extras we want to set to the image */
+  private static final String[] mImageExtrasList =
+      new String[] {
+        "encoded_size", "encoded_width", "encoded_height", "uri_source",
+      };
 
   /** @return size in bytes of the bitmap(s) */
   public abstract int getSizeInBytes();
@@ -48,26 +52,20 @@ public abstract class CloseableImage implements Closeable, ImageInfo, HasImageMe
     return false;
   }
 
-  public OriginalEncodedImageInfo getOriginalEncodedImageInfo() {
-    return mOriginalEncodedImageInfo;
-  }
-
   @Override
-  public @Nonnull Map<String, Object> getAsExtras() {
-    if (mOriginalEncodedImageInfo == null) {
-      return Collections.emptyMap();
-    }
-
-    HashMap<String, Object> extras = new HashMap<>();
-    extras.put("encoded_width", mOriginalEncodedImageInfo.getWidth());
-    extras.put("encoded_height", mOriginalEncodedImageInfo.getHeight());
-    extras.put("encoded_size", mOriginalEncodedImageInfo.getSize());
-    extras.put("uri_source", mOriginalEncodedImageInfo.getUri());
-    return extras;
+  public @Nonnull Map<String, Object> getExtras() {
+    return mExtras;
   }
 
-  public void setOriginalEncodedImageInfo(OriginalEncodedImageInfo originalEncodedImageInfo) {
-    mOriginalEncodedImageInfo = originalEncodedImageInfo;
+  /** Sets extras that match mImageExtrasList to this image from supplied extras */
+  public void setImageExtras(Map<String, Object> extras) {
+    if (extras == null) return;
+
+    for (String extra : mImageExtrasList) {
+      Object val = extras.get(extra);
+      if (val == null) continue;
+      mExtras.put(extra, val);
+    }
   }
 
   /** Ensures that the underlying resources are always properly released. */

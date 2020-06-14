@@ -25,7 +25,6 @@ import com.facebook.imagepipeline.bitmaps.SimpleBitmapReleaser;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
-import com.facebook.imagepipeline.image.OriginalEncodedImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.io.FileNotFoundException;
 import java.util.Map;
@@ -101,14 +100,7 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
                     SimpleBitmapReleaser.getInstance(),
                     ImmutableQualityInfo.FULL_QUALITY,
                     0);
-            closeableStaticBitmap.setOriginalEncodedImageInfo(
-                new OriginalEncodedImageInfo(
-                    producerContext.getImageRequest().getSourceUri(),
-                    producerContext.getEncodedImageOrigin(),
-                    producerContext.getCallerContext(),
-                    0,
-                    0,
-                    0));
+            closeableStaticBitmap.setImageExtras(producerContext.getExtras());
             return CloseableReference.<CloseableImage>of(closeableStaticBitmap);
           }
 

@@ -186,7 +186,7 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
 
   private static void maybeSetExtrasFromCloseableImage(
       HasImageMetadata imageWithMeta, ProducerContext producerContext) {
-    producerContext.putExtras(imageWithMeta.getAsExtras());
+    producerContext.putExtras(imageWithMeta.getExtras());
   }
 
   protected String getOriginSubcategory() {

@@ -176,7 +176,8 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
         .onRelease(
             drawable.getImageId(),
             drawable.getImageRequest(),
-            obtainExtras(null, null, drawable.getViewportDimensions()));
+            obtainExtras(
+                null, null, drawable.getViewportDimensions(), drawable.getCallerContext()));
   }
 
   private void setActualImage(
@@ -203,7 +204,8 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             drawable.getImageRequest(),
             drawable.getImageOrigin(),
             image.get(),
-            obtainExtras(dataSource, image, drawable.getViewportDimensions()),
+            obtainExtras(
+                dataSource, image, drawable.getViewportDimensions(), drawable.getCallerContext()),
             actualDrawable);
     drawable.setProgressDrawable(null);
     mDebugOverlayFactory.update(drawable);
@@ -246,7 +248,11 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             drawable.getImageRequest(),
             errorDrawable,
             dataSource.getFailureCause(),
-            obtainExtras(dataSource, dataSource.getResult(), drawable.getViewportDimensions()));
+            obtainExtras(
+                dataSource,
+                dataSource.getResult(),
+                drawable.getViewportDimensions(),
+                drawable.getCallerContext()));
     mDebugOverlayFactory.update(drawable);
   }
 
@@ -261,12 +267,18 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   private static Extras obtainExtras(
       @Nullable DataSource<CloseableReference<CloseableImage>> dataSource,
       CloseableReference<CloseableImage> image,
-      @Nullable Rect viewportDimensions) {
+      @Nullable Rect viewportDimensions,
+      @Nullable Object callerContext) {
     Map<String, Object> imageExtras = null;
     if (image != null && image.get() != null) {
-      imageExtras = image.get().getAsExtras();
+      imageExtras = image.get().getExtras();
     }
     return MiddlewareUtils.obtainExtras(
-        COMPONENT_EXTRAS, SHORTCUT_EXTRAS, dataSource, viewportDimensions, imageExtras);
+        COMPONENT_EXTRAS,
+        SHORTCUT_EXTRAS,
+        dataSource == null ? null : dataSource.getExtras(),
+        viewportDimensions,
+        imageExtras,
+        callerContext);
   }
 }

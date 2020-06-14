@@ -450,6 +450,6 @@ public class PipelineDraweeController
   @Override
   public @Nullable Map<String, Object> obtainExtrasFromImage(ImageInfo info) {
     if (info == null) return null;
-    return info.getAsExtras();
+    return info.getExtras();
   }
 }

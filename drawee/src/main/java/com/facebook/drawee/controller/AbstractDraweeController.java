@@ -815,20 +815,21 @@ public abstract class AbstractDraweeController<T, INFO>
 
   private void reportRelease(@Nullable Map<String, Object> extras) {
     getControllerListener().onRelease(mId);
-    getControllerListener2().onRelease(mId, obtainExtras(extras));
+    getControllerListener2().onRelease(mId, obtainExtras(extras, null));
   }
 
-  private Extras obtainExtras(@Nullable DataSource<T> dataSource, INFO info) {
+  private Extras obtainExtras(@Nullable Map<String, Object> datasourceExtras, INFO info) {
     return MiddlewareUtils.obtainExtras(
         COMPONENT_EXTRAS,
         SHORTCUT_EXTRAS,
-        dataSource,
+        datasourceExtras,
         getDimensions(),
-        obtainExtrasFromImage(info));
+        obtainExtrasFromImage(info),
+        getCallerContext());
   }
 
-  private static Extras obtainExtras(@Nullable Map<String, Object> dataSourceExtras) {
-    return MiddlewareUtils.obtainExtras(COMPONENT_EXTRAS, SHORTCUT_EXTRAS, dataSourceExtras, null);
+  private Extras obtainExtras(@Nullable DataSource<T> datasource, @Nullable INFO info) {
+    return obtainExtras(datasource == null ? null : datasource.getExtras(), info);
   }
 
   private @Nullable Rect getDimensions() {

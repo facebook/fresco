@@ -12,8 +12,6 @@ import javax.annotation.Nonnull;
 
 public interface HasImageMetadata {
 
-  OriginalEncodedImageInfo getOriginalEncodedImageInfo();
-
   @Nonnull
-  Map<String, Object> getAsExtras();
+  Map<String, Object> getExtras();
 }
