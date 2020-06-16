@@ -14,8 +14,10 @@ import androidx.annotation.DrawableRes;
 import com.facebook.common.internal.Objects;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImageOptions extends DecodedImageOptions {
 
   private static ImageOptions sDefaultImageOptions =
@@ -168,7 +170,7 @@ public class ImageOptions extends DecodedImageOptions {
   }
 
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(@Nullable Object obj) {
     if (this == obj) {
       return true;
     }

@@ -10,8 +10,10 @@ package com.facebook.fresco.vito.options;
 import com.facebook.common.internal.Objects;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class EncodedImageOptions {
 
   public static Builder create() {
@@ -35,7 +37,7 @@ public class EncodedImageOptions {
   }
 
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(@Nullable Object obj) {
     if (this == obj) {
       return true;
     }

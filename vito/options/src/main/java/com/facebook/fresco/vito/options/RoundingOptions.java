@@ -8,9 +8,11 @@
 package com.facebook.fresco.vito.options;
 
 import com.facebook.common.internal.Objects;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Arrays;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class RoundingOptions {
 
   public static final float CORNER_RADIUS_UNSET = 0f;
