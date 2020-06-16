@@ -13,6 +13,8 @@ object Deps {
 
     const val inferAnnotation = "com.facebook.infer.annotation:infer-annotation:0.18.0"
 
+    const val volley = "com.android.volley:volley:1.1.0"
+
     object Bolts {
         const val tasks = "com.parse.bolts:bolts-tasks:1.4.0"
     }

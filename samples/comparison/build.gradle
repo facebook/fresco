@@ -15,7 +15,7 @@ dependencies {
     implementation Comparison.Glide.glide
     annotationProcessor Comparison.Glide.compiler
     annotationProcessor "androidx.annotation:annotation:${versions.androidx.annotation}"
-    implementation "com.android.volley:volley:${VOLLEY_VERSION}"
+    implementation Deps.volley
     implementation Comparison.Uil.uil
     implementation Comparison.Picasso.picasso
     implementation "com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2"
