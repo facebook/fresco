@@ -12,7 +12,7 @@ apply plugin: 'com.android.library'
 dependencies {
     compileOnly Deps.jsr305
 
-    api "com.squareup.okhttp3:okhttp:${OKHTTP3_VERSION}"
+    api Deps.okhttp3
 
     implementation project(':fbcore')
     implementation project(':imagepipeline')
