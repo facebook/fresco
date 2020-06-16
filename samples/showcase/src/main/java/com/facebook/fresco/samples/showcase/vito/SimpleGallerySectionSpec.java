@@ -11,7 +11,7 @@ import android.net.Uri;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.ShowcaseApplication;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
-import com.facebook.fresco.vito.litho.FrescoVitoImage;
+import com.facebook.fresco.vito.litho.FrescoVitoImage2;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.litho.annotations.FromEvent;
 import com.facebook.litho.annotations.OnEvent;
@@ -50,7 +50,7 @@ public class SimpleGallerySectionSpec {
   static RenderInfo onRender(final SectionContext c, @FromEvent Uri model) {
     return ComponentRenderInfo.create()
         .component(
-            FrescoVitoImage.create(c)
+            FrescoVitoImage2.create(c)
                 .uri(model)
                 .imageOptions(IMAGE_OPTIONS)
                 .paddingDip(YogaEdge.ALL, 2))

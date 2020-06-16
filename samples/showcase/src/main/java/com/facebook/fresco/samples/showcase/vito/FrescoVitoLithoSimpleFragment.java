@@ -17,12 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
-import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
-import com.facebook.fresco.vito.litho.FrescoVitoImage;
+import com.facebook.fresco.vito.litho.FrescoVitoImage2;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.RoundingOptions;
-import com.facebook.imagepipeline.multiuri.MultiUri;
-import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.litho.Component;
 import com.facebook.litho.ComponentContext;
 import com.facebook.litho.LithoView;
@@ -59,20 +56,7 @@ public class FrescoVitoLithoSimpleFragment extends BaseShowcaseFragment {
   }
 
   public Component createComponent(ComponentContext c) {
-    Uri uri0 = Uri.parse("http://sample.com/invalid");
-    Uri uri1 = sampleUris().createSampleUri(ImageUriProvider.ImageSize.XXL);
-    Uri uri2 = Uri.parse("http://sample.com/invalid");
-
-    return FrescoVitoImage.create(c)
-        .multiUri(
-            MultiUri.create()
-                .setLowResImageRequest(ImageRequest.fromUri(uri0))
-                .setImageRequests(
-                    ImageRequest.fromUri(uri0),
-                    ImageRequest.fromUri(uri1),
-                    ImageRequest.fromUri(uri2))
-                .build())
-        .imageOptions(IMAGE_OPTIONS)
-        .build();
+    Uri uri = sampleUris().createSampleUri();
+    return FrescoVitoImage2.create(c).uri(uri).imageOptions(IMAGE_OPTIONS).build();
   }
 }

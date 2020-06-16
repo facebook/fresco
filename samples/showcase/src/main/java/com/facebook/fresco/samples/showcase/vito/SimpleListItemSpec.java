@@ -14,7 +14,7 @@ import static com.facebook.yoga.YogaEdge.START;
 
 import android.net.Uri;
 import com.facebook.fresco.samples.showcase.R;
-import com.facebook.fresco.vito.litho.FrescoVitoImage;
+import com.facebook.fresco.vito.litho.FrescoVitoImage2;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.RoundingOptions;
 import com.facebook.litho.Column;
@@ -47,7 +47,7 @@ public class SimpleListItemSpec {
         .child(
             Row.create(c)
                 .child(
-                    FrescoVitoImage.create(c)
+                    FrescoVitoImage2.create(c)
                         .uri(profilePicture)
                         .imageOptions(PROFILE_IMAGE_OPTIONS)
                         .widthDip(52))
@@ -58,7 +58,7 @@ public class SimpleListItemSpec {
                         .alignSelf(CENTER)
                         .paddingDip(START, 8))
                 .paddingDip(BOTTOM, 8))
-        .child(FrescoVitoImage.create(c).uri(mainPicture).imageOptions(IMAGE_OPTIONS))
+        .child(FrescoVitoImage2.create(c).uri(mainPicture).imageOptions(IMAGE_OPTIONS))
         .build();
   }
 }
