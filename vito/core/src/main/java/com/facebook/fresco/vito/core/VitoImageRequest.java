@@ -50,10 +50,9 @@ public class VitoImageRequest {
 
   @Override
   public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + (resources != null ? resources.hashCode() : 0);
-    result = 31 * result + (imageSource != null ? imageSource.hashCode() : 0);
-    result = 31 * result + (imageOptions != null ? imageOptions.hashCode() : 0);
+    int result = resources.hashCode();
+    result = 31 * result + imageSource.hashCode();
+    result = 31 * result + imageOptions.hashCode();
     return result;
   }
 }
