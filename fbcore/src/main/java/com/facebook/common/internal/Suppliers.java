@@ -7,7 +7,10 @@
 
 package com.facebook.common.internal;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /** Wrapper for creating a Supplier and default Suppliers for convenience. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class Suppliers {
   /**
    * Returns a Supplier which always returns {@code instance}.

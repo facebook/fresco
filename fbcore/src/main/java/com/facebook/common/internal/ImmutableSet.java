@@ -7,6 +7,7 @@
 
 package com.facebook.common.internal;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,6 +16,7 @@ import java.util.Set;
  * A dummy representation of an immutable set. This can be used temporarily as a type until we have
  * an actual non-gauva implementation.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImmutableSet<E> extends HashSet<E> {
 
   // Prevent direct instantiation.

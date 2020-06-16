@@ -7,7 +7,10 @@
 
 package com.facebook.common.internal;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /** Additional predicates. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class AndroidPredicates {
 
   private AndroidPredicates() {}

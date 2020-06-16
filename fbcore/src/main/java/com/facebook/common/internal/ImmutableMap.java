@@ -7,6 +7,7 @@
 
 package com.facebook.common.internal;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +18,7 @@ import java.util.Map;
  * <p>We do not replicate Guava's ImmutableMap class here. This class merely returns standard {@link
  * HashMap}s wrapped so that they throw UnsupportedOperationExceptions on any write method.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImmutableMap<K, V> extends HashMap<K, V> {
 
   private ImmutableMap(Map<? extends K, ? extends V> map) {
