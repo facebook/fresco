@@ -16,6 +16,7 @@ package com.facebook.common.internal;
 
 import static com.facebook.common.internal.Preconditions.checkNotNull;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Arrays;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -31,6 +32,7 @@ import javax.annotation.Nullable;
  * @author Laurence Gonsalves
  * @since 18.0 (since 2.0 as {@code Objects})
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class Objects {
 
   /**
