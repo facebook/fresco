@@ -4,13 +4,14 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
 
 dependencies {
     implementation project(':drawee-backends:drawee-pipeline')
 
-    testImplementation "junit:junit:${JUNIT_VERSION}"
+    testImplementation TestDeps.junit
     testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
     testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
         exclude group: 'commons-logging', module: 'commons-logging'

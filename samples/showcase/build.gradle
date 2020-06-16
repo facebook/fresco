@@ -7,6 +7,7 @@
 
 import com.facebook.fresco.buildsrc.Deps
 import com.facebook.fresco.buildsrc.SampleDeps
+import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -137,7 +138,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:${versions.androidx.espresso}"
     androidTestImplementation "androidx.test:rules:${versions.androidx.test}"
     androidTestImplementation "androidx.test:runner:${versions.androidx.test}"
-    androidTestImplementation "junit:junit:${JUNIT_VERSION}"
+    androidTestImplementation TestDeps.junit
 
     implementation(Deps.Tools.Flipper.flipper)
     implementation(Deps.Tools.Flipper.fresco) {

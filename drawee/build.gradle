@@ -6,6 +6,7 @@
  */
 
 import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
@@ -26,7 +27,7 @@ dependencies {
     implementation project(':middleware')
 
     testImplementation Deps.jsr305
-    testImplementation "junit:junit:${JUNIT_VERSION}"
+    testImplementation TestDeps.junit
     testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
     testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
         exclude group: 'commons-logging', module: 'commons-logging'

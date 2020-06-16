@@ -6,6 +6,7 @@
  */
 
 import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
 
@@ -27,7 +28,7 @@ dependencies {
     api project(':native-filters')
     api project(':native-imagetranscoder')
 
-    testImplementation "junit:junit:${JUNIT_VERSION}"
+    testImplementation TestDeps.junit
     testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
 }
 apply from: rootProject.file('release.gradle')

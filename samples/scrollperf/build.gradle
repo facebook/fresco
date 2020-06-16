@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import com.facebook.fresco.buildsrc.TestDeps
+
 apply plugin: 'com.android.application'
 
 android {
@@ -83,9 +85,9 @@ dependencies {
     soLoaderImplementation project(':static-webp')
     soLoaderImplementation project(':drawee-backends:drawee-pipeline')
 
-    testImplementation "junit:junit:${JUNIT_VERSION}"
+    testImplementation TestDeps.junit
 
-    androidTestImplementation "junit:junit:${JUNIT_VERSION}"
+    androidTestImplementation TestDeps.junit
     androidTestImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
     androidTestImplementation("org.powermock:powermock-api-mockito2:${POWERMOCK_VERSION}") {
         exclude group: 'org.mockito', module: 'mockito-all'

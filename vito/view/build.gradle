@@ -4,6 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
 
@@ -24,7 +25,7 @@ android {
 dependencies {
     implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation TestDeps.junit
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation project(path: ':drawee')

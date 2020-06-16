@@ -6,6 +6,7 @@
  */
 
 import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
@@ -18,7 +19,7 @@ dependencies {
 
     testImplementation project(':mockito-config')
     testImplementation Deps.jsr305
-    testImplementation "junit:junit:${JUNIT_VERSION}"
+    testImplementation TestDeps.junit
     testImplementation "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
     testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
     testImplementation "org.powermock:powermock-api-mockito2:${POWERMOCK_VERSION}"
