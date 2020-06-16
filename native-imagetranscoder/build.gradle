@@ -20,7 +20,7 @@ dependencies {
     implementation project(':imagepipeline-base')
     implementation Deps.SoLoader.nativeloader
 
-    implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
+    implementation Deps.Bolts.tasks
     implementation project(':fbcore')
 
 

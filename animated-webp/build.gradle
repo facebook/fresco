@@ -14,7 +14,7 @@ dependencies {
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
 
-    implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
+    implementation Deps.Bolts.tasks
     implementation project(':static-webp')
     implementation project(':animated-base')
 

@@ -15,7 +15,7 @@ dependencies {
     compileOnly Deps.jsr305
 
     implementation Deps.SoLoader.nativeloader
-    implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
+    implementation Deps.Bolts.tasks
     implementation project(':fbcore')
     implementation project(':imagepipeline-base')
 

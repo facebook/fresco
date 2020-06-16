@@ -21,7 +21,7 @@ dependencies {
     api project(':memory-types:nativememory')
     api project(':memory-types:simple')
     api project(':animated-drawable')
-    implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
+    implementation Deps.Bolts.tasks
 
     testImplementation project(':animated-base-test')
     testImplementation project(':imagepipeline-test')

@@ -13,6 +13,10 @@ object Deps {
 
     const val inferAnnotation = "com.facebook.infer.annotation:infer-annotation:0.18.0"
 
+    object Bolts {
+        const val tasks = "com.parse.bolts:bolts-tasks:1.4.0"
+    }
+
     object Kotlin {
         const val version = "1.3.72"
 

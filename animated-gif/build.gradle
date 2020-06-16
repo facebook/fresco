@@ -12,7 +12,7 @@ apply plugin: 'maven'
 
 dependencies {
     compileOnly Deps.jsr305
-    implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
+    implementation Deps.Bolts.tasks
     compileOnly Deps.javaxAnnotation
     implementation Deps.SoLoader.nativeloader
     implementation project(':fbcore')
