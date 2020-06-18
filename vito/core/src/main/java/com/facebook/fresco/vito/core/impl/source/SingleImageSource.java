@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.core.impl.source;
 
 import androidx.annotation.Nullable;
+import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
@@ -82,5 +83,10 @@ public class SingleImageSource implements VitoImageSource {
         }
       }
     };
+  }
+
+  @Override
+  public String toString() {
+    return Objects.toStringHelper(this).add("imageRequest", mMainImageRequest).toString();
   }
 }
