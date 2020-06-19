@@ -1,6 +1,7 @@
 package com.facebook.fresco.middleware;
 
 import android.graphics.Rect;
+import android.net.Uri;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +15,8 @@ public class MiddlewareUtils {
       @Nullable Map<String, Object> dataSourceExtras,
       @Nullable Rect viewportDimensions,
       @Nullable Map<String, Object> imageExtras,
-      @Nullable Object callerContext) {
+      @Nullable Object callerContext,
+      @Nullable Uri mainUri) {
     final Extras extras = new Extras();
     extras.view = new HashMap<>();
 
@@ -29,6 +31,7 @@ public class MiddlewareUtils {
     }
 
     extras.view.put("caller_context", callerContext);
+    if (mainUri != null) extras.view.put("uri_main", mainUri);
 
     if (dataSourceExtras != null) {
       extras.pipe = dataSourceExtras;

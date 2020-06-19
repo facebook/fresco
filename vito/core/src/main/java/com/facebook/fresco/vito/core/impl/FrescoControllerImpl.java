@@ -331,7 +331,12 @@ public class FrescoControllerImpl implements FrescoController {
         mControllerListener2.onSubmit(
             VitoUtils.getStringId(frescoState.getId()),
             frescoState.getCallerContext(),
-            ON_SUBMIT_EXTRAS);
+            obtainExtras(
+                null,
+                null,
+                frescoState.getFrescoDrawable(),
+                frescoState.getCallerContext(),
+                getMainUri(frescoState)));
       }
       frescoState.onSubmit(frescoState.getId(), frescoState.getCallerContext());
 
@@ -454,6 +459,15 @@ public class FrescoControllerImpl implements FrescoController {
     }
   }
 
+  private @Nullable Uri getMainUri(FrescoState frescoState) {
+    if (frescoState.getUri() != null) return frescoState.getUri();
+
+    if (frescoState.getMultiUri() == null
+        || frescoState.getMultiUri().getHighResImageRequest() == null) return null;
+
+    return frescoState.getMultiUri().getHighResImageRequest().getSourceUri();
+  }
+
   private DataSource<CloseableReference<CloseableImage>> createDataSource(FrescoState frescoState) {
     if (frescoState.getUri() != null) {
       return fireOffRequest(frescoState);
@@ -559,7 +573,11 @@ public class FrescoControllerImpl implements FrescoController {
           VitoUtils.getStringId(frescoState.getId()),
           dataSource.getFailureCause(),
           obtainExtras(
-              dataSource, null, frescoState.getFrescoDrawable(), frescoState.getCallerContext()));
+              dataSource,
+              null,
+              frescoState.getFrescoDrawable(),
+              frescoState.getCallerContext(),
+              null));
     }
     frescoState.onFailure(frescoState.getId(), errorDrawable, dataSource.getFailureCause());
   }
@@ -641,7 +659,8 @@ public class FrescoControllerImpl implements FrescoController {
                   dataSource,
                   null,
                   frescoState.getFrescoDrawable(),
-                  frescoState.getCallerContext()));
+                  frescoState.getCallerContext(),
+                  null));
         }
         frescoState.onFailure(frescoState.getId(), errorDrawable, null);
         return;
@@ -672,7 +691,8 @@ public class FrescoControllerImpl implements FrescoController {
                 dataSource,
                 closeableImage,
                 frescoState.getFrescoDrawable(),
-                frescoState.getCallerContext()));
+                frescoState.getCallerContext(),
+                null));
       }
       frescoState.onFinalImageSet(
           frescoState.getId(), frescoState.getImageOrigin(), closeableImage, actualDrawable);
@@ -757,13 +777,15 @@ public class FrescoControllerImpl implements FrescoController {
       @Nullable DataSource<CloseableReference<CloseableImage>> dataSource,
       @Nullable CloseableImage closeableImage,
       @Nullable FrescoDrawable frescoDrawable,
-      @Nullable Object callerContext) {
+      @Nullable Object callerContext,
+      @Nullable Uri mainUri) {
     return MiddlewareUtils.obtainExtras(
         COMPONENT_EXTRAS,
         SHORTCUT_EXTRAS,
         dataSource == null ? null : dataSource.getExtras(),
         frescoDrawable == null ? null : frescoDrawable.getViewportDimensions(),
         closeableImage == null ? null : closeableImage.getExtras(),
-        callerContext);
+        callerContext,
+        mainUri);
   }
 }

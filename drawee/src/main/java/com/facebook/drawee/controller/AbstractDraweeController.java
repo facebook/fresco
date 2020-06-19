@@ -12,6 +12,7 @@ import static com.facebook.drawee.components.DraweeEventTracker.Event;
 import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.view.MotionEvent;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Objects;
@@ -210,9 +211,9 @@ public abstract class AbstractDraweeController<T, INFO>
     boolean wasRequestSubmitted = mIsRequestSubmitted;
     mIsRequestSubmitted = false;
     mHasFetchFailed = false;
-    Map<String, Object> extras = null;
+    Map<String, Object> datasourceExtras = null, imageExtras = null;
     if (mDataSource != null) {
-      extras = mDataSource.getExtras();
+      datasourceExtras = mDataSource.getExtras();
       mDataSource.close();
       mDataSource = null;
     }
@@ -224,12 +225,13 @@ public abstract class AbstractDraweeController<T, INFO>
     }
     mDrawable = null;
     if (mFetchedImage != null) {
+      imageExtras = obtainExtrasFromImage(getImageInfo(mFetchedImage));
       logMessageAndImage("release", mFetchedImage);
       releaseImage(mFetchedImage);
       mFetchedImage = null;
     }
     if (wasRequestSubmitted) {
-      reportRelease(extras);
+      reportRelease(datasourceExtras, imageExtras);
     }
   }
 
@@ -523,7 +525,7 @@ public abstract class AbstractDraweeController<T, INFO>
       mIsRequestSubmitted = true;
       mHasFetchFailed = false;
       mEventTracker.recordEvent(Event.ON_SUBMIT_CACHE_HIT);
-      reportSubmit(mDataSource);
+      reportSubmit(mDataSource, getImageInfo(closeableImage));
       onImageLoadedFromCacheImmediately(mId, closeableImage);
       onNewResultInternal(mId, mDataSource, closeableImage, 1.0f, true, true, true);
       if (FrescoSystrace.isTracing()) {
@@ -539,7 +541,7 @@ public abstract class AbstractDraweeController<T, INFO>
     mIsRequestSubmitted = true;
     mHasFetchFailed = false;
     mDataSource = getDataSource();
-    reportSubmit(mDataSource);
+    reportSubmit(mDataSource, null);
     if (FLog.isLoggable(FLog.VERBOSE)) {
       FLog.v(
           TAG,
@@ -785,9 +787,10 @@ public abstract class AbstractDraweeController<T, INFO>
 
   protected void onImageLoadedFromCacheImmediately(String id, T cachedImage) {}
 
-  protected void reportSubmit(DataSource<T> dataSource) {
+  protected void reportSubmit(DataSource<T> dataSource, @Nullable INFO info) {
     getControllerListener().onSubmit(mId, mCallerContext);
-    getControllerListener2().onSubmit(mId, mCallerContext, obtainExtras(dataSource, null));
+    getControllerListener2()
+        .onSubmit(mId, mCallerContext, obtainExtras(dataSource, info, getMainUri()));
   }
 
   private void reportIntermediateSet(String id, @Nullable T image) {
@@ -804,32 +807,43 @@ public abstract class AbstractDraweeController<T, INFO>
   private void reportSuccess(String id, @Nullable T image, @Nullable DataSource<T> dataSource) {
     INFO info = getImageInfo(image);
     getControllerListener().onFinalImageSet(id, info, getAnimatable());
-    getControllerListener2().onFinalImageSet(id, info, obtainExtras(dataSource, info));
+    getControllerListener2().onFinalImageSet(id, info, obtainExtras(dataSource, info, null));
   }
 
   private void reportFailure(Throwable throwable, @Nullable DataSource<T> dataSource) {
-    final Extras extras = obtainExtras(dataSource, null);
+    final Extras extras = obtainExtras(dataSource, null, null);
     getControllerListener().onFailure(mId, throwable);
     getControllerListener2().onFailure(mId, throwable, extras);
   }
 
-  private void reportRelease(@Nullable Map<String, Object> extras) {
+  private void reportRelease(
+      @Nullable Map<String, Object> datasourceExtras, @Nullable Map<String, Object> imageExtras) {
     getControllerListener().onRelease(mId);
-    getControllerListener2().onRelease(mId, obtainExtras(extras, null));
+    getControllerListener2().onRelease(mId, obtainExtras(datasourceExtras, imageExtras, null));
   }
 
-  private Extras obtainExtras(@Nullable Map<String, Object> datasourceExtras, INFO info) {
+  private Extras obtainExtras(
+      @Nullable Map<String, Object> datasourceExtras,
+      @Nullable Map<String, Object> imageExtras,
+      @Nullable Uri mainUri) {
     return MiddlewareUtils.obtainExtras(
         COMPONENT_EXTRAS,
         SHORTCUT_EXTRAS,
         datasourceExtras,
         getDimensions(),
-        obtainExtrasFromImage(info),
-        getCallerContext());
+        imageExtras,
+        getCallerContext(),
+        mainUri);
   }
 
-  private Extras obtainExtras(@Nullable DataSource<T> datasource, @Nullable INFO info) {
-    return obtainExtras(datasource == null ? null : datasource.getExtras(), info);
+  protected @Nullable Uri getMainUri() {
+    return null;
+  };
+
+  private Extras obtainExtras(
+      @Nullable DataSource<T> datasource, @Nullable INFO info, @Nullable Uri mainUri) {
+    return obtainExtras(
+        datasource == null ? null : datasource.getExtras(), obtainExtrasFromImage(info), mainUri);
   }
 
   private @Nullable Rect getDimensions() {

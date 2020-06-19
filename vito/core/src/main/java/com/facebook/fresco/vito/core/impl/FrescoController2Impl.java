@@ -25,6 +25,7 @@ import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.core.VitoImageRequestListener;
 import com.facebook.fresco.vito.core.VitoUtils;
 import com.facebook.fresco.vito.core.impl.debug.DebugOverlayFactory2;
+import com.facebook.fresco.vito.core.impl.source.VitoImageSource;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.CloseableImage;
 import java.util.Map;
@@ -107,7 +108,11 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     // Notify listeners that we're about to fetch an image
     frescoDrawable
         .getImageListener()
-        .onSubmit(imageId, imageRequest, callerContext, ON_SUBMIT_EXTRAS);
+        .onSubmit(
+            imageId,
+            imageRequest,
+            callerContext,
+            obtainExtras(null, null, viewportDimensions, callerContext));
 
     // Check if the image is in cache
     CloseableReference<CloseableImage> cachedImage = mImagePipeline.getCachedImage(imageRequest);
@@ -279,6 +284,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
         dataSource == null ? null : dataSource.getExtras(),
         viewportDimensions,
         imageExtras,
-        callerContext);
+        callerContext,
+        null);
   }
 }

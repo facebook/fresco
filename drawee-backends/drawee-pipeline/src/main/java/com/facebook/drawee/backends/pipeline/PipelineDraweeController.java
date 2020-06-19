@@ -9,6 +9,7 @@ package com.facebook.drawee.backends.pipeline;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableList;
 import com.facebook.common.internal.Objects;
@@ -94,6 +95,7 @@ public class PipelineDraweeController
   private ImageOriginListener mImageOriginListener;
 
   private DebugOverlayImageOriginListener mDebugOverlayImageOriginListener;
+  private ImageRequest mImageRequest;
 
   public PipelineDraweeController(
       Resources resources,
@@ -160,6 +162,8 @@ public class PipelineDraweeController
       mImagePerfMonitor.setEnabled(true);
       mImagePerfMonitor.updateImageRequestData(builder);
     }
+
+    mImageRequest = builder.getImageRequest();
   }
 
   public void setDrawDebugOverlay(boolean drawDebugOverlay) {
@@ -451,5 +455,10 @@ public class PipelineDraweeController
   public @Nullable Map<String, Object> obtainExtrasFromImage(ImageInfo info) {
     if (info == null) return null;
     return info.getExtras();
+  }
+
+  @Override
+  protected @Nullable Uri getMainUri() {
+    return mImageRequest == null ? null : mImageRequest.getSourceUri();
   }
 }
