@@ -53,6 +53,14 @@ public class IncreasingQualityImageSource implements VitoImageSource {
     return result;
   }
 
+  public VitoImageSource getLowResImageSource() {
+    return mLowResImageSource;
+  }
+
+  public VitoImageSource getHighResImageSource() {
+    return mHighResImageSource;
+  }
+
   @Override
   @Nullable
   public ImageRequest maybeExtractFinalImageRequest(

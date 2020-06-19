@@ -49,6 +49,10 @@ public class FirstAvailableImageSource implements VitoImageSource {
     return Arrays.hashCode(mFirstAvailableImageSources);
   }
 
+  public ImageSource[] getSources() {
+    return mFirstAvailableImageSources;
+  }
+
   @Override
   @Nullable
   public ImageRequest maybeExtractFinalImageRequest(

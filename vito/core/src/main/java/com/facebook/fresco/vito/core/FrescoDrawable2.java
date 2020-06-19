@@ -107,4 +107,8 @@ public abstract class FrescoDrawable2 extends BaseFrescoDrawable
   @Override
   public abstract void onProgressUpdate(
       @Nonnull DataSource<CloseableReference<CloseableImage>> dataSource);
+
+  public abstract @Nullable Object getExtras();
+
+  public abstract void setExtras(@Nullable Object extras);
 }

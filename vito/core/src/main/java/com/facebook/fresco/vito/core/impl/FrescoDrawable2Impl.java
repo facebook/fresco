@@ -40,6 +40,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   private @Nullable Object mCallerContext;
   private @Nullable DrawableDataSubscriber mDrawableDataSubscriber;
   private long mImageId;
+  private @Nullable Object mExtras;
 
   private @Nullable DataSource<CloseableReference<CloseableImage>> mDataSource;
   private boolean mFetchSubmitted;
@@ -201,6 +202,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     mActualImageWrapper.setCurrent(NopDrawable.INSTANCE);
     mImageOrigin = ImageOrigin.UNKNOWN;
     mImageId = 0;
+    mExtras = null;
   }
 
   @Override
@@ -258,5 +260,16 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
       return; // wrong image
     }
     mDrawableDataSubscriber.onProgressUpdate(this, mImageRequest, dataSource);
+  }
+
+  @Nullable
+  @Override
+  public Object getExtras() {
+    return mExtras;
+  }
+
+  @Override
+  public void setExtras(@Nullable Object extras) {
+    mExtras = extras;
   }
 }
