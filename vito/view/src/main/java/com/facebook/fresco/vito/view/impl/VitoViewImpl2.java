@@ -8,13 +8,11 @@
 package com.facebook.fresco.vito.view.impl;
 
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
-import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.VisibilityCallback;
 import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
@@ -23,9 +21,7 @@ import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.source.ImageSource;
-import com.facebook.fresco.vito.source.ImageSourceProvider;
 import com.facebook.fresco.vito.view.VitoView;
-import com.facebook.imagepipeline.multiuri.MultiUri;
 
 /** You must initialize this class before use by calling {#code VitoView.init()}. */
 @Deprecated /* Experimental */
@@ -60,19 +56,13 @@ public class VitoViewImpl2 implements VitoView.Implementation {
 
   @Override
   public void show(
-      final @Nullable Uri uri,
-      final @Nullable MultiUri multiUri,
+      final ImageSource imageSource,
       final ImageOptions imageOptions,
       final @Nullable Object callerContext,
       final @Nullable ImageListener imageListener,
       final View target) {
-    Preconditions.checkArgument(
-        !(uri != null && multiUri != null), "Setting both a Uri and MultiUri is not allowed!");
-
-    // TODO(T68473224): multiUri -> ImageSource
-    ImageSource source = ImageSourceProvider.forUri(uri);
     VitoImageRequest imageRequest =
-        mVitoImagePipeline.createImageRequest(target.getResources(), source, imageOptions);
+        mVitoImagePipeline.createImageRequest(target.getResources(), imageSource, imageOptions);
 
     final FrescoDrawable2 frescoDrawable = ensureDrawableSet(target);
 
@@ -97,7 +87,7 @@ public class VitoViewImpl2 implements VitoView.Implementation {
     target.addOnAttachStateChangeListener(sOnAttachStateChangeListenerCallback);
   }
 
-  private void onAttach(final FrescoDrawable2 drawable, final VitoImageRequest request) {
+  private void onAttach(final FrescoDrawable2 drawable, @Nullable final VitoImageRequest request) {
     if (request != null) {
       mController.fetch(
           drawable,

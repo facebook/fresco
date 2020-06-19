@@ -13,7 +13,8 @@ import androidx.annotation.Nullable;
 import com.facebook.common.logging.FLog;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
-import com.facebook.imagepipeline.multiuri.MultiUri;
+import com.facebook.fresco.vito.source.ImageSource;
+import com.facebook.fresco.vito.source.ImageSourceProvider;
 
 /** You must initialize this class before use by calling {@link #init(Implementation)}. */
 @Deprecated /* Experimental */
@@ -21,8 +22,7 @@ public class VitoView {
 
   public interface Implementation {
     void show(
-        @Nullable Uri uri,
-        @Nullable MultiUri multiUri,
+        ImageSource imageSource,
         ImageOptions imageOptions,
         @Nullable Object callerContext,
         @Nullable ImageListener imageListener,
@@ -47,17 +47,53 @@ public class VitoView {
   }
 
   /*
-   * Display an image with default options
+   * Display an image with default image options
    */
   public static void show(@Nullable Uri uri, View target) {
-    sImplementation.show(uri, null, ImageOptions.defaults(), null, null, target);
+    show(ImageSourceProvider.forUri(uri), target);
+  }
+
+  /*
+   * Display an image with default image options
+   */
+  public static void show(ImageSource imageSource, View target) {
+    sImplementation.show(imageSource, ImageOptions.defaults(), null, null, target);
+  }
+
+  /*
+   * Display an image with the given image options
+   */
+  public static void show(@Nullable Uri uri, ImageOptions imageOptions, final View target) {
+    show(ImageSourceProvider.forUri(uri), imageOptions, target);
+  }
+
+  /*
+   * Display an image with the given image options
+   */
+  public static void show(ImageSource imageSource, ImageOptions imageOptions, final View target) {
+    sImplementation.show(imageSource, imageOptions, null, null, target);
   }
 
   /*
    * Display an image
    */
-  public static void show(@Nullable Uri uri, ImageOptions imageOptions, final View target) {
-    sImplementation.show(uri, null, imageOptions, null, null, target);
+  public static void show(
+      @Nullable Uri uri,
+      ImageOptions imageOptions,
+      @Nullable Object callerContext,
+      final View target) {
+    show(ImageSourceProvider.forUri(uri), imageOptions, callerContext, target);
+  }
+
+  /*
+   * Display an image
+   */
+  public static void show(
+      ImageSource imageSource,
+      ImageOptions imageOptions,
+      @Nullable Object callerContext,
+      final View target) {
+    sImplementation.show(imageSource, imageOptions, callerContext, null, target);
   }
 
   /*
@@ -69,21 +105,18 @@ public class VitoView {
       @Nullable Object callerContext,
       @Nullable ImageListener imageListener,
       final View target) {
-    sImplementation.show(uri, null, imageOptions, callerContext, imageListener, target);
-  }
-
-  /*
-   * Display an image with default options
-   */
-  public static void show(@Nullable MultiUri multiUri, final View target) {
-    sImplementation.show(null, multiUri, ImageOptions.defaults(), null, null, target);
+    show(ImageSourceProvider.forUri(uri), imageOptions, callerContext, imageListener, target);
   }
 
   /*
    * Display an image
    */
   public static void show(
-      @Nullable MultiUri multiUri, ImageOptions imageOptions, final View target) {
-    sImplementation.show(null, multiUri, imageOptions, null, null, target);
+      ImageSource imageSource,
+      ImageOptions imageOptions,
+      @Nullable Object callerContext,
+      @Nullable ImageListener imageListener,
+      final View target) {
+    sImplementation.show(imageSource, imageOptions, callerContext, imageListener, target);
   }
 }
