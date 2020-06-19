@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.producers;
 
+import com.facebook.common.internal.ImmutableSet;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.EncodedImageOrigin;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
@@ -26,13 +28,15 @@ public class BaseProducerContext implements ProducerContext {
 
   private static final String ORIGIN_SUBCATEGORY_DEFAULT = "default";
 
+  public static final Set<String> INITIAL_KEYS = ImmutableSet.of("id", "uri_source");
+
   private final ImageRequest mImageRequest;
   private final String mId;
   private final @Nullable String mUiComponentId;
   private final ProducerListener2 mProducerListener;
   private final Object mCallerContext;
   private final ImageRequest.RequestLevel mLowestPermittedRequestLevel;
-  private final Map<String, Object> mExtras = new HashMap<>();
+  private final Map<String, Object> mExtras;
 
   @GuardedBy("this")
   private boolean mIsPrefetch;
@@ -89,6 +93,11 @@ public class BaseProducerContext implements ProducerContext {
       ImagePipelineConfig imagePipelineConfig) {
     mImageRequest = imageRequest;
     mId = id;
+
+    mExtras = new HashMap<>();
+    mExtras.put("id", mId);
+    mExtras.put("uri_source", imageRequest == null ? "null-request" : imageRequest.getSourceUri());
+
     mUiComponentId = uiComponentId;
     mProducerListener = producerListener;
     mCallerContext = callerContext;
@@ -309,13 +318,15 @@ public class BaseProducerContext implements ProducerContext {
 
   @Override
   public void setExtra(String key, @Nullable Object value) {
+    if (INITIAL_KEYS.contains(key)) return;
     mExtras.put(key, value);
   }
 
   @Override
   public void putExtras(@Nullable Map<String, ?> extras) {
-    if (extras != null) {
-      mExtras.putAll(extras);
+    if (extras == null) return;
+    for (Map.Entry<String, ?> entry : extras.entrySet()) {
+      setExtra(entry.getKey(), entry.getValue());
     }
   }
 

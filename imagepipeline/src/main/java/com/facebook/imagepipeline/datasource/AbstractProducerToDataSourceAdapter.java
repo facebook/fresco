@@ -19,6 +19,9 @@ import com.facebook.imagepipeline.request.HasImageRequest;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -129,10 +132,6 @@ public abstract class AbstractProducerToDataSourceAdapter<T> extends AbstractDat
   }
 
   private void setInitialExtras() {
-    ImageRequest request = mSettableProducerContext.getImageRequest();
-    mSettableProducerContext.setExtra(
-        ProducerContext.ExtraKeys.SOURCE_URI,
-        request == null ? "null-request" : request.getSourceUri());
     setExtras(mSettableProducerContext.getExtras());
   }
 }
