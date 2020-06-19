@@ -411,6 +411,13 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     return getScaleTypeDrawableAtIndex(ACTUAL_IMAGE_INDEX).getScaleType();
   }
 
+  public @Nullable PointF getActualImageFocusPoint() {
+    if (!hasScaleTypeDrawableAtIndex(ACTUAL_IMAGE_INDEX)) {
+      return null;
+    }
+    return getScaleTypeDrawableAtIndex(ACTUAL_IMAGE_INDEX).getFocusPoint();
+  }
+
   /** Sets the color filter to be applied on the actual image. */
   public void setActualImageColorFilter(ColorFilter colorfilter) {
     mActualImageWrapper.setColorFilter(colorfilter);

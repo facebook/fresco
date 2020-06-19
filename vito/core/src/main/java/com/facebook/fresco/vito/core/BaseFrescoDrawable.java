@@ -7,12 +7,15 @@
 
 package com.facebook.fresco.vito.core;
 
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.drawable.FadeDrawable;
+import com.facebook.drawee.drawable.ScaleTypeDrawable;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.drawable.VisibilityCallback;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.infer.annotation.OkToExtend;
@@ -112,5 +115,19 @@ public class BaseFrescoDrawable extends FadeDrawable implements Closeable {
 
   public void setViewportDimensions(@Nullable Rect viewportDimensions) {
     mViewportDimensions = viewportDimensions;
+  }
+
+  public @Nullable ScalingUtils.ScaleType getActualImageScaleType() {
+    Drawable actual = getDrawable(IMAGE_DRAWABLE_INDEX);
+    if (!(actual instanceof ScaleTypeDrawable)) return null;
+
+    return ((ScaleTypeDrawable) actual).getScaleType();
+  }
+
+  public @Nullable PointF getActualImageFocusPoint() {
+    Drawable actual = getDrawable(IMAGE_DRAWABLE_INDEX);
+    if (!(actual instanceof ScaleTypeDrawable)) return null;
+
+    return ((ScaleTypeDrawable) actual).getFocusPoint();
   }
 }

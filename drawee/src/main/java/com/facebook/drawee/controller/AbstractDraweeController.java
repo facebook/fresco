@@ -9,6 +9,7 @@ package com.facebook.drawee.controller;
 
 import static com.facebook.drawee.components.DraweeEventTracker.Event;
 
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
@@ -826,11 +827,21 @@ public abstract class AbstractDraweeController<T, INFO>
       @Nullable Map<String, Object> datasourceExtras,
       @Nullable Map<String, Object> imageExtras,
       @Nullable Uri mainUri) {
+    String scaleType = null;
+    PointF focusPoint = null;
+    if (mSettableDraweeHierarchy instanceof GenericDraweeHierarchy) {
+      scaleType =
+          String.valueOf(
+              ((GenericDraweeHierarchy) mSettableDraweeHierarchy).getActualImageScaleType());
+      focusPoint = ((GenericDraweeHierarchy) mSettableDraweeHierarchy).getActualImageFocusPoint();
+    }
     return MiddlewareUtils.obtainExtras(
         COMPONENT_EXTRAS,
         SHORTCUT_EXTRAS,
         datasourceExtras,
         getDimensions(),
+        scaleType,
+        focusPoint,
         imageExtras,
         getCallerContext(),
         mainUri);

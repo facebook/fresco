@@ -791,6 +791,8 @@ public class FrescoControllerImpl implements FrescoController {
         SHORTCUT_EXTRAS,
         dataSource == null ? null : dataSource.getExtras(),
         frescoDrawable == null ? null : frescoDrawable.getViewportDimensions(),
+        String.valueOf(frescoDrawable == null ? null : frescoDrawable.getActualImageScaleType()),
+        frescoDrawable == null ? null : frescoDrawable.getActualImageFocusPoint(),
         closeableImage == null ? null : closeableImage.getExtras(),
         callerContext,
         mainUri);

@@ -1,5 +1,6 @@
 package com.facebook.fresco.middleware;
 
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.net.Uri;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
@@ -14,6 +15,8 @@ public class MiddlewareUtils {
       Map<String, Object> shortcutAttribution,
       @Nullable Map<String, Object> dataSourceExtras,
       @Nullable Rect viewportDimensions,
+      @Nullable String scaleType,
+      @Nullable PointF focusPoint,
       @Nullable Map<String, Object> imageExtras,
       @Nullable Object callerContext,
       @Nullable Uri mainUri) {
@@ -28,6 +31,11 @@ public class MiddlewareUtils {
     } else {
       extras.view.put("viewport_width", -1);
       extras.view.put("viewport_height", -1);
+    }
+    extras.view.put("scale_type", scaleType);
+    if (focusPoint != null) {
+      extras.view.put("focus_point_x", focusPoint.x);
+      extras.view.put("focus_point_y", focusPoint.y);
     }
 
     extras.view.put("caller_context", callerContext);

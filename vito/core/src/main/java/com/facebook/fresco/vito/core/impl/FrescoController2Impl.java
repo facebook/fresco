@@ -107,11 +107,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     // Notify listeners that we're about to fetch an image
     frescoDrawable
         .getImageListener()
-        .onSubmit(
-            imageId,
-            imageRequest,
-            callerContext,
-            obtainExtras(null, null, viewportDimensions, callerContext));
+        .onSubmit(imageId, imageRequest, callerContext, obtainExtras(null, null, frescoDrawable));
 
     // Check if the image is in cache
     CloseableReference<CloseableImage> cachedImage = mImagePipeline.getCachedImage(imageRequest);
@@ -178,10 +174,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     drawable
         .getImageListener()
         .onRelease(
-            drawable.getImageId(),
-            drawable.getImageRequest(),
-            obtainExtras(
-                null, null, drawable.getViewportDimensions(), drawable.getCallerContext()));
+            drawable.getImageId(), drawable.getImageRequest(), obtainExtras(null, null, drawable));
   }
 
   private void setActualImage(
@@ -208,8 +201,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             drawable.getImageRequest(),
             drawable.getImageOrigin(),
             image.get(),
-            obtainExtras(
-                dataSource, image, drawable.getViewportDimensions(), drawable.getCallerContext()),
+            obtainExtras(dataSource, image, drawable),
             actualDrawable);
     drawable.setProgressDrawable(null);
     mDebugOverlayFactory.update(drawable);
@@ -252,11 +244,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             drawable.getImageRequest(),
             errorDrawable,
             dataSource.getFailureCause(),
-            obtainExtras(
-                dataSource,
-                dataSource.getResult(),
-                drawable.getViewportDimensions(),
-                drawable.getCallerContext()));
+            obtainExtras(dataSource, dataSource.getResult(), drawable));
     mDebugOverlayFactory.update(drawable);
   }
 
@@ -271,8 +259,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   private static Extras obtainExtras(
       @Nullable DataSource<CloseableReference<CloseableImage>> dataSource,
       CloseableReference<CloseableImage> image,
-      @Nullable Rect viewportDimensions,
-      @Nullable Object callerContext) {
+      FrescoDrawable2 drawable) {
     Map<String, Object> imageExtras = null;
     if (image != null && image.get() != null) {
       imageExtras = image.get().getExtras();
@@ -281,9 +268,11 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
         COMPONENT_EXTRAS,
         SHORTCUT_EXTRAS,
         dataSource == null ? null : dataSource.getExtras(),
-        viewportDimensions,
+        drawable.getViewportDimensions(),
+        String.valueOf(drawable.getActualImageScaleType()),
+        drawable.getActualImageFocusPoint(),
         imageExtras,
-        callerContext,
+        drawable.getCallerContext(),
         null);
   }
 }
