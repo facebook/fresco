@@ -27,6 +27,7 @@ import com.facebook.imagepipeline.decoder.DecodeException;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegParser;
+import com.facebook.imagepipeline.image.CloseableBitmap;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.EncodedImage;
@@ -357,17 +358,25 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
                 sampleSize);
         mProducerListener.onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, extraMap);
 
-        mProducerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_WIDTH, encodedImage.getWidth());
-        mProducerContext.setExtra(
-            ProducerContext.ExtraKeys.ENCODED_HEIGHT, encodedImage.getHeight());
-        mProducerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_SIZE, encodedImage.getSize());
-        if (image != null) {
-          image.setImageExtras(mProducerContext.getExtras());
-        }
+        setImageExtras(encodedImage, image);
 
         handleResult(image, status);
       } finally {
         EncodedImage.closeSafely(encodedImage);
+      }
+    }
+
+    private void setImageExtras(EncodedImage encodedImage, CloseableImage image) {
+      mProducerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_WIDTH, encodedImage.getWidth());
+      mProducerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_HEIGHT, encodedImage.getHeight());
+      mProducerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_SIZE, encodedImage.getSize());
+      if (image instanceof CloseableBitmap) {
+        Bitmap bitmap = ((CloseableBitmap) image).getUnderlyingBitmap();
+        Bitmap.Config config = bitmap == null ? null : bitmap.getConfig();
+        mProducerContext.setExtra("bitmap_config", String.valueOf(config));
+      }
+      if (image != null) {
+        image.setImageExtras(mProducerContext.getExtras());
       }
     }
 
