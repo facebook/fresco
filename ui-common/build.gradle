@@ -24,6 +24,7 @@ android {
 
 dependencies {
     compileOnly Deps.jsr305
+    implementation project(path: ':fbcore')
 }
 
 task sourcesJar(type: Jar) {

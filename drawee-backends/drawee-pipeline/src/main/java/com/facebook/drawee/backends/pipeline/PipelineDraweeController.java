@@ -40,6 +40,7 @@ import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
+import com.facebook.fresco.ui.common.MultiUriHelper;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -95,7 +96,9 @@ public class PipelineDraweeController
   private ImageOriginListener mImageOriginListener;
 
   private DebugOverlayImageOriginListener mDebugOverlayImageOriginListener;
-  private ImageRequest mImageRequest;
+  private @Nullable ImageRequest mImageRequest;
+  private @Nullable ImageRequest[] mFirstAvailableImageRequests;
+  private @Nullable ImageRequest mLowResImageRequest;
 
   public PipelineDraweeController(
       Resources resources,
@@ -164,6 +167,8 @@ public class PipelineDraweeController
     }
 
     mImageRequest = builder.getImageRequest();
+    mFirstAvailableImageRequests = builder.getFirstAvailableImageRequests();
+    mLowResImageRequest = builder.getLowResImageRequest();
   }
 
   public void setDrawDebugOverlay(boolean drawDebugOverlay) {
@@ -459,6 +464,10 @@ public class PipelineDraweeController
 
   @Override
   protected @Nullable Uri getMainUri() {
-    return mImageRequest == null ? null : mImageRequest.getSourceUri();
+    return MultiUriHelper.getMainUri(
+        mImageRequest,
+        mLowResImageRequest,
+        mFirstAvailableImageRequests,
+        ImageRequest.REQUEST_TO_URI_FN);
   }
 }

@@ -19,6 +19,7 @@ import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_UNKNOW
 
 import android.net.Uri;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.common.internal.Fn;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.media.MediaUtils;
 import com.facebook.common.util.UriUtil;
@@ -376,4 +377,12 @@ public class ImageRequest {
       return SOURCE_TYPE_UNKNOWN;
     }
   }
+
+  public static final Fn<ImageRequest, Uri> REQUEST_TO_URI_FN =
+      new Fn<ImageRequest, Uri>() {
+        @Override
+        public @Nullable Uri apply(@Nullable ImageRequest arg) {
+          return arg != null ? arg.getSourceUri() : null;
+        }
+      };
 }

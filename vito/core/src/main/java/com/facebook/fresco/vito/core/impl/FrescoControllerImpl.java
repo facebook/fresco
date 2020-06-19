@@ -26,6 +26,7 @@ import com.facebook.fresco.middleware.MiddlewareUtils;
 import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.ui.common.DimensionsInfo;
+import com.facebook.fresco.ui.common.MultiUriHelper;
 import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoController;
 import com.facebook.fresco.vito.core.FrescoDrawable;
@@ -460,12 +461,18 @@ public class FrescoControllerImpl implements FrescoController {
   }
 
   private @Nullable Uri getMainUri(FrescoState frescoState) {
-    if (frescoState.getUri() != null) return frescoState.getUri();
-
-    if (frescoState.getMultiUri() == null
-        || frescoState.getMultiUri().getHighResImageRequest() == null) return null;
-
-    return frescoState.getMultiUri().getHighResImageRequest().getSourceUri();
+    ImageRequest highRes, lowRes = null;
+    ImageRequest[] firstAvailable = null;
+    MultiUri multiUri = frescoState.getMultiUri();
+    if (multiUri == null) {
+      highRes = frescoState.getImageRequest();
+    } else {
+      highRes = multiUri.getHighResImageRequest();
+      lowRes = multiUri.getLowResImageRequest();
+      firstAvailable = multiUri.getMultiImageRequests();
+    }
+    return MultiUriHelper.getMainUri(
+        highRes, lowRes, firstAvailable, ImageRequest.REQUEST_TO_URI_FN);
   }
 
   private DataSource<CloseableReference<CloseableImage>> createDataSource(FrescoState frescoState) {
