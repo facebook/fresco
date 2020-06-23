@@ -19,9 +19,6 @@ import com.facebook.imagepipeline.request.HasImageRequest;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
