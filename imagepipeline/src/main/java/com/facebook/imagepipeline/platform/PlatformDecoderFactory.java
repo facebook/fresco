@@ -29,7 +29,7 @@ public class PlatformDecoderFactory {
       return new OreoDecoder(
           poolFactory.getBitmapPool(), maxNumThreads, new Pools.SynchronizedPool<>(maxNumThreads));
     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-        || NativeCodeSetup.getUseNativeCode() == false) {
+        || !NativeCodeSetup.getUseNativeCode()) {
       int maxNumThreads = poolFactory.getFlexByteArrayPoolMaxNumThreads();
       return new ArtDecoder(
           poolFactory.getBitmapPool(), maxNumThreads, new Pools.SynchronizedPool<>(maxNumThreads));
