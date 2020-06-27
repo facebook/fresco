@@ -43,6 +43,7 @@ public class MiddlewareUtils {
 
     if (dataSourceExtras != null) {
       extras.pipe = dataSourceExtras;
+      if (imageExtras != null) extras.pipe.putAll(imageExtras);
     } else {
       extras.pipe = imageExtras;
       extras.view.putAll(shortcutAttribution);
