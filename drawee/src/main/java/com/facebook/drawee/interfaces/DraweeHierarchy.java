@@ -22,8 +22,17 @@ import javax.annotation.concurrent.ThreadSafe;
  *
  * <p>Example hierarchy:
  *
- * <p>o FadeDrawable (top level drawable) | +--o ScaleTypeDrawable | | | +--o BitmapDrawable | +--o
- * ScaleTypeDrawable | +--o BitmapDrawable
+ * <pre>
+ *   o FadeDrawable (top level drawable)
+ *   |
+ *   +--o ScaleTypeDrawable
+ *   |  |
+ *   |  +--o BitmapDrawable
+ *   |
+ *   +--o ScaleTypeDrawable
+ *      |
+ *      +--o BitmapDrawable
+ * </pre>
  */
 @ThreadSafe
 public interface DraweeHierarchy {
