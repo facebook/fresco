@@ -20,7 +20,6 @@ import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.memory.PooledByteStreams;
 import com.facebook.imagepipeline.core.MemoryChunkType;
 import com.facebook.imagepipeline.core.NativeCodeSetup;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import javax.annotation.Nullable;
