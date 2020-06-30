@@ -61,28 +61,39 @@ public class HttpUrlConnectionNetworkFetcher
 
   private int mHttpConnectionTimeout;
   @Nullable private String mUserAgent;
+  @Nullable private final Map<String, String> mRequestHeaders;
 
   private final ExecutorService mExecutorService;
   private final MonotonicClock mMonotonicClock;
 
   public HttpUrlConnectionNetworkFetcher() {
-    this(null, RealtimeSinceBootClock.get());
+    this(null, null, RealtimeSinceBootClock.get());
   }
 
   public HttpUrlConnectionNetworkFetcher(int httpConnectionTimeout) {
-    this(null, RealtimeSinceBootClock.get());
+    this(null, null, RealtimeSinceBootClock.get());
     mHttpConnectionTimeout = httpConnectionTimeout;
   }
 
   public HttpUrlConnectionNetworkFetcher(String userAgent, int httpConnectionTimeout) {
-    this(userAgent, RealtimeSinceBootClock.get());
+    this(userAgent, null, RealtimeSinceBootClock.get());
+    mHttpConnectionTimeout = httpConnectionTimeout;
+  }
+
+  public HttpUrlConnectionNetworkFetcher(
+      String userAgent, @Nullable Map<String, String> requestHeaders, int httpConnectionTimeout) {
+    this(userAgent, requestHeaders, RealtimeSinceBootClock.get());
     mHttpConnectionTimeout = httpConnectionTimeout;
   }
 
   @VisibleForTesting
-  HttpUrlConnectionNetworkFetcher(@Nullable String userAgent, MonotonicClock monotonicClock) {
+  HttpUrlConnectionNetworkFetcher(
+      @Nullable String userAgent,
+      @Nullable Map<String, String> requestHeaders,
+      MonotonicClock monotonicClock) {
     mExecutorService = Executors.newFixedThreadPool(NUM_NETWORK_THREADS);
     mMonotonicClock = monotonicClock;
+    mRequestHeaders = requestHeaders;
     mUserAgent = userAgent;
   }
 
@@ -148,6 +159,11 @@ public class HttpUrlConnectionNetworkFetcher
     HttpURLConnection connection = openConnectionTo(uri);
     if (mUserAgent != null) {
       connection.setRequestProperty("User-Agent", mUserAgent);
+    }
+    if (mRequestHeaders != null) {
+      for (Map.Entry<String, String> entry : mRequestHeaders.entrySet()) {
+        connection.setRequestProperty(entry.getKey(), entry.getValue());
+      }
     }
     connection.setConnectTimeout(mHttpConnectionTimeout);
     int responseCode = connection.getResponseCode();
