@@ -25,7 +25,9 @@ import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.core.VitoImageRequestListener;
 import com.facebook.fresco.vito.core.VitoUtils;
 import com.facebook.fresco.vito.core.impl.debug.DebugOverlayFactory2;
+import com.facebook.fresco.vito.listener.ForwardingImageListener;
 import com.facebook.fresco.vito.listener.ImageListener;
+import com.facebook.fresco.vito.listener.impl.AutoPlayImageListener;
 import com.facebook.imagepipeline.image.CloseableImage;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -93,7 +95,13 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     frescoDrawable.setDrawableDataSubscriber(this);
     frescoDrawable.setImageRequest(imageRequest);
     frescoDrawable.setCallerContext(callerContext);
-    frescoDrawable.setImageListener(listener);
+    if (imageRequest.imageOptions.shouldAutoPlay()) {
+      frescoDrawable.setImageListener(
+          ForwardingImageListener.create(listener, AutoPlayImageListener.getInstance()));
+    } else {
+      frescoDrawable.setImageListener(listener);
+    }
+
     frescoDrawable.setVitoImageRequestListener(mGlobalImageListener);
 
     // Set layers that are always visible
