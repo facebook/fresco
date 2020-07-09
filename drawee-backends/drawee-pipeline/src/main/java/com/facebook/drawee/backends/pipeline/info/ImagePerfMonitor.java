@@ -24,6 +24,7 @@ import com.facebook.imagepipeline.listener.ForwardingRequestListener;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import javax.annotation.Nullable;
 
 public class ImagePerfMonitor implements ImagePerfNotifier {
@@ -97,7 +98,7 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
       return;
     }
     if (mImagePerfDataListeners == null) {
-      mImagePerfDataListeners = new LinkedList<>();
+      mImagePerfDataListeners = new CopyOnWriteArrayList<>();
     }
     mImagePerfDataListeners.add(imagePerfDataListener);
   }
