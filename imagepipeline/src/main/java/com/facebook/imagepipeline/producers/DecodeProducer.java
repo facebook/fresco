@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.references.CloseableReference;
@@ -76,6 +77,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   private final boolean mDecodeCancellationEnabled;
   private final int mMaxBitmapSize;
   private final CloseableReferenceFactory mCloseableReferenceFactory;
+  private final @Nullable Runnable mReclaimMemoryRunnable;
+  private final Supplier<Boolean> mRecoverFromDecoderOOM;
 
   public DecodeProducer(
       final ByteArrayPool byteArrayPool,
@@ -87,7 +90,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       final boolean decodeCancellationEnabled,
       final Producer<EncodedImage> inputProducer,
       final int maxBitmapSize,
-      final CloseableReferenceFactory closeableReferenceFactory) {
+      final CloseableReferenceFactory closeableReferenceFactory,
+      final @Nullable Runnable reclaimMemoryRunnable,
+      Supplier<Boolean> recoverFromDecoderOOM) {
     mByteArrayPool = Preconditions.checkNotNull(byteArrayPool);
     mExecutor = Preconditions.checkNotNull(executor);
     mImageDecoder = Preconditions.checkNotNull(imageDecoder);
@@ -98,6 +103,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     mDecodeCancellationEnabled = decodeCancellationEnabled;
     mMaxBitmapSize = maxBitmapSize;
     mCloseableReferenceFactory = closeableReferenceFactory;
+    mReclaimMemoryRunnable = reclaimMemoryRunnable;
+    mRecoverFromDecoderOOM = recoverFromDecoderOOM;
   }
 
   @Override
@@ -314,7 +321,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         CloseableImage image = null;
         try {
           try {
-            image = mImageDecoder.decode(encodedImage, length, quality, mImageDecodeOptions);
+            image = internalDecode(encodedImage, length, quality);
           } catch (DecodeException e) {
             EncodedImage failedEncodedImage = e.getEncodedImage();
             FLog.w(
@@ -364,6 +371,27 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       } finally {
         EncodedImage.closeSafely(encodedImage);
       }
+    }
+
+    /** This does not close the encodedImage * */
+    private CloseableImage internalDecode(
+        EncodedImage encodedImage, int length, QualityInfo quality) {
+      CloseableImage image;
+      try {
+        image = mImageDecoder.decode(encodedImage, length, quality, mImageDecodeOptions);
+      } catch (OutOfMemoryError e) {
+        if (!mRecoverFromDecoderOOM.get() || mReclaimMemoryRunnable == null) {
+          throw e;
+        }
+
+        mReclaimMemoryRunnable.run();
+        System.gc();
+
+        // Now we retry only once
+        image = mImageDecoder.decode(encodedImage, length, quality, mImageDecodeOptions);
+      }
+
+      return image;
     }
 
     private void setImageExtras(EncodedImage encodedImage, CloseableImage image) {
