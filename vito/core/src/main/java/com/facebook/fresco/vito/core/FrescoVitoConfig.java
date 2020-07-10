@@ -9,9 +9,7 @@ package com.facebook.fresco.vito.core;
 
 public interface FrescoVitoConfig {
 
-  boolean prefetchInOnPrepare();
-
-  PrefetchTarget prefetchTargetOnPrepare();
+  PrefetchConfig getPrefetchConfig();
 
   boolean submitFetchOnBgThread();
 }

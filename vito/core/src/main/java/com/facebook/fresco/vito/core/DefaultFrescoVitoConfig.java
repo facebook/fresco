@@ -8,18 +8,53 @@
 package com.facebook.fresco.vito.core;
 
 public class DefaultFrescoVitoConfig implements FrescoVitoConfig {
-  @Override
-  public boolean prefetchInOnPrepare() {
-    return true;
-  }
+
+  private final PrefetchConfig mPrefetchConfig = new DefaultPrefetchConfig();
 
   @Override
-  public PrefetchTarget prefetchTargetOnPrepare() {
-    return PrefetchTarget.MEMORY_DECODED;
+  public PrefetchConfig getPrefetchConfig() {
+    return mPrefetchConfig;
   }
 
   @Override
   public boolean submitFetchOnBgThread() {
     return true;
+  }
+
+  public static class DefaultPrefetchConfig implements PrefetchConfig {
+    @Override
+    public boolean prefetchInOnPrepare() {
+      return true;
+    }
+
+    @Override
+    public PrefetchTarget prefetchTargetOnPrepare() {
+      return PrefetchTarget.MEMORY_DECODED;
+    }
+
+    @Override
+    public boolean cancelOnPreparePrefetchWhenWorkingRangePrefetch() {
+      return true;
+    }
+
+    @Override
+    public boolean cancelPrefetchWhenFetched() {
+      return true;
+    }
+
+    @Override
+    public boolean prefetchWithWorkingRange() {
+      return true;
+    }
+
+    @Override
+    public int prefetchWorkingRangeSize() {
+      return 3;
+    }
+
+    @Override
+    public PrefetchTarget prefetchTargetWorkingRange() {
+      return PrefetchTarget.MEMORY_DECODED;
+    }
   }
 }

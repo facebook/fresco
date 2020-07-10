@@ -15,7 +15,8 @@ import androidx.core.util.ObjectsCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import com.facebook.datasource.DataSource;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
-import com.facebook.fresco.vito.core.FrescoVitoConfig;
+import com.facebook.fresco.vito.core.PrefetchConfig;
+import com.facebook.fresco.vito.core.PrefetchTarget;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
@@ -23,11 +24,13 @@ import com.facebook.fresco.vito.provider.FrescoVitoProvider;
 import com.facebook.fresco.vito.source.ImageSource;
 import com.facebook.fresco.vito.source.ImageSourceProvider;
 import com.facebook.litho.AccessibilityRole;
+import com.facebook.litho.BoundaryWorkingRange;
 import com.facebook.litho.ComponentContext;
 import com.facebook.litho.ComponentLayout;
 import com.facebook.litho.Diff;
 import com.facebook.litho.Output;
 import com.facebook.litho.Size;
+import com.facebook.litho.StateValue;
 import com.facebook.litho.annotations.CachedValue;
 import com.facebook.litho.annotations.FromBoundsDefined;
 import com.facebook.litho.annotations.FromPrepare;
@@ -36,18 +39,24 @@ import com.facebook.litho.annotations.MountingType;
 import com.facebook.litho.annotations.OnBind;
 import com.facebook.litho.annotations.OnBoundsDefined;
 import com.facebook.litho.annotations.OnCalculateCachedValue;
+import com.facebook.litho.annotations.OnCreateInitialState;
 import com.facebook.litho.annotations.OnCreateMountContent;
+import com.facebook.litho.annotations.OnEnteredRange;
+import com.facebook.litho.annotations.OnExitedRange;
 import com.facebook.litho.annotations.OnMeasure;
 import com.facebook.litho.annotations.OnMount;
 import com.facebook.litho.annotations.OnPopulateAccessibilityNode;
 import com.facebook.litho.annotations.OnPrepare;
+import com.facebook.litho.annotations.OnRegisterRanges;
 import com.facebook.litho.annotations.OnUnbind;
 import com.facebook.litho.annotations.OnUnmount;
 import com.facebook.litho.annotations.Prop;
 import com.facebook.litho.annotations.PropDefault;
 import com.facebook.litho.annotations.ResType;
 import com.facebook.litho.annotations.ShouldUpdate;
+import com.facebook.litho.annotations.State;
 import com.facebook.litho.utils.MeasureUtils;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.Nullable;
 
 /** Simple Fresco Vito component for Litho */
@@ -59,6 +68,15 @@ public class FrescoVitoImage2Spec {
   @OnCreateMountContent(mountingType = MountingType.DRAWABLE)
   static FrescoDrawable2 onCreateMountContent(Context c) {
     return FrescoVitoProvider.getController().createDrawable();
+  }
+
+  @OnCreateInitialState
+  static void onCreateInitialState(
+      ComponentContext context,
+      StateValue<AtomicReference<DataSource<Void>>> workingRangePrefetchData) {
+    if (FrescoVitoProvider.getConfig().getPrefetchConfig().prefetchWithWorkingRange()) {
+      workingRangePrefetchData.set(new AtomicReference<DataSource<Void>>());
+    }
   }
 
   @OnMeasure
@@ -94,7 +112,7 @@ public class FrescoVitoImage2Spec {
       @Prop(optional = true) final @Nullable Object callerContext,
       @CachedValue VitoImageRequest imageRequest,
       Output<DataSource<Void>> prefetchDataSource) {
-    FrescoVitoConfig config = FrescoVitoProvider.getConfig();
+    PrefetchConfig config = FrescoVitoProvider.getConfig().getPrefetchConfig();
     if (config.prefetchInOnPrepare()) {
       prefetchDataSource.set(
           FrescoVitoProvider.getPrefetcher()
@@ -110,11 +128,15 @@ public class FrescoVitoImage2Spec {
       @Prop(optional = true) final @Nullable ImageListener imageListener,
       @CachedValue VitoImageRequest imageRequest,
       @FromPrepare DataSource<Void> prefetchDataSource,
-      @FromBoundsDefined Rect viewportDimensions) {
+      @FromBoundsDefined Rect viewportDimensions,
+      @State final @Nullable AtomicReference<DataSource<Void>> workingRangePrefetchData) {
     FrescoVitoProvider.getController()
         .fetch(frescoDrawable, imageRequest, callerContext, imageListener, viewportDimensions);
     if (prefetchDataSource != null) {
       prefetchDataSource.close();
+    }
+    if (FrescoVitoProvider.getConfig().getPrefetchConfig().cancelPrefetchWhenFetched()) {
+      cancelWorkingRangePrefetch(workingRangePrefetchData);
     }
   }
 
@@ -126,13 +148,17 @@ public class FrescoVitoImage2Spec {
       @Prop(optional = true) final @Nullable ImageListener imageListener,
       @CachedValue VitoImageRequest imageRequest,
       @FromPrepare DataSource<Void> prefetchDataSource,
-      @FromBoundsDefined Rect viewportDimensions) {
+      @FromBoundsDefined Rect viewportDimensions,
+      @State final @Nullable AtomicReference<DataSource<Void>> workingRangePrefetchData) {
     // We fetch in both mount and bind in case an unbind event triggered a delayed release.
     // We'll only trigger an actual fetch if needed. Most of the time, this will be a no-op.
     FrescoVitoProvider.getController()
         .fetch(frescoDrawable, imageRequest, callerContext, imageListener, viewportDimensions);
     if (prefetchDataSource != null) {
       prefetchDataSource.close();
+    }
+    if (FrescoVitoProvider.getConfig().getPrefetchConfig().cancelPrefetchWhenFetched()) {
+      cancelWorkingRangePrefetch(workingRangePrefetchData);
     }
   }
 
@@ -189,5 +215,56 @@ public class FrescoVitoImage2Spec {
     }
 
     viewportDimensions.set(new Rect(0, 0, width - paddingX, height - paddingY));
+  }
+
+  @OnEnteredRange(name = "imagePrefetch")
+  static void onEnteredWorkingRange(
+      ComponentContext c,
+      @Prop(optional = true) final @Nullable Object callerContext,
+      @CachedValue VitoImageRequest imageRequest,
+      @FromPrepare DataSource<Void> prefetchDataSource,
+      @State final @Nullable AtomicReference<DataSource<Void>> workingRangePrefetchData) {
+    if (workingRangePrefetchData == null) {
+      return;
+    }
+    cancelWorkingRangePrefetch(workingRangePrefetchData);
+    PrefetchConfig prefetchConfig = FrescoVitoProvider.getConfig().getPrefetchConfig();
+    if (prefetchConfig.prefetchWithWorkingRange()) {
+      workingRangePrefetchData.set(
+          FrescoVitoProvider.getPrefetcher()
+              .prefetch(PrefetchTarget.MEMORY_DECODED, imageRequest, callerContext));
+
+      if (prefetchDataSource != null
+          && prefetchConfig.cancelOnPreparePrefetchWhenWorkingRangePrefetch()) {
+        prefetchDataSource.close();
+      }
+    }
+  }
+
+  @OnExitedRange(name = "imagePrefetch")
+  static void onExitedWorkingRange(
+      ComponentContext c, @State final AtomicReference<DataSource<Void>> workingRangePrefetchData) {
+    cancelWorkingRangePrefetch(workingRangePrefetchData);
+  }
+
+  @OnRegisterRanges
+  static void registerWorkingRanges(ComponentContext c) {
+    PrefetchConfig prefetchConfig = FrescoVitoProvider.getConfig().getPrefetchConfig();
+    if (prefetchConfig.prefetchWithWorkingRange()) {
+      FrescoVitoImage2.registerImagePrefetchWorkingRange(
+          c, new BoundaryWorkingRange(prefetchConfig.prefetchWorkingRangeSize()));
+    }
+  }
+
+  static void cancelWorkingRangePrefetch(
+      final @Nullable AtomicReference<DataSource<Void>> prefetchData) {
+    if (prefetchData == null) {
+      return;
+    }
+    DataSource<Void> dataSource = prefetchData.get();
+    if (dataSource != null) {
+      dataSource.close();
+    }
+    prefetchData.set(null);
   }
 }
