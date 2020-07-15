@@ -377,10 +377,11 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     private CloseableImage internalDecode(
         EncodedImage encodedImage, int length, QualityInfo quality) {
       CloseableImage image;
+      final boolean recover = mReclaimMemoryRunnable != null && mRecoverFromDecoderOOM.get();
       try {
         image = mImageDecoder.decode(encodedImage, length, quality, mImageDecodeOptions);
       } catch (OutOfMemoryError e) {
-        if (!mRecoverFromDecoderOOM.get() || mReclaimMemoryRunnable == null) {
+        if (!recover) {
           throw e;
         }
 
