@@ -61,7 +61,7 @@ android {
         }
         instantRunConfig {
             dimension "main"
-            minSdkVersion 21
+            minSdkVersion FrescoConfig.samplesMinSdkVersion
         }
         internal {
         }
