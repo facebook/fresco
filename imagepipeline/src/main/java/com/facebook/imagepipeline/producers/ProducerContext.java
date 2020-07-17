@@ -95,7 +95,7 @@ public interface ProducerContext {
 
   void setEncodedImageOrigin(EncodedImageOrigin encodedImageOrigin);
 
-  <E> void setExtra(@ExtraKeys String key, @Nullable E value);
+  <E> void setExtra(String key, @Nullable E value);
 
   void putExtras(@Nullable Map<String, ?> extras);
 
