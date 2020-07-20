@@ -57,6 +57,16 @@ public class FirstAvailableImageSource implements VitoImageSource {
   @Nullable
   public ImageRequest maybeExtractFinalImageRequest(
       ImagePipelineUtils imagePipelineUtils, ImageOptions imageOptions) {
+    for (ImageSource imageSource : mFirstAvailableImageSources) {
+      if (imageSource instanceof VitoImageSource) {
+        ImageRequest imageRequest =
+            ((VitoImageSource) imageSource)
+                .maybeExtractFinalImageRequest(imagePipelineUtils, imageOptions);
+        if (imageRequest != null) {
+          return imageRequest;
+        }
+      }
+    }
     return null;
   }
 
