@@ -209,8 +209,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/controller/package-summary.html">com.facebook.drawee.controller</a></li>
@@ -249,6 +247,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/middleware/package-summary.html">com.facebook.fresco.middleware</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
@@ -285,6 +285,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/instrumentation/package-summary.html">com.facebook.imagepipeline.instrumentation</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
@@ -320,6 +322,7 @@
               
     <li><h2>Interfaces</h2>
       <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/Fn.html">Fn</a>&lt;A,&nbsp;R&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/Predicate.html">Predicate</a>&lt;T&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;T&gt;</li>
       </ul>
@@ -495,11 +498,11 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Helper functions that can operate on any <code>Object</code>.
+<p>Helper functions that operate on any <code>Object</code>, and are not already provided in java.util.Objects.
 
  <p>See the Guava User Guide on <a
- href="http://code.google.com/p/guava-libraries/wiki/CommonObjectUtilitiesExplained">writing
- <code>Object</code> methods with <code>Objects</code></a>.</p>
+ href="https://github.com/google/guava/wiki/CommonObjectUtilitiesExplained">writing <code>Object</code>
+ methods with <code>Objects</code></a>.</p>
 
 
 
@@ -647,8 +650,7 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/internal/Objects.html#toStringHelper(java.lang.String)">toStringHelper</a></span>(String className)
         
-        <div class="jd-descrdiv">Creates an instance of <code><a href="../../../../com/facebook/common/internal/Objects.ToStringHelper.html">Objects.ToStringHelper</a></code> in the same manner as <code><a href="../../../../com/facebook/common/internal/Objects.html#toStringHelper(java.lang.Object)">toStringHelper(Object)</a></code>, but using <code>className</code> instead of using an instance's
- <code><a href="null#getClass()">getClass()</a></code>.</div>
+        <div class="jd-descrdiv">Creates an instance of <code><a href="../../../../com/facebook/common/internal/Objects.ToStringHelper.html">Objects.ToStringHelper</a></code> in the same manner as <code><a href="../../../../com/facebook/common/internal/Objects.html#toStringHelper(java.lang.Object)">toStringHelper(Object)</a></code>, but using <code>className</code> instead of using an instance's <code><a href="null#getClass()">getClass()</a></code>.</div>
   
   </td></tr>
 
@@ -684,7 +686,7 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/internal/Objects.html#toStringHelper(java.lang.Class<?>)">toStringHelper</a></span>(Class&lt;?&gt; clazz)
         
-        <div class="jd-descrdiv">Creates an instance of <code><a href="../../../../com/facebook/common/internal/Objects.ToStringHelper.html">Objects.ToStringHelper</a></code> in the same manner as <code><a href="../../../../com/facebook/common/internal/Objects.html#toStringHelper(java.lang.Object)">toStringHelper(Object)</a></code>, but using the name of <code>clazz</code> instead of using an
+        <div class="jd-descrdiv">Creates an instance of <code><a href="../../../../com/facebook/common/internal/Objects.ToStringHelper.html">Objects.ToStringHelper</a></code> in the same manner as <code><a href="../../../../com/facebook/common/internal/Objects.html#toStringHelper(java.lang.Object)">toStringHelper(Object)</a></code>, but using the simple name of <code>clazz</code> instead of using an
  instance's <code><a href="null#getClass()">getClass()</a></code>.</div>
   
   </td></tr>
@@ -1110,8 +1112,7 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Creates an instance of <code><a href="../../../../com/facebook/common/internal/Objects.ToStringHelper.html">Objects.ToStringHelper</a></code> in the same manner as <code><a href="../../../../com/facebook/common/internal/Objects.html#toStringHelper(java.lang.Object)">toStringHelper(Object)</a></code>, but using <code>className</code> instead of using an instance's
- <code><a href="null#getClass()">getClass()</a></code>.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Creates an instance of <code><a href="../../../../com/facebook/common/internal/Objects.ToStringHelper.html">Objects.ToStringHelper</a></code> in the same manner as <code><a href="../../../../com/facebook/common/internal/Objects.html#toStringHelper(java.lang.Object)">toStringHelper(Object)</a></code>, but using <code>className</code> instead of using an instance's <code><a href="null#getClass()">getClass()</a></code>.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1181,7 +1182,6 @@ From class
      .add("x", 1)
      .add("y", null)
      .toString();
- }
  }</pre>
 
  <p>Note that in GWT, class names are often obfuscated.</p></div>
@@ -1225,7 +1225,7 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Creates an instance of <code><a href="../../../../com/facebook/common/internal/Objects.ToStringHelper.html">Objects.ToStringHelper</a></code> in the same manner as <code><a href="../../../../com/facebook/common/internal/Objects.html#toStringHelper(java.lang.Object)">toStringHelper(Object)</a></code>, but using the name of <code>clazz</code> instead of using an
+  <div class="jd-tagdata jd-tagdescr"><p>Creates an instance of <code><a href="../../../../com/facebook/common/internal/Objects.ToStringHelper.html">Objects.ToStringHelper</a></code> in the same manner as <code><a href="../../../../com/facebook/common/internal/Objects.html#toStringHelper(java.lang.Object)">toStringHelper(Object)</a></code>, but using the simple name of <code>clazz</code> instead of using an
  instance's <code><a href="null#getClass()">getClass()</a></code>.
 
  <p>Note that in GWT, class names are often obfuscated.</p></div>

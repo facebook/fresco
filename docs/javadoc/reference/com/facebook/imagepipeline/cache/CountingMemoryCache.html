@@ -209,8 +209,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/controller/package-summary.html">com.facebook.drawee.controller</a></li>
@@ -249,6 +247,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/middleware/package-summary.html">com.facebook.fresco.middleware</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
@@ -284,6 +284,8 @@
   <a href="../../../../com/facebook/imagepipeline/filter/package-summary.html">com.facebook.imagepipeline.filter</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/instrumentation/package-summary.html">com.facebook.imagepipeline.instrumentation</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
@@ -336,9 +338,13 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheFactory.html">BitmapMemoryCacheFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html">BitmapMemoryCacheKey</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheTrimStrategy.html">BitmapMemoryCacheTrimStrategy</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BoundedLinkedHashSet.html">BoundedLinkedHashSet</a>&lt;E&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingLruMap.html">CountingLruMap</a>&lt;K,&nbsp;V&gt;</li>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;K,&nbsp;V&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCacheInspector.html">CountingMemoryCacheInspector</a>&lt;K,&nbsp;V&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCacheInspector.DumpInfo.html">CountingMemoryCacheInspector.DumpInfo</a>&lt;K,&nbsp;V&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCacheInspector.DumpInfoEntry.html">CountingMemoryCacheInspector.DumpInfoEntry</a>&lt;K,&nbsp;V&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/DefaultBitmapMemoryCacheParamsSupplier.html">DefaultBitmapMemoryCacheParamsSupplier</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/DefaultCacheKeyFactory.html">DefaultCacheKeyFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/DefaultEncodedMemoryCacheParamsSupplier.html">DefaultEncodedMemoryCacheParamsSupplier</a></li>
@@ -636,7 +642,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html#CountingMemoryCache(com.facebook.imagepipeline.cache.ValueDescriptor<V>, com.facebook.imagepipeline.cache.MemoryCache.CacheTrimStrategy, com.facebook.common.internal.Supplier<com.facebook.imagepipeline.cache.MemoryCacheParams>)">CountingMemoryCache</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/ValueDescriptor.html">ValueDescriptor</a>&lt;V&gt; valueDescriptor, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.CacheTrimStrategy.html">MemoryCache.CacheTrimStrategy</a> cacheTrimStrategy, <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; memoryCacheParamsSupplier)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html#CountingMemoryCache(com.facebook.imagepipeline.cache.ValueDescriptor<V>, com.facebook.imagepipeline.cache.MemoryCache.CacheTrimStrategy, com.facebook.common.internal.Supplier<com.facebook.imagepipeline.cache.MemoryCacheParams>, com.facebook.imagepipeline.cache.CountingMemoryCache.EntryStateObserver<K>)">CountingMemoryCache</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/ValueDescriptor.html">ValueDescriptor</a>&lt;V&gt; valueDescriptor, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.CacheTrimStrategy.html">MemoryCache.CacheTrimStrategy</a> cacheTrimStrategy, <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; memoryCacheParamsSupplier, <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">EntryStateObserver</a>&lt;K&gt; entryStateObserver)
         
   </td></tr>
 
@@ -856,6 +862,22 @@ Summary:
     <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
+            
+            
+            
+            
+            <a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html#getMemoryCacheParams()">getMemoryCacheParams</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
             synchronized
             
             
@@ -866,6 +888,24 @@ Summary:
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html#getSizeInBytes()">getSizeInBytes</a></span>()
         
         <div class="jd-descrdiv">Gets the total size in bytes of all currently cached items.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html#probe(K)">probe</a></span>(K key)
+        
+        <div class="jd-descrdiv">Probes whether the object corresponding to the key is in the cache.</div>
   
   </td></tr>
 
@@ -896,6 +936,22 @@ Summary:
             
             
             
+            String
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html#reportData()">reportData</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
             <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;V&gt;
         </td>
         <td class="jd-linkcol" width="100%">
@@ -907,7 +963,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1320,6 +1376,24 @@ From interface
             
             
             
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html#probe(K)">probe</a></span>(K key)
+        
+        <div class="jd-descrdiv">Probes whether the object corresponding to the key is in the cache.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
             int
         </td>
         <td class="jd-linkcol" width="100%">
@@ -1407,7 +1481,7 @@ From interface
 
 
 
-<a id="CountingMemoryCache(com.facebook.imagepipeline.cache.ValueDescriptor<V>, com.facebook.imagepipeline.cache.MemoryCache.CacheTrimStrategy, com.facebook.common.internal.Supplier<com.facebook.imagepipeline.cache.MemoryCacheParams>)"></a>
+<a id="CountingMemoryCache(com.facebook.imagepipeline.cache.ValueDescriptor<V>, com.facebook.imagepipeline.cache.MemoryCache.CacheTrimStrategy, com.facebook.common.internal.Supplier<com.facebook.imagepipeline.cache.MemoryCacheParams>, com.facebook.imagepipeline.cache.CountingMemoryCache.EntryStateObserver<K>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1420,7 +1494,7 @@ From interface
         
       </span>
       <span class="sympad">CountingMemoryCache</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/cache/ValueDescriptor.html">ValueDescriptor</a>&lt;V&gt; valueDescriptor, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.CacheTrimStrategy.html">MemoryCache.CacheTrimStrategy</a> cacheTrimStrategy, <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; memoryCacheParamsSupplier)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/cache/ValueDescriptor.html">ValueDescriptor</a>&lt;V&gt; valueDescriptor, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.CacheTrimStrategy.html">MemoryCache.CacheTrimStrategy</a> cacheTrimStrategy, <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; memoryCacheParamsSupplier, <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">EntryStateObserver</a>&lt;K&gt; entryStateObserver)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1846,6 +1920,37 @@ From interface
 </div>
 
 
+<a id="getMemoryCacheParams()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>
+      </span>
+      <span class="sympad">getMemoryCacheParams</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 <a id="getSizeInBytes()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1872,6 +1977,39 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Gets the total size in bytes of all currently cached items. </p></div>
+
+    </div>
+</div>
+
+
+<a id="probe(K)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">probe</span>
+      <span class="normal">(K key)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Probes whether the object corresponding to the key is in the cache. Note that the act of
+ probing touches the item (if present in cache), thus changing its LRU timestamp.
+</p></div>
 
     </div>
 </div>
@@ -1917,6 +2055,37 @@ From interface
       <ul class="nolist"><li>number of the items removed from the cache
 </li></ul>
   </div>
+
+    </div>
+</div>
+
+
+<a id="reportData()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">reportData</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>

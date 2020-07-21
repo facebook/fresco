@@ -209,8 +209,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/controller/package-summary.html">com.facebook.drawee.controller</a></li>
@@ -249,6 +247,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/middleware/package-summary.html">com.facebook.fresco.middleware</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
@@ -284,6 +284,8 @@
   <a href="../../../../com/facebook/imagepipeline/filter/package-summary.html">com.facebook.imagepipeline.filter</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/instrumentation/package-summary.html">com.facebook.imagepipeline.instrumentation</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
@@ -561,7 +563,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ProducerSequenceFactory.html#ProducerSequenceFactory(android.content.ContentResolver, com.facebook.imagepipeline.core.ProducerFactory, com.facebook.imagepipeline.producers.NetworkFetcher, boolean, boolean, com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue, boolean, boolean, boolean, boolean, com.facebook.imagepipeline.transcoder.ImageTranscoderFactory)">ProducerSequenceFactory</a></span>(ContentResolver contentResolver, <a href="../../../../com/facebook/imagepipeline/core/ProducerFactory.html">ProducerFactory</a> producerFactory, <a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a> networkFetcher, boolean resizeAndRotateEnabledForNetwork, boolean webpSupportEnabled, <a href="../../../../com/facebook/imagepipeline/producers/ThreadHandoffProducerQueue.html">ThreadHandoffProducerQueue</a> threadHandoffProducerQueue, boolean downSampleEnabled, boolean useBitmapPrepareToDraw, boolean partialImageCachingEnabled, boolean diskCacheEnabled, <a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoderFactory.html">ImageTranscoderFactory</a> imageTranscoderFactory)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ProducerSequenceFactory.html#ProducerSequenceFactory(android.content.ContentResolver, com.facebook.imagepipeline.core.ProducerFactory, com.facebook.imagepipeline.producers.NetworkFetcher, boolean, boolean, com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue, boolean, boolean, boolean, boolean, com.facebook.imagepipeline.transcoder.ImageTranscoderFactory, boolean, boolean)">ProducerSequenceFactory</a></span>(ContentResolver contentResolver, <a href="../../../../com/facebook/imagepipeline/core/ProducerFactory.html">ProducerFactory</a> producerFactory, <a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a> networkFetcher, boolean resizeAndRotateEnabledForNetwork, boolean webpSupportEnabled, <a href="../../../../com/facebook/imagepipeline/producers/ThreadHandoffProducerQueue.html">ThreadHandoffProducerQueue</a> threadHandoffProducerQueue, boolean downSampleEnabled, boolean useBitmapPrepareToDraw, boolean partialImageCachingEnabled, boolean diskCacheEnabled, <a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoderFactory.html">ImageTranscoderFactory</a> imageTranscoderFactory, boolean isEncodedMemoryCacheProbingEnabled, boolean isDiskCacheProbingEnabled)
         
   </td></tr>
 
@@ -957,7 +959,7 @@ From class
 
 
 
-<a id="ProducerSequenceFactory(android.content.ContentResolver, com.facebook.imagepipeline.core.ProducerFactory, com.facebook.imagepipeline.producers.NetworkFetcher, boolean, boolean, com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue, boolean, boolean, boolean, boolean, com.facebook.imagepipeline.transcoder.ImageTranscoderFactory)"></a>
+<a id="ProducerSequenceFactory(android.content.ContentResolver, com.facebook.imagepipeline.core.ProducerFactory, com.facebook.imagepipeline.producers.NetworkFetcher, boolean, boolean, com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue, boolean, boolean, boolean, boolean, com.facebook.imagepipeline.transcoder.ImageTranscoderFactory, boolean, boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -970,7 +972,7 @@ From class
         
       </span>
       <span class="sympad">ProducerSequenceFactory</span>
-      <span class="normal">(ContentResolver contentResolver, <a href="../../../../com/facebook/imagepipeline/core/ProducerFactory.html">ProducerFactory</a> producerFactory, <a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a> networkFetcher, boolean resizeAndRotateEnabledForNetwork, boolean webpSupportEnabled, <a href="../../../../com/facebook/imagepipeline/producers/ThreadHandoffProducerQueue.html">ThreadHandoffProducerQueue</a> threadHandoffProducerQueue, boolean downSampleEnabled, boolean useBitmapPrepareToDraw, boolean partialImageCachingEnabled, boolean diskCacheEnabled, <a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoderFactory.html">ImageTranscoderFactory</a> imageTranscoderFactory)</span>
+      <span class="normal">(ContentResolver contentResolver, <a href="../../../../com/facebook/imagepipeline/core/ProducerFactory.html">ProducerFactory</a> producerFactory, <a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a> networkFetcher, boolean resizeAndRotateEnabledForNetwork, boolean webpSupportEnabled, <a href="../../../../com/facebook/imagepipeline/producers/ThreadHandoffProducerQueue.html">ThreadHandoffProducerQueue</a> threadHandoffProducerQueue, boolean downSampleEnabled, boolean useBitmapPrepareToDraw, boolean partialImageCachingEnabled, boolean diskCacheEnabled, <a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoderFactory.html">ImageTranscoderFactory</a> imageTranscoderFactory, boolean isEncodedMemoryCacheProbingEnabled, boolean isDiskCacheProbingEnabled)</span>
     </h4>
       <div class="api-level">
         <div>

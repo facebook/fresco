@@ -57,7 +57,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="../../../../../favicon.ico" />
 <title>
 
-  VolleyDataSource - Fresco API
+  MultiUriHelper - Fresco API
 
 
 | Fresco
@@ -208,8 +208,6 @@
   <a href="../../../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
-    <li class="selected api apilevel-">
-  <a href="../../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
     <li class="api apilevel-">
@@ -249,6 +247,8 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../com/facebook/fresco/middleware/package-summary.html">com.facebook.fresco.middleware</a></li>
+    <li class="selected api apilevel-">
   <a href="../../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
@@ -285,6 +285,8 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../com/facebook/imagepipeline/instrumentation/package-summary.html">com.facebook.imagepipeline.instrumentation</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
@@ -318,14 +320,21 @@
           <div id="classes-nav">
             <ul>
               
+    <li><h2>Interfaces</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../../com/facebook/fresco/ui/common/ControllerListener2.html">ControllerListener2</a>&lt;INFO&gt;</li>
+          <li class="api apilevel-"><a href="../../../../../com/facebook/fresco/ui/common/LoggingListener.html">LoggingListener</a></li>
+          <li class="api apilevel-"><a href="../../../../../com/facebook/fresco/ui/common/OnDrawControllerListener.html">OnDrawControllerListener</a>&lt;INFO&gt;</li>
+      </ul>
+    </li>
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="selected api apilevel-"><a href="../../../../../com/facebook/drawee/backends/volley/VolleyDataSource.html">VolleyDataSource</a></li>
-          <li class="api apilevel-"><a href="../../../../../com/facebook/drawee/backends/volley/VolleyDraweeController.html">VolleyDraweeController</a></li>
-          <li class="api apilevel-"><a href="../../../../../com/facebook/drawee/backends/volley/VolleyDraweeControllerBuilder.html">VolleyDraweeControllerBuilder</a></li>
-          <li class="api apilevel-"><a href="../../../../../com/facebook/drawee/backends/volley/VolleyDraweeControllerBuilderSupplier.html">VolleyDraweeControllerBuilderSupplier</a></li>
-          <li class="api apilevel-"><a href="../../../../../com/facebook/drawee/backends/volley/VolleyDraweeControllerFactory.html">VolleyDraweeControllerFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../../com/facebook/fresco/ui/common/BaseControllerListener2.html">BaseControllerListener2</a>&lt;INFO&gt;</li>
+          <li class="api apilevel-"><a href="../../../../../com/facebook/fresco/ui/common/ControllerListener2.Extras.html">ControllerListener2.Extras</a></li>
+          <li class="api apilevel-"><a href="../../../../../com/facebook/fresco/ui/common/DimensionsInfo.html">DimensionsInfo</a></li>
+          <li class="api apilevel-"><a href="../../../../../com/facebook/fresco/ui/common/ForwardingControllerListener2.html">ForwardingControllerListener2</a>&lt;I&gt;</li>
+          <li class="selected api apilevel-"><a href="../../../../../com/facebook/fresco/ui/common/MultiUriHelper.html">MultiUriHelper</a></li>
       </ul>
     </li>
               
@@ -368,20 +377,6 @@
 <div id="api-info-block">
 
 
-
-  
-   
-  
-  
-  
-  
-
-  
-   
-  
-  
-  
-  
 
   
    
@@ -436,18 +431,14 @@ Summary:
     public
      
      
-    
+    abstract
     class
-<h1>VolleyDataSource</h1>
+<h1>MultiUriHelper</h1>
 
 
 
   
-  
-  
-
-  
-    extends <a href="../../../../../com/facebook/datasource/AbstractDataSource.html">AbstractDataSource</a>&lt;T&gt;<br/>
+    extends Object<br/>
   
   
   
@@ -467,7 +458,7 @@ Summary:
 
     <tr>
          	
-        <td colspan="3" class="jd-inheritance-class-cell">java.lang.Object</td>
+        <td colspan="2" class="jd-inheritance-class-cell">java.lang.Object</td>
     </tr>
     
 
@@ -475,17 +466,7 @@ Summary:
         
             <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
          	
-        <td colspan="2" class="jd-inheritance-class-cell"><a href="../../../../../com/facebook/datasource/AbstractDataSource.html">com.facebook.datasource.AbstractDataSource</a>&lt;T&gt;</td>
-    </tr>
-    
-
-    <tr>
-        
-            <td class="jd-inheritance-space">&nbsp;</td>
-        
-            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
-         	
-        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.drawee.backends.volley.VolleyDataSource</td>
+        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.fresco.ui.common.MultiUriHelper</td>
     </tr>
     
 
@@ -499,9 +480,6 @@ Summary:
 
 <div class="jd-descr">
 
-
-<h2>Class Overview</h2>
-<p><code><a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a></code> that wraps Volley ImageLoader. </p>
 
 
 
@@ -567,7 +545,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/volley/VolleyDataSource.html#VolleyDataSource(com.android.volley.toolbox.ImageLoader, android.net.Uri, com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel)">VolleyDataSource</a></span>(ImageLoader imageLoader, Uri imageRequest, <a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.CacheLevel.html">AbstractDraweeControllerBuilder.CacheLevel</a> cacheLevel)
+        <span class="sympad"><a href="../../../../../com/facebook/fresco/ui/common/MultiUriHelper.html#MultiUriHelper()">MultiUriHelper</a></span>()
         
   </td></tr>
 
@@ -591,15 +569,13 @@ Summary:
             
             
             
-            
-            
-            boolean
+            static
+            &lt;T&gt;
+            Uri
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/volley/VolleyDataSource.html#close()">close</a></span>()
+        <span class="sympad"><a href="../../../../../com/facebook/fresco/ui/common/MultiUriHelper.html#getMainUri(T, T, T[], com.facebook.common.internal.Fn<T, android.net.Uri>)">getMainUri</a></span>(T mainRequest, T lowResRequest, T[] firstAvailableRequest, <a href="../../../../../com/facebook/common/internal/Fn.html">Fn</a>&lt;T,&nbsp;Uri&gt; requestToUri)
         
-        <div class="jd-descrdiv">Cancels the ongoing request and releases all associated resources.</div>
-  
   </td></tr>
 
 
@@ -616,286 +592,6 @@ Summary:
 <table id="inhmethods" class="jd-sumtable"><tr><th>
   <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
   <div style="clear:left;">Inherited Methods</div></th></tr>
-
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.datasource.AbstractDataSource" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-com.facebook.datasource.AbstractDataSource-trigger"
-          src="../../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From class
-
-  <a href="../../../../../com/facebook/datasource/AbstractDataSource.html">com.facebook.datasource.AbstractDataSource</a>
-
-<div id="inherited-methods-com.facebook.datasource.AbstractDataSource">
-  <div id="inherited-methods-com.facebook.datasource.AbstractDataSource-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-com.facebook.datasource.AbstractDataSource-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/AbstractDataSource.html#close()">close</a></span>()
-        
-        <div class="jd-descrdiv">Cancels the ongoing request and releases all associated resources.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/AbstractDataSource.html#closeResult(T)">closeResult</a></span>(T result)
-        
-        <div class="jd-descrdiv">Subclasses should override this method to close the result that is not needed anymore.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            synchronized
-            
-            
-            
-            Throwable
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/AbstractDataSource.html#getFailureCause()">getFailureCause</a></span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            synchronized
-            
-            
-            
-            float
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/AbstractDataSource.html#getProgress()">getProgress</a></span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            synchronized
-            
-            
-            
-            T
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/AbstractDataSource.html#getResult()">getResult</a></span>()
-        
-        <div class="jd-descrdiv">The most recent result of the asynchronous computation.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            synchronized
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/AbstractDataSource.html#hasFailed()">hasFailed</a></span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/AbstractDataSource.html#hasMultipleResults()">hasMultipleResults</a></span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            synchronized
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/AbstractDataSource.html#hasResult()">hasResult</a></span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            synchronized
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/AbstractDataSource.html#isClosed()">isClosed</a></span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            synchronized
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/AbstractDataSource.html#isFinished()">isFinished</a></span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/AbstractDataSource.html#notifyProgressUpdate()">notifyProgressUpdate</a></span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/AbstractDataSource.html#setFailure(java.lang.Throwable)">setFailure</a></span>(Throwable throwable)
-        
-        <div class="jd-descrdiv">Subclasses should invoke this method to set the failure.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/AbstractDataSource.html#setProgress(float)">setProgress</a></span>(float progress)
-        
-        <div class="jd-descrdiv">Subclasses should invoke this method to set the progress.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/AbstractDataSource.html#setResult(T, boolean)">setResult</a></span>(T value, boolean isLast)
-        
-        <div class="jd-descrdiv">Subclasses should invoke this method to set the result to <code>value</code>.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/AbstractDataSource.html#subscribe(com.facebook.datasource.DataSubscriber<T>, java.util.concurrent.Executor)">subscribe</a></span>(<a href="../../../../../com/facebook/datasource/DataSubscriber.html">DataSubscriber</a>&lt;T&gt; dataSubscriber, Executor executor)
-        
-        <div class="jd-descrdiv">Subscribe for notifications whenever the state of the DataSource changes.</div>
-  
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
 
 
 <tr class="api apilevel-" >
@@ -1099,198 +795,6 @@ From class
 </td></tr>
 
 
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.datasource.DataSource" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-com.facebook.datasource.DataSource-trigger"
-          src="../../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From interface
-
-  <a href="../../../../../com/facebook/datasource/DataSource.html">com.facebook.datasource.DataSource</a>
-
-<div id="inherited-methods-com.facebook.datasource.DataSource">
-  <div id="inherited-methods-com.facebook.datasource.DataSource-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-com.facebook.datasource.DataSource-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/DataSource.html#close()">close</a></span>()
-        
-        <div class="jd-descrdiv">Cancels the ongoing request and releases all associated resources.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            Throwable
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/DataSource.html#getFailureCause()">getFailureCause</a></span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            float
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/DataSource.html#getProgress()">getProgress</a></span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            T
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/DataSource.html#getResult()">getResult</a></span>()
-        
-        <div class="jd-descrdiv">The most recent result of the asynchronous computation.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/DataSource.html#hasFailed()">hasFailed</a></span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/DataSource.html#hasMultipleResults()">hasMultipleResults</a></span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/DataSource.html#hasResult()">hasResult</a></span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/DataSource.html#isClosed()">isClosed</a></span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/DataSource.html#isFinished()">isFinished</a></span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/datasource/DataSource.html#subscribe(com.facebook.datasource.DataSubscriber<T>, java.util.concurrent.Executor)">subscribe</a></span>(<a href="../../../../../com/facebook/datasource/DataSubscriber.html">DataSubscriber</a>&lt;T&gt; dataSubscriber, Executor executor)
-        
-        <div class="jd-descrdiv">Subscribe for notifications whenever the state of the DataSource changes.</div>
-  
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
-
 </table>
 
 
@@ -1325,7 +829,7 @@ From interface
 
 
 
-<a id="VolleyDataSource(com.android.volley.toolbox.ImageLoader, android.net.Uri, com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel)"></a>
+<a id="MultiUriHelper()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1337,8 +841,8 @@ From interface
          
         
       </span>
-      <span class="sympad">VolleyDataSource</span>
-      <span class="normal">(ImageLoader imageLoader, Uri imageRequest, <a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.CacheLevel.html">AbstractDraweeControllerBuilder.CacheLevel</a> cacheLevel)</span>
+      <span class="sympad">MultiUriHelper</span>
+      <span class="normal">()</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1371,20 +875,20 @@ From interface
 
 
 
-<a id="close()"></a>
+<a id="getMainUri(T, T, T[], com.facebook.common.internal.Fn<T, android.net.Uri>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
       <span class="normal">
         public 
+        static 
          
          
          
-         
-        boolean
+        Uri
       </span>
-      <span class="sympad">close</span>
-      <span class="normal">()</span>
+      <span class="sympad">getMainUri</span>
+      <span class="normal">(T mainRequest, T lowResRequest, T[] firstAvailableRequest, <a href="../../../../../com/facebook/common/internal/Fn.html">Fn</a>&lt;T,&nbsp;Uri&gt; requestToUri)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1396,14 +900,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Cancels the ongoing request and releases all associated resources.
-
- <p>Subsequent calls to <code><a href="../../../../../com/facebook/datasource/DataSource.html#getResult()">getResult()</a></code> will return null.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>true if the data source is closed for the first time
-</li></ul>
-  </div>
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>

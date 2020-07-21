@@ -209,8 +209,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/controller/package-summary.html">com.facebook.drawee.controller</a></li>
@@ -249,6 +247,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/middleware/package-summary.html">com.facebook.fresco.middleware</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
@@ -284,6 +284,8 @@
   <a href="../../../../com/facebook/imagepipeline/filter/package-summary.html">com.facebook.imagepipeline.filter</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/instrumentation/package-summary.html">com.facebook.imagepipeline.instrumentation</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
@@ -322,6 +324,8 @@
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/CloneableDrawable.html">CloneableDrawable</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/DrawableParent.html">DrawableParent</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/FadeDrawable.OnFadeFinishedListener.html">FadeDrawable.OnFadeFinishedListener</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/InstrumentedDrawable.Listener.html">InstrumentedDrawable.Listener</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/Rounded.html">Rounded</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.StatefulScaleType.html">ScalingUtils.StatefulScaleType</a></li>
@@ -340,6 +344,7 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/DrawableUtils.html">DrawableUtils</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/FadeDrawable.html">FadeDrawable</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ForwardingDrawable.html">ForwardingDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/InstrumentedDrawable.html">InstrumentedDrawable</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/MatrixDrawable.html">MatrixDrawable</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/OrientedDrawable.html">OrientedDrawable</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html">ProgressBarDrawable</a></li>
@@ -495,6 +500,8 @@ Summary:
             
               <a href="../../../../com/facebook/drawee/drawable/ForwardingDrawable.html">ForwardingDrawable</a>,
             
+              <a href="../../../../com/facebook/drawee/drawable/InstrumentedDrawable.html">InstrumentedDrawable</a>,
+            
               <a href="../../../../com/facebook/drawee/drawable/MatrixDrawable.html">MatrixDrawable</a>,
             
               <a href="../../../../com/facebook/drawee/drawable/OrientedDrawable.html">OrientedDrawable</a>,
@@ -535,35 +542,39 @@ Summary:
  inner drawable instance.&nbsp;</td>
           </tr>
         <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/InstrumentedDrawable.html">InstrumentedDrawable</a></td>
+              <td class="jd-descrcol" width="100%">Used to log image params at draw-time.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/MatrixDrawable.html">MatrixDrawable</a></td>
               <td class="jd-descrcol" width="100%">Drawable that can adjust underlying drawable based on specified Matrix.&nbsp;</td>
           </tr>
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/OrientedDrawable.html">OrientedDrawable</a></td>
               <td class="jd-descrcol" width="100%">Drawable that automatically rotates the underlying drawable with a pivot in the center of the
  drawable bounds based on a rotation angle.&nbsp;</td>
           </tr>
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/generic/RootDrawable.html">RootDrawable</a></td>
               <td class="jd-descrcol" width="100%">The root drawable of a DraweeHierarchy.&nbsp;</td>
           </tr>
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html">RoundedBitmapDrawable</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/RoundedCornersDrawable.html">RoundedCornersDrawable</a></td>
               <td class="jd-descrcol" width="100%">Drawable that draws underlying drawable with rounded corners.&nbsp;</td>
           </tr>
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html">RoundedDrawable</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/RoundedNinePatchDrawable.html">RoundedNinePatchDrawable</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScaleTypeDrawable.html">ScaleTypeDrawable</a></td>
               <td class="jd-descrcol" width="100%">Drawable that can scale underlying drawable based on specified <code><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></code> options.&nbsp;</td>
           </tr>

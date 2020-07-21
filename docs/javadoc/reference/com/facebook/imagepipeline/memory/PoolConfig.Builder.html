@@ -209,8 +209,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/controller/package-summary.html">com.facebook.drawee.controller</a></li>
@@ -249,6 +247,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/middleware/package-summary.html">com.facebook.fresco.middleware</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
@@ -284,6 +284,8 @@
   <a href="../../../../com/facebook/imagepipeline/filter/package-summary.html">com.facebook.imagepipeline.filter</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/instrumentation/package-summary.html">com.facebook.imagepipeline.instrumentation</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="selected api apilevel-">
@@ -439,11 +441,14 @@ Summary:
 
 
 
+  <a href="#lfields">Fields</a>
+  
 
 
 
 
-  <a href="#pubmethods">Methods</a>
+
+  &#124; <a href="#pubmethods">Methods</a>
   
 
 
@@ -561,6 +566,26 @@ Summary:
 
 
 
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+<table id="lfields" class="jd-sumtable"><tr><th colspan="12">Fields</th></tr>
+
+
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          public
+          
+          
+          boolean</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.Builder.html#mIgnoreBitmapPoolHardCap">mIgnoreBitmapPoolHardCap</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+
+</table>
 
 
 
@@ -700,13 +725,29 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.Builder.html">PoolConfig.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.Builder.html#setMemoryTrimmableRegistry(com.facebook.common.memory.MemoryTrimmableRegistry)">setMemoryTrimmableRegistry</a></span>(<a href="../../../../com/facebook/common/memory/MemoryTrimmableRegistry.html">MemoryTrimmableRegistry</a> memoryTrimmableRegistry)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.Builder.html#setIgnoreBitmapPoolHardCap(boolean)">setIgnoreBitmapPoolHardCap</a></span>(boolean ignoreBitmapPoolHardCap)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.Builder.html">PoolConfig.Builder</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.Builder.html#setMemoryTrimmableRegistry(com.facebook.common.memory.MemoryTrimmableRegistry)">setMemoryTrimmableRegistry</a></span>(<a href="../../../../com/facebook/common/memory/MemoryTrimmableRegistry.html">MemoryTrimmableRegistry</a> memoryTrimmableRegistry)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -722,7 +763,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -738,14 +779,14 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
             
             
             
-            void
+            <a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.Builder.html">PoolConfig.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.Builder.html#setRegisterLruBitmapPoolAsMemoryTrimmable(boolean)">setRegisterLruBitmapPoolAsMemoryTrimmable</a></span>(boolean registerLruBitmapPoolAsMemoryTrimmable)
@@ -754,7 +795,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -770,7 +811,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1027,6 +1068,43 @@ From class
 <!-- Fields -->
 
 
+<!-- ========= FIELD DETAIL ======== -->
+<h2>Fields</h2>
+
+
+
+
+<a id="mIgnoreBitmapPoolHardCap"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        boolean
+      </span>
+        mIgnoreBitmapPoolHardCap
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+
 <!-- Public ctors -->
 
 
@@ -1260,6 +1338,37 @@ From class
 </div>
 
 
+<a id="setIgnoreBitmapPoolHardCap(boolean)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.Builder.html">PoolConfig.Builder</a>
+      </span>
+      <span class="sympad">setIgnoreBitmapPoolHardCap</span>
+      <span class="normal">(boolean ignoreBitmapPoolHardCap)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 <a id="setMemoryTrimmableRegistry(com.facebook.common.memory.MemoryTrimmableRegistry)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1363,7 +1472,7 @@ From class
          
          
          
-        void
+        <a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.Builder.html">PoolConfig.Builder</a>
       </span>
       <span class="sympad">setRegisterLruBitmapPoolAsMemoryTrimmable</span>
       <span class="normal">(boolean registerLruBitmapPoolAsMemoryTrimmable)</span>

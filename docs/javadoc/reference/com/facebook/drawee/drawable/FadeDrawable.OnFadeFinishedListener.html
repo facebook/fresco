@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+  <meta name="description" content="Javadoc API documentation for Fresco." />
+
+<link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
+<title>
+
+  FadeDrawable.OnFadeFinishedListener - Fresco API
+
+
+| Fresco
+
+</title>
+<link href="../../../../../assets/doclava-developer-docs.css" rel="stylesheet" type="text/css" />
+<link href="../../../../../assets/customizations.css" rel="stylesheet" type="text/css" />
+<script src="../../../../../assets/search_autocomplete.js" type="text/javascript"></script>
+<script src="../../../../../assets/jquery-resizable.min.js" type="text/javascript"></script>
+<script src="../../../../../assets/doclava-developer-docs.js" type="text/javascript"></script>
+<script src="../../../../../assets/prettify.js" type="text/javascript"></script>
+<script type="text/javascript">
+  setToRoot("../../../../", "../../../../../assets/");
+</script>
+<script src="../../../../../assets/doclava-developer-reference.js" type="text/javascript"></script>
+<script src="../../../../../assets/navtree_data.js" type="text/javascript"></script>
+<script src="../../../../../assets/customizations.js" type="text/javascript"></script>
+<noscript>
+  <style type="text/css">
+    html,body{overflow:auto;}
+    #body-content{position:relative; top:0;}
+    #doc-content{overflow:visible;border-left:3px solid #666;}
+    #side-nav{padding:0;}
+    #side-nav .toggle-list ul {display:block;}
+    #resize-packages-nav{border-bottom:3px solid #666;}
+  </style>
+</noscript>
+</head>
+
+<body class="">
+
+<div id="header">
+    <div id="headerLeft">
+    
+      <span id="masthead-title"><a href="../../../../packages.html">Fresco</a></span>
+    
+    </div>
+    <div id="headerRight">
+      
+  <div id="search" >
+      <div id="searchForm">
+          <form accept-charset="utf-8" class="gsc-search-box" 
+                onsubmit="return submit_search()">
+            <table class="gsc-search-box" cellpadding="0" cellspacing="0"><tbody>
+                <tr>
+                  <td class="gsc-input">
+                    <input id="search_autocomplete" class="gsc-input" type="text" size="33" autocomplete="off"
+                      title="search developer docs" name="q"
+                      value="search developer docs"
+                      onFocus="search_focus_changed(this, true)"
+                      onBlur="search_focus_changed(this, false)"
+                      onkeydown="return search_changed(event, true, '../../../../')"
+                      onkeyup="return search_changed(event, false, '../../../../')" />
+                  <div id="search_filtered_div" class="no-display">
+                      <table id="search_filtered" cellspacing=0>
+                      </table>
+                  </div>
+                  </td>
+                  <!-- <td class="gsc-search-button">
+                    <input type="submit" value="Search" title="search" id="search-button" class="gsc-search-button" />
+                  </td>
+                  <td class="gsc-clear-button">
+                    <div title="clear results" class="gsc-clear-button">&nbsp;</div>
+                  </td> -->
+                </tr></tbody>
+              </table>
+          </form>
+      </div><!-- searchForm -->
+  </div><!-- search -->
+      
+    </div>
+</div><!-- header -->
+
+
+  <div class="g-section g-tpl-240" id="body-content">
+    <div class="g-unit g-first side-nav-resizable" id="side-nav">
+      <div id="swapper">
+        <div id="nav-panels">
+          <div id="resize-packages-nav">
+            <div id="packages-nav">
+              <div id="index-links">
+                <a href="../../../../packages.html"  >Packages</a> | 
+                <a href="../../../../classes.html" >Classes</a>
+              </div>
+              <ul>
+                
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/gif/package-summary.html">com.facebook.animated.gif</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/giflite/package-summary.html">com.facebook.animated.giflite</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/giflite/decoder/package-summary.html">com.facebook.animated.giflite.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/giflite/draw/package-summary.html">com.facebook.animated.giflite.draw</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/giflite/drawable/package-summary.html">com.facebook.animated.giflite.drawable</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webpdrawable/package-summary.html">com.facebook.animated.webpdrawable</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/callercontext/package-summary.html">com.facebook.callercontext</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/disk/package-summary.html">com.facebook.common.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/executors/package-summary.html">com.facebook.common.executors</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/file/package-summary.html">com.facebook.common.file</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/internal/package-summary.html">com.facebook.common.internal</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/lifecycle/package-summary.html">com.facebook.common.lifecycle</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/logging/package-summary.html">com.facebook.common.logging</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/media/package-summary.html">com.facebook.common.media</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/memory/package-summary.html">com.facebook.common.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/references/package-summary.html">com.facebook.common.references</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/statfs/package-summary.html">com.facebook.common.statfs</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/streams/package-summary.html">com.facebook.common.streams</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/time/package-summary.html">com.facebook.common.time</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/util/package-summary.html">com.facebook.common.util</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/webp/package-summary.html">com.facebook.common.webp</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/datasource/package-summary.html">com.facebook.datasource</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawable/base/package-summary.html">com.facebook.drawable.base</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/backends/pipeline/package-summary.html">com.facebook.drawee.backends.pipeline</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/backends/pipeline/debug/package-summary.html">com.facebook.drawee.backends.pipeline.debug</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/controller/package-summary.html">com.facebook.drawee.controller</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/debug/package-summary.html">com.facebook.drawee.debug</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/debug/listener/package-summary.html">com.facebook.drawee.debug.listener</a></li>
+    <li class="selected api apilevel-">
+  <a href="../../../../com/facebook/drawee/drawable/package-summary.html">com.facebook.drawee.drawable</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/generic/package-summary.html">com.facebook.drawee.generic</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/gestures/package-summary.html">com.facebook.drawee.gestures</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/interfaces/package-summary.html">com.facebook.drawee.interfaces</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/span/package-summary.html">com.facebook.drawee.span</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/view/package-summary.html">com.facebook.drawee.view</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/backend/package-summary.html">com.facebook.fresco.animation.backend</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/bitmap/package-summary.html">com.facebook.fresco.animation.bitmap</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/bitmap/cache/package-summary.html">com.facebook.fresco.animation.bitmap.cache</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/bitmap/preparation/package-summary.html">com.facebook.fresco.animation.bitmap.preparation</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/bitmap/wrapper/package-summary.html">com.facebook.fresco.animation.bitmap.wrapper</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/drawable/package-summary.html">com.facebook.fresco.animation.drawable</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/drawable/animator/package-summary.html">com.facebook.fresco.animation.drawable.animator</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/factory/package-summary.html">com.facebook.fresco.animation.factory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/middleware/package-summary.html">com.facebook.fresco.middleware</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/animated/factory/package-summary.html">com.facebook.imagepipeline.animated.factory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/animated/impl/package-summary.html">com.facebook.imagepipeline.animated.impl</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/animated/util/package-summary.html">com.facebook.imagepipeline.animated.util</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/backends/okhttp3/package-summary.html">com.facebook.imagepipeline.backends.okhttp3</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/backends/volley/package-summary.html">com.facebook.imagepipeline.backends.volley</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/bitmaps/package-summary.html">com.facebook.imagepipeline.bitmaps</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/cache/package-summary.html">com.facebook.imagepipeline.cache</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/common/package-summary.html">com.facebook.imagepipeline.common</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/core/package-summary.html">com.facebook.imagepipeline.core</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/datasource/package-summary.html">com.facebook.imagepipeline.datasource</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/debug/package-summary.html">com.facebook.imagepipeline.debug</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/decoder/package-summary.html">com.facebook.imagepipeline.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/filter/package-summary.html">com.facebook.imagepipeline.filter</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/instrumentation/package-summary.html">com.facebook.imagepipeline.instrumentation</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/multiuri/package-summary.html">com.facebook.imagepipeline.multiuri</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/platform/package-summary.html">com.facebook.imagepipeline.platform</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/postprocessors/package-summary.html">com.facebook.imagepipeline.postprocessors</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/producers/package-summary.html">com.facebook.imagepipeline.producers</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/request/package-summary.html">com.facebook.imagepipeline.request</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/systrace/package-summary.html">com.facebook.imagepipeline.systrace</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/transcoder/package-summary.html">com.facebook.imagepipeline.transcoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/transformation/package-summary.html">com.facebook.imagepipeline.transformation</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imageutils/package-summary.html">com.facebook.imageutils</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/webpsupport/package-summary.html">com.facebook.webpsupport</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/widget/text/span/package-summary.html">com.facebook.widget.text.span</a></li>
+              </ul><br/>
+            </div> <!-- end packages -->
+          </div> <!-- end resize-packages -->
+          <div id="classes-nav">
+            <ul>
+              
+    <li><h2>Interfaces</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/CloneableDrawable.html">CloneableDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/DrawableParent.html">DrawableParent</a></li>
+          <li class="selected api apilevel-"><a href="../../../../com/facebook/drawee/drawable/FadeDrawable.OnFadeFinishedListener.html">FadeDrawable.OnFadeFinishedListener</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/InstrumentedDrawable.Listener.html">InstrumentedDrawable.Listener</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/Rounded.html">Rounded</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.StatefulScaleType.html">ScalingUtils.StatefulScaleType</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/TransformAwareDrawable.html">TransformAwareDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/TransformCallback.html">TransformCallback</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/VisibilityAwareDrawable.html">VisibilityAwareDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/VisibilityCallback.html">VisibilityCallback</a></li>
+      </ul>
+    </li>
+              
+    <li><h2>Classes</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ArrayDrawable.html">ArrayDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/AutoRotateDrawable.html">AutoRotateDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/DrawableProperties.html">DrawableProperties</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/DrawableUtils.html">DrawableUtils</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/FadeDrawable.html">FadeDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ForwardingDrawable.html">ForwardingDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/InstrumentedDrawable.html">InstrumentedDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/MatrixDrawable.html">MatrixDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/OrientedDrawable.html">OrientedDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html">ProgressBarDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html">RoundedBitmapDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/RoundedColorDrawable.html">RoundedColorDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/RoundedCornersDrawable.html">RoundedCornersDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html">RoundedDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/RoundedNinePatchDrawable.html">RoundedNinePatchDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScaleTypeDrawable.html">ScaleTypeDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.html">ScalingUtils</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.AbstractScaleType.html">ScalingUtils.AbstractScaleType</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.InterpolatingScaleType.html">ScalingUtils.InterpolatingScaleType</a></li>
+      </ul>
+    </li>
+              
+              
+    <li><h2>Enums</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/RoundedCornersDrawable.Type.html">RoundedCornersDrawable.Type</a></li>
+      </ul>
+    </li>
+              
+              
+            </ul><br/>
+          </div><!-- end classes -->
+        </div><!-- end nav-panels -->
+        <div id="nav-tree" style="display:none">
+          <div id="index-links">
+            <a href="../../../../packages.html"  >Packages</a> | 
+            <a href="../../../../classes.html" >Classes</a>
+          </div>
+        </div><!-- end nav-tree -->
+      </div><!-- end swapper -->
+    </div> <!-- end side-nav -->
+    <script>
+      if (!isMobile) {
+        //$("<a href='#' id='nav-swap' onclick='swapNav();return false;' style='font-size:10px;line-height:9px;margin-left:1em;text-decoration:none;'><span id='tree-link'>Use Tree Navigation</span><span id='panel-link' style='display:none'>Use Panel Navigation</span></a>").appendTo("#side-nav");
+        chooseDefaultNav();
+        if ($("#nav-tree").is(':visible')) {
+          init_default_navtree("../../../../");
+        } else {
+          addLoadEvent(function() {
+            scrollIntoView("packages-nav");
+            scrollIntoView("classes-nav");
+          });
+        }
+        //$("#swapper").css({borderBottom:"2px solid #aaa"});
+      } else {
+        swapNav(); // tree view should be used on mobile
+      }
+    </script>
+
+
+
+<div class="g-unit" id="doc-content">
+
+<div id="api-info-block">
+
+
+
+
+<div class="sum-details-links">
+
+
+</div><!-- end sum-details-links -->
+<div class="api-level">
+  
+
+
+  
+  
+
+</div>
+</div><!-- end api-info-block -->
+
+
+<!-- ======== START OF CLASS DATA ======== -->
+
+<div id="jd-header">
+    public
+    static 
+     
+    
+    interface
+<h1>FadeDrawable.OnFadeFinishedListener</h1>
+
+
+
+  
+  
+  
+
+
+</div><!-- end header -->
+
+<div id="naMessage"></div>
+
+<div id="jd-content" class="api apilevel-">
+<table class="jd-inheritance-table">
+
+
+    <tr>
+         	
+        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.drawee.drawable.FadeDrawable.OnFadeFinishedListener</td>
+    </tr>
+    
+
+</table>
+
+
+
+
+
+
+
+<div class="jd-descr">
+
+
+
+
+
+
+</div><!-- jd-descr -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="jd-descr">
+
+
+<h2>Summary</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+<table id="pubmethods" class="jd-sumtable"><tr><th colspan="12">Public Methods</th></tr>
+
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/FadeDrawable.OnFadeFinishedListener.html#onFadeFinished()">onFadeFinished</a></span>()
+        
+  </td></tr>
+
+
+
+</table>
+
+
+
+
+
+
+
+</div><!-- jd-descr (summary) -->
+
+<!-- Details -->
+
+
+
+
+
+
+
+
+<!-- XML Attributes -->
+
+
+<!-- Enum Values -->
+
+
+<!-- Constants -->
+
+
+<!-- Fields -->
+
+
+<!-- Public ctors -->
+
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<!-- Protected ctors -->
+
+
+
+<!-- ========= METHOD DETAIL ======== -->
+<!-- Public methdos -->
+
+<h2>Public Methods</h2>
+
+
+
+<a id="onFadeFinished()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        abstract 
+         
+        void
+      </span>
+      <span class="sympad">onFadeFinished</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+
+
+
+<!-- ========= METHOD DETAIL ======== -->
+
+
+
+<!-- ========= END OF CLASS DATA ========= -->
+<a id="navbar_top"></a>
+
+<div id="footer">
+ +Generated by <a href="http://code.google.com/p/doclava/">Doclava</a>.
+ +</div> <!-- end footer - @generated -->
+
+</div> <!-- jd-content -->
+
+</div><!-- end doc-content -->
+
+</div> <!-- end body-content --> 
+
+<script type="text/javascript">
+init(); /* initialize doclava-developer-docs.js */
+</script>
+
+</body>
+</html>

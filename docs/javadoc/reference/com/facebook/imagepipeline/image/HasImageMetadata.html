@@ -209,8 +209,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/controller/package-summary.html">com.facebook.drawee.controller</a></li>
@@ -249,6 +247,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/middleware/package-summary.html">com.facebook.fresco.middleware</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
@@ -284,6 +284,8 @@
   <a href="../../../../com/facebook/imagepipeline/filter/package-summary.html">com.facebook.imagepipeline.filter</a></li>
     <li class="selected api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/instrumentation/package-summary.html">com.facebook.imagepipeline.instrumentation</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
@@ -476,7 +478,9 @@ Summary:
             
               <a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>,
             
-              <a href="../../../../com/facebook/imagepipeline/image/CloseableStaticBitmap.html">CloseableStaticBitmap</a>
+              <a href="../../../../com/facebook/imagepipeline/image/CloseableStaticBitmap.html">CloseableStaticBitmap</a>,
+            
+              <a href="../../../../com/facebook/imagepipeline/image/ImageInfo.html">ImageInfo</a>
             
           
       </div>
@@ -499,6 +503,10 @@ Summary:
         <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/image/CloseableStaticBitmap.html">CloseableStaticBitmap</a></td>
               <td class="jd-descrcol" width="100%">CloseableImage that contains one Bitmap.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/image/ImageInfo.html">ImageInfo</a></td>
+              <td class="jd-descrcol" width="100%">Interface containing information about an image.&nbsp;</td>
           </tr>
   </table>
       </div>
@@ -574,10 +582,10 @@ Summary:
             
             
             
-            <a href="../../../../com/facebook/imagepipeline/image/OriginalEncodedImageInfo.html">OriginalEncodedImageInfo</a>
+            Map&lt;String,&nbsp;Object&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/image/HasImageMetadata.html#getOriginalEncodedImageInfo()">getOriginalEncodedImageInfo</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/image/HasImageMetadata.html#getExtras()">getExtras</a></span>()
         
   </td></tr>
 
@@ -630,7 +638,7 @@ Summary:
 
 
 
-<a id="getOriginalEncodedImageInfo()"></a>
+<a id="getExtras()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -640,9 +648,9 @@ Summary:
          
         abstract 
          
-        <a href="../../../../com/facebook/imagepipeline/image/OriginalEncodedImageInfo.html">OriginalEncodedImageInfo</a>
+        Map&lt;String,&nbsp;Object&gt;
       </span>
-      <span class="sympad">getOriginalEncodedImageInfo</span>
+      <span class="sympad">getExtras</span>
       <span class="normal">()</span>
     </h4>
       <div class="api-level">

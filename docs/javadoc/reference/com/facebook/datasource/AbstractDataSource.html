@@ -209,8 +209,6 @@
     <li class="api apilevel-">
   <a href="../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
     <li class="api apilevel-">
-  <a href="../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
-    <li class="api apilevel-">
   <a href="../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
     <li class="api apilevel-">
   <a href="../../../com/facebook/drawee/controller/package-summary.html">com.facebook.drawee.controller</a></li>
@@ -249,6 +247,8 @@
     <li class="api apilevel-">
   <a href="../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../com/facebook/fresco/middleware/package-summary.html">com.facebook.fresco.middleware</a></li>
+    <li class="api apilevel-">
   <a href="../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
     <li class="api apilevel-">
   <a href="../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
@@ -285,6 +285,8 @@
     <li class="api apilevel-">
   <a href="../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
+  <a href="../../../com/facebook/imagepipeline/instrumentation/package-summary.html">com.facebook.imagepipeline.instrumentation</a></li>
+    <li class="api apilevel-">
   <a href="../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
@@ -320,6 +322,7 @@
               
     <li><h2>Interfaces</h2>
       <ul>
+          <li class="api apilevel-"><a href="../../../com/facebook/datasource/AbstractDataSource.DataSourceInstrumenter.html">AbstractDataSource.DataSourceInstrumenter</a></li>
           <li class="api apilevel-"><a href="../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;T&gt;</li>
           <li class="api apilevel-"><a href="../../../com/facebook/datasource/DataSubscriber.html">DataSubscriber</a>&lt;T&gt;</li>
       </ul>
@@ -398,6 +401,8 @@
 
 Summary:
 
+  <a href="#nestedclasses">Nested Classes</a>
+  
 
 
 
@@ -407,7 +412,8 @@ Summary:
 
 
 
-  <a href="#proctors">Protected Ctors</a>
+
+  &#124; <a href="#proctors">Protected Ctors</a>
   
 
 
@@ -510,9 +516,7 @@ Summary:
             
               <a href="../../../com/facebook/imagepipeline/datasource/SettableDataSource.html">SettableDataSource</a>&lt;T&gt;,
             
-              <a href="../../../com/facebook/datasource/SimpleDataSource.html">SimpleDataSource</a>&lt;T&gt;,
-            
-              <a href="../../../com/facebook/drawee/backends/volley/VolleyDataSource.html">VolleyDataSource</a>
+              <a href="../../../com/facebook/datasource/SimpleDataSource.html">SimpleDataSource</a>&lt;T&gt;
             
           
       </div>
@@ -535,10 +539,6 @@ Summary:
         <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../com/facebook/datasource/SimpleDataSource.html">SimpleDataSource</a>&lt;T&gt;</td>
               <td class="jd-descrcol" width="100%">Settable <code><a href="../../../com/facebook/datasource/DataSource.html">DataSource</a></code>.&nbsp;</td>
-          </tr>
-        <tr class="alt-color api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../com/facebook/drawee/backends/volley/VolleyDataSource.html">VolleyDataSource</a></td>
-              <td class="jd-descrcol" width="100%"><code><a href="../../../com/facebook/datasource/DataSource.html">DataSource</a></code> that wraps Volley ImageLoader.&nbsp;</td>
           </tr>
   </table>
       </div>
@@ -624,6 +624,27 @@ Summary:
 
 
 
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<table id="nestedclasses" class="jd-sumtable"><tr><th colspan="12">Nested Classes</th></tr>
+
+
+  
+    <tr class="alt-color api apilevel-" >
+      <td class="jd-typecol">
+        
+         
+         
+        
+        interface</td>
+      <td class="jd-linkcol"><a href="../../../com/facebook/datasource/AbstractDataSource.DataSourceInstrumenter.html">AbstractDataSource.DataSourceInstrumenter</a></td>
+      <td class="jd-descrcol" width="100%">Allows to capture unit of works for instrumentation purposes.&nbsp;</td>
+    </tr>
+    
+    
+
+</table>
+
+
 
 
 
@@ -693,6 +714,38 @@ Summary:
         
         <div class="jd-descrdiv">Cancels the ongoing request and releases all associated resources.</div>
   
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            <a href="../../../com/facebook/datasource/AbstractDataSource.DataSourceInstrumenter.html">AbstractDataSource.DataSourceInstrumenter</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/facebook/datasource/AbstractDataSource.html#getDataSourceInstrumenter()">getDataSourceInstrumenter</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            Map&lt;String,&nbsp;Object&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/facebook/datasource/AbstractDataSource.html#getExtras()">getExtras</a></span>()
+        
   </td></tr>
 
 
@@ -832,6 +885,38 @@ Summary:
             
             
             
+            static
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/facebook/datasource/AbstractDataSource.html#provideInstrumenter(com.facebook.datasource.AbstractDataSource.DataSourceInstrumenter)">provideInstrumenter</a></span>(<a href="../../../com/facebook/datasource/AbstractDataSource.DataSourceInstrumenter.html">AbstractDataSource.DataSourceInstrumenter</a> dataSourceInstrumenter)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/facebook/datasource/AbstractDataSource.html#setResult(T, boolean)">setResult</a></span>(T value, boolean isLast)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
             
             
             void
@@ -884,7 +969,39 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/facebook/datasource/AbstractDataSource.html#notifyDataSubscriber(com.facebook.datasource.DataSubscriber<T>, java.util.concurrent.Executor, boolean, boolean)">notifyDataSubscriber</a></span>(<a href="../../../com/facebook/datasource/DataSubscriber.html">DataSubscriber</a>&lt;T&gt; dataSubscriber, Executor executor, boolean isFailure, boolean isCancellation)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../com/facebook/datasource/AbstractDataSource.html#notifyProgressUpdate()">notifyProgressUpdate</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/facebook/datasource/AbstractDataSource.html#setExtras(java.util.Map<java.lang.String, java.lang.Object>)">setExtras</a></span>(Map&lt;String,&nbsp;Object&gt; extras)
         
   </td></tr>
 
@@ -918,10 +1035,8 @@ Summary:
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../com/facebook/datasource/AbstractDataSource.html#setProgress(float)">setProgress</a></span>(float progress)
+        <span class="sympad"><a href="../../../com/facebook/datasource/AbstractDataSource.html#setFailure(java.lang.Throwable, java.util.Map<java.lang.String, java.lang.Object>)">setFailure</a></span>(Throwable throwable, Map&lt;String,&nbsp;Object&gt; extras)
         
-        <div class="jd-descrdiv">Subclasses should invoke this method to set the progress.</div>
-  
   </td></tr>
 
 
@@ -936,7 +1051,25 @@ Summary:
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../com/facebook/datasource/AbstractDataSource.html#setResult(T, boolean)">setResult</a></span>(T value, boolean isLast)
+        <span class="sympad"><a href="../../../com/facebook/datasource/AbstractDataSource.html#setProgress(float)">setProgress</a></span>(float progress)
+        
+        <div class="jd-descrdiv">Subclasses should invoke this method to set the progress.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/facebook/datasource/AbstractDataSource.html#setResult(T, boolean, java.util.Map<java.lang.String, java.lang.Object>)">setResult</a></span>(T value, boolean isLast, Map&lt;String,&nbsp;Object&gt; extras)
         
         <div class="jd-descrdiv">Subclasses should invoke this method to set the result to <code>value</code>.</div>
   
@@ -1203,6 +1336,22 @@ From interface
             
             
             
+            Map&lt;String,&nbsp;Object&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/facebook/datasource/DataSource.html#getExtras()">getExtras</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
             Throwable
         </td>
         <td class="jd-linkcol" width="100%">
@@ -1212,7 +1361,7 @@ From interface
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1228,7 +1377,7 @@ From interface
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1246,7 +1395,7 @@ From interface
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1262,7 +1411,7 @@ From interface
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1278,7 +1427,7 @@ From interface
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1294,7 +1443,7 @@ From interface
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1310,7 +1459,7 @@ From interface
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1326,7 +1475,7 @@ From interface
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1460,6 +1609,68 @@ From interface
       <ul class="nolist"><li>true if the data source is closed for the first time
 </li></ul>
   </div>
+
+    </div>
+</div>
+
+
+<a id="getDataSourceInstrumenter()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        <a href="../../../com/facebook/datasource/AbstractDataSource.DataSourceInstrumenter.html">AbstractDataSource.DataSourceInstrumenter</a>
+      </span>
+      <span class="sympad">getDataSourceInstrumenter</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="getExtras()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Map&lt;String,&nbsp;Object&gt;
+      </span>
+      <span class="sympad">getExtras</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>
@@ -1729,6 +1940,68 @@ From interface
 </div>
 
 
+<a id="provideInstrumenter(com.facebook.datasource.AbstractDataSource.DataSourceInstrumenter)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">provideInstrumenter</span>
+      <span class="normal">(<a href="../../../com/facebook/datasource/AbstractDataSource.DataSourceInstrumenter.html">AbstractDataSource.DataSourceInstrumenter</a> dataSourceInstrumenter)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="setResult(T, boolean)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">setResult</span>
+      <span class="normal">(T value, boolean isLast)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 <a id="subscribe(com.facebook.datasource.DataSubscriber<T>, java.util.concurrent.Executor)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1806,6 +2079,37 @@ From interface
 </div>
 
 
+<a id="notifyDataSubscriber(com.facebook.datasource.DataSubscriber<T>, java.util.concurrent.Executor, boolean, boolean)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">notifyDataSubscriber</span>
+      <span class="normal">(<a href="../../../com/facebook/datasource/DataSubscriber.html">DataSubscriber</a>&lt;T&gt; dataSubscriber, Executor executor, boolean isFailure, boolean isCancellation)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 <a id="notifyProgressUpdate()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1820,6 +2124,37 @@ From interface
       </span>
       <span class="sympad">notifyProgressUpdate</span>
       <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="setExtras(java.util.Map<java.lang.String, java.lang.Object>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setExtras</span>
+      <span class="normal">(Map&lt;String,&nbsp;Object&gt; extras)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1892,6 +2227,37 @@ From interface
 </div>
 
 
+<a id="setFailure(java.lang.Throwable, java.util.Map<java.lang.String, java.lang.Object>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">setFailure</span>
+      <span class="normal">(Throwable throwable, Map&lt;String,&nbsp;Object&gt; extras)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 <a id="setProgress(float)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1945,7 +2311,7 @@ From interface
 </div>
 
 
-<a id="setResult(T, boolean)"></a>
+<a id="setResult(T, boolean, java.util.Map<java.lang.String, java.lang.Object>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1958,7 +2324,7 @@ From interface
         boolean
       </span>
       <span class="sympad">setResult</span>
-      <span class="normal">(T value, boolean isLast)</span>
+      <span class="normal">(T value, boolean isLast, Map&lt;String,&nbsp;Object&gt; extras)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1995,6 +2361,10 @@ From interface
         <tr>
           <th>isLast</th>
           <td>whether or not the value is last.</td>
+        </tr>
+        <tr>
+          <th>extras</th>
+          <td>an object with extra data for this datasource</td>
         </tr>
       </table>
   </div>
