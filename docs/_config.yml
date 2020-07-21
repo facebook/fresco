@@ -13,7 +13,7 @@ timezone: America/Los_Angeles
 ghrepo: "facebook/fresco"
 logo: /static/logo.png
 
-current_version: 2.2.0
+current_version: 2.3.0
 
 support_library_version: 24.2.1
 
