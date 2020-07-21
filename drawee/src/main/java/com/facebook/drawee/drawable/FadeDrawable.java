@@ -316,7 +316,7 @@ public class FadeDrawable extends ArrayDrawable {
     }
 
     for (int i = 0; i < mLayers.length; i++) {
-      drawDrawableWithAlpha(canvas, mLayers[i], mAlphas[i] * mAlpha / 255);
+      drawDrawableWithAlpha(canvas, mLayers[i], (int) Math.ceil(mAlphas[i] * mAlpha / 255.0));
     }
 
     if (!done) {

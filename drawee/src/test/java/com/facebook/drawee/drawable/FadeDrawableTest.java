@@ -330,7 +330,7 @@ public class FadeDrawableTest {
     inOrder.verify(mLayers[0]).setAlpha(128);
     inOrder.verify(mLayers[0]).draw(mCanvas);
     inOrder.verify(mLayers[1]).mutate();
-    inOrder.verify(mLayers[1]).setAlpha(25);
+    inOrder.verify(mLayers[1]).setAlpha(26);
     inOrder.verify(mLayers[1]).draw(mCanvas);
     inOrder.verify(mCallback, atLeastOnce()).invalidateDrawable(mFadeDrawable);
     inOrder.verifyNoMoreInteractions();
