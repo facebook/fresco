@@ -14,6 +14,7 @@ import android.os.Build;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.callercontext.CallerContextVerifier;
+import com.facebook.common.executors.SerialExecutorService;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.VisibleForTesting;
@@ -109,6 +110,7 @@ public class ImagePipelineConfig {
   private final CloseableReferenceLeakTracker mCloseableReferenceLeakTracker;
   @Nullable private final MemoryCache<CacheKey, CloseableImage> mBitmapCache;
   @Nullable private final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
+  @Nullable private final SerialExecutorService mSerialExecutorService;
 
   private static DefaultImageRequestConfig sDefaultImageRequestConfig =
       new DefaultImageRequestConfig();
@@ -217,6 +219,7 @@ public class ImagePipelineConfig {
     mCloseableReferenceLeakTracker = builder.mCloseableReferenceLeakTracker;
     mBitmapCache = builder.mBitmapMemoryCache;
     mEncodedMemoryCache = builder.mEncodedMemoryCache;
+    mSerialExecutorService = builder.mSerialExecutorService;
     // Here we manage the WebpBitmapFactory implementation if any
     WebpBitmapFactory webpBitmapFactory = mImagePipelineExperiments.getWebpBitmapFactory();
     if (webpBitmapFactory != null) {
@@ -317,6 +320,10 @@ public class ImagePipelineConfig {
 
   public ExecutorSupplier getExecutorSupplier() {
     return mExecutorSupplier;
+  }
+
+  public SerialExecutorService getSerialExecutorService(){
+    return mSerialExecutorService;
   }
 
   public ImageCacheStatsTracker getImageCacheStatsTracker() {
@@ -505,6 +512,7 @@ public class ImagePipelineConfig {
         new NoOpCloseableReferenceLeakTracker();
     @Nullable private MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
     @Nullable private MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
+    @Nullable private SerialExecutorService mSerialExecutorService;
 
     private Builder(Context context) {
       // Doesn't use a setter as always required.
@@ -696,6 +704,11 @@ public class ImagePipelineConfig {
     public Builder setEncodedMemoryCache(
         @Nullable MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache) {
       mEncodedMemoryCache = encodedMemoryCache;
+      return this;
+    }
+
+    public Builder setSerialExecutorService(@Nullable SerialExecutorService serialExecutorService){
+      mSerialExecutorService = serialExecutorService;
       return this;
     }
 

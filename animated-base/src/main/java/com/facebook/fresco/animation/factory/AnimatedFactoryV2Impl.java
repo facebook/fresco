@@ -54,17 +54,20 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   private @Nullable AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
   private @Nullable AnimatedDrawableUtil mAnimatedDrawableUtil;
   private @Nullable DrawableFactory mAnimatedDrawableFactory;
+  SerialExecutorService mSerialExecutorService;
 
   @DoNotStrip
   public AnimatedFactoryV2Impl(
       PlatformBitmapFactory platformBitmapFactory,
       ExecutorSupplier executorSupplier,
       CountingMemoryCache<CacheKey, CloseableImage> backingCache,
-      boolean downscaleFrameToDrawableDimensions) {
+      boolean downscaleFrameToDrawableDimensions,
+      SerialExecutorService serialExecutorServiceForFramePreparing) {
     mPlatformBitmapFactory = platformBitmapFactory;
     mExecutorSupplier = executorSupplier;
     mBackingCache = backingCache;
     mDownscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions;
+    this.mSerialExecutorService = serialExecutorServiceForFramePreparing;
   }
 
   @Nullable
@@ -114,8 +117,8 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
           }
         };
 
-    final SerialExecutorService serialExecutorServiceForFramePreparing =
-        new DefaultSerialExecutorService(mExecutorSupplier.forDecode());
+    final SerialExecutorService serialExecutorServiceForFramePreparing = mSerialExecutorService == null ?
+        new DefaultSerialExecutorService(mExecutorSupplier.forDecode()):mSerialExecutorService;
 
     Supplier<Integer> numberOfFramesToPrepareSupplier =
         new Supplier<Integer>() {
