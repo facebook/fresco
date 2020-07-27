@@ -76,8 +76,8 @@ to do this as soon as possible for all commits.
 
 ## Coding Style  
 
-* 2 spaces for indentation rather than tabs
-* 100 character line length
+* Use 2 spaces for indentation rather than using tabs.
+* 100 character line length is suggested.
 * Although officially archived, we still follow the practice of Oracle's 
 [Coding Conventions for the Java Programming Language](http://www.oracle.com/technetwork/java/javase/documentation/codeconvtoc-136057.html).
 
