@@ -404,13 +404,6 @@ public class ImagePipeline {
     return prefetchToBitmapCache(imageRequest, callerContext, Priority.MEDIUM);
   }
 
-  /** Experimental prefetch method. Do not use as it can be removed in the future */
-  @Deprecated
-  public DataSource<Void> prefetchToBitmapCacheWithHighPriority(
-      ImageRequest imageRequest, Object callerContext) {
-    return prefetchToBitmapCache(imageRequest, callerContext, Priority.HIGH);
-  }
-
   private DataSource<Void> prefetchToBitmapCache(
       ImageRequest imageRequest, Object callerContext, Priority priority) {
     if (!mIsPrefetchEnabledSupplier.get()) {
