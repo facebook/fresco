@@ -33,6 +33,7 @@ public interface ProducerContext {
     ExtraKeys.ORIGIN_SUBCATEGORY,
     ExtraKeys.NORMALIZED_URI,
     ExtraKeys.SOURCE_URI,
+    ExtraKeys.IMAGE_FORMAT,
     ExtraKeys.ENCODED_WIDTH,
     ExtraKeys.ENCODED_HEIGHT,
     ExtraKeys.ENCODED_SIZE,
@@ -44,6 +45,7 @@ public interface ProducerContext {
     String ORIGIN_SUBCATEGORY = "origin_sub";
     String SOURCE_URI = "uri_source";
     String NORMALIZED_URI = "uri_norm";
+    String IMAGE_FORMAT = "image_format";
     String ENCODED_WIDTH = "encoded_width";
     String ENCODED_HEIGHT = "encoded_height";
     String ENCODED_SIZE = "encoded_size";
