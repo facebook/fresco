@@ -129,11 +129,9 @@ public class FlipperImageTracker implements DebugImageTracker, ImagePerfDataList
     if (imagePerfData == null || imagePerfData.getImageRequest() == null) {
       return;
     }
-
-    if (mImageRequestDebugDataMap.containsKey(imagePerfData.getImageRequest())) {
-      mImageRequestDebugDataMap
-          .get(imagePerfData.getImageRequest())
-          .setImagePerfData(imagePerfData);
+    ImageDebugData debugData = mImageRequestDebugDataMap.get(imagePerfData.getImageRequest());
+    if (debugData != null) {
+      debugData.setImagePerfData(imagePerfData);
     } else {
       ImageDebugData imageDebugData = new ImageDebugData(imagePerfData.getImageRequest());
       imageDebugData.setImagePerfData(imagePerfData);
