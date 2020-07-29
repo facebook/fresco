@@ -14,6 +14,7 @@ import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.core.ExecutorSupplier;
 import com.facebook.imagepipeline.image.CloseableImage;
 import java.lang.reflect.Constructor;
+import java.util.concurrent.ExecutorService;
 
 public class AnimatedFactoryProvider {
 
@@ -26,7 +27,7 @@ public class AnimatedFactoryProvider {
       ExecutorSupplier executorSupplier,
       CountingMemoryCache<CacheKey, CloseableImage> backingCache,
       boolean downscaleFrameToDrawableDimensions,
-      SerialExecutorService serialExecutorService) {
+      ExecutorService serialExecutorService) {
     if (!sImplLoaded) {
       try {
         final Class<?> clazz =

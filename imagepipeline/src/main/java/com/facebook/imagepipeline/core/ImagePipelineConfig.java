@@ -707,7 +707,7 @@ public class ImagePipelineConfig {
       return this;
     }
 
-    public Builder setSerialExecutorService(@Nullable SerialExecutorService serialExecutorService){
+    public Builder setExecutorServiceForAnimatedImages(@Nullable SerialExecutorService serialExecutorService){
       mSerialExecutorService = serialExecutorService;
       return this;
     }

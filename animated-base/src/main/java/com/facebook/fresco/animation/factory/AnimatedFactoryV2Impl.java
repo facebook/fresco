@@ -54,7 +54,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   private @Nullable AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
   private @Nullable AnimatedDrawableUtil mAnimatedDrawableUtil;
   private @Nullable DrawableFactory mAnimatedDrawableFactory;
-  SerialExecutorService mSerialExecutorService;
+  private @Nullable SerialExecutorService mSerialExecutorService;
 
   @DoNotStrip
   public AnimatedFactoryV2Impl(
@@ -67,7 +67,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
     mExecutorSupplier = executorSupplier;
     mBackingCache = backingCache;
     mDownscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions;
-    this.mSerialExecutorService = serialExecutorServiceForFramePreparing;
+    mSerialExecutorService = serialExecutorServiceForFramePreparing;
   }
 
   @Nullable
