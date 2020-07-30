@@ -65,6 +65,8 @@ public class ImageDecodeOptions {
    */
   public final @Nullable ColorSpace colorSpace;
 
+  private final boolean excludeBitmapConfigFromComparison;
+
   public ImageDecodeOptions(ImageDecodeOptionsBuilder b) {
     this.minDecodeIntervalMs = b.getMinDecodeIntervalMs();
     this.maxDimensionPx = b.getMaxDimensionPx();
@@ -76,6 +78,7 @@ public class ImageDecodeOptions {
     this.customImageDecoder = b.getCustomImageDecoder();
     this.bitmapTransformation = b.getBitmapTransformation();
     this.colorSpace = b.getColorSpace();
+    this.excludeBitmapConfigFromComparison = b.getExcludeBitmapConfigFromComparison();
   }
 
   /**
@@ -109,7 +112,7 @@ public class ImageDecodeOptions {
     if (useLastFrameForPreview != that.useLastFrameForPreview) return false;
     if (decodeAllFrames != that.decodeAllFrames) return false;
     if (forceStaticImage != that.forceStaticImage) return false;
-    if (bitmapConfig != that.bitmapConfig) return false;
+    if (!excludeBitmapConfigFromComparison && bitmapConfig != that.bitmapConfig) return false;
     if (customImageDecoder != that.customImageDecoder) return false;
     if (bitmapTransformation != that.bitmapTransformation) return false;
     if (colorSpace != that.colorSpace) return false;
@@ -124,7 +127,7 @@ public class ImageDecodeOptions {
     result = 31 * result + (useLastFrameForPreview ? 1 : 0);
     result = 31 * result + (decodeAllFrames ? 1 : 0);
     result = 31 * result + (forceStaticImage ? 1 : 0);
-    result = 31 * result + bitmapConfig.ordinal();
+    if (!excludeBitmapConfigFromComparison) result = 31 * result + bitmapConfig.ordinal();
     result = 31 * result + (customImageDecoder != null ? customImageDecoder.hashCode() : 0);
     result = 31 * result + (bitmapTransformation != null ? bitmapTransformation.hashCode() : 0);
     result = 31 * result + (colorSpace != null ? colorSpace.hashCode() : 0);

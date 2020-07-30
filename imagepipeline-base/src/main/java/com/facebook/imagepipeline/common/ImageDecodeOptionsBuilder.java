@@ -26,6 +26,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
   private @Nullable ImageDecoder mCustomImageDecoder;
   private @Nullable BitmapTransformation mBitmapTransformation;
   private @Nullable ColorSpace mColorSpace;
+  private boolean mExcludeBitmapConfigFromComparison;
 
   public ImageDecodeOptionsBuilder() {}
 
@@ -253,6 +254,15 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
   @Nullable
   public ColorSpace getColorSpace() {
     return mColorSpace;
+  }
+
+  public T setExcludeBitmapConfigFromComparison(boolean excludeBitmapConfigFromComparison) {
+    mExcludeBitmapConfigFromComparison = excludeBitmapConfigFromComparison;
+    return getThis();
+  }
+
+  public boolean getExcludeBitmapConfigFromComparison() {
+    return mExcludeBitmapConfigFromComparison;
   }
 
   /**
