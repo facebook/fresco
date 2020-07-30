@@ -106,8 +106,6 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
       String id, @Nullable ImageInfo imageInfo, @Nullable Extras extraData) {
     final long now = mClock.now();
 
-    int i = extraData.view.size();
-
     mImagePerfState.setExtraData(extraData);
 
     mImagePerfState.setControllerFinalImageSetTimeMs(now);

@@ -2,6 +2,7 @@
 
 package com.facebook.fresco.ui.common;
 
+import android.net.Uri;
 import java.util.Map;
 import javax.annotation.Nullable;
 
@@ -10,20 +11,24 @@ import javax.annotation.Nullable;
 public interface ControllerListener2<INFO> {
 
   class Extras {
-    public @Nullable Map<String, Object> pipe;
-    public @Nullable Map<String, Object> view;
+    public @Nullable Map<String, Object> componentExtras;
+    public @Nullable Map<String, Object> shortcutExtras;
+    public @Nullable Map<String, Object> datasourceExtras;
+    public @Nullable Map<String, Object> imageExtras;
 
-    public static Extras of(
-        @Nullable Map<String, Object> pipe, @Nullable Map<String, Object> view) {
+    public @Nullable Object callerContext;
+    public @Nullable Uri mainUri;
+
+    public int viewportWidth = -1;
+    public int viewportHeight = -1;
+    public Object scaleType;
+    public float focusX = -1;
+    public float focusY = -1;
+
+    public static Extras of(@Nullable Map<String, Object> componentExtras) {
       Extras extras = new Extras();
-      extras.pipe = pipe;
-      extras.view = view;
+      extras.componentExtras = componentExtras;
       return extras;
-    }
-
-    @Override
-    public String toString() {
-      return "pipe: " + pipe + ", view: " + view;
     }
   }
 
