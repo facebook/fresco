@@ -4,7 +4,6 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.net.Uri;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
-import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
 
