@@ -189,6 +189,18 @@ public interface DiskStorage {
     BinaryResource commit(Object debugInfo) throws IOException;
 
     /**
+     * Commits the insertion into the cache. Once this is called the entry will be available to
+     * clients of the cache. It also sets the file's timestamp according to the time passed as an
+     * argument.
+     *
+     * @param debugInfo debug object for debugging
+     * @param time in milliseconds
+     * @return the final resource created
+     * @exception IOException on errors during the commit
+     */
+    BinaryResource commit(Object debugInfo, long time) throws IOException;
+
+    /**
      * Discards the insertion process. If resource was already committed the call is ignored.
      *
      * @return true if cleanUp is successful (or noop), false if something couldn't be dealt with

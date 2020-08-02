@@ -671,6 +671,11 @@ public class DefaultDiskStorage implements DiskStorage {
 
     @Override
     public BinaryResource commit(Object debugInfo) throws IOException {
+      return commit(debugInfo, mClock.now());
+    }
+
+    @Override
+    public BinaryResource commit(Object debugInfo, long time) throws IOException {
       // the temp resource must be ours!
       File targetFile = getContentFileFor(mResourceId);
 
@@ -693,7 +698,7 @@ public class DefaultDiskStorage implements DiskStorage {
         throw re;
       }
       if (targetFile.exists()) {
-        targetFile.setLastModified(mClock.now());
+        targetFile.setLastModified(time);
       }
       return FileBinaryResource.createOrNull(targetFile);
     }
