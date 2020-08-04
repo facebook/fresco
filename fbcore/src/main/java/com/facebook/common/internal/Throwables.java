@@ -16,6 +16,7 @@
 
 package com.facebook.common.internal;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import javax.annotation.Nullable;
  * @author Ben Yu
  * @since 1.0
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class Throwables {
   private Throwables() {}
 
