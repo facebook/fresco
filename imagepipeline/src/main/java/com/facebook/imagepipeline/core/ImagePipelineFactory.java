@@ -23,13 +23,12 @@ import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactoryProvider;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactoryProvider;
-import com.facebook.imagepipeline.cache.BitmapCountingMemoryCacheFactory;
-import com.facebook.imagepipeline.cache.BitmapMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.cache.EncodedCountingMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.EncodedMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.InstrumentedMemoryCache;
+import com.facebook.imagepipeline.cache.InstrumentedMemoryCacheBitmapMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.decoder.DefaultImageDecoder;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
@@ -193,23 +192,23 @@ public class ImagePipelineFactory {
   public CountingMemoryCache<CacheKey, CloseableImage> getBitmapCountingMemoryCache() {
     if (mBitmapCountingMemoryCache == null) {
       mBitmapCountingMemoryCache =
-          BitmapCountingMemoryCacheFactory.get(
-              mConfig.getBitmapMemoryCacheParamsSupplier(),
-              mConfig.getMemoryTrimmableRegistry(),
-              mConfig.getBitmapMemoryCacheTrimStrategy(),
-              mConfig.getBitmapMemoryCacheEntryStateObserver());
+          mConfig
+              .getBitmapMemoryCacheFactory()
+              .create(
+                  mConfig.getBitmapMemoryCacheParamsSupplier(),
+                  mConfig.getMemoryTrimmableRegistry(),
+                  mConfig.getBitmapMemoryCacheTrimStrategy(),
+                  mConfig.getBitmapMemoryCacheEntryStateObserver());
     }
     return mBitmapCountingMemoryCache;
   }
 
   public InstrumentedMemoryCache<CacheKey, CloseableImage> getBitmapMemoryCache() {
     if (mBitmapMemoryCache == null) {
-      MemoryCache<CacheKey, CloseableImage> backingCache =
-          mConfig.getBitmapCacheOverride() != null
-              ? mConfig.getBitmapCacheOverride()
-              : getBitmapCountingMemoryCache();
+      MemoryCache<CacheKey, CloseableImage> backingCache = getBitmapCountingMemoryCache();
       mBitmapMemoryCache =
-          BitmapMemoryCacheFactory.get(backingCache, mConfig.getImageCacheStatsTracker());
+          InstrumentedMemoryCacheBitmapMemoryCacheFactory.get(
+              backingCache, mConfig.getImageCacheStatsTracker());
     }
     return mBitmapMemoryCache;
   }
@@ -457,8 +456,8 @@ public class ImagePipelineFactory {
   @Nullable
   public String reportData() {
     return Objects.toStringHelper("ImagePipelineFactory")
-        .add("bitmapCountingMemoryCache", mBitmapCountingMemoryCache.reportData())
-        .add("encodedCountingMemoryCache", mEncodedCountingMemoryCache.reportData())
+        .add("bitmapCountingMemoryCache", mBitmapCountingMemoryCache.getDebugData())
+        .add("encodedCountingMemoryCache", mEncodedCountingMemoryCache.getDebugData())
         .toString();
   }
 }

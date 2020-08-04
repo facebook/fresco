@@ -7,8 +7,10 @@
 
 package com.facebook.imagepipeline.cache;
 
+import com.facebook.cache.common.HasDebugData;
 import com.facebook.common.internal.Predicate;
 import com.facebook.common.memory.MemoryTrimType;
+import com.facebook.common.memory.MemoryTrimmable;
 import com.facebook.common.references.CloseableReference;
 import javax.annotation.Nullable;
 
@@ -18,7 +20,7 @@ import javax.annotation.Nullable;
  * @param <K> the key type
  * @param <V> the value type
  */
-public interface MemoryCache<K, V> {
+public interface MemoryCache<K, V> extends MemoryTrimmable, HasDebugData {
 
   /** Interface used to specify the trimming strategy for the cache. */
   interface CacheTrimStrategy {

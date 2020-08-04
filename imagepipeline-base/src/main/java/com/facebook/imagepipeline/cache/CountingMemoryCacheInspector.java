@@ -92,10 +92,10 @@ public class CountingMemoryCacheInspector<K, V> {
           new DumpInfo<>(
               mCountingBitmapCache.getSizeInBytes(),
               mCountingBitmapCache.getEvictionQueueSizeInBytes(),
-              mCountingBitmapCache.mMemoryCacheParams);
+              mCountingBitmapCache.getMemoryCacheParams());
 
       final List<LinkedHashMap.Entry<K, CountingMemoryCache.Entry<K, V>>> cachedEntries =
-          mCountingBitmapCache.mCachedEntries.getMatchingEntries(null);
+          mCountingBitmapCache.getCachedEntries().getMatchingEntries(null);
       for (LinkedHashMap.Entry<K, CountingMemoryCache.Entry<K, V>> cachedEntry : cachedEntries) {
         CountingMemoryCache.Entry<K, V> entry = cachedEntry.getValue();
         DumpInfoEntry<K, V> dumpEntry = new DumpInfoEntry<>(entry.key, entry.valueRef);
@@ -105,7 +105,7 @@ public class CountingMemoryCacheInspector<K, V> {
           dumpInfo.lruEntries.add(dumpEntry);
         }
       }
-      for (Map.Entry<Bitmap, Object> entry : mCountingBitmapCache.mOtherEntries.entrySet()) {
+      for (Map.Entry<Bitmap, Object> entry : mCountingBitmapCache.getOtherEntries().entrySet()) {
         if (entry != null && !entry.getKey().isRecycled()) {
           dumpInfo.otherEntries.put(entry.getKey(), entry.getValue());
         }

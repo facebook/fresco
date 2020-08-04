@@ -47,7 +47,7 @@ import org.robolectric.annotation.Config;
 @PrepareForTest({SystemClock.class})
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 @Config(manifest = Config.NONE)
-public class CountingMemoryCacheTest {
+public class LruCountingMemoryCacheTest {
 
   private static final int CACHE_MAX_SIZE = 1200;
   private static final int CACHE_MAX_COUNT = 4;
@@ -57,7 +57,7 @@ public class CountingMemoryCacheTest {
   private static final long PARAMS_CHECK_INTERVAL_MS = TimeUnit.MINUTES.toMillis(5);
 
   @Mock public ResourceReleaser<Integer> mReleaser;
-  @Mock public CountingMemoryCache.CacheTrimStrategy mCacheTrimStrategy;
+  @Mock public MemoryCache.CacheTrimStrategy mCacheTrimStrategy;
   @Mock public Supplier<MemoryCacheParams> mParamsSupplier;
   @Mock public CountingMemoryCache.EntryStateObserver<String> mEntryStateObserver;
   @Mock public Bitmap mBitmap;
@@ -66,7 +66,7 @@ public class CountingMemoryCacheTest {
 
   private ValueDescriptor<Integer> mValueDescriptor;
   private MemoryCacheParams mParams;
-  private CountingMemoryCache<String, Integer> mCache;
+  private LruCountingMemoryCache<String, Integer> mCache;
   private CloseableReference<Bitmap> mBitmapReference;
 
   private static final String KEY = "KEY";
@@ -102,7 +102,8 @@ public class CountingMemoryCacheTest {
             PARAMS_CHECK_INTERVAL_MS);
     when(mParamsSupplier.get()).thenReturn(mParams);
     mBitmapReference = CloseableReference.of(mBitmap, FAKE_BITMAP_RESOURCE_RELEASER);
-    mCache = new CountingMemoryCache<>(mValueDescriptor, mCacheTrimStrategy, mParamsSupplier, null);
+    mCache =
+        new LruCountingMemoryCache<>(mValueDescriptor, mCacheTrimStrategy, mParamsSupplier, null);
   }
 
   @Test

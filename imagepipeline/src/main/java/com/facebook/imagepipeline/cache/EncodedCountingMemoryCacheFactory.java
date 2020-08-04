@@ -26,10 +26,10 @@ public class EncodedCountingMemoryCacheFactory {
           }
         };
 
-    CountingMemoryCache.CacheTrimStrategy trimStrategy = new NativeMemoryCacheTrimStrategy();
+    MemoryCache.CacheTrimStrategy trimStrategy = new NativeMemoryCacheTrimStrategy();
 
     CountingMemoryCache<CacheKey, PooledByteBuffer> countingCache =
-        new CountingMemoryCache<>(
+        new LruCountingMemoryCache<>(
             valueDescriptor, trimStrategy, encodedMemoryCacheParamsSupplier, null);
 
     memoryTrimmableRegistry.registerMemoryTrimmable(countingCache);

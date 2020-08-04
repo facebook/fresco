@@ -19,7 +19,7 @@ import com.facebook.common.memory.MemoryTrimType;
  * cache in one additional case: when OnCloseToDalvikHeapLimit trim type is received, cache's
  * eviction queue will be trimmed according to OnCloseToDalvikHeapLimit's suggested trim ratio.
  */
-public class BitmapMemoryCacheTrimStrategy implements CountingMemoryCache.CacheTrimStrategy {
+public class BitmapMemoryCacheTrimStrategy implements MemoryCache.CacheTrimStrategy {
   private static final String TAG = "BitmapMemoryCacheTrimStrategy";
 
   @Override

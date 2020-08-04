@@ -25,8 +25,10 @@ import com.facebook.common.webp.WebpBitmapFactory;
 import com.facebook.common.webp.WebpSupportStatus;
 import com.facebook.imagepipeline.bitmaps.HoneycombBitmapCreator;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import com.facebook.imagepipeline.cache.BitmapMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheTrimStrategy;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
+import com.facebook.imagepipeline.cache.CountingLruBitmapMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.cache.DefaultBitmapMemoryCacheParamsSupplier;
 import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
@@ -76,7 +78,7 @@ public class ImagePipelineConfig {
   // There are a lot of parameters in this class. Please follow strict alphabetical order.
   private final Bitmap.Config mBitmapConfig;
   private final Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
-  private final CountingMemoryCache.CacheTrimStrategy mBitmapMemoryCacheTrimStrategy;
+  private final MemoryCache.CacheTrimStrategy mBitmapMemoryCacheTrimStrategy;
   private final CountingMemoryCache.EntryStateObserver<CacheKey>
       mBitmapMemoryCacheEntryStateObserver;
   private final CacheKeyFactory mCacheKeyFactory;
@@ -109,6 +111,7 @@ public class ImagePipelineConfig {
   private final CloseableReferenceLeakTracker mCloseableReferenceLeakTracker;
   @Nullable private final MemoryCache<CacheKey, CloseableImage> mBitmapCache;
   @Nullable private final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
+  private final BitmapMemoryCacheFactory mBitmapMemoryCacheFactory;
 
   private static DefaultImageRequestConfig sDefaultImageRequestConfig =
       new DefaultImageRequestConfig();
@@ -216,6 +219,10 @@ public class ImagePipelineConfig {
     mCallerContextVerifier = builder.mCallerContextVerifier;
     mCloseableReferenceLeakTracker = builder.mCloseableReferenceLeakTracker;
     mBitmapCache = builder.mBitmapMemoryCache;
+    mBitmapMemoryCacheFactory =
+        builder.mBitmapMemoryCacheFactory == null
+            ? new CountingLruBitmapMemoryCacheFactory()
+            : builder.mBitmapMemoryCacheFactory;
     mEncodedMemoryCache = builder.mEncodedMemoryCache;
     // Here we manage the WebpBitmapFactory implementation if any
     WebpBitmapFactory webpBitmapFactory = mImagePipelineExperiments.getWebpBitmapFactory();
@@ -279,7 +286,7 @@ public class ImagePipelineConfig {
     return mBitmapMemoryCacheParamsSupplier;
   }
 
-  public CountingMemoryCache.CacheTrimStrategy getBitmapMemoryCacheTrimStrategy() {
+  public MemoryCache.CacheTrimStrategy getBitmapMemoryCacheTrimStrategy() {
     return mBitmapMemoryCacheTrimStrategy;
   }
 
@@ -451,6 +458,10 @@ public class ImagePipelineConfig {
     return mEncodedMemoryCache;
   }
 
+  public BitmapMemoryCacheFactory getBitmapMemoryCacheFactory() {
+    return mBitmapMemoryCacheFactory;
+  }
+
   /** Contains default configuration that can be personalized for all the request */
   public static class DefaultImageRequestConfig {
 
@@ -472,7 +483,7 @@ public class ImagePipelineConfig {
     private Bitmap.Config mBitmapConfig;
     private Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
     private CountingMemoryCache.EntryStateObserver<CacheKey> mBitmapMemoryCacheEntryStateObserver;
-    private CountingMemoryCache.CacheTrimStrategy mBitmapMemoryCacheTrimStrategy;
+    private MemoryCache.CacheTrimStrategy mBitmapMemoryCacheTrimStrategy;
     private CacheKeyFactory mCacheKeyFactory;
     private final Context mContext;
     private boolean mDownsampleEnabled = false;
@@ -505,6 +516,7 @@ public class ImagePipelineConfig {
         new NoOpCloseableReferenceLeakTracker();
     @Nullable private MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
     @Nullable private MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
+    @Nullable private BitmapMemoryCacheFactory mBitmapMemoryCacheFactory;
 
     private Builder(Context context) {
       // Doesn't use a setter as always required.
@@ -696,6 +708,12 @@ public class ImagePipelineConfig {
     public Builder setEncodedMemoryCache(
         @Nullable MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache) {
       mEncodedMemoryCache = encodedMemoryCache;
+      return this;
+    }
+
+    public Builder setBitmapMemoryCacheFactory(
+        @Nullable BitmapMemoryCacheFactory bitmapMemoryCacheFactory) {
+      mBitmapMemoryCacheFactory = bitmapMemoryCacheFactory;
       return this;
     }
 

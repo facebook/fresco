@@ -8,7 +8,9 @@
 package com.facebook.imagepipeline.cache;
 
 import com.facebook.common.internal.Predicate;
+import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.references.CloseableReference;
+import javax.annotation.Nullable;
 
 public class InstrumentedMemoryCache<K, V> implements MemoryCache<K, V> {
 
@@ -65,5 +67,15 @@ public class InstrumentedMemoryCache<K, V> implements MemoryCache<K, V> {
   @Override
   public int getSizeInBytes() {
     return mDelegate.getSizeInBytes();
+  }
+
+  @Override
+  public void trim(MemoryTrimType trimType) {
+    mDelegate.trim(trimType);
+  }
+
+  @Override
+  public @Nullable String getDebugData() {
+    return mDelegate.getDebugData();
   }
 }
