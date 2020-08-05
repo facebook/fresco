@@ -169,6 +169,9 @@ public final class BitmapUtil {
         return RGB_565_BYTES_PER_PIXEL;
       case RGBA_F16:
         return RGBA_F16_BYTES_PER_PIXEL;
+      case HARDWARE:
+        // We assume ARGB_8888 is used underneath
+        return ARGB_8888_BYTES_PER_PIXEL;
     }
     throw new UnsupportedOperationException("The provided Bitmap.Config is not supported");
   }

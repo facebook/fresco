@@ -23,7 +23,8 @@ import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.ByteConstants;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
-import com.facebook.imagepipeline.cache.BitmapCountingMemoryCacheFactory;
+import com.facebook.imagepipeline.cache.BitmapMemoryCacheTrimStrategy;
+import com.facebook.imagepipeline.cache.CountingLruBitmapMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.cache.MemoryCacheParams;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -60,8 +61,12 @@ public class AnimatedFrameCacheTest {
             TimeUnit.MINUTES.toMillis(5));
     when(mMemoryCacheParamsSupplier.get()).thenReturn(params);
     CountingMemoryCache<CacheKey, CloseableImage> countingMemoryCache =
-        BitmapCountingMemoryCacheFactory.get(
-            mMemoryCacheParamsSupplier, mMemoryTrimmableRegistry, null);
+        new CountingLruBitmapMemoryCacheFactory()
+            .create(
+                mMemoryCacheParamsSupplier,
+                mMemoryTrimmableRegistry,
+                new BitmapMemoryCacheTrimStrategy(),
+                null);
     mCacheKey = new SimpleCacheKey("key");
     mAnimatedFrameCache = new AnimatedFrameCache(mCacheKey, countingMemoryCache);
     mFrame1 = CloseableReference.of(mock(CloseableImage.class));

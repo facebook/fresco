@@ -103,11 +103,14 @@ public class DefaultDiskStorage implements DiskStorage {
     mClock = SystemClock.get();
   }
 
+  @SuppressWarnings("ExternalStorageUse")
   private static boolean isExternal(File directory, CacheErrorLogger cacheErrorLogger) {
     boolean state = false;
     String appCacheDirPath = null;
 
     try {
+      // Whitelisted use of external storage Android changes in Target SDK 29 and above as it
+      // only used for getting the canonical path
       File extStoragePath = Environment.getExternalStorageDirectory();
       if (extStoragePath != null) {
         String cacheDirPath = extStoragePath.toString();
@@ -668,6 +671,11 @@ public class DefaultDiskStorage implements DiskStorage {
 
     @Override
     public BinaryResource commit(Object debugInfo) throws IOException {
+      return commit(debugInfo, mClock.now());
+    }
+
+    @Override
+    public BinaryResource commit(Object debugInfo, long time) throws IOException {
       // the temp resource must be ours!
       File targetFile = getContentFileFor(mResourceId);
 
@@ -690,7 +698,7 @@ public class DefaultDiskStorage implements DiskStorage {
         throw re;
       }
       if (targetFile.exists()) {
-        targetFile.setLastModified(mClock.now());
+        targetFile.setLastModified(time);
       }
       return FileBinaryResource.createOrNull(targetFile);
     }

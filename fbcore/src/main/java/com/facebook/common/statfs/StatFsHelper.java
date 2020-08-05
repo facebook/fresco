@@ -88,12 +88,16 @@ public class StatFsHelper {
   }
 
   /** Initialization code that can sometimes take a long time. */
+  @SuppressWarnings("ExternalStorageUse")
   private void ensureInitialized() {
     if (!mInitialized) {
       lock.lock();
       try {
         if (!mInitialized) {
           mInternalPath = Environment.getDataDirectory();
+
+          // Whitelisted use of external storage Android changes in Target SDK 29 and above as it
+          // only used for getting the available space
           mExternalPath = Environment.getExternalStorageDirectory();
           updateStats();
           mInitialized = true;

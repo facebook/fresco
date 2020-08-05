@@ -345,7 +345,7 @@ public class ProducerFactory {
     return new SwallowResultProducer<T>(inputProducer);
   }
 
-  public <T> ThreadHandoffProducer<T> newBackgroundThreadHandoffProducer(
+  public <T> Producer<T> newBackgroundThreadHandoffProducer(
       Producer<T> inputProducer, ThreadHandoffProducerQueue inputThreadHandoffProducerQueue) {
     return new ThreadHandoffProducer<T>(inputProducer, inputThreadHandoffProducerQueue);
   }

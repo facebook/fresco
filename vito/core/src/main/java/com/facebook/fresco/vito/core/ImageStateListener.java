@@ -13,7 +13,8 @@ import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.imagepipeline.image.ImageInfo;
 import javax.annotation.Nullable;
 
-/** Interface for an image status listener. */
+@Deprecated
+/** Please use {@link ImageListener} instead. Interface for an image status listener. */
 public interface ImageStateListener {
 
   /**

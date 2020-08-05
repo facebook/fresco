@@ -10,7 +10,7 @@ package com.facebook.imagepipeline.cache;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.imagepipeline.image.CloseableImage;
 
-public class BitmapMemoryCacheFactory {
+public class InstrumentedMemoryCacheBitmapMemoryCacheFactory {
 
   public static InstrumentedMemoryCache<CacheKey, CloseableImage> get(
       final MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,

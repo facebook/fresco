@@ -1,3 +1,5 @@
+// (c) Facebook, Inc. and its affiliates. Confidential and proprietary.
+
 /*
  * Copyright (c) Facebook, Inc. and its affiliates.
  *
@@ -13,23 +15,13 @@ import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.imagepipeline.image.CloseableImage;
 import javax.annotation.Nullable;
 
-public class BitmapCountingMemoryCacheFactory {
+public class CountingLruBitmapMemoryCacheFactory implements BitmapMemoryCacheFactory {
 
-  public static CountingMemoryCache<CacheKey, CloseableImage> get(
+  @Override
+  public CountingMemoryCache<CacheKey, CloseableImage> create(
       Supplier<MemoryCacheParams> bitmapMemoryCacheParamsSupplier,
       MemoryTrimmableRegistry memoryTrimmableRegistry,
-      @Nullable CountingMemoryCache.EntryStateObserver<CacheKey> observer) {
-    return get(
-        bitmapMemoryCacheParamsSupplier,
-        memoryTrimmableRegistry,
-        new BitmapMemoryCacheTrimStrategy(),
-        observer);
-  }
-
-  public static CountingMemoryCache<CacheKey, CloseableImage> get(
-      Supplier<MemoryCacheParams> bitmapMemoryCacheParamsSupplier,
-      MemoryTrimmableRegistry memoryTrimmableRegistry,
-      CountingMemoryCache.CacheTrimStrategy trimStrategy,
+      MemoryCache.CacheTrimStrategy trimStrategy,
       @Nullable CountingMemoryCache.EntryStateObserver<CacheKey> observer) {
 
     ValueDescriptor<CloseableImage> valueDescriptor =
@@ -41,7 +33,7 @@ public class BitmapCountingMemoryCacheFactory {
         };
 
     CountingMemoryCache<CacheKey, CloseableImage> countingCache =
-        new CountingMemoryCache<>(
+        new LruCountingMemoryCache<>(
             valueDescriptor, trimStrategy, bitmapMemoryCacheParamsSupplier, observer);
 
     memoryTrimmableRegistry.registerMemoryTrimmable(countingCache);

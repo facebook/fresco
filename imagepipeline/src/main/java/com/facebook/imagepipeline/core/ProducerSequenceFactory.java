@@ -45,7 +45,6 @@ import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.QualifiedResourceFetchProducer;
 import com.facebook.imagepipeline.producers.RemoveImageTransformMetaDataProducer;
 import com.facebook.imagepipeline.producers.SwallowResultProducer;
-import com.facebook.imagepipeline.producers.ThreadHandoffProducer;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.producers.ThrottlingProducer;
 import com.facebook.imagepipeline.producers.ThumbnailBranchProducer;
@@ -811,7 +810,7 @@ public class ProducerSequenceFactory {
         mProducerFactory.newBitmapMemoryCacheProducer(inputProducer);
     BitmapMemoryCacheKeyMultiplexProducer bitmapKeyMultiplexProducer =
         mProducerFactory.newBitmapMemoryCacheKeyMultiplexProducer(bitmapMemoryCacheProducer);
-    ThreadHandoffProducer<CloseableReference<CloseableImage>> threadHandoffProducer =
+    Producer<CloseableReference<CloseableImage>> threadHandoffProducer =
         mProducerFactory.newBackgroundThreadHandoffProducer(
             bitmapKeyMultiplexProducer, mThreadHandoffProducerQueue);
     if (mIsEncodedMemoryCacheProbingEnabled || mIsDiskCacheProbingEnabled) {
