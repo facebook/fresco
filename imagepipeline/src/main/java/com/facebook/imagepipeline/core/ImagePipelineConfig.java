@@ -723,7 +723,7 @@ public class ImagePipelineConfig {
     public Builder setExecutorServiceForAnimatedImages(
         @Nullable SerialExecutorService serialExecutorService){
       mSerialExecutorService = serialExecutorService;
-      return this
+      return this;
     }
     public Builder setBitmapMemoryCacheFactory(
         @Nullable BitmapMemoryCacheFactory bitmapMemoryCacheFactory) {
