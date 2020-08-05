@@ -31,7 +31,7 @@ import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
-@PrepareForTest({Bitmap.class, Rect.class, Canvas.class})
+@PrepareForTest({Bitmap.class, Canvas.class})
 public class AnimatedDrawableBackendImplTest {
 
   @Rule public PowerMockRule mPowerMockRule = new PowerMockRule();
