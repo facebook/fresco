@@ -41,6 +41,21 @@ public class ImageSourceProvider {
   }
 
   /**
+   * Create a single image source for a given image request.
+   *
+   * @param imageRequest the image request to use
+   * @param requestLevelForFetch request level for fetch
+   * @return the ImageSource to be passed to the UI component
+   */
+  public static ImageSource forImageRequest(
+      @Nullable ImageRequest imageRequest, ImageRequest.RequestLevel requestLevelForFetch) {
+    if (imageRequest == null) {
+      return emptySource();
+    }
+    return get().singleImageRequest(imageRequest, requestLevelForFetch);
+  }
+
+  /**
    * Create a single image source for a given image URI.
    *
    * @param uri the image URI to use
@@ -128,6 +143,9 @@ public class ImageSourceProvider {
     ImageSource emptySource();
 
     ImageSource singleImageRequest(ImageRequest imageRequest);
+
+    ImageSource singleImageRequest(
+        ImageRequest imageRequest, ImageRequest.RequestLevel requestLevelForFetch);
 
     ImageSource singleUri(Uri uri);
 

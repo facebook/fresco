@@ -25,9 +25,16 @@ import com.facebook.infer.annotation.Nullsafe;
 public class SingleImageSource implements VitoImageSource {
 
   private final ImageRequest mMainImageRequest;
+  private final ImageRequest.RequestLevel mRequestLevelForFetch;
 
   protected SingleImageSource(ImageRequest mainImageRequest) {
+    this(mainImageRequest, ImageRequest.RequestLevel.FULL_FETCH);
+  }
+
+  protected SingleImageSource(
+      ImageRequest mainImageRequest, ImageRequest.RequestLevel requestLevelForFetch) {
     mMainImageRequest = mainImageRequest;
+    mRequestLevelForFetch = requestLevelForFetch;
   }
 
   public ImageRequest getImageRequest() {
@@ -73,7 +80,7 @@ public class SingleImageSource implements VitoImageSource {
           return imagePipeline.fetchDecodedImage(
               imageRequest,
               callerContext,
-              ImageRequest.RequestLevel.FULL_FETCH,
+              mRequestLevelForFetch,
               requestListener, // TODO: Check if this is correct !!
               uiComponentId);
         } else {

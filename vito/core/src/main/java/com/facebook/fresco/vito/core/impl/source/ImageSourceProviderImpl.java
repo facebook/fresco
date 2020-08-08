@@ -28,6 +28,12 @@ public class ImageSourceProviderImpl implements ImageSourceProvider.Implementati
   }
 
   @Override
+  public ImageSource singleImageRequest(
+      ImageRequest imageRequest, ImageRequest.RequestLevel requestLevelForFetch) {
+    return new SingleImageSource(imageRequest, requestLevelForFetch);
+  }
+
+  @Override
   public ImageSource singleUri(Uri uri) {
     return singleImageRequest(ImageRequestBuilder.newBuilderWithSource(uri).build());
   }
