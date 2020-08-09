@@ -634,6 +634,39 @@ public class ImagePipeline {
   }
 
   /**
+   * Returns whether the image is stored in the encoded memory cache.
+   *
+   * @param uri the uri for the image to be looked up.
+   * @return true if the image was found in the encoded memory cache, false otherwise
+   */
+  public boolean isInEncodedMemoryCache(final Uri uri) {
+    if (uri == null) {
+      return false;
+    }
+    Predicate<CacheKey> encodedCachePredicate = predicateForUri(uri);
+    return mEncodedMemoryCache.contains(encodedCachePredicate);
+  }
+
+  /**
+   * Returns whether the image is stored in the encoded memory cache.
+   *
+   * @param imageRequest the imageRequest for the image to be looked up.
+   * @return true if the image was found in the encoded memory cache, false otherwise.
+   */
+  public boolean isInEncodedMemoryCache(final ImageRequest imageRequest) {
+    if (imageRequest == null) {
+      return false;
+    }
+    final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest, null);
+    CloseableReference<PooledByteBuffer> ref = mEncodedMemoryCache.get(cacheKey);
+    try {
+      return CloseableReference.isValid(ref);
+    } finally {
+      CloseableReference.closeSafely(ref);
+    }
+  }
+
+  /**
    * Returns whether the image is stored in the disk cache. Performs disk cache check synchronously.
    * It is not recommended to use this unless you know what exactly you are doing. Disk cache check
    * is a costly operation, the call will block the caller thread until the cache check is
