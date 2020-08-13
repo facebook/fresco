@@ -130,4 +130,20 @@ public class BaseFrescoDrawable extends FadeDrawable implements Closeable {
 
     return ((ScaleTypeDrawable) actual).getFocusPoint();
   }
+
+  /** @return the width of the underlying actual image or -1 if unset */
+  public int getActualImageWidthPx() {
+    if (CloseableReference.isValid(mImageReference)) {
+      return mImageReference.get().getWidth();
+    }
+    return -1;
+  }
+
+  /** @return the width of the underlying actual image or -1 if unset */
+  public int getActualImageHeightPx() {
+    if (CloseableReference.isValid(mImageReference)) {
+      return mImageReference.get().getHeight();
+    }
+    return -1;
+  }
 }
