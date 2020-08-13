@@ -717,6 +717,11 @@ public class ImagePipelineConfig {
       return this;
     }
 
+    @Nullable
+    public BitmapMemoryCacheFactory getBitmapMemoryCacheFactory() {
+      return mBitmapMemoryCacheFactory;
+    }
+
     public ImagePipelineExperiments.Builder experiment() {
       return mExperimentsBuilder;
     }
