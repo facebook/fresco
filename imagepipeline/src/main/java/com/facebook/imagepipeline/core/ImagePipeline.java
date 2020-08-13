@@ -401,11 +401,6 @@ public class ImagePipeline {
    * @return a DataSource that can safely be ignored.
    */
   public DataSource<Void> prefetchToBitmapCache(ImageRequest imageRequest, Object callerContext) {
-    return prefetchToBitmapCache(imageRequest, callerContext, Priority.MEDIUM);
-  }
-
-  private DataSource<Void> prefetchToBitmapCache(
-      ImageRequest imageRequest, Object callerContext, Priority priority) {
     if (!mIsPrefetchEnabledSupplier.get()) {
       return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION);
     }
@@ -425,7 +420,7 @@ public class ImagePipeline {
           imageRequest,
           ImageRequest.RequestLevel.FULL_FETCH,
           callerContext,
-          priority);
+          Priority.MEDIUM);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     }
