@@ -57,7 +57,7 @@ public class ImagePerfData {
 
   private final @Nullable DimensionsInfo mDimensionsInfo;
 
-  private final @Nullable Extras mExtraData;
+  private @Nullable Extras mExtraData;
 
   public ImagePerfData(
       @Nullable String controllerId,
@@ -254,6 +254,10 @@ public class ImagePerfData {
   @Nullable
   public Extras getExtraData() {
     return mExtraData;
+  }
+
+  public void setExtraData(Extras extraData) {
+    mExtraData = extraData;
   }
 
   public String createDebugString() {

@@ -3,6 +3,7 @@
 package com.facebook.fresco.ui.common;
 
 import android.net.Uri;
+import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
 
@@ -29,6 +30,31 @@ public interface ControllerListener2<INFO> {
       Extras extras = new Extras();
       extras.componentExtras = componentExtras;
       return extras;
+    }
+
+    public Extras makeExtrasCopy() {
+      Extras extras = new Extras();
+      extras.componentExtras = copyMap(this.componentExtras);
+      extras.shortcutExtras = copyMap(this.shortcutExtras);
+      extras.datasourceExtras = copyMap(this.datasourceExtras);
+      extras.imageExtras = copyMap(this.imageExtras);
+      extras.callerContext = this.callerContext;
+      extras.mainUri = this.mainUri;
+      extras.viewportWidth = this.viewportWidth;
+      extras.viewportHeight = this.viewportHeight;
+      extras.scaleType = this.scaleType;
+      extras.focusX = this.focusX;
+      extras.focusY = this.focusY;
+
+      return extras;
+    }
+
+    private static Map<String, Object> copyMap(Map<String, Object> map) {
+      if (map == null) {
+        return null;
+      }
+
+      return new HashMap<>(map);
     }
   }
 
