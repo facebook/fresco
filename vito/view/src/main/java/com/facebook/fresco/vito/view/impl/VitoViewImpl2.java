@@ -99,7 +99,7 @@ public class VitoViewImpl2 implements VitoView.Implementation {
   }
 
   private void onDetach(FrescoDrawable2 drawable) {
-    drawable.scheduleReleaseNextFrame();
+    mController.release(drawable);
   }
 
   /**
