@@ -3,6 +3,7 @@
 <img alt="Fresco Logo" align="right" src="docs/static/sample-images/fresco_logo.svg" width="15%" />
 
 [![Build Status](https://circleci.com/gh/facebook/fresco.svg?style=shield)](https://circleci.com/gh/facebook/fresco)
+[![License](https://img.shields.io/badge/license-MIT-brightgreen)](https://github.com/facebook/fresco/blob/master/LICENSE)
 
 Fresco is a powerful system for displaying images in Android applications.
 
