@@ -22,6 +22,7 @@ import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.core.NativeCodeSetup;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.facebook.imagepipeline.request.Postprocessor;
 import javax.annotation.Nullable;
 
 /**
@@ -119,7 +120,10 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
 
     imageRequestBuilder.setShouldDecodePrefetches(mExperiments.prefetchToBitmapCache());
 
-    imageRequestBuilder.setPostprocessor(imageOptions.getPostprocessor());
+    Postprocessor postprocessor = imageOptions.getPostprocessor();
+    if (postprocessor != null) {
+      imageRequestBuilder.setPostprocessor(postprocessor);
+    }
 
     return imageRequestBuilder;
   }
