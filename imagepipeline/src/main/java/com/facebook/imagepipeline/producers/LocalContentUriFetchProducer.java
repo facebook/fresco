@@ -79,30 +79,9 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
   }
 
   private @Nullable EncodedImage getCameraImage(Uri uri) throws IOException {
-    Cursor cursor = mContentResolver.query(uri, PROJECTION, null, null, null);
-    if (cursor == null) {
-      return null;
-    }
-    try {
-      if (cursor.getCount() == 0) {
-        return null;
-      }
-      cursor.moveToFirst();
-      final String pathname =
-          cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
-      if (pathname != null) {
-        ParcelFileDescriptor parcelFileDescriptor = mContentResolver.openFileDescriptor(uri, "r");
-        FileDescriptor fd = parcelFileDescriptor.getFileDescriptor();
-        return getEncodedImage(new FileInputStream(fd), getLength(pathname));
-      }
-    } finally {
-      cursor.close();
-    }
-    return null;
-  }
-
-  private static int getLength(String pathname) {
-    return pathname == null ? -1 : (int) new File(pathname).length();
+    ParcelFileDescriptor parcelFileDescriptor = mContentResolver.openFileDescriptor(uri, "r");
+    FileDescriptor fd = parcelFileDescriptor.getFileDescriptor();
+    return getEncodedImage(new FileInputStream(fd), (int) parcelFileDescriptor.getStatSize());
   }
 
   @Override
