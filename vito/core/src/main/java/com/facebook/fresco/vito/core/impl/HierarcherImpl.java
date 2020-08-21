@@ -146,6 +146,10 @@ public class HierarcherImpl implements Hierarcher {
   @Override
   @Nullable
   public Drawable buildOverlayDrawable(Resources resources, ImageOptions imageOptions) {
+    @Nullable Drawable overlayDrawable = imageOptions.getOverlayDrawable();
+    if (overlayDrawable != null) {
+      return overlayDrawable;
+    }
     int resId = imageOptions.getOverlayRes();
     return resId == 0 ? null : resources.getDrawable(imageOptions.getOverlayRes());
   }

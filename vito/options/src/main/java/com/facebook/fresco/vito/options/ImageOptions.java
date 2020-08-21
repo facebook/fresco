@@ -67,6 +67,7 @@ public class ImageOptions extends DecodedImageOptions {
 
   // Overlay
   private final @DrawableRes int mOverlayRes;
+  private final @Nullable Drawable mOverlayDrawable;
 
   private final boolean mResizeToViewport;
 
@@ -91,6 +92,7 @@ public class ImageOptions extends DecodedImageOptions {
     mProgressScaleType = builder.mProgressScaleType;
 
     mOverlayRes = builder.mOverlayRes;
+    mOverlayDrawable = builder.mOverlayDrawable;
 
     mActualImageColorFilter = builder.mActualImageColorFilter;
 
@@ -141,6 +143,10 @@ public class ImageOptions extends DecodedImageOptions {
     return mOverlayRes;
   }
 
+  public @Nullable Drawable getOverlayDrawable() {
+    return mOverlayDrawable;
+  }
+
   public @DrawableRes int getProgressRes() {
     return mProgressRes;
   }
@@ -185,6 +191,7 @@ public class ImageOptions extends DecodedImageOptions {
         || !Objects.equal(mErrorScaleType, other.mErrorScaleType)
         || !Objects.equal(mErrorFocusPoint, other.mErrorFocusPoint)
         || mOverlayRes != other.mOverlayRes
+        || !Objects.equal(mOverlayDrawable, other.mOverlayDrawable)
         || mProgressRes != other.mProgressRes
         || mProgressDrawable != other.mProgressDrawable
         || mProgressScaleType != other.mProgressScaleType
@@ -209,6 +216,7 @@ public class ImageOptions extends DecodedImageOptions {
     result = 31 * result + (mErrorScaleType != null ? mErrorScaleType.hashCode() : 0);
     result = 31 * result + (mErrorFocusPoint != null ? mErrorFocusPoint.hashCode() : 0);
     result = 31 * result + mOverlayRes;
+    result = 31 * result + (mOverlayDrawable != null ? mOverlayDrawable.hashCode() : 0);
     result = 31 * result + (mProgressDrawable != null ? mProgressDrawable.hashCode() : 0);
     result = 31 * result + (mProgressScaleType != null ? mProgressScaleType.hashCode() : 0);
     result =
@@ -241,6 +249,7 @@ public class ImageOptions extends DecodedImageOptions {
         .add("errorFocusPoint", mErrorFocusPoint)
         .add("actualImageColorFilter", mActualImageColorFilter)
         .add("overlayRes", mOverlayRes)
+        .add("overlayDrawable", mOverlayDrawable)
         .add("resizeToViewport", mResizeToViewport)
         .add("autoPlay", mAutoPlay)
         .add("fadeDurationMs", mFadeDurationMs);
@@ -265,6 +274,7 @@ public class ImageOptions extends DecodedImageOptions {
     private @Nullable ColorFilter mActualImageColorFilter;
 
     private @DrawableRes int mOverlayRes;
+    private @Nullable Drawable mOverlayDrawable;
 
     private boolean mResizeToViewport;
     private boolean mAutoPlay;
@@ -294,6 +304,7 @@ public class ImageOptions extends DecodedImageOptions {
       mActualImageColorFilter = defaultOptions.getActualImageColorFilter();
 
       mOverlayRes = defaultOptions.getOverlayRes();
+      mOverlayDrawable = defaultOptions.getOverlayDrawable();
 
       mResizeToViewport = defaultOptions.shouldResizeToViewport();
 
@@ -388,6 +399,13 @@ public class ImageOptions extends DecodedImageOptions {
 
     public Builder overlayRes(@DrawableRes int overlayRes) {
       mOverlayRes = overlayRes;
+      mOverlayDrawable = null;
+      return getThis();
+    }
+
+    public Builder overlay(@Nullable Drawable overlayDrawable) {
+      mOverlayDrawable = overlayDrawable;
+      mOverlayRes = 0;
       return getThis();
     }
 
