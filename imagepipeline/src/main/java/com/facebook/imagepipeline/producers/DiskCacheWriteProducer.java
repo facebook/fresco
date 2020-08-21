@@ -7,8 +7,8 @@
 
 package com.facebook.imagepipeline.producers;
 
+import androidx.annotation.VisibleForTesting;
 import com.facebook.cache.common.CacheKey;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;

@@ -7,8 +7,8 @@
 
 package com.facebook.imagepipeline.memory;
 
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import java.nio.ByteBuffer;

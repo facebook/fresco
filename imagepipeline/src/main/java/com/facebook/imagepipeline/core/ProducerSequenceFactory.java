@@ -18,8 +18,8 @@ import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_QUALIF
 
 import android.content.ContentResolver;
 import android.net.Uri;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.media.MediaUtils;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;

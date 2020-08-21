@@ -11,8 +11,8 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import android.view.View;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
 import java.util.ArrayList;
 

@@ -9,7 +9,7 @@ package com.facebook.fresco.vito.draweesupport;
 
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
 import com.facebook.drawee.controller.ControllerListener;

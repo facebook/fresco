@@ -8,7 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import android.os.SystemClock;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.instrumentation.FrescoInstrumenter;
 import java.util.concurrent.Executor;

@@ -9,7 +9,7 @@ package com.facebook.fresco.animation.backend;
 
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.time.MonotonicClock;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;

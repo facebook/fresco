@@ -8,7 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import android.os.SystemClock;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;

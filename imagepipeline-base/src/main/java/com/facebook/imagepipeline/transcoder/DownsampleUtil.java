@@ -7,8 +7,8 @@
 
 package com.facebook.imagepipeline.transcoder;
 
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.common.ResizeOptions;

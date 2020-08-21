@@ -13,7 +13,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 
 /**
  * Drawable that automatically rotates the underlying drawable with a pivot in the center of the

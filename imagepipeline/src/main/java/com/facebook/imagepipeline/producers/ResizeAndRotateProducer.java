@@ -13,9 +13,9 @@ import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.DEFAULT_
 import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.INVERTED_EXIF_ORIENTATIONS;
 
 import android.media.ExifInterface;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.memory.PooledByteBufferOutputStream;

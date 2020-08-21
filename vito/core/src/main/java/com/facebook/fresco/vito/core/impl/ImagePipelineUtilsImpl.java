@@ -8,7 +8,7 @@
 package com.facebook.fresco.vito.core.impl;
 
 import android.net.Uri;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.core.ImagePipelineUtils;

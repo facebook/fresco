@@ -9,8 +9,8 @@ package com.facebook.fresco.animation.bitmap.cache;
 
 import android.graphics.Bitmap;
 import android.util.SparseArray;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;

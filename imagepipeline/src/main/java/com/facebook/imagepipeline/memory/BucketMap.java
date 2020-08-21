@@ -8,7 +8,7 @@
 package com.facebook.imagepipeline.memory;
 
 import android.util.SparseArray;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.infer.annotation.ThreadSafe;
 import java.util.LinkedList;
 import javax.annotation.Nullable;

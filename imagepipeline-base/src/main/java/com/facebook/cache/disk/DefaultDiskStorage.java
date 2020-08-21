@@ -9,6 +9,7 @@ package com.facebook.cache.disk;
 
 import android.os.Environment;
 import androidx.annotation.StringDef;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
@@ -18,7 +19,6 @@ import com.facebook.common.file.FileTreeVisitor;
 import com.facebook.common.file.FileUtils;
 import com.facebook.common.internal.CountingOutputStream;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.time.Clock;
 import com.facebook.common.time.SystemClock;
 import java.io.File;

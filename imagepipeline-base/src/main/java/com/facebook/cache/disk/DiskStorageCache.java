@@ -7,6 +7,7 @@
 
 package com.facebook.cache.disk;
 
+import androidx.annotation.VisibleForTesting;
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.CacheEventListener;
@@ -15,7 +16,6 @@ import com.facebook.cache.common.CacheKeyUtil;
 import com.facebook.cache.common.WriterCallback;
 import com.facebook.common.disk.DiskTrimmable;
 import com.facebook.common.disk.DiskTrimmableRegistry;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.statfs.StatFsHelper;
 import com.facebook.common.time.Clock;

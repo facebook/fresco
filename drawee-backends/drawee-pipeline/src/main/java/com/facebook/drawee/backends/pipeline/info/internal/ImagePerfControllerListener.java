@@ -8,7 +8,7 @@
 package com.facebook.drawee.backends.pipeline.info.internal;
 
 import android.graphics.drawable.Animatable;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawee.backends.pipeline.info.ImageLoadStatus;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfMonitor;

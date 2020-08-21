@@ -7,8 +7,8 @@
 
 package com.facebook.imagepipeline.cache;
 
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Predicate;
-import com.facebook.common.internal.VisibleForTesting;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;

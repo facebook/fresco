@@ -10,7 +10,7 @@ package com.facebook.drawee.gestures;
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import javax.annotation.Nullable;
 
 /**

@@ -8,7 +8,7 @@
 package com.facebook.imagepipeline.memory;
 
 import android.graphics.Bitmap;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import javax.annotation.Nullable;

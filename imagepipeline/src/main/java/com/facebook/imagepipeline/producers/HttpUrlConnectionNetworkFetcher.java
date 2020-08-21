@@ -8,7 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import android.net.Uri;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.common.time.RealtimeSinceBootClock;
 import com.facebook.common.util.UriUtil;
