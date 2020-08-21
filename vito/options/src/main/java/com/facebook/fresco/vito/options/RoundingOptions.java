@@ -45,6 +45,10 @@ public class RoundingOptions {
     return new RoundingOptions(false, CORNER_RADIUS_UNSET, radii, false);
   }
 
+  public static RoundingOptions forCornerRadii(float[] cornerRadii, boolean antiAliasing) {
+    return new RoundingOptions(false, CORNER_RADIUS_UNSET, cornerRadii, antiAliasing);
+  }
+
   private final boolean mIsCircular;
   private final float mCornerRadius;
   private final @Nullable float[] mCornerRadii;
