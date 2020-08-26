@@ -16,7 +16,7 @@ dependencies {
     compileOnly Deps.javaxAnnotation
     compileOnly Deps.inferAnnotation
 
-    implementation "androidx.core:core:${versions.androidx.core}"
+    implementation Deps.AndroidX.core
 
     implementation project(':animated-drawable')
     implementation project(':drawee')

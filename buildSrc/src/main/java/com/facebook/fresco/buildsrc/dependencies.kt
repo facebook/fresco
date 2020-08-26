@@ -19,6 +19,7 @@ object Deps {
     
     object AndroidX {
         const val androidxAnnotation = "androidx.annotation:annotation:1.0.2"
+        const val core = "androidx.core:core:1.0.1"
     }
 
     object Bolts {
