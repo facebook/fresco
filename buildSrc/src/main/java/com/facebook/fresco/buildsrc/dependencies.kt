@@ -18,8 +18,8 @@ object Deps {
     const val volley = "com.android.volley:volley:1.1.0"
     
     object AndroidX {
-        const val androidxAnnotation = "androidx.annotation:annotation:1.0.2"
-        const val core = "androidx.core:core:1.0.1"
+        const val androidxAnnotation = "androidx.annotation:annotation:1.1.0"
+        const val core = "androidx.core:core:1.3.1"
     }
 
     object Bolts {
