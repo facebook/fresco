@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#define LOG_TAG "GifImage"
+
 #include <jni.h>
 #include <algorithm>
 #include <cstdio>
