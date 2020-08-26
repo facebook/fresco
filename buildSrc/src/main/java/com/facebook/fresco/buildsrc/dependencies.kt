@@ -16,6 +16,10 @@ object Deps {
     const val okhttp3 = "com.squareup.okhttp3:okhttp:3.12.1"
 
     const val volley = "com.android.volley:volley:1.1.0"
+    
+    object AndroidX {
+        const val androidxAnnotation = "androidx.annotation:annotation:1.0.2"
+    }
 
     object Bolts {
         const val tasks = "com.parse.bolts:bolts-tasks:1.4.0"

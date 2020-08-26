@@ -12,7 +12,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 dependencies {
-    compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
+    compileOnly Deps.AndroidX.androidxAnnotation
     compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation

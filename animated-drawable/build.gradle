@@ -29,11 +29,11 @@ android {
 }
 
 dependencies {
-    compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
+    compileOnly Deps.AndroidX.androidxAnnotation
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
 
-    testImplementation "androidx.annotation:annotation:${versions.androidx.annotation}"
+    testImplementation Deps.AndroidX.androidxAnnotation
     testImplementation Deps.jsr305
     testImplementation TestDeps.junit
     testImplementation "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"

@@ -15,7 +15,7 @@ dependencies {
     compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
-    compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
+    compileOnly Deps.AndroidX.androidxAnnotation
 
     testImplementation project(':mockito-config')
     testImplementation Deps.jsr305
