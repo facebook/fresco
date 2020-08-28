@@ -85,6 +85,9 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
         spinner_rotation.setupWithList(VitoSpinners.rotationOptions) {
             refresh(imageOptionsBuilder.rotate(it))
         }
+        spinner_custom_drawable_factory.setupWithList(VitoSpinners.customDrawableFactoryOptions) {
+            refresh(it(imageOptionsBuilder)) 
+        }
     }
 
     override fun getTitleId() = R.string.vito_litho_image_options_config

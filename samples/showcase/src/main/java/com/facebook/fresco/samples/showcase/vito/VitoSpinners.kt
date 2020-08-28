@@ -136,4 +136,9 @@ object VitoSpinners {
       "rotate 180" to RotationOptions.forceRotation(RotationOptions.ROTATE_180),
       "rotate 270" to RotationOptions.forceRotation(RotationOptions.ROTATE_270)
     ), "Rotation")
+    
+    val customDrawableFactoryOptions = Pair(listOf(
+            "none" to {builder: ImageOptions.Builder -> builder.customDrawableFactory(null)},
+            "blue color" to {builder: ImageOptions.Builder -> builder.customDrawableFactory{ _, _ -> ColorDrawable(Color.BLUE) }}
+    ), "Custom Drawable Factory")
 }

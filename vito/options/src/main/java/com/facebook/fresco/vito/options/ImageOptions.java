@@ -75,6 +75,8 @@ public class ImageOptions extends DecodedImageOptions {
 
   private final boolean mAutoPlay;
 
+  private final @Nullable ImageOptionsDrawableFactory mCustomDrawableFactory;
+
   public ImageOptions(Builder builder) {
     super(builder);
     mPlaceholderRes = builder.mPlaceholderRes;
@@ -101,6 +103,8 @@ public class ImageOptions extends DecodedImageOptions {
     mFadeDurationMs = builder.mFadeDurationMs;
 
     mAutoPlay = builder.mAutoPlay;
+
+    mCustomDrawableFactory = builder.mCustomDrawableFactory;
   }
 
   public Builder extend() {
@@ -175,6 +179,10 @@ public class ImageOptions extends DecodedImageOptions {
     return mFadeDurationMs;
   }
 
+  public @Nullable ImageOptionsDrawableFactory getCustomDrawableFactory() {
+    return mCustomDrawableFactory;
+  }
+
   @Override
   public boolean equals(@Nullable Object obj) {
     if (this == obj) {
@@ -198,7 +206,8 @@ public class ImageOptions extends DecodedImageOptions {
         || !Objects.equal(mActualImageColorFilter, other.mActualImageColorFilter)
         || mResizeToViewport != other.mResizeToViewport
         || mFadeDurationMs != other.mFadeDurationMs
-        || mAutoPlay != other.mAutoPlay) {
+        || mAutoPlay != other.mAutoPlay
+        || !Objects.equal(mCustomDrawableFactory, other.mCustomDrawableFactory)) {
       return false;
     }
     return equalDecodedOptions(other);
@@ -225,6 +234,7 @@ public class ImageOptions extends DecodedImageOptions {
     result = 31 * result + mFadeDurationMs;
     result = 31 * result + (mAutoPlay ? 1 : 0);
     result = 31 * result + mProgressRes;
+    result = 31 * result + (mCustomDrawableFactory != null ? mCustomDrawableFactory.hashCode() : 0);
     return result;
   }
 
@@ -252,7 +262,8 @@ public class ImageOptions extends DecodedImageOptions {
         .add("overlayDrawable", mOverlayDrawable)
         .add("resizeToViewport", mResizeToViewport)
         .add("autoPlay", mAutoPlay)
-        .add("fadeDurationMs", mFadeDurationMs);
+        .add("fadeDurationMs", mFadeDurationMs)
+        .add("customDrawableFactory", mCustomDrawableFactory);
   }
 
   public static final class Builder extends DecodedImageOptions.Builder<Builder> {
@@ -280,6 +291,8 @@ public class ImageOptions extends DecodedImageOptions {
     private boolean mAutoPlay;
 
     private int mFadeDurationMs;
+
+    private @Nullable ImageOptionsDrawableFactory mCustomDrawableFactory;
 
     private Builder() {
       super();
@@ -309,6 +322,8 @@ public class ImageOptions extends DecodedImageOptions {
       mResizeToViewport = defaultOptions.shouldResizeToViewport();
 
       mFadeDurationMs = defaultOptions.getFadeDurationMs();
+
+      mCustomDrawableFactory = defaultOptions.getCustomDrawableFactory();
     }
 
     public Builder placeholder(@Nullable Drawable placeholder) {
@@ -443,6 +458,16 @@ public class ImageOptions extends DecodedImageOptions {
      */
     public Builder fadeDurationMs(int fadeInDurationMs) {
       mFadeDurationMs = fadeInDurationMs;
+      return getThis();
+    }
+
+    /**
+     * Set a custom drawable factory to be used to create the actual image drawable.
+     *
+     * @param drawableFactory the factory to use
+     */
+    public Builder customDrawableFactory(@Nullable ImageOptionsDrawableFactory drawableFactory) {
+      mCustomDrawableFactory = drawableFactory;
       return getThis();
     }
 

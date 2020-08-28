@@ -20,9 +20,9 @@ import com.facebook.fresco.vito.core.BaseFrescoDrawable;
 import com.facebook.fresco.vito.core.Hierarcher;
 import com.facebook.fresco.vito.core.NopDrawable;
 import com.facebook.fresco.vito.drawable.RoundingUtils;
-import com.facebook.fresco.vito.drawable.VitoDrawableFactory;
 import com.facebook.fresco.vito.options.BorderOptions;
 import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
 import com.facebook.fresco.vito.options.RoundingOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
@@ -30,10 +30,10 @@ import com.facebook.imagepipeline.systrace.FrescoSystrace;
 public class HierarcherImpl implements Hierarcher {
   private static final Drawable NOP_DRAWABLE = NopDrawable.INSTANCE;
 
-  private final VitoDrawableFactory mDrawableFactory;
+  private final ImageOptionsDrawableFactory mDrawableFactory;
   private final RoundingUtils mRoundingUtils;
 
-  public HierarcherImpl(VitoDrawableFactory drawableFactory) {
+  public HierarcherImpl(ImageOptionsDrawableFactory drawableFactory) {
     mDrawableFactory = drawableFactory;
     mRoundingUtils = new RoundingUtils();
   }
@@ -168,7 +168,11 @@ public class HierarcherImpl implements Hierarcher {
       FrescoSystrace.beginSection("HierarcherImpl#setupActualImageDrawable");
     }
     try {
-      Drawable actualDrawable = mDrawableFactory.createDrawable(closeableImage.get(), imageOptions);
+      ImageOptionsDrawableFactory drawableFactory = imageOptions.getCustomDrawableFactory();
+      if (drawableFactory == null) {
+        drawableFactory = mDrawableFactory;
+      }
+      Drawable actualDrawable = drawableFactory.createDrawable(closeableImage.get(), imageOptions);
 
       if (actualImageWrapperDrawable == null) {
         actualImageWrapperDrawable = buildActualImageWrapper(imageOptions);

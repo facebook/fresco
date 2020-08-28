@@ -5,14 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.drawable;
+package com.facebook.fresco.vito.options;
 
 import android.graphics.drawable.Drawable;
-import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
 import javax.annotation.Nullable;
 
-public interface VitoDrawableFactory {
+public interface ImageOptionsDrawableFactory {
 
   @Nullable
   Drawable createDrawable(CloseableImage closeableImage, ImageOptions imageOptions);
