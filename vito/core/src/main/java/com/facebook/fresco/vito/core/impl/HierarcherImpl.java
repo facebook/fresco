@@ -122,7 +122,8 @@ public class HierarcherImpl implements Hierarcher {
   }
 
   @Override
-  public ForwardingDrawable buildActualImageWrapper(ImageOptions imageOptions) {
+  public ForwardingDrawable buildActualImageWrapper(
+      ImageOptions imageOptions, @Nullable Object callerContext) {
     ScaleTypeDrawable wrapper =
         new ScaleTypeDrawable(
             NOP_DRAWABLE,
@@ -137,7 +138,9 @@ public class HierarcherImpl implements Hierarcher {
 
   @Override
   public void setupActualImageWrapper(
-      ScaleTypeDrawable actualImageWrapper, ImageOptions imageOptions) {
+      ScaleTypeDrawable actualImageWrapper,
+      ImageOptions imageOptions,
+      @Nullable Object callerContext) {
     actualImageWrapper.setScaleType(imageOptions.getActualImageScaleType());
     actualImageWrapper.setFocusPoint(imageOptions.getActualImageFocusPoint());
     actualImageWrapper.setColorFilter(imageOptions.getActualImageColorFilter());
@@ -160,6 +163,7 @@ public class HierarcherImpl implements Hierarcher {
       BaseFrescoDrawable frescoDrawable,
       Resources resources,
       ImageOptions imageOptions,
+      @Nullable Object callerContext,
       CloseableReference<CloseableImage> closeableImage,
       @Nullable ForwardingDrawable actualImageWrapperDrawable,
       boolean wasImmediate,
@@ -175,7 +179,7 @@ public class HierarcherImpl implements Hierarcher {
       Drawable actualDrawable = drawableFactory.createDrawable(closeableImage.get(), imageOptions);
 
       if (actualImageWrapperDrawable == null) {
-        actualImageWrapperDrawable = buildActualImageWrapper(imageOptions);
+        actualImageWrapperDrawable = buildActualImageWrapper(imageOptions, callerContext);
       }
       actualImageWrapperDrawable.setCurrent(actualDrawable != null ? actualDrawable : NOP_DRAWABLE);
 

@@ -237,7 +237,8 @@ public class FrescoControllerImpl implements FrescoController {
     }
     Hierarcher hierarcher = mFrescoContext.getHierarcher();
     frescoState.setActualImageWrapper(
-        hierarcher.buildActualImageWrapper(frescoState.getImageOptions()));
+        hierarcher.buildActualImageWrapper(
+            frescoState.getImageOptions(), frescoState.getCallerContext()));
     frescoState.setOverlayDrawable(
         hierarcher.buildOverlayDrawable(frescoState.getResources(), frescoState.getImageOptions()));
     if (FrescoSystrace.isTracing()) {
@@ -685,6 +686,7 @@ public class FrescoControllerImpl implements FrescoController {
                   frescoState.getFrescoDrawable(),
                   frescoState.getResources(),
                   frescoState.getImageOptions(),
+                  frescoState.getCallerContext(),
                   result,
                   frescoState.getActualImageWrapper(),
                   wasImmediate,

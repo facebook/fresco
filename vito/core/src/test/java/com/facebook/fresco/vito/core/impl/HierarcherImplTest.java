@@ -252,7 +252,7 @@ public class HierarcherImplTest {
             .focusPoint(expectedFocusPoint)
             .build();
 
-    final Drawable actual = mHierarcher.buildActualImageWrapper(imageOptions);
+    final Drawable actual = mHierarcher.buildActualImageWrapper(imageOptions, null);
     assertThat(actual).isInstanceOf(ScaleTypeDrawable.class);
     final ScaleTypeDrawable scaleTypeActual = (ScaleTypeDrawable) actual;
     assertThat(scaleTypeActual.getScaleType()).isEqualTo(ScalingUtils.ScaleType.FIT_CENTER);
