@@ -110,6 +110,7 @@ object VitoSpinners {
             "none" to {builder: ImageOptions.Builder -> builder.overlayRes(0)},
             "logo" to {builder: ImageOptions.Builder -> builder.overlayRes(R.drawable.logo)},
             "orange color res" to {builder: ImageOptions.Builder -> builder.overlayRes(R.color.overlay_color)},
+            "green color drawable" to {builder: ImageOptions.Builder -> builder.overlay(ColorDrawable(0x8800ff00.toInt()))},
             "9-patch" to {builder: ImageOptions.Builder -> builder.overlayRes(R.drawable.ninepatch)}
     ), "Overlay")
 
@@ -135,4 +136,9 @@ object VitoSpinners {
       "rotate 180" to RotationOptions.forceRotation(RotationOptions.ROTATE_180),
       "rotate 270" to RotationOptions.forceRotation(RotationOptions.ROTATE_270)
     ), "Rotation")
+    
+    val customDrawableFactoryOptions = Pair(listOf(
+            "none" to {builder: ImageOptions.Builder -> builder.customDrawableFactory(null)},
+            "blue color" to {builder: ImageOptions.Builder -> builder.customDrawableFactory{ _, _ -> ColorDrawable(Color.BLUE) }}
+    ), "Custom Drawable Factory")
 }

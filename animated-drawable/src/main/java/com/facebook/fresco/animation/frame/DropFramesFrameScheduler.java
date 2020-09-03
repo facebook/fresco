@@ -7,7 +7,7 @@
 
 package com.facebook.fresco.animation.frame;
 
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.fresco.animation.backend.AnimationInformation;
 
 /** Frame scheduler that maps time values to frames. */

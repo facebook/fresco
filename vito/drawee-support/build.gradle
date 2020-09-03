@@ -14,6 +14,7 @@ apply plugin: 'maven'
 dependencies {
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
+    compileOnly Deps.AndroidX.androidxAnnotation
 
     implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':ui-common')

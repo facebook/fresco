@@ -13,6 +13,7 @@ apply plugin: 'maven'
 
 dependencies {
     compileOnly Deps.jsr305
+    compileOnly Deps.AndroidX.androidxAnnotation
 
     implementation project(':fbcore')
     implementation project(':imagepipeline')

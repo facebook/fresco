@@ -7,7 +7,7 @@
 
 package com.facebook.imagepipeline.memory;
 
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nullable;

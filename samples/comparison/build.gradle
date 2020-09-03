@@ -14,7 +14,7 @@ dependencies {
     compileOnly Deps.jsr305
     implementation Comparison.Glide.glide
     annotationProcessor Comparison.Glide.compiler
-    annotationProcessor "androidx.annotation:annotation:${versions.androidx.annotation}"
+    annotationProcessor Deps.AndroidX.androidxAnnotation
     implementation Deps.volley
     implementation Comparison.Uil.uil
     implementation Comparison.Picasso.picasso

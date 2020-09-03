@@ -11,8 +11,8 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 
 /** Drawable that automatically rotates underlying drawable. */
 public class AutoRotateDrawable extends ForwardingDrawable implements Runnable, CloneableDrawable {

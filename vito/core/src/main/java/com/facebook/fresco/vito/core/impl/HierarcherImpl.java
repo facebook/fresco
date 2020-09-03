@@ -20,9 +20,9 @@ import com.facebook.fresco.vito.core.BaseFrescoDrawable;
 import com.facebook.fresco.vito.core.Hierarcher;
 import com.facebook.fresco.vito.core.NopDrawable;
 import com.facebook.fresco.vito.drawable.RoundingUtils;
-import com.facebook.fresco.vito.drawable.VitoDrawableFactory;
 import com.facebook.fresco.vito.options.BorderOptions;
 import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
 import com.facebook.fresco.vito.options.RoundingOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
@@ -30,10 +30,10 @@ import com.facebook.imagepipeline.systrace.FrescoSystrace;
 public class HierarcherImpl implements Hierarcher {
   private static final Drawable NOP_DRAWABLE = NopDrawable.INSTANCE;
 
-  private final VitoDrawableFactory mDrawableFactory;
+  private final ImageOptionsDrawableFactory mDrawableFactory;
   private final RoundingUtils mRoundingUtils;
 
-  public HierarcherImpl(VitoDrawableFactory drawableFactory) {
+  public HierarcherImpl(ImageOptionsDrawableFactory drawableFactory) {
     mDrawableFactory = drawableFactory;
     mRoundingUtils = new RoundingUtils();
   }
@@ -122,7 +122,8 @@ public class HierarcherImpl implements Hierarcher {
   }
 
   @Override
-  public ForwardingDrawable buildActualImageWrapper(ImageOptions imageOptions) {
+  public ForwardingDrawable buildActualImageWrapper(
+      ImageOptions imageOptions, @Nullable Object callerContext) {
     ScaleTypeDrawable wrapper =
         new ScaleTypeDrawable(
             NOP_DRAWABLE,
@@ -137,7 +138,9 @@ public class HierarcherImpl implements Hierarcher {
 
   @Override
   public void setupActualImageWrapper(
-      ScaleTypeDrawable actualImageWrapper, ImageOptions imageOptions) {
+      ScaleTypeDrawable actualImageWrapper,
+      ImageOptions imageOptions,
+      @Nullable Object callerContext) {
     actualImageWrapper.setScaleType(imageOptions.getActualImageScaleType());
     actualImageWrapper.setFocusPoint(imageOptions.getActualImageFocusPoint());
     actualImageWrapper.setColorFilter(imageOptions.getActualImageColorFilter());
@@ -146,6 +149,10 @@ public class HierarcherImpl implements Hierarcher {
   @Override
   @Nullable
   public Drawable buildOverlayDrawable(Resources resources, ImageOptions imageOptions) {
+    @Nullable Drawable overlayDrawable = imageOptions.getOverlayDrawable();
+    if (overlayDrawable != null) {
+      return overlayDrawable;
+    }
     int resId = imageOptions.getOverlayRes();
     return resId == 0 ? null : resources.getDrawable(imageOptions.getOverlayRes());
   }
@@ -156,6 +163,7 @@ public class HierarcherImpl implements Hierarcher {
       BaseFrescoDrawable frescoDrawable,
       Resources resources,
       ImageOptions imageOptions,
+      @Nullable Object callerContext,
       CloseableReference<CloseableImage> closeableImage,
       @Nullable ForwardingDrawable actualImageWrapperDrawable,
       boolean wasImmediate,
@@ -164,10 +172,14 @@ public class HierarcherImpl implements Hierarcher {
       FrescoSystrace.beginSection("HierarcherImpl#setupActualImageDrawable");
     }
     try {
-      Drawable actualDrawable = mDrawableFactory.createDrawable(closeableImage.get(), imageOptions);
+      ImageOptionsDrawableFactory drawableFactory = imageOptions.getCustomDrawableFactory();
+      if (drawableFactory == null) {
+        drawableFactory = mDrawableFactory;
+      }
+      Drawable actualDrawable = drawableFactory.createDrawable(closeableImage.get(), imageOptions);
 
       if (actualImageWrapperDrawable == null) {
-        actualImageWrapperDrawable = buildActualImageWrapper(imageOptions);
+        actualImageWrapperDrawable = buildActualImageWrapper(imageOptions, callerContext);
       }
       actualImageWrapperDrawable.setCurrent(actualDrawable != null ? actualDrawable : NOP_DRAWABLE);
 

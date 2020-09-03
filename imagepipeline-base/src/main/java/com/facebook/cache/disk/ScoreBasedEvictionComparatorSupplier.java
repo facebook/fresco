@@ -7,7 +7,7 @@
 
 package com.facebook.cache.disk;
 
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 
 /** Evicts cache items based on a mix of their size and timestamp. */
 public class ScoreBasedEvictionComparatorSupplier implements EntryEvictionComparatorSupplier {

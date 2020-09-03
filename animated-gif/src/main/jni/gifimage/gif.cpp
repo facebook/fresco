@@ -20,6 +20,7 @@
 
 #include "gif_lib.h"
 #include "jni_helpers.h"
+#include "locks.h"
 
 using namespace facebook;
 
@@ -207,6 +208,10 @@ public:
     m_animated = animated;
   }
 
+  RWLock* getSavedImagesRWLock() {
+    return &m_savedImagesRWLock;
+  }
+
 private:
   int m_loopCount = LOOP_COUNT_MISSING;
   bool m_animated = false;
@@ -215,6 +220,7 @@ private:
   std::vector<int> m_vectorFrameByteOffsets;
   std::vector<uint8_t> m_rasterBits;
   std::mutex m_rasterMutex;
+  mutable RWLock m_savedImagesRWLock;
 };
 
 /**
@@ -398,7 +404,11 @@ int readSingleFrame(
   GifFileType *pGifFile = pGifWrapper->get();
 
   int imageCount = pGifFile->ImageCount;
-  int imageDescResult = DGifGetImageDesc(pGifFile);
+  int imageDescResult = GIF_ERROR;
+  {
+    WriterLock wlock_{pGifWrapper->getSavedImagesRWLock()};
+    imageDescResult = DGifGetImageDesc(pGifFile);
+  }
 
   // DGifGetImageDesc may have changed the count, temporarily restoring until we know whether
   // the frame was read successfully.
@@ -407,6 +417,8 @@ int readSingleFrame(
   if (imageDescResult == GIF_ERROR) {
     return GIF_ERROR;
   }
+
+  ReaderLock rlock_{pGifWrapper->getSavedImagesRWLock()};
   SavedImage* pSavedImage = &pGifFile->SavedImages[imageCount];
 
   // Check size of image. Note: Frames with 0 width or height should be allowed.
@@ -638,6 +650,7 @@ int modifiedDGifSlurp(GifWrapper* pGifWrapper, int maxDimension, bool forceStati
 
   // parse application extensions
   const int imageCount = pGifFile->ImageCount;
+  ReaderLock rlock_{pGifWrapper->getSavedImagesRWLock()};
   for (int i = 0; i < imageCount; i++) {
     parseApplicationExtensions(&pGifFile->SavedImages[i], pGifWrapper);
   }
@@ -706,6 +719,7 @@ jobject createFromDataWrapper(JNIEnv* pEnv, std::shared_ptr<DataWrapper> spDataW
   // Compute cached fields that require iterating the frames.
   int durationMs = 0;
   std::vector<jint> frameDurationsMs;
+  ReaderLock rlock_{spNativeContext->spGifWrapper->getSavedImagesRWLock()};
   for (int i = 0; i < pGifFile->ImageCount; i++) {
     SavedImage* pSavedImage = &pGifFile->SavedImages[i];
     GraphicsControlBlock gcp;
@@ -976,6 +990,8 @@ jobject GifImage_nativeGetFrame(JNIEnv* pEnv, jobject thiz, jint index) {
   }
 
   GifFileType* pGifFile = spNativeContext->spGifWrapper->get();
+
+  ReaderLock rlock_{spNativeContext->spGifWrapper->getSavedImagesRWLock()};
   SavedImage* pSavedImage = &pGifFile->SavedImages[index];
 
   std::unique_ptr<GifFrameNativeContext> spFrameNativeContext(new GifFrameNativeContext());
@@ -1290,6 +1306,7 @@ void GifFrame_nativeRenderFrame(
 
   // Get the right color table to use.
   ColorMapObject* pColorMap = spNativeContext->spGifWrapper->get()->SColorMap;
+  ReaderLock rlock_{pGifWrapper->getSavedImagesRWLock()};
   SavedImage* pSavedImage = &pGifWrapper->get()->SavedImages[frameNum];
   if (pSavedImage->ImageDesc.ColorMap != NULL) {
     // use local color table
@@ -1344,6 +1361,7 @@ jint GifFrame_nativeGetTransparentPixelColor(JNIEnv* pEnv, jobject thiz) {
   //
   int frameNum = spNativeContext->frameNum;
   ColorMapObject* pColorMap = pGifWrapper->get()->SColorMap;
+  ReaderLock rlock_{pGifWrapper->getSavedImagesRWLock()};
   SavedImage* pSavedImage = &pGifWrapper->get()->SavedImages[frameNum];
 
   if (pSavedImage->ImageDesc.ColorMap != NULL) {

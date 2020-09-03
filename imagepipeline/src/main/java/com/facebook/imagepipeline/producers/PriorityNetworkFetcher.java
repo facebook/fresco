@@ -9,7 +9,7 @@ package com.facebook.imagepipeline.producers;
 
 import static com.facebook.imagepipeline.common.Priority.HIGH;
 
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.common.time.RealtimeSinceBootClock;

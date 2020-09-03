@@ -8,9 +8,9 @@
 package com.facebook.imagepipeline.producers;
 
 import android.util.Pair;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Sets;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.util.TriState;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;

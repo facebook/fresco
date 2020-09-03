@@ -9,9 +9,9 @@ package com.facebook.common.references;
 
 import android.graphics.Bitmap;
 import androidx.annotation.IntDef;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.infer.annotation.PropagatesNullable;
 import java.io.Closeable;

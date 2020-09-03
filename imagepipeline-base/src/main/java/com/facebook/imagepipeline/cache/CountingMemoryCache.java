@@ -8,8 +8,8 @@
 package com.facebook.imagepipeline.cache;
 
 import android.graphics.Bitmap;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.memory.MemoryTrimmable;
 import com.facebook.common.references.CloseableReference;
 import java.util.Map;

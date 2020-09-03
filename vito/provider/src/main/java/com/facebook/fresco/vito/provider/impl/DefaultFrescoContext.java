@@ -20,8 +20,8 @@ import com.facebook.fresco.vito.core.impl.debug.DefaultDebugOverlayFactory;
 import com.facebook.fresco.vito.core.impl.debug.NoOpDebugOverlayFactory;
 import com.facebook.fresco.vito.drawable.ArrayVitoDrawableFactory;
 import com.facebook.fresco.vito.drawable.BitmapDrawableFactory;
-import com.facebook.fresco.vito.drawable.VitoDrawableFactory;
 import com.facebook.fresco.vito.draweesupport.DrawableFactoryWrapper;
+import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
 import javax.annotation.Nullable;
 
 public class DefaultFrescoContext {
@@ -94,7 +94,7 @@ public class DefaultFrescoContext {
             : new DefaultDebugOverlayFactory(sDebugOverlayEnabledSupplier));
   }
 
-  private static VitoDrawableFactory createDefaultDrawableFactory(
+  private static ImageOptionsDrawableFactory createDefaultDrawableFactory(
       Resources resources, FrescoExperiments frescoExperiments) {
     return new ArrayVitoDrawableFactory(
         new BitmapDrawableFactory(resources, frescoExperiments),

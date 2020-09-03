@@ -54,10 +54,12 @@ public interface Hierarcher {
    * drawable once set and can perform transformations, like scaling.
    *
    * @param imageOptions image options to be used to create the wrapper
+   * @param callerContext the caller's context, may be null
    * @return the actual image wrapper drawable
    */
   @ThreadSafe
-  ForwardingDrawable buildActualImageWrapper(ImageOptions imageOptions);
+  ForwardingDrawable buildActualImageWrapper(
+      ImageOptions imageOptions, @Nullable Object callerContext);
 
   /**
    * Builds the overlay drawable to be displayed for the given image options.
@@ -74,8 +76,12 @@ public interface Hierarcher {
    *
    * @param actualImageWrapper the wrapper to set up
    * @param imageOptions image options to be used
+   * @param callerContext the caller's context, may be null
    */
-  void setupActualImageWrapper(ScaleTypeDrawable actualImageWrapper, ImageOptions imageOptions);
+  void setupActualImageWrapper(
+      ScaleTypeDrawable actualImageWrapper,
+      ImageOptions imageOptions,
+      @Nullable Object callerContext);
 
   /**
    * Sets up the actual image drawable for a given fresco drawable.
@@ -89,6 +95,7 @@ public interface Hierarcher {
       BaseFrescoDrawable frescoDrawable,
       Resources resources,
       ImageOptions imageOptions,
+      @Nullable Object callerContext,
       CloseableReference<CloseableImage> closeableImage,
       @Nullable ForwardingDrawable actualImageWrapperDrawable,
       boolean wasImmediate,

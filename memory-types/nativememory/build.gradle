@@ -12,16 +12,16 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 dependencies {
+    compileOnly Deps.jsr305
+    compileOnly Deps.AndroidX.androidxAnnotation
+    
     implementation project(':fbcore')
     implementation project(':imagepipeline')
     implementation project(':imagepipeline-native')
     
     implementation Deps.SoLoader.nativeloader
 
-    compileOnly Deps.jsr305
-
     testImplementation TestDeps.junit
-
     testImplementation "org.assertj:assertj-core:${versions.assertjCore}"
     testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
     testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {

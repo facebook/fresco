@@ -26,8 +26,8 @@ import com.facebook.drawee.drawable.RoundedColorDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.fresco.vito.core.Hierarcher;
-import com.facebook.fresco.vito.drawable.VitoDrawableFactory;
 import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
 import com.facebook.fresco.vito.options.RoundingOptions;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,19 +46,19 @@ public class HierarcherImplTest {
 
   private Hierarcher mHierarcher;
 
-  private VitoDrawableFactory mVitoDrawableFactory;
+  private ImageOptionsDrawableFactory mDrawableFactory;
 
   @Before
   public void setup() {
     mResources = mock(Resources.class);
     mDrawable = mock(Drawable.class);
-    mVitoDrawableFactory = mock(VitoDrawableFactory.class);
+    mDrawableFactory = mock(ImageOptionsDrawableFactory.class);
     mDisplayMetrics = new DisplayMetrics();
     when(mResources.getDisplayMetrics()).thenReturn(mDisplayMetrics);
     when(mResources.getDrawable(eq(RES_ID))).thenReturn(mDrawable);
     when(mResources.getDrawable(not(eq(RES_ID)))).thenThrow(new Resources.NotFoundException());
 
-    mHierarcher = new HierarcherImpl(mVitoDrawableFactory);
+    mHierarcher = new HierarcherImpl(mDrawableFactory);
   }
 
   @Test
@@ -252,7 +252,7 @@ public class HierarcherImplTest {
             .focusPoint(expectedFocusPoint)
             .build();
 
-    final Drawable actual = mHierarcher.buildActualImageWrapper(imageOptions);
+    final Drawable actual = mHierarcher.buildActualImageWrapper(imageOptions, null);
     assertThat(actual).isInstanceOf(ScaleTypeDrawable.class);
     final ScaleTypeDrawable scaleTypeActual = (ScaleTypeDrawable) actual;
     assertThat(scaleTypeActual.getScaleType()).isEqualTo(ScalingUtils.ScaleType.FIT_CENTER);

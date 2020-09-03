@@ -3,8 +3,8 @@
 package com.facebook.fresco.ui.common;
 
 import android.net.Uri;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 
 /* Experimental */
@@ -54,7 +54,7 @@ public interface ControllerListener2<INFO> {
         return null;
       }
 
-      return new HashMap<>(map);
+      return new ConcurrentHashMap<>(map);
     }
   }
 

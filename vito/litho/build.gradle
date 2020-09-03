@@ -15,7 +15,7 @@ dependencies {
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
 
-    implementation "androidx.core:core:${versions.androidx.core}"
+    implementation Deps.AndroidX.core
     implementation Deps.Litho.lithoAnnotations
     implementation Deps.Litho.core
     implementation Deps.Litho.widget

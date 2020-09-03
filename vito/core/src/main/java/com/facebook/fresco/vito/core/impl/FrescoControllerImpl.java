@@ -10,11 +10,11 @@ package com.facebook.fresco.vito.core.impl;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import androidx.annotation.VisibleForTesting;
 import androidx.core.util.ObjectsCompat;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
@@ -237,7 +237,8 @@ public class FrescoControllerImpl implements FrescoController {
     }
     Hierarcher hierarcher = mFrescoContext.getHierarcher();
     frescoState.setActualImageWrapper(
-        hierarcher.buildActualImageWrapper(frescoState.getImageOptions()));
+        hierarcher.buildActualImageWrapper(
+            frescoState.getImageOptions(), frescoState.getCallerContext()));
     frescoState.setOverlayDrawable(
         hierarcher.buildOverlayDrawable(frescoState.getResources(), frescoState.getImageOptions()));
     if (FrescoSystrace.isTracing()) {
@@ -685,6 +686,7 @@ public class FrescoControllerImpl implements FrescoController {
                   frescoState.getFrescoDrawable(),
                   frescoState.getResources(),
                   frescoState.getImageOptions(),
+                  frescoState.getCallerContext(),
                   result,
                   frescoState.getActualImageWrapper(),
                   wasImmediate,

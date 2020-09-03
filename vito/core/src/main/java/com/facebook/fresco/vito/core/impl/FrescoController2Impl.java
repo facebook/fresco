@@ -192,12 +192,13 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       boolean isImmediate,
       @Nullable DataSource<CloseableReference<CloseableImage>> dataSource) {
     mHierarcher.setupActualImageWrapper(
-        drawable.getActualImageWrapper(), imageRequest.imageOptions);
+        drawable.getActualImageWrapper(), imageRequest.imageOptions, drawable.getCallerContext());
     Drawable actualDrawable =
         mHierarcher.setupActualImageDrawable(
             drawable,
             imageRequest.resources,
             imageRequest.imageOptions,
+            drawable.getCallerContext(),
             image,
             drawable.getActualImageWrapper(),
             isImmediate,

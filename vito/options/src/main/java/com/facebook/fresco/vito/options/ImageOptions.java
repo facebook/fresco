@@ -67,12 +67,15 @@ public class ImageOptions extends DecodedImageOptions {
 
   // Overlay
   private final @DrawableRes int mOverlayRes;
+  private final @Nullable Drawable mOverlayDrawable;
 
   private final boolean mResizeToViewport;
 
   private final int mFadeDurationMs;
 
   private final boolean mAutoPlay;
+
+  private final @Nullable ImageOptionsDrawableFactory mCustomDrawableFactory;
 
   public ImageOptions(Builder builder) {
     super(builder);
@@ -91,6 +94,7 @@ public class ImageOptions extends DecodedImageOptions {
     mProgressScaleType = builder.mProgressScaleType;
 
     mOverlayRes = builder.mOverlayRes;
+    mOverlayDrawable = builder.mOverlayDrawable;
 
     mActualImageColorFilter = builder.mActualImageColorFilter;
 
@@ -99,6 +103,8 @@ public class ImageOptions extends DecodedImageOptions {
     mFadeDurationMs = builder.mFadeDurationMs;
 
     mAutoPlay = builder.mAutoPlay;
+
+    mCustomDrawableFactory = builder.mCustomDrawableFactory;
   }
 
   public Builder extend() {
@@ -141,6 +147,10 @@ public class ImageOptions extends DecodedImageOptions {
     return mOverlayRes;
   }
 
+  public @Nullable Drawable getOverlayDrawable() {
+    return mOverlayDrawable;
+  }
+
   public @DrawableRes int getProgressRes() {
     return mProgressRes;
   }
@@ -169,6 +179,10 @@ public class ImageOptions extends DecodedImageOptions {
     return mFadeDurationMs;
   }
 
+  public @Nullable ImageOptionsDrawableFactory getCustomDrawableFactory() {
+    return mCustomDrawableFactory;
+  }
+
   @Override
   public boolean equals(@Nullable Object obj) {
     if (this == obj) {
@@ -185,13 +199,15 @@ public class ImageOptions extends DecodedImageOptions {
         || !Objects.equal(mErrorScaleType, other.mErrorScaleType)
         || !Objects.equal(mErrorFocusPoint, other.mErrorFocusPoint)
         || mOverlayRes != other.mOverlayRes
+        || !Objects.equal(mOverlayDrawable, other.mOverlayDrawable)
         || mProgressRes != other.mProgressRes
         || mProgressDrawable != other.mProgressDrawable
         || mProgressScaleType != other.mProgressScaleType
         || !Objects.equal(mActualImageColorFilter, other.mActualImageColorFilter)
         || mResizeToViewport != other.mResizeToViewport
         || mFadeDurationMs != other.mFadeDurationMs
-        || mAutoPlay != other.mAutoPlay) {
+        || mAutoPlay != other.mAutoPlay
+        || !Objects.equal(mCustomDrawableFactory, other.mCustomDrawableFactory)) {
       return false;
     }
     return equalDecodedOptions(other);
@@ -209,6 +225,7 @@ public class ImageOptions extends DecodedImageOptions {
     result = 31 * result + (mErrorScaleType != null ? mErrorScaleType.hashCode() : 0);
     result = 31 * result + (mErrorFocusPoint != null ? mErrorFocusPoint.hashCode() : 0);
     result = 31 * result + mOverlayRes;
+    result = 31 * result + (mOverlayDrawable != null ? mOverlayDrawable.hashCode() : 0);
     result = 31 * result + (mProgressDrawable != null ? mProgressDrawable.hashCode() : 0);
     result = 31 * result + (mProgressScaleType != null ? mProgressScaleType.hashCode() : 0);
     result =
@@ -217,6 +234,7 @@ public class ImageOptions extends DecodedImageOptions {
     result = 31 * result + mFadeDurationMs;
     result = 31 * result + (mAutoPlay ? 1 : 0);
     result = 31 * result + mProgressRes;
+    result = 31 * result + (mCustomDrawableFactory != null ? mCustomDrawableFactory.hashCode() : 0);
     return result;
   }
 
@@ -241,9 +259,11 @@ public class ImageOptions extends DecodedImageOptions {
         .add("errorFocusPoint", mErrorFocusPoint)
         .add("actualImageColorFilter", mActualImageColorFilter)
         .add("overlayRes", mOverlayRes)
+        .add("overlayDrawable", mOverlayDrawable)
         .add("resizeToViewport", mResizeToViewport)
         .add("autoPlay", mAutoPlay)
-        .add("fadeDurationMs", mFadeDurationMs);
+        .add("fadeDurationMs", mFadeDurationMs)
+        .add("customDrawableFactory", mCustomDrawableFactory);
   }
 
   public static final class Builder extends DecodedImageOptions.Builder<Builder> {
@@ -265,11 +285,14 @@ public class ImageOptions extends DecodedImageOptions {
     private @Nullable ColorFilter mActualImageColorFilter;
 
     private @DrawableRes int mOverlayRes;
+    private @Nullable Drawable mOverlayDrawable;
 
     private boolean mResizeToViewport;
     private boolean mAutoPlay;
 
     private int mFadeDurationMs;
+
+    private @Nullable ImageOptionsDrawableFactory mCustomDrawableFactory;
 
     private Builder() {
       super();
@@ -294,10 +317,13 @@ public class ImageOptions extends DecodedImageOptions {
       mActualImageColorFilter = defaultOptions.getActualImageColorFilter();
 
       mOverlayRes = defaultOptions.getOverlayRes();
+      mOverlayDrawable = defaultOptions.getOverlayDrawable();
 
       mResizeToViewport = defaultOptions.shouldResizeToViewport();
 
       mFadeDurationMs = defaultOptions.getFadeDurationMs();
+
+      mCustomDrawableFactory = defaultOptions.getCustomDrawableFactory();
     }
 
     public Builder placeholder(@Nullable Drawable placeholder) {
@@ -388,6 +414,13 @@ public class ImageOptions extends DecodedImageOptions {
 
     public Builder overlayRes(@DrawableRes int overlayRes) {
       mOverlayRes = overlayRes;
+      mOverlayDrawable = null;
+      return getThis();
+    }
+
+    public Builder overlay(@Nullable Drawable overlayDrawable) {
+      mOverlayDrawable = overlayDrawable;
+      mOverlayRes = 0;
       return getThis();
     }
 
@@ -425,6 +458,16 @@ public class ImageOptions extends DecodedImageOptions {
      */
     public Builder fadeDurationMs(int fadeInDurationMs) {
       mFadeDurationMs = fadeInDurationMs;
+      return getThis();
+    }
+
+    /**
+     * Set a custom drawable factory to be used to create the actual image drawable.
+     *
+     * @param drawableFactory the factory to use
+     */
+    public Builder customDrawableFactory(@Nullable ImageOptionsDrawableFactory drawableFactory) {
+      mCustomDrawableFactory = drawableFactory;
       return getThis();
     }
 

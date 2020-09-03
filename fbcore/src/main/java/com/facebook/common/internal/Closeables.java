@@ -16,6 +16,7 @@
 
 package com.facebook.common.internal;
 
+import androidx.annotation.VisibleForTesting;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 import java.io.IOException;

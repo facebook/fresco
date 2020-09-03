@@ -8,9 +8,9 @@
 package com.facebook.imagepipeline.memory;
 
 import android.util.Log;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.soloader.nativeloader.NativeLoader;
 import java.io.Closeable;
 import java.nio.ByteBuffer;

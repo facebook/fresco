@@ -14,7 +14,7 @@ dependencies {
     compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
-    compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
+    compileOnly Deps.AndroidX.androidxAnnotation
 
     implementation project(':imagepipeline')
 }
