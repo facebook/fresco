@@ -46,6 +46,15 @@
       android:layout_marginTop="@dimen/margin_medium"
       android:text="@string/format_switch_aspect_ratio"
       />
+  
+  <androidx.appcompat.widget.SwitchCompat
+    android:id="@+id/switch_autoplay"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_medium"
+      android:checked="true"
+    android:text="@string/format_switch_autoplay"
+    />
 
   <TextView
       android:layout_width="wrap_content"
