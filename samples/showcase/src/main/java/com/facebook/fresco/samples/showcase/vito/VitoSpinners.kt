@@ -63,7 +63,8 @@ object VitoSpinners {
             "focus_crop (0, 0)" to Pair(ScalingUtils.ScaleType.FOCUS_CROP, PointF(0f, 0f)),
             "focus_crop (1, 0.5)" to Pair(ScalingUtils.ScaleType.FOCUS_CROP, PointF(1f, 0.5f)),
             "custom: fit_x" to Pair(CustomScaleTypes.FIT_X, null),
-            "custom: fit_y" to Pair(CustomScaleTypes.FIT_Y, null)
+            "custom: fit_y" to Pair(CustomScaleTypes.FIT_Y, null),
+            "null" to Pair(null, null)
     ), "Scale type")
 
     val colorFilters = Pair(listOf(
