@@ -9,7 +9,7 @@ package com.facebook.fresco.vito.core.impl;
 
 import android.graphics.drawable.Drawable;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
-import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
+import com.facebook.fresco.ui.common.BaseControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.vito.core.CombinedImageListener;
 import com.facebook.fresco.vito.core.VitoImageRequest;
@@ -24,7 +24,7 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
   private @Nullable VitoImageRequestListener mVitoImageRequestListener;
   private @Nullable ImageListener mImageListener;
   private ControllerListener2<ImageInfo> mControllerListener2 =
-      ImagePerfControllerListener2.getNoOpListener();
+      BaseControllerListener2.getNoOpListener();
 
   @Override
   public void setImageListener(@Nullable ImageListener imageListener) {
