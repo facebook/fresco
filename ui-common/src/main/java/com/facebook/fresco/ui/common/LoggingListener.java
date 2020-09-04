@@ -9,5 +9,7 @@ package com.facebook.fresco.ui.common;
 
 public interface LoggingListener {
 
+  void onFadeStarted(String id);
+
   void onFadeFinished(String id);
 }
