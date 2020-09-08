@@ -62,7 +62,8 @@ public class FadeDrawable extends ArrayDrawable {
   /** When in batch mode, drawable won't invalidate self until batch mode finishes. */
   @VisibleForTesting int mPreventInvalidateCount;
 
-  private @Nullable OnFadeFinishedListener mOnFadeFinishedListener;
+  private @Nullable OnFadeListener mOnFadeListener;
+  private boolean mCallOnFadeStartedListener;
   private boolean mCallOnFadeFinishedListener;
 
   /**
@@ -94,6 +95,7 @@ public class FadeDrawable extends ArrayDrawable {
     mPreventInvalidateCount = 0;
     mDefaultLayerIsOn = allLayersVisible;
     mDefaultLayerAlpha = mDefaultLayerIsOn ? 255 : 0;
+    mCallOnFadeStartedListener = true;
     resetInternal();
   }
 
@@ -157,6 +159,10 @@ public class FadeDrawable extends ArrayDrawable {
    */
   public void fadeInLayer(int index) {
     mCallOnFadeFinishedListener = index == ACTUAL_IMAGE_INDEX;
+    if (index == ACTUAL_IMAGE_INDEX) {
+      maybeNotifyOnFadeStarted();
+    }
+
     mTransitionState = TRANSITION_STARTING;
     mIsLayerOn[index] = true;
     invalidateSelf();
@@ -168,6 +174,10 @@ public class FadeDrawable extends ArrayDrawable {
    * @param index the index of the layer to fade out.
    */
   public void fadeOutLayer(int index) {
+    if (index == ACTUAL_IMAGE_INDEX) {
+      mCallOnFadeStartedListener = true;
+      mCallOnFadeFinishedListener = true;
+    }
     mTransitionState = TRANSITION_STARTING;
     mIsLayerOn[index] = false;
     invalidateSelf();
@@ -325,9 +335,16 @@ public class FadeDrawable extends ArrayDrawable {
   }
 
   private void maybeNotifyOnFadeFinished() {
-    if (mOnFadeFinishedListener != null && mCallOnFadeFinishedListener) {
-      mOnFadeFinishedListener.onFadeFinished();
+    if (mOnFadeListener != null && mCallOnFadeFinishedListener) {
+      mOnFadeListener.onFadeFinished();
       mCallOnFadeFinishedListener = false;
+    }
+  }
+
+  private void maybeNotifyOnFadeStarted() {
+    if (mOnFadeListener != null && mCallOnFadeStartedListener) {
+      mOnFadeListener.onFadeStarted();
+      mCallOnFadeStartedListener = false;
     }
   }
 
@@ -380,11 +397,13 @@ public class FadeDrawable extends ArrayDrawable {
     return mDefaultLayerIsOn;
   }
 
-  public void setOnFadeFinishedListener(OnFadeFinishedListener onFadeFinishedListener) {
-    mOnFadeFinishedListener = onFadeFinishedListener;
+  public void setOnFadeListener(OnFadeListener onFadeListener) {
+    mOnFadeListener = onFadeListener;
   }
 
-  public interface OnFadeFinishedListener {
+  public interface OnFadeListener {
+    void onFadeStarted();
+
     void onFadeFinished();
   }
 }

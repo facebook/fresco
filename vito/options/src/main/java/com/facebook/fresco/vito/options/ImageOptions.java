@@ -17,12 +17,11 @@ import com.facebook.imagepipeline.common.Priority;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImageOptions extends DecodedImageOptions {
 
   private static ImageOptions sDefaultImageOptions =
       new Builder()
-          .scale(ScalingUtils.ScaleType.CENTER_CROP)
           .placeholderScaleType(ScalingUtils.ScaleType.CENTER_INSIDE)
           .progressScaleType(ScalingUtils.ScaleType.CENTER_INSIDE)
           .errorScaleType(ScalingUtils.ScaleType.CENTER_INSIDE)
