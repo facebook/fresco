@@ -45,7 +45,7 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
    */
   @VisibleForTesting static final long TIME_BETWEEN_PARTIAL_RESULTS_MS = 100;
 
-  private final PooledByteBufferFactory mPooledByteBufferFactory;
+  protected final PooledByteBufferFactory mPooledByteBufferFactory;
   private final ByteArrayPool mByteArrayPool;
   private final NetworkFetcher mNetworkFetcher;
 
