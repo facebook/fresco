@@ -15,6 +15,8 @@ object TestDeps {
 
     const val festAssertCore = "org.easytesting:fest-assert-core:2.0M10"
 
+    const val robolectric = "org.robolectric:robolectric:4.3.1"
+
     object Powermock {
         private const val version = "2.0.2"
 

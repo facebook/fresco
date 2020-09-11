@@ -13,7 +13,7 @@ dependencies {
 
     testImplementation TestDeps.junit
     testImplementation TestDeps.mockitoCore
-    testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+    testImplementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }

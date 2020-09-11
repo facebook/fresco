@@ -95,7 +95,7 @@ dependencies {
     androidTestImplementation TestDeps.Powermock.moduleJunit4
     androidTestImplementation TestDeps.Powermock.moduleJunit4Rule
     androidTestImplementation TestDeps.Powermock.classloadingXstream
-    androidTestImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+    androidTestImplementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }

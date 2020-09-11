@@ -24,7 +24,7 @@ dependencies {
     }
     implementation TestDeps.Powermock.moduleJunit4Rule
     implementation TestDeps.Powermock.classloadingXstream
-    implementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+    implementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'com.google.auto.service', module: 'auto-service'
