@@ -154,7 +154,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     }
 
     // fade drawable composed of layers
-    mFadeDrawable = new FadeDrawable(layers);
+    mFadeDrawable = new FadeDrawable(layers, false, ACTUAL_IMAGE_INDEX);
     mFadeDrawable.setTransitionDuration(builder.getFadeDuration());
 
     // rounded corners drawable (optional)

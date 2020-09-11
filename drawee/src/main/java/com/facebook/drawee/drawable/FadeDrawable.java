@@ -39,10 +39,10 @@ public class FadeDrawable extends ArrayDrawable {
   /** Layers. */
   private final Drawable[] mLayers;
 
-  private final int ACTUAL_IMAGE_INDEX = 2;
-
   private final boolean mDefaultLayerIsOn;
   private final int mDefaultLayerAlpha;
+  /* The index of the layer that contains the actual image */
+  private final int mActualImageLayer;
 
   /** The current state. */
   @VisibleForTesting int mTransitionState;
@@ -73,7 +73,7 @@ public class FadeDrawable extends ArrayDrawable {
    * @param layers layers to fade between
    */
   public FadeDrawable(Drawable[] layers) {
-    this(layers, false);
+    this(layers, false, -1);
   }
 
   /**
@@ -83,8 +83,9 @@ public class FadeDrawable extends ArrayDrawable {
    *
    * @param layers layers to fade between
    * @param allLayersVisible true if all layers should be visible per default
+   * @param actualImageLayer The index of the layer that contains the actual image
    */
-  public FadeDrawable(Drawable[] layers, boolean allLayersVisible) {
+  public FadeDrawable(Drawable[] layers, boolean allLayersVisible, int actualImageLayer) {
     super(layers);
     Preconditions.checkState(layers.length >= 1, "At least one layer required!");
     mLayers = layers;
@@ -96,6 +97,7 @@ public class FadeDrawable extends ArrayDrawable {
     mDefaultLayerIsOn = allLayersVisible;
     mDefaultLayerAlpha = mDefaultLayerIsOn ? 255 : 0;
     mCallOnFadeStartedListener = true;
+    mActualImageLayer = actualImageLayer;
     resetInternal();
   }
 
@@ -158,8 +160,8 @@ public class FadeDrawable extends ArrayDrawable {
    * @param index the index of the layer to fade in.
    */
   public void fadeInLayer(int index) {
-    mCallOnFadeFinishedListener = index == ACTUAL_IMAGE_INDEX;
-    if (index == ACTUAL_IMAGE_INDEX) {
+    mCallOnFadeFinishedListener = index == mActualImageLayer;
+    if (index == mActualImageLayer) {
       maybeNotifyOnFadeStarted();
     }
 
@@ -174,7 +176,7 @@ public class FadeDrawable extends ArrayDrawable {
    * @param index the index of the layer to fade out.
    */
   public void fadeOutLayer(int index) {
-    if (index == ACTUAL_IMAGE_INDEX) {
+    if (index == mActualImageLayer) {
       mCallOnFadeStartedListener = true;
       mCallOnFadeFinishedListener = true;
     }
