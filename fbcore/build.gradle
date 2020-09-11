@@ -20,7 +20,7 @@ dependencies {
     testImplementation project(':mockito-config')
     testImplementation Deps.jsr305
     testImplementation TestDeps.junit
-    testImplementation "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
+    testImplementation TestDeps.festAssertCore
     testImplementation TestDeps.mockitoCore
     testImplementation "org.powermock:powermock-api-mockito2:${POWERMOCK_VERSION}"
     testImplementation "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"

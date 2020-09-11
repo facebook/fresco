@@ -32,7 +32,7 @@ dependencies {
     testImplementation "androidx.legacy:legacy-support-core-utils:${versions.androidx.legacy_support_core_utils}"
     testImplementation Deps.jsr305
     testImplementation TestDeps.junit
-    testImplementation "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
+    testImplementation TestDeps.festAssertCore
     testImplementation TestDeps.mockitoCore
     testImplementation("org.powermock:powermock-api-mockito2:${POWERMOCK_VERSION}") {
         exclude group: 'org.mockito', module: 'mockito-all'
