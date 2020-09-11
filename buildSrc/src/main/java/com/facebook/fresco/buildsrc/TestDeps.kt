@@ -18,6 +18,8 @@ object TestDeps {
 
     const val robolectric = "org.robolectric:robolectric:4.3.1"
     
+    const val truth = "com.google.truth:truth:1.0.1"
+    
     object AndroidX {
         const val espressoCore  = "androidx.test.espresso:espresso-core:3.1.1"
         const val testRules = "androidx.test:rules:1.1.1"

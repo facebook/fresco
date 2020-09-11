@@ -35,6 +35,7 @@ object SampleDeps {
         object Picasso {
             private const val version = "2.71828"
             const val picasso = "com.squareup.picasso:picasso:$version"
+            const val okhttpDownloader = "com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2"
         }
 
         object AndroidQuery {

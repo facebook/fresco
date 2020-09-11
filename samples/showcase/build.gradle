@@ -89,7 +89,6 @@ dependencies {
     implementation SampleDeps.AndroidX.preference
     implementation SampleDeps.AndroidX.recyclerview
     implementation SampleDeps.AndroidX.cardview
-    implementation "androidx.legacy:legacy-support-v4:1.0.0"
 
     implementation SampleDeps.Google.material
     implementation Deps.Tools.Stetho.okhttp3
