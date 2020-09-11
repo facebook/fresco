@@ -17,7 +17,6 @@ buildscript {
     ext.versions = [
             'androidx'  : [
                 'espresso' : '3.1.1',
-                'legacy_support_core_utils' : '1.0.0',
                 'test' : '1.1.1',
             ],
     ]

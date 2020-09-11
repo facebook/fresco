@@ -13,7 +13,7 @@ apply plugin: 'maven'
 
 dependencies {
     compileOnly Deps.AndroidX.androidxAnnotation
-    compileOnly "androidx.legacy:legacy-support-core-utils:${versions.androidx.legacy_support_core_utils}"
+    compileOnly Deps.AndroidX.legacySupportCoreUtils
     compileOnly Deps.jsr305
     compileOnly Deps.inferAnnotation
     compileOnly Deps.javaxAnnotation
@@ -25,7 +25,7 @@ dependencies {
     implementation Deps.Bolts.tasks
     implementation project(':fbcore')
     
-    testImplementation "androidx.legacy:legacy-support-core-utils:${versions.androidx.legacy_support_core_utils}"
+    testImplementation Deps.AndroidX.legacySupportCoreUtils
     testImplementation Deps.jsr305
     testImplementation project(':imagepipeline-test')
     testImplementation project(':imagepipeline-base-test')
