@@ -14,6 +14,8 @@ import android.view.View;
 import androidx.core.util.ObjectsCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import com.facebook.datasource.DataSource;
+import com.facebook.drawee.drawable.FadeDrawable;
+import com.facebook.fresco.ui.common.LoggingListener;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.PrefetchConfig;
 import com.facebook.fresco.vito.core.PrefetchTarget;
@@ -58,7 +60,6 @@ import com.facebook.litho.annotations.State;
 import com.facebook.litho.utils.MeasureUtils;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.Nullable;
-
 /** Simple Fresco Vito component for Litho */
 @MountSpec(isPureRender = true, canPreallocate = true, poolSize = 15)
 public class FrescoVitoImage2Spec {
@@ -122,16 +123,17 @@ public class FrescoVitoImage2Spec {
 
   @OnMount
   static void onMount(
-      ComponentContext c,
-      final FrescoDrawable2 frescoDrawable,
-      @Prop(optional = true) final @Nullable Object callerContext,
-      @Prop(optional = true) final @Nullable ImageListener imageListener,
-      @CachedValue VitoImageRequest imageRequest,
-      @FromPrepare DataSource<Void> prefetchDataSource,
-      @FromBoundsDefined Rect viewportDimensions,
-      @State final @Nullable AtomicReference<DataSource<Void>> workingRangePrefetchData) {
+        ComponentContext c,
+        final FrescoDrawable2 frescoDrawable,
+        @Prop(optional = true) final @Nullable Object callerContext,
+        @Prop(optional = true) final @Nullable ImageListener imageListener,
+        @CachedValue VitoImageRequest imageRequest,
+        @FromPrepare DataSource<Void> prefetchDataSource,
+        @FromBoundsDefined Rect viewportDimensions,
+        @State final @Nullable AtomicReference<DataSource<Void>> workingRangePrefetchData,
+        @Prop(optional = true) FadeDrawable.OnFadeListener onFadeListener) {
     FrescoVitoProvider.getController()
-        .fetch(frescoDrawable, imageRequest, callerContext, imageListener, viewportDimensions);
+        .fetch(frescoDrawable, imageRequest, callerContext, imageListener, onFadeListener, viewportDimensions);
     if (prefetchDataSource != null) {
       prefetchDataSource.close();
     }
@@ -146,6 +148,7 @@ public class FrescoVitoImage2Spec {
       final FrescoDrawable2 frescoDrawable,
       @Prop(optional = true) final @Nullable Object callerContext,
       @Prop(optional = true) final @Nullable ImageListener imageListener,
+      @Prop(optional = true) final @Nullable FadeDrawable.OnFadeListener onFadeListener,
       @CachedValue VitoImageRequest imageRequest,
       @FromPrepare DataSource<Void> prefetchDataSource,
       @FromBoundsDefined Rect viewportDimensions,
@@ -153,7 +156,7 @@ public class FrescoVitoImage2Spec {
     // We fetch in both mount and bind in case an unbind event triggered a delayed release.
     // We'll only trigger an actual fetch if needed. Most of the time, this will be a no-op.
     FrescoVitoProvider.getController()
-        .fetch(frescoDrawable, imageRequest, callerContext, imageListener, viewportDimensions);
+        .fetch(frescoDrawable, imageRequest, callerContext, imageListener, onFadeListener, viewportDimensions);
     if (prefetchDataSource != null) {
       prefetchDataSource.close();
     }

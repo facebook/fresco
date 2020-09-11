@@ -13,6 +13,7 @@ import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
+import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.fresco.middleware.MiddlewareUtils;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.vito.core.DrawableDataSubscriber;
@@ -77,6 +78,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       final VitoImageRequest imageRequest,
       final @Nullable Object callerContext,
       final @Nullable ImageListener listener,
+      final @Nullable FadeDrawable.OnFadeListener onFadeListener,
       final @Nullable Rect viewportDimensions) {
     // Save viewport dimension for future use
     frescoDrawable.setViewportDimensions(viewportDimensions);
@@ -103,6 +105,8 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     }
 
     frescoDrawable.setVitoImageRequestListener(mGlobalImageListener);
+
+    frescoDrawable.setOnFadeListener(onFadeListener);
 
     // Set layers that are always visible
     mHierarcher.setupOverlayDrawable(

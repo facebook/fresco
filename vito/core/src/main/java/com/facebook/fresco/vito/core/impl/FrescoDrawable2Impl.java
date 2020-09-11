@@ -203,6 +203,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     mImageOrigin = ImageOrigin.UNKNOWN;
     mImageId = 0;
     mExtras = null;
+    setOnFadeListener(null);
   }
 
   @Override
