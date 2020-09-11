@@ -10,4 +10,6 @@ package com.facebook.fresco.buildsrc
 object TestDeps {
 
     const val junit = "junit:junit:4.12"
+    
+    const val mockitoCore = "org.mockito:mockito-core:2.26.0"
 }

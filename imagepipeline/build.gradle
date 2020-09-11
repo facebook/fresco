@@ -32,7 +32,7 @@ dependencies {
     testImplementation project(':native-imagetranscoder')
     testImplementation TestDeps.junit
     testImplementation "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
-    testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+    testImplementation TestDeps.mockitoCore
     testImplementation("org.powermock:powermock-api-mockito2:${POWERMOCK_VERSION}") {
         exclude group: 'org.mockito', module: 'mockito-all'
     }

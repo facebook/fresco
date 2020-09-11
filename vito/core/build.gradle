@@ -34,7 +34,7 @@ dependencies {
 
     testImplementation TestDeps.junit
     testImplementation "org.assertj:assertj-core:${versions.assertjCore}"
-    testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+    testImplementation TestDeps.mockitoCore
     testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'

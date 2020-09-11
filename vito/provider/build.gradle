@@ -23,7 +23,7 @@ dependencies {
 
     testImplementation TestDeps.junit
     testImplementation "org.assertj:assertj-core:${versions.assertjCore}"
-    testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+    testImplementation TestDeps.mockitoCore
 }
 
 android {
