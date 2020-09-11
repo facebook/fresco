@@ -6,6 +6,7 @@
  */
 
 import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.SampleDeps
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -58,7 +59,7 @@ dependencies {
     compileOnly Deps.jsr305
     implementation Deps.Kotlin.stdlibJdk
     implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
-    implementation "com.google.android.material:material:${versions.material}"
+    implementation SampleDeps.Google.material
     implementation "androidx.recyclerview:recyclerview:${versions.androidx.recyclerview}"
     implementation "androidx.cardview:cardview:${versions.androidx.cardview}"
     implementation Deps.Tools.Stetho.okhttp3

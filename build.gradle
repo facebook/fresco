@@ -24,7 +24,6 @@ buildscript {
                 'recyclerview' : '1.0.0',
                 'test' : '1.1.1',
             ],
-            'material'  : '1.0.0',
     ]
 
     repositories {
