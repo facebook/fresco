@@ -11,6 +11,7 @@ object SampleDeps {
     
     object AndroidX {
         const val appcompat = "androidx.appcompat:appcompat:1.0.2"
+        const val cardview = "androidx.cardview:cardview:1.0.0"
         const val preference = "androidx.preference:preference:1.0.0"
         const val recyclerview = "androidx.recyclerview:recyclerview:1.0.0"
     }

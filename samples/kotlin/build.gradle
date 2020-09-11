@@ -61,7 +61,7 @@ dependencies {
     implementation SampleDeps.AndroidX.appcompat
     implementation SampleDeps.Google.material
     implementation SampleDeps.AndroidX.recyclerview
-    implementation "androidx.cardview:cardview:${versions.androidx.cardview}"
+    implementation SampleDeps.AndroidX.cardview
     implementation Deps.Tools.Stetho.okhttp3
 
     implementation project(':drawee-backends:drawee-pipeline')
