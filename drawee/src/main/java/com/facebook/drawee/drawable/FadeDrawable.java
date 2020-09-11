@@ -161,9 +161,7 @@ public class FadeDrawable extends ArrayDrawable {
    */
   public void fadeInLayer(int index) {
     mCallOnFadeFinishedListener = index == mActualImageLayer;
-    if (index == mActualImageLayer) {
-      maybeNotifyOnFadeStarted();
-    }
+    maybeNotifyOnFadeStarted(index);
 
     mTransitionState = TRANSITION_STARTING;
     mIsLayerOn[index] = true;
@@ -336,17 +334,17 @@ public class FadeDrawable extends ArrayDrawable {
     }
   }
 
+  private void maybeNotifyOnFadeStarted(int index) {
+    if (mOnFadeListener != null && index == mActualImageLayer && mCallOnFadeStartedListener) {
+      mOnFadeListener.onFadeStarted();
+      mCallOnFadeStartedListener = false;
+    }
+  }
+
   private void maybeNotifyOnFadeFinished() {
     if (mOnFadeListener != null && mCallOnFadeFinishedListener) {
       mOnFadeListener.onFadeFinished();
       mCallOnFadeFinishedListener = false;
-    }
-  }
-
-  private void maybeNotifyOnFadeStarted() {
-    if (mOnFadeListener != null && mCallOnFadeStartedListener) {
-      mOnFadeListener.onFadeStarted();
-      mCallOnFadeStartedListener = false;
     }
   }
 
