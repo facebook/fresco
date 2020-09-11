@@ -24,7 +24,7 @@ dependencies {
 
     testImplementation project(':imagepipeline-base-test')
     testImplementation TestDeps.junit
-    testImplementation "org.assertj:assertj-core:${versions.assertjCore}"
+    testImplementation TestDeps.assertjCore
     testImplementation TestDeps.festAssertCore
     testImplementation TestDeps.mockitoCore
     testImplementation(TestDeps.Powermock.apiMockito) {

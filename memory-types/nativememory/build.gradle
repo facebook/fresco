@@ -22,7 +22,7 @@ dependencies {
     implementation Deps.SoLoader.nativeloader
 
     testImplementation TestDeps.junit
-    testImplementation "org.assertj:assertj-core:${versions.assertjCore}"
+    testImplementation TestDeps.assertjCore
     testImplementation TestDeps.mockitoCore
     testImplementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'

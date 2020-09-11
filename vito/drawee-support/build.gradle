@@ -22,7 +22,7 @@ dependencies {
     implementation project(':vito:options')
 
     testImplementation TestDeps.junit
-    testImplementation "org.assertj:assertj-core:${versions.assertjCore}"
+    testImplementation TestDeps.assertjCore
     testImplementation TestDeps.mockitoCore
 }
 
