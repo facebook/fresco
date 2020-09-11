@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import com.facebook.fresco.buildsrc.SampleDeps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.application'
@@ -52,7 +53,7 @@ android {
 }
 
 dependencies {
-    implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
+    implementation SampleDeps.AndroidX.appcompat
     implementation "androidx.recyclerview:recyclerview:${versions.androidx.recyclerview}"
     implementation "androidx.preference:preference:${versions.androidx.preference}"
 

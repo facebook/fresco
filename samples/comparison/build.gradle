@@ -6,6 +6,7 @@
  */
 
 import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.SampleDeps
 import com.facebook.fresco.buildsrc.SampleDeps.Comparison
 
 apply plugin: 'com.android.application'
@@ -19,7 +20,7 @@ dependencies {
     implementation Comparison.Uil.uil
     implementation Comparison.Picasso.picasso
     implementation "com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2"
-    implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
+    implementation SampleDeps.AndroidX.appcompat
     implementation "androidx.recyclerview:recyclerview:${versions.androidx.recyclerview}"
     implementation Comparison.AndroidQuery.aquery
     implementation Deps.Tools.Stetho.okhttp3

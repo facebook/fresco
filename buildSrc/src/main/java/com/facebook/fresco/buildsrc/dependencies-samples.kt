@@ -9,6 +9,10 @@ package com.facebook.fresco.buildsrc
 
 object SampleDeps {
     
+    object AndroidX {
+        const val appcompat = "androidx.appcompat:appcompat:1.0.2"
+    }
+    
     object Google {
         const val material = "com.google.android.material:material:1.1.0-alpha03"
     }

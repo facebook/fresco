@@ -58,7 +58,7 @@ android {
 dependencies {
     compileOnly Deps.jsr305
     implementation Deps.Kotlin.stdlibJdk
-    implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
+    implementation SampleDeps.AndroidX.appcompat
     implementation SampleDeps.Google.material
     implementation "androidx.recyclerview:recyclerview:${versions.androidx.recyclerview}"
     implementation "androidx.cardview:cardview:${versions.androidx.cardview}"
