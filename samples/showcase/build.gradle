@@ -87,7 +87,7 @@ dependencies {
 
     implementation SampleDeps.AndroidX.appcompat
     implementation "androidx.preference:preference:${versions.androidx.preference}"
-    implementation "androidx.recyclerview:recyclerview:${versions.androidx.recyclerview}"
+    implementation SampleDeps.AndroidX.recyclerview
     implementation "androidx.cardview:cardview:1.0.0"
     implementation "androidx.legacy:legacy-support-v4:1.0.0"
 

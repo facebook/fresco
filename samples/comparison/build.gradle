@@ -21,7 +21,7 @@ dependencies {
     implementation Comparison.Picasso.picasso
     implementation "com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2"
     implementation SampleDeps.AndroidX.appcompat
-    implementation "androidx.recyclerview:recyclerview:${versions.androidx.recyclerview}"
+    implementation SampleDeps.AndroidX.recyclerview
     implementation Comparison.AndroidQuery.aquery
     implementation Deps.Tools.Stetho.okhttp3
 

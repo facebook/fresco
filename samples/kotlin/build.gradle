@@ -60,7 +60,7 @@ dependencies {
     implementation Deps.Kotlin.stdlibJdk
     implementation SampleDeps.AndroidX.appcompat
     implementation SampleDeps.Google.material
-    implementation "androidx.recyclerview:recyclerview:${versions.androidx.recyclerview}"
+    implementation SampleDeps.AndroidX.recyclerview
     implementation "androidx.cardview:cardview:${versions.androidx.cardview}"
     implementation Deps.Tools.Stetho.okhttp3
 

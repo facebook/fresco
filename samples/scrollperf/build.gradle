@@ -54,7 +54,7 @@ android {
 
 dependencies {
     implementation SampleDeps.AndroidX.appcompat
-    implementation "androidx.recyclerview:recyclerview:${versions.androidx.recyclerview}"
+    implementation SampleDeps.AndroidX.recyclerview
     implementation "androidx.preference:preference:${versions.androidx.preference}"
 
     implementation (fileTree(dir: 'libs', include: ['*.jar']))
