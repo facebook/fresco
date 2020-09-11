@@ -27,7 +27,7 @@ android {
 dependencies {
     compileOnly Deps.inferAnnotation
 
-    implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
+    implementation Deps.AndroidX.core
 
     testImplementation TestDeps.junit
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
