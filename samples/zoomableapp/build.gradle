@@ -1,3 +1,5 @@
+import com.facebook.fresco.buildsrc.SampleDeps
+
 /*
  * Copyright (c) Facebook, Inc. and its affiliates.
  *
@@ -55,7 +57,7 @@ configurations {
 }
 
 dependencies {
-    implementation "androidx.legacy:legacy-support-core-ui:${versions.androidx.legacy_support_core_ui}"
+    implementation SampleDeps.Zoomable.legacyAndroidXSupportCoreUi 
 
     internalImplementation project(':drawee-backends:drawee-pipeline')
     implementation project(path: ':samples:zoomable')

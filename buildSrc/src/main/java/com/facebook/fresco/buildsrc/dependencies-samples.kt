@@ -47,4 +47,8 @@ object SampleDeps {
 
         const val caverockSvg = "com.caverock:androidsvg-aar:1.4"
     }
+    
+    object Zoomable {
+        const val legacyAndroidXSupportCoreUi = "androidx.legacy:legacy-support-core-ui:1.0.0"
+    }
 }
