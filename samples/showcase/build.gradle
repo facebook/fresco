@@ -135,9 +135,9 @@ dependencies {
     implementation SampleDeps.Showcase.caverockSvg
 
     // Testing-only dependencies
-    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.androidx.espresso}"
-    androidTestImplementation "androidx.test:rules:${versions.androidx.test}"
-    androidTestImplementation "androidx.test:runner:${versions.androidx.test}"
+    androidTestImplementation TestDeps.AndroidX.espressoCore
+    androidTestImplementation TestDeps.AndroidX.testRules
+    androidTestImplementation TestDeps.AndroidX.testRunner
     androidTestImplementation TestDeps.junit
 
     implementation(Deps.Tools.Flipper.flipper)

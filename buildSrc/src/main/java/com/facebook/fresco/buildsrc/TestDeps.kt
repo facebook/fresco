@@ -17,6 +17,12 @@ object TestDeps {
     const val festAssertCore = "org.easytesting:fest-assert-core:2.0M10"
 
     const val robolectric = "org.robolectric:robolectric:4.3.1"
+    
+    object AndroidX {
+        const val espressoCore  = "androidx.test.espresso:espresso-core:3.1.1"
+        const val testRules = "androidx.test:rules:1.1.1"
+        const val testRunner = "androidx.test:runner:1.1.1" 
+    }
 
     object Powermock {
         private const val version = "2.0.2"
