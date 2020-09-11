@@ -65,6 +65,7 @@ import javax.annotation.Nullable;
 public class FrescoVitoImage2Spec {
 
   @PropDefault protected static final float imageAspectRatio = 1f;
+  @PropDefault protected static final boolean disablePrefetch = false;
 
   @OnCreateMountContent(mountingType = MountingType.DRAWABLE)
   static FrescoDrawable2 onCreateMountContent(Context c) {
@@ -111,10 +112,11 @@ public class FrescoVitoImage2Spec {
   static void onPrepare(
       ComponentContext c,
       @Prop(optional = true) final @Nullable Object callerContext,
+      @Prop(optional = true) final boolean disablePrefetch,
       @CachedValue VitoImageRequest imageRequest,
       Output<DataSource<Void>> prefetchDataSource) {
     PrefetchConfig config = FrescoVitoProvider.getConfig().getPrefetchConfig();
-    if (config.prefetchInOnPrepare()) {
+    if (!disablePrefetch && config.prefetchInOnPrepare()) {
       prefetchDataSource.set(
           FrescoVitoProvider.getPrefetcher()
               .prefetch(config.prefetchTargetOnPrepare(), imageRequest, callerContext));
@@ -224,6 +226,7 @@ public class FrescoVitoImage2Spec {
   static void onEnteredWorkingRange(
       ComponentContext c,
       @Prop(optional = true) final @Nullable Object callerContext,
+      @Prop(optional = true) final boolean disablePrefetch,
       @CachedValue VitoImageRequest imageRequest,
       @FromPrepare DataSource<Void> prefetchDataSource,
       @State final @Nullable AtomicReference<DataSource<Void>> workingRangePrefetchData) {
@@ -232,7 +235,7 @@ public class FrescoVitoImage2Spec {
     }
     cancelWorkingRangePrefetch(workingRangePrefetchData);
     PrefetchConfig prefetchConfig = FrescoVitoProvider.getConfig().getPrefetchConfig();
-    if (prefetchConfig.prefetchWithWorkingRange()) {
+    if (!disablePrefetch && prefetchConfig.prefetchWithWorkingRange()) {
       workingRangePrefetchData.set(
           FrescoVitoProvider.getPrefetcher()
               .prefetch(PrefetchTarget.MEMORY_DECODED, imageRequest, callerContext));
@@ -251,9 +254,10 @@ public class FrescoVitoImage2Spec {
   }
 
   @OnRegisterRanges
-  static void registerWorkingRanges(ComponentContext c) {
+  static void registerWorkingRanges(
+      ComponentContext c, @Prop(optional = true) final boolean disablePrefetch) {
     PrefetchConfig prefetchConfig = FrescoVitoProvider.getConfig().getPrefetchConfig();
-    if (prefetchConfig.prefetchWithWorkingRange()) {
+    if (!disablePrefetch && prefetchConfig.prefetchWithWorkingRange()) {
       FrescoVitoImage2.registerImagePrefetchWorkingRange(
           c, new BoundaryWorkingRange(prefetchConfig.prefetchWorkingRangeSize()));
     }
