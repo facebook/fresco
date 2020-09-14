@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
@@ -61,17 +60,21 @@ public class FrescoVitoLithoSimpleFragment extends BaseShowcaseFragment {
 
   public Component createComponent(ComponentContext c) {
     Uri uri = sampleUris().createSampleUri();
-    return FrescoVitoImage2.create(c).uri(uri).imageOptions(IMAGE_OPTIONS)
-            .onFadeListener(new FadeDrawable.OnFadeListener() {
+    return FrescoVitoImage2.create(c)
+        .uri(uri)
+        .imageOptions(IMAGE_OPTIONS)
+        .onFadeListener(
+            new FadeDrawable.OnFadeListener() {
               @Override
               public void onFadeStarted() {
-                  Log.d("pewpew", "f start");
+                Log.d("pewpew", "f start");
               }
 
               @Override
               public void onFadeFinished() {
-                  Log.d("pewpew", "f finished");
+                Log.d("pewpew", "f finished");
               }
-            }).build();
+            })
+        .build();
   }
 }
