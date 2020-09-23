@@ -24,6 +24,7 @@ import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.provider.FrescoVitoProvider;
 import com.facebook.fresco.vito.source.ImageSource;
 import com.facebook.fresco.vito.source.ImageSourceProvider;
+import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.litho.AccessibilityRole;
 import com.facebook.litho.BoundaryWorkingRange;
 import com.facebook.litho.ComponentContext;
@@ -119,13 +120,18 @@ public class FrescoVitoImage2Spec {
       ComponentContext c,
       @Prop(optional = true) final @Nullable Object callerContext,
       @Prop(optional = true) final @Nullable Prefetch prefetch,
+      @Prop(optional = true) final @Nullable RequestListener prefetchRequestListener,
       @CachedValue VitoImageRequest imageRequest,
       Output<DataSource<Void>> prefetchDataSource) {
     PrefetchConfig config = FrescoVitoProvider.getConfig().getPrefetchConfig();
     if (shouldPrefetchInOnPrepare(prefetch)) {
       prefetchDataSource.set(
           FrescoVitoProvider.getPrefetcher()
-              .prefetch(config.prefetchTargetOnPrepare(), imageRequest, callerContext));
+              .prefetch(
+                  config.prefetchTargetOnPrepare(),
+                  imageRequest,
+                  callerContext,
+                  prefetchRequestListener));
     }
   }
 
@@ -256,7 +262,7 @@ public class FrescoVitoImage2Spec {
     if (shouldPrefetchWithWorkingRange(prefetch)) {
       workingRangePrefetchData.set(
           FrescoVitoProvider.getPrefetcher()
-              .prefetch(PrefetchTarget.MEMORY_DECODED, imageRequest, callerContext));
+              .prefetch(PrefetchTarget.MEMORY_DECODED, imageRequest, callerContext, null));
 
       if (prefetchDataSource != null
           && prefetchConfig.cancelOnPreparePrefetchWhenWorkingRangePrefetch()) {

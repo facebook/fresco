@@ -18,6 +18,7 @@ import com.facebook.fresco.vito.options.DecodedImageOptions;
 import com.facebook.fresco.vito.options.EncodedImageOptions;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.core.ImagePipeline;
+import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.concurrent.CancellationException;
 import javax.annotation.Nullable;
@@ -137,7 +138,8 @@ public class FrescoVitoPrefetcherImpl implements FrescoVitoPrefetcher {
   public DataSource<Void> prefetch(
       final PrefetchTarget prefetchTarget,
       final VitoImageRequest imageRequest,
-      @Nullable final Object callerContext) {
+      @Nullable final Object callerContext,
+      @Nullable final RequestListener requestListener) {
     final ImageRequest finalImageRequest = imageRequest.finalImageRequest;
     if (finalImageRequest == null) {
       return null;
@@ -146,11 +148,11 @@ public class FrescoVitoPrefetcherImpl implements FrescoVitoPrefetcher {
     final ImagePipeline pipeline = mFrescoContext.getImagePipeline();
     switch (prefetchTarget) {
       case MEMORY_DECODED:
-        return pipeline.prefetchToBitmapCache(finalImageRequest, callerContext);
+        return pipeline.prefetchToBitmapCache(finalImageRequest, callerContext, requestListener);
       case MEMORY_ENCODED:
-        return pipeline.prefetchToEncodedCache(finalImageRequest, callerContext);
+        return pipeline.prefetchToEncodedCache(finalImageRequest, callerContext, requestListener);
       case DISK:
-        return pipeline.prefetchToDiskCache(finalImageRequest, callerContext);
+        return pipeline.prefetchToDiskCache(finalImageRequest, callerContext, requestListener);
     }
     return DataSources.immediateFailedDataSource(
         new CancellationException("Prefetching is not enabled"));

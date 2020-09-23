@@ -12,6 +12,7 @@ import com.facebook.datasource.DataSource;
 import com.facebook.fresco.vito.options.DecodedImageOptions;
 import com.facebook.fresco.vito.options.EncodedImageOptions;
 import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.imagepipeline.listener.RequestListener;
 import javax.annotation.Nullable;
 
 public interface FrescoVitoPrefetcher {
@@ -33,5 +34,8 @@ public interface FrescoVitoPrefetcher {
 
   @Nullable
   DataSource<Void> prefetch(
-      PrefetchTarget prefetchTarget, VitoImageRequest imageRequest, @Nullable Object callerContext);
+      PrefetchTarget prefetchTarget,
+      VitoImageRequest imageRequest,
+      @Nullable Object callerContext,
+      @Nullable RequestListener requestListener);
 }
