@@ -69,6 +69,17 @@ public class FrescoVitoImage2Spec {
     AUTO,
     YES,
     NO,
+    ;
+
+    public static Prefetch parsePrefetch(long value) {
+      if (value == 2) {
+        return NO;
+      }
+      if (value == 1) {
+        return YES;
+      }
+      return AUTO;
+    }
   }
 
   @PropDefault protected static final float imageAspectRatio = 1f;
