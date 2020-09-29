@@ -80,7 +80,12 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
       return null;
     }
 
-    if (mExperiments.useNativeRounding() && NativeCodeSetup.getUseNativeCode()) {
+    RoundingOptions roundingOptions = imageOptions.getRoundingOptions();
+    boolean forceRoundAtDecode =
+        roundingOptions == null ? false : roundingOptions.isForceRoundAtDecode();
+
+    if ((!forceRoundAtDecode && mExperiments.useNativeRounding())
+        && NativeCodeSetup.getUseNativeCode()) {
       setupNativeRounding(imageRequestBuilder, imageOptions.getRoundingOptions());
     }
 

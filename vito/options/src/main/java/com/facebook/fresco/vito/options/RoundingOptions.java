@@ -18,10 +18,10 @@ public class RoundingOptions {
   public static final float CORNER_RADIUS_UNSET = 0f;
 
   private static final RoundingOptions AS_CIRCLE =
-      new RoundingOptions(true, CORNER_RADIUS_UNSET, null, false);
+      new RoundingOptions(true, CORNER_RADIUS_UNSET, null, false, false);
 
   private static final RoundingOptions AS_CIRCLE_ANTI_ALIASING =
-      new RoundingOptions(true, CORNER_RADIUS_UNSET, null, true);
+      new RoundingOptions(true, CORNER_RADIUS_UNSET, null, true, false);
 
   public static RoundingOptions asCircle() {
     return AS_CIRCLE;
@@ -31,8 +31,12 @@ public class RoundingOptions {
     return antiAliasing ? AS_CIRCLE_ANTI_ALIASING : AS_CIRCLE;
   }
 
+  public static RoundingOptions asCircle(boolean antiAliasing, boolean forceRoundAtDecode) {
+    return new RoundingOptions(true, CORNER_RADIUS_UNSET, null, antiAliasing, forceRoundAtDecode);
+  }
+
   public static RoundingOptions forCornerRadiusPx(float cornerRadiusPx) {
-    return new RoundingOptions(false, cornerRadiusPx, null, false);
+    return new RoundingOptions(false, cornerRadiusPx, null, false, false);
   }
 
   public static RoundingOptions forCornerRadii(
@@ -42,27 +46,30 @@ public class RoundingOptions {
     radii[2] = radii[3] = topRight;
     radii[4] = radii[5] = bottomRight;
     radii[6] = radii[7] = bottomLeft;
-    return new RoundingOptions(false, CORNER_RADIUS_UNSET, radii, false);
+    return new RoundingOptions(false, CORNER_RADIUS_UNSET, radii, false, false);
   }
 
   public static RoundingOptions forCornerRadii(float[] cornerRadii, boolean antiAliasing) {
-    return new RoundingOptions(false, CORNER_RADIUS_UNSET, cornerRadii, antiAliasing);
+    return new RoundingOptions(false, CORNER_RADIUS_UNSET, cornerRadii, antiAliasing, false);
   }
 
   private final boolean mIsCircular;
   private final float mCornerRadius;
   private final @Nullable float[] mCornerRadii;
   private final boolean mAntiAliasing;
+  private final boolean mForceRoundAtDecode;
 
   private RoundingOptions(
       boolean isCircular,
       float cornerRadiusPx,
       @Nullable float[] cornerRadii,
-      boolean antiAliasing) {
+      boolean antiAliasing,
+      boolean forceRoundAtDecode) {
     mIsCircular = isCircular;
     mCornerRadius = cornerRadiusPx;
     mCornerRadii = cornerRadii;
     mAntiAliasing = antiAliasing;
+    mForceRoundAtDecode = forceRoundAtDecode;
   }
 
   public boolean isCircular() {
@@ -84,6 +91,10 @@ public class RoundingOptions {
 
   public boolean isAntiAliased() {
     return mAntiAliasing;
+  }
+
+  public boolean isForceRoundAtDecode() {
+    return mForceRoundAtDecode;
   }
 
   @Override
