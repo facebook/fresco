@@ -159,6 +159,12 @@ public abstract class DefaultDecoder implements PlatformDecoder {
             encodedImage, Bitmap.Config.ARGB_8888, regionToDecode, length, colorSpace);
       }
       throw re;
+    } finally {
+      try {
+        jpegDataStream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 
