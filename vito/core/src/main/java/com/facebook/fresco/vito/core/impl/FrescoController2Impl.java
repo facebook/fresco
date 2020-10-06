@@ -116,10 +116,10 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     final long imageId = VitoUtils.generateIdentifier();
     frescoDrawable.setImageId(imageId);
 
+    Extras extras = obtainExtras(null, null, frescoDrawable);
+
     // Notify listeners that we're about to fetch an image
-    frescoDrawable
-        .getImageListener()
-        .onSubmit(imageId, imageRequest, callerContext, obtainExtras(null, null, frescoDrawable));
+    frescoDrawable.getImageListener().onSubmit(imageId, imageRequest, callerContext, extras);
 
     // Check if the image is in cache
     CloseableReference<CloseableImage> cachedImage = mImagePipeline.getCachedImage(imageRequest);
@@ -129,8 +129,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
         // Immediately display the actual image.
         setActualImage(frescoDrawable, imageRequest, cachedImage, true, null);
         frescoDrawable.setFetchSubmitted(true);
-        mDebugOverlayFactory.update(frescoDrawable);
-
+        mDebugOverlayFactory.update(frescoDrawable, extras);
         return true;
       }
     } finally {
@@ -170,7 +169,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     }
     frescoDrawable.setFetchSubmitted(true);
 
-    mDebugOverlayFactory.update(frescoDrawable);
+    mDebugOverlayFactory.update(frescoDrawable, null);
 
     return false;
   }
@@ -207,6 +206,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             drawable.getActualImageWrapper(),
             isImmediate,
             null);
+    Extras extras = obtainExtras(dataSource, image, drawable);
     drawable
         .getImageListener()
         .onFinalImageSet(
@@ -214,10 +214,10 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             drawable.getImageRequest(),
             drawable.getImageOrigin(),
             image.get(),
-            obtainExtras(dataSource, image, drawable),
+            extras,
             actualDrawable);
     drawable.setProgressDrawable(null);
-    mDebugOverlayFactory.update(drawable);
+    mDebugOverlayFactory.update(drawable, extras);
   }
 
   @Override
@@ -250,6 +250,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
         mHierarcher.buildErrorDrawable(imageRequest.resources, imageRequest.imageOptions);
     drawable.setProgressDrawable(null);
     drawable.setImageDrawable(errorDrawable);
+    Extras extras = obtainExtras(dataSource, dataSource.getResult(), drawable);
     drawable
         .getImageListener()
         .onFailure(
@@ -257,8 +258,8 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             drawable.getImageRequest(),
             errorDrawable,
             dataSource.getFailureCause(),
-            obtainExtras(dataSource, dataSource.getResult(), drawable));
-    mDebugOverlayFactory.update(drawable);
+            extras);
+    mDebugOverlayFactory.update(drawable, extras);
   }
 
   @Override

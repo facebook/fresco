@@ -7,7 +7,9 @@
 
 package com.facebook.fresco.vito.core.impl.debug;
 
+import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
+import javax.annotation.Nullable;
 
 public interface DebugOverlayFactory2 {
 
@@ -17,5 +19,5 @@ public interface DebugOverlayFactory2 {
    *
    * @param drawable the drawable to update the overlay for
    */
-  void update(FrescoDrawable2 drawable);
+  void update(FrescoDrawable2 drawable, @Nullable ControllerListener2.Extras extras);
 }
