@@ -182,10 +182,6 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   @Override
   public void release(final FrescoDrawable2 drawable) {
     drawable.scheduleReleaseNextFrame();
-    drawable
-        .getImageListener()
-        .onRelease(
-            drawable.getImageId(), drawable.getImageRequest(), obtainExtras(null, null, drawable));
   }
 
   private void setActualImage(
@@ -268,6 +264,15 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       VitoImageRequest imageRequest,
       DataSource<CloseableReference<CloseableImage>> dataSource) {
     // TODO: implement
+  }
+
+  @Override
+  public void onRelease(final FrescoDrawable2 drawable) {
+    // Notify listeners
+    drawable
+        .getImageListener()
+        .onRelease(
+            drawable.getImageId(), drawable.getImageRequest(), obtainExtras(null, null, drawable));
   }
 
   private static Extras obtainExtras(

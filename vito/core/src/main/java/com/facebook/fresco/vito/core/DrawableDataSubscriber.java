@@ -26,4 +26,6 @@ public interface DrawableDataSubscriber {
       FrescoDrawable2 drawable,
       VitoImageRequest imageRequest,
       DataSource<CloseableReference<CloseableImage>> dataSource);
+
+  void onRelease(FrescoDrawable2 drawable);
 }
