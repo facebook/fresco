@@ -70,6 +70,7 @@ public class ProducerSequenceFactory {
   private final ImageTranscoderFactory mImageTranscoderFactory;
   private final boolean mIsEncodedMemoryCacheProbingEnabled;
   private final boolean mIsDiskCacheProbingEnabled;
+  private final boolean mUseCombinedNetworkAndCacheProducer;
 
   // Saved sequences
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
@@ -122,12 +123,14 @@ public class ProducerSequenceFactory {
       boolean diskCacheEnabled,
       ImageTranscoderFactory imageTranscoderFactory,
       boolean isEncodedMemoryCacheProbingEnabled,
-      boolean isDiskCacheProbingEnabled) {
+      boolean isDiskCacheProbingEnabled,
+      boolean useCombinedNetworkAndCacheProducer) {
     mContentResolver = contentResolver;
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
     mWebpSupportEnabled = webpSupportEnabled;
+    mUseCombinedNetworkAndCacheProducer = useCombinedNetworkAndCacheProducer;
     mPostprocessorSequences = new HashMap<>();
     mCloseableImagePrefetchSequences = new HashMap<>();
     mBitmapPrepareSequences = new HashMap<>();
@@ -460,7 +463,10 @@ public class ProducerSequenceFactory {
     return mNetworkFetchToEncodedMemoryPrefetchSequence;
   }
 
-  /** multiplex -> encoded cache -> disk cache -> (webp transcode) -> network fetch. */
+  /**
+   * multiplex -> encoded cache -> disk cache -> (webp transcode) -> network fetch. Alternatively,
+   * multiplex -> combined network and cache
+   */
   private synchronized Producer<EncodedImage> getCommonNetworkFetchToEncodedMemorySequence() {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection(
@@ -472,8 +478,10 @@ public class ProducerSequenceFactory {
             "ProducerSequenceFactory#getCommonNetworkFetchToEncodedMemorySequence:init");
       }
       Producer<EncodedImage> inputProducer =
-          newEncodedCacheMultiplexToTranscodeSequence(
-              mProducerFactory.newNetworkFetchProducer(mNetworkFetcher));
+          mUseCombinedNetworkAndCacheProducer
+              ? mProducerFactory.newCombinedNetworkAndCacheProducer(mNetworkFetcher)
+              : newEncodedCacheMultiplexToTranscodeSequence(
+                  mProducerFactory.newNetworkFetchProducer(mNetworkFetcher));
       mCommonNetworkFetchToEncodedMemorySequence =
           ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
 

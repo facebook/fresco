@@ -11,6 +11,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import androidx.annotation.Nullable;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.common.memory.ByteArrayPool;
@@ -369,5 +370,10 @@ public class ProducerFactory {
         mBitmapPrepareToDrawMinSizeBytes,
         mBitmapPrepareToDrawMaxSizeBytes,
         mBitmapPrepareToDrawForPrefetch);
+  }
+
+  public @Nullable Producer<EncodedImage> newCombinedNetworkAndCacheProducer(
+      final NetworkFetcher networkFetcher) {
+    return null;
   }
 }

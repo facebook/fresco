@@ -356,6 +356,7 @@ public class ImagePipelineFactory {
                   mConfig.getExperiments().isDecodeCancellationEnabled(),
                   mConfig.getExecutorSupplier(),
                   mConfig.getPoolFactory().getPooledByteBufferFactory(mConfig.getMemoryChunkType()),
+                  mConfig.getPoolFactory().getPooledByteStreams(),
                   getBitmapMemoryCache(),
                   getEncodedMemoryCache(),
                   getMainBufferedDiskCache(),
@@ -394,7 +395,8 @@ public class ImagePipelineFactory {
               mConfig.isDiskCacheEnabled(),
               getImageTranscoderFactory(),
               mConfig.getExperiments().isEncodedMemoryCacheProbingEnabled(),
-              mConfig.getExperiments().isDiskCacheProbingEnabled());
+              mConfig.getExperiments().isDiskCacheProbingEnabled(),
+              mConfig.getExperiments().shouldUseCombinedNetworkAndCacheProducer());
     }
     return mProducerSequenceFactory;
   }
