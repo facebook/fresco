@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.core;
 
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -61,6 +62,21 @@ public class BaseFrescoDrawable extends FadeDrawable implements Closeable {
     return setDrawable(PROGRESS_DRAWABLE_INDEX, drawable);
   }
 
+  public void setProgress(float progress) {
+    Drawable progressBarDrawable = getDrawable(PROGRESS_DRAWABLE_INDEX);
+    if (progressBarDrawable == null) {
+      return;
+    }
+    // display progressbar when not fully loaded, hide otherwise
+    if (progress >= 0.999f) {
+      maybeStopAnimation(progressBarDrawable);
+    } else {
+      maybeStartAnimation(progressBarDrawable);
+    }
+    // set drawable level, scaled to [0, 10000] per drawable specification
+    progressBarDrawable.setLevel(Math.round(progress * 10000));
+  }
+
   public @Nullable Drawable setPlaceholderDrawable(@Nullable Drawable drawable) {
     return setDrawable(PLACEHOLDER_DRAWABLE_INDEX, drawable);
   }
@@ -76,6 +92,7 @@ public class BaseFrescoDrawable extends FadeDrawable implements Closeable {
 
   public void showImageImmediately() {
     hideLayerImmediately(PLACEHOLDER_DRAWABLE_INDEX);
+    hideLayerImmediately(PROGRESS_DRAWABLE_INDEX);
     showLayerImmediately(IMAGE_DRAWABLE_INDEX);
   }
 
@@ -83,10 +100,15 @@ public class BaseFrescoDrawable extends FadeDrawable implements Closeable {
     showLayerImmediately(OVERLAY_DRAWABLE_INDEX);
   }
 
+  public void showProgressImmediately() {
+    showLayerImmediately(PROGRESS_DRAWABLE_INDEX);
+  }
+
   @Override
   public void close() {
     CloseableReference.closeSafely(mImageReference);
     mImageReference = null;
+    maybeStopAnimation(getDrawable(PLACEHOLDER_DRAWABLE_INDEX));
     for (int i = 0; i < LAYER_COUNT; i++) {
       setDrawable(i, null);
     }
@@ -145,5 +167,17 @@ public class BaseFrescoDrawable extends FadeDrawable implements Closeable {
       return mImageReference.get().getHeight();
     }
     return -1;
+  }
+
+  private static void maybeStopAnimation(@Nullable Drawable drawable) {
+    if (drawable instanceof Animatable) {
+      ((Animatable) drawable).stop();
+    }
+  }
+
+  private static void maybeStartAnimation(@Nullable Drawable drawable) {
+    if (drawable instanceof Animatable) {
+      ((Animatable) drawable).start();
+    }
   }
 }

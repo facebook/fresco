@@ -139,6 +139,9 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     // The image is not in cache -> Set up layers visible until the image is available
     frescoDrawable.setProgressDrawable(
         mHierarcher.buildProgressDrawable(imageRequest.resources, imageRequest.imageOptions));
+    // Immediately show the progress image and set progress to 0
+    frescoDrawable.setProgress(0f);
+    frescoDrawable.showProgressImmediately();
     Drawable placeholder =
         mHierarcher.buildPlaceholderDrawable(imageRequest.resources, imageRequest.imageOptions);
     frescoDrawable.setPlaceholderDrawable(placeholder);
@@ -212,7 +215,11 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             image.get(),
             extras,
             actualDrawable);
-    drawable.setProgressDrawable(null);
+    float progress = 1f;
+    if (dataSource != null && !dataSource.isFinished()) {
+      progress = dataSource.getProgress();
+    }
+    drawable.setProgress(progress);
     mDebugOverlayFactory.update(drawable, extras);
   }
 
@@ -244,7 +251,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       DataSource<CloseableReference<CloseableImage>> dataSource) {
     Drawable errorDrawable =
         mHierarcher.buildErrorDrawable(imageRequest.resources, imageRequest.imageOptions);
-    drawable.setProgressDrawable(null);
+    drawable.setProgress(1f);
     drawable.setImageDrawable(errorDrawable);
     Extras extras = obtainExtras(dataSource, dataSource.getResult(), drawable);
     drawable
@@ -263,7 +270,11 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       FrescoDrawable2 drawable,
       VitoImageRequest imageRequest,
       DataSource<CloseableReference<CloseableImage>> dataSource) {
-    // TODO: implement
+    boolean isFinished = dataSource.isFinished();
+    float progress = dataSource.getProgress();
+    if (!isFinished) {
+      drawable.setProgress(progress);
+    }
   }
 
   @Override
