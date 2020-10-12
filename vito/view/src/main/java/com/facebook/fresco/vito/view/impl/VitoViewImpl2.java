@@ -22,9 +22,11 @@ import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.source.ImageSource;
 import com.facebook.fresco.vito.view.VitoView;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** You must initialize this class before use by calling {#code VitoView.init()}. */
 @Deprecated /* Experimental */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class VitoViewImpl2 implements VitoView.Implementation {
 
   private final View.OnAttachStateChangeListener sOnAttachStateChangeListenerCallback =
