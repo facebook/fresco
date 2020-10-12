@@ -7,5 +7,8 @@
 
 package com.facebook.common.references;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /** Marker interface for closeable references containing a bitmap */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface HasBitmap {}

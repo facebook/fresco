@@ -13,6 +13,7 @@ import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.PropagatesNullable;
 import java.io.Closeable;
 import java.io.IOException;
@@ -65,6 +66,7 @@ import javax.annotation.concurrent.GuardedBy;
  * released without waiting for the garbage collector. The finalizer will log an error if the close
  * method has not been called.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class CloseableReference<T> implements Cloneable, Closeable {
 
   @IntDef({REF_TYPE_DEFAULT, REF_TYPE_FINALIZER, REF_TYPE_REF_COUNT, REF_TYPE_NOOP})
@@ -121,12 +123,13 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
       new LeakHandler() {
         @Override
         public void reportLeak(SharedReference<Object> reference, @Nullable Throwable stacktrace) {
+          final Object ref = reference.get();
           FLog.w(
               TAG,
               "Finalized without closing: %x %x (type = %s)",
               System.identityHashCode(this),
               System.identityHashCode(reference),
-              reference.get().getClass().getName());
+              ref == null ? null : ref.getClass().getName());
         }
 
         @Override
@@ -239,7 +242,7 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
    */
   public synchronized T get() {
     Preconditions.checkState(!mIsClosed);
-    return mSharedReference.get();
+    return Preconditions.checkNotNull(mSharedReference.get());
   }
 
   /**
