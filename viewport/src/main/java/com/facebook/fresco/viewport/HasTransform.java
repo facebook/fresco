@@ -11,7 +11,9 @@ package com.facebook.fresco.viewport;
 
 import android.graphics.Matrix;
 import android.graphics.Rect;
+import com.facebook.infer.annotation.Nullsafe;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface HasTransform {
 
   /**
