@@ -25,6 +25,7 @@ import com.facebook.fresco.vito.provider.FrescoVitoProvider;
 import com.facebook.fresco.vito.source.ImageSource;
 import com.facebook.fresco.vito.source.ImageSourceProvider;
 import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.litho.AccessibilityRole;
 import com.facebook.litho.BoundaryWorkingRange;
 import com.facebook.litho.ComponentContext;
@@ -62,6 +63,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.Nullable;
 
 /** Simple Fresco Vito component for Litho */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @MountSpec(isPureRender = true, canPreallocate = true, poolSize = 15)
 public class FrescoVitoImage2Spec {
 
