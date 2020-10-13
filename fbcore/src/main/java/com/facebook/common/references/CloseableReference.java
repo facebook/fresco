@@ -14,6 +14,7 @@ import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.infer.annotation.Nullsafe;
+import com.facebook.infer.annotation.FalseOnNull;
 import com.facebook.infer.annotation.PropagatesNullable;
 import java.io.Closeable;
 import java.io.IOException;
@@ -310,6 +311,7 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
    *
    * @return true if the closeable reference is valid
    */
+  @FalseOnNull
   public static boolean isValid(@Nullable CloseableReference<?> ref) {
     return ref != null && ref.isValid();
   }
