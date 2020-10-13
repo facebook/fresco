@@ -12,9 +12,11 @@ import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.MemoryTrimmable;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface CountingMemoryCache<K, V> extends MemoryCache<K, V>, MemoryTrimmable {
 
   @Nullable

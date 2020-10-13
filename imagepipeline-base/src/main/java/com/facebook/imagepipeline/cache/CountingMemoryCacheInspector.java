@@ -10,13 +10,16 @@ package com.facebook.imagepipeline.cache;
 import android.graphics.Bitmap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /** Inspects values cached in bitmap memory cache. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class CountingMemoryCacheInspector<K, V> {
 
   /** Cache entry info for use by dumpers. */
@@ -25,7 +28,7 @@ public class CountingMemoryCacheInspector<K, V> {
     public final K key;
 
     // The value
-    public final CloseableReference<V> value;
+    public final @Nullable CloseableReference<V> value;
 
     public DumpInfoEntry(final K key, final CloseableReference<V> valueRef) {
       this.key = Preconditions.checkNotNull(key);

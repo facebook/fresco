@@ -18,6 +18,7 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -38,6 +39,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * @param <V> the value type
  */
 @ThreadSafe
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class LruCountingMemoryCache<K, V>
     implements CountingMemoryCache<K, V>, MemoryCache<K, V>, HasDebugData {
 
@@ -80,7 +82,9 @@ public class LruCountingMemoryCache<K, V>
     mCachedEntries = new CountingLruMap<>(wrapValueDescriptor(valueDescriptor));
     mCacheTrimStrategy = cacheTrimStrategy;
     mMemoryCacheParamsSupplier = memoryCacheParamsSupplier;
-    mMemoryCacheParams = mMemoryCacheParamsSupplier.get();
+    mMemoryCacheParams =
+        Preconditions.checkNotNull(
+            mMemoryCacheParamsSupplier.get(), "mMemoryCacheParamsSupplier returned null");
     mLastCacheParamsCheck = SystemClock.uptimeMillis();
     mEntryStateObserver = entryStateObserver;
   }
@@ -103,7 +107,7 @@ public class LruCountingMemoryCache<K, V>
    *
    * @return the new reference to be used, null if the value cannot be cached
    */
-  public CloseableReference<V> cache(final K key, final CloseableReference<V> valueRef) {
+  public @Nullable CloseableReference<V> cache(final K key, final CloseableReference<V> valueRef) {
     return cache(key, valueRef, mEntryStateObserver);
   }
 
@@ -117,7 +121,9 @@ public class LruCountingMemoryCache<K, V>
    */
   @Override
   public @Nullable CloseableReference<V> cache(
-      final K key, final CloseableReference<V> valueRef, final EntryStateObserver<K> observer) {
+      final K key,
+      final CloseableReference<V> valueRef,
+      final @Nullable EntryStateObserver<K> observer) {
     Preconditions.checkNotNull(key);
     Preconditions.checkNotNull(valueRef);
 
@@ -345,7 +351,9 @@ public class LruCountingMemoryCache<K, V>
       return;
     }
     mLastCacheParamsCheck = SystemClock.uptimeMillis();
-    mMemoryCacheParams = mMemoryCacheParamsSupplier.get();
+    mMemoryCacheParams =
+        Preconditions.checkNotNull(
+            mMemoryCacheParamsSupplier.get(), "mMemoryCacheParamsSupplier returned null");
   }
 
   public MemoryCacheParams getMemoryCacheParams() {
@@ -404,7 +412,7 @@ public class LruCountingMemoryCache<K, V>
     }
     ArrayList<Entry<K, V>> oldEntries = new ArrayList<>();
     while (mExclusiveEntries.getCount() > count || mExclusiveEntries.getSizeInBytes() > size) {
-      K key = mExclusiveEntries.getFirstKey();
+      K key = Preconditions.checkNotNull(mExclusiveEntries.getFirstKey());
       mExclusiveEntries.remove(key);
       oldEntries.add(mCachedEntries.remove(key));
     }

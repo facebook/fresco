@@ -18,6 +18,7 @@ import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
@@ -38,6 +39,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * @param <V> the value type
  */
 @ThreadSafe
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
     implements CountingMemoryCache<K, V> {
   private static final String TAG = "AbstractArcCountingMemoryCache";
@@ -139,7 +141,9 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
     mCachedEntries = new CountingLruMap<>(wrapValueDescriptor(valueDescriptor));
     mCacheTrimStrategy = cacheTrimStrategy;
     mMemoryCacheParamsSupplier = memoryCacheParamsSupplier;
-    mMemoryCacheParams = mMemoryCacheParamsSupplier.get();
+    mMemoryCacheParams =
+        Preconditions.checkNotNull(
+            mMemoryCacheParamsSupplier.get(), "mMemoryCacheParamsSupplier returned null");
     mLastCacheParamsCheck = SystemClock.uptimeMillis();
     mFrequentlyUsedThreshold = frequentlyUsedThreshold;
     mGhostListMaxSize = ghostListMaxSize;
@@ -177,7 +181,7 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
    *
    * @return the new reference to be used, null if the value cannot be cached
    */
-  public CloseableReference<V> cache(final K key, final CloseableReference<V> valueRef) {
+  public @Nullable CloseableReference<V> cache(final K key, final CloseableReference<V> valueRef) {
     return cache(key, valueRef, null);
   }
 
@@ -190,7 +194,9 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
    * @return the new reference to be used, null if the value cannot be cached
    */
   public @Nullable CloseableReference<V> cache(
-      final K key, final CloseableReference<V> valueRef, final EntryStateObserver<K> observer) {
+      final K key,
+      final CloseableReference<V> valueRef,
+      final @Nullable EntryStateObserver<K> observer) {
     Preconditions.checkNotNull(key);
     Preconditions.checkNotNull(valueRef);
 
@@ -498,7 +504,9 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
       return;
     }
     mLastCacheParamsCheck = SystemClock.uptimeMillis();
-    mMemoryCacheParams = mMemoryCacheParamsSupplier.get();
+    mMemoryCacheParams =
+        Preconditions.checkNotNull(
+            mMemoryCacheParamsSupplier.get(), "mMemoryCacheParamsSupplier returned null");
   }
 
   public MemoryCacheParams getMemoryCacheParams() {
@@ -562,7 +570,7 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
     }
     ArrayList<Entry<K, V>> oldEntries = new ArrayList<>();
     while (ExclusixeEntries.getCount() > count || ExclusixeEntries.getSizeInBytes() > size) {
-      K key = ExclusixeEntries.getFirstKey();
+      K key = Preconditions.checkNotNull(ExclusixeEntries.getFirstKey());
       addElementToGhostList(
           key, Preconditions.checkNotNull(ExclusixeEntries.get(key)).accessCount, evictionType);
       ExclusixeEntries.remove(key);

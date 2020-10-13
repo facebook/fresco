@@ -7,10 +7,12 @@
 
 package com.facebook.imagepipeline.cache;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.LinkedHashSet;
 import javax.annotation.concurrent.ThreadSafe;
 
 @ThreadSafe
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class BoundedLinkedHashSet<E> {
 
   private int mMaxSize;
