@@ -10,12 +10,14 @@ package com.facebook.samples.zoomable;
 import android.graphics.PointF;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * Tap gesture listener for double tap to zoom / unzoom and double-tap-and-drag to zoom.
  *
  * @see ZoomableDraweeView#setTapListener(GestureDetector.SimpleOnGestureListener)
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DoubleTapGestureListener extends GestureDetector.SimpleOnGestureListener {
   private static final int DURATION_MS = 300;
   private static final int DOUBLE_TAP_SCROLL_THRESHOLD = 20;
