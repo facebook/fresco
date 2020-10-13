@@ -12,6 +12,7 @@ import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.EncodedImageOrigin;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,7 @@ import javax.annotation.concurrent.GuardedBy;
  * ProducerContext that can be cancelled. Exposes low level API to manipulate state of the
  * ProducerContext.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class BaseProducerContext implements ProducerContext {
 
   private static final String ORIGIN_SUBCATEGORY_DEFAULT = "default";
@@ -339,7 +341,7 @@ public class BaseProducerContext implements ProducerContext {
 
   @Nullable
   @Override
-  public <E> E getExtra(String key, E valueIfNotFound) {
+  public <E> E getExtra(String key, @Nullable E valueIfNotFound) {
     Object maybeValue = mExtras.get(key);
     if (maybeValue == null) {
       return valueIfNotFound;

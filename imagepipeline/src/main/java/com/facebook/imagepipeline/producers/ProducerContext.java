@@ -12,6 +12,7 @@ import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.EncodedImageOrigin;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import javax.annotation.Nullable;
 
@@ -26,6 +27,7 @@ import javax.annotation.Nullable;
  * runOnCancellationRequested} method which takes an instance of Runnable and executes it when the
  * pipeline client cancels the image request.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface ProducerContext {
 
   @StringDef({
