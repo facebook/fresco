@@ -3,10 +3,12 @@
 package com.facebook.fresco.ui.common;
 
 import android.util.Log;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ForwardingControllerListener2<I> extends BaseControllerListener2<I> {
 
   private static final String TAG = "FwdControllerListener2";
@@ -20,7 +22,7 @@ public class ForwardingControllerListener2<I> extends BaseControllerListener2<I>
   public synchronized void removeListener(ControllerListener2<I> listener) {
     int index = mListeners.indexOf(listener);
     if (index != -1) {
-      mListeners.set(index, null);
+      mListeners.remove(index);
     }
   }
 
@@ -33,7 +35,7 @@ public class ForwardingControllerListener2<I> extends BaseControllerListener2<I>
   }
 
   @Override
-  public void onSubmit(String id, Object callerContext, Extras extras) {
+  public void onSubmit(String id, Object callerContext, @Nullable Extras extras) {
     final int numberOfListeners = mListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       try {
@@ -65,7 +67,7 @@ public class ForwardingControllerListener2<I> extends BaseControllerListener2<I>
   }
 
   @Override
-  public void onFailure(String id, Throwable throwable, Extras extras) {
+  public void onFailure(String id, Throwable throwable, @Nullable Extras extras) {
     final int numberOfListeners = mListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       try {
@@ -81,7 +83,7 @@ public class ForwardingControllerListener2<I> extends BaseControllerListener2<I>
   }
 
   @Override
-  public void onRelease(String id, Extras extras) {
+  public void onRelease(String id, @Nullable Extras extras) {
     final int numberOfListeners = mListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       try {

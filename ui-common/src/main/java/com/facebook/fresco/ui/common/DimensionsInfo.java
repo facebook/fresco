@@ -7,6 +7,9 @@
 
 package com.facebook.fresco.ui.common;
 
+import com.facebook.infer.annotation.Nullsafe;
+
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DimensionsInfo {
 
   private final int mViewportWidth;
