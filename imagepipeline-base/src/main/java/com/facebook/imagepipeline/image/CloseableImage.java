@@ -8,12 +8,14 @@
 package com.facebook.imagepipeline.image;
 
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nonnull;
 
 /** A simple wrapper around an image that implements {@link Closeable} */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class CloseableImage implements Closeable, ImageInfo, HasImageMetadata {
   private static final String TAG = "CloseableImage";
   private Map<String, Object> mExtras = new HashMap<>();

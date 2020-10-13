@@ -15,12 +15,14 @@ import com.facebook.common.file.FileUtils;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import javax.annotation.Nullable;
 
 /** A supplier of a DiskStorage concrete implementation. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DynamicDefaultDiskStorage implements DiskStorage {
   private static final Class<?> TAG = DynamicDefaultDiskStorage.class;
 

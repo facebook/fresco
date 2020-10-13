@@ -7,6 +7,9 @@
 
 package com.facebook.animated.giflite.draw;
 
+import com.facebook.infer.annotation.Nullsafe;
+
+@Nullsafe(Nullsafe.Mode.LOCAL)
 class MovieScaleHolder {
 
   private final int mMovieWidth;

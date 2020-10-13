@@ -12,9 +12,11 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.drawee.backends.pipeline.debug.DebugOverlayImageOriginColor;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
 import com.facebook.fresco.vito.core.FrescoState;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Locale;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DefaultDebugOverlayFactory implements DebugOverlayFactory {
 
   private final Supplier<Boolean> mDebugOverlayEnabled;

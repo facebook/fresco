@@ -7,6 +7,9 @@
 
 package com.facebook.fresco.vito.core;
 
+import com.facebook.infer.annotation.Nullsafe;
+
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DefaultFrescoVitoConfig implements FrescoVitoConfig {
 
   private final PrefetchConfig mPrefetchConfig = new DefaultPrefetchConfig();

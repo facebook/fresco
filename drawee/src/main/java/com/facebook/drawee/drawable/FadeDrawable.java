@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Arrays;
 import javax.annotation.Nullable;
 
@@ -25,6 +26,7 @@ import javax.annotation.Nullable;
  * full opacity, fades out all other layers to zero opacity. fadeUpToLayer fades in all layers up to
  * specified layer to full opacity and fades out all other layers to zero opacity.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FadeDrawable extends ArrayDrawable {
 
   /** A transition is about to start. */

@@ -9,8 +9,10 @@ package com.facebook.fresco.vito.core.impl.debug;
 
 import android.graphics.drawable.Drawable;
 import com.facebook.fresco.vito.core.FrescoState;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class NoOpDebugOverlayFactory implements DebugOverlayFactory {
 
   @Nullable

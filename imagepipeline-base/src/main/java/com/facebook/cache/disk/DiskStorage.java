@@ -9,6 +9,7 @@ package com.facebook.cache.disk;
 
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.WriterCallback;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,6 +21,7 @@ import java.util.Map;
  * Storage for files in the cache. Responsible for maintaining state (count, size, watch file
  * existence, reachability)
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface DiskStorage {
 
   class DiskDumpInfoEntry {

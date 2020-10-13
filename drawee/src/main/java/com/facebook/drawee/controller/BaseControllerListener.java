@@ -8,6 +8,7 @@
 package com.facebook.drawee.controller;
 
 import android.graphics.drawable.Animatable;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Convenience class that has empty implementation of {@link ControllerListener}. */

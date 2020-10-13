@@ -7,9 +7,11 @@
 
 package com.facebook.fresco.vito.core;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Fresco experiment class with default values. Override this class to change them. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FrescoExperiments {
 
   public boolean prepareImagePipelineComponents() {

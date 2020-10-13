@@ -20,9 +20,11 @@ import com.facebook.drawee.drawable.TransformCallback;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 import javax.annotation.Nonnull;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class FrescoDrawable2 extends BaseFrescoDrawable
     implements Drawable.Callback,
         TransformCallback,

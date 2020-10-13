@@ -12,9 +12,11 @@ import android.graphics.drawable.LayerDrawable;
 import com.facebook.common.internal.Supplier;
 import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.OkToExtend;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @OkToExtend
 public abstract class BaseDebugOverlayFactory2 implements DebugOverlayFactory2 {
 

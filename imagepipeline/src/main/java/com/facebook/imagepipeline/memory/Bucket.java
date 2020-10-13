@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.memory;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.LinkedList;
 import java.util.Queue;
 import javax.annotation.Nullable;
@@ -36,6 +37,7 @@ import javax.annotation.concurrent.NotThreadSafe;
  *
  * @param <V> type of values to be 'stored' in the bucket
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @NotThreadSafe
 @VisibleForTesting
 class Bucket<V> {

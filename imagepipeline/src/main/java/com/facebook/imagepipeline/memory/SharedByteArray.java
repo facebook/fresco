@@ -16,6 +16,7 @@ import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.OOMSoftReference;
 import com.facebook.common.references.ResourceReleaser;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.Semaphore;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -32,6 +33,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * <p>This class will also release the byte array if it is unused and collecting it can prevent an
  * OOM.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
 public class SharedByteArray implements MemoryTrimmable {
   @VisibleForTesting final int mMinByteArraySize;

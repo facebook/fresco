@@ -11,8 +11,10 @@ import android.os.Handler;
 import android.os.Looper;
 import androidx.annotation.AnyThread;
 import androidx.annotation.MainThread;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 class DeferredReleaserConcurrentImpl extends DeferredReleaser {
 
   private final Object mLock = new Object();

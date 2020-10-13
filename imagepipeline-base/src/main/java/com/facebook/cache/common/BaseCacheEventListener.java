@@ -7,10 +7,13 @@
 
 package com.facebook.cache.common;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * No-op implementation of {@link CacheEventListener} so that listeners can extend and implement
  * only the events they're interested in.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class BaseCacheEventListener implements CacheEventListener {
 
   @Override

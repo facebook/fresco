@@ -15,6 +15,7 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.generic.GenericDraweeHierarchyInflater;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -23,6 +24,7 @@ import javax.annotation.Nullable;
  * <p>The hierarchy can be set either programmatically or inflated from XML. See {@link
  * GenericDraweeHierarchyInflater} for supported XML attributes.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
 
   public GenericDraweeView(Context context, GenericDraweeHierarchy hierarchy) {

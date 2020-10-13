@@ -38,6 +38,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.imagepipeline.transcoder.DownsampleUtil;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -49,6 +50,7 @@ import javax.annotation.concurrent.GuardedBy;
  *
  * <p>Progressive JPEGs are decoded progressively as new data arrives.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DecodeProducer implements Producer<CloseableReference<CloseableImage>> {
 
   public static final String PRODUCER_NAME = "DecodeProducer";

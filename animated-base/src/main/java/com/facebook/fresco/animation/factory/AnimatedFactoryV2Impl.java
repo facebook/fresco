@@ -35,10 +35,12 @@ import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.QualityInfo;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 /** {@link AnimatedFactory} for animations v2 that creates {@link AnimatedDrawable2} drawables. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @NotThreadSafe
 @DoNotStrip
 public class AnimatedFactoryV2Impl implements AnimatedFactory {

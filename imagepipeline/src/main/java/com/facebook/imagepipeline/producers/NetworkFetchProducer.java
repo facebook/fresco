@@ -18,6 +18,7 @@ import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.EncodedImageOrigin;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -32,6 +33,7 @@ import javax.annotation.Nullable;
  * <p>Clients should provide an instance of {@link NetworkFetcher} to make use of their networking
  * stack. Use {@link HttpUrlConnectionNetworkFetcher} as a model.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class NetworkFetchProducer implements Producer<EncodedImage> {
 
   public static final String PRODUCER_NAME = "NetworkFetchProducer";

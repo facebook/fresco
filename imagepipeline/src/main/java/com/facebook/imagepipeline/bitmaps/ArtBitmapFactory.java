@@ -15,9 +15,11 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.core.CloseableReferenceFactory;
 import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** Bitmap factory for ART VM (Lollipop and up). */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 @ThreadSafe
 public class ArtBitmapFactory extends PlatformBitmapFactory {
