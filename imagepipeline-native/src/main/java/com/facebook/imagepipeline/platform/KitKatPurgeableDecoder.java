@@ -18,6 +18,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.nativecode.DalvikPurgeableDecoder;
 import com.facebook.imageutils.JfifUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -30,6 +31,7 @@ import javax.annotation.concurrent.ThreadSafe;
 @TargetApi(Build.VERSION_CODES.KITKAT)
 @ThreadSafe
 @DoNotStrip
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class KitKatPurgeableDecoder extends DalvikPurgeableDecoder {
   private final FlexByteArrayPool mFlexByteArrayPool;
 
