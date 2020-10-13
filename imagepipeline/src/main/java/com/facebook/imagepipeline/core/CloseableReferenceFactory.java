@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.core;
 
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
@@ -16,6 +17,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Objects;
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.STRICT)
@@ -31,13 +33,14 @@ public class CloseableReferenceFactory {
           public void reportLeak(
               SharedReference<Object> reference, @Nullable Throwable stacktrace) {
             closeableReferenceLeakTracker.trackCloseableReferenceLeak(reference, stacktrace);
-            Object obj = reference.get();
+            Object value = reference.get();
+            String name = value != null ? value.getClass().getName() : "<value is null>";
             FLog.w(
                 "Fresco",
                 "Finalized without closing: %x %x (type = %s).\nStack:\n%s",
                 System.identityHashCode(this),
                 System.identityHashCode(reference),
-                obj == null ? null : obj.getClass().getName(),
+                name,
                 getStackTraceString(stacktrace));
           }
 
