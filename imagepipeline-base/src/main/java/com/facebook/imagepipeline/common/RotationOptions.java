@@ -8,7 +8,9 @@
 package com.facebook.imagepipeline.common;
 
 import androidx.annotation.IntDef;
+import androidx.annotation.Nullable;
 import com.facebook.common.util.HashCodeUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Locale;
@@ -28,6 +30,7 @@ import java.util.Locale;
  * This should be be false if a post-processor is used which needs to operate on the bitmap
  * correctly oriented but can otherwise generally be true, particularly if using drawee.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class RotationOptions {
 
   @IntDef(
@@ -143,7 +146,7 @@ public class RotationOptions {
   }
 
   @Override
-  public boolean equals(Object other) {
+  public boolean equals(@Nullable Object other) {
     if (other == this) {
       return true;
     }

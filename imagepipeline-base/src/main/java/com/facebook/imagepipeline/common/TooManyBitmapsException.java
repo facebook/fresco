@@ -10,7 +10,7 @@ package com.facebook.imagepipeline.common;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** Thrown if a bitmap pool cap or other limit on the number of bitmaps is exceeded. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class TooManyBitmapsException extends RuntimeException {
 
   public TooManyBitmapsException() {
