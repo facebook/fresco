@@ -36,7 +36,7 @@ public class DefaultDebugOverlayFactory2 extends BaseDebugOverlayFactory2 {
     setImageOriginData(overlay, extras);
   }
 
-  private void setBasicData(DebugOverlayDrawable overlay, FrescoDrawable2 drawable) {
+  private static void setBasicData(DebugOverlayDrawable overlay, FrescoDrawable2 drawable) {
     overlay.addDebugData("ID", VitoUtils.getStringId(drawable.getImageId()));
     Rect bounds = drawable.getBounds();
     overlay.addDebugData("D", formatDimensions(bounds.width(), bounds.height()));
@@ -44,7 +44,7 @@ public class DefaultDebugOverlayFactory2 extends BaseDebugOverlayFactory2 {
         "I", formatDimensions(drawable.getActualImageWidthPx(), drawable.getActualImageHeightPx()));
   }
 
-  private void setImageOriginData(
+  private static void setImageOriginData(
       DebugOverlayDrawable overlay, @Nullable ControllerListener2.Extras extras) {
     String origin = "unknown";
     String originSubcategory = "unknown";
@@ -65,15 +65,13 @@ public class DefaultDebugOverlayFactory2 extends BaseDebugOverlayFactory2 {
     overlay.addDebugData("origin_sub", originSubcategory, Color.GRAY);
   }
 
-  private void setImageRequestData(
+  private static void setImageRequestData(
       DebugOverlayDrawable overlay, @Nullable VitoImageRequest imageRequest) {
     if (imageRequest == null) {
       return;
     }
-    if (imageRequest.imageOptions.getActualImageScaleType() != null) {
-      overlay.addDebugData(
-          "scale", String.valueOf(imageRequest.imageOptions.getActualImageScaleType()));
-    }
+    overlay.addDebugData(
+        "scale", String.valueOf(imageRequest.imageOptions.getActualImageScaleType()));
   }
 
   protected static String formatDimensions(int width, int height) {

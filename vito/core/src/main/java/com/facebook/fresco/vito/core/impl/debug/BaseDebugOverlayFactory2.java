@@ -41,7 +41,7 @@ public abstract class BaseDebugOverlayFactory2 implements DebugOverlayFactory2 {
       FrescoDrawable2 drawable,
       @Nullable ControllerListener2.Extras extras);
 
-  private DebugOverlayDrawable extractOrCreate(FrescoDrawable2 drawable) {
+  private static DebugOverlayDrawable extractOrCreate(FrescoDrawable2 drawable) {
     Drawable existingOverlay = drawable.getOverlayDrawable();
     if (existingOverlay instanceof DebugOverlayDrawable) {
       return (DebugOverlayDrawable) existingOverlay;
@@ -60,7 +60,7 @@ public abstract class BaseDebugOverlayFactory2 implements DebugOverlayFactory2 {
     return debugOverlay;
   }
 
-  private class DebugOverlayDrawableWrapper extends LayerDrawable {
+  private static class DebugOverlayDrawableWrapper extends LayerDrawable {
     private DebugOverlayDrawable mDebugOverlayDrawable;
 
     public DebugOverlayDrawableWrapper(
