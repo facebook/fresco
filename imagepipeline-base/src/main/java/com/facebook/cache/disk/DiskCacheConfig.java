@@ -19,10 +19,12 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.common.util.ByteConstants;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.File;
 import javax.annotation.Nullable;
 
 /** Configuration class for a {@link DiskStorageCache}. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DiskCacheConfig {
 
   private final int mVersion;
@@ -35,7 +37,7 @@ public class DiskCacheConfig {
   private final CacheErrorLogger mCacheErrorLogger;
   private final CacheEventListener mCacheEventListener;
   private final DiskTrimmableRegistry mDiskTrimmableRegistry;
-  private final Context mContext;
+  @Nullable private final Context mContext;
   private final boolean mIndexPopulateAtStartupEnabled;
 
   protected DiskCacheConfig(Builder builder) {
@@ -48,6 +50,7 @@ public class DiskCacheConfig {
           new Supplier<File>() {
             @Override
             public File get() {
+              Preconditions.checkNotNull(mContext);
               return mContext.getApplicationContext().getCacheDir();
             }
           };
@@ -115,7 +118,7 @@ public class DiskCacheConfig {
     return mDiskTrimmableRegistry;
   }
 
-  public Context getContext() {
+  public @Nullable Context getContext() {
     return mContext;
   }
 
@@ -140,15 +143,15 @@ public class DiskCacheConfig {
 
     private int mVersion = 1;
     private String mBaseDirectoryName = "image_cache";
-    private Supplier<File> mBaseDirectoryPathSupplier;
+    private @Nullable Supplier<File> mBaseDirectoryPathSupplier;
     private long mMaxCacheSize = 40 * ByteConstants.MB;
     private long mMaxCacheSizeOnLowDiskSpace = 10 * ByteConstants.MB;
     private long mMaxCacheSizeOnVeryLowDiskSpace = 2 * ByteConstants.MB;
     private EntryEvictionComparatorSupplier mEntryEvictionComparatorSupplier =
         new DefaultEntryEvictionComparatorSupplier();
-    private CacheErrorLogger mCacheErrorLogger;
-    private CacheEventListener mCacheEventListener;
-    private DiskTrimmableRegistry mDiskTrimmableRegistry;
+    private @Nullable CacheErrorLogger mCacheErrorLogger;
+    private @Nullable CacheEventListener mCacheEventListener;
+    private @Nullable DiskTrimmableRegistry mDiskTrimmableRegistry;
     private boolean mIndexPopulateAtStartupEnabled;
 
     private final @Nullable Context mContext;

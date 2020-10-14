@@ -22,7 +22,7 @@ import java.util.Collection;
 import javax.annotation.Nullable;
 
 /** A supplier of a DiskStorage concrete implementation. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DynamicDefaultDiskStorage implements DiskStorage {
   private static final Class<?> TAG = DynamicDefaultDiskStorage.class;
 
@@ -86,7 +86,8 @@ public class DynamicDefaultDiskStorage implements DiskStorage {
   }
 
   @Override
-  public BinaryResource getResource(String resourceId, Object debugInfo) throws IOException {
+  public @Nullable BinaryResource getResource(String resourceId, Object debugInfo)
+      throws IOException {
     return get().getResource(resourceId, debugInfo);
   }
 

@@ -16,12 +16,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /**
  * Storage for files in the cache. Responsible for maintaining state (count, size, watch file
  * existence, reachability)
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface DiskStorage {
 
   class DiskDumpInfoEntry {
@@ -72,6 +73,7 @@ public interface DiskStorage {
    * @return the resource with the specified name. NULL if not found
    * @throws IOException for unexpected behavior.
    */
+  @Nullable
   BinaryResource getResource(String resourceId, Object debugInfo) throws IOException;
 
   /**

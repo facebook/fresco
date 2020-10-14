@@ -11,7 +11,7 @@ import androidx.annotation.VisibleForTesting;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** Evicts cache items based on a mix of their size and timestamp. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ScoreBasedEvictionComparatorSupplier implements EntryEvictionComparatorSupplier {
 
   private final float mAgeWeight;

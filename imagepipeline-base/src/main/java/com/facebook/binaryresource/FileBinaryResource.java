@@ -67,4 +67,8 @@ public class FileBinaryResource implements BinaryResource {
   public static @Nullable FileBinaryResource createOrNull(File file) {
     return (file != null) ? new FileBinaryResource(file) : null;
   }
+
+  public static FileBinaryResource create(File file) {
+    return new FileBinaryResource(file);
+  }
 }

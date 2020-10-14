@@ -7,9 +7,11 @@
 
 package com.facebook.common.disk;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Implementation of {@link DiskTrimmableRegistry} that does not do anything. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class NoOpDiskTrimmableRegistry implements DiskTrimmableRegistry {
   private static @Nullable NoOpDiskTrimmableRegistry sInstance = null;
 

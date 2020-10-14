@@ -11,7 +11,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Implementation of {@link CacheEventListener} that doesn't do anything. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class NoOpCacheEventListener implements CacheEventListener {
   private static @Nullable NoOpCacheEventListener sInstance = null;
 

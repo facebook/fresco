@@ -8,10 +8,12 @@
 package com.facebook.cache.common;
 
 import com.facebook.common.util.SecureHashUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class CacheKeyUtil {
 
   /**

@@ -9,7 +9,9 @@ package com.facebook.cache.common;
 
 import android.net.Uri;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.List;
+import javax.annotation.Nullable;
 
 /**
  * A cache key that wraps multiple cache keys.
@@ -23,6 +25,7 @@ import java.util.List;
  * <p>It is fine to use this key with AnyOf semantics, but one should be aware of {@code equals} and
  * {@code hashcode} behavior, and should implement AnyOf logic manually.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class MultiCacheKey implements CacheKey {
 
   final List<CacheKey> mCacheKeys;
@@ -41,7 +44,7 @@ public class MultiCacheKey implements CacheKey {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (o == this) {
       return true;
     }

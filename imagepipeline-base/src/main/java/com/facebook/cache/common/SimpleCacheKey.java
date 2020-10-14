@@ -9,6 +9,7 @@ package com.facebook.cache.common;
 
 import android.net.Uri;
 import com.facebook.common.internal.Preconditions;
+import javax.annotation.Nullable;
 
 /**
  * {@link CacheKey} implementation that is a simple wrapper around a {@link String} object.
@@ -35,7 +36,7 @@ public class SimpleCacheKey implements CacheKey {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (o == this) {
       return true;
     }
