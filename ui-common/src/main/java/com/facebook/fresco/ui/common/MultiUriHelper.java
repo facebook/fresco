@@ -5,7 +5,6 @@ package com.facebook.fresco.ui.common;
 import android.net.Uri;
 import com.facebook.common.internal.Fn;
 import com.facebook.infer.annotation.Nullsafe;
-import java.util.function.Function;
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.STRICT)

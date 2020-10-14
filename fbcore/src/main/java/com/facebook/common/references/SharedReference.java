@@ -8,7 +8,6 @@
 package com.facebook.common.references;
 
 import android.graphics.Bitmap;
-import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
