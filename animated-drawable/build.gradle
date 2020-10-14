@@ -30,6 +30,7 @@ android {
 
 dependencies {
     compileOnly Deps.AndroidX.androidxAnnotation
+    compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
 

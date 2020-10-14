@@ -13,6 +13,7 @@ apply plugin: 'com.android.library'
 dependencies {
     compileOnly Deps.AndroidX.legacySupportCoreUtils
     compileOnly Deps.AndroidX.androidxAnnotation
+    compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
 
     implementation project (':soloader')
