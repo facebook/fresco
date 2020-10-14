@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /** Class representing all used image formats. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImageFormat {
 
   public interface FormatChecker {

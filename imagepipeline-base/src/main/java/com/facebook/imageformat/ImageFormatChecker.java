@@ -19,7 +19,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 /** Detects the format of an encoded image. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImageFormatChecker {
 
   private static ImageFormatChecker sInstance;

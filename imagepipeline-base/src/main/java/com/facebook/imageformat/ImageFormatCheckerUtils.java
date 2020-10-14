@@ -8,9 +8,11 @@
 package com.facebook.imageformat;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.UnsupportedEncodingException;
 
 /** {@link ImageFormatChecker} utility methods */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImageFormatCheckerUtils {
 
   /**

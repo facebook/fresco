@@ -15,7 +15,7 @@ import java.io.InputStream;
 import javax.annotation.Nullable;
 
 /** Default image format checker that is able to determine all {@link DefaultImageFormats}. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultImageFormatChecker implements ImageFormat.FormatChecker {
 
   /**
