@@ -451,7 +451,7 @@ public class ProducerSequenceFactory {
             "ProducerSequenceFactory#getNetworkFetchToEncodedMemoryPrefetchSequence:init");
       }
       mNetworkFetchToEncodedMemoryPrefetchSequence =
-          ProducerFactory.newSwallowResultProducer(
+          mProducerFactory.newSwallowResultProducer(
               getBackgroundNetworkFetchToEncodedMemorySequence());
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.endSection();
@@ -515,7 +515,7 @@ public class ProducerSequenceFactory {
             "ProducerSequenceFactory#getLocalFileFetchToEncodedMemoryPrefetchSequence:init");
       }
       mLocalFileFetchToEncodedMemoryPrefetchSequence =
-          ProducerFactory.newSwallowResultProducer(
+          mProducerFactory.newSwallowResultProducer(
               getBackgroundLocalFileFetchToEncodeMemorySequence());
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.endSection();

@@ -344,7 +344,7 @@ public class ProducerFactory {
         imageTranscoderFactory);
   }
 
-  public static <T> SwallowResultProducer<T> newSwallowResultProducer(Producer<T> inputProducer) {
+  public <T> SwallowResultProducer<T> newSwallowResultProducer(Producer<T> inputProducer) {
     return new SwallowResultProducer<T>(inputProducer);
   }
 
