@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /** A trivial implementation of BinaryResource that wraps a byte array */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ByteArrayBinaryResource implements BinaryResource {
   private final byte[] mBytes;
 
