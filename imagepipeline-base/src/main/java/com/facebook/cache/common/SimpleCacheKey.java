@@ -9,6 +9,7 @@ package com.facebook.cache.common;
 
 import android.net.Uri;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -17,6 +18,7 @@ import javax.annotation.Nullable;
  * <p>Users of CacheKey should construct it by providing a unique string that unambiguously
  * identifies the cached resource.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class SimpleCacheKey implements CacheKey {
   final String mKey;
   final boolean mIsResourceIdForDebugging;

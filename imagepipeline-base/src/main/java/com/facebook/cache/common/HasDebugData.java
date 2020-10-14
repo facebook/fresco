@@ -2,8 +2,10 @@
 
 package com.facebook.cache.common;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface HasDebugData {
 
   /** Return a string describing this object and to be used for debugging or logging */

@@ -7,6 +7,7 @@
 
 package com.facebook.cache.common;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import javax.annotation.Nullable;
 
@@ -16,6 +17,7 @@ import javax.annotation.Nullable;
  * <p>All values may be null depending on the kind of event. See the docs for each method to see
  * when to expect values to be available.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface CacheEvent {
 
   /**
