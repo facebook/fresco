@@ -21,7 +21,7 @@ import java.io.InputStream;
  * ourselves to Android N where {@link ExifInterface} can wrap around an input stream. Actual
  * support for HEIF was only added in Android P.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class HeifExifUtil {
 
   public static final String TAG = "HeifExifUtil";

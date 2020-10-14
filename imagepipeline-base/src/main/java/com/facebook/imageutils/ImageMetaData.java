@@ -13,7 +13,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Wrapper class representing the recovered meta data of an image when decoding. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImageMetaData {
   private final @Nullable Pair<Integer, Integer> mDimensions;
   private final @Nullable ColorSpace mColorSpace;

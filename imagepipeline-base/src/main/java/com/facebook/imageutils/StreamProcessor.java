@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /** Util for processing Stream. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 class StreamProcessor {
 
   /**

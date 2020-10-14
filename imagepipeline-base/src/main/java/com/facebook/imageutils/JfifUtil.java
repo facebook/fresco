@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /** Util for obtaining information from JPEG file. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class JfifUtil {
 
   /**

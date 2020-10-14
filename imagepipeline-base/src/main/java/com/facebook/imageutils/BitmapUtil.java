@@ -16,12 +16,14 @@ import android.os.Build;
 import android.util.Pair;
 import androidx.core.util.Pools;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import javax.annotation.Nullable;
 
 /** This class contains utility method for Bitmap */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class BitmapUtil {
   private static final int DECODE_BUFFER_SIZE = 16 * 1024;
   private static final int POOL_SIZE = 12;
