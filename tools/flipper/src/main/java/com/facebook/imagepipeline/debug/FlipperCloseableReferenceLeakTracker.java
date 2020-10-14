@@ -12,7 +12,7 @@ import com.facebook.common.references.SharedReference;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class FlipperCloseableReferenceLeakTracker implements CloseableReferenceLeakTracker {
   @Nullable private Listener mListener;
 

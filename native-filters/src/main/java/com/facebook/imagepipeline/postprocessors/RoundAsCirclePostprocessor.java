@@ -16,7 +16,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Postprocessor that rounds a given image as a circle. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class RoundAsCirclePostprocessor extends BasePostprocessor {
   private static final boolean ENABLE_ANTI_ALIASING = true;
 

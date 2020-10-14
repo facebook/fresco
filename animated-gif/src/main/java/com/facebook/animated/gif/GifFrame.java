@@ -14,7 +14,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** A single frame of a {@link GifImage}. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 @ThreadSafe
 public class GifFrame implements AnimatedImageFrame {
 

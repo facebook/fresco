@@ -8,7 +8,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class BaseRequestListener2 implements RequestListener2 {
 
   @Override

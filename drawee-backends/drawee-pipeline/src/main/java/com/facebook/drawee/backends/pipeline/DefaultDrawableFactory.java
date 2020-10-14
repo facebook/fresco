@@ -20,7 +20,7 @@ import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultDrawableFactory implements DrawableFactory {
 
   private final Resources mResources;

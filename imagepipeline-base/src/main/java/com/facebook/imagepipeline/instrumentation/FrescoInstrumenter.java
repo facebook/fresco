@@ -15,7 +15,7 @@ import com.facebook.infer.annotation.Nullsafe;
  * can specify a custom {@link Instrumenter} that will receive ad-hoc updates when work that has to
  * be executed across threads gets moved around.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class FrescoInstrumenter {
 
   /** Allows to capture unit of works across different threads. */

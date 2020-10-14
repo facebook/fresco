@@ -10,7 +10,7 @@ package com.facebook.imagepipeline.producers;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** Empty implementation of {@link ProducerContextCallbacks}. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class BaseProducerContextCallbacks implements ProducerContextCallbacks {
 
   @Override

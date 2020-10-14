@@ -13,7 +13,7 @@ import com.facebook.soloader.SoLoader;
 import com.facebook.soloader.nativeloader.NativeLoader;
 
 /** Delegate to properly set and initialize NativeLoader for unit tests. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class TestNativeLoader {
 
   /**

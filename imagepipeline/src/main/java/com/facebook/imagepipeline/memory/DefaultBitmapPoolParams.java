@@ -12,7 +12,7 @@ import com.facebook.common.util.ByteConstants;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** Provides pool parameters for {@link BitmapPool} */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultBitmapPoolParams {
   /** We are not reusing Bitmaps and want to free them as soon as possible. */
   private static final int MAX_SIZE_SOFT_CAP = 0;

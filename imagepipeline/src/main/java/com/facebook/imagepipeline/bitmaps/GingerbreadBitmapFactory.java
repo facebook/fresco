@@ -12,7 +12,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** Bitmap factory for Gingerbread. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class GingerbreadBitmapFactory extends PlatformBitmapFactory {
 
   /**

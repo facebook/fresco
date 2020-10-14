@@ -12,7 +12,7 @@ import com.facebook.common.util.ByteConstants;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** Provides pool parameters ({@link PoolParams}) for {@link SharedByteArray} */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultFlexByteArrayPoolParams {
   // the default max buffer size we'll use
   public static final int DEFAULT_MAX_BYTE_ARRAY_SIZE = 4 * ByteConstants.MB;

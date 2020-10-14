@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
  * supported, the first fallback is NativeJpegTranscoder, otherwise {@link SimpleImageTranscoder} is
  * used.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class MultiImageTranscoderFactory implements ImageTranscoderFactory {
 
   private final int mMaxBitmapSize;

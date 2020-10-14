@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
  *
  * <p>{#code getExtraMap} returns null.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class BaseNetworkFetcher<FETCH_STATE extends FetchState>
     implements NetworkFetcher<FETCH_STATE> {
 

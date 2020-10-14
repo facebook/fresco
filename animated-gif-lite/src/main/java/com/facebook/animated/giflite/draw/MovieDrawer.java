@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
  * not be accessed outside of {@link MovieDrawer}. Attempts to optimize work done by the drawing
  * {@link Canvas} by detecting if the underlying {@link Bitmap} has changed.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class MovieDrawer {
 
   private final Movie mMovie;

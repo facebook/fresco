@@ -13,7 +13,7 @@ import com.facebook.infer.annotation.OkToExtend;
 import java.util.Map;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 @OkToExtend
 public class BaseRequestListener implements RequestListener {
 

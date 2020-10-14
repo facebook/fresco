@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
  *       required.
  * </ul>
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class RootDrawable extends ForwardingDrawable implements VisibilityAwareDrawable {
 
   @VisibleForTesting @Nullable Drawable mControllerOverlay = null;

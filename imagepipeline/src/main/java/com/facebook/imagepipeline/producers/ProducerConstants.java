@@ -16,7 +16,7 @@ import com.facebook.infer.annotation.Nullsafe;
  * <p>The elements are package visible on purpose such that the individual producers create public
  * constants of the ones that they actually use.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 class ProducerConstants {
 
   static final String EXTRA_CACHED_VALUE_FOUND = "cached_value_found";

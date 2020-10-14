@@ -14,7 +14,7 @@ import com.facebook.infer.annotation.Nullsafe;
 
 /** A fast native blur filter. See {@link NativeBlurFilter#iterativeBoxBlur} */
 @DoNotStrip
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class NativeBlurFilter {
 
   static {

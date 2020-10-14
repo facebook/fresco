@@ -14,7 +14,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import java.util.Arrays;
 
 /** Utility methods for AnimatedDrawable. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class AnimatedDrawableUtil {
 
   // See comment in fixFrameDurations below.

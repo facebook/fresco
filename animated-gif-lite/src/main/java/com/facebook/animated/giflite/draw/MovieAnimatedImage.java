@@ -14,7 +14,7 @@ import com.facebook.imagepipeline.animated.base.AnimatedImageFrame;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** Simple wrapper for an animated image backed by {@link Movie}. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class MovieAnimatedImage implements AnimatedImage {
 
   private final MovieFrame[] mFrames;

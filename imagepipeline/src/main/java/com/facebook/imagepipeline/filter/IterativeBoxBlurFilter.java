@@ -14,7 +14,7 @@ import com.facebook.imageutils.BitmapUtil;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.Locale;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class IterativeBoxBlurFilter {
   private static final String TAG = "IterativeBoxBlurFilter";
 

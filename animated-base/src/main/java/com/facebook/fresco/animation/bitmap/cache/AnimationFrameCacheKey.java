@@ -12,7 +12,7 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.infer.annotation.Nullsafe;
 
 /* Frame cache key for animation */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class AnimationFrameCacheKey implements CacheKey {
 
   private static final String URI_PREFIX = "anim://";

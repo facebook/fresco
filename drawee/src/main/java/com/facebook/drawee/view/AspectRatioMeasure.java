@@ -13,7 +13,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** A utility class that performs measuring based on the desired aspect ratio. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class AspectRatioMeasure {
 
   /** Holder for width and height measure specs. */

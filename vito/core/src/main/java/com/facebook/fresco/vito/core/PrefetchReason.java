@@ -9,7 +9,7 @@ package com.facebook.fresco.vito.core;
 
 import com.facebook.infer.annotation.Nullsafe;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public enum PrefetchReason {
   /** the image is needed right away to show on the viewport */
   ON_SCREEN,

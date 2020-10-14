@@ -21,7 +21,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * <p>This data source has no intermediate results - calling {@link #set(CloseableReference<T>)}
  * means that the data source is finished.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 @ThreadSafe
 public final class SettableDataSource<T> extends AbstractDataSource<CloseableReference<T>> {
 

@@ -14,7 +14,7 @@ import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class LruBitmapPool implements BitmapPool {
 
   protected final PoolBackend<Bitmap> mStrategy = new BitmapPoolBackend();

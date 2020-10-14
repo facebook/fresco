@@ -16,7 +16,7 @@ import com.facebook.infer.annotation.Nullsafe;
  * Modified midpoint circle algorithm. Clients that look for better performances should use the
  * native implementation of this algorithm in NativeRoundingFilter.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class InPlaceRoundFilter {
 
   private InPlaceRoundFilter() {}

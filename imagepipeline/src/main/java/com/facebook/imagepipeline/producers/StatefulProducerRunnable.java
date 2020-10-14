@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
  * <p>Class implements common functionality related to handling producer instrumentation and
  * resource management.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class StatefulProducerRunnable<T> extends StatefulRunnable<T> {
 
   private final Consumer<T> mConsumer;

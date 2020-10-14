@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
  * BitmapFrameRenderer} is used to render frames to the bitmaps aquired from the {@link
  * BitmapFrameCache}.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class BitmapAnimationBackend
     implements AnimationBackend, AnimationBackendDelegateWithInactivityCheck.InactivityListener {
 

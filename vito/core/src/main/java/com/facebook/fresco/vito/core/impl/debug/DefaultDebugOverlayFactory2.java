@@ -19,7 +19,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultDebugOverlayFactory2 extends BaseDebugOverlayFactory2 {
 
   public DefaultDebugOverlayFactory2(Supplier<Boolean> debugOverlayEnabled) {

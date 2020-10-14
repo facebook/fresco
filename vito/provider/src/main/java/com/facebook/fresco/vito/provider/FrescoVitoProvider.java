@@ -14,7 +14,7 @@ import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class FrescoVitoProvider {
 
   public interface Implementation {

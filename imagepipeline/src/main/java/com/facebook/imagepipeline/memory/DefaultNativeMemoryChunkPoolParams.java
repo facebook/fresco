@@ -12,7 +12,7 @@ import com.facebook.common.util.ByteConstants;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** Provides pool parameters ({@link PoolParams}) for {@link NativeMemoryChunkPool} */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultNativeMemoryChunkPoolParams {
   /**
    * Length of 'small' sized buckets. Bucket lengths for these buckets are larger because they're

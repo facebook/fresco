@@ -28,7 +28,7 @@ import javax.annotation.concurrent.ThreadSafe;
  *
  * @param <T>
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 @ThreadSafe
 public abstract class AbstractProducerToDataSourceAdapter<T> extends AbstractDataSource<T>
     implements HasImageRequest {

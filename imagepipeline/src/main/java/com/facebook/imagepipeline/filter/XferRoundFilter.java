@@ -24,7 +24,7 @@ import com.facebook.infer.annotation.Nullsafe;
  * will generate better looking images, otherwise clients that look for better performances should
  * use NativeRoundingFilter.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class XferRoundFilter {
 
   private XferRoundFilter() {}

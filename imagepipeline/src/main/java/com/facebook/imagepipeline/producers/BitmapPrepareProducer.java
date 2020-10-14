@@ -22,7 +22,7 @@ import com.facebook.infer.annotation.Nullsafe;
  * <p>Controlled via {@link
  * com.facebook.imagepipeline.core.ImagePipelineExperiments#mUseBitmapPrepareToDraw}
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class BitmapPrepareProducer implements Producer<CloseableReference<CloseableImage>> {
 
   public static final String PRODUCER_NAME = "BitmapPrepareProducer";

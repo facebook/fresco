@@ -17,7 +17,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DownsampleUtil {
   public static final int DEFAULT_SAMPLE_SIZE = 1;
   private static final float INTERVAL_ROUNDING = 1.0f / 3;

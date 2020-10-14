@@ -19,7 +19,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /** Helper methods for modifying webp static images. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 @DoNotStrip
 public class WebpTranscoderImpl implements WebpTranscoder {
 

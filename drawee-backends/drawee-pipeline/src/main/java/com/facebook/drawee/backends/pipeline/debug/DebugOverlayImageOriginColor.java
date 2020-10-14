@@ -12,7 +12,7 @@ import android.util.SparseIntArray;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.infer.annotation.Nullsafe;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DebugOverlayImageOriginColor {
 
   private static final SparseIntArray IMAGE_ORIGIN_COLOR_MAP = new SparseIntArray(7);

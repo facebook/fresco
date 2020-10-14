@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImagePerfMonitor implements ImagePerfNotifier {
 
   private final PipelineDraweeController mPipelineDraweeController;

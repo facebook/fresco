@@ -10,7 +10,7 @@ package com.facebook.imagepipeline.decoder;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.infer.annotation.Nullsafe;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DecodeException extends RuntimeException {
 
   private final EncodedImage mEncodedImage;

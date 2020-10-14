@@ -16,7 +16,7 @@ import com.facebook.infer.annotation.Nullsafe;
  * Utility class to consistently check whether a given thumbnail size will be sufficient for a given
  * request with {@link com.facebook.imagepipeline.common.ResizeOptions}.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class ThumbnailSizeChecker {
 
   /**

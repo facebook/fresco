@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  * Currently we are measuring this from Submit to Final Image.But can be extended to include
  * intermediate time and failure cases also
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImageLoadingTimeControllerListener extends BaseControllerListener {
 
   private long mRequestSubmitTimeMs = -1l;

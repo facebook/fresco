@@ -15,7 +15,7 @@ import com.facebook.imagepipeline.request.BasePostprocessor;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class RoundedCornersPostprocessor extends BasePostprocessor {
 
   private @Nullable CacheKey mCacheKey;

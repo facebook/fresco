@@ -19,7 +19,7 @@ import javax.annotation.concurrent.ThreadSafe;
  *
  * @param <T>
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 @ThreadSafe
 public class ProducerToDataSourceAdapter<T> extends AbstractProducerToDataSourceAdapter<T> {
 

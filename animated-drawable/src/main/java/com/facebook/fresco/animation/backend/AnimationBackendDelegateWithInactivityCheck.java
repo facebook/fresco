@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * <p>New instances can be created with {@link #createForBackend(AnimationBackend, MonotonicClock,
  * ScheduledExecutorService)}.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class AnimationBackendDelegateWithInactivityCheck<T extends AnimationBackend>
     extends AnimationBackendDelegate<T> {
 

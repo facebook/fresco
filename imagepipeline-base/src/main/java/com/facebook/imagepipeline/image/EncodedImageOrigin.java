@@ -9,7 +9,7 @@ import com.facebook.infer.annotation.Nullsafe;
  * LICENSE file in the root directory of this source tree.
  */
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public enum EncodedImageOrigin {
   NOT_SET("not_set"),
   NETWORK("network"),

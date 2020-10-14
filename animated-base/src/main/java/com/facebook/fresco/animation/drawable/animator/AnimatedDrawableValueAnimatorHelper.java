@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
  *
  * <p>Supported drawable types: - {@link AnimatedDrawable2}
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class AnimatedDrawableValueAnimatorHelper {
 
   /**

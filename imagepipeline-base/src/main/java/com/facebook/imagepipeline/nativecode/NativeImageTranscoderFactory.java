@@ -12,7 +12,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import java.lang.reflect.InvocationTargetException;
 
 /** Returns the native {@link ImageTranscoderFactory} if it is instantiable via reflection */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class NativeImageTranscoderFactory {
 
   private NativeImageTranscoderFactory() {}

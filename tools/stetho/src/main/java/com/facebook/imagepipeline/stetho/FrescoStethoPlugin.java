@@ -16,7 +16,7 @@ import com.facebook.infer.annotation.Nullsafe;
  * <p>Before running the dumpapp script from the command line, the app must already have called
  * {@link Stetho#initialize} and {@link Fresco#initialize}.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class FrescoStethoPlugin extends BaseFrescoStethoPlugin {
 
   public FrescoStethoPlugin() {}

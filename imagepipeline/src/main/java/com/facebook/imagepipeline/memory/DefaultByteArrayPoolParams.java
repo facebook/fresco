@@ -12,7 +12,7 @@ import com.facebook.common.util.ByteConstants;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** Provides pool parameters ({@link PoolParams}) for common {@link ByteArrayPool} */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultByteArrayPoolParams {
   private static final int DEFAULT_IO_BUFFER_SIZE = 16 * ByteConstants.KB;
 

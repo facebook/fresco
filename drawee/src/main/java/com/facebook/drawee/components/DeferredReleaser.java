@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * release / acquire cycle. If onAttach doesn't happen before the deferred message gets executed,
  * the resources will be released.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class DeferredReleaser {
   public interface Releasable {
     void release();

@@ -11,7 +11,7 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.infer.annotation.Nullsafe;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class EncodedMemoryCacheFactory {
 
   public static InstrumentedMemoryCache<CacheKey, PooledByteBuffer> get(

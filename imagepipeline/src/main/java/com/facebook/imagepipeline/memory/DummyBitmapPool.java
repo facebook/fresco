@@ -13,7 +13,7 @@ import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.infer.annotation.Nullsafe;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DummyBitmapPool implements BitmapPool {
 
   @Override

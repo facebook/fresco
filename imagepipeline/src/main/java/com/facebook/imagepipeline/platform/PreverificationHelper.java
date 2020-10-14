@@ -13,7 +13,7 @@ import android.os.Build;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.soloader.DoNotOptimize;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 @DoNotOptimize
 /*package*/ class PreverificationHelper {
   @TargetApi(Build.VERSION_CODES.O)

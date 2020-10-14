@@ -15,7 +15,7 @@ import com.facebook.infer.annotation.Nullsafe;
  *
  * <p>See {@link AnimationListener} for more information.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class BaseAnimationListener implements AnimationListener {
 
   @Override

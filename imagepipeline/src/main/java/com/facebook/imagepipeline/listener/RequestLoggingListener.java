@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
 /** Logging for {@link ImageRequest}s. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class RequestLoggingListener implements RequestListener {
   private static final String TAG = "RequestLoggingListener";
 

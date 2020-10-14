@@ -13,7 +13,7 @@ import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** Frame preparation strategy to prepare the next n frames */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class FixedNumberBitmapFramePreparationStrategy implements BitmapFramePreparationStrategy {
 
   private static final Class<?> TAG = FixedNumberBitmapFramePreparationStrategy.class;

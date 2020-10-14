@@ -12,7 +12,7 @@ import android.os.Trace;
 import com.facebook.imagepipelinebase.BuildConfig;
 import com.facebook.infer.annotation.Nullsafe;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultFrescoSystrace implements FrescoSystrace.Systrace {
 
   @Override

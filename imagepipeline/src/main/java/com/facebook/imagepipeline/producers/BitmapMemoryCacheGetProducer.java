@@ -15,7 +15,7 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** Bitmap memory cache producer that is read-only. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class BitmapMemoryCacheGetProducer extends BitmapMemoryCacheProducer {
 
   public static final String PRODUCER_NAME = "BitmapMemoryCacheGetProducer";

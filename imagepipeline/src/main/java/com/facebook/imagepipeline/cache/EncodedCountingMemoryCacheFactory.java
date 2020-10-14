@@ -13,7 +13,7 @@ import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.infer.annotation.Nullsafe;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class EncodedCountingMemoryCacheFactory {
 
   public static CountingMemoryCache<CacheKey, PooledByteBuffer> get(

@@ -18,7 +18,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Postprocessor that rounds a given image as a circle using non-native code. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class RoundPostprocessor extends BasePostprocessor {
   private static final boolean ENABLE_ANTI_ALIASING = true;
   private static final boolean canUseXferRoundFilter = XferRoundFilter.canUseXferRoundFilter();
