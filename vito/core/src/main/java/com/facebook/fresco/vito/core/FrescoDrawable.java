@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class FrescoDrawable extends BaseFrescoDrawable implements Closeable {
 
   private @Nullable FrescoState mFrescoState;

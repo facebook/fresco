@@ -24,7 +24,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 import javax.annotation.Nonnull;
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class FrescoDrawable2 extends BaseFrescoDrawable
     implements Drawable.Callback,
         TransformCallback,

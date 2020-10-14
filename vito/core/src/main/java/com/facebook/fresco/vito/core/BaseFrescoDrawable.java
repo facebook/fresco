@@ -19,9 +19,11 @@ import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.drawable.VisibilityCallback;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.OkToExtend;
 import java.io.Closeable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 @OkToExtend
 public class BaseFrescoDrawable extends FadeDrawable implements Closeable {
 
@@ -54,7 +56,7 @@ public class BaseFrescoDrawable extends FadeDrawable implements Closeable {
     return setImage(newDrawable, null);
   }
 
-  public Drawable setOverlayDrawable(@Nullable Drawable drawable) {
+  public @Nullable Drawable setOverlayDrawable(@Nullable Drawable drawable) {
     return setDrawable(OVERLAY_DRAWABLE_INDEX, drawable);
   }
 
@@ -126,7 +128,7 @@ public class BaseFrescoDrawable extends FadeDrawable implements Closeable {
     mVisibilityCallback = visibilityCallback;
   }
 
-  public Drawable getOverlayDrawable() {
+  public @Nullable Drawable getOverlayDrawable() {
     return getDrawable(OVERLAY_DRAWABLE_INDEX);
   }
 

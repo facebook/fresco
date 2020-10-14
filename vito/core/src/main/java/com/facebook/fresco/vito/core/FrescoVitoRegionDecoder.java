@@ -22,6 +22,7 @@ import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 import com.facebook.imagepipeline.transformation.BitmapTransformation;
+
 import javax.annotation.Nullable;
 
 /**
