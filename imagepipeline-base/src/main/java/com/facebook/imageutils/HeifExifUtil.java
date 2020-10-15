@@ -11,6 +11,7 @@ import android.media.ExifInterface;
 import android.os.Build;
 import androidx.annotation.RequiresApi;
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.soloader.DoNotOptimize;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +21,7 @@ import java.io.InputStream;
  * ourselves to Android N where {@link ExifInterface} can wrap around an input stream. Actual
  * support for HEIF was only added in Android P.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class HeifExifUtil {
 
   public static final String TAG = "HeifExifUtil";

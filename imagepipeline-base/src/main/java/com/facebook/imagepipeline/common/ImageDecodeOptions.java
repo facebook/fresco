@@ -12,11 +12,13 @@ import android.graphics.ColorSpace;
 import com.facebook.common.internal.Objects;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.transformation.BitmapTransformation;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 /** Options for changing the behavior of the {@code ImageDecoder}. */
 @Immutable
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImageDecodeOptions {
 
   private static final ImageDecodeOptions DEFAULTS = ImageDecodeOptions.newBuilder().build();
@@ -100,7 +102,7 @@ public class ImageDecodeOptions {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 

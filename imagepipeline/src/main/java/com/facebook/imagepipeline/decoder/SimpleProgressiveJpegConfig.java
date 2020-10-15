@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.decoder;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
  *
  * <p>If no specific scans to decode are provided, every scan is allowed to be decoded.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class SimpleProgressiveJpegConfig implements ProgressiveJpegConfig {
   public interface DynamicValueConfig {
     List<Integer> getScansToDecode();

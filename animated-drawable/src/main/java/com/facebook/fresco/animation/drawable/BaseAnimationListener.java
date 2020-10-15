@@ -7,12 +7,15 @@
 
 package com.facebook.fresco.animation.drawable;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * Base animation listener. This convenience class can be used to simplify the code if the extending
  * class is not interested in all events. Just override the ones you need.
  *
  * <p>See {@link AnimationListener} for more information.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class BaseAnimationListener implements AnimationListener {
 
   @Override

@@ -10,9 +10,11 @@ package com.facebook.animated.webp;
 import android.graphics.Bitmap;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.imagepipeline.animated.base.AnimatedImageFrame;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** A single frame of a {@link WebPImage}. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 @ThreadSafe
 public class WebPFrame implements AnimatedImageFrame {
 

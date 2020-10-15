@@ -11,9 +11,10 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 dependencies {
-    implementation project(':animated-base')
-
+    compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
+    
+    implementation project(':animated-base')
 }
 apply from: rootProject.file('release.gradle')
 

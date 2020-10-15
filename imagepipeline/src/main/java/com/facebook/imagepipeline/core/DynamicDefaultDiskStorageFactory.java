@@ -10,8 +10,10 @@ package com.facebook.imagepipeline.core;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.cache.disk.DiskStorage;
 import com.facebook.cache.disk.DynamicDefaultDiskStorage;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Factory for the default implementation of the DiskStorage. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DynamicDefaultDiskStorageFactory implements DiskStorageFactory {
 
   @Override

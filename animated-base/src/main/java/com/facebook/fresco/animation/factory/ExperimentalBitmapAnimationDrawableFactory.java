@@ -38,10 +38,12 @@ import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 
 /** Animation factory for {@link AnimatedDrawable2}. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFactory {
 
   public static final int CACHING_STRATEGY_NO_CACHE = 0;

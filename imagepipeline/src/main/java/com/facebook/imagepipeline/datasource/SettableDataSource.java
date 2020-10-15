@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.datasource;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.AbstractDataSource;
 import com.facebook.datasource.DataSource;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -20,6 +21,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * <p>This data source has no intermediate results - calling {@link #set(CloseableReference<T>)}
  * means that the data source is finished.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 @ThreadSafe
 public final class SettableDataSource<T> extends AbstractDataSource<CloseableReference<T>> {
 

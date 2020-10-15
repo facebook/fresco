@@ -10,7 +10,9 @@ package com.facebook.drawee.drawable;
 import android.graphics.Canvas;
 import android.graphics.drawable.NinePatchDrawable;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class RoundedNinePatchDrawable extends RoundedDrawable {
 
   public RoundedNinePatchDrawable(NinePatchDrawable ninePatchDrawable) {

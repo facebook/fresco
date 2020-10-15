@@ -33,9 +33,9 @@ dependencies {
     implementation project(':vito:source')
 
     testImplementation TestDeps.junit
-    testImplementation "org.assertj:assertj-core:${versions.assertjCore}"
-    testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+    testImplementation TestDeps.assertjCore
+    testImplementation TestDeps.mockitoCore
+    testImplementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }

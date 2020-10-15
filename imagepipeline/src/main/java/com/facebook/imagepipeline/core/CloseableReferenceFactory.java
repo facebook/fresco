@@ -12,11 +12,13 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.common.references.SharedReference;
 import com.facebook.imagepipeline.debug.CloseableReferenceLeakTracker;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class CloseableReferenceFactory {
 
   private final CloseableReference.LeakHandler mLeakHandler;
@@ -29,12 +31,14 @@ public class CloseableReferenceFactory {
           public void reportLeak(
               SharedReference<Object> reference, @Nullable Throwable stacktrace) {
             closeableReferenceLeakTracker.trackCloseableReferenceLeak(reference, stacktrace);
+            Object value = reference.get();
+            String name = value != null ? value.getClass().getName() : "<value is null>";
             FLog.w(
                 "Fresco",
                 "Finalized without closing: %x %x (type = %s).\nStack:\n%s",
                 System.identityHashCode(this),
                 System.identityHashCode(reference),
-                reference.get().getClass().getName(),
+                name,
                 getStackTraceString(stacktrace));
           }
 

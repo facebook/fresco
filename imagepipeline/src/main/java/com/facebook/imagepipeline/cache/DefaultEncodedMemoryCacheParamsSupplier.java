@@ -9,9 +9,11 @@ package com.facebook.imagepipeline.cache;
 
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.util.ByteConstants;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.TimeUnit;
 
 /** Supplies {@link MemoryCacheParams} for the encoded image memory cache */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultEncodedMemoryCacheParamsSupplier implements Supplier<MemoryCacheParams> {
 
   // We want memory cache to be bound only by its memory consumption

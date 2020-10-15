@@ -11,8 +11,10 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import com.facebook.common.logging.FLog;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class BitmapPoolBackend extends LruBucketsPoolBackend<Bitmap> {
 
   private static final String TAG = "BitmapPoolBackend";

@@ -21,6 +21,7 @@ import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.Dispos
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 import com.facebook.imagepipeline.transformation.BitmapTransformation;
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * Contains the logic for compositing the frames of an {@link AnimatedImage}. Animated image formats
@@ -29,6 +30,7 @@ import com.facebook.imagepipeline.transformation.BitmapTransformation;
  * behavior to be able to render any frame of the image. Designed to work with a cache via a
  * Callback.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedImageCompositor {
 
   /** Callback for caching. */

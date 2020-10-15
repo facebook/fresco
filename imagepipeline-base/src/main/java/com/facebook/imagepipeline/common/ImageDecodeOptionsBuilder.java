@@ -11,9 +11,11 @@ import android.graphics.Bitmap;
 import android.graphics.ColorSpace;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.transformation.BitmapTransformation;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Builder for {@link ImageDecodeOptions}. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
 
   private int mMinDecodeIntervalMs = 100;

@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.debug;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import java.util.Map;
  * A map that provides a constant-size LRU map by ordering elements by accessing order (and not in
  * insertion order) Most cases would be served better by using Android's LruCache class.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class LruMap<A, B> extends LinkedHashMap<A, B> {
   private final int mMaxEntries;
 

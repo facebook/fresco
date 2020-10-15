@@ -11,9 +11,11 @@ import android.graphics.Bitmap;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** No-op bitmap cache that doesn't do anything. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class NoOpCache implements BitmapFrameCache {
 
   @Nullable

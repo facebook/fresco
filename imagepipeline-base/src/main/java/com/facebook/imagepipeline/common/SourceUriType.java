@@ -20,6 +20,7 @@ import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_UNKNOW
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 import androidx.annotation.IntDef;
+import com.facebook.infer.annotation.Nullsafe;
 import java.lang.annotation.Retention;
 
 /**
@@ -38,6 +39,7 @@ import java.lang.annotation.Retention;
   SOURCE_TYPE_DATA,
   SOURCE_TYPE_QUALIFIED_RESOURCE
 })
+@Nullsafe(Nullsafe.Mode.STRICT)
 public @interface SourceUriType {
 
   int SOURCE_TYPE_UNKNOWN = -1;

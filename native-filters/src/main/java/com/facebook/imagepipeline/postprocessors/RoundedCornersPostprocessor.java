@@ -12,8 +12,10 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.imagepipeline.nativecode.NativeRoundingFilter;
 import com.facebook.imagepipeline.request.BasePostprocessor;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class RoundedCornersPostprocessor extends BasePostprocessor {
 
   private @Nullable CacheKey mCacheKey;

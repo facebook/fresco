@@ -13,6 +13,7 @@ import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.imagepipeline.nativecode.NativeBlurFilter;
 import com.facebook.imagepipeline.request.BasePostprocessor;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Locale;
 import javax.annotation.Nullable;
 
@@ -20,6 +21,7 @@ import javax.annotation.Nullable;
  * A fast and memory-efficient post processor performing an iterative box blur. For details see
  * {@link NativeBlurFilter#iterativeBoxBlur(Bitmap, int, int)}.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class IterativeBoxBlurPostProcessor extends BasePostprocessor {
 
   private static final int DEFAULT_ITERATIONS = 3;
@@ -27,7 +29,7 @@ public class IterativeBoxBlurPostProcessor extends BasePostprocessor {
   private final int mIterations;
   private final int mBlurRadius;
 
-  private CacheKey mCacheKey;
+  private @Nullable CacheKey mCacheKey;
 
   public IterativeBoxBlurPostProcessor(int blurRadius) {
     this(DEFAULT_ITERATIONS, blurRadius);

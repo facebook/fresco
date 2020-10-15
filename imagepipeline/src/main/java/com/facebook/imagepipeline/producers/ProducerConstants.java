@@ -7,6 +7,8 @@
 
 package com.facebook.imagepipeline.producers;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * Constants to be used various {@link Producer}s for logging purposes in the extra maps for the
  * {@link com.facebook.imagepipeline.listener.RequestListener}.
@@ -14,6 +16,7 @@ package com.facebook.imagepipeline.producers;
  * <p>The elements are package visible on purpose such that the individual producers create public
  * constants of the ones that they actually use.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 class ProducerConstants {
 
   static final String EXTRA_CACHED_VALUE_FOUND = "cached_value_found";

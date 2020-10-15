@@ -4,13 +4,13 @@ package com.facebook.fresco.ui.common;
 
 import android.net.Uri;
 import com.facebook.common.internal.Fn;
-import java.util.function.Function;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class MultiUriHelper {
 
-  Function<Integer, Integer> f;
-
+  @Nullable
   public static <T> Uri getMainUri(
       @Nullable T mainRequest,
       @Nullable T lowResRequest,

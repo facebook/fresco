@@ -9,10 +9,12 @@ package com.facebook.imagepipeline.drawable;
 
 import android.graphics.drawable.Drawable;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /** Drawable factory to create Drawables for given images. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface DrawableFactory {
 
   /**

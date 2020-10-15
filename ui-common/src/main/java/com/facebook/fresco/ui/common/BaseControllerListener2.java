@@ -2,10 +2,12 @@
 
 package com.facebook.fresco.ui.common;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /* Experimental */
 @Deprecated
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class BaseControllerListener2<INFO> implements ControllerListener2<INFO> {
 
   private static final ControllerListener2 NO_OP_LISTENER = new BaseControllerListener2();
@@ -28,8 +30,8 @@ public class BaseControllerListener2<INFO> implements ControllerListener2<INFO> 
   public void onIntermediateImageFailed(String id) {}
 
   @Override
-  public void onFailure(String id, Throwable throwable, Extras extras) {}
+  public void onFailure(String id, Throwable throwable, @Nullable Extras extras) {}
 
   @Override
-  public void onRelease(String id, Extras extras) {}
+  public void onRelease(String id, @Nullable Extras extras) {}
 }

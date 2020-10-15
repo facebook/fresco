@@ -9,8 +9,10 @@ package com.facebook.fresco.vito.options;
 
 import android.graphics.drawable.Drawable;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface ImageOptionsDrawableFactory {
 
   @Nullable

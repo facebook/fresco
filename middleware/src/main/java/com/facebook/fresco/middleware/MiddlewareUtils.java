@@ -4,9 +4,11 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.net.Uri;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class MiddlewareUtils {
 
   public static Extras obtainExtras(

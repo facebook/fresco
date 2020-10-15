@@ -10,7 +10,7 @@ package com.facebook.fresco.buildsrc
 object GradleDeps {
     
     object Android {
-        private const val version = "3.5.3"
+        private const val version = "4.0.1"
 
         const val gradlePlugin = "com.android.tools.build:gradle:$version"
     }

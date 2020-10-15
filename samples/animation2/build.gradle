@@ -6,6 +6,7 @@
  */
 
 import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.SampleDeps
 
 apply plugin: 'com.android.application'
 
@@ -13,7 +14,7 @@ dependencies {
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
 
-    implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
+    implementation SampleDeps.AndroidX.appcompat
 
     implementation project(':animated-base')
     implementation project(':drawee-backends:drawee-pipeline')

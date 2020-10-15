@@ -11,6 +11,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import androidx.annotation.Nullable;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.common.memory.ByteArrayPool;
@@ -64,7 +65,9 @@ import com.facebook.imagepipeline.producers.ThumbnailBranchProducer;
 import com.facebook.imagepipeline.producers.ThumbnailProducer;
 import com.facebook.imagepipeline.producers.WebpTranscodeProducer;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
+import com.facebook.infer.annotation.Nullsafe;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ProducerFactory {
 
   private static final int MAX_SIMULTANEOUS_REQUESTS = 5;
@@ -341,7 +344,7 @@ public class ProducerFactory {
         imageTranscoderFactory);
   }
 
-  public static <T> SwallowResultProducer<T> newSwallowResultProducer(Producer<T> inputProducer) {
+  public <T> SwallowResultProducer<T> newSwallowResultProducer(Producer<T> inputProducer) {
     return new SwallowResultProducer<T>(inputProducer);
   }
 
@@ -369,5 +372,10 @@ public class ProducerFactory {
         mBitmapPrepareToDrawMinSizeBytes,
         mBitmapPrepareToDrawMaxSizeBytes,
         mBitmapPrepareToDrawForPrefetch);
+  }
+
+  public @Nullable Producer<EncodedImage> newCombinedNetworkAndCacheProducer(
+      final NetworkFetcher networkFetcher) {
+    return null;
   }
 }

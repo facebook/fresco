@@ -9,6 +9,7 @@ package com.facebook.binaryresource;
 
 import com.facebook.common.internal.Files;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import javax.annotation.Nullable;
 /*
  * Implementation of BinaryResource based on a real file. @see BinaryResource for more details.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class FileBinaryResource implements BinaryResource {
   private final File mFile;
 
@@ -45,7 +47,7 @@ public class FileBinaryResource implements BinaryResource {
   }
 
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(@Nullable Object obj) {
     if (obj == null || !(obj instanceof FileBinaryResource)) {
       return false;
     }
@@ -64,5 +66,9 @@ public class FileBinaryResource implements BinaryResource {
    */
   public static @Nullable FileBinaryResource createOrNull(File file) {
     return (file != null) ? new FileBinaryResource(file) : null;
+  }
+
+  public static FileBinaryResource create(File file) {
+    return new FileBinaryResource(file);
   }
 }

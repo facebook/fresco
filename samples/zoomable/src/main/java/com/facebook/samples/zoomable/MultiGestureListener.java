@@ -9,6 +9,7 @@ package com.facebook.samples.zoomable;
 
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import java.util.List;
  * returned true), subsequent listeners will not be notified about the event any more since it has
  * been consumed.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class MultiGestureListener extends GestureDetector.SimpleOnGestureListener {
 
   private final List<GestureDetector.SimpleOnGestureListener> mListeners = new ArrayList<>();

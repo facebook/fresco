@@ -9,8 +9,10 @@ package com.facebook.samples.zoomable;
 
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Wrapper for SimpleOnGestureListener as GestureDetector does not allow changing its listener. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class GestureListenerWrapper extends GestureDetector.SimpleOnGestureListener {
 
   private GestureDetector.SimpleOnGestureListener mDelegate;

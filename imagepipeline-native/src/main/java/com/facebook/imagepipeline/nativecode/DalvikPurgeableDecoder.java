@@ -26,6 +26,7 @@ import com.facebook.imagepipeline.memory.BitmapCounterProvider;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.soloader.DoNotOptimize;
 import java.util.Locale;
 import javax.annotation.Nullable;
@@ -36,6 +37,7 @@ import javax.annotation.Nullable;
  * <p>Native code used by this class is shipped as part of libimagepipeline.so
  */
 @DoNotStrip
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class DalvikPurgeableDecoder implements PlatformDecoder {
 
   static {

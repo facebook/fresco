@@ -21,9 +21,9 @@ dependencies {
     implementation project(':ui-common')
 
     testImplementation TestDeps.junit
-    testImplementation "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
-    testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+    testImplementation TestDeps.festAssertCore
+    testImplementation TestDeps.mockitoCore
+    testImplementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }

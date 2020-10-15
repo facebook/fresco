@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.common;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.util.HashCodeUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Locale;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
@@ -33,6 +34,7 @@ import javax.annotation.concurrent.Immutable;
  * config. It is also dependent on a {@code NetworkFetcher} which writes and reads these headers.
  */
 @Immutable
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class BytesRange {
 
   public static final int TO_END_OF_CONTENT = Integer.MAX_VALUE;
@@ -83,7 +85,7 @@ public class BytesRange {
   }
 
   @Override
-  public boolean equals(Object other) {
+  public boolean equals(@Nullable Object other) {
     if (other == this) {
       return true;
     }

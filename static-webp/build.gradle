@@ -12,6 +12,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 dependencies {
+    compileOnly Deps.inferAnnotation
     compileOnly Deps.javaxAnnotation
     compileOnly Deps.jsr305
 
@@ -23,8 +24,8 @@ dependencies {
     testImplementation TestDeps.junit
 
     androidTestImplementation TestDeps.junit
-    androidTestImplementation "androidx.test:rules:${versions.androidx.test}"
-    androidTestImplementation "androidx.test:runner:${versions.androidx.test}"
+    androidTestImplementation TestDeps.AndroidX.testRules
+    androidTestImplementation TestDeps.AndroidX.testRunner
 }
 apply from: rootProject.file('release.gradle')
 

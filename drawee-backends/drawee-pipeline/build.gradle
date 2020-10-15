@@ -11,8 +11,9 @@ import com.facebook.fresco.buildsrc.TestDeps
 apply plugin: 'com.android.library'
 
 dependencies {
-    compileOnly "androidx.legacy:legacy-support-core-utils:${versions.androidx.legacy_support_core_utils}"
+    compileOnly Deps.AndroidX.legacySupportCoreUtils
     compileOnly Deps.AndroidX.androidxAnnotation
+    compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
 
     implementation project (':soloader')
@@ -30,8 +31,8 @@ dependencies {
     api project(':native-imagetranscoder')
 
     testImplementation TestDeps.junit
-    testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+    testImplementation TestDeps.mockitoCore
+    testImplementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }

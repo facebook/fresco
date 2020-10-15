@@ -10,9 +10,11 @@ package com.facebook.imagepipeline.memory;
 import android.annotation.TargetApi;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** Manages a pool of ashmem memory chunks ({@link AshmemMemoryChunk}) */
+@Nullsafe(Nullsafe.Mode.STRICT)
 @ThreadSafe
 @DoNotStrip
 @TargetApi(27)

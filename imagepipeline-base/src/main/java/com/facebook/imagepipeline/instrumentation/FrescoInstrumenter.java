@@ -8,12 +8,14 @@
 package com.facebook.imagepipeline.instrumentation;
 
 import androidx.annotation.Nullable;
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * Utility class that provides hooks to capture execution of different units of work. Client code
  * can specify a custom {@link Instrumenter} that will receive ad-hoc updates when work that has to
  * be executed across threads gets moved around.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class FrescoInstrumenter {
 
   /** Allows to capture unit of works across different threads. */

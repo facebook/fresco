@@ -18,8 +18,10 @@ import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.fresco.ui.common.OnDrawControllerListener;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImagePerfControllerListener extends BaseControllerListener<ImageInfo>
     implements OnDrawControllerListener<ImageInfo> {
 

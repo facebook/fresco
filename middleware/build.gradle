@@ -23,6 +23,7 @@ android {
 }
 
 dependencies {
+    compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
     implementation project(path: ':fbcore')
     implementation project(":ui-common")

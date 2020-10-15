@@ -13,6 +13,7 @@ import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,7 @@ import javax.annotation.concurrent.GuardedBy;
  * PooledByteBuffers. It is used by SimpleImageCache to store values that are being written to disk
  * cache, so that they can be returned by parallel cache get operations.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class StagingArea {
   private static final Class<?> TAG = StagingArea.class;
 

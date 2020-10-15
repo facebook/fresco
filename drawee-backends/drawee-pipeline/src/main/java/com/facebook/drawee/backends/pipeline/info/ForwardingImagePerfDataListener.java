@@ -7,8 +7,10 @@
 
 package com.facebook.drawee.backends.pipeline.info;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Collection;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ForwardingImagePerfDataListener implements ImagePerfDataListener {
 
   private final Collection<ImagePerfDataListener> mListeners;

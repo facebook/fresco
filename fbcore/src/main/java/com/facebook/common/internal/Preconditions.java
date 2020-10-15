@@ -106,8 +106,8 @@ public final class Preconditions {
    * @param expression a boolean expression
    * @throws IllegalArgumentException if {@code expression} is false
    */
-  public static void checkArgument(boolean expression) {
-    if (!expression) {
+  public static void checkArgument(@Nullable Boolean expression) {
+    if (expression != null && !expression) {
       throw new IllegalArgumentException();
     }
   }
@@ -142,9 +142,7 @@ public final class Preconditions {
    *     {@code errorMessageArgs} is null (don't let this happen)
    */
   public static void checkArgument(
-      boolean expression,
-      @Nullable String errorMessageTemplate,
-      @Nullable Object... errorMessageArgs) {
+      boolean expression, @Nullable String errorMessageTemplate, Object... errorMessageArgs) {
     if (!expression) {
       throw new IllegalArgumentException(format(errorMessageTemplate, errorMessageArgs));
     }
@@ -195,9 +193,7 @@ public final class Preconditions {
    *     {@code errorMessageArgs} is null (don't let this happen)
    */
   public static void checkState(
-      boolean expression,
-      @Nullable String errorMessageTemplate,
-      @Nullable Object... errorMessageArgs) {
+      boolean expression, @Nullable String errorMessageTemplate, Object... errorMessageArgs) {
     if (!expression) {
       throw new IllegalStateException(format(errorMessageTemplate, errorMessageArgs));
     }
@@ -210,7 +206,7 @@ public final class Preconditions {
    * @return the non-null reference that was validated
    * @throws NullPointerException if {@code reference} is null
    */
-  public static <T> T checkNotNull(T reference) {
+  public static <T> T checkNotNull(@Nullable T reference) {
     if (reference == null) {
       throw new NullPointerException();
     }
@@ -226,7 +222,7 @@ public final class Preconditions {
    * @return the non-null reference that was validated
    * @throws NullPointerException if {@code reference} is null
    */
-  public static <T> T checkNotNull(T reference, @Nullable Object errorMessage) {
+  public static <T> T checkNotNull(@Nullable T reference, @Nullable Object errorMessage) {
     if (reference == null) {
       throw new NullPointerException(String.valueOf(errorMessage));
     }
@@ -248,7 +244,7 @@ public final class Preconditions {
    * @throws NullPointerException if {@code reference} is null
    */
   public static <T> T checkNotNull(
-      T reference, @Nullable String errorMessageTemplate, @Nullable Object... errorMessageArgs) {
+      @Nullable T reference, @Nullable String errorMessageTemplate, Object... errorMessageArgs) {
     if (reference == null) {
       // If either of these parameters is null, the right thing happens anyway
       throw new NullPointerException(format(errorMessageTemplate, errorMessageArgs));
@@ -409,7 +405,7 @@ public final class Preconditions {
    *     to strings using {@link String#valueOf(Object)}. Arguments can be null.
    */
   // Note that this is somewhat-improperly used from Verify.java as well.
-  static String format(@Nullable String template, @Nullable Object... args) {
+  static String format(@Nullable String template, Object... args) {
     template = String.valueOf(template); // null -> "null"
 
     // start substituting the arguments into the '%s' placeholders

@@ -8,8 +8,10 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.Executor;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ExperimentalThreadHandoffProducerQueueImpl implements ThreadHandoffProducerQueue {
   private final Executor mExecutor;
 

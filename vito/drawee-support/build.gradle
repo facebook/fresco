@@ -15,6 +15,7 @@ dependencies {
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
     compileOnly Deps.AndroidX.androidxAnnotation
+    compileOnly Deps.inferAnnotation
 
     implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':ui-common')
@@ -22,8 +23,8 @@ dependencies {
     implementation project(':vito:options')
 
     testImplementation TestDeps.junit
-    testImplementation "org.assertj:assertj-core:${versions.assertjCore}"
-    testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+    testImplementation TestDeps.assertjCore
+    testImplementation TestDeps.mockitoCore
 }
 
 android {

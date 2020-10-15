@@ -35,8 +35,9 @@ public interface Hierarcher {
    *
    * @param resources resources to be used to load the drawable
    * @param imageOptions image options to be used to create the progressbar drawable
-   * @return the progressbar drawable or NopDrawable.INSTANCE if unset.
+   * @return the progressbar drawable or null if unset.
    */
+  @Nullable
   Drawable buildProgressDrawable(Resources resources, ImageOptions imageOptions);
 
   /**

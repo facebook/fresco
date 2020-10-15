@@ -10,11 +10,13 @@ package com.facebook.imagepipeline.producers;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * Utility class to consistently check whether a given thumbnail size will be sufficient for a given
  * request with {@link com.facebook.imagepipeline.common.ResizeOptions}.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class ThumbnailSizeChecker {
 
   /**

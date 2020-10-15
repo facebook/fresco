@@ -13,6 +13,7 @@ import com.facebook.common.internal.Throwables;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.memory.PooledByteStreams;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.concurrent.ThreadSafe;
@@ -21,6 +22,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * A factory to provide instances of {@link MemoryPooledByteBuffer} and {@link
  * MemoryPooledByteBufferOutputStream}
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
 public class MemoryPooledByteBufferFactory implements PooledByteBufferFactory {
 

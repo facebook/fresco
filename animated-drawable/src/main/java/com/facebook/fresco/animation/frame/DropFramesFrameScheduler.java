@@ -9,8 +9,10 @@ package com.facebook.fresco.animation.frame;
 
 import androidx.annotation.VisibleForTesting;
 import com.facebook.fresco.animation.backend.AnimationInformation;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Frame scheduler that maps time values to frames. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DropFramesFrameScheduler implements FrameScheduler {
 
   private static final int UNSET = -1;

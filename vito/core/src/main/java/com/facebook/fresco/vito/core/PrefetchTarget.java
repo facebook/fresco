@@ -7,6 +7,9 @@
 
 package com.facebook.fresco.vito.core;
 
+import com.facebook.infer.annotation.Nullsafe;
+
+@Nullsafe(Nullsafe.Mode.STRICT)
 public enum PrefetchTarget {
   MEMORY_DECODED,
   MEMORY_ENCODED,

@@ -20,8 +20,10 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class BitmapDrawableFactory implements ImageOptionsDrawableFactory {
 
   private final Resources mResources;
@@ -73,7 +75,10 @@ public class BitmapDrawableFactory implements ImageOptionsDrawableFactory {
       CloseableStaticBitmap closeableStaticBitmap, ImageOptions imageOptions) {
     RoundingOptions roundingOptions = imageOptions.getRoundingOptions();
     BorderOptions borderOptions = imageOptions.getBorderOptions();
-    mRoundingUtils.setAlreadyRounded(mExperiments.useNativeRounding());
+
+    boolean forceRoundAtDecode =
+        roundingOptions == null ? false : roundingOptions.isForceRoundAtDecode();
+    mRoundingUtils.setAlreadyRounded(!forceRoundAtDecode && mExperiments.useNativeRounding());
 
     return rotatedDrawable(
         closeableStaticBitmap,

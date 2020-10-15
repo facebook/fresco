@@ -11,6 +11,7 @@ import android.util.SparseIntArray;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -20,6 +21,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * size is at least as big as the requested size. On a release request, the pool adds the byte array
  * to the appropriate bucket. This byte array can then be used for a subsequent get request.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
 public class GenericByteArrayPool extends BasePool<byte[]> implements ByteArrayPool {
   private final int[] mBucketSizes;

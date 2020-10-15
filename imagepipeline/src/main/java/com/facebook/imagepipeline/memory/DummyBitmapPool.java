@@ -11,7 +11,9 @@ import android.graphics.Bitmap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DummyBitmapPool implements BitmapPool {
 
   @Override

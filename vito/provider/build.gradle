@@ -12,6 +12,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 dependencies {
+    compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
 
@@ -22,8 +23,8 @@ dependencies {
     implementation project(':ui-common')
 
     testImplementation TestDeps.junit
-    testImplementation "org.assertj:assertj-core:${versions.assertjCore}"
-    testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+    testImplementation TestDeps.assertjCore
+    testImplementation TestDeps.mockitoCore
 }
 
 android {

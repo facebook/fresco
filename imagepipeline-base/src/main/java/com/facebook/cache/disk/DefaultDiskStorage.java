@@ -21,6 +21,7 @@ import com.facebook.common.internal.CountingOutputStream;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.time.Clock;
 import com.facebook.common.time.SystemClock;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -36,6 +37,7 @@ import javax.annotation.Nullable;
  * The default disk storage implementation. Subsumes both 'simple' and 'sharded' implementations via
  * a new SubdirectorySupplier.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultDiskStorage implements DiskStorage {
 
   private static final Class<?> TAG = DefaultDiskStorage.class;
@@ -434,10 +436,12 @@ public class DefaultDiskStorage implements DiskStorage {
     for (Entry entry : entries) {
       DiskDumpInfoEntry infoEntry = dumpCacheEntry(entry);
       String type = infoEntry.type;
-      if (!dumpInfo.typeCounts.containsKey(type)) {
-        dumpInfo.typeCounts.put(type, 0);
+      Integer typeCount = dumpInfo.typeCounts.get(type);
+      if (typeCount == null) {
+        dumpInfo.typeCounts.put(type, 1);
+      } else {
+        dumpInfo.typeCounts.put(type, typeCount + 1);
       }
-      dumpInfo.typeCounts.put(type, dumpInfo.typeCounts.get(type) + 1);
       dumpInfo.entries.add(infoEntry);
     }
     return dumpInfo;
@@ -495,7 +499,7 @@ public class DefaultDiskStorage implements DiskStorage {
     private EntryImpl(String id, File cachedFile) {
       Preconditions.checkNotNull(cachedFile);
       this.id = Preconditions.checkNotNull(id);
-      this.resource = FileBinaryResource.createOrNull(cachedFile);
+      this.resource = FileBinaryResource.create(cachedFile);
       this.size = -1;
       this.timestamp = -1;
     }
@@ -700,7 +704,7 @@ public class DefaultDiskStorage implements DiskStorage {
       if (targetFile.exists()) {
         targetFile.setLastModified(time);
       }
-      return FileBinaryResource.createOrNull(targetFile);
+      return FileBinaryResource.create(targetFile);
     }
 
     @Override

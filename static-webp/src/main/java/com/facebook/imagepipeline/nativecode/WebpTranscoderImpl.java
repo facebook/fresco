@@ -13,11 +13,13 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.webp.WebpSupportStatus;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 /** Helper methods for modifying webp static images. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 @DoNotStrip
 public class WebpTranscoderImpl implements WebpTranscoder {
 

@@ -9,9 +9,11 @@ package com.facebook.imageutils;
 
 import android.graphics.ColorSpace;
 import android.util.Pair;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Wrapper class representing the recovered meta data of an image when decoding. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImageMetaData {
   private final @Nullable Pair<Integer, Integer> mDimensions;
   private final @Nullable ColorSpace mColorSpace;

@@ -7,6 +7,8 @@
 
 package com.facebook.imagepipeline.producers;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * Building block for image processing in the image pipeline.
  *
@@ -19,6 +21,7 @@ package com.facebook.imagepipeline.producers;
  *
  * @param <T>
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface Producer<T> {
 
   /**

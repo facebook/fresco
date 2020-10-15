@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -28,6 +29,7 @@ import javax.annotation.Nullable;
  * Likewise, hierarchies must not be reused by multiple views. Each view needs to have its own
  * instance of a hierarchy. The caller is responsible for building a new hierarchy for each view.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class GenericDraweeHierarchyBuilder {
 
   public static final int DEFAULT_FADE_DURATION = 300;

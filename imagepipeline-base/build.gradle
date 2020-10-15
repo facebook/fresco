@@ -13,7 +13,7 @@ apply plugin: 'maven'
 
 dependencies {
     compileOnly Deps.AndroidX.androidxAnnotation
-    compileOnly "androidx.legacy:legacy-support-core-utils:${versions.androidx.legacy_support_core_utils}"
+    compileOnly Deps.AndroidX.legacySupportCoreUtils
     compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
@@ -24,16 +24,16 @@ dependencies {
 
     testImplementation project(':imagepipeline-base-test')
     testImplementation TestDeps.junit
-    testImplementation "org.assertj:assertj-core:${versions.assertjCore}"
-    testImplementation "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
-    testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    testImplementation("org.powermock:powermock-api-mockito2:${POWERMOCK_VERSION}") {
+    testImplementation TestDeps.assertjCore
+    testImplementation TestDeps.festAssertCore
+    testImplementation TestDeps.mockitoCore
+    testImplementation(TestDeps.Powermock.apiMockito) {
         exclude group: 'org.mockito', module: 'mockito-all'
     }
-    testImplementation "org.powermock:powermock-module-junit4:${POWERMOCK_VERSION}"
-    testImplementation "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
-    testImplementation "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
-    testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+    testImplementation TestDeps.Powermock.moduleJunit4
+    testImplementation TestDeps.Powermock.moduleJunit4Rule
+    testImplementation TestDeps.Powermock.classloadingXstream
+    testImplementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }

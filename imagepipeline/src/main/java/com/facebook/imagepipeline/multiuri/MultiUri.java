@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.multiuri;
 
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -15,6 +16,7 @@ import javax.annotation.Nullable;
  * com.facebook.datasource.IncreasingQualityDataSourceSupplier} and/or {@link
  * com.facebook.datasource.FirstAvailableDataSourceSupplier} with Vito
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class MultiUri {
   private @Nullable ImageRequest mLowResImageRequest;
   private @Nullable ImageRequest[] mMultiImageRequests;

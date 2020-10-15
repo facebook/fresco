@@ -9,9 +9,11 @@ package com.facebook.imagepipeline.memory;
 
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** Manages a pool of native memory chunks ({@link NativeMemoryChunk}) */
+@Nullsafe(Nullsafe.Mode.STRICT)
 @ThreadSafe
 @DoNotStrip
 public class NativeMemoryChunkPool extends MemoryChunkPool {

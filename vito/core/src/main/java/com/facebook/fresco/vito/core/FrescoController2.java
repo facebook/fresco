@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.core;
 
 import android.graphics.Rect;
+import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.fresco.vito.listener.ImageListener;
 import javax.annotation.Nullable;
 
@@ -20,6 +21,7 @@ public interface FrescoController2 {
       VitoImageRequest imageRequest,
       @Nullable Object callerContext,
       @Nullable ImageListener listener,
+      @Nullable FadeDrawable.OnFadeListener onFadeListener,
       @Nullable Rect viewportDimensions);
 
   void releaseDelayed(FrescoDrawable2 drawable);

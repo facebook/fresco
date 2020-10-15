@@ -13,8 +13,10 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class CountingLruBitmapMemoryCacheFactory implements BitmapMemoryCacheFactory {
 
   @Override

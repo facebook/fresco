@@ -21,10 +21,12 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
 /** Bitmap frame cache that uses Fresco's {@link AnimatedFrameCache} to cache frames. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class FrescoFrameCache implements BitmapFrameCache {
 
   private static final Class<?> TAG = FrescoFrameCache.class;

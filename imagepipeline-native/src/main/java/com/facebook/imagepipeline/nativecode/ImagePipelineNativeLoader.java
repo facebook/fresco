@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.nativecode;
 
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.soloader.nativeloader.NativeLoader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +27,7 @@ import java.util.List;
  *   }
  * </code>
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImagePipelineNativeLoader {
   public static final String DSO_NAME = "imagepipeline";
 

@@ -9,8 +9,10 @@ package com.facebook.imagepipeline.bitmaps;
 
 import android.graphics.Bitmap;
 import com.facebook.common.references.ResourceReleaser;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** A releaser that just recycles (frees) bitmap memory immediately. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class SimpleBitmapReleaser implements ResourceReleaser<Bitmap> {
 
   private static SimpleBitmapReleaser sInstance;

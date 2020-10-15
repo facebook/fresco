@@ -7,7 +7,10 @@
 
 package com.facebook.imagepipeline.producers;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /** Delegating consumer. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class DelegatingConsumer<I, O> extends BaseConsumer<I> {
 
   private final Consumer<O> mConsumer;

@@ -11,6 +11,7 @@ import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.core.ImageTranscoderType;
 import com.facebook.imagepipeline.core.NativeCodeSetup;
 import com.facebook.imagepipeline.nativecode.NativeImageTranscoderFactory;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -19,6 +20,7 @@ import javax.annotation.Nullable;
  * supported, the first fallback is NativeJpegTranscoder, otherwise {@link SimpleImageTranscoder} is
  * used.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class MultiImageTranscoderFactory implements ImageTranscoderFactory {
 
   private final int mMaxBitmapSize;

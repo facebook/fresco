@@ -20,6 +20,7 @@ object Deps {
     object AndroidX {
         const val androidxAnnotation = "androidx.annotation:annotation:1.1.0"
         const val core = "androidx.core:core:1.3.1"
+        const val legacySupportCoreUtils = "androidx.legacy:legacy-support-core-utils:1.0.0"
     }
 
     object Bolts {
@@ -33,7 +34,7 @@ object Deps {
     }
 
     object Litho {
-        private const val version = "0.36.0"
+        private const val version = "0.39.0"
 
         const val core = "com.facebook.litho:litho-core:$version"
         const val lithoAnnotations = "com.facebook.litho:litho-annotations:$version"

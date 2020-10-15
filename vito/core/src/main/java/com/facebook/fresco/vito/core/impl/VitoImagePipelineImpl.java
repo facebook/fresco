@@ -24,9 +24,11 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Vito image pipeline to fetch an image for a given VitoImageRequest. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class VitoImagePipelineImpl implements VitoImagePipeline {
 
   private final ImagePipeline mImagePipeline;

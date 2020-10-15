@@ -14,6 +14,7 @@ import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.ProducerContext;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -22,6 +23,7 @@ import javax.annotation.concurrent.ThreadSafe;
  *
  * @param <T>
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 @ThreadSafe
 public class CloseableProducerToDataSourceAdapter<T>
     extends AbstractProducerToDataSourceAdapter<CloseableReference<T>> {

@@ -8,10 +8,12 @@
 package com.facebook.imagepipeline.testing;
 
 import com.facebook.common.time.MonotonicClock;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /** */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class FakeClock implements MonotonicClock {
 
   public interface OnTickListener {

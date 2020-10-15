@@ -12,8 +12,10 @@ import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DrawableFactoryWrapper implements ImageOptionsDrawableFactory {
 
   private final DrawableFactory mDrawableFactory;

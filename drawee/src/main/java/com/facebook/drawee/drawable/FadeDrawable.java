@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Arrays;
 import javax.annotation.Nullable;
 
@@ -25,6 +26,7 @@ import javax.annotation.Nullable;
  * full opacity, fades out all other layers to zero opacity. fadeUpToLayer fades in all layers up to
  * specified layer to full opacity and fades out all other layers to zero opacity.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class FadeDrawable extends ArrayDrawable {
 
   /** A transition is about to start. */
@@ -39,10 +41,10 @@ public class FadeDrawable extends ArrayDrawable {
   /** Layers. */
   private final Drawable[] mLayers;
 
-  private final int ACTUAL_IMAGE_INDEX = 2;
-
   private final boolean mDefaultLayerIsOn;
   private final int mDefaultLayerAlpha;
+  /* The index of the layer that contains the actual image */
+  private final int mActualImageLayer;
 
   /** The current state. */
   @VisibleForTesting int mTransitionState;
@@ -73,7 +75,7 @@ public class FadeDrawable extends ArrayDrawable {
    * @param layers layers to fade between
    */
   public FadeDrawable(Drawable[] layers) {
-    this(layers, false);
+    this(layers, false, -1);
   }
 
   /**
@@ -83,8 +85,9 @@ public class FadeDrawable extends ArrayDrawable {
    *
    * @param layers layers to fade between
    * @param allLayersVisible true if all layers should be visible per default
+   * @param actualImageLayer The index of the layer that contains the actual image
    */
-  public FadeDrawable(Drawable[] layers, boolean allLayersVisible) {
+  public FadeDrawable(Drawable[] layers, boolean allLayersVisible, int actualImageLayer) {
     super(layers);
     Preconditions.checkState(layers.length >= 1, "At least one layer required!");
     mLayers = layers;
@@ -96,6 +99,7 @@ public class FadeDrawable extends ArrayDrawable {
     mDefaultLayerIsOn = allLayersVisible;
     mDefaultLayerAlpha = mDefaultLayerIsOn ? 255 : 0;
     mCallOnFadeStartedListener = true;
+    mActualImageLayer = actualImageLayer;
     resetInternal();
   }
 
@@ -158,10 +162,8 @@ public class FadeDrawable extends ArrayDrawable {
    * @param index the index of the layer to fade in.
    */
   public void fadeInLayer(int index) {
-    mCallOnFadeFinishedListener = index == ACTUAL_IMAGE_INDEX;
-    if (index == ACTUAL_IMAGE_INDEX) {
-      maybeNotifyOnFadeStarted();
-    }
+    mCallOnFadeFinishedListener = index == mActualImageLayer;
+    maybeNotifyOnFadeStarted(index);
 
     mTransitionState = TRANSITION_STARTING;
     mIsLayerOn[index] = true;
@@ -174,7 +176,7 @@ public class FadeDrawable extends ArrayDrawable {
    * @param index the index of the layer to fade out.
    */
   public void fadeOutLayer(int index) {
-    if (index == ACTUAL_IMAGE_INDEX) {
+    if (index == mActualImageLayer) {
       mCallOnFadeStartedListener = true;
       mCallOnFadeFinishedListener = true;
     }
@@ -334,17 +336,17 @@ public class FadeDrawable extends ArrayDrawable {
     }
   }
 
+  private void maybeNotifyOnFadeStarted(int index) {
+    if (mOnFadeListener != null && index == mActualImageLayer && mCallOnFadeStartedListener) {
+      mOnFadeListener.onFadeStarted();
+      mCallOnFadeStartedListener = false;
+    }
+  }
+
   private void maybeNotifyOnFadeFinished() {
     if (mOnFadeListener != null && mCallOnFadeFinishedListener) {
       mOnFadeListener.onFadeFinished();
       mCallOnFadeFinishedListener = false;
-    }
-  }
-
-  private void maybeNotifyOnFadeStarted() {
-    if (mOnFadeListener != null && mCallOnFadeStartedListener) {
-      mOnFadeListener.onFadeStarted();
-      mCallOnFadeStartedListener = false;
     }
   }
 

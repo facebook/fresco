@@ -20,8 +20,10 @@ import com.facebook.fresco.vito.core.impl.debug.DefaultDebugOverlayFactory2;
 import com.facebook.fresco.vito.core.impl.debug.NoOpDebugOverlayFactory2;
 import com.facebook.fresco.vito.provider.FrescoVitoProvider;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementation {
 
   private FrescoController2 mFrescoController;

@@ -8,11 +8,13 @@
 package com.facebook.imageutils;
 
 import android.util.Pair;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.Nullable;
 
 /** This class contains utility method in order to manage the WebP format metadata */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class WebpUtil {
 
   /** Header for VP8 (lossy WebP). Take care of the space into the String */

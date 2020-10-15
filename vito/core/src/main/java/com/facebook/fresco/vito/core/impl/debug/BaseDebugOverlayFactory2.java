@@ -10,9 +10,13 @@ package com.facebook.fresco.vito.core.impl.debug;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import com.facebook.common.internal.Supplier;
+import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.OkToExtend;
+import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @OkToExtend
 public abstract class BaseDebugOverlayFactory2 implements DebugOverlayFactory2 {
 
@@ -23,18 +27,21 @@ public abstract class BaseDebugOverlayFactory2 implements DebugOverlayFactory2 {
   }
 
   @Override
-  public void update(FrescoDrawable2 drawable) {
+  public void update(FrescoDrawable2 drawable, @Nullable ControllerListener2.Extras extras) {
     if (!mDebugOverlayEnabled.get()) {
       return;
     }
     DebugOverlayDrawable overlay = extractOrCreate(drawable);
     overlay.reset();
-    setData(overlay, drawable);
+    setData(overlay, drawable, extras);
   }
 
-  protected abstract void setData(DebugOverlayDrawable overlay, FrescoDrawable2 drawable);
+  protected abstract void setData(
+      DebugOverlayDrawable overlay,
+      FrescoDrawable2 drawable,
+      @Nullable ControllerListener2.Extras extras);
 
-  private DebugOverlayDrawable extractOrCreate(FrescoDrawable2 drawable) {
+  private static DebugOverlayDrawable extractOrCreate(FrescoDrawable2 drawable) {
     Drawable existingOverlay = drawable.getOverlayDrawable();
     if (existingOverlay instanceof DebugOverlayDrawable) {
       return (DebugOverlayDrawable) existingOverlay;
@@ -53,7 +60,7 @@ public abstract class BaseDebugOverlayFactory2 implements DebugOverlayFactory2 {
     return debugOverlay;
   }
 
-  private class DebugOverlayDrawableWrapper extends LayerDrawable {
+  private static class DebugOverlayDrawableWrapper extends LayerDrawable {
     private DebugOverlayDrawable mDebugOverlayDrawable;
 
     public DebugOverlayDrawableWrapper(

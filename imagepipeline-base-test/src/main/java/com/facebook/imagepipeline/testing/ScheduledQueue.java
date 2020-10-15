@@ -8,8 +8,10 @@
 package com.facebook.imagepipeline.testing;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** A queue that executes items according to the passage of time. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ScheduledQueue {
 
   private final FakeClock clock;

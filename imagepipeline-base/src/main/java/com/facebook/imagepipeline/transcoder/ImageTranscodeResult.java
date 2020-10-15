@@ -7,9 +7,11 @@
 
 package com.facebook.imagepipeline.transcoder;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Locale;
 
 /** Result returned by an {@link ImageTranscoder} when transcoding an image. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImageTranscodeResult {
 
   private @TranscodeStatus final int mTranscodeStatus;

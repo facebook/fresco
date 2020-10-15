@@ -11,12 +11,14 @@ import android.os.SystemClock;
 import android.util.Pair;
 import com.facebook.common.logging.FLog;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
 /** Logging for {@link ImageRequest}s. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class RequestLoggingListener implements RequestListener {
   private static final String TAG = "RequestLoggingListener";
 

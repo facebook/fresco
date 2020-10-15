@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import java.io.FileDescriptor;
 import java.io.InputStream;
+import javax.annotation.Nullable;
 
 /**
  * Interface for a bitmap factory that can decode WebP images even on versions of Android that don't
@@ -49,7 +50,8 @@ public interface WebpBitmapFactory {
    */
   void setBitmapCreator(final BitmapCreator bitmapCreator);
 
-  Bitmap decodeFileDescriptor(FileDescriptor fd, Rect outPadding, BitmapFactory.Options opts);
+  Bitmap decodeFileDescriptor(
+      FileDescriptor fd, @Nullable Rect outPadding, BitmapFactory.Options opts);
 
   Bitmap decodeStream(InputStream inputStream, Rect outPadding, BitmapFactory.Options opts);
 

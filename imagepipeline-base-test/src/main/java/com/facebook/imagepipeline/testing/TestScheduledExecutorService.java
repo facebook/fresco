@@ -7,11 +7,13 @@
 
 package com.facebook.imagepipeline.testing;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class TestScheduledExecutorService extends TestExecutorService
     implements ScheduledExecutorService {
 

@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import com.facebook.fresco.buildsrc.SampleDeps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.application'
@@ -52,9 +53,9 @@ android {
 }
 
 dependencies {
-    implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
-    implementation "androidx.recyclerview:recyclerview:${versions.androidx.recyclerview}"
-    implementation "androidx.preference:preference:${versions.androidx.preference}"
+    implementation SampleDeps.AndroidX.appcompat
+    implementation SampleDeps.AndroidX.recyclerview
+    implementation SampleDeps.AndroidX.preference
 
     implementation (fileTree(dir: 'libs', include: ['*.jar']))
 
@@ -88,14 +89,14 @@ dependencies {
     testImplementation TestDeps.junit
 
     androidTestImplementation TestDeps.junit
-    androidTestImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    androidTestImplementation("org.powermock:powermock-api-mockito2:${POWERMOCK_VERSION}") {
+    androidTestImplementation TestDeps.mockitoCore
+    androidTestImplementation(TestDeps.Powermock.apiMockito) {
         exclude group: 'org.mockito', module: 'mockito-all'
     }
-    androidTestImplementation "org.powermock:powermock-module-junit4:${POWERMOCK_VERSION}"
-    androidTestImplementation "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
-    androidTestImplementation "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
-    androidTestImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+    androidTestImplementation TestDeps.Powermock.moduleJunit4
+    androidTestImplementation TestDeps.Powermock.moduleJunit4Rule
+    androidTestImplementation TestDeps.Powermock.classloadingXstream
+    androidTestImplementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }

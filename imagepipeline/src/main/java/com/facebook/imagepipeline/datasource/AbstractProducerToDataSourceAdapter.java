@@ -18,6 +18,7 @@ import com.facebook.imagepipeline.producers.SettableProducerContext;
 import com.facebook.imagepipeline.request.HasImageRequest;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -27,6 +28,7 @@ import javax.annotation.concurrent.ThreadSafe;
  *
  * @param <T>
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 @ThreadSafe
 public abstract class AbstractProducerToDataSourceAdapter<T> extends AbstractDataSource<T>
     implements HasImageRequest {

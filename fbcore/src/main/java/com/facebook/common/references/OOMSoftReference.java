@@ -7,8 +7,8 @@
 
 package com.facebook.common.references;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.lang.ref.SoftReference;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -30,11 +30,12 @@ import javax.annotation.Nullable;
  * just to be on the safe side. TLDR: It's a reference that's cleared if and only if we otherwise
  * would have encountered an OOM.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class OOMSoftReference<T> {
 
-  SoftReference<T> softRef1;
-  SoftReference<T> softRef2;
-  SoftReference<T> softRef3;
+  @Nullable SoftReference<T> softRef1;
+  @Nullable SoftReference<T> softRef2;
+  @Nullable SoftReference<T> softRef3;
 
   public OOMSoftReference() {
     softRef1 = null;
@@ -42,7 +43,7 @@ public class OOMSoftReference<T> {
     softRef3 = null;
   }
 
-  public void set(@Nonnull T hardReference) {
+  public void set(T hardReference) {
     softRef1 = new SoftReference<T>(hardReference);
     softRef2 = new SoftReference<T>(hardReference);
     softRef3 = new SoftReference<T>(hardReference);

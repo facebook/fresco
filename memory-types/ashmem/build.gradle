@@ -12,6 +12,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 dependencies {
+    compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
     compileOnly Deps.AndroidX.androidxAnnotation
 
@@ -19,9 +20,9 @@ dependencies {
     implementation project(':imagepipeline')
 
     testImplementation TestDeps.junit
-    testImplementation "org.assertj:assertj-core:${versions.assertjCore}"
-    testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+    testImplementation TestDeps.assertjCore
+    testImplementation TestDeps.mockitoCore
+    testImplementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }

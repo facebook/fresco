@@ -8,10 +8,12 @@
 package com.facebook.imagepipeline.core;
 
 import android.os.Process;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /** ThreadFactory that applies a priority to the threads it creates. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class PriorityThreadFactory implements ThreadFactory {
 
   private final int mThreadPriority;

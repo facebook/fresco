@@ -8,8 +8,10 @@
 package com.facebook.common.references;
 
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class FinalizerCloseableReference<T> extends CloseableReference<T> {
 
   private static final String TAG = "FinalizerCloseableReference";
@@ -44,12 +46,13 @@ public class FinalizerCloseableReference<T> extends CloseableReference<T> {
         }
       }
 
+      T ref = mSharedReference.get();
       FLog.w(
           TAG,
           "Finalized without closing: %x %x (type = %s)",
           System.identityHashCode(this),
           System.identityHashCode(mSharedReference),
-          mSharedReference.get().getClass().getName());
+          ref == null ? null : ref.getClass().getName());
 
       mSharedReference.deleteReference();
     } finally {

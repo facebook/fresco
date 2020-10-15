@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.common.executors.StatefulRunnable;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import javax.annotation.Nullable;
 
@@ -17,6 +18,7 @@ import javax.annotation.Nullable;
  * <p>Class implements common functionality related to handling producer instrumentation and
  * resource management.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class StatefulProducerRunnable<T> extends StatefulRunnable<T> {
 
   private final Consumer<T> mConsumer;

@@ -7,8 +7,10 @@
 
 package com.facebook.fresco.viewport;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ViewportData {
 
   private final int mWidth;

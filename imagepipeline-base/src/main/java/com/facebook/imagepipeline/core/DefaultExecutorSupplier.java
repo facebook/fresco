@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.core;
 
 import android.os.Process;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -17,6 +18,7 @@ import java.util.concurrent.Executors;
  * <p>Provides one thread pool for the CPU-bound operations and another thread pool for the IO-bound
  * operations.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultExecutorSupplier implements ExecutorSupplier {
   // Allows for simultaneous reads and writes.
   private static final int NUM_IO_BOUND_THREADS = 2;

@@ -9,11 +9,13 @@ package com.facebook.imageutils;
 
 import android.media.ExifInterface;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 /** Util for obtaining information from JPEG file. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class JfifUtil {
 
   /**

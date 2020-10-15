@@ -7,9 +7,11 @@
 
 package com.facebook.imagepipeline.animated.base;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.Immutable;
 
 /** Options for creating {@link com.facebook.fresco.animation.drawable.AnimatedDrawable2}. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 @Immutable
 public class AnimatedDrawableOptions {
 

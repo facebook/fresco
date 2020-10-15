@@ -8,6 +8,7 @@
 package com.facebook.samples.zoomable;
 
 import android.graphics.Matrix;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * An implementation of {@link ZoomableController.Listener} that allows multiple child listeners to
  * be added and notified about {@link ZoomableController} events.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class MultiZoomableControllerListener implements ZoomableController.Listener {
 
   private final List<ZoomableController.Listener> mListeners = new ArrayList<>();

@@ -14,7 +14,9 @@ import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.provider.FrescoVitoProvider;
 import com.facebook.fresco.vito.source.ImageSource;
 import com.facebook.fresco.vito.view.VitoView;
+import com.facebook.infer.annotation.Nullsafe;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class LazyVitoViewImpl implements VitoView.Implementation {
 
   private final FrescoVitoProvider.Implementation mProvider;

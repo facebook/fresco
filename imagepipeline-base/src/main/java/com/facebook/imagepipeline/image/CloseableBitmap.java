@@ -8,8 +8,10 @@
 package com.facebook.imagepipeline.image;
 
 import android.graphics.Bitmap;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** {@link CloseableImage} that wraps a bitmap. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class CloseableBitmap extends CloseableImage {
 
   /**

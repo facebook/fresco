@@ -7,8 +7,10 @@
 
 package com.facebook.imagepipeline.memory;
 
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.ThreadSafe;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class BitmapCounterProvider {
 
   private static final long KB = 1024;

@@ -18,9 +18,11 @@ import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.core.CloseableReferenceFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** Factory implementation for Honeycomb through Kitkat */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @ThreadSafe
 public class HoneycombBitmapFactory extends PlatformBitmapFactory {

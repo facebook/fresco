@@ -8,6 +8,17 @@
 package com.facebook.fresco.buildsrc
 
 object SampleDeps {
+    
+    object AndroidX {
+        const val appcompat = "androidx.appcompat:appcompat:1.0.2"
+        const val cardview = "androidx.cardview:cardview:1.0.0"
+        const val preference = "androidx.preference:preference:1.0.0"
+        const val recyclerview = "androidx.recyclerview:recyclerview:1.0.0"
+    }
+    
+    object Google {
+        const val material = "com.google.android.material:material:1.1.0-alpha03"
+    }
 
     object Comparison {
         object Glide {
@@ -24,6 +35,7 @@ object SampleDeps {
         object Picasso {
             private const val version = "2.71828"
             const val picasso = "com.squareup.picasso:picasso:$version"
+            const val okhttpDownloader = "com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2"
         }
 
         object AndroidQuery {
@@ -35,5 +47,9 @@ object SampleDeps {
     object Showcase {
 
         const val caverockSvg = "com.caverock:androidsvg-aar:1.4"
+    }
+    
+    object Zoomable {
+        const val legacyAndroidXSupportCoreUi = "androidx.legacy:legacy-support-core-ui:1.0.0"
     }
 }

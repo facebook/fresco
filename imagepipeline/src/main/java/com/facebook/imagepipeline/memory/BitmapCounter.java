@@ -11,9 +11,11 @@ import android.graphics.Bitmap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.GuardedBy;
 
 /** Counts bitmaps - keeps track of both, count and total size in bytes. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class BitmapCounter {
 
   @GuardedBy("this")

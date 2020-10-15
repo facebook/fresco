@@ -11,6 +11,7 @@ import com.facebook.datasource.DataSource;
 import com.facebook.imagepipeline.listener.RequestListener2;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -18,6 +19,7 @@ import javax.annotation.concurrent.ThreadSafe;
  *
  * @param <T>
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 @ThreadSafe
 public class ProducerToDataSourceAdapter<T> extends AbstractProducerToDataSourceAdapter<T> {
 

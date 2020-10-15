@@ -12,6 +12,7 @@ import com.facebook.common.internal.Predicate;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.memory.MemoryTrimmable;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -20,6 +21,7 @@ import javax.annotation.Nullable;
  * @param <K> the key type
  * @param <V> the value type
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface MemoryCache<K, V> extends MemoryTrimmable, HasDebugData {
 
   /** Interface used to specify the trimming strategy for the cache. */

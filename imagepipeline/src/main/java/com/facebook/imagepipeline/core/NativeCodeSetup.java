@@ -7,7 +7,10 @@
 
 package com.facebook.imagepipeline.core;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /** Setter and getter for option about using native code. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class NativeCodeSetup {
 
   private static boolean sUseNativeCode = true;

@@ -12,6 +12,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 dependencies {
+    compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
     implementation Deps.Bolts.tasks
     compileOnly Deps.javaxAnnotation
@@ -22,13 +23,13 @@ dependencies {
     testImplementation project(':imagepipeline-base-test')
     testImplementation project(':imagepipeline-test')
     testImplementation TestDeps.junit
-    testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    testImplementation("org.powermock:powermock-api-mockito2:${POWERMOCK_VERSION}") {
+    testImplementation TestDeps.mockitoCore
+    testImplementation(TestDeps.Powermock.apiMockito) {
         exclude group: 'org.mockito', module: 'mockito-all'
     }
-    testImplementation "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
-    testImplementation "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
-    testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+    testImplementation TestDeps.Powermock.moduleJunit4Rule
+    testImplementation TestDeps.Powermock.classloadingXstream
+    testImplementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }

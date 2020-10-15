@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.systrace;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -17,6 +18,7 @@ import javax.annotation.Nullable;
  * simply calls {@code android.os.Trace} (see {@link DefaultFrescoSystrace}). You may supply your
  * own with {@link FrescoSystrace#provide(Systrace)}.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class FrescoSystrace {
 
   /** Convenience implementation of ArgsBuilder to use when we aren't tracing. */

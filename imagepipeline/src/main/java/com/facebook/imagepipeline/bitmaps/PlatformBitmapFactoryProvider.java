@@ -11,7 +11,9 @@ import android.os.Build;
 import com.facebook.imagepipeline.core.CloseableReferenceFactory;
 import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
+import com.facebook.infer.annotation.Nullsafe;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PlatformBitmapFactoryProvider {
 
   /**

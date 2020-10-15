@@ -10,7 +10,9 @@ package com.facebook.imagepipeline.systrace;
 import android.os.Build;
 import android.os.Trace;
 import com.facebook.imagepipelinebase.BuildConfig;
+import com.facebook.infer.annotation.Nullsafe;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultFrescoSystrace implements FrescoSystrace.Systrace {
 
   @Override

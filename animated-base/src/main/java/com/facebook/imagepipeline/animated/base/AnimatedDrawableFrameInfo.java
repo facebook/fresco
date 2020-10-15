@@ -7,7 +7,10 @@
 
 package com.facebook.imagepipeline.animated.base;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /** Info per frame returned by {@link AnimatedDrawableBackend}. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class AnimatedDrawableFrameInfo {
 
   /** How to dispose of the current frame before rendering the next frame. */

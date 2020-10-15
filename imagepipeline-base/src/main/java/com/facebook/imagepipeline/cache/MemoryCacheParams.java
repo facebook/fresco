@@ -7,9 +7,11 @@
 
 package com.facebook.imagepipeline.cache;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.TimeUnit;
 
 /** Configuration for a memory cache. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class MemoryCacheParams {
 
   public final int maxCacheSize;

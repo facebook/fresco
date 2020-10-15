@@ -11,6 +11,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 dependencies {
+    compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
 

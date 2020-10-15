@@ -12,6 +12,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -23,6 +24,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * <p>The free list of each bucket uses {@link OOMSoftReference}s.
  */
 @ThreadSafe
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FlexByteArrayPool {
 
   private final ResourceReleaser<byte[]> mResourceReleaser;

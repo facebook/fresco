@@ -26,7 +26,7 @@ dependencies {
     implementation project(':memory-types:simple')
 
     testImplementation TestDeps.junit
-    testImplementation "org.assertj:assertj-core:${versions.assertjCore}"
+    testImplementation TestDeps.assertjCore
 }
 
 android {

@@ -18,13 +18,13 @@ dependencies {
     implementation project(':fbcore')
 
     implementation TestDeps.junit
-    implementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    implementation("org.powermock:powermock-api-mockito2:${POWERMOCK_VERSION}") {
+    implementation TestDeps.mockitoCore
+    implementation(TestDeps.Powermock.apiMockito) {
         exclude group: 'org.mockito', module: 'mockito-all'
     }
-    implementation "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
-    implementation "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
-    implementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+    implementation TestDeps.Powermock.moduleJunit4Rule
+    implementation TestDeps.Powermock.classloadingXstream
+    implementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'com.google.auto.service', module: 'auto-service'

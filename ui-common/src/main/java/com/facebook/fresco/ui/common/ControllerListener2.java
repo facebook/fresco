@@ -3,12 +3,15 @@
 package com.facebook.fresco.ui.common;
 
 import android.net.Uri;
+import com.facebook.infer.annotation.Nullsafe;
+import com.facebook.infer.annotation.PropagatesNullable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 
 /* Experimental */
 @Deprecated
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface ControllerListener2<INFO> {
 
   class Extras {
@@ -22,7 +25,7 @@ public interface ControllerListener2<INFO> {
 
     public int viewportWidth = -1;
     public int viewportHeight = -1;
-    public Object scaleType;
+    public @Nullable Object scaleType;
     public float focusX = -1;
     public float focusY = -1;
 
@@ -49,7 +52,7 @@ public interface ControllerListener2<INFO> {
       return extras;
     }
 
-    private static Map<String, Object> copyMap(Map<String, Object> map) {
+    private static Map<String, Object> copyMap(@PropagatesNullable Map<String, Object> map) {
       if (map == null) {
         return null;
       }

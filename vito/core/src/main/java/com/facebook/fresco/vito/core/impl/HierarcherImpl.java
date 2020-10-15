@@ -75,18 +75,20 @@ public class HierarcherImpl implements Hierarcher {
   }
 
   @Override
+  @Nullable
   public Drawable buildProgressDrawable(Resources resources, ImageOptions imageOptions) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("HierarcherImpl#buildProgressDrawable");
     }
     try {
       if (imageOptions.getProgressRes() == 0 && imageOptions.getProgressDrawable() == null) {
-        return NOP_DRAWABLE;
+        return null;
       }
       Drawable progressDrawable = imageOptions.getProgressDrawable();
       if (progressDrawable == null) {
         progressDrawable = resources.getDrawable(imageOptions.getProgressRes());
       }
+      progressDrawable.setLevel(0);
       if (imageOptions.getProgressScaleType() != null) {
         return new ScaleTypeDrawable(progressDrawable, imageOptions.getProgressScaleType());
       }
@@ -198,6 +200,7 @@ public class HierarcherImpl implements Hierarcher {
         }
       } else {
         frescoDrawable.setPlaceholderDrawable(null);
+        frescoDrawable.setProgressDrawable(null);
       }
       return actualDrawable;
     } finally {

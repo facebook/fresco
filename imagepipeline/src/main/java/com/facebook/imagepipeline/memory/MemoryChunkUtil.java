@@ -8,7 +8,9 @@
 package com.facebook.imagepipeline.memory;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class MemoryChunkUtil {
 
   /**
