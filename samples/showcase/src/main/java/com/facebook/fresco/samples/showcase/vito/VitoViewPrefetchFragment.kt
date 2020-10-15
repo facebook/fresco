@@ -50,11 +50,11 @@ class VitoViewPrefetchFragment : BaseShowcaseFragment() {
         }
 
         button_prefetch_encoded.setOnClickListener {
-            prefetcher.prefetchToEncodedCache(uri, imageOptions, "prefetch_bitmap")
+            prefetcher.prefetchToEncodedCache(uri, imageOptions, "prefetch_encoded")
         }
 
         button_prefetch_disk.setOnClickListener {
-            prefetcher.prefetchToDiskCache(uri, imageOptions, "prefetch_bitmap")
+            prefetcher.prefetchToDiskCache(uri, imageOptions, "prefetch_disk")
         }
 
         button_toggle_images.setOnClickListener {
