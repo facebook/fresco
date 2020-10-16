@@ -14,6 +14,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.drawable.FadeDrawable;
+import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.fresco.middleware.MiddlewareUtils;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.vito.core.DrawableDataSubscriber;
@@ -26,9 +27,7 @@ import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.core.VitoImageRequestListener;
 import com.facebook.fresco.vito.core.VitoUtils;
 import com.facebook.fresco.vito.core.impl.debug.DebugOverlayFactory2;
-import com.facebook.fresco.vito.listener.ForwardingImageListener;
 import com.facebook.fresco.vito.listener.ImageListener;
-import com.facebook.fresco.vito.listener.impl.AutoPlayImageListener;
 import com.facebook.imagepipeline.image.CloseableImage;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -97,12 +96,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     frescoDrawable.setDrawableDataSubscriber(this);
     frescoDrawable.setImageRequest(imageRequest);
     frescoDrawable.setCallerContext(callerContext);
-    if (imageRequest.imageOptions.shouldAutoPlay()) {
-      frescoDrawable.setImageListener(
-          ForwardingImageListener.create(listener, AutoPlayImageListener.getInstance()));
-    } else {
-      frescoDrawable.setImageListener(listener);
-    }
+    frescoDrawable.setImageListener(listener);
 
     frescoDrawable.setVitoImageRequestListener(mGlobalImageListener);
 
@@ -205,6 +199,9 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             drawable.getActualImageWrapper(),
             isImmediate,
             null);
+    if (imageRequest.imageOptions.shouldAutoPlay() && actualDrawable instanceof AnimatedDrawable2) {
+      ((AnimatedDrawable2) actualDrawable).start();
+    }
     Extras extras = obtainExtras(dataSource, image, drawable);
     drawable
         .getImageListener()
