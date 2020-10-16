@@ -54,6 +54,15 @@
           android:textAppearance="?android:attr/textAppearanceSmall"
           />
 
+      <Switch
+          android:id="@+id/switch_auto_play_animations"
+          android:text="@string/vito_litho_image_options_config_switch_auto_play_animations"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingLeft="@dimen/switch_padding"
+          android:checked="true"
+          />
+
       <Spinner
           android:id="@+id/spinner_rounding"
           android:layout_width="match_parent"

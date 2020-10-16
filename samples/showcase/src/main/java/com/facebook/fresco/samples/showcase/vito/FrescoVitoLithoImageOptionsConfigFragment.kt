@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.fragment_vito_image_options_config.*
 class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
 
     private val imageListener = DebugImageListener()
-    private val imageOptionsBuilder = ImageOptions.create().autoPlay(true).placeholderApplyRoundingOptions(true)
+    private val imageOptionsBuilder = ImageOptions.create().placeholderApplyRoundingOptions(true)
     private val imageSourceProvider = ImageSourceConfigurator(sampleUris())
 
     private var componentContext: ComponentContext? = null
@@ -88,6 +88,8 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
         spinner_custom_drawable_factory.setupWithList(VitoSpinners.customDrawableFactoryOptions) {
             refresh(it(imageOptionsBuilder)) 
         }
+        switch_auto_play_animations.setOnCheckedChangeListener { _, isChecked -> refresh(imageOptionsBuilder.autoPlay(isChecked)) }
+        imageOptionsBuilder.autoPlay(switch_auto_play_animations.isChecked())
     }
 
     override fun getTitleId() = R.string.vito_litho_image_options_config
