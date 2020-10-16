@@ -38,7 +38,7 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
     mBorderPaint.setStyle(Paint.Style.STROKE);
   }
 
-  public RoundedBitmapDrawable(Resources res, Bitmap bitmap) {
+  public RoundedBitmapDrawable(Resources res, @Nullable Bitmap bitmap) {
     this(res, bitmap, null);
   }
 
