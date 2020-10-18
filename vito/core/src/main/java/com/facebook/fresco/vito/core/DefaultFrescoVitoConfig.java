@@ -24,6 +24,11 @@ public class DefaultFrescoVitoConfig implements FrescoVitoConfig {
     return true;
   }
 
+  @Override
+  public boolean useBindOnly() {
+    return false;
+  }
+
   public static class DefaultPrefetchConfig implements PrefetchConfig {
     @Override
     public boolean prefetchInOnPrepare() {

@@ -159,6 +159,9 @@ public class FrescoVitoImage2Spec {
       @FromBoundsDefined Rect viewportDimensions,
       @State final @Nullable AtomicReference<DataSource<Void>> workingRangePrefetchData,
       @Prop(optional = true) FadeDrawable.OnFadeListener onFadeListener) {
+    if (FrescoVitoProvider.getConfig().useBindOnly()) {
+      return;
+    }
     FrescoVitoProvider.getController()
         .fetch(
             frescoDrawable,
@@ -209,7 +212,11 @@ public class FrescoVitoImage2Spec {
       ComponentContext c,
       FrescoDrawable2 frescoDrawable,
       @FromPrepare DataSource<Void> prefetchDataSource) {
-    FrescoVitoProvider.getController().releaseDelayed(frescoDrawable);
+    if (FrescoVitoProvider.getConfig().useBindOnly()) {
+      FrescoVitoProvider.getController().releaseImmediately(frescoDrawable);
+    } else {
+      FrescoVitoProvider.getController().releaseDelayed(frescoDrawable);
+    }
     if (prefetchDataSource != null) {
       prefetchDataSource.close();
     }
@@ -220,6 +227,9 @@ public class FrescoVitoImage2Spec {
       ComponentContext c,
       FrescoDrawable2 frescoDrawable,
       @FromPrepare DataSource<Void> prefetchDataSource) {
+    if (FrescoVitoProvider.getConfig().useBindOnly()) {
+      return;
+    }
     FrescoVitoProvider.getController().release(frescoDrawable);
     if (prefetchDataSource != null) {
       prefetchDataSource.close();

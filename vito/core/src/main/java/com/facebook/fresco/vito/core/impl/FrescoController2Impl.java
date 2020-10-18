@@ -181,6 +181,11 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     drawable.scheduleReleaseNextFrame();
   }
 
+  @Override
+  public void releaseImmediately(FrescoDrawable2 drawable) {
+    drawable.releaseImmediately();
+  }
+
   private void setActualImage(
       FrescoDrawable2 drawable,
       VitoImageRequest imageRequest,

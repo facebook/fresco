@@ -12,4 +12,6 @@ public interface FrescoVitoConfig {
   PrefetchConfig getPrefetchConfig();
 
   boolean submitFetchOnBgThread();
+
+  boolean useBindOnly();
 }

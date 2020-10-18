@@ -233,6 +233,14 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   }
 
   @Override
+  public void releaseImmediately() {
+    if (mDrawableDataSubscriber != null) {
+      mDrawableDataSubscriber.onRelease(this);
+    }
+    close();
+  }
+
+  @Override
   public void cancelReleaseNextFrame() {
     sDeferredReleaser.cancelDeferredRelease(this);
   }

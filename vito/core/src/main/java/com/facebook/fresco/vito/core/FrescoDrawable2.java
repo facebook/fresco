@@ -92,6 +92,8 @@ public abstract class FrescoDrawable2 extends BaseFrescoDrawable
 
   public abstract void scheduleReleaseNextFrame();
 
+  public abstract void releaseImmediately();
+
   public abstract void cancelReleaseNextFrame();
 
   @Override
