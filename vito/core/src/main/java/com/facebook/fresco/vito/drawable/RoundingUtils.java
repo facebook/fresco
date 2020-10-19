@@ -20,7 +20,6 @@ import com.facebook.drawee.drawable.RoundedNinePatchDrawable;
 import com.facebook.fresco.vito.options.BorderOptions;
 import com.facebook.fresco.vito.options.RoundingOptions;
 import com.facebook.infer.annotation.Nullsafe;
-
 import javax.annotation.Nullable;
 
 /**
