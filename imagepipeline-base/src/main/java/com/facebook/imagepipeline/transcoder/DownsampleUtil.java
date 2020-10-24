@@ -15,6 +15,7 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.infer.annotation.Nullsafe;
+import java.text.DecimalFormat;
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.STRICT)
@@ -102,17 +103,22 @@ public class DownsampleUtil {
     final float widthRatio = ((float) resizeOptions.width) / widthAfterRotation;
     final float heightRatio = ((float) resizeOptions.height) / heightAfterRotation;
     float ratio = Math.max(widthRatio, heightRatio);
+
+    // Format float values for the log message in advance
+    // due to possible String.Format() NPE within FLog.formatString() in some OS
+    final DecimalFormat dimensionsFormatter = new DecimalFormat("#.#");
+    final DecimalFormat ratioFormatter = new DecimalFormat("#.###");
     FLog.v(
         "DownsampleUtil",
         "Downsample - Specified size: %dx%d, image size: %dx%d "
-            + "ratio: %.1f x %.1f, ratio: %.3f",
+            + "ratio: %s x %s, ratio: %s",
         resizeOptions.width,
         resizeOptions.height,
         widthAfterRotation,
         heightAfterRotation,
-        widthRatio,
-        heightRatio,
-        ratio);
+        dimensionsFormatter.format(widthRatio),
+        dimensionsFormatter.format(heightRatio),
+        ratioFormatter.format(ratio));
     return ratio;
   }
 
