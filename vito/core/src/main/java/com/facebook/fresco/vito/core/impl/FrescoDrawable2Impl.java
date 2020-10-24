@@ -15,6 +15,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
+import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -72,8 +73,11 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
 
   private @ImageOrigin int mImageOrigin = ImageOrigin.UNKNOWN;
 
-  public FrescoDrawable2Impl(boolean useNewReleaseCallbacks) {
+  public FrescoDrawable2Impl(
+      boolean useNewReleaseCallbacks,
+      @Nullable ImagePerfControllerListener2 imagePerfControllerListener) {
     mUseNewReleaseCallbacks = useNewReleaseCallbacks;
+    mImageListener.setImagePerfControllerListener(imagePerfControllerListener);
   }
 
   @Override
@@ -212,6 +216,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     mImageId = 0;
     mExtras = null;
     setOnFadeListener(null);
+    mImageListener.onReset();
   }
 
   @Override

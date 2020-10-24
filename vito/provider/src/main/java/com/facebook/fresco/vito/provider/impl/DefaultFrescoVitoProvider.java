@@ -60,7 +60,8 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
             null,
             debugOverlayEnabledSupplier == null
                 ? new NoOpDebugOverlayFactory2()
-                : new DefaultDebugOverlayFactory2(debugOverlayEnabledSupplier));
+                : new DefaultDebugOverlayFactory2(debugOverlayEnabledSupplier),
+            null);
   }
 
   @Override

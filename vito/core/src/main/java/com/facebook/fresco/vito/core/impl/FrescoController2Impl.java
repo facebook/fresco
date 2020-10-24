@@ -10,9 +10,11 @@ package com.facebook.fresco.vito.core.impl;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import com.facebook.common.internal.ImmutableMap;
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
+import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
 import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.fresco.middleware.MiddlewareUtils;
@@ -48,6 +50,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   private final VitoImagePipeline mImagePipeline;
   private final @Nullable VitoImageRequestListener mGlobalImageListener;
   private final DebugOverlayFactory2 mDebugOverlayFactory;
+  private final @Nullable Supplier<ImagePerfControllerListener2> mImagePerfListenerSupplier;
 
   public FrescoController2Impl(
       FrescoVitoConfig config,
@@ -56,7 +59,8 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       Executor uiThreadExecutor,
       VitoImagePipeline imagePipeline,
       @Nullable VitoImageRequestListener globalImageListener,
-      DebugOverlayFactory2 debugOverlayFactory) {
+      DebugOverlayFactory2 debugOverlayFactory,
+      @Nullable Supplier<ImagePerfControllerListener2> imagePerfListenerSupplier) {
     mConfig = config;
     mHierarcher = hierarcher;
     mLightweightBackgroundThreadExecutor = lightweightBackgroundThreadExecutor;
@@ -64,11 +68,14 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     mImagePipeline = imagePipeline;
     mGlobalImageListener = globalImageListener;
     mDebugOverlayFactory = debugOverlayFactory;
+    mImagePerfListenerSupplier = imagePerfListenerSupplier;
   }
 
   @Override
   public FrescoDrawable2 createDrawable() {
-    return new FrescoDrawable2Impl(mConfig.useNewReleaseCallback());
+    return new FrescoDrawable2Impl(
+        mConfig.useNewReleaseCallback(),
+        mImagePerfListenerSupplier == null ? null : mImagePerfListenerSupplier.get());
   }
 
   @Override

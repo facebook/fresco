@@ -20,6 +20,7 @@ import com.facebook.drawee.backends.pipeline.info.ImagePerfNotifier;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfState;
 import com.facebook.drawee.backends.pipeline.info.VisibilityState;
 import com.facebook.fresco.ui.common.BaseControllerListener2;
+import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.fresco.ui.common.OnDrawControllerListener;
 import com.facebook.imagepipeline.image.ImageInfo;
@@ -78,7 +79,8 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   }
 
   @Override
-  public void onSubmit(String id, @Nullable Object callerContext, @Nullable Extras extraData) {
+  public void onSubmit(
+      String id, @Nullable Object callerContext, @Nullable ControllerListener2.Extras extraData) {
     final long now = mClock.now();
 
     ImagePerfState state = obtainState();
@@ -109,7 +111,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
 
   @Override
   public void onFinalImageSet(
-      String id, @Nullable ImageInfo imageInfo, @Nullable Extras extraData) {
+      String id, @Nullable ImageInfo imageInfo, @Nullable ControllerListener2.Extras extraData) {
     final long now = mClock.now();
 
     ImagePerfState state = obtainState();
@@ -125,7 +127,8 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   }
 
   @Override
-  public void onFailure(String id, Throwable throwable, @Nullable Extras extras) {
+  public void onFailure(
+      String id, Throwable throwable, @Nullable ControllerListener2.Extras extras) {
     final long now = mClock.now();
 
     ImagePerfState state = obtainState();
@@ -142,7 +145,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   }
 
   @Override
-  public void onRelease(String id, Extras extras) {
+  public void onRelease(String id, ControllerListener2.Extras extras) {
     final long now = mClock.now();
 
     ImagePerfState state = obtainState();
@@ -178,6 +181,10 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     state.setVisibilityEventTimeMs(now);
 
     updateVisibility(state, VisibilityState.VISIBLE);
+  }
+
+  public void resetState() {
+    obtainState().reset();
   }
 
   @VisibleForTesting
