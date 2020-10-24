@@ -68,7 +68,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
 
   @Override
   public FrescoDrawable2 createDrawable() {
-    return new FrescoDrawable2Impl();
+    return new FrescoDrawable2Impl(mConfig.useNewReleaseCallback());
   }
 
   @Override

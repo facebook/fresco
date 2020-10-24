@@ -36,6 +36,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   private static final Handler sHandler = new Handler(Looper.getMainLooper());
   private static final DeferredReleaser sDeferredReleaser = DeferredReleaser.getInstance();
 
+  private final boolean mUseNewReleaseCallbacks;
   private @Nullable VitoImageRequest mImageRequest;
   private @Nullable Object mCallerContext;
   private @Nullable DrawableDataSubscriber mDrawableDataSubscriber;
@@ -70,6 +71,10 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
       };
 
   private @ImageOrigin int mImageOrigin = ImageOrigin.UNKNOWN;
+
+  public FrescoDrawable2Impl(boolean useNewReleaseCallbacks) {
+    mUseNewReleaseCallbacks = useNewReleaseCallbacks;
+  }
 
   @Override
   public @Nullable Drawable setImage(
@@ -191,6 +196,9 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   public void close() {
     cancelReleaseNextFrame();
     cancelReleaseDelayed();
+    if (mUseNewReleaseCallbacks && mFetchSubmitted && mDrawableDataSubscriber != null) {
+      mDrawableDataSubscriber.onRelease(this);
+    }
     super.close();
     super.reset();
     mDrawableDataSubscriber = null;
@@ -227,14 +235,14 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   public void scheduleReleaseNextFrame() {
     cancelReleaseDelayed();
     sDeferredReleaser.scheduleDeferredRelease(this);
-    if (mDrawableDataSubscriber != null) {
+    if (!mUseNewReleaseCallbacks && mDrawableDataSubscriber != null) {
       mDrawableDataSubscriber.onRelease(this);
     }
   }
 
   @Override
   public void releaseImmediately() {
-    if (mDrawableDataSubscriber != null) {
+    if (!mUseNewReleaseCallbacks && mDrawableDataSubscriber != null) {
       mDrawableDataSubscriber.onRelease(this);
     }
     close();

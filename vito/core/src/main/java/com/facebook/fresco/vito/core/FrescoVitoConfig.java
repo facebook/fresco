@@ -14,4 +14,6 @@ public interface FrescoVitoConfig {
   boolean submitFetchOnBgThread();
 
   boolean useBindOnly();
+
+  boolean useNewReleaseCallback();
 }
