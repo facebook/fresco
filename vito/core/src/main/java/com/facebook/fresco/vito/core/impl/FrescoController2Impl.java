@@ -102,6 +102,9 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       frescoDrawable.cancelReleaseDelayed();
       return true; // already set
     }
+    if (frescoDrawable.isFetchSubmitted()) {
+      frescoDrawable.getImagePerfListener().onDrawableReconfigured(frescoDrawable);
+    }
     // We didn't -> Reset everything
     frescoDrawable.close();
     // Basic setup

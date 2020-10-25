@@ -30,4 +30,6 @@ public interface VitoImagePerfListener {
   void onScheduleReleaseNextFrame(FrescoDrawable2 drawable);
 
   void onReleaseImmediately(FrescoDrawable2 drawable);
+
+  void onDrawableReconfigured(FrescoDrawable2 drawable);
 }

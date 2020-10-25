@@ -73,6 +73,11 @@ public class LogcatImagePerfListener implements VitoImagePerfListener {
     log("onReleaseImmediately", drawable);
   }
 
+  @Override
+  public void onDrawableReconfigured(FrescoDrawable2 drawable) {
+    log("onReconfigured", drawable);
+  }
+
   private static void log(String name, FrescoDrawable2 drawable) {
     log(name, drawable, null);
   }
