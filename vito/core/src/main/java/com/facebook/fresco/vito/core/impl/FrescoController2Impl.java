@@ -24,6 +24,7 @@ import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.FrescoVitoConfig;
 import com.facebook.fresco.vito.core.Hierarcher;
+import com.facebook.fresco.vito.core.VitoImagePerfListener;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.core.VitoImageRequestListener;
@@ -51,6 +52,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   private final @Nullable VitoImageRequestListener mGlobalImageListener;
   private final DebugOverlayFactory2 mDebugOverlayFactory;
   private final @Nullable Supplier<ImagePerfControllerListener2> mImagePerfListenerSupplier;
+  private final VitoImagePerfListener mVitoImagePerfListener;
 
   public FrescoController2Impl(
       FrescoVitoConfig config,
@@ -60,7 +62,8 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       VitoImagePipeline imagePipeline,
       @Nullable VitoImageRequestListener globalImageListener,
       DebugOverlayFactory2 debugOverlayFactory,
-      @Nullable Supplier<ImagePerfControllerListener2> imagePerfListenerSupplier) {
+      @Nullable Supplier<ImagePerfControllerListener2> imagePerfListenerSupplier,
+      VitoImagePerfListener vitoImagePerfListener) {
     mConfig = config;
     mHierarcher = hierarcher;
     mLightweightBackgroundThreadExecutor = lightweightBackgroundThreadExecutor;
@@ -69,13 +72,15 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     mGlobalImageListener = globalImageListener;
     mDebugOverlayFactory = debugOverlayFactory;
     mImagePerfListenerSupplier = imagePerfListenerSupplier;
+    mVitoImagePerfListener = vitoImagePerfListener;
   }
 
   @Override
   public FrescoDrawable2 createDrawable() {
     return new FrescoDrawable2Impl(
         mConfig.useNewReleaseCallback(),
-        mImagePerfListenerSupplier == null ? null : mImagePerfListenerSupplier.get());
+        mImagePerfListenerSupplier == null ? null : mImagePerfListenerSupplier.get(),
+        mVitoImagePerfListener);
   }
 
   @Override

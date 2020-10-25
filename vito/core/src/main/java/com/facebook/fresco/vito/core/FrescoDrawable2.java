@@ -115,4 +115,6 @@ public abstract class FrescoDrawable2 extends BaseFrescoDrawable
   public abstract @Nullable Object getExtras();
 
   public abstract void setExtras(@Nullable Object extras);
+
+  public abstract VitoImagePerfListener getImagePerfListener();
 }

@@ -23,6 +23,7 @@ import com.facebook.fresco.vito.core.CombinedImageListener;
 import com.facebook.fresco.vito.core.DrawableDataSubscriber;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.NopDrawable;
+import com.facebook.fresco.vito.core.VitoImagePerfListener;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.core.VitoImageRequestListener;
 import com.facebook.fresco.vito.listener.ImageListener;
@@ -48,6 +49,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   private boolean mFetchSubmitted;
 
   private final CombinedImageListenerImpl mImageListener = new CombinedImageListenerImpl();
+  private final VitoImagePerfListener mImagePerfListener;
 
   private final Runnable mReleaseRunnable =
       new Runnable() {
@@ -75,9 +77,11 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
 
   public FrescoDrawable2Impl(
       boolean useNewReleaseCallbacks,
-      @Nullable ImagePerfControllerListener2 imagePerfControllerListener) {
+      @Nullable ImagePerfControllerListener2 imagePerfControllerListener,
+      VitoImagePerfListener imagePerfListener) {
     mUseNewReleaseCallbacks = useNewReleaseCallbacks;
     mImageListener.setImagePerfControllerListener(imagePerfControllerListener);
+    mImagePerfListener = imagePerfListener;
   }
 
   @Override
@@ -296,5 +300,10 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   @Override
   public void setExtras(@Nullable Object extras) {
     mExtras = extras;
+  }
+
+  @Override
+  public VitoImagePerfListener getImagePerfListener() {
+    return mImagePerfListener;
   }
 }
