@@ -126,6 +126,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
 
     // Notify listeners that we're about to fetch an image
     frescoDrawable.getImageListener().onSubmit(imageId, imageRequest, callerContext, extras);
+    frescoDrawable.getImagePerfListener().onImageFetch(frescoDrawable);
 
     // Check if the image is in cache
     CloseableReference<CloseableImage> cachedImage = mImagePipeline.getCachedImage(imageRequest);
@@ -185,16 +186,19 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
 
   @Override
   public void releaseDelayed(final FrescoDrawable2 drawable) {
+    drawable.getImagePerfListener().onScheduleReleaseDelayed(drawable);
     drawable.scheduleReleaseDelayed();
   }
 
   @Override
   public void release(final FrescoDrawable2 drawable) {
+    drawable.getImagePerfListener().onScheduleReleaseNextFrame(drawable);
     drawable.scheduleReleaseNextFrame();
   }
 
   @Override
   public void releaseImmediately(FrescoDrawable2 drawable) {
+    drawable.getImagePerfListener().onReleaseImmediately(drawable);
     drawable.releaseImmediately();
   }
 
@@ -229,6 +233,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             image.get(),
             extras,
             actualDrawable);
+    drawable.getImagePerfListener().onImageSuccess(drawable, isImmediate);
     float progress = 1f;
     if (dataSource != null && !dataSource.isFinished()) {
       progress = dataSource.getProgress();
@@ -276,6 +281,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             errorDrawable,
             dataSource.getFailureCause(),
             extras);
+    drawable.getImagePerfListener().onImageError(drawable);
     mDebugOverlayFactory.update(drawable, extras);
   }
 
@@ -298,6 +304,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
         .getImageListener()
         .onRelease(
             drawable.getImageId(), drawable.getImageRequest(), obtainExtras(null, null, drawable));
+    drawable.getImagePerfListener().onImageRelease(drawable);
   }
 
   private static Extras obtainExtras(

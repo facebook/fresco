@@ -38,6 +38,41 @@ public class LogcatImagePerfListener implements VitoImagePerfListener {
     log("onImageUnbind", drawable);
   }
 
+  @Override
+  public void onImageFetch(FrescoDrawable2 drawable) {
+    log("onImageRequested", drawable);
+  }
+
+  @Override
+  public void onImageSuccess(FrescoDrawable2 drawable, boolean wasImmediate) {
+    log("onImageSuccess - immediate: " + wasImmediate, drawable);
+  }
+
+  @Override
+  public void onImageError(FrescoDrawable2 drawable) {
+    log("onImageError", drawable);
+  }
+
+  @Override
+  public void onImageRelease(FrescoDrawable2 drawable) {
+    log("onImageRelease", drawable);
+  }
+
+  @Override
+  public void onScheduleReleaseDelayed(FrescoDrawable2 drawable) {
+    log("onImageReleaseDelayed", drawable);
+  }
+
+  @Override
+  public void onScheduleReleaseNextFrame(FrescoDrawable2 drawable) {
+    log("onScheduleReleaseNextFrame", drawable);
+  }
+
+  @Override
+  public void onReleaseImmediately(FrescoDrawable2 drawable) {
+    log("onReleaseImmediately", drawable);
+  }
+
   private static void log(String name, FrescoDrawable2 drawable) {
     log(name, drawable, null);
   }

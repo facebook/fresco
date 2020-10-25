@@ -16,4 +16,18 @@ public interface VitoImagePerfListener {
   void onImageBind(FrescoDrawable2 drawable);
 
   void onImageUnbind(FrescoDrawable2 drawable);
+
+  void onImageFetch(FrescoDrawable2 drawable);
+
+  void onImageSuccess(FrescoDrawable2 drawable, boolean wasImmediate);
+
+  void onImageError(FrescoDrawable2 drawable);
+
+  void onImageRelease(FrescoDrawable2 drawable);
+
+  void onScheduleReleaseDelayed(FrescoDrawable2 drawable);
+
+  void onScheduleReleaseNextFrame(FrescoDrawable2 drawable);
+
+  void onReleaseImmediately(FrescoDrawable2 drawable);
 }

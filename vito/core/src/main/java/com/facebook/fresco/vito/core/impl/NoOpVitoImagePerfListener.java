@@ -25,4 +25,25 @@ public class NoOpVitoImagePerfListener implements VitoImagePerfListener {
 
   @Override
   public void onImageUnbind(FrescoDrawable2 drawable) {}
+
+  @Override
+  public void onImageFetch(FrescoDrawable2 drawable) {}
+
+  @Override
+  public void onImageSuccess(FrescoDrawable2 drawable, boolean wasImmediate) {}
+
+  @Override
+  public void onImageError(FrescoDrawable2 drawable) {}
+
+  @Override
+  public void onImageRelease(FrescoDrawable2 drawable) {}
+
+  @Override
+  public void onScheduleReleaseDelayed(FrescoDrawable2 drawable) {}
+
+  @Override
+  public void onScheduleReleaseNextFrame(FrescoDrawable2 drawable) {}
+
+  @Override
+  public void onReleaseImmediately(FrescoDrawable2 drawable) {}
 }
