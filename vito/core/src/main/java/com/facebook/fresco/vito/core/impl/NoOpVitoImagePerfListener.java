@@ -49,4 +49,10 @@ public class NoOpVitoImagePerfListener implements VitoImagePerfListener {
 
   @Override
   public void onDrawableReconfigured(FrescoDrawable2 drawable) {}
+
+  @Override
+  public void onIgnoreResult(FrescoDrawable2 drawable) {}
+
+  @Override
+  public void onIgnoreFailure(FrescoDrawable2 drawable) {}
 }

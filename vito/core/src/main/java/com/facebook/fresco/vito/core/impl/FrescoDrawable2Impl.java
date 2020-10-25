@@ -265,6 +265,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   @Override
   public void onNewResult(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
     if (dataSource != mDataSource || mImageRequest == null || mDrawableDataSubscriber == null) {
+      getImagePerfListener().onIgnoreResult(this);
       return; // We don't care
     }
     mDrawableDataSubscriber.onNewResult(this, mImageRequest, dataSource);
@@ -273,6 +274,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   @Override
   public void onFailure(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
     if (dataSource != mDataSource || mImageRequest == null || mDrawableDataSubscriber == null) {
+      getImagePerfListener().onIgnoreFailure(this);
       return; // wrong image
     }
     mDrawableDataSubscriber.onFailure(this, mImageRequest, dataSource);

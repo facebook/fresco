@@ -32,4 +32,8 @@ public interface VitoImagePerfListener {
   void onReleaseImmediately(FrescoDrawable2 drawable);
 
   void onDrawableReconfigured(FrescoDrawable2 drawable);
+
+  void onIgnoreResult(FrescoDrawable2 drawable);
+
+  void onIgnoreFailure(FrescoDrawable2 drawable);
 }
