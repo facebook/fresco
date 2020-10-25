@@ -61,7 +61,7 @@ public class PriorityNetworkFetcherTest {
   public void sanityScenario() {
     // Hi-pri requests are LIFO, Max hi-pri: 4, max low-pri: 2
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 4, 2);
+        new PriorityNetworkFetcher<>(delegate, false, 4, 2, true);
 
     // Enqueue hi-pri image; since there are less than 4 concurrent downloads, it's dequeued
     // immediately.
@@ -108,7 +108,8 @@ public class PriorityNetworkFetcherTest {
   @Test
   public void hipriIsFifo() {
     // Hi-pri is FIFO, Max hi-pri: 2, max low-pri: 1
-    PriorityNetworkFetcher<FetchState> fetcher = new PriorityNetworkFetcher<>(delegate, true, 2, 1);
+    PriorityNetworkFetcher<FetchState> fetcher =
+        new PriorityNetworkFetcher<>(delegate, true, 2, 1, true);
 
     // Fill the currently-fetching set, so additional requests are not sent to network.
     PriorityFetchState<FetchState> dontcare1 = fetch(fetcher, "dontcare1", callback, true);
@@ -136,7 +137,7 @@ public class PriorityNetworkFetcherTest {
   public void hipriIsLifo() {
     // Hi-pri is LIFO, Max hi-pri: 2, max low-pri: 1
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 2, 1);
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true);
 
     // Fill the currently-fetching set, so additional requests are not sent to network.
     PriorityFetchState<FetchState> dontcare1 = fetch(fetcher, "dontcare1", callback, true);
@@ -161,7 +162,8 @@ public class PriorityNetworkFetcherTest {
   @Test
   public void lowpriIsFifo() {
     // Hi-pri is FIFO, Max hi-pri: 2, max low-pri: 1
-    PriorityNetworkFetcher<FetchState> fetcher = new PriorityNetworkFetcher<>(delegate, true, 2, 1);
+    PriorityNetworkFetcher<FetchState> fetcher =
+        new PriorityNetworkFetcher<>(delegate, true, 2, 1, true);
 
     // Fill the currently-fetching set, so additional requests are not sent to network.
     PriorityFetchState<FetchState> dontcare1 = fetch(fetcher, "dontcare1", callback, true);
@@ -201,7 +203,7 @@ public class PriorityNetworkFetcherTest {
   public void changePriority() {
     // Hi-pri is LIFO, Max hi-pri: 2, max low-pri: 1
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 2, 1);
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true);
 
     // Fill the currently-fetching set, so additional requests are not sent to network.
     fetch(fetcher, "dontcare1", callback, true);
@@ -250,9 +252,76 @@ public class PriorityNetworkFetcherTest {
   public void contextCancellationIsCallCancellation() {
     // Hi-pri is LIFO, Max hi-pri: 2, max low-pri: 1
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 2, 1);
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true);
     PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, true);
-    ((SettableProducerContext) one.getContext()).cancel();
+    cancel(one);
+    verify(callback).onCancellation();
+  }
+
+  /**
+   * Scenario: two low-pri requests are queued, so only one starts running. We cancel it, which gets
+   * the second request running. We then cancel it as well, so nothing is running.
+   */
+  @Test
+  public void testCancellations() {
+    // Hi-pri is LIFO, Max hi-pri: 2, max low-pri: 1
+    PriorityNetworkFetcher<FetchState> fetcher =
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true);
+
+    PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, false);
+    PriorityFetchState<FetchState> two = fetch(fetcher, "2", callback, false);
+
+    // 'one' was requested from the delegate, 'two' is waiting for a free slot.
+    assertThat(fetcher.getCurrentlyFetching()).containsExactly(one);
+
+    // Cancel 'one'.
+    cancel(one);
+
+    // 'one' was cancelled, so 'two' is starting to fetch.
+    assertThat(fetcher.getCurrentlyFetching()).containsExactly(two);
+
+    // Cancel 'two'.
+    cancel(two);
+
+    // Everything was cancelled, nothing is being fetched.
+    assertThat(fetcher.getCurrentlyFetching()).isEmpty();
+  }
+
+  /**
+   * Scenario: a queue that allows at most 1 low-pri requests to execute concurrently. The queue has
+   * 'inflightFetchesCanBeCancelled' set to false, meaning that it ignores cancellations to requests
+   * that have already begun.
+   *
+   * <p>Two low-pri requests are queued, so only 'one' starts running. We try to cancel it, but
+   * since it's already been started, nothing is cancelled. The second request continues to be
+   * queued. However, cancelling the second request does in fact cancel it, because it didn't start
+   * yet.
+   */
+  @Test
+  public void testCancellations_nonInflight() {
+    // Hi-pri is LIFO, Max hi-pri: 2, max low-pri: 1
+    PriorityNetworkFetcher<FetchState> fetcher =
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1, false);
+
+    PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, false);
+    PriorityFetchState<FetchState> two = fetch(fetcher, "2", callback, false);
+
+    // 'one' was requested from the delegate, 'two' is waiting for a free slot.
+    assertThat(fetcher.getCurrentlyFetching()).containsExactly(one);
+    assertThat(fetcher.getLowPriQueue()).contains(two);
+
+    // Cancel 'one' - nothing happens, because it's already in-flight.
+    cancel(one);
+    assertThat(fetcher.getLowPriQueue()).contains(two);
+    assertThat(fetcher.getCurrentlyFetching()).containsExactly(one);
+
+    verify(callback, never()).onCancellation();
+
+    // Cancel 'two'.
+    cancel(two);
+    assertThat(fetcher.getLowPriQueue()).isEmpty();
+    assertThat(fetcher.getCurrentlyFetching()).containsExactly(one);
+
     verify(callback).onCancellation();
   }
 
@@ -260,7 +329,7 @@ public class PriorityNetworkFetcherTest {
   @Test
   public void getExtraMapToleratesDelegateNullMap() {
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 2, 1);
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true);
 
     PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, true);
 
@@ -278,7 +347,7 @@ public class PriorityNetworkFetcherTest {
   @Test
   public void getExtraMapIsDelegated() {
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 2, 1);
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true);
 
     PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, true);
 
@@ -293,7 +362,7 @@ public class PriorityNetworkFetcherTest {
     FakeClock clock = new FakeClock();
 
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 1, 0, clock);
+        new PriorityNetworkFetcher<>(delegate, false, 1, 0, true, clock);
 
     // The queue is empty, so enqueuing a request immediately executes it. Therefore, the queue time
     // is 0.
@@ -319,7 +388,7 @@ public class PriorityNetworkFetcherTest {
 
     // Max hi-pri: 1, max low-pri: 0
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 1, 0, clock);
+        new PriorityNetworkFetcher<>(delegate, false, 1, 0, true, clock);
 
     PriorityFetchState<FetchState> hipri1 = fetch(fetcher, "hipri1", callback, true);
     PriorityFetchState<FetchState> hipri2 = fetch(fetcher, "hipri2", callback, true);
@@ -391,6 +460,10 @@ public class PriorityNetworkFetcherTest {
       result.add(new TestFetchState(fetchState));
     }
     return result;
+  }
+
+  private void cancel(PriorityFetchState<FetchState> fetchState) {
+    ((SettableProducerContext) fetchState.getContext()).cancel();
   }
 
   /**
