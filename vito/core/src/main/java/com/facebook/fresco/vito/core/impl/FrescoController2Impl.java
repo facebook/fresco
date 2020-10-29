@@ -10,10 +10,13 @@ package com.facebook.fresco.vito.core.impl;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import com.facebook.common.internal.ImmutableMap;
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
+import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
 import com.facebook.drawee.drawable.FadeDrawable;
+import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.fresco.middleware.MiddlewareUtils;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.vito.core.DrawableDataSubscriber;
@@ -21,14 +24,13 @@ import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.FrescoVitoConfig;
 import com.facebook.fresco.vito.core.Hierarcher;
+import com.facebook.fresco.vito.core.VitoImagePerfListener;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.core.VitoImageRequestListener;
 import com.facebook.fresco.vito.core.VitoUtils;
 import com.facebook.fresco.vito.core.impl.debug.DebugOverlayFactory2;
-import com.facebook.fresco.vito.listener.ForwardingImageListener;
 import com.facebook.fresco.vito.listener.ImageListener;
-import com.facebook.fresco.vito.listener.impl.AutoPlayImageListener;
 import com.facebook.imagepipeline.image.CloseableImage;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -49,6 +51,8 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   private final VitoImagePipeline mImagePipeline;
   private final @Nullable VitoImageRequestListener mGlobalImageListener;
   private final DebugOverlayFactory2 mDebugOverlayFactory;
+  private final @Nullable Supplier<ImagePerfControllerListener2> mImagePerfListenerSupplier;
+  private final VitoImagePerfListener mVitoImagePerfListener;
 
   public FrescoController2Impl(
       FrescoVitoConfig config,
@@ -57,7 +61,9 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       Executor uiThreadExecutor,
       VitoImagePipeline imagePipeline,
       @Nullable VitoImageRequestListener globalImageListener,
-      DebugOverlayFactory2 debugOverlayFactory) {
+      DebugOverlayFactory2 debugOverlayFactory,
+      @Nullable Supplier<ImagePerfControllerListener2> imagePerfListenerSupplier,
+      VitoImagePerfListener vitoImagePerfListener) {
     mConfig = config;
     mHierarcher = hierarcher;
     mLightweightBackgroundThreadExecutor = lightweightBackgroundThreadExecutor;
@@ -65,11 +71,16 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     mImagePipeline = imagePipeline;
     mGlobalImageListener = globalImageListener;
     mDebugOverlayFactory = debugOverlayFactory;
+    mImagePerfListenerSupplier = imagePerfListenerSupplier;
+    mVitoImagePerfListener = vitoImagePerfListener;
   }
 
   @Override
   public FrescoDrawable2 createDrawable() {
-    return new FrescoDrawable2Impl();
+    return new FrescoDrawable2Impl(
+        mConfig.useNewReleaseCallback(),
+        mImagePerfListenerSupplier == null ? null : mImagePerfListenerSupplier.get(),
+        mVitoImagePerfListener);
   }
 
   @Override
@@ -91,18 +102,16 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       frescoDrawable.cancelReleaseDelayed();
       return true; // already set
     }
+    if (frescoDrawable.isFetchSubmitted()) {
+      frescoDrawable.getImagePerfListener().onDrawableReconfigured(frescoDrawable);
+    }
     // We didn't -> Reset everything
     frescoDrawable.close();
     // Basic setup
     frescoDrawable.setDrawableDataSubscriber(this);
     frescoDrawable.setImageRequest(imageRequest);
     frescoDrawable.setCallerContext(callerContext);
-    if (imageRequest.imageOptions.shouldAutoPlay()) {
-      frescoDrawable.setImageListener(
-          ForwardingImageListener.create(listener, AutoPlayImageListener.getInstance()));
-    } else {
-      frescoDrawable.setImageListener(listener);
-    }
+    frescoDrawable.setImageListener(listener);
 
     frescoDrawable.setVitoImageRequestListener(mGlobalImageListener);
 
@@ -120,6 +129,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
 
     // Notify listeners that we're about to fetch an image
     frescoDrawable.getImageListener().onSubmit(imageId, imageRequest, callerContext, extras);
+    frescoDrawable.getImagePerfListener().onImageFetch(frescoDrawable);
 
     // Check if the image is in cache
     CloseableReference<CloseableImage> cachedImage = mImagePipeline.getCachedImage(imageRequest);
@@ -179,12 +189,20 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
 
   @Override
   public void releaseDelayed(final FrescoDrawable2 drawable) {
+    drawable.getImagePerfListener().onScheduleReleaseDelayed(drawable);
     drawable.scheduleReleaseDelayed();
   }
 
   @Override
   public void release(final FrescoDrawable2 drawable) {
+    drawable.getImagePerfListener().onScheduleReleaseNextFrame(drawable);
     drawable.scheduleReleaseNextFrame();
+  }
+
+  @Override
+  public void releaseImmediately(FrescoDrawable2 drawable) {
+    drawable.getImagePerfListener().onReleaseImmediately(drawable);
+    drawable.releaseImmediately();
   }
 
   private void setActualImage(
@@ -205,6 +223,9 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             drawable.getActualImageWrapper(),
             isImmediate,
             null);
+    if (imageRequest.imageOptions.shouldAutoPlay() && actualDrawable instanceof AnimatedDrawable2) {
+      ((AnimatedDrawable2) actualDrawable).start();
+    }
     Extras extras = obtainExtras(dataSource, image, drawable);
     drawable
         .getImageListener()
@@ -215,6 +236,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             image.get(),
             extras,
             actualDrawable);
+    drawable.getImagePerfListener().onImageSuccess(drawable, isImmediate);
     float progress = 1f;
     if (dataSource != null && !dataSource.isFinished()) {
       progress = dataSource.getProgress();
@@ -262,6 +284,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             errorDrawable,
             dataSource.getFailureCause(),
             extras);
+    drawable.getImagePerfListener().onImageError(drawable);
     mDebugOverlayFactory.update(drawable, extras);
   }
 
@@ -284,6 +307,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
         .getImageListener()
         .onRelease(
             drawable.getImageId(), drawable.getImageRequest(), obtainExtras(null, null, drawable));
+    drawable.getImagePerfListener().onImageRelease(drawable);
   }
 
   private static Extras obtainExtras(

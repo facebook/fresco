@@ -27,4 +27,6 @@ public interface FrescoController2 {
   void releaseDelayed(FrescoDrawable2 drawable);
 
   void release(FrescoDrawable2 drawable);
+
+  void releaseImmediately(FrescoDrawable2 drawable);
 }

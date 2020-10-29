@@ -19,6 +19,7 @@ import com.facebook.drawee.drawable.RoundedColorDrawable;
 import com.facebook.drawee.drawable.RoundedNinePatchDrawable;
 import com.facebook.fresco.vito.options.BorderOptions;
 import com.facebook.fresco.vito.options.RoundingOptions;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -35,6 +36,7 @@ import javax.annotation.Nullable;
  * - {@link ColorDrawable} -> {@link RoundedColorDrawable}<br>
  * - {@link NinePatchDrawable} -> {@link RoundedNinePatchDrawable}<br>
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class RoundingUtils {
 
   private boolean mAlreadyRounded;
@@ -145,7 +147,7 @@ public class RoundingUtils {
   }
 
   private static <T extends Drawable & Rounded> T getRoundedDrawable(
-      Resources resources, Bitmap bitmap) {
+      Resources resources, @Nullable Bitmap bitmap) {
     return (T) new RoundedBitmapDrawable(resources, bitmap);
   }
 
@@ -181,7 +183,7 @@ public class RoundingUtils {
   }
 
   private static Drawable circularNativeDrawableWithBorder(
-      Resources resources, Bitmap bitmap, BorderOptions borderOptions) {
+      Resources resources, @Nullable Bitmap bitmap, BorderOptions borderOptions) {
     CircularBorderBitmapDrawable drawable = new CircularBorderBitmapDrawable(resources, bitmap);
     drawable.setBorder(borderOptions);
     return drawable;

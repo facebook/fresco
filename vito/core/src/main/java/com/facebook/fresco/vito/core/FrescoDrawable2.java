@@ -92,6 +92,8 @@ public abstract class FrescoDrawable2 extends BaseFrescoDrawable
 
   public abstract void scheduleReleaseNextFrame();
 
+  public abstract void releaseImmediately();
+
   public abstract void cancelReleaseNextFrame();
 
   @Override
@@ -113,4 +115,6 @@ public abstract class FrescoDrawable2 extends BaseFrescoDrawable
   public abstract @Nullable Object getExtras();
 
   public abstract void setExtras(@Nullable Object extras);
+
+  public abstract VitoImagePerfListener getImagePerfListener();
 }

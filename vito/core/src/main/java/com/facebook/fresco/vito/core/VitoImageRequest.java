@@ -14,7 +14,6 @@ import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.source.ImageSource;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
-
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.STRICT)

@@ -20,6 +20,7 @@ import com.facebook.drawee.backends.pipeline.info.ImagePerfNotifier;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfState;
 import com.facebook.drawee.backends.pipeline.info.VisibilityState;
 import com.facebook.fresco.ui.common.BaseControllerListener2;
+import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.fresco.ui.common.OnDrawControllerListener;
 import com.facebook.imagepipeline.image.ImageInfo;
@@ -37,6 +38,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   private final ImagePerfState mImagePerfState;
   private final ImagePerfNotifier mImagePerfNotifier;
   private final Supplier<Boolean> mAsyncLogging;
+  private final Supplier<Boolean> mUseNewState;
 
   private @Nullable Handler mHandler;
 
@@ -66,136 +68,155 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
       MonotonicClock clock,
       ImagePerfState imagePerfState,
       ImagePerfNotifier imagePerfNotifier,
-      Supplier<Boolean> asyncLogging) {
+      Supplier<Boolean> asyncLogging,
+      Supplier<Boolean> useNewState) {
     mClock = clock;
     mImagePerfState = imagePerfState;
     mImagePerfNotifier = imagePerfNotifier;
 
     mAsyncLogging = asyncLogging;
+    mUseNewState = useNewState;
   }
 
   @Override
-  public void onSubmit(String id, @Nullable Object callerContext, @Nullable Extras extraData) {
+  public void onSubmit(
+      String id, @Nullable Object callerContext, @Nullable ControllerListener2.Extras extraData) {
     final long now = mClock.now();
 
-    mImagePerfState.resetPointsTimestamps();
+    ImagePerfState state = obtainState();
+    state.resetPointsTimestamps();
 
-    mImagePerfState.setControllerSubmitTimeMs(now);
-    mImagePerfState.setControllerId(id);
-    mImagePerfState.setCallerContext(callerContext);
+    state.setControllerSubmitTimeMs(now);
+    state.setControllerId(id);
+    state.setCallerContext(callerContext);
 
-    mImagePerfState.setExtraData(extraData);
+    state.setExtraData(extraData);
 
-    updateStatus(ImageLoadStatus.REQUESTED);
-    reportViewVisible(now);
+    updateStatus(state, ImageLoadStatus.REQUESTED);
+    reportViewVisible(state, now);
   }
 
   @Override
   public void onIntermediateImageSet(String id, @Nullable ImageInfo imageInfo) {
     final long now = mClock.now();
 
-    mImagePerfState.setControllerIntermediateImageSetTimeMs(now);
-    mImagePerfState.setControllerId(id);
-    mImagePerfState.setImageInfo(imageInfo);
+    ImagePerfState state = obtainState();
 
-    updateStatus(ImageLoadStatus.INTERMEDIATE_AVAILABLE);
+    state.setControllerIntermediateImageSetTimeMs(now);
+    state.setControllerId(id);
+    state.setImageInfo(imageInfo);
+
+    updateStatus(state, ImageLoadStatus.INTERMEDIATE_AVAILABLE);
   }
 
   @Override
   public void onFinalImageSet(
-      String id, @Nullable ImageInfo imageInfo, @Nullable Extras extraData) {
+      String id, @Nullable ImageInfo imageInfo, @Nullable ControllerListener2.Extras extraData) {
     final long now = mClock.now();
 
-    mImagePerfState.setExtraData(extraData);
+    ImagePerfState state = obtainState();
 
-    mImagePerfState.setControllerFinalImageSetTimeMs(now);
-    mImagePerfState.setImageRequestEndTimeMs(now);
-    mImagePerfState.setControllerId(id);
-    mImagePerfState.setImageInfo(imageInfo);
+    state.setExtraData(extraData);
 
-    updateStatus(ImageLoadStatus.SUCCESS);
+    state.setControllerFinalImageSetTimeMs(now);
+    state.setImageRequestEndTimeMs(now);
+    state.setControllerId(id);
+    state.setImageInfo(imageInfo);
+
+    updateStatus(state, ImageLoadStatus.SUCCESS);
   }
 
   @Override
-  public void onFailure(String id, Throwable throwable, @Nullable Extras extras) {
+  public void onFailure(
+      String id, Throwable throwable, @Nullable ControllerListener2.Extras extras) {
     final long now = mClock.now();
 
-    mImagePerfState.setExtraData(extras);
+    ImagePerfState state = obtainState();
 
-    mImagePerfState.setControllerFailureTimeMs(now);
-    mImagePerfState.setControllerId(id);
-    mImagePerfState.setErrorThrowable(throwable);
+    state.setExtraData(extras);
 
-    updateStatus(ImageLoadStatus.ERROR);
+    state.setControllerFailureTimeMs(now);
+    state.setControllerId(id);
+    state.setErrorThrowable(throwable);
 
-    reportViewInvisible(now);
+    updateStatus(state, ImageLoadStatus.ERROR);
+
+    reportViewInvisible(state, now);
   }
 
   @Override
-  public void onRelease(String id, Extras extras) {
+  public void onRelease(String id, ControllerListener2.Extras extras) {
     final long now = mClock.now();
 
-    mImagePerfState.setExtraData(extras);
-    mImagePerfState.setControllerId(id);
+    ImagePerfState state = obtainState();
 
-    int lastImageLoadStatus = mImagePerfState.getImageLoadStatus();
+    state.setExtraData(extras);
+    state.setControllerId(id);
+
+    int lastImageLoadStatus = state.getImageLoadStatus();
     if (lastImageLoadStatus != ImageLoadStatus.SUCCESS
         && lastImageLoadStatus != ImageLoadStatus.ERROR
         && lastImageLoadStatus != ImageLoadStatus.DRAW) {
-      mImagePerfState.setControllerCancelTimeMs(now);
+      state.setControllerCancelTimeMs(now);
       // The image request was canceled
-      updateStatus(ImageLoadStatus.CANCELED);
+      updateStatus(state, ImageLoadStatus.CANCELED);
     }
 
-    reportViewInvisible(now);
+    reportViewInvisible(state, now);
   }
 
   @Override
   public void onImageDrawn(String id, ImageInfo info, DimensionsInfo dimensionsInfo) {
-    mImagePerfState.setControllerId(id);
-    mImagePerfState.setImageDrawTimeMs(mClock.now());
-    mImagePerfState.setDimensionsInfo(dimensionsInfo);
-    updateStatus(ImageLoadStatus.DRAW);
+    ImagePerfState state = obtainState();
+
+    state.setControllerId(id);
+    state.setImageDrawTimeMs(mClock.now());
+    state.setDimensionsInfo(dimensionsInfo);
+    updateStatus(state, ImageLoadStatus.DRAW);
   }
 
   @VisibleForTesting
-  public void reportViewVisible(long now) {
-    mImagePerfState.setVisible(true);
-    mImagePerfState.setVisibilityEventTimeMs(now);
+  public void reportViewVisible(ImagePerfState state, long now) {
+    state.setVisible(true);
+    state.setVisibilityEventTimeMs(now);
 
-    updateVisibility(VisibilityState.VISIBLE);
+    updateVisibility(state, VisibilityState.VISIBLE);
+  }
+
+  public void resetState() {
+    obtainState().reset();
   }
 
   @VisibleForTesting
-  private void reportViewInvisible(long time) {
-    mImagePerfState.setVisible(false);
-    mImagePerfState.setInvisibilityEventTimeMs(time);
+  private void reportViewInvisible(ImagePerfState state, long time) {
+    state.setVisible(false);
+    state.setInvisibilityEventTimeMs(time);
 
-    updateVisibility(VisibilityState.INVISIBLE);
+    updateVisibility(state, VisibilityState.INVISIBLE);
   }
 
-  private void updateStatus(@ImageLoadStatus int imageLoadStatus) {
+  private void updateStatus(ImagePerfState state, @ImageLoadStatus int imageLoadStatus) {
     if (shouldDispatchAsync()) {
       Message msg = mHandler.obtainMessage();
       msg.what = WHAT_STATUS;
       msg.arg1 = imageLoadStatus;
-      msg.obj = mImagePerfState;
+      msg.obj = state;
       mHandler.sendMessage(msg);
     } else {
-      mImagePerfNotifier.notifyStatusUpdated(mImagePerfState, imageLoadStatus);
+      mImagePerfNotifier.notifyStatusUpdated(state, imageLoadStatus);
     }
   }
 
-  private void updateVisibility(@VisibilityState int visibilityState) {
+  private void updateVisibility(ImagePerfState state, @VisibilityState int visibilityState) {
     if (shouldDispatchAsync()) {
       Message msg = mHandler.obtainMessage();
       msg.what = WHAT_VISIBILITY;
       msg.arg1 = visibilityState;
-      msg.obj = mImagePerfState;
+      msg.obj = state;
       mHandler.sendMessage(msg);
     } else {
       // sync
-      mImagePerfNotifier.notifyListenersOfVisibilityStateUpdate(mImagePerfState, visibilityState);
+      mImagePerfNotifier.notifyListenersOfVisibilityStateUpdate(state, visibilityState);
     }
   }
 
@@ -214,5 +235,9 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
       initHandler();
     }
     return enabled;
+  }
+
+  private ImagePerfState obtainState() {
+    return mUseNewState.get() ? new ImagePerfState() : mImagePerfState;
   }
 }

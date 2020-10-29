@@ -61,4 +61,6 @@ public interface CombinedImageListener extends VitoImageRequestListener {
 
   @Override
   void onRelease(long id, VitoImageRequest imageRequest, ControllerListener2.Extras extras);
+
+  void onReset();
 }

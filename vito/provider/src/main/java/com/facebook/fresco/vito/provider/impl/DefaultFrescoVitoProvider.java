@@ -15,6 +15,7 @@ import com.facebook.fresco.vito.core.FrescoVitoConfig;
 import com.facebook.fresco.vito.core.FrescoVitoPrefetcher;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.impl.FrescoController2Impl;
+import com.facebook.fresco.vito.core.impl.NoOpVitoImagePerfListener;
 import com.facebook.fresco.vito.core.impl.VitoImagePipelineImpl;
 import com.facebook.fresco.vito.core.impl.debug.DefaultDebugOverlayFactory2;
 import com.facebook.fresco.vito.core.impl.debug.NoOpDebugOverlayFactory2;
@@ -60,7 +61,9 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
             null,
             debugOverlayEnabledSupplier == null
                 ? new NoOpDebugOverlayFactory2()
-                : new DefaultDebugOverlayFactory2(debugOverlayEnabledSupplier));
+                : new DefaultDebugOverlayFactory2(debugOverlayEnabledSupplier),
+            null,
+            new NoOpVitoImagePerfListener());
   }
 
   @Override

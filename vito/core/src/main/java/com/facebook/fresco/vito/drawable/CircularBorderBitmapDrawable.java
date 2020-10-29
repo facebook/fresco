@@ -27,7 +27,7 @@ public class CircularBorderBitmapDrawable extends BitmapDrawable {
   private int mRadius;
   private int mAlpha = 255;
 
-  public CircularBorderBitmapDrawable(Resources res, Bitmap bitmap) {
+  public CircularBorderBitmapDrawable(Resources res, @Nullable Bitmap bitmap) {
     super(res, bitmap);
     mBorderPaint.setStyle(Paint.Style.STROKE);
   }

@@ -61,21 +61,27 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       new LinkedList<>();
   private final HashSet<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> mCurrentlyFetching =
       new HashSet<>();
+  private final boolean inflightFetchesCanBeCancelled;
 
   /**
    * @param isHiPriFifo if true, hi-pri requests are dequeued in the order they were enqueued.
    *     Otherwise, they're dequeued in reverse order.
+   * @param inflightFetchesCanBeCancelled if false, the fetcher waits for the completion of requests
+   *     that have been delegated to 'delegate' even if they were cancelled by Fresco. The
+   *     cancellation order is not propagated to 'delegate', and no other request is dequeued.
    */
   public PriorityNetworkFetcher(
       NetworkFetcher<FETCH_STATE> delegate,
       boolean isHiPriFifo,
       int maxOutstandingHiPri,
-      int maxOutstandingLowPri) {
+      int maxOutstandingLowPri,
+      boolean inflightFetchesCanBeCancelled) {
     this(
         delegate,
         isHiPriFifo,
         maxOutstandingHiPri,
         maxOutstandingLowPri,
+        inflightFetchesCanBeCancelled,
         RealtimeSinceBootClock.get());
   }
 
@@ -85,6 +91,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       boolean isHiPriFifo,
       int maxOutstandingHiPri,
       int maxOutstandingLowPri,
+      boolean inflightFetchesCanBeCancelled,
       MonotonicClock clock) {
     mDelegate = delegate;
     mIsHiPriFifo = isHiPriFifo;
@@ -94,6 +101,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     if (maxOutstandingHiPri <= maxOutstandingLowPri) {
       throw new IllegalArgumentException("maxOutstandingHiPri should be > maxOutstandingLowPri");
     }
+    this.inflightFetchesCanBeCancelled = inflightFetchesCanBeCancelled;
     this.mClock = clock;
   }
 
@@ -107,6 +115,9 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
             new BaseProducerContextCallbacks() {
               @Override
               public void onCancellationRequested() {
+                if (!inflightFetchesCanBeCancelled && mCurrentlyFetching.contains(fetchState)) {
+                  return;
+                }
                 removeFromQueue(fetchState, "CANCEL");
                 callback.onCancellation();
               }
