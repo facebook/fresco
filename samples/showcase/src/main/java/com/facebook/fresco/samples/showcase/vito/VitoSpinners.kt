@@ -28,6 +28,7 @@ import com.facebook.fresco.samples.showcase.postprocessor.WatermarkPostprocessor
 import com.facebook.fresco.vito.options.BorderOptions
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.RoundingOptions
+import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.common.RotationOptions
 import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor
 import com.facebook.imagepipeline.postprocessors.RoundAsCirclePostprocessor
@@ -142,4 +143,24 @@ object VitoSpinners {
             "none" to {builder: ImageOptions.Builder -> builder.customDrawableFactory(null)},
             "blue color" to {builder: ImageOptions.Builder -> builder.customDrawableFactory{ _, _ -> ColorDrawable(Color.BLUE) }}
     ), "Custom Drawable Factory")
+    
+    val resizeOptions = Pair(listOf(
+            "none" to {builder: ImageOptions.Builder -> builder.resize(null)},
+            "100 x 100" to {builder: ImageOptions.Builder -> builder.resize(ResizeOptions.forSquareSize(100))},
+            "500 x 500" to {builder: ImageOptions.Builder -> builder.resize(ResizeOptions.forSquareSize(500))},
+            "1000 x 1000" to {builder: ImageOptions.Builder -> builder.resize(ResizeOptions.forSquareSize(1000))},
+            "200 x 100" to {builder: ImageOptions.Builder -> builder.resize(ResizeOptions.forDimensions(200, 100))},
+            "500 x 100" to {builder: ImageOptions.Builder -> builder.resize(ResizeOptions.forDimensions(500, 100))},
+            "500 x 400" to {builder: ImageOptions.Builder -> builder.resize(ResizeOptions.forDimensions(500, 400))},
+            "800 x 600" to {builder: ImageOptions.Builder -> builder.resize(ResizeOptions.forDimensions(800, 600))},
+            "600 x 800 " to {builder: ImageOptions.Builder -> builder.resize(ResizeOptions.forDimensions(600, 800))},
+            "960 x 720" to {builder: ImageOptions.Builder -> builder.resize(ResizeOptions.forDimensions(960, 720))},
+            "1280 x 720" to {builder: ImageOptions.Builder -> builder.resize(ResizeOptions.forDimensions(1280, 720))},
+            "1280 x 800" to {builder: ImageOptions.Builder -> builder.resize(ResizeOptions.forDimensions(1280, 800))},
+            "1920 x 1080" to {builder: ImageOptions.Builder -> builder.resize(ResizeOptions.forDimensions(1920, 1080))},
+            "1080 x 1920" to {builder: ImageOptions.Builder -> builder.resize(ResizeOptions.forDimensions(1080, 1920))},
+            "3840 x 2160" to {builder: ImageOptions.Builder -> builder.resize(ResizeOptions.forDimensions(3840, 2160))},
+            "4096 x 2160" to {builder: ImageOptions.Builder -> builder.resize(ResizeOptions.forDimensions(4096, 2160))},
+            "2160 x 4096" to {builder: ImageOptions.Builder -> builder.resize(ResizeOptions.forDimensions(2160, 4096))}
+    ), "Resize options")
 }

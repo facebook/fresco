@@ -85,6 +85,9 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
         spinner_rotation.setupWithList(VitoSpinners.rotationOptions) {
             refresh(imageOptionsBuilder.rotate(it))
         }
+        spinner_resize.setupWithList(VitoSpinners.resizeOptions) {
+            refresh(it(imageOptionsBuilder))
+        }
         spinner_custom_drawable_factory.setupWithList(VitoSpinners.customDrawableFactoryOptions) {
             refresh(it(imageOptionsBuilder)) 
         }
