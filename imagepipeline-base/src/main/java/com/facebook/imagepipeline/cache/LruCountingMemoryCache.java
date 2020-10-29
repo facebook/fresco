@@ -526,9 +526,9 @@ public class LruCountingMemoryCache<K, V>
   }
 
   @Override
-  public @Nullable String getDebugData() {
+  public synchronized @Nullable String getDebugData() {
     return Objects.toStringHelper("CountingMemoryCache")
-        .add("cached_entries_count:", mCachedEntries.getCount())
+        .add("cached_entries_count", mCachedEntries.getCount())
         .add("cached_entries_size_bytes", mCachedEntries.getSizeInBytes())
         .add("exclusive_entries_count", mExclusiveEntries.getCount())
         .add("exclusive_entries_size_bytes", mExclusiveEntries.getSizeInBytes())
