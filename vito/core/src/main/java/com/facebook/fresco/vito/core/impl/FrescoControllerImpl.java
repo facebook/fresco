@@ -189,7 +189,8 @@ public class FrescoControllerImpl implements FrescoController {
                                   frescoExperiments.onPreparePrefetchTarget(),
                                   uri,
                                   imageOptions,
-                                  callerContext);
+                                  callerContext,
+                                  "OnPrepare");
                       if (frescoExperiments.keepRefToPrefetchDatasource()) {
                         frescoState.setPrefetchDatasource(dataSource);
                       }

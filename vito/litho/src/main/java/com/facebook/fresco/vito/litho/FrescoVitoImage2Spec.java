@@ -144,7 +144,8 @@ public class FrescoVitoImage2Spec {
                   config.prefetchTargetOnPrepare(),
                   imageRequest,
                   callerContext,
-                  prefetchRequestListener));
+                  prefetchRequestListener,
+                  "OnPrepare"));
     }
   }
 
@@ -289,7 +290,12 @@ public class FrescoVitoImage2Spec {
     if (shouldPrefetchWithWorkingRange(prefetch)) {
       workingRangePrefetchData.set(
           FrescoVitoProvider.getPrefetcher()
-              .prefetch(PrefetchTarget.MEMORY_DECODED, imageRequest, callerContext, null));
+              .prefetch(
+                  PrefetchTarget.MEMORY_DECODED,
+                  imageRequest,
+                  callerContext,
+                  null,
+                  "OnEnteredRange"));
 
       if (prefetchDataSource != null
           && prefetchConfig.cancelOnPreparePrefetchWhenWorkingRangePrefetch()) {
