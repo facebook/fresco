@@ -44,7 +44,7 @@ public abstract class FrescoDrawable2 extends BaseFrescoDrawable
   public abstract ScaleTypeDrawable getActualImageWrapper();
 
   public abstract void setDataSource(
-      @Nullable DataSource<CloseableReference<CloseableImage>> dataSource);
+      long imageId, @Nullable DataSource<CloseableReference<CloseableImage>> dataSource);
 
   public abstract void setFetchSubmitted(boolean fetchSubmitted);
 
