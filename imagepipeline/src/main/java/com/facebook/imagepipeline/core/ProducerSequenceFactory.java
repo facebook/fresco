@@ -73,6 +73,7 @@ public class ProducerSequenceFactory {
   private final boolean mIsEncodedMemoryCacheProbingEnabled;
   private final boolean mIsDiskCacheProbingEnabled;
   private final boolean mUseCombinedNetworkAndCacheProducer;
+  private final boolean mAllowDelay;
 
   // Saved sequences
   @VisibleForTesting @Nullable Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
@@ -145,7 +146,8 @@ public class ProducerSequenceFactory {
       ImageTranscoderFactory imageTranscoderFactory,
       boolean isEncodedMemoryCacheProbingEnabled,
       boolean isDiskCacheProbingEnabled,
-      boolean useCombinedNetworkAndCacheProducer) {
+      boolean useCombinedNetworkAndCacheProducer,
+      boolean allowDelay) {
     mContentResolver = contentResolver;
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
@@ -163,6 +165,7 @@ public class ProducerSequenceFactory {
     mImageTranscoderFactory = imageTranscoderFactory;
     mIsEncodedMemoryCacheProbingEnabled = isEncodedMemoryCacheProbingEnabled;
     mIsDiskCacheProbingEnabled = isDiskCacheProbingEnabled;
+    mAllowDelay = allowDelay;
   }
 
   /**
@@ -339,6 +342,11 @@ public class ProducerSequenceFactory {
     if (mUseBitmapPrepareToDraw) {
       pipelineSequence = getBitmapPrepareSequence(pipelineSequence);
     }
+
+    if (mAllowDelay && imageRequest.getDelayMs() > 0) {
+      pipelineSequence = getDelaySequence(pipelineSequence);
+    }
+
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.endSection();
     }
@@ -918,6 +926,14 @@ public class ProducerSequenceFactory {
     }
 
     return bitmapPrepareProducer;
+  }
+
+  private synchronized Producer<CloseableReference<CloseableImage>> getDelaySequence(
+      Producer<CloseableReference<CloseableImage>> inputProducer) {
+
+    Producer<CloseableReference<CloseableImage>> delayProducer =
+        mProducerFactory.newDelayProducer(inputProducer);
+    return delayProducer;
   }
 
   private static String getShortenedUriString(Uri uri) {

@@ -11,6 +11,7 @@ import android.os.Process;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Basic implementation of {@link ExecutorSupplier}.
@@ -28,6 +29,7 @@ public class DefaultExecutorSupplier implements ExecutorSupplier {
   private final Executor mDecodeExecutor;
   private final Executor mBackgroundExecutor;
   private final Executor mLightWeightBackgroundExecutor;
+  private final ScheduledExecutorService mBackgroundScheduledExecutorService;
 
   public DefaultExecutorSupplier(int numCpuBoundThreads) {
     mIoBoundExecutor =
@@ -42,6 +44,11 @@ public class DefaultExecutorSupplier implements ExecutorSupplier {
                 Process.THREAD_PRIORITY_BACKGROUND, "FrescoDecodeExecutor", true));
     mBackgroundExecutor =
         Executors.newFixedThreadPool(
+            numCpuBoundThreads,
+            new PriorityThreadFactory(
+                Process.THREAD_PRIORITY_BACKGROUND, "FrescoBackgroundExecutor", true));
+    mBackgroundScheduledExecutorService =
+        Executors.newScheduledThreadPool(
             numCpuBoundThreads,
             new PriorityThreadFactory(
                 Process.THREAD_PRIORITY_BACKGROUND, "FrescoBackgroundExecutor", true));
@@ -70,6 +77,11 @@ public class DefaultExecutorSupplier implements ExecutorSupplier {
   @Override
   public Executor forBackgroundTasks() {
     return mBackgroundExecutor;
+  }
+
+  @Override
+  public ScheduledExecutorService scheduledExecutorServiceForBackgroundTasks() {
+    return mBackgroundScheduledExecutorService;
   }
 
   @Override

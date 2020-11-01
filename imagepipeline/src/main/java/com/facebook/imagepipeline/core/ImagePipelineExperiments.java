@@ -63,6 +63,7 @@ public class ImagePipelineExperiments {
   private final boolean mIsDiskCacheProbingEnabled;
   private final int mTrackedKeysSize;
   private final boolean mUseCombinedNetworkAndCacheProducer;
+  private final boolean mAllowDelay;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -97,6 +98,7 @@ public class ImagePipelineExperiments {
     mIsDiskCacheProbingEnabled = builder.mIsDiskCacheProbingEnabled;
     mTrackedKeysSize = builder.mTrackedKeysSize;
     mUseCombinedNetworkAndCacheProducer = builder.mUseCombinedNetworkAndCacheProducer;
+    mAllowDelay = builder.mAllowDelay;
   }
 
   public boolean isEncodedCacheEnabled() {
@@ -216,6 +218,10 @@ public class ImagePipelineExperiments {
     return mUseCombinedNetworkAndCacheProducer;
   }
 
+  public boolean allowDelay() {
+    return mAllowDelay;
+  }
+
   public static class Builder {
 
     private final ImagePipelineConfig.Builder mConfigBuilder;
@@ -247,6 +253,7 @@ public class ImagePipelineExperiments {
     private boolean mIsDiskCacheProbingEnabled = false;
     private int mTrackedKeysSize = 20;
     private boolean mUseCombinedNetworkAndCacheProducer = false;
+    private boolean mAllowDelay = false;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -437,6 +444,11 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setUseCombinedNetworkAndCacheProducer(
         boolean useCombinedNetworkAndCacheProducer) {
       mUseCombinedNetworkAndCacheProducer = useCombinedNetworkAndCacheProducer;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setAllowDelay(boolean allowDelay) {
+      mAllowDelay = allowDelay;
       return mConfigBuilder;
     }
 

@@ -125,8 +125,15 @@ public class FrescoControllerImpl implements FrescoController {
     try {
       final FrescoExperiments frescoExperiments = mFrescoContext.getExperiments();
 
-      final ImageRequest imageRequest =
+      ImageRequest imageRequest =
           mFrescoContext.getImagePipelineUtils().buildImageRequest(uri, imageOptions);
+      if (frescoExperiments.allowDelay() && imageOptions.getDelayMs() > 0 && imageRequest != null) {
+        imageRequest =
+            ImageRequestBuilder.fromRequest(imageRequest)
+                .setDelayMs(imageOptions.getDelayMs())
+                .build();
+      }
+
       final CacheKey cacheKey =
           mFrescoContext.getImagePipeline().getCacheKey(imageRequest, callerContext);
       CloseableReference<CloseableImage> cachedImage = null;
@@ -345,7 +352,9 @@ public class FrescoControllerImpl implements FrescoController {
 
       // Check if we have a cached image in the state
       CloseableReference<CloseableImage> cachedImage = null;
-      if (experiments.checkStateCacheInAttach()) {
+      if (experiments.allowDelay() && frescoState.getImageOptions().getDelayMs() > 0) {
+        // skip cache
+      } else if (experiments.checkStateCacheInAttach()) {
         cachedImage = frescoState.getCachedImage();
         try {
           if (CloseableReference.isValid(cachedImage)) {
@@ -359,7 +368,9 @@ public class FrescoControllerImpl implements FrescoController {
       }
 
       // Check if the image is in cache now
-      if (experiments.checkCacheInAttach()) {
+      if (experiments.allowDelay() && frescoState.getImageOptions().getDelayMs() > 0) {
+        // skip cache
+      } else if (experiments.checkCacheInAttach()) {
         if (FrescoSystrace.isTracing()) {
           FrescoSystrace.beginSection("FrescoControllerImpl#onAttach->getCachedImage");
         }

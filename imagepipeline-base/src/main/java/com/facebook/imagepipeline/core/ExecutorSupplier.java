@@ -9,6 +9,8 @@ package com.facebook.imagepipeline.core;
 
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ScheduledExecutorService;
+import javax.annotation.Nullable;
 
 /**
  * Implementations of this interface are responsible for supplying the different executors used by
@@ -39,6 +41,9 @@ public interface ExecutorSupplier {
    * processing.
    */
   Executor forBackgroundTasks();
+
+  @Nullable
+  ScheduledExecutorService scheduledExecutorServiceForBackgroundTasks();
 
   /**
    * Executor used for lightweight background operations, such as handing request off the main

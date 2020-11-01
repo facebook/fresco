@@ -89,6 +89,7 @@ public class ProducerSequenceFactoryTest {
             imageTranscoderFactory,
             false,
             false,
+            false,
             false);
 
     when(mImageRequest.getLowestPermittedRequestLevel())
@@ -326,6 +327,7 @@ public class ProducerSequenceFactoryTest {
             false,
             true,
             imageTranscoderFactory,
+            false,
             false,
             false,
             false);

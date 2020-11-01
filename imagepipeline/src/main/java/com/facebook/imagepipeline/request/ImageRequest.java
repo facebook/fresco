@@ -104,6 +104,8 @@ public class ImageRequest {
    */
   private final @Nullable Boolean mResizingAllowedOverride;
 
+  private final int mDelayMs;
+
   public static @Nullable ImageRequest fromFile(@Nullable File file) {
     return (file == null) ? null : ImageRequest.fromUri(UriUtil.getUriForFile(file));
   }
@@ -144,6 +146,8 @@ public class ImageRequest {
     mRequestListener = builder.getRequestListener();
 
     mResizingAllowedOverride = builder.getResizingAllowedOverride();
+
+    mDelayMs = builder.getDelayMs();
   }
 
   public CacheChoice getCacheChoice() {
@@ -221,6 +225,10 @@ public class ImageRequest {
     return mResizingAllowedOverride;
   }
 
+  public int getDelayMs() {
+    return mDelayMs;
+  }
+
   public synchronized File getSourceFile() {
     if (mSourceFile == null) {
       mSourceFile = new File(mSourceUri.getPath());
@@ -269,7 +277,8 @@ public class ImageRequest {
         mPostprocessor != null ? mPostprocessor.getPostprocessorCacheKey() : null;
     final CacheKey thatPostprocessorKey =
         request.mPostprocessor != null ? request.mPostprocessor.getPostprocessorCacheKey() : null;
-    return Objects.equal(thisPostprocessorKey, thatPostprocessorKey);
+    if (!Objects.equal(thisPostprocessorKey, thatPostprocessorKey)) return false;
+    return mDelayMs == request.mDelayMs;
   }
 
   @Override
@@ -297,7 +306,9 @@ public class ImageRequest {
               mResizeOptions,
               mRotationOptions,
               postprocessorCacheKey,
-              mResizingAllowedOverride);
+              mResizingAllowedOverride,
+              mDelayMs);
+      // ^ I *think* this is safe despite autoboxing...?
       if (cacheHashcode) {
         mHashcode = result;
       }
@@ -323,6 +334,7 @@ public class ImageRequest {
         .add("isDiskCacheEnabled", mIsDiskCacheEnabled)
         .add("isMemoryCacheEnabled", mIsMemoryCacheEnabled)
         .add("decodePrefetches", mDecodePrefetches)
+        .add("delayMs", mDelayMs)
         .toString();
   }
 
