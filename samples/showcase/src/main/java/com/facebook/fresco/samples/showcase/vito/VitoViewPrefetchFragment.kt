@@ -46,15 +46,15 @@ class VitoViewPrefetchFragment : BaseShowcaseFragment() {
         val prefetcher = FrescoVitoProvider.getPrefetcher()
 
         button_prefetch_bitmap.setOnClickListener {
-            prefetcher.prefetchToBitmapCache(uri, imageOptions, "prefetch_bitmap")
+            prefetcher.prefetchToBitmapCache(uri, imageOptions, "prefetch_bitmap", "sample")
         }
 
         button_prefetch_encoded.setOnClickListener {
-            prefetcher.prefetchToEncodedCache(uri, imageOptions, "prefetch_encoded")
+            prefetcher.prefetchToEncodedCache(uri, imageOptions, "prefetch_encoded", "sample")
         }
 
         button_prefetch_disk.setOnClickListener {
-            prefetcher.prefetchToDiskCache(uri, imageOptions, "prefetch_disk")
+            prefetcher.prefetchToDiskCache(uri, imageOptions, "prefetch_disk", "sample")
         }
 
         button_toggle_images.setOnClickListener {
