@@ -156,7 +156,7 @@ public class FrescoVitoImage2Spec {
       @Prop(optional = true) final @Nullable Object callerContext,
       @Prop(optional = true) final @Nullable ImageListener imageListener,
       @CachedValue VitoImageRequest imageRequest,
-      @FromPrepare DataSource<Void> prefetchDataSource,
+      @FromPrepare @Nullable DataSource<Void> prefetchDataSource,
       @FromBoundsDefined Rect viewportDimensions,
       @State final @Nullable AtomicReference<DataSource<Void>> workingRangePrefetchData,
       @Prop(optional = true) FadeDrawable.OnFadeListener onFadeListener) {
@@ -188,7 +188,7 @@ public class FrescoVitoImage2Spec {
       @Prop(optional = true) final @Nullable ImageListener imageListener,
       @Prop(optional = true) final @Nullable FadeDrawable.OnFadeListener onFadeListener,
       @CachedValue VitoImageRequest imageRequest,
-      @FromPrepare DataSource<Void> prefetchDataSource,
+      @FromPrepare @Nullable DataSource<Void> prefetchDataSource,
       @FromBoundsDefined Rect viewportDimensions,
       @State final @Nullable AtomicReference<DataSource<Void>> workingRangePrefetchData) {
     // We fetch in both mount and bind in case an unbind event triggered a delayed release.
@@ -214,7 +214,7 @@ public class FrescoVitoImage2Spec {
   static void onUnbind(
       ComponentContext c,
       FrescoDrawable2 frescoDrawable,
-      @FromPrepare DataSource<Void> prefetchDataSource) {
+      @FromPrepare @Nullable DataSource<Void> prefetchDataSource) {
     frescoDrawable.getImagePerfListener().onImageUnbind(frescoDrawable);
     if (FrescoVitoProvider.getConfig().useBindOnly()) {
       FrescoVitoProvider.getController().releaseImmediately(frescoDrawable);
@@ -230,7 +230,7 @@ public class FrescoVitoImage2Spec {
   static void onUnmount(
       ComponentContext c,
       FrescoDrawable2 frescoDrawable,
-      @FromPrepare DataSource<Void> prefetchDataSource) {
+      @FromPrepare @Nullable DataSource<Void> prefetchDataSource) {
     frescoDrawable.getImagePerfListener().onImageUnmount(frescoDrawable);
     if (FrescoVitoProvider.getConfig().useBindOnly()) {
       return;
@@ -280,7 +280,7 @@ public class FrescoVitoImage2Spec {
       @Prop(optional = true) final @Nullable Object callerContext,
       @Prop(optional = true) final @Nullable Prefetch prefetch,
       @CachedValue VitoImageRequest imageRequest,
-      @FromPrepare DataSource<Void> prefetchDataSource,
+      @FromPrepare @Nullable DataSource<Void> prefetchDataSource,
       @State final @Nullable AtomicReference<DataSource<Void>> workingRangePrefetchData) {
     if (workingRangePrefetchData == null) {
       return;
