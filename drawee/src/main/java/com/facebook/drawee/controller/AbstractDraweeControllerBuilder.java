@@ -120,7 +120,7 @@ public abstract class AbstractDraweeControllerBuilder<
   }
 
   /** Sets the image request. */
-  public BUILDER setImageRequest(REQUEST imageRequest) {
+  public BUILDER setImageRequest(@Nullable REQUEST imageRequest) {
     mImageRequest = imageRequest;
     return getThis();
   }
