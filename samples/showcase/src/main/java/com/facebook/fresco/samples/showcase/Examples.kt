@@ -24,7 +24,8 @@ import com.facebook.fresco.samples.showcase.vito.*
 
 object Examples {
 
-    fun getFragment(itemId: Int): ShowcaseFragment = when (itemId) {
+  fun getFragment(itemId: Int): ShowcaseFragment =
+      when (itemId) {
         // Drawee
         R.id.nav_drawee_simple -> DraweeSimpleFragment()
         R.id.nav_drawee_media_picker -> DraweeMediaPickerFragment()
@@ -75,5 +76,5 @@ object Examples {
 
         // Default to the welcome fragment
         else -> WelcomeFragment()
-    }
+      }
 }
