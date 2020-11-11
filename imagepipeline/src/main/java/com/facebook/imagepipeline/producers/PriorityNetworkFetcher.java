@@ -62,6 +62,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
   private final HashSet<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> mCurrentlyFetching =
       new HashSet<>();
   private final boolean inflightFetchesCanBeCancelled;
+  private final boolean infiniteRetries;
 
   /**
    * @param isHiPriFifo if true, hi-pri requests are dequeued in the order they were enqueued.
@@ -69,19 +70,23 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
    * @param inflightFetchesCanBeCancelled if false, the fetcher waits for the completion of requests
    *     that have been delegated to 'delegate' even if they were cancelled by Fresco. The
    *     cancellation order is not propagated to 'delegate', and no other request is dequeued.
+   * @param infiniteRetries if true, requests that fail are re-queued, potentially retrying
+   *     immediately.
    */
   public PriorityNetworkFetcher(
       NetworkFetcher<FETCH_STATE> delegate,
       boolean isHiPriFifo,
       int maxOutstandingHiPri,
       int maxOutstandingLowPri,
-      boolean inflightFetchesCanBeCancelled) {
+      boolean inflightFetchesCanBeCancelled,
+      boolean infiniteRetries) {
     this(
         delegate,
         isHiPriFifo,
         maxOutstandingHiPri,
         maxOutstandingLowPri,
         inflightFetchesCanBeCancelled,
+        infiniteRetries,
         RealtimeSinceBootClock.get());
   }
 
@@ -92,6 +97,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       int maxOutstandingHiPri,
       int maxOutstandingLowPri,
       boolean inflightFetchesCanBeCancelled,
+      boolean infiniteRetries,
       MonotonicClock clock) {
     mDelegate = delegate;
     mIsHiPriFifo = isHiPriFifo;
@@ -102,6 +108,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       throw new IllegalArgumentException("maxOutstandingHiPri should be > maxOutstandingLowPri");
     }
     this.inflightFetchesCanBeCancelled = inflightFetchesCanBeCancelled;
+    this.infiniteRetries = infiniteRetries;
     this.mClock = clock;
   }
 
@@ -161,6 +168,23 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     dequeueIfAvailableSlots();
   }
 
+  private void requeue(PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState) {
+    synchronized (mLock) {
+      FLog.v(TAG, "requeue: %s", fetchState.getUri());
+
+      fetchState.requeueCount++;
+      fetchState.delegatedState =
+          mDelegate.createFetchState(fetchState.getConsumer(), fetchState.getContext());
+
+      mCurrentlyFetching.remove(fetchState);
+      if (!mHiPriQueue.remove(fetchState)) {
+        mLowPriQueue.remove(fetchState);
+      }
+      putInQueue(fetchState, fetchState.getContext().getPriority() == HIGH);
+    }
+    dequeueIfAvailableSlots();
+  }
+
   private void dequeueIfAvailableSlots() {
     PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> toFetch = null;
     synchronized (mLock) {
@@ -203,8 +227,12 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
 
             @Override
             public void onFailure(Throwable throwable) {
-              removeFromQueue(fetchState, "FAIL");
-              fetchState.callback.onFailure(throwable);
+              if (infiniteRetries) {
+                requeue(fetchState);
+              } else {
+                removeFromQueue(fetchState, "FAIL");
+                fetchState.callback.onFailure(throwable);
+              }
             }
 
             @Override
@@ -264,7 +292,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
   }
 
   public static class PriorityFetchState<FETCH_STATE extends FetchState> extends FetchState {
-    public final FETCH_STATE delegatedState;
+    public FETCH_STATE delegatedState;
     final long enqueuedTimestamp;
 
     /** Size of hi-pri queue when this request was added. */
@@ -275,6 +303,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
 
     NetworkFetcher.Callback callback;
     long dequeuedTimestamp;
+    int requeueCount = 0;
 
     private PriorityFetchState(
         Consumer<EncodedImage> consumer,
@@ -320,6 +349,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
         "pri_queue_time", "" + (fetchState.dequeuedTimestamp - fetchState.enqueuedTimestamp));
     extras.put("hipri_queue_size", "" + fetchState.hiPriCountWhenCreated);
     extras.put("lowpri_queue_size", "" + fetchState.lowPriCountWhenCreated);
+    extras.put("requeueCount", "" + fetchState.requeueCount);
     return extras;
   }
 }
