@@ -69,6 +69,7 @@ object Examples {
         R.id.nav_vito_view_recycler -> VitoViewRecyclerFragment()
         R.id.nav_vito_view_prefetch -> VitoViewPrefetchFragment()
         R.id.nav_vito_view_ktx -> VitoViewKtxFragment()
+        R.id.nav_vito_litho_slideshow -> FrescoVitoLithoSlideshowFragment()
 
         // More
         R.id.nav_welcome -> WelcomeFragment()
