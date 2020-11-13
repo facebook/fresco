@@ -27,7 +27,6 @@ import com.facebook.litho.annotations.OnMount;
 import com.facebook.litho.annotations.OnUnmount;
 import com.facebook.litho.annotations.Prop;
 import com.facebook.litho.annotations.State;
-
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
