@@ -61,6 +61,9 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       new LinkedList<>();
   private final HashSet<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> mCurrentlyFetching =
       new HashSet<>();
+
+  private volatile boolean isRunning = true;
+
   private final boolean inflightFetchesCanBeCancelled;
   private final boolean infiniteRetries;
 
@@ -110,6 +113,22 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     this.inflightFetchesCanBeCancelled = inflightFetchesCanBeCancelled;
     this.infiniteRetries = infiniteRetries;
     this.mClock = clock;
+  }
+
+  /** Stop dequeuing requests until {@link #resume()} is called. */
+  public void pause() {
+    isRunning = false;
+  }
+
+  /**
+   * Resume dequeuing requests.
+   *
+   * <p>Note: a request is immediately dequeued and the delegate's fetch() method is called using
+   * the current thread.
+   */
+  public void resume() {
+    isRunning = true;
+    dequeueIfAvailableSlots();
   }
 
   @Override
@@ -186,6 +205,10 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
   }
 
   private void dequeueIfAvailableSlots() {
+    if (!isRunning) {
+      return;
+    }
+
     PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> toFetch = null;
     synchronized (mLock) {
       int outstandingRequests = mCurrentlyFetching.size();

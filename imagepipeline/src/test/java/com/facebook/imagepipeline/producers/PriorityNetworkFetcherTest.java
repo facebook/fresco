@@ -519,6 +519,63 @@ public class PriorityNetworkFetcherTest {
     assertThat(extrasMap).containsEntry("requeueCount", "1");
   }
 
+  /**
+   * Scenario: a priority fetcher is paused before fetch() is called. We expect that no request is
+   * dequeued until we call resume().
+   */
+  @Test
+  public void pauseBeforeFetch() {
+    PriorityNetworkFetcher<FetchState> fetcher =
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true, false);
+
+    fetcher.pause();
+
+    PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, true);
+
+    assertThat(fetcher.getCurrentlyFetching()).isEmpty();
+    assertThat(fetcher.getHiPriQueue()).containsExactly(one);
+    assertThat(fetcher.getLowPriQueue()).isEmpty();
+
+    fetcher.resume();
+
+    assertThat(fetcher.getCurrentlyFetching()).containsExactly(one);
+    assertThat(fetcher.getHiPriQueue()).isEmpty();
+    assertThat(fetcher.getLowPriQueue()).isEmpty();
+  }
+
+  /**
+   * Scenario: two requests are enqueued, and the first one starts executing immediately. pause() is
+   * called, and then the first request completes. Normally, the second request would be dequeued
+   * immediately, but since we're paused, it isn't. Then, when resume() is called, the second
+   * request is dequeued.
+   */
+  @Test
+  public void pauseDuringFetch() {
+    PriorityNetworkFetcher<FetchState> fetcher =
+        new PriorityNetworkFetcher<>(delegate, false, 1, 0, true, false);
+
+    PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, true);
+    PriorityFetchState<FetchState> two = fetch(fetcher, "2", callback, true);
+
+    fetcher.pause();
+
+    assertThat(fetcher.getCurrentlyFetching()).containsExactly(one);
+    assertThat(fetcher.getHiPriQueue()).containsExactly(two);
+    assertThat(fetcher.getLowPriQueue()).isEmpty();
+
+    fetcher.onFetchCompletion(one, 123);
+
+    assertThat(fetcher.getCurrentlyFetching()).isEmpty();
+    assertThat(fetcher.getHiPriQueue()).containsExactly(two);
+    assertThat(fetcher.getLowPriQueue()).isEmpty();
+
+    fetcher.resume();
+
+    assertThat(fetcher.getCurrentlyFetching()).containsExactly(two);
+    assertThat(fetcher.getHiPriQueue()).isEmpty();
+    assertThat(fetcher.getLowPriQueue()).isEmpty();
+  }
+
   private PriorityFetchState<FetchState> fetch(
       PriorityNetworkFetcher<FetchState> fetcher,
       String uri,
