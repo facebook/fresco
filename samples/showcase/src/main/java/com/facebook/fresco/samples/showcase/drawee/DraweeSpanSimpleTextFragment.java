@@ -122,9 +122,4 @@ public class DraweeSpanSimpleTextFragment extends BaseShowcaseFragment {
 
     mDraweeSpanTextView.setDraweeSpanStringBuilder(draweeSpanStringBuilder);
   }
-
-  @Override
-  public int getTitleId() {
-    return R.string.drawee_span_simple_title;
-  }
 }

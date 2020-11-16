@@ -78,11 +78,6 @@ public class RetainingDataSourceSupplierFragment extends BaseShowcaseFragment {
         });
   }
 
-  @Override
-  public int getTitleId() {
-    return R.string.drawee_retaining_supplier_title;
-  }
-
   private void replaceImage(
       RetainingDataSourceSupplier<CloseableReference<CloseableImage>> retainingSupplier) {
 

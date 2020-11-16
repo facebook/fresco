@@ -102,8 +102,6 @@ class MultiUriFragment : BaseShowcaseFragment() {
     }
   }
 
-  override fun getTitleId() = R.string.drawee_multi_uri_title
-
   private fun resetImageView() {
     drawee_view.controller = null
     VitoView.show(null as? Uri, drawee_view)

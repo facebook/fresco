@@ -67,6 +67,4 @@ class VitoViewPrefetchFragment : BaseShowcaseFragment() {
 
     button_clear_cache.setOnClickListener { Fresco.getImagePipeline().clearCaches() }
   }
-
-  override fun getTitleId(): Int = R.string.vito_view_prefetch
 }

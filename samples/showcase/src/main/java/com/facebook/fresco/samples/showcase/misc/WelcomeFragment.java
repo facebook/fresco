@@ -70,9 +70,4 @@ public class WelcomeFragment extends BaseShowcaseFragment {
           }
         });
   }
-
-  @Override
-  public int getTitleId() {
-    return R.string.welcome_title;
-  }
 }

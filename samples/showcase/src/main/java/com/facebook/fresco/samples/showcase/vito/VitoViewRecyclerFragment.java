@@ -88,11 +88,6 @@ public class VitoViewRecyclerFragment extends BaseShowcaseFragment {
         });
   }
 
-  @Override
-  public int getTitleId() {
-    return R.string.vito_view_view_recycler;
-  }
-
   public class SimpleAdapter extends RecyclerView.Adapter<SimpleViewHolder> {
 
     private final Random mRandom = new Random();

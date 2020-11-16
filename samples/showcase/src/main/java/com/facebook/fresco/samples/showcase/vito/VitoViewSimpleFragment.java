@@ -42,9 +42,4 @@ public class VitoViewSimpleFragment extends BaseShowcaseFragment {
 
     VitoView.show(uri, IMAGE_OPTIONS, view);
   }
-
-  @Override
-  public int getTitleId() {
-    return R.string.vito_view_simple;
-  }
 }

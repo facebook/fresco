@@ -87,11 +87,6 @@ public class DraweeRecyclerViewFragment extends BaseShowcaseFragment {
         });
   }
 
-  @Override
-  public int getTitleId() {
-    return R.string.drawee_recycler_title;
-  }
-
   public class SimpleAdapter extends RecyclerView.Adapter<SimpleViewHolder> {
 
     private List<Uri> mUris;

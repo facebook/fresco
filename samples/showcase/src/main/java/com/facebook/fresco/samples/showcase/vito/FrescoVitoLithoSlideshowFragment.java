@@ -52,11 +52,6 @@ public class FrescoVitoLithoSlideshowFragment extends BaseShowcaseFragment {
         LithoView.create(componentContext, createSlideshowComponent(componentContext)));
   }
 
-  @Override
-  public int getTitleId() {
-    return R.string.vito_litho_slideshow;
-  }
-
   public Component createSlideshowComponent(ComponentContext c) {
     return FrescoVitoSlideshowComponent.create(c)
         .fadeTransitionMs(1000)

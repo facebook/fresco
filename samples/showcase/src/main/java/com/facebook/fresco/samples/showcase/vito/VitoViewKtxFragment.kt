@@ -36,6 +36,4 @@ class VitoViewKtxFragment : BaseShowcaseFragment() {
     val uri = sampleUris().createSampleUri()
     image?.show(uri, imageOptions)
   }
-
-  override fun getTitleId() = R.string.vito_view_ktx
 }

@@ -36,9 +36,4 @@ public class FrescoVitoLithoSectionsFragment extends BaseShowcaseFragment {
             .disablePTR(true)
             .build());
   }
-
-  @Override
-  public int getTitleId() {
-    return R.string.vito_litho_sections;
-  }
 }

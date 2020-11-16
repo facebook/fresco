@@ -54,11 +54,6 @@ public class DraweeTransitionFragment extends BaseShowcaseFragment {
         });
   }
 
-  @Override
-  public int getTitleId() {
-    return R.string.drawee_transition_title;
-  }
-
   public void startTransition(View startView, Uri uri) {
     Intent intent = ImageDetailsActivity.getStartIntent(getContext(), uri);
     final String transitionName = getString(R.string.transition_name);

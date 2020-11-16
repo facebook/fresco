@@ -43,11 +43,6 @@ public class ImageFormatKeyframesFragment extends BaseShowcaseFragment {
     }
   }
 
-  @Override
-  public int getTitleId() {
-    return R.string.format_keyframes_title;
-  }
-
   @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
   private void initAnimation(View view) {
     mSimpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);

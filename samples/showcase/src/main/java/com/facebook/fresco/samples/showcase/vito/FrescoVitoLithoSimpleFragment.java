@@ -53,11 +53,6 @@ public class FrescoVitoLithoSimpleFragment extends BaseShowcaseFragment {
     container.addView(LithoView.create(componentContext, createComponent(componentContext)));
   }
 
-  @Override
-  public int getTitleId() {
-    return R.string.vito_litho_simple;
-  }
-
   public Component createComponent(ComponentContext c) {
     Uri uri = sampleUris().createSampleUri();
     return FrescoVitoImage2.create(c)

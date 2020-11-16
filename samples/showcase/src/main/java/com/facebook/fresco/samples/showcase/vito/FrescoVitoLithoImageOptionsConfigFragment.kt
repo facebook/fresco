@@ -91,8 +91,6 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
     imageOptionsBuilder.autoPlay(switch_auto_play_animations.isChecked())
   }
 
-  override fun getTitleId() = R.string.vito_litho_image_options_config
-
   private fun refresh(builder: ImageOptions.Builder = imageOptionsBuilder) {
     lithoView?.setComponentAsync(createImage(builder.build()))
   }

@@ -55,9 +55,4 @@ public class ImageFormatDataUriFragment extends BaseShowcaseFragment {
     final TextView uriContentTextView = view.findViewById(R.id.datauri_content_textview);
     uriContentTextView.setText(dataUri);
   }
-
-  @Override
-  public int getTitleId() {
-    return R.string.format_datauri_title;
-  }
 }
