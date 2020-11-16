@@ -12,21 +12,17 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import com.facebook.fresco.samples.showcase.settings.SettingsFragment
-import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -43,15 +39,37 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     drawer_layout.addDrawerListener(toggle)
     toggle.syncState()
 
-    nav_view.setNavigationItemSelectedListener(this)
+    addNavDrawerEntry(nav_view.menu, ExampleDatabase.welcome)
+    for (category in ExampleDatabase.examples) {
+      val submenu = nav_view.menu.addSubMenu(category.name)
+      for (item in category.examples) {
+        addNavDrawerEntry(submenu, item)
+      }
+    }
+    addNavDrawerEntry(nav_view.menu.addSubMenu("More"), ExampleDatabase.settings)
 
     if (savedInstanceState == null) {
-      val selectedItem =
+      nav_view.menu.performIdentifierAction(
           PreferenceManager.getDefaultSharedPreferences(this)
-              .getInt(KEY_SELECTED_NAVDRAWER_ITEM_ID, INITIAL_NAVDRAWER_ITEM_ID)
-      handleNavigationItemClick(selectedItem)
-      nav_view.setCheckedItem(selectedItem)
+              .getInt(KEY_SELECTED_NAVDRAWER_ITEM_ID, ExampleDatabase.welcome.itemId),
+          0)
     }
+  }
+
+  private fun addNavDrawerEntry(menu: Menu, item: ExampleItem) {
+    menu
+        .add(Menu.NONE, item.itemId, Menu.NONE, item.title)
+        .setCheckable(true)
+        .setOnMenuItemClickListener {
+          showFragment(item.createFragment(), item.title, item.backstackTag)
+          drawer_layout.closeDrawer(GravityCompat.START)
+          nav_view.setCheckedItem(it)
+          PreferenceManager.getDefaultSharedPreferences(this)
+              .edit()
+              .putInt(KEY_SELECTED_NAVDRAWER_ITEM_ID, it.itemId)
+              .apply()
+          true
+        }
   }
 
   override fun onResume() {
@@ -88,28 +106,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     if (item.itemId == R.id.action_settings) {
-      showFragment(SettingsFragment())
+      showFragment(ExampleDatabase.settings)
     }
     return super.onOptionsItemSelected(item)
-  }
-
-  override fun onNavigationItemSelected(item: MenuItem): Boolean {
-    handleNavigationItemClick(item.itemId)
-    val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
-    drawer.closeDrawer(GravityCompat.START)
-    return true
-  }
-
-  private fun handleNavigationItemClick(itemId: Int) {
-    showFragment(Examples.getFragment(itemId))
-
-    // Save the item if it's not the settings fragment
-    if (itemId != R.id.nav_action_settings) {
-      PreferenceManager.getDefaultSharedPreferences(this)
-          .edit()
-          .putInt(KEY_SELECTED_NAVDRAWER_ITEM_ID, itemId)
-          .apply()
-    }
   }
 
   /**
@@ -117,15 +116,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
    *
    * @param fragment The Fragment to add
    */
-  private fun showFragment(fragment: ShowcaseFragment) {
+  private fun showFragment(fragment: Fragment, title: String, backstackTag: String? = null) {
     val fragmentTransaction =
-        supportFragmentManager.beginTransaction().replace(R.id.content_main, fragment as Fragment)
-    if (fragment.backstackTag != null) {
-      fragmentTransaction.addToBackStack(fragment.backstackTag)
+        supportFragmentManager.beginTransaction().replace(R.id.content_main, fragment)
+    if (backstackTag != null) {
+      fragmentTransaction.addToBackStack(backstackTag)
     }
     fragmentTransaction.commit()
 
-    setTitle(fragment.titleId)
+    setTitle(title)
   }
 
   private fun maybeShowUriOverrideReminder() {
@@ -134,13 +133,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
     Snackbar.make(content_main, R.string.snackbar_uri_override_reminder_text, Snackbar.LENGTH_LONG)
         .setAction(R.string.snackbar_uri_override_reminder_change_button) {
-          showFragment(SettingsFragment())
+          showFragment(ExampleDatabase.settings)
         }
         .show()
   }
 
+  private fun showFragment(item: ExampleItem) {
+    showFragment(item.createFragment(), item.title, item.backstackTag)
+  }
+
   companion object {
-    private const val INITIAL_NAVDRAWER_ITEM_ID = R.id.nav_welcome
     private const val KEY_SELECTED_NAVDRAWER_ITEM_ID = "selected_navdrawer_item_id"
   }
 }
