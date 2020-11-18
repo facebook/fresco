@@ -12,8 +12,10 @@ import android.graphics.Rect;
 import com.facebook.common.internal.Objects;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FrescoVitoImageDecodeOptions extends ImageDecodeOptions {
 
   private static final FrescoVitoImageDecodeOptions DEFAULTS =
@@ -47,7 +49,7 @@ public class FrescoVitoImageDecodeOptions extends ImageDecodeOptions {
   }
 
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(@Nullable Object obj) {
     if (this == obj) {
       return false;
     }
