@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
-import com.facebook.fresco.samples.showcase.R;
 import com.facebook.litho.ComponentContext;
 import com.facebook.litho.LithoView;
 import com.facebook.litho.sections.SectionContext;

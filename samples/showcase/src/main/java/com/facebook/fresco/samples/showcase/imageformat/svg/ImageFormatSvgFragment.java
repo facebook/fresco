@@ -64,6 +64,7 @@ public class ImageFormatSvgFragment extends BaseShowcaseFragment {
           }
         });
   }
+
   private ShowRestartMessageDialog getShowRestartMessageDialog() {
     if (mShowRestartMessageDialog == null) {
       mShowRestartMessageDialog = new ShowRestartMessageDialog();
