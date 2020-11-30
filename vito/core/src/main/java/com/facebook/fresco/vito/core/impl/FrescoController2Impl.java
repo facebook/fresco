@@ -42,7 +42,6 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       ImmutableMap.<String, Object>of("component_tag", "vito2");
   private static final Map<String, Object> SHORTCUT_EXTRAS =
       ImmutableMap.<String, Object>of("origin", "memory_bitmap", "origin_sub", "shortcut");
-  private static final Extras ON_SUBMIT_EXTRAS = Extras.of(COMPONENT_EXTRAS);
 
   private final FrescoVitoConfig mConfig;
   private final Hierarcher mHierarcher;
