@@ -98,7 +98,8 @@ class ShowcaseApplication : Application() {
       draweeConfigBuilder.setImagePerfDataListener(
           object : ImagePerfDataListener {
             override fun onImageLoadStatusUpdated(
-                imagePerfData: ImagePerfData, imageLoadStatus: Int
+                imagePerfData: ImagePerfData,
+                imageLoadStatus: Int
             ) {
               frescoFlipperPlugin?.flipperImageTracker?.onImageLoadStatusUpdated(
                   imagePerfData, imageLoadStatus)
@@ -106,7 +107,8 @@ class ShowcaseApplication : Application() {
             }
 
             override fun onImageVisibilityUpdated(
-                imagePerfData: ImagePerfData, visibilityState: Int
+                imagePerfData: ImagePerfData,
+                visibilityState: Int
             ) {
               // nop
             }

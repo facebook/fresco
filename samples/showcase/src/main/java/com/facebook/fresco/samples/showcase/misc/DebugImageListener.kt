@@ -26,7 +26,10 @@ class DebugImageListener(val log: (String) -> Unit = { Log.d("DebugImageListener
   }
 
   override fun onFinalImageSet(
-      id: Long, imageOrigin: Int, imageInfo: ImageInfo?, drawable: Drawable?
+      id: Long,
+      imageOrigin: Int,
+      imageInfo: ImageInfo?,
+      drawable: Drawable?
   ) {
     log(
         "onFinalImageSet: id=$id, origin=${ImageOriginUtils.toString(imageOrigin)}, imageInfo=$imageInfo, drawable=$drawable")

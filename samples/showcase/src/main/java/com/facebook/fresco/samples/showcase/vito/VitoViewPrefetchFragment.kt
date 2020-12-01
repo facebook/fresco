@@ -33,7 +33,9 @@ class VitoViewPrefetchFragment : BaseShowcaseFragment() {
   private var imageVisible = false
 
   override fun onCreateView(
-      inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
   ): View? {
     return inflater.inflate(R.layout.fragment_vito_view_prefetch, container, false)
   }

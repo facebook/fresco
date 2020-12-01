@@ -65,7 +65,9 @@ data class ImageHolder(private val view: View, private val resizeOptions: Resize
 }
 
 class ImageAdapter(
-    private val placeholderDrawable: Drawable, private val failureDrawable: Drawable, squareDim: Int
+    private val placeholderDrawable: Drawable,
+    private val failureDrawable: Drawable,
+    squareDim: Int
 ) : RecyclerView.Adapter<ImageHolder>() {
   private var uris = listOf<Uri>()
   private val imageResizeOptions = ResizeOptions.forSquareSize(squareDim)

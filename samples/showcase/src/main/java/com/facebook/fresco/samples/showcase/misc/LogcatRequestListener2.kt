@@ -12,7 +12,8 @@ import com.facebook.imagepipeline.listener.RequestListener2
 import com.facebook.imagepipeline.producers.ProducerContext
 
 class LogcatRequestListener2(
-    val logExtraMap: Boolean = true, val tag: String = "LogcatRequestListener2"
+    val logExtraMap: Boolean = true,
+    val tag: String = "LogcatRequestListener2"
 ) : RequestListener2 {
 
   override fun onRequestStart(producerContext: ProducerContext) {
@@ -32,7 +33,9 @@ class LogcatRequestListener2(
   }
 
   override fun onProducerFinishWithCancellation(
-      producerContext: ProducerContext, producerName: String, extraMap: MutableMap<String, String>?
+      producerContext: ProducerContext,
+      producerName: String,
+      extraMap: MutableMap<String, String>?
   ) {
     Log.d(
         tag,
@@ -44,7 +47,9 @@ class LogcatRequestListener2(
   }
 
   override fun onProducerEvent(
-      producerContext: ProducerContext, producerName: String, eventName: String
+      producerContext: ProducerContext,
+      producerName: String,
+      eventName: String
   ) {
     Log.d(
         tag,
@@ -52,7 +57,9 @@ class LogcatRequestListener2(
   }
 
   override fun onProducerFinishWithSuccess(
-      producerContext: ProducerContext, producerName: String, extraMap: MutableMap<String, String>?
+      producerContext: ProducerContext,
+      producerName: String,
+      extraMap: MutableMap<String, String>?
   ) {
     Log.d(
         tag,
@@ -71,7 +78,9 @@ class LogcatRequestListener2(
   }
 
   override fun onUltimateProducerReached(
-      producerContext: ProducerContext, producerName: String, successful: Boolean
+      producerContext: ProducerContext,
+      producerName: String,
+      successful: Boolean
   ) {
     Log.d(
         tag,

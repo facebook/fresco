@@ -10,7 +10,9 @@ package com.facebook.fresco.samples.showcase
 import androidx.fragment.app.Fragment
 
 data class ExampleItem(
-    val title: String, val backstackTag: String? = null, val createFragment: () -> Fragment
+    val title: String,
+    val backstackTag: String? = null,
+    val createFragment: () -> Fragment
 ) {
   val itemId = title.hashCode()
 }
