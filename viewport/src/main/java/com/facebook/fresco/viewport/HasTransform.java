@@ -1,5 +1,3 @@
-// (c) Facebook, Inc. and its affiliates. Confidential and proprietary.
-
 /*
  * Copyright (c) Facebook, Inc. and its affiliates.
  *
