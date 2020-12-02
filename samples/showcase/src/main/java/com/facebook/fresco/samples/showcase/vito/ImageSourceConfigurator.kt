@@ -81,6 +81,10 @@ data class ImageSourceConfigurator(
                     }
                   },
               "Empty Image Source" to { set { ImageSourceProvider.emptySource() } },
+              "Non-existing URI" to
+                  {
+                    set { ImageSourceProvider.forUri(imageUriProvider.nonExistingUri) }
+                  },
               "null" to { set { null } }),
           "Image Source")
 
