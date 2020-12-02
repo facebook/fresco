@@ -274,6 +274,16 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
         mHierarcher.buildErrorDrawable(imageRequest.resources, imageRequest.imageOptions);
     drawable.setProgress(1f);
     drawable.setImageDrawable(errorDrawable);
+    if (!drawable.isDefaultLayerIsOn()) {
+      if (imageRequest.imageOptions.getFadeDurationMs() <= 0) {
+        drawable.showImageImmediately();
+      } else {
+        drawable.fadeInImage(imageRequest.imageOptions.getFadeDurationMs());
+      }
+    } else {
+      drawable.setPlaceholderDrawable(null);
+      drawable.setProgressDrawable(null);
+    }
     Extras extras = obtainExtras(dataSource, dataSource.getResult(), drawable);
     drawable
         .getImageListener()
