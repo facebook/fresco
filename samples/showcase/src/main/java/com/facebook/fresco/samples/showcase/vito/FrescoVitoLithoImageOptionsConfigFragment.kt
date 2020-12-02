@@ -70,6 +70,7 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
     spinner_placeholder.setupWithList(VitoSpinners.placeholderOptions) {
       refresh(it(imageOptionsBuilder))
     }
+    spinner_error.setupWithList(VitoSpinners.errorOptions) { refresh(it(imageOptionsBuilder)) }
     spinner_overlay.setupWithList(VitoSpinners.overlayOptions) { refresh(it(imageOptionsBuilder)) }
     spinner_fading.setupWithList(VitoSpinners.fadingOptions) {
       refresh(imageOptionsBuilder.fadeDurationMs(it))

@@ -114,6 +114,16 @@ object VitoSpinners {
                     builder.placeholderRes(R.color.placeholder_color)
                   }),
           "Placeholder")
+  val errorOptions =
+      Pair(
+          listOf(
+              "none" to { builder: ImageOptions.Builder -> builder.errorRes(0) },
+              "image" to { builder: ImageOptions.Builder -> builder.errorRes(R.drawable.logo) },
+              "color res" to
+                  { builder: ImageOptions.Builder ->
+                    builder.errorRes(R.color.error_color)
+                  }),
+          "Error")
 
   val progressOptions =
       Pair(
