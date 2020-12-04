@@ -84,8 +84,8 @@ public class FrescoVitoImage2Spec {
     }
   }
 
-  @PropDefault protected static final float imageAspectRatio = 1f;
-  @PropDefault protected static final Prefetch prefetch = Prefetch.AUTO;
+  @PropDefault static final float imageAspectRatio = 1f;
+  @PropDefault static final Prefetch prefetch = Prefetch.AUTO;
 
   @OnCreateMountContent(mountingType = MountingType.DRAWABLE)
   static FrescoDrawable2 onCreateMountContent(Context c) {

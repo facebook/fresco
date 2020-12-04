@@ -16,6 +16,7 @@ import com.facebook.fresco.samples.showcase.R
 import com.facebook.fresco.samples.showcase.common.SpinnerUtils.setupWithList
 import com.facebook.fresco.samples.showcase.misc.DebugImageListener
 import com.facebook.fresco.vito.litho.FrescoVitoImage2
+import com.facebook.fresco.vito.litho.FrescoVitoTapToRetryImage
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.litho.ComponentContext
 import com.facebook.litho.LithoView
@@ -30,6 +31,7 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
 
   private var componentContext: ComponentContext? = null
   private var lithoView: LithoView? = null
+  private var useTapToRetry = false
 
   override fun onCreateView(
       inflater: LayoutInflater,
@@ -99,9 +101,19 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
   }
 
   private fun createImage(imageOptions: ImageOptions) =
-      FrescoVitoImage2.create(componentContext)
-          .imageSource(imageSourceProvider.imageSource)
-          .imageOptions(imageOptions)
-          .imageListener(imageListener)
-          .build()
+      if (!useTapToRetry) {
+        FrescoVitoImage2.create(componentContext)
+            .imageSource(imageSourceProvider.imageSource)
+            .imageOptions(imageOptions)
+            .imageListener(imageListener)
+            .build()
+      } else {
+        FrescoVitoTapToRetryImage.create(componentContext)
+            .imageSource(imageSourceProvider.imageSource)
+            .imageOptions(imageOptions)
+            .retryImageRes(R.drawable.ic_retry_black_48dp)
+            .maxTapCount(5)
+            .imageListener(imageListener)
+            .build()
+      }
 }
