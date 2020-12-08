@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.producers;
 
 import android.util.Pair;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
 import javax.annotation.concurrent.GuardedBy;
@@ -17,6 +18,7 @@ import javax.annotation.concurrent.GuardedBy;
  * Only permits a configurable number of requests to be kicked off simultaneously. If that number is
  * exceeded, then requests are queued up and kicked off once other requests complete.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ThrottlingProducer<T> implements Producer<T> {
 
   public static final String PRODUCER_NAME = "ThrottlingProducer";
