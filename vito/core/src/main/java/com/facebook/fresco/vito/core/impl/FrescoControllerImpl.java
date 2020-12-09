@@ -63,7 +63,7 @@ public class FrescoControllerImpl implements FrescoController {
   private final FrescoContext mFrescoContext;
   private final DebugOverlayFactory mDebugOverlayFactory;
   private final boolean mShouldInstrumentDrawable;
-  private final ControllerListener2<ImageInfo> mControllerListener2;
+  @Nullable private final ControllerListener2<ImageInfo> mControllerListener2;
 
   public FrescoControllerImpl(
       FrescoContext frescoContext,

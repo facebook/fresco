@@ -10,6 +10,7 @@ package com.facebook.drawee.span;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -23,9 +24,10 @@ import javax.annotation.Nullable;
  * you previously set a {@link DraweeSpanStringBuilder} but want to re-use it as a normal text view,
  * you should call {@link #detachCurrentDraweeSpanStringBuilder()} first.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class SimpleDraweeSpanTextView extends TextView {
 
-  private DraweeSpanStringBuilder mDraweeStringBuilder;
+  @Nullable private DraweeSpanStringBuilder mDraweeStringBuilder;
   private boolean mIsAttached = false;
 
   public SimpleDraweeSpanTextView(Context context) {

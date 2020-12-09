@@ -9,9 +9,12 @@ package com.facebook.fresco.vito.transformation;
 
 import android.graphics.Bitmap;
 import com.facebook.imagepipeline.transformation.BitmapTransformation;
+import com.facebook.infer.annotation.Nullsafe;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class CircularBitmapTransformation implements BitmapTransformation {
 
   private final boolean mAntiAliased;
@@ -64,7 +67,7 @@ public class CircularBitmapTransformation implements BitmapTransformation {
   }
 
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(@Nullable Object obj) {
     if (this == obj) {
       return true;
     }

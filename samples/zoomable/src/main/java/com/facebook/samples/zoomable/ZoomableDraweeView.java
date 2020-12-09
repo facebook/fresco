@@ -45,7 +45,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   private final RectF mImageBounds = new RectF();
   private final RectF mViewBounds = new RectF();
 
-  private DraweeController mHugeImageController;
+  @Nullable private DraweeController mHugeImageController;
   private ZoomableController mZoomableController;
   private GestureDetector mTapGestureDetector;
   private boolean mAllowTouchInterceptionWhileZoomed = true;

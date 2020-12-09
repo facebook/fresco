@@ -12,9 +12,11 @@ import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.fresco.vito.listener.BaseImageListener;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Autoplays animated images */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AutoPlayImageListener extends BaseImageListener {
 
   private static @Nullable AutoPlayImageListener INSTANCE;
@@ -51,7 +53,7 @@ public class AutoPlayImageListener extends BaseImageListener {
   public void onIntermediateImageFailed(long id, Throwable throwable) {}
 
   @Override
-  public void onFailure(long id, @Nullable Drawable error, Throwable throwable) {}
+  public void onFailure(long id, @Nullable Drawable error, @Nullable Throwable throwable) {}
 
   @Override
   public void onRelease(long id) {}

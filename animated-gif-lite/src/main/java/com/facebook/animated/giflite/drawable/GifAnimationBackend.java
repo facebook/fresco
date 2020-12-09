@@ -65,7 +65,7 @@ public class GifAnimationBackend implements AnimationBackend {
   }
 
   @Override
-  public void setColorFilter(ColorFilter colorFilter) {
+  public void setColorFilter(@Nullable ColorFilter colorFilter) {
     // unimplemented
   }
 

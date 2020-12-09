@@ -324,7 +324,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     /** Size of low-pri queue when this request was added. */
     final int lowPriCountWhenCreated;
 
-    NetworkFetcher.Callback callback;
+    @Nullable NetworkFetcher.Callback callback;
     long dequeuedTimestamp;
     int requeueCount = 0;
 

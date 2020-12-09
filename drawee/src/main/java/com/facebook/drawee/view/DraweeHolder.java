@@ -44,7 +44,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
   private boolean mIsControllerAttached = false;
   private boolean mIsHolderAttached = false;
   private boolean mIsVisible = true;
-  private DH mHierarchy;
+  @Nullable private DH mHierarchy;
 
   private DraweeController mController = null;
 

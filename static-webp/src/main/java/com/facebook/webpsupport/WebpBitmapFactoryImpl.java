@@ -205,6 +205,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
     return hookDecodeStream(inputStream, null, null);
   }
 
+  @Nullable
   @DoNotStrip
   private static Bitmap originalDecodeStream(InputStream inputStream) {
     return BitmapFactory.decodeStream(inputStream);

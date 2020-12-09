@@ -12,7 +12,10 @@ import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfMonitor;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfState;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImagePerfImageOriginListener implements ImageOriginListener {
 
   private final ImagePerfState mImagePerfState;
@@ -29,7 +32,7 @@ public class ImagePerfImageOriginListener implements ImageOriginListener {
       String controllerId,
       @ImageOrigin int imageOrigin,
       boolean successful,
-      String ultimateProducerName) {
+      @Nullable String ultimateProducerName) {
     mImagePerfState.setImageOrigin(imageOrigin);
     mImagePerfState.setUltimateProducerName(ultimateProducerName);
     mImagePerfMonitor.notifyStatusUpdated(mImagePerfState, ImageLoadStatus.ORIGIN_AVAILABLE);

@@ -25,7 +25,7 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
   private final Paint mPaint = new Paint();
   private final Paint mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   @Nullable private final Bitmap mBitmap;
-  private WeakReference<Bitmap> mLastBitmap;
+  @Nullable private WeakReference<Bitmap> mLastBitmap;
 
   public RoundedBitmapDrawable(Resources res, @Nullable Bitmap bitmap, @Nullable Paint paint) {
     super(new BitmapDrawable(res, bitmap));
@@ -113,7 +113,7 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
   }
 
   @Override
-  public void setColorFilter(ColorFilter colorFilter) {
+  public void setColorFilter(@Nullable ColorFilter colorFilter) {
     super.setColorFilter(colorFilter);
     mPaint.setColorFilter(colorFilter);
   }

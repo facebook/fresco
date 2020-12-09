@@ -145,7 +145,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   }
 
   @Override
-  public void onRelease(String id, ControllerListener2.Extras extras) {
+  public void onRelease(String id, @Nullable ControllerListener2.Extras extras) {
     final long now = mClock.now();
 
     ImagePerfState state = obtainState();

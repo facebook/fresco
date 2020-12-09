@@ -663,6 +663,7 @@ public abstract class BasePool<V> implements Pool<V> {
    * @param bucketedSize the bucket size
    * @return the freelist for the bucket
    */
+  @Nullable
   private synchronized Bucket<V> getBucketIfPresent(int bucketedSize) {
     return mBuckets.get(bucketedSize);
   }

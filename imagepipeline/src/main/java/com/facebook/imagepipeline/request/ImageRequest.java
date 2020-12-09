@@ -54,7 +54,7 @@ public class ImageRequest {
   private final @SourceUriType int mSourceUriType;
 
   /** Source File - for local fetches only, lazily initialized */
-  private File mSourceFile;
+  @Nullable private File mSourceFile;
 
   /** If set - the client will receive intermediate results */
   private final boolean mProgressiveRenderingEnabled;
@@ -245,7 +245,7 @@ public class ImageRequest {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (!(o instanceof ImageRequest)) {
       return false;
     }
