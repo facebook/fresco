@@ -250,7 +250,8 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
 
             @Override
             public void onFailure(Throwable throwable) {
-              if (infiniteRetries) {
+              if (infiniteRetries
+                  && !(throwable instanceof PriorityNetworkFetcher.NonrecoverableException)) {
                 requeue(fetchState);
               } else {
                 removeFromQueue(fetchState, "FAIL");
@@ -340,6 +341,19 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       this.enqueuedTimestamp = enqueuedTimestamp;
       this.hiPriCountWhenCreated = hiPriCountWhenCreated;
       this.lowPriCountWhenCreated = lowPriCountWhenCreated;
+    }
+  }
+
+  /**
+   * The delegate fetcher may pass an instance of this exception to its callback's onFailure to
+   * signal to a PriorityNetworkFetcher that it shouldn't retry that request.
+   *
+   * <p>This is useful for e.g., requests that fail due to HTTP 403: there's no point in retrying
+   * them, usually.
+   */
+  public static class NonrecoverableException extends Throwable {
+    public NonrecoverableException(@androidx.annotation.Nullable String message) {
+      super(message);
     }
   }
 

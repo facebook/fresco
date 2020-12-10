@@ -457,6 +457,32 @@ public class PriorityNetworkFetcherTest {
     assertThat(hipri1.requeueCount).isEqualTo(1);
   }
 
+  /** Scenario: an image fetch fails with a non-recoverable exception. Don't requeue it. */
+  @Test
+  public void testInfiniteRetries_dontRetryNonrecoverableException() {
+    RecordingNetworkFetcher recordingNetworkFetcher = new RecordingNetworkFetcher();
+
+    // Max hi-pri: 1, max low-pri: 0
+    PriorityNetworkFetcher<FetchState> fetcher =
+        new PriorityNetworkFetcher<>(recordingNetworkFetcher, false, 1, 0, true, true);
+
+    PriorityFetchState<FetchState> hipri1 = fetch(fetcher, "hipri1", callback, true);
+
+    assertThat(fetcher.getCurrentlyFetching()).containsExactly(hipri1);
+    assertThat(fetcher.getHiPriQueue()).isEmpty();
+    assertThat(fetcher.getLowPriQueue()).isEmpty();
+
+    // Simulate a failure in hipri1.
+    getOnlyElement(recordingNetworkFetcher.callbacks.get(hipri1.delegatedState))
+        .onFailure(new PriorityNetworkFetcher.NonrecoverableException("HTTP 403"));
+
+    assertThat(fetcher.getCurrentlyFetching()).isEmpty();
+    assertThat(fetcher.getHiPriQueue()).isEmpty();
+    assertThat(fetcher.getLowPriQueue()).isEmpty();
+
+    assertThat(hipri1.requeueCount).isEqualTo(0);
+  }
+
   /**
    * Scenario: an image changes priority and then fails. We expect it to be re-queued in the new
    * priority queue.
