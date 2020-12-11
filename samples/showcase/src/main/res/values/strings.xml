@@ -119,8 +119,6 @@
 
   <string name="vito_litho_region_decode_help">Choose a focus point with the smaller square and parent bounds with the bigger</string>
 
-  <string name="vito_litho_slideshow_help"> Fresco Vito Litho slideshow.</string>
-
   <!-- Preferences -->
 
   <string name="preferences_category_cache">Cache</string>

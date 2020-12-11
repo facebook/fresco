@@ -87,5 +87,8 @@ object ExampleDatabase {
                   ExampleItem("Vito View: Recycler") { VitoViewRecyclerFragment() },
                   ExampleItem("Vito View: Prefetch") { VitoViewPrefetchFragment() },
                   ExampleItem("Vito View: Kotlin Extensions") { VitoViewKtxFragment() },
-                  ExampleItem("Vito Litho: Slideshow") { FrescoVitoLithoSlideshowFragment() })))
+                  ExampleItem(
+                      "Vito Litho: Slideshow",
+                      LithoSlideshowSample(),
+                      "Litho slideshow that fades between images"))))
 }
