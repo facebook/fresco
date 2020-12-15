@@ -11,9 +11,11 @@ import android.graphics.Bitmap;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Use an instance of this class to perform post-process operations on a bitmap. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface Postprocessor {
 
   /**
