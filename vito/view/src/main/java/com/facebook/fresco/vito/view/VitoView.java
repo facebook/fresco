@@ -18,7 +18,6 @@ import com.facebook.fresco.vito.source.ImageSourceProvider;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** You must initialize this class before use by calling {@link #init(Implementation)}. */
-@Deprecated /* Experimental */
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class VitoView {
 

@@ -1,4 +1,9 @@
-// (c) Facebook, Inc. and its affiliates. Confidential and proprietary.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 package com.facebook.fresco.ui.common;
 
@@ -9,8 +14,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 
-/* Experimental */
-@Deprecated
 @Nullsafe(Nullsafe.Mode.STRICT)
 public interface ControllerListener2<INFO> {
 
