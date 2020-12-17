@@ -7,6 +7,7 @@
 
 package com.facebook.common.util;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -14,6 +15,7 @@ import javax.annotation.Nullable;
  * gives the same results as Objects.hashCode, but does not create array consisting of all
  * components
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class HashCodeUtil {
 
   /**
