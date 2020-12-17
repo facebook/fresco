@@ -13,6 +13,7 @@ import android.os.Looper;
 import android.os.Message;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawee.backends.pipeline.info.ImageLoadStatus;
@@ -24,8 +25,10 @@ import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.fresco.ui.common.OnDrawControllerListener;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageInfo>
     implements OnDrawControllerListener<ImageInfo> {
 
@@ -53,12 +56,13 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
 
     @Override
     public void handleMessage(@NonNull Message msg) {
+      ImagePerfState state = (ImagePerfState) Preconditions.checkNotNull(msg.obj);
       switch (msg.what) {
         case WHAT_STATUS:
-          mNotifier.notifyStatusUpdated((ImagePerfState) msg.obj, msg.arg1);
+          mNotifier.notifyStatusUpdated(state, msg.arg1);
           break;
         case WHAT_VISIBILITY:
-          mNotifier.notifyListenersOfVisibilityStateUpdate((ImagePerfState) msg.obj, msg.arg1);
+          mNotifier.notifyListenersOfVisibilityStateUpdate(state, msg.arg1);
           break;
       }
     }
@@ -197,7 +201,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
 
   private void updateStatus(ImagePerfState state, @ImageLoadStatus int imageLoadStatus) {
     if (shouldDispatchAsync()) {
-      Message msg = mHandler.obtainMessage();
+      Message msg = Preconditions.checkNotNull(mHandler).obtainMessage();
       msg.what = WHAT_STATUS;
       msg.arg1 = imageLoadStatus;
       msg.obj = state;
@@ -209,7 +213,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
 
   private void updateVisibility(ImagePerfState state, @VisibilityState int visibilityState) {
     if (shouldDispatchAsync()) {
-      Message msg = mHandler.obtainMessage();
+      Message msg = Preconditions.checkNotNull(mHandler).obtainMessage();
       msg.what = WHAT_VISIBILITY;
       msg.arg1 = visibilityState;
       msg.obj = state;
@@ -226,7 +230,8 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     }
     HandlerThread handlerThread = new HandlerThread("ImagePerfControllerListener2Thread");
     handlerThread.start();
-    mHandler = new LogHandler(handlerThread.getLooper(), mImagePerfNotifier);
+    Looper looper = Preconditions.checkNotNull(handlerThread.getLooper());
+    mHandler = new LogHandler(looper, mImagePerfNotifier);
   }
 
   private boolean shouldDispatchAsync() {
