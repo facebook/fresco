@@ -9,10 +9,12 @@ package com.facebook.imagepipeline.nativecode;
 
 import android.content.Context;
 import com.facebook.common.internal.DoNotStrip;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.soloader.SoLoader;
 import java.io.IOException;
 
 /** Delegate to properly set and initialize NativeLoader and SoLoader. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @DoNotStrip
 public class NativeCodeInitializer {
 
