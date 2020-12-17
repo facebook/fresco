@@ -7,6 +7,8 @@
 
 package com.facebook.common.disk;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * A class which keeps a list of other classes to be notified of system disk events.
  *
@@ -16,6 +18,7 @@ package com.facebook.common.disk;
  * <p>Implementations of this class should notify all the trimmables that have registered with it
  * when they need to trim their disk usage.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface DiskTrimmableRegistry {
 
   /** Register an object. */
