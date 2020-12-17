@@ -8,9 +8,11 @@
 package com.facebook.common.util;
 
 import com.facebook.infer.annotation.Functional;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Generic tri-state enum for boolean values that can also be unset. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public enum TriState {
   YES,
   NO,
@@ -42,7 +44,7 @@ public enum TriState {
   }
 
   @Functional
-  public static TriState valueOf(Boolean bool) {
+  public static TriState valueOf(@Nullable Boolean bool) {
     return bool != null ? valueOf(bool.booleanValue()) : TriState.UNSET;
   }
 
