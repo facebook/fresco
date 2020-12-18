@@ -13,8 +13,10 @@ import com.facebook.fresco.vito.options.DecodedImageOptions;
 import com.facebook.fresco.vito.options.EncodedImageOptions;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface FrescoVitoPrefetcher {
 
   /**

@@ -11,9 +11,11 @@ import android.graphics.drawable.Drawable;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.fresco.ui.common.OnDrawControllerListener;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Interface for an image status listener. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface ImageListener extends OnDrawControllerListener<ImageInfo> {
 
   /**
@@ -22,7 +24,7 @@ public interface ImageListener extends OnDrawControllerListener<ImageInfo> {
    * @param id image id
    * @param callerContext caller context
    */
-  void onSubmit(long id, Object callerContext);
+  void onSubmit(long id, @Nullable Object callerContext);
 
   /**
    * Called after a placeholder image has been set
@@ -60,7 +62,7 @@ public interface ImageListener extends OnDrawControllerListener<ImageInfo> {
    * @param id image id
    * @param throwable failure cause
    */
-  void onIntermediateImageFailed(long id, Throwable throwable);
+  void onIntermediateImageFailed(long id, @Nullable Throwable throwable);
 
   /**
    * Called after the fetch of the final image failed.
