@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.webp.BitmapCreator;
@@ -19,8 +20,10 @@ import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.memory.PoolFactory;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** This is the implementation of the BitmapCreator for the Honeycomb */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class HoneycombBitmapCreator implements BitmapCreator {
 
   private final EmptyJpegGenerator mJpegGenerator;
@@ -48,7 +51,9 @@ public class HoneycombBitmapCreator implements BitmapCreator {
       encodedBytesArrayRef = mFlexByteArrayPool.get(length + 2);
       byte[] encodedBytesArray = encodedBytesArrayRef.get();
       pooledByteBuffer.read(0, encodedBytesArray, 0, length);
-      Bitmap bitmap = BitmapFactory.decodeByteArray(encodedBytesArray, 0, length, options);
+      Bitmap bitmap =
+          Preconditions.checkNotNull(
+              BitmapFactory.decodeByteArray(encodedBytesArray, 0, length, options));
       bitmap.setHasAlpha(true);
       bitmap.eraseColor(Color.TRANSPARENT);
       return bitmap;
