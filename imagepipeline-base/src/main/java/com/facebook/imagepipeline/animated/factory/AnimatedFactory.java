@@ -18,7 +18,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 public interface AnimatedFactory {
 
   @Nullable
-  DrawableFactory getAnimatedDrawableFactory(Context context);
+  DrawableFactory getAnimatedDrawableFactory(@Nullable Context context);
 
   @Nullable
   ImageDecoder getGifDecoder(Bitmap.Config config);

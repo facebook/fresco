@@ -71,7 +71,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
 
   @Nullable
   @Override
-  public DrawableFactory getAnimatedDrawableFactory(Context context) {
+  public DrawableFactory getAnimatedDrawableFactory(@Nullable Context context) {
     if (mAnimatedDrawableFactory == null) {
       mAnimatedDrawableFactory = createDrawableFactory();
     }

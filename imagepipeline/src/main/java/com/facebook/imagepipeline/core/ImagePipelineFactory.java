@@ -184,7 +184,7 @@ public class ImagePipelineFactory {
   }
 
   @Nullable
-  public DrawableFactory getAnimatedDrawableFactory(Context context) {
+  public DrawableFactory getAnimatedDrawableFactory(@Nullable Context context) {
     AnimatedFactory animatedFactory = getAnimatedFactory();
     return animatedFactory == null ? null : animatedFactory.getAnimatedDrawableFactory(context);
   }
