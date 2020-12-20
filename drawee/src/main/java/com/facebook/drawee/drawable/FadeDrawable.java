@@ -378,6 +378,9 @@ public class FadeDrawable extends ArrayDrawable {
       return;
     }
 
+    if (mActualImageLayer < 0 || mActualImageLayer >= mIsLayerOn.length) {
+      return;
+    }
     if (!mIsLayerOn[mActualImageLayer]) {
       return;
     }
