@@ -16,9 +16,11 @@ import com.facebook.drawee.drawable.InstrumentedDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.ThreadSafe;
 
 /** Helper for building drawables */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface Hierarcher {
 
   /**
@@ -28,6 +30,7 @@ public interface Hierarcher {
    * @param imageOptions image options to be used to create the placeholder drawable
    * @return the placeholder drawable or NopDrawable.INSTANCE if unset.
    */
+  @Nullable
   Drawable buildPlaceholderDrawable(Resources resources, ImageOptions imageOptions);
 
   /**

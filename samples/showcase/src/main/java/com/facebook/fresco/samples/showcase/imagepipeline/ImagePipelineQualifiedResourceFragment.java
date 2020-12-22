@@ -44,9 +44,4 @@ public class ImagePipelineQualifiedResourceFragment extends BaseShowcaseFragment
     SimpleDraweeView simpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
     simpleDraweeView.setImageURI(QUALIFIED_RESOURCE_URI);
   }
-
-  @Override
-  public int getTitleId() {
-    return R.string.imagepipeline_qualified_resource_title;
-  }
 }

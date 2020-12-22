@@ -13,9 +13,10 @@ import com.facebook.fresco.vito.source.ImageSourceProvider
 
 object ImageSourceExtensions {
 
-    fun Uri.asImageSource(): ImageSource = ImageSourceProvider.forUri(this)
+  fun Uri.asImageSource(): ImageSource = ImageSourceProvider.forUri(this)
 
-    fun String.asImageSource(): ImageSource = ImageSourceProvider.forUri(this)
+  fun String.asImageSource(): ImageSource = ImageSourceProvider.forUri(this)
 
-    fun ImageSource.withLowResImage(lowResImageSource: ImageSource): ImageSource = ImageSourceProvider.increasingQuality(lowResImageSource, this)
+  fun ImageSource.withLowResImage(lowResImageSource: ImageSource): ImageSource =
+      ImageSourceProvider.increasingQuality(lowResImageSource, this)
 }

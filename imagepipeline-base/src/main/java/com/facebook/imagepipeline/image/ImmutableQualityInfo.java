@@ -7,7 +7,11 @@
 
 package com.facebook.imagepipeline.image;
 
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
+
 /** Implementation of {@link QualityInfo} */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImmutableQualityInfo implements QualityInfo {
 
   public static final QualityInfo FULL_QUALITY = of(Integer.MAX_VALUE, true, true);
@@ -44,7 +48,7 @@ public class ImmutableQualityInfo implements QualityInfo {
   }
 
   @Override
-  public boolean equals(Object other) {
+  public boolean equals(@Nullable Object other) {
     if (other == this) {
       return true;
     }

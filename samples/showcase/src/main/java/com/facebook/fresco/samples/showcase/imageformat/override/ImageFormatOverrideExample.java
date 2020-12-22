@@ -61,9 +61,4 @@ public class ImageFormatOverrideExample extends BaseShowcaseFragment {
             .build();
     simpleDraweeView.setController(controller);
   }
-
-  @Override
-  public int getTitleId() {
-    return R.string.format_override_title;
-  }
 }

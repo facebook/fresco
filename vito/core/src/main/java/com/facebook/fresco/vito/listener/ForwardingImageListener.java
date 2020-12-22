@@ -50,7 +50,7 @@ public class ForwardingImageListener implements ImageListener {
   }
 
   @Override
-  public void onSubmit(long id, Object callerContext) {
+  public void onSubmit(long id, @Nullable Object callerContext) {
     for (int i = 0; i < mListeners.length; i++) {
       if (mListeners[i] != null) {
         mListeners[i].onSubmit(id, callerContext);
@@ -90,7 +90,7 @@ public class ForwardingImageListener implements ImageListener {
   }
 
   @Override
-  public void onIntermediateImageFailed(long id, Throwable throwable) {
+  public void onIntermediateImageFailed(long id, @Nullable Throwable throwable) {
     for (int i = 0; i < mListeners.length; i++) {
       if (mListeners[i] != null) {
         mListeners[i].onIntermediateImageFailed(id, throwable);

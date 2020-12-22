@@ -202,11 +202,6 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
         ScalingUtils.ScaleType.CENTER);
   }
 
-  @Override
-  public int getTitleId() {
-    return R.string.format_gif_title;
-  }
-
   private class SimpleUriListAdapter extends BaseAdapter {
 
     @Override

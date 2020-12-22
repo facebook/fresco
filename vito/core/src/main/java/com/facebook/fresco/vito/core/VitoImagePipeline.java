@@ -14,8 +14,10 @@ import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.source.ImageSource;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface VitoImagePipeline {
 
   VitoImageRequest createImageRequest(
@@ -28,5 +30,5 @@ public interface VitoImagePipeline {
       VitoImageRequest imageSource,
       @Nullable Object callerContext,
       @Nullable RequestListener requestListener,
-      @Nullable long uiComponentId);
+      long uiComponentId);
 }

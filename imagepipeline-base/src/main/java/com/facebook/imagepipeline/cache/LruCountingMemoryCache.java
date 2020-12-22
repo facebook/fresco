@@ -412,7 +412,13 @@ public class LruCountingMemoryCache<K, V>
     }
     ArrayList<Entry<K, V>> oldEntries = new ArrayList<>();
     while (mExclusiveEntries.getCount() > count || mExclusiveEntries.getSizeInBytes() > size) {
-      K key = Preconditions.checkNotNull(mExclusiveEntries.getFirstKey());
+      @Nullable K key = mExclusiveEntries.getFirstKey();
+      if (key == null) {
+        throw new IllegalStateException(
+            String.format(
+                "key is null, but exclusiveEntries count: %d, size: %d",
+                mExclusiveEntries.getCount(), mExclusiveEntries.getSizeInBytes()));
+      }
       mExclusiveEntries.remove(key);
       oldEntries.add(mCachedEntries.remove(key));
     }
@@ -526,9 +532,9 @@ public class LruCountingMemoryCache<K, V>
   }
 
   @Override
-  public @Nullable String getDebugData() {
+  public synchronized @Nullable String getDebugData() {
     return Objects.toStringHelper("CountingMemoryCache")
-        .add("cached_entries_count:", mCachedEntries.getCount())
+        .add("cached_entries_count", mCachedEntries.getCount())
         .add("cached_entries_size_bytes", mCachedEntries.getSizeInBytes())
         .add("exclusive_entries_count", mExclusiveEntries.getCount())
         .add("exclusive_entries_size_bytes", mExclusiveEntries.getSizeInBytes())

@@ -30,12 +30,14 @@ import com.facebook.imagepipeline.transcoder.ImageTranscodeResult;
 import com.facebook.imagepipeline.transcoder.ImageTranscoder;
 import com.facebook.imagepipeline.transcoder.JpegTranscoderUtils;
 import com.facebook.imagepipeline.transcoder.TranscodeStatus;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import javax.annotation.Nullable;
 
 /** Transcoder for jpeg images, using native code and libjpeg-turbo library. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 @DoNotStrip
 public class NativeJpegTranscoder implements ImageTranscoder {
   public static final String TAG = "NativeJpegTranscoder";
@@ -119,12 +121,22 @@ public class NativeJpegTranscoder implements ImageTranscoder {
         final int exifOrientation =
             JpegTranscoderUtils.getForceRotatedInvertedExifOrientation(
                 rotationOptions, encodedImage);
-        transcodeJpegWithExifOrientation(is, outputStream, exifOrientation, numerator, quality);
+        transcodeJpegWithExifOrientation(
+            Preconditions.checkNotNull(is, "Cannot transcode from null input stream!"),
+            outputStream,
+            exifOrientation,
+            numerator,
+            quality);
       } else {
         // Use actual rotation angle in degrees to rotate
         final int rotationAngle =
             JpegTranscoderUtils.getRotationAngle(rotationOptions, encodedImage);
-        transcodeJpeg(is, outputStream, rotationAngle, numerator, quality);
+        transcodeJpeg(
+            Preconditions.checkNotNull(is, "Cannot transcode from null input stream!"),
+            outputStream,
+            rotationAngle,
+            numerator,
+            quality);
       }
     } finally {
       Closeables.closeQuietly(is);

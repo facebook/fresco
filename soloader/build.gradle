@@ -12,10 +12,10 @@ apply plugin: 'maven'
 
 dependencies {
     compileOnly Deps.jsr305
+    compileOnly Deps.inferAnnotation
 
     implementation project(':fbcore')
     implementation Deps.SoLoader.soloader
-
 }
 
 apply from: rootProject.file('release.gradle')

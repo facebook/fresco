@@ -12,6 +12,7 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import com.facebook.common.internal.Preconditions;
+import javax.annotation.Nullable;
 
 /** Drawable that can adjust underlying drawable based on specified {@link Matrix}. */
 public class MatrixDrawable extends ForwardingDrawable {
@@ -21,7 +22,7 @@ public class MatrixDrawable extends ForwardingDrawable {
 
   // Matrix that is actually being used for drawing. In case underlying drawable doesn't have
   // intrinsic dimensions, this will be null (i.e. no matrix will be applied).
-  private Matrix mDrawMatrix;
+  @Nullable private Matrix mDrawMatrix;
 
   // Last known dimensions of the underlying drawable. Used to avoid computing bounds every time
   // if underlying size hasn't changed.
@@ -40,7 +41,7 @@ public class MatrixDrawable extends ForwardingDrawable {
   }
 
   @Override
-  public Drawable setCurrent(Drawable newDelegate) {
+  public Drawable setCurrent(@Nullable Drawable newDelegate) {
     final Drawable previousDelegate = super.setCurrent(newDelegate);
     configureBounds();
 

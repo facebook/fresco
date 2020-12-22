@@ -660,6 +660,7 @@ public class DiskStorageCacheTest {
   public void testTimeEvictionClearsIndex() throws Exception {
     when(mClock.now()).thenReturn(5l);
     CacheKey key = putOneThingInCache();
+    when(mClock.now()).thenReturn(10l);
     mCache.clearOldEntries(4);
     assertFalse(mCache.hasKeySync(key));
     assertFalse(mCache.hasKey(key));

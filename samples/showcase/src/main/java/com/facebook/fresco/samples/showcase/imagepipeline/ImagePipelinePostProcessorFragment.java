@@ -104,11 +104,6 @@ public class ImagePipelinePostProcessorFragment extends BaseShowcaseFragment
   }
 
   @Override
-  public int getTitleId() {
-    return R.string.imagepipeline_postprocessor_title;
-  }
-
-  @Override
   public void showDuration(long startNs) {
     final float deltaMs = startNs / 1e6f;
     final String message = String.format((Locale) null, "Duration: %.1f ms", deltaMs);

@@ -74,11 +74,6 @@ public class ImagePipelinePrefetchFragment extends BaseShowcaseFragment {
         }
       };
 
-  @Override
-  public int getTitleId() {
-    return R.string.imagepipeline_prefetch_title;
-  }
-
   private class PrefetchSubscriber extends BaseDataSubscriber<Void> {
 
     private int mSuccessful = 0;

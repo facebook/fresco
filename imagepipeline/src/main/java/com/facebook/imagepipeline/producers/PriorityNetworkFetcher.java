@@ -61,7 +61,11 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       new LinkedList<>();
   private final HashSet<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> mCurrentlyFetching =
       new HashSet<>();
+
+  private volatile boolean isRunning = true;
+
   private final boolean inflightFetchesCanBeCancelled;
+  private final boolean infiniteRetries;
 
   /**
    * @param isHiPriFifo if true, hi-pri requests are dequeued in the order they were enqueued.
@@ -69,19 +73,23 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
    * @param inflightFetchesCanBeCancelled if false, the fetcher waits for the completion of requests
    *     that have been delegated to 'delegate' even if they were cancelled by Fresco. The
    *     cancellation order is not propagated to 'delegate', and no other request is dequeued.
+   * @param infiniteRetries if true, requests that fail are re-queued, potentially retrying
+   *     immediately.
    */
   public PriorityNetworkFetcher(
       NetworkFetcher<FETCH_STATE> delegate,
       boolean isHiPriFifo,
       int maxOutstandingHiPri,
       int maxOutstandingLowPri,
-      boolean inflightFetchesCanBeCancelled) {
+      boolean inflightFetchesCanBeCancelled,
+      boolean infiniteRetries) {
     this(
         delegate,
         isHiPriFifo,
         maxOutstandingHiPri,
         maxOutstandingLowPri,
         inflightFetchesCanBeCancelled,
+        infiniteRetries,
         RealtimeSinceBootClock.get());
   }
 
@@ -92,6 +100,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       int maxOutstandingHiPri,
       int maxOutstandingLowPri,
       boolean inflightFetchesCanBeCancelled,
+      boolean infiniteRetries,
       MonotonicClock clock) {
     mDelegate = delegate;
     mIsHiPriFifo = isHiPriFifo;
@@ -102,7 +111,24 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       throw new IllegalArgumentException("maxOutstandingHiPri should be > maxOutstandingLowPri");
     }
     this.inflightFetchesCanBeCancelled = inflightFetchesCanBeCancelled;
+    this.infiniteRetries = infiniteRetries;
     this.mClock = clock;
+  }
+
+  /** Stop dequeuing requests until {@link #resume()} is called. */
+  public void pause() {
+    isRunning = false;
+  }
+
+  /**
+   * Resume dequeuing requests.
+   *
+   * <p>Note: a request is immediately dequeued and the delegate's fetch() method is called using
+   * the current thread.
+   */
+  public void resume() {
+    isRunning = true;
+    dequeueIfAvailableSlots();
   }
 
   @Override
@@ -161,7 +187,28 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     dequeueIfAvailableSlots();
   }
 
+  private void requeue(PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState) {
+    synchronized (mLock) {
+      FLog.v(TAG, "requeue: %s", fetchState.getUri());
+
+      fetchState.requeueCount++;
+      fetchState.delegatedState =
+          mDelegate.createFetchState(fetchState.getConsumer(), fetchState.getContext());
+
+      mCurrentlyFetching.remove(fetchState);
+      if (!mHiPriQueue.remove(fetchState)) {
+        mLowPriQueue.remove(fetchState);
+      }
+      putInQueue(fetchState, fetchState.getContext().getPriority() == HIGH);
+    }
+    dequeueIfAvailableSlots();
+  }
+
   private void dequeueIfAvailableSlots() {
+    if (!isRunning) {
+      return;
+    }
+
     PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> toFetch = null;
     synchronized (mLock) {
       int outstandingRequests = mCurrentlyFetching.size();
@@ -203,8 +250,13 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
 
             @Override
             public void onFailure(Throwable throwable) {
-              removeFromQueue(fetchState, "FAIL");
-              fetchState.callback.onFailure(throwable);
+              if (infiniteRetries
+                  && !(throwable instanceof PriorityNetworkFetcher.NonrecoverableException)) {
+                requeue(fetchState);
+              } else {
+                removeFromQueue(fetchState, "FAIL");
+                fetchState.callback.onFailure(throwable);
+              }
             }
 
             @Override
@@ -264,7 +316,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
   }
 
   public static class PriorityFetchState<FETCH_STATE extends FetchState> extends FetchState {
-    public final FETCH_STATE delegatedState;
+    public FETCH_STATE delegatedState;
     final long enqueuedTimestamp;
 
     /** Size of hi-pri queue when this request was added. */
@@ -273,8 +325,9 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     /** Size of low-pri queue when this request was added. */
     final int lowPriCountWhenCreated;
 
-    NetworkFetcher.Callback callback;
+    @Nullable NetworkFetcher.Callback callback;
     long dequeuedTimestamp;
+    int requeueCount = 0;
 
     private PriorityFetchState(
         Consumer<EncodedImage> consumer,
@@ -288,6 +341,19 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       this.enqueuedTimestamp = enqueuedTimestamp;
       this.hiPriCountWhenCreated = hiPriCountWhenCreated;
       this.lowPriCountWhenCreated = lowPriCountWhenCreated;
+    }
+  }
+
+  /**
+   * The delegate fetcher may pass an instance of this exception to its callback's onFailure to
+   * signal to a PriorityNetworkFetcher that it shouldn't retry that request.
+   *
+   * <p>This is useful for e.g., requests that fail due to HTTP 403: there's no point in retrying
+   * them, usually.
+   */
+  public static class NonrecoverableException extends Throwable {
+    public NonrecoverableException(@androidx.annotation.Nullable String message) {
+      super(message);
     }
   }
 
@@ -320,6 +386,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
         "pri_queue_time", "" + (fetchState.dequeuedTimestamp - fetchState.enqueuedTimestamp));
     extras.put("hipri_queue_size", "" + fetchState.hiPriCountWhenCreated);
     extras.put("lowpri_queue_size", "" + fetchState.lowPriCountWhenCreated);
+    extras.put("requeueCount", "" + fetchState.requeueCount);
     return extras;
   }
 }

@@ -7,12 +7,15 @@
 
 package org.mockito.configuration;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * Disables the Mockito cache to prevent Mockito & Robolectric bugs.
  *
  * <p>Mockito loads this with reflection, so this class might appear unused.
  */
 @SuppressWarnings("unused")
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class MockitoConfiguration extends DefaultMockitoConfiguration {
 
   /* (non-Javadoc)

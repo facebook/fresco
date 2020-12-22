@@ -58,12 +58,12 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
 
   // General information
   private String mControllerId;
-  private String mImageId;
+  @Nullable private String mImageId;
   private int mWidthPx;
   private int mHeightPx;
   private int mImageSizeBytes;
-  private String mImageFormat;
-  private ScaleType mScaleType;
+  @Nullable private String mImageFormat;
+  @Nullable private ScaleType mScaleType;
   private HashMap<String, String> mAdditionalData = new HashMap<>();
 
   // Animations
@@ -86,7 +86,7 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
   private int mCurrentTextYPx;
 
   private long mFinalImageTimeMs;
-  private String mOriginText;
+  @Nullable private String mOriginText;
   private int mOriginColor = TEXT_COLOR;
   private int mOverlayColor = Color.TRANSPARENT;
 

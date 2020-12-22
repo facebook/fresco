@@ -73,9 +73,4 @@ public class ImageFormatColorFragment extends BaseShowcaseFragment {
           }
         });
   }
-
-  @Override
-  public int getTitleId() {
-    return R.string.format_color_title;
-  }
 }

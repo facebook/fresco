@@ -65,8 +65,7 @@ public class FadeDrawable extends ArrayDrawable {
   @VisibleForTesting int mPreventInvalidateCount;
 
   private @Nullable OnFadeListener mOnFadeListener;
-  private boolean mCallOnFadeStartedListener;
-  private boolean mCallOnFadeFinishedListener;
+  private boolean mIsFadingActualImage;
 
   /**
    * Creates a new fade drawable. The first layer is displayed with full opacity whereas all other
@@ -98,7 +97,6 @@ public class FadeDrawable extends ArrayDrawable {
     mPreventInvalidateCount = 0;
     mDefaultLayerIsOn = allLayersVisible;
     mDefaultLayerAlpha = mDefaultLayerIsOn ? 255 : 0;
-    mCallOnFadeStartedListener = true;
     mActualImageLayer = actualImageLayer;
     resetInternal();
   }
@@ -162,9 +160,6 @@ public class FadeDrawable extends ArrayDrawable {
    * @param index the index of the layer to fade in.
    */
   public void fadeInLayer(int index) {
-    mCallOnFadeFinishedListener = index == mActualImageLayer;
-    maybeNotifyOnFadeStarted(index);
-
     mTransitionState = TRANSITION_STARTING;
     mIsLayerOn[index] = true;
     invalidateSelf();
@@ -176,10 +171,6 @@ public class FadeDrawable extends ArrayDrawable {
    * @param index the index of the layer to fade out.
    */
   public void fadeOutLayer(int index) {
-    if (index == mActualImageLayer) {
-      mCallOnFadeStartedListener = true;
-      mCallOnFadeFinishedListener = true;
-    }
     mTransitionState = TRANSITION_STARTING;
     mIsLayerOn[index] = false;
     invalidateSelf();
@@ -299,11 +290,8 @@ public class FadeDrawable extends ArrayDrawable {
         ratio = (mDurationMs == 0) ? 1.0f : 0.0f;
         // if all the layers have reached their target opacity, transition is done
         done = updateAlphas(ratio);
+        onFadeStarted();
         mTransitionState = done ? TRANSITION_NONE : TRANSITION_RUNNING;
-
-        if (done) {
-          maybeNotifyOnFadeFinished();
-        }
         break;
 
       case TRANSITION_RUNNING:
@@ -313,17 +301,11 @@ public class FadeDrawable extends ArrayDrawable {
         // if all the layers have reached their target opacity, transition is done
         done = updateAlphas(ratio);
         mTransitionState = done ? TRANSITION_NONE : TRANSITION_RUNNING;
-
-        if (done) {
-          maybeNotifyOnFadeFinished();
-        }
         break;
 
       case TRANSITION_NONE:
         // there is no transition in progress and mAlphas should be left as is.
         done = true;
-
-        maybeNotifyOnFadeFinished();
         break;
     }
 
@@ -331,22 +313,10 @@ public class FadeDrawable extends ArrayDrawable {
       drawDrawableWithAlpha(canvas, mLayers[i], (int) Math.ceil(mAlphas[i] * mAlpha / 255.0));
     }
 
-    if (!done) {
+    if (done) {
+      onFadeFinished();
+    } else {
       invalidateSelf();
-    }
-  }
-
-  private void maybeNotifyOnFadeStarted(int index) {
-    if (mOnFadeListener != null && index == mActualImageLayer && mCallOnFadeStartedListener) {
-      mOnFadeListener.onFadeStarted();
-      mCallOnFadeStartedListener = false;
-    }
-  }
-
-  private void maybeNotifyOnFadeFinished() {
-    if (mOnFadeListener != null && mCallOnFadeFinishedListener) {
-      mOnFadeListener.onFadeFinished();
-      mCallOnFadeFinishedListener = false;
     }
   }
 
@@ -401,6 +371,36 @@ public class FadeDrawable extends ArrayDrawable {
 
   public void setOnFadeListener(OnFadeListener onFadeListener) {
     mOnFadeListener = onFadeListener;
+  }
+
+  private void onFadeStarted() {
+    if (mIsFadingActualImage) {
+      return;
+    }
+
+    if (mActualImageLayer < 0 || mActualImageLayer >= mIsLayerOn.length) {
+      return;
+    }
+    if (!mIsLayerOn[mActualImageLayer]) {
+      return;
+    }
+
+    mIsFadingActualImage = true;
+
+    if (mOnFadeListener != null) {
+      mOnFadeListener.onFadeStarted();
+    }
+  }
+
+  private void onFadeFinished() {
+    if (!mIsFadingActualImage) {
+      return;
+    }
+    mIsFadingActualImage = false;
+
+    if (mOnFadeListener != null) {
+      mOnFadeListener.onFadeFinished();
+    }
   }
 
   public interface OnFadeListener {

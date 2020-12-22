@@ -7,6 +7,7 @@
 
 package com.facebook.common.streams;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +15,7 @@ import java.io.InputStream;
 /**
  * InputStream that returns all bytes from another stream, then appends the specified 'tail' bytes.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class TailAppendingInputStream extends FilterInputStream {
   private final byte[] mTail;
   private int mTailOffset;

@@ -11,14 +11,14 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
   companion object {
@@ -37,17 +37,15 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstance)
     setContentView(R.layout.activity_main)
 
-    imageAdapter = ImageAdapter(
-        ColorDrawable(ContextCompat.getColor(this, R.color.load_placeholder)),
-        ColorDrawable(ContextCompat.getColor(this, R.color.load_fail)),
-        resources.displayMetrics.widthPixels / GRID_COLUMN_COUNT)
+    imageAdapter =
+        ImageAdapter(
+            ColorDrawable(ContextCompat.getColor(this, R.color.load_placeholder)),
+            ColorDrawable(ContextCompat.getColor(this, R.color.load_fail)),
+            resources.displayMetrics.widthPixels / GRID_COLUMN_COUNT)
 
     with(recycler_view) {
-      layoutManager = GridLayoutManager(
-          context,
-          GRID_COLUMN_COUNT,
-          GridLayoutManager.VERTICAL,
-          false)
+      layoutManager =
+          GridLayoutManager(context, GRID_COLUMN_COUNT, GridLayoutManager.VERTICAL, false)
       adapter = imageAdapter
     }
   }
@@ -64,9 +62,11 @@ class MainActivity : AppCompatActivity() {
     loadPhotosFuture?.cancel(true)
   }
 
-  override fun onRequestPermissionsResult(requestCode: Int,
-                                          permissions: Array<out String>,
-                                          grantResults: IntArray) {
+  override fun onRequestPermissionsResult(
+      requestCode: Int,
+      permissions: Array<out String>,
+      grantResults: IntArray
+  ) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     if (requestCode != PERMISSION_REQUEST_CODE) {
       return
@@ -85,16 +85,12 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
-  /**
-   * Returns true if storage permissions were requested because they are needed, false otherwise
-   */
+  /** Returns true if storage permissions were requested because they are needed, false otherwise */
   private fun requestStoragePermissionsIfNeeded(): Boolean {
     if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) !=
         PackageManager.PERMISSION_GRANTED) {
       ActivityCompat.requestPermissions(
-          this,
-          arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-          PERMISSION_REQUEST_CODE)
+          this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSION_REQUEST_CODE)
       return true
     }
 
@@ -103,12 +99,13 @@ class MainActivity : AppCompatActivity() {
 
   private fun loadPhotos() {
     loadPhotosFuture?.cancel(true)
-    loadPhotosFuture = executor.submit {
-      val uris = dataSource.loadPhotoUris(this)
-      runOnUiThread {
-        imageAdapter.setUris(uris)
-        view_flipper.displayedChild = FLIPPER_INDEX_RECYCLER_VIEW
-      }
-    }
+    loadPhotosFuture =
+        executor.submit {
+          val uris = dataSource.loadPhotoUris(this)
+          runOnUiThread {
+            imageAdapter.setUris(uris)
+            view_flipper.displayedChild = FLIPPER_INDEX_RECYCLER_VIEW
+          }
+        }
   }
 }

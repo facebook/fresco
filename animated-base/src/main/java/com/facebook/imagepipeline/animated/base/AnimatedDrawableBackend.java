@@ -11,12 +11,14 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
  * Interface that {@link com.facebook.fresco.animation.drawable.AnimatedDrawable2} uses that
  * abstracts out the image format.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface AnimatedDrawableBackend {
 
   /**
@@ -132,7 +134,7 @@ public interface AnimatedDrawableBackend {
    * @return an {@link AnimatedDrawableBackend} with the new bounds (this may be the same instance
    *     if the bounds don't require a new backend)
    */
-  AnimatedDrawableBackend forNewBounds(Rect bounds);
+  AnimatedDrawableBackend forNewBounds(@Nullable Rect bounds);
 
   /**
    * Gets the number of bytes currently used by the backend for caching (for debugging)

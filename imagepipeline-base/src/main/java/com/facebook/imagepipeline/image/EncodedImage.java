@@ -373,6 +373,7 @@ public class EncodedImage implements Closeable {
   }
 
   /** We get the size from a WebP image */
+  @Nullable
   private Pair<Integer, Integer> readWebPImageSize() {
     final Pair<Integer, Integer> dimensions = WebpUtil.getSize(getInputStream());
     if (dimensions != null) {

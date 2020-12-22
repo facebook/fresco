@@ -36,6 +36,7 @@ import com.facebook.imagepipeline.producers.BitmapProbeProducer;
 import com.facebook.imagepipeline.producers.BranchOnSeparateImagesProducer;
 import com.facebook.imagepipeline.producers.DataFetchProducer;
 import com.facebook.imagepipeline.producers.DecodeProducer;
+import com.facebook.imagepipeline.producers.DelayProducer;
 import com.facebook.imagepipeline.producers.DiskCacheReadProducer;
 import com.facebook.imagepipeline.producers.DiskCacheWriteProducer;
 import com.facebook.imagepipeline.producers.EncodedCacheKeyMultiplexProducer;
@@ -372,6 +373,12 @@ public class ProducerFactory {
         mBitmapPrepareToDrawMinSizeBytes,
         mBitmapPrepareToDrawMaxSizeBytes,
         mBitmapPrepareToDrawForPrefetch);
+  }
+
+  public DelayProducer newDelayProducer(
+      Producer<CloseableReference<CloseableImage>> inputProducer) {
+    return new DelayProducer(
+        inputProducer, mExecutorSupplier.scheduledExecutorServiceForBackgroundTasks());
   }
 
   public @Nullable Producer<EncodedImage> newCombinedNetworkAndCacheProducer(

@@ -169,7 +169,7 @@ public class HierarcherImpl implements Hierarcher {
       CloseableReference<CloseableImage> closeableImage,
       @Nullable ForwardingDrawable actualImageWrapperDrawable,
       boolean wasImmediate,
-      InstrumentedDrawable.Listener instrumentedListener) {
+      @Nullable InstrumentedDrawable.Listener instrumentedListener) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("HierarcherImpl#setupActualImageDrawable");
     }

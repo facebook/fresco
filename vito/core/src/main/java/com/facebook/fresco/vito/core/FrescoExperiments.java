@@ -145,4 +145,8 @@ public class FrescoExperiments {
   public PrefetchTarget workingRangePrefetchTarget() {
     return PrefetchTarget.MEMORY_DECODED;
   }
+
+  public boolean allowDelay() {
+    return false;
+  }
 }

@@ -11,9 +11,11 @@ import android.graphics.drawable.Drawable;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Interface for an image status listener. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface VitoImageRequestListener {
 
   /**
@@ -67,7 +69,8 @@ public interface VitoImageRequestListener {
    * @param id image id
    * @param throwable failure cause
    */
-  void onIntermediateImageFailed(long id, VitoImageRequest imageRequest, Throwable throwable);
+  void onIntermediateImageFailed(
+      long id, VitoImageRequest imageRequest, @Nullable Throwable throwable);
 
   /**
    * Called after the fetch of the final image failed.

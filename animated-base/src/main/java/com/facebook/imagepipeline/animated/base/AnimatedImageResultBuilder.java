@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 public class AnimatedImageResultBuilder {
 
   private final AnimatedImage mImage;
-  private CloseableReference<Bitmap> mPreviewBitmap;
+  @Nullable private CloseableReference<Bitmap> mPreviewBitmap;
   private List<CloseableReference<Bitmap>> mDecodedFrames;
   private int mFrameForPreview;
   private @Nullable BitmapTransformation mBitmapTransformation;

@@ -52,6 +52,10 @@ public class BaseFrescoDrawable extends FadeDrawable implements Closeable {
     return setDrawable(IMAGE_DRAWABLE_INDEX, imageDrawable);
   }
 
+  public boolean hasImage() {
+    return getDrawable(IMAGE_DRAWABLE_INDEX) != null;
+  }
+
   public @Nullable Drawable setImageDrawable(@Nullable Drawable newDrawable) {
     return setImage(newDrawable, null);
   }

@@ -8,8 +8,10 @@
 package com.facebook.common.lifecycle;
 
 import android.view.View;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Attach detach listener. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface AttachDetachListener {
 
   void onAttachToView(View view);

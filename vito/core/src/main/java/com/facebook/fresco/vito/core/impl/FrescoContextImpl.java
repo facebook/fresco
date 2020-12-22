@@ -37,7 +37,7 @@ public class FrescoContextImpl implements FrescoContext {
   private final ImagePipelineUtils mImagePipelineUtils;
 
   private FrescoController mController;
-  private FrescoVitoPrefetcher mPrefetcher;
+  @Nullable private FrescoVitoPrefetcher mPrefetcher;
 
   private @Nullable ImagePipelineFactory mImagePipelineFactory;
 

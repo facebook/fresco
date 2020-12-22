@@ -126,6 +126,7 @@ dependencies {
     implementation project(':vito:core')
     implementation project(':vito:ktx')
     implementation project(':vito:litho')
+    implementation project(':vito:litho-slideshow')
     implementation project(':vito:options')
     implementation project(':vito:provider')
     implementation project(':vito:source')

@@ -9,11 +9,13 @@ package com.facebook.common.util;
 
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 /** Utility method for dealing with Streams. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class StreamUtil {
 
   /**

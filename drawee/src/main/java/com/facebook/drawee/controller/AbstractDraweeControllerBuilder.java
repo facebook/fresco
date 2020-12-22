@@ -22,6 +22,7 @@ import com.facebook.drawee.interfaces.SimpleDraweeControllerBuilder;
 import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.LoggingListener;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.ReturnsOwnership;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import javax.annotation.Nullable;
 
 /** Base implementation for Drawee controller builders. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class AbstractDraweeControllerBuilder<
         BUILDER extends AbstractDraweeControllerBuilder<BUILDER, REQUEST, IMAGE, INFO>,
         REQUEST,
@@ -68,7 +70,7 @@ public abstract class AbstractDraweeControllerBuilder<
   private boolean mTapToRetryEnabled;
   private boolean mAutoPlayAnimations;
   private boolean mRetainImageOnFailure;
-  private String mContentDescription;
+  @Nullable private String mContentDescription;
   // old controller to reuse
   private @Nullable DraweeController mOldController;
 
@@ -120,7 +122,7 @@ public abstract class AbstractDraweeControllerBuilder<
   }
 
   /** Sets the image request. */
-  public BUILDER setImageRequest(REQUEST imageRequest) {
+  public BUILDER setImageRequest(@Nullable REQUEST imageRequest) {
     mImageRequest = imageRequest;
     return getThis();
   }

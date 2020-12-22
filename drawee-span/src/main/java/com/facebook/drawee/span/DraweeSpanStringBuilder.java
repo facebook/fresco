@@ -26,6 +26,7 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.widget.text.span.BetterImageSpan;
 import java.util.HashSet;
 import java.util.Set;
+import javax.annotation.Nullable;
 
 /**
  * DraweeSpanStringBuilder that can be used to add {@link DraweeSpan}s to strings.
@@ -54,9 +55,9 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
   private final Set<DraweeSpan> mDraweeSpans = new HashSet<>();
   private final DrawableCallback mDrawableCallback = new DrawableCallback();
 
-  private View mBoundView;
-  private Drawable mBoundDrawable;
-  private DraweeSpanChangedListener mDraweeSpanChangedListener;
+  @Nullable private View mBoundView;
+  @Nullable private Drawable mBoundDrawable;
+  @Nullable private DraweeSpanChangedListener mDraweeSpanChangedListener;
 
   public DraweeSpanStringBuilder() {
     super();

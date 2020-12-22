@@ -11,11 +11,14 @@
 
 package com.facebook.common.util;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * Basic hex operations: from byte array to string and vice versa.
  *
  * <p>TODO: move to the framework and consider implementing as native code.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class Hex {
 
   private static final char[] HEX_DIGITS =

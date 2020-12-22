@@ -59,11 +59,6 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
   }
 
   @Override
-  public int getTitleId() {
-    return R.string.drawee_rounded_corners_title;
-  }
-
-  @Override
   public View onCreateView(
       LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_drawee_rounded_corners, container, false);

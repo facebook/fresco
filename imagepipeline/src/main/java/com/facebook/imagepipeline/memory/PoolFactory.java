@@ -32,14 +32,14 @@ public class PoolFactory {
   private final PoolConfig mConfig;
 
   private @Nullable MemoryChunkPool mAshmemMemoryChunkPool;
-  private BitmapPool mBitmapPool;
+  @Nullable private BitmapPool mBitmapPool;
   private @Nullable MemoryChunkPool mBufferMemoryChunkPool;
-  private FlexByteArrayPool mFlexByteArrayPool;
+  @Nullable private FlexByteArrayPool mFlexByteArrayPool;
   private @Nullable MemoryChunkPool mNativeMemoryChunkPool;
-  private PooledByteBufferFactory mPooledByteBufferFactory;
-  private PooledByteStreams mPooledByteStreams;
-  private SharedByteArray mSharedByteArray;
-  private ByteArrayPool mSmallByteArrayPool;
+  @Nullable private PooledByteBufferFactory mPooledByteBufferFactory;
+  @Nullable private PooledByteStreams mPooledByteStreams;
+  @Nullable private SharedByteArray mSharedByteArray;
+  @Nullable private ByteArrayPool mSmallByteArrayPool;
 
   public PoolFactory(PoolConfig config) {
     mConfig = Preconditions.checkNotNull(config);

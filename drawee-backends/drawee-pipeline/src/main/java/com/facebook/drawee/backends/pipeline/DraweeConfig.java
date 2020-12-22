@@ -13,11 +13,13 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
 
 /** Drawee configuration. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DraweeConfig {
 
   @Nullable private final ImmutableList<DrawableFactory> mCustomDrawableFactories;
@@ -63,9 +65,9 @@ public class DraweeConfig {
 
   public static class Builder {
 
-    private List<DrawableFactory> mCustomDrawableFactories;
-    private Supplier<Boolean> mDebugOverlayEnabledSupplier;
-    private PipelineDraweeControllerFactory mPipelineDraweeControllerFactory;
+    @Nullable private List<DrawableFactory> mCustomDrawableFactories;
+    @Nullable private Supplier<Boolean> mDebugOverlayEnabledSupplier;
+    @Nullable private PipelineDraweeControllerFactory mPipelineDraweeControllerFactory;
     private @Nullable ImagePerfDataListener mImagePerfDataListener;
 
     /**

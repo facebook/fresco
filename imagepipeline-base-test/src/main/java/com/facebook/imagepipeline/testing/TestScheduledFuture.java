@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import javax.annotation.Nullable;
 
 public class TestScheduledFuture<V> implements ScheduledFuture<V> {
 
@@ -24,7 +25,7 @@ public class TestScheduledFuture<V> implements ScheduledFuture<V> {
   private boolean mIsCanceled;
   private boolean mIsDone;
   private V mResult;
-  private Throwable mResultThrowable;
+  @Nullable private Throwable mResultThrowable;
 
   TestScheduledFuture(
       FakeClock fakeClock, ScheduledQueue scheduledQueue, long delay, final Runnable runnable) {

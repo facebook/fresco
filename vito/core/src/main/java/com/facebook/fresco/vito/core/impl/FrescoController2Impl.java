@@ -42,7 +42,6 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       ImmutableMap.<String, Object>of("component_tag", "vito2");
   private static final Map<String, Object> SHORTCUT_EXTRAS =
       ImmutableMap.<String, Object>of("origin", "memory_bitmap", "origin_sub", "shortcut");
-  private static final Extras ON_SUBMIT_EXTRAS = Extras.of(COMPONENT_EXTRAS);
 
   private final FrescoVitoConfig mConfig;
   private final Hierarcher mHierarcher;
@@ -170,7 +169,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             DataSource<CloseableReference<CloseableImage>> dataSource =
                 mImagePipeline.fetchDecodedImage(
                     imageRequest, callerContext, frescoDrawable.getImageOriginListener(), imageId);
-            frescoDrawable.setDataSource(dataSource);
+            frescoDrawable.setDataSource(imageId, dataSource);
             dataSource.subscribe(frescoDrawable, mUiThreadExecutor);
           }
         };
@@ -275,6 +274,16 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
         mHierarcher.buildErrorDrawable(imageRequest.resources, imageRequest.imageOptions);
     drawable.setProgress(1f);
     drawable.setImageDrawable(errorDrawable);
+    if (!drawable.isDefaultLayerIsOn()) {
+      if (imageRequest.imageOptions.getFadeDurationMs() <= 0) {
+        drawable.showImageImmediately();
+      } else {
+        drawable.fadeInImage(imageRequest.imageOptions.getFadeDurationMs());
+      }
+    } else {
+      drawable.setPlaceholderDrawable(null);
+      drawable.setProgressDrawable(null);
+    }
     Extras extras = obtainExtras(dataSource, dataSource.getResult(), drawable);
     drawable
         .getImageListener()

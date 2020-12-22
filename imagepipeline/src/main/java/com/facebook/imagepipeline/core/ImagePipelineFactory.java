@@ -132,23 +132,23 @@ public class ImagePipelineFactory {
   private final ImagePipelineConfig mConfig;
   private final CloseableReferenceFactory mCloseableReferenceFactory;
   private CountingMemoryCache<CacheKey, CloseableImage> mBitmapCountingMemoryCache;
-  private InstrumentedMemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
+  @Nullable private InstrumentedMemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private CountingMemoryCache<CacheKey, PooledByteBuffer> mEncodedCountingMemoryCache;
-  private InstrumentedMemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
-  private BufferedDiskCache mMainBufferedDiskCache;
-  private FileCache mMainFileCache;
-  private ImageDecoder mImageDecoder;
-  private ImagePipeline mImagePipeline;
-  private ImageTranscoderFactory mImageTranscoderFactory;
-  private ProducerFactory mProducerFactory;
-  private ProducerSequenceFactory mProducerSequenceFactory;
-  private BufferedDiskCache mSmallImageBufferedDiskCache;
-  private FileCache mSmallImageFileCache;
+  @Nullable private InstrumentedMemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
+  @Nullable private BufferedDiskCache mMainBufferedDiskCache;
+  @Nullable private FileCache mMainFileCache;
+  @Nullable private ImageDecoder mImageDecoder;
+  @Nullable private ImagePipeline mImagePipeline;
+  @Nullable private ImageTranscoderFactory mImageTranscoderFactory;
+  @Nullable private ProducerFactory mProducerFactory;
+  @Nullable private ProducerSequenceFactory mProducerSequenceFactory;
+  @Nullable private BufferedDiskCache mSmallImageBufferedDiskCache;
+  @Nullable private FileCache mSmallImageFileCache;
 
-  private PlatformBitmapFactory mPlatformBitmapFactory;
-  private PlatformDecoder mPlatformDecoder;
+  @Nullable private PlatformBitmapFactory mPlatformBitmapFactory;
+  @Nullable private PlatformDecoder mPlatformDecoder;
 
-  private AnimatedFactory mAnimatedFactory;
+  @Nullable private AnimatedFactory mAnimatedFactory;
 
   public ImagePipelineFactory(ImagePipelineConfig config) {
     if (FrescoSystrace.isTracing()) {
@@ -184,7 +184,7 @@ public class ImagePipelineFactory {
   }
 
   @Nullable
-  public DrawableFactory getAnimatedDrawableFactory(Context context) {
+  public DrawableFactory getAnimatedDrawableFactory(@Nullable Context context) {
     AnimatedFactory animatedFactory = getAnimatedFactory();
     return animatedFactory == null ? null : animatedFactory.getAnimatedDrawableFactory(context);
   }
@@ -396,7 +396,8 @@ public class ImagePipelineFactory {
               getImageTranscoderFactory(),
               mConfig.getExperiments().isEncodedMemoryCacheProbingEnabled(),
               mConfig.getExperiments().isDiskCacheProbingEnabled(),
-              mConfig.getExperiments().shouldUseCombinedNetworkAndCacheProducer());
+              mConfig.getExperiments().shouldUseCombinedNetworkAndCacheProducer(),
+              mConfig.getExperiments().allowDelay());
     }
     return mProducerSequenceFactory;
   }

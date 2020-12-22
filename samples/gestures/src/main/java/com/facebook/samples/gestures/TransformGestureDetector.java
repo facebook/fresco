@@ -8,6 +8,8 @@
 package com.facebook.samples.gestures;
 
 import android.view.MotionEvent;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * Component that detects translation, scale and rotation based on touch events.
@@ -16,6 +18,7 @@ import android.view.MotionEvent;
  * this detector is passed to the listeners, so it can be queried for pivot, translation, scale or
  * rotation.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class TransformGestureDetector implements MultiPointerGestureDetector.Listener {
 
   /** The listener for receiving notifications when gestures occur. */
@@ -32,7 +35,7 @@ public class TransformGestureDetector implements MultiPointerGestureDetector.Lis
 
   private final MultiPointerGestureDetector mDetector;
 
-  private Listener mListener = null;
+  @Nullable private Listener mListener = null;
 
   public TransformGestureDetector(MultiPointerGestureDetector multiPointerGestureDetector) {
     mDetector = multiPointerGestureDetector;

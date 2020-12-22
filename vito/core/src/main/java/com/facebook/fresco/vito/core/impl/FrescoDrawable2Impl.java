@@ -102,7 +102,14 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   }
 
   @Override
-  public void setDataSource(@Nullable DataSource<CloseableReference<CloseableImage>> dataSource) {
+  public synchronized void setDataSource(
+      long imageId, @Nullable DataSource<CloseableReference<CloseableImage>> dataSource) {
+    if (imageId != mImageId) {
+      return;
+    }
+    if (mDataSource != null && mDataSource != dataSource) {
+      mDataSource.close();
+    }
     mDataSource = dataSource;
   }
 
@@ -170,12 +177,12 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   }
 
   @Override
-  public void setImageId(long imageId) {
+  public synchronized void setImageId(long imageId) {
     mImageId = imageId;
   }
 
   @Override
-  public long getImageId() {
+  public synchronized long getImageId() {
     return mImageId;
   }
 
@@ -201,12 +208,13 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   }
 
   @Override
-  public void close() {
+  public synchronized void close() {
     cancelReleaseNextFrame();
     cancelReleaseDelayed();
     if (mUseNewReleaseCallbacks && mFetchSubmitted && mDrawableDataSubscriber != null) {
       mDrawableDataSubscriber.onRelease(this);
     }
+    setImageId(0);
     super.close();
     super.reset();
     mDrawableDataSubscriber = null;
@@ -217,7 +225,6 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     mFetchSubmitted = false;
     mActualImageWrapper.setCurrent(NopDrawable.INSTANCE);
     mImageOrigin = ImageOrigin.UNKNOWN;
-    mImageId = 0;
     mExtras = null;
     setOnFadeListener(null);
     mImageListener.onReset();

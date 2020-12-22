@@ -402,7 +402,7 @@ public class FadeDrawableTest {
     private long mCurrentTimeMs;
 
     public FakeFadeDrawable(Drawable[] layers) {
-      super(layers);
+      super(layers, false, 0);
       mCurrentTimeMs = 0;
     }
 

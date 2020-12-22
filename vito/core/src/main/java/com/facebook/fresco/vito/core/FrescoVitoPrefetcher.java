@@ -13,8 +13,10 @@ import com.facebook.fresco.vito.options.DecodedImageOptions;
 import com.facebook.fresco.vito.options.EncodedImageOptions;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface FrescoVitoPrefetcher {
 
   /**
@@ -27,13 +29,15 @@ public interface FrescoVitoPrefetcher {
    * @param uri the image URI to prefetch
    * @param imageOptions the image options used to display the image
    * @param callerContext the caller context for the given image
+   * @param callsite the prefetch callsite from which this request is being made, for logging
    * @return a DataSource that can safely be ignored.
    */
   DataSource<Void> prefetch(
       PrefetchTarget prefetchTarget,
       Uri uri,
       @Nullable ImageOptions imageOptions,
-      @Nullable Object callerContext);
+      @Nullable Object callerContext,
+      String callsite);
 
   /**
    * Prefetch an image to the bitmap memory cache (for decoded images). In order to cancel the
@@ -45,10 +49,14 @@ public interface FrescoVitoPrefetcher {
    * @param uri the image URI to prefetch
    * @param imageOptions the image options used to display the image
    * @param callerContext the caller context for the given image
+   * @param callsite the prefetch callsite from which this request is being made, for logging
    * @return a DataSource that can safely be ignored.
    */
   DataSource<Void> prefetchToBitmapCache(
-      Uri uri, @Nullable DecodedImageOptions imageOptions, @Nullable Object callerContext);
+      Uri uri,
+      @Nullable DecodedImageOptions imageOptions,
+      @Nullable Object callerContext,
+      String callsite);
 
   /**
    * Prefetch an image to the encoded memory cache. In order to cancel the prefetch, close the
@@ -60,10 +68,14 @@ public interface FrescoVitoPrefetcher {
    * @param uri the image URI to prefetch
    * @param imageOptions the image options used to display the image
    * @param callerContext the caller context for the given image
+   * @param callsite the prefetch callsite from which this request is being made, for logging
    * @return a DataSource that can safely be ignored.
    */
   DataSource<Void> prefetchToEncodedCache(
-      Uri uri, @Nullable EncodedImageOptions imageOptions, @Nullable Object callerContext);
+      Uri uri,
+      @Nullable EncodedImageOptions imageOptions,
+      @Nullable Object callerContext,
+      String callsite);
 
   /**
    * Prefetch an image to the disk cache. In order to cancel the prefetch, close the {@link
@@ -75,10 +87,14 @@ public interface FrescoVitoPrefetcher {
    * @param uri the image URI to prefetch
    * @param imageOptions the image options used to display the image
    * @param callerContext the caller context for the given image
+   * @param callsite the prefetch callsite from which this request is being made, for logging
    * @return a DataSource that can safely be ignored.
    */
   DataSource<Void> prefetchToDiskCache(
-      Uri uri, @Nullable ImageOptions imageOptions, @Nullable Object callerContext);
+      Uri uri,
+      @Nullable ImageOptions imageOptions,
+      @Nullable Object callerContext,
+      String callsite);
 
   /**
    * Prefetch an image to the given {@link PrefetchTarget} using a {@link VitoImageRequest}. In
@@ -90,11 +106,13 @@ public interface FrescoVitoPrefetcher {
    * @param prefetchTarget the target to prefetch to
    * @param callerContext the caller context for the given image
    * @param requestListener optional request listener
+   * @param callsite the prefetch callsite from which this request is being made, for logging
    * @return a DataSource that can safely be ignored.
    */
   DataSource<Void> prefetch(
       PrefetchTarget prefetchTarget,
       VitoImageRequest imageRequest,
       @Nullable Object callerContext,
-      @Nullable RequestListener requestListener);
+      @Nullable RequestListener requestListener,
+      String callsite);
 }

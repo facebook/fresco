@@ -76,6 +76,8 @@ public class ImageOptions extends DecodedImageOptions {
 
   private final @Nullable ImageOptionsDrawableFactory mCustomDrawableFactory;
 
+  private final int mDelayMs;
+
   public ImageOptions(Builder builder) {
     super(builder);
     mPlaceholderRes = builder.mPlaceholderRes;
@@ -104,6 +106,8 @@ public class ImageOptions extends DecodedImageOptions {
     mAutoPlay = builder.mAutoPlay;
 
     mCustomDrawableFactory = builder.mCustomDrawableFactory;
+
+    mDelayMs = builder.mDelayMs;
   }
 
   public Builder extend() {
@@ -182,6 +186,10 @@ public class ImageOptions extends DecodedImageOptions {
     return mCustomDrawableFactory;
   }
 
+  public int getDelayMs() {
+    return mDelayMs;
+  }
+
   @Override
   public boolean equals(@Nullable Object obj) {
     if (this == obj) {
@@ -206,7 +214,8 @@ public class ImageOptions extends DecodedImageOptions {
         || mResizeToViewport != other.mResizeToViewport
         || mFadeDurationMs != other.mFadeDurationMs
         || mAutoPlay != other.mAutoPlay
-        || !Objects.equal(mCustomDrawableFactory, other.mCustomDrawableFactory)) {
+        || !Objects.equal(mCustomDrawableFactory, other.mCustomDrawableFactory)
+        || mDelayMs != other.mDelayMs) {
       return false;
     }
     return equalDecodedOptions(other);
@@ -234,6 +243,7 @@ public class ImageOptions extends DecodedImageOptions {
     result = 31 * result + (mAutoPlay ? 1 : 0);
     result = 31 * result + mProgressRes;
     result = 31 * result + (mCustomDrawableFactory != null ? mCustomDrawableFactory.hashCode() : 0);
+    result = 31 * result + mDelayMs;
     return result;
   }
 
@@ -262,7 +272,8 @@ public class ImageOptions extends DecodedImageOptions {
         .add("resizeToViewport", mResizeToViewport)
         .add("autoPlay", mAutoPlay)
         .add("fadeDurationMs", mFadeDurationMs)
-        .add("customDrawableFactory", mCustomDrawableFactory);
+        .add("customDrawableFactory", mCustomDrawableFactory)
+        .add("delayMs", mDelayMs);
   }
 
   public static final class Builder extends DecodedImageOptions.Builder<Builder> {
@@ -292,6 +303,8 @@ public class ImageOptions extends DecodedImageOptions {
     private int mFadeDurationMs;
 
     private @Nullable ImageOptionsDrawableFactory mCustomDrawableFactory;
+
+    private int mDelayMs;
 
     private Builder() {
       super();
@@ -323,6 +336,8 @@ public class ImageOptions extends DecodedImageOptions {
       mFadeDurationMs = defaultOptions.getFadeDurationMs();
 
       mCustomDrawableFactory = defaultOptions.getCustomDrawableFactory();
+
+      mDelayMs = defaultOptions.getDelayMs();
     }
 
     public Builder placeholder(@Nullable Drawable placeholder) {
@@ -467,6 +482,17 @@ public class ImageOptions extends DecodedImageOptions {
      */
     public Builder customDrawableFactory(@Nullable ImageOptionsDrawableFactory drawableFactory) {
       mCustomDrawableFactory = drawableFactory;
+      return getThis();
+    }
+
+    /**
+     * Set an artificial delay for the final image. Useful for running negative tests on image load
+     * time. This will apply on top of any "natural" delay like the image fetch time.
+     *
+     * @param delayMs The delay to introduce, in milliseconds.
+     */
+    public Builder delayMs(int delayMs) {
+      mDelayMs = delayMs;
       return getThis();
     }
 

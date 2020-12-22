@@ -99,11 +99,6 @@ public class DraweeMediaPickerFragment extends BaseShowcaseFragment {
   }
 
   @Override
-  public int getTitleId() {
-    return R.string.drawee_media_picker_title;
-  }
-
-  @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == REQUEST_CODE_PICK_MEDIA) {
       if (resultCode != Activity.RESULT_OK) {

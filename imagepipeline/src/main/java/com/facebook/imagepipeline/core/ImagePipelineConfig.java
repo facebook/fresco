@@ -79,8 +79,11 @@ public class ImagePipelineConfig {
   private final Bitmap.Config mBitmapConfig;
   private final Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
   private final MemoryCache.CacheTrimStrategy mBitmapMemoryCacheTrimStrategy;
+
+  @Nullable
   private final CountingMemoryCache.EntryStateObserver<CacheKey>
       mBitmapMemoryCacheEntryStateObserver;
+
   private final CacheKeyFactory mCacheKeyFactory;
   private final Context mContext;
   private final boolean mDownsampleEnabled;
@@ -290,6 +293,7 @@ public class ImagePipelineConfig {
     return mBitmapMemoryCacheTrimStrategy;
   }
 
+  @Nullable
   public CountingMemoryCache.EntryStateObserver<CacheKey> getBitmapMemoryCacheEntryStateObserver() {
     return mBitmapMemoryCacheEntryStateObserver;
   }
@@ -480,38 +484,41 @@ public class ImagePipelineConfig {
 
   public static class Builder {
 
-    private Bitmap.Config mBitmapConfig;
-    private Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
+    @Nullable private Bitmap.Config mBitmapConfig;
+    @Nullable private Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
+
+    @Nullable
     private CountingMemoryCache.EntryStateObserver<CacheKey> mBitmapMemoryCacheEntryStateObserver;
-    private MemoryCache.CacheTrimStrategy mBitmapMemoryCacheTrimStrategy;
-    private CacheKeyFactory mCacheKeyFactory;
+
+    @Nullable private MemoryCache.CacheTrimStrategy mBitmapMemoryCacheTrimStrategy;
+    @Nullable private CacheKeyFactory mCacheKeyFactory;
     private final Context mContext;
     private boolean mDownsampleEnabled = false;
-    private Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
-    private ExecutorSupplier mExecutorSupplier;
-    private ImageCacheStatsTracker mImageCacheStatsTracker;
-    private ImageDecoder mImageDecoder;
-    private ImageTranscoderFactory mImageTranscoderFactory;
+    @Nullable private Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
+    @Nullable private ExecutorSupplier mExecutorSupplier;
+    @Nullable private ImageCacheStatsTracker mImageCacheStatsTracker;
+    @Nullable private ImageDecoder mImageDecoder;
+    @Nullable private ImageTranscoderFactory mImageTranscoderFactory;
     @Nullable @ImageTranscoderType private Integer mImageTranscoderType = null;
-    private Supplier<Boolean> mIsPrefetchEnabledSupplier;
-    private DiskCacheConfig mMainDiskCacheConfig;
-    private MemoryTrimmableRegistry mMemoryTrimmableRegistry;
+    @Nullable private Supplier<Boolean> mIsPrefetchEnabledSupplier;
+    @Nullable private DiskCacheConfig mMainDiskCacheConfig;
+    @Nullable private MemoryTrimmableRegistry mMemoryTrimmableRegistry;
     @Nullable @MemoryChunkType private Integer mMemoryChunkType = null;
-    private NetworkFetcher mNetworkFetcher;
-    private PlatformBitmapFactory mPlatformBitmapFactory;
-    private PoolFactory mPoolFactory;
-    private ProgressiveJpegConfig mProgressiveJpegConfig;
-    private Set<RequestListener> mRequestListeners;
-    private Set<RequestListener2> mRequestListener2s;
+    @Nullable private NetworkFetcher mNetworkFetcher;
+    @Nullable private PlatformBitmapFactory mPlatformBitmapFactory;
+    @Nullable private PoolFactory mPoolFactory;
+    @Nullable private ProgressiveJpegConfig mProgressiveJpegConfig;
+    @Nullable private Set<RequestListener> mRequestListeners;
+    @Nullable private Set<RequestListener2> mRequestListener2s;
     private boolean mResizeAndRotateEnabledForNetwork = true;
-    private DiskCacheConfig mSmallImageDiskCacheConfig;
-    private FileCacheFactory mFileCacheFactory;
-    private ImageDecoderConfig mImageDecoderConfig;
+    @Nullable private DiskCacheConfig mSmallImageDiskCacheConfig;
+    @Nullable private FileCacheFactory mFileCacheFactory;
+    @Nullable private ImageDecoderConfig mImageDecoderConfig;
     private int mHttpConnectionTimeout = -1;
     private final ImagePipelineExperiments.Builder mExperimentsBuilder =
         new ImagePipelineExperiments.Builder(this);
     private boolean mDiskCacheEnabled = true;
-    private CallerContextVerifier mCallerContextVerifier;
+    @Nullable private CallerContextVerifier mCallerContextVerifier;
     private CloseableReferenceLeakTracker mCloseableReferenceLeakTracker =
         new NoOpCloseableReferenceLeakTracker();
     @Nullable private MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;

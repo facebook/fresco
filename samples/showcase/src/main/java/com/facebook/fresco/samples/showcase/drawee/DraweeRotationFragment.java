@@ -64,11 +64,6 @@ public class DraweeRotationFragment extends BaseShowcaseFragment {
     spinner.setSelection(0);
   }
 
-  @Override
-  public int getTitleId() {
-    return R.string.drawee_rotation_title;
-  }
-
   private void setRotationOptions(RotationOptions rotationOptions) {
     ImageRequest imageRequest =
         ImageRequestBuilder.newBuilderWithSource(mUri)

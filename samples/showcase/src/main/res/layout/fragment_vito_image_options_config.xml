@@ -92,6 +92,11 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           />
+      <Spinner
+          android:id="@+id/spinner_error"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
 
       <Spinner
           android:id="@+id/spinner_overlay"
@@ -119,6 +124,12 @@
 
       <Spinner
           android:id="@+id/spinner_rotation"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+
+      <Spinner
+          android:id="@+id/spinner_resize"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           />

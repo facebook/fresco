@@ -39,14 +39,15 @@ public class FrescoVitoPrefetcherImpl implements FrescoVitoPrefetcher {
       PrefetchTarget prefetchTarget,
       final Uri uri,
       final @Nullable ImageOptions imageOptions,
-      final @Nullable Object callerContext) {
+      final @Nullable Object callerContext,
+      final String callsite) {
     switch (prefetchTarget) {
       case MEMORY_DECODED:
-        return prefetchToBitmapCache(uri, imageOptions, callerContext);
+        return prefetchToBitmapCache(uri, imageOptions, callerContext, callsite);
       case MEMORY_ENCODED:
-        return prefetchToEncodedCache(uri, imageOptions, callerContext);
+        return prefetchToEncodedCache(uri, imageOptions, callerContext, callsite);
       case DISK:
-        return prefetchToDiskCache(uri, imageOptions, callerContext);
+        return prefetchToDiskCache(uri, imageOptions, callerContext, callsite);
     }
     return DataSources.immediateFailedDataSource(
         new CancellationException("Prefetching is not enabled"));
@@ -56,7 +57,8 @@ public class FrescoVitoPrefetcherImpl implements FrescoVitoPrefetcher {
   public DataSource<Void> prefetchToBitmapCache(
       final Uri uri,
       final @Nullable DecodedImageOptions imageOptions,
-      final @Nullable Object callerContext) {
+      final @Nullable Object callerContext,
+      final String callsite) {
     final ImageRequest imageRequest =
         mFrescoContext
             .getImagePipelineUtils()
@@ -68,7 +70,8 @@ public class FrescoVitoPrefetcherImpl implements FrescoVitoPrefetcher {
   public DataSource<Void> prefetchToEncodedCache(
       final Uri uri,
       final @Nullable EncodedImageOptions imageOptions,
-      final @Nullable Object callerContext) {
+      final @Nullable Object callerContext,
+      final String callsite) {
     final ImageRequest imageRequest =
         mFrescoContext
             .getImagePipelineUtils()
@@ -81,7 +84,8 @@ public class FrescoVitoPrefetcherImpl implements FrescoVitoPrefetcher {
   public DataSource<Void> prefetchToDiskCache(
       final Uri uri,
       final @Nullable ImageOptions imageOptions,
-      final @Nullable Object callerContext) {
+      final @Nullable Object callerContext,
+      final String callsite) {
     final ImageRequest imageRequest =
         mFrescoContext
             .getImagePipelineUtils()
@@ -95,7 +99,8 @@ public class FrescoVitoPrefetcherImpl implements FrescoVitoPrefetcher {
       final PrefetchTarget prefetchTarget,
       final VitoImageRequest imageRequest,
       @Nullable final Object callerContext,
-      @Nullable final RequestListener requestListener) {
+      @Nullable final RequestListener requestListener,
+      final String callsite) {
     return prefetch(prefetchTarget, imageRequest.finalImageRequest, callerContext, requestListener);
   }
 

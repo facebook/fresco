@@ -22,6 +22,7 @@ import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 import com.facebook.imagepipeline.transformation.BitmapTransformation;
 import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * Contains the logic for compositing the frames of an {@link AnimatedImage}. Animated image formats
@@ -56,6 +57,7 @@ public class AnimatedImageCompositor {
      * @return a reference to the bitmap. The ownership of the reference is passed to the caller who
      *     must close it.
      */
+    @Nullable
     CloseableReference<Bitmap> getCachedBitmap(int frameNumber);
   }
 
