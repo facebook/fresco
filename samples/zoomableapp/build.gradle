@@ -57,7 +57,7 @@ configurations {
 }
 
 dependencies {
-    implementation SampleDeps.Zoomable.legacyAndroidXSupportCoreUi 
+    implementation SampleDeps.Zoomable.legacyAndroidXSupportCoreUi
 
     internalImplementation project(':drawee-backends:drawee-pipeline')
     implementation project(path: ':samples:zoomable')

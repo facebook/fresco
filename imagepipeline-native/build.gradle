@@ -16,7 +16,7 @@ dependencies {
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
     compileOnly Deps.AndroidX.androidxAnnotation
-    
+
     implementation project(':imagepipeline')
     implementation project(':fbcore')
     implementation Deps.SoLoader.soloader

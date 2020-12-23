@@ -18,7 +18,7 @@ dependencies {
     implementation project(':fbcore')
     implementation project(':imagepipeline')
     implementation project(':imagepipeline-native')
-    
+
     testImplementation TestDeps.junit
     testImplementation TestDeps.assertjCore
     testImplementation TestDeps.mockitoCore

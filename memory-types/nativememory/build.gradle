@@ -15,11 +15,11 @@ dependencies {
     compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
     compileOnly Deps.AndroidX.androidxAnnotation
-    
+
     implementation project(':fbcore')
     implementation project(':imagepipeline')
     implementation project(':imagepipeline-native')
-    
+
     implementation Deps.SoLoader.nativeloader
 
     testImplementation TestDeps.junit

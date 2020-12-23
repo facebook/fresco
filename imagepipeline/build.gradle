@@ -24,7 +24,7 @@ dependencies {
 
     implementation Deps.Bolts.tasks
     implementation project(':fbcore')
-    
+
     testImplementation Deps.AndroidX.legacySupportCoreUtils
     testImplementation Deps.jsr305
     testImplementation project(':imagepipeline-test')
@@ -43,7 +43,7 @@ dependencies {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
-    testImplementation TestDeps.truth 
+    testImplementation TestDeps.truth
 }
 apply from: rootProject.file('release.gradle')
 

@@ -50,7 +50,7 @@ dependencies {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
     testImplementation project(':imagepipeline-test')
-    
+
     implementation project(':imagepipeline')
     implementation project(':imagepipeline-native')
     implementation project(':memory-types:ashmem')

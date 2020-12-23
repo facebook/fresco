@@ -22,7 +22,7 @@ dependencies {
     implementation Deps.Litho.widget
 
     annotationProcessor Deps.Litho.processor
-    
+
     implementation project(':vito:core')
     implementation project(':vito:options')
     implementation project(':vito:provider')

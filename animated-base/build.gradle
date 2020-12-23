@@ -16,7 +16,7 @@ dependencies {
     compileOnly Deps.javaxAnnotation
     compileOnly Deps.jsr305
     compileOnly Deps.AndroidX.androidxAnnotation
-    
+
     api project(':fbcore')
     api project(':imagepipeline-base')
     api project(':imagepipeline')
