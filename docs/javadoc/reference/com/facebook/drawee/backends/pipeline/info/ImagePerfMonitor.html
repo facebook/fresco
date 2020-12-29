@@ -209,8 +209,6 @@
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
     <li class="api apilevel-">
-  <a href="../../../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
-    <li class="api apilevel-">
   <a href="../../../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/drawee/controller/package-summary.html">com.facebook.drawee.controller</a></li>
@@ -249,6 +247,8 @@
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../../com/facebook/fresco/middleware/package-summary.html">com.facebook.fresco.middleware</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
@@ -284,6 +284,8 @@
   <a href="../../../../../../com/facebook/imagepipeline/filter/package-summary.html">com.facebook.imagepipeline.filter</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../../com/facebook/imagepipeline/instrumentation/package-summary.html">com.facebook.imagepipeline.instrumentation</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
@@ -322,6 +324,7 @@
       <ul>
           <li class="api apilevel-"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageOriginListener.html">ImageOriginListener</a></li>
           <li class="api apilevel-"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfDataListener.html">ImagePerfDataListener</a></li>
+          <li class="api apilevel-"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfNotifier.html">ImagePerfNotifier</a></li>
       </ul>
     </li>
               
@@ -392,6 +395,13 @@
   
   
 
+  
+   
+  
+  
+  
+  
+
 
 <div class="sum-details-links">
 
@@ -451,6 +461,11 @@ Summary:
   
 
   
+  
+      implements 
+      
+        <a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfNotifier.html">ImagePerfNotifier</a> 
+      
   
   
 
@@ -552,7 +567,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfMonitor.html#ImagePerfMonitor(com.facebook.common.time.MonotonicClock, com.facebook.drawee.backends.pipeline.PipelineDraweeController)">ImagePerfMonitor</a></span>(<a href="../../../../../../com/facebook/common/time/MonotonicClock.html">MonotonicClock</a> monotonicClock, <a href="../../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.html">PipelineDraweeController</a> pipelineDraweeController)
+        <span class="sympad"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfMonitor.html#ImagePerfMonitor(com.facebook.common.time.MonotonicClock, com.facebook.drawee.backends.pipeline.PipelineDraweeController, com.facebook.common.internal.Supplier<java.lang.Boolean>)">ImagePerfMonitor</a></span>(<a href="../../../../../../com/facebook/common/time/MonotonicClock.html">MonotonicClock</a> monotonicClock, <a href="../../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.html">PipelineDraweeController</a> pipelineDraweeController, <a href="../../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; asyncLogging)
         
   </td></tr>
 
@@ -930,6 +945,64 @@ From class
 </td></tr>
 
 
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.drawee.backends.pipeline.info.ImagePerfNotifier" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.facebook.drawee.backends.pipeline.info.ImagePerfNotifier-trigger"
+          src="../../../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From interface
+
+  <a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfNotifier.html">com.facebook.drawee.backends.pipeline.info.ImagePerfNotifier</a>
+
+<div id="inherited-methods-com.facebook.drawee.backends.pipeline.info.ImagePerfNotifier">
+  <div id="inherited-methods-com.facebook.drawee.backends.pipeline.info.ImagePerfNotifier-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-com.facebook.drawee.backends.pipeline.info.ImagePerfNotifier-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfNotifier.html#notifyListenersOfVisibilityStateUpdate(com.facebook.drawee.backends.pipeline.info.ImagePerfState, int)">notifyListenersOfVisibilityStateUpdate</a></span>(<a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfState.html">ImagePerfState</a> state, int visibilityState)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfNotifier.html#notifyStatusUpdated(com.facebook.drawee.backends.pipeline.info.ImagePerfState, int)">notifyStatusUpdated</a></span>(<a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfState.html">ImagePerfState</a> state, int imageLoadStatus)
+        
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
 </table>
 
 
@@ -964,7 +1037,7 @@ From class
 
 
 
-<a id="ImagePerfMonitor(com.facebook.common.time.MonotonicClock, com.facebook.drawee.backends.pipeline.PipelineDraweeController)"></a>
+<a id="ImagePerfMonitor(com.facebook.common.time.MonotonicClock, com.facebook.drawee.backends.pipeline.PipelineDraweeController, com.facebook.common.internal.Supplier<java.lang.Boolean>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -977,7 +1050,7 @@ From class
         
       </span>
       <span class="sympad">ImagePerfMonitor</span>
-      <span class="normal">(<a href="../../../../../../com/facebook/common/time/MonotonicClock.html">MonotonicClock</a> monotonicClock, <a href="../../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.html">PipelineDraweeController</a> pipelineDraweeController)</span>
+      <span class="normal">(<a href="../../../../../../com/facebook/common/time/MonotonicClock.html">MonotonicClock</a> monotonicClock, <a href="../../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.html">PipelineDraweeController</a> pipelineDraweeController, <a href="../../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; asyncLogging)</span>
     </h4>
       <div class="api-level">
         <div>

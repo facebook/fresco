@@ -14,12 +14,14 @@ import com.facebook.drawee.backends.pipeline.info.ImagePerfData;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener;
 import com.facebook.drawee.backends.pipeline.info.VisibilityState;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
 
 /** Fresco image tracker for Sonar */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FlipperImageTracker implements DebugImageTracker, ImagePerfDataListener {
 
   private static final int MAX_IMAGES_TO_TRACK = 1000;
@@ -129,11 +131,9 @@ public class FlipperImageTracker implements DebugImageTracker, ImagePerfDataList
     if (imagePerfData == null || imagePerfData.getImageRequest() == null) {
       return;
     }
-
-    if (mImageRequestDebugDataMap.containsKey(imagePerfData.getImageRequest())) {
-      mImageRequestDebugDataMap
-          .get(imagePerfData.getImageRequest())
-          .setImagePerfData(imagePerfData);
+    ImageDebugData debugData = mImageRequestDebugDataMap.get(imagePerfData.getImageRequest());
+    if (debugData != null) {
+      debugData.setImagePerfData(imagePerfData);
     } else {
       ImageDebugData imageDebugData = new ImageDebugData(imagePerfData.getImageRequest());
       imageDebugData.setImagePerfData(imagePerfData);

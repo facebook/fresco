@@ -10,9 +10,11 @@ package com.facebook.imagepipeline.animated.util;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Build;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Arrays;
 
 /** Utility methods for AnimatedDrawable. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class AnimatedDrawableUtil {
 
   // See comment in fixFrameDurations below.

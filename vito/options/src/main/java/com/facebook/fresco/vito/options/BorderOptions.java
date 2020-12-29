@@ -8,9 +8,11 @@
 package com.facebook.fresco.vito.options;
 
 import androidx.annotation.ColorInt;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 @Immutable
 public class BorderOptions {
 

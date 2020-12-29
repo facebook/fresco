@@ -12,6 +12,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * This producer issues to a call to {@link android.graphics.Bitmap#prepareToDraw()} to allow the
@@ -21,6 +22,7 @@ import com.facebook.imagepipeline.image.CloseableStaticBitmap;
  * <p>Controlled via {@link
  * com.facebook.imagepipeline.core.ImagePipelineExperiments#mUseBitmapPrepareToDraw}
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class BitmapPrepareProducer implements Producer<CloseableReference<CloseableImage>> {
 
   public static final String PRODUCER_NAME = "BitmapPrepareProducer";

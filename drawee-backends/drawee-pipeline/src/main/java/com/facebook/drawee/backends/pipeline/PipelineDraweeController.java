@@ -9,6 +9,7 @@ package com.facebook.drawee.backends.pipeline;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableList;
 import com.facebook.common.internal.Objects;
@@ -39,6 +40,7 @@ import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
+import com.facebook.fresco.ui.common.MultiUriHelper;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -48,6 +50,7 @@ import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
@@ -93,6 +96,9 @@ public class PipelineDraweeController
   private ImageOriginListener mImageOriginListener;
 
   private DebugOverlayImageOriginListener mDebugOverlayImageOriginListener;
+  private @Nullable ImageRequest mImageRequest;
+  private @Nullable ImageRequest[] mFirstAvailableImageRequests;
+  private @Nullable ImageRequest mLowResImageRequest;
 
   public PipelineDraweeController(
       Resources resources,
@@ -159,6 +165,10 @@ public class PipelineDraweeController
       mImagePerfMonitor.setEnabled(true);
       mImagePerfMonitor.updateImageRequestData(builder);
     }
+
+    mImageRequest = builder.getImageRequest();
+    mFirstAvailableImageRequests = builder.getFirstAvailableImageRequests();
+    mLowResImageRequest = builder.getLowResImageRequest();
   }
 
   public void setDrawDebugOverlay(boolean drawDebugOverlay) {
@@ -444,5 +454,20 @@ public class PipelineDraweeController
         .add("super", super.toString())
         .add("dataSourceSupplier", mDataSourceSupplier)
         .toString();
+  }
+
+  @Override
+  public @Nullable Map<String, Object> obtainExtrasFromImage(ImageInfo info) {
+    if (info == null) return null;
+    return info.getExtras();
+  }
+
+  @Override
+  protected @Nullable Uri getMainUri() {
+    return MultiUriHelper.getMainUri(
+        mImageRequest,
+        mLowResImageRequest,
+        mFirstAvailableImageRequests,
+        ImageRequest.REQUEST_TO_URI_FN);
   }
 }

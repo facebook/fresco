@@ -11,12 +11,24 @@ import android.net.Uri;
 import javax.annotation.Nullable;
 
 public class OriginalEncodedImageInfo {
-  private final Uri mUri;
+
+  public static final OriginalEncodedImageInfo EMPTY = new OriginalEncodedImageInfo();
+
+  private final @Nullable Uri mUri;
   private final @Nullable EncodedImageOrigin mOrigin;
   private final @Nullable Object mCallerContext;
   private final int mWidth;
   private final int mHeight;
   private final int mSize;
+
+  private OriginalEncodedImageInfo() {
+    mUri = null;
+    mOrigin = EncodedImageOrigin.NOT_SET;
+    mCallerContext = null;
+    mWidth = -1;
+    mHeight = -1;
+    mSize = -1;
+  }
 
   public OriginalEncodedImageInfo(
       Uri sourceUri,
@@ -45,7 +57,7 @@ public class OriginalEncodedImageInfo {
     return mSize;
   }
 
-  public Uri getUri() {
+  public @Nullable Uri getUri() {
     return mUri;
   }
 

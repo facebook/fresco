@@ -7,15 +7,16 @@
 
 package com.facebook.imagepipeline.memory;
 
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.memory.MemoryTrimmable;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.OOMSoftReference;
 import com.facebook.common.references.ResourceReleaser;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.Semaphore;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -32,6 +33,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * <p>This class will also release the byte array if it is unused and collecting it can prevent an
  * OOM.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 @ThreadSafe
 public class SharedByteArray implements MemoryTrimmable {
   @VisibleForTesting final int mMinByteArraySize;

@@ -7,8 +7,8 @@
 
 package com.facebook.common.memory;
 
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import java.io.InputStream;
 import javax.annotation.concurrent.NotThreadSafe;
 

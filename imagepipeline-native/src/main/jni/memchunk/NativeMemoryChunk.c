@@ -116,7 +116,7 @@ static JNINativeMethod gNativeMemoryChunkMethods[] = {
 /**
  * Executed when libimagepipeline.so is loaded.
  *
- * Responsibilites:
+ * Responsibilities:
  * - looks up and stores global references to Java classes used by native code
  * - registers native methods of NativeMemoryChunk
  */

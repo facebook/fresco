@@ -209,8 +209,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
     <li class="selected api apilevel-">
   <a href="../../../../com/facebook/drawee/controller/package-summary.html">com.facebook.drawee.controller</a></li>
@@ -249,6 +247,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/middleware/package-summary.html">com.facebook.fresco.middleware</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
@@ -284,6 +284,8 @@
   <a href="../../../../com/facebook/imagepipeline/filter/package-summary.html">com.facebook.imagepipeline.filter</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/instrumentation/package-summary.html">com.facebook.imagepipeline.instrumentation</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
@@ -508,9 +510,7 @@ Summary:
               >
           
             
-              <a href="../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerBuilder.html">PipelineDraweeControllerBuilder</a>,
-            
-              <a href="../../../../com/facebook/drawee/backends/volley/VolleyDraweeControllerBuilder.html">VolleyDraweeControllerBuilder</a>
+              <a href="../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerBuilder.html">PipelineDraweeControllerBuilder</a>
             
           
       </div>
@@ -521,10 +521,6 @@ Summary:
         <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerBuilder.html">PipelineDraweeControllerBuilder</a></td>
               <td class="jd-descrcol" width="100%">Concrete implementation of ImagePipeline Drawee controller builder.&nbsp;</td>
-          </tr>
-        <tr class=" api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/backends/volley/VolleyDraweeControllerBuilder.html">VolleyDraweeControllerBuilder</a></td>
-              <td class="jd-descrcol" width="100%">Concrete implementation of Volley Drawee controller builder.&nbsp;</td>
           </tr>
   </table>
       </div>
@@ -627,7 +623,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#AbstractDraweeControllerBuilder(android.content.Context, java.util.Set<com.facebook.drawee.controller.ControllerListener>)">AbstractDraweeControllerBuilder</a></span>(Context context, Set&lt;<a href="../../../../com/facebook/drawee/controller/ControllerListener.html">ControllerListener</a>&gt; boundControllerListeners)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#AbstractDraweeControllerBuilder(android.content.Context, java.util.Set<com.facebook.drawee.controller.ControllerListener>, java.util.Set<com.facebook.fresco.ui.common.ControllerListener2>)">AbstractDraweeControllerBuilder</a></span>(Context context, Set&lt;<a href="../../../../com/facebook/drawee/controller/ControllerListener.html">ControllerListener</a>&gt; boundControllerListeners, Set&lt;<a href="../../../../com/facebook/fresco/ui/common/ControllerListener2.html">ControllerListener2</a>&gt; boundControllerListeners2)
         
   </td></tr>
 
@@ -813,6 +809,22 @@ Summary:
             
             
             
+            <a href="../../../../com/facebook/fresco/ui/common/LoggingListener.html">LoggingListener</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getLoggingListener()">getLoggingListener</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
             REQUEST
         </td>
         <td class="jd-linkcol" width="100%">
@@ -824,7 +836,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -842,7 +854,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -860,7 +872,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -878,7 +890,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -896,7 +908,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -914,7 +926,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -932,7 +944,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -950,7 +962,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -968,7 +980,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -986,7 +998,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1004,7 +1016,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1022,7 +1034,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1040,7 +1052,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1054,6 +1066,22 @@ Summary:
         
         <div class="jd-descrdiv">Sets the image request.</div>
   
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            BUILDER
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#setLoggingListener(com.facebook.fresco.ui.common.LoggingListener)">setLoggingListener</a></span>(<a href="../../../../com/facebook/fresco/ui/common/LoggingListener.html">LoggingListener</a> loggingListener)
+        
   </td></tr>
 
 
@@ -1753,7 +1781,7 @@ From interface
 
 
 
-<a id="AbstractDraweeControllerBuilder(android.content.Context, java.util.Set<com.facebook.drawee.controller.ControllerListener>)"></a>
+<a id="AbstractDraweeControllerBuilder(android.content.Context, java.util.Set<com.facebook.drawee.controller.ControllerListener>, java.util.Set<com.facebook.fresco.ui.common.ControllerListener2>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1766,7 +1794,7 @@ From interface
         
       </span>
       <span class="sympad">AbstractDraweeControllerBuilder</span>
-      <span class="normal">(Context context, Set&lt;<a href="../../../../com/facebook/drawee/controller/ControllerListener.html">ControllerListener</a>&gt; boundControllerListeners)</span>
+      <span class="normal">(Context context, Set&lt;<a href="../../../../com/facebook/drawee/controller/ControllerListener.html">ControllerListener</a>&gt; boundControllerListeners, Set&lt;<a href="../../../../com/facebook/fresco/ui/common/ControllerListener2.html">ControllerListener2</a>&gt; boundControllerListeners2)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -2076,6 +2104,37 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Gets the image request. </p></div>
+
+    </div>
+</div>
+
+
+<a id="getLoggingListener()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/fresco/ui/common/LoggingListener.html">LoggingListener</a>
+      </span>
+      <span class="sympad">getLoggingListener</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>
@@ -2531,6 +2590,37 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Sets the image request. </p></div>
+
+    </div>
+</div>
+
+
+<a id="setLoggingListener(com.facebook.fresco.ui.common.LoggingListener)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        BUILDER
+      </span>
+      <span class="sympad">setLoggingListener</span>
+      <span class="normal">(<a href="../../../../com/facebook/fresco/ui/common/LoggingListener.html">LoggingListener</a> loggingListener)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>

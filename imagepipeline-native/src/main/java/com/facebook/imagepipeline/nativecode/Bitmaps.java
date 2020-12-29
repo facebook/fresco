@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.nativecode;
 import android.graphics.Bitmap;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * Utility methods for handling Bitmaps.
@@ -17,6 +18,7 @@ import com.facebook.common.internal.Preconditions;
  * <p>Native code used by this class is shipped as part of libimagepipeline.so
  */
 @DoNotStrip
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class Bitmaps {
 
   static {

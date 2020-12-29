@@ -159,11 +159,6 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
         };
   }
 
-  @Override
-  public int getTitleId() {
-    return R.string.imagepipeline_resizing_title;
-  }
-
   private void reloadImage() {
     reloadImage(
         mImageFormatEntries[mFormatSpinner.getSelectedItemPosition()].uri,

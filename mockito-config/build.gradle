@@ -5,9 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.TestDeps
+
 apply plugin: 'java'
 apply plugin: 'maven'
 
 dependencies {
-    implementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+    compileOnly Deps.inferAnnotation
+    implementation TestDeps.mockitoCore
 }

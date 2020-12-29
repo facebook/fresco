@@ -209,8 +209,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/controller/package-summary.html">com.facebook.drawee.controller</a></li>
@@ -249,6 +247,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/middleware/package-summary.html">com.facebook.fresco.middleware</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
@@ -284,6 +284,8 @@
   <a href="../../../../com/facebook/imagepipeline/filter/package-summary.html">com.facebook.imagepipeline.filter</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/instrumentation/package-summary.html">com.facebook.imagepipeline.instrumentation</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
@@ -729,9 +731,9 @@ Summary:
             int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptionsBuilder.html#getMinDecodeIntervalMs()">getMinDecodeIntervalMs</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptionsBuilder.html#getMaxDimensionPx()">getMaxDimensionPx</a></span>()
         
-        <div class="jd-descrdiv">Gets the minimum decode interval.</div>
+        <div class="jd-descrdiv">Gets the maximum image dimension (width or height).</div>
   
   </td></tr>
 
@@ -744,12 +746,12 @@ Summary:
             
             
             
-            boolean
+            int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptionsBuilder.html#getUseLastFrameForPreview()">getUseLastFrameForPreview</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptionsBuilder.html#getMinDecodeIntervalMs()">getMinDecodeIntervalMs</a></span>()
         
-        <div class="jd-descrdiv">Gets whether to use the last frame for the preview image (defaults to the first frame).</div>
+        <div class="jd-descrdiv">Gets the minimum decode interval.</div>
   
   </td></tr>
 
@@ -765,10 +767,9 @@ Summary:
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptionsBuilder.html#getUseMediaStoreVideoThumbnail()">getUseMediaStoreVideoThumbnail</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptionsBuilder.html#getUseLastFrameForPreview()">getUseLastFrameForPreview</a></span>()
         
-        <div class="jd-descrdiv">Gets whether the media store video thumbnail should be used when a local video content uri is *
- requested.</div>
+        <div class="jd-descrdiv">Gets whether to use the last frame for the preview image (defaults to the first frame).</div>
   
   </td></tr>
 
@@ -928,9 +929,9 @@ Summary:
             T
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptionsBuilder.html#setMinDecodeIntervalMs(int)">setMinDecodeIntervalMs</a></span>(int intervalMs)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptionsBuilder.html#setMaxDimensionPx(int)">setMaxDimensionPx</a></span>(int maxDimensionPx)
         
-        <div class="jd-descrdiv">Sets the minimum decode interval.</div>
+        <div class="jd-descrdiv">Sets the maximum image dimension (width or height).</div>
   
   </td></tr>
 
@@ -946,9 +947,9 @@ Summary:
             T
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptionsBuilder.html#setUseLastFrameForPreview(boolean)">setUseLastFrameForPreview</a></span>(boolean useLastFrameForPreview)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptionsBuilder.html#setMinDecodeIntervalMs(int)">setMinDecodeIntervalMs</a></span>(int intervalMs)
         
-        <div class="jd-descrdiv">Sets whether to use the last frame for the preview image (defaults to the first frame).</div>
+        <div class="jd-descrdiv">Sets the minimum decode interval.</div>
   
   </td></tr>
 
@@ -964,10 +965,9 @@ Summary:
             T
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptionsBuilder.html#setUseMediaStoreVideoThumbnail(boolean)">setUseMediaStoreVideoThumbnail</a></span>(boolean useMediaStoreVideoThumbnail)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptionsBuilder.html#setUseLastFrameForPreview(boolean)">setUseLastFrameForPreview</a></span>(boolean useLastFrameForPreview)
         
-        <div class="jd-descrdiv">Sets whether the media store video thumbnail should be used when a local video content uri is
- requested.</div>
+        <div class="jd-descrdiv">Sets whether to use the last frame for the preview image (defaults to the first frame).</div>
   
   </td></tr>
 
@@ -1578,6 +1578,42 @@ From class
 </div>
 
 
+<a id="getMaxDimensionPx()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        int
+      </span>
+      <span class="sympad">getMaxDimensionPx</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the maximum image dimension (width or height).</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the maxinum image dimension in pixels
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="getMinDecodeIntervalMs()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1643,43 +1679,6 @@ From class
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>whether to use the last frame for the preview image
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="getUseMediaStoreVideoThumbnail()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        boolean
-      </span>
-      <span class="sympad">getUseMediaStoreVideoThumbnail</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Gets whether the media store video thumbnail should be used when a local video content uri is *
- requested.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>whether to use the media store video thumbnail
 </li></ul>
   </div>
 
@@ -2043,6 +2042,51 @@ From class
 </div>
 
 
+<a id="setMaxDimensionPx(int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        T
+      </span>
+      <span class="sympad">setMaxDimensionPx</span>
+      <span class="normal">(int maxDimensionPx)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets the maximum image dimension (width or height).</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>maxDimensionPx</th>
+          <td>the maximum image dimension in pixels</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>this builder
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="setMinDecodeIntervalMs(int)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -2130,52 +2174,6 @@ From class
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>this builder
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="setUseMediaStoreVideoThumbnail(boolean)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        T
-      </span>
-      <span class="sympad">setUseMediaStoreVideoThumbnail</span>
-      <span class="normal">(boolean useMediaStoreVideoThumbnail)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Sets whether the media store video thumbnail should be used when a local video content uri is
- requested.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>useMediaStoreVideoThumbnail</th>
-          <td>whether to use the media store video thumbnail</td>
-        </tr>
-      </table>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>the builder
 </li></ul>
   </div>
 

@@ -20,23 +20,22 @@ import kotlinx.android.synthetic.main.fragment_vito_view_ktx.*
 
 class VitoViewKtxFragment : BaseShowcaseFragment() {
 
-    private val imageOptions = ImageOptions.create()
-            .round(RoundingOptions.asCircle())
-            .placeholderRes(R.color.placeholder_color)
-            .build()
+  private val imageOptions =
+      ImageOptions.create()
+          .round(RoundingOptions.asCircle())
+          .placeholderRes(R.color.placeholder_color)
+          .build()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_vito_view_ktx, container, false)
-    }
+  override fun onCreateView(
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
+  ): View? {
+    return inflater.inflate(R.layout.fragment_vito_view_ktx, container, false)
+  }
 
-    override fun onViewCreated(container: View, savedInstanceState: Bundle?) {
-        val uri = sampleUris().createSampleUri()
-        image?.show(uri, imageOptions)
-    }
-
-    override fun getTitleId() = R.string.vito_view_ktx
+  override fun onViewCreated(container: View, savedInstanceState: Bundle?) {
+    val uri = sampleUris().createSampleUri()
+    image?.show(uri, imageOptions)
+  }
 }

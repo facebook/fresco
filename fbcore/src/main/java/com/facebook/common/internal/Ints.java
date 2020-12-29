@@ -16,6 +16,7 @@
 
 package com.facebook.common.internal;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Arrays;
 
 /**
@@ -25,6 +26,7 @@ import java.util.Arrays;
  * @author Kevin Bourrillion
  * @since 1.0
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class Ints {
   private Ints() {}
 

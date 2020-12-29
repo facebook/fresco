@@ -401,18 +401,11 @@ public class ImagePipeline {
    * @return a DataSource that can safely be ignored.
    */
   public DataSource<Void> prefetchToBitmapCache(ImageRequest imageRequest, Object callerContext) {
-    return prefetchToBitmapCache(imageRequest, callerContext, Priority.MEDIUM);
+    return prefetchToBitmapCache(imageRequest, callerContext, null);
   }
 
-  /** Experimental prefetch method. Do not use as it can be removed in the future */
-  @Deprecated
-  public DataSource<Void> prefetchToBitmapCacheWithHighPriority(
-      ImageRequest imageRequest, Object callerContext) {
-    return prefetchToBitmapCache(imageRequest, callerContext, Priority.HIGH);
-  }
-
-  private DataSource<Void> prefetchToBitmapCache(
-      ImageRequest imageRequest, Object callerContext, Priority priority) {
+  public DataSource<Void> prefetchToBitmapCache(
+      ImageRequest imageRequest, Object callerContext, @Nullable RequestListener requestListener) {
     if (!mIsPrefetchEnabledSupplier.get()) {
       return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION);
     }
@@ -432,7 +425,8 @@ public class ImagePipeline {
           imageRequest,
           ImageRequest.RequestLevel.FULL_FETCH,
           callerContext,
-          priority);
+          Priority.MEDIUM,
+          requestListener);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     }
@@ -451,6 +445,11 @@ public class ImagePipeline {
     return prefetchToDiskCache(imageRequest, callerContext, Priority.MEDIUM);
   }
 
+  public DataSource<Void> prefetchToDiskCache(
+      ImageRequest imageRequest, Object callerContext, @Nullable RequestListener requestListener) {
+    return prefetchToDiskCache(imageRequest, callerContext, Priority.MEDIUM, requestListener);
+  }
+
   /**
    * Submits a request for prefetching to the disk cache.
    *
@@ -463,6 +462,14 @@ public class ImagePipeline {
    */
   public DataSource<Void> prefetchToDiskCache(
       ImageRequest imageRequest, Object callerContext, Priority priority) {
+    return prefetchToDiskCache(imageRequest, callerContext, priority, null);
+  }
+
+  public DataSource<Void> prefetchToDiskCache(
+      ImageRequest imageRequest,
+      Object callerContext,
+      Priority priority,
+      @Nullable RequestListener requestListener) {
     if (!mIsPrefetchEnabledSupplier.get()) {
       return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION);
     }
@@ -474,7 +481,8 @@ public class ImagePipeline {
           imageRequest,
           ImageRequest.RequestLevel.FULL_FETCH,
           callerContext,
-          priority);
+          priority,
+          requestListener);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     }
@@ -493,6 +501,11 @@ public class ImagePipeline {
     return prefetchToEncodedCache(imageRequest, callerContext, Priority.MEDIUM);
   }
 
+  public DataSource<Void> prefetchToEncodedCache(
+      ImageRequest imageRequest, Object callerContext, @Nullable RequestListener requestListener) {
+    return prefetchToEncodedCache(imageRequest, callerContext, Priority.MEDIUM, requestListener);
+  }
+
   /**
    * Submits a request for prefetching to the encoded cache.
    *
@@ -505,6 +518,14 @@ public class ImagePipeline {
    */
   public DataSource<Void> prefetchToEncodedCache(
       ImageRequest imageRequest, Object callerContext, Priority priority) {
+    return prefetchToEncodedCache(imageRequest, callerContext, priority, null);
+  }
+
+  public DataSource<Void> prefetchToEncodedCache(
+      ImageRequest imageRequest,
+      Object callerContext,
+      Priority priority,
+      @Nullable RequestListener requestListener) {
     if (!mIsPrefetchEnabledSupplier.get()) {
       return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION);
     }
@@ -516,7 +537,8 @@ public class ImagePipeline {
           imageRequest,
           ImageRequest.RequestLevel.FULL_FETCH,
           callerContext,
-          priority);
+          priority,
+          requestListener);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     }
@@ -641,6 +663,39 @@ public class ImagePipeline {
   }
 
   /**
+   * Returns whether the image is stored in the encoded memory cache.
+   *
+   * @param uri the uri for the image to be looked up.
+   * @return true if the image was found in the encoded memory cache, false otherwise
+   */
+  public boolean isInEncodedMemoryCache(final Uri uri) {
+    if (uri == null) {
+      return false;
+    }
+    Predicate<CacheKey> encodedCachePredicate = predicateForUri(uri);
+    return mEncodedMemoryCache.contains(encodedCachePredicate);
+  }
+
+  /**
+   * Returns whether the image is stored in the encoded memory cache.
+   *
+   * @param imageRequest the imageRequest for the image to be looked up.
+   * @return true if the image was found in the encoded memory cache, false otherwise.
+   */
+  public boolean isInEncodedMemoryCache(final ImageRequest imageRequest) {
+    if (imageRequest == null) {
+      return false;
+    }
+    final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest, null);
+    CloseableReference<PooledByteBuffer> ref = mEncodedMemoryCache.get(cacheKey);
+    try {
+      return CloseableReference.isValid(ref);
+    } finally {
+      CloseableReference.closeSafely(ref);
+    }
+  }
+
+  /**
    * Returns whether the image is stored in the disk cache. Performs disk cache check synchronously.
    * It is not recommended to use this unless you know what exactly you are doing. Disk cache check
    * is a costly operation, the call will block the caller thread until the cache check is
@@ -739,7 +794,7 @@ public class ImagePipeline {
   }
   /** @return {@link CacheKey} for doing bitmap cache lookups in the pipeline. */
   @Nullable
-  public CacheKey getCacheKey(@Nullable ImageRequest imageRequest, Object callerContext) {
+  public CacheKey getCacheKey(@Nullable ImageRequest imageRequest, @Nullable Object callerContext) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("ImagePipeline#getCacheKey");
     }
@@ -863,10 +918,11 @@ public class ImagePipeline {
       ImageRequest imageRequest,
       ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit,
       Object callerContext,
-      Priority priority) {
-    final RequestListener2 requestListener =
+      Priority priority,
+      @Nullable RequestListener requestListener) {
+    final RequestListener2 requestListener2 =
         new InternalRequestListener(
-            getRequestListenerForRequest(imageRequest, null), mRequestListener2);
+            getRequestListenerForRequest(imageRequest, requestListener), mRequestListener2);
 
     if (mCallerContextVerifier != null) {
       mCallerContextVerifier.verifyCallerContext(callerContext, true);
@@ -879,7 +935,7 @@ public class ImagePipeline {
           new SettableProducerContext(
               imageRequest,
               generateUniqueFutureId(),
-              requestListener,
+              requestListener2,
               callerContext,
               lowestPermittedRequestLevel,
               /* isPrefetch */ true,
@@ -887,7 +943,7 @@ public class ImagePipeline {
               priority,
               mConfig);
       return ProducerToDataSourceAdapter.create(
-          producerSequence, settableProducerContext, requestListener);
+          producerSequence, settableProducerContext, requestListener2);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     }
@@ -907,6 +963,13 @@ public class ImagePipeline {
       return new ForwardingRequestListener(
           mRequestListener, requestListener, imageRequest.getRequestListener());
     }
+  }
+
+  public RequestListener getCombinedRequestListener(@Nullable RequestListener listener) {
+    if (listener == null) {
+      return mRequestListener;
+    }
+    return new ForwardingRequestListener(mRequestListener, listener);
   }
 
   private Predicate<CacheKey> predicateForUri(final Uri uri) {

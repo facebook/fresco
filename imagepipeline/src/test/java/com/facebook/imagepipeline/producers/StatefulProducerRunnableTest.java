@@ -53,7 +53,7 @@ public class StatefulProducerRunnableTest {
 
     mStatefulProducerRunnable =
         new StatefulProducerRunnable<Closeable>(
-            mConsumer, mProducerListener, mProducerContext, PRODUCER_NAME, null, null) {
+            mConsumer, mProducerListener, mProducerContext, PRODUCER_NAME) {
           @Override
           protected void disposeResult(Closeable result) {
             try {

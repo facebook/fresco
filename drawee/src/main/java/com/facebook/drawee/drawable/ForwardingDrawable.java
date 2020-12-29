@@ -35,7 +35,7 @@ public class ForwardingDrawable extends Drawable
 
   private final DrawableProperties mDrawableProperties = new DrawableProperties();
 
-  protected TransformCallback mTransformCallback;
+  @Nullable protected TransformCallback mTransformCallback;
 
   /**
    * Matrix used to store temporary transform. Drawables should be accessed on UI thread only, and

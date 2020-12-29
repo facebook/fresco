@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.os.SystemClock;
 import com.facebook.common.internal.Throwables;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -33,6 +34,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * additional cost.
  */
 @ThreadSafe
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class StatFsHelper {
 
   public enum StorageType {
@@ -59,10 +61,10 @@ public class StatFsHelper {
   private static final long RESTAT_INTERVAL_MS = TimeUnit.MINUTES.toMillis(2);
 
   private volatile @Nullable StatFs mInternalStatFs = null;
-  private volatile File mInternalPath;
+  private volatile @Nullable File mInternalPath;
 
   private volatile @Nullable StatFs mExternalStatFs = null;
-  private volatile File mExternalPath;
+  private volatile @Nullable File mExternalPath;
 
   @GuardedBy("lock")
   private long mLastRestatTime;
@@ -88,12 +90,16 @@ public class StatFsHelper {
   }
 
   /** Initialization code that can sometimes take a long time. */
+  @SuppressWarnings("ExternalStorageUse")
   private void ensureInitialized() {
     if (!mInitialized) {
       lock.lock();
       try {
         if (!mInitialized) {
           mInternalPath = Environment.getDataDirectory();
+
+          // Whitelisted use of external storage Android changes in Target SDK 29 and above as it
+          // only used for getting the available space
           mExternalPath = Environment.getExternalStorageDirectory();
           updateStats();
           mInitialized = true;

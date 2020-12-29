@@ -182,11 +182,6 @@ public class ImageFormatProgressiveJpegFragment extends BaseShowcaseFragment {
         });
   }
 
-  @Override
-  public int getTitleId() {
-    return R.string.format_pjpeg_title;
-  }
-
   private class SimpleUriListAdapter extends BaseAdapter {
 
     @Override

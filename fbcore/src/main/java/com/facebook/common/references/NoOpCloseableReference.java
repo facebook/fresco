@@ -7,8 +7,10 @@
 
 package com.facebook.common.references;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class NoOpCloseableReference<T> extends CloseableReference<T> {
 
   /*package*/ NoOpCloseableReference(

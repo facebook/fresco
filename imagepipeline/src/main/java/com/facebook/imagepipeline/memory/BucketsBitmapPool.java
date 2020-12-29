@@ -13,6 +13,7 @@ import android.graphics.Color;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -24,6 +25,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * if it matches the desired dimensions; if no such bitmap is found in the pool, a new one is
  * allocated. release() returns a bitmap to the pool.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 @ThreadSafe
 @TargetApi(21)
 public class BucketsBitmapPool extends BasePool<Bitmap> implements BitmapPool {

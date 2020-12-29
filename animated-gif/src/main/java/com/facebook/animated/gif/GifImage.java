@@ -14,6 +14,7 @@ import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.BlendO
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageDecoder;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.soloader.nativeloader.NativeLoader;
 import java.nio.ByteBuffer;
 import javax.annotation.concurrent.ThreadSafe;
@@ -22,6 +23,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * A representation of a GIF image. An instance of this class will hold a copy of the encoded data
  * in memory along with the parsed header data. Frames are decoded on demand via {@link GifFrame}.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
 @DoNotStrip
 public class GifImage implements AnimatedImage, AnimatedImageDecoder {

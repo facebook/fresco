@@ -9,10 +9,12 @@ package com.facebook.imageutils;
 
 import android.media.ExifInterface;
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 
 /** Util for getting exif orientation from a jpeg stored as a byte array. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 class TiffUtil {
 
   private static final Class<?> TAG = TiffUtil.class;

@@ -8,7 +8,7 @@
 package com.facebook.fresco.vito.core.impl;
 
 import android.net.Uri;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.core.ImagePipelineUtils;
@@ -22,6 +22,7 @@ import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.core.NativeCodeSetup;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.facebook.imagepipeline.request.Postprocessor;
 import javax.annotation.Nullable;
 
 /**
@@ -44,7 +45,23 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
   @Override
   @Nullable
   public ImageRequest buildImageRequest(@Nullable Uri uri, DecodedImageOptions imageOptions) {
-    ImageRequestBuilder builder = createDecodedImageRequestBuilder(uri, imageOptions);
+    if (uri == null) {
+      return null;
+    }
+    final ImageRequestBuilder imageRequestBuilder =
+        createEncodedImageRequestBuilder(uri, imageOptions);
+    ImageRequestBuilder builder =
+        createDecodedImageRequestBuilder(imageRequestBuilder, imageOptions);
+    return builder != null ? builder.build() : null;
+  }
+
+  @Override
+  @Nullable
+  public ImageRequest wrapDecodedImageRequest(
+      ImageRequest imageRequest, DecodedImageOptions imageOptions) {
+    ImageRequestBuilder builder =
+        createDecodedImageRequestBuilder(
+            createEncodedImageRequestBuilder(imageRequest, imageOptions), imageOptions);
     return builder != null ? builder.build() : null;
   }
 
@@ -58,17 +75,17 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
 
   @Nullable
   protected ImageRequestBuilder createDecodedImageRequestBuilder(
-      @Nullable Uri uri, DecodedImageOptions imageOptions) {
-    if (uri == null) {
-      return null;
-    }
-    final ImageRequestBuilder imageRequestBuilder =
-        createEncodedImageRequestBuilder(uri, imageOptions);
+      @Nullable ImageRequestBuilder imageRequestBuilder, DecodedImageOptions imageOptions) {
     if (imageRequestBuilder == null) {
       return null;
     }
 
-    if (mExperiments.useNativeRounding() && NativeCodeSetup.getUseNativeCode()) {
+    RoundingOptions roundingOptions = imageOptions.getRoundingOptions();
+    boolean forceRoundAtDecode =
+        roundingOptions == null ? false : roundingOptions.isForceRoundAtDecode();
+
+    if ((!forceRoundAtDecode && mExperiments.useNativeRounding())
+        && NativeCodeSetup.getUseNativeCode()) {
       setupNativeRounding(imageRequestBuilder, imageOptions.getRoundingOptions());
     }
 
@@ -108,7 +125,10 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
 
     imageRequestBuilder.setShouldDecodePrefetches(mExperiments.prefetchToBitmapCache());
 
-    imageRequestBuilder.setPostprocessor(imageOptions.getPostprocessor());
+    Postprocessor postprocessor = imageOptions.getPostprocessor();
+    if (postprocessor != null) {
+      imageRequestBuilder.setPostprocessor(postprocessor);
+    }
 
     return imageRequestBuilder;
   }
@@ -120,6 +140,16 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
       return null;
     }
     return ImageRequestBuilder.newBuilderWithSource(uri)
+        .setRequestPriority(imageOptions.getPriority());
+  }
+
+  @Nullable
+  protected ImageRequestBuilder createEncodedImageRequestBuilder(
+      ImageRequest imageRequest, EncodedImageOptions imageOptions) {
+    if (imageRequest == null) {
+      return null;
+    }
+    return ImageRequestBuilder.fromRequest(imageRequest)
         .setRequestPriority(imageOptions.getPriority());
   }
 

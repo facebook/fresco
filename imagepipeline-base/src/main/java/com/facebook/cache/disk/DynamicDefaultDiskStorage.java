@@ -7,20 +7,22 @@
 
 package com.facebook.cache.disk;
 
+import androidx.annotation.VisibleForTesting;
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.common.file.FileTree;
 import com.facebook.common.file.FileUtils;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import javax.annotation.Nullable;
 
 /** A supplier of a DiskStorage concrete implementation. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DynamicDefaultDiskStorage implements DiskStorage {
   private static final Class<?> TAG = DynamicDefaultDiskStorage.class;
 
@@ -84,7 +86,8 @@ public class DynamicDefaultDiskStorage implements DiskStorage {
   }
 
   @Override
-  public BinaryResource getResource(String resourceId, Object debugInfo) throws IOException {
+  public @Nullable BinaryResource getResource(String resourceId, Object debugInfo)
+      throws IOException {
     return get().getResource(resourceId, debugInfo);
   }
 

@@ -22,6 +22,7 @@ import com.facebook.common.streams.LimitedInputStream;
 import com.facebook.common.webp.WebpBitmapFactory;
 import com.facebook.common.webp.WebpSupportStatus;
 import com.facebook.imagepipeline.nativecode.DalvikPurgeableDecoder;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -38,6 +39,7 @@ import javax.annotation.Nullable;
  * and below.
  */
 @DoNotStrip
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class GingerbreadPurgeableDecoder extends DalvikPurgeableDecoder {
 
   private static Method sGetFileDescriptorMethod;
@@ -119,7 +121,7 @@ public class GingerbreadPurgeableDecoder extends DalvikPurgeableDecoder {
 
   private FileDescriptor getMemoryFileDescriptor(MemoryFile memoryFile) {
     try {
-      Object rawFD = getFileDescriptorMethod().invoke(memoryFile);
+      Object rawFD = Preconditions.checkNotNull(getFileDescriptorMethod().invoke(memoryFile));
       return (FileDescriptor) rawFD;
     } catch (Exception e) {
       throw Throwables.propagate(e);
@@ -129,7 +131,7 @@ public class GingerbreadPurgeableDecoder extends DalvikPurgeableDecoder {
   private Bitmap decodeFileDescriptorAsPurgeable(
       CloseableReference<PooledByteBuffer> bytesRef,
       int inputLength,
-      byte[] suffix,
+      @Nullable byte[] suffix,
       BitmapFactory.Options options) {
     MemoryFile memoryFile = null;
     try {

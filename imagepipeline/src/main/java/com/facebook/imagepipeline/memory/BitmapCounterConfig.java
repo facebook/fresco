@@ -7,6 +7,9 @@
 
 package com.facebook.imagepipeline.memory;
 
+import com.facebook.infer.annotation.Nullsafe;
+
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class BitmapCounterConfig {
 
   public static final int DEFAULT_MAX_BITMAP_COUNT = 384;

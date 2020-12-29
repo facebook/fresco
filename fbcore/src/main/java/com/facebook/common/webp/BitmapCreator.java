@@ -8,11 +8,13 @@
 package com.facebook.common.webp;
 
 import android.graphics.Bitmap;
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * This is a utility class we use in order to allocate a Bitmap that will be wrapped later with a
  * CloseableReference
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface BitmapCreator {
 
   /**

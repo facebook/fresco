@@ -13,8 +13,8 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Pair;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.ImmutableMap;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
@@ -85,9 +85,10 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
     final ProducerListener2 listener = producerContext.getProducerListener();
     final ImageRequest imageRequest = producerContext.getImageRequest();
 
+    producerContext.putOriginExtra("local", "exif");
     final StatefulProducerRunnable cancellableProducerRunnable =
         new StatefulProducerRunnable<EncodedImage>(
-            consumer, listener, producerContext, PRODUCER_NAME, "local", "exif") {
+            consumer, listener, producerContext, PRODUCER_NAME) {
           @Override
           protected @Nullable EncodedImage getResult() throws Exception {
             final Uri sourceUri = imageRequest.getSourceUri();

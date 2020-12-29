@@ -38,7 +38,9 @@ import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 import org.junit.Assert;
@@ -158,6 +160,12 @@ public class AbstractDraweeControllerTest {
 
     @Override
     protected void releaseDrawable(@Nullable Drawable drawable) {}
+
+    @Nullable
+    @Override
+    public Map<String, Object> obtainExtrasFromImage(FakeImageInfo fakeImageInfo) {
+      return Collections.emptyMap();
+    }
 
     @Override
     public boolean isSameImageRequest(DraweeController other) {

@@ -30,7 +30,6 @@ com.facebook.drawee.backends.pipeline
 com.facebook.drawee.backends.pipeline.debug
 com.facebook.drawee.backends.pipeline.info
 com.facebook.drawee.backends.pipeline.info.internal
-com.facebook.drawee.backends.volley
 com.facebook.drawee.components
 com.facebook.drawee.controller
 com.facebook.drawee.debug
@@ -50,6 +49,7 @@ com.facebook.fresco.animation.drawable
 com.facebook.fresco.animation.drawable.animator
 com.facebook.fresco.animation.factory
 com.facebook.fresco.animation.frame
+com.facebook.fresco.middleware
 com.facebook.fresco.ui.common
 com.facebook.imageformat
 com.facebook.imagepipeline.animated.base
@@ -68,6 +68,7 @@ com.facebook.imagepipeline.decoder
 com.facebook.imagepipeline.drawable
 com.facebook.imagepipeline.filter
 com.facebook.imagepipeline.image
+com.facebook.imagepipeline.instrumentation
 com.facebook.imagepipeline.listener
 com.facebook.imagepipeline.memory
 com.facebook.imagepipeline.multiuri

@@ -7,9 +7,11 @@
 
 package com.facebook.imagepipeline.common;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Priority levels recognized by the image pipeline. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public enum Priority {
   /**
    * NOTE: DO NOT CHANGE ORDERING OF THOSE CONSTANTS UNDER ANY CIRCUMSTANCES. Doing so will make
@@ -32,7 +34,7 @@ public enum Priority {
    * @param priority2
    * @return higher priority
    */
-  public static Priority getHigherPriority(
+  public static @Nullable Priority getHigherPriority(
       @Nullable Priority priority1, @Nullable Priority priority2) {
     if (priority1 == null) {
       return priority2;

@@ -63,7 +63,7 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
   }
 
   @Override
-  public void setColorFilter(ColorFilter colorFilter) {
+  public void setColorFilter(@Nullable ColorFilter colorFilter) {
     if (mAnimationBackend != null) {
       mAnimationBackend.setColorFilter(colorFilter);
     }

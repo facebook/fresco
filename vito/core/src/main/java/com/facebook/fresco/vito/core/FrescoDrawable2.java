@@ -20,9 +20,11 @@ import com.facebook.drawee.drawable.TransformCallback;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 import javax.annotation.Nonnull;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class FrescoDrawable2 extends BaseFrescoDrawable
     implements Drawable.Callback,
         TransformCallback,
@@ -30,10 +32,6 @@ public abstract class FrescoDrawable2 extends BaseFrescoDrawable
         Closeable,
         DeferredReleaser.Releasable,
         DataSubscriber<CloseableReference<CloseableImage>> {
-
-  protected FrescoDrawable2(boolean allLayersVisible) {
-    super(allLayersVisible);
-  }
 
   @Override
   @Nullable
@@ -46,7 +44,7 @@ public abstract class FrescoDrawable2 extends BaseFrescoDrawable
   public abstract ScaleTypeDrawable getActualImageWrapper();
 
   public abstract void setDataSource(
-      @Nullable DataSource<CloseableReference<CloseableImage>> dataSource);
+      long imageId, @Nullable DataSource<CloseableReference<CloseableImage>> dataSource);
 
   public abstract void setFetchSubmitted(boolean fetchSubmitted);
 
@@ -88,20 +86,13 @@ public abstract class FrescoDrawable2 extends BaseFrescoDrawable
   @Override
   public abstract void release();
 
-  public void reset() {
-    super.reset();
-  }
-
-  @Override
-  public void close() {
-    super.close();
-  }
-
   public abstract void scheduleReleaseDelayed();
 
   public abstract void cancelReleaseDelayed();
 
   public abstract void scheduleReleaseNextFrame();
+
+  public abstract void releaseImmediately();
 
   public abstract void cancelReleaseNextFrame();
 
@@ -120,4 +111,10 @@ public abstract class FrescoDrawable2 extends BaseFrescoDrawable
   @Override
   public abstract void onProgressUpdate(
       @Nonnull DataSource<CloseableReference<CloseableImage>> dataSource);
+
+  public abstract @Nullable Object getExtras();
+
+  public abstract void setExtras(@Nullable Object extras);
+
+  public abstract VitoImagePerfListener getImagePerfListener();
 }

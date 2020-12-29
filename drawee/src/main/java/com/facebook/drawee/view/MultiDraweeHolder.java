@@ -11,9 +11,10 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import android.view.View;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 
 /**
@@ -29,6 +30,7 @@ import java.util.ArrayList;
  * {@link #onAttach} from its {@link View#onFinishTemporaryDetach()} and {@link
  * View#onAttachedToWindow()} methods.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class MultiDraweeHolder<DH extends DraweeHierarchy> {
 
   @VisibleForTesting boolean mIsAttached = false;

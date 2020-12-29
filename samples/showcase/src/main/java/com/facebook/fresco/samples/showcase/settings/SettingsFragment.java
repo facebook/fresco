@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.Preference;
@@ -26,13 +25,12 @@ import androidx.preference.PreferenceManager;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.ShowcaseApplication;
-import com.facebook.fresco.samples.showcase.ShowcaseFragment;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import java.util.Arrays;
 
 /** The Fragment for settings */
 public class SettingsFragment extends PreferenceFragmentCompat
-    implements SharedPreferences.OnSharedPreferenceChangeListener, ShowcaseFragment {
+    implements SharedPreferences.OnSharedPreferenceChangeListener {
 
   private static final String TAG = SettingsFragment.class.getSimpleName();
 
@@ -145,17 +143,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   private void showToastText(String text) {
     Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
-  }
-
-  @Nullable
-  @Override
-  public String getBackstackTag() {
-    return TAG;
-  }
-
-  @Override
-  public int getTitleId() {
-    return R.string.action_settings;
   }
 
   /** Dialog asking for a new URI override */

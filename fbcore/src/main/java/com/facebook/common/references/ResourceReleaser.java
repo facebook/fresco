@@ -7,6 +7,8 @@
 
 package com.facebook.common.references;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * Interface that abstracts the action of releasing a resource.
  *
@@ -16,6 +18,7 @@ package com.facebook.common.references;
  *
  * @param <T> type of resource managed by this ResourceReleaser
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface ResourceReleaser<T> {
 
   /**

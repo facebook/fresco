@@ -10,8 +10,8 @@ import com.facebook.fresco.buildsrc.Deps
 apply plugin: 'com.android.library'
 
 dependencies {
-    compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
-    compileOnly "androidx.legacy:legacy-support-core-utils:${versions.androidx.legacy_support_core_utils}"
+    compileOnly Deps.AndroidX.androidxAnnotation
+    compileOnly Deps.AndroidX.legacySupportCoreUtils
     compileOnly Deps.jsr305
 
     implementation project(':drawee-backends:drawee-pipeline')
@@ -20,11 +20,11 @@ dependencies {
 
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
     }
 
     packagingOptions {

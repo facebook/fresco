@@ -10,7 +10,8 @@ package com.facebook.drawee.gestures;
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -25,6 +26,7 @@ import javax.annotation.Nullable;
  *
  * <p>This class currently only detects clicks.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class GestureDetector {
 
   /** Interface for the click listener. */

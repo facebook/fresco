@@ -8,8 +8,10 @@
 package com.facebook.imagepipeline.debug;
 
 import com.facebook.common.references.SharedReference;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class NoOpCloseableReferenceLeakTracker implements CloseableReferenceLeakTracker {
 
   @Override

@@ -6,6 +6,7 @@
  */
 
 import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.SampleDeps
 import com.facebook.fresco.buildsrc.SampleDeps.Comparison
 
 apply plugin: 'com.android.application'
@@ -14,13 +15,13 @@ dependencies {
     compileOnly Deps.jsr305
     implementation Comparison.Glide.glide
     annotationProcessor Comparison.Glide.compiler
-    annotationProcessor "androidx.annotation:annotation:${versions.androidx.annotation}"
-    implementation "com.android.volley:volley:${VOLLEY_VERSION}"
+    annotationProcessor Deps.AndroidX.androidxAnnotation
+    implementation Deps.volley
     implementation Comparison.Uil.uil
     implementation Comparison.Picasso.picasso
-    implementation "com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2"
-    implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
-    implementation "androidx.recyclerview:recyclerview:${versions.androidx.recyclerview}"
+    implementation Comparison.Picasso.okhttpDownloader
+    implementation SampleDeps.AndroidX.appcompat
+    implementation SampleDeps.AndroidX.recyclerview
     implementation Comparison.AndroidQuery.aquery
     implementation Deps.Tools.Stetho.okhttp3
 
@@ -40,14 +41,14 @@ dependencies {
 
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
 
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         applicationId "com.facebook.samples.comparison"
-        minSdkVersion rootProject.ext.samplesMinSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion FrescoConfig.samplesMinSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
         versionCode 1
         versionName "${VERSION_NAME}"
 

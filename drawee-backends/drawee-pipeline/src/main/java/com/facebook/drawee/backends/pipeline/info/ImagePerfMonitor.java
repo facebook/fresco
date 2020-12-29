@@ -9,6 +9,7 @@ package com.facebook.drawee.backends.pipeline.info;
 
 import android.graphics.Rect;
 import com.facebook.common.internal.Supplier;
+import com.facebook.common.internal.Suppliers;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
@@ -22,11 +23,13 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.listener.ForwardingRequestListener;
 import com.facebook.imagepipeline.request.ImageRequest;
-import java.util.LinkedList;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import javax.annotation.Nullable;
 
-public class ImagePerfMonitor {
+@Nullsafe(Nullsafe.Mode.STRICT)
+public class ImagePerfMonitor implements ImagePerfNotifier {
 
   private final PipelineDraweeController mPipelineDraweeController;
   private final MonotonicClock mMonotonicClock;
@@ -84,7 +87,7 @@ public class ImagePerfMonitor {
         mPipelineDraweeController.removeImageOriginListener(mImageOriginListener);
       }
       if (mImagePerfControllerListener2 != null) {
-        mPipelineDraweeController.removeControllerListener2();
+        mPipelineDraweeController.removeControllerListener2(mImagePerfControllerListener2);
       }
       if (mForwardingRequestListener != null) {
         mPipelineDraweeController.removeRequestListener(mForwardingRequestListener);
@@ -97,7 +100,7 @@ public class ImagePerfMonitor {
       return;
     }
     if (mImagePerfDataListeners == null) {
-      mImagePerfDataListeners = new LinkedList<>();
+      mImagePerfDataListeners = new CopyOnWriteArrayList<>();
     }
     mImagePerfDataListeners.add(imagePerfDataListener);
   }
@@ -115,6 +118,7 @@ public class ImagePerfMonitor {
     }
   }
 
+  @Override
   public void notifyStatusUpdated(ImagePerfState state, @ImageLoadStatus int imageLoadStatus) {
     state.setImageLoadStatus(imageLoadStatus);
     if (!mEnabled || mImagePerfDataListeners == null || mImagePerfDataListeners.isEmpty()) {
@@ -129,6 +133,7 @@ public class ImagePerfMonitor {
     }
   }
 
+  @Override
   public void notifyListenersOfVisibilityStateUpdate(
       ImagePerfState state, @VisibilityState int visibilityState) {
     if (!mEnabled || mImagePerfDataListeners == null || mImagePerfDataListeners.isEmpty()) {
@@ -153,7 +158,8 @@ public class ImagePerfMonitor {
   private void setupListeners() {
     if (mImagePerfControllerListener2 == null) {
       mImagePerfControllerListener2 =
-          new ImagePerfControllerListener2(mMonotonicClock, mImagePerfState, this, mAsyncLogging);
+          new ImagePerfControllerListener2(
+              mMonotonicClock, mImagePerfState, this, mAsyncLogging, Suppliers.BOOLEAN_FALSE);
     }
     if (mImagePerfRequestListener == null) {
       mImagePerfRequestListener = new ImagePerfRequestListener(mMonotonicClock, mImagePerfState);

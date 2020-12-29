@@ -4,9 +4,11 @@ package com.facebook.imagepipeline.listener;
 
 import androidx.annotation.NonNull;
 import com.facebook.imagepipeline.producers.ProducerContext;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class BaseRequestListener2 implements RequestListener2 {
 
   @Override

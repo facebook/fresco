@@ -7,9 +7,11 @@
 
 package com.facebook.cache.common;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** An implementation of {@link CacheErrorLogger} that doesn't do anything. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class NoOpCacheErrorLogger implements CacheErrorLogger {
   private static @Nullable NoOpCacheErrorLogger sInstance = null;
 

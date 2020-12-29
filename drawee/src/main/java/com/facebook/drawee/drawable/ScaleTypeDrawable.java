@@ -14,9 +14,9 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import javax.annotation.Nullable;
 
 /**
@@ -28,7 +28,7 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
 
   // Specified scale type.
   @VisibleForTesting ScaleType mScaleType;
-  @VisibleForTesting Object mScaleTypeState;
+  @Nullable @VisibleForTesting Object mScaleTypeState;
 
   // Specified focus point to use with FOCUS_CROP.
   @VisibleForTesting @Nullable PointF mFocusPoint = null;
@@ -39,7 +39,7 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
   @VisibleForTesting int mUnderlyingHeight = 0;
 
   // Matrix that is actually being used for drawing.
-  @VisibleForTesting Matrix mDrawMatrix;
+  @Nullable @VisibleForTesting Matrix mDrawMatrix;
 
   // Temporary objects preallocated in advance to save future allocations.
   private Matrix mTempMatrix = new Matrix();
@@ -69,7 +69,7 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
   }
 
   @Override
-  public Drawable setCurrent(Drawable newDelegate) {
+  public Drawable setCurrent(@Nullable Drawable newDelegate) {
     final Drawable previousDelegate = super.setCurrent(newDelegate);
     configureBounds();
 

@@ -12,8 +12,10 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Sets;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Set;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DummyTrackingInUseBitmapPool implements BitmapPool {
 
   /** An Identity hash-set to keep track of values by reference equality */

@@ -1,7 +1,3 @@
-// (c) Facebook, Inc. and its affiliates. Confidential and proprietary.
-
-package com.facebook.fresco.ui.common;
-
 /*
  * Copyright (c) 2015-present, Facebook, Inc.
  *
@@ -9,13 +5,14 @@ package com.facebook.fresco.ui.common;
  * LICENSE file in the root directory of this source tree.
  */
 
+package com.facebook.fresco.ui.common;
+
+import com.facebook.infer.annotation.Nullsafe;
+
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface LoggingListener {
 
+  void onFadeStarted(String id);
+
   void onFadeFinished(String id);
-
-  class BaseLoggingListener implements LoggingListener {
-
-    @Override
-    public void onFadeFinished(String id) {}
-  }
 }

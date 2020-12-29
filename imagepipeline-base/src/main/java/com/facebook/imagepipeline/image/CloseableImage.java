@@ -8,12 +8,27 @@
 package com.facebook.imagepipeline.image;
 
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
+import java.util.HashMap;
+import java.util.Map;
+import javax.annotation.Nonnull;
 
 /** A simple wrapper around an image that implements {@link Closeable} */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class CloseableImage implements Closeable, ImageInfo, HasImageMetadata {
   private static final String TAG = "CloseableImage";
-  private OriginalEncodedImageInfo mOriginalEncodedImageInfo;
+  private Map<String, Object> mExtras = new HashMap<>();
+  /* Extras we want to set to the image */
+  private static final String[] mImageExtrasList =
+      new String[] {
+        "encoded_size",
+        "encoded_width",
+        "encoded_height",
+        "uri_source",
+        "image_format",
+        "bitmap_config"
+      };
 
   /** @return size in bytes of the bitmap(s) */
   public abstract int getSizeInBytes();
@@ -44,12 +59,20 @@ public abstract class CloseableImage implements Closeable, ImageInfo, HasImageMe
     return false;
   }
 
-  public OriginalEncodedImageInfo getOriginalEncodedImageInfo() {
-    return mOriginalEncodedImageInfo;
+  @Override
+  public @Nonnull Map<String, Object> getExtras() {
+    return mExtras;
   }
 
-  public void setOriginalEncodedImageInfo(OriginalEncodedImageInfo originalEncodedImageInfo) {
-    mOriginalEncodedImageInfo = originalEncodedImageInfo;
+  /** Sets extras that match mImageExtrasList to this image from supplied extras */
+  public void setImageExtras(Map<String, Object> extras) {
+    if (extras == null) return;
+
+    for (String extra : mImageExtrasList) {
+      Object val = extras.get(extra);
+      if (val == null) continue;
+      mExtras.put(extra, val);
+    }
   }
 
   /** Ensures that the underlying resources are always properly released. */

@@ -130,10 +130,11 @@ public class EncodedProbeProducer implements Producer<EncodedImage> {
                 (imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL);
             final BufferedDiskCache preferredCache =
                 isSmallRequest ? mSmallImageBufferedDiskCache : mDefaultBufferedDiskCache;
-            preferredCache.probe(cacheKey);
+            preferredCache.addKeyForAsyncProbing(cacheKey);
             mDiskCacheHistory.add(cacheKey);
           }
-        } else {
+        } else if (mProducerContext.getExtra(ProducerContext.ExtraKeys.ORIGIN).equals("disk")) {
+          // image was fetched from disk cache, therefore it was probed in disk cache by default
           mDiskCacheHistory.add(cacheKey);
         }
 

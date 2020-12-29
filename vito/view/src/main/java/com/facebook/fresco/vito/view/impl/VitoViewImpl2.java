@@ -8,26 +8,24 @@
 package com.facebook.fresco.vito.view.impl;
 
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
-import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.VisibilityCallback;
 import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.VitoImageRequest;
-import com.facebook.fresco.vito.core.VitoUtils;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.source.ImageSource;
 import com.facebook.fresco.vito.view.VitoView;
-import com.facebook.imagepipeline.multiuri.MultiUri;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** You must initialize this class before use by calling {#code VitoView.init()}. */
-@Deprecated /* Experimental */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class VitoViewImpl2 implements VitoView.Implementation {
 
   private final View.OnAttachStateChangeListener sOnAttachStateChangeListenerCallback =
@@ -36,7 +34,7 @@ public class VitoViewImpl2 implements VitoView.Implementation {
         public void onViewAttachedToWindow(View view) {
           FrescoDrawable2 current = getDrawable(view);
           if (current != null) {
-            onAttach(current);
+            onAttach(current, current.getImageRequest());
           }
         }
 
@@ -59,43 +57,30 @@ public class VitoViewImpl2 implements VitoView.Implementation {
 
   @Override
   public void show(
-      final @Nullable Uri uri,
-      final @Nullable MultiUri multiUri,
+      final ImageSource imageSource,
       final ImageOptions imageOptions,
       final @Nullable Object callerContext,
       final @Nullable ImageListener imageListener,
       final View target) {
-    Preconditions.checkArgument(
-        !(uri != null && multiUri != null), "Setting both a Uri and MultiUri is not allowed!");
-
     VitoImageRequest imageRequest =
-        mVitoImagePipeline.createImageRequest(
-            target.getResources(), uri, multiUri, imageOptions, callerContext);
+        mVitoImagePipeline.createImageRequest(target.getResources(), imageSource, imageOptions);
 
     final FrescoDrawable2 frescoDrawable = ensureDrawableSet(target);
-
-    // Check if we already fetched the image
-    if (frescoDrawable.getDrawableDataSubscriber() != null
-        && frescoDrawable.isFetchSubmitted()
-        && imageRequest.equals(frescoDrawable.getImageRequest())) {
-      frescoDrawable.cancelReleaseNextFrame();
-      frescoDrawable.cancelReleaseDelayed();
-      return; // already set
-    }
-
-    frescoDrawable.setImageRequest(imageRequest);
-    frescoDrawable.setCallerContext(callerContext);
-    frescoDrawable.setImageId(VitoUtils.generateIdentifier());
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       // If the view is already attached, we should tell this to controller.
       if (target.isAttachedToWindow()) {
-        onAttach(frescoDrawable);
+        onAttach(frescoDrawable, imageRequest);
+      } else {
+        // The fetch will be submitted later when / if the View is attached.
+        frescoDrawable.setImageRequest(imageRequest);
+        frescoDrawable.setCallerContext(callerContext);
+        frescoDrawable.setImageListener(imageListener);
       }
     } else {
       // Before Kitkat we don't have a good way to know.
       // Normally we expect the view to be already attached, thus we always call `onAttach`.
-      onAttach(frescoDrawable);
+      onAttach(frescoDrawable, imageRequest);
     }
 
     // `addOnAttachStateChangeListener` is not idempotent
@@ -103,16 +88,20 @@ public class VitoViewImpl2 implements VitoView.Implementation {
     target.addOnAttachStateChangeListener(sOnAttachStateChangeListenerCallback);
   }
 
-  private void onAttach(final FrescoDrawable2 drawable) {
-    drawable.cancelReleaseNextFrame();
-    VitoImageRequest request = drawable.getImageRequest();
+  private void onAttach(final FrescoDrawable2 drawable, @Nullable final VitoImageRequest request) {
     if (request != null) {
-      mController.fetch(drawable, request, drawable.getCallerContext(), null);
+      mController.fetch(
+          drawable,
+          request,
+          drawable.getCallerContext(),
+          drawable.getImageListener().getImageListener(),
+          null,
+          null);
     }
   }
 
   private void onDetach(FrescoDrawable2 drawable) {
-    drawable.scheduleReleaseNextFrame();
+    mController.release(drawable);
   }
 
   /**
@@ -159,7 +148,7 @@ public class VitoViewImpl2 implements VitoView.Implementation {
             if (!visible) {
               onDetach(frescoDrawable);
             } else {
-              onAttach(frescoDrawable);
+              onAttach(frescoDrawable, frescoDrawable.getImageRequest());
             }
           }
 

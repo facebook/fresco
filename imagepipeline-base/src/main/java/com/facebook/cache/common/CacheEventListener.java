@@ -7,12 +7,15 @@
 
 package com.facebook.cache.common;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * An interface for logging various cache events.
  *
  * <p>In all callback methods, the {@link CacheEvent} object should not be held beyond the method
  * itself as they may be automatically recycled.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface CacheEventListener {
 
   /** Triggered by a cache hit. */

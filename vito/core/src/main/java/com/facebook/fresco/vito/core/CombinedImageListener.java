@@ -7,46 +7,23 @@
 
 package com.facebook.fresco.vito.core;
 
-import android.graphics.drawable.Drawable;
-import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
+import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface CombinedImageListener extends VitoImageRequestListener {
 
   void setImageListener(@Nullable ImageListener imageListener);
 
   void setVitoImageRequestListener(@Nullable VitoImageRequestListener vitoImageRequestListener);
 
-  @Override
-  void onSubmit(long id, VitoImageRequest imageRequest, @Nullable Object callerContext);
+  void setControllerListener2(@Nullable ControllerListener2<ImageInfo> controllerListener2);
 
-  @Override
-  void onPlaceholderSet(long id, VitoImageRequest imageRequest, @Nullable Drawable placeholder);
+  @Nullable
+  ImageListener getImageListener();
 
-  @Override
-  void onFinalImageSet(
-      long id,
-      VitoImageRequest imageRequest,
-      @ImageOrigin int imageOrigin,
-      @Nullable ImageInfo imageInfo,
-      @Nullable Drawable drawable);
-
-  @Override
-  void onIntermediateImageSet(
-      long id, VitoImageRequest imageRequest, @Nullable ImageInfo imageInfo);
-
-  @Override
-  void onIntermediateImageFailed(long id, VitoImageRequest imageRequest, Throwable throwable);
-
-  @Override
-  void onFailure(
-      long id,
-      VitoImageRequest imageRequest,
-      @Nullable Drawable error,
-      @Nullable Throwable throwable);
-
-  @Override
-  void onRelease(long id, VitoImageRequest imageRequest);
+  void onReset();
 }

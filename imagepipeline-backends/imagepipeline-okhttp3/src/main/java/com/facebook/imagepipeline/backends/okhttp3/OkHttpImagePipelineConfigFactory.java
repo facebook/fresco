@@ -9,12 +9,14 @@ package com.facebook.imagepipeline.backends.okhttp3;
 
 import android.content.Context;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.infer.annotation.Nullsafe;
 import okhttp3.OkHttpClient;
 
 /**
  * Factory for getting an {@link com.facebook.imagepipeline.core.ImagePipelineConfig} that uses
  * {@link OkHttpNetworkFetcher}.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class OkHttpImagePipelineConfigFactory {
 
   public static ImagePipelineConfig.Builder newBuilder(Context context, OkHttpClient okHttpClient) {

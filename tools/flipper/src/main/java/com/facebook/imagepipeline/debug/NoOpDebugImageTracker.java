@@ -9,8 +9,10 @@ package com.facebook.imagepipeline.debug;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** No-op debug image tracker. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class NoOpDebugImageTracker implements DebugImageTracker {
 
   @Override

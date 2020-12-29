@@ -16,7 +16,9 @@ import android.graphics.drawable.BitmapDrawable;
 import androidx.annotation.Nullable;
 import com.facebook.drawee.drawable.DrawableUtils;
 import com.facebook.fresco.vito.options.BorderOptions;
+import com.facebook.infer.annotation.Nullsafe;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class CircularBorderBitmapDrawable extends BitmapDrawable {
 
   private final Paint mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -25,7 +27,7 @@ public class CircularBorderBitmapDrawable extends BitmapDrawable {
   private int mRadius;
   private int mAlpha = 255;
 
-  public CircularBorderBitmapDrawable(Resources res, Bitmap bitmap) {
+  public CircularBorderBitmapDrawable(Resources res, @Nullable Bitmap bitmap) {
     super(res, bitmap);
     mBorderPaint.setStyle(Paint.Style.STROKE);
   }

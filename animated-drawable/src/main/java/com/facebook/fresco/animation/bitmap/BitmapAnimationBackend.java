@@ -25,6 +25,7 @@ import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy;
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import com.facebook.infer.annotation.Nullsafe;
 import java.lang.annotation.Retention;
 import javax.annotation.Nullable;
 
@@ -36,6 +37,7 @@ import javax.annotation.Nullable;
  * BitmapFrameRenderer} is used to render frames to the bitmaps aquired from the {@link
  * BitmapFrameCache}.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class BitmapAnimationBackend
     implements AnimationBackend, AnimationBackendDelegateWithInactivityCheck.InactivityListener {
 

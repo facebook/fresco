@@ -14,9 +14,7 @@ import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.HasImageMetadata;
-import com.facebook.imagepipeline.image.OriginalEncodedImageInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
-import com.facebook.imagepipeline.producers.ProducerContext.ExtraKeys;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 
@@ -188,14 +186,7 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
 
   private static void maybeSetExtrasFromCloseableImage(
       HasImageMetadata imageWithMeta, ProducerContext producerContext) {
-    final OriginalEncodedImageInfo info = imageWithMeta.getOriginalEncodedImageInfo();
-    if (info == null) {
-      return;
-    }
-
-    producerContext.setExtra(ExtraKeys.ENCODED_WIDTH, info.getWidth());
-    producerContext.setExtra(ExtraKeys.ENCODED_HEIGHT, info.getHeight());
-    producerContext.setExtra(ExtraKeys.ENCODED_SIZE, info.getSize());
+    producerContext.putExtras(imageWithMeta.getExtras());
   }
 
   protected String getOriginSubcategory() {

@@ -16,6 +16,8 @@
 
 package com.facebook.common.internal;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * A class that can supply objects of a single type. Semantically, this could be a factory,
  * generator, builder, closure, or something else entirely. No guarantees are implied by this
@@ -24,6 +26,7 @@ package com.facebook.common.internal;
  * @author Harry Heymann
  * @since 2.0 (imported from Google Collections Library)
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface Supplier<T> {
   /**
    * Retrieves an instance of the appropriate type. The returned object may or may not be a new

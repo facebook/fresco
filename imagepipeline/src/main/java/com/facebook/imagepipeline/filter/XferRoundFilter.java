@@ -16,6 +16,7 @@ import android.graphics.PorterDuffXfermode;
 import android.os.Build;
 import androidx.annotation.RequiresApi;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * Not-in-place rounding image algorithm using {@link Canvas} that requires an Android version >=
@@ -23,6 +24,7 @@ import com.facebook.common.internal.Preconditions;
  * will generate better looking images, otherwise clients that look for better performances should
  * use NativeRoundingFilter.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class XferRoundFilter {
 
   private XferRoundFilter() {}

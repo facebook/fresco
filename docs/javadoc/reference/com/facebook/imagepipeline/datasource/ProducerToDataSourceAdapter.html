@@ -209,8 +209,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/controller/package-summary.html">com.facebook.drawee.controller</a></li>
@@ -249,6 +247,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/middleware/package-summary.html">com.facebook.fresco.middleware</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
@@ -284,6 +284,8 @@
   <a href="../../../../com/facebook/imagepipeline/filter/package-summary.html">com.facebook.imagepipeline.filter</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/instrumentation/package-summary.html">com.facebook.imagepipeline.instrumentation</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
@@ -666,10 +668,10 @@ From class
             
             
             
-            <a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a>
+            Map&lt;String,&nbsp;Object&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/datasource/AbstractProducerToDataSourceAdapter.html#getImageRequest()">getImageRequest</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/datasource/AbstractProducerToDataSourceAdapter.html#getExtras(com.facebook.imagepipeline.producers.ProducerContext)">getExtras</a></span>(<a href="../../../../com/facebook/imagepipeline/producers/ProducerContext.html">ProducerContext</a> producerContext)
         
   </td></tr>
 
@@ -682,10 +684,26 @@ From class
             
             
             
+            <a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/datasource/AbstractProducerToDataSourceAdapter.html#getImageRequest()">getImageRequest</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/datasource/AbstractProducerToDataSourceAdapter.html#onNewResultImpl(T, int)">onNewResultImpl</a></span>(T result, int status)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/datasource/AbstractProducerToDataSourceAdapter.html#onNewResultImpl(T, int, com.facebook.imagepipeline.producers.ProducerContext)">onNewResultImpl</a></span>(T result, int status, <a href="../../../../com/facebook/imagepipeline/producers/ProducerContext.html">ProducerContext</a> producerContext)
         
   </td></tr>
 
@@ -749,6 +767,38 @@ From class
         
         <div class="jd-descrdiv">Subclasses should override this method to close the result that is not needed anymore.</div>
   
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            <a href="../../../../com/facebook/datasource/AbstractDataSource.DataSourceInstrumenter.html">AbstractDataSource.DataSourceInstrumenter</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/datasource/AbstractDataSource.html#getDataSourceInstrumenter()">getDataSourceInstrumenter</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            Map&lt;String,&nbsp;Object&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/datasource/AbstractDataSource.html#getExtras()">getExtras</a></span>()
+        
   </td></tr>
 
 
@@ -893,8 +943,74 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/datasource/AbstractDataSource.html#notifyDataSubscriber(com.facebook.datasource.DataSubscriber<T>, java.util.concurrent.Executor, boolean, boolean)">notifyDataSubscriber</a></span>(<a href="../../../../com/facebook/datasource/DataSubscriber.html">DataSubscriber</a>&lt;T&gt; dataSubscriber, Executor executor, boolean isFailure, boolean isCancellation)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/datasource/AbstractDataSource.html#notifyProgressUpdate()">notifyProgressUpdate</a></span>()
         
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/datasource/AbstractDataSource.html#provideInstrumenter(com.facebook.datasource.AbstractDataSource.DataSourceInstrumenter)">provideInstrumenter</a></span>(<a href="../../../../com/facebook/datasource/AbstractDataSource.DataSourceInstrumenter.html">AbstractDataSource.DataSourceInstrumenter</a> dataSourceInstrumenter)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/datasource/AbstractDataSource.html#setExtras(java.util.Map<java.lang.String, java.lang.Object>)">setExtras</a></span>(Map&lt;String,&nbsp;Object&gt; extras)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/datasource/AbstractDataSource.html#setFailure(java.lang.Throwable)">setFailure</a></span>(Throwable throwable)
+        
+        <div class="jd-descrdiv">Subclasses should invoke this method to set the failure.</div>
+  
   </td></tr>
 
 
@@ -909,10 +1025,8 @@ From class
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/datasource/AbstractDataSource.html#setFailure(java.lang.Throwable)">setFailure</a></span>(Throwable throwable)
+        <span class="sympad"><a href="../../../../com/facebook/datasource/AbstractDataSource.html#setFailure(java.lang.Throwable, java.util.Map<java.lang.String, java.lang.Object>)">setFailure</a></span>(Throwable throwable, Map&lt;String,&nbsp;Object&gt; extras)
         
-        <div class="jd-descrdiv">Subclasses should invoke this method to set the failure.</div>
-  
   </td></tr>
 
 
@@ -945,7 +1059,7 @@ From class
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/datasource/AbstractDataSource.html#setResult(T, boolean)">setResult</a></span>(T value, boolean isLast)
+        <span class="sympad"><a href="../../../../com/facebook/datasource/AbstractDataSource.html#setResult(T, boolean, java.util.Map<java.lang.String, java.lang.Object>)">setResult</a></span>(T value, boolean isLast, Map&lt;String,&nbsp;Object&gt; extras)
         
         <div class="jd-descrdiv">Subclasses should invoke this method to set the result to <code>value</code>.</div>
   
@@ -954,6 +1068,22 @@ From class
 
 	 
     <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/datasource/AbstractDataSource.html#setResult(T, boolean)">setResult</a></span>(T value, boolean isLast)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1224,6 +1354,22 @@ From interface
             
             
             
+            Map&lt;String,&nbsp;Object&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/datasource/DataSource.html#getExtras()">getExtras</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
             Throwable
         </td>
         <td class="jd-linkcol" width="100%">
@@ -1233,7 +1379,7 @@ From interface
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1249,7 +1395,7 @@ From interface
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1267,7 +1413,7 @@ From interface
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1283,7 +1429,7 @@ From interface
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1299,7 +1445,7 @@ From interface
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1315,7 +1461,7 @@ From interface
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1331,7 +1477,7 @@ From interface
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1347,7 +1493,7 @@ From interface
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             

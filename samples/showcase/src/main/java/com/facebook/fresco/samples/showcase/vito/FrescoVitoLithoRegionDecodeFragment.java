@@ -140,11 +140,6 @@ public class FrescoVitoLithoRegionDecodeFragment extends BaseShowcaseFragment {
             .build());
   }
 
-  @Override
-  public int getTitleId() {
-    return R.string.imagepipeline_region_decoding_title;
-  }
-
   private ImageDecoder createRegionDecoder() {
     return new FrescoVitoRegionDecoder(Fresco.getImagePipelineFactory().getPlatformDecoder());
   }

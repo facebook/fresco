@@ -8,6 +8,8 @@
 package com.facebook.samples.gestures;
 
 import android.view.MotionEvent;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * Component that detects and tracks multiple pointers based on touch events.
@@ -16,6 +18,7 @@ import android.view.MotionEvent;
  * one will be started (if there are still pressed pointers left). It is guaranteed that the number
  * of pointers within the single gesture will remain the same during the whole gesture.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class MultiPointerGestureDetector {
 
   /** The listener for receiving notifications when gestures occur. */
@@ -41,7 +44,7 @@ public class MultiPointerGestureDetector {
   private final float mCurrentX[] = new float[MAX_POINTERS];
   private final float mCurrentY[] = new float[MAX_POINTERS];
 
-  private Listener mListener = null;
+  @Nullable private Listener mListener = null;
 
   public MultiPointerGestureDetector() {
     reset();

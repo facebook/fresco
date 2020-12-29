@@ -8,12 +8,14 @@
 package com.facebook.cache.common;
 
 import android.net.Uri;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
  * Extension of {@link SimpleCacheKey} which adds the ability to hold a caller context. This can be
  * of use for debugging and has no bearing on equality.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DebuggingCacheKey extends SimpleCacheKey {
 
   private final @Nullable Object mCallerContext;

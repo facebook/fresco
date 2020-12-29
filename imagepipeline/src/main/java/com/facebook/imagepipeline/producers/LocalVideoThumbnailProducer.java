@@ -17,15 +17,14 @@ import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.ImmutableMap;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.bitmaps.SimpleBitmapReleaser;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
-import com.facebook.imagepipeline.image.OriginalEncodedImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.io.FileNotFoundException;
 import java.util.Map;
@@ -58,9 +57,10 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
 
     final ProducerListener2 listener = producerContext.getProducerListener();
     final ImageRequest imageRequest = producerContext.getImageRequest();
+    producerContext.putOriginExtra("local", "video");
     final StatefulProducerRunnable cancellableProducerRunnable =
         new StatefulProducerRunnable<CloseableReference<CloseableImage>>(
-            consumer, listener, producerContext, PRODUCER_NAME, "local", "video") {
+            consumer, listener, producerContext, PRODUCER_NAME) {
           @Override
           protected void onSuccess(CloseableReference<CloseableImage> result) {
             super.onSuccess(result);
@@ -100,14 +100,8 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
                     SimpleBitmapReleaser.getInstance(),
                     ImmutableQualityInfo.FULL_QUALITY,
                     0);
-            closeableStaticBitmap.setOriginalEncodedImageInfo(
-                new OriginalEncodedImageInfo(
-                    producerContext.getImageRequest().getSourceUri(),
-                    producerContext.getEncodedImageOrigin(),
-                    producerContext.getCallerContext(),
-                    0,
-                    0,
-                    0));
+            producerContext.setExtra(ProducerContext.ExtraKeys.IMAGE_FORMAT, "thumbnail");
+            closeableStaticBitmap.setImageExtras(producerContext.getExtras());
             return CloseableReference.<CloseableImage>of(closeableStaticBitmap);
           }
 

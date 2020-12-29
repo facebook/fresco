@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.references.CloseableReference;
@@ -27,16 +28,17 @@ import com.facebook.imagepipeline.decoder.DecodeException;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegParser;
+import com.facebook.imagepipeline.image.CloseableBitmap;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
-import com.facebook.imagepipeline.image.OriginalEncodedImageInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.imagepipeline.transcoder.DownsampleUtil;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -48,6 +50,7 @@ import javax.annotation.concurrent.GuardedBy;
  *
  * <p>Progressive JPEGs are decoded progressively as new data arrives.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DecodeProducer implements Producer<CloseableReference<CloseableImage>> {
 
   public static final String PRODUCER_NAME = "DecodeProducer";
@@ -76,6 +79,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   private final boolean mDecodeCancellationEnabled;
   private final int mMaxBitmapSize;
   private final CloseableReferenceFactory mCloseableReferenceFactory;
+  private final @Nullable Runnable mReclaimMemoryRunnable;
+  private final Supplier<Boolean> mRecoverFromDecoderOOM;
 
   public DecodeProducer(
       final ByteArrayPool byteArrayPool,
@@ -87,7 +92,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       final boolean decodeCancellationEnabled,
       final Producer<EncodedImage> inputProducer,
       final int maxBitmapSize,
-      final CloseableReferenceFactory closeableReferenceFactory) {
+      final CloseableReferenceFactory closeableReferenceFactory,
+      final @Nullable Runnable reclaimMemoryRunnable,
+      Supplier<Boolean> recoverFromDecoderOOM) {
     mByteArrayPool = Preconditions.checkNotNull(byteArrayPool);
     mExecutor = Preconditions.checkNotNull(executor);
     mImageDecoder = Preconditions.checkNotNull(imageDecoder);
@@ -98,6 +105,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     mDecodeCancellationEnabled = decodeCancellationEnabled;
     mMaxBitmapSize = maxBitmapSize;
     mCloseableReferenceFactory = closeableReferenceFactory;
+    mReclaimMemoryRunnable = reclaimMemoryRunnable;
+    mRecoverFromDecoderOOM = recoverFromDecoderOOM;
   }
 
   @Override
@@ -163,6 +172,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             @Override
             public void run(EncodedImage encodedImage, @Status int status) {
               if (encodedImage != null) {
+                mProducerContext.setExtra(
+                    ProducerContext.ExtraKeys.IMAGE_FORMAT,
+                    encodedImage.getImageFormat().getName());
                 if (mDownsampleEnabled || !statusHasFlag(status, Consumer.IS_RESIZING_DONE)) {
                   ImageRequest request = producerContext.getImageRequest();
                   if (mDownsampleEnabledForNetwork
@@ -313,7 +325,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         CloseableImage image = null;
         try {
           try {
-            image = mImageDecoder.decode(encodedImage, length, quality, mImageDecodeOptions);
+            image = internalDecode(encodedImage, length, quality);
           } catch (DecodeException e) {
             EncodedImage failedEncodedImage = e.getEncodedImage();
             FLog.w(
@@ -357,25 +369,47 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
                 sampleSize);
         mProducerListener.onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, extraMap);
 
-        if (image != null) {
-          image.setOriginalEncodedImageInfo(
-              new OriginalEncodedImageInfo(
-                  mProducerContext.getImageRequest().getSourceUri(),
-                  mProducerContext.getEncodedImageOrigin(),
-                  mProducerContext.getCallerContext(),
-                  encodedImage.getWidth(),
-                  encodedImage.getHeight(),
-                  encodedImage.getSize()));
-        }
-
-        mProducerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_WIDTH, encodedImage.getWidth());
-        mProducerContext.setExtra(
-            ProducerContext.ExtraKeys.ENCODED_HEIGHT, encodedImage.getHeight());
-        mProducerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_SIZE, encodedImage.getSize());
+        setImageExtras(encodedImage, image);
 
         handleResult(image, status);
       } finally {
         EncodedImage.closeSafely(encodedImage);
+      }
+    }
+
+    /** This does not close the encodedImage * */
+    private CloseableImage internalDecode(
+        EncodedImage encodedImage, int length, QualityInfo quality) {
+      CloseableImage image;
+      final boolean recover = mReclaimMemoryRunnable != null && mRecoverFromDecoderOOM.get();
+      try {
+        image = mImageDecoder.decode(encodedImage, length, quality, mImageDecodeOptions);
+      } catch (OutOfMemoryError e) {
+        if (!recover) {
+          throw e;
+        }
+
+        mReclaimMemoryRunnable.run();
+        System.gc();
+
+        // Now we retry only once
+        image = mImageDecoder.decode(encodedImage, length, quality, mImageDecodeOptions);
+      }
+
+      return image;
+    }
+
+    private void setImageExtras(EncodedImage encodedImage, CloseableImage image) {
+      mProducerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_WIDTH, encodedImage.getWidth());
+      mProducerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_HEIGHT, encodedImage.getHeight());
+      mProducerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_SIZE, encodedImage.getSize());
+      if (image instanceof CloseableBitmap) {
+        Bitmap bitmap = ((CloseableBitmap) image).getUnderlyingBitmap();
+        Bitmap.Config config = bitmap == null ? null : bitmap.getConfig();
+        mProducerContext.setExtra("bitmap_config", String.valueOf(config));
+      }
+      if (image != null) {
+        image.setImageExtras(mProducerContext.getExtras());
       }
     }
 

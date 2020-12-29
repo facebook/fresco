@@ -9,12 +9,11 @@ package com.facebook.samples.kotlin
 
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.backends.pipeline.Fresco
-import com.facebook.drawee.backends.pipeline.info.ImageLoadStatus
 import com.facebook.drawee.backends.pipeline.info.ImagePerfData
 import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener
 import com.facebook.drawee.backends.pipeline.info.ImagePerfUtils
@@ -25,8 +24,8 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 
-data class ImageHolder(private val view: View,
-                       private val resizeOptions: ResizeOptions?) : RecyclerView.ViewHolder(view) {
+data class ImageHolder(private val view: View, private val resizeOptions: ResizeOptions?) :
+    RecyclerView.ViewHolder(view) {
   companion object {
     private const val DEFAULT_IMAGE_SIZE = 360
   }
@@ -37,34 +36,39 @@ data class ImageHolder(private val view: View,
     itemView.layoutParams = ViewGroup.LayoutParams(width, height)
   }
 
-  val logImagePerf = object: ImagePerfDataListener {
-    override fun onImageLoadStatusUpdated(imagePerfData: ImagePerfData?, imageLoadStatus: Int) {
-      Log.d("ImagePerf",
+  val logImagePerf =
+      object : ImagePerfDataListener {
+        override fun onImageLoadStatusUpdated(imagePerfData: ImagePerfData?, imageLoadStatus: Int) {
+          Log.d(
+              "ImagePerf",
               "state=${ImagePerfUtils.toString(imageLoadStatus)}, data=${imagePerfData?.createDebugString()}")
-    }
+        }
 
-    override fun onImageVisibilityUpdated(imagePerfData: ImagePerfData?, visibilityState: Int) {
-      // ignore
-    }
-  }
+        override fun onImageVisibilityUpdated(imagePerfData: ImagePerfData?, visibilityState: Int) {
+          // ignore
+        }
+      }
 
   fun bind(uri: Uri) {
     itemView as? SimpleDraweeView ?: return
-    itemView.controller = Fresco.newDraweeControllerBuilder()
-        .setImageRequest(
-            ImageRequestBuilder.newBuilderWithSource(uri)
-                .setResizeOptions(resizeOptions)
-                .build())
-        .setOldController(itemView.controller)
-        .setAutoPlayAnimations(true)
-        .setPerfDataListener(logImagePerf)
-        .build()
+    itemView.controller =
+        Fresco.newDraweeControllerBuilder()
+            .setImageRequest(
+                ImageRequestBuilder.newBuilderWithSource(uri)
+                    .setResizeOptions(resizeOptions)
+                    .build())
+            .setOldController(itemView.controller)
+            .setAutoPlayAnimations(true)
+            .setPerfDataListener(logImagePerf)
+            .build()
   }
 }
 
-class ImageAdapter(private val placeholderDrawable: Drawable,
-                   private val failureDrawable: Drawable,
-                   squareDim: Int) : RecyclerView.Adapter<ImageHolder>() {
+class ImageAdapter(
+    private val placeholderDrawable: Drawable,
+    private val failureDrawable: Drawable,
+    squareDim: Int
+) : RecyclerView.Adapter<ImageHolder>() {
   private var uris = listOf<Uri>()
   private val imageResizeOptions = ResizeOptions.forSquareSize(squareDim)
 
@@ -75,12 +79,13 @@ class ImageAdapter(private val placeholderDrawable: Drawable,
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageHolder {
     val context = parent.context
-    val hierarchy = GenericDraweeHierarchyBuilder(context.resources)
-        .setPlaceholderImage(placeholderDrawable)
-        .setFailureImage(failureDrawable)
-        .setProgressBarImage(ProgressBarDrawable())
-        .setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP)
-        .build()
+    val hierarchy =
+        GenericDraweeHierarchyBuilder(context.resources)
+            .setPlaceholderImage(placeholderDrawable)
+            .setFailureImage(failureDrawable)
+            .setProgressBarImage(ProgressBarDrawable())
+            .setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP)
+            .build()
     return ImageHolder(SimpleDraweeView(context, hierarchy), imageResizeOptions)
   }
 

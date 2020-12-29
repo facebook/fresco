@@ -69,7 +69,8 @@ public class HttpUrlConnectionNetworkFetcherTest {
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
 
-    mFetcher = new HttpUrlConnectionNetworkFetcher("user-agent-blabla", mock(MonotonicClock.class));
+    mFetcher =
+        new HttpUrlConnectionNetworkFetcher("user-agent-blabla", null, mock(MonotonicClock.class));
     mConnectionsQueue = new LinkedList<>();
     mockUrlConnections();
     mockUriParse();

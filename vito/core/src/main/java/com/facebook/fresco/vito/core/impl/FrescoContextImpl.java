@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.core.impl;
 
 import com.facebook.callercontext.CallerContextVerifier;
+import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoController;
 import com.facebook.fresco.vito.core.FrescoExperiments;
@@ -36,7 +37,7 @@ public class FrescoContextImpl implements FrescoContext {
   private final ImagePipelineUtils mImagePipelineUtils;
 
   private FrescoController mController;
-  private FrescoVitoPrefetcher mPrefetcher;
+  @Nullable private FrescoVitoPrefetcher mPrefetcher;
 
   private @Nullable ImagePipelineFactory mImagePipelineFactory;
 
@@ -68,8 +69,10 @@ public class FrescoContextImpl implements FrescoContext {
       Executor lightweightBackgroundThreadExecutor,
       @Nullable ImageListener globalImageListener,
       @Nullable ImageStateListener globalImageStateListener,
+      @Nullable ControllerListener2 imagePerfControllerListener2,
       DebugOverlayFactory debugOverlayFactory) {
-    mController = new FrescoControllerImpl(this, debugOverlayFactory, false);
+    mController =
+        new FrescoControllerImpl(this, debugOverlayFactory, false, imagePerfControllerListener2);
     mHierarcher = hierarcher;
     mCallerContextVerifier = callerContextVerifier;
     mExperiments = frescoExperiments;
@@ -127,7 +130,7 @@ public class FrescoContextImpl implements FrescoContext {
   @Override
   public FrescoVitoPrefetcher getPrefetcher() {
     if (mPrefetcher == null) {
-      mPrefetcher = new FrescoVitoPrefetcher(this);
+      mPrefetcher = new FrescoVitoPrefetcherImpl(this);
     }
     return mPrefetcher;
   }

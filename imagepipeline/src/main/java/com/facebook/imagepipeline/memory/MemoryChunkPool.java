@@ -10,9 +10,11 @@ package com.facebook.imagepipeline.memory;
 import android.util.SparseIntArray;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** Manages a pool of memory chunks ({@link MemoryChunk}) */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
 public abstract class MemoryChunkPool extends BasePool<MemoryChunk> {
   private final int[] mBucketSizes;

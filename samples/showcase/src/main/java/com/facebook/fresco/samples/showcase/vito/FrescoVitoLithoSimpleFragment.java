@@ -9,20 +9,19 @@ package com.facebook.fresco.samples.showcase.vito;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
-import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
-import com.facebook.fresco.vito.litho.FrescoVitoImage;
+import com.facebook.fresco.vito.litho.FrescoVitoImage2;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.RoundingOptions;
-import com.facebook.imagepipeline.multiuri.MultiUri;
-import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.litho.Component;
 import com.facebook.litho.ComponentContext;
 import com.facebook.litho.LithoView;
@@ -34,6 +33,7 @@ public class FrescoVitoLithoSimpleFragment extends BaseShowcaseFragment {
       ImageOptions.create()
           .placeholderRes(R.drawable.logo)
           .round(RoundingOptions.asCircle())
+          .fadeDurationMs(3000)
           .build();
 
   @Nullable
@@ -53,26 +53,23 @@ public class FrescoVitoLithoSimpleFragment extends BaseShowcaseFragment {
     container.addView(LithoView.create(componentContext, createComponent(componentContext)));
   }
 
-  @Override
-  public int getTitleId() {
-    return R.string.vito_litho_simple;
-  }
-
   public Component createComponent(ComponentContext c) {
-    Uri uri0 = Uri.parse("http://sample.com/invalid");
-    Uri uri1 = sampleUris().createSampleUri(ImageUriProvider.ImageSize.XXL);
-    Uri uri2 = Uri.parse("http://sample.com/invalid");
-
-    return FrescoVitoImage.create(c)
-        .multiUri(
-            MultiUri.create()
-                .setLowResImageRequest(ImageRequest.fromUri(uri0))
-                .setImageRequests(
-                    ImageRequest.fromUri(uri0),
-                    ImageRequest.fromUri(uri1),
-                    ImageRequest.fromUri(uri2))
-                .build())
+    Uri uri = sampleUris().createSampleUri();
+    return FrescoVitoImage2.create(c)
+        .uri(uri)
         .imageOptions(IMAGE_OPTIONS)
+        .onFadeListener(
+            new FadeDrawable.OnFadeListener() {
+              @Override
+              public void onFadeStarted() {
+                Log.d("pewpew", "f start");
+              }
+
+              @Override
+              public void onFadeFinished() {
+                Log.d("pewpew", "f finished");
+              }
+            })
         .build();
   }
 }

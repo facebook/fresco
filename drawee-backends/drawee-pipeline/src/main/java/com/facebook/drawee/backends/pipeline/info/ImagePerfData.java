@@ -12,8 +12,10 @@ import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImagePerfData {
 
   public static final int UNSET = -1;
@@ -57,7 +59,7 @@ public class ImagePerfData {
 
   private final @Nullable DimensionsInfo mDimensionsInfo;
 
-  private final @Nullable Extras mExtraData;
+  private @Nullable Extras mExtraData;
 
   public ImagePerfData(
       @Nullable String controllerId,
@@ -254,6 +256,10 @@ public class ImagePerfData {
   @Nullable
   public Extras getExtraData() {
     return mExtraData;
+  }
+
+  public void setExtraData(Extras extraData) {
+    mExtraData = extraData;
   }
 
   public String createDebugString() {

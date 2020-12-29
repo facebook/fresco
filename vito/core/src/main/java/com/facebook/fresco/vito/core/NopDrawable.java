@@ -13,8 +13,10 @@ import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** A Drawable that draws nothing on Canvas */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class NopDrawable extends Drawable {
 
   public static final NopDrawable INSTANCE = new NopDrawable();

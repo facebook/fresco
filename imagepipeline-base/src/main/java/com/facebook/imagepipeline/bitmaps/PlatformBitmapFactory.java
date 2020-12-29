@@ -17,9 +17,11 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Bitmap factory optimized for the platform. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class PlatformBitmapFactory {
 
   /**
@@ -428,7 +430,7 @@ public abstract class PlatformBitmapFactory {
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   private CloseableReference<Bitmap> createBitmap(
-      DisplayMetrics display,
+      @Nullable DisplayMetrics display,
       int width,
       int height,
       Bitmap.Config config,

@@ -19,6 +19,7 @@ import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_UNKNOW
 
 import android.net.Uri;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.common.internal.Fn;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.media.MediaUtils;
 import com.facebook.common.util.UriUtil;
@@ -40,6 +41,10 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public class ImageRequest {
 
+  private static boolean sUseCachedHashcodeInEquals;
+  private static boolean sCacheHashcode;
+  private int mHashcode;
+
   /** Cache choice */
   private final CacheChoice mCacheChoice;
 
@@ -49,7 +54,7 @@ public class ImageRequest {
   private final @SourceUriType int mSourceUriType;
 
   /** Source File - for local fetches only, lazily initialized */
-  private File mSourceFile;
+  @Nullable private File mSourceFile;
 
   /** If set - the client will receive intermediate results */
   private final boolean mProgressiveRenderingEnabled;
@@ -99,6 +104,8 @@ public class ImageRequest {
    */
   private final @Nullable Boolean mResizingAllowedOverride;
 
+  private final int mDelayMs;
+
   public static @Nullable ImageRequest fromFile(@Nullable File file) {
     return (file == null) ? null : ImageRequest.fromUri(UriUtil.getUriForFile(file));
   }
@@ -139,6 +146,8 @@ public class ImageRequest {
     mRequestListener = builder.getRequestListener();
 
     mResizingAllowedOverride = builder.getResizingAllowedOverride();
+
+    mDelayMs = builder.getDelayMs();
   }
 
   public CacheChoice getCacheChoice() {
@@ -216,6 +225,10 @@ public class ImageRequest {
     return mResizingAllowedOverride;
   }
 
+  public int getDelayMs() {
+    return mDelayMs;
+  }
+
   public synchronized File getSourceFile() {
     if (mSourceFile == null) {
       mSourceFile = new File(mSourceUri.getPath());
@@ -232,11 +245,18 @@ public class ImageRequest {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (!(o instanceof ImageRequest)) {
       return false;
     }
     ImageRequest request = (ImageRequest) o;
+    if (sUseCachedHashcodeInEquals) {
+      int a = mHashcode;
+      int b = request.mHashcode;
+      if (a != 0 && b != 0 && a != b) {
+        return false;
+      }
+    }
     if (mLocalThumbnailPreviewsEnabled != request.mLocalThumbnailPreviewsEnabled) return false;
     if (mIsDiskCacheEnabled != request.mIsDiskCacheEnabled) return false;
     if (mIsMemoryCacheEnabled != request.mIsMemoryCacheEnabled) return false;
@@ -257,28 +277,43 @@ public class ImageRequest {
         mPostprocessor != null ? mPostprocessor.getPostprocessorCacheKey() : null;
     final CacheKey thatPostprocessorKey =
         request.mPostprocessor != null ? request.mPostprocessor.getPostprocessorCacheKey() : null;
-    return Objects.equal(thisPostprocessorKey, thatPostprocessorKey);
+    if (!Objects.equal(thisPostprocessorKey, thatPostprocessorKey)) return false;
+    return mDelayMs == request.mDelayMs;
   }
 
   @Override
   public int hashCode() {
-    final CacheKey postprocessorCacheKey =
-        mPostprocessor != null ? mPostprocessor.getPostprocessorCacheKey() : null;
-    return Objects.hashCode(
-        mCacheChoice,
-        mSourceUri,
-        mLocalThumbnailPreviewsEnabled,
-        mBytesRange,
-        mRequestPriority,
-        mLowestPermittedRequestLevel,
-        mIsDiskCacheEnabled,
-        mIsMemoryCacheEnabled,
-        mImageDecodeOptions,
-        mDecodePrefetches,
-        mResizeOptions,
-        mRotationOptions,
-        postprocessorCacheKey,
-        mResizingAllowedOverride);
+    final boolean cacheHashcode = sCacheHashcode;
+    int result = 0;
+    if (cacheHashcode) {
+      result = mHashcode;
+    }
+    if (result == 0) {
+      final CacheKey postprocessorCacheKey =
+          mPostprocessor != null ? mPostprocessor.getPostprocessorCacheKey() : null;
+      result =
+          Objects.hashCode(
+              mCacheChoice,
+              mSourceUri,
+              mLocalThumbnailPreviewsEnabled,
+              mBytesRange,
+              mRequestPriority,
+              mLowestPermittedRequestLevel,
+              mIsDiskCacheEnabled,
+              mIsMemoryCacheEnabled,
+              mImageDecodeOptions,
+              mDecodePrefetches,
+              mResizeOptions,
+              mRotationOptions,
+              postprocessorCacheKey,
+              mResizingAllowedOverride,
+              mDelayMs);
+      // ^ I *think* this is safe despite autoboxing...?
+      if (cacheHashcode) {
+        mHashcode = result;
+      }
+    }
+    return result;
   }
 
   @Override
@@ -299,6 +334,7 @@ public class ImageRequest {
         .add("isDiskCacheEnabled", mIsDiskCacheEnabled)
         .add("isMemoryCacheEnabled", mIsMemoryCacheEnabled)
         .add("decodePrefetches", mDecodePrefetches)
+        .add("delayMs", mDelayMs)
         .toString();
   }
 
@@ -375,5 +411,21 @@ public class ImageRequest {
     } else {
       return SOURCE_TYPE_UNKNOWN;
     }
+  }
+
+  public static final Fn<ImageRequest, Uri> REQUEST_TO_URI_FN =
+      new Fn<ImageRequest, Uri>() {
+        @Override
+        public @Nullable Uri apply(@Nullable ImageRequest arg) {
+          return arg != null ? arg.getSourceUri() : null;
+        }
+      };
+
+  public static void setUseCachedHashcodeInEquals(boolean useCachedHashcodeInEquals) {
+    sUseCachedHashcodeInEquals = useCachedHashcodeInEquals;
+  }
+
+  public static void setCacheHashcode(boolean cacheHashcode) {
+    sCacheHashcode = cacheHashcode;
   }
 }

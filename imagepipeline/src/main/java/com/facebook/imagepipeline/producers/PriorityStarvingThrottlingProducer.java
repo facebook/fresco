@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.producers;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -22,6 +23,7 @@ import javax.annotation.concurrent.GuardedBy;
  * the lower priority items. Within the groups, send order is the same as order they were given to
  * the class. (based on nano time).
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class PriorityStarvingThrottlingProducer<T> implements Producer<T> {
 
   public static final String PRODUCER_NAME = "PriorityStarvingThrottlingProducer";

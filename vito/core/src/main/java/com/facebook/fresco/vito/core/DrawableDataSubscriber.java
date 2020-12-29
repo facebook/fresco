@@ -10,7 +10,9 @@ package com.facebook.fresco.vito.core;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface DrawableDataSubscriber {
   void onNewResult(
       FrescoDrawable2 drawable,
@@ -26,4 +28,6 @@ public interface DrawableDataSubscriber {
       FrescoDrawable2 drawable,
       VitoImageRequest imageRequest,
       DataSource<CloseableReference<CloseableImage>> dataSource);
+
+  void onRelease(FrescoDrawable2 drawable);
 }

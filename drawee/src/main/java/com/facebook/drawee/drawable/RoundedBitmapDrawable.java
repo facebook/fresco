@@ -15,7 +15,7 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import java.lang.ref.WeakReference;
 import javax.annotation.Nullable;
@@ -25,7 +25,7 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
   private final Paint mPaint = new Paint();
   private final Paint mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   @Nullable private final Bitmap mBitmap;
-  private WeakReference<Bitmap> mLastBitmap;
+  @Nullable private WeakReference<Bitmap> mLastBitmap;
 
   public RoundedBitmapDrawable(Resources res, @Nullable Bitmap bitmap, @Nullable Paint paint) {
     super(new BitmapDrawable(res, bitmap));
@@ -38,7 +38,7 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
     mBorderPaint.setStyle(Paint.Style.STROKE);
   }
 
-  public RoundedBitmapDrawable(Resources res, Bitmap bitmap) {
+  public RoundedBitmapDrawable(Resources res, @Nullable Bitmap bitmap) {
     this(res, bitmap, null);
   }
 
@@ -113,7 +113,7 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
   }
 
   @Override
-  public void setColorFilter(ColorFilter colorFilter) {
+  public void setColorFilter(@Nullable ColorFilter colorFilter) {
     super.setColorFilter(colorFilter);
     mPaint.setColorFilter(colorFilter);
   }

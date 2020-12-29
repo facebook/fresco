@@ -11,8 +11,10 @@ import android.graphics.Bitmap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Locale;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class IterativeBoxBlurFilter {
   private static final String TAG = "IterativeBoxBlurFilter";
 

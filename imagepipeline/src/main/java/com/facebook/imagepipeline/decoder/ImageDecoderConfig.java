@@ -12,23 +12,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /** Configuration for {@link ImageDecoder}. */
 public class ImageDecoderConfig {
 
-  private final Map<ImageFormat, ImageDecoder> mCustomImageDecoders;
+  private final @Nullable Map<ImageFormat, ImageDecoder> mCustomImageDecoders;
 
-  private final List<ImageFormat.FormatChecker> mCustomImageFormats;
+  private final @Nullable List<ImageFormat.FormatChecker> mCustomImageFormats;
 
   private ImageDecoderConfig(Builder builder) {
     mCustomImageDecoders = builder.mCustomImageDecoders;
     mCustomImageFormats = builder.mCustomImageFormats;
   }
 
+  @Nullable
   public Map<ImageFormat, ImageDecoder> getCustomImageDecoders() {
     return mCustomImageDecoders;
   }
 
+  @Nullable
   public List<ImageFormat.FormatChecker> getCustomImageFormats() {
     return mCustomImageFormats;
   }
@@ -38,8 +41,8 @@ public class ImageDecoderConfig {
   }
 
   public static class Builder {
-    private Map<ImageFormat, ImageDecoder> mCustomImageDecoders;
-    private List<ImageFormat.FormatChecker> mCustomImageFormats;
+    @Nullable private Map<ImageFormat, ImageDecoder> mCustomImageDecoders;
+    @Nullable private List<ImageFormat.FormatChecker> mCustomImageFormats;
 
     /**
      * Add a new decoding capability for a new image format.

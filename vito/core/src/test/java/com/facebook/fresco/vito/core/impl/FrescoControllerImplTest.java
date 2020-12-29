@@ -107,7 +107,7 @@ public class FrescoControllerImplTest {
     when(mFrescoState.isAttached()).thenReturn(true);
 
     mFrescoController =
-        new FrescoControllerImpl(mFrescoContext, new NoOpDebugOverlayFactory(), false);
+        new FrescoControllerImpl(mFrescoContext, new NoOpDebugOverlayFactory(), false, null);
   }
 
   @Test
@@ -122,11 +122,7 @@ public class FrescoControllerImplTest {
     verify(mFrescoState).setAttached(true);
     verify(mHierarcher)
         .setupOverlayDrawable(
-            eq(mFrescoContext),
-            eq(mFrescoDrawable),
-            eq(mResources),
-            eq(mImageOptions),
-            eq(mOverlayDrawable));
+            eq(mFrescoDrawable), eq(mResources), eq(mImageOptions), eq(mOverlayDrawable));
     verify(mFrescoContext).getImagePipeline();
     verify(mImagePipeline).getCachedImage(eq(cacheKey));
     assertThat(imageReference.isValid()).isFalse();
@@ -140,11 +136,7 @@ public class FrescoControllerImplTest {
     verify(mFrescoContext, atLeast(1)).getHierarcher();
     verify(mHierarcher)
         .setupOverlayDrawable(
-            eq(mFrescoContext),
-            eq(mFrescoDrawable),
-            eq(mResources),
-            eq(mImageOptions),
-            eq(mOverlayDrawable));
+            eq(mFrescoDrawable), eq(mResources), eq(mImageOptions), eq(mOverlayDrawable));
     verify(mFrescoContext, atLeast(1)).getExperiments();
     verify(mFrescoContext).getImagePipeline();
     verify(mFrescoState).onSubmit(eq(IMAGE_ID), eq(CALLER_CONTEXT));

@@ -209,8 +209,6 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
     <li class="api apilevel-">
-  <a href="../../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
-    <li class="api apilevel-">
   <a href="../../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/drawee/controller/package-summary.html">com.facebook.drawee.controller</a></li>
@@ -249,6 +247,8 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../com/facebook/fresco/middleware/package-summary.html">com.facebook.fresco.middleware</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
@@ -284,6 +284,8 @@
   <a href="../../../../../com/facebook/imagepipeline/filter/package-summary.html">com.facebook.imagepipeline.filter</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/imagepipeline/instrumentation/package-summary.html">com.facebook.imagepipeline.instrumentation</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
@@ -569,6 +571,24 @@ Summary:
             
             
             
+            <a href="../../../../../com/facebook/imagepipeline/transformation/BitmapTransformation.html">BitmapTransformation</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedImageResultBuilder.html#getBitmapTransformation()">getBitmapTransformation</a></span>()
+        
+        <div class="jd-descrdiv">Gets the transformation that is to be applied to the image, or null if none.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
             List&lt;<a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;&gt;
         </td>
         <td class="jd-linkcol" width="100%">
@@ -580,7 +600,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -598,7 +618,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -616,7 +636,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -629,6 +649,24 @@ Summary:
         <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedImageResultBuilder.html#getPreviewBitmap()">getPreviewBitmap</a></span>()
         
         <div class="jd-descrdiv">Gets the preview bitmap.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedImageResultBuilder.html">AnimatedImageResultBuilder</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedImageResultBuilder.html#setBitmapTransformation(com.facebook.imagepipeline.transformation.BitmapTransformation)">setBitmapTransformation</a></span>(<a href="../../../../../com/facebook/imagepipeline/transformation/BitmapTransformation.html">BitmapTransformation</a> bitmapTransformation)
+        
+        <div class="jd-descrdiv">Sets the transformation that is to be applied to the image.</div>
   
   </td></tr>
 
@@ -983,6 +1021,42 @@ From class
 </div>
 
 
+<a id="getBitmapTransformation()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../../com/facebook/imagepipeline/transformation/BitmapTransformation.html">BitmapTransformation</a>
+      </span>
+      <span class="sympad">getBitmapTransformation</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the transformation that is to be applied to the image, or null if none.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the transformation that is to be applied to the image, or null if none
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="getDecodedFrames()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1125,6 +1199,47 @@ From class
       <ul class="nolist"><li>the reference to the preview bitmap or null if none was set. This returns a reference
      that must be released by the caller
 </li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="setBitmapTransformation(com.facebook.imagepipeline.transformation.BitmapTransformation)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedImageResultBuilder.html">AnimatedImageResultBuilder</a>
+      </span>
+      <span class="sympad">setBitmapTransformation</span>
+      <span class="normal">(<a href="../../../../../com/facebook/imagepipeline/transformation/BitmapTransformation.html">BitmapTransformation</a> bitmapTransformation)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets the transformation that is to be applied to the image.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>bitmapTransformation</th>
+          <td>the transformation that is to be applied to the image
+</td>
+        </tr>
+      </table>
   </div>
 
     </div>

@@ -10,8 +10,10 @@ package com.facebook.fresco.animation.bitmap.preparation;
 import com.facebook.common.logging.FLog;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Frame preparation strategy to prepare the next n frames */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class FixedNumberBitmapFramePreparationStrategy implements BitmapFramePreparationStrategy {
 
   private static final Class<?> TAG = FixedNumberBitmapFramePreparationStrategy.class;

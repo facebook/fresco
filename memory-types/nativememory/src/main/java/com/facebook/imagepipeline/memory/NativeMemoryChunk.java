@@ -8,9 +8,10 @@
 package com.facebook.imagepipeline.memory;
 
 import android.util.Log;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.soloader.nativeloader.NativeLoader;
 import java.io.Closeable;
 import java.nio.ByteBuffer;
@@ -23,6 +24,7 @@ import javax.annotation.Nullable;
  *
  * <p>Native code used by this class is shipped as part of libimagepipeline.so @ThreadSafe
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 @DoNotStrip
 public class NativeMemoryChunk implements MemoryChunk, Closeable {
   private static final String TAG = "NativeMemoryChunk";

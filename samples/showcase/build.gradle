@@ -6,6 +6,8 @@
  */
 
 import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.SampleDeps
+import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -13,7 +15,7 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
 
     dexOptions {
         maxProcessCount 2
@@ -22,8 +24,8 @@ android {
 
     defaultConfig {
         applicationId "com.facebook.fresco.samples.showcase"
-        minSdkVersion rootProject.ext.samplesMinSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion FrescoConfig.samplesMinSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
         versionCode 1
         versionName "${VERSION_NAME}"
 
@@ -59,7 +61,7 @@ android {
         }
         instantRunConfig {
             dimension "main"
-            minSdkVersion 21
+            minSdkVersion FrescoConfig.samplesMinSdkVersion
         }
         internal {
         }
@@ -83,13 +85,12 @@ android {
 dependencies {
     compileOnly Deps.jsr305
 
-    implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
-    implementation "androidx.preference:preference:${versions.androidx.preference}"
-    implementation "androidx.recyclerview:recyclerview:${versions.androidx.recyclerview}"
-    implementation "androidx.cardview:cardview:1.0.0"
-    implementation "androidx.legacy:legacy-support-v4:1.0.0"
+    implementation SampleDeps.AndroidX.appcompat
+    implementation SampleDeps.AndroidX.preference
+    implementation SampleDeps.AndroidX.recyclerview
+    implementation SampleDeps.AndroidX.cardview
 
-    implementation "com.google.android.material:material:1.1.0-alpha03"
+    implementation SampleDeps.Google.material
     implementation Deps.Tools.Stetho.okhttp3
 
     implementation project(':animated-base')
@@ -125,17 +126,19 @@ dependencies {
     implementation project(':vito:core')
     implementation project(':vito:ktx')
     implementation project(':vito:litho')
+    implementation project(':vito:litho-slideshow')
     implementation project(':vito:options')
     implementation project(':vito:provider')
+    implementation project(':vito:source')
 
     // Only used for the custom SVG decoder
-    implementation 'com.caverock:androidsvg:1.2.1'
+    implementation SampleDeps.Showcase.caverockSvg
 
     // Testing-only dependencies
-    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.androidx.espresso}"
-    androidTestImplementation "androidx.test:rules:${versions.androidx.test}"
-    androidTestImplementation "androidx.test:runner:${versions.androidx.test}"
-    androidTestImplementation "junit:junit:${JUNIT_VERSION}"
+    androidTestImplementation TestDeps.AndroidX.espressoCore
+    androidTestImplementation TestDeps.AndroidX.testRules
+    androidTestImplementation TestDeps.AndroidX.testRunner
+    androidTestImplementation TestDeps.junit
 
     implementation(Deps.Tools.Flipper.flipper)
     implementation(Deps.Tools.Flipper.fresco) {

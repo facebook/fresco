@@ -9,6 +9,7 @@ package com.facebook.cache.disk;
 
 import android.os.Environment;
 import androidx.annotation.StringDef;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
@@ -18,9 +19,9 @@ import com.facebook.common.file.FileTreeVisitor;
 import com.facebook.common.file.FileUtils;
 import com.facebook.common.internal.CountingOutputStream;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.time.Clock;
 import com.facebook.common.time.SystemClock;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -36,6 +37,7 @@ import javax.annotation.Nullable;
  * The default disk storage implementation. Subsumes both 'simple' and 'sharded' implementations via
  * a new SubdirectorySupplier.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultDiskStorage implements DiskStorage {
 
   private static final Class<?> TAG = DefaultDiskStorage.class;
@@ -103,11 +105,14 @@ public class DefaultDiskStorage implements DiskStorage {
     mClock = SystemClock.get();
   }
 
+  @SuppressWarnings("ExternalStorageUse")
   private static boolean isExternal(File directory, CacheErrorLogger cacheErrorLogger) {
     boolean state = false;
     String appCacheDirPath = null;
 
     try {
+      // Whitelisted use of external storage Android changes in Target SDK 29 and above as it
+      // only used for getting the canonical path
       File extStoragePath = Environment.getExternalStorageDirectory();
       if (extStoragePath != null) {
         String cacheDirPath = extStoragePath.toString();
@@ -431,10 +436,12 @@ public class DefaultDiskStorage implements DiskStorage {
     for (Entry entry : entries) {
       DiskDumpInfoEntry infoEntry = dumpCacheEntry(entry);
       String type = infoEntry.type;
-      if (!dumpInfo.typeCounts.containsKey(type)) {
-        dumpInfo.typeCounts.put(type, 0);
+      Integer typeCount = dumpInfo.typeCounts.get(type);
+      if (typeCount == null) {
+        dumpInfo.typeCounts.put(type, 1);
+      } else {
+        dumpInfo.typeCounts.put(type, typeCount + 1);
       }
-      dumpInfo.typeCounts.put(type, dumpInfo.typeCounts.get(type) + 1);
       dumpInfo.entries.add(infoEntry);
     }
     return dumpInfo;
@@ -492,7 +499,7 @@ public class DefaultDiskStorage implements DiskStorage {
     private EntryImpl(String id, File cachedFile) {
       Preconditions.checkNotNull(cachedFile);
       this.id = Preconditions.checkNotNull(id);
-      this.resource = FileBinaryResource.createOrNull(cachedFile);
+      this.resource = FileBinaryResource.create(cachedFile);
       this.size = -1;
       this.timestamp = -1;
     }
@@ -668,6 +675,11 @@ public class DefaultDiskStorage implements DiskStorage {
 
     @Override
     public BinaryResource commit(Object debugInfo) throws IOException {
+      return commit(debugInfo, mClock.now());
+    }
+
+    @Override
+    public BinaryResource commit(Object debugInfo, long time) throws IOException {
       // the temp resource must be ours!
       File targetFile = getContentFileFor(mResourceId);
 
@@ -690,9 +702,9 @@ public class DefaultDiskStorage implements DiskStorage {
         throw re;
       }
       if (targetFile.exists()) {
-        targetFile.setLastModified(mClock.now());
+        targetFile.setLastModified(time);
       }
-      return FileBinaryResource.createOrNull(targetFile);
+      return FileBinaryResource.create(targetFile);
     }
 
     @Override

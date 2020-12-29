@@ -8,7 +8,8 @@
 package com.facebook.imagepipeline.memory;
 
 import android.util.SparseArray;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.ThreadSafe;
 import java.util.LinkedList;
 import javax.annotation.Nullable;
@@ -17,6 +18,7 @@ import javax.annotation.Nullable;
  * Map-like datastructure that allows to have more than one value per int key. Allows to remove a
  * value from LRU key by calling {@link #removeFromEnd()}
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 @ThreadSafe
 public class BucketMap<T> {
   protected final SparseArray<LinkedEntry<T>> mMap = new SparseArray<>();

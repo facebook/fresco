@@ -18,6 +18,7 @@ import com.facebook.imagepipeline.producers.Consumer;
 import com.facebook.imagepipeline.producers.FetchState;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.producers.ProducerContext;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +32,7 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 /** Network fetcher that uses OkHttp 3 as a backend. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class OkHttpNetworkFetcher
     extends BaseNetworkFetcher<OkHttpNetworkFetcher.OkHttpNetworkFetchState> {
 
@@ -161,6 +163,10 @@ public class OkHttpNetworkFetcher
           public void onResponse(Call call, Response response) throws IOException {
             fetchState.responseTime = SystemClock.elapsedRealtime();
             final ResponseBody body = response.body();
+            if (body == null) {
+              handleException(call, new IOException("Response body null: " + response), callback);
+              return;
+            }
             try {
               if (!response.isSuccessful()) {
                 handleException(

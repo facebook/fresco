@@ -10,9 +10,11 @@ package com.facebook.imagepipeline.nativecode;
 import android.graphics.Bitmap;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** A fast native rounding filter. */
 @DoNotStrip
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class NativeRoundingFilter {
 
   static {
@@ -49,18 +51,27 @@ public class NativeRoundingFilter {
   @DoNotStrip
   public static void toCircle(Bitmap bitmap, boolean antiAliased) {
     Preconditions.checkNotNull(bitmap);
+    if (bitmap.getWidth() < 3 || bitmap.getHeight() < 3) {
+      return; // Image too small to round
+    }
     nativeToCircleFilter(bitmap, antiAliased);
   }
 
   @DoNotStrip
   public static void toCircleFast(Bitmap bitmap, boolean antiAliased) {
     Preconditions.checkNotNull(bitmap);
+    if (bitmap.getWidth() < 3 || bitmap.getHeight() < 3) {
+      return; // Image too small to round
+    }
     nativeToCircleFastFilter(bitmap, antiAliased);
   }
 
   public static void toCircleWithBorder(
       Bitmap bitmap, int colorARGB, int borderWidthPx, boolean antiAliased) {
     Preconditions.checkNotNull(bitmap);
+    if (bitmap.getWidth() < 3 || bitmap.getHeight() < 3) {
+      return; // Image too small to round
+    }
     nativeToCircleWithBorderFilter(bitmap, colorARGB, borderWidthPx, antiAliased);
   }
 

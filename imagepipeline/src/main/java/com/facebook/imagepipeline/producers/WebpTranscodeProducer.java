@@ -97,12 +97,7 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
     final EncodedImage encodedImageCopy = EncodedImage.cloneOrNull(originalResult);
     final StatefulProducerRunnable<EncodedImage> runnable =
         new StatefulProducerRunnable<EncodedImage>(
-            consumer,
-            producerContext.getProducerListener(),
-            producerContext,
-            PRODUCER_NAME,
-            null,
-            null) {
+            consumer, producerContext.getProducerListener(), producerContext, PRODUCER_NAME) {
           @Override
           protected EncodedImage getResult() throws Exception {
             PooledByteBufferOutputStream outputStream = mPooledByteBufferFactory.newOutputStream();

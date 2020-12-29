@@ -10,8 +10,10 @@ package com.facebook.drawee.drawable;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Used to log image params at draw-time. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class InstrumentedDrawable extends ForwardingDrawable {
 
   private final String mScaleType;

@@ -13,16 +13,17 @@ apply plugin: 'kotlin-android-extensions'
 dependencies {
     implementation project(':vito:core')
     implementation project(':vito:options')
+    implementation project(':vito:source')
     implementation project(':vito:view')
 }
 
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
     }
 
     lintOptions {

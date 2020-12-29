@@ -14,14 +14,17 @@ import com.facebook.drawee.drawable.OrientedDrawable;
 import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.options.BorderOptions;
 import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
 import com.facebook.fresco.vito.options.RoundingOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
-public class BitmapDrawableFactory implements VitoDrawableFactory {
+@Nullsafe(Nullsafe.Mode.LOCAL)
+public class BitmapDrawableFactory implements ImageOptionsDrawableFactory {
 
   private final Resources mResources;
   private final FrescoExperiments mExperiments;
@@ -72,7 +75,10 @@ public class BitmapDrawableFactory implements VitoDrawableFactory {
       CloseableStaticBitmap closeableStaticBitmap, ImageOptions imageOptions) {
     RoundingOptions roundingOptions = imageOptions.getRoundingOptions();
     BorderOptions borderOptions = imageOptions.getBorderOptions();
-    mRoundingUtils.setAlreadyRounded(mExperiments.useNativeRounding());
+
+    boolean forceRoundAtDecode =
+        roundingOptions == null ? false : roundingOptions.isForceRoundAtDecode();
+    mRoundingUtils.setAlreadyRounded(!forceRoundAtDecode && mExperiments.useNativeRounding());
 
     return rotatedDrawable(
         closeableStaticBitmap,

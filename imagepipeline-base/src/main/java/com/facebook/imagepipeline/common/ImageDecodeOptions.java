@@ -12,11 +12,13 @@ import android.graphics.ColorSpace;
 import com.facebook.common.internal.Objects;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.transformation.BitmapTransformation;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 /** Options for changing the behavior of the {@code ImageDecoder}. */
 @Immutable
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImageDecodeOptions {
 
   private static final ImageDecodeOptions DEFAULTS = ImageDecodeOptions.newBuilder().build();
@@ -65,6 +67,8 @@ public class ImageDecodeOptions {
    */
   public final @Nullable ColorSpace colorSpace;
 
+  private final boolean excludeBitmapConfigFromComparison;
+
   public ImageDecodeOptions(ImageDecodeOptionsBuilder b) {
     this.minDecodeIntervalMs = b.getMinDecodeIntervalMs();
     this.maxDimensionPx = b.getMaxDimensionPx();
@@ -76,6 +80,7 @@ public class ImageDecodeOptions {
     this.customImageDecoder = b.getCustomImageDecoder();
     this.bitmapTransformation = b.getBitmapTransformation();
     this.colorSpace = b.getColorSpace();
+    this.excludeBitmapConfigFromComparison = b.getExcludeBitmapConfigFromComparison();
   }
 
   /**
@@ -97,7 +102,7 @@ public class ImageDecodeOptions {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
@@ -109,7 +114,7 @@ public class ImageDecodeOptions {
     if (useLastFrameForPreview != that.useLastFrameForPreview) return false;
     if (decodeAllFrames != that.decodeAllFrames) return false;
     if (forceStaticImage != that.forceStaticImage) return false;
-    if (bitmapConfig != that.bitmapConfig) return false;
+    if (!excludeBitmapConfigFromComparison && bitmapConfig != that.bitmapConfig) return false;
     if (customImageDecoder != that.customImageDecoder) return false;
     if (bitmapTransformation != that.bitmapTransformation) return false;
     if (colorSpace != that.colorSpace) return false;
@@ -124,7 +129,7 @@ public class ImageDecodeOptions {
     result = 31 * result + (useLastFrameForPreview ? 1 : 0);
     result = 31 * result + (decodeAllFrames ? 1 : 0);
     result = 31 * result + (forceStaticImage ? 1 : 0);
-    result = 31 * result + bitmapConfig.ordinal();
+    if (!excludeBitmapConfigFromComparison) result = 31 * result + bitmapConfig.ordinal();
     result = 31 * result + (customImageDecoder != null ? customImageDecoder.hashCode() : 0);
     result = 31 * result + (bitmapTransformation != null ? bitmapTransformation.hashCode() : 0);
     result = 31 * result + (colorSpace != null ? colorSpace.hashCode() : 0);

@@ -20,6 +20,7 @@ import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener;
 import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.core.ImagePipeline;
@@ -56,8 +57,9 @@ public class PipelineDraweeControllerBuilder
       Context context,
       PipelineDraweeControllerFactory pipelineDraweeControllerFactory,
       ImagePipeline imagePipeline,
-      Set<ControllerListener> boundControllerListeners) {
-    super(context, boundControllerListeners);
+      Set<ControllerListener> boundControllerListeners,
+      Set<ControllerListener2> boundControllerListeners2) {
+    super(context, boundControllerListeners, boundControllerListeners2);
     mImagePipeline = imagePipeline;
     mPipelineDraweeControllerFactory = pipelineDraweeControllerFactory;
   }

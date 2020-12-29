@@ -3,7 +3,6 @@
     <string translatable="false" name="action_settings">Settings</string>
 
     <!-- Data Source Preferences-->
-    <string translatable="false" name="key_preferences_source_group">Data Source</string>
     <string translatable="false" name="title_preferences_source_group">Data Source</string>
     <string translatable="false" name="dialog_title_data_source">Data Source for Uris</string>
     <string translatable="false" name="title_data_source">Data Source for Uris</string>
@@ -44,7 +43,6 @@
     <string translatable="false" name="unchecked_distinct_uri_data_source_summary">Uri are the same for repeating images</string>
 
     <!-- Controller Preferences-->
-    <string translatable="false" name="key_preferences_controller_group">Controllers</string>
     <string translatable="false" name="title_controller_group">Controller configuration</string>
     <!-- Reuse old controller-->
     <string translatable="false" name="title_reuse_old_controller">Reuse old Controller</string>
@@ -107,7 +105,6 @@
     <string translatable="false" name="label_scale_type_fit_xy_summary">Using fitXY scale type</string>
 
     <!-- Layout Preferences-->
-    <string translatable="false" name="key_preferences_recycler_layout">Recycler Layout</string>
     <string translatable="false" name="title_preferences_recycler_layout">Recycler Layout</string>
     <string translatable="false" name="dialog_title_recycler_layout">Layout selection</string>
     <string translatable="false" name="title_recycler_layout">Layout for the list</string>
@@ -122,7 +119,6 @@
     <string translatable="false" name="value_grid_recycler_summary">We use a RecyclerView with Grid Layout</string>
 
     <!-- Grid Preferences-->
-    <string translatable="false" name="key_preferences_grid_recycler_layout">Recycler with Grid layout</string>
     <string translatable="false" name="title_grid_recycler_layout">Grid info</string>
     <string translatable="false" name="dialog_title_grid_recycler_span_count">Span Count</string>
     <string translatable="false" name="label_grid_recycler_span_count_1">1 Column</string>

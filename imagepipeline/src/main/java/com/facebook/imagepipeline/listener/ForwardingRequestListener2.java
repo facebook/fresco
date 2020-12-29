@@ -9,12 +9,14 @@ package com.facebook.imagepipeline.listener;
 
 import com.facebook.common.logging.FLog;
 import com.facebook.imagepipeline.producers.ProducerContext;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ForwardingRequestListener2 implements RequestListener2 {
   private static final String TAG = "ForwardingRequestListener2";
 

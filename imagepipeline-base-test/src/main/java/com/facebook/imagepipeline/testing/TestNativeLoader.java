@@ -7,11 +7,13 @@
 
 package com.facebook.imagepipeline.testing;
 
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.soloader.NativeLoaderToSoLoaderDelegate;
 import com.facebook.soloader.SoLoader;
 import com.facebook.soloader.nativeloader.NativeLoader;
 
 /** Delegate to properly set and initialize NativeLoader for unit tests. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class TestNativeLoader {
 
   /**

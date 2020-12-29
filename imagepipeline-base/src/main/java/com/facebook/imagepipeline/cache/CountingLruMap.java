@@ -7,8 +7,9 @@
 
 package com.facebook.imagepipeline.cache;
 
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Predicate;
-import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -18,6 +19,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /** Map that keeps track of the elements order (according to the LRU policy) and their size. */
 @ThreadSafe
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class CountingLruMap<K, V> {
 
   private final ValueDescriptor<V> mValueDescriptor;
@@ -124,7 +126,7 @@ public class CountingLruMap<K, V> {
     return oldValues;
   }
 
-  private int getValueSizeInBytes(V value) {
+  private int getValueSizeInBytes(@Nullable V value) {
     return (value == null) ? 0 : mValueDescriptor.getSizeInBytes(value);
   }
 }

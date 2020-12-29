@@ -16,11 +16,13 @@ import com.facebook.common.util.HashCodeUtil;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Locale;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 /** Cache key for BitmapMemoryCache */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @Immutable
 public class BitmapMemoryCacheKey implements CacheKey {
 
@@ -61,7 +63,7 @@ public class BitmapMemoryCacheKey implements CacheKey {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (!(o instanceof BitmapMemoryCacheKey)) {
       return false;
     }

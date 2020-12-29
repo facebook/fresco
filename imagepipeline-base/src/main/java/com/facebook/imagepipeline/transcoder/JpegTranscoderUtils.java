@@ -9,13 +9,15 @@ package com.facebook.imagepipeline.transcoder;
 
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.ImmutableList;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class JpegTranscoderUtils {
 
   private static final int FULL_ROUND = 360;

@@ -7,7 +7,10 @@
 
 package com.facebook.cache.disk;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /** Sorts entries by date of the last access, evicting old ones first */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultEntryEvictionComparatorSupplier implements EntryEvictionComparatorSupplier {
 
   @Override

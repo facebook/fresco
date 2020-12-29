@@ -11,7 +11,9 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.memory.PooledByteBuffer;
+import com.facebook.infer.annotation.Nullsafe;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class EncodedCountingMemoryCacheFactory {
 
   public static CountingMemoryCache<CacheKey, PooledByteBuffer> get(
@@ -26,10 +28,10 @@ public class EncodedCountingMemoryCacheFactory {
           }
         };
 
-    CountingMemoryCache.CacheTrimStrategy trimStrategy = new NativeMemoryCacheTrimStrategy();
+    MemoryCache.CacheTrimStrategy trimStrategy = new NativeMemoryCacheTrimStrategy();
 
     CountingMemoryCache<CacheKey, PooledByteBuffer> countingCache =
-        new CountingMemoryCache<>(
+        new LruCountingMemoryCache<>(
             valueDescriptor, trimStrategy, encodedMemoryCacheParamsSupplier, null);
 
     memoryTrimmableRegistry.registerMemoryTrimmable(countingCache);

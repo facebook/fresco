@@ -15,6 +15,7 @@ import com.facebook.common.internal.Suppliers;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
+import com.facebook.common.memory.PooledByteStreams;
 import com.facebook.common.webp.WebpBitmapFactory;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
@@ -58,7 +59,11 @@ public class ImagePipelineExperiments {
   private boolean mDownsampleIfLargeBitmap;
   private boolean mEncodedCacheEnabled;
   private final boolean mEnsureTranscoderLibraryLoaded;
-  private final boolean mIsProbingEnabled;
+  private final boolean mIsEncodedMemoryCacheProbingEnabled;
+  private final boolean mIsDiskCacheProbingEnabled;
+  private final int mTrackedKeysSize;
+  private final boolean mUseCombinedNetworkAndCacheProducer;
+  private final boolean mAllowDelay;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -89,7 +94,11 @@ public class ImagePipelineExperiments {
     mDownsampleIfLargeBitmap = builder.mDownsampleIfLargeBitmap;
     mEncodedCacheEnabled = builder.mEncodedCacheEnabled;
     mEnsureTranscoderLibraryLoaded = builder.mEnsureTranscoderLibraryLoaded;
-    mIsProbingEnabled = builder.mIsProbingEnabled;
+    mIsEncodedMemoryCacheProbingEnabled = builder.mIsEncodedMemoryCacheProbingEnabled;
+    mIsDiskCacheProbingEnabled = builder.mIsDiskCacheProbingEnabled;
+    mTrackedKeysSize = builder.mTrackedKeysSize;
+    mUseCombinedNetworkAndCacheProducer = builder.mUseCombinedNetworkAndCacheProducer;
+    mAllowDelay = builder.mAllowDelay;
   }
 
   public boolean isEncodedCacheEnabled() {
@@ -169,8 +178,12 @@ public class ImagePipelineExperiments {
     return mEnsureTranscoderLibraryLoaded;
   }
 
-  public boolean isProbingEnabled() {
-    return mIsProbingEnabled;
+  public boolean isDiskCacheProbingEnabled() {
+    return mIsDiskCacheProbingEnabled;
+  }
+
+  public boolean isEncodedMemoryCacheProbingEnabled() {
+    return mIsEncodedMemoryCacheProbingEnabled;
   }
 
   public boolean isGingerbreadDecoderEnabled() {
@@ -193,8 +206,20 @@ public class ImagePipelineExperiments {
     return mMemoryType;
   }
 
+  public int getTrackedKeysSize() {
+    return mTrackedKeysSize;
+  }
+
   public boolean shouldKeepCancelledFetchAsLowPriority() {
     return mKeepCancelledFetchAsLowPriority;
+  }
+
+  public boolean shouldUseCombinedNetworkAndCacheProducer() {
+    return mUseCombinedNetworkAndCacheProducer;
+  }
+
+  public boolean allowDelay() {
+    return mAllowDelay;
   }
 
   public static class Builder {
@@ -224,7 +249,11 @@ public class ImagePipelineExperiments {
     public boolean mDownsampleIfLargeBitmap;
     public boolean mEncodedCacheEnabled = true;
     public boolean mEnsureTranscoderLibraryLoaded = true;
-    private boolean mIsProbingEnabled = false;
+    private boolean mIsEncodedMemoryCacheProbingEnabled = false;
+    private boolean mIsDiskCacheProbingEnabled = false;
+    private int mTrackedKeysSize = 20;
+    private boolean mUseCombinedNetworkAndCacheProducer = false;
+    private boolean mAllowDelay = false;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -395,8 +424,31 @@ public class ImagePipelineExperiments {
       return mConfigBuilder;
     }
 
-    public ImagePipelineConfig.Builder setIsProbingEnabled(boolean isProbingEnabled) {
-      mIsProbingEnabled = isProbingEnabled;
+    public ImagePipelineConfig.Builder setIsDiskCacheProbingEnabled(
+        boolean isDiskCacheProbingEnabled) {
+      mIsDiskCacheProbingEnabled = isDiskCacheProbingEnabled;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setIsEncodedMemoryCacheProbingEnabled(
+        boolean isEncodedMemoryCacheProbingEnabled) {
+      mIsEncodedMemoryCacheProbingEnabled = isEncodedMemoryCacheProbingEnabled;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setTrackedKeysSize(int trackedKeysSize) {
+      mTrackedKeysSize = trackedKeysSize;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setUseCombinedNetworkAndCacheProducer(
+        boolean useCombinedNetworkAndCacheProducer) {
+      mUseCombinedNetworkAndCacheProducer = useCombinedNetworkAndCacheProducer;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setAllowDelay(boolean allowDelay) {
+      mAllowDelay = allowDelay;
       return mConfigBuilder;
     }
 
@@ -417,6 +469,7 @@ public class ImagePipelineExperiments {
         boolean decodeCancellationEnabled,
         ExecutorSupplier executorSupplier,
         PooledByteBufferFactory pooledByteBufferFactory,
+        PooledByteStreams pooledByteStreams,
         MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
         MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
         BufferedDiskCache defaultBufferedDiskCache,
@@ -428,7 +481,8 @@ public class ImagePipelineExperiments {
         boolean bitmapPrepareToDrawForPrefetch,
         int maxBitmapSize,
         CloseableReferenceFactory closeableReferenceFactory,
-        boolean keepCancelledFetchAsLowPriority);
+        boolean keepCancelledFetchAsLowPriority,
+        int trackedKeysSize);
   }
 
   public static class DefaultProducerFactoryMethod implements ProducerFactoryMethod {
@@ -444,6 +498,7 @@ public class ImagePipelineExperiments {
         boolean decodeCancellationEnabled,
         ExecutorSupplier executorSupplier,
         PooledByteBufferFactory pooledByteBufferFactory,
+        PooledByteStreams pooledByteStreams,
         MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
         MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
         BufferedDiskCache defaultBufferedDiskCache,
@@ -455,7 +510,8 @@ public class ImagePipelineExperiments {
         boolean bitmapPrepareToDrawForPrefetch,
         int maxBitmapSize,
         CloseableReferenceFactory closeableReferenceFactory,
-        boolean keepCancelledFetchAsLowPriority) {
+        boolean keepCancelledFetchAsLowPriority,
+        int trackedKeysSize) {
       return new ProducerFactory(
           context,
           byteArrayPool,
@@ -477,7 +533,8 @@ public class ImagePipelineExperiments {
           bitmapPrepareToDrawForPrefetch,
           maxBitmapSize,
           closeableReferenceFactory,
-          keepCancelledFetchAsLowPriority);
+          keepCancelledFetchAsLowPriority,
+          trackedKeysSize);
     }
   }
 }

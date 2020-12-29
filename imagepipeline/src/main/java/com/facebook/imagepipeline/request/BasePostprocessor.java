@@ -13,6 +13,7 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.core.NativeCodeSetup;
+import com.facebook.infer.annotation.Nullsafe;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import javax.annotation.Nullable;
@@ -22,6 +23,7 @@ import javax.annotation.Nullable;
  *
  * <p>Clients should override exactly one of the three provided {@link #process} methods.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class BasePostprocessor implements Postprocessor {
 
   /**
@@ -61,7 +63,7 @@ public abstract class BasePostprocessor implements Postprocessor {
             sourceBitmapConfig != null ? sourceBitmapConfig : FALLBACK_BITMAP_CONFIGURATION);
     try {
       process(destBitmapRef.get(), sourceBitmap);
-      return CloseableReference.cloneOrNull(destBitmapRef);
+      return destBitmapRef.clone();
     } finally {
       CloseableReference.closeSafely(destBitmapRef);
     }

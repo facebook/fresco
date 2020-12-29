@@ -9,8 +9,9 @@ package com.facebook.fresco.animation.backend;
 
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.time.MonotonicClock;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
@@ -25,6 +26,7 @@ import javax.annotation.Nullable;
  * <p>New instances can be created with {@link #createForBackend(AnimationBackend, MonotonicClock,
  * ScheduledExecutorService)}.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class AnimationBackendDelegateWithInactivityCheck<T extends AnimationBackend>
     extends AnimationBackendDelegate<T> {
 

@@ -8,11 +8,14 @@
 package com.facebook.drawee.backends.pipeline.info;
 
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ForwardingImageOriginListener implements ImageOriginListener {
 
   private static final String TAG = "ForwardingImageOriginListener";
@@ -38,7 +41,10 @@ public class ForwardingImageOriginListener implements ImageOriginListener {
 
   @Override
   public synchronized void onImageLoaded(
-      String controllerId, int imageOrigin, boolean successful, String ultimateProducerName) {
+      String controllerId,
+      int imageOrigin,
+      boolean successful,
+      @Nullable String ultimateProducerName) {
     final int numberOfListeners = mImageOriginListeners.size();
     for (int i = 0; i < numberOfListeners; i++) {
       ImageOriginListener listener = mImageOriginListeners.get(i);

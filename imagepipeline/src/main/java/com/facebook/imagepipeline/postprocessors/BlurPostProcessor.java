@@ -16,6 +16,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.imagepipeline.filter.IterativeBoxBlurFilter;
 import com.facebook.imagepipeline.filter.RenderScriptBlurFilter;
 import com.facebook.imagepipeline.request.BasePostprocessor;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Locale;
 import javax.annotation.Nullable;
 
@@ -24,6 +25,7 @@ import javax.annotation.Nullable;
  * one Gaussian blur using {@link ScriptIntrinsicBlur} for Android version >= 4.2 and the other one
  * is an in-place iterative box blur algorithm that runs faster than a traditional box blur.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class BlurPostProcessor extends BasePostprocessor {
 
   private static final boolean canUseRenderScript = RenderScriptBlurFilter.canUseRenderScript();
@@ -31,7 +33,7 @@ public class BlurPostProcessor extends BasePostprocessor {
   private final int mIterations;
   private final Context mContext;
   private final int mBlurRadius;
-  private CacheKey mCacheKey;
+  @Nullable private CacheKey mCacheKey;
 
   /**
    * Creates an instance of {@link BlurPostProcessor}.

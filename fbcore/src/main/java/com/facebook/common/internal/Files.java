@@ -16,6 +16,7 @@
 
 package com.facebook.common.internal;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,6 +31,7 @@ import java.io.InputStream;
  * @author Colin Decker
  * @since 1.0
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class Files {
   private Files() {}
 

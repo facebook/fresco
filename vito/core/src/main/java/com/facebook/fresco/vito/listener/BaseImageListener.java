@@ -11,12 +11,14 @@ import android.graphics.drawable.Drawable;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class BaseImageListener implements ImageListener {
 
   @Override
-  public void onSubmit(long id, Object callerContext) {}
+  public void onSubmit(long id, @Nullable Object callerContext) {}
 
   @Override
   public void onPlaceholderSet(long id, @Nullable Drawable placeholder) {}
@@ -32,10 +34,10 @@ public class BaseImageListener implements ImageListener {
   public void onIntermediateImageSet(long id, @Nullable ImageInfo imageInfo) {}
 
   @Override
-  public void onIntermediateImageFailed(long id, Throwable throwable) {}
+  public void onIntermediateImageFailed(long id, @Nullable Throwable throwable) {}
 
   @Override
-  public void onFailure(long id, @Nullable Drawable error, Throwable throwable) {}
+  public void onFailure(long id, @Nullable Drawable error, @Nullable Throwable throwable) {}
 
   @Override
   public void onRelease(long id) {}

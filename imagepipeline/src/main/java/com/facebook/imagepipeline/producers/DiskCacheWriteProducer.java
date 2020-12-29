@@ -7,8 +7,8 @@
 
 package com.facebook.imagepipeline.producers;
 
+import androidx.annotation.VisibleForTesting;
 import com.facebook.cache.common.CacheKey;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
@@ -56,6 +56,7 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
       Consumer<EncodedImage> consumerOfDiskCacheWriteProducer, ProducerContext producerContext) {
     if (producerContext.getLowestPermittedRequestLevel().getValue()
         >= ImageRequest.RequestLevel.DISK_CACHE.getValue()) {
+      producerContext.putOriginExtra("disk", "nil-result_write");
       consumerOfDiskCacheWriteProducer.onNewResult(null, Consumer.IS_LAST);
     } else {
       Consumer<EncodedImage> consumer;

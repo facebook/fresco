@@ -7,15 +7,16 @@
 
 package com.facebook.fresco.vito.view.impl;
 
-import android.net.Uri;
 import android.view.View;
 import androidx.annotation.Nullable;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.provider.FrescoVitoProvider;
+import com.facebook.fresco.vito.source.ImageSource;
 import com.facebook.fresco.vito.view.VitoView;
-import com.facebook.imagepipeline.multiuri.MultiUri;
+import com.facebook.infer.annotation.Nullsafe;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class LazyVitoViewImpl implements VitoView.Implementation {
 
   private final FrescoVitoProvider.Implementation mProvider;
@@ -27,13 +28,12 @@ public abstract class LazyVitoViewImpl implements VitoView.Implementation {
 
   @Override
   public void show(
-      Uri uri,
-      MultiUri multiUri,
+      ImageSource imageSource,
       ImageOptions imageOptions,
-      Object callerContext,
-      ImageListener imageListener,
+      @Nullable Object callerContext,
+      @Nullable ImageListener imageListener,
       View target) {
-    get().show(uri, multiUri, imageOptions, callerContext, imageListener, target);
+    get().show(imageSource, imageOptions, callerContext, imageListener, target);
   }
 
   private synchronized VitoView.Implementation get() {

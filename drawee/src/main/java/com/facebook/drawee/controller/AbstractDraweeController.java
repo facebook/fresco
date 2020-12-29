@@ -9,9 +9,11 @@ package com.facebook.drawee.controller;
 
 import static com.facebook.drawee.components.DraweeEventTracker.Event;
 
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.view.MotionEvent;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Objects;
@@ -29,12 +31,13 @@ import com.facebook.drawee.gestures.GestureDetector;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
-import com.facebook.fresco.ui.common.BaseControllerListener2;
+import com.facebook.fresco.middleware.MiddlewareUtils;
 import com.facebook.fresco.ui.common.ControllerListener2;
+import com.facebook.fresco.ui.common.ControllerListener2.Extras;
+import com.facebook.fresco.ui.common.ForwardingControllerListener2;
 import com.facebook.fresco.ui.common.LoggingListener;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.ReturnsOwnership;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
@@ -53,12 +56,12 @@ import javax.annotation.concurrent.NotThreadSafe;
 public abstract class AbstractDraweeController<T, INFO>
     implements DraweeController, DeferredReleaser.Releasable, GestureDetector.ClickListener {
 
+  private static final Map<String, Object> COMPONENT_EXTRAS =
+      ImmutableMap.<String, Object>of("component_tag", "drawee");
   private static final Map<String, Object> SHORTCUT_EXTRAS =
       ImmutableMap.<String, Object>of(
           "origin", "memory_bitmap",
-          "origin_sub", "drawee");
-
-  private static final Rect RECT_ZEROES = new Rect();
+          "origin_sub", "shortcut");
 
   /**
    * This class is used to allow an optimization of not creating a ForwardingControllerListener when
@@ -92,7 +95,8 @@ public abstract class AbstractDraweeController<T, INFO>
   private @Nullable GestureDetector mGestureDetector;
   private @Nullable ControllerViewportVisibilityListener mControllerViewportVisibilityListener;
   protected @Nullable ControllerListener<INFO> mControllerListener;
-  protected @Nullable ControllerListener2 mControllerListener2;
+  protected ForwardingControllerListener2<INFO> mControllerListener2 =
+      new ForwardingControllerListener2<>();
   protected @Nullable LoggingListener mLoggingListener;
 
   // Hierarchy
@@ -208,7 +212,9 @@ public abstract class AbstractDraweeController<T, INFO>
     boolean wasRequestSubmitted = mIsRequestSubmitted;
     mIsRequestSubmitted = false;
     mHasFetchFailed = false;
+    Map<String, Object> datasourceExtras = null, imageExtras = null;
     if (mDataSource != null) {
+      datasourceExtras = mDataSource.getExtras();
       mDataSource.close();
       mDataSource = null;
     }
@@ -220,12 +226,13 @@ public abstract class AbstractDraweeController<T, INFO>
     }
     mDrawable = null;
     if (mFetchedImage != null) {
+      imageExtras = obtainExtrasFromImage(getImageInfo(mFetchedImage));
       logMessageAndImage("release", mFetchedImage);
       releaseImage(mFetchedImage);
       mFetchedImage = null;
     }
     if (wasRequestSubmitted) {
-      reportRelease();
+      reportRelease(datasourceExtras, imageExtras);
     }
   }
 
@@ -295,12 +302,12 @@ public abstract class AbstractDraweeController<T, INFO>
     mControllerListener = (ControllerListener<INFO>) controllerListener;
   }
 
-  public void addControllerListener2(ControllerListener2 controllerListener2) {
-    mControllerListener2 = controllerListener2;
+  public void addControllerListener2(ControllerListener2<INFO> controllerListener2) {
+    mControllerListener2.addListener(controllerListener2);
   }
 
-  public void removeControllerListener2() {
-    mControllerListener2 = BaseControllerListener2.getNoOpListener();
+  public void removeControllerListener2(ControllerListener2<INFO> controllerListener2) {
+    mControllerListener2.removeListener(controllerListener2);
   }
 
   public void setLoggingListener(final LoggingListener loggingListener) {
@@ -331,10 +338,7 @@ public abstract class AbstractDraweeController<T, INFO>
     return mControllerListener;
   }
 
-  protected ControllerListener2 getControllerListener2() {
-    if (mControllerListener2 == null) {
-      mControllerListener2 = BaseControllerListener2.getNoOpListener();
-    }
+  protected ControllerListener2<INFO> getControllerListener2() {
     return mControllerListener2;
   }
 
@@ -390,12 +394,19 @@ public abstract class AbstractDraweeController<T, INFO>
   private void setUpLoggingListener() {
     if (mSettableDraweeHierarchy instanceof GenericDraweeHierarchy) {
       ((GenericDraweeHierarchy) mSettableDraweeHierarchy)
-          .setOnFadeFinishedListener(
-              new FadeDrawable.OnFadeFinishedListener() {
+          .setOnFadeListener(
+              new FadeDrawable.OnFadeListener() {
                 @Override
                 public void onFadeFinished() {
                   if (mLoggingListener != null) {
                     mLoggingListener.onFadeFinished(mId);
+                  }
+                }
+
+                @Override
+                public void onFadeStarted() {
+                  if (mLoggingListener != null) {
+                    mLoggingListener.onFadeStarted(mId);
                   }
                 }
               });
@@ -522,7 +533,7 @@ public abstract class AbstractDraweeController<T, INFO>
       mIsRequestSubmitted = true;
       mHasFetchFailed = false;
       mEventTracker.recordEvent(Event.ON_SUBMIT_CACHE_HIT);
-      reportSubmit();
+      reportSubmit(mDataSource, getImageInfo(closeableImage));
       onImageLoadedFromCacheImmediately(mId, closeableImage);
       onNewResultInternal(mId, mDataSource, closeableImage, 1.0f, true, true, true);
       if (FrescoSystrace.isTracing()) {
@@ -534,11 +545,11 @@ public abstract class AbstractDraweeController<T, INFO>
       return;
     }
     mEventTracker.recordEvent(Event.ON_DATASOURCE_SUBMIT);
-    reportSubmit();
     mSettableDraweeHierarchy.setProgress(0, true);
     mIsRequestSubmitted = true;
     mHasFetchFailed = false;
     mDataSource = getDataSource();
+    reportSubmit(mDataSource, null);
     if (FLog.isLoggable(FLog.VERBOSE)) {
       FLog.v(
           TAG,
@@ -683,7 +694,7 @@ public abstract class AbstractDraweeController<T, INFO>
       } else {
         mSettableDraweeHierarchy.setFailure(throwable);
       }
-      reportFailure(throwable);
+      reportFailure(throwable, dataSource);
       // IMPORTANT: do not execute any instance-specific code after this point
     } else {
       logMessageAndFailure("intermediate_failed @ onFailure", throwable);
@@ -784,14 +795,16 @@ public abstract class AbstractDraweeController<T, INFO>
 
   protected void onImageLoadedFromCacheImmediately(String id, T cachedImage) {}
 
-  private void reportSubmit() {
+  protected void reportSubmit(DataSource<T> dataSource, @Nullable INFO info) {
     getControllerListener().onSubmit(mId, mCallerContext);
-    getControllerListener2().onSubmit(mId, mCallerContext);
+    getControllerListener2()
+        .onSubmit(mId, mCallerContext, obtainExtras(dataSource, info, getMainUri()));
   }
 
   private void reportIntermediateSet(String id, @Nullable T image) {
-    getControllerListener().onIntermediateImageSet(id, getImageInfo(image));
-    getControllerListener2().onIntermediateImageSet(id, getImageInfo(image));
+    INFO info = getImageInfo(image);
+    getControllerListener().onIntermediateImageSet(id, info);
+    getControllerListener2().onIntermediateImageSet(id, info);
   }
 
   private void reportIntermediateFailure(Throwable throwable) {
@@ -800,46 +813,63 @@ public abstract class AbstractDraweeController<T, INFO>
   }
 
   private void reportSuccess(String id, @Nullable T image, @Nullable DataSource<T> dataSource) {
-    getControllerListener().onFinalImageSet(id, getImageInfo(image), getAnimatable());
-    getControllerListener2().onFinalImageSet(id, getImageInfo(image), obtainExtras(dataSource));
+    INFO info = getImageInfo(image);
+    getControllerListener().onFinalImageSet(id, info, getAnimatable());
+    getControllerListener2().onFinalImageSet(id, info, obtainExtras(dataSource, info, null));
   }
 
-  private void reportFailure(Throwable throwable) {
+  private void reportFailure(Throwable throwable, @Nullable DataSource<T> dataSource) {
+    final Extras extras = obtainExtras(dataSource, null, null);
     getControllerListener().onFailure(mId, throwable);
-    getControllerListener2().onFailure(mId, throwable);
+    getControllerListener2().onFailure(mId, throwable, extras);
   }
 
-  private void reportRelease() {
+  private void reportRelease(
+      @Nullable Map<String, Object> datasourceExtras, @Nullable Map<String, Object> imageExtras) {
     getControllerListener().onRelease(mId);
-    getControllerListener2().onRelease(mId);
+    getControllerListener2().onRelease(mId, obtainExtras(datasourceExtras, imageExtras, null));
   }
 
-  private ControllerListener2.Extras obtainExtras(@Nullable DataSource<T> dataSource) {
-    ControllerListener2.Extras extras = new ControllerListener2.Extras();
-    if (dataSource != null) {
-      extras.pipe = dataSource.getExtras();
+  private Extras obtainExtras(
+      @Nullable Map<String, Object> datasourceExtras,
+      @Nullable Map<String, Object> imageExtras,
+      @Nullable Uri mainUri) {
+    String scaleType = null;
+    PointF focusPoint = null;
+    if (mSettableDraweeHierarchy instanceof GenericDraweeHierarchy) {
+      scaleType =
+          String.valueOf(
+              ((GenericDraweeHierarchy) mSettableDraweeHierarchy).getActualImageScaleType());
+      focusPoint = ((GenericDraweeHierarchy) mSettableDraweeHierarchy).getActualImageFocusPoint();
     }
-
-    extras.view = new HashMap<>(2);
-    addDimensions(extras.view);
-
-    if (dataSource == null) {
-      extras.view.putAll(SHORTCUT_EXTRAS);
-    }
-
-    return extras;
+    return MiddlewareUtils.obtainExtras(
+        COMPONENT_EXTRAS,
+        SHORTCUT_EXTRAS,
+        datasourceExtras,
+        getDimensions(),
+        scaleType,
+        focusPoint,
+        imageExtras,
+        getCallerContext(),
+        mainUri);
   }
 
-  private void addDimensions(Map<String, Object> extras) {
-    Rect r = getDimensions();
-    extras.put("viewport_width", r != null ? r.width() : -1);
-    extras.put("viewport_height", r != null ? r.height() : -1);
+  protected @Nullable Uri getMainUri() {
+    return null;
+  };
+
+  private Extras obtainExtras(
+      @Nullable DataSource<T> datasource, @Nullable INFO info, @Nullable Uri mainUri) {
+    return obtainExtras(
+        datasource == null ? null : datasource.getExtras(), obtainExtrasFromImage(info), mainUri);
   }
 
-  private Rect getDimensions() {
+  private @Nullable Rect getDimensions() {
     if (mSettableDraweeHierarchy == null) {
-      return RECT_ZEROES;
+      return null;
     }
     return mSettableDraweeHierarchy.getBounds();
   }
+
+  public abstract @Nullable Map<String, Object> obtainExtrasFromImage(INFO info);
 }

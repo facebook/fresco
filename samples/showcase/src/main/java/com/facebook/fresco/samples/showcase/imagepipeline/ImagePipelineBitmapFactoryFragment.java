@@ -115,11 +115,6 @@ public class ImagePipelineBitmapFactoryFragment extends BaseShowcaseFragment {
     CloseableReference.closeSafely(mDisplayedBitmap);
   }
 
-  @Override
-  public int getTitleId() {
-    return R.string.drawee_rotation_title;
-  }
-
   /** Creates a new bitmap with a HSV map at value=1 */
   private CloseableReference<Bitmap> createRainbowBitmap() {
     final int w = 256;

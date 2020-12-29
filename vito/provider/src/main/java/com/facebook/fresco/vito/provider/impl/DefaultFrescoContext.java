@@ -10,6 +10,7 @@ package com.facebook.fresco.vito.provider.impl;
 import android.content.res.Resources;
 import com.facebook.callercontext.CallerContextVerifier;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.vito.core.FrescoContext;
@@ -20,10 +21,13 @@ import com.facebook.fresco.vito.core.impl.debug.DefaultDebugOverlayFactory;
 import com.facebook.fresco.vito.core.impl.debug.NoOpDebugOverlayFactory;
 import com.facebook.fresco.vito.drawable.ArrayVitoDrawableFactory;
 import com.facebook.fresco.vito.drawable.BitmapDrawableFactory;
-import com.facebook.fresco.vito.drawable.VitoDrawableFactory;
 import com.facebook.fresco.vito.draweesupport.DrawableFactoryWrapper;
+import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
+import com.facebook.imagepipeline.drawable.DrawableFactory;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DefaultFrescoContext {
 
   private static @Nullable FrescoContext sInstance;
@@ -33,7 +37,7 @@ public class DefaultFrescoContext {
     if (sInstance == null) {
       initialize(resources, null);
     }
-    return sInstance;
+    return Preconditions.checkNotNull(sInstance);
   }
 
   public static synchronized FrescoContext get() {
@@ -67,6 +71,11 @@ public class DefaultFrescoContext {
     sDebugOverlayEnabledSupplier = debugOverlayEnabledSupplier;
   }
 
+  @Nullable
+  public static Supplier<Boolean> getDebugOverlayEnabledSupplier() {
+    return sDebugOverlayEnabledSupplier;
+  }
+
   public static synchronized boolean isInitialized() {
     return sInstance != null;
   }
@@ -83,17 +92,21 @@ public class DefaultFrescoContext {
         Fresco.getImagePipeline().getConfig().getExecutorSupplier().forLightweightBackgroundTasks(),
         null,
         null,
+        null,
         sDebugOverlayEnabledSupplier == null
             ? new NoOpDebugOverlayFactory()
             : new DefaultDebugOverlayFactory(sDebugOverlayEnabledSupplier));
   }
 
-  private static VitoDrawableFactory createDefaultDrawableFactory(
+  private static ImageOptionsDrawableFactory createDefaultDrawableFactory(
       Resources resources, FrescoExperiments frescoExperiments) {
+    DrawableFactory animatedDrawableFactory =
+        Fresco.getImagePipelineFactory().getAnimatedDrawableFactory(null);
     return new ArrayVitoDrawableFactory(
         new BitmapDrawableFactory(resources, frescoExperiments),
-        new DrawableFactoryWrapper(
-            Fresco.getImagePipelineFactory().getAnimatedDrawableFactory(null)));
+        animatedDrawableFactory == null
+            ? null
+            : new DrawableFactoryWrapper(animatedDrawableFactory));
   }
 
   private static class NoOpCallerContextVerifier implements CallerContextVerifier {

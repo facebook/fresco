@@ -7,6 +7,7 @@
 
 package com.facebook.common.internal;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
  * A dummy representation of an immutable set. This can be used temporarily as a type until we have
  * an actual non-guava implementation.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImmutableList<E> extends ArrayList<E> {
 
   private ImmutableList(final int capacity) {

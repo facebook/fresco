@@ -24,52 +24,49 @@ import kotlinx.android.synthetic.main.fragment_vito_view_prefetch.*
 
 class VitoViewPrefetchFragment : BaseShowcaseFragment() {
 
-    private val imageOptions = ImageOptions.create()
-            .round(RoundingOptions.asCircle())
-            .placeholderRes(R.color.placeholder_color)
-            .build()
+  private val imageOptions =
+      ImageOptions.create()
+          .round(RoundingOptions.asCircle())
+          .placeholderRes(R.color.placeholder_color)
+          .build()
 
-    private var imageVisible = false
+  private var imageVisible = false
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_vito_view_prefetch, container, false)
+  override fun onCreateView(
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
+  ): View? {
+    return inflater.inflate(R.layout.fragment_vito_view_prefetch, container, false)
+  }
+
+  override fun onViewCreated(container: View, savedInstanceState: Bundle?) {
+    val uri = sampleUris().createSampleUri(ImageUriProvider.ImageSize.M)
+    val view = container.findViewById<View>(R.id.view)
+
+    val prefetcher = FrescoVitoProvider.getPrefetcher()
+
+    button_prefetch_bitmap.setOnClickListener {
+      prefetcher.prefetchToBitmapCache(uri, imageOptions, "prefetch_bitmap", "sample")
     }
 
-    override fun onViewCreated(container: View, savedInstanceState: Bundle?) {
-        val uri = sampleUris().createSampleUri(ImageUriProvider.ImageSize.M)
-        val view = container.findViewById<View>(R.id.view)
-
-        val prefetcher = FrescoVitoProvider.getPrefetcher()
-
-        button_prefetch_bitmap.setOnClickListener {
-            prefetcher.prefetchToBitmapCache(uri, imageOptions, "prefetch_bitmap")
-        }
-
-        button_prefetch_encoded.setOnClickListener {
-            prefetcher.prefetchToEncodedCache(uri, imageOptions, "prefetch_bitmap")
-        }
-
-        button_prefetch_disk.setOnClickListener {
-            prefetcher.prefetchToDiskCache(uri, imageOptions, "prefetch_bitmap")
-        }
-
-        button_toggle_images.setOnClickListener {
-            if (imageVisible) {
-                VitoView.show(null as? Uri, view)
-            } else {
-                VitoView.show(uri, imageOptions, view)
-            }
-            imageVisible = !imageVisible
-        }
-
-        button_clear_cache.setOnClickListener {
-            Fresco.getImagePipeline().clearCaches()
-        }
+    button_prefetch_encoded.setOnClickListener {
+      prefetcher.prefetchToEncodedCache(uri, imageOptions, "prefetch_encoded", "sample")
     }
 
-    override fun getTitleId(): Int = R.string.vito_view_prefetch
+    button_prefetch_disk.setOnClickListener {
+      prefetcher.prefetchToDiskCache(uri, imageOptions, "prefetch_disk", "sample")
+    }
+
+    button_toggle_images.setOnClickListener {
+      if (imageVisible) {
+        VitoView.show(null as? Uri, view)
+      } else {
+        VitoView.show(uri, imageOptions, view)
+      }
+      imageVisible = !imageVisible
+    }
+
+    button_clear_cache.setOnClickListener { Fresco.getImagePipeline().clearCaches() }
+  }
 }

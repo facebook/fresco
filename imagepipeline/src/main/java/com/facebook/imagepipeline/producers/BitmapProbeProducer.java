@@ -134,16 +134,21 @@ public class BitmapProbeProducer implements Producer<CloseableReference<Closeabl
         final CacheKey cacheKey =
             mCacheKeyFactory.getEncodedCacheKey(imageRequest, mProducerContext.getCallerContext());
         if (mProducerContext.getExtra(ProducerContext.ExtraKeys.ORIGIN).equals("memory_bitmap")) {
-          if (!mEncodedMemoryCacheHistory.contains(cacheKey)) {
+          if (mProducerContext
+                  .getImagePipelineConfig()
+                  .getExperiments()
+                  .isEncodedMemoryCacheProbingEnabled()
+              && !mEncodedMemoryCacheHistory.contains(cacheKey)) {
             mEncodedMemoryCache.probe(cacheKey);
             mEncodedMemoryCacheHistory.add(cacheKey);
           }
-          if (!mDiskCacheHistory.contains(cacheKey)) {
+          if (mProducerContext.getImagePipelineConfig().getExperiments().isDiskCacheProbingEnabled()
+              && !mDiskCacheHistory.contains(cacheKey)) {
             final boolean isSmallRequest =
                 (imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL);
             final BufferedDiskCache preferredCache =
                 isSmallRequest ? mSmallImageBufferedDiskCache : mDefaultBufferedDiskCache;
-            preferredCache.probe(cacheKey);
+            preferredCache.addKeyForAsyncProbing(cacheKey);
             mDiskCacheHistory.add(cacheKey);
           }
         }

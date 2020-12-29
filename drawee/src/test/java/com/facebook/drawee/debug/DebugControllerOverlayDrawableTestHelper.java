@@ -10,7 +10,9 @@ package com.facebook.drawee.debug;
 import static org.junit.Assert.assertEquals;
 
 import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.infer.annotation.Nullsafe;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DebugControllerOverlayDrawableTestHelper {
 
   public DebugControllerOverlayDrawable mOverlayDrawable;

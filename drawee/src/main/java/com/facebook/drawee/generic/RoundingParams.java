@@ -11,10 +11,12 @@ import android.graphics.Color;
 import androidx.annotation.ColorInt;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Arrays;
 import javax.annotation.Nullable;
 
 /** Class that encapsulates rounding parameters. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class RoundingParams {
 
   public enum RoundingMethod {

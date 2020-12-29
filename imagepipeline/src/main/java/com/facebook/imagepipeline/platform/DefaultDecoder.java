@@ -14,9 +14,9 @@ import android.graphics.BitmapRegionDecoder;
 import android.graphics.ColorSpace;
 import android.graphics.Rect;
 import android.os.Build;
+import androidx.annotation.VisibleForTesting;
 import androidx.core.util.Pools.SynchronizedPool;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.streams.LimitedInputStream;
@@ -159,6 +159,12 @@ public abstract class DefaultDecoder implements PlatformDecoder {
             encodedImage, Bitmap.Config.ARGB_8888, regionToDecode, length, colorSpace);
       }
       throw re;
+    } finally {
+      try {
+        jpegDataStream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 

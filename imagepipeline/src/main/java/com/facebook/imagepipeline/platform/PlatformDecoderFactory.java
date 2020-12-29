@@ -12,8 +12,10 @@ import androidx.core.util.Pools;
 import com.facebook.imagepipeline.core.NativeCodeSetup;
 import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.memory.PoolFactory;
+import com.facebook.infer.annotation.Nullsafe;
 import java.lang.reflect.InvocationTargetException;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class PlatformDecoderFactory {
   /**
    * Provide the implementation of the PlatformDecoder for the current platform using the provided
@@ -29,7 +31,7 @@ public class PlatformDecoderFactory {
       return new OreoDecoder(
           poolFactory.getBitmapPool(), maxNumThreads, new Pools.SynchronizedPool<>(maxNumThreads));
     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-        || NativeCodeSetup.getUseNativeCode() == false) {
+        || !NativeCodeSetup.getUseNativeCode()) {
       int maxNumThreads = poolFactory.getFlexByteArrayPoolMaxNumThreads();
       return new ArtDecoder(
           poolFactory.getBitmapPool(), maxNumThreads, new Pools.SynchronizedPool<>(maxNumThreads));

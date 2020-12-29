@@ -7,6 +7,8 @@
 
 package com.facebook.fresco.samples.showcase.imageformat.gif;
 
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,6 +24,9 @@ import androidx.appcompat.widget.SwitchCompat;
 import com.facebook.animated.giflite.GifDecoder;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.drawable.ScaleTypeDrawable;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
@@ -29,6 +34,7 @@ import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.ImageDecodeOptionsBuilder;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 /** GIF example that illustrates how to display a simple GIF file */
@@ -39,6 +45,7 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
   private Spinner mSpinner;
   private SimpleDraweeView mSimpleDraweeView;
   private @Nullable GifDecoder mGifDecoder;
+  private boolean mAutoPlayEnabled;
 
   @Nullable
   @Override
@@ -63,9 +70,9 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
               sampleUris().createGifUri(ImageUriProvider.ImageSize.L)),
         };
 
-    mSimpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
+    mSimpleDraweeView = view.findViewById(R.id.drawee_view);
 
-    final SwitchCompat switchBackground = (SwitchCompat) view.findViewById(R.id.switch_background);
+    final SwitchCompat switchBackground = view.findViewById(R.id.switch_background);
     switchBackground.setOnCheckedChangeListener(
         new CompoundButton.OnCheckedChangeListener() {
           @Override
@@ -75,8 +82,18 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
                 .setBackgroundImage(isChecked ? new CheckerBoardDrawable(getResources()) : null);
           }
         });
+    final SwitchCompat switchAutoPlay = view.findViewById(R.id.switch_autoplay);
+    switchAutoPlay.setOnCheckedChangeListener(
+        new CompoundButton.OnCheckedChangeListener() {
+          @Override
+          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            mAutoPlayEnabled = isChecked;
+            refreshAnimation();
+          }
+        });
+    mAutoPlayEnabled = switchAutoPlay.isEnabled();
 
-    final SwitchCompat switchAspect = (SwitchCompat) view.findViewById(R.id.switch_aspect_ratio);
+    final SwitchCompat switchAspect = view.findViewById(R.id.switch_aspect_ratio);
     switchAspect.setOnCheckedChangeListener(
         new CompoundButton.OnCheckedChangeListener() {
           @Override
@@ -101,7 +118,7 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
         });
     mSpinner.setSelection(0);
 
-    final Spinner decoderSpinner = (Spinner) view.findViewById(R.id.spinner_select_decoder);
+    final Spinner decoderSpinner = view.findViewById(R.id.spinner_select_decoder);
     decoderSpinner.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
           @Override
@@ -133,7 +150,7 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
   private void setAnimationUri(Uri uri) {
     final PipelineDraweeControllerBuilder controllerBuilder =
         Fresco.newDraweeControllerBuilder()
-            .setAutoPlayAnimations(true)
+            .setAutoPlayAnimations(mAutoPlayEnabled)
             .setOldController(mSimpleDraweeView.getController());
     final ImageDecodeOptionsBuilder optionsBuilder =
         ImageDecodeOptions.newBuilder().setMaxDimensionPx(4000);
@@ -146,12 +163,43 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
         ImageRequestBuilder.newBuilderWithSource(uri)
             .setImageDecodeOptions(optionsBuilder.build())
             .build());
+    if (!mAutoPlayEnabled) {
+      controllerBuilder.setControllerListener(
+          new BaseControllerListener<ImageInfo>() {
+
+            @Override
+            public void onFinalImageSet(
+                String id, @Nullable ImageInfo imageInfo, final @Nullable Animatable animatable) {
+              if (animatable != null) {
+                mSimpleDraweeView.getHierarchy().setOverlayImage(getPlayOverlayDrawable());
+                mSimpleDraweeView.setOnClickListener(
+                    new View.OnClickListener() {
+                      @Override
+                      public void onClick(View v) {
+                        if (animatable.isRunning()) {
+                          animatable.stop();
+                          mSimpleDraweeView
+                              .getHierarchy()
+                              .setOverlayImage(getPlayOverlayDrawable());
+                        } else {
+                          animatable.start();
+                          mSimpleDraweeView.getHierarchy().setOverlayImage(null);
+                        }
+                      }
+                    });
+              }
+            }
+          });
+    } else {
+      mSimpleDraweeView.getHierarchy().setOverlayImage(null);
+    }
     mSimpleDraweeView.setController(controllerBuilder.build());
   }
 
-  @Override
-  public int getTitleId() {
-    return R.string.format_gif_title;
+  public Drawable getPlayOverlayDrawable() {
+    return new ScaleTypeDrawable(
+        getResources().getDrawable(android.R.drawable.ic_media_play),
+        ScalingUtils.ScaleType.CENTER);
   }
 
   private class SimpleUriListAdapter extends BaseAdapter {

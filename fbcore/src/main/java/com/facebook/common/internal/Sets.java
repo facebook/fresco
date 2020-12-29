@@ -16,6 +16,7 @@
 
 package com.facebook.common.internal;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /** Static utility methods pertaining to {@link Set} instances. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class Sets {
   private Sets() {}
 

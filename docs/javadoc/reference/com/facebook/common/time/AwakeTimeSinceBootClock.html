@@ -209,8 +209,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/controller/package-summary.html">com.facebook.drawee.controller</a></li>
@@ -249,6 +247,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/middleware/package-summary.html">com.facebook.fresco.middleware</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/ui/common/package-summary.html">com.facebook.fresco.ui.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
@@ -284,6 +284,8 @@
   <a href="../../../../com/facebook/imagepipeline/filter/package-summary.html">com.facebook.imagepipeline.filter</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/instrumentation/package-summary.html">com.facebook.imagepipeline.instrumentation</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
     <li class="api apilevel-">
@@ -322,6 +324,7 @@
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/common/time/Clock.html">Clock</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/common/time/MonotonicClock.html">MonotonicClock</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/time/MonotonicNanoClock.html">MonotonicNanoClock</a></li>
       </ul>
     </li>
               
@@ -373,6 +376,13 @@
 <div id="api-info-block">
 
 
+
+  
+   
+  
+  
+  
+  
 
   
    
@@ -448,6 +458,8 @@ Summary:
       implements 
       
         <a href="../../../../com/facebook/common/time/MonotonicClock.html">MonotonicClock</a> 
+      
+        <a href="../../../../com/facebook/common/time/MonotonicNanoClock.html">MonotonicNanoClock</a> 
       
   
   
@@ -582,6 +594,24 @@ Summary:
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/time/AwakeTimeSinceBootClock.html#now()">now</a></span>()
+        
+        <div class="jd-descrdiv">Produce a timestamp.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            long
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/time/AwakeTimeSinceBootClock.html#nowNanos()">nowNanos</a></span>()
         
         <div class="jd-descrdiv">Produce a timestamp.</div>
   
@@ -848,6 +878,50 @@ From interface
 </td></tr>
 
 
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.common.time.MonotonicNanoClock" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.facebook.common.time.MonotonicNanoClock-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From interface
+
+  <a href="../../../../com/facebook/common/time/MonotonicNanoClock.html">com.facebook.common.time.MonotonicNanoClock</a>
+
+<div id="inherited-methods-com.facebook.common.time.MonotonicNanoClock">
+  <div id="inherited-methods-com.facebook.common.time.MonotonicNanoClock-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-com.facebook.common.time.MonotonicNanoClock-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            long
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/time/MonotonicNanoClock.html#nowNanos()">nowNanos</a></span>()
+        
+        <div class="jd-descrdiv">Produce a timestamp.</div>
+  
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
 </table>
 
 
@@ -959,6 +1033,46 @@ From interface
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>A timestamp for the current time, in ms.
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="nowNanos()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        long
+      </span>
+      <span class="sympad">nowNanos</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Produce a timestamp. Values returned from this method may only be compared to other values
+ returned from this clock in this process. They have no meaning outside of this process and
+ should not be written to disk.
+
+ <p>The difference between two timestamps is an interval, in nanoseconds.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>A timestamp for the current time, in nanoseconds.
 </li></ul>
   </div>
 

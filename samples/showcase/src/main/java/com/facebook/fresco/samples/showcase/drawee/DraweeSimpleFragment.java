@@ -45,9 +45,4 @@ public class DraweeSimpleFragment extends BaseShowcaseFragment {
               }
             });
   }
-
-  @Override
-  public int getTitleId() {
-    return R.string.drawee_simple_title;
-  }
 }

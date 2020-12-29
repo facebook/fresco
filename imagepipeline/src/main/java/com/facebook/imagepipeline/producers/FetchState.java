@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.producers;
 import android.net.Uri;
 import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.OkToExtend;
 import javax.annotation.Nullable;
 
@@ -18,6 +19,7 @@ import javax.annotation.Nullable;
  *
  * <p>Implementations can subclass this to store additional fetch-scoped fields.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @OkToExtend
 public class FetchState {
 

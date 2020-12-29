@@ -32,7 +32,7 @@ public class FrescoDrawableTest {
 
   @Before
   public void setup() {
-    mFrescoDrawable = new FrescoDrawable(true);
+    mFrescoDrawable = new FrescoDrawable();
     mLatch = new CountDownLatch(1);
     mCloseableImage = new DummyCloseableImage();
     mCloseableReference =

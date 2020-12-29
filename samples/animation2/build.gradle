@@ -6,6 +6,7 @@
  */
 
 import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.SampleDeps
 
 apply plugin: 'com.android.application'
 
@@ -13,7 +14,7 @@ dependencies {
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
 
-    implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
+    implementation SampleDeps.AndroidX.appcompat
 
     implementation project(':animated-base')
     implementation project(':drawee-backends:drawee-pipeline')
@@ -22,12 +23,12 @@ dependencies {
 
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
 
     defaultConfig {
         applicationId "com.facebook.samples.animation2"
-        minSdkVersion rootProject.ext.samplesMinSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion FrescoConfig.samplesMinSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
         versionCode 1
         versionName "${VERSION_NAME}"
 

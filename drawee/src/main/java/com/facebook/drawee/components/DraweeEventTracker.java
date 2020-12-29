@@ -7,6 +7,7 @@
 
 package com.facebook.drawee.components;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
@@ -16,6 +17,7 @@ import java.util.concurrent.ArrayBlockingQueue;
  * <p>Having a record of a last few events is useful for debugging purposes. If you want to disable
  * it, call {@link DraweeEventTracker.disable()} before {@link Fresco.initialize()}.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DraweeEventTracker {
 
   private final Queue<Event> mEventQueue = new ArrayBlockingQueue<>(MAX_EVENTS_TO_TRACK);

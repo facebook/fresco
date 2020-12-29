@@ -14,23 +14,6 @@ import com.facebook.fresco.buildsrc.GradleDeps
 
 buildscript {
 
-    ext.versions = [
-            'androidx'  : [
-                'annotation' : '1.0.2',
-                'appcompat'  : '1.0.2',
-                'core'  : '1.0.1',
-                'espresso' : '3.1.1',
-                'legacy_support_core_ui' : '1.0.0',
-                'legacy_support_core_utils' : '1.0.0',
-                'preference' : '1.0.0',
-                'recyclerview' : '1.0.0',
-                'test' : '1.1.1',
-            ],
-            'material'  : '1.0.0',
-            // Testing
-            assertjCore : '2.9.0',
-    ]
-
     repositories {
         google()
         jcenter()
@@ -53,10 +36,6 @@ plugins {
 }
 
 project.ext {
-    compileSdkVersion = COMPILE_SDK_VERSION.toInteger()
-    minSdkVersion = MIN_SDK_VERSION
-    samplesMinSdkVersion = SAMPLES_MIN_SDK_VERSION
-    targetSdkVersion = TARGET_SDK_VERSION
     preDexLibs = !project.hasProperty('disablePreDex')
 }
 

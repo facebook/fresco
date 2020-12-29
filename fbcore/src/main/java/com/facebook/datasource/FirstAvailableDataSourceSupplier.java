@@ -178,7 +178,7 @@ public class FirstAvailableDataSourceSupplier<T> implements Supplier<DataSource<
         closeSafely(dataSource);
       }
       if (!startNextDataSource()) {
-        setFailure(dataSource.getFailureCause());
+        setFailure(dataSource.getFailureCause(), dataSource.getExtras());
       }
     }
 

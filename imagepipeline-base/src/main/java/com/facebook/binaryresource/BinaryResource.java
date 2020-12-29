@@ -7,6 +7,7 @@
 
 package com.facebook.binaryresource;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -19,6 +20,7 @@ import java.io.InputStream;
  *
  * <p>Inspired partly by Guava's ByteSource class, but does not use its implementation.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface BinaryResource {
 
   /**

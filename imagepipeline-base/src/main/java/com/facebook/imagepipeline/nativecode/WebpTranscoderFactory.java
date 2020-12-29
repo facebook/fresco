@@ -7,7 +7,10 @@
 
 package com.facebook.imagepipeline.nativecode;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /** This is the class responsible to return the WebpTranscoder if any */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class WebpTranscoderFactory {
 
   private static WebpTranscoder sWebpTranscoder;

@@ -16,8 +16,8 @@ import android.graphics.RectF;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.drawee.drawable.DrawableParent;
 import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.drawee.drawable.ForwardingDrawable;
@@ -154,7 +154,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     }
 
     // fade drawable composed of layers
-    mFadeDrawable = new FadeDrawable(layers);
+    mFadeDrawable = new FadeDrawable(layers, false, ACTUAL_IMAGE_INDEX);
     mFadeDrawable.setTransitionDuration(builder.getFadeDuration());
 
     // rounded corners drawable (optional)
@@ -411,6 +411,13 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     return getScaleTypeDrawableAtIndex(ACTUAL_IMAGE_INDEX).getScaleType();
   }
 
+  public @Nullable PointF getActualImageFocusPoint() {
+    if (!hasScaleTypeDrawableAtIndex(ACTUAL_IMAGE_INDEX)) {
+      return null;
+    }
+    return getScaleTypeDrawableAtIndex(ACTUAL_IMAGE_INDEX).getFocusPoint();
+  }
+
   /** Sets the color filter to be applied on the actual image. */
   public void setActualImageColorFilter(ColorFilter colorfilter) {
     mActualImageWrapper.setColorFilter(colorfilter);
@@ -597,7 +604,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     return mActualImageWrapper.getDrawable() != mEmptyActualImageDrawable;
   }
 
-  public void setOnFadeFinishedListener(FadeDrawable.OnFadeFinishedListener onFadeFinished) {
-    mFadeDrawable.setOnFadeFinishedListener(onFadeFinished);
+  public void setOnFadeListener(FadeDrawable.OnFadeListener onFadeFinished) {
+    mFadeDrawable.setOnFadeListener(onFadeFinished);
   }
 }

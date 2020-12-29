@@ -80,9 +80,4 @@ public class ImageFormatWebpFragment extends BaseShowcaseFragment {
         .append('\n');
     supportStatusTextView.setText(sb.toString());
   }
-
-  @Override
-  public int getTitleId() {
-    return R.string.format_webp_title;
-  }
 }

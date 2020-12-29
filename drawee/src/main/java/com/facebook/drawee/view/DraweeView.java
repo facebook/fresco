@@ -215,7 +215,7 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
    */
   @Override
   @Deprecated
-  public void setImageDrawable(Drawable drawable) {
+  public void setImageDrawable(@Nullable Drawable drawable) {
     init(getContext());
     mDraweeHolder.setController(null);
     super.setImageDrawable(drawable);

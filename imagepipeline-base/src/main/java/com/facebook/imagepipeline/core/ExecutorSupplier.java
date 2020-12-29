@@ -7,7 +7,10 @@
 
 package com.facebook.imagepipeline.core;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ScheduledExecutorService;
+import javax.annotation.Nullable;
 
 /**
  * Implementations of this interface are responsible for supplying the different executors used by
@@ -21,6 +24,7 @@ import java.util.concurrent.Executor;
  *
  * <p>{@see Executor}
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface ExecutorSupplier {
 
   /** Executor used to do all disk reads, whether for disk cache or local files. */
@@ -37,6 +41,9 @@ public interface ExecutorSupplier {
    * processing.
    */
   Executor forBackgroundTasks();
+
+  @Nullable
+  ScheduledExecutorService scheduledExecutorServiceForBackgroundTasks();
 
   /**
    * Executor used for lightweight background operations, such as handing request off the main

@@ -10,10 +10,12 @@ package com.facebook.imageformat;
 import com.facebook.common.internal.Ints;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.webp.WebpSupportStatus;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.InputStream;
 import javax.annotation.Nullable;
 
 /** Default image format checker that is able to determine all {@link DefaultImageFormats}. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultImageFormatChecker implements ImageFormat.FormatChecker {
 
   /**

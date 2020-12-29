@@ -184,6 +184,11 @@ public class BufferedDiskCache {
     }
   }
 
+  public void addKeyForAsyncProbing(final CacheKey key) {
+    Preconditions.checkNotNull(key);
+    mFileCache.probe(key);
+  }
+
   /**
    * Performs key-value loop up in staging area and file cache. Any error manifests itself as a
    * miss, i.e. returns false.

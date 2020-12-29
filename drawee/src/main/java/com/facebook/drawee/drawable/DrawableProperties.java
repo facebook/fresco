@@ -10,18 +10,21 @@ package com.facebook.drawee.drawable;
 import android.annotation.SuppressLint;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * Set of properties for drawable. There are no default values and only gets applied if were set
  * explicitly.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DrawableProperties {
 
   private static final int UNSET = -1;
 
   private int mAlpha = UNSET;
   private boolean mIsSetColorFilter = false;
-  private ColorFilter mColorFilter = null;
+  @Nullable private ColorFilter mColorFilter = null;
   private int mDither = UNSET;
   private int mFilterBitmap = UNSET;
 

@@ -8,9 +8,11 @@
 package com.facebook.imagepipeline.nativecode;
 
 import android.os.Build;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.soloader.nativeloader.NativeLoader;
 
 /** Single place responsible for ensuring that `static-webp.so` is loaded */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class StaticWebpNativeLoader {
 
   private static boolean sInitialized;

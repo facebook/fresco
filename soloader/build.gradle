@@ -12,21 +12,21 @@ apply plugin: 'maven'
 
 dependencies {
     compileOnly Deps.jsr305
+    compileOnly Deps.inferAnnotation
 
     implementation project(':fbcore')
     implementation Deps.SoLoader.soloader
-
 }
 
 apply from: rootProject.file('release.gradle')
 
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
     }
 
     lintOptions {

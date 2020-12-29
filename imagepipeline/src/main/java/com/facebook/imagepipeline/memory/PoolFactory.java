@@ -19,6 +19,7 @@ import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.memory.PooledByteStreams;
 import com.facebook.imagepipeline.core.MemoryChunkType;
+import com.facebook.imagepipeline.core.NativeCodeSetup;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import javax.annotation.Nullable;
@@ -31,14 +32,14 @@ public class PoolFactory {
   private final PoolConfig mConfig;
 
   private @Nullable MemoryChunkPool mAshmemMemoryChunkPool;
-  private BitmapPool mBitmapPool;
+  @Nullable private BitmapPool mBitmapPool;
   private @Nullable MemoryChunkPool mBufferMemoryChunkPool;
-  private FlexByteArrayPool mFlexByteArrayPool;
+  @Nullable private FlexByteArrayPool mFlexByteArrayPool;
   private @Nullable MemoryChunkPool mNativeMemoryChunkPool;
-  private PooledByteBufferFactory mPooledByteBufferFactory;
-  private PooledByteStreams mPooledByteStreams;
-  private SharedByteArray mSharedByteArray;
-  private ByteArrayPool mSmallByteArrayPool;
+  @Nullable private PooledByteBufferFactory mPooledByteBufferFactory;
+  @Nullable private PooledByteStreams mPooledByteStreams;
+  @Nullable private SharedByteArray mSharedByteArray;
+  @Nullable private ByteArrayPool mSmallByteArrayPool;
 
   public PoolFactory(PoolConfig config) {
     mConfig = Preconditions.checkNotNull(config);
@@ -196,7 +197,8 @@ public class PoolFactory {
   }
 
   public PooledByteBufferFactory getPooledByteBufferFactory() {
-    return getPooledByteBufferFactory(NATIVE_MEMORY);
+    return getPooledByteBufferFactory(
+        NativeCodeSetup.getUseNativeCode() ? NATIVE_MEMORY : BUFFER_MEMORY);
   }
 
   public PooledByteBufferFactory getPooledByteBufferFactory(@MemoryChunkType int memoryChunkType) {

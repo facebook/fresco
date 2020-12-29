@@ -8,10 +8,12 @@
 package com.facebook.imageformat;
 
 import com.facebook.common.internal.ImmutableList;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.List;
 
 /** Default image formats that Fresco supports. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class DefaultImageFormats {
 
   public static final ImageFormat JPEG = new ImageFormat("JPEG", "jpeg");

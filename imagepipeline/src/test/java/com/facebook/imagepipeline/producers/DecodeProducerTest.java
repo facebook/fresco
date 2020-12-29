@@ -12,6 +12,7 @@ import static org.mockito.Mockito.*;
 
 import android.media.ExifInterface;
 import android.net.Uri;
+import com.facebook.common.internal.Suppliers;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
@@ -123,7 +124,9 @@ public class DecodeProducerTest {
             false, /* We don't cancel when the request is cancelled */
             mInputProducer,
             MAX_BITMAP_SIZE,
-            new CloseableReferenceFactory(new NoOpCloseableReferenceLeakTracker()));
+            new CloseableReferenceFactory(new NoOpCloseableReferenceLeakTracker()),
+            null,
+            Suppliers.BOOLEAN_FALSE);
 
     PooledByteBuffer pooledByteBuffer = mockPooledByteBuffer(IMAGE_SIZE);
     mByteBufferRef = CloseableReference.of(pooledByteBuffer);

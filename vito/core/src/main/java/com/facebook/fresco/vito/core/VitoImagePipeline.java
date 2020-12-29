@@ -8,30 +8,27 @@
 package com.facebook.fresco.vito.core;
 
 import android.content.res.Resources;
-import android.net.Uri;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.source.ImageSource;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.listener.RequestListener;
-import com.facebook.imagepipeline.multiuri.MultiUri;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface VitoImagePipeline {
 
   VitoImageRequest createImageRequest(
-      Resources resources,
-      @Nullable Uri uri,
-      @Nullable MultiUri multiUri,
-      @Nullable ImageOptions options,
-      @Nullable Object callerContext);
+      Resources resources, ImageSource imageSource, @Nullable ImageOptions options);
 
   @Nullable
   CloseableReference<CloseableImage> getCachedImage(VitoImageRequest imageRequest);
 
   DataSource<CloseableReference<CloseableImage>> fetchDecodedImage(
-      VitoImageRequest imageRequest,
+      VitoImageRequest imageSource,
       @Nullable Object callerContext,
       @Nullable RequestListener requestListener,
-      @Nullable long uiComponentId);
+      long uiComponentId);
 }

@@ -8,11 +8,11 @@
 package com.facebook.imagepipeline.producers;
 
 import android.net.Uri;
+import androidx.annotation.VisibleForTesting;
 import bolts.Continuation;
 import bolts.Task;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableMap;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBuffer;

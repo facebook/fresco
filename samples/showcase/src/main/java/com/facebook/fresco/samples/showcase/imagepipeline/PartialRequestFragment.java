@@ -90,9 +90,4 @@ public class PartialRequestFragment extends BaseShowcaseFragment {
 
     draweeView.setController(draweeController);
   }
-
-  @Override
-  public int getTitleId() {
-    return R.string.imagepipeline_partial_request_title;
-  }
 }

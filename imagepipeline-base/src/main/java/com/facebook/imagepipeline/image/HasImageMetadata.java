@@ -7,7 +7,11 @@
 
 package com.facebook.imagepipeline.image;
 
+import java.util.Map;
+import javax.annotation.Nonnull;
+
 public interface HasImageMetadata {
 
-  OriginalEncodedImageInfo getOriginalEncodedImageInfo();
+  @Nonnull
+  Map<String, Object> getExtras();
 }

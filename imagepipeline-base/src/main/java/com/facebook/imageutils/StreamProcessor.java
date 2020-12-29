@@ -7,10 +7,12 @@
 
 package com.facebook.imageutils;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 
 /** Util for processing Stream. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 class StreamProcessor {
 
   /**

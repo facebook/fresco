@@ -11,8 +11,10 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.imagepipeline.common.ImageDecodeOptionsBuilder;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FrescoVitoImageDecodeOptionsBuilder
     extends ImageDecodeOptionsBuilder<FrescoVitoImageDecodeOptionsBuilder> {
 

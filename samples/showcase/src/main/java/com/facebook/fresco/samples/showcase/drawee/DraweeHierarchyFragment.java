@@ -136,9 +136,4 @@ public class DraweeHierarchyFragment extends BaseShowcaseFragment {
             .setUri(uri)
             .build());
   }
-
-  @Override
-  public int getTitleId() {
-    return R.string.drawee_hierarchy_title;
-  }
 }

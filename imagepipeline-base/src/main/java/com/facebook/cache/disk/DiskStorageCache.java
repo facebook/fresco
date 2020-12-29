@@ -7,6 +7,7 @@
 
 package com.facebook.cache.disk;
 
+import androidx.annotation.VisibleForTesting;
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.CacheEventListener;
@@ -15,11 +16,12 @@ import com.facebook.cache.common.CacheKeyUtil;
 import com.facebook.cache.common.WriterCallback;
 import com.facebook.common.disk.DiskTrimmable;
 import com.facebook.common.disk.DiskTrimmableRegistry;
-import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.statfs.StatFsHelper;
 import com.facebook.common.time.Clock;
 import com.facebook.common.time.SystemClock;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,6 +38,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /** Cache that manages disk storage. */
 @ThreadSafe
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DiskStorageCache implements FileCache, DiskTrimmable {
 
   private static final Class<?> TAG = DiskStorageCache.class;
@@ -256,6 +259,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
           mCacheEventListener.onMiss(cacheEvent);
           mResourceIndex.remove(resourceId);
         } else {
+          Preconditions.checkNotNull(resourceId);
           mCacheEventListener.onHit(cacheEvent);
           mResourceIndex.add(resourceId);
         }
@@ -696,6 +700,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
           sizeFutureFiles += entry.getSize();
           maxTimeDelta = Math.max(entry.getTimestamp() - now, maxTimeDelta);
         } else if (mIndexPopulateAtStartupEnabled) {
+          Preconditions.checkNotNull(tempResourceIndex);
           tempResourceIndex.add(entry.getId());
         }
       }
@@ -714,6 +719,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       }
       if (mCacheStats.getCount() != count || mCacheStats.getSize() != size) {
         if (mIndexPopulateAtStartupEnabled && mResourceIndex != tempResourceIndex) {
+          Preconditions.checkNotNull(tempResourceIndex);
           mResourceIndex.clear();
           mResourceIndex.addAll(tempResourceIndex);
         }

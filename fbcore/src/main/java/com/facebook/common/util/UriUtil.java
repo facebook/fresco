@@ -7,17 +7,21 @@
 
 package com.facebook.common.util;
 
+import static com.facebook.infer.annotation.Assertions.assumeNotNull;
+
 import android.content.ContentResolver;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class UriUtil {
 
   /** http scheme for URIs */
@@ -33,7 +37,7 @@ public class UriUtil {
 
   /** URI prefix (including scheme) for contact photos */
   private static final Uri LOCAL_CONTACT_IMAGE_URI =
-      Uri.withAppendedPath(ContactsContract.AUTHORITY_URI, "display_photo");
+      Uri.withAppendedPath(assumeNotNull(ContactsContract.AUTHORITY_URI), "display_photo");
 
   /** Asset scheme for URIs */
   public static final String LOCAL_ASSET_SCHEME = "asset";
@@ -110,9 +114,12 @@ public class UriUtil {
    * @return true if the uri is a Contact URI, and is not already specifying a display photo.
    */
   public static boolean isLocalContactUri(Uri uri) {
+    if (uri.getPath() == null) {
+      return false;
+    }
     return isLocalContentUri(uri)
         && ContactsContract.AUTHORITY.equals(uri.getAuthority())
-        && !uri.getPath().startsWith(LOCAL_CONTACT_IMAGE_URI.getPath());
+        && !uri.getPath().startsWith(assumeNotNull(LOCAL_CONTACT_IMAGE_URI.getPath()));
   }
 
   /**

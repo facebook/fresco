@@ -138,9 +138,4 @@ public class ImagePipelineNotificationFragment extends BaseShowcaseFragment {
   private void showToastText(String text) {
     Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
   }
-
-  @Override
-  public int getTitleId() {
-    return R.string.imagepipeline_notification_title;
-  }
 }

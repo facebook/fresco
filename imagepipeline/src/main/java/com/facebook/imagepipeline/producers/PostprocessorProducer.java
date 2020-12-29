@@ -8,9 +8,9 @@
 package com.facebook.imagepipeline.producers;
 
 import android.graphics.Bitmap;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -248,8 +248,7 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
         CloseableStaticBitmap closeableStaticBitmap =
             new CloseableStaticBitmap(
                 bitmapRef, sourceImage.getQualityInfo(), rotationAngle, exifOrientation);
-        closeableStaticBitmap.setOriginalEncodedImageInfo(
-            staticBitmap.getOriginalEncodedImageInfo());
+        closeableStaticBitmap.setImageExtras(staticBitmap.getExtras());
         return CloseableReference.<CloseableImage>of(closeableStaticBitmap);
       } finally {
         CloseableReference.closeSafely(bitmapRef);

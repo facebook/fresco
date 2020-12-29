@@ -17,7 +17,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.drawee.debug.listener.ImageLoadingTimeListener;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import java.util.HashMap;
@@ -58,12 +58,12 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
 
   // General information
   private String mControllerId;
-  private String mImageId;
+  @Nullable private String mImageId;
   private int mWidthPx;
   private int mHeightPx;
   private int mImageSizeBytes;
-  private String mImageFormat;
-  private ScaleType mScaleType;
+  @Nullable private String mImageFormat;
+  @Nullable private ScaleType mScaleType;
   private HashMap<String, String> mAdditionalData = new HashMap<>();
 
   // Animations
@@ -86,7 +86,7 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
   private int mCurrentTextYPx;
 
   private long mFinalImageTimeMs;
-  private String mOriginText;
+  @Nullable private String mOriginText;
   private int mOriginColor = TEXT_COLOR;
   private int mOverlayColor = Color.TRANSPARENT;
 

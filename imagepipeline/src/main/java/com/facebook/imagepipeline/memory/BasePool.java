@@ -10,10 +10,10 @@ package com.facebook.imagepipeline.memory;
 import android.annotation.SuppressLint;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Sets;
 import com.facebook.common.internal.Throwables;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
@@ -663,6 +663,7 @@ public abstract class BasePool<V> implements Pool<V> {
    * @param bucketedSize the bucket size
    * @return the freelist for the bucket
    */
+  @Nullable
   private synchronized Bucket<V> getBucketIfPresent(int bucketedSize) {
     return mBuckets.get(bucketedSize);
   }

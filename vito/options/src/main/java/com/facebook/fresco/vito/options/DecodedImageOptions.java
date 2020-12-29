@@ -15,8 +15,10 @@ import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.request.Postprocessor;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DecodedImageOptions extends EncodedImageOptions {
 
   public static Builder create() {
@@ -29,7 +31,7 @@ public class DecodedImageOptions extends EncodedImageOptions {
   private final @Nullable ImageDecodeOptions mImageDecodeOptions;
   private final @Nullable RoundingOptions mRoundingOptions;
   private final @Nullable BorderOptions mBorderOptions;
-  private final @Nullable ScalingUtils.ScaleType mActualImageScaleType;
+  private final ScalingUtils.ScaleType mActualImageScaleType;
   private final @Nullable PointF mActualImageFocusPoint;
   private final boolean mLocalThumbnailPreviewsEnabled;
   private final @Nullable Bitmap.Config mBitmapConfig;
@@ -72,7 +74,7 @@ public class DecodedImageOptions extends EncodedImageOptions {
     return mBorderOptions;
   }
 
-  public @Nullable ScalingUtils.ScaleType getActualImageScaleType() {
+  public ScalingUtils.ScaleType getActualImageScaleType() {
     return mActualImageScaleType;
   }
 
@@ -89,7 +91,7 @@ public class DecodedImageOptions extends EncodedImageOptions {
   }
 
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(@Nullable Object obj) {
     if (this == obj) {
       return true;
     }
@@ -158,13 +160,14 @@ public class DecodedImageOptions extends EncodedImageOptions {
     private @Nullable ImageDecodeOptions mImageDecodeOptions;
     private @Nullable RoundingOptions mRoundingOptions;
     private @Nullable BorderOptions mBorderOptions;
-    private @Nullable ScalingUtils.ScaleType mActualImageScaleType;
+    private ScalingUtils.ScaleType mActualImageScaleType;
     private @Nullable PointF mActualFocusPoint;
     private boolean mLocalThumbnailPreviewsEnabled = false;
     public @Nullable Bitmap.Config mBitmapConfig;
 
     protected Builder() {
       super();
+      mActualImageScaleType = ScalingUtils.ScaleType.CENTER_CROP;
     }
 
     protected Builder(ImageOptions defaultOptions) {
@@ -218,7 +221,11 @@ public class DecodedImageOptions extends EncodedImageOptions {
     }
 
     public T scale(@Nullable ScalingUtils.ScaleType actualImageScaleType) {
-      mActualImageScaleType = actualImageScaleType;
+      if (actualImageScaleType == null) {
+        mActualImageScaleType = ImageOptions.defaults().getActualImageScaleType();
+      } else {
+        mActualImageScaleType = actualImageScaleType;
+      }
       return getThis();
     }
 

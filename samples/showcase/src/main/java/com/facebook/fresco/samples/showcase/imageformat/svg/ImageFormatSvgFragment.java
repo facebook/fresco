@@ -65,11 +65,6 @@ public class ImageFormatSvgFragment extends BaseShowcaseFragment {
         });
   }
 
-  @Override
-  public int getTitleId() {
-    return R.string.format_svg_title;
-  }
-
   private ShowRestartMessageDialog getShowRestartMessageDialog() {
     if (mShowRestartMessageDialog == null) {
       mShowRestartMessageDialog = new ShowRestartMessageDialog();

@@ -67,7 +67,7 @@ public class ImagePerfMonitorTest {
     verify(mController).addRequestListener(any(RequestListener.class));
     verify(mController).getId();
     verify(mController).removeImageOriginListener(any(ImagePerfImageOriginListener.class));
-    verify(mController).removeControllerListener2();
+    verify(mController).removeControllerListener2(any(ImagePerfControllerListener2.class));
     verify(mController).removeRequestListener(any(RequestListener.class));
     verifyNoMoreInteractions(mController);
   }

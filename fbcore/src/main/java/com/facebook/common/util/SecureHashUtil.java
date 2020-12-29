@@ -8,6 +8,7 @@
 package com.facebook.common.util;
 
 import android.util.Base64;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -15,6 +16,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /** Static methods for secure hashing. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class SecureHashUtil {
 
   public static String makeSHA1Hash(String text) {

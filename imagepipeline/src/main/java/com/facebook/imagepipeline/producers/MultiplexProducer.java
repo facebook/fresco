@@ -8,9 +8,9 @@
 package com.facebook.imagepipeline.producers;
 
 import android.util.Pair;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Sets;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.util.TriState;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
@@ -112,7 +112,8 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
       } while (!multiplexer.addNewConsumer(consumer, context));
 
       if (createdNewMultiplexer) {
-        multiplexer.startInputProducerIfHasAttachedConsumers(TriState.valueOf(context.isPrefetch()));
+        multiplexer.startInputProducerIfHasAttachedConsumers(
+            TriState.valueOf(context.isPrefetch()));
       }
     } finally {
       if (FrescoSystrace.isTracing()) {
@@ -377,8 +378,10 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
                 computeIsIntermediateResultExpected(),
                 computePriority(),
                 producerContext.getImagePipelineConfig());
+        mMultiplexProducerContext.putExtras(producerContext.getExtras());
         if (startedAsPrefetch.isSet()) {
-          mMultiplexProducerContext.setExtra(EXTRAS_STARTED_AS_PREFETCH, startedAsPrefetch.asBoolean());
+          mMultiplexProducerContext.setExtra(
+              EXTRAS_STARTED_AS_PREFETCH, startedAsPrefetch.asBoolean());
         }
 
         mForwardingConsumer = new ForwardingConsumer();

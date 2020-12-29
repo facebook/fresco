@@ -8,12 +8,14 @@
 package com.facebook.cache.common;
 
 import android.net.Uri;
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * Strongly typed cache key to be used instead of {@link Object}.
  *
  * <p>{@link #toString}, {@link #equals} and {@link #hashCode} methods must be implemented.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface CacheKey {
 
   /** This is useful for instrumentation and debugging purposes. */

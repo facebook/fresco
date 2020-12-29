@@ -8,11 +8,13 @@
 package com.facebook.cache.common;
 
 import com.facebook.common.internal.ByteStreams;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 /** Utility class to create typical {@link WriterCallback}s. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class WriterCallbacks {
 
   /**

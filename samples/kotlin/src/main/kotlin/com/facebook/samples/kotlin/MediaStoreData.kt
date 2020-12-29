@@ -9,7 +9,6 @@ package com.facebook.samples.kotlin
 
 import android.content.ContentUris
 import android.content.Context
-import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
 
@@ -21,17 +20,13 @@ class MediaStoreData {
 
   fun loadPhotoUris(context: Context): List<Uri> {
     val uris = mutableListOf<Uri>()
-    context.contentResolver.query(
-        CONTENT_URI,
-        arrayOf(IMAGE_ID_COLUMN_NAME),
-        null,
-        null,
-        null)?.use {
-      val dataIndex = it.getColumnIndexOrThrow(IMAGE_ID_COLUMN_NAME)
-      while (it.moveToNext()) {
-        uris.add(ContentUris.withAppendedId(CONTENT_URI, it.getLong(dataIndex)))
-      }
-    }
+    context.contentResolver.query(CONTENT_URI, arrayOf(IMAGE_ID_COLUMN_NAME), null, null, null)
+        ?.use {
+          val dataIndex = it.getColumnIndexOrThrow(IMAGE_ID_COLUMN_NAME)
+          while (it.moveToNext()) {
+            uris.add(ContentUris.withAppendedId(CONTENT_URI, it.getLong(dataIndex)))
+          }
+        }
 
     return uris
   }

@@ -11,7 +11,9 @@ import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfState;
 import com.facebook.imagepipeline.listener.BaseRequestListener;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImagePerfRequestListener extends BaseRequestListener {
 
   private final MonotonicClock mClock;

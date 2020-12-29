@@ -16,6 +16,8 @@
 
 package com.facebook.common.internal;
 
+import androidx.annotation.VisibleForTesting;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +32,7 @@ import javax.annotation.Nullable;
  * @author Michael Lancaster
  * @since 1.0
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class Closeables {
   @VisibleForTesting static final Logger logger = Logger.getLogger(Closeables.class.getName());
 

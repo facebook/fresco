@@ -9,21 +9,24 @@ package com.facebook.fresco.vito.drawable;
 
 import android.graphics.drawable.Drawable;
 import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
-public class ArrayVitoDrawableFactory implements VitoDrawableFactory {
+@Nullsafe(Nullsafe.Mode.STRICT)
+public class ArrayVitoDrawableFactory implements ImageOptionsDrawableFactory {
 
-  private final VitoDrawableFactory[] mDrawableFactories;
+  private final ImageOptionsDrawableFactory[] mDrawableFactories;
 
-  public ArrayVitoDrawableFactory(VitoDrawableFactory... drawableFactories) {
+  public ArrayVitoDrawableFactory(ImageOptionsDrawableFactory... drawableFactories) {
     mDrawableFactories = drawableFactories;
   }
 
   @Nullable
   @Override
   public Drawable createDrawable(CloseableImage closeableImage, ImageOptions imageOptions) {
-    for (VitoDrawableFactory factory : mDrawableFactories) {
+    for (ImageOptionsDrawableFactory factory : mDrawableFactories) {
       Drawable drawable = factory.createDrawable(closeableImage, imageOptions);
       if (drawable != null) {
         return drawable;

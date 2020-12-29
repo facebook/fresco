@@ -13,6 +13,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
@@ -111,6 +112,7 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
     private int mNumberOfDataSources;
     private AtomicInteger mFinishedDataSources;
     private @Nullable Throwable mDelayedError;
+    private @Nullable Map<String, Object> mDelayedExtras;
 
     public IncreasingQualityDataSource() {
       if (!mDataSourceLazy) {
@@ -218,6 +220,7 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
       closeSafely(tryGetAndClearDataSource(index, dataSource));
       if (index == 0) {
         mDelayedError = dataSource.getFailureCause();
+        mDelayedExtras = dataSource.getExtras();
       }
       maybeSetFailure();
     }
@@ -225,7 +228,7 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
     private void maybeSetFailure() {
       int finished = mFinishedDataSources.incrementAndGet();
       if (finished == mNumberOfDataSources && mDelayedError != null) {
-        setFailure(mDelayedError);
+        setFailure(mDelayedError, mDelayedExtras);
       }
     }
 

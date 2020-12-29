@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 public class ArrayDrawable extends Drawable
     implements Drawable.Callback, TransformCallback, TransformAwareDrawable {
 
-  private TransformCallback mTransformCallback;
+  @Nullable private TransformCallback mTransformCallback;
 
   private final DrawableProperties mDrawableProperties = new DrawableProperties();
 

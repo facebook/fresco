@@ -10,10 +10,12 @@ package com.facebook.common.references;
 import android.graphics.Bitmap;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.FalseOnNull;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
 /**
@@ -60,7 +62,7 @@ import javax.annotation.concurrent.GuardedBy;
  * Preconditions.checkArgument(SharedReference.isValid(r)); ... // increment ref count before
  * returning r.addReference(); return r; }
  */
-@VisibleForTesting
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class SharedReference<T> {
 
   // Keeps references to all live objects so finalization of those Objects always happens after
@@ -70,7 +72,7 @@ public class SharedReference<T> {
   private static final Map<Object, Integer> sLiveObjects = new IdentityHashMap<>();
 
   @GuardedBy("this")
-  private T mValue;
+  private @Nullable T mValue;
 
   @GuardedBy("this")
   private int mRefCount;
@@ -138,6 +140,7 @@ public class SharedReference<T> {
    *
    * @return the referenced value
    */
+  @Nullable
   public synchronized T get() {
     return mValue;
   }
@@ -156,7 +159,8 @@ public class SharedReference<T> {
    *
    * @return true if the shared reference is valid
    */
-  public static boolean isValid(SharedReference<?> ref) {
+  @FalseOnNull
+  public static boolean isValid(@Nullable SharedReference<?> ref) {
     return ref != null && ref.isValid();
   }
 
@@ -197,8 +201,10 @@ public class SharedReference<T> {
         deleted = mValue;
         mValue = null;
       }
-      mResourceReleaser.release(deleted);
-      removeLiveReference(deleted);
+      if (deleted != null) {
+        mResourceReleaser.release(deleted);
+        removeLiveReference(deleted);
+      }
     }
   }
 

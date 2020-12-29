@@ -9,8 +9,10 @@ package com.facebook.common.references;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultCloseableReference<T> extends CloseableReference<T> {
 
   private static final String TAG = "DefaultCloseableReference";
@@ -31,7 +33,8 @@ public class DefaultCloseableReference<T> extends CloseableReference<T> {
   @Override
   public CloseableReference<T> clone() {
     Preconditions.checkState(isValid());
-    return new DefaultCloseableReference<T>(mSharedReference, mLeakHandler, mStacktrace);
+    return new DefaultCloseableReference<T>(
+        mSharedReference, mLeakHandler, mStacktrace != null ? new Throwable(mStacktrace) : null);
   }
 
   @Override
@@ -45,12 +48,13 @@ public class DefaultCloseableReference<T> extends CloseableReference<T> {
         }
       }
 
+      T ref = mSharedReference.get();
       FLog.w(
           TAG,
           "Finalized without closing: %x %x (type = %s)",
           System.identityHashCode(this),
           System.identityHashCode(mSharedReference),
-          mSharedReference.get().getClass().getName());
+          ref == null ? null : ref.getClass().getName());
 
       mLeakHandler.reportLeak((SharedReference<Object>) mSharedReference, mStacktrace);
 

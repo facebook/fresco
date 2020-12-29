@@ -8,13 +8,15 @@
 package com.facebook.fresco.vito.draweesupport;
 
 import android.graphics.drawable.Drawable;
-import com.facebook.fresco.vito.drawable.VitoDrawableFactory;
 import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
-public class DrawableFactoryWrapper implements VitoDrawableFactory {
+@Nullsafe(Nullsafe.Mode.STRICT)
+public class DrawableFactoryWrapper implements ImageOptionsDrawableFactory {
 
   private final DrawableFactory mDrawableFactory;
 

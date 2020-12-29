@@ -19,6 +19,7 @@ import android.util.DisplayMetrics;
 import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
 import com.facebook.fresco.vito.options.RoundingOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
@@ -34,7 +35,7 @@ public class BitmapDrawableFactoryTest {
   private DisplayMetrics mDisplayMetrics;
   private FrescoExperiments mExperiments;
 
-  private VitoDrawableFactory mDrawableFactory;
+  private ImageOptionsDrawableFactory mDrawableFactory;
 
   @Before
   public void setup() {

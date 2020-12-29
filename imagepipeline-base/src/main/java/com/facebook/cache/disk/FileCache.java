@@ -11,9 +11,12 @@ import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.WriterCallback;
 import com.facebook.common.disk.DiskTrimmable;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
+import javax.annotation.Nullable;
 
 /** Interface that caches based on disk should implement. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface FileCache extends DiskTrimmable {
 
   /**
@@ -26,6 +29,7 @@ public interface FileCache extends DiskTrimmable {
   boolean isEnabled();
 
   /** Returns the binary resource cached with key. */
+  @Nullable
   BinaryResource getResource(CacheKey key);
 
   /**

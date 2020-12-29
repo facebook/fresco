@@ -23,22 +23,24 @@ class KotlinApp : Application() {
 
   override fun onCreate() {
     super.onCreate()
-    val pipelineConfig = ImagePipelineConfig.newBuilder(this)
-        .setBitmapMemoryCacheParamsSupplier {
-          MemoryCacheParams(
-              MAX_MEMORY_CACHE_SIZE,
-              Int.MAX_VALUE,
-              MAX_MEMORY_CACHE_SIZE,
-              Int.MAX_VALUE,
-              Int.MAX_VALUE)
-        }
-        .setMainDiskCacheConfig(DiskCacheConfig.newBuilder(this)
-            .setBaseDirectoryPath(cacheDir)
-            .setBaseDirectoryName("stuff")
-            .setMaxCacheSize(MAX_DISK_CACHE_SIZE)
-            .build())
-        .setDownsampleEnabled(true)
-        .build()
+    val pipelineConfig =
+        ImagePipelineConfig.newBuilder(this)
+            .setBitmapMemoryCacheParamsSupplier {
+              MemoryCacheParams(
+                  MAX_MEMORY_CACHE_SIZE,
+                  Int.MAX_VALUE,
+                  MAX_MEMORY_CACHE_SIZE,
+                  Int.MAX_VALUE,
+                  Int.MAX_VALUE)
+            }
+            .setMainDiskCacheConfig(
+                DiskCacheConfig.newBuilder(this)
+                    .setBaseDirectoryPath(cacheDir)
+                    .setBaseDirectoryName("stuff")
+                    .setMaxCacheSize(MAX_DISK_CACHE_SIZE)
+                    .build())
+            .setDownsampleEnabled(true)
+            .build()
     Fresco.initialize(this, pipelineConfig)
   }
 }

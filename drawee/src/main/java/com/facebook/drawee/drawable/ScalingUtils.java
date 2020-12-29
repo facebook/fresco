@@ -11,9 +11,11 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Performs scale type calculations. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ScalingUtils {
 
   /**

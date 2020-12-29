@@ -15,6 +15,7 @@ import android.graphics.Matrix;
 import android.view.animation.DecelerateInterpolator;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.gestures.TransformGestureDetector;
 import javax.annotation.Nullable;
 
@@ -22,6 +23,7 @@ import javax.annotation.Nullable;
  * ZoomableController that adds animation capabilities to DefaultZoomableController using standard
  * Android animation classes
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedZoomableController extends AbstractAnimatedZoomableController {
 
   private static final Class<?> TAG = AnimatedZoomableController.class;

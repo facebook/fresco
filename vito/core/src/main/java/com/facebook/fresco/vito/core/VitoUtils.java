@@ -7,8 +7,10 @@
 
 package com.facebook.fresco.vito.core;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class VitoUtils {
 
   private static final AtomicLong sIdCounter = new AtomicLong();

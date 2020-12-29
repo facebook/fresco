@@ -16,10 +16,10 @@ import javax.annotation.Nullable;
 public interface CacheKeyFactory {
 
   /** @return {@link CacheKey} for doing bitmap cache lookups in the pipeline. */
-  CacheKey getBitmapCacheKey(ImageRequest request, Object callerContext);
+  CacheKey getBitmapCacheKey(ImageRequest request, @Nullable Object callerContext);
 
   /** @return {@link CacheKey} for doing post-processed bitmap cache lookups in the pipeline. */
-  CacheKey getPostprocessedBitmapCacheKey(ImageRequest request, Object callerContext);
+  CacheKey getPostprocessedBitmapCacheKey(ImageRequest request, @Nullable Object callerContext);
 
   /**
    * Creates a key to be used in the encoded memory and disk caches.

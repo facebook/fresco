@@ -10,9 +10,10 @@ import com.facebook.fresco.buildsrc.Deps
 apply plugin: 'com.android.library'
 
 dependencies {
+    compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
 
-    api "com.squareup.okhttp3:okhttp:${OKHTTP3_VERSION}"
+    api Deps.okhttp3
 
     implementation project(':fbcore')
     implementation project(':imagepipeline')
@@ -25,11 +26,11 @@ apply from: rootProject.file('release.gradle')
 
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
     }
 
     packagingOptions {
@@ -50,4 +51,3 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 artifacts.add('archives', sourcesJar)
-

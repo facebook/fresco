@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
-import com.facebook.fresco.samples.showcase.R;
 import com.facebook.litho.ComponentContext;
 import com.facebook.litho.LithoView;
 import com.facebook.litho.sections.SectionContext;
@@ -35,10 +34,5 @@ public class FrescoVitoLithoSectionsFragment extends BaseShowcaseFragment {
             .section(SimpleListSection.create(new SectionContext(c)).build())
             .disablePTR(true)
             .build());
-  }
-
-  @Override
-  public int getTitleId() {
-    return R.string.vito_litho_sections;
   }
 }

@@ -14,6 +14,7 @@ import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSubscriber;
 import com.facebook.imagepipeline.image.CloseableBitmap;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -40,6 +41,7 @@ import javax.annotation.Nullable;
  * </code>
  * </pre>
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class BaseBitmapDataSubscriber
     extends BaseDataSubscriber<CloseableReference<CloseableImage>> {
 

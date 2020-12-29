@@ -43,6 +43,7 @@ public class ImageRequestBuilder {
   private @Nullable RequestListener mRequestListener;
   private @Nullable BytesRange mBytesRange = null;
   private @Nullable Boolean mResizingAllowedOverride = null;
+  private int mDelayMs;
 
   /**
    * Creates a new request builder instance. The setting will be done according to the source type.
@@ -94,7 +95,8 @@ public class ImageRequestBuilder {
         .setResizeOptions(imageRequest.getResizeOptions())
         .setRequestListener(imageRequest.getRequestListener())
         .setRotationOptions(imageRequest.getRotationOptions())
-        .setShouldDecodePrefetches(imageRequest.shouldDecodePrefetches());
+        .setShouldDecodePrefetches(imageRequest.shouldDecodePrefetches())
+        .setDelayMs(imageRequest.getDelayMs());
   }
 
   private ImageRequestBuilder() {}
@@ -363,6 +365,16 @@ public class ImageRequestBuilder {
 
   public @Nullable Boolean getResizingAllowedOverride() {
     return mResizingAllowedOverride;
+  }
+
+  public int getDelayMs() {
+    return mDelayMs;
+  }
+
+  /** Add an artificial delay for this image, in milliseconds. */
+  public ImageRequestBuilder setDelayMs(int delayMs) {
+    mDelayMs = delayMs;
+    return this;
   }
 
   /** An exception class for builder methods. */

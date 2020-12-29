@@ -8,19 +8,13 @@
 package com.facebook.fresco.vito.core;
 
 import androidx.annotation.Nullable;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class FrescoDrawable extends BaseFrescoDrawable implements Closeable {
 
   private @Nullable FrescoState mFrescoState;
-
-  public FrescoDrawable() {
-    super();
-  }
-
-  public FrescoDrawable(boolean allLayersVisible) {
-    super(allLayersVisible);
-  }
 
   @Nullable
   public FrescoState getFrescoState() {

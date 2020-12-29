@@ -99,9 +99,4 @@ public class DraweeScaleTypeFragment extends BaseShowcaseFragment {
     hierarchy.setActualImageScaleType(scaleType);
     hierarchy.setActualImageFocusPoint(focusPoint != null ? focusPoint : new PointF(0.5f, 0.5f));
   }
-
-  @Override
-  public int getTitleId() {
-    return R.string.drawee_scale_type_title;
-  }
 }

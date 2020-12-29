@@ -10,6 +10,7 @@ package com.facebook.cache.disk;
 import com.facebook.cache.common.CacheEvent;
 import com.facebook.cache.common.CacheEventListener;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.ReturnsOwnership;
 import java.io.IOException;
 import javax.annotation.Nullable;
@@ -18,22 +19,23 @@ import javax.annotation.Nullable;
  * Implementation of {@link CacheEvent} that allows the values to be set and supports recycling of
  * instances.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class SettableCacheEvent implements CacheEvent {
 
   private static final Object RECYCLER_LOCK = new Object();
   private static final int MAX_RECYCLED = 5;
 
-  private static SettableCacheEvent sFirstRecycledEvent;
+  private static @Nullable SettableCacheEvent sFirstRecycledEvent;
   private static int sRecycledCount;
 
-  private CacheKey mCacheKey;
-  private String mResourceId;
+  private @Nullable CacheKey mCacheKey;
+  private @Nullable String mResourceId;
   private long mItemSize;
   private long mCacheLimit;
   private long mCacheSize;
-  private IOException mException;
-  private CacheEventListener.EvictionReason mEvictionReason;
-  private SettableCacheEvent mNextRecycledEvent;
+  private @Nullable IOException mException;
+  private @Nullable CacheEventListener.EvictionReason mEvictionReason;
+  private @Nullable SettableCacheEvent mNextRecycledEvent;
 
   @ReturnsOwnership
   public static SettableCacheEvent obtain() {

@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.common;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.util.HashCodeUtil;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Locale;
 import javax.annotation.Nullable;
 
@@ -19,6 +20,7 @@ import javax.annotation.Nullable;
  * <p>Describes the target bounds for the image (width, height) in pixels, as well as the
  * downscaling policy to employ.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ResizeOptions {
 
   public static final float DEFAULT_ROUNDUP_FRACTION = 2.0f / 3;
@@ -74,7 +76,7 @@ public class ResizeOptions {
   }
 
   @Override
-  public boolean equals(Object other) {
+  public boolean equals(@Nullable Object other) {
     if (other == this) {
       return true;
     }

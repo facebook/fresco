@@ -8,7 +8,7 @@
 package com.facebook.imagepipeline.image;
 
 /** Interface containing information about an image. */
-public interface ImageInfo {
+public interface ImageInfo extends HasImageMetadata {
 
   /** @return width of the image */
   int getWidth();

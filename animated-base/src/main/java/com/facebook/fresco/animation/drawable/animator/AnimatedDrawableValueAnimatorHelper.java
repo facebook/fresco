@@ -11,6 +11,7 @@ import android.animation.ValueAnimator;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -19,6 +20,7 @@ import javax.annotation.Nullable;
  *
  * <p>Supported drawable types: - {@link AnimatedDrawable2}
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class AnimatedDrawableValueAnimatorHelper {
 
   /**

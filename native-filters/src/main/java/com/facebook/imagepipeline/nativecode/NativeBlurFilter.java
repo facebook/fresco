@@ -10,9 +10,11 @@ package com.facebook.imagepipeline.nativecode;
 import android.graphics.Bitmap;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** A fast native blur filter. See {@link NativeBlurFilter#iterativeBoxBlur} */
 @DoNotStrip
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class NativeBlurFilter {
 
   static {

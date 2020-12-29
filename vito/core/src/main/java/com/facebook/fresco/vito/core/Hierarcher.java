@@ -16,9 +16,11 @@ import com.facebook.drawee.drawable.InstrumentedDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.ThreadSafe;
 
 /** Helper for building drawables */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface Hierarcher {
 
   /**
@@ -28,6 +30,7 @@ public interface Hierarcher {
    * @param imageOptions image options to be used to create the placeholder drawable
    * @return the placeholder drawable or NopDrawable.INSTANCE if unset.
    */
+  @Nullable
   Drawable buildPlaceholderDrawable(Resources resources, ImageOptions imageOptions);
 
   /**
@@ -35,8 +38,9 @@ public interface Hierarcher {
    *
    * @param resources resources to be used to load the drawable
    * @param imageOptions image options to be used to create the progressbar drawable
-   * @return the progressbar drawable or NopDrawable.INSTANCE if unset.
+   * @return the progressbar drawable or null if unset.
    */
+  @Nullable
   Drawable buildProgressDrawable(Resources resources, ImageOptions imageOptions);
 
   /**
@@ -54,10 +58,12 @@ public interface Hierarcher {
    * drawable once set and can perform transformations, like scaling.
    *
    * @param imageOptions image options to be used to create the wrapper
+   * @param callerContext the caller's context, may be null
    * @return the actual image wrapper drawable
    */
   @ThreadSafe
-  ForwardingDrawable buildActualImageWrapper(ImageOptions imageOptions);
+  ForwardingDrawable buildActualImageWrapper(
+      ImageOptions imageOptions, @Nullable Object callerContext);
 
   /**
    * Builds the overlay drawable to be displayed for the given image options.
@@ -74,8 +80,12 @@ public interface Hierarcher {
    *
    * @param actualImageWrapper the wrapper to set up
    * @param imageOptions image options to be used
+   * @param callerContext the caller's context, may be null
    */
-  void setupActualImageWrapper(ScaleTypeDrawable actualImageWrapper, ImageOptions imageOptions);
+  void setupActualImageWrapper(
+      ScaleTypeDrawable actualImageWrapper,
+      ImageOptions imageOptions,
+      @Nullable Object callerContext);
 
   /**
    * Sets up the actual image drawable for a given fresco drawable.
@@ -89,6 +99,7 @@ public interface Hierarcher {
       BaseFrescoDrawable frescoDrawable,
       Resources resources,
       ImageOptions imageOptions,
+      @Nullable Object callerContext,
       CloseableReference<CloseableImage> closeableImage,
       @Nullable ForwardingDrawable actualImageWrapperDrawable,
       boolean wasImmediate,
@@ -97,18 +108,16 @@ public interface Hierarcher {
   /**
    * Sets up the overlay drawable for a given fresco drawable.
    *
-   * @param frescoContext the Fresco context to use
    * @param frescoDrawable the Fresco drawable to set up
    * @param resources resources to be used to load drawables
    * @param imageOptions image options to be used to create the overlay
-   * @param overlayDrawable a cached overlay drawable to be used instead of creating a new one
+   * @param cachedOverlayDrawable a cached overlay drawable to be used instead of creating a new one
    */
   void setupOverlayDrawable(
-      FrescoContext frescoContext,
-      FrescoDrawable frescoDrawable,
+      BaseFrescoDrawable frescoDrawable,
       Resources resources,
       ImageOptions imageOptions,
-      @Nullable Drawable overlayDrawable);
+      @Nullable Drawable cachedOverlayDrawable);
 
   /**
    * Sets up the debug overlay drawable for a given fresco drawable.
@@ -118,7 +127,7 @@ public interface Hierarcher {
    * @param debugOverlayDrawable a debug overlay drawable if enabled
    */
   void setupDebugOverlayDrawable(
-      FrescoDrawable frescoDrawable,
+      BaseFrescoDrawable frescoDrawable,
       @Nullable Drawable overlayDrawable,
       @Nullable Drawable debugOverlayDrawable);
 }

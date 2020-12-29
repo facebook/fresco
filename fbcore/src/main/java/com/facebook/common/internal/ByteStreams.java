@@ -18,6 +18,7 @@ package com.facebook.common.internal;
 
 import static com.facebook.common.internal.Preconditions.checkNotNull;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInput;
 import java.io.EOFException;
@@ -33,6 +34,7 @@ import java.util.Arrays;
  * @author Colin Decker
  * @since 1.0
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class ByteStreams {
 
   private static final int BUF_SIZE = 0x1000; // 4K

@@ -9,17 +9,20 @@ package com.facebook.cache.disk;
 
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.WriterCallback;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /**
  * Storage for files in the cache. Responsible for maintaining state (count, size, watch file
  * existence, reachability)
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface DiskStorage {
 
   class DiskDumpInfoEntry {
@@ -70,6 +73,7 @@ public interface DiskStorage {
    * @return the resource with the specified name. NULL if not found
    * @throws IOException for unexpected behavior.
    */
+  @Nullable
   BinaryResource getResource(String resourceId, Object debugInfo) throws IOException;
 
   /**
@@ -187,6 +191,18 @@ public interface DiskStorage {
      * @exception IOException on errors during the commit
      */
     BinaryResource commit(Object debugInfo) throws IOException;
+
+    /**
+     * Commits the insertion into the cache. Once this is called the entry will be available to
+     * clients of the cache. It also sets the file's timestamp according to the time passed as an
+     * argument.
+     *
+     * @param debugInfo debug object for debugging
+     * @param time in milliseconds
+     * @return the final resource created
+     * @exception IOException on errors during the commit
+     */
+    BinaryResource commit(Object debugInfo, long time) throws IOException;
 
     /**
      * Discards the insertion process. If resource was already committed the call is ignored.
