@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.core.impl;
 
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
@@ -327,6 +328,15 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     if (image != null && image.get() != null) {
       imageExtras = image.get().getExtras();
     }
+
+    Uri sourceUri = null;
+    VitoImageRequest vitoImageRequest = drawable.getImageRequest();
+    if (vitoImageRequest != null) {
+      if (vitoImageRequest.finalImageRequest != null) {
+        sourceUri = vitoImageRequest.finalImageRequest.getSourceUri();
+      }
+    }
+
     return MiddlewareUtils.obtainExtras(
         COMPONENT_EXTRAS,
         SHORTCUT_EXTRAS,
@@ -336,6 +346,6 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
         drawable.getActualImageFocusPoint(),
         imageExtras,
         drawable.getCallerContext(),
-        null);
+        sourceUri);
   }
 }
