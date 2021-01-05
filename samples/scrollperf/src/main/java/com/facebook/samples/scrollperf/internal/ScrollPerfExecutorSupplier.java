@@ -8,10 +8,12 @@
 package com.facebook.samples.scrollperf.internal;
 
 import android.os.Process;
+import androidx.annotation.Nullable;
 import com.facebook.imagepipeline.core.ExecutorSupplier;
 import com.facebook.imagepipeline.core.PriorityThreadFactory;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 
 /** An ExecutorSupplier we use just for ScrollPerf */
@@ -58,6 +60,12 @@ public class ScrollPerfExecutorSupplier implements ExecutorSupplier {
   @Override
   public Executor forBackgroundTasks() {
     return mBackgroundExecutor;
+  }
+
+  @Nullable
+  @Override
+  public ScheduledExecutorService scheduledExecutorServiceForBackgroundTasks() {
+    return null;
   }
 
   @Override

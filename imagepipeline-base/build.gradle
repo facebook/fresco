@@ -14,7 +14,7 @@ apply plugin: 'maven'
 dependencies {
     compileOnly Deps.AndroidX.androidxAnnotation
     compileOnly Deps.AndroidX.legacySupportCoreUtils
-    compileOnly Deps.inferAnnotation
+    implementation Deps.inferAnnotation
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
 

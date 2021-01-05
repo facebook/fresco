@@ -10,6 +10,10 @@ import com.facebook.fresco.buildsrc.Deps
 apply plugin: 'com.android.library'
 
 dependencies {
+    compileOnly Deps.inferAnnotation
+    compileOnly Deps.jsr305
+    compileOnly Deps.javaxAnnotation
+
     compileOnly Deps.AndroidX.androidxAnnotation
     compileOnly Deps.AndroidX.legacySupportCoreUtils
     compileOnly Deps.jsr305
