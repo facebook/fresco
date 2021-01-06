@@ -227,8 +227,8 @@ subprojects {
     // Gif
     createNativeLibrariesTasks(
             'Giflib',      // Name for the tasks
-            "https://launchpad.net/ubuntu/+archive/primary/+files/giflib_${GIFLIB_VERSION}.orig.tar.bz2", // The Url for download
-            "giflib_${GIFLIB_VERSION}.orig.tar.bz2", // The downloaded file
+            "https://sourceforge.net/projects/giflib/files/giflib-${GIFLIB_VERSION}.tar.gz/download", // The Url for download
+            "giflib-${GIFLIB_VERSION}.tar.gz", // The downloaded file
             'giflib', // The folder where the file is downloaded
             "giflib-${GIFLIB_VERSION}", // The first dir where we have put our customisation
             ['*.c', '*.h', '*.mk'], // Files to compile
