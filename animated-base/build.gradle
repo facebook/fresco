@@ -27,6 +27,7 @@ dependencies {
     api project(':animated-drawable')
     implementation Deps.Bolts.tasks
 
+    testCompileOnly Deps.inferAnnotation
     testImplementation project(':animated-base-test')
     testImplementation project(':imagepipeline-test')
     testImplementation TestDeps.junit
