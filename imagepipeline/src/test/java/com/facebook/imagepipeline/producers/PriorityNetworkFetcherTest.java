@@ -531,7 +531,7 @@ public class PriorityNetworkFetcherTest {
 
     assertThat(recordingNetworkFetcher.createdFetchStates).hasSize(1);
     assertThat(fetchState.delegatedState)
-        .isSameAs(recordingNetworkFetcher.createdFetchStates.get(0));
+        .isSameInstanceAs(recordingNetworkFetcher.createdFetchStates.get(0));
 
     // Simulate a failure in fetchState, triggering a requeue.
     getOnlyElement(recordingNetworkFetcher.callbacks.get(fetchState.delegatedState))
@@ -539,7 +539,7 @@ public class PriorityNetworkFetcherTest {
 
     assertThat(recordingNetworkFetcher.createdFetchStates).hasSize(2);
     assertThat(fetchState.delegatedState)
-        .isSameAs(recordingNetworkFetcher.createdFetchStates.get(1));
+        .isSameInstanceAs(recordingNetworkFetcher.createdFetchStates.get(1));
 
     Map<String, String> extrasMap = fetcher.getExtraMap(fetchState, 123);
     assertThat(extrasMap).containsEntry("requeueCount", "1");
