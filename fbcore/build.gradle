@@ -17,6 +17,7 @@ dependencies {
     compileOnly Deps.javaxAnnotation
     compileOnly Deps.AndroidX.androidxAnnotation
 
+    testImplementation Deps.inferAnnotation
     testImplementation project(':mockito-config')
     testImplementation Deps.jsr305
     testImplementation TestDeps.junit
