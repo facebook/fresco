@@ -172,12 +172,12 @@ subprojects {
             src libraryUrl
             onlyIfNewer true
             overwrite false
-            dest downloadsDir
+            dest "${downloadsDir}/${libraryFileName}"
             dependsOn createNativeDepsDirectories
         }
         // The unpack task
         tasks.create("unpack${name}", Copy) {
-            String filePath = "${downloadLibjpeg.dest}/${libraryFileName}"
+            String filePath = "${downloadsDir}/${libraryFileName}"
             ReadableResource resource
             if (filePath.endsWith("gz")) {
                 resource = resources.gzip(filePath)
