@@ -26,9 +26,13 @@ dependencies {
     implementation project(':ui-common')
     implementation project(':middleware')
 
+    testCompileOnly Deps.inferAnnotation
     testImplementation Deps.jsr305
     testImplementation TestDeps.junit
     testImplementation TestDeps.mockitoCore
+    testImplementation(TestDeps.Powermock.apiMockito) {
+        exclude group: 'org.mockito', module: 'mockito-all'
+    }
     testImplementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
