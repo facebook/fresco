@@ -651,12 +651,12 @@ static void toCircleWithOptionalBorder(
 
   int rc = AndroidBitmap_getInfo(env, bitmap, &bitmapInfo);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "Failed to get Bitmap info");
+    safe_throw_exception(env, "Rounding#toCircleWithOptionalBorder: Failed to get Bitmap info");
     return;
   }
 
   if (bitmapInfo.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
-    safe_throw_exception(env, "Unexpected bitmap format");
+    safe_throw_exception(env, "Rounding#toCircleWithOptionalBorder: Unexpected bitmap format");
     return;
   }
 
@@ -664,7 +664,7 @@ static void toCircleWithOptionalBorder(
   const int h = bitmapInfo.height;
 
   if (w > BITMAP_MAX_DIMENSION || h > BITMAP_MAX_DIMENSION) {
-    safe_throw_exception(env, "Bitmap dimensions too large");
+    safe_throw_exception(env, "Rounding#toCircleWithOptionalBorder: Bitmap dimensions too large");
     return;
   }
 
@@ -673,7 +673,7 @@ static void toCircleWithOptionalBorder(
   // Locking pixels such that they will not get moved around during processing
   rc = AndroidBitmap_lockPixels(env, bitmap, (void*) &pixelPtr);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "Failed to lock Bitmap pixels");
+    safe_throw_exception(env, "Rounding#toCircleWithOptionalBorder: Failed to lock Bitmap pixels");
     return;
   }
 
@@ -691,7 +691,7 @@ static void toCircleWithOptionalBorder(
   // Unlocking the pixels
   rc = AndroidBitmap_unlockPixels(env, bitmap);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "Failed to unlock Bitmap pixels");
+    safe_throw_exception(env, "Rounding#toCircleWithOptionalBorder: Failed to unlock Bitmap pixels");
   }
 }
 
@@ -709,12 +709,12 @@ static void addRoundedCorners(
 
   int rc = AndroidBitmap_getInfo(env, bitmap, &bitmapInfo);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "Failed to get Bitmap info");
+    safe_throw_exception(env, "Rounding#addRoundedCorners: Failed to get Bitmap info");
     return;
   }
 
   if (bitmapInfo.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
-    safe_throw_exception(env, "Unexpected bitmap format");
+    safe_throw_exception(env, "Rounding#addRoundedCorners: nexpected bitmap format");
     return;
   }
 
@@ -722,7 +722,7 @@ static void addRoundedCorners(
   const int h = bitmapInfo.height;
 
   if (w > BITMAP_MAX_DIMENSION || h > BITMAP_MAX_DIMENSION) {
-    safe_throw_exception(env, "Bitmap dimensions too large");
+    safe_throw_exception(env, "Rounding#addRoundedCorners: Bitmap dimensions too large");
     return;
   }
 
@@ -731,7 +731,7 @@ static void addRoundedCorners(
   // Locking pixels such that they will not get moved around during processing
   rc = AndroidBitmap_lockPixels(env, bitmap, (void*) &pixelPtr);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "Failed to lock Bitmap pixels");
+    safe_throw_exception(env, "Rounding#addRoundedCorners: Failed to lock Bitmap pixels");
     return;
   }
 
@@ -743,7 +743,7 @@ static void addRoundedCorners(
   // Unlocking the pixels
   rc = AndroidBitmap_unlockPixels(env, bitmap);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "Failed to unlock Bitmap pixels");
+    safe_throw_exception(env, "Rounding#addRoundedCorners: Failed to unlock Bitmap pixels");
   }
 }
 
@@ -774,12 +774,12 @@ static void toCircleFastWithOptionalBorder(
 
   int rc = AndroidBitmap_getInfo(env, bitmap, &bitmapInfo);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "Failed to get Bitmap info");
+    safe_throw_exception(env, "Rounding#toCircleFastWithOptionalBorder: Failed to get Bitmap info");
     return;
   }
 
   if (bitmapInfo.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
-    safe_throw_exception(env, "Unexpected bitmap format");
+    safe_throw_exception(env, "Rounding#toCircleFastWithOptionalBorder: Unexpected bitmap format");
     return;
   }
 
@@ -787,7 +787,7 @@ static void toCircleFastWithOptionalBorder(
   const int h = bitmapInfo.height;
 
   if (w > BITMAP_MAX_DIMENSION || h > BITMAP_MAX_DIMENSION) {
-    safe_throw_exception(env, "Bitmap dimensions too large");
+    safe_throw_exception(env, "Rounding#toCircleFastWithOptionalBorder: Bitmap dimensions too large");
     return;
   }
 
@@ -796,7 +796,7 @@ static void toCircleFastWithOptionalBorder(
   // Locking pixels such that they will not get moved around during processing
   rc = AndroidBitmap_lockPixels(env, bitmap, (void*) &pixelPtr);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "Failed to lock Bitmap pixels");
+    safe_throw_exception(env, "Rounding#toCircleFastWithOptionalBorder: Failed to lock Bitmap pixels");
     return;
   }
 
@@ -814,7 +814,7 @@ static void toCircleFastWithOptionalBorder(
   // Unlocking the pixels
   rc = AndroidBitmap_unlockPixels(env, bitmap);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "Failed to unlock Bitmap pixels");
+    safe_throw_exception(env, "Rounding#toCircleFastWithOptionalBorder: Failed to unlock Bitmap pixels");
   }
 }
 /**
