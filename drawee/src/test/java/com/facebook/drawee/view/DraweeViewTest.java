@@ -22,9 +22,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 /** Unit test for {@link DraweeView}. */
 @RunWith(RobolectricTestRunner.class)
+@Config(sdk = 21)
 public class DraweeViewTest {
 
   private DraweeView<DraweeHierarchy> mDraweeView;
