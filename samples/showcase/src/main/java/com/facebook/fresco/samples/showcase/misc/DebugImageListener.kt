@@ -51,7 +51,7 @@ class DebugImageListener(val log: (String) -> Unit = { Log.d("DebugImageListener
     log("onRelease: id=$id")
   }
 
-  override fun onImageDrawn(id: String?, imageInfo: ImageInfo?, dimensionsInfo: DimensionsInfo?) {
+  override fun onImageDrawn(id: String, imageInfo: ImageInfo, dimensionsInfo: DimensionsInfo) {
     log("onImageDrawn: id=$id, imageInfo=$imageInfo, dimensionsInfo=$dimensionsInfo")
   }
 }

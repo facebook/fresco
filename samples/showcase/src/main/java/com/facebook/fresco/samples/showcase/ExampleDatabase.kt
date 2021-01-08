@@ -21,6 +21,7 @@ import com.facebook.fresco.samples.showcase.imagepipeline.*
 import com.facebook.fresco.samples.showcase.misc.WelcomeFragment
 import com.facebook.fresco.samples.showcase.settings.SettingsFragment
 import com.facebook.fresco.samples.showcase.vito.*
+import com.facebook.fresco.samples.showcase.vito.ninepatch.LithoNinePatchSample
 
 object ExampleDatabase {
 
@@ -90,5 +91,9 @@ object ExampleDatabase {
                   ExampleItem(
                       "Vito Litho: Slideshow",
                       LithoSlideshowSample(),
-                      "Litho slideshow that fades between images"))))
+                      "Litho slideshow that fades between images"),
+                  ExampleItem(
+                      "Vito Litho: NinePatch",
+                      LithoNinePatchSample(),
+                      "Litho nine patch example"))))
 }

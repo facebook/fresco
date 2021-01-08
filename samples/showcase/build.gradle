@@ -84,6 +84,8 @@ android {
 
 dependencies {
     compileOnly Deps.jsr305
+    compileOnly Deps.inferAnnotation
+    compileOnly Deps.javaxAnnotation
 
     implementation SampleDeps.AndroidX.appcompat
     implementation SampleDeps.AndroidX.preference

@@ -68,8 +68,8 @@ data class ImageSourceConfigurator(
                   {
                     set {
                       ImageSourceProvider.increasingQuality(
-                          imageUriProvider.create(currentImageFormat), // TODO: low res
-                          imageUriProvider.create(currentImageFormat))
+                          imageUriProvider.create(currentImageFormat)!!, // TODO: low res
+                          imageUriProvider.create(currentImageFormat)!!)
                     }
                   },
               "First available" to
