@@ -282,6 +282,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
 
       FLog.v(TAG, "change-pri: %s %s", isNewHiPri ? "HIPRI" : "LOWPRI", fetchState.getUri());
 
+      fetchState.priorityChangedCount++;
       putInQueue(fetchState, isNewHiPri);
     }
     dequeueIfAvailableSlots();
@@ -329,6 +330,12 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     long dequeuedTimestamp;
     int requeueCount = 0;
 
+    /** the number of times the request's priority was changed while it was waiting the queue */
+    int priorityChangedCount = 0;
+
+    /** True if image request priority was high when it was started */
+    final boolean isInitialPriorityHigh;
+
     private PriorityFetchState(
         Consumer<EncodedImage> consumer,
         ProducerContext producerContext,
@@ -341,6 +348,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       this.enqueuedTimestamp = enqueuedTimestamp;
       this.hiPriCountWhenCreated = hiPriCountWhenCreated;
       this.lowPriCountWhenCreated = lowPriCountWhenCreated;
+      this.isInitialPriorityHigh = producerContext.getPriority() == HIGH;
     }
   }
 
@@ -387,6 +395,10 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     extras.put("hipri_queue_size", "" + fetchState.hiPriCountWhenCreated);
     extras.put("lowpri_queue_size", "" + fetchState.lowPriCountWhenCreated);
     extras.put("requeueCount", "" + fetchState.requeueCount);
+    extras.put("priority_changed_count", "" + fetchState.priorityChangedCount);
+    extras.put("request_initial_priority_is_high", "" + fetchState.isInitialPriorityHigh);
+    extras.put("currently_fetching_size", "" + mCurrentlyFetching.size());
+
     return extras;
   }
 }

@@ -386,6 +386,69 @@ public class PriorityNetworkFetcherTest {
   }
 
   @Test
+  public void changePriorityIsReturnedInExtraMap() {
+    // all request should wait in the priority queues
+    PriorityNetworkFetcher<FetchState> fetcher =
+        new PriorityNetworkFetcher<>(delegate, false, 1, 0, true, false);
+
+    // fill the currently fetching queue so all the next requests will wait in the priority queues.
+    PriorityFetchState<FetchState> dontcare1 = fetch(fetcher, "dontcare1", callback, true);
+
+    // enqueue a low-pri request in the queue
+    PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, false);
+    assertThat(fetcher.getExtraMap(one, 123))
+        .containsEntry("request_initial_priority_is_high", "false");
+    assertThat(fetcher.getExtraMap(one, 123)).containsEntry("priority_changed_count", "0");
+
+    // enqueue a hi-pri request in the queue
+    PriorityFetchState<FetchState> two = fetch(fetcher, "2", callback, true);
+    assertThat(fetcher.getExtraMap(two, 123))
+        .containsEntry("request_initial_priority_is_high", "true");
+    assertThat(fetcher.getExtraMap(two, 123)).containsEntry("priority_changed_count", "0");
+
+    // change priority from low to low (nothing should be changed)
+    ((SettableProducerContext) one.getContext()).setPriority(LOW);
+    assertThat(fetcher.getExtraMap(one, 123))
+        .containsEntry("request_initial_priority_is_high", "false");
+    assertThat(fetcher.getExtraMap(one, 123)).containsEntry("priority_changed_count", "0");
+
+    // change priority from low to high
+    ((SettableProducerContext) one.getContext()).setPriority(HIGH);
+    assertThat(fetcher.getExtraMap(one, 123))
+        .containsEntry("request_initial_priority_is_high", "false");
+    assertThat(fetcher.getExtraMap(one, 123)).containsEntry("priority_changed_count", "1");
+
+    // change priority from high to low (second time)
+    ((SettableProducerContext) one.getContext()).setPriority(LOW);
+    assertThat(fetcher.getExtraMap(one, 123))
+        .containsEntry("request_initial_priority_is_high", "false");
+    assertThat(fetcher.getExtraMap(one, 123)).containsEntry("priority_changed_count", "2");
+  }
+
+  @Test
+  public void numberOfCurrentlyFetchingIsReturnedInExtraMap() {
+    PriorityNetworkFetcher<FetchState> fetcher =
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true, false);
+
+    // The queue is empty, so enqueuing a request immediately executes it. Therefore,
+    // currentlyFetching size is 1.
+    PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, false);
+    assertThat(fetcher.getExtraMap(one, 123)).containsEntry("currently_fetching_size", "1");
+
+    // enqueuing a request immediately executes it. Therefore, currentlyFetching size is 2.
+    PriorityFetchState<FetchState> two = fetch(fetcher, "2", callback, true);
+    assertThat(fetcher.getExtraMap(two, 123)).containsEntry("currently_fetching_size", "2");
+
+    // CurrentlyFetching queue is full. Therefore, new request will wait in the hi-pri queue.
+    PriorityFetchState<FetchState> three = fetch(fetcher, "3", callback, true);
+    assertThat(fetcher.getExtraMap(three, 123)).containsEntry("currently_fetching_size", "2");
+
+    // one of the fetching request is completed, a new one should be replace it (three).
+    fetcher.onFetchCompletion(one, 4317);
+    assertThat(fetcher.getExtraMap(three, 123)).containsEntry("currently_fetching_size", "2");
+  }
+
+  @Test
   public void queueSizesAreReturnedInExtraMap() {
     FakeClock clock = new FakeClock();
 
