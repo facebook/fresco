@@ -26,6 +26,7 @@ dependencies {
     implementation project(':ui-common')
     implementation project(':middleware')
 
+    testCompileOnly Deps.inferAnnotation
     testImplementation Deps.jsr305
     testImplementation TestDeps.junit
     testImplementation TestDeps.mockitoCore

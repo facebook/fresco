@@ -20,6 +20,7 @@ dependencies {
     implementation project(':fbcore')
     implementation project(':animated-base')
 
+    testCompileOnly Deps.inferAnnotation
     testImplementation project(':imagepipeline-base-test')
     testImplementation project(':imagepipeline-test')
     testImplementation TestDeps.junit
