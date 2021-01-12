@@ -84,7 +84,7 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
   }
 
   @Override
-  public boolean equals(Object other) {
+  public boolean equals(@Nullable Object other) {
     if (other == this) {
       return true;
     }

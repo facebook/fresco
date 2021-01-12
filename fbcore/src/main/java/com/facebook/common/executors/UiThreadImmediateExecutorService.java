@@ -9,6 +9,7 @@ package com.facebook.common.executors;
 
 import android.os.Handler;
 import android.os.Looper;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.ExecutorService;
 import javax.annotation.Nullable;
 
@@ -18,6 +19,7 @@ import javax.annotation.Nullable;
  * <p>If the execute is called from the thread of the application's main looper, it will be executed
  * synchronously.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class UiThreadImmediateExecutorService extends HandlerExecutorServiceImpl {
   private static @Nullable UiThreadImmediateExecutorService sInstance = null;
 

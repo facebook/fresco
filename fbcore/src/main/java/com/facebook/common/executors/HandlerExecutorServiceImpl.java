@@ -8,6 +8,7 @@
 package com.facebook.common.executors;
 
 import android.os.Handler;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.List;
 import java.util.concurrent.AbstractExecutorService;
 import java.util.concurrent.Callable;
@@ -16,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 
 /** A {@link HandlerExecutorService} implementation. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class HandlerExecutorServiceImpl extends AbstractExecutorService
     implements HandlerExecutorService {
 

@@ -50,6 +50,7 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
   @GuardedBy("this")
   private @Nullable T mResult = null;
 
+  @Nullable
   @GuardedBy("this")
   private Throwable mFailureThrowable = null;
 

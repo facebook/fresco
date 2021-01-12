@@ -7,6 +7,8 @@
 
 package com.facebook.datasource;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * Base implementation of {@link DataSubscriber} that ensures that the data source is closed when
  * the subscriber has finished with it.
@@ -25,6 +27,7 @@ package com.facebook.datasource;
  * </code>
  * </pre>
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class BaseBooleanSubscriber implements DataSubscriber<Boolean> {
   @Override
   public void onNewResult(DataSource<Boolean> dataSource) {

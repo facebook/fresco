@@ -8,11 +8,13 @@
 package com.facebook.datasource;
 
 import com.facebook.common.internal.Supplier;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 
 /** Static utility methods pertaining to the {@link DataSource} interface. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DataSources {
 
   private DataSources() {}

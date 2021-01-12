@@ -7,12 +7,14 @@
 
 package com.facebook.common.executors;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Default implementation of {@link SerialExecutorService} that wraps an existing {@link Executor}.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DefaultSerialExecutorService extends ConstrainedExecutorService
     implements SerialExecutorService {
 

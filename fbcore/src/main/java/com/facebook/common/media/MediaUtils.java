@@ -8,11 +8,13 @@
 package com.facebook.common.media;
 
 import com.facebook.common.internal.ImmutableMap;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Locale;
 import java.util.Map;
 import javax.annotation.Nullable;
 
 /** Utility class. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class MediaUtils {
   // Additional mime types that we know to be a particular media type but which may not be
   // supported natively on the device.

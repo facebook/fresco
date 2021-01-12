@@ -7,6 +7,7 @@
 
 package com.facebook.datasource;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nonnull;
 
 /**
@@ -36,6 +37,7 @@ import javax.annotation.Nonnull;
  * </code>
  * </pre>
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class BaseDataSubscriber<T> implements DataSubscriber<T> {
 
   @Override

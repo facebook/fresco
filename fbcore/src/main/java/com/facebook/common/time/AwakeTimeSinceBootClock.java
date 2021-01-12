@@ -8,6 +8,7 @@
 package com.facebook.common.time;
 
 import com.facebook.common.internal.DoNotStrip;
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * A clock that returns number of milliseconds since boot. It guarantees that every next call to
@@ -17,6 +18,7 @@ import com.facebook.common.internal.DoNotStrip;
  * <p>DO USE THIS CLOCK FOR PERFORMANCE MEASUREMENT. IT STOPS TICKING WHILE THE DEVICE SLEEPS, THAT
  * IS, WHILE THE DEVICE CANNOT RUN THE CODE WE ARE PURPORTEDLY MEASURING.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @DoNotStrip
 public class AwakeTimeSinceBootClock implements MonotonicClock, MonotonicNanoClock {
   @DoNotStrip private static final AwakeTimeSinceBootClock INSTANCE = new AwakeTimeSinceBootClock();

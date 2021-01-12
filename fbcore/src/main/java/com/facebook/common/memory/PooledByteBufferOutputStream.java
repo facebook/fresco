@@ -8,6 +8,7 @@
 package com.facebook.common.memory;
 
 import com.facebook.common.internal.Throwables;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -23,6 +24,7 @@ import java.io.OutputStream;
  * method should be called. Streams subclassing PooledByteBufferOutputStream are not allowed to
  * throw IOException from close method.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class PooledByteBufferOutputStream extends OutputStream {
   /**
    * Creates a PooledByteBuffer from the contents of the stream.

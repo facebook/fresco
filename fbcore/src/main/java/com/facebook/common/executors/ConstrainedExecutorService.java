@@ -8,6 +8,7 @@
 package com.facebook.common.executors;
 
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.List;
 import java.util.concurrent.AbstractExecutorService;
 import java.util.concurrent.BlockingQueue;
@@ -21,6 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * A {@link java.util.concurrent.ExecutorService} that delegates to an existing {@link Executor} but
  * constrains the number of concurrently executing tasks to a pre-configured value.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ConstrainedExecutorService extends AbstractExecutorService {
 
   private static final Class<?> TAG = ConstrainedExecutorService.class;

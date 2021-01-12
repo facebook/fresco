@@ -7,6 +7,7 @@
 
 package com.facebook.common.executors;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.AbstractExecutorService;
@@ -29,6 +30,7 @@ import java.util.concurrent.TimeUnit;
  * started execution. This applies also to tasks given to {@code invokeAll} or {@code invokeAny}
  * which are pending serial execution, including the tasks that have not yet started execution.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class CallerThreadExecutor extends AbstractExecutorService {
 
   private static final CallerThreadExecutor sInstance = new CallerThreadExecutor();

@@ -8,7 +8,9 @@
 package com.facebook.common.activitylistener;
 
 import android.app.Activity;
+import com.facebook.infer.annotation.Nullsafe;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class BaseActivityListener implements ActivityListener {
 
   @Override

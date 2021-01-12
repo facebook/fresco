@@ -7,6 +7,7 @@
 
 package com.facebook.common.file;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.File;
 
 /**
@@ -14,6 +15,7 @@ import java.io.File;
  * method. Its methods could be merge into FileUtil (although it seems to have a lot of crazy
  * redundant methods, maybe for testing, but crazy anyway).
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FileTree {
 
   /**

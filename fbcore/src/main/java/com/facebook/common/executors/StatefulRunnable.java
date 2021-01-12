@@ -7,6 +7,7 @@
 
 package com.facebook.common.executors;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -20,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * <p>This runnable can be run only once. Subsequent calls to run method won't have any effect.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class StatefulRunnable<T> implements Runnable {
   protected static final int STATE_CREATED = 0;
   protected static final int STATE_STARTED = 1;

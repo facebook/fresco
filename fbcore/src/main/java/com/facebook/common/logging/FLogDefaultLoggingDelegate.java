@@ -8,10 +8,12 @@
 package com.facebook.common.logging;
 
 import android.util.Log;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
 /** Default implementation of {@link LoggingDelegate}. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FLogDefaultLoggingDelegate implements LoggingDelegate {
 
   public static final FLogDefaultLoggingDelegate sInstance = new FLogDefaultLoggingDelegate();

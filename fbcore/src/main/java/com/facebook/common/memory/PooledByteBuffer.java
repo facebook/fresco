@@ -7,6 +7,7 @@
 
 package com.facebook.common.memory;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 import java.nio.ByteBuffer;
 import javax.annotation.Nullable;
@@ -15,6 +16,7 @@ import javax.annotation.Nullable;
  * A 'pooled' byte-buffer abstraction. Represents an immutable sequence of bytes stored off the java
  * heap.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface PooledByteBuffer extends Closeable {
 
   /**

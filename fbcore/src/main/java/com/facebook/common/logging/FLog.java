@@ -8,8 +8,10 @@
 package com.facebook.common.logging;
 
 import android.util.Log;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Logging wrapper with format style support. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FLog {
 
   public static final int VERBOSE = Log.VERBOSE;
