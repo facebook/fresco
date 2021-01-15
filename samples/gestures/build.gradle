@@ -18,6 +18,7 @@ dependencies {
 
     implementation project(':drawee-backends:drawee-pipeline')
 
+    testImplementation Deps.inferAnnotation
     testImplementation TestDeps.junit
     testImplementation TestDeps.mockitoCore
     testImplementation(TestDeps.robolectric) {
