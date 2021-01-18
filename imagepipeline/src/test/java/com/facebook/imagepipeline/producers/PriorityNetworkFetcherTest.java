@@ -431,13 +431,13 @@ public class PriorityNetworkFetcherTest {
         new PriorityNetworkFetcher<>(delegate, false, 2, 1, true, false);
 
     // The queue is empty, so enqueuing a request immediately executes it. Therefore,
-    // currentlyFetching size is 1.
+    // currentlyFetching size is 0.
     PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, false);
-    assertThat(fetcher.getExtraMap(one, 123)).containsEntry("currently_fetching_size", "1");
+    assertThat(fetcher.getExtraMap(one, 123)).containsEntry("currently_fetching_size", "0");
 
-    // enqueuing a request immediately executes it. Therefore, currentlyFetching size is 2.
+    // enqueuing a request immediately executes it. Therefore, currentlyFetching size is 1.
     PriorityFetchState<FetchState> two = fetch(fetcher, "2", callback, true);
-    assertThat(fetcher.getExtraMap(two, 123)).containsEntry("currently_fetching_size", "2");
+    assertThat(fetcher.getExtraMap(two, 123)).containsEntry("currently_fetching_size", "1");
 
     // CurrentlyFetching queue is full. Therefore, new request will wait in the hi-pri queue.
     PriorityFetchState<FetchState> three = fetch(fetcher, "3", callback, true);

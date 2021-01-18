@@ -326,6 +326,9 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     /** Size of low-pri queue when this request was added. */
     final int lowPriCountWhenCreated;
 
+    /** Size of currentlyFetching queue when this request was added. */
+    final int currentlyFetchingCountWhenCreated;
+
     @Nullable NetworkFetcher.Callback callback;
     long dequeuedTimestamp;
     int requeueCount = 0;
@@ -342,13 +345,15 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
         FETCH_STATE delegatedState,
         long enqueuedTimestamp,
         int hiPriCountWhenCreated,
-        int lowPriCountWhenCreated) {
+        int lowPriCountWhenCreated,
+        int currentlyFetchingCountWhenCreated) {
       super(consumer, producerContext);
       this.delegatedState = delegatedState;
       this.enqueuedTimestamp = enqueuedTimestamp;
       this.hiPriCountWhenCreated = hiPriCountWhenCreated;
       this.lowPriCountWhenCreated = lowPriCountWhenCreated;
       this.isInitialPriorityHigh = producerContext.getPriority() == HIGH;
+      this.currentlyFetchingCountWhenCreated = currentlyFetchingCountWhenCreated;
     }
   }
 
@@ -374,7 +379,8 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
         mDelegate.createFetchState(consumer, producerContext),
         mClock.now(),
         mHiPriQueue.size(),
-        mLowPriQueue.size());
+        mLowPriQueue.size(),
+        mCurrentlyFetching.size());
   }
 
   @Override
@@ -397,7 +403,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     extras.put("requeueCount", "" + fetchState.requeueCount);
     extras.put("priority_changed_count", "" + fetchState.priorityChangedCount);
     extras.put("request_initial_priority_is_high", "" + fetchState.isInitialPriorityHigh);
-    extras.put("currently_fetching_size", "" + mCurrentlyFetching.size());
+    extras.put("currently_fetching_size", "" + fetchState.currentlyFetchingCountWhenCreated);
 
     return extras;
   }
