@@ -329,7 +329,7 @@ public class ImageRequestBuilder {
    *     {@link com.facebook.imagepipeline.core.ImagePipelineConfig}
    * @return the modified builder instance
    */
-  public ImageRequestBuilder setRequestListener(RequestListener requestListener) {
+  public ImageRequestBuilder setRequestListener(@Nullable RequestListener requestListener) {
     mRequestListener = requestListener;
     return this;
   }
