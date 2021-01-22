@@ -84,16 +84,16 @@ public class Fresco {
         clazz.getMethod("init", Context.class).invoke(null, context);
       } catch (ClassNotFoundException e) {
         // Failed to initialize SoLoader
-        NativeLoader.init(new SystemDelegate());
+        initializeNativeLoaderWithSystemDelegate();
       } catch (IllegalAccessException e) {
         // Failed to initialize SoLoader
-        NativeLoader.init(new SystemDelegate());
+        initializeNativeLoaderWithSystemDelegate();
       } catch (InvocationTargetException e) {
         // Failed to initialize SoLoader
-        NativeLoader.init(new SystemDelegate());
+        initializeNativeLoaderWithSystemDelegate();
       } catch (NoSuchMethodException e) {
         // Failed to initialize SoLoader
-        NativeLoader.init(new SystemDelegate());
+        initializeNativeLoaderWithSystemDelegate();
       } finally {
         if (FrescoSystrace.isTracing()) {
           FrescoSystrace.endSection();
@@ -110,6 +110,14 @@ public class Fresco {
     initializeDrawee(context, draweeConfig);
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.endSection();
+    }
+  }
+
+  private static void initializeNativeLoaderWithSystemDelegate() {
+    synchronized (NativeLoader.class) {
+      if (!NativeLoader.isInitialized()) {
+        NativeLoader.init(new SystemDelegate());
+      }
     }
   }
 
