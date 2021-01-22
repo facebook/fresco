@@ -31,7 +31,6 @@ class LithoSlideshowSample : LithoSample {
     return FrescoVitoSlideshowComponent.create(c)
         .fadeTransitionMs(1000)
         .photoTransitionMs(4000)
-        .isPlaying(true)
         .uris(uris.getRandomSampleUris(ImageUriProvider.ImageSize.M, 5))
         .imageOptions(imageOptions)
         .callerContext(callerContext)

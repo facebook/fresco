@@ -26,6 +26,7 @@ import com.facebook.litho.annotations.OnCreateMountContent;
 import com.facebook.litho.annotations.OnMount;
 import com.facebook.litho.annotations.OnUnmount;
 import com.facebook.litho.annotations.Prop;
+import com.facebook.litho.annotations.PropDefault;
 import com.facebook.litho.annotations.State;
 import java.util.List;
 import java.util.Timer;
@@ -35,6 +36,8 @@ import javax.annotation.Nullable;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 @MountSpec(isPureRender = true)
 public class FrescoVitoSlideshowComponentSpec {
+
+  @PropDefault static final boolean isPlaying = true;
 
   @OnCreateInitialState
   protected static void createInitialState(
@@ -62,7 +65,7 @@ public class FrescoVitoSlideshowComponentSpec {
       final @Prop(varArg = "uri") List<Uri> uris,
       final @Prop int photoTransitionMs,
       final @Prop int fadeTransitionMs,
-      final @Prop Boolean isPlaying,
+      final @Prop(optional = true) boolean isPlaying,
       final @Prop(optional = true) @Nullable ImageOptions imageOptions,
       final @Prop(optional = true) @Nullable Object callerContext,
       final @State(canUpdateLazily = true) Integer slideshowIndex,
