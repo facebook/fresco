@@ -66,6 +66,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
 
   private final boolean inflightFetchesCanBeCancelled;
   private final boolean infiniteRetries;
+  private final boolean doNotCancelRequests;
 
   /**
    * @param isHiPriFifo if true, hi-pri requests are dequeued in the order they were enqueued.
@@ -82,7 +83,8 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       int maxOutstandingHiPri,
       int maxOutstandingLowPri,
       boolean inflightFetchesCanBeCancelled,
-      boolean infiniteRetries) {
+      boolean infiniteRetries,
+      boolean doNotCancelRequests) {
     this(
         delegate,
         isHiPriFifo,
@@ -90,6 +92,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
         maxOutstandingLowPri,
         inflightFetchesCanBeCancelled,
         infiniteRetries,
+        doNotCancelRequests,
         RealtimeSinceBootClock.get());
   }
 
@@ -101,6 +104,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       int maxOutstandingLowPri,
       boolean inflightFetchesCanBeCancelled,
       boolean infiniteRetries,
+      boolean doNotCancelRequests,
       MonotonicClock clock) {
     mDelegate = delegate;
     mIsHiPriFifo = isHiPriFifo;
@@ -112,6 +116,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     }
     this.inflightFetchesCanBeCancelled = inflightFetchesCanBeCancelled;
     this.infiniteRetries = infiniteRetries;
+    this.doNotCancelRequests = doNotCancelRequests;
     this.mClock = clock;
   }
 
@@ -141,6 +146,9 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
             new BaseProducerContextCallbacks() {
               @Override
               public void onCancellationRequested() {
+                if (doNotCancelRequests) {
+                  return;
+                }
                 if (!inflightFetchesCanBeCancelled && mCurrentlyFetching.contains(fetchState)) {
                   return;
                 }
