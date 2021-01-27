@@ -441,8 +441,7 @@ int readSingleFrame(
   }
 
   // Check for image size overflow.
-  if (pSavedImage->ImageDesc.Width > 0 &&
-      pSavedImage->ImageDesc.Height > 0 &&
+  if (pSavedImage->ImageDesc.Height != 0 &&
       pSavedImage->ImageDesc.Width > (INT_MAX / pSavedImage->ImageDesc.Height)) {
     return GIF_ERROR;
   }
