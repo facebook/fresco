@@ -58,14 +58,20 @@ public:
     m_length = m_pBuffer.size();
   }
 
-  size_t read(GifByteType* dest, size_t size) override {
-    size_t endPosition = m_position + size;
+  inline static size_t rangeAdd(size_t current, size_t increment, size_t max) {
+    size_t end = current + increment;
     if (
-      endPosition < m_position ||  // integer overflow
-      endPosition > m_length  // buffer overflow
+      end < current ||  // integer overflow
+      end > max  // buffer overflow
     ) {
-      endPosition = m_length;
+      end = max;
     }
+
+    return end;
+  }
+
+  size_t read(GifByteType* dest, size_t size) override {
+    size_t endPosition = rangeAdd(m_position, size, m_length);
     size_t readSize = endPosition - m_position;
     memcpy(dest, m_pBuffer.data() + m_position, readSize);
     m_position = endPosition;
