@@ -59,9 +59,16 @@ public:
   }
 
   size_t read(GifByteType* dest, size_t size) override {
-    size_t readSize = m_position + size > m_length ? m_length - m_position : size;
+    size_t endPosition = m_position + size;
+    if (
+      endPosition < m_position ||  // integer overflow
+      endPosition > m_length  // buffer overflow
+    ) {
+      endPosition = m_length;
+    }
+    size_t readSize = endPosition - m_position;
     memcpy(dest, m_pBuffer.data() + m_position, readSize);
-    m_position += readSize;
+    m_position = endPosition;
     return readSize;
   }
 
