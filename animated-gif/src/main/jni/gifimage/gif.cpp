@@ -1175,7 +1175,7 @@ static PixelType32 packARGB32(
  * @param pColorMap the color map
  * @return a 32-bit pixel
  */
-static PixelType32 getColorFromTable(int idx, const ColorMapObject* pColorMap) {
+static PixelType32 getColorFromTable(unsigned int idx, const ColorMapObject* pColorMap) {
   if (pColorMap == NULL) {
       return TRANSPARENT;
   }
