@@ -80,6 +80,9 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
 
   @VisibleForTesting static final int NO_DELAYED_REQUESTS = -1;
 
+  /** if true, then dequeue requests recuresively */
+  private final boolean multipleDequeue;
+
   /**
    * @param isHiPriFifo if true, hi-pri requests are dequeued in the order they were enqueued.
    *     Otherwise, they're dequeued in reverse order.
@@ -105,7 +108,8 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       int maxNumberOfRequeue,
       boolean doNotCancelRequests,
       int immediateRequeueCount,
-      int requeueDelayTimeInMillis) {
+      int requeueDelayTimeInMillis,
+      boolean multipleDequeue) {
     this(
         delegate,
         isHiPriFifo,
@@ -116,6 +120,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
         doNotCancelRequests,
         immediateRequeueCount,
         requeueDelayTimeInMillis,
+        multipleDequeue,
         RealtimeSinceBootClock.get());
   }
 
@@ -146,6 +151,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
         doNotCancelRequests,
         NO_DELAYED_REQUESTS,
         0,
+        false,
         RealtimeSinceBootClock.get());
   }
 
@@ -160,6 +166,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       boolean doNotCancelRequests,
       int immediateRequeueCount,
       int requeueDelayTimeInMillis,
+      boolean multipleDequeue,
       MonotonicClock clock) {
     mDelegate = delegate;
     mIsHiPriFifo = isHiPriFifo;
@@ -174,6 +181,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     this.doNotCancelRequests = doNotCancelRequests;
     this.immediateRequeueCount = immediateRequeueCount;
     this.requeueDelayTimeInMillis = requeueDelayTimeInMillis;
+    this.multipleDequeue = multipleDequeue;
     this.mClock = clock;
   }
 
@@ -328,6 +336,10 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     }
 
     delegateFetch(toFetch);
+
+    if (multipleDequeue) {
+      dequeueIfAvailableSlots();
+    }
   }
 
   private void delegateFetch(
