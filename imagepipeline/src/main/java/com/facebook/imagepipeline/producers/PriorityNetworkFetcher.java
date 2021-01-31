@@ -268,6 +268,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     if (mDelayedQueue.isEmpty()) {
       firstDelayedRequestEnqueuedTimeStamp = mClock.now();
     }
+    fetchState.delayCount++;
     mDelayedQueue.addLast(fetchState);
   }
 
@@ -432,6 +433,9 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     long dequeuedTimestamp;
     int requeueCount = 0;
 
+    /** number of times the request was delayed (inserted to the delay queue) */
+    int delayCount = 0;
+
     /** the number of times the request's priority was changed while it was waiting the queue */
     int priorityChangedCount = 0;
 
@@ -503,6 +507,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     extras.put("priority_changed_count", "" + fetchState.priorityChangedCount);
     extras.put("request_initial_priority_is_high", "" + fetchState.isInitialPriorityHigh);
     extras.put("currently_fetching_size", "" + fetchState.currentlyFetchingCountWhenCreated);
+    extras.put("delay_count", "" + fetchState.delayCount);
 
     return extras;
   }

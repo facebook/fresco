@@ -777,6 +777,7 @@ public class PriorityNetworkFetcherTest {
     assertThat(fetcher.getLowPriQueue()).isEmpty();
     assertThat(fetcher.getDelayedQeueue()).isEmpty();
     assertThat(hipri1.requeueCount).isEqualTo(1);
+    assertThat(fetcher.getExtraMap(hipri1, 123)).containsEntry("delay_count", "0");
 
     // Simulate 2nd failure in hipri1, the request should wait in the delayedQueue for
     // delayTimeInMillis.
@@ -786,6 +787,7 @@ public class PriorityNetworkFetcherTest {
     assertThat(fetcher.getHiPriQueue()).isEmpty();
     assertThat(fetcher.getLowPriQueue()).isEmpty();
     assertThat(fetcher.getDelayedQeueue()).containsExactly(hipri1);
+    assertThat(fetcher.getExtraMap(hipri1, 123)).containsEntry("delay_count", "1");
 
     clock.incrementBy(301);
     // to trigger inflight requests
@@ -842,6 +844,7 @@ public class PriorityNetworkFetcherTest {
     assertThat(fetcher.getLowPriQueue()).isEmpty();
     assertThat(fetcher.getDelayedQeueue()).isEmpty();
     assertThat(hipri1.requeueCount).isEqualTo(1);
+    assertThat(fetcher.getExtraMap(hipri1, 123)).containsEntry("delay_count", "0");
 
     // Simulate 2nd failure in hipri1, the request should wait in the delayedQueue for
     // delayTimeInMillis.
@@ -851,6 +854,7 @@ public class PriorityNetworkFetcherTest {
     assertThat(fetcher.getHiPriQueue()).isEmpty();
     assertThat(fetcher.getLowPriQueue()).isEmpty();
     assertThat(fetcher.getDelayedQeueue()).containsExactly(hipri1);
+    assertThat(fetcher.getExtraMap(hipri1, 123)).containsEntry("delay_count", "1");
 
     clock.incrementBy(200);
     // to trigger inflight requests
