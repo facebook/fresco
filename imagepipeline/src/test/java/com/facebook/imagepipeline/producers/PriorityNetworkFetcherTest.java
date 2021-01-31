@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.producers;
 
 import static com.facebook.imagepipeline.common.Priority.HIGH;
 import static com.facebook.imagepipeline.common.Priority.LOW;
+import static com.facebook.imagepipeline.producers.PriorityNetworkFetcher.INFINITE_REQUEUE;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -64,7 +65,7 @@ public class PriorityNetworkFetcherTest {
   public void sanityScenario() {
     // Hi-pri requests are LIFO, Max hi-pri: 4, max low-pri: 2
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 4, 2, true, false, false);
+        new PriorityNetworkFetcher<>(delegate, false, 4, 2, true, 0, false);
 
     // Enqueue hi-pri image; since there are less than 4 concurrent downloads, it's dequeued
     // immediately.
@@ -112,7 +113,7 @@ public class PriorityNetworkFetcherTest {
   public void hipriIsFifo() {
     // Hi-pri is FIFO, Max hi-pri: 2, max low-pri: 1
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, true, 2, 1, true, false, false);
+        new PriorityNetworkFetcher<>(delegate, true, 2, 1, true, 0, false);
 
     // Fill the currently-fetching set, so additional requests are not sent to network.
     PriorityFetchState<FetchState> dontcare1 = fetch(fetcher, "dontcare1", callback, true);
@@ -140,7 +141,7 @@ public class PriorityNetworkFetcherTest {
   public void hipriIsLifo() {
     // Hi-pri is LIFO, Max hi-pri: 2, max low-pri: 1
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true, false, false);
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true, 0, false);
 
     // Fill the currently-fetching set, so additional requests are not sent to network.
     PriorityFetchState<FetchState> dontcare1 = fetch(fetcher, "dontcare1", callback, true);
@@ -166,7 +167,7 @@ public class PriorityNetworkFetcherTest {
   public void lowpriIsFifo() {
     // Hi-pri is FIFO, Max hi-pri: 2, max low-pri: 1
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, true, 2, 1, true, false, false);
+        new PriorityNetworkFetcher<>(delegate, true, 2, 1, true, 0, false);
 
     // Fill the currently-fetching set, so additional requests are not sent to network.
     PriorityFetchState<FetchState> dontcare1 = fetch(fetcher, "dontcare1", callback, true);
@@ -206,7 +207,7 @@ public class PriorityNetworkFetcherTest {
   public void changePriority() {
     // Hi-pri is LIFO, Max hi-pri: 2, max low-pri: 1
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true, false, false);
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true, 0, false);
 
     // Fill the currently-fetching set, so additional requests are not sent to network.
     fetch(fetcher, "dontcare1", callback, true);
@@ -255,7 +256,7 @@ public class PriorityNetworkFetcherTest {
   public void contextCancellationIsCallCancellation() {
     // Hi-pri is LIFO, Max hi-pri: 2, max low-pri: 1
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true, false, false);
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true, 0, false);
     PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, true);
     cancel(one);
     verify(callback).onCancellation();
@@ -269,7 +270,7 @@ public class PriorityNetworkFetcherTest {
   public void testCancellations() {
     // Hi-pri is LIFO, Max hi-pri: 2, max low-pri: 1
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true, false, false);
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true, 0, false);
 
     PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, false);
     PriorityFetchState<FetchState> two = fetch(fetcher, "2", callback, false);
@@ -304,7 +305,7 @@ public class PriorityNetworkFetcherTest {
   public void testCancellations_nonInflight() {
     // Hi-pri is LIFO, Max hi-pri: 2, max low-pri: 1
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 2, 1, false, false, false);
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1, false, 0, false);
 
     PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, false);
     PriorityFetchState<FetchState> two = fetch(fetcher, "2", callback, false);
@@ -340,7 +341,7 @@ public class PriorityNetworkFetcherTest {
   public void testCancellations_none() {
     // Hi-pri is LIFO, Max hi-pri: 2, max low-pri: 1
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 2, 1, false, false, true);
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1, false, 0, true);
 
     PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, false);
     PriorityFetchState<FetchState> two = fetch(fetcher, "2", callback, false);
@@ -368,7 +369,7 @@ public class PriorityNetworkFetcherTest {
   @Test
   public void getExtraMapToleratesDelegateNullMap() {
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true, false, false);
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true, 0, false);
 
     PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, true);
 
@@ -386,7 +387,7 @@ public class PriorityNetworkFetcherTest {
   @Test
   public void getExtraMapIsDelegated() {
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true, false, false);
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true, 0, false);
 
     PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, true);
 
@@ -401,7 +402,7 @@ public class PriorityNetworkFetcherTest {
     FakeClock clock = new FakeClock();
 
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 1, 0, true, false, false, clock);
+        new PriorityNetworkFetcher<>(delegate, false, 1, 0, true, 0, false, clock);
 
     // The queue is empty, so enqueuing a request immediately executes it. Therefore, the queue time
     // is 0.
@@ -425,7 +426,7 @@ public class PriorityNetworkFetcherTest {
   public void changePriorityIsReturnedInExtraMap() {
     // all request should wait in the priority queues
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 1, 0, true, false, false);
+        new PriorityNetworkFetcher<>(delegate, false, 1, 0, true, 0, false);
 
     // fill the currently fetching queue so all the next requests will wait in the priority queues.
     PriorityFetchState<FetchState> dontcare1 = fetch(fetcher, "dontcare1", callback, true);
@@ -464,7 +465,7 @@ public class PriorityNetworkFetcherTest {
   @Test
   public void numberOfCurrentlyFetchingIsReturnedInExtraMap() {
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true, false, false);
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true, 0, false);
 
     // The queue is empty, so enqueuing a request immediately executes it. Therefore,
     // currentlyFetching size is 0.
@@ -490,7 +491,7 @@ public class PriorityNetworkFetcherTest {
 
     // Max hi-pri: 1, max low-pri: 0
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 1, 0, true, false, false, clock);
+        new PriorityNetworkFetcher<>(delegate, false, 1, 0, true, 0, false, clock);
 
     PriorityFetchState<FetchState> hipri1 = fetch(fetcher, "hipri1", callback, true);
     PriorityFetchState<FetchState> hipri2 = fetch(fetcher, "hipri2", callback, true);
@@ -531,12 +532,13 @@ public class PriorityNetworkFetcherTest {
    * retried immediately.
    */
   @Test
-  public void testInfiniteRetries_requeueOnFail() {
+  public void testInfiniteRequeues_requeueOnFail() {
     RecordingNetworkFetcher recordingNetworkFetcher = new RecordingNetworkFetcher();
 
     // Max hi-pri: 1, max low-pri: 0
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(recordingNetworkFetcher, false, 1, 0, true, true, false);
+        new PriorityNetworkFetcher<>(
+            recordingNetworkFetcher, false, 1, 0, true, INFINITE_REQUEUE, false);
 
     PriorityFetchState<FetchState> hipri1 = fetch(fetcher, "hipri1", callback, true);
     PriorityFetchState<FetchState> hipri2 = fetch(fetcher, "hipri2", callback, true);
@@ -558,12 +560,13 @@ public class PriorityNetworkFetcherTest {
 
   /** Scenario: an image fetch fails with a non-recoverable exception. Don't requeue it. */
   @Test
-  public void testInfiniteRetries_dontRetryNonrecoverableException() {
+  public void testInfiniteRequeues_dontRequeueNonrecoverableException() {
     RecordingNetworkFetcher recordingNetworkFetcher = new RecordingNetworkFetcher();
 
     // Max hi-pri: 1, max low-pri: 0
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(recordingNetworkFetcher, false, 1, 0, true, true, false);
+        new PriorityNetworkFetcher<>(
+            recordingNetworkFetcher, false, 1, 0, true, INFINITE_REQUEUE, false);
 
     PriorityFetchState<FetchState> hipri1 = fetch(fetcher, "hipri1", callback, true);
 
@@ -587,12 +590,13 @@ public class PriorityNetworkFetcherTest {
    * priority queue.
    */
   @Test
-  public void testInfiniteRetries_changePriThenFail() {
+  public void testInfiniteRequeues_changePriThenFail() {
     RecordingNetworkFetcher recordingNetworkFetcher = new RecordingNetworkFetcher();
 
     // Max hi-pri: 1, max low-pri: 0
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(recordingNetworkFetcher, false, 1, 0, true, true, false);
+        new PriorityNetworkFetcher<>(
+            recordingNetworkFetcher, false, 1, 0, true, INFINITE_REQUEUE, false);
 
     PriorityFetchState<FetchState> hipri1 = fetch(fetcher, "hipri1", callback, true);
     PriorityFetchState<FetchState> hipri2 = fetch(fetcher, "hipri2", callback, true);
@@ -624,7 +628,8 @@ public class PriorityNetworkFetcherTest {
 
     // Max hi-pri: 1, max low-pri: 0
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(recordingNetworkFetcher, false, 1, 0, true, true, false);
+        new PriorityNetworkFetcher<>(
+            recordingNetworkFetcher, false, 1, 0, true, INFINITE_REQUEUE, false);
 
     PriorityFetchState<FetchState> fetchState = fetch(fetcher, "url", callback, true);
 
@@ -645,13 +650,55 @@ public class PriorityNetworkFetcherTest {
   }
 
   /**
+   * Scenario: an image fetch fails. We expect it to be re-queued up to maxNumberOfRequeue times.
+   */
+  @Test
+  public void testMaxNumberOfRequeue_requeueOnFail() {
+    RecordingNetworkFetcher recordingNetworkFetcher = new RecordingNetworkFetcher();
+    final int maxNumberOfRequeue = 2;
+
+    // Max hi-pri: 1, max low-pri: 0
+    PriorityNetworkFetcher<FetchState> fetcher =
+        new PriorityNetworkFetcher<>(
+            recordingNetworkFetcher, false, 1, 0, true, maxNumberOfRequeue, false);
+
+    PriorityFetchState<FetchState> hipri1 = fetch(fetcher, "hipri1", callback, true);
+    PriorityFetchState<FetchState> hipri2 = fetch(fetcher, "hipri2", callback, true);
+
+    assertThat(fetcher.getCurrentlyFetching()).containsExactly(hipri1);
+    assertThat(fetcher.getHiPriQueue()).containsExactly(hipri2);
+    assertThat(fetcher.getLowPriQueue()).isEmpty();
+
+    // Simulate 2 failures in hipri1, the request should be requeued.
+    getOnlyElement(recordingNetworkFetcher.callbacks.get(hipri1.delegatedState))
+        .onFailure(new Exception());
+    getOnlyElement(recordingNetworkFetcher.callbacks.get(hipri1.delegatedState))
+        .onFailure(new Exception());
+
+    assertThat(fetcher.getCurrentlyFetching()).containsExactly(hipri1);
+    assertThat(fetcher.getHiPriQueue()).containsExactly(hipri2);
+    assertThat(fetcher.getLowPriQueue()).isEmpty();
+
+    // Simulate a 3rd failure in hipri1, the request should NOT be requeued.
+    getOnlyElement(recordingNetworkFetcher.callbacks.get(hipri1.delegatedState))
+        .onFailure(new Exception());
+
+    assertThat(hipri1.requeueCount).isEqualTo(2);
+
+    // we will start fetching hipri2 immediately.
+    assertThat(fetcher.getCurrentlyFetching()).containsExactly(hipri2);
+    assertThat(fetcher.getHiPriQueue()).isEmpty();
+    assertThat(fetcher.getLowPriQueue()).isEmpty();
+  }
+
+  /**
    * Scenario: a priority fetcher is paused before fetch() is called. We expect that no request is
    * dequeued until we call resume().
    */
   @Test
   public void pauseBeforeFetch() {
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true, false, false);
+        new PriorityNetworkFetcher<>(delegate, false, 2, 1, true, 0, false);
 
     fetcher.pause();
 
@@ -677,7 +724,7 @@ public class PriorityNetworkFetcherTest {
   @Test
   public void pauseDuringFetch() {
     PriorityNetworkFetcher<FetchState> fetcher =
-        new PriorityNetworkFetcher<>(delegate, false, 1, 0, true, false, false);
+        new PriorityNetworkFetcher<>(delegate, false, 1, 0, true, 0, false);
 
     PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, true);
     PriorityFetchState<FetchState> two = fetch(fetcher, "2", callback, true);

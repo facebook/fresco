@@ -65,7 +65,8 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
   private volatile boolean isRunning = true;
 
   private final boolean inflightFetchesCanBeCancelled;
-  private final boolean infiniteRetries;
+  private final int maxNumberOfRequeue;
+  @VisibleForTesting static final int INFINITE_REQUEUE = -1;
   private final boolean doNotCancelRequests;
 
   /**
@@ -74,7 +75,35 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
    * @param inflightFetchesCanBeCancelled if false, the fetcher waits for the completion of requests
    *     that have been delegated to 'delegate' even if they were cancelled by Fresco. The
    *     cancellation order is not propagated to 'delegate', and no other request is dequeued.
-   * @param infiniteRetries if true, requests that fail are re-queued, potentially retrying
+   * @param maxNumberOfRequeue requests that fail are re-queued up to maxNumberOfRequeue times,
+   *     potentially retrying immediately. INFINITE_REQUEUE(-1) means infinite requeue.
+   */
+  public PriorityNetworkFetcher(
+      NetworkFetcher<FETCH_STATE> delegate,
+      boolean isHiPriFifo,
+      int maxOutstandingHiPri,
+      int maxOutstandingLowPri,
+      boolean inflightFetchesCanBeCancelled,
+      int maxNumberOfRequeue,
+      boolean doNotCancelRequests) {
+    this(
+        delegate,
+        isHiPriFifo,
+        maxOutstandingHiPri,
+        maxOutstandingLowPri,
+        inflightFetchesCanBeCancelled,
+        maxNumberOfRequeue,
+        doNotCancelRequests,
+        RealtimeSinceBootClock.get());
+  }
+
+  /**
+   * @param isHiPriFifo if true, hi-pri requests are dequeued in the order they were enqueued.
+   *     Otherwise, they're dequeued in reverse order.
+   * @param inflightFetchesCanBeCancelled if false, the fetcher waits for the completion of requests
+   *     that have been delegated to 'delegate' even if they were cancelled by Fresco. The
+   *     cancellation order is not propagated to 'delegate', and no other request is dequeued.
+   * @param infiniteRequeue if true, requests that fail are re-queued, potentially retrying
    *     immediately.
    */
   public PriorityNetworkFetcher(
@@ -83,7 +112,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       int maxOutstandingHiPri,
       int maxOutstandingLowPri,
       boolean inflightFetchesCanBeCancelled,
-      boolean infiniteRetries,
+      boolean infiniteRequeue,
       boolean doNotCancelRequests) {
     this(
         delegate,
@@ -91,7 +120,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
         maxOutstandingHiPri,
         maxOutstandingLowPri,
         inflightFetchesCanBeCancelled,
-        infiniteRetries,
+        infiniteRequeue ? INFINITE_REQUEUE : 0,
         doNotCancelRequests,
         RealtimeSinceBootClock.get());
   }
@@ -103,7 +132,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       int maxOutstandingHiPri,
       int maxOutstandingLowPri,
       boolean inflightFetchesCanBeCancelled,
-      boolean infiniteRetries,
+      int maxNumberOfRequeue,
       boolean doNotCancelRequests,
       MonotonicClock clock) {
     mDelegate = delegate;
@@ -115,7 +144,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       throw new IllegalArgumentException("maxOutstandingHiPri should be > maxOutstandingLowPri");
     }
     this.inflightFetchesCanBeCancelled = inflightFetchesCanBeCancelled;
-    this.infiniteRetries = infiniteRetries;
+    this.maxNumberOfRequeue = maxNumberOfRequeue;
     this.doNotCancelRequests = doNotCancelRequests;
     this.mClock = clock;
   }
@@ -258,7 +287,10 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
 
             @Override
             public void onFailure(Throwable throwable) {
-              if (infiniteRetries
+              final boolean shouldRequeue =
+                  maxNumberOfRequeue == INFINITE_REQUEUE
+                      || fetchState.requeueCount < maxNumberOfRequeue;
+              if (shouldRequeue
                   && !(throwable instanceof PriorityNetworkFetcher.NonrecoverableException)) {
                 requeue(fetchState);
               } else {
