@@ -61,6 +61,8 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       new LinkedList<>();
   private final HashSet<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> mCurrentlyFetching =
       new HashSet<>();
+  private final LinkedList<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> mDelayedQueue =
+      new LinkedList<>();
 
   private volatile boolean isRunning = true;
 
@@ -68,6 +70,15 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
   private final int maxNumberOfRequeue;
   @VisibleForTesting static final int INFINITE_REQUEUE = -1;
   private final boolean doNotCancelRequests;
+
+  private long firstDelayedRequestEnqueuedTimeStamp;
+
+  /** the amount of time a request should wait before it gets re-queued again */
+  private final long requeueDelayTimeInMillis;
+  /** the number of immediate re-queue, with no delay */
+  private final int immediateRequeueCount;
+
+  @VisibleForTesting static final int NO_DELAYED_REQUESTS = -1;
 
   /**
    * @param isHiPriFifo if true, hi-pri requests are dequeued in the order they were enqueued.
@@ -77,6 +88,13 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
    *     cancellation order is not propagated to 'delegate', and no other request is dequeued.
    * @param maxNumberOfRequeue requests that fail are re-queued up to maxNumberOfRequeue times,
    *     potentially retrying immediately. INFINITE_REQUEUE(-1) means infinite requeue.
+   * @param doNotCancelRequests if true, requests will not be removed from the queue on cancellation
+   * @param immediateRequeueCount number of immediate requeue attempts, when a request is re-queued
+   *     more then this number, it will get re-queued again after at most requeueDelayTimeInMillis.
+   *     NO_DELAYED_REQUESTS(-1) means no delay, no matter how many times the request is re-queued.
+   * @param requeueDelayTimeInMillis the amount of time in ms a request needs to wait until getting
+   *     re-queued again after it gets re-queued more than immediateRequeueCount times. This is an
+   *     upper bound of delay time.
    */
   public PriorityNetworkFetcher(
       NetworkFetcher<FETCH_STATE> delegate,
@@ -85,7 +103,9 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       int maxOutstandingLowPri,
       boolean inflightFetchesCanBeCancelled,
       int maxNumberOfRequeue,
-      boolean doNotCancelRequests) {
+      boolean doNotCancelRequests,
+      int immediateRequeueCount,
+      int requeueDelayTimeInMillis) {
     this(
         delegate,
         isHiPriFifo,
@@ -94,6 +114,8 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
         inflightFetchesCanBeCancelled,
         maxNumberOfRequeue,
         doNotCancelRequests,
+        immediateRequeueCount,
+        requeueDelayTimeInMillis,
         RealtimeSinceBootClock.get());
   }
 
@@ -122,6 +144,8 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
         inflightFetchesCanBeCancelled,
         infiniteRequeue ? INFINITE_REQUEUE : 0,
         doNotCancelRequests,
+        NO_DELAYED_REQUESTS,
+        0,
         RealtimeSinceBootClock.get());
   }
 
@@ -134,6 +158,8 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       boolean inflightFetchesCanBeCancelled,
       int maxNumberOfRequeue,
       boolean doNotCancelRequests,
+      int immediateRequeueCount,
+      int requeueDelayTimeInMillis,
       MonotonicClock clock) {
     mDelegate = delegate;
     mIsHiPriFifo = isHiPriFifo;
@@ -146,6 +172,8 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     this.inflightFetchesCanBeCancelled = inflightFetchesCanBeCancelled;
     this.maxNumberOfRequeue = maxNumberOfRequeue;
     this.doNotCancelRequests = doNotCancelRequests;
+    this.immediateRequeueCount = immediateRequeueCount;
+    this.requeueDelayTimeInMillis = requeueDelayTimeInMillis;
     this.mClock = clock;
   }
 
@@ -224,6 +252,25 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     dequeueIfAvailableSlots();
   }
 
+  private void moveDelayedRequestsToPriorityQueues() {
+    if (mDelayedQueue.isEmpty()
+        || mClock.now() - firstDelayedRequestEnqueuedTimeStamp <= requeueDelayTimeInMillis) {
+      return;
+    }
+    for (PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState : mDelayedQueue) {
+      putInQueue(fetchState, fetchState.getContext().getPriority() == HIGH);
+    }
+    mDelayedQueue.clear();
+  }
+
+  private void putInDelayedQueue(
+      PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState) {
+    if (mDelayedQueue.isEmpty()) {
+      firstDelayedRequestEnqueuedTimeStamp = mClock.now();
+    }
+    mDelayedQueue.addLast(fetchState);
+  }
+
   private void requeue(PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState) {
     synchronized (mLock) {
       FLog.v(TAG, "requeue: %s", fetchState.getUri());
@@ -236,7 +283,13 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       if (!mHiPriQueue.remove(fetchState)) {
         mLowPriQueue.remove(fetchState);
       }
-      putInQueue(fetchState, fetchState.getContext().getPriority() == HIGH);
+
+      if (immediateRequeueCount != NO_DELAYED_REQUESTS
+          && fetchState.requeueCount > immediateRequeueCount) {
+        putInDelayedQueue(fetchState);
+      } else {
+        putInQueue(fetchState, fetchState.getContext().getPriority() == HIGH);
+      }
     }
     dequeueIfAvailableSlots();
   }
@@ -248,6 +301,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
 
     PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> toFetch = null;
     synchronized (mLock) {
+      moveDelayedRequestsToPriorityQueues();
       int outstandingRequests = mCurrentlyFetching.size();
 
       if (outstandingRequests < mMaxOutstandingHiPri) {
@@ -349,6 +403,11 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
   @VisibleForTesting
   List<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> getLowPriQueue() {
     return mLowPriQueue;
+  }
+
+  @VisibleForTesting
+  List<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> getDelayedQeueue() {
+    return mDelayedQueue;
   }
 
   @VisibleForTesting
