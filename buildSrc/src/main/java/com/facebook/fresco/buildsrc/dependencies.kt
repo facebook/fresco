@@ -50,7 +50,7 @@ object Deps {
   }
 
   object SoLoader {
-    private const val version = "0.10.0"
+    private const val version = "0.10.1"
     const val soloaderAnnotation = "com.facebook.soloader:annotation:$version"
     const val nativeloader = "com.facebook.soloader:nativeloader:$version"
     const val soloader = "com.facebook.soloader:soloader:$version"
