@@ -1,5 +1,8 @@
 # Third-party libraries for samples
 -keep class com.caverock.androidsvg.** { *; }
+-keep class com.facebook.flipper.** { *; }
+-keep class com.facebook.jni.** { *; }
+
 -dontwarn com.caverock.androidsvg.**
 
 -keep class com.facebook.drawee.generic.GenericDraweeHierarchy {
