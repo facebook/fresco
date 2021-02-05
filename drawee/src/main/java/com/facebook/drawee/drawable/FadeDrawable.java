@@ -66,6 +66,7 @@ public class FadeDrawable extends ArrayDrawable {
 
   private @Nullable OnFadeListener mOnFadeListener;
   private boolean mIsFadingActualImage;
+  private boolean mOnFadeListenerShowImmediately;
 
   /**
    * Creates a new fade drawable. The first layer is displayed with full opacity whereas all other
@@ -224,6 +225,9 @@ public class FadeDrawable extends ArrayDrawable {
   public void showLayerImmediately(int index) {
     mIsLayerOn[index] = true;
     mAlphas[index] = 255;
+    if (index == mActualImageLayer) {
+      mOnFadeListenerShowImmediately = true;
+    }
     invalidateSelf();
   }
 
@@ -290,7 +294,7 @@ public class FadeDrawable extends ArrayDrawable {
         ratio = (mDurationMs == 0) ? 1.0f : 0.0f;
         // if all the layers have reached their target opacity, transition is done
         done = updateAlphas(ratio);
-        onFadeStarted();
+        maybeOnFadeStarted();
         mTransitionState = done ? TRANSITION_NONE : TRANSITION_RUNNING;
         break;
 
@@ -314,9 +318,23 @@ public class FadeDrawable extends ArrayDrawable {
     }
 
     if (done) {
-      onFadeFinished();
+      maybeOnFadeFinished();
+      maybeOnImageShownImmediately();
     } else {
       invalidateSelf();
+    }
+  }
+
+  private void maybeOnImageShownImmediately() {
+    if (!mOnFadeListenerShowImmediately) {
+      return;
+    }
+
+    if (mTransitionState == TRANSITION_NONE && mIsLayerOn[mActualImageLayer]) {
+      if (mOnFadeListener != null) {
+        mOnFadeListener.onShownImmediately();
+      }
+      mOnFadeListenerShowImmediately = false;
     }
   }
 
@@ -373,7 +391,7 @@ public class FadeDrawable extends ArrayDrawable {
     mOnFadeListener = onFadeListener;
   }
 
-  private void onFadeStarted() {
+  private void maybeOnFadeStarted() {
     if (mIsFadingActualImage) {
       return;
     }
@@ -392,7 +410,7 @@ public class FadeDrawable extends ArrayDrawable {
     }
   }
 
-  private void onFadeFinished() {
+  private void maybeOnFadeFinished() {
     if (!mIsFadingActualImage) {
       return;
     }
@@ -407,5 +425,7 @@ public class FadeDrawable extends ArrayDrawable {
     void onFadeStarted();
 
     void onFadeFinished();
+
+    void onShownImmediately();
   }
 }

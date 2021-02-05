@@ -404,6 +404,9 @@ public abstract class AbstractDraweeController<T, INFO>
                 }
 
                 @Override
+                public void onShownImmediately() {}
+
+                @Override
                 public void onFadeStarted() {
                   if (mLoggingListener != null) {
                     mLoggingListener.onFadeStarted(mId);
