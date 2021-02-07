@@ -69,6 +69,11 @@ public class FrescoVitoLithoSimpleFragment extends BaseShowcaseFragment {
               public void onFadeFinished() {
                 Log.d("pewpew", "f finished");
               }
+
+              @Override
+              public void onShownImmediately() {
+                Log.d("pewpew", "f immediately");
+              }
             })
         .build();
   }

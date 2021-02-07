@@ -45,7 +45,8 @@ object ExampleDatabase {
                   ExampleItem("Retaining Data Source Supplier") {
                     RetainingDataSourceSupplierFragment()
                   },
-                  ExampleItem("Multi URI") { MultiUriFragment() })),
+                  ExampleItem("Multi URI") { MultiUriFragment() },
+                  ExampleItem("Attribute Color") { DraweeAttrColorFragment() })),
           ExampleCategory(
               "Image Pipeline",
               listOf(
