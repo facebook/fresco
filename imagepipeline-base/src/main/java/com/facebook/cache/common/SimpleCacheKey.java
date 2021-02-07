@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,6 +9,8 @@ package com.facebook.cache.common;
 
 import android.net.Uri;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * {@link CacheKey} implementation that is a simple wrapper around a {@link String} object.
@@ -16,11 +18,18 @@ import com.facebook.common.internal.Preconditions;
  * <p>Users of CacheKey should construct it by providing a unique string that unambiguously
  * identifies the cached resource.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class SimpleCacheKey implements CacheKey {
   final String mKey;
+  final boolean mIsResourceIdForDebugging;
 
   public SimpleCacheKey(final String key) {
+    this(key, false);
+  }
+
+  public SimpleCacheKey(final String key, boolean isResourceIdForDebugging) {
     mKey = Preconditions.checkNotNull(key);
+    mIsResourceIdForDebugging = isResourceIdForDebugging;
   }
 
   @Override
@@ -29,7 +38,7 @@ public class SimpleCacheKey implements CacheKey {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (o == this) {
       return true;
     }
@@ -53,5 +62,10 @@ public class SimpleCacheKey implements CacheKey {
   @Override
   public String getUriString() {
     return mKey;
+  }
+
+  @Override
+  public boolean isResourceIdForDebugging() {
+    return mIsResourceIdForDebugging;
   }
 }

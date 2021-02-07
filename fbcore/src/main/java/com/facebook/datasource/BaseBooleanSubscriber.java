@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,11 +7,14 @@
 
 package com.facebook.datasource;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * Base implementation of {@link DataSubscriber} that ensures that the data source is closed when
  * the subscriber has finished with it.
- * <p>
- * Sample usage:
+ *
+ * <p>Sample usage:
+ *
  * <pre>
  * <code>
  * imagePipeline.isInDiskCache(
@@ -24,7 +27,8 @@ package com.facebook.datasource;
  * </code>
  * </pre>
  */
-public abstract class BaseBooleanSubscriber implements DataSubscriber<Boolean>{
+@Nullsafe(Nullsafe.Mode.LOCAL)
+public abstract class BaseBooleanSubscriber implements DataSubscriber<Boolean> {
   @Override
   public void onNewResult(DataSource<Boolean> dataSource) {
     try {
@@ -44,12 +48,10 @@ public abstract class BaseBooleanSubscriber implements DataSubscriber<Boolean>{
   }
 
   @Override
-  public void onCancellation(DataSource<Boolean> dataSource) {
-  }
+  public void onCancellation(DataSource<Boolean> dataSource) {}
 
   @Override
-  public void onProgressUpdate(DataSource<Boolean> dataSource) {
-  }
+  public void onProgressUpdate(DataSource<Boolean> dataSource) {}
 
   protected abstract void onNewResultImpl(boolean isFoundInDisk);
 

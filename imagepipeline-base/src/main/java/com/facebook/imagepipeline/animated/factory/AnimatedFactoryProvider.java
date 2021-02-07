@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.imagepipeline.animated.factory;
 
 import com.facebook.cache.common.CacheKey;
@@ -22,19 +23,25 @@ public class AnimatedFactoryProvider {
   public static AnimatedFactory getAnimatedFactory(
       PlatformBitmapFactory platformBitmapFactory,
       ExecutorSupplier executorSupplier,
-      CountingMemoryCache<CacheKey, CloseableImage> backingCache) {
+      CountingMemoryCache<CacheKey, CloseableImage> backingCache,
+      boolean downscaleFrameToDrawableDimensions) {
     if (!sImplLoaded) {
       try {
         final Class<?> clazz =
             Class.forName("com.facebook.fresco.animation.factory.AnimatedFactoryV2Impl");
-        final Constructor<?> constructor = clazz.getConstructor(
-            PlatformBitmapFactory.class,
-            ExecutorSupplier.class,
-            CountingMemoryCache.class);
-        sImpl = (AnimatedFactory) constructor.newInstance(
-            platformBitmapFactory,
-            executorSupplier,
-            backingCache);
+        final Constructor<?> constructor =
+            clazz.getConstructor(
+                PlatformBitmapFactory.class,
+                ExecutorSupplier.class,
+                CountingMemoryCache.class,
+                Boolean.TYPE);
+        sImpl =
+            (AnimatedFactory)
+                constructor.newInstance(
+                    platformBitmapFactory,
+                    executorSupplier,
+                    backingCache,
+                    downscaleFrameToDrawableDimensions);
       } catch (Throwable e) {
         // Head in the sand
       }

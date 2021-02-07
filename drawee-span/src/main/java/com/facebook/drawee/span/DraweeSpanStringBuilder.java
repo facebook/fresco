@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -14,8 +14,8 @@ import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.text.SpannableStringBuilder;
 import android.view.View;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.lifecycle.AttachDetachListener;
 import com.facebook.drawee.controller.AbstractDraweeController;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -26,6 +26,7 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.widget.text.span.BetterImageSpan;
 import java.util.HashSet;
 import java.util.Set;
+import javax.annotation.Nullable;
 
 /**
  * DraweeSpanStringBuilder that can be used to add {@link DraweeSpan}s to strings.
@@ -39,7 +40,7 @@ import java.util.Set;
  * will be updated correctly since you can only bind the same builder to 1 view at a time. Older
  * views will be automatically unbound.
  *
- * {@see DraweeHolder}
+ * <p>{@see DraweeHolder}
  */
 public class DraweeSpanStringBuilder extends SpannableStringBuilder
     implements AttachDetachListener {
@@ -54,9 +55,9 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
   private final Set<DraweeSpan> mDraweeSpans = new HashSet<>();
   private final DrawableCallback mDrawableCallback = new DrawableCallback();
 
-  private View mBoundView;
-  private Drawable mBoundDrawable;
-  private DraweeSpanChangedListener mDraweeSpanChangedListener;
+  @Nullable private View mBoundView;
+  @Nullable private Drawable mBoundDrawable;
+  @Nullable private DraweeSpanChangedListener mDraweeSpanChangedListener;
 
   public DraweeSpanStringBuilder() {
     super();
@@ -111,8 +112,9 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
     DraweeSpan draweeSpan = new DraweeSpan(draweeHolder, verticalAlignment);
     final DraweeController controller = draweeHolder.getController();
     if (controller instanceof AbstractDraweeController) {
-      ((AbstractDraweeController) controller).addControllerListener(
-          new DrawableChangedListener(draweeSpan, enableResizing, drawableHeightPx));
+      ((AbstractDraweeController) controller)
+          .addControllerListener(
+              new DrawableChangedListener(draweeSpan, enableResizing, drawableHeightPx));
     }
     mDraweeSpans.add(draweeSpan);
     setSpan(draweeSpan, startIndex, endIndex + 1, SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -292,14 +294,10 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
      * will have the given fixed height.
      *
      * @param draweeSpan the Drawee span to listen to
-     * @param enableResizing if true, the drawable will be resized according to the final image
-     * size
+     * @param enableResizing if true, the drawable will be resized according to the final image size
      * @param fixedHeight use a fixed height even if resizing is enabled {@link #UNSET_SIZE}
      */
-    public DrawableChangedListener(
-        DraweeSpan draweeSpan,
-        boolean enableResizing,
-        int fixedHeight) {
+    public DrawableChangedListener(DraweeSpan draweeSpan, boolean enableResizing, int fixedHeight) {
       Preconditions.checkNotNull(draweeSpan);
       mDraweeSpan = draweeSpan;
       mEnableResizing = enableResizing;
@@ -307,28 +305,25 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
     }
 
     @Override
-    public void onFinalImageSet(
-        String id,
-        ImageInfo imageInfo,
-        Animatable animatable) {
-      if (mEnableResizing &&
-          imageInfo != null &&
-          mDraweeSpan.getDraweeHolder().getTopLevelDrawable() != null) {
+    public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+      if (mEnableResizing
+          && imageInfo != null
+          && mDraweeSpan.getDraweeHolder().getTopLevelDrawable() != null) {
         Drawable topLevelDrawable = mDraweeSpan.getDraweeHolder().getTopLevelDrawable();
         Rect topLevelDrawableBounds = topLevelDrawable.getBounds();
         if (mFixedHeight != UNSET_SIZE) {
           float imageWidth = ((float) mFixedHeight / imageInfo.getHeight()) * imageInfo.getWidth();
           int imageWidthPx = (int) imageWidth;
-          if (topLevelDrawableBounds.width() != imageWidthPx ||
-              topLevelDrawableBounds.height() != mFixedHeight) {
+          if (topLevelDrawableBounds.width() != imageWidthPx
+              || topLevelDrawableBounds.height() != mFixedHeight) {
             topLevelDrawable.setBounds(0, 0, imageWidthPx, mFixedHeight);
 
             if (mDraweeSpanChangedListener != null) {
               mDraweeSpanChangedListener.onDraweeSpanChanged(DraweeSpanStringBuilder.this);
             }
           }
-        } else if (topLevelDrawableBounds.width() != imageInfo.getWidth() ||
-            topLevelDrawableBounds.height() != imageInfo.getHeight()) {
+        } else if (topLevelDrawableBounds.width() != imageInfo.getWidth()
+            || topLevelDrawableBounds.height() != imageInfo.getHeight()) {
           topLevelDrawable.setBounds(0, 0, imageInfo.getWidth(), imageInfo.getHeight());
 
           if (mDraweeSpanChangedListener != null) {

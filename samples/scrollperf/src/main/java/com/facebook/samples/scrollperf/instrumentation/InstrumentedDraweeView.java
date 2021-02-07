@@ -1,13 +1,8 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 package com.facebook.samples.scrollperf.instrumentation;
@@ -16,7 +11,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.controller.ControllerListener;
@@ -26,9 +21,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.util.DraweeUtil;
 
-/**
- * {@link SimpleDraweeView} with instrumentation.
- */
+/** {@link SimpleDraweeView} with instrumentation. */
 public class InstrumentedDraweeView extends SimpleDraweeView implements Instrumented {
 
   private Instrumentation mInstrumentation;
@@ -44,27 +37,29 @@ public class InstrumentedDraweeView extends SimpleDraweeView implements Instrume
   private void init() {
     mInstrumentation = new Instrumentation(this);
     if (mConfig.instrumentationEnabled) {
-      mListener = new BaseControllerListener<Object>() {
-        @Override
-        public void onSubmit(String id, Object callerContext) {
-          mInstrumentation.onStart();
-        }
-        @Override
-        public void onFinalImageSet(
-            String id,
-            @Nullable Object imageInfo,
-            @Nullable Animatable animatable) {
-          mInstrumentation.onSuccess();
-        }
-        @Override
-        public void onFailure(String id, Throwable throwable) {
-          mInstrumentation.onFailure();
-        }
-        @Override
-        public void onRelease(String id) {
-          mInstrumentation.onCancellation();
-        }
-      };
+      mListener =
+          new BaseControllerListener<Object>() {
+            @Override
+            public void onSubmit(String id, Object callerContext) {
+              mInstrumentation.onStart();
+            }
+
+            @Override
+            public void onFinalImageSet(
+                String id, @Nullable Object imageInfo, @Nullable Animatable animatable) {
+              mInstrumentation.onSuccess();
+            }
+
+            @Override
+            public void onFailure(String id, Throwable throwable) {
+              mInstrumentation.onFailure();
+            }
+
+            @Override
+            public void onRelease(String id) {
+              mInstrumentation.onCancellation();
+            }
+          };
     }
     DraweeUtil.setBgColor(this, mConfig);
   }
@@ -86,13 +81,14 @@ public class InstrumentedDraweeView extends SimpleDraweeView implements Instrume
 
   @Override
   public void setImageURI(Uri uri, @Nullable Object callerContext) {
-    SimpleDraweeControllerBuilder controllerBuilder = getControllerBuilder()
-        .setUri(uri)
-        .setCallerContext(callerContext)
-        .setOldController(getController());
-    if (mConfig.instrumentationEnabled &&
-        controllerBuilder instanceof AbstractDraweeControllerBuilder) {
-      ((AbstractDraweeControllerBuilder<?,?,?,?>) controllerBuilder)
+    SimpleDraweeControllerBuilder controllerBuilder =
+        getControllerBuilder()
+            .setUri(uri)
+            .setCallerContext(callerContext)
+            .setOldController(getController());
+    if (mConfig.instrumentationEnabled
+        && controllerBuilder instanceof AbstractDraweeControllerBuilder) {
+      ((AbstractDraweeControllerBuilder<?, ?, ?, ?>) controllerBuilder)
           .setControllerListener(mListener);
     }
     setController(controllerBuilder.build());

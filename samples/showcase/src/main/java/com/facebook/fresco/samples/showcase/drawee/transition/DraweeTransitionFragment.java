@@ -1,14 +1,10 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.samples.showcase.drawee.transition;
 
 import android.app.ActivityOptions;
@@ -16,19 +12,17 @@ import android.content.Intent;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.Nullable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 
-/**
- * Simple drawee fragment that just displays an image.
- */
+/** Simple drawee fragment that just displays an image. */
 public class DraweeTransitionFragment extends BaseShowcaseFragment {
 
   public static final PointF FOCUS_POINT = new PointF(1, 0.5f);
@@ -42,8 +36,7 @@ public class DraweeTransitionFragment extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
-    final Uri imageUri = imageUriProvider.createSampleUri(ImageUriProvider.ImageSize.M);
+    final Uri imageUri = sampleUris().createSampleUri(ImageUriProvider.ImageSize.M);
 
     final SimpleDraweeView simpleDraweeView =
         (SimpleDraweeView) view.findViewById(R.id.drawee_view);
@@ -52,26 +45,20 @@ public class DraweeTransitionFragment extends BaseShowcaseFragment {
     simpleDraweeView.setImageURI(imageUri);
     simpleDraweeView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.FOCUS_CROP);
     simpleDraweeView.getHierarchy().setActualImageFocusPoint(FOCUS_POINT);
-    simpleDraweeView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        startTransition(v, imageUri);
-      }
-    });
-  }
-
-  @Override
-  public int getTitleId() {
-    return R.string.drawee_transition_title;
+    simpleDraweeView.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            startTransition(v, imageUri);
+          }
+        });
   }
 
   public void startTransition(View startView, Uri uri) {
     Intent intent = ImageDetailsActivity.getStartIntent(getContext(), uri);
     final String transitionName = getString(R.string.transition_name);
-    final ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
-        getActivity(),
-        startView,
-        transitionName);
+    final ActivityOptions options =
+        ActivityOptions.makeSceneTransitionAnimation(getActivity(), startView, transitionName);
     startActivity(intent, options.toBundle());
   }
 }

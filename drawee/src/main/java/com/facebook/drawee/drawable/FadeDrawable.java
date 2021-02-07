@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,52 +10,45 @@ package com.facebook.drawee.drawable;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Arrays;
+import javax.annotation.Nullable;
 
 /**
  * A drawable that fades to the specific layer.
  *
- * <p> Arbitrary number of layers is supported. 5 Different fade methods are supported.
- * Once the transition starts we will animate layers in or out based on used fade method.
- * fadeInLayer fades in specified layer to full opacity.
- * fadeOutLayer fades out specified layer to zero opacity.
- * fadeOutAllLayers fades out all layers to zero opacity.
- * fadeToLayer fades in specified layer to full opacity, fades out all other layers to zero opacity.
- * fadeUpToLayer fades in all layers up to specified layer to full opacity and
- * fades out all other layers to zero opacity.
- *
+ * <p>Arbitrary number of layers is supported. 5 Different fade methods are supported. Once the
+ * transition starts we will animate layers in or out based on used fade method. fadeInLayer fades
+ * in specified layer to full opacity. fadeOutLayer fades out specified layer to zero opacity.
+ * fadeOutAllLayers fades out all layers to zero opacity. fadeToLayer fades in specified layer to
+ * full opacity, fades out all other layers to zero opacity. fadeUpToLayer fades in all layers up to
+ * specified layer to full opacity and fades out all other layers to zero opacity.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class FadeDrawable extends ArrayDrawable {
 
-  /**
-   * A transition is about to start.
-   */
-  @VisibleForTesting
-  public static final int TRANSITION_STARTING = 0;
+  /** A transition is about to start. */
+  @VisibleForTesting public static final int TRANSITION_STARTING = 0;
 
-  /**
-   * The transition has started and the animation is in progress.
-   */
-  @VisibleForTesting
-  public static final int TRANSITION_RUNNING = 1;
+  /** The transition has started and the animation is in progress. */
+  @VisibleForTesting public static final int TRANSITION_RUNNING = 1;
 
-  /**
-   * No transition will be applied.
-   */
-  @VisibleForTesting
-  public static final int TRANSITION_NONE = 2;
+  /** No transition will be applied. */
+  @VisibleForTesting public static final int TRANSITION_NONE = 2;
 
-  /**
-   * Layers.
-   */
+  /** Layers. */
   private final Drawable[] mLayers;
 
-  /**
-   * The current state.
-   */
+  private final boolean mDefaultLayerIsOn;
+  private final int mDefaultLayerAlpha;
+  /* The index of the layer that contains the actual image */
+  private final int mActualImageLayer;
+
+  /** The current state. */
   @VisibleForTesting int mTransitionState;
+
   @VisibleForTesting int mDurationMs;
   @VisibleForTesting long mStartTimeMs;
   @VisibleForTesting int[] mStartAlphas;
@@ -63,22 +56,38 @@ public class FadeDrawable extends ArrayDrawable {
   @VisibleForTesting int mAlpha;
 
   /**
-   * Determines whether to fade-out a layer to zero opacity (false) or to fade-in to
-   * the full opacity (true)
+   * Determines whether to fade-out a layer to zero opacity (false) or to fade-in to the full
+   * opacity (true)
    */
   @VisibleForTesting boolean[] mIsLayerOn;
 
-  /**
-   * When in batch mode, drawable won't invalidate self until batch mode finishes.
-   */
+  /** When in batch mode, drawable won't invalidate self until batch mode finishes. */
   @VisibleForTesting int mPreventInvalidateCount;
 
+  private @Nullable OnFadeListener mOnFadeListener;
+  private boolean mIsFadingActualImage;
+  private boolean mOnFadeListenerShowImmediately;
+
   /**
-   * Creates a new fade drawable.
-   * The first layer is displayed with full opacity whereas all other layers are invisible.
+   * Creates a new fade drawable. The first layer is displayed with full opacity whereas all other
+   * layers are invisible.
+   *
    * @param layers layers to fade between
    */
   public FadeDrawable(Drawable[] layers) {
+    this(layers, false, -1);
+  }
+
+  /**
+   * Creates a new fade drawable. The first layer is displayed with full opacity whereas all other
+   * layers are invisible if allLayersVisible is false. Otherwise, all layers will be displayed with
+   * full opacity.
+   *
+   * @param layers layers to fade between
+   * @param allLayersVisible true if all layers should be visible per default
+   * @param actualImageLayer The index of the layer that contains the actual image
+   */
+  public FadeDrawable(Drawable[] layers, boolean allLayersVisible, int actualImageLayer) {
     super(layers);
     Preconditions.checkState(layers.length >= 1, "At least one layer required!");
     mLayers = layers;
@@ -87,6 +96,9 @@ public class FadeDrawable extends ArrayDrawable {
     mAlpha = 255;
     mIsLayerOn = new boolean[layers.length];
     mPreventInvalidateCount = 0;
+    mDefaultLayerIsOn = allLayersVisible;
+    mDefaultLayerAlpha = mDefaultLayerIsOn ? 255 : 0;
+    mActualImageLayer = actualImageLayer;
     resetInternal();
   }
 
@@ -97,24 +109,18 @@ public class FadeDrawable extends ArrayDrawable {
     }
   }
 
-  /**
-   * Begins the batch mode so that it doesn't invalidate self on every operation.
-   */
+  /** Begins the batch mode so that it doesn't invalidate self on every operation. */
   public void beginBatchMode() {
     mPreventInvalidateCount++;
   }
 
-  /**
-   * Ends the batch mode and invalidates.
-   */
+  /** Ends the batch mode and invalidates. */
   public void endBatchMode() {
     mPreventInvalidateCount--;
     invalidateSelf();
   }
 
-  /**
-   * Sets the duration of the current transition in milliseconds.
-   */
+  /** Sets the duration of the current transition in milliseconds. */
   public void setTransitionDuration(int durationMs) {
     mDurationMs = durationMs;
     // re-initialize transition if it's running
@@ -125,28 +131,25 @@ public class FadeDrawable extends ArrayDrawable {
 
   /**
    * Gets the transition duration.
+   *
    * @return transition duration in milliseconds.
    */
   public int getTransitionDuration() {
     return mDurationMs;
   }
 
-  /**
-   * Resets internal state to the initial state.
-   */
+  /** Resets internal state to the initial state. */
   private void resetInternal() {
     mTransitionState = TRANSITION_NONE;
-    Arrays.fill(mStartAlphas, 0);
+    Arrays.fill(mStartAlphas, mDefaultLayerAlpha);
     mStartAlphas[0] = 255;
-    Arrays.fill(mAlphas, 0);
+    Arrays.fill(mAlphas, mDefaultLayerAlpha);
     mAlphas[0] = 255;
-    Arrays.fill(mIsLayerOn, false);
+    Arrays.fill(mIsLayerOn, mDefaultLayerIsOn);
     mIsLayerOn[0] = true;
   }
 
-  /**
-   * Resets to the initial state.
-   */
+  /** Resets to the initial state. */
   public void reset() {
     resetInternal();
     invalidateSelf();
@@ -154,6 +157,7 @@ public class FadeDrawable extends ArrayDrawable {
 
   /**
    * Starts fading in the specified layer.
+   *
    * @param index the index of the layer to fade in.
    */
   public void fadeInLayer(int index) {
@@ -164,6 +168,7 @@ public class FadeDrawable extends ArrayDrawable {
 
   /**
    * Starts fading out the specified layer.
+   *
    * @param index the index of the layer to fade out.
    */
   public void fadeOutLayer(int index) {
@@ -172,18 +177,14 @@ public class FadeDrawable extends ArrayDrawable {
     invalidateSelf();
   }
 
-  /**
-   * Starts fading in all layers.
-   */
+  /** Starts fading in all layers. */
   public void fadeInAllLayers() {
     mTransitionState = TRANSITION_STARTING;
     Arrays.fill(mIsLayerOn, true);
     invalidateSelf();
   }
 
-  /**
-   * Starts fading out all layers.
-   */
+  /** Starts fading out all layers. */
   public void fadeOutAllLayers() {
     mTransitionState = TRANSITION_STARTING;
     Arrays.fill(mIsLayerOn, false);
@@ -192,6 +193,7 @@ public class FadeDrawable extends ArrayDrawable {
 
   /**
    * Starts fading to the specified layer.
+   *
    * @param index the index of the layer to fade to
    */
   public void fadeToLayer(int index) {
@@ -203,8 +205,9 @@ public class FadeDrawable extends ArrayDrawable {
 
   /**
    * Starts fading up to the specified layer.
-   * <p>
-   * Layers up to the specified layer inclusive will fade in, other layers will fade out.
+   *
+   * <p>Layers up to the specified layer inclusive will fade in, other layers will fade out.
+   *
    * @param index the index of the layer to fade up to.
    */
   public void fadeUpToLayer(int index) {
@@ -215,8 +218,31 @@ public class FadeDrawable extends ArrayDrawable {
   }
 
   /**
-   * Finishes transition immediately.
+   * Makes the specified layer fully opaque
+   *
+   * @param index the index of the layer to be shown
    */
+  public void showLayerImmediately(int index) {
+    mIsLayerOn[index] = true;
+    mAlphas[index] = 255;
+    if (index == mActualImageLayer) {
+      mOnFadeListenerShowImmediately = true;
+    }
+    invalidateSelf();
+  }
+
+  /**
+   * Makes the specified layer fully transparent
+   *
+   * @param index the index of the layer to be hidden
+   */
+  public void hideLayerImmediately(int index) {
+    mIsLayerOn[index] = false;
+    mAlphas[index] = 0;
+    invalidateSelf();
+  }
+
+  /** Finishes transition immediately. */
   public void finishTransitionImmediately() {
     mTransitionState = TRANSITION_NONE;
     for (int i = 0; i < mLayers.length; i++) {
@@ -227,6 +253,7 @@ public class FadeDrawable extends ArrayDrawable {
 
   /**
    * Updates the current alphas based on the ratio of the elapsed time and duration.
+   *
    * @param ratio
    * @return whether the all layers have reached their target opacity
    */
@@ -267,6 +294,7 @@ public class FadeDrawable extends ArrayDrawable {
         ratio = (mDurationMs == 0) ? 1.0f : 0.0f;
         // if all the layers have reached their target opacity, transition is done
         done = updateAlphas(ratio);
+        maybeOnFadeStarted();
         mTransitionState = done ? TRANSITION_NONE : TRANSITION_RUNNING;
         break;
 
@@ -286,11 +314,27 @@ public class FadeDrawable extends ArrayDrawable {
     }
 
     for (int i = 0; i < mLayers.length; i++) {
-      drawDrawableWithAlpha(canvas, mLayers[i], mAlphas[i] * mAlpha / 255);
+      drawDrawableWithAlpha(canvas, mLayers[i], (int) Math.ceil(mAlphas[i] * mAlpha / 255.0));
     }
 
-    if (!done) {
+    if (done) {
+      maybeOnFadeFinished();
+      maybeOnImageShownImmediately();
+    } else {
       invalidateSelf();
+    }
+  }
+
+  private void maybeOnImageShownImmediately() {
+    if (!mOnFadeListenerShowImmediately) {
+      return;
+    }
+
+    if (mTransitionState == TRANSITION_NONE && mIsLayerOn[mActualImageLayer]) {
+      if (mOnFadeListener != null) {
+        mOnFadeListener.onShownImmediately();
+      }
+      mOnFadeListenerShowImmediately = false;
     }
   }
 
@@ -318,6 +362,7 @@ public class FadeDrawable extends ArrayDrawable {
   /**
    * Returns current time. Absolute reference is not important as only time deltas are used.
    * Extracting this to a separate method allows better testing.
+   *
    * @return current time in milliseconds
    */
   protected long getCurrentTimeMs() {
@@ -325,8 +370,8 @@ public class FadeDrawable extends ArrayDrawable {
   }
 
   /**
-   * Gets the transition state (STARTING, RUNNING, NONE).
-   * Useful for testing purposes.
+   * Gets the transition state (STARTING, RUNNING, NONE). Useful for testing purposes.
+   *
    * @return transition state
    */
   @VisibleForTesting
@@ -338,4 +383,49 @@ public class FadeDrawable extends ArrayDrawable {
     return mIsLayerOn[index];
   }
 
+  public boolean isDefaultLayerIsOn() {
+    return mDefaultLayerIsOn;
+  }
+
+  public void setOnFadeListener(OnFadeListener onFadeListener) {
+    mOnFadeListener = onFadeListener;
+  }
+
+  private void maybeOnFadeStarted() {
+    if (mIsFadingActualImage) {
+      return;
+    }
+
+    if (mActualImageLayer < 0 || mActualImageLayer >= mIsLayerOn.length) {
+      return;
+    }
+    if (!mIsLayerOn[mActualImageLayer]) {
+      return;
+    }
+
+    mIsFadingActualImage = true;
+
+    if (mOnFadeListener != null) {
+      mOnFadeListener.onFadeStarted();
+    }
+  }
+
+  private void maybeOnFadeFinished() {
+    if (!mIsFadingActualImage) {
+      return;
+    }
+    mIsFadingActualImage = false;
+
+    if (mOnFadeListener != null) {
+      mOnFadeListener.onFadeFinished();
+    }
+  }
+
+  public interface OnFadeListener {
+    void onFadeStarted();
+
+    void onFadeFinished();
+
+    void onShownImmediately();
+  }
 }

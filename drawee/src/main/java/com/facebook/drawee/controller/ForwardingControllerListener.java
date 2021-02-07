@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,23 +9,23 @@ package com.facebook.drawee.controller;
 
 import android.graphics.drawable.Animatable;
 import android.util.Log;
+import com.facebook.fresco.ui.common.DimensionsInfo;
+import com.facebook.fresco.ui.common.OnDrawControllerListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
-/**
- * Listener that forwards controller events to multiple listeners.
- */
+/** Listener that forwards controller events to multiple listeners. */
 @ThreadSafe
-public class ForwardingControllerListener<INFO> implements ControllerListener<INFO> {
+public class ForwardingControllerListener<INFO>
+    implements ControllerListener<INFO>, OnDrawControllerListener<INFO> {
   // lint only allows 23 characters in a tag
   private static final String TAG = "FdingControllerListener";
 
   private final List<ControllerListener<? super INFO>> mListeners = new ArrayList<>(2);
 
-  public ForwardingControllerListener() {
-  }
+  public ForwardingControllerListener() {}
 
   public static <INFO> ForwardingControllerListener<INFO> create() {
     return new ForwardingControllerListener<INFO>();
@@ -83,9 +83,7 @@ public class ForwardingControllerListener<INFO> implements ControllerListener<IN
 
   @Override
   public synchronized void onFinalImageSet(
-      String id,
-      @Nullable INFO imageInfo,
-      @Nullable Animatable animatable) {
+      String id, @Nullable INFO imageInfo, @Nullable Animatable animatable) {
     final int numberOfListeners = mListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       try {
@@ -160,6 +158,22 @@ public class ForwardingControllerListener<INFO> implements ControllerListener<IN
       } catch (Exception exception) {
         // Don't punish the other listeners if we're given a bad one.
         onException("InternalListener exception in onRelease", exception);
+      }
+    }
+  }
+
+  @Override
+  public void onImageDrawn(String id, INFO imageInfo, DimensionsInfo dimensionsInfo) {
+    final int numberOfListeners = mListeners.size();
+    for (int i = 0; i < numberOfListeners; ++i) {
+      try {
+        ControllerListener<? super INFO> listener = mListeners.get(i);
+        if (listener instanceof OnDrawControllerListener) {
+          ((OnDrawControllerListener) listener).onImageDrawn(id, imageInfo, dimensionsInfo);
+        }
+      } catch (Exception exception) {
+        // Don't punish the other listeners if we're given a bad one.
+        onException("InternalListener exception in onImageDrawn", exception);
       }
     }
   }

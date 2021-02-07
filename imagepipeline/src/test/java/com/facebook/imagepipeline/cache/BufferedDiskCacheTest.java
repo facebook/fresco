@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -55,9 +55,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 @PrepareOnlyThisForTest(StagingArea.class)
-@Config(manifest=Config.NONE)
+@Config(manifest = Config.NONE)
 public class BufferedDiskCacheTest {
   @Mock public FileCache mFileCache;
   @Mock public PooledByteBufferFactory mByteBufferFactory;
@@ -68,8 +68,7 @@ public class BufferedDiskCacheTest {
   @Mock public InputStream mInputStream;
   @Mock public BinaryResource mBinaryResource;
 
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
+  @Rule public PowerMockRule rule = new PowerMockRule();
 
   private MultiCacheKey mCacheKey;
   private AtomicBoolean mIsCancelled;
@@ -103,13 +102,14 @@ public class BufferedDiskCacheTest {
     mockStatic(StagingArea.class);
     when(StagingArea.getInstance()).thenReturn(mStagingArea);
 
-    mBufferedDiskCache = new BufferedDiskCache(
-        mFileCache,
-        mByteBufferFactory,
-        mPooledByteStreams,
-        mReadPriorityExecutor,
-        mWritePriorityExecutor,
-        mImageCacheStatsTracker);
+    mBufferedDiskCache =
+        new BufferedDiskCache(
+            mFileCache,
+            mByteBufferFactory,
+            mPooledByteStreams,
+            mReadPriorityExecutor,
+            mWritePriorityExecutor,
+            mImageCacheStatsTracker);
   }
 
   @Test
@@ -144,8 +144,7 @@ public class BufferedDiskCacheTest {
     verify(mFileCache).getResource(eq(mCacheKey));
     EncodedImage result = readTask.getResult();
     assertEquals(
-        2,
-        result.getByteBufferRef().getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+        2, result.getByteBufferRef().getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertSame(mPooledByteBuffer, result.getByteBufferRef().get());
   }
 
@@ -176,9 +175,7 @@ public class BufferedDiskCacheTest {
     when(mPooledByteBuffer.size()).thenReturn(0);
 
     final ArgumentCaptor<WriterCallback> wcCapture = ArgumentCaptor.forClass(WriterCallback.class);
-    when(mFileCache.insert(
-            eq(mCacheKey),
-            wcCapture.capture())).thenReturn(null);
+    when(mFileCache.insert(eq(mCacheKey), wcCapture.capture())).thenReturn(null);
 
     mWritePriorityExecutor.runUntilIdle();
     OutputStream os = mock(OutputStream.class);
@@ -222,8 +219,11 @@ public class BufferedDiskCacheTest {
     assertEquals(2, mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertSame(
         mCloseableReference.getUnderlyingReferenceTestOnly(),
-        mBufferedDiskCache.get(mCacheKey, mIsCancelled).getResult()
-            .getByteBufferRef().getUnderlyingReferenceTestOnly());
+        mBufferedDiskCache
+            .get(mCacheKey, mIsCancelled)
+            .getResult()
+            .getByteBufferRef()
+            .getUnderlyingReferenceTestOnly());
   }
 
   @Test
@@ -241,8 +241,7 @@ public class BufferedDiskCacheTest {
     // mEncodedImage is created and a third one that is cloned when the method getByteBufferRef is
     // called in EncodedImage).
     assertEquals(
-        3,
-        result.getByteBufferRef().getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+        3, result.getByteBufferRef().getUnderlyingReferenceTestOnly().getRefCountTestOnly());
   }
 
   @Test
@@ -279,7 +278,7 @@ public class BufferedDiskCacheTest {
   }
 
   private static boolean isTaskCancelled(Task<?> task) {
-    return task.isCancelled() ||
-        (task.isFaulted() && task.getError() instanceof CancellationException);
+    return task.isCancelled()
+        || (task.isFaulted() && task.getError() instanceof CancellationException);
   }
 }

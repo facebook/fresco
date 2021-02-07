@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.animation.bitmap.cache;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -21,12 +22,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests {@link FrescoFrameCache}.
- */
-@RunWith(PowerMockRunner.class)
+/** Tests {@link FrescoFrameCache}. */
+@RunWith(RobolectricTestRunner.class)
 @PrepareForTest(CloseableReference.class)
 public class FrescoFrameCacheTest {
 
@@ -47,8 +46,7 @@ public class FrescoFrameCacheTest {
 
     when(mCloseableStaticBitmap.isClosed()).thenReturn(false);
     when(mCloseableStaticBitmap.getUnderlyingBitmap()).thenReturn(mUnderlyingBitmap);
-    when(mCloseableStaticBitmap.convertToBitmapReference())
-        .thenReturn(mBitmapReference);
+    when(mCloseableStaticBitmap.convertToBitmapReference()).thenReturn(mBitmapReference);
     when(mCloseableStaticBitmap.cloneUnderlyingBitmapReference()).thenReturn(mBitmapReferenceClone);
 
     when(mImageReference.isValid()).thenReturn(true);

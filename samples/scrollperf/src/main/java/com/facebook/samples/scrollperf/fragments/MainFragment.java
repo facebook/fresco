@@ -1,26 +1,16 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.samples.scrollperf.fragments;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.conf.Const;
@@ -71,9 +67,7 @@ public class MainFragment extends Fragment {
 
   @Override
   public View onCreateView(
-      LayoutInflater inflater,
-      ViewGroup container,
-      Bundle savedInstanceState) {
+      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     mConfig = Config.load(getContext());
     // Initialize the SimpleAdapter
     mSimpleAdapter = initializeSimpleAdapter(mConfig);
@@ -134,16 +128,16 @@ public class MainFragment extends Fragment {
     SimpleAdapter<Uri> simpleAdapter = null;
     switch (config.dataSourceType) {
       case Const.LOCAL_RESOURCE_URIS:
-        simpleAdapter = LocalResourceSimpleAdapter
-                .getEagerAdapter(getContext(), R.array.example_uris);
+        simpleAdapter =
+            LocalResourceSimpleAdapter.getEagerAdapter(getContext(), R.array.example_uris);
         break;
       case Const.LOCAL_RESOURCE_WEBP_URIS:
-        simpleAdapter = LocalResourceSimpleAdapter
-            .getEagerAdapter(getContext(), R.array.example_webp_uris);
+        simpleAdapter =
+            LocalResourceSimpleAdapter.getEagerAdapter(getContext(), R.array.example_webp_uris);
         break;
       case Const.LOCAL_RESOURCE_PNG_URIS:
-        simpleAdapter = LocalResourceSimpleAdapter
-            .getEagerAdapter(getContext(), R.array.example_png_uris);
+        simpleAdapter =
+            LocalResourceSimpleAdapter.getEagerAdapter(getContext(), R.array.example_png_uris);
         break;
       case Const.LOCAL_INTERNAL_PHOTO_URIS:
         simpleAdapter = ContentProviderSimpleAdapter.getInternalPhotoSimpleAdapter(getActivity());
@@ -164,28 +158,22 @@ public class MainFragment extends Fragment {
     if (mConfig.infiniteDataSource) {
       mSimpleAdapter = SimpleAdapter.Util.makeItInfinite(mSimpleAdapter);
       if (mDistinctUriCompatible && mConfig.distinctUriDataSource) {
-        mSimpleAdapter = SimpleAdapter.Util
-            .decorate(mSimpleAdapter, DistinctUriDecorator.SINGLETON);
+        mSimpleAdapter =
+            SimpleAdapter.Util.decorate(mSimpleAdapter, DistinctUriDecorator.SINGLETON);
       }
     }
     switch (mConfig.recyclerLayoutType) {
       case Const.RECYCLER_VIEW_LAYOUT_VALUE:
       case Const.GRID_RECYCLER_VIEW_LAYOUT_VALUE:
         // Create the Adapter
-        mDraweeViewAdapter = new DraweeViewAdapter(
-            getContext(),
-            mSimpleAdapter,
-            mConfig,
-            mPerfListener);
+        mDraweeViewAdapter =
+            new DraweeViewAdapter(getContext(), mSimpleAdapter, mConfig, mPerfListener);
         mRecyclerView.setAdapter(mDraweeViewAdapter);
         break;
       case Const.LISTVIEW_LAYOUT_VALUE:
         // Create the Adapter
-        mListAdapter = new DraweeViewListAdapter(
-            getContext(),
-            mSimpleAdapter,
-            mConfig,
-            mPerfListener);
+        mListAdapter =
+            new DraweeViewListAdapter(getContext(), mSimpleAdapter, mConfig, mPerfListener);
         // Set the adapter
         mListView.setAdapter(mListAdapter);
         break;
@@ -200,8 +188,7 @@ public class MainFragment extends Fragment {
       return ContentProviderSimpleAdapter.getExternalPhotoSimpleAdapter(getActivity());
     } else {
       requestPermissions(
-          new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
-          REQUEST_READ_EXTERNAL_ID);
+          new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_READ_EXTERNAL_ID);
     }
     return SimpleAdapter.Util.EMPTY_ADAPTER;
   }
@@ -209,8 +196,8 @@ public class MainFragment extends Fragment {
   @Override
   public void onRequestPermissionsResult(
       int requestCode, String[] permissions, int[] grantResults) {
-    if (requestCode == REQUEST_READ_EXTERNAL_ID &&
-        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    if (requestCode == REQUEST_READ_EXTERNAL_ID
+        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       mSimpleAdapter = ContentProviderSimpleAdapter.getExternalPhotoSimpleAdapter(getActivity());
       updateAdapter();
     }

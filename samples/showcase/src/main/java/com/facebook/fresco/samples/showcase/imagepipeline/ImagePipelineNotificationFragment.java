@@ -1,14 +1,10 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.samples.showcase.imagepipeline;
 
 import android.app.Notification;
@@ -18,13 +14,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
@@ -49,16 +45,15 @@ public class ImagePipelineNotificationFragment extends BaseShowcaseFragment {
   @Nullable
   @Override
   public View onCreateView(
-      LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+      LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_imagepipeline_notification, container, false);
   }
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     if (Build.VERSION.SDK_INT >= 26) {
-      // newer versions of android require the creation of notification channels to show notifications to the user.
+      // newer versions of android require the creation of notification channels to show
+      // notifications to the user.
       createNotificationChannel();
     }
 
@@ -88,9 +83,8 @@ public class ImagePipelineNotificationFragment extends BaseShowcaseFragment {
 
   private void createNotification() {
     final ImagePipeline imagePipeline = Fresco.getImagePipeline();
-    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
-    final ImageRequest imageRequest = ImageRequest.fromUri(
-        imageUriProvider.createSampleUri(ImageUriProvider.ImageSize.S));
+    final ImageRequest imageRequest =
+        ImageRequest.fromUri(sampleUris().createSampleUri(ImageUriProvider.ImageSize.S));
 
     final DataSource<CloseableReference<CloseableImage>> dataSource =
         imagePipeline.fetchDecodedImage(imageRequest, null);
@@ -138,17 +132,10 @@ public class ImagePipelineNotificationFragment extends BaseShowcaseFragment {
     final NotificationManager notificationManager =
         (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
-
     notificationManager.notify(NOTIFICATION_ID, notification);
   }
 
   private void showToastText(String text) {
     Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
   }
-
-  @Override
-  public int getTitleId() {
-    return R.string.imagepipeline_notification_title;
-  }
-
 }

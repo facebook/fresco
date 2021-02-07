@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,10 +7,7 @@
 
 package com.facebook.imagepipeline.animated.base;
 
-
-/**
- * Common interface for an animated image.
- */
+/** Common interface for an animated image. */
 public interface AnimatedImage {
 
   int LOOP_COUNT_INFINITE = 0;
@@ -75,8 +72,8 @@ public interface AnimatedImage {
   AnimatedImageFrame getFrame(int frameNumber);
 
   /**
-   * Returns whether {@link AnimatedImageFrame#renderFrame} supports scaling to arbitrary
-   * sizes or whether scaling must be done externally.
+   * Returns whether {@link AnimatedImageFrame#renderFrame} supports scaling to arbitrary sizes or
+   * whether scaling must be done externally.
    *
    * @return whether rendering supports scaling
    */

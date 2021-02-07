@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,9 +7,7 @@
 
 package com.facebook.drawee.drawable;
 
-/**
- * Callback used to notify about drawable's visibility changes.
- */
+/** Callback used to notify about drawable's visibility changes. */
 public interface VisibilityCallback {
 
   /**
@@ -19,8 +17,6 @@ public interface VisibilityCallback {
    */
   void onVisibilityChange(boolean visible);
 
-  /**
-   * Called when the drawable gets drawn.
-   */
+  /** Called when the drawable gets drawn. */
   void onDraw();
 }

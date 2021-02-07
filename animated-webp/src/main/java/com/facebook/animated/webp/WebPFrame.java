@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,11 +10,11 @@ package com.facebook.animated.webp;
 import android.graphics.Bitmap;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.imagepipeline.animated.base.AnimatedImageFrame;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.ThreadSafe;
 
-/**
- * A single frame of a {@link WebPImage}.
- */
+/** A single frame of a {@link WebPImage}. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 @ThreadSafe
 public class WebPFrame implements AnimatedImageFrame {
 
@@ -82,13 +82,22 @@ public class WebPFrame implements AnimatedImageFrame {
   }
 
   private native void nativeRenderFrame(int width, int height, Bitmap bitmap);
+
   private native int nativeGetDurationMs();
+
   private native int nativeGetWidth();
+
   private native int nativeGetHeight();
+
   private native int nativeGetXOffset();
+
   private native int nativeGetYOffset();
+
   private native boolean nativeShouldDisposeToBackgroundColor();
+
   private native boolean nativeIsBlendWithPreviousFrame();
+
   private native void nativeDispose();
+
   private native void nativeFinalize();
 }

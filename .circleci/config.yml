@@ -1,0 +1,107 @@
+# Copyright (c) Facebook, Inc. and its affiliates.
+
+#
+# GENERAL CONFIG
+#
+version: 2.1
+
+aliases:
+# Cache Management
+  - &restore-cache-gradle
+    keys:
+      - v1-gradle-{{ arch }}-{{ .Branch }}-{{ checksum "build.gradle" }}-{{ checksum "gradle.properties" }}
+      # Fallback in case checksum fails
+      - v1-gradle-{{ arch }}-{{ .Branch }}-{{ checksum "build.gradle" }}-
+      - v1-gradle-{{ arch }}-{{ .Branch }}-
+      # Fallback in case this is a first-time run on a fork
+      - v1-gradle-{{ arch }}-master-
+  - &save-cache-gradle
+    paths:
+      - ~/.gradle
+    key: v1-gradle-{{ arch }}-{{ .Branch }}-{{ checksum "build.gradle" }}-{{ checksum "gradle.properties" }}
+
+#
+# EXECUTORS & COMMANDS
+#
+executors:
+  frescoandroid:
+    docker:
+      - image: reactnativecommunity/react-native-android:2019-5-29
+    working_directory: ~/fresco
+    resource_class: large
+    environment:
+      - TERM: dumb
+      - ADB_INSTALL_TIMEOUT: 10
+      - _JAVA_OPTIONS: -Xmx4g -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
+      - GRADLE_OPTS: -Dkotlin.incremental=false -Dorg.gradle.daemon=true -Dorg.gradle.jvmargs="-XX:+HeapDumpOnOutOfMemoryError" -Dorg.gradle.caching=true -Dkotlin.compiler.execution.strategy=in-process
+      - BUILD_THREADS: 2
+
+commands:
+  setup-emulator:
+    steps:
+      - run:
+          name: Setup emulator
+          command: |
+            source ".circleci/scripts/.tests.env"
+            AVD_PACKAGES="system-images;android-$ANDROID_SDK_TARGET_API_LEVEL;google_apis;$AVD_ABI"
+            echo "Creating AVD with packages $AVD_PACKAGES"
+            echo no | avdmanager create avd --name "$AVD_NAME" --force --package "$AVD_PACKAGES" --tag google_apis --abi "$AVD_ABI"
+  launch-emulator:
+    steps:
+      - run:
+          name: Launch emulator
+          command: |
+            source ".circleci/scripts/.tests.env"
+            "$ANDROID_HOME/emulator/emulator" -avd "$AVD_NAME" -no-audio -no-window
+          background: true
+  wait-emulator:
+    steps:
+      - run:
+          name: Wait for emulator
+          command: |
+            chmod +x .circleci/scripts/android-wait-for-emulator
+            .circleci/scripts/android-wait-for-emulator
+  remove-lock-screen:
+    steps:
+      - run:
+          name: Remove lock screen
+          command: adb shell input keyevent 82
+  run-tests:
+    steps:
+      - run:
+          name: Run Tests
+          command: ./gradlew test assembleDebug -PdisablePreDex
+  run-instrumentation-tests:
+    steps:
+      - run:
+          name: Run Instrumentation Tests
+          command: |
+            ./gradlew :samples:showcase:connectedInternalInstrumentationAndroidTest -PdisablePreDex
+  copy-results:
+    steps:
+      - run:
+          name: Copy Results
+          command: |
+            mkdir -p /home/circleci/test-results/junit
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} /home/circleci/test-results/junit \;
+
+#
+# JOBS
+#
+jobs:
+  build:
+    executor: frescoandroid
+    steps:
+      - checkout
+      - run: yes | sdkmanager --licenses || exit 0
+      - run: yes | sdkmanager --update || exit 0
+      - setup-emulator
+      - launch-emulator
+      - wait-emulator
+      - remove-lock-screen
+      - restore_cache: *restore-cache-gradle
+      - run-tests
+      - save_cache: *save-cache-gradle
+      - copy-results
+      - store_test_results:
+          path: /home/circleci/test-results

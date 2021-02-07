@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.os.SystemClock;
 import com.facebook.common.internal.Throwables;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -23,8 +24,9 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Helper class that periodically checks the amount of free space available.
- * <p>To keep the overhead low, it caches the free space information, and
- * only updates that info after two minutes.
+ *
+ * <p>To keep the overhead low, it caches the free space information, and only updates that info
+ * after two minutes.
  *
  * <p>It is a singleton, and is thread-safe.
  *
@@ -32,6 +34,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * additional cost.
  */
 @ThreadSafe
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class StatFsHelper {
 
   public enum StorageType {
@@ -39,16 +42,29 @@ public class StatFsHelper {
     EXTERNAL
   };
 
+  /* See definition here: https://fburl.com/wut/atm6yg8o */
+  public static final int DEFAULT_DISK_YELLOW_LEVEL_IN_MB = 400;
+
+  public static final long DEFAULT_DISK_YELLOW_LEVEL_IN_BYTES =
+      DEFAULT_DISK_YELLOW_LEVEL_IN_MB * 1024 * 1024;
+
+  public static final int DEFAULT_DISK_RED_LEVEL_IN_MB = 100;
+
+  public static final long DEFAULT_DISK_RED_LEVEL_IN_BYTES =
+      DEFAULT_DISK_RED_LEVEL_IN_MB * 1024 * 1024;
+
+  public static final long DEFAULT_DISK_OLIVE_LEVEL_IN_BYTES = 1000 * 1024 * 1024;
+
   private static StatFsHelper sStatsFsHelper;
 
   // Time interval for updating disk information
   private static final long RESTAT_INTERVAL_MS = TimeUnit.MINUTES.toMillis(2);
 
-  private volatile StatFs mInternalStatFs = null;
-  private volatile File mInternalPath;
+  private volatile @Nullable StatFs mInternalStatFs = null;
+  private volatile @Nullable File mInternalPath;
 
-  private volatile StatFs mExternalStatFs = null;
-  private volatile File mExternalPath;
+  private volatile @Nullable StatFs mExternalStatFs = null;
+  private volatile @Nullable File mExternalPath;
 
   @GuardedBy("lock")
   private long mLastRestatTime;
@@ -56,7 +72,7 @@ public class StatFsHelper {
   private final Lock lock;
   private volatile boolean mInitialized = false;
 
-  public synchronized static StatFsHelper getInstance() {
+  public static synchronized StatFsHelper getInstance() {
     if (sStatsFsHelper == null) {
       sStatsFsHelper = new StatFsHelper();
     }
@@ -66,22 +82,24 @@ public class StatFsHelper {
   /**
    * Constructor.
    *
-   * <p>Initialization is delayed until first use, so we must call {@link #ensureInitialized()}
-   * when implementing member methods.
+   * <p>Initialization is delayed until first use, so we must call {@link #ensureInitialized()} when
+   * implementing member methods.
    */
   protected StatFsHelper() {
     lock = new ReentrantLock();
   }
 
-  /**
-   * Initialization code that can sometimes take a long time.
-   */
+  /** Initialization code that can sometimes take a long time. */
+  @SuppressWarnings("ExternalStorageUse")
   private void ensureInitialized() {
     if (!mInitialized) {
-     lock.lock();
+      lock.lock();
       try {
         if (!mInitialized) {
           mInternalPath = Environment.getDataDirectory();
+
+          // Whitelisted use of external storage Android changes in Target SDK 29 and above as it
+          // only used for getting the available space
           mExternalPath = Environment.getExternalStorageDirectory();
           updateStats();
           mInitialized = true;
@@ -93,15 +111,15 @@ public class StatFsHelper {
   }
 
   /**
-   * Check if available space in the filesystem is greater than the given threshold.
-   * Note that the free space stats are cached and updated in intervals of RESTAT_INTERVAL_MS.
-   * If the amount of free space has crossed over the threshold since the last update, it will
-   * return incorrect results till the space stats are updated again.
+   * Check if available space in the filesystem is greater than the given threshold. Note that the
+   * free space stats are cached and updated in intervals of RESTAT_INTERVAL_MS. If the amount of
+   * free space has crossed over the threshold since the last update, it will return incorrect
+   * results till the space stats are updated again.
    *
    * @param storageType StorageType (internal or external) to test
    * @param freeSpaceThreshold compare the available free space to this size
-   * @return whether free space is lower than the input freeSpaceThreshold,
-   * returns true if disk information is not available
+   * @return whether free space is lower than the input freeSpaceThreshold, returns true if disk
+   *     information is not available
    */
   public boolean testLowDiskSpace(StorageType storageType, long freeSpaceThreshold) {
     ensureInitialized();
@@ -114,8 +132,9 @@ public class StatFsHelper {
   }
 
   /**
-   * Gets the information about the free storage space, including reserved blocks,
-   * either internal or external depends on the given input
+   * Gets the information about the free storage space, including reserved blocks, either internal
+   * or external depends on the given input
+   *
    * @param storageType Internal or external storage type
    * @return available space in bytes, -1 if no information is available
    */
@@ -141,8 +160,9 @@ public class StatFsHelper {
   }
 
   /**
-   * Gets the information about the total storage space,
-   * either internal or external depends on the given input
+   * Gets the information about the total storage space, either internal or external depends on the
+   * given input
+   *
    * @param storageType Internal or external storage type
    * @return available space in bytes, -1 if no information is available
    */
@@ -168,8 +188,9 @@ public class StatFsHelper {
   }
 
   /**
-   * Gets the information about the available storage space
-   * either internal or external depends on the give input
+   * Gets the information about the available storage space either internal or external depends on
+   * the give input
+   *
    * @param storageType Internal or external storage type
    * @return available space in bytes, 0 if no information is available
    */
@@ -194,11 +215,26 @@ public class StatFsHelper {
     return 0;
   }
 
+  public boolean isLowSpaceCondition() {
+    return getAvailableStorageSpace(StatFsHelper.StorageType.INTERNAL)
+        < DEFAULT_DISK_YELLOW_LEVEL_IN_BYTES;
+  }
+
+  public boolean isVeryLowSpaceCondition() {
+    return getAvailableStorageSpace(StatFsHelper.StorageType.INTERNAL)
+        < DEFAULT_DISK_RED_LEVEL_IN_BYTES;
+  }
+
+  public boolean isHighSpaceCondition() {
+    return getAvailableStorageSpace(StatFsHelper.StorageType.INTERNAL)
+        > DEFAULT_DISK_OLIVE_LEVEL_IN_BYTES;
+  }
+
   /**
-   * Thread-safe call to update disk stats. Update occurs if the thread is able to acquire
-   * the lock (i.e., no other thread is updating it at the same time), and it has been
-   * at least RESTAT_INTERVAL_MS since the last update.
-   * Assumes that initialization has been completed before this method is called.
+   * Thread-safe call to update disk stats. Update occurs if the thread is able to acquire the lock
+   * (i.e., no other thread is updating it at the same time), and it has been at least
+   * RESTAT_INTERVAL_MS since the last update. Assumes that initialization has been completed before
+   * this method is called.
    */
   private void maybeUpdateStats() {
     // Update the free space if able to get the lock,
@@ -215,18 +251,17 @@ public class StatFsHelper {
   }
 
   /**
-   * Thread-safe call to reset the disk stats.
-   * If we know that the free space has changed recently (for example, if we have
-   * deleted files), use this method to reset the internal state and
-   * start tracking disk stats afresh, resetting the internal timer for updating stats.
+   * Thread-safe call to reset the disk stats. If we know that the free space has changed recently
+   * (for example, if we have deleted files), use this method to reset the internal state and start
+   * tracking disk stats afresh, resetting the internal timer for updating stats.
    */
   public void resetStats() {
     // Update the free space if able to get the lock
     if (lock.tryLock()) {
       try {
-          ensureInitialized();
+        ensureInitialized();
 
-          updateStats();
+        updateStats();
       } finally {
         lock.unlock();
       }
@@ -234,9 +269,8 @@ public class StatFsHelper {
   }
 
   /**
-   * (Re)calculate the stats.
-   * It is the callers responsibility to ensure thread-safety.
-   * Assumes that it is called after initialization (or at the end of it).
+   * (Re)calculate the stats. It is the callers responsibility to ensure thread-safety. Assumes that
+   * it is called after initialization (or at the end of it).
    */
   @GuardedBy("lock")
   private void updateStats() {
@@ -250,8 +284,8 @@ public class StatFsHelper {
    * directory does not exist or the StatFs restat() or constructor fails (throws), a null StatFs
    * object is returned.
    */
-  private StatFs updateStatsHelper(@Nullable StatFs statfs, @Nullable File dir) {
-    if(dir == null || !dir.exists()) {
+  private @Nullable StatFs updateStatsHelper(@Nullable StatFs statfs, @Nullable File dir) {
+    if (dir == null || !dir.exists()) {
       // The path does not exist, do not track stats for it.
       return null;
     }

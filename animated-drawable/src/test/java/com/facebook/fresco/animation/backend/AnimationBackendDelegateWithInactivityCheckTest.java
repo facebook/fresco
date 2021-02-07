@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.animation.backend;
 
 import static com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactivityCheck.INACTIVITY_THRESHOLD_MS;
@@ -18,13 +19,10 @@ import com.facebook.imagepipeline.testing.TestScheduledExecutorService;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * Tests {@link AnimationBackendDelegateWithInactivityCheck}
- */
+/** Tests {@link AnimationBackendDelegateWithInactivityCheck} */
 public class AnimationBackendDelegateWithInactivityCheckTest {
 
-  private AnimationBackendDelegate<AnimationBackend>
-      mAnimationBackendDelegateWithInactivityCheck;
+  private AnimationBackendDelegate<AnimationBackend> mAnimationBackendDelegateWithInactivityCheck;
 
   private AnimationBackend mAnimationBackend;
   private AnimationBackendDelegateWithInactivityCheck.InactivityListener mInactivityListener;
@@ -46,10 +44,7 @@ public class AnimationBackendDelegateWithInactivityCheckTest {
 
     mAnimationBackendDelegateWithInactivityCheck =
         AnimationBackendDelegateWithInactivityCheck.createForBackend(
-            mAnimationBackend,
-            mInactivityListener,
-            mFakeClock,
-            mTestScheduledExecutorService);
+            mAnimationBackend, mInactivityListener, mFakeClock, mTestScheduledExecutorService);
   }
 
   @Test

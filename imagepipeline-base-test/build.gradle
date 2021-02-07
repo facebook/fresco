@@ -1,28 +1,38 @@
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import com.facebook.fresco.buildsrc.Deps
+
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
-project.group = GROUP
-version = VERSION_NAME
-
 dependencies {
-    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compileOnly Deps.jsr305
+    compileOnly Deps.javaxAnnotation
+    compileOnly Deps.inferAnnotation
 
-    implementation "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
-    implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
+    implementation Deps.AndroidX.legacySupportCoreUtils
+    implementation Deps.SoLoader.soloader
+    implementation Deps.Bolts.tasks
     implementation project(':fbcore')
+
+    testCompileOnly Deps.inferAnnotation
 }
 apply from: rootProject.file('release.gradle')
 
 android {
 
-    buildToolsVersion rootProject.ext.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion FrescoConfig.buildToolsVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion rootProject.ext.samplesMinSdkVersion
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
     }
-
 }
 
 task sourcesJar(type: Jar) {

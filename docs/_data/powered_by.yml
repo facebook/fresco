@@ -1,5 +1,7 @@
 - title: Apps Using Fresco
   items:
+  - name: TamTam Messenger
+    url: https://play.google.com/store/apps/details?id=ru.ok.messages
   - name: Frost Blur
     url: https://play.google.com/store/apps/details?id=com.rvnd.frostblur
   - name: Book Share
@@ -88,3 +90,9 @@
     url: https://play.google.com/store/apps/details?id=com.apartmentbuddy.android
   - name: Wikimedia Commons
     url: https://play.google.com/store/apps/details?id=fr.free.nrw.commons
+  - name: Waldo Photos
+    url: https://play.google.com/store/apps/details?id=com.waldophotos.android
+  - name: Degoo - Cloud Photo Storage
+    url: https://play.google.com/store/apps/details?id=com.degoo.android
+  - name: ROMEO - Gay Chat & Dating
+    url: https://play.google.com/store/apps/details?id=com.planetromeo.android.app

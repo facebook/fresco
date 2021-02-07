@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -42,13 +42,11 @@ public class ArrayDrawableTest {
     when(mUnderlyingDrawable0.mutate()).thenReturn(mUnderlyingDrawable0);
     when(mUnderlyingDrawable1.mutate()).thenReturn(mUnderlyingDrawable1);
     when(mUnderlyingDrawable2.mutate()).thenReturn(mUnderlyingDrawable2);
-    mArrayDrawable = new ArrayDrawable(new Drawable[] {
-        mUnderlyingDrawable0,
-        null,
-        mUnderlyingDrawable1,
-        null,
-        mUnderlyingDrawable2
-    });
+    mArrayDrawable =
+        new ArrayDrawable(
+            new Drawable[] {
+              mUnderlyingDrawable0, null, mUnderlyingDrawable1, null, mUnderlyingDrawable2
+            });
   }
 
   @Test
@@ -164,7 +162,7 @@ public class ArrayDrawableTest {
     mArrayDrawable.setDrawable(2, null);
 
     int level = 10;
-    int[] state = new int[]{1, 2, 3};
+    int[] state = new int[] {1, 2, 3};
     BitmapDrawable newDrawable = mock(BitmapDrawable.class);
     when(newDrawable.mutate()).thenReturn(newDrawable);
     Rect rect = new Rect(1, 2, 3, 4);

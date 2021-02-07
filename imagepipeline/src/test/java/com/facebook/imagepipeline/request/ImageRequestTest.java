@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -25,25 +25,25 @@ public class ImageRequestTest {
 
   @Test
   public void testCreatingRequestFromExistingRequest() {
-    ImageRequest original = ImageRequestBuilder
-        .newBuilderWithSource(Uri.parse("http://frescolib.org/image.jpg"))
+    ImageRequest original =
+        ImageRequestBuilder.newBuilderWithSource(Uri.parse("http://frescolib.org/image.jpg"))
             .setCacheChoice(ImageRequest.CacheChoice.SMALL)
-        .setImageDecodeOptions(new ImageDecodeOptionsBuilder().build())
-        .setLocalThumbnailPreviewsEnabled(true)
-        .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.DISK_CACHE)
-        .setMediaVariations(MediaVariations.forMediaId("A113"))
-        .setPostprocessor(new BasePostprocessor() {
-          @Override
-          public String getName() {
-            return super.getName();
-          }
-        })
-        .setProgressiveRenderingEnabled(true)
-        .setRequestListener(new RequestLoggingListener())
-        .setResizeOptions(new ResizeOptions(20, 20))
-        .setRotationOptions(RotationOptions.forceRotation(RotationOptions.ROTATE_90))
-        .setRequestPriority(Priority.HIGH)
-        .build();
+            .setImageDecodeOptions(new ImageDecodeOptionsBuilder().build())
+            .setLocalThumbnailPreviewsEnabled(true)
+            .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.DISK_CACHE)
+            .setPostprocessor(
+                new BasePostprocessor() {
+                  @Override
+                  public String getName() {
+                    return super.getName();
+                  }
+                })
+            .setProgressiveRenderingEnabled(true)
+            .setRequestListener(new RequestLoggingListener())
+            .setResizeOptions(new ResizeOptions(20, 20))
+            .setRotationOptions(RotationOptions.forceRotation(RotationOptions.ROTATE_90))
+            .setRequestPriority(Priority.HIGH)
+            .build();
 
     ImageRequest copy = ImageRequestBuilder.fromRequest(original).build();
 

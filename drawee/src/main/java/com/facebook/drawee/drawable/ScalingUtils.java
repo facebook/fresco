@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,19 +11,20 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
-/**
- * Performs scale type calculations.
- */
+/** Performs scale type calculations. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ScalingUtils {
 
   /**
    * Options for scaling the child bounds to the parent bounds.
-   * <p>
-   * Similar to {@link android.widget.ImageView.ScaleType}, but ScaleType.MATRIX is not supported.
-   * To use matrix scaling, use a {@link MatrixDrawable}. An additional scale type (FOCUS_CROP) is
-   * provided.
+   *
+   * <p>Similar to {@link android.widget.ImageView.ScaleType}, but ScaleType.MATRIX is not
+   * supported. To use matrix scaling, use a {@link MatrixDrawable}. An additional scale type
+   * (FOCUS_CROP) is provided.
+   *
    * <p>
    */
   public interface ScaleType {
@@ -33,6 +34,20 @@ public class ScalingUtils {
      * change the aspect ratio of the child.
      */
     ScaleType FIT_XY = ScaleTypeFitXY.INSTANCE;
+
+    /**
+     * Scales the child so that the child's width fits exactly. The height will be cropped if it
+     * exceeds parent's bounds. Aspect ratio is preserved. Child is centered within the parent's
+     * bounds.
+     */
+    ScaleType FIT_X = ScaleTypeFitX.INSTANCE;
+
+    /**
+     * Scales the child so that the child's height fits exactly. The width will be cropped if it
+     * exceeds parent's bounds. Aspect ratio is preserved. Child is centered within the parent's
+     * bounds.
+     */
+    ScaleType FIT_Y = ScaleTypeFitY.INSTANCE;
 
     /**
      * Scales the child so that it fits entirely inside the parent. At least one dimension (width or
@@ -110,7 +125,7 @@ public class ScalingUtils {
   }
 
   @Nullable
-  public static ScaleTypeDrawable getActiveScaleTypeDrawable(Drawable drawable) {
+  public static ScaleTypeDrawable getActiveScaleTypeDrawable(@Nullable Drawable drawable) {
     if (drawable == null) {
       return null;
     } else if (drawable instanceof ScaleTypeDrawable) {
@@ -133,10 +148,8 @@ public class ScalingUtils {
     return null;
   }
 
-  /**
-   * A convenience base class that has some common logic.
-   */
-  public static abstract class AbstractScaleType implements ScaleType {
+  /** A convenience base class that has some common logic. */
+  public abstract static class AbstractScaleType implements ScaleType {
 
     @Override
     public Matrix getTransform(
@@ -419,9 +432,63 @@ public class ScalingUtils {
     }
   }
 
-  /**
-   * Scaletypes that have some internal state and are not static.
-   */
+  private static class ScaleTypeFitX extends AbstractScaleType {
+
+    public static final ScaleType INSTANCE = new ScaleTypeFitX();
+
+    @Override
+    public void getTransformImpl(
+        Matrix outTransform,
+        Rect parentRect,
+        int childWidth,
+        int childHeight,
+        float focusX,
+        float focusY,
+        float scaleX,
+        float scaleY) {
+      float scale, dx, dy;
+      scale = scaleX;
+      dx = parentRect.left;
+      dy = parentRect.top + (parentRect.height() - childHeight * scale) * 0.5f;
+      outTransform.setScale(scale, scale);
+      outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+    }
+
+    @Override
+    public String toString() {
+      return "fit_x";
+    }
+  }
+
+  private static class ScaleTypeFitY extends AbstractScaleType {
+
+    public static final ScaleType INSTANCE = new ScaleTypeFitY();
+
+    @Override
+    public void getTransformImpl(
+        Matrix outTransform,
+        Rect parentRect,
+        int childWidth,
+        int childHeight,
+        float focusX,
+        float focusY,
+        float scaleX,
+        float scaleY) {
+      float scale, dx, dy;
+      scale = scaleY;
+      dx = parentRect.left + (parentRect.width() - childWidth * scale) * 0.5f;
+      dy = parentRect.top;
+      outTransform.setScale(scale, scale);
+      outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+    }
+
+    @Override
+    public String toString() {
+      return "fit_y";
+    }
+  }
+
+  /** Scaletypes that have some internal state and are not static. */
   public interface StatefulScaleType {
 
     /**
@@ -434,9 +501,7 @@ public class ScalingUtils {
     Object getState();
   }
 
-  /**
-   * Scale type that interpolates transform of the two underlying scale types.
-   */
+  /** Scale type that interpolates transform of the two underlying scale types. */
   public static class InterpolatingScaleType implements ScaleType, StatefulScaleType {
 
     private final ScaleType mScaleTypeFrom;
@@ -505,17 +570,15 @@ public class ScalingUtils {
     /**
      * Sets the interpolating value.
      *
-     * Value of 0.0 will produce the transform same as ScaleTypeFrom.
-     * Value of 1.0 will produce the transform same as ScaleTypeTo.
-     * Inbetween values will produce a transform that is a linear combination between the two.
+     * <p>Value of 0.0 will produce the transform same as ScaleTypeFrom. Value of 1.0 will produce
+     * the transform same as ScaleTypeTo. Inbetween values will produce a transform that is a linear
+     * combination between the two.
      */
     public void setValue(float value) {
       mInterpolatingValue = value;
     }
 
-    /**
-     * Gets the interpolating value.
-     */
+    /** Gets the interpolating value. */
     public float getValue() {
       return mInterpolatingValue;
     }
@@ -554,8 +617,9 @@ public class ScalingUtils {
       transform.getValues(mMatrixValuesTo);
 
       for (int i = 0; i < 9; i++) {
-        mMatrixValuesInterpolated[i] = mMatrixValuesFrom[i] * (1 - mInterpolatingValue) +
-            mMatrixValuesTo[i] * mInterpolatingValue;
+        mMatrixValuesInterpolated[i] =
+            mMatrixValuesFrom[i] * (1 - mInterpolatingValue)
+                + mMatrixValuesTo[i] * mInterpolatingValue;
       }
       transform.setValues(mMatrixValuesInterpolated);
       return transform;

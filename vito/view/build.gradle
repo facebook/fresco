@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.TestDeps
+
+apply plugin: 'com.android.library'
+
+android {
+    buildToolsVersion FrescoConfig.buildToolsVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    compileOnly Deps.inferAnnotation
+
+    implementation Deps.AndroidX.core
+
+    testImplementation TestDeps.junit
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation project(path: ':drawee')
+    implementation project(path: ':imagepipeline')
+    implementation project(path: ':drawee-backends:drawee-pipeline')
+    implementation project(path: ':fbcore')
+    implementation project(path: ':vito:core')
+    implementation project(path: ':vito:options')
+    implementation project(path: ':vito:provider')
+    implementation project(path: ':vito:source')
+}

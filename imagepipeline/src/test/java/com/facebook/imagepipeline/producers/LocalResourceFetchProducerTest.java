@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -17,6 +17,7 @@ import android.net.Uri;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.testing.FakeClock;
@@ -31,11 +32,9 @@ import org.mockito.stubbing.*;
 import org.robolectric.*;
 import org.robolectric.annotation.Config;
 
-/**
- * Basic tests for LocalResourceFetchProducer
- */
+/** Basic tests for LocalResourceFetchProducer */
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class LocalResourceFetchProducerTest {
 
   private static final String PRODUCER_NAME = LocalResourceFetchProducer.PRODUCER_NAME;
@@ -47,8 +46,9 @@ public class LocalResourceFetchProducerTest {
   @Mock public PooledByteBufferFactory mPooledByteBufferFactory;
   @Mock public Consumer<EncodedImage> mConsumer;
   @Mock public ImageRequest mImageRequest;
-  @Mock public ProducerListener mProducerListener;
+  @Mock public ProducerListener2 mProducerListener;
   @Mock public Exception mException;
+  @Mock public ImagePipelineConfig mConfig;
 
   private TestExecutorService mExecutor;
   private SettableProducerContext mProducerContext;
@@ -63,31 +63,30 @@ public class LocalResourceFetchProducerTest {
     when(mAssetFileDescriptor.getLength()).thenReturn((long) TEST_DATA_LENGTH);
 
     mExecutor = new TestExecutorService(new FakeClock());
-    mLocalResourceFetchProducer = new LocalResourceFetchProducer(
-        mExecutor,
-        mPooledByteBufferFactory,
-        mResources
-    );
+    mLocalResourceFetchProducer =
+        new LocalResourceFetchProducer(mExecutor, mPooledByteBufferFactory, mResources);
 
-    mProducerContext = new SettableProducerContext(
-        mImageRequest,
-        mRequestId,
-        mProducerListener,
-        mock(Object.class),
-        ImageRequest.RequestLevel.FULL_FETCH,
-        false,
-        true,
-        Priority.MEDIUM);
+    mProducerContext =
+        new SettableProducerContext(
+            mImageRequest,
+            mRequestId,
+            mProducerListener,
+            mock(Object.class),
+            ImageRequest.RequestLevel.FULL_FETCH,
+            false,
+            true,
+            Priority.MEDIUM,
+            mConfig);
     when(mImageRequest.getSourceUri()).thenReturn(Uri.parse("res:///" + TEST_ID));
     doAnswer(
-        new Answer() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            mCapturedEncodedImage =
-                EncodedImage.cloneOrNull(((EncodedImage) invocation.getArguments()[0]));
-            return null;
-          }
-        })
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                mCapturedEncodedImage =
+                    EncodedImage.cloneOrNull(((EncodedImage) invocation.getArguments()[0]));
+                return null;
+              }
+            })
         .when(mConsumer)
         .onNewResult(notNull(EncodedImage.class), anyInt());
   }
@@ -111,24 +110,25 @@ public class LocalResourceFetchProducerTest {
 
     assertEquals(
         2,
-        mCapturedEncodedImage.getByteBufferRef()
-            .getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+        mCapturedEncodedImage
+            .getByteBufferRef()
+            .getUnderlyingReferenceTestOnly()
+            .getRefCountTestOnly());
     assertSame(pooledByteBuffer, mCapturedEncodedImage.getByteBufferRef().get());
-    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, null);
-    verify(mProducerListener).onUltimateProducerReached(mRequestId, PRODUCER_NAME, true);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener).onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
+    verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, true);
   }
 
   @Test(expected = RuntimeException.class)
   public void testFetchLocalResourceFailsByThrowing() throws Exception {
-    when(mResources.openRawResource(eq(TEST_ID)))
-        .thenThrow(mException);
+    when(mResources.openRawResource(eq(TEST_ID))).thenThrow(mException);
     mLocalResourceFetchProducer.produceResults(mConsumer, mProducerContext);
     mExecutor.runUntilIdle();
     verify(mConsumer).onFailure(mException);
-    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithFailure(
-        mRequestId, PRODUCER_NAME, mException, null);
-    verify(mProducerListener).onUltimateProducerReached(mRequestId, PRODUCER_NAME, false);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener)
+        .onProducerFinishWithFailure(mProducerContext, PRODUCER_NAME, mException, null);
+    verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, false);
   }
 }

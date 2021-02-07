@@ -1,13 +1,8 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 package com.facebook.samples.comparison.urlsfetcher;
@@ -30,18 +25,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Helper that asynchronously fetches the list of image URIs from Imgur.
- */
+/** Helper that asynchronously fetches the list of image URIs from Imgur. */
 public class ImageUrlsFetcher {
 
   /**
    * Imgur license key for use by the Fresco project.
    *
-   * The rest of this class may be used freely according to the licence file, with the sole
-   * exception of this variable. Any fork of this code or use in any other application,
-   * whether open- or closed-source, must use a different client ID obtained from Imgur.
-   * See the <a href="https://api.imgur.com/#register">Imgur API documentation</a>.
+   * <p>The rest of this class may be used freely according to the licence file, with the sole
+   * exception of this variable. Any fork of this code or use in any other application, whether
+   * open- or closed-source, must use a different client ID obtained from Imgur. See the <a
+   * href="https://api.imgur.com/#register">Imgur API documentation</a>.
    */
   private static final String IMGUR_CLIENT_ID = "Client-ID ccc6ca6a65ecdd8";
 
@@ -57,6 +50,7 @@ public class ImageUrlsFetcher {
       protected List<String> doInBackground(Void... params) {
         return getImageUrls(request);
       }
+
       @Override
       protected void onPostExecute(List<String> result) {
         callback.onFinish(result);
@@ -131,9 +125,8 @@ public class ImageUrlsFetcher {
     return writer.toString();
   }
 
-  private static String getThumbnailLink(
-      final JSONObject json,
-      final ImageSize imageSize) throws JSONException {
+  private static String getThumbnailLink(final JSONObject json, final ImageSize imageSize)
+      throws JSONException {
     Preconditions.checkNotNull(imageSize);
     final String originalUrl = json.getString("link");
     if (imageSize == ImageSize.ORIGINAL_IMAGE) {
@@ -142,9 +135,6 @@ public class ImageUrlsFetcher {
 
     final int dotPos = originalUrl.lastIndexOf('.');
     final StringBuilder linkBuilder = new StringBuilder(originalUrl.length() + 1);
-    return linkBuilder
-      .append(originalUrl)
-      .insert(dotPos, imageSize.suffix)
-      .toString();
+    return linkBuilder.append(originalUrl).insert(dotPos, imageSize.suffix).toString();
   }
 }

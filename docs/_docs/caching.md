@@ -5,7 +5,7 @@ layout: docs
 permalink: /docs/caching.html
 ---
 
-Fresco stores images in three different types of caches, organized hierarchically, with the cost of retrieving an image increasing the deeper you go.  
+Fresco stores images in three different types of caches, organized hierarchically, with the cost of retrieving an image increasing the deeper you go.
 
 #### 1. Bitmap cache
 
@@ -16,6 +16,8 @@ On Android 4.x and lower, the bitmap cache's data lives in the *ashmem* heap, no
 Android 5.0 and newer has much improved memory management than earlier versions, so it is safer to leave the bitmap cache on the Java heap.
 
 Your app should [clear this cache](#clearing-the-cache) when it is backgrounded.
+
+For non-static image formats or custom image formats, the Bitmap cache can hold any decoded image data by extending the `CloseableImage` class. See [customizing image formats](customizing-image-formats.html) for more details.
 
 #### 2. Encoded memory cache
 

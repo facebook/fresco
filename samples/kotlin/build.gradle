@@ -1,33 +1,30 @@
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.SampleDeps
+
 apply plugin: 'com.android.application'
-
-buildscript {
-    ext.KOTLIN_VERSION = '1.2.41'
-
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${KOTLIN_VERSION}"
-    }
-}
-
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    buildToolsVersion rootProject.ext.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion FrescoConfig.buildToolsVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
 
     defaultConfig {
         applicationId "com.facebook.fresco.samples.kotlin"
-        minSdkVersion rootProject.ext.samplesMinSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion FrescoConfig.samplesMinSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
         versionCode 1
         versionName "${VERSION_NAME}"
 
         testApplicationId "com.facebook.fresco.samples.kotlin.test"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true // needed for tinting
     }
@@ -52,21 +49,20 @@ android {
         abi {
             enable true
             reset()
-            include 'x86', 'x86_64', 'arm64-v8a', 'armeabi-v7a', 'armeabi'
+            include 'x86', 'x86_64', 'arm64-v8a', 'armeabi-v7a'
             universalApk false
         }
     }
 }
 
 dependencies {
-    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compileOnly "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:${KOTLIN_VERSION}"
-    implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-    implementation "com.android.support:design:${SUPPORT_LIB_VERSION}"
-    implementation "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
-    implementation "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
-    implementation "com.facebook.stetho:stetho-okhttp3:${STETHO_VERSION}"
+    compileOnly Deps.jsr305
+    implementation Deps.Kotlin.stdlibJdk
+    implementation SampleDeps.AndroidX.appcompat
+    implementation SampleDeps.Google.material
+    implementation SampleDeps.AndroidX.recyclerview
+    implementation SampleDeps.AndroidX.cardview
+    implementation Deps.Tools.Stetho.okhttp3
 
     implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':drawee-span')

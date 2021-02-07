@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,13 +7,16 @@
 
 package com.facebook.imagepipeline.producers;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * Constants to be used various {@link Producer}s for logging purposes in the extra maps for the
  * {@link com.facebook.imagepipeline.listener.RequestListener}.
  *
- * The elements are package visible on purpose such that the individual producers create public
+ * <p>The elements are package visible on purpose such that the individual producers create public
  * constants of the ones that they actually use.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 class ProducerConstants {
 
   static final String EXTRA_CACHED_VALUE_FOUND = "cached_value_found";
@@ -23,6 +26,7 @@ class ProducerConstants {
   static final String EXTRA_IMAGE_TYPE = "imageType";
   static final String EXTRA_IS_FINAL = "isFinal";
   static final String EXTRA_IMAGE_FORMAT_NAME = "imageFormat";
+  static final String EXTRA_BYTES = "byteCount";
   static final String ENCODED_IMAGE_SIZE = "encodedImageSize";
   static final String REQUESTED_IMAGE_SIZE = "requestedImageSize";
   static final String SAMPLE_SIZE = "sampleSize";

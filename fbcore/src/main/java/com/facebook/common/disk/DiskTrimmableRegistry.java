@@ -1,11 +1,13 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
 package com.facebook.common.disk;
+
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * A class which keeps a list of other classes to be notified of system disk events.
@@ -16,6 +18,7 @@ package com.facebook.common.disk;
  * <p>Implementations of this class should notify all the trimmables that have registered with it
  * when they need to trim their disk usage.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface DiskTrimmableRegistry {
 
   /** Register an object. */

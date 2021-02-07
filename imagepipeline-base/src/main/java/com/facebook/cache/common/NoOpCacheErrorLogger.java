@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,16 +7,15 @@
 
 package com.facebook.cache.common;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
-/**
- * An implementation of {@link CacheErrorLogger} that doesn't do anything.
- */
+/** An implementation of {@link CacheErrorLogger} that doesn't do anything. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class NoOpCacheErrorLogger implements CacheErrorLogger {
-  private static NoOpCacheErrorLogger sInstance = null;
+  private static @Nullable NoOpCacheErrorLogger sInstance = null;
 
-  private NoOpCacheErrorLogger() {
-  }
+  private NoOpCacheErrorLogger() {}
 
   public static synchronized NoOpCacheErrorLogger getInstance() {
     if (sInstance == null) {
@@ -27,6 +26,7 @@ public class NoOpCacheErrorLogger implements CacheErrorLogger {
 
   /**
    * Log an error of the specified category.
+   *
    * @param category Error category
    * @param clazz Class reporting the error
    * @param message An optional error message
@@ -34,9 +34,5 @@ public class NoOpCacheErrorLogger implements CacheErrorLogger {
    */
   @Override
   public void logError(
-      CacheErrorCategory category,
-      Class<?> clazz,
-      String message,
-      @Nullable Throwable throwable) {
-  }
+      CacheErrorCategory category, Class<?> clazz, String message, @Nullable Throwable throwable) {}
 }

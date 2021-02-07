@@ -1,0 +1,58 @@
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.TestDeps
+
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+dependencies {
+    compileOnly Deps.inferAnnotation
+    compileOnly Deps.jsr305
+    compileOnly Deps.AndroidX.androidxAnnotation
+
+    implementation project(':fbcore')
+    implementation project(':imagepipeline')
+
+    testImplementation TestDeps.junit
+    testImplementation TestDeps.assertjCore
+    testImplementation TestDeps.mockitoCore
+    testImplementation(TestDeps.robolectric) {
+        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    }
+    testImplementation project(':imagepipeline-test')
+}
+
+apply from: rootProject.file('release.gradle')
+
+android {
+    buildToolsVersion FrescoConfig.buildToolsVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task testJar(type: Jar) {
+    from android.sourceSets.test.java.srcDirs
+    classifier = 'sources'
+}
+
+artifacts.add('archives', sourcesJar)

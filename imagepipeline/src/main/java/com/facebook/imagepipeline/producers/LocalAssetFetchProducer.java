@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -15,9 +15,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import java.io.IOException;
 import java.util.concurrent.Executor;
 
-/**
- * Executes a local fetch from an asset.
- */
+/** Executes a local fetch from an asset. */
 public class LocalAssetFetchProducer extends LocalFetchProducer {
 
   public static final String PRODUCER_NAME = "LocalAssetFetchProducer";

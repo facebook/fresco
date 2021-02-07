@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -27,8 +27,8 @@ public class AddImageTransformMetaDataProducer implements Producer<EncodedImage>
     mInputProducer.produceResults(new AddImageTransformMetaDataConsumer(consumer), context);
   }
 
-  private static class AddImageTransformMetaDataConsumer extends DelegatingConsumer<
-      EncodedImage, EncodedImage> {
+  private static class AddImageTransformMetaDataConsumer
+      extends DelegatingConsumer<EncodedImage, EncodedImage> {
 
     private AddImageTransformMetaDataConsumer(Consumer<EncodedImage> consumer) {
       super(consumer);

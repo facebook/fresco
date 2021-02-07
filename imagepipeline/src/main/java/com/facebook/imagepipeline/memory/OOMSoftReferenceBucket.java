@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,16 +11,14 @@ import com.facebook.common.references.OOMSoftReference;
 import java.util.LinkedList;
 import javax.annotation.concurrent.NotThreadSafe;
 
-/**
- * A Bucket that uses OOMSoftReferences to store its free list.
- */
+/** A Bucket that uses OOMSoftReferences to store its free list. */
 @NotThreadSafe
 class OOMSoftReferenceBucket<V> extends Bucket<V> {
 
   private LinkedList<OOMSoftReference<V>> mSpareReferences;
 
   public OOMSoftReferenceBucket(int itemSize, int maxLength, int inUseLength) {
-    super(itemSize, maxLength, inUseLength);
+    super(itemSize, maxLength, inUseLength, false);
     mSpareReferences = new LinkedList<>();
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,51 +10,50 @@ package com.facebook.imagepipeline.datasource;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.AbstractDataSource;
 import com.facebook.datasource.DataSource;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * A {@link DataSource} whose result may be set by a {@link #set(CloseableReference<T>)} or
- * {@link #setException(Throwable)} call. It may also be closed.
+ * A {@link DataSource} whose result may be set by a {@link #set(CloseableReference<T>)} or {@link
+ * #setException(Throwable)} call. It may also be closed.
  *
  * <p>This data source has no intermediate results - calling {@link #set(CloseableReference<T>)}
  * means that the data source is finished.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 @ThreadSafe
 public final class SettableDataSource<T> extends AbstractDataSource<CloseableReference<T>> {
 
-  /**
-   * Creates a new {@code SettableDataSource}
-   */
+  /** Creates a new {@code SettableDataSource} */
   public static <V> SettableDataSource<V> create() {
     return new SettableDataSource<V>();
   }
 
-  private SettableDataSource() {
-  }
+  private SettableDataSource() {}
 
   /**
    * Sets the value of this data source.
    *
-   * <p> This method will return {@code true} if the value was successfully set, or
-   * {@code false} if the data source has already been set, failed or closed.
+   * <p>This method will return {@code true} if the value was successfully set, or {@code false} if
+   * the data source has already been set, failed or closed.
    *
-   * <p> Passed CloseableReference is cloned, caller of this method still owns passed reference
-   * after the method returns.
+   * <p>Passed CloseableReference is cloned, caller of this method still owns passed reference after
+   * the method returns.
    *
    * @param valueRef closeable reference to the value the data source should hold.
    * @return true if the value was successfully set.
    */
   public boolean set(@Nullable CloseableReference<T> valueRef) {
     CloseableReference<T> clonedRef = CloseableReference.cloneOrNull(valueRef);
-    return super.setResult(clonedRef, /* isLast */ true);
+    return super.setResult(clonedRef, /* isLast */ true, null);
   }
 
   /**
    * Sets the data source to having failed with the given exception.
    *
-   * <p> This method will return {@code true} if the exception was successfully set, or
-   * {@code false} if the data source has already been set, failed or closed.
+   * <p>This method will return {@code true} if the exception was successfully set, or {@code false}
+   * if the data source has already been set, failed or closed.
    *
    * @param throwable the exception the data source should hold.
    * @return true if the exception was successfully set.
@@ -77,7 +76,7 @@ public final class SettableDataSource<T> extends AbstractDataSource<CloseableRef
   /**
    * Gets the result if any, null otherwise.
    *
-   * <p> Value will be cloned and it's the caller's responsibility to close the returned value.
+   * <p>Value will be cloned and it's the caller's responsibility to close the returned value.
    */
   @Override
   @Nullable

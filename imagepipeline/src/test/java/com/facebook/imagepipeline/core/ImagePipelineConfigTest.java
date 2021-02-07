@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.imagepipeline.core;
 
 import static org.junit.Assert.assertFalse;
@@ -19,9 +20,7 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Some tests for ImagePipelineConfigTest
- */
+/** Some tests for ImagePipelineConfigTest */
 @RunWith(RobolectricTestRunner.class)
 public class ImagePipelineConfigTest {
 
@@ -64,13 +63,13 @@ public class ImagePipelineConfigTest {
   @Test
   public void testImageRequestWhenChangedAndOverriden() {
     ImagePipelineConfig.resetDefaultRequestConfig();
-    final ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(mUri)
-        .setProgressiveRenderingEnabled(true)
-        .build();
+    final ImageRequest imageRequest =
+        ImageRequestBuilder.newBuilderWithSource(mUri).setProgressiveRenderingEnabled(true).build();
     assertTrue(imageRequest.getProgressiveRenderingEnabled());
-    final ImageRequest imageRequest2 = ImageRequestBuilder.newBuilderWithSource(mUri)
-        .setProgressiveRenderingEnabled(false)
-        .build();
+    final ImageRequest imageRequest2 =
+        ImageRequestBuilder.newBuilderWithSource(mUri)
+            .setProgressiveRenderingEnabled(false)
+            .build();
     assertFalse(imageRequest2.getProgressiveRenderingEnabled());
   }
 }

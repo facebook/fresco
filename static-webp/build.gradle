@@ -1,23 +1,31 @@
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.TestDeps
+
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
-project.group = GROUP
-version = VERSION_NAME
-
 dependencies {
-    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
-    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    compileOnly Deps.inferAnnotation
+    compileOnly Deps.javaxAnnotation
+    compileOnly Deps.jsr305
 
-    implementation "com.facebook.soloader:soloader:${SOLOADER_VERSION}"
-    implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
+    implementation Deps.SoLoader.nativeloader
+    implementation Deps.Bolts.tasks
     implementation project(':fbcore')
     implementation project(':imagepipeline-base')
 
-    testImplementation "junit:junit:${JUNIT_VERSION}"
+    testImplementation TestDeps.junit
 
-    androidTestImplementation "junit:junit:${JUNIT_VERSION}"
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test:rules:1.0.1'
+    androidTestImplementation TestDeps.junit
+    androidTestImplementation TestDeps.AndroidX.testRules
+    androidTestImplementation TestDeps.AndroidX.testRunner
 }
 apply from: rootProject.file('release.gradle')
 
@@ -31,8 +39,13 @@ android {
 
     def ndkLibs = [['static-webp', [copyLibjpeg, copyLibpng, copyLibwebp]]]
 
-    buildToolsVersion rootProject.ext.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion FrescoConfig.buildToolsVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
+    }
 
     sourceSets {
         main {

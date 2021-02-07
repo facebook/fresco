@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2017-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.animation.factory;
 
 import android.content.Context;
@@ -34,12 +35,12 @@ import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.QualityInfo;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
-/**
- * {@link AnimatedFactory} for animations v2 that creates {@link AnimatedDrawable2} drawables.
- */
+/** {@link AnimatedFactory} for animations v2 that creates {@link AnimatedDrawable2} drawables. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @NotThreadSafe
 @DoNotStrip
 public class AnimatedFactoryV2Impl implements AnimatedFactory {
@@ -49,6 +50,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   private final PlatformBitmapFactory mPlatformBitmapFactory;
   private final ExecutorSupplier mExecutorSupplier;
   private final CountingMemoryCache<CacheKey, CloseableImage> mBackingCache;
+  private final boolean mDownscaleFrameToDrawableDimensions;
 
   private @Nullable AnimatedImageFactory mAnimatedImageFactory;
   private @Nullable AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
@@ -59,15 +61,17 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   public AnimatedFactoryV2Impl(
       PlatformBitmapFactory platformBitmapFactory,
       ExecutorSupplier executorSupplier,
-      CountingMemoryCache<CacheKey, CloseableImage> backingCache) {
+      CountingMemoryCache<CacheKey, CloseableImage> backingCache,
+      boolean downscaleFrameToDrawableDimensions) {
     mPlatformBitmapFactory = platformBitmapFactory;
     mExecutorSupplier = executorSupplier;
     mBackingCache = backingCache;
+    mDownscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions;
   }
 
   @Nullable
   @Override
-  public DrawableFactory getAnimatedDrawableFactory(Context context) {
+  public DrawableFactory getAnimatedDrawableFactory(@Nullable Context context) {
     if (mAnimatedDrawableFactory == null) {
       mAnimatedDrawableFactory = createDrawableFactory();
     }
@@ -103,22 +107,25 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   }
 
   private ExperimentalBitmapAnimationDrawableFactory createDrawableFactory() {
-    Supplier<Integer> cachingStrategySupplier = new Supplier<Integer>() {
-      @Override
-      public Integer get() {
-        return ExperimentalBitmapAnimationDrawableFactory.CACHING_STRATEGY_FRESCO_CACHE_NO_REUSING;
-      }
-    };
+    Supplier<Integer> cachingStrategySupplier =
+        new Supplier<Integer>() {
+          @Override
+          public Integer get() {
+            return ExperimentalBitmapAnimationDrawableFactory
+                .CACHING_STRATEGY_FRESCO_CACHE_NO_REUSING;
+          }
+        };
 
     final SerialExecutorService serialExecutorServiceForFramePreparing =
         new DefaultSerialExecutorService(mExecutorSupplier.forDecode());
 
-    Supplier<Integer> numberOfFramesToPrepareSupplier = new Supplier<Integer>() {
-      @Override
-      public Integer get() {
-        return NUMBER_OF_FRAMES_TO_PREPARE;
-      }
-    };
+    Supplier<Integer> numberOfFramesToPrepareSupplier =
+        new Supplier<Integer>() {
+          @Override
+          public Integer get() {
+            return NUMBER_OF_FRAMES_TO_PREPARE;
+          }
+        };
 
     return new ExperimentalBitmapAnimationDrawableFactory(
         getAnimatedDrawableBackendProvider(),
@@ -147,15 +154,18 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
 
   private AnimatedDrawableBackendProvider getAnimatedDrawableBackendProvider() {
     if (mAnimatedDrawableBackendProvider == null) {
-      mAnimatedDrawableBackendProvider = new AnimatedDrawableBackendProvider() {
-        @Override
-        public AnimatedDrawableBackend get(AnimatedImageResult animatedImageResult, Rect bounds) {
-          return new AnimatedDrawableBackendImpl(
-              getAnimatedDrawableUtil(),
-              animatedImageResult,
-              bounds);
-        }
-      };
+      mAnimatedDrawableBackendProvider =
+          new AnimatedDrawableBackendProvider() {
+            @Override
+            public AnimatedDrawableBackend get(
+                AnimatedImageResult animatedImageResult, Rect bounds) {
+              return new AnimatedDrawableBackendImpl(
+                  getAnimatedDrawableUtil(),
+                  animatedImageResult,
+                  bounds,
+                  mDownscaleFrameToDrawableDimensions);
+            }
+          };
     }
     return mAnimatedDrawableBackendProvider;
   }
@@ -165,7 +175,11 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
         new AnimatedDrawableBackendProvider() {
           @Override
           public AnimatedDrawableBackend get(AnimatedImageResult imageResult, Rect bounds) {
-            return new AnimatedDrawableBackendImpl(getAnimatedDrawableUtil(), imageResult, bounds);
+            return new AnimatedDrawableBackendImpl(
+                getAnimatedDrawableUtil(),
+                imageResult,
+                bounds,
+                mDownscaleFrameToDrawableDimensions);
           }
         };
     return new AnimatedImageFactoryImpl(animatedDrawableBackendProvider, mPlatformBitmapFactory);

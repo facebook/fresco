@@ -8,11 +8,4 @@
         android:title="Allow animations"
         app:showAsAction="never"
         />
-
-    <item
-        android:id="@+id/use_drawee"
-        android:checkable="true"
-        android:title="Use Drawee"
-        app:showAsAction="never"
-        />
 </menu>

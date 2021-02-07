@@ -1,6 +1,9 @@
 # Fresco
 
+<img alt="Fresco Logo" align="right" src="docs/static/sample-images/fresco_logo.svg" width="15%" />
+
 [![Build Status](https://circleci.com/gh/facebook/fresco.svg?style=shield)](https://circleci.com/gh/facebook/fresco)
+[![License](https://img.shields.io/badge/license-MIT-brightgreen)](https://github.com/facebook/fresco/blob/master/LICENSE)
 
 Fresco is a powerful system for displaying images in Android applications.
 
@@ -28,7 +31,7 @@ Fresco supports Android 2.3 (Gingerbread) and later.
 If you are building with Gradle, simply add the following line to the `dependencies` section of your `build.gradle` file:
 
 ```groovy
-implementation 'com.facebook.fresco:fresco:1.9.0'
+implementation 'com.facebook.fresco:fresco:2.4.0'
 ```
 
 For full details, visit the documentation on our web site, available in English, Chinese, and Korean:
@@ -43,7 +46,7 @@ For full details, visit the documentation on our web site, available in English,
 
 Please use our [issues page](https://github.com/facebook/fresco/issues) to let us know of any problems.
 
-For pull requests, please see the [CONTRIBUTING](https://github.com/facebook/fresco/blob/master/CONTRIBUTING.md) file for information on how to help out. See our [documentation](http://frescolib.org/docs/building-from-source.html) for information how to build from source.
+For pull requests, please see the [CONTRIBUTING](https://github.com/facebook/fresco/blob/master/CONTRIBUTING.md) file for information on how to help out. See our [documentation](http://frescolib.org/docs/building-from-source.html) for information on how to build from source.
 
 
 ## License

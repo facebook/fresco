@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,11 +10,13 @@ package com.facebook.imagepipeline.producers;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * Utility class to consistently check whether a given thumbnail size will be sufficient for a given
  * request with {@link com.facebook.imagepipeline.common.ResizeOptions}.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class ThumbnailSizeChecker {
 
   /**
@@ -22,7 +24,7 @@ public final class ThumbnailSizeChecker {
    * big enough. This will allow a thumbnail which is actually 75% of the requested size to be used
    * and scaled up.
    */
-  public static final float ACCEPTABLE_REQUESTED_TO_ACTUAL_SIZE_RATIO = 4.0f/3;
+  public static final float ACCEPTABLE_REQUESTED_TO_ACTUAL_SIZE_RATIO = 4.0f / 3;
 
   private static final int ROTATED_90_DEGREES_CLOCKWISE = 90;
   private static final int ROTATED_90_DEGREES_COUNTER_CLOCKWISE = 270;

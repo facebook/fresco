@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,15 +7,18 @@
 
 package com.facebook.imagepipeline.producers;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import javax.annotation.Nullable;
 
 /**
  * Base class for {@link NetworkFetcher}.
  *
- * <p> Intermediate results are propagated.
- * <p> {#code getExtraMap} returns null.
+ * <p>Intermediate results are propagated.
+ *
+ * <p>{#code getExtraMap} returns null.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class BaseNetworkFetcher<FETCH_STATE extends FetchState>
     implements NetworkFetcher<FETCH_STATE> {
 

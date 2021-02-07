@@ -16,15 +16,17 @@
 
 package com.facebook.common.internal;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Arrays;
 
 /**
- * Static utility methods pertaining to {@code int} primitives, that are not
- * already found in either {@link Integer} or {@link Arrays}.
+ * Static utility methods pertaining to {@code int} primitives, that are not already found in either
+ * {@link Integer} or {@link Arrays}.
  *
  * @author Kevin Bourrillion
  * @since 1.0
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class Ints {
   private Ints() {}
 
@@ -32,8 +34,8 @@ public class Ints {
    * Returns the greatest value present in {@code array}.
    *
    * @param array a <i>nonempty</i> array of {@code int} values
-   * @return the value present in {@code array} that is greater than or equal to
-   *     every other value in the array
+   * @return the value present in {@code array} that is greater than or equal to every other value
+   *     in the array
    * @throws IllegalArgumentException if {@code array} is empty
    */
   public static int max(int... array) {
@@ -46,5 +48,4 @@ public class Ints {
     }
     return max;
   }
-
 }

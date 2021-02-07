@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,14 +8,15 @@
 package com.facebook.drawee.generic;
 
 import android.graphics.Color;
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Arrays;
+import javax.annotation.Nullable;
 
-/**
- * Class that encapsulates rounding parameters.
- */
+/** Class that encapsulates rounding parameters. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class RoundingParams {
 
   public enum RoundingMethod {
@@ -35,24 +36,25 @@ public class RoundingParams {
      * {@link ScalingUtils.ScaleType#CENTER_CROP}, {@link ScalingUtils.ScaleType#FOCUS_CROP} and
      * {@link ScalingUtils.ScaleType#FIT_XY}.
      *
-     * If you use this rounding method with other scale types, such as
-     * {@link ScalingUtils.ScaleType#CENTER}, you won't get an Exception but the image might look
-     * wrong (e.g. repeated edges), especially in cases the source image is smaller than the view.
+     * <p>If you use this rounding method with other scale types, such as {@link
+     * ScalingUtils.ScaleType#CENTER}, you won't get an Exception but the image might look wrong
+     * (e.g. repeated edges), especially in cases the source image is smaller than the view.
      */
     BITMAP_ONLY
   }
 
   private RoundingMethod mRoundingMethod = RoundingMethod.BITMAP_ONLY;
   private boolean mRoundAsCircle = false;
-  private float[] mCornersRadii = null;
+  private @Nullable float[] mCornersRadii = null;
   private int mOverlayColor = 0;
   private float mBorderWidth = 0;
   private int mBorderColor = Color.TRANSPARENT;
   private float mPadding = 0;
   private boolean mScaleDownInsideBorders = false;
+  private boolean mPaintFilterBitmap = false;
 
   /**
-   *  Sets whether to round as circle.
+   * Sets whether to round as circle.
    *
    * @param roundAsCircle whether or not to round as circle
    * @return modified instance
@@ -71,7 +73,7 @@ public class RoundingParams {
    * Sets the rounded corners radius.
    *
    * @param radius corner radius in pixels
-   * @return  modified instance
+   * @return modified instance
    */
   public RoundingParams setCornersRadius(float radius) {
     Arrays.fill(getOrCreateRoundedCornersRadii(), radius);
@@ -88,10 +90,7 @@ public class RoundingParams {
    * @return modified instance
    */
   public RoundingParams setCornersRadii(
-      float topLeft,
-      float topRight,
-      float bottomRight,
-      float bottomLeft) {
+      float topLeft, float topRight, float bottomRight, float bottomLeft) {
     float[] radii = getOrCreateRoundedCornersRadii();
     radii[0] = radii[1] = topLeft;
     radii[2] = radii[3] = topRight;
@@ -117,10 +116,10 @@ public class RoundingParams {
   /**
    * Gets the rounded corners radii.
    *
-   * <p> For performance reasons the internal array is returned directly. Do not modify it directly,
+   * <p>For performance reasons the internal array is returned directly. Do not modify it directly,
    * but use one of the exposed corner radii setters instead.
    */
-  public float[] getCornersRadii() {
+  public @Nullable float[] getCornersRadii() {
     return mCornersRadii;
   }
 
@@ -175,12 +174,8 @@ public class RoundingParams {
 
   /** Factory method that creates new RoundingParams with the specified corners radii. */
   public static RoundingParams fromCornersRadii(
-      float topLeft,
-      float topRight,
-      float bottomRight,
-      float bottomLeft) {
-    return (new RoundingParams())
-        .setCornersRadii(topLeft, topRight, bottomRight, bottomLeft);
+      float topLeft, float topRight, float bottomRight, float bottomLeft) {
+    return (new RoundingParams()).setCornersRadii(topLeft, topRight, bottomRight, bottomLeft);
   }
 
   /** Factory method that creates new RoundingParams with the specified corners radii. */
@@ -190,6 +185,7 @@ public class RoundingParams {
 
   /**
    * Sets the border width
+   *
    * @param width of the width
    */
   public RoundingParams setBorderWidth(float width) {
@@ -205,6 +201,7 @@ public class RoundingParams {
 
   /**
    * Sets the border color
+   *
    * @param color of the border
    */
   public RoundingParams setBorderColor(@ColorInt int color) {
@@ -219,6 +216,7 @@ public class RoundingParams {
 
   /**
    * Sets the border around the rounded drawable
+   *
    * @param color of the border
    * @param width of the width
    */
@@ -231,9 +229,10 @@ public class RoundingParams {
 
   /**
    * Sets the padding on rounded drawable. Works only with {@code RoundingMethod.BITMAP_ONLY}
+   *
    * @param padding the padding in pixels
    */
-  public RoundingParams setPadding(float padding){
+  public RoundingParams setPadding(float padding) {
     Preconditions.checkArgument(padding >= 0, "the padding cannot be < 0");
     mPadding = padding;
     return this;
@@ -261,8 +260,27 @@ public class RoundingParams {
     return mScaleDownInsideBorders;
   }
 
+  /**
+   * Sets FILTER_BITMAP_FLAG flag to Paint. {@link android.graphics.Paint#FILTER_BITMAP_FLAG}
+   *
+   * <p>This should generally be on when drawing bitmaps, unless performance-bound (rendering to
+   * software canvas) or preferring pixelation artifacts to blurriness when scaling significantly.
+   *
+   * @param paintFilterBitmap whether to set FILTER_BITMAP_FLAG flag to Paint.
+   * @return modified instance
+   */
+  public RoundingParams setPaintFilterBitmap(boolean paintFilterBitmap) {
+    mPaintFilterBitmap = paintFilterBitmap;
+    return this;
+  }
+
+  /** Gets whether to set FILTER_BITMAP_FLAG flag to Paint. */
+  public boolean getPaintFilterBitmap() {
+    return mPaintFilterBitmap;
+  }
+
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) {
       return true;
     }
@@ -300,6 +318,10 @@ public class RoundingParams {
       return false;
     }
 
+    if (mPaintFilterBitmap != that.mPaintFilterBitmap) {
+      return false;
+    }
+
     return Arrays.equals(mCornersRadii, that.mCornersRadii);
   }
 
@@ -313,6 +335,7 @@ public class RoundingParams {
     result = 31 * result + mBorderColor;
     result = 31 * result + (mPadding != +0.0f ? Float.floatToIntBits(mPadding) : 0);
     result = 31 * result + (mScaleDownInsideBorders ? 1 : 0);
+    result = 31 * result + (mPaintFilterBitmap ? 1 : 0);
 
     return result;
   }

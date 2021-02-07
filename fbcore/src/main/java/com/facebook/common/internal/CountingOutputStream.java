@@ -16,6 +16,7 @@
 
 package com.facebook.common.internal;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -26,13 +27,13 @@ import java.io.OutputStream;
  * @author Chris Nokleberg
  * @since 1.0
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class CountingOutputStream extends FilterOutputStream {
 
   private long mCount;
 
   /**
-   * Constructs a new {@code FilterOutputStream} with {@code out} as its
-   * target stream.
+   * Constructs a new {@code FilterOutputStream} with {@code out} as its target stream.
    *
    * @param out the target stream that this stream writes to.
    */
@@ -41,9 +42,7 @@ public class CountingOutputStream extends FilterOutputStream {
     mCount = 0;
   }
 
-  /**
-   * Returns the number of bytes written.
-   */
+  /** Returns the number of bytes written. */
   public long getCount() {
     return mCount;
   }

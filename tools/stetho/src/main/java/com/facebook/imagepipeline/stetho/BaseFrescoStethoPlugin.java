@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -17,6 +17,7 @@ import com.facebook.cache.disk.FileCache;
 import com.facebook.common.time.RealtimeSinceBootClock;
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheKey;
 import com.facebook.imagepipeline.cache.CountingMemoryCacheInspector;
+import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.image.CloseableBitmap;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -43,10 +44,10 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
   private static final float KB = 1024f;
 
   protected boolean mInitialized;
-  private CountingMemoryCacheInspector<CacheKey, CloseableImage>
-      mBitmapMemoryCacheInspector;
+  private CountingMemoryCacheInspector<CacheKey, CloseableImage> mBitmapMemoryCacheInspector;
   private FileCache mMainFileCache;
   private FileCache mSmallFileCache;
+  private ImagePipeline mImagePipeline;
 
   protected BaseFrescoStethoPlugin() {
     mInitialized = false;
@@ -59,10 +60,11 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
   protected abstract void ensureInitialized() throws DumpException;
 
   protected void initialize(ImagePipelineFactory factory) {
-    mBitmapMemoryCacheInspector = new CountingMemoryCacheInspector<>(
-        factory.getBitmapCountingMemoryCache());
+    mBitmapMemoryCacheInspector =
+        new CountingMemoryCacheInspector<>(factory.getBitmapCountingMemoryCache());
     mMainFileCache = factory.getMainFileCache();
     mSmallFileCache = factory.getSmallImageFileCache();
+    mImagePipeline = factory.getImagePipeline();
     mInitialized = true;
   }
 
@@ -74,7 +76,7 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
   /**
    * Entry point for the Stetho dumpapp script.
    *
-   * {@link #initialize} must have been called in the app before running dumpapp.
+   * <p>{@link #initialize} must have been called in the app before running dumpapp.
    */
   @Override
   public void dump(DumperContext dumpContext) throws DumpException {
@@ -90,6 +92,8 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
     } else if (cmd != null && cmd.equals("diskcache")) {
       diskcache(mMainFileCache, "Main", writer, rest);
       diskcache(mSmallFileCache, "Small", writer, rest);
+    } else if (cmd != null && cmd.equals("clear")) {
+      mImagePipeline.clearCaches();
     } else {
       usage(writer);
       if (TextUtils.isEmpty(cmd)) {
@@ -123,7 +127,7 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
       return;
     }
 
-    SparseArray<Integer> histogram  = emptyHistogram();
+    SparseArray<Integer> histogram = emptyHistogram();
     float total = 0f;
     for (DiskStorage.DiskDumpInfoEntry entry : dumpInfo.entries) {
       writeDiskDumpEntry(writer, entry);
@@ -154,17 +158,11 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
     writer.println();
     writer.println("File Type Counts:");
     for (String type : dumpInfo.typeCounts.keySet()) {
-      writer.println(formatStrLocaleSafe(
-          "%4s: %5d",
-          type,
-          dumpInfo.typeCounts.get(type)));
+      writer.println(formatStrLocaleSafe("%4s: %5d", type, dumpInfo.typeCounts.get(type)));
     }
-
   }
 
-  private void addToHistogram(
-      SparseArray<Integer> histogram,
-      DiskStorage.DiskDumpInfoEntry entry) {
+  private void addToHistogram(SparseArray<Integer> histogram, DiskStorage.DiskDumpInfoEntry entry) {
     for (int i = 0; i < histogram.size(); i++) {
       int key = histogram.keyAt(i);
       if (entry.size / KB < key) {
@@ -190,11 +188,9 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
     if (entry.firstBits != null && !entry.firstBits.isEmpty()) {
       writer.println("Undefined: " + entry.firstBits);
     }
-    writer.println(formatStrLocaleSafe(
-        "type: %5s size: %7.2fkB path: %9s",
-        entry.type,
-        entry.size / KB,
-        entry.path));
+    writer.println(
+        formatStrLocaleSafe(
+            "type: %5s size: %7.2fkB path: %9s", entry.type, entry.size / KB, entry.path));
   }
 
   private void writeDiskDumpInfoScriptReadable(
@@ -216,14 +212,15 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
       writer.println("Undefined: " + entry.key.getClass());
     }
     BitmapMemoryCacheKey cacheKey = (BitmapMemoryCacheKey) entry.key;
-    writer.println(formatStrLocaleSafe(
-        "size: %7.2fkB (%4d x %4d) key: %s, %s, duration: %dms",
-        entry.value.get().getSizeInBytes() / KB,
-        entry.value.get().getWidth(),
-        entry.value.get().getHeight(),
-        entry.key,
-        cacheKey.getCallerContext(),
-        RealtimeSinceBootClock.get().now() - cacheKey.getInBitmapCacheSince()));
+    writer.println(
+        formatStrLocaleSafe(
+            "size: %7.2fkB (%4d x %4d) key: %s, %s, duration: %dms",
+            entry.value.get().getSizeInBytes() / KB,
+            entry.value.get().getWidth(),
+            entry.value.get().getHeight(),
+            entry.key,
+            cacheKey.getCallerContext(),
+            RealtimeSinceBootClock.get().now() - cacheKey.getInBitmapCacheSince()));
   }
 
   private void memcache(PrintStream writer, List<String> args) throws DumpException {
@@ -235,34 +232,33 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
       writer.println(mBitmapMemoryCacheInspector.getClass().getSimpleName());
       writer.println();
       writer.println("Params:");
-      writer.println(formatStrLocaleSafe(
-          "Max size:          %7.2fMB", dumpInfo.maxSize / (1024.0 * KB)));
-      writer.println(formatStrLocaleSafe(
-          "Max entries count: %9d", dumpInfo.maxEntriesCount));
-      writer.println(formatStrLocaleSafe(
-          "Max entry size:    %7.2fMB", dumpInfo.maxEntrySize / (1024.0 * KB)));
+      writer.println(
+          formatStrLocaleSafe("Max size:          %7.2fMB", dumpInfo.maxSize / (1024.0 * KB)));
+      writer.println(formatStrLocaleSafe("Max entries count: %9d", dumpInfo.maxEntriesCount));
+      writer.println(
+          formatStrLocaleSafe("Max entry size:    %7.2fMB", dumpInfo.maxEntrySize / (1024.0 * KB)));
       writer.println();
 
       writer.println("Summary of current content:");
-      writer.println(formatStrLocaleSafe(
-          "Total size:        %7.2fMB (includes in-use content)",
-          dumpInfo.size / (1024.0 * KB)));
-      writer.println(formatStrLocaleSafe(
-          "Entries count:     %9d",
-          dumpInfo.lruEntries.size() + dumpInfo.sharedEntries.size()));
-      writer.println(formatStrLocaleSafe(
-          "LRU size:          %7.2fMB", dumpInfo.lruSize / (1024.0 * KB)));
-      writer.println(formatStrLocaleSafe(
-          "LRU count:         %9d", dumpInfo.lruEntries.size()));
-      writer.println(formatStrLocaleSafe(
-          "Shared size:       %7.2fMB",
-          (dumpInfo.size - dumpInfo.lruSize) / (1024.0 * KB)));
-      writer.println(formatStrLocaleSafe(
-          "Shared count:      %9d", dumpInfo.sharedEntries.size()));
+      writer.println(
+          formatStrLocaleSafe(
+              "Total size:        %7.2fMB (includes in-use content)",
+              dumpInfo.size / (1024.0 * KB)));
+      writer.println(
+          formatStrLocaleSafe(
+              "Entries count:     %9d",
+              dumpInfo.lruEntries.size() + dumpInfo.sharedEntries.size()));
+      writer.println(
+          formatStrLocaleSafe("LRU size:          %7.2fMB", dumpInfo.lruSize / (1024.0 * KB)));
+      writer.println(formatStrLocaleSafe("LRU count:         %9d", dumpInfo.lruEntries.size()));
+      writer.println(
+          formatStrLocaleSafe(
+              "Shared size:       %7.2fMB", (dumpInfo.size - dumpInfo.lruSize) / (1024.0 * KB)));
+      writer.println(formatStrLocaleSafe("Shared count:      %9d", dumpInfo.sharedEntries.size()));
       writer.println();
 
-      writer.println("The cache consists of two parts: Things " +
-              "currently being used and things not.");
+      writer.println(
+          "The cache consists of two parts: Things " + "currently being used and things not.");
       writer.println("Those things that are *not* currently being used are in the LRU.");
       writer.println("Things currently being used are considered to be shared. They will be added");
       writer.println("to the LRU if/when they stop being used.");
@@ -287,12 +283,10 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
     } finally {
       dumpInfo.release();
     }
-
   }
 
   private void getFiles(
-      PrintStream writer,
-      CountingMemoryCacheInspector.DumpInfo<CacheKey, CloseableImage> dumpInfo)
+      PrintStream writer, CountingMemoryCacheInspector.DumpInfo<CacheKey, CloseableImage> dumpInfo)
       throws DumpException, IOException {
     writer.println("\nStoring all images in the memory cache into /sdcard/imagedumperfiles/ ...");
 
@@ -317,51 +311,43 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
     }
     if (!dumpInfo.sharedEntries.isEmpty()) {
       writer.println("Shared Entries:");
-      storeEntries(dumpInfo.sharedEntries, dumpInfo.lruEntries.size()+1, writer, dir);
+      storeEntries(dumpInfo.sharedEntries, dumpInfo.lruEntries.size() + 1, writer, dir);
     }
 
     writer.println("Done!");
   }
 
   private void storeEntries(
-      List<CountingMemoryCacheInspector.DumpInfoEntry<CacheKey, CloseableImage>>
-          entries,
+      List<CountingMemoryCacheInspector.DumpInfoEntry<CacheKey, CloseableImage>> entries,
       int i,
       PrintStream writer,
-      File directory) throws IOException {
+      File directory)
+      throws IOException {
     String filename;
-    for (CountingMemoryCacheInspector.DumpInfoEntry<CacheKey, CloseableImage>
-        entry : entries) {
-        CloseableImage closeableImage = entry.value.get();
-        if (closeableImage instanceof CloseableBitmap) {
-          CloseableBitmap closeableBitmap = (CloseableBitmap) closeableImage;
-          filename = "tmp" + i + ".png";
-          writer.println(formatStrLocaleSafe(
-              "Storing image %d as %s. Key: %s",
-              i,
-              filename,
-              entry.key));
-          storeImage(
-              closeableBitmap.getUnderlyingBitmap(),
-              new File(directory, filename),
-              Bitmap.CompressFormat.PNG,
-              100);
-        } else {
-          writer.println(formatStrLocaleSafe(
-              "Image %d has unrecognized type %s. Key: %s",
-              i,
-              closeableImage,
-              entry.key));
-        }
-      i++;
+    for (CountingMemoryCacheInspector.DumpInfoEntry<CacheKey, CloseableImage> entry : entries) {
+      CloseableImage closeableImage = entry.value.get();
+      if (closeableImage instanceof CloseableBitmap) {
+        CloseableBitmap closeableBitmap = (CloseableBitmap) closeableImage;
+        filename = "tmp" + i + ".png";
+        writer.println(
+            formatStrLocaleSafe("Storing image %d as %s. Key: %s", i, filename, entry.key));
+        storeImage(
+            closeableBitmap.getUnderlyingBitmap(),
+            new File(directory, filename),
+            Bitmap.CompressFormat.PNG,
+            100);
+      } else {
+        writer.println(
+            formatStrLocaleSafe(
+                "Image %d has unrecognized type %s. Key: %s", i, closeableImage, entry.key));
       }
+      i++;
+    }
   }
 
   private void storeImage(
-      Bitmap image,
-      File pictureFile,
-      Bitmap.CompressFormat compressionFormat,
-      int quality) throws IOException {
+      Bitmap image, File pictureFile, Bitmap.CompressFormat compressionFormat, int quality)
+      throws IOException {
     FileOutputStream fos = null;
     try {
       fos = new FileOutputStream(pictureFile);
@@ -383,16 +369,21 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
     writer.println(usagePrefix + "memcache|diskcache");
     writer.println();
     writer.println(cmdName + " memcache: Show contents of bitmap memory cache.");
-    writer.println(cmdName + " memcache -g: Get contents of bitmap memory cache and store them" +
-            "on the sdcard.");
+    writer.println(
+        cmdName
+            + " memcache -g: Get contents of bitmap memory cache and store them"
+            + "on the sdcard.");
     writer.println(cmdName + " diskcache: Show contents of disk storage cache.");
-    writer.println(cmdName + " diskcache -s: Show contents of disk storage cache formatted " +
-            "for script consumption.");
+    writer.println(
+        cmdName
+            + " diskcache -s: Show contents of disk storage cache formatted "
+            + "for script consumption.");
+    writer.println(cmdName + " clear: Clear all caches.");
     writer.println();
   }
 
   private static String formatStrLocaleSafe(String format, Object... args) {
-    String str =  String.format(/* locale */ null, "  " + format, args);
+    String str = String.format(/* locale */ null, "  " + format, args);
     return str;
   }
 }

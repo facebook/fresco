@@ -1,38 +1,50 @@
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.TestDeps
+
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
-project.group = GROUP
-version = VERSION_NAME
-
 dependencies {
-    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compileOnly Deps.jsr305
+    compileOnly Deps.javaxAnnotation
 
+    testCompileOnly Deps.inferAnnotation
     api project(':imagepipeline-base-test')
-    implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
+    implementation Deps.Bolts.tasks
     implementation project(':fbcore')
+    implementation project(':imagepipeline')
+    implementation project(':imagepipeline-native')
     implementation project(':imagepipeline-base')
-    implementation "junit:junit:${JUNIT_VERSION}"
-    implementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    implementation("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {
+    implementation TestDeps.junit
+    implementation TestDeps.mockitoCore
+    implementation(TestDeps.Powermock.apiMockito) {
         exclude group: 'org.mockito', module: 'mockito-all'
     }
-    implementation "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
-    implementation "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
-    implementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+    implementation TestDeps.Powermock.moduleJunit4Rule
+    implementation TestDeps.Powermock.classloadingXstream
+    implementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+        exclude group: 'com.google.auto.service', module: 'auto-service'
     }
 }
 apply from: rootProject.file('release.gradle')
 
 android {
 
-    buildToolsVersion rootProject.ext.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion FrescoConfig.buildToolsVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion rootProject.ext.samplesMinSdkVersion
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
     }
 
     lintOptions {

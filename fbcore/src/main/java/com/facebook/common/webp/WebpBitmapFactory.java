@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,21 +10,23 @@ package com.facebook.common.webp;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.FileDescriptor;
 import java.io.InputStream;
+import javax.annotation.Nullable;
 
 /**
- * Interface for a bitmap factory that can decode WebP images even on versions of Android that
- * don't support it.
- * <p> Implementation is found in the optional static-webp library. To use, add the following to
- * your build.gradle file:
- * <code>implementation 'com.facebook.fresco:static-webp:${FRESCO_VERSION}'</code>
+ * Interface for a bitmap factory that can decode WebP images even on versions of Android that don't
+ * support it.
+ *
+ * <p>Implementation is found in the optional static-webp library. To use, add the following to your
+ * build.gradle file: <code>implementation 'com.facebook.fresco:static-webp:${FRESCO_VERSION}'
+ * </code>
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface WebpBitmapFactory {
 
-  /**
-   * We listen to events in Webp direct decoding
-   */
+  /** We listen to events in Webp direct decoding */
   interface WebpErrorLogger {
 
     /**
@@ -33,7 +35,7 @@ public interface WebpBitmapFactory {
      * @param message The message to log
      * @param extra Extra message if any
      */
-    void onWebpErrorLog(String message, String extra);
+    void onWebpErrorLog(String message, @Nullable String extra);
   }
 
   /**
@@ -50,24 +52,18 @@ public interface WebpBitmapFactory {
    */
   void setBitmapCreator(final BitmapCreator bitmapCreator);
 
+  @Nullable
   Bitmap decodeFileDescriptor(
-      FileDescriptor fd,
-      Rect outPadding,
-      BitmapFactory.Options opts);
+      FileDescriptor fd, @Nullable Rect outPadding, @Nullable BitmapFactory.Options opts);
 
+  @Nullable
   Bitmap decodeStream(
-      InputStream inputStream,
-      Rect outPadding,
-      BitmapFactory.Options opts);
+      InputStream inputStream, @Nullable Rect outPadding, @Nullable BitmapFactory.Options opts);
 
-  Bitmap decodeFile(
-      String pathName,
-      BitmapFactory.Options opts);
+  @Nullable
+  Bitmap decodeFile(String pathName, @Nullable BitmapFactory.Options opts);
 
+  @Nullable
   Bitmap decodeByteArray(
-      byte[] array,
-      int offset,
-      int length,
-      BitmapFactory.Options opts);
-
+      byte[] array, int offset, int length, @Nullable BitmapFactory.Options opts);
 }

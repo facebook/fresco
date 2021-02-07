@@ -1,8 +1,21 @@
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.SampleDeps
+import com.facebook.fresco.buildsrc.TestDeps
+
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
-    buildToolsVersion rootProject.ext.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion FrescoConfig.buildToolsVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
 
     dexOptions {
         maxProcessCount 2
@@ -11,13 +24,13 @@ android {
 
     defaultConfig {
         applicationId "com.facebook.fresco.samples.showcase"
-        minSdkVersion rootProject.ext.samplesMinSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion FrescoConfig.samplesMinSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
         versionCode 1
         versionName "${VERSION_NAME}"
 
         testApplicationId "com.facebook.fresco.samples.showcase.test"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true // needed for tinting
     }
@@ -27,25 +40,30 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-showcase.pro'
         }
+        debug {
+            minifyEnabled false
+        }
+        instrumentation {
+            initWith debug
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-showcase.pro'
+            testProguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-showcase.pro', 'proguard-test.pro'
+            matchingFallbacks = ['debug']
+        }
     }
+
+    testBuildType "instrumentation"
+
 
     flavorDimensions "main"
     productFlavors {
-        main {
+        normal {
         }
         instantRunConfig {
             dimension "main"
-            minSdkVersion 21
+            minSdkVersion FrescoConfig.samplesMinSdkVersion
         }
-
         internal {
-            buildTypes {
-                debug {
-                    minifyEnabled true
-                    proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-showcase.pro'
-                    testProguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-showcase.pro', 'proguard-test.pro'
-                }
-            }
         }
     }
 
@@ -58,27 +76,32 @@ android {
         abi {
             enable true
             reset()
-            include 'x86', 'x86_64', 'arm64-v8a', 'armeabi-v7a', 'armeabi'
+            include 'x86', 'x86_64', 'arm64-v8a', 'armeabi-v7a'
             universalApk false
         }
     }
 }
 
 dependencies {
-    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compileOnly "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
-    implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-    implementation "com.android.support:design:${SUPPORT_LIB_VERSION}"
-    implementation "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
-    implementation "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
-    implementation "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
-    implementation "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
-    implementation "com.facebook.stetho:stetho-okhttp3:${STETHO_VERSION}"
+    compileOnly Deps.jsr305
+    compileOnly Deps.inferAnnotation
+    compileOnly Deps.javaxAnnotation
+
+    implementation SampleDeps.AndroidX.appcompat
+    implementation SampleDeps.AndroidX.preference
+    implementation SampleDeps.AndroidX.recyclerview
+    implementation SampleDeps.AndroidX.cardview
+
+    implementation SampleDeps.Google.material
+    implementation Deps.Tools.Stetho.okhttp3
 
     implementation project(':animated-base')
     implementation project(':animated-gif')
+    implementation project(':animated-gif-lite')
     implementation project(':animated-webp')
     implementation project(':static-webp')
+    implementation project(':native-filters')
+    implementation project(':native-imagetranscoder')
 
     implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':drawee-span')
@@ -88,11 +111,44 @@ dependencies {
 
     implementation 'com.facebook.keyframes:keyframes:1.0'
 
+    implementation project(':ui-common')
+
+    // Litho
+    compileOnly Deps.Litho.lithoAnnotations
+    implementation Deps.Litho.core
+    implementation Deps.Litho.widget
+
+    // Litho Sections
+    implementation Deps.Litho.Sections.core
+    implementation Deps.Litho.Sections.widget
+    compileOnly Deps.Litho.Sections.sectionsAnnotations
+    annotationProcessor Deps.Litho.Sections.processor
+
+    // Experimental Fresco Vito
+    implementation project(':vito:core')
+    implementation project(':vito:ktx')
+    implementation project(':vito:litho')
+    implementation project(':vito:litho-slideshow')
+    implementation project(':vito:options')
+    implementation project(':vito:provider')
+    implementation project(':vito:source')
+
     // Only used for the custom SVG decoder
-    implementation 'com.caverock:androidsvg:1.2.1'
+    implementation SampleDeps.Showcase.caverockSvg
 
     // Testing-only dependencies
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation "junit:junit:${JUNIT_VERSION}"
+    androidTestImplementation TestDeps.AndroidX.espressoCore
+    androidTestImplementation TestDeps.AndroidX.testRules
+    androidTestImplementation TestDeps.AndroidX.testRunner
+    androidTestImplementation TestDeps.junit
+
+    implementation(Deps.Tools.Flipper.flipper)
+    implementation(Deps.Tools.Flipper.fresco) {
+        exclude group: 'com.facebook.fresco'
+    }
+    implementation project(':tools:flipper')
+
+    implementation Deps.Kotlin.stdlibJdk
+
+    implementation project(path: ':vito:view')
 }

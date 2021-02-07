@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,12 +9,12 @@ package com.facebook.imageutils;
 
 import android.media.ExifInterface;
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Util for getting exif orientation from a jpeg stored as a byte array.
- */
+/** Util for getting exif orientation from a jpeg stored as a byte array. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 class TiffUtil {
 
   private static final Class<?> TAG = TiffUtil.class;
@@ -47,6 +47,7 @@ class TiffUtil {
 
   /**
    * Reads orientation information from TIFF data.
+   *
    * @param is the input stream of TIFF data
    * @param length length of the TIFF data
    * @return orientation information (1/3/6/8 on success, 0 if not found)
@@ -73,9 +74,7 @@ class TiffUtil {
     return getOrientationFromTiffEntry(is, length, tiffHeader.isLittleEndian);
   }
 
-  /**
-   * Structure that holds TIFF header.
-   */
+  /** Structure that holds TIFF header. */
   private static class TiffHeader {
     boolean isLittleEndian;
     int byteOrder;
@@ -84,6 +83,7 @@ class TiffUtil {
 
   /**
    * Reads the TIFF header to the provided structure.
+   *
    * @param is the input stream of TIFF data
    * @param length length of the TIFF data
    * @return remaining length of the data on success, 0 on failure
@@ -98,8 +98,8 @@ class TiffUtil {
     // read the byte order
     tiffHeader.byteOrder = StreamProcessor.readPackedInt(is, 4, false);
     length -= 4;
-    if (tiffHeader.byteOrder != TIFF_BYTE_ORDER_LITTLE_END &&
-        tiffHeader.byteOrder != TIFF_BYTE_ORDER_BIG_END) {
+    if (tiffHeader.byteOrder != TIFF_BYTE_ORDER_LITTLE_END
+        && tiffHeader.byteOrder != TIFF_BYTE_ORDER_BIG_END) {
       FLog.e(TAG, "Invalid TIFF header");
       return 0;
     }
@@ -118,6 +118,7 @@ class TiffUtil {
 
   /**
    * Positions the given input stream to the entry that has a specified tag. Tag will be consumed.
+   *
    * @param is the input stream of TIFF data positioned to the beginning of an IFD.
    * @param length length of the available data in the given input stream.
    * @param isLittleEndian whether the TIFF data is stored in little or big endian format
@@ -125,11 +126,7 @@ class TiffUtil {
    * @return remaining length of the data on success, 0 on failure
    */
   private static int moveToTiffEntryWithTag(
-      InputStream is,
-      int length,
-      boolean isLittleEndian,
-      int tagToFind)
-      throws IOException {
+      InputStream is, int length, boolean isLittleEndian, int tagToFind) throws IOException {
     if (length < 14) {
       return 0;
     }
@@ -151,8 +148,9 @@ class TiffUtil {
   }
 
   /**
-   * Reads the orientation information from the TIFF entry.
-   * It is assumed that the entry has a TIFF orientation tag and that tag has already been consumed.
+   * Reads the orientation information from the TIFF entry. It is assumed that the entry has a TIFF
+   * orientation tag and that tag has already been consumed.
+   *
    * @param is the input stream positioned at the TIFF entry with tag already being consumed
    * @param isLittleEndian whether the TIFF data is stored in little or big endian format
    * @return Orientation value in TIFF IFD entry.
@@ -173,8 +171,6 @@ class TiffUtil {
       return 0;
     }
     int value = StreamProcessor.readPackedInt(is, 2, isLittleEndian);
-    int padding = StreamProcessor.readPackedInt(is, 2, isLittleEndian);
     return value;
   }
-
 }

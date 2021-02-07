@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,12 +9,14 @@ package com.facebook.imagepipeline.listener;
 
 import com.facebook.common.logging.FLog;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ForwardingRequestListener implements RequestListener {
   private static final String TAG = "ForwardingRequestListener";
 
@@ -88,10 +90,7 @@ public class ForwardingRequestListener implements RequestListener {
 
   @Override
   public void onProducerFinishWithFailure(
-      String requestId,
-      String producerName,
-      Throwable t,
-      @Nullable Map<String, String> extraMap) {
+      String requestId, String producerName, Throwable t, @Nullable Map<String, String> extraMap) {
     final int numberOfListeners = mRequestListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       RequestListener listener = mRequestListeners.get(i);
@@ -120,8 +119,7 @@ public class ForwardingRequestListener implements RequestListener {
   }
 
   @Override
-  public void onProducerEvent(
-      String requestId, String producerName, String producerEventName) {
+  public void onProducerEvent(String requestId, String producerName, String producerEventName) {
     final int numberOfListeners = mRequestListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       RequestListener listener = mRequestListeners.get(i);
@@ -164,10 +162,7 @@ public class ForwardingRequestListener implements RequestListener {
 
   @Override
   public void onRequestFailure(
-      ImageRequest request,
-      String requestId,
-      Throwable throwable,
-      boolean isPrefetch) {
+      ImageRequest request, String requestId, Throwable throwable, boolean isPrefetch) {
     final int numberOfListeners = mRequestListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       RequestListener listener = mRequestListeners.get(i);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,14 +7,15 @@
 
 package com.facebook.cache.common;
 
-/**
- * Implementation of {@link CacheEventListener} that doesn't do anything.
- */
-public class NoOpCacheEventListener implements CacheEventListener {
-  private static NoOpCacheEventListener sInstance = null;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
-  private NoOpCacheEventListener() {
-  }
+/** Implementation of {@link CacheEventListener} that doesn't do anything. */
+@Nullsafe(Nullsafe.Mode.STRICT)
+public class NoOpCacheEventListener implements CacheEventListener {
+  private static @Nullable NoOpCacheEventListener sInstance = null;
+
+  private NoOpCacheEventListener() {}
 
   public static synchronized NoOpCacheEventListener getInstance() {
     if (sInstance == null) {
@@ -24,35 +25,26 @@ public class NoOpCacheEventListener implements CacheEventListener {
   }
 
   @Override
-  public void onHit(CacheEvent cacheEvent) {
-
-  }
+  public void onHit(CacheEvent cacheEvent) {}
 
   @Override
-  public void onMiss(CacheEvent cacheEvent) {
-  }
+  public void onMiss(CacheEvent cacheEvent) {}
 
   @Override
-  public void onWriteAttempt(CacheEvent cacheEvent) {
-  }
+  public void onWriteAttempt(CacheEvent cacheEvent) {}
 
   @Override
-  public void onWriteSuccess(CacheEvent cacheEvent) {
-  }
+  public void onWriteSuccess(CacheEvent cacheEvent) {}
 
   @Override
-  public void onReadException(CacheEvent cacheEvent) {
-  }
+  public void onReadException(CacheEvent cacheEvent) {}
 
   @Override
-  public void onWriteException(CacheEvent cacheEvent) {
-  }
+  public void onWriteException(CacheEvent cacheEvent) {}
 
   @Override
-  public void onEviction(CacheEvent cacheEvent) {
-  }
+  public void onEviction(CacheEvent cacheEvent) {}
 
   @Override
-  public void onCleared() {
-  }
+  public void onCleared() {}
 }

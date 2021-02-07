@@ -1,0 +1,68 @@
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.TestDeps
+
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+dependencies {
+    compileOnly Deps.inferAnnotation
+    compileOnly Deps.jsr305
+    compileOnly Deps.javaxAnnotation
+
+    implementation Deps.AndroidX.core
+    implementation Deps.Litho.lithoAnnotations
+    implementation Deps.Litho.core
+    implementation Deps.Litho.widget
+
+    annotationProcessor Deps.Litho.processor
+
+    implementation project(':drawee')
+    implementation project(':fbcore')
+    implementation project(':ui-common')
+    implementation project(':vito:core')
+    implementation project(':vito:options')
+    implementation project(':vito:provider')
+    implementation project(':vito:source')
+
+    testImplementation TestDeps.junit
+    testImplementation TestDeps.assertjCore
+    testImplementation TestDeps.mockitoCore
+    testImplementation(TestDeps.robolectric) {
+        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    }
+    implementation project(path: ':imagepipeline')
+}
+
+android {
+    buildToolsVersion FrescoConfig.buildToolsVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task testJar(type: Jar) {
+    from android.sourceSets.test.java.srcDirs
+    classifier = 'sources'
+}
+
+artifacts.add('archives', sourcesJar)

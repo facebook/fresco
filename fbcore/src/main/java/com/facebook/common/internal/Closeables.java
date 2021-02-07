@@ -16,6 +16,8 @@
 
 package com.facebook.common.internal;
 
+import androidx.annotation.VisibleForTesting;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,9 +32,9 @@ import javax.annotation.Nullable;
  * @author Michael Lancaster
  * @since 1.0
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class Closeables {
-  @VisibleForTesting static final Logger logger
-      = Logger.getLogger(Closeables.class.getName());
+  @VisibleForTesting static final Logger logger = Logger.getLogger(Closeables.class.getName());
 
   private Closeables() {}
 
@@ -44,29 +46,31 @@ public final class Closeables {
    * <p>If {@code swallowIOException} is true then we never throw {@code IOException} but merely log
    * it.
    *
-   * <p>Example: <pre>   {@code
+   * <p>Example:
    *
-   *   public void useStreamNicely() throws IOException {
-   *     SomeStream stream = new SomeStream("foo");
-   *     boolean threw = true;
-   *     try {
-   *       // ... code which does something with the stream ...
-   *       threw = false;
-   *     } finally {
-   *       // If an exception occurs, rethrow it only if threw==false:
-   *       Closeables.close(stream, threw);
-   *     }
-   *   }}</pre>
+   * <pre>{@code
+   * public void useStreamNicely() throws IOException {
+   *   SomeStream stream = new SomeStream("foo");
+   *   boolean threw = true;
+   *   try {
+   *     // ... code which does something with the stream ...
+   *     threw = false;
+   *   } finally {
+   *     // If an exception occurs, rethrow it only if threw==false:
+   *     Closeables.close(stream, threw);
+   *   }
+   * }
+   * }</pre>
    *
    * @param closeable the {@code Closeable} object to be closed, or null, in which case this method
    *     does nothing
    * @param swallowIOException if true, don't propagate IO exceptions thrown by the {@code close}
    *     methods
-   * @throws IOException if {@code swallowIOException} is false and {@code close} throws an
-   *     {@code IOException}.
+   * @throws IOException if {@code swallowIOException} is false and {@code close} throws an {@code
+   *     IOException}.
    */
-  public static void close(@Nullable Closeable closeable,
-      boolean swallowIOException) throws IOException {
+  public static void close(@Nullable Closeable closeable, boolean swallowIOException)
+      throws IOException {
     if (closeable == null) {
       return;
     }
@@ -74,8 +78,7 @@ public final class Closeables {
       closeable.close();
     } catch (IOException e) {
       if (swallowIOException) {
-        logger.log(Level.WARNING,
-            "IOException thrown while closing Closeable.", e);
+        logger.log(Level.WARNING, "IOException thrown while closing Closeable.", e);
       } else {
         throw e;
       }
@@ -83,14 +86,14 @@ public final class Closeables {
   }
 
   /**
-   * Closes the given {@link InputStream}, logging any {@code IOException} that's thrown rather
-   * than propagating it.
+   * Closes the given {@link InputStream}, logging any {@code IOException} that's thrown rather than
+   * propagating it.
    *
-   * <p>While it's not safe in the general case to ignore exceptions that are thrown when closing
-   * an I/O resource, it should generally be safe in the case of a resource that's being used only
-   * for reading, such as an {@code InputStream}. Unlike with writable resources, there's no
-   * chance that a failure that occurs when closing the stream indicates a meaningful problem such
-   * as a failure to flush all bytes to the underlying resource.
+   * <p>While it's not safe in the general case to ignore exceptions that are thrown when closing an
+   * I/O resource, it should generally be safe in the case of a resource that's being used only for
+   * reading, such as an {@code InputStream}. Unlike with writable resources, there's no chance that
+   * a failure that occurs when closing the stream indicates a meaningful problem such as a failure
+   * to flush all bytes to the underlying resource.
    *
    * @param inputStream the input stream to be closed, or {@code null} in which case this method
    *     does nothing
@@ -108,11 +111,11 @@ public final class Closeables {
    * Closes the given {@link Reader}, logging any {@code IOException} that's thrown rather than
    * propagating it.
    *
-   * <p>While it's not safe in the general case to ignore exceptions that are thrown when closing
-   * an I/O resource, it should generally be safe in the case of a resource that's being used only
-   * for reading, such as a {@code Reader}. Unlike with writable resources, there's no chance that
-   * a failure that occurs when closing the reader indicates a meaningful problem such as a failure
-   * to flush all bytes to the underlying resource.
+   * <p>While it's not safe in the general case to ignore exceptions that are thrown when closing an
+   * I/O resource, it should generally be safe in the case of a resource that's being used only for
+   * reading, such as a {@code Reader}. Unlike with writable resources, there's no chance that a
+   * failure that occurs when closing the reader indicates a meaningful problem such as a failure to
+   * flush all bytes to the underlying resource.
    *
    * @param reader the reader to be closed, or {@code null} in which case this method does nothing
    * @since 17.0

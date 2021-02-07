@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,9 +7,7 @@
 
 package com.facebook.imagepipeline.memory;
 
-/**
- * Listener that logs pool statistics.
- */
+/** Listener that logs pool statistics. */
 public interface PoolStatsTracker {
   String BUCKETS_USED_PREFIX = "buckets_used_";
   String USED_COUNT = "used_count";

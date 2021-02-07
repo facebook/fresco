@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,24 +11,24 @@ import android.util.SparseIntArray;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * A pool of byte arrays.
- * The pool manages a number of byte arrays of a predefined set of sizes. This set of sizes is
- * typically, but not required to be, based on powers of 2.
- * The pool supports a get/release paradigm.
- * On a get request, the pool attempts to find an existing byte array whose size
- * is at least as big as the requested size.
- * On a release request, the pool adds the byte array to the appropriate bucket.
- * This byte array can then be used for a subsequent get request.
+ * A pool of byte arrays. The pool manages a number of byte arrays of a predefined set of sizes.
+ * This set of sizes is typically, but not required to be, based on powers of 2. The pool supports a
+ * get/release paradigm. On a get request, the pool attempts to find an existing byte array whose
+ * size is at least as big as the requested size. On a release request, the pool adds the byte array
+ * to the appropriate bucket. This byte array can then be used for a subsequent get request.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
 public class GenericByteArrayPool extends BasePool<byte[]> implements ByteArrayPool {
   private final int[] mBucketSizes;
 
   /**
    * Creates a new instance of the GenericByteArrayPool class
+   *
    * @param memoryTrimmableRegistry the memory manager to register with
    * @param poolParams provider for pool parameters
    * @param poolStatsTracker
@@ -48,6 +48,7 @@ public class GenericByteArrayPool extends BasePool<byte[]> implements ByteArrayP
 
   /**
    * Gets the smallest buffer size supported by the pool
+   *
    * @return the smallest buffer size supported by the pool
    */
   public int getMinBufferSize() {
@@ -56,6 +57,7 @@ public class GenericByteArrayPool extends BasePool<byte[]> implements ByteArrayP
 
   /**
    * Allocate a buffer greater than or equal to the specified size
+   *
    * @param bucketedSize size of the buffer requested
    * @return a byte array of the specified or larger size. Null if the size is invalid
    */
@@ -66,6 +68,7 @@ public class GenericByteArrayPool extends BasePool<byte[]> implements ByteArrayP
 
   /**
    * Frees the 'value'
+   *
    * @param value the value to free
    */
   @Override
@@ -76,6 +79,7 @@ public class GenericByteArrayPool extends BasePool<byte[]> implements ByteArrayP
 
   /**
    * Gets the size in bytes for the given 'bucketed' size
+   *
    * @param bucketedSize the bucketed size
    * @return size in bytes
    */
@@ -85,11 +89,11 @@ public class GenericByteArrayPool extends BasePool<byte[]> implements ByteArrayP
   }
 
   /**
-   * Get the 'bucketed' size for the given request size. The 'bucketed' size is a size that is
-   * the same or larger than the request size. We walk through our list of pre-defined bucket
-   * sizes, and use that to determine the smallest bucket size that is larger than the requested
-   * size.
-   * If no such 'bucketedSize' is found, then we simply return "requestSize"
+   * Get the 'bucketed' size for the given request size. The 'bucketed' size is a size that is the
+   * same or larger than the request size. We walk through our list of pre-defined bucket sizes, and
+   * use that to determine the smallest bucket size that is larger than the requested size. If no
+   * such 'bucketedSize' is found, then we simply return "requestSize"
+   *
    * @param requestSize the logical request size
    * @return the bucketed size
    * @throws InvalidSizeException, if the requested size was invalid
@@ -115,6 +119,7 @@ public class GenericByteArrayPool extends BasePool<byte[]> implements ByteArrayP
 
   /**
    * Gets the bucketed size of the value
+   *
    * @param value the value
    * @return just the length of the value
    */
@@ -124,4 +129,3 @@ public class GenericByteArrayPool extends BasePool<byte[]> implements ByteArrayP
     return value.length;
   }
 }
-

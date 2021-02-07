@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,11 +8,11 @@
 package com.facebook.imagepipeline.nativecode;
 
 import android.os.Build;
-import com.facebook.soloader.SoLoader;
+import com.facebook.infer.annotation.Nullsafe;
+import com.facebook.soloader.nativeloader.NativeLoader;
 
-/**
- * Single place responsible for ensuring that `static-webp.so` is loaded
- */
+/** Single place responsible for ensuring that `static-webp.so` is loaded */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class StaticWebpNativeLoader {
 
   private static boolean sInitialized;
@@ -24,12 +24,12 @@ public class StaticWebpNativeLoader {
       // library
       if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
         try {
-          SoLoader.loadLibrary("fb_jpegturbo");
+          NativeLoader.loadLibrary("fb_jpegturbo");
         } catch (UnsatisfiedLinkError error) {
           // Head in the sand
         }
       }
-      SoLoader.loadLibrary("static-webp");
+      NativeLoader.loadLibrary("static-webp");
       sInitialized = true;
     }
   }

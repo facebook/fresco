@@ -1,20 +1,16 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.samples.scrollperf.fragments.recycler;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
@@ -23,9 +19,7 @@ import com.facebook.samples.scrollperf.instrumentation.InstrumentedDraweeView;
 import com.facebook.samples.scrollperf.instrumentation.PerfListener;
 import com.facebook.samples.scrollperf.util.DraweeUtil;
 
-/**
- * The RecyclerView.Adapter for the DraweeView
- */
+/** The RecyclerView.Adapter for the DraweeView */
 public class DraweeViewAdapter extends RecyclerView.Adapter<DraweeViewHolder> {
 
   private final SimpleAdapter<Uri> mSimpleAdapter;
@@ -39,10 +33,7 @@ public class DraweeViewAdapter extends RecyclerView.Adapter<DraweeViewHolder> {
   private final PerfListener mPerfListener;
 
   public DraweeViewAdapter(
-      Context context,
-      SimpleAdapter<Uri> simpleAdapter,
-      Config config,
-      PerfListener perfListener) {
+      Context context, SimpleAdapter<Uri> simpleAdapter, Config config, PerfListener perfListener) {
     this.mContext = context;
     this.mSimpleAdapter = simpleAdapter;
     this.mConfig = config;

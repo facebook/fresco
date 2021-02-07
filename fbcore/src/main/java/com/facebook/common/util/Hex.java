@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,17 +11,21 @@
 
 package com.facebook.common.util;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * Basic hex operations: from byte array to string and vice versa.
- * <p/>
- * TODO: move to the framework and consider implementing as native code.
+ *
+ * <p>TODO: move to the framework and consider implementing as native code.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class Hex {
 
-  private static final char[] HEX_DIGITS = new char[]{
-      '0', '1', '2', '3', '4', '5', '6', '7',
-      '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
-  };
+  private static final char[] HEX_DIGITS =
+      new char[] {
+        '0', '1', '2', '3', '4', '5', '6', '7',
+        '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+      };
 
   private static final char[] FIRST_CHAR = new char[256];
   private static final char[] SECOND_CHAR = new char[256];
@@ -82,9 +86,7 @@ public class Hex {
     return new String(cArray, 0, j);
   }
 
-  /**
-   * Quickly converts a hexadecimal string to a byte array.
-   */
+  /** Quickly converts a hexadecimal string to a byte array. */
   public static byte[] decodeHex(String hexString) {
     int length = hexString.length();
 

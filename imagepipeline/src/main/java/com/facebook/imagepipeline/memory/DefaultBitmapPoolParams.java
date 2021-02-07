@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,18 +9,15 @@ package com.facebook.imagepipeline.memory;
 
 import android.util.SparseIntArray;
 import com.facebook.common.util.ByteConstants;
+import com.facebook.infer.annotation.Nullsafe;
 
-/**
- * Provides pool parameters for {@link BitmapPool}
- */
+/** Provides pool parameters for {@link BitmapPool} */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultBitmapPoolParams {
-  /**
-   * We are not reusing Bitmaps and want to free them as soon as possible.
-   */
+  /** We are not reusing Bitmaps and want to free them as soon as possible. */
   private static final int MAX_SIZE_SOFT_CAP = 0;
 
-  private DefaultBitmapPoolParams() {
-  }
+  private DefaultBitmapPoolParams() {}
 
   /**
    * Our Bitmaps live in ashmem, meaning that they are pinned in androids' shared native memory.
@@ -29,7 +26,7 @@ public class DefaultBitmapPoolParams {
    * process to be evicted.
    */
   private static int getMaxSizeHardCap() {
-    final int maxMemory = (int)Math.min(Runtime.getRuntime().maxMemory(), Integer.MAX_VALUE);
+    final int maxMemory = (int) Math.min(Runtime.getRuntime().maxMemory(), Integer.MAX_VALUE);
     if (maxMemory > 16 * ByteConstants.MB) {
       return maxMemory / 4 * 3;
     } else {
@@ -37,16 +34,10 @@ public class DefaultBitmapPoolParams {
     }
   }
 
-  /**
-   * This will cause all get/release calls to behave like alloc/free calls i.e. no pooling.
-   */
+  /** This will cause all get/release calls to behave like alloc/free calls i.e. no pooling. */
   private static final SparseIntArray DEFAULT_BUCKETS = new SparseIntArray(0);
 
   public static PoolParams get() {
-    return new PoolParams(
-        MAX_SIZE_SOFT_CAP,
-        getMaxSizeHardCap(),
-        DEFAULT_BUCKETS
-    );
+    return new PoolParams(MAX_SIZE_SOFT_CAP, getMaxSizeHardCap(), DEFAULT_BUCKETS);
   }
 }

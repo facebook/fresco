@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,6 +7,7 @@
 
 package com.facebook.binaryresource;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -19,6 +20,7 @@ import java.io.InputStream;
  *
  * <p>Inspired partly by Guava's ByteSource class, but does not use its implementation.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface BinaryResource {
 
   /**
@@ -36,12 +38,12 @@ public interface BinaryResource {
    *
    * @throws IOException if an I/O error occurs in the process of reading from this source
    */
-   byte[] read() throws IOException;
+  byte[] read() throws IOException;
 
   /**
-   * Returns the size of this source in bytes. This may be a heavyweight
-   * operation that will open a stream, read (or {@link InputStream#skip(long) skip}, if possible)
-   * to the end of the stream and return the total number of bytes that were read.
+   * Returns the size of this source in bytes. This may be a heavyweight operation that will open a
+   * stream, read (or {@link InputStream#skip(long) skip}, if possible) to the end of the stream and
+   * return the total number of bytes that were read.
    *
    * <p>For some sources, such as a file, this method may use a more efficient implementation. Note
    * that in such cases, it is <i>possible</i> that this method will return a different number of

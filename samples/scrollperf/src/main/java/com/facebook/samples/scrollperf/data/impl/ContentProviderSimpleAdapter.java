@@ -1,14 +1,10 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.samples.scrollperf.data.impl;
 
 import android.content.Context;
@@ -17,17 +13,14 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
 
-/**
- * This is a SimpleAdapter which which uses a set of elements from a ContentProvider
- */
+/** This is a SimpleAdapter which which uses a set of elements from a ContentProvider */
 public class ContentProviderSimpleAdapter implements SimpleAdapter<Uri> {
 
   private final Uri[] mUris;
 
   private ContentProviderSimpleAdapter(final Uri baseProvider, Context context) {
     String[] projection = {MediaStore.Images.Media._ID};
-    Cursor cursor = context.getContentResolver()
-            .query(baseProvider, projection, null, null, null);
+    Cursor cursor = context.getContentResolver().query(baseProvider, projection, null, null, null);
     final int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
     mUris = new Uri[cursor.getCount()];
     int i = 0;

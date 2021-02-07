@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -19,26 +19,29 @@ import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.BlendOperation;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.DisposalMethod;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
+import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
+import com.facebook.imagepipeline.transformation.BitmapTransformation;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
- * Contains the logic for compositing the frames of an {@link AnimatedImage}. Animated image
- * formats like GIF and WebP support inter-frame compression where a subsequent frame may require
- * being blended on a previous frame in order to render the full frame. This class encapsulates
- * the behavior to be able to render any frame of the image. Designed to work with a cache
- * via a Callback.
+ * Contains the logic for compositing the frames of an {@link AnimatedImage}. Animated image formats
+ * like GIF and WebP support inter-frame compression where a subsequent frame may require being
+ * blended on a previous frame in order to render the full frame. This class encapsulates the
+ * behavior to be able to render any frame of the image. Designed to work with a cache via a
+ * Callback.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedImageCompositor {
 
-  /**
-   * Callback for caching.
-   */
+  /** Callback for caching. */
   public interface Callback {
 
     /**
-     * Called from within {@link #renderFrame} to let the caller know that while trying generate
-     * the requested frame, an earlier frame was generated. This allows the caller to optionally
-     * cache the intermediate result. The caller must copy the Bitmap if it wishes to cache it
-     * as {@link #renderFrame} will continue using it generate the requested frame.
+     * Called from within {@link #renderFrame} to let the caller know that while trying generate the
+     * requested frame, an earlier frame was generated. This allows the caller to optionally cache
+     * the intermediate result. The caller must copy the Bitmap if it wishes to cache it as {@link
+     * #renderFrame} will continue using it generate the requested frame.
      *
      * @param frameNumber the frame number of the intermediate result
      * @param bitmap the bitmap which must not be modified or directly cached
@@ -47,13 +50,14 @@ public class AnimatedImageCompositor {
 
     /**
      * Called from within {@link #renderFrame} to ask the caller for a cached bitmap for the
-     * specified frame number. If the caller has the bitmap cached, it can greatly reduce the
-     * work required to render the requested frame.
+     * specified frame number. If the caller has the bitmap cached, it can greatly reduce the work
+     * required to render the requested frame.
      *
      * @param frameNumber the frame number to get
-     * @return a reference to the bitmap. The ownership of the reference is passed to the caller
-     *    who must close it.
+     * @return a reference to the bitmap. The ownership of the reference is passed to the caller who
+     *     must close it.
      */
+    @Nullable
     CloseableReference<Bitmap> getCachedBitmap(int frameNumber);
   }
 
@@ -62,8 +66,7 @@ public class AnimatedImageCompositor {
   private final Paint mTransparentFillPaint;
 
   public AnimatedImageCompositor(
-      AnimatedDrawableBackend animatedDrawableBackend,
-      Callback callback) {
+      AnimatedDrawableBackend animatedDrawableBackend, Callback callback) {
     mAnimatedDrawableBackend = animatedDrawableBackend;
     mCallback = callback;
     mTransparentFillPaint = new Paint();
@@ -116,11 +119,10 @@ public class AnimatedImageCompositor {
     }
     // Finally, we render the current frame. We don't dispose it.
     mAnimatedDrawableBackend.renderFrame(frameNumber, canvas);
+    maybeApplyTransformation(bitmap);
   }
 
-  /**
-   * Return value for {@link #isFrameNeededForRendering} used in the compositing logic.
-   */
+  /** Return value for {@link #isFrameNeededForRendering} used in the compositing logic. */
   private enum FrameNeededResult {
     /** The frame is required to render the next frame */
     REQUIRED,
@@ -136,10 +138,10 @@ public class AnimatedImageCompositor {
   }
 
   /**
-   * Given a frame number, prepares the canvas to render based on the nearest cached frame
-   * at or before the frame. On return the canvas will be prepared as if the nearest cached
-   * frame had been rendered and disposed. The returned index is the next frame that needs to be
-   * composited onto the canvas.
+   * Given a frame number, prepares the canvas to render based on the nearest cached frame at or
+   * before the frame. On return the canvas will be prepared as if the nearest cached frame had been
+   * rendered and disposed. The returned index is the next frame that needs to be composited onto
+   * the canvas.
    *
    * @param previousFrameNumber the frame number that is ones less than the one we're rendering
    * @param canvas the canvas to prepare
@@ -192,8 +194,8 @@ public class AnimatedImageCompositor {
   }
 
   /**
-   * Returns whether the specified frame is needed for rendering the next frame. This is part of
-   * the compositing logic. See {@link FrameNeededResult} for more info about the results.
+   * Returns whether the specified frame is needed for rendering the next frame. This is part of the
+   * compositing logic. See {@link FrameNeededResult} for more info about the results.
    *
    * @param index the frame to check
    * @return whether the frame is required taking into account special conditions
@@ -235,9 +237,25 @@ public class AnimatedImageCompositor {
   }
 
   private boolean isFullFrame(AnimatedDrawableFrameInfo frameInfo) {
-    return frameInfo.xOffset == 0 &&
-            frameInfo.yOffset == 0 &&
-            frameInfo.width == mAnimatedDrawableBackend.getRenderedWidth() &&
-            frameInfo.height == mAnimatedDrawableBackend.getRenderedHeight();
+    return frameInfo.xOffset == 0
+        && frameInfo.yOffset == 0
+        && frameInfo.width == mAnimatedDrawableBackend.getRenderedWidth()
+        && frameInfo.height == mAnimatedDrawableBackend.getRenderedHeight();
+  }
+
+  private void maybeApplyTransformation(Bitmap bitmap) {
+    AnimatedImageResult animatedImageResult = mAnimatedDrawableBackend.getAnimatedImageResult();
+
+    if (animatedImageResult == null) {
+      return;
+    }
+
+    BitmapTransformation tr = animatedImageResult.getBitmapTransformation();
+
+    if (tr == null) {
+      return;
+    }
+
+    tr.transform(bitmap);
   }
 }

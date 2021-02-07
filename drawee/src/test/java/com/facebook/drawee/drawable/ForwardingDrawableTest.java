@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -19,9 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests for {@link ForwardingDrawable}
- */
+/** Tests for {@link ForwardingDrawable} */
 @RunWith(RobolectricTestRunner.class)
 public class ForwardingDrawableTest {
   private Drawable mInnerDrawable;
@@ -59,7 +57,7 @@ public class ForwardingDrawableTest {
     boolean visible = false;
     boolean restart = false;
 
-    //when(mInnerDrawable.setVisible(visible, restart)).thenReturn(true);
+    // when(mInnerDrawable.setVisible(visible, restart)).thenReturn(true);
     when(mInnerDrawable.getOpacity()).thenReturn(11);
     Assert.assertEquals(11, mDrawable.getOpacity());
 
@@ -93,7 +91,7 @@ public class ForwardingDrawableTest {
     int config = 11;
     int level = 100;
     boolean visible = true;
-    int[] stateSet = new int[]{1, 2};
+    int[] stateSet = new int[] {1, 2};
 
     mDrawable.setBounds(rect);
     mDrawable.setChangingConfigurations(config);

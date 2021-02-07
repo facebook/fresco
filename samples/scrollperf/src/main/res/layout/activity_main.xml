@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context="com.facebook.samples.scrollperf.MainActivity">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

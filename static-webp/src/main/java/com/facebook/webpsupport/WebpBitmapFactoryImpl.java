@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -22,6 +22,7 @@ import com.facebook.common.webp.BitmapCreator;
 import com.facebook.common.webp.WebpBitmapFactory;
 import com.facebook.common.webp.WebpSupportStatus;
 import com.facebook.imagepipeline.nativecode.StaticWebpNativeLoader;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.BufferedInputStream;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -29,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 @DoNotStrip
 public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   private static final int HEADER_SIZE = 20;
@@ -54,7 +56,8 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
     return inputStream;
   }
 
-  private static byte[] getWebpHeader(InputStream inputStream, BitmapFactory.Options opts) {
+  private static @Nullable byte[] getWebpHeader(
+      InputStream inputStream, @Nullable BitmapFactory.Options opts) {
     inputStream.mark(HEADER_SIZE);
 
     byte[] header;
@@ -73,7 +76,8 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
     return header;
   }
 
-  private static void setDensityFromOptions(Bitmap outputBitmap, BitmapFactory.Options opts) {
+  private static void setDensityFromOptions(
+      @Nullable Bitmap outputBitmap, @Nullable BitmapFactory.Options opts) {
     if (outputBitmap == null || opts == null) {
       return;
     }
@@ -97,57 +101,51 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
 
   @Override
   public void setWebpErrorLogger(WebpBitmapFactory.WebpErrorLogger webpErrorLogger) {
-    this.mWebpErrorLogger = webpErrorLogger;
+    mWebpErrorLogger = webpErrorLogger;
   }
 
   @Override
+  @Nullable
   public Bitmap decodeFileDescriptor(
-      FileDescriptor fd,
-      Rect outPadding,
-      BitmapFactory.Options opts) {
+      FileDescriptor fd, @Nullable Rect outPadding, @Nullable BitmapFactory.Options opts) {
     return hookDecodeFileDescriptor(fd, outPadding, opts);
   }
 
   @Override
+  @Nullable
   public Bitmap decodeStream(
-      InputStream inputStream,
-      Rect outPadding,
-      BitmapFactory.Options opts) {
+      InputStream inputStream, @Nullable Rect outPadding, @Nullable BitmapFactory.Options opts) {
     return hookDecodeStream(inputStream, outPadding, opts);
   }
 
   @Override
-  public Bitmap decodeFile(
-      String pathName,
-      BitmapFactory.Options opts) {
+  @Nullable
+  public Bitmap decodeFile(String pathName, @Nullable BitmapFactory.Options opts) {
     return hookDecodeFile(pathName, opts);
   }
 
   @Override
+  @Nullable
   public Bitmap decodeByteArray(
-      byte[] array,
-      int offset,
-      int length,
-      BitmapFactory.Options opts) {
+      byte[] array, int offset, int length, @Nullable BitmapFactory.Options opts) {
     return hookDecodeByteArray(array, offset, length, opts);
   }
 
   @DoNotStrip
+  @Nullable
   public static Bitmap hookDecodeByteArray(
-      byte[] array,
-      int offset,
-      int length,
-      BitmapFactory.Options opts) {
+      byte[] array, int offset, int length, @Nullable BitmapFactory.Options opts) {
     StaticWebpNativeLoader.ensure();
     Bitmap bitmap;
     if (WebpSupportStatus.sIsWebpSupportRequired && isWebpHeader(array, offset, length)) {
-      bitmap = nativeDecodeByteArray(
-          array,
-          offset,
-          length,
-          opts,
-          getScaleFromOptions(opts),
-          getInTempStorageFromOptions(opts));
+      bitmap =
+          nativeDecodeByteArray(
+              array,
+              offset,
+              length,
+              opts,
+              getScaleFromOptions(opts),
+              getInTempStorageFromOptions(opts));
       // We notify that the direct decoding failed
       if (bitmap == null) {
         sendWebpErrorLog("webp_direct_decode_array");
@@ -163,47 +161,40 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   }
 
   @DoNotStrip
+  @Nullable
   private static Bitmap originalDecodeByteArray(
-      byte[] array,
-      int offset,
-      int length,
-      BitmapFactory.Options opts) {
+      byte[] array, int offset, int length, @Nullable BitmapFactory.Options opts) {
     return BitmapFactory.decodeByteArray(array, offset, length, opts);
   }
 
   @DoNotStrip
-  public static Bitmap hookDecodeByteArray(
-      byte[] array,
-      int offset,
-      int length) {
+  @Nullable
+  public static Bitmap hookDecodeByteArray(byte[] array, int offset, int length) {
     return hookDecodeByteArray(array, offset, length, null);
   }
 
   @DoNotStrip
-  private static Bitmap originalDecodeByteArray(
-      byte[] array,
-      int offset,
-      int length) {
+  @Nullable
+  private static Bitmap originalDecodeByteArray(byte[] array, int offset, int length) {
     return BitmapFactory.decodeByteArray(array, offset, length);
   }
 
   @DoNotStrip
+  @Nullable
   public static Bitmap hookDecodeStream(
-      InputStream inputStream,
-      Rect outPadding,
-      BitmapFactory.Options opts) {
+      InputStream inputStream, @Nullable Rect outPadding, @Nullable BitmapFactory.Options opts) {
     StaticWebpNativeLoader.ensure();
     inputStream = wrapToMarkSupportedStream(inputStream);
 
     Bitmap bitmap;
 
     byte[] header = getWebpHeader(inputStream, opts);
-    if (WebpSupportStatus.sIsWebpSupportRequired && isWebpHeader(header, 0, HEADER_SIZE)) {
-      bitmap = nativeDecodeStream(
-          inputStream,
-          opts,
-          getScaleFromOptions(opts),
-          getInTempStorageFromOptions(opts));
+    if (WebpSupportStatus.sIsWebpSupportRequired
+        && header != null
+        && isWebpHeader(header, 0, HEADER_SIZE)) {
+      bitmap =
+          nativeDecodeStream(
+              inputStream, opts, getScaleFromOptions(opts), getInTempStorageFromOptions(opts));
       // We notify that the direct decoder failed
       if (bitmap == null) {
         sendWebpErrorLog("webp_direct_decode_stream");
@@ -220,29 +211,27 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   }
 
   @DoNotStrip
+  @Nullable
   private static Bitmap originalDecodeStream(
-      InputStream inputStream,
-      Rect outPadding,
-      BitmapFactory.Options opts) {
+      InputStream inputStream, @Nullable Rect outPadding, @Nullable BitmapFactory.Options opts) {
     return BitmapFactory.decodeStream(inputStream, outPadding, opts);
   }
 
   @DoNotStrip
-  public static Bitmap hookDecodeStream(
-      InputStream inputStream) {
+  @Nullable
+  public static Bitmap hookDecodeStream(InputStream inputStream) {
     return hookDecodeStream(inputStream, null, null);
   }
 
+  @Nullable
   @DoNotStrip
-  private static Bitmap originalDecodeStream(
-      InputStream inputStream) {
+  private static Bitmap originalDecodeStream(InputStream inputStream) {
     return BitmapFactory.decodeStream(inputStream);
   }
 
   @DoNotStrip
-  public static Bitmap hookDecodeFile(
-      String pathName,
-      BitmapFactory.Options opts) {
+  public static @Nullable Bitmap hookDecodeFile(
+      String pathName, @Nullable BitmapFactory.Options opts) {
     Bitmap bitmap = null;
     try (InputStream stream = new FileInputStream(pathName)) {
       bitmap = hookDecodeStream(stream, null, opts);
@@ -253,17 +242,19 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   }
 
   @DoNotStrip
+  @Nullable
   public static Bitmap hookDecodeFile(String pathName) {
     return hookDecodeFile(pathName, null);
   }
 
   @DoNotStrip
+  @Nullable
   public static Bitmap hookDecodeResourceStream(
-      Resources res,
-      TypedValue value,
+      @Nullable Resources res,
+      @Nullable TypedValue value,
       InputStream is,
-      Rect pad,
-      BitmapFactory.Options opts) {
+      @Nullable Rect pad,
+      @Nullable BitmapFactory.Options opts) {
     if (opts == null) {
       opts = new BitmapFactory.Options();
     }
@@ -285,20 +276,15 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   }
 
   @DoNotStrip
+  @Nullable
   private static Bitmap originalDecodeResourceStream(
-      Resources res,
-      TypedValue value,
-      InputStream is,
-      Rect pad,
-      BitmapFactory.Options opts) {
+      Resources res, TypedValue value, InputStream is, Rect pad, BitmapFactory.Options opts) {
     return BitmapFactory.decodeResourceStream(res, value, is, pad, opts);
   }
 
   @DoNotStrip
-  public static Bitmap hookDecodeResource(
-      Resources res,
-      int id,
-      BitmapFactory.Options opts) {
+  public static @Nullable Bitmap hookDecodeResource(
+      Resources res, int id, @Nullable BitmapFactory.Options opts) {
     Bitmap bm = null;
     TypedValue value = new TypedValue();
 
@@ -316,32 +302,26 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   }
 
   @DoNotStrip
-  private static Bitmap originalDecodeResource(
-      Resources res,
-      int id,
-      BitmapFactory.Options opts) {
+  @Nullable
+  private static Bitmap originalDecodeResource(Resources res, int id, BitmapFactory.Options opts) {
     return BitmapFactory.decodeResource(res, id, opts);
   }
 
   @DoNotStrip
-  public static Bitmap hookDecodeResource(
-      Resources res,
-      int id) {
+  @Nullable
+  public static Bitmap hookDecodeResource(Resources res, int id) {
     return hookDecodeResource(res, id, null);
   }
 
   @DoNotStrip
-  private static Bitmap originalDecodeResource(
-      Resources res,
-      int id) {
+  @Nullable
+  private static Bitmap originalDecodeResource(Resources res, int id) {
     return BitmapFactory.decodeResource(res, id);
   }
 
   @DoNotStrip
   private static boolean setOutDimensions(
-      BitmapFactory.Options options,
-      int imageWidth,
-      int imageHeight) {
+      @Nullable BitmapFactory.Options options, int imageWidth, int imageHeight) {
     if (options != null && options.inJustDecodeBounds) {
       options.outWidth = imageWidth;
       options.outHeight = imageHeight;
@@ -362,9 +342,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
 
   @DoNotStrip
   private static void setBitmapSize(
-      @Nullable BitmapFactory.Options options,
-      int width,
-      int height) {
+      @Nullable BitmapFactory.Options options, int width, int height) {
     if (options != null) {
       options.outWidth = width;
       options.outHeight = height;
@@ -372,22 +350,21 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   }
 
   @DoNotStrip
-  private static Bitmap originalDecodeFile(
-      String pathName,
-      BitmapFactory.Options opts) {
+  @Nullable
+  private static Bitmap originalDecodeFile(String pathName, @Nullable BitmapFactory.Options opts) {
     return BitmapFactory.decodeFile(pathName, opts);
   }
 
   @DoNotStrip
+  @Nullable
   private static Bitmap originalDecodeFile(String pathName) {
     return BitmapFactory.decodeFile(pathName);
   }
 
   @DoNotStrip
+  @Nullable
   public static Bitmap hookDecodeFileDescriptor(
-      FileDescriptor fd,
-      Rect outPadding,
-      BitmapFactory.Options opts) {
+      FileDescriptor fd, @Nullable Rect outPadding, @Nullable BitmapFactory.Options opts) {
     StaticWebpNativeLoader.ensure();
     Bitmap bitmap;
 
@@ -396,12 +373,12 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       InputStream inputStream = wrapToMarkSupportedStream(new FileInputStream(fd));
       try {
         byte[] header = getWebpHeader(inputStream, opts);
-        if (WebpSupportStatus.sIsWebpSupportRequired && isWebpHeader(header, 0, HEADER_SIZE)) {
-          bitmap = nativeDecodeStream(
-              inputStream,
-              opts,
-              getScaleFromOptions(opts),
-              getInTempStorageFromOptions(opts));
+        if (WebpSupportStatus.sIsWebpSupportRequired
+            && header != null
+            && isWebpHeader(header, 0, HEADER_SIZE)) {
+          bitmap =
+              nativeDecodeStream(
+                  inputStream, opts, getScaleFromOptions(opts), getInTempStorageFromOptions(opts));
           // We send error if the direct decode failed
           if (bitmap == null) {
             sendWebpErrorLog("webp_direct_decode_fd");
@@ -430,24 +407,26 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   }
 
   @DoNotStrip
+  @Nullable
   private static Bitmap originalDecodeFileDescriptor(
-      FileDescriptor fd,
-      Rect outPadding,
-      BitmapFactory.Options opts) {
+      FileDescriptor fd, @Nullable Rect outPadding, @Nullable BitmapFactory.Options opts) {
     return BitmapFactory.decodeFileDescriptor(fd, outPadding, opts);
   }
 
   @DoNotStrip
+  @Nullable
   public static Bitmap hookDecodeFileDescriptor(FileDescriptor fd) {
     return hookDecodeFileDescriptor(fd, null, null);
   }
 
   @DoNotStrip
+  @Nullable
   private static Bitmap originalDecodeFileDescriptor(FileDescriptor fd) {
     return BitmapFactory.decodeFileDescriptor(fd);
   }
 
-  private static void setWebpBitmapOptions(Bitmap bitmap, BitmapFactory.Options opts) {
+  private static void setWebpBitmapOptions(
+      @Nullable Bitmap bitmap, @Nullable BitmapFactory.Options opts) {
     setDensityFromOptions(bitmap, opts);
     if (opts != null) {
       opts.outMimeType = "image/webp";
@@ -456,7 +435,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
 
   @DoNotStrip
   @SuppressLint("NewApi")
-  private static boolean shouldPremultiply(BitmapFactory.Options options) {
+  private static boolean shouldPremultiply(@Nullable BitmapFactory.Options options) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && options != null) {
       return options.inPremultiplied;
     }
@@ -464,29 +443,30 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   }
 
   @DoNotStrip
-  private static Bitmap createBitmap(int width, int height, BitmapFactory.Options options) {
-    if (IN_BITMAP_SUPPORTED &&
-        options != null &&
-        options.inBitmap != null &&
-        options.inBitmap.isMutable()) {
+  @Nullable
+  private static Bitmap createBitmap(
+      int width, int height, @Nullable BitmapFactory.Options options) {
+    if (IN_BITMAP_SUPPORTED
+        && options != null
+        && options.inBitmap != null
+        && options.inBitmap.isMutable()) {
       return options.inBitmap;
     }
     return mBitmapCreator.createNakedBitmap(width, height, Bitmap.Config.ARGB_8888);
   }
 
   @DoNotStrip
+  @Nullable
   private static native Bitmap nativeDecodeStream(
-      InputStream is,
-      BitmapFactory.Options options,
-      float scale,
-      byte[] inTempStorage);
+      InputStream is, @Nullable BitmapFactory.Options options, float scale, byte[] inTempStorage);
 
   @DoNotStrip
+  @Nullable
   private static native Bitmap nativeDecodeByteArray(
       byte[] data,
       int offset,
       int length,
-      BitmapFactory.Options opts,
+      @Nullable BitmapFactory.Options opts,
       float scale,
       byte[] inTempStorage);
 
@@ -503,7 +483,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   }
 
   @DoNotStrip
-  private static float getScaleFromOptions(BitmapFactory.Options options) {
+  private static float getScaleFromOptions(@Nullable BitmapFactory.Options options) {
     float scale = 1.0f;
     if (options != null) {
       int sampleSize = options.inSampleSize;

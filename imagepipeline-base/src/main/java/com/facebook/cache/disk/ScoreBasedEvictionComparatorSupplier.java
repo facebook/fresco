@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,11 +7,11 @@
 
 package com.facebook.cache.disk;
 
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
+import com.facebook.infer.annotation.Nullsafe;
 
-/**
- * Evicts cache items based on a mix of their size and timestamp.
- */
+/** Evicts cache items based on a mix of their size and timestamp. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ScoreBasedEvictionComparatorSupplier implements EntryEvictionComparatorSupplier {
 
   private final float mAgeWeight;
@@ -28,9 +28,7 @@ public class ScoreBasedEvictionComparatorSupplier implements EntryEvictionCompar
 
       long now = System.currentTimeMillis();
 
-      /**
-       * Return <0 if lhs should be evicted before rhs.
-       */
+      /** Return <0 if lhs should be evicted before rhs. */
       @Override
       public int compare(DiskStorage.Entry lhs, DiskStorage.Entry rhs) {
         float score1 = calculateScore(lhs, now);
@@ -43,7 +41,7 @@ public class ScoreBasedEvictionComparatorSupplier implements EntryEvictionCompar
   /**
    * Calculates an eviction score.
    *
-   * Entries with a higher eviction score should be evicted first.
+   * <p>Entries with a higher eviction score should be evicted first.
    */
   @VisibleForTesting
   float calculateScore(DiskStorage.Entry entry, long now) {

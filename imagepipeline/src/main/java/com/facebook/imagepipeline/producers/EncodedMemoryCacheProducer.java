@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,14 +11,14 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 
-/**
- * Memory cache producer for the encoded memory cache.
- */
+/** Memory cache producer for the encoded memory cache. */
 public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
 
   public static final String PRODUCER_NAME = "EncodedMemoryCacheProducer";
@@ -39,61 +39,76 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
 
   @Override
   public void produceResults(
-      final Consumer<EncodedImage> consumer,
-      final ProducerContext producerContext) {
-
-    final String requestId = producerContext.getId();
-    final ProducerListener listener = producerContext.getListener();
-    listener.onProducerStart(requestId, PRODUCER_NAME);
-    final ImageRequest imageRequest = producerContext.getImageRequest();
-    final CacheKey cacheKey =
-        mCacheKeyFactory.getEncodedCacheKey(imageRequest, producerContext.getCallerContext());
-
-    CloseableReference<PooledByteBuffer> cachedReference = mMemoryCache.get(cacheKey);
+      final Consumer<EncodedImage> consumer, final ProducerContext producerContext) {
     try {
-      if (cachedReference != null) {
-        EncodedImage cachedEncodedImage = new EncodedImage(cachedReference);
-        try {
-          listener.onProducerFinishWithSuccess(
-              requestId,
-              PRODUCER_NAME,
-              listener.requiresExtraMap(requestId)
-                  ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "true")
-                  : null);
-          listener.onUltimateProducerReached(requestId, PRODUCER_NAME, true);
-          consumer.onProgressUpdate(1f);
-          consumer.onNewResult(cachedEncodedImage, Consumer.IS_LAST);
-          return;
-        } finally {
-          EncodedImage.closeSafely(cachedEncodedImage);
-        }
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("EncodedMemoryCacheProducer#produceResults");
       }
+      final ProducerListener2 listener = producerContext.getProducerListener();
+      listener.onProducerStart(producerContext, PRODUCER_NAME);
+      final ImageRequest imageRequest = producerContext.getImageRequest();
+      final CacheKey cacheKey =
+          mCacheKeyFactory.getEncodedCacheKey(imageRequest, producerContext.getCallerContext());
 
-      if (producerContext.getLowestPermittedRequestLevel().getValue() >=
-          ImageRequest.RequestLevel.ENCODED_MEMORY_CACHE.getValue()) {
+      CloseableReference<PooledByteBuffer> cachedReference = mMemoryCache.get(cacheKey);
+      try {
+        if (cachedReference != null) {
+          EncodedImage cachedEncodedImage = new EncodedImage(cachedReference);
+          try {
+            listener.onProducerFinishWithSuccess(
+                producerContext,
+                PRODUCER_NAME,
+                listener.requiresExtraMap(producerContext, PRODUCER_NAME)
+                    ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "true")
+                    : null);
+            listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, true);
+            producerContext.putOriginExtra("memory_encoded");
+            consumer.onProgressUpdate(1f);
+            consumer.onNewResult(cachedEncodedImage, Consumer.IS_LAST);
+            return;
+          } finally {
+            EncodedImage.closeSafely(cachedEncodedImage);
+          }
+        }
+
+        if (producerContext.getLowestPermittedRequestLevel().getValue()
+            >= ImageRequest.RequestLevel.ENCODED_MEMORY_CACHE.getValue()) {
+          listener.onProducerFinishWithSuccess(
+              producerContext,
+              PRODUCER_NAME,
+              listener.requiresExtraMap(producerContext, PRODUCER_NAME)
+                  ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "false")
+                  : null);
+          listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, false);
+          producerContext.putOriginExtra("memory_encoded", "nil-result");
+          consumer.onNewResult(null, Consumer.IS_LAST);
+          return;
+        }
+
+        final boolean isMemoryCacheEnabled =
+            producerContext.getImageRequest().isMemoryCacheEnabled();
+        Consumer consumerOfInputProducer =
+            new EncodedMemoryCacheConsumer(
+                consumer,
+                mMemoryCache,
+                cacheKey,
+                isMemoryCacheEnabled,
+                producerContext.getImagePipelineConfig().getExperiments().isEncodedCacheEnabled());
+
         listener.onProducerFinishWithSuccess(
-            requestId,
+            producerContext,
             PRODUCER_NAME,
-            listener.requiresExtraMap(requestId)
+            listener.requiresExtraMap(producerContext, PRODUCER_NAME)
                 ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "false")
                 : null);
-        listener.onUltimateProducerReached(requestId, PRODUCER_NAME, false);
-        consumer.onNewResult(null, Consumer.IS_LAST);
-        return;
+        mInputProducer.produceResults(consumerOfInputProducer, producerContext);
+      } finally {
+        CloseableReference.closeSafely(cachedReference);
       }
-
-      Consumer consumerOfInputProducer =
-          new EncodedMemoryCacheConsumer(consumer, mMemoryCache, cacheKey);
-
-      listener.onProducerFinishWithSuccess(
-          requestId,
-          PRODUCER_NAME,
-          listener.requiresExtraMap(requestId)
-              ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "false")
-              : null);
-      mInputProducer.produceResults(consumerOfInputProducer, producerContext);
     } finally {
-      CloseableReference.closeSafely(cachedReference);
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
   }
 
@@ -102,52 +117,72 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
 
     private final MemoryCache<CacheKey, PooledByteBuffer> mMemoryCache;
     private final CacheKey mRequestedCacheKey;
+    private final boolean mIsMemoryCacheEnabled;
+    private final boolean mEncodedCacheEnabled;
 
     public EncodedMemoryCacheConsumer(
         Consumer<EncodedImage> consumer,
         MemoryCache<CacheKey, PooledByteBuffer> memoryCache,
-        CacheKey requestedCacheKey) {
+        CacheKey requestedCacheKey,
+        boolean isMemoryCacheEnabled,
+        boolean encodedCacheEnabled) {
       super(consumer);
       mMemoryCache = memoryCache;
       mRequestedCacheKey = requestedCacheKey;
+      mIsMemoryCacheEnabled = isMemoryCacheEnabled;
+      mEncodedCacheEnabled = encodedCacheEnabled;
     }
 
     @Override
     public void onNewResultImpl(EncodedImage newResult, @Status int status) {
-      // intermediate, null or uncacheable results are not cached, so we just forward them
-      if (isNotLast(status) || newResult == null ||
-          statusHasAnyFlag(status, DO_NOT_CACHE_ENCODED | IS_PARTIAL_RESULT)) {
-        getConsumer().onNewResult(newResult, status);
-        return;
-      }
+      try {
+        if (FrescoSystrace.isTracing()) {
+          FrescoSystrace.beginSection("EncodedMemoryCacheProducer#onNewResultImpl");
+        }
+        // intermediate, null or uncacheable results are not cached, so we just forward them
+        // as well as the images with unknown format which could be html response from the server
+        if (isNotLast(status)
+            || newResult == null
+            || statusHasAnyFlag(status, DO_NOT_CACHE_ENCODED | IS_PARTIAL_RESULT)
+            || newResult.getImageFormat() == ImageFormat.UNKNOWN) {
+          getConsumer().onNewResult(newResult, status);
+          return;
+        }
 
-      // cache and forward the last result
-      CloseableReference<PooledByteBuffer> ref = newResult.getByteBufferRef();
-      if (ref != null) {
-        CloseableReference<PooledByteBuffer> cachedResult;
-        try {
-          cachedResult = mMemoryCache.cache(mRequestedCacheKey, ref);
-        } finally {
-          CloseableReference.closeSafely(ref);
+        // cache and forward the last result
+        CloseableReference<PooledByteBuffer> ref = newResult.getByteBufferRef();
+        if (ref != null) {
+          CloseableReference<PooledByteBuffer> cachedResult = null;
+          try {
+            if (mEncodedCacheEnabled && mIsMemoryCacheEnabled) {
+              cachedResult = mMemoryCache.cache(mRequestedCacheKey, ref);
+            }
+          } finally {
+            CloseableReference.closeSafely(ref);
+          }
+          if (cachedResult != null) {
+            EncodedImage cachedEncodedImage;
+            try {
+              cachedEncodedImage = new EncodedImage(cachedResult);
+              cachedEncodedImage.copyMetaDataFrom(newResult);
+            } finally {
+              CloseableReference.closeSafely(cachedResult);
+            }
+            try {
+              getConsumer().onProgressUpdate(1f);
+              getConsumer().onNewResult(cachedEncodedImage, status);
+              return;
+            } finally {
+              EncodedImage.closeSafely(cachedEncodedImage);
+            }
+          }
         }
-        if (cachedResult != null) {
-          EncodedImage cachedEncodedImage;
-          try {
-            cachedEncodedImage = new EncodedImage(cachedResult);
-            cachedEncodedImage.copyMetaDataFrom(newResult);
-          } finally {
-            CloseableReference.closeSafely(cachedResult);
-          }
-          try {
-            getConsumer().onProgressUpdate(1f);
-            getConsumer().onNewResult(cachedEncodedImage, status);
-            return;
-          } finally {
-            EncodedImage.closeSafely(cachedEncodedImage);
-          }
+        getConsumer().onNewResult(newResult, status);
+      } finally {
+        if (FrescoSystrace.isTracing()) {
+          FrescoSystrace.endSection();
         }
       }
-      getConsumer().onNewResult(newResult, status);
     }
   }
 }

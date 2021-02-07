@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -12,8 +12,8 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
+import androidx.annotation.DrawableRes;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.util.UriUtil;
@@ -22,6 +22,7 @@ import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import javax.annotation.Nullable;
 
 /**
@@ -75,32 +76,43 @@ public class SimpleDraweeView extends GenericDraweeView {
   }
 
   private void init(Context context, @Nullable AttributeSet attrs) {
-    if (isInEditMode()) {
-      return;
-    }
-    Preconditions.checkNotNull(
-        sDraweecontrollerbuildersupplier, "SimpleDraweeView was not initialized!");
-    mControllerBuilder = sDraweecontrollerbuildersupplier.get();
+    try {
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("SimpleDraweeView#init");
+      }
+      if (isInEditMode()) {
+        getTopLevelDrawable().setVisible(true, false);
+        getTopLevelDrawable().invalidateSelf();
+      } else {
+        Preconditions.checkNotNull(
+            sDraweecontrollerbuildersupplier, "SimpleDraweeView was not initialized!");
+        mControllerBuilder = sDraweecontrollerbuildersupplier.get();
+      }
 
-    if (attrs != null) {
-      TypedArray gdhAttrs = context.obtainStyledAttributes(
-          attrs,
-          R.styleable.SimpleDraweeView);
-      try {
-        if (gdhAttrs.hasValue(R.styleable.SimpleDraweeView_actualImageUri)) {
-          setImageURI(
-              Uri.parse(gdhAttrs.getString(R.styleable.SimpleDraweeView_actualImageUri)),
-              null);
-        } else if (gdhAttrs.hasValue((R.styleable.SimpleDraweeView_actualImageResource))) {
-          int resId = gdhAttrs.getResourceId(
-              R.styleable.SimpleDraweeView_actualImageResource,
-              NO_ID);
-          if (resId != NO_ID) {
-            setActualImageResource(resId);
+      if (attrs != null) {
+        TypedArray gdhAttrs = context.obtainStyledAttributes(attrs, R.styleable.SimpleDraweeView);
+        try {
+          if (gdhAttrs.hasValue(R.styleable.SimpleDraweeView_actualImageUri)) {
+            setImageURI(
+                Uri.parse(gdhAttrs.getString(R.styleable.SimpleDraweeView_actualImageUri)), null);
+          } else if (gdhAttrs.hasValue((R.styleable.SimpleDraweeView_actualImageResource))) {
+            int resId =
+                gdhAttrs.getResourceId(R.styleable.SimpleDraweeView_actualImageResource, NO_ID);
+            if (resId != NO_ID) {
+              if (isInEditMode()) {
+                setImageResource(resId);
+              } else {
+                setActualImageResource(resId);
+              }
+            }
           }
+        } finally {
+          gdhAttrs.recycle();
         }
-      } finally {
-        gdhAttrs.recycle();
+      }
+    } finally {
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
       }
     }
   }
@@ -185,9 +197,9 @@ public class SimpleDraweeView extends GenericDraweeView {
   /**
    * Sets the actual image resource to the given resource ID.
    *
-   * Similar to {@link #setImageResource(int)}, this sets the displayed image to the given resource.
-   * However, {@link #setImageResource(int)} bypasses all Drawee functionality and makes the view
-   * act as a normal {@link android.widget.ImageView}, whereas this method keeps all of the
+   * <p>Similar to {@link #setImageResource(int)}, this sets the displayed image to the given
+   * resource. However, {@link #setImageResource(int)} bypasses all Drawee functionality and makes
+   * the view act as a normal {@link android.widget.ImageView}, whereas this method keeps all of the
    * Drawee functionality, including the {@link com.facebook.drawee.interfaces.DraweeHierarchy}.
    *
    * @param resourceId the resource ID to use.
@@ -198,9 +210,9 @@ public class SimpleDraweeView extends GenericDraweeView {
   }
 
   /**
-   * This method will bypass all Drawee-related functionality.
-   * If you want to keep this functionality, take a look at {@link #setActualImageResource(int)}
-   * and {@link #setActualImageResource(int, Object)}}.
+   * This method will bypass all Drawee-related functionality. If you want to keep this
+   * functionality, take a look at {@link #setActualImageResource(int)} and {@link
+   * #setActualImageResource(int, Object)}}.
    *
    * @param resId the resource ID
    */

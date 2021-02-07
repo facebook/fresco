@@ -53,7 +53,7 @@ For this, you can use the `imagePipeline#fetchEncodedImage(ImageRequest, ...)` m
 
 ### How do I modify an image before displaying?
 
-The best way is to implement a [PostProcessor](02-post-processor). This allows the image pipeline to schedule the modification on the background and allocates the Bitmaps efficiently.
+The best way is to implement a [PostProcessor](post-processor.html). This allows the image pipeline to schedule the modification on the background and allocates the Bitmaps efficiently.
 
 ### How large is Fresco?
 

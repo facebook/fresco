@@ -18,6 +18,25 @@ dependencies {
 }
 ```
 
+Starting with Fresco version 2.1.0, you can also use a Java-only Fresco version (without native code).
+You simply exclude artifacts with native code:
+
+```groovy
+dependencies {
+  // your app's other dependencies
+  implementation('com.facebook.fresco:fresco:{{site.current_version}}') {
+      exclude group: 'com.facebook.soloader', module: 'soloader'
+      exclude group: 'com.facebook.fresco', module: 'soloader'
+      exclude group: 'com.facebook.fresco', module: 'nativeimagefilters'
+      exclude group: 'com.facebook.fresco', module: 'nativeimagetranscoder'
+      exclude group: 'com.facebook.fresco', module: 'memory-type-native'
+      exclude group: 'com.facebook.fresco', module: 'imagepipeline-native'
+  }
+}
+```
+
+### 2. Optional: Add additional Fresco feature modules
+
 The following optional modules may also be added, depending on the needs of your app.
 
 ```groovy
@@ -38,7 +57,7 @@ dependencies {
 }
 ```
 
-### 2. Initialize Fresco & Declare Permissions
+### 3. Initialize Fresco & Declare Permissions
 
 Fresco needs to be initialized. You should only do this 1 time, so placing the initialization in your Application is a good idea. An example for this would be:
 
@@ -71,7 +90,18 @@ public class MyApplication extends Application {
   </manifest>
 ```
 
-### 3. Create a Layout
+Optional: For Java-only Fresco, you have to disable native code via `ImagePipelineConfig`.
+```java
+Fresco.initialize(
+    applicationContext,
+    ImagePipelineConfig.newBuilder(applicationContext)
+        .setMemoryChunkType(MemoryChunkType.BUFFER_MEMORY)
+        .setImageTranscoderType(ImageTranscoderType.JAVA_TRANSCODER)
+        .experiment().setNativeCodeDisabled(true)
+        .build())
+```
+
+### 4. Create a Layout
 
 In your layout XML, add a custom namespace to the top-level element. This is needed to access the custom `fresco:` attributes which allows you to control how the image is loaded and displayed.
 
@@ -106,3 +136,22 @@ draweeView.setImageURI(uri);
 and Fresco does the rest.
 
 The placeholder is shown until the image is ready. The image will be downloaded, cached, displayed, and cleared from memory when your view goes off-screen.
+
+
+### 5. Optional: Setting a non-default native library loader (Only for Fresco 2.1 and above)
+
+The default Fresco artifact employs SoLoader for loading native libraries. However, starting with Fresco version 2.1.0 this can be customized to use any other native code loading mechanism, such as the built-in `System.loadLibrary(...)`.
+
+In order to set this up, you first have to exclude the default SoLoader implementation for all dependencies that are including it. To do this, simply edit your 'build.gradle' file in the following way:
+```groovy
+dependencies {
+  // your app's other dependencies
+  implementation 'com.facebook.fresco:fresco:{{site.current_version}}' {
+    exclude group: 'com.facebook.soloader', module: 'soloader'
+  }
+}
+```
+Now, `System.loadLibrary(...)` will be used for native code loading. You can also take a look at 'samples/scrollperf/build.gradle' where we set up two build variants, one with SoLoader, one without.
+
+You can also employ your own native library loading mechanism by implementing a custom [`NativeLoaderDelegate`](https://github.com/facebook/SoLoader/blob/cdd144ab84d7af8c370a4a0e1e6b7ce5d7e19d5c/java/com/facebook/soloader/nativeloader/NativeLoaderDelegate.java). Then, simply call `NativeLoader.init(yourDelegate)` before Fresco is initialized.
+

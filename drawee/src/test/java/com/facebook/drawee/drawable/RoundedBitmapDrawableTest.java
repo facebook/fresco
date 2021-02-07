@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -55,16 +55,16 @@ public class RoundedBitmapDrawableTest {
 
   @Test
   public void testSetRadii() {
-    mRoundedBitmapDrawable.setRadii(new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+    mRoundedBitmapDrawable.setRadii(new float[] {1, 2, 3, 4, 5, 6, 7, 8});
     verify(mCallback).invalidateDrawable(mRoundedBitmapDrawable);
-    assertArrayEquals(new float[]{1, 2, 3, 4, 5, 6, 7, 8}, mRoundedBitmapDrawable.getRadii(), 0);
+    assertArrayEquals(new float[] {1, 2, 3, 4, 5, 6, 7, 8}, mRoundedBitmapDrawable.getRadii(), 0);
   }
 
   @Test
   public void testSetRadius() {
     mRoundedBitmapDrawable.setRadius(9);
     verify(mCallback).invalidateDrawable(mRoundedBitmapDrawable);
-    assertArrayEquals(new float[]{9, 9, 9, 9, 9, 9, 9, 9}, mRoundedBitmapDrawable.getRadii(), 0);
+    assertArrayEquals(new float[] {9, 9, 9, 9, 9, 9, 9, 9}, mRoundedBitmapDrawable.getRadii(), 0);
   }
 
   @Test
@@ -93,6 +93,13 @@ public class RoundedBitmapDrawableTest {
   }
 
   @Test
+  public void testSetPaintFilterBitmap() {
+    mRoundedBitmapDrawable.setPaintFilterBitmap(true);
+    verify(mCallback).invalidateDrawable(mRoundedBitmapDrawable);
+    assertTrue(mRoundedBitmapDrawable.getPaintFilterBitmap());
+  }
+
+  @Test
   public void testShouldRoundDefault() {
     assertFalse(mRoundedBitmapDrawable.shouldRound());
     assertFalse(mRoundedBitmapDrawableWithNullBitmap.shouldRound());
@@ -113,14 +120,14 @@ public class RoundedBitmapDrawableTest {
 
   @Test
   public void testShouldRoundRadii() {
-    mRoundedBitmapDrawable.setRadii(new float[]{0, 0, 0, 0, 0, 0, 0, 1});
+    mRoundedBitmapDrawable.setRadii(new float[] {0, 0, 0, 0, 0, 0, 0, 1});
     assertTrue(mRoundedBitmapDrawable.shouldRound());
-    mRoundedBitmapDrawable.setRadii(new float[]{0, 0, 0, 0, 0, 0, 0, 0});
+    mRoundedBitmapDrawable.setRadii(new float[] {0, 0, 0, 0, 0, 0, 0, 0});
     assertFalse(mRoundedBitmapDrawable.shouldRound());
 
-    mRoundedBitmapDrawableWithNullBitmap.setRadii(new float[]{0, 0, 0, 0, 0, 0, 0, 1});
+    mRoundedBitmapDrawableWithNullBitmap.setRadii(new float[] {0, 0, 0, 0, 0, 0, 0, 1});
     assertFalse(mRoundedBitmapDrawableWithNullBitmap.shouldRound());
-    mRoundedBitmapDrawableWithNullBitmap.setRadii(new float[]{0, 0, 0, 0, 0, 0, 0, 0});
+    mRoundedBitmapDrawableWithNullBitmap.setRadii(new float[] {0, 0, 0, 0, 0, 0, 0, 0});
     assertFalse(mRoundedBitmapDrawableWithNullBitmap.shouldRound());
   }
 
@@ -159,12 +166,10 @@ public class RoundedBitmapDrawableTest {
     originalPaint.setColorFilter(colorFilter);
     when(originalVersion.getPaint()).thenReturn(originalPaint);
 
-    RoundedBitmapDrawable roundedVersion = RoundedBitmapDrawable.fromBitmapDrawable(
-        mResources,
-        originalVersion);
+    RoundedBitmapDrawable roundedVersion =
+        RoundedBitmapDrawable.fromBitmapDrawable(mResources, originalVersion);
 
     assertEquals(
-        originalVersion.getPaint().getColorFilter(),
-        roundedVersion.getPaint().getColorFilter());
+        originalVersion.getPaint().getColorFilter(), roundedVersion.getPaint().getColorFilter());
   }
 }

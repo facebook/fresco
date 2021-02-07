@@ -1,20 +1,13 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 package com.facebook.samples.comparison.instrumentation;
 
-/**
- * Collects wait times and holds image loading stats.
- */
+/** Collects wait times and holds image loading stats. */
 public class PerfListener {
   private long mSumOfWaitTime;
   private long mStartedRequests;
@@ -30,17 +23,13 @@ public class PerfListener {
     mFailedRequests = 0;
   }
 
-  /**
-   * Called whenever image request finishes successfully, that is whenever final image is set.
-   */
+  /** Called whenever image request finishes successfully, that is whenever final image is set. */
   public void reportSuccess(long waitTime) {
     mSumOfWaitTime += waitTime;
     mSuccessfulRequests++;
   }
 
-  /**
-   * Called whenever image request fails, that is whenever failure drawable is set.
-   */
+  /** Called whenever image request fails, that is whenever failure drawable is set. */
   public void reportFailure(long waitTime) {
     mSumOfWaitTime += waitTime;
     mFailedRequests++;
@@ -55,39 +44,31 @@ public class PerfListener {
     mCancelledRequests++;
   }
 
-  /**
-   * Called whenver new request is started.
-   */
+  /** Called whenver new request is started. */
   public void reportStart() {
     mStartedRequests++;
   }
 
   /**
    * @return average wait time, that is sum of reported wait times divided by number of completed
-   *   requests
+   *     requests
    */
   public long getAverageWaitTime() {
     final long completedRequests = getCompletedRequests();
     return completedRequests > 0 ? mSumOfWaitTime / completedRequests : 0;
   }
 
-  /**
-   * @return difference between number of started requests and number of completed requests
-   */
+  /** @return difference between number of started requests and number of completed requests */
   public long getOutstandingRequests() {
     return mStartedRequests - getCompletedRequests();
   }
 
-  /**
-   * @return number of cancelled requests
-   */
+  /** @return number of cancelled requests */
   public long getCancelledRequests() {
     return mCancelledRequests;
   }
 
-  /**
-   * @return number of completed requests, either by seting final image, failure or cancellation
-   */
+  /** @return number of completed requests, either by seting final image, failure or cancellation */
   public long getCompletedRequests() {
     return mSuccessfulRequests + mCancelledRequests + mFailedRequests;
   }

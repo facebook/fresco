@@ -1,30 +1,29 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.samples.showcase.drawee;
 
+import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.Nullable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.RetainingDataSourceSupplier;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
-import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.List;
 
@@ -33,12 +32,23 @@ public class RetainingDataSourceSupplierFragment extends BaseShowcaseFragment {
   private List<Uri> mSampleUris;
   private int mUriIndex = 0;
 
+  private ControllerListener controllerListener =
+      new BaseControllerListener<ImageInfo>() {
+        @Override
+        public void onFinalImageSet(
+            String id, @Nullable ImageInfo imageInfo, @Nullable Animatable anim) {
+          if (anim != null) {
+            // app-specific logic to enable animation starting
+            anim.start();
+          }
+        }
+      };
+
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    mSampleUris =
-        ImageUriProvider.getInstance(getContext()).getSampleUris(ImageUriProvider.ImageSize.M);
+    mSampleUris = sampleUris().getSampleGifUris();
   }
 
   @Nullable
@@ -54,7 +64,10 @@ public class RetainingDataSourceSupplierFragment extends BaseShowcaseFragment {
     final RetainingDataSourceSupplier<CloseableReference<CloseableImage>> retainingSupplier =
         new RetainingDataSourceSupplier<>();
     simpleDraweeView.setController(
-        Fresco.newDraweeControllerBuilder().setDataSourceSupplier(retainingSupplier).build());
+        Fresco.newDraweeControllerBuilder()
+            .setDataSourceSupplier(retainingSupplier)
+            .setControllerListener(controllerListener)
+            .build());
     replaceImage(retainingSupplier);
     simpleDraweeView.setOnClickListener(
         new View.OnClickListener() {
@@ -63,11 +76,6 @@ public class RetainingDataSourceSupplierFragment extends BaseShowcaseFragment {
             replaceImage(retainingSupplier);
           }
         });
-  }
-
-  @Override
-  public int getTitleId() {
-    return R.string.drawee_retaining_supplier_title;
   }
 
   private void replaceImage(

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name">Fresco Showcase</string>
 
   <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -9,13 +9,8 @@
 
   <string name="action_settings">Settings</string>
 
-  <!-- Navigation drawer items -->
-  <string name="category_drawee">Drawee</string>
-
-  <string name="drawee_simple_title">Simple Drawee</string>
   <string name="drawee_simple_help">Basic SimpleDraweeView example that just sets the image URI.</string>
 
-  <string name="drawee_media_picker_title">Media Provider</string>
   <string name="drawee_media_picker_help">Select an image by pressing one of the media picker buttons.</string>
   <string name="drawee_media_picker_button_action_open_document">ACTION_OPEN_DOCUMENT</string>
   <string name="drawee_media_picker_action_open_document_not_supported">Intent.ACTION_OPEN_DOCUMENT is only supported by Kitkat and above!</string>
@@ -23,39 +18,27 @@
   <string name="drawee_media_picker_no_image">No image selected.</string>
   <string name="drawee_media_picker_button_action_pick">ACTION_PICK</string>
 
-  <string name="drawee_scale_type_title">Scale Type</string>
   <string name="drawee_scale_type_help">Select either the landscape or portrait picture. Then select a scale type to apply for the large Drawee.</string>
 
-  <string name="drawee_span_simple_title">Simple DraweeSpan</string>
-  <string name="drawee_span_simple_text">Text with an # inline image using a DraweeSpan. Also works with % animated images!</string>
+  <string name="drawee_span_simple_text">Text with an # inline image using a DraweeSpan. Also works with @ animated images!</string>
   <string name="drawee_span_simple_help">This example shows how to render text with an inline image. Change the scale type using the drop-down menu.</string>
 
-  <string name="drawee_rounded_corners_title">Rounded Corners</string>
-
-  <string name="drawee_hierarchy_title">Placeholder, Progress, Failure</string>
-
-  <string name="drawee_rotation_title">Rotation</string>
   <string name="drawee_rotation_help">Change the used RotationOptions using the drop-down menu on top.</string>
 
-  <string name="drawee_recycler_title">Recycler View</string>
-
-  <string name="drawee_transition_title">Drawee Transition</string>
   <string name="drawee_transition_help">Tap the image to start the activity transition.</string>
   <string name="drawee_transition_details_title">Image Detail Activity</string>
   <string name="drawee_transition_details_help">This is the second activity. Press back to reverse the transition.</string>
 
-  <string name="drawee_retaining_supplier_title">Retaining Data Source Supplier</string>
   <string name="drawee_retaining_supplier_help">Click on the image to show the next one. The previous one will be retained until the new image is ready.</string>
 
-  <string name="category_pipeline">Image Pipeline</string>
+  <string name="drawee_multi_uri_help">Example to load an image based on a set of URIs, either as "first available" or with "increasing quality".</string>
 
-  <string name="imagepipeline_notification_title">Notifications</string>
+
   <string name="imagepipeline_notification_button">Create Notification</string>
   <string name="imagepipeline_notification_content_title">Fresco Says Hello</string>
   <string name="imagepipeline_notification_content_text">This notification shows a bitmap that has been loaded by Fresco.</string>
   <string name="imagepipeline_notification_help">Clicking on the button will create a new notification using a BaseBitmapDataSubscriber.</string>
   <string name="imagepipeline_notification_channel_name">Fresco showcase app notification channel</string>
-  <string name="imagepipeline_notification_channel_description">Notifications from the Fresco showcase app will be sent via this channel.</string>
 
   <string name="imagepipeline_postprocessor_title">Post-Processor</string>
   <string name="imagepipeline_postprocessor_help">Change the applied post-processor using the drop-down menu on top. Use the refresh button to re-run uncached post-processors.</string>
@@ -64,63 +47,51 @@
   <string name="imagepipeline_postprocessor_set_greyscale">Grey Scale Post-Processor</string>
   <string name="imagepipeline_postprocessor_set_watermark">Watermark Post-Processor</string>
   <string name="imagepipeline_postprocessor_set_watermark_cached">Watermark Post-Processor (cached)</string>
+  <string name="imagepipeline_postprocessor_set_native_blur">Native Blur Post-Processor</string>
   <string name="imagepipeline_postprocessor_set_blur">Blur Post-Processor</string>
   <string name="imagepipeline_postprocessor_set_scaling_blur">Scaling Blur Post-Processor</string>
+  <string name="imagepipeline_postprocessor_set_native_round_as_circle">Native Round As Circle Post-Processor</string>
   <string name="imagepipeline_postprocessor_set_round_as_circle">Round As Circle Post-Processor</string>
+  <string name="imagepipeline_postprocessor_set_round_as_aa_circle">Antialiased Circle Post-Processor</string>
+  <string name="imagepipeline_postprocessor_set_rounded_corners">Rounded Corners Post-Processor</string>
   <string name="imagepipeline_postprocessor_refresh">Refresh</string>
 
-  <string name="imagepipeline_prefetch_title">Prefetch</string>
   <string name="imagepipeline_prefetch_help">1. Clear the cache\n2. Toggle images, they show slowly\n3. Hide the images\n4. Clear the cache\n5. Prefetch\n6. Show the images, they load fast!</string>
 
-  <string name="imagepipeline_resizing_title">Resizing</string>
   <string name="imagepipeline_resizing_help">Change the resizing mode using the drop-down menu on top. Tap the image to refresh. Enable the debug overlay to see image dimensions.</string>
-  <string name="imagepipeline_resizing_refresh">Refresh</string>
   <string name="imagepipeline_resizing_disabled">No resizing</string>
 
-  <string name="imagepipeline_media_variations_title">Media Variations</string>
-  <string name="imagepipeline_media_variations_individual_variants">Individual variants (click to load)</string>
-  <string name="imagepipeline_media_variations_combined_request">Combined image request (click to refresh)</string>
-  <string name="imagepipeline_media_variations_clear_cache">Clear cache and reset</string>
-  <string name="imagepipeline_media_variations_restart_toast">Cache cleared. Please restart the app to test further.</string>
-  <string name="imagepipeline_media_variations_mode_title">Mode</string>
-  <string name="imagepipeline_media_variations_mode_media_id">Media ID in request</string>
-  <string name="imagepipeline_media_variations_mode_listed_variants">Variants listed in request</string>
-  <string name="imagepipeline_media_variations_toast_mode_media_id">Using a media ID added to the image request</string>
-  <string name="imagepipeline_media_variations_toast_mode_listed_variants">Using a list of variants added to the image request</string>
-
-  <string name="imagepipeline_partial_request_title">Partial Image Loading</string>
   <string name="button_load_partial">Load Partial</string>
   <string name="button_load_full">Load Full</string>
 
-  <string name="imagepipeline_qualified_resource_title">Qualified Resource URI</string>
   <string name="imagepipeline_qualified_resource_help">Demonstration of loading a resource using a qualifying resource URI. This allows for loading resources that are not part of the application\'s main package.</string>
 
-  <string name="imagepipeline_bitmap_factory_title">Platform Bitmap Factory</string>
   <string name="imagepipeline_bitmap_factory_help">This fragment\'s code demonstrates how to create managed Bitmaps using the PlatformBitmapFactory.</string>
   <string name="imagepipeline_bitmap_factory_case_create_basic">Create Basic</string>
   <string name="imagepipeline_bitmap_factory_case_create_cropped">Create Cropped</string>
   <string name="imagepipeline_bitmap_factory_case_create_scaled">Create Scaled</string>
   <string name="imagepipeline_bitmap_factory_case_create_transformed">Create Transformed</string>
 
-  <string name="imagepipeline_region_decoding_title">Region Decoding</string>
   <string name="imagepipeline_region_decoding_help">Select a region for the full image above. The selected region will be rendered below. NOTE: This currently only works for JPEG images that are not resized / downsampled.</string>
 
-  <string name="category_format">Image Format</string>
-
   <string name="format_switch_checker_board">Checker board background</string>
+  <string name="format_switch_aspect_ratio">Portrait aspect ratio</string>
+  <string name="format_switch_autoplay">Autoplay enabled</string>
 
-  <string name="format_gif_title">GIF</string>
-  <string name="format_gif_help">Select a size in the spinner to start playing that file. The animation has 36 frames and plays at 30 FPS.</string>
+  <string-array name="gif_decoder_options">
+    <item>Native Decoder</item>
+    <item>Movie Decoder</item>
+  </string-array>
+
+  <string name="format_gif_help">Select a size in the spinner to start playing that file. The animation has 36 frames and plays at 30 FPS. If autoplay is disabled, tap the GIF to play / pause the animation.</string>
   <string name="format_gif_label_small">Small (256x256 px)</string>
   <string name="format_gif_label_medium">Medium (512x512 px)</string>
   <string name="format_gif_label_large">Large (1024x1024 px)</string>
 
-  <string name="format_webp_title">WebP</string>
   <string name="format_webp_static_help">The above Drawee displays a lossy WebP image.</string>
   <string name="format_webp_translucent_help">The above Drawee displays a loss-less WebP image with semi-transparent areas.</string>
   <string name="format_webp_animated_help">The above Drawee displays an animated WebP image</string>
 
-  <string name="format_pjpeg_title">Progressive JPEG</string>
   <string name="format_pjpeg_help">Select a progressive JPEG from the spinner and enable or disable progessive JPEG support with the switch.</string>
   <string name="format_pjpeg_switch_rendering_enabled">Progressive JPEG rendering enabled</string>
   <string name="format_pjpeg_label_small">Small progressive JPEG</string>
@@ -128,22 +99,25 @@
   <string name="format_pjpeg_label_large">Large progressive JPEG</string>
   <string name="format_pjpeg_label_slow">Slow progressive JPEG</string>
 
-  <string name="format_color_title">Color</string>
   <string name="format_color_switch">Color XML support enabled</string>
   <string name="format_color_help">This example adds a custom color XML image format (&lt;color&gt;#rrggbb&lt;/color&gt;), decoder, and Drawable factory. In this example, you have to enable the decoder globally when Fresco is initialized. Toggle the switch and restart the application to enable/disable custom color XML support.</string>
 
-  <string name="format_svg_title">SVG</string>
   <string name="format_svg_switch">SVG support enabled</string>
   <string name="format_svg_help">This example adds a custom SVG image format, decoder, and Drawable factory that has to be enabled when Fresco is initialized. Toggle the switch and restart the application to enable/disable SVG support.</string>
 
-  <string name="format_keyframes_title">Keyframes</string>
   <string name="format_keyframes_help">Keyframes animations are only supported on devices running Android 4.0.3 (API level 15) and above.</string>
 
-  <string name="format_override_title">Decoder Override</string>
   <string name="format_override_help">This example overrides the decoder to be used for the given image. You can use this approach if you do not want to set a global custom decoder. The image will be decoded correctly even if global color decoding is disabled.</string>
 
-  <string name="format_datauri_title">Data URI</string>
   <string name="format_datauri_help">Images can also be provided by data URIs such as the one below:</string>
+
+  <string name="vito_litho_simple_help">Experimental Fresco Vito Litho component.</string>
+
+  <string name="vito_litho_image_options_config_help_source">Configure the image source to be displayed</string>
+  <string name="vito_litho_image_options_config_help_options">Configure image options to change the image\'s appearance</string>
+  <string name="vito_litho_image_options_config_switch_auto_play_animations">Auto play animations</string>
+
+  <string name="vito_litho_region_decode_help">Choose a focus point with the smaller square and parent bounds with the bigger</string>
 
   <!-- Preferences -->
 
@@ -163,12 +137,12 @@
 
   <string name="preference_uri_override_title">URI Override</string>
   <string name="preference_uri_override_summary_none">&lt;none set&gt;</string>
-  <string name="preference_uri_override_summary_given">%1$s</string>
+  <string name="preference_uri_override_summary_given"><xliff:g id="name">%s</xliff:g></string>
 
   <string name="preference_uri_override_dialog_message">New URI to use in all requests instead of the default sample images</string>
   <string name="preference_uri_override_dialog_edittext_hint">https://example.org/cute_animal.jpg</string>
-  <string name="preference_uri_override_dialog_edittext_error_bad_uri">Bad URI: %1$s</string>
-  <string name="preference_uri_override_dialog_history">Last used: %1$s</string>
+  <string name="preference_uri_override_dialog_edittext_error_bad_uri">Bad URI: <xliff:g id="uri">%s</xliff:g></string>
+  <string name="preference_uri_override_dialog_history">Last used: <xliff:g id="uri">%s</xliff:g></string>
   <string name="preference_uri_override_dialog_button_set">Set</string>
   <string name="preference_uri_override_dialog_button_cancel">Cancel</string>
   <string name="preference_uri_override_dialog_button_remove">Remove Override</string>
@@ -180,16 +154,14 @@
   <string name="preferences_category_details">Version and Device Details</string>
 
   <string name="preference_details_android_version_title">Android Version</string>
-  <string name="preference_details_android_version_summary">SDK: %1$s (%2$s)</string>
+  <string name="preference_details_android_version_summary">SDK: <xliff:g id="name1">%s</xliff:g> (<xliff:g id="name2">%s</xliff:g>)</string>
   <string name="preference_details_cpu_architecture_title">CPU Architecture</string>
-  <string name="preference_details_cpu_architecture_summary_before_21">%1$s - supported ABIs: %2$s, %3$s</string>
-  <string name="preference_details_cpu_architecture_summary_after_21">%1$s - supported ABIs: %2$s</string>
+  <string name="preference_details_cpu_architecture_summary_before_21"><xliff:g id="name1">%s</xliff:g> - supported ABIs: <xliff:g id="name2">%s</xliff:g>, <xliff:g id="name3">%s</xliff:g></string>
+  <string name="preference_details_cpu_architecture_summary_after_21"><xliff:g id="name1">%s</xliff:g> - supported ABIs: <xliff:g id="name2">%s</xliff:g></string>
   <string name="preference_details_device_name_title">Device Name</string>
-  <string name="preference_details_device_name_summary">%1$s %2$s</string>
+  <string name="preference_details_device_name_summary"><xliff:g id="name1">%s</xliff:g> <xliff:g id="name2">%s</xliff:g></string>
 
   <!-- Other -->
-
-  <string name="category_more">More</string>
 
   <string name="welcome_title">@string/app_name</string>
   <string name="welcome_nav_title">Welcome Screen</string>
@@ -199,9 +171,14 @@
   <string name="welcome_button_doc">Documentation</string>
 
   <string name="button_clear_cache">Clear Cache</string>
-  <string name="button_prefetch">Prefetch</string>
+  <string name="button_prefetch_disk">Prefetch Disk</string>
+  <string name="button_prefetch_encoded">Prefetch Encoded</string>
+  <string name="button_prefetch_bitmap">Prefetch Bitmap</string>
+  <string name="button_prefetch_disk_short">Disk</string>
+  <string name="button_prefetch_encoded_short">Encoded</string>
+  <string name="button_prefetch_bitmap_short">Bitmap</string>
   <string name="button_toggle_images">Toggle images</string>
-  <string name="prefetch_status">%1$d/%2$d prefetched, %3$d failed.</string>
+  <string name="prefetch_status"><xliff:g id="name1">%d</xliff:g>/<xliff:g id="name2">%d</xliff:g> prefetched, <xliff:g id="name3">%d</xliff:g> failed.</string>
 
   <string name="snackbar_uri_override_reminder_text">URI override is active</string>
   <string name="snackbar_uri_override_reminder_change_button">Change</string>
@@ -233,5 +210,17 @@
 
   <string translatable="false" name="message_application_needs_restart">In order to keep this change you have to kill and restart this application</string>
   <string translatable="false" name="message_restart_now">Kill Now</string>
-  <string name="switch_big_images">Big Images</string>
+  <string name="spinner_image_source">Image source</string>
+  <string name="drawee_hierarchy_switch_rounded">Round corners</string>
+  <string name="drawee_hierarchy_switch_ninepatch">Use ninepatch</string>
+  <string name="load_random_uri">Load Random URI</string>
+  <string name="load_first_available">Load URIs: first available</string>
+  <string name="load_increasing_quality">Load URIs: increasing quality</string>
+  <string name="load_multi_uri_both">Load URIs: Both</string>
+
+  <string name="vito_view_simple_help">Basic Vito View example that just sets the image URI</string>
+  <string name="vito_view_prefetch_title">Prefetch to cache:</string>
+  <string name="vito_view_ktx_help">Vito View Kotlin Extensions examples</string>
+
+  <string name="use_vito">Use Vito</string>
 </resources>

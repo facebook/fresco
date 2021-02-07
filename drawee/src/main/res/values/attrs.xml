@@ -134,7 +134,7 @@
     <!-- Rounding border width-->
     <attr name="roundingBorderWidth" format="dimension"/>
     <!-- Rounding border color -->
-    <attr name="roundingBorderColor" format="color"/>
+    <attr name="roundingBorderColor" format="color|reference"/>
     <!-- Rounding border padding -->
     <attr name="roundingBorderPadding" format="dimension" />
 

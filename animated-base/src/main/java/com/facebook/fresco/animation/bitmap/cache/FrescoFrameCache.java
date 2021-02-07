@@ -1,15 +1,16 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.animation.bitmap.cache;
 
 import android.graphics.Bitmap;
 import android.util.SparseArray;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
@@ -20,18 +21,19 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
-/**
- * Bitmap frame cache that uses Fresco's {@link AnimatedFrameCache} to cache frames.
- */
+/** Bitmap frame cache that uses Fresco's {@link AnimatedFrameCache} to cache frames. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class FrescoFrameCache implements BitmapFrameCache {
 
   private static final Class<?> TAG = FrescoFrameCache.class;
 
   private final AnimatedFrameCache mAnimatedFrameCache;
   private final boolean mEnableBitmapReusing;
+
   @GuardedBy("this")
   private final SparseArray<CloseableReference<CloseableImage>> mPreparedPendingFrames;
 
@@ -60,9 +62,7 @@ public class FrescoFrameCache implements BitmapFrameCache {
   @Nullable
   @Override
   public synchronized CloseableReference<Bitmap> getBitmapToReuseForFrame(
-      int frameNumber,
-      int width,
-      int height) {
+      int frameNumber, int width, int height) {
     if (!mEnableBitmapReusing) {
       return null;
     }
@@ -173,8 +173,8 @@ public class FrescoFrameCache implements BitmapFrameCache {
   }
 
   /**
-   * Converts the given image reference to a bitmap reference
-   * and closes the original image reference.
+   * Converts the given image reference to a bitmap reference and closes the original image
+   * reference.
    *
    * @param closeableImage the image to convert. It will be closed afterwards and will be invalid
    * @return the closeable bitmap reference to be used
@@ -184,8 +184,8 @@ public class FrescoFrameCache implements BitmapFrameCache {
   static CloseableReference<Bitmap> convertToBitmapReferenceAndClose(
       final @Nullable CloseableReference<CloseableImage> closeableImage) {
     try {
-      if (CloseableReference.isValid(closeableImage) &&
-          closeableImage.get() instanceof CloseableStaticBitmap) {
+      if (CloseableReference.isValid(closeableImage)
+          && closeableImage.get() instanceof CloseableStaticBitmap) {
 
         CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) closeableImage.get();
         if (closeableStaticBitmap != null) {

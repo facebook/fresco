@@ -1,28 +1,22 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.samples.showcase;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.fresco.samples.showcase.imageformat.color.ColorImageExample;
 import com.facebook.fresco.samples.showcase.imageformat.keyframes.KeyframesDecoderExample;
 import com.facebook.fresco.samples.showcase.imageformat.svg.SvgDecoderExample;
 import com.facebook.imagepipeline.decoder.ImageDecoderConfig;
 
-/**
- * Helper class to add custom decoders and drawable factories if enabled.
- */
+/** Helper class to add custom decoders and drawable factories if enabled. */
 public class CustomImageFormatConfigurator {
 
   private static final String IMAGE_FORMAT_PREFS = "fresco_image_format_prefs";
@@ -54,8 +48,7 @@ public class CustomImageFormatConfigurator {
   }
 
   public static void addCustomDrawableFactories(
-      Context context,
-      DraweeConfig.Builder draweeConfigBuilder) {
+      Context context, DraweeConfig.Builder draweeConfigBuilder) {
     // We always add the color drawable factory so that it can be used for image decoder overrides,
     // see ImageFormatOverrideExample.
     draweeConfigBuilder.addCustomDrawableFactory(ColorImageExample.createDrawableFactory());
@@ -88,12 +81,14 @@ public class CustomImageFormatConfigurator {
   }
 
   private static boolean getBoolean(Context context, String key, boolean defaultValue) {
-    return context.getSharedPreferences(IMAGE_FORMAT_PREFS, Context.MODE_PRIVATE)
+    return context
+        .getSharedPreferences(IMAGE_FORMAT_PREFS, Context.MODE_PRIVATE)
         .getBoolean(key, defaultValue);
   }
 
   private static void setBoolean(Context context, String key, boolean value) {
-    context.getSharedPreferences(IMAGE_FORMAT_PREFS, Context.MODE_PRIVATE)
+    context
+        .getSharedPreferences(IMAGE_FORMAT_PREFS, Context.MODE_PRIVATE)
         .edit()
         .putBoolean(key, value)
         .apply();

@@ -1,13 +1,8 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 package com.facebook.samples.comparison;
@@ -25,11 +20,6 @@ import android.os.Debug;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,7 +28,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.common.logging.FLog;
 import com.facebook.samples.comparison.adapters.AQueryAdapter;
 import com.facebook.samples.comparison.adapters.FrescoAdapter;
@@ -47,7 +42,6 @@ import com.facebook.samples.comparison.adapters.ImageListAdapter;
 import com.facebook.samples.comparison.adapters.PicassoAdapter;
 import com.facebook.samples.comparison.adapters.UilAdapter;
 import com.facebook.samples.comparison.adapters.VolleyAdapter;
-import com.facebook.samples.comparison.adapters.VolleyDraweeAdapter;
 import com.facebook.samples.comparison.configs.imagepipeline.ImagePipelineConfigFactory;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 import com.facebook.samples.comparison.urlsfetcher.ImageFormat;
@@ -85,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
   private static final int BYTES_IN_MEGABYTE = 1024 * 1024;
 
   private static final String EXTRA_ALLOW_ANIMATIONS = "allow_animations";
-  private static final String EXTRA_USE_DRAWEE = "use_drawee";
   private static final String EXTRA_CURRENT_ADAPTER_INDEX = "current_adapter_index";
   private static final String EXTRA_CURRENT_SOURCE_ADAPTER_INDEX = "current_source_adapter_index";
 
@@ -98,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
 
   private boolean mHasStoragePermissions;
   private boolean mRequestedLocalSource;
-  private boolean mUseDrawee;
   private boolean mAllowAnimations;
   private int mCurrentLoaderAdapterIndex;
   private int mCurrentSourceAdapterIndex;
@@ -124,63 +116,61 @@ public class MainActivity extends AppCompatActivity {
 
     mPerfListener = new PerfListener();
     mAllowAnimations = true;
-    mUseDrawee = true;
     mCurrentLoaderAdapterIndex = 0;
     mCurrentSourceAdapterIndex = 0;
     if (savedInstanceState != null) {
       mAllowAnimations = savedInstanceState.getBoolean(EXTRA_ALLOW_ANIMATIONS);
-      mUseDrawee = savedInstanceState.getBoolean(EXTRA_USE_DRAWEE);
       mCurrentLoaderAdapterIndex = savedInstanceState.getInt(EXTRA_CURRENT_ADAPTER_INDEX);
       mCurrentSourceAdapterIndex = savedInstanceState.getInt(EXTRA_CURRENT_SOURCE_ADAPTER_INDEX);
     }
 
     mHandler = new Handler(Looper.getMainLooper());
-    mStatsClockTickRunnable = new Runnable() {
-      @Override
-      public void run() {
-        updateStats();
-        scheduleNextStatsClockTick();
-      }
-    };
+    mStatsClockTickRunnable =
+        new Runnable() {
+          @Override
+          public void run() {
+            updateStats();
+            scheduleNextStatsClockTick();
+          }
+        };
 
     mCurrentAdapter = null;
 
     mStatsDisplay = (TextView) findViewById(R.id.stats_display);
     mLoaderSelect = (Spinner) findViewById(R.id.loader_select);
-    mLoaderSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    mLoaderSelect.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
           @Override
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             setLoaderAdapter(position);
           }
 
           @Override
-          public void onNothingSelected(AdapterView<?> parent) {
-          }
+          public void onNothingSelected(AdapterView<?> parent) {}
         });
     mLoaderSelect.setSelection(mCurrentLoaderAdapterIndex);
 
     mSourceSelect = (Spinner) findViewById(R.id.source_select);
-    mSourceSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    mSourceSelect.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
           @Override
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             setSourceAdapter(position);
           }
 
           @Override
-          public void onNothingSelected(AdapterView<?> parent) {
-          }
+          public void onNothingSelected(AdapterView<?> parent) {}
         });
     mSourceSelect.setSelection(mCurrentSourceAdapterIndex);
     mHasStoragePermissions =
-        ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) ==
-            PackageManager.PERMISSION_GRANTED;
+        ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+            == PackageManager.PERMISSION_GRANTED;
   }
 
   @Override
   protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putBoolean(EXTRA_ALLOW_ANIMATIONS, mAllowAnimations);
-    outState.putBoolean(EXTRA_USE_DRAWEE, mUseDrawee);
     outState.putInt(EXTRA_CURRENT_ADAPTER_INDEX, mCurrentLoaderAdapterIndex);
     outState.putInt(EXTRA_CURRENT_SOURCE_ADAPTER_INDEX, mCurrentSourceAdapterIndex);
   }
@@ -194,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
     menu.findItem(R.id.allow_animations).setChecked(mAllowAnimations);
-    menu.findItem(R.id.use_drawee).setChecked(mUseDrawee);
     return super.onPrepareOptionsMenu(menu);
   }
 
@@ -206,12 +195,6 @@ public class MainActivity extends AppCompatActivity {
       setAllowAnimations(!item.isChecked());
       return true;
     }
-
-    if (id == R.id.use_drawee) {
-      setUseDrawee(!item.isChecked());
-      return true;
-    }
-
     return super.onOptionsItemSelected(item);
   }
 
@@ -235,30 +218,18 @@ public class MainActivity extends AppCompatActivity {
     loadUrls();
   }
 
-  @VisibleForTesting
-  public void setUseDrawee(boolean useDrawee) {
-    mUseDrawee = useDrawee;
-    supportInvalidateOptionsMenu();
-    setLoaderAdapter(mCurrentLoaderAdapterIndex);
-    setSourceAdapter(mCurrentSourceAdapterIndex);
-  }
-
   private void requestStoragePermissions() {
     if (mHasStoragePermissions) {
       return;
     }
 
     ActivityCompat.requestPermissions(
-        this,
-        new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
-        PERMISSION_REQUEST_CODE);
+        this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
   }
 
   @Override
   public void onRequestPermissionsResult(
-      int requestCode,
-      String[] permissions,
-      int[] grantResults) {
+      int requestCode, String[] permissions, int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     for (int i = 0; i < permissions.length; ++i) {
       if (permissions[i].equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
@@ -291,12 +262,13 @@ public class MainActivity extends AppCompatActivity {
     switch (index) {
       case FRESCO_INDEX:
       case FRESCO_OKHTTP_INDEX:
-        mCurrentAdapter = new FrescoAdapter(
-            this,
-            mPerfListener,
-            index == FRESCO_INDEX ?
-                ImagePipelineConfigFactory.getImagePipelineConfig(this) :
-                ImagePipelineConfigFactory.getOkHttpImagePipelineConfig(this));
+        mCurrentAdapter =
+            new FrescoAdapter(
+                this,
+                mPerfListener,
+                index == FRESCO_INDEX
+                    ? ImagePipelineConfigFactory.getImagePipelineConfig(this)
+                    : ImagePipelineConfigFactory.getOkHttpImagePipelineConfig(this));
         break;
       case GLIDE_INDEX:
         mCurrentAdapter = new GlideAdapter(this, mPerfListener);
@@ -308,9 +280,7 @@ public class MainActivity extends AppCompatActivity {
         mCurrentAdapter = new UilAdapter(this, mPerfListener);
         break;
       case VOLLEY_INDEX:
-        mCurrentAdapter = mUseDrawee ?
-            new VolleyDraweeAdapter(this, mPerfListener) :
-            new VolleyAdapter(this, mPerfListener);
+        mCurrentAdapter = new VolleyAdapter(this, mPerfListener);
         break;
       case AQUERY_INDEX:
         mCurrentAdapter = new AQueryAdapter(this, mPerfListener);
@@ -325,7 +295,6 @@ public class MainActivity extends AppCompatActivity {
 
     updateStats();
   }
-
 
   private void setSourceAdapter(int index) {
     FLog.v(TAG, "onImageSourceSelect: %d", index);
@@ -373,8 +342,8 @@ public class MainActivity extends AppCompatActivity {
 
   public static int calcDesiredSize(Context context, int parentWidth, int parentHeight) {
     int orientation = context.getResources().getConfiguration().orientation;
-    int desiredSize = (orientation == Configuration.ORIENTATION_LANDSCAPE) ?
-        parentHeight / 2 : parentHeight / 3;
+    int desiredSize =
+        (orientation == Configuration.ORIENTATION_LANDSCAPE) ? parentHeight / 2 : parentHeight / 3;
     return Math.min(desiredSize, parentWidth);
   }
 
@@ -402,13 +371,12 @@ public class MainActivity extends AppCompatActivity {
   private void loadNetworkUrls() {
     String url = "https://api.imgur.com/3/gallery/hot/viral/0.json";
     ImageSize staticSize = chooseImageSize();
-    ImageUrlsRequestBuilder builder = new ImageUrlsRequestBuilder(url)
-        .addImageFormat(ImageFormat.JPEG, staticSize)
-        .addImageFormat(ImageFormat.PNG, staticSize);
+    ImageUrlsRequestBuilder builder =
+        new ImageUrlsRequestBuilder(url)
+            .addImageFormat(ImageFormat.JPEG, staticSize)
+            .addImageFormat(ImageFormat.PNG, staticSize);
     if (mAllowAnimations) {
-      builder.addImageFormat(
-          ImageFormat.GIF,
-          ImageSize.ORIGINAL_IMAGE);
+      builder.addImageFormat(ImageFormat.GIF, ImageSize.ORIGINAL_IMAGE);
     }
     ImageUrlsFetcher.getImageUrls(
         builder.build(),
@@ -497,9 +465,7 @@ public class MainActivity extends AppCompatActivity {
     sb.append(prefix).append(value).append(suffix);
   }
 
-  /**
-   * Determines display's height.
-   */
+  /** Determines display's height. */
   public int getDisplayHeight() {
     Display display = getWindowManager().getDefaultDisplay();
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {

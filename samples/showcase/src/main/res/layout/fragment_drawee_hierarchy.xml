@@ -33,13 +33,29 @@
         android:text="@string/drawee_hierarchy_clear"
         />
   </LinearLayout>
-  <android.support.v7.widget.SwitchCompat
+  <androidx.appcompat.widget.SwitchCompat
       android:id="@+id/retry_enabled"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
       android:layout_marginTop="@dimen/margin_medium"
       android:text="@string/drawee_hierarchy_retry"
+      />
+  <androidx.appcompat.widget.SwitchCompat
+      android:id="@+id/switch_rounded"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:text="@string/drawee_hierarchy_switch_rounded"
+      />
+  <androidx.appcompat.widget.SwitchCompat
+      android:id="@+id/switch_ninepatch"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:text="@string/drawee_hierarchy_switch_ninepatch"
       />
   <com.facebook.drawee.view.SimpleDraweeView
       android:id="@+id/drawee"

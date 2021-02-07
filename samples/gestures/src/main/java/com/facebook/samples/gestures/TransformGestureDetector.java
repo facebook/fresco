@@ -1,26 +1,24 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 package com.facebook.samples.gestures;
 
 import android.view.MotionEvent;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * Component that detects translation, scale and rotation based on touch events.
- * <p>
- * This class notifies its listeners whenever a gesture begins, updates or ends.
- * The instance of this detector is passed to the listeners, so it can be queried
- * for pivot, translation, scale or rotation.
+ *
+ * <p>This class notifies its listeners whenever a gesture begins, updates or ends. The instance of
+ * this detector is passed to the listeners, so it can be queried for pivot, translation, scale or
+ * rotation.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class TransformGestureDetector implements MultiPointerGestureDetector.Listener {
 
   /** The listener for receiving notifications when gestures occur. */
@@ -37,7 +35,7 @@ public class TransformGestureDetector implements MultiPointerGestureDetector.Lis
 
   private final MultiPointerGestureDetector mDetector;
 
-  private Listener mListener = null;
+  @Nullable private Listener mListener = null;
 
   public TransformGestureDetector(MultiPointerGestureDetector multiPointerGestureDetector) {
     mDetector = multiPointerGestureDetector;
@@ -51,21 +49,21 @@ public class TransformGestureDetector implements MultiPointerGestureDetector.Lis
 
   /**
    * Sets the listener.
+   *
    * @param listener listener to set
    */
   public void setListener(Listener listener) {
     mListener = listener;
   }
 
-  /**
-   * Resets the component to the initial state.
-   */
+  /** Resets the component to the initial state. */
   public void reset() {
     mDetector.reset();
   }
 
   /**
    * Handles the given motion event.
+   *
    * @param event event to handle
    * @return whether or not the event was handled
    */
@@ -102,7 +100,7 @@ public class TransformGestureDetector implements MultiPointerGestureDetector.Lis
     return (len > 0) ? sum / len : 0;
   }
 
-  /** Restarts the current gesture (if any).  */
+  /** Restarts the current gesture (if any). */
   public void restartGesture() {
     mDetector.restartGesture();
   }
@@ -134,14 +132,14 @@ public class TransformGestureDetector implements MultiPointerGestureDetector.Lis
 
   /** Gets the X component of the translation */
   public float getTranslationX() {
-    return calcAverage(mDetector.getCurrentX(), mDetector.getPointerCount()) -
-        calcAverage(mDetector.getStartX(), mDetector.getPointerCount());
+    return calcAverage(mDetector.getCurrentX(), mDetector.getPointerCount())
+        - calcAverage(mDetector.getStartX(), mDetector.getPointerCount());
   }
 
   /** Gets the Y component of the translation */
   public float getTranslationY() {
-    return calcAverage(mDetector.getCurrentY(), mDetector.getPointerCount()) -
-        calcAverage(mDetector.getStartY(), mDetector.getPointerCount());
+    return calcAverage(mDetector.getCurrentY(), mDetector.getPointerCount())
+        - calcAverage(mDetector.getStartY(), mDetector.getPointerCount());
   }
 
   /** Gets the scale */

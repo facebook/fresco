@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -19,12 +19,12 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.common.util.ByteConstants;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.File;
 import javax.annotation.Nullable;
 
-/**
- * Configuration class for a {@link DiskStorageCache}.
- */
+/** Configuration class for a {@link DiskStorageCache}. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DiskCacheConfig {
 
   private final int mVersion;
@@ -37,10 +37,24 @@ public class DiskCacheConfig {
   private final CacheErrorLogger mCacheErrorLogger;
   private final CacheEventListener mCacheEventListener;
   private final DiskTrimmableRegistry mDiskTrimmableRegistry;
-  private final Context mContext;
+  @Nullable private final Context mContext;
   private final boolean mIndexPopulateAtStartupEnabled;
 
-  private DiskCacheConfig(Builder builder) {
+  protected DiskCacheConfig(Builder builder) {
+    mContext = builder.mContext;
+    Preconditions.checkState(
+        builder.mBaseDirectoryPathSupplier != null || mContext != null,
+        "Either a non-null context or a base directory path or supplier must be provided.");
+    if (builder.mBaseDirectoryPathSupplier == null && mContext != null) {
+      builder.mBaseDirectoryPathSupplier =
+          new Supplier<File>() {
+            @Override
+            public File get() {
+              Preconditions.checkNotNull(mContext);
+              return mContext.getApplicationContext().getCacheDir();
+            }
+          };
+    }
     mVersion = builder.mVersion;
     mBaseDirectoryName = Preconditions.checkNotNull(builder.mBaseDirectoryName);
     mBaseDirectoryPathSupplier = Preconditions.checkNotNull(builder.mBaseDirectoryPathSupplier);
@@ -50,18 +64,17 @@ public class DiskCacheConfig {
     mEntryEvictionComparatorSupplier =
         Preconditions.checkNotNull(builder.mEntryEvictionComparatorSupplier);
     mCacheErrorLogger =
-        builder.mCacheErrorLogger == null ?
-            NoOpCacheErrorLogger.getInstance() :
-            builder.mCacheErrorLogger;
+        builder.mCacheErrorLogger == null
+            ? NoOpCacheErrorLogger.getInstance()
+            : builder.mCacheErrorLogger;
     mCacheEventListener =
-        builder.mCacheEventListener == null ?
-            NoOpCacheEventListener.getInstance() :
-            builder.mCacheEventListener;
+        builder.mCacheEventListener == null
+            ? NoOpCacheEventListener.getInstance()
+            : builder.mCacheEventListener;
     mDiskTrimmableRegistry =
-        builder.mDiskTrimmableRegistry == null ?
-            NoOpDiskTrimmableRegistry.getInstance() :
-            builder.mDiskTrimmableRegistry;
-    mContext = builder.mContext;
+        builder.mDiskTrimmableRegistry == null
+            ? NoOpDiskTrimmableRegistry.getInstance()
+            : builder.mDiskTrimmableRegistry;
     mIndexPopulateAtStartupEnabled = builder.mIndexPopulateAtStartupEnabled;
   }
 
@@ -105,7 +118,7 @@ public class DiskCacheConfig {
     return mDiskTrimmableRegistry;
   }
 
-  public Context getContext() {
+  public @Nullable Context getContext() {
     return mContext;
   }
 
@@ -116,10 +129,10 @@ public class DiskCacheConfig {
   /**
    * Create a new builder.
    *
-   * @param context If this is null, you must explicitly call
-   *   {@link Builder#setBaseDirectoryPath(File)} or
-   *   {@link Builder#setBaseDirectoryPathSupplier(Supplier)}
-   *   or the config won't know where to physically locate the cache.
+   * @param context If this is null, you must explicitly call {@link
+   *     Builder#setBaseDirectoryPath(File)} or {@link
+   *     Builder#setBaseDirectoryPathSupplier(Supplier)} or the config won't know where to
+   *     physically locate the cache.
    * @return
    */
   public static Builder newBuilder(@Nullable Context context) {
@@ -130,15 +143,15 @@ public class DiskCacheConfig {
 
     private int mVersion = 1;
     private String mBaseDirectoryName = "image_cache";
-    private Supplier<File> mBaseDirectoryPathSupplier;
+    private @Nullable Supplier<File> mBaseDirectoryPathSupplier;
     private long mMaxCacheSize = 40 * ByteConstants.MB;
     private long mMaxCacheSizeOnLowDiskSpace = 10 * ByteConstants.MB;
     private long mMaxCacheSizeOnVeryLowDiskSpace = 2 * ByteConstants.MB;
-    private EntryEvictionComparatorSupplier mEntryEvictionComparatorSupplier
-        = new DefaultEntryEvictionComparatorSupplier();
-    private CacheErrorLogger mCacheErrorLogger;
-    private CacheEventListener mCacheEventListener;
-    private DiskTrimmableRegistry mDiskTrimmableRegistry;
+    private EntryEvictionComparatorSupplier mEntryEvictionComparatorSupplier =
+        new DefaultEntryEvictionComparatorSupplier();
+    private @Nullable CacheErrorLogger mCacheErrorLogger;
+    private @Nullable CacheEventListener mCacheEventListener;
+    private @Nullable DiskTrimmableRegistry mDiskTrimmableRegistry;
     private boolean mIndexPopulateAtStartupEnabled;
 
     private final @Nullable Context mContext;
@@ -157,9 +170,7 @@ public class DiskCacheConfig {
       return this;
     }
 
-    /**
-     * Sets the name of the directory where the cache will be located.
-     */
+    /** Sets the name of the directory where the cache will be located. */
     public Builder setBaseDirectoryName(String baseDirectoryName) {
       mBaseDirectoryName = baseDirectoryName;
       return this;
@@ -181,9 +192,7 @@ public class DiskCacheConfig {
       return this;
     }
 
-    /**
-     * This is the default maximum size of the cache.
-     */
+    /** This is the default maximum size of the cache. */
     public Builder setMaxCacheSize(long maxCacheSize) {
       mMaxCacheSize = maxCacheSize;
       return this;
@@ -192,7 +201,7 @@ public class DiskCacheConfig {
     /**
      * This is the maximum size of the cache that is used when the device is low on disk space.
      *
-     * See {@link DiskTrimmable#trimToMinimum()}.
+     * <p>See {@link DiskTrimmable#trimToMinimum()}.
      */
     public Builder setMaxCacheSizeOnLowDiskSpace(long maxCacheSizeOnLowDiskSpace) {
       mMaxCacheSizeOnLowDiskSpace = maxCacheSizeOnLowDiskSpace;
@@ -202,32 +211,26 @@ public class DiskCacheConfig {
     /**
      * This is the maximum size of the cache when the device is extremely low on disk space.
      *
-     * See {@link DiskTrimmable#trimToNothing()}.
+     * <p>See {@link DiskTrimmable#trimToNothing()}.
      */
     public Builder setMaxCacheSizeOnVeryLowDiskSpace(long maxCacheSizeOnVeryLowDiskSpace) {
       mMaxCacheSizeOnVeryLowDiskSpace = maxCacheSizeOnVeryLowDiskSpace;
       return this;
     }
 
-    /**
-     * Provides the logic to determine the eviction order based on entry's access time and size
-     */
+    /** Provides the logic to determine the eviction order based on entry's access time and size */
     public Builder setEntryEvictionComparatorSupplier(EntryEvictionComparatorSupplier supplier) {
       mEntryEvictionComparatorSupplier = supplier;
       return this;
     }
 
-    /**
-     * The logger that is used to log errors made by the cache.
-     */
+    /** The logger that is used to log errors made by the cache. */
     public Builder setCacheErrorLogger(CacheErrorLogger cacheErrorLogger) {
       mCacheErrorLogger = cacheErrorLogger;
       return this;
     }
 
-    /**
-     * The listener for cache events.
-     */
+    /** The listener for cache events. */
     public Builder setCacheEventListener(CacheEventListener cacheEventListener) {
       mCacheEventListener = cacheEventListener;
       return this;
@@ -249,17 +252,6 @@ public class DiskCacheConfig {
     }
 
     public DiskCacheConfig build() {
-      Preconditions.checkState(
-          mBaseDirectoryPathSupplier != null || mContext != null,
-          "Either a non-null context or a base directory path or supplier must be provided.");
-      if (mBaseDirectoryPathSupplier == null && mContext != null) {
-        mBaseDirectoryPathSupplier = new Supplier<File>() {
-          @Override
-          public File get() {
-            return mContext.getApplicationContext().getCacheDir();
-          }
-        };
-      }
       return new DiskCacheConfig(this);
     }
   }

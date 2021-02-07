@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,32 +7,27 @@
 
 package com.facebook.cache.common;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * An interface for logging various cache events.
  *
- * <p> In all callback methods, the {@link CacheEvent} object should not be held beyond the method
+ * <p>In all callback methods, the {@link CacheEvent} object should not be held beyond the method
  * itself as they may be automatically recycled.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface CacheEventListener {
 
-  /**
-  * Triggered by a cache hit.
-  */
+  /** Triggered by a cache hit. */
   void onHit(CacheEvent cacheEvent);
 
-  /**
-   * Triggered by a cache miss for the given key.
-   */
+  /** Triggered by a cache miss for the given key. */
   void onMiss(CacheEvent cacheEvent);
 
-  /**
-   * Triggered at the start of the process to save a resource in cache.
-   */
+  /** Triggered at the start of the process to save a resource in cache. */
   void onWriteAttempt(CacheEvent cacheEvent);
 
-  /**
-   * Triggered after a resource has been successfully written to cache.
-   */
+  /** Triggered after a resource has been successfully written to cache. */
   void onWriteSuccess(CacheEvent cacheEvent);
 
   /**
@@ -47,14 +42,10 @@ public interface CacheEventListener {
    */
   void onWriteException(CacheEvent cacheEvent);
 
-  /**
-   * Triggered by an eviction from cache.
-   */
+  /** Triggered by an eviction from cache. */
   void onEviction(CacheEvent cacheEvent);
 
-  /**
-   * Triggered by a full cache clearance.
-   */
+  /** Triggered by a full cache clearance. */
   void onCleared();
 
   enum EvictionReason {

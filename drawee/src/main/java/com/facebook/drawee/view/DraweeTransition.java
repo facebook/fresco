@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.drawee.view;
 
 import android.animation.Animator;
@@ -19,15 +20,16 @@ import android.transition.TransitionSet;
 import android.transition.TransitionValues;
 import android.view.ViewGroup;
 import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
  * This Transition animates changes of {@link GenericDraweeView} between two ScaleTypes
  *
- * In combination with ChangeBounds, DraweeTransition allows GenericDraweeViews
- * that change size, shape, or {@link ScalingUtils.ScaleType} to animate contents
- * smoothly.
+ * <p>In combination with ChangeBounds, DraweeTransition allows GenericDraweeViews that change size,
+ * shape, or {@link ScalingUtils.ScaleType} to animate contents smoothly.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class DraweeTransition extends Transition {
 
@@ -39,8 +41,7 @@ public class DraweeTransition extends Transition {
   private final @Nullable PointF mToFocusPoint;
 
   public static TransitionSet createTransitionSet(
-      ScalingUtils.ScaleType fromScale,
-      ScalingUtils.ScaleType toScale) {
+      ScalingUtils.ScaleType fromScale, ScalingUtils.ScaleType toScale) {
     return createTransitionSet(fromScale, toScale, null, null);
   }
 
@@ -82,10 +83,8 @@ public class DraweeTransition extends Transition {
   }
 
   @Override
-  public Animator createAnimator(
-      ViewGroup sceneRoot,
-      TransitionValues startValues,
-      TransitionValues endValues) {
+  public @Nullable Animator createAnimator(
+      ViewGroup sceneRoot, TransitionValues startValues, TransitionValues endValues) {
     if (startValues == null || endValues == null) {
       return null;
     }
@@ -104,13 +103,14 @@ public class DraweeTransition extends Transition {
     draweeView.getHierarchy().setActualImageScaleType(scaleType);
 
     ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
-    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-      @Override
-      public void onAnimationUpdate(ValueAnimator animation) {
-        float fraction = (float) animation.getAnimatedValue();
-        scaleType.setValue(fraction);
-      }
-    });
+    animator.addUpdateListener(
+        new ValueAnimator.AnimatorUpdateListener() {
+          @Override
+          public void onAnimationUpdate(ValueAnimator animation) {
+            float fraction = (float) animation.getAnimatedValue();
+            scaleType.setValue(fraction);
+          }
+        });
     animator.addListener(
         new AnimatorListenerAdapter() {
           @Override

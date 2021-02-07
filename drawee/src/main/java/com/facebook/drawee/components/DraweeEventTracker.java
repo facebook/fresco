@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,14 +7,17 @@
 
 package com.facebook.drawee.components;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * This class keeps a record of internal events that take place in the Drawee.
- * <p/> Having a record of a last few events is useful for debugging purposes. If you want to
- * disable it, call {@link DraweeEventTracker.disable()} before {@link Fresco.initialize()}.
+ *
+ * <p>Having a record of a last few events is useful for debugging purposes. If you want to disable
+ * it, call {@link DraweeEventTracker.disable()} before {@link Fresco.initialize()}.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DraweeEventTracker {
 
   private final Queue<Event> mEventQueue = new ArrayBlockingQueue<>(MAX_EVENTS_TO_TRACK);
@@ -51,16 +54,13 @@ public class DraweeEventTracker {
     ON_SUBMIT_CACHE_HIT
   }
 
-  private DraweeEventTracker() {
-  }
+  private DraweeEventTracker() {}
 
   public static DraweeEventTracker newInstance() {
     return sEnabled ? new DraweeEventTracker() : sInstance;
   }
 
-  /**
-   * Disable DraweeEventTracker. Need to call before initialize Fresco.
-   */
+  /** Disable DraweeEventTracker. Need to call before initialize Fresco. */
   public static void disable() {
     sEnabled = false;
   }

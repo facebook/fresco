@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.imageutils;
 
 import static junit.framework.Assert.assertEquals;
@@ -17,9 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests {@link WebpUtil}
- */
+/** Tests {@link WebpUtil} */
 @RunWith(RobolectricTestRunner.class)
 public class WebPUtilTest {
 
@@ -71,10 +70,7 @@ public class WebPUtilTest {
    * @param expectedHeight The expected height
    * @throws IOException In case of errors
    */
-  private void checkImage(
-      final String imagePath,
-      int expectedWidth,
-      int expectedHeight)
+  private void checkImage(final String imagePath, int expectedWidth, int expectedHeight)
       throws IOException {
     Pair<Integer, Integer> size = WebpUtil.getSize(getResourceStream(imagePath));
     assertNotNull("Something went wrong during parsing WebP! " + imagePath, size);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -13,7 +13,7 @@ import static org.mockito.Mockito.*;
 import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSubscriber;
-import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.imagepipeline.listener.RequestListener2;
 import com.facebook.imagepipeline.producers.BaseConsumer;
 import com.facebook.imagepipeline.producers.Consumer;
 import com.facebook.imagepipeline.producers.Producer;
@@ -26,7 +26,7 @@ import org.robolectric.*;
 @RunWith(RobolectricTestRunner.class)
 public class ProducerToDataSourceAdapterTest {
 
-  @Mock public RequestListener mRequestListener;
+  @Mock public RequestListener2 mRequestListener;
 
   private static final boolean FINISHED = true;
   private static final boolean NOT_FINISHED = false;
@@ -72,16 +72,10 @@ public class ProducerToDataSourceAdapterTest {
     when(mSettableProducerContext.getId()).thenReturn(mRequestId);
     when(mSettableProducerContext.isPrefetch()).thenReturn(true);
     mProducer = mock(Producer.class);
-    mDataSource = ProducerToDataSourceAdapter.create(
-        mProducer,
-        mSettableProducerContext,
-        mRequestListener);
+    mDataSource =
+        ProducerToDataSourceAdapter.create(mProducer, mSettableProducerContext, mRequestListener);
     ArgumentCaptor<Consumer> captor = ArgumentCaptor.forClass(Consumer.class);
-    verify(mRequestListener).onRequestStart(
-        mSettableProducerContext.getImageRequest(),
-        mSettableProducerContext.getCallerContext(),
-        mRequestId,
-        mSettableProducerContext.isPrefetch());
+    verify(mRequestListener).onRequestStart(mSettableProducerContext);
     verify(mProducer).produceResults(captor.capture(), any(SettableProducerContext.class));
     mInternalConsumer = captor.getValue();
 
@@ -153,16 +147,10 @@ public class ProducerToDataSourceAdapterTest {
     verifyNoMoreInteractionsAndReset();
   }
 
-  private void testNewResult(
-      Object result,
-      boolean isLast,
-      int numSubscribers) {
+  private void testNewResult(Object result, boolean isLast, int numSubscribers) {
     mInternalConsumer.onNewResult(result, BaseConsumer.simpleStatusForIsLast(isLast));
     if (isLast) {
-      verify(mRequestListener).onRequestSuccess(
-          mSettableProducerContext.getImageRequest(),
-          mRequestId,
-          mSettableProducerContext.isPrefetch());
+      verify(mRequestListener).onRequestSuccess(mSettableProducerContext);
     }
     if (numSubscribers >= 1) {
       verify(mDataSubscriber1).onNewResult(mDataSource);
@@ -175,11 +163,7 @@ public class ProducerToDataSourceAdapterTest {
 
   private void testFailure(Object result, int numSubscribers) {
     mInternalConsumer.onFailure(mException);
-    verify(mRequestListener).onRequestFailure(
-        mSettableProducerContext.getImageRequest(),
-        mRequestId,
-        mException,
-        mSettableProducerContext.isPrefetch());
+    verify(mRequestListener).onRequestFailure(mSettableProducerContext, mException);
     if (numSubscribers >= 1) {
       verify(mDataSubscriber1).onFailure(mDataSource);
     }
@@ -197,7 +181,7 @@ public class ProducerToDataSourceAdapterTest {
   private void testClose(boolean isFinished, int numSubscribers) {
     mDataSource.close();
     if (!isFinished) {
-      verify(mRequestListener).onRequestCancellation(mRequestId);
+      verify(mRequestListener).onRequestCancellation(mSettableProducerContext);
       if (numSubscribers >= 1) {
         verify(mDataSubscriber1).onCancellation(mDataSource);
       }
@@ -380,10 +364,7 @@ public class ProducerToDataSourceAdapterTest {
     testSubscribe(NO_INTERACTIONS);
 
     mInternalConsumer.onNewResult(null, Consumer.IS_LAST);
-    verify(mRequestListener).onRequestSuccess(
-        mSettableProducerContext.getImageRequest(),
-        mRequestId,
-        mSettableProducerContext.isPrefetch());
+    verify(mRequestListener).onRequestSuccess(mSettableProducerContext);
     verify(mDataSubscriber1).onNewResult(mDataSource);
     verify(mDataSubscriber2).onNewResult(mDataSource);
     verifyWithResult(null, LAST);
@@ -396,10 +377,7 @@ public class ProducerToDataSourceAdapterTest {
     testNewResult(mResult1, INTERMEDIATE, 1);
 
     mInternalConsumer.onNewResult(null, Consumer.IS_LAST);
-    verify(mRequestListener).onRequestSuccess(
-        mSettableProducerContext.getImageRequest(),
-        mRequestId,
-        mSettableProducerContext.isPrefetch());
+    verify(mRequestListener).onRequestSuccess(mSettableProducerContext);
     verify(mDataSubscriber1).onNewResult(mDataSource);
     verifyWithResult(null, LAST);
 

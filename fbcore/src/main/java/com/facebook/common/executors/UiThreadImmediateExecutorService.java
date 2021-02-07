@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,16 +9,19 @@ package com.facebook.common.executors;
 
 import android.os.Handler;
 import android.os.Looper;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.ExecutorService;
+import javax.annotation.Nullable;
 
 /**
  * An {@link ExecutorService} that is backed by the application's main looper.
  *
- * <p/> If the execute is called from the thread of the application's main looper,
- * it will be executed synchronously.
+ * <p>If the execute is called from the thread of the application's main looper, it will be executed
+ * synchronously.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class UiThreadImmediateExecutorService extends HandlerExecutorServiceImpl {
-  private static UiThreadImmediateExecutorService sInstance = null;
+  private static @Nullable UiThreadImmediateExecutorService sInstance = null;
 
   private UiThreadImmediateExecutorService() {
     super(new Handler(Looper.getMainLooper()));

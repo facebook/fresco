@@ -1,14 +1,10 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.samples.scrollperf.util;
 
 import android.content.Context;
@@ -18,27 +14,26 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.conf.Const;
 
-/**
- * Utility class about Drawee
- */
+/** Utility class about Drawee */
 public final class DraweeUtil {
 
   /**
    * Creates the Hierarchy using the information into the Config
    *
    * @param context The Context
-   * @param config  The Config object
+   * @param config The Config object
    * @return The Hierarchy to use
    */
   public static GenericDraweeHierarchy createDraweeHierarchy(
-          final Context context,
-          final Config config) {
+      final Context context, final Config config) {
+    FrescoSystrace.beginSection("DraweeUtil#createDraweeHierarchy");
     GenericDraweeHierarchyBuilder builder =
-            new GenericDraweeHierarchyBuilder(context.getResources())
+        new GenericDraweeHierarchyBuilder(context.getResources())
             .setFadeDuration(config.fadeDurationMs)
             .setPlaceholderImage(Const.PLACEHOLDER)
             .setFailureImage(Const.FAILURE)
@@ -63,7 +58,9 @@ public final class DraweeUtil {
 
       builder.setRoundingParams(roundingParams);
     }
-    return builder.build();
+    GenericDraweeHierarchy result = builder.build();
+    FrescoSystrace.endSection();
+    return result;
   }
 
   public static void applyScaleType(GenericDraweeHierarchyBuilder builder, final Config config) {
@@ -97,6 +94,7 @@ public final class DraweeUtil {
 
   /**
    * Utility method which set the bgColor based on configuration values
+   *
    * @param view The View to change the bgColor to
    * @param config The Config object
    */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,11 +8,13 @@
 package com.facebook.imagepipeline.producers;
 
 import android.content.ContentResolver;
+import android.content.res.AssetFileDescriptor;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Pair;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.ImmutableMap;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
@@ -25,7 +27,9 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
+import com.facebook.soloader.DoNotOptimize;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -62,38 +66,31 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
    * promise about being able to produce images for a particular source, only generally being able
    * to produce output of the desired resolution.
    *
-   * <p> In this case, assumptions are made about the common size of EXIF thumbnails which is that
+   * <p>In this case, assumptions are made about the common size of EXIF thumbnails which is that
    * they may be up to 512 pixels in each dimension.
    *
    * @param resizeOptions the resize options from the current request
    * @return true if the producer can meet these needs
-  */
+   */
   @Override
   public boolean canProvideImageForSize(ResizeOptions resizeOptions) {
     return ThumbnailSizeChecker.isImageBigEnough(
-        COMMON_EXIF_THUMBNAIL_MAX_DIMENSION,
-        COMMON_EXIF_THUMBNAIL_MAX_DIMENSION,
-        resizeOptions);
+        COMMON_EXIF_THUMBNAIL_MAX_DIMENSION, COMMON_EXIF_THUMBNAIL_MAX_DIMENSION, resizeOptions);
   }
 
   @Override
   public void produceResults(
-      final Consumer<EncodedImage> consumer,
-      final ProducerContext producerContext) {
+      final Consumer<EncodedImage> consumer, final ProducerContext producerContext) {
 
-    final ProducerListener listener = producerContext.getListener();
-    final String requestId = producerContext.getId();
+    final ProducerListener2 listener = producerContext.getProducerListener();
     final ImageRequest imageRequest = producerContext.getImageRequest();
 
+    producerContext.putOriginExtra("local", "exif");
     final StatefulProducerRunnable cancellableProducerRunnable =
         new StatefulProducerRunnable<EncodedImage>(
-            consumer,
-            listener,
-            PRODUCER_NAME,
-            requestId) {
+            consumer, listener, producerContext, PRODUCER_NAME) {
           @Override
-          protected EncodedImage getResult()
-              throws Exception {
+          protected @Nullable EncodedImage getResult() throws Exception {
             final Uri sourceUri = imageRequest.getSourceUri();
 
             final ExifInterface exifInterface = getExifInterface(sourceUri);
@@ -126,11 +123,22 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
     mExecutor.execute(cancellableProducerRunnable);
   }
 
-  @VisibleForTesting @Nullable ExifInterface getExifInterface(Uri uri) {
+  @VisibleForTesting
+  @Nullable
+  ExifInterface getExifInterface(Uri uri) {
     final String realPath = UriUtil.getRealPathFromUri(mContentResolver, uri);
     try {
       if (canReadAsFile(realPath)) {
         return new ExifInterface(realPath);
+      } else {
+        AssetFileDescriptor assetFileDescriptor =
+            UriUtil.getAssetFileDescriptor(mContentResolver, uri);
+        if (assetFileDescriptor != null && Build.VERSION.SDK_INT >= 24) {
+          final ExifInterface exifInterface =
+              (new Api24Utils()).getExifInterface(assetFileDescriptor.getFileDescriptor());
+          assetFileDescriptor.close();
+          return exifInterface;
+        }
       }
     } catch (IOException e) {
       // If we cannot get the exif interface, return null as there is no thumbnail available
@@ -141,9 +149,7 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
     return null;
   }
 
-  private EncodedImage buildEncodedImage(
-      PooledByteBuffer imageBytes,
-      ExifInterface exifInterface) {
+  private EncodedImage buildEncodedImage(PooledByteBuffer imageBytes, ExifInterface exifInterface) {
     Pair<Integer, Integer> dimensions =
         BitmapUtil.decodeDimensions(new PooledByteBufferInputStream(imageBytes));
     int rotationAngle = getRotationAngle(exifInterface);
@@ -169,11 +175,19 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
         Integer.parseInt(exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION)));
   }
 
-  @VisibleForTesting boolean canReadAsFile(String realPath) throws IOException {
+  @VisibleForTesting
+  boolean canReadAsFile(String realPath) throws IOException {
     if (realPath == null) {
       return false;
     }
     final File file = new File(realPath);
     return file.exists() && file.canRead();
+  }
+
+  @DoNotOptimize
+  private class Api24Utils {
+    ExifInterface getExifInterface(FileDescriptor fileDescriptor) throws IOException {
+      return Build.VERSION.SDK_INT >= 24 ? new ExifInterface(fileDescriptor) : null;
+    }
   }
 }

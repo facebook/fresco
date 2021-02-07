@@ -1,17 +1,21 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.drawee.backends.pipeline.info;
 
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ForwardingImageOriginListener implements ImageOriginListener {
 
   private static final String TAG = "ForwardingImageOriginListener";
@@ -36,14 +40,20 @@ public class ForwardingImageOriginListener implements ImageOriginListener {
   }
 
   @Override
-  public synchronized void onImageLoaded(String controllerId, int imageOrigin, boolean successful) {
+  public synchronized void onImageLoaded(
+      String controllerId,
+      int imageOrigin,
+      boolean successful,
+      @Nullable String ultimateProducerName) {
     final int numberOfListeners = mImageOriginListeners.size();
     for (int i = 0; i < numberOfListeners; i++) {
       ImageOriginListener listener = mImageOriginListeners.get(i);
-      try {
-        listener.onImageLoaded(controllerId, imageOrigin, successful);
-      } catch (Exception e) {
-        FLog.e(TAG, "InternalListener exception in onImageLoaded", e);
+      if (listener != null) {
+        try {
+          listener.onImageLoaded(controllerId, imageOrigin, successful, ultimateProducerName);
+        } catch (Exception e) {
+          FLog.e(TAG, "InternalListener exception in onImageLoaded", e);
+        }
       }
     }
   }

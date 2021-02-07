@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,13 +8,13 @@
 package com.facebook.binaryresource;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * A trivial implementation of BinaryResource that wraps a byte array
- */
+/** A trivial implementation of BinaryResource that wraps a byte array */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ByteArrayBinaryResource implements BinaryResource {
   private final byte[] mBytes;
 
@@ -34,6 +34,7 @@ public class ByteArrayBinaryResource implements BinaryResource {
 
   /**
    * Get the underlying byte array
+   *
    * @return the underlying byte array of this resource
    */
   @Override

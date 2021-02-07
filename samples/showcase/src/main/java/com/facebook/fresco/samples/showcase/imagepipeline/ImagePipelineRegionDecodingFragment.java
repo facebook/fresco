@@ -1,14 +1,10 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.samples.showcase.imagepipeline;
 
 import android.graphics.Bitmap;
@@ -16,10 +12,10 @@ import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.Nullable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -82,10 +78,9 @@ public class ImagePipelineRegionDecodingFragment extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
-    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
     mUri =
-        imageUriProvider.createSampleUri(
-            ImageUriProvider.ImageSize.L, ImageUriProvider.Orientation.LANDSCAPE);
+        sampleUris()
+            .createSampleUri(ImageUriProvider.ImageSize.L, ImageUriProvider.Orientation.LANDSCAPE);
 
     mFullDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view_full);
     mFullDraweeView.setController(
@@ -136,11 +131,6 @@ public class ImagePipelineRegionDecodingFragment extends BaseShowcaseFragment {
             .build());
   }
 
-  @Override
-  public int getTitleId() {
-    return R.string.imagepipeline_region_decoding_title;
-  }
-
   private ImageDecoder createRegionDecoder(int left, int top, int right, int bottom) {
     return new RegionDecoder(
         Fresco.getImagePipelineFactory().getPlatformDecoder(), new Rect(left, top, right, bottom));
@@ -163,8 +153,8 @@ public class ImagePipelineRegionDecodingFragment extends BaseShowcaseFragment {
         QualityInfo qualityInfo,
         ImageDecodeOptions options) {
       CloseableReference<Bitmap> decodedBitmapReference =
-          mPlatformDecoder.decodeJPEGFromEncodedImage(
-              encodedImage, options.bitmapConfig, mRegion, length);
+          mPlatformDecoder.decodeJPEGFromEncodedImageWithColorSpace(
+              encodedImage, options.bitmapConfig, mRegion, length, options.colorSpace);
       try {
         return new CloseableStaticBitmap(decodedBitmapReference, qualityInfo, 0);
       } finally {

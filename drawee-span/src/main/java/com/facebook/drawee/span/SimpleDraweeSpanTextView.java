@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,23 +10,24 @@ package com.facebook.drawee.span;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
- * DraweeSpan text view that can be used to bind to a {@link DraweeSpanStringBuilder} to
- * display images within text strings.
+ * DraweeSpan text view that can be used to bind to a {@link DraweeSpanStringBuilder} to display
+ * images within text strings.
  *
- * You should always use {@link #setDraweeSpanStringBuilder(DraweeSpanStringBuilder)}
- * instead of calling {@link #setText(CharSequence)} and its variations.
+ * <p>You should always use {@link #setDraweeSpanStringBuilder(DraweeSpanStringBuilder)} instead of
+ * calling {@link #setText(CharSequence)} and its variations.
  *
- * If you use the normal text view setters, this view will behave exactly like BetterTextView.
- * If you previously set a {@link DraweeSpanStringBuilder} but want to re-use it as a normal
- * text view, you should call {@link #detachCurrentDraweeSpanStringBuilder()} first.
- *
+ * <p>If you use the normal text view setters, this view will behave exactly like BetterTextView. If
+ * you previously set a {@link DraweeSpanStringBuilder} but want to re-use it as a normal text view,
+ * you should call {@link #detachCurrentDraweeSpanStringBuilder()} first.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class SimpleDraweeSpanTextView extends TextView {
 
-  private DraweeSpanStringBuilder mDraweeStringBuilder;
+  @Nullable private DraweeSpanStringBuilder mDraweeStringBuilder;
   private boolean mIsAttached = false;
 
   public SimpleDraweeSpanTextView(Context context) {
@@ -93,8 +94,8 @@ public class SimpleDraweeSpanTextView extends TextView {
   }
 
   /**
-   * Detaches the currently attached DraweeSpanStringBuilder (if there is one) so that
-   * this view can be used as a normal text view instead.
+   * Detaches the currently attached DraweeSpanStringBuilder (if there is one) so that this view can
+   * be used as a normal text view instead.
    */
   public void detachCurrentDraweeSpanStringBuilder() {
     if (mDraweeStringBuilder != null) {

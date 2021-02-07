@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,10 +8,12 @@
 package com.facebook.imagepipeline.producers;
 
 import android.util.Pair;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Sets;
-import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.util.TriState;
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.HashMap;
@@ -28,8 +30,8 @@ import javax.annotation.concurrent.ThreadSafe;
  *
  * <p>Requests using the same key will be combined into a single request. This request is only
  * cancelled when all underlying requests are cancelled, and returns values to all underlying
- * consumers. If the request has already return one or more results but has not finished, then
- * any requests with the same key will have the most recent result returned to them immediately.
+ * consumers. If the request has already return one or more results but has not finished, then any
+ * requests with the same key will have the most recent result returned to them immediately.
  *
  * @param <K> type of the key
  * @param <T> type of the closeable reference result that is returned to this producer
@@ -37,53 +39,90 @@ import javax.annotation.concurrent.ThreadSafe;
 @ThreadSafe
 public abstract class MultiplexProducer<K, T extends Closeable> implements Producer<T> {
 
+  /* Specifies if the first of the multiplex requests of the group that the marked request belongs to is a prefetch */
+  public static final String EXTRAS_STARTED_AS_PREFETCH = "started_as_prefetch";
+
   /**
    * Map of multiplexers guarded by "this" lock. The lock should be used only to synchronize
    * accesses to this map. In particular, no callbacks or third party code should be run under
    * "this" lock.
    *
-   * <p> The map might contain entries in progress, entries in progress for which cancellation
-   * has been requested and ignored, or cancelled entries for which onCancellation has not been
-   * called yet.
+   * <p>The map might contain entries in progress, entries in progress for which cancellation has
+   * been requested and ignored, or cancelled entries for which onCancellation has not been called
+   * yet.
    */
   @GuardedBy("this")
-  @VisibleForTesting final Map<K, Multiplexer> mMultiplexers;
+  @VisibleForTesting
+  final Map<K, Multiplexer> mMultiplexers;
+
   private final Producer<T> mInputProducer;
 
-  protected MultiplexProducer(Producer<T> inputProducer) {
+  private final boolean mKeepCancelledFetchAsLowPriority;
+
+  private final String mProducerName;
+  private final String mDedupedRequestsCountKey;
+
+  protected MultiplexProducer(
+      Producer<T> inputProducer,
+      String producerName,
+      @ProducerContext.ExtraKeys String dedupedRequestsCountKey) {
+    this(inputProducer, producerName, dedupedRequestsCountKey, false);
+  }
+
+  protected MultiplexProducer(
+      Producer<T> inputProducer,
+      String producerName,
+      @ProducerContext.ExtraKeys String dedupedRequestsCountKey,
+      boolean keepCancelledFetchAsLowPriority) {
     mInputProducer = inputProducer;
     mMultiplexers = new HashMap<>();
+    mKeepCancelledFetchAsLowPriority = keepCancelledFetchAsLowPriority;
+    mProducerName = producerName;
+    mDedupedRequestsCountKey = dedupedRequestsCountKey;
   }
 
   @Override
   public void produceResults(Consumer<T> consumer, ProducerContext context) {
-    K key = getKey(context);
-    Multiplexer multiplexer;
-    boolean createdNewMultiplexer;
-    // We do want to limit scope of this lock to guard only accesses to mMultiplexers map.
-    // However what we would like to do here is to atomically lookup mMultiplexers, add new
-    // consumer to consumers set associated with the map's entry and call consumer's callback with
-    // last intermediate result. We should not do all of those things under this lock.
-    do {
-      createdNewMultiplexer = false;
-      synchronized (this) {
-        multiplexer = getExistingMultiplexer(key);
-        if (multiplexer == null) {
-          multiplexer = createAndPutNewMultiplexer(key);
-          createdNewMultiplexer = true;
-        }
+    try {
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("MultiplexProducer#produceResults");
       }
-      // addNewConsumer may call consumer's onNewResult method immediately. For this reason
-      // we release "this" lock. If multiplexer is removed from mMultiplexers in the meantime,
-      // which is not very probable, then addNewConsumer will fail and we will be able to retry.
-    } while (!multiplexer.addNewConsumer(consumer, context));
 
-    if (createdNewMultiplexer) {
-      multiplexer.startInputProducerIfHasAttachedConsumers();
+      context.getProducerListener().onProducerStart(context, mProducerName);
+
+      K key = getKey(context);
+      Multiplexer multiplexer;
+      boolean createdNewMultiplexer;
+      // We do want to limit scope of this lock to guard only accesses to mMultiplexers map.
+      // However what we would like to do here is to atomically lookup mMultiplexers, add new
+      // consumer to consumers set associated with the map's entry and call consumer's callback with
+      // last intermediate result. We should not do all of those things under this lock.
+      do {
+        createdNewMultiplexer = false;
+        synchronized (this) {
+          multiplexer = getExistingMultiplexer(key);
+          if (multiplexer == null) {
+            multiplexer = createAndPutNewMultiplexer(key);
+            createdNewMultiplexer = true;
+          }
+        }
+        // addNewConsumer may call consumer's onNewResult method immediately. For this reason
+        // we release "this" lock. If multiplexer is removed from mMultiplexers in the meantime,
+        // which is not very probable, then addNewConsumer will fail and we will be able to retry.
+      } while (!multiplexer.addNewConsumer(consumer, context));
+
+      if (createdNewMultiplexer) {
+        multiplexer.startInputProducerIfHasAttachedConsumers(
+            TriState.valueOf(context.isPrefetch()));
+      }
+    } finally {
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
   }
 
-  private synchronized Multiplexer getExistingMultiplexer(K key) {
+  protected synchronized Multiplexer getExistingMultiplexer(K key) {
     return mMultiplexers.get(key);
   }
 
@@ -93,7 +132,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
     return multiplexer;
   }
 
-  private synchronized void removeMultiplexer(K key, Multiplexer multiplexer) {
+  protected synchronized void removeMultiplexer(K key, Multiplexer multiplexer) {
     if (mMultiplexers.get(key) == multiplexer) {
       mMultiplexers.remove(key);
     }
@@ -107,32 +146,35 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
    * Multiplexes same requests - passes the same result to multiple consumers, manages cancellation
    * and maintains last intermediate result.
    *
-   * <p> Multiplexed computation might be in one of 3 states:
+   * <p>Multiplexed computation might be in one of 3 states:
+   *
    * <ul>
-   *   <li> in progress </li>
-   *   <li> in progress after requesting cancellation (cancellation has been denied) </li>
-   *   <li> cancelled, but without onCancellation method being called yet </li>
+   *   <li>in progress
+   *   <li>in progress after requesting cancellation (cancellation has been denied)
+   *   <li>cancelled, but without onCancellation method being called yet
    * </ul>
    *
-   * <p> In last case new consumers may be added before onCancellation is called. When it is, the
+   * <p>In last case new consumers may be added before onCancellation is called. When it is, the
    * Multiplexer has to check if it is the case and start next producer once again if so.
    */
-  @VisibleForTesting class Multiplexer {
+  @VisibleForTesting
+  class Multiplexer {
     private final K mKey;
 
     /**
-     * Set of consumer-context pairs participating in multiplexing. Cancelled pairs
-     * are removed from the set.
+     * Set of consumer-context pairs participating in multiplexing. Cancelled pairs are removed from
+     * the set.
      *
-     * <p> Following invariant is maintained: if mConsumerContextPairs is not empty, then this
+     * <p>Following invariant is maintained: if mConsumerContextPairs is not empty, then this
      * instance of Multiplexer is present in mMultiplexers map. This way all ongoing multiplexed
      * requests might be attached to by other requests
      *
-     * <p> A Multiplexer is removed from the map only if
+     * <p>A Multiplexer is removed from the map only if
+     *
      * <ul>
-     *   <li> final result is received </li>
-     *   <li> error is received </li>
-     *   <li> cancellation notification is received and mConsumerContextPairs is empty </li>
+     *   <li>final result is received
+     *   <li>error is received
+     *   <li>cancellation notification is received and mConsumerContextPairs is empty
      * </ul>
      */
     private final CopyOnWriteArraySet<Pair<Consumer<T>, ProducerContext>> mConsumerContextPairs;
@@ -140,8 +182,10 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
     @GuardedBy("Multiplexer.this")
     @Nullable
     private T mLastIntermediateResult;
+
     @GuardedBy("Multiplexer.this")
     private float mLastProgress;
+
     @GuardedBy("Multiplexer.this")
     private @Consumer.Status int mLastStatus;
 
@@ -149,7 +193,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
      * Producer context used for cancelling producers below MultiplexProducers, and for setting
      * whether the request is a prefetch or not.
      *
-     * <p> If not null, then underlying computation has been started, and no onCancellation callback
+     * <p>If not null, then underlying computation has been started, and no onCancellation callback
      * has been received yet.
      */
     @GuardedBy("Multiplexer.this")
@@ -159,11 +203,11 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
     /**
      * Currently used consumer of next producer.
      *
-     * <p> The same Multiplexer might call mInputProducer.produceResults multiple times when
+     * <p>The same Multiplexer might call mInputProducer.produceResults multiple times when
      * cancellation happens. This field is used to guard against late callbacks.
      *
-     * <p>  If not null, then underlying computation has been started, and no onCancellation
-     * callback has been received yet.
+     * <p>If not null, then underlying computation has been started, and no onCancellation callback
+     * has been received yet.
      */
     @GuardedBy("Multiplexer.this")
     @Nullable
@@ -178,14 +222,13 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
      * Tries to add consumer to set of consumers participating in multiplexing. If successful and
      * appropriate intermediate result is already known, then it will be passed to the consumer.
      *
-     * <p> This function will fail and return false if the multiplexer is not present in
+     * <p>This function will fail and return false if the multiplexer is not present in
      * mMultiplexers map.
      *
      * @return true if consumer was added successfully
      */
     public boolean addNewConsumer(
-        final Consumer<T> consumer,
-        final ProducerContext producerContext) {
+        final Consumer<T> consumer, final ProducerContext producerContext) {
       final Pair<Consumer<T>, ProducerContext> consumerContextPair =
           Pair.create(consumer, producerContext);
       T lastIntermediateResult;
@@ -274,7 +317,13 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
                   isIntermediateResultExpectedCallbacks);
 
               if (contextToCancel != null) {
-                contextToCancel.cancel();
+                if (mKeepCancelledFetchAsLowPriority && !contextToCancel.isPrefetch()) {
+                  List<ProducerContextCallbacks> callbacks =
+                      contextToCancel.setPriorityNoCallbacks(Priority.LOW);
+                  BaseProducerContext.callOnPriorityChanged(callbacks);
+                } else {
+                  contextToCancel.cancel();
+                }
               }
               if (pairWasRemoved) {
                 consumerContextPair.first.onCancellation();
@@ -301,10 +350,10 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
 
     /**
      * Starts next producer if it is not started yet and there is at least one Consumer waiting for
-     * the data. If all consumers are cancelled, then this multiplexer is removed from mRequest
-     * map to clean up.
+     * the data. If all consumers are cancelled, then this multiplexer is removed from mRequest map
+     * to clean up.
      */
-    private void startInputProducerIfHasAttachedConsumers() {
+    private void startInputProducerIfHasAttachedConsumers(TriState startedAsPrefetch) {
       BaseProducerContext multiplexProducerContext;
       ForwardingConsumer forwardingConsumer;
       synchronized (Multiplexer.this) {
@@ -318,23 +367,28 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
         }
 
         ProducerContext producerContext = mConsumerContextPairs.iterator().next().second;
-        mMultiplexProducerContext = new BaseProducerContext(
-            producerContext.getImageRequest(),
-            producerContext.getId(),
-            producerContext.getListener(),
-            producerContext.getCallerContext(),
-            producerContext.getLowestPermittedRequestLevel(),
-            computeIsPrefetch(),
-            computeIsIntermediateResultExpected(),
-            computePriority());
+        mMultiplexProducerContext =
+            new BaseProducerContext(
+                producerContext.getImageRequest(),
+                producerContext.getId(),
+                producerContext.getProducerListener(),
+                producerContext.getCallerContext(),
+                producerContext.getLowestPermittedRequestLevel(),
+                computeIsPrefetch(),
+                computeIsIntermediateResultExpected(),
+                computePriority(),
+                producerContext.getImagePipelineConfig());
+        mMultiplexProducerContext.putExtras(producerContext.getExtras());
+        if (startedAsPrefetch.isSet()) {
+          mMultiplexProducerContext.setExtra(
+              EXTRAS_STARTED_AS_PREFETCH, startedAsPrefetch.asBoolean());
+        }
 
         mForwardingConsumer = new ForwardingConsumer();
         multiplexProducerContext = mMultiplexProducerContext;
         forwardingConsumer = mForwardingConsumer;
       }
-      mInputProducer.produceResults(
-          forwardingConsumer,
-          multiplexProducerContext);
+      mInputProducer.produceResults(forwardingConsumer, multiplexProducerContext);
     }
 
     @Nullable
@@ -407,6 +461,9 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
       while (iterator.hasNext()) {
         Pair<Consumer<T>, ProducerContext> pair = iterator.next();
         synchronized (pair) {
+          pair.second
+              .getProducerListener()
+              .onProducerFinishWithFailure(pair.second, mProducerName, t, null);
           pair.first.onFailure(t);
         }
       }
@@ -417,6 +474,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
         final T closeableObject,
         @Consumer.Status final int status) {
       Iterator<Pair<Consumer<T>, ProducerContext>> iterator;
+      final int size;
       synchronized (Multiplexer.this) {
         // check for late callbacks
         if (mForwardingConsumer != consumer) {
@@ -427,6 +485,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
         mLastIntermediateResult = null;
 
         iterator = mConsumerContextPairs.iterator();
+        size = mConsumerContextPairs.size();
         if (BaseConsumer.isNotLast(status)) {
           mLastIntermediateResult = cloneOrNull(closeableObject);
           mLastStatus = status;
@@ -439,6 +498,15 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
       while (iterator.hasNext()) {
         Pair<Consumer<T>, ProducerContext> pair = iterator.next();
         synchronized (pair) {
+          if (BaseConsumer.isLast(status)) {
+            pair.second
+                .getProducerListener()
+                .onProducerFinishWithSuccess(pair.second, mProducerName, null);
+            if (mMultiplexProducerContext != null) {
+              pair.second.putExtras(mMultiplexProducerContext.getExtras());
+            }
+            pair.second.setExtra(mDedupedRequestsCountKey, size);
+          }
           pair.first.onNewResult(closeableObject, status);
         }
       }
@@ -457,7 +525,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
         mLastIntermediateResult = null;
       }
 
-      startInputProducerIfHasAttachedConsumers();
+      startInputProducerIfHasAttachedConsumers(TriState.UNSET);
     }
 
     public void onProgressUpdate(ForwardingConsumer forwardingConsumer, float progress) {
@@ -490,28 +558,62 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
       }
     }
 
-    /**
-     * Forwards {@link Consumer} methods to Multiplexer.
-     */
+    /** Forwards {@link Consumer} methods to Multiplexer. */
     private class ForwardingConsumer extends BaseConsumer<T> {
       @Override
       protected void onNewResultImpl(T newResult, @Status int status) {
-        Multiplexer.this.onNextResult(this, newResult, status);
+        try {
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.beginSection("MultiplexProducer#onNewResult");
+          }
+          Multiplexer.this.onNextResult(this, newResult, status);
+        } finally {
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.endSection();
+          }
+        }
       }
 
       @Override
       protected void onFailureImpl(Throwable t) {
-        Multiplexer.this.onFailure(this, t);
+        try {
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.beginSection("MultiplexProducer#onFailure");
+          }
+          Multiplexer.this.onFailure(this, t);
+        } finally {
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.endSection();
+          }
+        }
       }
 
       @Override
       protected void onCancellationImpl() {
-        Multiplexer.this.onCancelled(this);
+        try {
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.beginSection("MultiplexProducer#onCancellation");
+          }
+          Multiplexer.this.onCancelled(this);
+        } finally {
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.endSection();
+          }
+        }
       }
 
       @Override
       protected void onProgressUpdateImpl(float progress) {
-        Multiplexer.this.onProgressUpdate(this, progress);
+        try {
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.beginSection("MultiplexProducer#onProgressUpdate");
+          }
+          Multiplexer.this.onProgressUpdate(this, progress);
+        } finally {
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.endSection();
+          }
+        }
       }
     }
   }

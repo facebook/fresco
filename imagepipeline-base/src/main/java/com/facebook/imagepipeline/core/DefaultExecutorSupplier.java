@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,15 +8,18 @@
 package com.facebook.imagepipeline.core;
 
 import android.os.Process;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Basic implementation of {@link ExecutorSupplier}.
  *
- * <p> Provides one thread pool for the CPU-bound operations and another thread pool for the
- * IO-bound operations.
+ * <p>Provides one thread pool for the CPU-bound operations and another thread pool for the IO-bound
+ * operations.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultExecutorSupplier implements ExecutorSupplier {
   // Allows for simultaneous reads and writes.
   private static final int NUM_IO_BOUND_THREADS = 2;
@@ -26,6 +29,7 @@ public class DefaultExecutorSupplier implements ExecutorSupplier {
   private final Executor mDecodeExecutor;
   private final Executor mBackgroundExecutor;
   private final Executor mLightWeightBackgroundExecutor;
+  private final ScheduledExecutorService mBackgroundScheduledExecutorService;
 
   public DefaultExecutorSupplier(int numCpuBoundThreads) {
     mIoBoundExecutor =
@@ -43,12 +47,16 @@ public class DefaultExecutorSupplier implements ExecutorSupplier {
             numCpuBoundThreads,
             new PriorityThreadFactory(
                 Process.THREAD_PRIORITY_BACKGROUND, "FrescoBackgroundExecutor", true));
+    mBackgroundScheduledExecutorService =
+        Executors.newScheduledThreadPool(
+            numCpuBoundThreads,
+            new PriorityThreadFactory(
+                Process.THREAD_PRIORITY_BACKGROUND, "FrescoBackgroundExecutor", true));
     mLightWeightBackgroundExecutor =
         Executors.newFixedThreadPool(
             NUM_LIGHTWEIGHT_BACKGROUND_THREADS,
             new PriorityThreadFactory(
                 Process.THREAD_PRIORITY_BACKGROUND, "FrescoLightWeightBackgroundExecutor", true));
-
   }
 
   @Override
@@ -72,7 +80,17 @@ public class DefaultExecutorSupplier implements ExecutorSupplier {
   }
 
   @Override
+  public ScheduledExecutorService scheduledExecutorServiceForBackgroundTasks() {
+    return mBackgroundScheduledExecutorService;
+  }
+
+  @Override
   public Executor forLightweightBackgroundTasks() {
     return mLightWeightBackgroundExecutor;
+  }
+
+  @Override
+  public Executor forThumbnailProducer() {
+    return mIoBoundExecutor;
   }
 }

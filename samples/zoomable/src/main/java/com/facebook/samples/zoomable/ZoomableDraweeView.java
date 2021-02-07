@@ -1,13 +1,8 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 package com.facebook.samples.zoomable;
@@ -18,10 +13,10 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Animatable;
-import android.support.v4.view.ScrollingView;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import androidx.core.view.ScrollingView;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.controller.AbstractDraweeController;
@@ -37,8 +32,8 @@ import javax.annotation.Nullable;
 
 /**
  * DraweeView that has zoomable capabilities.
- * <p>
- * Once the image loads, pinch-to-zoom and translation gestures are enabled.
+ *
+ * <p>Once the image loads, pinch-to-zoom and translation gestures are enabled.
  */
 public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
     implements ScrollingView {
@@ -50,25 +45,27 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   private final RectF mImageBounds = new RectF();
   private final RectF mViewBounds = new RectF();
 
-  private DraweeController mHugeImageController;
+  @Nullable private DraweeController mHugeImageController;
   private ZoomableController mZoomableController;
   private GestureDetector mTapGestureDetector;
   private boolean mAllowTouchInterceptionWhileZoomed = true;
 
-  private final ControllerListener mControllerListener = new BaseControllerListener<Object>() {
-    @Override
-    public void onFinalImageSet(
-        String id,
-        @Nullable Object imageInfo,
-        @Nullable Animatable animatable) {
-      ZoomableDraweeView.this.onFinalImageSet();
-    }
+  private boolean mIsDialtoneEnabled = false;
+  private boolean mZoomingEnabled = true;
 
-    @Override
-    public void onRelease(String id) {
-      ZoomableDraweeView.this.onRelease();
-    }
-  };
+  private final ControllerListener mControllerListener =
+      new BaseControllerListener<Object>() {
+        @Override
+        public void onFinalImageSet(
+            String id, @Nullable Object imageInfo, @Nullable Animatable animatable) {
+          ZoomableDraweeView.this.onFinalImageSet();
+        }
+
+        @Override
+        public void onRelease(String id) {
+          ZoomableDraweeView.this.onRelease();
+        }
+      };
 
   private final ZoomableController.Listener mZoomableListener =
       new ZoomableController.Listener() {
@@ -112,8 +109,9 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
 
   protected void inflateHierarchy(Context context, @Nullable AttributeSet attrs) {
     Resources resources = context.getResources();
-    GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(resources)
-        .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
+    GenericDraweeHierarchyBuilder builder =
+        new GenericDraweeHierarchyBuilder(resources)
+            .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
     GenericDraweeHierarchyInflater.updateBuilder(builder, context, attrs);
     setAspectRatio(builder.getDesiredAspectRatio());
     setHierarchy(builder.build());
@@ -125,18 +123,22 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
     mTapGestureDetector = new GestureDetector(getContext(), mTapListenerWrapper);
   }
 
+  public void setIsDialtoneEnabled(boolean isDialtoneEnabled) {
+    mIsDialtoneEnabled = isDialtoneEnabled;
+  }
+
   /**
    * Gets the original image bounds, in view-absolute coordinates.
    *
-   * <p> The original image bounds are those reported by the hierarchy. The hierarchy itself may
+   * <p>The original image bounds are those reported by the hierarchy. The hierarchy itself may
    * apply scaling on its own (e.g. due to scale type) so the reported bounds are not necessarily
    * the same as the actual bitmap dimensions. In other words, the original image bounds correspond
    * to the image bounds within this view when no zoomable transformation is applied, but including
-   * the potential scaling of the hierarchy.
-   * Having the actual bitmap dimensions abstracted away from this view greatly simplifies
-   * implementation because the actual bitmap may change (e.g. when a high-res image arrives and
-   * replaces the previously set low-res image). With proper hierarchy scaling (e.g. FIT_CENTER),
-   * this underlying change will not affect this view nor the zoomable transformation in any way.
+   * the potential scaling of the hierarchy. Having the actual bitmap dimensions abstracted away
+   * from this view greatly simplifies implementation because the actual bitmap may change (e.g.
+   * when a high-res image arrives and replaces the previously set low-res image). With proper
+   * hierarchy scaling (e.g. FIT_CENTER), this underlying change will not affect this view nor the
+   * zoomable transformation in any way.
    */
   protected void getImageBounds(RectF outBounds) {
     getHierarchy().getActualImageBounds(outBounds);
@@ -145,19 +147,18 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   /**
    * Gets the bounds used to limit the translation, in view-absolute coordinates.
    *
-   * <p> These bounds are passed to the zoomable controller in order to limit the translation. The
+   * <p>These bounds are passed to the zoomable controller in order to limit the translation. The
    * image is attempted to be centered within the limit bounds if the transformed image is smaller.
-   * There will be no empty spaces within the limit bounds if the transformed image is bigger.
-   * This applies to each dimension (horizontal and vertical) independently.
-   * <p> Unless overridden by a subclass, these bounds are same as the view bounds.
+   * There will be no empty spaces within the limit bounds if the transformed image is bigger. This
+   * applies to each dimension (horizontal and vertical) independently.
+   *
+   * <p>Unless overridden by a subclass, these bounds are same as the view bounds.
    */
   protected void getLimitBounds(RectF outBounds) {
     outBounds.set(0, 0, getWidth(), getHeight());
   }
 
-  /**
-   * Sets a custom zoomable controller, instead of using the default one.
-   */
+  /** Sets a custom zoomable controller, instead of using the default one. */
   public void setZoomableController(ZoomableController zoomableController) {
     Preconditions.checkNotNull(zoomableController);
     mZoomableController.setListener(null);
@@ -168,7 +169,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   /**
    * Gets the zoomable controller.
    *
-   * <p> Zoomable controller can be used to zoom to point, or to map point from view to image
+   * <p>Zoomable controller can be used to zoom to point, or to map point from view to image
    * coordinates for instance.
    */
   public ZoomableController getZoomableController() {
@@ -176,8 +177,8 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   }
 
   /**
-   * Check whether the parent view can intercept touch events while zoomed.
-   * This can be used, for example, to swipe between images in a view pager while zoomed.
+   * Check whether the parent view can intercept touch events while zoomed. This can be used, for
+   * example, to swipe between images in a view pager while zoomed.
    *
    * @return true if touch events can be intercepted
    */
@@ -186,34 +187,34 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   }
 
   /**
-   * If this is set to true, parent views can intercept touch events while the view is zoomed.
-   * For example, this can be used to swipe between images in a view pager while zoomed.
+   * If this is set to true, parent views can intercept touch events while the view is zoomed. For
+   * example, this can be used to swipe between images in a view pager while zoomed.
    *
    * @param allowTouchInterceptionWhileZoomed true if the parent needs to intercept touches
    */
-  public void setAllowTouchInterceptionWhileZoomed(
-      boolean allowTouchInterceptionWhileZoomed) {
+  public void setAllowTouchInterceptionWhileZoomed(boolean allowTouchInterceptionWhileZoomed) {
     mAllowTouchInterceptionWhileZoomed = allowTouchInterceptionWhileZoomed;
   }
 
-  /**
-   * Sets the tap listener.
-   */
+  /** Sets the tap listener. */
   public void setTapListener(GestureDetector.SimpleOnGestureListener tapListener) {
     mTapListenerWrapper.setListener(tapListener);
   }
 
   /**
-   * Sets whether long-press tap detection is enabled.
-   * Unfortunately, long-press conflicts with onDoubleTapEvent.
+   * Sets whether long-press tap detection is enabled. Unfortunately, long-press conflicts with
+   * onDoubleTapEvent.
    */
   public void setIsLongpressEnabled(boolean enabled) {
     mTapGestureDetector.setIsLongpressEnabled(enabled);
   }
 
-  /**
-   * Sets the image controller.
-   */
+  public void setZoomingEnabled(boolean zoomingEnabled) {
+    mZoomingEnabled = zoomingEnabled;
+    mZoomableController.setEnabled(false);
+  }
+
+  /** Sets the image controller. */
   @Override
   public void setController(@Nullable DraweeController controller) {
     setControllers(controller, null);
@@ -222,25 +223,23 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   /**
    * Sets the controllers for the normal and huge image.
    *
-   * <p> The huge image controller is used after the image gets scaled above a certain threshold.
+   * <p>The huge image controller is used after the image gets scaled above a certain threshold.
    *
-   * <p> IMPORTANT: in order to avoid a flicker when switching to the huge image, the huge image
+   * <p>IMPORTANT: in order to avoid a flicker when switching to the huge image, the huge image
    * controller should have the normal-image-uri set as its low-res-uri.
    *
    * @param controller controller to be initially used
    * @param hugeImageController controller to be used after the client starts zooming-in
    */
   public void setControllers(
-      @Nullable DraweeController controller,
-      @Nullable DraweeController hugeImageController) {
+      @Nullable DraweeController controller, @Nullable DraweeController hugeImageController) {
     setControllersInternal(null, null);
     mZoomableController.setEnabled(false);
     setControllersInternal(controller, hugeImageController);
   }
 
   private void setControllersInternal(
-      @Nullable DraweeController controller,
-      @Nullable DraweeController hugeImageController) {
+      @Nullable DraweeController controller, @Nullable DraweeController hugeImageController) {
     removeControllerListener(getController());
     addControllerListener(controller);
     mHugeImageController = hugeImageController;
@@ -248,23 +247,21 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   }
 
   private void maybeSetHugeImageController() {
-    if (mHugeImageController != null &&
-        mZoomableController.getScaleFactor() > HUGE_IMAGE_SCALE_FACTOR_THRESHOLD) {
+    if (mHugeImageController != null
+        && mZoomableController.getScaleFactor() > HUGE_IMAGE_SCALE_FACTOR_THRESHOLD) {
       setControllersInternal(mHugeImageController, null);
     }
   }
 
   private void removeControllerListener(DraweeController controller) {
     if (controller instanceof AbstractDraweeController) {
-      ((AbstractDraweeController) controller)
-          .removeControllerListener(mControllerListener);
+      ((AbstractDraweeController) controller).removeControllerListener(mControllerListener);
     }
   }
 
   private void addControllerListener(DraweeController controller) {
     if (controller instanceof AbstractDraweeController) {
-      ((AbstractDraweeController) controller)
-          .addControllerListener(mControllerListener);
+      ((AbstractDraweeController) controller).addControllerListener(mControllerListener);
     }
   }
 
@@ -280,8 +277,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
         Object callerContext = ((AbstractDraweeController) controller).getCallerContext();
         if (callerContext != null) {
           throw new RuntimeException(
-              String.format("Exception in onDraw, callerContext=%s", callerContext.toString()),
-              e);
+              String.format("Exception in onDraw, callerContext=%s", callerContext.toString()), e);
         }
       }
       throw e;
@@ -293,7 +289,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   public boolean onTouchEvent(MotionEvent event) {
     int a = event.getActionMasked();
     FLog.v(getLogTag(), "onTouchEvent: %d, view %x, received", a, this.hashCode());
-    if (mTapGestureDetector.onTouchEvent(event)) {
+    if (!mIsDialtoneEnabled && mTapGestureDetector.onTouchEvent(event)) {
       FLog.v(
           getLogTag(),
           "onTouchEvent: %d, view %x, handled by tap gesture detector",
@@ -302,7 +298,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
       return true;
     }
 
-    if (mZoomableController.onTouchEvent(event)) {
+    if (!mIsDialtoneEnabled && mZoomableController.onTouchEvent(event)) {
       FLog.v(
           getLogTag(),
           "onTouchEvent: %d, view %x, handled by zoomable controller",
@@ -334,22 +330,27 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   public int computeHorizontalScrollRange() {
     return mZoomableController.computeHorizontalScrollRange();
   }
+
   @Override
   public int computeHorizontalScrollOffset() {
     return mZoomableController.computeHorizontalScrollOffset();
   }
+
   @Override
   public int computeHorizontalScrollExtent() {
     return mZoomableController.computeHorizontalScrollExtent();
   }
+
   @Override
   public int computeVerticalScrollRange() {
     return mZoomableController.computeVerticalScrollRange();
   }
+
   @Override
   public int computeVerticalScrollOffset() {
     return mZoomableController.computeVerticalScrollOffset();
   }
+
   @Override
   public int computeVerticalScrollExtent() {
     return mZoomableController.computeVerticalScrollExtent();
@@ -364,7 +365,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
 
   private void onFinalImageSet() {
     FLog.v(getLogTag(), "onFinalImageSet: view %x", this.hashCode());
-    if (!mZoomableController.isEnabled()) {
+    if (!mZoomableController.isEnabled() && mZoomingEnabled) {
       mZoomableController.setEnabled(true);
       updateZoomableControllerBounds();
     }

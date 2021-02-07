@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,43 +10,48 @@ package com.facebook.imagepipeline.bitmaps;
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.os.Build;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imagepipeline.core.CloseableReferenceFactory;
 import com.facebook.imagepipeline.memory.BitmapPool;
-import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.ThreadSafe;
 
-
-/**
- * Bitmap factory for ART VM (Lollipop and up).
- */
+/** Bitmap factory for ART VM (Lollipop and up). */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 @ThreadSafe
 public class ArtBitmapFactory extends PlatformBitmapFactory {
 
   private final BitmapPool mBitmapPool;
+  private final CloseableReferenceFactory mCloseableReferenceFactory;
 
-  public ArtBitmapFactory(BitmapPool bitmapPool) {
+  public ArtBitmapFactory(
+      BitmapPool bitmapPool, CloseableReferenceFactory closeableReferenceFactory) {
     mBitmapPool = bitmapPool;
+    mCloseableReferenceFactory = closeableReferenceFactory;
   }
 
   /**
    * Creates a bitmap of the specified width and height.
+   *
    * @param width the width of the bitmap
    * @param height the height of the bitmap
-   * @param bitmapConfig the {@link android.graphics.Bitmap.Config}
-   * used to create the decoded Bitmap
+   * @param bitmapConfig the {@link android.graphics.Bitmap.Config} used to create the decoded
+   *     Bitmap
    * @return a reference to the bitmap
    * @exception java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   @Override
   public CloseableReference<Bitmap> createBitmapInternal(
-      int width,
-      int height,
-      Bitmap.Config bitmapConfig) {
+      int width, int height, Bitmap.Config bitmapConfig) {
     int sizeInBytes = BitmapUtil.getSizeInByteForBitmap(width, height, bitmapConfig);
     Bitmap bitmap = mBitmapPool.get(sizeInBytes);
-    Bitmaps.reconfigureBitmap(bitmap, width, height, bitmapConfig);
-    return CloseableReference.of(bitmap, mBitmapPool);
+    Preconditions.checkArgument(
+        bitmap.getAllocationByteCount()
+            >= width * height * BitmapUtil.getPixelSizeForBitmapConfig(bitmapConfig));
+    bitmap.reconfigure(width, height, bitmapConfig);
+    return mCloseableReferenceFactory.create(bitmap, mBitmapPool);
   }
 }

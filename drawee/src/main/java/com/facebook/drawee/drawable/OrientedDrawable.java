@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.drawee.drawable;
 
 import android.graphics.Canvas;
@@ -12,8 +13,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
-import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 
 /**
  * Drawable that automatically rotates the underlying drawable with a pivot in the center of the
@@ -41,16 +41,17 @@ public class OrientedDrawable extends ForwardingDrawable {
   /**
    * Creates a new OrientedDrawable.
    *
-   * @param rotationAngle multiples of 90 or -1 if the angle is unknown
-   * @param exifOrientation EXIF values (1-8), or 0 if unknown
+   * @param rotationAngle multiples of 90. Invalid value is clamped to a closest multiple of 90.
+   * @param exifOrientation EXIF values (1-8), or 0 if unknown. Invalid value is replaced with 0.
    */
   public OrientedDrawable(Drawable drawable, int rotationAngle, int exifOrientation) {
     super(drawable);
-    Preconditions.checkArgument(rotationAngle % 90 == 0);
-    Preconditions.checkArgument(exifOrientation >= 0 && exifOrientation <= 8);
     mRotationMatrix = new Matrix();
-    mRotationAngle = rotationAngle;
-    mExifOrientation = exifOrientation;
+    mRotationAngle = rotationAngle - rotationAngle % 90;
+    mExifOrientation =
+        exifOrientation >= 0 && exifOrientation <= 8
+            ? exifOrientation
+            : ExifInterface.ORIENTATION_UNDEFINED;
   }
 
   @Override

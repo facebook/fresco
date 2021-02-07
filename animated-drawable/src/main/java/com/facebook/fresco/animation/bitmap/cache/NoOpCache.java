@@ -1,20 +1,21 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.animation.bitmap.cache;
 
 import android.graphics.Bitmap;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
-/**
- * No-op bitmap cache that doesn't do anything.
- */
+/** No-op bitmap cache that doesn't do anything. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class NoOpCache implements BitmapFrameCache {
 
   @Nullable
@@ -32,9 +33,7 @@ public class NoOpCache implements BitmapFrameCache {
   @Nullable
   @Override
   public CloseableReference<Bitmap> getBitmapToReuseForFrame(
-      int frameNumber,
-      int width,
-      int height) {
+      int frameNumber, int width, int height) {
     return null;
   }
 

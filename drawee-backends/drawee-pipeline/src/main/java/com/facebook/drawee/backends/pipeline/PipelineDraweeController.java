@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,6 +9,7 @@ package com.facebook.drawee.backends.pipeline;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableList;
 import com.facebook.common.internal.Objects;
@@ -16,17 +17,21 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
-import com.facebook.common.time.RealtimeSinceBootClock;
+import com.facebook.common.time.AwakeTimeSinceBootClock;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawable.base.DrawableWithCaches;
+import com.facebook.drawee.backends.pipeline.debug.DebugOverlayImageOriginColor;
+import com.facebook.drawee.backends.pipeline.debug.DebugOverlayImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.ForwardingImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginRequestListener;
+import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfMonitor;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.AbstractDraweeController;
+import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
 import com.facebook.drawee.debug.DebugControllerOverlayDrawable;
 import com.facebook.drawee.debug.listener.ImageLoadingTimeControllerListener;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
@@ -35,22 +40,27 @@ import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
+import com.facebook.fresco.ui.common.MultiUriHelper;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.listener.ForwardingRequestListener;
 import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
 /**
- * Drawee controller that bridges the image pipeline with {@link SettableDraweeHierarchy}. <p> The
- * hierarchy's actual image is set to the image(s) obtained by the provided data source. The data
- * source is automatically obtained and closed based on attach / detach calls.
+ * Drawee controller that bridges the image pipeline with {@link SettableDraweeHierarchy}.
+ *
+ * <p>The hierarchy's actual image is set to the image(s) obtained by the provided data source. The
+ * data source is automatically obtained and closed based on attach / detach calls.
  */
 public class PipelineDraweeController
     extends AbstractDraweeController<CloseableReference<CloseableImage>, ImageInfo> {
@@ -61,8 +71,7 @@ public class PipelineDraweeController
   private final Resources mResources;
   private final DrawableFactory mDefaultDrawableFactory;
   // Global drawable factories that are set when Fresco is initialized
-  @Nullable
-  private final ImmutableList<DrawableFactory> mGlobalDrawableFactories;
+  @Nullable private final ImmutableList<DrawableFactory> mGlobalDrawableFactories;
 
   private final @Nullable MemoryCache<CacheKey, CloseableImage> mMemoryCache;
 
@@ -85,6 +94,11 @@ public class PipelineDraweeController
   @GuardedBy("this")
   @Nullable
   private ImageOriginListener mImageOriginListener;
+
+  private DebugOverlayImageOriginListener mDebugOverlayImageOriginListener;
+  private @Nullable ImageRequest mImageRequest;
+  private @Nullable ImageRequest[] mFirstAvailableImageRequests;
+  private @Nullable ImageRequest mLowResImageRequest;
 
   public PipelineDraweeController(
       Resources resources,
@@ -116,26 +130,45 @@ public class PipelineDraweeController
       Object callerContext,
       @Nullable ImmutableList<DrawableFactory> customDrawableFactories,
       @Nullable ImageOriginListener imageOriginListener) {
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("PipelineDraweeController#initialize");
+    }
     super.initialize(id, callerContext);
     init(dataSourceSupplier);
     mCacheKey = cacheKey;
     setCustomDrawableFactories(customDrawableFactories);
     clearImageOriginListeners();
+    maybeUpdateDebugOverlay(null);
     addImageOriginListener(imageOriginListener);
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
   }
 
   protected synchronized void initializePerformanceMonitoring(
-      @Nullable ImagePerfDataListener imagePerfDataListener) {
+      @Nullable ImagePerfDataListener imagePerfDataListener,
+      AbstractDraweeControllerBuilder<
+              PipelineDraweeControllerBuilder,
+              ImageRequest,
+              CloseableReference<CloseableImage>,
+              ImageInfo>
+          builder,
+      Supplier<Boolean> asyncLogging) {
     if (mImagePerfMonitor != null) {
       mImagePerfMonitor.reset();
     }
     if (imagePerfDataListener != null) {
       if (mImagePerfMonitor == null) {
-        mImagePerfMonitor = new ImagePerfMonitor(RealtimeSinceBootClock.get(), this);
+        mImagePerfMonitor = new ImagePerfMonitor(AwakeTimeSinceBootClock.get(), this, asyncLogging);
       }
       mImagePerfMonitor.addImagePerfDataListener(imagePerfDataListener);
       mImagePerfMonitor.setEnabled(true);
+      mImagePerfMonitor.updateImageRequestData(builder);
     }
+
+    mImageRequest = builder.getImageRequest();
+    mFirstAvailableImageRequests = builder.getFirstAvailableImageRequests();
+    mLowResImageRequest = builder.getLowResImageRequest();
   }
 
   public void setDrawDebugOverlay(boolean drawDebugOverlay) {
@@ -177,11 +210,10 @@ public class PipelineDraweeController
     if (mImageOriginListener instanceof ForwardingImageOriginListener) {
       ((ForwardingImageOriginListener) mImageOriginListener)
           .removeImageOriginListener(imageOriginListener);
-    } else if (mImageOriginListener != null) {
-      mImageOriginListener =
-          new ForwardingImageOriginListener(mImageOriginListener, imageOriginListener);
-    } else {
-      mImageOriginListener = imageOriginListener;
+      return;
+    }
+    if (mImageOriginListener == imageOriginListener) {
+      mImageOriginListener = null;
     }
   }
 
@@ -223,39 +255,55 @@ public class PipelineDraweeController
 
   @Override
   protected DataSource<CloseableReference<CloseableImage>> getDataSource() {
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("PipelineDraweeController#getDataSource");
+    }
     if (FLog.isLoggable(FLog.VERBOSE)) {
       FLog.v(TAG, "controller %x: getDataSource", System.identityHashCode(this));
     }
-    return mDataSourceSupplier.get();
+    DataSource<CloseableReference<CloseableImage>> result = mDataSourceSupplier.get();
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
+    return result;
   }
 
   @Override
   protected Drawable createDrawable(CloseableReference<CloseableImage> image) {
-    Preconditions.checkState(CloseableReference.isValid(image));
-    CloseableImage closeableImage = image.get();
+    try {
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("PipelineDraweeController#createDrawable");
+      }
+      Preconditions.checkState(CloseableReference.isValid(image));
+      CloseableImage closeableImage = image.get();
 
-    maybeUpdateDebugOverlay(closeableImage);
+      maybeUpdateDebugOverlay(closeableImage);
 
-    Drawable drawable = maybeCreateDrawableFromFactories(mCustomDrawableFactories, closeableImage);
-    if (drawable != null) {
-      return drawable;
+      Drawable drawable =
+          maybeCreateDrawableFromFactories(mCustomDrawableFactories, closeableImage);
+      if (drawable != null) {
+        return drawable;
+      }
+
+      drawable = maybeCreateDrawableFromFactories(mGlobalDrawableFactories, closeableImage);
+      if (drawable != null) {
+        return drawable;
+      }
+
+      drawable = mDefaultDrawableFactory.createDrawable(closeableImage);
+      if (drawable != null) {
+        return drawable;
+      }
+      throw new UnsupportedOperationException("Unrecognized image class: " + closeableImage);
+    } finally {
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
-
-    drawable = maybeCreateDrawableFromFactories(mGlobalDrawableFactories, closeableImage);
-    if (drawable != null) {
-      return drawable;
-    }
-
-    drawable = mDefaultDrawableFactory.createDrawable(closeableImage);
-    if (drawable != null) {
-      return drawable;
-    }
-    throw new UnsupportedOperationException("Unrecognized image class: " + closeableImage);
   }
 
-  private Drawable maybeCreateDrawableFromFactories(
-      @Nullable ImmutableList<DrawableFactory> drawableFactories,
-      CloseableImage closeableImage) {
+  private @Nullable Drawable maybeCreateDrawableFromFactories(
+      @Nullable ImmutableList<DrawableFactory> drawableFactories, CloseableImage closeableImage) {
     if (drawableFactories == null) {
       return null;
     }
@@ -290,32 +338,51 @@ public class PipelineDraweeController
     }
 
     if (getControllerOverlay() == null) {
-      DebugControllerOverlayDrawable controllerOverlay = new DebugControllerOverlayDrawable();
+      final DebugControllerOverlayDrawable controllerOverlay = new DebugControllerOverlayDrawable();
       ImageLoadingTimeControllerListener overlayImageLoadListener =
           new ImageLoadingTimeControllerListener(controllerOverlay);
+      mDebugOverlayImageOriginListener = new DebugOverlayImageOriginListener();
       addControllerListener(overlayImageLoadListener);
       setControllerOverlay(controllerOverlay);
     }
 
-    if (getControllerOverlay() instanceof DebugControllerOverlayDrawable) {
-      DebugControllerOverlayDrawable debugOverlay =
-          (DebugControllerOverlayDrawable) getControllerOverlay();
-      debugOverlay.setControllerId(getId());
+    if (mImageOriginListener == null) {
+      addImageOriginListener(mDebugOverlayImageOriginListener);
+    }
 
-      final DraweeHierarchy draweeHierarchy = getHierarchy();
-      ScaleType scaleType = null;
-      if (draweeHierarchy != null) {
-        final ScaleTypeDrawable scaleTypeDrawable =
-            ScalingUtils.getActiveScaleTypeDrawable(draweeHierarchy.getTopLevelDrawable());
-        scaleType = scaleTypeDrawable != null ? scaleTypeDrawable.getScaleType() : null;
-      }
-      debugOverlay.setScaleType(scaleType);
-      if (image != null) {
-        debugOverlay.setDimensions(image.getWidth(), image.getHeight());
-        debugOverlay.setImageSize(image.getSizeInBytes());
-      } else {
-        debugOverlay.reset();
-      }
+    if (getControllerOverlay() instanceof DebugControllerOverlayDrawable) {
+      updateDebugOverlay(image, (DebugControllerOverlayDrawable) getControllerOverlay());
+    }
+  }
+
+  /**
+   * updateDebugOverlay updates the debug overlay. Subclasses of {@link PipelineDraweeController}
+   * can override this method (and call <code>super</code>) to provide additional debug information.
+   */
+  protected void updateDebugOverlay(
+      @Nullable CloseableImage image, DebugControllerOverlayDrawable debugOverlay) {
+    debugOverlay.setControllerId(getId());
+
+    final DraweeHierarchy draweeHierarchy = getHierarchy();
+    ScaleType scaleType = null;
+    if (draweeHierarchy != null) {
+      final ScaleTypeDrawable scaleTypeDrawable =
+          ScalingUtils.getActiveScaleTypeDrawable(draweeHierarchy.getTopLevelDrawable());
+      scaleType = scaleTypeDrawable != null ? scaleTypeDrawable.getScaleType() : null;
+    }
+    debugOverlay.setScaleType(scaleType);
+
+    // fill in image origin text and color hint
+    final int origin = mDebugOverlayImageOriginListener.getImageOrigin();
+    final String originText = ImageOriginUtils.toString(origin);
+    final int originColor = DebugOverlayImageOriginColor.getImageOriginColor(origin);
+    debugOverlay.setOrigin(originText, originColor);
+
+    if (image != null) {
+      debugOverlay.setDimensions(image.getWidth(), image.getHeight());
+      debugOverlay.setImageSize(image.getSizeInBytes());
+    } else {
+      debugOverlay.reset();
     }
   }
 
@@ -343,17 +410,26 @@ public class PipelineDraweeController
   }
 
   @Override
-  protected CloseableReference<CloseableImage> getCachedImage() {
-    if (mMemoryCache == null || mCacheKey == null) {
-      return null;
+  protected @Nullable CloseableReference<CloseableImage> getCachedImage() {
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("PipelineDraweeController#getCachedImage");
     }
-    // We get the CacheKey
-    CloseableReference<CloseableImage> closeableImage = mMemoryCache.get(mCacheKey);
-    if (closeableImage != null && !closeableImage.get().getQualityInfo().isOfFullQuality()) {
-      closeableImage.close();
-      return null;
+    try {
+      if (mMemoryCache == null || mCacheKey == null) {
+        return null;
+      }
+      // We get the CacheKey
+      CloseableReference<CloseableImage> closeableImage = mMemoryCache.get(mCacheKey);
+      if (closeableImage != null && !closeableImage.get().getQualityInfo().isOfFullQuality()) {
+        closeableImage.close();
+        return null;
+      }
+      return closeableImage;
+    } finally {
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
-    return closeableImage;
   }
 
   @Override
@@ -362,7 +438,8 @@ public class PipelineDraweeController
     super.onImageLoadedFromCacheImmediately(id, cachedImage);
     synchronized (this) {
       if (mImageOriginListener != null) {
-        mImageOriginListener.onImageLoaded(id, ImageOrigin.MEMORY_BITMAP, true);
+        mImageOriginListener.onImageLoaded(
+            id, ImageOrigin.MEMORY_BITMAP_SHORTCUT, true, "PipelineDraweeController");
       }
     }
   }
@@ -377,5 +454,20 @@ public class PipelineDraweeController
         .add("super", super.toString())
         .add("dataSourceSupplier", mDataSourceSupplier)
         .toString();
+  }
+
+  @Override
+  public @Nullable Map<String, Object> obtainExtrasFromImage(ImageInfo info) {
+    if (info == null) return null;
+    return info.getExtras();
+  }
+
+  @Override
+  protected @Nullable Uri getMainUri() {
+    return MultiUriHelper.getMainUri(
+        mImageRequest,
+        mLowResImageRequest,
+        mFirstAvailableImageRequests,
+        ImageRequest.REQUEST_TO_URI_FN);
   }
 }

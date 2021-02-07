@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -46,16 +46,13 @@ import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
-/**
- * Tests for 'default' disk storage
- */
+/** Tests for 'default' disk storage */
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 @PrepareOnlyThisForTest({SystemClock.class})
 public class DefaultDiskStorageTest {
 
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
+  @Rule public PowerMockRule rule = new PowerMockRule();
 
   private File mDirectory;
   private SystemClock mClock;
@@ -65,9 +62,8 @@ public class DefaultDiskStorageTest {
     mClock = mock(SystemClock.class);
     PowerMockito.mockStatic(SystemClock.class);
     PowerMockito.when(SystemClock.get()).thenReturn(mClock);
-    mDirectory = new File(
-        RuntimeEnvironment.application.getCacheDir(),
-        "sharded-disk-storage-test");
+    mDirectory =
+        new File(RuntimeEnvironment.application.getCacheDir(), "sharded-disk-storage-test");
     Assert.assertTrue(mDirectory.mkdirs());
     FileTree.deleteContents(mDirectory);
   }
@@ -76,10 +72,7 @@ public class DefaultDiskStorageTest {
     return new Supplier<DefaultDiskStorage>() {
       @Override
       public DefaultDiskStorage get() {
-        return new DefaultDiskStorage(
-            mDirectory,
-            version,
-            mock(CacheErrorLogger.class));
+        return new DefaultDiskStorage(mDirectory, version, mock(CacheErrorLogger.class));
       }
     };
   }
@@ -138,8 +131,8 @@ public class DefaultDiskStorageTest {
   }
 
   /**
-   * Test that a file is stored in a new file,
-   * and the bytes are stored plainly in the file.
+   * Test that a file is stored in a new file, and the bytes are stored plainly in the file.
+   *
    * @throws Exception
    */
   @Test
@@ -152,7 +145,7 @@ public class DefaultDiskStorageTest {
 
     Set<File> files = new HashSet<>();
     Assert.assertTrue(mDirectory.exists());
-    List<File> founds1 = findNewFiles(mDirectory, files, /*recurse*/true);
+    List<File> founds1 = findNewFiles(mDirectory, files, /*recurse*/ true);
     Assert.assertNotNull(file1);
     Assert.assertTrue(founds1.contains(file1));
     Assert.assertTrue(file1.exists());
@@ -161,10 +154,9 @@ public class DefaultDiskStorageTest {
   }
 
   /**
-   * Inserts 3 files with different dates.
-   * Check what files are there.
-   * Uses an iterator to remove the one in the middle.
-   * Check that later.
+   * Inserts 3 files with different dates. Check what files are there. Uses an iterator to remove
+   * the one in the middle. Check that later.
+   *
    * @throws Exception
    */
   @Test
@@ -190,7 +182,7 @@ public class DefaultDiskStorageTest {
     when(mClock.now()).thenReturn(2000L);
     writeFileToStorage(storage, resourceId3, value3);
 
-    List<File> files = findNewFiles(mDirectory, Collections.<File>emptySet(), /*recurse*/true);
+    List<File> files = findNewFiles(mDirectory, Collections.<File>emptySet(), /*recurse*/ true);
 
     // there should be 1 file per entry
     assertEquals(3, files.size());
@@ -204,7 +196,7 @@ public class DefaultDiskStorageTest {
     }
 
     assertFalse(storage.contains(resourceId2, null));
-    List<File> remaining = findNewFiles(mDirectory, Collections.<File>emptySet(), /*recurse*/true);
+    List<File> remaining = findNewFiles(mDirectory, Collections.<File>emptySet(), /*recurse*/ true);
 
     // 2 entries remain
     assertEquals(2, remaining.size());
@@ -303,12 +295,14 @@ public class DefaultDiskStorageTest {
 
     // obtain entries and sort by name
     List<DiskStorage.Entry> entries = new ArrayList<>(storage.getEntries());
-    Collections.sort(entries, new Comparator<DiskStorage.Entry>() {
-      @Override
-      public int compare(DiskStorage.Entry lhs, DiskStorage.Entry rhs) {
-        return lhs.getId().compareTo(rhs.getId());
-      }
-    });
+    Collections.sort(
+        entries,
+        new Comparator<DiskStorage.Entry>() {
+          @Override
+          public int compare(DiskStorage.Entry lhs, DiskStorage.Entry rhs) {
+            return lhs.getId().compareTo(rhs.getId());
+          }
+        });
 
     assertEquals(3, entries.size());
     assertEquals("resourceId1", entries.get(0).getId());
@@ -366,6 +360,7 @@ public class DefaultDiskStorageTest {
   /**
    * Test that purgeUnexpectedResources deletes all files/directories outside the version directory
    * but leaves untouched the version directory and the content files.
+   *
    * @throws Exception
    */
   @Test
@@ -418,8 +413,9 @@ public class DefaultDiskStorageTest {
   }
 
   /**
-   * Tests that an existing directory is nuked when it's not current version (doens't have
-   * the version directory used for the structure)
+   * Tests that an existing directory is nuked when it's not current version (doens't have the
+   * version directory used for the structure)
+   *
    * @throws Exception
    */
   @Test
@@ -446,6 +442,7 @@ public class DefaultDiskStorageTest {
   /**
    * Tests that an existing directory is not nuked if the version directory used for the structure
    * exists (so it's current version and doesn't suffer Samsung RFS problem)
+   *
    * @throws Exception
    */
   @Test
@@ -478,8 +475,9 @@ public class DefaultDiskStorageTest {
   }
 
   /**
-   * Test the iterator returned is ok and deletion through the iterator is ok too.
-   * This is the required functionality that eviction needs.
+   * Test the iterator returned is ok and deletion through the iterator is ok too. This is the
+   * required functionality that eviction needs.
+   *
    * @throws Exception
    */
   @Test
@@ -526,25 +524,20 @@ public class DefaultDiskStorageTest {
   }
 
   private static FileBinaryResource writeToStorage(
-      final DefaultDiskStorage storage,
-      final String resourceId,
-      final byte[] value) throws IOException {
+      final DefaultDiskStorage storage, final String resourceId, final byte[] value)
+      throws IOException {
     DiskStorage.Inserter inserter = storage.insert(resourceId, null);
     writeToResource(inserter, value);
     return (FileBinaryResource) inserter.commit(null);
   }
 
   private static File writeFileToStorage(
-      DefaultDiskStorage storage,
-      String resourceId,
-      byte[] value) throws IOException {
+      DefaultDiskStorage storage, String resourceId, byte[] value) throws IOException {
     return writeToStorage(storage, resourceId, value).getFile();
   }
 
-  private static File write(
-      DefaultDiskStorage storage,
-      String resourceId,
-      byte[] content) throws IOException {
+  private static File write(DefaultDiskStorage storage, String resourceId, byte[] content)
+      throws IOException {
     DiskStorage.Inserter inserter = storage.insert(resourceId, null);
     File file = ((DefaultDiskStorage.InserterImpl) inserter).mTemporaryFile;
     FileOutputStream fos = new FileOutputStream(file);
@@ -556,21 +549,19 @@ public class DefaultDiskStorageTest {
     return ((FileBinaryResource) inserter.commit(null)).getFile();
   }
 
-  private static void writeToResource(
-      DiskStorage.Inserter inserter,
-      final byte[] content) throws IOException {
+  private static void writeToResource(DiskStorage.Inserter inserter, final byte[] content)
+      throws IOException {
     inserter.writeData(
         new WriterCallback() {
-            @Override
-            public void write(OutputStream os) throws IOException {
-              os.write(content);
-            }
+          @Override
+          public void write(OutputStream os) throws IOException {
+            os.write(content);
+          }
         },
         null);
   }
 
-  private void purgeUnexpectedFiles(DefaultDiskStorage storage)
-      throws IOException {
+  private void purgeUnexpectedFiles(DefaultDiskStorage storage) throws IOException {
     storage.purgeUnexpectedResources();
   }
 
@@ -581,13 +572,10 @@ public class DefaultDiskStorageTest {
   }
 
   private void findNewFiles(
-      File directory,
-      Set<File> existing,
-      boolean recurse,
-      List<File> result) {
+      File directory, Set<File> existing, boolean recurse, List<File> result) {
     File[] files = directory.listFiles();
     if (files != null) {
-      for (File file: files) {
+      for (File file : files) {
         if (file.isDirectory() && recurse) {
           findNewFiles(file, existing, true, result);
         } else if (!existing.contains(file)) {
@@ -598,25 +586,27 @@ public class DefaultDiskStorageTest {
   }
 
   /**
-   * Retrieves a list of entries (the one returned by DiskStorage.Session.entriesIterator)
-   * ordered by timestamp.
+   * Retrieves a list of entries (the one returned by DiskStorage.Session.entriesIterator) ordered
+   * by timestamp.
+   *
    * @param storage
    */
-  private static List<DefaultDiskStorage.EntryImpl> retrieveEntries(
-      DefaultDiskStorage storage)
+  private static List<DefaultDiskStorage.EntryImpl> retrieveEntries(DefaultDiskStorage storage)
       throws IOException {
     List<DiskStorage.Entry> entries = new ArrayList<>(storage.getEntries());
 
-    Collections.sort(entries, new Comparator<DiskStorage.Entry>() {
-      @Override
-      public int compare(DefaultDiskStorage.Entry a, DefaultDiskStorage.Entry b) {
-        long al = a.getTimestamp();
-        long bl = b.getTimestamp();
-        return (al < bl) ? -1 : ((al > bl) ? 1 : 0);
-      }
-    });
+    Collections.sort(
+        entries,
+        new Comparator<DiskStorage.Entry>() {
+          @Override
+          public int compare(DefaultDiskStorage.Entry a, DefaultDiskStorage.Entry b) {
+            long al = a.getTimestamp();
+            long bl = b.getTimestamp();
+            return (al < bl) ? -1 : ((al > bl) ? 1 : 0);
+          }
+        });
     List<DefaultDiskStorage.EntryImpl> newEntries = new ArrayList<>();
-    for (DiskStorage.Entry entry: entries) {
+    for (DiskStorage.Entry entry : entries) {
       newEntries.add((DefaultDiskStorage.EntryImpl) entry);
     }
     return newEntries;

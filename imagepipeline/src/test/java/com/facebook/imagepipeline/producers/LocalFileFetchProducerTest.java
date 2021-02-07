@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -13,6 +13,7 @@ import static org.mockito.Mockito.*;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.testing.FakeClock;
@@ -29,11 +30,9 @@ import org.mockito.stubbing.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
 
-/**
- * Basic tests for LocalFileFetchProducer
- */
+/** Basic tests for LocalFileFetchProducer */
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class LocalFileFetchProducerTest {
   private static final String PRODUCER_NAME = LocalFileFetchProducer.PRODUCER_NAME;
   private static final int INPUT_STREAM_LENGTH = 100;
@@ -41,8 +40,9 @@ public class LocalFileFetchProducerTest {
   @Mock public PooledByteBufferFactory mPooledByteBufferFactory;
   @Mock public Consumer<EncodedImage> mConsumer;
   @Mock public ImageRequest mImageRequest;
-  @Mock public ProducerListener mProducerListener;
+  @Mock public ProducerListener2 mProducerListener;
   @Mock public Exception mException;
+  @Mock public ImagePipelineConfig mConfig;
   private TestExecutorService mExecutor;
   private SettableProducerContext mProducerContext;
   private final String mRequestId = "mRequestId";
@@ -54,32 +54,33 @@ public class LocalFileFetchProducerTest {
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
     mExecutor = new TestExecutorService(new FakeClock());
-    mLocalFileFetchProducer =
-        new LocalFileFetchProducer(mExecutor, mPooledByteBufferFactory);
+    mLocalFileFetchProducer = new LocalFileFetchProducer(mExecutor, mPooledByteBufferFactory);
     mFile = new File(RuntimeEnvironment.application.getExternalFilesDir(null), TEST_FILENAME);
     BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(mFile));
-    bos.write(new byte[INPUT_STREAM_LENGTH], 0 , INPUT_STREAM_LENGTH);
+    bos.write(new byte[INPUT_STREAM_LENGTH], 0, INPUT_STREAM_LENGTH);
     bos.close();
 
-    mProducerContext = new SettableProducerContext(
-        mImageRequest,
-        mRequestId,
-        mProducerListener,
-        mock(Object.class),
-        ImageRequest.RequestLevel.FULL_FETCH,
-        false,
-        true,
-        Priority.MEDIUM);
+    mProducerContext =
+        new SettableProducerContext(
+            mImageRequest,
+            mRequestId,
+            mProducerListener,
+            mock(Object.class),
+            ImageRequest.RequestLevel.FULL_FETCH,
+            false,
+            true,
+            Priority.MEDIUM,
+            mConfig);
     when(mImageRequest.getSourceFile()).thenReturn(mFile);
     doAnswer(
-        new Answer() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            mCapturedEncodedImage =
-                EncodedImage.cloneOrNull((EncodedImage) invocation.getArguments()[0]);
-            return null;
-          }
-        })
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                mCapturedEncodedImage =
+                    EncodedImage.cloneOrNull((EncodedImage) invocation.getArguments()[0]);
+                return null;
+              }
+            })
         .when(mConsumer)
         .onNewResult(notNull(EncodedImage.class), anyInt());
   }
@@ -88,8 +89,9 @@ public class LocalFileFetchProducerTest {
   public void testLocalFileFetchCancelled() {
     mLocalFileFetchProducer.produceResults(mConsumer, mProducerContext);
     mProducerContext.cancel();
-    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithCancellation(mRequestId, PRODUCER_NAME, null);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener)
+        .onProducerFinishWithCancellation(mProducerContext, PRODUCER_NAME, null);
     verify(mConsumer).onCancellation();
     mExecutor.runUntilIdle();
     verifyZeroInteractions(mPooledByteBufferFactory);
@@ -104,12 +106,14 @@ public class LocalFileFetchProducerTest {
     mExecutor.runUntilIdle();
     assertEquals(
         2,
-        mCapturedEncodedImage.getByteBufferRef()
-            .getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+        mCapturedEncodedImage
+            .getByteBufferRef()
+            .getUnderlyingReferenceTestOnly()
+            .getRefCountTestOnly());
     assertSame(pooledByteBuffer, mCapturedEncodedImage.getByteBufferRef().get());
-    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, null);
-    verify(mProducerListener).onUltimateProducerReached(mRequestId, PRODUCER_NAME, true);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener).onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
+    verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, true);
   }
 
   @Test(expected = RuntimeException.class)
@@ -117,10 +121,10 @@ public class LocalFileFetchProducerTest {
     when(mPooledByteBufferFactory.newByteBuffer(any(InputStream.class), eq(INPUT_STREAM_LENGTH)))
         .thenThrow(mException);
     verify(mConsumer).onFailure(mException);
-    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithFailure(
-        mRequestId, PRODUCER_NAME, mException, null);
-    verify(mProducerListener).onUltimateProducerReached(mRequestId, PRODUCER_NAME, false);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener)
+        .onProducerFinishWithFailure(mProducerContext, PRODUCER_NAME, mException, null);
+    verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, false);
   }
 
   @After

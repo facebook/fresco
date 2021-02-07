@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.imagepipeline.core;
 
 import android.os.Process;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * ThreadFactory that applies a priority to the threads it creates.
- */
+/** ThreadFactory that applies a priority to the threads it creates. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class PriorityThreadFactory implements ThreadFactory {
 
   private final int mThreadPriority;
@@ -24,9 +25,8 @@ public class PriorityThreadFactory implements ThreadFactory {
   /**
    * Creates a new PriorityThreadFactory with a given priority.
    *
-   * <p>This value should be set to a value compatible with
-   * {@link android.os.Process#setThreadPriority}, not {@link Thread#setPriority}.
-   *
+   * <p>This value should be set to a value compatible with {@link
+   * android.os.Process#setThreadPriority}, not {@link Thread#setPriority}.
    */
   public PriorityThreadFactory(int threadPriority) {
     this(threadPriority, "PriorityThreadFactory", true);
@@ -40,17 +40,18 @@ public class PriorityThreadFactory implements ThreadFactory {
 
   @Override
   public Thread newThread(final Runnable runnable) {
-    Runnable wrapperRunnable = new Runnable() {
-      @Override
-      public void run() {
-        try {
-          Process.setThreadPriority(mThreadPriority);
-        } catch (Throwable t) {
-          // just to be safe
-        }
-        runnable.run();
-      }
-    };
+    Runnable wrapperRunnable =
+        new Runnable() {
+          @Override
+          public void run() {
+            try {
+              Process.setThreadPriority(mThreadPriority);
+            } catch (Throwable t) {
+              // just to be safe
+            }
+            runnable.run();
+          }
+        };
     final String name;
     if (mAddThreadNumber) {
       name = mPrefix + "-" + mThreadNumber.getAndIncrement();
@@ -59,5 +60,4 @@ public class PriorityThreadFactory implements ThreadFactory {
     }
     return new Thread(wrapperRunnable, name);
   }
-
 }

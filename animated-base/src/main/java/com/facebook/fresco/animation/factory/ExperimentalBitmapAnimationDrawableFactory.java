@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,7 +9,6 @@ package com.facebook.fresco.animation.factory;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.net.Uri;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.time.MonotonicClock;
@@ -18,6 +17,7 @@ import com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactiv
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer;
+import com.facebook.fresco.animation.bitmap.cache.AnimationFrameCacheKey;
 import com.facebook.fresco.animation.bitmap.cache.FrescoFrameCache;
 import com.facebook.fresco.animation.bitmap.cache.KeepLastFrameCache;
 import com.facebook.fresco.animation.bitmap.cache.NoOpCache;
@@ -38,13 +38,12 @@ import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 
-/**
- * Animation factory for {@link AnimatedDrawable2}.
- *
- */
+/** Animation factory for {@link AnimatedDrawable2}. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFactory {
 
   public static final int CACHING_STRATEGY_NO_CACHE = 0;
@@ -88,8 +87,7 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
   @Override
   public AnimatedDrawable2 createDrawable(CloseableImage image) {
     return new AnimatedDrawable2(
-        createAnimationBackend(
-            ((CloseableAnimatedImage) image).getImageResult()));
+        createAnimationBackend(((CloseableAnimatedImage) image).getImageResult()));
   }
 
   private AnimationBackend createAnimationBackend(AnimatedImageResult animatedImageResult) {
@@ -109,18 +107,17 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
       bitmapFramePreparer = createBitmapFramePreparer(bitmapFrameRenderer);
     }
 
-    BitmapAnimationBackend bitmapAnimationBackend = new BitmapAnimationBackend(
-        mPlatformBitmapFactory,
-        bitmapFrameCache,
-        new AnimatedDrawableBackendAnimationInformation(animatedDrawableBackend),
-        bitmapFrameRenderer,
-        bitmapFramePreparationStrategy,
-        bitmapFramePreparer);
+    BitmapAnimationBackend bitmapAnimationBackend =
+        new BitmapAnimationBackend(
+            mPlatformBitmapFactory,
+            bitmapFrameCache,
+            new AnimatedDrawableBackendAnimationInformation(animatedDrawableBackend),
+            bitmapFrameRenderer,
+            bitmapFramePreparationStrategy,
+            bitmapFramePreparer);
 
     return AnimationBackendDelegateWithInactivityCheck.createForBackend(
-        bitmapAnimationBackend,
-        mMonotonicClock,
-        mScheduledExecutorServiceForUiThread);
+        bitmapAnimationBackend, mMonotonicClock, mScheduledExecutorServiceForUiThread);
   }
 
   private BitmapFramePreparer createBitmapFramePreparer(BitmapFrameRenderer bitmapFrameRenderer) {
@@ -155,28 +152,6 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
   private AnimatedFrameCache createAnimatedFrameCache(
       final AnimatedImageResult animatedImageResult) {
     return new AnimatedFrameCache(
-        new AnimationFrameCacheKey(animatedImageResult.hashCode()),
-        mBackingCache);
-  }
-
-  public static class AnimationFrameCacheKey implements CacheKey {
-
-    private static final String URI_PREFIX = "anim://";
-
-    private final String mAnimationUriString;
-
-    public AnimationFrameCacheKey(int imageId) {
-      mAnimationUriString = URI_PREFIX + imageId;
-    }
-
-    @Override
-    public boolean containsUri(Uri uri) {
-      return uri.toString().startsWith(mAnimationUriString);
-    }
-
-    @Override
-    public String getUriString() {
-      return mAnimationUriString;
-    }
+        new AnimationFrameCacheKey(animatedImageResult.hashCode()), mBackingCache);
   }
 }

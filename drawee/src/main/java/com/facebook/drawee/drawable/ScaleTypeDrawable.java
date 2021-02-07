@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -14,23 +14,24 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
+import javax.annotation.Nullable;
 
 /**
- * Drawable that can scale underlying drawable based on specified {@link ScaleType}
- * options.
- * <p/> Based on {@link android.widget.ImageView.ScaleType}.
+ * Drawable that can scale underlying drawable based on specified {@link ScaleType} options.
+ *
+ * <p>Based on {@link android.widget.ImageView.ScaleType}.
  */
 public class ScaleTypeDrawable extends ForwardingDrawable {
 
   // Specified scale type.
   @VisibleForTesting ScaleType mScaleType;
-  @VisibleForTesting Object mScaleTypeState;
+  @Nullable @VisibleForTesting Object mScaleTypeState;
 
   // Specified focus point to use with FOCUS_CROP.
-  @VisibleForTesting PointF mFocusPoint = null;
+  @VisibleForTesting @Nullable PointF mFocusPoint = null;
 
   // Last known dimensions of the underlying drawable. Used to avoid computing bounds every time
   // if underlying size hasn't changed.
@@ -38,13 +39,14 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
   @VisibleForTesting int mUnderlyingHeight = 0;
 
   // Matrix that is actually being used for drawing.
-  @VisibleForTesting Matrix mDrawMatrix;
+  @Nullable @VisibleForTesting Matrix mDrawMatrix;
 
   // Temporary objects preallocated in advance to save future allocations.
   private Matrix mTempMatrix = new Matrix();
 
   /**
    * Creates a new ScaleType drawable with given underlying drawable and scale type.
+   *
    * @param drawable underlying drawable to apply scale type on
    * @param scaleType scale type to be applied
    */
@@ -53,8 +55,21 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
     mScaleType = scaleType;
   }
 
+  /**
+   * Creates a new ScaleType drawable with given underlying drawable, scale type, and focus point.
+   *
+   * @param drawable underlying drawable to apply scale type on
+   * @param scaleType scale type to be applied
+   * @param focusPoint focus point of the image
+   */
+  public ScaleTypeDrawable(Drawable drawable, ScaleType scaleType, @Nullable PointF focusPoint) {
+    super(Preconditions.checkNotNull(drawable));
+    mScaleType = scaleType;
+    mFocusPoint = focusPoint;
+  }
+
   @Override
-  public Drawable setCurrent(Drawable newDelegate) {
+  public Drawable setCurrent(@Nullable Drawable newDelegate) {
     final Drawable previousDelegate = super.setCurrent(newDelegate);
     configureBounds();
 
@@ -63,6 +78,7 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
 
   /**
    * Gets the current scale type.
+   *
    * @return scale type
    */
   public ScaleType getScaleType() {
@@ -71,6 +87,7 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
 
   /**
    * Sets the scale type.
+   *
    * @param scaleType scale type to set
    */
   public void setScaleType(ScaleType scaleType) {
@@ -86,29 +103,34 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
 
   /**
    * Gets the focus point.
+   *
    * @return focus point of the image
    */
+  @Nullable
   public PointF getFocusPoint() {
     return mFocusPoint;
   }
 
   /**
-   * Sets the focus point.
-   * If ScaleType.FOCUS_CROP is used, focus point will attempted to be centered within a view.
-   * Each coordinate is a real number in [0,1] range, in the coordinate system where top-left
-   * corner of the image corresponds to (0, 0) and the bottom-right corner corresponds to (1, 1).
+   * Sets the focus point. If ScaleType.FOCUS_CROP is used, focus point will attempted to be
+   * centered within a view. Each coordinate is a real number in [0,1] range, in the coordinate
+   * system where top-left corner of the image corresponds to (0, 0) and the bottom-right corner
+   * corresponds to (1, 1).
+   *
    * @param focusPoint focus point of the image
    */
-  public void setFocusPoint(PointF focusPoint) {
+  public void setFocusPoint(@Nullable PointF focusPoint) {
     if (Objects.equal(mFocusPoint, focusPoint)) {
       return;
     }
-
-    if (mFocusPoint == null) {
-      mFocusPoint = new PointF();
+    if (focusPoint == null) {
+      mFocusPoint = null;
+    } else {
+      if (mFocusPoint == null) {
+        mFocusPoint = new PointF();
+      }
+      mFocusPoint.set(focusPoint);
     }
-
-    mFocusPoint.set(focusPoint);
     configureBounds();
     invalidateSelf();
   }
@@ -141,8 +163,8 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
       mScaleTypeState = state;
     }
     boolean underlyingChanged =
-        mUnderlyingWidth != getCurrent().getIntrinsicWidth() ||
-        mUnderlyingHeight != getCurrent().getIntrinsicHeight();
+        mUnderlyingWidth != getCurrent().getIntrinsicWidth()
+            || mUnderlyingHeight != getCurrent().getIntrinsicHeight();
     if (underlyingChanged || scaleTypeChanged) {
       configureBounds();
     }
@@ -152,7 +174,8 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
    * Determines bounds for the underlying drawable and a matrix that should be applied on it.
    * Adopted from android.widget.ImageView
    */
-  @VisibleForTesting void configureBounds() {
+  @VisibleForTesting
+  void configureBounds() {
     Drawable underlyingDrawable = getCurrent();
     Rect bounds = getBounds();
     int viewWidth = bounds.width();
@@ -196,6 +219,7 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
 
   /**
    * TransformationCallback method
+   *
    * @param transform
    */
   @Override

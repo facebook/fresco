@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,8 +7,11 @@
 
 package com.facebook.datasource;
 
+import javax.annotation.Nonnull;
+
 /**
  * Subscribes to DataSource<T>.
+ *
  * @param <T>
  */
 public interface DataSubscriber<T> {
@@ -22,19 +25,19 @@ public interface DataSubscriber<T> {
    *
    * @param dataSource
    */
-  void onNewResult(DataSource<T> dataSource);
+  void onNewResult(@Nonnull DataSource<T> dataSource);
 
   /**
    * Called whenever an error occurs inside of the pipeline.
    *
    * <p>No further results will be produced after this method is called.
    *
-   * <p>The throwable resulting from the failure can be obtained using
-   * {@code dataSource.getFailureCause}.
+   * <p>The throwable resulting from the failure can be obtained using {@code
+   * dataSource.getFailureCause}.
    *
    * @param dataSource
    */
-  void onFailure(DataSource<T> dataSource);
+  void onFailure(@Nonnull DataSource<T> dataSource);
 
   /**
    * Called whenever the request is cancelled (a request being cancelled means that is was closed
@@ -44,12 +47,12 @@ public interface DataSubscriber<T> {
    *
    * @param dataSource
    */
-  void onCancellation(DataSource<T> dataSource);
+  void onCancellation(@Nonnull DataSource<T> dataSource);
 
   /**
    * Called when the progress updates.
    *
    * @param dataSource
    */
-  void onProgressUpdate(DataSource<T> dataSource);
+  void onProgressUpdate(@Nonnull DataSource<T> dataSource);
 }

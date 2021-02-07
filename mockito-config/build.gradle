@@ -1,0 +1,17 @@
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.TestDeps
+
+apply plugin: 'java'
+apply plugin: 'maven'
+
+dependencies {
+    compileOnly Deps.inferAnnotation
+    implementation TestDeps.mockitoCore
+}

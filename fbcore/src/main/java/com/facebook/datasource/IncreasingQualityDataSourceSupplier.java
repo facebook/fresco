@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -13,6 +13,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
@@ -83,7 +84,7 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
   }
 
   @Override
-  public boolean equals(Object other) {
+  public boolean equals(@Nullable Object other) {
     if (other == this) {
       return true;
     }
@@ -96,9 +97,7 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this)
-        .add("list", mDataSourceSuppliers)
-        .toString();
+    return Objects.toStringHelper(this).add("list", mDataSourceSuppliers).toString();
   }
 
   @ThreadSafe
@@ -106,12 +105,14 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
 
     @GuardedBy("IncreasingQualityDataSource.this")
     private @Nullable ArrayList<DataSource<T>> mDataSources;
+
     @GuardedBy("IncreasingQualityDataSource.this")
     private int mIndexOfDataSourceWithResult;
 
     private int mNumberOfDataSources;
     private AtomicInteger mFinishedDataSources;
     private @Nullable Throwable mDelayedError;
+    private @Nullable Map<String, Object> mDelayedExtras;
 
     public IncreasingQualityDataSource() {
       if (!mDataSourceLazy) {
@@ -210,7 +211,7 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
       // If the data source with the new result is our {@code mIndexOfDataSourceWithResult},
       // we have to notify our subscribers about the new result.
       if (dataSource == getDataSourceWithResult()) {
-        setResult(null, (index == 0) && dataSource.isFinished());
+        setResult(null, (index == 0) && dataSource.isFinished(), dataSource.getExtras());
       }
       maybeSetFailure();
     }
@@ -219,6 +220,7 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
       closeSafely(tryGetAndClearDataSource(index, dataSource));
       if (index == 0) {
         mDelayedError = dataSource.getFailureCause();
+        mDelayedExtras = dataSource.getExtras();
       }
       maybeSetFailure();
     }
@@ -226,14 +228,12 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
     private void maybeSetFailure() {
       int finished = mFinishedDataSources.incrementAndGet();
       if (finished == mNumberOfDataSources && mDelayedError != null) {
-        setFailure(mDelayedError);
+        setFailure(mDelayedError, mDelayedExtras);
       }
     }
 
     private void maybeSetIndexOfDataSourceWithResult(
-        int index,
-        DataSource<T> dataSource,
-        boolean isFinished) {
+        int index, DataSource<T> dataSource, boolean isFinished) {
       int oldIndexOfDataSourceWithResult;
       int newIndexOfDataSourceWithResult;
       synchronized (IncreasingQualityDataSource.this) {
@@ -247,8 +247,8 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
         // If we did have a result which came from another data source,
         // we'll only set {@code mIndexOfDataSourceWithResult} to point to the current data source
         // if it has finished (i.e. the new result is final), and is of higher quality.
-        if (getDataSourceWithResult() == null ||
-            (isFinished && index < mIndexOfDataSourceWithResult)) {
+        if (getDataSourceWithResult() == null
+            || (isFinished && index < mIndexOfDataSourceWithResult)) {
           newIndexOfDataSourceWithResult = index;
           mIndexOfDataSourceWithResult = index;
         }
@@ -298,8 +298,7 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
       }
 
       @Override
-      public void onCancellation(DataSource<T> dataSource) {
-      }
+      public void onCancellation(DataSource<T> dataSource) {}
 
       @Override
       public void onProgressUpdate(DataSource<T> dataSource) {

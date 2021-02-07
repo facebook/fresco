@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -22,16 +22,16 @@ import org.robolectric.*;
 import org.robolectric.annotation.*;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class StatefulProducerRunnableTest {
 
-  private static final String REQUEST_ID = "awesomeRequestId";
   private static final String PRODUCER_NAME = "aBitLessAwesomeButStillAwesomeProducerName";
 
   @Mock public Consumer<Closeable> mConsumer;
-  @Mock public ProducerListener mProducerListener;
+  @Mock public ProducerListener2 mProducerListener;
   @Mock public Supplier<Closeable> mResultSupplier;
   @Mock public Closeable mResult;
+  @Mock public ProducerContext mProducerContext;
 
   private RuntimeException mException;
   private Map<String, String> mSuccessMap;
@@ -51,52 +51,53 @@ public class StatefulProducerRunnableTest {
     mCancellationMap = new HashMap<>();
     mCancellationMap.put("state", "cancelled");
 
-    mStatefulProducerRunnable = new StatefulProducerRunnable<Closeable>(
-        mConsumer,
-        mProducerListener,
-        PRODUCER_NAME,
-        REQUEST_ID) {
-      @Override
-      protected void disposeResult(Closeable result) {
-        try {
-          result.close();
-        } catch (IOException ioe) {
-          throw new RuntimeException("unexpected IOException", ioe);
-        }
-      }
+    mStatefulProducerRunnable =
+        new StatefulProducerRunnable<Closeable>(
+            mConsumer, mProducerListener, mProducerContext, PRODUCER_NAME) {
+          @Override
+          protected void disposeResult(Closeable result) {
+            try {
+              result.close();
+            } catch (IOException ioe) {
+              throw new RuntimeException("unexpected IOException", ioe);
+            }
+          }
 
-      @Override
-      protected Closeable getResult() throws Exception {
-        return mResultSupplier.get();
-      }
+          @Override
+          protected Closeable getResult() throws Exception {
+            return mResultSupplier.get();
+          }
 
-      @Override
-      protected Map<String, String> getExtraMapOnCancellation() {
-        return mCancellationMap;
-      }
+          @Override
+          protected Map<String, String> getExtraMapOnCancellation() {
+            return mCancellationMap;
+          }
 
-      @Override
-      protected Map<String, String> getExtraMapOnFailure(Exception exception) {
-        return mFailureMap;
-      }
+          @Override
+          protected Map<String, String> getExtraMapOnFailure(Exception exception) {
+            return mFailureMap;
+          }
 
-      @Override
-      protected Map<String, String> getExtraMapOnSuccess(Closeable result) {
-        return mSuccessMap;
-      }
-    };
+          @Override
+          protected Map<String, String> getExtraMapOnSuccess(Closeable result) {
+            return mSuccessMap;
+          }
+        };
   }
 
   @Test
   public void testOnSuccess_extraMap() throws IOException {
-    doReturn(true).when(mProducerListener).requiresExtraMap(REQUEST_ID);
+    doReturn(true)
+        .when(mProducerListener)
+        .requiresExtraMap(eq(mProducerContext), eq(PRODUCER_NAME));
     doReturn(mResult).when(mResultSupplier).get();
     mStatefulProducerRunnable.run();
     verify(mConsumer).onNewResult(mResult, Consumer.IS_LAST);
-    verify(mProducerListener).onProducerStart(REQUEST_ID, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithSuccess(REQUEST_ID, PRODUCER_NAME, mSuccessMap);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener)
+        .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, mSuccessMap);
     verify(mProducerListener, never())
-        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
+        .onUltimateProducerReached(eq(mProducerContext), anyString(), anyBoolean());
     verify(mResult).close();
   }
 
@@ -105,52 +106,47 @@ public class StatefulProducerRunnableTest {
     doReturn(mResult).when(mResultSupplier).get();
     mStatefulProducerRunnable.run();
     verify(mConsumer).onNewResult(mResult, Consumer.IS_LAST);
-    verify(mProducerListener).onProducerStart(REQUEST_ID, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithSuccess(REQUEST_ID, PRODUCER_NAME, null);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener).onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
     verify(mProducerListener, never())
-        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
+        .onUltimateProducerReached(eq(mProducerContext), anyString(), anyBoolean());
     verify(mResult).close();
   }
 
   @Test
   public void testOnCancellation_extraMap() {
-    doReturn(true).when(mProducerListener).requiresExtraMap(REQUEST_ID);
+    doReturn(true).when(mProducerListener).requiresExtraMap(mProducerContext, PRODUCER_NAME);
     mStatefulProducerRunnable.cancel();
     verify(mConsumer).onCancellation();
-    verify(mProducerListener).onProducerStart(REQUEST_ID, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithCancellation(
-        REQUEST_ID,
-        PRODUCER_NAME,
-        mCancellationMap);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener)
+        .onProducerFinishWithCancellation(mProducerContext, PRODUCER_NAME, mCancellationMap);
     verify(mProducerListener, never())
-        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
+        .onUltimateProducerReached(eq(mProducerContext), anyString(), anyBoolean());
   }
 
   @Test
   public void testOnCancellation_noExtraMap() {
     mStatefulProducerRunnable.cancel();
     verify(mConsumer).onCancellation();
-    verify(mProducerListener).onProducerStart(REQUEST_ID, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithCancellation(REQUEST_ID, PRODUCER_NAME, null);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener)
+        .onProducerFinishWithCancellation(mProducerContext, PRODUCER_NAME, null);
     verify(mProducerListener, never())
-        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
+        .onUltimateProducerReached(eq(mProducerContext), anyString(), anyBoolean());
   }
-
 
   @Test
   public void testOnFailure_extraMap() {
-    doReturn(true).when(mProducerListener).requiresExtraMap(REQUEST_ID);
+    doReturn(true).when(mProducerListener).requiresExtraMap(mProducerContext, PRODUCER_NAME);
     doThrow(mException).when(mResultSupplier).get();
     mStatefulProducerRunnable.run();
     verify(mConsumer).onFailure(mException);
-    verify(mProducerListener).onProducerStart(REQUEST_ID, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithFailure(
-        REQUEST_ID,
-        PRODUCER_NAME,
-        mException,
-        mFailureMap);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener)
+        .onProducerFinishWithFailure(mProducerContext, PRODUCER_NAME, mException, mFailureMap);
     verify(mProducerListener, never())
-        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
+        .onUltimateProducerReached(eq(mProducerContext), anyString(), anyBoolean());
   }
 
   @Test
@@ -158,13 +154,10 @@ public class StatefulProducerRunnableTest {
     doThrow(mException).when(mResultSupplier).get();
     mStatefulProducerRunnable.run();
     verify(mConsumer).onFailure(mException);
-    verify(mProducerListener).onProducerStart(REQUEST_ID, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithFailure(
-        REQUEST_ID,
-        PRODUCER_NAME,
-        mException,
-        null);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener)
+        .onProducerFinishWithFailure(mProducerContext, PRODUCER_NAME, mException, null);
     verify(mProducerListener, never())
-        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
+        .onUltimateProducerReached(eq(mProducerContext), anyString(), anyBoolean());
   }
 }

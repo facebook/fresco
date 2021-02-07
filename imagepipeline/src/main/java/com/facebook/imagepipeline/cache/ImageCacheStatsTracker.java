@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -12,61 +12,64 @@ import com.facebook.cache.common.CacheKey;
 /**
  * Interface for stats tracking for the image cache.
  *
- * <p>An implementation of this interface, passed to
- * {@link com.facebook.imagepipeline.core.ImagePipelineConfig}, will be notified for each
- * of the following cache events. Use this to keep cache stats for your app.
+ * <p>An implementation of this interface, passed to {@link
+ * com.facebook.imagepipeline.core.ImagePipelineConfig}, will be notified for each of the following
+ * cache events. Use this to keep cache stats for your app.
  */
 public interface ImageCacheStatsTracker {
 
   /** Called whenever decoded images are put into the bitmap cache. */
-  void onBitmapCachePut();
+  void onBitmapCachePut(CacheKey cacheKey);
 
   /** Called on a bitmap cache hit. */
   void onBitmapCacheHit(CacheKey cacheKey);
 
   /** Called on a bitmap cache miss. */
-  void onBitmapCacheMiss();
+  void onBitmapCacheMiss(CacheKey cacheKey);
 
   /** Called whenever encoded images are put into the encoded memory cache. */
-  void onMemoryCachePut();
+  void onMemoryCachePut(CacheKey cacheKey);
 
   /** Called on an encoded memory cache hit. */
   void onMemoryCacheHit(CacheKey cacheKey);
 
   /** Called on an encoded memory cache hit. */
-  void onMemoryCacheMiss();
+  void onMemoryCacheMiss(CacheKey cacheKey);
 
   /**
    * Called on an staging area hit.
    *
-   * <p>The staging area stores encoded images. It gets the images before they are written
-   * to disk cache.
+   * <p>The staging area stores encoded images. It gets the images before they are written to disk
+   * cache.
    */
   void onStagingAreaHit(CacheKey cacheKey);
 
   /** Called on a staging area miss hit. */
-  void onStagingAreaMiss();
+  void onStagingAreaMiss(CacheKey cacheKey);
 
   /** Called on a disk cache hit. */
-  void onDiskCacheHit();
+  void onDiskCacheHit(CacheKey cacheKey);
 
   /** Called on a disk cache miss. */
-  void onDiskCacheMiss();
+  void onDiskCacheMiss(CacheKey cacheKey);
 
   /** Called if an exception is thrown on a disk cache read. */
-  void onDiskCacheGetFail();
+  void onDiskCacheGetFail(CacheKey cacheKey);
+
+  /** called whenever new files are written to disk */
+  void onDiskCachePut(CacheKey cacheKey);
 
   /**
    * Registers a bitmap cache with this tracker.
    *
    * <p>Use this method if you need access to the cache itself to compile your stats.
    */
-  void registerBitmapMemoryCache(CountingMemoryCache<?, ?> bitmapMemoryCache);
+  void registerBitmapMemoryCache(MemoryCache<?, ?> bitmapMemoryCache);
 
   /**
    * Registers an encoded memory cache with this tracker.
    *
    * <p>Use this method if you need access to the cache itself to compile your stats.
    */
-  void registerEncodedMemoryCache(CountingMemoryCache<?, ?> encodedMemoryCache);
+  void registerEncodedMemoryCache(MemoryCache<?, ?> encodedMemoryCache);
 }

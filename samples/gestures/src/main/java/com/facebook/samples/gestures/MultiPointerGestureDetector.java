@@ -1,26 +1,24 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 package com.facebook.samples.gestures;
 
 import android.view.MotionEvent;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * Component that detects and tracks multiple pointers based on touch events.
- * <p>
- * Each time a pointer gets pressed or released, the current gesture (if any) will end, and a new
+ *
+ * <p>Each time a pointer gets pressed or released, the current gesture (if any) will end, and a new
  * one will be started (if there are still pressed pointers left). It is guaranteed that the number
  * of pointers within the single gesture will remain the same during the whole gesture.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class MultiPointerGestureDetector {
 
   /** The listener for receiving notifications when gestures occur. */
@@ -46,7 +44,7 @@ public class MultiPointerGestureDetector {
   private final float mCurrentX[] = new float[MAX_POINTERS];
   private final float mCurrentY[] = new float[MAX_POINTERS];
 
-  private Listener mListener = null;
+  @Nullable private Listener mListener = null;
 
   public MultiPointerGestureDetector() {
     reset();
@@ -59,15 +57,14 @@ public class MultiPointerGestureDetector {
 
   /**
    * Sets the listener.
+   *
    * @param listener listener to set
    */
   public void setListener(Listener listener) {
     mListener = listener;
   }
 
-  /**
-   * Resets the component to the initial state.
-   */
+  /** Resets the component to the initial state. */
   public void reset() {
     mGestureInProgress = false;
     mPointerCount = 0;
@@ -78,15 +75,14 @@ public class MultiPointerGestureDetector {
 
   /**
    * This method can be overridden in order to perform threshold check or something similar.
+   *
    * @return whether or not to start a new gesture
    */
   protected boolean shouldStartGesture() {
     return true;
   }
 
-  /**
-   * Starts a new gesture and calls the listener just before starting it.
-   */
+  /** Starts a new gesture and calls the listener just before starting it. */
   private void startGesture() {
     if (!mGestureInProgress) {
       if (mListener != null) {
@@ -96,9 +92,7 @@ public class MultiPointerGestureDetector {
     }
   }
 
-  /**
-   * Stops the current gesture and calls the listener right after stopping it.
-   */
+  /** Stops the current gesture and calls the listener right after stopping it. */
   private void stopGesture() {
     if (mGestureInProgress) {
       mGestureInProgress = false;
@@ -109,16 +103,16 @@ public class MultiPointerGestureDetector {
   }
 
   /**
-   * Gets the index of the i-th pressed pointer.
-   * Normally, the index will be equal to i, except in the case when the pointer is released.
+   * Gets the index of the i-th pressed pointer. Normally, the index will be equal to i, except in
+   * the case when the pointer is released.
+   *
    * @return index of the specified pointer or -1 if not found (i.e. not enough pointers are down)
    */
   private int getPressedPointerIndex(MotionEvent event, int i) {
     final int count = event.getPointerCount();
     final int action = event.getActionMasked();
     final int index = event.getActionIndex();
-    if (action == MotionEvent.ACTION_UP ||
-        action == MotionEvent.ACTION_POINTER_UP) {
+    if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
       if (i >= index) {
         i++;
       }
@@ -126,14 +120,11 @@ public class MultiPointerGestureDetector {
     return (i < count) ? i : -1;
   }
 
-  /**
-   * Gets the number of pressed pointers (fingers down).
-   */
+  /** Gets the number of pressed pointers (fingers down). */
   private static int getPressedPointerCount(MotionEvent event) {
     int count = event.getPointerCount();
     int action = event.getActionMasked();
-    if (action == MotionEvent.ACTION_UP ||
-        action == MotionEvent.ACTION_POINTER_UP) {
+    if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
       count--;
     }
     return count;
@@ -166,50 +157,54 @@ public class MultiPointerGestureDetector {
 
   /**
    * Handles the given motion event.
+   *
    * @param event event to handle
    * @return whether or not the event was handled
    */
   public boolean onTouchEvent(final MotionEvent event) {
     switch (event.getActionMasked()) {
-      case MotionEvent.ACTION_MOVE: {
-        // update pointers
-        updatePointersOnMove(event);
-        // start a new gesture if not already started
-        if (!mGestureInProgress && mPointerCount > 0 && shouldStartGesture()) {
-          startGesture();
+      case MotionEvent.ACTION_MOVE:
+        {
+          // update pointers
+          updatePointersOnMove(event);
+          // start a new gesture if not already started
+          if (!mGestureInProgress && mPointerCount > 0 && shouldStartGesture()) {
+            startGesture();
+          }
+          // notify listener
+          if (mGestureInProgress && mListener != null) {
+            mListener.onGestureUpdate(this);
+          }
+          break;
         }
-        // notify listener
-        if (mGestureInProgress && mListener != null) {
-          mListener.onGestureUpdate(this);
-        }
-        break;
-      }
 
       case MotionEvent.ACTION_DOWN:
       case MotionEvent.ACTION_POINTER_DOWN:
       case MotionEvent.ACTION_POINTER_UP:
-      case MotionEvent.ACTION_UP: {
-        // restart gesture whenever the number of pointers changes
-        mNewPointerCount = getPressedPointerCount(event);
-        stopGesture();
-        updatePointersOnTap(event);
-        if (mPointerCount > 0 && shouldStartGesture()) {
-          startGesture();
+      case MotionEvent.ACTION_UP:
+        {
+          // restart gesture whenever the number of pointers changes
+          mNewPointerCount = getPressedPointerCount(event);
+          stopGesture();
+          updatePointersOnTap(event);
+          if (mPointerCount > 0 && shouldStartGesture()) {
+            startGesture();
+          }
+          break;
         }
-        break;
-      }
 
-      case MotionEvent.ACTION_CANCEL: {
-        mNewPointerCount = 0;
-        stopGesture();
-        reset();
-        break;
-      }
+      case MotionEvent.ACTION_CANCEL:
+        {
+          mNewPointerCount = 0;
+          stopGesture();
+          reset();
+          break;
+        }
     }
     return true;
   }
 
-  /** Restarts the current gesture (if any).  */
+  /** Restarts the current gesture (if any). */
   public void restartGesture() {
     if (!mGestureInProgress) {
       return;
@@ -238,32 +233,32 @@ public class MultiPointerGestureDetector {
   }
 
   /**
-   * Gets the start X coordinates for the all pointers
-   * Mutable array is exposed for performance reasons and is not to be modified by the callers.
+   * Gets the start X coordinates for the all pointers Mutable array is exposed for performance
+   * reasons and is not to be modified by the callers.
    */
   public float[] getStartX() {
     return mStartX;
   }
 
   /**
-   * Gets the start Y coordinates for the all pointers
-   * Mutable array is exposed for performance reasons and is not to be modified by the callers.
+   * Gets the start Y coordinates for the all pointers Mutable array is exposed for performance
+   * reasons and is not to be modified by the callers.
    */
   public float[] getStartY() {
     return mStartY;
   }
 
   /**
-   * Gets the current X coordinates for the all pointers
-   * Mutable array is exposed for performance reasons and is not to be modified by the callers.
+   * Gets the current X coordinates for the all pointers Mutable array is exposed for performance
+   * reasons and is not to be modified by the callers.
    */
   public float[] getCurrentX() {
     return mCurrentX;
   }
 
   /**
-   * Gets the current Y coordinates for the all pointers
-   * Mutable array is exposed for performance reasons and is not to be modified by the callers.
+   * Gets the current Y coordinates for the all pointers Mutable array is exposed for performance
+   * reasons and is not to be modified by the callers.
    */
   public float[] getCurrentY() {
     return mCurrentY;

@@ -1,29 +1,23 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.samples.scrollperf.util;
 
 import android.app.Activity;
 import android.view.View;
 
-/**
- * Utility class to get View references using type inference
- */
+/** Utility class to get View references using type inference */
 public final class UI {
 
   /**
-   * This method returns the reference of the View with the given Id in the layout of the
-   * Activity passed as parameter
+   * This method returns the reference of the View with the given Id in the layout of the Activity
+   * passed as parameter
    *
-   * @param act    The Activity that is using the layout with the given View
+   * @param act The Activity that is using the layout with the given View
    * @param viewId The id of the View we want to get a reference
    * @return The View with the given id and type
    */
@@ -33,11 +27,10 @@ public final class UI {
   }
 
   /**
-   * This method returns the reference of the View with the given Id in the view passed
-   * as parameter
+   * This method returns the reference of the View with the given Id in the view passed as parameter
    *
    * @param containerView The container View
-   * @param viewId        The id of the View we want to get a reference
+   * @param viewId The id of the View we want to get a reference
    * @return The View with the given id and type
    */
   @SuppressWarnings("unchecked")

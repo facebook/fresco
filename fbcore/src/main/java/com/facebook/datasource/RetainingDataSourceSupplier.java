@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2017-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.datasource;
 
 import com.facebook.common.executors.CallerThreadExecutor;
@@ -96,7 +97,7 @@ public class RetainingDataSourceSupplier<T> implements Supplier<DataSource<T>> {
 
     private void onDataSourceNewResult(DataSource<T> dataSource) {
       if (dataSource == mDataSource) {
-        setResult(null, false);
+        setResult(null, false, dataSource.getExtras());
       }
     }
 
@@ -138,6 +139,11 @@ public class RetainingDataSourceSupplier<T> implements Supplier<DataSource<T>> {
       public void onProgressUpdate(DataSource<T> dataSource) {
         RetainingDataSource.this.onDatasourceProgress(dataSource);
       }
+    }
+
+    @Override
+    public boolean hasMultipleResults() {
+      return true;
     }
   }
 }

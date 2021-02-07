@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,11 +11,14 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
+
 /**
- * Interface that {@link com.facebook.fresco.animation.drawable.AnimatedDrawable2} uses
- * that abstracts out the image format.
+ * Interface that {@link com.facebook.fresco.animation.drawable.AnimatedDrawable2} uses that
+ * abstracts out the image format.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface AnimatedDrawableBackend {
 
   /**
@@ -61,16 +64,16 @@ public interface AnimatedDrawableBackend {
   int getHeight();
 
   /**
-   * Gets the rendered width of the image. This may be smaller than the underlying image width
-   * if the image is being rendered to a small bounds or to reduce memory requirements.
+   * Gets the rendered width of the image. This may be smaller than the underlying image width if
+   * the image is being rendered to a small bounds or to reduce memory requirements.
    *
    * @return the rendered width of the image
    */
   int getRenderedWidth();
 
   /**
-   * Gets the rendered height of the image. This may be smaller than the underlying image height
-   * if the image is being rendered to a small bounds or to reduce memory requirements.
+   * Gets the rendered height of the image. This may be smaller than the underlying image height if
+   * the image is being rendered to a small bounds or to reduce memory requirements.
    *
    * @return the rendered height of the image
    */
@@ -97,7 +100,7 @@ public interface AnimatedDrawableBackend {
    *
    * @param timestampMs the timestamp
    * @return the frame index for the timestamp or the last frame number if the timestamp is outside
-   *    the duration of the entire animation
+   *     the duration of the entire animation
    */
   int getFrameForTimestampMs(int timestampMs);
 
@@ -129,9 +132,9 @@ public interface AnimatedDrawableBackend {
    *
    * @param bounds the bounds
    * @return an {@link AnimatedDrawableBackend} with the new bounds (this may be the same instance
-   *    if the bounds don't require a new backend)
+   *     if the bounds don't require a new backend)
    */
-  AnimatedDrawableBackend forNewBounds(Rect bounds);
+  AnimatedDrawableBackend forNewBounds(@Nullable Rect bounds);
 
   /**
    * Gets the number of bytes currently used by the backend for caching (for debugging)
@@ -141,26 +144,25 @@ public interface AnimatedDrawableBackend {
   int getMemoryUsage();
 
   /**
-   * Gets a pre-decoded frame. This will only return non-null if the {@code ImageDecodeOptions}
-   * were configured to decode all frames at decode time.
+   * Gets a pre-decoded frame. This will only return non-null if the {@code ImageDecodeOptions} were
+   * configured to decode all frames at decode time.
    *
    * @param frameNumber the index of the frame to get
    * @return a reference to the preview bitmap which must be released by the caller when done or
    *     null if there is no preview bitmap set
    */
-  @Nullable CloseableReference<Bitmap> getPreDecodedFrame(int frameNumber);
+  @Nullable
+  CloseableReference<Bitmap> getPreDecodedFrame(int frameNumber);
 
   /**
-   * Gets whether it has the decoded frame. This will only return true if the
-   * {@code ImageDecodeOptions} were configured to decode all frames at decode time.
+   * Gets whether it has the decoded frame. This will only return true if the {@code
+   * ImageDecodeOptions} were configured to decode all frames at decode time.
    *
    * @param frameNumber the index of the frame to get
    * @return true if the result has the decoded frame
    */
   boolean hasPreDecodedFrame(int frameNumber);
 
-    /**
-     * Instructs the backend to drop its caches.
-     */
+  /** Instructs the backend to drop its caches. */
   void dropCaches();
 }

@@ -1,17 +1,18 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.animation.frame;
 
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.fresco.animation.backend.AnimationInformation;
+import com.facebook.infer.annotation.Nullsafe;
 
-/**
- * Frame scheduler that maps time values to frames.
- */
+/** Frame scheduler that maps time values to frames. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class DropFramesFrameScheduler implements FrameScheduler {
 
   private static final int UNSET = -1;
@@ -26,13 +27,18 @@ public class DropFramesFrameScheduler implements FrameScheduler {
 
   @Override
   public int getFrameNumberToRender(long animationTimeMs, long lastFrameTimeMs) {
+    long loopDurationMs = getLoopDurationMs();
+    if (loopDurationMs == 0) {
+      return getFrameNumberWithinLoop(0);
+    }
     if (!isInfiniteAnimation()) {
-      long loopCount = animationTimeMs / getLoopDurationMs();
+
+      long loopCount = animationTimeMs / loopDurationMs;
       if (loopCount >= mAnimationInformation.getLoopCount()) {
         return FRAME_NUMBER_DONE;
       }
     }
-    long timeInCurrentLoopMs = animationTimeMs % getLoopDurationMs();
+    long timeInCurrentLoopMs = animationTimeMs % loopDurationMs;
     return getFrameNumberWithinLoop(timeInCurrentLoopMs);
   }
 

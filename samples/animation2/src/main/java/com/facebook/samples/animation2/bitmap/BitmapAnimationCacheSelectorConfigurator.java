@@ -1,14 +1,10 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.samples.animation2.bitmap;
 
 import android.content.Context;
@@ -27,8 +23,8 @@ import com.facebook.imagepipeline.animated.impl.AnimatedFrameCache;
 import com.facebook.samples.animation2.R;
 
 /**
- * Manages a {@link Spinner} that can be used to switch the used caching implementation for
- * {@link BitmapAnimationBackend}s.
+ * Manages a {@link Spinner} that can be used to switch the used caching implementation for {@link
+ * BitmapAnimationBackend}s.
  */
 public class BitmapAnimationCacheSelectorConfigurator {
 
@@ -134,19 +130,19 @@ public class BitmapAnimationCacheSelectorConfigurator {
   }
 
   private void setupSelector() {
-    mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-      @Override
-      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        BitmapFrameCache bitmapFrameCache =
-            mArrayAdapter.getItem(position).createBitmapFrameCache();
-        bitmapFrameCache.setFrameCacheListener(mFrameCacheListener);
-        updateBitmapFrameCache(bitmapFrameCache);
-      }
+    mSpinner.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            BitmapFrameCache bitmapFrameCache =
+                mArrayAdapter.getItem(position).createBitmapFrameCache();
+            bitmapFrameCache.setFrameCacheListener(mFrameCacheListener);
+            updateBitmapFrameCache(bitmapFrameCache);
+          }
 
-      @Override
-      public void onNothingSelected(AdapterView<?> adapterView) {
-      }
-    });
+          @Override
+          public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
   }
 
   private void updateBitmapFrameCache(BitmapFrameCache bitmapFrameCache) {

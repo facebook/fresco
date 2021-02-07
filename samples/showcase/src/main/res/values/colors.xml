@@ -13,4 +13,8 @@
   <color name="progress_bar_background">@color/grey300</color>
 
   <color name="image_detail_help_background">#66000000</color>
+
+  <color name="placeholder_color">@color/checker_board_dark</color>
+  <color name="error_color">@color/primaryDark</color>
+  <color name="overlay_color">#88FF5722</color>
 </resources>

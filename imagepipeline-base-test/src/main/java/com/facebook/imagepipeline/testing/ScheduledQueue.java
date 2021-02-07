@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,10 +8,10 @@
 package com.facebook.imagepipeline.testing;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 
-/**
- * A queue that executes items according to the passage of time.
- */
+/** A queue that executes items according to the passage of time. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ScheduledQueue {
 
   private final FakeClock clock;
@@ -33,10 +33,9 @@ public class ScheduledQueue {
   }
 
   /**
-   * Runs time forwards by a given duration, executing any commands scheduled for
-   * execution during that time period, and any background tasks spawned by the
-   * scheduled tasks.  Therefore, when a call to tick returns, the executor
-   * will be idle.
+   * Runs time forwards by a given duration, executing any commands scheduled for execution during
+   * that time period, and any background tasks spawned by the scheduled tasks. Therefore, when a
+   * call to tick returns, the executor will be idle.
    */
   private void tick() {
     long newNow = clock.now();
@@ -56,10 +55,7 @@ public class ScheduledQueue {
     }
   }
 
-  /**
-   * Runs all commands scheduled to be executed immediately but does
-   * not tick time forward.
-   */
+  /** Runs all commands scheduled to be executed immediately but does not tick time forward. */
   public void runUntilIdle() {
     while (!isIdle()) {
       runNextPendingCommand();
@@ -75,9 +71,7 @@ public class ScheduledQueue {
     return deltaQueue.isEmpty() || deltaQueue.delay() > 0;
   }
 
-  /**
-   * Runs the next command scheduled to be executed immediately.
-   */
+  /** Runs the next command scheduled to be executed immediately. */
   public void runNextPendingCommand() {
     Runnable runnable = deltaQueue.pop();
     runnable.run();
@@ -86,7 +80,7 @@ public class ScheduledQueue {
   /**
    * Returns how much time left until next command.
    *
-   * If there are no pending commands left will throw and exception.
+   * <p>If there are no pending commands left will throw and exception.
    */
   public long getNextPendingCommandDelay() {
     if (getPendingCount() == 0) {
@@ -116,6 +110,7 @@ public class ScheduledQueue {
 
   /**
    * Removes a task from the queue
+   *
    * @param runnable The runnable to remove
    * @return whether the element was removed
    */

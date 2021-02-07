@@ -1,10 +1,9 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 
 package com.facebook.drawee.span;
 
@@ -24,9 +23,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests {@link DraweeSpanStringBuilder}
- */
+/** Tests {@link DraweeSpanStringBuilder} */
 @RunWith(RobolectricTestRunner.class)
 public class DraweeSpanStringBuilderTest {
 
@@ -83,10 +80,8 @@ public class DraweeSpanStringBuilderTest {
   @Test
   public void testDraweeSpanInSpannable() {
     addDraweeSpan(mDraweeSpanStringBuilder, mDraweeHolder, 3, 1);
-    DraweeSpan[] draweeSpans = mDraweeSpanStringBuilder.getSpans(
-        0,
-        mDraweeSpanStringBuilder.length(),
-        DraweeSpan.class);
+    DraweeSpan[] draweeSpans =
+        mDraweeSpanStringBuilder.getSpans(0, mDraweeSpanStringBuilder.length(), DraweeSpan.class);
 
     assertThat(draweeSpans).hasSize(1);
     assertThat(draweeSpans[0].getDrawable()).isEqualTo(mTopLevelDrawable);

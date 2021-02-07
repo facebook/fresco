@@ -16,8 +16,13 @@
 }
 
 # Keep native methods
--keepclassmembers class * {
+-keepclassmembers class com.facebook.** {
     native <methods>;
+}
+
+# Do not strip SoLoader class and init method
+-keep public class com.facebook.soloader.SoLoader {
+    public static void init(android.content.Context, int);
 }
 
 -dontwarn okio.**

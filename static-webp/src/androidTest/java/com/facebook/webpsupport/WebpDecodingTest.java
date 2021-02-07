@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,9 +10,7 @@ package com.facebook.webpsupport;
 import android.app.Instrumentation;
 import android.graphics.Bitmap;
 import android.os.MemoryFile;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
-import android.test.InstrumentationTestCase;
+import androidx.test.InstrumentationRegistry;
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Throwables;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
@@ -21,15 +19,12 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-/**
- * This is the test in order to directly decoding all types of webp images
- */
-@RunWith(AndroidJUnit4.class)
-public class WebpDecodingTest extends InstrumentationTestCase {
+/** This is the test in order to directly decoding all types of webp images */
+public class WebpDecodingTest extends TestCase {
 
   private static Method sGetFileDescriptorMethod;
 
@@ -44,7 +39,8 @@ public class WebpDecodingTest extends InstrumentationTestCase {
     mWebpBitmapFactory = new WebpBitmapFactoryImpl();
     ImagePipelineConfig.Builder configBuilder =
         ImagePipelineConfig.newBuilder(mInstrumentation.getContext())
-            .experiment().setWebpBitmapFactory(mWebpBitmapFactory);
+            .experiment()
+            .setWebpBitmapFactory(mWebpBitmapFactory);
     ImagePipelineFactory.initialize(configBuilder.build());
   }
 
@@ -90,83 +86,67 @@ public class WebpDecodingTest extends InstrumentationTestCase {
 
   @Test
   public void test_webp_extended_decoding_inputstream_bitmap() throws Throwable {
-    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(
-        getTestImageInputStream("webp_e.webp"),
-        null,
-        null);
+    final Bitmap bitmap =
+        mWebpBitmapFactory.decodeStream(getTestImageInputStream("webp_e.webp"), null, null);
     assertBitmap(bitmap, 480, 320);
   }
 
   @Test
   public void test_webp_extended_decoding_filedescriptor_bitmap() throws Throwable {
-    final MemoryFile memoryFile =  getMemoryFile("webp_e.webp");
-    final Bitmap bitmap = mWebpBitmapFactory.decodeFileDescriptor(
-        getMemoryFileDescriptor(memoryFile),
-        null,
-        null);
+    final MemoryFile memoryFile = getMemoryFile("webp_e.webp");
+    final Bitmap bitmap =
+        mWebpBitmapFactory.decodeFileDescriptor(getMemoryFileDescriptor(memoryFile), null, null);
     memoryFile.close();
     assertBitmap(bitmap, 480, 320);
   }
 
   @Test
   public void test_webp_extended_with_alpha_decoding_inputstream_bitmap() throws Throwable {
-    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(
-        getTestImageInputStream("webp_ea.webp"),
-        null,
-        null);
+    final Bitmap bitmap =
+        mWebpBitmapFactory.decodeStream(getTestImageInputStream("webp_ea.webp"), null, null);
 
-    assertBitmap(bitmap, 400 ,301);
+    assertBitmap(bitmap, 400, 301);
   }
 
   @Test
   public void test_webp_extended_with_alpha_decoding_filedescriptor_bitmap() throws Throwable {
-    final MemoryFile memoryFile =  getMemoryFile("webp_ea.webp");
-    final Bitmap bitmap = mWebpBitmapFactory.decodeFileDescriptor(
-        getMemoryFileDescriptor(memoryFile),
-        null,
-        null);
+    final MemoryFile memoryFile = getMemoryFile("webp_ea.webp");
+    final Bitmap bitmap =
+        mWebpBitmapFactory.decodeFileDescriptor(getMemoryFileDescriptor(memoryFile), null, null);
     memoryFile.close();
-    assertBitmap(bitmap, 400 ,301);
+    assertBitmap(bitmap, 400, 301);
   }
 
   @Test
   public void test_webp_lossless_decoding_inputstream_bitmap() throws Throwable {
-    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(
-        getTestImageInputStream("webp_ll.webp"),
-        null,
-        null);
+    final Bitmap bitmap =
+        mWebpBitmapFactory.decodeStream(getTestImageInputStream("webp_ll.webp"), null, null);
 
     assertBitmap(bitmap, 400, 301);
   }
 
   @Test
   public void test_webp_lossless_decoding_filedescriptor_bitmap() throws Throwable {
-    final MemoryFile memoryFile =  getMemoryFile("webp_ll.webp");
-    final Bitmap bitmap = mWebpBitmapFactory.decodeFileDescriptor(
-        getMemoryFileDescriptor(memoryFile),
-        null,
-        null);
+    final MemoryFile memoryFile = getMemoryFile("webp_ll.webp");
+    final Bitmap bitmap =
+        mWebpBitmapFactory.decodeFileDescriptor(getMemoryFileDescriptor(memoryFile), null, null);
     memoryFile.close();
     assertBitmap(bitmap, 400, 301);
   }
 
   @Test
   public void test_webp_plain_inputstream_bitmap() throws Throwable {
-    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(
-        getTestImageInputStream("webp_plain.webp"),
-        null,
-        null);
+    final Bitmap bitmap =
+        mWebpBitmapFactory.decodeStream(getTestImageInputStream("webp_plain.webp"), null, null);
 
     assertBitmap(bitmap, 320, 214);
   }
 
   @Test
   public void test_webp_plain_decoding_filedescriptor_bitmap() throws Throwable {
-    final MemoryFile memoryFile =  getMemoryFile("webp_plain.webp");
-    final Bitmap bitmap = mWebpBitmapFactory.decodeFileDescriptor(
-        getMemoryFileDescriptor(memoryFile),
-        null,
-        null);
+    final MemoryFile memoryFile = getMemoryFile("webp_plain.webp");
+    final Bitmap bitmap =
+        mWebpBitmapFactory.decodeFileDescriptor(getMemoryFileDescriptor(memoryFile), null, null);
     memoryFile.close();
     assertBitmap(bitmap, 320, 214);
   }

@@ -1,17 +1,11 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 package com.facebook.samples.comparison.configs.imagepipeline;
-
 
 import android.content.Context;
 import com.facebook.cache.disk.DiskCacheConfig;
@@ -25,20 +19,17 @@ import com.facebook.samples.comparison.configs.ConfigConstants;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 
-/**
- * Creates ImagePipeline configuration for the sample app
- */
+/** Creates ImagePipeline configuration for the sample app */
 public class ImagePipelineConfigFactory {
   private static final String IMAGE_PIPELINE_CACHE_DIR = "imagepipeline_cache";
 
   private static ImagePipelineConfig sImagePipelineConfig;
   private static ImagePipelineConfig sOkHttpImagePipelineConfig;
 
-  /**
-   * Creates config using android http stack as network backend.
-   */
+  /** Creates config using android http stack as network backend. */
   public static ImagePipelineConfig getImagePipelineConfig(Context context) {
     if (sImagePipelineConfig == null) {
       ImagePipelineConfig.Builder configBuilder = ImagePipelineConfig.newBuilder(context);
@@ -50,16 +41,13 @@ public class ImagePipelineConfigFactory {
     return sImagePipelineConfig;
   }
 
-  /**
-   * Creates config using OkHttp as network backed.
-   */
+  /** Creates config using OkHttp as network backed. */
   public static ImagePipelineConfig getOkHttpImagePipelineConfig(Context context) {
     if (sOkHttpImagePipelineConfig == null) {
-      OkHttpClient okHttpClient = new OkHttpClient.Builder()
-          .addNetworkInterceptor(new StethoInterceptor())
-          .build();
+      OkHttpClient okHttpClient =
+          new OkHttpClient.Builder().addNetworkInterceptor(new StethoInterceptor()).build();
       ImagePipelineConfig.Builder configBuilder =
-        OkHttpImagePipelineConfigFactory.newBuilder(context, okHttpClient);
+          OkHttpImagePipelineConfigFactory.newBuilder(context, okHttpClient);
       configureCaches(configBuilder, context);
       configureLoggingListeners(configBuilder);
       sOkHttpImagePipelineConfig = configBuilder.build();
@@ -67,18 +55,16 @@ public class ImagePipelineConfigFactory {
     return sOkHttpImagePipelineConfig;
   }
 
-  /**
-   * Configures disk and memory cache not to exceed common limits
-   */
-  private static void configureCaches(
-      ImagePipelineConfig.Builder configBuilder,
-      Context context) {
-    final MemoryCacheParams bitmapCacheParams = new MemoryCacheParams(
-        ConfigConstants.MAX_MEMORY_CACHE_SIZE, // Max total size of elements in the cache
-        Integer.MAX_VALUE,                     // Max entries in the cache
-        ConfigConstants.MAX_MEMORY_CACHE_SIZE, // Max total size of elements in eviction queue
-        Integer.MAX_VALUE,                     // Max length of eviction queue
-        Integer.MAX_VALUE);                    // Max cache entry size
+  /** Configures disk and memory cache not to exceed common limits */
+  private static void configureCaches(ImagePipelineConfig.Builder configBuilder, Context context) {
+    final MemoryCacheParams bitmapCacheParams =
+        new MemoryCacheParams(
+            ConfigConstants.MAX_MEMORY_CACHE_SIZE, // Max total size of elements in the cache
+            Integer.MAX_VALUE, // Max entries in the cache
+            ConfigConstants.MAX_MEMORY_CACHE_SIZE, // Max total size of elements in eviction queue
+            Integer.MAX_VALUE, // Max length of eviction queue
+            Integer.MAX_VALUE, // Max cache entry size
+            TimeUnit.MINUTES.toMillis(5)); // Interval for checking cache parameters
     configBuilder
         .setBitmapMemoryCacheParamsSupplier(
             new Supplier<MemoryCacheParams>() {

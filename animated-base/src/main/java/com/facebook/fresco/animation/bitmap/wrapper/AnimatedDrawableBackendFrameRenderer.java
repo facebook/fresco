@@ -1,24 +1,28 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.animation.bitmap.wrapper;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.impl.AnimatedImageCompositor;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
-/**
- * {@link BitmapFrameRenderer} that wraps around an {@link AnimatedDrawableBackend}.
- */
+/** {@link BitmapFrameRenderer} that wraps around an {@link AnimatedDrawableBackend}. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedDrawableBackendFrameRenderer implements BitmapFrameRenderer {
+
+  private static final Class<?> TAG = AnimatedDrawableBackendFrameRenderer.class;
 
   private final BitmapFrameCache mBitmapFrameCache;
 
@@ -40,8 +44,7 @@ public class AnimatedDrawableBackendFrameRenderer implements BitmapFrameRenderer
       };
 
   public AnimatedDrawableBackendFrameRenderer(
-      BitmapFrameCache bitmapFrameCache,
-      AnimatedDrawableBackend animatedDrawableBackend) {
+      BitmapFrameCache bitmapFrameCache, AnimatedDrawableBackend animatedDrawableBackend) {
     mBitmapFrameCache = bitmapFrameCache;
     mAnimatedDrawableBackend = animatedDrawableBackend;
 
@@ -69,7 +72,12 @@ public class AnimatedDrawableBackendFrameRenderer implements BitmapFrameRenderer
 
   @Override
   public boolean renderFrame(int frameNumber, Bitmap targetBitmap) {
-    mAnimatedImageCompositor.renderFrame(frameNumber, targetBitmap);
+    try {
+      mAnimatedImageCompositor.renderFrame(frameNumber, targetBitmap);
+    } catch (IllegalStateException exception) {
+      FLog.e(TAG, exception, "Rendering of frame unsuccessful. Frame number: %d", frameNumber);
+      return false;
+    }
     return true;
   }
 }

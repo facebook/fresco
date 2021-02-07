@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,8 +7,10 @@
 
 package com.facebook.imagepipeline.common;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
+import androidx.annotation.Nullable;
 import com.facebook.common.util.HashCodeUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Locale;
@@ -16,37 +18,37 @@ import java.util.Locale;
 /**
  * Options for rotation.
  *
- * <p> These options are applied to JPEG images only.
+ * <p>These options are applied to JPEG images only.
  *
- * <p> Describes how the image should be rotated, whether following image meta-data or a specified
+ * <p>Describes how the image should be rotated, whether following image meta-data or a specified
  * amount.
  *
- * <p> These options are only relevant for JPEG images. Fresco doesn't support rotation of other
+ * <p>These options are only relevant for JPEG images. Fresco doesn't support rotation of other
  * image formats.
  *
- * <p> The options also include whether the rotation can be deferred until the bitmap is rendered.
+ * <p>The options also include whether the rotation can be deferred until the bitmap is rendered.
  * This should be be false if a post-processor is used which needs to operate on the bitmap
  * correctly oriented but can otherwise generally be true, particularly if using drawee.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class RotationOptions {
 
-  @IntDef(flag=false, value={
-      NO_ROTATION,
-      ROTATE_90,
-      ROTATE_180,
-      ROTATE_270,
-      USE_EXIF_ROTATION_ANGLE,
-      DISABLE_ROTATION
-  })
+  @IntDef(
+      flag = false,
+      value = {
+        NO_ROTATION,
+        ROTATE_90,
+        ROTATE_180,
+        ROTATE_270,
+        USE_EXIF_ROTATION_ANGLE,
+        DISABLE_ROTATION
+      })
   @Retention(RetentionPolicy.SOURCE)
   private @interface Rotation {}
 
-  @IntDef(flag=false, value={
-      NO_ROTATION,
-      ROTATE_90,
-      ROTATE_180,
-      ROTATE_270
-  })
+  @IntDef(
+      flag = false,
+      value = {NO_ROTATION, ROTATE_90, ROTATE_180, ROTATE_270})
   @Retention(RetentionPolicy.SOURCE)
   public @interface RotationAngle {}
 
@@ -73,19 +75,16 @@ public class RotationOptions {
    * Creates a new set of rotation options for JPEG images to use the rotation angle in the image
    * metadata.
    *
-   * <p> This is the default option for requests which don't specify rotation options.
+   * <p>This is the default option for requests which don't specify rotation options.
    *
-   * <p> The rotation will not be deferred for defensiveness but that can improve performance. To
+   * <p>The rotation will not be deferred for defensiveness but that can improve performance. To
    * defer, use {@link #autoRotateAtRenderTime()}.
    */
   public static RotationOptions autoRotate() {
     return ROTATION_OPTIONS_AUTO_ROTATE;
   }
 
-  /**
-   * Creates a new set of rotation options for JPEG images to load image without any rotation.
-   *
-   */
+  /** Creates a new set of rotation options for JPEG images to load image without any rotation. */
   public static RotationOptions disableRotation() {
     return ROTATION_OPTIONS_DISABLE_ROTATION;
   }
@@ -94,7 +93,7 @@ public class RotationOptions {
    * Creates a new set of rotation options for JPEG images to use the rotation angle in the image
    * metadata.
    *
-   * <p> The rotation may be deferred until the image is rendered.
+   * <p>The rotation may be deferred until the image is rendered.
    */
   public static RotationOptions autoRotateAtRenderTime() {
     return ROTATION_OPTIONS_ROTATE_AT_RENDER_TIME;
@@ -103,7 +102,7 @@ public class RotationOptions {
   /**
    * Creates a new set of rotation options to use a specific rotation angle.
    *
-   * <p> The rotation will be carried out in the pipeline.
+   * <p>The rotation will be carried out in the pipeline.
    *
    * @param angle the angle to rotate - valid values are 0, 90, 180 and 270
    */
@@ -127,8 +126,8 @@ public class RotationOptions {
   /**
    * Gets the explicit angle to rotate to, if one was set.
    *
-   * @throws IllegalStateException if the instance was create using one of the
-   * {@code autoRotate()} constructors.
+   * @throws IllegalStateException if the instance was create using one of the {@code autoRotate()}
+   *     constructors.
    */
   public @RotationAngle int getForcedAngle() {
     if (useImageMetadata()) {
@@ -147,7 +146,7 @@ public class RotationOptions {
   }
 
   @Override
-  public boolean equals(Object other) {
+  public boolean equals(@Nullable Object other) {
     if (other == this) {
       return true;
     }
@@ -155,8 +154,7 @@ public class RotationOptions {
       return false;
     }
     RotationOptions that = (RotationOptions) other;
-    return this.mRotation == that.mRotation &&
-        this.mDeferUntilRendered == that.mDeferUntilRendered;
+    return this.mRotation == that.mRotation && this.mDeferUntilRendered == that.mDeferUntilRendered;
   }
 
   @Override

@@ -1,25 +1,41 @@
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import com.facebook.fresco.buildsrc.Deps
+
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
-project.group = GROUP
-version = VERSION_NAME
-
 dependencies {
-    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
-    implementation "com.facebook.stetho:stetho:${STETHO_VERSION}"
+    compileOnly Deps.inferAnnotation
+    compileOnly Deps.jsr305
+    compileOnly Deps.javaxAnnotation
+    implementation Deps.Tools.Stetho.stetho
 
     implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':fbcore')
     implementation project(':imagepipeline')
+    implementation project(':imagepipeline-native')
+    implementation project(':memory-types:ashmem')
+    implementation project(':memory-types:nativememory')
+    implementation project(':memory-types:simple')
     implementation project(':imagepipeline-base')
 }
 
 apply from: rootProject.file('release.gradle')
 
 android {
-    buildToolsVersion rootProject.ext.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion FrescoConfig.buildToolsVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
+    }
 
     packagingOptions {
         exclude 'NOTICE'

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -26,10 +26,11 @@ import javax.annotation.Nullable;
 /**
  * Transcodes WebP to JPEG / PNG.
  *
- * <p> If processed image is one of VP8, VP8X or VP8L non-animated WebPs then it is transcoded to
+ * <p>If processed image is one of VP8, VP8X or VP8L non-animated WebPs then it is transcoded to
  * jpeg if the decoder on the running version of Android does not support this format. This was the
  * case prior to version 4.2.1.
- * <p> If the image is not WebP, no transformation is applied.
+ *
+ * <p>If the image is not WebP, no transformation is applied.
  */
 public class WebpTranscodeProducer implements Producer<EncodedImage> {
   public static final String PRODUCER_NAME = "WebpTranscodeProducer";
@@ -59,8 +60,7 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
     private TriState mShouldTranscodeWhenFinished;
 
     public WebpTranscodeConsumer(
-        final Consumer<EncodedImage> consumer,
-        final ProducerContext context) {
+        final Consumer<EncodedImage> consumer, final ProducerContext context) {
       super(consumer);
       mContext = context;
       mShouldTranscodeWhenFinished = TriState.UNSET;
@@ -97,10 +97,7 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
     final EncodedImage encodedImageCopy = EncodedImage.cloneOrNull(originalResult);
     final StatefulProducerRunnable<EncodedImage> runnable =
         new StatefulProducerRunnable<EncodedImage>(
-            consumer,
-            producerContext.getListener(),
-            PRODUCER_NAME,
-            producerContext.getId()) {
+            consumer, producerContext.getProducerListener(), producerContext, PRODUCER_NAME) {
           @Override
           protected EncodedImage getResult() throws Exception {
             PooledByteBufferOutputStream outputStream = mPooledByteBufferFactory.newOutputStream();
@@ -148,15 +145,14 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
 
   private static TriState shouldTranscode(final EncodedImage encodedImage) {
     Preconditions.checkNotNull(encodedImage);
-    ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
-        encodedImage.getInputStream());
+    ImageFormat imageFormat =
+        ImageFormatChecker.getImageFormat_WrapIOException(encodedImage.getInputStream());
     if (DefaultImageFormats.isStaticWebpFormat(imageFormat)) {
       final WebpTranscoder webpTranscoder = WebpTranscoderFactory.getWebpTranscoder();
       if (webpTranscoder == null) {
         return TriState.NO;
       }
-      return TriState.valueOf(
-              !webpTranscoder.isWebpNativelySupported(imageFormat));
+      return TriState.valueOf(!webpTranscoder.isWebpNativelySupported(imageFormat));
     } else if (imageFormat == ImageFormat.UNKNOWN) {
       // the image format might be unknown because we haven't fetched the whole header yet,
       // in which case the decision whether to transcode or not cannot be made yet
@@ -167,22 +163,19 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
   }
 
   private static void doTranscode(
-      final EncodedImage encodedImage,
-      final PooledByteBufferOutputStream outputStream) throws Exception {
+      final EncodedImage encodedImage, final PooledByteBufferOutputStream outputStream)
+      throws Exception {
     InputStream imageInputStream = encodedImage.getInputStream();
     ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(imageInputStream);
-    if (imageFormat == DefaultImageFormats.WEBP_SIMPLE ||
-        imageFormat == DefaultImageFormats.WEBP_EXTENDED) {
-        WebpTranscoderFactory.getWebpTranscoder().transcodeWebpToJpeg(
-            imageInputStream,
-            outputStream,
-            DEFAULT_JPEG_QUALITY);
-      encodedImage.setImageFormat(DefaultImageFormats.JPEG);
-    } else if (imageFormat == DefaultImageFormats.WEBP_LOSSLESS ||
-        imageFormat == DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA) {
-      // In this case we always transcode to PNG
+    if (imageFormat == DefaultImageFormats.WEBP_SIMPLE
+        || imageFormat == DefaultImageFormats.WEBP_EXTENDED) {
       WebpTranscoderFactory.getWebpTranscoder()
-          .transcodeWebpToPng(imageInputStream, outputStream);
+          .transcodeWebpToJpeg(imageInputStream, outputStream, DEFAULT_JPEG_QUALITY);
+      encodedImage.setImageFormat(DefaultImageFormats.JPEG);
+    } else if (imageFormat == DefaultImageFormats.WEBP_LOSSLESS
+        || imageFormat == DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA) {
+      // In this case we always transcode to PNG
+      WebpTranscoderFactory.getWebpTranscoder().transcodeWebpToPng(imageInputStream, outputStream);
       encodedImage.setImageFormat(DefaultImageFormats.PNG);
     } else {
       throw new IllegalArgumentException("Wrong image format");

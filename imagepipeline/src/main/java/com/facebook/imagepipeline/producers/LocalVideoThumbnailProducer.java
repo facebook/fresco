@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,14 +10,15 @@ package com.facebook.imagepipeline.producers;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
+import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.ImmutableMap;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.bitmaps.SimpleBitmapReleaser;
@@ -25,17 +26,18 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
+import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
 
 /**
  * A producer that creates video thumbnails.
  *
- * <p>At present, these thumbnails are created on the java heap rather than being pinned
- * purgeables. This is deemed okay as the thumbnails are only very small.
+ * <p>At present, these thumbnails are created on the java heap rather than being pinned purgeables.
+ * This is deemed okay as the thumbnails are only very small.
  */
-public class LocalVideoThumbnailProducer implements
-    Producer<CloseableReference<CloseableImage>> {
+public class LocalVideoThumbnailProducer implements Producer<CloseableReference<CloseableImage>> {
 
   public static final String PRODUCER_NAME = "VideoThumbnailProducer";
   @VisibleForTesting static final String CREATED_THUMBNAIL = "createdThumbnail";
@@ -53,46 +55,54 @@ public class LocalVideoThumbnailProducer implements
       final Consumer<CloseableReference<CloseableImage>> consumer,
       final ProducerContext producerContext) {
 
-    final ProducerListener listener = producerContext.getListener();
-    final String requestId = producerContext.getId();
+    final ProducerListener2 listener = producerContext.getProducerListener();
     final ImageRequest imageRequest = producerContext.getImageRequest();
+    producerContext.putOriginExtra("local", "video");
     final StatefulProducerRunnable cancellableProducerRunnable =
         new StatefulProducerRunnable<CloseableReference<CloseableImage>>(
-            consumer,
-            listener,
-            PRODUCER_NAME,
-            requestId) {
+            consumer, listener, producerContext, PRODUCER_NAME) {
           @Override
           protected void onSuccess(CloseableReference<CloseableImage> result) {
             super.onSuccess(result);
-            listener.onUltimateProducerReached(requestId, PRODUCER_NAME, result != null);
+            listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, result != null);
+            producerContext.putOriginExtra("local");
           }
 
           @Override
           protected void onFailure(Exception e) {
             super.onFailure(e);
-            listener.onUltimateProducerReached(requestId, PRODUCER_NAME, false);
+            listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, false);
+            producerContext.putOriginExtra("local");
           }
 
           @Override
-          protected CloseableReference<CloseableImage> getResult() throws Exception {
-            String path = getLocalFilePath(imageRequest);
-            if (path == null) {
-              return null;
+          protected @Nullable CloseableReference<CloseableImage> getResult() throws Exception {
+            Bitmap thumbnailBitmap;
+            String path;
+            try {
+              path = getLocalFilePath(imageRequest);
+            } catch (IllegalArgumentException e) {
+              path = null;
             }
-            Bitmap thumbnailBitmap = ThumbnailUtils.createVideoThumbnail(
-                path,
-                calculateKind(imageRequest));
+            thumbnailBitmap =
+                path != null
+                    ? ThumbnailUtils.createVideoThumbnail(path, calculateKind(imageRequest))
+                    : createThumbnailFromContentProvider(
+                        mContentResolver, imageRequest.getSourceUri());
+
             if (thumbnailBitmap == null) {
               return null;
             }
 
-            return CloseableReference.<CloseableImage>of(
+            CloseableStaticBitmap closeableStaticBitmap =
                 new CloseableStaticBitmap(
                     thumbnailBitmap,
                     SimpleBitmapReleaser.getInstance(),
                     ImmutableQualityInfo.FULL_QUALITY,
-                    0));
+                    0);
+            producerContext.setExtra(ProducerContext.ExtraKeys.IMAGE_FORMAT, "thumbnail");
+            closeableStaticBitmap.setImageExtras(producerContext.getExtras());
+            return CloseableReference.<CloseableImage>of(closeableStaticBitmap);
           }
 
           @Override
@@ -123,7 +133,8 @@ public class LocalVideoThumbnailProducer implements
     return MediaStore.Images.Thumbnails.MICRO_KIND;
   }
 
-  @Nullable private String getLocalFilePath(ImageRequest imageRequest) {
+  @Nullable
+  private String getLocalFilePath(ImageRequest imageRequest) {
     Uri uri = imageRequest.getSourceUri();
     if (UriUtil.isLocalFileUri(uri)) {
       return imageRequest.getSourceFile().getPath();
@@ -151,5 +162,22 @@ public class LocalVideoThumbnailProducer implements
       }
     }
     return null;
+  }
+
+  @Nullable
+  private static Bitmap createThumbnailFromContentProvider(
+      ContentResolver contentResolver, Uri uri) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1) {
+      try {
+        ParcelFileDescriptor videoFile = contentResolver.openFileDescriptor(uri, "r");
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+        mediaMetadataRetriever.setDataSource(videoFile.getFileDescriptor());
+        return mediaMetadataRetriever.getFrameAtTime(-1);
+      } catch (FileNotFoundException e) {
+        return null;
+      }
+    } else {
+      return null;
+    }
   }
 }

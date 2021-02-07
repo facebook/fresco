@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,23 +7,22 @@
 
 package com.facebook.common.file;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.File;
 
 /**
- * Utility class to visit a file tree.
- * There's similar functionality in Java 7's Files.walkFileTree method.
- * Its methods could be merge into FileUtil (although it seems to have a lot of
- * crazy redundant methods, maybe for testing, but crazy anyway).
+ * Utility class to visit a file tree. There's similar functionality in Java 7's Files.walkFileTree
+ * method. Its methods could be merge into FileUtil (although it seems to have a lot of crazy
+ * redundant methods, maybe for testing, but crazy anyway).
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FileTree {
 
   /**
-   * Iterates over the file tree of a directory. It receives a visitor and will call its methods
-   * for each file in the directory.
-   * preVisitDirectory (directory)
-   * visitFile (file)
-   * - recursively the same for every subdirectory
-   * postVisitDirectory (directory)
+   * Iterates over the file tree of a directory. It receives a visitor and will call its methods for
+   * each file in the directory. preVisitDirectory (directory) visitFile (file) - recursively the
+   * same for every subdirectory postVisitDirectory (directory)
+   *
    * @param directory the directory to iterate
    * @param visitor the visitor that will be invoked for each directory/file in the tree
    */
@@ -31,7 +30,7 @@ public class FileTree {
     visitor.preVisitDirectory(directory);
     File[] files = directory.listFiles();
     if (files != null) {
-      for (File file: files) {
+      for (File file : files) {
         if (file.isDirectory()) {
           walkFileTree(file, visitor);
         } else {
@@ -43,8 +42,8 @@ public class FileTree {
   }
 
   /**
-   * Deletes all files and subdirectories in directory (doesn't delete the directory
-   * passed as parameter).
+   * Deletes all files and subdirectories in directory (doesn't delete the directory passed as
+   * parameter).
    */
   public static boolean deleteContents(File directory) {
     File[] files = directory.listFiles();
@@ -59,6 +58,7 @@ public class FileTree {
 
   /**
    * Deletes the file and if it's a directory deletes also any content in it
+   *
    * @param file a file or directory
    * @return true if the file/directory could be deleted
    */
@@ -69,5 +69,4 @@ public class FileTree {
     // if I can delete directory then I know everything was deleted
     return file.delete();
   }
-
 }

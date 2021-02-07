@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -611,6 +611,7 @@ void WebPFrame_nativeRenderFrame(
   }
 
   if (bitmapInfo.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
+    spNativeContext.reset();
     throwIllegalStateException(pEnv, "Wrong color format");
     return;
   }
@@ -627,12 +628,14 @@ void WebPFrame_nativeRenderFrame(
 
   ret = (WebPGetFeatures(pPayload , payloadSize, &config.input) == VP8_STATUS_OK);
   if (!ret) {
+    spNativeContext.reset();
     throwIllegalStateException(pEnv, "WebPGetFeatures failed");
     return;
   }
 
   uint8_t* pixels;
   if (AndroidBitmap_lockPixels(pEnv, bitmap, (void**) &pixels) != ANDROID_BITMAP_RESULT_SUCCESS) {
+    spNativeContext.reset();
     throwIllegalStateException(pEnv, "Bad bitmap");
     return;
   }
@@ -653,7 +656,8 @@ void WebPFrame_nativeRenderFrame(
   ret = WebPDecode(pPayload, payloadSize, &config);
   AndroidBitmap_unlockPixels(pEnv, bitmap);
   if (ret != VP8_STATUS_OK) {
-    throwIllegalStateException(pEnv, "Failed to decode frame");
+    spNativeContext.reset();
+    throwIllegalStateException(pEnv, "Failed to decode frame. VP8StatusCode: %d", ret);
   }
 }
 
@@ -799,9 +803,6 @@ static JNINativeMethod sWebPImageMethods[] = {
   { "nativeGetFrameDurations",
     "()[I",
     (void*)WebPImage_nativeGetFrameDurations },
-  { "nativeGetDuration",
-    "()I",
-    (void*)WebPImage_nativeGetDuration },
   { "nativeGetLoopCount",
     "()I",
     (void*)WebPImage_nativeGetLoopCount },
@@ -823,9 +824,6 @@ static JNINativeMethod sWebPFrameMethods[] = {
   { "nativeRenderFrame",
     "(IILandroid/graphics/Bitmap;)V",
     (void*)WebPFrame_nativeRenderFrame },
-  { "nativeGetDurationMs",
-    "()I",
-    (void*)WebPFrame_nativeGetDurationMs },
   { "nativeGetWidth",
     "()I",
     (void*)WebPFrame_nativeGetWidth },

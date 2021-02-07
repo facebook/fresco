@@ -1,38 +1,32 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.imageutils;
 
 import android.util.Pair;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.Nullable;
 
-/**
- * This class contains utility method in order to manage the WebP format metadata
- */
+/** This class contains utility method in order to manage the WebP format metadata */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class WebpUtil {
 
-  /**
-   * Header for VP8 (lossy WebP). Take care of the space into the String
-   */
+  /** Header for VP8 (lossy WebP). Take care of the space into the String */
   private static final String VP8_HEADER = "VP8 ";
 
-  /**
-   * Header for Lossless WebP images
-   */
+  /** Header for Lossless WebP images */
   private static final String VP8L_HEADER = "VP8L";
 
-  /**
-   * Header for WebP enhanced
-   */
+  /** Header for WebP enhanced */
   private static final String VP8X_HEADER = "VP8X";
 
-  private WebpUtil() {
-  }
+  private WebpUtil() {}
 
   /**
    * This method checks for the dimension of the WebP image from the given InputStream. We don't
@@ -41,7 +35,8 @@ public class WebpUtil {
    * @param is The InputStream used for read WebP data
    * @return The Size of the WebP image if any or null if the size is not available
    */
-  @Nullable public static Pair<Integer, Integer> getSize(InputStream is) {
+  @Nullable
+  public static Pair<Integer, Integer> getSize(InputStream is) {
     // Here we have to parse the WebP data skipping all the information which are not
     // the size
     Pair<Integer, Integer> result = null;
@@ -91,7 +86,8 @@ public class WebpUtil {
    * @return The dimensions if any
    * @throws IOException In case or error reading from the InputStream
    */
-  private static Pair<Integer, Integer> getVP8Dimension(final InputStream is) throws IOException {
+  private static @Nullable Pair<Integer, Integer> getVP8Dimension(final InputStream is)
+      throws IOException {
     // We need to skip 7 bytes
     is.skip(7);
     // And then check the signature
@@ -113,10 +109,11 @@ public class WebpUtil {
    * @return The dimensions if any
    * @throws IOException In case or error reading from the InputStream
    */
-  private static Pair<Integer, Integer> getVP8LDimension(final InputStream is) throws IOException {
+  private static @Nullable Pair<Integer, Integer> getVP8LDimension(final InputStream is)
+      throws IOException {
     // Skip 4 bytes
     getInt(is);
-    //We have a check here
+    // We have a check here
     final byte check = getByte(is);
     if (check != 0x2F) {
       return null;
@@ -177,10 +174,10 @@ public class WebpUtil {
     byte byte2 = (byte) is.read();
     byte byte3 = (byte) is.read();
     byte byte4 = (byte) is.read();
-    return (byte4 << 24) & 0xFF000000 |
-        (byte3 << 16) & 0xFF0000 |
-        (byte2 << 8) & 0xFF00 |
-        (byte1) & 0xFF;
+    return (byte4 << 24) & 0xFF000000
+        | (byte3 << 16) & 0xFF0000
+        | (byte2 << 8) & 0xFF00
+        | (byte1) & 0xFF;
   }
 
   public static int get2BytesAsInt(InputStream is) throws IOException {
@@ -193,9 +190,9 @@ public class WebpUtil {
     byte byte1 = getByte(is);
     byte byte2 = getByte(is);
     byte byte3 = getByte(is);
-    return (((int) byte3) << 16 & 0xFF0000) |
-        (((int) byte2) << 8 & 0xFF00) |
-        (((int) byte1) & 0xFF);
+    return (((int) byte3) << 16 & 0xFF0000)
+        | (((int) byte2) << 8 & 0xFF00)
+        | (((int) byte1) & 0xFF);
   }
 
   private static short getShort(InputStream is) throws IOException {

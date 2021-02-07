@@ -1,13 +1,8 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 package com.facebook.samples.comparison.instrumentation;
@@ -23,7 +18,7 @@ import com.facebook.samples.comparison.Drawables;
  * {@link ImageView} that notifies its instance of {@link Instrumentation} whenever an image request
  * lifecycle event happens.
  *
- * <p> setImageResource and setImageURI methods are not expected to be used by any library,
+ * <p>setImageResource and setImageURI methods are not expected to be used by any library,
  * UnsupportedOperationException is thrown if those are called
  */
 public class InstrumentedImageView extends ImageView implements Instrumented {
@@ -50,7 +45,7 @@ public class InstrumentedImageView extends ImageView implements Instrumented {
 
   @Override
   public void setImageDrawable(final Drawable drawable) {
-    if (drawable == null) {// AQuery preset drawable to be null if not found in cache
+    if (drawable == null) { // AQuery preset drawable to be null if not found in cache
       return;
     }
     if (drawable == Drawables.sPlaceholderDrawable) {
@@ -63,17 +58,13 @@ public class InstrumentedImageView extends ImageView implements Instrumented {
     super.setImageDrawable(drawable);
   }
 
-  /**
-   * Throws UnsupportedOperationException
-   */
+  /** Throws UnsupportedOperationException */
   @Override
   public void setImageResource(int resourceId) {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * Throws UnsupportedOperationException
-   */
+  /** Throws UnsupportedOperationException */
   @Override
   public void setImageURI(Uri uri) {
     throw new UnsupportedOperationException();

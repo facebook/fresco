@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.cache;
 import android.os.Build;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.MemoryTrimType;
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * CountingMemoryCache eviction strategy appropriate for bitmap caches.
@@ -19,7 +20,8 @@ import com.facebook.common.memory.MemoryTrimType;
  * cache in one additional case: when OnCloseToDalvikHeapLimit trim type is received, cache's
  * eviction queue will be trimmed according to OnCloseToDalvikHeapLimit's suggested trim ratio.
  */
-public class BitmapMemoryCacheTrimStrategy implements CountingMemoryCache.CacheTrimStrategy {
+@Nullsafe(Nullsafe.Mode.STRICT)
+public class BitmapMemoryCacheTrimStrategy implements MemoryCache.CacheTrimStrategy {
   private static final String TAG = "BitmapMemoryCacheTrimStrategy";
 
   @Override
@@ -34,6 +36,7 @@ public class BitmapMemoryCacheTrimStrategy implements CountingMemoryCache.CacheT
           return 0;
         }
       case OnAppBackgrounded:
+      case OnSystemMemoryCriticallyLowWhileAppInForeground:
       case OnSystemLowMemoryWhileAppInForeground:
       case OnSystemLowMemoryWhileAppInBackground:
         return 1;

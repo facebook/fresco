@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,13 +11,12 @@ import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import javax.annotation.Nullable;
 
-/**
- * Helper class containing functionality commonly used by drawables.
- */
+/** Helper class containing functionality commonly used by drawables. */
 public class DrawableUtils {
 
   /**
    * Clones the specified drawable.
+   *
    * @param drawable the drawable to clone.
    * @return a clone of the drawable or null if the drawable cannot be cloned.
    */
@@ -32,10 +31,11 @@ public class DrawableUtils {
 
   /**
    * Copies various properties from one drawable to the other.
+   *
    * @param to drawable to copy properties to
    * @param from drawable to copy properties from
    */
-  public static void copyProperties(Drawable to, Drawable from) {
+  public static void copyProperties(@Nullable Drawable to, @Nullable Drawable from) {
     if (from == null || to == null || to == from) {
       return;
     }
@@ -49,10 +49,12 @@ public class DrawableUtils {
 
   /**
    * Sets various paint properties on the drawable
+   *
    * @param drawable Drawable on which to set the properties
    * @param properties wrapper around mValue values to set on the drawable
    */
-  public static void setDrawableProperties(Drawable drawable, DrawableProperties properties) {
+  public static void setDrawableProperties(
+      @Nullable Drawable drawable, @Nullable DrawableProperties properties) {
     if (drawable == null || properties == null) {
       return;
     }
@@ -61,12 +63,13 @@ public class DrawableUtils {
 
   /**
    * Sets callback to the drawable.
+   *
    * @param drawable drawable to set callbacks to
    * @param callback standard Android Drawable.Callback
    * @param transformCallback TransformCallback used by TransformAwareDrawables
    */
   public static void setCallbacks(
-      Drawable drawable,
+      @Nullable Drawable drawable,
       @Nullable Drawable.Callback callback,
       @Nullable TransformCallback transformCallback) {
     if (drawable != null) {
@@ -79,6 +82,7 @@ public class DrawableUtils {
 
   /**
    * Multiplies the color with the given alpha.
+   *
    * @param color color to be multiplied
    * @param alpha value between 0 and 255
    * @return multiplied color
@@ -98,6 +102,7 @@ public class DrawableUtils {
 
   /**
    * Gets the opacity from a color. Inspired by Android ColorDrawable.
+   *
    * @param color
    * @return opacity expressed by one of PixelFormat constants
    */

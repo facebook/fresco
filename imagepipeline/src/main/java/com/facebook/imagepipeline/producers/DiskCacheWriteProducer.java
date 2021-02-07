@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,8 +7,9 @@
 
 package com.facebook.imagepipeline.producers;
 
+import androidx.annotation.VisibleForTesting;
 import com.facebook.cache.common.CacheKey;
-import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
@@ -28,7 +29,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
  * enable another producer to sit between cache read and write.
  */
 public class DiskCacheWriteProducer implements Producer<EncodedImage> {
-  @VisibleForTesting static final String PRODUCER_NAME = "DiskCacheProducer";
+  @VisibleForTesting static final String PRODUCER_NAME = "DiskCacheWriteProducer";
 
   private final BufferedDiskCache mDefaultBufferedDiskCache;
   private final BufferedDiskCache mSmallImageBufferedDiskCache;
@@ -47,27 +48,26 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
   }
 
   public void produceResults(
-      final Consumer<EncodedImage> consumer,
-      final ProducerContext producerContext) {
+      final Consumer<EncodedImage> consumer, final ProducerContext producerContext) {
     maybeStartInputProducer(consumer, producerContext);
   }
 
   private void maybeStartInputProducer(
-      Consumer<EncodedImage> consumerOfDiskCacheWriteProducer,
-      ProducerContext producerContext) {
-    if (producerContext.getLowestPermittedRequestLevel().getValue() >=
-        ImageRequest.RequestLevel.DISK_CACHE.getValue()) {
+      Consumer<EncodedImage> consumerOfDiskCacheWriteProducer, ProducerContext producerContext) {
+    if (producerContext.getLowestPermittedRequestLevel().getValue()
+        >= ImageRequest.RequestLevel.DISK_CACHE.getValue()) {
+      producerContext.putOriginExtra("disk", "nil-result_write");
       consumerOfDiskCacheWriteProducer.onNewResult(null, Consumer.IS_LAST);
     } else {
       Consumer<EncodedImage> consumer;
       if (producerContext.getImageRequest().isDiskCacheEnabled()) {
-        consumer = new DiskCacheWriteConsumer(
-            consumerOfDiskCacheWriteProducer,
-            producerContext,
-            mDefaultBufferedDiskCache,
-            mSmallImageBufferedDiskCache,
-            mCacheKeyFactory
-        );
+        consumer =
+            new DiskCacheWriteConsumer(
+                consumerOfDiskCacheWriteProducer,
+                producerContext,
+                mDefaultBufferedDiskCache,
+                mSmallImageBufferedDiskCache,
+                mCacheKeyFactory);
       } else {
         consumer = consumerOfDiskCacheWriteProducer;
       }
@@ -105,9 +105,16 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
 
     @Override
     public void onNewResultImpl(EncodedImage newResult, @Status int status) {
+      mProducerContext.getProducerListener().onProducerStart(mProducerContext, PRODUCER_NAME);
       // intermediate, null or uncacheable results are not cached, so we just forward them
-      if (isNotLast(status) || newResult == null ||
-          statusHasAnyFlag(status, DO_NOT_CACHE_ENCODED | IS_PARTIAL_RESULT)) {
+      // as well as the images with unknown format which could be html response from the server
+      if (isNotLast(status)
+          || newResult == null
+          || statusHasAnyFlag(status, DO_NOT_CACHE_ENCODED | IS_PARTIAL_RESULT)
+          || newResult.getImageFormat() == ImageFormat.UNKNOWN) {
+        mProducerContext
+            .getProducerListener()
+            .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
         getConsumer().onNewResult(newResult, status);
         return;
       }
@@ -121,6 +128,9 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
       } else {
         mDefaultBufferedDiskCache.put(cacheKey, newResult);
       }
+      mProducerContext
+          .getProducerListener()
+          .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
 
       getConsumer().onNewResult(newResult, status);
     }

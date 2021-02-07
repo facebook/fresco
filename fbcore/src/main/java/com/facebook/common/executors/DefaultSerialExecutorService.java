@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,12 +7,14 @@
 
 package com.facebook.common.executors;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Default implementation of {@link SerialExecutorService} that wraps an existing {@link Executor}.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DefaultSerialExecutorService extends ConstrainedExecutorService
     implements SerialExecutorService {
 
@@ -23,8 +25,9 @@ public class DefaultSerialExecutorService extends ConstrainedExecutorService
   }
 
   /**
-   * Synchronized override of {@link ConstrainedExecutorService#execute(Runnable)} to
-   * ensure that view of memory is consistent between different threads executing tasks serially.
+   * Synchronized override of {@link ConstrainedExecutorService#execute(Runnable)} to ensure that
+   * view of memory is consistent between different threads executing tasks serially.
+   *
    * @param runnable The task to be executed.
    */
   @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,14 +7,15 @@
 
 package com.facebook.common.streams;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.Override;
 
 /**
  * InputStream that returns all bytes from another stream, then appends the specified 'tail' bytes.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class TailAppendingInputStream extends FilterInputStream {
   private final byte[] mTail;
   private int mTailOffset;

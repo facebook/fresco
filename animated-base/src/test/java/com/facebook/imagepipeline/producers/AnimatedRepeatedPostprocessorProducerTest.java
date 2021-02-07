@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,8 +8,8 @@
 package com.facebook.imagepipeline.producers;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import android.graphics.Bitmap;
@@ -18,6 +18,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
@@ -39,7 +40,7 @@ import org.robolectric.*;
 import org.robolectric.annotation.*;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class AnimatedRepeatedPostprocessorProducerTest {
 
   private static final String POSTPROCESSOR_NAME = "postprocessor_name";
@@ -47,13 +48,15 @@ public class AnimatedRepeatedPostprocessorProducerTest {
       ImmutableMap.of(PostprocessorProducer.POSTPROCESSOR, POSTPROCESSOR_NAME);
 
   @Mock public PlatformBitmapFactory mPlatformBitmapFactory;
-  @Mock public ProducerListener mProducerListener;
+  @Mock public ProducerListener2 mProducerListener;
   @Mock public Producer<CloseableReference<CloseableImage>> mInputProducer;
   @Mock public Consumer<CloseableReference<CloseableImage>> mConsumer;
   @Mock public RepeatedPostprocessor mPostprocessor;
   @Mock public ResourceReleaser<Bitmap> mBitmapResourceReleaser;
 
   @Mock public ImageRequest mImageRequest;
+
+  @Mock public ImagePipelineConfig mConfig;
 
   private SettableProducerContext mProducerContext;
   private String mRequestId = "mRequestId";
@@ -73,10 +76,7 @@ public class AnimatedRepeatedPostprocessorProducerTest {
     MockitoAnnotations.initMocks(this);
     mTestExecutorService = new TestExecutorService(new FakeClock());
     mPostprocessorProducer =
-        new PostprocessorProducer(
-            mInputProducer,
-            mPlatformBitmapFactory,
-            mTestExecutorService);
+        new PostprocessorProducer(mInputProducer, mPlatformBitmapFactory, mTestExecutorService);
     mProducerContext =
         new SettableProducerContext(
             mImageRequest,
@@ -86,21 +86,23 @@ public class AnimatedRepeatedPostprocessorProducerTest {
             ImageRequest.RequestLevel.FULL_FETCH,
             false /* isPrefetch */,
             false /* isIntermediateResultExpected */,
-            Priority.MEDIUM);
+            Priority.MEDIUM,
+            mConfig);
     when(mImageRequest.getPostprocessor()).thenReturn(mPostprocessor);
     mResults = new ArrayList<>();
     when(mPostprocessor.getName()).thenReturn(POSTPROCESSOR_NAME);
-    when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(true);
+    when(mProducerListener.requiresExtraMap(mProducerContext, POSTPROCESSOR_NAME)).thenReturn(true);
     doAnswer(
-        new Answer<Object>() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            mResults.add(
-                ((CloseableReference<CloseableImage>) invocation.getArguments()[0]).clone());
-            return null;
-          }
-        }
-    ).when(mConsumer).onNewResult(any(CloseableReference.class), anyInt());
+            new Answer<Object>() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                mResults.add(
+                    ((CloseableReference<CloseableImage>) invocation.getArguments()[0]).clone());
+                return null;
+              }
+            })
+        .when(mConsumer)
+        .onNewResult(any(CloseableReference.class), anyInt());
     mInOrder = inOrder(mPostprocessor, mProducerListener, mConsumer);
   }
 
@@ -133,8 +135,7 @@ public class AnimatedRepeatedPostprocessorProducerTest {
     mSourceBitmap = mock(Bitmap.class);
     mSourceCloseableStaticBitmap = mock(CloseableStaticBitmap.class);
     when(mSourceCloseableStaticBitmap.getUnderlyingBitmap()).thenReturn(mSourceBitmap);
-    mSourceCloseableImageRef =
-        CloseableReference.<CloseableImage>of(mSourceCloseableStaticBitmap);
+    mSourceCloseableImageRef = CloseableReference.<CloseableImage>of(mSourceCloseableStaticBitmap);
   }
 
   private void setupNewDestinationImage() {
@@ -142,7 +143,8 @@ public class AnimatedRepeatedPostprocessorProducerTest {
     mDestinationCloseableBitmapRef =
         CloseableReference.of(mDestinationBitmap, mBitmapResourceReleaser);
     doReturn(mDestinationCloseableBitmapRef)
-        .when(mPostprocessor).process(mSourceBitmap, mPlatformBitmapFactory);
+        .when(mPostprocessor)
+        .process(mSourceBitmap, mPlatformBitmapFactory);
   }
 
   private RepeatedPostprocessorConsumer produceResults() {
@@ -180,22 +182,26 @@ public class AnimatedRepeatedPostprocessorProducerTest {
   private void performUpdateDuringTheNextPostprocessing(
       final RepeatedPostprocessorRunner repeatedPostprocessorRunner) {
     doAnswer(
-        new Answer<CloseableReference<Bitmap>>() {
-          @Override
-          public CloseableReference<Bitmap> answer(InvocationOnMock invocation) throws Throwable {
-            CloseableReference<Bitmap> destBitmapRef = mDestinationCloseableBitmapRef;
-            performUpdate(repeatedPostprocessorRunner, false);
-            // the following call should be ignored
-            performUpdate(repeatedPostprocessorRunner, false);
-            return destBitmapRef;
-          }
-        }).when(mPostprocessor).process(mSourceBitmap, mPlatformBitmapFactory);
+            new Answer<CloseableReference<Bitmap>>() {
+              @Override
+              public CloseableReference<Bitmap> answer(InvocationOnMock invocation)
+                  throws Throwable {
+                CloseableReference<Bitmap> destBitmapRef = mDestinationCloseableBitmapRef;
+                performUpdate(repeatedPostprocessorRunner, false);
+                // the following call should be ignored
+                performUpdate(repeatedPostprocessorRunner, false);
+                return destBitmapRef;
+              }
+            })
+        .when(mPostprocessor)
+        .process(mSourceBitmap, mPlatformBitmapFactory);
   }
 
   private void performFailure(RepeatedPostprocessorRunner repeatedPostprocessorRunner) {
     setupNewDestinationImage();
     doThrow(new RuntimeException())
-        .when(mPostprocessor).process(mSourceBitmap, mPlatformBitmapFactory);
+        .when(mPostprocessor)
+        .process(mSourceBitmap, mPlatformBitmapFactory);
     repeatedPostprocessorRunner.update();
     mTestExecutorService.runUntilIdle();
   }
@@ -220,11 +226,16 @@ public class AnimatedRepeatedPostprocessorProducerTest {
   }
 
   private void verifyNewResultProcessed(int index, Bitmap destBitmap) {
-    mInOrder.verify(mProducerListener).onProducerStart(mRequestId, PostprocessorProducer.NAME);
+    mInOrder
+        .verify(mProducerListener)
+        .onProducerStart(mProducerContext, PostprocessorProducer.NAME);
     mInOrder.verify(mPostprocessor).process(mSourceBitmap, mPlatformBitmapFactory);
-    mInOrder.verify(mProducerListener).requiresExtraMap(mRequestId);
-    mInOrder.verify(mProducerListener)
-        .onProducerFinishWithSuccess(mRequestId, PostprocessorProducer.NAME, mExtraMap);
+    mInOrder
+        .verify(mProducerListener)
+        .requiresExtraMap(mProducerContext, PostprocessorProducer.NAME);
+    mInOrder
+        .verify(mProducerListener)
+        .onProducerFinishWithSuccess(mProducerContext, PostprocessorProducer.NAME, mExtraMap);
     mInOrder.verify(mConsumer).onNewResult(any(CloseableReference.class), eq(Consumer.NO_FLAGS));
     mInOrder.verifyNoMoreInteractions();
 

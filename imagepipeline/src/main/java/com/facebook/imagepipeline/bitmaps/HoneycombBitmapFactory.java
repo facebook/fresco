@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -15,13 +15,14 @@ import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.DefaultImageFormats;
+import com.facebook.imagepipeline.core.CloseableReferenceFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.ThreadSafe;
 
-/**
- * Factory implementation for Honeycomb through Kitkat
- */
+/** Factory implementation for Honeycomb through Kitkat */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @ThreadSafe
 public class HoneycombBitmapFactory extends PlatformBitmapFactory {
@@ -29,12 +30,16 @@ public class HoneycombBitmapFactory extends PlatformBitmapFactory {
   private static final String TAG = HoneycombBitmapFactory.class.getSimpleName();
   private final EmptyJpegGenerator mJpegGenerator;
   private final PlatformDecoder mPurgeableDecoder;
+  private final CloseableReferenceFactory mCloseableReferenceFactory;
   private boolean mImmutableBitmapFallback;
 
   public HoneycombBitmapFactory(
-      EmptyJpegGenerator jpegGenerator, PlatformDecoder purgeableDecoder) {
+      EmptyJpegGenerator jpegGenerator,
+      PlatformDecoder purgeableDecoder,
+      CloseableReferenceFactory closeableReferenceFactory) {
     mJpegGenerator = jpegGenerator;
     mPurgeableDecoder = purgeableDecoder;
+    mCloseableReferenceFactory = closeableReferenceFactory;
   }
 
   /**
@@ -42,8 +47,8 @@ public class HoneycombBitmapFactory extends PlatformBitmapFactory {
    *
    * @param width the width of the bitmap
    * @param height the height of the bitmap
-   * @param bitmapConfig the {@link android.graphics.Bitmap.Config}
-   * used to create the decoded Bitmap
+   * @param bitmapConfig the {@link android.graphics.Bitmap.Config} used to create the decoded
+   *     Bitmap
    * @return a reference to the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
@@ -51,15 +56,12 @@ public class HoneycombBitmapFactory extends PlatformBitmapFactory {
   @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
   @Override
   public CloseableReference<Bitmap> createBitmapInternal(
-      int width,
-      int height,
-      Bitmap.Config bitmapConfig) {
+      int width, int height, Bitmap.Config bitmapConfig) {
     if (mImmutableBitmapFallback) {
       return createFallbackBitmap(width, height, bitmapConfig);
     }
-    CloseableReference<PooledByteBuffer> jpgRef = mJpegGenerator.generate(
-        (short) width,
-        (short) height);
+    CloseableReference<PooledByteBuffer> jpgRef =
+        mJpegGenerator.generate((short) width, (short) height);
     try {
       EncodedImage encodedImage = new EncodedImage(jpgRef);
       encodedImage.setImageFormat(DefaultImageFormats.JPEG);
@@ -86,9 +88,9 @@ public class HoneycombBitmapFactory extends PlatformBitmapFactory {
     }
   }
 
-  private static CloseableReference<Bitmap> createFallbackBitmap(
+  private CloseableReference<Bitmap> createFallbackBitmap(
       int width, int height, Bitmap.Config bitmapConfig) {
-    return CloseableReference.of(
+    return mCloseableReferenceFactory.create(
         Bitmap.createBitmap(width, height, bitmapConfig), SimpleBitmapReleaser.getInstance());
   }
 }

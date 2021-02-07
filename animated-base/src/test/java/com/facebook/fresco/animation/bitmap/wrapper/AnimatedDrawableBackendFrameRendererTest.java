@@ -1,19 +1,23 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.animation.bitmap.wrapper;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Rect;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
@@ -23,9 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests {@link AnimatedDrawableBackendFrameRenderer}
- */
+/** Tests {@link AnimatedDrawableBackendFrameRenderer} */
 @RunWith(RobolectricTestRunner.class)
 public class AnimatedDrawableBackendFrameRendererTest {
 
@@ -37,9 +39,8 @@ public class AnimatedDrawableBackendFrameRendererTest {
   public void setup() {
     mAnimatedDrawableBackend = mock(AnimatedDrawableBackend.class);
     mBitmapFrameCache = mock(BitmapFrameCache.class);
-    mAnimatedDrawableBackendFrameRenderer = new AnimatedDrawableBackendFrameRenderer(
-        mBitmapFrameCache,
-        mAnimatedDrawableBackend);
+    mAnimatedDrawableBackendFrameRenderer =
+        new AnimatedDrawableBackendFrameRenderer(mBitmapFrameCache, mAnimatedDrawableBackend);
   }
 
   @Test
@@ -55,8 +56,7 @@ public class AnimatedDrawableBackendFrameRendererTest {
 
   @Test
   public void testGetIntrinsicWidth() {
-    when(mAnimatedDrawableBackend.getWidth())
-        .thenReturn(123);
+    when(mAnimatedDrawableBackend.getWidth()).thenReturn(123);
 
     assertThat(mAnimatedDrawableBackendFrameRenderer.getIntrinsicWidth()).isEqualTo(123);
     assertThat(mAnimatedDrawableBackendFrameRenderer.getIntrinsicHeight()).isNotEqualTo(123);
@@ -64,8 +64,7 @@ public class AnimatedDrawableBackendFrameRendererTest {
 
   @Test
   public void testGetIntrinsicHeight() {
-    when(mAnimatedDrawableBackend.getHeight())
-        .thenReturn(1200);
+    when(mAnimatedDrawableBackend.getHeight()).thenReturn(1200);
 
     assertThat(mAnimatedDrawableBackendFrameRenderer.getIntrinsicHeight()).isEqualTo(1200);
     assertThat(mAnimatedDrawableBackendFrameRenderer.getIntrinsicWidth()).isNotEqualTo(1200);
@@ -73,8 +72,7 @@ public class AnimatedDrawableBackendFrameRendererTest {
 
   @Test
   public void testRenderFrame() {
-    when(mAnimatedDrawableBackend.getHeight())
-        .thenReturn(1200);
+    when(mAnimatedDrawableBackend.getHeight()).thenReturn(1200);
     Bitmap bitmap = mock(Bitmap.class);
     AnimatedDrawableFrameInfo animatedDrawableFrameInfo = mock(AnimatedDrawableFrameInfo.class);
     when(mAnimatedDrawableBackend.getFrameInfo(anyInt())).thenReturn(animatedDrawableFrameInfo);
@@ -82,5 +80,22 @@ public class AnimatedDrawableBackendFrameRendererTest {
     boolean rendered = mAnimatedDrawableBackendFrameRenderer.renderFrame(0, bitmap);
 
     assertThat(rendered).isTrue();
+  }
+
+  @Test
+  public void testRenderFrameUnsuccessful() {
+    int frameNumber = 0;
+
+    when(mAnimatedDrawableBackend.getHeight()).thenReturn(1200);
+    Bitmap bitmap = mock(Bitmap.class);
+    AnimatedDrawableFrameInfo animatedDrawableFrameInfo = mock(AnimatedDrawableFrameInfo.class);
+    when(mAnimatedDrawableBackend.getFrameInfo(anyInt())).thenReturn(animatedDrawableFrameInfo);
+    doThrow(new IllegalStateException())
+        .when(mAnimatedDrawableBackend)
+        .renderFrame(eq(frameNumber), any(Canvas.class));
+
+    boolean rendered = mAnimatedDrawableBackendFrameRenderer.renderFrame(frameNumber, bitmap);
+
+    assertThat(rendered).isFalse();
   }
 }

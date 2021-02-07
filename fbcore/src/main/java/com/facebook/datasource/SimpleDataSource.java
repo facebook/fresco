@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,18 +8,14 @@
 package com.facebook.datasource;
 
 import com.facebook.common.internal.Preconditions;
+import java.util.Map;
 
-/**
- * Settable {@link DataSource}.
- */
+/** Settable {@link DataSource}. */
 public class SimpleDataSource<T> extends AbstractDataSource<T> {
 
-  private SimpleDataSource() {
-  }
+  private SimpleDataSource() {}
 
-  /**
-   * Creates a new {@link SimpleDataSource}.
-   */
+  /** Creates a new {@link SimpleDataSource}. */
   public static <T> SimpleDataSource<T> create() {
     return new SimpleDataSource<T>();
   }
@@ -27,41 +23,42 @@ public class SimpleDataSource<T> extends AbstractDataSource<T> {
   /**
    * Sets the result to {@code value}.
    *
-   * <p> This method will return {@code true} if the value was successfully set, or
-   * {@code false} if the data source has already been set, failed or closed.
+   * <p>This method will return {@code true} if the value was successfully set, or {@code false} if
+   * the data source has already been set, failed or closed.
    *
-   * <p> If the value was successfully set and {@code isLast} is {@code true}, state of the
-   * data source will be set to {@link AbstractDataSource.DataSourceStatus#SUCCESS}.
+   * <p>If the value was successfully set and {@code isLast} is {@code true}, state of the data
+   * source will be set to {@link AbstractDataSource.DataSourceStatus#SUCCESS}.
    *
-   * <p> This will also notify the subscribers if the value was successfully set.
+   * <p>This will also notify the subscribers if the value was successfully set.
    *
    * @param value the value to be set
    * @param isLast whether or not the value is last.
    * @return true if the value was successfully set.
    */
   @Override
-  public boolean setResult(T value, boolean isLast) {
-    return super.setResult(Preconditions.checkNotNull(value), isLast);
+  public boolean setResult(T value, boolean isLast, Map<String, Object> extras) {
+    return super.setResult(Preconditions.checkNotNull(value), isLast, extras);
   }
 
   /**
    * Sets the value as the last result.
-   * <p> See {@link #setResult(T value, boolean isLast)}.
+   *
+   * <p>See {@link #setResult(T value, boolean isLast)}.
    */
   public boolean setResult(T value) {
-    return super.setResult(Preconditions.checkNotNull(value), /* isLast */ true);
+    return super.setResult(Preconditions.checkNotNull(value), /* isLast */ true, null);
   }
 
   /**
    * Sets the failure.
    *
-   * <p> This method will return {@code true} if the failure was successfully set, or
-   * {@code false} if the data source has already been set, failed or closed.
+   * <p>This method will return {@code true} if the failure was successfully set, or {@code false}
+   * if the data source has already been set, failed or closed.
    *
-   * <p> If the failure was successfully set, state of the data source will be set to
-   * {@link AbstractDataSource.DataSourceStatus#FAILURE}.
+   * <p>If the failure was successfully set, state of the data source will be set to {@link
+   * AbstractDataSource.DataSourceStatus#FAILURE}.
    *
-   * <p> This will also notify the subscribers if the failure was successfully set.
+   * <p>This will also notify the subscribers if the failure was successfully set.
    *
    * @param throwable the failure cause to be set.
    * @return true if the failure was successfully set.

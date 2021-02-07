@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,24 +8,29 @@
 package com.facebook.imagepipeline.common;
 
 import android.graphics.Bitmap;
+import android.graphics.ColorSpace;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.transformation.BitmapTransformation;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
-/**
- * Builder for {@link ImageDecodeOptions}.
- */
-public class ImageDecodeOptionsBuilder {
+/** Builder for {@link ImageDecodeOptions}. */
+@Nullsafe(Nullsafe.Mode.STRICT)
+public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
 
   private int mMinDecodeIntervalMs = 100;
+  private int mMaxDimensionPx = Integer.MAX_VALUE;
   private boolean mDecodePreviewFrame;
   private boolean mUseLastFrameForPreview;
   private boolean mDecodeAllFrames;
   private boolean mForceStaticImage;
   private Bitmap.Config mBitmapConfig = Bitmap.Config.ARGB_8888;
   private @Nullable ImageDecoder mCustomImageDecoder;
+  private @Nullable BitmapTransformation mBitmapTransformation;
+  private @Nullable ColorSpace mColorSpace;
+  private boolean mExcludeBitmapConfigFromComparison;
 
-  public ImageDecodeOptionsBuilder() {
-  }
+  public ImageDecodeOptionsBuilder() {}
 
   /**
    * Sets the builder to be equivalent to the specified options.
@@ -34,27 +39,32 @@ public class ImageDecodeOptionsBuilder {
    * @return this builder
    */
   public ImageDecodeOptionsBuilder setFrom(ImageDecodeOptions options) {
+    mMinDecodeIntervalMs = options.minDecodeIntervalMs;
+    mMaxDimensionPx = options.maxDimensionPx;
     mDecodePreviewFrame = options.decodePreviewFrame;
     mUseLastFrameForPreview = options.useLastFrameForPreview;
     mDecodeAllFrames = options.decodeAllFrames;
     mForceStaticImage = options.forceStaticImage;
     mBitmapConfig = options.bitmapConfig;
     mCustomImageDecoder = options.customImageDecoder;
-    return this;
+    mBitmapTransformation = options.bitmapTransformation;
+    mColorSpace = options.colorSpace;
+    return getThis();
   }
 
   /**
    * Sets the minimum decode interval.
    *
-   * <p/> Decoding of intermediate results won't happen more often that intervalMs. If another
+   * <p>Decoding of intermediate results won't happen more often that intervalMs. If another
    * intermediate result comes too soon, it will be decoded only after intervalMs since the last
    * decode. If there were more intermediate results in between, only the last one gets decoded.
+   *
    * @param intervalMs the minimum decode interval in milliseconds
    * @return this builder
    */
-  public ImageDecodeOptionsBuilder setMinDecodeIntervalMs(int intervalMs) {
+  public T setMinDecodeIntervalMs(int intervalMs) {
     mMinDecodeIntervalMs = intervalMs;
-    return this;
+    return getThis();
   }
 
   /**
@@ -67,14 +77,34 @@ public class ImageDecodeOptionsBuilder {
   }
 
   /**
+   * Sets the maximum image dimension (width or height).
+   *
+   * @param maxDimensionPx the maximum image dimension in pixels
+   * @return this builder
+   */
+  public T setMaxDimensionPx(int maxDimensionPx) {
+    mMaxDimensionPx = maxDimensionPx;
+    return getThis();
+  }
+
+  /**
+   * Gets the maximum image dimension (width or height).
+   *
+   * @return the maxinum image dimension in pixels
+   */
+  public int getMaxDimensionPx() {
+    return mMaxDimensionPx;
+  }
+
+  /**
    * Sets whether to decode a preview frame for animated images.
    *
    * @param decodePreviewFrame whether to decode a preview frame
    * @return this builder
    */
-  public ImageDecodeOptionsBuilder setDecodePreviewFrame(boolean decodePreviewFrame) {
+  public T setDecodePreviewFrame(boolean decodePreviewFrame) {
     mDecodePreviewFrame = decodePreviewFrame;
-    return this;
+    return getThis();
   }
 
   /**
@@ -101,15 +131,15 @@ public class ImageDecodeOptionsBuilder {
    * @param useLastFrameForPreview whether to use the last frame for the preview image
    * @return this builder
    */
-  public ImageDecodeOptionsBuilder setUseLastFrameForPreview(boolean useLastFrameForPreview) {
+  public T setUseLastFrameForPreview(boolean useLastFrameForPreview) {
     mUseLastFrameForPreview = useLastFrameForPreview;
-    return this;
+    return getThis();
   }
 
   /**
    * Gets whether to decode all the frames and store them in memory. This should only ever be used
-   * for animations that are known to be small (e.g. stickers). Caching dozens of large Bitmaps
-   * in memory for general GIFs or WebP's will not fit in memory.
+   * for animations that are known to be small (e.g. stickers). Caching dozens of large Bitmaps in
+   * memory for general GIFs or WebP's will not fit in memory.
    *
    * @return whether to decode all the frames and store them in memory
    */
@@ -119,15 +149,15 @@ public class ImageDecodeOptionsBuilder {
 
   /**
    * Sets whether to decode all the frames and store them in memory. This should only ever be used
-   * for animations that are known to be small (e.g. stickers). Caching dozens of large Bitmaps
-   * in memory for general GIFs or WebP's will not fit in memory.
+   * for animations that are known to be small (e.g. stickers). Caching dozens of large Bitmaps in
+   * memory for general GIFs or WebP's will not fit in memory.
    *
    * @param decodeAllFrames whether to decode all the frames and store them in memory
    * @return this builder
    */
-  public ImageDecodeOptionsBuilder setDecodeAllFrames(boolean decodeAllFrames) {
+  public T setDecodeAllFrames(boolean decodeAllFrames) {
     mDecodeAllFrames = decodeAllFrames;
-    return this;
+    return getThis();
   }
 
   /**
@@ -136,23 +166,21 @@ public class ImageDecodeOptionsBuilder {
    * @param forceStaticImage whether to force the image to be decoded as a static image
    * @return this builder
    */
-  public ImageDecodeOptionsBuilder setForceStaticImage(boolean forceStaticImage) {
+  public T setForceStaticImage(boolean forceStaticImage) {
     mForceStaticImage = forceStaticImage;
-    return this;
+    return getThis();
   }
 
   /**
-   * Set a custom image decoder override to be used for the given image.
-   * This will bypass all default decoders and only use the provided custom image decoder
-   * for the given image.
+   * Set a custom image decoder override to be used for the given image. This will bypass all
+   * default decoders and only use the provided custom image decoder for the given image.
    *
    * @param customImageDecoder the custom decoder to use
    * @return this builder
    */
-  public ImageDecodeOptionsBuilder setCustomImageDecoder(
-      @Nullable ImageDecoder customImageDecoder) {
+  public T setCustomImageDecoder(@Nullable ImageDecoder customImageDecoder) {
     mCustomImageDecoder = customImageDecoder;
-    return this;
+    return getThis();
   }
 
   /**
@@ -185,11 +213,58 @@ public class ImageDecodeOptionsBuilder {
 
   /**
    * Sets which config static image will be decode with;
+   *
    * @param bitmapConfig which config static image will be decode with;
    */
-  public ImageDecodeOptionsBuilder setBitmapConfig(Bitmap.Config bitmapConfig) {
+  public T setBitmapConfig(Bitmap.Config bitmapConfig) {
     mBitmapConfig = bitmapConfig;
-    return this;
+    return getThis();
+  }
+
+  /**
+   * Set a custom in-place bitmap transformation that is applied immediately after decoding.
+   *
+   * @param bitmapTransformation the transformation to use
+   * @return the builder
+   */
+  public T setBitmapTransformation(@Nullable BitmapTransformation bitmapTransformation) {
+    mBitmapTransformation = bitmapTransformation;
+    return getThis();
+  }
+
+  @Nullable
+  public BitmapTransformation getBitmapTransformation() {
+    return mBitmapTransformation;
+  }
+
+  /**
+   * Sets the target color space for decoding. When possible, the color space transformation will be
+   * performed at load time. This requires SDK version >= 26, otherwise it's a no-op.
+   *
+   * @param colorSpace target color space for decoding.
+   */
+  public T setColorSpace(ColorSpace colorSpace) {
+    mColorSpace = colorSpace;
+    return getThis();
+  }
+
+  /**
+   * Gets the target color space for decoding.
+   *
+   * @return the target color space.
+   */
+  @Nullable
+  public ColorSpace getColorSpace() {
+    return mColorSpace;
+  }
+
+  public T setExcludeBitmapConfigFromComparison(boolean excludeBitmapConfigFromComparison) {
+    mExcludeBitmapConfigFromComparison = excludeBitmapConfigFromComparison;
+    return getThis();
+  }
+
+  public boolean getExcludeBitmapConfigFromComparison() {
+    return mExcludeBitmapConfigFromComparison;
   }
 
   /**
@@ -199,5 +274,9 @@ public class ImageDecodeOptionsBuilder {
    */
   public ImageDecodeOptions build() {
     return new ImageDecodeOptions(this);
+  }
+
+  protected T getThis() {
+    return (T) this;
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -18,10 +18,12 @@ import com.facebook.imagepipeline.producers.Consumer;
 import com.facebook.imagepipeline.producers.FetchState;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.producers.ProducerContext;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
 import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -29,11 +31,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-/**
- * Network fetcher that uses OkHttp 3 as a backend.
- */
-public class OkHttpNetworkFetcher extends
-    BaseNetworkFetcher<OkHttpNetworkFetcher.OkHttpNetworkFetchState> {
+/** Network fetcher that uses OkHttp 3 as a backend. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
+public class OkHttpNetworkFetcher
+    extends BaseNetworkFetcher<OkHttpNetworkFetcher.OkHttpNetworkFetchState> {
 
   public static class OkHttpNetworkFetchState extends FetchState {
 
@@ -42,25 +43,22 @@ public class OkHttpNetworkFetcher extends
     public long fetchCompleteTime;
 
     public OkHttpNetworkFetchState(
-        Consumer<EncodedImage> consumer,
-        ProducerContext producerContext) {
+        Consumer<EncodedImage> consumer, ProducerContext producerContext) {
       super(consumer, producerContext);
     }
   }
 
-  private static final String TAG = "OkHttpNetworkFetchProducer";
   private static final String QUEUE_TIME = "queue_time";
   private static final String FETCH_TIME = "fetch_time";
   private static final String TOTAL_TIME = "total_time";
   private static final String IMAGE_SIZE = "image_size";
 
   private final Call.Factory mCallFactory;
+  private final @Nullable CacheControl mCacheControl;
 
   private Executor mCancellationExecutor;
 
-  /**
-   * @param okHttpClient client to use
-   */
+  /** @param okHttpClient client to use */
   public OkHttpNetworkFetcher(OkHttpClient okHttpClient) {
     this(okHttpClient, okHttpClient.dispatcher().executorService());
   }
@@ -68,17 +66,28 @@ public class OkHttpNetworkFetcher extends
   /**
    * @param callFactory custom {@link Call.Factory} for fetching image from the network
    * @param cancellationExecutor executor on which fetching cancellation is performed if
-   * cancellation is requested from the UI Thread
+   *     cancellation is requested from the UI Thread
    */
   public OkHttpNetworkFetcher(Call.Factory callFactory, Executor cancellationExecutor) {
+    this(callFactory, cancellationExecutor, true);
+  }
+
+  /**
+   * @param callFactory custom {@link Call.Factory} for fetching image from the network
+   * @param cancellationExecutor executor on which fetching cancellation is performed if
+   *     cancellation is requested from the UI Thread
+   * @param disableOkHttpCache true if network requests should not be cached by OkHttp
+   */
+  public OkHttpNetworkFetcher(
+      Call.Factory callFactory, Executor cancellationExecutor, boolean disableOkHttpCache) {
     mCallFactory = callFactory;
     mCancellationExecutor = cancellationExecutor;
+    mCacheControl = disableOkHttpCache ? new CacheControl.Builder().noStore().build() : null;
   }
 
   @Override
   public OkHttpNetworkFetchState createFetchState(
-      Consumer<EncodedImage> consumer,
-      ProducerContext context) {
+      Consumer<EncodedImage> consumer, ProducerContext context) {
     return new OkHttpNetworkFetchState(consumer, context);
   }
 
@@ -89,10 +98,11 @@ public class OkHttpNetworkFetcher extends
     final Uri uri = fetchState.getUri();
 
     try {
-      final Request.Builder requestBuilder = new Request.Builder()
-          .cacheControl(new CacheControl.Builder().noStore().build())
-          .url(uri.toString())
-          .get();
+      final Request.Builder requestBuilder = new Request.Builder().url(uri.toString()).get();
+
+      if (mCacheControl != null) {
+        requestBuilder.cacheControl(mCacheControl);
+      }
 
       final BytesRange bytesRange = fetchState.getContext().getImageRequest().getBytesRange();
       if (bytesRange != null) {
@@ -153,6 +163,10 @@ public class OkHttpNetworkFetcher extends
           public void onResponse(Call call, Response response) throws IOException {
             fetchState.responseTime = SystemClock.elapsedRealtime();
             final ResponseBody body = response.body();
+            if (body == null) {
+              handleException(call, new IOException("Response body null: " + response), callback);
+              return;
+            }
             try {
               if (!response.isSuccessful()) {
                 handleException(
@@ -192,9 +206,9 @@ public class OkHttpNetworkFetcher extends
   /**
    * Handles exceptions.
    *
-   * <p> OkHttp notifies callers of cancellations via an IOException. If IOException is caught
-   * after request cancellation, then the exception is interpreted as successful cancellation
-   * and onCancellation is called. Otherwise onFailure is called.
+   * <p>OkHttp notifies callers of cancellations via an IOException. If IOException is caught after
+   * request cancellation, then the exception is interpreted as successful cancellation and
+   * onCancellation is called. Otherwise onFailure is called.
    */
   private void handleException(final Call call, final Exception e, final Callback callback) {
     if (call.isCanceled()) {

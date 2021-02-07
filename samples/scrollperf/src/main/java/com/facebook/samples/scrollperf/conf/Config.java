@@ -1,19 +1,15 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.samples.scrollperf.conf;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.util.SizeUtil;
 
@@ -67,81 +63,51 @@ public class Config {
     final SharedPreferences sharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(context);
     return Builder.newBuilder()
-        .setDataSourceType(sharedPreferences.getString(
-            Const.DATA_SOURCE_KEY,
-            context.getString(R.string.value_local_uri)))
-        .setInfiniteDataSource(sharedPreferences.getBoolean(
-            Const.INFINITE_DATA_SOURCE_KEY,
-            false))
-        .setDistinctUriDataSource(sharedPreferences.getBoolean(
-            Const.DISTINCT_DATA_SOURCE_KEY,
-            false))
-        .setRecyclerLayoutType(sharedPreferences.getString(
-            Const.RECYCLER_LAYOUT_KEY,
-            context.getString(R.string.value_recyclerview_recycler_layout)))
-        .setReuseOldController(sharedPreferences.getBoolean(
-            Const.REUSE_OLD_CONTROLLER_KEY,
-            false))
-        .setUseRoundedCorners(sharedPreferences.getBoolean(
-            Const.ROUNDED_CORNERS_KEY,
-            false))
-        .setUseRoundedAsCircle(sharedPreferences.getBoolean(
-            Const.ROUNDED_AS_CIRCLE_KEY,
-            false))
-        .setUsePostprocessor(sharedPreferences.getBoolean(
-            Const.USE_POSTPROCESSOR_KEY,
-            false))
-        .setPostprocessorType(sharedPreferences.getString(
-            Const.POSTPROCESSOR_TYPE_KEY,
-            context.getString(R.string.value_postprocessor_medium)))
-        .setScaleType(sharedPreferences.getString(
-            Const.SCALE_TYPE_KEY,
-            context.getString(R.string.value_scale_type_fit_center)))
-        .setRotateUsingMetaData(sharedPreferences.getBoolean(
-            Const.AUTO_ROTATE_KEY,
-            false))
-        .setForcedRotationAngle(Integer.parseInt(sharedPreferences.getString(
-            Const.FORCED_ROTATION_ANGLE_KEY,
-            "0")))
-        .setDownsampling(sharedPreferences.getBoolean(
-            Const.DOWNSAMPLING_KEY,
-            false))
-        .setOverrideSize(sharedPreferences.getBoolean(
-            Const.OVERRIDE_SIZE_KEY,
-            false))
-        .setOverridenWidth(sharedPreferences.getInt(
-            Const.OVERRIDEN_WIDTH_KEY,
-            SizeUtil.DISPLAY_WIDTH / 2))
-        .setOverridenHeight(sharedPreferences.getInt(
-            Const.OVERRIDEN_HEIGHT_KEY,
-            SizeUtil.DISPLAY_HEIGHT / 2))
-        .setFadeDurationMs(Integer.parseInt(sharedPreferences.getString(
-            Const.FADE_DURATION_KEY,
-            context.getString(R.string.value_fast_fade_duration))))
-        .setDrawBorder(sharedPreferences.getBoolean(
-            Const.DRAW_BORDER_KEY,
-            false))
-        .setGridSpanCount(Integer.parseInt(sharedPreferences.getString(
-            Const.GRID_SPAN_COUNT_KEY,
-            "3")))
-        .setDecodeCancellation(sharedPreferences.getBoolean(
-            Const.DECODE_CANCELLATION_KEY,
-            false))
-        .setWebpSupportEnabled(sharedPreferences.getBoolean(
-            Const.WEBP_SUPPORT_KEY,
-            false))
-        .setDraweeOverlayEnabled(sharedPreferences.getBoolean(
-            Const.DRAWEE_OVERLAY_KEY,
-            false))
-        .setInstrumentationEnabled(sharedPreferences.getBoolean(
-            Const.INSTRUMENTATION_ENABLED_KEY,
-            false))
-        .setDecodingThreadCount(Integer.parseInt(sharedPreferences.getString(
-            Const.DECODING_THREAD_KEY,
-            "0")))
-        .setBgColor(Integer.parseInt(sharedPreferences.getString(
-            Const.BG_COLOR_KEY,
-            "0")))
+        .setDataSourceType(
+            sharedPreferences.getString(
+                Const.DATA_SOURCE_KEY, context.getString(R.string.value_local_uri)))
+        .setInfiniteDataSource(sharedPreferences.getBoolean(Const.INFINITE_DATA_SOURCE_KEY, false))
+        .setDistinctUriDataSource(
+            sharedPreferences.getBoolean(Const.DISTINCT_DATA_SOURCE_KEY, false))
+        .setRecyclerLayoutType(
+            sharedPreferences.getString(
+                Const.RECYCLER_LAYOUT_KEY,
+                context.getString(R.string.value_recyclerview_recycler_layout)))
+        .setReuseOldController(sharedPreferences.getBoolean(Const.REUSE_OLD_CONTROLLER_KEY, false))
+        .setUseRoundedCorners(sharedPreferences.getBoolean(Const.ROUNDED_CORNERS_KEY, false))
+        .setUseRoundedAsCircle(sharedPreferences.getBoolean(Const.ROUNDED_AS_CIRCLE_KEY, false))
+        .setUsePostprocessor(sharedPreferences.getBoolean(Const.USE_POSTPROCESSOR_KEY, false))
+        .setPostprocessorType(
+            sharedPreferences.getString(
+                Const.POSTPROCESSOR_TYPE_KEY,
+                context.getString(R.string.value_postprocessor_medium)))
+        .setScaleType(
+            sharedPreferences.getString(
+                Const.SCALE_TYPE_KEY, context.getString(R.string.value_scale_type_fit_center)))
+        .setRotateUsingMetaData(sharedPreferences.getBoolean(Const.AUTO_ROTATE_KEY, false))
+        .setForcedRotationAngle(
+            Integer.parseInt(sharedPreferences.getString(Const.FORCED_ROTATION_ANGLE_KEY, "0")))
+        .setDownsampling(sharedPreferences.getBoolean(Const.DOWNSAMPLING_KEY, false))
+        .setOverrideSize(sharedPreferences.getBoolean(Const.OVERRIDE_SIZE_KEY, false))
+        .setOverridenWidth(
+            sharedPreferences.getInt(Const.OVERRIDEN_WIDTH_KEY, SizeUtil.DISPLAY_WIDTH / 2))
+        .setOverridenHeight(
+            sharedPreferences.getInt(Const.OVERRIDEN_HEIGHT_KEY, SizeUtil.DISPLAY_HEIGHT / 2))
+        .setFadeDurationMs(
+            Integer.parseInt(
+                sharedPreferences.getString(
+                    Const.FADE_DURATION_KEY, context.getString(R.string.value_fast_fade_duration))))
+        .setDrawBorder(sharedPreferences.getBoolean(Const.DRAW_BORDER_KEY, false))
+        .setGridSpanCount(
+            Integer.parseInt(sharedPreferences.getString(Const.GRID_SPAN_COUNT_KEY, "3")))
+        .setDecodeCancellation(sharedPreferences.getBoolean(Const.DECODE_CANCELLATION_KEY, false))
+        .setWebpSupportEnabled(sharedPreferences.getBoolean(Const.WEBP_SUPPORT_KEY, false))
+        .setDraweeOverlayEnabled(sharedPreferences.getBoolean(Const.DRAWEE_OVERLAY_KEY, false))
+        .setInstrumentationEnabled(
+            sharedPreferences.getBoolean(Const.INSTRUMENTATION_ENABLED_KEY, false))
+        .setDecodingThreadCount(
+            Integer.parseInt(sharedPreferences.getString(Const.DECODING_THREAD_KEY, "0")))
+        .setBgColor(Integer.parseInt(sharedPreferences.getString(Const.BG_COLOR_KEY, "0")))
         .build();
   }
 
@@ -201,8 +167,7 @@ public class Config {
     private int mDecodingThreadCount;
     private int mBgColor;
 
-    private Builder() {
-    }
+    private Builder() {}
 
     public static Builder newBuilder() {
       return new Builder();

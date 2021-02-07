@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2017-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.animation.bitmap.preparation;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -28,13 +29,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-/**
- * Tests {@link DefaultBitmapFramePreparer}.
- */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(CloseableReference.class)
+import org.robolectric.RobolectricTestRunner;
+
+/** Tests {@link DefaultBitmapFramePreparer}. */
+@RunWith(RobolectricTestRunner.class)
 public class DefaultBitmapFramePreparerTest {
 
   private static final int FRAME_COUNT = 10;
@@ -61,11 +59,9 @@ public class DefaultBitmapFramePreparerTest {
     mFakeClock = new FakeClock();
     mExecutorService = new TestExecutorService(mFakeClock);
 
-    mDefaultBitmapFramePreparer = new DefaultBitmapFramePreparer(
-        mPlatformBitmapFactory,
-        mBitmapFrameRenderer,
-        BITMAP_CONFIG,
-        mExecutorService);
+    mDefaultBitmapFramePreparer =
+        new DefaultBitmapFramePreparer(
+            mPlatformBitmapFactory, mBitmapFrameRenderer, BITMAP_CONFIG, mExecutorService);
     when(mAnimationBackend.getFrameCount()).thenReturn(FRAME_COUNT);
     when(mAnimationBackend.getIntrinsicWidth()).thenReturn(BACKEND_INTRINSIC_WIDTH);
     when(mAnimationBackend.getIntrinsicHeight()).thenReturn(BACKEND_INTRINSIC_HEIGHT);
@@ -98,16 +94,12 @@ public class DefaultBitmapFramePreparerTest {
     mExecutorService.getScheduledQueue().runNextPendingCommand();
 
     verify(mBitmapFrameCache).contains(1);
-    verify(mBitmapFrameCache).getBitmapToReuseForFrame(
-        1,
-        BACKEND_INTRINSIC_WIDTH,
-        BACKEND_INTRINSIC_HEIGHT);
+    verify(mBitmapFrameCache)
+        .getBitmapToReuseForFrame(1, BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT);
     verifyNoMoreInteractions(mBitmapFrameCache);
 
-    verify(mPlatformBitmapFactory).createBitmap(
-        BACKEND_INTRINSIC_WIDTH,
-        BACKEND_INTRINSIC_HEIGHT,
-        BITMAP_CONFIG);
+    verify(mPlatformBitmapFactory)
+        .createBitmap(BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT, BITMAP_CONFIG);
 
     verifyZeroInteractions(mBitmapFrameRenderer);
   }
@@ -115,9 +107,7 @@ public class DefaultBitmapFramePreparerTest {
   @Test
   public void testPrepareFrame_whenReusedBitmapAvailable_thenCacheReusedBitmap() {
     when(mBitmapFrameCache.getBitmapToReuseForFrame(
-        1,
-        BACKEND_INTRINSIC_WIDTH,
-        BACKEND_INTRINSIC_HEIGHT))
+            1, BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT))
         .thenReturn(mBitmapReference);
     when(mBitmapFrameRenderer.renderFrame(1, mBitmap)).thenReturn(true);
 
@@ -126,16 +116,12 @@ public class DefaultBitmapFramePreparerTest {
     mExecutorService.getScheduledQueue().runNextPendingCommand();
 
     verify(mBitmapFrameCache, times(2)).contains(1);
-    verify(mBitmapFrameCache).getBitmapToReuseForFrame(
-        1,
-        BACKEND_INTRINSIC_WIDTH,
-        BACKEND_INTRINSIC_HEIGHT);
+    verify(mBitmapFrameCache)
+        .getBitmapToReuseForFrame(1, BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT);
     verify(mBitmapFrameRenderer).renderFrame(1, mBitmap);
 
-    verify(mBitmapFrameCache).onFramePrepared(
-        1,
-        mBitmapReference,
-        BitmapAnimationBackend.FRAME_TYPE_REUSED);
+    verify(mBitmapFrameCache)
+        .onFramePrepared(1, mBitmapReference, BitmapAnimationBackend.FRAME_TYPE_REUSED);
 
     verifyZeroInteractions(mPlatformBitmapFactory);
   }
@@ -143,9 +129,7 @@ public class DefaultBitmapFramePreparerTest {
   @Test
   public void testPrepareFrame_whenPlatformBitmapAvailable_thenCacheCreatedBitmap() {
     when(mPlatformBitmapFactory.createBitmap(
-        BACKEND_INTRINSIC_WIDTH,
-        BACKEND_INTRINSIC_HEIGHT,
-        BITMAP_CONFIG))
+            BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT, BITMAP_CONFIG))
         .thenReturn(mBitmapReference);
     when(mBitmapFrameRenderer.renderFrame(1, mBitmap)).thenReturn(true);
 
@@ -154,20 +138,14 @@ public class DefaultBitmapFramePreparerTest {
     mExecutorService.getScheduledQueue().runNextPendingCommand();
 
     verify(mBitmapFrameCache, times(2)).contains(1);
-    verify(mBitmapFrameCache).getBitmapToReuseForFrame(
-        1,
-        BACKEND_INTRINSIC_WIDTH,
-        BACKEND_INTRINSIC_HEIGHT);
-    verify(mPlatformBitmapFactory).createBitmap(
-        BACKEND_INTRINSIC_WIDTH,
-        BACKEND_INTRINSIC_HEIGHT,
-        BITMAP_CONFIG);
+    verify(mBitmapFrameCache)
+        .getBitmapToReuseForFrame(1, BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT);
+    verify(mPlatformBitmapFactory)
+        .createBitmap(BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT, BITMAP_CONFIG);
     verify(mBitmapFrameRenderer).renderFrame(1, mBitmap);
 
-    verify(mBitmapFrameCache).onFramePrepared(
-        1,
-        mBitmapReference,
-        BitmapAnimationBackend.FRAME_TYPE_CREATED);
+    verify(mBitmapFrameCache)
+        .onFramePrepared(1, mBitmapReference, BitmapAnimationBackend.FRAME_TYPE_CREATED);
 
     verifyNoMoreInteractions(mPlatformBitmapFactory);
   }
@@ -175,14 +153,10 @@ public class DefaultBitmapFramePreparerTest {
   @Test
   public void testPrepareFrame_whenReusedAndPlatformBitmapAvailable_thenCacheReusedBitmap() {
     when(mBitmapFrameCache.getBitmapToReuseForFrame(
-        1,
-        BACKEND_INTRINSIC_WIDTH,
-        BACKEND_INTRINSIC_HEIGHT))
+            1, BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT))
         .thenReturn(mBitmapReference);
     when(mPlatformBitmapFactory.createBitmap(
-        BACKEND_INTRINSIC_WIDTH,
-        BACKEND_INTRINSIC_HEIGHT,
-        BITMAP_CONFIG))
+            BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT, BITMAP_CONFIG))
         .thenReturn(mBitmapReference);
     when(mBitmapFrameRenderer.renderFrame(1, mBitmap)).thenReturn(true);
 
@@ -191,16 +165,12 @@ public class DefaultBitmapFramePreparerTest {
     mExecutorService.getScheduledQueue().runNextPendingCommand();
 
     verify(mBitmapFrameCache, times(2)).contains(1);
-    verify(mBitmapFrameCache).getBitmapToReuseForFrame(
-        1,
-        BACKEND_INTRINSIC_WIDTH,
-        BACKEND_INTRINSIC_HEIGHT);
+    verify(mBitmapFrameCache)
+        .getBitmapToReuseForFrame(1, BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT);
     verify(mBitmapFrameRenderer).renderFrame(1, mBitmap);
 
-    verify(mBitmapFrameCache).onFramePrepared(
-        1,
-        mBitmapReference,
-        BitmapAnimationBackend.FRAME_TYPE_REUSED);
+    verify(mBitmapFrameCache)
+        .onFramePrepared(1, mBitmapReference, BitmapAnimationBackend.FRAME_TYPE_REUSED);
 
     verifyZeroInteractions(mPlatformBitmapFactory);
   }
@@ -208,14 +178,10 @@ public class DefaultBitmapFramePreparerTest {
   @Test
   public void testPrepareFrame_whenRenderingFails_thenDoNothing() {
     when(mBitmapFrameCache.getBitmapToReuseForFrame(
-        1,
-        BACKEND_INTRINSIC_WIDTH,
-        BACKEND_INTRINSIC_HEIGHT))
+            1, BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT))
         .thenReturn(mBitmapReference);
     when(mPlatformBitmapFactory.createBitmap(
-        BACKEND_INTRINSIC_WIDTH,
-        BACKEND_INTRINSIC_HEIGHT,
-        BITMAP_CONFIG))
+            BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT, BITMAP_CONFIG))
         .thenReturn(mBitmapReference);
     when(mBitmapFrameRenderer.renderFrame(1, mBitmap)).thenReturn(false);
 
@@ -224,14 +190,10 @@ public class DefaultBitmapFramePreparerTest {
     mExecutorService.getScheduledQueue().runNextPendingCommand();
 
     verify(mBitmapFrameCache, times(2)).contains(1);
-    verify(mBitmapFrameCache).getBitmapToReuseForFrame(
-        1,
-        BACKEND_INTRINSIC_WIDTH,
-        BACKEND_INTRINSIC_HEIGHT);
-    verify(mPlatformBitmapFactory).createBitmap(
-        BACKEND_INTRINSIC_WIDTH,
-        BACKEND_INTRINSIC_HEIGHT,
-        BITMAP_CONFIG);
+    verify(mBitmapFrameCache)
+        .getBitmapToReuseForFrame(1, BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT);
+    verify(mPlatformBitmapFactory)
+        .createBitmap(BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT, BITMAP_CONFIG);
     verify(mBitmapFrameRenderer, times(2)).renderFrame(1, mBitmap);
 
     verifyNoMoreInteractions(mBitmapFrameCache);

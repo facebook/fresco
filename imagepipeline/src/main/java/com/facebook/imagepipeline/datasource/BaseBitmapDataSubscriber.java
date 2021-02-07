@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -14,13 +14,14 @@ import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSubscriber;
 import com.facebook.imagepipeline.image.CloseableBitmap;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
  * Implementation of {@link DataSubscriber} for cases where the client wants access to a bitmap.
  *
- * <p>
- * Sample usage:
+ * <p>Sample usage:
+ *
  * <pre>
  * <code>
  * dataSource.subscribe(
@@ -40,8 +41,9 @@ import javax.annotation.Nullable;
  * </code>
  * </pre>
  */
-public abstract class BaseBitmapDataSubscriber extends
-    BaseDataSubscriber<CloseableReference<CloseableImage>> {
+@Nullsafe(Nullsafe.Mode.STRICT)
+public abstract class BaseBitmapDataSubscriber
+    extends BaseDataSubscriber<CloseableReference<CloseableImage>> {
 
   @Override
   public void onNewResultImpl(DataSource<CloseableReference<CloseableImage>> dataSource) {
@@ -51,8 +53,7 @@ public abstract class BaseBitmapDataSubscriber extends
 
     CloseableReference<CloseableImage> closeableImageRef = dataSource.getResult();
     Bitmap bitmap = null;
-    if (closeableImageRef != null &&
-        closeableImageRef.get() instanceof CloseableBitmap) {
+    if (closeableImageRef != null && closeableImageRef.get() instanceof CloseableBitmap) {
       bitmap = ((CloseableBitmap) closeableImageRef.get()).getUnderlyingBitmap();
     }
 
@@ -68,6 +69,7 @@ public abstract class BaseBitmapDataSubscriber extends
    * method.
    *
    * <p>The framework will free the bitmap's memory after this method has completed.
+   *
    * @param bitmap
    */
   protected abstract void onNewResultImpl(@Nullable Bitmap bitmap);

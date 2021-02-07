@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -16,46 +16,41 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
 
-/**
- * Represents a local fetch producer.
- */
+/** Represents a local fetch producer. */
 public abstract class LocalFetchProducer implements Producer<EncodedImage> {
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
 
-  protected LocalFetchProducer(
-      Executor executor,
-      PooledByteBufferFactory pooledByteBufferFactory) {
+  protected LocalFetchProducer(Executor executor, PooledByteBufferFactory pooledByteBufferFactory) {
     mExecutor = executor;
     mPooledByteBufferFactory = pooledByteBufferFactory;
   }
 
   @Override
   public void produceResults(
-      final Consumer<EncodedImage> consumer,
-      final ProducerContext producerContext) {
+      final Consumer<EncodedImage> consumer, final ProducerContext producerContext) {
 
-    final ProducerListener listener = producerContext.getListener();
-    final String requestId = producerContext.getId();
+    final ProducerListener2 listener = producerContext.getProducerListener();
     final ImageRequest imageRequest = producerContext.getImageRequest();
+    producerContext.putOriginExtra("local", "fetch");
     final StatefulProducerRunnable cancellableProducerRunnable =
         new StatefulProducerRunnable<EncodedImage>(
-            consumer,
-            listener,
-            getProducerName(),
-            requestId) {
+            consumer, listener, producerContext, getProducerName()) {
 
           @Override
-          protected EncodedImage getResult() throws Exception {
+          protected @Nullable EncodedImage getResult() throws Exception {
             EncodedImage encodedImage = getEncodedImage(imageRequest);
             if (encodedImage == null) {
-              listener.onUltimateProducerReached(requestId, getProducerName(), false);
+              listener.onUltimateProducerReached(producerContext, getProducerName(), false);
+              producerContext.putOriginExtra("local");
               return null;
             }
             encodedImage.parseMetaData();
-            listener.onUltimateProducerReached(requestId, getProducerName(), true);
+            listener.onUltimateProducerReached(producerContext, getProducerName(), true);
+            producerContext.putOriginExtra("local");
             return encodedImage;
           }
 
@@ -76,9 +71,8 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
   }
 
   /** Creates a memory-backed encoded image from the stream. The stream is closed. */
-  protected EncodedImage getByteBufferBackedEncodedImage(
-      InputStream inputStream,
-      int length) throws IOException {
+  protected EncodedImage getByteBufferBackedEncodedImage(InputStream inputStream, int length)
+      throws IOException {
     CloseableReference<PooledByteBuffer> ref = null;
     try {
       if (length <= 0) {
@@ -93,22 +87,19 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
     }
   }
 
-  protected EncodedImage getEncodedImage(
-      InputStream inputStream,
-      int length) throws IOException {
+  protected EncodedImage getEncodedImage(InputStream inputStream, int length) throws IOException {
     return getByteBufferBackedEncodedImage(inputStream, length);
   }
 
   /**
    * Gets an encoded image from the local resource. It can be either backed by a FileInputStream or
    * a PooledByteBuffer
+   *
    * @param imageRequest request that includes the local resource that is being accessed
    * @throws IOException
    */
   protected abstract EncodedImage getEncodedImage(ImageRequest imageRequest) throws IOException;
 
-  /**
-   * @return name of the Producer
-   */
+  /** @return name of the Producer */
   protected abstract String getProducerName();
 }

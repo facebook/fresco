@@ -1,13 +1,22 @@
+import com.facebook.fresco.buildsrc.SampleDeps
+
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 apply plugin: 'com.android.application'
 
 android {
-    buildToolsVersion rootProject.ext.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion FrescoConfig.buildToolsVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
 
     defaultConfig {
         applicationId "com.facebook.samples.zoomableapp"
-        minSdkVersion rootProject.ext.samplesMinSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion FrescoConfig.samplesMinSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
         versionCode 1
         versionName "${VERSION_NAME}"
 
@@ -37,7 +46,7 @@ android {
         abi {
             enable true
             reset()
-            include 'x86', 'x86_64', 'arm64-v8a', 'armeabi-v7a', 'armeabi'
+            include 'x86', 'x86_64', 'arm64-v8a', 'armeabi-v7a'
             universalApk false
         }
     }
@@ -48,8 +57,7 @@ configurations {
 }
 
 dependencies {
-    compileOnly "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
-    implementation "com.android.support:support-core-ui:${SUPPORT_LIB_VERSION}"
+    implementation SampleDeps.Zoomable.legacyAndroidXSupportCoreUi
 
     internalImplementation project(':drawee-backends:drawee-pipeline')
     implementation project(path: ':samples:zoomable')

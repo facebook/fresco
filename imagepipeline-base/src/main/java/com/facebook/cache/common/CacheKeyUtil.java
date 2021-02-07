@@ -1,16 +1,19 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.cache.common;
 
 import com.facebook.common.util.SecureHashUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public final class CacheKeyUtil {
 
   /**
@@ -27,7 +30,7 @@ public final class CacheKeyUtil {
         }
       } else {
         ids = new ArrayList<>(1);
-        ids.add(secureHashKey(key));
+        ids.add(key.isResourceIdForDebugging() ? key.getUriString() : secureHashKey(key));
       }
       return ids;
     } catch (UnsupportedEncodingException e) {

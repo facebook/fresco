@@ -1,13 +1,15 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.imagepipeline.cache;
 
-import com.android.internal.util.Predicate;
-import com.facebook.common.internal.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
+import com.facebook.common.internal.Predicate;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -15,16 +17,16 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
-/**
- * Map that keeps track of the elements order (according to the LRU policy) and their size.
- */
+/** Map that keeps track of the elements order (according to the LRU policy) and their size. */
 @ThreadSafe
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class CountingLruMap<K, V> {
 
   private final ValueDescriptor<V> mValueDescriptor;
 
   @GuardedBy("this")
   private final LinkedHashMap<K, V> mMap = new LinkedHashMap<>();
+
   @GuardedBy("this")
   private int mSizeInBytes = 0;
 
@@ -70,7 +72,7 @@ public class CountingLruMap<K, V> {
     return matchingEntries;
   }
 
-  /** Returns whether the map contains an element with the given key.  */
+  /** Returns whether the map contains an element with the given key. */
   public synchronized boolean contains(K key) {
     return mMap.containsKey(key);
   }
@@ -96,9 +98,9 @@ public class CountingLruMap<K, V> {
   /** Removes the element from the map. */
   @Nullable
   public synchronized V remove(K key) {
-      V oldValue = mMap.remove(key);
-      mSizeInBytes -= getValueSizeInBytes(oldValue);
-      return oldValue;
+    V oldValue = mMap.remove(key);
+    mSizeInBytes -= getValueSizeInBytes(oldValue);
+    return oldValue;
   }
 
   /** Removes all the matching elements from the map. */
@@ -124,7 +126,7 @@ public class CountingLruMap<K, V> {
     return oldValues;
   }
 
-  private int getValueSizeInBytes(V value) {
+  private int getValueSizeInBytes(@Nullable V value) {
     return (value == null) ? 0 : mValueDescriptor.getSizeInBytes(value);
   }
 }

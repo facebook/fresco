@@ -1,0 +1,87 @@
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.TestDeps
+
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+dependencies {
+    compileOnly Deps.AndroidX.androidxAnnotation
+    compileOnly Deps.AndroidX.legacySupportCoreUtils
+    compileOnly Deps.jsr305
+    compileOnly Deps.inferAnnotation
+    compileOnly Deps.javaxAnnotation
+
+    implementation project(':imagepipeline-base')
+    implementation Deps.SoLoader.nativeloader
+
+    implementation Deps.Bolts.tasks
+    implementation project(':fbcore')
+
+
+    testImplementation Deps.AndroidX.legacySupportCoreUtils
+    testImplementation Deps.jsr305
+    testImplementation TestDeps.junit
+    testImplementation TestDeps.festAssertCore
+    testImplementation TestDeps.mockitoCore
+    testImplementation(TestDeps.Powermock.apiMockito) {
+        exclude group: 'org.mockito', module: 'mockito-all'
+    }
+    testImplementation TestDeps.Powermock.moduleJunit4
+    testImplementation TestDeps.Powermock.moduleJunit4Rule
+    testImplementation TestDeps.Powermock.classloadingXstream
+    testImplementation(TestDeps.robolectric) {
+        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    }
+}
+apply from: rootProject.file('release.gradle')
+
+// We download various C++ open-source dependencies from SourceForge into nativedeps/downloads.
+// We then copy both downloaded code and our custom makefiles and headers into nativedeps/merge.
+
+task fetchNativeDeps(dependsOn: [copyLibjpeg]) {
+}
+
+android {
+
+    def ndkLibs = [
+            ['native-imagetranscoder', [copyLibjpeg]]]
+
+    buildToolsVersion FrescoConfig.buildToolsVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
+    }
+
+    sourceSets {
+        main {
+            jni.srcDirs = []
+            jniLibs.srcDirs = ndkLibs.collect { "$buildDir/${it[0]}" }
+        }
+        test {
+            resources {
+                exclude '**/BUCK'
+            }
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+    ndkLibs.each { lib -> makeNdkTasks lib[0], lib[1] }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+artifacts.add('archives', sourcesJar)

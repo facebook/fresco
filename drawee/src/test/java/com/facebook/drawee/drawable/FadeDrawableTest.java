@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -18,13 +18,19 @@ import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.robolectric.RobolectricTestRunner;
 
+/**
+ * Tests {@link FadeDrawable} with the default configuration.
+ *
+ * @see FadeDrawableAllOnTest for more tests
+ */
 @RunWith(RobolectricTestRunner.class)
 public class FadeDrawableTest {
-  private Drawable[] mLayers = new Drawable[] {
-      DrawableTestUtils.mockDrawable(),
-      DrawableTestUtils.mockDrawable(),
-      DrawableTestUtils.mockDrawable(),
-  };
+  private Drawable[] mLayers =
+      new Drawable[] {
+        DrawableTestUtils.mockDrawable(),
+        DrawableTestUtils.mockDrawable(),
+        DrawableTestUtils.mockDrawable(),
+      };
 
   private FakeFadeDrawable mFadeDrawable;
   private Canvas mCanvas = mock(Canvas.class);
@@ -103,7 +109,7 @@ public class FadeDrawableTest {
 
   @Test
   public void testFadeInLayer() {
-    //start fade in
+    // start fade in
     mFadeDrawable.setTransitionDuration(100);
     mFadeDrawable.fadeInLayer(2);
     Assert.assertEquals(true, mFadeDrawable.mIsLayerOn[0]);
@@ -120,7 +126,7 @@ public class FadeDrawableTest {
 
   @Test
   public void testFadeOutLayer() {
-    //start fade out
+    // start fade out
     mFadeDrawable.setTransitionDuration(100);
     mFadeDrawable.fadeOutLayer(0);
     Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[0]);
@@ -137,7 +143,7 @@ public class FadeDrawableTest {
 
   @Test
   public void testFadeOutAllLayers() {
-    //start fade out
+    // start fade out
     mFadeDrawable.setTransitionDuration(100);
     mFadeDrawable.mIsLayerOn[1] = true;
     mFadeDrawable.mIsLayerOn[2] = true;
@@ -159,6 +165,7 @@ public class FadeDrawableTest {
     testImmediateTransition(true);
     testImmediateTransition(false);
   }
+
   private void testImmediateTransition(boolean fadeUpToLayer) {
     resetInteractions();
     if (fadeUpToLayer) {
@@ -184,6 +191,7 @@ public class FadeDrawableTest {
     testZeroTransition(true);
     testZeroTransition(false);
   }
+
   private void testZeroTransition(boolean fadeUpToLayer) {
     resetInteractions();
     mFadeDrawable.setTransitionDuration(0);
@@ -213,6 +221,7 @@ public class FadeDrawableTest {
     testTransition(true);
     testTransition(false);
   }
+
   private void testTransition(boolean fadeUpToLayer) {
     // duration is set to 85 ms
     // 85 = 5 * 17; 5 frames of 17ms
@@ -321,7 +330,7 @@ public class FadeDrawableTest {
     inOrder.verify(mLayers[0]).setAlpha(128);
     inOrder.verify(mLayers[0]).draw(mCanvas);
     inOrder.verify(mLayers[1]).mutate();
-    inOrder.verify(mLayers[1]).setAlpha(25);
+    inOrder.verify(mLayers[1]).setAlpha(26);
     inOrder.verify(mLayers[1]).draw(mCanvas);
     inOrder.verify(mCallback, atLeastOnce()).invalidateDrawable(mFadeDrawable);
     inOrder.verifyNoMoreInteractions();
@@ -393,7 +402,7 @@ public class FadeDrawableTest {
     private long mCurrentTimeMs;
 
     public FakeFadeDrawable(Drawable[] layers) {
-      super(layers);
+      super(layers, false, 0);
       mCurrentTimeMs = 0;
     }
 

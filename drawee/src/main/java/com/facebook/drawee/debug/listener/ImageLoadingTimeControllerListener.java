@@ -1,19 +1,22 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.drawee.debug.listener;
 
 import android.graphics.drawable.Animatable;
 import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
  * Currently we are measuring this from Submit to Final Image.But can be extended to include
  * intermediate time and failure cases also
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class ImageLoadingTimeControllerListener extends BaseControllerListener {
 
   private long mRequestSubmitTimeMs = -1l;

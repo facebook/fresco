@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,7 +7,8 @@
 
 package com.facebook.imagepipeline.producers;
 
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -17,7 +18,10 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import android.net.Uri;
+import android.provider.ContactsContract;
+import com.facebook.common.time.MonotonicClock;
 import com.facebook.common.util.UriUtil;
+import com.facebook.imagepipeline.producers.HttpUrlConnectionNetworkFetcher.HttpUrlConnectionNetworkFetchState;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -27,6 +31,7 @@ import java.net.URLConnection;
 import java.util.LinkedList;
 import java.util.Queue;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -36,16 +41,24 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.RobolectricTestRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({HttpUrlConnectionNetworkFetcher.class, Uri.class, UriUtil.class})
+@RunWith(RobolectricTestRunner.class)
+@PrepareForTest({
+  HttpUrlConnectionNetworkFetcher.class,
+  Uri.class,
+  UriUtil.class,
+  ContactsContract.class
+})
 public class HttpUrlConnectionNetworkFetcherTest {
 
   public static final String INITIAL_TEST_URL = "http://localhost/";
   public static final String HTTPS_URL = "https://localhost/";
 
-  @Mock private FetchState mMockFetchState;
+  @Rule public PowerMockRule mPowerMockRule = new PowerMockRule();
+
+  @Mock private HttpUrlConnectionNetworkFetchState mMockFetchState;
   @Mock private ProducerContext mMockProducerContext;
   @Mock private NetworkFetcher.Callback mMockCallback;
 
@@ -56,7 +69,8 @@ public class HttpUrlConnectionNetworkFetcherTest {
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
 
-    mFetcher = new HttpUrlConnectionNetworkFetcher();
+    mFetcher =
+        new HttpUrlConnectionNetworkFetcher("user-agent-blabla", null, mock(MonotonicClock.class));
     mConnectionsQueue = new LinkedList<>();
     mockUrlConnections();
     mockUriParse();
@@ -68,22 +82,26 @@ public class HttpUrlConnectionNetworkFetcherTest {
     URL mockUrl = PowerMockito.mock(URL.class);
     PowerMockito.whenNew(URL.class).withAnyArguments().thenReturn(mockUrl);
 
-    PowerMockito.when(mockUrl.openConnection()).then(new Answer<URLConnection>() {
-      @Override
-      public URLConnection answer(InvocationOnMock invocation) throws Throwable {
-        return mConnectionsQueue.poll();
-      }
-    });
+    PowerMockito.when(mockUrl.openConnection())
+        .then(
+            new Answer<URLConnection>() {
+              @Override
+              public URLConnection answer(InvocationOnMock invocation) throws Throwable {
+                return mConnectionsQueue.poll();
+              }
+            });
   }
 
   private void mockUriParse() {
     PowerMockito.mockStatic(Uri.class);
-    PowerMockito.when(Uri.parse(anyString())).then(new Answer<Uri>() {
-      @Override
-      public Uri answer(InvocationOnMock invocation) throws Throwable {
-        return mockUri((String) invocation.getArguments()[0]);
-      }
-    });
+    PowerMockito.when(Uri.parse(anyString()))
+        .then(
+            new Answer<Uri>() {
+              @Override
+              public Uri answer(InvocationOnMock invocation) throws Throwable {
+                return mockUri((String) invocation.getArguments()[0]);
+              }
+            });
   }
 
   private void mockUriWithAppendedPath() {
@@ -100,23 +118,27 @@ public class HttpUrlConnectionNetworkFetcherTest {
   private Uri mockUri(final String url) {
     Uri mockUri = mock(Uri.class);
     when(mockUri.toString()).thenReturn(url);
-    when(mockUri.getScheme()).then(new Answer<String>() {
-      @Override
-      public String answer(InvocationOnMock invocation) throws Throwable {
-        return url.substring(0, url.indexOf(':'));
-      }
-    });
+    when(mockUri.getScheme())
+        .then(
+            new Answer<String>() {
+              @Override
+              public String answer(InvocationOnMock invocation) throws Throwable {
+                return url.substring(0, url.indexOf(':'));
+              }
+            });
     return mockUri;
   }
 
   private void mockFetchState() {
     when(mMockFetchState.getContext()).thenReturn(mMockProducerContext);
-    when(mMockFetchState.getUri()).then(new Answer<Uri>() {
-      @Override
-      public Uri answer(InvocationOnMock invocation) throws Throwable {
-        return mockUri(INITIAL_TEST_URL);
-      }
-    });
+    when(mMockFetchState.getUri())
+        .then(
+            new Answer<Uri>() {
+              @Override
+              public Uri answer(InvocationOnMock invocation) throws Throwable {
+                return mockUri(INITIAL_TEST_URL);
+              }
+            });
   }
 
   @Test
@@ -211,6 +233,15 @@ public class HttpUrlConnectionNetworkFetcherTest {
     verify(mockConnection).setConnectTimeout(30000);
   }
 
+  @Test
+  public void testUserAgent() throws Exception {
+    HttpURLConnection mockConnection = mockSuccessWithStream(mock(InputStream.class));
+
+    runFetch();
+
+    verify(mockConnection).setRequestProperty(eq("User-Agent"), eq("user-agent-blabla"));
+  }
+
   private HttpURLConnection mockSuccess() throws IOException {
     return mockSuccessWithStream(mock(InputStream.class));
   }
@@ -251,5 +282,4 @@ public class HttpUrlConnectionNetworkFetcherTest {
   private void runFetch() {
     mFetcher.fetchSync(mMockFetchState, mMockCallback);
   }
-
 }

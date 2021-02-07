@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -25,7 +25,7 @@ public class PipelineDraweeControllerFactory {
   private DeferredReleaser mDeferredReleaser;
   private DrawableFactory mAnimatedDrawableFactory;
   private Executor mUiThreadExecutor;
-  private MemoryCache<CacheKey, CloseableImage> mMemoryCache;
+  @Nullable private MemoryCache<CacheKey, CloseableImage> mMemoryCache;
   @Nullable private ImmutableList<DrawableFactory> mDrawableFactories;
   @Nullable private Supplier<Boolean> mDebugOverlayEnabledSupplier;
 
@@ -66,7 +66,7 @@ public class PipelineDraweeControllerFactory {
       DeferredReleaser deferredReleaser,
       DrawableFactory animatedDrawableFactory,
       Executor uiThreadExecutor,
-      MemoryCache<CacheKey, CloseableImage> memoryCache,
+      @Nullable MemoryCache<CacheKey, CloseableImage> memoryCache,
       @Nullable ImmutableList<DrawableFactory> drawableFactories) {
     return new PipelineDraweeController(
         resources,

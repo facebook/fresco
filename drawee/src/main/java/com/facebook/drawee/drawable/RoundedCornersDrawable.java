@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -15,28 +15,23 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 import java.util.Arrays;
 import javax.annotation.Nullable;
 
-/**
- * Drawable that draws underlying drawable with rounded corners.
- */
+/** Drawable that draws underlying drawable with rounded corners. */
 public class RoundedCornersDrawable extends ForwardingDrawable implements Rounded {
 
   public enum Type {
     /**
-     * Draws rounded corners on top of the underlying drawable by overlaying a solid color which
-     * is specified by {@code setOverlayColor}. This option should only be used when the
-     * background beneath the underlying drawable is static and of the same solid color.
+     * Draws rounded corners on top of the underlying drawable by overlaying a solid color which is
+     * specified by {@code setOverlayColor}. This option should only be used when the background
+     * beneath the underlying drawable is static and of the same solid color.
      */
     OVERLAY_COLOR,
 
-    /**
-     * Clips the drawable to be rounded. This option is not supported right now but is expected to
-     * be made available in the future.
-     */
+    /** Clips the drawing of the drawable to be rounded. */
     CLIPPING
   }
 
@@ -53,6 +48,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
   private int mOverlayColor = Color.TRANSPARENT;
   private float mPadding = 0;
   private boolean mScaleDownInsideBorders = false;
+  private boolean mPaintFilterBitmap = false;
   private final Path mPath = new Path();
   private final Path mBorderPath = new Path();
   private final RectF mTempRectangle = new RectF();
@@ -73,6 +69,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
    */
   public void setType(Type type) {
     mType = type;
+    updatePath();
     invalidateSelf();
   }
 
@@ -107,9 +104,8 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
   }
 
   /**
-   * Sets radii values to be used for rounding.
-   * Each corner receive two radius values [X, Y]. The corners are ordered
-   * top-left, top-right, bottom-right, bottom-left
+   * Sets radii values to be used for rounding. Each corner receive two radius values [X, Y]. The
+   * corners are ordered top-left, top-right, bottom-right, bottom-left
    *
    * @param radii Array of 8 values, 4 pairs of [X,Y] radii
    */
@@ -132,7 +128,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
   }
 
   /**
-   * Sets the overlay color.
+   * Sets the overlay color for corner type {@link Type#OVERLAY_COLOR}
    *
    * @param overlayColor the color to filled outside the rounded corners
    */
@@ -148,6 +144,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
 
   /**
    * Sets the border
+   *
    * @param color of the border
    * @param width of the border
    */
@@ -202,6 +199,28 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
     return mScaleDownInsideBorders;
   }
 
+  /**
+   * Sets FILTER_BITMAP_FLAG flag to Paint. {@link android.graphics.Paint#FILTER_BITMAP_FLAG}
+   *
+   * <p>This should generally be on when drawing bitmaps, unless performance-bound (rendering to
+   * software canvas) or preferring pixelation artifacts to blurriness when scaling significantly.
+   *
+   * @param paintFilterBitmap whether to set FILTER_BITMAP_FLAG flag to Paint.
+   */
+  @Override
+  public void setPaintFilterBitmap(boolean paintFilterBitmap) {
+    if (mPaintFilterBitmap != paintFilterBitmap) {
+      mPaintFilterBitmap = paintFilterBitmap;
+      invalidateSelf();
+    }
+  }
+
+  /** Gets whether to set FILTER_BITMAP_FLAG flag to Paint. */
+  @Override
+  public boolean getPaintFilterBitmap() {
+    return mPaintFilterBitmap;
+  }
+
   @Override
   protected void onBoundsChange(Rect bounds) {
     super.onBoundsChange(bounds);
@@ -214,29 +233,32 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
     mTempRectangle.set(getBounds());
 
     mTempRectangle.inset(mPadding, mPadding);
+    if (mType == Type.OVERLAY_COLOR) {
+      mPath.addRect(mTempRectangle, Path.Direction.CW);
+    }
     if (mIsCircle) {
       mPath.addCircle(
-              mTempRectangle.centerX(),
-              mTempRectangle.centerY(),
-              Math.min(mTempRectangle.width(), mTempRectangle.height())/2,
-              Path.Direction.CW);
+          mTempRectangle.centerX(),
+          mTempRectangle.centerY(),
+          Math.min(mTempRectangle.width(), mTempRectangle.height()) / 2,
+          Path.Direction.CW);
     } else {
       mPath.addRoundRect(mTempRectangle, mRadii, Path.Direction.CW);
     }
     mTempRectangle.inset(-mPadding, -mPadding);
 
-    mTempRectangle.inset(mBorderWidth/2, mBorderWidth/2);
+    mTempRectangle.inset(mBorderWidth / 2, mBorderWidth / 2);
     if (mIsCircle) {
-      float radius = Math.min(mTempRectangle.width(), mTempRectangle.height())/2;
+      float radius = Math.min(mTempRectangle.width(), mTempRectangle.height()) / 2;
       mBorderPath.addCircle(
           mTempRectangle.centerX(), mTempRectangle.centerY(), radius, Path.Direction.CW);
     } else {
       for (int i = 0; i < mBorderRadii.length; i++) {
-        mBorderRadii[i] = mRadii[i] + mPadding - mBorderWidth/2;
+        mBorderRadii[i] = mRadii[i] + mPadding - mBorderWidth / 2;
       }
       mBorderPath.addRoundRect(mTempRectangle, mBorderRadii, Path.Direction.CW);
     }
-    mTempRectangle.inset(-mBorderWidth/2, -mBorderWidth/2);
+    mTempRectangle.inset(-mBorderWidth / 2, -mBorderWidth / 2);
   }
 
   @Override
@@ -245,8 +267,6 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
     switch (mType) {
       case CLIPPING:
         int saveCount = canvas.save();
-        // clip, note: doesn't support anti-aliasing
-        mPath.setFillType(Path.FillType.EVEN_ODD);
         canvas.clipPath(mPath);
         super.draw(canvas);
         canvas.restoreToCount(saveCount);
@@ -275,7 +295,8 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(mOverlayColor);
         mPaint.setStrokeWidth(0f);
-        mPath.setFillType(Path.FillType.INVERSE_EVEN_ODD);
+        mPaint.setFilterBitmap(getPaintFilterBitmap());
+        mPath.setFillType(Path.FillType.EVEN_ODD);
         canvas.drawPath(mPath, mPaint);
 
         if (mIsCircle) {
@@ -284,22 +305,16 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
           float paddingH = (mBounds.width() - mBounds.height() + mBorderWidth) / 2f;
           float paddingV = (mBounds.height() - mBounds.width() + mBorderWidth) / 2f;
           if (paddingH > 0) {
-            canvas.drawRect(mBounds.left, mBounds.top, mBounds.left + paddingH, mBounds.bottom, mPaint);
             canvas.drawRect(
-                mBounds.right - paddingH,
-                mBounds.top,
-                mBounds.right,
-                mBounds.bottom,
-                mPaint);
+                mBounds.left, mBounds.top, mBounds.left + paddingH, mBounds.bottom, mPaint);
+            canvas.drawRect(
+                mBounds.right - paddingH, mBounds.top, mBounds.right, mBounds.bottom, mPaint);
           }
           if (paddingV > 0) {
-            canvas.drawRect(mBounds.left, mBounds.top, mBounds.right, mBounds.top + paddingV, mPaint);
             canvas.drawRect(
-                mBounds.left,
-                mBounds.bottom - paddingV,
-                mBounds.right,
-                mBounds.bottom,
-                mPaint);
+                mBounds.left, mBounds.top, mBounds.right, mBounds.top + paddingV, mPaint);
+            canvas.drawRect(
+                mBounds.left, mBounds.bottom - paddingV, mBounds.right, mBounds.bottom, mPaint);
           }
         }
         break;

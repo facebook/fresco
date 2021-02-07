@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -19,12 +19,12 @@ import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.base.AnimatedImageFrame;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
-/**
- * An {@link AnimatedDrawableBackend} that renders {@link AnimatedImage}.
- */
+/** An {@link AnimatedDrawableBackend} that renders {@link AnimatedImage}. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
 
   private final AnimatedDrawableUtil mAnimatedDrawableUtil;
@@ -38,6 +38,7 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
   private final AnimatedDrawableFrameInfo[] mFrameInfos;
   private final Rect mRenderSrcRect = new Rect();
   private final Rect mRenderDstRect = new Rect();
+  private final boolean mDownscaleFrameToDrawableDimensions;
 
   @GuardedBy("this")
   private @Nullable Bitmap mTempBitmap;
@@ -45,7 +46,8 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
   public AnimatedDrawableBackendImpl(
       AnimatedDrawableUtil animatedDrawableUtil,
       AnimatedImageResult animatedImageResult,
-      Rect bounds) {
+      @Nullable Rect bounds,
+      boolean downscaleFrameToDrawableDimensions) {
     mAnimatedDrawableUtil = animatedDrawableUtil;
     mAnimatedImageResult = animatedImageResult;
     mAnimatedImage = animatedImageResult.getImage();
@@ -54,13 +56,14 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     mDurationMs = mAnimatedDrawableUtil.getTotalDurationFromFrameDurations(mFrameDurationsMs);
     mFrameTimestampsMs = mAnimatedDrawableUtil.getFrameTimeStampsFromDurations(mFrameDurationsMs);
     mRenderedBounds = getBoundsToUse(mAnimatedImage, bounds);
+    mDownscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions;
     mFrameInfos = new AnimatedDrawableFrameInfo[mAnimatedImage.getFrameCount()];
     for (int i = 0; i < mAnimatedImage.getFrameCount(); i++) {
       mFrameInfos[i] = mAnimatedImage.getFrameInfo(i);
     }
   }
 
-  private static Rect getBoundsToUse(AnimatedImage image, Rect targetBounds) {
+  private static Rect getBoundsToUse(AnimatedImage image, @Nullable Rect targetBounds) {
     if (targetBounds == null) {
       return new Rect(0, 0, image.getWidth(), image.getHeight());
     }
@@ -138,16 +141,14 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
   }
 
   @Override
-  public AnimatedDrawableBackend forNewBounds(Rect bounds) {
+  public AnimatedDrawableBackend forNewBounds(@Nullable Rect bounds) {
     Rect boundsToUse = getBoundsToUse(mAnimatedImage, bounds);
     if (boundsToUse.equals(mRenderedBounds)) {
       // Actual bounds aren't changed.
       return this;
     }
     return new AnimatedDrawableBackendImpl(
-        mAnimatedDrawableUtil,
-        mAnimatedImageResult,
-        bounds);
+        mAnimatedDrawableUtil, mAnimatedImageResult, bounds, mDownscaleFrameToDrawableDimensions);
   }
 
   @Override
@@ -161,7 +162,7 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
   }
 
   @Override
-  public CloseableReference<Bitmap> getPreDecodedFrame(int frameNumber) {
+  public @Nullable CloseableReference<Bitmap> getPreDecodedFrame(int frameNumber) {
     return mAnimatedImageResult.getDecodedFrame(frameNumber);
   }
 
@@ -172,7 +173,7 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
 
   @Override
   public void renderFrame(int frameNumber, Canvas canvas) {
-    AnimatedImageFrame frame  = mAnimatedImage.getFrame(frameNumber);
+    AnimatedImageFrame frame = mAnimatedImage.getFrame(frameNumber);
     try {
       if (mAnimatedImage.doesRenderSupportScaling()) {
         renderImageSupportsScaling(canvas, frame);
@@ -184,7 +185,7 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     }
   }
 
-  private synchronized void prepareTempBitmapForThisSize(int width, int height) {
+  private synchronized Bitmap prepareTempBitmapForThisSize(int width, int height) {
     // Different gif frames can be different size,
     // So we need to ensure we can fit next frame to temporary bitmap
     if (mTempBitmap != null
@@ -195,6 +196,7 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
       mTempBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
     }
     mTempBitmap.eraseColor(Color.TRANSPARENT);
+    return mTempBitmap;
   }
 
   private void renderImageSupportsScaling(Canvas canvas, AnimatedImageFrame frame) {
@@ -211,34 +213,47 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
       int renderedHeight = mRenderedBounds.height();
       // Update the temp bitmap to be >= rendered dimensions
       prepareTempBitmapForThisSize(renderedWidth, renderedHeight);
-      frame.renderFrame(frameWidth, frameHeight, mTempBitmap);
+      if (mTempBitmap != null) {
+        frame.renderFrame(frameWidth, frameHeight, mTempBitmap);
+      }
       // Temporary bitmap can be bigger than frame, so we should draw only rendered area of bitmap
       mRenderSrcRect.set(0, 0, renderedWidth, renderedHeight);
       mRenderDstRect.set(xOffset, yOffset, xOffset + renderedWidth, yOffset + renderedHeight);
 
-      canvas.drawBitmap(mTempBitmap, mRenderSrcRect, mRenderDstRect, null);
+      if (mTempBitmap != null) {
+        canvas.drawBitmap(mTempBitmap, mRenderSrcRect, mRenderDstRect, null);
+      }
     }
   }
 
   private void renderImageDoesNotSupportScaling(Canvas canvas, AnimatedImageFrame frame) {
-    int frameWidth = frame.getWidth();
-    int frameHeight = frame.getHeight();
-    int xOffset = frame.getXOffset();
-    int yOffset = frame.getYOffset();
+    int frameWidth, frameHeight, xOffset, yOffset;
+    if (mDownscaleFrameToDrawableDimensions) {
+      final int fittedWidth = Math.min(frame.getWidth(), canvas.getWidth());
+      final int fittedHeight = Math.min(frame.getHeight(), canvas.getHeight());
+
+      final float scaleX = (float) frame.getWidth() / (float) fittedWidth;
+      final float scaleY = (float) frame.getHeight() / (float) fittedHeight;
+      final float scale = Math.max(scaleX, scaleY);
+
+      frameWidth = (int) (frame.getWidth() / scale);
+      frameHeight = (int) (frame.getHeight() / scale);
+      xOffset = (int) (frame.getXOffset() / scale);
+      yOffset = (int) (frame.getYOffset() / scale);
+    } else {
+      frameWidth = frame.getWidth();
+      frameHeight = frame.getHeight();
+      xOffset = frame.getXOffset();
+      yOffset = frame.getYOffset();
+    }
+
     synchronized (this) {
-      prepareTempBitmapForThisSize(frameWidth, frameHeight);
+      mTempBitmap = prepareTempBitmapForThisSize(frameWidth, frameHeight);
       frame.renderFrame(frameWidth, frameHeight, mTempBitmap);
 
-      // Temporary bitmap can be bigger than frame, so we should draw only rendered area of bitmap
-      mRenderSrcRect.set(0, 0, frameWidth, frameHeight);
-      mRenderDstRect.set(0, 0, frameWidth, frameHeight);
-
-      float xScale = (float) mRenderedBounds.width() / (float) mAnimatedImage.getWidth();
-      float yScale = (float) mRenderedBounds.height() / (float) mAnimatedImage.getHeight();
       canvas.save();
-      canvas.scale(xScale, yScale);
       canvas.translate(xOffset, yOffset);
-      canvas.drawBitmap(mTempBitmap, mRenderSrcRect, mRenderDstRect, null);
+      canvas.drawBitmap(mTempBitmap, 0, 0, null);
       canvas.restore();
     }
   }

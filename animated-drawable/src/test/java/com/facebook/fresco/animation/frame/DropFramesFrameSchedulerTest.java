@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.animation.frame;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -12,15 +13,13 @@ import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.IntRange;
+import androidx.annotation.IntRange;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import javax.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * Tests {@link DropFramesFrameScheduler}.
- */
+/** Tests {@link DropFramesFrameScheduler}. */
 public class DropFramesFrameSchedulerTest {
 
   private DummyAnimationBackend mDummyAnimationBackend;
@@ -29,7 +28,7 @@ public class DropFramesFrameSchedulerTest {
 
   @Before
   public void setUp() throws Exception {
-    mDummyAnimationBackend = new DummyAnimationBackend();
+    mDummyAnimationBackend = new DummyAnimationBackend(5);
     mFrameScheduler = new DropFramesFrameScheduler(mDummyAnimationBackend);
   }
 
@@ -104,12 +103,18 @@ public class DropFramesFrameSchedulerTest {
     assertThat(mFrameScheduler.getFrameNumberToRender(animationDurationMs + 1, -1))
         .isEqualTo(FrameScheduler.FRAME_NUMBER_DONE);
 
-    assertThat(mFrameScheduler.getFrameNumberToRender(
-        animationDurationMs + mDummyAnimationBackend.getFrameDurationMs(lastFrameNumber), -1))
+    assertThat(
+            mFrameScheduler.getFrameNumberToRender(
+                animationDurationMs + mDummyAnimationBackend.getFrameDurationMs(lastFrameNumber),
+                -1))
         .isEqualTo(FrameScheduler.FRAME_NUMBER_DONE);
 
-    assertThat(mFrameScheduler.getFrameNumberToRender(
-        animationDurationMs + mDummyAnimationBackend.getFrameDurationMs(lastFrameNumber) + 100, -1))
+    assertThat(
+            mFrameScheduler.getFrameNumberToRender(
+                animationDurationMs
+                    + mDummyAnimationBackend.getFrameDurationMs(lastFrameNumber)
+                    + 100,
+                -1))
         .isEqualTo(FrameScheduler.FRAME_NUMBER_DONE);
   }
 
@@ -124,7 +129,23 @@ public class DropFramesFrameSchedulerTest {
     assertThat(mFrameScheduler.getFrameNumberWithinLoop(499)).isEqualTo(4);
   }
 
+  @Test
+  public void testGetFrameNumberToRender_whenNoFrames_thenReturnFirstFrame() {
+
+    AnimationBackend backend = new DummyAnimationBackend(0);
+    DropFramesFrameScheduler frameScheduler = new DropFramesFrameScheduler(backend);
+
+    assertThat(frameScheduler.getLoopDurationMs()).isEqualTo(0);
+    assertThat(frameScheduler.getFrameNumberToRender(0, 0)).isEqualTo(0);
+  }
+
   private static class DummyAnimationBackend implements AnimationBackend {
+
+    private final int mFrameCount;
+
+    private DummyAnimationBackend(int frameCount) {
+      mFrameCount = frameCount;
+    }
 
     public long getLoopDurationMs() {
       long loopDuration = 0;
@@ -140,7 +161,7 @@ public class DropFramesFrameSchedulerTest {
 
     @Override
     public int getFrameCount() {
-      return 5;
+      return mFrameCount;
     }
 
     @Override
@@ -154,25 +175,18 @@ public class DropFramesFrameSchedulerTest {
     }
 
     @Override
-    public boolean drawFrame(
-        Drawable parent, Canvas canvas, int frameNumber) {
+    public boolean drawFrame(Drawable parent, Canvas canvas, int frameNumber) {
       return false;
     }
 
     @Override
-    public void setAlpha(@IntRange(from = 0, to = 255) int alpha) {
-
-    }
+    public void setAlpha(@IntRange(from = 0, to = 255) int alpha) {}
 
     @Override
-    public void setColorFilter(@Nullable ColorFilter colorFilter) {
-
-    }
+    public void setColorFilter(@Nullable ColorFilter colorFilter) {}
 
     @Override
-    public void setBounds(Rect bounds) {
-
-    }
+    public void setBounds(Rect bounds) {}
 
     @Override
     public int getIntrinsicWidth() {
@@ -190,7 +204,6 @@ public class DropFramesFrameSchedulerTest {
     }
 
     @Override
-    public void clear() {
-    }
+    public void clear() {}
   }
 }

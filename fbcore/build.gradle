@@ -1,23 +1,32 @@
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.TestDeps
+
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
-project.group = GROUP
-version = VERSION_NAME
-
 dependencies {
-    compileOnly "com.facebook.infer.annotation:infer-annotation:${INFER_ANNOTATION_VERSION}"
-    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
-    compileOnly "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+    compileOnly Deps.inferAnnotation
+    compileOnly Deps.jsr305
+    compileOnly Deps.javaxAnnotation
+    compileOnly Deps.AndroidX.androidxAnnotation
 
-    testImplementation "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    testImplementation "junit:junit:${JUNIT_VERSION}"
-    testImplementation "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
-    testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    testImplementation "org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}"
-    testImplementation "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
-    testImplementation "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
-    testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+    testImplementation Deps.inferAnnotation
+    testImplementation project(':mockito-config')
+    testImplementation Deps.jsr305
+    testImplementation TestDeps.junit
+    testImplementation TestDeps.festAssertCore
+    testImplementation TestDeps.mockitoCore
+    testImplementation TestDeps.Powermock.apiMockito
+    testImplementation TestDeps.Powermock.moduleJunit4Rule
+    testImplementation TestDeps.Powermock.classloadingXstream
+    testImplementation(TestDeps.robolectric) {
         exclude group: 'com.android.support', module: 'support-v4'
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
@@ -28,13 +37,15 @@ apply from: rootProject.file('release.gradle')
 
 
 android {
-    buildToolsVersion rootProject.ext.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion FrescoConfig.buildToolsVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
 
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         consumerProguardFiles 'proguard-fresco.pro'
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
     }
 
     packagingOptions {

@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2017-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.animation.bitmap.preparation;
 
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
@@ -21,9 +22,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests {@link FixedNumberBitmapFramePreparationStrategy}.
- */
+/** Tests {@link FixedNumberBitmapFramePreparationStrategy}. */
 @RunWith(RobolectricTestRunner.class)
 public class FixedNumberBitmapFramePreparationStrategyTest {
 
@@ -39,8 +38,8 @@ public class FixedNumberBitmapFramePreparationStrategyTest {
   @Before
   public void setup() {
     MockitoAnnotations.initMocks(this);
-    mBitmapFramePreparationStrategy = new FixedNumberBitmapFramePreparationStrategy(
-        NUMBER_OF_FRAMES_TO_PREPARE);
+    mBitmapFramePreparationStrategy =
+        new FixedNumberBitmapFramePreparationStrategy(NUMBER_OF_FRAMES_TO_PREPARE);
     when(mAnimationBackend.getFrameCount()).thenReturn(FRAME_COUNT);
     when(mBitmapFramePreparer.prepareFrame(eq(mBitmapFrameCache), eq(mAnimationBackend), anyInt()))
         .thenReturn(true);
@@ -49,40 +48,28 @@ public class FixedNumberBitmapFramePreparationStrategyTest {
   @Test
   public void testPrepareFrames_FromFirstFrame() throws Exception {
     mBitmapFramePreparationStrategy.prepareFrames(
-        mBitmapFramePreparer,
-        mBitmapFrameCache,
-        mAnimationBackend,
-        0);
+        mBitmapFramePreparer, mBitmapFrameCache, mAnimationBackend, 0);
     verifyPrepareCalledForFramesInOrder(1, 2, 3);
   }
 
   @Test
   public void testPrepareFrames_FromLastFrame() throws Exception {
     mBitmapFramePreparationStrategy.prepareFrames(
-        mBitmapFramePreparer,
-        mBitmapFrameCache,
-        mAnimationBackend,
-        9);
+        mBitmapFramePreparer, mBitmapFrameCache, mAnimationBackend, 9);
     verifyPrepareCalledForFramesInOrder(0, 1, 2);
   }
 
   @Test
   public void testPrepareFrames_ExactlyLastFrames() throws Exception {
     mBitmapFramePreparationStrategy.prepareFrames(
-        mBitmapFramePreparer,
-        mBitmapFrameCache,
-        mAnimationBackend,
-        6);
+        mBitmapFramePreparer, mBitmapFrameCache, mAnimationBackend, 6);
     verifyPrepareCalledForFramesInOrder(7, 8, 9);
   }
 
   @Test
   public void testPrepareFrames_FrameOverflow() throws Exception {
     mBitmapFramePreparationStrategy.prepareFrames(
-        mBitmapFramePreparer,
-        mBitmapFrameCache,
-        mAnimationBackend,
-        8);
+        mBitmapFramePreparer, mBitmapFrameCache, mAnimationBackend, 8);
     verifyPrepareCalledForFramesInOrder(9, 0, 1);
   }
 
@@ -92,10 +79,7 @@ public class FixedNumberBitmapFramePreparationStrategyTest {
     when(mBitmapFramePreparer.prepareFrame(eq(mBitmapFrameCache), eq(mAnimationBackend), anyInt()))
         .thenReturn(false);
     mBitmapFramePreparationStrategy.prepareFrames(
-        mBitmapFramePreparer,
-        mBitmapFrameCache,
-        mAnimationBackend,
-        0);
+        mBitmapFramePreparer, mBitmapFrameCache, mAnimationBackend, 0);
     verifyPrepareCalledForFramesInOrder(1);
   }
 
@@ -107,17 +91,15 @@ public class FixedNumberBitmapFramePreparationStrategyTest {
     when(mBitmapFramePreparer.prepareFrame(eq(mBitmapFrameCache), eq(mAnimationBackend), eq(3)))
         .thenReturn(false);
     mBitmapFramePreparationStrategy.prepareFrames(
-        mBitmapFramePreparer,
-        mBitmapFrameCache,
-        mAnimationBackend,
-        0);
+        mBitmapFramePreparer, mBitmapFrameCache, mAnimationBackend, 0);
     verifyPrepareCalledForFramesInOrder(1, 2);
   }
 
   private void verifyPrepareCalledForFramesInOrder(int... frameNumbers) {
     InOrder inOrderBitmapFramePreparer = inOrder(mBitmapFramePreparer);
     for (int frameNumber : frameNumbers) {
-      inOrderBitmapFramePreparer.verify(mBitmapFramePreparer)
+      inOrderBitmapFramePreparer
+          .verify(mBitmapFramePreparer)
           .prepareFrame(mBitmapFrameCache, mAnimationBackend, frameNumber);
     }
     inOrderBitmapFramePreparer.verifyNoMoreInteractions();

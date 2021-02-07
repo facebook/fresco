@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,13 +9,13 @@ package com.facebook.imageutils;
 
 import android.media.ExifInterface;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Util for obtaining information from JPEG file.
- */
+/** Util for obtaining information from JPEG file. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class JfifUtil {
 
   /**
@@ -23,6 +23,7 @@ public class JfifUtil {
    * here: <a href="http://www.w3.org/Graphics/JPEG/itu-t81.pdf">Recommendation T.81</a>
    */
   public static final int MARKER_FIRST_BYTE = 0xFF;
+
   public static final int MARKER_ESCAPE_BYTE = 0x00;
   public static final int MARKER_SOI = 0xD8;
   public static final int MARKER_TEM = 0x01;
@@ -34,11 +35,11 @@ public class JfifUtil {
   public static final int MARKER_RST7 = 0xD7;
   public static final int APP1_EXIF_MAGIC = 0x45786966;
 
-  private JfifUtil() {
-  }
+  private JfifUtil() {}
 
   /**
    * Determines auto-rotate angle based on orientation information.
+   *
    * @param orientation orientation information, one of {1, 3, 6, 8}.
    * @return orientation: 1/3/6/8 -> 0/180/90/270.
    */
@@ -48,6 +49,7 @@ public class JfifUtil {
 
   /**
    * Gets orientation information from jpeg byte array.
+   *
    * @param jpeg the input byte array of jpeg image
    * @return orientation: 1/8/3/6. Returns 0 if there is no valid orientation information.
    */
@@ -77,11 +79,12 @@ public class JfifUtil {
   }
 
   /**
-   *  Reads the content of the input stream until specified marker is found. Marker will be
-   *  consumed and the input stream will be positioned after the specified marker.
-   *  @param is the input stream to read bytes from
-   *  @param markerToFind the marker we are looking for
-   *  @return boolean: whether or not we found the expected marker from input stream.
+   * Reads the content of the input stream until specified marker is found. Marker will be consumed
+   * and the input stream will be positioned after the specified marker.
+   *
+   * @param is the input stream to read bytes from
+   * @param markerToFind the marker we are looking for
+   * @return boolean: whether or not we found the expected marker from input stream.
    */
   public static boolean moveToMarker(InputStream is, int markerToFind) throws IOException {
     Preconditions.checkNotNull(is);
@@ -143,6 +146,7 @@ public class JfifUtil {
 
   /**
    * Positions the given input stream to the beginning of the EXIF data in the JPEG APP1 block.
+   *
    * @param is the input stream of jpeg image
    * @return length of EXIF data
    */

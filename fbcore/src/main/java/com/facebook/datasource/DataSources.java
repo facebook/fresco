@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,17 +8,16 @@
 package com.facebook.datasource;
 
 import com.facebook.common.internal.Supplier;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 
-/**
- * Static utility methods pertaining to the {@link DataSource} interface.
- */
+/** Static utility methods pertaining to the {@link DataSource} interface. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DataSources {
 
-  private DataSources() {
-  }
+  private DataSources() {}
 
   public static <T> DataSource<T> immediateFailedDataSource(Throwable failure) {
     SimpleDataSource<T> simpleDataSource = SimpleDataSource.create();
@@ -46,12 +45,10 @@ public class DataSources {
    * been cancelled or has failed.
    *
    * @param dataSource The {@link DataSource} to wait for. The caller MUST close the data source
-   * after this method returned!
+   *     after this method returned!
    * @param <T> The type parameter for the {@link DataSource}
-   *
    * @return The final result of the {@link DataSource}. Intermediate results are ignored. Might be
-   * <code>null</code> if the data source has been cancelled.
-   *
+   *     <code>null</code> if the data source has been cancelled.
    * @throws Throwable if the {@link DataSource} has failed
    */
   @Nullable
@@ -118,7 +115,6 @@ public class DataSources {
 
   private static class ValueHolder<T> {
 
-    @Nullable
-    public T value = null;
+    @Nullable public T value = null;
   }
 }

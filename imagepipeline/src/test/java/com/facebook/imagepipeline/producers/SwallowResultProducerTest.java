@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,7 +7,7 @@
 
 package com.facebook.imagepipeline.producers;
 
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import com.facebook.common.references.CloseableReference;
@@ -25,13 +25,11 @@ import org.robolectric.*;
 import org.robolectric.annotation.*;
 
 /**
- * Checks basic properties of swallow result producer, that is:
- *   - it swallows all results.
- *   - it notifies previous consumer of last result.
- *   - it notifies previous consumer of a failure.
+ * Checks basic properties of swallow result producer, that is: - it swallows all results. - it
+ * notifies previous consumer of last result. - it notifies previous consumer of a failure.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class SwallowResultProducerTest {
   @Mock public Producer<CloseableReference<CloseableImage>> mInputProducer;
   @Mock public Consumer<Void> mConsumer;
@@ -39,8 +37,7 @@ public class SwallowResultProducerTest {
   @Mock public Exception mException;
   private CloseableReference<CloseableImage> mFinalImageReference;
   private CloseableReference<CloseableImage> mIntermediateImageReference;
-  private SwallowResultProducer<CloseableReference<CloseableImage>>
-      mSwallowResultProducer;
+  private SwallowResultProducer<CloseableReference<CloseableImage>> mSwallowResultProducer;
 
   @Before
   public void setUp() {
@@ -84,28 +81,32 @@ public class SwallowResultProducerTest {
   }
 
   private void setupInputProducerStreamingSuccess() {
-    doAnswer(new ProduceResultsNewResultAnswer(
-            Arrays.asList(mIntermediateImageReference, mFinalImageReference)))
-        .when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+    doAnswer(
+            new ProduceResultsNewResultAnswer(
+                Arrays.asList(mIntermediateImageReference, mFinalImageReference)))
+        .when(mInputProducer)
+        .produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   private void setupInputProducerNotFound() {
     final List<CloseableReference<CloseableImage>> empty =
         new ArrayList<CloseableReference<CloseableImage>>(1);
     empty.add(null);
-    doAnswer(
-        new ProduceResultsNewResultAnswer(empty))
-                .when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+    doAnswer(new ProduceResultsNewResultAnswer(empty))
+        .when(mInputProducer)
+        .produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   private void setupInputProducerFailure() {
-    doAnswer(new ProduceResultsFailureAnswer()).
-        when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+    doAnswer(new ProduceResultsFailureAnswer())
+        .when(mInputProducer)
+        .produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   private void setupInputProducerCancellation() {
-    doAnswer(new ProduceResultsCancellationAnswer()).
-        when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+    doAnswer(new ProduceResultsCancellationAnswer())
+        .when(mInputProducer)
+        .produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   private static class ProduceResultsNewResultAnswer implements Answer<Void> {

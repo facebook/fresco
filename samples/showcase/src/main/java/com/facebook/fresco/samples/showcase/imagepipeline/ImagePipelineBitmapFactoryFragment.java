@@ -1,21 +1,16 @@
 /*
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only.  Facebook reserves all rights not expressly granted.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.samples.showcase.imagepipeline;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +19,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import androidx.annotation.Nullable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
@@ -31,10 +27,10 @@ import com.facebook.fresco.samples.showcase.R;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 
 /**
- * Fragment demonstrating how to use the PlatformBitmapFactory. It also demonstrates how to manage
- * a {@link CloseableReference} in another component.
+ * Fragment demonstrating how to use the PlatformBitmapFactory. It also demonstrates how to manage a
+ * {@link CloseableReference} in another component.
  *
- * Most notably, one MUST close it when the outer component is being destroyed.
+ * <p>Most notably, one MUST close it when the outer component is being destroyed.
  */
 public class ImagePipelineBitmapFactoryFragment extends BaseShowcaseFragment {
 
@@ -62,9 +58,7 @@ public class ImagePipelineBitmapFactoryFragment extends BaseShowcaseFragment {
    */
   private CloseableReference<Bitmap> mOriginalBitmap;
 
-  /**
-   * Reference to the currently displayed bitmap
-   */
+  /** Reference to the currently displayed bitmap */
   private CloseableReference<Bitmap> mDisplayedBitmap;
 
   @Override
@@ -87,17 +81,17 @@ public class ImagePipelineBitmapFactoryFragment extends BaseShowcaseFragment {
 
     final CreateOptionsAdapter adapter = new CreateOptionsAdapter();
     mSpinner.setAdapter(adapter);
-    mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-      @Override
-      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        final CreateOptions spinnerEntry = (CreateOptions) adapter.getItem(position);
-        initDisplayedBitmap(spinnerEntry);
-      }
+    mSpinner.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            final CreateOptions spinnerEntry = (CreateOptions) adapter.getItem(position);
+            initDisplayedBitmap(spinnerEntry);
+          }
 
-      @Override
-      public void onNothingSelected(AdapterView<?> parent) {
-      }
-    });
+          @Override
+          public void onNothingSelected(AdapterView<?> parent) {}
+        });
   }
 
   @Override
@@ -121,14 +115,7 @@ public class ImagePipelineBitmapFactoryFragment extends BaseShowcaseFragment {
     CloseableReference.closeSafely(mDisplayedBitmap);
   }
 
-  @Override
-  public int getTitleId() {
-    return R.string.drawee_rotation_title;
-  }
-
-  /**
-   * Creates a new bitmap with a HSV map at value=1
-   */
+  /** Creates a new bitmap with a HSV map at value=1 */
   private CloseableReference<Bitmap> createRainbowBitmap() {
     final int w = 256;
     final int h = 256;
@@ -140,7 +127,7 @@ public class ImagePipelineBitmapFactoryFragment extends BaseShowcaseFragment {
         final float hue = 360f * j / (float) w;
         final float saturation = 2f * (h - i) / (float) h;
         final float value = 1;
-        colors[i * h + j] = Color.HSVToColor(255, new float[]{hue, saturation, value});
+        colors[i * h + j] = Color.HSVToColor(255, new float[] {hue, saturation, value});
       }
     }
     mOriginalBitmap.get().setPixels(colors, 0, w, 0, 0, w, h);
@@ -159,29 +146,18 @@ public class ImagePipelineBitmapFactoryFragment extends BaseShowcaseFragment {
         mDisplayedBitmap = mPlatformBitmapFactory.createBitmap(mOriginalBitmap.get());
         break;
       case CROPPED:
-        mDisplayedBitmap = mPlatformBitmapFactory.createBitmap(
-            mOriginalBitmap.get(),
-            0,
-            0,
-            originalW / 2,
-            originalH / 2);
+        mDisplayedBitmap =
+            mPlatformBitmapFactory.createBitmap(
+                mOriginalBitmap.get(), 0, 0, originalW / 2, originalH / 2);
         break;
       case SCALED:
-        mDisplayedBitmap = mPlatformBitmapFactory.createScaledBitmap(
-            mOriginalBitmap.get(),
-            4,
-            4,
-            true);
+        mDisplayedBitmap =
+            mPlatformBitmapFactory.createScaledBitmap(mOriginalBitmap.get(), 4, 4, true);
         break;
       case TRANSFORMED:
-        mDisplayedBitmap = mPlatformBitmapFactory.createBitmap(
-            mOriginalBitmap.get(),
-            0,
-            0,
-            originalW,
-            originalH,
-            getMatrix(2f, 3f, 60.0f),
-            true);
+        mDisplayedBitmap =
+            mPlatformBitmapFactory.createBitmap(
+                mOriginalBitmap.get(), 0, 0, originalW, originalH, getMatrix(2f, 3f, 60.0f), true);
         break;
     }
 
@@ -198,11 +174,13 @@ public class ImagePipelineBitmapFactoryFragment extends BaseShowcaseFragment {
 
   private static class CreateOptionsAdapter extends BaseAdapter {
 
-    CreateOptions[] SPINNER_ENTRIES = new CreateOptions[]{
-        CreateOptions.BASIC,
-        CreateOptions.CROPPED,
-        CreateOptions.SCALED,
-        CreateOptions.TRANSFORMED};
+    CreateOptions[] SPINNER_ENTRIES =
+        new CreateOptions[] {
+          CreateOptions.BASIC,
+          CreateOptions.CROPPED,
+          CreateOptions.SCALED,
+          CreateOptions.TRANSFORMED
+        };
 
     @Override
     public int getCount() {
@@ -223,9 +201,11 @@ public class ImagePipelineBitmapFactoryFragment extends BaseShowcaseFragment {
     public View getView(int position, View convertView, ViewGroup parent) {
       final LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 
-      final View view = convertView != null
-          ? convertView
-          : layoutInflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
+      final View view =
+          convertView != null
+              ? convertView
+              : layoutInflater.inflate(
+                  android.R.layout.simple_spinner_dropdown_item, parent, false);
 
       final TextView textView = view.findViewById(android.R.id.text1);
       textView.setText(SPINNER_ENTRIES[position].descriptionResId);

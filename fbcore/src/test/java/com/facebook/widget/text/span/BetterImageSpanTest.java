@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -23,8 +23,8 @@ import org.robolectric.ParameterizedRobolectricTestRunner;
 
 /**
  * Tests the dimensions assigned by {@link BetterImageSpan} ensuring the width/height of is
- * calculated correctly for different combinations of image and text height,
- * as well as span alignment.
+ * calculated correctly for different combinations of image and text height, as well as span
+ * alignment.
  */
 @RunWith(ParameterizedRobolectricTestRunner.class)
 public class BetterImageSpanTest {

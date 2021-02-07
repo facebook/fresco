@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,58 +7,52 @@
 
 package com.facebook.imagepipeline.memory;
 
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.memory.MemoryTrimmable;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.OOMSoftReference;
 import com.facebook.common.references.ResourceReleaser;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.Semaphore;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Maintains a shareable reference to a byte array.
  *
- * <p> When accessing the shared array proper synchronization is guaranteed.
- * Under hood the get method acquires an exclusive lock, which is released
- * whenever the returned CloseableReference is closed.
+ * <p>When accessing the shared array proper synchronization is guaranteed. Under hood the get
+ * method acquires an exclusive lock, which is released whenever the returned CloseableReference is
+ * closed.
  *
- * <p> If the currently available byte array is too small for a request
- * it is replaced with a bigger one.
+ * <p>If the currently available byte array is too small for a request it is replaced with a bigger
+ * one.
  *
- * <p> This class will also release the byte array if it is unused and
- * collecting it can prevent an OOM.
+ * <p>This class will also release the byte array if it is unused and collecting it can prevent an
+ * OOM.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 @ThreadSafe
 public class SharedByteArray implements MemoryTrimmable {
-  @VisibleForTesting
-  final int mMinByteArraySize;
-  @VisibleForTesting
-  final int mMaxByteArraySize;
+  @VisibleForTesting final int mMinByteArraySize;
+  @VisibleForTesting final int mMaxByteArraySize;
 
   /**
    * The underlying byte array.
    *
-   * <p> If we receive a memory trim notification, or the runtime runs pre-OOM gc
-   * it will be cleared to reduce memory pressure.
+   * <p>If we receive a memory trim notification, or the runtime runs pre-OOM gc it will be cleared
+   * to reduce memory pressure.
    */
-  @VisibleForTesting
-  final OOMSoftReference<byte[]> mByteArraySoftRef;
+  @VisibleForTesting final OOMSoftReference<byte[]> mByteArraySoftRef;
 
-  /**
-   * Synchronization primitive used by this implementation
-   */
-  @VisibleForTesting
-  final Semaphore mSemaphore;
+  /** Synchronization primitive used by this implementation */
+  @VisibleForTesting final Semaphore mSemaphore;
 
   private final ResourceReleaser<byte[]> mResourceReleaser;
 
-  public SharedByteArray(
-      MemoryTrimmableRegistry memoryTrimmableRegistry,
-      PoolParams params) {
+  public SharedByteArray(MemoryTrimmableRegistry memoryTrimmableRegistry, PoolParams params) {
     Preconditions.checkNotNull(memoryTrimmableRegistry);
     Preconditions.checkArgument(params.minBucketSize > 0);
     Preconditions.checkArgument(params.maxBucketSize >= params.minBucketSize);
@@ -67,12 +61,13 @@ public class SharedByteArray implements MemoryTrimmable {
     mMinByteArraySize = params.minBucketSize;
     mByteArraySoftRef = new OOMSoftReference<byte[]>();
     mSemaphore = new Semaphore(1);
-    mResourceReleaser = new ResourceReleaser<byte[]>() {
-      @Override
-      public void release(byte[] unused) {
-        mSemaphore.release();
-      }
-    };
+    mResourceReleaser =
+        new ResourceReleaser<byte[]>() {
+          @Override
+          public void release(byte[] unused) {
+            mSemaphore.release();
+          }
+        };
 
     memoryTrimmableRegistry.registerMemoryTrimmable(this);
   }
@@ -80,8 +75,8 @@ public class SharedByteArray implements MemoryTrimmable {
   /**
    * Get exclusive access to the byte array of size greater or equal to the passed one.
    *
-   * <p> Under the hood this method acquires an exclusive lock that is released when
-   * the returned reference is closed.
+   * <p>Under the hood this method acquires an exclusive lock that is released when the returned
+   * reference is closed.
    */
   public CloseableReference<byte[]> get(int size) {
     Preconditions.checkArgument(size > 0, "Size must be greater than zero");
@@ -106,8 +101,8 @@ public class SharedByteArray implements MemoryTrimmable {
   }
 
   /**
-   * Responds to memory pressure by simply 'discarding' the local byte array if it is not used
-   * at the moment.
+   * Responds to memory pressure by simply 'discarding' the local byte array if it is not used at
+   * the moment.
    *
    * @param trimType kind of trimming to perform (ignored)
    */

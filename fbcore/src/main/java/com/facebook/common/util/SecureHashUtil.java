@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,15 +8,15 @@
 package com.facebook.common.util;
 
 import android.util.Base64;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Static methods for secure hashing.
- */
+/** Static methods for secure hashing. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class SecureHashUtil {
 
   public static String makeSHA1Hash(String text) {
@@ -63,10 +63,10 @@ public class SecureHashUtil {
   }
 
   static final byte[] HEX_CHAR_TABLE = {
-      (byte) '0', (byte) '1', (byte) '2', (byte) '3',
-      (byte) '4', (byte) '5', (byte) '6', (byte) '7',
-      (byte) '8', (byte) '9', (byte) 'a', (byte) 'b',
-      (byte) 'c', (byte) 'd', (byte) 'e', (byte) 'f'
+    (byte) '0', (byte) '1', (byte) '2', (byte) '3',
+    (byte) '4', (byte) '5', (byte) '6', (byte) '7',
+    (byte) '8', (byte) '9', (byte) 'a', (byte) 'b',
+    (byte) 'c', (byte) 'd', (byte) 'e', (byte) 'f'
   };
 
   public static String convertToHex(byte[] raw) throws UnsupportedEncodingException {

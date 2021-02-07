@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,9 +7,11 @@
 
 package com.facebook.imagepipeline.image;
 
-/**
- * Implementation of {@link QualityInfo}
- */
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
+
+/** Implementation of {@link QualityInfo} */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImmutableQualityInfo implements QualityInfo {
 
   public static final QualityInfo FULL_QUALITY = of(Integer.MAX_VALUE, true, true);
@@ -19,9 +21,7 @@ public class ImmutableQualityInfo implements QualityInfo {
   boolean mIsOfFullQuality;
 
   private ImmutableQualityInfo(
-      int quality,
-      boolean isOfGoodEnoughQuality,
-      boolean isOfFullQuality) {
+      int quality, boolean isOfGoodEnoughQuality, boolean isOfFullQuality) {
     mQuality = quality;
     mIsOfGoodEnoughQuality = isOfGoodEnoughQuality;
     mIsOfFullQuality = isOfFullQuality;
@@ -48,7 +48,7 @@ public class ImmutableQualityInfo implements QualityInfo {
   }
 
   @Override
-  public boolean equals(Object other) {
+  public boolean equals(@Nullable Object other) {
     if (other == this) {
       return true;
     }
@@ -56,15 +56,13 @@ public class ImmutableQualityInfo implements QualityInfo {
       return false;
     }
     ImmutableQualityInfo that = (ImmutableQualityInfo) other;
-    return mQuality == that.mQuality &&
-        mIsOfGoodEnoughQuality == that.mIsOfGoodEnoughQuality &&
-        mIsOfFullQuality == that.mIsOfFullQuality;
+    return mQuality == that.mQuality
+        && mIsOfGoodEnoughQuality == that.mIsOfGoodEnoughQuality
+        && mIsOfFullQuality == that.mIsOfFullQuality;
   }
 
   public static QualityInfo of(
-      int quality,
-      boolean isOfGoodEnoughQuality,
-      boolean isOfFullQuality) {
+      int quality, boolean isOfGoodEnoughQuality, boolean isOfFullQuality) {
     return new ImmutableQualityInfo(quality, isOfGoodEnoughQuality, isOfFullQuality);
   }
 }

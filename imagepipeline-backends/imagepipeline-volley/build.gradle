@@ -1,20 +1,35 @@
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import com.facebook.fresco.buildsrc.Deps
+
 apply plugin: 'com.android.library'
 
-project.group = GROUP
-version = VERSION_NAME
-
 dependencies {
-  implementation "com.android.volley:volley:${VOLLEY_VERSION}"
+  implementation Deps.volley
 
   implementation project(':fbcore')
   implementation project(':imagepipeline')
+  implementation project(':imagepipeline-native')
+  implementation project(':memory-types:ashmem')
+  implementation project(':memory-types:nativememory')
+  implementation project(':memory-types:simple')
   implementation project(':imagepipeline-base')
 }
 apply from: rootProject.file('release.gradle')
 
 android {
-    buildToolsVersion rootProject.ext.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion FrescoConfig.buildToolsVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
+    }
 
     packagingOptions {
         exclude 'LICENSE'
@@ -34,4 +49,3 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 artifacts.add('archives', sourcesJar)
-
