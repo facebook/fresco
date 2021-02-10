@@ -198,13 +198,9 @@ public class DefaultDiskStorage implements DiskStorage {
   }
 
   private static class IncompleteFileException extends IOException {
-    public final long expected;
-    public final long actual;
 
     public IncompleteFileException(long expected, long actual) {
       super("File was not written completely. Expected: " + expected + ", found: " + actual);
-      this.expected = expected;
-      this.actual = actual;
     }
   }
 
