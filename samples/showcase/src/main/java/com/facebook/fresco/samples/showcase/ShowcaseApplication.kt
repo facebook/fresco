@@ -121,7 +121,10 @@ class ShowcaseApplication : Application() {
             .build())
     Fresco.initialize(this, imagePipelineConfig, draweeConfigBuilder.build())
     DefaultFrescoContext.initialize(resources, null)
-    FrescoVitoProvider.setImplementation(DefaultFrescoVitoProvider())
+    FrescoVitoProvider.setImplementation(
+        DefaultFrescoVitoProvider(
+            DefaultFrescoContext.get(),
+            DebugOverlaySupplierSingleton.getInstance(applicationContext)))
     ImageSourceProvider.setImplementation(ImageSourceProviderImpl())
     VitoView.init(
         VitoViewImpl2(FrescoVitoProvider.getController(), FrescoVitoProvider.getImagePipeline()))
