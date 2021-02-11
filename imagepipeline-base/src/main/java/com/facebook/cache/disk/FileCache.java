@@ -54,6 +54,7 @@ public interface FileCache extends DiskTrimmable {
    * @return a sequence of bytes
    * @throws IOException
    */
+  @Nullable
   BinaryResource insert(CacheKey key, WriterCallback writer) throws IOException;
 
   /**
