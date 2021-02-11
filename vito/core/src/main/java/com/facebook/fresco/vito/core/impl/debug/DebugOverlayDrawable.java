@@ -17,7 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.util.Pair;
 import android.view.Gravity;
 import androidx.annotation.ColorInt;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class DebugOverlayDrawable extends Drawable {
@@ -38,7 +38,7 @@ public class DebugOverlayDrawable extends Drawable {
   private int mTextGravity = Gravity.BOTTOM;
 
   // Internal helpers
-  private final HashMap<String, Pair<String, Integer>> mDebugData = new HashMap<>();
+  private final LinkedHashMap<String, Pair<String, Integer>> mDebugData = new LinkedHashMap<>();
   private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private final String mIdentifier;
   private int mMaxLineLength = INITIAL_MAX_LINE_LENGTH;
