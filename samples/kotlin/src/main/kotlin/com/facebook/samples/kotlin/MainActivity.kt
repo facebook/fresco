@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 
   override fun onDestroy() {
     super.onDestroy()
-    loadPhotosFuture?.cancel(false)
+    loadPhotosFuture?.cancel(true)
   }
 
   override fun onRequestPermissionsResult(
@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun loadPhotos() {
-    loadPhotosFuture?.cancel(false)
+    loadPhotosFuture?.cancel(true)
     loadPhotosFuture =
         executor.submit {
           val uris = dataSource.loadPhotoUris(this)
