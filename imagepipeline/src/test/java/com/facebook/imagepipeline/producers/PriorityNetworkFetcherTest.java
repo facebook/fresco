@@ -251,6 +251,45 @@ public class PriorityNetworkFetcherTest {
   }
 
   /**
+   * Scenario:
+   *
+   * <p>The priority of a hi-pri image waiting in the delayedQueue is changed to lowi-pri. We expect
+   * it to be re-queued to the low-pri queue.
+   */
+  @Test
+  public void changePriorityForDelayedRequests() {
+    RecordingNetworkFetcher recordingNetworkFetcher = new RecordingNetworkFetcher();
+    FakeClock clock = new FakeClock();
+    final int delayTime = 100;
+
+    // Hi-pri is LIFO, Max hi-pri: 2, max low-pri: 1
+    PriorityNetworkFetcher<FetchState> fetcher =
+        new PriorityNetworkFetcher<>(
+            recordingNetworkFetcher, false, 2, 0, true, 2, false, 0, delayTime, false, clock);
+
+    // add a hi-pri, it will be fetched immediately.
+    PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, true);
+
+    // simulate a network failure, the request should wait in the delayed queue.
+    getOnlyElement(recordingNetworkFetcher.callbacks.get(one.delegatedState))
+        .onFailure(new Exception());
+
+    // Change priority of 'one' to low-pri (while it's waiting in the delayed queue).
+    ((SettableProducerContext) one.getContext()).setPriority(LOW);
+
+    // delay + 1 ms
+    clock.incrementBy(delayTime + 1);
+
+    // to trigger a dequeue operation
+    PriorityFetchState<FetchState> two = fetch(fetcher, "2", callback, true);
+
+    assertThat(fetcher.getDelayedQeueue()).isEmpty();
+    assertThat(fetcher.getLowPriQueue()).containsExactly(one);
+    assertThat(fetcher.getHiPriQueue()).isEmpty();
+    assertThat(fetcher.getCurrentlyFetching()).containsExactly(two);
+  }
+
+  /**
    * Assert that when the producer tells us the request is cancelled, we pass this on to the
    * callback.
    *

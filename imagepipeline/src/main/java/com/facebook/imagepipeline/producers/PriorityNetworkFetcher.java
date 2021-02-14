@@ -378,12 +378,24 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     }
   }
 
+  private void changePriorityInDelayedQueue(
+      PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState) {
+    final boolean existed = mDelayedQueue.remove(fetchState);
+    if (!existed) {
+      return;
+    }
+
+    fetchState.priorityChangedCount++;
+    mDelayedQueue.addLast(fetchState);
+  }
+
   private void changePriority(
       PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState, boolean isNewHiPri) {
     synchronized (mLock) {
-      boolean existed =
+      final boolean existed =
           isNewHiPri ? mLowPriQueue.remove(fetchState) : mHiPriQueue.remove(fetchState);
       if (!existed) {
+        changePriorityInDelayedQueue(fetchState);
         return;
       }
 
