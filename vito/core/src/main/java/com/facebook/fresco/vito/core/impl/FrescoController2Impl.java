@@ -10,6 +10,7 @@ package com.facebook.fresco.vito.core.impl;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import com.facebook.common.callercontext.ContextChain;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
@@ -88,6 +89,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       final FrescoDrawable2 frescoDrawable,
       final VitoImageRequest imageRequest,
       final @Nullable Object callerContext,
+      final @Nullable ContextChain contextChain,
       final @Nullable ImageListener listener,
       final @Nullable FadeDrawable.OnFadeListener onFadeListener,
       final @Nullable Rect viewportDimensions) {

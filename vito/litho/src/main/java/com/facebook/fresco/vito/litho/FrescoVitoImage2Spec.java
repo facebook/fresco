@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.view.View;
 import androidx.core.util.ObjectsCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
+import com.facebook.common.callercontext.ContextChain;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
@@ -58,6 +59,7 @@ import com.facebook.litho.annotations.PropDefault;
 import com.facebook.litho.annotations.ResType;
 import com.facebook.litho.annotations.ShouldUpdate;
 import com.facebook.litho.annotations.State;
+import com.facebook.litho.annotations.TreeProp;
 import com.facebook.litho.utils.MeasureUtils;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.Nullable;
@@ -153,13 +155,14 @@ public class FrescoVitoImage2Spec {
   static void onMount(
       ComponentContext c,
       final FrescoDrawable2 frescoDrawable,
-      @Prop(optional = true) final @Nullable Object callerContext,
       @Prop(optional = true) final @Nullable ImageListener imageListener,
+      @Prop(optional = true) final @Nullable Object callerContext,
+      @Prop(optional = true) FadeDrawable.OnFadeListener onFadeListener,
       @CachedValue VitoImageRequest imageRequest,
       @FromPrepare @Nullable DataSource<Void> prefetchDataSource,
       @FromBoundsDefined Rect viewportDimensions,
       @State final @Nullable AtomicReference<DataSource<Void>> workingRangePrefetchData,
-      @Prop(optional = true) FadeDrawable.OnFadeListener onFadeListener) {
+      @TreeProp final @Nullable ContextChain contextChain) {
     if (FrescoVitoProvider.getConfig().useBindOnly()) {
       return;
     }
@@ -168,6 +171,7 @@ public class FrescoVitoImage2Spec {
             frescoDrawable,
             imageRequest,
             callerContext,
+            contextChain,
             imageListener,
             onFadeListener,
             viewportDimensions);
@@ -184,9 +188,10 @@ public class FrescoVitoImage2Spec {
   static void onBind(
       ComponentContext c,
       final FrescoDrawable2 frescoDrawable,
-      @Prop(optional = true) final @Nullable Object callerContext,
       @Prop(optional = true) final @Nullable ImageListener imageListener,
       @Prop(optional = true) final @Nullable FadeDrawable.OnFadeListener onFadeListener,
+      @Prop(optional = true) final @Nullable Object callerContext,
+      @TreeProp final @Nullable ContextChain contextChain,
       @CachedValue VitoImageRequest imageRequest,
       @FromPrepare @Nullable DataSource<Void> prefetchDataSource,
       @FromBoundsDefined Rect viewportDimensions,
@@ -198,6 +203,7 @@ public class FrescoVitoImage2Spec {
             frescoDrawable,
             imageRequest,
             callerContext,
+            contextChain,
             imageListener,
             onFadeListener,
             viewportDimensions);
@@ -277,8 +283,8 @@ public class FrescoVitoImage2Spec {
   @OnEnteredRange(name = "imagePrefetch")
   static void onEnteredWorkingRange(
       ComponentContext c,
-      @Prop(optional = true) final @Nullable Object callerContext,
       @Prop(optional = true) final @Nullable Prefetch prefetch,
+      @Prop(optional = true) final @Nullable Object callerContext,
       @CachedValue VitoImageRequest imageRequest,
       @FromPrepare @Nullable DataSource<Void> prefetchDataSource,
       @State final @Nullable AtomicReference<DataSource<Void>> workingRangePrefetchData) {

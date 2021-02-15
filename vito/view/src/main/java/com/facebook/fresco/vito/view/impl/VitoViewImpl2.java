@@ -101,6 +101,7 @@ public class VitoViewImpl2 implements VitoView.Implementation {
         drawable,
         request,
         drawable.getCallerContext(),
+        null,
         drawable.getImageListener().getImageListener(),
         null,
         null);
