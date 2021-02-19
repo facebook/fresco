@@ -406,29 +406,39 @@ public class ImagePipeline {
 
   public DataSource<Void> prefetchToBitmapCache(
       ImageRequest imageRequest, Object callerContext, @Nullable RequestListener requestListener) {
-    if (!mIsPrefetchEnabledSupplier.get()) {
-      return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION);
-    }
     try {
-      final Boolean shouldDecodePrefetches = imageRequest.shouldDecodePrefetches();
-      final boolean skipBitmapCache =
-          shouldDecodePrefetches != null
-              ? !shouldDecodePrefetches // use imagerequest param if specified
-              : mSuppressBitmapPrefetchingSupplier
-                  .get(); // otherwise fall back to pipeline's default
-      Producer<Void> producerSequence =
-          skipBitmapCache
-              ? mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(imageRequest)
-              : mProducerSequenceFactory.getDecodedImagePrefetchProducerSequence(imageRequest);
-      return submitPrefetchRequest(
-          producerSequence,
-          imageRequest,
-          ImageRequest.RequestLevel.FULL_FETCH,
-          callerContext,
-          Priority.MEDIUM,
-          requestListener);
-    } catch (Exception exception) {
-      return DataSources.immediateFailedDataSource(exception);
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("ImagePipeline#prefetchToBitmapCache");
+      }
+
+      if (!mIsPrefetchEnabledSupplier.get()) {
+        return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION);
+      }
+      try {
+        final Boolean shouldDecodePrefetches = imageRequest.shouldDecodePrefetches();
+        final boolean skipBitmapCache =
+            shouldDecodePrefetches != null
+                ? !shouldDecodePrefetches // use imagerequest param if specified
+                : mSuppressBitmapPrefetchingSupplier
+                    .get(); // otherwise fall back to pipeline's default
+        Producer<Void> producerSequence =
+            skipBitmapCache
+                ? mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(imageRequest)
+                : mProducerSequenceFactory.getDecodedImagePrefetchProducerSequence(imageRequest);
+        return submitPrefetchRequest(
+            producerSequence,
+            imageRequest,
+            ImageRequest.RequestLevel.FULL_FETCH,
+            callerContext,
+            Priority.MEDIUM,
+            requestListener);
+      } catch (Exception exception) {
+        return DataSources.immediateFailedDataSource(exception);
+      }
+    } finally {
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
   }
 
@@ -526,21 +536,31 @@ public class ImagePipeline {
       Object callerContext,
       Priority priority,
       @Nullable RequestListener requestListener) {
-    if (!mIsPrefetchEnabledSupplier.get()) {
-      return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION);
-    }
     try {
-      Producer<Void> producerSequence =
-          mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(imageRequest);
-      return submitPrefetchRequest(
-          producerSequence,
-          imageRequest,
-          ImageRequest.RequestLevel.FULL_FETCH,
-          callerContext,
-          priority,
-          requestListener);
-    } catch (Exception exception) {
-      return DataSources.immediateFailedDataSource(exception);
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("ImagePipeline#prefetchToEncodedCache");
+      }
+
+      if (!mIsPrefetchEnabledSupplier.get()) {
+        return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION);
+      }
+      try {
+        Producer<Void> producerSequence =
+            mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(imageRequest);
+        return submitPrefetchRequest(
+            producerSequence,
+            imageRequest,
+            ImageRequest.RequestLevel.FULL_FETCH,
+            callerContext,
+            priority,
+            requestListener);
+      } catch (Exception exception) {
+        return DataSources.immediateFailedDataSource(exception);
+      }
+    } finally {
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
   }
 
