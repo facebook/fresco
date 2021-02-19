@@ -86,22 +86,22 @@ data class ImageSourceConfigurator(
                     set { ImageSourceProvider.forUri(imageUriProvider.nonExistingUri) }
                   },
               "null" to { set { null } },
-                  "Increasing quality (low res error)" to
-                          {
-                              set {
-                                  ImageSourceProvider.increasingQuality(
-                                          ImageSourceProvider.forUri(imageUriProvider.nonExistingUri),
-                                          ImageSourceProvider.forUri(imageUriProvider.create(currentImageFormat)))
-                              }
-                          },
+              "Increasing quality (low res error)" to
+                  {
+                    set {
+                      ImageSourceProvider.increasingQuality(
+                          ImageSourceProvider.forUri(imageUriProvider.nonExistingUri),
+                          ImageSourceProvider.forUri(imageUriProvider.create(currentImageFormat)))
+                    }
+                  },
               "First available (all error)" to
-                      {
-                          set {
-                              ImageSourceProvider.firstAvailable(
-                                      ImageSourceProvider.forUri(imageUriProvider.nonExistingUri),
-                                      ImageSourceProvider.forUri(imageUriProvider.nonExistingUri))
-                          }
-                      }),
+                  {
+                    set {
+                      ImageSourceProvider.firstAvailable(
+                          ImageSourceProvider.forUri(imageUriProvider.nonExistingUri),
+                          ImageSourceProvider.forUri(imageUriProvider.nonExistingUri))
+                    }
+                  }),
           "Image Source")
 
   private fun set(create: () -> ImageSource?) {
