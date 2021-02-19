@@ -123,8 +123,6 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
     imageRequestBuilder.setLocalThumbnailPreviewsEnabled(
         imageOptions.areLocalThumbnailPreviewsEnabled());
 
-    imageRequestBuilder.setShouldDecodePrefetches(mExperiments.prefetchToBitmapCache());
-
     Postprocessor postprocessor = imageOptions.getPostprocessor();
     if (postprocessor != null) {
       imageRequestBuilder.setPostprocessor(postprocessor);
