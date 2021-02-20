@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.provider.impl;
 
+import com.facebook.callercontext.CallerContextVerifier;
 import com.facebook.common.internal.Supplier;
 import com.facebook.fresco.vito.core.DefaultFrescoVitoConfig;
 import com.facebook.fresco.vito.core.FrescoContext;
@@ -17,6 +18,7 @@ import com.facebook.fresco.vito.core.Hierarcher;
 import com.facebook.fresco.vito.core.ImagePipelineUtils;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.impl.FrescoController2Impl;
+import com.facebook.fresco.vito.core.impl.FrescoVitoPrefetcherImpl;
 import com.facebook.fresco.vito.core.impl.NoOpVitoImagePerfListener;
 import com.facebook.fresco.vito.core.impl.VitoImagePipelineImpl;
 import com.facebook.fresco.vito.core.impl.debug.DefaultDebugOverlayFactory2;
@@ -40,30 +42,31 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
       FrescoContext frescoContext, @Nullable Supplier<Boolean> debugOverlayEnabledSupplier) {
     this(
         new DefaultFrescoVitoConfig(),
-        frescoContext.getPrefetcher(),
         frescoContext.getImagePipeline(),
         frescoContext.getImagePipelineUtils(),
         frescoContext.getHierarcher(),
         frescoContext.getLightweightBackgroundThreadExecutor(),
         frescoContext.getUiThreadExecutorService(),
-        debugOverlayEnabledSupplier);
+        debugOverlayEnabledSupplier,
+        new NoOpCallerContextVerifier());
   }
 
   public DefaultFrescoVitoProvider(
       FrescoVitoConfig config,
-      FrescoVitoPrefetcher prefetcher,
       ImagePipeline imagePipeline,
       ImagePipelineUtils imagePipelineUtils,
       Hierarcher hierarcher,
       Executor lightweightBackgroundThreadExecutor,
       Executor uiThreadExecutor,
-      @Nullable Supplier<Boolean> debugOverlayEnabledSupplier) {
+      @Nullable Supplier<Boolean> debugOverlayEnabledSupplier,
+      CallerContextVerifier callerContextVerifier) {
     if (!ImagePipelineFactory.hasBeenInitialized()) {
       throw new RuntimeException(
           "Fresco must be initialized before DefaultFrescoVitoProvider can be used!");
     }
     mFrescoVitoConfig = config;
-    mFrescoVitoPrefetcher = prefetcher;
+    mFrescoVitoPrefetcher =
+        new FrescoVitoPrefetcherImpl(imagePipeline, imagePipelineUtils, callerContextVerifier);
     mVitoImagePipeline = new VitoImagePipelineImpl(imagePipeline, imagePipelineUtils);
     mFrescoController =
         new FrescoController2Impl(
