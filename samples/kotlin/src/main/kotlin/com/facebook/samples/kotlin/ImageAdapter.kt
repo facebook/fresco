@@ -80,7 +80,7 @@ class ImageAdapter(
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageHolder {
     val context = parent.context
     val hierarchy =
-        GenericDraweeHierarchyBuilder(context.resources)
+        GenericDraweeHierarchyBuilder(context)
             .setPlaceholderImage(placeholderDrawable)
             .setFailureImage(failureDrawable)
             .setProgressBarImage(ProgressBarDrawable())
