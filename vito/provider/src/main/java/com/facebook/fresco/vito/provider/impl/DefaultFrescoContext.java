@@ -8,7 +8,6 @@
 package com.facebook.fresco.vito.provider.impl;
 
 import android.content.res.Resources;
-import com.facebook.callercontext.CallerContextVerifier;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
@@ -71,11 +70,6 @@ public class DefaultFrescoContext {
     sDebugOverlayEnabledSupplier = debugOverlayEnabledSupplier;
   }
 
-  @Nullable
-  public static Supplier<Boolean> getDebugOverlayEnabledSupplier() {
-    return sDebugOverlayEnabledSupplier;
-  }
-
   public static synchronized boolean isInitialized() {
     return sInstance != null;
   }
@@ -107,13 +101,5 @@ public class DefaultFrescoContext {
         animatedDrawableFactory == null
             ? null
             : new DrawableFactoryWrapper(animatedDrawableFactory));
-  }
-
-  private static class NoOpCallerContextVerifier implements CallerContextVerifier {
-
-    @Override
-    public void verifyCallerContext(@Nullable Object callerContext, boolean isPrefetch) {
-      // No-op
-    }
   }
 }

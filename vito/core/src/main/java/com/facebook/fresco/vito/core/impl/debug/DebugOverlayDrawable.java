@@ -17,7 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.util.Pair;
 import android.view.Gravity;
 import androidx.annotation.ColorInt;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class DebugOverlayDrawable extends Drawable {
@@ -35,10 +35,10 @@ public class DebugOverlayDrawable extends Drawable {
   private static final int MARGIN = TEXT_LINE_SPACING_PX / 2;
 
   private @ColorInt int mBackgroundColor = Color.TRANSPARENT;
-  private int mTextGravity = Gravity.BOTTOM;
+  private int mTextGravity = Gravity.TOP;
 
   // Internal helpers
-  private final HashMap<String, Pair<String, Integer>> mDebugData = new HashMap<>();
+  private final LinkedHashMap<String, Pair<String, Integer>> mDebugData = new LinkedHashMap<>();
   private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private final String mIdentifier;
   private int mMaxLineLength = INITIAL_MAX_LINE_LENGTH;
@@ -124,6 +124,10 @@ public class DebugOverlayDrawable extends Drawable {
     return PixelFormat.TRANSLUCENT;
   }
 
+  public void setTextGravity(int textGravity) {
+    mTextGravity = textGravity;
+  }
+
   private void prepareDebugTextParameters(Rect bounds) {
     if (mDebugData.isEmpty() || mMaxLineLength <= 0) {
       return;
@@ -133,14 +137,11 @@ public class DebugOverlayDrawable extends Drawable {
     mPaint.setTextSize(textSizePx);
 
     mLineIncrementPx = textSizePx + TEXT_LINE_SPACING_PX;
-    if (mTextGravity == Gravity.BOTTOM) {
-      mLineIncrementPx *= -1;
-    }
     mStartTextXPx = bounds.left + TEXT_PADDING_PX;
     mStartTextYPx =
         mTextGravity == Gravity.BOTTOM
             ? bounds.bottom - TEXT_PADDING_PX
-            : bounds.top + TEXT_PADDING_PX + MIN_TEXT_SIZE_PX;
+            : bounds.top + TEXT_PADDING_PX + textSizePx;
   }
 
   protected void addDebugText(Canvas canvas, String label, String value, Integer color) {
@@ -153,7 +154,7 @@ public class DebugOverlayDrawable extends Drawable {
         mCurrentTextXPx - MARGIN,
         mCurrentTextYPx + TEXT_LINE_SPACING_PX,
         mCurrentTextXPx + labelColonWidth + valueWidth + MARGIN,
-        mCurrentTextYPx + mLineIncrementPx + TEXT_LINE_SPACING_PX,
+        mCurrentTextYPx - mLineIncrementPx + TEXT_LINE_SPACING_PX,
         mPaint);
 
     mPaint.setColor(TEXT_COLOR);
@@ -162,7 +163,11 @@ public class DebugOverlayDrawable extends Drawable {
     canvas.drawText(
         String.valueOf(value), mCurrentTextXPx + labelColonWidth, mCurrentTextYPx, mPaint);
 
-    mCurrentTextYPx += mLineIncrementPx;
+    if (mTextGravity == Gravity.BOTTOM) {
+      mCurrentTextYPx -= mLineIncrementPx;
+    } else {
+      mCurrentTextYPx += mLineIncrementPx;
+    }
   }
 
   protected void addDebugText(

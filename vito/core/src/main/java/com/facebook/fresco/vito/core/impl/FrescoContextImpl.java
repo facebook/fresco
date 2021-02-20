@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 @ThreadSafe
 public class FrescoContextImpl implements FrescoContext {
 
-  private final @Nullable CallerContextVerifier mCallerContextVerifier;
+  private final CallerContextVerifier mCallerContextVerifier;
   private final FrescoExperiments mExperiments;
   private final @Nullable ImageListener mGlobalImageListener;
   private final @Nullable ImageStateListener mGlobalImageStateListener;
@@ -44,7 +44,7 @@ public class FrescoContextImpl implements FrescoContext {
   public FrescoContextImpl(
       FrescoController controller,
       Hierarcher hierarcher,
-      @Nullable CallerContextVerifier callerContextVerifier,
+      CallerContextVerifier callerContextVerifier,
       FrescoExperiments frescoExperiments,
       Executor uiThreadExecutor,
       Executor lightweightBackgroundThreadExecutor,
@@ -63,7 +63,7 @@ public class FrescoContextImpl implements FrescoContext {
 
   public FrescoContextImpl(
       Hierarcher hierarcher,
-      @Nullable CallerContextVerifier callerContextVerifier,
+      CallerContextVerifier callerContextVerifier,
       FrescoExperiments frescoExperiments,
       Executor uiThreadExecutor,
       Executor lightweightBackgroundThreadExecutor,
@@ -130,7 +130,9 @@ public class FrescoContextImpl implements FrescoContext {
   @Override
   public FrescoVitoPrefetcher getPrefetcher() {
     if (mPrefetcher == null) {
-      mPrefetcher = new FrescoVitoPrefetcherImpl(this);
+      mPrefetcher =
+          new FrescoVitoPrefetcherImpl(
+              getImagePipeline(), getImagePipelineUtils(), mCallerContextVerifier);
     }
     return mPrefetcher;
   }

@@ -27,7 +27,7 @@ public interface VitoImagePipeline {
   CloseableReference<CloseableImage> getCachedImage(VitoImageRequest imageRequest);
 
   DataSource<CloseableReference<CloseableImage>> fetchDecodedImage(
-      VitoImageRequest imageSource,
+      VitoImageRequest imageRequest,
       @Nullable Object callerContext,
       @Nullable RequestListener requestListener,
       long uiComponentId);

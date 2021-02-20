@@ -32,8 +32,6 @@ import javax.annotation.Nullable;
 public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageInfo>
     implements OnDrawControllerListener<ImageInfo> {
 
-  private static final String TAG = "ImagePerfControllerListener2";
-
   private static final int WHAT_STATUS = 1;
   private static final int WHAT_VISIBILITY = 2;
 

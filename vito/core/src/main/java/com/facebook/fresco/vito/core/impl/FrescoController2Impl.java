@@ -10,6 +10,7 @@ package com.facebook.fresco.vito.core.impl;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import com.facebook.common.callercontext.ContextChain;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
@@ -88,6 +89,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       final FrescoDrawable2 frescoDrawable,
       final VitoImageRequest imageRequest,
       final @Nullable Object callerContext,
+      final @Nullable ContextChain contextChain,
       final @Nullable ImageListener listener,
       final @Nullable FadeDrawable.OnFadeListener onFadeListener,
       final @Nullable Rect viewportDimensions) {
@@ -227,15 +229,21 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       ((AnimatedDrawable2) actualDrawable).start();
     }
     Extras extras = obtainExtras(dataSource, image, drawable);
-    drawable
-        .getImageListener()
-        .onFinalImageSet(
-            drawable.getImageId(),
-            drawable.getImageRequest(),
-            drawable.getImageOrigin(),
-            image.get(),
-            extras,
-            actualDrawable);
+    if (notifyFinalResult(dataSource)) {
+      drawable
+          .getImageListener()
+          .onFinalImageSet(
+              drawable.getImageId(),
+              drawable.getImageRequest(),
+              drawable.getImageOrigin(),
+              image.get(),
+              extras,
+              actualDrawable);
+    } else {
+      drawable
+          .getImageListener()
+          .onIntermediateImageSet(drawable.getImageId(), drawable.getImageRequest(), image.get());
+    }
     drawable.getImagePerfListener().onImageSuccess(drawable, isImmediate);
     float progress = 1f;
     if (dataSource != null && !dataSource.isFinished()) {
@@ -286,14 +294,22 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       drawable.setProgressDrawable(null);
     }
     Extras extras = obtainExtras(dataSource, dataSource.getResult(), drawable);
-    drawable
-        .getImageListener()
-        .onFailure(
-            drawable.getImageId(),
-            drawable.getImageRequest(),
-            errorDrawable,
-            dataSource.getFailureCause(),
-            extras);
+    if (notifyFinalResult(dataSource)) {
+      drawable
+          .getImageListener()
+          .onFailure(
+              drawable.getImageId(),
+              drawable.getImageRequest(),
+              errorDrawable,
+              dataSource.getFailureCause(),
+              extras);
+    } else {
+      drawable
+          .getImageListener()
+          .onIntermediateImageFailed(
+              drawable.getImageId(), drawable.getImageRequest(), dataSource.getFailureCause());
+    }
+
     drawable.getImagePerfListener().onImageError(drawable);
     mDebugOverlayFactory.update(drawable, extras);
   }
@@ -347,5 +363,10 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
         imageExtras,
         drawable.getCallerContext(),
         sourceUri);
+  }
+
+  private boolean notifyFinalResult(
+      @Nullable DataSource<CloseableReference<CloseableImage>> dataSource) {
+    return dataSource == null || dataSource.isFinished() || dataSource.hasMultipleResults();
   }
 }
