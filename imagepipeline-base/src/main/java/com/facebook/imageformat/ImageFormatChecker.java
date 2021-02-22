@@ -28,10 +28,14 @@ public class ImageFormatChecker {
 
   @Nullable private List<ImageFormat.FormatChecker> mCustomImageFormatCheckers;
 
-  private final ImageFormat.FormatChecker mDefaultFormatChecker = new DefaultImageFormatChecker();
+  private final DefaultImageFormatChecker mDefaultFormatChecker = new DefaultImageFormatChecker();
 
   private ImageFormatChecker() {
     updateMaxHeaderLength();
+  }
+
+  public void setUseNewOrder(boolean useNewOrder) {
+    mDefaultFormatChecker.setUseNewOrder(useNewOrder);
   }
 
   public void setCustomImageFormatCheckers(
