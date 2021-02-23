@@ -8,11 +8,13 @@
 package com.facebook.imagepipeline.animated.factory;
 
 import com.facebook.cache.common.CacheKey;
+import com.facebook.common.executors.SerialExecutorService;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.core.ExecutorSupplier;
 import com.facebook.imagepipeline.image.CloseableImage;
 import java.lang.reflect.Constructor;
+import java.util.concurrent.ExecutorService;
 
 public class AnimatedFactoryProvider {
 
@@ -24,7 +26,8 @@ public class AnimatedFactoryProvider {
       PlatformBitmapFactory platformBitmapFactory,
       ExecutorSupplier executorSupplier,
       CountingMemoryCache<CacheKey, CloseableImage> backingCache,
-      boolean downscaleFrameToDrawableDimensions) {
+      boolean downscaleFrameToDrawableDimensions,
+      ExecutorService serialExecutorService) {
     if (!sImplLoaded) {
       try {
         final Class<?> clazz =
@@ -34,14 +37,16 @@ public class AnimatedFactoryProvider {
                 PlatformBitmapFactory.class,
                 ExecutorSupplier.class,
                 CountingMemoryCache.class,
-                Boolean.TYPE);
+                Boolean.TYPE,
+                SerialExecutorService.class);
         sImpl =
             (AnimatedFactory)
                 constructor.newInstance(
                     platformBitmapFactory,
                     executorSupplier,
                     backingCache,
-                    downscaleFrameToDrawableDimensions);
+                    downscaleFrameToDrawableDimensions,
+                    serialExecutorService);
       } catch (Throwable e) {
         // Head in the sand
       }

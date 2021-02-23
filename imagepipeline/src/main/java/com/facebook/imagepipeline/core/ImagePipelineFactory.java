@@ -178,7 +178,8 @@ public class ImagePipelineFactory {
               getPlatformBitmapFactory(),
               mConfig.getExecutorSupplier(),
               getBitmapCountingMemoryCache(),
-              mConfig.getExperiments().shouldDownscaleFrameToDrawableDimensions());
+              mConfig.getExperiments().shouldDownscaleFrameToDrawableDimensions(),
+              mConfig.getExecutorServiceForAnimatedImages());
     }
     return mAnimatedFactory;
   }

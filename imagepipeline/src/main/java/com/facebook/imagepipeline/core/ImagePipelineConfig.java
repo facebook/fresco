@@ -15,6 +15,7 @@ import androidx.annotation.VisibleForTesting;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.callercontext.CallerContextVerifier;
+import com.facebook.common.executors.SerialExecutorService;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
@@ -114,6 +115,7 @@ public class ImagePipelineConfig {
   private final CloseableReferenceLeakTracker mCloseableReferenceLeakTracker;
   @Nullable private final MemoryCache<CacheKey, CloseableImage> mBitmapCache;
   @Nullable private final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
+  @Nullable private final SerialExecutorService mSerialExecutorServiceForAnimatedImages;
   private final BitmapMemoryCacheFactory mBitmapMemoryCacheFactory;
 
   private static DefaultImageRequestConfig sDefaultImageRequestConfig =
@@ -227,6 +229,7 @@ public class ImagePipelineConfig {
             ? new CountingLruBitmapMemoryCacheFactory()
             : builder.mBitmapMemoryCacheFactory;
     mEncodedMemoryCache = builder.mEncodedMemoryCache;
+    mSerialExecutorServiceForAnimatedImages = builder.mSerialExecutorServiceForAnimatedImages;
     // Here we manage the WebpBitmapFactory implementation if any
     WebpBitmapFactory webpBitmapFactory = mImagePipelineExperiments.getWebpBitmapFactory();
     if (webpBitmapFactory != null) {
@@ -328,6 +331,11 @@ public class ImagePipelineConfig {
 
   public ExecutorSupplier getExecutorSupplier() {
     return mExecutorSupplier;
+  }
+
+  @Nullable
+  public SerialExecutorService getExecutorServiceForAnimatedImages() {
+    return mSerialExecutorServiceForAnimatedImages;
   }
 
   public ImageCacheStatsTracker getImageCacheStatsTracker() {
@@ -523,6 +531,7 @@ public class ImagePipelineConfig {
         new NoOpCloseableReferenceLeakTracker();
     @Nullable private MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
     @Nullable private MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
+    @Nullable private SerialExecutorService mSerialExecutorServiceForAnimatedImages;
     @Nullable private BitmapMemoryCacheFactory mBitmapMemoryCacheFactory;
 
     private Builder(Context context) {
@@ -715,6 +724,12 @@ public class ImagePipelineConfig {
     public Builder setEncodedMemoryCache(
         @Nullable MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache) {
       mEncodedMemoryCache = encodedMemoryCache;
+      return this;
+    }
+
+    public Builder setExecutorServiceForAnimatedImages(
+        @Nullable SerialExecutorService serialExecutorService) {
+      mSerialExecutorServiceForAnimatedImages = serialExecutorService;
       return this;
     }
 
