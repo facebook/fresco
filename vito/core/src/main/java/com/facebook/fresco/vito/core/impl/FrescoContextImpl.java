@@ -130,7 +130,9 @@ public class FrescoContextImpl implements FrescoContext {
   @Override
   public FrescoVitoPrefetcher getPrefetcher() {
     if (mPrefetcher == null) {
-      mPrefetcher = new FrescoVitoPrefetcherImpl(this);
+      mPrefetcher =
+          new FrescoVitoPrefetcherImpl(
+              getImagePipeline(), getImagePipelineUtils(), mCallerContextVerifier);
     }
     return mPrefetcher;
   }

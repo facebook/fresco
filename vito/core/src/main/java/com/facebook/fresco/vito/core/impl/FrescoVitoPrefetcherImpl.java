@@ -8,10 +8,11 @@
 package com.facebook.fresco.vito.core.impl;
 
 import android.net.Uri;
+import com.facebook.callercontext.CallerContextVerifier;
 import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSources;
-import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoVitoPrefetcher;
+import com.facebook.fresco.vito.core.ImagePipelineUtils;
 import com.facebook.fresco.vito.core.PrefetchTarget;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.options.DecodedImageOptions;
@@ -28,10 +29,17 @@ public class FrescoVitoPrefetcherImpl implements FrescoVitoPrefetcher {
   private static final Throwable NULL_IMAGE_MESSAGE =
       new NullPointerException("No image to prefetch.");
 
-  private final FrescoContext mFrescoContext;
+  private final ImagePipeline mImagePipeline;
+  private final ImagePipelineUtils mImagePipelineUtils;
+  private final @Nullable CallerContextVerifier mCallerContextVerifier;
 
-  public FrescoVitoPrefetcherImpl(FrescoContext frescoContext) {
-    mFrescoContext = frescoContext;
+  public FrescoVitoPrefetcherImpl(
+      ImagePipeline imagePipeline,
+      ImagePipelineUtils imagePipelineUtils,
+      @Nullable CallerContextVerifier callerContextVerifier) {
+    mImagePipeline = imagePipeline;
+    mImagePipelineUtils = imagePipelineUtils;
+    mCallerContextVerifier = callerContextVerifier;
   }
 
   @Override
@@ -60,9 +68,8 @@ public class FrescoVitoPrefetcherImpl implements FrescoVitoPrefetcher {
       final @Nullable Object callerContext,
       final String callsite) {
     final ImageRequest imageRequest =
-        mFrescoContext
-            .getImagePipelineUtils()
-            .buildImageRequest(uri, imageOptions != null ? imageOptions : ImageOptions.defaults());
+        mImagePipelineUtils.buildImageRequest(
+            uri, imageOptions != null ? imageOptions : ImageOptions.defaults());
     return prefetch(PrefetchTarget.MEMORY_DECODED, imageRequest, callerContext, null);
   }
 
@@ -73,10 +80,8 @@ public class FrescoVitoPrefetcherImpl implements FrescoVitoPrefetcher {
       final @Nullable Object callerContext,
       final String callsite) {
     final ImageRequest imageRequest =
-        mFrescoContext
-            .getImagePipelineUtils()
-            .buildEncodedImageRequest(
-                uri, imageOptions != null ? imageOptions : ImageOptions.defaults());
+        mImagePipelineUtils.buildEncodedImageRequest(
+            uri, imageOptions != null ? imageOptions : ImageOptions.defaults());
     return prefetch(PrefetchTarget.MEMORY_ENCODED, imageRequest, callerContext, null);
   }
 
@@ -87,10 +92,8 @@ public class FrescoVitoPrefetcherImpl implements FrescoVitoPrefetcher {
       final @Nullable Object callerContext,
       final String callsite) {
     final ImageRequest imageRequest =
-        mFrescoContext
-            .getImagePipelineUtils()
-            .buildEncodedImageRequest(
-                uri, imageOptions != null ? imageOptions : ImageOptions.defaults());
+        mImagePipelineUtils.buildEncodedImageRequest(
+            uri, imageOptions != null ? imageOptions : ImageOptions.defaults());
     return prefetch(PrefetchTarget.DISK, imageRequest, callerContext, null);
   }
 
@@ -109,18 +112,19 @@ public class FrescoVitoPrefetcherImpl implements FrescoVitoPrefetcher {
       @Nullable final ImageRequest imageRequest,
       @Nullable final Object callerContext,
       @Nullable final RequestListener requestListener) {
-    mFrescoContext.verifyCallerContext(callerContext);
+    if (mCallerContextVerifier != null) {
+      mCallerContextVerifier.verifyCallerContext(callerContext, false);
+    }
     if (imageRequest == null) {
       return DataSources.immediateFailedDataSource(NULL_IMAGE_MESSAGE);
     }
-    final ImagePipeline pipeline = mFrescoContext.getImagePipeline();
     switch (prefetchTarget) {
       case MEMORY_DECODED:
-        return pipeline.prefetchToBitmapCache(imageRequest, callerContext, requestListener);
+        return mImagePipeline.prefetchToBitmapCache(imageRequest, callerContext, requestListener);
       case MEMORY_ENCODED:
-        return pipeline.prefetchToEncodedCache(imageRequest, callerContext, requestListener);
+        return mImagePipeline.prefetchToEncodedCache(imageRequest, callerContext, requestListener);
       case DISK:
-        return pipeline.prefetchToDiskCache(imageRequest, callerContext, requestListener);
+        return mImagePipeline.prefetchToDiskCache(imageRequest, callerContext, requestListener);
     }
     return DataSources.immediateFailedDataSource(
         new CancellationException("Prefetching is not enabled"));
