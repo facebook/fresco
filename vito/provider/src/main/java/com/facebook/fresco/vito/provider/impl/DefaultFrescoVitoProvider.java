@@ -7,25 +7,33 @@
 
 package com.facebook.fresco.vito.provider.impl;
 
+import android.content.res.Resources;
 import com.facebook.callercontext.CallerContextVerifier;
 import com.facebook.common.internal.Supplier;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.vito.core.DefaultFrescoVitoConfig;
 import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoController2;
+import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.core.FrescoVitoConfig;
 import com.facebook.fresco.vito.core.FrescoVitoPrefetcher;
-import com.facebook.fresco.vito.core.Hierarcher;
 import com.facebook.fresco.vito.core.ImagePipelineUtils;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.impl.FrescoController2Impl;
 import com.facebook.fresco.vito.core.impl.FrescoVitoPrefetcherImpl;
+import com.facebook.fresco.vito.core.impl.HierarcherImpl;
 import com.facebook.fresco.vito.core.impl.NoOpVitoImagePerfListener;
 import com.facebook.fresco.vito.core.impl.VitoImagePipelineImpl;
 import com.facebook.fresco.vito.core.impl.debug.DefaultDebugOverlayFactory2;
 import com.facebook.fresco.vito.core.impl.debug.NoOpDebugOverlayFactory2;
+import com.facebook.fresco.vito.drawable.ArrayVitoDrawableFactory;
+import com.facebook.fresco.vito.drawable.BitmapDrawableFactory;
+import com.facebook.fresco.vito.draweesupport.DrawableFactoryWrapper;
+import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
 import com.facebook.fresco.vito.provider.FrescoVitoProvider;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
+import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
@@ -39,12 +47,15 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
   private FrescoVitoConfig mFrescoVitoConfig;
 
   public DefaultFrescoVitoProvider(
-      FrescoContext frescoContext, @Nullable Supplier<Boolean> debugOverlayEnabledSupplier) {
+      Resources resources,
+      FrescoContext frescoContext,
+      @Nullable Supplier<Boolean> debugOverlayEnabledSupplier) {
     this(
+        resources,
         new DefaultFrescoVitoConfig(),
+        frescoContext.getExperiments(),
         frescoContext.getImagePipeline(),
         frescoContext.getImagePipelineUtils(),
-        frescoContext.getHierarcher(),
         frescoContext.getLightweightBackgroundThreadExecutor(),
         frescoContext.getUiThreadExecutorService(),
         debugOverlayEnabledSupplier,
@@ -52,10 +63,11 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
   }
 
   public DefaultFrescoVitoProvider(
+      Resources resources,
       FrescoVitoConfig config,
+      FrescoExperiments experiments,
       ImagePipeline imagePipeline,
       ImagePipelineUtils imagePipelineUtils,
-      Hierarcher hierarcher,
       Executor lightweightBackgroundThreadExecutor,
       Executor uiThreadExecutor,
       @Nullable Supplier<Boolean> debugOverlayEnabledSupplier,
@@ -71,7 +83,7 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
     mFrescoController =
         new FrescoController2Impl(
             mFrescoVitoConfig,
-            hierarcher,
+            new HierarcherImpl(createDefaultDrawableFactory(resources, experiments)),
             lightweightBackgroundThreadExecutor,
             uiThreadExecutor,
             mVitoImagePipeline,
@@ -101,5 +113,16 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
   @Override
   public FrescoVitoConfig getConfig() {
     return mFrescoVitoConfig;
+  }
+
+  private static ImageOptionsDrawableFactory createDefaultDrawableFactory(
+      Resources resources, FrescoExperiments frescoExperiments) {
+    DrawableFactory animatedDrawableFactory =
+        Fresco.getImagePipelineFactory().getAnimatedDrawableFactory(null);
+    return new ArrayVitoDrawableFactory(
+        new BitmapDrawableFactory(resources, frescoExperiments),
+        animatedDrawableFactory == null
+            ? null
+            : new DrawableFactoryWrapper(animatedDrawableFactory));
   }
 }
