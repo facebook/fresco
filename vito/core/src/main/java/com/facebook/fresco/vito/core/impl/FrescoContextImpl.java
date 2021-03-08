@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.core.impl;
 
 import com.facebook.callercontext.CallerContextVerifier;
+import com.facebook.common.internal.Supplier;
 import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoController;
@@ -45,7 +46,7 @@ public class FrescoContextImpl implements FrescoContext {
       FrescoController controller,
       Hierarcher hierarcher,
       @Nullable CallerContextVerifier callerContextVerifier,
-      FrescoExperiments frescoExperiments,
+      final FrescoExperiments frescoExperiments,
       Executor uiThreadExecutor,
       Executor lightweightBackgroundThreadExecutor,
       @Nullable ImageListener globalImageListener,
@@ -58,7 +59,7 @@ public class FrescoContextImpl implements FrescoContext {
     mGlobalImageListener = globalImageListener;
     mLightweightBackgroundThreadExecutor = lightweightBackgroundThreadExecutor;
     mGlobalImageStateListener = globalImageStateListener;
-    mImagePipelineUtils = new ImagePipelineUtilsImpl(mExperiments);
+    mImagePipelineUtils = createImagePipelineUtils();
   }
 
   public FrescoContextImpl(
@@ -80,7 +81,7 @@ public class FrescoContextImpl implements FrescoContext {
     mGlobalImageListener = globalImageListener;
     mGlobalImageStateListener = globalImageStateListener;
     mLightweightBackgroundThreadExecutor = lightweightBackgroundThreadExecutor;
-    mImagePipelineUtils = new ImagePipelineUtilsImpl(mExperiments);
+    mImagePipelineUtils = createImagePipelineUtils();
   }
 
   @Override
@@ -162,5 +163,23 @@ public class FrescoContextImpl implements FrescoContext {
   @Override
   public void setController(FrescoController controller) {
     mController = controller;
+  }
+
+  private ImagePipelineUtils createImagePipelineUtils() {
+    return new ImagePipelineUtilsImpl(
+        new Supplier<Boolean>() {
+
+          @Override
+          public Boolean get() {
+            return mExperiments.useNativeRounding();
+          }
+        },
+        new Supplier<Boolean>() {
+
+          @Override
+          public Boolean get() {
+            return mExperiments.useFastNativeRounding();
+          }
+        });
   }
 }

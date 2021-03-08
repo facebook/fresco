@@ -12,6 +12,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import android.net.Uri;
+import com.facebook.common.internal.Suppliers;
 import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.core.ImagePipelineUtils;
 import com.facebook.fresco.vito.options.ImageOptions;
@@ -44,7 +45,8 @@ public class ImagePipelineUtilsImplTest {
   public void setup() {
     mFrescoExperiments = mock(FrescoExperiments.class);
 
-    mImagePipelineUtils = new ImagePipelineUtilsImpl(mFrescoExperiments);
+    mImagePipelineUtils =
+        new ImagePipelineUtilsImpl(Suppliers.BOOLEAN_TRUE, Suppliers.BOOLEAN_FALSE);
   }
 
   @Test

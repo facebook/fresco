@@ -93,11 +93,18 @@ public class DefaultFrescoContext {
   }
 
   private static ImageOptionsDrawableFactory createDefaultDrawableFactory(
-      Resources resources, FrescoExperiments frescoExperiments) {
+      Resources resources, final FrescoExperiments frescoExperiments) {
     DrawableFactory animatedDrawableFactory =
         Fresco.getImagePipelineFactory().getAnimatedDrawableFactory(null);
     return new ArrayVitoDrawableFactory(
-        new BitmapDrawableFactory(resources, frescoExperiments),
+        new BitmapDrawableFactory(
+            resources,
+            new Supplier<Boolean>() {
+              @Override
+              public Boolean get() {
+                return frescoExperiments.useNativeRounding();
+              }
+            }),
         animatedDrawableFactory == null
             ? null
             : new DrawableFactoryWrapper(animatedDrawableFactory));

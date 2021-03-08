@@ -14,7 +14,6 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.vito.core.DefaultFrescoVitoConfig;
 import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoController2;
-import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.core.FrescoVitoConfig;
 import com.facebook.fresco.vito.core.FrescoVitoPrefetcher;
 import com.facebook.fresco.vito.core.ImagePipelineUtils;
@@ -22,6 +21,7 @@ import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.impl.FrescoController2Impl;
 import com.facebook.fresco.vito.core.impl.FrescoVitoPrefetcherImpl;
 import com.facebook.fresco.vito.core.impl.HierarcherImpl;
+import com.facebook.fresco.vito.core.impl.ImagePipelineUtilsImpl;
 import com.facebook.fresco.vito.core.impl.NoOpVitoImagePerfListener;
 import com.facebook.fresco.vito.core.impl.VitoImagePipelineImpl;
 import com.facebook.fresco.vito.core.impl.debug.DefaultDebugOverlayFactory2;
@@ -48,29 +48,48 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
 
   public DefaultFrescoVitoProvider(
       Resources resources,
-      FrescoContext frescoContext,
+      final FrescoContext frescoContext,
       @Nullable Supplier<Boolean> debugOverlayEnabledSupplier) {
     this(
         resources,
         new DefaultFrescoVitoConfig(),
-        frescoContext.getExperiments(),
         frescoContext.getImagePipeline(),
-        frescoContext.getImagePipelineUtils(),
+        new ImagePipelineUtilsImpl(
+            new Supplier<Boolean>() {
+
+              @Override
+              public Boolean get() {
+                return frescoContext.getExperiments().useNativeRounding();
+              }
+            },
+            new Supplier<Boolean>() {
+
+              @Override
+              public Boolean get() {
+                return frescoContext.getExperiments().useFastNativeRounding();
+              }
+            }),
         frescoContext.getLightweightBackgroundThreadExecutor(),
         frescoContext.getUiThreadExecutorService(),
         debugOverlayEnabledSupplier,
+        new Supplier<Boolean>() {
+          @Override
+          public Boolean get() {
+            return frescoContext.getExperiments().useNativeRounding();
+          }
+        },
         new NoOpCallerContextVerifier());
   }
 
   public DefaultFrescoVitoProvider(
       Resources resources,
       FrescoVitoConfig config,
-      FrescoExperiments experiments,
       ImagePipeline imagePipeline,
       ImagePipelineUtils imagePipelineUtils,
       Executor lightweightBackgroundThreadExecutor,
       Executor uiThreadExecutor,
       @Nullable Supplier<Boolean> debugOverlayEnabledSupplier,
+      Supplier<Boolean> nativeCodeEnabledSupplier,
       CallerContextVerifier callerContextVerifier) {
     if (!ImagePipelineFactory.hasBeenInitialized()) {
       throw new RuntimeException(
@@ -83,7 +102,7 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
     mFrescoController =
         new FrescoController2Impl(
             mFrescoVitoConfig,
-            new HierarcherImpl(createDefaultDrawableFactory(resources, experiments)),
+            new HierarcherImpl(createDefaultDrawableFactory(resources, nativeCodeEnabledSupplier)),
             lightweightBackgroundThreadExecutor,
             uiThreadExecutor,
             mVitoImagePipeline,
@@ -116,11 +135,11 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
   }
 
   private static ImageOptionsDrawableFactory createDefaultDrawableFactory(
-      Resources resources, FrescoExperiments frescoExperiments) {
+      Resources resources, Supplier<Boolean> nativeCodeEnabledSupplier) {
     DrawableFactory animatedDrawableFactory =
         Fresco.getImagePipelineFactory().getAnimatedDrawableFactory(null);
     return new ArrayVitoDrawableFactory(
-        new BitmapDrawableFactory(resources, frescoExperiments),
+        new BitmapDrawableFactory(resources, nativeCodeEnabledSupplier),
         animatedDrawableFactory == null
             ? null
             : new DrawableFactoryWrapper(animatedDrawableFactory));

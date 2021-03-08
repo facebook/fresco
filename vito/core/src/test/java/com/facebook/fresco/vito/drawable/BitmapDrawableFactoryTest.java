@@ -16,8 +16,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
+import com.facebook.common.internal.Suppliers;
 import com.facebook.drawee.drawable.RoundedBitmapDrawable;
-import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
 import com.facebook.fresco.vito.options.RoundingOptions;
@@ -33,7 +33,6 @@ public class BitmapDrawableFactoryTest {
 
   private Resources mResources;
   private DisplayMetrics mDisplayMetrics;
-  private FrescoExperiments mExperiments;
 
   private ImageOptionsDrawableFactory mDrawableFactory;
 
@@ -43,9 +42,7 @@ public class BitmapDrawableFactoryTest {
     mDisplayMetrics = new DisplayMetrics();
     when(mResources.getDisplayMetrics()).thenReturn(mDisplayMetrics);
 
-    mExperiments = mock(FrescoExperiments.class);
-
-    mDrawableFactory = new BitmapDrawableFactory(mResources, mExperiments);
+    mDrawableFactory = new BitmapDrawableFactory(mResources, Suppliers.BOOLEAN_TRUE);
   }
 
   @Test
@@ -71,7 +68,8 @@ public class BitmapDrawableFactoryTest {
   }
 
   @Test
-  public void testCreateDrawable_whenRoundAsCircle_thenReturnBitmapDrawable() {
+  public void
+      testCreateDrawable_whenRoundAsCircleAndJavaRounding_thenReturnRoundedBitmapDrawable() {
     final CloseableStaticBitmap closeableImage = mock(CloseableStaticBitmap.class);
     final Bitmap bitmap = mock(Bitmap.class);
     when(closeableImage.getUnderlyingBitmap()).thenReturn(bitmap);
@@ -79,15 +77,24 @@ public class BitmapDrawableFactoryTest {
     final ImageOptions options = mock(ImageOptions.class);
     when(options.getRoundingOptions()).thenReturn(RoundingOptions.asCircle());
 
-    when(mExperiments.useNativeRounding()).thenReturn(false);
+    ImageOptionsDrawableFactory factory =
+        new BitmapDrawableFactory(mResources, Suppliers.BOOLEAN_FALSE);
 
-    Drawable drawable = mDrawableFactory.createDrawable(closeableImage, options);
+    Drawable drawable = factory.createDrawable(closeableImage, options);
     assertThat(drawable).isNotNull();
     assertThat(drawable).isInstanceOf(RoundedBitmapDrawable.class);
+  }
 
-    when(mExperiments.useNativeRounding()).thenReturn(true);
+  @Test
+  public void testCreateDrawable_whenRoundAsCircleAndNativeRounding_thenReturnBitmapDrawable() {
+    final CloseableStaticBitmap closeableImage = mock(CloseableStaticBitmap.class);
+    final Bitmap bitmap = mock(Bitmap.class);
+    when(closeableImage.getUnderlyingBitmap()).thenReturn(bitmap);
 
-    drawable = mDrawableFactory.createDrawable(closeableImage, options);
+    final ImageOptions options = mock(ImageOptions.class);
+    when(options.getRoundingOptions()).thenReturn(RoundingOptions.asCircle());
+
+    Drawable drawable = mDrawableFactory.createDrawable(closeableImage, options);
     assertThat(drawable).isNotNull();
     assertThat(drawable).isInstanceOf(BitmapDrawable.class);
   }

@@ -10,8 +10,8 @@ package com.facebook.fresco.vito.drawable;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
+import com.facebook.common.internal.Supplier;
 import com.facebook.drawee.drawable.OrientedDrawable;
-import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.options.BorderOptions;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
@@ -27,12 +27,12 @@ import javax.annotation.Nullable;
 public class BitmapDrawableFactory implements ImageOptionsDrawableFactory {
 
   private final Resources mResources;
-  private final FrescoExperiments mExperiments;
+  private final Supplier<Boolean> mUseNativeRounding;
   private final RoundingUtils mRoundingUtils;
 
-  public BitmapDrawableFactory(Resources resources, FrescoExperiments frescoExperiments) {
+  public BitmapDrawableFactory(Resources resources, Supplier<Boolean> useNativeRounding) {
     mResources = resources;
-    mExperiments = frescoExperiments;
+    mUseNativeRounding = useNativeRounding;
     mRoundingUtils = new RoundingUtils();
   }
 
@@ -76,9 +76,8 @@ public class BitmapDrawableFactory implements ImageOptionsDrawableFactory {
     RoundingOptions roundingOptions = imageOptions.getRoundingOptions();
     BorderOptions borderOptions = imageOptions.getBorderOptions();
 
-    boolean forceRoundAtDecode =
-        roundingOptions == null ? false : roundingOptions.isForceRoundAtDecode();
-    mRoundingUtils.setAlreadyRounded(!forceRoundAtDecode && mExperiments.useNativeRounding());
+    boolean forceRoundAtDecode = roundingOptions != null && roundingOptions.isForceRoundAtDecode();
+    mRoundingUtils.setAlreadyRounded(!forceRoundAtDecode && mUseNativeRounding.get());
 
     return rotatedDrawable(
         closeableStaticBitmap,
