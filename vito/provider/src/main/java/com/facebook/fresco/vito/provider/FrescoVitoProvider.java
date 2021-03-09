@@ -49,7 +49,7 @@ public class FrescoVitoProvider {
     sImplementation = implementation;
   }
 
-  private static synchronized Implementation getImplementation() {
+  public static synchronized Implementation getImplementation() {
     if (sImplementation == null) {
       throw new RuntimeException("Fresco context provider must be set");
     }
