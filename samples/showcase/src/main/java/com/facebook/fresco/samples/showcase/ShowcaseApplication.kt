@@ -8,6 +8,7 @@
 package com.facebook.fresco.samples.showcase
 
 import android.app.Application
+import com.facebook.common.internal.Suppliers
 import com.facebook.common.logging.FLog
 import com.facebook.common.memory.manager.NoOpDebugMemoryManager
 import com.facebook.drawee.backends.pipeline.DraweeConfig
@@ -123,8 +124,13 @@ class ShowcaseApplication : Application() {
     DefaultFrescoContext.initialize(resources, null)
     FrescoVitoProvider.setImplementation(
         DefaultFrescoVitoProvider(
-            DefaultFrescoContext.get(),
-            DebugOverlaySupplierSingleton.getInstance(applicationContext)))
+            resources,
+            DefaultFrescoContext.get().imagePipeline,
+            DefaultFrescoContext.get().lightweightBackgroundThreadExecutor,
+            DefaultFrescoContext.get().uiThreadExecutorService,
+            DebugOverlaySupplierSingleton.getInstance(applicationContext),
+            Suppliers.BOOLEAN_TRUE,
+            Suppliers.BOOLEAN_FALSE))
     ImageSourceProvider.setImplementation(ImageSourceProviderImpl())
     VitoView.init(
         VitoViewImpl2(FrescoVitoProvider.getController(), FrescoVitoProvider.getImagePipeline()))

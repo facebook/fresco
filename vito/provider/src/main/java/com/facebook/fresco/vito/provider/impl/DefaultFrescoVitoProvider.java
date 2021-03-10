@@ -12,7 +12,6 @@ import com.facebook.callercontext.CallerContextVerifier;
 import com.facebook.common.internal.Supplier;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.vito.core.DefaultFrescoVitoConfig;
-import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoVitoConfig;
 import com.facebook.fresco.vito.core.FrescoVitoPrefetcher;
@@ -47,37 +46,22 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
   private FrescoVitoConfig mFrescoVitoConfig;
 
   public DefaultFrescoVitoProvider(
-      Resources resources,
-      final FrescoContext frescoContext,
-      @Nullable Supplier<Boolean> debugOverlayEnabledSupplier) {
+      final Resources resources,
+      final ImagePipeline imagePipeline,
+      final Executor lightweightBackgroundThreadExecutor,
+      final Executor uiThreadExecutor,
+      final @Nullable Supplier<Boolean> debugOverlayEnabledSupplier,
+      final Supplier<Boolean> useNativeRounding,
+      final Supplier<Boolean> useFastNativeRounding) {
     this(
         resources,
         new DefaultFrescoVitoConfig(),
-        frescoContext.getImagePipeline(),
-        new ImagePipelineUtilsImpl(
-            new Supplier<Boolean>() {
-
-              @Override
-              public Boolean get() {
-                return frescoContext.getExperiments().useNativeRounding();
-              }
-            },
-            new Supplier<Boolean>() {
-
-              @Override
-              public Boolean get() {
-                return frescoContext.getExperiments().useFastNativeRounding();
-              }
-            }),
-        frescoContext.getLightweightBackgroundThreadExecutor(),
-        frescoContext.getUiThreadExecutorService(),
+        imagePipeline,
+        new ImagePipelineUtilsImpl(useNativeRounding, useFastNativeRounding),
+        lightweightBackgroundThreadExecutor,
+        uiThreadExecutor,
         debugOverlayEnabledSupplier,
-        new Supplier<Boolean>() {
-          @Override
-          public Boolean get() {
-            return frescoContext.getExperiments().useNativeRounding();
-          }
-        },
+        useNativeRounding,
         new NoOpCallerContextVerifier());
   }
 
