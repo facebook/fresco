@@ -8,7 +8,6 @@
 package com.facebook.fresco.samples.showcase
 
 import android.app.Application
-import com.facebook.common.internal.Suppliers
 import com.facebook.common.logging.FLog
 import com.facebook.common.memory.manager.NoOpDebugMemoryManager
 import com.facebook.drawee.backends.pipeline.DraweeConfig
@@ -25,13 +24,10 @@ import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
 import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.samples.showcase.misc.LogcatRequestListener2
-import com.facebook.fresco.vito.core.impl.source.ImageSourceProviderImpl
+import com.facebook.fresco.vito.init.FrescoVito
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
-import com.facebook.fresco.vito.provider.impl.DefaultFrescoContext
-import com.facebook.fresco.vito.provider.impl.DefaultFrescoVitoProvider
-import com.facebook.fresco.vito.source.ImageSourceProvider
 import com.facebook.fresco.vito.view.VitoView
-import com.facebook.fresco.vito.view.impl.VitoViewImpl2
+import com.facebook.fresco.vito.view.impl.LazyVitoViewImpl2
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.facebook.imagepipeline.debug.FlipperCacheKeyFactory
@@ -92,9 +88,6 @@ class ShowcaseApplication : Application() {
     draweeConfigBuilder.setDebugOverlayEnabledSupplier(
         DebugOverlaySupplierSingleton.getInstance(applicationContext))
 
-    DefaultFrescoContext.setDebugOverlayEnabledSupplier(
-        DebugOverlaySupplierSingleton.getInstance(applicationContext))
-
     if (shouldEnableFlipper()) {
       draweeConfigBuilder.setImagePerfDataListener(
           object : ImagePerfDataListener {
@@ -121,20 +114,8 @@ class ShowcaseApplication : Application() {
             .setMaxBitmapCount(BitmapCounterConfig.DEFAULT_MAX_BITMAP_COUNT)
             .build())
     Fresco.initialize(this, imagePipelineConfig, draweeConfigBuilder.build())
-    DefaultFrescoContext.initialize(resources, null)
-    FrescoVitoProvider.setImplementation(
-        DefaultFrescoVitoProvider(
-            resources,
-            DefaultFrescoContext.get().imagePipeline,
-            DefaultFrescoContext.get().lightweightBackgroundThreadExecutor,
-            DefaultFrescoContext.get().uiThreadExecutorService,
-            DebugOverlaySupplierSingleton.getInstance(applicationContext),
-            Suppliers.BOOLEAN_TRUE,
-            Suppliers.BOOLEAN_FALSE))
-    ImageSourceProvider.setImplementation(ImageSourceProviderImpl())
-    VitoView.init(
-        VitoViewImpl2(FrescoVitoProvider.getController(), FrescoVitoProvider.getImagePipeline()))
-
+    FrescoVito.initialize(resources, DebugOverlaySupplierSingleton.getInstance(applicationContext))
+    VitoView.init(LazyVitoViewImpl2(FrescoVitoProvider.getImplementation()))
     val context = this
     Stetho.initialize(
         Stetho.newInitializerBuilder(context)
