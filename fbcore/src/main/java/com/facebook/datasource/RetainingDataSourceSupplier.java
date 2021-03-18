@@ -101,7 +101,7 @@ public class RetainingDataSourceSupplier<T> implements Supplier<DataSource<T>> {
       }
     }
 
-    private void onDataSourceFailed(DataSource<T> dataSource) {
+    private void onDataSourceFailed() {
       // do not propagate failure
     }
 
@@ -123,13 +123,13 @@ public class RetainingDataSourceSupplier<T> implements Supplier<DataSource<T>> {
         if (dataSource.hasResult()) {
           RetainingDataSource.this.onDataSourceNewResult(dataSource);
         } else if (dataSource.isFinished()) {
-          RetainingDataSource.this.onDataSourceFailed(dataSource);
+          RetainingDataSource.this.onDataSourceFailed();
         }
       }
 
       @Override
       public void onFailure(DataSource<T> dataSource) {
-        RetainingDataSource.this.onDataSourceFailed(dataSource);
+        RetainingDataSource.this.onDataSourceFailed();
       }
 
       @Override
