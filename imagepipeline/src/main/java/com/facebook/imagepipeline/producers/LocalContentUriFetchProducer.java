@@ -9,7 +9,6 @@ package com.facebook.imagepipeline.producers;
 
 import android.content.ContentResolver;
 import android.content.res.AssetFileDescriptor;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.ContactsContract;
@@ -18,9 +17,9 @@ import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
-import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.Executor;
@@ -79,30 +78,13 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
   }
 
   private @Nullable EncodedImage getCameraImage(Uri uri) throws IOException {
-    Cursor cursor = mContentResolver.query(uri, PROJECTION, null, null, null);
-    if (cursor == null) {
+    try {
+      ParcelFileDescriptor parcelFileDescriptor = mContentResolver.openFileDescriptor(uri, "r");
+      FileDescriptor fd = parcelFileDescriptor.getFileDescriptor();
+      return getEncodedImage(new FileInputStream(fd), (int) parcelFileDescriptor.getStatSize());
+    } catch (FileNotFoundException e) {
       return null;
     }
-    try {
-      if (cursor.getCount() == 0) {
-        return null;
-      }
-      cursor.moveToFirst();
-      final String pathname =
-          cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
-      if (pathname != null) {
-        ParcelFileDescriptor parcelFileDescriptor = mContentResolver.openFileDescriptor(uri, "r");
-        FileDescriptor fd = parcelFileDescriptor.getFileDescriptor();
-        return getEncodedImage(new FileInputStream(fd), getLength(pathname));
-      }
-    } finally {
-      cursor.close();
-    }
-    return null;
-  }
-
-  private static int getLength(String pathname) {
-    return pathname == null ? -1 : (int) new File(pathname).length();
   }
 
   @Override
