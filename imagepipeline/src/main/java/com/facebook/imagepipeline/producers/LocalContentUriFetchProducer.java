@@ -32,7 +32,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
   public static final String PRODUCER_NAME = "LocalContentUriFetchProducer";
 
   private static final String[] PROJECTION =
-      new String[] {MediaStore.Images.Media._ID, MediaStore.Images.ImageColumns.DATA};
+      new String[] {MediaStore.Images.Media._ID};
 
   private final ContentResolver mContentResolver;
 
@@ -67,42 +67,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
       // If a Contact URI is provided, use the special helper to open that contact's photo.
       return getEncodedImage(inputStream, EncodedImage.UNKNOWN_STREAM_SIZE);
     }
-
-    if (UriUtil.isLocalCameraUri(uri)) {
-      EncodedImage cameraImage = getCameraImage(uri);
-      if (cameraImage != null) {
-        return cameraImage;
-      }
-    }
-
     return getEncodedImage(mContentResolver.openInputStream(uri), EncodedImage.UNKNOWN_STREAM_SIZE);
-  }
-
-  private @Nullable EncodedImage getCameraImage(Uri uri) throws IOException {
-    Cursor cursor = mContentResolver.query(uri, PROJECTION, null, null, null);
-    if (cursor == null) {
-      return null;
-    }
-    try {
-      if (cursor.getCount() == 0) {
-        return null;
-      }
-      cursor.moveToFirst();
-      final String pathname =
-          cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
-      if (pathname != null) {
-        ParcelFileDescriptor parcelFileDescriptor = mContentResolver.openFileDescriptor(uri, "r");
-        FileDescriptor fd = parcelFileDescriptor.getFileDescriptor();
-        return getEncodedImage(new FileInputStream(fd), getLength(pathname));
-      }
-    } finally {
-      cursor.close();
-    }
-    return null;
-  }
-
-  private static int getLength(String pathname) {
-    return pathname == null ? -1 : (int) new File(pathname).length();
   }
 
   @Override
