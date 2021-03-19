@@ -72,7 +72,7 @@ public class VitoViewImpl2 implements VitoView.Implementation {
     // The Drawable might be re-purposed before being cleaned up, so we release if necessary.
     VitoImageRequest oldImageRequest = frescoDrawable.getImageRequest();
     if (oldImageRequest != null && !oldImageRequest.equals(imageRequest)) {
-      mController.release(frescoDrawable);
+      mController.releaseImmediately(frescoDrawable);
     }
     // We always set fields required to fetch the image.
     frescoDrawable.setImageRequest(imageRequest);
