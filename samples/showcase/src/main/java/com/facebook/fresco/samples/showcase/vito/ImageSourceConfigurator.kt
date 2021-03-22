@@ -7,6 +7,8 @@
 
 package com.facebook.fresco.samples.showcase.vito
 
+import com.facebook.common.util.UriUtil
+import com.facebook.fresco.samples.showcase.R
 import com.facebook.fresco.samples.showcase.imageformat.keyframes.KeyframesDecoderExample
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.vito.source.*
@@ -100,6 +102,12 @@ data class ImageSourceConfigurator(
                       ImageSourceProvider.firstAvailable(
                           ImageSourceProvider.forUri(imageUriProvider.nonExistingUri),
                           ImageSourceProvider.forUri(imageUriProvider.nonExistingUri))
+                    }
+                  },
+              "Local icon" to
+                  {
+                    set {
+                      ImageSourceProvider.forUri(UriUtil.getUriForResourceId(R.drawable.ic_done))
                     }
                   }),
           "Image Source")

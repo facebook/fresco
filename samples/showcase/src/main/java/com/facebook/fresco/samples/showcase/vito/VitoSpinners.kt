@@ -80,7 +80,13 @@ object VitoSpinners {
               "none" to PorterDuffColorFilter(Color.TRANSPARENT, PorterDuff.Mode.ADD),
               "red" to PorterDuffColorFilter(Color.RED, PorterDuff.Mode.DARKEN),
               "green" to PorterDuffColorFilter(Color.GREEN, PorterDuff.Mode.DARKEN),
-              "blue" to PorterDuffColorFilter(Color.BLUE, PorterDuff.Mode.DARKEN)),
+              "blue" to PorterDuffColorFilter(Color.BLUE, PorterDuff.Mode.DARKEN),
+              "tint: black" to PorterDuffColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP),
+              "tint: white" to PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP),
+              "tint: gray" to PorterDuffColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP),
+              "tint: red" to PorterDuffColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP),
+              "tint: green" to PorterDuffColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP),
+              "tint: blue" to PorterDuffColorFilter(Color.BLUE, PorterDuff.Mode.SRC_ATOP)),
           "Color filter")
 
   val fadingOptions =
