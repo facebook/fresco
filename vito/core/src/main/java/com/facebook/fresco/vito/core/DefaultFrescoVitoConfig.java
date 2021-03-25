@@ -10,8 +10,10 @@ package com.facebook.fresco.vito.core;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.infer.annotation.Nullsafe;
+import com.facebook.infer.annotation.OkToExtend;
 
 @Nullsafe(Nullsafe.Mode.STRICT)
+@OkToExtend
 public class DefaultFrescoVitoConfig implements FrescoVitoConfig {
 
   private final PrefetchConfig mPrefetchConfig = new DefaultPrefetchConfig();
