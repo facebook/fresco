@@ -93,7 +93,7 @@ public class ImagePipelineFactory {
 
   /** Initializes {@link ImagePipelineFactory} with the specified config. */
   public static synchronized void initialize(
-      ImagePipelineConfig imagePipelineConfig, boolean forceSinglePipelineInstance) {
+      ImagePipelineConfigInterface imagePipelineConfig, boolean forceSinglePipelineInstance) {
     if (sInstance != null) {
       FLog.w(
           TAG,
@@ -105,7 +105,7 @@ public class ImagePipelineFactory {
   }
 
   /** Initializes {@link ImagePipelineFactory} with the specified config. */
-  public static synchronized void initialize(ImagePipelineConfig imagePipelineConfig) {
+  public static synchronized void initialize(ImagePipelineConfigInterface imagePipelineConfig) {
     if (sInstance != null) {
       FLog.w(
           TAG,
@@ -129,7 +129,7 @@ public class ImagePipelineFactory {
     }
   }
 
-  private final ImagePipelineConfig mConfig;
+  private final ImagePipelineConfigInterface mConfig;
   private final CloseableReferenceFactory mCloseableReferenceFactory;
   private CountingMemoryCache<CacheKey, CloseableImage> mBitmapCountingMemoryCache;
   @Nullable private InstrumentedMemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
@@ -150,7 +150,7 @@ public class ImagePipelineFactory {
 
   @Nullable private AnimatedFactory mAnimatedFactory;
 
-  public ImagePipelineFactory(ImagePipelineConfig config) {
+  public ImagePipelineFactory(ImagePipelineConfigInterface config) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("ImagePipelineConfig()");
     }

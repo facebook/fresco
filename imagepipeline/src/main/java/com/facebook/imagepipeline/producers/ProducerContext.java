@@ -9,7 +9,7 @@ package com.facebook.imagepipeline.producers;
 
 import androidx.annotation.StringDef;
 import com.facebook.imagepipeline.common.Priority;
-import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.core.ImagePipelineConfigInterface;
 import com.facebook.imagepipeline.image.EncodedImageOrigin;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
@@ -93,7 +93,7 @@ public interface ProducerContext {
    */
   void addCallbacks(ProducerContextCallbacks callbacks);
 
-  ImagePipelineConfig getImagePipelineConfig();
+  ImagePipelineConfigInterface getImagePipelineConfig();
 
   EncodedImageOrigin getEncodedImageOrigin();
 

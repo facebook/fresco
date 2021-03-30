@@ -9,7 +9,7 @@ package com.facebook.imagepipeline.producers;
 
 import com.facebook.common.internal.ImmutableSet;
 import com.facebook.imagepipeline.common.Priority;
-import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.core.ImagePipelineConfigInterface;
 import com.facebook.imagepipeline.image.EncodedImageOrigin;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
@@ -55,7 +55,7 @@ public class BaseProducerContext implements ProducerContext {
   @GuardedBy("this")
   private final List<ProducerContextCallbacks> mCallbacks;
 
-  private final ImagePipelineConfig mImagePipelineConfig;
+  private final ImagePipelineConfigInterface mImagePipelineConfig;
 
   private EncodedImageOrigin mEncodedImageOrigin = EncodedImageOrigin.NOT_SET;
 
@@ -68,7 +68,7 @@ public class BaseProducerContext implements ProducerContext {
       boolean isPrefetch,
       boolean isIntermediateResultExpected,
       Priority priority,
-      ImagePipelineConfig imagePipelineConfig) {
+      ImagePipelineConfigInterface imagePipelineConfig) {
     this(
         imageRequest,
         id,
@@ -92,7 +92,7 @@ public class BaseProducerContext implements ProducerContext {
       boolean isPrefetch,
       boolean isIntermediateResultExpected,
       Priority priority,
-      ImagePipelineConfig imagePipelineConfig) {
+      ImagePipelineConfigInterface imagePipelineConfig) {
     mImageRequest = imageRequest;
     mId = id;
 
@@ -180,7 +180,7 @@ public class BaseProducerContext implements ProducerContext {
   }
 
   @Override
-  public ImagePipelineConfig getImagePipelineConfig() {
+  public ImagePipelineConfigInterface getImagePipelineConfig() {
     return mImagePipelineConfig;
   }
 

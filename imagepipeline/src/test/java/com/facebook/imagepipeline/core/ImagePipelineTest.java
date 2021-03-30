@@ -60,7 +60,7 @@ public class ImagePipelineTest {
   @Mock public ProducerSequenceFactory mProducerSequenceFactory;
   @Mock public CacheKeyFactory mCacheKeyFactory;
   @Mock public Object mCallerContext;
-  @Mock public ImagePipelineConfig mConfig;
+  @Mock public ImagePipelineConfigInterface mConfig;
 
   private Supplier<Boolean> mPrefetchEnabledSupplier;
   private Supplier<Boolean> mSuppressBitmapPrefetchingSupplier;

@@ -67,7 +67,7 @@ public class ImagePipeline {
   private AtomicLong mIdCounter;
   private final Supplier<Boolean> mLazyDataSource;
   private final @Nullable CallerContextVerifier mCallerContextVerifier;
-  private final ImagePipelineConfig mConfig;
+  private final ImagePipelineConfigInterface mConfig;
 
   public ImagePipeline(
       ProducerSequenceFactory producerSequenceFactory,
@@ -83,7 +83,7 @@ public class ImagePipeline {
       Supplier<Boolean> suppressBitmapPrefetchingSupplier,
       Supplier<Boolean> lazyDataSource,
       @Nullable CallerContextVerifier callerContextVerifier,
-      ImagePipelineConfig config) {
+      ImagePipelineConfigInterface config) {
     mIdCounter = new AtomicLong();
     mProducerSequenceFactory = producerSequenceFactory;
     mRequestListener = new ForwardingRequestListener(requestListeners);
@@ -1022,7 +1022,7 @@ public class ImagePipeline {
     return mCacheKeyFactory;
   }
 
-  public ImagePipelineConfig getConfig() {
+  public ImagePipelineConfigInterface getConfig() {
     return mConfig;
   }
 }

@@ -8,7 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.imagepipeline.common.Priority;
-import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.core.ImagePipelineConfigInterface;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
@@ -56,7 +56,7 @@ public class SettableProducerContext extends BaseProducerContext {
       boolean isPrefetch,
       boolean isIntermediateResultExpected,
       Priority priority,
-      ImagePipelineConfig imagePipelineConfig) {
+      ImagePipelineConfigInterface imagePipelineConfig) {
     super(
         imageRequest,
         id,
@@ -79,7 +79,7 @@ public class SettableProducerContext extends BaseProducerContext {
       boolean isPrefetch,
       boolean isIntermediateResultExpected,
       Priority priority,
-      ImagePipelineConfig imagePipelineConfig) {
+      ImagePipelineConfigInterface imagePipelineConfig) {
     super(
         imageRequest,
         id,
