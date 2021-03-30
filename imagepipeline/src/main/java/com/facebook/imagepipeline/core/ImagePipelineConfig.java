@@ -72,7 +72,7 @@ import javax.annotation.Nullable;
  *
  * <p>This should only be done once per process.
  */
-public class ImagePipelineConfig {
+public class ImagePipelineConfig implements ImagePipelineConfigInterface {
   // If a member here is marked @Nullable, it must be constructed by ImagePipelineFactory
   // on demand if needed.
 
@@ -284,27 +284,33 @@ public class ImagePipelineConfig {
     sDefaultImageRequestConfig = new DefaultImageRequestConfig();
   }
 
+  @Override
   public Bitmap.Config getBitmapConfig() {
     return mBitmapConfig;
   }
 
+  @Override
   public Supplier<MemoryCacheParams> getBitmapMemoryCacheParamsSupplier() {
     return mBitmapMemoryCacheParamsSupplier;
   }
 
+  @Override
   public MemoryCache.CacheTrimStrategy getBitmapMemoryCacheTrimStrategy() {
     return mBitmapMemoryCacheTrimStrategy;
   }
 
+  @Override
   @Nullable
   public CountingMemoryCache.EntryStateObserver<CacheKey> getBitmapMemoryCacheEntryStateObserver() {
     return mBitmapMemoryCacheEntryStateObserver;
   }
 
+  @Override
   public CacheKeyFactory getCacheKeyFactory() {
     return mCacheKeyFactory;
   }
 
+  @Override
   public Context getContext() {
     return mContext;
   }
@@ -313,115 +319,141 @@ public class ImagePipelineConfig {
     return sDefaultImageRequestConfig;
   }
 
+  @Override
   public FileCacheFactory getFileCacheFactory() {
     return mFileCacheFactory;
   }
 
+  @Override
   public boolean isDownsampleEnabled() {
     return mDownsampleEnabled;
   }
 
+  @Override
   public boolean isDiskCacheEnabled() {
     return mDiskCacheEnabled;
   }
 
+  @Override
   public Supplier<MemoryCacheParams> getEncodedMemoryCacheParamsSupplier() {
     return mEncodedMemoryCacheParamsSupplier;
   }
 
+  @Override
   public ExecutorSupplier getExecutorSupplier() {
     return mExecutorSupplier;
   }
 
+  @Override
   @Nullable
   public SerialExecutorService getExecutorServiceForAnimatedImages() {
     return mSerialExecutorServiceForAnimatedImages;
   }
 
+  @Override
   public ImageCacheStatsTracker getImageCacheStatsTracker() {
     return mImageCacheStatsTracker;
   }
 
+  @Override
   @Nullable
   public ImageDecoder getImageDecoder() {
     return mImageDecoder;
   }
 
+  @Override
   @Nullable
   public ImageTranscoderFactory getImageTranscoderFactory() {
     return mImageTranscoderFactory;
   }
 
+  @Override
   @Nullable
   @ImageTranscoderType
   public Integer getImageTranscoderType() {
     return mImageTranscoderType;
   }
 
+  @Override
   public Supplier<Boolean> getIsPrefetchEnabledSupplier() {
     return mIsPrefetchEnabledSupplier;
   }
 
+  @Override
   public DiskCacheConfig getMainDiskCacheConfig() {
     return mMainDiskCacheConfig;
   }
 
+  @Override
   public MemoryTrimmableRegistry getMemoryTrimmableRegistry() {
     return mMemoryTrimmableRegistry;
   }
 
+  @Override
   @MemoryChunkType
   public int getMemoryChunkType() {
     return mMemoryChunkType;
   }
 
+  @Override
   public NetworkFetcher getNetworkFetcher() {
     return mNetworkFetcher;
   }
 
+  @Override
   @Nullable
   public PlatformBitmapFactory getPlatformBitmapFactory() {
     return mPlatformBitmapFactory;
   }
 
+  @Override
   public PoolFactory getPoolFactory() {
     return mPoolFactory;
   }
 
+  @Override
   public ProgressiveJpegConfig getProgressiveJpegConfig() {
     return mProgressiveJpegConfig;
   }
 
+  @Override
   public Set<RequestListener> getRequestListeners() {
     return Collections.unmodifiableSet(mRequestListeners);
   }
 
+  @Override
   public Set<RequestListener2> getRequestListener2s() {
     return Collections.unmodifiableSet(mRequestListener2s);
   }
 
+  @Override
   public boolean isResizeAndRotateEnabledForNetwork() {
     return mResizeAndRotateEnabledForNetwork;
   }
 
+  @Override
   public DiskCacheConfig getSmallImageDiskCacheConfig() {
     return mSmallImageDiskCacheConfig;
   }
 
+  @Override
   @Nullable
   public ImageDecoderConfig getImageDecoderConfig() {
     return mImageDecoderConfig;
   }
 
+  @Override
   @Nullable
   public CallerContextVerifier getCallerContextVerifier() {
     return mCallerContextVerifier;
   }
 
+  @Override
   public ImagePipelineExperiments getExperiments() {
     return mImagePipelineExperiments;
   }
 
+  @Override
   public CloseableReferenceLeakTracker getCloseableReferenceLeakTracker() {
     return mCloseableReferenceLeakTracker;
   }
@@ -460,16 +492,19 @@ public class ImagePipelineConfig {
     }
   }
 
+  @Override
   @Nullable
   public MemoryCache<CacheKey, CloseableImage> getBitmapCacheOverride() {
     return mBitmapCache;
   }
 
+  @Override
   @Nullable
   public MemoryCache<CacheKey, PooledByteBuffer> getEncodedMemoryCacheOverride() {
     return mEncodedMemoryCache;
   }
 
+  @Override
   public BitmapMemoryCacheFactory getBitmapMemoryCacheFactory() {
     return mBitmapMemoryCacheFactory;
   }
