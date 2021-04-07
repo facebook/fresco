@@ -40,10 +40,10 @@ import javax.annotation.Nullable;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementation {
 
-  private FrescoController2 mFrescoController;
-  private VitoImagePipeline mVitoImagePipeline;
-  private FrescoVitoPrefetcher mFrescoVitoPrefetcher;
-  private FrescoVitoConfig mFrescoVitoConfig;
+  private final FrescoController2 mFrescoController;
+  private final VitoImagePipeline mVitoImagePipeline;
+  private final FrescoVitoPrefetcher mFrescoVitoPrefetcher;
+  private final FrescoVitoConfig mFrescoVitoConfig;
 
   public DefaultFrescoVitoProvider(
       final Resources resources,
