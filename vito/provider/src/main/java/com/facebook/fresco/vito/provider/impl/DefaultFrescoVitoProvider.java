@@ -21,6 +21,7 @@ import com.facebook.fresco.vito.core.impl.FrescoController2Impl;
 import com.facebook.fresco.vito.core.impl.FrescoVitoPrefetcherImpl;
 import com.facebook.fresco.vito.core.impl.HierarcherImpl;
 import com.facebook.fresco.vito.core.impl.ImagePipelineUtilsImpl;
+import com.facebook.fresco.vito.core.impl.NativeCircularBitmapRounding;
 import com.facebook.fresco.vito.core.impl.NoOpVitoImagePerfListener;
 import com.facebook.fresco.vito.core.impl.VitoImagePipelineImpl;
 import com.facebook.fresco.vito.core.impl.debug.DefaultDebugOverlayFactory2;
@@ -57,7 +58,7 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
         resources,
         new DefaultFrescoVitoConfig(),
         imagePipeline,
-        new ImagePipelineUtilsImpl(useNativeRounding, useFastNativeRounding),
+        createImagePipelineUtils(useNativeRounding, useFastNativeRounding),
         lightweightBackgroundThreadExecutor,
         uiThreadExecutor,
         debugOverlayEnabledSupplier,
@@ -127,5 +128,11 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
         animatedDrawableFactory == null
             ? null
             : new DrawableFactoryWrapper(animatedDrawableFactory));
+  }
+
+  private static ImagePipelineUtils createImagePipelineUtils(
+      final Supplier<Boolean> useNativeRounding, final Supplier<Boolean> useFastNativeRounding) {
+    return new ImagePipelineUtilsImpl(
+        useNativeRounding.get() ? new NativeCircularBitmapRounding(useFastNativeRounding) : null);
   }
 }

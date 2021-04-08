@@ -46,7 +46,7 @@ public class ImagePipelineUtilsImplTest {
     mFrescoExperiments = mock(FrescoExperiments.class);
 
     mImagePipelineUtils =
-        new ImagePipelineUtilsImpl(Suppliers.BOOLEAN_TRUE, Suppliers.BOOLEAN_FALSE);
+        new ImagePipelineUtilsImpl(new NativeCircularBitmapRounding(Suppliers.BOOLEAN_FALSE));
   }
 
   @Test

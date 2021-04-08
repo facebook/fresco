@@ -9,7 +9,6 @@ package com.facebook.fresco.vito.core.impl;
 
 import android.net.Uri;
 import androidx.annotation.VisibleForTesting;
-import com.facebook.common.internal.Supplier;
 import com.facebook.common.logging.FLog;
 import com.facebook.fresco.vito.core.ImagePipelineUtils;
 import com.facebook.fresco.vito.options.DecodedImageOptions;
@@ -37,11 +36,6 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
   private static final String TAG = "ImagePipelineUtils";
 
   private final @Nullable CircularBitmapRounding mCircularBitmapRounding;
-
-  public ImagePipelineUtilsImpl(
-      Supplier<Boolean> useNativeRounding, Supplier<Boolean> useFastNativeRounding) {
-    this(useNativeRounding.get() ? new NativeCircularBitmapRounding(useFastNativeRounding) : null);
-  }
 
   public ImagePipelineUtilsImpl(@Nullable CircularBitmapRounding circularBitmapRounding) {
     mCircularBitmapRounding = circularBitmapRounding;
