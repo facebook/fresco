@@ -9,15 +9,11 @@ package com.facebook.fresco.vito.core.impl;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import android.net.Uri;
-import com.facebook.common.internal.Suppliers;
-import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.core.ImagePipelineUtils;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.RoundingOptions;
-import com.facebook.fresco.vito.transformation.CircularBitmapTransformation;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
@@ -36,17 +32,15 @@ public class ImagePipelineUtilsImplTest {
   }
 
   private final Uri URI = Uri.parse("test");
-
-  private FrescoExperiments mFrescoExperiments;
+  private final ImageDecodeOptions mRoundingDecodeOptions = mock(ImageDecodeOptions.class);
+  private final ImageDecodeOptions mRoundingDecodeOptionsAntiAliased =
+      mock(ImageDecodeOptions.class);
 
   private ImagePipelineUtils mImagePipelineUtils;
 
   @Before
   public void setup() {
-    mFrescoExperiments = mock(FrescoExperiments.class);
-
-    mImagePipelineUtils =
-        new ImagePipelineUtilsImpl(new NativeCircularBitmapRounding(Suppliers.BOOLEAN_FALSE));
+    mImagePipelineUtils = new ImagePipelineUtilsImpl(new TestCircularBitmapRounding());
   }
 
   @Test
@@ -78,8 +72,6 @@ public class ImagePipelineUtilsImplTest {
 
   @Test
   public void testBuildImageRequest_whenRoundAsCircle_thenApplyRoundingParameters() {
-    when(mFrescoExperiments.useNativeRounding()).thenReturn(true);
-
     final ImageOptions imageOptions =
         ImageOptions.create().round(RoundingOptions.asCircle()).build();
 
@@ -88,21 +80,12 @@ public class ImagePipelineUtilsImplTest {
     assertThat(imageRequest).isNotNull();
     assertThat(imageRequest.getSourceUri()).isEqualTo(URI);
     ImageDecodeOptions imageDecodeOptions = imageRequest.getImageDecodeOptions();
-    assertThat(imageDecodeOptions).isNotEqualTo(ImageDecodeOptions.defaults());
-    assertThat(imageDecodeOptions.bitmapTransformation)
-        .isInstanceOf(CircularBitmapTransformation.class);
-
-    CircularBitmapTransformation transformation =
-        (CircularBitmapTransformation) imageDecodeOptions.bitmapTransformation;
-    assertThat(transformation).isNotNull();
-    assertThat(transformation.isAntiAliased()).isFalse();
+    assertThat(imageDecodeOptions).isEqualTo(mRoundingDecodeOptions);
   }
 
   @Test
   public void
       testBuildImageRequest_whenRoundAsCircleWithAntiAliasing_thenApplyRoundingParameters() {
-    when(mFrescoExperiments.useNativeRounding()).thenReturn(true);
-
     final ImageOptions imageOptions =
         ImageOptions.create().round(RoundingOptions.asCircle(true)).build();
 
@@ -111,14 +94,38 @@ public class ImagePipelineUtilsImplTest {
     assertThat(imageRequest).isNotNull();
     assertThat(imageRequest.getSourceUri()).isEqualTo(URI);
     ImageDecodeOptions imageDecodeOptions = imageRequest.getImageDecodeOptions();
-    assertThat(imageDecodeOptions).isNotEqualTo(ImageDecodeOptions.defaults());
-    assertThat(imageDecodeOptions.bitmapTransformation)
-        .isInstanceOf(CircularBitmapTransformation.class);
+    assertThat(imageDecodeOptions).isEqualTo(mRoundingDecodeOptionsAntiAliased);
+  }
 
-    CircularBitmapTransformation transformation =
-        (CircularBitmapTransformation) imageDecodeOptions.bitmapTransformation;
-    assertThat(transformation).isNotNull();
-    assertThat(transformation.isAntiAliased()).isTrue();
+  @Test
+  public void testBuildImageRequest_whenRoundAsCircleAndRoundingDisabled_thenDoNothing() {
+    final ImageOptions imageOptions =
+        ImageOptions.create().round(RoundingOptions.asCircle()).build();
+
+    ImagePipelineUtils imagePipelineUtils = new ImagePipelineUtilsImpl(null);
+
+    ImageRequest imageRequest = imagePipelineUtils.buildImageRequest(URI, imageOptions);
+
+    assertThat(imageRequest).isNotNull();
+    assertThat(imageRequest.getSourceUri()).isEqualTo(URI);
+    ImageDecodeOptions imageDecodeOptions = imageRequest.getImageDecodeOptions();
+    assertThat(imageDecodeOptions).isEqualTo(ImageDecodeOptions.defaults());
+  }
+
+  @Test
+  public void
+      testBuildImageRequest_whenRoundAsCircleWithAntiAliasingAndRoundingDisabled_thenDoNothing() {
+    final ImageOptions imageOptions =
+        ImageOptions.create().round(RoundingOptions.asCircle(true)).build();
+
+    ImagePipelineUtils imagePipelineUtils = new ImagePipelineUtilsImpl(null);
+
+    ImageRequest imageRequest = imagePipelineUtils.buildImageRequest(URI, imageOptions);
+
+    assertThat(imageRequest).isNotNull();
+    assertThat(imageRequest.getSourceUri()).isEqualTo(URI);
+    ImageDecodeOptions imageDecodeOptions = imageRequest.getImageDecodeOptions();
+    assertThat(imageDecodeOptions).isEqualTo(ImageDecodeOptions.defaults());
   }
 
   @Test
@@ -143,5 +150,13 @@ public class ImagePipelineUtilsImplTest {
     assertThat(imageRequest).isNotNull();
     assertThat(imageRequest.getSourceUri()).isEqualTo(URI);
     assertThat(imageRequest.getRotationOptions()).isEqualTo(rotationOptions);
+  }
+
+  class TestCircularBitmapRounding implements ImagePipelineUtilsImpl.CircularBitmapRounding {
+
+    @Override
+    public ImageDecodeOptions getDecodeOptions(boolean antiAliased) {
+      return antiAliased ? mRoundingDecodeOptionsAntiAliased : mRoundingDecodeOptions;
+    }
   }
 }

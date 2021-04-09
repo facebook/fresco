@@ -22,9 +22,9 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
-public class FrescoDrawableTest {
+public class BaseFrescoDrawableTest {
 
-  private FrescoDrawable mFrescoDrawable;
+  private BaseFrescoDrawable mFrescoDrawable;
 
   private CountDownLatch mLatch;
   private CloseableImage mCloseableImage;
@@ -32,7 +32,7 @@ public class FrescoDrawableTest {
 
   @Before
   public void setup() {
-    mFrescoDrawable = new FrescoDrawable();
+    mFrescoDrawable = new BaseFrescoDrawable();
     mLatch = new CountDownLatch(1);
     mCloseableImage = new DummyCloseableImage();
     mCloseableReference =
