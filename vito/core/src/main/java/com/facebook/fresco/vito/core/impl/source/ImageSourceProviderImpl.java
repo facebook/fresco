@@ -10,7 +10,6 @@ package com.facebook.fresco.vito.core.impl.source;
 import android.net.Uri;
 import com.facebook.fresco.vito.source.ImageSource;
 import com.facebook.fresco.vito.source.ImageSourceProvider;
-import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.infer.annotation.Nullsafe;
 
@@ -23,19 +22,8 @@ public class ImageSourceProviderImpl implements ImageSourceProvider.Implementati
   }
 
   @Override
-  public ImageSource singleImageRequest(ImageRequest imageRequest) {
-    return new SingleImageSource(imageRequest);
-  }
-
-  @Override
-  public ImageSource singleImageRequest(
-      ImageRequest imageRequest, ImageRequest.RequestLevel requestLevelForFetch) {
-    return new SingleImageSource(imageRequest, requestLevelForFetch);
-  }
-
-  @Override
   public ImageSource singleUri(Uri uri) {
-    return singleImageRequest(ImageRequestBuilder.newBuilderWithSource(uri).build());
+    return new SingleImageSource(ImageRequestBuilder.newBuilderWithSource(uri).build());
   }
 
   @Override

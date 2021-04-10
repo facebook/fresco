@@ -8,7 +8,6 @@
 package com.facebook.fresco.vito.source;
 
 import android.net.Uri;
-import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
@@ -25,34 +24,6 @@ public class ImageSourceProvider {
   /** @return an empty image source if no image URI is available to pass to the UI component */
   public static ImageSource emptySource() {
     return get().emptySource();
-  }
-
-  /**
-   * Create a single image source for a given image request.
-   *
-   * @param imageRequest the image request to use
-   * @return the ImageSource to be passed to the UI component
-   */
-  public static ImageSource forImageRequest(@Nullable ImageRequest imageRequest) {
-    if (imageRequest == null) {
-      return emptySource();
-    }
-    return get().singleImageRequest(imageRequest);
-  }
-
-  /**
-   * Create a single image source for a given image request.
-   *
-   * @param imageRequest the image request to use
-   * @param requestLevelForFetch request level for fetch
-   * @return the ImageSource to be passed to the UI component
-   */
-  public static ImageSource forImageRequest(
-      @Nullable ImageRequest imageRequest, ImageRequest.RequestLevel requestLevelForFetch) {
-    if (imageRequest == null) {
-      return emptySource();
-    }
-    return get().singleImageRequest(imageRequest, requestLevelForFetch);
   }
 
   /**
@@ -141,11 +112,6 @@ public class ImageSourceProvider {
 
   public interface Implementation {
     ImageSource emptySource();
-
-    ImageSource singleImageRequest(ImageRequest imageRequest);
-
-    ImageSource singleImageRequest(
-        ImageRequest imageRequest, ImageRequest.RequestLevel requestLevelForFetch);
 
     ImageSource singleUri(Uri uri);
 

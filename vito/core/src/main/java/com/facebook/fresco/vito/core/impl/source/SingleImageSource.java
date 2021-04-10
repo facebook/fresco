@@ -27,11 +27,11 @@ public class SingleImageSource implements VitoImageSource {
   private final ImageRequest mMainImageRequest;
   private final ImageRequest.RequestLevel mRequestLevelForFetch;
 
-  protected SingleImageSource(ImageRequest mainImageRequest) {
+  public SingleImageSource(ImageRequest mainImageRequest) {
     this(mainImageRequest, ImageRequest.RequestLevel.FULL_FETCH);
   }
 
-  protected SingleImageSource(
+  public SingleImageSource(
       ImageRequest mainImageRequest, ImageRequest.RequestLevel requestLevelForFetch) {
     mMainImageRequest = mainImageRequest;
     mRequestLevelForFetch = requestLevelForFetch;

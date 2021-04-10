@@ -14,7 +14,6 @@ import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.vito.source.*
 import com.facebook.imageformat.DefaultImageFormats
 import com.facebook.imageformat.ImageFormat
-import com.facebook.imagepipeline.request.ImageRequest
 
 data class ImageSourceConfigurator(
     private val imageUriProvider: ImageUriProvider,
@@ -57,13 +56,6 @@ data class ImageSourceConfigurator(
                     set {
                       ImageSourceProvider.forUri(
                           imageUriProvider.create(currentImageFormat)?.toString())
-                    }
-                  },
-              "Single ImageRequest" to
-                  {
-                    set {
-                      ImageSourceProvider.forImageRequest(
-                          ImageRequest.fromUri(imageUriProvider.create(currentImageFormat)))
                     }
                   },
               "Increasing quality" to
