@@ -11,16 +11,20 @@ import android.os.SystemClock;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.instrumentation.FrescoInstrumenter;
+import com.facebook.infer.annotation.FalseOnNull;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
 /**
  * Manages jobs so that only one can be executed at a time and no more often than once in <code>
  * mMinimumJobIntervalMs</code> milliseconds.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class JobScheduler {
 
   static final String QUEUE_TIME_KEY = "queueTime";
@@ -59,6 +63,7 @@ public class JobScheduler {
   // job data
   @GuardedBy("this")
   @VisibleForTesting
+  @Nullable
   EncodedImage mEncodedImage;
 
   @GuardedBy("this")
@@ -248,7 +253,9 @@ public class JobScheduler {
     }
   }
 
-  private static boolean shouldProcess(EncodedImage encodedImage, @Consumer.Status int status) {
+  @FalseOnNull
+  private static boolean shouldProcess(
+      @Nullable EncodedImage encodedImage, @Consumer.Status int status) {
     // the last result should always be processed, whereas
     // an intermediate result should be processed only if valid
     return BaseConsumer.isLast(status)

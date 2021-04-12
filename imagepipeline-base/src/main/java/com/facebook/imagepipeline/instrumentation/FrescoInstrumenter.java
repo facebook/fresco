@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.instrumentation;
 
 import androidx.annotation.Nullable;
 import com.facebook.infer.annotation.Nullsafe;
+import com.facebook.infer.annotation.PropagatesNullable;
 
 /**
  * Utility class that provides hooks to capture execution of different units of work. Client code
@@ -131,7 +132,8 @@ public final class FrescoInstrumenter {
   }
 
   @Nullable
-  public static Runnable decorateRunnable(@Nullable Runnable runnable, @Nullable String tag) {
+  public static Runnable decorateRunnable(
+      @PropagatesNullable @Nullable Runnable runnable, @Nullable String tag) {
     final Instrumenter instrumenter = sInstance;
     if (instrumenter == null || runnable == null || tag == null) {
       return runnable;
