@@ -21,6 +21,8 @@ import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 import com.facebook.imagepipeline.transformation.BitmapTransformation;
+import com.facebook.infer.annotation.Nullsafe;
+import java.io.InputStream;
 import java.util.Map;
 import javax.annotation.Nullable;
 
@@ -39,10 +41,11 @@ import javax.annotation.Nullable;
  * <p>For API 21 and higher, this class produces standard Bitmaps, as purgeability is not supported
  * on the most recent versions of Android.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DefaultImageDecoder implements ImageDecoder {
 
-  private final ImageDecoder mAnimatedGifDecoder;
-  private final ImageDecoder mAnimatedWebPDecoder;
+  private final @Nullable ImageDecoder mAnimatedGifDecoder;
+  private final @Nullable ImageDecoder mAnimatedWebPDecoder;
   private final PlatformDecoder mPlatformDecoder;
 
   private final ImageDecoder mDefaultDecoder =
@@ -70,15 +73,15 @@ public class DefaultImageDecoder implements ImageDecoder {
   @Nullable private final Map<ImageFormat, ImageDecoder> mCustomDecoders;
 
   public DefaultImageDecoder(
-      final ImageDecoder animatedGifDecoder,
-      final ImageDecoder animatedWebPDecoder,
+      @Nullable final ImageDecoder animatedGifDecoder,
+      @Nullable final ImageDecoder animatedWebPDecoder,
       final PlatformDecoder platformDecoder) {
     this(animatedGifDecoder, animatedWebPDecoder, platformDecoder, null);
   }
 
   public DefaultImageDecoder(
-      final ImageDecoder animatedGifDecoder,
-      final ImageDecoder animatedWebPDecoder,
+      @Nullable final ImageDecoder animatedGifDecoder,
+      @Nullable final ImageDecoder animatedWebPDecoder,
       final PlatformDecoder platformDecoder,
       @Nullable Map<ImageFormat, ImageDecoder> customDecoders) {
     mAnimatedGifDecoder = animatedGifDecoder;
@@ -107,9 +110,11 @@ public class DefaultImageDecoder implements ImageDecoder {
     }
     ImageFormat imageFormat = encodedImage.getImageFormat();
     if (imageFormat == null || imageFormat == ImageFormat.UNKNOWN) {
-      imageFormat =
-          ImageFormatChecker.getImageFormat_WrapIOException(encodedImage.getInputStream());
-      encodedImage.setImageFormat(imageFormat);
+      InputStream inputStream = encodedImage.getInputStream();
+      if (inputStream != null) {
+        imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(inputStream);
+        encodedImage.setImageFormat(imageFormat);
+      }
     }
     if (mCustomDecoders != null) {
       ImageDecoder decoder = mCustomDecoders.get(imageFormat);
@@ -204,7 +209,10 @@ public class DefaultImageDecoder implements ImageDecoder {
       final int length,
       final QualityInfo qualityInfo,
       final ImageDecodeOptions options) {
-    return mAnimatedWebPDecoder.decode(encodedImage, length, qualityInfo, options);
+    if (mAnimatedWebPDecoder != null) {
+      return mAnimatedWebPDecoder.decode(encodedImage, length, qualityInfo, options);
+    }
+    throw new DecodeException("Animated WebP support not set up!", encodedImage);
   }
 
   private void maybeApplyTransformation(
