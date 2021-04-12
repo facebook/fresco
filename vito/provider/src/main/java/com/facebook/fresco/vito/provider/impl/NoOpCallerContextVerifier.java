@@ -8,8 +8,10 @@
 package com.facebook.fresco.vito.provider.impl;
 
 import com.facebook.callercontext.CallerContextVerifier;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class NoOpCallerContextVerifier implements CallerContextVerifier {
 
   @Override
