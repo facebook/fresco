@@ -8,10 +8,13 @@
 package com.facebook.imagepipeline.cache;
 
 import com.facebook.cache.common.CacheKey;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /** Class that does no stats tracking at all */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class NoOpImageCacheStatsTracker implements ImageCacheStatsTracker {
-  private static NoOpImageCacheStatsTracker sInstance = null;
+  private static @Nullable NoOpImageCacheStatsTracker sInstance = null;
 
   private NoOpImageCacheStatsTracker() {}
 

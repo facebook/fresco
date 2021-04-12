@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.cache;
 
 import com.facebook.cache.common.CacheKey;
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * Interface for stats tracking for the image cache.
@@ -16,6 +17,7 @@ import com.facebook.cache.common.CacheKey;
  * com.facebook.imagepipeline.core.ImagePipelineConfig}, will be notified for each of the following
  * cache events. Use this to keep cache stats for your app.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface ImageCacheStatsTracker {
 
   /** Called whenever decoded images are put into the bitmap cache. */
