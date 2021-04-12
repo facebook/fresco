@@ -298,7 +298,7 @@ public class FrescoVitoImage2Spec {
       workingRangePrefetchData.set(
           FrescoVitoProvider.getPrefetcher()
               .prefetch(
-                  PrefetchTarget.MEMORY_DECODED,
+                  prefetchConfig.prefetchTargetWorkingRange(),
                   imageRequest,
                   callerContext,
                   null,
