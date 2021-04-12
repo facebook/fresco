@@ -11,7 +11,10 @@ import android.content.res.Resources;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.Suppliers;
+import com.facebook.fresco.vito.core.ImagePipelineUtils;
+import com.facebook.fresco.vito.core.impl.ImagePipelineUtilsImpl;
 import com.facebook.fresco.vito.core.impl.source.ImageSourceProviderImpl;
+import com.facebook.fresco.vito.nativecode.NativeCircularBitmapRounding;
 import com.facebook.fresco.vito.provider.FrescoVitoProvider;
 import com.facebook.fresco.vito.provider.impl.DefaultFrescoVitoProvider;
 import com.facebook.fresco.vito.source.ImageSourceProvider;
@@ -92,13 +95,20 @@ public class FrescoVito {
       final Resources resources,
       final ImagePipeline imagePipeline,
       final @Nullable Supplier<Boolean> debugOverlayEnabledSupplier) {
+    final Supplier<Boolean> useNativeCode = Suppliers.BOOLEAN_TRUE;
     return new DefaultFrescoVitoProvider(
         resources,
         imagePipeline,
         imagePipeline.getConfig().getExecutorSupplier().forLightweightBackgroundTasks(),
         UiThreadImmediateExecutorService.getInstance(),
-        debugOverlayEnabledSupplier,
-        Suppliers.BOOLEAN_TRUE,
-        Suppliers.BOOLEAN_FALSE);
+        createImagePipelineUtils(useNativeCode, Suppliers.BOOLEAN_FALSE),
+        useNativeCode,
+        debugOverlayEnabledSupplier);
+  }
+
+  private static ImagePipelineUtils createImagePipelineUtils(
+      final Supplier<Boolean> useNativeRounding, final Supplier<Boolean> useFastNativeRounding) {
+    return new ImagePipelineUtilsImpl(
+        useNativeRounding.get() ? new NativeCircularBitmapRounding(useFastNativeRounding) : null);
   }
 }

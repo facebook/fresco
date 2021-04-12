@@ -5,10 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.core.impl;
+package com.facebook.fresco.vito.nativecode;
 
 import com.facebook.common.internal.Supplier;
-import com.facebook.fresco.vito.transformation.CircularBitmapTransformation;
+import com.facebook.fresco.vito.core.impl.ImagePipelineUtilsImpl;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;

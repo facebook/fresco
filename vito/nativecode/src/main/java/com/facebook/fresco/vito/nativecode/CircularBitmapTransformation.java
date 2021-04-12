@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.transformation;
+package com.facebook.fresco.vito.nativecode;
 
 import android.graphics.Bitmap;
 import com.facebook.imagepipeline.transformation.BitmapTransformation;

@@ -12,6 +12,8 @@ import static org.mockito.Mockito.mock;
 
 import android.net.Uri;
 import com.facebook.fresco.vito.core.ImagePipelineUtils;
+import com.facebook.fresco.vito.nativecode.CircularBitmapTransformation;
+import com.facebook.fresco.vito.nativecode.NativeCircularBitmapRounding;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.RoundingOptions;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;

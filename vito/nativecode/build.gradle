@@ -19,7 +19,6 @@ dependencies {
     implementation project(':fbcore')
     implementation project(':imagepipeline')
     implementation project(':vito:core')
-    implementation project(':vito:nativecode')
     implementation project(':vito:provider')
     implementation project(':vito:source')
 
