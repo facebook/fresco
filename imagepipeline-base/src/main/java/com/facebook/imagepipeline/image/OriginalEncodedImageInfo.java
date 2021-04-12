@@ -8,8 +8,10 @@
 package com.facebook.imagepipeline.image;
 
 import android.net.Uri;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class OriginalEncodedImageInfo {
 
   public static final OriginalEncodedImageInfo EMPTY = new OriginalEncodedImageInfo();
@@ -65,7 +67,7 @@ public class OriginalEncodedImageInfo {
     return mCallerContext;
   }
 
-  public EncodedImageOrigin getOrigin() {
+  public @Nullable EncodedImageOrigin getOrigin() {
     return mOrigin;
   }
 }
