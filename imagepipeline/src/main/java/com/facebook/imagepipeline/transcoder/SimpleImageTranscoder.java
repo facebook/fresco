@@ -17,6 +17,7 @@ import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.OutputStream;
 import javax.annotation.Nullable;
 
@@ -24,6 +25,7 @@ import javax.annotation.Nullable;
  * Image transcoder using only the Android API. Clients can use this if they don't want to use the
  * native implementation. This image transcoder requires more memory.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class SimpleImageTranscoder implements ImageTranscoder {
   private static final String TAG = "SimpleImageTranscoder";
   private final boolean mResizingEnabled;

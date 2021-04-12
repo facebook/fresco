@@ -12,12 +12,14 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.Postprocessor;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Default implementation of {@link CacheKeyFactory}. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DefaultCacheKeyFactory implements CacheKeyFactory {
 
-  private static DefaultCacheKeyFactory sInstance = null;
+  private static @Nullable DefaultCacheKeyFactory sInstance = null;
 
   protected DefaultCacheKeyFactory() {}
 

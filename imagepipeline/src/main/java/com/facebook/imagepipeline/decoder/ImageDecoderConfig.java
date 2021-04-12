@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.decoder;
 
 import com.facebook.imageformat.ImageFormat;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 /** Configuration for {@link ImageDecoder}. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImageDecoderConfig {
 
   private final @Nullable Map<ImageFormat, ImageDecoder> mCustomImageDecoders;

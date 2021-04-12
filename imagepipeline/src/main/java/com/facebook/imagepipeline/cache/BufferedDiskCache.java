@@ -21,6 +21,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.instrumentation.FrescoInstrumenter;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -34,6 +35,7 @@ import javax.annotation.Nullable;
  * BufferedDiskCache provides get and put operations to take care of scheduling disk-cache
  * read/writes.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class BufferedDiskCache {
   private static final Class<?> TAG = BufferedDiskCache.class;
 
@@ -449,7 +451,9 @@ public class BufferedDiskCache {
           new WriterCallback() {
             @Override
             public void write(OutputStream os) throws IOException {
-              mPooledByteStreams.copy(encodedImage.getInputStream(), os);
+              InputStream inputStream = encodedImage.getInputStream();
+              Preconditions.checkNotNull(inputStream);
+              mPooledByteStreams.copy(inputStream, os);
             }
           });
       mImageCacheStatsTracker.onDiskCachePut(key);

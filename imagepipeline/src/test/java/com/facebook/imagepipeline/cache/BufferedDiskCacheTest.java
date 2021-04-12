@@ -48,6 +48,8 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
@@ -175,11 +177,19 @@ public class BufferedDiskCacheTest {
     when(mPooledByteBuffer.size()).thenReturn(0);
 
     final ArgumentCaptor<WriterCallback> wcCapture = ArgumentCaptor.forClass(WriterCallback.class);
-    when(mFileCache.insert(eq(mCacheKey), wcCapture.capture())).thenReturn(null);
+    final OutputStream os = mock(OutputStream.class);
+    when(mFileCache.insert(eq(mCacheKey), wcCapture.capture()))
+        .then(
+            new Answer<Void>() {
+              @Override
+              public Void answer(InvocationOnMock invocation) throws Throwable {
+                WriterCallback wc = (WriterCallback) invocation.getArguments()[1];
+                wc.write(os);
+                return null;
+              }
+            });
 
     mWritePriorityExecutor.runUntilIdle();
-    OutputStream os = mock(OutputStream.class);
-    wcCapture.getValue().write(os);
 
     // Ref count should be equal to 2 ('owned' by the mCloseableReference and other 'owned' by
     // mEncodedImage)

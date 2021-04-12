@@ -33,7 +33,7 @@ public class BitmapMemoryCacheKey implements CacheKey {
   private final @Nullable CacheKey mPostprocessorCacheKey;
   private final @Nullable String mPostprocessorName;
   private final int mHash;
-  private final Object mCallerContext;
+  private final @Nullable Object mCallerContext;
   private final long mCacheTime;
 
   public BitmapMemoryCacheKey(
@@ -43,7 +43,7 @@ public class BitmapMemoryCacheKey implements CacheKey {
       ImageDecodeOptions imageDecodeOptions,
       @Nullable CacheKey postprocessorCacheKey,
       @Nullable String postprocessorName,
-      Object callerContext) {
+      @Nullable Object callerContext) {
     mSourceString = Preconditions.checkNotNull(sourceString);
     mResizeOptions = resizeOptions;
     mRotationOptions = rotationOptions;
@@ -116,7 +116,7 @@ public class BitmapMemoryCacheKey implements CacheKey {
     return false;
   }
 
-  public Object getCallerContext() {
+  public @Nullable Object getCallerContext() {
     return mCallerContext;
   }
 
