@@ -11,18 +11,19 @@ import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class InternalProducerListener implements ProducerListener2 {
 
-  private final ProducerListener mProducerListener;
+  private final @Nullable ProducerListener mProducerListener;
   private final @Nullable ProducerListener2 mProducerListener2;
 
   public InternalProducerListener(
-      ProducerListener producerListener, @Nullable ProducerListener2 producerListener2) {
+      @Nullable ProducerListener producerListener, @Nullable ProducerListener2 producerListener2) {
     mProducerListener = producerListener;
     mProducerListener2 = producerListener2;
   }
 
+  @Nullable
   public ProducerListener getProducerListener() {
     return mProducerListener;
   }

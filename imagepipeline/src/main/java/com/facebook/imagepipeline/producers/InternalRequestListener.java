@@ -9,8 +9,10 @@ package com.facebook.imagepipeline.producers;
 
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestListener2;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class InternalRequestListener extends InternalProducerListener implements RequestListener2 {
 
   private final @Nullable RequestListener mRequestListener;
