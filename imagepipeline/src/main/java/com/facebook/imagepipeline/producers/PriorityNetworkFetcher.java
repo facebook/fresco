@@ -14,6 +14,7 @@ import com.facebook.common.logging.FLog;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.common.time.RealtimeSinceBootClock;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -43,6 +44,7 @@ import javax.annotation.Nullable;
  *       to the rules above.
  * </ul>
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     implements NetworkFetcher<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> {
   public static final String TAG = PriorityNetworkFetcher.class.getSimpleName();
@@ -349,7 +351,10 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
           new NetworkFetcher.Callback() {
             @Override
             public void onResponse(InputStream response, int responseLength) throws IOException {
-              fetchState.callback.onResponse(response, responseLength);
+              final Callback callback = fetchState.callback;
+              if (callback != null) {
+                callback.onResponse(response, responseLength);
+              }
             }
 
             @Override
@@ -362,14 +367,20 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
                 requeue(fetchState);
               } else {
                 removeFromQueue(fetchState, "FAIL");
-                fetchState.callback.onFailure(throwable);
+                final Callback callback = fetchState.callback;
+                if (callback != null) {
+                  callback.onFailure(throwable);
+                }
               }
             }
 
             @Override
             public void onCancellation() {
               removeFromQueue(fetchState, "CANCEL");
-              fetchState.callback.onCancellation();
+              final Callback callback = fetchState.callback;
+              if (callback != null) {
+                callback.onCancellation();
+              }
             }
           };
       mDelegate.fetch(fetchState.delegatedState, callbackWrapper);
