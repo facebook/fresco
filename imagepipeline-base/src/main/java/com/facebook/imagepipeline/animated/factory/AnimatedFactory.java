@@ -13,8 +13,10 @@ import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
+import com.facebook.infer.annotation.Nullsafe;
 
 @NotThreadSafe
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface AnimatedFactory {
 
   @Nullable

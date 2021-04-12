@@ -15,19 +15,22 @@ import com.facebook.imagepipeline.core.ExecutorSupplier;
 import com.facebook.imagepipeline.image.CloseableImage;
 import java.lang.reflect.Constructor;
 import java.util.concurrent.ExecutorService;
+import javax.annotation.Nullable;
+import com.facebook.infer.annotation.Nullsafe;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedFactoryProvider {
 
   private static boolean sImplLoaded;
 
-  private static AnimatedFactory sImpl = null;
+  @Nullable private static AnimatedFactory sImpl = null;
 
-  public static AnimatedFactory getAnimatedFactory(
+  public static @Nullable AnimatedFactory getAnimatedFactory(
       PlatformBitmapFactory platformBitmapFactory,
       ExecutorSupplier executorSupplier,
       CountingMemoryCache<CacheKey, CloseableImage> backingCache,
       boolean downscaleFrameToDrawableDimensions,
-      ExecutorService serialExecutorService) {
+      @Nullable ExecutorService serialExecutorService) {
     if (!sImplLoaded) {
       try {
         final Class<?> clazz =
