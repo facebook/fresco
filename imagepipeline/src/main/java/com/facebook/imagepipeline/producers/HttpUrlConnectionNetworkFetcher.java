@@ -9,10 +9,12 @@ package com.facebook.imagepipeline.producers;
 
 import android.net.Uri;
 import androidx.annotation.VisibleForTesting;
+import com.facebook.common.internal.Objects;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.common.time.RealtimeSinceBootClock;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -31,6 +33,7 @@ import javax.annotation.Nullable;
  * <p>Apps requiring more sophisticated networking should implement their own {@link
  * NetworkFetcher}.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class HttpUrlConnectionNetworkFetcher
     extends BaseNetworkFetcher<HttpUrlConnectionNetworkFetcher.HttpUrlConnectionNetworkFetchState> {
 
@@ -178,7 +181,9 @@ public class HttpUrlConnectionNetworkFetcher
       Uri nextUri = (nextUriString == null) ? null : Uri.parse(nextUriString);
       String originalScheme = uri.getScheme();
 
-      if (maxRedirects > 0 && nextUri != null && !nextUri.getScheme().equals(originalScheme)) {
+      if (maxRedirects > 0
+          && nextUri != null
+          && !Objects.equal(nextUri.getScheme(), originalScheme)) {
         return downloadFrom(nextUri, maxRedirects - 1);
       } else {
         String message =
