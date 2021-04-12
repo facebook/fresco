@@ -16,12 +16,15 @@ import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.ExecutorService;
+import javax.annotation.Nullable;
 
 /**
  * Default bitmap frame preparer that uses the given {@link ExecutorService} to schedule jobs. An
  * instance of this class can be shared between multiple animated images.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DefaultBitmapFramePreparer implements BitmapFramePreparer {
 
   private static final Class<?> TAG = DefaultBitmapFramePreparer.class;
@@ -116,7 +119,7 @@ public class DefaultBitmapFramePreparer implements BitmapFramePreparer {
 
     private boolean prepareFrameAndCache(
         int frameNumber, @BitmapAnimationBackend.FrameType int frameType) {
-      CloseableReference<Bitmap> bitmapReference = null;
+      @Nullable CloseableReference<Bitmap> bitmapReference = null;
       boolean created;
       int nextFrameType;
 
@@ -164,7 +167,7 @@ public class DefaultBitmapFramePreparer implements BitmapFramePreparer {
 
     private boolean renderFrameAndCache(
         int frameNumber,
-        CloseableReference<Bitmap> bitmapReference,
+        @Nullable CloseableReference<Bitmap> bitmapReference,
         @BitmapAnimationBackend.FrameType int frameType) {
       // Check if the bitmap is valid
       if (!CloseableReference.isValid(bitmapReference)) {

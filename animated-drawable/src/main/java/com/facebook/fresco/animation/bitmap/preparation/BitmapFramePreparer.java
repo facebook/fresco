@@ -10,8 +10,10 @@ package com.facebook.fresco.animation.bitmap.preparation;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Prepare frames for animated images ahead of time. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface BitmapFramePreparer {
 
   /**

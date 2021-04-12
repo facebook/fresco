@@ -9,8 +9,10 @@ package com.facebook.fresco.animation.bitmap.preparation;
 
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Frame preparation strategy to prepare next animation frames. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface BitmapFramePreparationStrategy {
 
   /**

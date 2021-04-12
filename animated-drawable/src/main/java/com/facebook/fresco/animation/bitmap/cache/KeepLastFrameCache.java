@@ -12,10 +12,12 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
 /** Simple bitmap cache that keeps the last frame and reuses it if possible. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class KeepLastFrameCache implements BitmapFrameCache {
 
   private static final int FRAME_NUMBER_UNSET = -1;
@@ -44,6 +46,7 @@ public class KeepLastFrameCache implements BitmapFrameCache {
   }
 
   @Override
+  @Nullable
   public synchronized CloseableReference<Bitmap> getBitmapToReuseForFrame(
       int frameNumber, int width, int height) {
     try {
