@@ -31,6 +31,7 @@ import com.facebook.imagepipeline.transcoder.ImageTranscoder;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import com.facebook.imagepipeline.transcoder.JpegTranscoderUtils;
 import com.facebook.imagepipeline.transcoder.TranscodeStatus;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -43,6 +44,7 @@ import javax.annotation.Nullable;
  *
  * <p>This can be used even if downsampling is enabled as long as resizing is disabled.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   private static final String PRODUCER_NAME = "ResizeAndRotateProducer";
   private static final String INPUT_IMAGE_FORMAT = "Image format";

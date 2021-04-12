@@ -7,11 +7,14 @@
 
 package com.facebook.imagepipeline.producers;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * Swallow result producer.
  *
  * <p>This producer just inserts a consumer that swallows results into the stack of consumers.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class SwallowResultProducer<T> implements Producer<Void> {
   private final Producer<T> mInputProducer;
 

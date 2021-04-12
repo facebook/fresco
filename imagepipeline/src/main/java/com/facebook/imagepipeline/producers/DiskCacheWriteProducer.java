@@ -14,6 +14,7 @@ import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * Disk cache write producer.
@@ -28,6 +29,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
  * <p>This producer is currently used only if the media variations experiment is turned on, to
  * enable another producer to sit between cache read and write.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DiskCacheWriteProducer implements Producer<EncodedImage> {
   @VisibleForTesting static final String PRODUCER_NAME = "DiskCacheWriteProducer";
 

@@ -7,12 +7,15 @@
 
 package com.facebook.imagepipeline.producers;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * Producer that never produces anything, but just returns null.
  *
  * <p>This producer can be used to terminate a sequence, e.g. for a bitmap cache get only sequence,
  * just use BitmapMemoryCacheGetProducer followed by NullProducer.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class NullProducer<T> implements Producer<T> {
 
   /**

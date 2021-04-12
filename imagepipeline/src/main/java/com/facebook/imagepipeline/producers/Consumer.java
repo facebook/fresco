@@ -11,6 +11,7 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 import androidx.annotation.IntDef;
 import java.lang.annotation.Retention;
+import javax.annotation.Nullable;
 
 /**
  * Consumes data produced by {@link Producer}.<T>
@@ -91,7 +92,7 @@ public interface Consumer<T> {
    * @param status bitwise values describing the returned result
    * @see Status for status flags
    */
-  void onNewResult(T newResult, @Status int status);
+  void onNewResult(@Nullable T newResult, @Status int status);
 
   /**
    * Called by a producer whenever it terminates further work due to Throwable being thrown. This

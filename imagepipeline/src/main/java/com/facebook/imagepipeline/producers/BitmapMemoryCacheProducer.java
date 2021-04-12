@@ -17,8 +17,10 @@ import com.facebook.imagepipeline.image.HasImageMetadata;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Memory cache producer for the bitmap memory cache. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class BitmapMemoryCacheProducer implements Producer<CloseableReference<CloseableImage>> {
 
   public static final String PRODUCER_NAME = "BitmapMemoryCacheProducer";

@@ -94,7 +94,7 @@ public class EncodedImage implements Closeable {
    *
    * @param encodedImage the EncodedImage to clone
    */
-  public static @Nullable EncodedImage cloneOrNull(EncodedImage encodedImage) {
+  public static @Nullable EncodedImage cloneOrNull(@Nullable EncodedImage encodedImage) {
     return encodedImage != null ? encodedImage.cloneOrNull() : null;
   }
 

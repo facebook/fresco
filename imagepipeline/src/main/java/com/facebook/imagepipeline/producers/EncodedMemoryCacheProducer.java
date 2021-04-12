@@ -17,8 +17,10 @@ import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Memory cache producer for the encoded memory cache. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
 
   public static final String PRODUCER_NAME = "EncodedMemoryCacheProducer";

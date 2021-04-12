@@ -17,6 +17,7 @@ import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequest.CacheChoice;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -34,6 +35,7 @@ import javax.annotation.Nullable;
  * <p>This producer is currently used only if the media variations experiment is turned on, to
  * enable another producer to sit between cache read and write.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DiskCacheReadProducer implements Producer<EncodedImage> {
   // PRODUCER_NAME doesn't exactly match class name as it matches name in historic data instead
   public static final String PRODUCER_NAME = "DiskCacheProducer";
