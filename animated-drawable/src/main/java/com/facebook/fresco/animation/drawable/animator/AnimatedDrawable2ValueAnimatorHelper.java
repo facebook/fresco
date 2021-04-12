@@ -12,10 +12,12 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Helper class to create {@link ValueAnimator}s for {@link AnimatedDrawable2}. */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedDrawable2ValueAnimatorHelper {
 
   public static @Nullable ValueAnimator createValueAnimator(

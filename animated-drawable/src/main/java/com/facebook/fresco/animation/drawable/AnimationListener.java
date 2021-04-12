@@ -7,10 +7,13 @@
 
 package com.facebook.fresco.animation.drawable;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * Animation listener that can be used to get notified about {@link AnimatedDrawable2} events. Call
  * {@link AnimatedDrawable2#setAnimationListener(AnimationListener)} to set a listener.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface AnimationListener {
 
   /**

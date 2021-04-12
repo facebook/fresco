@@ -21,12 +21,14 @@ import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.fresco.animation.frame.DropFramesFrameScheduler;
 import com.facebook.fresco.animation.frame.FrameScheduler;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
  * Experimental new animated drawable that uses a supplied {@link AnimationBackend} for drawing
  * frames.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableWithCaches {
 
   /**
@@ -271,7 +273,7 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
   }
 
   @Override
-  public void setColorFilter(ColorFilter colorFilter) {
+  public void setColorFilter(@Nullable ColorFilter colorFilter) {
     if (mDrawableProperties == null) {
       mDrawableProperties = new DrawableProperties();
     }

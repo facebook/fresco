@@ -32,7 +32,7 @@ public class DrawableProperties {
     mAlpha = alpha;
   }
 
-  public void setColorFilter(ColorFilter colorFilter) {
+  public void setColorFilter(@Nullable ColorFilter colorFilter) {
     mColorFilter = colorFilter;
     mIsSetColorFilter = true;
   }
