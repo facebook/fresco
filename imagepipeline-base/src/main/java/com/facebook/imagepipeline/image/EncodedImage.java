@@ -26,6 +26,7 @@ import com.facebook.imageutils.HeifExifUtil;
 import com.facebook.imageutils.ImageMetaData;
 import com.facebook.imageutils.JfifUtil;
 import com.facebook.imageutils.WebpUtil;
+import com.facebook.infer.annotation.FalseOnNull;
 import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -449,6 +450,7 @@ public class EncodedImage implements Closeable {
    *
    * @return true if the encoded image is valid
    */
+  @FalseOnNull
   public static boolean isValid(@Nullable EncodedImage encodedImage) {
     return encodedImage != null && encodedImage.isValid();
   }

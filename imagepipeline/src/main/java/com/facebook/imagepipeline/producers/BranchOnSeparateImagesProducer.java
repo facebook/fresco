@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.producers;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * Producer that coordinates fetching two separate images.
@@ -44,7 +45,7 @@ public class BranchOnSeparateImagesProducer implements Producer<EncodedImage> {
     }
 
     @Override
-    protected void onNewResultImpl(EncodedImage newResult, @Status int status) {
+    protected void onNewResultImpl(@Nullable EncodedImage newResult, @Status int status) {
       ImageRequest request = mProducerContext.getImageRequest();
       boolean isLast = isLast(status);
       boolean isGoodEnough =

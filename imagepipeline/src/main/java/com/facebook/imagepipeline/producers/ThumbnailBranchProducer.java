@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.producers;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
+import javax.annotation.Nullable;
 
 /**
  * Producer that will attempt to retrieve a thumbnail from one or more producers.
@@ -58,7 +59,7 @@ public class ThumbnailBranchProducer implements Producer<EncodedImage> {
     }
 
     @Override
-    protected void onNewResultImpl(EncodedImage newResult, @Status int status) {
+    protected void onNewResultImpl(@Nullable EncodedImage newResult, @Status int status) {
       if (newResult != null
           && (isNotLast(status)
               || ThumbnailSizeChecker.isImageBigEnough(newResult, mResizeOptions))) {

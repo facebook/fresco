@@ -110,7 +110,7 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
 
     @Override
     protected void onNewResultImpl(
-        CloseableReference<CloseableImage> newResult, @Status int status) {
+        @Nullable CloseableReference<CloseableImage> newResult, @Status int status) {
       if (!CloseableReference.isValid(newResult)) {
         // try to propagate if the last result is invalid
         if (isLast(status)) {

@@ -15,6 +15,7 @@ import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * Disk cache write producer.
@@ -106,7 +107,7 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
     }
 
     @Override
-    public void onNewResultImpl(EncodedImage newResult, @Status int status) {
+    public void onNewResultImpl(@Nullable EncodedImage newResult, @Status int status) {
       mProducerContext.getProducerListener().onProducerStart(mProducerContext, PRODUCER_NAME);
       // intermediate, null or uncacheable results are not cached, so we just forward them
       // as well as the images with unknown format which could be html response from the server

@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * Swallow result producer.
@@ -27,7 +28,7 @@ public class SwallowResultProducer<T> implements Producer<Void> {
     DelegatingConsumer<T, Void> swallowResultConsumer =
         new DelegatingConsumer<T, Void>(consumer) {
           @Override
-          protected void onNewResultImpl(T newResult, @Status int status) {
+          protected void onNewResultImpl(@Nullable T newResult, @Status int status) {
             if (isLast(status)) {
               getConsumer().onNewResult(null, status);
             }

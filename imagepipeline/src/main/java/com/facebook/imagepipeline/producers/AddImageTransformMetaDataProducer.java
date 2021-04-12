@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.producers;
 
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * Add image transform meta data producer
@@ -37,7 +38,7 @@ public class AddImageTransformMetaDataProducer implements Producer<EncodedImage>
     }
 
     @Override
-    protected void onNewResultImpl(EncodedImage newResult, @Status int status) {
+    protected void onNewResultImpl(@Nullable EncodedImage newResult, @Status int status) {
       if (newResult == null) {
         getConsumer().onNewResult(null, status);
         return;

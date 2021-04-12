@@ -140,7 +140,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
 
   protected abstract K getKey(ProducerContext producerContext);
 
-  protected abstract T cloneOrNull(T object);
+  protected abstract @Nullable T cloneOrNull(T object);
 
   /**
    * Multiplexes same requests - passes the same result to multiple consumers, manages cancellation
@@ -471,7 +471,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
 
     public void onNextResult(
         final ForwardingConsumer consumer,
-        final T closeableObject,
+        final @Nullable T closeableObject,
         @Consumer.Status final int status) {
       Iterator<Pair<Consumer<T>, ProducerContext>> iterator;
       final int size;
@@ -561,7 +561,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
     /** Forwards {@link Consumer} methods to Multiplexer. */
     private class ForwardingConsumer extends BaseConsumer<T> {
       @Override
-      protected void onNewResultImpl(T newResult, @Status int status) {
+      protected void onNewResultImpl(@Nullable T newResult, @Status int status) {
         try {
           if (FrescoSystrace.isTracing()) {
             FrescoSystrace.beginSection("MultiplexProducer#onNewResult");

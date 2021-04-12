@@ -15,6 +15,7 @@ import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import javax.annotation.Nullable;
 
 /** Probe producer for brobing disk cache on encoded memory cache hit requests. */
 public class EncodedProbeProducer implements Producer<EncodedImage> {
@@ -104,7 +105,7 @@ public class EncodedProbeProducer implements Producer<EncodedImage> {
     }
 
     @Override
-    public void onNewResultImpl(EncodedImage newResult, @Status int status) {
+    public void onNewResultImpl(@Nullable EncodedImage newResult, @Status int status) {
       try {
         if (FrescoSystrace.isTracing()) {
           FrescoSystrace.beginSection("EncodedProbeProducer#onNewResultImpl");

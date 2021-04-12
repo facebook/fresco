@@ -251,13 +251,15 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
     }
 
     @Override
-    public void onNewResultImpl(EncodedImage newResult, @Status int status) {
+    public void onNewResultImpl(@Nullable EncodedImage newResult, @Status int status) {
       if (isNotLast(status)) {
         // TODO 19247361 Consider merging of non-final results
         return;
       }
 
-      if (mPartialEncodedImageFromCache != null && newResult.getBytesRange() != null) {
+      if (mPartialEncodedImageFromCache != null
+          && newResult != null
+          && newResult.getBytesRange() != null) {
         try {
           final PooledByteBufferOutputStream pooledOutputStream =
               merge(mPartialEncodedImageFromCache, newResult);
@@ -274,6 +276,7 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
         mDefaultBufferedDiskCache.remove(mPartialImageCacheKey);
       } else if (statusHasFlag(status, IS_PARTIAL_RESULT)
           && isLast(status)
+          && newResult != null
           && newResult.getImageFormat() != ImageFormat.UNKNOWN) {
         mDefaultBufferedDiskCache.put(mPartialImageCacheKey, newResult);
         getConsumer().onNewResult(newResult, status);

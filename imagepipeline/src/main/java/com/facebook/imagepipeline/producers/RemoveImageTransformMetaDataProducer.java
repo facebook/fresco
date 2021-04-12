@@ -11,6 +11,7 @@ import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * Remove image transform meta data producer
@@ -42,7 +43,7 @@ public class RemoveImageTransformMetaDataProducer
     }
 
     @Override
-    protected void onNewResultImpl(EncodedImage newResult, @Status int status) {
+    protected void onNewResultImpl(@Nullable EncodedImage newResult, @Status int status) {
       CloseableReference<PooledByteBuffer> ret = null;
       try {
         if (EncodedImage.isValid(newResult)) {

@@ -13,6 +13,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * This producer issues to a call to {@link android.graphics.Bitmap#prepareToDraw()} to allow the
@@ -83,12 +84,12 @@ public class BitmapPrepareProducer implements Producer<CloseableReference<Closea
 
     @Override
     protected void onNewResultImpl(
-        CloseableReference<CloseableImage> newResult, @Status int status) {
+        @Nullable CloseableReference<CloseableImage> newResult, @Status int status) {
       internalPrepareBitmap(newResult);
       getConsumer().onNewResult(newResult, status);
     }
 
-    private void internalPrepareBitmap(CloseableReference<CloseableImage> newResult) {
+    private void internalPrepareBitmap(@Nullable CloseableReference<CloseableImage> newResult) {
       if (newResult == null || !newResult.isValid()) {
         return;
       }

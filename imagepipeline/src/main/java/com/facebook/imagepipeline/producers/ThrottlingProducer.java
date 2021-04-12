@@ -12,6 +12,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
 /**
@@ -77,7 +78,7 @@ public class ThrottlingProducer<T> implements Producer<T> {
     }
 
     @Override
-    protected void onNewResultImpl(T newResult, @Status int status) {
+    protected void onNewResultImpl(@Nullable T newResult, @Status int status) {
       getConsumer().onNewResult(newResult, status);
       if (isLast(status)) {
         onRequestFinished();

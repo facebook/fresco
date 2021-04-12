@@ -14,6 +14,7 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
 /**
@@ -116,7 +117,7 @@ public class PriorityStarvingThrottlingProducer<T> implements Producer<T> {
     }
 
     @Override
-    protected void onNewResultImpl(T newResult, @Status int status) {
+    protected void onNewResultImpl(@Nullable T newResult, @Status int status) {
       getConsumer().onNewResult(newResult, status);
       if (isLast(status)) {
         onRequestFinished();

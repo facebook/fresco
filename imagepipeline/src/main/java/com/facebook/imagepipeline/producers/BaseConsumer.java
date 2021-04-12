@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -24,6 +25,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * @param <T>
  */
 @ThreadSafe
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class BaseConsumer<T> implements Consumer<T> {
 
   /**
@@ -134,7 +136,7 @@ public abstract class BaseConsumer<T> implements Consumer<T> {
   }
 
   /** Called by onNewResult, override this method instead. */
-  protected abstract void onNewResultImpl(T newResult, @Status int status);
+  protected abstract void onNewResultImpl(@Nullable T newResult, @Status int status);
 
   /** Called by onFailure, override this method instead */
   protected abstract void onFailureImpl(Throwable t);

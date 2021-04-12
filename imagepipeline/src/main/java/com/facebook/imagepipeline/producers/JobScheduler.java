@@ -134,7 +134,7 @@ public class JobScheduler {
    *
    * @return whether the job was successfully updated.
    */
-  public boolean updateJob(EncodedImage encodedImage, @Consumer.Status int status) {
+  public boolean updateJob(@Nullable EncodedImage encodedImage, @Consumer.Status int status) {
     if (!shouldProcess(encodedImage, status)) {
       return false;
     }

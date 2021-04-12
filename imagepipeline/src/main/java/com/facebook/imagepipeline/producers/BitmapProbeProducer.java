@@ -18,6 +18,7 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * Probe producer for brobing encoded memory and disk caches on bitmap memory cache hit requests.
@@ -120,7 +121,8 @@ public class BitmapProbeProducer implements Producer<CloseableReference<Closeabl
     }
 
     @Override
-    public void onNewResultImpl(CloseableReference<CloseableImage> newResult, @Status int status) {
+    public void onNewResultImpl(
+        @Nullable CloseableReference<CloseableImage> newResult, @Status int status) {
       try {
         if (FrescoSystrace.isTracing()) {
           FrescoSystrace.beginSection("BitmapProbeProducer#onNewResultImpl");

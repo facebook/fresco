@@ -18,6 +18,7 @@ import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /** Memory cache producer for the bitmap memory cache. */
 @Nullsafe(Nullsafe.Mode.LOCAL)
@@ -123,7 +124,7 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
         CloseableReference<CloseableImage>, CloseableReference<CloseableImage>>(consumer) {
       @Override
       public void onNewResultImpl(
-          CloseableReference<CloseableImage> newResult, @Status int status) {
+          @Nullable CloseableReference<CloseableImage> newResult, @Status int status) {
         try {
           if (FrescoSystrace.isTracing()) {
             FrescoSystrace.beginSection("BitmapMemoryCacheProducer#onNewResultImpl");

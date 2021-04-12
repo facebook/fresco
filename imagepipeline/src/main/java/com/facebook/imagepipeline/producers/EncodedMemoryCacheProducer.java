@@ -18,6 +18,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /** Memory cache producer for the encoded memory cache. */
 @Nullsafe(Nullsafe.Mode.LOCAL)
@@ -136,7 +137,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
     }
 
     @Override
-    public void onNewResultImpl(EncodedImage newResult, @Status int status) {
+    public void onNewResultImpl(@Nullable EncodedImage newResult, @Status int status) {
       try {
         if (FrescoSystrace.isTracing()) {
           FrescoSystrace.beginSection("EncodedMemoryCacheProducer#onNewResultImpl");
