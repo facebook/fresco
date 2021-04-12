@@ -12,8 +12,11 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /** Multiplex producer that uses the encoded cache key to combine requests. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class EncodedCacheKeyMultiplexProducer
     extends MultiplexProducer<Pair<CacheKey, ImageRequest.RequestLevel>, EncodedImage> {
 
@@ -38,7 +41,7 @@ public class EncodedCacheKeyMultiplexProducer
         producerContext.getLowestPermittedRequestLevel());
   }
 
-  public EncodedImage cloneOrNull(EncodedImage encodedImage) {
+  public @Nullable EncodedImage cloneOrNull(EncodedImage encodedImage) {
     return EncodedImage.cloneOrNull(encodedImage);
   }
 }
