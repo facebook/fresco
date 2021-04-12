@@ -26,18 +26,20 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
 
 /** Decoder for animated images. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
 
   private final AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
   private final PlatformBitmapFactory mBitmapFactory;
 
-  static AnimatedImageDecoder sGifAnimatedImageDecoder = null;
-  static AnimatedImageDecoder sWebpAnimatedImageDecoder = null;
+  static @Nullable AnimatedImageDecoder sGifAnimatedImageDecoder = null;
+  static @Nullable AnimatedImageDecoder sWebpAnimatedImageDecoder = null;
 
   private static @Nullable AnimatedImageDecoder loadIfPresent(final String className) {
     try {
@@ -205,6 +207,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
               }
 
               @Override
+              @Nullable
               public CloseableReference<Bitmap> getCachedBitmap(int frameNumber) {
                 return CloseableReference.cloneOrNull(bitmaps.get(frameNumber));
               }

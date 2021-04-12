@@ -10,15 +10,17 @@ package com.facebook.imagepipeline.animated.base;
 import android.graphics.Bitmap;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.transformation.BitmapTransformation;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.List;
 import javax.annotation.Nullable;
 
 /** Builder for {@link AnimatedImageResult}. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedImageResultBuilder {
 
   private final AnimatedImage mImage;
-  @Nullable private CloseableReference<Bitmap> mPreviewBitmap;
-  private List<CloseableReference<Bitmap>> mDecodedFrames;
+  private @Nullable CloseableReference<Bitmap> mPreviewBitmap;
+  private @Nullable List<CloseableReference<Bitmap>> mDecodedFrames;
   private int mFrameForPreview;
   private @Nullable BitmapTransformation mBitmapTransformation;
 
@@ -41,7 +43,7 @@ public class AnimatedImageResultBuilder {
    * @return the reference to the preview bitmap or null if none was set. This returns a reference
    *     that must be released by the caller
    */
-  public CloseableReference<Bitmap> getPreviewBitmap() {
+  public @Nullable CloseableReference<Bitmap> getPreviewBitmap() {
     return CloseableReference.cloneOrNull(mPreviewBitmap);
   }
 
@@ -51,7 +53,8 @@ public class AnimatedImageResultBuilder {
    * @param previewBitmap the preview. The method clones the reference.
    * @return this builder
    */
-  public AnimatedImageResultBuilder setPreviewBitmap(CloseableReference<Bitmap> previewBitmap) {
+  public AnimatedImageResultBuilder setPreviewBitmap(
+      @Nullable CloseableReference<Bitmap> previewBitmap) {
     mPreviewBitmap = CloseableReference.cloneOrNull(previewBitmap);
     return this;
   }
@@ -84,7 +87,7 @@ public class AnimatedImageResultBuilder {
    * @return the references to the decoded frames or null if none was set. This returns references
    *     that must be released by the caller
    */
-  public List<CloseableReference<Bitmap>> getDecodedFrames() {
+  public @Nullable List<CloseableReference<Bitmap>> getDecodedFrames() {
     return CloseableReference.cloneOrNull(mDecodedFrames);
   }
 
@@ -95,7 +98,7 @@ public class AnimatedImageResultBuilder {
    * @param decodedFrames the decoded frames. The method clones the references.
    */
   public AnimatedImageResultBuilder setDecodedFrames(
-      List<CloseableReference<Bitmap>> decodedFrames) {
+      @Nullable List<CloseableReference<Bitmap>> decodedFrames) {
     mDecodedFrames = CloseableReference.cloneOrNull(decodedFrames);
     return this;
   }

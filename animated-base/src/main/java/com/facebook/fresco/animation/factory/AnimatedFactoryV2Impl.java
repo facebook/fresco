@@ -163,7 +163,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
           new AnimatedDrawableBackendProvider() {
             @Override
             public AnimatedDrawableBackend get(
-                AnimatedImageResult animatedImageResult, Rect bounds) {
+                AnimatedImageResult animatedImageResult, @Nullable Rect bounds) {
               return new AnimatedDrawableBackendImpl(
                   getAnimatedDrawableUtil(),
                   animatedImageResult,
@@ -179,7 +179,8 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
     AnimatedDrawableBackendProvider animatedDrawableBackendProvider =
         new AnimatedDrawableBackendProvider() {
           @Override
-          public AnimatedDrawableBackend get(AnimatedImageResult imageResult, Rect bounds) {
+          public AnimatedDrawableBackend get(
+              AnimatedImageResult imageResult, @Nullable Rect bounds) {
             return new AnimatedDrawableBackendImpl(
                 getAnimatedDrawableUtil(),
                 imageResult,

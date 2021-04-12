@@ -10,8 +10,11 @@ package com.facebook.imagepipeline.animated.impl;
 import android.graphics.Rect;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /** Assisted provider for {@link AnimatedDrawableBackend}. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface AnimatedDrawableBackendProvider {
 
   /**
@@ -21,5 +24,5 @@ public interface AnimatedDrawableBackendProvider {
    * @param bounds the initial bounds for the drawable
    * @return a new {@link AnimatedDrawableBackend}
    */
-  AnimatedDrawableBackend get(AnimatedImageResult animatedImageResult, Rect bounds);
+  AnimatedDrawableBackend get(AnimatedImageResult animatedImageResult, @Nullable Rect bounds);
 }

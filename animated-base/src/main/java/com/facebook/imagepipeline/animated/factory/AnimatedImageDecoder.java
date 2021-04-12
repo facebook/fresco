@@ -9,8 +9,10 @@ package com.facebook.imagepipeline.animated.factory;
 
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.nio.ByteBuffer;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface AnimatedImageDecoder {
 
   /**

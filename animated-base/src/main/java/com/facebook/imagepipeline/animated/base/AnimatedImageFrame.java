@@ -8,8 +8,10 @@
 package com.facebook.imagepipeline.animated.base;
 
 import android.graphics.Bitmap;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Common interface for a frame of an animated image. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface AnimatedImageFrame {
 
   /**

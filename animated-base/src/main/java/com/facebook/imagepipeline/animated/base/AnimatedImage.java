@@ -7,7 +7,10 @@
 
 package com.facebook.imagepipeline.animated.base;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /** Common interface for an animated image. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface AnimatedImage {
 
   int LOOP_COUNT_INFINITE = 0;

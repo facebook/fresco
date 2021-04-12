@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.transformation.BitmapTransformation;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.List;
 import javax.annotation.Nullable;
 
@@ -18,6 +19,7 @@ import javax.annotation.Nullable;
  * The result of decoding an animated image. Contains the {@link AnimatedImage} as well as
  * additional data.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedImageResult {
 
   private final AnimatedImage mImage;
@@ -120,6 +122,7 @@ public class AnimatedImageResult {
    * @return a reference to the preview bitmap which must be released by the caller when done or
    *     null if there is no preview bitmap set
    */
+  @Nullable
   public synchronized CloseableReference<Bitmap> getPreviewBitmap() {
     return CloseableReference.cloneOrNull(mPreviewBitmap);
   }
