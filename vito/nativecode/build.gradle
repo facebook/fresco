@@ -21,6 +21,7 @@ dependencies {
     implementation project(':vito:core')
     implementation project(':vito:provider')
     implementation project(':vito:source')
+    implementation project(':native-filters')
 
     testImplementation TestDeps.junit
     testImplementation TestDeps.assertjCore
