@@ -15,6 +15,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
@@ -30,6 +31,7 @@ import java.io.IOException;
  *
  * <p>Charsets specified in the URI are ignored. Only UTF-8 encoding is currently supported.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DataFetchProducer extends LocalFetchProducer {
 
   public static final String PRODUCER_NAME = "DataFetchProducer";
@@ -65,6 +67,7 @@ public class DataFetchProducer extends LocalFetchProducer {
       return Base64.decode(dataStr, Base64.DEFAULT);
     } else {
       String str = Uri.decode(dataStr);
+      Preconditions.checkNotNull(str);
       byte[] b = str.getBytes();
       return b;
     }
