@@ -11,6 +11,7 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * Utility class to consistently check whether a given thumbnail size will be sufficient for a given
@@ -38,7 +39,8 @@ public final class ThumbnailSizeChecker {
    * @param height the desired height
    * @return true if the producer can meet these needs
    */
-  public static boolean isImageBigEnough(int width, int height, ResizeOptions resizeOptions) {
+  public static boolean isImageBigEnough(
+      int width, int height, @Nullable ResizeOptions resizeOptions) {
     if (resizeOptions == null) {
       return getAcceptableSize(width) >= BitmapUtil.MAX_BITMAP_SIZE
           && getAcceptableSize(height) >= (int) BitmapUtil.MAX_BITMAP_SIZE;
@@ -48,7 +50,8 @@ public final class ThumbnailSizeChecker {
     }
   }
 
-  public static boolean isImageBigEnough(EncodedImage encodedImage, ResizeOptions resizeOptions) {
+  public static boolean isImageBigEnough(
+      @Nullable EncodedImage encodedImage, @Nullable ResizeOptions resizeOptions) {
     if (encodedImage == null) {
       return false;
     }

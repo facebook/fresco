@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.producers;
 
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * Producer that coordinates fetching two separate images.
@@ -16,6 +17,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
  * <p>The first producer is kicked off, and once it has returned all its results, the second
  * producer is kicked off if necessary.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class BranchOnSeparateImagesProducer implements Producer<EncodedImage> {
   private final Producer<EncodedImage> mInputProducer1;
   private final Producer<EncodedImage> mInputProducer2;
