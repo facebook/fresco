@@ -13,10 +13,10 @@ import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.core.ExecutorSupplier;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import java.lang.reflect.Constructor;
 import java.util.concurrent.ExecutorService;
 import javax.annotation.Nullable;
-import com.facebook.infer.annotation.Nullsafe;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedFactoryProvider {

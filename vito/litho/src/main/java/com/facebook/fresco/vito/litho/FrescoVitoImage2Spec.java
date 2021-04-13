@@ -18,7 +18,6 @@ import com.facebook.datasource.DataSource;
 import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.PrefetchConfig;
-import com.facebook.fresco.vito.core.PrefetchTarget;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
