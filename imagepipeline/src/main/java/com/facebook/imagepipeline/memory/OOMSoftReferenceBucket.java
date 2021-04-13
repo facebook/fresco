@@ -7,12 +7,16 @@
 
 package com.facebook.imagepipeline.memory;
 
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.OOMSoftReference;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.LinkedList;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 /** A Bucket that uses OOMSoftReferences to store its free list. */
 @NotThreadSafe
+@Nullsafe(Nullsafe.Mode.LOCAL)
 class OOMSoftReferenceBucket<V> extends Bucket<V> {
 
   private LinkedList<OOMSoftReference<V>> mSpareReferences;
@@ -23,8 +27,9 @@ class OOMSoftReferenceBucket<V> extends Bucket<V> {
   }
 
   @Override
-  public V pop() {
+  public @Nullable V pop() {
     OOMSoftReference<V> ref = (OOMSoftReference<V>) mFreeList.poll();
+    Preconditions.checkNotNull(ref);
     V value = ref.get();
     ref.clear();
     mSpareReferences.add(ref);

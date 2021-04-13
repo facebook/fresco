@@ -31,7 +31,7 @@ public abstract class MemoryChunkPool extends BasePool<MemoryChunk> {
       PoolParams poolParams,
       PoolStatsTracker memoryChunkPoolStatsTracker) {
     super(memoryTrimmableRegistry, poolParams, memoryChunkPoolStatsTracker);
-    SparseIntArray bucketSizes = poolParams.bucketSizes;
+    SparseIntArray bucketSizes = Preconditions.checkNotNull(poolParams.bucketSizes);
     mBucketSizes = new int[bucketSizes.size()];
     for (int i = 0; i < mBucketSizes.length; ++i) {
       mBucketSizes[i] = bucketSizes.keyAt(i);

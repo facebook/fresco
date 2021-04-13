@@ -12,8 +12,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import androidx.core.util.Pools.SynchronizedPool;
+import androidx.core.util.Preconditions;
 import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** Bitmap decoder for ART VM (Android O and up). */

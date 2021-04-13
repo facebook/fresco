@@ -12,8 +12,10 @@ import android.graphics.ColorSpace;
 import android.graphics.Rect;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface PlatformDecoder {
   /**
    * Creates a bitmap from encoded bytes. Supports JPEG but callers should use {@link

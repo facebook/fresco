@@ -7,6 +7,9 @@
 
 package com.facebook.imagepipeline.memory;
 
+import com.facebook.infer.annotation.Nullsafe;
+
+@Nullsafe(Nullsafe.Mode.STRICT)
 public @interface BitmapPoolType {
   String LEGACY = "legacy";
   String LEGACY_DEFAULT_PARAMS = "legacy_default_params";

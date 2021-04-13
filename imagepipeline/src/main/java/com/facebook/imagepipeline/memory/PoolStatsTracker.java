@@ -7,7 +7,10 @@
 
 package com.facebook.imagepipeline.memory;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /** Listener that logs pool statistics. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface PoolStatsTracker {
   String BUCKETS_USED_PREFIX = "buckets_used_";
   String USED_COUNT = "used_count";

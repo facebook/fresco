@@ -106,7 +106,8 @@ public abstract class DefaultDecoder implements PlatformDecoder {
     final BitmapFactory.Options options = getDecodeOptionsForStream(encodedImage, bitmapConfig);
     boolean retryOnFail = options.inPreferredConfig != Bitmap.Config.ARGB_8888;
     try {
-      return decodeFromStream(encodedImage.getInputStream(), options, regionToDecode, colorSpace);
+      InputStream s = Preconditions.checkNotNull(encodedImage.getInputStream());
+      return decodeFromStream(s, options, regionToDecode, colorSpace);
     } catch (RuntimeException re) {
       if (retryOnFail) {
         return decodeFromEncodedImageWithColorSpace(

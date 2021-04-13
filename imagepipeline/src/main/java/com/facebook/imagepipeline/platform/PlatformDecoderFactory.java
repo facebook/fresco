@@ -15,7 +15,7 @@ import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.infer.annotation.Nullsafe;
 import java.lang.reflect.InvocationTargetException;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PlatformDecoderFactory {
   /**
    * Provide the implementation of the PlatformDecoder for the current platform using the provided

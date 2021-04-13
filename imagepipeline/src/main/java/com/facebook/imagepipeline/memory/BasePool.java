@@ -18,6 +18,7 @@ import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.memory.Pool;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -106,6 +107,7 @@ import javax.annotation.concurrent.NotThreadSafe;
  *       dynamically create buckets on demand.
  * </ul>
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class BasePool<V> implements Pool<V> {
   private final Class<?> TAG = this.getClass();
 
@@ -513,7 +515,7 @@ public abstract class BasePool<V> implements Pool<V> {
     List<Bucket<V>> bucketsToTrim = new ArrayList<>(mBuckets.size());
 
     for (int i = 0, len = mBuckets.size(); i < len; ++i) {
-      final Bucket<V> oldBucket = mBuckets.valueAt(i);
+      final Bucket<V> oldBucket = Preconditions.checkNotNull(mBuckets.valueAt(i));
       final int bucketSize = oldBucket.mItemSize;
       final int maxLength = oldBucket.mMaxLength;
       final int bucketInUseCount = oldBucket.getInUseCount();
@@ -550,7 +552,7 @@ public abstract class BasePool<V> implements Pool<V> {
         final SparseIntArray inUseCounts = new SparseIntArray();
 
         for (int i = 0; i < mBuckets.size(); ++i) {
-          final Bucket<V> bucket = mBuckets.valueAt(i);
+          final Bucket<V> bucket = Preconditions.checkNotNull(mBuckets.valueAt(i));
           if (bucket.getFreeListSize() > 0) {
             bucketsToTrim.add(bucket);
           }
@@ -634,7 +636,7 @@ public abstract class BasePool<V> implements Pool<V> {
       if (bytesToFree <= 0) {
         break;
       }
-      Bucket<V> bucket = mBuckets.valueAt(i);
+      Bucket<V> bucket = Preconditions.checkNotNull(mBuckets.valueAt(i));
       while (bytesToFree > 0) {
         V value = bucket.pop();
         if (value == null) {
@@ -675,7 +677,7 @@ public abstract class BasePool<V> implements Pool<V> {
    * @return the freelist for the bucket
    */
   @VisibleForTesting
-  synchronized Bucket<V> getBucket(int bucketedSize) {
+  synchronized @Nullable Bucket<V> getBucket(int bucketedSize) {
     // get an existing bucket
     Bucket<V> bucket = mBuckets.get(bucketedSize);
     if (bucket != null || !mAllowNewBuckets) {
@@ -771,7 +773,7 @@ public abstract class BasePool<V> implements Pool<V> {
     Map<String, Integer> stats = new HashMap<String, Integer>();
     for (int i = 0; i < mBuckets.size(); ++i) {
       final int bucketedSize = mBuckets.keyAt(i);
-      final Bucket<V> bucket = mBuckets.valueAt(i);
+      final Bucket<V> bucket = Preconditions.checkNotNull(mBuckets.valueAt(i));
       final String BUCKET_USED_KEY =
           PoolStatsTracker.BUCKETS_USED_PREFIX + getSizeInBytes(bucketedSize);
       stats.put(BUCKET_USED_KEY, bucket.getInUseCount());

@@ -11,7 +11,9 @@ import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.PooledByteBufferOutputStream;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 /**
@@ -19,9 +21,11 @@ import javax.annotation.concurrent.NotThreadSafe;
  * MemoryPooledByteBuffer}
  */
 @NotThreadSafe
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class MemoryPooledByteBufferOutputStream extends PooledByteBufferOutputStream {
   private final MemoryChunkPool mPool; // the pool to allocate memory chunks from
-  private CloseableReference<MemoryChunk> mBufRef; // the current chunk that we're writing to
+  private @Nullable CloseableReference<MemoryChunk>
+      mBufRef; // the current chunk that we're writing to
   private int mCount; // number of bytes 'used' in the current chunk
 
   /**
@@ -61,7 +65,7 @@ public class MemoryPooledByteBufferOutputStream extends PooledByteBufferOutputSt
   @Override
   public MemoryPooledByteBuffer toByteBuffer() {
     ensureValid();
-    return new MemoryPooledByteBuffer(mBufRef, mCount);
+    return new MemoryPooledByteBuffer(Preconditions.checkNotNull(mBufRef), mCount);
   }
 
   /**
@@ -107,7 +111,7 @@ public class MemoryPooledByteBufferOutputStream extends PooledByteBufferOutputSt
     }
     ensureValid();
     realloc(mCount + count);
-    mBufRef.get().write(mCount, buffer, offset, count);
+    Preconditions.checkNotNull(mBufRef).get().write(mCount, buffer, offset, count);
     mCount += count;
   }
 
@@ -136,11 +140,13 @@ public class MemoryPooledByteBufferOutputStream extends PooledByteBufferOutputSt
   @VisibleForTesting
   void realloc(int newLength) {
     ensureValid();
+    Preconditions.checkNotNull(mBufRef);
     /* Can the buffer handle @i more bytes, if not expand it */
     if (newLength <= mBufRef.get().getSize()) {
       return;
     }
     MemoryChunk newbuf = mPool.get(newLength);
+    Preconditions.checkNotNull(mBufRef);
     mBufRef.get().copy(0, newbuf, 0, mCount);
     mBufRef.close();
     mBufRef = CloseableReference.of(newbuf, mPool);

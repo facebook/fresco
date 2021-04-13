@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.memory;
 
 import android.util.SparseIntArray;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -38,17 +39,16 @@ import javax.annotation.Nullable;
  * restricts all buckets to only accept elements smaller or equal to this size. If this size is
  * exceeded, an exception will be thrown.
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public class PoolParams {
   /** If maxNumThreads is set to this level, the pool doesn't actually care what it is */
   public static final int IGNORE_THREADS = -1;
 
   public final int maxSizeHardCap;
   public final int maxSizeSoftCap;
-  public final SparseIntArray bucketSizes;
+  public final @Nullable SparseIntArray bucketSizes;
   public final int minBucketSize;
   public final int maxBucketSize;
-
-  public String bitmapPoolType;
 
   public boolean fixBucketsReinitialization;
 

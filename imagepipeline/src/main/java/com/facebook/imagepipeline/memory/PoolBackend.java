@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.memory;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -14,6 +15,7 @@ import javax.annotation.Nullable;
  *
  * @param <T> type of pooled objects
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 interface PoolBackend<T> {
   /** @return available object from the pool or null */
   @Nullable

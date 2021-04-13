@@ -12,13 +12,14 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.soloader.DoNotOptimize;
+import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.STRICT)
 @DoNotOptimize
 /*package*/ class PreverificationHelper {
   @TargetApi(Build.VERSION_CODES.O)
   @DoNotOptimize
-  /*package*/ boolean shouldUseHardwareBitmapConfig(Bitmap.Config config) {
+  /*package*/ boolean shouldUseHardwareBitmapConfig(@Nullable Bitmap.Config config) {
     return config == Bitmap.Config.HARDWARE;
   }
 }

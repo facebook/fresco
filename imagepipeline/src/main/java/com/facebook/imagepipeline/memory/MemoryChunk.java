@@ -7,9 +7,11 @@
 
 package com.facebook.imagepipeline.memory;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.nio.ByteBuffer;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.STRICT)
 public interface MemoryChunk {
   /**
    * This has to be called before we get rid of this object in order to release underlying memory

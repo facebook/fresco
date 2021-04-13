@@ -12,10 +12,13 @@ import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.memory.NoOpMemoryTrimmableRegistry;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 /** Configuration class for pools. */
 @Immutable
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PoolConfig {
 
   public static final int BITMAP_POOL_MAX_BITMAP_SIZE_DEFAULT =
@@ -146,15 +149,15 @@ public class PoolConfig {
 
   public static class Builder {
 
-    private PoolParams mBitmapPoolParams;
-    private PoolStatsTracker mBitmapPoolStatsTracker;
-    private PoolParams mFlexByteArrayPoolParams;
-    private MemoryTrimmableRegistry mMemoryTrimmableRegistry;
-    private PoolParams mMemoryChunkPoolParams;
-    private PoolStatsTracker mMemoryChunkPoolStatsTracker;
-    private PoolParams mSmallByteArrayPoolParams;
-    private PoolStatsTracker mSmallByteArrayPoolStatsTracker;
-    private String mBitmapPoolType;
+    private @Nullable PoolParams mBitmapPoolParams;
+    private @Nullable PoolStatsTracker mBitmapPoolStatsTracker;
+    private @Nullable PoolParams mFlexByteArrayPoolParams;
+    private @Nullable MemoryTrimmableRegistry mMemoryTrimmableRegistry;
+    private @Nullable PoolParams mMemoryChunkPoolParams;
+    private @Nullable PoolStatsTracker mMemoryChunkPoolStatsTracker;
+    private @Nullable PoolParams mSmallByteArrayPoolParams;
+    private @Nullable PoolStatsTracker mSmallByteArrayPoolStatsTracker;
+    private @Nullable String mBitmapPoolType;
     private int mBitmapPoolMaxPoolSize;
     private int mBitmapPoolMaxBitmapSize;
     private boolean mRegisterLruBitmapPoolAsMemoryTrimmable;
