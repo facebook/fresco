@@ -34,7 +34,7 @@ public class DrawableProperties {
 
   public void setColorFilter(@Nullable ColorFilter colorFilter) {
     mColorFilter = colorFilter;
-    mIsSetColorFilter = true;
+    mIsSetColorFilter = colorFilter != null;
   }
 
   public void setDither(boolean dither) {

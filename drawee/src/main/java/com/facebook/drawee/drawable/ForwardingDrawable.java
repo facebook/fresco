@@ -103,7 +103,7 @@ public class ForwardingDrawable extends Drawable
   }
 
   @Override
-  public void setColorFilter(ColorFilter colorFilter) {
+  public void setColorFilter(@Nullable ColorFilter colorFilter) {
     mDrawableProperties.setColorFilter(colorFilter);
     if (mCurrentDelegate != null) {
       mCurrentDelegate.setColorFilter(colorFilter);

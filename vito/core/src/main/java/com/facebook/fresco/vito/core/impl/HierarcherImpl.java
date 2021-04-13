@@ -26,7 +26,9 @@ import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
 import com.facebook.fresco.vito.options.RoundingOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class HierarcherImpl implements Hierarcher {
   private static final Drawable NOP_DRAWABLE = NopDrawable.INSTANCE;
 
@@ -88,6 +90,9 @@ public class HierarcherImpl implements Hierarcher {
       if (progressDrawable == null) {
         progressDrawable = resources.getDrawable(imageOptions.getProgressRes());
       }
+      if (progressDrawable == null) {
+        return null;
+      }
       progressDrawable.setLevel(0);
       if (imageOptions.getProgressScaleType() != null) {
         return new ScaleTypeDrawable(progressDrawable, imageOptions.getProgressScaleType());
@@ -111,7 +116,7 @@ public class HierarcherImpl implements Hierarcher {
         return null;
       }
       Drawable drawable = resources.getDrawable(imageOptions.getErrorRes());
-      if (imageOptions.getErrorScaleType() != null) {
+      if (drawable != null && imageOptions.getErrorScaleType() != null) {
         return new ScaleTypeDrawable(
             drawable, imageOptions.getErrorScaleType(), imageOptions.getErrorFocusPoint());
       }
