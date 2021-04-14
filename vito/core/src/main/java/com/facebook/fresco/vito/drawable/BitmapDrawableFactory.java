@@ -10,6 +10,7 @@ package com.facebook.fresco.vito.drawable;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.drawee.drawable.OrientedDrawable;
 import com.facebook.fresco.vito.options.BorderOptions;
@@ -83,7 +84,7 @@ public class BitmapDrawableFactory implements ImageOptionsDrawableFactory {
         closeableStaticBitmap,
         mRoundingUtils.roundedDrawable(
             mResources,
-            closeableStaticBitmap.getUnderlyingBitmap(),
+            Preconditions.checkNotNull(closeableStaticBitmap.getUnderlyingBitmap()),
             borderOptions,
             roundingOptions));
   }

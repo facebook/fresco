@@ -34,14 +34,7 @@ public enum Priority {
    * @param priority2
    * @return higher priority
    */
-  public static @Nullable Priority getHigherPriority(
-      @Nullable Priority priority1, @Nullable Priority priority2) {
-    if (priority1 == null) {
-      return priority2;
-    }
-    if (priority2 == null) {
-      return priority1;
-    }
+  public static Priority getHigherPriority(Priority priority1, Priority priority2) {
     if (priority1.ordinal() > priority2.ordinal()) {
       return priority1;
     } else {

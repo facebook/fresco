@@ -14,6 +14,7 @@ import com.facebook.common.internal.Sets;
 import com.facebook.common.util.TriState;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.HashMap;
@@ -37,6 +38,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * @param <T> type of the closeable reference result that is returned to this producer
  */
 @ThreadSafe
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class MultiplexProducer<K, T extends Closeable> implements Producer<T> {
 
   /* Specifies if the first of the multiplex requests of the group that the marked request belongs to is a prefetch */
@@ -122,7 +124,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
     }
   }
 
-  protected synchronized Multiplexer getExistingMultiplexer(K key) {
+  protected synchronized @Nullable Multiplexer getExistingMultiplexer(K key) {
     return mMultiplexers.get(key);
   }
 
@@ -140,7 +142,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
 
   protected abstract K getKey(ProducerContext producerContext);
 
-  protected abstract @Nullable T cloneOrNull(T object);
+  protected abstract @Nullable T cloneOrNull(@Nullable T object);
 
   /**
    * Multiplexes same requests - passes the same result to multiple consumers, manages cancellation
@@ -548,7 +550,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
       }
     }
 
-    private void closeSafely(Closeable obj) {
+    private void closeSafely(@Nullable Closeable obj) {
       try {
         if (obj != null) {
           obj.close();

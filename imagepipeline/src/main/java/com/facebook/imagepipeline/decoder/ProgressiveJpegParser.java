@@ -15,6 +15,7 @@ import com.facebook.common.memory.PooledByteArrayBufferedInputStream;
 import com.facebook.common.util.StreamUtil;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imageutils.JfifUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -27,6 +28,7 @@ import java.io.InputStream;
  * <p>Users should call parseMoreData method each time new chunk of data is received. The buffer
  * passed as a parameter should include entire image data received so far.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ProgressiveJpegParser {
 
   /** Initial state of the parser. Next byte read by the parser should be 0xFF. */
@@ -117,7 +119,7 @@ public class ProgressiveJpegParser {
 
     final InputStream bufferedDataStream =
         new PooledByteArrayBufferedInputStream(
-            encodedImage.getInputStream(), mByteArrayPool.get(BUFFER_SIZE), mByteArrayPool);
+            encodedImage.getInputStreamOrThrow(), mByteArrayPool.get(BUFFER_SIZE), mByteArrayPool);
     try {
       StreamUtil.skip(bufferedDataStream, mBytesParsed);
       return doParseMoreData(bufferedDataStream);

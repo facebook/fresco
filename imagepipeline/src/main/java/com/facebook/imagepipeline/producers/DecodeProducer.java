@@ -430,6 +430,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       String finalStr = String.valueOf(isFinal);
       if (image instanceof CloseableStaticBitmap) {
         Bitmap bitmap = ((CloseableStaticBitmap) image).getUnderlyingBitmap();
+        Preconditions.checkNotNull(bitmap);
         String sizeStr = bitmap.getWidth() + "x" + bitmap.getHeight();
         // We need this because the copyOf() utility method doesn't have a proper overload method
         // for all these parameters

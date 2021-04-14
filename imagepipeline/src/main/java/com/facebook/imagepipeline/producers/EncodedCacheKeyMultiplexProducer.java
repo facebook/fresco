@@ -41,7 +41,7 @@ public class EncodedCacheKeyMultiplexProducer
         producerContext.getLowestPermittedRequestLevel());
   }
 
-  public @Nullable EncodedImage cloneOrNull(EncodedImage encodedImage) {
+  public @Nullable EncodedImage cloneOrNull(@Nullable EncodedImage encodedImage) {
     return EncodedImage.cloneOrNull(encodedImage);
   }
 }

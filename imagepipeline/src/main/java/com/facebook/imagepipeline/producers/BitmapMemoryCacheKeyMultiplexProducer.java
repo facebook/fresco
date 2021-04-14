@@ -41,7 +41,7 @@ public class BitmapMemoryCacheKeyMultiplexProducer
   }
 
   public @Nullable CloseableReference<CloseableImage> cloneOrNull(
-      CloseableReference<CloseableImage> closeableImage) {
+      @Nullable CloseableReference<CloseableImage> closeableImage) {
     return CloseableReference.cloneOrNull(closeableImage);
   }
 }

@@ -164,6 +164,10 @@ public class EncodedImage implements Closeable {
     return null;
   }
 
+  public InputStream getInputStreamOrThrow() {
+    return Preconditions.checkNotNull(getInputStream());
+  }
+
   /** Sets the image format */
   public void setImageFormat(ImageFormat imageFormat) {
     this.mImageFormat = imageFormat;
