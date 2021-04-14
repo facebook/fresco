@@ -34,10 +34,12 @@ import com.facebook.fresco.vito.core.VitoUtils;
 import com.facebook.fresco.vito.core.impl.debug.DebugOverlayFactory2;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FrescoController2Impl implements DrawableDataSubscriber, FrescoController2 {
 
   private static final Map<String, Object> COMPONENT_EXTRAS =
@@ -234,7 +236,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
           .getImageListener()
           .onFinalImageSet(
               drawable.getImageId(),
-              drawable.getImageRequest(),
+              imageRequest,
               drawable.getImageOrigin(),
               image.get(),
               extras,
@@ -242,7 +244,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     } else {
       drawable
           .getImageListener()
-          .onIntermediateImageSet(drawable.getImageId(), drawable.getImageRequest(), image.get());
+          .onIntermediateImageSet(drawable.getImageId(), imageRequest, image.get());
     }
     drawable.getImagePerfListener().onImageSuccess(drawable, isImmediate);
     float progress = 1f;
@@ -299,7 +301,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
           .getImageListener()
           .onFailure(
               drawable.getImageId(),
-              drawable.getImageRequest(),
+              imageRequest,
               errorDrawable,
               dataSource.getFailureCause(),
               extras);
@@ -307,7 +309,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       drawable
           .getImageListener()
           .onIntermediateImageFailed(
-              drawable.getImageId(), drawable.getImageRequest(), dataSource.getFailureCause());
+              drawable.getImageId(), imageRequest, dataSource.getFailureCause());
     }
 
     drawable.getImagePerfListener().onImageError(drawable);
@@ -328,20 +330,22 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
 
   @Override
   public void onRelease(final FrescoDrawable2 drawable) {
-    // Notify listeners
-    drawable
-        .getImageListener()
-        .onRelease(
-            drawable.getImageId(), drawable.getImageRequest(), obtainExtras(null, null, drawable));
+    final VitoImageRequest imageRequest = drawable.getImageRequest();
+    if (imageRequest != null) {
+      // Notify listeners
+      drawable
+          .getImageListener()
+          .onRelease(drawable.getImageId(), imageRequest, obtainExtras(null, null, drawable));
+    }
     drawable.getImagePerfListener().onImageRelease(drawable);
   }
 
   private static Extras obtainExtras(
       @Nullable DataSource<CloseableReference<CloseableImage>> dataSource,
-      CloseableReference<CloseableImage> image,
+      @Nullable CloseableReference<CloseableImage> image,
       FrescoDrawable2 drawable) {
     Map<String, Object> imageExtras = null;
-    if (image != null && image.get() != null) {
+    if (image != null) {
       imageExtras = image.get().getExtras();
     }
 
@@ -365,7 +369,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
         sourceUri);
   }
 
-  private boolean notifyFinalResult(
+  private static boolean notifyFinalResult(
       @Nullable DataSource<CloseableReference<CloseableImage>> dataSource) {
     return dataSource == null || dataSource.isFinished() || dataSource.hasMultipleResults();
   }

@@ -31,7 +31,6 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.listener.BaseRequestListener;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.infer.annotation.Nullsafe;
-import javax.annotation.Nonnull;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class FrescoDrawable2Impl extends FrescoDrawable2 {
@@ -272,7 +271,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   }
 
   @Override
-  public void onNewResult(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
+  public void onNewResult(DataSource<CloseableReference<CloseableImage>> dataSource) {
     if (dataSource != mDataSource || mImageRequest == null || mDrawableDataSubscriber == null) {
       getImagePerfListener().onIgnoreResult(this);
       return; // We don't care
@@ -281,7 +280,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   }
 
   @Override
-  public void onFailure(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
+  public void onFailure(DataSource<CloseableReference<CloseableImage>> dataSource) {
     if (dataSource != mDataSource || mImageRequest == null || mDrawableDataSubscriber == null) {
       getImagePerfListener().onIgnoreFailure(this);
       return; // wrong image
@@ -290,12 +289,12 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   }
 
   @Override
-  public void onCancellation(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
+  public void onCancellation(DataSource<CloseableReference<CloseableImage>> dataSource) {
     // no-op
   }
 
   @Override
-  public void onProgressUpdate(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
+  public void onProgressUpdate(DataSource<CloseableReference<CloseableImage>> dataSource) {
     if (dataSource != mDataSource || mImageRequest == null || mDrawableDataSubscriber == null) {
       return; // wrong image
     }
