@@ -13,6 +13,7 @@ import bolts.Continuation;
 import bolts.Task;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableMap;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBuffer;
@@ -27,6 +28,7 @@ import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,6 +48,7 @@ import javax.annotation.Nullable;
  * <p>When the final result comes from the input producer, the two parts are stitched back together
  * and returned as a whole.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PartialDiskCacheProducer implements Producer<EncodedImage> {
   public static final String PRODUCER_NAME = "PartialDiskCacheProducer";
   public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
@@ -287,14 +290,15 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
 
     private PooledByteBufferOutputStream merge(EncodedImage initialData, EncodedImage remainingData)
         throws IOException {
-      final int totalLength = remainingData.getSize() + remainingData.getBytesRange().from;
+      int bytesToReadFromInitialData =
+          Preconditions.checkNotNull(remainingData.getBytesRange()).from;
+      final int totalLength = remainingData.getSize() + bytesToReadFromInitialData;
       final PooledByteBufferOutputStream pooledOutputStream =
           mPooledByteBufferFactory.newOutputStream(totalLength);
 
       // Only read from the original image data up to the start of the new data
-      int bytesToReadFromInitialData = remainingData.getBytesRange().from;
-      copy(initialData.getInputStream(), pooledOutputStream, bytesToReadFromInitialData);
-      copy(remainingData.getInputStream(), pooledOutputStream, remainingData.getSize());
+      copy(initialData.getInputStreamOrThrow(), pooledOutputStream, bytesToReadFromInitialData);
+      copy(remainingData.getInputStreamOrThrow(), pooledOutputStream, remainingData.getSize());
 
       return pooledOutputStream;
     }

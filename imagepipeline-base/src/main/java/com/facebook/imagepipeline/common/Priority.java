@@ -8,7 +8,6 @@
 package com.facebook.imagepipeline.common;
 
 import com.facebook.infer.annotation.Nullsafe;
-import javax.annotation.Nullable;
 
 /** Priority levels recognized by the image pipeline. */
 @Nullsafe(Nullsafe.Mode.STRICT)
