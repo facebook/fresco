@@ -25,6 +25,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
   private boolean mDecodeAllFrames;
   private boolean mForceStaticImage;
   private Bitmap.Config mBitmapConfig = Bitmap.Config.ARGB_8888;
+  private Bitmap.Config mAnimatedBitmapConfig = Bitmap.Config.ARGB_8888;
   private @Nullable ImageDecoder mCustomImageDecoder;
   private @Nullable BitmapTransformation mBitmapTransformation;
   private @Nullable ColorSpace mColorSpace;
@@ -46,6 +47,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
     mDecodeAllFrames = options.decodeAllFrames;
     mForceStaticImage = options.forceStaticImage;
     mBitmapConfig = options.bitmapConfig;
+    mAnimatedBitmapConfig = options.animatedBitmapConfig;
     mCustomImageDecoder = options.customImageDecoder;
     mBitmapTransformation = options.bitmapTransformation;
     mColorSpace = options.colorSpace;
@@ -218,6 +220,25 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
    */
   public T setBitmapConfig(Bitmap.Config bitmapConfig) {
     mBitmapConfig = bitmapConfig;
+    return getThis();
+  }
+
+  /**
+   * Gets which config the animated image will be decode with;
+   *
+   * @return which config the animated image will be decode with
+   */
+  public Bitmap.Config getAnimatedBitmapConfig() {
+    return mAnimatedBitmapConfig;
+  }
+
+  /**
+   * Sets which config the animated image will be decode with;
+   *
+   * @param animatedBitmapConfig which config animated image will be decode with;
+   */
+  public T setAnimatedBitmapConfig(Bitmap.Config animatedBitmapConfig) {
+    mAnimatedBitmapConfig = animatedBitmapConfig;
     return getThis();
   }
 

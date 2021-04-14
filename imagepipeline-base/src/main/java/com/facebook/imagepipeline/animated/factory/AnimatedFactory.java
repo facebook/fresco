@@ -8,7 +8,6 @@
 package com.facebook.imagepipeline.animated.factory;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.infer.annotation.Nullsafe;
@@ -23,8 +22,8 @@ public interface AnimatedFactory {
   DrawableFactory getAnimatedDrawableFactory(@Nullable Context context);
 
   @Nullable
-  ImageDecoder getGifDecoder(Bitmap.Config config);
+  ImageDecoder getGifDecoder();
 
   @Nullable
-  ImageDecoder getWebPDecoder(Bitmap.Config config);
+  ImageDecoder getWebPDecoder();
 }

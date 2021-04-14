@@ -7,6 +7,7 @@
 
 package com.facebook.animated.gif;
 
+import android.graphics.Bitmap;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
@@ -17,6 +18,7 @@ import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.soloader.nativeloader.NativeLoader;
 import java.nio.ByteBuffer;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -37,6 +39,8 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
   @SuppressWarnings("unused")
   @DoNotStrip
   private long mNativeContext;
+
+  @Nullable private Bitmap.Config mDecodeBitmapConfig = null;
 
   private static synchronized void ensure() {
     if (!sInitialized) {
@@ -81,16 +85,22 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
     ensure();
     byteBuffer.rewind();
 
-    return nativeCreateFromDirectByteBuffer(
-        byteBuffer, options.maxDimensionPx, options.forceStaticImage);
+    GifImage image =
+        nativeCreateFromDirectByteBuffer(
+            byteBuffer, options.maxDimensionPx, options.forceStaticImage);
+    image.mDecodeBitmapConfig = options.animatedBitmapConfig;
+    return image;
   }
 
   public static GifImage createFromNativeMemory(
       long nativePtr, int sizeInBytes, ImageDecodeOptions options) {
     ensure();
     Preconditions.checkArgument(nativePtr != 0);
-    return nativeCreateFromNativeMemory(
-        nativePtr, sizeInBytes, options.maxDimensionPx, options.forceStaticImage);
+    GifImage image =
+        nativeCreateFromNativeMemory(
+            nativePtr, sizeInBytes, options.maxDimensionPx, options.forceStaticImage);
+    image.mDecodeBitmapConfig = options.animatedBitmapConfig;
+    return image;
   }
 
   /**
@@ -217,6 +227,12 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
     } finally {
       frame.dispose();
     }
+  }
+
+  @Override
+  @Nullable
+  public Bitmap.Config getAnimatedBitmapConfig() {
+    return mDecodeBitmapConfig;
   }
 
   private static AnimatedDrawableFrameInfo.DisposalMethod fromGifDisposalMethod(int disposalMode) {

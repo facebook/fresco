@@ -9,6 +9,7 @@ package com.facebook.animated.webp;
 
 import static com.facebook.imagepipeline.nativecode.StaticWebpNativeLoader.ensure;
 
+import android.graphics.Bitmap;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
@@ -19,6 +20,7 @@ import com.facebook.imagepipeline.animated.factory.AnimatedImageDecoder;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.infer.annotation.Nullsafe;
 import java.nio.ByteBuffer;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -34,6 +36,8 @@ public class WebPImage implements AnimatedImage, AnimatedImageDecoder {
   @SuppressWarnings("unused")
   @DoNotStrip
   private long mNativeContext;
+
+  @Nullable private Bitmap.Config mDecodeBitmapConfig = null;
 
   @DoNotStrip
   public WebPImage() {}
@@ -64,7 +68,7 @@ public class WebPImage implements AnimatedImage, AnimatedImageDecoder {
    *
    * @param source the data to the image (a copy will be made)
    */
-  public static WebPImage createFromByteArray(byte[] source) {
+  public static WebPImage createFromByteArray(byte[] source, @Nullable ImageDecodeOptions options) {
     ensure();
     Preconditions.checkNotNull(source);
 
@@ -72,7 +76,11 @@ public class WebPImage implements AnimatedImage, AnimatedImageDecoder {
     byteBuffer.put(source);
     byteBuffer.rewind();
 
-    return nativeCreateFromDirectByteBuffer(byteBuffer);
+    WebPImage image = nativeCreateFromDirectByteBuffer(byteBuffer);
+    if (options != null) {
+      image.mDecodeBitmapConfig = options.animatedBitmapConfig;
+    }
+    return image;
   }
 
   /**
@@ -81,28 +89,38 @@ public class WebPImage implements AnimatedImage, AnimatedImageDecoder {
    *
    * @param byteBuffer the ByteBuffer containing the image
    */
-  public static WebPImage createFromByteBuffer(ByteBuffer byteBuffer) {
+  public static WebPImage createFromByteBuffer(
+      ByteBuffer byteBuffer, @Nullable ImageDecodeOptions options) {
     ensure();
     byteBuffer.rewind();
 
-    return nativeCreateFromDirectByteBuffer(byteBuffer);
+    WebPImage image = nativeCreateFromDirectByteBuffer(byteBuffer);
+    if (options != null) {
+      image.mDecodeBitmapConfig = options.animatedBitmapConfig;
+    }
+    return image;
   }
 
-  public static WebPImage createFromNativeMemory(long nativePtr, int sizeInBytes) {
+  public static WebPImage createFromNativeMemory(
+      long nativePtr, int sizeInBytes, @Nullable ImageDecodeOptions options) {
     ensure();
     Preconditions.checkArgument(nativePtr != 0);
-    return nativeCreateFromNativeMemory(nativePtr, sizeInBytes);
+    WebPImage image = nativeCreateFromNativeMemory(nativePtr, sizeInBytes);
+    if (options != null) {
+      image.mDecodeBitmapConfig = options.animatedBitmapConfig;
+    }
+    return image;
   }
 
   @Override
   public AnimatedImage decodeFromNativeMemory(
       long nativePtr, int sizeInBytes, ImageDecodeOptions options) {
-    return WebPImage.createFromNativeMemory(nativePtr, sizeInBytes);
+    return WebPImage.createFromNativeMemory(nativePtr, sizeInBytes, options);
   }
 
   @Override
   public AnimatedImage decodeFromByteBuffer(ByteBuffer byteBuffer, ImageDecodeOptions options) {
-    return WebPImage.createFromByteBuffer(byteBuffer);
+    return WebPImage.createFromByteBuffer(byteBuffer, options);
   }
 
   @Override
@@ -169,6 +187,12 @@ public class WebPImage implements AnimatedImage, AnimatedImageDecoder {
     } finally {
       frame.dispose();
     }
+  }
+
+  @Override
+  @Nullable
+  public Bitmap.Config getAnimatedBitmapConfig() {
+    return mDecodeBitmapConfig;
   }
 
   private static native WebPImage nativeCreateFromDirectByteBuffer(ByteBuffer buffer);

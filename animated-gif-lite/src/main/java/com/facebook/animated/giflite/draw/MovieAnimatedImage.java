@@ -7,11 +7,13 @@
 
 package com.facebook.animated.giflite.draw;
 
+import android.graphics.Bitmap;
 import android.graphics.Movie;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.base.AnimatedImageFrame;
 import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /** Simple wrapper for an animated image backed by {@link Movie}. */
 @Nullsafe(Nullsafe.Mode.STRICT)
@@ -93,5 +95,11 @@ public class MovieAnimatedImage implements AnimatedImage {
         frame.getHeight(),
         AnimatedDrawableFrameInfo.BlendOperation.BLEND_WITH_PREVIOUS,
         mFrames[frameNumber].getDisposalMode());
+  }
+
+  @Override
+  @Nullable
+  public Bitmap.Config getAnimatedBitmapConfig() {
+    return null;
   }
 }

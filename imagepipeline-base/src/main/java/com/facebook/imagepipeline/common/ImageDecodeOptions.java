@@ -54,6 +54,9 @@ public class ImageDecodeOptions {
   /** StaticImage and JPEG will decode with this config; */
   public final Bitmap.Config bitmapConfig;
 
+  /** Animated Image will decode with this config; */
+  public final Bitmap.Config animatedBitmapConfig;
+
   /** Custom image decoder override. */
   public final @Nullable ImageDecoder customImageDecoder;
 
@@ -77,6 +80,7 @@ public class ImageDecodeOptions {
     this.decodeAllFrames = b.getDecodeAllFrames();
     this.forceStaticImage = b.getForceStaticImage();
     this.bitmapConfig = b.getBitmapConfig();
+    this.animatedBitmapConfig = b.getAnimatedBitmapConfig();
     this.customImageDecoder = b.getCustomImageDecoder();
     this.bitmapTransformation = b.getBitmapTransformation();
     this.colorSpace = b.getColorSpace();
@@ -115,6 +119,8 @@ public class ImageDecodeOptions {
     if (decodeAllFrames != that.decodeAllFrames) return false;
     if (forceStaticImage != that.forceStaticImage) return false;
     if (!excludeBitmapConfigFromComparison && bitmapConfig != that.bitmapConfig) return false;
+    if (!excludeBitmapConfigFromComparison && animatedBitmapConfig != that.animatedBitmapConfig)
+      return false;
     if (customImageDecoder != that.customImageDecoder) return false;
     if (bitmapTransformation != that.bitmapTransformation) return false;
     if (colorSpace != that.colorSpace) return false;
@@ -130,6 +136,8 @@ public class ImageDecodeOptions {
     result = 31 * result + (decodeAllFrames ? 1 : 0);
     result = 31 * result + (forceStaticImage ? 1 : 0);
     if (!excludeBitmapConfigFromComparison) result = 31 * result + bitmapConfig.ordinal();
+    if (!excludeBitmapConfigFromComparison)
+      result = 31 * result + (animatedBitmapConfig != null ? animatedBitmapConfig.ordinal() : 0);
     result = 31 * result + (customImageDecoder != null ? customImageDecoder.hashCode() : 0);
     result = 31 * result + (bitmapTransformation != null ? bitmapTransformation.hashCode() : 0);
     result = 31 * result + (colorSpace != null ? colorSpace.hashCode() : 0);
@@ -150,6 +158,7 @@ public class ImageDecodeOptions {
         .add("decodeAllFrames", decodeAllFrames)
         .add("forceStaticImage", forceStaticImage)
         .add("bitmapConfigName", bitmapConfig.name())
+        .add("animatedBitmapConfigName", animatedBitmapConfig.name())
         .add("customImageDecoder", customImageDecoder)
         .add("bitmapTransformation", bitmapTransformation)
         .add("colorSpace", colorSpace);

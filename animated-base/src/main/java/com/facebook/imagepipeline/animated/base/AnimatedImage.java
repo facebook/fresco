@@ -7,7 +7,9 @@
 
 package com.facebook.imagepipeline.animated.base;
 
+import android.graphics.Bitmap;
 import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /** Common interface for an animated image. */
 @Nullsafe(Nullsafe.Mode.LOCAL)
@@ -97,4 +99,12 @@ public interface AnimatedImage {
    * @return the frame info
    */
   AnimatedDrawableFrameInfo getFrameInfo(int frameNumber);
+
+  /**
+   * Gets the Bitmap.Config to decode the Bitmap of Animated Frames.
+   *
+   * @return Bitmap.Config for Animated Image
+   */
+  @Nullable
+  Bitmap.Config getAnimatedBitmapConfig();
 }

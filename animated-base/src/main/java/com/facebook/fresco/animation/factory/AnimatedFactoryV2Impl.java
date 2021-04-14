@@ -8,7 +8,6 @@
 package com.facebook.fresco.animation.factory;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Rect;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.executors.DefaultSerialExecutorService;
@@ -82,7 +81,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   }
 
   @Override
-  public ImageDecoder getGifDecoder(final Bitmap.Config bitmapConfig) {
+  public ImageDecoder getGifDecoder() {
     return new ImageDecoder() {
       @Override
       public CloseableImage decode(
@@ -90,13 +89,14 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
           int length,
           QualityInfo qualityInfo,
           ImageDecodeOptions options) {
-        return getAnimatedImageFactory().decodeGif(encodedImage, options, bitmapConfig);
+        return getAnimatedImageFactory()
+            .decodeGif(encodedImage, options, options.animatedBitmapConfig);
       }
     };
   }
 
   @Override
-  public ImageDecoder getWebPDecoder(final Bitmap.Config bitmapConfig) {
+  public ImageDecoder getWebPDecoder() {
     return new ImageDecoder() {
       @Override
       public CloseableImage decode(
@@ -104,7 +104,8 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
           int length,
           QualityInfo qualityInfo,
           ImageDecodeOptions options) {
-        return getAnimatedImageFactory().decodeWebP(encodedImage, options, bitmapConfig);
+        return getAnimatedImageFactory()
+            .decodeWebP(encodedImage, options, options.animatedBitmapConfig);
       }
     };
   }

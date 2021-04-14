@@ -246,8 +246,8 @@ public class ImagePipelineFactory {
         ImageDecoder webPDecoder = null;
 
         if (animatedFactory != null) {
-          gifDecoder = animatedFactory.getGifDecoder(mConfig.getBitmapConfig());
-          webPDecoder = animatedFactory.getWebPDecoder(mConfig.getBitmapConfig());
+          gifDecoder = animatedFactory.getGifDecoder();
+          webPDecoder = animatedFactory.getWebPDecoder();
         }
 
         if (mConfig.getImageDecoderConfig() == null) {
