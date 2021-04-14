@@ -35,7 +35,7 @@ public class ForwardingControllerListener2<I> extends BaseControllerListener2<I>
   }
 
   @Override
-  public void onSubmit(String id, Object callerContext, @Nullable Extras extras) {
+  public void onSubmit(String id, @Nullable Object callerContext, @Nullable Extras extras) {
     final int numberOfListeners = mListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       try {
@@ -51,7 +51,7 @@ public class ForwardingControllerListener2<I> extends BaseControllerListener2<I>
   }
 
   @Override
-  public void onFinalImageSet(String id, @Nullable I imageInfo, Extras extraData) {
+  public void onFinalImageSet(String id, @Nullable I imageInfo, @Nullable Extras extraData) {
     final int numberOfListeners = mListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       try {
@@ -67,7 +67,7 @@ public class ForwardingControllerListener2<I> extends BaseControllerListener2<I>
   }
 
   @Override
-  public void onFailure(String id, Throwable throwable, @Nullable Extras extras) {
+  public void onFailure(String id, @Nullable Throwable throwable, @Nullable Extras extras) {
     final int numberOfListeners = mListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       try {

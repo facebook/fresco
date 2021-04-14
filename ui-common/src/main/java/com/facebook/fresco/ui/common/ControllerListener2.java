@@ -73,7 +73,7 @@ public interface ControllerListener2<INFO> {
    * @param callerContext caller context
    * @param extraData extra data
    */
-  void onSubmit(String id, Object callerContext, @Nullable Extras extraData);
+  void onSubmit(String id, @Nullable Object callerContext, @Nullable Extras extraData);
 
   /**
    * Called after the final image has been set.
@@ -82,7 +82,7 @@ public interface ControllerListener2<INFO> {
    * @param imageInfo image info
    * @param extraData extra data
    */
-  void onFinalImageSet(String id, @Nullable INFO imageInfo, Extras extraData);
+  void onFinalImageSet(String id, @Nullable INFO imageInfo, @Nullable Extras extraData);
 
   /**
    * Called after any intermediate image has been set.
@@ -105,7 +105,7 @@ public interface ControllerListener2<INFO> {
    * @param throwable failure cause
    * @param extraData extra data
    */
-  void onFailure(String id, Throwable throwable, @Nullable Extras extraData);
+  void onFailure(String id, @Nullable Throwable throwable, @Nullable Extras extraData);
 
   /**
    * Called after the controller released the fetched image.

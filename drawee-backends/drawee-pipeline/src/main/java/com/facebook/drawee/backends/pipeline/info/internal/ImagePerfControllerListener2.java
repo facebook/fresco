@@ -130,7 +130,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
 
   @Override
   public void onFailure(
-      String id, Throwable throwable, @Nullable ControllerListener2.Extras extras) {
+      String id, @Nullable Throwable throwable, @Nullable ControllerListener2.Extras extras) {
     final long now = mClock.now();
 
     ImagePerfState state = obtainState();
