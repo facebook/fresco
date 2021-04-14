@@ -10,8 +10,10 @@ package com.facebook.imagepipeline.cache;
 import com.facebook.common.internal.Predicate;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class InstrumentedMemoryCache<K, V> implements MemoryCache<K, V> {
 
   private final MemoryCache<K, V> mDelegate;
@@ -23,7 +25,7 @@ public class InstrumentedMemoryCache<K, V> implements MemoryCache<K, V> {
   }
 
   @Override
-  public CloseableReference<V> get(K key) {
+  public @Nullable CloseableReference<V> get(K key) {
     CloseableReference<V> result = mDelegate.get(key);
     if (result == null) {
       mTracker.onCacheMiss(key);
@@ -39,7 +41,7 @@ public class InstrumentedMemoryCache<K, V> implements MemoryCache<K, V> {
   }
 
   @Override
-  public CloseableReference<V> cache(K key, CloseableReference<V> value) {
+  public @Nullable CloseableReference<V> cache(K key, CloseableReference<V> value) {
     mTracker.onCachePut(key);
     return mDelegate.cache(key, value);
   }
