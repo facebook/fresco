@@ -30,8 +30,10 @@ import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.listener.BaseRequestListener;
 import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nonnull;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FrescoDrawable2Impl extends FrescoDrawable2 {
 
   private static final long RELEASE_DELAY = 16 * 5; // Roughly 5 frames.

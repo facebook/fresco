@@ -387,7 +387,7 @@ public class FadeDrawable extends ArrayDrawable {
     return mDefaultLayerIsOn;
   }
 
-  public void setOnFadeListener(OnFadeListener onFadeListener) {
+  public void setOnFadeListener(@Nullable OnFadeListener onFadeListener) {
     mOnFadeListener = onFadeListener;
   }
 
