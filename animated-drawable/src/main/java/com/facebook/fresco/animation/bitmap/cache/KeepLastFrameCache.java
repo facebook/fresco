@@ -46,8 +46,7 @@ public class KeepLastFrameCache implements BitmapFrameCache {
   }
 
   @Override
-  @Nullable
-  public synchronized CloseableReference<Bitmap> getBitmapToReuseForFrame(
+  public synchronized @Nullable CloseableReference<Bitmap> getBitmapToReuseForFrame(
       int frameNumber, int width, int height) {
     try {
       return CloseableReference.cloneOrNull(mLastBitmapReference);
