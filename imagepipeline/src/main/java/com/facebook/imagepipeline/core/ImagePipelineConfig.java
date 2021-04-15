@@ -53,6 +53,7 @@ import com.facebook.imagepipeline.producers.HttpUrlConnectionNetworkFetcher;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -72,6 +73,7 @@ import javax.annotation.Nullable;
  *
  * <p>This should only be done once per process.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImagePipelineConfig implements ImagePipelineConfigInterface {
   // If a member here is marked @Nullable, it must be constructed by ImagePipelineFactory
   // on demand if needed.
@@ -130,7 +132,9 @@ public class ImagePipelineConfig implements ImagePipelineConfigInterface {
     mBitmapMemoryCacheParamsSupplier =
         builder.mBitmapMemoryCacheParamsSupplier == null
             ? new DefaultBitmapMemoryCacheParamsSupplier(
-                (ActivityManager) builder.mContext.getSystemService(Context.ACTIVITY_SERVICE))
+                (ActivityManager)
+                    Preconditions.checkNotNull(
+                        builder.mContext.getSystemService(Context.ACTIVITY_SERVICE)))
             : builder.mBitmapMemoryCacheParamsSupplier;
     mBitmapMemoryCacheTrimStrategy =
         builder.mBitmapMemoryCacheTrimStrategy == null
