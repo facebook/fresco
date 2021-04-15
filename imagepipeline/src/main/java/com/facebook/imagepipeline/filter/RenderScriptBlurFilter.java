@@ -16,7 +16,9 @@ import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import androidx.annotation.RequiresApi;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class RenderScriptBlurFilter {
 
   public static final int BLUR_MAX_RADIUS = 25;
@@ -40,14 +42,14 @@ public abstract class RenderScriptBlurFilter {
     Preconditions.checkArgument(radius > 0 && radius <= BLUR_MAX_RADIUS);
     RenderScript rs = null;
     try {
-      rs = RenderScript.create(context);
+      rs = Preconditions.checkNotNull(RenderScript.create(context));
 
       // Create an Intrinsic Blur Script using the Renderscript
       ScriptIntrinsicBlur blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
 
       // Create the input/output allocations with Renderscript and the src/dest bitmaps
-      Allocation allIn = Allocation.createFromBitmap(rs, src);
-      Allocation allOut = Allocation.createFromBitmap(rs, dest);
+      Allocation allIn = Preconditions.checkNotNull(Allocation.createFromBitmap(rs, src));
+      Allocation allOut = Preconditions.checkNotNull(Allocation.createFromBitmap(rs, dest));
 
       // Set the radius of the blur
       blurScript.setRadius(radius);
