@@ -10,6 +10,7 @@ package com.facebook.fresco.animation.factory;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.fresco.animation.backend.AnimationBackend;
@@ -87,10 +88,11 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
 
   @Override
   public AnimatedDrawable2 createDrawable(CloseableImage image) {
-    AnimatedImage animatedImage = ((CloseableAnimatedImage) image).getImage();
+    CloseableAnimatedImage closeable = ((CloseableAnimatedImage) image);
+    AnimatedImage animatedImage = closeable.getImage();
     return new AnimatedDrawable2(
         createAnimationBackend(
-            ((CloseableAnimatedImage) image).getImageResult(),
+            Preconditions.checkNotNull(closeable.getImageResult()),
             animatedImage != null ? animatedImage.getAnimatedBitmapConfig() : null));
   }
 

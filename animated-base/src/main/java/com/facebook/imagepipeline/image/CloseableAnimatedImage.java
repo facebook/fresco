@@ -9,15 +9,17 @@ package com.facebook.imagepipeline.image;
 
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
  * Encapsulates the data needed in order for {@code AnimatedDrawable} to render a {@code
  * AnimatedImage}.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class CloseableAnimatedImage extends CloseableImage {
 
-  private AnimatedImageResult mImageResult;
+  private @Nullable AnimatedImageResult mImageResult;
 
   private boolean mIsStateful;
 
@@ -32,12 +34,12 @@ public class CloseableAnimatedImage extends CloseableImage {
 
   @Override
   public synchronized int getWidth() {
-    return isClosed() ? 0 : mImageResult.getImage().getWidth();
+    return mImageResult == null ? 0 : mImageResult.getImage().getWidth();
   }
 
   @Override
   public synchronized int getHeight() {
-    return isClosed() ? 0 : mImageResult.getImage().getHeight();
+    return mImageResult == null ? 0 : mImageResult.getImage().getHeight();
   }
 
   @Override
@@ -60,7 +62,7 @@ public class CloseableAnimatedImage extends CloseableImage {
 
   @Override
   public synchronized int getSizeInBytes() {
-    return isClosed() ? 0 : mImageResult.getImage().getSizeInBytes();
+    return mImageResult == null ? 0 : mImageResult.getImage().getSizeInBytes();
   }
 
   @Override
@@ -68,11 +70,11 @@ public class CloseableAnimatedImage extends CloseableImage {
     return mIsStateful;
   }
 
-  public synchronized AnimatedImageResult getImageResult() {
+  public synchronized @Nullable AnimatedImageResult getImageResult() {
     return mImageResult;
   }
 
   public synchronized @Nullable AnimatedImage getImage() {
-    return isClosed() ? null : mImageResult.getImage();
+    return mImageResult == null ? null : mImageResult.getImage();
   }
 }
