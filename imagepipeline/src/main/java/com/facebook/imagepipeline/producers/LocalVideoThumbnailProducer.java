@@ -77,18 +77,22 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
 
           @Override
           protected @Nullable CloseableReference<CloseableImage> getResult() throws Exception {
-            Bitmap thumbnailBitmap;
+            Bitmap thumbnailBitmap = null;
             String path;
             try {
               path = getLocalFilePath(imageRequest);
             } catch (IllegalArgumentException e) {
               path = null;
             }
-            thumbnailBitmap =
-                path != null
-                    ? ThumbnailUtils.createVideoThumbnail(path, calculateKind(imageRequest))
-                    : createThumbnailFromContentProvider(
+
+            if (path != null) {
+              thumbnailBitmap = ThumbnailUtils.createVideoThumbnail(path, calculateKind(imageRequest));
+            }
+
+            if (thumbnailBitmap == null) {
+                thumbnailBitmap = createThumbnailFromContentProvider(
                         mContentResolver, imageRequest.getSourceUri());
+            }
 
             if (thumbnailBitmap == null) {
               return null;
