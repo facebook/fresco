@@ -62,7 +62,7 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
         new StatefulProducerRunnable<CloseableReference<CloseableImage>>(
             consumer, listener, producerContext, PRODUCER_NAME) {
           @Override
-          protected void onSuccess(CloseableReference<CloseableImage> result) {
+          protected void onSuccess(@Nullable CloseableReference<CloseableImage> result) {
             super.onSuccess(result);
             listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, result != null);
             producerContext.putOriginExtra("local");
@@ -107,7 +107,7 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
 
           @Override
           protected Map<String, String> getExtraMapOnSuccess(
-              final CloseableReference<CloseableImage> result) {
+              final @Nullable CloseableReference<CloseableImage> result) {
             return ImmutableMap.of(CREATED_THUMBNAIL, String.valueOf(result != null));
           }
 

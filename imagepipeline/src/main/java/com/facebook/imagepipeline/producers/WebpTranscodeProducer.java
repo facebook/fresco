@@ -19,6 +19,7 @@ import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.nativecode.WebpTranscoder;
 import com.facebook.imagepipeline.nativecode.WebpTranscoderFactory;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.InputStream;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
@@ -32,6 +33,7 @@ import javax.annotation.Nullable;
  *
  * <p>If the image is not WebP, no transformation is applied.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class WebpTranscodeProducer implements Producer<EncodedImage> {
   public static final String PRODUCER_NAME = "WebpTranscodeProducer";
 
@@ -145,8 +147,8 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
 
   private static TriState shouldTranscode(final EncodedImage encodedImage) {
     Preconditions.checkNotNull(encodedImage);
-    ImageFormat imageFormat =
-        ImageFormatChecker.getImageFormat_WrapIOException(encodedImage.getInputStream());
+    InputStream is = Preconditions.checkNotNull(encodedImage.getInputStream());
+    ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(is);
     if (DefaultImageFormats.isStaticWebpFormat(imageFormat)) {
       final WebpTranscoder webpTranscoder = WebpTranscoderFactory.getWebpTranscoder();
       if (webpTranscoder == null) {
@@ -165,17 +167,17 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
   private static void doTranscode(
       final EncodedImage encodedImage, final PooledByteBufferOutputStream outputStream)
       throws Exception {
-    InputStream imageInputStream = encodedImage.getInputStream();
-    ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(imageInputStream);
+    InputStream is = Preconditions.checkNotNull(encodedImage.getInputStream());
+    ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(is);
     if (imageFormat == DefaultImageFormats.WEBP_SIMPLE
         || imageFormat == DefaultImageFormats.WEBP_EXTENDED) {
       WebpTranscoderFactory.getWebpTranscoder()
-          .transcodeWebpToJpeg(imageInputStream, outputStream, DEFAULT_JPEG_QUALITY);
+          .transcodeWebpToJpeg(is, outputStream, DEFAULT_JPEG_QUALITY);
       encodedImage.setImageFormat(DefaultImageFormats.JPEG);
     } else if (imageFormat == DefaultImageFormats.WEBP_LOSSLESS
         || imageFormat == DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA) {
       // In this case we always transcode to PNG
-      WebpTranscoderFactory.getWebpTranscoder().transcodeWebpToPng(imageInputStream, outputStream);
+      WebpTranscoderFactory.getWebpTranscoder().transcodeWebpToPng(is, outputStream);
       encodedImage.setImageFormat(DefaultImageFormats.PNG);
     } else {
       throw new IllegalArgumentException("Wrong image format");

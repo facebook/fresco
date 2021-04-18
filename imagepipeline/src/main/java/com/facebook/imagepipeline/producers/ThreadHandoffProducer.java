@@ -10,9 +10,11 @@ package com.facebook.imagepipeline.producers;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.imagepipeline.instrumentation.FrescoInstrumenter;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Uses ExecutorService to move further computation to different thread */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ThreadHandoffProducer<T> implements Producer<T> {
 
   public static final String PRODUCER_NAME = "BackgroundThreadHandoffProducer";
@@ -37,13 +39,13 @@ public class ThreadHandoffProducer<T> implements Producer<T> {
       final StatefulProducerRunnable<T> statefulRunnable =
           new StatefulProducerRunnable<T>(consumer, producerListener, context, PRODUCER_NAME) {
             @Override
-            protected void onSuccess(T ignored) {
+            protected void onSuccess(@Nullable T ignored) {
               producerListener.onProducerFinishWithSuccess(context, PRODUCER_NAME, null);
               mInputProducer.produceResults(consumer, context);
             }
 
             @Override
-            protected void disposeResult(T ignored) {}
+            protected void disposeResult(@Nullable T ignored) {}
 
             @Override
             protected @Nullable T getResult() throws Exception {

@@ -109,7 +109,7 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
           }
 
           @Override
-          protected Map<String, String> getExtraMapOnSuccess(final EncodedImage result) {
+          protected Map<String, String> getExtraMapOnSuccess(final @Nullable EncodedImage result) {
             return ImmutableMap.of(CREATED_THUMBNAIL, Boolean.toString(result != null));
           }
         };

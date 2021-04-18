@@ -9,6 +9,7 @@ package com.facebook.common.executors;
 
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.atomic.AtomicInteger;
+import javax.annotation.Nullable;
 
 /**
  * Abstraction for computation.
@@ -68,7 +69,7 @@ public abstract class StatefulRunnable<T> implements Runnable {
    *
    * @param result
    */
-  protected void onSuccess(T result) {}
+  protected void onSuccess(@Nullable T result) {}
 
   /**
    * Called if exception occurred during computation.
@@ -85,7 +86,7 @@ public abstract class StatefulRunnable<T> implements Runnable {
    *
    * @param result
    */
-  protected void disposeResult(T result) {}
+  protected void disposeResult(@Nullable T result) {}
 
-  protected abstract T getResult() throws Exception;
+  protected abstract @Nullable T getResult() throws Exception;
 }

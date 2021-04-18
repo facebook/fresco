@@ -40,7 +40,7 @@ public abstract class StatefulProducerRunnable<T> extends StatefulRunnable<T> {
   }
 
   @Override
-  protected void onSuccess(T result) {
+  protected void onSuccess(@Nullable T result) {
     mProducerListener.onProducerFinishWithSuccess(
         mProducerContext,
         mProducerName,
@@ -74,7 +74,7 @@ public abstract class StatefulProducerRunnable<T> extends StatefulRunnable<T> {
   }
 
   /** Create extra map for result */
-  protected @Nullable Map<String, String> getExtraMapOnSuccess(T result) {
+  protected @Nullable Map<String, String> getExtraMapOnSuccess(@Nullable T result) {
     return null;
   }
 
