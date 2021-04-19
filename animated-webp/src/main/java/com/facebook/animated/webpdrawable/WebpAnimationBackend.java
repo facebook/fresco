@@ -44,7 +44,7 @@ public class WebpAnimationBackend implements AnimationBackend {
       byte[] targetArray = new byte[is.available()];
       is.read(targetArray);
 
-      WebPImage webPImage = WebPImage.createFromByteArray(targetArray);
+      WebPImage webPImage = WebPImage.createFromByteArray(targetArray, null);
       is.reset();
 
       return new WebpAnimationBackend(webPImage);
