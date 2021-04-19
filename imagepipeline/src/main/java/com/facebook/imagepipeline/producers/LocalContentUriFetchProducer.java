@@ -13,10 +13,12 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -26,6 +28,7 @@ import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 
 /** Represents a local content Uri fetch producer. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class LocalContentUriFetchProducer extends LocalFetchProducer {
 
   public static final String PRODUCER_NAME = "LocalContentUriFetchProducer";
@@ -52,7 +55,8 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
         inputStream = mContentResolver.openInputStream(uri);
       } else if (uri.toString().endsWith("/display_photo")) {
         try {
-          AssetFileDescriptor fd = mContentResolver.openAssetFileDescriptor(uri, "r");
+          AssetFileDescriptor fd =
+              Preconditions.checkNotNull(mContentResolver.openAssetFileDescriptor(uri, "r"));
           inputStream = fd.createInputStream();
         } catch (IOException e) {
           throw new IOException("Contact photo does not exist: " + uri);
@@ -64,7 +68,8 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
         }
       }
       // If a Contact URI is provided, use the special helper to open that contact's photo.
-      return getEncodedImage(inputStream, EncodedImage.UNKNOWN_STREAM_SIZE);
+      return getEncodedImage(
+          Preconditions.checkNotNull(inputStream), EncodedImage.UNKNOWN_STREAM_SIZE);
     }
 
     if (UriUtil.isLocalCameraUri(uri)) {
@@ -74,12 +79,14 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
       }
     }
 
-    return getEncodedImage(mContentResolver.openInputStream(uri), EncodedImage.UNKNOWN_STREAM_SIZE);
+    InputStream is = Preconditions.checkNotNull(mContentResolver.openInputStream(uri));
+    return getEncodedImage(is, EncodedImage.UNKNOWN_STREAM_SIZE);
   }
 
   private @Nullable EncodedImage getCameraImage(Uri uri) throws IOException {
     try {
-      ParcelFileDescriptor parcelFileDescriptor = mContentResolver.openFileDescriptor(uri, "r");
+      ParcelFileDescriptor parcelFileDescriptor =
+          Preconditions.checkNotNull(mContentResolver.openFileDescriptor(uri, "r"));
       FileDescriptor fd = parcelFileDescriptor.getFileDescriptor();
       return getEncodedImage(new FileInputStream(fd), (int) parcelFileDescriptor.getStatSize());
     } catch (FileNotFoundException e) {
