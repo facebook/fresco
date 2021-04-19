@@ -17,6 +17,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
 
 /**
  * The {@link QualifiedResourceFetchProducer} uses the {@link ContentResolver} to allow fetching
@@ -38,7 +39,8 @@ public class QualifiedResourceFetchProducer extends LocalFetchProducer {
   }
 
   @Override
-  protected EncodedImage getEncodedImage(final ImageRequest imageRequest) throws IOException {
+  protected @Nullable EncodedImage getEncodedImage(final ImageRequest imageRequest)
+      throws IOException {
     final Uri uri = imageRequest.getSourceUri();
     final InputStream inputStream = mContentResolver.openInputStream(uri);
     Preconditions.checkNotNull(inputStream, "ContentResolver returned null InputStream");

@@ -13,6 +13,7 @@ import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.util.UriUtil;
@@ -20,6 +21,7 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imageutils.JfifUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -27,6 +29,7 @@ import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 
 /** Represents a local content Uri fetch producer. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer
     implements ThumbnailProducer<EncodedImage> {
 
@@ -55,7 +58,7 @@ public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer
   }
 
   @Override
-  public boolean canProvideImageForSize(ResizeOptions resizeOptions) {
+  public boolean canProvideImageForSize(@Nullable ResizeOptions resizeOptions) {
     return ThumbnailSizeChecker.isImageBigEnough(
         MINI_THUMBNAIL_DIMENSIONS.width(), MINI_THUMBNAIL_DIMENSIONS.height(), resizeOptions);
   }
@@ -117,8 +120,9 @@ public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer
     try {
       if (thumbnailCursor.moveToFirst()) {
         final String thumbnailUri =
-            thumbnailCursor.getString(
-                thumbnailCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA));
+            Preconditions.checkNotNull(
+                thumbnailCursor.getString(
+                    thumbnailCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA)));
         if (new File(thumbnailUri).exists()) {
           return getEncodedImage(new FileInputStream(thumbnailUri), getLength(thumbnailUri));
         }
@@ -154,7 +158,7 @@ public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer
     return PRODUCER_NAME;
   }
 
-  private static int getRotationAngle(String pathname) {
+  private static int getRotationAngle(@Nullable String pathname) {
     if (pathname != null) {
       try {
         ExifInterface exif = new ExifInterface(pathname);

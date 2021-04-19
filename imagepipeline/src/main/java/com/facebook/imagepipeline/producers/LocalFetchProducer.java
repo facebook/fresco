@@ -13,12 +13,14 @@ import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 
 /** Represents a local fetch producer. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class LocalFetchProducer implements Producer<EncodedImage> {
 
   private final Executor mExecutor;
@@ -87,7 +89,8 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
     }
   }
 
-  protected EncodedImage getEncodedImage(InputStream inputStream, int length) throws IOException {
+  protected @Nullable EncodedImage getEncodedImage(InputStream inputStream, int length)
+      throws IOException {
     return getByteBufferBackedEncodedImage(inputStream, length);
   }
 
@@ -98,7 +101,8 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
    * @param imageRequest request that includes the local resource that is being accessed
    * @throws IOException
    */
-  protected abstract EncodedImage getEncodedImage(ImageRequest imageRequest) throws IOException;
+  protected abstract @Nullable EncodedImage getEncodedImage(ImageRequest imageRequest)
+      throws IOException;
 
   /** @return name of the Producer */
   protected abstract String getProducerName();
