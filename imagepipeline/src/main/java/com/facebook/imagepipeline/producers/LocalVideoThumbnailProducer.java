@@ -19,7 +19,6 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.ImmutableMap;
-import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.bitmaps.SimpleBitmapReleaser;
@@ -27,7 +26,6 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.infer.annotation.Nullsafe;
 import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -39,7 +37,6 @@ import javax.annotation.Nullable;
  * <p>At present, these thumbnails are created on the java heap rather than being pinned purgeables.
  * This is deemed okay as the thumbnails are only very small.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
 public class LocalVideoThumbnailProducer implements Producer<CloseableReference<CloseableImage>> {
 
   public static final String PRODUCER_NAME = "VideoThumbnailProducer";
@@ -146,8 +143,8 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
       String[] selectionArgs = null;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
           && "com.android.providers.media.documents".equals(uri.getAuthority())) {
-        String documentId = Preconditions.checkNotNull(DocumentsContract.getDocumentId(uri));
-        uri = Preconditions.checkNotNull(MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        String documentId = DocumentsContract.getDocumentId(uri);
+        uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         selection = MediaStore.Video.Media._ID + "=?";
         selectionArgs = new String[] {documentId.split(":")[1]};
       }
@@ -173,9 +170,6 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1) {
       try {
         ParcelFileDescriptor videoFile = contentResolver.openFileDescriptor(uri, "r");
-        if (videoFile == null) {
-          return null;
-        }
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         mediaMetadataRetriever.setDataSource(videoFile.getFileDescriptor());
         return mediaMetadataRetriever.getFrameAtTime(-1);

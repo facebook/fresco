@@ -9,16 +9,13 @@ package com.facebook.imagepipeline.producers;
 
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
-import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.util.concurrent.Executor;
 
 /** Executes a local fetch from a resource. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
 public class LocalResourceFetchProducer extends LocalFetchProducer {
 
   public static final String PRODUCER_NAME = "LocalResourceFetchProducer";
@@ -61,7 +58,6 @@ public class LocalResourceFetchProducer extends LocalFetchProducer {
   }
 
   private static int getResourceId(ImageRequest imageRequest) {
-    return Integer.parseInt(
-        Preconditions.checkNotNull(imageRequest.getSourceUri().getPath()).substring(1));
+    return Integer.parseInt(imageRequest.getSourceUri().getPath().substring(1));
   }
 }
