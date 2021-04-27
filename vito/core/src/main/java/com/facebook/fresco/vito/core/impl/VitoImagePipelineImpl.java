@@ -15,7 +15,6 @@ import com.facebook.datasource.DataSources;
 import com.facebook.fresco.vito.core.ImagePipelineUtils;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.VitoImageRequest;
-import com.facebook.fresco.vito.core.VitoUtils;
 import com.facebook.fresco.vito.core.impl.source.VitoImageSource;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.source.ImageSource;

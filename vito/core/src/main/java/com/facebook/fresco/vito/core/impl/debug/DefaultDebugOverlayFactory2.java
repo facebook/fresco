@@ -13,7 +13,7 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.VitoImageRequest;
-import com.facebook.fresco.vito.core.VitoUtils;
+import com.facebook.fresco.vito.core.impl.VitoUtils;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.Locale;
 import java.util.Map;
