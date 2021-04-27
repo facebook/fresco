@@ -17,7 +17,6 @@ import com.facebook.drawee.drawable.ForwardingDrawable;
 import com.facebook.drawee.drawable.InstrumentedDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.fresco.vito.core.BaseFrescoDrawable;
-import com.facebook.fresco.vito.core.Hierarcher;
 import com.facebook.fresco.vito.core.NopDrawable;
 import com.facebook.fresco.vito.drawable.RoundingUtils;
 import com.facebook.fresco.vito.options.BorderOptions;
