@@ -135,9 +135,10 @@ public final class FrescoInstrumenter {
   public static Runnable decorateRunnable(
       @PropagatesNullable @Nullable Runnable runnable, @Nullable String tag) {
     final Instrumenter instrumenter = sInstance;
-    if (instrumenter == null || runnable == null || tag == null) {
+    if (instrumenter == null || runnable == null) {
       return runnable;
     }
+    tag = tag == null ? "" : tag;
     return instrumenter.decorateRunnable(runnable, tag);
   }
 }
