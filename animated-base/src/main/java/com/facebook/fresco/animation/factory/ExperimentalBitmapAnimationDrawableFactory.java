@@ -61,6 +61,7 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
   private final CountingMemoryCache<CacheKey, CloseableImage> mBackingCache;
   private final Supplier<Integer> mCachingStrategySupplier;
   private final Supplier<Integer> mNumberOfFramesToPrepareSupplier;
+  private final Supplier<Boolean> mUseDeepEqualsForCacheKey;
 
   public ExperimentalBitmapAnimationDrawableFactory(
       AnimatedDrawableBackendProvider animatedDrawableBackendProvider,
@@ -70,7 +71,8 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
       PlatformBitmapFactory platformBitmapFactory,
       CountingMemoryCache<CacheKey, CloseableImage> backingCache,
       Supplier<Integer> cachingStrategySupplier,
-      Supplier<Integer> numberOfFramesToPrepareSupplier) {
+      Supplier<Integer> numberOfFramesToPrepareSupplier,
+      Supplier<Boolean> useDeepEqualsForCacheKey) {
     mAnimatedDrawableBackendProvider = animatedDrawableBackendProvider;
     mScheduledExecutorServiceForUiThread = scheduledExecutorServiceForUiThread;
     mExecutorServiceForFramePreparing = executorServiceForFramePreparing;
@@ -79,6 +81,7 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
     mBackingCache = backingCache;
     mCachingStrategySupplier = cachingStrategySupplier;
     mNumberOfFramesToPrepareSupplier = numberOfFramesToPrepareSupplier;
+    mUseDeepEqualsForCacheKey = useDeepEqualsForCacheKey;
   }
 
   @Override
@@ -160,6 +163,7 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
   private AnimatedFrameCache createAnimatedFrameCache(
       final AnimatedImageResult animatedImageResult) {
     return new AnimatedFrameCache(
-        new AnimationFrameCacheKey(animatedImageResult.hashCode()), mBackingCache);
+        new AnimationFrameCacheKey(animatedImageResult.hashCode(), mUseDeepEqualsForCacheKey.get()),
+        mBackingCache);
   }
 }
