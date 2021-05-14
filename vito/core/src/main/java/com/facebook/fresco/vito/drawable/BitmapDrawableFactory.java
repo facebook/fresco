@@ -11,7 +11,6 @@ import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
-import com.facebook.common.internal.Supplier;
 import com.facebook.drawee.drawable.OrientedDrawable;
 import com.facebook.fresco.vito.options.BorderOptions;
 import com.facebook.fresco.vito.options.ImageOptions;
@@ -28,12 +27,10 @@ import javax.annotation.Nullable;
 public class BitmapDrawableFactory implements ImageOptionsDrawableFactory {
 
   private final Resources mResources;
-  private final Supplier<Boolean> mUseNativeRounding;
   private final RoundingUtils mRoundingUtils;
 
-  public BitmapDrawableFactory(Resources resources, Supplier<Boolean> useNativeRounding) {
+  public BitmapDrawableFactory(Resources resources) {
     mResources = resources;
-    mUseNativeRounding = useNativeRounding;
     mRoundingUtils = new RoundingUtils();
   }
 
@@ -77,13 +74,8 @@ public class BitmapDrawableFactory implements ImageOptionsDrawableFactory {
     RoundingOptions roundingOptions = imageOptions.getRoundingOptions();
     BorderOptions borderOptions = imageOptions.getBorderOptions();
 
-    boolean forceRoundAtDecode = roundingOptions != null && roundingOptions.isForceRoundAtDecode();
-    Boolean isBitmapRoundedExtra = (Boolean) closeableStaticBitmap.getExtras().get("is_rounded");
-
     boolean isBitmapRounded =
-        !forceRoundAtDecode
-            && mUseNativeRounding.get()
-            && (isBitmapRoundedExtra == null || isBitmapRoundedExtra);
+        Boolean.TRUE.equals(closeableStaticBitmap.getExtras().get("is_rounded"));
 
     Drawable drawable;
     if (isBitmapRounded && roundingOptions != null && roundingOptions.isCircular()) {

@@ -102,7 +102,6 @@ public class FrescoVito {
         imagePipeline.getConfig().getExecutorSupplier().forLightweightBackgroundTasks(),
         UiThreadImmediateExecutorService.getInstance(),
         createImagePipelineUtils(useNativeCode, Suppliers.BOOLEAN_FALSE),
-        useNativeCode,
         debugOverlayEnabledSupplier);
   }
 

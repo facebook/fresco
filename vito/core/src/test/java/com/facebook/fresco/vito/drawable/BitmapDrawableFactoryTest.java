@@ -17,7 +17,6 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
-import com.facebook.common.internal.Suppliers;
 import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.fresco.vito.options.BorderOptions;
 import com.facebook.fresco.vito.options.ImageOptions;
@@ -59,7 +58,7 @@ public class BitmapDrawableFactoryTest {
     mDisplayMetrics = new DisplayMetrics();
     when(mResources.getDisplayMetrics()).thenReturn(mDisplayMetrics);
 
-    mDrawableFactory = new BitmapDrawableFactory(mResources, Suppliers.BOOLEAN_TRUE);
+    mDrawableFactory = new BitmapDrawableFactory(mResources);
   }
 
   @Test
@@ -94,8 +93,7 @@ public class BitmapDrawableFactoryTest {
     final ImageOptions options = mock(ImageOptions.class);
     when(options.getRoundingOptions()).thenReturn(RoundingOptions.asCircle());
 
-    ImageOptionsDrawableFactory factory =
-        new BitmapDrawableFactory(mResources, Suppliers.BOOLEAN_FALSE);
+    ImageOptionsDrawableFactory factory = new BitmapDrawableFactory(mResources);
 
     Drawable drawable = factory.createDrawable(closeableImage, options);
     assertThat(drawable).isNotNull();
