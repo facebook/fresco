@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Build;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
@@ -21,8 +20,8 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
-import com.facebook.imagepipeline.transformation.BitmapTransformation;
 import com.facebook.imagepipeline.transformation.CircularTransformation;
+import com.facebook.imagepipeline.transformation.TransformationUtils;
 import javax.annotation.Nullable;
 
 /**
@@ -57,7 +56,8 @@ public class FrescoVitoRegionDecoder implements ImageDecoder {
             encodedImage, options.bitmapConfig, regionToDecode, length, options.colorSpace);
     try {
       boolean didApplyTransformation =
-          maybeApplyTransformation(options.bitmapTransformation, decodedBitmapReference);
+          TransformationUtils.maybeApplyTransformation(
+              options.bitmapTransformation, decodedBitmapReference);
 
       CloseableStaticBitmap closeableStaticBitmap =
           new CloseableStaticBitmap(
@@ -99,19 +99,5 @@ public class FrescoVitoRegionDecoder implements ImageDecoder {
 
     tempRectangle.round(regionToDecode);
     return regionToDecode;
-  }
-
-  private boolean maybeApplyTransformation(
-      @Nullable BitmapTransformation transformation, CloseableReference<Bitmap> bitmapReference) {
-    if (transformation == null) {
-      return false;
-    }
-    Bitmap bitmap = bitmapReference.get();
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1
-        && transformation.modifiesTransparency()) {
-      bitmap.setHasAlpha(true);
-    }
-    transformation.transform(bitmap);
-    return true;
   }
 }

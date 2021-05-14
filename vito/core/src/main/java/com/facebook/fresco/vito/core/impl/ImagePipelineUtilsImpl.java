@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.core.impl;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.logging.FLog;
@@ -80,7 +81,8 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
     }
 
     // Configure circular bitmap rounding if available
-    if (mCircularBitmapRounding != null) {
+    if (mCircularBitmapRounding != null
+        && imageOptions.getBitmapConfig() != Bitmap.Config.RGB_565) {
       setupNativeRounding(imageRequestBuilder, imageOptions.getRoundingOptions());
     }
 

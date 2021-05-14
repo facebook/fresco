@@ -8,7 +8,6 @@
 package com.facebook.imagepipeline.decoder;
 
 import android.graphics.Bitmap;
-import android.os.Build;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
@@ -20,8 +19,8 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
-import com.facebook.imagepipeline.transformation.BitmapTransformation;
 import com.facebook.imagepipeline.transformation.CircularTransformation;
+import com.facebook.imagepipeline.transformation.TransformationUtils;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.InputStream;
 import java.util.Map;
@@ -158,7 +157,8 @@ public class DefaultImageDecoder implements ImageDecoder {
             encodedImage, options.bitmapConfig, null, options.colorSpace);
     try {
       boolean didApplyTransformation =
-          maybeApplyTransformation(options.bitmapTransformation, bitmapReference);
+          TransformationUtils.maybeApplyTransformation(
+              options.bitmapTransformation, bitmapReference);
 
       CloseableStaticBitmap closeableStaticBitmap =
           new CloseableStaticBitmap(
@@ -195,7 +195,8 @@ public class DefaultImageDecoder implements ImageDecoder {
             encodedImage, options.bitmapConfig, null, length, options.colorSpace);
     try {
       boolean didApplyTransformation =
-          maybeApplyTransformation(options.bitmapTransformation, bitmapReference);
+          TransformationUtils.maybeApplyTransformation(
+              options.bitmapTransformation, bitmapReference);
 
       CloseableStaticBitmap closeableStaticBitmap =
           new CloseableStaticBitmap(
@@ -232,19 +233,5 @@ public class DefaultImageDecoder implements ImageDecoder {
       return mAnimatedWebPDecoder.decode(encodedImage, length, qualityInfo, options);
     }
     throw new DecodeException("Animated WebP support not set up!", encodedImage);
-  }
-
-  private boolean maybeApplyTransformation(
-      @Nullable BitmapTransformation transformation, CloseableReference<Bitmap> bitmapReference) {
-    if (transformation == null) {
-      return false;
-    }
-    Bitmap bitmap = bitmapReference.get();
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1
-        && transformation.modifiesTransparency()) {
-      bitmap.setHasAlpha(true);
-    }
-    transformation.transform(bitmap);
-    return true;
   }
 }
