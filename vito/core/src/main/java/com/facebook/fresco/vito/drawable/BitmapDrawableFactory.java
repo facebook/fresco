@@ -78,7 +78,12 @@ public class BitmapDrawableFactory implements ImageOptionsDrawableFactory {
     BorderOptions borderOptions = imageOptions.getBorderOptions();
 
     boolean forceRoundAtDecode = roundingOptions != null && roundingOptions.isForceRoundAtDecode();
-    mRoundingUtils.setAlreadyRounded(!forceRoundAtDecode && mUseNativeRounding.get());
+    Boolean isBitmapRoundedExtra = (Boolean) closeableStaticBitmap.getExtras().get("is_rounded");
+
+    mRoundingUtils.setAlreadyRounded(
+        !forceRoundAtDecode
+            && mUseNativeRounding.get()
+            && (isBitmapRoundedExtra == null || isBitmapRoundedExtra));
 
     return rotatedDrawable(
         closeableStaticBitmap,

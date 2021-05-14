@@ -22,6 +22,7 @@ import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 import com.facebook.imagepipeline.transformation.BitmapTransformation;
+import com.facebook.imagepipeline.transformation.CircularTransformation;
 import javax.annotation.Nullable;
 
 /**
@@ -55,12 +56,21 @@ public class FrescoVitoRegionDecoder implements ImageDecoder {
         mPlatformDecoder.decodeJPEGFromEncodedImageWithColorSpace(
             encodedImage, options.bitmapConfig, regionToDecode, length, options.colorSpace);
     try {
-      maybeApplyTransformation(options.bitmapTransformation, decodedBitmapReference);
-      return new CloseableStaticBitmap(
-          decodedBitmapReference,
-          ImmutableQualityInfo.FULL_QUALITY,
-          encodedImage.getRotationAngle(),
-          encodedImage.getExifOrientation());
+      boolean didApplyTransformation =
+          maybeApplyTransformation(options.bitmapTransformation, decodedBitmapReference);
+
+      CloseableStaticBitmap closeableStaticBitmap =
+          new CloseableStaticBitmap(
+              decodedBitmapReference,
+              ImmutableQualityInfo.FULL_QUALITY,
+              encodedImage.getRotationAngle(),
+              encodedImage.getExifOrientation());
+
+      closeableStaticBitmap.setImageExtra(
+          "is_rounded",
+          didApplyTransformation && options.bitmapTransformation instanceof CircularTransformation);
+
+      return closeableStaticBitmap;
     } finally {
       CloseableReference.closeSafely(decodedBitmapReference);
     }
@@ -91,10 +101,10 @@ public class FrescoVitoRegionDecoder implements ImageDecoder {
     return regionToDecode;
   }
 
-  private void maybeApplyTransformation(
+  private boolean maybeApplyTransformation(
       @Nullable BitmapTransformation transformation, CloseableReference<Bitmap> bitmapReference) {
     if (transformation == null) {
-      return;
+      return false;
     }
     Bitmap bitmap = bitmapReference.get();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1
@@ -102,5 +112,6 @@ public class FrescoVitoRegionDecoder implements ImageDecoder {
       bitmap.setHasAlpha(true);
     }
     transformation.transform(bitmap);
+    return true;
   }
 }

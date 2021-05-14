@@ -21,6 +21,7 @@ import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 import com.facebook.imagepipeline.transformation.BitmapTransformation;
+import com.facebook.imagepipeline.transformation.CircularTransformation;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.InputStream;
 import java.util.Map;
@@ -156,12 +157,21 @@ public class DefaultImageDecoder implements ImageDecoder {
         mPlatformDecoder.decodeFromEncodedImageWithColorSpace(
             encodedImage, options.bitmapConfig, null, options.colorSpace);
     try {
-      maybeApplyTransformation(options.bitmapTransformation, bitmapReference);
-      return new CloseableStaticBitmap(
-          bitmapReference,
-          ImmutableQualityInfo.FULL_QUALITY,
-          encodedImage.getRotationAngle(),
-          encodedImage.getExifOrientation());
+      boolean didApplyTransformation =
+          maybeApplyTransformation(options.bitmapTransformation, bitmapReference);
+
+      CloseableStaticBitmap closeableStaticBitmap =
+          new CloseableStaticBitmap(
+              bitmapReference,
+              ImmutableQualityInfo.FULL_QUALITY,
+              encodedImage.getRotationAngle(),
+              encodedImage.getExifOrientation());
+
+      closeableStaticBitmap.setImageExtra(
+          "is_rounded",
+          didApplyTransformation && options.bitmapTransformation instanceof CircularTransformation);
+
+      return closeableStaticBitmap;
     } finally {
       bitmapReference.close();
     }
@@ -184,12 +194,21 @@ public class DefaultImageDecoder implements ImageDecoder {
         mPlatformDecoder.decodeJPEGFromEncodedImageWithColorSpace(
             encodedImage, options.bitmapConfig, null, length, options.colorSpace);
     try {
-      maybeApplyTransformation(options.bitmapTransformation, bitmapReference);
-      return new CloseableStaticBitmap(
-          bitmapReference,
-          qualityInfo,
-          encodedImage.getRotationAngle(),
-          encodedImage.getExifOrientation());
+      boolean didApplyTransformation =
+          maybeApplyTransformation(options.bitmapTransformation, bitmapReference);
+
+      CloseableStaticBitmap closeableStaticBitmap =
+          new CloseableStaticBitmap(
+              bitmapReference,
+              qualityInfo,
+              encodedImage.getRotationAngle(),
+              encodedImage.getExifOrientation());
+
+      closeableStaticBitmap.setImageExtra(
+          "is_rounded",
+          didApplyTransformation && options.bitmapTransformation instanceof CircularTransformation);
+
+      return closeableStaticBitmap;
     } finally {
       bitmapReference.close();
     }
@@ -215,10 +234,10 @@ public class DefaultImageDecoder implements ImageDecoder {
     throw new DecodeException("Animated WebP support not set up!", encodedImage);
   }
 
-  private void maybeApplyTransformation(
+  private boolean maybeApplyTransformation(
       @Nullable BitmapTransformation transformation, CloseableReference<Bitmap> bitmapReference) {
     if (transformation == null) {
-      return;
+      return false;
     }
     Bitmap bitmap = bitmapReference.get();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1
@@ -226,5 +245,6 @@ public class DefaultImageDecoder implements ImageDecoder {
       bitmap.setHasAlpha(true);
     }
     transformation.transform(bitmap);
+    return true;
   }
 }
