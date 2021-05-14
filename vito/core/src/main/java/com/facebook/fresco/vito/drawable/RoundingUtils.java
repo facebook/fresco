@@ -39,19 +39,7 @@ import javax.annotation.Nullable;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class RoundingUtils {
 
-  private boolean mAlreadyRounded;
-
-  public RoundingUtils() {
-    this(false);
-  }
-
-  public RoundingUtils(boolean alreadyRounded) {
-    mAlreadyRounded = alreadyRounded;
-  }
-
-  public void setAlreadyRounded(boolean alreadyRounded) {
-    mAlreadyRounded = alreadyRounded;
-  }
+  public RoundingUtils() {}
 
   /**
    * Creates a drawable with the {@link RoundingOptions} and {@link BorderOptions} applied to it.
@@ -95,7 +83,7 @@ public class RoundingUtils {
 
   private Drawable roundedDrawableWithoutBorder(
       Resources resources, Bitmap bitmap, @Nullable RoundingOptions roundingOptions) {
-    if ((roundingOptions == null) || (mAlreadyRounded && roundingOptions.isCircular())) {
+    if (roundingOptions == null) {
       return new BitmapDrawable(resources, bitmap);
     } else {
       return applyRounding(getRoundedDrawable(resources, bitmap), null, roundingOptions);
@@ -110,12 +98,7 @@ public class RoundingUtils {
     if (roundingOptions == null) {
       return squareDrawableWithBorder(getRoundedDrawable(resources, bitmap), borderOptions);
     } else {
-      if (mAlreadyRounded && roundingOptions.isCircular()) {
-        // Circular rounding is performed on the bitmap, so we only need to draw a circular border
-        return circularNativeDrawableWithBorder(resources, bitmap, borderOptions);
-      } else {
-        return applyRounding(getRoundedDrawable(resources, bitmap), borderOptions, roundingOptions);
-      }
+      return applyRounding(getRoundedDrawable(resources, bitmap), borderOptions, roundingOptions);
     }
   }
 
@@ -135,14 +118,7 @@ public class RoundingUtils {
     if (roundingOptions == null) {
       return squareDrawableWithBorder(getRoundedDrawable(resources, drawable), borderOptions);
     } else {
-      if (mAlreadyRounded && roundingOptions.isCircular() && drawable instanceof BitmapDrawable) {
-        // Circular rounding is performed on the bitmap, so we only need to draw a circular border
-        return circularNativeDrawableWithBorder(
-            resources, ((BitmapDrawable) drawable).getBitmap(), borderOptions);
-      } else {
-        return applyRounding(
-            getRoundedDrawable(resources, drawable), borderOptions, roundingOptions);
-      }
+      return applyRounding(getRoundedDrawable(resources, drawable), borderOptions, roundingOptions);
     }
   }
 
@@ -180,13 +156,6 @@ public class RoundingUtils {
       T drawable, BorderOptions borderOptions) {
     // We use the same rounded corner drawable to draw the border without applying rounding
     return roundedCornerDrawable(drawable, borderOptions, null);
-  }
-
-  private static Drawable circularNativeDrawableWithBorder(
-      Resources resources, @Nullable Bitmap bitmap, BorderOptions borderOptions) {
-    CircularBorderBitmapDrawable drawable = new CircularBorderBitmapDrawable(resources, bitmap);
-    drawable.setBorder(borderOptions);
-    return drawable;
   }
 
   private static <T extends Drawable & Rounded> Drawable circularDrawable(

@@ -44,19 +44,6 @@ public class RoundingUtilsTest {
 
   @Test
   public void
-      testRoundedDrawablesWithoutBorder_withBitmap_withAlreadyRounded_thenReturnBitmapDrawable() {
-    RoundingUtils roundingUtils = new RoundingUtils(true);
-    final Bitmap bitmap = mock(Bitmap.class);
-
-    Drawable drawable =
-        roundingUtils.roundedDrawable(mResources, bitmap, null, RoundingOptions.asCircle());
-
-    assertThat(drawable).isNotNull();
-    assertThat(drawable).isInstanceOf(BitmapDrawable.class);
-  }
-
-  @Test
-  public void
       testRoundedDrawablesWithoutBorder_withBitmap_withNotAlreadyRounded_thenReturnBitmapDrawable() {
     RoundingUtils roundingUtils = new RoundingUtils();
     final Bitmap bitmap = mock(Bitmap.class);
@@ -67,22 +54,6 @@ public class RoundingUtilsTest {
     assertThat(drawable).isNotNull();
     assertThat(drawable).isInstanceOf(RoundedBitmapDrawable.class);
     assertThat(((RoundedBitmapDrawable) drawable).isCircle()).isTrue();
-  }
-
-  @Test
-  public void
-      testRoundedDrawablesWithBorder_withBitmap_withAlreadyRounded_thenReturnBitmapDrawable() {
-    RoundingUtils roundingUtils = new RoundingUtils(true);
-    final Bitmap bitmap = mock(Bitmap.class);
-
-    BorderOptions borderOptions = BorderOptions.create(Color.YELLOW, 10);
-    Drawable drawable =
-        roundingUtils.roundedDrawable(
-            mResources, bitmap, borderOptions, RoundingOptions.asCircle());
-
-    assertThat(drawable).isNotNull();
-    assertThat(drawable).isInstanceOf(CircularBorderBitmapDrawable.class);
-    assertThat(((CircularBorderBitmapDrawable) drawable).getBorder()).isEqualTo(borderOptions);
   }
 
   @Test
