@@ -44,7 +44,7 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
     implements CountingMemoryCache<K, V> {
   private static final String TAG = "AbstractArcCountingMemoryCache";
 
-  // Contains the least frequently used items out of all the iterms in the cache that are not being
+  // Contains the least frequently used items out of all the items in the cache that are not being
   // used by any client and are hence viable for eviction.
   @GuardedBy("this")
   @VisibleForTesting
@@ -79,7 +79,7 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
   static final int DEFAULT_LFU_FRACTION_PROMIL = 500;
 
   // These constants are used to define the smallest LFU/MFU fraction sizes.
-  // considering the cache is partioned [Cache] = [..LFU..|..MFU..]: LFU between 0 and N, MFU
+  // considering the cache is partitioned [Cache] = [..LFU..|..MFU..]: LFU between 0 and N, MFU
   // between N and 1000.
   static final int TOTAL_PROMIL = 1000;
   @VisibleForTesting static final int MIN_FRACTION_PROMIL = 100;
