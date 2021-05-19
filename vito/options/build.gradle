@@ -20,10 +20,6 @@ dependencies {
     implementation project(':drawee')
     implementation project(':fbcore')
     implementation project(':imagepipeline')
-    implementation project(':imagepipeline-native')
-    implementation project(':memory-types:ashmem')
-    implementation project(':memory-types:nativememory')
-    implementation project(':memory-types:simple')
 
     testImplementation TestDeps.junit
     testImplementation TestDeps.assertjCore

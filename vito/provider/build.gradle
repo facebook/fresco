@@ -16,11 +16,12 @@ dependencies {
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
 
-    implementation project(':drawee-backends:drawee-pipeline')
+    implementation project(':fbcore')
+    implementation project(':imagepipeline')
+    implementation project(':ui-common')
     implementation project(':vito:core')
     implementation project(':vito:drawee-support')
     implementation project(':vito:options')
-    implementation project(':ui-common')
 
     testImplementation TestDeps.junit
     testImplementation TestDeps.assertjCore

@@ -18,14 +18,9 @@ dependencies {
 
     implementation Deps.AndroidX.core
 
-    implementation project(':drawee')
     implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':fbcore')
-    implementation project(':imagepipeline')
-    implementation project(':imagepipeline-native')
-    implementation project(':memory-types:ashmem')
-    implementation project(':memory-types:nativememory')
-    implementation project(':memory-types:simple')
+    implementation project(':imagepipeline-base')
     implementation project(':ui-common')
     implementation project(':middleware')
     implementation project(':vito:options')
@@ -38,7 +33,6 @@ dependencies {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
-    testImplementation project(':imagepipeline-base-test')
 }
 
 android {

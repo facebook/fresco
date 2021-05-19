@@ -10,7 +10,6 @@ package com.facebook.fresco.vito.provider.impl;
 import android.content.res.Resources;
 import com.facebook.callercontext.CallerContextVerifier;
 import com.facebook.common.internal.Supplier;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.vito.core.DefaultFrescoVitoConfig;
 import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoVitoConfig;
@@ -116,7 +115,7 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
 
   private static ImageOptionsDrawableFactory createDefaultDrawableFactory(Resources resources) {
     DrawableFactory animatedDrawableFactory =
-        Fresco.getImagePipelineFactory().getAnimatedDrawableFactory(null);
+        ImagePipelineFactory.getInstance().getAnimatedDrawableFactory(null);
     return new ArrayVitoDrawableFactory(
         new BitmapDrawableFactory(resources),
         animatedDrawableFactory == null
