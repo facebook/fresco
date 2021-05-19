@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.core.impl;
 
 import android.graphics.Rect;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import com.facebook.common.callercontext.ContextChain;
@@ -18,7 +19,6 @@ import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
 import com.facebook.drawee.drawable.FadeDrawable;
-import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.fresco.middleware.MiddlewareUtils;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.vito.core.DrawableDataSubscriber;
@@ -225,8 +225,8 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
             drawable.getActualImageWrapper(),
             isImmediate,
             null);
-    if (imageRequest.imageOptions.shouldAutoPlay() && actualDrawable instanceof AnimatedDrawable2) {
-      ((AnimatedDrawable2) actualDrawable).start();
+    if (imageRequest.imageOptions.shouldAutoPlay() && actualDrawable instanceof Animatable) {
+      ((Animatable) actualDrawable).start();
     }
     Extras extras = obtainExtras(dataSource, image, drawable);
     if (notifyFinalResult(dataSource)) {

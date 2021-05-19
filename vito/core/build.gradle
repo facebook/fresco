@@ -18,7 +18,6 @@ dependencies {
 
     implementation Deps.AndroidX.core
 
-    implementation project(':animated-drawable')
     implementation project(':drawee')
     implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':fbcore')
