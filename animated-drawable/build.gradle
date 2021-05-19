@@ -52,11 +52,7 @@ dependencies {
     }
     testImplementation project(':imagepipeline-test')
 
-    implementation project(':imagepipeline')
-    implementation project(':imagepipeline-native')
-    implementation project(':memory-types:ashmem')
-    implementation project(':memory-types:nativememory')
-    implementation project(':memory-types:simple')
+    implementation project(':imagepipeline-base')
     implementation project(':drawee')
     implementation project(':fbcore')
 }
