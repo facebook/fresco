@@ -12,6 +12,7 @@ import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.fresco.vito.core.ImagePipelineUtils;
+import com.facebook.fresco.vito.core.impl.DefaultImageDecodeOptionsProviderImpl;
 import com.facebook.fresco.vito.core.impl.ImagePipelineUtilsImpl;
 import com.facebook.fresco.vito.core.impl.source.ImageSourceProviderImpl;
 import com.facebook.fresco.vito.nativecode.NativeCircularBitmapRounding;
@@ -107,7 +108,10 @@ public class FrescoVito {
 
   private static ImagePipelineUtils createImagePipelineUtils(
       final Supplier<Boolean> useNativeRounding, final Supplier<Boolean> useFastNativeRounding) {
+    ImagePipelineUtilsImpl.CircularBitmapRounding circularBitmapRounding =
+        useNativeRounding.get() ? new NativeCircularBitmapRounding(useFastNativeRounding) : null;
+
     return new ImagePipelineUtilsImpl(
-        useNativeRounding.get() ? new NativeCircularBitmapRounding(useFastNativeRounding) : null);
+        new DefaultImageDecodeOptionsProviderImpl(circularBitmapRounding));
   }
 }
