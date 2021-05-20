@@ -805,38 +805,4 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
   public Map<Bitmap, Object> getOtherEntries() {
     return Collections.emptyMap(); // TODO T66165815
   }
-
-  /** The internal representation of a key-value pair stored by the cache. */
-  @VisibleForTesting
-  static class Entry<K, V> {
-    public final K key;
-    public final CloseableReference<V> valueRef;
-    // The number of clients that reference the value.
-    public int clientCount;
-    // Whether or not this entry is tracked by this cache. Orphans are not tracked by the cache and
-    // as soon as the last client of an orphaned entry closes their reference, the entry's copy is
-    // closed too.
-    public boolean isOrphan;
-    @Nullable public final EntryStateObserver<K> observer;
-    // The number of clients accessed this value while being in the cache.
-    public int accessCount;
-
-    private Entry(K key, CloseableReference<V> valueRef, @Nullable EntryStateObserver<K> observer) {
-      this.key = Preconditions.checkNotNull(key);
-      this.valueRef = Preconditions.checkNotNull(CloseableReference.cloneOrNull(valueRef));
-      this.clientCount = 0;
-      this.isOrphan = false;
-      this.observer = observer;
-      this.accessCount = 0;
-    }
-
-    /** Creates a new entry with the usage count and access count of 0. */
-    @VisibleForTesting
-    static <K, V> Entry<K, V> of(
-        final K key,
-        final CloseableReference<V> valueRef,
-        final @Nullable EntryStateObserver<K> observer) {
-      return new Entry<>(key, valueRef, observer);
-    }
-  }
 }
