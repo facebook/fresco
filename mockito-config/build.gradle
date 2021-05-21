@@ -9,7 +9,6 @@ import com.facebook.fresco.buildsrc.Deps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'java'
-apply plugin: 'maven'
 
 dependencies {
     compileOnly Deps.inferAnnotation

@@ -10,7 +10,7 @@ package com.facebook.fresco.buildsrc
 object GradleDeps {
 
   object Android {
-    private const val version = "4.0.1"
+    private const val version = "4.2.1"
 
     const val gradlePlugin = "com.android.tools.build:gradle:$version"
   }
@@ -20,7 +20,6 @@ object GradleDeps {
   }
 
   object Publishing {
-    const val bintrayGradlePlugin = "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
-    const val androidMavenGradlePlugin = "com.github.dcendents:android-maven-gradle-plugin:2.1"
+    const val gradleMavenPublishPlugin = "com.vanniktech:gradle-maven-publish-plugin:0.15.1"
   }
 }

@@ -9,7 +9,6 @@ import com.facebook.fresco.buildsrc.Deps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
 
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
@@ -56,17 +55,3 @@ dependencies {
     implementation project(':drawee')
     implementation project(':fbcore')
 }
-
-apply from: rootProject.file('release.gradle')
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task testJar(type: Jar) {
-    from android.sourceSets.test.java.srcDirs
-    classifier = 'sources'
-}
-
-artifacts.add('archives', sourcesJar)

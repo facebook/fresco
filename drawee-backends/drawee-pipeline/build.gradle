@@ -37,7 +37,6 @@ dependencies {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
 }
-apply from: rootProject.file('release.gradle')
 
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
@@ -61,9 +60,3 @@ android {
         abortOnError false
     }
 }
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-artifacts.add('archives', sourcesJar)

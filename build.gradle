@@ -23,8 +23,7 @@ buildscript {
         classpath GradleDeps.Android.gradlePlugin
         classpath GradleDeps.Kotlin.gradlePlugin
 
-        classpath GradleDeps.Publishing.bintrayGradlePlugin
-        classpath GradleDeps.Publishing.androidMavenGradlePlugin
+        classpath GradleDeps.Publishing.gradleMavenPublishPlugin
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -46,6 +45,12 @@ subprojects {
         jcenter()
     }
 
+    // FIXME: This picks up non-Java files by default, failing to parse them.
+    // Need to configure this more carefully.
+    tasks.withType(Javadoc).all {
+        enabled = false
+    }
+
     configurations.all {
         resolutionStrategy.force Deps.jsr305
     }
@@ -53,23 +58,24 @@ subprojects {
     task allclean {
     }
 
-    afterEvaluate { project ->
-      allclean.dependsOn(project.tasks.matching {it.name == 'clean'})
-
-        if (project.tasks.matching { it.name == 'assembleRelease'}) {
-            def jarList = new ArrayList()
-            task setJarList(dependsOn: assembleRelease) << {
-                configurations.compile.each {
-                    jarList.add(it)
-                }
-            }
-
-            task copyDeps(dependsOn: setJarList, type: Copy) {
-                from jarList
-                into 'build/external'
-            }
-        }
-    }
+// TODO: Figure out why this breaks.
+//    afterEvaluate { project ->
+//      allclean.dependsOn(project.tasks.matching {it.name == 'clean'})
+//
+//        if (project.tasks.matching { it.name == 'assembleRelease'}) {
+//            def jarList = new ArrayList()
+//            task setJarList(dependsOn: assembleRelease) << {
+//                configurations.compile.each {
+//                    jarList.add(it)
+//                }
+//            }
+//
+//            task copyDeps(dependsOn: setJarList, type: Copy) {
+//                from jarList
+//                into 'build/external'
+//            }
+//        }
+//    }
 
     project.plugins.whenPluginAdded { plugin ->
         if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
