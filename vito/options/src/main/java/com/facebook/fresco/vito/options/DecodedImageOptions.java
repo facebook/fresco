@@ -35,6 +35,7 @@ public class DecodedImageOptions extends EncodedImageOptions {
   private final @Nullable PointF mActualImageFocusPoint;
   private final boolean mLocalThumbnailPreviewsEnabled;
   private final @Nullable Bitmap.Config mBitmapConfig;
+  private final @Nullable Boolean mProgressiveDecodingEnabled;
 
   public DecodedImageOptions(Builder builder) {
     super(builder);
@@ -48,6 +49,7 @@ public class DecodedImageOptions extends EncodedImageOptions {
     mActualImageFocusPoint = builder.mActualFocusPoint;
     mLocalThumbnailPreviewsEnabled = builder.mLocalThumbnailPreviewsEnabled;
     mBitmapConfig = builder.mBitmapConfig;
+    mProgressiveDecodingEnabled = builder.mProgressiveDecodingEnabled;
   }
 
   public @Nullable ResizeOptions getResizeOptions() {
@@ -90,6 +92,10 @@ public class DecodedImageOptions extends EncodedImageOptions {
     return mBitmapConfig;
   }
 
+  public @Nullable Boolean isProgressiveDecodingEnabled() {
+    return mProgressiveDecodingEnabled;
+  }
+
   @Override
   public boolean equals(@Nullable Object obj) {
     if (this == obj) {
@@ -110,6 +116,7 @@ public class DecodedImageOptions extends EncodedImageOptions {
         || !Objects.equal(mActualImageScaleType, other.mActualImageScaleType)
         || !Objects.equal(mActualImageFocusPoint, other.mActualImageFocusPoint)
         || mLocalThumbnailPreviewsEnabled != other.mLocalThumbnailPreviewsEnabled
+        || mProgressiveDecodingEnabled != other.mProgressiveDecodingEnabled
         || !Objects.equal(mBitmapConfig, other.mBitmapConfig)) {
       return false;
     }
@@ -129,6 +136,9 @@ public class DecodedImageOptions extends EncodedImageOptions {
     result = 31 * result + (mActualImageFocusPoint != null ? mActualImageFocusPoint.hashCode() : 0);
     result = 31 * result + (mLocalThumbnailPreviewsEnabled ? 1 : 0);
     result = 31 * result + (mBitmapConfig != null ? mBitmapConfig.hashCode() : 0);
+    result =
+        31 * result
+            + (mProgressiveDecodingEnabled != null ? mProgressiveDecodingEnabled.hashCode() : 0);
     return result;
   }
 
@@ -149,7 +159,8 @@ public class DecodedImageOptions extends EncodedImageOptions {
         .add("actualImageScaleType", mActualImageScaleType)
         .add("actualImageFocusPoint", mActualImageFocusPoint)
         .add("localThumbnailPreviewsEnabled", mLocalThumbnailPreviewsEnabled)
-        .add("bitmapConfig", mBitmapConfig);
+        .add("bitmapConfig", mBitmapConfig)
+        .add("progressiveRenderingEnabled", mProgressiveDecodingEnabled);
   }
 
   public static class Builder<T extends Builder> extends EncodedImageOptions.Builder<T> {
@@ -162,8 +173,9 @@ public class DecodedImageOptions extends EncodedImageOptions {
     private @Nullable BorderOptions mBorderOptions;
     private ScalingUtils.ScaleType mActualImageScaleType;
     private @Nullable PointF mActualFocusPoint;
-    private boolean mLocalThumbnailPreviewsEnabled = false;
+    private boolean mLocalThumbnailPreviewsEnabled;
     public @Nullable Bitmap.Config mBitmapConfig;
+    private @Nullable Boolean mProgressiveDecodingEnabled;
 
     protected Builder() {
       super();
@@ -182,6 +194,7 @@ public class DecodedImageOptions extends EncodedImageOptions {
       mActualFocusPoint = defaultOptions.getActualImageFocusPoint();
       mLocalThumbnailPreviewsEnabled = defaultOptions.areLocalThumbnailPreviewsEnabled();
       mBitmapConfig = defaultOptions.getBitmapConfig();
+      mProgressiveDecodingEnabled = defaultOptions.isProgressiveDecodingEnabled();
     }
 
     public T resize(@Nullable ResizeOptions resizeOptions) {
@@ -247,6 +260,11 @@ public class DecodedImageOptions extends EncodedImageOptions {
 
     public T bitmapConfig(@Nullable Bitmap.Config bitmapConfig) {
       mBitmapConfig = bitmapConfig;
+      return getThis();
+    }
+
+    public T progressiveRendering(@Nullable Boolean progressiveDecodingEnabled) {
+      mProgressiveDecodingEnabled = progressiveDecodingEnabled;
       return getThis();
     }
 

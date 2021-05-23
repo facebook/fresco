@@ -105,6 +105,11 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
       imageRequestBuilder.setPostprocessor(postprocessor);
     }
 
+    if (imageOptions.isProgressiveDecodingEnabled() != null) {
+      imageRequestBuilder.setProgressiveRenderingEnabled(
+          imageOptions.isProgressiveDecodingEnabled());
+    }
+
     return imageRequestBuilder;
   }
 
