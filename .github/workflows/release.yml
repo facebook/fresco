@@ -19,6 +19,8 @@ jobs:
         java-version: 1.8
     - name: Setup Android SDK
       uses: android-actions/setup-android@v2
+    - name: Install NDK 20, 21
+      run: echo "y" | sudo /usr/local/lib/android/sdk/tools/bin/sdkmanager --install "ndk;21.0.6113669" "ndk;20.0.5594570" --sdk_root=${ANDROID_SDK_ROOT}
     - name: Write GPG Sec Ring
       run: echo '${{ secrets.GPG_KEY_CONTENTS }}' | base64 -d > /tmp/secring.gpg
     - name: Update gradle.properties
