@@ -58,25 +58,6 @@ subprojects {
     task allclean {
     }
 
-// TODO: Figure out why this breaks (and what it does).
-//    afterEvaluate { project ->
-//      allclean.dependsOn(project.tasks.matching {it.name == 'clean'})
-//
-//        if (project.tasks.matching { it.name == 'assembleRelease'}) {
-//            def jarList = new ArrayList()
-//            task setJarList(dependsOn: assembleRelease) << {
-//                configurations.compile.each {
-//                    jarList.add(it)
-//                }
-//            }
-//
-//            task copyDeps(dependsOn: setJarList, type: Copy) {
-//                from jarList
-//                into 'build/external'
-//            }
-//        }
-//    }
-
     project.plugins.whenPluginAdded { plugin ->
         if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
             project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
