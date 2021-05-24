@@ -19,12 +19,14 @@ import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
 import com.facebook.drawee.drawable.FadeDrawable;
+import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.fresco.middleware.MiddlewareUtils;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.vito.core.DrawableDataSubscriber;
 import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.FrescoVitoConfig;
+import com.facebook.fresco.vito.core.NopDrawable;
 import com.facebook.fresco.vito.core.VitoImagePerfListener;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.VitoImageRequest;
@@ -120,8 +122,9 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     frescoDrawable.setOnFadeListener(onFadeListener);
 
     // Set layers that are always visible
-    mHierarcher.setupOverlayDrawable(
-        frescoDrawable, imageRequest.resources, imageRequest.imageOptions, null);
+    frescoDrawable.setOverlayDrawable(
+        mHierarcher.buildOverlayDrawable(imageRequest.resources, imageRequest.imageOptions));
+    frescoDrawable.showOverlayImmediately();
 
     // We're fetching a new image, so we're updating the ID
     final long imageId = VitoUtils.generateIdentifier();
@@ -213,18 +216,23 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       CloseableReference<CloseableImage> image,
       boolean isImmediate,
       @Nullable DataSource<CloseableReference<CloseableImage>> dataSource) {
+
+    ScaleTypeDrawable actualImageWrapperDrawable = drawable.getActualImageWrapper();
     mHierarcher.setupActualImageWrapper(
-        drawable.getActualImageWrapper(), imageRequest.imageOptions, drawable.getCallerContext());
+        actualImageWrapperDrawable, imageRequest.imageOptions, drawable.getCallerContext());
     Drawable actualDrawable =
-        mHierarcher.setupActualImageDrawable(
-            drawable,
-            imageRequest.resources,
-            imageRequest.imageOptions,
-            drawable.getCallerContext(),
-            image,
-            drawable.getActualImageWrapper(),
-            isImmediate,
-            null);
+        mHierarcher.buildActualImageDrawable(
+            imageRequest.resources, imageRequest.imageOptions, image);
+    actualImageWrapperDrawable.setCurrent(
+        actualDrawable != null ? actualDrawable : NopDrawable.INSTANCE);
+
+    drawable.setImage(actualImageWrapperDrawable, image);
+
+    if (isImmediate || imageRequest.imageOptions.getFadeDurationMs() <= 0) {
+      drawable.showImageImmediately();
+    } else {
+      drawable.fadeInImage(imageRequest.imageOptions.getFadeDurationMs());
+    }
     if (imageRequest.imageOptions.shouldAutoPlay() && actualDrawable instanceof Animatable) {
       ((Animatable) actualDrawable).start();
     }

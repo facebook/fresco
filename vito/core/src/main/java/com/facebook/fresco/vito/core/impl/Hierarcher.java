@@ -12,9 +12,7 @@ import android.graphics.drawable.Drawable;
 import androidx.annotation.Nullable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.drawable.ForwardingDrawable;
-import com.facebook.drawee.drawable.InstrumentedDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
-import com.facebook.fresco.vito.core.BaseFrescoDrawable;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.infer.annotation.Nullsafe;
@@ -23,6 +21,24 @@ import com.facebook.infer.annotation.ThreadSafe;
 /** Helper for building drawables */
 @Nullsafe(Nullsafe.Mode.STRICT)
 public interface Hierarcher {
+  /**
+   * Build an actual image drawable for the given closeable image. For scaling, color filters and
+   * other transformation, the actual image wrapper is used. The drawable returned here does not
+   * include scaling etc and should be combined with the actual image wrapper.
+   *
+   * <p>NOTE: the Drawable returned by this method will not hold on to the image reference. This
+   * must be done separately.
+   *
+   * @param resources resources to be used to load the drawable
+   * @param imageOptions image options to be used to create the drawable
+   * @param closeableImage the decoded image to create the Drawable for
+   * @return the actual image drawable or null if it cannot be rendered
+   */
+  @Nullable
+  Drawable buildActualImageDrawable(
+      Resources resources,
+      ImageOptions imageOptions,
+      CloseableReference<CloseableImage> closeableImage);
 
   /**
    * Build a placeholder drawable if specified in the given image options.
@@ -87,36 +103,4 @@ public interface Hierarcher {
       ScaleTypeDrawable actualImageWrapper,
       ImageOptions imageOptions,
       @Nullable Object callerContext);
-
-  /**
-   * Sets up the actual image drawable for a given fresco drawable
-   *
-   * @return actual image drawable for given {@code closeableImage} or null
-   * @param wasImmediate true if result was delivered immediately e.g. from cache. Affects the
-   *     decision of whether to animate transition
-   */
-  @Nullable
-  Drawable setupActualImageDrawable(
-      BaseFrescoDrawable frescoDrawable,
-      Resources resources,
-      ImageOptions imageOptions,
-      @Nullable Object callerContext,
-      CloseableReference<CloseableImage> closeableImage,
-      @Nullable ForwardingDrawable actualImageWrapperDrawable,
-      boolean wasImmediate,
-      @Nullable InstrumentedDrawable.Listener instrumentedListener);
-
-  /**
-   * Sets up the overlay drawable for a given fresco drawable.
-   *
-   * @param frescoDrawable the Fresco drawable to set up
-   * @param resources resources to be used to load drawables
-   * @param imageOptions image options to be used to create the overlay
-   * @param cachedOverlayDrawable a cached overlay drawable to be used instead of creating a new one
-   */
-  void setupOverlayDrawable(
-      BaseFrescoDrawable frescoDrawable,
-      Resources resources,
-      ImageOptions imageOptions,
-      @Nullable Drawable cachedOverlayDrawable);
 }
