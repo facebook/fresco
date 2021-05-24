@@ -50,3 +50,5 @@ android {
     }
 
 }
+
+apply plugin: "com.vanniktech.maven.publish"

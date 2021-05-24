@@ -58,7 +58,7 @@ subprojects {
     task allclean {
     }
 
-// TODO: Figure out why this breaks.
+// TODO: Figure out why this breaks (and what it does).
 //    afterEvaluate { project ->
 //      allclean.dependsOn(project.tasks.matching {it.name == 'clean'})
 //
@@ -201,6 +201,8 @@ subprojects {
         tasks.create("copy${name}", Copy) {
             from "${unpackTask.destinationDir}/${sourceDir}"
             from "src/main/jni/third-party/${destinationDir}"
+            // Allows for overriding when duplicates are encountered.
+            duplicatesStrategy DuplicatesStrategy.INCLUDE
             include(includePaths)
             into "${mergeDir}/${destinationDir}"
             dependsOn "unpack${name}"

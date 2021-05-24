@@ -57,3 +57,5 @@ android {
     }
     ndkLibs.each { lib -> makeNdkTasks lib[0], lib[1] }
 }
+
+apply plugin: "com.vanniktech.maven.publish"

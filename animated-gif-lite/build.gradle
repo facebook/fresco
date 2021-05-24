@@ -30,3 +30,5 @@ android {
         main
     }
 }
+
+apply plugin: "com.vanniktech.maven.publish"

@@ -47,3 +47,5 @@ android {
         abortOnError false
     }
 }
+
+apply plugin: "com.vanniktech.maven.publish"

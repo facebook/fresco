@@ -24,3 +24,5 @@ dependencies {
     compileOnly Deps.inferAnnotation
     implementation project(path: ':fbcore')
 }
+
+apply plugin: "com.vanniktech.maven.publish"

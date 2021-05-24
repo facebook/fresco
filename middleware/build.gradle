@@ -25,3 +25,5 @@ dependencies {
     implementation project(path: ':fbcore')
     implementation project(":ui-common")
 }
+
+apply plugin: "com.vanniktech.maven.publish"

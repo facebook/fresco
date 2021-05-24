@@ -42,3 +42,5 @@ android {
         warning 'InvalidPackage'
     }
 }
+
+apply plugin: "com.vanniktech.maven.publish"

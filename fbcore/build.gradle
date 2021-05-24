@@ -62,5 +62,4 @@ android {
     }
 }
 
-// TODO: This needs to be added everywhere.
 apply plugin: "com.vanniktech.maven.publish"

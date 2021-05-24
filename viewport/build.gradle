@@ -22,3 +22,5 @@ android {
 dependencies {
     compileOnly Deps.jsr305
 }
+
+apply plugin: "com.vanniktech.maven.publish"

@@ -55,3 +55,5 @@ dependencies {
     implementation project(':drawee')
     implementation project(':fbcore')
 }
+
+apply plugin: "com.vanniktech.maven.publish"

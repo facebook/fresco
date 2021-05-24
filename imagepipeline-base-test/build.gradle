@@ -33,6 +33,4 @@ android {
     }
 }
 
-configurations {
-    testOutput.extendsFrom (testImplementation)
-}
+apply plugin: "com.vanniktech.maven.publish"
