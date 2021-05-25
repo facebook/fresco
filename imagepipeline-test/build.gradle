@@ -9,7 +9,6 @@ import com.facebook.fresco.buildsrc.Deps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
 
 dependencies {
     compileOnly Deps.jsr305
@@ -35,7 +34,6 @@ dependencies {
         exclude group: 'com.google.auto.service', module: 'auto-service'
     }
 }
-apply from: rootProject.file('release.gradle')
 
 android {
 
@@ -53,9 +51,4 @@ android {
 
 }
 
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-artifacts.add('archives', sourcesJar)
+apply plugin: "com.vanniktech.maven.publish"

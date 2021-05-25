@@ -8,7 +8,6 @@
 import com.facebook.fresco.buildsrc.Deps
 
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
 
 dependencies {
     compileOnly Deps.jsr305
@@ -17,8 +16,6 @@ dependencies {
     implementation project(':fbcore')
     implementation Deps.SoLoader.soloader
 }
-
-apply from: rootProject.file('release.gradle')
 
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
@@ -34,14 +31,4 @@ android {
     }
 }
 
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task testJar(type: Jar) {
-    from android.sourceSets.test.java.srcDirs
-    classifier = 'sources'
-}
-
-artifacts.add('archives', sourcesJar)
+apply plugin: "com.vanniktech.maven.publish"

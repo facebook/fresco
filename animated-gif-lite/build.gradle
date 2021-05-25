@@ -8,7 +8,6 @@
 import com.facebook.fresco.buildsrc.Deps
 
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
 
 dependencies {
     compileOnly Deps.inferAnnotation
@@ -16,7 +15,6 @@ dependencies {
 
     implementation project(':animated-base')
 }
-apply from: rootProject.file('release.gradle')
 
 android {
 
@@ -33,8 +31,4 @@ android {
     }
 }
 
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-artifacts.add('archives', sourcesJar)
+apply plugin: "com.vanniktech.maven.publish"

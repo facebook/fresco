@@ -8,7 +8,6 @@
 import com.facebook.fresco.buildsrc.Deps
 
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
 
 dependencies {
     compileOnly Deps.jsr305
@@ -22,7 +21,6 @@ dependencies {
 
     testCompileOnly Deps.inferAnnotation
 }
-apply from: rootProject.file('release.gradle')
 
 android {
 
@@ -35,22 +33,4 @@ android {
     }
 }
 
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task jarTest (type: Jar) {
-    from android.sourceSets.test.java.srcDirs
-    include '**/*.java'
-    classifier = 'test'
-}
-
-configurations {
-    testOutput.extendsFrom (testImplementation)
-}
-
-artifacts.add('archives', sourcesJar)
-artifacts.add('testOutput', jarTest)
-
-build.dependsOn jarTest
+apply plugin: "com.vanniktech.maven.publish"

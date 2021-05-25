@@ -36,3 +36,5 @@ dependencies {
     implementation project(':vito:provider')
     implementation project(':vito:source')
 }
+
+apply plugin: "com.vanniktech.maven.publish"
