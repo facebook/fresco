@@ -51,7 +51,6 @@ import com.facebook.imagepipeline.producers.LocalResourceFetchProducer;
 import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
 import com.facebook.imagepipeline.producers.NetworkFetchProducer;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
-import com.facebook.imagepipeline.producers.NullProducer;
 import com.facebook.imagepipeline.producers.PartialDiskCacheProducer;
 import com.facebook.imagepipeline.producers.PostprocessedBitmapMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.PostprocessorProducer;
@@ -315,10 +314,6 @@ public class ProducerFactory {
 
   public Producer<EncodedImage> newNetworkFetchProducer(NetworkFetcher networkFetcher) {
     return new NetworkFetchProducer(mPooledByteBufferFactory, mByteArrayPool, networkFetcher);
-  }
-
-  public static <T> NullProducer<T> newNullProducer() {
-    return new NullProducer<T>();
   }
 
   public PostprocessedBitmapMemoryCacheProducer newPostprocessorBitmapMemoryCacheProducer(
