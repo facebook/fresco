@@ -47,7 +47,6 @@ android {
     lintOptions {
         abortOnError false
     }
-    testImplementation project(':imagepipeline-base-test')
 }
 
 apply plugin: "com.vanniktech.maven.publish"
