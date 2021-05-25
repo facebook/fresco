@@ -163,7 +163,7 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
   private AnimatedFrameCache createAnimatedFrameCache(
       final AnimatedImageResult animatedImageResult) {
     return new AnimatedFrameCache(
-        new AnimationFrameCacheKey(animatedImageResult.hashCode(), mUseDeepEqualsForCacheKey.get()),
+        new AnimationFrameCacheKey(animatedImageResult.getHash(), mUseDeepEqualsForCacheKey.get()),
         mBackingCache);
   }
 }

@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedImageResult {
 
+  private int mEncodeHash;
   private final AnimatedImage mImage;
   private final int mFrameForPreview;
   private @Nullable CloseableReference<Bitmap> mPreviewBitmap;
@@ -34,11 +35,16 @@ public class AnimatedImageResult {
     mPreviewBitmap = builder.getPreviewBitmap();
     mDecodedFrames = builder.getDecodedFrames();
     mBitmapTransformation = builder.getBitmapTransformation();
+    mEncodeHash = builder.getEncodeHash();
   }
 
   private AnimatedImageResult(AnimatedImage image) {
     mImage = Preconditions.checkNotNull(image);
     mFrameForPreview = 0;
+  }
+
+  public int getHash(){
+    return mEncodeHash == 0 ? hashCode() : mEncodeHash;
   }
 
   /**

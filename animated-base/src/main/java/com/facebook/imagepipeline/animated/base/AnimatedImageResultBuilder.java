@@ -18,6 +18,7 @@ import javax.annotation.Nullable;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedImageResultBuilder {
 
+  private int mEncodeHash;
   private final AnimatedImage mImage;
   private @Nullable CloseableReference<Bitmap> mPreviewBitmap;
   private @Nullable List<CloseableReference<Bitmap>> mDecodedFrames;
@@ -26,6 +27,16 @@ public class AnimatedImageResultBuilder {
 
   AnimatedImageResultBuilder(AnimatedImage image) {
     mImage = image;
+  }
+
+
+  public int getEncodeHash() {
+    return mEncodeHash;
+  }
+
+  public AnimatedImageResultBuilder setEncodeHash(int mEncodeHash) {
+    this.mEncodeHash = mEncodeHash;
+    return this;
   }
 
   /**
