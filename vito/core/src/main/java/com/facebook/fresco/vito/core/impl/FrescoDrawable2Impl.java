@@ -20,7 +20,6 @@ import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.fresco.vito.core.CombinedImageListener;
-import com.facebook.fresco.vito.core.DrawableDataSubscriber;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.NopDrawable;
 import com.facebook.fresco.vito.core.VitoImagePerfListener;
@@ -124,12 +123,10 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     return mFetchSubmitted;
   }
 
-  @Override
   public void setDrawableDataSubscriber(@Nullable DrawableDataSubscriber drawableDataSubscriber) {
     mDrawableDataSubscriber = drawableDataSubscriber;
   }
 
-  @Override
   @Nullable
   public DrawableDataSubscriber getDrawableDataSubscriber() {
     return mDrawableDataSubscriber;

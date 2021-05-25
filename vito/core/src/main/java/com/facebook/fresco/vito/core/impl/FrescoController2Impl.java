@@ -22,7 +22,6 @@ import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.fresco.middleware.MiddlewareUtils;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
-import com.facebook.fresco.vito.core.DrawableDataSubscriber;
 import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.FrescoVitoConfig;
@@ -88,15 +87,19 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
 
   @Override
   public boolean fetch(
-      final FrescoDrawable2 frescoDrawable,
+      final FrescoDrawable2 drawable,
       final VitoImageRequest imageRequest,
       final @Nullable Object callerContext,
       final @Nullable ContextChain contextChain,
       final @Nullable ImageListener listener,
       final @Nullable FadeDrawable.OnFadeListener onFadeListener,
       final @Nullable Rect viewportDimensions) {
+    if (!(drawable instanceof FrescoDrawable2Impl)) {
+      throw new IllegalArgumentException("Drawable not supported " + drawable);
+    }
+    final FrescoDrawable2Impl frescoDrawable = (FrescoDrawable2Impl) drawable;
     // Save viewport dimension for future use
-    frescoDrawable.setViewportDimensions(viewportDimensions);
+    drawable.setViewportDimensions(viewportDimensions);
 
     // Check if we already fetched the image
     if (frescoDrawable.getDrawableDataSubscriber() == this
@@ -194,24 +197,36 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
 
   @Override
   public void releaseDelayed(final FrescoDrawable2 drawable) {
-    drawable.getImagePerfListener().onScheduleReleaseDelayed(drawable);
-    drawable.scheduleReleaseDelayed();
+    if (!(drawable instanceof FrescoDrawable2Impl)) {
+      throw new IllegalArgumentException("Drawable not supported " + drawable);
+    }
+    FrescoDrawable2Impl frescoDrawable = (FrescoDrawable2Impl) drawable;
+    frescoDrawable.getImagePerfListener().onScheduleReleaseDelayed(frescoDrawable);
+    frescoDrawable.scheduleReleaseDelayed();
   }
 
   @Override
   public void release(final FrescoDrawable2 drawable) {
-    drawable.getImagePerfListener().onScheduleReleaseNextFrame(drawable);
-    drawable.scheduleReleaseNextFrame();
+    if (!(drawable instanceof FrescoDrawable2Impl)) {
+      throw new IllegalArgumentException("Drawable not supported " + drawable);
+    }
+    FrescoDrawable2Impl frescoDrawable = (FrescoDrawable2Impl) drawable;
+    frescoDrawable.getImagePerfListener().onScheduleReleaseNextFrame(frescoDrawable);
+    frescoDrawable.scheduleReleaseNextFrame();
   }
 
   @Override
   public void releaseImmediately(FrescoDrawable2 drawable) {
-    drawable.getImagePerfListener().onReleaseImmediately(drawable);
-    drawable.releaseImmediately();
+    if (!(drawable instanceof FrescoDrawable2Impl)) {
+      throw new IllegalArgumentException("Drawable not supported " + drawable);
+    }
+    FrescoDrawable2Impl frescoDrawable = (FrescoDrawable2Impl) drawable;
+    frescoDrawable.getImagePerfListener().onReleaseImmediately(frescoDrawable);
+    frescoDrawable.releaseImmediately();
   }
 
   private void setActualImage(
-      FrescoDrawable2 drawable,
+      FrescoDrawable2Impl drawable,
       VitoImageRequest imageRequest,
       CloseableReference<CloseableImage> image,
       boolean isImmediate,
@@ -263,7 +278,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
 
   @Override
   public void onNewResult(
-      FrescoDrawable2 drawable,
+      FrescoDrawable2Impl drawable,
       VitoImageRequest imageRequest,
       DataSource<CloseableReference<CloseableImage>> dataSource) {
     if (dataSource == null || !dataSource.hasResult()) {
@@ -284,7 +299,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
 
   @Override
   public void onFailure(
-      FrescoDrawable2 drawable,
+      FrescoDrawable2Impl drawable,
       VitoImageRequest imageRequest,
       DataSource<CloseableReference<CloseableImage>> dataSource) {
     Drawable errorDrawable =
@@ -324,7 +339,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
 
   @Override
   public void onProgressUpdate(
-      FrescoDrawable2 drawable,
+      FrescoDrawable2Impl drawable,
       VitoImageRequest imageRequest,
       DataSource<CloseableReference<CloseableImage>> dataSource) {
     boolean isFinished = dataSource.isFinished();
@@ -335,7 +350,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   }
 
   @Override
-  public void onRelease(final FrescoDrawable2 drawable) {
+  public void onRelease(final FrescoDrawable2Impl drawable) {
     final VitoImageRequest imageRequest = drawable.getImageRequest();
     if (imageRequest != null) {
       // Notify listeners
