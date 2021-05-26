@@ -121,10 +121,13 @@ public class HierarcherImpl implements Hierarcher {
       FrescoSystrace.beginSection("HierarcherImpl#buildErrorDrawable");
     }
     try {
-      if (imageOptions.getErrorRes() == 0) {
+      Drawable drawable = imageOptions.getErrorDrawable();
+      if (drawable == null && imageOptions.getErrorRes() != 0) {
+        drawable = resources.getDrawable(imageOptions.getErrorRes());
+      }
+      if (drawable == null) {
         return null;
       }
-      Drawable drawable = resources.getDrawable(imageOptions.getErrorRes());
       if (drawable != null && imageOptions.getErrorScaleType() != null) {
         return new ScaleTypeDrawable(
             drawable, imageOptions.getErrorScaleType(), imageOptions.getErrorFocusPoint());

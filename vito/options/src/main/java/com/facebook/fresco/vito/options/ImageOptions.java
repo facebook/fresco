@@ -60,6 +60,7 @@ public class ImageOptions extends DecodedImageOptions {
   private final @DrawableRes int mErrorRes;
   private final @Nullable ScalingUtils.ScaleType mErrorScaleType;
   private final @Nullable PointF mErrorFocusPoint;
+  private final @Nullable Drawable mErrorDrawable;
 
   // Actual image
   private final @Nullable ColorFilter mActualImageColorFilter;
@@ -89,6 +90,7 @@ public class ImageOptions extends DecodedImageOptions {
     mErrorRes = builder.mErrorRes;
     mErrorScaleType = builder.mErrorScaleType;
     mErrorFocusPoint = builder.mErrorFocusPoint;
+    mErrorDrawable = builder.mErrorDrawable;
 
     mProgressRes = builder.mProgressRes;
     mProgressDrawable = builder.mProgressDrawable;
@@ -144,6 +146,10 @@ public class ImageOptions extends DecodedImageOptions {
 
   public @Nullable PointF getErrorFocusPoint() {
     return mErrorFocusPoint;
+  }
+
+  public @Nullable Drawable getErrorDrawable() {
+    return mErrorDrawable;
   }
 
   public @DrawableRes int getOverlayRes() {
@@ -215,7 +221,8 @@ public class ImageOptions extends DecodedImageOptions {
         || mFadeDurationMs != other.mFadeDurationMs
         || mAutoPlay != other.mAutoPlay
         || !Objects.equal(mCustomDrawableFactory, other.mCustomDrawableFactory)
-        || mDelayMs != other.mDelayMs) {
+        || mDelayMs != other.mDelayMs
+        || mErrorDrawable != other.mErrorDrawable) {
       return false;
     }
     return equalDecodedOptions(other);
@@ -232,6 +239,7 @@ public class ImageOptions extends DecodedImageOptions {
     result = 31 * result + mErrorRes;
     result = 31 * result + (mErrorScaleType != null ? mErrorScaleType.hashCode() : 0);
     result = 31 * result + (mErrorFocusPoint != null ? mErrorFocusPoint.hashCode() : 0);
+    result = 31 * result + (mErrorDrawable != null ? mErrorDrawable.hashCode() : 0);
     result = 31 * result + mOverlayRes;
     result = 31 * result + (mOverlayDrawable != null ? mOverlayDrawable.hashCode() : 0);
     result = 31 * result + (mProgressDrawable != null ? mProgressDrawable.hashCode() : 0);
@@ -266,6 +274,7 @@ public class ImageOptions extends DecodedImageOptions {
         .add("errorRes", mErrorRes)
         .add("errorScaleType", mErrorScaleType)
         .add("errorFocusPoint", mErrorFocusPoint)
+        .add("errorDrawable", mErrorDrawable)
         .add("actualImageColorFilter", mActualImageColorFilter)
         .add("overlayRes", mOverlayRes)
         .add("overlayDrawable", mOverlayDrawable)
@@ -291,6 +300,7 @@ public class ImageOptions extends DecodedImageOptions {
     private @DrawableRes int mErrorRes;
     private @Nullable ScalingUtils.ScaleType mErrorScaleType;
     private @Nullable PointF mErrorFocusPoint;
+    private @Nullable Drawable mErrorDrawable;
 
     private @Nullable ColorFilter mActualImageColorFilter;
 
@@ -325,6 +335,7 @@ public class ImageOptions extends DecodedImageOptions {
       mErrorRes = defaultOptions.getErrorRes();
       mErrorScaleType = defaultOptions.getErrorScaleType();
       mErrorFocusPoint = defaultOptions.getErrorFocusPoint();
+      mErrorDrawable = defaultOptions.getErrorDrawable();
 
       mActualImageColorFilter = defaultOptions.getActualImageColorFilter();
 
@@ -395,6 +406,11 @@ public class ImageOptions extends DecodedImageOptions {
 
     public Builder errorFocusPoint(@Nullable PointF errorFocusPoint) {
       mErrorFocusPoint = errorFocusPoint;
+      return getThis();
+    }
+
+    public Builder errorDrawable(@Nullable Drawable errorDrawable) {
+      mErrorDrawable = errorDrawable;
       return getThis();
     }
 
