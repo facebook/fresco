@@ -37,7 +37,6 @@ dependencies {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
 }
-apply from: rootProject.file('release.gradle')
 
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
@@ -62,8 +61,4 @@ android {
     }
 }
 
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-artifacts.add('archives', sourcesJar)
+apply plugin: "com.vanniktech.maven.publish"

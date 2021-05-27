@@ -50,12 +50,6 @@ public abstract class FrescoDrawable2 extends BaseFrescoDrawable
 
   public abstract boolean isFetchSubmitted();
 
-  public abstract void setDrawableDataSubscriber(
-      @Nullable DrawableDataSubscriber drawableDataSubscriber);
-
-  @Nullable
-  public abstract DrawableDataSubscriber getDrawableDataSubscriber();
-
   public abstract void setImageRequest(@Nullable VitoImageRequest imageRequest);
 
   public abstract void setCallerContext(@Nullable Object callerContext);
