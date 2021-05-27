@@ -136,7 +136,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     Extras extras = obtainExtras(null, null, frescoDrawable);
 
     // Notify listeners that we're about to fetch an image
-    frescoDrawable.getImageListener().onSubmit(imageId, imageRequest, callerContext, extras);
+    frescoDrawable.getInternalListener().onSubmit(imageId, imageRequest, callerContext, extras);
     frescoDrawable.getImagePerfListener().onImageFetch(frescoDrawable);
 
     // Check if the image is in cache
@@ -165,7 +165,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     frescoDrawable.setPlaceholderDrawable(placeholder);
     frescoDrawable.setImageDrawable(null);
 
-    frescoDrawable.getImageListener().onPlaceholderSet(imageId, imageRequest, placeholder);
+    frescoDrawable.getInternalListener().onPlaceholderSet(imageId, imageRequest, placeholder);
 
     // Fetch the image
     final Runnable fetchRunnable =
@@ -254,7 +254,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     Extras extras = obtainExtras(dataSource, image, drawable);
     if (notifyFinalResult(dataSource)) {
       drawable
-          .getImageListener()
+          .getInternalListener()
           .onFinalImageSet(
               drawable.getImageId(),
               imageRequest,
@@ -264,7 +264,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
               actualDrawable);
     } else {
       drawable
-          .getImageListener()
+          .getInternalListener()
           .onIntermediateImageSet(drawable.getImageId(), imageRequest, image.get());
     }
     drawable.getImagePerfListener().onImageSuccess(drawable, isImmediate);
@@ -319,7 +319,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     Extras extras = obtainExtras(dataSource, dataSource.getResult(), drawable);
     if (notifyFinalResult(dataSource)) {
       drawable
-          .getImageListener()
+          .getInternalListener()
           .onFailure(
               drawable.getImageId(),
               imageRequest,
@@ -328,7 +328,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
               extras);
     } else {
       drawable
-          .getImageListener()
+          .getInternalListener()
           .onIntermediateImageFailed(
               drawable.getImageId(), imageRequest, dataSource.getFailureCause());
     }
@@ -355,7 +355,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     if (imageRequest != null) {
       // Notify listeners
       drawable
-          .getImageListener()
+          .getInternalListener()
           .onRelease(drawable.getImageId(), imageRequest, obtainExtras(null, null, drawable));
     }
     drawable.getImagePerfListener().onImageRelease(drawable);

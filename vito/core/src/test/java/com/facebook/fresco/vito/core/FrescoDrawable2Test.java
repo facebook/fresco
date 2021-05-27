@@ -12,6 +12,8 @@ import static org.mockito.Mockito.mock;
 import android.graphics.drawable.Drawable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
+import com.facebook.fresco.vito.core.impl.FrescoDrawable2Impl;
+import com.facebook.fresco.vito.core.impl.NoOpVitoImagePerfListener;
 import com.facebook.imagepipeline.image.CloseableImage;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -22,9 +24,9 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
-public class BaseFrescoDrawableTest {
+public class FrescoDrawable2Test {
 
-  private BaseFrescoDrawable mFrescoDrawable;
+  private FrescoDrawable2 mFrescoDrawable;
 
   private CountDownLatch mLatch;
   private CloseableImage mCloseableImage;
@@ -32,7 +34,7 @@ public class BaseFrescoDrawableTest {
 
   @Before
   public void setup() {
-    mFrescoDrawable = new BaseFrescoDrawable();
+    mFrescoDrawable = new FrescoDrawable2Impl(false, null, new NoOpVitoImagePerfListener());
     mLatch = new CountDownLatch(1);
     mCloseableImage = new DummyCloseableImage();
     mCloseableReference =

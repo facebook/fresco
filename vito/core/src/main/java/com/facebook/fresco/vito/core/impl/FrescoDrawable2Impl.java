@@ -13,6 +13,7 @@ import android.os.Looper;
 import androidx.annotation.Nullable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
+import com.facebook.datasource.DataSubscriber;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
@@ -32,7 +33,8 @@ import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.infer.annotation.Nullsafe;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public class FrescoDrawable2Impl extends FrescoDrawable2 {
+public class FrescoDrawable2Impl extends FrescoDrawable2
+    implements DataSubscriber<CloseableReference<CloseableImage>> {
 
   private static final long RELEASE_DELAY = 16 * 5; // Roughly 5 frames.
   private static final Handler sHandler = new Handler(Looper.getMainLooper());
@@ -101,7 +103,16 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     return mActualImageWrapper;
   }
 
+  @Nullable
   @Override
+  public Drawable getActualImageDrawable() {
+    Drawable actual = getDrawable(IMAGE_DRAWABLE_INDEX);
+    if (actual == mActualImageWrapper) {
+      return mActualImageWrapper.getDrawable();
+    }
+    return actual;
+  }
+
   public synchronized void setDataSource(
       long imageId, @Nullable DataSource<CloseableReference<CloseableImage>> dataSource) {
     if (imageId != mImageId) {
@@ -113,7 +124,6 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     mDataSource = dataSource;
   }
 
-  @Override
   public void setFetchSubmitted(boolean fetchSubmitted) {
     mFetchSubmitted = fetchSubmitted;
   }
@@ -154,16 +164,19 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   }
 
   @Override
+  @Nullable
+  public ImageListener getImageListener() {
+    return mImageListener.getImageListener();
+  }
+
   public void setVitoImageRequestListener(@Nullable VitoImageRequestListener listener) {
     mImageListener.setVitoImageRequestListener(listener);
   }
 
-  @Override
-  public CombinedImageListener getImageListener() {
+  public CombinedImageListener getInternalListener() {
     return mImageListener;
   }
 
-  @Override
   public RequestListener getImageOriginListener() {
     return mImageOriginListener;
   }
@@ -174,7 +187,6 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     return mImageRequest;
   }
 
-  @Override
   public synchronized void setImageId(long imageId) {
     mImageId = imageId;
   }
@@ -184,12 +196,10 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     return mImageId;
   }
 
-  @Override
   public void setImageOrigin(@ImageOrigin int imageOrigin) {
     mImageOrigin = imageOrigin;
   }
 
-  @Override
   public @ImageOrigin int getImageOrigin() {
     return mImageOrigin;
   }
@@ -228,7 +238,6 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     mImageListener.onReset();
   }
 
-  @Override
   public void scheduleReleaseDelayed() {
     if (mDelayedReleasePending) {
       return;
@@ -245,7 +254,6 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     }
   }
 
-  @Override
   public void scheduleReleaseNextFrame() {
     cancelReleaseDelayed();
     sDeferredReleaser.scheduleDeferredRelease(this);
@@ -254,7 +262,6 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     }
   }
 
-  @Override
   public void releaseImmediately() {
     if (!mUseNewReleaseCallbacks && mDrawableDataSubscriber != null) {
       mDrawableDataSubscriber.onRelease(this);
