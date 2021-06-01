@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSubscriber;
@@ -77,6 +78,8 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
 
   private @ImageOrigin int mImageOrigin = ImageOrigin.UNKNOWN;
 
+  @VisibleForTesting @Nullable CloseableReference<CloseableImage> mImageReference;
+
   public FrescoDrawable2Impl(
       boolean useNewReleaseCallbacks,
       @Nullable ImagePerfControllerListener2 imagePerfControllerListener,
@@ -86,7 +89,10 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
     mImagePerfListener = imagePerfListener;
   }
 
-  @Override
+  public @Nullable Drawable setImageDrawable(@Nullable Drawable newDrawable) {
+    return setImage(newDrawable, null);
+  }
+
   public @Nullable Drawable setImage(
       @Nullable Drawable imageDrawable,
       @Nullable CloseableReference<CloseableImage> imageReference) {
@@ -95,7 +101,9 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
     if (imageDrawable != mActualImageWrapper) {
       mActualImageWrapper.setCurrent(NopDrawable.INSTANCE);
     }
-    return super.setImage(imageDrawable, imageReference);
+    CloseableReference.closeSafely(mImageReference);
+    mImageReference = CloseableReference.cloneOrNull(imageReference);
+    return setDrawable(IMAGE_DRAWABLE_INDEX, imageDrawable);
   }
 
   @Override
@@ -225,13 +233,16 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
     setImageId(0);
     super.close();
     super.reset();
+    mActualImageWrapper.setCurrent(NopDrawable.INSTANCE);
+    CloseableReference.closeSafely(mImageReference);
+    mImageReference = null;
     mDrawableDataSubscriber = null;
     if (mDataSource != null) {
       mDataSource.close();
     }
     mDataSource = null;
     mFetchSubmitted = false;
-    mActualImageWrapper.setCurrent(NopDrawable.INSTANCE);
+
     mImageOrigin = ImageOrigin.UNKNOWN;
     mExtras = null;
     setOnFadeListener(null);
@@ -319,5 +330,23 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
   @Override
   public VitoImagePerfListener getImagePerfListener() {
     return mImagePerfListener;
+  }
+
+  /** @return the width of the underlying actual image or -1 if unset */
+  @Override
+  public int getActualImageWidthPx() {
+    if (CloseableReference.isValid(mImageReference)) {
+      return mImageReference.get().getWidth();
+    }
+    return -1;
+  }
+
+  /** @return the width of the underlying actual image or -1 if unset */
+  @Override
+  public int getActualImageHeightPx() {
+    if (CloseableReference.isValid(mImageReference)) {
+      return mImageReference.get().getHeight();
+    }
+    return -1;
   }
 }

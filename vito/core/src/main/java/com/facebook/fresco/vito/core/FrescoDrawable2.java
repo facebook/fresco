@@ -12,8 +12,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
@@ -22,7 +20,6 @@ import com.facebook.drawee.drawable.TransformAwareDrawable;
 import com.facebook.drawee.drawable.TransformCallback;
 import com.facebook.drawee.drawable.VisibilityCallback;
 import com.facebook.fresco.vito.listener.ImageListener;
-import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 
@@ -33,8 +30,6 @@ public abstract class FrescoDrawable2 extends FadeDrawable
         TransformAwareDrawable,
         Closeable,
         DeferredReleaser.Releasable {
-
-  @VisibleForTesting @Nullable CloseableReference<CloseableImage> mImageReference;
 
   private static final int LAYER_COUNT = 4;
 
@@ -51,20 +46,8 @@ public abstract class FrescoDrawable2 extends FadeDrawable
     super(new Drawable[LAYER_COUNT], false, IMAGE_DRAWABLE_INDEX);
   }
 
-  public @Nullable Drawable setImage(
-      @Nullable Drawable imageDrawable,
-      @Nullable CloseableReference<CloseableImage> imageReference) {
-    CloseableReference.closeSafely(mImageReference);
-    mImageReference = CloseableReference.cloneOrNull(imageReference);
-    return setDrawable(IMAGE_DRAWABLE_INDEX, imageDrawable);
-  }
-
   public boolean hasImage() {
     return getDrawable(IMAGE_DRAWABLE_INDEX) != null;
-  }
-
-  public @Nullable Drawable setImageDrawable(@Nullable Drawable newDrawable) {
-    return setImage(newDrawable, null);
   }
 
   public @Nullable Drawable setOverlayDrawable(@Nullable Drawable drawable) {
@@ -121,8 +104,6 @@ public abstract class FrescoDrawable2 extends FadeDrawable
 
   @Override
   public void close() {
-    CloseableReference.closeSafely(mImageReference);
-    mImageReference = null;
     maybeStopAnimation(getDrawable(PLACEHOLDER_DRAWABLE_INDEX));
     for (int i = 0; i < LAYER_COUNT; i++) {
       setDrawable(i, null);
@@ -169,20 +150,10 @@ public abstract class FrescoDrawable2 extends FadeDrawable
   }
 
   /** @return the width of the underlying actual image or -1 if unset */
-  public int getActualImageWidthPx() {
-    if (CloseableReference.isValid(mImageReference)) {
-      return mImageReference.get().getWidth();
-    }
-    return -1;
-  }
+  public abstract int getActualImageWidthPx();
 
   /** @return the width of the underlying actual image or -1 if unset */
-  public int getActualImageHeightPx() {
-    if (CloseableReference.isValid(mImageReference)) {
-      return mImageReference.get().getHeight();
-    }
-    return -1;
-  }
+  public abstract int getActualImageHeightPx();
 
   public abstract ScaleTypeDrawable getActualImageWrapper();
 

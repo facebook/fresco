@@ -5,15 +5,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.core;
+package com.facebook.fresco.vito.core.impl;
 
 import static org.mockito.Mockito.mock;
 
 import android.graphics.drawable.Drawable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
-import com.facebook.fresco.vito.core.impl.FrescoDrawable2Impl;
-import com.facebook.fresco.vito.core.impl.NoOpVitoImagePerfListener;
+import com.facebook.fresco.vito.core.NopDrawable;
 import com.facebook.imagepipeline.image.CloseableImage;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -24,9 +23,9 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
-public class FrescoDrawable2Test {
+public class FrescoDrawable2ImplTest {
 
-  private FrescoDrawable2 mFrescoDrawable;
+  private FrescoDrawable2Impl mFrescoDrawable;
 
   private CountDownLatch mLatch;
   private CloseableImage mCloseableImage;
