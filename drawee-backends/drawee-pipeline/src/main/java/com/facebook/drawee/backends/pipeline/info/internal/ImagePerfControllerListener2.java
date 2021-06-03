@@ -26,11 +26,12 @@ import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.fresco.ui.common.OnDrawControllerListener;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.infer.annotation.Nullsafe;
+import java.io.Closeable;
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageInfo>
-    implements OnDrawControllerListener<ImageInfo> {
+    implements OnDrawControllerListener<ImageInfo>, Closeable {
 
   private static final int WHAT_STATUS = 1;
   private static final int WHAT_VISIBILITY = 2;
@@ -187,6 +188,11 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
 
   public void resetState() {
     obtainState().reset();
+  }
+
+  @Override
+  public void close() {
+    resetState();
   }
 
   @VisibleForTesting

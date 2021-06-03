@@ -17,10 +17,10 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
-import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
 import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.fresco.middleware.MiddlewareUtils;
+import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
@@ -33,6 +33,7 @@ import com.facebook.fresco.vito.core.VitoImageRequestListener;
 import com.facebook.fresco.vito.core.impl.debug.DebugOverlayFactory2;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -53,7 +54,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   private final VitoImagePipeline mImagePipeline;
   private final @Nullable VitoImageRequestListener mGlobalImageListener;
   private final DebugOverlayFactory2 mDebugOverlayFactory;
-  private final @Nullable Supplier<ImagePerfControllerListener2> mImagePerfListenerSupplier;
+  private final @Nullable Supplier<ControllerListener2<ImageInfo>> mImagePerfListenerSupplier;
   private final VitoImagePerfListener mVitoImagePerfListener;
 
   public FrescoController2Impl(
@@ -64,7 +65,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       VitoImagePipeline imagePipeline,
       @Nullable VitoImageRequestListener globalImageListener,
       DebugOverlayFactory2 debugOverlayFactory,
-      @Nullable Supplier<ImagePerfControllerListener2> imagePerfListenerSupplier,
+      @Nullable Supplier<ControllerListener2<ImageInfo>> imagePerfListenerSupplier,
       VitoImagePerfListener vitoImagePerfListener) {
     mConfig = config;
     mHierarcher = hierarcher;
