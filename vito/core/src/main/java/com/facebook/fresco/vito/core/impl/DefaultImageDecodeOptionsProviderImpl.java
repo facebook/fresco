@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.core.impl;
 
 import android.graphics.Bitmap;
+import android.os.Build;
 import com.facebook.common.logging.FLog;
 import com.facebook.fresco.vito.options.DecodedImageOptions;
 import com.facebook.fresco.vito.options.RoundingOptions;
@@ -36,7 +37,7 @@ public class DefaultImageDecodeOptionsProviderImpl
     ImageDecodeOptions imageDecodeOptions = maybeCreateFromConfigAndCustomDecoder(imageOptions);
     if (imageDecodeOptions == null) {
       imageDecodeOptions =
-          maybeSetupNativeRounding(
+          maybeSetupPipelineRounding(
               imageOptions.getRoundingOptions(),
               imageOptions.getBitmapConfig(),
               mCircularBitmapRounding);
@@ -70,7 +71,7 @@ public class DefaultImageDecodeOptionsProviderImpl
   }
 
   @Nullable
-  public static ImageDecodeOptions maybeSetupNativeRounding(
+  public static ImageDecodeOptions maybeSetupPipelineRounding(
       @Nullable RoundingOptions roundingOptions,
       @Nullable Bitmap.Config bitmapConfig,
       @Nullable ImagePipelineUtilsImpl.CircularBitmapRounding circularBitmapRounding) {
@@ -78,9 +79,16 @@ public class DefaultImageDecodeOptionsProviderImpl
         || roundingOptions.isForceRoundAtDecode()
         || !roundingOptions.isCircular()
         || circularBitmapRounding == null
-        || bitmapConfig == Bitmap.Config.RGB_565) {
+        || pipelineRoundingUnsupportedForBitmapConfig(bitmapConfig)) {
       return null;
     }
     return circularBitmapRounding.getDecodeOptions(roundingOptions.isAntiAliased());
+  }
+
+  private static boolean pipelineRoundingUnsupportedForBitmapConfig(
+      @Nullable Bitmap.Config bitmapConfig) {
+    return bitmapConfig == Bitmap.Config.RGB_565
+        || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+            && bitmapConfig == Bitmap.Config.HARDWARE);
   }
 }
