@@ -11,7 +11,6 @@ import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
-import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.fresco.ui.common.OnDrawControllerListener;
@@ -34,16 +33,10 @@ public class ControllerListenerWrapper implements ImageListener {
   }
 
   private final ControllerListener<ImageInfo> mControllerListener;
-  private @Nullable ImageOriginListener mImageOriginListener;
 
   @VisibleForTesting
   ControllerListenerWrapper(ControllerListener<ImageInfo> controllerListener) {
     mControllerListener = controllerListener;
-  }
-
-  public ControllerListenerWrapper setImageOriginListener(ImageOriginListener imageOriginListener) {
-    mImageOriginListener = imageOriginListener;
-    return this;
   }
 
   @Override
@@ -62,12 +55,8 @@ public class ControllerListenerWrapper implements ImageListener {
       @ImageOrigin int imageOrigin,
       @Nullable ImageInfo imageInfo,
       @Nullable Drawable drawable) {
-    String stringId = toStringId(id);
-    if (mImageOriginListener != null) {
-      mImageOriginListener.onImageLoaded(stringId, imageOrigin, true, "ControllerListenerWrapper");
-    }
     Animatable animatable = drawable instanceof Animatable ? (Animatable) drawable : null;
-    mControllerListener.onFinalImageSet(stringId, imageInfo, animatable);
+    mControllerListener.onFinalImageSet(toStringId(id), imageInfo, animatable);
   }
 
   @Override
