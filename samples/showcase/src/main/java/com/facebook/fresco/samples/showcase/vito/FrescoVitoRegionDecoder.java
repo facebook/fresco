@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.core;
+package com.facebook.fresco.samples.showcase.vito;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
