@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 
 /** A simple wrapper around an image that implements {@link Closeable} */
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public abstract class CloseableImage implements Closeable, ImageInfo, HasImageMetadata {
+public abstract class CloseableImage implements Closeable, ImageInfo {
   private static final String TAG = "CloseableImage";
   private Map<String, Object> mExtras = new HashMap<>();
 
