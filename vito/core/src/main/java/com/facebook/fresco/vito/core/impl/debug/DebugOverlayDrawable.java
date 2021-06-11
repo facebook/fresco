@@ -17,9 +17,12 @@ import android.graphics.drawable.Drawable;
 import android.util.Pair;
 import android.view.Gravity;
 import androidx.annotation.ColorInt;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DebugOverlayDrawable extends Drawable {
 
   private static final int OUTLINE_COLOR = 0xFFFF9800;
@@ -113,7 +116,7 @@ public class DebugOverlayDrawable extends Drawable {
   public void setAlpha(int alpha) {}
 
   @Override
-  public void setColorFilter(ColorFilter cf) {}
+  public void setColorFilter(@Nullable ColorFilter cf) {}
 
   public void setBackgroundColor(@ColorInt int color) {
     mBackgroundColor = color;

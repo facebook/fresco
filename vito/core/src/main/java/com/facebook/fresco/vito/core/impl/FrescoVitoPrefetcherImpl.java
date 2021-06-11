@@ -21,9 +21,11 @@ import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.CancellationException;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FrescoVitoPrefetcherImpl implements FrescoVitoPrefetcher {
 
   private static final Throwable NULL_IMAGE_MESSAGE =

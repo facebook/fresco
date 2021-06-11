@@ -12,17 +12,20 @@ import com.facebook.fresco.vito.core.ImagePipelineUtils;
 import com.facebook.fresco.vito.options.DecodedImageOptions;
 import com.facebook.fresco.vito.options.EncodedImageOptions;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
+import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.request.Postprocessor;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
  * Utility methods to create {@link ImageRequest}s for {@link
  * com.facebook.fresco.vito.options.ImageOptions}.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
 
   public interface CircularBitmapRounding {
@@ -119,8 +122,9 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
     if (uri == null) {
       return null;
     }
-    return ImageRequestBuilder.newBuilderWithSource(uri)
-        .setRequestPriority(imageOptions.getPriority());
+    ImageRequestBuilder builder = ImageRequestBuilder.newBuilderWithSource(uri);
+    maybeSetRequestPriority(builder, imageOptions.getPriority());
+    return builder;
   }
 
   @Nullable
@@ -129,7 +133,15 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
     if (imageRequest == null) {
       return null;
     }
-    return ImageRequestBuilder.fromRequest(imageRequest)
-        .setRequestPriority(imageOptions.getPriority());
+    ImageRequestBuilder builder = ImageRequestBuilder.fromRequest(imageRequest);
+    maybeSetRequestPriority(builder, imageOptions.getPriority());
+    return builder;
+  }
+
+  private static void maybeSetRequestPriority(
+      ImageRequestBuilder builder, @Nullable Priority priority) {
+    if (priority != null) {
+      builder.setRequestPriority(priority);
+    }
   }
 }
