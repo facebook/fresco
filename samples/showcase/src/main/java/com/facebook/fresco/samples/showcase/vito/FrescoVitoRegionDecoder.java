@@ -12,7 +12,6 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import com.facebook.common.references.CloseableReference;
-import com.facebook.fresco.vito.core.FrescoVitoImageDecodeOptions;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.image.CloseableImage;
