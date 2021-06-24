@@ -7,6 +7,8 @@
 
 package com.facebook.fresco.vito.draweesupport;
 
+import static com.facebook.infer.annotation.Assertions.nullsafeFIXME;
+
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import androidx.annotation.VisibleForTesting;
@@ -16,8 +18,10 @@ import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.fresco.ui.common.OnDrawControllerListener;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ControllerListenerWrapper implements ImageListener {
 
   /**
@@ -40,8 +44,9 @@ public class ControllerListenerWrapper implements ImageListener {
   }
 
   @Override
-  public void onSubmit(long id, Object callerContext) {
-    mControllerListener.onSubmit(toStringId(id), callerContext);
+  public void onSubmit(long id, @Nullable Object callerContext) {
+    mControllerListener.onSubmit(
+        toStringId(id), nullsafeFIXME(callerContext, "Legacy ControllerListener is not nullsafe"));
   }
 
   @Override
@@ -65,13 +70,15 @@ public class ControllerListenerWrapper implements ImageListener {
   }
 
   @Override
-  public void onIntermediateImageFailed(long id, Throwable throwable) {
-    mControllerListener.onIntermediateImageFailed(toStringId(id), throwable);
+  public void onIntermediateImageFailed(long id, @Nullable Throwable throwable) {
+    mControllerListener.onIntermediateImageFailed(
+        toStringId(id), nullsafeFIXME(throwable, "Legacy ControllerListener is not nullsafe"));
   }
 
   @Override
-  public void onFailure(long id, @Nullable Drawable error, Throwable throwable) {
-    mControllerListener.onFailure(toStringId(id), throwable);
+  public void onFailure(long id, @Nullable Drawable error, @Nullable Throwable throwable) {
+    mControllerListener.onFailure(
+        toStringId(id), nullsafeFIXME(throwable, "Legacy ControllerListener is not nullsafe"));
   }
 
   @Override
