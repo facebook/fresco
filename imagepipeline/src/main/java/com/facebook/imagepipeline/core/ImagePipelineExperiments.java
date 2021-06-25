@@ -64,6 +64,7 @@ public class ImagePipelineExperiments {
   private final int mTrackedKeysSize;
   private final boolean mUseCombinedNetworkAndCacheProducer;
   private final boolean mAllowDelay;
+  private final boolean mHandOffOnUiThreadOnly;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -99,6 +100,7 @@ public class ImagePipelineExperiments {
     mTrackedKeysSize = builder.mTrackedKeysSize;
     mUseCombinedNetworkAndCacheProducer = builder.mUseCombinedNetworkAndCacheProducer;
     mAllowDelay = builder.mAllowDelay;
+    mHandOffOnUiThreadOnly = builder.mHandOffOnUiThreadOnly;
   }
 
   public boolean isEncodedCacheEnabled() {
@@ -222,6 +224,10 @@ public class ImagePipelineExperiments {
     return mAllowDelay;
   }
 
+  public boolean handoffOnUiThreadOnly() {
+    return mHandOffOnUiThreadOnly;
+  }
+
   public static class Builder {
 
     private final ImagePipelineConfig.Builder mConfigBuilder;
@@ -254,9 +260,15 @@ public class ImagePipelineExperiments {
     private int mTrackedKeysSize = 20;
     private boolean mUseCombinedNetworkAndCacheProducer = false;
     private boolean mAllowDelay = false;
+    private boolean mHandOffOnUiThreadOnly = false;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setHandOffOnUiThreadOnly(boolean handOffOnUiThreadOnly) {
+      mHandOffOnUiThreadOnly = handOffOnUiThreadOnly;
+      return mConfigBuilder;
     }
 
     public ImagePipelineConfig.Builder setWebpSupportEnabled(boolean webpSupportEnabled) {

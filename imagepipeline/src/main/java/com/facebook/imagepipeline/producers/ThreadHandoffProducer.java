@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.producers;
 
+import android.os.Looper;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.imagepipeline.instrumentation.FrescoInstrumenter;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
@@ -35,7 +36,16 @@ public class ThreadHandoffProducer<T> implements Producer<T> {
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.beginSection("ThreadHandoffProducer#produceResults");
       }
+
       final ProducerListener2 producerListener = context.getProducerListener();
+
+      if (shouldRunImmediately(context)) {
+        producerListener.onProducerStart(context, PRODUCER_NAME);
+        producerListener.onProducerFinishWithSuccess(context, PRODUCER_NAME, null);
+        mInputProducer.produceResults(consumer, context);
+        return;
+      }
+
       final StatefulProducerRunnable<T> statefulRunnable =
           new StatefulProducerRunnable<T>(consumer, producerListener, context, PRODUCER_NAME) {
             @Override
@@ -75,5 +85,17 @@ public class ThreadHandoffProducer<T> implements Producer<T> {
     return FrescoInstrumenter.isTracing()
         ? "ThreadHandoffProducer_produceResults_" + context.getId()
         : null;
+  }
+
+  private static boolean shouldRunImmediately(ProducerContext context) {
+    if (!context.getImagePipelineConfig().getExperiments().handoffOnUiThreadOnly()) {
+      return false;
+    }
+
+    if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
+      return false;
+    }
+
+    return true;
   }
 }
