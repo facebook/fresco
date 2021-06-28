@@ -11,6 +11,8 @@ import static org.mockito.Mockito.*;
 
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.core.ImagePipelineConfigInterface;
+import com.facebook.imagepipeline.core.ImagePipelineExperiments;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
@@ -33,6 +35,7 @@ public class ThreadHandoffProducerTest {
   private SettableProducerContext mProducerContext;
   private ThreadHandoffProducer mThreadHandoffProducer;
   private TestExecutorService mTestExecutorService;
+  private ImagePipelineExperiments mImagePipelineExperiments;
 
   @Before
   public void setUp() {
@@ -52,6 +55,11 @@ public class ThreadHandoffProducerTest {
     mThreadHandoffProducer =
         new ThreadHandoffProducer(
             mInputProducer, new ThreadHandoffProducerQueueImpl(mTestExecutorService));
+
+    mImagePipelineExperiments = mock(ImagePipelineExperiments.class);
+
+    doReturn(mImagePipelineExperiments).when(mConfig).getExperiments();
+    doReturn(false).when(mImagePipelineExperiments).handoffOnUiThreadOnly();
   }
 
   @Test
