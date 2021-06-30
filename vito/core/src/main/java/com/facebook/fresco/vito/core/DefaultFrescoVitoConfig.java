@@ -51,6 +51,11 @@ public class DefaultFrescoVitoConfig implements FrescoVitoConfig {
     return Suppliers.BOOLEAN_TRUE;
   }
 
+  @Override
+  public boolean layoutPrefetchingEnabled(Object surface) {
+    return false;
+  }
+
   public static class DefaultPrefetchConfig implements PrefetchConfig {
     @Override
     public boolean prefetchInOnPrepare() {
