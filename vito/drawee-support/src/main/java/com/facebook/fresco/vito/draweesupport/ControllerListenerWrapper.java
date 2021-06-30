@@ -19,6 +19,7 @@ import com.facebook.fresco.ui.common.OnDrawControllerListener;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.infer.annotation.Nullsafe;
+import com.facebook.infer.annotation.PropagatesNullable;
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
@@ -30,9 +31,8 @@ public class ControllerListenerWrapper implements ImageListener {
    * @param controllerListener the controller listener to wrap
    * @return the wrapped controller listener or null if no wrapping required
    */
-  @Nullable
   public static ControllerListenerWrapper create(
-      @Nullable ControllerListener<ImageInfo> controllerListener) {
+      @PropagatesNullable ControllerListener<ImageInfo> controllerListener) {
     return controllerListener == null ? null : new ControllerListenerWrapper(controllerListener);
   }
 
