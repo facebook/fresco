@@ -13,12 +13,14 @@ import android.system.ErrnoException;
 import android.util.Log;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 import java.nio.ByteBuffer;
 import javax.annotation.Nullable;
 
 /** Wrapper around chunk of ashmem memory. */
 @TargetApi(27)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AshmemMemoryChunk implements MemoryChunk, Closeable {
   private static final String TAG = "AshmemMemoryChunk";
 
@@ -49,8 +51,12 @@ public class AshmemMemoryChunk implements MemoryChunk, Closeable {
   @Override
   public synchronized void close() {
     if (!isClosed()) {
-      mSharedMemory.unmap(mByteBuffer);
-      mSharedMemory.close();
+      if (mSharedMemory != null) {
+        mSharedMemory.close();
+      }
+      if (mByteBuffer != null) {
+        SharedMemory.unmap(mByteBuffer);
+      }
       mByteBuffer = null;
       mSharedMemory = null;
     }
@@ -63,7 +69,7 @@ public class AshmemMemoryChunk implements MemoryChunk, Closeable {
 
   @Override
   public int getSize() {
-    Preconditions.checkState(!isClosed());
+    Preconditions.checkNotNull(mSharedMemory);
     return mSharedMemory.getSize();
   }
 
@@ -71,7 +77,7 @@ public class AshmemMemoryChunk implements MemoryChunk, Closeable {
   public synchronized int write(
       final int memoryOffset, final byte[] byteArray, final int byteArrayOffset, final int count) {
     Preconditions.checkNotNull(byteArray);
-    Preconditions.checkState(!isClosed());
+    Preconditions.checkNotNull(mByteBuffer);
     final int actualCount = MemoryChunkUtil.adjustByteCount(memoryOffset, count, getSize());
     MemoryChunkUtil.checkBounds(
         memoryOffset, byteArray.length, byteArrayOffset, actualCount, getSize());
@@ -84,7 +90,7 @@ public class AshmemMemoryChunk implements MemoryChunk, Closeable {
   public synchronized int read(
       final int memoryOffset, final byte[] byteArray, final int byteArrayOffset, final int count) {
     Preconditions.checkNotNull(byteArray);
-    Preconditions.checkState(!isClosed());
+    Preconditions.checkNotNull(mByteBuffer);
     final int actualCount = MemoryChunkUtil.adjustByteCount(memoryOffset, count, getSize());
     MemoryChunkUtil.checkBounds(
         memoryOffset, byteArray.length, byteArrayOffset, actualCount, getSize());
@@ -98,6 +104,7 @@ public class AshmemMemoryChunk implements MemoryChunk, Closeable {
     Preconditions.checkState(!isClosed());
     Preconditions.checkArgument(offset >= 0);
     Preconditions.checkArgument(offset < getSize());
+    Preconditions.checkNotNull(mByteBuffer);
     return mByteBuffer.get(offset);
   }
 
@@ -170,6 +177,8 @@ public class AshmemMemoryChunk implements MemoryChunk, Closeable {
     }
     Preconditions.checkState(!isClosed());
     Preconditions.checkState(!other.isClosed());
+    Preconditions.checkNotNull(mByteBuffer);
+    Preconditions.checkNotNull(other.getByteBuffer());
     MemoryChunkUtil.checkBounds(offset, other.getSize(), otherOffset, count, getSize());
     mByteBuffer.position(offset);
     // ByteBuffer can't be null at this point
