@@ -10,10 +10,12 @@ package com.facebook.samples.scrollperf.util;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.request.Postprocessor;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.postprocessor.DelayPostprocessor;
 
 /** Utility class in order to manage Pipeline objects */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public final class PipelineUtil {
 
   /**

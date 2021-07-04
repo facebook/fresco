@@ -9,9 +9,11 @@ package com.facebook.samples.scrollperf.postprocessor;
 
 import android.graphics.Bitmap;
 import com.facebook.imagepipeline.request.BasePostprocessor;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.util.TimeWaster;
 
 /** This is a Postprocessor which just introduce a delay */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public final class DelayPostprocessor extends BasePostprocessor {
 
   private static DelayPostprocessor sSlowPostprocessor;

@@ -17,6 +17,7 @@ import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
@@ -27,6 +28,7 @@ import com.facebook.samples.scrollperf.util.PipelineUtil;
 import com.facebook.samples.scrollperf.util.SizeUtil;
 
 /** This is the implementation of the Adapter for the ListView */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DraweeViewListAdapter extends BaseAdapter {
 
   private final SimpleAdapter<Uri> mSimpleAdapter;

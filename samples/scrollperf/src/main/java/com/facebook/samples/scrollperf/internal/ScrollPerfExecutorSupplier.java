@@ -11,12 +11,14 @@ import android.os.Process;
 import androidx.annotation.Nullable;
 import com.facebook.imagepipeline.core.ExecutorSupplier;
 import com.facebook.imagepipeline.core.PriorityThreadFactory;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 
 /** An ExecutorSupplier we use just for ScrollPerf */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ScrollPerfExecutorSupplier implements ExecutorSupplier {
 
   // Allows for simultaneous reads and writes.

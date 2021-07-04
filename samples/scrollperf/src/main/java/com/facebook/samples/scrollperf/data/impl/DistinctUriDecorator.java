@@ -8,10 +8,12 @@
 package com.facebook.samples.scrollperf.data.impl;
 
 import android.net.Uri;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.data.Decorator;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
 
 /** This decorates a Uri adding a distinct parameter */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public enum DistinctUriDecorator implements Decorator<Uri> {
   SINGLETON;
 

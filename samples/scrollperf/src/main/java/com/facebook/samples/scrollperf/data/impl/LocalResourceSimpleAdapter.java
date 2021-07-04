@@ -10,9 +10,11 @@ package com.facebook.samples.scrollperf.data.impl;
 import android.content.Context;
 import android.net.Uri;
 import androidx.annotation.ArrayRes;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
 
 /** This is the implementation of a SimpleAdapter which reads data from an array resource */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class LocalResourceSimpleAdapter implements SimpleAdapter<Uri> {
 
   private Uri[] mUris;

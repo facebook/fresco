@@ -15,10 +15,12 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.conf.Const;
 
 /** Utility class for resizing */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public final class SizeUtil {
 
   public static int DISPLAY_WIDTH;
