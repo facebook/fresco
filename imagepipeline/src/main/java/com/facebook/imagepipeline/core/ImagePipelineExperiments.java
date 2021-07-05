@@ -25,6 +25,8 @@ import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * Encapsulates additional elements of the {@link ImagePipelineConfig} which are currently in an
@@ -33,12 +35,13 @@ import com.facebook.imageutils.BitmapUtil;
  * <p>These options may often change or disappear altogether and it is not recommended to change
  * their values from their defaults.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImagePipelineExperiments {
 
   private final boolean mWebpSupportEnabled;
-  private final WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
+  private final @Nullable WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
   private final boolean mDecodeCancellationEnabled;
-  private final WebpBitmapFactory mWebpBitmapFactory;
+  private final @Nullable WebpBitmapFactory mWebpBitmapFactory;
   private final boolean mUseDownsamplingRatioForResizing;
   private final boolean mUseBitmapPrepareToDraw;
   private final int mBitmapPrepareToDrawMinSizeBytes;
@@ -48,7 +51,7 @@ public class ImagePipelineExperiments {
   private final boolean mNativeCodeDisabled;
   private final boolean mPartialImageCachingEnabled;
   private final ProducerFactoryMethod mProducerFactoryMethod;
-  private final Supplier<Boolean> mLazyDataSource;
+  private final @Nullable Supplier<Boolean> mLazyDataSource;
   private final boolean mGingerbreadDecoderEnabled;
   private final boolean mDownscaleFrameToDrawableDimensions;
   private final int mBitmapCloseableRefType;
@@ -123,11 +126,11 @@ public class ImagePipelineExperiments {
     return mDecodeCancellationEnabled;
   }
 
-  public WebpBitmapFactory.WebpErrorLogger getWebpErrorLogger() {
+  public @Nullable WebpBitmapFactory.WebpErrorLogger getWebpErrorLogger() {
     return mWebpErrorLogger;
   }
 
-  public WebpBitmapFactory getWebpBitmapFactory() {
+  public @Nullable WebpBitmapFactory getWebpBitmapFactory() {
     return mWebpBitmapFactory;
   }
 
@@ -172,7 +175,7 @@ public class ImagePipelineExperiments {
     return mMaxBitmapSize;
   }
 
-  public Supplier<Boolean> isLazyDataSource() {
+  public @Nullable Supplier<Boolean> isLazyDataSource() {
     return mLazyDataSource;
   }
 
@@ -232,9 +235,9 @@ public class ImagePipelineExperiments {
 
     private final ImagePipelineConfig.Builder mConfigBuilder;
     private boolean mWebpSupportEnabled = false;
-    private WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
+    private @Nullable WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
     private boolean mDecodeCancellationEnabled = false;
-    private WebpBitmapFactory mWebpBitmapFactory;
+    private @Nullable WebpBitmapFactory mWebpBitmapFactory;
     private boolean mUseDownsamplingRatioForResizing = false;
     private boolean mUseBitmapPrepareToDraw = false;
     private int mBitmapPrepareToDrawMinSizeBytes = 0;
@@ -243,8 +246,8 @@ public class ImagePipelineExperiments {
     private int mMaxBitmapSize = (int) BitmapUtil.MAX_BITMAP_SIZE;
     private boolean mNativeCodeDisabled = false;
     private boolean mPartialImageCachingEnabled = false;
-    private ProducerFactoryMethod mProducerFactoryMethod;
-    public Supplier<Boolean> mLazyDataSource;
+    private @Nullable ProducerFactoryMethod mProducerFactoryMethod;
+    public @Nullable Supplier<Boolean> mLazyDataSource;
     public boolean mGingerbreadDecoderEnabled;
     public boolean mDownscaleFrameToDrawableDimensions;
     public int mBitmapCloseableRefType;
