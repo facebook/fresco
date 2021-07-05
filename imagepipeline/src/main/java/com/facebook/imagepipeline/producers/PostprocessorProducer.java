@@ -18,6 +18,7 @@ import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.request.Postprocessor;
 import com.facebook.imagepipeline.request.RepeatedPostprocessor;
 import com.facebook.imagepipeline.request.RepeatedPostprocessorRunner;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
@@ -29,6 +30,7 @@ import javax.annotation.concurrent.GuardedBy;
  * <p>Post-processors are only supported for static bitmaps. If the request is for an animated
  * image, the post-processor step will be skipped without warning.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PostprocessorProducer implements Producer<CloseableReference<CloseableImage>> {
 
   public static final String NAME = "PostprocessorProducer";
@@ -52,6 +54,7 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
       final Consumer<CloseableReference<CloseableImage>> consumer, ProducerContext context) {
     final ProducerListener2 listener = context.getProducerListener();
     final Postprocessor postprocessor = context.getImageRequest().getPostprocessor();
+    Preconditions.checkNotNull(postprocessor);
     final PostprocessorConsumer basePostprocessorConsumer =
         new PostprocessorConsumer(consumer, listener, postprocessor, context);
     final Consumer<CloseableReference<CloseableImage>> postprocessorConsumer;
@@ -255,7 +258,8 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
       }
     }
 
-    private void maybeNotifyOnNewResult(CloseableReference<CloseableImage> newRef, int status) {
+    private void maybeNotifyOnNewResult(
+        @Nullable CloseableReference<CloseableImage> newRef, int status) {
       boolean isLast = isLast(status);
       if ((!isLast && !isClosed()) || (isLast && close())) {
         getConsumer().onNewResult(newRef, status);

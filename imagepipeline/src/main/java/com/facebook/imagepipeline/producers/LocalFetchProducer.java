@@ -89,8 +89,7 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
     }
   }
 
-  protected @Nullable EncodedImage getEncodedImage(InputStream inputStream, int length)
-      throws IOException {
+  protected EncodedImage getEncodedImage(InputStream inputStream, int length) throws IOException {
     return getByteBufferBackedEncodedImage(inputStream, length);
   }
 
