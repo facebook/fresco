@@ -175,6 +175,9 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
   public void renderFrame(int frameNumber, Canvas canvas) {
     AnimatedImageFrame frame = mAnimatedImage.getFrame(frameNumber);
     try {
+      if (frame.getWidth() <= 0 || frame.getHeight() <= 0) {
+        return; // Frame not visible -> skipping
+      }
       if (mAnimatedImage.doesRenderSupportScaling()) {
         renderImageSupportsScaling(canvas, frame);
       } else {
