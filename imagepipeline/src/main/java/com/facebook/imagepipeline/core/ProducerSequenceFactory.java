@@ -72,7 +72,6 @@ public class ProducerSequenceFactory {
   private final ImageTranscoderFactory mImageTranscoderFactory;
   private final boolean mIsEncodedMemoryCacheProbingEnabled;
   private final boolean mIsDiskCacheProbingEnabled;
-  private final boolean mUseCombinedNetworkAndCacheProducer;
   private final boolean mAllowDelay;
 
   // Saved sequences
@@ -146,14 +145,12 @@ public class ProducerSequenceFactory {
       ImageTranscoderFactory imageTranscoderFactory,
       boolean isEncodedMemoryCacheProbingEnabled,
       boolean isDiskCacheProbingEnabled,
-      boolean useCombinedNetworkAndCacheProducer,
       boolean allowDelay) {
     mContentResolver = contentResolver;
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
     mWebpSupportEnabled = webpSupportEnabled;
-    mUseCombinedNetworkAndCacheProducer = useCombinedNetworkAndCacheProducer;
     mPostprocessorSequences = new HashMap<>();
     mCloseableImagePrefetchSequences = new HashMap<>();
     mBitmapPrepareSequences = new HashMap<>();
@@ -508,10 +505,8 @@ public class ProducerSequenceFactory {
       }
       Producer<EncodedImage> inputProducer =
           Preconditions.checkNotNull(
-              mUseCombinedNetworkAndCacheProducer
-                  ? mProducerFactory.newCombinedNetworkAndCacheProducer(mNetworkFetcher)
-                  : newEncodedCacheMultiplexToTranscodeSequence(
-                      mProducerFactory.newNetworkFetchProducer(mNetworkFetcher)));
+              newEncodedCacheMultiplexToTranscodeSequence(
+                  mProducerFactory.newNetworkFetchProducer(mNetworkFetcher)));
       mCommonNetworkFetchToEncodedMemorySequence =
           ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
 

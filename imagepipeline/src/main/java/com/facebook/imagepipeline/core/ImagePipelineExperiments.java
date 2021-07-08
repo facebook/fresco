@@ -65,7 +65,6 @@ public class ImagePipelineExperiments {
   private final boolean mIsEncodedMemoryCacheProbingEnabled;
   private final boolean mIsDiskCacheProbingEnabled;
   private final int mTrackedKeysSize;
-  private final boolean mUseCombinedNetworkAndCacheProducer;
   private final boolean mAllowDelay;
   private final boolean mHandOffOnUiThreadOnly;
 
@@ -101,7 +100,6 @@ public class ImagePipelineExperiments {
     mIsEncodedMemoryCacheProbingEnabled = builder.mIsEncodedMemoryCacheProbingEnabled;
     mIsDiskCacheProbingEnabled = builder.mIsDiskCacheProbingEnabled;
     mTrackedKeysSize = builder.mTrackedKeysSize;
-    mUseCombinedNetworkAndCacheProducer = builder.mUseCombinedNetworkAndCacheProducer;
     mAllowDelay = builder.mAllowDelay;
     mHandOffOnUiThreadOnly = builder.mHandOffOnUiThreadOnly;
   }
@@ -219,10 +217,6 @@ public class ImagePipelineExperiments {
     return mKeepCancelledFetchAsLowPriority;
   }
 
-  public boolean shouldUseCombinedNetworkAndCacheProducer() {
-    return mUseCombinedNetworkAndCacheProducer;
-  }
-
   public boolean allowDelay() {
     return mAllowDelay;
   }
@@ -261,7 +255,6 @@ public class ImagePipelineExperiments {
     private boolean mIsEncodedMemoryCacheProbingEnabled = false;
     private boolean mIsDiskCacheProbingEnabled = false;
     private int mTrackedKeysSize = 20;
-    private boolean mUseCombinedNetworkAndCacheProducer = false;
     private boolean mAllowDelay = false;
     private boolean mHandOffOnUiThreadOnly = false;
 
@@ -453,12 +446,6 @@ public class ImagePipelineExperiments {
 
     public ImagePipelineConfig.Builder setTrackedKeysSize(int trackedKeysSize) {
       mTrackedKeysSize = trackedKeysSize;
-      return mConfigBuilder;
-    }
-
-    public ImagePipelineConfig.Builder setUseCombinedNetworkAndCacheProducer(
-        boolean useCombinedNetworkAndCacheProducer) {
-      mUseCombinedNetworkAndCacheProducer = useCombinedNetworkAndCacheProducer;
       return mConfigBuilder;
     }
 
