@@ -269,7 +269,8 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
     return setFailure(throwable, null);
   }
 
-  protected boolean setFailure(Throwable throwable, @Nullable Map<String, Object> extras) {
+  protected boolean setFailure(
+      @Nullable Throwable throwable, @Nullable Map<String, Object> extras) {
     boolean result = setFailureInternal(throwable, extras);
     if (result) {
       notifyDataSubscribers();
@@ -326,7 +327,7 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
   }
 
   private synchronized boolean setFailureInternal(
-      Throwable throwable, @Nullable Map<String, Object> extras) {
+      @Nullable Throwable throwable, @Nullable Map<String, Object> extras) {
     if (mIsClosed || mDataSourceStatus != DataSourceStatus.IN_PROGRESS) {
       return false;
     } else {

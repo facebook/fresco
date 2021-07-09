@@ -1,4 +1,9 @@
-// (c) Facebook, Inc. and its affiliates. Confidential and proprietary.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 package com.facebook.imagepipeline.listener;
 
@@ -18,7 +23,8 @@ public class BaseRequestListener2 implements RequestListener2 {
   public void onRequestSuccess(@NonNull ProducerContext producerContext) {}
 
   @Override
-  public void onRequestFailure(@NonNull ProducerContext producerContext, Throwable throwable) {}
+  public void onRequestFailure(
+      @NonNull ProducerContext producerContext, @Nullable Throwable throwable) {}
 
   @Override
   public void onRequestCancellation(@NonNull ProducerContext producerContext) {}
@@ -43,7 +49,7 @@ public class BaseRequestListener2 implements RequestListener2 {
   public void onProducerFinishWithFailure(
       @NonNull ProducerContext producerContext,
       String producerName,
-      Throwable t,
+      @Nullable Throwable t,
       @Nullable Map<String, String> extraMap) {}
 
   @Override

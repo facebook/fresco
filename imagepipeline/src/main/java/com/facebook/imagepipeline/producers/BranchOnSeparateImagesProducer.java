@@ -66,7 +66,7 @@ public class BranchOnSeparateImagesProducer implements Producer<EncodedImage> {
     }
 
     @Override
-    protected void onFailureImpl(Throwable t) {
+    protected void onFailureImpl(@Nullable Throwable t) {
       mInputProducer2.produceResults(getConsumer(), mProducerContext);
     }
   }

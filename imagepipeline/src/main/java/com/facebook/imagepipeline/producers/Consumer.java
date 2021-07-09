@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.producers;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 import androidx.annotation.IntDef;
+import com.facebook.infer.annotation.Nullsafe;
 import java.lang.annotation.Retention;
 import javax.annotation.Nullable;
 
@@ -37,6 +38,7 @@ import javax.annotation.Nullable;
  *
  * @param <T>
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface Consumer<T> {
 
   /** Status flag used by producers and consumers to supply additional information. */
