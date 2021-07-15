@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import com.facebook.drawee.R;
@@ -75,8 +76,7 @@ public class GenericDraweeHierarchyInflater {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("GenericDraweeHierarchyBuilder#inflateBuilder");
     }
-    Resources resources = context.getResources();
-    GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(resources);
+    GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(context);
     builder = updateBuilder(builder, context, attrs);
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.endSection();
@@ -256,7 +256,7 @@ public class GenericDraweeHierarchyInflater {
   @Nullable
   private static Drawable getDrawable(Context context, TypedArray gdhAttrs, int attrId) {
     int resourceId = gdhAttrs.getResourceId(attrId, 0);
-    return (resourceId == 0) ? null : context.getResources().getDrawable(resourceId);
+    return (resourceId == 0) ? null : ContextCompat.getDrawable(context, resourceId);
   }
 
   /**

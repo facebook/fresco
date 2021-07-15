@@ -32,7 +32,7 @@ public class FrescoAdapter extends ImageListAdapter {
   @Override
   public FrescoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     GenericDraweeHierarchy gdh =
-        new GenericDraweeHierarchyBuilder(getContext().getResources())
+        new GenericDraweeHierarchyBuilder(getContext())
             .setPlaceholderImage(Drawables.sPlaceholderDrawable)
             .setFailureImage(Drawables.sErrorDrawable)
             .setProgressBarImage(new ProgressBarDrawable())

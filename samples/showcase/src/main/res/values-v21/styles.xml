@@ -6,5 +6,7 @@
     <item name="android:statusBarColor">@android:color/transparent</item>
     <!-- Preference Theme -->
     <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+    <item name="rectangleColor">@color/accent</item>
+    <item name="vectorColor">@color/primary</item>
   </style>
 </resources>
