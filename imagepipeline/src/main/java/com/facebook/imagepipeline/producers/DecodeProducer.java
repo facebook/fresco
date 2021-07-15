@@ -175,7 +175,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
                 mProducerContext.setExtra(
                     ProducerContext.ExtraKeys.IMAGE_FORMAT,
                     encodedImage.getImageFormat().getName());
-                if (mDownsampleEnabled || !statusHasFlag(status, Consumer.IS_RESIZING_DONE)) {
+                if (mDownsampleEnabled && !statusHasFlag(status, Consumer.IS_RESIZING_DONE)) {
                   ImageRequest request = producerContext.getImageRequest();
                   if (mDownsampleEnabledForNetwork
                       || !UriUtil.isNetworkUri(request.getSourceUri())) {
