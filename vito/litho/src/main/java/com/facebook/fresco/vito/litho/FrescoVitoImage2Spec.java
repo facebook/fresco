@@ -87,6 +87,7 @@ public class FrescoVitoImage2Spec {
 
   @PropDefault static final float imageAspectRatio = 1f;
   @PropDefault static final Prefetch prefetch = Prefetch.AUTO;
+  @PropDefault static final boolean mutateDrawables = true;
 
   @OnCreateMountContent(mountingType = MountingType.DRAWABLE)
   static FrescoDrawable2 onCreateMountContent(Context c) {
@@ -157,11 +158,13 @@ public class FrescoVitoImage2Spec {
       @Prop(optional = true) final @Nullable ImageListener imageListener,
       @Prop(optional = true) final @Nullable Object callerContext,
       @Prop(optional = true) FadeDrawable.OnFadeListener onFadeListener,
+      @Prop(optional = true) boolean mutateDrawables,
       @CachedValue VitoImageRequest imageRequest,
       @FromPrepare @Nullable DataSource<Void> prefetchDataSource,
       @FromBoundsDefined Rect viewportDimensions,
       @State final @Nullable AtomicReference<DataSource<Void>> workingRangePrefetchData,
       @TreeProp final @Nullable ContextChain contextChain) {
+    frescoDrawable.setMutateDrawables(mutateDrawables);
     if (FrescoVitoProvider.getConfig().useBindOnly()) {
       return;
     }

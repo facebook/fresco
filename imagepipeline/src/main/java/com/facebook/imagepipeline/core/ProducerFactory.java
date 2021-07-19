@@ -11,7 +11,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
-import androidx.annotation.Nullable;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.common.memory.ByteArrayPool;
@@ -51,7 +50,6 @@ import com.facebook.imagepipeline.producers.LocalResourceFetchProducer;
 import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
 import com.facebook.imagepipeline.producers.NetworkFetchProducer;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
-import com.facebook.imagepipeline.producers.NullProducer;
 import com.facebook.imagepipeline.producers.PartialDiskCacheProducer;
 import com.facebook.imagepipeline.producers.PostprocessedBitmapMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.PostprocessorProducer;
@@ -317,10 +315,6 @@ public class ProducerFactory {
     return new NetworkFetchProducer(mPooledByteBufferFactory, mByteArrayPool, networkFetcher);
   }
 
-  public static <T> NullProducer<T> newNullProducer() {
-    return new NullProducer<T>();
-  }
-
   public PostprocessedBitmapMemoryCacheProducer newPostprocessorBitmapMemoryCacheProducer(
       Producer<CloseableReference<CloseableImage>> inputProducer) {
     return new PostprocessedBitmapMemoryCacheProducer(
@@ -379,10 +373,5 @@ public class ProducerFactory {
       Producer<CloseableReference<CloseableImage>> inputProducer) {
     return new DelayProducer(
         inputProducer, mExecutorSupplier.scheduledExecutorServiceForBackgroundTasks());
-  }
-
-  public @Nullable Producer<EncodedImage> newCombinedNetworkAndCacheProducer(
-      final NetworkFetcher networkFetcher) {
-    return null;
   }
 }

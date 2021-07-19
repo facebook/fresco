@@ -10,8 +10,10 @@ package com.facebook.samples.scrollperf.conf;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Constants for the Application */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public final class Const {
 
   public static final String LOCAL_RESOURCE_URIS = "local_resource_uris";

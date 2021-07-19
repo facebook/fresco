@@ -33,11 +33,16 @@ public class VitoView {
   private static final Class<?> TAG = VitoView.class;
   private static volatile boolean sIsInitialized = false;
 
-  private static Implementation sImplementation;
+  private static @Nullable Implementation sImplementation;
 
   private VitoView() {}
 
-  public static void init(Implementation implementation) {
+  public static synchronized void init(@Nullable Implementation implementation) {
+    if (implementation == null) {
+      sImplementation = null;
+      sIsInitialized = false;
+      return;
+    }
     if (sIsInitialized) {
       FLog.w(TAG, "VitoView has already been initialized!");
       return;
@@ -65,14 +70,14 @@ public class VitoView {
    * Display an image with default image options
    */
   public static void show(ImageSource imageSource, View target) {
-    sImplementation.show(imageSource, ImageOptions.defaults(), null, null, target);
+    getImplementation().show(imageSource, ImageOptions.defaults(), null, null, target);
   }
 
   /*
    * Display an image with default image options and a caller context.
    */
   public static void show(ImageSource imageSource, Object callerContext, View target) {
-    sImplementation.show(imageSource, ImageOptions.defaults(), callerContext, null, target);
+    getImplementation().show(imageSource, ImageOptions.defaults(), callerContext, null, target);
   }
 
   /*
@@ -86,7 +91,7 @@ public class VitoView {
    * Display an image with the given image options
    */
   public static void show(ImageSource imageSource, ImageOptions imageOptions, final View target) {
-    sImplementation.show(imageSource, imageOptions, null, null, target);
+    getImplementation().show(imageSource, imageOptions, null, null, target);
   }
 
   /*
@@ -108,7 +113,7 @@ public class VitoView {
       ImageOptions imageOptions,
       @Nullable Object callerContext,
       final View target) {
-    sImplementation.show(imageSource, imageOptions, callerContext, null, target);
+    getImplementation().show(imageSource, imageOptions, callerContext, null, target);
   }
 
   /*
@@ -132,6 +137,13 @@ public class VitoView {
       @Nullable Object callerContext,
       @Nullable ImageListener imageListener,
       final View target) {
-    sImplementation.show(imageSource, imageOptions, callerContext, imageListener, target);
+    getImplementation().show(imageSource, imageOptions, callerContext, imageListener, target);
+  }
+
+  public static synchronized Implementation getImplementation() {
+    if (sImplementation == null) {
+      throw new RuntimeException("Vito View implementation must be set!");
+    }
+    return sImplementation;
   }
 }

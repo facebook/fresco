@@ -8,24 +8,24 @@
 package com.facebook.fresco.vito.core.impl;
 
 import android.net.Uri;
-import androidx.annotation.VisibleForTesting;
-import com.facebook.common.logging.FLog;
 import com.facebook.fresco.vito.core.ImagePipelineUtils;
 import com.facebook.fresco.vito.options.DecodedImageOptions;
 import com.facebook.fresco.vito.options.EncodedImageOptions;
-import com.facebook.fresco.vito.options.RoundingOptions;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
+import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.request.Postprocessor;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
  * Utility methods to create {@link ImageRequest}s for {@link
  * com.facebook.fresco.vito.options.ImageOptions}.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
 
   public interface CircularBitmapRounding {
@@ -33,12 +33,17 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
     ImageDecodeOptions getDecodeOptions(boolean antiAliased);
   }
 
-  private static final String TAG = "ImagePipelineUtils";
+  public interface ImageDecodeOptionsProvider {
 
-  private final @Nullable CircularBitmapRounding mCircularBitmapRounding;
+    @Nullable
+    ImageDecodeOptions create(
+        ImageRequestBuilder imageRequestBuilder, DecodedImageOptions imageOptions);
+  }
 
-  public ImagePipelineUtilsImpl(@Nullable CircularBitmapRounding circularBitmapRounding) {
-    mCircularBitmapRounding = circularBitmapRounding;
+  private final ImageDecodeOptionsProvider mImageDecodeOptionsProvider;
+
+  public ImagePipelineUtilsImpl(ImageDecodeOptionsProvider imageDecodeOptionsProvider) {
+    mImageDecodeOptionsProvider = imageDecodeOptionsProvider;
   }
 
   @Override
@@ -79,11 +84,6 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
       return null;
     }
 
-    // Configure circular bitmap rounding if available
-    if (mCircularBitmapRounding != null) {
-      setupNativeRounding(imageRequestBuilder, imageOptions.getRoundingOptions());
-    }
-
     ResizeOptions resizeOptions = imageOptions.getResizeOptions();
     if (resizeOptions != null) {
       imageRequestBuilder.setResizeOptions(resizeOptions);
@@ -94,25 +94,10 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
       imageRequestBuilder.setRotationOptions(rotationOptions);
     }
 
-    if (imageOptions.getBitmapConfig() != null) {
-      if (imageOptions.getRoundingOptions() != null || imageOptions.getPostprocessor() != null) {
-        FLog.wtf(TAG, "Trying to use bitmap config incompatible with rounding.");
-      } else {
-        imageRequestBuilder.setImageDecodeOptions(
-            ImageDecodeOptions.newBuilder()
-                .setBitmapConfig(imageOptions.getBitmapConfig())
-                .setCustomImageDecoder(
-                    imageOptions.getImageDecodeOptions() != null
-                        ? imageOptions.getImageDecodeOptions().customImageDecoder
-                        : null)
-                .build());
-      }
-    } else if (imageOptions.getImageDecodeOptions() != null
-        && imageOptions.getImageDecodeOptions().customImageDecoder != null) {
-      imageRequestBuilder.setImageDecodeOptions(
-          ImageDecodeOptions.newBuilder()
-              .setCustomImageDecoder(imageOptions.getImageDecodeOptions().customImageDecoder)
-              .build());
+    ImageDecodeOptions imageDecodeOptions =
+        mImageDecodeOptionsProvider.create(imageRequestBuilder, imageOptions);
+    if (imageDecodeOptions != null) {
+      imageRequestBuilder.setImageDecodeOptions(imageDecodeOptions);
     }
 
     imageRequestBuilder.setLocalThumbnailPreviewsEnabled(
@@ -121,6 +106,11 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
     Postprocessor postprocessor = imageOptions.getPostprocessor();
     if (postprocessor != null) {
       imageRequestBuilder.setPostprocessor(postprocessor);
+    }
+
+    if (imageOptions.isProgressiveDecodingEnabled() != null) {
+      imageRequestBuilder.setProgressiveRenderingEnabled(
+          imageOptions.isProgressiveDecodingEnabled());
     }
 
     return imageRequestBuilder;
@@ -132,8 +122,9 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
     if (uri == null) {
       return null;
     }
-    return ImageRequestBuilder.newBuilderWithSource(uri)
-        .setRequestPriority(imageOptions.getPriority());
+    ImageRequestBuilder builder = ImageRequestBuilder.newBuilderWithSource(uri);
+    maybeSetRequestPriority(builder, imageOptions.getPriority());
+    return builder;
   }
 
   @Nullable
@@ -142,19 +133,15 @@ public class ImagePipelineUtilsImpl implements ImagePipelineUtils {
     if (imageRequest == null) {
       return null;
     }
-    return ImageRequestBuilder.fromRequest(imageRequest)
-        .setRequestPriority(imageOptions.getPriority());
+    ImageRequestBuilder builder = ImageRequestBuilder.fromRequest(imageRequest);
+    maybeSetRequestPriority(builder, imageOptions.getPriority());
+    return builder;
   }
 
-  @VisibleForTesting
-  protected void setupNativeRounding(
-      final ImageRequestBuilder imageRequestBuilder, @Nullable RoundingOptions roundingOptions) {
-    if (roundingOptions == null || roundingOptions.isForceRoundAtDecode()) {
-      return;
-    }
-    if (roundingOptions.isCircular() && mCircularBitmapRounding != null) {
-      imageRequestBuilder.setImageDecodeOptions(
-          mCircularBitmapRounding.getDecodeOptions(roundingOptions.isAntiAliased()));
+  private static void maybeSetRequestPriority(
+      ImageRequestBuilder builder, @Nullable Priority priority) {
+    if (priority != null) {
+      builder.setRequestPriority(priority);
     }
   }
 }

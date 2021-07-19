@@ -9,16 +9,16 @@ package com.facebook.fresco.vito.core.impl;
 
 import android.graphics.drawable.Drawable;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
-import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
 import com.facebook.fresco.ui.common.BaseControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.vito.core.CombinedImageListener;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.core.VitoImageRequestListener;
-import com.facebook.fresco.vito.core.VitoUtils;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.infer.annotation.Nullsafe;
+import java.io.Closeable;
+import java.io.IOException;
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
@@ -28,7 +28,7 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
   private @Nullable ImageListener mImageListener;
   private @Nullable ControllerListener2<ImageInfo> mControllerListener2 =
       BaseControllerListener2.getNoOpListener();
-  private @Nullable ImagePerfControllerListener2 mImagePerfControllerListener;
+  private @Nullable ControllerListener2<ImageInfo> mImagePerfControllerListener;
 
   @Override
   public void setImageListener(@Nullable ImageListener imageListener) {
@@ -53,7 +53,7 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
   }
 
   public void setImagePerfControllerListener(
-      @Nullable ImagePerfControllerListener2 imagePerfControllerListener) {
+      @Nullable ControllerListener2<ImageInfo> imagePerfControllerListener) {
     mImagePerfControllerListener = imagePerfControllerListener;
   }
 
@@ -190,8 +190,11 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
 
   @Override
   public void onReset() {
-    if (mImagePerfControllerListener != null) {
-      mImagePerfControllerListener.resetState();
+    if (mImagePerfControllerListener instanceof Closeable) {
+      try {
+        ((Closeable) mImagePerfControllerListener).close();
+      } catch (IOException e) {
+      }
     }
   }
 }

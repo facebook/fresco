@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
@@ -20,6 +21,7 @@ import com.facebook.samples.scrollperf.instrumentation.PerfListener;
 import com.facebook.samples.scrollperf.util.DraweeUtil;
 
 /** The RecyclerView.Adapter for the DraweeView */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DraweeViewAdapter extends RecyclerView.Adapter<DraweeViewHolder> {
 
   private final SimpleAdapter<Uri> mSimpleAdapter;

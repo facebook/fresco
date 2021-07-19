@@ -13,16 +13,19 @@ import static org.mockito.Mockito.when;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
-import com.facebook.common.internal.Suppliers;
 import com.facebook.drawee.drawable.RoundedBitmapDrawable;
+import com.facebook.fresco.vito.options.BorderOptions;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
 import com.facebook.fresco.vito.options.RoundingOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,13 +39,26 @@ public class BitmapDrawableFactoryTest {
 
   private ImageOptionsDrawableFactory mDrawableFactory;
 
+  private static final Map<String, Object> mImageExtrasRounded =
+      new HashMap<String, Object>() {
+        {
+          put("is_rounded", true);
+        }
+      };
+  private static final Map<String, Object> mImageExtrasNotRounded =
+      new HashMap<String, Object>() {
+        {
+          put("is_rounded", true);
+        }
+      };
+
   @Before
   public void setup() {
     mResources = mock(Resources.class);
     mDisplayMetrics = new DisplayMetrics();
     when(mResources.getDisplayMetrics()).thenReturn(mDisplayMetrics);
 
-    mDrawableFactory = new BitmapDrawableFactory(mResources, Suppliers.BOOLEAN_TRUE);
+    mDrawableFactory = new BitmapDrawableFactory(mResources);
   }
 
   @Test
@@ -77,8 +93,7 @@ public class BitmapDrawableFactoryTest {
     final ImageOptions options = mock(ImageOptions.class);
     when(options.getRoundingOptions()).thenReturn(RoundingOptions.asCircle());
 
-    ImageOptionsDrawableFactory factory =
-        new BitmapDrawableFactory(mResources, Suppliers.BOOLEAN_FALSE);
+    ImageOptionsDrawableFactory factory = new BitmapDrawableFactory(mResources);
 
     Drawable drawable = factory.createDrawable(closeableImage, options);
     assertThat(drawable).isNotNull();
@@ -90,6 +105,7 @@ public class BitmapDrawableFactoryTest {
     final CloseableStaticBitmap closeableImage = mock(CloseableStaticBitmap.class);
     final Bitmap bitmap = mock(Bitmap.class);
     when(closeableImage.getUnderlyingBitmap()).thenReturn(bitmap);
+    when(closeableImage.getExtras()).thenReturn(mImageExtrasRounded);
 
     final ImageOptions options = mock(ImageOptions.class);
     when(options.getRoundingOptions()).thenReturn(RoundingOptions.asCircle());
@@ -107,6 +123,7 @@ public class BitmapDrawableFactoryTest {
 
     final ImageOptions options = mock(ImageOptions.class);
     when(options.getRoundingOptions()).thenReturn(RoundingOptions.forCornerRadiusPx(123));
+    when(closeableImage.getExtras()).thenReturn(mImageExtrasNotRounded);
 
     Drawable drawable = mDrawableFactory.createDrawable(closeableImage, options);
     assertThat(drawable).isNotNull();
@@ -123,11 +140,31 @@ public class BitmapDrawableFactoryTest {
 
     final ImageOptions options = mock(ImageOptions.class);
     when(options.getRoundingOptions()).thenReturn(RoundingOptions.forCornerRadii(1, 2, 3, 4));
+    when(closeableImage.getExtras()).thenReturn(mImageExtrasNotRounded);
 
     Drawable drawable = mDrawableFactory.createDrawable(closeableImage, options);
     assertThat(drawable).isNotNull();
     assertThat(drawable).isInstanceOf(RoundedBitmapDrawable.class);
     assertThat(((RoundedBitmapDrawable) drawable).getRadii())
         .isEqualTo(new float[] {1, 1, 2, 2, 3, 3, 4, 4});
+  }
+
+  @Test
+  public void testCreateDrawable_whenAlreadyRoundedWithBorder_thenReturnBitmapDrawable() {
+    final CloseableStaticBitmap closeableImage = mock(CloseableStaticBitmap.class);
+    final Bitmap bitmap = mock(Bitmap.class);
+    when(closeableImage.getUnderlyingBitmap()).thenReturn(bitmap);
+    when(closeableImage.getExtras()).thenReturn(mImageExtrasRounded);
+
+    final ImageOptions options = mock(ImageOptions.class);
+    BorderOptions borderOptions = BorderOptions.create(Color.YELLOW, 10);
+
+    when(options.getBorderOptions()).thenReturn(borderOptions);
+    when(options.getRoundingOptions()).thenReturn(RoundingOptions.asCircle(false, false));
+    Drawable drawable = mDrawableFactory.createDrawable(closeableImage, options);
+
+    assertThat(drawable).isNotNull();
+    assertThat(drawable).isInstanceOf(CircularBorderBitmapDrawable.class);
+    assertThat(((CircularBorderBitmapDrawable) drawable).getBorder()).isEqualTo(borderOptions);
   }
 }

@@ -89,5 +89,5 @@ public abstract class StatefulProducerRunnable<T> extends StatefulRunnable<T> {
   }
 
   @Override
-  protected abstract void disposeResult(T result);
+  protected abstract void disposeResult(@Nullable T result);
 }

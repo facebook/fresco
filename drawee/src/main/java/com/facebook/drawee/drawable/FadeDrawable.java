@@ -67,6 +67,7 @@ public class FadeDrawable extends ArrayDrawable {
   private @Nullable OnFadeListener mOnFadeListener;
   private boolean mIsFadingActualImage;
   private boolean mOnFadeListenerShowImmediately;
+  private boolean mMutateDrawables = true;
 
   /**
    * Creates a new fade drawable. The first layer is displayed with full opacity whereas all other
@@ -341,7 +342,10 @@ public class FadeDrawable extends ArrayDrawable {
   private void drawDrawableWithAlpha(Canvas canvas, Drawable drawable, int alpha) {
     if (drawable != null && alpha > 0) {
       mPreventInvalidateCount++;
-      drawable.mutate().setAlpha(alpha);
+      if (mMutateDrawables) {
+        drawable.mutate();
+      }
+      drawable.setAlpha(alpha);
       mPreventInvalidateCount--;
       drawable.draw(canvas);
     }
@@ -389,6 +393,10 @@ public class FadeDrawable extends ArrayDrawable {
 
   public void setOnFadeListener(@Nullable OnFadeListener onFadeListener) {
     mOnFadeListener = onFadeListener;
+  }
+
+  public void setMutateDrawables(boolean mutateDrawables) {
+    mMutateDrawables = mutateDrawables;
   }
 
   private void maybeOnFadeStarted() {

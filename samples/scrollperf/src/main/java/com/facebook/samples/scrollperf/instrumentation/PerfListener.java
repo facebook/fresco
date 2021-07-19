@@ -7,7 +7,10 @@
 
 package com.facebook.samples.scrollperf.instrumentation;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /** Collects wait times and holds image loading stats. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PerfListener {
   private long mSumOfWaitTime;
   private long mStartedRequests;

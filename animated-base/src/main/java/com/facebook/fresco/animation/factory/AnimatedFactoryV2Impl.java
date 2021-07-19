@@ -15,6 +15,7 @@ import com.facebook.common.executors.SerialExecutorService;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Supplier;
+import com.facebook.common.internal.Suppliers;
 import com.facebook.common.time.RealtimeSinceBootClock;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
@@ -133,6 +134,8 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
           }
         };
 
+    final Supplier<Boolean> useDeepEquals = Suppliers.BOOLEAN_FALSE;
+
     return new ExperimentalBitmapAnimationDrawableFactory(
         getAnimatedDrawableBackendProvider(),
         UiThreadImmediateExecutorService.getInstance(),
@@ -141,7 +144,8 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
         mPlatformBitmapFactory,
         mBackingCache,
         cachingStrategySupplier,
-        numberOfFramesToPrepareSupplier);
+        numberOfFramesToPrepareSupplier,
+        useDeepEquals);
   }
 
   private AnimatedDrawableUtil getAnimatedDrawableUtil() {

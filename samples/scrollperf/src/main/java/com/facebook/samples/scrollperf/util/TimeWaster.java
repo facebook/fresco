@@ -7,7 +7,10 @@
 
 package com.facebook.samples.scrollperf.util;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /** Class with utility method which spend time */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public final class TimeWaster {
 
   /**

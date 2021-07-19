@@ -16,7 +16,15 @@ import com.facebook.infer.annotation.OkToExtend;
 @OkToExtend
 public class DefaultFrescoVitoConfig implements FrescoVitoConfig {
 
-  private final PrefetchConfig mPrefetchConfig = new DefaultPrefetchConfig();
+  private final PrefetchConfig mPrefetchConfig;
+
+  public DefaultFrescoVitoConfig() {
+    this(new DefaultPrefetchConfig());
+  }
+
+  public DefaultFrescoVitoConfig(PrefetchConfig prefetchConfig) {
+    mPrefetchConfig = prefetchConfig;
+  }
 
   @Override
   public PrefetchConfig getPrefetchConfig() {
@@ -41,6 +49,11 @@ public class DefaultFrescoVitoConfig implements FrescoVitoConfig {
   @Override
   public Supplier<Boolean> useNativeRounding() {
     return Suppliers.BOOLEAN_TRUE;
+  }
+
+  @Override
+  public boolean layoutPrefetchingEnabled(Object surface) {
+    return false;
   }
 
   public static class DefaultPrefetchConfig implements PrefetchConfig {

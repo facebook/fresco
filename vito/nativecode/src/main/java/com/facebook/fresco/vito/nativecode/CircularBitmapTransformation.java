@@ -10,11 +10,12 @@ package com.facebook.fresco.vito.nativecode;
 import android.graphics.Bitmap;
 import com.facebook.imagepipeline.nativecode.NativeRoundingFilter;
 import com.facebook.imagepipeline.transformation.BitmapTransformation;
+import com.facebook.imagepipeline.transformation.CircularTransformation;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public class CircularBitmapTransformation implements BitmapTransformation {
+public class CircularBitmapTransformation implements BitmapTransformation, CircularTransformation {
 
   private final boolean mAntiAliased;
 

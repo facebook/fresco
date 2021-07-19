@@ -85,7 +85,7 @@ public class FetchState {
    * EXPERIMENTAL: Allows the fetcher to identify that the reponse is for an imcomplete portion of
    * the whole image by defining the range of bytes being provided.
    */
-  public void setResponseBytesRange(BytesRange bytesRange) {
+  public void setResponseBytesRange(@Nullable BytesRange bytesRange) {
     mResponseBytesRange = bytesRange;
   }
 }

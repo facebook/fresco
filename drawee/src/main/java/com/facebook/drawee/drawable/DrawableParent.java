@@ -8,8 +8,11 @@
 package com.facebook.drawee.drawable;
 
 import android.graphics.drawable.Drawable;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /** A drawable parent that has a single child. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface DrawableParent {
 
   /**
@@ -18,12 +21,14 @@ public interface DrawableParent {
    * @param newDrawable a new child drawable to set
    * @return the old child drawable
    */
-  Drawable setDrawable(Drawable newDrawable);
+  @Nullable
+  Drawable setDrawable(@Nullable Drawable newDrawable);
 
   /**
    * Gets the child drawable.
    *
    * @return the current child drawable
    */
+  @Nullable
   Drawable getDrawable();
 }

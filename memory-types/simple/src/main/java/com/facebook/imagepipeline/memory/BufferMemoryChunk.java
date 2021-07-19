@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.memory;
 
 import android.util.Log;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 import java.nio.ByteBuffer;
 import javax.annotation.Nullable;
@@ -20,11 +21,12 @@ import javax.annotation.Nullable;
  *
  * <p>The buffer in native memory will be released when the Java object gets garbage collected.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class BufferMemoryChunk implements MemoryChunk, Closeable {
   private static final String TAG = "BufferMemoryChunk";
 
   /** Internal representation of the chunk */
-  private ByteBuffer mBuffer;
+  private @Nullable ByteBuffer mBuffer;
 
   /** Size of the ByteBuffer */
   private final int mSize;
@@ -58,6 +60,7 @@ public class BufferMemoryChunk implements MemoryChunk, Closeable {
       final int memoryOffset, final byte[] byteArray, final int byteArrayOffset, final int count) {
     Preconditions.checkNotNull(byteArray);
     Preconditions.checkState(!isClosed());
+    Preconditions.checkNotNull(mBuffer);
     final int actualCount = MemoryChunkUtil.adjustByteCount(memoryOffset, count, mSize);
     MemoryChunkUtil.checkBounds(
         memoryOffset, byteArray.length, byteArrayOffset, actualCount, mSize);
@@ -71,6 +74,7 @@ public class BufferMemoryChunk implements MemoryChunk, Closeable {
       final int memoryOffset, final byte[] byteArray, final int byteArrayOffset, final int count) {
     Preconditions.checkNotNull(byteArray);
     Preconditions.checkState(!isClosed());
+    Preconditions.checkNotNull(mBuffer);
     final int actualCount = MemoryChunkUtil.adjustByteCount(memoryOffset, count, mSize);
     MemoryChunkUtil.checkBounds(
         memoryOffset, byteArray.length, byteArrayOffset, actualCount, mSize);
@@ -84,6 +88,7 @@ public class BufferMemoryChunk implements MemoryChunk, Closeable {
     Preconditions.checkState(!isClosed());
     Preconditions.checkArgument(offset >= 0);
     Preconditions.checkArgument(offset < mSize);
+    Preconditions.checkNotNull(mBuffer);
     return mBuffer.get(offset);
   }
 
@@ -156,14 +161,15 @@ public class BufferMemoryChunk implements MemoryChunk, Closeable {
     }
     Preconditions.checkState(!isClosed());
     Preconditions.checkState(!other.isClosed());
+    Preconditions.checkNotNull(mBuffer);
     MemoryChunkUtil.checkBounds(offset, other.getSize(), otherOffset, count, mSize);
     mBuffer.position(offset);
-    // ByteBuffer can't be null at this point
-    other.getByteBuffer().position(otherOffset);
+    ByteBuffer otherByteBuffer = Preconditions.checkNotNull(other.getByteBuffer());
+    otherByteBuffer.position(otherOffset);
     // Recover the necessary part to be copied as a byte array.
     // This requires a copy, for now there is not a more efficient alternative.
     byte[] b = new byte[count];
     mBuffer.get(b, 0, count);
-    other.getByteBuffer().put(b, 0, count);
+    otherByteBuffer.put(b, 0, count);
   }
 }

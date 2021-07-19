@@ -29,15 +29,12 @@ dependencies {
 
     implementation Deps.AndroidX.core
 
-    testImplementation TestDeps.junit
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation project(path: ':drawee')
-    implementation project(path: ':imagepipeline')
-    implementation project(path: ':drawee-backends:drawee-pipeline')
-    implementation project(path: ':fbcore')
-    implementation project(path: ':vito:core')
-    implementation project(path: ':vito:options')
-    implementation project(path: ':vito:provider')
-    implementation project(path: ':vito:source')
+    implementation project(':drawee')
+    implementation project(':fbcore')
+    implementation project(':vito:core')
+    implementation project(':vito:options')
+    implementation project(':vito:provider')
+    implementation project(':vito:source')
 }
+
+apply plugin: "com.vanniktech.maven.publish"

@@ -10,14 +10,10 @@ package com.facebook.fresco.vito.core.impl;
 import android.content.res.Resources;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import androidx.annotation.Nullable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.drawable.ForwardingDrawable;
-import com.facebook.drawee.drawable.InstrumentedDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
-import com.facebook.fresco.vito.core.BaseFrescoDrawable;
-import com.facebook.fresco.vito.core.Hierarcher;
 import com.facebook.fresco.vito.core.NopDrawable;
 import com.facebook.fresco.vito.drawable.RoundingUtils;
 import com.facebook.fresco.vito.options.BorderOptions;
@@ -38,6 +34,19 @@ public class HierarcherImpl implements Hierarcher {
   public HierarcherImpl(ImageOptionsDrawableFactory drawableFactory) {
     mDrawableFactory = drawableFactory;
     mRoundingUtils = new RoundingUtils();
+  }
+
+  @Nullable
+  @Override
+  public Drawable buildActualImageDrawable(
+      Resources resources,
+      ImageOptions imageOptions,
+      CloseableReference<CloseableImage> closeableImage) {
+    ImageOptionsDrawableFactory drawableFactory = imageOptions.getCustomDrawableFactory();
+    if (drawableFactory == null) {
+      drawableFactory = mDrawableFactory;
+    }
+    return drawableFactory.createDrawable(closeableImage.get(), imageOptions);
   }
 
   @Override
@@ -112,10 +121,13 @@ public class HierarcherImpl implements Hierarcher {
       FrescoSystrace.beginSection("HierarcherImpl#buildErrorDrawable");
     }
     try {
-      if (imageOptions.getErrorRes() == 0) {
+      Drawable drawable = imageOptions.getErrorDrawable();
+      if (drawable == null && imageOptions.getErrorRes() != 0) {
+        drawable = resources.getDrawable(imageOptions.getErrorRes());
+      }
+      if (drawable == null) {
         return null;
       }
-      Drawable drawable = resources.getDrawable(imageOptions.getErrorRes());
       if (drawable != null && imageOptions.getErrorScaleType() != null) {
         return new ScaleTypeDrawable(
             drawable, imageOptions.getErrorScaleType(), imageOptions.getErrorFocusPoint());
@@ -162,88 +174,5 @@ public class HierarcherImpl implements Hierarcher {
     }
     int resId = imageOptions.getOverlayRes();
     return resId == 0 ? null : resources.getDrawable(imageOptions.getOverlayRes());
-  }
-
-  @Nullable
-  @Override
-  public Drawable setupActualImageDrawable(
-      BaseFrescoDrawable frescoDrawable,
-      Resources resources,
-      ImageOptions imageOptions,
-      @Nullable Object callerContext,
-      CloseableReference<CloseableImage> closeableImage,
-      @Nullable ForwardingDrawable actualImageWrapperDrawable,
-      boolean wasImmediate,
-      @Nullable InstrumentedDrawable.Listener instrumentedListener) {
-    if (FrescoSystrace.isTracing()) {
-      FrescoSystrace.beginSection("HierarcherImpl#setupActualImageDrawable");
-    }
-    try {
-      ImageOptionsDrawableFactory drawableFactory = imageOptions.getCustomDrawableFactory();
-      if (drawableFactory == null) {
-        drawableFactory = mDrawableFactory;
-      }
-      Drawable actualDrawable = drawableFactory.createDrawable(closeableImage.get(), imageOptions);
-
-      if (actualImageWrapperDrawable == null) {
-        actualImageWrapperDrawable = buildActualImageWrapper(imageOptions, callerContext);
-      }
-      actualImageWrapperDrawable.setCurrent(actualDrawable != null ? actualDrawable : NOP_DRAWABLE);
-
-      if (instrumentedListener != null) {
-        actualImageWrapperDrawable =
-            new InstrumentedDrawable(actualImageWrapperDrawable, instrumentedListener);
-      }
-
-      frescoDrawable.setImage(actualImageWrapperDrawable, closeableImage);
-
-      if (!frescoDrawable.isDefaultLayerIsOn()) {
-        if (wasImmediate || imageOptions.getFadeDurationMs() <= 0) {
-          frescoDrawable.showImageImmediately();
-        } else {
-          frescoDrawable.fadeInImage(imageOptions.getFadeDurationMs());
-        }
-      } else {
-        frescoDrawable.setPlaceholderDrawable(null);
-        frescoDrawable.setProgressDrawable(null);
-      }
-      return actualDrawable;
-    } finally {
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.endSection();
-      }
-    }
-  }
-
-  @Override
-  public void setupOverlayDrawable(
-      BaseFrescoDrawable frescoDrawable,
-      Resources resources,
-      ImageOptions imageOptions,
-      @Nullable Drawable cachedOverlayDrawable) {
-    if (cachedOverlayDrawable == null) {
-      cachedOverlayDrawable = buildOverlayDrawable(resources, imageOptions);
-    }
-    frescoDrawable.setOverlayDrawable(cachedOverlayDrawable);
-    frescoDrawable.showOverlayImmediately();
-  }
-
-  @Override
-  public void setupDebugOverlayDrawable(
-      BaseFrescoDrawable frescoDrawable,
-      @Nullable Drawable overlayDrawable,
-      @Nullable Drawable debugOverlayDrawable) {
-    if (debugOverlayDrawable == null) {
-      return;
-    }
-
-    if (overlayDrawable == null) {
-      overlayDrawable = debugOverlayDrawable;
-    } else {
-      overlayDrawable = new LayerDrawable(new Drawable[] {overlayDrawable, debugOverlayDrawable});
-    }
-
-    frescoDrawable.setOverlayDrawable(overlayDrawable);
-    frescoDrawable.showOverlayImmediately();
   }
 }

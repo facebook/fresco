@@ -10,25 +10,30 @@ package com.facebook.imagepipeline.image;
 import com.facebook.common.logging.FLog;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import javax.annotation.Nonnull;
+import java.util.Set;
+import javax.annotation.Nullable;
 
 /** A simple wrapper around an image that implements {@link Closeable} */
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public abstract class CloseableImage implements Closeable, ImageInfo, HasImageMetadata {
+public abstract class CloseableImage implements Closeable, ImageInfo {
   private static final String TAG = "CloseableImage";
   private Map<String, Object> mExtras = new HashMap<>();
+
   /* Extras we want to set to the image */
-  private static final String[] mImageExtrasList =
-      new String[] {
-        "encoded_size",
-        "encoded_width",
-        "encoded_height",
-        "uri_source",
-        "image_format",
-        "bitmap_config"
-      };
+  private static final Set<String> mImageExtrasList =
+      new HashSet<>(
+          Arrays.asList(
+              "encoded_size",
+              "encoded_width",
+              "encoded_height",
+              "uri_source",
+              "image_format",
+              "bitmap_config",
+              "is_rounded"));
 
   /** @return size in bytes of the bitmap(s) */
   public abstract int getSizeInBytes();
@@ -60,18 +65,28 @@ public abstract class CloseableImage implements Closeable, ImageInfo, HasImageMe
   }
 
   @Override
-  public @Nonnull Map<String, Object> getExtras() {
+  public Map<String, Object> getExtras() {
     return mExtras;
   }
 
   /** Sets extras that match mImageExtrasList to this image from supplied extras */
-  public void setImageExtras(Map<String, Object> extras) {
-    if (extras == null) return;
+  public void setImageExtras(@Nullable Map<String, Object> extras) {
+    if (extras == null) {
+      return;
+    }
 
     for (String extra : mImageExtrasList) {
       Object val = extras.get(extra);
-      if (val == null) continue;
+      if (val == null) {
+        continue;
+      }
       mExtras.put(extra, val);
+    }
+  }
+
+  public void setImageExtra(String extra, Object value) {
+    if (mImageExtrasList.contains(extra)) {
+      mExtras.put(extra, value);
     }
   }
 

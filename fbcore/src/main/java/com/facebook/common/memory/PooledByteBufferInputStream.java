@@ -9,12 +9,14 @@ package com.facebook.common.memory;
 
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.InputStream;
 import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * An InputStream implementation over a {@link com.facebook.common.memory.PooledByteBuffer} instance
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @NotThreadSafe
 public class PooledByteBufferInputStream extends InputStream {
 

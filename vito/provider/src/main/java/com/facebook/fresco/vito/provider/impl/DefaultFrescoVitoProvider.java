@@ -10,7 +10,6 @@ package com.facebook.fresco.vito.provider.impl;
 import android.content.res.Resources;
 import com.facebook.callercontext.CallerContextVerifier;
 import com.facebook.common.internal.Supplier;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.vito.core.DefaultFrescoVitoConfig;
 import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoVitoConfig;
@@ -50,7 +49,6 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
       final Executor lightweightBackgroundThreadExecutor,
       final Executor uiThreadExecutor,
       final ImagePipelineUtils imagePipelineUtils,
-      final Supplier<Boolean> useNativeRounding,
       final @Nullable Supplier<Boolean> debugOverlayEnabledSupplier) {
     this(
         resources,
@@ -60,7 +58,6 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
         lightweightBackgroundThreadExecutor,
         uiThreadExecutor,
         debugOverlayEnabledSupplier,
-        useNativeRounding,
         new NoOpCallerContextVerifier());
   }
 
@@ -72,7 +69,6 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
       Executor lightweightBackgroundThreadExecutor,
       Executor uiThreadExecutor,
       @Nullable Supplier<Boolean> debugOverlayEnabledSupplier,
-      Supplier<Boolean> nativeCodeEnabledSupplier,
       CallerContextVerifier callerContextVerifier) {
     if (!ImagePipelineFactory.hasBeenInitialized()) {
       throw new RuntimeException(
@@ -85,7 +81,7 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
     mFrescoController =
         new FrescoController2Impl(
             mFrescoVitoConfig,
-            new HierarcherImpl(createDefaultDrawableFactory(resources, nativeCodeEnabledSupplier)),
+            new HierarcherImpl(createDefaultDrawableFactory(resources)),
             lightweightBackgroundThreadExecutor,
             uiThreadExecutor,
             mVitoImagePipeline,
@@ -117,12 +113,11 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
     return mFrescoVitoConfig;
   }
 
-  private static ImageOptionsDrawableFactory createDefaultDrawableFactory(
-      Resources resources, Supplier<Boolean> nativeCodeEnabledSupplier) {
+  private static ImageOptionsDrawableFactory createDefaultDrawableFactory(Resources resources) {
     DrawableFactory animatedDrawableFactory =
-        Fresco.getImagePipelineFactory().getAnimatedDrawableFactory(null);
+        ImagePipelineFactory.getInstance().getAnimatedDrawableFactory(null);
     return new ArrayVitoDrawableFactory(
-        new BitmapDrawableFactory(resources, nativeCodeEnabledSupplier),
+        new BitmapDrawableFactory(resources),
         animatedDrawableFactory == null
             ? null
             : new DrawableFactoryWrapper(animatedDrawableFactory));

@@ -8,10 +8,9 @@
 package com.facebook.fresco.vito.drawable;
 
 import android.content.res.Resources;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
-import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.Supplier;
 import com.facebook.drawee.drawable.OrientedDrawable;
 import com.facebook.fresco.vito.options.BorderOptions;
 import com.facebook.fresco.vito.options.ImageOptions;
@@ -28,12 +27,10 @@ import javax.annotation.Nullable;
 public class BitmapDrawableFactory implements ImageOptionsDrawableFactory {
 
   private final Resources mResources;
-  private final Supplier<Boolean> mUseNativeRounding;
   private final RoundingUtils mRoundingUtils;
 
-  public BitmapDrawableFactory(Resources resources, Supplier<Boolean> useNativeRounding) {
+  public BitmapDrawableFactory(Resources resources) {
     mResources = resources;
-    mUseNativeRounding = useNativeRounding;
     mRoundingUtils = new RoundingUtils();
   }
 
@@ -77,16 +74,29 @@ public class BitmapDrawableFactory implements ImageOptionsDrawableFactory {
     RoundingOptions roundingOptions = imageOptions.getRoundingOptions();
     BorderOptions borderOptions = imageOptions.getBorderOptions();
 
-    boolean forceRoundAtDecode = roundingOptions != null && roundingOptions.isForceRoundAtDecode();
-    mRoundingUtils.setAlreadyRounded(!forceRoundAtDecode && mUseNativeRounding.get());
+    boolean isBitmapRounded =
+        Boolean.TRUE.equals(closeableStaticBitmap.getExtras().get("is_rounded"));
 
-    return rotatedDrawable(
-        closeableStaticBitmap,
-        mRoundingUtils.roundedDrawable(
-            mResources,
-            Preconditions.checkNotNull(closeableStaticBitmap.getUnderlyingBitmap()),
-            borderOptions,
-            roundingOptions));
+    Drawable drawable;
+    if (isBitmapRounded && roundingOptions != null && roundingOptions.isCircular()) {
+      if (borderOptions != null && borderOptions.width > 0) {
+        CircularBorderBitmapDrawable circularBorderDrawable =
+            new CircularBorderBitmapDrawable(
+                mResources, closeableStaticBitmap.getUnderlyingBitmap());
+        circularBorderDrawable.setBorder(borderOptions);
+        drawable = circularBorderDrawable;
+      } else {
+        drawable = new BitmapDrawable(mResources, closeableStaticBitmap.getUnderlyingBitmap());
+      }
+    } else {
+      drawable =
+          mRoundingUtils.roundedDrawable(
+              mResources,
+              closeableStaticBitmap.getUnderlyingBitmap(),
+              borderOptions,
+              roundingOptions);
+    }
+    return rotatedDrawable(closeableStaticBitmap, drawable);
   }
 
   protected Drawable rotatedDrawable(

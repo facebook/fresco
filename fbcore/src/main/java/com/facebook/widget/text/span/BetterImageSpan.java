@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.text.style.DynamicDrawableSpan;
 import android.text.style.ReplacementSpan;
 import androidx.annotation.IntDef;
+import androidx.annotation.Nullable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -78,7 +79,11 @@ public class BetterImageSpan extends ReplacementSpan {
   /** Returns the width of the image span and increases the height if font metrics are available. */
   @Override
   public int getSize(
-      Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fontMetrics) {
+      Paint paint,
+      CharSequence text,
+      int start,
+      int end,
+      @Nullable Paint.FontMetricsInt fontMetrics) {
     updateBounds();
     if (fontMetrics == null) {
       return mWidth;

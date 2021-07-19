@@ -37,10 +37,15 @@ public class ImagePipelineUtilsImplTest {
       mock(ImageDecodeOptions.class);
 
   private ImagePipelineUtils mImagePipelineUtils;
+  private ImagePipelineUtils mImagePipelineUtilsNoNativeRounding;
 
   @Before
   public void setup() {
-    mImagePipelineUtils = new ImagePipelineUtilsImpl(new TestCircularBitmapRounding());
+    mImagePipelineUtils =
+        new ImagePipelineUtilsImpl(
+            new DefaultImageDecodeOptionsProviderImpl(new TestCircularBitmapRounding()));
+    mImagePipelineUtilsNoNativeRounding =
+        new ImagePipelineUtilsImpl(new DefaultImageDecodeOptionsProviderImpl(null));
   }
 
   @Test
@@ -102,9 +107,8 @@ public class ImagePipelineUtilsImplTest {
     final ImageOptions imageOptions =
         ImageOptions.create().round(RoundingOptions.asCircle()).build();
 
-    ImagePipelineUtils imagePipelineUtils = new ImagePipelineUtilsImpl(null);
-
-    ImageRequest imageRequest = imagePipelineUtils.buildImageRequest(URI, imageOptions);
+    ImageRequest imageRequest =
+        mImagePipelineUtilsNoNativeRounding.buildImageRequest(URI, imageOptions);
 
     assertThat(imageRequest).isNotNull();
     assertThat(imageRequest.getSourceUri()).isEqualTo(URI);
@@ -118,9 +122,8 @@ public class ImagePipelineUtilsImplTest {
     final ImageOptions imageOptions =
         ImageOptions.create().round(RoundingOptions.asCircle(true)).build();
 
-    ImagePipelineUtils imagePipelineUtils = new ImagePipelineUtilsImpl(null);
-
-    ImageRequest imageRequest = imagePipelineUtils.buildImageRequest(URI, imageOptions);
+    ImageRequest imageRequest =
+        mImagePipelineUtilsNoNativeRounding.buildImageRequest(URI, imageOptions);
 
     assertThat(imageRequest).isNotNull();
     assertThat(imageRequest.getSourceUri()).isEqualTo(URI);

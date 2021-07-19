@@ -10,9 +10,9 @@ package com.facebook.fresco.samples.showcase.vito.ninepatch
 import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.fresco.samples.showcase.LithoSample
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
-import com.facebook.fresco.vito.core.FrescoVitoImageDecodeOptionsBuilder
 import com.facebook.fresco.vito.litho.FrescoVitoImage2
 import com.facebook.fresco.vito.options.ImageOptions
+import com.facebook.imagepipeline.common.ImageDecodeOptions
 import com.facebook.litho.Component
 import com.facebook.litho.ComponentContext
 
@@ -26,7 +26,7 @@ class LithoNinePatchSample : LithoSample {
     val imageOptions =
         ImageOptions.create()
             .imageDecodeOptions(
-                FrescoVitoImageDecodeOptionsBuilder()
+                ImageDecodeOptions.newBuilder()
                     .setCustomImageDecoder(NinePatchExample.NinePatchDecoder())
                     .build())
             .customDrawableFactory(NinePatchExample.NinePatchDrawableFactory(c.resources))

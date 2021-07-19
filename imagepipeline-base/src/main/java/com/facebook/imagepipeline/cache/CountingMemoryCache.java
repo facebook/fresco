@@ -75,6 +75,7 @@ public interface CountingMemoryCache<K, V> extends MemoryCache<K, V>, MemoryTrim
     // closed too.
     public boolean isOrphan;
     @Nullable public final EntryStateObserver<K> observer;
+    public int accessCount;
 
     private Entry(K key, CloseableReference<V> valueRef, @Nullable EntryStateObserver<K> observer) {
       this.key = Preconditions.checkNotNull(key);
@@ -82,6 +83,7 @@ public interface CountingMemoryCache<K, V> extends MemoryCache<K, V>, MemoryTrim
       this.clientCount = 0;
       this.isOrphan = false;
       this.observer = observer;
+      this.accessCount = 0;
     }
 
     /** Creates a new entry with the usage count of 0. */

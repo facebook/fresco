@@ -16,7 +16,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Objects;
-import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
  *
  * <p>Based on {@link android.widget.ImageView.ScaleType}.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ScaleTypeDrawable extends ForwardingDrawable {
 
   // Specified scale type.
@@ -50,8 +51,8 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
    * @param drawable underlying drawable to apply scale type on
    * @param scaleType scale type to be applied
    */
-  public ScaleTypeDrawable(Drawable drawable, ScaleType scaleType) {
-    super(Preconditions.checkNotNull(drawable));
+  public ScaleTypeDrawable(@Nullable Drawable drawable, ScaleType scaleType) {
+    super(drawable);
     mScaleType = scaleType;
   }
 
@@ -62,14 +63,15 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
    * @param scaleType scale type to be applied
    * @param focusPoint focus point of the image
    */
-  public ScaleTypeDrawable(Drawable drawable, ScaleType scaleType, @Nullable PointF focusPoint) {
-    super(Preconditions.checkNotNull(drawable));
+  public ScaleTypeDrawable(
+      @Nullable Drawable drawable, ScaleType scaleType, @Nullable PointF focusPoint) {
+    super(drawable);
     mScaleType = scaleType;
     mFocusPoint = focusPoint;
   }
 
   @Override
-  public Drawable setCurrent(@Nullable Drawable newDelegate) {
+  public @Nullable Drawable setCurrent(@Nullable Drawable newDelegate) {
     final Drawable previousDelegate = super.setCurrent(newDelegate);
     configureBounds();
 
@@ -162,9 +164,13 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
       scaleTypeChanged = (state == null || !state.equals(mScaleTypeState));
       mScaleTypeState = state;
     }
+    final Drawable current = getCurrent();
+    if (current == null) {
+      return;
+    }
     boolean underlyingChanged =
-        mUnderlyingWidth != getCurrent().getIntrinsicWidth()
-            || mUnderlyingHeight != getCurrent().getIntrinsicHeight();
+        mUnderlyingWidth != current.getIntrinsicWidth()
+            || mUnderlyingHeight != current.getIntrinsicHeight();
     if (underlyingChanged || scaleTypeChanged) {
       configureBounds();
     }
@@ -177,6 +183,12 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
   @VisibleForTesting
   void configureBounds() {
     Drawable underlyingDrawable = getCurrent();
+    // If there is no underlying Drawable, we do not need a draw matrix.
+    if (underlyingDrawable == null) {
+      mUnderlyingWidth = mUnderlyingHeight = 0;
+      mDrawMatrix = null;
+      return;
+    }
     Rect bounds = getBounds();
     int viewWidth = bounds.width();
     int viewHeight = bounds.height();

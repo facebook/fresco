@@ -5,13 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.core;
+package com.facebook.fresco.samples.showcase.vito;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Build;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
@@ -21,7 +20,8 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
-import com.facebook.imagepipeline.transformation.BitmapTransformation;
+import com.facebook.imagepipeline.transformation.CircularTransformation;
+import com.facebook.imagepipeline.transformation.TransformationUtils;
 import javax.annotation.Nullable;
 
 /**
@@ -55,12 +55,22 @@ public class FrescoVitoRegionDecoder implements ImageDecoder {
         mPlatformDecoder.decodeJPEGFromEncodedImageWithColorSpace(
             encodedImage, options.bitmapConfig, regionToDecode, length, options.colorSpace);
     try {
-      maybeApplyTransformation(options.bitmapTransformation, decodedBitmapReference);
-      return new CloseableStaticBitmap(
-          decodedBitmapReference,
-          ImmutableQualityInfo.FULL_QUALITY,
-          encodedImage.getRotationAngle(),
-          encodedImage.getExifOrientation());
+      boolean didApplyTransformation =
+          TransformationUtils.maybeApplyTransformation(
+              options.bitmapTransformation, decodedBitmapReference);
+
+      CloseableStaticBitmap closeableStaticBitmap =
+          new CloseableStaticBitmap(
+              decodedBitmapReference,
+              ImmutableQualityInfo.FULL_QUALITY,
+              encodedImage.getRotationAngle(),
+              encodedImage.getExifOrientation());
+
+      closeableStaticBitmap.setImageExtra(
+          "is_rounded",
+          didApplyTransformation && options.bitmapTransformation instanceof CircularTransformation);
+
+      return closeableStaticBitmap;
     } finally {
       CloseableReference.closeSafely(decodedBitmapReference);
     }
@@ -89,18 +99,5 @@ public class FrescoVitoRegionDecoder implements ImageDecoder {
 
     tempRectangle.round(regionToDecode);
     return regionToDecode;
-  }
-
-  private void maybeApplyTransformation(
-      @Nullable BitmapTransformation transformation, CloseableReference<Bitmap> bitmapReference) {
-    if (transformation == null) {
-      return;
-    }
-    Bitmap bitmap = bitmapReference.get();
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1
-        && transformation.modifiesTransparency()) {
-      bitmap.setHasAlpha(true);
-    }
-    transformation.transform(bitmap);
   }
 }

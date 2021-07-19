@@ -14,11 +14,13 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.MemoryChunkType;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.conf.Const;
 import com.facebook.samples.scrollperf.internal.ScrollPerfExecutorSupplier;
 
 /** Application for Fresco initialization */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ScrollPerfApplication extends Application {
 
   @Override
