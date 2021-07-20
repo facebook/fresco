@@ -839,11 +839,10 @@ public abstract class AbstractDraweeController<T, INFO>
       @Nullable Uri mainUri) {
     String scaleType = null;
     PointF focusPoint = null;
-    if (mSettableDraweeHierarchy instanceof GenericDraweeHierarchy) {
-      scaleType =
-          String.valueOf(
-              ((GenericDraweeHierarchy) mSettableDraweeHierarchy).getActualImageScaleType());
-      focusPoint = ((GenericDraweeHierarchy) mSettableDraweeHierarchy).getActualImageFocusPoint();
+    final SettableDraweeHierarchy hierarchy = mSettableDraweeHierarchy;
+    if (hierarchy instanceof GenericDraweeHierarchy) {
+      scaleType = String.valueOf(((GenericDraweeHierarchy) hierarchy).getActualImageScaleType());
+      focusPoint = ((GenericDraweeHierarchy) hierarchy).getActualImageFocusPoint();
     }
     return MiddlewareUtils.obtainExtras(
         COMPONENT_EXTRAS,
