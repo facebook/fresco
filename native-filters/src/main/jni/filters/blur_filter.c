@@ -210,6 +210,7 @@ static void BlurFilter_iterativeBoxBlur(
   // pre-compute division table: speed-up by factor 5(!)
   uint8_t* div = (uint8_t*) malloc(256 * diameter * sizeof(uint8_t));
   if (!div) {
+    AndroidBitmap_unlockPixels(env, bitmap);
     safe_throw_exception(env, "BlurFilter_iterativeBoxBlur: Failed to allocate memory: div");
     return;
   }
@@ -230,6 +231,7 @@ static void BlurFilter_iterativeBoxBlur(
   pixel_t* tempRowOrColumn = (pixel_t*) malloc(max(w, h) * sizeof(pixel_t));
   if (!tempRowOrColumn) {
     free(div);
+    AndroidBitmap_unlockPixels(env, bitmap);
     safe_throw_exception(env, "BlurFilter_iterativeBoxBlur: Failed to allocate memory: tempRowOrColumn");
     return;
   }
