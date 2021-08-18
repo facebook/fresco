@@ -42,6 +42,10 @@ import javax.annotation.Nullable;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class FrescoController2Impl implements DrawableDataSubscriber, FrescoController2 {
 
+  public interface DrawableListener {
+    void onNewDrawableCreated(FrescoDrawable2 drawable);
+  }
+
   private static final Map<String, Object> COMPONENT_EXTRAS =
       ImmutableMap.<String, Object>of("component_tag", "vito2");
   private static final Map<String, Object> SHORTCUT_EXTRAS =
@@ -56,6 +60,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   private final DebugOverlayFactory2 mDebugOverlayFactory;
   private final @Nullable Supplier<ControllerListener2<ImageInfo>> mImagePerfListenerSupplier;
   private final VitoImagePerfListener mVitoImagePerfListener;
+  private @Nullable DrawableListener mDrawableListener;
 
   public FrescoController2Impl(
       FrescoVitoConfig config,
@@ -80,10 +85,19 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
 
   @Override
   public FrescoDrawable2 createDrawable() {
-    return new FrescoDrawable2Impl(
-        mConfig.useNewReleaseCallback(),
-        mImagePerfListenerSupplier == null ? null : mImagePerfListenerSupplier.get(),
-        mVitoImagePerfListener);
+    FrescoDrawable2 drawable =
+        new FrescoDrawable2Impl(
+            mConfig.useNewReleaseCallback(),
+            mImagePerfListenerSupplier == null ? null : mImagePerfListenerSupplier.get(),
+            mVitoImagePerfListener);
+    if (mDrawableListener != null) {
+      mDrawableListener.onNewDrawableCreated(drawable);
+    }
+    return drawable;
+  }
+
+  public void setDrawableListener(@Nullable DrawableListener drawableListener) {
+    mDrawableListener = drawableListener;
   }
 
   @Override
