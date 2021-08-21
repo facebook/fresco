@@ -18,7 +18,9 @@ import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_QUALIF
 
 import android.content.ContentResolver;
 import android.net.Uri;
+import android.os.Build;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.media.MediaUtils;
@@ -115,6 +117,9 @@ public class ProducerSequenceFactory {
   Producer<CloseableReference<CloseableImage>> mLocalAssetFetchSequence;
 
   @VisibleForTesting @Nullable Producer<CloseableReference<CloseableImage>> mDataFetchSequence;
+
+  @VisibleForTesting @Nullable
+  Producer<CloseableReference<CloseableImage>> mLocalThumbnailBitmapFetchSequence;
 
   @VisibleForTesting @Nullable
   Producer<CloseableReference<CloseableImage>> mQualifiedResourceFetchSequence;
@@ -388,6 +393,9 @@ public class ProducerSequenceFactory {
         case SOURCE_TYPE_LOCAL_CONTENT:
           if (MediaUtils.isVideo(mContentResolver.getType(uri))) {
             return getLocalVideoFileFetchSequence();
+          } else if (imageRequest.getLoadThumbnailOnly()
+              && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return getLocalContentUriThumbnailFetchSequence();
           }
           return getLocalContentUriFetchSequence();
         case SOURCE_TYPE_LOCAL_ASSET:
@@ -668,6 +676,21 @@ public class ProducerSequenceFactory {
               localContentUriFetchProducer, thumbnailProducers);
     }
     return mLocalContentUriFetchSequence;
+  }
+
+  /**
+   * bitmap cache get -> background thread hand-off -> multiplex -> bitmap cache -> local thumbnail
+   * bitmap
+   */
+  @RequiresApi(Build.VERSION_CODES.Q)
+  private synchronized Producer<CloseableReference<CloseableImage>>
+      getLocalContentUriThumbnailFetchSequence() {
+    if (mLocalThumbnailBitmapFetchSequence == null) {
+      mLocalThumbnailBitmapFetchSequence =
+          newBitmapCacheGetToBitmapCacheSequence(
+              mProducerFactory.newLocalThumbnailBitmapProducer());
+    }
+    return mLocalThumbnailBitmapFetchSequence;
   }
 
   /**

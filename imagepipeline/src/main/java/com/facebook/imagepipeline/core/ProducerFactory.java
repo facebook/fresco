@@ -11,6 +11,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.os.Build;
+import androidx.annotation.RequiresApi;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.common.memory.ByteArrayPool;
@@ -47,6 +49,7 @@ import com.facebook.imagepipeline.producers.LocalContentUriThumbnailFetchProduce
 import com.facebook.imagepipeline.producers.LocalExifThumbnailProducer;
 import com.facebook.imagepipeline.producers.LocalFileFetchProducer;
 import com.facebook.imagepipeline.producers.LocalResourceFetchProducer;
+import com.facebook.imagepipeline.producers.LocalThumbnailBitmapProducer;
 import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
 import com.facebook.imagepipeline.producers.NetworkFetchProducer;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
@@ -373,5 +376,11 @@ public class ProducerFactory {
       Producer<CloseableReference<CloseableImage>> inputProducer) {
     return new DelayProducer(
         inputProducer, mExecutorSupplier.scheduledExecutorServiceForBackgroundTasks());
+  }
+
+  @RequiresApi(Build.VERSION_CODES.Q)
+  public LocalThumbnailBitmapProducer newLocalThumbnailBitmapProducer() {
+    return new LocalThumbnailBitmapProducer(
+        mExecutorSupplier.forBackgroundTasks(), mContentResolver);
   }
 }

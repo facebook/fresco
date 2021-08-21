@@ -62,6 +62,9 @@ public class ImageRequest {
   /** If set the client will receive thumbnail previews for local images, before the whole image */
   private final boolean mLocalThumbnailPreviewsEnabled;
 
+  /** If set, only the image thumbnail will be loaded, not the full image */
+  private final boolean mLoadThumbnailOnly;
+
   private final ImageDecodeOptions mImageDecodeOptions;
 
   /** resize options */
@@ -125,6 +128,7 @@ public class ImageRequest {
 
     mProgressiveRenderingEnabled = builder.isProgressiveRenderingEnabled();
     mLocalThumbnailPreviewsEnabled = builder.isLocalThumbnailPreviewsEnabled();
+    mLoadThumbnailOnly = builder.getLoadThumbnailOnly();
 
     mImageDecodeOptions = builder.getImageDecodeOptions();
 
@@ -201,6 +205,10 @@ public class ImageRequest {
     return mLocalThumbnailPreviewsEnabled;
   }
 
+  public boolean getLoadThumbnailOnly() {
+    return mLoadThumbnailOnly;
+  }
+
   public Priority getPriority() {
     return mRequestPriority;
   }
@@ -270,7 +278,8 @@ public class ImageRequest {
         || !Objects.equal(mLowestPermittedRequestLevel, request.mLowestPermittedRequestLevel)
         || !Objects.equal(mDecodePrefetches, request.mDecodePrefetches)
         || !Objects.equal(mResizingAllowedOverride, request.mResizingAllowedOverride)
-        || !Objects.equal(mRotationOptions, request.mRotationOptions)) {
+        || !Objects.equal(mRotationOptions, request.mRotationOptions)
+        || mLoadThumbnailOnly != request.mLoadThumbnailOnly) {
       return false;
     }
     final CacheKey thisPostprocessorKey =
@@ -307,7 +316,8 @@ public class ImageRequest {
               mRotationOptions,
               postprocessorCacheKey,
               mResizingAllowedOverride,
-              mDelayMs);
+              mDelayMs,
+              mLoadThumbnailOnly);
       // ^ I *think* this is safe despite autoboxing...?
       if (cacheHashcode) {
         mHashcode = result;
@@ -330,6 +340,7 @@ public class ImageRequest {
         .add("resizingAllowedOverride", mResizingAllowedOverride)
         .add("progressiveRenderingEnabled", mProgressiveRenderingEnabled)
         .add("localThumbnailPreviewsEnabled", mLocalThumbnailPreviewsEnabled)
+        .add("loadThumbnailOnly", mLoadThumbnailOnly)
         .add("lowestPermittedRequestLevel", mLowestPermittedRequestLevel)
         .add("isDiskCacheEnabled", mIsDiskCacheEnabled)
         .add("isMemoryCacheEnabled", mIsMemoryCacheEnabled)

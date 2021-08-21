@@ -35,6 +35,7 @@ public class ImageRequestBuilder {
   private boolean mProgressiveRenderingEnabled =
       ImagePipelineConfig.getDefaultImageRequestConfig().isProgressiveRenderingEnabled();
   private boolean mLocalThumbnailPreviewsEnabled = false;
+  private boolean mLoadThumbnailOnly = false;
   private Priority mRequestPriority = Priority.HIGH;
   private @Nullable Postprocessor mPostprocessor = null;
   private boolean mDiskCacheEnabled = true;
@@ -88,6 +89,7 @@ public class ImageRequestBuilder {
         .setBytesRange(imageRequest.getBytesRange())
         .setCacheChoice(imageRequest.getCacheChoice())
         .setLocalThumbnailPreviewsEnabled(imageRequest.getLocalThumbnailPreviewsEnabled())
+        .setLoadThumbnailOnly(imageRequest.getLoadThumbnailOnly())
         .setLowestPermittedRequestLevel(imageRequest.getLowestPermittedRequestLevel())
         .setPostprocessor(imageRequest.getPostprocessor())
         .setProgressiveRenderingEnabled(imageRequest.getProgressiveRenderingEnabled())
@@ -266,6 +268,16 @@ public class ImageRequestBuilder {
   /** Returns whether the use of local thumbnails for previews is enabled. */
   public boolean isLocalThumbnailPreviewsEnabled() {
     return mLocalThumbnailPreviewsEnabled;
+  }
+
+  public ImageRequestBuilder setLoadThumbnailOnly(boolean loadThumbnailOnly) {
+    mLoadThumbnailOnly = loadThumbnailOnly;
+    return this;
+  }
+
+  /** Returns whether the use of local thumbnails for previews is enabled. */
+  public boolean getLoadThumbnailOnly() {
+    return mLoadThumbnailOnly;
   }
 
   /** Disables disk cache for this request, regardless where the image will come from. */
