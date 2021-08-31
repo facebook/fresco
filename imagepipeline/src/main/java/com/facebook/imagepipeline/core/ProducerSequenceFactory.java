@@ -391,11 +391,11 @@ public class ProducerSequenceFactory {
         case SOURCE_TYPE_LOCAL_IMAGE_FILE:
           return getLocalImageFileFetchSequence();
         case SOURCE_TYPE_LOCAL_CONTENT:
-          if (MediaUtils.isVideo(mContentResolver.getType(uri))) {
-            return getLocalVideoFileFetchSequence();
-          } else if (imageRequest.getLoadThumbnailOnly()
+          if (imageRequest.getLoadThumbnailOnly()
               && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             return getLocalContentUriThumbnailFetchSequence();
+          } else if (MediaUtils.isVideo(mContentResolver.getType(uri))) {
+            return getLocalVideoFileFetchSequence();
           }
           return getLocalContentUriFetchSequence();
         case SOURCE_TYPE_LOCAL_ASSET:
