@@ -35,7 +35,7 @@ public final class DraweeUtil {
       final Context context, final Config config) {
     FrescoSystrace.beginSection("DraweeUtil#createDraweeHierarchy");
     GenericDraweeHierarchyBuilder builder =
-        new GenericDraweeHierarchyBuilder(context.getResources())
+        new GenericDraweeHierarchyBuilder(context)
             .setFadeDuration(config.fadeDurationMs)
             .setPlaceholderImage(Const.PLACEHOLDER)
             .setFailureImage(Const.FAILURE)

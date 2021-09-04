@@ -108,9 +108,8 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   }
 
   protected void inflateHierarchy(Context context, @Nullable AttributeSet attrs) {
-    Resources resources = context.getResources();
     GenericDraweeHierarchyBuilder builder =
-        new GenericDraweeHierarchyBuilder(resources)
+        new GenericDraweeHierarchyBuilder(context)
             .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
     GenericDraweeHierarchyInflater.updateBuilder(builder, context, attrs);
     setAspectRatio(builder.getDesiredAspectRatio());

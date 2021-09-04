@@ -7,6 +7,7 @@
 
 package com.facebook.drawee.generic;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
@@ -38,7 +39,7 @@ public class GenericDraweeHierarchyBuilder {
   public static final ScalingUtils.ScaleType DEFAULT_ACTUAL_IMAGE_SCALE_TYPE =
       ScalingUtils.ScaleType.CENTER_CROP;
 
-  private Resources mResources;
+  private Context mContext;
 
   private int mFadeDuration;
 
@@ -67,13 +68,13 @@ public class GenericDraweeHierarchyBuilder {
 
   private @Nullable RoundingParams mRoundingParams;
 
-  public GenericDraweeHierarchyBuilder(Resources resources) {
-    mResources = resources;
+  public GenericDraweeHierarchyBuilder(Context context) {
+    mContext = context;
     init();
   }
 
-  public static GenericDraweeHierarchyBuilder newInstance(Resources resources) {
-    return new GenericDraweeHierarchyBuilder(resources);
+  public static GenericDraweeHierarchyBuilder newInstance(Context context) {
+    return new GenericDraweeHierarchyBuilder(context);
   }
 
   /** Initializes this builder to its defaults. */
@@ -117,12 +118,12 @@ public class GenericDraweeHierarchyBuilder {
   }
 
   /**
-   * Gets resources.
+   * Gets context.
    *
-   * @return resources
+   * @return context
    */
-  public Resources getResources() {
-    return mResources;
+  public Context getContext() {
+    return mContext;
   }
 
   /**
@@ -180,7 +181,7 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setPlaceholderImage(int resourceId) {
-    mPlaceholderImage = mResources.getDrawable(resourceId);
+    mPlaceholderImage = ContextCompat.getDrawable(mContext, resourceId);
     return this;
   }
 
@@ -231,7 +232,7 @@ public class GenericDraweeHierarchyBuilder {
    */
   public GenericDraweeHierarchyBuilder setPlaceholderImage(
       int resourceId, @Nullable ScalingUtils.ScaleType placeholderImageScaleType) {
-    mPlaceholderImage = mResources.getDrawable(resourceId);
+    mPlaceholderImage = ContextCompat.getDrawable(mContext, resourceId);
     mPlaceholderImageScaleType = placeholderImageScaleType;
     return this;
   }
@@ -254,7 +255,7 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setRetryImage(int resourceId) {
-    mRetryImage = mResources.getDrawable(resourceId);
+    mRetryImage = ContextCompat.getDrawable(mContext, resourceId);
     return this;
   }
 
@@ -305,7 +306,7 @@ public class GenericDraweeHierarchyBuilder {
    */
   public GenericDraweeHierarchyBuilder setRetryImage(
       int resourceId, @Nullable ScalingUtils.ScaleType retryImageScaleType) {
-    mRetryImage = mResources.getDrawable(resourceId);
+    mRetryImage = ContextCompat.getDrawable(mContext, resourceId);
     mRetryImageScaleType = retryImageScaleType;
     return this;
   }
@@ -328,7 +329,7 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setFailureImage(int resourceId) {
-    mFailureImage = mResources.getDrawable(resourceId);
+    mFailureImage = ContextCompat.getDrawable(mContext, resourceId);
     return this;
   }
 
@@ -379,7 +380,7 @@ public class GenericDraweeHierarchyBuilder {
    */
   public GenericDraweeHierarchyBuilder setFailureImage(
       int resourceId, @Nullable ScalingUtils.ScaleType failureImageScaleType) {
-    mFailureImage = mResources.getDrawable(resourceId);
+    mFailureImage = ContextCompat.getDrawable(mContext, resourceId);
     mFailureImageScaleType = failureImageScaleType;
     return this;
   }
@@ -402,7 +403,7 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setProgressBarImage(int resourceId) {
-    mProgressBarImage = mResources.getDrawable(resourceId);
+    mProgressBarImage = ContextCompat.getDrawable(mContext, resourceId);
     return this;
   }
 
@@ -453,7 +454,7 @@ public class GenericDraweeHierarchyBuilder {
    */
   public GenericDraweeHierarchyBuilder setProgressBarImage(
       int resourceId, @Nullable ScalingUtils.ScaleType progressBarImageScaleType) {
-    mProgressBarImage = mResources.getDrawable(resourceId);
+    mProgressBarImage = ContextCompat.getDrawable(mContext, resourceId);
     mProgressBarImageScaleType = progressBarImageScaleType;
     return this;
   }

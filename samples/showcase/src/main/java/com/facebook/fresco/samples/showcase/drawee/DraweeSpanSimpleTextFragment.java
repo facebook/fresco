@@ -80,7 +80,7 @@ public class DraweeSpanSimpleTextFragment extends BaseShowcaseFragment {
     DraweeSpanStringBuilder draweeSpanStringBuilder = new DraweeSpanStringBuilder(text);
 
     DraweeHierarchy draweeHierarchy =
-        GenericDraweeHierarchyBuilder.newInstance(getResources())
+        GenericDraweeHierarchyBuilder.newInstance(requireContext())
             .setPlaceholderImage(new ColorDrawable(Color.RED))
             .setActualImageScaleType(mScaleType)
             .build();
@@ -100,7 +100,7 @@ public class DraweeSpanSimpleTextFragment extends BaseShowcaseFragment {
     int imagePosition2 = text.indexOf('@');
 
     DraweeHierarchy draweeAnimatedHierarchy =
-        GenericDraweeHierarchyBuilder.newInstance(getResources())
+        GenericDraweeHierarchyBuilder.newInstance(requireContext())
             .setPlaceholderImage(new ColorDrawable(Color.RED))
             .setActualImageScaleType(mScaleType)
             .build();
