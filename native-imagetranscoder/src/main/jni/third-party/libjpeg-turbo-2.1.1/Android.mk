@@ -2,6 +2,11 @@ LOCAL_PATH:= $(call my-dir)
 
 JPEGTURBO_CFLAGS := -DJPEG_LIB_VERSION=80 -Wno-attributes
 
+ifneq ($(filter $(TARGET_ARCH_ABI), armeabi-v7a arm64-v8a),)
+LOCAL_ARM_NEON := true
+LOCAL_CFLAGS += -D__ARM_HAVE_NEON
+endif
+
 JPEGTURBO_SRC_FILES := \
 	jcapimin.c jcapistd.c jccoefct.c jccolor.c \
 	jcdctmgr.c jchuff.c jcinit.c jcmainct.c jcmarker.c jcmaster.c \
@@ -16,10 +21,6 @@ JPEGTURBO_SRC_FILES := \
 
 # switch between SIMD supported and non supported architectures
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
-LOCAL_ARM_MODE := arm
-LOCAL_ARM_NEON := true
-LOCAL_CFLAGS += -march=armv7-a -mfpu=neon -mfloat-abi=softfp
-
 JPEGTURBO_SRC_FILES += \
 	simd/arm/aarch32/jsimd_neon.S \
 	simd/arm/aarch32/jsimd.c \
@@ -38,10 +39,6 @@ JPEGTURBO_SRC_FILES += \
     simd/arm/jquanti-neon.c
 
 else ifeq ($(TARGET_ARCH_ABI),arm64-v8a)
-LOCAL_ARM_MODE := arm
-LOCAL_ARM_NEON := true
-LOCAL_CFLAGS += -march=armv8-a -mfpu=neon -mfloat-abi=softfp
-
 JPEGTURBO_SRC_FILES += \
 	simd/arm/aarch64/jsimd_neon.S \
 	simd/arm/aarch64/jsimd.c \
