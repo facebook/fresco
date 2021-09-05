@@ -18,6 +18,8 @@ JPEGTURBO_SRC_FILES := \
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 LOCAL_ARM_MODE := arm
 LOCAL_ARM_NEON := true
+LOCAL_CFLAGS += -O3 -march=armv7-a -mfpu=neon -mfloat-abi=softfp
+
 JPEGTURBO_SRC_FILES += \
 	simd/arm/aarch32/jsimd_neon.S \
 	simd/arm/aarch32/jsimd.c \
@@ -38,6 +40,8 @@ JPEGTURBO_SRC_FILES += \
 else ifeq ($(TARGET_ARCH_ABI),arm64-v8a)
 LOCAL_ARM_MODE := arm
 LOCAL_ARM_NEON := true
+LOCAL_CFLAGS += -O3 -march=arm64v8-a -mfpu=neon -mfloat-abi=softfp
+
 JPEGTURBO_SRC_FILES += \
 	simd/arm/aarch64/jsimd_neon.S \
 	simd/arm/aarch64/jsimd.c \
