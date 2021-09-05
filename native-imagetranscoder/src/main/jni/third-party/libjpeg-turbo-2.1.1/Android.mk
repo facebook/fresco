@@ -17,14 +17,17 @@ JPEGTURBO_SRC_FILES := \
 # switch between SIMD supported and non supported architectures
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 JPEGTURBO_SRC_FILES += \
+    simd/arm/jccolor-neon.c \
     simd/arm/jcgray-neon.c \
     simd/arm/jcphuff-neon.c \
     simd/arm/jcsample-neon.c \
+    simd/arm/jdcolor-neon.c \
     simd/arm/jdmerge-neon.c \
     simd/arm/jdsample-neon.c \
-    simd/arm/jccolor-neon.c \
-    simd/arm/jdcolor-neon.c \
+    simd/arm/jfdctfst-neon.c \
     simd/arm/jfdctint-neon.c \
+    simd/arm/jidctfst-neon.c \
+    simd/arm/jidctint-neon.c \
     simd/arm/jidctred-neon.c \
     simd/arm/jquanti-neon.c \
     simd/arm/aarch32/jchuff-neon.c \
@@ -32,14 +35,17 @@ JPEGTURBO_SRC_FILES += \
 
 else ifeq ($(TARGET_ARCH_ABI),arm64-v8a)
 JPEGTURBO_SRC_FILES += \
+    simd/arm/jccolor-neon.c \
     simd/arm/jcgray-neon.c \
     simd/arm/jcphuff-neon.c \
     simd/arm/jcsample-neon.c \
+    simd/arm/jdcolor-neon.c \
     simd/arm/jdmerge-neon.c \
     simd/arm/jdsample-neon.c \
-    simd/arm/jccolor-neon.c \
-    simd/arm/jdcolor-neon.c \
+    simd/arm/jfdctfst-neon.c \
     simd/arm/jfdctint-neon.c \
+    simd/arm/jidctfst-neon.c \
+    simd/arm/jidctint-neon.c \
     simd/arm/jidctred-neon.c \
     simd/arm/jquanti-neon.c \
     simd/arm/aarch32/jchuff-neon.c \
