@@ -101,7 +101,7 @@
 #define PACKAGE_NAME "libjpeg-turbo"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libjpeg-turbo 1.5.3"
+#define PACKAGE_STRING "libjpeg-turbo 2.1.1"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "libjpeg-turbo"
@@ -127,7 +127,7 @@
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "1.5.3"
+#define VERSION "2.1.1"
 
 /* Use accelerated SIMD routines. */
 #define WITH_SIMD 1
