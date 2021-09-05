@@ -73,10 +73,10 @@
 #define JPEG_LIB_VERSION 80
 
 /* libjpeg-turbo version */
-#define LIBJPEG_TURBO_VERSION 1.5.3
+#define LIBJPEG_TURBO_VERSION 2.1.1
 
 /* libjpeg-turbo version in integer form */
-#define LIBJPEG_TURBO_VERSION_NUMBER 1005003
+#define LIBJPEG_TURBO_VERSION_NUMBER 2001001
 
 /* Define to the sub-directory where libtool stores uninstalled libraries. */
 #define LT_OBJDIR ".libs/"
@@ -110,7 +110,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.5.3"
+#define PACKAGE_VERSION "2.1.1"
 
 /* Define if your (broken) compiler shifts signed values as if they were
    unsigned. */
