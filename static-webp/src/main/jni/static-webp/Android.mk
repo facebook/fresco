@@ -48,4 +48,4 @@ LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_png.a
 include $(BUILD_SHARED_LIBRARY)
 $(call import-module,libpng-1.6.37)
 $(call import-module,libwebp-1.0.0)
-$(call import-module,libjpeg-turbo-1.5.3)
+$(call import-module,libjpeg-turbo-2.1.1)
