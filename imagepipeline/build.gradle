@@ -53,6 +53,10 @@ android {
         minSdkVersion FrescoConfig.minSdkVersion
         targetSdkVersion FrescoConfig.targetSdkVersion
     }
+        lintOptions {
+            abortOnError false
+        }
+
     sourceSets {
         test {
             java {
