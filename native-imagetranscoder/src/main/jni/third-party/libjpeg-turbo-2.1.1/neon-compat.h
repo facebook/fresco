@@ -20,7 +20,6 @@
  */
 
 #define HAVE_VLD1_S16_X3
-#define HAVE_VLD1_U16_X2
 #define HAVE_VLD1Q_U8_X4
 
 /* Define compiler-independent count-leading-zeros and byte-swap macros */
