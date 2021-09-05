@@ -1,11 +1,6 @@
 LOCAL_PATH:= $(call my-dir)
 
-JPEGTURBO_CFLAGS := -DJPEG_LIB_VERSION=80 -Wno-attributes
-
-ifneq ($(filter $(TARGET_ARCH_ABI), armeabi-v7a arm64-v8a),)
-LOCAL_ARM_NEON := true
-LOCAL_CFLAGS += -D__ARM_HAVE_NEON
-endif
+JPEGTURBO_CFLAGS := -DJPEG_LIB_VERSION=80 -Wno-attributes -D__ARM_HAVE_NEON
 
 JPEGTURBO_SRC_FILES := \
 	jcapimin.c jcapistd.c jccoefct.c jccolor.c \
@@ -63,6 +58,7 @@ endif
 # fb_jpegturbo module
 include $(CLEAR_VARS)
 LOCAL_MODULE:= fb_jpegturbo
+LOCAL_ARM_NEON := true
 LOCAL_SRC_FILES := $(JPEGTURBO_SRC_FILES)
 LOCAL_CFLAGS := $(JPEGTURBO_CFLAGS)
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
