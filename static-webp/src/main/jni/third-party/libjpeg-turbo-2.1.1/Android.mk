@@ -22,6 +22,7 @@ JPEGTURBO_SRC_FILES += \
     simd/arm/jcsample-neon.c \
     simd/arm/jdmerge-neon.c \
     simd/arm/jdsample-neon.c \
+    simd/arm/jccolor-neon.c \
     simd/arm/jdcolor-neon.c \
     simd/arm/jfdctint-neon.c \
     simd/arm/jidctred-neon.c \
@@ -36,6 +37,7 @@ JPEGTURBO_SRC_FILES += \
     simd/arm/jcsample-neon.c \
     simd/arm/jdmerge-neon.c \
     simd/arm/jdsample-neon.c \
+    simd/arm/jccolor-neon.c \
     simd/arm/jdcolor-neon.c \
     simd/arm/jfdctint-neon.c \
     simd/arm/jidctred-neon.c \
