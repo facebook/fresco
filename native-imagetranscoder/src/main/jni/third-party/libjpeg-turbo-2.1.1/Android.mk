@@ -16,6 +16,8 @@ JPEGTURBO_SRC_FILES := \
 
 # switch between SIMD supported and non supported architectures
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
+LOCAL_ARM_MODE := arm
+LOCAL_ARM_NEON := true
 JPEGTURBO_SRC_FILES += \
 	simd/arm/aarch32/jsimd_neon.S \
 	simd/arm/aarch32/jsimd.c \
@@ -37,6 +39,8 @@ JPEGTURBO_SRC_FILES += \
     simd/arm/jquanti-neon.c
 
 else ifeq ($(TARGET_ARCH_ABI),arm64-v8a)
+LOCAL_ARM_MODE := arm
+LOCAL_ARM_NEON := true
 JPEGTURBO_SRC_FILES += \
 	simd/arm/aarch64/jsimd_neon.S \
 	simd/arm/aarch64/jsimd.c \
