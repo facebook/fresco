@@ -17,6 +17,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
+import com.facebook.fresco.ui.common.OnFadeListener;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +44,7 @@ public class FadeDrawableOnFadeListenerTest {
       };
 
   private FadeDrawable mFadeDrawable;
-  private FadeDrawable.OnFadeListener mOnFadeListener = mock(FadeDrawable.OnFadeListener.class);
+  private final OnFadeListener mOnFadeListener = mock(OnFadeListener.class);
 
   private Canvas mCanvas = mock(Canvas.class);
 

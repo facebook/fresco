@@ -11,9 +11,9 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
-import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.fresco.ui.common.OnFadeListener;
 import com.facebook.fresco.vito.listener.BaseImageListener;
 import com.facebook.fresco.vito.listener.ForwardingImageListener;
 import com.facebook.fresco.vito.listener.ImageListener;
@@ -76,7 +76,7 @@ public class FrescoVitoTapToRetryImageSpec {
       @Prop(optional = true) final @Nullable ImageListener imageListener,
       @Prop(optional = true) final @Nullable ImageOptions imageOptions,
       @Prop(optional = true) final int maxTapCount,
-      @Prop(optional = true) final FadeDrawable.OnFadeListener onFadeListener,
+      @Prop(optional = true) final OnFadeListener onFadeListener,
       @Prop(optional = true) final @Nullable FrescoVitoImage2Spec.Prefetch prefetch,
       @Prop(optional = true) final @Nullable RequestListener prefetchRequestListener,
       @Prop(resType = ResType.DRAWABLE, optional = true) final @Nullable Drawable retryImage,

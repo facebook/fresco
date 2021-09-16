@@ -15,7 +15,7 @@ import androidx.core.util.ObjectsCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import com.facebook.common.callercontext.ContextChain;
 import com.facebook.datasource.DataSource;
-import com.facebook.drawee.drawable.FadeDrawable;
+import com.facebook.fresco.ui.common.OnFadeListener;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.PrefetchConfig;
 import com.facebook.fresco.vito.core.VitoImageRequest;
@@ -157,7 +157,7 @@ public class FrescoVitoImage2Spec {
       final FrescoDrawable2 frescoDrawable,
       @Prop(optional = true) final @Nullable ImageListener imageListener,
       @Prop(optional = true) final @Nullable Object callerContext,
-      @Prop(optional = true) FadeDrawable.OnFadeListener onFadeListener,
+      @Prop(optional = true) final @Nullable OnFadeListener onFadeListener,
       @Prop(optional = true) boolean mutateDrawables,
       @CachedValue VitoImageRequest imageRequest,
       @FromPrepare @Nullable DataSource<Void> prefetchDataSource,
@@ -191,7 +191,7 @@ public class FrescoVitoImage2Spec {
       ComponentContext c,
       final FrescoDrawable2 frescoDrawable,
       @Prop(optional = true) final @Nullable ImageListener imageListener,
-      @Prop(optional = true) final @Nullable FadeDrawable.OnFadeListener onFadeListener,
+      @Prop(optional = true) final @Nullable OnFadeListener onFadeListener,
       @Prop(optional = true) final @Nullable Object callerContext,
       @TreeProp final @Nullable ContextChain contextChain,
       @CachedValue VitoImageRequest imageRequest,

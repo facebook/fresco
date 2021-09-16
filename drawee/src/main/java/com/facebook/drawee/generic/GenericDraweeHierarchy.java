@@ -25,6 +25,7 @@ import com.facebook.drawee.drawable.MatrixDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
+import com.facebook.fresco.ui.common.OnFadeListener;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import javax.annotation.Nullable;
 
@@ -604,7 +605,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     return mActualImageWrapper.getDrawable() != mEmptyActualImageDrawable;
   }
 
-  public void setOnFadeListener(FadeDrawable.OnFadeListener onFadeFinished) {
-    mFadeDrawable.setOnFadeListener(onFadeFinished);
+  public void setOnFadeListener(OnFadeListener onFadeListener) {
+    mFadeDrawable.setOnFadeListener(onFadeListener);
   }
 }

@@ -35,6 +35,7 @@ dependencies {
     implementation project(':vito:options')
     implementation project(':vito:provider')
     implementation project(':vito:source')
+    implementation project(':ui-common')
 }
 
 apply plugin: "com.vanniktech.maven.publish"
