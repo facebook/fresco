@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.request;
 
 import static com.facebook.imagepipeline.request.ImageRequest.CacheChoice;
 import static com.facebook.imagepipeline.request.ImageRequest.RequestLevel;
+import static com.facebook.imagepipeline.request.ImageRequest.CachesLocationsMasks;
 
 import android.net.Uri;
 import com.facebook.common.internal.Preconditions;
@@ -39,8 +40,6 @@ public class ImageRequestBuilder {
   private boolean mLoadThumbnailOnly = false;
   private Priority mRequestPriority = Priority.HIGH;
   private @Nullable Postprocessor mPostprocessor = null;
-  private boolean mDiskCacheEnabled = true;
-  private boolean mMemoryCacheEnabled = true;
   private @Nullable Boolean mDecodePrefetches = null;
   private @Nullable RequestListener mRequestListener;
   private @Nullable BytesRange mBytesRange = null;
@@ -300,24 +299,36 @@ public class ImageRequestBuilder {
 
   /** Disables disk cache for this request, regardless where the image will come from. */
   public ImageRequestBuilder disableDiskCache() {
-    mDiskCacheEnabled = false;
+    int mask = CachesLocationsMasks.DISK_READ | CachesLocationsMasks.DISK_WRITE;
+    mCachesDisabled = mCachesDisabled | mask;
     return this;
   }
 
   /** Returns whether the use of the disk cache is enabled, which is partly dependent on the URI. */
   public boolean isDiskCacheEnabled() {
-    return mDiskCacheEnabled && UriUtil.isNetworkUri(mSourceUri);
+    int mask = CachesLocationsMasks.DISK_READ | CachesLocationsMasks.DISK_WRITE;
+    return ((mCachesDisabled & mask) == 0) && UriUtil.isNetworkUri(mSourceUri);
   }
 
   /** Disables memory cache for this request. */
   public ImageRequestBuilder disableMemoryCache() {
-    mMemoryCacheEnabled = false;
+    int mask =
+        CachesLocationsMasks.BITMAP_READ
+            | CachesLocationsMasks.BITMAP_WRITE
+            | CachesLocationsMasks.ENCODED_READ
+            | CachesLocationsMasks.ENCODED_WRITE;
+    mCachesDisabled = mCachesDisabled | mask;
     return this;
   }
 
   /** Returns whether the use of the memory cache is enabled. */
   public boolean isMemoryCacheEnabled() {
-    return mMemoryCacheEnabled;
+    int mask =
+        CachesLocationsMasks.BITMAP_READ
+            | CachesLocationsMasks.BITMAP_WRITE
+            | CachesLocationsMasks.ENCODED_READ
+            | CachesLocationsMasks.ENCODED_WRITE;
+    return (mCachesDisabled & mask) == 0;
   }
 
   /**
