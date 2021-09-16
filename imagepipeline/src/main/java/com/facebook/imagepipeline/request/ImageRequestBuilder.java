@@ -28,6 +28,7 @@ public class ImageRequestBuilder {
 
   private Uri mSourceUri = null;
   private RequestLevel mLowestPermittedRequestLevel = RequestLevel.FULL_FETCH;
+  private int mCachesDisabled = 0; // All caches enabled by default
   private @Nullable ResizeOptions mResizeOptions = null;
   private @Nullable RotationOptions mRotationOptions = null;
   private ImageDecodeOptions mImageDecodeOptions = ImageDecodeOptions.defaults();
@@ -91,6 +92,7 @@ public class ImageRequestBuilder {
         .setLocalThumbnailPreviewsEnabled(imageRequest.getLocalThumbnailPreviewsEnabled())
         .setLoadThumbnailOnly(imageRequest.getLoadThumbnailOnly())
         .setLowestPermittedRequestLevel(imageRequest.getLowestPermittedRequestLevel())
+        .setCachesDisabled(imageRequest.getCachesDisabled())
         .setPostprocessor(imageRequest.getPostprocessor())
         .setProgressiveRenderingEnabled(imageRequest.getProgressiveRenderingEnabled())
         .setRequestPriority(imageRequest.getPriority())
@@ -136,6 +138,22 @@ public class ImageRequestBuilder {
   /** Gets the lowest permitted request level. */
   public RequestLevel getLowestPermittedRequestLevel() {
     return mLowestPermittedRequestLevel;
+  }
+
+  /**
+   * Sets the caches read and write permissions.
+   *
+   * @param cachesDisabled the representation caches permissions
+   * @return the updated builder instance
+   */
+  private ImageRequestBuilder setCachesDisabled(int cachesDisabled) {
+    mCachesDisabled = cachesDisabled;
+    return this;
+  }
+
+  /** Gets the caches permissions. */
+  public int getCachesDisabled() {
+    return mCachesDisabled;
   }
 
   /**
