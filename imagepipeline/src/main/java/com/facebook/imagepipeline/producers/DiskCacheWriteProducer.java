@@ -63,7 +63,11 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
       consumerOfDiskCacheWriteProducer.onNewResult(null, Consumer.IS_LAST);
     } else {
       Consumer<EncodedImage> consumer;
-      if (producerContext.getImageRequest().isDiskCacheEnabled()) {
+      final boolean isDiskCacheEnabledForWrite =
+          producerContext
+              .getImageRequest()
+              .isCacheEnabled(ImageRequest.CachesLocationsMasks.DISK_WRITE);
+      if (!isDiskCacheEnabledForWrite) {
         consumer =
             new DiskCacheWriteConsumer(
                 consumerOfDiskCacheWriteProducer,
