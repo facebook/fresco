@@ -233,6 +233,11 @@ public class ImageRequest {
     return mIsDiskCacheEnabled;
   }
 
+  /** Returns whether the use of the cache is enabled for read or write according to given mask. */
+  public boolean isCacheEnabled(int cacheMask) {
+    return (getCachesDisabled() & cacheMask) == 0;
+  }
+
   public boolean isMemoryCacheEnabled() {
     return mIsMemoryCacheEnabled;
   }

@@ -55,8 +55,13 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
       final ImageRequest imageRequest = producerContext.getImageRequest();
       final Object callerContext = producerContext.getCallerContext();
       final CacheKey cacheKey = mCacheKeyFactory.getBitmapCacheKey(imageRequest, callerContext);
+      final boolean isBitmapCacheEnabledForRead =
+          producerContext
+              .getImageRequest()
+              .isCacheEnabled(ImageRequest.CachesLocationsMasks.BITMAP_READ);
 
-      CloseableReference<CloseableImage> cachedReference = mMemoryCache.get(cacheKey);
+      CloseableReference<CloseableImage> cachedReference =
+          isBitmapCacheEnabledForRead ? mMemoryCache.get(cacheKey) : null;
 
       if (cachedReference != null) {
         maybeSetExtrasFromCloseableImage(cachedReference.get(), producerContext);
@@ -95,7 +100,11 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
 
       Consumer<CloseableReference<CloseableImage>> wrappedConsumer =
           wrapConsumer(
-              consumer, cacheKey, producerContext.getImageRequest().isMemoryCacheEnabled());
+              consumer,
+              cacheKey,
+              producerContext
+                  .getImageRequest()
+                  .isCacheEnabled(ImageRequest.CachesLocationsMasks.BITMAP_WRITE));
       listener.onProducerFinishWithSuccess(
           producerContext,
           getProducerName(),
@@ -119,7 +128,7 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
   protected Consumer<CloseableReference<CloseableImage>> wrapConsumer(
       final Consumer<CloseableReference<CloseableImage>> consumer,
       final CacheKey cacheKey,
-      final boolean isMemoryCacheEnabled) {
+      final boolean isBitmapCacheEnabledForWrite) {
     return new DelegatingConsumer<
         CloseableReference<CloseableImage>, CloseableReference<CloseableImage>>(consumer) {
       @Override
@@ -162,7 +171,7 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
           }
           // cache, if needed, and forward the new result
           CloseableReference<CloseableImage> newCachedResult = null;
-          if (isMemoryCacheEnabled) {
+          if (isBitmapCacheEnabledForWrite) {
             newCachedResult = mMemoryCache.cache(cacheKey, newResult);
           }
           try {

@@ -59,7 +59,14 @@ public class PostprocessedBitmapMemoryCacheProducer
     listener.onProducerStart(producerContext, getProducerName());
     final CacheKey cacheKey =
         mCacheKeyFactory.getPostprocessedBitmapCacheKey(imageRequest, callerContext);
-    CloseableReference<CloseableImage> cachedReference = mMemoryCache.get(cacheKey);
+    final boolean isBitmapCacheEnabledForRead =
+        producerContext
+            .getImageRequest()
+            .isCacheEnabled(ImageRequest.CachesLocationsMasks.BITMAP_READ);
+
+    CloseableReference<CloseableImage> cachedReference =
+        isBitmapCacheEnabledForRead ? mMemoryCache.get(cacheKey) : null;
+
     if (cachedReference != null) {
       listener.onProducerFinishWithSuccess(
           producerContext,
@@ -74,11 +81,13 @@ public class PostprocessedBitmapMemoryCacheProducer
       cachedReference.close();
     } else {
       final boolean isRepeatedProcessor = postprocessor instanceof RepeatedPostprocessor;
-      final boolean isMemoryCachedEnabled =
-          producerContext.getImageRequest().isMemoryCacheEnabled();
+      final boolean isBitmapCacheEnabledForWrite =
+          producerContext
+              .getImageRequest()
+              .isCacheEnabled(ImageRequest.CachesLocationsMasks.BITMAP_WRITE);
       Consumer<CloseableReference<CloseableImage>> cachedConsumer =
           new CachedPostprocessorConsumer(
-              consumer, cacheKey, isRepeatedProcessor, mMemoryCache, isMemoryCachedEnabled);
+              consumer, cacheKey, isRepeatedProcessor, mMemoryCache, isBitmapCacheEnabledForWrite);
       listener.onProducerFinishWithSuccess(
           producerContext,
           getProducerName(),
@@ -96,19 +105,19 @@ public class PostprocessedBitmapMemoryCacheProducer
     private final CacheKey mCacheKey;
     private final boolean mIsRepeatedProcessor;
     private final MemoryCache<CacheKey, CloseableImage> mMemoryCache;
-    private final boolean mIsMemoryCachedEnabled;
+    private final boolean mIsBitmapCacheEnabledForWrite;
 
     public CachedPostprocessorConsumer(
         final Consumer<CloseableReference<CloseableImage>> consumer,
         final CacheKey cacheKey,
         final boolean isRepeatedProcessor,
         final MemoryCache<CacheKey, CloseableImage> memoryCache,
-        boolean isMemoryCachedEnabled) {
+        boolean isBitmapCacheEnabledForWrite) {
       super(consumer);
       this.mCacheKey = cacheKey;
       this.mIsRepeatedProcessor = isRepeatedProcessor;
       this.mMemoryCache = memoryCache;
-      mIsMemoryCachedEnabled = isMemoryCachedEnabled;
+      mIsBitmapCacheEnabledForWrite = isBitmapCacheEnabledForWrite;
     }
 
     @Override
@@ -127,7 +136,7 @@ public class PostprocessedBitmapMemoryCacheProducer
       }
       // cache, if needed, and forward the new result
       CloseableReference<CloseableImage> newCachedResult = null;
-      if (mIsMemoryCachedEnabled) {
+      if (mIsBitmapCacheEnabledForWrite) {
         newCachedResult = mMemoryCache.cache(mCacheKey, newResult);
       }
       try {
