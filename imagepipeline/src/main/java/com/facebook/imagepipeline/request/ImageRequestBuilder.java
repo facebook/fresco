@@ -8,8 +8,8 @@
 package com.facebook.imagepipeline.request;
 
 import static com.facebook.imagepipeline.request.ImageRequest.CacheChoice;
-import static com.facebook.imagepipeline.request.ImageRequest.RequestLevel;
 import static com.facebook.imagepipeline.request.ImageRequest.CachesLocationsMasks;
+import static com.facebook.imagepipeline.request.ImageRequest.RequestLevel;
 
 import android.net.Uri;
 import com.facebook.common.internal.Preconditions;
