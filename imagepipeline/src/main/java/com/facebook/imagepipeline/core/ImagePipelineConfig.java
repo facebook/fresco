@@ -60,7 +60,7 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 /**
- * Master configuration class for the image pipeline library.
+ * Main configuration class for the image pipeline library.
  *
  * <p>To use: <code>
  *   ImagePipelineConfig config = ImagePipelineConfig.newBuilder()

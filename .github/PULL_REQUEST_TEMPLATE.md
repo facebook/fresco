@@ -3,7 +3,7 @@ Thanks for submitting a PR! Please read these instructions carefully:
 - [ ] Explain the **motivation** for making this change.
 - [ ] Provide a **test plan** demonstrating that the code is solid.
 - [ ] Match the **code formatting** of the rest of the codebase.
-- [ ] Target the `master` branch
+- [ ] Target the `main` branch
 
 ## Motivation (required)
 
@@ -28,4 +28,4 @@ For more info, see the [Contributing guide][4].
 [1]: https://medium.com/@martinkonicek/what-is-a-test-plan-8bfc840ec171#.y9lcuqqi9
 [2]: https://code.facebook.com/cla
 [3]: http://circleci.com/gh/facebook/fresco
-[4]: https://github.com/facebook/fresco/blob/master/CONTRIBUTING.md
+[4]: https://github.com/facebook/fresco/blob/main/CONTRIBUTING.md

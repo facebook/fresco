@@ -115,6 +115,6 @@ mSimpleDraweeView.getHierarchy().setPlaceHolderImage(placeholderImage);
 
 ### Full Sample
 
-For a full sample see the `DraweeSimpleFragment` in the showcase app: [DraweeSimpleFragment.java](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeSimpleFragment.java)
+For a full sample see the `DraweeSimpleFragment` in the showcase app: [DraweeSimpleFragment.java](https://github.com/facebook/fresco/blob/main/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeSimpleFragment.java)
 
 ![Showcase app with a scale type example](/static/images/docs/01-using-simpledraweeview-sample.png)

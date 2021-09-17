@@ -37,4 +37,4 @@ Closing a prefetch data source after the prefetch has already completed is a no-
 
 ### Example
 
-See our [showcase app](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/imagepipeline/ImagePipelinePrefetchFragment.java) for a practical example of how to use prefetching.
+See our [showcase app](https://github.com/facebook/fresco/blob/main/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/imagepipeline/ImagePipelinePrefetchFragment.java) for a practical example of how to use prefetching.

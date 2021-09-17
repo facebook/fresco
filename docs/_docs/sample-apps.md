@@ -13,12 +13,12 @@ The samples are available in source form only. Follow the [build instructions](b
 
 ### The Showcase app
 
-The [Showcase App](https://github.com/facebook/fresco/blob/master/samples/showcase) demonstrates various features and allows to customize parameters to show their effect.
+The [Showcase App](https://github.com/facebook/fresco/blob/main/samples/showcase) demonstrates various features and allows to customize parameters to show their effect.
 It includes samples for Drawee and for the image pipeline. Furthermore, it showcases how to use both built-in and custom image formats.
 
 ### The zoomable library
 
-The [zoomable library](https://github.com/facebook/fresco/blob/master/samples/zoomable) features a `ZoomableDraweeView` class that supports gestures such as pinch-to-zoom and panning of a Drawee image.
+The [zoomable library](https://github.com/facebook/fresco/blob/main/samples/zoomable) features a `ZoomableDraweeView` class that supports gestures such as pinch-to-zoom and panning of a Drawee image.
 
 ### The comparison app
 
@@ -28,7 +28,7 @@ Fresco allows you to also compare its performance with OkHttp as its network lay
 
 The app offers you a choice of images from your local camera or from the Internet. The network images come from [Imgur](http://imgur.com).
 
-You can build, install, and run a controlled test of any combination of loaders using the [run_comparison.py](https://github.com/facebook/fresco/blob/master/run_comparison.py) script. The following command will run them all on a connected ARM v7 device:
+You can build, install, and run a controlled test of any combination of loaders using the [run_comparison.py](https://github.com/facebook/fresco/blob/main/run_comparison.py) script. The following command will run them all on a connected ARM v7 device:
 
 ```./run_comparison.py -c armeabi-v7a```
 

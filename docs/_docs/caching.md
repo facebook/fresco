@@ -33,7 +33,7 @@ Like the encoded memory cache, this cache stores compressed image, which must be
 
 Unlike the others, this cache is not cleared when your app exits, or even if the device is turned off.
 
-When disk cache is about to be to the size limits defined by [DiskCacheConfig](configure-image-pipeline.html#configuring-the-disk-cache) Fresco uses LRU logic of eviction in disk cache (see [DefaultEntryEvictionComparatorSupplier.java](https://github.com/facebook/fresco/blob/master/imagepipeline-base/src/main/java/com/facebook/cache/disk/DefaultEntryEvictionComparatorSupplier.java)).
+When disk cache is about to be to the size limits defined by [DiskCacheConfig](configure-image-pipeline.html#configuring-the-disk-cache) Fresco uses LRU logic of eviction in disk cache (see [DefaultEntryEvictionComparatorSupplier.java](https://github.com/facebook/fresco/blob/main/imagepipeline-base/src/main/java/com/facebook/cache/disk/DefaultEntryEvictionComparatorSupplier.java)).
 
 The user can, of course, always clear it from Android's Settings menu.
 

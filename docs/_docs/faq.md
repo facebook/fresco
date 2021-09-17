@@ -18,7 +18,7 @@ Fresco.getImagePipeline().clearCaches();
 
 ### How can I create a Drawee that supports zoom gestures?
 
-Have a look at the [ZoomableDraweeView](https://github.com/facebook/fresco/tree/master/samples/zoomable) module which is part of our sample code on GitHub.
+Have a look at the [ZoomableDraweeView](https://github.com/facebook/fresco/tree/main/samples/zoomable) module which is part of our sample code on GitHub.
 
 ### How do I create an URI for a local file?
 

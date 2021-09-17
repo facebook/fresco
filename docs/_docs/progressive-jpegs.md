@@ -32,7 +32,7 @@ We hope to add support for using progressive images with `setImageURI` in a futu
 ### Full Sample
 
 For the full sample see the `ImageFormatProgressiveJpegFragment` in the showcase app:
-[ImageFormatProgressiveJpegFragment.java](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/imageformat/pjpeg/ImageFormatProgressiveJpegFragment.java)
+[ImageFormatProgressiveJpegFragment.java](https://github.com/facebook/fresco/blob/main/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/imageformat/pjpeg/ImageFormatProgressiveJpegFragment.java)
 
 <video controls="" autoplay="">
   <source src="/static/videos/01-progressive-jpegs.mp4" type="video/mp4">
