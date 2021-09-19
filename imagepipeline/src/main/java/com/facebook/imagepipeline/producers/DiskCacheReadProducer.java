@@ -61,11 +61,7 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
   public void produceResults(
       final Consumer<EncodedImage> consumer, final ProducerContext producerContext) {
     final ImageRequest imageRequest = producerContext.getImageRequest();
-    final boolean isDiskCacheEnabledForRead =
-        producerContext
-            .getImageRequest()
-            .isCacheEnabled(ImageRequest.CachesLocationsMasks.DISK_READ);
-    if (!isDiskCacheEnabledForRead) {
+    if (!imageRequest.isDiskCacheEnabled()) {
       maybeStartInputProducer(consumer, producerContext);
       return;
     }
