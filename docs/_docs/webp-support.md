@@ -59,6 +59,6 @@ mSimpleDraweeView.setController(controller);
 
 ### Full Sample
 
-For the full sample see the `ImageFormatWebpFragment` in the showcase app: [ImageFormatWebpFragment.java](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/imageformat/webp/ImageFormatWebpFragment.java)
+For the full sample see the `ImageFormatWebpFragment` in the showcase app: [ImageFormatWebpFragment.java](https://github.com/facebook/fresco/blob/main/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/imageformat/webp/ImageFormatWebpFragment.java)
 
 ![Showcase app with a notification](/static/images/docs/03-webp-support-sample.png)

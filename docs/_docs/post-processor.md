@@ -171,4 +171,4 @@ Please keep the following rules in mind when creating post-processors
 
 ### Full Sample
 
-For the full sample see the `ImagePipelinePostProcessorFragment` in the showcase app: [ImagePipelinePostProcessorFragment.java](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/imagepipeline/ImagePipelinePostProcessorFragment.java). It includes all post-processors from this page as well as additional ones.
+For the full sample see the `ImagePipelinePostProcessorFragment` in the showcase app: [ImagePipelinePostProcessorFragment.java](https://github.com/facebook/fresco/blob/main/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/imagepipeline/ImagePipelinePostProcessorFragment.java). It includes all post-processors from this page as well as additional ones.

@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.fresco.ui.common.OnFadeListener;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.Arrays;
 import javax.annotation.Nullable;
@@ -427,13 +428,5 @@ public class FadeDrawable extends ArrayDrawable {
     if (mOnFadeListener != null) {
       mOnFadeListener.onFadeFinished();
     }
-  }
-
-  public interface OnFadeListener {
-    void onFadeStarted();
-
-    void onFadeFinished();
-
-    void onShownImmediately();
   }
 }

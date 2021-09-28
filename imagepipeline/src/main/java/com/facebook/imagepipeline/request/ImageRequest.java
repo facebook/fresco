@@ -18,6 +18,7 @@ import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_QUALIF
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_UNKNOWN;
 
 import android.net.Uri;
+import androidx.annotation.IntDef;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Fn;
 import com.facebook.common.internal.Objects;
@@ -82,6 +83,12 @@ public class ImageRequest {
   /** Lowest level that is permitted to fetch an image from */
   private final RequestLevel mLowestPermittedRequestLevel;
 
+  /**
+   * int in which each bit represents read or write permission of each cache from bitmap read bit
+   * (rightest) to disk write bit
+   */
+  private final int mCachesDisabled;
+
   /** Whether the disk cache should be used for this request */
   private final boolean mIsDiskCacheEnabled;
 
@@ -141,6 +148,7 @@ public class ImageRequest {
 
     mRequestPriority = builder.getRequestPriority();
     mLowestPermittedRequestLevel = builder.getLowestPermittedRequestLevel();
+    mCachesDisabled = builder.getCachesDisabled();
     mIsDiskCacheEnabled = builder.isDiskCacheEnabled();
     mIsMemoryCacheEnabled = builder.isMemoryCacheEnabled();
     mDecodePrefetches = builder.shouldDecodePrefetches();
@@ -217,8 +225,17 @@ public class ImageRequest {
     return mLowestPermittedRequestLevel;
   }
 
+  public int getCachesDisabled() {
+    return mCachesDisabled;
+  }
+
   public boolean isDiskCacheEnabled() {
     return mIsDiskCacheEnabled;
+  }
+
+  /** Returns whether the use of the cache is enabled for read or write according to given mask. */
+  public boolean isCacheEnabled(int cacheMask) {
+    return (getCachesDisabled() & cacheMask) == 0;
   }
 
   public boolean isMemoryCacheEnabled() {
@@ -276,6 +293,7 @@ public class ImageRequest {
         || !Objects.equal(mResizeOptions, request.mResizeOptions)
         || !Objects.equal(mRequestPriority, request.mRequestPriority)
         || !Objects.equal(mLowestPermittedRequestLevel, request.mLowestPermittedRequestLevel)
+        || !Objects.equal(mCachesDisabled, request.mCachesDisabled)
         || !Objects.equal(mDecodePrefetches, request.mDecodePrefetches)
         || !Objects.equal(mResizingAllowedOverride, request.mResizingAllowedOverride)
         || !Objects.equal(mRotationOptions, request.mRotationOptions)
@@ -308,6 +326,7 @@ public class ImageRequest {
               mBytesRange,
               mRequestPriority,
               mLowestPermittedRequestLevel,
+              mCachesDisabled,
               mIsDiskCacheEnabled,
               mIsMemoryCacheEnabled,
               mImageDecodeOptions,
@@ -342,6 +361,7 @@ public class ImageRequest {
         .add("localThumbnailPreviewsEnabled", mLocalThumbnailPreviewsEnabled)
         .add("loadThumbnailOnly", mLoadThumbnailOnly)
         .add("lowestPermittedRequestLevel", mLowestPermittedRequestLevel)
+        .add("cachesDisabled", mCachesDisabled)
         .add("isDiskCacheEnabled", mIsDiskCacheEnabled)
         .add("isMemoryCacheEnabled", mIsMemoryCacheEnabled)
         .add("decodePrefetches", mDecodePrefetches)
@@ -389,6 +409,39 @@ public class ImageRequest {
     public static RequestLevel getMax(RequestLevel requestLevel1, RequestLevel requestLevel2) {
       return requestLevel1.getValue() > requestLevel2.getValue() ? requestLevel1 : requestLevel2;
     }
+  }
+
+  /**
+   * Caches bit locations in cachesDisabled from bitmap read bit (rightest bit, 00000001) to disk
+   * write bit (00100000). Uses for creating mask when performing bitwise operation with
+   * cachesDisabled in order to turn on (disable cache) or turn off (enable cache) the right bit.
+   */
+  @IntDef({
+    CachesLocationsMasks.BITMAP_READ,
+    CachesLocationsMasks.BITMAP_WRITE,
+    CachesLocationsMasks.ENCODED_READ,
+    CachesLocationsMasks.ENCODED_WRITE,
+    CachesLocationsMasks.DISK_READ,
+    CachesLocationsMasks.DISK_WRITE
+  })
+  public @interface CachesLocationsMasks {
+    /* bitmap cache read bit location- 00000001  */
+    int BITMAP_READ = 1;
+
+    /* bitmap cache write bit location- 00000010  */
+    int BITMAP_WRITE = 2;
+
+    /* encoded cache read bit location- 00000100  */
+    int ENCODED_READ = 4;
+
+    /* encoded cache write bit location- 00001000  */
+    int ENCODED_WRITE = 8;
+
+    /* disk cache read bit location- 00010000  */
+    int DISK_READ = 16;
+
+    /* disk cache write bit location- 00100000  */
+    int DISK_WRITE = 32;
   }
 
   /**

@@ -17,11 +17,11 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
-import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.fresco.middleware.MiddlewareUtils;
 import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
+import com.facebook.fresco.ui.common.OnFadeListener;
 import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.FrescoVitoConfig;
@@ -107,7 +107,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       final @Nullable Object callerContext,
       final @Nullable ContextChain contextChain,
       final @Nullable ImageListener listener,
-      final @Nullable FadeDrawable.OnFadeListener onFadeListener,
+      final @Nullable OnFadeListener onFadeListener,
       final @Nullable Rect viewportDimensions) {
     if (!(drawable instanceof FrescoDrawable2Impl)) {
       throw new IllegalArgumentException("Drawable not supported " + drawable);

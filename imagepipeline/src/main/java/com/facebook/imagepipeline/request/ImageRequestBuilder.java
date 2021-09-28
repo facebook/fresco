@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.request;
 
 import static com.facebook.imagepipeline.request.ImageRequest.CacheChoice;
+import static com.facebook.imagepipeline.request.ImageRequest.CachesLocationsMasks;
 import static com.facebook.imagepipeline.request.ImageRequest.RequestLevel;
 
 import android.net.Uri;
@@ -28,6 +29,7 @@ public class ImageRequestBuilder {
 
   private Uri mSourceUri = null;
   private RequestLevel mLowestPermittedRequestLevel = RequestLevel.FULL_FETCH;
+  private int mCachesDisabled = 0; // All caches enabled by default
   private @Nullable ResizeOptions mResizeOptions = null;
   private @Nullable RotationOptions mRotationOptions = null;
   private ImageDecodeOptions mImageDecodeOptions = ImageDecodeOptions.defaults();
@@ -38,8 +40,6 @@ public class ImageRequestBuilder {
   private boolean mLoadThumbnailOnly = false;
   private Priority mRequestPriority = Priority.HIGH;
   private @Nullable Postprocessor mPostprocessor = null;
-  private boolean mDiskCacheEnabled = true;
-  private boolean mMemoryCacheEnabled = true;
   private @Nullable Boolean mDecodePrefetches = null;
   private @Nullable RequestListener mRequestListener;
   private @Nullable BytesRange mBytesRange = null;
@@ -91,6 +91,7 @@ public class ImageRequestBuilder {
         .setLocalThumbnailPreviewsEnabled(imageRequest.getLocalThumbnailPreviewsEnabled())
         .setLoadThumbnailOnly(imageRequest.getLoadThumbnailOnly())
         .setLowestPermittedRequestLevel(imageRequest.getLowestPermittedRequestLevel())
+        .setCachesDisabled(imageRequest.getCachesDisabled())
         .setPostprocessor(imageRequest.getPostprocessor())
         .setProgressiveRenderingEnabled(imageRequest.getProgressiveRenderingEnabled())
         .setRequestPriority(imageRequest.getPriority())
@@ -136,6 +137,22 @@ public class ImageRequestBuilder {
   /** Gets the lowest permitted request level. */
   public RequestLevel getLowestPermittedRequestLevel() {
     return mLowestPermittedRequestLevel;
+  }
+
+  /**
+   * Sets the caches read and write permissions.
+   *
+   * @param cachesDisabled the representation caches permissions
+   * @return the updated builder instance
+   */
+  private ImageRequestBuilder setCachesDisabled(int cachesDisabled) {
+    mCachesDisabled = cachesDisabled;
+    return this;
+  }
+
+  /** Gets the caches permissions. */
+  public int getCachesDisabled() {
+    return mCachesDisabled;
   }
 
   /**
@@ -282,24 +299,36 @@ public class ImageRequestBuilder {
 
   /** Disables disk cache for this request, regardless where the image will come from. */
   public ImageRequestBuilder disableDiskCache() {
-    mDiskCacheEnabled = false;
+    int mask = CachesLocationsMasks.DISK_READ | CachesLocationsMasks.DISK_WRITE;
+    mCachesDisabled = mCachesDisabled | mask;
     return this;
   }
 
   /** Returns whether the use of the disk cache is enabled, which is partly dependent on the URI. */
   public boolean isDiskCacheEnabled() {
-    return mDiskCacheEnabled && UriUtil.isNetworkUri(mSourceUri);
+    int mask = CachesLocationsMasks.DISK_READ | CachesLocationsMasks.DISK_WRITE;
+    return ((mCachesDisabled & mask) == 0) && UriUtil.isNetworkUri(mSourceUri);
   }
 
   /** Disables memory cache for this request. */
   public ImageRequestBuilder disableMemoryCache() {
-    mMemoryCacheEnabled = false;
+    int mask =
+        CachesLocationsMasks.BITMAP_READ
+            | CachesLocationsMasks.BITMAP_WRITE
+            | CachesLocationsMasks.ENCODED_READ
+            | CachesLocationsMasks.ENCODED_WRITE;
+    mCachesDisabled = mCachesDisabled | mask;
     return this;
   }
 
   /** Returns whether the use of the memory cache is enabled. */
   public boolean isMemoryCacheEnabled() {
-    return mMemoryCacheEnabled;
+    int mask =
+        CachesLocationsMasks.BITMAP_READ
+            | CachesLocationsMasks.BITMAP_WRITE
+            | CachesLocationsMasks.ENCODED_READ
+            | CachesLocationsMasks.ENCODED_WRITE;
+    return (mCachesDisabled & mask) == 0;
   }
 
   /**

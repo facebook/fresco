@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import com.facebook.fresco.samples.showcase.permissions.StoragePermissionHelper
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -109,6 +110,15 @@ class MainActivity : AppCompatActivity() {
       showFragment(ExampleDatabase.settings)
     }
     return super.onOptionsItemSelected(item)
+  }
+
+  override fun onRequestPermissionsResult(
+      requestCode: Int,
+      permissions: Array<out String>,
+      grantResults: IntArray
+  ) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    StoragePermissionHelper.onRequestPermissionsResult(this, requestCode, permissions, grantResults)
   }
 
   /**

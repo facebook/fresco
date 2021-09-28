@@ -25,7 +25,6 @@ import com.facebook.datasource.DataSubscriber;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.components.DraweeEventTracker;
 import com.facebook.drawee.components.RetryManager;
-import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.gestures.GestureDetector;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -36,6 +35,7 @@ import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.ui.common.ForwardingControllerListener2;
 import com.facebook.fresco.ui.common.LoggingListener;
+import com.facebook.fresco.ui.common.OnFadeListener;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.ReturnsOwnership;
 import java.util.Map;
@@ -395,7 +395,7 @@ public abstract class AbstractDraweeController<T, INFO>
     if (mSettableDraweeHierarchy instanceof GenericDraweeHierarchy) {
       ((GenericDraweeHierarchy) mSettableDraweeHierarchy)
           .setOnFadeListener(
-              new FadeDrawable.OnFadeListener() {
+              new OnFadeListener() {
                 @Override
                 public void onFadeFinished() {
                   if (mLoggingListener != null) {

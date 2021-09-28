@@ -107,7 +107,7 @@ Congratulations! You just implemented the `FIT_CENTER` scale type:
 
 ### Full Sample
 
-For a full sample see the `DraweeScaleTypeFragment` in the showcase app: [DraweeScaleTypeFragment.java](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeScaleTypeFragment.java)
+For a full sample see the `DraweeScaleTypeFragment` in the showcase app: [DraweeScaleTypeFragment.java](https://github.com/facebook/fresco/blob/main/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeScaleTypeFragment.java)
 
 ![Showcase app with a scale type example](/static/images/docs/01-scaletypes-sample-1.png)
 

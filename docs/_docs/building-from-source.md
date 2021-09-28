@@ -93,4 +93,4 @@ Please raise github issues if the Windows build is broken or submit a pull reque
 
 ### Contributing code upstream
 
-Please see our [CONTRIBUTING](https://github.com/facebook/fresco/blob/master/CONTRIBUTING.md) page.
+Please see our [CONTRIBUTING](https://github.com/facebook/fresco/blob/main/CONTRIBUTING.md) page.

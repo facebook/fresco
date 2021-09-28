@@ -7,10 +7,8 @@
 
 package com.facebook.fresco.samples.showcase.drawee;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,17 +18,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.common.ToggleAnimationClickListener;
+import com.facebook.fresco.samples.showcase.permissions.StoragePermissionHelper;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 /** Display images from media pickers. */
 public class DraweeMediaPickerFragment extends BaseShowcaseFragment {
 
-  private static final int PERMISSION_REQUEST_READ_EXTERNAL_STORAGE = 0;
   private static final int REQUEST_CODE_PICK_MEDIA = 1;
 
   private SimpleDraweeView mSimpleDraweeView;
@@ -86,14 +84,19 @@ public class DraweeMediaPickerFragment extends BaseShowcaseFragment {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            if (!ensureExternalStoragePermissionGranted()) {
-              return;
-            }
-            Intent intent =
-                new Intent(
-                    Intent.ACTION_PICK,
-                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(intent, REQUEST_CODE_PICK_MEDIA);
+            StoragePermissionHelper.INSTANCE.withStoragePermission(
+                getActivity(),
+                new Function1<Unit, Unit>() {
+                  @Override
+                  public Unit invoke(Unit unit) {
+                    Intent intent =
+                        new Intent(
+                            Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent, REQUEST_CODE_PICK_MEDIA);
+                    return null;
+                  }
+                });
           }
         });
   }
@@ -111,17 +114,5 @@ public class DraweeMediaPickerFragment extends BaseShowcaseFragment {
     } else {
       super.onActivityResult(requestCode, resultCode, data);
     }
-  }
-
-  private boolean ensureExternalStoragePermissionGranted() {
-    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-        != PackageManager.PERMISSION_GRANTED) {
-      ActivityCompat.requestPermissions(
-          getActivity(),
-          new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
-          PERMISSION_REQUEST_READ_EXTERNAL_STORAGE);
-      return false;
-    }
-    return true;
   }
 }

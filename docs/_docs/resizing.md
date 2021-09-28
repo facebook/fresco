@@ -65,6 +65,6 @@ Therefore, there is no silver bullet and depending on the device characteristics
 
 ### Example
 
-The Fresco showcase app has a [ImagePipelineResizingFragment](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/imagepipeline/ImagePipelineResizingFragment.java) that demonstrates using placeholder, failure and retry images.
+The Fresco showcase app has a [ImagePipelineResizingFragment](https://github.com/facebook/fresco/blob/main/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/imagepipeline/ImagePipelineResizingFragment.java) that demonstrates using placeholder, failure and retry images.
 
 ![Showcase app with resized example image](/static/images/docs/01-resizing-sample.png)

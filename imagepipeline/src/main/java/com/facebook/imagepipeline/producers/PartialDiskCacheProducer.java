@@ -76,19 +76,27 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
   public void produceResults(
       final Consumer<EncodedImage> consumer, final ProducerContext producerContext) {
     final ImageRequest imageRequest = producerContext.getImageRequest();
-    if (!imageRequest.isDiskCacheEnabled()) {
-      mInputProducer.produceResults(consumer, producerContext);
-      return;
-    }
+    final boolean isDiskCacheEnabledForRead =
+        producerContext
+            .getImageRequest()
+            .isCacheEnabled(ImageRequest.CachesLocationsMasks.DISK_READ);
 
-    producerContext.getProducerListener().onProducerStart(producerContext, PRODUCER_NAME);
+    final ProducerListener2 listener = producerContext.getProducerListener();
+    listener.onProducerStart(producerContext, PRODUCER_NAME);
 
     final Uri uriForPartialCacheKey = createUriForPartialCacheKey(imageRequest);
     final CacheKey partialImageCacheKey =
         mCacheKeyFactory.getEncodedCacheKey(
             imageRequest, uriForPartialCacheKey, producerContext.getCallerContext());
-    final AtomicBoolean isCancelled = new AtomicBoolean(false);
 
+    if (!isDiskCacheEnabledForRead) {
+      listener.onProducerFinishWithSuccess(
+          producerContext, PRODUCER_NAME, getExtraMap(listener, producerContext, false, 0));
+      startInputProducer(consumer, producerContext, partialImageCacheKey, null);
+      return;
+    }
+
+    final AtomicBoolean isCancelled = new AtomicBoolean(false);
     final Task<EncodedImage> diskLookupTask =
         mDefaultBufferedDiskCache.get(partialImageCacheKey, isCancelled);
     final Continuation<EncodedImage, Void> continuation =
@@ -168,7 +176,10 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
             partialImageCacheKey,
             mPooledByteBufferFactory,
             mByteArrayPool,
-            partialResultFromCache);
+            partialResultFromCache,
+            producerContext
+                .getImageRequest()
+                .isCacheEnabled(ImageRequest.CachesLocationsMasks.DISK_WRITE));
 
     mInputProducer.produceResults(consumer, producerContext);
   }
@@ -237,6 +248,7 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
     private final PooledByteBufferFactory mPooledByteBufferFactory;
     private final ByteArrayPool mByteArrayPool;
     private final @Nullable EncodedImage mPartialEncodedImageFromCache;
+    private final boolean mIsDiskCacheEnabledForWrite;
 
     private PartialDiskCacheConsumer(
         final Consumer<EncodedImage> consumer,
@@ -244,13 +256,15 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
         final CacheKey partialImageCacheKey,
         final PooledByteBufferFactory pooledByteBufferFactory,
         final ByteArrayPool byteArrayPool,
-        final @Nullable EncodedImage partialEncodedImageFromCache) {
+        final @Nullable EncodedImage partialEncodedImageFromCache,
+        final boolean isDiskCacheEnabledForWrite) {
       super(consumer);
       mDefaultBufferedDiskCache = defaultBufferedDiskCache;
       mPartialImageCacheKey = partialImageCacheKey;
       mPooledByteBufferFactory = pooledByteBufferFactory;
       mByteArrayPool = byteArrayPool;
       mPartialEncodedImageFromCache = partialEncodedImageFromCache;
+      mIsDiskCacheEnabledForWrite = isDiskCacheEnabledForWrite;
     }
 
     @Override
@@ -277,7 +291,8 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
         }
 
         mDefaultBufferedDiskCache.remove(mPartialImageCacheKey);
-      } else if (statusHasFlag(status, IS_PARTIAL_RESULT)
+      } else if (mIsDiskCacheEnabledForWrite
+          && statusHasFlag(status, IS_PARTIAL_RESULT)
           && isLast(status)
           && newResult != null
           && newResult.getImageFormat() != ImageFormat.UNKNOWN) {
