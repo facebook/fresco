@@ -16,7 +16,7 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import com.facebook.common.callercontext.ContextChain;
 import com.facebook.datasource.DataSource;
 import com.facebook.fresco.ui.common.OnFadeListener;
-import com.facebook.fresco.vito.core.FrescoDrawable2;
+import com.facebook.fresco.vito.core.FrescoDrawableInterface;
 import com.facebook.fresco.vito.core.PrefetchConfig;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.listener.ImageListener;
@@ -90,7 +90,7 @@ public class FrescoVitoImage2Spec {
   @PropDefault static final boolean mutateDrawables = true;
 
   @OnCreateMountContent(mountingType = MountingType.DRAWABLE)
-  static FrescoDrawable2 onCreateMountContent(Context c) {
+  static FrescoDrawableInterface onCreateMountContent(Context c) {
     return FrescoVitoProvider.getController().createDrawable();
   }
 
@@ -154,7 +154,7 @@ public class FrescoVitoImage2Spec {
   @OnMount
   static void onMount(
       ComponentContext c,
-      final FrescoDrawable2 frescoDrawable,
+      final FrescoDrawableInterface frescoDrawable,
       @Prop(optional = true) final @Nullable ImageListener imageListener,
       @Prop(optional = true) final @Nullable Object callerContext,
       @Prop(optional = true) final @Nullable OnFadeListener onFadeListener,
@@ -189,7 +189,7 @@ public class FrescoVitoImage2Spec {
   @OnBind
   static void onBind(
       ComponentContext c,
-      final FrescoDrawable2 frescoDrawable,
+      final FrescoDrawableInterface frescoDrawable,
       @Prop(optional = true) final @Nullable ImageListener imageListener,
       @Prop(optional = true) final @Nullable OnFadeListener onFadeListener,
       @Prop(optional = true) final @Nullable Object callerContext,
@@ -221,7 +221,7 @@ public class FrescoVitoImage2Spec {
   @OnUnbind
   static void onUnbind(
       ComponentContext c,
-      FrescoDrawable2 frescoDrawable,
+      FrescoDrawableInterface frescoDrawable,
       @FromPrepare @Nullable DataSource<Void> prefetchDataSource) {
     frescoDrawable.getImagePerfListener().onImageUnbind(frescoDrawable);
     if (FrescoVitoProvider.getConfig().useBindOnly()) {
@@ -237,7 +237,7 @@ public class FrescoVitoImage2Spec {
   @OnUnmount
   static void onUnmount(
       ComponentContext c,
-      FrescoDrawable2 frescoDrawable,
+      FrescoDrawableInterface frescoDrawable,
       @FromPrepare @Nullable DataSource<Void> prefetchDataSource) {
     frescoDrawable.getImagePerfListener().onImageUnmount(frescoDrawable);
     if (FrescoVitoProvider.getConfig().useBindOnly()) {

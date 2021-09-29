@@ -47,6 +47,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
   private @Nullable DrawableDataSubscriber mDrawableDataSubscriber;
   private long mImageId;
   private @Nullable Object mExtras;
+  private @Nullable Runnable mPersistentFetchRunnable;
 
   private @Nullable DataSource<CloseableReference<CloseableImage>> mDataSource;
   private boolean mFetchSubmitted;
@@ -227,6 +228,17 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
     return mImageRequest;
   }
 
+  @Override
+  @Nullable
+  public Runnable getPersistentFetchRunnable() {
+    return mPersistentFetchRunnable;
+  }
+
+  @Override
+  public void setPersistentFetchRunnable(@Nullable Runnable runnable) {
+    mPersistentFetchRunnable = runnable;
+  }
+
   public synchronized void setImageId(long imageId) {
     mImageId = imageId;
   }
@@ -279,6 +291,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
     mExtras = null;
     setOnFadeListener(null);
     mImageListener.onReset();
+    // The fetchRunnable will not be reset automatically
   }
 
   public void scheduleReleaseDelayed() {

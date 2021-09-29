@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.core;
 
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import com.facebook.common.callercontext.ContextChain;
 import com.facebook.fresco.ui.common.OnFadeListener;
 import com.facebook.fresco.vito.listener.ImageListener;
@@ -17,10 +18,10 @@ import javax.annotation.Nullable;
 @Nullsafe(Nullsafe.Mode.STRICT)
 public interface FrescoController2 {
 
-  FrescoDrawable2 createDrawable();
+  <T extends Drawable & FrescoDrawableInterface> T createDrawable();
 
   boolean fetch(
-      FrescoDrawable2 frescoDrawable,
+      FrescoDrawableInterface drawableInterface,
       VitoImageRequest imageRequest,
       @Nullable Object callerContext,
       @Nullable ContextChain contextChain,
@@ -28,9 +29,9 @@ public interface FrescoController2 {
       @Nullable OnFadeListener onFadeListener,
       @Nullable Rect viewportDimensions);
 
-  void releaseDelayed(FrescoDrawable2 drawable);
+  void releaseDelayed(FrescoDrawableInterface drawableInterface);
 
-  void release(FrescoDrawable2 drawable);
+  void release(FrescoDrawableInterface drawableInterface);
 
-  void releaseImmediately(FrescoDrawable2 drawable);
+  void releaseImmediately(FrescoDrawableInterface drawableInterface);
 }
