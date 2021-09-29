@@ -42,7 +42,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   private final Supplier<Boolean> mAsyncLogging;
   private final Supplier<Boolean> mUseNewState;
 
-  private @Nullable Handler mHandler;
+  private static @Nullable Handler sHandler;
 
   static class LogHandler extends Handler {
 
@@ -205,11 +205,11 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
 
   private void updateStatus(ImagePerfState state, @ImageLoadStatus int imageLoadStatus) {
     if (shouldDispatchAsync()) {
-      Message msg = Preconditions.checkNotNull(mHandler).obtainMessage();
+      Message msg = Preconditions.checkNotNull(sHandler).obtainMessage();
       msg.what = WHAT_STATUS;
       msg.arg1 = imageLoadStatus;
       msg.obj = state;
-      mHandler.sendMessage(msg);
+      sHandler.sendMessage(msg);
     } else {
       mImagePerfNotifier.notifyStatusUpdated(state, imageLoadStatus);
     }
@@ -217,11 +217,11 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
 
   private void updateVisibility(ImagePerfState state, @VisibilityState int visibilityState) {
     if (shouldDispatchAsync()) {
-      Message msg = Preconditions.checkNotNull(mHandler).obtainMessage();
+      Message msg = Preconditions.checkNotNull(sHandler).obtainMessage();
       msg.what = WHAT_VISIBILITY;
       msg.arg1 = visibilityState;
       msg.obj = state;
-      mHandler.sendMessage(msg);
+      sHandler.sendMessage(msg);
     } else {
       // sync
       mImagePerfNotifier.notifyListenersOfVisibilityStateUpdate(state, visibilityState);
@@ -229,18 +229,18 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   }
 
   private synchronized void initHandler() {
-    if (mHandler != null) {
+    if (sHandler != null) {
       return;
     }
     HandlerThread handlerThread = new HandlerThread("ImagePerfControllerListener2Thread");
     handlerThread.start();
     Looper looper = Preconditions.checkNotNull(handlerThread.getLooper());
-    mHandler = new LogHandler(looper, mImagePerfNotifier);
+    sHandler = new LogHandler(looper, mImagePerfNotifier);
   }
 
   private boolean shouldDispatchAsync() {
     boolean enabled = mAsyncLogging.get();
-    if (enabled && mHandler == null) {
+    if (enabled && sHandler == null) {
       initHandler();
     }
     return enabled;
