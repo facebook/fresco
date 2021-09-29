@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 
 /** Builder for {@link ImageDecodeOptions}. */
 @Nullsafe(Nullsafe.Mode.STRICT)
-public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
+public class ImageDecodeOptionsBuilder {
 
   private int mMinDecodeIntervalMs = 100;
   private int mMaxDimensionPx = Integer.MAX_VALUE;
@@ -64,7 +64,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
    * @param intervalMs the minimum decode interval in milliseconds
    * @return this builder
    */
-  public T setMinDecodeIntervalMs(int intervalMs) {
+  public ImageDecodeOptionsBuilder setMinDecodeIntervalMs(int intervalMs) {
     mMinDecodeIntervalMs = intervalMs;
     return getThis();
   }
@@ -84,7 +84,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
    * @param maxDimensionPx the maximum image dimension in pixels
    * @return this builder
    */
-  public T setMaxDimensionPx(int maxDimensionPx) {
+  public ImageDecodeOptionsBuilder setMaxDimensionPx(int maxDimensionPx) {
     mMaxDimensionPx = maxDimensionPx;
     return getThis();
   }
@@ -104,7 +104,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
    * @param decodePreviewFrame whether to decode a preview frame
    * @return this builder
    */
-  public T setDecodePreviewFrame(boolean decodePreviewFrame) {
+  public ImageDecodeOptionsBuilder setDecodePreviewFrame(boolean decodePreviewFrame) {
     mDecodePreviewFrame = decodePreviewFrame;
     return getThis();
   }
@@ -133,7 +133,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
    * @param useLastFrameForPreview whether to use the last frame for the preview image
    * @return this builder
    */
-  public T setUseLastFrameForPreview(boolean useLastFrameForPreview) {
+  public ImageDecodeOptionsBuilder setUseLastFrameForPreview(boolean useLastFrameForPreview) {
     mUseLastFrameForPreview = useLastFrameForPreview;
     return getThis();
   }
@@ -157,7 +157,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
    * @param decodeAllFrames whether to decode all the frames and store them in memory
    * @return this builder
    */
-  public T setDecodeAllFrames(boolean decodeAllFrames) {
+  public ImageDecodeOptionsBuilder setDecodeAllFrames(boolean decodeAllFrames) {
     mDecodeAllFrames = decodeAllFrames;
     return getThis();
   }
@@ -168,7 +168,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
    * @param forceStaticImage whether to force the image to be decoded as a static image
    * @return this builder
    */
-  public T setForceStaticImage(boolean forceStaticImage) {
+  public ImageDecodeOptionsBuilder setForceStaticImage(boolean forceStaticImage) {
     mForceStaticImage = forceStaticImage;
     return getThis();
   }
@@ -180,7 +180,8 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
    * @param customImageDecoder the custom decoder to use
    * @return this builder
    */
-  public T setCustomImageDecoder(@Nullable ImageDecoder customImageDecoder) {
+  public ImageDecodeOptionsBuilder setCustomImageDecoder(
+      @Nullable ImageDecoder customImageDecoder) {
     mCustomImageDecoder = customImageDecoder;
     return getThis();
   }
@@ -218,7 +219,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
    *
    * @param bitmapConfig which config static image will be decode with;
    */
-  public T setBitmapConfig(Bitmap.Config bitmapConfig) {
+  public ImageDecodeOptionsBuilder setBitmapConfig(Bitmap.Config bitmapConfig) {
     mBitmapConfig = bitmapConfig;
     return getThis();
   }
@@ -237,7 +238,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
    *
    * @param animatedBitmapConfig which config animated image will be decode with;
    */
-  public T setAnimatedBitmapConfig(Bitmap.Config animatedBitmapConfig) {
+  public ImageDecodeOptionsBuilder setAnimatedBitmapConfig(Bitmap.Config animatedBitmapConfig) {
     mAnimatedBitmapConfig = animatedBitmapConfig;
     return getThis();
   }
@@ -248,7 +249,8 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
    * @param bitmapTransformation the transformation to use
    * @return the builder
    */
-  public T setBitmapTransformation(@Nullable BitmapTransformation bitmapTransformation) {
+  public ImageDecodeOptionsBuilder setBitmapTransformation(
+      @Nullable BitmapTransformation bitmapTransformation) {
     mBitmapTransformation = bitmapTransformation;
     return getThis();
   }
@@ -264,7 +266,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
    *
    * @param colorSpace target color space for decoding.
    */
-  public T setColorSpace(ColorSpace colorSpace) {
+  public ImageDecodeOptionsBuilder setColorSpace(ColorSpace colorSpace) {
     mColorSpace = colorSpace;
     return getThis();
   }
@@ -279,7 +281,8 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
     return mColorSpace;
   }
 
-  public T setExcludeBitmapConfigFromComparison(boolean excludeBitmapConfigFromComparison) {
+  public ImageDecodeOptionsBuilder setExcludeBitmapConfigFromComparison(
+      boolean excludeBitmapConfigFromComparison) {
     mExcludeBitmapConfigFromComparison = excludeBitmapConfigFromComparison;
     return getThis();
   }
@@ -297,7 +300,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
     return new ImageDecodeOptions(this);
   }
 
-  protected T getThis() {
-    return (T) this;
+  protected ImageDecodeOptionsBuilder getThis() {
+    return this;
   }
 }
