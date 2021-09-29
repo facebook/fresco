@@ -21,6 +21,8 @@ public interface FrescoVitoConfig {
 
   boolean useNewReleaseCallback();
 
+  boolean releasePersistentFetchRunnable();
+
   Supplier<Boolean> useNativeRounding();
 
   boolean layoutPrefetchingEnabled(Object callerContext);

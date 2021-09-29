@@ -33,7 +33,7 @@ public class FrescoDrawable2ImplTest {
 
   @Before
   public void setup() {
-    mFrescoDrawable = new FrescoDrawable2Impl(false, null, new NoOpVitoImagePerfListener());
+    mFrescoDrawable = new FrescoDrawable2Impl(false, false, null, new NoOpVitoImagePerfListener());
     mLatch = new CountDownLatch(1);
     mCloseableImage = new DummyCloseableImage();
     mCloseableReference =
