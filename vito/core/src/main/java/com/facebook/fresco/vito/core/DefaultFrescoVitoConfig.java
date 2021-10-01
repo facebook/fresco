@@ -47,11 +47,6 @@ public class DefaultFrescoVitoConfig implements FrescoVitoConfig {
   }
 
   @Override
-  public boolean releasePersistentFetchRunnable() {
-    return true;
-  }
-
-  @Override
   public Supplier<Boolean> useNativeRounding() {
     return Suppliers.BOOLEAN_TRUE;
   }

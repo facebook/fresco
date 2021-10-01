@@ -89,7 +89,6 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     FrescoDrawable2 drawable =
         new FrescoDrawable2Impl(
             mConfig.useNewReleaseCallback(),
-            mConfig.releasePersistentFetchRunnable(),
             mImagePerfListenerSupplier == null ? null : mImagePerfListenerSupplier.get(),
             mVitoImagePerfListener);
     if (mDrawableListener != null) {

@@ -42,7 +42,6 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
   private static final DeferredReleaser sDeferredReleaser = DeferredReleaser.getInstance();
 
   private final boolean mUseNewReleaseCallbacks;
-  private final boolean mReleasePersistentFetchRunnable;
   private @Nullable VitoImageRequest mImageRequest;
   private @Nullable Object mCallerContext;
   private @Nullable DrawableDataSubscriber mDrawableDataSubscriber;
@@ -116,11 +115,9 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
 
   public FrescoDrawable2Impl(
       boolean useNewReleaseCallbacks,
-      boolean releasePersistentFetchRunnable,
       @Nullable ControllerListener2<ImageInfo> imagePerfControllerListener,
       VitoImagePerfListener imagePerfListener) {
     mUseNewReleaseCallbacks = useNewReleaseCallbacks;
-    mReleasePersistentFetchRunnable = releasePersistentFetchRunnable;
     mImageListener.setImagePerfControllerListener(imagePerfControllerListener);
     mImagePerfListener = imagePerfListener;
   }
@@ -276,9 +273,6 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
     cancelReleaseDelayed();
     if (mUseNewReleaseCallbacks && mFetchSubmitted && mDrawableDataSubscriber != null) {
       mDrawableDataSubscriber.onRelease(this);
-    }
-    if (mReleasePersistentFetchRunnable) {
-      mPersistentFetchRunnable = null;
     }
     setImageId(0);
     super.close();
