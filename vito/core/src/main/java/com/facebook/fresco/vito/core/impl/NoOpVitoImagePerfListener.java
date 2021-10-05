@@ -7,7 +7,7 @@
 
 package com.facebook.fresco.vito.core.impl;
 
-import com.facebook.fresco.vito.core.FrescoDrawableInterface;
+import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.VitoImagePerfListener;
 import com.facebook.infer.annotation.Nullsafe;
 
@@ -15,44 +15,44 @@ import com.facebook.infer.annotation.Nullsafe;
 public class NoOpVitoImagePerfListener implements VitoImagePerfListener {
 
   @Override
-  public void onImageMount(FrescoDrawableInterface drawable) {}
+  public void onImageMount(FrescoDrawable2 drawable) {}
 
   @Override
-  public void onImageUnmount(FrescoDrawableInterface drawable) {}
+  public void onImageUnmount(FrescoDrawable2 drawable) {}
 
   @Override
-  public void onImageBind(FrescoDrawableInterface drawable) {}
+  public void onImageBind(FrescoDrawable2 drawable) {}
 
   @Override
-  public void onImageUnbind(FrescoDrawableInterface drawable) {}
+  public void onImageUnbind(FrescoDrawable2 drawable) {}
 
   @Override
-  public void onImageFetch(FrescoDrawableInterface drawable) {}
+  public void onImageFetch(FrescoDrawable2 drawable) {}
 
   @Override
-  public void onImageSuccess(FrescoDrawableInterface drawable, boolean wasImmediate) {}
+  public void onImageSuccess(FrescoDrawable2 drawable, boolean wasImmediate) {}
 
   @Override
-  public void onImageError(FrescoDrawableInterface drawable) {}
+  public void onImageError(FrescoDrawable2 drawable) {}
 
   @Override
-  public void onImageRelease(FrescoDrawableInterface drawable) {}
+  public void onImageRelease(FrescoDrawable2 drawable) {}
 
   @Override
-  public void onScheduleReleaseDelayed(FrescoDrawableInterface drawable) {}
+  public void onScheduleReleaseDelayed(FrescoDrawable2 drawable) {}
 
   @Override
-  public void onScheduleReleaseNextFrame(FrescoDrawableInterface drawable) {}
+  public void onScheduleReleaseNextFrame(FrescoDrawable2 drawable) {}
 
   @Override
-  public void onReleaseImmediately(FrescoDrawableInterface drawable) {}
+  public void onReleaseImmediately(FrescoDrawable2 drawable) {}
 
   @Override
-  public void onDrawableReconfigured(FrescoDrawableInterface drawable) {}
+  public void onDrawableReconfigured(FrescoDrawable2 drawable) {}
 
   @Override
-  public void onIgnoreResult(FrescoDrawableInterface drawable) {}
+  public void onIgnoreResult(FrescoDrawable2 drawable) {}
 
   @Override
-  public void onIgnoreFailure(FrescoDrawableInterface drawable) {}
+  public void onIgnoreFailure(FrescoDrawable2 drawable) {}
 }

@@ -14,7 +14,7 @@ import android.os.Handler;
 import android.os.Looper;
 import com.facebook.common.callercontext.ContextChain;
 import com.facebook.fresco.vito.core.FrescoController2;
-import com.facebook.fresco.vito.core.FrescoDrawableInterface;
+import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.provider.FrescoVitoProvider;
 import com.facebook.fresco.vito.source.ImageSourceProvider;
@@ -76,9 +76,9 @@ public class FrescoVitoSlideshowComponentSpec {
       final @State(canUpdateLazily = true) Boolean currentlyPlaying) {
     // Reset mount content
     FrescoController2 controller = FrescoVitoProvider.getController();
-    controller.releaseImmediately(slideshowDrawable.getPreviousImage());
-    controller.releaseImmediately(slideshowDrawable.getCurrentImage());
-    controller.releaseImmediately(slideshowDrawable.getNextImage());
+    controller.releaseImmediately(slideshowDrawable.getPrevious());
+    controller.releaseImmediately(slideshowDrawable.getCurrent());
+    controller.releaseImmediately(slideshowDrawable.getNext());
     slideshowDrawable.reset();
 
     // Configure mount content
@@ -154,9 +154,9 @@ public class FrescoVitoSlideshowComponentSpec {
       ComponentContext c, final FrescoVitoSlideshowDrawable slideshowDrawable) {
     FrescoController2 controller = FrescoVitoProvider.getController();
 
-    controller.releaseImmediately(slideshowDrawable.getPreviousImage());
-    controller.releaseImmediately(slideshowDrawable.getCurrentImage());
-    controller.releaseImmediately(slideshowDrawable.getNextImage());
+    controller.releaseImmediately(slideshowDrawable.getPrevious());
+    controller.releaseImmediately(slideshowDrawable.getCurrent());
+    controller.releaseImmediately(slideshowDrawable.getNext());
     slideshowDrawable.reset();
     FrescoVitoSlideshowComponent.lazyUpdateCurrentlyPlaying(c, false);
   }
@@ -170,8 +170,8 @@ public class FrescoVitoSlideshowComponentSpec {
       @Nullable ContextChain contextChain,
       int nextIndex) {
     // Do not transition until both current and next images are available
-    if (isStillLoading(slideshowDrawable.getCurrentImage())
-        || isStillLoading(slideshowDrawable.getNextImage())) {
+    if (isStillLoading(slideshowDrawable.getCurrent())
+        || isStillLoading(slideshowDrawable.getNext())) {
       return;
     }
     // Both images are available -> we can fade
@@ -181,7 +181,7 @@ public class FrescoVitoSlideshowComponentSpec {
         resources, slideshowDrawable, uris.get(nextIndex), options, callerContext, contextChain);
   }
 
-  private static boolean isStillLoading(FrescoDrawableInterface frescoDrawable) {
+  private static boolean isStillLoading(FrescoDrawable2 frescoDrawable) {
     return frescoDrawable.isFetchSubmitted() && !frescoDrawable.hasImage();
   }
 
@@ -194,7 +194,7 @@ public class FrescoVitoSlideshowComponentSpec {
       @Nullable ContextChain contextChain) {
     FrescoVitoProvider.getController()
         .fetch(
-            slideshowDrawable.getNextImage(),
+            slideshowDrawable.getNext(),
             FrescoVitoProvider.getImagePipeline()
                 .createImageRequest(resources, ImageSourceProvider.forUri(uri), options),
             callerContext,

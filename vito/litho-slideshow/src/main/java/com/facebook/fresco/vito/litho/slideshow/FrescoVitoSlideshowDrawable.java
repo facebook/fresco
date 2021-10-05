@@ -10,19 +10,19 @@ package com.facebook.fresco.vito.litho.slideshow;
 import android.graphics.drawable.Drawable;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.FadeDrawable;
-import com.facebook.fresco.vito.core.FrescoDrawableInterface;
+import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.TimerTask;
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public class FrescoVitoSlideshowDrawable<T extends Drawable & FrescoDrawableInterface>
-    extends FadeDrawable {
+public class FrescoVitoSlideshowDrawable extends FadeDrawable {
 
   private int mCurrentLayer = 0;
   private @Nullable TimerTask mTimerTask;
 
-  public FrescoVitoSlideshowDrawable(T drawable1, T drawable2, T drawable3) {
+  public FrescoVitoSlideshowDrawable(
+      FrescoDrawable2 drawable1, FrescoDrawable2 drawable2, FrescoDrawable2 drawable3) {
     super(new Drawable[] {drawable1, drawable2, drawable3});
   }
 
@@ -35,17 +35,16 @@ public class FrescoVitoSlideshowDrawable<T extends Drawable & FrescoDrawableInte
     return mTimerTask;
   }
 
-  public FrescoDrawableInterface getCurrentImage() {
-    return Preconditions.checkNotNull((FrescoDrawableInterface) getDrawable(mCurrentLayer));
+  public FrescoDrawable2 getCurrent() {
+    return Preconditions.checkNotNull((FrescoDrawable2) getDrawable(mCurrentLayer));
   }
 
-  public FrescoDrawableInterface getNextImage() {
-    return Preconditions.checkNotNull((FrescoDrawableInterface) getDrawable(getNextLayerIndex()));
+  public FrescoDrawable2 getNext() {
+    return Preconditions.checkNotNull((FrescoDrawable2) getDrawable(getNextLayerIndex()));
   }
 
-  public FrescoDrawableInterface getPreviousImage() {
-    return Preconditions.checkNotNull(
-        (FrescoDrawableInterface) getDrawable(getPreviousLayerIndex()));
+  public FrescoDrawable2 getPrevious() {
+    return Preconditions.checkNotNull((FrescoDrawable2) getDrawable(getPreviousLayerIndex()));
   }
 
   public void fadeToNext() {

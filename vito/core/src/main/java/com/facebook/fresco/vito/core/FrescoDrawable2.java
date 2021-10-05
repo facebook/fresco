@@ -29,8 +29,7 @@ public abstract class FrescoDrawable2 extends FadeDrawable
         TransformCallback,
         TransformAwareDrawable,
         Closeable,
-        DeferredReleaser.Releasable,
-        FrescoDrawableInterface {
+        DeferredReleaser.Releasable {
 
   private static final int LAYER_COUNT = 4;
 
@@ -47,7 +46,6 @@ public abstract class FrescoDrawable2 extends FadeDrawable
     super(new Drawable[LAYER_COUNT], false, IMAGE_DRAWABLE_INDEX);
   }
 
-  @Override
   public boolean hasImage() {
     return getDrawable(IMAGE_DRAWABLE_INDEX) != null;
   }
@@ -120,7 +118,6 @@ public abstract class FrescoDrawable2 extends FadeDrawable
     return super.setVisible(visible, restart);
   }
 
-  @Override
   public void setVisibilityCallback(@Nullable VisibilityCallback visibilityCallback) {
     mVisibilityCallback = visibilityCallback;
   }
@@ -160,11 +157,23 @@ public abstract class FrescoDrawable2 extends FadeDrawable
 
   public abstract ScaleTypeDrawable getActualImageWrapper();
 
+  public abstract @Nullable Drawable getActualImageDrawable();
+
+  public abstract boolean isFetchSubmitted();
+
+  public abstract void setImageRequest(@Nullable VitoImageRequest imageRequest);
+
   public abstract void setCallerContext(@Nullable Object callerContext);
+
+  public abstract @Nullable Object getCallerContext();
 
   public abstract void setImageListener(@Nullable ImageListener imageListener);
 
   public abstract @Nullable ImageListener getImageListener();
+
+  public abstract @Nullable VitoImageRequest getImageRequest();
+
+  public abstract long getImageId();
 
   public abstract void cancelReleaseDelayed();
 
@@ -173,6 +182,8 @@ public abstract class FrescoDrawable2 extends FadeDrawable
   public abstract @Nullable Object getExtras();
 
   public abstract void setExtras(@Nullable Object extras);
+
+  public abstract VitoImagePerfListener getImagePerfListener();
 
   private static void maybeStopAnimation(@Nullable Drawable drawable) {
     if (drawable instanceof Animatable) {

@@ -12,31 +12,31 @@ import com.facebook.infer.annotation.Nullsafe;
 @Nullsafe(Nullsafe.Mode.STRICT)
 public interface VitoImagePerfListener {
 
-  void onImageMount(FrescoDrawableInterface drawable);
+  void onImageMount(FrescoDrawable2 drawable);
 
-  void onImageUnmount(FrescoDrawableInterface drawable);
+  void onImageUnmount(FrescoDrawable2 drawable);
 
-  void onImageBind(FrescoDrawableInterface drawable);
+  void onImageBind(FrescoDrawable2 drawable);
 
-  void onImageUnbind(FrescoDrawableInterface drawable);
+  void onImageUnbind(FrescoDrawable2 drawable);
 
-  void onImageFetch(FrescoDrawableInterface drawable);
+  void onImageFetch(FrescoDrawable2 drawable);
 
-  void onImageSuccess(FrescoDrawableInterface drawable, boolean wasImmediate);
+  void onImageSuccess(FrescoDrawable2 drawable, boolean wasImmediate);
 
-  void onImageError(FrescoDrawableInterface drawable);
+  void onImageError(FrescoDrawable2 drawable);
 
-  void onImageRelease(FrescoDrawableInterface drawable);
+  void onImageRelease(FrescoDrawable2 drawable);
 
-  void onScheduleReleaseDelayed(FrescoDrawableInterface drawable);
+  void onScheduleReleaseDelayed(FrescoDrawable2 drawable);
 
-  void onScheduleReleaseNextFrame(FrescoDrawableInterface drawable);
+  void onScheduleReleaseNextFrame(FrescoDrawable2 drawable);
 
-  void onReleaseImmediately(FrescoDrawableInterface drawable);
+  void onReleaseImmediately(FrescoDrawable2 drawable);
 
-  void onDrawableReconfigured(FrescoDrawableInterface drawable);
+  void onDrawableReconfigured(FrescoDrawable2 drawable);
 
-  void onIgnoreResult(FrescoDrawableInterface drawable);
+  void onIgnoreResult(FrescoDrawable2 drawable);
 
-  void onIgnoreFailure(FrescoDrawableInterface drawable);
+  void onIgnoreFailure(FrescoDrawable2 drawable);
 }

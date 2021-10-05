@@ -24,7 +24,6 @@ import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.ui.common.OnFadeListener;
 import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
-import com.facebook.fresco.vito.core.FrescoDrawableInterface;
 import com.facebook.fresco.vito.core.FrescoVitoConfig;
 import com.facebook.fresco.vito.core.NopDrawable;
 import com.facebook.fresco.vito.core.VitoImagePerfListener;
@@ -103,19 +102,19 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
 
   @Override
   public boolean fetch(
-      final FrescoDrawableInterface drawableInterface,
+      final FrescoDrawable2 drawable,
       final VitoImageRequest imageRequest,
       final @Nullable Object callerContext,
       final @Nullable ContextChain contextChain,
       final @Nullable ImageListener listener,
       final @Nullable OnFadeListener onFadeListener,
       final @Nullable Rect viewportDimensions) {
-    if (!(drawableInterface instanceof FrescoDrawable2Impl)) {
-      throw new IllegalArgumentException("Drawable not supported " + drawableInterface);
+    if (!(drawable instanceof FrescoDrawable2Impl)) {
+      throw new IllegalArgumentException("Drawable not supported " + drawable);
     }
-    final FrescoDrawable2Impl frescoDrawable = (FrescoDrawable2Impl) drawableInterface;
+    final FrescoDrawable2Impl frescoDrawable = (FrescoDrawable2Impl) drawable;
     // Save viewport dimension for future use
-    frescoDrawable.setViewportDimensions(viewportDimensions);
+    drawable.setViewportDimensions(viewportDimensions);
 
     // Check if we already fetched the image
     if (frescoDrawable.getDrawableDataSubscriber() == this
@@ -212,22 +211,31 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   }
 
   @Override
-  public void releaseDelayed(final FrescoDrawableInterface drawableInterface) {
-    FrescoDrawable2Impl frescoDrawable = (FrescoDrawable2Impl) drawableInterface;
+  public void releaseDelayed(final FrescoDrawable2 drawable) {
+    if (!(drawable instanceof FrescoDrawable2Impl)) {
+      throw new IllegalArgumentException("Drawable not supported " + drawable);
+    }
+    FrescoDrawable2Impl frescoDrawable = (FrescoDrawable2Impl) drawable;
     frescoDrawable.getImagePerfListener().onScheduleReleaseDelayed(frescoDrawable);
     frescoDrawable.scheduleReleaseDelayed();
   }
 
   @Override
-  public void release(final FrescoDrawableInterface drawableInterface) {
-    FrescoDrawable2Impl frescoDrawable = (FrescoDrawable2Impl) drawableInterface;
+  public void release(final FrescoDrawable2 drawable) {
+    if (!(drawable instanceof FrescoDrawable2Impl)) {
+      throw new IllegalArgumentException("Drawable not supported " + drawable);
+    }
+    FrescoDrawable2Impl frescoDrawable = (FrescoDrawable2Impl) drawable;
     frescoDrawable.getImagePerfListener().onScheduleReleaseNextFrame(frescoDrawable);
     frescoDrawable.scheduleReleaseNextFrame();
   }
 
   @Override
-  public void releaseImmediately(FrescoDrawableInterface drawableInterface) {
-    FrescoDrawable2Impl frescoDrawable = (FrescoDrawable2Impl) drawableInterface;
+  public void releaseImmediately(FrescoDrawable2 drawable) {
+    if (!(drawable instanceof FrescoDrawable2Impl)) {
+      throw new IllegalArgumentException("Drawable not supported " + drawable);
+    }
+    FrescoDrawable2Impl frescoDrawable = (FrescoDrawable2Impl) drawable;
     frescoDrawable.getImagePerfListener().onReleaseImmediately(frescoDrawable);
     frescoDrawable.releaseImmediately();
   }
@@ -238,6 +246,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       CloseableReference<CloseableImage> image,
       boolean isImmediate,
       @Nullable DataSource<CloseableReference<CloseableImage>> dataSource) {
+
     ScaleTypeDrawable actualImageWrapperDrawable = drawable.getActualImageWrapper();
     mHierarcher.setupActualImageWrapper(
         actualImageWrapperDrawable, imageRequest.imageOptions, drawable.getCallerContext());
