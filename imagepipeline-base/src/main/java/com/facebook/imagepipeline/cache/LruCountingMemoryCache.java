@@ -185,6 +185,15 @@ public class LruCountingMemoryCache<K, V>
     return clientRef;
   }
 
+  @Override
+  public synchronized @Nullable V inspect(final K key) {
+    Entry<K, V> entry = mCachedEntries.get(key);
+    if (entry == null) {
+      return null;
+    }
+    return entry.valueRef.get();
+  }
+
   /**
    * Probes whether the object corresponding to the key is in the cache. Note that the act of
    * probing touches the item (if present in cache), thus changing its LRU timestamp.

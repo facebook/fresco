@@ -35,6 +35,12 @@ public class InstrumentedMemoryCache<K, V> implements MemoryCache<K, V> {
     return result;
   }
 
+  @Nullable
+  @Override
+  public V inspect(K key) {
+    return mDelegate.inspect(key);
+  }
+
   @Override
   public void probe(K key) {
     mDelegate.probe(key);

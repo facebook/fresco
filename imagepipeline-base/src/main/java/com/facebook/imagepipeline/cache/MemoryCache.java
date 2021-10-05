@@ -54,6 +54,16 @@ public interface MemoryCache<K, V> extends MemoryTrimmable, HasDebugData {
   CloseableReference<V> get(K key);
 
   /**
+   * Gets the item with the given key for debug purposes. For instance, for LRU caches this will not
+   * change the LRU order. Use {@link #get(K)} instead.
+   *
+   * @param key
+   * @return a cached value or null if the item was not found
+   */
+  @Nullable
+  V inspect(K key);
+
+  /**
    * Probes whether the object corresponding to the key is in the cache. Note that the act of
    * probing touches the item (if present in cache), thus changing its LRU timestamp.
    *

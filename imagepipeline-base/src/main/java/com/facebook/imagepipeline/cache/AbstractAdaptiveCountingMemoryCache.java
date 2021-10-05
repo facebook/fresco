@@ -269,6 +269,11 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
     return clientRef;
   }
 
+  @Override
+  public @Nullable V inspect(K key) {
+    return null; // Not supported. TODO T66165815
+  }
+
   /**
    * Probes whether the object corresponding to the key is in the cache. Note that the act of
    * probing touches the item (if present in cache), thus changing its LRU timestamp.
