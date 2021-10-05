@@ -75,6 +75,8 @@ public class ImageOptions extends DecodedImageOptions {
 
   private final boolean mAutoPlay;
 
+  private final boolean mAlwaysShowProgressImmediately;
+
   private final @Nullable ImageOptionsDrawableFactory mCustomDrawableFactory;
 
   private final int mDelayMs;
@@ -106,6 +108,7 @@ public class ImageOptions extends DecodedImageOptions {
     mFadeDurationMs = builder.mFadeDurationMs;
 
     mAutoPlay = builder.mAutoPlay;
+    mAlwaysShowProgressImmediately = builder.mAlwaysShowProgressImmediately;
 
     mCustomDrawableFactory = builder.mCustomDrawableFactory;
 
@@ -180,6 +183,10 @@ public class ImageOptions extends DecodedImageOptions {
     return mAutoPlay;
   }
 
+  public boolean shouldAlwaysShowProgressImmediately() {
+    return mAlwaysShowProgressImmediately;
+  }
+
   public boolean shouldResizeToViewport() {
     return mResizeToViewport;
   }
@@ -220,6 +227,7 @@ public class ImageOptions extends DecodedImageOptions {
         || mResizeToViewport != other.mResizeToViewport
         || mFadeDurationMs != other.mFadeDurationMs
         || mAutoPlay != other.mAutoPlay
+        || mAlwaysShowProgressImmediately != other.mAlwaysShowProgressImmediately
         || !Objects.equal(mCustomDrawableFactory, other.mCustomDrawableFactory)
         || mDelayMs != other.mDelayMs
         || mErrorDrawable != other.mErrorDrawable) {
@@ -249,6 +257,7 @@ public class ImageOptions extends DecodedImageOptions {
     result = 31 * result + (mResizeToViewport ? 1 : 0);
     result = 31 * result + mFadeDurationMs;
     result = 31 * result + (mAutoPlay ? 1 : 0);
+    result = 31 * result + (mAlwaysShowProgressImmediately ? 1 : 0);
     result = 31 * result + mProgressRes;
     result = 31 * result + (mCustomDrawableFactory != null ? mCustomDrawableFactory.hashCode() : 0);
     result = 31 * result + mDelayMs;
@@ -280,6 +289,7 @@ public class ImageOptions extends DecodedImageOptions {
         .add("overlayDrawable", mOverlayDrawable)
         .add("resizeToViewport", mResizeToViewport)
         .add("autoPlay", mAutoPlay)
+        .add("mAlwaysShowProgressImmediately", mAlwaysShowProgressImmediately)
         .add("fadeDurationMs", mFadeDurationMs)
         .add("customDrawableFactory", mCustomDrawableFactory)
         .add("delayMs", mDelayMs);
@@ -309,6 +319,7 @@ public class ImageOptions extends DecodedImageOptions {
 
     private boolean mResizeToViewport;
     private boolean mAutoPlay;
+    private boolean mAlwaysShowProgressImmediately = false;
 
     private int mFadeDurationMs;
 
@@ -466,6 +477,18 @@ public class ImageOptions extends DecodedImageOptions {
      */
     public Builder autoPlay(final boolean autoPlay) {
       mAutoPlay = autoPlay;
+      return getThis();
+    }
+
+    /**
+     * Whenever the progress is updated - the progress indicator is shown immediately. This is
+     * important for cases in which progressive decoding isn't used and we want to show progress
+     * bars.
+     *
+     * @param alwaysShow whether to show progress indicators immediately.
+     */
+    public Builder alwaysShowProgressImmediately(final boolean alwaysShow) {
+      mAlwaysShowProgressImmediately = alwaysShow;
       return getThis();
     }
 
