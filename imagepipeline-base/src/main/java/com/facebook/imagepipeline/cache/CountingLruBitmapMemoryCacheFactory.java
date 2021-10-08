@@ -22,6 +22,8 @@ public class CountingLruBitmapMemoryCacheFactory implements BitmapMemoryCacheFac
       Supplier<MemoryCacheParams> bitmapMemoryCacheParamsSupplier,
       MemoryTrimmableRegistry memoryTrimmableRegistry,
       MemoryCache.CacheTrimStrategy trimStrategy,
+      boolean storeEntrySize,
+      boolean ignoreSizeMismatch,
       @Nullable CountingMemoryCache.EntryStateObserver<CacheKey> observer) {
 
     ValueDescriptor<CloseableImage> valueDescriptor =
@@ -34,7 +36,12 @@ public class CountingLruBitmapMemoryCacheFactory implements BitmapMemoryCacheFac
 
     CountingMemoryCache<CacheKey, CloseableImage> countingCache =
         new LruCountingMemoryCache<>(
-            valueDescriptor, trimStrategy, bitmapMemoryCacheParamsSupplier, observer);
+            valueDescriptor,
+            trimStrategy,
+            bitmapMemoryCacheParamsSupplier,
+            observer,
+            storeEntrySize,
+            ignoreSizeMismatch);
 
     memoryTrimmableRegistry.registerMemoryTrimmable(countingCache);
 

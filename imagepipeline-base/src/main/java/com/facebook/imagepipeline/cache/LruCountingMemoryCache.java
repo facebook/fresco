@@ -72,11 +72,16 @@ public class LruCountingMemoryCache<K, V>
   @GuardedBy("this")
   private long mLastCacheParamsCheck;
 
+  private final boolean mStoreEntrySize;
+  private final boolean mIgnoreSizeMismatch;
+
   public LruCountingMemoryCache(
       ValueDescriptor<V> valueDescriptor,
       CacheTrimStrategy cacheTrimStrategy,
       Supplier<MemoryCacheParams> memoryCacheParamsSupplier,
-      @Nullable EntryStateObserver<K> entryStateObserver) {
+      @Nullable EntryStateObserver<K> entryStateObserver,
+      boolean storeEntrySize,
+      boolean ignoreSizeMismatch) {
     mValueDescriptor = valueDescriptor;
     mExclusiveEntries = new CountingLruMap<>(wrapValueDescriptor(valueDescriptor));
     mCachedEntries = new CountingLruMap<>(wrapValueDescriptor(valueDescriptor));
@@ -87,6 +92,8 @@ public class LruCountingMemoryCache<K, V>
             mMemoryCacheParamsSupplier.get(), "mMemoryCacheParamsSupplier returned null");
     mLastCacheParamsCheck = SystemClock.uptimeMillis();
     mEntryStateObserver = entryStateObserver;
+    mStoreEntrySize = storeEntrySize;
+    mIgnoreSizeMismatch = ignoreSizeMismatch;
   }
 
   private ValueDescriptor<Entry<K, V>> wrapValueDescriptor(
@@ -94,6 +101,9 @@ public class LruCountingMemoryCache<K, V>
     return new ValueDescriptor<Entry<K, V>>() {
       @Override
       public int getSizeInBytes(Entry<K, V> entry) {
+        if (mStoreEntrySize) {
+          return entry.size;
+        }
         return evictableValueDescriptor.getSizeInBytes(entry.valueRef.get());
       }
     };
@@ -141,8 +151,15 @@ public class LruCountingMemoryCache<K, V>
         oldRefToClose = referenceToClose(oldEntry);
       }
 
-      if (canCacheNewValue(valueRef.get())) {
-        Entry<K, V> newEntry = Entry.of(key, valueRef, observer);
+      V value = valueRef.get();
+      int size = mValueDescriptor.getSizeInBytes(value);
+      if (canCacheNewValueOfSize(size)) {
+        Entry<K, V> newEntry;
+        if (mStoreEntrySize) {
+          newEntry = Entry.of(key, valueRef, size, observer);
+        } else {
+          newEntry = Entry.of(key, valueRef, observer);
+        }
         mCachedEntries.put(key, newEntry);
         clientRef = newClientReference(newEntry);
       }
@@ -154,9 +171,11 @@ public class LruCountingMemoryCache<K, V>
     return clientRef;
   }
 
-  /** Checks the cache constraints to determine whether the new value can be cached or not. */
-  private synchronized boolean canCacheNewValue(V value) {
-    int newValueSize = mValueDescriptor.getSizeInBytes(value);
+  /**
+   * Checks the cache constraints to determine whether the new value of given size can be cached or
+   * not.
+   */
+  private synchronized boolean canCacheNewValueOfSize(int newValueSize) {
     return (newValueSize <= mMemoryCacheParams.maxCacheEntrySize)
         && (getInUseCount() <= mMemoryCacheParams.maxCacheEntries - 1)
         && (getInUseSizeInBytes() <= mMemoryCacheParams.maxCacheSize - newValueSize);
@@ -423,6 +442,10 @@ public class LruCountingMemoryCache<K, V>
     while (mExclusiveEntries.getCount() > count || mExclusiveEntries.getSizeInBytes() > size) {
       @Nullable K key = mExclusiveEntries.getFirstKey();
       if (key == null) {
+        if (mIgnoreSizeMismatch) {
+          mExclusiveEntries.resetSize();
+          break;
+        }
         throw new IllegalStateException(
             String.format(
                 "key is null, but exclusiveEntries count: %d, size: %d",

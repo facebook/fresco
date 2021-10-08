@@ -66,6 +66,8 @@ public class AnimatedFrameCacheTest {
                 mMemoryCacheParamsSupplier,
                 mMemoryTrimmableRegistry,
                 new BitmapMemoryCacheTrimStrategy(),
+                false,
+                false,
                 null);
     mCacheKey = new SimpleCacheKey("key");
     mAnimatedFrameCache = new AnimatedFrameCache(mCacheKey, countingMemoryCache);

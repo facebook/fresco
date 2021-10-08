@@ -32,7 +32,7 @@ public class EncodedCountingMemoryCacheFactory {
 
     CountingMemoryCache<CacheKey, PooledByteBuffer> countingCache =
         new LruCountingMemoryCache<>(
-            valueDescriptor, trimStrategy, encodedMemoryCacheParamsSupplier, null);
+            valueDescriptor, trimStrategy, encodedMemoryCacheParamsSupplier, null, false, false);
 
     memoryTrimmableRegistry.registerMemoryTrimmable(countingCache);
 

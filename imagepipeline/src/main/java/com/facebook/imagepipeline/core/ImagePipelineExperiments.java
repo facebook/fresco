@@ -67,6 +67,8 @@ public class ImagePipelineExperiments {
   private final int mTrackedKeysSize;
   private final boolean mAllowDelay;
   private final boolean mHandOffOnUiThreadOnly;
+  private final boolean mShouldStoreCacheEntrySize;
+  private final boolean mShouldIgnoreCacheSizeMismatch;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -102,6 +104,8 @@ public class ImagePipelineExperiments {
     mTrackedKeysSize = builder.mTrackedKeysSize;
     mAllowDelay = builder.mAllowDelay;
     mHandOffOnUiThreadOnly = builder.mHandOffOnUiThreadOnly;
+    mShouldStoreCacheEntrySize = builder.mShouldStoreCacheEntrySize;
+    mShouldIgnoreCacheSizeMismatch = builder.mShouldIgnoreCacheSizeMismatch;
   }
 
   public boolean isEncodedCacheEnabled() {
@@ -225,6 +229,14 @@ public class ImagePipelineExperiments {
     return mHandOffOnUiThreadOnly;
   }
 
+  public boolean shouldStoreCacheEntrySize() {
+    return mShouldStoreCacheEntrySize;
+  }
+
+  public boolean shouldIgnoreCacheSizeMismatch() {
+    return mShouldIgnoreCacheSizeMismatch;
+  }
+
   public static class Builder {
 
     private final ImagePipelineConfig.Builder mConfigBuilder;
@@ -257,6 +269,8 @@ public class ImagePipelineExperiments {
     private int mTrackedKeysSize = 20;
     private boolean mAllowDelay = false;
     private boolean mHandOffOnUiThreadOnly = false;
+    private boolean mShouldStoreCacheEntrySize = false;
+    public boolean mShouldIgnoreCacheSizeMismatch = false;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -264,6 +278,17 @@ public class ImagePipelineExperiments {
 
     public ImagePipelineConfig.Builder setHandOffOnUiThreadOnly(boolean handOffOnUiThreadOnly) {
       mHandOffOnUiThreadOnly = handOffOnUiThreadOnly;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setStoreCacheEntrySize(boolean shouldStoreCacheEntrySize) {
+      mShouldStoreCacheEntrySize = shouldStoreCacheEntrySize;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setIgnoreCacheSizeMismatch(
+        boolean shouldIgnoreCacheSizeMismatch) {
+      mShouldIgnoreCacheSizeMismatch = shouldIgnoreCacheSizeMismatch;
       return mConfigBuilder;
     }
 

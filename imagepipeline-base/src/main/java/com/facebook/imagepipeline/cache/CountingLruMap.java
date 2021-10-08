@@ -126,6 +126,12 @@ public class CountingLruMap<K, V> {
     return oldValues;
   }
 
+  public synchronized void resetSize() {
+    if (mMap.isEmpty()) {
+      mSizeInBytes = 0;
+    }
+  }
+
   private int getValueSizeInBytes(@Nullable V value) {
     return (value == null) ? 0 : mValueDescriptor.getSizeInBytes(value);
   }

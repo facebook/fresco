@@ -103,7 +103,8 @@ public class LruCountingMemoryCacheTest {
     when(mParamsSupplier.get()).thenReturn(mParams);
     mBitmapReference = CloseableReference.of(mBitmap, FAKE_BITMAP_RESOURCE_RELEASER);
     mCache =
-        new LruCountingMemoryCache<>(mValueDescriptor, mCacheTrimStrategy, mParamsSupplier, null);
+        new LruCountingMemoryCache<>(
+            mValueDescriptor, mCacheTrimStrategy, mParamsSupplier, null, false, false);
   }
 
   @Test

@@ -199,6 +199,8 @@ public class ImagePipelineFactory {
                   mConfig.getBitmapMemoryCacheParamsSupplier(),
                   mConfig.getMemoryTrimmableRegistry(),
                   mConfig.getBitmapMemoryCacheTrimStrategy(),
+                  mConfig.getExperiments().shouldStoreCacheEntrySize(),
+                  mConfig.getExperiments().shouldIgnoreCacheSizeMismatch(),
                   mConfig.getBitmapMemoryCacheEntryStateObserver());
     }
     return mBitmapCountingMemoryCache;

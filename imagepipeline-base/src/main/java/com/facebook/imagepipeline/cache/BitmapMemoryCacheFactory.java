@@ -19,5 +19,7 @@ public interface BitmapMemoryCacheFactory {
       Supplier<MemoryCacheParams> bitmapMemoryCacheParamsSupplier,
       MemoryTrimmableRegistry memoryTrimmableRegistry,
       MemoryCache.CacheTrimStrategy trimStrategy,
+      boolean storeEntrySize,
+      boolean ignoreSizeMismatch,
       @Nullable CountingMemoryCache.EntryStateObserver<CacheKey> observer);
 }
