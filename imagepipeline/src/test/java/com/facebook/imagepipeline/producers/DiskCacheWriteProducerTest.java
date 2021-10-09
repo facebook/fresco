@@ -129,7 +129,12 @@ public class DiskCacheWriteProducerTest {
     when(mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)).thenReturn(true);
     when(mCacheKeyFactory.getEncodedCacheKey(mImageRequest, mCallerContext)).thenReturn(mCacheKey);
     when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.DEFAULT);
-    when(mImageRequest.isDiskCacheEnabled()).thenReturn(true);
+    setUpCacheEnabled(true);
+  }
+
+  private void setUpCacheEnabled(boolean enabled) {
+    when(mImageRequest.isCacheEnabled(ImageRequest.CachesLocationsMasks.DISK_WRITE))
+        .thenReturn(enabled);
   }
 
   @Test
@@ -214,7 +219,7 @@ public class DiskCacheWriteProducerTest {
 
   @Test
   public void testDoesNotWriteResultToCacheIfNotEnabled() {
-    when(mImageRequest.isDiskCacheEnabled()).thenReturn(false);
+    setUpCacheEnabled(false);
     setupInputProducerSuccessFormatUnknown();
     mDiskCacheWriteProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);

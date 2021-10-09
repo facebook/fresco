@@ -122,8 +122,14 @@ public class DiskCacheReadProducerTest {
     when(mImageRequest.isDiskCacheEnabled()).thenReturn(true);
   }
 
+  private void setUpDiskCacheProducerEnabled(boolean enabled) {
+    when(mImageRequest.isCacheEnabled(ImageRequest.CachesLocationsMasks.DISK_READ))
+        .thenReturn(enabled);
+  }
+
   @Test
   public void testStartInputProducerIfNotEnabled() {
+    setUpDiskCacheProducerEnabled(false);
     when(mImageRequest.isDiskCacheEnabled()).thenReturn(false);
     mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
     verify(mInputProducer).produceResults(mConsumer, mProducerContext);
@@ -166,6 +172,7 @@ public class DiskCacheReadProducerTest {
 
   @Test
   public void testSmallImageDiskCacheGetSuccessful() {
+    setUpDiskCacheProducerEnabled(true);
     when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.SMALL);
     setupDiskCacheGetSuccess(mSmallImageBufferedDiskCache);
     mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
@@ -183,6 +190,7 @@ public class DiskCacheReadProducerTest {
 
   @Test
   public void testDiskCacheGetSuccessfulNoExtraMap() {
+    setUpDiskCacheProducerEnabled(true);
     setupDiskCacheGetSuccess(mDefaultBufferedDiskCache);
     when(mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)).thenReturn(false);
     mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
@@ -209,6 +217,7 @@ public class DiskCacheReadProducerTest {
 
   @Test
   public void testDiskCacheGetFailureInputProducerSuccess() {
+    setUpDiskCacheProducerEnabled(true);
     setupDiskCacheGetFailure(mDefaultBufferedDiskCache);
     setupInputProducerSuccess();
     mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
@@ -221,6 +230,7 @@ public class DiskCacheReadProducerTest {
 
   @Test
   public void testDiskCacheGetFailureInputProducerNotFound() {
+    setUpDiskCacheProducerEnabled(true);
     setupDiskCacheGetFailure(mDefaultBufferedDiskCache);
     setupInputProducerNotFound();
     mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
@@ -229,6 +239,7 @@ public class DiskCacheReadProducerTest {
 
   @Test
   public void testDiskCacheGetFailureInputProducerFailure() {
+    setUpDiskCacheProducerEnabled(true);
     setupDiskCacheGetFailure(mDefaultBufferedDiskCache);
     setupInputProducerFailure();
     mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
@@ -242,6 +253,8 @@ public class DiskCacheReadProducerTest {
 
   @Test
   public void testDiskCacheGetFailureLowestLevelReached() {
+    setUpDiskCacheProducerEnabled(true);
+    setUpDiskCacheProducerEnabled(true);
     setupDiskCacheGetFailure(mDefaultBufferedDiskCache);
     mDiskCacheReadProducer.produceResults(mConsumer, mLowestLevelProducerContext);
     verify(mProducerListener).onProducerStart(mLowestLevelProducerContext, PRODUCER_NAME);
@@ -254,6 +267,7 @@ public class DiskCacheReadProducerTest {
 
   @Test
   public void testDefaultDiskCacheGetNotFoundInputProducerSuccess() {
+    setUpDiskCacheProducerEnabled(true);
     setupDiskCacheGetNotFound(mDefaultBufferedDiskCache);
     setupInputProducerSuccess();
     mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
@@ -272,6 +286,7 @@ public class DiskCacheReadProducerTest {
 
   @Test
   public void testSmallImageDiskCacheGetNotFoundInputProducerSuccess() {
+    setUpDiskCacheProducerEnabled(true);
     when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.SMALL);
     setupDiskCacheGetNotFound(mSmallImageBufferedDiskCache);
     setupInputProducerSuccess();
@@ -290,6 +305,7 @@ public class DiskCacheReadProducerTest {
 
   @Test
   public void testDiskCacheGetNotFoundInputProducerSuccessNoExtraMap() {
+    setUpDiskCacheProducerEnabled(true);
     setupDiskCacheGetNotFound(mDefaultBufferedDiskCache);
     setupInputProducerSuccess();
     when(mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)).thenReturn(false);
@@ -304,6 +320,7 @@ public class DiskCacheReadProducerTest {
 
   @Test
   public void testDiskCacheGetNotFoundInputProducerNotFound() {
+    setUpDiskCacheProducerEnabled(true);
     setupDiskCacheGetNotFound(mDefaultBufferedDiskCache);
     setupInputProducerNotFound();
     mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
@@ -312,6 +329,7 @@ public class DiskCacheReadProducerTest {
 
   @Test
   public void testDiskCacheGetNotFoundInputProducerFailure() {
+    setUpDiskCacheProducerEnabled(true);
     setupDiskCacheGetNotFound(mDefaultBufferedDiskCache);
     setupInputProducerFailure();
     mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
@@ -329,6 +347,7 @@ public class DiskCacheReadProducerTest {
 
   @Test
   public void testDiskCacheGetNotFoundLowestLevelReached() {
+    setUpDiskCacheProducerEnabled(true);
     setupDiskCacheGetNotFound(mDefaultBufferedDiskCache);
     when(mProducerListener.requiresExtraMap(mLowestLevelProducerContext, PRODUCER_NAME))
         .thenReturn(false);
@@ -362,6 +381,7 @@ public class DiskCacheReadProducerTest {
 
   @Test
   public void testDiskCacheGetCancelled() {
+    setUpDiskCacheProducerEnabled(true);
     setupDiskCacheGetWait(mDefaultBufferedDiskCache);
     mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer, never()).onCancellation();
@@ -390,6 +410,7 @@ public class DiskCacheReadProducerTest {
   }
 
   private void setupDiskCacheGetSuccess(BufferedDiskCache bufferedDiskCache) {
+    setUpDiskCacheProducerEnabled(true);
     when(bufferedDiskCache.get(eq(mCacheKey), any(AtomicBoolean.class)))
         .thenReturn(Task.forResult(mFinalEncodedImage));
   }
