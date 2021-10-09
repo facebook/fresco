@@ -93,10 +93,19 @@ public class BitmapMemoryCacheProducerTest {
         .thenReturn(mBitmapMemoryCacheKey);
 
     when(mImageRequest.isMemoryCacheEnabled()).thenReturn(true);
+    setUpCacheEnabled(true);
+  }
+
+  private void setUpCacheEnabled(boolean enabled) {
+    when(mImageRequest.isCacheEnabled(ImageRequest.CachesLocationsMasks.BITMAP_READ))
+        .thenReturn(enabled);
+    when(mImageRequest.isCacheEnabled(ImageRequest.CachesLocationsMasks.BITMAP_WRITE))
+        .thenReturn(enabled);
   }
 
   @Test
   public void testDisableMemoryCache() {
+    setUpCacheEnabled(false);
     setupBitmapMemoryCacheGetNotFound();
     setupInputProducerStreamingSuccess();
     when(mMemoryCache.get(mBitmapMemoryCacheKey)).thenReturn(null);
