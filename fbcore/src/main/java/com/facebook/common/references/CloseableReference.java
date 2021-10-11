@@ -369,23 +369,4 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
       }
     }
   }
-
-  @Override
-  protected void finalize() throws Throwable {
-    try {
-      // We put synchronized here so that lint doesn't warn about accessing mIsClosed, which is
-      // guarded by this. Lint isn't aware of finalize semantics.
-      synchronized (this) {
-        if (mIsClosed) {
-          return;
-        }
-      }
-
-      mLeakHandler.reportLeak((SharedReference<Object>) mSharedReference, mStacktrace);
-
-      close();
-    } finally {
-      super.finalize();
-    }
-  }
 }
