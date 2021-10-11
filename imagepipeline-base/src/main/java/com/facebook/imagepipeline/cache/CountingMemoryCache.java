@@ -48,8 +48,10 @@ public interface CountingMemoryCache<K, V> extends MemoryCache<K, V>, MemoryTrim
 
   MemoryCacheParams getMemoryCacheParams();
 
+  @Nullable
   CountingLruMap<K, Entry<K, V>> getCachedEntries();
 
+  @Nullable
   Map<Bitmap, Object> getOtherEntries();
 
   /** Interface used to observe the state changes of an entry. */

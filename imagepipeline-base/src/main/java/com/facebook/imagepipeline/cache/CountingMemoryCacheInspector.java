@@ -19,7 +19,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 /** Inspects values cached in bitmap memory cache. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class CountingMemoryCacheInspector<K, V> {
 
   /** Cache entry info for use by dumpers. */
@@ -97,8 +97,14 @@ public class CountingMemoryCacheInspector<K, V> {
               mCountingBitmapCache.getEvictionQueueSizeInBytes(),
               mCountingBitmapCache.getMemoryCacheParams());
 
+      @Nullable
+      CountingLruMap<K, CountingMemoryCache.Entry<K, V>> maybeCachedEntries =
+          mCountingBitmapCache.getCachedEntries();
+      if (maybeCachedEntries == null) {
+        return dumpInfo;
+      }
       final List<LinkedHashMap.Entry<K, CountingMemoryCache.Entry<K, V>>> cachedEntries =
-          mCountingBitmapCache.getCachedEntries().getMatchingEntries(null);
+          maybeCachedEntries.getMatchingEntries(null);
       for (LinkedHashMap.Entry<K, CountingMemoryCache.Entry<K, V>> cachedEntry : cachedEntries) {
         CountingMemoryCache.Entry<K, V> entry = cachedEntry.getValue();
         DumpInfoEntry<K, V> dumpEntry = new DumpInfoEntry<>(entry.key, entry.valueRef);
@@ -108,9 +114,12 @@ public class CountingMemoryCacheInspector<K, V> {
           dumpInfo.lruEntries.add(dumpEntry);
         }
       }
-      for (Map.Entry<Bitmap, Object> entry : mCountingBitmapCache.getOtherEntries().entrySet()) {
-        if (entry != null && !entry.getKey().isRecycled()) {
-          dumpInfo.otherEntries.put(entry.getKey(), entry.getValue());
+      Map<Bitmap, Object> otherEntries = mCountingBitmapCache.getOtherEntries();
+      if (otherEntries != null) {
+        for (Map.Entry<Bitmap, Object> entry : otherEntries.entrySet()) {
+          if (entry != null && !entry.getKey().isRecycled()) {
+            dumpInfo.otherEntries.put(entry.getKey(), entry.getValue());
+          }
         }
       }
 
