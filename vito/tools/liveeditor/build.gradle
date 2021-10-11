@@ -12,6 +12,7 @@ apply plugin: 'kotlin-android-extensions'
 dependencies {
     implementation project(':drawee') // TODO RM; required for FadeDrawable access
     implementation project(':fbcore')
+    implementation project(':ui-common')
     implementation project(':vito:core')
     implementation project(':vito:options')
     implementation project(':vito:source')
