@@ -7,19 +7,39 @@
 
 package com.facebook.fresco.vito.view.impl;
 
+import android.view.View;
+import androidx.annotation.Nullable;
+import com.facebook.fresco.vito.listener.ImageListener;
+import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.provider.FrescoVitoProvider;
+import com.facebook.fresco.vito.source.ImageSource;
 import com.facebook.fresco.vito.view.VitoView;
 import com.facebook.infer.annotation.Nullsafe;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public class LazyVitoViewImpl2 extends LazyVitoViewImpl {
+public class LazyVitoViewImpl2 implements VitoView.Implementation {
+
+  private final FrescoVitoProvider.Implementation mProvider;
+  private @Nullable VitoView.Implementation mImplementation;
 
   public LazyVitoViewImpl2(FrescoVitoProvider.Implementation provider) {
-    super(provider);
+    mProvider = provider;
   }
 
   @Override
-  protected VitoView.Implementation create(FrescoVitoProvider.Implementation provider) {
-    return new VitoViewImpl2(provider.getController(), provider.getImagePipeline());
+  public void show(
+      ImageSource imageSource,
+      ImageOptions imageOptions,
+      @Nullable Object callerContext,
+      @Nullable ImageListener imageListener,
+      View target) {
+    get().show(imageSource, imageOptions, callerContext, imageListener, target);
+  }
+
+  private synchronized VitoView.Implementation get() {
+    if (mImplementation == null) {
+      mImplementation = new VitoViewImpl2(mProvider.getController(), mProvider.getImagePipeline());
+    }
+    return mImplementation;
   }
 }
