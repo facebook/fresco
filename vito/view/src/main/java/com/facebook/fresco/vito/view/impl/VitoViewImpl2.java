@@ -34,10 +34,7 @@ public class VitoViewImpl2 implements VitoView.Implementation {
         public void onViewAttachedToWindow(View view) {
           FrescoDrawable2 current = getDrawable(view);
           if (current != null) {
-            VitoImageRequest request = current.getImageRequest();
-            if (request != null) {
-              fetchImage(current, request);
-            }
+            maybeFetchImage(current);
           }
         }
 
@@ -81,14 +78,14 @@ public class VitoViewImpl2 implements VitoView.Implementation {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       // If the view is already attached to the window, immediately fetch the image.
-      // Otherwise, the fetch will be submitter later when then View is attached.
+      // Otherwise, the fetch will be submitted later when then View is attached.
       if (target.isAttachedToWindow()) {
-        fetchImage(frescoDrawable, imageRequest);
+        maybeFetchImage(frescoDrawable);
       }
     } else {
       // Before Kitkat we don't have a good way to know.
       // Normally we expect the view to be already attached, thus we always fetch the image.
-      fetchImage(frescoDrawable, imageRequest);
+      maybeFetchImage(frescoDrawable);
     }
 
     // `addOnAttachStateChangeListener` is not idempotent
@@ -96,7 +93,11 @@ public class VitoViewImpl2 implements VitoView.Implementation {
     target.addOnAttachStateChangeListener(mOnAttachStateChangeListenerCallback);
   }
 
-  private void fetchImage(final FrescoDrawable2 drawable, final VitoImageRequest request) {
+  private void maybeFetchImage(final FrescoDrawable2 drawable) {
+    final VitoImageRequest request = drawable.getImageRequest();
+    if (request == null) {
+      return;
+    }
     mController.fetch(
         drawable,
         request,
@@ -151,10 +152,7 @@ public class VitoViewImpl2 implements VitoView.Implementation {
             if (!visible) {
               mController.release(frescoDrawable);
             } else {
-              VitoImageRequest request = frescoDrawable.getImageRequest();
-              if (request != null) {
-                fetchImage(frescoDrawable, request);
-              }
+              maybeFetchImage(frescoDrawable);
             }
           }
 
