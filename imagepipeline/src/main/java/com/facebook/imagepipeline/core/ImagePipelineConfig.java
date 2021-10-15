@@ -18,6 +18,7 @@ import com.facebook.callercontext.CallerContextVerifier;
 import com.facebook.common.executors.SerialExecutorService;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
+import com.facebook.common.internal.Suppliers;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.memory.NoOpMemoryTrimmableRegistry;
 import com.facebook.common.memory.PooledByteBuffer;
@@ -165,12 +166,7 @@ public class ImagePipelineConfig implements ImagePipelineConfigInterface {
     mImageTranscoderType = builder.mImageTranscoderType;
     mIsPrefetchEnabledSupplier =
         builder.mIsPrefetchEnabledSupplier == null
-            ? new Supplier<Boolean>() {
-              @Override
-              public Boolean get() {
-                return true;
-              }
-            }
+            ? Suppliers.BOOLEAN_TRUE
             : builder.mIsPrefetchEnabledSupplier;
     mMainDiskCacheConfig =
         builder.mMainDiskCacheConfig == null
