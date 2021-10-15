@@ -14,21 +14,19 @@ import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import com.facebook.drawee.drawable.VisibilityCallback;
-import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
-import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.provider.FrescoVitoProvider;
 import com.facebook.fresco.vito.source.ImageSource;
-import com.facebook.fresco.vito.view.VitoView;
 import com.facebook.infer.annotation.Nullsafe;
 
-/** You must initialize this class before use by calling {#code VitoView.init()}. */
+/** Vito View implementation */
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public class VitoViewImpl2 implements VitoView.Implementation {
+public class VitoViewImpl2 {
 
-  private final View.OnAttachStateChangeListener mOnAttachStateChangeListenerCallback =
+  private static final View.OnAttachStateChangeListener mOnAttachStateChangeListenerCallback =
       new View.OnAttachStateChangeListener() {
         @Override
         public void onViewAttachedToWindow(View view) {
@@ -42,34 +40,26 @@ public class VitoViewImpl2 implements VitoView.Implementation {
         public void onViewDetachedFromWindow(View view) {
           FrescoDrawable2 current = getDrawable(view);
           if (current != null) {
-            mController.release(current);
+            FrescoVitoProvider.getController().release(current);
           }
         }
       };
 
-  private final FrescoController2 mController;
-  private final VitoImagePipeline mVitoImagePipeline;
-
-  public VitoViewImpl2(FrescoController2 controller, VitoImagePipeline vitoImagePipeline) {
-    mController = controller;
-    mVitoImagePipeline = vitoImagePipeline;
-  }
-
-  @Override
-  public void show(
+  public static void show(
       final ImageSource imageSource,
       final ImageOptions imageOptions,
       final @Nullable Object callerContext,
       final @Nullable ImageListener imageListener,
       final View target) {
     VitoImageRequest imageRequest =
-        mVitoImagePipeline.createImageRequest(target.getResources(), imageSource, imageOptions);
+        FrescoVitoProvider.getImagePipeline()
+            .createImageRequest(target.getResources(), imageSource, imageOptions);
 
     final FrescoDrawable2 frescoDrawable = ensureDrawableSet(target);
     // The Drawable might be re-purposed before being cleaned up, so we release if necessary.
     VitoImageRequest oldImageRequest = frescoDrawable.getImageRequest();
     if (oldImageRequest != null && !oldImageRequest.equals(imageRequest)) {
-      mController.releaseImmediately(frescoDrawable);
+      FrescoVitoProvider.getController().releaseImmediately(frescoDrawable);
     }
     // We always set fields required to fetch the image.
     frescoDrawable.setImageRequest(imageRequest);
@@ -93,19 +83,20 @@ public class VitoViewImpl2 implements VitoView.Implementation {
     target.addOnAttachStateChangeListener(mOnAttachStateChangeListenerCallback);
   }
 
-  private void maybeFetchImage(final FrescoDrawable2 drawable) {
+  private static void maybeFetchImage(final FrescoDrawable2 drawable) {
     final VitoImageRequest request = drawable.getImageRequest();
     if (request == null) {
       return;
     }
-    mController.fetch(
-        drawable,
-        request,
-        drawable.getCallerContext(),
-        null,
-        drawable.getImageListener(),
-        null,
-        null);
+    FrescoVitoProvider.getController()
+        .fetch(
+            drawable,
+            request,
+            drawable.getCallerContext(),
+            null,
+            drawable.getImageListener(),
+            null,
+            null);
   }
 
   /**
@@ -114,7 +105,7 @@ public class VitoViewImpl2 implements VitoView.Implementation {
    * @param target the target to use
    * @return The drawable to use for the given target
    */
-  private FrescoDrawable2 ensureDrawableSet(final View target) {
+  private static FrescoDrawable2 ensureDrawableSet(final View target) {
     if (target instanceof ImageView) {
       ImageView iv = (ImageView) target;
       Drawable current = iv.getDrawable();
@@ -142,15 +133,15 @@ public class VitoViewImpl2 implements VitoView.Implementation {
     return d instanceof FrescoDrawable2 ? (FrescoDrawable2) d : null;
   }
 
-  private FrescoDrawable2 createDrawable() {
-    final FrescoDrawable2 frescoDrawable = mController.createDrawable();
+  private static FrescoDrawable2 createDrawable() {
+    final FrescoDrawable2 frescoDrawable = FrescoVitoProvider.getController().createDrawable();
 
     frescoDrawable.setVisibilityCallback(
         new VisibilityCallback() {
           @Override
           public void onVisibilityChange(boolean visible) {
             if (!visible) {
-              mController.release(frescoDrawable);
+              FrescoVitoProvider.getController().release(frescoDrawable);
             } else {
               maybeFetchImage(frescoDrawable);
             }

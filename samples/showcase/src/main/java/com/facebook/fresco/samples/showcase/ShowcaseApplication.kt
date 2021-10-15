@@ -25,9 +25,6 @@ import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.samples.showcase.misc.LogcatRequestListener2
 import com.facebook.fresco.vito.init.FrescoVito
-import com.facebook.fresco.vito.provider.FrescoVitoProvider
-import com.facebook.fresco.vito.view.VitoView
-import com.facebook.fresco.vito.view.impl.LazyVitoViewImpl2
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.facebook.imagepipeline.debug.FlipperCacheKeyFactory
@@ -115,7 +112,6 @@ class ShowcaseApplication : Application() {
             .build())
     Fresco.initialize(this, imagePipelineConfig, draweeConfigBuilder.build())
     FrescoVito.initialize(resources, DebugOverlaySupplierSingleton.getInstance(applicationContext))
-    VitoView.init(LazyVitoViewImpl2(FrescoVitoProvider.getImplementation()))
     val context = this
     Stetho.initialize(
         Stetho.newInitializerBuilder(context)
