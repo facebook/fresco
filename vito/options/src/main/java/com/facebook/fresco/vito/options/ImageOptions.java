@@ -77,6 +77,8 @@ public class ImageOptions extends DecodedImageOptions {
 
   private final boolean mAlwaysShowProgressImmediately;
 
+  private final boolean mPerfMediaRemountInstrumentationFix;
+
   private final @Nullable ImageOptionsDrawableFactory mCustomDrawableFactory;
 
   private final int mDelayMs;
@@ -109,6 +111,7 @@ public class ImageOptions extends DecodedImageOptions {
 
     mAutoPlay = builder.mAutoPlay;
     mAlwaysShowProgressImmediately = builder.mAlwaysShowProgressImmediately;
+    mPerfMediaRemountInstrumentationFix = builder.mPerfMediaRemountInstrumentationFix;
 
     mCustomDrawableFactory = builder.mCustomDrawableFactory;
 
@@ -187,6 +190,10 @@ public class ImageOptions extends DecodedImageOptions {
     return mAlwaysShowProgressImmediately;
   }
 
+  public boolean isPerfMediaRemountInstrumentationFix() {
+    return mPerfMediaRemountInstrumentationFix;
+  }
+
   public boolean shouldResizeToViewport() {
     return mResizeToViewport;
   }
@@ -210,28 +217,55 @@ public class ImageOptions extends DecodedImageOptions {
     }
     if (obj == null || getClass() != obj.getClass()) return false;
     ImageOptions other = (ImageOptions) obj;
-    if (mPlaceholderRes != other.mPlaceholderRes
-        || !Objects.equal(mPlaceholderDrawable, other.mPlaceholderDrawable)
-        || !Objects.equal(mPlaceholderScaleType, other.mPlaceholderScaleType)
-        || !Objects.equal(mPlaceholderFocusPoint, other.mPlaceholderFocusPoint)
-        || mPlaceholderApplyRoundingOptions != other.mPlaceholderApplyRoundingOptions
-        || mErrorRes != other.mErrorRes
-        || !Objects.equal(mErrorScaleType, other.mErrorScaleType)
-        || !Objects.equal(mErrorFocusPoint, other.mErrorFocusPoint)
-        || mOverlayRes != other.mOverlayRes
-        || !Objects.equal(mOverlayDrawable, other.mOverlayDrawable)
-        || mProgressRes != other.mProgressRes
-        || mProgressDrawable != other.mProgressDrawable
-        || mProgressScaleType != other.mProgressScaleType
-        || !Objects.equal(mActualImageColorFilter, other.mActualImageColorFilter)
-        || mResizeToViewport != other.mResizeToViewport
-        || mFadeDurationMs != other.mFadeDurationMs
-        || mAutoPlay != other.mAutoPlay
-        || mAlwaysShowProgressImmediately != other.mAlwaysShowProgressImmediately
-        || !Objects.equal(mCustomDrawableFactory, other.mCustomDrawableFactory)
-        || mDelayMs != other.mDelayMs
-        || mErrorDrawable != other.mErrorDrawable) {
-      return false;
+    if (mPerfMediaRemountInstrumentationFix) {
+      if (mPlaceholderRes != other.mPlaceholderRes
+          || !Objects.equal(mPlaceholderDrawable, other.mPlaceholderDrawable)
+          || !Objects.equal(mPlaceholderScaleType, other.mPlaceholderScaleType)
+          || !Objects.equal(mPlaceholderFocusPoint, other.mPlaceholderFocusPoint)
+          || mPlaceholderApplyRoundingOptions != other.mPlaceholderApplyRoundingOptions
+          || mErrorRes != other.mErrorRes
+          || !Objects.equal(mErrorScaleType, other.mErrorScaleType)
+          || !Objects.equal(mErrorFocusPoint, other.mErrorFocusPoint)
+          || mOverlayRes != other.mOverlayRes
+          || !Objects.equal(mOverlayDrawable, other.mOverlayDrawable)
+          || mProgressRes != other.mProgressRes
+          || !Objects.equal(mProgressDrawable, other.mProgressDrawable)
+          || !Objects.equal(mProgressScaleType, other.mProgressScaleType)
+          || !Objects.equal(mActualImageColorFilter, other.mActualImageColorFilter)
+          || mResizeToViewport != other.mResizeToViewport
+          || mFadeDurationMs != other.mFadeDurationMs
+          || mAutoPlay != other.mAutoPlay
+          || mAlwaysShowProgressImmediately != other.mAlwaysShowProgressImmediately
+          || !Objects.equal(mCustomDrawableFactory, other.mCustomDrawableFactory)
+          || mDelayMs != other.mDelayMs
+          || !Objects.equal(mErrorDrawable, other.mErrorDrawable)
+          || mPerfMediaRemountInstrumentationFix != other.mPerfMediaRemountInstrumentationFix) {
+        return false;
+      }
+    } else {
+      if (mPlaceholderRes != other.mPlaceholderRes
+          || !Objects.equal(mPlaceholderDrawable, other.mPlaceholderDrawable)
+          || !Objects.equal(mPlaceholderScaleType, other.mPlaceholderScaleType)
+          || !Objects.equal(mPlaceholderFocusPoint, other.mPlaceholderFocusPoint)
+          || mPlaceholderApplyRoundingOptions != other.mPlaceholderApplyRoundingOptions
+          || mErrorRes != other.mErrorRes
+          || !Objects.equal(mErrorScaleType, other.mErrorScaleType)
+          || !Objects.equal(mErrorFocusPoint, other.mErrorFocusPoint)
+          || mOverlayRes != other.mOverlayRes
+          || !Objects.equal(mOverlayDrawable, other.mOverlayDrawable)
+          || mProgressRes != other.mProgressRes
+          || mProgressDrawable != other.mProgressDrawable
+          || mProgressScaleType != other.mProgressScaleType
+          || !Objects.equal(mActualImageColorFilter, other.mActualImageColorFilter)
+          || mResizeToViewport != other.mResizeToViewport
+          || mFadeDurationMs != other.mFadeDurationMs
+          || mAutoPlay != other.mAutoPlay
+          || mAlwaysShowProgressImmediately != other.mAlwaysShowProgressImmediately
+          || !Objects.equal(mCustomDrawableFactory, other.mCustomDrawableFactory)
+          || mDelayMs != other.mDelayMs
+          || mErrorDrawable != other.mErrorDrawable) {
+        return false;
+      }
     }
     return equalDecodedOptions(other);
   }
@@ -258,6 +292,7 @@ public class ImageOptions extends DecodedImageOptions {
     result = 31 * result + mFadeDurationMs;
     result = 31 * result + (mAutoPlay ? 1 : 0);
     result = 31 * result + (mAlwaysShowProgressImmediately ? 1 : 0);
+    result = 31 * result + (mPerfMediaRemountInstrumentationFix ? 1 : 0);
     result = 31 * result + mProgressRes;
     result = 31 * result + (mCustomDrawableFactory != null ? mCustomDrawableFactory.hashCode() : 0);
     result = 31 * result + mDelayMs;
@@ -290,6 +325,7 @@ public class ImageOptions extends DecodedImageOptions {
         .add("resizeToViewport", mResizeToViewport)
         .add("autoPlay", mAutoPlay)
         .add("mAlwaysShowProgressImmediately", mAlwaysShowProgressImmediately)
+        .add("mPerfMediaRemountInstrumentationFix", mPerfMediaRemountInstrumentationFix)
         .add("fadeDurationMs", mFadeDurationMs)
         .add("customDrawableFactory", mCustomDrawableFactory)
         .add("delayMs", mDelayMs);
@@ -320,6 +356,7 @@ public class ImageOptions extends DecodedImageOptions {
     private boolean mResizeToViewport;
     private boolean mAutoPlay;
     private boolean mAlwaysShowProgressImmediately = false;
+    private boolean mPerfMediaRemountInstrumentationFix = false;
 
     private int mFadeDurationMs;
 
@@ -489,6 +526,11 @@ public class ImageOptions extends DecodedImageOptions {
      */
     public Builder alwaysShowProgressImmediately(final boolean alwaysShow) {
       mAlwaysShowProgressImmediately = alwaysShow;
+      return getThis();
+    }
+
+    public Builder perfMediaRemountInstrumentationFix(final boolean fix) {
+      mPerfMediaRemountInstrumentationFix = fix;
       return getThis();
     }
 
