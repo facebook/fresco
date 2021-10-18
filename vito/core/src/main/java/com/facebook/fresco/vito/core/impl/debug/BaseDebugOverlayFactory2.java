@@ -56,7 +56,6 @@ public abstract class BaseDebugOverlayFactory2 implements DebugOverlayFactory2 {
     } else {
       drawable.setOverlayDrawable(debugOverlay);
     }
-    drawable.showOverlayImmediately();
     return debugOverlay;
   }
 

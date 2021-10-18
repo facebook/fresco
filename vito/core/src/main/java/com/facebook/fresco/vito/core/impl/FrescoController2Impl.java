@@ -24,6 +24,7 @@ import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.ui.common.OnFadeListener;
 import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
+import com.facebook.fresco.vito.core.FrescoDrawableInterface;
 import com.facebook.fresco.vito.core.FrescoVitoConfig;
 import com.facebook.fresco.vito.core.NopDrawable;
 import com.facebook.fresco.vito.core.VitoImagePerfListener;
@@ -102,7 +103,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
 
   @Override
   public boolean fetch(
-      final FrescoDrawable2 drawable,
+      final FrescoDrawableInterface drawable,
       final VitoImageRequest imageRequest,
       final @Nullable Object callerContext,
       final @Nullable ContextChain contextChain,
@@ -114,7 +115,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     }
     final FrescoDrawable2Impl frescoDrawable = (FrescoDrawable2Impl) drawable;
     // Save viewport dimension for future use
-    drawable.setViewportDimensions(viewportDimensions);
+    frescoDrawable.setViewportDimensions(viewportDimensions);
 
     // Check if we already fetched the image
     if (frescoDrawable.getDrawableDataSubscriber() == this
@@ -142,7 +143,6 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     // Set layers that are always visible
     frescoDrawable.setOverlayDrawable(
         mHierarcher.buildOverlayDrawable(imageRequest.resources, imageRequest.imageOptions));
-    frescoDrawable.showOverlayImmediately();
 
     // We're fetching a new image, so we're updating the ID
     final long imageId = VitoUtils.generateIdentifier();
@@ -211,7 +211,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   }
 
   @Override
-  public void releaseDelayed(final FrescoDrawable2 drawable) {
+  public void releaseDelayed(final FrescoDrawableInterface drawable) {
     if (!(drawable instanceof FrescoDrawable2Impl)) {
       throw new IllegalArgumentException("Drawable not supported " + drawable);
     }
@@ -221,7 +221,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   }
 
   @Override
-  public void release(final FrescoDrawable2 drawable) {
+  public void release(final FrescoDrawableInterface drawable) {
     if (!(drawable instanceof FrescoDrawable2Impl)) {
       throw new IllegalArgumentException("Drawable not supported " + drawable);
     }
@@ -231,7 +231,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   }
 
   @Override
-  public void releaseImmediately(FrescoDrawable2 drawable) {
+  public void releaseImmediately(FrescoDrawableInterface drawable) {
     if (!(drawable instanceof FrescoDrawable2Impl)) {
       throw new IllegalArgumentException("Drawable not supported " + drawable);
     }

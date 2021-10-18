@@ -19,7 +19,6 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.drawable.TransformAwareDrawable;
 import com.facebook.drawee.drawable.TransformCallback;
 import com.facebook.drawee.drawable.VisibilityCallback;
-import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 
@@ -29,7 +28,8 @@ public abstract class FrescoDrawable2 extends FadeDrawable
         TransformCallback,
         TransformAwareDrawable,
         Closeable,
-        DeferredReleaser.Releasable {
+        DeferredReleaser.Releasable,
+        FrescoDrawableInterface {
 
   private static final int LAYER_COUNT = 4;
 
@@ -46,12 +46,16 @@ public abstract class FrescoDrawable2 extends FadeDrawable
     super(new Drawable[LAYER_COUNT], false, IMAGE_DRAWABLE_INDEX);
   }
 
+  @Override
   public boolean hasImage() {
     return getDrawable(IMAGE_DRAWABLE_INDEX) != null;
   }
 
+  @Override
   public @Nullable Drawable setOverlayDrawable(@Nullable Drawable drawable) {
-    return setDrawable(OVERLAY_DRAWABLE_INDEX, drawable);
+    Drawable result = setDrawable(OVERLAY_DRAWABLE_INDEX, drawable);
+    showLayerImmediately(OVERLAY_DRAWABLE_INDEX);
+    return result;
   }
 
   public @Nullable Drawable setProgressDrawable(@Nullable Drawable drawable) {
@@ -94,10 +98,6 @@ public abstract class FrescoDrawable2 extends FadeDrawable
     endBatchMode();
   }
 
-  public void showOverlayImmediately() {
-    showLayerImmediately(OVERLAY_DRAWABLE_INDEX);
-  }
-
   public void showProgressImmediately() {
     showLayerImmediately(PROGRESS_DRAWABLE_INDEX);
   }
@@ -118,6 +118,7 @@ public abstract class FrescoDrawable2 extends FadeDrawable
     return super.setVisible(visible, restart);
   }
 
+  @Override
   public void setVisibilityCallback(@Nullable VisibilityCallback visibilityCallback) {
     mVisibilityCallback = visibilityCallback;
   }
@@ -157,33 +158,9 @@ public abstract class FrescoDrawable2 extends FadeDrawable
 
   public abstract ScaleTypeDrawable getActualImageWrapper();
 
-  public abstract @Nullable Drawable getActualImageDrawable();
-
-  public abstract boolean isFetchSubmitted();
-
-  public abstract void setImageRequest(@Nullable VitoImageRequest imageRequest);
-
-  public abstract void setCallerContext(@Nullable Object callerContext);
-
-  public abstract @Nullable Object getCallerContext();
-
-  public abstract void setImageListener(@Nullable ImageListener imageListener);
-
-  public abstract @Nullable ImageListener getImageListener();
-
-  public abstract @Nullable VitoImageRequest getImageRequest();
-
-  public abstract long getImageId();
-
   public abstract void cancelReleaseDelayed();
 
   public abstract void cancelReleaseNextFrame();
-
-  public abstract @Nullable Object getExtras();
-
-  public abstract void setExtras(@Nullable Object extras);
-
-  public abstract VitoImagePerfListener getImagePerfListener();
 
   private static void maybeStopAnimation(@Nullable Drawable drawable) {
     if (drawable instanceof Animatable) {

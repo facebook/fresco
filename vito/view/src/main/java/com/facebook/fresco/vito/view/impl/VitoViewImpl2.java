@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import com.facebook.drawee.drawable.VisibilityCallback;
-import com.facebook.fresco.vito.core.FrescoDrawable2;
+import com.facebook.fresco.vito.core.FrescoDrawableInterface;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
@@ -30,7 +30,7 @@ public class VitoViewImpl2 {
       new View.OnAttachStateChangeListener() {
         @Override
         public void onViewAttachedToWindow(View view) {
-          FrescoDrawable2 current = getDrawable(view);
+          FrescoDrawableInterface current = getDrawable(view);
           if (current != null) {
             maybeFetchImage(current);
           }
@@ -38,7 +38,7 @@ public class VitoViewImpl2 {
 
         @Override
         public void onViewDetachedFromWindow(View view) {
-          FrescoDrawable2 current = getDrawable(view);
+          FrescoDrawableInterface current = getDrawable(view);
           if (current != null) {
             FrescoVitoProvider.getController().release(current);
           }
@@ -55,7 +55,7 @@ public class VitoViewImpl2 {
         FrescoVitoProvider.getImagePipeline()
             .createImageRequest(target.getResources(), imageSource, imageOptions);
 
-    final FrescoDrawable2 frescoDrawable = ensureDrawableSet(target);
+    final FrescoDrawableInterface frescoDrawable = ensureDrawableSet(target);
     // The Drawable might be re-purposed before being cleaned up, so we release if necessary.
     VitoImageRequest oldImageRequest = frescoDrawable.getImageRequest();
     if (oldImageRequest != null && !oldImageRequest.equals(imageRequest)) {
@@ -83,7 +83,7 @@ public class VitoViewImpl2 {
     target.addOnAttachStateChangeListener(mOnAttachStateChangeListenerCallback);
   }
 
-  private static void maybeFetchImage(final FrescoDrawable2 drawable) {
+  private static void maybeFetchImage(final FrescoDrawableInterface drawable) {
     final VitoImageRequest request = drawable.getImageRequest();
     if (request == null) {
       return;
@@ -100,41 +100,42 @@ public class VitoViewImpl2 {
   }
 
   /**
-   * Ensure that a {@link FrescoDrawable2} is set for the given View target
+   * Ensure that a {@link FrescoDrawableInterface} is set for the given View target
    *
    * @param target the target to use
    * @return The drawable to use for the given target
    */
-  private static FrescoDrawable2 ensureDrawableSet(final View target) {
+  private static FrescoDrawableInterface ensureDrawableSet(final View target) {
     if (target instanceof ImageView) {
       ImageView iv = (ImageView) target;
       Drawable current = iv.getDrawable();
-      if (current instanceof FrescoDrawable2) {
-        return (FrescoDrawable2) current;
+      if (current instanceof FrescoDrawableInterface) {
+        return (FrescoDrawableInterface) current;
       } else {
-        FrescoDrawable2 drawable = createDrawable();
-        iv.setImageDrawable(drawable);
+        FrescoDrawableInterface drawable = createDrawable();
+        iv.setImageDrawable((Drawable) drawable);
         return drawable;
       }
     }
     final Drawable background = target.getBackground();
-    if (background instanceof FrescoDrawable2) {
-      return (FrescoDrawable2) background;
+    if (background instanceof FrescoDrawableInterface) {
+      return (FrescoDrawableInterface) background;
     }
-    FrescoDrawable2 drawable = createDrawable();
-    ViewCompat.setBackground(target, drawable);
+    FrescoDrawableInterface drawable = createDrawable();
+    ViewCompat.setBackground(target, (Drawable) drawable);
     return drawable;
   }
 
   @Nullable
-  private static FrescoDrawable2 getDrawable(final View view) {
+  private static FrescoDrawableInterface getDrawable(final View view) {
     Drawable d =
         view instanceof ImageView ? ((ImageView) view).getDrawable() : view.getBackground();
-    return d instanceof FrescoDrawable2 ? (FrescoDrawable2) d : null;
+    return d instanceof FrescoDrawableInterface ? (FrescoDrawableInterface) d : null;
   }
 
-  private static FrescoDrawable2 createDrawable() {
-    final FrescoDrawable2 frescoDrawable = FrescoVitoProvider.getController().createDrawable();
+  private static FrescoDrawableInterface createDrawable() {
+    final FrescoDrawableInterface frescoDrawable =
+        FrescoVitoProvider.getController().createDrawable();
 
     frescoDrawable.setVisibilityCallback(
         new VisibilityCallback() {
