@@ -148,8 +148,16 @@ public class ImageRequest {
 
     mRequestPriority = builder.getRequestPriority();
     mLowestPermittedRequestLevel = builder.getLowestPermittedRequestLevel();
-    mCachesDisabled = builder.getCachesDisabled();
+
     mIsDiskCacheEnabled = builder.isDiskCacheEnabled();
+
+    int cachesDisabledFlags = builder.getCachesDisabled();
+    if (!mIsDiskCacheEnabled) {
+      // If disk cache is disabled we must make sure mCachesDisabled reflects it
+      cachesDisabledFlags |= CachesLocationsMasks.DISK_READ | CachesLocationsMasks.DISK_WRITE;
+    }
+    mCachesDisabled = cachesDisabledFlags;
+
     mIsMemoryCacheEnabled = builder.isMemoryCacheEnabled();
     mDecodePrefetches = builder.shouldDecodePrefetches();
 
