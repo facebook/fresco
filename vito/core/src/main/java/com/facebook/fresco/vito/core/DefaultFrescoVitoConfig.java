@@ -91,5 +91,10 @@ public class DefaultFrescoVitoConfig implements FrescoVitoConfig {
     public PrefetchTarget prefetchTargetWorkingRange() {
       return PrefetchTarget.MEMORY_DECODED;
     }
+
+    @Override
+    public boolean prioritizeWithWorkingRange() {
+      return false;
+    }
   }
 }

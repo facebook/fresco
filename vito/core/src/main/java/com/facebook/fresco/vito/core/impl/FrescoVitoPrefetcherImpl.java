@@ -131,4 +131,10 @@ public class FrescoVitoPrefetcherImpl implements FrescoVitoPrefetcher {
     return DataSources.immediateFailedDataSource(
         new CancellationException("Prefetching is not enabled"));
   }
+
+  @Override
+  public void setDistanceToViewport(
+      int distance, @Nullable Object callerContext, @Nullable Uri uri, String callsite) {
+    // empty
+  }
 }

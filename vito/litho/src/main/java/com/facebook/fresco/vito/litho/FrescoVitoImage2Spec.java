@@ -319,6 +319,57 @@ public class FrescoVitoImage2Spec {
     cancelWorkingRangePrefetch(workingRangePrefetchData);
   }
 
+  @OnEnteredRange(name = "below3")
+  static void onEnteredBelow3WorkingRange(
+      ComponentContext c,
+      @Prop(optional = true) final @Nullable Object callerContext,
+      @CachedValue VitoImageRequest imageRequest) {
+    FrescoVitoProvider.getPrefetcher()
+        .setDistanceToViewport(3, callerContext, getUri(imageRequest), "FrescoVitoImage2");
+  }
+
+  @OnEnteredRange(name = "below2")
+  static void onEnteredBelow2WorkingRange(
+      ComponentContext c,
+      @Prop(optional = true) final @Nullable Object callerContext,
+      @CachedValue VitoImageRequest imageRequest) {
+    FrescoVitoProvider.getPrefetcher()
+        .setDistanceToViewport(2, callerContext, getUri(imageRequest), "FrescoVitoImage2");
+  }
+
+  @OnEnteredRange(name = "below1")
+  static void onEnteredBelowWorkingRange(
+      ComponentContext c,
+      @Prop(optional = true) final @Nullable Object callerContext,
+      @CachedValue VitoImageRequest imageRequest) {
+    FrescoVitoProvider.getPrefetcher()
+        .setDistanceToViewport(1, callerContext, getUri(imageRequest), "FrescoVitoImage2");
+  }
+
+  @OnEnteredRange(name = "visible")
+  static void onEnteredVisibleWorkingRange(
+      ComponentContext c,
+      @Prop(optional = true) final @Nullable Object callerContext,
+      @CachedValue VitoImageRequest imageRequest) {
+    FrescoVitoProvider.getPrefetcher()
+        .setDistanceToViewport(0, callerContext, getUri(imageRequest), "FrescoVitoImage2");
+  }
+
+  @OnEnteredRange(name = "above")
+  static void onEnteredAboveWorkingRange(
+      ComponentContext c,
+      @Prop(optional = true) final @Nullable Object callerContext,
+      @CachedValue VitoImageRequest imageRequest) {
+    FrescoVitoProvider.getPrefetcher()
+        .setDistanceToViewport(-1, callerContext, getUri(imageRequest), "FrescoVitoImage2");
+  }
+
+  private static @Nullable Uri getUri(VitoImageRequest imageRequest) {
+    return imageRequest.finalImageRequest != null
+        ? imageRequest.finalImageRequest.getSourceUri()
+        : null;
+  }
+
   @OnRegisterRanges
   static void registerWorkingRanges(
       ComponentContext c, @Prop(optional = true) final @Nullable Prefetch prefetch) {
@@ -326,6 +377,15 @@ public class FrescoVitoImage2Spec {
     if (shouldPrefetchWithWorkingRange(prefetch)) {
       FrescoVitoImage2.registerImagePrefetchWorkingRange(
           c, new BoundaryWorkingRange(prefetchConfig.prefetchWorkingRangeSize()));
+    }
+
+    if (prefetchConfig.prioritizeWithWorkingRange()) {
+      FrescoVitoImage2.registerBelow3WorkingRange(
+          c, new BelowViewportWorkingRange(3, Integer.MAX_VALUE));
+      FrescoVitoImage2.registerBelow2WorkingRange(c, new BelowViewportWorkingRange(2, 2));
+      FrescoVitoImage2.registerBelow1WorkingRange(c, new BelowViewportWorkingRange(1, 1));
+      FrescoVitoImage2.registerVisibleWorkingRange(c, new InViewportWorkingRange());
+      FrescoVitoImage2.registerAboveWorkingRange(c, new AboveViewportWorkingRange());
     }
   }
 

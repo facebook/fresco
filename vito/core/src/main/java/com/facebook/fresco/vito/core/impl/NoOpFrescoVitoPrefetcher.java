@@ -70,4 +70,10 @@ public class NoOpFrescoVitoPrefetcher implements FrescoVitoPrefetcher {
       String callsite) {
     throw new UnsupportedOperationException(EXCEPTION_MSG);
   }
+
+  @Override
+  public void setDistanceToViewport(
+      int distance, @Nullable Object callerContext, @Nullable Uri uri, String callsite) {
+    throw new UnsupportedOperationException(EXCEPTION_MSG);
+  }
 }

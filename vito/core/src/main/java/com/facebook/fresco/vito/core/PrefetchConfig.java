@@ -25,4 +25,6 @@ public interface PrefetchConfig {
   int prefetchWorkingRangeSize();
 
   PrefetchTarget prefetchTargetWorkingRange();
+
+  boolean prioritizeWithWorkingRange();
 }
