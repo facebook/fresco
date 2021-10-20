@@ -287,6 +287,7 @@ public abstract class BasePool<V> implements Pool<V> {
       }
     }
 
+    // NULLSAFE_FIXME[Return Not Nullable]
     return value;
   }
 

@@ -32,6 +32,7 @@ public abstract class BaseBooleanSubscriber implements DataSubscriber<Boolean> {
   @Override
   public void onNewResult(DataSource<Boolean> dataSource) {
     try {
+      // NULLSAFE_FIXME[Parameter Not Nullable]
       onNewResultImpl(dataSource.getResult());
     } finally {
       dataSource.close();

@@ -305,11 +305,13 @@ public class BufferedDiskCache {
               public void run() {
                 final Object currentToken = FrescoInstrumenter.onBeginWork(token, null);
                 try {
+                  // NULLSAFE_FIXME[Parameter Not Nullable]
                   writeToDiskCache(key, finalEncodedImage);
                 } catch (Throwable th) {
                   FrescoInstrumenter.markFailure(token, th);
                   throw th;
                 } finally {
+                  // NULLSAFE_FIXME[Parameter Not Nullable]
                   mStagingArea.remove(key, finalEncodedImage);
                   EncodedImage.closeSafely(finalEncodedImage);
                   FrescoInstrumenter.onEndWork(currentToken);

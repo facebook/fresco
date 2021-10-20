@@ -302,6 +302,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       }
     } catch (IOException e) {
       SettableCacheEvent cacheEvent =
+          // NULLSAFE_FIXME[Parameter Not Nullable]
           SettableCacheEvent.obtain().setCacheKey(key).setResourceId(resourceId).setException(e);
       mCacheEventListener.onReadException(cacheEvent);
       cacheEvent.recycle();

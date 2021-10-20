@@ -104,11 +104,13 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
           protected EncodedImage getResult() throws Exception {
             PooledByteBufferOutputStream outputStream = mPooledByteBufferFactory.newOutputStream();
             try {
+              // NULLSAFE_FIXME[Parameter Not Nullable]
               doTranscode(encodedImageCopy, outputStream);
               CloseableReference<PooledByteBuffer> ref =
                   CloseableReference.of(outputStream.toByteBuffer());
               try {
                 EncodedImage encodedImage = new EncodedImage(ref);
+                // NULLSAFE_FIXME[Parameter Not Nullable]
                 encodedImage.copyMetaDataFrom(encodedImageCopy);
                 return encodedImage;
               } finally {

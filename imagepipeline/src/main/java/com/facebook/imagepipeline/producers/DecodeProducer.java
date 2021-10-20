@@ -389,6 +389,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
           throw e;
         }
 
+        // NULLSAFE_FIXME[Nullable Dereference]
         mReclaimMemoryRunnable.run();
         System.gc();
 
