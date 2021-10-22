@@ -373,19 +373,21 @@ public class FrescoVitoImage2Spec {
   @OnRegisterRanges
   static void registerWorkingRanges(
       ComponentContext c, @Prop(optional = true) final @Nullable Prefetch prefetch) {
-    PrefetchConfig prefetchConfig = FrescoVitoProvider.getConfig().getPrefetchConfig();
-    if (shouldPrefetchWithWorkingRange(prefetch)) {
-      FrescoVitoImage2.registerImagePrefetchWorkingRange(
-          c, new BoundaryWorkingRange(prefetchConfig.prefetchWorkingRangeSize()));
-    }
+    if (FrescoVitoProvider.hasBeenInitialized()) {
+      PrefetchConfig prefetchConfig = FrescoVitoProvider.getConfig().getPrefetchConfig();
+      if (shouldPrefetchWithWorkingRange(prefetch)) {
+        FrescoVitoImage2.registerImagePrefetchWorkingRange(
+            c, new BoundaryWorkingRange(prefetchConfig.prefetchWorkingRangeSize()));
+      }
 
-    if (prefetchConfig.prioritizeWithWorkingRange()) {
-      FrescoVitoImage2.registerBelow3WorkingRange(
-          c, new BelowViewportWorkingRange(3, Integer.MAX_VALUE));
-      FrescoVitoImage2.registerBelow2WorkingRange(c, new BelowViewportWorkingRange(2, 2));
-      FrescoVitoImage2.registerBelow1WorkingRange(c, new BelowViewportWorkingRange(1, 1));
-      FrescoVitoImage2.registerVisibleWorkingRange(c, new InViewportWorkingRange());
-      FrescoVitoImage2.registerAboveWorkingRange(c, new AboveViewportWorkingRange());
+      if (prefetchConfig.prioritizeWithWorkingRange()) {
+        FrescoVitoImage2.registerBelow3WorkingRange(
+            c, new BelowViewportWorkingRange(3, Integer.MAX_VALUE));
+        FrescoVitoImage2.registerBelow2WorkingRange(c, new BelowViewportWorkingRange(2, 2));
+        FrescoVitoImage2.registerBelow1WorkingRange(c, new BelowViewportWorkingRange(1, 1));
+        FrescoVitoImage2.registerVisibleWorkingRange(c, new InViewportWorkingRange());
+        FrescoVitoImage2.registerAboveWorkingRange(c, new AboveViewportWorkingRange());
+      }
     }
   }
 
