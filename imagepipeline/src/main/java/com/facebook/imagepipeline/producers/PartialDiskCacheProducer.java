@@ -80,6 +80,15 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
         producerContext
             .getImageRequest()
             .isCacheEnabled(ImageRequest.CachesLocationsMasks.DISK_READ);
+    final boolean isDiskCacheEnabledForWrite =
+        producerContext
+            .getImageRequest()
+            .isCacheEnabled(ImageRequest.CachesLocationsMasks.DISK_WRITE);
+
+    if (!isDiskCacheEnabledForRead && !isDiskCacheEnabledForWrite) {
+      mInputProducer.produceResults(consumer, producerContext);
+      return;
+    }
 
     final ProducerListener2 listener = producerContext.getProducerListener();
     listener.onProducerStart(producerContext, PRODUCER_NAME);
