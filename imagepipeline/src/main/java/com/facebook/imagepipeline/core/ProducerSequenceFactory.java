@@ -825,7 +825,7 @@ public class ProducerSequenceFactory {
     if (mDiskCacheEnabled) {
       inputProducer = newDiskCacheSequence(inputProducer);
     }
-    EncodedMemoryCacheProducer encodedMemoryCacheProducer =
+    Producer<EncodedImage> encodedMemoryCacheProducer =
         mProducerFactory.newEncodedMemoryCacheProducer(inputProducer);
     if (mIsDiskCacheProbingEnabled) {
       EncodedProbeProducer probeProducer =

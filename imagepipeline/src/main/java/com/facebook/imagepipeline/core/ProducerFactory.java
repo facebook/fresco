@@ -264,7 +264,7 @@ public class ProducerFactory {
         inputProducer);
   }
 
-  public EncodedMemoryCacheProducer newEncodedMemoryCacheProducer(
+  public Producer<EncodedImage> newEncodedMemoryCacheProducer(
       Producer<EncodedImage> inputProducer) {
     return new EncodedMemoryCacheProducer(mEncodedMemoryCache, mCacheKeyFactory, inputProducer);
   }
