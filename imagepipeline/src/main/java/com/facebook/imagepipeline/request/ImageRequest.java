@@ -87,7 +87,7 @@ public class ImageRequest {
    * int in which each bit represents read or write permission of each cache from bitmap read bit
    * (rightest) to disk write bit
    */
-  private final int mCachesDisabled;
+  protected int mCachesDisabled;
 
   /** Whether the disk cache should be used for this request */
   private final boolean mIsDiskCacheEnabled;
