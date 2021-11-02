@@ -41,7 +41,7 @@ object ExampleDatabase {
                   ExampleItem("Placeholder, Progress, Failure") { DraweeHierarchyFragment() },
                   ExampleItem("Rotation") { DraweeRotationFragment() },
                   ExampleItem("Recycler View") { DraweeRecyclerViewFragment() },
-                  ExampleItem("Drawee Transistion") { DraweeTransitionFragment() },
+                  ExampleItem("Drawee Transition") { DraweeTransitionFragment() },
                   ExampleItem("Retaining Data Source Supplier") {
                     RetainingDataSourceSupplierFragment()
                   },
