@@ -13,6 +13,7 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import androidx.annotation.VisibleForTesting;
@@ -26,6 +27,12 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
   private final Paint mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   @Nullable private final Bitmap mBitmap;
   @Nullable private WeakReference<Bitmap> mLastBitmap;
+  private @Nullable RectF mBitmapClipRect = null;
+  private static boolean sFixRepeatedEdges = true;
+
+  public static void setFixRepeatedEdges(boolean fixRepeatedEdges) {
+    sFixRepeatedEdges = fixRepeatedEdges;
+  }
 
   public RoundedBitmapDrawable(Resources res, @Nullable Bitmap bitmap, @Nullable Paint paint) {
     super(new BitmapDrawable(res, bitmap));
@@ -40,6 +47,17 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
 
   public RoundedBitmapDrawable(Resources res, @Nullable Bitmap bitmap) {
     this(res, bitmap, null);
+  }
+
+  @Override
+  protected void updateTransform() {
+    super.updateTransform();
+    if (sFixRepeatedEdges) {
+      if (mBitmapClipRect == null) {
+        mBitmapClipRect = new RectF();
+      }
+      mTransform.mapRect(mBitmapClipRect, mBitmapBounds);
+    }
   }
 
   @Override
@@ -59,7 +77,14 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
     updatePaint();
     int saveCount = canvas.save();
     canvas.concat(mInverseParentTransform);
-    canvas.drawPath(mPath, mPaint);
+    if (sFixRepeatedEdges && mBitmapClipRect != null) {
+      int saveCount2 = canvas.save();
+      canvas.clipRect(mBitmapClipRect);
+      canvas.drawPath(mPath, mPaint);
+      canvas.restoreToCount(saveCount2);
+    } else {
+      canvas.drawPath(mPath, mPaint);
+    }
     if (mBorderWidth > 0) {
       mBorderPaint.setStrokeWidth(mBorderWidth);
       mBorderPaint.setColor(DrawableUtils.multiplyColorAlpha(mBorderColor, mPaint.getAlpha()));
