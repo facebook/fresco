@@ -98,7 +98,8 @@ public class FrescoVitoImage2Spec {
   static void onCreateInitialState(
       ComponentContext context,
       StateValue<AtomicReference<DataSource<Void>>> workingRangePrefetchData) {
-    if (FrescoVitoProvider.getConfig().getPrefetchConfig().prefetchWithWorkingRange()) {
+    if (FrescoVitoProvider.hasBeenInitialized()
+        && FrescoVitoProvider.getConfig().getPrefetchConfig().prefetchWithWorkingRange()) {
       workingRangePrefetchData.set(new AtomicReference<DataSource<Void>>());
     }
   }
