@@ -126,12 +126,14 @@ dependencies {
 
     // Experimental Fresco Vito
     implementation project(':vito:core')
+    implementation project(':vito:core-impl')
     implementation project(':vito:init')
     implementation project(':vito:ktx')
     implementation project(':vito:litho')
     implementation project(':vito:litho-slideshow')
     implementation project(':vito:options')
     implementation project(':vito:provider')
+    implementation project(':vito:renderer')
     implementation project(':vito:source')
 
     // Only used for the custom SVG decoder

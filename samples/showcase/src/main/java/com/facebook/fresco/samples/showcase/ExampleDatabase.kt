@@ -22,6 +22,8 @@ import com.facebook.fresco.samples.showcase.misc.WelcomeFragment
 import com.facebook.fresco.samples.showcase.settings.SettingsFragment
 import com.facebook.fresco.samples.showcase.vito.*
 import com.facebook.fresco.samples.showcase.vito.ninepatch.LithoNinePatchSample
+import com.facebook.fresco.samples.showcase.vito.renderer.RendererShapeExampleFragment
+import com.facebook.fresco.samples.showcase.vito.renderer.VitoLayerExample
 
 object ExampleDatabase {
 
@@ -95,5 +97,10 @@ object ExampleDatabase {
                   ExampleItem(
                       "Vito Litho: NinePatch",
                       LithoNinePatchSample(),
-                      "Litho nine patch example"))))
+                      "Litho nine patch example"))),
+          ExampleCategory(
+              "Vito Renderer",
+              listOf(
+                  ExampleItem("Renderer: Shapes") { RendererShapeExampleFragment() },
+                  ExampleItem("Layers: Scaling") { VitoLayerExample() })))
 }

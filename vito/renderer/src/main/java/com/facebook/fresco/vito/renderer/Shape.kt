@@ -13,7 +13,7 @@ sealed class Shape {
   abstract fun draw(canvas: Canvas, paint: Paint)
 }
 
-class RectShape(val rect: Rect) : Shape() {
+class RectShape(val rect: RectF) : Shape() {
   override fun draw(canvas: Canvas, paint: Paint) = canvas.drawRect(rect, paint)
 }
 
