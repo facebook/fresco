@@ -16,7 +16,9 @@ object GradleDeps {
   }
 
   object Kotlin {
-    const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Deps.Kotlin.version}"
+    const val version = "1.5.31"
+    const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
+    const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib:$version"
   }
 
   object Publishing {

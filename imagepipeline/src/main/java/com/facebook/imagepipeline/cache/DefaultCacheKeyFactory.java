@@ -32,14 +32,16 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
 
   @Override
   public CacheKey getBitmapCacheKey(ImageRequest request, @Nullable Object callerContext) {
-    return new BitmapMemoryCacheKey(
-        getCacheKeySourceUri(request.getSourceUri()).toString(),
-        request.getResizeOptions(),
-        request.getRotationOptions(),
-        request.getImageDecodeOptions(),
-        null,
-        null,
-        callerContext);
+    BitmapMemoryCacheKey cacheKey =
+        new BitmapMemoryCacheKey(
+            getCacheKeySourceUri(request.getSourceUri()).toString(),
+            request.getResizeOptions(),
+            request.getRotationOptions(),
+            request.getImageDecodeOptions(),
+            null,
+            null);
+    cacheKey.setCallerContext(callerContext);
+    return cacheKey;
   }
 
   @Override
@@ -55,14 +57,16 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
       postprocessorCacheKey = null;
       postprocessorName = null;
     }
-    return new BitmapMemoryCacheKey(
-        getCacheKeySourceUri(request.getSourceUri()).toString(),
-        request.getResizeOptions(),
-        request.getRotationOptions(),
-        request.getImageDecodeOptions(),
-        postprocessorCacheKey,
-        postprocessorName,
-        callerContext);
+    BitmapMemoryCacheKey cacheKey =
+        new BitmapMemoryCacheKey(
+            getCacheKeySourceUri(request.getSourceUri()).toString(),
+            request.getResizeOptions(),
+            request.getRotationOptions(),
+            request.getImageDecodeOptions(),
+            postprocessorCacheKey,
+            postprocessorName);
+    cacheKey.setCallerContext(callerContext);
+    return cacheKey;
   }
 
   @Override
