@@ -33,6 +33,9 @@ public class DiskCacheConfig {
   private final long mDefaultSizeLimit;
   private final long mLowDiskSpaceSizeLimit;
   private final long mMinimumSizeLimit;
+  private final int mCutPercentageThreshold;
+  private final int mLowPercentageThreshold;
+  private final int mHighPercentageThreshold;
   private final EntryEvictionComparatorSupplier mEntryEvictionComparatorSupplier;
   private final CacheErrorLogger mCacheErrorLogger;
   private final CacheEventListener mCacheEventListener;
@@ -59,6 +62,9 @@ public class DiskCacheConfig {
     mBaseDirectoryName = Preconditions.checkNotNull(builder.mBaseDirectoryName);
     mBaseDirectoryPathSupplier = Preconditions.checkNotNull(builder.mBaseDirectoryPathSupplier);
     mDefaultSizeLimit = builder.mMaxCacheSize;
+    mCutPercentageThreshold = builder.mCutPercentageCacheSize;
+    mLowPercentageThreshold = builder.mLowPercentageCacheSize;
+    mHighPercentageThreshold = builder.mHighPercentageCacheSize;
     mLowDiskSpaceSizeLimit = builder.mMaxCacheSizeOnLowDiskSpace;
     mMinimumSizeLimit = builder.mMaxCacheSizeOnVeryLowDiskSpace;
     mEntryEvictionComparatorSupplier =
@@ -92,6 +98,18 @@ public class DiskCacheConfig {
 
   public long getDefaultSizeLimit() {
     return mDefaultSizeLimit;
+  }
+
+  public int getCutPercentageThreshold() {
+    return mCutPercentageThreshold;
+  }
+
+  public int getLowPercentageThreshold() {
+    return mLowPercentageThreshold;
+  }
+
+  public int getHighPercentageThershold() {
+    return mHighPercentageThreshold;
   }
 
   public long getLowDiskSpaceSizeLimit() {
@@ -147,6 +165,9 @@ public class DiskCacheConfig {
     private long mMaxCacheSize = 40 * ByteConstants.MB;
     private long mMaxCacheSizeOnLowDiskSpace = 10 * ByteConstants.MB;
     private long mMaxCacheSizeOnVeryLowDiskSpace = 2 * ByteConstants.MB;
+    private int mCutPercentageCacheSize;
+    private int mLowPercentageCacheSize;
+    private int mHighPercentageCacheSize;
     private EntryEvictionComparatorSupplier mEntryEvictionComparatorSupplier =
         new DefaultEntryEvictionComparatorSupplier();
     private @Nullable CacheErrorLogger mCacheErrorLogger;
@@ -215,6 +236,21 @@ public class DiskCacheConfig {
      */
     public Builder setMaxCacheSizeOnVeryLowDiskSpace(long maxCacheSizeOnVeryLowDiskSpace) {
       mMaxCacheSizeOnVeryLowDiskSpace = maxCacheSizeOnVeryLowDiskSpace;
+      return this;
+    }
+
+    public Builder setCutPercentageCacheSize(int cutCachePercent) {
+      mCutPercentageCacheSize = cutCachePercent;
+      return this;
+    }
+
+    public Builder setLowPercentageCacheSize(int lowCachePercent) {
+      mLowPercentageCacheSize = lowCachePercent;
+      return this;
+    }
+
+    public Builder setHighPercentageCacheSize(int highCachePercent) {
+      mHighPercentageCacheSize = highCachePercent;
       return this;
     }
 
