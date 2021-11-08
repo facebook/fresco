@@ -12,7 +12,9 @@ object TestDeps {
 
   const val junit = "junit:junit:4.12"
 
-  const val mockitoCore = "org.mockito:mockito-core:2.26.0"
+  const val mockitoCore = "org.mockito:mockito-core:2.28.2"
+
+  const val mockitoInline = "org.mockito:mockito-inline:2.28.2"
 
   const val festAssertCore = "org.easytesting:fest-assert-core:2.0M10"
 
