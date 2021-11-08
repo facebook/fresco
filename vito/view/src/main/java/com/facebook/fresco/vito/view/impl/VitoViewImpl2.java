@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
+import com.facebook.common.internal.Supplier;
+import com.facebook.common.internal.Suppliers;
 import com.facebook.drawee.drawable.VisibilityCallback;
 import com.facebook.fresco.vito.core.FrescoDrawableInterface;
 import com.facebook.fresco.vito.core.VitoImageRequest;
@@ -25,6 +27,12 @@ import com.facebook.infer.annotation.Nullsafe;
 /** Vito View implementation */
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class VitoViewImpl2 {
+
+  private static Supplier<Boolean> sUseVisibilityCallbacks = Suppliers.BOOLEAN_TRUE;
+
+  public static void setUseVisibilityCallbacks(Supplier<Boolean> useVisibilityCallbacks) {
+    sUseVisibilityCallbacks = useVisibilityCallbacks;
+  }
 
   private static final View.OnAttachStateChangeListener mOnAttachStateChangeListenerCallback =
       new View.OnAttachStateChangeListener() {
@@ -137,22 +145,24 @@ public class VitoViewImpl2 {
     final FrescoDrawableInterface frescoDrawable =
         FrescoVitoProvider.getController().createDrawable();
 
-    frescoDrawable.setVisibilityCallback(
-        new VisibilityCallback() {
-          @Override
-          public void onVisibilityChange(boolean visible) {
-            if (!visible) {
-              FrescoVitoProvider.getController().release(frescoDrawable);
-            } else {
-              maybeFetchImage(frescoDrawable);
+    if (sUseVisibilityCallbacks.get()) {
+      frescoDrawable.setVisibilityCallback(
+          new VisibilityCallback() {
+            @Override
+            public void onVisibilityChange(boolean visible) {
+              if (!visible) {
+                FrescoVitoProvider.getController().release(frescoDrawable);
+              } else {
+                maybeFetchImage(frescoDrawable);
+              }
             }
-          }
 
-          @Override
-          public void onDraw() {
-            // NOP
-          }
-        });
+            @Override
+            public void onDraw() {
+              // NOP
+            }
+          });
+    }
     return frescoDrawable;
   }
 }
