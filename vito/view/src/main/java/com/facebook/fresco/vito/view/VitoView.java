@@ -110,4 +110,13 @@ public class VitoView {
       final View target) {
     VitoViewImpl2.show(imageSource, imageOptions, callerContext, imageListener, target);
   }
+
+  /**
+   * Release the image for the given view target if loaded by Vito
+   *
+   * @param target the image target to release
+   */
+  public static void release(final View target) {
+    VitoViewImpl2.release(target);
+  }
 }

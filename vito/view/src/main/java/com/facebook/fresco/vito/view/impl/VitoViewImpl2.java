@@ -91,6 +91,13 @@ public class VitoViewImpl2 {
     target.addOnAttachStateChangeListener(mOnAttachStateChangeListenerCallback);
   }
 
+  public static void release(final View target) {
+    final FrescoDrawableInterface drawable = getDrawable(target);
+    if (drawable != null) {
+      FrescoVitoProvider.getController().releaseImmediately(drawable);
+    }
+  }
+
   private static void maybeFetchImage(final FrescoDrawableInterface drawable) {
     final VitoImageRequest request = drawable.getImageRequest();
     if (request == null) {
