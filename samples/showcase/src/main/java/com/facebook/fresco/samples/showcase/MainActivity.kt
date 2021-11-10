@@ -18,6 +18,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import com.facebook.fresco.samples.showcase.permissions.StoragePermissionHelper
+import com.facebook.fresco.vito.tools.liveeditor.ImageTracker
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -106,10 +107,21 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    if (item.itemId == R.id.action_settings) {
-      showFragment(ExampleDatabase.settings)
+    when (item.itemId) {
+      R.id.action_next_image -> ShowcaseApplication.imageSelector.selectNext(this)
+      R.id.action_prev_image -> ShowcaseApplication.imageSelector.selectPrevious(this)
+      R.id.action_settings -> showFragment(ExampleDatabase.settings)
+      R.id.action_edit_image -> showImageOptionsEditor()
     }
     return super.onOptionsItemSelected(item)
+  }
+
+  fun showImageOptionsEditor() {
+    supportFragmentManager.let {
+      ImageOptionsBottomSheet.newInstance(ShowcaseApplication.imageSelector, Bundle()).apply {
+        show(it, tag)
+      }
+    }
   }
 
   override fun onRequestPermissionsResult(
@@ -135,6 +147,7 @@ class MainActivity : AppCompatActivity() {
     fragmentTransaction.commit()
 
     setTitle(title)
+    ImageTracker.reset()
   }
 
   private fun maybeShowUriOverrideReminder() {

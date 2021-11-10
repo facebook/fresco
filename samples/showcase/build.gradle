@@ -107,7 +107,6 @@ dependencies {
     implementation project(':drawee-span')
     implementation project(':imagepipeline-backends:imagepipeline-okhttp3')
     implementation project(':tools:stetho')
-    implementation project(path: ':imagepipeline-backends:imagepipeline-okhttp3')
 
     implementation 'com.facebook.keyframes:keyframes:1.0'
 
@@ -135,6 +134,7 @@ dependencies {
     implementation project(':vito:provider')
     implementation project(':vito:renderer')
     implementation project(':vito:source')
+    implementation project(':vito:tools:liveeditor')
 
     // Only used for the custom SVG decoder
     implementation SampleDeps.Showcase.caverockSvg

@@ -24,7 +24,11 @@ import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
 import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.samples.showcase.misc.LogcatRequestListener2
+import com.facebook.fresco.vito.core.impl.FrescoController2Impl
 import com.facebook.fresco.vito.init.FrescoVito
+import com.facebook.fresco.vito.provider.FrescoVitoProvider
+import com.facebook.fresco.vito.tools.liveeditor.ImageSelector
+import com.facebook.fresco.vito.tools.liveeditor.ImageTracker
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.facebook.imagepipeline.debug.FlipperCacheKeyFactory
@@ -38,7 +42,6 @@ import com.facebook.imagepipeline.memory.BitmapCounterProvider
 import com.facebook.imagepipeline.stetho.FrescoStethoPlugin
 import com.facebook.stetho.Stetho
 import com.facebook.stetho.okhttp3.StethoInterceptor
-import java.util.HashSet
 import okhttp3.OkHttpClient
 
 /** Showcase Application implementation where we set up Fresco */
@@ -112,6 +115,7 @@ class ShowcaseApplication : Application() {
             .build())
     Fresco.initialize(this, imagePipelineConfig, draweeConfigBuilder.build())
     FrescoVito.initialize(resources, DebugOverlaySupplierSingleton.getInstance(applicationContext))
+    setupLiveEditing()
     val context = this
     Stetho.initialize(
         Stetho.newInitializerBuilder(context)
@@ -145,9 +149,17 @@ class ShowcaseApplication : Application() {
     return BuildConfig.DEBUG && FlipperUtils.shouldEnableFlipper(this)
   }
 
+  private fun setupLiveEditing() {
+    val controller = FrescoVitoProvider.getController() as FrescoController2Impl
+    controller.setDrawableListener(ImageTracker)
+    imageSelector = ImageSelector(ImageTracker, FrescoVitoProvider.getImagePipeline(), controller)
+  }
+
   companion object {
     private val sFlipperImageTracker = FlipperImageTracker()
     lateinit var imageUriProvider: ImageUriProvider
+      private set
+    lateinit var imageSelector: ImageSelector
       private set
   }
 }
