@@ -292,7 +292,10 @@ public class WrappingUtils {
       final BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
       RoundedBitmapDrawable roundedBitmapDrawable =
           new RoundedBitmapDrawable(
-              resources, bitmapDrawable.getBitmap(), bitmapDrawable.getPaint());
+              resources,
+              bitmapDrawable.getBitmap(),
+              bitmapDrawable.getPaint(),
+              roundingParams.getRepeatEdgePixels());
       applyRoundingParams(roundedBitmapDrawable, roundingParams);
       return roundedBitmapDrawable;
     } else if (drawable instanceof NinePatchDrawable) {

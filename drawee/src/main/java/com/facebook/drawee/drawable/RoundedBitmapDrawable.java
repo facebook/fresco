@@ -23,18 +23,21 @@ import javax.annotation.Nullable;
 
 public class RoundedBitmapDrawable extends RoundedDrawable {
 
+  private static boolean sDefaultRepeatEdgePixels = false;
+
   private final Paint mPaint = new Paint();
   private final Paint mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   @Nullable private final Bitmap mBitmap;
   @Nullable private WeakReference<Bitmap> mLastBitmap;
+  private final boolean mRepeatEdgePixels;
   private @Nullable RectF mBitmapClipRect = null;
-  private static boolean sFixRepeatedEdges = true;
 
-  public static void setFixRepeatedEdges(boolean fixRepeatedEdges) {
-    sFixRepeatedEdges = fixRepeatedEdges;
+  public static void setDefaultFixRepeatedEdges(boolean defaultFixRepeatedEdges) {
+    sDefaultRepeatEdgePixels = defaultFixRepeatedEdges;
   }
 
-  public RoundedBitmapDrawable(Resources res, @Nullable Bitmap bitmap, @Nullable Paint paint) {
+  public RoundedBitmapDrawable(
+      Resources res, @Nullable Bitmap bitmap, @Nullable Paint paint, boolean repeatEdgePixels) {
     super(new BitmapDrawable(res, bitmap));
     mBitmap = bitmap;
     if (paint != null) {
@@ -43,6 +46,11 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
 
     mPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
     mBorderPaint.setStyle(Paint.Style.STROKE);
+    mRepeatEdgePixels = repeatEdgePixels;
+  }
+
+  public RoundedBitmapDrawable(Resources res, @Nullable Bitmap bitmap, @Nullable Paint paint) {
+    this(res, bitmap, paint, sDefaultRepeatEdgePixels);
   }
 
   public RoundedBitmapDrawable(Resources res, @Nullable Bitmap bitmap) {
@@ -52,7 +60,7 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
   @Override
   protected void updateTransform() {
     super.updateTransform();
-    if (sFixRepeatedEdges) {
+    if (!mRepeatEdgePixels) {
       if (mBitmapClipRect == null) {
         mBitmapClipRect = new RectF();
       }
@@ -77,7 +85,7 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
     updatePaint();
     int saveCount = canvas.save();
     canvas.concat(mInverseParentTransform);
-    if (sFixRepeatedEdges && mBitmapClipRect != null) {
+    if (!mRepeatEdgePixels && mBitmapClipRect != null) {
       int saveCount2 = canvas.save();
       canvas.clipRect(mBitmapClipRect);
       canvas.drawPath(mPath, mPaint);
