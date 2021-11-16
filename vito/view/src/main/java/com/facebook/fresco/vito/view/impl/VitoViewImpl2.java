@@ -29,9 +29,14 @@ import com.facebook.infer.annotation.Nullsafe;
 public class VitoViewImpl2 {
 
   private static Supplier<Boolean> sUseVisibilityCallbacks = Suppliers.BOOLEAN_TRUE;
+  private static Supplier<Boolean> sUseSimpleFetchLogic = Suppliers.BOOLEAN_FALSE;
 
   public static void setUseVisibilityCallbacks(Supplier<Boolean> useVisibilityCallbacks) {
     sUseVisibilityCallbacks = useVisibilityCallbacks;
+  }
+
+  public static void setUseSimpleFetchLogic(Supplier<Boolean> useSimpleFetchLogic) {
+    sUseSimpleFetchLogic = useSimpleFetchLogic;
   }
 
   private static final View.OnAttachStateChangeListener mOnAttachStateChangeListenerCallback =
@@ -73,17 +78,20 @@ public class VitoViewImpl2 {
     frescoDrawable.setImageRequest(imageRequest);
     frescoDrawable.setCallerContext(callerContext);
     frescoDrawable.setImageListener(imageListener);
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      // If the view is already attached to the window, immediately fetch the image.
-      // Otherwise, the fetch will be submitted later when then View is attached.
-      if (target.isAttachedToWindow()) {
+    if (sUseSimpleFetchLogic.get()) {
+      maybeFetchImage(frescoDrawable);
+    } else {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        // If the view is already attached to the window, immediately fetch the image.
+        // Otherwise, the fetch will be submitted later when then View is attached.
+        if (target.isAttachedToWindow()) {
+          maybeFetchImage(frescoDrawable);
+        }
+      } else {
+        // Before Kitkat we don't have a good way to know.
+        // Normally we expect the view to be already attached, thus we always fetch the image.
         maybeFetchImage(frescoDrawable);
       }
-    } else {
-      // Before Kitkat we don't have a good way to know.
-      // Normally we expect the view to be already attached, thus we always fetch the image.
-      maybeFetchImage(frescoDrawable);
     }
 
     // `addOnAttachStateChangeListener` is not idempotent
