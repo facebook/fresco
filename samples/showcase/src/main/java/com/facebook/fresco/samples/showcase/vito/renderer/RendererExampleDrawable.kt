@@ -19,16 +19,19 @@ import com.facebook.fresco.vito.renderer.Shape
 open class RendererExampleDrawable(
     private val imageDataModel: ImageDataModel,
     private val shape: Shape,
-    private val transformationMatrix: Matrix? = null
+    private val transformationMatrix: Matrix? = null,
+    private var imageColorFilter: ColorFilter? = null,
 ) : Drawable() {
   override fun draw(canvas: Canvas) {
-    ImageRenderer.createImageDataModelRenderCommand(imageDataModel, shape, transformationMatrix)(
-        canvas)
+    ImageRenderer.createImageDataModelRenderCommand(
+        imageDataModel, shape, transformationMatrix, null, imageColorFilter)(canvas)
   }
 
   override fun setAlpha(alpha: Int) = Unit
 
-  override fun setColorFilter(colorFilter: ColorFilter?) = Unit
+  override fun setColorFilter(colorFilter: ColorFilter?) {
+    imageColorFilter = colorFilter
+  }
 
   override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
 }

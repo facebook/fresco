@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.core.impl
 
 import android.graphics.Canvas
+import android.graphics.ColorFilter
 import android.graphics.Rect
 import com.facebook.fresco.vito.options.BorderOptions
 import com.facebook.fresco.vito.options.RoundingOptions
@@ -24,6 +25,7 @@ class ImageLayerDataModel {
   private val canvasTransformationHandler: CanvasTransformationHandler =
       CanvasTransformationHandler(null)
   private var renderCommand: RenderCommand? = null
+  private var colorFilter: ColorFilter? = null
 
   fun getDataModel(): ImageDataModel? {
     return dataModel
@@ -35,12 +37,14 @@ class ImageLayerDataModel {
       borderOptions: BorderOptions? = this.borderOptions,
       canvasTransformation: CanvasTransformation? =
           canvasTransformationHandler.canvasTransformation,
-      bounds: Rect? = this.currentBounds
+      bounds: Rect? = this.currentBounds,
+      colorFilter: ColorFilter? = this.colorFilter
   ) {
     this.dataModel = dataModel
     this.roundingOptions = roundingOptions
     this.borderOptions = borderOptions
     this.currentBounds = bounds
+    this.colorFilter = colorFilter
     canvasTransformationHandler.canvasTransformation = canvasTransformation
     // TODO(T105148151): only invalidate if changed
     invalidateRenderCommand()
@@ -71,6 +75,7 @@ class ImageLayerDataModel {
             borderOptions,
             canvasTransformationHandler.getMatrix(),
             bounds,
+            colorFilter,
             alpha)
   }
 
@@ -85,5 +90,6 @@ class ImageLayerDataModel {
     borderOptions = null
     renderCommand = null
     currentBounds = null
+    colorFilter = null
   }
 }

@@ -9,6 +9,7 @@ package com.facebook.fresco.samples.showcase.vito.renderer
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.ColorFilter
 import android.graphics.Matrix
 import android.view.ViewGroup
 import android.widget.HorizontalScrollView
@@ -96,10 +97,12 @@ fun LinearLayout.addExample(
     h: Int,
     imageDataModel: ImageDataModel,
     shape: Shape,
-    transformationMatrix: Matrix? = null
+    transformationMatrix: Matrix? = null,
+    colorFilter: ColorFilter? = null,
 ) {
   addImageView(w, h)
-      .setImageDrawable(RendererExampleDrawable(imageDataModel, shape, transformationMatrix))
+      .setImageDrawable(
+          RendererExampleDrawable(imageDataModel, shape, transformationMatrix, colorFilter))
 }
 
 fun LinearLayout.addText(text: String?) {

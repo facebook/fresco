@@ -186,7 +186,8 @@ class KFrescoController(
         dataModel = imageToDataModelMapper(closeableImage, imageOptions),
         canvasTransformation = imageOptions.createActualImageCanvasTransformation(),
         roundingOptions = imageOptions.roundingOptions,
-        borderOptions = imageOptions.borderOptions)
+        borderOptions = imageOptions.borderOptions,
+        colorFilter = imageOptions.actualImageColorFilter)
   }
 
   private fun ImageLayerDataModel.setPlaceholder(resources: Resources, imageOptions: ImageOptions) {

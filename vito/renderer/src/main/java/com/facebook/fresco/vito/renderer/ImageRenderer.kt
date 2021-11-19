@@ -8,7 +8,6 @@
 package com.facebook.fresco.vito.renderer
 
 import android.graphics.*
-import android.graphics.drawable.Drawable
 
 typealias RenderCommand = (Canvas) -> Unit
 
@@ -25,42 +24,48 @@ class ImageRenderer {
         model: ImageDataModel,
         shape: Shape,
         imageTransformation: Matrix? = null,
-        paintToReuse: Paint? = null
+        paintToReuse: Paint? = null,
+        colorFilter: ColorFilter? = null,
     ): RenderCommand {
       return when (model) {
         is BitmapImageDataModel ->
-            model.createRenderCommand(shape, imageTransformation, paintToReuse)
+            model.createRenderCommand(shape, imageTransformation, paintToReuse, colorFilter)
         is ColorIntImageDataModel ->
-            model.createRenderCommand(shape, imageTransformation, paintToReuse)
+            model.createRenderCommand(shape, imageTransformation, paintToReuse, colorFilter)
         is DrawableImageDataModel ->
-            model.createRenderCommand(shape, imageTransformation, paintToReuse)
+            model.createRenderCommand(shape, imageTransformation, paintToReuse, colorFilter)
       }
     }
 
     inline fun BitmapImageDataModel.createRenderCommand(
         shape: Shape,
         imageTransformation: Matrix? = null,
-        paintToReuse: Paint? = null
+        paintToReuse: Paint? = null,
+        colorFilter: ColorFilter? = null,
     ): RenderCommand {
       when (shape) {
         is RectShape -> {
+          val colorFilterPaint =
+              if (colorFilter != null) getPaint(paintToReuse, colorFilter) else null
           return {
             it.concat(imageTransformation)
-            it.drawBitmap(bitmap, 0f, 0f, null)
+            it.drawBitmap(bitmap, 0f, 0f, colorFilterPaint)
           }
         }
         is CircleShape ->
             if (!isBitmapCircular) {
-              val paint = getBitmapPaint(bitmap, imageTransformation, paintToReuse)
+              val paint = getBitmapPaint(bitmap, imageTransformation, paintToReuse, colorFilter)
               return { shape.draw(it, paint) }
             } else {
+              val colorFilterPaint =
+                  if (colorFilter != null) getPaint(paintToReuse, colorFilter) else null
               return {
                 it.concat(imageTransformation)
-                it.drawBitmap(bitmap, 0f, 0f, null)
+                it.drawBitmap(bitmap, 0f, 0f, colorFilterPaint)
               }
             }
         else -> {
-          val paint = getBitmapPaint(bitmap, imageTransformation, paintToReuse)
+          val paint = getBitmapPaint(bitmap, imageTransformation, paintToReuse, colorFilter)
           return { shape.draw(it, paint) }
         }
       }
@@ -69,17 +74,19 @@ class ImageRenderer {
     inline fun ColorIntImageDataModel.createRenderCommand(
         shape: Shape,
         imageTransformation: Matrix? = null,
-        paintToReuse: Paint? = null
+        paintToReuse: Paint? = null,
+        colorFilter: ColorFilter? = null,
     ): RenderCommand {
       // The image transformation is a no-op for solid colors since it is a no-op
-      val paint = getColorPaint(this, paintToReuse)
+      val paint = getPaint(paintToReuse, colorFilter).apply { color = colorInt }
       return { shape.draw(it, paint) }
     }
 
     inline fun DrawableImageDataModel.createRenderCommand(
         shape: Shape,
         imageTransformation: Matrix? = null,
-        paintToReuse: Paint? = null
+        paintToReuse: Paint? = null,
+        colorFilter: ColorFilter? = null,
     ): RenderCommand {
       // TODO(T105148151): account for image transformation
       // We transform by scaling the Canvas, so we let the Drawable draw itself with its
@@ -87,41 +94,39 @@ class ImageRenderer {
       when (shape) {
         is RectShape -> return {
               drawable.setBounds(0, 0, width, height)
+              drawable.colorFilter = colorFilter
               drawable.draw(it)
             }
 
         // TODO(T105148151): properly handle transformations
         else -> {
-          val paint = paintToReuse ?: Paint(Paint.ANTI_ALIAS_FLAG)
           return {
             drawable.setBounds(0, 0, width, height)
-            shape.draw(it, getDrawablePaint(drawable, width, height, paint))
+            drawable.colorFilter = null // The Paint handles the color filter
+            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            drawable.draw(Canvas(bitmap))
+            shape.draw(it, getBitmapPaint(bitmap, null, paintToReuse, colorFilter))
           }
         }
       }
     }
 
-    inline fun getColorPaint(model: ColorIntImageDataModel, paint: Paint? = null): Paint {
-      return (reset(paint) ?: Paint(Paint.ANTI_ALIAS_FLAG)).apply { color = model.colorInt }
-    }
-
     inline fun getBitmapPaint(
         bitmap: Bitmap,
         shaderTransformation: Matrix? = null,
-        paint: Paint? = null
+        paintToReuse: Paint? = null,
+        colorFilter: ColorFilter? = null
     ): Paint {
-      return (reset(paint) ?: Paint(Paint.ANTI_ALIAS_FLAG)).apply {
+      return getPaint(paintToReuse, colorFilter).apply {
         shader = BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
         shader.setLocalMatrix(shaderTransformation)
       }
     }
 
-    inline fun getDrawablePaint(drawable: Drawable, width: Int, height: Int, paint: Paint): Paint {
-      val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-      drawable.draw(Canvas(bitmap))
-      return getBitmapPaint(bitmap, null, paint)
+    inline fun getPaint(paintToReuse: Paint? = null, colorFilter: ColorFilter? = null): Paint {
+      return (paintToReuse?.apply { reset() } ?: Paint(Paint.ANTI_ALIAS_FLAG)).apply {
+        this.colorFilter = colorFilter
+      }
     }
-
-    inline fun reset(paint: Paint?): Paint? = paint?.apply { reset() }
   }
 }
