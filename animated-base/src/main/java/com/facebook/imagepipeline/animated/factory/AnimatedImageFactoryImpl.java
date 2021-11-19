@@ -10,7 +10,6 @@ package com.facebook.imagepipeline.animated.factory;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.os.Build;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
@@ -227,9 +226,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
     CloseableReference<Bitmap> bitmap =
         mBitmapFactory.createBitmapInternal(width, height, bitmapConfig);
     bitmap.get().eraseColor(Color.TRANSPARENT);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-      bitmap.get().setHasAlpha(true);
-    }
+    bitmap.get().setHasAlpha(true);
     return bitmap;
   }
 }

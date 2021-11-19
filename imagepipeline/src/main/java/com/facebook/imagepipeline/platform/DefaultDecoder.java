@@ -7,7 +7,6 @@
 
 package com.facebook.imagepipeline.platform;
 
-import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
@@ -32,7 +31,6 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** Bitmap decoder for ART VM (Lollipop and up). */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @ThreadSafe
 public abstract class DefaultDecoder implements PlatformDecoder {
 

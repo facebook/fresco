@@ -8,15 +8,12 @@
 package com.facebook.fresco.animation.drawable.animator;
 
 import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
-import android.os.Build;
 import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Helper class to create {@link ValueAnimator}s for {@link AnimatedDrawable2}. */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedDrawable2ValueAnimatorHelper {
 
@@ -50,7 +47,6 @@ public class AnimatedDrawable2ValueAnimatorHelper {
   public static ValueAnimator.AnimatorUpdateListener createAnimatorUpdateListener(
       final AnimatedDrawable2 drawable) {
     return new ValueAnimator.AnimatorUpdateListener() {
-      @TargetApi(Build.VERSION_CODES.HONEYCOMB)
       @Override
       public void onAnimationUpdate(ValueAnimator animation) {
         drawable.setLevel((Integer) animation.getAnimatedValue());

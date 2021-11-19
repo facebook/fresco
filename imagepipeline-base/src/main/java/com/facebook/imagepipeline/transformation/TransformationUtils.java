@@ -8,7 +8,6 @@
 package com.facebook.imagepipeline.transformation;
 
 import android.graphics.Bitmap;
-import android.os.Build;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
@@ -22,8 +21,7 @@ public final class TransformationUtils {
       return false;
     }
     Bitmap bitmap = bitmapReference.get();
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1
-        && transformation.modifiesTransparency()) {
+    if (transformation.modifiesTransparency()) {
       bitmap.setHasAlpha(true);
     }
     transformation.transform(bitmap);

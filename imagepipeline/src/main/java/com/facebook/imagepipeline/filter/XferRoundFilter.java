@@ -13,8 +13,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.os.Build;
-import androidx.annotation.RequiresApi;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.infer.annotation.Nullsafe;
 
@@ -29,7 +27,6 @@ public final class XferRoundFilter {
 
   private XferRoundFilter() {}
 
-  @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB_MR1)
   public static void xferRoundBitmap(Bitmap output, Bitmap source, boolean enableAntiAliasing) {
     Preconditions.checkNotNull(source);
     Preconditions.checkNotNull(output);
@@ -51,9 +48,5 @@ public final class XferRoundFilter {
     float yCenter = source.getHeight() / 2f;
     canvas.drawCircle(xCenter, yCenter, Math.min(xCenter, yCenter), circlePaint);
     canvas.drawBitmap(source, 0, 0, xfermodePaint);
-  }
-
-  public static boolean canUseXferRoundFilter() {
-    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
   }
 }

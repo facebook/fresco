@@ -62,7 +62,6 @@ public class ResizableFrameLayout extends FrameLayout {
     mSizeChangedListener = sizeChangedListener;
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
   @Override
   public boolean onInterceptTouchEvent(MotionEvent event) {
     if (event.getAction() == MotionEvent.ACTION_DOWN

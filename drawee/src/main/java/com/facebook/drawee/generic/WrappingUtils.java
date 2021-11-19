@@ -15,7 +15,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
-import android.os.Build;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.drawable.DrawableParent;
@@ -304,8 +303,7 @@ public class WrappingUtils {
           new RoundedNinePatchDrawable(ninePatchDrawableDrawable);
       applyRoundingParams(roundedNinePatchDrawable, roundingParams);
       return roundedNinePatchDrawable;
-    } else if (drawable instanceof ColorDrawable
-        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+    } else if (drawable instanceof ColorDrawable) {
       RoundedColorDrawable roundedColorDrawable =
           RoundedColorDrawable.fromColorDrawable((ColorDrawable) drawable);
       applyRoundingParams(roundedColorDrawable, roundingParams);

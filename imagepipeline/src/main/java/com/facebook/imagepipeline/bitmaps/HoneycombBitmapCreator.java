@@ -7,11 +7,9 @@
 
 package com.facebook.imagepipeline.bitmaps;
 
-import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.Build;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
@@ -34,7 +32,6 @@ public class HoneycombBitmapCreator implements BitmapCreator {
     mJpegGenerator = new EmptyJpegGenerator(poolFactory.getPooledByteBufferFactory());
   }
 
-  @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
   @Override
   public Bitmap createNakedBitmap(int width, int height, Bitmap.Config bitmapConfig) {
     CloseableReference<PooledByteBuffer> jpgRef =
@@ -75,9 +72,7 @@ public class HoneycombBitmapCreator implements BitmapCreator {
     options.inInputShareable = true;
     // Sample size should ONLY be different than 1 when downsampling is enabled in the pipeline
     options.inSampleSize = sampleSize;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      options.inMutable = true; // no known perf difference; allows postprocessing to work
-    }
+    options.inMutable = true; // no known perf difference; allows postprocessing to work
     return options;
   }
 }

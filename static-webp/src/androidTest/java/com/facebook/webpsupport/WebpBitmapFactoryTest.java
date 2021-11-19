@@ -11,7 +11,6 @@ import android.app.Instrumentation;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.os.Build;
 import androidx.test.InstrumentationRegistry;
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Throwables;
@@ -91,10 +90,7 @@ public class WebpBitmapFactoryTest extends TestCase {
     assertEquals("Width should be decoded properly", 20, bitmap.getWidth());
     assertEquals("Height should be decoded properly", 20, bitmap.getHeight());
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      // TODO 8639341 - In GB colors are not decoded exactly as they are into the image
-      assertEquals("Bitmap pixels should be red", 0xFFFF0100, bitmap.getPixel(5, 8));
-    }
+    assertEquals("Bitmap pixels should be red", 0xFFFF0100, bitmap.getPixel(5, 8));
   }
 
   @Test
@@ -128,9 +124,6 @@ public class WebpBitmapFactoryTest extends TestCase {
 
   @Test
   public void testInBitmap() throws Throwable {
-    if (!WebpBitmapFactoryImpl.IN_BITMAP_SUPPORTED) {
-      return;
-    }
     Bitmap inBitmap = Bitmap.createBitmap(20, 20, Bitmap.Config.ARGB_8888);
 
     BitmapFactory.Options options = new BitmapFactory.Options();
@@ -268,9 +261,6 @@ public class WebpBitmapFactoryTest extends TestCase {
     assertEquals("Width should be set properly", width, bitmap.getWidth());
     assertEquals("Height should be set properly", height, bitmap.getHeight());
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      // TODO 8639341 - In GB colors are not decoded exactly as they are into the image
-      assertEquals("Bitmap pixels should be red", 0xFFFF0100, bitmap.getPixel(1, 1));
-    }
+    assertEquals("Bitmap pixels should be red", 0xFFFF0100, bitmap.getPixel(1, 1));
   }
 }

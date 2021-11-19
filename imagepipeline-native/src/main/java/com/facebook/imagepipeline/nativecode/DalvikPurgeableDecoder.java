@@ -176,9 +176,7 @@ public abstract class DalvikPurgeableDecoder implements PlatformDecoder {
     options.inInputShareable = true;
     // Sample size should ONLY be different than 1 when downsampling is enabled in the pipeline
     options.inSampleSize = sampleSize;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      options.inMutable = true; // no known perf difference; allows postprocessing to work
-    }
+    options.inMutable = true; // no known perf difference; allows postprocessing to work
     return options;
   }
 

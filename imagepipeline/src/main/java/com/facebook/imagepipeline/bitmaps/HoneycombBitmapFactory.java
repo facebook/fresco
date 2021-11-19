@@ -23,7 +23,6 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /** Factory implementation for Honeycomb through Kitkat */
 @Nullsafe(Nullsafe.Mode.LOCAL)
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @ThreadSafe
 public class HoneycombBitmapFactory extends PlatformBitmapFactory {
 

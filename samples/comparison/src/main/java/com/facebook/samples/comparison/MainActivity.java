@@ -14,7 +14,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
@@ -468,12 +467,8 @@ public class MainActivity extends AppCompatActivity {
   /** Determines display's height. */
   public int getDisplayHeight() {
     Display display = getWindowManager().getDefaultDisplay();
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {
-      return display.getHeight();
-    } else {
-      final Point size = new Point();
-      display.getSize(size);
-      return size.y;
-    }
+    final Point size = new Point();
+    display.getSize(size);
+    return size.y;
   }
 }

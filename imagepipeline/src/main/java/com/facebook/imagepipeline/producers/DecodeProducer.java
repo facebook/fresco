@@ -10,7 +10,6 @@ package com.facebook.imagepipeline.producers;
 import static com.facebook.imagepipeline.producers.JobScheduler.JobRunnable;
 
 import android.graphics.Bitmap;
-import android.os.Build;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
@@ -444,9 +443,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         tmpMap.put(EXTRA_IMAGE_FORMAT_NAME, imageFormatName);
         tmpMap.put(REQUESTED_IMAGE_SIZE, requestImageSize);
         tmpMap.put(SAMPLE_SIZE, sampleSize);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-          tmpMap.put(EXTRA_BITMAP_BYTES, bitmap.getByteCount() + "");
-        }
+        tmpMap.put(EXTRA_BITMAP_BYTES, bitmap.getByteCount() + "");
         return ImmutableMap.copyOf(tmpMap);
       } else {
         final Map<String, String> tmpMap = new HashMap<>(7);

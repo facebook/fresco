@@ -7,14 +7,12 @@
 
 package com.facebook.fresco.samples.showcase.imageformat.keyframes;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SwitchCompat;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -43,7 +41,6 @@ public class ImageFormatKeyframesFragment extends BaseShowcaseFragment {
     }
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
   private void initAnimation(View view) {
     mSimpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
     mSimpleDraweeView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);

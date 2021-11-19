@@ -57,13 +57,7 @@ public final class BitmapUtil {
         // Swallow exception and try fallbacks.
       }
     }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-      return bitmap.getByteCount();
-    }
-
-    // Estimate for earlier platforms. Same code as getByteCount() for Honeycomb.
-    return bitmap.getRowBytes() * bitmap.getHeight();
+    return bitmap.getByteCount();
   }
 
   /**
