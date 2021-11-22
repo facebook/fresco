@@ -222,6 +222,11 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
   }
 
   @Override
+  public void setRepeatEdgePixels(boolean repeatEdgePixels) {
+    // no-op
+  }
+
+  @Override
   protected void onBoundsChange(Rect bounds) {
     super.onBoundsChange(bounds);
     updatePath();

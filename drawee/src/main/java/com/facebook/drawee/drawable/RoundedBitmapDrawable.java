@@ -29,11 +29,15 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
   private final Paint mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   @Nullable private final Bitmap mBitmap;
   @Nullable private WeakReference<Bitmap> mLastBitmap;
-  private final boolean mRepeatEdgePixels;
+  private boolean mRepeatEdgePixels;
   private @Nullable RectF mBitmapClipRect = null;
 
-  public static void setDefaultFixRepeatedEdges(boolean defaultFixRepeatedEdges) {
-    sDefaultRepeatEdgePixels = defaultFixRepeatedEdges;
+  public static void setDefaultRepeatEdgePixels(boolean defaultRepeatEdgePixels) {
+    sDefaultRepeatEdgePixels = defaultRepeatEdgePixels;
+  }
+
+  public static boolean getDefaultRepeatEdgePixels() {
+    return sDefaultRepeatEdgePixels;
   }
 
   public RoundedBitmapDrawable(
@@ -153,5 +157,10 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
 
   Paint getPaint() {
     return mPaint;
+  }
+
+  @Override
+  public void setRepeatEdgePixels(boolean repeatEdgePixels) {
+    mRepeatEdgePixels = repeatEdgePixels;
   }
 }

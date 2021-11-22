@@ -322,6 +322,7 @@ public class WrappingUtils {
     rounded.setPadding(roundingParams.getPadding());
     rounded.setScaleDownInsideBorders(roundingParams.getScaleDownInsideBorders());
     rounded.setPaintFilterBitmap(roundingParams.getPaintFilterBitmap());
+    rounded.setRepeatEdgePixels(roundingParams.getRepeatEdgePixels());
   }
 
   /** Resets the rounding params on the specified rounded drawable, so that no rounding occurs. */
@@ -332,6 +333,7 @@ public class WrappingUtils {
     rounded.setPadding(0);
     rounded.setScaleDownInsideBorders(false);
     rounded.setPaintFilterBitmap(false);
+    rounded.setRepeatEdgePixels(RoundedBitmapDrawable.getDefaultRepeatEdgePixels());
   }
 
   /** Finds the immediate parent of a leaf drawable. */

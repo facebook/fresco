@@ -265,6 +265,11 @@ public class RoundedColorDrawable extends Drawable implements Rounded {
     return mPaintFilterBitmap;
   }
 
+  @Override
+  public void setRepeatEdgePixels(boolean repeatEdgePixels) {
+    // no-op
+  }
+
   /**
    * Sets the drawable's alpha value.
    *

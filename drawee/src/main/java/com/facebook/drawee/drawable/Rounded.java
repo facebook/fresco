@@ -37,4 +37,6 @@ public interface Rounded {
   void setPaintFilterBitmap(boolean paintFilterBitmap);
 
   boolean getPaintFilterBitmap();
+
+  void setRepeatEdgePixels(boolean repeatEdgePixels);
 }

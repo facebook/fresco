@@ -22,7 +22,6 @@ import android.widget.Spinner;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.RoundingParams;
@@ -36,8 +35,6 @@ import com.facebook.fresco.samples.showcase.misc.ImageUriProvider.ImageSize;
 /** A {@link Fragment} that illustrates using rounded corners with Fresco. */
 public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
 
-  private ScaleType mPreviousScaleType = ScaleType.CENTER;
-
   private int mCornerBackgroundColor;
   private int mColorPrimary;
 
@@ -50,6 +47,7 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
   private CheckBox mShowBordersCheck;
   private CheckBox mScaleInsideBordersCheck;
   private CheckBox mColorOverlayCheck;
+  private CheckBox mFixRepeatedEdgesCheck;
 
   public DraweeRoundedCornersFragment() {
     // Required empty public constructor
@@ -91,8 +89,6 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
             changeDraweeViewScaleType(mDraweeSome, scaleType, spinnerEntry.focusPoint);
             changeDraweeViewScaleType(mDraweeSomeRtl, scaleType, spinnerEntry.focusPoint);
             changeDraweeViewScaleType(mDraweeFancy, scaleType, spinnerEntry.focusPoint);
-
-            mPreviousScaleType = scaleType;
           }
 
           @Override
@@ -125,15 +121,14 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
           }
         });
 
-    ((CheckBox) view.findViewById(R.id.fix_repeated_edges))
-        .setOnCheckedChangeListener(
-            new CompoundButton.OnCheckedChangeListener() {
-              @Override
-              public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RoundedBitmapDrawable.setFixRepeatedEdges(isChecked);
-                updateRounding();
-              }
-            });
+    mFixRepeatedEdgesCheck = view.findViewById(R.id.fix_repeated_edges);
+    mFixRepeatedEdgesCheck.setOnCheckedChangeListener(
+        new CompoundButton.OnCheckedChangeListener() {
+          @Override
+          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            updateRounding();
+          }
+        });
 
     final Resources res = getResources();
     final RoundingParams fancyRoundingParams =
@@ -205,6 +200,7 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
     } else {
       roundingParams.setRoundingMethod(RoundingParams.RoundingMethod.BITMAP_ONLY);
     }
+    roundingParams.setRepeatEdgePixels(!mFixRepeatedEdgesCheck.isChecked());
     draweeView.getHierarchy().setRoundingParams(roundingParams);
   }
 }

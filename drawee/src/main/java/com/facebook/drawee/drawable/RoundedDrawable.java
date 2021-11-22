@@ -404,4 +404,9 @@ public abstract class RoundedDrawable extends Drawable implements Rounded, Trans
       FrescoSystrace.endSection();
     }
   }
+
+  @Override
+  public void setRepeatEdgePixels(boolean repeatEdgePixels) {
+    // no-op
+  }
 }
