@@ -101,16 +101,15 @@ object ImageOptionsSampleValues {
 
   val autoPlay = Entry("Autoplay", listOf("off" to false, "on" to true)) { b, v -> b.autoPlay(v) }
 
-  @TargetApi(Build.VERSION_CODES.O)
   val bitmapConfig =
       Entry(
           "Bitmap config",
-          listOf(
+          listOfNotNull(
               "ARGB 8888" to Bitmap.Config.ARGB_8888,
               "RGB 565" to Bitmap.Config.RGB_565,
               "ALPHA 8" to Bitmap.Config.ALPHA_8,
-              "RGBA F16" to Bitmap.Config.RGBA_F16,
-              "HARDWARE" to Bitmap.Config.HARDWARE)) { b, v -> b.bitmapConfig(v) }
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) "RGBA F16" to  Bitmap.Config.RGBA_F16 else null,
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) "HARDWARE" to  Bitmap.Config.HARDWARE else null)) { b, v -> b.bitmapConfig(v) }
 
   fun <T> nameForValue(data: List<Pair<String, T?>>, value: T?): String {
     return data.find { value == it.second }?.first ?: "unknown"
