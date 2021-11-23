@@ -61,6 +61,7 @@ public class ImageOptions extends DecodedImageOptions {
   private final @Nullable ScalingUtils.ScaleType mErrorScaleType;
   private final @Nullable PointF mErrorFocusPoint;
   private final @Nullable Drawable mErrorDrawable;
+  private final boolean mErrorApplyRoundingOptions;
 
   // Actual image
   private final @Nullable ColorFilter mActualImageColorFilter;
@@ -95,6 +96,7 @@ public class ImageOptions extends DecodedImageOptions {
     mErrorScaleType = builder.mErrorScaleType;
     mErrorFocusPoint = builder.mErrorFocusPoint;
     mErrorDrawable = builder.mErrorDrawable;
+    mErrorApplyRoundingOptions = builder.mErrorApplyRoundingOptions;
 
     mProgressRes = builder.mProgressRes;
     mProgressDrawable = builder.mProgressDrawable;
@@ -156,6 +158,10 @@ public class ImageOptions extends DecodedImageOptions {
 
   public @Nullable Drawable getErrorDrawable() {
     return mErrorDrawable;
+  }
+
+  public boolean getErrorApplyRoundingOptions() {
+    return mErrorApplyRoundingOptions;
   }
 
   public @DrawableRes int getOverlayRes() {
@@ -226,6 +232,7 @@ public class ImageOptions extends DecodedImageOptions {
           || mErrorRes != other.mErrorRes
           || !Objects.equal(mErrorScaleType, other.mErrorScaleType)
           || !Objects.equal(mErrorFocusPoint, other.mErrorFocusPoint)
+          || mErrorApplyRoundingOptions != other.mErrorApplyRoundingOptions
           || mOverlayRes != other.mOverlayRes
           || !Objects.equal(mOverlayDrawable, other.mOverlayDrawable)
           || mProgressRes != other.mProgressRes
@@ -251,6 +258,7 @@ public class ImageOptions extends DecodedImageOptions {
           || mErrorRes != other.mErrorRes
           || !Objects.equal(mErrorScaleType, other.mErrorScaleType)
           || !Objects.equal(mErrorFocusPoint, other.mErrorFocusPoint)
+          || mErrorApplyRoundingOptions != other.mErrorApplyRoundingOptions
           || mOverlayRes != other.mOverlayRes
           || !Objects.equal(mOverlayDrawable, other.mOverlayDrawable)
           || mProgressRes != other.mProgressRes
@@ -282,6 +290,7 @@ public class ImageOptions extends DecodedImageOptions {
     result = 31 * result + (mErrorScaleType != null ? mErrorScaleType.hashCode() : 0);
     result = 31 * result + (mErrorFocusPoint != null ? mErrorFocusPoint.hashCode() : 0);
     result = 31 * result + (mErrorDrawable != null ? mErrorDrawable.hashCode() : 0);
+    result = 31 * result + (mErrorApplyRoundingOptions ? 1 : 0);
     result = 31 * result + mOverlayRes;
     result = 31 * result + (mOverlayDrawable != null ? mOverlayDrawable.hashCode() : 0);
     result = 31 * result + (mProgressDrawable != null ? mProgressDrawable.hashCode() : 0);
@@ -319,6 +328,7 @@ public class ImageOptions extends DecodedImageOptions {
         .add("errorScaleType", mErrorScaleType)
         .add("errorFocusPoint", mErrorFocusPoint)
         .add("errorDrawable", mErrorDrawable)
+        .add("errorApplyRoundingOptions", mErrorApplyRoundingOptions)
         .add("actualImageColorFilter", mActualImageColorFilter)
         .add("overlayRes", mOverlayRes)
         .add("overlayDrawable", mOverlayDrawable)
@@ -347,6 +357,7 @@ public class ImageOptions extends DecodedImageOptions {
     private @Nullable ScalingUtils.ScaleType mErrorScaleType;
     private @Nullable PointF mErrorFocusPoint;
     private @Nullable Drawable mErrorDrawable;
+    private boolean mErrorApplyRoundingOptions;
 
     private @Nullable ColorFilter mActualImageColorFilter;
 
@@ -384,6 +395,7 @@ public class ImageOptions extends DecodedImageOptions {
       mErrorScaleType = defaultOptions.getErrorScaleType();
       mErrorFocusPoint = defaultOptions.getErrorFocusPoint();
       mErrorDrawable = defaultOptions.getErrorDrawable();
+      mErrorApplyRoundingOptions = defaultOptions.getErrorApplyRoundingOptions();
 
       mActualImageColorFilter = defaultOptions.getActualImageColorFilter();
 
@@ -459,6 +471,11 @@ public class ImageOptions extends DecodedImageOptions {
 
     public Builder errorDrawable(@Nullable Drawable errorDrawable) {
       mErrorDrawable = errorDrawable;
+      return getThis();
+    }
+
+    public Builder errorApplyRoundingOptions(boolean errorApplyRoundingOptions) {
+      mErrorApplyRoundingOptions = errorApplyRoundingOptions;
       return getThis();
     }
 

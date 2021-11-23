@@ -128,6 +128,9 @@ public class HierarcherImpl implements Hierarcher {
       if (drawable == null) {
         return null;
       }
+      if (imageOptions.getErrorApplyRoundingOptions()) {
+        drawable = applyRoundingOptions(resources, drawable, imageOptions);
+      }
       if (drawable != null && imageOptions.getErrorScaleType() != null) {
         return new ScaleTypeDrawable(
             drawable, imageOptions.getErrorScaleType(), imageOptions.getErrorFocusPoint());
