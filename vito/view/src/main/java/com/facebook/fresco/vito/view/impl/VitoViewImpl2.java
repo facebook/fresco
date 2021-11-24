@@ -45,6 +45,7 @@ public class VitoViewImpl2 {
         public void onViewAttachedToWindow(View view) {
           FrescoDrawableInterface current = getDrawable(view);
           if (current != null) {
+            current.getImagePerfListener().onImageMount(current);
             maybeFetchImage(current);
           }
         }
@@ -53,6 +54,7 @@ public class VitoViewImpl2 {
         public void onViewDetachedFromWindow(View view) {
           FrescoDrawableInterface current = getDrawable(view);
           if (current != null) {
+            current.getImagePerfListener().onImageUnmount(current);
             FrescoVitoProvider.getController().release(current);
           }
         }
@@ -79,17 +81,20 @@ public class VitoViewImpl2 {
     frescoDrawable.setCallerContext(callerContext);
     frescoDrawable.setImageListener(imageListener);
     if (sUseSimpleFetchLogic.get()) {
+        frescoDrawable.getImagePerfListener().onImageMount(frescoDrawable);
       maybeFetchImage(frescoDrawable);
     } else {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
         // If the view is already attached to the window, immediately fetch the image.
         // Otherwise, the fetch will be submitted later when then View is attached.
         if (target.isAttachedToWindow()) {
+          frescoDrawable.getImagePerfListener().onImageMount(frescoDrawable);
           maybeFetchImage(frescoDrawable);
         }
       } else {
         // Before Kitkat we don't have a good way to know.
         // Normally we expect the view to be already attached, thus we always fetch the image.
+        frescoDrawable.getImagePerfListener().onImageMount(frescoDrawable);
         maybeFetchImage(frescoDrawable);
       }
     }
@@ -102,6 +107,7 @@ public class VitoViewImpl2 {
   public static void release(final View target) {
     final FrescoDrawableInterface drawable = getDrawable(target);
     if (drawable != null) {
+      drawable.getImagePerfListener().onImageUnmount(drawable);
       FrescoVitoProvider.getController().releaseImmediately(drawable);
     }
   }
