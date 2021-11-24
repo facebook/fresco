@@ -7,7 +7,6 @@
 
 package com.facebook.fresco.vito.tools.liveeditor
 
-import android.annotation.TargetApi
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PointF
@@ -108,8 +107,12 @@ object ImageOptionsSampleValues {
               "ARGB 8888" to Bitmap.Config.ARGB_8888,
               "RGB 565" to Bitmap.Config.RGB_565,
               "ALPHA 8" to Bitmap.Config.ALPHA_8,
-              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) "RGBA F16" to  Bitmap.Config.RGBA_F16 else null,
-              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) "HARDWARE" to  Bitmap.Config.HARDWARE else null)) { b, v -> b.bitmapConfig(v) }
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                  "RGBA F16" to Bitmap.Config.RGBA_F16
+              else null,
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                  "HARDWARE" to Bitmap.Config.HARDWARE
+              else null)) { b, v -> b.bitmapConfig(v) }
 
   fun <T> nameForValue(data: List<Pair<String, T?>>, value: T?): String {
     return data.find { value == it.second }?.first ?: "unknown"
