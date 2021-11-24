@@ -10,7 +10,7 @@ package com.facebook.fresco.vito.tools.liveeditor
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import com.facebook.fresco.vito.core.FrescoController2
-import com.facebook.fresco.vito.core.FrescoDrawable2
+import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.VitoImagePipeline
 
 class ImageSelector(
@@ -39,7 +39,7 @@ class ImageSelector(
     }
   }
 
-  fun highlightDrawable(context: Context, drawable: FrescoDrawable2?) {
+  fun highlightDrawable(context: Context, drawable: FrescoDrawableInterface?) {
     removeHighlight(context)
     if (drawable == null) {
       return

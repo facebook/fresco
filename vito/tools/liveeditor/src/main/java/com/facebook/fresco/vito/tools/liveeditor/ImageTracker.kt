@@ -7,18 +7,18 @@
 
 package com.facebook.fresco.vito.tools.liveeditor
 
-import com.facebook.fresco.vito.core.FrescoDrawable2
+import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.impl.FrescoController2Impl
 import java.lang.ref.WeakReference
 
 object ImageTracker : FrescoController2Impl.DrawableListener {
-  override fun onNewDrawableCreated(drawable: FrescoDrawable2) {
+  override fun onNewDrawableCreated(drawable: FrescoDrawableInterface) {
     drawables.add(WeakReference(drawable))
   }
 
-  private val drawables: MutableList<WeakReference<FrescoDrawable2>> = ArrayList()
+  private val drawables: MutableList<WeakReference<FrescoDrawableInterface>> = ArrayList()
 
-  fun getDrawable(index: Int): FrescoDrawable2? {
+  fun getDrawable(index: Int): FrescoDrawableInterface? {
     require(drawables.isNotEmpty()) { "No Drawables tracked!" }
     return if (index < drawables.size) drawables[index].get() else null
   }

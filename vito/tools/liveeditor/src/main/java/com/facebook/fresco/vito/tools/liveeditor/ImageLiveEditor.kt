@@ -9,7 +9,7 @@ package com.facebook.fresco.vito.tools.liveeditor
 
 import android.content.Context
 import com.facebook.fresco.vito.core.FrescoController2
-import com.facebook.fresco.vito.core.FrescoDrawable2
+import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.VitoImagePipeline
 import com.facebook.fresco.vito.core.VitoImageRequest
 import com.facebook.fresco.vito.options.ImageOptions
@@ -17,7 +17,7 @@ import com.facebook.fresco.vito.source.ImageSource
 import com.facebook.fresco.vito.source.ImageSourceProvider
 
 class ImageLiveEditor(
-    private val drawable: FrescoDrawable2,
+    private val drawable: FrescoDrawableInterface,
     private val imagePipeline: VitoImagePipeline,
     private val frescoController: FrescoController2
 ) {
@@ -48,13 +48,7 @@ class ImageLiveEditor(
 
   fun fetch(request: VitoImageRequest) {
     frescoController.fetch(
-        drawable,
-        request,
-        drawable.callerContext,
-        null,
-        drawable.imageListener,
-        null,
-        drawable.viewportDimensions)
+        drawable, request, drawable.callerContext, null, drawable.imageListener, null, null)
   }
 
   fun getOptions(): ImageOptions = drawable.imageRequest?.imageOptions ?: ImageOptions.defaults()

@@ -44,7 +44,7 @@ import javax.annotation.Nullable;
 public class FrescoController2Impl implements DrawableDataSubscriber, FrescoController2 {
 
   public interface DrawableListener {
-    void onNewDrawableCreated(FrescoDrawable2 drawable);
+    void onNewDrawableCreated(FrescoDrawableInterface drawable);
   }
 
   private static final Map<String, Object> COMPONENT_EXTRAS =
