@@ -81,7 +81,7 @@ public class VitoViewImpl2 {
     frescoDrawable.setCallerContext(callerContext);
     frescoDrawable.setImageListener(imageListener);
     if (sUseSimpleFetchLogic.get()) {
-        frescoDrawable.getImagePerfListener().onImageMount(frescoDrawable);
+      frescoDrawable.getImagePerfListener().onImageMount(frescoDrawable);
       maybeFetchImage(frescoDrawable);
     } else {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
