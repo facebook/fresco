@@ -93,7 +93,7 @@ class KFrescoVitoDrawable : Drawable(), FrescoDrawableInterface {
   override fun getExtras(): Any? = _extras
 
   override fun setExtras(extras: Any?) {
-    _extras
+    _extras = extras
   }
 
   override fun setVisible(visible: Boolean, restart: Boolean): Boolean {
