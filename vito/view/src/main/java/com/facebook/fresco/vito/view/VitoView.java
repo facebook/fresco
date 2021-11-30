@@ -10,6 +10,7 @@ package com.facebook.fresco.vito.view;
 import android.net.Uri;
 import android.view.View;
 import androidx.annotation.Nullable;
+import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.source.ImageSource;
@@ -109,6 +110,14 @@ public class VitoView {
       @Nullable ImageListener imageListener,
       final View target) {
     VitoViewImpl2.show(imageSource, imageOptions, callerContext, imageListener, target);
+  }
+
+  public static void show(
+      VitoImageRequest vitoImageRequest,
+      @Nullable Object callerContext,
+      @Nullable ImageListener imageListener,
+      final View target) {
+    VitoViewImpl2.show(vitoImageRequest, callerContext, imageListener, target);
   }
 
   /**

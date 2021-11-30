@@ -66,10 +66,19 @@ public class VitoViewImpl2 {
       final @Nullable Object callerContext,
       final @Nullable ImageListener imageListener,
       final View target) {
-    VitoImageRequest imageRequest =
+    show(
         FrescoVitoProvider.getImagePipeline()
-            .createImageRequest(target.getResources(), imageSource, imageOptions);
+            .createImageRequest(target.getResources(), imageSource, imageOptions),
+        callerContext,
+        imageListener,
+        target);
+  }
 
+  public static void show(
+      final VitoImageRequest imageRequest,
+      final @Nullable Object callerContext,
+      final @Nullable ImageListener imageListener,
+      final View target) {
     final FrescoDrawableInterface frescoDrawable = ensureDrawableSet(target);
     // The Drawable might be re-purposed before being cleaned up, so we release if necessary.
     VitoImageRequest oldImageRequest = frescoDrawable.getImageRequest();
