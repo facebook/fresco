@@ -14,9 +14,10 @@ import android.graphics.ColorSpace;
 import android.graphics.Rect;
 import android.os.Build;
 import androidx.annotation.VisibleForTesting;
-import androidx.core.util.Pools.SynchronizedPool;
+import androidx.core.util.Pools;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
+import com.facebook.common.memory.DecodeBufferHelper;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.streams.LimitedInputStream;
 import com.facebook.common.streams.TailAppendingInputStream;
@@ -36,9 +37,6 @@ public abstract class DefaultDecoder implements PlatformDecoder {
 
   private static final Class<?> TAG = DefaultDecoder.class;
 
-  /** Size of temporary array. Value recommended by Android docs for decoding Bitmaps. */
-  private static final int DECODE_BUFFER_SIZE = 16 * 1024;
-
   private final BitmapPool mBitmapPool;
 
   private final @Nullable PreverificationHelper mPreverificationHelper;
@@ -52,18 +50,15 @@ public abstract class DefaultDecoder implements PlatformDecoder {
    * ArtPlatformImageDecoder decodes images from InputStream - to do so we need to provide temporary
    * buffer, otherwise framework will allocate one for us for each decode request
    */
-  @VisibleForTesting final SynchronizedPool<ByteBuffer> mDecodeBuffers;
+  @VisibleForTesting final Pools.Pool<ByteBuffer> mDecodeBuffers;
 
   // TODO (5884402) - remove dependency on JfifUtil
   private static final byte[] EOI_TAIL =
       new byte[] {(byte) JfifUtil.MARKER_FIRST_BYTE, (byte) JfifUtil.MARKER_EOI};
 
-  public DefaultDecoder(BitmapPool bitmapPool, int maxNumThreads, SynchronizedPool decodeBuffers) {
+  public DefaultDecoder(BitmapPool bitmapPool, Pools.Pool<ByteBuffer> decodeBuffers) {
     mBitmapPool = bitmapPool;
     mDecodeBuffers = decodeBuffers;
-    for (int i = 0; i < maxNumThreads; i++) {
-      mDecodeBuffers.release(ByteBuffer.allocate(DECODE_BUFFER_SIZE));
-    }
   }
 
   @Override
@@ -237,7 +232,7 @@ public abstract class DefaultDecoder implements PlatformDecoder {
     Bitmap decodedBitmap = null;
     ByteBuffer byteBuffer = mDecodeBuffers.acquire();
     if (byteBuffer == null) {
-      byteBuffer = ByteBuffer.allocate(DECODE_BUFFER_SIZE);
+      byteBuffer = ByteBuffer.allocate(DecodeBufferHelper.DEFAULT_DECODE_BUFFER_SIZE);
     }
     try {
       options.inTempStorage = byteBuffer.array();

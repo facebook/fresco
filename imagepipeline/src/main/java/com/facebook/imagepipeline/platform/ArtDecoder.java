@@ -11,11 +11,12 @@ import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import androidx.core.util.Pools.SynchronizedPool;
+import androidx.core.util.Pools;
 import androidx.core.util.Preconditions;
 import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.infer.annotation.Nullsafe;
+import java.nio.ByteBuffer;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** Bitmap decoder for ART VM (Lollipop and up). */
@@ -24,8 +25,8 @@ import javax.annotation.concurrent.ThreadSafe;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class ArtDecoder extends DefaultDecoder {
 
-  public ArtDecoder(BitmapPool bitmapPool, int maxNumThreads, SynchronizedPool decodeBuffers) {
-    super(bitmapPool, maxNumThreads, decodeBuffers);
+  public ArtDecoder(BitmapPool bitmapPool, Pools.Pool<ByteBuffer> decodeBuffers) {
+    super(bitmapPool, decodeBuffers);
   }
 
   @Override

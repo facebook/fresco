@@ -11,10 +11,11 @@ import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import androidx.core.util.Pools.SynchronizedPool;
+import androidx.core.util.Pools;
 import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.infer.annotation.Nullsafe;
+import java.nio.ByteBuffer;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** Bitmap decoder for ART VM (Android O and up). */
@@ -23,8 +24,8 @@ import javax.annotation.concurrent.ThreadSafe;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class OreoDecoder extends DefaultDecoder {
 
-  public OreoDecoder(BitmapPool bitmapPool, int maxNumThreads, SynchronizedPool decodeBuffers) {
-    super(bitmapPool, maxNumThreads, decodeBuffers);
+  public OreoDecoder(BitmapPool bitmapPool, Pools.Pool<ByteBuffer> decodeBuffers) {
+    super(bitmapPool, decodeBuffers);
   }
 
   @Override

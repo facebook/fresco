@@ -9,11 +9,14 @@ package com.facebook.imagepipeline.platform;
 
 import android.os.Build;
 import androidx.core.util.Pools;
+import com.facebook.common.memory.DecodeBufferHelper;
 import com.facebook.imagepipeline.core.NativeCodeSetup;
 import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.infer.annotation.Nullsafe;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.ByteBuffer;
+import org.jetbrains.annotations.NotNull;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class PlatformDecoderFactory {
@@ -26,15 +29,12 @@ public class PlatformDecoderFactory {
    */
   public static PlatformDecoder buildPlatformDecoder(
       PoolFactory poolFactory, boolean gingerbreadDecoderEnabled) {
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      int maxNumThreads = poolFactory.getFlexByteArrayPoolMaxNumThreads();
-      return new OreoDecoder(
-          poolFactory.getBitmapPool(), maxNumThreads, new Pools.SynchronizedPool<>(maxNumThreads));
+      return new OreoDecoder(poolFactory.getBitmapPool(), createPool(poolFactory));
     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
         || !NativeCodeSetup.getUseNativeCode()) {
-      int maxNumThreads = poolFactory.getFlexByteArrayPoolMaxNumThreads();
-      return new ArtDecoder(
-          poolFactory.getBitmapPool(), maxNumThreads, new Pools.SynchronizedPool<>(maxNumThreads));
+      return new ArtDecoder(poolFactory.getBitmapPool(), createPool(poolFactory));
     } else {
       try {
         if (gingerbreadDecoderEnabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
@@ -61,5 +61,15 @@ public class PlatformDecoderFactory {
         throw new RuntimeException("Wrong Native code setup, reflection failed.", e);
       }
     }
+  }
+
+  @NotNull
+  public static Pools.Pool<ByteBuffer> createPool(PoolFactory poolFactory) {
+    final int maxNumThreads = poolFactory.getFlexByteArrayPoolMaxNumThreads();
+    final Pools.Pool<ByteBuffer> pool = new Pools.SynchronizedPool<>(maxNumThreads);
+    for (int i = 0; i < maxNumThreads; i++) {
+      pool.release(ByteBuffer.allocate(DecodeBufferHelper.DEFAULT_DECODE_BUFFER_SIZE));
+    }
+    return pool;
   }
 }
