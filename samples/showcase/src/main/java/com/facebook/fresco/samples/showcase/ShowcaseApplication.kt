@@ -114,7 +114,9 @@ class ShowcaseApplication : Application() {
             .setMaxBitmapCount(BitmapCounterConfig.DEFAULT_MAX_BITMAP_COUNT)
             .build())
     Fresco.initialize(this, imagePipelineConfig, draweeConfigBuilder.build())
-    FrescoVito.initialize(resources, DebugOverlaySupplierSingleton.getInstance(applicationContext))
+    FrescoVito.initialize(
+        resources = resources,
+        debugOverlayEnabledSupplier = DebugOverlaySupplierSingleton.getInstance(applicationContext))
     setupLiveEditing()
     val context = this
     Stetho.initialize(

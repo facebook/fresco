@@ -10,7 +10,6 @@ package com.facebook.fresco.vito.provider.impl;
 import android.content.res.Resources;
 import com.facebook.callercontext.CallerContextVerifier;
 import com.facebook.common.internal.Supplier;
-import com.facebook.fresco.vito.core.DefaultFrescoVitoConfig;
 import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoVitoConfig;
 import com.facebook.fresco.vito.core.FrescoVitoPrefetcher;
@@ -42,24 +41,6 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
   private final VitoImagePipeline mVitoImagePipeline;
   private final FrescoVitoPrefetcher mFrescoVitoPrefetcher;
   private final FrescoVitoConfig mFrescoVitoConfig;
-
-  public DefaultFrescoVitoProvider(
-      final Resources resources,
-      final ImagePipeline imagePipeline,
-      final Executor lightweightBackgroundThreadExecutor,
-      final Executor uiThreadExecutor,
-      final ImagePipelineUtils imagePipelineUtils,
-      final @Nullable Supplier<Boolean> debugOverlayEnabledSupplier) {
-    this(
-        resources,
-        new DefaultFrescoVitoConfig(),
-        imagePipeline,
-        imagePipelineUtils,
-        lightweightBackgroundThreadExecutor,
-        uiThreadExecutor,
-        debugOverlayEnabledSupplier,
-        new NoOpCallerContextVerifier());
-  }
 
   public DefaultFrescoVitoProvider(
       Resources resources,
