@@ -232,7 +232,7 @@ public abstract class DefaultDecoder implements PlatformDecoder {
     Bitmap decodedBitmap = null;
     ByteBuffer byteBuffer = mDecodeBuffers.acquire();
     if (byteBuffer == null) {
-      byteBuffer = ByteBuffer.allocate(DecodeBufferHelper.DEFAULT_DECODE_BUFFER_SIZE);
+      byteBuffer = ByteBuffer.allocate(DecodeBufferHelper.getRecommendedDecodeBufferSize());
     }
     try {
       options.inTempStorage = byteBuffer.array();

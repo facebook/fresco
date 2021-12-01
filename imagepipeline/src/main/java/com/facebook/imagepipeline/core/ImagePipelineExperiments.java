@@ -69,6 +69,7 @@ public class ImagePipelineExperiments {
   private final boolean mHandOffOnUiThreadOnly;
   private final boolean mShouldStoreCacheEntrySize;
   private final boolean mShouldIgnoreCacheSizeMismatch;
+  private final boolean mShouldUseDecodingBufferHelper;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -106,6 +107,7 @@ public class ImagePipelineExperiments {
     mHandOffOnUiThreadOnly = builder.mHandOffOnUiThreadOnly;
     mShouldStoreCacheEntrySize = builder.mShouldStoreCacheEntrySize;
     mShouldIgnoreCacheSizeMismatch = builder.mShouldIgnoreCacheSizeMismatch;
+    mShouldUseDecodingBufferHelper = builder.mShouldUseDecodingBufferHelper;
   }
 
   public boolean isEncodedCacheEnabled() {
@@ -237,9 +239,14 @@ public class ImagePipelineExperiments {
     return mShouldIgnoreCacheSizeMismatch;
   }
 
+  public boolean shouldUseDecodingBufferHelper() {
+    return mShouldUseDecodingBufferHelper;
+  }
+
   public static class Builder {
 
     private final ImagePipelineConfig.Builder mConfigBuilder;
+    private boolean mShouldUseDecodingBufferHelper = false;
     private boolean mWebpSupportEnabled = false;
     private @Nullable WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
     private boolean mDecodeCancellationEnabled = false;
@@ -295,6 +302,14 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setWebpSupportEnabled(boolean webpSupportEnabled) {
       mWebpSupportEnabled = webpSupportEnabled;
       return mConfigBuilder;
+    }
+
+    public boolean shouldUseDecodingBufferHelper() {
+      return mShouldUseDecodingBufferHelper;
+    }
+
+    public void setShouldUseDecodingBufferHelper(boolean shouldUseDecodingBufferHelper) {
+      mShouldUseDecodingBufferHelper = shouldUseDecodingBufferHelper;
     }
 
     public ImagePipelineConfig.Builder setUseDownsampligRatioForResizing(

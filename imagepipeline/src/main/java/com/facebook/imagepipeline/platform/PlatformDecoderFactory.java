@@ -28,13 +28,15 @@ public class PlatformDecoderFactory {
    * @return The PlatformDecoder implementation
    */
   public static PlatformDecoder buildPlatformDecoder(
-      PoolFactory poolFactory, boolean gingerbreadDecoderEnabled) {
+      PoolFactory poolFactory, boolean gingerbreadDecoderEnabled, boolean useDecodeBufferHelper) {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      return new OreoDecoder(poolFactory.getBitmapPool(), createPool(poolFactory));
+      return new OreoDecoder(
+          poolFactory.getBitmapPool(), createPool(poolFactory, useDecodeBufferHelper));
     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
         || !NativeCodeSetup.getUseNativeCode()) {
-      return new ArtDecoder(poolFactory.getBitmapPool(), createPool(poolFactory));
+      return new ArtDecoder(
+          poolFactory.getBitmapPool(), createPool(poolFactory, useDecodeBufferHelper));
     } else {
       try {
         if (gingerbreadDecoderEnabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
@@ -63,12 +65,21 @@ public class PlatformDecoderFactory {
     }
   }
 
+  public static PlatformDecoder buildPlatformDecoder(
+      PoolFactory poolFactory, boolean gingerbreadDecoderEnabled) {
+    return buildPlatformDecoder(poolFactory, gingerbreadDecoderEnabled, false);
+  }
+
   @NotNull
-  public static Pools.Pool<ByteBuffer> createPool(PoolFactory poolFactory) {
+  public static Pools.Pool<ByteBuffer> createPool(
+      PoolFactory poolFactory, boolean useDecodeBufferHelper) {
+    if (useDecodeBufferHelper) {
+      return DecodeBufferHelper.INSTANCE;
+    }
     final int maxNumThreads = poolFactory.getFlexByteArrayPoolMaxNumThreads();
     final Pools.Pool<ByteBuffer> pool = new Pools.SynchronizedPool<>(maxNumThreads);
     for (int i = 0; i < maxNumThreads; i++) {
-      pool.release(ByteBuffer.allocate(DecodeBufferHelper.DEFAULT_DECODE_BUFFER_SIZE));
+      pool.release(ByteBuffer.allocate(DecodeBufferHelper.getRecommendedDecodeBufferSize()));
     }
     return pool;
   }

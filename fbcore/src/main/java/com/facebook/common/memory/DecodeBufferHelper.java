@@ -17,13 +17,23 @@ public class DecodeBufferHelper implements Pools.Pool<ByteBuffer> {
 
   public static final DecodeBufferHelper INSTANCE = new DecodeBufferHelper();
 
-  public static final int DEFAULT_DECODE_BUFFER_SIZE = 16 * 1024;
+  private static final int DEFAULT_DECODE_BUFFER_SIZE = 16 * 1024;
+
+  private static int sRecommendedDecodeBufferSize = DEFAULT_DECODE_BUFFER_SIZE;
+
+  public static int getRecommendedDecodeBufferSize() {
+    return sRecommendedDecodeBufferSize;
+  }
+
+  public static void setRecommendedDecodeBufferSize(int recommendedDecodeBufferSize) {
+    sRecommendedDecodeBufferSize = recommendedDecodeBufferSize;
+  }
 
   private static final ThreadLocal<ByteBuffer> sBuffer =
       new ThreadLocal<ByteBuffer>() {
         @Override
         protected ByteBuffer initialValue() {
-          return ByteBuffer.allocate(DEFAULT_DECODE_BUFFER_SIZE);
+          return ByteBuffer.allocate(sRecommendedDecodeBufferSize);
         }
       };
 
