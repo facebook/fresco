@@ -434,22 +434,22 @@ public class ImageRequest {
   })
   public @interface CachesLocationsMasks {
     /* bitmap cache read bit location- 00000001  */
-    int BITMAP_READ = 1;
+    final /* bitmap cache read bit location- 00000001  */ int BITMAP_READ = 1;
 
     /* bitmap cache write bit location- 00000010  */
-    int BITMAP_WRITE = 2;
+    final /* bitmap cache write bit location- 00000010  */ int BITMAP_WRITE = 2;
 
     /* encoded cache read bit location- 00000100  */
-    int ENCODED_READ = 4;
+    final /* encoded cache read bit location- 00000100  */ int ENCODED_READ = 4;
 
     /* encoded cache write bit location- 00001000  */
-    int ENCODED_WRITE = 8;
+    final /* encoded cache write bit location- 00001000  */ int ENCODED_WRITE = 8;
 
     /* disk cache read bit location- 00010000  */
-    int DISK_READ = 16;
+    final /* disk cache read bit location- 00010000  */ int DISK_READ = 16;
 
     /* disk cache write bit location- 00100000  */
-    int DISK_WRITE = 32;
+    final /* disk cache write bit location- 00100000  */ int DISK_WRITE = 32;
   }
 
   /**

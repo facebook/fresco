@@ -11,11 +11,11 @@ import com.facebook.infer.annotation.Nullsafe;
 
 @Nullsafe(Nullsafe.Mode.STRICT)
 public @interface BitmapPoolType {
-  String LEGACY = "legacy";
-  String LEGACY_DEFAULT_PARAMS = "legacy_default_params";
-  String DUMMY = "dummy";
-  String DUMMY_WITH_TRACKING = "dummy_with_tracking";
-  String EXPERIMENTAL = "experimental";
+  final String LEGACY = "legacy";
+  final String LEGACY_DEFAULT_PARAMS = "legacy_default_params";
+  final String DUMMY = "dummy";
+  final String DUMMY_WITH_TRACKING = "dummy_with_tracking";
+  final String EXPERIMENTAL = "experimental";
 
-  String DEFAULT = LEGACY;
+  final String DEFAULT = LEGACY;
 }

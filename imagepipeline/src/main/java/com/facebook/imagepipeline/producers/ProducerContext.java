@@ -43,18 +43,20 @@ public interface ProducerContext {
     ExtraKeys.MULTIPLEX_ENCODED_COUNT,
   })
   @interface ExtraKeys {
-    String ORIGIN = "origin";
-    String ORIGIN_SUBCATEGORY = "origin_sub";
-    String SOURCE_URI = "uri_source";
-    String NORMALIZED_URI = "uri_norm";
-    String IMAGE_FORMAT = "image_format";
-    String ENCODED_WIDTH = "encoded_width";
-    String ENCODED_HEIGHT = "encoded_height";
-    String ENCODED_SIZE = "encoded_size";
+    final String ORIGIN = "origin";
+    final String ORIGIN_SUBCATEGORY = "origin_sub";
+    final String SOURCE_URI = "uri_source";
+    final String NORMALIZED_URI = "uri_norm";
+    final String IMAGE_FORMAT = "image_format";
+    final String ENCODED_WIDTH = "encoded_width";
+    final String ENCODED_HEIGHT = "encoded_height";
+    final String ENCODED_SIZE = "encoded_size";
     /* number of deduped request in BitmapMemoryCacheKeyMultiplexProducer */
-    String MULTIPLEX_BITMAP_COUNT = "multiplex_bmp_cnt";
+    final /* number of deduped request in BitmapMemoryCacheKeyMultiplexProducer */ String
+        MULTIPLEX_BITMAP_COUNT = "multiplex_bmp_cnt";
     /* number of deduped request in EncodedCacheKeyMultiplexProducer */
-    String MULTIPLEX_ENCODED_COUNT = "multiplex_enc_cnt";
+    final /* number of deduped request in EncodedCacheKeyMultiplexProducer */ String
+        MULTIPLEX_ENCODED_COUNT = "multiplex_enc_cnt";
   }
 
   /** @return image request that is being executed */

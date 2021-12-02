@@ -22,6 +22,7 @@ import java.util.List;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class SimpleProgressiveJpegConfig implements ProgressiveJpegConfig {
   public interface DynamicValueConfig {
+
     List<Integer> getScansToDecode();
 
     int getGoodEnoughScanNumber();
