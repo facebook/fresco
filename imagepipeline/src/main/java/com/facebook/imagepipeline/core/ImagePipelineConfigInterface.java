@@ -46,6 +46,8 @@ public interface ImagePipelineConfigInterface {
 
   MemoryCache.CacheTrimStrategy getBitmapMemoryCacheTrimStrategy();
 
+  MemoryCache.CacheTrimStrategy getEncodedMemoryCacheTrimStrategy();
+
   @Nullable
   CountingMemoryCache.EntryStateObserver<CacheKey> getBitmapMemoryCacheEntryStateObserver();
 

@@ -18,7 +18,8 @@ public class EncodedCountingMemoryCacheFactory {
 
   public static CountingMemoryCache<CacheKey, PooledByteBuffer> get(
       Supplier<MemoryCacheParams> encodedMemoryCacheParamsSupplier,
-      MemoryTrimmableRegistry memoryTrimmableRegistry) {
+      MemoryTrimmableRegistry memoryTrimmableRegistry,
+      MemoryCache.CacheTrimStrategy cacheTrimStrategy) {
 
     ValueDescriptor<PooledByteBuffer> valueDescriptor =
         new ValueDescriptor<PooledByteBuffer>() {
@@ -28,11 +29,14 @@ public class EncodedCountingMemoryCacheFactory {
           }
         };
 
-    MemoryCache.CacheTrimStrategy trimStrategy = new NativeMemoryCacheTrimStrategy();
-
     CountingMemoryCache<CacheKey, PooledByteBuffer> countingCache =
         new LruCountingMemoryCache<>(
-            valueDescriptor, trimStrategy, encodedMemoryCacheParamsSupplier, null, false, false);
+            valueDescriptor,
+            cacheTrimStrategy,
+            encodedMemoryCacheParamsSupplier,
+            null,
+            false,
+            false);
 
     memoryTrimmableRegistry.registerMemoryTrimmable(countingCache);
 

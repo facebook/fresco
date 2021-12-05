@@ -38,6 +38,7 @@ import com.facebook.imagepipeline.cache.DefaultEncodedMemoryCacheParamsSupplier;
 import com.facebook.imagepipeline.cache.ImageCacheStatsTracker;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.cache.MemoryCacheParams;
+import com.facebook.imagepipeline.cache.NativeMemoryCacheTrimStrategy;
 import com.facebook.imagepipeline.cache.NoOpImageCacheStatsTracker;
 import com.facebook.imagepipeline.debug.CloseableReferenceLeakTracker;
 import com.facebook.imagepipeline.debug.NoOpCloseableReferenceLeakTracker;
@@ -83,6 +84,7 @@ public class ImagePipelineConfig implements ImagePipelineConfigInterface {
   private final Bitmap.Config mBitmapConfig;
   private final Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
   private final MemoryCache.CacheTrimStrategy mBitmapMemoryCacheTrimStrategy;
+  private final MemoryCache.CacheTrimStrategy mEncodedMemoryCacheTrimStrategy;
 
   @Nullable
   private final CountingMemoryCache.EntryStateObserver<CacheKey>
@@ -141,6 +143,10 @@ public class ImagePipelineConfig implements ImagePipelineConfigInterface {
         builder.mBitmapMemoryCacheTrimStrategy == null
             ? new BitmapMemoryCacheTrimStrategy()
             : builder.mBitmapMemoryCacheTrimStrategy;
+    mEncodedMemoryCacheTrimStrategy =
+        builder.mEncodedMemoryCacheTrimStrategy == null
+            ? new NativeMemoryCacheTrimStrategy()
+            : builder.mEncodedMemoryCacheTrimStrategy;
     mBitmapMemoryCacheEntryStateObserver = builder.mBitmapMemoryCacheEntryStateObserver;
     mBitmapConfig = builder.mBitmapConfig == null ? Bitmap.Config.ARGB_8888 : builder.mBitmapConfig;
     mCacheKeyFactory =
@@ -297,6 +303,11 @@ public class ImagePipelineConfig implements ImagePipelineConfigInterface {
   @Override
   public MemoryCache.CacheTrimStrategy getBitmapMemoryCacheTrimStrategy() {
     return mBitmapMemoryCacheTrimStrategy;
+  }
+
+  @Override
+  public MemoryCache.CacheTrimStrategy getEncodedMemoryCacheTrimStrategy() {
+    return mEncodedMemoryCacheTrimStrategy;
   }
 
   @Override
@@ -534,6 +545,7 @@ public class ImagePipelineConfig implements ImagePipelineConfigInterface {
     private CountingMemoryCache.EntryStateObserver<CacheKey> mBitmapMemoryCacheEntryStateObserver;
 
     @Nullable private MemoryCache.CacheTrimStrategy mBitmapMemoryCacheTrimStrategy;
+    @Nullable private MemoryCache.CacheTrimStrategy mEncodedMemoryCacheTrimStrategy;
     @Nullable private CacheKeyFactory mCacheKeyFactory;
     private final Context mContext;
     private boolean mDownsampleEnabled = false;
@@ -594,6 +606,11 @@ public class ImagePipelineConfig implements ImagePipelineConfigInterface {
 
     public Builder setBitmapMemoryCacheTrimStrategy(MemoryCache.CacheTrimStrategy trimStrategy) {
       mBitmapMemoryCacheTrimStrategy = trimStrategy;
+      return this;
+    }
+
+    public Builder setEncodedMemoryCacheTrimStrategy(MemoryCache.CacheTrimStrategy trimStrategy) {
+      mEncodedMemoryCacheTrimStrategy = trimStrategy;
       return this;
     }
 

@@ -217,7 +217,9 @@ public class ImagePipelineFactory {
     if (mEncodedCountingMemoryCache == null) {
       mEncodedCountingMemoryCache =
           EncodedCountingMemoryCacheFactory.get(
-              mConfig.getEncodedMemoryCacheParamsSupplier(), mConfig.getMemoryTrimmableRegistry());
+              mConfig.getEncodedMemoryCacheParamsSupplier(),
+              mConfig.getMemoryTrimmableRegistry(),
+              mConfig.getEncodedMemoryCacheTrimStrategy());
     }
     return mEncodedCountingMemoryCache;
   }
