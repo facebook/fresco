@@ -21,8 +21,12 @@ object ViewExtensions {
 
   fun View.show(uri: Uri, imageOptions: ImageOptions) = VitoView.show(uri, imageOptions, this)
 
-  fun View.show(uri: Uri, imageOptions: ImageOptions, imageListener: ImageListener) =
-      VitoView.show(uri, imageOptions, null, imageListener, this)
+  fun View.show(
+      uri: Uri,
+      imageOptions: ImageOptions,
+      imageListener: ImageListener,
+      callerContext: Any? = null
+  ) = VitoView.show(uri, imageOptions, callerContext, imageListener, this)
 
   fun View.show(uri: Uri, imageOptions: ImageOptions, callerContext: Any) =
       VitoView.show(uri, imageOptions, callerContext, this)
