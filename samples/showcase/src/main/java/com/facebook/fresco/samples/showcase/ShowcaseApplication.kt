@@ -24,7 +24,6 @@ import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
 import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.samples.showcase.misc.LogcatRequestListener2
-import com.facebook.fresco.vito.core.impl.FrescoController2Impl
 import com.facebook.fresco.vito.init.FrescoVito
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.fresco.vito.tools.liveeditor.ImageSelector
@@ -116,8 +115,11 @@ class ShowcaseApplication : Application() {
     Fresco.initialize(this, imagePipelineConfig, draweeConfigBuilder.build())
     FrescoVito.initialize(
         resources = resources,
-        debugOverlayEnabledSupplier = DebugOverlaySupplierSingleton.getInstance(applicationContext))
-    setupLiveEditing()
+        debugOverlayEnabledSupplier = DebugOverlaySupplierSingleton.getInstance(applicationContext),
+        vitoImagePerfListener = ImageTracker)
+    imageSelector =
+        ImageSelector(
+            ImageTracker, FrescoVitoProvider.getImagePipeline(), FrescoVitoProvider.getController())
     val context = this
     Stetho.initialize(
         Stetho.newInitializerBuilder(context)
@@ -149,12 +151,6 @@ class ShowcaseApplication : Application() {
 
   private fun shouldEnableFlipper(): Boolean {
     return BuildConfig.DEBUG && FlipperUtils.shouldEnableFlipper(this)
-  }
-
-  private fun setupLiveEditing() {
-    val controller = FrescoVitoProvider.getController() as FrescoController2Impl
-    controller.setDrawableListener(ImageTracker)
-    imageSelector = ImageSelector(ImageTracker, FrescoVitoProvider.getImagePipeline(), controller)
   }
 
   companion object {

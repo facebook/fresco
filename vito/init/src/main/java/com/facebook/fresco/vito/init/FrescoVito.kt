@@ -15,6 +15,8 @@ import com.facebook.common.internal.Suppliers
 import com.facebook.fresco.vito.core.DefaultFrescoVitoConfig
 import com.facebook.fresco.vito.core.FrescoVitoConfig
 import com.facebook.fresco.vito.core.ImagePipelineUtils
+import com.facebook.fresco.vito.core.VitoImagePerfListener
+import com.facebook.fresco.vito.core.impl.BaseVitoImagePerfListener
 import com.facebook.fresco.vito.core.impl.DefaultImageDecodeOptionsProviderImpl
 import com.facebook.fresco.vito.core.impl.ImagePipelineUtilsImpl
 import com.facebook.fresco.vito.core.impl.ImagePipelineUtilsImpl.CircularBitmapRounding
@@ -54,7 +56,8 @@ class FrescoVito {
         debugOverlayEnabledSupplier: Supplier<Boolean?>? = null,
         useNativeCode: Supplier<Boolean> = Suppliers.BOOLEAN_TRUE,
         vitoConfig: FrescoVitoConfig = DefaultFrescoVitoConfig(),
-        callerContextVerifier: CallerContextVerifier = NoOpCallerContextVerifier()
+        callerContextVerifier: CallerContextVerifier = NoOpCallerContextVerifier(),
+        vitoImagePerfListener: VitoImagePerfListener = BaseVitoImagePerfListener()
     ) {
       if (isInitialized) {
         return
@@ -68,7 +71,8 @@ class FrescoVito {
               lightweightBackgroundThreadExecutor,
               uiThreadExecutor,
               debugOverlayEnabledSupplier,
-              callerContextVerifier))
+              callerContextVerifier,
+              vitoImagePerfListener))
     }
 
     /**

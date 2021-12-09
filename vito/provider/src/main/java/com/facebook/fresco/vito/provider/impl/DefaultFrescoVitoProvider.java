@@ -14,8 +14,8 @@ import com.facebook.fresco.vito.core.FrescoController2;
 import com.facebook.fresco.vito.core.FrescoVitoConfig;
 import com.facebook.fresco.vito.core.FrescoVitoPrefetcher;
 import com.facebook.fresco.vito.core.ImagePipelineUtils;
+import com.facebook.fresco.vito.core.VitoImagePerfListener;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
-import com.facebook.fresco.vito.core.impl.BaseVitoImagePerfListener;
 import com.facebook.fresco.vito.core.impl.FrescoController2Impl;
 import com.facebook.fresco.vito.core.impl.FrescoVitoPrefetcherImpl;
 import com.facebook.fresco.vito.core.impl.HierarcherImpl;
@@ -50,7 +50,8 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
       Executor lightweightBackgroundThreadExecutor,
       Executor uiThreadExecutor,
       @Nullable Supplier<Boolean> debugOverlayEnabledSupplier,
-      CallerContextVerifier callerContextVerifier) {
+      CallerContextVerifier callerContextVerifier,
+      VitoImagePerfListener vitoImagePerfListener) {
     if (!ImagePipelineFactory.hasBeenInitialized()) {
       throw new RuntimeException(
           "Fresco must be initialized before DefaultFrescoVitoProvider can be used!");
@@ -71,7 +72,7 @@ public class DefaultFrescoVitoProvider implements FrescoVitoProvider.Implementat
                 ? new NoOpDebugOverlayFactory2()
                 : new DefaultDebugOverlayFactory2(debugOverlayEnabledSupplier),
             null,
-            new BaseVitoImagePerfListener());
+            vitoImagePerfListener);
   }
 
   @Override
