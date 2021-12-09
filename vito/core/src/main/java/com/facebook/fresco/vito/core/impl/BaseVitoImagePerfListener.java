@@ -10,9 +10,11 @@ package com.facebook.fresco.vito.core.impl;
 import com.facebook.fresco.vito.core.FrescoDrawableInterface;
 import com.facebook.fresco.vito.core.VitoImagePerfListener;
 import com.facebook.infer.annotation.Nullsafe;
+import com.facebook.infer.annotation.OkToExtend;
 
 @Nullsafe(Nullsafe.Mode.STRICT)
-public class NoOpVitoImagePerfListener implements VitoImagePerfListener {
+@OkToExtend
+public class BaseVitoImagePerfListener implements VitoImagePerfListener {
 
   @Override
   public void onImageMount(FrescoDrawableInterface drawable) {}
