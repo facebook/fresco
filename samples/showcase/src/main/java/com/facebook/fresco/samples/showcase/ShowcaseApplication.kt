@@ -113,13 +113,14 @@ class ShowcaseApplication : Application() {
             .setMaxBitmapCount(BitmapCounterConfig.DEFAULT_MAX_BITMAP_COUNT)
             .build())
     Fresco.initialize(this, imagePipelineConfig, draweeConfigBuilder.build())
+    imageTracker = ImageTracker()
     FrescoVito.initialize(
         resources = resources,
         debugOverlayEnabledSupplier = DebugOverlaySupplierSingleton.getInstance(applicationContext),
-        vitoImagePerfListener = ImageTracker)
+        vitoImagePerfListener = imageTracker)
     imageSelector =
         ImageSelector(
-            ImageTracker, FrescoVitoProvider.getImagePipeline(), FrescoVitoProvider.getController())
+            imageTracker, FrescoVitoProvider.getImagePipeline(), FrescoVitoProvider.getController())
     val context = this
     Stetho.initialize(
         Stetho.newInitializerBuilder(context)
@@ -155,6 +156,8 @@ class ShowcaseApplication : Application() {
 
   companion object {
     private val sFlipperImageTracker = FlipperImageTracker()
+    lateinit var imageTracker: ImageTracker
+      private set
     lateinit var imageUriProvider: ImageUriProvider
       private set
     lateinit var imageSelector: ImageSelector

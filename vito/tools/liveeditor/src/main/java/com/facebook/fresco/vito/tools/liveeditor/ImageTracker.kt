@@ -11,7 +11,7 @@ import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.impl.BaseVitoImagePerfListener
 import java.lang.ref.WeakReference
 
-object ImageTracker : BaseVitoImagePerfListener() {
+open class ImageTracker : BaseVitoImagePerfListener() {
   private val drawables: MutableList<WeakReference<FrescoDrawableInterface>> = ArrayList()
 
   val drawableCount: Int
