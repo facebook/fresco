@@ -36,9 +36,7 @@ object FrescoSystrace {
     this.instance.endSection()
   }
 
-  @JvmStatic
-  val isTracing: Boolean
-    get() = instance.isTracing
+  @JvmStatic fun isTracing(): Boolean = instance.isTracing()
 
   private var _instance: Systrace? = null
   private val instance: Systrace
@@ -55,7 +53,7 @@ object FrescoSystrace {
     fun beginSection(name: String)
     fun beginSectionWithArgs(name: String): ArgsBuilder
     fun endSection()
-    val isTracing: Boolean
+    fun isTracing(): Boolean
   }
 
   /** Object that accumulates arguments. */
