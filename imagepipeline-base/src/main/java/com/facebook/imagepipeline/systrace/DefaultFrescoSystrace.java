@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Trace;
 import com.facebook.imagepipelinebase.BuildConfig;
 import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultFrescoSystrace implements FrescoSystrace.Systrace {
@@ -69,7 +70,7 @@ public class DefaultFrescoSystrace implements FrescoSystrace.Systrace {
     }
 
     @Override
-    public FrescoSystrace.ArgsBuilder arg(String key, Object value) {
+    public FrescoSystrace.ArgsBuilder arg(String key, @Nullable Object value) {
       mStringBuilder
           .append(';')
           .append(key)
