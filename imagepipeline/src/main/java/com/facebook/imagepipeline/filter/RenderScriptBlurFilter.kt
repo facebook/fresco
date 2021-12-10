@@ -62,7 +62,5 @@ object RenderScriptBlurFilter {
   }
 
   @JvmStatic
-  fun canUseRenderScript(): Boolean {
-    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1
-  }
+  fun canUseRenderScript(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1
 }
