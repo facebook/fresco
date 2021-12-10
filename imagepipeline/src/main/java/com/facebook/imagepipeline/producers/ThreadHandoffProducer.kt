@@ -8,11 +8,8 @@
 package com.facebook.imagepipeline.producers
 
 import android.os.Looper
-import com.facebook.common.internal.Preconditions
 import com.facebook.imagepipeline.instrumentation.FrescoInstrumenter
-import com.facebook.imagepipeline.systrace.FrescoSystrace.beginSection
-import com.facebook.imagepipeline.systrace.FrescoSystrace.endSection
-import com.facebook.imagepipeline.systrace.FrescoSystrace.isTracing
+import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
 import java.lang.Exception
 
 /** Uses ExecutorService to move further computation to different thread */
@@ -22,10 +19,7 @@ class ThreadHandoffProducer<T>(
 ) : Producer<T> {
 
   override fun produceResults(consumer: Consumer<T>, context: ProducerContext) {
-    try {
-      if (isTracing()) {
-        beginSection("ThreadHandoffProducer#produceResults")
-      }
+    traceSection("ThreadHandoffProducer#produceResults") {
       val producerListener = context.producerListener
       if (shouldRunImmediately(context)) {
         producerListener.onProducerStart(context, PRODUCER_NAME)
@@ -55,10 +49,6 @@ class ThreadHandoffProducer<T>(
           })
       threadHandoffProducerQueue.addToQueueOrExecute(
           FrescoInstrumenter.decorateRunnable(statefulRunnable, getInstrumentationTag(context)))
-    } finally {
-      if (isTracing()) {
-        endSection()
-      }
     }
   }
 

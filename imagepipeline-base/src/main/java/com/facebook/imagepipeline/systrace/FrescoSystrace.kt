@@ -33,7 +33,20 @@ object FrescoSystrace {
 
   @JvmStatic
   fun endSection() {
-    this.instance.endSection()
+    instance.endSection()
+  }
+
+  inline fun <T> traceSection(name: String, block: () -> T): T {
+    if (!isTracing()) {
+      return block()
+    }
+
+    beginSection(name)
+    try {
+      return block()
+    } finally {
+      endSection()
+    }
   }
 
   @JvmStatic fun isTracing(): Boolean = instance.isTracing()
