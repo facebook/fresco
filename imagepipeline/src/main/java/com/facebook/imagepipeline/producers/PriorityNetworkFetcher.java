@@ -92,6 +92,8 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
   /** if true, then dequeue requests recuresively */
   private final boolean multipleDequeue;
 
+  private final boolean nonRecoverableExceptionPreventsRequeue;
+
   /**
    * @param isHiPriFifo if true, hi-pri requests are dequeued in the order they were enqueued.
    *     Otherwise, they're dequeued in reverse order.
@@ -118,7 +120,8 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       boolean doNotCancelRequests,
       int immediateRequeueCount,
       int requeueDelayTimeInMillis,
-      boolean multipleDequeue) {
+      boolean multipleDequeue,
+      boolean nonRecoverableExceptionPreventsRequeue) {
     this(
         delegate,
         isHiPriFifo,
@@ -130,6 +133,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
         immediateRequeueCount,
         requeueDelayTimeInMillis,
         multipleDequeue,
+        nonRecoverableExceptionPreventsRequeue,
         RealtimeSinceBootClock.get());
   }
 
@@ -145,6 +149,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       int immediateRequeueCount,
       int requeueDelayTimeInMillis,
       boolean multipleDequeue,
+      boolean nonRecoverableExceptionPreventsRequeue,
       MonotonicClock clock) {
     mDelegate = delegate;
     mIsHiPriFifo = isHiPriFifo;
@@ -160,6 +165,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     this.immediateRequeueCount = immediateRequeueCount;
     this.requeueDelayTimeInMillis = requeueDelayTimeInMillis;
     this.multipleDequeue = multipleDequeue;
+    this.nonRecoverableExceptionPreventsRequeue = nonRecoverableExceptionPreventsRequeue;
     this.mClock = clock;
   }
 
@@ -339,7 +345,8 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
                   maxNumberOfRequeue == INFINITE_REQUEUE
                       || fetchState.requeueCount < maxNumberOfRequeue;
               if (shouldRequeue
-                  && !(throwable instanceof PriorityNetworkFetcher.NonrecoverableException)) {
+                  && !(nonRecoverableExceptionPreventsRequeue
+                      && throwable instanceof PriorityNetworkFetcher.NonrecoverableException)) {
                 requeue(fetchState);
               } else {
                 removeFromQueue(fetchState, "FAIL");

@@ -265,7 +265,18 @@ public class PriorityNetworkFetcherTest {
     // Hi-pri is LIFO, Max hi-pri: 2, max low-pri: 1
     PriorityNetworkFetcher<FetchState> fetcher =
         new PriorityNetworkFetcher<>(
-            recordingNetworkFetcher, false, 2, 0, true, 2, false, 0, delayTime, false, clock);
+            recordingNetworkFetcher,
+            false,
+            2,
+            0,
+            true,
+            2,
+            false,
+            0,
+            delayTime,
+            false,
+            false /* nonRecoverableExceptionPreventsRequeue */,
+            clock);
 
     // add a hi-pri, it will be fetched immediately.
     PriorityFetchState<FetchState> one = fetch(fetcher, "1", callback, true);
@@ -449,7 +460,18 @@ public class PriorityNetworkFetcherTest {
 
     PriorityNetworkFetcher<FetchState> fetcher =
         new PriorityNetworkFetcher<>(
-            delegate, false, 1, 0, true, 0, false, NO_DELAYED_REQUESTS, 0, false, clock);
+            delegate,
+            false,
+            1,
+            0,
+            true,
+            0,
+            false,
+            NO_DELAYED_REQUESTS,
+            0,
+            false,
+            false /* nonRecoverableExceptionPreventsRequeue */,
+            clock);
 
     // The queue is empty, so enqueuing a request immediately executes it. Therefore, the queue time
     // is 0.
@@ -539,7 +561,18 @@ public class PriorityNetworkFetcherTest {
     // Max hi-pri: 1, max low-pri: 0
     PriorityNetworkFetcher<FetchState> fetcher =
         new PriorityNetworkFetcher<>(
-            delegate, false, 1, 0, true, 0, false, NO_DELAYED_REQUESTS, 0, false, clock);
+            delegate,
+            false,
+            1,
+            0,
+            true,
+            0,
+            false,
+            NO_DELAYED_REQUESTS,
+            0,
+            false,
+            false /* nonRecoverableExceptionPreventsRequeue */,
+            clock);
 
     PriorityFetchState<FetchState> hipri1 = fetch(fetcher, "hipri1", callback, true);
     PriorityFetchState<FetchState> hipri2 = fetch(fetcher, "hipri2", callback, true);
@@ -612,7 +645,18 @@ public class PriorityNetworkFetcherTest {
 
     // Max hi-pri: 1, max low-pri: 0
     PriorityNetworkFetcher<FetchState> fetcher =
-        newFetcher(recordingNetworkFetcher, false, 1, 0, true, INFINITE_REQUEUE, false, false);
+        new PriorityNetworkFetcher<>(
+            recordingNetworkFetcher,
+            false,
+            1,
+            0,
+            true,
+            INFINITE_REQUEUE,
+            false,
+            NO_DELAYED_REQUESTS,
+            0 /* requeueDelayTimeInMillis */,
+            false,
+            true /* nonRecoverableExceptionPreventsRequeue */);
 
     PriorityFetchState<FetchState> hipri1 = fetch(fetcher, "hipri1", callback, true);
 
@@ -797,6 +841,7 @@ public class PriorityNetworkFetcherTest {
             immediateRequeueCount,
             delayTimeInMillis,
             false,
+            false /* nonRecoverableExceptionPreventsRequeue */,
             clock);
 
     PriorityFetchState<FetchState> hipri1 = fetch(fetcher, "hipri1", callback, true);
@@ -865,6 +910,7 @@ public class PriorityNetworkFetcherTest {
             immediateRequeueCount,
             delayTimeInMillis,
             false,
+            false /* nonRecoverableExceptionPreventsRequeue */,
             clock);
 
     PriorityFetchState<FetchState> hipri1 = fetch(fetcher, "hipri1", callback, true);
@@ -1121,7 +1167,8 @@ public class PriorityNetworkFetcherTest {
         doNotCancelRequests,
         NO_DELAYED_REQUESTS,
         0 /* requeueDelayTimeInMillis */,
-        multipleDequeue);
+        multipleDequeue,
+        false);
   }
 
   private PriorityFetchState<FetchState> fetch(
