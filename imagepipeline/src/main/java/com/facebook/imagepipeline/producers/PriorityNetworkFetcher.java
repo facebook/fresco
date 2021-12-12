@@ -545,9 +545,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     return false;
   }
 
-  @VisibleForTesting
   public static boolean shouldRetry(
-      int responseCode,
       Throwable e,
       int attemptNumber,
       int maxConnectAttemptCount,
@@ -571,7 +569,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
           e, retryLowPriUnknownHostException, retryLowPriConnectionException);
     }
 
-    if (isHiPriority && responseCode == HTTP_408_REQUEST_TIMEOUT) {
+    if (isHiPriority && e instanceof NonrecoverableException) {
       return true;
     }
 

@@ -1024,7 +1024,6 @@ public class PriorityNetworkFetcherTest {
     // retries are disabled
     assertThat(
             shouldRetry(
-                -1,
                 failedToConnect,
                 0 /* attemptNumber */,
                 maxAttemptCount,
@@ -1039,7 +1038,6 @@ public class PriorityNetworkFetcherTest {
     boolean retryLowPriConnectionException = true;
     assertThat(
             shouldRetry(
-                -1,
                 failedToConnect,
                 0 /* attemptNumber */,
                 maxAttemptCount,
@@ -1067,7 +1065,6 @@ public class PriorityNetworkFetcherTest {
     // first connection failure should be retried
     assertThat(
             shouldRetry(
-                -1,
                 failedToConnect,
                 1 /* attemptNumber */,
                 maxConnectAttemoCount,
@@ -1080,7 +1077,6 @@ public class PriorityNetworkFetcherTest {
     // second connection failure should not be retried
     assertThat(
             shouldRetry(
-                -1,
                 failedToConnect,
                 2 /* attemptNumber */,
                 maxConnectAttemoCount,
@@ -1094,7 +1090,6 @@ public class PriorityNetworkFetcherTest {
     // SocketTimeoutException
     assertThat(
             shouldRetry(
-                -1,
                 new SocketTimeoutException(),
                 2 /* attemptNumber */,
                 maxConnectAttemoCount,
@@ -1121,7 +1116,6 @@ public class PriorityNetworkFetcherTest {
     // retries are disabled
     assertThat(
             shouldRetry(
-                -1,
                 unableToResolveHostName,
                 1 /* attemptNumber */,
                 maxAttemptCount,
@@ -1136,7 +1130,6 @@ public class PriorityNetworkFetcherTest {
     boolean retryLowPriUnknownHostException = true;
     assertThat(
             shouldRetry(
-                -1,
                 unableToResolveHostName,
                 1 /* attemptNumber */,
                 maxAttemptCount,
