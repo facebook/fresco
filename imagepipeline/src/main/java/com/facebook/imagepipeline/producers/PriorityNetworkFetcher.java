@@ -133,37 +133,6 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
         RealtimeSinceBootClock.get());
   }
 
-  /**
-   * @param isHiPriFifo if true, hi-pri requests are dequeued in the order they were enqueued.
-   *     Otherwise, they're dequeued in reverse order.
-   * @param inflightFetchesCanBeCancelled if false, the fetcher waits for the completion of requests
-   *     that have been delegated to 'delegate' even if they were cancelled by Fresco. The
-   *     cancellation order is not propagated to 'delegate', and no other request is dequeued.
-   * @param infiniteRequeue if true, requests that fail are re-queued, potentially retrying
-   *     immediately.
-   */
-  public PriorityNetworkFetcher(
-      NetworkFetcher<FETCH_STATE> delegate,
-      boolean isHiPriFifo,
-      int maxOutstandingHiPri,
-      int maxOutstandingLowPri,
-      boolean inflightFetchesCanBeCancelled,
-      boolean infiniteRequeue,
-      boolean doNotCancelRequests) {
-    this(
-        delegate,
-        isHiPriFifo,
-        maxOutstandingHiPri,
-        maxOutstandingLowPri,
-        inflightFetchesCanBeCancelled,
-        infiniteRequeue ? INFINITE_REQUEUE : 0,
-        doNotCancelRequests,
-        NO_DELAYED_REQUESTS,
-        0,
-        false,
-        RealtimeSinceBootClock.get());
-  }
-
   @VisibleForTesting
   public PriorityNetworkFetcher(
       NetworkFetcher<FETCH_STATE> delegate,
