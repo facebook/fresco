@@ -13,10 +13,16 @@ import androidx.annotation.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.common.time.RealtimeSinceBootClock;
+import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
+import java.net.ConnectException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -48,6 +54,7 @@ import javax.annotation.Nullable;
 public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     implements NetworkFetcher<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> {
   public static final String TAG = PriorityNetworkFetcher.class.getSimpleName();
+  private static final int HTTP_408_REQUEST_TIMEOUT = 408;
 
   private final NetworkFetcher<FETCH_STATE> mDelegate;
 
@@ -545,5 +552,65 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     extras.put("delay_count", "" + fetchState.delayCount);
 
     return extras;
+  }
+
+  private static boolean shouldRetryLowPrioritySpecificExceptions(
+      Throwable e,
+      boolean retryLowPriUnknownHostException,
+      boolean retryLowPriConnectionException) {
+    if (e instanceof UnknownHostException) {
+      return retryLowPriUnknownHostException;
+    }
+
+    if (e instanceof ConnectException) {
+      return retryLowPriConnectionException;
+    }
+
+    return false;
+  }
+
+  @VisibleForTesting
+  public static boolean shouldRetry(
+      int responseCode,
+      Throwable e,
+      int attemptNumber,
+      int maxConnectAttemptCount,
+      int maxAttemptCount,
+      boolean retryLowPriAll,
+      boolean retryLowPriUnknownHostException,
+      boolean retryLowPriConnectionException,
+      Priority priority) {
+    if (e instanceof ConnectException && attemptNumber >= maxConnectAttemptCount) {
+      return false;
+    }
+
+    if (attemptNumber >= maxAttemptCount) {
+      return false;
+    }
+
+    boolean isHiPriority = priority == Priority.HIGH;
+
+    if (!retryLowPriAll && !isHiPriority) {
+      return shouldRetryLowPrioritySpecificExceptions(
+          e, retryLowPriUnknownHostException, retryLowPriConnectionException);
+    }
+
+    if (isHiPriority && responseCode == HTTP_408_REQUEST_TIMEOUT) {
+      return true;
+    }
+
+    if (e instanceof SocketTimeoutException
+        || e instanceof UnknownHostException
+        || e instanceof ConnectException) {
+      return true;
+    }
+    String msg = e.getMessage();
+    if (msg == null) {
+      return false;
+    }
+    return (e instanceof IOException && msg.contains("Canceled"))
+        || (e instanceof IOException && msg.contains("unexpected end of stream on null"))
+        || (e instanceof SocketException && msg.contains("Socket closed"))
+        || (isHiPriority && e instanceof InterruptedIOException && msg.contains("timeout"));
   }
 }

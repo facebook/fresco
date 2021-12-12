@@ -11,6 +11,7 @@ import static com.facebook.imagepipeline.common.Priority.HIGH;
 import static com.facebook.imagepipeline.common.Priority.LOW;
 import static com.facebook.imagepipeline.producers.PriorityNetworkFetcher.INFINITE_REQUEUE;
 import static com.facebook.imagepipeline.producers.PriorityNetworkFetcher.NO_DELAYED_REQUESTS;
+import static com.facebook.imagepipeline.producers.PriorityNetworkFetcher.shouldRetry;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -22,11 +23,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.facebook.common.logging.FLog;
+import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.producers.PriorityNetworkFetcher.PriorityFetchState;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.testing.FakeClock;
 import com.google.common.collect.ArrayListMultimap;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1032,6 +1037,144 @@ public class PriorityNetworkFetcherTest {
     assertThat(fetcher.getCurrentlyFetching()).containsExactly(two);
     assertThat(fetcher.getHiPriQueue()).isEmpty();
     assertThat(fetcher.getLowPriQueue()).isEmpty();
+  }
+
+  /**
+   * Scenario: failed to connect to host exception is thrown when trying to fetch a low-priority
+   * request.
+   *
+   * <p>test both cases when retries for connection exceptions are enabled and disabled.
+   */
+  @Test
+  public void LowPriFailedToConnectRequestsRetries() {
+    int maxAttemptCount = 3;
+    Throwable failedToConnect = new ConnectException("Failed to connect to host scontext.xx");
+
+    // retries are disabled
+    assertThat(
+            shouldRetry(
+                -1,
+                failedToConnect,
+                0 /* attemptNumber */,
+                maxAttemptCount,
+                maxAttemptCount,
+                false /* retryLowPriAll */,
+                false /* retryLowPriUnknownHostException */,
+                false /* retryLowPriConnectionException */,
+                Priority.LOW))
+        .isFalse();
+
+    // enable retries
+    boolean retryLowPriConnectionException = true;
+    assertThat(
+            shouldRetry(
+                -1,
+                failedToConnect,
+                0 /* attemptNumber */,
+                maxAttemptCount,
+                maxAttemptCount,
+                false /* retryLowPriAll */,
+                false /* retryLowPriUnknownHostException */,
+                retryLowPriConnectionException /* retryLowPriConnectionException */,
+                Priority.LOW))
+        .isTrue();
+  }
+
+  /**
+   * Scenario: ConnectException is thrown. Number of failed to connect retry attempts is 2, while
+   * max number of attempts for general exception is 3.
+   *
+   * <p>expected behavior is to retry connect exception up to 2 times while other exceptions up to 3
+   * times
+   */
+  @Test
+  public void retryFailedToConnectExceptionUpToMaxConnectAttemptCount() {
+    int maxAttemptCount = 3;
+    int maxConnectAttemoCount = 2;
+    Throwable failedToConnect = new ConnectException("Failed to connect to host scontext.xx");
+
+    // first connection failure should be retried
+    assertThat(
+            shouldRetry(
+                -1,
+                failedToConnect,
+                1 /* attemptNumber */,
+                maxConnectAttemoCount,
+                maxAttemptCount,
+                false /* retryLowPriAll */,
+                false /* retryLowPriUnknownHostException */,
+                false /* retryLowPriConnectionException */,
+                HIGH))
+        .isTrue();
+    // second connection failure should not be retried
+    assertThat(
+            shouldRetry(
+                -1,
+                failedToConnect,
+                2 /* attemptNumber */,
+                maxConnectAttemoCount,
+                maxAttemptCount,
+                false /* retryLowPriAll */,
+                false /* retryLowPriUnknownHostException */,
+                false /* retryLowPriConnectionException */,
+                HIGH))
+        .isFalse();
+    // with the same number of attempts, other exceptions should be retried e.g.
+    // SocketTimeoutException
+    assertThat(
+            shouldRetry(
+                -1,
+                new SocketTimeoutException(),
+                2 /* attemptNumber */,
+                maxConnectAttemoCount,
+                maxAttemptCount,
+                false /* retryLowPriAll */,
+                false /* retryLowPriUnknownHostException */,
+                false /* retryLowPriConnectionException */,
+                HIGH))
+        .isTrue();
+  }
+
+  /**
+   * Scenario: unable to resolve host name exception is thrown when trying to fetch a low-priority
+   * request.
+   *
+   * <p>test both cases when retries for unknown host exceptions are enabled and disabled.
+   */
+  @Test
+  public void LowPriFailedwithUnknownHostExceptionRetries() {
+    int maxAttemptCount = 3;
+    Throwable unableToResolveHostName =
+        new UnknownHostException("Unable to resolve hostname scontext.xx");
+
+    // retries are disabled
+    assertThat(
+            shouldRetry(
+                -1,
+                unableToResolveHostName,
+                1 /* attemptNumber */,
+                maxAttemptCount,
+                maxAttemptCount,
+                false /* retryLowPriAll */,
+                false /* retryLowPriUnknownHostException */,
+                false /* retryLowPriConnectionException */,
+                Priority.LOW))
+        .isFalse();
+
+    // enable retries
+    boolean retryLowPriUnknownHostException = true;
+    assertThat(
+            shouldRetry(
+                -1,
+                unableToResolveHostName,
+                1 /* attemptNumber */,
+                maxAttemptCount,
+                maxAttemptCount,
+                false /* retryLowPriAll */,
+                retryLowPriUnknownHostException /* retryLowPriUnknownHostException */,
+                false /* retryLowPriConnectionException */,
+                Priority.LOW))
+        .isTrue();
   }
 
   private PriorityFetchState<FetchState> fetch(
