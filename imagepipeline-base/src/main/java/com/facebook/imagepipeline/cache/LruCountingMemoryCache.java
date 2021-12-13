@@ -46,11 +46,13 @@ public class LruCountingMemoryCache<K, V>
   private final @Nullable EntryStateObserver<K> mEntryStateObserver;
 
   // Contains the items that are not being used by any client and are hence viable for eviction.
+
   @GuardedBy("this")
   @VisibleForTesting
   final CountingLruMap<K, Entry<K, V>> mExclusiveEntries;
 
   // Contains all the cached items including the exclusively owned ones.
+
   @GuardedBy("this")
   @VisibleForTesting
   final CountingLruMap<K, Entry<K, V>> mCachedEntries;
@@ -435,11 +437,11 @@ public class LruCountingMemoryCache<K, V>
     count = Math.max(count, 0);
     size = Math.max(size, 0);
     // fast path without array allocation if no eviction is necessary
-    if (mExclusiveEntries.getCount() <= count && mExclusiveEntries.getSizeInBytes() <= size) {
+    if (this.mExclusiveEntries.getCount() <= count && mExclusiveEntries.getSizeInBytes() <= size) {
       return null;
     }
     ArrayList<Entry<K, V>> oldEntries = new ArrayList<>();
-    while (mExclusiveEntries.getCount() > count || mExclusiveEntries.getSizeInBytes() > size) {
+    while (this.mExclusiveEntries.getCount() > count || mExclusiveEntries.getSizeInBytes() > size) {
       @Nullable K key = mExclusiveEntries.getFirstKey();
       if (key == null) {
         if (mIgnoreSizeMismatch) {
@@ -449,7 +451,7 @@ public class LruCountingMemoryCache<K, V>
         throw new IllegalStateException(
             String.format(
                 "key is null, but exclusiveEntries count: %d, size: %d",
-                mExclusiveEntries.getCount(), mExclusiveEntries.getSizeInBytes()));
+                this.mExclusiveEntries.getCount(), mExclusiveEntries.getSizeInBytes()));
       }
       mExclusiveEntries.remove(key);
       oldEntries.add(mCachedEntries.remove(key));

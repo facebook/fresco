@@ -25,11 +25,17 @@ import java.lang.annotation.Retention;
 public @interface TranscodeStatus {
 
   /** Status flag to show that the image was transcoded successfully. */
+  final
+  /** Status flag to show that the image was transcoded successfully. */
   int TRANSCODING_SUCCESS = 0;
 
   /** Status flag to show that the input image transcoded successfully without resizing. */
+  final
+  /** Status flag to show that the input image transcoded successfully without resizing. */
   int TRANSCODING_NO_RESIZING = 1;
 
+  /** Status flag to show that an error occured while transcoding the image. */
+  final
   /** Status flag to show that an error occured while transcoding the image. */
   int TRANSCODING_ERROR = 2;
 }

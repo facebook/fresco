@@ -30,6 +30,7 @@ public class JpegTranscoderUtils {
 
   // Inverted EXIF orientations in clockwise rotation order. Rotating 90 degrees clockwise gets you
   // the next item in the list
+
   public static final ImmutableList<Integer> INVERTED_EXIF_ORIENTATIONS =
       ImmutableList.of(
           ExifInterface.ORIENTATION_FLIP_HORIZONTAL,

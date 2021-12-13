@@ -46,17 +46,20 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
 
   // Contains the least frequently used items out of all the items in the cache that are not being
   // used by any client and are hence viable for eviction.
+
   @GuardedBy("this")
   @VisibleForTesting
   final CountingLruMap<K, Entry<K, V>> mLeastFrequentlyUsedExclusiveEntries;
 
   // Contains the most frequently used items out of all the items in the cache that are not being
   // used by any client and are hence viable for eviction.
+
   @GuardedBy("this")
   @VisibleForTesting
   final CountingLruMap<K, Entry<K, V>> mMostFrequentlyUsedExclusiveEntries;
 
   // Contains all the cached items including the exclusively owned ones.
+
   @GuardedBy("this")
   @VisibleForTesting
   final CountingLruMap<K, Entry<K, V>> mCachedEntries;
@@ -72,6 +75,7 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
   // The mLFUFractionPromil/1000 is the the percentage of the cache allocated for the least
   // frequently used values. The rest of the cache, which is the (1 - mLFUFractionPromil/1000) is
   // allocated for the most frequently used values.
+
   @GuardedBy("this")
   @VisibleForTesting
   int mLFUFractionPromil;
@@ -92,6 +96,7 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
 
   // The learning rate for adapting the cache partitions; this determines how much we
   // increase/decrease the fraction
+
   @GuardedBy("this")
   @VisibleForTesting
   final int mAdaptiveRatePromil;
@@ -99,16 +104,19 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
   static final int DEFAULT_ADAPTIVE_RATE_PROMIL = 10;
 
   // Tracks the most recently evicted keys from the least frequently used cache.
+
   @GuardedBy("this")
   @VisibleForTesting
   final IntMapArrayList<K> mLeastFrequentlyUsedKeysGhostList;
 
   // Tracks the most recently evicted keys from the most frequently used cache.
+
   @GuardedBy("this")
   @VisibleForTesting
   final ArrayList<K> mMostFrequentlyUsedKeysGhostList;
 
   // The maximum size of the ghost lists.
+
   @GuardedBy("this")
   @VisibleForTesting
   final int mGhostListMaxSize;

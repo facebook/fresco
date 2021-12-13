@@ -393,7 +393,7 @@ public class EncodedImage implements Closeable {
     InputStream inputStream = null;
     ImageMetaData metaData = null;
     try {
-      inputStream = getInputStream();
+      inputStream = this.getInputStream();
       metaData = BitmapUtil.decodeDimensionsAndColorSpace(inputStream);
       mColorSpace = metaData.getColorSpace();
       Pair<Integer, Integer> dimensions = metaData.getDimensions();
