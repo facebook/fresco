@@ -60,12 +60,18 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
 
   // keys for extra map
   public static final String EXTRA_BITMAP_SIZE = ProducerConstants.EXTRA_BITMAP_SIZE;
+
   public static final String EXTRA_HAS_GOOD_QUALITY = ProducerConstants.EXTRA_HAS_GOOD_QUALITY;
+
   public static final String EXTRA_IS_FINAL = ProducerConstants.EXTRA_IS_FINAL;
+
   public static final String EXTRA_IMAGE_FORMAT_NAME = ProducerConstants.EXTRA_IMAGE_FORMAT_NAME;
+
   public static final String EXTRA_BITMAP_BYTES = ProducerConstants.EXTRA_BYTES;
   public static final String ENCODED_IMAGE_SIZE = ProducerConstants.ENCODED_IMAGE_SIZE;
+
   public static final String REQUESTED_IMAGE_SIZE = ProducerConstants.REQUESTED_IMAGE_SIZE;
+
   public static final String SAMPLE_SIZE = ProducerConstants.SAMPLE_SIZE;
 
   private final ByteArrayPool mByteArrayPool;

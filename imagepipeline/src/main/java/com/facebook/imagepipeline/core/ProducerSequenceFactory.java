@@ -97,7 +97,9 @@ public class ProducerSequenceFactory {
   Producer<CloseableReference<PooledByteBuffer>> mNetworkEncodedImageProducerSequence;
 
   @VisibleForTesting @Nullable Producer<Void> mLocalFileFetchToEncodedMemoryPrefetchSequence;
+
   @VisibleForTesting @Nullable Producer<Void> mNetworkFetchToEncodedMemoryPrefetchSequence;
+
   private @Nullable Producer<EncodedImage> mCommonNetworkFetchToEncodedMemorySequence;
 
   @VisibleForTesting @Nullable

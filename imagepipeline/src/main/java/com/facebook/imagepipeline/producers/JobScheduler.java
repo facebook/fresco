@@ -61,6 +61,7 @@ public class JobScheduler {
   }
 
   // job data
+
   @GuardedBy("this")
   @VisibleForTesting
   @Nullable
@@ -72,6 +73,7 @@ public class JobScheduler {
   int mStatus;
 
   // job state
+
   @GuardedBy("this")
   @VisibleForTesting
   JobState mJobState;

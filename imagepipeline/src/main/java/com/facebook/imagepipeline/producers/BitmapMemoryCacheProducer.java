@@ -25,6 +25,7 @@ import javax.annotation.Nullable;
 public class BitmapMemoryCacheProducer implements Producer<CloseableReference<CloseableImage>> {
 
   public static final String PRODUCER_NAME = "BitmapMemoryCacheProducer";
+
   public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
 
   private static final String ORIGIN_SUBCATEGORY = "pipe_bg";

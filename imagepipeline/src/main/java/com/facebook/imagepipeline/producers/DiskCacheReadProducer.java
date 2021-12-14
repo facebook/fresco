@@ -39,7 +39,9 @@ import javax.annotation.Nullable;
 public class DiskCacheReadProducer implements Producer<EncodedImage> {
   // PRODUCER_NAME doesn't exactly match class name as it matches name in historic data instead
   public static final String PRODUCER_NAME = "DiskCacheProducer";
+
   public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
+
   public static final String ENCODED_IMAGE_SIZE = ProducerConstants.ENCODED_IMAGE_SIZE;
 
   private final BufferedDiskCache mDefaultBufferedDiskCache;

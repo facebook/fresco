@@ -111,6 +111,7 @@ public class ListDataSource<T> extends AbstractDataSource<List<CloseableReferenc
   }
 
   private class InternalDataSubscriber implements DataSubscriber<CloseableReference<T>> {
+
     @GuardedBy("InternalDataSubscriber.this")
     boolean mFinished = false;
 

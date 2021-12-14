@@ -51,7 +51,9 @@ import javax.annotation.Nullable;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class PartialDiskCacheProducer implements Producer<EncodedImage> {
   public static final String PRODUCER_NAME = "PartialDiskCacheProducer";
+
   public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
+
   public static final String ENCODED_IMAGE_SIZE = ProducerConstants.ENCODED_IMAGE_SIZE;
 
   private final BufferedDiskCache mDefaultBufferedDiskCache;
