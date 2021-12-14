@@ -8,7 +8,6 @@
 package com.facebook.common.media
 
 import androidx.annotation.NonNull
-import com.facebook.common.internal.ImmutableMap
 import java.util.Locale
 
 /** Utility class. */
