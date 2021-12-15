@@ -16,52 +16,37 @@ class ForwardingRequestListener2 : RequestListener2 {
 
   private var requestListeners: MutableList<RequestListener2>
 
-  constructor(requestListeners: Set<RequestListener2?>) {
-    this.requestListeners = ArrayList(requestListeners.size)
-    for (requestListener in requestListeners) {
-      if (requestListener != null) {
-        this.requestListeners.add(requestListener)
-      }
-    }
+  constructor(listenersToAdd: Set<RequestListener2?>) {
+    requestListeners = ArrayList(listenersToAdd.size)
+    listenersToAdd.filterNotNullTo(requestListeners)
   }
 
-  constructor(vararg requestListeners: RequestListener2?) {
-    this.requestListeners = ArrayList(requestListeners.size)
-    for (requestListener in requestListeners) {
-      if (requestListener != null) {
-        this.requestListeners.add(requestListener)
-      }
-    }
+  constructor(vararg listenersToAdd: RequestListener2?) {
+    requestListeners = ArrayList(listenersToAdd.size)
+    listenersToAdd.filterNotNullTo(requestListeners)
   }
 
   fun addRequestListener(requestListener: RequestListener2) {
     requestListeners.add(requestListener)
   }
 
-  override fun onRequestStart(producerContext: ProducerContext) {
-    val numberOfListeners = requestListeners.size
-    for (i in 0 until numberOfListeners) {
-      val listener = requestListeners[i]
+  private inline fun forEachListener(methodName: String, block: (RequestListener2) -> Unit) {
+    requestListeners.forEach {
       try {
-        listener.onRequestStart(producerContext)
+        block(it)
       } catch (exception: Exception) {
         // Don't punish the other listeners if we're given a bad one.
-        onException("InternalListener exception in onRequestStart", exception)
+        FLog.e(TAG, "InternalListener exception in $methodName", exception)
       }
     }
   }
 
+  override fun onRequestStart(producerContext: ProducerContext) {
+    forEachListener("onRequestStart") { it.onRequestStart(producerContext) }
+  }
+
   override fun onProducerStart(producerContext: ProducerContext, producerName: String) {
-    val numberOfListeners = requestListeners.size
-    for (i in 0 until numberOfListeners) {
-      val listener = requestListeners[i]
-      try {
-        listener.onProducerStart(producerContext, producerName)
-      } catch (exception: Exception) {
-        // Don't punish the other listeners if we're given a bad one.
-        onException("InternalListener exception in onProducerStart", exception)
-      }
-    }
+    forEachListener("onProducerStart") { it.onProducerStart(producerContext, producerName) }
   }
 
   override fun onProducerFinishWithSuccess(
@@ -69,50 +54,29 @@ class ForwardingRequestListener2 : RequestListener2 {
       producerName: String?,
       extraMap: MutableMap<String, String>?
   ) {
-    val numberOfListeners = requestListeners.size
-    for (i in 0 until numberOfListeners) {
-      val listener = requestListeners[i]
-      try {
-        listener.onProducerFinishWithSuccess(producerContext, producerName, extraMap)
-      } catch (exception: Exception) {
-        // Don't punish the other listeners if we're given a bad one.
-        onException("InternalListener exception in onProducerFinishWithSuccess", exception)
-      }
+    forEachListener("onProducerFinishWithSuccess") {
+      it.onProducerFinishWithSuccess(producerContext, producerName, extraMap)
     }
   }
 
   override fun onProducerFinishWithFailure(
-      producerContext: ProducerContext,
-      producerName: String,
-      t: Throwable,
+      producerContext: ProducerContext?,
+      producerName: String?,
+      t: Throwable?,
       extraMap: MutableMap<String, String>?
   ) {
-    val numberOfListeners = requestListeners.size
-    for (i in 0 until numberOfListeners) {
-      val listener = requestListeners[i]
-      try {
-        listener.onProducerFinishWithFailure(producerContext, producerName, t, extraMap)
-      } catch (exception: Exception) {
-        // Don't punish the other listeners if we're given a bad one.
-        onException("InternalListener exception in onProducerFinishWithFailure", exception)
-      }
+    forEachListener("onProducerFinishWithFailure") {
+      it.onProducerFinishWithFailure(producerContext, producerName, t, extraMap)
     }
   }
 
   override fun onProducerFinishWithCancellation(
-      producerContext: ProducerContext,
-      producerName: String,
+      producerContext: ProducerContext?,
+      producerName: String?,
       extraMap: MutableMap<String, String>?
   ) {
-    val numberOfListeners = requestListeners.size
-    for (i in 0 until numberOfListeners) {
-      val listener = requestListeners[i]
-      try {
-        listener.onProducerFinishWithCancellation(producerContext, producerName, extraMap)
-      } catch (exception: Exception) {
-        // Don't punish the other listeners if we're given a bad one.
-        onException("InternalListener exception in onProducerFinishWithCancellation", exception)
-      }
+    forEachListener("onProducerFinishWithCancellation") {
+      it.onProducerFinishWithCancellation(producerContext, producerName, extraMap)
     }
   }
 
@@ -121,15 +85,8 @@ class ForwardingRequestListener2 : RequestListener2 {
       producerName: String,
       producerEventName: String
   ) {
-    val numberOfListeners = requestListeners.size
-    for (i in 0 until numberOfListeners) {
-      val listener = requestListeners[i]
-      try {
-        listener.onProducerEvent(producerContext, producerName, producerEventName)
-      } catch (exception: Exception) {
-        // Don't punish the other listeners if we're given a bad one.
-        onException("InternalListener exception in onIntermediateChunkStart", exception)
-      }
+    forEachListener("onIntermediateChunkStart") {
+      it.onProducerEvent(producerContext, producerName, producerEventName)
     }
   }
 
@@ -138,70 +95,25 @@ class ForwardingRequestListener2 : RequestListener2 {
       producerName: String,
       successful: Boolean
   ) {
-    val numberOfListeners = requestListeners.size
-    for (i in 0 until numberOfListeners) {
-      val listener = requestListeners[i]
-      try {
-        listener.onUltimateProducerReached(producerContext, producerName, successful)
-      } catch (exception: Exception) {
-        // Don't punish the other listeners if we're given a bad one.
-        onException("InternalListener exception in onProducerFinishWithSuccess", exception)
-      }
+    forEachListener("onProducerFinishWithSuccess") {
+      it.onUltimateProducerReached(producerContext, producerName, successful)
     }
   }
 
   override fun onRequestSuccess(producerContext: ProducerContext) {
-    val numberOfListeners = requestListeners.size
-    for (i in 0 until numberOfListeners) {
-      val listener = requestListeners[i]
-      try {
-        listener.onRequestSuccess(producerContext)
-      } catch (exception: Exception) {
-        // Don't punish the other listeners if we're given a bad one.
-        onException("InternalListener exception in onRequestSuccess", exception)
-      }
-    }
+    forEachListener("onRequestSuccess") { it.onRequestSuccess(producerContext) }
   }
 
   override fun onRequestFailure(producerContext: ProducerContext, throwable: Throwable) {
-    val numberOfListeners = requestListeners.size
-    for (i in 0 until numberOfListeners) {
-      val listener = requestListeners[i]
-      try {
-        listener.onRequestFailure(producerContext, throwable)
-      } catch (exception: Exception) {
-        // Don't punish the other listeners if we're given a bad one.
-        onException("InternalListener exception in onRequestFailure", exception)
-      }
-    }
+    forEachListener("onRequestFailure") { it.onRequestFailure(producerContext, throwable) }
   }
 
   override fun onRequestCancellation(producerContext: ProducerContext) {
-    val numberOfListeners = requestListeners.size
-    for (i in 0 until numberOfListeners) {
-      val listener = requestListeners[i]
-      try {
-        listener.onRequestCancellation(producerContext)
-      } catch (exception: Exception) {
-        // Don't punish the other listeners if we're given a bad one.
-        onException("InternalListener exception in onRequestCancellation", exception)
-      }
-    }
+    forEachListener("onRequestCancellation") { it.onRequestCancellation(producerContext) }
   }
 
-  override fun requiresExtraMap(producerContext: ProducerContext, producerName: String): Boolean {
-    val numberOfListeners = requestListeners.size
-    for (i in 0 until numberOfListeners) {
-      if (requestListeners[i].requiresExtraMap(producerContext, producerName)) {
-        return true
-      }
-    }
-    return false
-  }
-
-  private fun onException(message: String, t: Throwable) {
-    FLog.e(TAG, message, t)
-  }
+  override fun requiresExtraMap(producerContext: ProducerContext, producerName: String): Boolean =
+      requestListeners.any { it.requiresExtraMap(producerContext, producerName) }
 
   companion object {
     private const val TAG = "ForwardingRequestListener2"
