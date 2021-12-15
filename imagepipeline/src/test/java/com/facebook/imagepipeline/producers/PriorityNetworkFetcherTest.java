@@ -12,11 +12,13 @@ import static com.facebook.imagepipeline.common.Priority.LOW;
 import static com.facebook.imagepipeline.producers.PriorityNetworkFetcher.INFINITE_REQUEUE;
 import static com.facebook.imagepipeline.producers.PriorityNetworkFetcher.NO_DELAYED_REQUESTS;
 import static com.facebook.imagepipeline.producers.PriorityNetworkFetcher.shouldRetry;
+import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -28,7 +30,9 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.producers.PriorityNetworkFetcher.PriorityFetchState;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.testing.FakeClock;
-import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.LinkedListMultimap;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -276,6 +280,11 @@ public class PriorityNetworkFetcherTest {
             delayTime,
             false,
             false /* nonRecoverableExceptionPreventsRequeue */,
+            1 /* maxConnectAttemptCount */,
+            1 /* maxAttemptCount */,
+            false /* retryLowPriAll */,
+            false /* retryLowPriUnknownHostException */,
+            false /* retryLowPriConnectionException */,
             clock);
 
     // add a hi-pri, it will be fetched immediately.
@@ -471,6 +480,11 @@ public class PriorityNetworkFetcherTest {
             0,
             false,
             false /* nonRecoverableExceptionPreventsRequeue */,
+            1 /* maxConnectAttemptCount */,
+            1 /* maxAttemptCount */,
+            false /* retryLowPriAll */,
+            false /* retryLowPriUnknownHostException */,
+            false /* retryLowPriConnectionException */,
             clock);
 
     // The queue is empty, so enqueuing a request immediately executes it. Therefore, the queue time
@@ -572,6 +586,11 @@ public class PriorityNetworkFetcherTest {
             0,
             false,
             false /* nonRecoverableExceptionPreventsRequeue */,
+            1 /* maxConnectAttemptCount */,
+            1 /* maxAttemptCount */,
+            false /* retryLowPriAll */,
+            false /* retryLowPriUnknownHostException */,
+            false /* retryLowPriConnectionException */,
             clock);
 
     PriorityFetchState<FetchState> hipri1 = fetch(fetcher, "hipri1", callback, true);
@@ -656,7 +675,12 @@ public class PriorityNetworkFetcherTest {
             NO_DELAYED_REQUESTS,
             0 /* requeueDelayTimeInMillis */,
             false,
-            true /* nonRecoverableExceptionPreventsRequeue */);
+            true /* nonRecoverableExceptionPreventsRequeue */,
+            1 /* maxConnectAttemptCount */,
+            1 /* maxAttemptCount */,
+            false /* retryLowPriAll */,
+            false /* retryLowPriUnknownHostException */,
+            false /* retryLowPriConnectionException */);
 
     PriorityFetchState<FetchState> hipri1 = fetch(fetcher, "hipri1", callback, true);
 
@@ -842,6 +866,11 @@ public class PriorityNetworkFetcherTest {
             delayTimeInMillis,
             false,
             false /* nonRecoverableExceptionPreventsRequeue */,
+            1 /* maxConnectAttemptCount */,
+            1 /* maxAttemptCount */,
+            false /* retryLowPriAll */,
+            false /* retryLowPriUnknownHostException */,
+            false /* retryLowPriConnectionException */,
             clock);
 
     PriorityFetchState<FetchState> hipri1 = fetch(fetcher, "hipri1", callback, true);
@@ -911,6 +940,11 @@ public class PriorityNetworkFetcherTest {
             delayTimeInMillis,
             false,
             false /* nonRecoverableExceptionPreventsRequeue */,
+            1 /* maxConnectAttemptCount */,
+            1 /* maxAttemptCount */,
+            false /* retryLowPriAll */,
+            false /* retryLowPriUnknownHostException */,
+            false /* retryLowPriConnectionException */,
             clock);
 
     PriorityFetchState<FetchState> hipri1 = fetch(fetcher, "hipri1", callback, true);
@@ -1141,6 +1175,117 @@ public class PriorityNetworkFetcherTest {
         .isTrue();
   }
 
+  /**
+   * Scenario: two requests are enqueued. Up to 1 request may be processed at a time. The first one
+   * fails twice and then succeeds.
+   *
+   * <p>Verify that we attempt the first one 3 times, and only once it succeeds, we move on to the
+   * second request.
+   */
+  @Test
+  public void failuresAreRetried_eventualSuccess() throws IOException {
+    final int maxAttemptCount = 3;
+
+    RecordingNetworkFetcher delegateFetcher = new RecordingNetworkFetcher();
+
+    PriorityNetworkFetcher<FetchState> fetcher =
+        new PriorityNetworkFetcher<>(
+            delegateFetcher,
+            true,
+            1,
+            0,
+            true,
+            0,
+            false,
+            NO_DELAYED_REQUESTS,
+            0 /* requeueDelayTimeInMillis */,
+            false,
+            false /* nonRecoverableExceptionPreventsRequeue */,
+            1 /* maxConnectAttemptCount */,
+            maxAttemptCount,
+            false /* retryLowPriAll */,
+            false /* retryLowPriUnknownHostException */,
+            false /* retryLowPriConnectionException */);
+
+    PriorityFetchState<FetchState> state1 = fetch(fetcher, "uri1", callback, true);
+    fetch(fetcher, "uri2", callback, true);
+
+    // Simulate delegate fails twice.
+    for (int i = 0; i < 2; i++) {
+      assertThat(delegateFetcher.callbacks).hasSize(i + 1);
+      FetchState lastFetched = getLast(delegateFetcher.callbacks.keys());
+      assertThat(lastFetched.getUri().toString()).isEqualTo("uri1");
+      getOnlyElement(delegateFetcher.callbacks.get(lastFetched))
+          .onFailure(new IOException("Canceled"));
+    }
+    // Simulate delegate succeeds 3rd attempt.
+    assertThat(delegateFetcher.callbacks).hasSize(3);
+    FetchState lastFetched = getLast(delegateFetcher.callbacks.keys());
+    assertThat(lastFetched.getUri().toString()).isEqualTo("uri1");
+    getOnlyElement(delegateFetcher.callbacks.get(lastFetched))
+        .onResponse(mock(InputStream.class), 0);
+    fetcher.onFetchCompletion(state1, 0);
+
+    // Assert that eventually we succeed.
+    verify(callback).onResponse(isA(InputStream.class), anyInt());
+
+    // After we're done with uri1, 'fetcher' moves on to uti2 (but not before).
+    assertThat(delegateFetcher.callbacks).hasSize(4);
+    assertThat(getLast(delegateFetcher.callbacks.keys()).getUri().toString()).isEqualTo("uri2");
+  }
+
+  /**
+   * Scenario: two requests are enqueued. Up to 1 request may be processed at a time. The first one
+   * fails three times.
+   *
+   * <p>Verify that we attempt the first one 3 times, and only once it fails, we move on to the
+   * second request.
+   */
+  @Test
+  public void failuresAreRetried_eventualFailure() throws IOException {
+    final int maxAttemptCount = 3;
+
+    RecordingNetworkFetcher delegateFetcher = new RecordingNetworkFetcher();
+
+    PriorityNetworkFetcher<FetchState> fetcher =
+        new PriorityNetworkFetcher<>(
+            delegateFetcher,
+            true,
+            1,
+            0,
+            true,
+            0,
+            false,
+            NO_DELAYED_REQUESTS,
+            0 /* requeueDelayTimeInMillis */,
+            false,
+            false /* nonRecoverableExceptionPreventsRequeue */,
+            1 /* maxConnectAttemptCount */,
+            maxAttemptCount,
+            false /* retryLowPriAll */,
+            false /* retryLowPriUnknownHostException */,
+            false /* retryLowPriConnectionException */);
+
+    fetch(fetcher, "uri1", callback, true);
+    fetch(fetcher, "uri2", callback, true);
+
+    // Simulate delegate fails 3 times.
+    for (int i = 0; i < 3; i++) {
+      assertThat(delegateFetcher.callbacks).hasSize(i + 1);
+      FetchState lastFetched = getLast(delegateFetcher.callbacks.keys());
+      assertThat(lastFetched.getUri().toString()).isEqualTo("uri1");
+      getOnlyElement(delegateFetcher.callbacks.get(lastFetched))
+          .onFailure(new IOException("Canceled"));
+    }
+
+    // Assert that eventually we get a failure callback.
+    verify(callback).onFailure(isA(Throwable.class));
+
+    // After we're done with uri1, 'fetcher' moves on to uti2 (but not before).
+    assertThat(delegateFetcher.callbacks).hasSize(4);
+    assertThat(getLast(delegateFetcher.callbacks.keys()).getUri().toString()).isEqualTo("uri2");
+  }
+
   private static PriorityNetworkFetcher<FetchState> newFetcher(
       NetworkFetcher<FetchState> delegate,
       boolean isHiPriFifo,
@@ -1161,7 +1306,12 @@ public class PriorityNetworkFetcherTest {
         NO_DELAYED_REQUESTS,
         0 /* requeueDelayTimeInMillis */,
         multipleDequeue,
-        false);
+        false /* nonRecoverableExceptionPreventsRequeue */,
+        0 /* maxConnectAttemptCount */,
+        0 /* maxAttemptCount */,
+        false /* retryLowPriAll */,
+        false /* retryLowPriUnknownHostException */,
+        false /* retryLowPriConnectionException */);
   }
 
   private PriorityFetchState<FetchState> fetch(
@@ -1244,7 +1394,13 @@ public class PriorityNetworkFetcherTest {
   private static class RecordingNetworkFetcher implements NetworkFetcher<FetchState> {
 
     private final ArrayList<FetchState> createdFetchStates = new ArrayList<>();
-    private final ArrayListMultimap<FetchState, Callback> callbacks = ArrayListMultimap.create();
+
+    /** A multimap of callbacks. These are 1:1 with actual fetch() calls. */
+    private final LinkedListMultimap<FetchState, Callback> callbacks = LinkedListMultimap.create();
+
+    public Callback getLatestCallback() {
+      return callbacks.get(createdFetchStates.get(createdFetchStates.size() - 1)).get(0);
+    }
 
     @Override
     public FetchState createFetchState(

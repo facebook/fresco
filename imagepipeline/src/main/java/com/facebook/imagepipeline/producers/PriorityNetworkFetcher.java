@@ -93,6 +93,11 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
   private final boolean multipleDequeue;
 
   private final boolean nonRecoverableExceptionPreventsRequeue;
+  private final int maxConnectAttemptCount;
+  private final int maxAttemptCount;
+  private final boolean retryLowPriAll;
+  private final boolean retryLowPriUnknownHostException;
+  private final boolean retryLowPriConnectionException;
 
   /**
    * @param isHiPriFifo if true, hi-pri requests are dequeued in the order they were enqueued.
@@ -121,7 +126,13 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       int immediateRequeueCount,
       int requeueDelayTimeInMillis,
       boolean multipleDequeue,
-      boolean nonRecoverableExceptionPreventsRequeue) {
+      boolean nonRecoverableExceptionPreventsRequeue,
+      int maxConnectAttemptCount,
+      int maxAttemptCount,
+      boolean retryLowPriAll,
+      boolean retryLowPriUnknownHostException,
+      boolean retryLowPriConnectionException) {
+
     this(
         delegate,
         isHiPriFifo,
@@ -134,6 +145,11 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
         requeueDelayTimeInMillis,
         multipleDequeue,
         nonRecoverableExceptionPreventsRequeue,
+        maxConnectAttemptCount,
+        maxAttemptCount,
+        retryLowPriAll,
+        retryLowPriUnknownHostException,
+        retryLowPriConnectionException,
         RealtimeSinceBootClock.get());
   }
 
@@ -150,6 +166,11 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       int requeueDelayTimeInMillis,
       boolean multipleDequeue,
       boolean nonRecoverableExceptionPreventsRequeue,
+      int maxConnectAttemptCount,
+      int maxAttemptCount,
+      boolean retryLowPriAll,
+      boolean retryLowPriUnknownHostException,
+      boolean retryLowPriConnectionException,
       MonotonicClock clock) {
     mDelegate = delegate;
     mIsHiPriFifo = isHiPriFifo;
@@ -166,6 +187,11 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     this.requeueDelayTimeInMillis = requeueDelayTimeInMillis;
     this.multipleDequeue = multipleDequeue;
     this.nonRecoverableExceptionPreventsRequeue = nonRecoverableExceptionPreventsRequeue;
+    this.maxConnectAttemptCount = maxConnectAttemptCount;
+    this.maxAttemptCount = maxAttemptCount;
+    this.retryLowPriAll = retryLowPriAll;
+    this.retryLowPriUnknownHostException = retryLowPriUnknownHostException;
+    this.retryLowPriConnectionException = retryLowPriConnectionException;
     this.mClock = clock;
   }
 
@@ -264,6 +290,21 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     mDelayedQueue.addLast(fetchState);
   }
 
+  private void retry(PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState) {
+    FLog.v(TAG, "retry: %s", fetchState.getUri());
+    synchronized (mLock) {
+      fetchState.delegatedState =
+          mDelegate.createFetchState(fetchState.getConsumer(), fetchState.getContext());
+
+      mCurrentlyFetching.remove(fetchState);
+      if (!mHiPriQueue.remove(fetchState)) {
+        mLowPriQueue.remove(fetchState);
+      }
+      mHiPriQueue.addFirst(fetchState);
+    }
+    dequeueIfAvailableSlots();
+  }
+
   private void requeue(PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState) {
     synchronized (mLock) {
       FLog.v(TAG, "requeue: %s", fetchState.getUri());
@@ -341,6 +382,19 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
 
             @Override
             public void onFailure(Throwable throwable) {
+              if (shouldRetry(
+                  throwable,
+                  fetchState.attemptCount,
+                  maxConnectAttemptCount,
+                  maxAttemptCount,
+                  retryLowPriAll,
+                  retryLowPriUnknownHostException,
+                  retryLowPriConnectionException,
+                  fetchState.getContext().getPriority())) {
+                retry(fetchState);
+                return;
+              }
+
               final boolean shouldRequeue =
                   maxNumberOfRequeue == INFINITE_REQUEUE
                       || fetchState.requeueCount < maxNumberOfRequeue;
@@ -366,6 +420,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
               }
             }
           };
+      fetchState.attemptCount++;
       mDelegate.fetch(fetchState.delegatedState, callbackWrapper);
     } catch (Exception e) {
       removeFromQueue(fetchState, "FAIL");
@@ -450,6 +505,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     @Nullable NetworkFetcher.Callback callback;
     long dequeuedTimestamp;
     int requeueCount = 0;
+    int attemptCount = 0;
 
     /** number of times the request was delayed (inserted to the delay queue) */
     int delayCount = 0;
@@ -488,6 +544,22 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
   public static class NonrecoverableException extends Throwable {
     public NonrecoverableException(@androidx.annotation.Nullable String message) {
       super(message);
+    }
+  }
+
+  /**
+   * RetriableIOException should be returned by NetworkFetcher's that would like to signal to
+   * PriorityNetworkFetcher that a failure is
+   */
+  public static class RetriableIOException extends IOException {
+    public RetriableIOException(Throwable cause) {
+      super(cause);
+    }
+
+    @Override
+    public String toString() {
+      Throwable cause = getCause();
+      return cause != null ? cause.toString() : toString();
     }
   }
 
@@ -575,7 +647,8 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
 
     if (e instanceof SocketTimeoutException
         || e instanceof UnknownHostException
-        || e instanceof ConnectException) {
+        || e instanceof ConnectException
+        || e instanceof RetriableIOException) {
       return true;
     }
     String msg = e.getMessage();
