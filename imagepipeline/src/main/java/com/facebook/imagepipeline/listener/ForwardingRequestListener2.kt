@@ -10,7 +10,6 @@ package com.facebook.imagepipeline.listener
 import com.facebook.common.logging.FLog
 import com.facebook.imagepipeline.producers.ProducerContext
 import java.util.ArrayList
-import java.util.Map
 import java.util.Set
 
 class ForwardingRequestListener2 : RequestListener2 {
