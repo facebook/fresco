@@ -19,7 +19,7 @@ import android.widget.Toast
 
 class LiveEditorUiUtils(var liveEditor: ImageLiveEditor?) {
 
-  fun createView(context: Context): View {
+  fun createView(context: Context, closeAction: ((View) -> Unit)? = null): View {
     return LinearLayout(context).apply {
       layoutParams =
           LinearLayout.LayoutParams(
@@ -34,17 +34,23 @@ class LiveEditorUiUtils(var liveEditor: ImageLiveEditor?) {
       addView(createWithList(context, ImageOptionsSampleValues.autoPlay))
       addView(createWithList(context, ImageOptionsSampleValues.bitmapConfig))
       addView(createImageInfoButton(context))
+      if (closeAction != null) {
+        addView(createButton(context, "Close", closeAction))
+      }
     }
   }
 
   fun createImageInfoButton(context: Context): Button =
+      createButton(context, "Image Info") {
+        Toast.makeText(
+                context, "ImageSource: ${liveEditor?.getSource().toString()}", Toast.LENGTH_LONG)
+            .show()
+      }
+
+  fun createButton(context: Context, btnText: String, clickAction: (View) -> Unit): Button =
       Button(context).apply {
-        text = "Image Info"
-        setOnClickListener {
-          Toast.makeText(
-                  context, "ImageSource: ${liveEditor?.getSource().toString()}", Toast.LENGTH_LONG)
-              .show()
-        }
+        text = btnText
+        setOnClickListener(clickAction)
       }
 
   fun <T> createWithList(context: Context, entry: ImageOptionsSampleValues.Entry<T>): Spinner {
