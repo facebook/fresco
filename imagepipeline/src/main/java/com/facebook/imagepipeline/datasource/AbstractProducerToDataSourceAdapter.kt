@@ -17,9 +17,7 @@ import com.facebook.imagepipeline.producers.ProducerContext
 import com.facebook.imagepipeline.producers.SettableProducerContext
 import com.facebook.imagepipeline.request.HasImageRequest
 import com.facebook.imagepipeline.request.ImageRequest
-import com.facebook.imagepipeline.systrace.FrescoSystrace.beginSection
-import com.facebook.imagepipeline.systrace.FrescoSystrace.endSection
-import com.facebook.imagepipeline.systrace.FrescoSystrace.isTracing
+import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
 import javax.annotation.concurrent.ThreadSafe
 
 /**
@@ -31,12 +29,9 @@ import javax.annotation.concurrent.ThreadSafe
 abstract class AbstractProducerToDataSourceAdapter<T>
 protected constructor(
     producer: Producer<T>,
-    settableProducerContext: SettableProducerContext,
-    requestListener: RequestListener2
+    val settableProducerContext: SettableProducerContext,
+    val requestListener: RequestListener2
 ) : AbstractDataSource<T>(), HasImageRequest {
-
-  private val settableProducerContext: SettableProducerContext
-  private val requestListener: RequestListener2
 
   private fun createConsumer(): Consumer<T> {
     return object : BaseConsumer<T>() {
@@ -103,28 +98,14 @@ protected constructor(
   }
 
   init {
-    if (isTracing()) {
-      beginSection("AbstractProducerToDataSourceAdapter()")
-    }
-    this.settableProducerContext = settableProducerContext
-    this.requestListener = requestListener
-    setInitialExtras()
-    if (isTracing()) {
-      beginSection("AbstractProducerToDataSourceAdapter()->onRequestStart")
-    }
-    requestListener.onRequestStart(settableProducerContext)
-    if (isTracing()) {
-      endSection()
-    }
-    if (isTracing()) {
-      beginSection("AbstractProducerToDataSourceAdapter()->produceResult")
-    }
-    producer.produceResults(createConsumer(), settableProducerContext)
-    if (isTracing()) {
-      endSection()
-    }
-    if (isTracing()) {
-      endSection()
+    traceSection("AbstractProducerToDataSourceAdapter()") {
+      setInitialExtras()
+      traceSection("AbstractProducerToDataSourceAdapter()->onRequestStart") {
+        requestListener.onRequestStart(settableProducerContext)
+      }
+      traceSection("AbstractProducerToDataSourceAdapter()->produceResult") {
+        producer.produceResults(createConsumer(), settableProducerContext)
+      }
     }
   }
 }
