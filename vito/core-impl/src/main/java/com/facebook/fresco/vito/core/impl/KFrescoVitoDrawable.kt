@@ -86,8 +86,13 @@ class KFrescoVitoDrawable : Drawable(), FrescoDrawableInterface {
   override fun getImageListener(): ImageListener? = _imageListener
 
   override fun setOverlayDrawable(drawable: Drawable?): Drawable? {
-    // TODO(T105148151) implement overlays
-    return null
+    overlayImageLayer.apply {
+      configure(
+          dataModel = if (drawable == null) null else DrawableImageDataModel(drawable),
+          roundingOptions = null,
+          borderOptions = null)
+    }
+    return drawable
   }
 
   override fun getExtras(): Any? = _extras
