@@ -93,7 +93,15 @@ class ImageRenderer {
       // preferred dimensions
       when (shape) {
         is RectShape -> return {
-              drawable.setBounds(0, 0, width, height)
+              if (width >= 0 && height >= 0) {
+                drawable.setBounds(0, 0, width, height)
+              } else {
+                drawable.setBounds(
+                    shape.rect.left.toInt(),
+                    shape.rect.top.toInt(),
+                    shape.rect.right.toInt(),
+                    shape.rect.bottom.toInt())
+              }
               drawable.colorFilter = colorFilter
               drawable.draw(it)
             }
