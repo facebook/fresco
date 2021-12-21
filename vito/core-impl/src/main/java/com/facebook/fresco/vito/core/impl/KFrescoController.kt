@@ -11,9 +11,12 @@ import android.content.res.Resources
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import com.facebook.common.callercontext.ContextChain
+import com.facebook.common.internal.Supplier
 import com.facebook.common.references.CloseableReference
 import com.facebook.datasource.DataSource
 import com.facebook.datasource.DataSubscriber
+import com.facebook.drawee.backends.pipeline.info.ImageOrigin
+import com.facebook.fresco.ui.common.ControllerListener2
 import com.facebook.fresco.ui.common.OnFadeListener
 import com.facebook.fresco.vito.core.*
 import com.facebook.fresco.vito.listener.ImageListener
@@ -24,12 +27,17 @@ import com.facebook.fresco.vito.renderer.DrawableImageDataModel
 import com.facebook.fresco.vito.renderer.ImageDataModel
 import com.facebook.imagepipeline.image.CloseableBitmap
 import com.facebook.imagepipeline.image.CloseableImage
+import com.facebook.imagepipeline.image.ImageInfo
 import java.util.concurrent.Executor
 
 class KFrescoController(
     private val vitoImagePipeline: VitoImagePipeline,
     private val uiThreadExecutor: Executor,
     private val lightweightBackgroundThreadExecutor: Executor,
+    private val globalImageRequestListener: VitoImageRequestListener? = null,
+    private val imagePerfControllerListenerSupplier: Supplier<ControllerListener2<ImageInfo>>? =
+        null,
+    private val imagePerfListener: VitoImagePerfListener = BaseVitoImagePerfListener(),
     private val drawableFactory: ImageOptionsDrawableFactory? = null
 ) : FrescoController2 {
 
@@ -45,7 +53,11 @@ class KFrescoController(
   }
 
   override fun <T> createDrawable(): T where T : Drawable, T : FrescoDrawableInterface {
-    return KFrescoVitoDrawable() as T
+    val drawable = KFrescoVitoDrawable(imagePerfListener)
+    imagePerfControllerListenerSupplier?.get()?.let {
+      drawable.listenerManager.setImagePerfControllerListener(it)
+    }
+    return drawable as T
   }
 
   override fun fetch(
@@ -75,15 +87,12 @@ class KFrescoController(
       setImageRequest(imageRequest)
       setCallerContext(callerContext)
       imageListener = listener
+      listenerManager.setVitoImageRequestListener(globalImageRequestListener)
       _imageId = imageId
+      this.viewportDimensions = viewportDimensions
     }
 
-    // TODO(T105148151): use extras
-    // val extras = obtainExtras(null, null, drawable)
-
-    // TODO(T105148151): fix internal listeners
-    val internalListener = listener
-    internalListener?.onSubmit(imageId, callerContext)
+    drawable.listenerManager.onSubmit(imageId, imageRequest, callerContext, drawable.obtainExtras())
     drawable.imagePerfListener.onImageFetch(drawable)
 
     val options = imageRequest.imageOptions
@@ -102,6 +111,13 @@ class KFrescoController(
           drawable.actualImageLayer.setActualImage(options, image)
           // TODO(T105148151): trigger listeners
           drawable.invalidateSelf()
+          drawable.listenerManager.onFinalImageSet(
+              imageId,
+              imageRequest,
+              ImageOrigin.MEMORY_BITMAP_SHORTCUT,
+              image,
+              drawable.obtainExtras(null, cachedImage),
+              drawable.actualImageDrawable)
           return true
         }
       }
@@ -111,8 +127,8 @@ class KFrescoController(
 
     // The image is not in cache -> Set up layers visible until the image is available
     drawable.placeholderLayer.setPlaceholder(imageRequest.resources, options)
-    // TODO(T105148151): notify with placeholder drawable parameter
-    internalListener?.onPlaceholderSet(imageId, null)
+    drawable.listenerManager.onPlaceholderSet(
+        imageId, imageRequest, maybeGetDrawable(drawable.placeholderLayer.getDataModel()))
 
     // Fetch the image
     lightweightBackgroundThreadExecutor.execute {
@@ -134,7 +150,19 @@ class KFrescoController(
                   drawable.setCloseable(result)
                   val image = result.get()
                   drawable.actualImageLayer.setActualImage(options, image)
+                  if (notifyFinalResult(dataSource)) {
+                    drawable.listenerManager.onFinalImageSet(
+                        imageId,
+                        imageRequest,
+                        ImageOrigin.MEMORY_BITMAP_SHORTCUT,
+                        image,
+                        drawable.obtainExtras(dataSource, cachedImage),
+                        drawable.actualImageDrawable)
+                  } else {
+                    drawable.listenerManager.onIntermediateImageSet(imageId, imageRequest, image)
+                  }
                 } else {
+                  onFailure(dataSource)
                   result.close()
                 }
               }
@@ -145,6 +173,26 @@ class KFrescoController(
                 return
               }
               drawable.actualImageLayer.setError(imageRequest.resources, options)
+              if (notifyFinalResult(dataSource)) {
+                val result = dataSource.result
+                try {
+                  drawable.listenerManager.onFailure(
+                      imageId,
+                      imageRequest,
+                      maybeGetDrawable(drawable.actualImageLayer.getDataModel()),
+                      dataSource.failureCause,
+                      drawable.obtainExtras(dataSource, result))
+                } finally {
+                  result?.close()
+                }
+              } else {
+                drawable.listenerManager.onIntermediateImageFailed(
+                    imageId,
+                    imageRequest,
+                    dataSource.failureCause,
+                )
+              }
+              drawable.imagePerfListener.onImageError(drawable)
               uiThreadExecutor.execute { drawable.invalidateSelf() }
             }
 
@@ -158,7 +206,7 @@ class KFrescoController(
               // TODO(T105148151): set progress
             }
           },
-          lightweightBackgroundThreadExecutor)
+          uiThreadExecutor) // Keyframes require callbacks to be on the main thread.
     }
     drawable.isFetchSubmitted = true
     drawable.invalidateSelf()
@@ -215,5 +263,15 @@ class KFrescoController(
     }
     configure(
         dataModel = model, canvasTransformation = imageOptions.createErrorCanvasTransformation())
+  }
+
+  private fun maybeGetDrawable(imageDataModel: ImageDataModel?): Drawable? {
+    return (imageDataModel as? DrawableImageDataModel)?.drawable
+  }
+
+  private fun notifyFinalResult(
+      dataSource: DataSource<CloseableReference<CloseableImage>>?
+  ): Boolean {
+    return dataSource == null || dataSource.isFinished || dataSource.hasMultipleResults()
   }
 }

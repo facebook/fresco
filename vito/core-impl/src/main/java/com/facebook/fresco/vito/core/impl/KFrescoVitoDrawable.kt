@@ -1,10 +1,10 @@
-// (c) Facebook, Inc. and its affiliates. Confidential and proprietary.
 /*
  * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.vito.core.impl
 
 import android.graphics.Canvas
@@ -21,17 +21,17 @@ import com.facebook.fresco.vito.renderer.DrawableImageDataModel
 import java.io.Closeable
 import java.io.IOException
 
-class KFrescoVitoDrawable : Drawable(), FrescoDrawableInterface {
+class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopImagePerfListener()) :
+    Drawable(), FrescoDrawableInterface {
 
   var _imageId: Long = 0
   var _isLoading: Boolean = false
   var _callerContext: Any? = null
-  // TODO(T105148151) implement listeners
-  val _imagePerfListener: VitoImagePerfListener = NopImagePerfListener()
   var _visibilityCallback: VisibilityCallback? = null
   var _fetchSubmitted: Boolean = false
-  var _imageListener: ImageListener? = null
+  val listenerManager: CombinedImageListenerImpl = CombinedImageListenerImpl()
   var _extras: Any? = null
+  var viewportDimensions: Rect? = null
 
   val releaseState = ImageReleaseScheduler.createReleaseState(this)
   private var hasBoundsSet = false
@@ -80,10 +80,10 @@ class KFrescoVitoDrawable : Drawable(), FrescoDrawableInterface {
   }
 
   override fun setImageListener(imageListener: ImageListener?) {
-    _imageListener
+    listenerManager.imageListener = imageListener
   }
 
-  override fun getImageListener(): ImageListener? = _imageListener
+  override fun getImageListener(): ImageListener? = listenerManager.imageListener
 
   override fun setOverlayDrawable(drawable: Drawable?): Drawable? {
     overlayImageLayer.apply {
@@ -107,7 +107,7 @@ class KFrescoVitoDrawable : Drawable(), FrescoDrawableInterface {
   }
 
   fun reset() {
-    // TODO(T105148151): trigger the equivalent of drawable data subscriber onRelease(this)
+    imageRequest?.let { listenerManager.onRelease(imageId, it, obtainExtras()) }
     imagePerfListener.onImageRelease(this)
     ImageReleaseScheduler.cancelAllReleasing(this)
     _imageId = 0
@@ -118,8 +118,10 @@ class KFrescoVitoDrawable : Drawable(), FrescoDrawableInterface {
     actualImageLayer.reset()
     overlayImageLayer.reset()
     hasBoundsSet = false
-
     closeCloseable()
+
+    listenerManager.onReset()
+    listenerManager.imageListener = null
   }
 
   @Synchronized
