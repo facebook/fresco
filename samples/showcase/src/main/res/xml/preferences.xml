@@ -17,6 +17,7 @@
         />
   </PreferenceCategory>
 
+
   <PreferenceCategory android:title="@string/preferences_category_uri">
     <Preference
         android:key="uri_override"
@@ -27,6 +28,14 @@
         android:title="@string/preference_uri_cache_breaking_title"
         android:summaryOn="@string/preference_uri_cache_breaking_summary_enabled"
         android:summaryOff="@string/preference_uri_cache_breaking_summary_disabled"
+        />
+  </PreferenceCategory>
+
+  <PreferenceCategory android:title="@string/preferences_category_vito">
+    <CheckBoxPreference
+        android:key="vito_use_kotlin"
+        android:title="@string/preference_vito_use_kotlin"
+        android:summary="@string/preference_vito_use_kotlin_summary"
         />
   </PreferenceCategory>
 

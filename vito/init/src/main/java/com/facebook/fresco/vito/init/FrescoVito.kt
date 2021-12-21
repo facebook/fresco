@@ -91,7 +91,7 @@ class FrescoVito {
       isInitialized = true
     }
 
-    private fun createImagePipelineUtils(
+    fun createImagePipelineUtils(
         useNativeRounding: Supplier<Boolean>,
         useFastNativeRounding: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE
     ): ImagePipelineUtils {

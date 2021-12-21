@@ -37,6 +37,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   public static final String KEY_CLEAR_DISK_CACHE = "clear_disk_cache";
   public static final String KEY_DEBUG_OVERLAY = "debug_overlay";
   public static final String KEY_URI_OVERRIDE = "uri_override";
+  public static final String KEY_VITO_KOTLIN = "vito_use_kotlin";
 
   public static final String KEY_DETAILS_ANDROID_VERSION = "android_version";
   public static final String KEY_DETAILS_CPU_ARCHITECTURE = "cpu_architecture";

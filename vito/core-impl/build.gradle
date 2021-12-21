@@ -11,9 +11,11 @@ apply plugin: 'kotlin-android-extensions'
 
 dependencies {
     implementation project(':drawee')
+    implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':fbcore')
     implementation project(':imagepipeline-base')
     implementation project(':imagepipeline')
+    implementation project(':middleware')
     implementation project(':vito:core')
     implementation project(':vito:options')
     implementation project(':vito:renderer')

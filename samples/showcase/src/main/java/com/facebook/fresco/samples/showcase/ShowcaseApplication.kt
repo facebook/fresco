@@ -8,6 +8,10 @@
 package com.facebook.fresco.samples.showcase
 
 import android.app.Application
+import android.content.res.Resources
+import androidx.preference.PreferenceManager
+import com.facebook.common.executors.UiThreadImmediateExecutorService
+import com.facebook.common.internal.Suppliers
 import com.facebook.common.logging.FLog
 import com.facebook.common.memory.manager.NoOpDebugMemoryManager
 import com.facebook.drawee.backends.pipeline.DraweeConfig
@@ -24,12 +28,17 @@ import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
 import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.samples.showcase.misc.LogcatRequestListener2
+import com.facebook.fresco.samples.showcase.settings.SettingsFragment.KEY_VITO_KOTLIN
+import com.facebook.fresco.vito.core.DefaultFrescoVitoConfig
+import com.facebook.fresco.vito.core.FrescoVitoConfig
 import com.facebook.fresco.vito.init.FrescoVito
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
+import com.facebook.fresco.vito.provider.impl.kotlin.KFrescoVitoProvider
 import com.facebook.fresco.vito.tools.liveeditor.ImageSelector
 import com.facebook.fresco.vito.tools.liveeditor.ImageTracker
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
 import com.facebook.imagepipeline.core.ImagePipelineConfig
+import com.facebook.imagepipeline.core.ImagePipelineFactory
 import com.facebook.imagepipeline.debug.FlipperCacheKeyFactory
 import com.facebook.imagepipeline.debug.FlipperImageTracker
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig
@@ -114,10 +123,7 @@ class ShowcaseApplication : Application() {
             .build())
     Fresco.initialize(this, imagePipelineConfig, draweeConfigBuilder.build())
     imageTracker = ImageTracker()
-    FrescoVito.initialize(
-        resources = resources,
-        debugOverlayEnabledSupplier = DebugOverlaySupplierSingleton.getInstance(applicationContext),
-        vitoImagePerfListener = imageTracker)
+    initVito(resources)
     imageSelector =
         ImageSelector(
             imageTracker, FrescoVitoProvider.getImagePipeline(), FrescoVitoProvider.getController())
@@ -147,6 +153,32 @@ class ShowcaseApplication : Application() {
         addPlugin(frescoFlipperPlugin)
         start()
       }
+    }
+  }
+
+  private fun initVito(
+      resources: Resources,
+      vitoConfig: FrescoVitoConfig = DefaultFrescoVitoConfig(),
+  ) {
+    if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(KEY_VITO_KOTLIN, false)) {
+      FrescoVito.initialize(
+          KFrescoVitoProvider(
+              vitoConfig,
+              ImagePipelineFactory.getInstance().imagePipeline,
+              FrescoVito.createImagePipelineUtils(Suppliers.BOOLEAN_TRUE),
+              ImagePipelineFactory.getInstance()
+                  .imagePipeline
+                  .config
+                  .executorSupplier
+                  .forLightweightBackgroundTasks(),
+              UiThreadImmediateExecutorService.getInstance()))
+    } else {
+      FrescoVito.initialize(
+          resources = resources,
+          vitoConfig = vitoConfig,
+          debugOverlayEnabledSupplier =
+              DebugOverlaySupplierSingleton.getInstance(applicationContext),
+          vitoImagePerfListener = imageTracker)
     }
   }
 
