@@ -88,14 +88,16 @@ class ImageRenderer {
         paintToReuse: Paint? = null,
         colorFilter: ColorFilter? = null,
     ): RenderCommand {
-      // TODO(T105148151): account for image transformation
       // We transform by scaling the Canvas, so we let the Drawable draw itself with its
       // preferred dimensions
       when (shape) {
         is RectShape -> return {
               if (width >= 0 && height >= 0) {
                 drawable.setBounds(0, 0, width, height)
+                it.concat(imageTransformation)
               } else {
+                // The image dimensions are not set, so we assume the image can stretch to fit the
+                // entire rect, so we do not apply the transformation.
                 drawable.setBounds(
                     shape.rect.left.toInt(),
                     shape.rect.top.toInt(),
@@ -105,15 +107,13 @@ class ImageRenderer {
               drawable.colorFilter = colorFilter
               drawable.draw(it)
             }
-
-        // TODO(T105148151): properly handle transformations
         else -> {
           return {
             drawable.setBounds(0, 0, width, height)
             drawable.colorFilter = null // The Paint handles the color filter
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
             drawable.draw(Canvas(bitmap))
-            shape.draw(it, getBitmapPaint(bitmap, null, paintToReuse, colorFilter))
+            shape.draw(it, getBitmapPaint(bitmap, imageTransformation, paintToReuse, colorFilter))
           }
         }
       }
