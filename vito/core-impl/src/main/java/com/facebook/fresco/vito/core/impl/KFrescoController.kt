@@ -143,47 +143,46 @@ class KFrescoController(
               if (imageId != drawable.imageId) {
                 return
               }
-              if (dataSource.hasResult()) {
-                val result: CloseableReference<CloseableImage> = dataSource.result ?: return
-                if (CloseableReference.isValid(result)) {
-                  // We avoid cloning result and closing the original for performance reasons
-                  drawable.setCloseable(result)
-                  val image = result.get()
-                  drawable.actualImageLayer.setActualImage(options, image)
-                  if (notifyFinalResult(dataSource)) {
-                    drawable.listenerManager.onFinalImageSet(
-                        imageId,
-                        imageRequest,
-                        ImageOrigin.MEMORY_BITMAP_SHORTCUT,
-                        image,
-                        drawable.obtainExtras(dataSource, cachedImage),
-                        drawable.actualImageDrawable)
-                  } else {
-                    drawable.listenerManager.onIntermediateImageSet(imageId, imageRequest, image)
-                  }
-                } else {
-                  onFailure(dataSource)
-                  result.close()
-                }
+
+              val result: CloseableReference<CloseableImage>? = dataSource.result
+
+              if (result == null || !result.isValid) {
+                onFailure(dataSource)
+                result?.close()
+                return
+              }
+
+              // We avoid cloning result and closing the original for performance reasons
+              drawable.setCloseable(result)
+              val image = result.get()
+              drawable.actualImageLayer.setActualImage(options, image)
+              if (notifyFinalResult(dataSource)) {
+                drawable.listenerManager.onFinalImageSet(
+                    imageId,
+                    imageRequest,
+                    ImageOrigin.MEMORY_BITMAP_SHORTCUT,
+                    image,
+                    drawable.obtainExtras(dataSource, cachedImage),
+                    drawable.actualImageDrawable)
+              } else {
+                drawable.listenerManager.onIntermediateImageSet(imageId, imageRequest, image)
               }
               uiThreadExecutor.execute { drawable.invalidateSelf() }
             }
+
             override fun onFailure(dataSource: DataSource<CloseableReference<CloseableImage>>) {
               if (imageId != drawable.imageId) {
                 return
               }
               drawable.actualImageLayer.setError(imageRequest.resources, options)
               if (notifyFinalResult(dataSource)) {
-                val result = dataSource.result
-                try {
+                dataSource.result.use { result ->
                   drawable.listenerManager.onFailure(
                       imageId,
                       imageRequest,
                       maybeGetDrawable(drawable.actualImageLayer.getDataModel()),
                       dataSource.failureCause,
                       drawable.obtainExtras(dataSource, result))
-                } finally {
-                  result?.close()
                 }
               } else {
                 drawable.listenerManager.onIntermediateImageFailed(
