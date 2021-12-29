@@ -31,8 +31,10 @@ import com.facebook.fresco.samples.showcase.misc.LogcatRequestListener2
 import com.facebook.fresco.samples.showcase.settings.SettingsFragment.KEY_VITO_KOTLIN
 import com.facebook.fresco.vito.core.DefaultFrescoVitoConfig
 import com.facebook.fresco.vito.core.FrescoVitoConfig
+import com.facebook.fresco.vito.core.impl.DebugOverlayHandler
 import com.facebook.fresco.vito.init.FrescoVito
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
+import com.facebook.fresco.vito.provider.impl.NoOpCallerContextVerifier
 import com.facebook.fresco.vito.provider.impl.kotlin.KFrescoVitoProvider
 import com.facebook.fresco.vito.tools.liveeditor.ImageSelector
 import com.facebook.fresco.vito.tools.liveeditor.ImageTracker
@@ -171,7 +173,9 @@ class ShowcaseApplication : Application() {
                   .config
                   .executorSupplier
                   .forLightweightBackgroundTasks(),
-              UiThreadImmediateExecutorService.getInstance()))
+              UiThreadImmediateExecutorService.getInstance(),
+              NoOpCallerContextVerifier(),
+              DebugOverlayHandler(DebugOverlaySupplierSingleton.getInstance(applicationContext))))
     } else {
       FrescoVito.initialize(
           resources = resources,

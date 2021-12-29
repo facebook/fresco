@@ -13,6 +13,7 @@ import com.facebook.fresco.vito.core.FrescoVitoConfig
 import com.facebook.fresco.vito.core.FrescoVitoPrefetcher
 import com.facebook.fresco.vito.core.ImagePipelineUtils
 import com.facebook.fresco.vito.core.VitoImagePipeline
+import com.facebook.fresco.vito.core.impl.DebugOverlayHandler
 import com.facebook.fresco.vito.core.impl.FrescoVitoPrefetcherImpl
 import com.facebook.fresco.vito.core.impl.KFrescoController
 import com.facebook.fresco.vito.core.impl.VitoImagePipelineImpl
@@ -28,6 +29,7 @@ class KFrescoVitoProvider(
     private val uiThreadExecutor: Executor,
     private val lightweightBackgroundExecutor: Executor,
     private val callerContextVerifier: CallerContextVerifier = NoOpCallerContextVerifier(),
+    private val debugOverlayHandler: DebugOverlayHandler? = null
 ) : FrescoVitoProvider.Implementation {
 
   private val _imagePipeline: VitoImagePipeline by lazy {
@@ -36,10 +38,11 @@ class KFrescoVitoProvider(
 
   private val _controller: FrescoController2 by lazy {
     KFrescoController(
-        _imagePipeline,
-        uiThreadExecutor,
-        lightweightBackgroundExecutor,
-    )
+            _imagePipeline,
+            uiThreadExecutor,
+            lightweightBackgroundExecutor,
+        )
+        .also { it.debugOverlayHandler = debugOverlayHandler }
   }
 
   private val _prefetcher: FrescoVitoPrefetcher by lazy {

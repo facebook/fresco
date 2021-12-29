@@ -52,6 +52,8 @@ class KFrescoController(
         }
   }
 
+  var debugOverlayHandler: DebugOverlayHandler? = null
+
   override fun <T> createDrawable(): T where T : Drawable, T : FrescoDrawableInterface {
     val drawable = KFrescoVitoDrawable(imagePerfListener)
     imagePerfControllerListenerSupplier?.get()?.let {
@@ -118,6 +120,7 @@ class KFrescoController(
               image,
               drawable.obtainExtras(null, cachedImage),
               drawable.actualImageDrawable)
+          debugOverlayHandler?.update(drawable)
           return true
         }
       }
@@ -172,6 +175,7 @@ class KFrescoController(
               } else {
                 drawable.listenerManager.onIntermediateImageSet(imageId, imageRequest, image)
               }
+              debugOverlayHandler?.update(drawable)
               uiThreadExecutor.execute { drawable.invalidateSelf() }
             }
 
@@ -201,6 +205,7 @@ class KFrescoController(
               }
               drawable.imagePerfListener.onImageError(drawable)
               uiThreadExecutor.execute { drawable.invalidateSelf() }
+              debugOverlayHandler?.update(drawable)
             }
 
             override fun onCancellation(
@@ -211,13 +216,14 @@ class KFrescoController(
                 dataSource: DataSource<CloseableReference<CloseableImage>>
             ) {
               drawable.updateProgress(dataSource)
+              debugOverlayHandler?.update(drawable)
             }
           },
           uiThreadExecutor) // Keyframes require callbacks to be on the main thread.
     }
     drawable.isFetchSubmitted = true
     drawable.invalidateSelf()
-
+    debugOverlayHandler?.update(drawable)
     return false
   }
 
