@@ -161,6 +161,8 @@ class KFrescoController(
               drawable.setCloseable(result)
               val image = result.get()
               drawable.actualImageLayer.setActualImage(options, image)
+              // Remove the progress image
+              drawable.placeholderLayer.reset()
               if (dataSource.isFinished) {
                 drawable.hideProgressLayer()
               }
