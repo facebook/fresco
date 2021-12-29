@@ -402,16 +402,16 @@ static void addRoundCorner(
       centerY = radius;
       break;
     case TOP_RIGHT:
-      centerX = w - radius;
+      centerX = w - radius - 1;
       centerY = radius;
       break;
     case BOTTOM_RIGHT:
-      centerX = w - radius;
-      centerY = h - radius;
+      centerX = w - radius - 1;
+      centerY = h - radius - 1;
       break;
     case BOTTOM_LEFT:
       centerX = radius;
-      centerY = h - radius;
+      centerY = h - radius - 1;
   }
 
   if (radius < 1) {
