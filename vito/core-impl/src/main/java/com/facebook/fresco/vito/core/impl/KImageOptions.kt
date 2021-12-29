@@ -21,17 +21,14 @@ import com.facebook.fresco.vito.renderer.DrawableImageDataModel
 import com.facebook.fresco.vito.renderer.ImageDataModel
 
 // Models
-fun ImageOptions.createPlaceholderModel(resources: Resources): ImageDataModel? {
-  return toModel(createPlaceholderDrawable(resources))
-}
+fun ImageOptions.createPlaceholderModel(resources: Resources): ImageDataModel? =
+    toModel(createPlaceholderDrawable(resources))
 
-fun ImageOptions.createOverlayModel(resources: Resources): ImageDataModel? {
-  return toModel(createOverlayDrawable(resources))
-}
+fun ImageOptions.createOverlayModel(resources: Resources): ImageDataModel? =
+    toModel(createOverlayDrawable(resources))
 
-fun ImageOptions.createErrorModel(resources: Resources): ImageDataModel? {
-  return toModel(createErrorDrawable(resources))
-}
+fun ImageOptions.createErrorModel(resources: Resources): ImageDataModel? =
+    toModel(createErrorDrawable(resources))
 
 // Drawables
 fun ImageOptions.createPlaceholderDrawable(resources: Resources): Drawable? =
@@ -52,6 +49,9 @@ fun ImageOptions.createPlaceholderCanvasTransformation(): CanvasTransformation? 
 
 fun ImageOptions.createActualImageCanvasTransformation(): CanvasTransformation =
     actualImageScaleType.getCanvasTransformation(actualImageFocusPoint)
+
+fun ImageOptions.createProgressCanvasTransformation(): CanvasTransformation? =
+    progressScaleType?.getCanvasTransformation(null)
 
 fun ImageOptions.createErrorCanvasTransformation(): CanvasTransformation? =
     errorScaleType?.getCanvasTransformation(errorFocusPoint)

@@ -116,6 +116,7 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
 
     placeholderLayer.reset()
     actualImageLayer.reset()
+    progressLayer?.reset()
     overlayImageLayer.reset()
     hasBoundsSet = false
     closeCloseable()
@@ -149,6 +150,7 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
 
   val placeholderLayer = ImageLayerDataModel()
   val actualImageLayer = ImageLayerDataModel()
+  var progressLayer: ImageLayerDataModel? = null
   val overlayImageLayer = ImageLayerDataModel()
 
   override fun draw(canvas: Canvas) {
@@ -157,6 +159,7 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
     }
     placeholderLayer.draw(canvas)
     actualImageLayer.draw(canvas)
+    progressLayer?.draw(canvas)
     overlayImageLayer.draw(canvas)
   }
 
@@ -169,6 +172,7 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
     if (bounds != null) {
       placeholderLayer.configure(bounds = bounds)
       actualImageLayer.configure(bounds = bounds)
+      progressLayer?.configure(bounds = bounds)
       overlayImageLayer.configure(bounds = bounds)
       hasBoundsSet = true
     }

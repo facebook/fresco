@@ -128,7 +128,9 @@ class KFrescoController(
     // The image is not in cache -> Set up layers visible until the image is available
     drawable.placeholderLayer.setPlaceholder(imageRequest.resources, options)
     drawable.listenerManager.onPlaceholderSet(
-        imageId, imageRequest, maybeGetDrawable(drawable.placeholderLayer.getDataModel()))
+        imageId, imageRequest, drawable.placeholderLayer.getDataModel().maybeGetDrawable())
+
+    drawable.setupProgressLayer(imageRequest.resources, options)
 
     // Fetch the image
     lightweightBackgroundThreadExecutor.execute {
@@ -156,6 +158,9 @@ class KFrescoController(
               drawable.setCloseable(result)
               val image = result.get()
               drawable.actualImageLayer.setActualImage(options, image)
+              if (dataSource.isFinished) {
+                drawable.hideProgressLayer()
+              }
               if (notifyFinalResult(dataSource)) {
                 drawable.listenerManager.onFinalImageSet(
                     imageId,
@@ -175,12 +180,15 @@ class KFrescoController(
                 return
               }
               drawable.actualImageLayer.setError(imageRequest.resources, options)
+              if (dataSource.isFinished) {
+                drawable.hideProgressLayer()
+              }
               if (notifyFinalResult(dataSource)) {
                 dataSource.result.use { result ->
                   drawable.listenerManager.onFailure(
                       imageId,
                       imageRequest,
-                      maybeGetDrawable(drawable.actualImageLayer.getDataModel()),
+                      drawable.actualImageLayer.getDataModel().maybeGetDrawable(),
                       dataSource.failureCause,
                       drawable.obtainExtras(dataSource, result))
                 }
@@ -202,7 +210,7 @@ class KFrescoController(
             override fun onProgressUpdate(
                 dataSource: DataSource<CloseableReference<CloseableImage>>
             ) {
-              // TODO(T105148151): set progress
+              drawable.updateProgress(dataSource)
             }
           },
           uiThreadExecutor) // Keyframes require callbacks to be on the main thread.
@@ -240,14 +248,17 @@ class KFrescoController(
   private fun ImageLayerDataModel.setPlaceholder(resources: Resources, imageOptions: ImageOptions) {
     val model = imageOptions.createPlaceholderModel(resources)
     if (model == null) {
-      configure(dataModel = model)
+      reset()
       return
     }
     configure(
         dataModel = model,
         canvasTransformation = imageOptions.createPlaceholderCanvasTransformation(),
-        roundingOptions = imageOptions.roundingOptions,
-        borderOptions = imageOptions.borderOptions)
+        roundingOptions =
+            if (imageOptions.placeholderApplyRoundingOptions) imageOptions.roundingOptions
+            else null,
+        borderOptions =
+            if (imageOptions.placeholderApplyRoundingOptions) imageOptions.borderOptions else null)
   }
 
   private fun ImageLayerDataModel.setOverlay(resources: Resources, imageOptions: ImageOptions) {
@@ -257,15 +268,11 @@ class KFrescoController(
   private fun ImageLayerDataModel.setError(resources: Resources, imageOptions: ImageOptions) {
     val model = imageOptions.createErrorModel(resources)
     if (model == null) {
-      configure(dataModel = model)
+      reset()
       return
     }
     configure(
         dataModel = model, canvasTransformation = imageOptions.createErrorCanvasTransformation())
-  }
-
-  private fun maybeGetDrawable(imageDataModel: ImageDataModel?): Drawable? {
-    return (imageDataModel as? DrawableImageDataModel)?.drawable
   }
 
   private fun notifyFinalResult(
