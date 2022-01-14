@@ -135,6 +135,7 @@ dependencies {
     implementation project(':vito:renderer')
     implementation project(':vito:source')
     implementation project(':vito:tools:liveeditor')
+    implementation project(':vito:view')
 
     // Only used for the custom SVG decoder
     implementation SampleDeps.Showcase.caverockSvg
@@ -152,6 +153,4 @@ dependencies {
     implementation project(':tools:flipper')
 
     implementation Deps.Kotlin.stdlibJdk
-
-    implementation project(path: ':vito:view')
 }

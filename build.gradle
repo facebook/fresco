@@ -15,7 +15,6 @@ import com.facebook.fresco.buildsrc.GradleDeps
 buildscript {
     repositories {
         google()
-        jcenter()
         mavenCentral()
     }
     dependencies {
@@ -42,7 +41,7 @@ subprojects {
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     // FIXME: This picks up non-Java files by default, failing to parse them.

@@ -54,7 +54,7 @@ public class SimpleGallerySectionSpec {
         .child(
             DataDiffSection.<Uri>create(c)
                 .data(data)
-                .renderEventHandler(SimpleListSection.onRender(c)))
+                .renderEventHandler(SimpleGallerySection.onRender(c)))
         .build();
   }
 

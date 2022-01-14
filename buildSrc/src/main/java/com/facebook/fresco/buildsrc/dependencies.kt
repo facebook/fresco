@@ -15,7 +15,7 @@ object Deps {
 
   const val okhttp3 = "com.squareup.okhttp3:okhttp:3.12.1"
 
-  const val volley = "com.android.volley:volley:1.1.0"
+  const val volley = "com.android.volley:volley:1.2.1"
 
   object AndroidX {
     const val androidxAnnotation = "androidx.annotation:annotation:1.1.0"
@@ -34,7 +34,7 @@ object Deps {
   }
 
   object Litho {
-    private const val version = "0.40.0"
+    private const val version = "0.41.1"
 
     const val core = "com.facebook.litho:litho-core:$version"
     const val lithoAnnotations = "com.facebook.litho:litho-annotations:$version"
@@ -50,7 +50,7 @@ object Deps {
   }
 
   object SoLoader {
-    private const val version = "0.10.1"
+    private const val version = "0.10.3"
     const val soloaderAnnotation = "com.facebook.soloader:annotation:$version"
     const val nativeloader = "com.facebook.soloader:nativeloader:$version"
     const val soloader = "com.facebook.soloader:soloader:$version"
@@ -58,12 +58,12 @@ object Deps {
 
   object Tools {
     object Flipper {
-      private const val version = "0.31.0"
+      private const val version = "0.121.0"
       const val flipper = "com.facebook.flipper:flipper:$version"
       const val fresco = "com.facebook.flipper:flipper-fresco-plugin:$version"
     }
     object Stetho {
-      private const val version = "1.3.1"
+      private const val version = "1.6.0"
       const val stetho = "com.facebook.stetho:stetho:$version"
       const val okhttp3 = "com.facebook.stetho:stetho-okhttp3:$version"
     }
