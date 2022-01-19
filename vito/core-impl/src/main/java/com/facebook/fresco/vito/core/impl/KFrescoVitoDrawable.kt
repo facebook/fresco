@@ -111,6 +111,7 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
     imagePerfListener.onImageRelease(this)
     ImageReleaseScheduler.cancelAllReleasing(this)
     _imageId = 0
+    _imageRequest = null
     _isLoading = false
     _callerContext = null
 
