@@ -44,7 +44,7 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
 
           @Override
           protected @Nullable EncodedImage getResult() throws Exception {
-            EncodedImage encodedImage = getEncodedImage(imageRequest);
+            EncodedImage encodedImage = LocalFetchProducer.this.getEncodedImage(imageRequest);
             if (encodedImage == null) {
               listener.onUltimateProducerReached(producerContext, getProducerName(), false);
               producerContext.putOriginExtra("local");

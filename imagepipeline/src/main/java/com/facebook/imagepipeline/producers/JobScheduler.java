@@ -143,8 +143,8 @@ public class JobScheduler {
     EncodedImage oldEncodedImage;
     synchronized (this) {
       oldEncodedImage = mEncodedImage;
-      mEncodedImage = EncodedImage.cloneOrNull(encodedImage);
-      mStatus = status;
+      this.mEncodedImage = EncodedImage.cloneOrNull(encodedImage);
+      this.mStatus = status;
     }
     EncodedImage.closeSafely(oldEncodedImage);
     return true;
@@ -220,7 +220,7 @@ public class JobScheduler {
       input = mEncodedImage;
       status = mStatus;
       mEncodedImage = null;
-      mStatus = 0;
+      this.mStatus = 0;
       mJobState = JobState.RUNNING;
       mJobStartTime = now;
     }

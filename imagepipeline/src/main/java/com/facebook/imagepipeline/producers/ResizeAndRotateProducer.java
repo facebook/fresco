@@ -236,7 +236,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         }
 
         extraMap =
-            getExtraMap(
+            this.getExtraMap(
                 encodedImage,
                 imageRequest.getResizeOptions(),
                 result,

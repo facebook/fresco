@@ -26,7 +26,7 @@ public abstract class BaseRepeatedPostProcessor extends BasePostprocessor
   }
 
   public void update() {
-    RepeatedPostprocessorRunner callback = getCallback();
+    RepeatedPostprocessorRunner callback = this.getCallback();
     if (callback != null) {
       callback.update();
     }

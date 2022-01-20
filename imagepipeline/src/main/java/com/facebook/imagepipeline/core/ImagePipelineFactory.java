@@ -183,7 +183,7 @@ public class ImagePipelineFactory {
 
   @Nullable
   public DrawableFactory getAnimatedDrawableFactory(@Nullable Context context) {
-    AnimatedFactory animatedFactory = getAnimatedFactory();
+    AnimatedFactory animatedFactory = this.getAnimatedFactory();
     return animatedFactory == null ? null : animatedFactory.getAnimatedDrawableFactory(context);
   }
 
@@ -241,7 +241,7 @@ public class ImagePipelineFactory {
       if (mConfig.getImageDecoder() != null) {
         mImageDecoder = mConfig.getImageDecoder();
       } else {
-        final AnimatedFactory animatedFactory = getAnimatedFactory();
+        final AnimatedFactory animatedFactory = this.getAnimatedFactory();
 
         ImageDecoder gifDecoder = null;
         ImageDecoder webPDecoder = null;

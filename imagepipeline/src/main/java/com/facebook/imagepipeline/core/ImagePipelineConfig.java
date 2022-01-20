@@ -593,14 +593,14 @@ public class ImagePipelineConfig implements ImagePipelineConfigInterface {
 
     public Builder setBitmapMemoryCacheParamsSupplier(
         Supplier<MemoryCacheParams> bitmapMemoryCacheParamsSupplier) {
-      mBitmapMemoryCacheParamsSupplier =
+      this.mBitmapMemoryCacheParamsSupplier =
           Preconditions.checkNotNull(bitmapMemoryCacheParamsSupplier);
       return this;
     }
 
     public Builder setBitmapMemoryCacheEntryStateObserver(
         CountingMemoryCache.EntryStateObserver<CacheKey> bitmapMemoryCacheEntryStateObserver) {
-      mBitmapMemoryCacheEntryStateObserver = bitmapMemoryCacheEntryStateObserver;
+      this.mBitmapMemoryCacheEntryStateObserver = bitmapMemoryCacheEntryStateObserver;
       return this;
     }
 
@@ -615,7 +615,7 @@ public class ImagePipelineConfig implements ImagePipelineConfigInterface {
     }
 
     public Builder setCacheKeyFactory(CacheKeyFactory cacheKeyFactory) {
-      mCacheKeyFactory = cacheKeyFactory;
+      this.mCacheKeyFactory = cacheKeyFactory;
       return this;
     }
 
@@ -625,7 +625,7 @@ public class ImagePipelineConfig implements ImagePipelineConfigInterface {
     }
 
     public Builder setFileCacheFactory(FileCacheFactory fileCacheFactory) {
-      mFileCacheFactory = fileCacheFactory;
+      this.mFileCacheFactory = fileCacheFactory;
       return this;
     }
 
@@ -634,7 +634,7 @@ public class ImagePipelineConfig implements ImagePipelineConfigInterface {
     }
 
     public Builder setDownsampleEnabled(boolean downsampleEnabled) {
-      mDownsampleEnabled = downsampleEnabled;
+      this.mDownsampleEnabled = downsampleEnabled;
       return this;
     }
 
@@ -643,29 +643,29 @@ public class ImagePipelineConfig implements ImagePipelineConfigInterface {
     }
 
     public Builder setDiskCacheEnabled(boolean diskCacheEnabled) {
-      mDiskCacheEnabled = diskCacheEnabled;
+      this.mDiskCacheEnabled = diskCacheEnabled;
       return this;
     }
 
     public Builder setEncodedMemoryCacheParamsSupplier(
         Supplier<MemoryCacheParams> encodedMemoryCacheParamsSupplier) {
-      mEncodedMemoryCacheParamsSupplier =
+      this.mEncodedMemoryCacheParamsSupplier =
           Preconditions.checkNotNull(encodedMemoryCacheParamsSupplier);
       return this;
     }
 
     public Builder setExecutorSupplier(ExecutorSupplier executorSupplier) {
-      mExecutorSupplier = executorSupplier;
+      this.mExecutorSupplier = executorSupplier;
       return this;
     }
 
     public Builder setImageCacheStatsTracker(ImageCacheStatsTracker imageCacheStatsTracker) {
-      mImageCacheStatsTracker = imageCacheStatsTracker;
+      this.mImageCacheStatsTracker = imageCacheStatsTracker;
       return this;
     }
 
     public Builder setImageDecoder(ImageDecoder imageDecoder) {
-      mImageDecoder = imageDecoder;
+      this.mImageDecoder = imageDecoder;
       return this;
     }
 
@@ -676,27 +676,27 @@ public class ImagePipelineConfig implements ImagePipelineConfigInterface {
     }
 
     public Builder setImageTranscoderType(@ImageTranscoderType int imageTranscoderType) {
-      mImageTranscoderType = imageTranscoderType;
+      this.mImageTranscoderType = imageTranscoderType;
       return this;
     }
 
     public Builder setImageTranscoderFactory(ImageTranscoderFactory imageTranscoderFactory) {
-      mImageTranscoderFactory = imageTranscoderFactory;
+      this.mImageTranscoderFactory = imageTranscoderFactory;
       return this;
     }
 
     public Builder setIsPrefetchEnabledSupplier(Supplier<Boolean> isPrefetchEnabledSupplier) {
-      mIsPrefetchEnabledSupplier = isPrefetchEnabledSupplier;
+      this.mIsPrefetchEnabledSupplier = isPrefetchEnabledSupplier;
       return this;
     }
 
     public Builder setMainDiskCacheConfig(DiskCacheConfig mainDiskCacheConfig) {
-      mMainDiskCacheConfig = mainDiskCacheConfig;
+      this.mMainDiskCacheConfig = mainDiskCacheConfig;
       return this;
     }
 
     public Builder setMemoryTrimmableRegistry(MemoryTrimmableRegistry memoryTrimmableRegistry) {
-      mMemoryTrimmableRegistry = memoryTrimmableRegistry;
+      this.mMemoryTrimmableRegistry = memoryTrimmableRegistry;
       return this;
     }
 
@@ -707,32 +707,32 @@ public class ImagePipelineConfig implements ImagePipelineConfigInterface {
     }
 
     public Builder setMemoryChunkType(@MemoryChunkType int memoryChunkType) {
-      mMemoryChunkType = memoryChunkType;
+      this.mMemoryChunkType = memoryChunkType;
       return this;
     }
 
     public Builder setNetworkFetcher(NetworkFetcher networkFetcher) {
-      mNetworkFetcher = networkFetcher;
+      this.mNetworkFetcher = networkFetcher;
       return this;
     }
 
     public Builder setPlatformBitmapFactory(PlatformBitmapFactory platformBitmapFactory) {
-      mPlatformBitmapFactory = platformBitmapFactory;
+      this.mPlatformBitmapFactory = platformBitmapFactory;
       return this;
     }
 
     public Builder setPoolFactory(PoolFactory poolFactory) {
-      mPoolFactory = poolFactory;
+      this.mPoolFactory = poolFactory;
       return this;
     }
 
     public Builder setProgressiveJpegConfig(ProgressiveJpegConfig progressiveJpegConfig) {
-      mProgressiveJpegConfig = progressiveJpegConfig;
+      this.mProgressiveJpegConfig = progressiveJpegConfig;
       return this;
     }
 
     public Builder setRequestListeners(Set<RequestListener> requestListeners) {
-      mRequestListeners = requestListeners;
+      this.mRequestListeners = requestListeners;
       return this;
     }
 
@@ -742,28 +742,28 @@ public class ImagePipelineConfig implements ImagePipelineConfigInterface {
     }
 
     public Builder setResizeAndRotateEnabledForNetwork(boolean resizeAndRotateEnabledForNetwork) {
-      mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
+      this.mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
       return this;
     }
 
     public Builder setSmallImageDiskCacheConfig(DiskCacheConfig smallImageDiskCacheConfig) {
-      mSmallImageDiskCacheConfig = smallImageDiskCacheConfig;
+      this.mSmallImageDiskCacheConfig = smallImageDiskCacheConfig;
       return this;
     }
 
     public Builder setImageDecoderConfig(ImageDecoderConfig imageDecoderConfig) {
-      mImageDecoderConfig = imageDecoderConfig;
+      this.mImageDecoderConfig = imageDecoderConfig;
       return this;
     }
 
     public Builder setCallerContextVerifier(CallerContextVerifier callerContextVerifier) {
-      mCallerContextVerifier = callerContextVerifier;
+      this.mCallerContextVerifier = callerContextVerifier;
       return this;
     }
 
     public Builder setCloseableReferenceLeakTracker(
         CloseableReferenceLeakTracker closeableReferenceLeakTracker) {
-      mCloseableReferenceLeakTracker = closeableReferenceLeakTracker;
+      this.mCloseableReferenceLeakTracker = closeableReferenceLeakTracker;
       return this;
     }
 
@@ -775,7 +775,7 @@ public class ImagePipelineConfig implements ImagePipelineConfigInterface {
 
     public Builder setEncodedMemoryCache(
         @Nullable MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache) {
-      mEncodedMemoryCache = encodedMemoryCache;
+      this.mEncodedMemoryCache = encodedMemoryCache;
       return this;
     }
 
@@ -787,7 +787,7 @@ public class ImagePipelineConfig implements ImagePipelineConfigInterface {
 
     public Builder setBitmapMemoryCacheFactory(
         @Nullable BitmapMemoryCacheFactory bitmapMemoryCacheFactory) {
-      mBitmapMemoryCacheFactory = bitmapMemoryCacheFactory;
+      this.mBitmapMemoryCacheFactory = bitmapMemoryCacheFactory;
       return this;
     }
 

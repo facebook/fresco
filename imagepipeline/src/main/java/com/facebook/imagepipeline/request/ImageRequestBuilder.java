@@ -146,7 +146,7 @@ public class ImageRequestBuilder {
    * @return the updated builder instance
    */
   private ImageRequestBuilder setCachesDisabled(int cachesDisabled) {
-    mCachesDisabled = cachesDisabled;
+    this.mCachesDisabled = cachesDisabled;
     return this;
   }
 
@@ -178,7 +178,7 @@ public class ImageRequestBuilder {
    * @return the modified builder instance
    */
   public ImageRequestBuilder setResizeOptions(@Nullable ResizeOptions resizeOptions) {
-    mResizeOptions = resizeOptions;
+    this.mResizeOptions = resizeOptions;
     return this;
   }
 
@@ -197,7 +197,7 @@ public class ImageRequestBuilder {
    * @return the modified builder instance
    */
   public ImageRequestBuilder setRotationOptions(@Nullable RotationOptions rotationOptions) {
-    mRotationOptions = rotationOptions;
+    this.mRotationOptions = rotationOptions;
     return this;
   }
 
@@ -219,7 +219,7 @@ public class ImageRequestBuilder {
    * @return the modified builder instance
    */
   public ImageRequestBuilder setBytesRange(@Nullable BytesRange bytesRange) {
-    mBytesRange = bytesRange;
+    this.mBytesRange = bytesRange;
     return this;
   }
 
@@ -230,7 +230,7 @@ public class ImageRequestBuilder {
   }
 
   public ImageRequestBuilder setImageDecodeOptions(ImageDecodeOptions imageDecodeOptions) {
-    mImageDecodeOptions = imageDecodeOptions;
+    this.mImageDecodeOptions = imageDecodeOptions;
     return this;
   }
 
@@ -246,7 +246,7 @@ public class ImageRequestBuilder {
    * @return the modified builder instance
    */
   public ImageRequestBuilder setCacheChoice(ImageRequest.CacheChoice cacheChoice) {
-    mCacheChoice = cacheChoice;
+    this.mCacheChoice = cacheChoice;
     return this;
   }
 
@@ -288,7 +288,7 @@ public class ImageRequestBuilder {
   }
 
   public ImageRequestBuilder setLoadThumbnailOnly(boolean loadThumbnailOnly) {
-    mLoadThumbnailOnly = loadThumbnailOnly;
+    this.mLoadThumbnailOnly = loadThumbnailOnly;
     return this;
   }
 
@@ -338,7 +338,7 @@ public class ImageRequestBuilder {
    * @return the modified builder instance
    */
   public ImageRequestBuilder setRequestPriority(Priority requestPriority) {
-    mRequestPriority = requestPriority;
+    this.mRequestPriority = requestPriority;
     return this;
   }
 
@@ -354,7 +354,7 @@ public class ImageRequestBuilder {
    * @return the modified builder instance
    */
   public ImageRequestBuilder setPostprocessor(@Nullable Postprocessor postprocessor) {
-    mPostprocessor = postprocessor;
+    this.mPostprocessor = postprocessor;
     return this;
   }
 
@@ -371,7 +371,7 @@ public class ImageRequestBuilder {
    * @return the modified builder instance
    */
   public ImageRequestBuilder setRequestListener(@Nullable RequestListener requestListener) {
-    mRequestListener = requestListener;
+    this.mRequestListener = requestListener;
     return this;
   }
 
@@ -400,7 +400,7 @@ public class ImageRequestBuilder {
   }
 
   public ImageRequestBuilder setResizingAllowedOverride(@Nullable Boolean resizingAllowedOverride) {
-    mResizingAllowedOverride = resizingAllowedOverride;
+    this.mResizingAllowedOverride = resizingAllowedOverride;
     return this;
   }
 
@@ -414,7 +414,7 @@ public class ImageRequestBuilder {
 
   /** Add an artificial delay for this image, in milliseconds. */
   public ImageRequestBuilder setDelayMs(int delayMs) {
-    mDelayMs = delayMs;
+    this.mDelayMs = delayMs;
     return this;
   }
 

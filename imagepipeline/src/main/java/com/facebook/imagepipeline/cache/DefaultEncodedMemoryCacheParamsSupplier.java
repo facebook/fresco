@@ -23,7 +23,7 @@ public class DefaultEncodedMemoryCacheParamsSupplier implements Supplier<MemoryC
 
   @Override
   public MemoryCacheParams get() {
-    final int maxCacheSize = getMaxCacheSize();
+    final int maxCacheSize = this.getMaxCacheSize();
     final int maxCacheEntrySize = maxCacheSize / 8;
     return new MemoryCacheParams(
         maxCacheSize,

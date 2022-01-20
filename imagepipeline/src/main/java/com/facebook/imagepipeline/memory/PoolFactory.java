@@ -205,7 +205,7 @@ public class PoolFactory {
 
   public PooledByteBufferFactory getPooledByteBufferFactory(@MemoryChunkType int memoryChunkType) {
     if (mPooledByteBufferFactory == null) {
-      MemoryChunkPool memoryChunkPool = getMemoryChunkPool(memoryChunkType);
+      MemoryChunkPool memoryChunkPool = this.getMemoryChunkPool(memoryChunkType);
       Preconditions.checkNotNull(
           memoryChunkPool, "failed to get pool for chunk type: " + memoryChunkType);
       mPooledByteBufferFactory =

@@ -158,7 +158,7 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
   private EncodedImage buildEncodedImage(PooledByteBuffer imageBytes, ExifInterface exifInterface) {
     Pair<Integer, Integer> dimensions =
         BitmapUtil.decodeDimensions(new PooledByteBufferInputStream(imageBytes));
-    int rotationAngle = getRotationAngle(exifInterface);
+    int rotationAngle = this.getRotationAngle(exifInterface);
     int width = dimensions != null ? dimensions.first : EncodedImage.UNKNOWN_WIDTH;
     int height = dimensions != null ? dimensions.second : EncodedImage.UNKNOWN_HEIGHT;
     EncodedImage encodedImage;

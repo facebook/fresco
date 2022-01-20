@@ -92,7 +92,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
 
       context.getProducerListener().onProducerStart(context, mProducerName);
 
-      K key = getKey(context);
+      K key = this.getKey(context);
       Multiplexer multiplexer;
       boolean createdNewMultiplexer;
       // We do want to limit scope of this lock to guard only accesses to mMultiplexers map.

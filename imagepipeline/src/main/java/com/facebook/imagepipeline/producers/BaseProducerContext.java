@@ -190,7 +190,7 @@ public class BaseProducerContext implements ProducerContext {
   }
 
   public void setEncodedImageOrigin(EncodedImageOrigin encodedImageOrigin) {
-    mEncodedImageOrigin = encodedImageOrigin;
+    this.mEncodedImageOrigin = encodedImageOrigin;
   }
 
   /** Cancels the request processing and calls appropriate callbacks. */
@@ -212,7 +212,7 @@ public class BaseProducerContext implements ProducerContext {
     if (isPrefetch == mIsPrefetch) {
       return null;
     }
-    mIsPrefetch = isPrefetch;
+    this.mIsPrefetch = isPrefetch;
     return new ArrayList<>(mCallbacks);
   }
 
@@ -230,7 +230,7 @@ public class BaseProducerContext implements ProducerContext {
     if (priority == mPriority) {
       return null;
     }
-    mPriority = priority;
+    this.mPriority = priority;
     return new ArrayList<>(mCallbacks);
   }
 
@@ -249,7 +249,7 @@ public class BaseProducerContext implements ProducerContext {
     if (isIntermediateResultExpected == mIsIntermediateResultExpected) {
       return null;
     }
-    mIsIntermediateResultExpected = isIntermediateResultExpected;
+    this.mIsIntermediateResultExpected = isIntermediateResultExpected;
     return new ArrayList<>(mCallbacks);
   }
 

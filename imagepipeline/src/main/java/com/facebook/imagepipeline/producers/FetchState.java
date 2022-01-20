@@ -60,7 +60,7 @@ public class FetchState {
   }
 
   public void setLastIntermediateResultTimeMs(long lastIntermediateResultTimeMs) {
-    mLastIntermediateResultTimeMs = lastIntermediateResultTimeMs;
+    this.mLastIntermediateResultTimeMs = lastIntermediateResultTimeMs;
   }
 
   @Consumer.Status
@@ -73,7 +73,7 @@ public class FetchState {
    * Consumer#onNewResult(Object, int)}.
    */
   public void setOnNewResultStatusFlags(@Consumer.Status int onNewResultStatusFlags) {
-    mOnNewResultStatusFlags = onNewResultStatusFlags;
+    this.mOnNewResultStatusFlags = onNewResultStatusFlags;
   }
 
   @Nullable

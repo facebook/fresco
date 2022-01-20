@@ -203,22 +203,22 @@ public abstract class BasePool<V> implements Pool<V> {
   public V get(int size) {
     ensurePoolSizeInvariant();
 
-    int bucketedSize = getBucketedSize(size);
+    int bucketedSize = this.getBucketedSize(size);
     int sizeInBytes = -1;
 
     synchronized (this) {
-      Bucket<V> bucket = getBucket(bucketedSize);
+      Bucket<V> bucket = this.getBucket(bucketedSize);
 
       if (bucket != null) {
         // find an existing value that we can reuse
-        V value = getValue(bucket);
+        V value = this.getValue(bucket);
         if (value != null) {
           Preconditions.checkState(mInUseValues.add(value));
 
           // It is possible that we got a 'larger' value than we asked for.
           // lets recompute size in bytes here
           bucketedSize = getBucketedSizeForValue(value);
-          sizeInBytes = getSizeInBytes(bucketedSize);
+          sizeInBytes = this.getSizeInBytes(bucketedSize);
           mUsed.increment(sizeInBytes);
           mFree.decrement(sizeInBytes);
           mPoolStatsTracker.onValueReuse(sizeInBytes);
@@ -235,7 +235,7 @@ public abstract class BasePool<V> implements Pool<V> {
         // fall through
       }
       // check to see if we can allocate a value of the given size without exceeding the hard cap
-      sizeInBytes = getSizeInBytes(bucketedSize);
+      sizeInBytes = this.getSizeInBytes(bucketedSize);
       if (!canAllocate(sizeInBytes)) {
         throw new PoolSizeViolationException(
             mPoolParams.maxSizeHardCap, mUsed.mNumBytes, mFree.mNumBytes, sizeInBytes);
@@ -259,7 +259,7 @@ public abstract class BasePool<V> implements Pool<V> {
       // counters.
       synchronized (this) {
         mUsed.decrement(sizeInBytes);
-        Bucket<V> bucket = getBucket(bucketedSize);
+        Bucket<V> bucket = this.getBucket(bucketedSize);
         if (bucket != null) {
           bucket.decrementInUseCount();
         }
@@ -305,7 +305,7 @@ public abstract class BasePool<V> implements Pool<V> {
     Preconditions.checkNotNull(value);
 
     final int bucketedSize = getBucketedSizeForValue(value);
-    final int sizeInBytes = getSizeInBytes(bucketedSize);
+    final int sizeInBytes = this.getSizeInBytes(bucketedSize);
     synchronized (this) {
       final Bucket<V> bucket = getBucketIfPresent(bucketedSize);
       if (!mInUseValues.remove(value)) {

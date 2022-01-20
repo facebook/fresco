@@ -112,7 +112,7 @@ public class MemoryPooledByteBufferOutputStream extends PooledByteBufferOutputSt
     ensureValid();
     realloc(mCount + count);
     Preconditions.checkNotNull(mBufRef).get().write(mCount, buffer, offset, count);
-    mCount += count;
+    this.mCount += count;
   }
 
   /**

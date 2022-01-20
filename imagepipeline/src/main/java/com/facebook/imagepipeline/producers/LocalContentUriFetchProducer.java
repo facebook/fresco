@@ -73,7 +73,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
     }
 
     if (UriUtil.isLocalCameraUri(uri)) {
-      EncodedImage cameraImage = getCameraImage(uri);
+      EncodedImage cameraImage = this.getCameraImage(uri);
       if (cameraImage != null) {
         return cameraImage;
       }

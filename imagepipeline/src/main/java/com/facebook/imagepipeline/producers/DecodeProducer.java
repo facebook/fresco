@@ -348,7 +348,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
           }
         } catch (Exception e) {
           Map<String, String> extraMap =
-              getExtraMap(
+              this.getExtraMap(
                   image,
                   queueTime,
                   quality,
@@ -363,7 +363,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
           return;
         }
         Map<String, String> extraMap =
-            getExtraMap(
+            this.getExtraMap(
                 image,
                 queueTime,
                 quality,

@@ -83,7 +83,7 @@ public class SharedByteArray implements MemoryTrimmable {
     Preconditions.checkArgument(size <= mMaxByteArraySize, "Requested size is too big");
     mSemaphore.acquireUninterruptibly();
     try {
-      byte[] byteArray = getByteArray(size);
+      byte[] byteArray = this.getByteArray(size);
       return CloseableReference.of(byteArray, mResourceReleaser);
     } catch (Throwable t) {
       mSemaphore.release();
@@ -92,7 +92,7 @@ public class SharedByteArray implements MemoryTrimmable {
   }
 
   private byte[] getByteArray(int requestedSize) {
-    final int bucketedSize = getBucketedSize(requestedSize);
+    final int bucketedSize = this.getBucketedSize(requestedSize);
     byte[] byteArray = mByteArraySoftRef.get();
     if (byteArray == null || byteArray.length < bucketedSize) {
       byteArray = allocateByteArray(bucketedSize);

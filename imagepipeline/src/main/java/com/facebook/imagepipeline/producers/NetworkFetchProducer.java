@@ -159,7 +159,7 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
 
   protected void handleFinalResult(
       PooledByteBufferOutputStream pooledOutputStream, FetchState fetchState) {
-    Map<String, String> extraMap = getExtraMap(fetchState, pooledOutputStream.size());
+    Map<String, String> extraMap = this.getExtraMap(fetchState, pooledOutputStream.size());
     ProducerListener2 listener = fetchState.getListener();
     listener.onProducerFinishWithSuccess(fetchState.getContext(), PRODUCER_NAME, extraMap);
     listener.onUltimateProducerReached(fetchState.getContext(), PRODUCER_NAME, true);

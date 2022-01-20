@@ -51,7 +51,7 @@ public class SimpleImageTranscoder implements ImageTranscoder {
       rotationOptions = RotationOptions.autoRotate();
     }
 
-    final int sampleSize = getSampleSize(encodedImage, rotationOptions, resizeOptions);
+    final int sampleSize = this.getSampleSize(encodedImage, rotationOptions, resizeOptions);
     final BitmapFactory.Options options = new BitmapFactory.Options();
     options.inSampleSize = sampleSize;
     Bitmap resizedBitmap;

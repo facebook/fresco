@@ -39,7 +39,7 @@ public class GenericByteArrayPool extends BasePool<byte[]> implements ByteArrayP
       PoolStatsTracker poolStatsTracker) {
     super(memoryTrimmableRegistry, poolParams, poolStatsTracker);
     final SparseIntArray bucketSizes = Preconditions.checkNotNull(poolParams.bucketSizes);
-    mBucketSizes = new int[bucketSizes.size()];
+    this.mBucketSizes = new int[bucketSizes.size()];
     for (int i = 0; i < bucketSizes.size(); ++i) {
       mBucketSizes[i] = bucketSizes.keyAt(i);
     }

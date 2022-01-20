@@ -87,7 +87,7 @@ public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer
       if (cursor.moveToFirst()) {
         final int imageIdColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
         final EncodedImage thumbnail =
-            getThumbnail(resizeOptions, cursor.getLong(imageIdColumnIndex));
+            this.getThumbnail(resizeOptions, cursor.getLong(imageIdColumnIndex));
         if (thumbnail != null) {
           final String pathname =
               cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
