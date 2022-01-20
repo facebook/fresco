@@ -172,7 +172,7 @@ class KFrescoController(
                     imageRequest,
                     ImageOrigin.MEMORY_BITMAP_SHORTCUT,
                     image,
-                    drawable.obtainExtras(dataSource, cachedImage),
+                    drawable.obtainExtras(dataSource, result),
                     drawable.actualImageDrawable)
               } else {
                 drawable.listenerManager.onIntermediateImageSet(imageId, imageRequest, image)
