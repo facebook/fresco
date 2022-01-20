@@ -50,7 +50,7 @@ class ImageFetchSubscriber(
       drawable.listenerManager.onFinalImageSet(
           imageId,
           request,
-          ImageOrigin.MEMORY_BITMAP_SHORTCUT,
+          ImageOrigin.UNKNOWN,
           image,
           drawable.obtainExtras(dataSource, result),
           drawable.actualImageDrawable)
