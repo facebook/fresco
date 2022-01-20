@@ -7,14 +7,12 @@
 
 package com.facebook.fresco.vito.core.impl
 
-import android.content.res.Resources
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import com.facebook.common.callercontext.ContextChain
 import com.facebook.common.internal.Supplier
 import com.facebook.common.references.CloseableReference
 import com.facebook.datasource.DataSource
-import com.facebook.datasource.DataSubscriber
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin
 import com.facebook.fresco.ui.common.ControllerListener2
 import com.facebook.fresco.ui.common.OnFadeListener
@@ -110,7 +108,7 @@ class KFrescoController(
         if (image != null) {
           drawable.isFetchSubmitted = true
           drawable.setCloseable(cachedImage.clone())
-          drawable.actualImageLayer.setActualImage(options, image)
+          drawable.actualImageLayer.setActualImage(options, image, imageToDataModelMapper)
           // TODO(T105148151): trigger listeners
           drawable.invalidateSelf()
           drawable.listenerManager.onFinalImageSet(
@@ -143,84 +141,8 @@ class KFrescoController(
       val dataSource: DataSource<CloseableReference<CloseableImage>> =
           vitoImagePipeline.fetchDecodedImage(imageRequest, callerContext, null, imageId)
       dataSource.subscribe(
-          object : DataSubscriber<CloseableReference<CloseableImage>> {
-            override fun onNewResult(dataSource: DataSource<CloseableReference<CloseableImage>>) {
-              if (imageId != drawable.imageId) {
-                return
-              }
-
-              val result: CloseableReference<CloseableImage>? = dataSource.result
-
-              if (result == null || !result.isValid) {
-                onFailure(dataSource)
-                result?.close()
-                return
-              }
-
-              // We avoid cloning result and closing the original for performance reasons
-              drawable.setCloseable(result)
-              val image = result.get()
-              drawable.actualImageLayer.setActualImage(options, image)
-              // Remove the progress image
-              drawable.placeholderLayer.reset()
-              if (dataSource.isFinished) {
-                drawable.hideProgressLayer()
-              }
-              if (notifyFinalResult(dataSource)) {
-                drawable.listenerManager.onFinalImageSet(
-                    imageId,
-                    imageRequest,
-                    ImageOrigin.MEMORY_BITMAP_SHORTCUT,
-                    image,
-                    drawable.obtainExtras(dataSource, result),
-                    drawable.actualImageDrawable)
-              } else {
-                drawable.listenerManager.onIntermediateImageSet(imageId, imageRequest, image)
-              }
-              debugOverlayHandler?.update(drawable)
-              uiThreadExecutor.execute { drawable.invalidateSelf() }
-            }
-
-            override fun onFailure(dataSource: DataSource<CloseableReference<CloseableImage>>) {
-              if (imageId != drawable.imageId) {
-                return
-              }
-              drawable.actualImageLayer.setError(imageRequest.resources, options)
-              if (dataSource.isFinished) {
-                drawable.hideProgressLayer()
-              }
-              if (notifyFinalResult(dataSource)) {
-                dataSource.result.use { result ->
-                  drawable.listenerManager.onFailure(
-                      imageId,
-                      imageRequest,
-                      drawable.actualImageLayer.getDataModel().maybeGetDrawable(),
-                      dataSource.failureCause,
-                      drawable.obtainExtras(dataSource, result))
-                }
-              } else {
-                drawable.listenerManager.onIntermediateImageFailed(
-                    imageId,
-                    imageRequest,
-                    dataSource.failureCause,
-                )
-              }
-              drawable.imagePerfListener.onImageError(drawable)
-              uiThreadExecutor.execute { drawable.invalidateSelf() }
-              debugOverlayHandler?.update(drawable)
-            }
-
-            override fun onCancellation(
-                dataSource: DataSource<CloseableReference<CloseableImage>>
-            ) = Unit
-
-            override fun onProgressUpdate(
-                dataSource: DataSource<CloseableReference<CloseableImage>>
-            ) {
-              drawable.updateProgress(dataSource)
-              debugOverlayHandler?.update(drawable)
-            }
-          },
+          ImageFetchSubscriber(
+              imageId, drawable, imageToDataModelMapper, debugOverlayHandler, null),
           uiThreadExecutor) // Keyframes require callbacks to be on the main thread.
     }
     drawable.isFetchSubmitted = true
@@ -239,53 +161,5 @@ class KFrescoController(
 
   override fun releaseImmediately(drawable: FrescoDrawableInterface) {
     ImageReleaseScheduler.releaseImmediately(drawable as KFrescoVitoDrawable)
-  }
-
-  private fun ImageLayerDataModel.setActualImage(
-      imageOptions: ImageOptions,
-      closeableImage: CloseableImage
-  ) {
-    configure(
-        dataModel = imageToDataModelMapper(closeableImage, imageOptions),
-        canvasTransformation = imageOptions.createActualImageCanvasTransformation(),
-        roundingOptions = imageOptions.roundingOptions,
-        borderOptions = imageOptions.borderOptions,
-        colorFilter = imageOptions.actualImageColorFilter)
-  }
-
-  private fun ImageLayerDataModel.setPlaceholder(resources: Resources, imageOptions: ImageOptions) {
-    val model = imageOptions.createPlaceholderModel(resources)
-    if (model == null) {
-      reset()
-      return
-    }
-    configure(
-        dataModel = model,
-        canvasTransformation = imageOptions.createPlaceholderCanvasTransformation(),
-        roundingOptions =
-            if (imageOptions.placeholderApplyRoundingOptions) imageOptions.roundingOptions
-            else null,
-        borderOptions =
-            if (imageOptions.placeholderApplyRoundingOptions) imageOptions.borderOptions else null)
-  }
-
-  private fun ImageLayerDataModel.setOverlay(resources: Resources, imageOptions: ImageOptions) {
-    configure(dataModel = imageOptions.createOverlayModel(resources))
-  }
-
-  private fun ImageLayerDataModel.setError(resources: Resources, imageOptions: ImageOptions) {
-    val model = imageOptions.createErrorModel(resources)
-    if (model == null) {
-      reset()
-      return
-    }
-    configure(
-        dataModel = model, canvasTransformation = imageOptions.createErrorCanvasTransformation())
-  }
-
-  private fun notifyFinalResult(
-      dataSource: DataSource<CloseableReference<CloseableImage>>?
-  ): Boolean {
-    return dataSource == null || dataSource.isFinished || dataSource.hasMultipleResults()
   }
 }
