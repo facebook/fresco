@@ -58,7 +58,7 @@ public class ThreadHandoffProducerTest {
     mImagePipelineExperiments = mock(ImagePipelineExperiments.class);
 
     doReturn(mImagePipelineExperiments).when(mConfig).getExperiments();
-    doReturn(false).when(mImagePipelineExperiments).handoffOnUiThreadOnly();
+    doReturn(false).when(mImagePipelineExperiments).getHandOffOnUiThreadOnly();
   }
 
   @Test

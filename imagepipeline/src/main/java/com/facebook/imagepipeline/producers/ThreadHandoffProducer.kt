@@ -61,7 +61,7 @@ class ThreadHandoffProducer<T>(
     }
 
     private fun shouldRunImmediately(context: ProducerContext): Boolean {
-      if (!context.imagePipelineConfig.experiments.handoffOnUiThreadOnly()) {
+      if (!context.imagePipelineConfig.experiments.handOffOnUiThreadOnly) {
         return false
       }
       return Looper.getMainLooper().thread !== Thread.currentThread()

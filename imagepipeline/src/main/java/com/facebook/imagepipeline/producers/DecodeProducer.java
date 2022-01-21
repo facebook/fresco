@@ -196,7 +196,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
                 if (producerContext
                     .getImagePipelineConfig()
                     .getExperiments()
-                    .shouldDownsampleIfLargeBitmap()) {
+                    .getDownsampleIfLargeBitmap()) {
                   maybeIncreaseSampleSize(encodedImage);
                 }
 

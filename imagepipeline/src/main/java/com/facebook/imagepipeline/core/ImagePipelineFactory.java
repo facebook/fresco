@@ -175,7 +175,7 @@ public class ImagePipelineFactory {
               getPlatformBitmapFactory(),
               mConfig.getExecutorSupplier(),
               getBitmapCountingMemoryCache(),
-              mConfig.getExperiments().shouldDownscaleFrameToDrawableDimensions(),
+              mConfig.getExperiments().getDownscaleFrameToDrawableDimensions(),
               mConfig.getExecutorServiceForAnimatedImages());
     }
     return mAnimatedFactory;
@@ -196,8 +196,8 @@ public class ImagePipelineFactory {
                   mConfig.getBitmapMemoryCacheParamsSupplier(),
                   mConfig.getMemoryTrimmableRegistry(),
                   mConfig.getBitmapMemoryCacheTrimStrategy(),
-                  mConfig.getExperiments().shouldStoreCacheEntrySize(),
-                  mConfig.getExperiments().shouldIgnoreCacheSizeMismatch(),
+                  mConfig.getExperiments().getShouldStoreCacheEntrySize(),
+                  mConfig.getExperiments().getShouldIgnoreCacheSizeMismatch(),
                   mConfig.getBitmapMemoryCacheEntryStateObserver());
     }
     return mBitmapCountingMemoryCache;
@@ -339,7 +339,7 @@ public class ImagePipelineFactory {
           PlatformDecoderFactory.buildPlatformDecoder(
               mConfig.getPoolFactory(),
               mConfig.getExperiments().isGingerbreadDecoderEnabled(),
-              mConfig.getExperiments().shouldUseDecodingBufferHelper());
+              mConfig.getExperiments().getShouldUseDecodingBufferHelper());
     }
     return mPlatformDecoder;
   }
@@ -372,7 +372,7 @@ public class ImagePipelineFactory {
                   mConfig.getExperiments().getBitmapPrepareToDrawForPrefetch(),
                   mConfig.getExperiments().getMaxBitmapSize(),
                   getCloseableReferenceFactory(),
-                  mConfig.getExperiments().shouldKeepCancelledFetchAsLowPriority(),
+                  mConfig.getExperiments().getKeepCancelledFetchAsLowPriority(),
                   mConfig.getExperiments().getTrackedKeysSize());
     }
     return mProducerFactory;
@@ -400,7 +400,7 @@ public class ImagePipelineFactory {
               getImageTranscoderFactory(),
               mConfig.getExperiments().isEncodedMemoryCacheProbingEnabled(),
               mConfig.getExperiments().isDiskCacheProbingEnabled(),
-              mConfig.getExperiments().allowDelay());
+              mConfig.getExperiments().getAllowDelay());
     }
     return mProducerSequenceFactory;
   }

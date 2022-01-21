@@ -49,42 +49,26 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val maxBitmapSize: Int
   val isNativeCodeDisabled: Boolean
   val isPartialImageCachingEnabled: Boolean
-  var producerFactoryMethod: ProducerFactoryMethod? = null
+  val producerFactoryMethod: ProducerFactoryMethod?
   val isLazyDataSource: Supplier<Boolean>?
   val isGingerbreadDecoderEnabled: Boolean
-  private val downscaleFrameToDrawableDimensions: Boolean
+  val downscaleFrameToDrawableDimensions: Boolean
   val bitmapCloseableRefType: Int
   val suppressBitmapPrefetchingSupplier: Supplier<Boolean>
   val isExperimentalThreadHandoffQueueEnabled: Boolean
   val memoryType: Long
-  private val keepCancelledFetchAsLowPriority: Boolean
-  private val downsampleIfLargeBitmap: Boolean
+  val keepCancelledFetchAsLowPriority: Boolean
+  val downsampleIfLargeBitmap: Boolean
   val isEncodedCacheEnabled: Boolean
   val isEnsureTranscoderLibraryLoaded: Boolean
   val isEncodedMemoryCacheProbingEnabled: Boolean
   val isDiskCacheProbingEnabled: Boolean
   val trackedKeysSize: Int
-  private val allowDelay: Boolean
-  private val handOffOnUiThreadOnly: Boolean
-  private val shouldStoreCacheEntrySize: Boolean
-  private val shouldIgnoreCacheSizeMismatch: Boolean
-  private val shouldUseDecodingBufferHelper: Boolean
-
-  fun shouldDownsampleIfLargeBitmap(): Boolean = downsampleIfLargeBitmap
-
-  fun shouldDownscaleFrameToDrawableDimensions(): Boolean = downscaleFrameToDrawableDimensions
-
-  fun shouldKeepCancelledFetchAsLowPriority(): Boolean = keepCancelledFetchAsLowPriority
-
-  fun allowDelay(): Boolean = allowDelay
-
-  fun handoffOnUiThreadOnly(): Boolean = handOffOnUiThreadOnly
-
-  fun shouldStoreCacheEntrySize(): Boolean = shouldStoreCacheEntrySize
-
-  fun shouldIgnoreCacheSizeMismatch(): Boolean = shouldIgnoreCacheSizeMismatch
-
-  fun shouldUseDecodingBufferHelper(): Boolean = shouldUseDecodingBufferHelper
+  val allowDelay: Boolean
+  val handOffOnUiThreadOnly: Boolean
+  val shouldStoreCacheEntrySize: Boolean
+  val shouldIgnoreCacheSizeMismatch: Boolean
+  val shouldUseDecodingBufferHelper: Boolean
 
   class Builder(private val configBuilder: ImagePipelineConfig.Builder) {
     @JvmField var shouldUseDecodingBufferHelper = false
@@ -131,53 +115,44 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var shouldStoreCacheEntrySize = false
 
     @JvmField var shouldIgnoreCacheSizeMismatch = false
-    fun setHandOffOnUiThreadOnly(handOffOnUiThreadOnly: Boolean): ImagePipelineConfig.Builder {
+
+    private fun asBuilder(block: () -> Unit): ImagePipelineConfig.Builder {
+      block()
+      return configBuilder
+    }
+
+    fun setHandOffOnUiThreadOnly(handOffOnUiThreadOnly: Boolean) = asBuilder {
       this.handOffOnUiThreadOnly = handOffOnUiThreadOnly
-      return configBuilder
     }
 
-    fun setStoreCacheEntrySize(shouldStoreCacheEntrySize: Boolean): ImagePipelineConfig.Builder {
+    fun setStoreCacheEntrySize(shouldStoreCacheEntrySize: Boolean) = asBuilder {
       this.shouldStoreCacheEntrySize = shouldStoreCacheEntrySize
-      return configBuilder
     }
 
-    fun setIgnoreCacheSizeMismatch(
-        shouldIgnoreCacheSizeMismatch: Boolean
-    ): ImagePipelineConfig.Builder {
+    fun setIgnoreCacheSizeMismatch(shouldIgnoreCacheSizeMismatch: Boolean) = asBuilder {
       this.shouldIgnoreCacheSizeMismatch = shouldIgnoreCacheSizeMismatch
-      return configBuilder
     }
 
-    fun setWebpSupportEnabled(webpSupportEnabled: Boolean): ImagePipelineConfig.Builder {
+    fun setWebpSupportEnabled(webpSupportEnabled: Boolean) = asBuilder {
       this.webpSupportEnabled = webpSupportEnabled
-      return configBuilder
     }
 
     fun shouldUseDecodingBufferHelper(): Boolean = shouldUseDecodingBufferHelper
 
-    fun setShouldUseDecodingBufferHelper(
-        shouldUseDecodingBufferHelper: Boolean
-    ): ImagePipelineConfig.Builder {
+    fun setShouldUseDecodingBufferHelper(shouldUseDecodingBufferHelper: Boolean) = asBuilder {
       this.shouldUseDecodingBufferHelper = shouldUseDecodingBufferHelper
-      return configBuilder
     }
 
-    fun setUseDownsampligRatioForResizing(
-        useDownsamplingRatioForResizing: Boolean
-    ): ImagePipelineConfig.Builder {
+    fun setUseDownsampligRatioForResizing(useDownsamplingRatioForResizing: Boolean) = asBuilder {
       this.useDownsamplingRatioForResizing = useDownsamplingRatioForResizing
-      return configBuilder
     }
 
     /**
      * Enables the caching of partial image data, for example if the request is cancelled or fails
      * after some data has been received.
      */
-    fun setPartialImageCachingEnabled(
-        partialImageCachingEnabled: Boolean
-    ): ImagePipelineConfig.Builder {
+    fun setPartialImageCachingEnabled(partialImageCachingEnabled: Boolean) = asBuilder {
       isPartialImageCachingEnabled = partialImageCachingEnabled
-      return configBuilder
     }
 
     /**
@@ -186,21 +161,16 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
      * @param decodeCancellationEnabled If true the decoding of cancelled requests are cancelled
      * @return The Builder itself for chaining
      */
-    fun setDecodeCancellationEnabled(
-        decodeCancellationEnabled: Boolean
-    ): ImagePipelineConfig.Builder {
+    fun setDecodeCancellationEnabled(decodeCancellationEnabled: Boolean) = asBuilder {
       this.decodeCancellationEnabled = decodeCancellationEnabled
-      return configBuilder
     }
 
-    fun setWebpErrorLogger(webpErrorLogger: WebpErrorLogger?): ImagePipelineConfig.Builder {
+    fun setWebpErrorLogger(webpErrorLogger: WebpErrorLogger?) = asBuilder {
       this.webpErrorLogger = webpErrorLogger
-      return configBuilder
     }
 
-    fun setWebpBitmapFactory(webpBitmapFactory: WebpBitmapFactory?): ImagePipelineConfig.Builder {
+    fun setWebpBitmapFactory(webpBitmapFactory: WebpBitmapFactory?) = asBuilder {
       this.webpBitmapFactory = webpBitmapFactory
-      return configBuilder
     }
 
     /**
@@ -222,21 +192,17 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
         minBitmapSizeBytes: Int,
         maxBitmapSizeBytes: Int,
         preparePrefetch: Boolean
-    ): ImagePipelineConfig.Builder {
+    ) = asBuilder {
       this.useBitmapPrepareToDraw = useBitmapPrepareToDraw
-      bitmapPrepareToDrawMinSizeBytes = minBitmapSizeBytes
-      bitmapPrepareToDrawMaxSizeBytes = maxBitmapSizeBytes
-      bitmapPrepareToDrawForPrefetch = preparePrefetch
-      return configBuilder
+      this.bitmapPrepareToDrawMinSizeBytes = minBitmapSizeBytes
+      this.bitmapPrepareToDrawMaxSizeBytes = maxBitmapSizeBytes
+      this.bitmapPrepareToDrawForPrefetch = preparePrefetch
     }
 
     /**
      * Sets the maximum bitmap size use to compute the downsampling value when decoding Jpeg images.
      */
-    fun setMaxBitmapSize(maxBitmapSize: Int): ImagePipelineConfig.Builder {
-      this.maxBitmapSize = maxBitmapSize
-      return configBuilder
-    }
+    fun setMaxBitmapSize(maxBitmapSize: Int) = asBuilder { this.maxBitmapSize = maxBitmapSize }
 
     /**
      * If true, the pipeline will use alternative implementations without native code.
@@ -244,113 +210,78 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
      * @param nativeCodeDisabled set true for disabling native implementation.
      * @return The Builder itself for chaining
      */
-    fun setNativeCodeDisabled(nativeCodeDisabled: Boolean): ImagePipelineConfig.Builder {
+    fun setNativeCodeDisabled(nativeCodeDisabled: Boolean) = asBuilder {
       this.nativeCodeDisabled = nativeCodeDisabled
-      return configBuilder
     }
 
     /**
      * Stores an alternative method to instantiate the [ProducerFactory]. This allows experimenting
      * with overridden producers.
      */
-    fun setProducerFactoryMethod(
-        producerFactoryMethod: ProducerFactoryMethod?
-    ): ImagePipelineConfig.Builder {
+    fun setProducerFactoryMethod(producerFactoryMethod: ProducerFactoryMethod?) = asBuilder {
       this.producerFactoryMethod = producerFactoryMethod
-      return configBuilder
     }
 
     /** Stores an alternative lazy method to instantiate the data souce. */
-    fun setLazyDataSource(lazyDataSource: Supplier<Boolean>?): ImagePipelineConfig.Builder {
+    fun setLazyDataSource(lazyDataSource: Supplier<Boolean>?) = asBuilder {
       this.lazyDataSource = lazyDataSource
-      return configBuilder
     }
 
-    fun setGingerbreadDecoderEnabled(
-        gingerbreadDecoderEnabled: Boolean
-    ): ImagePipelineConfig.Builder {
+    fun setGingerbreadDecoderEnabled(gingerbreadDecoderEnabled: Boolean) = asBuilder {
       this.gingerbreadDecoderEnabled = gingerbreadDecoderEnabled
-      return configBuilder
     }
 
-    fun setShouldDownscaleFrameToDrawableDimensions(
-        downscaleFrameToDrawableDimensions: Boolean
-    ): ImagePipelineConfig.Builder {
+    fun setShouldDownscaleFrameToDrawableDimensions(downscaleFrameToDrawableDimensions: Boolean) =
+        asBuilder {
       this.downscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions
-      return configBuilder
     }
 
-    fun setBitmapCloseableRefType(bitmapCloseableRefType: Int): ImagePipelineConfig.Builder {
+    fun setBitmapCloseableRefType(bitmapCloseableRefType: Int) = asBuilder {
       this.bitmapCloseableRefType = bitmapCloseableRefType
-      return configBuilder
     }
 
-    fun setSuppressBitmapPrefetchingSupplier(
-        suppressBitmapPrefetchingSupplier: Supplier<Boolean>
-    ): ImagePipelineConfig.Builder {
+    fun setSuppressBitmapPrefetchingSupplier(suppressBitmapPrefetchingSupplier: Supplier<Boolean>) =
+        asBuilder {
       this.suppressBitmapPrefetchingSupplier = suppressBitmapPrefetchingSupplier
-      return configBuilder
     }
 
-    fun setExperimentalThreadHandoffQueueEnabled(
-        experimentalThreadHandoffQueueEnabled: Boolean
-    ): ImagePipelineConfig.Builder {
+    fun setExperimentalThreadHandoffQueueEnabled(experimentalThreadHandoffQueueEnabled: Boolean) =
+        asBuilder {
       this.experimentalThreadHandoffQueueEnabled = experimentalThreadHandoffQueueEnabled
-      return configBuilder
     }
 
-    fun setExperimentalMemoryType(MemoryType: Long): ImagePipelineConfig.Builder {
-      this.memoryType = MemoryType
-      return configBuilder
-    }
+    fun setExperimentalMemoryType(MemoryType: Long) = asBuilder { this.memoryType = MemoryType }
 
-    fun setKeepCancelledFetchAsLowPriority(
-        keepCancelledFetchAsLowPriority: Boolean
-    ): ImagePipelineConfig.Builder {
+    fun setKeepCancelledFetchAsLowPriority(keepCancelledFetchAsLowPriority: Boolean) = asBuilder {
       this.keepCancelledFetchAsLowPriority = keepCancelledFetchAsLowPriority
-      return configBuilder
     }
 
-    fun setDownsampleIfLargeBitmap(downsampleIfLargeBitmap: Boolean): ImagePipelineConfig.Builder {
+    fun setDownsampleIfLargeBitmap(downsampleIfLargeBitmap: Boolean) = asBuilder {
       this.downsampleIfLargeBitmap = downsampleIfLargeBitmap
-      return configBuilder
     }
 
-    fun setEncodedCacheEnabled(encodedCacheEnabled: Boolean): ImagePipelineConfig.Builder {
+    fun setEncodedCacheEnabled(encodedCacheEnabled: Boolean) = asBuilder {
       this.encodedCacheEnabled = encodedCacheEnabled
-      return configBuilder
     }
 
-    fun setEnsureTranscoderLibraryLoaded(
-        ensureTranscoderLibraryLoaded: Boolean
-    ): ImagePipelineConfig.Builder {
+    fun setEnsureTranscoderLibraryLoaded(ensureTranscoderLibraryLoaded: Boolean) = asBuilder {
       this.ensureTranscoderLibraryLoaded = ensureTranscoderLibraryLoaded
-      return configBuilder
     }
 
-    fun setIsDiskCacheProbingEnabled(
-        isDiskCacheProbingEnabled: Boolean
-    ): ImagePipelineConfig.Builder {
+    fun setIsDiskCacheProbingEnabled(isDiskCacheProbingEnabled: Boolean) = asBuilder {
       this.isDiskCacheProbingEnabled = isDiskCacheProbingEnabled
-      return configBuilder
     }
 
-    fun setIsEncodedMemoryCacheProbingEnabled(
-        isEncodedMemoryCacheProbingEnabled: Boolean
-    ): ImagePipelineConfig.Builder {
+    fun setIsEncodedMemoryCacheProbingEnabled(isEncodedMemoryCacheProbingEnabled: Boolean) =
+        asBuilder {
       this.isEncodedMemoryCacheProbingEnabled = isEncodedMemoryCacheProbingEnabled
-      return configBuilder
     }
 
-    fun setTrackedKeysSize(trackedKeysSize: Int): ImagePipelineConfig.Builder {
+    fun setTrackedKeysSize(trackedKeysSize: Int) = asBuilder {
       this.trackedKeysSize = trackedKeysSize
-      return configBuilder
     }
 
-    fun setAllowDelay(allowDelay: Boolean): ImagePipelineConfig.Builder {
-      this.allowDelay = allowDelay
-      return configBuilder
-    }
+    fun setAllowDelay(allowDelay: Boolean) = asBuilder { this.allowDelay = allowDelay }
 
     fun build(): ImagePipelineExperiments = ImagePipelineExperiments(this)
   }
@@ -447,11 +378,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     maxBitmapSize = builder.maxBitmapSize
     isNativeCodeDisabled = builder.nativeCodeDisabled
     isPartialImageCachingEnabled = builder.isPartialImageCachingEnabled
-    if (builder.producerFactoryMethod == null) {
-      producerFactoryMethod = DefaultProducerFactoryMethod()
-    } else {
-      producerFactoryMethod = builder.producerFactoryMethod
-    }
+    producerFactoryMethod = builder.producerFactoryMethod ?: DefaultProducerFactoryMethod()
     isLazyDataSource = builder.lazyDataSource
     isGingerbreadDecoderEnabled = builder.gingerbreadDecoderEnabled
     downscaleFrameToDrawableDimensions = builder.downscaleFrameToDrawableDimensions
