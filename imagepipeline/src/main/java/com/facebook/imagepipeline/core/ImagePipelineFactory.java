@@ -311,7 +311,7 @@ public class ImagePipelineFactory {
         getProducerSequenceFactory(),
         mConfig.getRequestListeners(),
         mConfig.getRequestListener2s(),
-        mConfig.getIsPrefetchEnabledSupplier(),
+        mConfig.isPrefetchEnabledSupplier(),
         getBitmapMemoryCache(),
         getEncodedMemoryCache(),
         getMainBufferedDiskCache(),
