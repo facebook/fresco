@@ -56,6 +56,7 @@ import com.facebook.imagepipeline.producers.NetworkFetcher
 import com.facebook.imagepipeline.systrace.FrescoSystrace.beginSection
 import com.facebook.imagepipeline.systrace.FrescoSystrace.endSection
 import com.facebook.imagepipeline.systrace.FrescoSystrace.isTracing
+import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory
 import java.util.HashSet
 
@@ -120,89 +121,57 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     // We have to build experiments before the rest
     experiments = builder.experimentsBuilder.build()
     bitmapMemoryCacheParamsSupplier =
-        if (builder.bitmapMemoryCacheParamsSupplier == null)
-            DefaultBitmapMemoryCacheParamsSupplier(
+        builder.bitmapMemoryCacheParamsSupplier
+            ?: DefaultBitmapMemoryCacheParamsSupplier(
                 (checkNotNull(builder.context.getSystemService(Context.ACTIVITY_SERVICE)) as
                     ActivityManager))
-        else builder.bitmapMemoryCacheParamsSupplier!!
     bitmapMemoryCacheTrimStrategy =
-        if (builder.bitmapMemoryCacheTrimStrategy == null) BitmapMemoryCacheTrimStrategy()
-        else builder.bitmapMemoryCacheTrimStrategy!!
+        builder.bitmapMemoryCacheTrimStrategy ?: BitmapMemoryCacheTrimStrategy()
     encodedMemoryCacheTrimStrategy =
-        if (builder.encodedMemoryCacheTrimStrategy == null) NativeMemoryCacheTrimStrategy()
-        else builder.encodedMemoryCacheTrimStrategy!!
+        builder.encodedMemoryCacheTrimStrategy ?: NativeMemoryCacheTrimStrategy()
     bitmapMemoryCacheEntryStateObserver = builder.bitmapMemoryCacheEntryStateObserver
-    bitmapConfig =
-        if (builder.bitmapConfig == null) Bitmap.Config.ARGB_8888 else builder.bitmapConfig!!
-    cacheKeyFactory =
-        if (builder.cacheKeyFactory == null) DefaultCacheKeyFactory.getInstance()
-        else builder.cacheKeyFactory!!
+    bitmapConfig = builder.bitmapConfig ?: Bitmap.Config.ARGB_8888
+    cacheKeyFactory = builder.cacheKeyFactory ?: DefaultCacheKeyFactory.getInstance()
     context = checkNotNull(builder.context)
     fileCacheFactory =
-        if (builder.fileCacheFactory == null)
-            DiskStorageCacheFactory(DynamicDefaultDiskStorageFactory())
-        else builder.fileCacheFactory!!
+        builder.fileCacheFactory ?: DiskStorageCacheFactory(DynamicDefaultDiskStorageFactory())
     isDownsampleEnabled = builder.downsampleEnabled
     encodedMemoryCacheParamsSupplier =
-        if (builder.encodedMemoryCacheParamsSupplier == null)
-            DefaultEncodedMemoryCacheParamsSupplier()
-        else builder.encodedMemoryCacheParamsSupplier!!
+        builder.encodedMemoryCacheParamsSupplier ?: DefaultEncodedMemoryCacheParamsSupplier()
     imageCacheStatsTracker =
-        if (builder.imageCacheStatsTracker == null) NoOpImageCacheStatsTracker.getInstance()
-        else builder.imageCacheStatsTracker!!
+        builder.imageCacheStatsTracker ?: NoOpImageCacheStatsTracker.getInstance()
     imageDecoder = builder.imageDecoder
     imageTranscoderFactory = getImageTranscoderFactory(builder)
     imageTranscoderType = builder.imageTranscoderType
-    isPrefetchEnabledSupplier =
-        if (builder.isPrefetchEnabledSupplier == null) Suppliers.BOOLEAN_TRUE
-        else builder.isPrefetchEnabledSupplier!!
+    isPrefetchEnabledSupplier = builder.isPrefetchEnabledSupplier ?: Suppliers.BOOLEAN_TRUE
     mainDiskCacheConfig =
-        if (builder.mainDiskCacheConfig == null) getDefaultMainDiskCacheConfig(builder.context)
-        else builder.mainDiskCacheConfig!!
+        builder.mainDiskCacheConfig ?: getDefaultMainDiskCacheConfig(builder.context)
     memoryTrimmableRegistry =
-        if (builder.memoryTrimmableRegistry == null) NoOpMemoryTrimmableRegistry.getInstance()
-        else builder.memoryTrimmableRegistry!!
+        builder.memoryTrimmableRegistry ?: NoOpMemoryTrimmableRegistry.getInstance()
     memoryChunkType = getMemoryChunkType(builder, experiments)
     httpNetworkTimeout =
-        if (builder.httpConnectionTimeout < 0) HttpUrlConnectionNetworkFetcher.HTTP_DEFAULT_TIMEOUT
-        else builder.httpConnectionTimeout
-    if (isTracing()) {
-      beginSection("ImagePipelineConfig->mNetworkFetcher")
-    }
+        builder.httpConnectionTimeout ?: HttpUrlConnectionNetworkFetcher.HTTP_DEFAULT_TIMEOUT
     networkFetcher =
-        if (builder.networkFetcher == null) HttpUrlConnectionNetworkFetcher(httpNetworkTimeout)
-        else builder.networkFetcher!!
-    if (isTracing()) {
-      endSection()
-    }
+        traceSection("ImagePipelineConfig->mNetworkFetcher") {
+          builder.networkFetcher ?: HttpUrlConnectionNetworkFetcher(httpNetworkTimeout)
+        }
     platformBitmapFactory = builder.platformBitmapFactory
-    poolFactory =
-        if (builder.poolFactory == null) PoolFactory(PoolConfig.newBuilder().build())
-        else builder.poolFactory!!
-    progressiveJpegConfig =
-        if (builder.progressiveJpegConfig == null) SimpleProgressiveJpegConfig()
-        else builder.progressiveJpegConfig!!
-    requestListeners =
-        if (builder.requestListeners == null) HashSet() else builder.requestListeners!!
-    requestListener2s =
-        if (builder.requestListener2s == null) HashSet() else builder.requestListener2s!!
+    poolFactory = builder.poolFactory ?: PoolFactory(PoolConfig.newBuilder().build())
+    progressiveJpegConfig = builder.progressiveJpegConfig ?: SimpleProgressiveJpegConfig()
+    requestListeners = builder.requestListeners ?: HashSet()
+    requestListener2s = builder.requestListener2s ?: HashSet()
     isResizeAndRotateEnabledForNetwork = builder.resizeAndRotateEnabledForNetwork
-    smallImageDiskCacheConfig =
-        if (builder.smallImageDiskCacheConfig == null) mainDiskCacheConfig
-        else builder.smallImageDiskCacheConfig!!
+    smallImageDiskCacheConfig = builder.smallImageDiskCacheConfig ?: mainDiskCacheConfig
     imageDecoderConfig = builder.imageDecoderConfig
     // Below this comment can't be built in alphabetical order, because of dependencies
     val numCpuBoundThreads = poolFactory.flexByteArrayPoolMaxNumThreads
-    executorSupplier =
-        if (builder.executorSupplier == null) DefaultExecutorSupplier(numCpuBoundThreads)
-        else builder.executorSupplier!!
+    executorSupplier = builder.executorSupplier ?: DefaultExecutorSupplier(numCpuBoundThreads)
     isDiskCacheEnabled = builder.diskCacheEnabled
     callerContextVerifier = builder.callerContextVerifier
     closeableReferenceLeakTracker = builder.closeableReferenceLeakTracker
     bitmapCacheOverride = builder.bitmapMemoryCache
     bitmapMemoryCacheFactory =
-        if (builder.bitmapMemoryCacheFactory == null) CountingLruBitmapMemoryCacheFactory()
-        else builder.bitmapMemoryCacheFactory!!
+        builder.bitmapMemoryCacheFactory ?: CountingLruBitmapMemoryCacheFactory()
     encodedMemoryCacheOverride = builder.encodedMemoryCache
     executorServiceForAnimatedImages = builder.serialExecutorServiceForAnimatedImages
     // Here we manage the WebpBitmapFactory implementation if any
@@ -465,7 +434,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
 
     init {
       // Doesn't use a setter as always required.
-      this.context = checkNotNull(context)
+      this.context = context
     }
   }
 
@@ -514,7 +483,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
         "You can't define a custom ImageTranscoderFactory and provide an ImageTranscoderType"
       }
       return builder.imageTranscoderFactory
-          ?: null // This member will be constructed by ImagePipelineFactory
+      // This member will be constructed by ImagePipelineFactory
     }
 
     @MemoryChunkType
@@ -522,17 +491,18 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
         builder: Builder,
         imagePipelineExperiments: ImagePipelineExperiments
     ): Int =
-        if (builder.memoryChunkType != null) {
-          builder.memoryChunkType!!
-        } else if (imagePipelineExperiments.memoryType == MemoryChunkType.ASHMEM_MEMORY.toLong() &&
-            Build.VERSION.SDK_INT >= 27) {
-          MemoryChunkType.ASHMEM_MEMORY
-        } else if (imagePipelineExperiments.memoryType == MemoryChunkType.BUFFER_MEMORY.toLong()) {
-          MemoryChunkType.BUFFER_MEMORY
-        } else if (imagePipelineExperiments.memoryType == MemoryChunkType.NATIVE_MEMORY.toLong()) {
-          MemoryChunkType.NATIVE_MEMORY
-        } else {
-          MemoryChunkType.NATIVE_MEMORY
-        }
+        builder.memoryChunkType
+            ?: if (imagePipelineExperiments.memoryType == MemoryChunkType.ASHMEM_MEMORY.toLong() &&
+                Build.VERSION.SDK_INT >= 27) {
+              MemoryChunkType.ASHMEM_MEMORY
+            } else if (imagePipelineExperiments.memoryType ==
+                MemoryChunkType.BUFFER_MEMORY.toLong()) {
+              MemoryChunkType.BUFFER_MEMORY
+            } else if (imagePipelineExperiments.memoryType ==
+                MemoryChunkType.NATIVE_MEMORY.toLong()) {
+              MemoryChunkType.NATIVE_MEMORY
+            } else {
+              MemoryChunkType.NATIVE_MEMORY
+            }
   }
 }
