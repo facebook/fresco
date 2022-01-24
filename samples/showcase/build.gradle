@@ -33,6 +33,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true // needed for tinting
+
+        multiDexEnabled = true
     }
 
     buildTypes {
@@ -153,4 +155,6 @@ dependencies {
     implementation project(':tools:flipper')
 
     implementation Deps.Kotlin.stdlibJdk
+
+    implementation SampleDeps.AndroidX.multidex
 }
