@@ -60,12 +60,14 @@ android {
     flavorDimensions "main"
     productFlavors {
         normal {
-        }
-        instantRunConfig {
             dimension "main"
-            minSdkVersion FrescoConfig.samplesMinSdkVersion
+        }
+        fast {
+            dimension "main"
+            minSdkVersion FrescoConfig.targetSdkVersion
         }
         internal {
+            dimension "main"
         }
     }
 
