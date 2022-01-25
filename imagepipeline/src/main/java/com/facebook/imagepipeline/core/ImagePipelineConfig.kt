@@ -150,7 +150,8 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
         builder.memoryTrimmableRegistry ?: NoOpMemoryTrimmableRegistry.getInstance()
     memoryChunkType = getMemoryChunkType(builder, experiments)
     httpNetworkTimeout =
-        builder.httpConnectionTimeout ?: HttpUrlConnectionNetworkFetcher.HTTP_DEFAULT_TIMEOUT
+        if (builder.httpConnectionTimeout < 0) HttpUrlConnectionNetworkFetcher.HTTP_DEFAULT_TIMEOUT
+        else builder.httpConnectionTimeout
     networkFetcher =
         traceSection("ImagePipelineConfig->mNetworkFetcher") {
           builder.networkFetcher ?: HttpUrlConnectionNetworkFetcher(httpNetworkTimeout)
