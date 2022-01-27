@@ -40,6 +40,8 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
 
   private var _closeable: Closeable? = null
 
+  private var _refetchRunnable: Runnable? = null
+
   override fun getImageId(): Long = _imageId
 
   override fun setCallerContext(callerContext: Any?) {
@@ -99,6 +101,11 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
 
   override fun setExtras(extras: Any?) {
     _extras = extras
+  }
+
+  override fun getRefetchRunnable(): Runnable? = _refetchRunnable
+  override fun setRefetchRunnable(refetchRunnable: Runnable?) {
+    _refetchRunnable = refetchRunnable
   }
 
   override fun setVisible(visible: Boolean, restart: Boolean): Boolean {

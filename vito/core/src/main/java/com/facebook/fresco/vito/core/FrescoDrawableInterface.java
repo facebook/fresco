@@ -52,4 +52,16 @@ public interface FrescoDrawableInterface {
   Object getExtras();
 
   void setExtras(@Nullable Object extras);
+
+  /**
+   * Get a runnable that can be used to refetch the previous image, if set. This can for example be
+   * used to refetch an image when a View has been re-attached without the need to manually trigger
+   * a fetch call again.
+   *
+   * @return the refetch runnable if set
+   */
+  @Nullable
+  Runnable getRefetchRunnable();
+
+  void setRefetchRunnable(@Nullable Runnable refetchRunnable);
 }

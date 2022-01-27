@@ -51,6 +51,8 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
   private @Nullable DataSource<CloseableReference<CloseableImage>> mDataSource;
   private boolean mFetchSubmitted;
 
+  private @Nullable Runnable mRefetchRunnable;
+
   private final CombinedImageListenerImpl mImageListener = new CombinedImageListenerImpl();
   private final VitoImagePerfListener mImagePerfListener;
 
@@ -274,6 +276,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
     }
     mDataSource = null;
     mFetchSubmitted = false;
+    mImageRequest = null;
 
     mImageOrigin = ImageOrigin.UNKNOWN;
     mExtras = null;
@@ -357,6 +360,17 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
   @Override
   public void setExtras(@Nullable Object extras) {
     mExtras = extras;
+  }
+
+  @Nullable
+  @Override
+  public Runnable getRefetchRunnable() {
+    return mRefetchRunnable;
+  }
+
+  @Override
+  public void setRefetchRunnable(@Nullable Runnable refetchRunnable) {
+    mRefetchRunnable = refetchRunnable;
   }
 
   @Override

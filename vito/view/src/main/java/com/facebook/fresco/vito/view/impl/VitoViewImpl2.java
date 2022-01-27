@@ -85,10 +85,18 @@ public class VitoViewImpl2 {
     if (oldImageRequest != null && !oldImageRequest.equals(imageRequest)) {
       FrescoVitoProvider.getController().releaseImmediately(frescoDrawable);
     }
-    // We always set fields required to fetch the image.
-    frescoDrawable.setImageRequest(imageRequest);
-    frescoDrawable.setCallerContext(callerContext);
-    frescoDrawable.setImageListener(imageListener);
+
+    final Runnable refetchRunnable =
+        new Runnable() {
+          @Override
+          public void run() {
+            FrescoVitoProvider.getController()
+                .fetch(
+                    frescoDrawable, imageRequest, callerContext, null, imageListener, null, null);
+          }
+        };
+    frescoDrawable.setRefetchRunnable(refetchRunnable);
+
     if (sUseSimpleFetchLogic.get()) {
       frescoDrawable.getImagePerfListener().onImageMount(frescoDrawable);
       maybeFetchImage(frescoDrawable);
@@ -118,23 +126,18 @@ public class VitoViewImpl2 {
     if (drawable != null) {
       drawable.getImagePerfListener().onImageUnmount(drawable);
       FrescoVitoProvider.getController().releaseImmediately(drawable);
+      // When we manually release an image, we do not want the possibility to refetch later since
+      // we expect a new fetch call.
+      drawable.setRefetchRunnable(null);
     }
   }
 
   private static void maybeFetchImage(final FrescoDrawableInterface drawable) {
-    final VitoImageRequest request = drawable.getImageRequest();
-    if (request == null) {
+    final Runnable refetchRunnable = drawable.getRefetchRunnable();
+    if (refetchRunnable == null) {
       return;
     }
-    FrescoVitoProvider.getController()
-        .fetch(
-            drawable,
-            request,
-            drawable.getCallerContext(),
-            null,
-            drawable.getImageListener(),
-            null,
-            null);
+    refetchRunnable.run();
   }
 
   /**
