@@ -74,6 +74,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
 
   public static final String SAMPLE_SIZE = ProducerConstants.SAMPLE_SIZE;
 
+  public static final String NON_FATAL_DECODE_ERROR = ProducerConstants.NON_FATAL_DECODE_ERROR;
+
   private final ByteArrayPool mByteArrayPool;
   private final Executor mExecutor;
   private final ImageDecoder mImageDecoder;
@@ -434,6 +436,15 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       String queueStr = String.valueOf(queueTime);
       String qualityStr = String.valueOf(quality.isOfGoodEnoughQuality());
       String finalStr = String.valueOf(isFinal);
+
+      String nonFatalErrorStr = null;
+      if (image != null) {
+        Object nonFatalError = image.getExtras().get(NON_FATAL_DECODE_ERROR);
+        if (nonFatalError != null) {
+          nonFatalErrorStr = nonFatalError.toString();
+        }
+      }
+
       if (image instanceof CloseableStaticBitmap) {
         Bitmap bitmap = ((CloseableStaticBitmap) image).getUnderlyingBitmap();
         Preconditions.checkNotNull(bitmap);
@@ -450,6 +461,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         tmpMap.put(REQUESTED_IMAGE_SIZE, requestImageSize);
         tmpMap.put(SAMPLE_SIZE, sampleSize);
         tmpMap.put(EXTRA_BITMAP_BYTES, bitmap.getByteCount() + "");
+        if (nonFatalErrorStr != null) {
+          tmpMap.put(NON_FATAL_DECODE_ERROR, nonFatalErrorStr);
+        }
         return ImmutableMap.copyOf(tmpMap);
       } else {
         final Map<String, String> tmpMap = new HashMap<>(7);
@@ -460,6 +474,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         tmpMap.put(EXTRA_IMAGE_FORMAT_NAME, imageFormatName);
         tmpMap.put(REQUESTED_IMAGE_SIZE, requestImageSize);
         tmpMap.put(SAMPLE_SIZE, sampleSize);
+        if (nonFatalErrorStr != null) {
+          tmpMap.put(NON_FATAL_DECODE_ERROR, nonFatalErrorStr);
+        }
         return ImmutableMap.copyOf(tmpMap);
       }
     }

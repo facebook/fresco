@@ -30,4 +30,5 @@ class ProducerConstants {
   static final String ENCODED_IMAGE_SIZE = "encodedImageSize";
   static final String REQUESTED_IMAGE_SIZE = "requestedImageSize";
   static final String SAMPLE_SIZE = "sampleSize";
+  static final String NON_FATAL_DECODE_ERROR = "non_fatal_decode_error";
 }

@@ -33,7 +33,8 @@ public abstract class CloseableImage implements Closeable, ImageInfo {
               "uri_source",
               "image_format",
               "bitmap_config",
-              "is_rounded"));
+              "is_rounded",
+              "non_fatal_decode_error"));
 
   /** @return size in bytes of the bitmap(s) */
   public abstract int getSizeInBytes();
