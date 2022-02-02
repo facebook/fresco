@@ -85,14 +85,18 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
   }
 
   private @Nullable EncodedImage getCameraImage(Uri uri) throws IOException {
+    ParcelFileDescriptor parcelFileDescriptor;
     try {
-      ParcelFileDescriptor parcelFileDescriptor = mContentResolver.openFileDescriptor(uri, "r");
-      Preconditions.checkNotNull(parcelFileDescriptor);
-      FileDescriptor fd = parcelFileDescriptor.getFileDescriptor();
-      return getEncodedImage(new FileInputStream(fd), (int) parcelFileDescriptor.getStatSize());
+      parcelFileDescriptor = mContentResolver.openFileDescriptor(uri, "r");
     } catch (FileNotFoundException e) {
       return null;
     }
+    Preconditions.checkNotNull(parcelFileDescriptor);
+    FileDescriptor fd = parcelFileDescriptor.getFileDescriptor();
+    EncodedImage encodedImage =
+        getEncodedImage(new FileInputStream(fd), (int) parcelFileDescriptor.getStatSize());
+    parcelFileDescriptor.close();
+    return encodedImage;
   }
 
   @Override
