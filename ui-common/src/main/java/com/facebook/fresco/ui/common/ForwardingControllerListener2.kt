@@ -14,19 +14,16 @@ import java.util.ArrayList
 
 class ForwardingControllerListener2<I> : BaseControllerListener2<I>() {
 
-  @NonNull private val listeners: MutableList<ControllerListener2<I>> = ArrayList(2)
+  private val listeners: MutableList<ControllerListener2<I>> = ArrayList(2)
 
   @Synchronized
-  fun addListener(@NonNull listener: ControllerListener2<I>) {
+  fun addListener(listener: ControllerListener2<I>) {
     listeners.add(listener)
   }
 
   @Synchronized
-  fun removeListener(@NonNull listener: ControllerListener2<I>) {
-    val index = listeners.indexOf(listener)
-    if (index != -1) {
-      listeners.removeAt(index)
-    }
+  fun removeListener(listener: ControllerListener2<I>) {
+    listeners.remove(listener)
   }
 
   @Synchronized
@@ -34,64 +31,34 @@ class ForwardingControllerListener2<I> : BaseControllerListener2<I>() {
     listeners.clear()
   }
 
-  @Synchronized
-  private fun onException(@NonNull message: String, @NonNull t: Throwable) {
-    Log.e(TAG, message, t)
-  }
-
-  override fun onSubmit(@NonNull id: String, callerContext: Any?, extras: Extras?) {
-    val numberOfListeners = listeners.size
-    for (i in 0 until numberOfListeners) {
+  private inline fun forEachListener(methodName: String, block: (ControllerListener2<I>) -> Unit) {
+    listeners.forEach {
       try {
-        val listener = listeners[i]
-        listener?.onSubmit(id, callerContext, extras)
+        block(it)
       } catch (exception: Exception) {
         // Don't punish the other listeners if we're given a bad one.
-        onException("ForwardingControllerListener2 exception in onSubmit", exception)
+        Log.e(TAG, "InternalListener exception in $methodName", exception)
       }
     }
   }
 
-  override fun onFinalImageSet(@NonNull id: String, imageInfo: I?, extraData: Extras?) {
-    val numberOfListeners = listeners.size
-    for (i in 0 until numberOfListeners) {
-      try {
-        val listener = listeners[i]
-        listener?.onFinalImageSet(id, imageInfo, extraData)
-      } catch (exception: Exception) {
-        // Don't punish the other listeners if we're given a bad one.
-        onException("ForwardingControllerListener2 exception in onFinalImageSet", exception)
-      }
-    }
+  override fun onSubmit(id: String, callerContext: Any?, extras: Extras?) {
+    forEachListener("onSubmit") { it.onSubmit(id, callerContext, extras) }
   }
 
-  override fun onFailure(@NonNull id: String, throwable: Throwable?, extras: Extras?) {
-    val numberOfListeners = listeners.size
-    for (i in 0 until numberOfListeners) {
-      try {
-        val listener = listeners[i]
-        listener?.onFailure(id, throwable, extras)
-      } catch (exception: Exception) {
-        // Don't punish the other listeners if we're given a bad one.
-        onException("ForwardingControllerListener2 exception in onFailure", exception)
-      }
-    }
+  override fun onFinalImageSet(id: String, imageInfo: I?, extraData: Extras?) {
+    forEachListener("onFinalImageSet") { it.onFinalImageSet(id, imageInfo, extraData) }
   }
 
-  override fun onRelease(@NonNull id: String, extras: Extras?) {
-    val numberOfListeners = listeners.size
-    for (i in 0 until numberOfListeners) {
-      try {
-        val listener = listeners[i]
-        listener?.onRelease(id, extras)
-      } catch (exception: Exception) {
-        // Don't punish the other listeners if we're given a bad one.
-        onException("ForwardingControllerListener2 exception in onRelease", exception)
-      }
-    }
+  override fun onFailure(id: String, throwable: Throwable?, extras: Extras?) {
+    forEachListener("onFailure") { it.onFailure(id, throwable, extras) }
+  }
+
+  override fun onRelease(id: String, extras: Extras?) {
+    forEachListener("onRelease") { it.onRelease(id, extras) }
   }
 
   companion object {
-    @NonNull private const val TAG = "FwdControllerListener2"
+    private const val TAG = "FwdControllerListener2"
   }
 }
