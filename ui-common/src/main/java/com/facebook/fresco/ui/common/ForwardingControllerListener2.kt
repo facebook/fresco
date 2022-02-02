@@ -58,6 +58,14 @@ class ForwardingControllerListener2<I> : BaseControllerListener2<I>() {
     forEachListener("onRelease") { it.onRelease(id, extras) }
   }
 
+  override fun onIntermediateImageSet(id: String, imageInfo: I?) {
+    forEachListener("onIntermediateImageSet") { it.onIntermediateImageSet(id, imageInfo) }
+  }
+
+  override fun onIntermediateImageFailed(id: String) {
+    forEachListener("onIntermediateImageFailed") { it.onIntermediateImageFailed(id) }
+  }
+
   companion object {
     private const val TAG = "FwdControllerListener2"
   }
