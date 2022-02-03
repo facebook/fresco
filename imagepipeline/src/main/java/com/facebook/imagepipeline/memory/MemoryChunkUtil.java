@@ -29,10 +29,20 @@ public class MemoryChunkUtil {
       final int otherOffset,
       final int count,
       final int memorySize) {
-    Preconditions.checkArgument(count >= 0);
-    Preconditions.checkArgument(offset >= 0);
-    Preconditions.checkArgument(otherOffset >= 0);
-    Preconditions.checkArgument(offset + count <= memorySize);
-    Preconditions.checkArgument(otherOffset + count <= otherLength);
+    Preconditions.checkArgument(count >= 0, "count (%d) ! >= 0", count);
+    Preconditions.checkArgument(offset >= 0, "offset (%d) ! >= 0", offset);
+    Preconditions.checkArgument(otherOffset >= 0, "otherOffset (%d) ! >= 0", otherOffset);
+    Preconditions.checkArgument(
+        offset + count <= memorySize,
+        "offset (%d) + count (%d) ! <= %d",
+        offset,
+        count,
+        memorySize);
+    Preconditions.checkArgument(
+        otherOffset + count <= otherLength,
+        "otherOffset (%d) + count (%d) ! <= %d",
+        otherOffset,
+        count,
+        otherLength);
   }
 }
