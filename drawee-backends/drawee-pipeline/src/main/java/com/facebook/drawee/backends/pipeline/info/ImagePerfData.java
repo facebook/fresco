@@ -223,12 +223,7 @@ public class ImagePerfData {
   }
 
   public long getIntermediateImageLoadTimeMs() {
-    if (getControllerIntermediateImageSetTimeMs() == UNSET
-        || getControllerSubmitTimeMs() == UNSET) {
-      return UNSET;
-    }
-
-    return getControllerIntermediateImageSetTimeMs() - getControllerSubmitTimeMs();
+    return mControllerIntermediateImageSetTimeMs;
   }
 
   public int getVisibilityState() {
