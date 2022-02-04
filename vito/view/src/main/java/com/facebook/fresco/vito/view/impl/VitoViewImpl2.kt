@@ -25,35 +25,22 @@ import com.facebook.fresco.vito.source.ImageSource
 
 /** Vito View implementation */
 object VitoViewImpl2 {
-
-  private var useVisibilityCallbacks = Suppliers.BOOLEAN_TRUE
-  private var useSimpleFetchLogic = Suppliers.BOOLEAN_FALSE
-
-  @JvmStatic
-  fun setUseVisibilityCallbacks(useVisibilityCallbacks: Supplier<Boolean>) {
-    this.useVisibilityCallbacks = useVisibilityCallbacks
-  }
-
-  @JvmStatic
-  fun setUseSimpleFetchLogic(useSimpleFetchLogic: Supplier<Boolean>) {
-    this.useSimpleFetchLogic = useSimpleFetchLogic
-  }
+  @JvmStatic var useVisibilityCallbacks: Supplier<Boolean> = Suppliers.BOOLEAN_TRUE
+  @JvmStatic var useSimpleFetchLogic: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE
 
   private val onAttachStateChangeListenerCallback: OnAttachStateChangeListener =
       object : OnAttachStateChangeListener {
         override fun onViewAttachedToWindow(view: View) {
-          val current = getDrawable(view)
-          if (current != null) {
-            current.imagePerfListener.onImageMount(current)
-            maybeFetchImage(current)
+          getDrawable(view)?.apply {
+            imagePerfListener.onImageMount(this)
+            maybeFetchImage(this)
           }
         }
 
         override fun onViewDetachedFromWindow(view: View) {
-          val current = getDrawable(view)
-          if (current != null) {
-            current.imagePerfListener.onImageUnmount(current)
-            FrescoVitoProvider.getController().release(current)
+          getDrawable(view)?.apply {
+            imagePerfListener.onImageUnmount(this)
+            FrescoVitoProvider.getController().release(this)
           }
         }
       }
@@ -87,11 +74,11 @@ object VitoViewImpl2 {
     if (oldImageRequest != null && oldImageRequest != imageRequest) {
       FrescoVitoProvider.getController().releaseImmediately(frescoDrawable)
     }
-    val refetchRunnable = Runnable {
-      FrescoVitoProvider.getController()
-          .fetch(frescoDrawable, imageRequest, callerContext, null, imageListener, null, null)
-    }
-    frescoDrawable.refetchRunnable = refetchRunnable
+    frescoDrawable.refetchRunnable =
+        Runnable {
+          FrescoVitoProvider.getController()
+              .fetch(frescoDrawable, imageRequest, callerContext, null, imageListener, null, null)
+        }
     if (useSimpleFetchLogic.get()) {
       frescoDrawable.imagePerfListener.onImageMount(frescoDrawable)
       maybeFetchImage(frescoDrawable)
@@ -118,19 +105,15 @@ object VitoViewImpl2 {
 
   @JvmStatic
   fun release(target: View) {
-    val drawable = getDrawable(target)
-    if (drawable != null) {
-      drawable.imagePerfListener.onImageUnmount(drawable)
-      FrescoVitoProvider.getController().releaseImmediately(drawable)
-      // When we manually release an image, we do not want the possibility to refetch later since
-      // we expect a new fetch call.
-      drawable.refetchRunnable = null
+    getDrawable(target)?.apply {
+      imagePerfListener.onImageUnmount(this)
+      FrescoVitoProvider.getController().releaseImmediately(this)
+      refetchRunnable = null
     }
   }
 
   private fun maybeFetchImage(drawable: FrescoDrawableInterface) {
-    val refetchRunnable = drawable.refetchRunnable ?: return
-    refetchRunnable.run()
+    drawable.refetchRunnable?.run()
   }
 
   /**
@@ -140,29 +123,22 @@ object VitoViewImpl2 {
    * @return The drawable to use for the given target
    */
   private fun ensureDrawableSet(target: View): FrescoDrawableInterface {
-    if (target is ImageView) {
-      val iv = target
-      val current = iv.drawable
-      return if (current is FrescoDrawableInterface) {
-        current
-      } else {
-        val drawable = createDrawable()
-        iv.setImageDrawable(drawable as Drawable)
-        drawable
-      }
+    return when (target) {
+      is ImageView ->
+          when (val current = target.drawable) {
+            is FrescoDrawableInterface -> current
+            else -> createDrawable().also { target.setImageDrawable(it as Drawable) }
+          }
+      else ->
+          when (val current = target.background) {
+            is FrescoDrawableInterface -> current
+            else -> createDrawable().also { ViewCompat.setBackground(target, it as Drawable) }
+          }
     }
-    val background = target.background
-    if (background is FrescoDrawableInterface) {
-      return background
-    }
-    val drawable = createDrawable()
-    androidx.core.view.ViewCompat.setBackground(target, drawable as Drawable)
-    return drawable
   }
 
   private fun getDrawable(view: View): FrescoDrawableInterface? {
-    val d = if (view is ImageView) view.drawable else view.background
-    return if (d is FrescoDrawableInterface) d else null
+    return (if (view is ImageView) view.drawable else view.background) as? FrescoDrawableInterface
   }
 
   private fun createDrawable(): FrescoDrawableInterface {
