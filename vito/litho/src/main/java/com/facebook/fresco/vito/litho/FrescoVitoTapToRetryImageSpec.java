@@ -59,15 +59,18 @@ public class FrescoVitoTapToRetryImageSpec {
       ComponentContext c,
       StateValue<Boolean> isTapToRetry,
       StateValue<Integer> tapCount,
+      StateValue<Boolean> useFallbackImageSource,
       @Prop(optional = true) boolean isInitialTapToLoad) {
     isTapToRetry.set(isInitialTapToLoad);
     tapCount.set(isInitialTapToLoad ? 1 : 0);
+    useFallbackImageSource.set(false);
   }
 
   @OnCreateLayout
   static Component onCreateLayout(
       final ComponentContext c,
       @Prop final ImageSource imageSource,
+      @Prop(optional = true) final @Nullable ImageSource fallbackImageSource,
       @Prop(optional = true) final @Nullable Object callerContext,
       @Prop(optional = true, resType = ResType.FLOAT) final float imageAspectRatio,
       @Prop(optional = true) final @Nullable EventHandler<ClickEvent> imageClickHandler,
@@ -82,6 +85,7 @@ public class FrescoVitoTapToRetryImageSpec {
       @Prop(resType = ResType.DRAWABLE, optional = true) final @Nullable Drawable retryImage,
       @Prop(optional = true) final @Nullable ScalingUtils.ScaleType retryImageScaleType,
       @State final boolean isTapToRetry,
+      @State final boolean useFallbackImageSource,
       @State final int tapCount) {
     if (isTapToRetry) {
       Drawable scaledRetryDrawable =
@@ -104,12 +108,15 @@ public class FrescoVitoTapToRetryImageSpec {
             }
           }
         };
+
+    boolean useFallback = fallbackImageSource != null && useFallbackImageSource;
+
     return FrescoVitoImage2.create(c)
         .callerContext(callerContext)
         .imageAspectRatio(imageAspectRatio)
         .imageListener(ForwardingImageListener.create(internalListener, imageListener))
         .imageOptions(imageOptions)
-        .imageSource(imageSource)
+        .imageSource(useFallback ? fallbackImageSource : imageSource)
         .onFadeListener(onFadeListener)
         .prefetch(prefetch)
         .clickHandler(imageClickHandler)
@@ -126,11 +133,15 @@ public class FrescoVitoTapToRetryImageSpec {
   }
 
   @OnUpdateState
-  static void onImageFailure(StateValue<Boolean> isTapToRetry, StateValue<Integer> tapCount) {
+  static void onImageFailure(
+      StateValue<Boolean> isTapToRetry,
+      StateValue<Integer> tapCount,
+      StateValue<Boolean> useFallbackImageSource) {
     Integer oldTapCount = tapCount.get();
     int newTapCount = oldTapCount == null ? 1 : oldTapCount + 1;
     tapCount.set(newTapCount);
     isTapToRetry.set(true);
+    useFallbackImageSource.set(true);
   }
 
   @OnUpdateState
