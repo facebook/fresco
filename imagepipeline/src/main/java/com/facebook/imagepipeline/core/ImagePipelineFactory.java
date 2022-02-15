@@ -60,7 +60,6 @@ public class ImagePipelineFactory {
   private static final Class<?> TAG = ImagePipelineFactory.class;
 
   private static ImagePipelineFactory sInstance = null;
-  private static boolean sForceSinglePipelineInstance;
   private static ImagePipeline sImagePipeline;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
 
@@ -88,19 +87,6 @@ public class ImagePipelineFactory {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.endSection();
     }
-  }
-
-  /** Initializes {@link ImagePipelineFactory} with the specified config. */
-  public static synchronized void initialize(
-      ImagePipelineConfigInterface imagePipelineConfig, boolean forceSinglePipelineInstance) {
-    if (sInstance != null) {
-      FLog.w(
-          TAG,
-          "ImagePipelineFactory has already been initialized! `ImagePipelineFactory.initialize(...)` should only be called once to avoid unexpected behavior.");
-    }
-
-    sForceSinglePipelineInstance = forceSinglePipelineInstance;
-    sInstance = new ImagePipelineFactory(imagePipelineConfig);
   }
 
   /** Initializes {@link ImagePipelineFactory} with the specified config. */
@@ -137,7 +123,6 @@ public class ImagePipelineFactory {
   @Nullable private BufferedDiskCache mMainBufferedDiskCache;
   @Nullable private FileCache mMainFileCache;
   @Nullable private ImageDecoder mImageDecoder;
-  @Nullable private ImagePipeline mImagePipeline;
   @Nullable private ImageTranscoderFactory mImageTranscoderFactory;
   @Nullable private ProducerFactory mProducerFactory;
   @Nullable private ProducerSequenceFactory mProducerSequenceFactory;
@@ -293,17 +278,10 @@ public class ImagePipelineFactory {
   }
 
   public ImagePipeline getImagePipeline() {
-    if (sForceSinglePipelineInstance) {
-      if (sImagePipeline == null) {
-        sImagePipeline = createImagePipeline();
-        mImagePipeline = sImagePipeline;
-      }
-      return sImagePipeline;
+    if (sImagePipeline == null) {
+      sImagePipeline = createImagePipeline();
     }
-    if (mImagePipeline == null) {
-      mImagePipeline = createImagePipeline();
-    }
-    return mImagePipeline;
+    return sImagePipeline;
   }
 
   private ImagePipeline createImagePipeline() {
