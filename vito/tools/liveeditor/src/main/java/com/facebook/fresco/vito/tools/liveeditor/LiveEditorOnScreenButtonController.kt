@@ -13,7 +13,7 @@ import android.graphics.PixelFormat
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
-import android.util.TypedValue
+import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +24,8 @@ import androidx.annotation.ColorInt
 import com.facebook.common.internal.Supplier
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
+import com.facebook.fresco.vito.tools.liveeditor.LiveEditorUiUtils.Companion.dpToPx
+import com.facebook.fresco.vito.tools.liveeditor.LiveEditorUiUtils.Companion.dpToPxF
 
 class LiveEditorOnScreenButtonController(
     private val isEnabled: Supplier<Boolean>,
@@ -107,18 +109,24 @@ class LiveEditorOnScreenButtonController(
   private fun showImageToggleButtons(
       context: Context,
   ) {
-    setView(context, createOnScreenButtons(context))
+    addWindow(context, createOnScreenButtons(context))
   }
 
   private fun showLiveEditor(context: Context) {
-    setView(
+    val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    addWindow(
         context,
         LiveEditorUiUtils(imageSelector?.currentEditor)
             .createView(context) { showImageToggleButtons(context) }
-            .apply { background = ColorDrawable(editorBackgroundColor) })
+            .apply { background = ColorDrawable(editorBackgroundColor) },
+        DisplayMetrics().apply { windowManager.defaultDisplay.getMetrics(this) }.heightPixels / 2)
   }
 
-  private fun setView(context: Context, view: View) {
+  private fun addWindow(
+      context: Context,
+      view: View,
+      height: Int = WindowManager.LayoutParams.WRAP_CONTENT
+  ) {
     if (!isEnabled.get()) {
       return
     }
@@ -129,7 +137,7 @@ class LiveEditorOnScreenButtonController(
         view,
         WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
+                height,
                 WindowManager.LayoutParams.LAST_APPLICATION_WINDOW,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT)
@@ -195,10 +203,4 @@ class LiveEditorOnScreenButtonController(
         }
         else -> null
       }
-
-  private fun Int.dpToPxF(context: Context): Float =
-      TypedValue.applyDimension(
-          TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), context.resources.displayMetrics)
-
-  private fun Int.dpToPx(context: Context): Int = dpToPxF(context).toInt()
 }
