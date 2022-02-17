@@ -12,7 +12,7 @@ import com.facebook.fresco.ui.common.ControllerListener2.Extras
 import java.lang.Exception
 import java.util.ArrayList
 
-class ForwardingControllerListener2<I> : BaseControllerListener2<I>() {
+open class ForwardingControllerListener2<I> : BaseControllerListener2<I>() {
 
   private val listeners: MutableList<ControllerListener2<I>> = ArrayList(2)
 
