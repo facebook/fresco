@@ -3,6 +3,11 @@ layout: home
 title: Fresco | An image management library.
 id: home
 ---
+## Watch Introductory Video
+
+<div class="videoBlock">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/XLwlGoxrg4M" title="Explain Like I'm 5: Fresco" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen ></iframe>
+</div>
 
 <div class="gridBlock">
 <div class="featureBlock twoByGridBlock" markdown="1">
