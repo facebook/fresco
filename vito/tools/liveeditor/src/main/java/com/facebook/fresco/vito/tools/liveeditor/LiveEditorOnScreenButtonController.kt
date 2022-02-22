@@ -24,18 +24,37 @@ import androidx.annotation.ColorInt
 import com.facebook.common.internal.Supplier
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
+import com.facebook.fresco.vito.tools.liveeditor.ImageOptionsSampleValues.Entry
 import com.facebook.fresco.vito.tools.liveeditor.LiveEditorUiUtils.Companion.dpToPx
 import com.facebook.fresco.vito.tools.liveeditor.LiveEditorUiUtils.Companion.dpToPxF
 
 class LiveEditorOnScreenButtonController(
     private val isEnabled: Supplier<Boolean>,
-    private @ColorInt val buttonTextColor: Int = Color.WHITE,
-    private @ColorInt val buttonBackgroundColor: Int = Color.BLUE,
-    private @ColorInt val editorBackgroundColor: Int = Color.WHITE,
-    additionalButtonConfig: ButtonConfig? = null
+    @ColorInt private val buttonTextColor: Int = Color.WHITE,
+    @ColorInt private val buttonBackgroundColor: Int = Color.BLUE,
+    @ColorInt private val editorBackgroundColor: Int = Color.WHITE,
+    additionalButtonConfig: ButtonConfig? = null,
+    private val customOptions: CustomOptions
 ) {
 
+  /** Called from fblite java code */
+  constructor(
+      isEnabled: Supplier<Boolean>,
+      @ColorInt buttonTextColor: Int = Color.WHITE,
+      @ColorInt buttonBackgroundColor: Int = Color.BLUE,
+      @ColorInt editorBackgroundColor: Int = Color.WHITE,
+      additionalButtonConfig: ButtonConfig? = null
+  ) : this(
+      isEnabled,
+      buttonTextColor,
+      buttonBackgroundColor,
+      editorBackgroundColor,
+      additionalButtonConfig,
+      CustomOptions(emptyList()))
+
   class ButtonConfig(val title: String, val action: View.OnClickListener)
+
+  class CustomOptions(val entries: List<Entry<out Any>>)
 
   private val buttons =
       listOfNotNull(
@@ -117,7 +136,7 @@ class LiveEditorOnScreenButtonController(
     addWindow(
         context,
         LiveEditorUiUtils(imageSelector?.currentEditor)
-            .createView(context) { showImageToggleButtons(context) }
+            .createView(context, customOptions.entries) { showImageToggleButtons(context) }
             .apply { background = ColorDrawable(editorBackgroundColor) },
         DisplayMetrics().apply { windowManager.defaultDisplay.getMetrics(this) }.heightPixels / 2)
   }
@@ -188,7 +207,7 @@ class LiveEditorOnScreenButtonController(
         background =
             GradientDrawable().apply {
               setColor(buttonBackgroundColor)
-              setShape(GradientDrawable.RECTANGLE)
+              shape = GradientDrawable.RECTANGLE
               setCornerRadius(cornerRadius)
             }
       }

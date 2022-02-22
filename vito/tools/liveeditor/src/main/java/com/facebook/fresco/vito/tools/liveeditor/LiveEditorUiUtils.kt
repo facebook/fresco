@@ -21,7 +21,11 @@ import android.widget.Toast
 
 class LiveEditorUiUtils(var liveEditor: ImageLiveEditor?) {
 
-  fun createView(context: Context, closeAction: ((View) -> Unit)? = null): View {
+  fun createView(
+      context: Context,
+      customEntries: List<ImageOptionsSampleValues.Entry<out Any>> = emptyList(),
+      closeAction: ((View) -> Unit)? = null
+  ): View {
     return LinearLayout(context).apply {
       addView(
           ScrollView(context).apply {
@@ -51,6 +55,7 @@ class LiveEditorUiUtils(var liveEditor: ImageLiveEditor?) {
                       createWithList(
                           context, ImageOptionsSampleValues.progressiveRenderingEnabledConfig))
 
+                  customEntries.forEach { addView(createWithList(context, it)) }
                   addView(createImageInfoButton(context))
                   if (closeAction != null) {
                     addView(createButton(context, "Close", closeAction))

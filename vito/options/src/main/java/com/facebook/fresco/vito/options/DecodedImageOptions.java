@@ -177,12 +177,12 @@ public class DecodedImageOptions extends EncodedImageOptions {
     public @Nullable Bitmap.Config mBitmapConfig;
     private @Nullable Boolean mProgressiveDecodingEnabled;
 
-    protected Builder() {
+    public Builder() {
       super();
       mActualImageScaleType = ScalingUtils.ScaleType.CENTER_CROP;
     }
 
-    protected Builder(ImageOptions defaultOptions) {
+    public Builder(ImageOptions defaultOptions) {
       super(defaultOptions);
       mResizeOptions = defaultOptions.getResizeOptions();
       mRotationOptions = defaultOptions.getRotationOptions();
