@@ -12,6 +12,9 @@ import com.facebook.imagepipeline.image.QualityInfo;
 /** Progressive JPEG config. */
 public interface ProgressiveJpegConfig {
 
+  /** Shortcut for checking if we should attempt to decode progressively. */
+  boolean decodeProgressively();
+
   /** Gets the next scan-number that should be decoded after the given scan-number. */
   int getNextScanNumberToDecode(int scanNumber);
 

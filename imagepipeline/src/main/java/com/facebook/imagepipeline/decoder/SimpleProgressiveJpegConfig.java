@@ -49,6 +49,11 @@ public class SimpleProgressiveJpegConfig implements ProgressiveJpegConfig {
   }
 
   @Override
+  public boolean decodeProgressively() {
+    return true;
+  }
+
+  @Override
   public int getNextScanNumberToDecode(int scanNumber) {
     final List<Integer> scansToDecode = mDynamicValueConfig.getScansToDecode();
     if (scansToDecode == null || scansToDecode.isEmpty()) {

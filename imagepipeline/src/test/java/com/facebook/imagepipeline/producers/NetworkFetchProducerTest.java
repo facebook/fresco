@@ -18,6 +18,7 @@ import com.facebook.common.memory.PooledByteBufferOutputStream;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,6 +49,7 @@ public class NetworkFetchProducerTest {
   @Mock public NetworkFetcher mNetworkFetcher;
   @Mock public Map<String, String> mExtrasMap;
   @Mock public ImagePipelineConfig mConfig;
+  @Mock public ProgressiveJpegConfig mProgressiveJpegConfig;
 
   private byte[] mCommonByteArray;
   private final String mRequestId = "mRequestId";
@@ -72,6 +74,8 @@ public class NetworkFetchProducerTest {
             true /* isIntermediateResultExpected */,
             Priority.MEDIUM,
             mConfig);
+    when(mConfig.getProgressiveJpegConfig()).thenReturn(mProgressiveJpegConfig);
+    when(mProgressiveJpegConfig.decodeProgressively()).thenReturn(true);
     mFetchState = new FetchState(mConsumer, mProducerContext);
     mCommonByteArray = new byte[10];
     when(mByteArrayPool.get(anyInt())).thenReturn(mCommonByteArray);

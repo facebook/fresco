@@ -15,6 +15,7 @@ import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.memory.PooledByteBufferOutputStream;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.common.BytesRange;
+import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.EncodedImageOrigin;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
@@ -139,9 +140,9 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
 
   protected void maybeHandleIntermediateResult(
       PooledByteBufferOutputStream pooledOutputStream, FetchState fetchState) {
-    final long nowMs = getSystemUptime();
-    if (shouldPropagateIntermediateResults(fetchState)
-        && nowMs - fetchState.getLastIntermediateResultTimeMs()
+    final long nowMs;
+    if (shouldPropagateIntermediateResults(fetchState, fetchState.getContext())
+        && (nowMs = getSystemUptime()) - fetchState.getLastIntermediateResultTimeMs()
             >= TIME_BETWEEN_PARTIAL_RESULTS_MS) {
       fetchState.setLastIntermediateResultTimeMs(nowMs);
       fetchState
@@ -211,7 +212,12 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
     fetchState.getConsumer().onCancellation();
   }
 
-  private boolean shouldPropagateIntermediateResults(FetchState fetchState) {
+  private boolean shouldPropagateIntermediateResults(
+      FetchState fetchState, ProducerContext context) {
+    ProgressiveJpegConfig pjpegConfig = context.getImagePipelineConfig().getProgressiveJpegConfig();
+    if (pjpegConfig == null || !pjpegConfig.decodeProgressively()) {
+      return false;
+    }
     if (!fetchState.getContext().isIntermediateResultExpected()) {
       return false;
     }
