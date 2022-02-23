@@ -41,6 +41,7 @@ public interface ProducerContext {
     ExtraKeys.ENCODED_SIZE,
     ExtraKeys.MULTIPLEX_BITMAP_COUNT,
     ExtraKeys.MULTIPLEX_ENCODED_COUNT,
+    ExtraKeys.LAST_SCAN_NUMBER,
   })
   @interface ExtraKeys {
     final String ORIGIN = "origin";
@@ -57,6 +58,7 @@ public interface ProducerContext {
     /* number of deduped request in EncodedCacheKeyMultiplexProducer */
     final /* number of deduped request in EncodedCacheKeyMultiplexProducer */ String
         MULTIPLEX_ENCODED_COUNT = "multiplex_enc_cnt";
+    final String LAST_SCAN_NUMBER = "last_scan_num";
   }
 
   /** @return image request that is being executed */

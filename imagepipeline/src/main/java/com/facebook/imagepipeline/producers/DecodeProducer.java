@@ -164,6 +164,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
 
     private final JobScheduler mJobScheduler;
 
+    protected int mLastScheduledScanNumber;
+
     public ProgressiveDecoder(
         final Consumer<CloseableReference<CloseableImage>> consumer,
         final ProducerContext producerContext,
@@ -202,7 +204,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
                   maybeIncreaseSampleSize(encodedImage);
                 }
 
-                doDecode(encodedImage, status);
+                doDecode(encodedImage, status, mLastScheduledScanNumber);
               }
             }
           };
@@ -288,7 +290,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     }
 
     /** Performs the decode synchronously. */
-    private void doDecode(EncodedImage encodedImage, @Status int status) {
+    private void doDecode(
+        EncodedImage encodedImage, @Status int status, int lastScheduledScanNumber) {
       // do not run for partial results of anything except JPEG
       if (encodedImage.getImageFormat() != DefaultImageFormats.JPEG && isNotLast(status)) {
         return;
@@ -376,7 +379,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
                 sampleSize);
         mProducerListener.onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, extraMap);
 
-        setImageExtras(encodedImage, image);
+        setImageExtras(encodedImage, image, lastScheduledScanNumber);
 
         handleResult(image, status);
       } finally {
@@ -407,7 +410,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       return image;
     }
 
-    private void setImageExtras(EncodedImage encodedImage, CloseableImage image) {
+    private void setImageExtras(
+        EncodedImage encodedImage, CloseableImage image, int lastScheduledScanNumber) {
       mProducerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_WIDTH, encodedImage.getWidth());
       mProducerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_HEIGHT, encodedImage.getHeight());
       mProducerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_SIZE, encodedImage.getSize());
@@ -419,6 +423,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       if (image != null) {
         image.setImageExtras(mProducerContext.getExtras());
       }
+      mProducerContext.setExtra(
+          ProducerContext.ExtraKeys.LAST_SCAN_NUMBER, lastScheduledScanNumber);
     }
 
     private @Nullable Map<String, String> getExtraMap(
@@ -565,7 +571,6 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
 
     private final ProgressiveJpegParser mProgressiveJpegParser;
     private final ProgressiveJpegConfig mProgressiveJpegConfig;
-    private int mLastScheduledScanNumber;
 
     public NetworkImagesProgressiveDecoder(
         final Consumer<CloseableReference<CloseableImage>> consumer,
