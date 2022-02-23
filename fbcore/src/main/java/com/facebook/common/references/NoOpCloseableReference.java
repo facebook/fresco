@@ -18,7 +18,7 @@ public class NoOpCloseableReference<T> extends CloseableReference<T> {
       ResourceReleaser<T> resourceReleaser,
       LeakHandler leakHandler,
       @Nullable Throwable stacktrace) {
-    super(t, resourceReleaser, leakHandler, stacktrace);
+    super(t, resourceReleaser, leakHandler, stacktrace, false);
   }
 
   @Override

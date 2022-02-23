@@ -82,10 +82,6 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
 
   private static @CloseableRefType int sBitmapCloseableRefType = REF_TYPE_DEFAULT;
 
-  public static boolean useGc() {
-    return sBitmapCloseableRefType == REF_TYPE_NOOP;
-  }
-
   public static void setDisableCloseableReferencesForBitmaps(
       @CloseableRefType int bitmapCloseableRefType) {
     sBitmapCloseableRefType = bitmapCloseableRefType;
@@ -151,8 +147,9 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
       T t,
       ResourceReleaser<T> resourceReleaser,
       LeakHandler leakHandler,
-      @Nullable Throwable stacktrace) {
-    mSharedReference = new SharedReference<T>(t, resourceReleaser);
+      @Nullable Throwable stacktrace,
+      boolean keepAlive) {
+    mSharedReference = new SharedReference<T>(t, resourceReleaser, keepAlive);
     mLeakHandler = leakHandler;
     mStacktrace = stacktrace;
   }

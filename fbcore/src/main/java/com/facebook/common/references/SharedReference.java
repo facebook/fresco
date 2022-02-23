@@ -7,7 +7,6 @@
 
 package com.facebook.common.references;
 
-import android.graphics.Bitmap;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
@@ -86,12 +85,19 @@ public class SharedReference<T> {
    *
    * @param value non-null value to manage
    * @param resourceReleaser non-null ResourceReleaser for the value
+   * @param keepAlive whether to add to {@code sLiveObjects}
    */
-  public SharedReference(T value, ResourceReleaser<T> resourceReleaser) {
+  public SharedReference(T value, ResourceReleaser<T> resourceReleaser, boolean keepAlive) {
     mValue = Preconditions.checkNotNull(value);
     mResourceReleaser = Preconditions.checkNotNull(resourceReleaser);
     mRefCount = 1;
-    addLiveReference(value);
+    if (keepAlive) {
+      addLiveReference(value);
+    }
+  }
+
+  public SharedReference(T value, ResourceReleaser<T> resourceReleaser) {
+    this(value, resourceReleaser, false);
   }
 
   /**
@@ -101,9 +107,6 @@ public class SharedReference<T> {
    * @param value the value to add.
    */
   private static void addLiveReference(Object value) {
-    if (CloseableReference.useGc() && (value instanceof Bitmap || value instanceof HasBitmap)) {
-      return;
-    }
     synchronized (sLiveObjects) {
       Integer count = sLiveObjects.get(value);
       if (count == null) {
