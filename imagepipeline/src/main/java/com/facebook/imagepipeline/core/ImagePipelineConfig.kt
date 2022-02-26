@@ -332,8 +332,8 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
 
     fun setImageCacheStatsTracker(imageCacheStatsTracker: ImageCacheStatsTracker?): Builder =
         apply {
-      this.imageCacheStatsTracker = imageCacheStatsTracker
-    }
+          this.imageCacheStatsTracker = imageCacheStatsTracker
+        }
 
     fun setImageDecoder(imageDecoder: ImageDecoder?): Builder = apply {
       this.imageDecoder = imageDecoder
@@ -345,13 +345,13 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
 
     fun setImageTranscoderFactory(imageTranscoderFactory: ImageTranscoderFactory?): Builder =
         apply {
-      this.imageTranscoderFactory = imageTranscoderFactory
-    }
+          this.imageTranscoderFactory = imageTranscoderFactory
+        }
 
     fun setIsPrefetchEnabledSupplier(isPrefetchEnabledSupplier: Supplier<Boolean>?): Builder =
         apply {
-      this.isPrefetchEnabledSupplier = isPrefetchEnabledSupplier
-    }
+          this.isPrefetchEnabledSupplier = isPrefetchEnabledSupplier
+        }
 
     fun setMainDiskCacheConfig(mainDiskCacheConfig: DiskCacheConfig?): Builder = apply {
       this.mainDiskCacheConfig = mainDiskCacheConfig
@@ -359,8 +359,8 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
 
     fun setMemoryTrimmableRegistry(memoryTrimmableRegistry: MemoryTrimmableRegistry?): Builder =
         apply {
-      this.memoryTrimmableRegistry = memoryTrimmableRegistry
-    }
+          this.memoryTrimmableRegistry = memoryTrimmableRegistry
+        }
 
     fun setMemoryChunkType(@MemoryChunkType memoryChunkType: Int): Builder = apply {
       this.memoryChunkType = memoryChunkType
@@ -392,8 +392,8 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
 
     fun setResizeAndRotateEnabledForNetwork(resizeAndRotateEnabledForNetwork: Boolean): Builder =
         apply {
-      this.resizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork
-    }
+          this.resizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork
+        }
 
     fun setSmallImageDiskCacheConfig(smallImageDiskCacheConfig: DiskCacheConfig?): Builder = apply {
       this.smallImageDiskCacheConfig = smallImageDiskCacheConfig
@@ -413,8 +413,8 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
 
     fun setBitmapMemoryCache(bitmapMemoryCache: MemoryCache<CacheKey, CloseableImage>?): Builder =
         apply {
-      this.bitmapMemoryCache = bitmapMemoryCache
-    }
+          this.bitmapMemoryCache = bitmapMemoryCache
+        }
 
     fun setEncodedMemoryCache(
         encodedMemoryCache: MemoryCache<CacheKey, PooledByteBuffer>?
@@ -426,8 +426,8 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
 
     fun setBitmapMemoryCacheFactory(bitmapMemoryCacheFactory: BitmapMemoryCacheFactory?): Builder =
         apply {
-      this.bitmapMemoryCacheFactory = bitmapMemoryCacheFactory
-    }
+          this.bitmapMemoryCacheFactory = bitmapMemoryCacheFactory
+        }
 
     fun experiment(): ImagePipelineExperiments.Builder = experimentsBuilder
 

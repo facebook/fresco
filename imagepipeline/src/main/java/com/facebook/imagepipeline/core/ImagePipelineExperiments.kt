@@ -233,8 +233,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
 
     fun setShouldDownscaleFrameToDrawableDimensions(downscaleFrameToDrawableDimensions: Boolean) =
         asBuilder {
-      this.downscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions
-    }
+          this.downscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions
+        }
 
     fun setBitmapCloseableRefType(bitmapCloseableRefType: Int) = asBuilder {
       this.bitmapCloseableRefType = bitmapCloseableRefType
@@ -242,13 +242,13 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
 
     fun setSuppressBitmapPrefetchingSupplier(suppressBitmapPrefetchingSupplier: Supplier<Boolean>) =
         asBuilder {
-      this.suppressBitmapPrefetchingSupplier = suppressBitmapPrefetchingSupplier
-    }
+          this.suppressBitmapPrefetchingSupplier = suppressBitmapPrefetchingSupplier
+        }
 
     fun setExperimentalThreadHandoffQueueEnabled(experimentalThreadHandoffQueueEnabled: Boolean) =
         asBuilder {
-      this.experimentalThreadHandoffQueueEnabled = experimentalThreadHandoffQueueEnabled
-    }
+          this.experimentalThreadHandoffQueueEnabled = experimentalThreadHandoffQueueEnabled
+        }
 
     fun setExperimentalMemoryType(MemoryType: Long) = asBuilder { this.memoryType = MemoryType }
 
@@ -274,8 +274,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
 
     fun setIsEncodedMemoryCacheProbingEnabled(isEncodedMemoryCacheProbingEnabled: Boolean) =
         asBuilder {
-      this.isEncodedMemoryCacheProbingEnabled = isEncodedMemoryCacheProbingEnabled
-    }
+          this.isEncodedMemoryCacheProbingEnabled = isEncodedMemoryCacheProbingEnabled
+        }
 
     fun setTrackedKeysSize(trackedKeysSize: Int) = asBuilder {
       this.trackedKeysSize = trackedKeysSize
