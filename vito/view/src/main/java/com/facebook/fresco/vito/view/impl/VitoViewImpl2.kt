@@ -126,7 +126,16 @@ object VitoViewImpl2 {
       is ImageView ->
           when (val current = target.drawable) {
             is FrescoDrawableInterface -> current
-            else -> createDrawable().also { target.setImageDrawable(it as Drawable) }
+            else ->
+                createDrawable().also {
+                  // Force the Drawable to adjust its bounds to match the hosting ImageView's
+                  // bounds, since Fresco has custom scale types that are separate from ImageView's
+                  // scale type.
+                  // Without this, the Drawable would not respect the given Fresco ScaleType,
+                  // effectively resulting in CENTER_INSIDE.
+                  target.scaleType = ImageView.ScaleType.FIT_XY
+                  target.setImageDrawable(it as Drawable)
+                }
           }
       else ->
           when (val current = target.background) {
