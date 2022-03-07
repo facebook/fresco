@@ -18,26 +18,14 @@ class ImageSelector(
     private val imagePipeline: VitoImagePipeline,
     private val controller: FrescoController2,
     private val overlayColor: Int = 0x88ff0000.toInt(),
-    private var currentIndex: Int = 0
+    private var currentIndex: Int = -1
 ) {
 
   var currentEditor: ImageLiveEditor? = null
 
-  fun selectNext(context: Context) =
-      highlightDrawable(context, tracker.getDrawable((++currentIndex) % tracker.drawableCount))
+  fun selectNext(context: Context) = highlightDrawable(context, incrementIndexBy(1))
 
-  fun selectPrevious(context: Context) {
-    currentIndex--
-    if (currentIndex < -1) {
-      currentIndex = tracker.drawableCount - 1
-    }
-    if (currentIndex == -1) {
-      removeHighlight(context)
-      currentEditor = null
-    } else {
-      highlightDrawable(context, tracker.getDrawable(currentIndex % tracker.drawableCount))
-    }
-  }
+  fun selectPrevious(context: Context) = highlightDrawable(context, incrementIndexBy(-1))
 
   fun highlightDrawable(context: Context, drawable: FrescoDrawableInterface?) {
     removeHighlight(context)
@@ -50,4 +38,19 @@ class ImageSelector(
   }
 
   fun removeHighlight(context: Context) = currentEditor?.editOptions(context) { it.overlay(null) }
+
+  private fun highlightDrawable(context: Context, index: Int?) {
+    if (index != null) {
+      highlightDrawable(context, tracker.getDrawableOrNull(index))
+    }
+  }
+
+  private fun incrementIndexBy(increment: Int): Int? {
+    val size = tracker.drawableCount
+    if (size <= 0) {
+      return null
+    }
+    currentIndex = (currentIndex + increment).mod(size)
+    return currentIndex
+  }
 }
