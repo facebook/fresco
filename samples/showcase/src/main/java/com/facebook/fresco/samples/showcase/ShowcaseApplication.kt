@@ -90,7 +90,7 @@ class ShowcaseApplication : Application() {
     imagePipelineConfigBuilder.experiment().setDownsampleIfLargeBitmap(true)
 
     val imagePipelineConfig = imagePipelineConfigBuilder.build()
-    ImagePipelineConfig.getDefaultImageRequestConfig().isProgressiveRenderingEnabled = true
+    ImagePipelineConfig.defaultImageRequestConfig.isProgressiveRenderingEnabled = true
 
     val draweeConfigBuilder = DraweeConfig.newBuilder()
     CustomImageFormatConfigurator.addCustomDrawableFactories(this, draweeConfigBuilder)
