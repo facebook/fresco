@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.core.impl
 
 import android.graphics.Canvas
 import android.graphics.ColorFilter
+import android.graphics.Paint
 import android.graphics.Rect
 import com.facebook.fresco.vito.options.BorderOptions
 import com.facebook.fresco.vito.options.RoundingOptions
@@ -24,6 +25,8 @@ class ImageLayerDataModel {
   private var currentBounds: Rect? = null
   private val canvasTransformationHandler: CanvasTransformationHandler =
       CanvasTransformationHandler(null)
+  private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
   private var renderCommand: RenderCommand? = null
   private var colorFilter: ColorFilter? = null
 
@@ -68,6 +71,7 @@ class ImageLayerDataModel {
     }
     currentBounds = bounds
     canvasTransformationHandler.configure(bounds, model.width, model.height)
+    paint.colorFilter = colorFilter
     renderCommand =
         ImageWithTransformationAndBorderRenderer.createRenderCommand(
             model,
@@ -75,7 +79,7 @@ class ImageLayerDataModel {
             borderOptions,
             canvasTransformationHandler.getMatrix(),
             bounds,
-            colorFilter,
+            paint,
             alpha)
   }
 
@@ -90,6 +94,8 @@ class ImageLayerDataModel {
     borderOptions = null
     renderCommand = null
     currentBounds = null
+    paint.reset()
+    paint.flags = Paint.ANTI_ALIAS_FLAG
     colorFilter = null
   }
 }

@@ -10,6 +10,7 @@ package com.facebook.fresco.samples.showcase.vito.renderer
 import android.graphics.Canvas
 import android.graphics.ColorFilter
 import android.graphics.Matrix
+import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.graphics.drawable.Drawable
 import com.facebook.fresco.vito.renderer.ImageDataModel
@@ -24,7 +25,10 @@ open class RendererExampleDrawable(
 ) : Drawable() {
   override fun draw(canvas: Canvas) {
     ImageRenderer.createImageDataModelRenderCommand(
-        imageDataModel, shape, transformationMatrix, null, imageColorFilter)(canvas)
+        imageDataModel,
+        shape,
+        Paint(Paint.ANTI_ALIAS_FLAG).apply { colorFilter = imageColorFilter },
+        transformationMatrix)(canvas)
   }
 
   override fun setAlpha(alpha: Int) = Unit
