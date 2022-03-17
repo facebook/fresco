@@ -27,12 +27,9 @@ class ImageRenderer {
         imageTransformation: Matrix? = null
     ): RenderCommand {
       return when (model) {
-        is BitmapImageDataModel ->
-            model.createRenderCommand(shape, paint, imageTransformation)
-        is ColorIntImageDataModel ->
-            model.createRenderCommand(shape, paint, imageTransformation)
-        is DrawableImageDataModel ->
-            model.createRenderCommand(shape, paint, imageTransformation)
+        is BitmapImageDataModel -> model.createRenderCommand(shape, paint, imageTransformation)
+        is ColorIntImageDataModel -> model.createRenderCommand(shape, paint, imageTransformation)
+        is DrawableImageDataModel -> model.createRenderCommand(shape, paint, imageTransformation)
       }
     }
 
@@ -99,6 +96,7 @@ class ImageRenderer {
                     shape.rect.bottom.toInt())
               }
               drawable.colorFilter = colorFilter
+              drawable.alpha = paint.alpha
               drawable.draw(it)
             }
         else -> {

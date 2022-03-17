@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.core.impl
 
+import android.animation.ValueAnimator
 import android.graphics.Canvas
 import android.graphics.ColorFilter
 import android.graphics.Paint
@@ -29,6 +30,10 @@ class ImageLayerDataModel {
 
   private var renderCommand: RenderCommand? = null
   private var colorFilter: ColorFilter? = null
+
+  private var fadeAnimator: ValueAnimator? = null
+
+  var invalidateLayerCallback: (() -> Unit)? = null
 
   fun getDataModel(): ImageDataModel? {
     return dataModel
@@ -98,4 +103,33 @@ class ImageLayerDataModel {
     paint.flags = Paint.ANTI_ALIAS_FLAG
     colorFilter = null
   }
+
+  fun fadeIn(durationMs: Int) {
+    fadeAnimator?.end()
+    fadeAnimator =
+        ValueAnimator.ofInt(0, 255).apply {
+          duration = durationMs.toLong()
+          addUpdateListener {
+            paint.alpha = it.animatedValue as Int
+            invalidateLayerCallback?.invoke()
+          }
+
+          start()
+        }
+  }
+
+  fun fadeOut(durationMs: Int) {
+    fadeAnimator?.end()
+    fadeAnimator =
+        ValueAnimator.ofInt(255, 0).apply {
+          duration = durationMs.toLong()
+          addUpdateListener {
+            paint.alpha = it.animatedValue as Int
+            invalidateLayerCallback?.invoke()
+          }
+          start()
+        }
+  }
+
+  fun getAlpha() = paint.alpha
 }

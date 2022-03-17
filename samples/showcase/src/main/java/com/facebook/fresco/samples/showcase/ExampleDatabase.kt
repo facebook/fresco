@@ -23,6 +23,7 @@ import com.facebook.fresco.samples.showcase.settings.SettingsFragment
 import com.facebook.fresco.samples.showcase.vito.*
 import com.facebook.fresco.samples.showcase.vito.ninepatch.LithoNinePatchSample
 import com.facebook.fresco.samples.showcase.vito.renderer.RendererColorFilterExampleFragment
+import com.facebook.fresco.samples.showcase.vito.renderer.RendererFadeExampleFragment
 import com.facebook.fresco.samples.showcase.vito.renderer.RendererShapeExampleFragment
 import com.facebook.fresco.samples.showcase.vito.renderer.VitoLayerExample
 
@@ -104,5 +105,6 @@ object ExampleDatabase {
               listOf(
                   ExampleItem("Renderer: Shapes") { RendererShapeExampleFragment() },
                   ExampleItem("Renderer: Color Filters") { RendererColorFilterExampleFragment() },
+                  ExampleItem("Renderer: Fading") { RendererFadeExampleFragment() },
                   ExampleItem("Layers: Scaling") { VitoLayerExample() })))
 }
