@@ -11,6 +11,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import com.facebook.fresco.vito.options.BorderOptions
 import com.facebook.fresco.vito.renderer.Shape
+import com.facebook.fresco.vito.renderer.util.ColorUtils
 
 class BorderRenderer {
 
@@ -21,22 +22,9 @@ class BorderRenderer {
 
     fun createPaint(borderOptions: BorderOptions, alpha: Int = 255) =
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
-          color = multiplyColorAlpha(borderOptions.color, alpha)
+          color = ColorUtils.multiplyColorAlpha(borderOptions.color, alpha)
           strokeWidth = borderOptions.width
           style = Paint.Style.STROKE
         }
-
-    private fun multiplyColorAlpha(color: Int, alpha: Int): Int {
-      return when (alpha) {
-        255 -> color
-        0 -> color and 0x00FFFFFF
-        else -> {
-          val cappedAlpha = alpha + (alpha shr 7) // make it 0..256
-          val colorAlpha = color ushr 24
-          val multipliedAlpha = colorAlpha * cappedAlpha shr 8
-          multipliedAlpha shl 24 or (color and 0x00FFFFFF)
-        }
-      }
-    }
   }
 }

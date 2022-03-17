@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.renderer
 
 import android.graphics.*
+import com.facebook.fresco.vito.renderer.util.ColorUtils
 
 typealias RenderCommand = (Canvas) -> Unit
 
@@ -68,8 +69,7 @@ class ImageRenderer {
         imageTransformation: Matrix? = null
     ): RenderCommand {
       // The image transformation is a no-op for solid colors since it is a no-op
-      // TODO alpha not being correctly rendered
-      val paint = paint.apply { color = colorInt }
+      val paint = paint.apply { color = ColorUtils.multiplyColorAlpha(colorInt, paint.alpha) }
       return { shape.draw(it, paint) }
     }
 
