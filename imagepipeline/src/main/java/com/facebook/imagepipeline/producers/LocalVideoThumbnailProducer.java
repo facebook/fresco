@@ -142,6 +142,10 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
     if (UriUtil.isLocalFileUri(uri)) {
       return imageRequest.getSourceFile().getPath();
     } else if (UriUtil.isLocalContentUri(uri)) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !Environment.isExternalStorageLegacy()){
+        return null;
+      }
+      
       String selection = null;
       String[] selectionArgs = null;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
