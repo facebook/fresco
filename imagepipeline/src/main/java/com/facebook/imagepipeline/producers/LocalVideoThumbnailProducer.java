@@ -14,6 +14,7 @@ import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
@@ -142,6 +143,9 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
     if (UriUtil.isLocalFileUri(uri)) {
       return imageRequest.getSourceFile().getPath();
     } else if (UriUtil.isLocalContentUri(uri)) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !Environment.isExternalStorageLegacy()) {
+        return null;
+      }
       String selection = null;
       String[] selectionArgs = null;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
