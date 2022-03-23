@@ -7,10 +7,10 @@
 
 package com.facebook.common.logging;
 
-import com.facebook.infer.annotation.NullsafeStrict;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Logging interface */
-@NullsafeStrict
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface LoggingDelegate {
 
   /**
