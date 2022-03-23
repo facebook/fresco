@@ -51,7 +51,7 @@ class ImageWithTransformationAndBorderRenderer {
       }
 
       val imageRenderCommand =
-          ImageRenderer.createImageDataModelRenderCommand(model, imageShape, paint)
+          ImageRenderer.createImageDataModelRenderCommand(model, imageShape, paint, imageTransform)
 
       val imageClipRect =
           if (model.width > 0 && model.height > 0) {
