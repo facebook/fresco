@@ -104,9 +104,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     frescoDrawable.setViewportDimensions(viewportDimensions);
 
     // Check if we already fetched the image
-    if (frescoDrawable.getDrawableDataSubscriber() == this
-        && frescoDrawable.isFetchSubmitted()
-        && imageRequest.equals(frescoDrawable.getImageRequest())) {
+    if (isAlreadyLoadingImage(frescoDrawable, imageRequest)) {
       frescoDrawable.cancelReleaseNextFrame();
       frescoDrawable.cancelReleaseDelayed();
       return true; // already set
@@ -363,6 +361,18 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
           .onRelease(drawable.getImageId(), imageRequest, obtainExtras(null, null, drawable));
     }
     drawable.getImagePerfListener().onImageRelease(drawable);
+  }
+
+  private boolean isAlreadyLoadingImage(
+      FrescoDrawable2Impl drawable, VitoImageRequest imageRequest) {
+    if (drawable.getDrawableDataSubscriber() != this || !drawable.isFetchSubmitted()) {
+      return false;
+    }
+    if (mConfig.useSmartPropertyDiffing()) {
+      return imageRequest.equalsIfHasImage(drawable.getImageRequest(), drawable.hasImage());
+    } else {
+      return imageRequest.equals(drawable.getImageRequest());
+    }
   }
 
   private static Extras obtainExtras(

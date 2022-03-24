@@ -56,6 +56,11 @@ public class DefaultFrescoVitoConfig implements FrescoVitoConfig {
     return false;
   }
 
+  @Override
+  public boolean useSmartPropertyDiffing() {
+    return false;
+  }
+
   public static class DefaultPrefetchConfig implements PrefetchConfig {
     @Override
     public boolean prefetchInOnPrepare() {

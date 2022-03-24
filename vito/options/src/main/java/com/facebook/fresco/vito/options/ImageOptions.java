@@ -216,6 +216,32 @@ public class ImageOptions extends DecodedImageOptions {
     return mDelayMs;
   }
 
+  public boolean equalsForActualImage(ImageOptions other) {
+    if (this == other) {
+      return true;
+    }
+    if (mPerfMediaRemountInstrumentationFix) {
+      if (mOverlayRes != other.mOverlayRes
+          || !Objects.equal(mOverlayDrawable, other.mOverlayDrawable)
+          || !Objects.equal(mActualImageColorFilter, other.mActualImageColorFilter)
+          || mResizeToViewport != other.mResizeToViewport
+          || mAutoPlay != other.mAutoPlay
+          || !Objects.equal(mCustomDrawableFactory, other.mCustomDrawableFactory)
+          || mPerfMediaRemountInstrumentationFix != other.mPerfMediaRemountInstrumentationFix) {
+        return false;
+      }
+    } else {
+      if (mOverlayRes != other.mOverlayRes
+          || !Objects.equal(mOverlayDrawable, other.mOverlayDrawable)
+          || !Objects.equal(mActualImageColorFilter, other.mActualImageColorFilter)
+          || mResizeToViewport != other.mResizeToViewport
+          || !Objects.equal(mCustomDrawableFactory, other.mCustomDrawableFactory)) {
+        return false;
+      }
+    }
+    return equalDecodedOptions(other);
+  }
+
   @Override
   public boolean equals(@Nullable Object obj) {
     if (this == obj) {

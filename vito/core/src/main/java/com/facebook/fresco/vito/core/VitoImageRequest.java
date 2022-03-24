@@ -50,6 +50,20 @@ public class VitoImageRequest {
         && Objects.equal(imageOptions, other.imageOptions);
   }
 
+  public boolean equalsIfHasImage(@Nullable VitoImageRequest other, boolean hasImage) {
+    if (this == other) {
+      return true;
+    }
+    if (other == null) {
+      return false;
+    }
+    return resources == other.resources
+        && Objects.equal(imageSource, other.imageSource)
+        && (hasImage
+            ? imageOptions.equalsForActualImage(other.imageOptions)
+            : Objects.equal(imageOptions, other.imageOptions));
+  }
+
   @Override
   public int hashCode() {
     int result = resources.hashCode();
