@@ -179,7 +179,7 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
    * <p>Returns null if the parameter is null.
    */
   public static <T extends Closeable> CloseableReference<T> of(
-      @PropagatesNullable T t, LeakHandler leakHandler) {
+      @PropagatesNullable @Nullable T t, LeakHandler leakHandler) {
     if (t == null) {
       return null;
     } else {
