@@ -28,9 +28,7 @@ import com.facebook.imagepipeline.image.EncodedImage
 import com.facebook.imagepipeline.image.ImmutableQualityInfo
 import com.facebook.imagepipeline.image.QualityInfo
 import com.facebook.imagepipeline.producers.JobScheduler.JobRunnable
-import com.facebook.imagepipeline.systrace.FrescoSystrace.beginSection
-import com.facebook.imagepipeline.systrace.FrescoSystrace.endSection
-import com.facebook.imagepipeline.systrace.FrescoSystrace.isTracing
+import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
 import com.facebook.imagepipeline.transcoder.DownsampleUtil
 import com.facebook.imageutils.BitmapUtil
 import java.lang.Exception
@@ -61,33 +59,25 @@ class DecodeProducer(
   override fun produceResults(
       consumer: Consumer<CloseableReference<CloseableImage?>>,
       context: ProducerContext
-  ) {
-    try {
-      if (isTracing()) {
-        beginSection("DecodeProducer#produceResults")
+  ) =
+      traceSection("DecodeProducer#produceResults") {
+        val imageRequest = context.imageRequest
+        val progressiveDecoder =
+            if (!UriUtil.isNetworkUri(imageRequest.sourceUri)) {
+              LocalImagesProgressiveDecoder(
+                  consumer, context, this.decodeCancellationEnabled, this.maxBitmapSize)
+            } else {
+              val jpegParser = ProgressiveJpegParser(this.byteArrayPool)
+              NetworkImagesProgressiveDecoder(
+                  consumer,
+                  context,
+                  jpegParser,
+                  this.progressiveJpegConfig,
+                  this.decodeCancellationEnabled,
+                  this.maxBitmapSize)
+            }
+        this.inputProducer.produceResults(progressiveDecoder, context)
       }
-      val imageRequest = context.imageRequest
-      val progressiveDecoder =
-          if (!UriUtil.isNetworkUri(imageRequest.sourceUri)) {
-            LocalImagesProgressiveDecoder(
-                consumer, context, this.decodeCancellationEnabled, this.maxBitmapSize)
-          } else {
-            val jpegParser = ProgressiveJpegParser(this.byteArrayPool)
-            NetworkImagesProgressiveDecoder(
-                consumer,
-                context,
-                jpegParser,
-                this.progressiveJpegConfig,
-                this.decodeCancellationEnabled,
-                this.maxBitmapSize)
-          }
-      this.inputProducer.produceResults(progressiveDecoder, context)
-    } finally {
-      if (isTracing()) {
-        endSection()
-      }
-    }
-  }
 
   private abstract inner class ProgressiveDecoder(
       consumer: Consumer<CloseableReference<CloseableImage?>>,
@@ -114,34 +104,26 @@ class DecodeProducer(
       encodedImage.sampleSize = sampleSize
     }
 
-    public override fun onNewResultImpl(newResult: EncodedImage?, @Consumer.Status status: Int) {
-      try {
-        if (isTracing()) {
-          beginSection("DecodeProducer#onNewResultImpl")
-        }
-        val isLast = isLast(status)
-        if (isLast) {
-          if (newResult == null) {
-            handleError(ExceptionWithNoStacktrace("Encoded image is null."))
-            return
-          } else if (!newResult.isValid) {
-            handleError(ExceptionWithNoStacktrace("Encoded image is not valid."))
+    public override fun onNewResultImpl(newResult: EncodedImage?, @Consumer.Status status: Int) =
+        traceSection("DecodeProducer#onNewResultImpl") {
+          val isLast = isLast(status)
+          if (isLast) {
+            if (newResult == null) {
+              handleError(ExceptionWithNoStacktrace("Encoded image is null."))
+              return
+            } else if (!newResult.isValid) {
+              handleError(ExceptionWithNoStacktrace("Encoded image is not valid."))
+              return
+            }
+          }
+          if (!updateDecodeJob(newResult, status)) {
             return
           }
+          val isPlaceholder = statusHasFlag(status, IS_PLACEHOLDER)
+          if (isLast || isPlaceholder || producerContext.isIntermediateResultExpected) {
+            jobScheduler.scheduleJob()
+          }
         }
-        if (!updateDecodeJob(newResult, status)) {
-          return
-        }
-        val isPlaceholder = statusHasFlag(status, IS_PLACEHOLDER)
-        if (isLast || isPlaceholder || producerContext.isIntermediateResultExpected) {
-          jobScheduler.scheduleJob()
-        }
-      } finally {
-        if (isTracing()) {
-          endSection()
-        }
-      }
-    }
 
     override fun onProgressUpdateImpl(progress: Float) {
       super.onProgressUpdateImpl(progress * 0.99f)
