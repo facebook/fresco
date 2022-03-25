@@ -6,7 +6,6 @@
  */
 package com.facebook.imagepipeline.producers
 
-import com.facebook.imagepipeline.producers.ProducerContext
 import com.facebook.infer.annotation.Nullsafe
 
 /**
