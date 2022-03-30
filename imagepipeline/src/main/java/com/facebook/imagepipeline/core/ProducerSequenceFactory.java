@@ -32,6 +32,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheGetProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheKeyMultiplexProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheProducer;
+import com.facebook.imagepipeline.producers.CustomProducerSequenceFactory;
 import com.facebook.imagepipeline.producers.DecodeProducer;
 import com.facebook.imagepipeline.producers.DiskCacheReadProducer;
 import com.facebook.imagepipeline.producers.EncodedProbeProducer;
@@ -56,6 +57,7 @@ import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class ProducerSequenceFactory {
@@ -74,6 +76,7 @@ public class ProducerSequenceFactory {
   private final boolean mIsEncodedMemoryCacheProbingEnabled;
   private final boolean mIsDiskCacheProbingEnabled;
   private final boolean mAllowDelay;
+  @Nullable private final Set<CustomProducerSequenceFactory> mCustomProducerSequenceFactories;
 
   // Saved sequences
   @VisibleForTesting @Nullable Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
@@ -151,7 +154,8 @@ public class ProducerSequenceFactory {
       ImageTranscoderFactory imageTranscoderFactory,
       boolean isEncodedMemoryCacheProbingEnabled,
       boolean isDiskCacheProbingEnabled,
-      boolean allowDelay) {
+      boolean allowDelay,
+      @Nullable Set<CustomProducerSequenceFactory> customProducerSequenceFactories) {
     mContentResolver = contentResolver;
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
@@ -169,6 +173,7 @@ public class ProducerSequenceFactory {
     mIsEncodedMemoryCacheProbingEnabled = isEncodedMemoryCacheProbingEnabled;
     mIsDiskCacheProbingEnabled = isDiskCacheProbingEnabled;
     mAllowDelay = allowDelay;
+    mCustomProducerSequenceFactories = customProducerSequenceFactories;
   }
 
   /**
@@ -408,6 +413,17 @@ public class ProducerSequenceFactory {
         case SOURCE_TYPE_DATA:
           return getDataFetchSequence();
         default:
+          if (mCustomProducerSequenceFactories != null) {
+            for (CustomProducerSequenceFactory customProducerSequenceFactory :
+                mCustomProducerSequenceFactories) {
+              Producer<CloseableReference<CloseableImage>> sequence =
+                  customProducerSequenceFactory.getCustomDecodedImageSequence(imageRequest, this);
+              if (sequence != null) {
+                return sequence;
+              }
+            }
+          }
+
           throw new IllegalArgumentException(
               "Unsupported uri scheme! Uri is: " + getShortenedUriString(uri));
       }
@@ -508,30 +524,37 @@ public class ProducerSequenceFactory {
           "ProducerSequenceFactory#getCommonNetworkFetchToEncodedMemorySequence");
     }
     if (mCommonNetworkFetchToEncodedMemorySequence == null) {
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.beginSection(
-            "ProducerSequenceFactory#getCommonNetworkFetchToEncodedMemorySequence:init");
-      }
-      Producer<EncodedImage> inputProducer =
-          Preconditions.checkNotNull(
-              newEncodedCacheMultiplexToTranscodeSequence(
-                  mProducerFactory.newNetworkFetchProducer(mNetworkFetcher)));
       mCommonNetworkFetchToEncodedMemorySequence =
-          ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
-
-      mCommonNetworkFetchToEncodedMemorySequence =
-          mProducerFactory.newResizeAndRotateProducer(
-              mCommonNetworkFetchToEncodedMemorySequence,
-              mResizeAndRotateEnabledForNetwork && !mDownsampleEnabled,
-              mImageTranscoderFactory);
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.endSection();
-      }
+          newCommonNetworkFetchToEncodedMemorySequence(mNetworkFetcher);
     }
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.endSection();
     }
     return mCommonNetworkFetchToEncodedMemorySequence;
+  }
+
+  public synchronized Producer<EncodedImage> newCommonNetworkFetchToEncodedMemorySequence(
+      NetworkFetcher networkFetcher) {
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection(
+          "ProducerSequenceFactory#createCommonNetworkFetchToEncodedMemorySequence");
+    }
+    Producer<EncodedImage> inputProducer =
+        Preconditions.checkNotNull(
+            newEncodedCacheMultiplexToTranscodeSequence(
+                mProducerFactory.newNetworkFetchProducer(networkFetcher)));
+    Producer<EncodedImage> networkFetchToEncodedMemorySequence =
+        ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
+
+    networkFetchToEncodedMemorySequence =
+        mProducerFactory.newResizeAndRotateProducer(
+            networkFetchToEncodedMemorySequence,
+            mResizeAndRotateEnabledForNetwork && !mDownsampleEnabled,
+            mImageTranscoderFactory);
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
+    return networkFetchToEncodedMemorySequence;
   }
 
   /**
@@ -797,7 +820,7 @@ public class ProducerSequenceFactory {
    * @param inputProducer producer providing the input to the decode
    * @return bitmap cache get to decode sequence
    */
-  private Producer<CloseableReference<CloseableImage>> newBitmapCacheGetToDecodeSequence(
+  public Producer<CloseableReference<CloseableImage>> newBitmapCacheGetToDecodeSequence(
       Producer<EncodedImage> inputProducer) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("ProducerSequenceFactory#newBitmapCacheGetToDecodeSequence");

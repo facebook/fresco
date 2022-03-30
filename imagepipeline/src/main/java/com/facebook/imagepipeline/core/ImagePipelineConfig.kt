@@ -51,6 +51,7 @@ import com.facebook.imagepipeline.listener.RequestListener
 import com.facebook.imagepipeline.listener.RequestListener2
 import com.facebook.imagepipeline.memory.PoolConfig
 import com.facebook.imagepipeline.memory.PoolFactory
+import com.facebook.imagepipeline.producers.CustomProducerSequenceFactory
 import com.facebook.imagepipeline.producers.HttpUrlConnectionNetworkFetcher
 import com.facebook.imagepipeline.producers.NetworkFetcher
 import com.facebook.imagepipeline.systrace.FrescoSystrace.beginSection
@@ -102,6 +103,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
   override val progressiveJpegConfig: ProgressiveJpegConfig
   override val requestListeners: Set<RequestListener>
   override val requestListener2s: Set<RequestListener2>
+  override val customProducerSequenceFactories: Set<CustomProducerSequenceFactory>?
   override val isResizeAndRotateEnabledForNetwork: Boolean
   override val smallImageDiskCacheConfig: DiskCacheConfig
   override val imageDecoderConfig: ImageDecoderConfig?
@@ -161,6 +163,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     progressiveJpegConfig = builder.progressiveJpegConfig ?: SimpleProgressiveJpegConfig()
     requestListeners = builder.requestListeners ?: HashSet()
     requestListener2s = builder.requestListener2s ?: HashSet()
+    customProducerSequenceFactories = builder.customProducerSequenceFactories
     isResizeAndRotateEnabledForNetwork = builder.resizeAndRotateEnabledForNetwork
     smallImageDiskCacheConfig = builder.smallImageDiskCacheConfig ?: mainDiskCacheConfig
     imageDecoderConfig = builder.imageDecoderConfig
@@ -247,6 +250,8 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     var requestListeners: Set<RequestListener>? = null
       private set
     var requestListener2s: Set<RequestListener2>? = null
+      private set
+    var customProducerSequenceFactories: Set<CustomProducerSequenceFactory>? = null
       private set
     var resizeAndRotateEnabledForNetwork = true
       private set
@@ -389,6 +394,10 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     fun setRequestListener2s(requestListeners: Set<RequestListener2>?): Builder = apply {
       requestListener2s = requestListeners
     }
+
+    fun setCustomFetchSequenceFactories(
+        customProducerSequenceFactories: Set<CustomProducerSequenceFactory>?
+    ): Builder = apply { this.customProducerSequenceFactories = customProducerSequenceFactories }
 
     fun setResizeAndRotateEnabledForNetwork(resizeAndRotateEnabledForNetwork: Boolean): Builder =
         apply {

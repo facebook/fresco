@@ -378,7 +378,8 @@ public class ImagePipelineFactory {
               getImageTranscoderFactory(),
               mConfig.getExperiments().isEncodedMemoryCacheProbingEnabled(),
               mConfig.getExperiments().isDiskCacheProbingEnabled(),
-              mConfig.getExperiments().getAllowDelay());
+              mConfig.getExperiments().getAllowDelay(),
+              mConfig.getCustomProducerSequenceFactories());
     }
     return mProducerSequenceFactory;
   }

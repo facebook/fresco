@@ -32,6 +32,7 @@ import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.listener.RequestListener
 import com.facebook.imagepipeline.listener.RequestListener2
 import com.facebook.imagepipeline.memory.PoolFactory
+import com.facebook.imagepipeline.producers.CustomProducerSequenceFactory
 import com.facebook.imagepipeline.producers.NetworkFetcher
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory
 
@@ -66,6 +67,7 @@ interface ImagePipelineConfigInterface {
   val progressiveJpegConfig: ProgressiveJpegConfig?
   val requestListeners: Set<RequestListener?>?
   val requestListener2s: Set<RequestListener2?>?
+  val customProducerSequenceFactories: Set<CustomProducerSequenceFactory>?
   val isResizeAndRotateEnabledForNetwork: Boolean
   val smallImageDiskCacheConfig: DiskCacheConfig?
   val imageDecoderConfig: ImageDecoderConfig?

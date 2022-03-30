@@ -13,6 +13,7 @@ import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_RESOURCE;
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_VIDEO_FILE;
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_NETWORK;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_UNKNOWN;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -29,11 +30,15 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.producers.Consumer;
+import com.facebook.imagepipeline.producers.CustomProducerSequenceFactory;
 import com.facebook.imagepipeline.producers.Producer;
+import com.facebook.imagepipeline.producers.ProducerContext;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.Postprocessor;
 import com.facebook.imagepipeline.transcoder.ImageTranscoder;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
+import java.util.Collections;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -89,7 +94,8 @@ public class ProducerSequenceFactoryTest {
             imageTranscoderFactory,
             false,
             false,
-            false);
+            false,
+            null);
 
     when(mImageRequest.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
@@ -104,6 +110,28 @@ public class ProducerSequenceFactoryTest {
     PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_NETWORK);
     Producer producer = mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
     assertSame(producer, mProducerSequenceFactory.mNetworkFetchSequence);
+  }
+
+  @Test
+  public void testCustomSequenceFetchIsCalled() {
+    RecordingCustomProducerSequenceFactoryIsCalled producerSequenceFactory =
+        new RecordingCustomProducerSequenceFactoryIsCalled();
+    internalUseSequenceFactoryWithCustomSequence(producerSequenceFactory);
+    PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_UNKNOWN);
+
+    Producer producer = mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
+    assertSame(producerSequenceFactory.isCalled, true);
+  }
+
+  @Test
+  public void testCustomSequenceFetchNotCalled() {
+    RecordingCustomProducerSequenceFactoryIsCalled producerSequenceFactory =
+        new RecordingCustomProducerSequenceFactoryIsCalled();
+    internalUseSequenceFactoryWithCustomSequence(producerSequenceFactory);
+    PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_NETWORK);
+
+    Producer producer = mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
+    assertSame(producerSequenceFactory.isCalled, false);
   }
 
   @Test
@@ -328,6 +356,51 @@ public class ProducerSequenceFactoryTest {
             imageTranscoderFactory,
             false,
             false,
-            false);
+            false,
+            null);
+  }
+
+  private void internalUseSequenceFactoryWithCustomSequence(
+      CustomProducerSequenceFactory customProducerSequenceFactory) {
+    ProducerFactory producerFactory = mock(ProducerFactory.class, RETURNS_MOCKS);
+    ImageTranscoderFactory imageTranscoderFactory = mock(ImageTranscoderFactory.class);
+
+    mProducerSequenceFactory =
+        new ProducerSequenceFactory(
+            RuntimeEnvironment.application.getContentResolver(),
+            producerFactory,
+            null,
+            true,
+            false,
+            null,
+            false,
+            false,
+            false,
+            true,
+            imageTranscoderFactory,
+            false,
+            false,
+            false,
+            Collections.singleton(customProducerSequenceFactory));
+  }
+
+  private static class RecordingCustomProducerSequenceFactoryIsCalled
+      extends CustomProducerSequenceFactory {
+
+    boolean isCalled = false;
+
+    @Override
+    public Producer<CloseableReference<CloseableImage>> getCustomDecodedImageSequence(
+        ImageRequest imageRequest, ProducerSequenceFactory producerSequenceFactory) {
+      this.isCalled = true;
+      return new DummyProducer();
+    }
+  }
+
+  private static class DummyProducer implements Producer<CloseableReference<CloseableImage>> {
+
+    @Override
+    public void produceResults(
+        Consumer<CloseableReference<CloseableImage>> consumer, ProducerContext context) {}
   }
 }
