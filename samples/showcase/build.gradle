@@ -138,6 +138,7 @@ dependencies {
     implementation project(':vito:provider')
     implementation project(':vito:renderer')
     implementation project(':vito:source')
+    implementation project(':vito:textspan')
     implementation project(':vito:tools:liveeditor')
     implementation project(':vito:view')
 

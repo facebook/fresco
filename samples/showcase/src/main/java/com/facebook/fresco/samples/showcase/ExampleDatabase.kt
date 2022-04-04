@@ -97,9 +97,9 @@ object ExampleDatabase {
                       LithoSlideshowSample(),
                       "Litho slideshow that fades between images"),
                   ExampleItem(
-                      "Vito Litho: NinePatch",
-                      LithoNinePatchSample(),
-                      "Litho nine patch example"))),
+                      "Vito Litho: NinePatch", LithoNinePatchSample(), "Litho nine patch example"),
+                  ExampleItem("Vito Text Span") { VitoSpanFragment() },
+              )),
           ExampleCategory(
               "Vito Renderer",
               listOf(
