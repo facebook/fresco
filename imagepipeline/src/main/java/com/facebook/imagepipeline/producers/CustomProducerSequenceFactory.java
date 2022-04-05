@@ -7,7 +7,7 @@
 
 package com.facebook.imagepipeline.producers;
 
-import com.facebook.annotations.OkToExtend;
+import com.facebook.infer.annotation.OkToExtend;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.core.ProducerSequenceFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
