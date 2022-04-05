@@ -69,6 +69,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val shouldStoreCacheEntrySize: Boolean
   val shouldIgnoreCacheSizeMismatch: Boolean
   val shouldUseDecodingBufferHelper: Boolean
+  val allowProgressiveOnPrefetch: Boolean
 
   class Builder(private val configBuilder: ImagePipelineConfig.Builder) {
     @JvmField var shouldUseDecodingBufferHelper = false
@@ -115,6 +116,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var shouldStoreCacheEntrySize = false
 
     @JvmField var shouldIgnoreCacheSizeMismatch = false
+    @JvmField var allowProgressiveOnPrefetch = false
 
     private fun asBuilder(block: () -> Unit): ImagePipelineConfig.Builder {
       block()
@@ -283,6 +285,10 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
 
     fun setAllowDelay(allowDelay: Boolean) = asBuilder { this.allowDelay = allowDelay }
 
+    fun setAllowProgressiveOnPrefetch(allowProgressiveOnPrefetch: Boolean) = asBuilder {
+      this.allowProgressiveOnPrefetch = allowProgressiveOnPrefetch
+    }
+
     fun build(): ImagePipelineExperiments = ImagePipelineExperiments(this)
   }
 
@@ -393,6 +399,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     isEncodedMemoryCacheProbingEnabled = builder.isEncodedMemoryCacheProbingEnabled
     isDiskCacheProbingEnabled = builder.isDiskCacheProbingEnabled
     trackedKeysSize = builder.trackedKeysSize
+    allowProgressiveOnPrefetch = builder.allowProgressiveOnPrefetch
     allowDelay = builder.allowDelay
     handOffOnUiThreadOnly = builder.handOffOnUiThreadOnly
     shouldStoreCacheEntrySize = builder.shouldStoreCacheEntrySize

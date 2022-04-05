@@ -972,7 +972,9 @@ public class ImagePipeline {
               callerContext,
               lowestPermittedRequestLevel,
               /* isPrefetch */ true,
-              /* isIntermediateResultExpected */ false,
+              mConfig.getExperiments() != null
+                  && mConfig.getExperiments().getAllowProgressiveOnPrefetch()
+                  && imageRequest.getProgressiveRenderingEnabled(),
               priority,
               mConfig);
       return ProducerToDataSourceAdapter.create(
