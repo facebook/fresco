@@ -73,15 +73,17 @@ object VitoSpanLoader {
     target?.let { FrescoVitoProvider.getController().releaseImmediately(target.drawable) }
   }
 
-  fun SpannableStringBuilder.setImageSpan(
+  @JvmStatic
+  fun setImageSpanOnBuilder(
+      sb: SpannableStringBuilder,
       imageSpan: VitoSpan,
       startIndex: Int,
       endIndex: Int,
       imageWidthPx: Int,
       imageHeightPx: Int,
-      parentView: View
+      parentView: View?
   ) {
-    if (endIndex >= length) {
+    if (endIndex > sb.length) {
       // Unfortunately, some callers use this wrong. The original implementation also swallows
       // an exception if this happens (e.g. if you tap on a video that has a minutiae as well.
       // Example: Text = "ABC", insert image at position 18.
@@ -90,7 +92,19 @@ object VitoSpanLoader {
     (imageSpan.drawable as Drawable).setBounds(0, 0, imageWidthPx, imageHeightPx)
     imageSpan.parentView = parentView
 
-    setSpan(imageSpan, startIndex, endIndex + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    sb.setSpan(imageSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+  }
+
+  fun SpannableStringBuilder.setImageSpan(
+      imageSpan: VitoSpan,
+      startIndex: Int,
+      endIndex: Int,
+      imageWidthPx: Int,
+      imageHeightPx: Int,
+      parentView: View?
+  ) {
+    setImageSpanOnBuilder(
+        this, imageSpan, startIndex, endIndex, imageWidthPx, imageHeightPx, parentView)
   }
 
   private fun createDrawable(): FrescoDrawableInterface =
