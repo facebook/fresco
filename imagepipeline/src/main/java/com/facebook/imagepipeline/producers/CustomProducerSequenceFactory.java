@@ -7,11 +7,11 @@
 
 package com.facebook.imagepipeline.producers;
 
-import com.facebook.infer.annotation.OkToExtend;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.core.ProducerSequenceFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.OkToExtend;
 import javax.annotation.Nullable;
 
 @OkToExtend
