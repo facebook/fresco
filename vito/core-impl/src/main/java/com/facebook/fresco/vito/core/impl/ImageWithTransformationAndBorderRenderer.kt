@@ -69,9 +69,8 @@ class ImageWithTransformationAndBorderRenderer {
       val borderShape =
           if (hasBorders) {
             val halfBorder = borderWidth / 2
-            layerBounds.inset(halfBorder, halfBorder)
-            val borderShape = ShapeCalculator.getShape(layerBounds, roundingOptions, -halfBorder)
-            layerBounds.inset(-halfBorder, -halfBorder)
+            val borderBounds = RectF(layerBounds).apply { inset(halfBorder, halfBorder) }
+            val borderShape = ShapeCalculator.getShape(borderBounds, roundingOptions, -halfBorder)
             borderShape
           } else {
             null
