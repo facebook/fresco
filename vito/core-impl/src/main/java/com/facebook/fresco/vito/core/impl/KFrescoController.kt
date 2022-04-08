@@ -29,6 +29,7 @@ import com.facebook.imagepipeline.image.ImageInfo
 import java.util.concurrent.Executor
 
 class KFrescoController(
+    private val config: FrescoVitoConfig,
     private val vitoImagePipeline: VitoImagePipeline,
     private val uiThreadExecutor: Executor,
     private val lightweightBackgroundThreadExecutor: Executor,
@@ -72,7 +73,7 @@ class KFrescoController(
     val drawable = frescoDrawable as KFrescoVitoDrawable
 
     // Check if we already fetched that image
-    if (drawable.imageRequest == imageRequest) {
+    if (isAlreadyLoadingImage(imageRequest, drawable)) {
       ImageReleaseScheduler.cancelAllReleasing(drawable)
       return true
     }
@@ -162,4 +163,14 @@ class KFrescoController(
   override fun releaseImmediately(drawable: FrescoDrawableInterface) {
     ImageReleaseScheduler.releaseImmediately(drawable as KFrescoVitoDrawable)
   }
+
+  private fun isAlreadyLoadingImage(
+      imageRequest: VitoImageRequest,
+      drawable: KFrescoVitoDrawable
+  ): Boolean =
+      if (config.useSmartPropertyDiffing()) {
+        imageRequest.equalsIfHasImage(drawable.imageRequest, drawable.hasImage())
+      } else {
+        imageRequest == drawable.imageRequest
+      }
 }

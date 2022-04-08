@@ -38,6 +38,7 @@ class KFrescoVitoProvider(
 
   private val _controller: FrescoController2 by lazy {
     KFrescoController(
+            vitoConfig,
             _imagePipeline,
             uiThreadExecutor,
             lightweightBackgroundExecutor,
