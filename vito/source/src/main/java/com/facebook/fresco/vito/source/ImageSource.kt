@@ -5,13 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.source;
-
-import com.facebook.infer.annotation.Nullsafe;
+package com.facebook.fresco.vito.source
 
 /**
  * Image source that can be passed to Fresco's image components. New image sources can be created
- * via {@link ImageSourceProvider}.
+ * via [ImageSourceProvider].
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
-public interface ImageSource {}
+interface ImageSource
