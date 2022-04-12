@@ -40,6 +40,8 @@ public class DownsampleUtilTest {
   @Test
   public void testDetermineSampleSize_NullResizeOptions() {
     whenImageWidthAndHeight(0, 0);
+    // A default rotation is required for this field
+    when(mImageRequest.getRotationOptions()).thenReturn(RotationOptions.autoRotate());
     // Null resizeOptions
     assertEquals(
         1,
