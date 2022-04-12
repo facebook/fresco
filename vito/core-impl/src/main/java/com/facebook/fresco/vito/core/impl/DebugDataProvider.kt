@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.core.impl
 
+import com.facebook.fresco.ui.common.VitoUtils
 import java.util.Locale
 
 class DebugDataProvider(

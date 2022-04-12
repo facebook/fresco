@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.core.impl;
+package com.facebook.fresco.ui.common;
 
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.atomic.AtomicLong;

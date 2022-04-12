@@ -16,6 +16,7 @@ import com.facebook.datasource.DataSource
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin
 import com.facebook.fresco.ui.common.ControllerListener2
 import com.facebook.fresco.ui.common.OnFadeListener
+import com.facebook.fresco.ui.common.VitoUtils
 import com.facebook.fresco.vito.core.*
 import com.facebook.fresco.vito.listener.ImageListener
 import com.facebook.fresco.vito.options.ImageOptions
