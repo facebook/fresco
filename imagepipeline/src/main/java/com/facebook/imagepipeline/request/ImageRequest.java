@@ -32,6 +32,8 @@ import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.common.SourceUriType;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.memory.config.MemorySpikeConfig;
+import com.facebook.memory.helper.HashCode;
 import java.io.File;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -326,25 +328,45 @@ public class ImageRequest {
     if (result == 0) {
       final CacheKey postprocessorCacheKey =
           mPostprocessor != null ? mPostprocessor.getPostprocessorCacheKey() : null;
-      result =
-          Objects.hashCode(
-              mCacheChoice,
-              mSourceUri,
-              mLocalThumbnailPreviewsEnabled,
-              mBytesRange,
-              mRequestPriority,
-              mLowestPermittedRequestLevel,
-              mCachesDisabled,
-              mIsDiskCacheEnabled,
-              mIsMemoryCacheEnabled,
-              mImageDecodeOptions,
-              mDecodePrefetches,
-              mResizeOptions,
-              mRotationOptions,
-              postprocessorCacheKey,
-              mResizingAllowedOverride,
-              mDelayMs,
-              mLoadThumbnailOnly);
+      if (!MemorySpikeConfig.avoidObjectsHashCode()) {
+        result =
+            Objects.hashCode(
+                mCacheChoice,
+                mSourceUri,
+                mLocalThumbnailPreviewsEnabled,
+                mBytesRange,
+                mRequestPriority,
+                mLowestPermittedRequestLevel,
+                mCachesDisabled,
+                mIsDiskCacheEnabled,
+                mIsMemoryCacheEnabled,
+                mImageDecodeOptions,
+                mDecodePrefetches,
+                mResizeOptions,
+                mRotationOptions,
+                postprocessorCacheKey,
+                mResizingAllowedOverride,
+                mDelayMs,
+                mLoadThumbnailOnly);
+      } else {
+        result = HashCode.extend(0, mCacheChoice);
+        result = HashCode.extend(result, mSourceUri);
+        result = HashCode.extend(result, mLocalThumbnailPreviewsEnabled);
+        result = HashCode.extend(result, mBytesRange);
+        result = HashCode.extend(result, mRequestPriority);
+        result = HashCode.extend(result, mLowestPermittedRequestLevel);
+        result = HashCode.extend(result, mCachesDisabled);
+        result = HashCode.extend(result, mIsDiskCacheEnabled);
+        result = HashCode.extend(result, mIsMemoryCacheEnabled);
+        result = HashCode.extend(result, mImageDecodeOptions);
+        result = HashCode.extend(result, mDecodePrefetches);
+        result = HashCode.extend(result, mResizeOptions);
+        result = HashCode.extend(result, mRotationOptions);
+        result = HashCode.extend(result, postprocessorCacheKey);
+        result = HashCode.extend(result, mResizingAllowedOverride);
+        result = HashCode.extend(result, mDelayMs);
+        result = HashCode.extend(result, mLoadThumbnailOnly);
+      }
       // ^ I *think* this is safe despite autoboxing...?
       if (cacheHashcode) {
         mHashcode = result;
