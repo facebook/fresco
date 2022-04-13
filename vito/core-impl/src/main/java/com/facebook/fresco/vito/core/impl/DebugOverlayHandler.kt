@@ -34,7 +34,7 @@ class DebugOverlayHandler(
         model.drawable !is DebugOverlayDrawable) {
       val debugOverlayDrawable = DebugOverlayDrawable("K")
       drawable.debugOverlayImageLayer =
-          ImageLayerDataModel().apply {
+          ImageLayerDataModel(drawable.callbackProvider).apply {
             configure(dataModel = DrawableImageDataModel(debugOverlayDrawable))
           }
       return debugOverlayDrawable

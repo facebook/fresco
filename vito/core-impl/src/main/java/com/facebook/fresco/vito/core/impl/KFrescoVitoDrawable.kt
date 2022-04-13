@@ -157,10 +157,12 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
   private var drawableAlpha: Int = 255
   private var drawableColorFilter: ColorFilter? = null
 
-  val placeholderLayer = ImageLayerDataModel()
-  val actualImageLayer = ImageLayerDataModel()
+  val callbackProvider: (() -> Callback?) = { callback }
+
+  val placeholderLayer = ImageLayerDataModel(callbackProvider)
+  val actualImageLayer = ImageLayerDataModel(callbackProvider)
   var progressLayer: ImageLayerDataModel? = null
-  val overlayImageLayer = ImageLayerDataModel()
+  val overlayImageLayer = ImageLayerDataModel(callbackProvider)
   var debugOverlayImageLayer: ImageLayerDataModel? = null
 
   override fun draw(canvas: Canvas) {

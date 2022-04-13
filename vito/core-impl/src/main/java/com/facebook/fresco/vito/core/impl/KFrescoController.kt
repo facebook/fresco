@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.core.impl
 
 import android.graphics.Rect
+import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import com.facebook.common.callercontext.ContextChain
 import com.facebook.common.internal.Supplier
@@ -42,13 +43,24 @@ class KFrescoController(
 ) : FrescoController2 {
 
   private val imageToDataModelMapper: (CloseableImage, ImageOptions) -> ImageDataModel? = { a, b ->
-    b.customDrawableFactory?.createDrawable(a, b)?.let { DrawableImageDataModel(it) }
+    b.customDrawableFactory?.createDrawable(a, b)?.let {
+      if (b.shouldAutoPlay() && it is Animatable) {
+        it.start()
+      }
+      DrawableImageDataModel(it)
+    }
         ?: when (a) {
           is CloseableBitmap ->
               BitmapImageDataModel(
                   a.underlyingBitmap, java.lang.Boolean.TRUE.equals(a.getExtras()["is_rounded"]))
           // TODO(T105148151): handle rotation for closeable static bitmap, handle other types
-          else -> drawableFactory?.createDrawable(a, b)?.let { DrawableImageDataModel(it) }
+          else ->
+              drawableFactory?.createDrawable(a, b)?.let {
+                if (b.shouldAutoPlay() && it is Animatable) {
+                  it.start()
+                }
+                DrawableImageDataModel(it)
+              }
         }
   }
 

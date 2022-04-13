@@ -13,6 +13,8 @@ import android.graphics.drawable.Drawable
 sealed class ImageDataModel {
   open val width = -1
   open val height = -1
+
+  open fun setCallback(callback: Drawable.Callback?) = Unit
 }
 
 class ColorIntImageDataModel(val colorInt: Int) : ImageDataModel()
@@ -26,4 +28,8 @@ class BitmapImageDataModel(val bitmap: Bitmap, val isBitmapCircular: Boolean = f
 class DrawableImageDataModel(val drawable: Drawable) : ImageDataModel() {
   override val width = drawable.intrinsicWidth
   override val height = drawable.intrinsicHeight
+
+  override fun setCallback(callback: Drawable.Callback?) {
+    drawable.callback = callback
+  }
 }

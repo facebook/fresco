@@ -17,9 +17,12 @@ import com.facebook.fresco.vito.core.impl.DebugOverlayHandler
 import com.facebook.fresco.vito.core.impl.FrescoVitoPrefetcherImpl
 import com.facebook.fresco.vito.core.impl.KFrescoController
 import com.facebook.fresco.vito.core.impl.VitoImagePipelineImpl
+import com.facebook.fresco.vito.draweesupport.DrawableFactoryWrapper
+import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.fresco.vito.provider.impl.NoOpCallerContextVerifier
 import com.facebook.imagepipeline.core.ImagePipeline
+import com.facebook.imagepipeline.core.ImagePipelineFactory
 import java.util.concurrent.Executor
 
 class KFrescoVitoProvider(
@@ -38,11 +41,11 @@ class KFrescoVitoProvider(
 
   private val _controller: FrescoController2 by lazy {
     KFrescoController(
-            vitoConfig,
-            _imagePipeline,
-            uiThreadExecutor,
-            lightweightBackgroundExecutor,
-        )
+            config = vitoConfig,
+            vitoImagePipeline = _imagePipeline,
+            uiThreadExecutor = uiThreadExecutor,
+            lightweightBackgroundThreadExecutor = lightweightBackgroundExecutor,
+            drawableFactory = getFactory())
         .also { it.debugOverlayHandler = debugOverlayHandler }
   }
 
@@ -57,4 +60,10 @@ class KFrescoVitoProvider(
   override fun getImagePipeline(): VitoImagePipeline = _imagePipeline
 
   override fun getConfig(): FrescoVitoConfig = vitoConfig
+
+  private fun getFactory(): ImageOptionsDrawableFactory? {
+    return ImagePipelineFactory.getInstance().getAnimatedDrawableFactory(null)?.let {
+      DrawableFactoryWrapper(it)
+    }
+  }
 }
