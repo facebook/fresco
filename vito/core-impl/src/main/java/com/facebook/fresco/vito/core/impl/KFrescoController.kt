@@ -22,6 +22,7 @@ import com.facebook.fresco.vito.core.*
 import com.facebook.fresco.vito.listener.ImageListener
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory
+import com.facebook.fresco.vito.renderer.AnimatedDrawableImageDataModel
 import com.facebook.fresco.vito.renderer.BitmapImageDataModel
 import com.facebook.fresco.vito.renderer.DrawableImageDataModel
 import com.facebook.fresco.vito.renderer.ImageDataModel
@@ -43,24 +44,13 @@ class KFrescoController(
 ) : FrescoController2 {
 
   private val imageToDataModelMapper: (CloseableImage, ImageOptions) -> ImageDataModel? = { a, b ->
-    b.customDrawableFactory?.createDrawable(a, b)?.let {
-      if (b.shouldAutoPlay() && it is Animatable) {
-        it.start()
-      }
-      DrawableImageDataModel(it)
-    }
+    b.customDrawableFactory?.createDrawable(a, b)?.let { createDrawableModel(it, b) }
         ?: when (a) {
           is CloseableBitmap ->
               BitmapImageDataModel(
                   a.underlyingBitmap, java.lang.Boolean.TRUE.equals(a.getExtras()["is_rounded"]))
           // TODO(T105148151): handle rotation for closeable static bitmap, handle other types
-          else ->
-              drawableFactory?.createDrawable(a, b)?.let {
-                if (b.shouldAutoPlay() && it is Animatable) {
-                  it.start()
-                }
-                DrawableImageDataModel(it)
-              }
+          else -> drawableFactory?.createDrawable(a, b)?.let { createDrawableModel(it, b) }
         }
   }
 
@@ -185,5 +175,12 @@ class KFrescoController(
         imageRequest.equalsIfHasImage(drawable.imageRequest, drawable.hasImage())
       } else {
         imageRequest == drawable.imageRequest
+      }
+
+  private fun createDrawableModel(drawable: Drawable, options: ImageOptions): ImageDataModel =
+      if (drawable is Animatable) {
+        AnimatedDrawableImageDataModel(drawable, drawable, options.shouldAutoPlay())
+      } else {
+        DrawableImageDataModel(drawable)
       }
 }

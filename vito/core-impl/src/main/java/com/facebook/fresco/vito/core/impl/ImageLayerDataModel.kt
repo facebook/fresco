@@ -49,8 +49,17 @@ class ImageLayerDataModel(var drawableCallbackProvider: (() -> Drawable.Callback
       bounds: Rect? = this.currentBounds,
       colorFilter: ColorFilter? = this.colorFilter
   ) {
-    this.dataModel?.setCallback(null)
-    this.dataModel = dataModel
+    if (dataModel != this.dataModel) {
+      this.dataModel?.apply {
+        onDetach()
+        setCallback(null)
+      }
+      this.dataModel =
+          dataModel?.apply {
+            setCallback(drawableCallbackProvider?.invoke())
+            onAttach()
+          }
+    }
     this.roundingOptions = roundingOptions
     this.borderOptions = borderOptions
     this.currentBounds = bounds
@@ -76,7 +85,6 @@ class ImageLayerDataModel(var drawableCallbackProvider: (() -> Drawable.Callback
     if (renderCommand != null && currentBounds == bounds) {
       return
     }
-    model.setCallback(drawableCallbackProvider?.invoke())
 
     currentBounds = bounds
     canvasTransformationHandler.configure(bounds, model.width, model.height)
@@ -98,7 +106,10 @@ class ImageLayerDataModel(var drawableCallbackProvider: (() -> Drawable.Callback
 
   fun reset() {
     canvasTransformationHandler.canvasTransformation = null
-    dataModel?.setCallback(null)
+    dataModel?.apply {
+      onDetach()
+      setCallback(null)
+    }
     dataModel = null
     roundingOptions = null
     borderOptions = null

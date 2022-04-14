@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.renderer
 
 import android.graphics.Bitmap
+import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 
 sealed class ImageDataModel {
@@ -15,6 +16,8 @@ sealed class ImageDataModel {
   open val height = -1
 
   open fun setCallback(callback: Drawable.Callback?) = Unit
+  open fun onAttach() = Unit
+  open fun onDetach() = Unit
 }
 
 class ColorIntImageDataModel(val colorInt: Int) : ImageDataModel()
@@ -25,11 +28,29 @@ class BitmapImageDataModel(val bitmap: Bitmap, val isBitmapCircular: Boolean = f
   override val height = bitmap.height
 }
 
-class DrawableImageDataModel(val drawable: Drawable) : ImageDataModel() {
+open class DrawableImageDataModel(val drawable: Drawable) : ImageDataModel() {
   override val width = drawable.intrinsicWidth
   override val height = drawable.intrinsicHeight
 
   override fun setCallback(callback: Drawable.Callback?) {
     drawable.callback = callback
+  }
+}
+
+class AnimatedDrawableImageDataModel(
+    drawable: Drawable,
+    val animatable: Animatable,
+    val isAutoPlay: Boolean
+) : DrawableImageDataModel(drawable) {
+  override fun onAttach() {
+    if (isAutoPlay) {
+      animatable.start()
+    }
+  }
+  override fun onDetach() {
+    // We only update if we started the animation
+    if (isAutoPlay) {
+      animatable.stop()
+    }
   }
 }
