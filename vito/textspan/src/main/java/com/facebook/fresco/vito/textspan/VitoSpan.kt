@@ -14,18 +14,18 @@ import android.view.View
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.widget.text.span.BetterImageSpan
 
-class VitoSpan(
+open class VitoSpan(
     val resources: Resources,
-    val drawable: FrescoDrawableInterface,
+    val drawableInterface: FrescoDrawableInterface,
     @BetterImageSpan.BetterImageSpanAlignment verticalAlignment: Int
-) : BetterImageSpan(drawable as Drawable, verticalAlignment), Drawable.Callback {
+) : BetterImageSpan(drawableInterface as Drawable, verticalAlignment), Drawable.Callback {
 
   var parentView: View? = null
 
   var imageFetchCommand: (() -> Boolean)? = null
 
   init {
-    (drawable as Drawable).callback = this
+    (drawableInterface as Drawable).callback = this
   }
 
   override fun invalidateDrawable(who: Drawable) {

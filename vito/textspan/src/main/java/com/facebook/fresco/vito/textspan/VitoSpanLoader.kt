@@ -62,7 +62,13 @@ object VitoSpanLoader {
     val fetchCommand = {
       FrescoVitoProvider.getController()
           .fetch(
-              target.drawable, imageRequest, callerContext, contextChain, imageListener, null, null)
+              target.drawableInterface,
+              imageRequest,
+              callerContext,
+              contextChain,
+              imageListener,
+              null,
+              null)
     }
     target.imageFetchCommand = fetchCommand
     fetchCommand()
@@ -70,7 +76,7 @@ object VitoSpanLoader {
 
   @JvmStatic
   fun release(target: VitoSpan?) {
-    target?.let { FrescoVitoProvider.getController().releaseImmediately(target.drawable) }
+    target?.let { FrescoVitoProvider.getController().releaseImmediately(target.drawableInterface) }
   }
 
   @JvmStatic
@@ -107,7 +113,7 @@ object VitoSpanLoader {
         this, imageSpan, startIndex, endIndex, imageWidthPx, imageHeightPx, parentView)
   }
 
-  private fun createDrawable(): FrescoDrawableInterface =
+  fun createDrawable(): FrescoDrawableInterface =
       FrescoVitoProvider.getController().createDrawable()
 
   class VitoAttachDetachListener(val vitoSpan: VitoSpan) : AttachDetachListener {
