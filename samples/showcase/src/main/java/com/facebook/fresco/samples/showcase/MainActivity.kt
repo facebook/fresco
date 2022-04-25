@@ -58,7 +58,8 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun addNavDrawerEntry(menu: Menu, item: ExampleItem) {
-    menu.add(Menu.NONE, item.itemId, Menu.NONE, item.title)
+    menu
+        .add(Menu.NONE, item.itemId, Menu.NONE, item.title)
         .setCheckable(true)
         .setOnMenuItemClickListener {
           showFragment(item.createFragment(), item.title, item.backstackTag)

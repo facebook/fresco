@@ -188,7 +188,8 @@ class ImageUriProvider constructor(context: Context) {
 
   fun getMediaStoreUris(context: Context): List<Uri> {
     val uris = mutableListOf<Uri>()
-    context.contentResolver.query(
+    context.contentResolver
+        .query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             arrayOf(MediaStore.Images.Media._ID),
             null,

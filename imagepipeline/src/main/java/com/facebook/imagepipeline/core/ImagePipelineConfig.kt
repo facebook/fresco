@@ -125,8 +125,8 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     bitmapMemoryCacheParamsSupplier =
         builder.bitmapMemoryCacheParamsSupplier
             ?: DefaultBitmapMemoryCacheParamsSupplier(
-                (checkNotNull(builder.context.getSystemService(Context.ACTIVITY_SERVICE)) as
-                    ActivityManager))
+                (checkNotNull(builder.context.getSystemService(Context.ACTIVITY_SERVICE))
+                    as ActivityManager))
     bitmapMemoryCacheTrimStrategy =
         builder.bitmapMemoryCacheTrimStrategy ?: BitmapMemoryCacheTrimStrategy()
     encodedMemoryCacheTrimStrategy =
