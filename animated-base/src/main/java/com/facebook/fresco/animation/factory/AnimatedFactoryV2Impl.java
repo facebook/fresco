@@ -134,7 +134,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
           }
         };
 
-    final Supplier<Boolean> useDeepEquals = Suppliers.BOOLEAN_FALSE;
+    final Supplier<Boolean> useDeepEquals = Suppliers.BOOLEAN_TRUE;
 
     return new ExperimentalBitmapAnimationDrawableFactory(
         getAnimatedDrawableBackendProvider(),
