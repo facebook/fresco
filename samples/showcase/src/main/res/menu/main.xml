@@ -1,9 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
+  <item android:id="@+id/action_prev_image"
+      android:title="Previous"
+      android:orderInCategory="101"
+      android:icon="@drawable/ic_arrow_left"
+      app:showAsAction="ifRoom"
+      />
+  <item android:id="@+id/action_next_image"
+      android:title="Next"
+      android:orderInCategory="102"
+      android:icon="@drawable/ic_arrow_right"
+      app:showAsAction="ifRoom"
+      />
+
+  <item android:id="@+id/action_edit_image"
+      android:title="Edit"
+      android:orderInCategory="103"
+      android:icon="@drawable/ic_edit"
+      app:showAsAction="ifRoom"
+      />
   <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        android:icon="@drawable/ic_settings_black_24dp"
-        app:showAsAction="ifRoom"/>
+      android:title="@string/action_settings"
+      android:orderInCategory="104"
+      android:icon="@drawable/ic_settings_black_24dp"
+      app:showAsAction="ifRoom"
+      />
+
 </menu>

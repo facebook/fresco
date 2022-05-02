@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.imagepipeline.common.ResizeOptions;
+import javax.annotation.Nullable;
 
 /**
  * Implemented producers can be queried for whether they are likely to be able to produce a result
@@ -27,5 +28,5 @@ public interface ThumbnailProducer<T> extends Producer<T> {
    * @param resizeOptions the resize options from the current request
    * @return true if the producer can meet these needs
    */
-  boolean canProvideImageForSize(ResizeOptions resizeOptions);
+  boolean canProvideImageForSize(@Nullable ResizeOptions resizeOptions);
 }

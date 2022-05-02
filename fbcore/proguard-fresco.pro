@@ -16,7 +16,7 @@
 }
 
 # Keep native methods
--keepclassmembers class * {
+-keepclassmembers class com.facebook.** {
     native <methods>;
 }
 

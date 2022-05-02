@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.instrumentation;
 
 import androidx.annotation.Nullable;
 import com.facebook.infer.annotation.Nullsafe;
+import com.facebook.infer.annotation.PropagatesNullable;
 
 /**
  * Utility class that provides hooks to capture execution of different units of work. Client code
@@ -131,11 +132,13 @@ public final class FrescoInstrumenter {
   }
 
   @Nullable
-  public static Runnable decorateRunnable(@Nullable Runnable runnable, @Nullable String tag) {
+  public static Runnable decorateRunnable(
+      @PropagatesNullable @Nullable Runnable runnable, @Nullable String tag) {
     final Instrumenter instrumenter = sInstance;
-    if (instrumenter == null || runnable == null || tag == null) {
+    if (instrumenter == null || runnable == null) {
       return runnable;
     }
+    tag = tag == null ? "" : tag;
     return instrumenter.decorateRunnable(runnable, tag);
   }
 }

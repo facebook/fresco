@@ -322,7 +322,9 @@
               
     <li><h2>Interfaces</h2>
       <ul>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheFactory.html">BitmapMemoryCacheFactory</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a></li>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;K,&nbsp;V&gt;</li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</li>
@@ -334,14 +336,14 @@
               
     <li><h2>Classes</h2>
       <ul>
-        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapCountingMemoryCacheFactory.html">BitmapCountingMemoryCacheFactory</a></li>
-        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheFactory.html">BitmapMemoryCacheFactory</a></li>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/AbstractAdaptiveCountingMemoryCache.html">AbstractAdaptiveCountingMemoryCache</a>&lt;K,&nbsp;V&gt;</li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html">BitmapMemoryCacheKey</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheTrimStrategy.html">BitmapMemoryCacheTrimStrategy</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BoundedLinkedHashSet.html">BoundedLinkedHashSet</a>&lt;E&gt;</li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a></li>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingLruBitmapMemoryCacheFactory.html">CountingLruBitmapMemoryCacheFactory</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingLruMap.html">CountingLruMap</a>&lt;K,&nbsp;V&gt;</li>
-        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;K,&nbsp;V&gt;</li>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.Entry.html">CountingMemoryCache.Entry</a>&lt;K,&nbsp;V&gt;</li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCacheInspector.html">CountingMemoryCacheInspector</a>&lt;K,&nbsp;V&gt;</li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCacheInspector.DumpInfo.html">CountingMemoryCacheInspector.DumpInfo</a>&lt;K,&nbsp;V&gt;</li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCacheInspector.DumpInfoEntry.html">CountingMemoryCacheInspector.DumpInfoEntry</a>&lt;K,&nbsp;V&gt;</li>
@@ -351,6 +353,8 @@
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/EncodedCountingMemoryCacheFactory.html">EncodedCountingMemoryCacheFactory</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/EncodedMemoryCacheFactory.html">EncodedMemoryCacheFactory</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/InstrumentedMemoryCache.html">InstrumentedMemoryCache</a>&lt;K,&nbsp;V&gt;</li>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/InstrumentedMemoryCacheBitmapMemoryCacheFactory.html">InstrumentedMemoryCacheBitmapMemoryCacheFactory</a></li>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/LruCountingMemoryCache.html">LruCountingMemoryCache</a>&lt;K,&nbsp;V&gt;</li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NativeMemoryCacheTrimStrategy.html">NativeMemoryCacheTrimStrategy</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html">NoOpImageCacheStatsTracker</a></li>
@@ -429,8 +433,16 @@
     
   <table class="jd-sumtable-expando">
         <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheFactory.html">BitmapMemoryCacheFactory</a></td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a></td>
               <td class="jd-descrcol" width="100%">Factory methods for creating cache keys for the pipeline.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;K,&nbsp;V&gt;</td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</td>
@@ -467,37 +479,37 @@
     
   <table class="jd-sumtable-expando">
         <tr class="alt-color api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/BitmapCountingMemoryCacheFactory.html">BitmapCountingMemoryCacheFactory</a></td>
-              <td class="jd-descrcol" width="100%">&nbsp;</td>
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/AbstractAdaptiveCountingMemoryCache.html">AbstractAdaptiveCountingMemoryCache</a>&lt;K,&nbsp;V&gt;</td>
+              <td class="jd-descrcol" width="100%">Layer of memory cache stack responsible for managing eviction of the the cached items.&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheFactory.html">BitmapMemoryCacheFactory</a></td>
-              <td class="jd-descrcol" width="100%">&nbsp;</td>
-          </tr>
-        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html">BitmapMemoryCacheKey</a></td>
               <td class="jd-descrcol" width="100%">Cache key for BitmapMemoryCache &nbsp;</td>
           </tr>
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheTrimStrategy.html">BitmapMemoryCacheTrimStrategy</a></td>
               <td class="jd-descrcol" width="100%">CountingMemoryCache eviction strategy appropriate for bitmap caches.&nbsp;</td>
           </tr>
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/BoundedLinkedHashSet.html">BoundedLinkedHashSet</a>&lt;E&gt;</td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a></td>
               <td class="jd-descrcol" width="100%">BufferedDiskCache provides get and put operations to take care of scheduling disk-cache
  read/writes.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/CountingLruBitmapMemoryCacheFactory.html">CountingLruBitmapMemoryCacheFactory</a></td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
         <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/CountingLruMap.html">CountingLruMap</a>&lt;K,&nbsp;V&gt;</td>
               <td class="jd-descrcol" width="100%">Map that keeps track of the elements order (according to the LRU policy) and their size.&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;K,&nbsp;V&gt;</td>
-              <td class="jd-descrcol" width="100%">Layer of memory cache stack responsible for managing eviction of the the cached items.&nbsp;</td>
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.Entry.html">CountingMemoryCache.Entry</a>&lt;K,&nbsp;V&gt;</td>
+              <td class="jd-descrcol" width="100%">The internal representation of a key-value pair stored by the cache.&nbsp;</td>
           </tr>
         <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCacheInspector.html">CountingMemoryCacheInspector</a>&lt;K,&nbsp;V&gt;</td>
@@ -534,6 +546,14 @@
         <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/InstrumentedMemoryCache.html">InstrumentedMemoryCache</a>&lt;K,&nbsp;V&gt;</td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/InstrumentedMemoryCacheBitmapMemoryCacheFactory.html">InstrumentedMemoryCacheBitmapMemoryCacheFactory</a></td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/LruCountingMemoryCache.html">LruCountingMemoryCache</a>&lt;K,&nbsp;V&gt;</td>
+              <td class="jd-descrcol" width="100%">Layer of memory cache stack responsible for managing eviction of the the cached items.&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a></td>

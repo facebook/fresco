@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,7 +9,6 @@ package com.facebook.fresco.animation.drawable.animator;
 
 import android.animation.ValueAnimator;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
@@ -32,10 +31,6 @@ public class AnimatedDrawableValueAnimatorHelper {
    */
   @Nullable
   public static ValueAnimator createValueAnimator(Drawable drawable, int maxDurationMs) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-      return null;
-    }
-
     if (drawable instanceof AnimatedDrawable2) {
       return AnimatedDrawable2ValueAnimatorHelper.createValueAnimator(
           (AnimatedDrawable2) drawable, maxDurationMs);
@@ -51,10 +46,6 @@ public class AnimatedDrawableValueAnimatorHelper {
    */
   @Nullable
   public static ValueAnimator createValueAnimator(Drawable drawable) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-      return null;
-    }
-
     if (drawable instanceof AnimatedDrawable2) {
       return AnimatedDrawable2ValueAnimatorHelper.createValueAnimator((AnimatedDrawable2) drawable);
     }
@@ -70,10 +61,6 @@ public class AnimatedDrawableValueAnimatorHelper {
   @Nullable
   public static ValueAnimator.AnimatorUpdateListener createAnimatorUpdateListener(
       final Drawable drawable) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-      return null;
-    }
-
     if (drawable instanceof AnimatedDrawable2) {
       return AnimatedDrawable2ValueAnimatorHelper.createAnimatorUpdateListener(
           (AnimatedDrawable2) drawable);

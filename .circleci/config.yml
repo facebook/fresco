@@ -14,7 +14,7 @@ aliases:
       - v1-gradle-{{ arch }}-{{ .Branch }}-{{ checksum "build.gradle" }}-
       - v1-gradle-{{ arch }}-{{ .Branch }}-
       # Fallback in case this is a first-time run on a fork
-      - v1-gradle-{{ arch }}-master-
+      - v1-gradle-{{ arch }}-main-
   - &save-cache-gradle
     paths:
       - ~/.gradle

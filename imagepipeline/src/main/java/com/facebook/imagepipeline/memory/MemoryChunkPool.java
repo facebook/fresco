@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -31,8 +31,8 @@ public abstract class MemoryChunkPool extends BasePool<MemoryChunk> {
       PoolParams poolParams,
       PoolStatsTracker memoryChunkPoolStatsTracker) {
     super(memoryTrimmableRegistry, poolParams, memoryChunkPoolStatsTracker);
-    SparseIntArray bucketSizes = poolParams.bucketSizes;
-    mBucketSizes = new int[bucketSizes.size()];
+    SparseIntArray bucketSizes = Preconditions.checkNotNull(poolParams.bucketSizes);
+    this.mBucketSizes = new int[bucketSizes.size()];
     for (int i = 0; i < mBucketSizes.length; ++i) {
       mBucketSizes[i] = bucketSizes.keyAt(i);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -17,10 +17,13 @@ import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * Probe producer for brobing encoded memory and disk caches on bitmap memory cache hit requests.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class BitmapProbeProducer implements Producer<CloseableReference<CloseableImage>> {
 
   public static final String PRODUCER_NAME = "BitmapProbeProducer";
@@ -118,7 +121,8 @@ public class BitmapProbeProducer implements Producer<CloseableReference<Closeabl
     }
 
     @Override
-    public void onNewResultImpl(CloseableReference<CloseableImage> newResult, @Status int status) {
+    public void onNewResultImpl(
+        @Nullable CloseableReference<CloseableImage> newResult, @Status int status) {
       try {
         if (FrescoSystrace.isTracing()) {
           FrescoSystrace.beginSection("BitmapProbeProducer#onNewResultImpl");
@@ -133,7 +137,8 @@ public class BitmapProbeProducer implements Producer<CloseableReference<Closeabl
         final ImageRequest imageRequest = mProducerContext.getImageRequest();
         final CacheKey cacheKey =
             mCacheKeyFactory.getEncodedCacheKey(imageRequest, mProducerContext.getCallerContext());
-        if (mProducerContext.getExtra(ProducerContext.ExtraKeys.ORIGIN).equals("memory_bitmap")) {
+        String producerContextExtra = mProducerContext.getExtra(ProducerContext.ExtraKeys.ORIGIN);
+        if (producerContextExtra != null && producerContextExtra.equals("memory_bitmap")) {
           if (mProducerContext
                   .getImagePipelineConfig()
                   .getExperiments()

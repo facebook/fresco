@@ -351,6 +351,7 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BranchOnSeparateImagesProducer.html">BranchOnSeparateImagesProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DataFetchProducer.html">DataFetchProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DecodeProducer.html">DecodeProducer</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DelayProducer.html">DelayProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DelegatingConsumer.html">DelegatingConsumer</a>&lt;I,&nbsp;O&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DiskCacheReadProducer.html">DiskCacheReadProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DiskCacheWriteProducer.html">DiskCacheWriteProducer</a></li>
@@ -380,6 +381,7 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PostprocessedBitmapMemoryCacheProducer.CachedPostprocessorConsumer.html">PostprocessedBitmapMemoryCacheProducer.CachedPostprocessorConsumer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PostprocessorProducer.html">PostprocessorProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PriorityNetworkFetcher.html">PriorityNetworkFetcher</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PriorityNetworkFetcher.NonrecoverableException.html">PriorityNetworkFetcher.NonrecoverableException</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PriorityNetworkFetcher.PriorityFetchState.html">PriorityNetworkFetcher.PriorityFetchState</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PriorityStarvingThrottlingProducer.html">PriorityStarvingThrottlingProducer</a>&lt;T&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/QualifiedResourceFetchProducer.html">QualifiedResourceFetchProducer</a></li>
@@ -471,6 +473,9 @@ Summary:
   
 
 
+
+  &#124; <a href="#lfields">Fields</a>
+  
 
 
 
@@ -638,6 +643,26 @@ Summary:
 
 
 
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+<table id="lfields" class="jd-sumtable"><tr><th colspan="12">Fields</th></tr>
+
+
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          protected
+          
+          final
+          <a href="../../../../com/facebook/common/memory/PooledByteBufferFactory.html">PooledByteBufferFactory</a></td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetchProducer.html#mPooledByteBufferFactory">mPooledByteBufferFactory</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+
+</table>
 
 
 
@@ -1169,6 +1194,43 @@ From interface
 
 
 <!-- Fields -->
+
+
+<!-- ========= FIELD DETAIL ======== -->
+<h2>Fields</h2>
+
+
+
+
+<a id="mPooledByteBufferFactory"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+        final 
+        <a href="../../../../com/facebook/common/memory/PooledByteBufferFactory.html">PooledByteBufferFactory</a>
+      </span>
+        mPooledByteBufferFactory
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
 
 
 <!-- Public ctors -->

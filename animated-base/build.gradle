@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,7 +9,6 @@ import com.facebook.fresco.buildsrc.Deps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
 
 dependencies {
     compileOnly Deps.inferAnnotation
@@ -27,6 +26,7 @@ dependencies {
     api project(':animated-drawable')
     implementation Deps.Bolts.tasks
 
+    testCompileOnly Deps.inferAnnotation
     testImplementation project(':animated-base-test')
     testImplementation project(':imagepipeline-test')
     testImplementation TestDeps.junit
@@ -43,10 +43,8 @@ dependencies {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
 }
-apply from: rootProject.file('release.gradle')
 
 android {
-
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
 
@@ -59,14 +57,4 @@ android {
     }
 }
 
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task testJar(type: Jar) {
-    from android.sourceSets.test.java.srcDirs
-    classifier = 'sources'
-}
-
-artifacts.add('archives', sourcesJar)
+apply plugin: "com.vanniktech.maven.publish"

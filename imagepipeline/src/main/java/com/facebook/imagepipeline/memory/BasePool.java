@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -18,6 +18,7 @@ import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.memory.Pool;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -106,6 +107,7 @@ import javax.annotation.concurrent.NotThreadSafe;
  *       dynamically create buckets on demand.
  * </ul>
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class BasePool<V> implements Pool<V> {
   private final Class<?> TAG = this.getClass();
 
@@ -201,22 +203,22 @@ public abstract class BasePool<V> implements Pool<V> {
   public V get(int size) {
     ensurePoolSizeInvariant();
 
-    int bucketedSize = getBucketedSize(size);
+    int bucketedSize = this.getBucketedSize(size);
     int sizeInBytes = -1;
 
     synchronized (this) {
-      Bucket<V> bucket = getBucket(bucketedSize);
+      Bucket<V> bucket = this.getBucket(bucketedSize);
 
       if (bucket != null) {
         // find an existing value that we can reuse
-        V value = getValue(bucket);
+        V value = this.getValue(bucket);
         if (value != null) {
           Preconditions.checkState(mInUseValues.add(value));
 
           // It is possible that we got a 'larger' value than we asked for.
           // lets recompute size in bytes here
           bucketedSize = getBucketedSizeForValue(value);
-          sizeInBytes = getSizeInBytes(bucketedSize);
+          sizeInBytes = this.getSizeInBytes(bucketedSize);
           mUsed.increment(sizeInBytes);
           mFree.decrement(sizeInBytes);
           mPoolStatsTracker.onValueReuse(sizeInBytes);
@@ -233,7 +235,7 @@ public abstract class BasePool<V> implements Pool<V> {
         // fall through
       }
       // check to see if we can allocate a value of the given size without exceeding the hard cap
-      sizeInBytes = getSizeInBytes(bucketedSize);
+      sizeInBytes = this.getSizeInBytes(bucketedSize);
       if (!canAllocate(sizeInBytes)) {
         throw new PoolSizeViolationException(
             mPoolParams.maxSizeHardCap, mUsed.mNumBytes, mFree.mNumBytes, sizeInBytes);
@@ -257,7 +259,7 @@ public abstract class BasePool<V> implements Pool<V> {
       // counters.
       synchronized (this) {
         mUsed.decrement(sizeInBytes);
-        Bucket<V> bucket = getBucket(bucketedSize);
+        Bucket<V> bucket = this.getBucket(bucketedSize);
         if (bucket != null) {
           bucket.decrementInUseCount();
         }
@@ -285,6 +287,7 @@ public abstract class BasePool<V> implements Pool<V> {
       }
     }
 
+    // NULLSAFE_FIXME[Return Not Nullable]
     return value;
   }
 
@@ -302,7 +305,7 @@ public abstract class BasePool<V> implements Pool<V> {
     Preconditions.checkNotNull(value);
 
     final int bucketedSize = getBucketedSizeForValue(value);
-    final int sizeInBytes = getSizeInBytes(bucketedSize);
+    final int sizeInBytes = this.getSizeInBytes(bucketedSize);
     synchronized (this) {
       final Bucket<V> bucket = getBucketIfPresent(bucketedSize);
       if (!mInUseValues.remove(value)) {
@@ -513,7 +516,7 @@ public abstract class BasePool<V> implements Pool<V> {
     List<Bucket<V>> bucketsToTrim = new ArrayList<>(mBuckets.size());
 
     for (int i = 0, len = mBuckets.size(); i < len; ++i) {
-      final Bucket<V> oldBucket = mBuckets.valueAt(i);
+      final Bucket<V> oldBucket = Preconditions.checkNotNull(mBuckets.valueAt(i));
       final int bucketSize = oldBucket.mItemSize;
       final int maxLength = oldBucket.mMaxLength;
       final int bucketInUseCount = oldBucket.getInUseCount();
@@ -550,7 +553,7 @@ public abstract class BasePool<V> implements Pool<V> {
         final SparseIntArray inUseCounts = new SparseIntArray();
 
         for (int i = 0; i < mBuckets.size(); ++i) {
-          final Bucket<V> bucket = mBuckets.valueAt(i);
+          final Bucket<V> bucket = Preconditions.checkNotNull(mBuckets.valueAt(i));
           if (bucket.getFreeListSize() > 0) {
             bucketsToTrim.add(bucket);
           }
@@ -634,7 +637,7 @@ public abstract class BasePool<V> implements Pool<V> {
       if (bytesToFree <= 0) {
         break;
       }
-      Bucket<V> bucket = mBuckets.valueAt(i);
+      Bucket<V> bucket = Preconditions.checkNotNull(mBuckets.valueAt(i));
       while (bytesToFree > 0) {
         V value = bucket.pop();
         if (value == null) {
@@ -675,7 +678,7 @@ public abstract class BasePool<V> implements Pool<V> {
    * @return the freelist for the bucket
    */
   @VisibleForTesting
-  synchronized Bucket<V> getBucket(int bucketedSize) {
+  synchronized @Nullable Bucket<V> getBucket(int bucketedSize) {
     // get an existing bucket
     Bucket<V> bucket = mBuckets.get(bucketedSize);
     if (bucket != null || !mAllowNewBuckets) {
@@ -771,7 +774,7 @@ public abstract class BasePool<V> implements Pool<V> {
     Map<String, Integer> stats = new HashMap<String, Integer>();
     for (int i = 0; i < mBuckets.size(); ++i) {
       final int bucketedSize = mBuckets.keyAt(i);
-      final Bucket<V> bucket = mBuckets.valueAt(i);
+      final Bucket<V> bucket = Preconditions.checkNotNull(mBuckets.valueAt(i));
       final String BUCKET_USED_KEY =
           PoolStatsTracker.BUCKETS_USED_PREFIX + getSizeInBytes(bucketedSize);
       stats.put(BUCKET_USED_KEY, bucket.getInUseCount());

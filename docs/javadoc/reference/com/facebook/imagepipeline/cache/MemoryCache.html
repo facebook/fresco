@@ -322,7 +322,9 @@
               
     <li><h2>Interfaces</h2>
       <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheFactory.html">BitmapMemoryCacheFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;K,&nbsp;V&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></li>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</li>
@@ -334,14 +336,14 @@
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapCountingMemoryCacheFactory.html">BitmapCountingMemoryCacheFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheFactory.html">BitmapMemoryCacheFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/AbstractAdaptiveCountingMemoryCache.html">AbstractAdaptiveCountingMemoryCache</a>&lt;K,&nbsp;V&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html">BitmapMemoryCacheKey</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheTrimStrategy.html">BitmapMemoryCacheTrimStrategy</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BoundedLinkedHashSet.html">BoundedLinkedHashSet</a>&lt;E&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingLruBitmapMemoryCacheFactory.html">CountingLruBitmapMemoryCacheFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingLruMap.html">CountingLruMap</a>&lt;K,&nbsp;V&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;K,&nbsp;V&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.Entry.html">CountingMemoryCache.Entry</a>&lt;K,&nbsp;V&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCacheInspector.html">CountingMemoryCacheInspector</a>&lt;K,&nbsp;V&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCacheInspector.DumpInfo.html">CountingMemoryCacheInspector.DumpInfo</a>&lt;K,&nbsp;V&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCacheInspector.DumpInfoEntry.html">CountingMemoryCacheInspector.DumpInfoEntry</a>&lt;K,&nbsp;V&gt;</li>
@@ -351,6 +353,8 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/EncodedCountingMemoryCacheFactory.html">EncodedCountingMemoryCacheFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/EncodedMemoryCacheFactory.html">EncodedMemoryCacheFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/InstrumentedMemoryCache.html">InstrumentedMemoryCache</a>&lt;K,&nbsp;V&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/InstrumentedMemoryCacheBitmapMemoryCacheFactory.html">InstrumentedMemoryCacheBitmapMemoryCacheFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/LruCountingMemoryCache.html">LruCountingMemoryCache</a>&lt;K,&nbsp;V&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NativeMemoryCacheTrimStrategy.html">NativeMemoryCacheTrimStrategy</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html">NoOpImageCacheStatsTracker</a></li>
@@ -398,6 +402,20 @@
 
 
 
+  
+   
+  
+  
+  
+  
+
+  
+   
+  
+  
+  
+  
+
 
 <div class="sum-details-links">
 
@@ -421,6 +439,8 @@ Summary:
   
 
 
+
+  &#124; <a href="#inhmethods">Inherited Methods</a>
 
 &#124; <a href="#" onclick="return toggleAllClassInherited()" id="toggleAllClassInherited">[Expand All]</a>
 
@@ -449,6 +469,13 @@ Summary:
 
 
   
+  
+      implements 
+      
+        <a href="../../../../com/facebook/cache/common/HasDebugData.html">HasDebugData</a> 
+      
+        <a href="../../../../com/facebook/common/memory/MemoryTrimmable.html">MemoryTrimmable</a> 
+      
   
   
 
@@ -488,9 +515,13 @@ Summary:
               >
           
             
+              <a href="../../../../com/facebook/imagepipeline/cache/AbstractAdaptiveCountingMemoryCache.html">AbstractAdaptiveCountingMemoryCache</a>&lt;K,&nbsp;V&gt;,
+            
               <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;K,&nbsp;V&gt;,
             
-              <a href="../../../../com/facebook/imagepipeline/cache/InstrumentedMemoryCache.html">InstrumentedMemoryCache</a>&lt;K,&nbsp;V&gt;
+              <a href="../../../../com/facebook/imagepipeline/cache/InstrumentedMemoryCache.html">InstrumentedMemoryCache</a>&lt;K,&nbsp;V&gt;,
+            
+              <a href="../../../../com/facebook/imagepipeline/cache/LruCountingMemoryCache.html">LruCountingMemoryCache</a>&lt;K,&nbsp;V&gt;
             
           
       </div>
@@ -499,12 +530,20 @@ Summary:
               >
   <table class="jd-sumtable-expando">
         <tr class="alt-color api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;K,&nbsp;V&gt;</td>
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/AbstractAdaptiveCountingMemoryCache.html">AbstractAdaptiveCountingMemoryCache</a>&lt;K,&nbsp;V&gt;</td>
               <td class="jd-descrcol" width="100%">Layer of memory cache stack responsible for managing eviction of the the cached items.&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;K,&nbsp;V&gt;</td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/InstrumentedMemoryCache.html">InstrumentedMemoryCache</a>&lt;K,&nbsp;V&gt;</td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/LruCountingMemoryCache.html">LruCountingMemoryCache</a>&lt;K,&nbsp;V&gt;</td>
+              <td class="jd-descrcol" width="100%">Layer of memory cache stack responsible for managing eviction of the the cached items.&nbsp;</td>
           </tr>
   </table>
       </div>
@@ -747,6 +786,102 @@ Summary:
 
 
 
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+<table id="inhmethods" class="jd-sumtable"><tr><th>
+  <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
+  <div style="clear:left;">Inherited Methods</div></th></tr>
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.cache.common.HasDebugData" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.facebook.cache.common.HasDebugData-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From interface
+
+  <a href="../../../../com/facebook/cache/common/HasDebugData.html">com.facebook.cache.common.HasDebugData</a>
+
+<div id="inherited-methods-com.facebook.cache.common.HasDebugData">
+  <div id="inherited-methods-com.facebook.cache.common.HasDebugData-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-com.facebook.cache.common.HasDebugData-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            String
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/cache/common/HasDebugData.html#getDebugData()">getDebugData</a></span>()
+        
+        <div class="jd-descrdiv">Return a string describing this object and to be used for debugging or logging </div>
+  
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.common.memory.MemoryTrimmable" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.facebook.common.memory.MemoryTrimmable-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From interface
+
+  <a href="../../../../com/facebook/common/memory/MemoryTrimmable.html">com.facebook.common.memory.MemoryTrimmable</a>
+
+<div id="inherited-methods-com.facebook.common.memory.MemoryTrimmable">
+  <div id="inherited-methods-com.facebook.common.memory.MemoryTrimmable-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-com.facebook.common.memory.MemoryTrimmable-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/memory/MemoryTrimmable.html#trim(com.facebook.common.memory.MemoryTrimType)">trim</a></span>(<a href="../../../../com/facebook/common/memory/MemoryTrimType.html">MemoryTrimType</a> trimType)
+        
+        <div class="jd-descrdiv">Trim memory.</div>
+  
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+</table>
 
 
 </div><!-- jd-descr (summary) -->

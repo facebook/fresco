@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -58,10 +58,23 @@ public:
     m_length = m_pBuffer.size();
   }
 
+  inline static size_t rangeAdd(size_t current, size_t increment, size_t max) {
+    size_t end = current + increment;
+    if (
+      end < current ||  // integer overflow
+      end > max  // buffer overflow
+    ) {
+      end = max;
+    }
+
+    return end;
+  }
+
   size_t read(GifByteType* dest, size_t size) override {
-    size_t readSize = m_position + size > m_length ? m_length - m_position : size;
+    size_t endPosition = rangeAdd(m_position, size, m_length);
+    size_t readSize = endPosition - m_position;
     memcpy(dest, m_pBuffer.data() + m_position, readSize);
-    m_position += readSize;
+    m_position = endPosition;
     return readSize;
   }
 
@@ -428,8 +441,7 @@ int readSingleFrame(
   }
 
   // Check for image size overflow.
-  if (pSavedImage->ImageDesc.Width > 0 &&
-      pSavedImage->ImageDesc.Height > 0 &&
+  if (pSavedImage->ImageDesc.Height != 0 &&
       pSavedImage->ImageDesc.Width > (INT_MAX / pSavedImage->ImageDesc.Height)) {
     return GIF_ERROR;
   }
@@ -1163,7 +1175,7 @@ static PixelType32 packARGB32(
  * @param pColorMap the color map
  * @return a 32-bit pixel
  */
-static PixelType32 getColorFromTable(int idx, const ColorMapObject* pColorMap) {
+static PixelType32 getColorFromTable(unsigned int idx, const ColorMapObject* pColorMap) {
   if (pColorMap == NULL) {
       return TRANSPARENT;
   }

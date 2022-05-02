@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,7 +7,9 @@
 
 package com.facebook.common.executors;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.atomic.AtomicInteger;
+import javax.annotation.Nullable;
 
 /**
  * Abstraction for computation.
@@ -20,6 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * <p>This runnable can be run only once. Subsequent calls to run method won't have any effect.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class StatefulRunnable<T> implements Runnable {
   protected static final int STATE_CREATED = 0;
   protected static final int STATE_STARTED = 1;
@@ -66,7 +69,7 @@ public abstract class StatefulRunnable<T> implements Runnable {
    *
    * @param result
    */
-  protected void onSuccess(T result) {}
+  protected void onSuccess(@Nullable T result) {}
 
   /**
    * Called if exception occurred during computation.
@@ -83,7 +86,7 @@ public abstract class StatefulRunnable<T> implements Runnable {
    *
    * @param result
    */
-  protected void disposeResult(T result) {}
+  protected void disposeResult(@Nullable T result) {}
 
-  protected abstract T getResult() throws Exception;
+  protected abstract @Nullable T getResult() throws Exception;
 }

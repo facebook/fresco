@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -62,11 +62,9 @@ class MultiUriFragment : BaseShowcaseFragment() {
             ImageRequest.fromUri(sampleUris().createSampleUri(ImageUriProvider.ImageSize.XS))
         val highRes =
             ImageRequest.fromUri(sampleUris().createSampleUri(ImageUriProvider.ImageSize.XXL))
-        drawee_view.setController(
-            Fresco.newDraweeControllerBuilder()
-                .setLowResImageRequest(lowRes)
-                .setImageRequest(highRes)
-                .build())
+        val draweeControllerBuilder = Fresco.newDraweeControllerBuilder().setImageRequest(highRes)
+        lowRes?.let { draweeControllerBuilder.setLowResImageRequest(it) }
+        drawee_view.controller = draweeControllerBuilder.build()
       }
     }
 
@@ -95,11 +93,10 @@ class MultiUriFragment : BaseShowcaseFragment() {
                     sampleUris().createSampleUri(ImageUriProvider.ImageSize.XXL))
                 .map(ImageRequest::fromUri)
                 .toTypedArray()
-        drawee_view.setController(
-            Fresco.newDraweeControllerBuilder()
-                .setLowResImageRequest(lowRes)
-                .setFirstAvailableImageRequests(anyHighRes)
-                .build())
+        val draweeControllerBuilder =
+            Fresco.newDraweeControllerBuilder().setFirstAvailableImageRequests(anyHighRes)
+        lowRes?.let { draweeControllerBuilder.setLowResImageRequest(it) }
+        drawee_view.controller = draweeControllerBuilder.build()
       }
     }
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,18 +8,19 @@
 import com.facebook.fresco.buildsrc.Deps
 
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
 
 dependencies {
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
+    compileOnly Deps.inferAnnotation
 
     implementation Deps.AndroidX.legacySupportCoreUtils
     implementation Deps.SoLoader.soloader
     implementation Deps.Bolts.tasks
     implementation project(':fbcore')
+
+    testCompileOnly Deps.inferAnnotation
 }
-apply from: rootProject.file('release.gradle')
 
 android {
 
@@ -32,22 +33,4 @@ android {
     }
 }
 
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task jarTest (type: Jar) {
-    from android.sourceSets.test.java.srcDirs
-    include '**/*.java'
-    classifier = 'test'
-}
-
-configurations {
-    testOutput.extendsFrom (testImplementation)
-}
-
-artifacts.add('archives', sourcesJar)
-artifacts.add('testOutput', jarTest)
-
-build.dependsOn jarTest
+apply plugin: "com.vanniktech.maven.publish"

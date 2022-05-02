@@ -556,6 +556,24 @@
             
             
             
+            <a href="../../../../com/facebook/binaryresource/BinaryResource.html">BinaryResource</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/cache/disk/DiskStorage.Inserter.html#commit(java.lang.Object, long)">commit</a></span>(Object debugInfo, long time)
+        
+        <div class="jd-descrdiv">Commits the insertion into the cache.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
             void
         </td>
         <td class="jd-linkcol" width="100%">
@@ -683,6 +701,66 @@
         <tr>
           <th>debugInfo</th>
           <td>debug object for debugging</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the final resource created</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>IOException</td>
+            <td>on errors during the commit
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="commit(java.lang.Object, long)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        abstract 
+         
+        <a href="../../../../com/facebook/binaryresource/BinaryResource.html">BinaryResource</a>
+      </span>
+      <span class="sympad">commit</span>
+      <span class="normal">(Object debugInfo, long time)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Commits the insertion into the cache. Once this is called the entry will be available to
+ clients of the cache. It also sets the file's timestamp according to the time passed as an
+ argument.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>debugInfo</th>
+          <td>debug object for debugging</td>
+        </tr>
+        <tr>
+          <th>time</th>
+          <td>in milliseconds</td>
         </tr>
       </table>
   </div>

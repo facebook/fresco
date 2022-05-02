@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -123,5 +123,39 @@ public class ForwardingImageListener implements ImageListener {
         mListeners[i].onImageDrawn(id, imageInfo, dimensionsInfo);
       }
     }
+  }
+
+  @Override
+  public boolean equals(@Nullable Object o) {
+    // If the object is compared with itself then return true
+    if (o == this) {
+      return true;
+    }
+
+    // Check if o is an instance of ForwardingImageListener or not
+    if (!(o instanceof ForwardingImageListener)) {
+      return false;
+    }
+
+    ForwardingImageListener forwardingImageListener = (ForwardingImageListener) o;
+    ImageListener[] listeners = forwardingImageListener.mListeners;
+    if (mListeners.length != listeners.length) {
+      return false;
+    }
+    for (int i = 0; i < mListeners.length; i++) {
+      if (!(mListeners[i].equals(listeners[i]))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = mListeners[0] != null ? mListeners[0].hashCode() : 0;
+    for (int i = 1; i < mListeners.length; i++) {
+      result = 31 * result + (mListeners[i] != null ? mListeners[i].hashCode() : 0);
+    }
+    return result;
   }
 }

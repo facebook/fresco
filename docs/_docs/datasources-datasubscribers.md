@@ -12,11 +12,11 @@ After submitting an image request, the image pipeline returns a data source. To 
 ### Executors
 
 When subscribing to a data source, an executor must be provided. The purpose of executors is to execute runnables (in our case the subscriber callback methods) on a specific thread and with specific policy.
-Fresco provides several [executors](https://github.com/facebook/fresco/tree/master/fbcore/src/main/java/com/facebook/common/executors) and one should carefully choose which one to be used:
+Fresco provides several [executors](https://github.com/facebook/fresco/tree/main/fbcore/src/main/java/com/facebook/common/executors) and one should carefully choose which one to be used:
 
 * If you need to do any UI stuff from your callback (accessing views, drawables, etc.), you must use `UiThreadImmediateExecutorService.getInstance()`. Android view system is not thread safe and is only to be accessed from the main thread (the UI thread).
 * If the callback is lightweight, and does not do any UI related stuff, you can simply use `CallerThreadExecutor.getInstance()`. This executor executes runnables on the caller's thread. Depending on what is the calling thread, callback may be executed either on the UI or a background thread. There are no guarantees which thread it is going to be and because of that this executor should be used with great caution. And again, only for lightweight non-UI related stuff.
-* If you need to do some expensive non-UI related work (database access, disk read/write, or any other slow operation), this should NOT be done either with `CallerThreadExecutor` nor with the `UiThreadExecutorService`, but with one of the background thread executors. See [DefaultExecutorSupplier.forBackgroundTasks](https://github.com/facebook/fresco/blob/master/imagepipeline-base/src/main/java/com/facebook/imagepipeline/core/DefaultExecutorSupplier.java) for an example implementation.
+* If you need to do some expensive non-UI related work (database access, disk read/write, or any other slow operation), this should NOT be done either with `CallerThreadExecutor` nor with the `UiThreadExecutorService`, but with one of the background thread executors. See [DefaultExecutorSupplier.forBackgroundTasks](https://github.com/facebook/fresco/blob/main/imagepipeline-base/src/main/java/com/facebook/imagepipeline/core/DefaultExecutorSupplier.java) for an example implementation.
 
 ### Getting result from a data source
 
@@ -135,12 +135,12 @@ DataSource<CloseableReference<CloseableImage>>
 Image pipeline uses `CloseableImage` for decoded images. This is our `T` in the above examples. Here is an example of getting a `Bitmap` out of `CloseableImage`:
 
 ```java
-	CloseableImage image = ref.get();
-	if (image instanceof CloseableBitmap) {
-	  // do something with the bitmap
-	  Bitmap bitmap = (CloseableBitmap image).getUnderlyingBitmap();
-	  ...
-	}
+    CloseableImage image = ref.get();
+    if (image instanceof CloseableBitmap) {
+      // do something with the bitmap
+      Bitmap bitmap = (CloseableBitmap image).getUnderlyingBitmap();
+      ...
+    }
 ```
 
 

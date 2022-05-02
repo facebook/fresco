@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -15,8 +15,11 @@ import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /** Probe producer for brobing disk cache on encoded memory cache hit requests. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class EncodedProbeProducer implements Producer<EncodedImage> {
 
   public static final String PRODUCER_NAME = "EncodedProbeProducer";
@@ -104,7 +107,7 @@ public class EncodedProbeProducer implements Producer<EncodedImage> {
     }
 
     @Override
-    public void onNewResultImpl(EncodedImage newResult, @Status int status) {
+    public void onNewResultImpl(@Nullable EncodedImage newResult, @Status int status) {
       try {
         if (FrescoSystrace.isTracing()) {
           FrescoSystrace.beginSection("EncodedProbeProducer#onNewResultImpl");
@@ -124,7 +127,7 @@ public class EncodedProbeProducer implements Producer<EncodedImage> {
             mCacheKeyFactory.getEncodedCacheKey(imageRequest, mProducerContext.getCallerContext());
 
         mEncodedMemoryCacheHistory.add(cacheKey);
-        if (mProducerContext.getExtra(ProducerContext.ExtraKeys.ORIGIN).equals("memory_encoded")) {
+        if ("memory_encoded".equals(mProducerContext.getExtra(ProducerContext.ExtraKeys.ORIGIN))) {
           if (!mDiskCacheHistory.contains(cacheKey)) {
             final boolean isSmallRequest =
                 (imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL);
@@ -133,7 +136,7 @@ public class EncodedProbeProducer implements Producer<EncodedImage> {
             preferredCache.addKeyForAsyncProbing(cacheKey);
             mDiskCacheHistory.add(cacheKey);
           }
-        } else if (mProducerContext.getExtra(ProducerContext.ExtraKeys.ORIGIN).equals("disk")) {
+        } else if ("disk".equals(mProducerContext.getExtra(ProducerContext.ExtraKeys.ORIGIN))) {
           // image was fetched from disk cache, therefore it was probed in disk cache by default
           mDiskCacheHistory.add(cacheKey);
         }

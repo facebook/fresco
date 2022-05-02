@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -44,19 +44,22 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
     implements CountingMemoryCache<K, V> {
   private static final String TAG = "AbstractArcCountingMemoryCache";
 
-  // Contains the least frequently used items out of all the iterms in the cache that are not being
+  // Contains the least frequently used items out of all the items in the cache that are not being
   // used by any client and are hence viable for eviction.
+
   @GuardedBy("this")
   @VisibleForTesting
   final CountingLruMap<K, Entry<K, V>> mLeastFrequentlyUsedExclusiveEntries;
 
   // Contains the most frequently used items out of all the items in the cache that are not being
   // used by any client and are hence viable for eviction.
+
   @GuardedBy("this")
   @VisibleForTesting
   final CountingLruMap<K, Entry<K, V>> mMostFrequentlyUsedExclusiveEntries;
 
   // Contains all the cached items including the exclusively owned ones.
+
   @GuardedBy("this")
   @VisibleForTesting
   final CountingLruMap<K, Entry<K, V>> mCachedEntries;
@@ -72,6 +75,7 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
   // The mLFUFractionPromil/1000 is the the percentage of the cache allocated for the least
   // frequently used values. The rest of the cache, which is the (1 - mLFUFractionPromil/1000) is
   // allocated for the most frequently used values.
+
   @GuardedBy("this")
   @VisibleForTesting
   int mLFUFractionPromil;
@@ -79,7 +83,7 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
   static final int DEFAULT_LFU_FRACTION_PROMIL = 500;
 
   // These constants are used to define the smallest LFU/MFU fraction sizes.
-  // considering the cache is partioned [Cache] = [..LFU..|..MFU..]: LFU between 0 and N, MFU
+  // considering the cache is partitioned [Cache] = [..LFU..|..MFU..]: LFU between 0 and N, MFU
   // between N and 1000.
   static final int TOTAL_PROMIL = 1000;
   @VisibleForTesting static final int MIN_FRACTION_PROMIL = 100;
@@ -92,6 +96,7 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
 
   // The learning rate for adapting the cache partitions; this determines how much we
   // increase/decrease the fraction
+
   @GuardedBy("this")
   @VisibleForTesting
   final int mAdaptiveRatePromil;
@@ -99,16 +104,19 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
   static final int DEFAULT_ADAPTIVE_RATE_PROMIL = 10;
 
   // Tracks the most recently evicted keys from the least frequently used cache.
+
   @GuardedBy("this")
   @VisibleForTesting
   final IntMapArrayList<K> mLeastFrequentlyUsedKeysGhostList;
 
   // Tracks the most recently evicted keys from the most frequently used cache.
+
   @GuardedBy("this")
   @VisibleForTesting
   final ArrayList<K> mMostFrequentlyUsedKeysGhostList;
 
   // The maximum size of the ghost lists.
+
   @GuardedBy("this")
   @VisibleForTesting
   final int mGhostListMaxSize;
@@ -267,6 +275,11 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
     maybeUpdateCacheParams();
     maybeEvictEntries();
     return clientRef;
+  }
+
+  @Override
+  public @Nullable V inspect(K key) {
+    return null; // Not supported. TODO T66165815
   }
 
   /**
@@ -804,39 +817,5 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
   @Override
   public Map<Bitmap, Object> getOtherEntries() {
     return Collections.emptyMap(); // TODO T66165815
-  }
-
-  /** The internal representation of a key-value pair stored by the cache. */
-  @VisibleForTesting
-  static class Entry<K, V> {
-    public final K key;
-    public final CloseableReference<V> valueRef;
-    // The number of clients that reference the value.
-    public int clientCount;
-    // Whether or not this entry is tracked by this cache. Orphans are not tracked by the cache and
-    // as soon as the last client of an orphaned entry closes their reference, the entry's copy is
-    // closed too.
-    public boolean isOrphan;
-    @Nullable public final EntryStateObserver<K> observer;
-    // The number of clients accessed this value while being in the cache.
-    public int accessCount;
-
-    private Entry(K key, CloseableReference<V> valueRef, @Nullable EntryStateObserver<K> observer) {
-      this.key = Preconditions.checkNotNull(key);
-      this.valueRef = Preconditions.checkNotNull(CloseableReference.cloneOrNull(valueRef));
-      this.clientCount = 0;
-      this.isOrphan = false;
-      this.observer = observer;
-      this.accessCount = 0;
-    }
-
-    /** Creates a new entry with the usage count and access count of 0. */
-    @VisibleForTesting
-    static <K, V> Entry<K, V> of(
-        final K key,
-        final CloseableReference<V> valueRef,
-        final @Nullable EntryStateObserver<K> observer) {
-      return new Entry<>(key, valueRef, observer);
-    }
   }
 }

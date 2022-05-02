@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -12,6 +12,7 @@ object SampleDeps {
   object AndroidX {
     const val appcompat = "androidx.appcompat:appcompat:1.0.2"
     const val cardview = "androidx.cardview:cardview:1.0.0"
+    const val multidex = "androidx.multidex:multidex:2.0.1"
     const val preference = "androidx.preference:preference:1.0.0"
     const val recyclerview = "androidx.recyclerview:recyclerview:1.0.0"
   }

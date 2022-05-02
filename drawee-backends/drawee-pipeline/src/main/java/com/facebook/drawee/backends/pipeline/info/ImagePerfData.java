@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -223,12 +223,7 @@ public class ImagePerfData {
   }
 
   public long getIntermediateImageLoadTimeMs() {
-    if (getControllerIntermediateImageSetTimeMs() == UNSET
-        || getControllerSubmitTimeMs() == UNSET) {
-      return UNSET;
-    }
-
-    return getControllerIntermediateImageSetTimeMs() - getControllerSubmitTimeMs();
+    return mControllerIntermediateImageSetTimeMs;
   }
 
   public int getVisibilityState() {

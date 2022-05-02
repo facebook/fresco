@@ -1,11 +1,13 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
 package com.facebook.datasource;
+
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * Base implementation of {@link DataSubscriber} that ensures that the data source is closed when
@@ -25,10 +27,12 @@ package com.facebook.datasource;
  * </code>
  * </pre>
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class BaseBooleanSubscriber implements DataSubscriber<Boolean> {
   @Override
   public void onNewResult(DataSource<Boolean> dataSource) {
     try {
+      // NULLSAFE_FIXME[Parameter Not Nullable]
       onNewResultImpl(dataSource.getResult());
     } finally {
       dataSource.close();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,7 +9,6 @@ package com.facebook.fresco.samples.showcase;
 
 import android.content.Context;
 import android.os.Build;
-import androidx.annotation.Nullable;
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.fresco.samples.showcase.imageformat.color.ColorImageExample;
 import com.facebook.fresco.samples.showcase.imageformat.keyframes.KeyframesDecoderExample;
@@ -23,7 +22,6 @@ public class CustomImageFormatConfigurator {
   private static final String IMAGE_FORMAT_COLOR_KEY = "color";
   private static final String IMAGE_FORMAT_SVG_KEY = "svg";
 
-  @Nullable
   public static ImageDecoderConfig createImageDecoderConfig(Context context) {
     ImageDecoderConfig.Builder config = ImageDecoderConfig.newBuilder();
     if (isGlobalColorDecoderEnabled(context)) {

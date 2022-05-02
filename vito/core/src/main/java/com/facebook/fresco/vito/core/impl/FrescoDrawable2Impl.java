@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,16 +11,16 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
+import com.facebook.datasource.DataSubscriber;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
-import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
-import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.vito.core.CombinedImageListener;
-import com.facebook.fresco.vito.core.DrawableDataSubscriber;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.NopDrawable;
 import com.facebook.fresco.vito.core.VitoImagePerfListener;
@@ -28,11 +28,14 @@ import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.core.VitoImageRequestListener;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.listener.BaseRequestListener;
 import com.facebook.imagepipeline.listener.RequestListener;
-import javax.annotation.Nonnull;
+import com.facebook.infer.annotation.Nullsafe;
 
-public class FrescoDrawable2Impl extends FrescoDrawable2 {
+@Nullsafe(Nullsafe.Mode.LOCAL)
+public class FrescoDrawable2Impl extends FrescoDrawable2
+    implements DataSubscriber<CloseableReference<CloseableImage>> {
 
   private static final long RELEASE_DELAY = 16 * 5; // Roughly 5 frames.
   private static final Handler sHandler = new Handler(Looper.getMainLooper());
@@ -47,6 +50,8 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
 
   private @Nullable DataSource<CloseableReference<CloseableImage>> mDataSource;
   private boolean mFetchSubmitted;
+
+  private @Nullable Runnable mRefetchRunnable;
 
   private final CombinedImageListenerImpl mImageListener = new CombinedImageListenerImpl();
   private final VitoImagePerfListener mImagePerfListener;
@@ -69,22 +74,59 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
         @Override
         public void onUltimateProducerReached(
             String requestId, String producerName, boolean successful) {
-          mImageOrigin = ImageOriginUtils.mapProducerNameToImageOrigin(producerName);
+          mImageOrigin = mapProducerNameToImageOrigin(producerName);
+        }
+
+        private @ImageOrigin int mapProducerNameToImageOrigin(final String producerName) {
+          switch (producerName) {
+            case "BitmapMemoryCacheGetProducer":
+            case "BitmapMemoryCacheProducer":
+            case "PostprocessedBitmapMemoryCacheProducer":
+              return ImageOrigin.MEMORY_BITMAP;
+
+            case "EncodedMemoryCacheProducer":
+              return ImageOrigin.MEMORY_ENCODED;
+
+            case "DiskCacheProducer":
+            case "PartialDiskCacheProducer":
+              return ImageOrigin.DISK;
+
+            case "NetworkFetchProducer":
+              return ImageOrigin.NETWORK;
+
+            case "DataFetchProducer":
+            case "LocalAssetFetchProducer":
+            case "LocalContentUriFetchProducer":
+            case "LocalContentUriThumbnailFetchProducer":
+            case "LocalFileFetchProducer":
+            case "LocalResourceFetchProducer":
+            case "VideoThumbnailProducer":
+            case "QualifiedResourceFetchProducer":
+              return ImageOrigin.LOCAL;
+
+            default:
+              return ImageOrigin.UNKNOWN;
+          }
         }
       };
 
   private @ImageOrigin int mImageOrigin = ImageOrigin.UNKNOWN;
 
+  @VisibleForTesting @Nullable CloseableReference<CloseableImage> mImageReference;
+
   public FrescoDrawable2Impl(
       boolean useNewReleaseCallbacks,
-      @Nullable ImagePerfControllerListener2 imagePerfControllerListener,
+      @Nullable ControllerListener2<ImageInfo> imagePerfControllerListener,
       VitoImagePerfListener imagePerfListener) {
     mUseNewReleaseCallbacks = useNewReleaseCallbacks;
     mImageListener.setImagePerfControllerListener(imagePerfControllerListener);
     mImagePerfListener = imagePerfListener;
   }
 
-  @Override
+  public @Nullable Drawable setImageDrawable(@Nullable Drawable newDrawable) {
+    return setImage(newDrawable, null);
+  }
+
   public @Nullable Drawable setImage(
       @Nullable Drawable imageDrawable,
       @Nullable CloseableReference<CloseableImage> imageReference) {
@@ -93,7 +135,9 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     if (imageDrawable != mActualImageWrapper) {
       mActualImageWrapper.setCurrent(NopDrawable.INSTANCE);
     }
-    return super.setImage(imageDrawable, imageReference);
+    CloseableReference.closeSafely(mImageReference);
+    mImageReference = CloseableReference.cloneOrNull(imageReference);
+    return setDrawable(IMAGE_DRAWABLE_INDEX, imageDrawable);
   }
 
   @Override
@@ -101,7 +145,16 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     return mActualImageWrapper;
   }
 
+  @Nullable
   @Override
+  public Drawable getActualImageDrawable() {
+    Drawable actual = getDrawable(IMAGE_DRAWABLE_INDEX);
+    if (actual == mActualImageWrapper) {
+      return mActualImageWrapper.getDrawable();
+    }
+    return actual;
+  }
+
   public synchronized void setDataSource(
       long imageId, @Nullable DataSource<CloseableReference<CloseableImage>> dataSource) {
     if (imageId != mImageId) {
@@ -113,7 +166,6 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     mDataSource = dataSource;
   }
 
-  @Override
   public void setFetchSubmitted(boolean fetchSubmitted) {
     mFetchSubmitted = fetchSubmitted;
   }
@@ -123,12 +175,10 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     return mFetchSubmitted;
   }
 
-  @Override
   public void setDrawableDataSubscriber(@Nullable DrawableDataSubscriber drawableDataSubscriber) {
     mDrawableDataSubscriber = drawableDataSubscriber;
   }
 
-  @Override
   @Nullable
   public DrawableDataSubscriber getDrawableDataSubscriber() {
     return mDrawableDataSubscriber;
@@ -156,16 +206,19 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   }
 
   @Override
+  @Nullable
+  public ImageListener getImageListener() {
+    return mImageListener.getImageListener();
+  }
+
   public void setVitoImageRequestListener(@Nullable VitoImageRequestListener listener) {
     mImageListener.setVitoImageRequestListener(listener);
   }
 
-  @Override
-  public CombinedImageListener getImageListener() {
+  public CombinedImageListener getInternalListener() {
     return mImageListener;
   }
 
-  @Override
   public RequestListener getImageOriginListener() {
     return mImageOriginListener;
   }
@@ -176,7 +229,6 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     return mImageRequest;
   }
 
-  @Override
   public synchronized void setImageId(long imageId) {
     mImageId = imageId;
   }
@@ -186,12 +238,10 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     return mImageId;
   }
 
-  @Override
   public void setImageOrigin(@ImageOrigin int imageOrigin) {
     mImageOrigin = imageOrigin;
   }
 
-  @Override
   public @ImageOrigin int getImageOrigin() {
     return mImageOrigin;
   }
@@ -217,20 +267,23 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     setImageId(0);
     super.close();
     super.reset();
+    mActualImageWrapper.setCurrent(NopDrawable.INSTANCE);
+    CloseableReference.closeSafely(mImageReference);
+    mImageReference = null;
     mDrawableDataSubscriber = null;
     if (mDataSource != null) {
       mDataSource.close();
     }
     mDataSource = null;
     mFetchSubmitted = false;
-    mActualImageWrapper.setCurrent(NopDrawable.INSTANCE);
+    mImageRequest = null;
+
     mImageOrigin = ImageOrigin.UNKNOWN;
     mExtras = null;
     setOnFadeListener(null);
     mImageListener.onReset();
   }
 
-  @Override
   public void scheduleReleaseDelayed() {
     if (mDelayedReleasePending) {
       return;
@@ -247,7 +300,6 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     }
   }
 
-  @Override
   public void scheduleReleaseNextFrame() {
     cancelReleaseDelayed();
     sDeferredReleaser.scheduleDeferredRelease(this);
@@ -256,7 +308,6 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     }
   }
 
-  @Override
   public void releaseImmediately() {
     if (!mUseNewReleaseCallbacks && mDrawableDataSubscriber != null) {
       mDrawableDataSubscriber.onRelease(this);
@@ -270,7 +321,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   }
 
   @Override
-  public void onNewResult(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
+  public void onNewResult(DataSource<CloseableReference<CloseableImage>> dataSource) {
     if (dataSource != mDataSource || mImageRequest == null || mDrawableDataSubscriber == null) {
       getImagePerfListener().onIgnoreResult(this);
       return; // We don't care
@@ -279,7 +330,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   }
 
   @Override
-  public void onFailure(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
+  public void onFailure(DataSource<CloseableReference<CloseableImage>> dataSource) {
     if (dataSource != mDataSource || mImageRequest == null || mDrawableDataSubscriber == null) {
       getImagePerfListener().onIgnoreFailure(this);
       return; // wrong image
@@ -288,12 +339,12 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
   }
 
   @Override
-  public void onCancellation(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
+  public void onCancellation(DataSource<CloseableReference<CloseableImage>> dataSource) {
     // no-op
   }
 
   @Override
-  public void onProgressUpdate(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
+  public void onProgressUpdate(DataSource<CloseableReference<CloseableImage>> dataSource) {
     if (dataSource != mDataSource || mImageRequest == null || mDrawableDataSubscriber == null) {
       return; // wrong image
     }
@@ -311,8 +362,37 @@ public class FrescoDrawable2Impl extends FrescoDrawable2 {
     mExtras = extras;
   }
 
+  @Nullable
+  @Override
+  public Runnable getRefetchRunnable() {
+    return mRefetchRunnable;
+  }
+
+  @Override
+  public void setRefetchRunnable(@Nullable Runnable refetchRunnable) {
+    mRefetchRunnable = refetchRunnable;
+  }
+
   @Override
   public VitoImagePerfListener getImagePerfListener() {
     return mImagePerfListener;
+  }
+
+  /** @return the width of the underlying actual image or -1 if unset */
+  @Override
+  public int getActualImageWidthPx() {
+    if (CloseableReference.isValid(mImageReference)) {
+      return mImageReference.get().getWidth();
+    }
+    return -1;
+  }
+
+  /** @return the width of the underlying actual image or -1 if unset */
+  @Override
+  public int getActualImageHeightPx() {
+    if (CloseableReference.isValid(mImageReference)) {
+      return mImageReference.get().getHeight();
+    }
+    return -1;
   }
 }

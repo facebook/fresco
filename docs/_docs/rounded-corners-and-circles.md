@@ -78,6 +78,6 @@ As explained above, there is no really good solution for rounding corners on And
 
 ### Full Sample
 
-For a full sample see the `DraweeRoundedCornersFragment` in the showcase app: [DraweeRoundedCornersFragment.java](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeRoundedCornersFragment.java)
+For a full sample see the `DraweeRoundedCornersFragment` in the showcase app: [DraweeRoundedCornersFragment.java](https://github.com/facebook/fresco/blob/main/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeRoundedCornersFragment.java)
 
 ![Showcase app with a scale type example](/static/images/docs/01-rounded-corners-and-circles-sample.png)

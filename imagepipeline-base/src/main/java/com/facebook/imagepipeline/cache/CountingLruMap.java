@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -124,6 +124,12 @@ public class CountingLruMap<K, V> {
     mMap.clear();
     mSizeInBytes = 0;
     return oldValues;
+  }
+
+  public synchronized void resetSize() {
+    if (mMap.isEmpty()) {
+      mSizeInBytes = 0;
+    }
   }
 
   private int getValueSizeInBytes(@Nullable V value) {

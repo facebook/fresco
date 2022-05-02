@@ -1,17 +1,24 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
+
+import com.facebook.fresco.buildsrc.Deps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
 
 dependencies {
+    compileOnly Deps.inferAnnotation
+    compileOnly Deps.jsr305
+    compileOnly Deps.javaxAnnotation
+
     implementation project(':drawee-backends:drawee-pipeline')
 
+    testImplementation Deps.inferAnnotation
     testImplementation TestDeps.junit
     testImplementation TestDeps.mockitoCore
     testImplementation(TestDeps.robolectric) {

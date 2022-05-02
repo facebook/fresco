@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -14,6 +14,8 @@ import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * Disk cache write producer.
@@ -28,6 +30,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
  * <p>This producer is currently used only if the media variations experiment is turned on, to
  * enable another producer to sit between cache read and write.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DiskCacheWriteProducer implements Producer<EncodedImage> {
   @VisibleForTesting static final String PRODUCER_NAME = "DiskCacheWriteProducer";
 
@@ -60,7 +63,11 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
       consumerOfDiskCacheWriteProducer.onNewResult(null, Consumer.IS_LAST);
     } else {
       Consumer<EncodedImage> consumer;
-      if (producerContext.getImageRequest().isDiskCacheEnabled()) {
+      final boolean isDiskCacheEnabledForWrite =
+          producerContext
+              .getImageRequest()
+              .isCacheEnabled(ImageRequest.CachesLocationsMasks.DISK_WRITE);
+      if (isDiskCacheEnabledForWrite) {
         consumer =
             new DiskCacheWriteConsumer(
                 consumerOfDiskCacheWriteProducer,
@@ -104,7 +111,7 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
     }
 
     @Override
-    public void onNewResultImpl(EncodedImage newResult, @Status int status) {
+    public void onNewResultImpl(@Nullable EncodedImage newResult, @Status int status) {
       mProducerContext.getProducerListener().onProducerStart(mProducerContext, PRODUCER_NAME);
       // intermediate, null or uncacheable results are not cached, so we just forward them
       // as well as the images with unknown format which could be html response from the server

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -20,6 +20,7 @@ import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.memory.PooledByteStreams;
 import com.facebook.imagepipeline.core.MemoryChunkType;
 import com.facebook.imagepipeline.core.NativeCodeSetup;
+import com.facebook.infer.annotation.Nullsafe;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import javax.annotation.Nullable;
@@ -27,6 +28,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 /** Factory class for pools. */
 @NotThreadSafe
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PoolFactory {
 
   private final PoolConfig mConfig;
@@ -203,12 +205,11 @@ public class PoolFactory {
 
   public PooledByteBufferFactory getPooledByteBufferFactory(@MemoryChunkType int memoryChunkType) {
     if (mPooledByteBufferFactory == null) {
-      MemoryChunkPool memoryChunkPool = getMemoryChunkPool(memoryChunkType);
+      MemoryChunkPool memoryChunkPool = this.getMemoryChunkPool(memoryChunkType);
       Preconditions.checkNotNull(
           memoryChunkPool, "failed to get pool for chunk type: " + memoryChunkType);
       mPooledByteBufferFactory =
-          new MemoryPooledByteBufferFactory(
-              getMemoryChunkPool(memoryChunkType), getPooledByteStreams());
+          new MemoryPooledByteBufferFactory(memoryChunkPool, getPooledByteStreams());
     }
     return mPooledByteBufferFactory;
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -13,6 +13,7 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import androidx.annotation.VisibleForTesting;
@@ -22,12 +23,25 @@ import javax.annotation.Nullable;
 
 public class RoundedBitmapDrawable extends RoundedDrawable {
 
+  private static boolean sDefaultRepeatEdgePixels = false;
+
   private final Paint mPaint = new Paint();
   private final Paint mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   @Nullable private final Bitmap mBitmap;
   @Nullable private WeakReference<Bitmap> mLastBitmap;
+  private boolean mRepeatEdgePixels;
+  private @Nullable RectF mBitmapClipRect = null;
 
-  public RoundedBitmapDrawable(Resources res, @Nullable Bitmap bitmap, @Nullable Paint paint) {
+  public static void setDefaultRepeatEdgePixels(boolean defaultRepeatEdgePixels) {
+    sDefaultRepeatEdgePixels = defaultRepeatEdgePixels;
+  }
+
+  public static boolean getDefaultRepeatEdgePixels() {
+    return sDefaultRepeatEdgePixels;
+  }
+
+  public RoundedBitmapDrawable(
+      Resources res, @Nullable Bitmap bitmap, @Nullable Paint paint, boolean repeatEdgePixels) {
     super(new BitmapDrawable(res, bitmap));
     mBitmap = bitmap;
     if (paint != null) {
@@ -36,10 +50,26 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
 
     mPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
     mBorderPaint.setStyle(Paint.Style.STROKE);
+    mRepeatEdgePixels = repeatEdgePixels;
+  }
+
+  public RoundedBitmapDrawable(Resources res, @Nullable Bitmap bitmap, @Nullable Paint paint) {
+    this(res, bitmap, paint, sDefaultRepeatEdgePixels);
   }
 
   public RoundedBitmapDrawable(Resources res, @Nullable Bitmap bitmap) {
     this(res, bitmap, null);
+  }
+
+  @Override
+  protected void updateTransform() {
+    super.updateTransform();
+    if (!mRepeatEdgePixels) {
+      if (mBitmapClipRect == null) {
+        mBitmapClipRect = new RectF();
+      }
+      mTransform.mapRect(mBitmapClipRect, mBitmapBounds);
+    }
   }
 
   @Override
@@ -59,7 +89,14 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
     updatePaint();
     int saveCount = canvas.save();
     canvas.concat(mInverseParentTransform);
-    canvas.drawPath(mPath, mPaint);
+    if (!mRepeatEdgePixels && mBitmapClipRect != null) {
+      int saveCount2 = canvas.save();
+      canvas.clipRect(mBitmapClipRect);
+      canvas.drawPath(mPath, mPaint);
+      canvas.restoreToCount(saveCount2);
+    } else {
+      canvas.drawPath(mPath, mPaint);
+    }
     if (mBorderWidth > 0) {
       mBorderPaint.setStrokeWidth(mBorderWidth);
       mBorderPaint.setColor(DrawableUtils.multiplyColorAlpha(mBorderColor, mPaint.getAlpha()));
@@ -120,5 +157,10 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
 
   Paint getPaint() {
     return mPaint;
+  }
+
+  @Override
+  public void setRepeatEdgePixels(boolean repeatEdgePixels) {
+    mRepeatEdgePixels = repeatEdgePixels;
   }
 }

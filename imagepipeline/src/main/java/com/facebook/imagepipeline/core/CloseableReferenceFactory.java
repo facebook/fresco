@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -13,6 +13,7 @@ import com.facebook.common.references.ResourceReleaser;
 import com.facebook.common.references.SharedReference;
 import com.facebook.imagepipeline.debug.CloseableReferenceLeakTracker;
 import com.facebook.infer.annotation.Nullsafe;
+import com.facebook.infer.annotation.PropagatesNullable;
 import java.io.Closeable;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -49,7 +50,7 @@ public class CloseableReferenceFactory {
         };
   }
 
-  public <U extends Closeable> CloseableReference<U> create(U u) {
+  public <U extends Closeable> CloseableReference<U> create(@PropagatesNullable @Nullable U u) {
     return CloseableReference.of(u, mLeakHandler);
   }
 

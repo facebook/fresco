@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -31,6 +31,7 @@ import com.facebook.imagepipeline.transcoder.ImageTranscoder;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import com.facebook.imagepipeline.transcoder.JpegTranscoderUtils;
 import com.facebook.imagepipeline.transcoder.TranscodeStatus;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -43,6 +44,7 @@ import javax.annotation.Nullable;
  *
  * <p>This can be used even if downsampling is enabled as long as resizing is disabled.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   private static final String PRODUCER_NAME = "ResizeAndRotateProducer";
   private static final String INPUT_IMAGE_FORMAT = "Image format";
@@ -234,7 +236,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         }
 
         extraMap =
-            getExtraMap(
+            this.getExtraMap(
                 encodedImage,
                 imageRequest.getResizeOptions(),
                 result,

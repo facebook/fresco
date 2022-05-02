@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,12 +7,13 @@
 
 package com.facebook.fresco.samples.showcase.vito
 
+import com.facebook.common.util.UriUtil
+import com.facebook.fresco.samples.showcase.R
 import com.facebook.fresco.samples.showcase.imageformat.keyframes.KeyframesDecoderExample
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.vito.source.*
 import com.facebook.imageformat.DefaultImageFormats
 import com.facebook.imageformat.ImageFormat
-import com.facebook.imagepipeline.request.ImageRequest
 
 data class ImageSourceConfigurator(
     private val imageUriProvider: ImageUriProvider,
@@ -57,19 +58,12 @@ data class ImageSourceConfigurator(
                           imageUriProvider.create(currentImageFormat)?.toString())
                     }
                   },
-              "Single ImageRequest" to
-                  {
-                    set {
-                      ImageSourceProvider.forImageRequest(
-                          ImageRequest.fromUri(imageUriProvider.create(currentImageFormat)))
-                    }
-                  },
               "Increasing quality" to
                   {
                     set {
                       ImageSourceProvider.increasingQuality(
-                          imageUriProvider.create(currentImageFormat), // TODO: low res
-                          imageUriProvider.create(currentImageFormat))
+                          imageUriProvider.create(currentImageFormat)!!, // TODO: low res
+                          imageUriProvider.create(currentImageFormat)!!)
                     }
                   },
               "First available" to
@@ -85,7 +79,29 @@ data class ImageSourceConfigurator(
                   {
                     set { ImageSourceProvider.forUri(imageUriProvider.nonExistingUri) }
                   },
-              "null" to { set { null } }),
+              "null" to { set { null } },
+              "Increasing quality (low res error)" to
+                  {
+                    set {
+                      ImageSourceProvider.increasingQuality(
+                          ImageSourceProvider.forUri(imageUriProvider.nonExistingUri),
+                          ImageSourceProvider.forUri(imageUriProvider.create(currentImageFormat)))
+                    }
+                  },
+              "First available (all error)" to
+                  {
+                    set {
+                      ImageSourceProvider.firstAvailable(
+                          ImageSourceProvider.forUri(imageUriProvider.nonExistingUri),
+                          ImageSourceProvider.forUri(imageUriProvider.nonExistingUri))
+                    }
+                  },
+              "Local icon" to
+                  {
+                    set {
+                      ImageSourceProvider.forUri(UriUtil.getUriForResourceId(R.drawable.ic_done))
+                    }
+                  }),
           "Image Source")
 
   private fun set(create: () -> ImageSource?) {

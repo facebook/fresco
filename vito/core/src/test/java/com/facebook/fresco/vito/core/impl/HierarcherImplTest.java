@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -25,7 +25,6 @@ import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.drawee.drawable.RoundedColorDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.fresco.vito.core.Hierarcher;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
 import com.facebook.fresco.vito.options.RoundingOptions;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -48,6 +48,20 @@ public class VitoImageRequest {
     return resources == other.resources
         && Objects.equal(imageSource, other.imageSource)
         && Objects.equal(imageOptions, other.imageOptions);
+  }
+
+  public boolean equalsIfHasImage(@Nullable VitoImageRequest other, boolean hasImage) {
+    if (this == other) {
+      return true;
+    }
+    if (other == null) {
+      return false;
+    }
+    return resources == other.resources
+        && Objects.equal(imageSource, other.imageSource)
+        && (hasImage
+            ? imageOptions.equalsForActualImage(other.imageOptions)
+            : Objects.equal(imageOptions, other.imageOptions));
   }
 
   @Override

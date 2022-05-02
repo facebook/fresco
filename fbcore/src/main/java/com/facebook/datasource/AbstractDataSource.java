@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,6 +9,7 @@ package com.facebook.datasource;
 
 import android.util.Pair;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
@@ -25,6 +26,7 @@ import javax.annotation.concurrent.GuardedBy;
  *
  * @param <T>
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class AbstractDataSource<T> implements DataSource<T> {
 
   private @Nullable Map<String, Object> mExtras;
@@ -50,6 +52,7 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
   @GuardedBy("this")
   private @Nullable T mResult = null;
 
+  @Nullable
   @GuardedBy("this")
   private Throwable mFailureThrowable = null;
 
@@ -262,7 +265,8 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
     return setFailure(throwable, null);
   }
 
-  protected boolean setFailure(Throwable throwable, @Nullable Map<String, Object> extras) {
+  protected boolean setFailure(
+      @Nullable Throwable throwable, @Nullable Map<String, Object> extras) {
     boolean result = setFailureInternal(throwable, extras);
     if (result) {
       notifyDataSubscribers();
@@ -319,7 +323,7 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
   }
 
   private synchronized boolean setFailureInternal(
-      Throwable throwable, @Nullable Map<String, Object> extras) {
+      @Nullable Throwable throwable, @Nullable Map<String, Object> extras) {
     if (mIsClosed || mDataSourceStatus != DataSourceStatus.IN_PROGRESS) {
       return false;
     } else {

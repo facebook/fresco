@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,7 +8,6 @@
 package com.facebook.fresco.vito.draweesupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
@@ -19,7 +18,6 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
-import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.imagepipeline.image.ImageInfo;
 import org.junit.Before;
@@ -110,21 +108,6 @@ public class ControllerListenerWrapperTest {
     mControllerListenerWrapper.onFinalImageSet(ID, ImageOrigin.DISK, imageInfo, drawable);
 
     verify(mControllerListener).onFinalImageSet(eq(STRING_ID), eq(imageInfo), eq(drawable));
-    verifyNoMoreInteractions(mControllerListener);
-  }
-
-  @Test
-  public void testOnFinalImageSetImageOriginListener() {
-    final ImageOriginListener listener = mock(ImageOriginListener.class);
-    final ImageInfo imageInfo = mock(ImageInfo.class);
-    ControllerListenerWrapper wrapper =
-        ControllerListenerWrapper.create(mControllerListener).setImageOriginListener(listener);
-
-    wrapper.onFinalImageSet(ID, ImageOrigin.DISK, imageInfo, null);
-
-    verify(mControllerListener)
-        .onFinalImageSet(eq(STRING_ID), eq(imageInfo), isNull(Animatable.class));
-    verify(listener).onImageLoaded(eq(STRING_ID), eq(ImageOrigin.DISK), eq(true), anyString());
     verifyNoMoreInteractions(mControllerListener);
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,18 +11,21 @@ import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import androidx.core.util.Pools.SynchronizedPool;
+import androidx.core.util.Pools;
 import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
+import java.nio.ByteBuffer;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** Bitmap decoder for ART VM (Android O and up). */
 @TargetApi(Build.VERSION_CODES.O)
 @ThreadSafe
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class OreoDecoder extends DefaultDecoder {
 
-  public OreoDecoder(BitmapPool bitmapPool, int maxNumThreads, SynchronizedPool decodeBuffers) {
-    super(bitmapPool, maxNumThreads, decodeBuffers);
+  public OreoDecoder(BitmapPool bitmapPool, Pools.Pool<ByteBuffer> decodeBuffers) {
+    super(bitmapPool, decodeBuffers);
   }
 
   @Override
@@ -32,7 +35,12 @@ public class OreoDecoder extends DefaultDecoder {
     // needs to be computed manually to get the correct size.
     return hasColorGamutMismatch(options)
         ? width * height * 8
-        : BitmapUtil.getSizeInByteForBitmap(width, height, options.inPreferredConfig);
+        : BitmapUtil.getSizeInByteForBitmap(
+            width,
+            height,
+            options.inPreferredConfig != null
+                ? options.inPreferredConfig
+                : Bitmap.Config.ARGB_8888);
   }
 
   /** Check if the color space has a wide color gamut and is consistent with the Bitmap config */

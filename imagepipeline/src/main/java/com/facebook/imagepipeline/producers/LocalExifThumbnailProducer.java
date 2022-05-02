@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -15,6 +15,7 @@ import android.os.Build;
 import android.util.Pair;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.ImmutableMap;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
@@ -27,6 +28,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.soloader.DoNotOptimize;
 import java.io.File;
 import java.io.FileDescriptor;
@@ -41,6 +43,7 @@ import javax.annotation.Nullable;
  * <p>At present, these thumbnails are retrieved on the java heap before being put into native
  * memory.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImage> {
 
   private static final int COMMON_EXIF_THUMBNAIL_MAX_DIMENSION = 512;
@@ -73,7 +76,7 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
    * @return true if the producer can meet these needs
    */
   @Override
-  public boolean canProvideImageForSize(ResizeOptions resizeOptions) {
+  public boolean canProvideImageForSize(@Nullable ResizeOptions resizeOptions) {
     return ThumbnailSizeChecker.isImageBigEnough(
         COMMON_EXIF_THUMBNAIL_MAX_DIMENSION, COMMON_EXIF_THUMBNAIL_MAX_DIMENSION, resizeOptions);
   }
@@ -98,18 +101,18 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
               return null;
             }
 
-            byte[] bytes = exifInterface.getThumbnail();
+            byte[] bytes = Preconditions.checkNotNull(exifInterface.getThumbnail());
             PooledByteBuffer pooledByteBuffer = mPooledByteBufferFactory.newByteBuffer(bytes);
             return buildEncodedImage(pooledByteBuffer, exifInterface);
           }
 
           @Override
-          protected void disposeResult(EncodedImage result) {
+          protected void disposeResult(@Nullable EncodedImage result) {
             EncodedImage.closeSafely(result);
           }
 
           @Override
-          protected Map<String, String> getExtraMapOnSuccess(final EncodedImage result) {
+          protected Map<String, String> getExtraMapOnSuccess(final @Nullable EncodedImage result) {
             return ImmutableMap.of(CREATED_THUMBNAIL, Boolean.toString(result != null));
           }
         };
@@ -126,7 +129,10 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
   @VisibleForTesting
   @Nullable
   ExifInterface getExifInterface(Uri uri) {
-    final String realPath = UriUtil.getRealPathFromUri(mContentResolver, uri);
+    final @Nullable String realPath = UriUtil.getRealPathFromUri(mContentResolver, uri);
+    if (realPath == null) {
+      return null;
+    }
     try {
       if (canReadAsFile(realPath)) {
         return new ExifInterface(realPath);
@@ -152,7 +158,7 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
   private EncodedImage buildEncodedImage(PooledByteBuffer imageBytes, ExifInterface exifInterface) {
     Pair<Integer, Integer> dimensions =
         BitmapUtil.decodeDimensions(new PooledByteBufferInputStream(imageBytes));
-    int rotationAngle = getRotationAngle(exifInterface);
+    int rotationAngle = this.getRotationAngle(exifInterface);
     int width = dimensions != null ? dimensions.first : EncodedImage.UNKNOWN_WIDTH;
     int height = dimensions != null ? dimensions.second : EncodedImage.UNKNOWN_HEIGHT;
     EncodedImage encodedImage;
@@ -171,8 +177,9 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
 
   // Gets the correction angle based on the image's orientation
   private int getRotationAngle(final ExifInterface exifInterface) {
-    return JfifUtil.getAutoRotateAngleFromOrientation(
-        Integer.parseInt(exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION)));
+    String s =
+        Preconditions.checkNotNull(exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION));
+    return JfifUtil.getAutoRotateAngleFromOrientation(Integer.parseInt(s));
   }
 
   @VisibleForTesting
@@ -186,6 +193,7 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
 
   @DoNotOptimize
   private class Api24Utils {
+    @Nullable
     ExifInterface getExifInterface(FileDescriptor fileDescriptor) throws IOException {
       return Build.VERSION.SDK_INT >= 24 ? new ExifInterface(fileDescriptor) : null;
     }

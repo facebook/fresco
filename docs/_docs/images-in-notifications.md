@@ -64,6 +64,6 @@ private void displayNotification(@Nullable Bitmap bitmap) {
 
 ### Full Sample
 
-For the full sample see the `ImagePipelineNotificationFragment` in the showcase app: [ImagePipelineNotificationFragment.java](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/imagepipeline/ImagePipelineNotificationFragment.java)
+For the full sample see the `ImagePipelineNotificationFragment` in the showcase app: [ImagePipelineNotificationFragment.java](https://github.com/facebook/fresco/blob/main/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/imagepipeline/ImagePipelineNotificationFragment.java)
 
 ![Showcase app with a notification](/static/images/docs/02-images-in-notifications-sample.png)

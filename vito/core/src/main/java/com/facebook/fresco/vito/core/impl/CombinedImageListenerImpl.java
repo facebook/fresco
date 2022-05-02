@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,24 +9,27 @@ package com.facebook.fresco.vito.core.impl;
 
 import android.graphics.drawable.Drawable;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
-import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
 import com.facebook.fresco.ui.common.BaseControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2;
+import com.facebook.fresco.ui.common.VitoUtils;
 import com.facebook.fresco.vito.core.CombinedImageListener;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.core.VitoImageRequestListener;
-import com.facebook.fresco.vito.core.VitoUtils;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.infer.annotation.Nullsafe;
+import java.io.Closeable;
+import java.io.IOException;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class CombinedImageListenerImpl implements CombinedImageListener {
 
   private @Nullable VitoImageRequestListener mVitoImageRequestListener;
   private @Nullable ImageListener mImageListener;
-  private ControllerListener2<ImageInfo> mControllerListener2 =
+  private @Nullable ControllerListener2<ImageInfo> mControllerListener2 =
       BaseControllerListener2.getNoOpListener();
-  private @Nullable ImagePerfControllerListener2 mImagePerfControllerListener;
+  private @Nullable ControllerListener2<ImageInfo> mImagePerfControllerListener;
 
   @Override
   public void setImageListener(@Nullable ImageListener imageListener) {
@@ -46,12 +49,12 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
   }
 
   @Override
-  public void setControllerListener2(ControllerListener2<ImageInfo> controllerListener2) {
+  public void setControllerListener2(@Nullable ControllerListener2<ImageInfo> controllerListener2) {
     mControllerListener2 = controllerListener2;
   }
 
   public void setImagePerfControllerListener(
-      @Nullable ImagePerfControllerListener2 imagePerfControllerListener) {
+      @Nullable ControllerListener2<ImageInfo> imagePerfControllerListener) {
     mImagePerfControllerListener = imagePerfControllerListener;
   }
 
@@ -68,7 +71,9 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
       mImageListener.onSubmit(id, callerContext);
     }
     String stringId = VitoUtils.getStringId(id);
-    mControllerListener2.onSubmit(stringId, callerContext, extras);
+    if (mControllerListener2 != null) {
+      mControllerListener2.onSubmit(stringId, callerContext, extras);
+    }
     if (mImagePerfControllerListener != null) {
       mImagePerfControllerListener.onSubmit(stringId, callerContext, extras);
     }
@@ -101,7 +106,9 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
       mImageListener.onFinalImageSet(id, imageOrigin, imageInfo, drawable);
     }
     String stringId = VitoUtils.getStringId(id);
-    mControllerListener2.onFinalImageSet(stringId, imageInfo, extras);
+    if (mControllerListener2 != null) {
+      mControllerListener2.onFinalImageSet(stringId, imageInfo, extras);
+    }
     if (mImagePerfControllerListener != null) {
       mImagePerfControllerListener.onFinalImageSet(stringId, imageInfo, extras);
     }
@@ -117,7 +124,9 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
       mImageListener.onIntermediateImageSet(id, imageInfo);
     }
     String stringId = VitoUtils.getStringId(id);
-    mControllerListener2.onIntermediateImageSet(stringId, imageInfo);
+    if (mControllerListener2 != null) {
+      mControllerListener2.onIntermediateImageSet(stringId, imageInfo);
+    }
     if (mImagePerfControllerListener != null) {
       mImagePerfControllerListener.onIntermediateImageSet(stringId, imageInfo);
     }
@@ -125,7 +134,7 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
 
   @Override
   public void onIntermediateImageFailed(
-      long id, VitoImageRequest imageRequest, Throwable throwable) {
+      long id, VitoImageRequest imageRequest, @Nullable Throwable throwable) {
     if (mVitoImageRequestListener != null) {
       mVitoImageRequestListener.onIntermediateImageFailed(id, imageRequest, throwable);
     }
@@ -133,7 +142,9 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
       mImageListener.onIntermediateImageFailed(id, throwable);
     }
     String stringId = VitoUtils.getStringId(id);
-    mControllerListener2.onIntermediateImageFailed(stringId);
+    if (mControllerListener2 != null) {
+      mControllerListener2.onIntermediateImageFailed(stringId);
+    }
     if (mImagePerfControllerListener != null) {
       mImagePerfControllerListener.onIntermediateImageFailed(stringId);
     }
@@ -153,7 +164,9 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
       mImageListener.onFailure(id, error, throwable);
     }
     String stringId = VitoUtils.getStringId(id);
-    mControllerListener2.onFailure(stringId, throwable, extras);
+    if (mControllerListener2 != null) {
+      mControllerListener2.onFailure(stringId, throwable, extras);
+    }
     if (mImagePerfControllerListener != null) {
       mImagePerfControllerListener.onFailure(stringId, throwable, extras);
     }
@@ -168,7 +181,9 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
       mImageListener.onRelease(id);
     }
     String stringId = VitoUtils.getStringId(id);
-    mControllerListener2.onRelease(stringId, extras);
+    if (mControllerListener2 != null) {
+      mControllerListener2.onRelease(stringId, extras);
+    }
     if (mImagePerfControllerListener != null) {
       mImagePerfControllerListener.onRelease(stringId, extras);
     }
@@ -176,8 +191,11 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
 
   @Override
   public void onReset() {
-    if (mImagePerfControllerListener != null) {
-      mImagePerfControllerListener.resetState();
+    if (mImagePerfControllerListener instanceof Closeable) {
+      try {
+        ((Closeable) mImagePerfControllerListener).close();
+      } catch (IOException e) {
+      }
     }
   }
 }

@@ -324,7 +324,7 @@
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/CloneableDrawable.html">CloneableDrawable</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/DrawableParent.html">DrawableParent</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/FadeDrawable.OnFadeFinishedListener.html">FadeDrawable.OnFadeFinishedListener</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/FadeDrawable.OnFadeListener.html">FadeDrawable.OnFadeListener</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/InstrumentedDrawable.Listener.html">InstrumentedDrawable.Listener</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/Rounded.html">Rounded</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></li>
@@ -633,7 +633,7 @@ Summary:
          
         
         interface</td>
-      <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/FadeDrawable.OnFadeFinishedListener.html">FadeDrawable.OnFadeFinishedListener</a></td>
+      <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/FadeDrawable.OnFadeListener.html">FadeDrawable.OnFadeListener</a></td>
       <td class="jd-descrcol" width="100%">&nbsp;</td>
     </tr>
     
@@ -726,7 +726,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/FadeDrawable.html#FadeDrawable(android.graphics.drawable.Drawable[], boolean)">FadeDrawable</a></span>(Drawable[] layers, boolean allLayersVisible)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/FadeDrawable.html#FadeDrawable(android.graphics.drawable.Drawable[], boolean, int)">FadeDrawable</a></span>(Drawable[] layers, boolean allLayersVisible, int actualImageLayer)
         
         <div class="jd-descrdiv">Creates a new fade drawable.</div>
   
@@ -1087,7 +1087,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/FadeDrawable.html#setOnFadeFinishedListener(com.facebook.drawee.drawable.FadeDrawable.OnFadeFinishedListener)">setOnFadeFinishedListener</a></span>(<a href="../../../../com/facebook/drawee/drawable/FadeDrawable.OnFadeFinishedListener.html">FadeDrawable.OnFadeFinishedListener</a> onFadeFinishedListener)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/FadeDrawable.html#setOnFadeListener(com.facebook.drawee.drawable.FadeDrawable.OnFadeListener)">setOnFadeListener</a></span>(<a href="../../../../com/facebook/drawee/drawable/FadeDrawable.OnFadeListener.html">FadeDrawable.OnFadeListener</a> onFadeListener)
         
   </td></tr>
 
@@ -3342,7 +3342,7 @@ From interface
 </div>
 
 
-<a id="FadeDrawable(android.graphics.drawable.Drawable[], boolean)"></a>
+<a id="FadeDrawable(android.graphics.drawable.Drawable[], boolean, int)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3355,7 +3355,7 @@ From interface
         
       </span>
       <span class="sympad">FadeDrawable</span>
-      <span class="normal">(Drawable[] layers, boolean allLayersVisible)</span>
+      <span class="normal">(Drawable[] layers, boolean allLayersVisible, int actualImageLayer)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -3379,7 +3379,11 @@ From interface
         </tr>
         <tr>
           <th>allLayersVisible</th>
-          <td>true if all layers should be visible per default
+          <td>true if all layers should be visible per default</td>
+        </tr>
+        <tr>
+          <th>actualImageLayer</th>
+          <td>The index of the layer that contains the actual image
 </td>
         </tr>
       </table>
@@ -4055,7 +4059,7 @@ From interface
 </div>
 
 
-<a id="setOnFadeFinishedListener(com.facebook.drawee.drawable.FadeDrawable.OnFadeFinishedListener)"></a>
+<a id="setOnFadeListener(com.facebook.drawee.drawable.FadeDrawable.OnFadeListener)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4067,8 +4071,8 @@ From interface
          
         void
       </span>
-      <span class="sympad">setOnFadeFinishedListener</span>
-      <span class="normal">(<a href="../../../../com/facebook/drawee/drawable/FadeDrawable.OnFadeFinishedListener.html">FadeDrawable.OnFadeFinishedListener</a> onFadeFinishedListener)</span>
+      <span class="sympad">setOnFadeListener</span>
+      <span class="normal">(<a href="../../../../com/facebook/drawee/drawable/FadeDrawable.OnFadeListener.html">FadeDrawable.OnFadeListener</a> onFadeListener)</span>
     </h4>
       <div class="api-level">
         <div>

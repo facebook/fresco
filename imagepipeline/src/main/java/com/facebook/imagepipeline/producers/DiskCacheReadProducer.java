@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -17,6 +17,7 @@ import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequest.CacheChoice;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -34,10 +35,13 @@ import javax.annotation.Nullable;
  * <p>This producer is currently used only if the media variations experiment is turned on, to
  * enable another producer to sit between cache read and write.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DiskCacheReadProducer implements Producer<EncodedImage> {
   // PRODUCER_NAME doesn't exactly match class name as it matches name in historic data instead
   public static final String PRODUCER_NAME = "DiskCacheProducer";
+
   public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
+
   public static final String ENCODED_IMAGE_SIZE = ProducerConstants.ENCODED_IMAGE_SIZE;
 
   private final BufferedDiskCache mDefaultBufferedDiskCache;
@@ -59,7 +63,11 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
   public void produceResults(
       final Consumer<EncodedImage> consumer, final ProducerContext producerContext) {
     final ImageRequest imageRequest = producerContext.getImageRequest();
-    if (!imageRequest.isDiskCacheEnabled()) {
+    final boolean isDiskCacheEnabledForRead =
+        producerContext
+            .getImageRequest()
+            .isCacheEnabled(ImageRequest.CachesLocationsMasks.DISK_READ);
+    if (!isDiskCacheEnabledForRead) {
       maybeStartInputProducer(consumer, producerContext);
       return;
     }

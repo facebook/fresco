@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -91,11 +91,8 @@ public class AnimatedDrawableUtil {
   public int getSizeOfBitmap(Bitmap bitmap) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       return bitmap.getAllocationByteCount();
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-      return bitmap.getByteCount();
     } else {
-      // Estimate for earlier platforms.
-      return bitmap.getWidth() * bitmap.getHeight() * 4;
+      return bitmap.getByteCount();
     }
   }
 

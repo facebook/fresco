@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -13,12 +13,14 @@ import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 
 /** Represents a local fetch producer. */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class LocalFetchProducer implements Producer<EncodedImage> {
 
   private final Executor mExecutor;
@@ -42,7 +44,7 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
 
           @Override
           protected @Nullable EncodedImage getResult() throws Exception {
-            EncodedImage encodedImage = getEncodedImage(imageRequest);
+            EncodedImage encodedImage = LocalFetchProducer.this.getEncodedImage(imageRequest);
             if (encodedImage == null) {
               listener.onUltimateProducerReached(producerContext, getProducerName(), false);
               producerContext.putOriginExtra("local");
@@ -98,7 +100,8 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
    * @param imageRequest request that includes the local resource that is being accessed
    * @throws IOException
    */
-  protected abstract EncodedImage getEncodedImage(ImageRequest imageRequest) throws IOException;
+  protected abstract @Nullable EncodedImage getEncodedImage(ImageRequest imageRequest)
+      throws IOException;
 
   /** @return name of the Producer */
   protected abstract String getProducerName();

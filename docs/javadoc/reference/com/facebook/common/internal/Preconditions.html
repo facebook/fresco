@@ -351,7 +351,6 @@
     <li><h2>Annotations</h2>
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/DoNotStrip.html">DoNotStrip</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/VisibleForTesting.html">VisibleForTesting</a></li>
       </ul>
     </li>
               
@@ -651,7 +650,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/common/internal/Preconditions.html#checkArgument(boolean, java.lang.Object)">checkArgument</a></span>(boolean expression, Object errorMessage)
+        <span class="sympad"><a href="../../../../com/facebook/common/internal/Preconditions.html#checkArgument(java.lang.Boolean)">checkArgument</a></span>(Boolean expression)
         
         <div class="jd-descrdiv">Ensures the truth of an expression involving one or more parameters to the calling method.</div>
   
@@ -669,7 +668,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/common/internal/Preconditions.html#checkArgument(boolean)">checkArgument</a></span>(boolean expression)
+        <span class="sympad"><a href="../../../../com/facebook/common/internal/Preconditions.html#checkArgument(boolean, java.lang.Object)">checkArgument</a></span>(boolean expression, Object errorMessage)
         
         <div class="jd-descrdiv">Ensures the truth of an expression involving one or more parameters to the calling method.</div>
   
@@ -1207,6 +1206,56 @@ From class
 </div>
 
 
+<a id="checkArgument(java.lang.Boolean)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">checkArgument</span>
+      <span class="normal">(Boolean expression)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Ensures the truth of an expression involving one or more parameters to the calling method.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>expression</th>
+          <td>a boolean expression</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>IllegalArgumentException</td>
+            <td>if <code>expression</code> is false
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="checkArgument(boolean, java.lang.Object)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1244,56 +1293,6 @@ From class
           <th>errorMessage</th>
           <td>the exception message to use if the check fails; will be converted to a
      string using <code><a href="null#valueOf(java.lang.Object)">valueOf(Object)</a></code></td>
-        </tr>
-      </table>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Throws</h5>
-      <table class="jd-tagtable">  
-        <tr>
-            <th>IllegalArgumentException</td>
-            <td>if <code>expression</code> is false
-</td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="checkArgument(boolean)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-        static 
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">checkArgument</span>
-      <span class="normal">(boolean expression)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Ensures the truth of an expression involving one or more parameters to the calling method.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>expression</th>
-          <td>a boolean expression</td>
         </tr>
       </table>
   </div>

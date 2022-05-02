@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import com.facebook.infer.annotation.Nullsafe;
+import com.facebook.infer.annotation.PropagatesNullable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
@@ -61,7 +62,7 @@ public class UriUtil {
    * @return url pointing to the same resource as uri
    */
   @Nullable
-  public static URL uriToUrl(@Nullable Uri uri) {
+  public static URL uriToUrl(@PropagatesNullable @Nullable Uri uri) {
     if (uri == null) {
       return null;
     }

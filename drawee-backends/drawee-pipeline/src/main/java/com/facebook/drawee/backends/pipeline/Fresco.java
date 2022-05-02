@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -84,16 +84,16 @@ public class Fresco {
         clazz.getMethod("init", Context.class).invoke(null, context);
       } catch (ClassNotFoundException e) {
         // Failed to initialize SoLoader
-        NativeLoader.init(new SystemDelegate());
+        NativeLoader.initIfUninitialized(new SystemDelegate());
       } catch (IllegalAccessException e) {
         // Failed to initialize SoLoader
-        NativeLoader.init(new SystemDelegate());
+        NativeLoader.initIfUninitialized(new SystemDelegate());
       } catch (InvocationTargetException e) {
         // Failed to initialize SoLoader
-        NativeLoader.init(new SystemDelegate());
+        NativeLoader.initIfUninitialized(new SystemDelegate());
       } catch (NoSuchMethodException e) {
         // Failed to initialize SoLoader
-        NativeLoader.init(new SystemDelegate());
+        NativeLoader.initIfUninitialized(new SystemDelegate());
       } finally {
         if (FrescoSystrace.isTracing()) {
           FrescoSystrace.endSection();

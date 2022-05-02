@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -59,12 +59,12 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
     init(context);
   }
 
-  public DraweeView(Context context, AttributeSet attrs) {
+  public DraweeView(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
     init(context);
   }
 
-  public DraweeView(Context context, AttributeSet attrs, int defStyle) {
+  public DraweeView(Context context, @Nullable AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
     init(context);
   }

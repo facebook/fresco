@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -25,8 +25,6 @@ import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.imagepipeline.widget.ResizableFrameLayout;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
-import com.facebook.fresco.vito.core.FrescoVitoImageDecodeOptions;
-import com.facebook.fresco.vito.core.FrescoVitoRegionDecoder;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;

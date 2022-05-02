@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -37,12 +37,12 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
     inflateHierarchy(context, null);
   }
 
-  public GenericDraweeView(Context context, AttributeSet attrs) {
+  public GenericDraweeView(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
     inflateHierarchy(context, attrs);
   }
 
-  public GenericDraweeView(Context context, AttributeSet attrs, int defStyle) {
+  public GenericDraweeView(Context context, @Nullable AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
     inflateHierarchy(context, attrs);
   }

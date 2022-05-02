@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -13,11 +13,11 @@ import android.net.Uri;
 import android.view.View;
 import androidx.core.util.ObjectsCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
+import com.facebook.common.callercontext.ContextChain;
 import com.facebook.datasource.DataSource;
-import com.facebook.drawee.drawable.FadeDrawable;
-import com.facebook.fresco.vito.core.FrescoDrawable2;
+import com.facebook.fresco.ui.common.OnFadeListener;
+import com.facebook.fresco.vito.core.FrescoDrawableInterface;
 import com.facebook.fresco.vito.core.PrefetchConfig;
-import com.facebook.fresco.vito.core.PrefetchTarget;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
@@ -58,6 +58,7 @@ import com.facebook.litho.annotations.PropDefault;
 import com.facebook.litho.annotations.ResType;
 import com.facebook.litho.annotations.ShouldUpdate;
 import com.facebook.litho.annotations.State;
+import com.facebook.litho.annotations.TreeProp;
 import com.facebook.litho.utils.MeasureUtils;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.Nullable;
@@ -86,9 +87,10 @@ public class FrescoVitoImage2Spec {
 
   @PropDefault static final float imageAspectRatio = 1f;
   @PropDefault static final Prefetch prefetch = Prefetch.AUTO;
+  @PropDefault static final boolean mutateDrawables = true;
 
   @OnCreateMountContent(mountingType = MountingType.DRAWABLE)
-  static FrescoDrawable2 onCreateMountContent(Context c) {
+  static FrescoDrawableInterface onCreateMountContent(Context c) {
     return FrescoVitoProvider.getController().createDrawable();
   }
 
@@ -96,7 +98,8 @@ public class FrescoVitoImage2Spec {
   static void onCreateInitialState(
       ComponentContext context,
       StateValue<AtomicReference<DataSource<Void>>> workingRangePrefetchData) {
-    if (FrescoVitoProvider.getConfig().getPrefetchConfig().prefetchWithWorkingRange()) {
+    if (FrescoVitoProvider.hasBeenInitialized()
+        && FrescoVitoProvider.getConfig().getPrefetchConfig().prefetchWithWorkingRange()) {
       workingRangePrefetchData.set(new AtomicReference<DataSource<Void>>());
     }
   }
@@ -152,14 +155,17 @@ public class FrescoVitoImage2Spec {
   @OnMount
   static void onMount(
       ComponentContext c,
-      final FrescoDrawable2 frescoDrawable,
-      @Prop(optional = true) final @Nullable Object callerContext,
+      final FrescoDrawableInterface frescoDrawable,
       @Prop(optional = true) final @Nullable ImageListener imageListener,
+      @Prop(optional = true) final @Nullable Object callerContext,
+      @Prop(optional = true) final @Nullable OnFadeListener onFadeListener,
+      @Prop(optional = true) boolean mutateDrawables,
       @CachedValue VitoImageRequest imageRequest,
       @FromPrepare @Nullable DataSource<Void> prefetchDataSource,
       @FromBoundsDefined Rect viewportDimensions,
       @State final @Nullable AtomicReference<DataSource<Void>> workingRangePrefetchData,
-      @Prop(optional = true) FadeDrawable.OnFadeListener onFadeListener) {
+      @TreeProp final @Nullable ContextChain contextChain) {
+    frescoDrawable.setMutateDrawables(mutateDrawables);
     if (FrescoVitoProvider.getConfig().useBindOnly()) {
       return;
     }
@@ -168,6 +174,7 @@ public class FrescoVitoImage2Spec {
             frescoDrawable,
             imageRequest,
             callerContext,
+            contextChain,
             imageListener,
             onFadeListener,
             viewportDimensions);
@@ -183,10 +190,11 @@ public class FrescoVitoImage2Spec {
   @OnBind
   static void onBind(
       ComponentContext c,
-      final FrescoDrawable2 frescoDrawable,
-      @Prop(optional = true) final @Nullable Object callerContext,
+      final FrescoDrawableInterface frescoDrawable,
       @Prop(optional = true) final @Nullable ImageListener imageListener,
-      @Prop(optional = true) final @Nullable FadeDrawable.OnFadeListener onFadeListener,
+      @Prop(optional = true) final @Nullable OnFadeListener onFadeListener,
+      @Prop(optional = true) final @Nullable Object callerContext,
+      @TreeProp final @Nullable ContextChain contextChain,
       @CachedValue VitoImageRequest imageRequest,
       @FromPrepare @Nullable DataSource<Void> prefetchDataSource,
       @FromBoundsDefined Rect viewportDimensions,
@@ -198,6 +206,7 @@ public class FrescoVitoImage2Spec {
             frescoDrawable,
             imageRequest,
             callerContext,
+            contextChain,
             imageListener,
             onFadeListener,
             viewportDimensions);
@@ -213,7 +222,7 @@ public class FrescoVitoImage2Spec {
   @OnUnbind
   static void onUnbind(
       ComponentContext c,
-      FrescoDrawable2 frescoDrawable,
+      FrescoDrawableInterface frescoDrawable,
       @FromPrepare @Nullable DataSource<Void> prefetchDataSource) {
     frescoDrawable.getImagePerfListener().onImageUnbind(frescoDrawable);
     if (FrescoVitoProvider.getConfig().useBindOnly()) {
@@ -229,7 +238,7 @@ public class FrescoVitoImage2Spec {
   @OnUnmount
   static void onUnmount(
       ComponentContext c,
-      FrescoDrawable2 frescoDrawable,
+      FrescoDrawableInterface frescoDrawable,
       @FromPrepare @Nullable DataSource<Void> prefetchDataSource) {
     frescoDrawable.getImagePerfListener().onImageUnmount(frescoDrawable);
     if (FrescoVitoProvider.getConfig().useBindOnly()) {
@@ -256,7 +265,8 @@ public class FrescoVitoImage2Spec {
   }
 
   @OnPopulateAccessibilityNode
-  static void onPopulateAccessibilityNode(View host, AccessibilityNodeInfoCompat node) {
+  static void onPopulateAccessibilityNode(
+      ComponentContext c, View host, AccessibilityNodeInfoCompat node) {
     node.setClassName(AccessibilityRole.IMAGE);
   }
 
@@ -277,8 +287,8 @@ public class FrescoVitoImage2Spec {
   @OnEnteredRange(name = "imagePrefetch")
   static void onEnteredWorkingRange(
       ComponentContext c,
-      @Prop(optional = true) final @Nullable Object callerContext,
       @Prop(optional = true) final @Nullable Prefetch prefetch,
+      @Prop(optional = true) final @Nullable Object callerContext,
       @CachedValue VitoImageRequest imageRequest,
       @FromPrepare @Nullable DataSource<Void> prefetchDataSource,
       @State final @Nullable AtomicReference<DataSource<Void>> workingRangePrefetchData) {
@@ -291,7 +301,7 @@ public class FrescoVitoImage2Spec {
       workingRangePrefetchData.set(
           FrescoVitoProvider.getPrefetcher()
               .prefetch(
-                  PrefetchTarget.MEMORY_DECODED,
+                  prefetchConfig.prefetchTargetWorkingRange(),
                   imageRequest,
                   callerContext,
                   null,
@@ -310,13 +320,75 @@ public class FrescoVitoImage2Spec {
     cancelWorkingRangePrefetch(workingRangePrefetchData);
   }
 
+  @OnEnteredRange(name = "below3")
+  static void onEnteredBelow3WorkingRange(
+      ComponentContext c,
+      @Prop(optional = true) final @Nullable Object callerContext,
+      @CachedValue VitoImageRequest imageRequest) {
+    FrescoVitoProvider.getPrefetcher()
+        .setDistanceToViewport(3, callerContext, getUri(imageRequest), "FrescoVitoImage2");
+  }
+
+  @OnEnteredRange(name = "below2")
+  static void onEnteredBelow2WorkingRange(
+      ComponentContext c,
+      @Prop(optional = true) final @Nullable Object callerContext,
+      @CachedValue VitoImageRequest imageRequest) {
+    FrescoVitoProvider.getPrefetcher()
+        .setDistanceToViewport(2, callerContext, getUri(imageRequest), "FrescoVitoImage2");
+  }
+
+  @OnEnteredRange(name = "below1")
+  static void onEnteredBelowWorkingRange(
+      ComponentContext c,
+      @Prop(optional = true) final @Nullable Object callerContext,
+      @CachedValue VitoImageRequest imageRequest) {
+    FrescoVitoProvider.getPrefetcher()
+        .setDistanceToViewport(1, callerContext, getUri(imageRequest), "FrescoVitoImage2");
+  }
+
+  @OnEnteredRange(name = "visible")
+  static void onEnteredVisibleWorkingRange(
+      ComponentContext c,
+      @Prop(optional = true) final @Nullable Object callerContext,
+      @CachedValue VitoImageRequest imageRequest) {
+    FrescoVitoProvider.getPrefetcher()
+        .setDistanceToViewport(0, callerContext, getUri(imageRequest), "FrescoVitoImage2");
+  }
+
+  @OnEnteredRange(name = "above")
+  static void onEnteredAboveWorkingRange(
+      ComponentContext c,
+      @Prop(optional = true) final @Nullable Object callerContext,
+      @CachedValue VitoImageRequest imageRequest) {
+    FrescoVitoProvider.getPrefetcher()
+        .setDistanceToViewport(-1, callerContext, getUri(imageRequest), "FrescoVitoImage2");
+  }
+
+  private static @Nullable Uri getUri(VitoImageRequest imageRequest) {
+    return imageRequest.finalImageRequest != null
+        ? imageRequest.finalImageRequest.getSourceUri()
+        : null;
+  }
+
   @OnRegisterRanges
   static void registerWorkingRanges(
       ComponentContext c, @Prop(optional = true) final @Nullable Prefetch prefetch) {
-    PrefetchConfig prefetchConfig = FrescoVitoProvider.getConfig().getPrefetchConfig();
-    if (shouldPrefetchWithWorkingRange(prefetch)) {
-      FrescoVitoImage2.registerImagePrefetchWorkingRange(
-          c, new BoundaryWorkingRange(prefetchConfig.prefetchWorkingRangeSize()));
+    if (FrescoVitoProvider.hasBeenInitialized()) {
+      PrefetchConfig prefetchConfig = FrescoVitoProvider.getConfig().getPrefetchConfig();
+      if (shouldPrefetchWithWorkingRange(prefetch)) {
+        FrescoVitoImage2.registerImagePrefetchWorkingRange(
+            c, new BoundaryWorkingRange(prefetchConfig.prefetchWorkingRangeSize()));
+      }
+
+      if (prefetchConfig.prioritizeWithWorkingRange()) {
+        FrescoVitoImage2.registerBelow3WorkingRange(
+            c, new BelowViewportWorkingRange(3, Integer.MAX_VALUE));
+        FrescoVitoImage2.registerBelow2WorkingRange(c, new BelowViewportWorkingRange(2, 2));
+        FrescoVitoImage2.registerBelow1WorkingRange(c, new BelowViewportWorkingRange(1, 1));
+        FrescoVitoImage2.registerVisibleWorkingRange(c, new InViewportWorkingRange());
+        FrescoVitoImage2.registerAboveWorkingRange(c, new AboveViewportWorkingRange());
+      }
     }
   }
 

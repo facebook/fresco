@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.memory;
 
 import androidx.annotation.VisibleForTesting;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nullable;
@@ -18,6 +19,7 @@ import javax.annotation.Nullable;
  *
  * @param <T>
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 public abstract class LruBucketsPoolBackend<T> implements PoolBackend<T> {
 
   private final Set<T> mCurrentItems = new HashSet<>();
@@ -48,7 +50,7 @@ public abstract class LruBucketsPoolBackend<T> implements PoolBackend<T> {
     return maybeRemoveFromCurrentItems(mMap.removeFromEnd());
   }
 
-  private T maybeRemoveFromCurrentItems(@Nullable T t) {
+  private @Nullable T maybeRemoveFromCurrentItems(@Nullable T t) {
     if (t != null) {
       synchronized (this) {
         mCurrentItems.remove(t);

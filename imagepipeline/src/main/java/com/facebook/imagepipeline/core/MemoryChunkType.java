@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -23,7 +23,7 @@ import java.lang.annotation.Retention;
   ASHMEM_MEMORY,
 })
 public @interface MemoryChunkType {
-  int NATIVE_MEMORY = 0;
-  int BUFFER_MEMORY = 1;
-  int ASHMEM_MEMORY = 2;
+  final int NATIVE_MEMORY = 0;
+  final int BUFFER_MEMORY = 1;
+  final int ASHMEM_MEMORY = 2;
 }

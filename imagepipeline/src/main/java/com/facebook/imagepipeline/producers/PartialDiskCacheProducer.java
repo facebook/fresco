@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -13,6 +13,7 @@ import bolts.Continuation;
 import bolts.Task;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableMap;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBuffer;
@@ -27,6 +28,7 @@ import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,9 +48,12 @@ import javax.annotation.Nullable;
  * <p>When the final result comes from the input producer, the two parts are stitched back together
  * and returned as a whole.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PartialDiskCacheProducer implements Producer<EncodedImage> {
   public static final String PRODUCER_NAME = "PartialDiskCacheProducer";
+
   public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
+
   public static final String ENCODED_IMAGE_SIZE = ProducerConstants.ENCODED_IMAGE_SIZE;
 
   private final BufferedDiskCache mDefaultBufferedDiskCache;
@@ -73,19 +78,36 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
   public void produceResults(
       final Consumer<EncodedImage> consumer, final ProducerContext producerContext) {
     final ImageRequest imageRequest = producerContext.getImageRequest();
-    if (!imageRequest.isDiskCacheEnabled()) {
+    final boolean isDiskCacheEnabledForRead =
+        producerContext
+            .getImageRequest()
+            .isCacheEnabled(ImageRequest.CachesLocationsMasks.DISK_READ);
+    final boolean isDiskCacheEnabledForWrite =
+        producerContext
+            .getImageRequest()
+            .isCacheEnabled(ImageRequest.CachesLocationsMasks.DISK_WRITE);
+
+    if (!isDiskCacheEnabledForRead && !isDiskCacheEnabledForWrite) {
       mInputProducer.produceResults(consumer, producerContext);
       return;
     }
 
-    producerContext.getProducerListener().onProducerStart(producerContext, PRODUCER_NAME);
+    final ProducerListener2 listener = producerContext.getProducerListener();
+    listener.onProducerStart(producerContext, PRODUCER_NAME);
 
     final Uri uriForPartialCacheKey = createUriForPartialCacheKey(imageRequest);
     final CacheKey partialImageCacheKey =
         mCacheKeyFactory.getEncodedCacheKey(
             imageRequest, uriForPartialCacheKey, producerContext.getCallerContext());
-    final AtomicBoolean isCancelled = new AtomicBoolean(false);
 
+    if (!isDiskCacheEnabledForRead) {
+      listener.onProducerFinishWithSuccess(
+          producerContext, PRODUCER_NAME, getExtraMap(listener, producerContext, false, 0));
+      startInputProducer(consumer, producerContext, partialImageCacheKey, null);
+      return;
+    }
+
+    final AtomicBoolean isCancelled = new AtomicBoolean(false);
     final Task<EncodedImage> diskLookupTask =
         mDefaultBufferedDiskCache.get(partialImageCacheKey, isCancelled);
     final Continuation<EncodedImage, Void> continuation =
@@ -165,7 +187,10 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
             partialImageCacheKey,
             mPooledByteBufferFactory,
             mByteArrayPool,
-            partialResultFromCache);
+            partialResultFromCache,
+            producerContext
+                .getImageRequest()
+                .isCacheEnabled(ImageRequest.CachesLocationsMasks.DISK_WRITE));
 
     mInputProducer.produceResults(consumer, producerContext);
   }
@@ -234,6 +259,7 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
     private final PooledByteBufferFactory mPooledByteBufferFactory;
     private final ByteArrayPool mByteArrayPool;
     private final @Nullable EncodedImage mPartialEncodedImageFromCache;
+    private final boolean mIsDiskCacheEnabledForWrite;
 
     private PartialDiskCacheConsumer(
         final Consumer<EncodedImage> consumer,
@@ -241,23 +267,27 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
         final CacheKey partialImageCacheKey,
         final PooledByteBufferFactory pooledByteBufferFactory,
         final ByteArrayPool byteArrayPool,
-        final @Nullable EncodedImage partialEncodedImageFromCache) {
+        final @Nullable EncodedImage partialEncodedImageFromCache,
+        final boolean isDiskCacheEnabledForWrite) {
       super(consumer);
       mDefaultBufferedDiskCache = defaultBufferedDiskCache;
       mPartialImageCacheKey = partialImageCacheKey;
       mPooledByteBufferFactory = pooledByteBufferFactory;
       mByteArrayPool = byteArrayPool;
       mPartialEncodedImageFromCache = partialEncodedImageFromCache;
+      mIsDiskCacheEnabledForWrite = isDiskCacheEnabledForWrite;
     }
 
     @Override
-    public void onNewResultImpl(EncodedImage newResult, @Status int status) {
+    public void onNewResultImpl(@Nullable EncodedImage newResult, @Status int status) {
       if (isNotLast(status)) {
         // TODO 19247361 Consider merging of non-final results
         return;
       }
 
-      if (mPartialEncodedImageFromCache != null && newResult.getBytesRange() != null) {
+      if (mPartialEncodedImageFromCache != null
+          && newResult != null
+          && newResult.getBytesRange() != null) {
         try {
           final PooledByteBufferOutputStream pooledOutputStream =
               merge(mPartialEncodedImageFromCache, newResult);
@@ -272,8 +302,10 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
         }
 
         mDefaultBufferedDiskCache.remove(mPartialImageCacheKey);
-      } else if (statusHasFlag(status, IS_PARTIAL_RESULT)
+      } else if (mIsDiskCacheEnabledForWrite
+          && statusHasFlag(status, IS_PARTIAL_RESULT)
           && isLast(status)
+          && newResult != null
           && newResult.getImageFormat() != ImageFormat.UNKNOWN) {
         mDefaultBufferedDiskCache.put(mPartialImageCacheKey, newResult);
         getConsumer().onNewResult(newResult, status);
@@ -284,14 +316,15 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
 
     private PooledByteBufferOutputStream merge(EncodedImage initialData, EncodedImage remainingData)
         throws IOException {
-      final int totalLength = remainingData.getSize() + remainingData.getBytesRange().from;
+      int bytesToReadFromInitialData =
+          Preconditions.checkNotNull(remainingData.getBytesRange()).from;
+      final int totalLength = remainingData.getSize() + bytesToReadFromInitialData;
       final PooledByteBufferOutputStream pooledOutputStream =
           mPooledByteBufferFactory.newOutputStream(totalLength);
 
       // Only read from the original image data up to the start of the new data
-      int bytesToReadFromInitialData = remainingData.getBytesRange().from;
-      copy(initialData.getInputStream(), pooledOutputStream, bytesToReadFromInitialData);
-      copy(remainingData.getInputStream(), pooledOutputStream, remainingData.getSize());
+      copy(initialData.getInputStreamOrThrow(), pooledOutputStream, bytesToReadFromInitialData);
+      copy(remainingData.getInputStreamOrThrow(), pooledOutputStream, remainingData.getSize());
 
       return pooledOutputStream;
     }

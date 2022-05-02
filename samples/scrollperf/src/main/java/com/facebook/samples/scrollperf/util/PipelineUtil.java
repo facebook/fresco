@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,10 +10,12 @@ package com.facebook.samples.scrollperf.util;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.request.Postprocessor;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.postprocessor.DelayPostprocessor;
 
 /** Utility class in order to manage Pipeline objects */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public final class PipelineUtil {
 
   /**

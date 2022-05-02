@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -21,6 +21,11 @@ import com.facebook.fresco.samples.showcase.imagepipeline.*
 import com.facebook.fresco.samples.showcase.misc.WelcomeFragment
 import com.facebook.fresco.samples.showcase.settings.SettingsFragment
 import com.facebook.fresco.samples.showcase.vito.*
+import com.facebook.fresco.samples.showcase.vito.ninepatch.LithoNinePatchSample
+import com.facebook.fresco.samples.showcase.vito.renderer.RendererColorFilterExampleFragment
+import com.facebook.fresco.samples.showcase.vito.renderer.RendererFadeExampleFragment
+import com.facebook.fresco.samples.showcase.vito.renderer.RendererShapeExampleFragment
+import com.facebook.fresco.samples.showcase.vito.renderer.VitoLayerExample
 
 object ExampleDatabase {
 
@@ -40,7 +45,7 @@ object ExampleDatabase {
                   ExampleItem("Placeholder, Progress, Failure") { DraweeHierarchyFragment() },
                   ExampleItem("Rotation") { DraweeRotationFragment() },
                   ExampleItem("Recycler View") { DraweeRecyclerViewFragment() },
-                  ExampleItem("Drawee Transistion") { DraweeTransitionFragment() },
+                  ExampleItem("Drawee Transition") { DraweeTransitionFragment() },
                   ExampleItem("Retaining Data Source Supplier") {
                     RetainingDataSourceSupplierFragment()
                   },
@@ -90,5 +95,16 @@ object ExampleDatabase {
                   ExampleItem(
                       "Vito Litho: Slideshow",
                       LithoSlideshowSample(),
-                      "Litho slideshow that fades between images"))))
+                      "Litho slideshow that fades between images"),
+                  ExampleItem(
+                      "Vito Litho: NinePatch", LithoNinePatchSample(), "Litho nine patch example"),
+                  ExampleItem("Vito Text Span") { VitoSpanFragment() },
+              )),
+          ExampleCategory(
+              "Vito Renderer",
+              listOf(
+                  ExampleItem("Renderer: Shapes") { RendererShapeExampleFragment() },
+                  ExampleItem("Renderer: Color Filters") { RendererColorFilterExampleFragment() },
+                  ExampleItem("Renderer: Fading") { RendererFadeExampleFragment() },
+                  ExampleItem("Layers: Scaling") { VitoLayerExample() })))
 }

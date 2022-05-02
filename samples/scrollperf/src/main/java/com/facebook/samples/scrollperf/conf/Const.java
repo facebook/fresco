@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,8 +10,10 @@ package com.facebook.samples.scrollperf.conf;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Constants for the Application */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public final class Const {
 
   public static final String LOCAL_RESOURCE_URIS = "local_resource_uris";

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -256,7 +256,14 @@ public class GenericDraweeHierarchyInflater {
   @Nullable
   private static Drawable getDrawable(Context context, TypedArray gdhAttrs, int attrId) {
     int resourceId = gdhAttrs.getResourceId(attrId, 0);
-    return (resourceId == 0) ? null : context.getResources().getDrawable(resourceId);
+    if (resourceId == 0) {
+      return null;
+    }
+    if (android.os.Build.VERSION.SDK_INT >= 21) {
+      return context.getDrawable(resourceId);
+    } else {
+      return context.getResources().getDrawable(resourceId);
+    }
   }
 
   /**

@@ -1,4 +1,4 @@
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
 #
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
@@ -46,6 +46,6 @@ LOCAL_STATIC_LIBRARIES += fb_png
 LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_png.a
 
 include $(BUILD_SHARED_LIBRARY)
-$(call import-module,libpng-1.6.35)
+$(call import-module,libpng-1.6.37)
 $(call import-module,libwebp-1.0.0)
 $(call import-module,libjpeg-turbo-1.5.3)

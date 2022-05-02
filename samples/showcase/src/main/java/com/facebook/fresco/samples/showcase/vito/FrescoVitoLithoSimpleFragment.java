@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,14 +9,12 @@ package com.facebook.fresco.samples.showcase.vito;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.vito.litho.FrescoVitoImage2;
@@ -55,21 +53,6 @@ public class FrescoVitoLithoSimpleFragment extends BaseShowcaseFragment {
 
   public Component createComponent(ComponentContext c) {
     Uri uri = sampleUris().createSampleUri();
-    return FrescoVitoImage2.create(c)
-        .uri(uri)
-        .imageOptions(IMAGE_OPTIONS)
-        .onFadeListener(
-            new FadeDrawable.OnFadeListener() {
-              @Override
-              public void onFadeStarted() {
-                Log.d("pewpew", "f start");
-              }
-
-              @Override
-              public void onFadeFinished() {
-                Log.d("pewpew", "f finished");
-              }
-            })
-        .build();
+    return FrescoVitoImage2.create(c).uri(uri).imageOptions(IMAGE_OPTIONS).build();
   }
 }

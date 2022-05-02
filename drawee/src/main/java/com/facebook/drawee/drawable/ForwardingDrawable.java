@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -16,6 +16,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -27,6 +28,7 @@ import javax.annotation.Nullable;
  * DrawableContainer, LevelListDrawable etc. DrawableContainer is not directly subclassable, and the
  * others don't allow changing the member drawables.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ForwardingDrawable extends Drawable
     implements Drawable.Callback, TransformCallback, TransformAwareDrawable, DrawableParent {
 
@@ -103,7 +105,7 @@ public class ForwardingDrawable extends Drawable
   }
 
   @Override
-  public void setColorFilter(ColorFilter colorFilter) {
+  public void setColorFilter(@Nullable ColorFilter colorFilter) {
     mDrawableProperties.setColorFilter(colorFilter);
     if (mCurrentDelegate != null) {
       mCurrentDelegate.setColorFilter(colorFilter);
@@ -230,6 +232,7 @@ public class ForwardingDrawable extends Drawable
   // DrawableParent methods
 
   @Override
+  @Nullable
   public Drawable setDrawable(@Nullable Drawable newDrawable) {
     return setCurrent(newDrawable);
   }

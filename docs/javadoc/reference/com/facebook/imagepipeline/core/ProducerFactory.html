@@ -892,7 +892,7 @@ Summary:
             
             
             &lt;T&gt;
-            <a href="../../../../com/facebook/imagepipeline/producers/ThreadHandoffProducer.html">ThreadHandoffProducer</a>&lt;T&gt;
+            <a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;T&gt;
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ProducerFactory.html#newBackgroundThreadHandoffProducer(com.facebook.imagepipeline.producers.Producer<T>, com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue)">newBackgroundThreadHandoffProducer</a></span>(<a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;T&gt; inputProducer, <a href="../../../../com/facebook/imagepipeline/producers/ThreadHandoffProducerQueue.html">ThreadHandoffProducerQueue</a> inputThreadHandoffProducerQueue)
@@ -1004,10 +1004,10 @@ Summary:
             
             
             
-            <a href="../../../../com/facebook/imagepipeline/producers/DataFetchProducer.html">DataFetchProducer</a>
+            <a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a>&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ProducerFactory.html#newDataFetchProducer()">newDataFetchProducer</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ProducerFactory.html#newCombinedNetworkAndCacheProducer(com.facebook.imagepipeline.producers.NetworkFetcher)">newCombinedNetworkAndCacheProducer</a></span>(<a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a> networkFetcher)
         
   </td></tr>
 
@@ -1020,10 +1020,42 @@ Summary:
             
             
             
+            <a href="../../../../com/facebook/imagepipeline/producers/DataFetchProducer.html">DataFetchProducer</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ProducerFactory.html#newDataFetchProducer()">newDataFetchProducer</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
             <a href="../../../../com/facebook/imagepipeline/producers/DecodeProducer.html">DecodeProducer</a>
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ProducerFactory.html#newDecodeProducer(com.facebook.imagepipeline.producers.Producer<com.facebook.imagepipeline.image.EncodedImage>)">newDecodeProducer</a></span>(<a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a>&gt; inputProducer)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/imagepipeline/producers/DelayProducer.html">DelayProducer</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ProducerFactory.html#newDelayProducer(com.facebook.imagepipeline.producers.Producer<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>)">newDelayProducer</a></span>(<a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt; inputProducer)
         
   </td></tr>
 
@@ -1338,7 +1370,7 @@ Summary:
             
             
             
-            static
+            
             &lt;T&gt;
             <a href="../../../../com/facebook/imagepipeline/producers/SwallowResultProducer.html">SwallowResultProducer</a>&lt;T&gt;
         </td>
@@ -2490,7 +2522,7 @@ From class
          
          
          
-        <a href="../../../../com/facebook/imagepipeline/producers/ThreadHandoffProducer.html">ThreadHandoffProducer</a>&lt;T&gt;
+        <a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;T&gt;
       </span>
       <span class="sympad">newBackgroundThreadHandoffProducer</span>
       <span class="normal">(<a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;T&gt; inputProducer, <a href="../../../../com/facebook/imagepipeline/producers/ThreadHandoffProducerQueue.html">ThreadHandoffProducerQueue</a> inputThreadHandoffProducerQueue)</span>
@@ -2697,6 +2729,37 @@ From class
 </div>
 
 
+<a id="newCombinedNetworkAndCacheProducer(com.facebook.imagepipeline.producers.NetworkFetcher)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a>&gt;
+      </span>
+      <span class="sympad">newCombinedNetworkAndCacheProducer</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a> networkFetcher)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 <a id="newDataFetchProducer()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -2742,6 +2805,37 @@ From class
       </span>
       <span class="sympad">newDecodeProducer</span>
       <span class="normal">(<a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a>&gt; inputProducer)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="newDelayProducer(com.facebook.imagepipeline.producers.Producer<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/producers/DelayProducer.html">DelayProducer</a>
+      </span>
+      <span class="sympad">newDelayProducer</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt; inputProducer)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -3354,7 +3448,7 @@ From class
     <h4 class="jd-details-title">
       <span class="normal">
         public 
-        static 
+         
          
          
          

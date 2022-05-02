@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -25,7 +25,7 @@ public class BitmapCounterConfig {
   }
 
   public void setMaxBitmapCount(int maxBitmapCount) {
-    mMaxBitmapCount = maxBitmapCount;
+    this.mMaxBitmapCount = maxBitmapCount;
   }
 
   public static Builder newBuilder() {
@@ -39,7 +39,7 @@ public class BitmapCounterConfig {
     private int mMaxBitmapCount = DEFAULT_MAX_BITMAP_COUNT;
 
     public Builder setMaxBitmapCount(int maxBitmapCount) {
-      mMaxBitmapCount = maxBitmapCount;
+      this.mMaxBitmapCount = maxBitmapCount;
       return this;
     }
 

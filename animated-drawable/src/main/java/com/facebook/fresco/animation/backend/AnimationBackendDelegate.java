@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -13,9 +13,11 @@ import android.graphics.ColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import androidx.annotation.IntRange;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Animation backend delegate that forwards all calls to a given {@link AnimationBackend} */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimationBackendDelegate<T extends AnimationBackend> implements AnimationBackend {
 
   private static final int ALPHA_UNSET = -1;
@@ -71,7 +73,7 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
   }
 
   @Override
-  public void setBounds(@Nullable Rect bounds) {
+  public void setBounds(Rect bounds) {
     if (mAnimationBackend != null) {
       mAnimationBackend.setBounds(bounds);
     }

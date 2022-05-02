@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -12,10 +12,12 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
 /** Simple bitmap cache that keeps the last frame and reuses it if possible. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class KeepLastFrameCache implements BitmapFrameCache {
 
   private static final int FRAME_NUMBER_UNSET = -1;
@@ -44,7 +46,7 @@ public class KeepLastFrameCache implements BitmapFrameCache {
   }
 
   @Override
-  public synchronized CloseableReference<Bitmap> getBitmapToReuseForFrame(
+  public synchronized @Nullable CloseableReference<Bitmap> getBitmapToReuseForFrame(
       int frameNumber, int width, int height) {
     try {
       return CloseableReference.cloneOrNull(mLastBitmapReference);

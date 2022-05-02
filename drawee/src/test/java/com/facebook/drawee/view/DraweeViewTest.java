@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -22,9 +22,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 /** Unit test for {@link DraweeView}. */
 @RunWith(RobolectricTestRunner.class)
+@Config(sdk = 21)
 public class DraweeViewTest {
 
   private DraweeView<DraweeHierarchy> mDraweeView;

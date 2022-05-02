@@ -24,19 +24,19 @@ Note: Only image resources can be used with the image pipeline (e.g. a PNG image
 
 ### Sample: Loading an URI
 
-For a sample that just loads an URI see the `DraweeSimpleFragment` in the showcase app: [DraweeSimpleFragment.java](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeSimpleFragment.java)
+For a sample that just loads an URI see the `DraweeSimpleFragment` in the showcase app: [DraweeSimpleFragment.java](https://github.com/facebook/fresco/blob/main/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeSimpleFragment.java)
 
 ![A simple URI sample](/static/images/docs/01-using-simpledraweeview-sample.png)
 
 ### Sample: Loading a Local File
 
-For a sample on how to correctly load user-selected files (e.g. using the `content://` URI) see the `DraweeMediaPickerFragment` in the showcase app: [DraweeMediaPickerFragment.java](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeMediaPickerFragment.java)
+For a sample on how to correctly load user-selected files (e.g. using the `content://` URI) see the `DraweeMediaPickerFragment` in the showcase app: [DraweeMediaPickerFragment.java](https://github.com/facebook/fresco/blob/main/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeMediaPickerFragment.java)
 
 ![A sample with local files](/static/images/docs/01-supported-uris-sample-local-file.png)
 
 ### Sample: Loading a Data URI
 
-The Fresco showcase app has a [ImageFormatDataUriFragment](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/imageformat/datauri/ImageFormatDataUriFragment.java) that demonstrates using placeholder, failure and retry images.
+The Fresco showcase app has a [ImageFormatDataUriFragment](https://github.com/facebook/fresco/blob/main/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/imageformat/datauri/ImageFormatDataUriFragment.java) that demonstrates using placeholder, failure and retry images.
 
 ![A data URI sample](/static/images/docs/01-supported-uris-sample-data-uri.png)
 

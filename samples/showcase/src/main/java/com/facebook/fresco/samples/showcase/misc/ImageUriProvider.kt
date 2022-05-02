@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -14,6 +14,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import androidx.preference.PreferenceManager
 import com.facebook.common.internal.Preconditions
+import com.facebook.fresco.samples.showcase.R
 import com.facebook.fresco.samples.showcase.imageformat.keyframes.KeyframesDecoderExample
 import com.facebook.imageformat.DefaultImageFormats
 import com.facebook.imageformat.ImageFormat
@@ -164,6 +165,8 @@ class ImageUriProvider constructor(context: Context) {
 
   fun createSvgUri() = applyOverrideSettings(SAMPLE_URI_SVG, UriModification.NONE)
 
+  fun createNinePatchUri() = applyOverrideSettings(SAMPLE_URI_NINE_PATCH, UriModification.NONE)
+
   fun getRandomSampleUris(imageSize: ImageSize, numImages: Int): List<Uri> {
     val uriFormat: String =
         when (imageSize) {
@@ -185,7 +188,8 @@ class ImageUriProvider constructor(context: Context) {
 
   fun getMediaStoreUris(context: Context): List<Uri> {
     val uris = mutableListOf<Uri>()
-    context.contentResolver.query(
+    context.contentResolver
+        .query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             arrayOf(MediaStore.Images.Media._ID),
             null,
@@ -296,5 +300,7 @@ class ImageUriProvider constructor(context: Context) {
 
     private val SAMPLE_URI_SVG =
         "https://frescolib.org/static/sample-images/fresco_logo_half_transparent.svg"
+
+    private val SAMPLE_URI_NINE_PATCH = "res:/" + R.drawable.ninepatch
   }
 }

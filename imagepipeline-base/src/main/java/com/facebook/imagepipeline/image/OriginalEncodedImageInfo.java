@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,8 +8,10 @@
 package com.facebook.imagepipeline.image;
 
 import android.net.Uri;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class OriginalEncodedImageInfo {
 
   public static final OriginalEncodedImageInfo EMPTY = new OriginalEncodedImageInfo();
@@ -65,7 +67,7 @@ public class OriginalEncodedImageInfo {
     return mCallerContext;
   }
 
-  public EncodedImageOrigin getOrigin() {
+  public @Nullable EncodedImageOrigin getOrigin() {
     return mOrigin;
   }
 }

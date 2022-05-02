@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -17,14 +17,15 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
-import com.facebook.testing.robolectric.v4.WithTestDefaultsRunner;
+import com.facebook.fresco.ui.common.OnFadeListener;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.robolectric.RobolectricTestRunner;
 
 /** Tests {@link FadeDrawable.OnFadeListener} */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @PrepareForTest({
   //  SystemClock.class,
   Rect.class,
@@ -43,7 +44,7 @@ public class FadeDrawableOnFadeListenerTest {
       };
 
   private FadeDrawable mFadeDrawable;
-  private FadeDrawable.OnFadeListener mOnFadeListener = mock(FadeDrawable.OnFadeListener.class);
+  private final OnFadeListener mOnFadeListener = mock(OnFadeListener.class);
 
   private Canvas mCanvas = mock(Canvas.class);
 

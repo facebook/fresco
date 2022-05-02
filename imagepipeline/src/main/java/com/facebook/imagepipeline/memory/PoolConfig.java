@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -12,10 +12,13 @@ import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.memory.NoOpMemoryTrimmableRegistry;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 /** Configuration class for pools. */
 @Immutable
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PoolConfig {
 
   public static final int BITMAP_POOL_MAX_BITMAP_SIZE_DEFAULT =
@@ -146,15 +149,15 @@ public class PoolConfig {
 
   public static class Builder {
 
-    private PoolParams mBitmapPoolParams;
-    private PoolStatsTracker mBitmapPoolStatsTracker;
-    private PoolParams mFlexByteArrayPoolParams;
-    private MemoryTrimmableRegistry mMemoryTrimmableRegistry;
-    private PoolParams mMemoryChunkPoolParams;
-    private PoolStatsTracker mMemoryChunkPoolStatsTracker;
-    private PoolParams mSmallByteArrayPoolParams;
-    private PoolStatsTracker mSmallByteArrayPoolStatsTracker;
-    private String mBitmapPoolType;
+    private @Nullable PoolParams mBitmapPoolParams;
+    private @Nullable PoolStatsTracker mBitmapPoolStatsTracker;
+    private @Nullable PoolParams mFlexByteArrayPoolParams;
+    private @Nullable MemoryTrimmableRegistry mMemoryTrimmableRegistry;
+    private @Nullable PoolParams mMemoryChunkPoolParams;
+    private @Nullable PoolStatsTracker mMemoryChunkPoolStatsTracker;
+    private @Nullable PoolParams mSmallByteArrayPoolParams;
+    private @Nullable PoolStatsTracker mSmallByteArrayPoolStatsTracker;
+    private @Nullable String mBitmapPoolType;
     private int mBitmapPoolMaxPoolSize;
     private int mBitmapPoolMaxBitmapSize;
     private boolean mRegisterLruBitmapPoolAsMemoryTrimmable;
@@ -163,33 +166,33 @@ public class PoolConfig {
     private Builder() {}
 
     public Builder setBitmapPoolParams(PoolParams bitmapPoolParams) {
-      mBitmapPoolParams = Preconditions.checkNotNull(bitmapPoolParams);
+      this.mBitmapPoolParams = Preconditions.checkNotNull(bitmapPoolParams);
       return this;
     }
 
     public Builder setBitmapPoolStatsTracker(PoolStatsTracker bitmapPoolStatsTracker) {
-      mBitmapPoolStatsTracker = Preconditions.checkNotNull(bitmapPoolStatsTracker);
+      this.mBitmapPoolStatsTracker = Preconditions.checkNotNull(bitmapPoolStatsTracker);
       return this;
     }
 
     public Builder setFlexByteArrayPoolParams(PoolParams flexByteArrayPoolParams) {
-      mFlexByteArrayPoolParams = flexByteArrayPoolParams;
+      this.mFlexByteArrayPoolParams = flexByteArrayPoolParams;
       return this;
     }
 
     public Builder setMemoryTrimmableRegistry(MemoryTrimmableRegistry memoryTrimmableRegistry) {
-      mMemoryTrimmableRegistry = memoryTrimmableRegistry;
+      this.mMemoryTrimmableRegistry = memoryTrimmableRegistry;
       return this;
     }
 
     public Builder setNativeMemoryChunkPoolParams(PoolParams memoryChunkPoolParams) {
-      mMemoryChunkPoolParams = Preconditions.checkNotNull(memoryChunkPoolParams);
+      this.mMemoryChunkPoolParams = Preconditions.checkNotNull(memoryChunkPoolParams);
       return this;
     }
 
     public Builder setNativeMemoryChunkPoolStatsTracker(
         PoolStatsTracker memoryChunkPoolStatsTracker) {
-      mMemoryChunkPoolStatsTracker = Preconditions.checkNotNull(memoryChunkPoolStatsTracker);
+      this.mMemoryChunkPoolStatsTracker = Preconditions.checkNotNull(memoryChunkPoolStatsTracker);
       return this;
     }
 
@@ -200,7 +203,8 @@ public class PoolConfig {
 
     public Builder setSmallByteArrayPoolStatsTracker(
         PoolStatsTracker smallByteArrayPoolStatsTracker) {
-      mSmallByteArrayPoolStatsTracker = Preconditions.checkNotNull(smallByteArrayPoolStatsTracker);
+      this.mSmallByteArrayPoolStatsTracker =
+          Preconditions.checkNotNull(smallByteArrayPoolStatsTracker);
       return this;
     }
 
@@ -209,28 +213,28 @@ public class PoolConfig {
     }
 
     public Builder setBitmapPoolType(String bitmapPoolType) {
-      mBitmapPoolType = bitmapPoolType;
+      this.mBitmapPoolType = bitmapPoolType;
       return this;
     }
 
     public Builder setBitmapPoolMaxPoolSize(int bitmapPoolMaxPoolSize) {
-      mBitmapPoolMaxPoolSize = bitmapPoolMaxPoolSize;
+      this.mBitmapPoolMaxPoolSize = bitmapPoolMaxPoolSize;
       return this;
     }
 
     public Builder setBitmapPoolMaxBitmapSize(int bitmapPoolMaxBitmapSize) {
-      mBitmapPoolMaxBitmapSize = bitmapPoolMaxBitmapSize;
+      this.mBitmapPoolMaxBitmapSize = bitmapPoolMaxBitmapSize;
       return this;
     }
 
     public Builder setRegisterLruBitmapPoolAsMemoryTrimmable(
         boolean registerLruBitmapPoolAsMemoryTrimmable) {
-      mRegisterLruBitmapPoolAsMemoryTrimmable = registerLruBitmapPoolAsMemoryTrimmable;
+      this.mRegisterLruBitmapPoolAsMemoryTrimmable = registerLruBitmapPoolAsMemoryTrimmable;
       return this;
     }
 
     public Builder setIgnoreBitmapPoolHardCap(boolean ignoreBitmapPoolHardCap) {
-      mIgnoreBitmapPoolHardCap = ignoreBitmapPoolHardCap;
+      this.mIgnoreBitmapPoolHardCap = ignoreBitmapPoolHardCap;
       return this;
     }
   }

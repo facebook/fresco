@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -14,6 +14,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
 
 /** Represents a local file fetch producer. */
 @Nullsafe(Nullsafe.Mode.LOCAL)
@@ -27,7 +28,8 @@ public class LocalFileFetchProducer extends LocalFetchProducer {
   }
 
   @Override
-  protected EncodedImage getEncodedImage(final ImageRequest imageRequest) throws IOException {
+  protected @Nullable EncodedImage getEncodedImage(final ImageRequest imageRequest)
+      throws IOException {
     return getEncodedImage(
         new FileInputStream(imageRequest.getSourceFile().toString()),
         (int) imageRequest.getSourceFile().length());

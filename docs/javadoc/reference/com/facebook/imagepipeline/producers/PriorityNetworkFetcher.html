@@ -351,6 +351,7 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BranchOnSeparateImagesProducer.html">BranchOnSeparateImagesProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DataFetchProducer.html">DataFetchProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DecodeProducer.html">DecodeProducer</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DelayProducer.html">DelayProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DelegatingConsumer.html">DelegatingConsumer</a>&lt;I,&nbsp;O&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DiskCacheReadProducer.html">DiskCacheReadProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DiskCacheWriteProducer.html">DiskCacheWriteProducer</a></li>
@@ -380,6 +381,7 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PostprocessedBitmapMemoryCacheProducer.CachedPostprocessorConsumer.html">PostprocessedBitmapMemoryCacheProducer.CachedPostprocessorConsumer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PostprocessorProducer.html">PostprocessorProducer</a></li>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PriorityNetworkFetcher.html">PriorityNetworkFetcher</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PriorityNetworkFetcher.NonrecoverableException.html">PriorityNetworkFetcher.NonrecoverableException</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PriorityNetworkFetcher.PriorityFetchState.html">PriorityNetworkFetcher.PriorityFetchState</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PriorityStarvingThrottlingProducer.html">PriorityStarvingThrottlingProducer</a>&lt;T&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/QualifiedResourceFetchProducer.html">QualifiedResourceFetchProducer</a></li>
@@ -625,6 +627,19 @@ Summary:
          
         
         class</td>
+      <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/PriorityNetworkFetcher.NonrecoverableException.html">PriorityNetworkFetcher.NonrecoverableException</a></td>
+      <td class="jd-descrcol" width="100%">The delegate fetcher may pass an instance of this exception to its callback's onFailure to
+ signal to a PriorityNetworkFetcher that it shouldn't retry that request.&nbsp;</td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+      <td class="jd-typecol">
+        
+         
+         
+        
+        class</td>
       <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/PriorityNetworkFetcher.PriorityFetchState.html">PriorityNetworkFetcher.PriorityFetchState</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</td>
       <td class="jd-descrcol" width="100%">&nbsp;</td>
     </tr>
@@ -690,7 +705,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/PriorityNetworkFetcher.html#PriorityNetworkFetcher(com.facebook.imagepipeline.producers.NetworkFetcher<FETCH_STATE>, boolean, int, int)">PriorityNetworkFetcher</a></span>(<a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a>&lt;FETCH_STATE&gt; delegate, boolean isHiPriFifo, int maxOutstandingHiPri, int maxOutstandingLowPri)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/PriorityNetworkFetcher.html#PriorityNetworkFetcher(com.facebook.imagepipeline.producers.NetworkFetcher<FETCH_STATE>, boolean, int, int, boolean, boolean)">PriorityNetworkFetcher</a></span>(<a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a>&lt;FETCH_STATE&gt; delegate, boolean isHiPriFifo, int maxOutstandingHiPri, int maxOutstandingLowPri, boolean inflightFetchesCanBeCancelled, boolean infiniteRetries)
         
   </td></tr>
 
@@ -706,7 +721,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/PriorityNetworkFetcher.html#PriorityNetworkFetcher(com.facebook.imagepipeline.producers.NetworkFetcher<FETCH_STATE>, boolean, int, int, com.facebook.common.time.MonotonicClock)">PriorityNetworkFetcher</a></span>(<a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a>&lt;FETCH_STATE&gt; delegate, boolean isHiPriFifo, int maxOutstandingHiPri, int maxOutstandingLowPri, <a href="../../../../com/facebook/common/time/MonotonicClock.html">MonotonicClock</a> clock)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/PriorityNetworkFetcher.html#PriorityNetworkFetcher(com.facebook.imagepipeline.producers.NetworkFetcher<FETCH_STATE>, boolean, int, int, boolean, boolean, com.facebook.common.time.MonotonicClock)">PriorityNetworkFetcher</a></span>(<a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a>&lt;FETCH_STATE&gt; delegate, boolean isHiPriFifo, int maxOutstandingHiPri, int maxOutstandingLowPri, boolean inflightFetchesCanBeCancelled, boolean infiniteRetries, <a href="../../../../com/facebook/common/time/MonotonicClock.html">MonotonicClock</a> clock)
         
   </td></tr>
 
@@ -787,6 +802,42 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/PriorityNetworkFetcher.html#onFetchCompletion(com.facebook.imagepipeline.producers.PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>, int)">onFetchCompletion</a></span>(<a href="../../../../com/facebook/imagepipeline/producers/PriorityNetworkFetcher.PriorityFetchState.html">PriorityFetchState</a>&lt;FETCH_STATE&gt; fetchState, int byteSize)
         
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/PriorityNetworkFetcher.html#pause()">pause</a></span>()
+        
+        <div class="jd-descrdiv">Stop dequeuing requests until <code><a href="../../../../com/facebook/imagepipeline/producers/PriorityNetworkFetcher.html#resume()">resume()</a></code> is called.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/PriorityNetworkFetcher.html#resume()">resume</a></span>()
+        
+        <div class="jd-descrdiv">Resume dequeuing requests.</div>
+  
   </td></tr>
 
 
@@ -1210,7 +1261,7 @@ From interface
 
 
 
-<a id="PriorityNetworkFetcher(com.facebook.imagepipeline.producers.NetworkFetcher<FETCH_STATE>, boolean, int, int)"></a>
+<a id="PriorityNetworkFetcher(com.facebook.imagepipeline.producers.NetworkFetcher<FETCH_STATE>, boolean, int, int, boolean, boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1223,7 +1274,7 @@ From interface
         
       </span>
       <span class="sympad">PriorityNetworkFetcher</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a>&lt;FETCH_STATE&gt; delegate, boolean isHiPriFifo, int maxOutstandingHiPri, int maxOutstandingLowPri)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a>&lt;FETCH_STATE&gt; delegate, boolean isHiPriFifo, int maxOutstandingHiPri, int maxOutstandingLowPri, boolean inflightFetchesCanBeCancelled, boolean infiniteRetries)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1242,7 +1293,18 @@ From interface
         <tr>
           <th>isHiPriFifo</th>
           <td>if true, hi-pri requests are dequeued in the order they were enqueued.
-     Otherwise, they're dequeued in reverse order.
+     Otherwise, they're dequeued in reverse order.</td>
+        </tr>
+        <tr>
+          <th>inflightFetchesCanBeCancelled</th>
+          <td>if false, the fetcher waits for the completion of requests
+     that have been delegated to 'delegate' even if they were cancelled by Fresco. The
+     cancellation order is not propagated to 'delegate', and no other request is dequeued.</td>
+        </tr>
+        <tr>
+          <th>infiniteRetries</th>
+          <td>if true, requests that fail are re-queued, potentially retrying
+     immediately.
 </td>
         </tr>
       </table>
@@ -1252,7 +1314,7 @@ From interface
 </div>
 
 
-<a id="PriorityNetworkFetcher(com.facebook.imagepipeline.producers.NetworkFetcher<FETCH_STATE>, boolean, int, int, com.facebook.common.time.MonotonicClock)"></a>
+<a id="PriorityNetworkFetcher(com.facebook.imagepipeline.producers.NetworkFetcher<FETCH_STATE>, boolean, int, int, boolean, boolean, com.facebook.common.time.MonotonicClock)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1265,7 +1327,7 @@ From interface
         
       </span>
       <span class="sympad">PriorityNetworkFetcher</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a>&lt;FETCH_STATE&gt; delegate, boolean isHiPriFifo, int maxOutstandingHiPri, int maxOutstandingLowPri, <a href="../../../../com/facebook/common/time/MonotonicClock.html">MonotonicClock</a> clock)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a>&lt;FETCH_STATE&gt; delegate, boolean isHiPriFifo, int maxOutstandingHiPri, int maxOutstandingLowPri, boolean inflightFetchesCanBeCancelled, boolean infiniteRetries, <a href="../../../../com/facebook/common/time/MonotonicClock.html">MonotonicClock</a> clock)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1435,6 +1497,72 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="pause()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">pause</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Stop dequeuing requests until <code><a href="../../../../com/facebook/imagepipeline/producers/PriorityNetworkFetcher.html#resume()">resume()</a></code> is called. </p></div>
+
+    </div>
+</div>
+
+
+<a id="resume()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">resume</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Resume dequeuing requests.
+
+ <p>Note: a request is immediately dequeued and the delegate's fetch() method is called using
+ the current thread.
+</p></div>
 
     </div>
 </div>

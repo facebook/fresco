@@ -478,6 +478,8 @@ Summary:
               >
           
             
+              <a href="../../../../com/facebook/imagepipeline/cache/AbstractAdaptiveCountingMemoryCache.html">AbstractAdaptiveCountingMemoryCache</a>&lt;K,&nbsp;V&gt;,
+            
               <a href="../../../../com/facebook/imagepipeline/memory/AshmemMemoryChunkPool.html">AshmemMemoryChunkPool</a>,
             
               <a href="../../../../com/facebook/imagepipeline/memory/BasePool.html">BasePool</a>&lt;V&gt;,
@@ -498,7 +500,13 @@ Summary:
             
               <a href="../../../../com/facebook/imagepipeline/memory/GenericByteArrayPool.html">GenericByteArrayPool</a>,
             
+              <a href="../../../../com/facebook/imagepipeline/cache/InstrumentedMemoryCache.html">InstrumentedMemoryCache</a>&lt;K,&nbsp;V&gt;,
+            
               <a href="../../../../com/facebook/imagepipeline/memory/LruBitmapPool.html">LruBitmapPool</a>,
+            
+              <a href="../../../../com/facebook/imagepipeline/cache/LruCountingMemoryCache.html">LruCountingMemoryCache</a>&lt;K,&nbsp;V&gt;,
+            
+              <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;,
             
               <a href="../../../../com/facebook/imagepipeline/memory/MemoryChunkPool.html">MemoryChunkPool</a>,
             
@@ -515,48 +523,64 @@ Summary:
               >
   <table class="jd-sumtable-expando">
         <tr class="alt-color api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/AshmemMemoryChunkPool.html">AshmemMemoryChunkPool</a></td>
-              <td class="jd-descrcol" width="100%">Manages a pool of ashmem memory chunks (<code><a href="../../../../com/facebook/imagepipeline/memory/AshmemMemoryChunk.html">AshmemMemoryChunk</a></code>) &nbsp;</td>
-          </tr>
-        <tr class=" api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.html">BasePool</a>&lt;V&gt;</td>
-              <td class="jd-descrcol" width="100%">A base pool class that manages a pool of values (of type V).&nbsp;</td>
-          </tr>
-        <tr class="alt-color api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/BitmapPool.html">BitmapPool</a></td>
-              <td class="jd-descrcol" width="100%">&nbsp;</td>
-          </tr>
-        <tr class=" api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/BucketsBitmapPool.html">BucketsBitmapPool</a></td>
-              <td class="jd-descrcol" width="100%">Manages a pool of bitmaps.&nbsp;</td>
-          </tr>
-        <tr class="alt-color api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/BufferMemoryChunkPool.html">BufferMemoryChunkPool</a></td>
-              <td class="jd-descrcol" width="100%">Manages a pool of buffer memory chunks (<code><a href="../../../../com/facebook/imagepipeline/memory/BufferMemoryChunk.html">BufferMemoryChunk</a></code>) &nbsp;</td>
-          </tr>
-        <tr class=" api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/common/memory/ByteArrayPool.html">ByteArrayPool</a></td>
-              <td class="jd-descrcol" width="100%">A pool of byte-arrays &nbsp;</td>
-          </tr>
-        <tr class="alt-color api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;K,&nbsp;V&gt;</td>
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/AbstractAdaptiveCountingMemoryCache.html">AbstractAdaptiveCountingMemoryCache</a>&lt;K,&nbsp;V&gt;</td>
               <td class="jd-descrcol" width="100%">Layer of memory cache stack responsible for managing eviction of the the cached items.&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/DummyBitmapPool.html">DummyBitmapPool</a></td>
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/AshmemMemoryChunkPool.html">AshmemMemoryChunkPool</a></td>
+              <td class="jd-descrcol" width="100%">Manages a pool of ashmem memory chunks (<code><a href="../../../../com/facebook/imagepipeline/memory/AshmemMemoryChunk.html">AshmemMemoryChunk</a></code>) &nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.html">BasePool</a>&lt;V&gt;</td>
+              <td class="jd-descrcol" width="100%">A base pool class that manages a pool of values (of type V).&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/BitmapPool.html">BitmapPool</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
         <tr class="alt-color api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/DummyTrackingInUseBitmapPool.html">DummyTrackingInUseBitmapPool</a></td>
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/BucketsBitmapPool.html">BucketsBitmapPool</a></td>
+              <td class="jd-descrcol" width="100%">Manages a pool of bitmaps.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/BufferMemoryChunkPool.html">BufferMemoryChunkPool</a></td>
+              <td class="jd-descrcol" width="100%">Manages a pool of buffer memory chunks (<code><a href="../../../../com/facebook/imagepipeline/memory/BufferMemoryChunk.html">BufferMemoryChunk</a></code>) &nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/common/memory/ByteArrayPool.html">ByteArrayPool</a></td>
+              <td class="jd-descrcol" width="100%">A pool of byte-arrays &nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;K,&nbsp;V&gt;</td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/DummyBitmapPool.html">DummyBitmapPool</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/DummyTrackingInUseBitmapPool.html">DummyTrackingInUseBitmapPool</a></td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/GenericByteArrayPool.html">GenericByteArrayPool</a></td>
               <td class="jd-descrcol" width="100%">A pool of byte arrays.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/InstrumentedMemoryCache.html">InstrumentedMemoryCache</a>&lt;K,&nbsp;V&gt;</td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
         <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/LruBitmapPool.html">LruBitmapPool</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/LruCountingMemoryCache.html">LruCountingMemoryCache</a>&lt;K,&nbsp;V&gt;</td>
+              <td class="jd-descrcol" width="100%">Layer of memory cache stack responsible for managing eviction of the the cached items.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</td>
+              <td class="jd-descrcol" width="100%">Interface for the image pipeline memory cache.&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/MemoryChunkPool.html">MemoryChunkPool</a></td>

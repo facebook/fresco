@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -48,7 +48,7 @@ public class FirstAvailableDataSourceSupplier<T> implements Supplier<DataSource<
   }
 
   @Override
-  public boolean equals(Object other) {
+  public boolean equals(@Nullable Object other) {
     if (other == this) {
       return true;
     }
@@ -68,8 +68,8 @@ public class FirstAvailableDataSourceSupplier<T> implements Supplier<DataSource<
   private class FirstAvailableDataSource extends AbstractDataSource<T> {
 
     private int mIndex = 0;
-    private DataSource<T> mCurrentDataSource = null;
-    private DataSource<T> mDataSourceWithResult = null;
+    @Nullable private DataSource<T> mCurrentDataSource = null;
+    @Nullable private DataSource<T> mDataSourceWithResult = null;
 
     public FirstAvailableDataSource() {
       if (!startNextDataSource()) {
@@ -191,7 +191,7 @@ public class FirstAvailableDataSourceSupplier<T> implements Supplier<DataSource<
       }
     }
 
-    private void closeSafely(DataSource<T> dataSource) {
+    private void closeSafely(@Nullable DataSource<T> dataSource) {
       if (dataSource != null) {
         dataSource.close();
       }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -12,10 +12,10 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSources;
+import com.facebook.fresco.ui.common.VitoUtils;
 import com.facebook.fresco.vito.core.ImagePipelineUtils;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.VitoImageRequest;
-import com.facebook.fresco.vito.core.VitoUtils;
 import com.facebook.fresco.vito.core.impl.source.VitoImageSource;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.source.ImageSource;

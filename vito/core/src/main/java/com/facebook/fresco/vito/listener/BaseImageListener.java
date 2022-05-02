@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -12,9 +12,11 @@ import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.infer.annotation.Nullsafe;
+import com.facebook.infer.annotation.OkToExtend;
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.STRICT)
+@OkToExtend
 public class BaseImageListener implements ImageListener {
 
   @Override

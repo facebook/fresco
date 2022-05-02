@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,8 +9,10 @@ package com.facebook.fresco.animation.bitmap.preparation;
 
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Frame preparation strategy to prepare next animation frames. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface BitmapFramePreparationStrategy {
 
   /**

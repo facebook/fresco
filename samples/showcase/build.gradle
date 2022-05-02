@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -33,6 +33,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true // needed for tinting
+
+        multiDexEnabled = true
     }
 
     buildTypes {
@@ -58,12 +60,14 @@ android {
     flavorDimensions "main"
     productFlavors {
         normal {
-        }
-        instantRunConfig {
             dimension "main"
-            minSdkVersion FrescoConfig.samplesMinSdkVersion
+        }
+        fast {
+            dimension "main"
+            minSdkVersion FrescoConfig.targetSdkVersion
         }
         internal {
+            dimension "main"
         }
     }
 
@@ -84,6 +88,8 @@ android {
 
 dependencies {
     compileOnly Deps.jsr305
+    compileOnly Deps.inferAnnotation
+    compileOnly Deps.javaxAnnotation
 
     implementation SampleDeps.AndroidX.appcompat
     implementation SampleDeps.AndroidX.preference
@@ -105,7 +111,6 @@ dependencies {
     implementation project(':drawee-span')
     implementation project(':imagepipeline-backends:imagepipeline-okhttp3')
     implementation project(':tools:stetho')
-    implementation project(path: ':imagepipeline-backends:imagepipeline-okhttp3')
 
     implementation 'com.facebook.keyframes:keyframes:1.0'
 
@@ -124,12 +129,18 @@ dependencies {
 
     // Experimental Fresco Vito
     implementation project(':vito:core')
+    implementation project(':vito:core-impl')
+    implementation project(':vito:init')
     implementation project(':vito:ktx')
     implementation project(':vito:litho')
     implementation project(':vito:litho-slideshow')
     implementation project(':vito:options')
     implementation project(':vito:provider')
+    implementation project(':vito:renderer')
     implementation project(':vito:source')
+    implementation project(':vito:textspan')
+    implementation project(':vito:tools:liveeditor')
+    implementation project(':vito:view')
 
     // Only used for the custom SVG decoder
     implementation SampleDeps.Showcase.caverockSvg
@@ -148,5 +159,5 @@ dependencies {
 
     implementation Deps.Kotlin.stdlibJdk
 
-    implementation project(path: ':vito:view')
+    implementation SampleDeps.AndroidX.multidex
 }

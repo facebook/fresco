@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -36,6 +36,12 @@ public class DefaultImageFormatChecker implements ImageFormat.FormatChecker {
           ICO_HEADER_LENGTH,
           HEIF_HEADER_LENGTH);
 
+  private boolean mUseNewOrder = false;
+
+  public void setUseNewOrder(boolean useNewOrder) {
+    mUseNewOrder = useNewOrder;
+  }
+
   @Override
   public int getHeaderSize() {
     return MAX_HEADER_LENGTH;
@@ -54,7 +60,7 @@ public class DefaultImageFormatChecker implements ImageFormat.FormatChecker {
   public final ImageFormat determineFormat(byte[] headerBytes, int headerSize) {
     Preconditions.checkNotNull(headerBytes);
 
-    if (WebpSupportStatus.isWebpHeader(headerBytes, 0, headerSize)) {
+    if (!mUseNewOrder && WebpSupportStatus.isWebpHeader(headerBytes, 0, headerSize)) {
       return getWebpFormat(headerBytes, headerSize);
     }
 
@@ -64,6 +70,10 @@ public class DefaultImageFormatChecker implements ImageFormat.FormatChecker {
 
     if (isPngHeader(headerBytes, headerSize)) {
       return DefaultImageFormats.PNG;
+    }
+
+    if (mUseNewOrder && WebpSupportStatus.isWebpHeader(headerBytes, 0, headerSize)) {
+      return getWebpFormat(headerBytes, headerSize);
     }
 
     if (isGifHeader(headerBytes, headerSize)) {

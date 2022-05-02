@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -14,6 +14,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.instrumentation.InstrumentedDraweeView;
 import com.facebook.samples.scrollperf.instrumentation.PerfListener;
@@ -21,6 +22,7 @@ import com.facebook.samples.scrollperf.util.PipelineUtil;
 import com.facebook.samples.scrollperf.util.SizeUtil;
 
 /** This is the ViewHolder for the RecyclerView in order to contain the DraweeView */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DraweeViewHolder extends RecyclerView.ViewHolder {
 
   private final View mParentView;

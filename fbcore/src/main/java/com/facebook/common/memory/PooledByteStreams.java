@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,6 +9,7 @@ package com.facebook.common.memory;
 
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -17,6 +18,7 @@ import java.io.OutputStream;
  * Helper class for interacting with java streams, similar to guava's ByteSteams. To prevent
  * numerous allocations of temp buffers pool of byte arrays is used.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PooledByteStreams {
   /** Size of temporary buffer to use for copying (16 kb) */
   private static final int DEFAULT_TEMP_BUF_SIZE = 16 * 1024;

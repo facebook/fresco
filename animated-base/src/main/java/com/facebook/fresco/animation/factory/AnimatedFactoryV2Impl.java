@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,7 +8,6 @@
 package com.facebook.fresco.animation.factory;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Rect;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.executors.DefaultSerialExecutorService;
@@ -16,6 +15,7 @@ import com.facebook.common.executors.SerialExecutorService;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Supplier;
+import com.facebook.common.internal.Suppliers;
 import com.facebook.common.time.RealtimeSinceBootClock;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
@@ -56,17 +56,20 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   private @Nullable AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
   private @Nullable AnimatedDrawableUtil mAnimatedDrawableUtil;
   private @Nullable DrawableFactory mAnimatedDrawableFactory;
+  private @Nullable SerialExecutorService mSerialExecutorService;
 
   @DoNotStrip
   public AnimatedFactoryV2Impl(
       PlatformBitmapFactory platformBitmapFactory,
       ExecutorSupplier executorSupplier,
       CountingMemoryCache<CacheKey, CloseableImage> backingCache,
-      boolean downscaleFrameToDrawableDimensions) {
+      boolean downscaleFrameToDrawableDimensions,
+      SerialExecutorService serialExecutorServiceForFramePreparing) {
     mPlatformBitmapFactory = platformBitmapFactory;
     mExecutorSupplier = executorSupplier;
     mBackingCache = backingCache;
     mDownscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions;
+    mSerialExecutorService = serialExecutorServiceForFramePreparing;
   }
 
   @Nullable
@@ -79,7 +82,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   }
 
   @Override
-  public ImageDecoder getGifDecoder(final Bitmap.Config bitmapConfig) {
+  public ImageDecoder getGifDecoder() {
     return new ImageDecoder() {
       @Override
       public CloseableImage decode(
@@ -87,13 +90,14 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
           int length,
           QualityInfo qualityInfo,
           ImageDecodeOptions options) {
-        return getAnimatedImageFactory().decodeGif(encodedImage, options, bitmapConfig);
+        return getAnimatedImageFactory()
+            .decodeGif(encodedImage, options, options.animatedBitmapConfig);
       }
     };
   }
 
   @Override
-  public ImageDecoder getWebPDecoder(final Bitmap.Config bitmapConfig) {
+  public ImageDecoder getWebPDecoder() {
     return new ImageDecoder() {
       @Override
       public CloseableImage decode(
@@ -101,7 +105,8 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
           int length,
           QualityInfo qualityInfo,
           ImageDecodeOptions options) {
-        return getAnimatedImageFactory().decodeWebP(encodedImage, options, bitmapConfig);
+        return getAnimatedImageFactory()
+            .decodeWebP(encodedImage, options, options.animatedBitmapConfig);
       }
     };
   }
@@ -117,7 +122,9 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
         };
 
     final SerialExecutorService serialExecutorServiceForFramePreparing =
-        new DefaultSerialExecutorService(mExecutorSupplier.forDecode());
+        mSerialExecutorService == null
+            ? new DefaultSerialExecutorService(mExecutorSupplier.forDecode())
+            : mSerialExecutorService;
 
     Supplier<Integer> numberOfFramesToPrepareSupplier =
         new Supplier<Integer>() {
@@ -127,6 +134,8 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
           }
         };
 
+    final Supplier<Boolean> useDeepEquals = Suppliers.BOOLEAN_FALSE;
+
     return new ExperimentalBitmapAnimationDrawableFactory(
         getAnimatedDrawableBackendProvider(),
         UiThreadImmediateExecutorService.getInstance(),
@@ -135,7 +144,8 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
         mPlatformBitmapFactory,
         mBackingCache,
         cachingStrategySupplier,
-        numberOfFramesToPrepareSupplier);
+        numberOfFramesToPrepareSupplier,
+        useDeepEquals);
   }
 
   private AnimatedDrawableUtil getAnimatedDrawableUtil() {
@@ -158,7 +168,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
           new AnimatedDrawableBackendProvider() {
             @Override
             public AnimatedDrawableBackend get(
-                AnimatedImageResult animatedImageResult, Rect bounds) {
+                AnimatedImageResult animatedImageResult, @Nullable Rect bounds) {
               return new AnimatedDrawableBackendImpl(
                   getAnimatedDrawableUtil(),
                   animatedImageResult,
@@ -174,7 +184,8 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
     AnimatedDrawableBackendProvider animatedDrawableBackendProvider =
         new AnimatedDrawableBackendProvider() {
           @Override
-          public AnimatedDrawableBackend get(AnimatedImageResult imageResult, Rect bounds) {
+          public AnimatedDrawableBackend get(
+              AnimatedImageResult imageResult, @Nullable Rect bounds) {
             return new AnimatedDrawableBackendImpl(
                 getAnimatedDrawableUtil(),
                 imageResult,

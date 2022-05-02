@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -60,7 +60,7 @@ public class FetchState {
   }
 
   public void setLastIntermediateResultTimeMs(long lastIntermediateResultTimeMs) {
-    mLastIntermediateResultTimeMs = lastIntermediateResultTimeMs;
+    this.mLastIntermediateResultTimeMs = lastIntermediateResultTimeMs;
   }
 
   @Consumer.Status
@@ -73,7 +73,7 @@ public class FetchState {
    * Consumer#onNewResult(Object, int)}.
    */
   public void setOnNewResultStatusFlags(@Consumer.Status int onNewResultStatusFlags) {
-    mOnNewResultStatusFlags = onNewResultStatusFlags;
+    this.mOnNewResultStatusFlags = onNewResultStatusFlags;
   }
 
   @Nullable
@@ -85,7 +85,7 @@ public class FetchState {
    * EXPERIMENTAL: Allows the fetcher to identify that the reponse is for an imcomplete portion of
    * the whole image by defining the range of bytes being provided.
    */
-  public void setResponseBytesRange(BytesRange bytesRange) {
+  public void setResponseBytesRange(@Nullable BytesRange bytesRange) {
     mResponseBytesRange = bytesRange;
   }
 }

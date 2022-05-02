@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -25,7 +25,6 @@ import com.facebook.datasource.DataSubscriber;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.components.DraweeEventTracker;
 import com.facebook.drawee.components.RetryManager;
-import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.gestures.GestureDetector;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -36,6 +35,7 @@ import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.ui.common.ForwardingControllerListener2;
 import com.facebook.fresco.ui.common.LoggingListener;
+import com.facebook.fresco.ui.common.OnFadeListener;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.ReturnsOwnership;
 import java.util.Map;
@@ -395,13 +395,16 @@ public abstract class AbstractDraweeController<T, INFO>
     if (mSettableDraweeHierarchy instanceof GenericDraweeHierarchy) {
       ((GenericDraweeHierarchy) mSettableDraweeHierarchy)
           .setOnFadeListener(
-              new FadeDrawable.OnFadeListener() {
+              new OnFadeListener() {
                 @Override
                 public void onFadeFinished() {
                   if (mLoggingListener != null) {
                     mLoggingListener.onFadeFinished(mId);
                   }
                 }
+
+                @Override
+                public void onShownImmediately() {}
 
                 @Override
                 public void onFadeStarted() {
@@ -687,12 +690,15 @@ public abstract class AbstractDraweeController<T, INFO>
       mDataSource = null;
       mHasFetchFailed = true;
       // Set the previously available image if available.
-      if (mRetainImageOnFailure && mDrawable != null) {
-        mSettableDraweeHierarchy.setImage(mDrawable, 1f, true);
-      } else if (shouldRetryOnTap()) {
-        mSettableDraweeHierarchy.setRetry(throwable);
-      } else {
-        mSettableDraweeHierarchy.setFailure(throwable);
+      final SettableDraweeHierarchy hierarchy = mSettableDraweeHierarchy;
+      if (hierarchy != null) {
+        if (mRetainImageOnFailure && mDrawable != null) {
+          hierarchy.setImage(mDrawable, 1f, true);
+        } else if (shouldRetryOnTap()) {
+          hierarchy.setRetry(throwable);
+        } else {
+          hierarchy.setFailure(throwable);
+        }
       }
       reportFailure(throwable, dataSource);
       // IMPORTANT: do not execute any instance-specific code after this point
@@ -836,11 +842,10 @@ public abstract class AbstractDraweeController<T, INFO>
       @Nullable Uri mainUri) {
     String scaleType = null;
     PointF focusPoint = null;
-    if (mSettableDraweeHierarchy instanceof GenericDraweeHierarchy) {
-      scaleType =
-          String.valueOf(
-              ((GenericDraweeHierarchy) mSettableDraweeHierarchy).getActualImageScaleType());
-      focusPoint = ((GenericDraweeHierarchy) mSettableDraweeHierarchy).getActualImageFocusPoint();
+    final SettableDraweeHierarchy hierarchy = mSettableDraweeHierarchy;
+    if (hierarchy instanceof GenericDraweeHierarchy) {
+      scaleType = String.valueOf(((GenericDraweeHierarchy) hierarchy).getActualImageScaleType());
+      focusPoint = ((GenericDraweeHierarchy) hierarchy).getActualImageFocusPoint();
     }
     return MiddlewareUtils.obtainExtras(
         COMPONENT_EXTRAS,

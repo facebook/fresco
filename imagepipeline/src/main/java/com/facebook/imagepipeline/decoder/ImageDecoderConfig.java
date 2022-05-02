@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.decoder;
 
 import com.facebook.imageformat.ImageFormat;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 /** Configuration for {@link ImageDecoder}. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImageDecoderConfig {
 
   private final @Nullable Map<ImageFormat, ImageDecoder> mCustomImageDecoders;

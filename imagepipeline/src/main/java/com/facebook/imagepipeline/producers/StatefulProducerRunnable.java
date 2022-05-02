@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -40,7 +40,7 @@ public abstract class StatefulProducerRunnable<T> extends StatefulRunnable<T> {
   }
 
   @Override
-  protected void onSuccess(T result) {
+  protected void onSuccess(@Nullable T result) {
     mProducerListener.onProducerFinishWithSuccess(
         mProducerContext,
         mProducerName,
@@ -74,7 +74,7 @@ public abstract class StatefulProducerRunnable<T> extends StatefulRunnable<T> {
   }
 
   /** Create extra map for result */
-  protected @Nullable Map<String, String> getExtraMapOnSuccess(T result) {
+  protected @Nullable Map<String, String> getExtraMapOnSuccess(@Nullable T result) {
     return null;
   }
 
@@ -89,5 +89,5 @@ public abstract class StatefulProducerRunnable<T> extends StatefulRunnable<T> {
   }
 
   @Override
-  protected abstract void disposeResult(T result);
+  protected abstract void disposeResult(@Nullable T result);
 }

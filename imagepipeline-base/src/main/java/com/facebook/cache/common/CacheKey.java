@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -22,6 +22,7 @@ public interface CacheKey {
   String toString();
 
   /** This method must be implemented, otherwise the cache keys will be be compared by reference. */
+  // NULLSAFE_FIXME[Inconsistent Subclass Parameter Annotation]
   boolean equals(Object o);
 
   /** This method must be implemented with accordance to the {@link #equals} method. */

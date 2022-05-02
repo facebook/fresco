@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -17,11 +17,15 @@ import com.facebook.imagepipeline.image.HasImageMetadata;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /** Memory cache producer for the bitmap memory cache. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class BitmapMemoryCacheProducer implements Producer<CloseableReference<CloseableImage>> {
 
   public static final String PRODUCER_NAME = "BitmapMemoryCacheProducer";
+
   public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
 
   private static final String ORIGIN_SUBCATEGORY = "pipe_bg";
@@ -52,8 +56,13 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
       final ImageRequest imageRequest = producerContext.getImageRequest();
       final Object callerContext = producerContext.getCallerContext();
       final CacheKey cacheKey = mCacheKeyFactory.getBitmapCacheKey(imageRequest, callerContext);
+      final boolean isBitmapCacheEnabledForRead =
+          producerContext
+              .getImageRequest()
+              .isCacheEnabled(ImageRequest.CachesLocationsMasks.BITMAP_READ);
 
-      CloseableReference<CloseableImage> cachedReference = mMemoryCache.get(cacheKey);
+      CloseableReference<CloseableImage> cachedReference =
+          isBitmapCacheEnabledForRead ? mMemoryCache.get(cacheKey) : null;
 
       if (cachedReference != null) {
         maybeSetExtrasFromCloseableImage(cachedReference.get(), producerContext);
@@ -92,7 +101,11 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
 
       Consumer<CloseableReference<CloseableImage>> wrappedConsumer =
           wrapConsumer(
-              consumer, cacheKey, producerContext.getImageRequest().isMemoryCacheEnabled());
+              consumer,
+              cacheKey,
+              producerContext
+                  .getImageRequest()
+                  .isCacheEnabled(ImageRequest.CachesLocationsMasks.BITMAP_WRITE));
       listener.onProducerFinishWithSuccess(
           producerContext,
           getProducerName(),
@@ -116,12 +129,12 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
   protected Consumer<CloseableReference<CloseableImage>> wrapConsumer(
       final Consumer<CloseableReference<CloseableImage>> consumer,
       final CacheKey cacheKey,
-      final boolean isMemoryCacheEnabled) {
+      final boolean isBitmapCacheEnabledForWrite) {
     return new DelegatingConsumer<
         CloseableReference<CloseableImage>, CloseableReference<CloseableImage>>(consumer) {
       @Override
       public void onNewResultImpl(
-          CloseableReference<CloseableImage> newResult, @Status int status) {
+          @Nullable CloseableReference<CloseableImage> newResult, @Status int status) {
         try {
           if (FrescoSystrace.isTracing()) {
             FrescoSystrace.beginSection("BitmapMemoryCacheProducer#onNewResultImpl");
@@ -159,7 +172,7 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
           }
           // cache, if needed, and forward the new result
           CloseableReference<CloseableImage> newCachedResult = null;
-          if (isMemoryCacheEnabled) {
+          if (isBitmapCacheEnabledForWrite) {
             newCachedResult = mMemoryCache.cache(cacheKey, newResult);
           }
           try {

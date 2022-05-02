@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -18,6 +18,7 @@ import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_QUALIF
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_UNKNOWN;
 
 import android.net.Uri;
+import androidx.annotation.IntDef;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Fn;
 import com.facebook.common.internal.Objects;
@@ -31,6 +32,8 @@ import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.common.SourceUriType;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.memory.config.MemorySpikeConfig;
+import com.facebook.memory.helper.HashCode;
 import java.io.File;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -62,6 +65,9 @@ public class ImageRequest {
   /** If set the client will receive thumbnail previews for local images, before the whole image */
   private final boolean mLocalThumbnailPreviewsEnabled;
 
+  /** If set, only the image thumbnail will be loaded, not the full image */
+  private final boolean mLoadThumbnailOnly;
+
   private final ImageDecodeOptions mImageDecodeOptions;
 
   /** resize options */
@@ -78,6 +84,12 @@ public class ImageRequest {
 
   /** Lowest level that is permitted to fetch an image from */
   private final RequestLevel mLowestPermittedRequestLevel;
+
+  /**
+   * int in which each bit represents read or write permission of each cache from bitmap read bit
+   * (rightest) to disk write bit
+   */
+  protected int mCachesDisabled;
 
   /** Whether the disk cache should be used for this request */
   private final boolean mIsDiskCacheEnabled;
@@ -125,6 +137,7 @@ public class ImageRequest {
 
     mProgressiveRenderingEnabled = builder.isProgressiveRenderingEnabled();
     mLocalThumbnailPreviewsEnabled = builder.isLocalThumbnailPreviewsEnabled();
+    mLoadThumbnailOnly = builder.getLoadThumbnailOnly();
 
     mImageDecodeOptions = builder.getImageDecodeOptions();
 
@@ -137,7 +150,16 @@ public class ImageRequest {
 
     mRequestPriority = builder.getRequestPriority();
     mLowestPermittedRequestLevel = builder.getLowestPermittedRequestLevel();
+
     mIsDiskCacheEnabled = builder.isDiskCacheEnabled();
+
+    int cachesDisabledFlags = builder.getCachesDisabled();
+    if (!mIsDiskCacheEnabled) {
+      // If disk cache is disabled we must make sure mCachesDisabled reflects it
+      cachesDisabledFlags |= CachesLocationsMasks.DISK_READ | CachesLocationsMasks.DISK_WRITE;
+    }
+    mCachesDisabled = cachesDisabledFlags;
+
     mIsMemoryCacheEnabled = builder.isMemoryCacheEnabled();
     mDecodePrefetches = builder.shouldDecodePrefetches();
 
@@ -201,6 +223,10 @@ public class ImageRequest {
     return mLocalThumbnailPreviewsEnabled;
   }
 
+  public boolean getLoadThumbnailOnly() {
+    return mLoadThumbnailOnly;
+  }
+
   public Priority getPriority() {
     return mRequestPriority;
   }
@@ -209,8 +235,17 @@ public class ImageRequest {
     return mLowestPermittedRequestLevel;
   }
 
+  public int getCachesDisabled() {
+    return mCachesDisabled;
+  }
+
   public boolean isDiskCacheEnabled() {
     return mIsDiskCacheEnabled;
+  }
+
+  /** Returns whether the use of the cache is enabled for read or write according to given mask. */
+  public boolean isCacheEnabled(int cacheMask) {
+    return (getCachesDisabled() & cacheMask) == 0;
   }
 
   public boolean isMemoryCacheEnabled() {
@@ -268,9 +303,11 @@ public class ImageRequest {
         || !Objects.equal(mResizeOptions, request.mResizeOptions)
         || !Objects.equal(mRequestPriority, request.mRequestPriority)
         || !Objects.equal(mLowestPermittedRequestLevel, request.mLowestPermittedRequestLevel)
+        || !Objects.equal(mCachesDisabled, request.mCachesDisabled)
         || !Objects.equal(mDecodePrefetches, request.mDecodePrefetches)
         || !Objects.equal(mResizingAllowedOverride, request.mResizingAllowedOverride)
-        || !Objects.equal(mRotationOptions, request.mRotationOptions)) {
+        || !Objects.equal(mRotationOptions, request.mRotationOptions)
+        || mLoadThumbnailOnly != request.mLoadThumbnailOnly) {
       return false;
     }
     final CacheKey thisPostprocessorKey =
@@ -291,23 +328,45 @@ public class ImageRequest {
     if (result == 0) {
       final CacheKey postprocessorCacheKey =
           mPostprocessor != null ? mPostprocessor.getPostprocessorCacheKey() : null;
-      result =
-          Objects.hashCode(
-              mCacheChoice,
-              mSourceUri,
-              mLocalThumbnailPreviewsEnabled,
-              mBytesRange,
-              mRequestPriority,
-              mLowestPermittedRequestLevel,
-              mIsDiskCacheEnabled,
-              mIsMemoryCacheEnabled,
-              mImageDecodeOptions,
-              mDecodePrefetches,
-              mResizeOptions,
-              mRotationOptions,
-              postprocessorCacheKey,
-              mResizingAllowedOverride,
-              mDelayMs);
+      if (!MemorySpikeConfig.avoidObjectsHashCode()) {
+        result =
+            Objects.hashCode(
+                mCacheChoice,
+                mSourceUri,
+                mLocalThumbnailPreviewsEnabled,
+                mBytesRange,
+                mRequestPriority,
+                mLowestPermittedRequestLevel,
+                mCachesDisabled,
+                mIsDiskCacheEnabled,
+                mIsMemoryCacheEnabled,
+                mImageDecodeOptions,
+                mDecodePrefetches,
+                mResizeOptions,
+                mRotationOptions,
+                postprocessorCacheKey,
+                mResizingAllowedOverride,
+                mDelayMs,
+                mLoadThumbnailOnly);
+      } else {
+        result = HashCode.extend(0, mCacheChoice);
+        result = HashCode.extend(result, mSourceUri);
+        result = HashCode.extend(result, mLocalThumbnailPreviewsEnabled);
+        result = HashCode.extend(result, mBytesRange);
+        result = HashCode.extend(result, mRequestPriority);
+        result = HashCode.extend(result, mLowestPermittedRequestLevel);
+        result = HashCode.extend(result, mCachesDisabled);
+        result = HashCode.extend(result, mIsDiskCacheEnabled);
+        result = HashCode.extend(result, mIsMemoryCacheEnabled);
+        result = HashCode.extend(result, mImageDecodeOptions);
+        result = HashCode.extend(result, mDecodePrefetches);
+        result = HashCode.extend(result, mResizeOptions);
+        result = HashCode.extend(result, mRotationOptions);
+        result = HashCode.extend(result, postprocessorCacheKey);
+        result = HashCode.extend(result, mResizingAllowedOverride);
+        result = HashCode.extend(result, mDelayMs);
+        result = HashCode.extend(result, mLoadThumbnailOnly);
+      }
       // ^ I *think* this is safe despite autoboxing...?
       if (cacheHashcode) {
         mHashcode = result;
@@ -330,7 +389,9 @@ public class ImageRequest {
         .add("resizingAllowedOverride", mResizingAllowedOverride)
         .add("progressiveRenderingEnabled", mProgressiveRenderingEnabled)
         .add("localThumbnailPreviewsEnabled", mLocalThumbnailPreviewsEnabled)
+        .add("loadThumbnailOnly", mLoadThumbnailOnly)
         .add("lowestPermittedRequestLevel", mLowestPermittedRequestLevel)
+        .add("cachesDisabled", mCachesDisabled)
         .add("isDiskCacheEnabled", mIsDiskCacheEnabled)
         .add("isMemoryCacheEnabled", mIsMemoryCacheEnabled)
         .add("decodePrefetches", mDecodePrefetches)
@@ -378,6 +439,39 @@ public class ImageRequest {
     public static RequestLevel getMax(RequestLevel requestLevel1, RequestLevel requestLevel2) {
       return requestLevel1.getValue() > requestLevel2.getValue() ? requestLevel1 : requestLevel2;
     }
+  }
+
+  /**
+   * Caches bit locations in cachesDisabled from bitmap read bit (rightest bit, 00000001) to disk
+   * write bit (00100000). Uses for creating mask when performing bitwise operation with
+   * cachesDisabled in order to turn on (disable cache) or turn off (enable cache) the right bit.
+   */
+  @IntDef({
+    CachesLocationsMasks.BITMAP_READ,
+    CachesLocationsMasks.BITMAP_WRITE,
+    CachesLocationsMasks.ENCODED_READ,
+    CachesLocationsMasks.ENCODED_WRITE,
+    CachesLocationsMasks.DISK_READ,
+    CachesLocationsMasks.DISK_WRITE
+  })
+  public @interface CachesLocationsMasks {
+    /* bitmap cache read bit location- 00000001  */
+    final /* bitmap cache read bit location- 00000001  */ int BITMAP_READ = 1;
+
+    /* bitmap cache write bit location- 00000010  */
+    final /* bitmap cache write bit location- 00000010  */ int BITMAP_WRITE = 2;
+
+    /* encoded cache read bit location- 00000100  */
+    final /* encoded cache read bit location- 00000100  */ int ENCODED_READ = 4;
+
+    /* encoded cache write bit location- 00001000  */
+    final /* encoded cache write bit location- 00001000  */ int ENCODED_WRITE = 8;
+
+    /* disk cache read bit location- 00010000  */
+    final /* disk cache read bit location- 00010000  */ int DISK_READ = 16;
+
+    /* disk cache write bit location- 00100000  */
+    final /* disk cache write bit location- 00100000  */ int DISK_WRITE = 32;
   }
 
   /**

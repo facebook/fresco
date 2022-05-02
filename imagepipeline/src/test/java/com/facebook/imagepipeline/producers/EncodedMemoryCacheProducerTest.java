@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -107,14 +107,21 @@ public class EncodedMemoryCacheProducerTest {
     when(mImagePipelineConfig.getExperiments()).thenReturn(mImagePipelineExperiments);
     when(mImagePipelineExperiments.isEncodedCacheEnabled()).thenReturn(true);
 
-    when(mImageRequest.isMemoryCacheEnabled()).thenReturn(true);
+    setUpCacheEnabled(true);
+  }
+
+  private void setUpCacheEnabled(boolean enabled) {
+    when(mImageRequest.isCacheEnabled(ImageRequest.CachesLocationsMasks.ENCODED_READ))
+        .thenReturn(enabled);
+    when(mImageRequest.isCacheEnabled(ImageRequest.CachesLocationsMasks.ENCODED_WRITE))
+        .thenReturn(enabled);
   }
 
   @Test
   public void testDisableMemoryCache() {
     setupEncodedMemoryCacheGetNotFound();
     setupInputProducerStreamingSuccess();
-    when(mImageRequest.isMemoryCacheEnabled()).thenReturn(false);
+    setUpCacheEnabled(false);
     mEncodedMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
     verify(mMemoryCache, never()).cache(any(CacheKey.class), any(CloseableReference.class));
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,6 +10,8 @@ package com.facebook.imagepipeline.producers;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * Producer that will attempt to retrieve a thumbnail from one or more producers.
@@ -20,6 +22,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
  * <p>If no underlying producer can provide a suitable result, null result is returned to the
  * consumer
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ThumbnailBranchProducer implements Producer<EncodedImage> {
 
   private final ThumbnailProducer<EncodedImage>[] mThumbnailProducers;
@@ -45,7 +48,7 @@ public class ThumbnailBranchProducer implements Producer<EncodedImage> {
 
     private final ProducerContext mProducerContext;
     private final int mProducerIndex;
-    private final ResizeOptions mResizeOptions;
+    private final @Nullable ResizeOptions mResizeOptions;
 
     public ThumbnailConsumer(
         final Consumer<EncodedImage> consumer,
@@ -58,7 +61,7 @@ public class ThumbnailBranchProducer implements Producer<EncodedImage> {
     }
 
     @Override
-    protected void onNewResultImpl(EncodedImage newResult, @Status int status) {
+    protected void onNewResultImpl(@Nullable EncodedImage newResult, @Status int status) {
       if (newResult != null
           && (isNotLast(status)
               || ThumbnailSizeChecker.isImageBigEnough(newResult, mResizeOptions))) {
@@ -101,7 +104,7 @@ public class ThumbnailBranchProducer implements Producer<EncodedImage> {
     return true;
   }
 
-  private int findFirstProducerForSize(int startIndex, ResizeOptions resizeOptions) {
+  private int findFirstProducerForSize(int startIndex, @Nullable ResizeOptions resizeOptions) {
     for (int i = startIndex; i < mThumbnailProducers.length; i++) {
       if (mThumbnailProducers[i].canProvideImageForSize(resizeOptions)) {
         return i;

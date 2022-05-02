@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -26,13 +26,12 @@ import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.fresco.ui.common.OnDrawControllerListener;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.infer.annotation.Nullsafe;
+import java.io.Closeable;
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageInfo>
-    implements OnDrawControllerListener<ImageInfo> {
-
-  private static final String TAG = "ImagePerfControllerListener2";
+    implements OnDrawControllerListener<ImageInfo>, Closeable {
 
   private static final int WHAT_STATUS = 1;
   private static final int WHAT_VISIBILITY = 2;
@@ -43,7 +42,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   private final Supplier<Boolean> mAsyncLogging;
   private final Supplier<Boolean> mUseNewState;
 
-  private @Nullable Handler mHandler;
+  private static @Nullable Handler sHandler;
 
   static class LogHandler extends Handler {
 
@@ -132,7 +131,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
 
   @Override
   public void onFailure(
-      String id, Throwable throwable, @Nullable ControllerListener2.Extras extras) {
+      String id, @Nullable Throwable throwable, @Nullable ControllerListener2.Extras extras) {
     final long now = mClock.now();
 
     ImagePerfState state = obtainState();
@@ -191,6 +190,11 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     obtainState().reset();
   }
 
+  @Override
+  public void close() {
+    resetState();
+  }
+
   @VisibleForTesting
   private void reportViewInvisible(ImagePerfState state, long time) {
     state.setVisible(false);
@@ -201,11 +205,11 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
 
   private void updateStatus(ImagePerfState state, @ImageLoadStatus int imageLoadStatus) {
     if (shouldDispatchAsync()) {
-      Message msg = Preconditions.checkNotNull(mHandler).obtainMessage();
+      Message msg = Preconditions.checkNotNull(sHandler).obtainMessage();
       msg.what = WHAT_STATUS;
       msg.arg1 = imageLoadStatus;
       msg.obj = state;
-      mHandler.sendMessage(msg);
+      sHandler.sendMessage(msg);
     } else {
       mImagePerfNotifier.notifyStatusUpdated(state, imageLoadStatus);
     }
@@ -213,11 +217,11 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
 
   private void updateVisibility(ImagePerfState state, @VisibilityState int visibilityState) {
     if (shouldDispatchAsync()) {
-      Message msg = Preconditions.checkNotNull(mHandler).obtainMessage();
+      Message msg = Preconditions.checkNotNull(sHandler).obtainMessage();
       msg.what = WHAT_VISIBILITY;
       msg.arg1 = visibilityState;
       msg.obj = state;
-      mHandler.sendMessage(msg);
+      sHandler.sendMessage(msg);
     } else {
       // sync
       mImagePerfNotifier.notifyListenersOfVisibilityStateUpdate(state, visibilityState);
@@ -225,18 +229,18 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   }
 
   private synchronized void initHandler() {
-    if (mHandler != null) {
+    if (sHandler != null) {
       return;
     }
     HandlerThread handlerThread = new HandlerThread("ImagePerfControllerListener2Thread");
     handlerThread.start();
     Looper looper = Preconditions.checkNotNull(handlerThread.getLooper());
-    mHandler = new LogHandler(looper, mImagePerfNotifier);
+    sHandler = new LogHandler(looper, mImagePerfNotifier);
   }
 
   private boolean shouldDispatchAsync() {
     boolean enabled = mAsyncLogging.get();
-    if (enabled && mHandler == null) {
+    if (enabled && sHandler == null) {
       initHandler();
     }
     return enabled;

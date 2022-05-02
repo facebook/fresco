@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+dependencies {
+    implementation project(':drawee')
+    implementation project(':drawee-backends:drawee-pipeline')
+    implementation project(':fbcore')
+    implementation project(':imagepipeline-base')
+    implementation project(':imagepipeline')
+    implementation project(':middleware')
+    implementation project(':vito:core')
+    implementation project(':vito:options')
+    implementation project(':vito:renderer')
+    implementation project(':ui-common')
+}
+
+android {
+    buildToolsVersion FrescoConfig.buildToolsVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+apply plugin: "com.vanniktech.maven.publish"

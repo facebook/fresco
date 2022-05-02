@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -30,4 +30,5 @@ class ProducerConstants {
   static final String ENCODED_IMAGE_SIZE = "encodedImageSize";
   static final String REQUESTED_IMAGE_SIZE = "requestedImageSize";
   static final String SAMPLE_SIZE = "sampleSize";
+  static final String NON_FATAL_DECODE_ERROR = "non_fatal_decode_error";
 }

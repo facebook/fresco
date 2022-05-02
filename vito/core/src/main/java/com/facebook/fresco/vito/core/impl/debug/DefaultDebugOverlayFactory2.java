@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,9 +11,9 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import com.facebook.common.internal.Supplier;
 import com.facebook.fresco.ui.common.ControllerListener2;
+import com.facebook.fresco.ui.common.VitoUtils;
 import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.VitoImageRequest;
-import com.facebook.fresco.vito.core.VitoUtils;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.Locale;
 import java.util.Map;

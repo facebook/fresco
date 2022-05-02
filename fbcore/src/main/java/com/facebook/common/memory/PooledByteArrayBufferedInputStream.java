@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,6 +10,7 @@ package com.facebook.common.memory;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.ResourceReleaser;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -21,6 +22,7 @@ import javax.annotation.concurrent.NotThreadSafe;
  * together with ResourceReleaser responsible for releasing it when the stream is closed.
  */
 @NotThreadSafe
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PooledByteArrayBufferedInputStream extends InputStream {
 
   private static final String TAG = "PooledByteInputStream";

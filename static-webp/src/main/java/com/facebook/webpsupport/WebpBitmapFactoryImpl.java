@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -36,9 +36,6 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   private static final int HEADER_SIZE = 20;
 
   private static final int IN_TEMP_BUFFER_SIZE = 8 * 1024;
-
-  public static final boolean IN_BITMAP_SUPPORTED =
-      Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
 
   private static WebpErrorLogger mWebpErrorLogger;
 
@@ -93,7 +90,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       if (opts.inScaled) {
         outputBitmap.setDensity(targetDensity);
       }
-    } else if (IN_BITMAP_SUPPORTED && opts.inBitmap != null) {
+    } else if (opts.inBitmap != null) {
       // bitmap was reused, ensure density is reset
       outputBitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
     }
@@ -294,7 +291,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       // Keep resulting bitmap as null
     }
 
-    if (IN_BITMAP_SUPPORTED && bm == null && opts != null && opts.inBitmap != null) {
+    if (bm == null && opts != null && opts.inBitmap != null) {
       throw new IllegalArgumentException("Problem decoding into existing bitmap");
     }
 
@@ -446,10 +443,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   @Nullable
   private static Bitmap createBitmap(
       int width, int height, @Nullable BitmapFactory.Options options) {
-    if (IN_BITMAP_SUPPORTED
-        && options != null
-        && options.inBitmap != null
-        && options.inBitmap.isMutable()) {
+    if (options != null && options.inBitmap != null && options.inBitmap.isMutable()) {
       return options.inBitmap;
     }
     return mBitmapCreator.createNakedBitmap(width, height, Bitmap.Config.ARGB_8888);

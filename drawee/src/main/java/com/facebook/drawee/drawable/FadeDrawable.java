@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.fresco.ui.common.OnFadeListener;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.Arrays;
 import javax.annotation.Nullable;
@@ -66,6 +67,8 @@ public class FadeDrawable extends ArrayDrawable {
 
   private @Nullable OnFadeListener mOnFadeListener;
   private boolean mIsFadingActualImage;
+  private boolean mOnFadeListenerShowImmediately;
+  private boolean mMutateDrawables = true;
 
   /**
    * Creates a new fade drawable. The first layer is displayed with full opacity whereas all other
@@ -224,6 +227,9 @@ public class FadeDrawable extends ArrayDrawable {
   public void showLayerImmediately(int index) {
     mIsLayerOn[index] = true;
     mAlphas[index] = 255;
+    if (index == mActualImageLayer) {
+      mOnFadeListenerShowImmediately = true;
+    }
     invalidateSelf();
   }
 
@@ -290,7 +296,7 @@ public class FadeDrawable extends ArrayDrawable {
         ratio = (mDurationMs == 0) ? 1.0f : 0.0f;
         // if all the layers have reached their target opacity, transition is done
         done = updateAlphas(ratio);
-        onFadeStarted();
+        maybeOnFadeStarted();
         mTransitionState = done ? TRANSITION_NONE : TRANSITION_RUNNING;
         break;
 
@@ -314,16 +320,33 @@ public class FadeDrawable extends ArrayDrawable {
     }
 
     if (done) {
-      onFadeFinished();
+      maybeOnFadeFinished();
+      maybeOnImageShownImmediately();
     } else {
       invalidateSelf();
+    }
+  }
+
+  private void maybeOnImageShownImmediately() {
+    if (!mOnFadeListenerShowImmediately) {
+      return;
+    }
+
+    if (mTransitionState == TRANSITION_NONE && mIsLayerOn[mActualImageLayer]) {
+      if (mOnFadeListener != null) {
+        mOnFadeListener.onShownImmediately();
+      }
+      mOnFadeListenerShowImmediately = false;
     }
   }
 
   private void drawDrawableWithAlpha(Canvas canvas, Drawable drawable, int alpha) {
     if (drawable != null && alpha > 0) {
       mPreventInvalidateCount++;
-      drawable.mutate().setAlpha(alpha);
+      if (mMutateDrawables) {
+        drawable.mutate();
+      }
+      drawable.setAlpha(alpha);
       mPreventInvalidateCount--;
       drawable.draw(canvas);
     }
@@ -369,11 +392,15 @@ public class FadeDrawable extends ArrayDrawable {
     return mDefaultLayerIsOn;
   }
 
-  public void setOnFadeListener(OnFadeListener onFadeListener) {
+  public void setOnFadeListener(@Nullable OnFadeListener onFadeListener) {
     mOnFadeListener = onFadeListener;
   }
 
-  private void onFadeStarted() {
+  public void setMutateDrawables(boolean mutateDrawables) {
+    mMutateDrawables = mutateDrawables;
+  }
+
+  private void maybeOnFadeStarted() {
     if (mIsFadingActualImage) {
       return;
     }
@@ -392,7 +419,7 @@ public class FadeDrawable extends ArrayDrawable {
     }
   }
 
-  private void onFadeFinished() {
+  private void maybeOnFadeFinished() {
     if (!mIsFadingActualImage) {
       return;
     }
@@ -401,11 +428,5 @@ public class FadeDrawable extends ArrayDrawable {
     if (mOnFadeListener != null) {
       mOnFadeListener.onFadeFinished();
     }
-  }
-
-  public interface OnFadeListener {
-    void onFadeStarted();
-
-    void onFadeFinished();
   }
 }

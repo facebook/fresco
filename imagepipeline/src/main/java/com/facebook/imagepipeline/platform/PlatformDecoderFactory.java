@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,13 +9,16 @@ package com.facebook.imagepipeline.platform;
 
 import android.os.Build;
 import androidx.core.util.Pools;
+import com.facebook.common.memory.DecodeBufferHelper;
 import com.facebook.imagepipeline.core.NativeCodeSetup;
 import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.infer.annotation.Nullsafe;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.ByteBuffer;
+import org.jetbrains.annotations.NotNull;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PlatformDecoderFactory {
   /**
    * Provide the implementation of the PlatformDecoder for the current platform using the provided
@@ -25,16 +28,15 @@ public class PlatformDecoderFactory {
    * @return The PlatformDecoder implementation
    */
   public static PlatformDecoder buildPlatformDecoder(
-      PoolFactory poolFactory, boolean gingerbreadDecoderEnabled) {
+      PoolFactory poolFactory, boolean gingerbreadDecoderEnabled, boolean useDecodeBufferHelper) {
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      int maxNumThreads = poolFactory.getFlexByteArrayPoolMaxNumThreads();
       return new OreoDecoder(
-          poolFactory.getBitmapPool(), maxNumThreads, new Pools.SynchronizedPool<>(maxNumThreads));
+          poolFactory.getBitmapPool(), createPool(poolFactory, useDecodeBufferHelper));
     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
         || !NativeCodeSetup.getUseNativeCode()) {
-      int maxNumThreads = poolFactory.getFlexByteArrayPoolMaxNumThreads();
       return new ArtDecoder(
-          poolFactory.getBitmapPool(), maxNumThreads, new Pools.SynchronizedPool<>(maxNumThreads));
+          poolFactory.getBitmapPool(), createPool(poolFactory, useDecodeBufferHelper));
     } else {
       try {
         if (gingerbreadDecoderEnabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
@@ -61,5 +63,24 @@ public class PlatformDecoderFactory {
         throw new RuntimeException("Wrong Native code setup, reflection failed.", e);
       }
     }
+  }
+
+  public static PlatformDecoder buildPlatformDecoder(
+      PoolFactory poolFactory, boolean gingerbreadDecoderEnabled) {
+    return buildPlatformDecoder(poolFactory, gingerbreadDecoderEnabled, false);
+  }
+
+  @NotNull
+  public static Pools.Pool<ByteBuffer> createPool(
+      PoolFactory poolFactory, boolean useDecodeBufferHelper) {
+    if (useDecodeBufferHelper) {
+      return DecodeBufferHelper.INSTANCE;
+    }
+    final int maxNumThreads = poolFactory.getFlexByteArrayPoolMaxNumThreads();
+    final Pools.Pool<ByteBuffer> pool = new Pools.SynchronizedPool<>(maxNumThreads);
+    for (int i = 0; i < maxNumThreads; i++) {
+      pool.release(ByteBuffer.allocate(DecodeBufferHelper.getRecommendedDecodeBufferSize()));
+    }
+    return pool;
   }
 }

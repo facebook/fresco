@@ -577,7 +577,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/internal/ImagePerfControllerListener2.html#ImagePerfControllerListener2(com.facebook.common.time.MonotonicClock, com.facebook.drawee.backends.pipeline.info.ImagePerfState, com.facebook.drawee.backends.pipeline.info.ImagePerfNotifier, com.facebook.common.internal.Supplier<java.lang.Boolean>)">ImagePerfControllerListener2</a></span>(<a href="../../../../../../../com/facebook/common/time/MonotonicClock.html">MonotonicClock</a> clock, <a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfState.html">ImagePerfState</a> imagePerfState, <a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfNotifier.html">ImagePerfNotifier</a> imagePerfNotifier, <a href="../../../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; asyncLogging)
+        <span class="sympad"><a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/internal/ImagePerfControllerListener2.html#ImagePerfControllerListener2(com.facebook.common.time.MonotonicClock, com.facebook.drawee.backends.pipeline.info.ImagePerfState, com.facebook.drawee.backends.pipeline.info.ImagePerfNotifier, com.facebook.common.internal.Supplier<java.lang.Boolean>, com.facebook.common.internal.Supplier<java.lang.Boolean>)">ImagePerfControllerListener2</a></span>(<a href="../../../../../../../com/facebook/common/time/MonotonicClock.html">MonotonicClock</a> clock, <a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfState.html">ImagePerfState</a> imagePerfState, <a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfNotifier.html">ImagePerfNotifier</a> imagePerfNotifier, <a href="../../../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; asyncLogging, <a href="../../../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; useNewState)
         
   </td></tr>
 
@@ -712,7 +712,23 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/internal/ImagePerfControllerListener2.html#reportViewVisible(long)">reportViewVisible</a></span>(long now)
+        <span class="sympad"><a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/internal/ImagePerfControllerListener2.html#reportViewVisible(com.facebook.drawee.backends.pipeline.info.ImagePerfState, long)">reportViewVisible</a></span>(<a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfState.html">ImagePerfState</a> state, long now)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/internal/ImagePerfControllerListener2.html#resetState()">resetState</a></span>()
         
   </td></tr>
 
@@ -1295,7 +1311,7 @@ From interface
 
 
 
-<a id="ImagePerfControllerListener2(com.facebook.common.time.MonotonicClock, com.facebook.drawee.backends.pipeline.info.ImagePerfState, com.facebook.drawee.backends.pipeline.info.ImagePerfNotifier, com.facebook.common.internal.Supplier<java.lang.Boolean>)"></a>
+<a id="ImagePerfControllerListener2(com.facebook.common.time.MonotonicClock, com.facebook.drawee.backends.pipeline.info.ImagePerfState, com.facebook.drawee.backends.pipeline.info.ImagePerfNotifier, com.facebook.common.internal.Supplier<java.lang.Boolean>, com.facebook.common.internal.Supplier<java.lang.Boolean>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1308,7 +1324,7 @@ From interface
         
       </span>
       <span class="sympad">ImagePerfControllerListener2</span>
-      <span class="normal">(<a href="../../../../../../../com/facebook/common/time/MonotonicClock.html">MonotonicClock</a> clock, <a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfState.html">ImagePerfState</a> imagePerfState, <a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfNotifier.html">ImagePerfNotifier</a> imagePerfNotifier, <a href="../../../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; asyncLogging)</span>
+      <span class="normal">(<a href="../../../../../../../com/facebook/common/time/MonotonicClock.html">MonotonicClock</a> clock, <a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfState.html">ImagePerfState</a> imagePerfState, <a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfNotifier.html">ImagePerfNotifier</a> imagePerfNotifier, <a href="../../../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; asyncLogging, <a href="../../../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; useNewState)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1609,7 +1625,7 @@ From interface
 </div>
 
 
-<a id="reportViewVisible(long)"></a>
+<a id="reportViewVisible(com.facebook.drawee.backends.pipeline.info.ImagePerfState, long)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1622,7 +1638,38 @@ From interface
         void
       </span>
       <span class="sympad">reportViewVisible</span>
-      <span class="normal">(long now)</span>
+      <span class="normal">(<a href="../../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfState.html">ImagePerfState</a> state, long now)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="resetState()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">resetState</span>
+      <span class="normal">()</span>
     </h4>
       <div class="api-level">
         <div>

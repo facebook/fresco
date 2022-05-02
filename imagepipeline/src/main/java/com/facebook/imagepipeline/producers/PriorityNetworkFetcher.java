@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -13,9 +13,16 @@ import androidx.annotation.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.common.time.RealtimeSinceBootClock;
+import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
+import java.net.ConnectException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -43,9 +50,11 @@ import javax.annotation.Nullable;
  *       to the rules above.
  * </ul>
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     implements NetworkFetcher<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> {
   public static final String TAG = PriorityNetworkFetcher.class.getSimpleName();
+  private static final int HTTP_408_REQUEST_TIMEOUT = 408;
 
   private final NetworkFetcher<FETCH_STATE> mDelegate;
 
@@ -61,11 +70,34 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       new LinkedList<>();
   private final HashSet<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> mCurrentlyFetching =
       new HashSet<>();
+  private final LinkedList<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> mDelayedQueue =
+      new LinkedList<>();
 
   private volatile boolean isRunning = true;
 
   private final boolean inflightFetchesCanBeCancelled;
-  private final boolean infiniteRetries;
+  private final int maxNumberOfRequeue;
+  @VisibleForTesting static final int INFINITE_REQUEUE = -1;
+  private final boolean doNotCancelRequests;
+
+  private long firstDelayedRequestEnqueuedTimeStamp;
+
+  /** the amount of time a request should wait before it gets re-queued again */
+  private final long requeueDelayTimeInMillis;
+  /** the number of immediate re-queue, with no delay */
+  private final int immediateRequeueCount;
+
+  @VisibleForTesting static final int NO_DELAYED_REQUESTS = -1;
+
+  /** if true, then dequeue requests recuresively */
+  private final boolean multipleDequeue;
+
+  private final boolean nonRecoverableExceptionPreventsRequeue;
+  private final int maxConnectAttemptCount;
+  private final int maxAttemptCount;
+  private final boolean retryLowPriAll;
+  private final boolean retryLowPriUnknownHostException;
+  private final boolean retryLowPriConnectionException;
 
   /**
    * @param isHiPriFifo if true, hi-pri requests are dequeued in the order they were enqueued.
@@ -73,8 +105,15 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
    * @param inflightFetchesCanBeCancelled if false, the fetcher waits for the completion of requests
    *     that have been delegated to 'delegate' even if they were cancelled by Fresco. The
    *     cancellation order is not propagated to 'delegate', and no other request is dequeued.
-   * @param infiniteRetries if true, requests that fail are re-queued, potentially retrying
-   *     immediately.
+   * @param maxNumberOfRequeue requests that fail are re-queued up to maxNumberOfRequeue times,
+   *     potentially retrying immediately. INFINITE_REQUEUE(-1) means infinite requeue.
+   * @param doNotCancelRequests if true, requests will not be removed from the queue on cancellation
+   * @param immediateRequeueCount number of immediate requeue attempts, when a request is re-queued
+   *     more then this number, it will get re-queued again after at most requeueDelayTimeInMillis.
+   *     NO_DELAYED_REQUESTS(-1) means no delay, no matter how many times the request is re-queued.
+   * @param requeueDelayTimeInMillis the amount of time in ms a request needs to wait until getting
+   *     re-queued again after it gets re-queued more than immediateRequeueCount times. This is an
+   *     upper bound of delay time.
    */
   public PriorityNetworkFetcher(
       NetworkFetcher<FETCH_STATE> delegate,
@@ -82,14 +121,35 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       int maxOutstandingHiPri,
       int maxOutstandingLowPri,
       boolean inflightFetchesCanBeCancelled,
-      boolean infiniteRetries) {
+      int maxNumberOfRequeue,
+      boolean doNotCancelRequests,
+      int immediateRequeueCount,
+      int requeueDelayTimeInMillis,
+      boolean multipleDequeue,
+      boolean nonRecoverableExceptionPreventsRequeue,
+      int maxConnectAttemptCount,
+      int maxAttemptCount,
+      boolean retryLowPriAll,
+      boolean retryLowPriUnknownHostException,
+      boolean retryLowPriConnectionException) {
+
     this(
         delegate,
         isHiPriFifo,
         maxOutstandingHiPri,
         maxOutstandingLowPri,
         inflightFetchesCanBeCancelled,
-        infiniteRetries,
+        maxNumberOfRequeue,
+        doNotCancelRequests,
+        immediateRequeueCount,
+        requeueDelayTimeInMillis,
+        multipleDequeue,
+        nonRecoverableExceptionPreventsRequeue,
+        maxConnectAttemptCount,
+        maxAttemptCount,
+        retryLowPriAll,
+        retryLowPriUnknownHostException,
+        retryLowPriConnectionException,
         RealtimeSinceBootClock.get());
   }
 
@@ -100,7 +160,17 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       int maxOutstandingHiPri,
       int maxOutstandingLowPri,
       boolean inflightFetchesCanBeCancelled,
-      boolean infiniteRetries,
+      int maxNumberOfRequeue,
+      boolean doNotCancelRequests,
+      int immediateRequeueCount,
+      int requeueDelayTimeInMillis,
+      boolean multipleDequeue,
+      boolean nonRecoverableExceptionPreventsRequeue,
+      int maxConnectAttemptCount,
+      int maxAttemptCount,
+      boolean retryLowPriAll,
+      boolean retryLowPriUnknownHostException,
+      boolean retryLowPriConnectionException,
       MonotonicClock clock) {
     mDelegate = delegate;
     mIsHiPriFifo = isHiPriFifo;
@@ -111,7 +181,17 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       throw new IllegalArgumentException("maxOutstandingHiPri should be > maxOutstandingLowPri");
     }
     this.inflightFetchesCanBeCancelled = inflightFetchesCanBeCancelled;
-    this.infiniteRetries = infiniteRetries;
+    this.maxNumberOfRequeue = maxNumberOfRequeue;
+    this.doNotCancelRequests = doNotCancelRequests;
+    this.immediateRequeueCount = immediateRequeueCount;
+    this.requeueDelayTimeInMillis = requeueDelayTimeInMillis;
+    this.multipleDequeue = multipleDequeue;
+    this.nonRecoverableExceptionPreventsRequeue = nonRecoverableExceptionPreventsRequeue;
+    this.maxConnectAttemptCount = maxConnectAttemptCount;
+    this.maxAttemptCount = maxAttemptCount;
+    this.retryLowPriAll = retryLowPriAll;
+    this.retryLowPriUnknownHostException = retryLowPriUnknownHostException;
+    this.retryLowPriConnectionException = retryLowPriConnectionException;
     this.mClock = clock;
   }
 
@@ -141,6 +221,9 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
             new BaseProducerContextCallbacks() {
               @Override
               public void onCancellationRequested() {
+                if (doNotCancelRequests) {
+                  return;
+                }
                 if (!inflightFetchesCanBeCancelled && mCurrentlyFetching.contains(fetchState)) {
                   return;
                 }
@@ -187,6 +270,41 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     dequeueIfAvailableSlots();
   }
 
+  private void moveDelayedRequestsToPriorityQueues() {
+    if (mDelayedQueue.isEmpty()
+        || mClock.now() - firstDelayedRequestEnqueuedTimeStamp <= requeueDelayTimeInMillis) {
+      return;
+    }
+    for (PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState : mDelayedQueue) {
+      putInQueue(fetchState, fetchState.getContext().getPriority() == HIGH);
+    }
+    mDelayedQueue.clear();
+  }
+
+  private void putInDelayedQueue(
+      PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState) {
+    if (mDelayedQueue.isEmpty()) {
+      firstDelayedRequestEnqueuedTimeStamp = mClock.now();
+    }
+    fetchState.delayCount++;
+    mDelayedQueue.addLast(fetchState);
+  }
+
+  private void retry(PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState) {
+    FLog.v(TAG, "retry: %s", fetchState.getUri());
+    synchronized (mLock) {
+      fetchState.delegatedState =
+          mDelegate.createFetchState(fetchState.getConsumer(), fetchState.getContext());
+
+      mCurrentlyFetching.remove(fetchState);
+      if (!mHiPriQueue.remove(fetchState)) {
+        mLowPriQueue.remove(fetchState);
+      }
+      mHiPriQueue.addFirst(fetchState);
+    }
+    dequeueIfAvailableSlots();
+  }
+
   private void requeue(PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState) {
     synchronized (mLock) {
       FLog.v(TAG, "requeue: %s", fetchState.getUri());
@@ -199,7 +317,13 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
       if (!mHiPriQueue.remove(fetchState)) {
         mLowPriQueue.remove(fetchState);
       }
-      putInQueue(fetchState, fetchState.getContext().getPriority() == HIGH);
+
+      if (immediateRequeueCount != NO_DELAYED_REQUESTS
+          && fetchState.requeueCount > immediateRequeueCount) {
+        putInDelayedQueue(fetchState);
+      } else {
+        putInQueue(fetchState, fetchState.getContext().getPriority() == HIGH);
+      }
     }
     dequeueIfAvailableSlots();
   }
@@ -211,6 +335,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
 
     PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> toFetch = null;
     synchronized (mLock) {
+      moveDelayedRequestsToPriorityQueues();
       int outstandingRequests = mCurrentlyFetching.size();
 
       if (outstandingRequests < mMaxOutstandingHiPri) {
@@ -236,6 +361,10 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     }
 
     delegateFetch(toFetch);
+
+    if (multipleDequeue) {
+      dequeueIfAvailableSlots();
+    }
   }
 
   private void delegateFetch(
@@ -245,43 +374,83 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
           new NetworkFetcher.Callback() {
             @Override
             public void onResponse(InputStream response, int responseLength) throws IOException {
-              fetchState.callback.onResponse(response, responseLength);
+              final Callback callback = fetchState.callback;
+              if (callback != null) {
+                callback.onResponse(response, responseLength);
+              }
             }
 
             @Override
             public void onFailure(Throwable throwable) {
-              if (infiniteRetries
-                  && !(throwable instanceof PriorityNetworkFetcher.NonrecoverableException)) {
+              if (shouldRetry(
+                  throwable,
+                  fetchState.attemptCount,
+                  maxConnectAttemptCount,
+                  maxAttemptCount,
+                  retryLowPriAll,
+                  retryLowPriUnknownHostException,
+                  retryLowPriConnectionException,
+                  fetchState.getContext().getPriority())) {
+                retry(fetchState);
+                return;
+              }
+
+              final boolean shouldRequeue =
+                  maxNumberOfRequeue == INFINITE_REQUEUE
+                      || fetchState.requeueCount < maxNumberOfRequeue;
+              if (shouldRequeue
+                  && !(nonRecoverableExceptionPreventsRequeue
+                      && throwable instanceof PriorityNetworkFetcher.NonrecoverableException)) {
                 requeue(fetchState);
               } else {
                 removeFromQueue(fetchState, "FAIL");
-                fetchState.callback.onFailure(throwable);
+                final Callback callback = fetchState.callback;
+                if (callback != null) {
+                  callback.onFailure(throwable);
+                }
               }
             }
 
             @Override
             public void onCancellation() {
               removeFromQueue(fetchState, "CANCEL");
-              fetchState.callback.onCancellation();
+              final Callback callback = fetchState.callback;
+              if (callback != null) {
+                callback.onCancellation();
+              }
             }
           };
+      fetchState.attemptCount++;
       mDelegate.fetch(fetchState.delegatedState, callbackWrapper);
     } catch (Exception e) {
       removeFromQueue(fetchState, "FAIL");
     }
   }
 
+  private void changePriorityInDelayedQueue(
+      PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState) {
+    final boolean existed = mDelayedQueue.remove(fetchState);
+    if (!existed) {
+      return;
+    }
+
+    fetchState.priorityChangedCount++;
+    mDelayedQueue.addLast(fetchState);
+  }
+
   private void changePriority(
       PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> fetchState, boolean isNewHiPri) {
     synchronized (mLock) {
-      boolean existed =
+      final boolean existed =
           isNewHiPri ? mLowPriQueue.remove(fetchState) : mHiPriQueue.remove(fetchState);
       if (!existed) {
+        changePriorityInDelayedQueue(fetchState);
         return;
       }
 
       FLog.v(TAG, "change-pri: %s %s", isNewHiPri ? "HIPRI" : "LOWPRI", fetchState.getUri());
 
+      fetchState.priorityChangedCount++;
       putInQueue(fetchState, isNewHiPri);
     }
     dequeueIfAvailableSlots();
@@ -311,6 +480,11 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
   }
 
   @VisibleForTesting
+  List<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> getDelayedQeueue() {
+    return mDelayedQueue;
+  }
+
+  @VisibleForTesting
   HashSet<PriorityFetchState<FETCH_STATE>> getCurrentlyFetching() {
     return mCurrentlyFetching;
   }
@@ -325,9 +499,22 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     /** Size of low-pri queue when this request was added. */
     final int lowPriCountWhenCreated;
 
+    /** Size of currentlyFetching queue when this request was added. */
+    final int currentlyFetchingCountWhenCreated;
+
     @Nullable NetworkFetcher.Callback callback;
     long dequeuedTimestamp;
     int requeueCount = 0;
+    int attemptCount = 0;
+
+    /** number of times the request was delayed (inserted to the delay queue) */
+    int delayCount = 0;
+
+    /** the number of times the request's priority was changed while it was waiting the queue */
+    int priorityChangedCount = 0;
+
+    /** True if image request priority was high when it was started */
+    final boolean isInitialPriorityHigh;
 
     private PriorityFetchState(
         Consumer<EncodedImage> consumer,
@@ -335,12 +522,15 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
         FETCH_STATE delegatedState,
         long enqueuedTimestamp,
         int hiPriCountWhenCreated,
-        int lowPriCountWhenCreated) {
+        int lowPriCountWhenCreated,
+        int currentlyFetchingCountWhenCreated) {
       super(consumer, producerContext);
       this.delegatedState = delegatedState;
       this.enqueuedTimestamp = enqueuedTimestamp;
       this.hiPriCountWhenCreated = hiPriCountWhenCreated;
       this.lowPriCountWhenCreated = lowPriCountWhenCreated;
+      this.isInitialPriorityHigh = producerContext.getPriority() == HIGH;
+      this.currentlyFetchingCountWhenCreated = currentlyFetchingCountWhenCreated;
     }
   }
 
@@ -357,6 +547,22 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     }
   }
 
+  /**
+   * RetriableIOException should be returned by NetworkFetcher's that would like to signal to
+   * PriorityNetworkFetcher that a failure is
+   */
+  public static class RetriableIOException extends IOException {
+    public RetriableIOException(Throwable cause) {
+      super(cause);
+    }
+
+    @Override
+    public String toString() {
+      Throwable cause = getCause();
+      return cause != null ? cause.toString() : toString();
+    }
+  }
+
   @Override
   public PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE> createFetchState(
       Consumer<EncodedImage> consumer, ProducerContext producerContext) {
@@ -366,7 +572,8 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
         mDelegate.createFetchState(consumer, producerContext),
         mClock.now(),
         mHiPriQueue.size(),
-        mLowPriQueue.size());
+        mLowPriQueue.size(),
+        mCurrentlyFetching.size());
   }
 
   @Override
@@ -387,6 +594,70 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     extras.put("hipri_queue_size", "" + fetchState.hiPriCountWhenCreated);
     extras.put("lowpri_queue_size", "" + fetchState.lowPriCountWhenCreated);
     extras.put("requeueCount", "" + fetchState.requeueCount);
+    extras.put("priority_changed_count", "" + fetchState.priorityChangedCount);
+    extras.put("request_initial_priority_is_high", "" + fetchState.isInitialPriorityHigh);
+    extras.put("currently_fetching_size", "" + fetchState.currentlyFetchingCountWhenCreated);
+    extras.put("delay_count", "" + fetchState.delayCount);
+
     return extras;
+  }
+
+  private static boolean shouldRetryLowPrioritySpecificExceptions(
+      Throwable e,
+      boolean retryLowPriUnknownHostException,
+      boolean retryLowPriConnectionException) {
+    if (e instanceof UnknownHostException) {
+      return retryLowPriUnknownHostException;
+    }
+
+    if (e instanceof ConnectException) {
+      return retryLowPriConnectionException;
+    }
+
+    return false;
+  }
+
+  public static boolean shouldRetry(
+      Throwable e,
+      int attemptNumber,
+      int maxConnectAttemptCount,
+      int maxAttemptCount,
+      boolean retryLowPriAll,
+      boolean retryLowPriUnknownHostException,
+      boolean retryLowPriConnectionException,
+      Priority priority) {
+    if (e instanceof ConnectException && attemptNumber >= maxConnectAttemptCount) {
+      return false;
+    }
+
+    if (attemptNumber >= maxAttemptCount) {
+      return false;
+    }
+
+    boolean isHiPriority = priority == Priority.HIGH;
+
+    if (!retryLowPriAll && !isHiPriority) {
+      return shouldRetryLowPrioritySpecificExceptions(
+          e, retryLowPriUnknownHostException, retryLowPriConnectionException);
+    }
+
+    if (isHiPriority && e instanceof NonrecoverableException) {
+      return true;
+    }
+
+    if (e instanceof SocketTimeoutException
+        || e instanceof UnknownHostException
+        || e instanceof ConnectException
+        || e instanceof RetriableIOException) {
+      return true;
+    }
+    String msg = e.getMessage();
+    if (msg == null) {
+      return false;
+    }
+    return (e instanceof IOException && msg.contains("Canceled"))
+        || (e instanceof IOException && msg.contains("unexpected end of stream on null"))
+        || (e instanceof SocketException && msg.contains("Socket closed"))
+        || (isHiPriority && e instanceof InterruptedIOException && msg.contains("timeout"));
   }
 }

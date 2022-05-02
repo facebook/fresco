@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import com.facebook.fresco.buildsrc.Deps
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+dependencies {
+    implementation project(':drawee') // TODO RM; required for FadeDrawable access
+    implementation project(':fbcore')
+    implementation project(':ui-common')
+    implementation project(':vito:core')
+    implementation project(':vito:options')
+    implementation project(':vito:provider')
+    implementation project(':vito:source')
+    implementation project(':vito:view')
+
+    implementation Deps.AndroidX.core
+}
+
+android {
+    buildToolsVersion FrescoConfig.buildToolsVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+apply plugin: "com.vanniktech.maven.publish"

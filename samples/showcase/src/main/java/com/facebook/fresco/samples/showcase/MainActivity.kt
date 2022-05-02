@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import com.facebook.fresco.samples.showcase.permissions.StoragePermissionHelper
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -105,10 +106,30 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    if (item.itemId == R.id.action_settings) {
-      showFragment(ExampleDatabase.settings)
+    when (item.itemId) {
+      R.id.action_next_image -> ShowcaseApplication.imageSelector.selectNext(this)
+      R.id.action_prev_image -> ShowcaseApplication.imageSelector.selectPrevious(this)
+      R.id.action_settings -> showFragment(ExampleDatabase.settings)
+      R.id.action_edit_image -> showImageOptionsEditor()
     }
     return super.onOptionsItemSelected(item)
+  }
+
+  fun showImageOptionsEditor() {
+    supportFragmentManager.let {
+      ImageOptionsBottomSheet.newInstance(ShowcaseApplication.imageSelector, Bundle()).apply {
+        show(it, tag)
+      }
+    }
+  }
+
+  override fun onRequestPermissionsResult(
+      requestCode: Int,
+      permissions: Array<out String>,
+      grantResults: IntArray
+  ) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    StoragePermissionHelper.onRequestPermissionsResult(this, requestCode, permissions, grantResults)
   }
 
   /**
@@ -125,6 +146,7 @@ class MainActivity : AppCompatActivity() {
     fragmentTransaction.commit()
 
     setTitle(title)
+    ShowcaseApplication.imageTracker.reset()
   }
 
   private fun maybeShowUriOverrideReminder() {

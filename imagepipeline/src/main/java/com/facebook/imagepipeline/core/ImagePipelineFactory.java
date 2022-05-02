@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -17,7 +17,6 @@ import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.PooledByteBuffer;
-import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactoryProvider;
@@ -61,7 +60,6 @@ public class ImagePipelineFactory {
   private static final Class<?> TAG = ImagePipelineFactory.class;
 
   private static ImagePipelineFactory sInstance = null;
-  private static boolean sForceSinglePipelineInstance;
   private static ImagePipeline sImagePipeline;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
 
@@ -92,20 +90,7 @@ public class ImagePipelineFactory {
   }
 
   /** Initializes {@link ImagePipelineFactory} with the specified config. */
-  public static synchronized void initialize(
-      ImagePipelineConfig imagePipelineConfig, boolean forceSinglePipelineInstance) {
-    if (sInstance != null) {
-      FLog.w(
-          TAG,
-          "ImagePipelineFactory has already been initialized! `ImagePipelineFactory.initialize(...)` should only be called once to avoid unexpected behavior.");
-    }
-
-    sForceSinglePipelineInstance = forceSinglePipelineInstance;
-    sInstance = new ImagePipelineFactory(imagePipelineConfig);
-  }
-
-  /** Initializes {@link ImagePipelineFactory} with the specified config. */
-  public static synchronized void initialize(ImagePipelineConfig imagePipelineConfig) {
+  public static synchronized void initialize(ImagePipelineConfigInterface imagePipelineConfig) {
     if (sInstance != null) {
       FLog.w(
           TAG,
@@ -129,7 +114,7 @@ public class ImagePipelineFactory {
     }
   }
 
-  private final ImagePipelineConfig mConfig;
+  private final ImagePipelineConfigInterface mConfig;
   private final CloseableReferenceFactory mCloseableReferenceFactory;
   private CountingMemoryCache<CacheKey, CloseableImage> mBitmapCountingMemoryCache;
   @Nullable private InstrumentedMemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
@@ -138,7 +123,6 @@ public class ImagePipelineFactory {
   @Nullable private BufferedDiskCache mMainBufferedDiskCache;
   @Nullable private FileCache mMainFileCache;
   @Nullable private ImageDecoder mImageDecoder;
-  @Nullable private ImagePipeline mImagePipeline;
   @Nullable private ImageTranscoderFactory mImageTranscoderFactory;
   @Nullable private ProducerFactory mProducerFactory;
   @Nullable private ProducerSequenceFactory mProducerSequenceFactory;
@@ -150,7 +134,7 @@ public class ImagePipelineFactory {
 
   @Nullable private AnimatedFactory mAnimatedFactory;
 
-  public ImagePipelineFactory(ImagePipelineConfig config) {
+  public ImagePipelineFactory(ImagePipelineConfigInterface config) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("ImagePipelineConfig()");
     }
@@ -161,8 +145,6 @@ public class ImagePipelineFactory {
                 config.getExecutorSupplier().forLightweightBackgroundTasks())
             : new ThreadHandoffProducerQueueImpl(
                 config.getExecutorSupplier().forLightweightBackgroundTasks());
-    CloseableReference.setDisableCloseableReferencesForBitmaps(
-        config.getExperiments().getBitmapCloseableRefType());
     mCloseableReferenceFactory =
         new CloseableReferenceFactory(config.getCloseableReferenceLeakTracker());
     if (FrescoSystrace.isTracing()) {
@@ -178,14 +160,15 @@ public class ImagePipelineFactory {
               getPlatformBitmapFactory(),
               mConfig.getExecutorSupplier(),
               getBitmapCountingMemoryCache(),
-              mConfig.getExperiments().shouldDownscaleFrameToDrawableDimensions());
+              mConfig.getExperiments().getDownscaleFrameToDrawableDimensions(),
+              mConfig.getExecutorServiceForAnimatedImages());
     }
     return mAnimatedFactory;
   }
 
   @Nullable
   public DrawableFactory getAnimatedDrawableFactory(@Nullable Context context) {
-    AnimatedFactory animatedFactory = getAnimatedFactory();
+    AnimatedFactory animatedFactory = this.getAnimatedFactory();
     return animatedFactory == null ? null : animatedFactory.getAnimatedDrawableFactory(context);
   }
 
@@ -198,6 +181,8 @@ public class ImagePipelineFactory {
                   mConfig.getBitmapMemoryCacheParamsSupplier(),
                   mConfig.getMemoryTrimmableRegistry(),
                   mConfig.getBitmapMemoryCacheTrimStrategy(),
+                  mConfig.getExperiments().getShouldStoreCacheEntrySize(),
+                  mConfig.getExperiments().getShouldIgnoreCacheSizeMismatch(),
                   mConfig.getBitmapMemoryCacheEntryStateObserver());
     }
     return mBitmapCountingMemoryCache;
@@ -217,7 +202,9 @@ public class ImagePipelineFactory {
     if (mEncodedCountingMemoryCache == null) {
       mEncodedCountingMemoryCache =
           EncodedCountingMemoryCacheFactory.get(
-              mConfig.getEncodedMemoryCacheParamsSupplier(), mConfig.getMemoryTrimmableRegistry());
+              mConfig.getEncodedMemoryCacheParamsSupplier(),
+              mConfig.getMemoryTrimmableRegistry(),
+              mConfig.getEncodedMemoryCacheTrimStrategy());
     }
     return mEncodedCountingMemoryCache;
   }
@@ -239,14 +226,14 @@ public class ImagePipelineFactory {
       if (mConfig.getImageDecoder() != null) {
         mImageDecoder = mConfig.getImageDecoder();
       } else {
-        final AnimatedFactory animatedFactory = getAnimatedFactory();
+        final AnimatedFactory animatedFactory = this.getAnimatedFactory();
 
         ImageDecoder gifDecoder = null;
         ImageDecoder webPDecoder = null;
 
         if (animatedFactory != null) {
-          gifDecoder = animatedFactory.getGifDecoder(mConfig.getBitmapConfig());
-          webPDecoder = animatedFactory.getWebPDecoder(mConfig.getBitmapConfig());
+          gifDecoder = animatedFactory.getGifDecoder();
+          webPDecoder = animatedFactory.getWebPDecoder();
         }
 
         if (mConfig.getImageDecoderConfig() == null) {
@@ -291,17 +278,10 @@ public class ImagePipelineFactory {
   }
 
   public ImagePipeline getImagePipeline() {
-    if (sForceSinglePipelineInstance) {
-      if (sImagePipeline == null) {
-        sImagePipeline = createImagePipeline();
-        mImagePipeline = sImagePipeline;
-      }
-      return sImagePipeline;
+    if (sImagePipeline == null) {
+      sImagePipeline = createImagePipeline();
     }
-    if (mImagePipeline == null) {
-      mImagePipeline = createImagePipeline();
-    }
-    return mImagePipeline;
+    return sImagePipeline;
   }
 
   private ImagePipeline createImagePipeline() {
@@ -309,7 +289,7 @@ public class ImagePipelineFactory {
         getProducerSequenceFactory(),
         mConfig.getRequestListeners(),
         mConfig.getRequestListener2s(),
-        mConfig.getIsPrefetchEnabledSupplier(),
+        mConfig.isPrefetchEnabledSupplier(),
         getBitmapMemoryCache(),
         getEncodedMemoryCache(),
         getMainBufferedDiskCache(),
@@ -335,7 +315,9 @@ public class ImagePipelineFactory {
     if (mPlatformDecoder == null) {
       mPlatformDecoder =
           PlatformDecoderFactory.buildPlatformDecoder(
-              mConfig.getPoolFactory(), mConfig.getExperiments().isGingerbreadDecoderEnabled());
+              mConfig.getPoolFactory(),
+              mConfig.getExperiments().isGingerbreadDecoderEnabled(),
+              mConfig.getExperiments().getShouldUseDecodingBufferHelper());
     }
     return mPlatformDecoder;
   }
@@ -368,7 +350,7 @@ public class ImagePipelineFactory {
                   mConfig.getExperiments().getBitmapPrepareToDrawForPrefetch(),
                   mConfig.getExperiments().getMaxBitmapSize(),
                   getCloseableReferenceFactory(),
-                  mConfig.getExperiments().shouldKeepCancelledFetchAsLowPriority(),
+                  mConfig.getExperiments().getKeepCancelledFetchAsLowPriority(),
                   mConfig.getExperiments().getTrackedKeysSize());
     }
     return mProducerFactory;
@@ -396,8 +378,8 @@ public class ImagePipelineFactory {
               getImageTranscoderFactory(),
               mConfig.getExperiments().isEncodedMemoryCacheProbingEnabled(),
               mConfig.getExperiments().isDiskCacheProbingEnabled(),
-              mConfig.getExperiments().shouldUseCombinedNetworkAndCacheProducer(),
-              mConfig.getExperiments().allowDelay());
+              mConfig.getExperiments().getAllowDelay(),
+              mConfig.getCustomProducerSequenceFactories());
     }
     return mProducerSequenceFactory;
   }

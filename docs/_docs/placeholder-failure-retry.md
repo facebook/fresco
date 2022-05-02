@@ -84,6 +84,6 @@ Placeholder, failure and retry images are drawee *branches*. There are others th
 
 ### Example
 
-The Fresco showcase app has a [DraweeHierarchyFragment](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeHierarchyFragment.java) that demonstrates using placeholder, failure and retry images.
+The Fresco showcase app has a [DraweeHierarchyFragment](https://github.com/facebook/fresco/blob/main/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeHierarchyFragment.java) that demonstrates using placeholder, failure and retry images.
 
 ![Showcase app with placeholder, failure and retry images](/static/images/docs/01-placeholder-sample.png)

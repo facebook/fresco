@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-# Copyright (c) Facebook, Inc. and its affiliates.
+#!/usr/bin/env python3
+# Copyright (c) Meta Platforms, Inc. and affiliates.
 #
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
@@ -86,7 +86,7 @@ def parse_args():
 
 
 def start_subprocess(command, **kwargs):
-    """ Starts subprocess after printing command to stdout. """
+    """Starts subprocess after printing command to stdout."""
     return Popen(command.split(), **kwargs)
 
 
@@ -98,18 +98,18 @@ def run_command(command):
 
 
 def gradle(*tasks):
-    """ Runs given gradle tasks """
+    """Runs given gradle tasks"""
     if tasks:
         run_command("./gradlew {}".format(" ".join(tasks)))
 
 
 def adb(command):
-    """ Runs adb command - arguments are given as single string"""
+    """Runs adb command - arguments are given as single string"""
     run_command("adb {}".format(command))
 
 
 def install_apks(abi):
-    """ Installs comparison app and test apks """
+    """Installs comparison app and test apks"""
     print("Installing comparison app...")
     gradle(
         ":samples:comparison:assembleDebug",
@@ -129,7 +129,7 @@ def install_apks(abi):
 
 
 class ComparisonTest:
-    """ Comparison test case """
+    """Comparison test case"""
 
     def __init__(
         self,
@@ -144,7 +144,7 @@ class ComparisonTest:
         self.test_runner = test_runner
 
     def __call__(self):
-        """ Executes test case and captures logcat output """
+        """Executes test case and captures logcat output"""
         adb("logcat -c")
         with tempfile.TemporaryFile() as logcat_file:
             logcat_reader = start_subprocess("adb logcat", stdout=logcat_file)

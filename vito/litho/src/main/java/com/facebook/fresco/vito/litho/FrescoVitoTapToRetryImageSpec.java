@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,9 +11,9 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
-import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.fresco.ui.common.OnFadeListener;
 import com.facebook.fresco.vito.listener.BaseImageListener;
 import com.facebook.fresco.vito.listener.ForwardingImageListener;
 import com.facebook.fresco.vito.listener.ImageListener;
@@ -59,15 +59,18 @@ public class FrescoVitoTapToRetryImageSpec {
       ComponentContext c,
       StateValue<Boolean> isTapToRetry,
       StateValue<Integer> tapCount,
+      StateValue<Boolean> useFallbackImageSource,
       @Prop(optional = true) boolean isInitialTapToLoad) {
     isTapToRetry.set(isInitialTapToLoad);
     tapCount.set(isInitialTapToLoad ? 1 : 0);
+    useFallbackImageSource.set(false);
   }
 
   @OnCreateLayout
   static Component onCreateLayout(
       final ComponentContext c,
       @Prop final ImageSource imageSource,
+      @Prop(optional = true) final @Nullable ImageSource fallbackImageSource,
       @Prop(optional = true) final @Nullable Object callerContext,
       @Prop(optional = true, resType = ResType.FLOAT) final float imageAspectRatio,
       @Prop(optional = true) final @Nullable EventHandler<ClickEvent> imageClickHandler,
@@ -76,12 +79,13 @@ public class FrescoVitoTapToRetryImageSpec {
       @Prop(optional = true) final @Nullable ImageListener imageListener,
       @Prop(optional = true) final @Nullable ImageOptions imageOptions,
       @Prop(optional = true) final int maxTapCount,
-      @Prop(optional = true) final FadeDrawable.OnFadeListener onFadeListener,
+      @Prop(optional = true) final OnFadeListener onFadeListener,
       @Prop(optional = true) final @Nullable FrescoVitoImage2Spec.Prefetch prefetch,
       @Prop(optional = true) final @Nullable RequestListener prefetchRequestListener,
       @Prop(resType = ResType.DRAWABLE, optional = true) final @Nullable Drawable retryImage,
       @Prop(optional = true) final @Nullable ScalingUtils.ScaleType retryImageScaleType,
       @State final boolean isTapToRetry,
+      @State final boolean useFallbackImageSource,
       @State final int tapCount) {
     if (isTapToRetry) {
       Drawable scaledRetryDrawable =
@@ -104,12 +108,15 @@ public class FrescoVitoTapToRetryImageSpec {
             }
           }
         };
+
+    boolean useFallback = fallbackImageSource != null && useFallbackImageSource;
+
     return FrescoVitoImage2.create(c)
         .callerContext(callerContext)
         .imageAspectRatio(imageAspectRatio)
         .imageListener(ForwardingImageListener.create(internalListener, imageListener))
         .imageOptions(imageOptions)
-        .imageSource(imageSource)
+        .imageSource(useFallback ? fallbackImageSource : imageSource)
         .onFadeListener(onFadeListener)
         .prefetch(prefetch)
         .clickHandler(imageClickHandler)
@@ -120,16 +127,21 @@ public class FrescoVitoTapToRetryImageSpec {
   }
 
   @OnPopulateAccessibilityNode
-  static void onPopulateAccessibilityNode(View host, AccessibilityNodeInfoCompat node) {
+  static void onPopulateAccessibilityNode(
+      ComponentContext c, View host, AccessibilityNodeInfoCompat node) {
     node.setClassName(AccessibilityRole.IMAGE);
   }
 
   @OnUpdateState
-  static void onImageFailure(StateValue<Boolean> isTapToRetry, StateValue<Integer> tapCount) {
+  static void onImageFailure(
+      StateValue<Boolean> isTapToRetry,
+      StateValue<Integer> tapCount,
+      StateValue<Boolean> useFallbackImageSource) {
     Integer oldTapCount = tapCount.get();
     int newTapCount = oldTapCount == null ? 1 : oldTapCount + 1;
     tapCount.set(newTapCount);
     isTapToRetry.set(true);
+    useFallbackImageSource.set(true);
   }
 
   @OnUpdateState

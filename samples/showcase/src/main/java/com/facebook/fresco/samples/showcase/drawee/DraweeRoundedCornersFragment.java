@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -19,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
-import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.facebook.common.internal.Preconditions;
@@ -32,17 +31,11 @@ import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.common.SimpleScaleTypeAdapter;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider.ImageSize;
-import java.util.Arrays;
-import java.util.List;
 
 /** A {@link Fragment} that illustrates using rounded corners with Fresco. */
 public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
-  private static final List<ScaleType> BITMAP_ONLY_SCALETYPES =
-      Arrays.asList(ScaleType.CENTER_CROP, ScaleType.FOCUS_CROP, ScaleType.FIT_XY);
 
-  private ScaleType mPreviousScaleType = ScaleType.CENTER;
-
-  private int mWindowBackgroundColor;
+  private int mCornerBackgroundColor;
   private int mColorPrimary;
 
   private SimpleDraweeView mDraweeRound;
@@ -53,6 +46,8 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
 
   private CheckBox mShowBordersCheck;
   private CheckBox mScaleInsideBordersCheck;
+  private CheckBox mColorOverlayCheck;
+  private CheckBox mFixRepeatedEdgesCheck;
 
   public DraweeRoundedCornersFragment() {
     // Required empty public constructor
@@ -78,7 +73,7 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
     mDraweeSomeRtl.setImageURI(imageUriProvider.createSampleUri(ImageSize.L));
     mDraweeFancy.setImageURI(imageUriProvider.createSampleUri(ImageSize.L));
 
-    final Spinner scaleType = (Spinner) view.findViewById(R.id.scaleType);
+    final Spinner scaleType = view.findViewById(R.id.scaleType);
     final SimpleScaleTypeAdapter scaleTypeAdapter = SimpleScaleTypeAdapter.createForAllScaleTypes();
     scaleType.setAdapter(scaleTypeAdapter);
     scaleType.setOnItemSelectedListener(
@@ -94,23 +89,6 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
             changeDraweeViewScaleType(mDraweeSome, scaleType, spinnerEntry.focusPoint);
             changeDraweeViewScaleType(mDraweeSomeRtl, scaleType, spinnerEntry.focusPoint);
             changeDraweeViewScaleType(mDraweeFancy, scaleType, spinnerEntry.focusPoint);
-
-            if (BITMAP_ONLY_SCALETYPES.contains(scaleType)
-                && !BITMAP_ONLY_SCALETYPES.contains(mPreviousScaleType)) {
-              Toast.makeText(
-                      getContext(),
-                      R.string.drawee_rounded_corners_bitmap_only_toast,
-                      Toast.LENGTH_SHORT)
-                  .show();
-            } else if (!BITMAP_ONLY_SCALETYPES.contains(scaleType)
-                && BITMAP_ONLY_SCALETYPES.contains(mPreviousScaleType)) {
-              Toast.makeText(
-                      getContext(),
-                      R.string.drawee_rounded_corners_overlay_color_toast,
-                      Toast.LENGTH_SHORT)
-                  .show();
-            }
-            mPreviousScaleType = scaleType;
           }
 
           @Override
@@ -134,6 +112,23 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
             updateRounding();
           }
         });
+    mColorOverlayCheck = view.findViewById(R.id.color_overlay);
+    mColorOverlayCheck.setOnCheckedChangeListener(
+        new CompoundButton.OnCheckedChangeListener() {
+          @Override
+          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            updateRounding();
+          }
+        });
+
+    mFixRepeatedEdgesCheck = view.findViewById(R.id.fix_repeated_edges);
+    mFixRepeatedEdgesCheck.setOnCheckedChangeListener(
+        new CompoundButton.OnCheckedChangeListener() {
+          @Override
+          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            updateRounding();
+          }
+        });
 
     final Resources res = getResources();
     final RoundingParams fancyRoundingParams =
@@ -146,11 +141,11 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
   }
 
   private void findDrawees(View view) {
-    mDraweeRound = (SimpleDraweeView) view.findViewById(R.id.drawee_round);
-    mDraweeRadius = (SimpleDraweeView) view.findViewById(R.id.drawee_radius);
-    mDraweeSome = (SimpleDraweeView) view.findViewById(R.id.drawee_some);
-    mDraweeSomeRtl = (SimpleDraweeView) view.findViewById(R.id.drawee_some_rtl);
-    mDraweeFancy = (SimpleDraweeView) view.findViewById(R.id.drawee_fancy);
+    mDraweeRound = view.findViewById(R.id.drawee_round);
+    mDraweeRadius = view.findViewById(R.id.drawee_radius);
+    mDraweeSome = view.findViewById(R.id.drawee_some);
+    mDraweeSomeRtl = view.findViewById(R.id.drawee_some_rtl);
+    mDraweeFancy = view.findViewById(R.id.drawee_fancy);
   }
 
   @SuppressWarnings("ResourceType")
@@ -162,7 +157,7 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
                 R.style.AppTheme, new int[] {R.attr.colorPrimary, android.R.attr.windowBackground});
     try {
       mColorPrimary = attrs.getColor(0, Color.BLACK);
-      mWindowBackgroundColor = attrs.getColor(1, Color.BLUE);
+      mCornerBackgroundColor = Color.BLUE;
     } finally {
       attrs.recycle();
     }
@@ -175,11 +170,7 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
     hierarchy.setActualImageFocusPoint(focusPoint != null ? focusPoint : new PointF(0.5f, 0.5f));
 
     final RoundingParams roundingParams = Preconditions.checkNotNull(hierarchy.getRoundingParams());
-    if (BITMAP_ONLY_SCALETYPES.contains(scaleType)) {
-      roundingParams.setRoundingMethod(RoundingParams.RoundingMethod.BITMAP_ONLY);
-    } else {
-      roundingParams.setOverlayColor(mWindowBackgroundColor);
-    }
+
     hierarchy.setRoundingParams(roundingParams);
   }
 
@@ -204,6 +195,12 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
     } else {
       roundingParams.setBorder(Color.TRANSPARENT, 0);
     }
+    if (mColorOverlayCheck.isChecked()) {
+      roundingParams.setOverlayColor(mCornerBackgroundColor);
+    } else {
+      roundingParams.setRoundingMethod(RoundingParams.RoundingMethod.BITMAP_ONLY);
+    }
+    roundingParams.setRepeatEdgePixels(!mFixRepeatedEdgesCheck.isChecked());
     draweeView.getHierarchy().setRoundingParams(roundingParams);
   }
 }

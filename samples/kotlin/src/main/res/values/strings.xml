@@ -1,4 +1,0 @@
-<resources>
-  <string name="app_name" translatable="false">Fresco Kotlin Demo</string>
-  <string name="permission_denied_toast" translatable="false">This sample app needs storage permissions to load images</string>
-</resources>

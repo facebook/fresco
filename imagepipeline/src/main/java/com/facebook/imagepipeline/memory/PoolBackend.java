@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.memory;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -14,6 +15,7 @@ import javax.annotation.Nullable;
  *
  * @param <T> type of pooled objects
  */
+@Nullsafe(Nullsafe.Mode.STRICT)
 interface PoolBackend<T> {
   /** @return available object from the pool or null */
   @Nullable

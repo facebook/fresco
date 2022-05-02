@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -18,7 +18,9 @@ import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_QUALIF
 
 import android.content.ContentResolver;
 import android.net.Uri;
+import android.os.Build;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.media.MediaUtils;
@@ -30,9 +32,9 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheGetProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheKeyMultiplexProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheProducer;
+import com.facebook.imagepipeline.producers.CustomProducerSequenceFactory;
 import com.facebook.imagepipeline.producers.DecodeProducer;
 import com.facebook.imagepipeline.producers.DiskCacheReadProducer;
-import com.facebook.imagepipeline.producers.EncodedMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.EncodedProbeProducer;
 import com.facebook.imagepipeline.producers.LocalAssetFetchProducer;
 import com.facebook.imagepipeline.producers.LocalContentUriFetchProducer;
@@ -55,6 +57,7 @@ import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class ProducerSequenceFactory {
@@ -72,8 +75,8 @@ public class ProducerSequenceFactory {
   private final ImageTranscoderFactory mImageTranscoderFactory;
   private final boolean mIsEncodedMemoryCacheProbingEnabled;
   private final boolean mIsDiskCacheProbingEnabled;
-  private final boolean mUseCombinedNetworkAndCacheProducer;
   private final boolean mAllowDelay;
+  @Nullable private final Set<CustomProducerSequenceFactory> mCustomProducerSequenceFactories;
 
   // Saved sequences
   @VisibleForTesting @Nullable Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
@@ -97,7 +100,9 @@ public class ProducerSequenceFactory {
   Producer<CloseableReference<PooledByteBuffer>> mNetworkEncodedImageProducerSequence;
 
   @VisibleForTesting @Nullable Producer<Void> mLocalFileFetchToEncodedMemoryPrefetchSequence;
+
   @VisibleForTesting @Nullable Producer<Void> mNetworkFetchToEncodedMemoryPrefetchSequence;
+
   private @Nullable Producer<EncodedImage> mCommonNetworkFetchToEncodedMemorySequence;
 
   @VisibleForTesting @Nullable
@@ -116,6 +121,9 @@ public class ProducerSequenceFactory {
   Producer<CloseableReference<CloseableImage>> mLocalAssetFetchSequence;
 
   @VisibleForTesting @Nullable Producer<CloseableReference<CloseableImage>> mDataFetchSequence;
+
+  @VisibleForTesting @Nullable
+  Producer<CloseableReference<CloseableImage>> mLocalThumbnailBitmapFetchSequence;
 
   @VisibleForTesting @Nullable
   Producer<CloseableReference<CloseableImage>> mQualifiedResourceFetchSequence;
@@ -146,14 +154,13 @@ public class ProducerSequenceFactory {
       ImageTranscoderFactory imageTranscoderFactory,
       boolean isEncodedMemoryCacheProbingEnabled,
       boolean isDiskCacheProbingEnabled,
-      boolean useCombinedNetworkAndCacheProducer,
-      boolean allowDelay) {
+      boolean allowDelay,
+      @Nullable Set<CustomProducerSequenceFactory> customProducerSequenceFactories) {
     mContentResolver = contentResolver;
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
     mWebpSupportEnabled = webpSupportEnabled;
-    mUseCombinedNetworkAndCacheProducer = useCombinedNetworkAndCacheProducer;
     mPostprocessorSequences = new HashMap<>();
     mCloseableImagePrefetchSequences = new HashMap<>();
     mBitmapPrepareSequences = new HashMap<>();
@@ -166,6 +173,7 @@ public class ProducerSequenceFactory {
     mIsEncodedMemoryCacheProbingEnabled = isEncodedMemoryCacheProbingEnabled;
     mIsDiskCacheProbingEnabled = isDiskCacheProbingEnabled;
     mAllowDelay = allowDelay;
+    mCustomProducerSequenceFactories = customProducerSequenceFactories;
   }
 
   /**
@@ -389,7 +397,10 @@ public class ProducerSequenceFactory {
         case SOURCE_TYPE_LOCAL_IMAGE_FILE:
           return getLocalImageFileFetchSequence();
         case SOURCE_TYPE_LOCAL_CONTENT:
-          if (MediaUtils.isVideo(mContentResolver.getType(uri))) {
+          if (imageRequest.getLoadThumbnailOnly()
+              && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return getLocalContentUriThumbnailFetchSequence();
+          } else if (MediaUtils.isVideo(mContentResolver.getType(uri))) {
             return getLocalVideoFileFetchSequence();
           }
           return getLocalContentUriFetchSequence();
@@ -402,6 +413,17 @@ public class ProducerSequenceFactory {
         case SOURCE_TYPE_DATA:
           return getDataFetchSequence();
         default:
+          if (mCustomProducerSequenceFactories != null) {
+            for (CustomProducerSequenceFactory customProducerSequenceFactory :
+                mCustomProducerSequenceFactories) {
+              Producer<CloseableReference<CloseableImage>> sequence =
+                  customProducerSequenceFactory.getCustomDecodedImageSequence(imageRequest, this);
+              if (sequence != null) {
+                return sequence;
+              }
+            }
+          }
+
           throw new IllegalArgumentException(
               "Unsupported uri scheme! Uri is: " + getShortenedUriString(uri));
       }
@@ -502,32 +524,37 @@ public class ProducerSequenceFactory {
           "ProducerSequenceFactory#getCommonNetworkFetchToEncodedMemorySequence");
     }
     if (mCommonNetworkFetchToEncodedMemorySequence == null) {
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.beginSection(
-            "ProducerSequenceFactory#getCommonNetworkFetchToEncodedMemorySequence:init");
-      }
-      Producer<EncodedImage> inputProducer =
-          Preconditions.checkNotNull(
-              mUseCombinedNetworkAndCacheProducer
-                  ? mProducerFactory.newCombinedNetworkAndCacheProducer(mNetworkFetcher)
-                  : newEncodedCacheMultiplexToTranscodeSequence(
-                      mProducerFactory.newNetworkFetchProducer(mNetworkFetcher)));
       mCommonNetworkFetchToEncodedMemorySequence =
-          ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
-
-      mCommonNetworkFetchToEncodedMemorySequence =
-          mProducerFactory.newResizeAndRotateProducer(
-              mCommonNetworkFetchToEncodedMemorySequence,
-              mResizeAndRotateEnabledForNetwork && !mDownsampleEnabled,
-              mImageTranscoderFactory);
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.endSection();
-      }
+          newCommonNetworkFetchToEncodedMemorySequence(mNetworkFetcher);
     }
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.endSection();
     }
     return mCommonNetworkFetchToEncodedMemorySequence;
+  }
+
+  public synchronized Producer<EncodedImage> newCommonNetworkFetchToEncodedMemorySequence(
+      NetworkFetcher networkFetcher) {
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection(
+          "ProducerSequenceFactory#createCommonNetworkFetchToEncodedMemorySequence");
+    }
+    Producer<EncodedImage> inputProducer =
+        Preconditions.checkNotNull(
+            newEncodedCacheMultiplexToTranscodeSequence(
+                mProducerFactory.newNetworkFetchProducer(networkFetcher)));
+    Producer<EncodedImage> networkFetchToEncodedMemorySequence =
+        ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
+
+    networkFetchToEncodedMemorySequence =
+        mProducerFactory.newResizeAndRotateProducer(
+            networkFetchToEncodedMemorySequence,
+            mResizeAndRotateEnabledForNetwork && !mDownsampleEnabled,
+            mImageTranscoderFactory);
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
+    return networkFetchToEncodedMemorySequence;
   }
 
   /**
@@ -676,6 +703,21 @@ public class ProducerSequenceFactory {
   }
 
   /**
+   * bitmap cache get -> background thread hand-off -> multiplex -> bitmap cache -> local thumbnail
+   * bitmap
+   */
+  @RequiresApi(Build.VERSION_CODES.Q)
+  private synchronized Producer<CloseableReference<CloseableImage>>
+      getLocalContentUriThumbnailFetchSequence() {
+    if (mLocalThumbnailBitmapFetchSequence == null) {
+      mLocalThumbnailBitmapFetchSequence =
+          newBitmapCacheGetToBitmapCacheSequence(
+              mProducerFactory.newLocalThumbnailBitmapProducer());
+    }
+    return mLocalThumbnailBitmapFetchSequence;
+  }
+
+  /**
    * bitmap cache get -> background thread hand-off -> multiplex -> bitmap cache -> decode -> branch
    * on separate images -> exif resize and rotate -> exif thumbnail creation -> local image resize
    * and rotate -> add meta data producer -> multiplex -> encoded cache -> (webp transcode) ->
@@ -778,7 +820,7 @@ public class ProducerSequenceFactory {
    * @param inputProducer producer providing the input to the decode
    * @return bitmap cache get to decode sequence
    */
-  private Producer<CloseableReference<CloseableImage>> newBitmapCacheGetToDecodeSequence(
+  public Producer<CloseableReference<CloseableImage>> newBitmapCacheGetToDecodeSequence(
       Producer<EncodedImage> inputProducer) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("ProducerSequenceFactory#newBitmapCacheGetToDecodeSequence");
@@ -807,7 +849,7 @@ public class ProducerSequenceFactory {
     if (mDiskCacheEnabled) {
       inputProducer = newDiskCacheSequence(inputProducer);
     }
-    EncodedMemoryCacheProducer encodedMemoryCacheProducer =
+    Producer<EncodedImage> encodedMemoryCacheProducer =
         mProducerFactory.newEncodedMemoryCacheProducer(inputProducer);
     if (mIsDiskCacheProbingEnabled) {
       EncodedProbeProducer probeProducer =

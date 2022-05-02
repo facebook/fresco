@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -17,11 +17,15 @@ import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /** Memory cache producer for the encoded memory cache. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
 
   public static final String PRODUCER_NAME = "EncodedMemoryCacheProducer";
+
   public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
 
   private final MemoryCache<CacheKey, PooledByteBuffer> mMemoryCache;
@@ -49,8 +53,12 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
       final ImageRequest imageRequest = producerContext.getImageRequest();
       final CacheKey cacheKey =
           mCacheKeyFactory.getEncodedCacheKey(imageRequest, producerContext.getCallerContext());
-
-      CloseableReference<PooledByteBuffer> cachedReference = mMemoryCache.get(cacheKey);
+      final boolean isEncodedCacheEnabledForRead =
+          producerContext
+              .getImageRequest()
+              .isCacheEnabled(ImageRequest.CachesLocationsMasks.ENCODED_READ);
+      CloseableReference<PooledByteBuffer> cachedReference =
+          isEncodedCacheEnabledForRead ? mMemoryCache.get(cacheKey) : null;
       try {
         if (cachedReference != null) {
           EncodedImage cachedEncodedImage = new EncodedImage(cachedReference);
@@ -85,14 +93,14 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
           return;
         }
 
-        final boolean isMemoryCacheEnabled =
-            producerContext.getImageRequest().isMemoryCacheEnabled();
         Consumer consumerOfInputProducer =
             new EncodedMemoryCacheConsumer(
                 consumer,
                 mMemoryCache,
                 cacheKey,
-                isMemoryCacheEnabled,
+                producerContext
+                    .getImageRequest()
+                    .isCacheEnabled(ImageRequest.CachesLocationsMasks.ENCODED_WRITE),
                 producerContext.getImagePipelineConfig().getExperiments().isEncodedCacheEnabled());
 
         listener.onProducerFinishWithSuccess(
@@ -117,24 +125,24 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
 
     private final MemoryCache<CacheKey, PooledByteBuffer> mMemoryCache;
     private final CacheKey mRequestedCacheKey;
-    private final boolean mIsMemoryCacheEnabled;
+    private final boolean mIsEncodedCacheEnabledForWrite;
     private final boolean mEncodedCacheEnabled;
 
     public EncodedMemoryCacheConsumer(
         Consumer<EncodedImage> consumer,
         MemoryCache<CacheKey, PooledByteBuffer> memoryCache,
         CacheKey requestedCacheKey,
-        boolean isMemoryCacheEnabled,
+        boolean isEncodedCacheEnabledForWrite,
         boolean encodedCacheEnabled) {
       super(consumer);
       mMemoryCache = memoryCache;
       mRequestedCacheKey = requestedCacheKey;
-      mIsMemoryCacheEnabled = isMemoryCacheEnabled;
+      mIsEncodedCacheEnabledForWrite = isEncodedCacheEnabledForWrite;
       mEncodedCacheEnabled = encodedCacheEnabled;
     }
 
     @Override
-    public void onNewResultImpl(EncodedImage newResult, @Status int status) {
+    public void onNewResultImpl(@Nullable EncodedImage newResult, @Status int status) {
       try {
         if (FrescoSystrace.isTracing()) {
           FrescoSystrace.beginSection("EncodedMemoryCacheProducer#onNewResultImpl");
@@ -154,7 +162,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
         if (ref != null) {
           CloseableReference<PooledByteBuffer> cachedResult = null;
           try {
-            if (mEncodedCacheEnabled && mIsMemoryCacheEnabled) {
+            if (mEncodedCacheEnabled && mIsEncodedCacheEnabledForWrite) {
               cachedResult = mMemoryCache.cache(mRequestedCacheKey, ref);
             }
           } finally {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -82,10 +82,6 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
 
   private static @CloseableRefType int sBitmapCloseableRefType = REF_TYPE_DEFAULT;
 
-  public static boolean useGc() {
-    return sBitmapCloseableRefType == REF_TYPE_NOOP;
-  }
-
   public static void setDisableCloseableReferencesForBitmaps(
       @CloseableRefType int bitmapCloseableRefType) {
     sBitmapCloseableRefType = bitmapCloseableRefType;
@@ -151,8 +147,9 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
       T t,
       ResourceReleaser<T> resourceReleaser,
       LeakHandler leakHandler,
-      @Nullable Throwable stacktrace) {
-    mSharedReference = new SharedReference<T>(t, resourceReleaser);
+      @Nullable Throwable stacktrace,
+      boolean keepAlive) {
+    mSharedReference = new SharedReference<T>(t, resourceReleaser, keepAlive);
     mLeakHandler = leakHandler;
     mStacktrace = stacktrace;
   }
@@ -182,7 +179,7 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
    * <p>Returns null if the parameter is null.
    */
   public static <T extends Closeable> CloseableReference<T> of(
-      @PropagatesNullable T t, LeakHandler leakHandler) {
+      @PropagatesNullable @Nullable T t, LeakHandler leakHandler) {
     if (t == null) {
       return null;
     } else {
@@ -367,25 +364,6 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
       for (CloseableReference<?> ref : references) {
         closeSafely(ref);
       }
-    }
-  }
-
-  @Override
-  protected void finalize() throws Throwable {
-    try {
-      // We put synchronized here so that lint doesn't warn about accessing mIsClosed, which is
-      // guarded by this. Lint isn't aware of finalize semantics.
-      synchronized (this) {
-        if (mIsClosed) {
-          return;
-        }
-      }
-
-      mLeakHandler.reportLeak((SharedReference<Object>) mSharedReference, mStacktrace);
-
-      close();
-    } finally {
-      super.finalize();
     }
   }
 }

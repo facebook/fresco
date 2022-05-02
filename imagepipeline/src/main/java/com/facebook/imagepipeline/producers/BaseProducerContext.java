@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,7 +9,7 @@ package com.facebook.imagepipeline.producers;
 
 import com.facebook.common.internal.ImmutableSet;
 import com.facebook.imagepipeline.common.Priority;
-import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.core.ImagePipelineConfigInterface;
 import com.facebook.imagepipeline.image.EncodedImageOrigin;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
@@ -55,7 +55,7 @@ public class BaseProducerContext implements ProducerContext {
   @GuardedBy("this")
   private final List<ProducerContextCallbacks> mCallbacks;
 
-  private final ImagePipelineConfig mImagePipelineConfig;
+  private final ImagePipelineConfigInterface mImagePipelineConfig;
 
   private EncodedImageOrigin mEncodedImageOrigin = EncodedImageOrigin.NOT_SET;
 
@@ -68,7 +68,7 @@ public class BaseProducerContext implements ProducerContext {
       boolean isPrefetch,
       boolean isIntermediateResultExpected,
       Priority priority,
-      ImagePipelineConfig imagePipelineConfig) {
+      ImagePipelineConfigInterface imagePipelineConfig) {
     this(
         imageRequest,
         id,
@@ -92,7 +92,7 @@ public class BaseProducerContext implements ProducerContext {
       boolean isPrefetch,
       boolean isIntermediateResultExpected,
       Priority priority,
-      ImagePipelineConfig imagePipelineConfig) {
+      ImagePipelineConfigInterface imagePipelineConfig) {
     mImageRequest = imageRequest;
     mId = id;
 
@@ -180,7 +180,7 @@ public class BaseProducerContext implements ProducerContext {
   }
 
   @Override
-  public ImagePipelineConfig getImagePipelineConfig() {
+  public ImagePipelineConfigInterface getImagePipelineConfig() {
     return mImagePipelineConfig;
   }
 
@@ -190,7 +190,7 @@ public class BaseProducerContext implements ProducerContext {
   }
 
   public void setEncodedImageOrigin(EncodedImageOrigin encodedImageOrigin) {
-    mEncodedImageOrigin = encodedImageOrigin;
+    this.mEncodedImageOrigin = encodedImageOrigin;
   }
 
   /** Cancels the request processing and calls appropriate callbacks. */
@@ -212,7 +212,7 @@ public class BaseProducerContext implements ProducerContext {
     if (isPrefetch == mIsPrefetch) {
       return null;
     }
-    mIsPrefetch = isPrefetch;
+    this.mIsPrefetch = isPrefetch;
     return new ArrayList<>(mCallbacks);
   }
 
@@ -230,7 +230,7 @@ public class BaseProducerContext implements ProducerContext {
     if (priority == mPriority) {
       return null;
     }
-    mPriority = priority;
+    this.mPriority = priority;
     return new ArrayList<>(mCallbacks);
   }
 
@@ -249,7 +249,7 @@ public class BaseProducerContext implements ProducerContext {
     if (isIntermediateResultExpected == mIsIntermediateResultExpected) {
       return null;
     }
-    mIsIntermediateResultExpected = isIntermediateResultExpected;
+    this.mIsIntermediateResultExpected = isIntermediateResultExpected;
     return new ArrayList<>(mCallbacks);
   }
 

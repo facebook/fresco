@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -15,7 +15,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
-import android.os.Build;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.drawable.DrawableParent;
@@ -292,7 +291,10 @@ public class WrappingUtils {
       final BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
       RoundedBitmapDrawable roundedBitmapDrawable =
           new RoundedBitmapDrawable(
-              resources, bitmapDrawable.getBitmap(), bitmapDrawable.getPaint());
+              resources,
+              bitmapDrawable.getBitmap(),
+              bitmapDrawable.getPaint(),
+              roundingParams.getRepeatEdgePixels());
       applyRoundingParams(roundedBitmapDrawable, roundingParams);
       return roundedBitmapDrawable;
     } else if (drawable instanceof NinePatchDrawable) {
@@ -301,8 +303,7 @@ public class WrappingUtils {
           new RoundedNinePatchDrawable(ninePatchDrawableDrawable);
       applyRoundingParams(roundedNinePatchDrawable, roundingParams);
       return roundedNinePatchDrawable;
-    } else if (drawable instanceof ColorDrawable
-        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+    } else if (drawable instanceof ColorDrawable) {
       RoundedColorDrawable roundedColorDrawable =
           RoundedColorDrawable.fromColorDrawable((ColorDrawable) drawable);
       applyRoundingParams(roundedColorDrawable, roundingParams);
@@ -321,6 +322,7 @@ public class WrappingUtils {
     rounded.setPadding(roundingParams.getPadding());
     rounded.setScaleDownInsideBorders(roundingParams.getScaleDownInsideBorders());
     rounded.setPaintFilterBitmap(roundingParams.getPaintFilterBitmap());
+    rounded.setRepeatEdgePixels(roundingParams.getRepeatEdgePixels());
   }
 
   /** Resets the rounding params on the specified rounded drawable, so that no rounding occurs. */
@@ -331,6 +333,7 @@ public class WrappingUtils {
     rounded.setPadding(0);
     rounded.setScaleDownInsideBorders(false);
     rounded.setPaintFilterBitmap(false);
+    rounded.setRepeatEdgePixels(RoundedBitmapDrawable.getDefaultRepeatEdgePixels());
   }
 
   /** Finds the immediate parent of a leaf drawable. */

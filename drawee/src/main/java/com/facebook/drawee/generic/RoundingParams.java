@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -52,6 +52,7 @@ public class RoundingParams {
   private float mPadding = 0;
   private boolean mScaleDownInsideBorders = false;
   private boolean mPaintFilterBitmap = false;
+  private boolean mRepeatEdgePixels = false;
 
   /**
    * Sets whether to round as circle.
@@ -67,6 +68,20 @@ public class RoundingParams {
   /** Gets whether to round as circle */
   public boolean getRoundAsCircle() {
     return mRoundAsCircle;
+  }
+
+  /**
+   * Specify if the edge pixels of the image should be repeated if the image is smaller than the
+   * rounded image. For example, this can be useful if you have a smaller image icon wht a solid
+   * background color that should fill the entire rounded image viewport.
+   */
+  public RoundingParams setRepeatEdgePixels(boolean repeatEdgePixels) {
+    mRepeatEdgePixels = repeatEdgePixels;
+    return this;
+  }
+
+  public boolean getRepeatEdgePixels() {
+    return mRepeatEdgePixels;
   }
 
   /**

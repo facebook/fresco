@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -14,8 +14,10 @@ import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSubscriber;
 import com.facebook.imagepipeline.image.CloseableBitmap;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
 
 /**
  * Implementation of {@link DataSubscriber} for cases where the client wants to access a list of
@@ -38,6 +40,7 @@ import java.util.List;
  *     }
  * </code>
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class BaseListBitmapDataSubscriber
     extends BaseDataSubscriber<List<CloseableReference<CloseableImage>>> {
 
@@ -77,5 +80,5 @@ public abstract class BaseListBitmapDataSubscriber
    *
    * @param bitmapList
    */
-  protected abstract void onNewResultListImpl(List<Bitmap> bitmapList);
+  protected abstract void onNewResultListImpl(@Nullable List<Bitmap> bitmapList);
 }

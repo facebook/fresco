@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -51,7 +51,7 @@ class DebugImageListener(val log: (String) -> Unit = { Log.d("DebugImageListener
     log("onRelease: id=$id")
   }
 
-  override fun onImageDrawn(id: String?, imageInfo: ImageInfo?, dimensionsInfo: DimensionsInfo?) {
+  override fun onImageDrawn(id: String, imageInfo: ImageInfo, dimensionsInfo: DimensionsInfo) {
     log("onImageDrawn: id=$id, imageInfo=$imageInfo, dimensionsInfo=$dimensionsInfo")
   }
 }

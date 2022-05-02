@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -72,6 +72,10 @@ public class BitmapMemoryCacheGetProducerTest {
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
     when(mProducerContext.getCallerContext()).thenReturn(PRODUCER_NAME);
     when(mCacheKeyFactory.getBitmapCacheKey(mImageRequest, PRODUCER_NAME)).thenReturn(mCacheKey);
+    when(mImageRequest.isCacheEnabled(ImageRequest.CachesLocationsMasks.BITMAP_READ))
+        .thenReturn(true);
+    when(mImageRequest.isCacheEnabled(ImageRequest.CachesLocationsMasks.BITMAP_WRITE))
+        .thenReturn(true);
   }
 
   @Test

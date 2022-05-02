@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -176,9 +176,7 @@ public abstract class DalvikPurgeableDecoder implements PlatformDecoder {
     options.inInputShareable = true;
     // Sample size should ONLY be different than 1 when downsampling is enabled in the pipeline
     options.inSampleSize = sampleSize;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      options.inMutable = true; // no known perf difference; allows postprocessing to work
-    }
+    options.inMutable = true; // no known perf difference; allows postprocessing to work
     return options;
   }
 

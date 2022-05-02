@@ -1,15 +1,16 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
 import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.GradleDeps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
+apply plugin: 'kotlin-android'
 
 dependencies {
     compileOnly Deps.AndroidX.androidxAnnotation
@@ -25,6 +26,8 @@ dependencies {
     implementation Deps.Bolts.tasks
     implementation project(':fbcore')
 
+    implementation GradleDeps.Kotlin.stdlib
+
     testImplementation Deps.AndroidX.legacySupportCoreUtils
     testImplementation Deps.jsr305
     testImplementation project(':imagepipeline-test')
@@ -33,6 +36,7 @@ dependencies {
     testImplementation TestDeps.junit
     testImplementation TestDeps.festAssertCore
     testImplementation TestDeps.mockitoCore
+    testImplementation TestDeps.mockitoInline
     testImplementation(TestDeps.Powermock.apiMockito) {
         exclude group: 'org.mockito', module: 'mockito-all'
     }
@@ -45,7 +49,6 @@ dependencies {
     }
     testImplementation TestDeps.truth
 }
-apply from: rootProject.file('release.gradle')
 
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
@@ -66,8 +69,7 @@ android {
     }
 }
 
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
+apply plugin: "com.vanniktech.maven.publish"
+repositories {
+    mavenCentral()
 }
-artifacts.add('archives', sourcesJar)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -19,6 +19,7 @@ public class DefaultFlexByteArrayPoolParams {
   // the min buffer size we'll use
   private static final int DEFAULT_MIN_BYTE_ARRAY_SIZE = 128 * ByteConstants.KB;
   // the maximum number of threads permitted to touch this pool
+
   public static final int DEFAULT_MAX_NUM_THREADS = Runtime.getRuntime().availableProcessors();
 
   private DefaultFlexByteArrayPoolParams() {}

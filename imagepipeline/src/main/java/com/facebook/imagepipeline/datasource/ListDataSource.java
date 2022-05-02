@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -13,6 +13,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.AbstractDataSource;
 import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSubscriber;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CancellationException;
@@ -28,6 +29,7 @@ import javax.annotation.concurrent.GuardedBy;
  *
  * @param <T>
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ListDataSource<T> extends AbstractDataSource<List<CloseableReference<T>>> {
   private final DataSource<CloseableReference<T>>[] mDataSources;
 
@@ -92,7 +94,8 @@ public class ListDataSource<T> extends AbstractDataSource<List<CloseableReferenc
   }
 
   private void onDataSourceFailed(DataSource<CloseableReference<T>> dataSource) {
-    setFailure(dataSource.getFailureCause());
+    final Throwable failureCause = dataSource.getFailureCause();
+    setFailure(failureCause != null ? failureCause : new Throwable("Unknown failure cause"));
   }
 
   private void onDataSourceCancelled() {
@@ -108,6 +111,7 @@ public class ListDataSource<T> extends AbstractDataSource<List<CloseableReferenc
   }
 
   private class InternalDataSubscriber implements DataSubscriber<CloseableReference<T>> {
+
     @GuardedBy("InternalDataSubscriber.this")
     boolean mFinished = false;
 

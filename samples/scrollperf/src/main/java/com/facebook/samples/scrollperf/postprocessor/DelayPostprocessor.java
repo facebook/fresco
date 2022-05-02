@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,9 +9,11 @@ package com.facebook.samples.scrollperf.postprocessor;
 
 import android.graphics.Bitmap;
 import com.facebook.imagepipeline.request.BasePostprocessor;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.util.TimeWaster;
 
 /** This is a Postprocessor which just introduce a delay */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public final class DelayPostprocessor extends BasePostprocessor {
 
   private static DelayPostprocessor sSlowPostprocessor;

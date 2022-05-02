@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,7 +10,9 @@ package com.facebook.imagepipeline.producers;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 import androidx.annotation.IntDef;
+import com.facebook.infer.annotation.Nullsafe;
 import java.lang.annotation.Retention;
+import javax.annotation.Nullable;
 
 /**
  * Consumes data produced by {@link Producer}.<T>
@@ -36,6 +38,7 @@ import java.lang.annotation.Retention;
  *
  * @param <T>
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface Consumer<T> {
 
   /** Status flag used by producers and consumers to supply additional information. */
@@ -91,7 +94,7 @@ public interface Consumer<T> {
    * @param status bitwise values describing the returned result
    * @see Status for status flags
    */
-  void onNewResult(T newResult, @Status int status);
+  void onNewResult(@Nullable T newResult, @Status int status);
 
   /**
    * Called by a producer whenever it terminates further work due to Throwable being thrown. This

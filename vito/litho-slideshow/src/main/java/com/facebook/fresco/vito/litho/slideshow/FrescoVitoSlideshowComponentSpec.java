@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -12,8 +12,9 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import com.facebook.common.callercontext.ContextChain;
 import com.facebook.fresco.vito.core.FrescoController2;
-import com.facebook.fresco.vito.core.FrescoDrawable2;
+import com.facebook.fresco.vito.core.FrescoDrawableInterface;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.provider.FrescoVitoProvider;
 import com.facebook.fresco.vito.source.ImageSourceProvider;
@@ -26,7 +27,9 @@ import com.facebook.litho.annotations.OnCreateMountContent;
 import com.facebook.litho.annotations.OnMount;
 import com.facebook.litho.annotations.OnUnmount;
 import com.facebook.litho.annotations.Prop;
+import com.facebook.litho.annotations.PropDefault;
 import com.facebook.litho.annotations.State;
+import com.facebook.litho.annotations.TreeProp;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -35,6 +38,8 @@ import javax.annotation.Nullable;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 @MountSpec(isPureRender = true)
 public class FrescoVitoSlideshowComponentSpec {
+
+  @PropDefault static final boolean isPlaying = true;
 
   @OnCreateInitialState
   protected static void createInitialState(
@@ -62,17 +67,18 @@ public class FrescoVitoSlideshowComponentSpec {
       final @Prop(varArg = "uri") List<Uri> uris,
       final @Prop int photoTransitionMs,
       final @Prop int fadeTransitionMs,
-      final @Prop Boolean isPlaying,
+      final @Prop(optional = true) boolean isPlaying,
       final @Prop(optional = true) @Nullable ImageOptions imageOptions,
       final @Prop(optional = true) @Nullable Object callerContext,
+      final @TreeProp @Nullable ContextChain contextChain,
       final @State(canUpdateLazily = true) Integer slideshowIndex,
       final @State(canUpdateLazily = true) Timer timer,
       final @State(canUpdateLazily = true) Boolean currentlyPlaying) {
     // Reset mount content
     FrescoController2 controller = FrescoVitoProvider.getController();
-    controller.releaseImmediately(slideshowDrawable.getPrevious());
-    controller.releaseImmediately(slideshowDrawable.getCurrent());
-    controller.releaseImmediately(slideshowDrawable.getNext());
+    controller.releaseImmediately(slideshowDrawable.getPreviousImage());
+    controller.releaseImmediately(slideshowDrawable.getCurrentImage());
+    controller.releaseImmediately(slideshowDrawable.getNextImage());
     slideshowDrawable.reset();
 
     // Configure mount content
@@ -80,7 +86,12 @@ public class FrescoVitoSlideshowComponentSpec {
 
     // Load current image
     fetchNextImage(
-        c.getResources(), slideshowDrawable, uris.get(slideshowIndex), imageOptions, callerContext);
+        c.getResources(),
+        slideshowDrawable,
+        uris.get(slideshowIndex),
+        imageOptions,
+        callerContext,
+        contextChain);
     // Immediately show current image
     slideshowDrawable.fadeToNext();
     slideshowDrawable.finishTransitionImmediately();
@@ -95,7 +106,8 @@ public class FrescoVitoSlideshowComponentSpec {
           slideshowDrawable,
           uris.get(nextImageIndex),
           imageOptions,
-          callerContext);
+          callerContext,
+          contextChain);
 
       // Set up task for animating to next image
       final Runnable animation =
@@ -111,6 +123,7 @@ public class FrescoVitoSlideshowComponentSpec {
                   uris,
                   imageOptions,
                   callerContext,
+                  contextChain,
                   nextIndex);
               currentIndex = nextIndex;
               FrescoVitoSlideshowComponent.lazyUpdateSlideshowIndex(c, currentIndex);
@@ -141,9 +154,9 @@ public class FrescoVitoSlideshowComponentSpec {
       ComponentContext c, final FrescoVitoSlideshowDrawable slideshowDrawable) {
     FrescoController2 controller = FrescoVitoProvider.getController();
 
-    controller.releaseImmediately(slideshowDrawable.getPrevious());
-    controller.releaseImmediately(slideshowDrawable.getCurrent());
-    controller.releaseImmediately(slideshowDrawable.getNext());
+    controller.releaseImmediately(slideshowDrawable.getPreviousImage());
+    controller.releaseImmediately(slideshowDrawable.getCurrentImage());
+    controller.releaseImmediately(slideshowDrawable.getNextImage());
     slideshowDrawable.reset();
     FrescoVitoSlideshowComponent.lazyUpdateCurrentlyPlaying(c, false);
   }
@@ -154,19 +167,21 @@ public class FrescoVitoSlideshowComponentSpec {
       List<Uri> uris,
       @Nullable ImageOptions options,
       @Nullable Object callerContext,
+      @Nullable ContextChain contextChain,
       int nextIndex) {
     // Do not transition until both current and next images are available
-    if (isStillLoading(slideshowDrawable.getCurrent())
-        || isStillLoading(slideshowDrawable.getNext())) {
+    if (isStillLoading(slideshowDrawable.getCurrentImage())
+        || isStillLoading(slideshowDrawable.getNextImage())) {
       return;
     }
     // Both images are available -> we can fade
     slideshowDrawable.fadeToNext();
     // Fetch the next image ahead of time
-    fetchNextImage(resources, slideshowDrawable, uris.get(nextIndex), options, callerContext);
+    fetchNextImage(
+        resources, slideshowDrawable, uris.get(nextIndex), options, callerContext, contextChain);
   }
 
-  private static boolean isStillLoading(FrescoDrawable2 frescoDrawable) {
+  private static boolean isStillLoading(FrescoDrawableInterface frescoDrawable) {
     return frescoDrawable.isFetchSubmitted() && !frescoDrawable.hasImage();
   }
 
@@ -175,13 +190,15 @@ public class FrescoVitoSlideshowComponentSpec {
       final FrescoVitoSlideshowDrawable slideshowDrawable,
       Uri uri,
       @Nullable ImageOptions options,
-      @Nullable Object callerContext) {
+      @Nullable Object callerContext,
+      @Nullable ContextChain contextChain) {
     FrescoVitoProvider.getController()
         .fetch(
-            slideshowDrawable.getNext(),
+            slideshowDrawable.getNextImage(),
             FrescoVitoProvider.getImagePipeline()
                 .createImageRequest(resources, ImageSourceProvider.forUri(uri), options),
             callerContext,
+            contextChain,
             null,
             null,
             null);

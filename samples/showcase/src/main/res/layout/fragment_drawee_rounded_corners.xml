@@ -112,6 +112,19 @@
           android:layout_height="wrap_content"
           android:text="@string/drawee_rounded_corners_scale_inside_borders"
           />
+      <CheckBox
+          android:id="@+id/color_overlay"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/drawee_rounded_corners_color_overlay"
+          />
+      <CheckBox
+          android:id="@+id/fix_repeated_edges"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:checked="true"
+          android:text="@string/drawee_rounded_corners_fix_repeated_edges"
+          />
     </LinearLayout>
   </LinearLayout>
 </LinearLayout>

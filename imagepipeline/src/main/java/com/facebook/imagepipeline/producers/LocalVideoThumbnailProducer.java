@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -19,6 +19,7 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.ImmutableMap;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.bitmaps.SimpleBitmapReleaser;
@@ -26,6 +27,7 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -37,6 +39,7 @@ import javax.annotation.Nullable;
  * <p>At present, these thumbnails are created on the java heap rather than being pinned purgeables.
  * This is deemed okay as the thumbnails are only very small.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class LocalVideoThumbnailProducer implements Producer<CloseableReference<CloseableImage>> {
 
   public static final String PRODUCER_NAME = "VideoThumbnailProducer";
@@ -62,7 +65,7 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
         new StatefulProducerRunnable<CloseableReference<CloseableImage>>(
             consumer, listener, producerContext, PRODUCER_NAME) {
           @Override
-          protected void onSuccess(CloseableReference<CloseableImage> result) {
+          protected void onSuccess(@Nullable CloseableReference<CloseableImage> result) {
             super.onSuccess(result);
             listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, result != null);
             producerContext.putOriginExtra("local");
@@ -107,7 +110,7 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
 
           @Override
           protected Map<String, String> getExtraMapOnSuccess(
-              final CloseableReference<CloseableImage> result) {
+              final @Nullable CloseableReference<CloseableImage> result) {
             return ImmutableMap.of(CREATED_THUMBNAIL, String.valueOf(result != null));
           }
 
@@ -144,7 +147,8 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
           && "com.android.providers.media.documents".equals(uri.getAuthority())) {
         String documentId = DocumentsContract.getDocumentId(uri);
-        uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+        Preconditions.checkNotNull(documentId);
+        uri = Preconditions.checkNotNull(MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
         selection = MediaStore.Video.Media._ID + "=?";
         selectionArgs = new String[] {documentId.split(":")[1]};
       }
@@ -170,6 +174,7 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1) {
       try {
         ParcelFileDescriptor videoFile = contentResolver.openFileDescriptor(uri, "r");
+        Preconditions.checkNotNull(videoFile);
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         mediaMetadataRetriever.setDataSource(videoFile.getFileDescriptor());
         return mediaMetadataRetriever.getFrameAtTime(-1);

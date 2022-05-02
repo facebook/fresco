@@ -186,9 +186,6 @@
     <!-- Progress bar Auto Rotate interval in milliseconds -->
     <attr name="progressBarAutoRotateInterval" />
 
-    <!-- Scale type of the actual image. -->
-    <attr name="actualImageScaleType" />
-
     <!-- A drawable or color to be used as a background. -->
     <attr name="backgroundImage" />
 

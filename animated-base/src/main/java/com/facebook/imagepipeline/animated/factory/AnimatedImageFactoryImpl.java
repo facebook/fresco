@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,7 +10,6 @@ package com.facebook.imagepipeline.animated.factory;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.os.Build;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
@@ -26,18 +25,20 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
 
 /** Decoder for animated images. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
 
   private final AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
   private final PlatformBitmapFactory mBitmapFactory;
 
-  static AnimatedImageDecoder sGifAnimatedImageDecoder = null;
-  static AnimatedImageDecoder sWebpAnimatedImageDecoder = null;
+  static @Nullable AnimatedImageDecoder sGifAnimatedImageDecoder = null;
+  static @Nullable AnimatedImageDecoder sWebpAnimatedImageDecoder = null;
 
   private static @Nullable AnimatedImageDecoder loadIfPresent(final String className) {
     try {
@@ -205,6 +206,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
               }
 
               @Override
+              @Nullable
               public CloseableReference<Bitmap> getCachedBitmap(int frameNumber) {
                 return CloseableReference.cloneOrNull(bitmaps.get(frameNumber));
               }
@@ -224,9 +226,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
     CloseableReference<Bitmap> bitmap =
         mBitmapFactory.createBitmapInternal(width, height, bitmapConfig);
     bitmap.get().eraseColor(Color.TRANSPARENT);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-      bitmap.get().setHasAlpha(true);
-    }
+    bitmap.get().setHasAlpha(true);
     return bitmap;
   }
 }
