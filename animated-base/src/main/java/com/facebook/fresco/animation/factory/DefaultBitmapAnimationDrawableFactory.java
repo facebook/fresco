@@ -46,7 +46,7 @@ import javax.annotation.Nullable;
 
 /** Animation factory for {@link AnimatedDrawable2}. */
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFactory {
+public class DefaultBitmapAnimationDrawableFactory implements DrawableFactory {
 
   public static final int CACHING_STRATEGY_NO_CACHE = 0;
   public static final int CACHING_STRATEGY_FRESCO_CACHE = 1;
@@ -63,7 +63,7 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
   private final Supplier<Integer> mNumberOfFramesToPrepareSupplier;
   private final Supplier<Boolean> mUseDeepEqualsForCacheKey;
 
-  public ExperimentalBitmapAnimationDrawableFactory(
+  public DefaultBitmapAnimationDrawableFactory(
       AnimatedDrawableBackendProvider animatedDrawableBackendProvider,
       ScheduledExecutorService scheduledExecutorServiceForUiThread,
       ExecutorService executorServiceForFramePreparing,

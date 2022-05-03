@@ -111,13 +111,12 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
     };
   }
 
-  private ExperimentalBitmapAnimationDrawableFactory createDrawableFactory() {
+  private DefaultBitmapAnimationDrawableFactory createDrawableFactory() {
     Supplier<Integer> cachingStrategySupplier =
         new Supplier<Integer>() {
           @Override
           public Integer get() {
-            return ExperimentalBitmapAnimationDrawableFactory
-                .CACHING_STRATEGY_FRESCO_CACHE_NO_REUSING;
+            return DefaultBitmapAnimationDrawableFactory.CACHING_STRATEGY_FRESCO_CACHE_NO_REUSING;
           }
         };
 
@@ -136,7 +135,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
 
     final Supplier<Boolean> useDeepEquals = Suppliers.BOOLEAN_FALSE;
 
-    return new ExperimentalBitmapAnimationDrawableFactory(
+    return new DefaultBitmapAnimationDrawableFactory(
         getAnimatedDrawableBackendProvider(),
         UiThreadImmediateExecutorService.getInstance(),
         serialExecutorServiceForFramePreparing,
