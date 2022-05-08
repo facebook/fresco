@@ -172,7 +172,10 @@ class ImageUriProvider constructor(context: Context) {
         when (imageSize) {
           ImageSize.S -> RANDOM_URI_PATTERN_S
           ImageSize.M -> RANDOM_URI_PATTERN_M
-          ImageSize.XS, ImageSize.L, ImageSize.XL, ImageSize.XXL ->
+          ImageSize.XS,
+          ImageSize.L,
+          ImageSize.XL,
+          ImageSize.XXL ->
               throw IllegalArgumentException(
                   "Don't have random sample URIs for image size: $imageSize")
         }
