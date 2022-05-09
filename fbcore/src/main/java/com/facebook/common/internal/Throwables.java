@@ -16,9 +16,8 @@
 
 package com.facebook.common.internal;
 
+import android.util.Log;
 import com.facebook.infer.annotation.Nullsafe;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -203,8 +202,6 @@ public final class Throwables {
    * {@link Throwable#getStackTrace()}.
    */
   public static String getStackTraceAsString(Throwable throwable) {
-    StringWriter stringWriter = new StringWriter();
-    throwable.printStackTrace(new PrintWriter(stringWriter));
-    return stringWriter.toString();
+    return Log.getStackTraceString(throwable);
   }
 }

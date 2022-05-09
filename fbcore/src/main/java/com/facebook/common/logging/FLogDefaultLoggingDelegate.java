@@ -9,8 +9,6 @@ package com.facebook.common.logging;
 
 import android.util.Log;
 import com.facebook.infer.annotation.Nullsafe;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 /** Default implementation of {@link LoggingDelegate}. */
 @Nullsafe(Nullsafe.Mode.LOCAL)
@@ -149,9 +147,6 @@ public class FLogDefaultLoggingDelegate implements LoggingDelegate {
     if (tr == null) {
       return "";
     }
-    StringWriter sw = new StringWriter();
-    PrintWriter pw = new PrintWriter(sw);
-    tr.printStackTrace(pw);
-    return sw.toString();
+    return Log.getStackTraceString(tr);
   }
 }

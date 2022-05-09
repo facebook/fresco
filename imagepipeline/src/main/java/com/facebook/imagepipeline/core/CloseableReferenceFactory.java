@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.core;
 
+import android.util.Log;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
@@ -15,8 +16,6 @@ import com.facebook.imagepipeline.debug.CloseableReferenceLeakTracker;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.PropagatesNullable;
 import java.io.Closeable;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.STRICT)
@@ -67,9 +66,8 @@ public class CloseableReferenceFactory {
     if (tr == null) {
       return "";
     }
-    final StringWriter sw = new StringWriter();
-    final PrintWriter pw = new PrintWriter(sw);
-    tr.printStackTrace(pw);
-    return sw.toString();
+
+    final String stackTrace = Log.getStackTraceString(tr);
+    return stackTrace;
   }
 }
