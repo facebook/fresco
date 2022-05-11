@@ -134,7 +134,7 @@ public abstract class AbstractDraweeControllerBuilder<
   }
 
   /** Sets the low-res image request. */
-  public BUILDER setLowResImageRequest(REQUEST lowResImageRequest) {
+  public BUILDER setLowResImageRequest(@Nullable REQUEST lowResImageRequest) {
     mLowResImageRequest = lowResImageRequest;
     return getThis();
   }
