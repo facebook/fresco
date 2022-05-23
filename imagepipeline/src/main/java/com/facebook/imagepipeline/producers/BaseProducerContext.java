@@ -98,7 +98,8 @@ public class BaseProducerContext implements ProducerContext {
 
     mExtras = new HashMap<>();
     mExtras.put("id", mId);
-    mExtras.put("uri_source", imageRequest == null ? "null-request" : imageRequest.getSourceUri());
+    mExtras.put(
+        ExtraKeys.URI_SOURCE, imageRequest == null ? "null-request" : imageRequest.getSourceUri());
 
     mUiComponentId = uiComponentId;
     mProducerListener = producerListener;

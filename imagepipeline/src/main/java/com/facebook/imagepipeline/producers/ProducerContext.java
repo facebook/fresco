@@ -52,6 +52,7 @@ public interface ProducerContext {
     final String ENCODED_WIDTH = "encoded_width";
     final String ENCODED_HEIGHT = "encoded_height";
     final String ENCODED_SIZE = "encoded_size";
+    final String URI_SOURCE = "uri_source";
     /* number of deduped request in BitmapMemoryCacheKeyMultiplexProducer */
     final /* number of deduped request in BitmapMemoryCacheKeyMultiplexProducer */ String
         MULTIPLEX_BITMAP_COUNT = "multiplex_bmp_cnt";
