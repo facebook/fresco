@@ -111,13 +111,17 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       JobScheduler.JobRunnable job =
           new JobScheduler.JobRunnable() {
             @Override
-            public void run(EncodedImage encodedImage, @Status int status) {
-              doTransform(
-                  encodedImage,
-                  status,
-                  Preconditions.checkNotNull(
-                      mImageTranscoderFactory.createImageTranscoder(
-                          encodedImage.getImageFormat(), mIsResizingEnabled)));
+            public void run(@Nullable EncodedImage encodedImage, @Status int status) {
+              if (encodedImage != null) {
+                doTransform(
+                    encodedImage,
+                    status,
+                    Preconditions.checkNotNull(
+                        mImageTranscoderFactory.createImageTranscoder(
+                            encodedImage.getImageFormat(), mIsResizingEnabled)));
+              } else {
+                getConsumer().onNewResult(null, status);
+              }
             }
           };
       mJobScheduler = new JobScheduler(mExecutor, job, MIN_TRANSFORM_INTERVAL_MS);

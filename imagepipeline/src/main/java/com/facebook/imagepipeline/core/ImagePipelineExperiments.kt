@@ -70,6 +70,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val shouldIgnoreCacheSizeMismatch: Boolean
   val shouldUseDecodingBufferHelper: Boolean
   val allowProgressiveOnPrefetch: Boolean
+  val cancelDecodeOnCacheMiss: Boolean
 
   class Builder(private val configBuilder: ImagePipelineConfig.Builder) {
     @JvmField var shouldUseDecodingBufferHelper = false
@@ -117,6 +118,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
 
     @JvmField var shouldIgnoreCacheSizeMismatch = false
     @JvmField var allowProgressiveOnPrefetch = false
+    @JvmField var cancelDecodeOnCacheMiss = false
 
     private fun asBuilder(block: () -> Unit): ImagePipelineConfig.Builder {
       block()
@@ -289,6 +291,10 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
       this.allowProgressiveOnPrefetch = allowProgressiveOnPrefetch
     }
 
+    fun setCancelDecodeOnCacheMiss(cancelDecodeOnCacheMiss: Boolean) = asBuilder {
+      this.cancelDecodeOnCacheMiss = cancelDecodeOnCacheMiss
+    }
+
     fun build(): ImagePipelineExperiments = ImagePipelineExperiments(this)
   }
 
@@ -405,6 +411,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     shouldStoreCacheEntrySize = builder.shouldStoreCacheEntrySize
     shouldIgnoreCacheSizeMismatch = builder.shouldIgnoreCacheSizeMismatch
     shouldUseDecodingBufferHelper = builder.shouldUseDecodingBufferHelper
+    cancelDecodeOnCacheMiss = builder.cancelDecodeOnCacheMiss
   }
 
   companion object {

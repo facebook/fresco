@@ -28,6 +28,7 @@ import com.facebook.imagepipeline.image.EncodedImage
 import com.facebook.imagepipeline.image.ImmutableQualityInfo
 import com.facebook.imagepipeline.image.QualityInfo
 import com.facebook.imagepipeline.producers.JobScheduler.JobRunnable
+import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
 import com.facebook.imagepipeline.transcoder.DownsampleUtil
 import com.facebook.imageutils.BitmapUtil
@@ -109,8 +110,16 @@ class DecodeProducer(
           val isLast = isLast(status)
           if (isLast) {
             if (newResult == null) {
-              handleError(ExceptionWithNoStacktrace("Encoded image is null."))
-              return
+              val cacheHit =
+                  producerContext.getExtra<Boolean>(ProducerConstants.EXTRA_CACHED_VALUE_FOUND) ==
+                      true
+              if (!producerContext.imagePipelineConfig.experiments.cancelDecodeOnCacheMiss ||
+                  producerContext.lowestPermittedRequestLevel ==
+                      ImageRequest.RequestLevel.FULL_FETCH ||
+                  cacheHit) {
+                handleError(ExceptionWithNoStacktrace("Encoded image is null."))
+                return
+              }
             } else if (!newResult.isValid) {
               handleError(ExceptionWithNoStacktrace("Encoded image is not valid."))
               return

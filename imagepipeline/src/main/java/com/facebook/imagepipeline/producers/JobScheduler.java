@@ -43,7 +43,7 @@ public class JobScheduler {
   }
 
   public interface JobRunnable {
-    void run(EncodedImage encodedImage, @Consumer.Status int status);
+    void run(@Nullable EncodedImage encodedImage, @Consumer.Status int status);
   }
 
   private final Executor mExecutor;
