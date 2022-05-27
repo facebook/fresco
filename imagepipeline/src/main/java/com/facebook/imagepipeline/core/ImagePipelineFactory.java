@@ -62,6 +62,7 @@ public class ImagePipelineFactory {
   private static ImagePipelineFactory sInstance = null;
   private static ImagePipeline sImagePipeline;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
+  private static boolean sForceSingleInstance;
 
   /** Gets the instance of {@link ImagePipelineFactory}. */
   public static ImagePipelineFactory getInstance() {
@@ -95,9 +96,16 @@ public class ImagePipelineFactory {
       FLog.w(
           TAG,
           "ImagePipelineFactory has already been initialized! `ImagePipelineFactory.initialize(...)` should only be called once to avoid unexpected behavior.");
+      if (sForceSingleInstance) {
+        return;
+      }
     }
 
     sInstance = new ImagePipelineFactory(imagePipelineConfig);
+  }
+
+  public static synchronized void forceSingleInstance() {
+    sForceSingleInstance = true;
   }
 
   /** Checks if {@link ImagePipelineFactory} has already been initialized */
