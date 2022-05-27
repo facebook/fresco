@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.media.ExifInterface;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
-import com.facebook.common.references.HasBitmap;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imageutils.BitmapUtil;
 import javax.annotation.Nullable;
@@ -20,7 +19,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /** CloseableImage that contains one Bitmap. */
 @ThreadSafe
-public class CloseableStaticBitmap extends CloseableBitmap implements HasBitmap {
+public class CloseableStaticBitmap extends CloseableBitmap {
 
   @GuardedBy("this")
   private CloseableReference<Bitmap> mBitmapReference;
