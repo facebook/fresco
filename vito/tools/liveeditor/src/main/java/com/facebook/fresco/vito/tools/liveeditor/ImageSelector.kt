@@ -8,16 +8,19 @@
 package com.facebook.fresco.vito.tools.liveeditor
 
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.drawable.ShapeDrawable
 import com.facebook.fresco.vito.core.FrescoController2
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.VitoImagePipeline
+import com.facebook.fresco.vito.tools.liveeditor.LiveEditorUiUtils.Companion.dpToPx
 
 class ImageSelector(
     val tracker: ImageTracker,
     private val imagePipeline: VitoImagePipeline,
     private val controller: FrescoController2,
-    private val overlayColor: Int = 0x88ff0000.toInt(),
+    private val overlayColor: Int = Color.GREEN,
     private var currentIndex: Int = -1
 ) {
 
@@ -28,13 +31,25 @@ class ImageSelector(
   fun selectPrevious(context: Context) = highlightDrawable(context, incrementIndexBy(-1))
 
   fun highlightDrawable(context: Context, drawable: FrescoDrawableInterface?) {
+
     removeHighlight(context)
+
     if (drawable == null) {
       return
     }
+
     val editor = ImageLiveEditor(drawable, imagePipeline, controller)
+
     currentEditor = editor
-    editor.editOptions(context) { it.overlay(ColorDrawable(overlayColor)) }
+
+    val overlayColorDrawable =
+        ShapeDrawable().apply {
+          paint?.style = Paint.Style.STROKE
+          paint?.color = overlayColor
+          paint?.strokeWidth = 10.dpToPx(context).toFloat()
+        }
+
+    editor.editOptions(context) { it.overlay(overlayColorDrawable) }
   }
 
   fun removeHighlight(context: Context) = currentEditor?.editOptions(context) { it.overlay(null) }
