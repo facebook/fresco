@@ -229,9 +229,9 @@ public class DefaultImageDecoder implements ImageDecoder {
       final int length,
       final QualityInfo qualityInfo,
       final ImageDecodeOptions options) {
-    if (mAnimatedWebPDecoder != null) {
+    if (!options.forceStaticImage && mAnimatedWebPDecoder != null) {
       return mAnimatedWebPDecoder.decode(encodedImage, length, qualityInfo, options);
     }
-    throw new DecodeException("Animated WebP support not set up!", encodedImage);
+    return decodeStaticImage(encodedImage, options);
   }
 }
