@@ -17,7 +17,6 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.Spinner
-import android.widget.Toast
 
 class LiveEditorUiUtils(var liveEditor: ImageLiveEditor?) {
 
@@ -69,9 +68,10 @@ class LiveEditorUiUtils(var liveEditor: ImageLiveEditor?) {
 
   private fun createImageInfoButton(context: Context): Button =
       createButton(context, "Image Info") {
-        Toast.makeText(
-                context, "ImageSource: ${liveEditor?.getSource().toString()}", Toast.LENGTH_LONG)
-            .show()
+        val source: List<Pair<String, String>> =
+            ImageSourceParser.convertSourceToKeyValue(liveEditor?.getSource().toString())
+
+        ImageSourceUiUtil(context).apply { createSourceDialog(source)?.show() }
       }
 
   private fun createButton(context: Context, btnText: String, clickAction: (View) -> Unit): Button =
