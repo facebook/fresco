@@ -8,7 +8,6 @@
 package com.facebook.fresco.vito.source
 
 import android.net.Uri
-import java.lang.RuntimeException
 
 /**
  * Create image sources that can be passed to Fresco's image components. For example, to create a
@@ -19,7 +18,7 @@ import java.lang.RuntimeException
 object ImageSourceProvider {
 
   /** @return an empty image source if no image URI is available to pass to the UI component */
-  @JvmStatic fun emptySource(): ImageSource = get().emptySource()
+  @JvmStatic fun emptySource(): ImageSource = EmptyImageSource
 
   /**
    * Create a single image source for a given image URI.
@@ -32,7 +31,7 @@ object ImageSourceProvider {
       if (uri == null) {
         emptySource()
       } else {
-        get().singleUri(uri)
+        SingleImageSource(uri)
       }
 
   /**
@@ -46,7 +45,7 @@ object ImageSourceProvider {
       if (uriString == null) {
         emptySource()
       } else {
-        get().singleUri(Uri.parse(uriString))
+        SingleImageSource(Uri.parse(uriString))
       }
 
   /**
@@ -59,7 +58,7 @@ object ImageSourceProvider {
    */
   @JvmStatic
   fun firstAvailable(vararg imageSources: ImageSource): ImageSource =
-      get().firstAvailable(*imageSources)
+      FirstAvailableImageSource(imageSources)
 
   /**
    * Create a multi image source for a low- and high resolution image. Both requests will be sent
@@ -74,7 +73,7 @@ object ImageSourceProvider {
   fun increasingQuality(
       lowResImageSource: ImageSource,
       highResImageSource: ImageSource
-  ): ImageSource = get().increasingQuality(lowResImageSource, highResImageSource)
+  ): ImageSource = IncreasingQualityImageSource(lowResImageSource, highResImageSource)
 
   /**
    * Create a multi image source for a low- and high resolution image. Both requests will be sent
@@ -87,34 +86,5 @@ object ImageSourceProvider {
    */
   @JvmStatic
   fun increasingQuality(lowResImageUri: Uri?, highResImageUri: Uri?): ImageSource =
-      get().increasingQuality(forUri(lowResImageUri), forUri(highResImageUri))
-
-  private var impl: Implementation? = null
-
-  @JvmStatic
-  fun setImplementation(implementation: Implementation?) {
-    impl = implementation
-  }
-
-  @JvmStatic
-  fun shutdown() {
-    impl = null
-  }
-
-  private fun get(): Implementation {
-    return impl ?: throw RuntimeException("ImageSourceProvider must be initialized first!")
-  }
-
-  interface Implementation {
-    fun emptySource(): ImageSource
-
-    fun singleUri(uri: Uri): ImageSource
-
-    fun firstAvailable(vararg imageSources: ImageSource): ImageSource
-
-    fun increasingQuality(
-        lowResImageSource: ImageSource,
-        highResImageSource: ImageSource
-    ): ImageSource
-  }
+      IncreasingQualityImageSource(forUri(lowResImageUri), forUri(highResImageUri))
 }

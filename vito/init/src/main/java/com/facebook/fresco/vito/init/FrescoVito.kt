@@ -20,12 +20,10 @@ import com.facebook.fresco.vito.core.impl.BaseVitoImagePerfListener
 import com.facebook.fresco.vito.core.impl.DefaultImageDecodeOptionsProviderImpl
 import com.facebook.fresco.vito.core.impl.ImagePipelineUtilsImpl
 import com.facebook.fresco.vito.core.impl.ImagePipelineUtilsImpl.CircularBitmapRounding
-import com.facebook.fresco.vito.core.impl.source.ImageSourceProviderImpl
 import com.facebook.fresco.vito.nativecode.NativeCircularBitmapRounding
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.fresco.vito.provider.impl.DefaultFrescoVitoProvider
 import com.facebook.fresco.vito.provider.impl.NoOpCallerContextVerifier
-import com.facebook.fresco.vito.source.ImageSourceProvider
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.core.ImagePipelineFactory
 import java.util.concurrent.Executor
@@ -87,7 +85,6 @@ class FrescoVito {
         return
       }
       FrescoVitoProvider.setImplementation(providerImplementation)
-      ImageSourceProvider.setImplementation(ImageSourceProviderImpl())
       isInitialized = true
     }
 

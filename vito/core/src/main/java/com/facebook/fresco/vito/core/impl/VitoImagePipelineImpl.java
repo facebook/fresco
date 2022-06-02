@@ -11,12 +11,10 @@ import android.content.res.Resources;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
-import com.facebook.datasource.DataSources;
 import com.facebook.fresco.ui.common.VitoUtils;
 import com.facebook.fresco.vito.core.ImagePipelineUtils;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.VitoImageRequest;
-import com.facebook.fresco.vito.core.impl.source.VitoImageSource;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.source.ImageSource;
 import com.facebook.imagepipeline.core.ImagePipeline;
@@ -45,13 +43,10 @@ public class VitoImagePipelineImpl implements VitoImagePipeline {
     if (options == null) {
       options = ImageOptions.defaults();
     }
-    if (!(imageSource instanceof VitoImageSource)) {
-      throw new IllegalArgumentException("ImageSource not supported: " + imageSource);
-    }
-    VitoImageSource vitoImageSource = (VitoImageSource) imageSource;
     CacheKey finalImageCacheKey = null;
     ImageRequest finalImageRequest =
-        vitoImageSource.maybeExtractFinalImageRequest(mImagePipelineUtils, options);
+        ImageSourceToImagePipelineAdapter.maybeExtractFinalImageRequest(
+            imageSource, mImagePipelineUtils, options);
 
     if (finalImageRequest != null) {
       finalImageCacheKey = mImagePipeline.getCacheKey(finalImageRequest, null);
@@ -86,20 +81,14 @@ public class VitoImagePipelineImpl implements VitoImagePipeline {
       final @Nullable Object callerContext,
       final @Nullable RequestListener requestListener,
       final long uiComponentId) {
-    if (!(imageRequest.imageSource instanceof VitoImageSource)) {
-      return DataSources.immediateFailedDataSource(
-          new IllegalArgumentException("Unknown ImageSource " + imageRequest.imageSource));
-    }
-    VitoImageSource vitoImageSource = (VitoImageSource) imageRequest.imageSource;
-    final String stringId = VitoUtils.getStringId(uiComponentId);
-    return vitoImageSource
-        .createDataSourceSupplier(
+    return ImageSourceToImagePipelineAdapter.createDataSourceSupplier(
+            imageRequest.imageSource,
             mImagePipeline,
             mImagePipelineUtils,
             imageRequest.imageOptions,
             callerContext,
             requestListener,
-            stringId)
+            VitoUtils.getStringId(uiComponentId))
         .get();
   }
 }
