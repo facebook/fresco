@@ -106,7 +106,8 @@ class ShowcaseApplication : Application() {
                 imageLoadStatus: Int
             ) {
               frescoFlipperPlugin
-                  ?.flipperImageTracker?.onImageLoadStatusUpdated(imagePerfData, imageLoadStatus)
+                  ?.flipperImageTracker
+                  ?.onImageLoadStatusUpdated(imagePerfData, imageLoadStatus)
               frescoFlipperPlugin?.onImageLoadStatusUpdated(imagePerfData, imageLoadStatus)
             }
 
@@ -169,7 +170,10 @@ class ShowcaseApplication : Application() {
               ImagePipelineFactory.getInstance().imagePipeline,
               FrescoVito.createImagePipelineUtils(Suppliers.BOOLEAN_TRUE),
               ImagePipelineFactory.getInstance()
-                  .imagePipeline.config.executorSupplier.forLightweightBackgroundTasks(),
+                  .imagePipeline
+                  .config
+                  .executorSupplier
+                  .forLightweightBackgroundTasks(),
               UiThreadImmediateExecutorService.getInstance(),
               NoOpCallerContextVerifier(),
               DebugOverlayHandler(DebugOverlaySupplierSingleton.getInstance(applicationContext))))
