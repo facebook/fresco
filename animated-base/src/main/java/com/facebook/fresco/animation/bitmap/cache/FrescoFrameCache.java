@@ -146,7 +146,8 @@ public class FrescoFrameCache implements BitmapFrameCache {
   }
 
   @Override
-  public void setFrameCacheListener(BitmapFrameCache.FrameCacheListener frameCacheListener) {
+  public void setFrameCacheListener(
+      @Nullable BitmapFrameCache.FrameCacheListener frameCacheListener) {
     // TODO (t15557326) Not supported for now
   }
 

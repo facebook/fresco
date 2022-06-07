@@ -5,16 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.animation.bitmap.preparation;
+package com.facebook.fresco.animation.bitmap.preparation
 
-import com.facebook.fresco.animation.backend.AnimationBackend;
-import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
-import com.facebook.infer.annotation.Nullsafe;
+import com.facebook.fresco.animation.backend.AnimationBackend
+import com.facebook.fresco.animation.bitmap.BitmapFrameCache
 
 /** Frame preparation strategy to prepare next animation frames. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
-public interface BitmapFramePreparationStrategy {
-
+interface BitmapFramePreparationStrategy {
   /**
    * Decide whether frames should be prepared ahead of time when a frame is drawn.
    *
@@ -23,9 +20,10 @@ public interface BitmapFramePreparationStrategy {
    * @param animationBackend the animation backend to prepare frames for
    * @param lastDrawnFrameNumber the last drawn frame number
    */
-  void prepareFrames(
-      BitmapFramePreparer bitmapFramePreparer,
-      BitmapFrameCache bitmapFrameCache,
-      AnimationBackend animationBackend,
-      int lastDrawnFrameNumber);
+  fun prepareFrames(
+      bitmapFramePreparer: BitmapFramePreparer,
+      bitmapFrameCache: BitmapFrameCache,
+      animationBackend: AnimationBackend,
+      lastDrawnFrameNumber: Int
+  )
 }

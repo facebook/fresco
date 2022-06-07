@@ -5,26 +5,24 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.animation.bitmap;
+package com.facebook.fresco.animation.bitmap
 
-import android.graphics.Bitmap;
-import com.facebook.common.references.CloseableReference;
-import com.facebook.infer.annotation.Nullsafe;
-import javax.annotation.Nullable;
+import android.graphics.Bitmap
+import com.facebook.common.references.CloseableReference
+import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend.FrameType
+import com.facebook.fresco.animation.bitmap.BitmapFrameCache.FrameCacheListener
 
 /** Bitmap frame cache that is used for animated images. */
-@Nullsafe(Nullsafe.Mode.STRICT)
-public interface BitmapFrameCache {
+interface BitmapFrameCache {
 
   interface FrameCacheListener {
-
     /**
      * Called when the frame for the given frame number has been put in the frame cache.
      *
      * @param bitmapFrameCache the frame cache that holds the frame
      * @param frameNumber the cached frame number
      */
-    void onFrameCached(BitmapFrameCache bitmapFrameCache, int frameNumber);
+    fun onFrameCached(bitmapFrameCache: BitmapFrameCache, frameNumber: Int)
 
     /**
      * Called when the frame for the given frame number has been evicted from the frame cache.
@@ -32,7 +30,7 @@ public interface BitmapFrameCache {
      * @param bitmapFrameCache the frame cache that evicted the frame
      * @param frameNumber the frame number of the evicted frame
      */
-    void onFrameEvicted(BitmapFrameCache bitmapFrameCache, int frameNumber);
+    fun onFrameEvicted(bitmapFrameCache: BitmapFrameCache, frameNumber: Int)
   }
 
   /**
@@ -41,8 +39,7 @@ public interface BitmapFrameCache {
    * @param frameNumber the frame number to get the cached frame for
    * @return the cached frame or null if not cached
    */
-  @Nullable
-  CloseableReference<Bitmap> getCachedFrame(int frameNumber);
+  fun getCachedFrame(frameNumber: Int): CloseableReference<Bitmap>?
 
   /**
    * Get a fallback frame for the given frame number. This method is called if all other attempts to
@@ -51,8 +48,7 @@ public interface BitmapFrameCache {
    * @param frameNumber the frame number to get the fallback
    * @return the fallback frame or null if not cached
    */
-  @Nullable
-  CloseableReference<Bitmap> getFallbackFrame(int frameNumber);
+  fun getFallbackFrame(frameNumber: Int): CloseableReference<Bitmap>?
 
   /**
    * Return a reusable bitmap that should be used to render the given frame.
@@ -62,8 +58,11 @@ public interface BitmapFrameCache {
    * @param height the height of the target bitmap
    * @return the reusable bitmap or null if no reusable bitmaps available
    */
-  @Nullable
-  CloseableReference<Bitmap> getBitmapToReuseForFrame(int frameNumber, int width, int height);
+  fun getBitmapToReuseForFrame(
+      frameNumber: Int,
+      width: Int,
+      height: Int
+  ): CloseableReference<Bitmap>?
 
   /**
    * Check whether the cache contains a certain frame.
@@ -71,60 +70,62 @@ public interface BitmapFrameCache {
    * @param frameNumber the frame number to check
    * @return true if the frame is cached
    */
-  boolean contains(int frameNumber);
+  operator fun contains(frameNumber: Int): Boolean
 
   /** @return the size in bytes of all cached data */
-  int getSizeInBytes();
+  val sizeInBytes: Int
 
   /** Clear the cache. */
-  void clear();
+  fun clear()
 
   /**
    * Callback when the given bitmap has been drawn to a canvas. This bitmap can either be a reused
-   * bitmap returned by {@link #getBitmapToReuseForFrame(int, int, int)} or a new bitmap.
+   * bitmap returned by [getBitmapToReuseForFrame(int, int, int)] or a new bitmap.
    *
-   * <p>Note: the implementation of this interface must manually clone the given bitmap reference if
-   * it wants to hold on to the bitmap. The original reference will be automatically closed after
-   * this call.
+   * Note: the implementation of this interface must manually clone the given bitmap reference if it
+   * wants to hold on to the bitmap. The original reference will be automatically closed after this
+   * call.
    *
    * @param frameNumber the frame number that has been rendered
    * @param bitmapReference the bitmap reference that has been rendered
    * @param frameType the frame type that has been rendered
    */
-  void onFrameRendered(
-      int frameNumber,
-      CloseableReference<Bitmap> bitmapReference,
-      @BitmapAnimationBackend.FrameType int frameType);
+  fun onFrameRendered(
+      frameNumber: Int,
+      bitmapReference: CloseableReference<Bitmap>?,
+      @FrameType frameType: Int
+  )
 
   /**
    * Callback when a bitmap reference for a given frame has been prepared for future rendering.
    *
-   * <p>This method is called ahead of render time (i.e. when future frames have been prepared in
-   * the background), whereas {@link #onFrameRendered(int, CloseableReference, int)} is invoked when
-   * the actual frame has been drawn on a Canvas.
+   * This method is called ahead of render time (i.e. when future frames have been prepared in the
+   * background), whereas [onFrameRendered(int, CloseableReference, int)] is invoked when the actual
+   * frame has been drawn on a Canvas.
    *
-   * <p>The supplied bitmap reference can either hold a reused bitmap returned by {@link
-   * #getBitmapToReuseForFrame(int, int, int)} or a new bitmap as indicated by the frame type
+   * The supplied bitmap reference can either hold a reused bitmap returned by
+   * [getBitmapToReuseForFrame(int, int, int)] or a new bitmap as indicated by the frame type
    * parameter.
    *
-   * <p>Note: the implementation of this interface must manually clone the given bitmap reference if
-   * it wants to hold on to the bitmap. The original reference will be automatically closed after
-   * this call.
+   * Note: the implementation of this interface must manually clone the given bitmap reference if it
+   * wants to hold on to the bitmap. The original reference will be automatically closed after this
+   * call.
    *
    * @param frameNumber the frame number of the passed bitmapReference
    * @param bitmapReference the bitmap reference that has been prepared for future rendering
    * @param frameType the frame type of the prepared frame
    * @return true if the frame has been successfully cached
    */
-  void onFramePrepared(
-      int frameNumber,
-      CloseableReference<Bitmap> bitmapReference,
-      @BitmapAnimationBackend.FrameType int frameType);
+  fun onFramePrepared(
+      frameNumber: Int,
+      bitmapReference: CloseableReference<Bitmap>?,
+      @FrameType frameType: Int
+  )
 
   /**
    * Set a frame cache listener that gets notified about caching events.
    *
    * @param frameCacheListener the listener to use
    */
-  void setFrameCacheListener(FrameCacheListener frameCacheListener);
+  fun setFrameCacheListener(frameCacheListener: FrameCacheListener?)
 }
