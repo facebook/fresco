@@ -20,7 +20,6 @@ import com.facebook.common.references.CloseableReference
 import com.facebook.fresco.animation.backend.AnimationBackend
 import com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactivityCheck.InactivityListener
 import com.facebook.fresco.animation.backend.AnimationInformation
-import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend.FrameType
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
@@ -50,7 +49,7 @@ class BitmapAnimationBackend(
      * @param backend the backend
      * @param frameNumber the frame number to be drawn
      */
-    fun onDrawFrameStart(backend: BitmapAnimationBackend?, frameNumber: Int)
+    fun onDrawFrameStart(backend: BitmapAnimationBackend, frameNumber: Int)
 
     /**
      * Called when the given frame has been drawn.
@@ -59,7 +58,7 @@ class BitmapAnimationBackend(
      * @param frameNumber the frame number that has been drawn
      * @param frameType the [FrameType] that has been drawn
      */
-    fun onFrameDrawn(backend: BitmapAnimationBackend?, frameNumber: Int, @FrameType frameType: Int)
+    fun onFrameDrawn(backend: BitmapAnimationBackend, frameNumber: Int, @FrameType frameType: Int)
 
     /**
      * Called when no bitmap could be drawn by the backend for the given frame number.
@@ -67,7 +66,7 @@ class BitmapAnimationBackend(
      * @param backend the backend
      * @param frameNumber the frame number that could not be drawn
      */
-    fun onFrameDropped(backend: BitmapAnimationBackend?, frameNumber: Int)
+    fun onFrameDropped(backend: BitmapAnimationBackend, frameNumber: Int)
   }
 
   /** Frame type that has been drawn. Can be used for logging. */
@@ -80,25 +79,17 @@ class BitmapAnimationBackend(
       FRAME_TYPE_FALLBACK)
   annotation class FrameType
 
+  var bitmapConfig = Bitmap.Config.ARGB_8888
+
   private val paint: Paint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG)
   private var bounds: Rect? = null
   private var bitmapWidth = 0
   private var bitmapHeight = 0
-  private var bitmapConfig = Bitmap.Config.ARGB_8888
+
   private var frameListener: FrameListener? = null
 
   init {
-
     updateBitmapDimensions()
-  }
-
-  /**
-   * Set the bitmap config to be used to create new bitmaps.
-   *
-   * @param bitmapConfig the bitmap config to be used
-   */
-  fun setBitmapConfig(bitmapConfig: Bitmap.Config) {
-    this.bitmapConfig = bitmapConfig
   }
 
   fun setFrameListener(frameListener: FrameListener?) {
@@ -117,13 +108,13 @@ class BitmapAnimationBackend(
     val drawn = drawFrameOrFallback(canvas, frameNumber, FRAME_TYPE_CACHED)
 
     // We could not draw anything
-    if (!drawn && frameListener != null) {
-      frameListener!!.onFrameDropped(this, frameNumber)
+    if (!drawn) {
+      frameListener?.onFrameDropped(this, frameNumber)
     }
 
     // Prepare next frames
-    if (bitmapFramePreparationStrategy != null && bitmapFramePreparer != null) {
-      bitmapFramePreparationStrategy.prepareFrames(
+    if (bitmapFramePreparer != null) {
+      bitmapFramePreparationStrategy?.prepareFrames(
           bitmapFramePreparer, bitmapFrameCache, this, frameNumber)
     }
     return drawn
@@ -134,7 +125,7 @@ class BitmapAnimationBackend(
       frameNumber: Int,
       @FrameType frameType: Int
   ): Boolean {
-    var bitmapReference: CloseableReference<Bitmap?>? = null
+    var bitmapReference: CloseableReference<Bitmap>? = null
     var drawn = false
     var nextFrameType = FRAME_TYPE_UNKNOWN
     try {
@@ -159,7 +150,6 @@ class BitmapAnimationBackend(
                 platformBitmapFactory.createBitmap(bitmapWidth, bitmapHeight, bitmapConfig)
               } catch (e: RuntimeException) {
                 // Failed to create the bitmap for the frame, return and report that we could not
-
                 // draw the frame.
                 FLog.w(TAG, "Failed to create frame bitmap", e)
                 return false
@@ -218,13 +208,11 @@ class BitmapAnimationBackend(
     // Calculate the correct bitmap dimensions
     bitmapWidth = bitmapFrameRenderer.intrinsicWidth
     if (bitmapWidth == AnimationBackend.INTRINSIC_DIMENSION_UNSET) {
-      bitmapWidth =
-          if (bounds == null) AnimationBackend.INTRINSIC_DIMENSION_UNSET else bounds!!.width()
+      bitmapWidth = bounds?.width() ?: AnimationBackend.INTRINSIC_DIMENSION_UNSET
     }
     bitmapHeight = bitmapFrameRenderer.intrinsicHeight
     if (bitmapHeight == AnimationBackend.INTRINSIC_DIMENSION_UNSET) {
-      bitmapHeight =
-          if (bounds == null) AnimationBackend.INTRINSIC_DIMENSION_UNSET else bounds!!.height()
+      bitmapHeight = bounds?.height() ?: AnimationBackend.INTRINSIC_DIMENSION_UNSET
     }
   }
 
@@ -239,13 +227,13 @@ class BitmapAnimationBackend(
    */
   private fun renderFrameInBitmap(
       frameNumber: Int,
-      targetBitmap: CloseableReference<Bitmap?>?
+      targetBitmap: CloseableReference<Bitmap>?
   ): Boolean {
-    if (!CloseableReference.isValid(targetBitmap)) {
+    if (targetBitmap == null || !targetBitmap.isValid) {
       return false
     }
     // Render the image
-    val frameRendered = bitmapFrameRenderer.renderFrame(frameNumber, targetBitmap!!.get())
+    val frameRendered = bitmapFrameRenderer.renderFrame(frameNumber, targetBitmap.get())
     if (!frameRendered) {
       CloseableReference.closeSafely(targetBitmap)
     }
@@ -266,21 +254,21 @@ class BitmapAnimationBackend(
    */
   private fun drawBitmapAndCache(
       frameNumber: Int,
-      bitmapReference: CloseableReference<Bitmap?>?,
+      bitmapReference: CloseableReference<Bitmap>?,
       canvas: Canvas,
       @FrameType frameType: Int
   ): Boolean {
-    if (!CloseableReference.isValid(bitmapReference)) {
+    if (bitmapReference == null || !CloseableReference.isValid(bitmapReference)) {
       return false
     }
-    if (bounds == null) {
-      canvas.drawBitmap(bitmapReference!!.get(), 0f, 0f, paint)
+    val currentBounds = bounds
+    if (currentBounds == null) {
+      canvas.drawBitmap(bitmapReference.get(), 0f, 0f, paint)
     } else {
-      canvas.drawBitmap(bitmapReference!!.get(), null, bounds!!, paint)
+      canvas.drawBitmap(bitmapReference.get(), null, currentBounds, paint)
     }
 
     // Notify the cache that a frame has been rendered.
-
     // We should not cache fallback frames since they do not represent the actual frame.
     if (frameType != FRAME_TYPE_FALLBACK) {
       bitmapFrameCache.onFrameRendered(frameNumber, bitmapReference, frameType)
@@ -295,6 +283,6 @@ class BitmapAnimationBackend(
     const val FRAME_TYPE_REUSED = 1
     const val FRAME_TYPE_CREATED = 2
     const val FRAME_TYPE_FALLBACK = 3
-    private val TAG: Class<*> = BitmapAnimationBackend::class.java
+    private val TAG = BitmapAnimationBackend::class.java
   }
 }

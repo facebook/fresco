@@ -92,7 +92,7 @@ interface BitmapFrameCache {
    */
   fun onFrameRendered(
       frameNumber: Int,
-      bitmapReference: CloseableReference<Bitmap>?,
+      bitmapReference: CloseableReference<Bitmap>,
       @FrameType frameType: Int
   )
 
@@ -118,7 +118,7 @@ interface BitmapFrameCache {
    */
   fun onFramePrepared(
       frameNumber: Int,
-      bitmapReference: CloseableReference<Bitmap>?,
+      bitmapReference: CloseableReference<Bitmap>,
       @FrameType frameType: Int
   )
 

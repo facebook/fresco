@@ -16,7 +16,6 @@ import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend.FrameType
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer
-import com.facebook.fresco.animation.bitmap.preparation.DefaultBitmapFramePreparer.FrameDecodeRunnable
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
 import java.lang.RuntimeException
 import java.util.concurrent.ExecutorService
@@ -32,7 +31,9 @@ class DefaultBitmapFramePreparer(
     private val executorService: ExecutorService
 ) : BitmapFramePreparer {
 
-  private val pendingFrameDecodeJobs: SparseArray<Runnable?> = SparseArray()
+  private val TAG = DefaultBitmapFramePreparer::class.java
+
+  private val pendingFrameDecodeJobs: SparseArray<Runnable> = SparseArray()
 
   override fun prepareFrame(
       bitmapFrameCache: BitmapFrameCache,
@@ -48,11 +49,13 @@ class DefaultBitmapFramePreparer(
         FLog.v(TAG, "Already scheduled decode job for frame %d", frameNumber)
         return true
       }
+
       // Check if already cached.
       if (bitmapFrameCache.contains(frameNumber)) {
         FLog.v(TAG, "Frame %d is cached already.", frameNumber)
         return true
       }
+
       val frameDecodeRunnable =
           FrameDecodeRunnable(animationBackend, bitmapFrameCache, frameNumber, frameId)
       pendingFrameDecodeJobs.put(frameId, frameDecodeRunnable)
@@ -65,7 +68,7 @@ class DefaultBitmapFramePreparer(
       private val animationBackend: AnimationBackend,
       private val bitmapFrameCache: BitmapFrameCache,
       private val frameNumber: Int,
-      private val hashCode: Int
+      private val frameId: Int
   ) : Runnable {
     override fun run() {
       try {
@@ -76,29 +79,29 @@ class DefaultBitmapFramePreparer(
         }
 
         // Prepare the frame.
-        if (prepareFrameAndCache(frameNumber, BitmapAnimationBackend.Companion.FRAME_TYPE_REUSED)) {
-          FLog.v(TAG, "Prepared frame frame %d.", frameNumber)
+        if (prepareFrameAndCache(frameNumber, BitmapAnimationBackend.FRAME_TYPE_REUSED)) {
+          FLog.v(TAG, "Prepared frame %d.", frameNumber)
         } else {
           FLog.e(TAG, "Could not prepare frame %d.", frameNumber)
         }
       } finally {
-        synchronized(pendingFrameDecodeJobs) { pendingFrameDecodeJobs.remove(hashCode) }
+        synchronized(pendingFrameDecodeJobs) { pendingFrameDecodeJobs.remove(frameId) }
       }
     }
 
     private fun prepareFrameAndCache(frameNumber: Int, @FrameType frameType: Int): Boolean {
-      var bitmapReference: CloseableReference<Bitmap?>? = null
+      var bitmapReference: CloseableReference<Bitmap>? = null
       val created: Boolean
       val nextFrameType: Int
       try {
         when (frameType) {
-          BitmapAnimationBackend.Companion.FRAME_TYPE_REUSED -> {
+          BitmapAnimationBackend.FRAME_TYPE_REUSED -> {
             bitmapReference =
                 bitmapFrameCache.getBitmapToReuseForFrame(
                     frameNumber, animationBackend.intrinsicWidth, animationBackend.intrinsicHeight)
-            nextFrameType = BitmapAnimationBackend.Companion.FRAME_TYPE_CREATED
+            nextFrameType = BitmapAnimationBackend.FRAME_TYPE_CREATED
           }
-          BitmapAnimationBackend.Companion.FRAME_TYPE_CREATED -> {
+          BitmapAnimationBackend.FRAME_TYPE_CREATED -> {
             bitmapReference =
                 try {
                   platformBitmapFactory.createBitmap(
@@ -107,12 +110,11 @@ class DefaultBitmapFramePreparer(
                       bitmapConfig)
                 } catch (e: RuntimeException) {
                   // Failed to create the bitmap for the frame, return and report that we could not
-
                   // prepare the frame.
                   FLog.w(TAG, "Failed to create frame bitmap", e)
                   return false
                 }
-            nextFrameType = BitmapAnimationBackend.Companion.FRAME_TYPE_UNKNOWN
+            nextFrameType = BitmapAnimationBackend.FRAME_TYPE_UNKNOWN
           }
           else -> return false
         }
@@ -121,7 +123,7 @@ class DefaultBitmapFramePreparer(
       } finally {
         CloseableReference.closeSafely(bitmapReference)
       }
-      return if (created || nextFrameType == BitmapAnimationBackend.Companion.FRAME_TYPE_UNKNOWN) {
+      return if (created || nextFrameType == BitmapAnimationBackend.FRAME_TYPE_UNKNOWN) {
         created
       } else {
         prepareFrameAndCache(frameNumber, nextFrameType)
@@ -130,7 +132,7 @@ class DefaultBitmapFramePreparer(
 
     private fun renderFrameAndCache(
         frameNumber: Int,
-        bitmapReference: CloseableReference<Bitmap?>?,
+        bitmapReference: CloseableReference<Bitmap>?,
         @FrameType frameType: Int
     ): Boolean {
       // Check if the bitmap is valid
@@ -138,24 +140,19 @@ class DefaultBitmapFramePreparer(
         return false
       }
       // Try to render the frame
-      if (!bitmapFrameRenderer.renderFrame(frameNumber, bitmapReference!!.get())) {
+      if (bitmapReference == null ||
+          !bitmapFrameRenderer.renderFrame(frameNumber, bitmapReference.get())) {
         return false
       }
-      FLog.v(TAG, "Frame %d ready.", this.frameNumber)
+      FLog.v(TAG, "Frame %d ready.", frameNumber)
       // Cache the frame
       synchronized(pendingFrameDecodeJobs) {
-        bitmapFrameCache.onFramePrepared(this.frameNumber, bitmapReference, frameType)
+        bitmapFrameCache.onFramePrepared(frameNumber, bitmapReference, frameType)
       }
       return true
     }
   }
 
-  companion object {
-    private val TAG: Class<*> = DefaultBitmapFramePreparer::class.java
-    private fun getUniqueId(backend: AnimationBackend, frameNumber: Int): Int {
-      var result = backend.hashCode()
-      result = 31 * result + frameNumber
-      return result
-    }
-  }
+  private fun getUniqueId(backend: AnimationBackend, frameNumber: Int): Int =
+      31 * backend.hashCode() + frameNumber
 }

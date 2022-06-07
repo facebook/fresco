@@ -16,15 +16,15 @@ import com.facebook.fresco.animation.bitmap.BitmapFrameCache.FrameCacheListener
 /** No-op bitmap cache that doesn't do anything. */
 class NoOpCache : BitmapFrameCache {
 
-  override fun getCachedFrame(frameNumber: Int): CloseableReference<Bitmap?>? = null
+  override fun getCachedFrame(frameNumber: Int): CloseableReference<Bitmap>? = null
 
-  override fun getFallbackFrame(frameNumber: Int): CloseableReference<Bitmap?>? = null
+  override fun getFallbackFrame(frameNumber: Int): CloseableReference<Bitmap>? = null
 
   override fun getBitmapToReuseForFrame(
       frameNumber: Int,
       width: Int,
       height: Int
-  ): CloseableReference<Bitmap?>? = null
+  ): CloseableReference<Bitmap>? = null
 
   override fun contains(frameNumber: Int): Boolean = false
 
@@ -36,7 +36,7 @@ class NoOpCache : BitmapFrameCache {
 
   override fun onFrameRendered(
       frameNumber: Int,
-      bitmapReference: CloseableReference<Bitmap?>?,
+      bitmapReference: CloseableReference<Bitmap>,
       @FrameType frameType: Int
   ) {
     // no-op
@@ -44,7 +44,7 @@ class NoOpCache : BitmapFrameCache {
 
   override fun onFramePrepared(
       frameNumber: Int,
-      bitmapReference: CloseableReference<Bitmap?>?,
+      bitmapReference: CloseableReference<Bitmap>,
       @FrameType frameType: Int
   ) {
     // Does not cache anything

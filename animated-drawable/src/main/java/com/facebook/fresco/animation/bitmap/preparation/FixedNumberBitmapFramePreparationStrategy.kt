@@ -14,8 +14,9 @@ import com.facebook.fresco.animation.bitmap.BitmapFrameCache
 /** Frame preparation strategy to prepare the next n frames */
 class FixedNumberBitmapFramePreparationStrategy
 @JvmOverloads
-constructor(private val framesToPrepare: Int = DEFAULT_FRAMES_TO_PREPARE) :
-    BitmapFramePreparationStrategy {
+constructor(private val framesToPrepare: Int = 3) : BitmapFramePreparationStrategy {
+
+  private val TAG = FixedNumberBitmapFramePreparationStrategy::class.java
 
   override fun prepareFrames(
       bitmapFramePreparer: BitmapFramePreparer,
@@ -33,10 +34,5 @@ constructor(private val framesToPrepare: Int = DEFAULT_FRAMES_TO_PREPARE) :
         return
       }
     }
-  }
-
-  companion object {
-    private val TAG: Class<*> = FixedNumberBitmapFramePreparationStrategy::class.java
-    private const val DEFAULT_FRAMES_TO_PREPARE = 3
   }
 }

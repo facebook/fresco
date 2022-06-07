@@ -21,10 +21,10 @@ class KeepLastFrameCache : BitmapFrameCache {
   private var lastFrameNumber = FRAME_NUMBER_UNSET
   private var frameCacheListener: FrameCacheListener? = null
 
-  @GuardedBy("this") private var lastBitmapReference: CloseableReference<Bitmap?>? = null
+  @GuardedBy("this") private var lastBitmapReference: CloseableReference<Bitmap>? = null
 
   @Synchronized
-  override fun getCachedFrame(frameNumber: Int): CloseableReference<Bitmap?>? =
+  override fun getCachedFrame(frameNumber: Int): CloseableReference<Bitmap>? =
       if (lastFrameNumber == frameNumber) {
         CloseableReference.cloneOrNull(lastBitmapReference)
       } else {
@@ -32,7 +32,7 @@ class KeepLastFrameCache : BitmapFrameCache {
       }
 
   @Synchronized
-  override fun getFallbackFrame(frameNumber: Int): CloseableReference<Bitmap?>? =
+  override fun getFallbackFrame(frameNumber: Int): CloseableReference<Bitmap>? =
       CloseableReference.cloneOrNull(lastBitmapReference)
 
   @Synchronized
@@ -40,7 +40,7 @@ class KeepLastFrameCache : BitmapFrameCache {
       frameNumber: Int,
       width: Int,
       height: Int
-  ): CloseableReference<Bitmap?>? =
+  ): CloseableReference<Bitmap>? =
       try {
         CloseableReference.cloneOrNull(lastBitmapReference)
       } finally {
@@ -65,17 +65,15 @@ class KeepLastFrameCache : BitmapFrameCache {
   @Synchronized
   override fun onFrameRendered(
       frameNumber: Int,
-      bitmapReference: CloseableReference<Bitmap?>?,
+      bitmapReference: CloseableReference<Bitmap>,
       @FrameType frameType: Int
   ) {
-    if (bitmapReference != null &&
-        lastBitmapReference != null &&
-        bitmapReference.get() == lastBitmapReference!!.get()) {
+    if (lastBitmapReference != null && bitmapReference.get() == lastBitmapReference?.get()) {
       return
     }
     CloseableReference.closeSafely(lastBitmapReference)
-    if (frameCacheListener != null && lastFrameNumber != FRAME_NUMBER_UNSET) {
-      frameCacheListener!!.onFrameEvicted(this, lastFrameNumber)
+    if (lastFrameNumber != FRAME_NUMBER_UNSET) {
+      frameCacheListener?.onFrameEvicted(this, lastFrameNumber)
     }
     lastBitmapReference = CloseableReference.cloneOrNull(bitmapReference)
     frameCacheListener?.onFrameCached(this, frameNumber)
@@ -84,7 +82,7 @@ class KeepLastFrameCache : BitmapFrameCache {
 
   override fun onFramePrepared(
       frameNumber: Int,
-      bitmapReference: CloseableReference<Bitmap?>?,
+      bitmapReference: CloseableReference<Bitmap>,
       @FrameType frameType: Int
   ) = Unit
 
@@ -94,8 +92,8 @@ class KeepLastFrameCache : BitmapFrameCache {
 
   @Synchronized
   private fun closeAndResetLastBitmapReference() {
-    if (frameCacheListener != null && lastFrameNumber != FRAME_NUMBER_UNSET) {
-      frameCacheListener!!.onFrameEvicted(this, lastFrameNumber)
+    if (lastFrameNumber != FRAME_NUMBER_UNSET) {
+      frameCacheListener?.onFrameEvicted(this, lastFrameNumber)
     }
     CloseableReference.closeSafely(lastBitmapReference)
     lastBitmapReference = null

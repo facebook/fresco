@@ -23,7 +23,7 @@ interface BitmapFrameRenderer {
    * @param targetBitmap the bitmap to render the frame in
    * @return true if successful
    */
-  fun renderFrame(frameNumber: Int, targetBitmap: Bitmap?): Boolean
+  fun renderFrame(frameNumber: Int, targetBitmap: Bitmap): Boolean
 
   /**
    * Set the parent drawable bounds to be used for frame rendering.
