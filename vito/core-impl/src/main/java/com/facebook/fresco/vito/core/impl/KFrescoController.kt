@@ -148,6 +148,7 @@ class KFrescoController(
           ImageFetchSubscriber(
               imageId, drawable, imageToDataModelMapper, debugOverlayHandler, null),
           uiThreadExecutor) // Keyframes require callbacks to be on the main thread.
+      drawable.dataSource = dataSource
     }
     drawable.isFetchSubmitted = true
     drawable.invalidateSelf()

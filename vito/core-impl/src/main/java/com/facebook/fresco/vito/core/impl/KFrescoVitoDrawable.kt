@@ -12,6 +12,7 @@ import android.graphics.ColorFilter
 import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import com.facebook.datasource.DataSource
 import com.facebook.drawee.drawable.VisibilityCallback
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.VitoImagePerfListener
@@ -32,6 +33,13 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
   val listenerManager: CombinedImageListenerImpl = CombinedImageListenerImpl()
   var _extras: Any? = null
   var viewportDimensions: Rect? = null
+  var dataSource: DataSource<out Any>? = null
+    set(value) {
+      if (field != value) {
+        field?.close()
+      }
+      field = value
+    }
 
   val releaseState = ImageReleaseScheduler.createReleaseState(this)
   private var hasBoundsSet = false
@@ -121,6 +129,7 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
     _imageRequest = null
     _isLoading = false
     _callerContext = null
+    dataSource = null
 
     placeholderLayer.reset()
     actualImageLayer.reset()
