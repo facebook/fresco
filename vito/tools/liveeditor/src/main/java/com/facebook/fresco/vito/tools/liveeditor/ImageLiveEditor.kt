@@ -17,7 +17,7 @@ import com.facebook.fresco.vito.source.ImageSource
 import com.facebook.fresco.vito.source.ImageSourceProvider
 
 class ImageLiveEditor(
-    private val drawable: FrescoDrawableInterface,
+    val drawable: FrescoDrawableInterface,
     private val imagePipeline: VitoImagePipeline,
     private val frescoController: FrescoController2
 ) {

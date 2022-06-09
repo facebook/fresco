@@ -17,8 +17,12 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.Spinner
+import com.facebook.fresco.vito.core.impl.DebugDataProvider
 
-class LiveEditorUiUtils(var liveEditor: ImageLiveEditor?) {
+class LiveEditorUiUtils(
+    var liveEditor: ImageLiveEditor?,
+    var debugDataProviders: List<DebugDataProvider>
+) {
 
   fun createView(
       context: Context,
@@ -68,9 +72,16 @@ class LiveEditorUiUtils(var liveEditor: ImageLiveEditor?) {
 
   private fun createImageInfoButton(context: Context): Button =
       createButton(context, "Image Info") {
-        val source: List<Pair<String, String>> =
+        var source: List<Pair<String, String>> =
             ImageSourceParser.convertSourceToKeyValue(liveEditor?.getSource().toString())
 
+        liveEditor?.let { liveEditorNonNull ->
+          debugDataProviders.forEach {
+            val debugData: Pair<String, String> =
+                Pair(it.longName, it.extractData(liveEditorNonNull.drawable))
+            source = source + debugData
+          }
+        }
         ImageSourceUiUtil(context).apply { createSourceDialog(source)?.show() }
       }
 

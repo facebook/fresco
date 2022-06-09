@@ -22,8 +22,11 @@ class DebugOverlayHandler(
       return
     }
 
-    extractDebugOverlayDrawable(drawable).apply {
-      debugDataProviders.forEach { addDebugData(it.shortName, it.extractData(drawable)) }
+    val debugOverlayDrawable = extractDebugOverlayDrawable(drawable)
+    if (debugOverlayDrawable is DebugOverlayDrawable) {
+      debugDataProviders.forEach {
+        debugOverlayDrawable.addDebugData(it.shortName, it.extractData(drawable).toString())
+      }
     }
   }
 

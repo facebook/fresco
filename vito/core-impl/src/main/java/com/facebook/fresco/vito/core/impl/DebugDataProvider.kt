@@ -7,14 +7,16 @@
 
 package com.facebook.fresco.vito.core.impl
 
+import android.graphics.drawable.Drawable
 import com.facebook.fresco.ui.common.VitoUtils
+import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import java.util.Locale
 
 class DebugDataProvider(
     val shortName: String,
     val longName: String,
     val description: String,
-    val extractData: (KFrescoVitoDrawable) -> String
+    val extractData: (FrescoDrawableInterface) -> String
 )
 
 val imageIDProvider =
@@ -22,14 +24,22 @@ val imageIDProvider =
 
 val drawableDimensionsProvider =
     DebugDataProvider("D", "Drawable dimensions", "The visible Drawable dimensions on screen") {
-      formatDimensions(it.bounds.width(), it.bounds.height())
+      if (it is Drawable) {
+        formatDimensions(it.bounds.width(), it.bounds.height())
+      } else {
+        ""
+      }
     }
 
 val imageDimensionsProvider =
     DebugDataProvider("I", "Image dimensions", "The dimensions of the decoded image") {
-      when (val model = it.actualImageLayer.getDataModel()) {
-        null -> "unset"
-        else -> formatDimensions(model.width, model.height)
+      if (it is KFrescoVitoDrawable) {
+        when (val model = it.actualImageLayer.getDataModel()) {
+          null -> "unset"
+          else -> formatDimensions(model.width, model.height)
+        }
+      } else {
+        ""
       }
     }
 
