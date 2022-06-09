@@ -5,10 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
-plugins {
-    `kotlin-dsl`
-}
+plugins { `kotlin-dsl` }
