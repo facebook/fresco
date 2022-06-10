@@ -77,7 +77,10 @@ object ExampleDatabase {
           ExampleCategory(
               "Fresco Vito",
               listOf(
-                  ExampleItem("Vito Litho: Simple") { FrescoVitoLithoSimpleFragment() },
+                  ExampleItem(
+                      "Vito Litho: Simple",
+                      FrescoVitoLithoSimpleExample,
+                      "Simple Fresco Vito Litho component."),
                   ExampleItem("Vito Litho: Region decoding") {
                     FrescoVitoLithoRegionDecodeFragment()
                   },
@@ -87,6 +90,10 @@ object ExampleDatabase {
                   ExampleItem("Vito Litho: Sections (RecyclerView)") {
                     FrescoVitoLithoSectionsFragment()
                   },
+                  ExampleItem(
+                      "Vito Litho: Listener",
+                      FrescoVitoLithoListenerExample,
+                      "Vito Litho component with listener."),
                   ExampleItem("Vito Litho: Gallery") { FrescoVitoLithoGalleryFragment() },
                   ExampleItem("Vito View: Simple") { VitoViewSimpleFragment() },
                   ExampleItem("Vito View: Recycler") { VitoViewRecyclerFragment() },
