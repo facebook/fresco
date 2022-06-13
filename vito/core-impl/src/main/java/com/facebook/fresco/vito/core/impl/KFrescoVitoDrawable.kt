@@ -12,6 +12,7 @@ import android.graphics.ColorFilter
 import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import com.facebook.common.closeables.AutoCleanupDelegate
 import com.facebook.datasource.DataSource
 import com.facebook.drawee.drawable.VisibilityCallback
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
@@ -33,20 +34,23 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
   val listenerManager: CombinedImageListenerImpl = CombinedImageListenerImpl()
   var _extras: Any? = null
   var viewportDimensions: Rect? = null
-  var dataSource: DataSource<out Any>? = null
-    set(value) {
-      if (field != value) {
-        field?.close()
-      }
-      field = value
-    }
+  var dataSource: DataSource<out Any>? by DataSourceCleanupDelegate()
 
   val releaseState = ImageReleaseScheduler.createReleaseState(this)
   private var hasBoundsSet = false
 
   private var _imageRequest: VitoImageRequest? = null
 
-  private var _closeable: Closeable? = null
+  private val closeableCleanupFunction: (Closeable) -> Unit = {
+    ImageReleaseScheduler.cancelAllReleasing(this)
+    try {
+      it.close()
+    } catch (e: IOException) {
+      // swallow
+    }
+  }
+
+  var closeable: Closeable? by AutoCleanupDelegate(null, closeableCleanupFunction)
 
   private var _refetchRunnable: Runnable? = null
 
@@ -126,10 +130,11 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
     imagePerfListener.onImageRelease(this)
     ImageReleaseScheduler.cancelAllReleasing(this)
     _imageId = 0
+    closeable = null
+    dataSource = null
     _imageRequest = null
     _isLoading = false
     _callerContext = null
-    dataSource = null
 
     placeholderLayer.reset()
     actualImageLayer.reset()
@@ -137,30 +142,9 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
     overlayImageLayer.reset()
     debugOverlayImageLayer?.reset()
     hasBoundsSet = false
-    closeCloseable()
 
     listenerManager.onReset()
     listenerManager.imageListener = null
-  }
-
-  @Synchronized
-  fun setCloseable(closeable: Closeable?) {
-    ImageReleaseScheduler.cancelAllReleasing(this)
-    closeCloseable()
-    _closeable = closeable
-  }
-
-  @Synchronized
-  private fun closeCloseable() {
-    val current = _closeable
-    if (current != null) {
-      _closeable = null
-      try {
-        current.close()
-      } catch (e: IOException) {
-        // swallow
-      }
-    }
   }
 
   private var drawableAlpha: Int = 255

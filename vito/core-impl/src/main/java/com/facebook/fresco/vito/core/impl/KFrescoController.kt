@@ -111,7 +111,7 @@ class KFrescoController(
         val image = cachedImage?.get()
         if (image != null) {
           drawable.isFetchSubmitted = true
-          drawable.setCloseable(cachedImage.clone())
+          drawable.closeable = cachedImage.clone()
           drawable.actualImageLayer.setActualImage(options, image, imageToDataModelMapper)
           // TODO(T105148151): trigger listeners
           drawable.invalidateSelf()

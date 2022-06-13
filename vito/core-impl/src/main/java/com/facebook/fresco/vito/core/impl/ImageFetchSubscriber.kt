@@ -38,7 +38,7 @@ class ImageFetchSubscriber(
     }
 
     // We avoid cloning result and closing the original for performance reasons
-    drawable.setCloseable(result)
+    drawable.closeable = result
     val image = result.get()
     drawable.actualImageLayer.setActualImage(request.imageOptions, image, imageToDataModelMapper)
     // Remove the progress image
