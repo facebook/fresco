@@ -5,15 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.viewport;
+package com.facebook.fresco.viewport
 
-import android.graphics.Matrix;
-import android.graphics.Rect;
-import com.facebook.infer.annotation.Nullsafe;
+import android.graphics.Matrix
+import android.graphics.Rect
 
-@Nullsafe(Nullsafe.Mode.STRICT)
-public interface HasTransform {
-
+interface HasTransform {
   /**
    * Gets transformation matrix based on the scale type.
    *
@@ -25,11 +22,12 @@ public interface HasTransform {
    * @param focusY focus point y coordinate, relative [0...1]
    * @return same reference to the out matrix for convenience
    */
-  Matrix getTransform(
-      Matrix outTransform,
-      Rect parentBounds,
-      int childWidth,
-      int childHeight,
-      float focusX,
-      float focusY);
+  fun getTransform(
+      outTransform: Matrix,
+      parentBounds: Rect,
+      childWidth: Int,
+      childHeight: Int,
+      focusX: Float,
+      focusY: Float
+  ): Matrix
 }
