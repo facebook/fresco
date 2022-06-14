@@ -169,7 +169,7 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
     debugOverlayImageLayer?.draw(canvas)
   }
 
-  override fun onBoundsChange(bounds: Rect?) {
+  override fun onBoundsChange(bounds: Rect) {
     super.onBoundsChange(bounds)
     setLayerBounds(bounds)
   }
