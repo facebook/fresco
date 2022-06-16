@@ -9,7 +9,7 @@ package com.facebook.fresco.vito.provider.impl
 
 import com.facebook.callercontext.CallerContextVerifier
 
-class NoOpCallerContextVerifier : CallerContextVerifier {
+object NoOpCallerContextVerifier : CallerContextVerifier {
   override fun verifyCallerContext(callerContext: Any?, isPrefetch: Boolean) {
     // No-op
   }

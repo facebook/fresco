@@ -175,7 +175,7 @@ class ShowcaseApplication : Application() {
                   .executorSupplier
                   .forLightweightBackgroundTasks(),
               UiThreadImmediateExecutorService.getInstance(),
-              NoOpCallerContextVerifier(),
+              NoOpCallerContextVerifier,
               DebugOverlayHandler(DebugOverlaySupplierSingleton.getInstance(applicationContext))))
     } else {
       FrescoVito.initialize(

@@ -54,7 +54,7 @@ class FrescoVito {
         debugOverlayEnabledSupplier: Supplier<Boolean?>? = null,
         useNativeCode: Supplier<Boolean> = Suppliers.BOOLEAN_TRUE,
         vitoConfig: FrescoVitoConfig = DefaultFrescoVitoConfig(),
-        callerContextVerifier: CallerContextVerifier = NoOpCallerContextVerifier(),
+        callerContextVerifier: CallerContextVerifier = NoOpCallerContextVerifier,
         vitoImagePerfListener: VitoImagePerfListener = BaseVitoImagePerfListener()
     ) {
       if (isInitialized) {

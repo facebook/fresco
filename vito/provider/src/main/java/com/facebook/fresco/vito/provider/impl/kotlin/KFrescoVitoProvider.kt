@@ -31,7 +31,7 @@ class KFrescoVitoProvider(
     private val imagePipelineUtils: ImagePipelineUtils,
     private val uiThreadExecutor: Executor,
     private val lightweightBackgroundExecutor: Executor,
-    private val callerContextVerifier: CallerContextVerifier = NoOpCallerContextVerifier(),
+    private val callerContextVerifier: CallerContextVerifier = NoOpCallerContextVerifier,
     private val debugOverlayHandler: DebugOverlayHandler? = null
 ) : FrescoVitoProvider.Implementation {
 
