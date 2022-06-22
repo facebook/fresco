@@ -12,114 +12,113 @@ import com.facebook.fresco.vito.renderer.util.ColorUtils
 
 typealias RenderCommand = (Canvas) -> Unit
 
-class ImageRenderer {
-  companion object {
+object ImageRenderer {
 
-    /**
-     * Creates an image data model render command.
-     *
-     * NOTE: The render command can modify the Canvas that it draws on and does not restore the
-     * canvas. The Canvas has to be saved & restored manually if required.
-     */
-    fun createImageDataModelRenderCommand(
-        model: ImageDataModel,
-        shape: Shape,
-        paint: Paint,
-        imageTransformation: Matrix? = null
-    ): RenderCommand {
-      return when (model) {
-        is BitmapImageDataModel -> model.createRenderCommand(shape, paint, imageTransformation)
-        is ColorIntImageDataModel -> model.createRenderCommand(shape, paint, imageTransformation)
-        is DrawableImageDataModel -> model.createRenderCommand(shape, paint, imageTransformation)
-      }
+  /**
+   * Creates an image data model render command.
+   *
+   * NOTE: The render command can modify the Canvas that it draws on and does not restore the
+   * canvas. The Canvas has to be saved & restored manually if required.
+   */
+  fun createImageDataModelRenderCommand(
+      model: ImageDataModel,
+      shape: Shape,
+      paint: Paint,
+      imageTransformation: Matrix? = null
+  ): RenderCommand {
+    return when (model) {
+      is BitmapImageDataModel -> model.createRenderCommand(shape, paint, imageTransformation)
+      is ColorIntImageDataModel -> model.createRenderCommand(shape, paint, imageTransformation)
+      is DrawableImageDataModel -> model.createRenderCommand(shape, paint, imageTransformation)
     }
+  }
 
-    inline fun BitmapImageDataModel.createRenderCommand(
-        shape: Shape,
-        paint: Paint,
-        imageTransformation: Matrix? = null
-    ): RenderCommand {
+  inline fun BitmapImageDataModel.createRenderCommand(
+      shape: Shape,
+      paint: Paint,
+      imageTransformation: Matrix? = null
+  ): RenderCommand =
       when (shape) {
-        is RectShape -> {
-          return {
-            it.concat(imageTransformation)
-            it.drawBitmap(bitmap, 0f, 0f, paint)
-          }
-        }
+        is RectShape -> bitmapRenderCommand(paint, bitmap, imageTransformation)
         is CircleShape ->
             if (!isBitmapCircular) {
-              val paint = getBitmapPaint(bitmap, paint, imageTransformation)
-              return { shape.draw(it, paint) }
+              paintRenderCommand(shape, paint.setBitmap(bitmap, imageTransformation))
             } else {
-              return {
-                it.concat(imageTransformation)
-                it.drawBitmap(bitmap, 0f, 0f, paint)
-              }
+              bitmapRenderCommand(paint, bitmap, imageTransformation)
             }
         else -> {
-          val paint = getBitmapPaint(bitmap, paint, imageTransformation)
-          return { shape.draw(it, paint) }
+          paintRenderCommand(shape, paint.setBitmap(bitmap, imageTransformation))
         }
       }
-    }
 
-    inline fun ColorIntImageDataModel.createRenderCommand(
-        shape: Shape,
-        paint: Paint,
-        imageTransformation: Matrix? = null
-    ): RenderCommand {
-      // The image transformation is a no-op for solid colors since it is a no-op
-      val paint = paint.apply { color = ColorUtils.multiplyColorAlpha(colorInt, paint.alpha) }
-      return { shape.draw(it, paint) }
-    }
+  inline fun ColorIntImageDataModel.createRenderCommand(
+      shape: Shape,
+      paint: Paint,
+      imageTransformation: Matrix? = null
+  ): RenderCommand {
+    // The image transformation is a no-op for solid colors since it is a no-op
+    paint.color = ColorUtils.multiplyColorAlpha(colorInt, paint.alpha)
+    return paintRenderCommand(shape, paint)
+  }
 
-    inline fun DrawableImageDataModel.createRenderCommand(
-        shape: Shape,
-        paint: Paint,
-        imageTransformation: Matrix? = null,
-        colorFilter: ColorFilter? = null,
-    ): RenderCommand {
-      // We transform by scaling the Canvas, so we let the Drawable draw itself with its
-      // preferred dimensions
-      when (shape) {
-        is RectShape -> return {
-              if (width >= 0 && height >= 0) {
-                drawable.setBounds(0, 0, width, height)
-                it.concat(imageTransformation)
-              } else {
-                // The image dimensions are not set, so we assume the image can stretch to fit the
-                // entire rect, so we do not apply the transformation.
-                drawable.setBounds(
-                    shape.rect.left.toInt(),
-                    shape.rect.top.toInt(),
-                    shape.rect.right.toInt(),
-                    shape.rect.bottom.toInt())
-              }
-              drawable.colorFilter = colorFilter
-              drawable.alpha = paint.alpha
-              drawable.draw(it)
+  inline fun DrawableImageDataModel.createRenderCommand(
+      shape: Shape,
+      paint: Paint,
+      imageTransformation: Matrix? = null,
+      colorFilter: ColorFilter? = null,
+  ): RenderCommand {
+    // We transform by scaling the Canvas, so we let the Drawable draw itself with its
+    // preferred dimensions
+    when (shape) {
+      is RectShape -> return { canvas ->
+            if (width >= 0 && height >= 0) {
+              drawable.setBounds(0, 0, width, height)
+              canvas.concat(imageTransformation)
+            } else {
+              // The image dimensions are not set, so we assume the image can stretch to fit the
+              // entire rect, so we do not apply the transformation.
+              drawable.setBounds(
+                  shape.rect.left.toInt(),
+                  shape.rect.top.toInt(),
+                  shape.rect.right.toInt(),
+                  shape.rect.bottom.toInt())
             }
-        else -> {
-          return {
-            drawable.setBounds(0, 0, width, height)
-            drawable.colorFilter = null // The Paint handles the color filter
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-            drawable.draw(Canvas(bitmap))
-            shape.draw(it, getBitmapPaint(bitmap, paint, imageTransformation))
+            drawable.colorFilter = colorFilter
+            drawable.alpha = paint.alpha
+            drawable.draw(canvas)
           }
+      else -> {
+        return { canvas ->
+          drawable.setBounds(0, 0, width, height)
+          drawable.colorFilter = null // The Paint handles the color filter
+          val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+          drawable.draw(Canvas(bitmap))
+          paint.setBitmap(bitmap, imageTransformation)
+          shape.draw(canvas, paint)
         }
       }
     }
+  }
 
-    inline fun getBitmapPaint(
-        bitmap: Bitmap,
-        paint: Paint,
-        shaderTransformation: Matrix? = null,
-    ): Paint {
-      return paint.apply {
-        shader = BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
-        shader.setLocalMatrix(shaderTransformation)
-      }
-    }
+  inline fun bitmapRenderCommand(
+      paint: Paint,
+      bitmap: Bitmap,
+      imageTransformation: Matrix?
+  ): RenderCommand = { canvas ->
+    canvas.concat(imageTransformation)
+    canvas.drawBitmap(bitmap, 0f, 0f, paint)
+  }
+
+  inline fun paintRenderCommand(shape: Shape, paint: Paint): RenderCommand = { canvas ->
+    shape.draw(canvas, paint)
+  }
+
+  inline fun Paint.setBitmap(
+      bitmap: Bitmap,
+      shaderTransformation: Matrix? = null,
+  ): Paint {
+    shader = BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+    shader.setLocalMatrix(shaderTransformation)
+    return this
   }
 }
