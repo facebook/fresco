@@ -21,7 +21,7 @@ import com.facebook.fresco.vito.core.impl.DebugDataProvider
 
 class LiveEditorUiUtils(
     var liveEditor: ImageLiveEditor?,
-    var debugDataProviders: List<DebugDataProvider>
+    var debugDataProviders: List<DebugDataProvider>? = null
 ) {
 
   fun createView(
@@ -76,7 +76,7 @@ class LiveEditorUiUtils(
             ImageSourceParser.convertSourceToKeyValue(liveEditor?.getSource().toString())
 
         liveEditor?.let { liveEditorNonNull ->
-          debugDataProviders.forEach {
+          debugDataProviders?.forEach {
             val debugData: Pair<String, String> =
                 Pair(it.longName, it.extractData(liveEditorNonNull.drawable))
             source = source + debugData

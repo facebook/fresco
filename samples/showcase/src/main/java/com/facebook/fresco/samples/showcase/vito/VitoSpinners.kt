@@ -13,6 +13,7 @@ import android.graphics.PointF
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.InsetDrawable
 import androidx.core.content.ContextCompat
 import com.facebook.drawee.drawable.AutoRotateDrawable
@@ -27,9 +28,11 @@ import com.facebook.fresco.samples.showcase.postprocessor.SlowGreyScalePostproce
 import com.facebook.fresco.samples.showcase.postprocessor.WatermarkPostprocessor
 import com.facebook.fresco.vito.options.BorderOptions
 import com.facebook.fresco.vito.options.ImageOptions
+import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory
 import com.facebook.fresco.vito.options.RoundingOptions
 import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.common.RotationOptions
+import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor
 import com.facebook.imagepipeline.postprocessors.RoundAsCirclePostprocessor
 import com.facebook.imagepipeline.postprocessors.RoundPostprocessor
@@ -242,7 +245,10 @@ object VitoSpinners {
               "none" to { builder: ImageOptions.Builder -> builder.customDrawableFactory(null) },
               "blue color" to
                   { builder: ImageOptions.Builder ->
-                    builder.customDrawableFactory { _, _ -> ColorDrawable(Color.BLUE) }
+                    builder.customDrawableFactory(object : ImageOptionsDrawableFactory {
+                        override fun createDrawable(closeableImage: CloseableImage, imageOptions: ImageOptions): Drawable?
+                        = ColorDrawable(Color.BLUE)
+                    })
                   }),
           "Custom Drawable Factory")
 
