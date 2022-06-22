@@ -84,6 +84,8 @@ public class ImageOptions extends DecodedImageOptions {
 
   private final int mDelayMs;
 
+  private final boolean mExperimentalDynamicSize;
+
   public ImageOptions(Builder builder) {
     super(builder);
     mPlaceholderRes = builder.mPlaceholderRes;
@@ -118,6 +120,8 @@ public class ImageOptions extends DecodedImageOptions {
     mCustomDrawableFactory = builder.mCustomDrawableFactory;
 
     mDelayMs = builder.mDelayMs;
+
+    mExperimentalDynamicSize = builder.mExperimentalDynamicSize;
   }
 
   public Builder extend() {
@@ -214,6 +218,10 @@ public class ImageOptions extends DecodedImageOptions {
 
   public int getDelayMs() {
     return mDelayMs;
+  }
+
+  public boolean getExperimentalDynamicSize() {
+    return mExperimentalDynamicSize;
   }
 
   public boolean equalsForActualImage(ImageOptions other) {
@@ -401,6 +409,8 @@ public class ImageOptions extends DecodedImageOptions {
 
     private int mDelayMs;
 
+    private boolean mExperimentalDynamicSize;
+
     private Builder() {
       super();
     }
@@ -435,6 +445,8 @@ public class ImageOptions extends DecodedImageOptions {
       mCustomDrawableFactory = defaultOptions.getCustomDrawableFactory();
 
       mDelayMs = defaultOptions.getDelayMs();
+
+      mExperimentalDynamicSize = defaultOptions.getExperimentalDynamicSize();
     }
 
     public Builder placeholder(@Nullable Drawable placeholder) {
@@ -617,6 +629,11 @@ public class ImageOptions extends DecodedImageOptions {
      */
     public Builder delayMs(int delayMs) {
       mDelayMs = delayMs;
+      return getThis();
+    }
+
+    public Builder experimentalDynamicSize(boolean dynamicSize) {
+      mExperimentalDynamicSize = dynamicSize;
       return getThis();
     }
 
