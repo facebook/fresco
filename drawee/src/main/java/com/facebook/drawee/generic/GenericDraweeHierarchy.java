@@ -420,7 +420,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   }
 
   /** Sets the color filter to be applied on the actual image. */
-  public void setActualImageColorFilter(ColorFilter colorfilter) {
+  public void setActualImageColorFilter(@Nullable ColorFilter colorfilter) {
     mActualImageWrapper.setColorFilter(colorfilter);
   }
 
