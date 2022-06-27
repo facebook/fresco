@@ -15,9 +15,11 @@ data class Dimensions(val w: Int, val h: Int) {
 }
 
 interface UriModifierInterface {
-  fun modifyUri(uri: Uri, viewport: Dimensions?, scaleType: ScaleType): Uri = uri
+  fun modifyUri(uri: Uri, viewport: Dimensions?, scaleType: ScaleType): Uri
 }
 
 object UriModifier : UriModifierInterface {
   @kotlin.jvm.JvmField var INSTANCE: UriModifierInterface = this
+
+  override fun modifyUri(uri: Uri, viewport: Dimensions?, scaleType: ScaleType) = uri
 }
