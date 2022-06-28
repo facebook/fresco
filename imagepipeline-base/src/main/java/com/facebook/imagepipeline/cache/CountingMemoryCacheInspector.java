@@ -67,10 +67,10 @@ public class CountingMemoryCacheInspector<K, V> {
     }
 
     public void release() {
-      for (DumpInfoEntry entry : lruEntries) {
+      for (DumpInfoEntry<?, ?> entry : lruEntries) {
         entry.release();
       }
-      for (DumpInfoEntry entry : sharedEntries) {
+      for (DumpInfoEntry<?, ?> entry : sharedEntries) {
         entry.release();
       }
     }
@@ -89,7 +89,7 @@ public class CountingMemoryCacheInspector<K, V> {
    * <p>Caller should call release method on returned DumpInfo after it is done with examining cache
    * contents
    */
-  public DumpInfo dumpCacheContent() {
+  public DumpInfo<K, V> dumpCacheContent() {
     synchronized (mCountingBitmapCache) {
       DumpInfo<K, V> dumpInfo =
           new DumpInfo<>(
