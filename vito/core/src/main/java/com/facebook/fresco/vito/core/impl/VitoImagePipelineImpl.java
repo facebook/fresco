@@ -8,15 +8,21 @@
 package com.facebook.fresco.vito.core.impl;
 
 import android.content.res.Resources;
+import android.graphics.Rect;
+import android.net.Uri;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
+import com.facebook.fresco.middleware.Dimensions;
+import com.facebook.fresco.middleware.UriModifier;
 import com.facebook.fresco.ui.common.VitoUtils;
 import com.facebook.fresco.vito.core.ImagePipelineUtils;
 import com.facebook.fresco.vito.core.VitoImagePipeline;
 import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.source.ImageSource;
+import com.facebook.fresco.vito.source.ImageSourceProvider;
+import com.facebook.fresco.vito.source.SingleImageSource;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.listener.RequestListener;
@@ -40,19 +46,42 @@ public class VitoImagePipelineImpl implements VitoImagePipeline {
   @Override
   public VitoImageRequest createImageRequest(
       Resources resources, ImageSource imageSource, @Nullable ImageOptions options) {
+    return createImageRequest(resources, imageSource, options, null);
+  }
+
+  @Override
+  public VitoImageRequest createImageRequest(
+      Resources resources,
+      ImageSource imageSource,
+      @Nullable ImageOptions options,
+      @Nullable Rect viewport) {
     if (options == null) {
       options = ImageOptions.defaults();
     }
+
+    ImageSource finalImageSource = imageSource;
+    if (options.getExperimentalDynamicSize() && imageSource instanceof SingleImageSource) {
+      Uri uri = ((SingleImageSource) imageSource).getUri();
+      Uri maybeModifiedUri =
+          UriModifier.INSTANCE.modifyUri(
+              uri,
+              viewport == null ? null : new Dimensions(viewport.width(), viewport.height()),
+              options.getActualImageScaleType());
+      if (maybeModifiedUri != uri) {
+        finalImageSource = ImageSourceProvider.forUri(maybeModifiedUri);
+      }
+    }
+
     CacheKey finalImageCacheKey = null;
     ImageRequest finalImageRequest =
         ImageSourceToImagePipelineAdapter.maybeExtractFinalImageRequest(
-            imageSource, mImagePipelineUtils, options);
+            finalImageSource, mImagePipelineUtils, options);
 
     if (finalImageRequest != null) {
       finalImageCacheKey = mImagePipeline.getCacheKey(finalImageRequest, null);
     }
     return new VitoImageRequest(
-        resources, imageSource, options, finalImageRequest, finalImageCacheKey);
+        resources, finalImageSource, options, finalImageRequest, finalImageCacheKey);
   }
 
   @Override

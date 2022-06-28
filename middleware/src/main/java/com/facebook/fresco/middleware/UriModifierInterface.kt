@@ -18,8 +18,10 @@ interface UriModifierInterface {
   fun modifyUri(uri: Uri, viewport: Dimensions?, scaleType: ScaleType): Uri
 }
 
-object UriModifier : UriModifierInterface {
-  @kotlin.jvm.JvmField var INSTANCE: UriModifierInterface = this
+object NopUriModifier : UriModifierInterface {
+  override fun modifyUri(uri: Uri, viewport: Dimensions?, scaleType: ScaleType): Uri = uri
+}
 
-  override fun modifyUri(uri: Uri, viewport: Dimensions?, scaleType: ScaleType) = uri
+object UriModifier {
+  @JvmField var INSTANCE: UriModifierInterface = NopUriModifier
 }

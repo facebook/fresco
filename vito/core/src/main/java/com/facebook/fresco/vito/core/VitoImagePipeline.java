@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.core;
 
 import android.content.res.Resources;
+import android.graphics.Rect;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.fresco.vito.options.ImageOptions;
@@ -22,6 +23,12 @@ public interface VitoImagePipeline {
 
   VitoImageRequest createImageRequest(
       Resources resources, ImageSource imageSource, @Nullable ImageOptions options);
+
+  VitoImageRequest createImageRequest(
+      Resources resources,
+      ImageSource imageSource,
+      @Nullable ImageOptions options,
+      @Nullable Rect viewport);
 
   @Nullable
   CloseableReference<CloseableImage> getCachedImage(VitoImageRequest imageRequest);
