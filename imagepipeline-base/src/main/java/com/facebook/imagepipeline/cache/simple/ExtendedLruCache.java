@@ -5,9 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.imagepipeline.cache;
+package com.facebook.imagepipeline.cache.simple;
 
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /** Identical to {@link android.util.LruCache} but gives access to backing map. */
@@ -286,7 +287,11 @@ public class ExtendedLruCache<K, V> {
     int accesses = hitCount + missCount;
     int hitPercent = accesses != 0 ? (100 * hitCount / accesses) : 0;
     return String.format(
+        Locale.US,
         "LruCache[maxSize=%d,hits=%d,misses=%d,hitRate=%d%%]",
-        maxSize, hitCount, missCount, hitPercent);
+        maxSize,
+        hitCount,
+        missCount,
+        hitPercent);
   }
 }

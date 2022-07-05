@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.imagepipeline.cache;
+package com.facebook.imagepipeline.cache.simple;
 
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -13,6 +13,9 @@ import com.facebook.common.internal.Predicate;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imagepipeline.cache.CountingLruMap;
+import com.facebook.imagepipeline.cache.CountingMemoryCache;
+import com.facebook.imagepipeline.cache.MemoryCacheParams;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
