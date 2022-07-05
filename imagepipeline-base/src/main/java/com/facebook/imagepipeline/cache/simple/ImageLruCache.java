@@ -7,9 +7,16 @@
 
 package com.facebook.imagepipeline.cache.simple;
 
+import com.facebook.common.internal.Predicate;
+import com.facebook.common.references.CloseableReference;
+import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
-import java.util.Set;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
+@ThreadSafe
+@Nullsafe(Nullsafe.Mode.LOCAL)
 class ImageLruCache<K> extends ExtendedLruCache<K, SizedEntry> {
 
   /**
@@ -26,16 +33,38 @@ class ImageLruCache<K> extends ExtendedLruCache<K, SizedEntry> {
     return value.size;
   }
 
-  public Set<K> keys() {
-    return map.keySet();
-  }
-
-  public Set<Map.Entry<K, SizedEntry>> entries() {
-    return map.entrySet();
-  }
-
   /** @return number of elements currently in cache */
   public synchronized int count() {
     return putCount() - evictionCount();
+  }
+
+  public synchronized int removeAll(Predicate<K> predicate) {
+    int count = 0;
+    for (K key : map.keySet()) {
+      if (predicate.apply(key)) {
+        map.remove(key);
+        count++;
+      }
+    }
+    return count;
+  }
+
+  public synchronized boolean contains(Predicate<K> predicate) {
+    for (K key : map.keySet()) {
+      if (predicate.apply(key)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public synchronized @Nullable CloseableImage inspect(K key) {
+    for (Map.Entry<K, SizedEntry> entry : map.entrySet()) {
+      if (entry.getKey().equals(key)) {
+        CloseableReference<CloseableImage> ref = entry.getValue().value;
+        return ref.get();
+      }
+    }
+    return null;
   }
 }

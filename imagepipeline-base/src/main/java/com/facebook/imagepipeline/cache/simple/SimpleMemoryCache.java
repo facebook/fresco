@@ -109,13 +109,7 @@ public class SimpleMemoryCache<K> implements CountingMemoryCache<K, CloseableIma
   @Nullable
   @Override
   public CloseableImage inspect(K key) {
-    for (Map.Entry<K, SizedEntry> entry : map.entries()) {
-      if (entry.getKey().equals(key)) {
-        CloseableReference<CloseableImage> ref = entry.getValue().value;
-        return ref.get();
-      }
-    }
-    return null;
+    return map.inspect(key);
   }
 
   @Override
@@ -125,24 +119,12 @@ public class SimpleMemoryCache<K> implements CountingMemoryCache<K, CloseableIma
 
   @Override
   public int removeAll(Predicate<K> predicate) {
-    int count = 0;
-    for (K key : map.keys()) {
-      if (predicate.apply(key)) {
-        map.remove(key);
-        count++;
-      }
-    }
-    return count;
+    return map.removeAll(predicate);
   }
 
   @Override
   public boolean contains(Predicate<K> predicate) {
-    for (K key : map.map.keySet()) {
-      if (predicate.apply(key)) {
-        return true;
-      }
-    }
-    return false;
+    return map.contains(predicate);
   }
 
   @Override
