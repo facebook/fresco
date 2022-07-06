@@ -4,19 +4,15 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+package com.facebook.fresco.vito.listener
 
-package com.facebook.fresco.vito.listener;
-
-import android.graphics.drawable.Drawable;
-import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
-import com.facebook.fresco.ui.common.OnDrawControllerListener;
-import com.facebook.imagepipeline.image.ImageInfo;
-import com.facebook.infer.annotation.Nullsafe;
-import javax.annotation.Nullable;
+import android.graphics.drawable.Drawable
+import com.facebook.drawee.backends.pipeline.info.ImageOrigin
+import com.facebook.fresco.ui.common.OnDrawControllerListener
+import com.facebook.imagepipeline.image.ImageInfo
 
 /** Interface for an image status listener. */
-@Nullsafe(Nullsafe.Mode.STRICT)
-public interface ImageListener extends OnDrawControllerListener<ImageInfo> {
+interface ImageListener : OnDrawControllerListener<ImageInfo> {
 
   /**
    * Called before the image request is submitted.
@@ -24,7 +20,7 @@ public interface ImageListener extends OnDrawControllerListener<ImageInfo> {
    * @param id image id
    * @param callerContext caller context
    */
-  void onSubmit(long id, @Nullable Object callerContext);
+  fun onSubmit(id: Long, callerContext: Any?)
 
   /**
    * Called after a placeholder image has been set
@@ -32,7 +28,7 @@ public interface ImageListener extends OnDrawControllerListener<ImageInfo> {
    * @param id image id
    * @param placeholder the placeholder drawable if set
    */
-  void onPlaceholderSet(long id, @Nullable Drawable placeholder);
+  fun onPlaceholderSet(id: Long, placeholder: Drawable?)
 
   /**
    * Called after the final image has been set.
@@ -42,11 +38,12 @@ public interface ImageListener extends OnDrawControllerListener<ImageInfo> {
    * @param imageInfo image info
    * @param drawable the Drawable to be displayed
    */
-  void onFinalImageSet(
-      long id,
-      @ImageOrigin int imageOrigin,
-      @Nullable ImageInfo imageInfo,
-      @Nullable Drawable drawable);
+  fun onFinalImageSet(
+      id: Long,
+      @ImageOrigin imageOrigin: Int,
+      imageInfo: ImageInfo?,
+      drawable: Drawable?
+  )
 
   /**
    * Called after any intermediate image has been set.
@@ -54,7 +51,7 @@ public interface ImageListener extends OnDrawControllerListener<ImageInfo> {
    * @param id image id
    * @param imageInfo image info
    */
-  void onIntermediateImageSet(long id, @Nullable ImageInfo imageInfo);
+  fun onIntermediateImageSet(id: Long, imageInfo: ImageInfo?)
 
   /**
    * Called after the fetch of the intermediate image failed.
@@ -62,7 +59,7 @@ public interface ImageListener extends OnDrawControllerListener<ImageInfo> {
    * @param id image id
    * @param throwable failure cause
    */
-  void onIntermediateImageFailed(long id, @Nullable Throwable throwable);
+  fun onIntermediateImageFailed(id: Long, throwable: Throwable?)
 
   /**
    * Called after the fetch of the final image failed.
@@ -71,12 +68,12 @@ public interface ImageListener extends OnDrawControllerListener<ImageInfo> {
    * @param error the displayed error drawable if set
    * @param throwable failure cause
    */
-  void onFailure(long id, @Nullable Drawable error, @Nullable Throwable throwable);
+  fun onFailure(id: Long, error: Drawable?, throwable: Throwable?)
 
   /**
    * Called after the controller released the fetched image.
    *
    * @param id image id
    */
-  void onRelease(long id);
+  fun onRelease(id: Long)
 }
