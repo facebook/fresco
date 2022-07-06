@@ -21,10 +21,6 @@ import javax.annotation.Nullable;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class DecodedImageOptions extends EncodedImageOptions {
 
-  public static Builder create() {
-    return new Builder(ImageOptions.defaults());
-  }
-
   private final @Nullable ResizeOptions mResizeOptions;
   private final @Nullable RotationOptions mRotationOptions;
   private final @Nullable Postprocessor mPostprocessor;

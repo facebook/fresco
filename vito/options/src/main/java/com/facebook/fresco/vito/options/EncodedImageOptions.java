@@ -16,10 +16,6 @@ import javax.annotation.Nullable;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class EncodedImageOptions {
 
-  public static Builder create() {
-    return new Builder(ImageOptions.defaults());
-  }
-
   private final @Nullable Priority mPriority;
   private final @Nullable ImageRequest.CacheChoice mCacheChoice;
 
