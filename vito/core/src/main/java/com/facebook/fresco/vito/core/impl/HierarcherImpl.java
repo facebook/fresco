@@ -29,11 +29,9 @@ public class HierarcherImpl implements Hierarcher {
   private static final Drawable NOP_DRAWABLE = NopDrawable.INSTANCE;
 
   private final ImageOptionsDrawableFactory mDrawableFactory;
-  private final RoundingUtils mRoundingUtils;
 
   public HierarcherImpl(ImageOptionsDrawableFactory drawableFactory) {
     mDrawableFactory = drawableFactory;
-    mRoundingUtils = new RoundingUtils();
   }
 
   @Nullable
@@ -81,7 +79,7 @@ public class HierarcherImpl implements Hierarcher {
     RoundingOptions roundingOptions = imageOptions.getRoundingOptions();
     BorderOptions borderOptions = imageOptions.getBorderOptions();
 
-    return mRoundingUtils.roundedDrawable(
+    return RoundingUtils.INSTANCE.roundedDrawable(
         resources, placeholderDrawable, borderOptions, roundingOptions);
   }
 

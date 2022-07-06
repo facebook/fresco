@@ -45,7 +45,7 @@ public class RoundingUtilsTest {
   @Test
   public void
       testRoundedDrawablesWithoutBorder_withBitmap_withNotAlreadyRounded_thenReturnBitmapDrawable() {
-    RoundingUtils roundingUtils = new RoundingUtils();
+    RoundingUtils roundingUtils = RoundingUtils.INSTANCE;
     final Bitmap bitmap = mock(Bitmap.class);
 
     Drawable drawable =
@@ -59,7 +59,7 @@ public class RoundingUtilsTest {
   @Test
   public void
       testRoundedDrawablesWithBorder_withBitmap_withNotAlreadyRounded_thenReturnBitmapDrawable() {
-    RoundingUtils roundingUtils = new RoundingUtils();
+    RoundingUtils roundingUtils = RoundingUtils.INSTANCE;
     final Bitmap bitmap = mock(Bitmap.class);
 
     BorderOptions borderOptions = BorderOptions.create(Color.YELLOW, 10);
@@ -76,7 +76,7 @@ public class RoundingUtilsTest {
 
   @Test
   public void testRoundedDrawablesWithoutBorder_withDrawable_thenReturnBitmapDrawable() {
-    RoundingUtils roundingUtils = new RoundingUtils();
+    RoundingUtils roundingUtils = RoundingUtils.INSTANCE;
     RoundingOptions roundingOptions = RoundingOptions.asCircle();
     Drawable drawable = mock(BitmapDrawable.class);
 
@@ -105,7 +105,7 @@ public class RoundingUtilsTest {
 
   @Test
   public void testRoundedDrawablesWithBorder_withDrawable_thenReturnBitmapDrawable() {
-    RoundingUtils roundingUtils = new RoundingUtils();
+    RoundingUtils roundingUtils = RoundingUtils.INSTANCE;
     Drawable drawable = mock(BitmapDrawable.class);
     RoundingOptions roundingOptions = RoundingOptions.asCircle();
     BorderOptions borderOptions = BorderOptions.create(Color.YELLOW, 10);
@@ -147,7 +147,7 @@ public class RoundingUtilsTest {
 
   @Test(expected = UnsupportedOperationException.class)
   public void testBuildOverlayDrawable_whenInvalidResId_thenThrowNotFoundException() {
-    RoundingUtils roundingUtils = new RoundingUtils();
+    RoundingUtils roundingUtils = RoundingUtils.INSTANCE;
     Drawable drawable = mock(Drawable.class);
     RoundingOptions roundingOptions = mock(RoundingOptions.class);
 
