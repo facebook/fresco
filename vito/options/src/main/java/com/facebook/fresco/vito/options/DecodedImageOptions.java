@@ -159,7 +159,7 @@ public class DecodedImageOptions extends EncodedImageOptions {
         .add("progressiveRenderingEnabled", mProgressiveDecodingEnabled);
   }
 
-  public static class Builder<T extends Builder> extends EncodedImageOptions.Builder<T> {
+  public static class Builder<T extends Builder<T>> extends EncodedImageOptions.Builder<T> {
 
     private @Nullable ResizeOptions mResizeOptions;
     private @Nullable RotationOptions mRotationOptions;
