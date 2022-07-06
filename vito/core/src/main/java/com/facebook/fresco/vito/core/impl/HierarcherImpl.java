@@ -46,7 +46,7 @@ public class HierarcherImpl implements Hierarcher {
     if (drawableFactory == null) {
       drawableFactory = mDrawableFactory;
     }
-    return drawableFactory.createDrawable(closeableImage.get(), imageOptions);
+    return drawableFactory.createDrawable(resources, closeableImage.get(), imageOptions);
   }
 
   @Override

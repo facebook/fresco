@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.draweesupport;
 
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
@@ -26,7 +27,8 @@ public class DrawableFactoryWrapper implements ImageOptionsDrawableFactory {
 
   @Nullable
   @Override
-  public Drawable createDrawable(CloseableImage closeableImage, ImageOptions imageOptions) {
+  public Drawable createDrawable(
+      Resources resources, CloseableImage closeableImage, ImageOptions imageOptions) {
     if (mDrawableFactory.supportsImageType(closeableImage)) {
       return mDrawableFactory.createDrawable(closeableImage);
     }

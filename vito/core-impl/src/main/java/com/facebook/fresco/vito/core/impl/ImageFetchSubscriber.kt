@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.core.impl
 
+import android.content.res.Resources
 import com.facebook.common.references.CloseableReference
 import com.facebook.datasource.DataSource
 import com.facebook.datasource.DataSubscriber
@@ -19,7 +20,8 @@ import java.util.concurrent.Executor
 class ImageFetchSubscriber(
     private val imageId: Long,
     private val drawable: KFrescoVitoDrawable,
-    private val imageToDataModelMapper: (CloseableImage, ImageOptions) -> ImageDataModel?,
+    private val imageToDataModelMapper:
+        (Resources, CloseableImage, ImageOptions) -> ImageDataModel?,
     private var debugOverlayHandler: DebugOverlayHandler? = null,
     private val invalidationExecutor: Executor? = null,
 ) : DataSubscriber<CloseableReference<CloseableImage>> {
@@ -40,7 +42,8 @@ class ImageFetchSubscriber(
     // We avoid cloning result and closing the original for performance reasons
     drawable.closeable = result
     val image = result.get()
-    drawable.actualImageLayer.setActualImage(request.imageOptions, image, imageToDataModelMapper)
+    drawable.actualImageLayer.setActualImage(
+        request.resources, request.imageOptions, image, imageToDataModelMapper)
     // Remove the progress image
     drawable.placeholderLayer.reset()
     if (dataSource.isFinished) {

@@ -7,7 +7,6 @@
 
 package com.facebook.fresco.vito.init
 
-import android.content.res.Resources
 import com.facebook.callercontext.CallerContextVerifier
 import com.facebook.common.executors.UiThreadImmediateExecutorService
 import com.facebook.common.internal.Supplier
@@ -46,7 +45,6 @@ class FrescoVito {
     @JvmOverloads
     @JvmStatic
     fun initialize(
-        resources: Resources,
         imagePipeline: ImagePipeline = ImagePipelineFactory.getInstance().imagePipeline,
         lightweightBackgroundThreadExecutor: Executor =
             imagePipeline.config.executorSupplier.forLightweightBackgroundTasks(),
@@ -62,7 +60,6 @@ class FrescoVito {
       }
       initialize(
           DefaultFrescoVitoProvider(
-              resources,
               vitoConfig,
               imagePipeline,
               createImagePipelineUtils(useNativeCode),

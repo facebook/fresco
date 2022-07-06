@@ -7,7 +7,6 @@
 
 package com.facebook.fresco.vito.provider.impl
 
-import android.content.res.Resources
 import com.facebook.callercontext.CallerContextVerifier
 import com.facebook.common.internal.Supplier
 import com.facebook.fresco.vito.core.FrescoController2
@@ -33,7 +32,6 @@ import java.lang.RuntimeException
 import java.util.concurrent.Executor
 
 class DefaultFrescoVitoProvider(
-    resources: Resources,
     private val frescoVitoConfig: FrescoVitoConfig,
     imagePipeline: ImagePipeline,
     imagePipelineUtils: ImagePipelineUtils,
@@ -61,7 +59,7 @@ class DefaultFrescoVitoProvider(
     frescoController =
         FrescoController2Impl(
             frescoVitoConfig,
-            HierarcherImpl(createDefaultDrawableFactory(resources)),
+            HierarcherImpl(createDefaultDrawableFactory()),
             lightweightBackgroundThreadExecutor,
             uiThreadExecutor,
             vitoImagePipeline,
@@ -81,10 +79,10 @@ class DefaultFrescoVitoProvider(
   override fun getConfig(): FrescoVitoConfig = frescoVitoConfig
 
   companion object {
-    private fun createDefaultDrawableFactory(resources: Resources): ImageOptionsDrawableFactory {
+    private fun createDefaultDrawableFactory(): ImageOptionsDrawableFactory {
       val animatedDrawableFactory =
           ImagePipelineFactory.getInstance().getAnimatedDrawableFactory(null)
-      val bitmapFactory = BitmapDrawableFactory(resources)
+      val bitmapFactory = BitmapDrawableFactory()
       return if (animatedDrawableFactory == null) {
         bitmapFactory
       } else {

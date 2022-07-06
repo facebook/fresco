@@ -58,7 +58,7 @@ public class BitmapDrawableFactoryTest {
     mDisplayMetrics = new DisplayMetrics();
     when(mResources.getDisplayMetrics()).thenReturn(mDisplayMetrics);
 
-    mDrawableFactory = new BitmapDrawableFactory(mResources);
+    mDrawableFactory = new BitmapDrawableFactory();
   }
 
   @Test
@@ -66,7 +66,7 @@ public class BitmapDrawableFactoryTest {
     final CloseableImage closeableImage = mock(CloseableImage.class);
     final ImageOptions options = mock(ImageOptions.class);
 
-    Drawable drawable = mDrawableFactory.createDrawable(closeableImage, options);
+    Drawable drawable = mDrawableFactory.createDrawable(mResources, closeableImage, options);
     assertThat(drawable).isNull();
   }
 
@@ -78,7 +78,7 @@ public class BitmapDrawableFactoryTest {
 
     final ImageOptions options = mock(ImageOptions.class);
 
-    Drawable drawable = mDrawableFactory.createDrawable(closeableImage, options);
+    Drawable drawable = mDrawableFactory.createDrawable(mResources, closeableImage, options);
     assertThat(drawable).isNotNull();
     assertThat(drawable).isInstanceOf(BitmapDrawable.class);
   }
@@ -93,9 +93,9 @@ public class BitmapDrawableFactoryTest {
     final ImageOptions options = mock(ImageOptions.class);
     when(options.getRoundingOptions()).thenReturn(RoundingOptions.asCircle());
 
-    ImageOptionsDrawableFactory factory = new BitmapDrawableFactory(mResources);
+    ImageOptionsDrawableFactory factory = new BitmapDrawableFactory();
 
-    Drawable drawable = factory.createDrawable(closeableImage, options);
+    Drawable drawable = factory.createDrawable(mResources, closeableImage, options);
     assertThat(drawable).isNotNull();
     assertThat(drawable).isInstanceOf(RoundedBitmapDrawable.class);
   }
@@ -110,7 +110,7 @@ public class BitmapDrawableFactoryTest {
     final ImageOptions options = mock(ImageOptions.class);
     when(options.getRoundingOptions()).thenReturn(RoundingOptions.asCircle());
 
-    Drawable drawable = mDrawableFactory.createDrawable(closeableImage, options);
+    Drawable drawable = mDrawableFactory.createDrawable(mResources, closeableImage, options);
     assertThat(drawable).isNotNull();
     assertThat(drawable).isInstanceOf(BitmapDrawable.class);
   }
@@ -125,7 +125,7 @@ public class BitmapDrawableFactoryTest {
     when(options.getRoundingOptions()).thenReturn(RoundingOptions.forCornerRadiusPx(123));
     when(closeableImage.getExtras()).thenReturn(mImageExtrasNotRounded);
 
-    Drawable drawable = mDrawableFactory.createDrawable(closeableImage, options);
+    Drawable drawable = mDrawableFactory.createDrawable(mResources, closeableImage, options);
     assertThat(drawable).isNotNull();
     assertThat(drawable).isInstanceOf(RoundedBitmapDrawable.class);
     assertThat(((RoundedBitmapDrawable) drawable).getRadii())
@@ -142,7 +142,7 @@ public class BitmapDrawableFactoryTest {
     when(options.getRoundingOptions()).thenReturn(RoundingOptions.forCornerRadii(1, 2, 3, 4));
     when(closeableImage.getExtras()).thenReturn(mImageExtrasNotRounded);
 
-    Drawable drawable = mDrawableFactory.createDrawable(closeableImage, options);
+    Drawable drawable = mDrawableFactory.createDrawable(mResources, closeableImage, options);
     assertThat(drawable).isNotNull();
     assertThat(drawable).isInstanceOf(RoundedBitmapDrawable.class);
     assertThat(((RoundedBitmapDrawable) drawable).getRadii())
@@ -161,7 +161,7 @@ public class BitmapDrawableFactoryTest {
 
     when(options.getBorderOptions()).thenReturn(borderOptions);
     when(options.getRoundingOptions()).thenReturn(RoundingOptions.asCircle(false, false));
-    Drawable drawable = mDrawableFactory.createDrawable(closeableImage, options);
+    Drawable drawable = mDrawableFactory.createDrawable(mResources, closeableImage, options);
 
     assertThat(drawable).isNotNull();
     assertThat(drawable).isInstanceOf(CircularBorderBitmapDrawable.class);

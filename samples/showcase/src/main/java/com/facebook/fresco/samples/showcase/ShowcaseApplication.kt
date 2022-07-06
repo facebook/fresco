@@ -179,7 +179,6 @@ class ShowcaseApplication : Application() {
               DebugOverlayHandler(DebugOverlaySupplierSingleton.getInstance(applicationContext))))
     } else {
       FrescoVito.initialize(
-          resources = resources,
           vitoConfig = vitoConfig,
           debugOverlayEnabledSupplier =
               DebugOverlaySupplierSingleton.getInstance(applicationContext),

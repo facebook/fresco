@@ -13,12 +13,13 @@ import com.facebook.fresco.vito.renderer.ImageDataModel
 import com.facebook.imagepipeline.image.CloseableImage
 
 fun ImageLayerDataModel.setActualImage(
+    resources: Resources,
     imageOptions: ImageOptions,
     closeableImage: CloseableImage,
-    imageToDataModelMapper: (CloseableImage, ImageOptions) -> ImageDataModel?
+    imageToDataModelMapper: (Resources, CloseableImage, ImageOptions) -> ImageDataModel?
 ) {
   configure(
-      dataModel = imageToDataModelMapper(closeableImage, imageOptions),
+      dataModel = imageToDataModelMapper(resources, closeableImage, imageOptions),
       canvasTransformation = imageOptions.createActualImageCanvasTransformation(),
       roundingOptions = imageOptions.roundingOptions,
       borderOptions = imageOptions.borderOptions,

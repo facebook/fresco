@@ -26,23 +26,23 @@ import javax.annotation.Nullable;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class BitmapDrawableFactory implements ImageOptionsDrawableFactory {
 
-  private final Resources mResources;
   private final RoundingUtils mRoundingUtils;
 
-  public BitmapDrawableFactory(Resources resources) {
-    mResources = resources;
+  public BitmapDrawableFactory() {
     mRoundingUtils = new RoundingUtils();
   }
 
   @Override
   @Nullable
-  public Drawable createDrawable(CloseableImage closeableImage, ImageOptions imageOptions) {
+  public Drawable createDrawable(
+      Resources resources, CloseableImage closeableImage, ImageOptions imageOptions) {
     try {
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.beginSection("BitmapDrawableFactory#createDrawable");
       }
       if (closeableImage instanceof CloseableStaticBitmap) {
-        return handleCloseableStaticBitmap((CloseableStaticBitmap) closeableImage, imageOptions);
+        return handleCloseableStaticBitmap(
+            resources, (CloseableStaticBitmap) closeableImage, imageOptions);
       }
       return null;
     } finally {
@@ -70,7 +70,7 @@ public class BitmapDrawableFactory implements ImageOptionsDrawableFactory {
    * @return the drawable to display
    */
   protected Drawable handleCloseableStaticBitmap(
-      CloseableStaticBitmap closeableStaticBitmap, ImageOptions imageOptions) {
+      Resources resources, CloseableStaticBitmap closeableStaticBitmap, ImageOptions imageOptions) {
     RoundingOptions roundingOptions = imageOptions.getRoundingOptions();
     BorderOptions borderOptions = imageOptions.getBorderOptions();
 
@@ -82,16 +82,16 @@ public class BitmapDrawableFactory implements ImageOptionsDrawableFactory {
       if (borderOptions != null && borderOptions.width > 0) {
         CircularBorderBitmapDrawable circularBorderDrawable =
             new CircularBorderBitmapDrawable(
-                mResources, closeableStaticBitmap.getUnderlyingBitmap());
+                resources, closeableStaticBitmap.getUnderlyingBitmap());
         circularBorderDrawable.setBorder(borderOptions);
         drawable = circularBorderDrawable;
       } else {
-        drawable = new BitmapDrawable(mResources, closeableStaticBitmap.getUnderlyingBitmap());
+        drawable = new BitmapDrawable(resources, closeableStaticBitmap.getUnderlyingBitmap());
       }
     } else {
       drawable =
           mRoundingUtils.roundedDrawable(
-              mResources,
+              resources,
               closeableStaticBitmap.getUnderlyingBitmap(),
               borderOptions,
               roundingOptions);

@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.core.impl
 
+import android.content.res.Resources
 import android.graphics.Rect
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
@@ -43,16 +44,18 @@ class KFrescoController(
     private val drawableFactory: ImageOptionsDrawableFactory? = null
 ) : FrescoController2 {
 
-  private val imageToDataModelMapper: (CloseableImage, ImageOptions) -> ImageDataModel? = { a, b ->
-    b.customDrawableFactory?.createDrawable(a, b)?.let { createDrawableModel(it, b) }
-        ?: when (a) {
-          is CloseableBitmap ->
-              BitmapImageDataModel(
-                  a.underlyingBitmap, java.lang.Boolean.TRUE.equals(a.getExtras()["is_rounded"]))
-          // TODO(T105148151): handle rotation for closeable static bitmap, handle other types
-          else -> drawableFactory?.createDrawable(a, b)?.let { createDrawableModel(it, b) }
-        }
-  }
+  private val imageToDataModelMapper: (Resources, CloseableImage, ImageOptions) -> ImageDataModel? =
+      { r, a, b ->
+        b.customDrawableFactory?.createDrawable(r, a, b)?.let { createDrawableModel(it, b) }
+            ?: when (a) {
+              is CloseableBitmap ->
+                  BitmapImageDataModel(
+                      a.underlyingBitmap,
+                      java.lang.Boolean.TRUE.equals(a.getExtras()["is_rounded"]))
+              // TODO(T105148151): handle rotation for closeable static bitmap, handle other types
+              else -> drawableFactory?.createDrawable(r, a, b)?.let { createDrawableModel(it, b) }
+            }
+      }
 
   var debugOverlayHandler: DebugOverlayHandler? = null
 
@@ -112,7 +115,8 @@ class KFrescoController(
         if (image != null) {
           drawable.isFetchSubmitted = true
           drawable.closeable = cachedImage.clone()
-          drawable.actualImageLayer.setActualImage(options, image, imageToDataModelMapper)
+          drawable.actualImageLayer.setActualImage(
+              imageRequest.resources, options, image, imageToDataModelMapper)
           // TODO(T105148151): trigger listeners
           drawable.invalidateSelf()
           drawable.listenerManager.onFinalImageSet(

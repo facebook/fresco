@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.drawable;
 
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
@@ -25,9 +26,10 @@ public class ArrayVitoDrawableFactory implements ImageOptionsDrawableFactory {
 
   @Nullable
   @Override
-  public Drawable createDrawable(CloseableImage closeableImage, ImageOptions imageOptions) {
+  public Drawable createDrawable(
+      Resources resources, CloseableImage closeableImage, ImageOptions imageOptions) {
     for (ImageOptionsDrawableFactory factory : mDrawableFactories) {
-      Drawable drawable = factory.createDrawable(closeableImage, imageOptions);
+      Drawable drawable = factory.createDrawable(resources, closeableImage, imageOptions);
       if (drawable != null) {
         return drawable;
       }
