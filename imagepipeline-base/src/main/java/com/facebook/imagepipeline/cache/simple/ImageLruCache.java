@@ -11,6 +11,7 @@ import com.facebook.common.internal.Predicate;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.infer.annotation.Nullsafe;
+import java.util.Iterator;
 import java.util.Map;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -40,9 +41,11 @@ class ImageLruCache<K> extends ExtendedLruCache<K, SizedEntry> {
 
   public synchronized int removeAll(Predicate<K> predicate) {
     int count = 0;
-    for (K key : map.keySet()) {
+    Iterator<K> iter = map.keySet().iterator();
+    while (iter.hasNext()) {
+      K key = iter.next();
       if (predicate.apply(key)) {
-        map.remove(key);
+        iter.remove();
         count++;
       }
     }
