@@ -57,7 +57,7 @@ open class EncodedImageOptions(builder: Builder<*>) {
 
     protected fun getThis(): T = this as T
 
-    internal inline fun modify(block: Builder<T>.() -> Unit): T {
+    private inline fun modify(block: Builder<T>.() -> Unit): T {
       block()
       return getThis()
     }
