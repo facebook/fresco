@@ -89,12 +89,13 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
             }
 
             if (path != null) {
-              thumbnailBitmap = ThumbnailUtils.createVideoThumbnail(path, calculateKind(imageRequest));
+              thumbnailBitmap =
+                  ThumbnailUtils.createVideoThumbnail(path, calculateKind(imageRequest));
             }
 
             if (thumbnailBitmap == null) {
-                thumbnailBitmap = createThumbnailFromContentProvider(
-                        mContentResolver, imageRequest.getSourceUri());
+              thumbnailBitmap =
+                  createThumbnailFromContentProvider(mContentResolver, imageRequest.getSourceUri());
             }
 
             if (thumbnailBitmap == null) {
