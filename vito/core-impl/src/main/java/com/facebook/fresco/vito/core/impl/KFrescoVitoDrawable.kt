@@ -28,18 +28,18 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
 
   var _imageId: Long = 0
   var _isLoading: Boolean = false
-  var _callerContext: Any? = null
+  override var callerContext: Any? = null
   var _visibilityCallback: VisibilityCallback? = null
   var _fetchSubmitted: Boolean = false
   val listenerManager: CombinedImageListenerImpl = CombinedImageListenerImpl()
-  var _extras: Any? = null
+  override var extras: Any? = null
   var viewportDimensions: Rect? = null
   var dataSource: DataSource<out Any>? by DataSourceCleanupDelegate()
 
   val releaseState = ImageReleaseScheduler.createReleaseState(this)
   private var hasBoundsSet = false
 
-  private var _imageRequest: VitoImageRequest? = null
+  override var imageRequest: VitoImageRequest? = null
 
   private val closeableCleanupFunction: (Closeable) -> Unit = {
     ImageReleaseScheduler.cancelAllReleasing(this)
@@ -52,28 +52,25 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
 
   var closeable: Closeable? by AutoCleanupDelegate(null, closeableCleanupFunction)
 
-  private var _refetchRunnable: Runnable? = null
+  override var refetchRunnable: Runnable? = null
 
-  override fun getImageId(): Long = _imageId
+  override val imageId: Long
+    get() = _imageId
 
-  override fun setCallerContext(callerContext: Any?) {
-    _callerContext = callerContext
-  }
-
-  override fun getCallerContext(): Any? = _callerContext
-
-  override fun getImagePerfListener(): VitoImagePerfListener = _imagePerfListener
+  override val imagePerfListener: VitoImagePerfListener
+    get() = _imagePerfListener
 
   override fun setMutateDrawables(mutateDrawables: Boolean) {
     // No-op since we never mutate Drawables
   }
 
-  override fun getActualImageDrawable(): Drawable? {
-    return when (val model = actualImageLayer.getDataModel()) {
-      is DrawableImageDataModel -> model.drawable
-      else -> null
+  override val actualImageDrawable: Drawable?
+    get() {
+      return when (val model = actualImageLayer.getDataModel()) {
+        is DrawableImageDataModel -> model.drawable
+        else -> null
+      }
     }
-  }
 
   override fun hasImage(): Boolean = actualImageLayer.getDataModel() != null
 
@@ -81,23 +78,18 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
     _fetchSubmitted = fetchSubmitted
   }
 
-  override fun isFetchSubmitted(): Boolean = _fetchSubmitted
-
-  override fun getImageRequest(): VitoImageRequest? = _imageRequest
-
-  override fun setImageRequest(imageRequest: VitoImageRequest?) {
-    _imageRequest = imageRequest
-  }
+  override val isFetchSubmitted: Boolean
+    get() = _fetchSubmitted
 
   override fun setVisibilityCallback(visibilityCallback: VisibilityCallback?) {
     _visibilityCallback = visibilityCallback
   }
 
-  override fun setImageListener(imageListener: ImageListener?) {
-    listenerManager.imageListener = imageListener
-  }
-
-  override fun getImageListener(): ImageListener? = listenerManager.imageListener
+  override var imageListener: ImageListener?
+    get() = listenerManager.imageListener
+    set(value) {
+      listenerManager.imageListener = value
+    }
 
   override fun setOverlayDrawable(drawable: Drawable?): Drawable? {
     overlayImageLayer.apply {
@@ -107,17 +99,6 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
           borderOptions = null)
     }
     return drawable
-  }
-
-  override fun getExtras(): Any? = _extras
-
-  override fun setExtras(extras: Any?) {
-    _extras = extras
-  }
-
-  override fun getRefetchRunnable(): Runnable? = _refetchRunnable
-  override fun setRefetchRunnable(refetchRunnable: Runnable?) {
-    _refetchRunnable = refetchRunnable
   }
 
   override fun setVisible(visible: Boolean, restart: Boolean): Boolean {
@@ -132,9 +113,9 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
     _imageId = 0
     closeable = null
     dataSource = null
-    _imageRequest = null
+    imageRequest = null
     _isLoading = false
-    _callerContext = null
+    callerContext = null
 
     placeholderLayer.reset()
     actualImageLayer.reset()

@@ -5,12 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.core;
+package com.facebook.fresco.vito.core
 
-import com.facebook.infer.annotation.Nullsafe;
+enum class PrefetchReason {
 
-@Nullsafe(Nullsafe.Mode.STRICT)
-public enum PrefetchReason {
   /** the image is needed right away to show on the viewport */
   ON_SCREEN,
 
@@ -27,5 +25,5 @@ public enum PrefetchReason {
    * the image will not be visible until people tap on something to show a different surface than
    * the current one
    */
-  ON_TAP,
+  ON_TAP
 }

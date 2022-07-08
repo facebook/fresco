@@ -91,8 +91,8 @@ class KFrescoController(
     val imageId: Long = VitoUtils.generateIdentifier()
     drawable.apply {
       reset()
-      setImageRequest(imageRequest)
-      setCallerContext(callerContext)
+      this.imageRequest = imageRequest
+      this.callerContext = callerContext
       imageListener = listener
       listenerManager.setVitoImageRequestListener(globalImageRequestListener)
       _imageId = imageId
@@ -113,7 +113,7 @@ class KFrescoController(
         // Immediately display the actual image.
         val image = cachedImage?.get()
         if (image != null) {
-          drawable.isFetchSubmitted = true
+          drawable.setFetchSubmitted(true)
           drawable.closeable = cachedImage.clone()
           drawable.actualImageLayer.setActualImage(
               imageRequest.resources, options, image, imageToDataModelMapper)
@@ -154,7 +154,7 @@ class KFrescoController(
           uiThreadExecutor) // Keyframes require callbacks to be on the main thread.
       drawable.dataSource = dataSource
     }
-    drawable.isFetchSubmitted = true
+    drawable.setFetchSubmitted(true)
     drawable.invalidateSelf()
     debugOverlayHandler?.update(drawable)
     return false

@@ -173,7 +173,8 @@ public class CombinedImageListenerImpl implements CombinedImageListener {
   }
 
   @Override
-  public void onRelease(long id, VitoImageRequest imageRequest, ControllerListener2.Extras extras) {
+  public void onRelease(
+      long id, VitoImageRequest imageRequest, @Nullable ControllerListener2.Extras extras) {
     if (mVitoImageRequestListener != null) {
       mVitoImageRequestListener.onRelease(id, imageRequest, extras);
     }

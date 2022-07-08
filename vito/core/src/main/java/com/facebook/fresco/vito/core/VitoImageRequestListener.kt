@@ -5,15 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.listener
+package com.facebook.fresco.vito.core
 
 import android.graphics.drawable.Drawable
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin
-import com.facebook.fresco.ui.common.OnDrawControllerListener
+import com.facebook.fresco.ui.common.ControllerListener2.Extras
 import com.facebook.imagepipeline.image.ImageInfo
 
 /** Interface for an image status listener. */
-interface ImageListener : OnDrawControllerListener<ImageInfo> {
+interface VitoImageRequestListener {
 
   /**
    * Called before the image request is submitted.
@@ -21,7 +21,7 @@ interface ImageListener : OnDrawControllerListener<ImageInfo> {
    * @param id image id
    * @param callerContext caller context
    */
-  fun onSubmit(id: Long, callerContext: Any?)
+  fun onSubmit(id: Long, imageRequest: VitoImageRequest, callerContext: Any?, extras: Extras?)
 
   /**
    * Called after a placeholder image has been set
@@ -29,7 +29,7 @@ interface ImageListener : OnDrawControllerListener<ImageInfo> {
    * @param id image id
    * @param placeholder the placeholder drawable if set
    */
-  fun onPlaceholderSet(id: Long, placeholder: Drawable?)
+  fun onPlaceholderSet(id: Long, imageRequest: VitoImageRequest, placeholder: Drawable?)
 
   /**
    * Called after the final image has been set.
@@ -41,8 +41,10 @@ interface ImageListener : OnDrawControllerListener<ImageInfo> {
    */
   fun onFinalImageSet(
       id: Long,
+      imageRequest: VitoImageRequest,
       @ImageOrigin imageOrigin: Int,
       imageInfo: ImageInfo?,
+      extras: Extras?,
       drawable: Drawable?
   )
 
@@ -52,7 +54,7 @@ interface ImageListener : OnDrawControllerListener<ImageInfo> {
    * @param id image id
    * @param imageInfo image info
    */
-  fun onIntermediateImageSet(id: Long, imageInfo: ImageInfo?)
+  fun onIntermediateImageSet(id: Long, imageRequest: VitoImageRequest, imageInfo: ImageInfo?)
 
   /**
    * Called after the fetch of the intermediate image failed.
@@ -60,7 +62,7 @@ interface ImageListener : OnDrawControllerListener<ImageInfo> {
    * @param id image id
    * @param throwable failure cause
    */
-  fun onIntermediateImageFailed(id: Long, throwable: Throwable?)
+  fun onIntermediateImageFailed(id: Long, imageRequest: VitoImageRequest, throwable: Throwable?)
 
   /**
    * Called after the fetch of the final image failed.
@@ -69,12 +71,18 @@ interface ImageListener : OnDrawControllerListener<ImageInfo> {
    * @param error the displayed error drawable if set
    * @param throwable failure cause
    */
-  fun onFailure(id: Long, error: Drawable?, throwable: Throwable?)
+  fun onFailure(
+      id: Long,
+      imageRequest: VitoImageRequest,
+      error: Drawable?,
+      throwable: Throwable?,
+      extras: Extras?
+  )
 
   /**
    * Called after the controller released the fetched image.
    *
    * @param id image id
    */
-  fun onRelease(id: Long)
+  fun onRelease(id: Long, imageRequest: VitoImageRequest, extras: Extras?)
 }

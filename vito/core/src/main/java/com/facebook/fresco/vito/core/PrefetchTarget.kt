@@ -5,12 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.core;
+package com.facebook.fresco.vito.core
 
-import com.facebook.infer.annotation.Nullsafe;
-
-@Nullsafe(Nullsafe.Mode.STRICT)
-public enum PrefetchTarget {
+enum class PrefetchTarget {
   MEMORY_DECODED,
   MEMORY_ENCODED,
   DISK
