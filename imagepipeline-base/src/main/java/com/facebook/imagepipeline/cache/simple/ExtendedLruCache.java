@@ -10,21 +10,22 @@ package com.facebook.imagepipeline.cache.simple;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /** Identical to {@link android.util.LruCache} but gives access to backing map. */
 public class ExtendedLruCache<K, V> {
   protected final LinkedHashMap<K, V> map; // changed from private
 
   /** Size of this cache in units. Not necessarily the number of elements. */
-  private int size;
+  protected int size;
 
   private int maxSize;
 
-  private int putCount;
-  private int createCount;
-  private int evictionCount;
-  private int hitCount;
-  private int missCount;
+  protected int putCount;
+  protected int createCount;
+  protected int evictionCount;
+  protected int hitCount;
+  protected int missCount;
 
   /**
    * @param maxSize for caches that do not override {@link #sizeOf}, this is the maximum number of
@@ -188,7 +189,7 @@ public class ExtendedLruCache<K, V> {
    * @param newValue the new value for {@code key}, if it exists. If non-null, this removal was
    *     caused by a {@link #put}. Otherwise it was caused by an eviction or a {@link #remove}.
    */
-  protected void entryRemoved(boolean evicted, K key, V oldValue, V newValue) {}
+  protected void entryRemoved(boolean evicted, K key, V oldValue, @Nullable V newValue) {}
 
   /**
    * Called after a cache miss to compute a value for the corresponding key. Returns the computed
@@ -206,7 +207,7 @@ public class ExtendedLruCache<K, V> {
     return null;
   }
 
-  private int safeSizeOf(K key, V value) {
+  protected int safeSizeOf(K key, V value) {
     int result = sizeOf(key, value);
     if (result < 0) {
       throw new IllegalStateException("Negative size: " + key + "=" + value);

@@ -41,12 +41,33 @@ class ImageLruCache<K> extends ExtendedLruCache<K, SizedEntry> {
 
   public synchronized int removeAll(Predicate<K> predicate) {
     int count = 0;
-    Iterator<K> iter = map.keySet().iterator();
-    while (iter.hasNext()) {
-      K key = iter.next();
-      if (predicate.apply(key)) {
-        iter.remove();
-        count++;
+    while (true) {
+      K key;
+      SizedEntry value;
+      boolean evict;
+      synchronized (this) {
+        if (size < 0 || (map.isEmpty() && size != 0)) {
+          throw new IllegalStateException(
+              getClass().getName() + ".sizeOf() is reporting inconsistent results!");
+        }
+
+        Iterator<Map.Entry<K, SizedEntry>> iter = map.entrySet().iterator();
+        if (!iter.hasNext()) {
+          break;
+        }
+        Map.Entry<K, SizedEntry> toEvict = iter.next();
+        key = toEvict.getKey();
+        value = toEvict.getValue();
+        evict = predicate.apply(key);
+        if (evict) {
+          map.remove(key);
+          size -= safeSizeOf(key, value);
+          evictionCount++;
+        }
+      }
+
+      if (evict) {
+        entryRemoved(true, key, value, null);
       }
     }
     return count;
