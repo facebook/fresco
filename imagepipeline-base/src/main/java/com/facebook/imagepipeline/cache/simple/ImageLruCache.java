@@ -18,7 +18,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 @ThreadSafe
 @Nullsafe(Nullsafe.Mode.LOCAL)
-class ImageLruCache<K> extends ExtendedLruCache<K, SizedEntry> {
+final class ImageLruCache<K> extends ExtendedLruCache<K, SizedValue> {
 
   /**
    * @param maxSize for caches that do not override {@link #sizeOf}, this is the maximum number of
@@ -30,7 +30,7 @@ class ImageLruCache<K> extends ExtendedLruCache<K, SizedEntry> {
   }
 
   @Override
-  protected int sizeOf(K key, SizedEntry value) {
+  protected int sizeOf(K key, SizedValue value) {
     return value.size;
   }
 
@@ -43,7 +43,7 @@ class ImageLruCache<K> extends ExtendedLruCache<K, SizedEntry> {
     int count = 0;
     while (true) {
       K key;
-      SizedEntry value;
+      SizedValue value;
       boolean evict;
       synchronized (this) {
         if (size < 0 || (map.isEmpty() && size != 0)) {
@@ -51,11 +51,11 @@ class ImageLruCache<K> extends ExtendedLruCache<K, SizedEntry> {
               getClass().getName() + ".sizeOf() is reporting inconsistent results!");
         }
 
-        Iterator<Map.Entry<K, SizedEntry>> iter = map.entrySet().iterator();
+        Iterator<Map.Entry<K, SizedValue>> iter = map.entrySet().iterator();
         if (!iter.hasNext()) {
           break;
         }
-        Map.Entry<K, SizedEntry> toEvict = iter.next();
+        Map.Entry<K, SizedValue> toEvict = iter.next();
         key = toEvict.getKey();
         value = toEvict.getValue();
         evict = predicate.apply(key);
@@ -83,7 +83,7 @@ class ImageLruCache<K> extends ExtendedLruCache<K, SizedEntry> {
   }
 
   public synchronized @Nullable CloseableImage inspect(K key) {
-    for (Map.Entry<K, SizedEntry> entry : map.entrySet()) {
+    for (Map.Entry<K, SizedValue> entry : map.entrySet()) {
       if (entry.getKey().equals(key)) {
         CloseableReference<CloseableImage> ref = entry.getValue().value;
         return ref.get();

@@ -10,12 +10,12 @@ package com.facebook.imagepipeline.cache.simple;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.CloseableImage;
 
-class SizedEntry {
+class SizedValue {
 
   final CloseableReference<CloseableImage> value;
   final int size;
 
-  public SizedEntry(CloseableReference<CloseableImage> value, int size) {
+  public SizedValue(CloseableReference<CloseableImage> value, int size) {
     this.value = value;
     this.size = size;
   }

@@ -42,7 +42,7 @@ public class SimpleMemoryCache<K> implements CountingMemoryCache<K, CloseableIma
       CloseableReference<CloseableImage> valueRef,
       @Nullable EntryStateObserver<K> observer) {
     int size = valueRef.get().getSizeInBytes();
-    map.put(key, new SizedEntry(valueRef, size));
+    map.put(key, new SizedValue(valueRef, size));
     return valueRef;
   }
 
@@ -101,11 +101,11 @@ public class SimpleMemoryCache<K> implements CountingMemoryCache<K, CloseableIma
   @Nullable
   @Override
   public CloseableReference<CloseableImage> get(K key) {
-    SizedEntry entry = map.get(key);
-    if (entry == null) {
+    SizedValue value = map.get(key);
+    if (value == null) {
       return null;
     }
-    return entry.value;
+    return value.value;
   }
 
   @Nullable
