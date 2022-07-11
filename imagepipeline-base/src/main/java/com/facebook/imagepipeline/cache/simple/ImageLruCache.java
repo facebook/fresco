@@ -31,7 +31,7 @@ final class ImageLruCache<K> extends ExtendedLruCache<K, SizedValue> {
 
   @Override
   protected int sizeOf(K key, SizedValue value) {
-    return value.size;
+    return value.getSize();
   }
 
   /** @return number of elements currently in cache */
@@ -85,7 +85,7 @@ final class ImageLruCache<K> extends ExtendedLruCache<K, SizedValue> {
   public synchronized @Nullable CloseableImage inspect(K key) {
     for (Map.Entry<K, SizedValue> entry : map.entrySet()) {
       if (entry.getKey().equals(key)) {
-        CloseableReference<CloseableImage> ref = entry.getValue().value;
+        CloseableReference<CloseableImage> ref = entry.getValue().getValue();
         return ref.get();
       }
     }

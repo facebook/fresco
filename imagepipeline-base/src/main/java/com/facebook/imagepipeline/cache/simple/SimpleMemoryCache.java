@@ -105,7 +105,7 @@ public class SimpleMemoryCache<K> implements CountingMemoryCache<K, CloseableIma
     if (value == null) {
       return null;
     }
-    return value.value;
+    return value.getValue();
   }
 
   @Nullable
