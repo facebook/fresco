@@ -360,6 +360,14 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       drawable
           .getInternalListener()
           .onRelease(drawable.getImageId(), imageRequest, obtainExtras(null, null, drawable));
+      if (mConfig.stopAnimationInOnRelease()) {
+        // We automatically stop the animation if it was automatically started
+        if ((!mConfig.onlyStopAnimationWhenAutoPlayEnabled()
+                || imageRequest.imageOptions.shouldAutoPlay())
+            && drawable.getActualImageDrawable() instanceof Animatable) {
+          ((Animatable) drawable.getActualImageDrawable()).stop();
+        }
+      }
     }
     drawable.getImagePerfListener().onImageRelease(drawable);
   }

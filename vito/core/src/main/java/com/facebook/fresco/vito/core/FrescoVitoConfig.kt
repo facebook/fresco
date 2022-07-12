@@ -23,4 +23,8 @@ interface FrescoVitoConfig {
   fun layoutPrefetchingEnabled(callerContext: Any?): Boolean
 
   fun useSmartPropertyDiffing(): Boolean
+
+  fun stopAnimationInOnRelease(): Boolean
+
+  fun onlyStopAnimationWhenAutoPlayEnabled(): Boolean
 }
