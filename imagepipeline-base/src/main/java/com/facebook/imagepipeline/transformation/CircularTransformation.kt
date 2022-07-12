@@ -5,10 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.imagepipeline.transformation;
-
-import com.facebook.infer.annotation.Nullsafe;
+package com.facebook.imagepipeline.transformation
 
 /** Indicates that the bitmap transformation performs rounding. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
-public interface CircularTransformation {}
+interface CircularTransformation
