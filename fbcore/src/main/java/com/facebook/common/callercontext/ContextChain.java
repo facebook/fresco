@@ -35,8 +35,6 @@ public class ContextChain implements Parcelable {
 
   private static final char PARENT_SEPARATOR = '/';
 
-  private static boolean sUseDeepEquals = false;
-
   private final String mTag;
   private final String mName;
   private final int mLevel;
@@ -47,8 +45,9 @@ public class ContextChain implements Parcelable {
 
   private @Nullable String mSerializedString;
 
+  @Deprecated
   public static void setUseDeepEquals(boolean useDeepEquals) {
-    sUseDeepEquals = useDeepEquals;
+    // TODO remove
   }
 
   public ContextChain(
@@ -150,33 +149,27 @@ public class ContextChain implements Parcelable {
 
   @Override
   public boolean equals(@Nullable Object obj) {
-    if (sUseDeepEquals) {
-      if (this == obj) {
-        return true;
-      }
-      if (obj == null || getClass() != obj.getClass()) {
-        return false;
-      }
-      ContextChain other = (ContextChain) obj;
-      return Objects.equal(mTag, other.mTag)
-          && Objects.equal(mName, other.mName)
-          && mLevel == other.mLevel
-          && (mParent == other.mParent || (mParent != null && mParent.equals(other.mParent)));
+    if (this == obj) {
+      return true;
     }
-    return super.equals(obj);
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    ContextChain other = (ContextChain) obj;
+    return Objects.equal(mTag, other.mTag)
+        && Objects.equal(mName, other.mName)
+        && mLevel == other.mLevel
+        && (mParent == other.mParent || (mParent != null && mParent.equals(other.mParent)));
   }
 
   @Override
   public int hashCode() {
-    if (sUseDeepEquals) {
-      int result = super.hashCode();
-      result = 31 * result + (mTag != null ? mTag.hashCode() : 0);
-      result = 31 * result + (mName != null ? mName.hashCode() : 0);
-      result = 31 * result + mLevel;
-      result = 31 * result + (mParent != null ? mParent.hashCode() : 0);
-      return result;
-    }
-    return super.hashCode();
+    int result = super.hashCode();
+    result = 31 * result + (mTag != null ? mTag.hashCode() : 0);
+    result = 31 * result + (mName != null ? mName.hashCode() : 0);
+    result = 31 * result + mLevel;
+    result = 31 * result + (mParent != null ? mParent.hashCode() : 0);
+    return result;
   }
 
   @Override
