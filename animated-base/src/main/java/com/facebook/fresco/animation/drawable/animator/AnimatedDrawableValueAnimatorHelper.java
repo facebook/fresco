@@ -47,7 +47,11 @@ public class AnimatedDrawableValueAnimatorHelper {
   @Nullable
   public static ValueAnimator createValueAnimator(Drawable drawable) {
     if (drawable instanceof AnimatedDrawable2) {
-      return AnimatedDrawable2ValueAnimatorHelper.createValueAnimator((AnimatedDrawable2) drawable);
+      final AnimatedDrawable2 animatedDrawable2 = (AnimatedDrawable2) drawable;
+      return AnimatedDrawable2ValueAnimatorHelper.createValueAnimator(
+          animatedDrawable2,
+          animatedDrawable2.getLoopCount(),
+          animatedDrawable2.getLoopDurationMs());
     }
     return null;
   }

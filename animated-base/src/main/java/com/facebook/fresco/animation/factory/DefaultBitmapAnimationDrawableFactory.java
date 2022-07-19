@@ -9,9 +9,11 @@ package com.facebook.fresco.animation.factory;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
+import com.facebook.common.internal.Suppliers;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactivityCheck;
@@ -29,6 +31,7 @@ import com.facebook.fresco.animation.bitmap.preparation.FixedNumberBitmapFramePr
 import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendAnimationInformation;
 import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendFrameRenderer;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
+import com.facebook.fresco.animation.drawable.KAnimatedDrawable2;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
@@ -63,6 +66,9 @@ public class DefaultBitmapAnimationDrawableFactory implements DrawableFactory {
   private final Supplier<Integer> mNumberOfFramesToPrepareSupplier;
   private final Supplier<Boolean> mUseDeepEqualsForCacheKey;
 
+  // Change the value to true to use KAnimatedDrawable2.kt
+  private final Supplier<Boolean> useRendererAnimatedDrawable = Suppliers.BOOLEAN_FALSE;
+
   public DefaultBitmapAnimationDrawableFactory(
       AnimatedDrawableBackendProvider animatedDrawableBackendProvider,
       ScheduledExecutorService scheduledExecutorServiceForUiThread,
@@ -90,17 +96,22 @@ public class DefaultBitmapAnimationDrawableFactory implements DrawableFactory {
   }
 
   @Override
-  public AnimatedDrawable2 createDrawable(CloseableImage image) {
+  public Drawable createDrawable(CloseableImage image) {
     CloseableAnimatedImage closeable = ((CloseableAnimatedImage) image);
     AnimatedImage animatedImage = closeable.getImage();
-    return new AnimatedDrawable2(
+    AnimationBackend animationBackend =
         createAnimationBackend(
             Preconditions.checkNotNull(closeable.getImageResult()),
-            animatedImage != null ? animatedImage.getAnimatedBitmapConfig() : null));
+            animatedImage != null ? animatedImage.getAnimatedBitmapConfig() : null);
+    if (useRendererAnimatedDrawable.get()) {
+      return new KAnimatedDrawable2(animationBackend);
+    } else {
+      return new AnimatedDrawable2(animationBackend);
+    }
   }
 
   private AnimationBackend createAnimationBackend(
-      AnimatedImageResult animatedImageResult, @Nullable Bitmap.Config animatedBitmapConig) {
+      AnimatedImageResult animatedImageResult, @Nullable Bitmap.Config animatedBitmapConfig) {
     AnimatedDrawableBackend animatedDrawableBackend =
         createAnimatedDrawableBackend(animatedImageResult);
 
@@ -114,7 +125,7 @@ public class DefaultBitmapAnimationDrawableFactory implements DrawableFactory {
     if (numberOfFramesToPrefetch > 0) {
       bitmapFramePreparationStrategy =
           new FixedNumberBitmapFramePreparationStrategy(numberOfFramesToPrefetch);
-      bitmapFramePreparer = createBitmapFramePreparer(bitmapFrameRenderer, animatedBitmapConig);
+      bitmapFramePreparer = createBitmapFramePreparer(bitmapFrameRenderer, animatedBitmapConfig);
     }
 
     BitmapAnimationBackend bitmapAnimationBackend =

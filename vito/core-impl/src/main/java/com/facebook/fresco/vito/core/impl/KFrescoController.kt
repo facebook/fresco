@@ -53,7 +53,9 @@ class KFrescoController(
                       a.underlyingBitmap,
                       java.lang.Boolean.TRUE.equals(a.getExtras()["is_rounded"]))
               // TODO(T105148151): handle rotation for closeable static bitmap, handle other types
-              else -> drawableFactory?.createDrawable(r, a, b)?.let { createDrawableModel(it, b) }
+              else -> {
+                drawableFactory?.createDrawable(r, a, b)?.let { createDrawableModel(it, b) }
+              }
             }
       }
 

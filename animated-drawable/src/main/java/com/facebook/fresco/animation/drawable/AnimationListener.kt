@@ -4,38 +4,35 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+package com.facebook.fresco.animation.drawable
 
-package com.facebook.fresco.animation.drawable;
-
-import com.facebook.infer.annotation.Nullsafe;
+import android.graphics.drawable.Drawable
 
 /**
- * Animation listener that can be used to get notified about {@link AnimatedDrawable2} events. Call
- * {@link AnimatedDrawable2#setAnimationListener(AnimationListener)} to set a listener.
+ * Animation listener that can be used to get notified about [AnimatedDrawable2] events. Call
+ * [AnimatedDrawable2#setAnimationListener(AnimationListener)] to set a listener.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
-public interface AnimationListener {
-
+interface AnimationListener {
   /**
    * Called when the animation is started for the given drawable.
    *
    * @param drawable the affected drawable
    */
-  void onAnimationStart(AnimatedDrawable2 drawable);
+  fun onAnimationStart(drawable: Drawable)
 
   /**
    * Called when the animation is stopped for the given drawable.
    *
    * @param drawable the affected drawable
    */
-  void onAnimationStop(AnimatedDrawable2 drawable);
+  fun onAnimationStop(drawable: Drawable)
 
   /**
    * Called when the animation is reset for the given drawable.
    *
    * @param drawable the affected drawable
    */
-  void onAnimationReset(AnimatedDrawable2 drawable);
+  fun onAnimationReset(drawable: Drawable)
 
   /**
    * Called when the animation is repeated for the given drawable. Animations have a loop count, and
@@ -43,7 +40,7 @@ public interface AnimationListener {
    *
    * @param drawable the affected drawable
    */
-  void onAnimationRepeat(AnimatedDrawable2 drawable);
+  fun onAnimationRepeat(drawable: Drawable)
 
   /**
    * Called when a frame of the animation is about to be rendered.
@@ -51,5 +48,5 @@ public interface AnimationListener {
    * @param drawable the affected drawable
    * @param frameNumber the frame number to be rendered
    */
-  void onAnimationFrame(AnimatedDrawable2 drawable, int frameNumber);
+  fun onAnimationFrame(drawable: Drawable, frameNumber: Int)
 }

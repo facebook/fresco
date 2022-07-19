@@ -98,40 +98,20 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
 
   @Override
   public ImageDecoder getWebPDecoder() {
-    return new ImageDecoder() {
-      @Override
-      public CloseableImage decode(
-          EncodedImage encodedImage,
-          int length,
-          QualityInfo qualityInfo,
-          ImageDecodeOptions options) {
-        return getAnimatedImageFactory()
-            .decodeWebP(encodedImage, options, options.animatedBitmapConfig);
-      }
-    };
+    return (encodedImage, length, qualityInfo, options) ->
+        getAnimatedImageFactory().decodeWebP(encodedImage, options, options.animatedBitmapConfig);
   }
 
   private DefaultBitmapAnimationDrawableFactory createDrawableFactory() {
     Supplier<Integer> cachingStrategySupplier =
-        new Supplier<Integer>() {
-          @Override
-          public Integer get() {
-            return DefaultBitmapAnimationDrawableFactory.CACHING_STRATEGY_FRESCO_CACHE_NO_REUSING;
-          }
-        };
+        () -> DefaultBitmapAnimationDrawableFactory.CACHING_STRATEGY_FRESCO_CACHE_NO_REUSING;
 
     final SerialExecutorService serialExecutorServiceForFramePreparing =
         mSerialExecutorService == null
             ? new DefaultSerialExecutorService(mExecutorSupplier.forDecode())
             : mSerialExecutorService;
 
-    Supplier<Integer> numberOfFramesToPrepareSupplier =
-        new Supplier<Integer>() {
-          @Override
-          public Integer get() {
-            return NUMBER_OF_FRAMES_TO_PREPARE;
-          }
-        };
+    Supplier<Integer> numberOfFramesToPrepareSupplier = () -> NUMBER_OF_FRAMES_TO_PREPARE;
 
     final Supplier<Boolean> useDeepEquals = Suppliers.BOOLEAN_FALSE;
 

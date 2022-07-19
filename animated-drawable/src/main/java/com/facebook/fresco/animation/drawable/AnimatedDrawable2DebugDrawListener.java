@@ -12,8 +12,8 @@ import com.facebook.fresco.animation.frame.FrameScheduler;
 import com.facebook.infer.annotation.Nullsafe;
 
 /**
- * {@link com.facebook.fresco.animation.drawable.AnimatedDrawable2.DrawListener} for debugging
- * {@link AnimatedDrawable2}.
+ * [com.facebook.fresco.animation.drawable.AnimatedDrawable2.DrawListener] for debugging
+ * [AnimatedDrawable2].
  */
 @Nullsafe(Nullsafe.Mode.STRICT)
 public class AnimatedDrawable2DebugDrawListener implements AnimatedDrawable2.DrawListener {

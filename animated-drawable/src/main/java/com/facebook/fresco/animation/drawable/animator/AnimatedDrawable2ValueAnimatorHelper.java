@@ -8,6 +8,7 @@
 package com.facebook.fresco.animation.drawable.animator;
 
 import android.animation.ValueAnimator;
+import android.graphics.drawable.Drawable;
 import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.infer.annotation.Nullsafe;
@@ -19,7 +20,11 @@ public class AnimatedDrawable2ValueAnimatorHelper {
 
   public static @Nullable ValueAnimator createValueAnimator(
       AnimatedDrawable2 animatedDrawable, int maxDurationMs) {
-    ValueAnimator animator = createValueAnimator(animatedDrawable);
+    ValueAnimator animator =
+        createValueAnimator(
+            animatedDrawable,
+            animatedDrawable.getLoopCount(),
+            animatedDrawable.getLoopDurationMs());
     if (animator == null) {
       return null;
     }
@@ -28,11 +33,11 @@ public class AnimatedDrawable2ValueAnimatorHelper {
     return animator;
   }
 
-  public static ValueAnimator createValueAnimator(AnimatedDrawable2 animatedDrawable) {
-    int loopCount = animatedDrawable.getLoopCount();
+  public static ValueAnimator createValueAnimator(
+      Drawable animatedDrawable, int loopCount, long loopDurationMs) {
     ValueAnimator animator = new ValueAnimator();
-    animator.setIntValues(0, (int) animatedDrawable.getLoopDurationMs());
-    animator.setDuration(animatedDrawable.getLoopDurationMs());
+    animator.setIntValues(0, (int) loopDurationMs);
+    animator.setDuration(loopDurationMs);
     animator.setRepeatCount(
         loopCount != AnimationInformation.LOOP_COUNT_INFINITE ? loopCount : ValueAnimator.INFINITE);
     animator.setRepeatMode(ValueAnimator.RESTART);
@@ -45,13 +50,8 @@ public class AnimatedDrawable2ValueAnimatorHelper {
   }
 
   public static ValueAnimator.AnimatorUpdateListener createAnimatorUpdateListener(
-      final AnimatedDrawable2 drawable) {
-    return new ValueAnimator.AnimatorUpdateListener() {
-      @Override
-      public void onAnimationUpdate(ValueAnimator animation) {
-        drawable.setLevel((Integer) animation.getAnimatedValue());
-      }
-    };
+      final Drawable drawable) {
+    return animation -> drawable.setLevel((Integer) animation.getAnimatedValue());
   }
 
   private AnimatedDrawable2ValueAnimatorHelper() {}

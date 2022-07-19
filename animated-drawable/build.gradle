@@ -55,6 +55,7 @@ dependencies {
     implementation project(':imagepipeline-base')
     implementation project(':drawee')
     implementation project(':fbcore')
+    implementation project(':vito:renderer')
 }
 
 apply plugin: "com.vanniktech.maven.publish"
