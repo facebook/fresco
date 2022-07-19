@@ -57,6 +57,7 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
           }
 
           @Override
+          // NULLSAFE_FIXME[Inconsistent Subclass Parameter Annotation]
           protected void disposeResult(EncodedImage result) {
             EncodedImage.closeSafely(result);
           }

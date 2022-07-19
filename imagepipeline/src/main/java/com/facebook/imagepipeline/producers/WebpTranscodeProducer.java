@@ -122,11 +122,13 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
           }
 
           @Override
+          // NULLSAFE_FIXME[Inconsistent Subclass Parameter Annotation]
           protected void disposeResult(EncodedImage result) {
             EncodedImage.closeSafely(result);
           }
 
           @Override
+          // NULLSAFE_FIXME[Inconsistent Subclass Parameter Annotation]
           protected void onSuccess(EncodedImage result) {
             EncodedImage.closeSafely(encodedImageCopy);
             super.onSuccess(result);

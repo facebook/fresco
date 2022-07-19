@@ -120,6 +120,7 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
           }
 
           @Override
+          // NULLSAFE_FIXME[Inconsistent Subclass Parameter Annotation]
           protected void disposeResult(CloseableReference<CloseableImage> result) {
             CloseableReference.closeSafely(result);
           }
