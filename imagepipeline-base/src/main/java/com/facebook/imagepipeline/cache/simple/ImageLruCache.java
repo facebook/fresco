@@ -39,7 +39,7 @@ final class ImageLruCache<K> extends ExtendedLruCache<K, SizedValue> {
     return putCount() - evictionCount();
   }
 
-  public synchronized int removeAll(Predicate<K> predicate) {
+  public int removeAll(Predicate<K> predicate) {
     int count = 0;
     while (true) {
       K key;
