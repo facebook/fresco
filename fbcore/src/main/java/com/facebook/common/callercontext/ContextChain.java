@@ -45,11 +45,6 @@ public class ContextChain implements Parcelable {
 
   private @Nullable String mSerializedString;
 
-  @Deprecated
-  public static void setUseDeepEquals(boolean useDeepEquals) {
-    // TODO remove
-  }
-
   public ContextChain(
       final String tag,
       final String name,
