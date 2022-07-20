@@ -97,7 +97,8 @@ class ImageLayerDataModel(var drawableCallbackProvider: (() -> Drawable.Callback
             canvasTransformationHandler.getMatrix(),
             bounds,
             paint,
-            alpha)
+            alpha,
+            colorFilter)
   }
 
   fun draw(canvas: Canvas) {

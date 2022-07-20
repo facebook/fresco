@@ -24,12 +24,14 @@ object ImageRenderer {
       model: ImageDataModel,
       shape: Shape,
       paint: Paint,
-      imageTransformation: Matrix? = null
+      imageTransformation: Matrix? = null,
+      colorFilter: ColorFilter? = null
   ): RenderCommand {
     return when (model) {
       is BitmapImageDataModel -> model.createRenderCommand(shape, paint, imageTransformation)
       is ColorIntImageDataModel -> model.createRenderCommand(shape, paint, imageTransformation)
-      is DrawableImageDataModel -> model.createRenderCommand(shape, paint, imageTransformation)
+      is DrawableImageDataModel ->
+          model.createRenderCommand(shape, paint, imageTransformation, colorFilter)
     }
   }
 
