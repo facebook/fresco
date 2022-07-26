@@ -46,7 +46,7 @@ public class FrescoVitoRegionDecoder implements ImageDecoder {
    * @param options options that can change decode behavior
    */
   @Override
-  public CloseableImage decode(
+  public @Nullable CloseableImage decode(
       EncodedImage encodedImage, int length, QualityInfo qualityInfo, ImageDecodeOptions options) {
 
     Rect regionToDecode = computeRegionToDecode(encodedImage, options);

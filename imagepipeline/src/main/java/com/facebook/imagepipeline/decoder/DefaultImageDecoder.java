@@ -51,7 +51,7 @@ public class DefaultImageDecoder implements ImageDecoder {
   private final ImageDecoder mDefaultDecoder =
       new ImageDecoder() {
         @Override
-        public CloseableImage decode(
+        public @Nullable CloseableImage decode(
             EncodedImage encodedImage,
             int length,
             QualityInfo qualityInfo,
@@ -100,7 +100,7 @@ public class DefaultImageDecoder implements ImageDecoder {
    * @param options options that can change decode behavior
    */
   @Override
-  public CloseableImage decode(
+  public @Nullable CloseableImage decode(
       final EncodedImage encodedImage,
       final int length,
       final QualityInfo qualityInfo,
@@ -131,7 +131,7 @@ public class DefaultImageDecoder implements ImageDecoder {
    * @param encodedImage input image (encoded bytes plus meta data)
    * @return a CloseableImage
    */
-  public CloseableImage decodeGif(
+  public @Nullable CloseableImage decodeGif(
       final EncodedImage encodedImage,
       final int length,
       final QualityInfo qualityInfo,
@@ -224,7 +224,7 @@ public class DefaultImageDecoder implements ImageDecoder {
    * @param options
    * @return a {@link CloseableImage}
    */
-  public CloseableImage decodeAnimatedWebp(
+  public @Nullable CloseableImage decodeAnimatedWebp(
       final EncodedImage encodedImage,
       final int length,
       final QualityInfo qualityInfo,

@@ -85,7 +85,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   public ImageDecoder getGifDecoder() {
     return new ImageDecoder() {
       @Override
-      public CloseableImage decode(
+      public @Nullable CloseableImage decode(
           EncodedImage encodedImage,
           int length,
           QualityInfo qualityInfo,
