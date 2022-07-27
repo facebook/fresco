@@ -10,8 +10,4 @@ package com.facebook.imagepipeline.common
 import java.lang.RuntimeException
 
 /** Thrown if a bitmap pool cap or other limit on the number of bitmaps is exceeded. */
-class TooManyBitmapsException : RuntimeException {
-  constructor() : super() {}
-
-  constructor(detailMessage: String?) : super(detailMessage) {}
-}
+class TooManyBitmapsException(detailMessage: String?) : RuntimeException(detailMessage)
