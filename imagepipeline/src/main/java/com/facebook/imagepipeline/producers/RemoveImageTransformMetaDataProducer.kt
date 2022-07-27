@@ -18,18 +18,18 @@ import com.facebook.imagepipeline.image.EncodedImage
  * and adds it to the result that it returns to the consumer.
  */
 class RemoveImageTransformMetaDataProducer(private val inputProducer: Producer<EncodedImage?>) :
-    Producer<CloseableReference<PooledByteBuffer>?> {
+    Producer<CloseableReference<PooledByteBuffer>> {
 
   override fun produceResults(
-      consumer: Consumer<CloseableReference<PooledByteBuffer>?>,
+      consumer: Consumer<CloseableReference<PooledByteBuffer>>,
       context: ProducerContext
   ) {
     inputProducer.produceResults(RemoveImageTransformMetaDataConsumer(consumer), context)
   }
 
   private inner class RemoveImageTransformMetaDataConsumer(
-      consumer: Consumer<CloseableReference<PooledByteBuffer>?>
-  ) : DelegatingConsumer<EncodedImage?, CloseableReference<PooledByteBuffer>?>(consumer) {
+      consumer: Consumer<CloseableReference<PooledByteBuffer>>
+  ) : DelegatingConsumer<EncodedImage?, CloseableReference<PooledByteBuffer>>(consumer) {
     override fun onNewResultImpl(newResult: EncodedImage?, @Consumer.Status status: Int) {
       var ret: CloseableReference<PooledByteBuffer>? = null
       try {

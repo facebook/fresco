@@ -32,8 +32,10 @@ import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.producers.Consumer;
 import com.facebook.imagepipeline.producers.CustomProducerSequenceFactory;
+import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.ProducerContext;
+import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.Postprocessor;
 import com.facebook.imagepipeline.transcoder.ImageTranscoder;
@@ -65,6 +67,8 @@ public class ProducerSequenceFactoryTest {
   private final String mDummyMime = "dummy_mime";
   private Uri mUri;
   private ProducerSequenceFactory mProducerSequenceFactory;
+  @Mock public NetworkFetcher mNetworkFetcher;
+  @Mock public ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
 
   @Rule public PowerMockRule rule = new PowerMockRule();
 
@@ -83,10 +87,10 @@ public class ProducerSequenceFactoryTest {
         new ProducerSequenceFactory(
             RuntimeEnvironment.application.getContentResolver(),
             producerFactory,
-            null,
+            mNetworkFetcher,
             true,
             false,
-            null,
+            mThreadHandoffProducerQueue,
             false,
             false,
             false,
@@ -109,7 +113,7 @@ public class ProducerSequenceFactoryTest {
   public void testNetworkFullFetch() {
     PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_NETWORK);
     Producer producer = mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
-    assertSame(producer, mProducerSequenceFactory.mNetworkFetchSequence);
+    assertSame(producer, mProducerSequenceFactory.getNetworkFetchSequence());
   }
 
   @Test
@@ -141,8 +145,9 @@ public class ProducerSequenceFactoryTest {
         mProducerSequenceFactory.getDecodedImagePrefetchProducerSequence(mImageRequest);
     assertSame(
         producer,
-        mProducerSequenceFactory.mCloseableImagePrefetchSequences.get(
-            mProducerSequenceFactory.mNetworkFetchSequence));
+        mProducerSequenceFactory
+            .getCloseableImagePrefetchSequences()
+            .get(mProducerSequenceFactory.getNetworkFetchSequence()));
   }
 
   @Test
@@ -150,11 +155,11 @@ public class ProducerSequenceFactoryTest {
     PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_LOCAL_IMAGE_FILE);
     Producer<CloseableReference<PooledByteBuffer>> producer =
         mProducerSequenceFactory.getEncodedImageProducerSequence(mImageRequest);
-    assertSame(producer, mProducerSequenceFactory.mLocalFileEncodedImageProducerSequence);
+    assertSame(producer, mProducerSequenceFactory.getLocalFileFetchEncodedImageProducerSequence());
     // Same for Video
     PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_LOCAL_IMAGE_FILE);
     producer = mProducerSequenceFactory.getEncodedImageProducerSequence(mImageRequest);
-    assertSame(producer, mProducerSequenceFactory.mLocalFileEncodedImageProducerSequence);
+    assertSame(producer, mProducerSequenceFactory.getLocalFileFetchEncodedImageProducerSequence());
   }
 
   @Test
@@ -162,7 +167,7 @@ public class ProducerSequenceFactoryTest {
     PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_NETWORK);
     Producer<CloseableReference<PooledByteBuffer>> producer =
         mProducerSequenceFactory.getEncodedImageProducerSequence(mImageRequest);
-    assertSame(producer, mProducerSequenceFactory.mNetworkEncodedImageProducerSequence);
+    assertSame(producer, mProducerSequenceFactory.getNetworkFetchEncodedImageProducerSequence());
   }
 
   @Test
@@ -170,11 +175,13 @@ public class ProducerSequenceFactoryTest {
     PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_LOCAL_VIDEO_FILE);
     Producer<Void> producer =
         mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(mImageRequest);
-    assertSame(producer, mProducerSequenceFactory.mLocalFileFetchToEncodedMemoryPrefetchSequence);
+    assertSame(
+        producer, mProducerSequenceFactory.getLocalFileFetchToEncodedMemoryPrefetchSequence());
     // Same for image
     PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_LOCAL_IMAGE_FILE);
     producer = mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(mImageRequest);
-    assertSame(producer, mProducerSequenceFactory.mLocalFileFetchToEncodedMemoryPrefetchSequence);
+    assertSame(
+        producer, mProducerSequenceFactory.getLocalFileFetchToEncodedMemoryPrefetchSequence());
   }
 
   @Test
@@ -182,7 +189,7 @@ public class ProducerSequenceFactoryTest {
     PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_NETWORK);
     Producer<Void> producer =
         mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(mImageRequest);
-    assertSame(producer, mProducerSequenceFactory.mNetworkFetchToEncodedMemoryPrefetchSequence);
+    assertSame(producer, mProducerSequenceFactory.getNetworkFetchToEncodedMemoryPrefetchSequence());
   }
 
   @Test
@@ -190,7 +197,7 @@ public class ProducerSequenceFactoryTest {
     PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_LOCAL_IMAGE_FILE);
     Producer<CloseableReference<CloseableImage>> producer =
         mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
-    assertSame(producer, mProducerSequenceFactory.mLocalImageFileFetchSequence);
+    assertSame(producer, mProducerSequenceFactory.getLocalImageFileFetchSequence());
   }
 
   @Test
@@ -200,8 +207,9 @@ public class ProducerSequenceFactoryTest {
         mProducerSequenceFactory.getDecodedImagePrefetchProducerSequence(mImageRequest);
     assertSame(
         producer,
-        mProducerSequenceFactory.mCloseableImagePrefetchSequences.get(
-            mProducerSequenceFactory.mLocalImageFileFetchSequence));
+        mProducerSequenceFactory
+            .getCloseableImagePrefetchSequences()
+            .get(mProducerSequenceFactory.getLocalImageFileFetchSequence()));
   }
 
   @Test
@@ -209,7 +217,7 @@ public class ProducerSequenceFactoryTest {
     PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_LOCAL_VIDEO_FILE);
     Producer<CloseableReference<CloseableImage>> producer =
         mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
-    assertSame(producer, mProducerSequenceFactory.mLocalVideoFileFetchSequence);
+    assertSame(producer, mProducerSequenceFactory.getLocalVideoFileFetchSequence());
   }
 
   @Test
@@ -219,8 +227,9 @@ public class ProducerSequenceFactoryTest {
         mProducerSequenceFactory.getDecodedImagePrefetchProducerSequence(mImageRequest);
     assertSame(
         producer,
-        mProducerSequenceFactory.mCloseableImagePrefetchSequences.get(
-            mProducerSequenceFactory.mLocalVideoFileFetchSequence));
+        mProducerSequenceFactory
+            .getCloseableImagePrefetchSequences()
+            .get(mProducerSequenceFactory.getLocalVideoFileFetchSequence()));
   }
 
   @Test
@@ -228,7 +237,7 @@ public class ProducerSequenceFactoryTest {
     PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_LOCAL_CONTENT);
     Producer<CloseableReference<CloseableImage>> producer =
         mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
-    assertSame(producer, mProducerSequenceFactory.mLocalContentUriFetchSequence);
+    assertSame(producer, mProducerSequenceFactory.getLocalContentUriFetchSequence());
   }
 
   @Test
@@ -238,8 +247,9 @@ public class ProducerSequenceFactoryTest {
         mProducerSequenceFactory.getDecodedImagePrefetchProducerSequence(mImageRequest);
     assertSame(
         producer,
-        mProducerSequenceFactory.mCloseableImagePrefetchSequences.get(
-            mProducerSequenceFactory.mLocalContentUriFetchSequence));
+        mProducerSequenceFactory
+            .getCloseableImagePrefetchSequences()
+            .get(mProducerSequenceFactory.getLocalContentUriFetchSequence()));
   }
 
   @Test
@@ -247,7 +257,7 @@ public class ProducerSequenceFactoryTest {
     PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_LOCAL_RESOURCE);
     Producer<CloseableReference<CloseableImage>> producer =
         mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
-    assertSame(producer, mProducerSequenceFactory.mLocalResourceFetchSequence);
+    assertSame(producer, mProducerSequenceFactory.getLocalResourceFetchSequence());
   }
 
   @Test
@@ -255,7 +265,7 @@ public class ProducerSequenceFactoryTest {
     PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_LOCAL_ASSET);
     Producer<CloseableReference<CloseableImage>> producer =
         mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
-    assertSame(producer, mProducerSequenceFactory.mLocalAssetFetchSequence);
+    assertSame(producer, mProducerSequenceFactory.getLocalAssetFetchSequence());
   }
 
   @Test
@@ -265,15 +275,17 @@ public class ProducerSequenceFactoryTest {
         mProducerSequenceFactory.getDecodedImagePrefetchProducerSequence(mImageRequest);
     assertSame(
         localResourceSequence,
-        mProducerSequenceFactory.mCloseableImagePrefetchSequences.get(
-            mProducerSequenceFactory.mLocalResourceFetchSequence));
+        mProducerSequenceFactory
+            .getCloseableImagePrefetchSequences()
+            .get(mProducerSequenceFactory.getLocalResourceFetchSequence()));
     PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_LOCAL_ASSET);
     Producer localAssetSequence =
         mProducerSequenceFactory.getDecodedImagePrefetchProducerSequence(mImageRequest);
     assertSame(
         localAssetSequence,
-        mProducerSequenceFactory.mCloseableImagePrefetchSequences.get(
-            mProducerSequenceFactory.mLocalAssetFetchSequence));
+        mProducerSequenceFactory
+            .getCloseableImagePrefetchSequences()
+            .get(mProducerSequenceFactory.getLocalAssetFetchSequence()));
     assertNotSame(localAssetSequence, localResourceSequence);
   }
 
@@ -285,8 +297,9 @@ public class ProducerSequenceFactoryTest {
         mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
     assertSame(
         networkSequence,
-        mProducerSequenceFactory.mPostprocessorSequences.get(
-            mProducerSequenceFactory.mNetworkFetchSequence));
+        mProducerSequenceFactory
+            .getPostprocessorSequences()
+            .get(mProducerSequenceFactory.getNetworkFetchSequence()));
 
     // each source type should be different
     PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_LOCAL_CONTENT);
@@ -295,18 +308,21 @@ public class ProducerSequenceFactoryTest {
         mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
     assertSame(
         localSequence,
-        mProducerSequenceFactory.mPostprocessorSequences.get(
-            mProducerSequenceFactory.mLocalContentUriFetchSequence));
+        mProducerSequenceFactory
+            .getPostprocessorSequences()
+            .get(mProducerSequenceFactory.getLocalContentUriFetchSequence()));
     assertNotSame(networkSequence, localSequence);
 
     // encoded return types don't get postprocessed
     PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_NETWORK);
     Producer<CloseableReference<PooledByteBuffer>> encodedSequence =
         mProducerSequenceFactory.getEncodedImageProducerSequence(mImageRequest);
-    assertSame(encodedSequence, mProducerSequenceFactory.mNetworkEncodedImageProducerSequence);
+    assertSame(
+        encodedSequence, mProducerSequenceFactory.getNetworkFetchEncodedImageProducerSequence());
     assertNull(
-        mProducerSequenceFactory.mPostprocessorSequences.get(
-            mProducerSequenceFactory.mBackgroundNetworkFetchToEncodedMemorySequence));
+        mProducerSequenceFactory
+            .getPostprocessorSequences()
+            .get(mProducerSequenceFactory.getBackgroundNetworkFetchToEncodedMemorySequence()));
   }
 
   @Test
@@ -318,8 +334,9 @@ public class ProducerSequenceFactoryTest {
     Producer producer = mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
     assertSame(
         producer,
-        mProducerSequenceFactory.mBitmapPrepareSequences.get(
-            mProducerSequenceFactory.mNetworkFetchSequence));
+        mProducerSequenceFactory
+            .getBitmapPrepareSequences()
+            .get(mProducerSequenceFactory.getNetworkFetchSequence()));
   }
 
   @Test
@@ -332,9 +349,12 @@ public class ProducerSequenceFactoryTest {
     Producer producer = mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
     assertSame(
         producer,
-        mProducerSequenceFactory.mBitmapPrepareSequences.get(
-            mProducerSequenceFactory.mPostprocessorSequences.get(
-                mProducerSequenceFactory.mNetworkFetchSequence)));
+        mProducerSequenceFactory
+            .getBitmapPrepareSequences()
+            .get(
+                mProducerSequenceFactory
+                    .getPostprocessorSequences()
+                    .get(mProducerSequenceFactory.getNetworkFetchSequence())));
   }
 
   private void internalUseSequenceFactoryWithBitmapPrepare() {
@@ -345,10 +365,10 @@ public class ProducerSequenceFactoryTest {
         new ProducerSequenceFactory(
             RuntimeEnvironment.application.getContentResolver(),
             producerFactory,
-            null,
+            mNetworkFetcher,
             true,
             false,
-            null,
+            mThreadHandoffProducerQueue,
             false,
             /* useBitmapPrepareToDraw */ true,
             false,
@@ -369,10 +389,10 @@ public class ProducerSequenceFactoryTest {
         new ProducerSequenceFactory(
             RuntimeEnvironment.application.getContentResolver(),
             producerFactory,
-            null,
+            mNetworkFetcher,
             true,
             false,
-            null,
+            mThreadHandoffProducerQueue,
             false,
             false,
             false,

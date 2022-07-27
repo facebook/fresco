@@ -55,10 +55,10 @@ class DecodeProducer(
     val closeableReferenceFactory: CloseableReferenceFactory,
     val reclaimMemoryRunnable: Runnable?,
     val recoverFromDecoderOOM: Supplier<Boolean>
-) : Producer<CloseableReference<CloseableImage?>> {
+) : Producer<CloseableReference<CloseableImage>> {
 
   override fun produceResults(
-      consumer: Consumer<CloseableReference<CloseableImage?>>,
+      consumer: Consumer<CloseableReference<CloseableImage>>,
       context: ProducerContext
   ) =
       traceSection("DecodeProducer#produceResults") {
@@ -81,11 +81,11 @@ class DecodeProducer(
       }
 
   private abstract inner class ProgressiveDecoder(
-      consumer: Consumer<CloseableReference<CloseableImage?>>,
+      consumer: Consumer<CloseableReference<CloseableImage>>,
       private val producerContext: ProducerContext,
       decodeCancellationEnabled: Boolean,
       maxBitmapSize: Int
-  ) : DelegatingConsumer<EncodedImage?, CloseableReference<CloseableImage?>>(consumer) {
+  ) : DelegatingConsumer<EncodedImage?, CloseableReference<CloseableImage>>(consumer) {
     private val TAG = "ProgressiveDecoder"
     private val producerListener: ProducerListener2 = producerContext.producerListener
     private val imageDecodeOptions: ImageDecodeOptions =
@@ -365,7 +365,7 @@ class DecodeProducer(
 
     /** Notifies consumer of new result and finishes if the result is final. */
     private fun handleResult(decodedImage: CloseableImage?, @Consumer.Status status: Int) {
-      val decodedImageRef: CloseableReference<CloseableImage?>? =
+      val decodedImageRef: CloseableReference<CloseableImage>? =
           closeableReferenceFactory.create(decodedImage)
       try {
         maybeFinish(isLast(status))
@@ -429,7 +429,7 @@ class DecodeProducer(
   }
 
   private inner class LocalImagesProgressiveDecoder(
-      consumer: Consumer<CloseableReference<CloseableImage?>>,
+      consumer: Consumer<CloseableReference<CloseableImage>>,
       producerContext: ProducerContext,
       decodeCancellationEnabled: Boolean,
       maxBitmapSize: Int
@@ -452,7 +452,7 @@ class DecodeProducer(
   }
 
   private inner class NetworkImagesProgressiveDecoder(
-      consumer: Consumer<CloseableReference<CloseableImage?>>,
+      consumer: Consumer<CloseableReference<CloseableImage>>,
       producerContext: ProducerContext,
       val progressiveJpegParser: ProgressiveJpegParser,
       val progressiveJpegConfig: ProgressiveJpegConfig,
