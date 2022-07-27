@@ -21,31 +21,19 @@ import kotlin.jvm.JvmField
 class ResizeOptions
 @JvmOverloads
 constructor(
-    width: Int,
-    height: Int,
-    maxBitmapSize: Float = BitmapUtil.MAX_BITMAP_SIZE,
-    roundUpFraction: Float = DEFAULT_ROUNDUP_FRACTION
+    /* target width (in pixels) */
+    @JvmField val width: Int,
+    /* target height (in pixels) */
+    @JvmField val height: Int,
+    /* max supported bitmap size (in pixels), defaults to BitmapUtil.MAX_BITMAP_SIZE */
+    @JvmField val maxBitmapSize: Float = BitmapUtil.MAX_BITMAP_SIZE,
+    /* round-up fraction for resize process, defaults to DEFAULT_ROUNDUP_FRACTION */
+    @JvmField val roundUpFraction: Float = DEFAULT_ROUNDUP_FRACTION
 ) {
-
-  /* target width (in pixels) */
-  @JvmField val width: Int
-
-  /* target height (in pixels) */
-  @JvmField val height: Int
-
-  /* max supported bitmap size (in pixels), defaults to BitmapUtil.MAX_BITMAP_SIZE */
-  @JvmField val maxBitmapSize: Float
-
-  /* round-up fraction for resize process, defaults to DEFAULT_ROUNDUP_FRACTION */
-  @JvmField val roundUpFraction: Float
 
   init {
     check(width > 0)
     check(height > 0)
-    this.width = width
-    this.height = height
-    this.maxBitmapSize = maxBitmapSize
-    this.roundUpFraction = roundUpFraction
   }
 
   override fun hashCode(): Int = HashCodeUtil.hashCode(width, height)
@@ -54,11 +42,7 @@ constructor(
     if (other === this) {
       return true
     }
-    if (other !is ResizeOptions) {
-      return false
-    }
-    val that = other
-    return width == that.width && height == that.height
+    return other is ResizeOptions && width == other.width && height == other.height
   }
 
   override fun toString(): String = String.format(null as Locale?, "%dx%d", width, height)
