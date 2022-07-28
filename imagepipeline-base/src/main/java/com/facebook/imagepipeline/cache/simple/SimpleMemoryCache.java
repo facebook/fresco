@@ -28,10 +28,13 @@ public class SimpleMemoryCache<K> implements CountingMemoryCache<K, CloseableIma
 
   private final Supplier<MemoryCacheParams> supplier;
   private final ImageLruCache<K> map;
+  private final CacheTrimStrategy trimStrategy;
 
-  public SimpleMemoryCache(Supplier<MemoryCacheParams> memoryCacheParamsSupplier) {
+  public SimpleMemoryCache(
+      Supplier<MemoryCacheParams> memoryCacheParamsSupplier, CacheTrimStrategy trimStrategy) {
     this.supplier = memoryCacheParamsSupplier;
     this.map = new ImageLruCache<K>(memoryCacheParamsSupplier.get().maxCacheSize);
+    this.trimStrategy = trimStrategy;
   }
 
   /** @param observer ignored */
@@ -152,7 +155,8 @@ public class SimpleMemoryCache<K> implements CountingMemoryCache<K, CloseableIma
 
   @Override
   public void trim(MemoryTrimType trimType) {
-    int size = (int) (trimType.getSuggestedTrimRatio() * (double) map.size());
+    final double trimRatio = trimStrategy.getTrimRatio(trimType);
+    int size = (int) (map.size() * (1.0 - trimRatio));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       map.trimToSize(size);
     } else {
