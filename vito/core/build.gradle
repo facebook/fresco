@@ -25,6 +25,7 @@ dependencies {
     implementation project(':middleware')
     implementation project(':vito:options')
     implementation project(':vito:source')
+    implementation project(':urimod')
 
     testImplementation TestDeps.junit
     testImplementation TestDeps.assertjCore

@@ -135,6 +135,7 @@ dependencies {
     implementation project(':vito:litho')
     implementation project(':vito:litho-slideshow')
     implementation project(':vito:options')
+    implementation project(':vito:drawee-support')
     implementation project(':vito:provider')
     implementation project(':vito:renderer')
     implementation project(':vito:source')

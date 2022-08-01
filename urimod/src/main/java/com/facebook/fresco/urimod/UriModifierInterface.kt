@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.middleware
+package com.facebook.fresco.urimod
 
 import android.net.Uri
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType

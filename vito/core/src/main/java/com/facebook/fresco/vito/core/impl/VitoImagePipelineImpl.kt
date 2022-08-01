@@ -11,9 +11,9 @@ import android.content.res.Resources
 import android.graphics.Rect
 import com.facebook.common.references.CloseableReference
 import com.facebook.datasource.DataSource
-import com.facebook.fresco.middleware.Dimensions
-import com.facebook.fresco.middleware.UriModifier
 import com.facebook.fresco.ui.common.VitoUtils
+import com.facebook.fresco.urimod.Dimensions
+import com.facebook.fresco.urimod.UriModifier
 import com.facebook.fresco.vito.core.ImagePipelineUtils
 import com.facebook.fresco.vito.core.VitoImagePipeline
 import com.facebook.fresco.vito.core.VitoImageRequest
