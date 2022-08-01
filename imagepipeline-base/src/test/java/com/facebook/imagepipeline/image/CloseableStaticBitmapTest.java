@@ -33,7 +33,7 @@ public class CloseableStaticBitmapTest {
     mBitmap = Bitmap.createBitmap(WIDTH, HEIGHT, Bitmap.Config.ARGB_8888);
     ResourceReleaser<Bitmap> releaser = SimpleBitmapReleaser.getInstance();
     mCloseableStaticBitmap =
-        new CloseableStaticBitmap(
+        CloseableStaticBitmap.of(
             mBitmap,
             releaser,
             ImmutableQualityInfo.FULL_QUALITY,
@@ -53,7 +53,7 @@ public class CloseableStaticBitmapTest {
     mBitmap = Bitmap.createBitmap(HEIGHT, WIDTH, Bitmap.Config.ARGB_8888);
     ResourceReleaser<Bitmap> releaser = SimpleBitmapReleaser.getInstance();
     mCloseableStaticBitmap =
-        new CloseableStaticBitmap(
+        CloseableStaticBitmap.of(
             mBitmap,
             releaser,
             ImmutableQualityInfo.FULL_QUALITY,
@@ -70,7 +70,7 @@ public class CloseableStaticBitmapTest {
     mBitmap = Bitmap.createBitmap(HEIGHT, WIDTH, Bitmap.Config.ARGB_8888);
     ResourceReleaser<Bitmap> releaser = SimpleBitmapReleaser.getInstance();
     mCloseableStaticBitmap =
-        new CloseableStaticBitmap(
+        CloseableStaticBitmap.of(
             mBitmap,
             releaser,
             ImmutableQualityInfo.FULL_QUALITY,

@@ -161,7 +161,7 @@ public class DefaultImageDecoder implements ImageDecoder {
               options.bitmapTransformation, bitmapReference);
 
       CloseableStaticBitmap closeableStaticBitmap =
-          new CloseableStaticBitmap(
+          CloseableStaticBitmap.of(
               bitmapReference,
               ImmutableQualityInfo.FULL_QUALITY,
               encodedImage.getRotationAngle(),
@@ -199,7 +199,7 @@ public class DefaultImageDecoder implements ImageDecoder {
               options.bitmapTransformation, bitmapReference);
 
       CloseableStaticBitmap closeableStaticBitmap =
-          new CloseableStaticBitmap(
+          CloseableStaticBitmap.of(
               bitmapReference,
               qualityInfo,
               encodedImage.getRotationAngle(),

@@ -249,7 +249,7 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
       int exifOrientation = staticBitmap.getExifOrientation();
       try {
         CloseableStaticBitmap closeableStaticBitmap =
-            new CloseableStaticBitmap(
+            CloseableStaticBitmap.of(
                 bitmapRef, sourceImage.getQualityInfo(), rotationAngle, exifOrientation);
         closeableStaticBitmap.setImageExtras(staticBitmap.getExtras());
         return CloseableReference.<CloseableImage>of(closeableStaticBitmap);

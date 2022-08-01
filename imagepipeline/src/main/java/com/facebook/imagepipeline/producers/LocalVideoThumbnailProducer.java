@@ -103,7 +103,7 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
             }
 
             CloseableStaticBitmap closeableStaticBitmap =
-                new CloseableStaticBitmap(
+                CloseableStaticBitmap.of(
                     thumbnailBitmap,
                     SimpleBitmapReleaser.getInstance(),
                     ImmutableQualityInfo.FULL_QUALITY,

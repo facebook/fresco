@@ -32,27 +32,7 @@ public class CloseableStaticBitmap extends CloseableBitmap {
   private final int mRotationAngle;
   private final int mExifOrientation;
 
-  /**
-   * Creates a new instance of a CloseableStaticBitmap.
-   *
-   * @param bitmap the bitmap to wrap
-   * @param resourceReleaser ResourceReleaser to release the bitmap to
-   */
-  public CloseableStaticBitmap(
-      Bitmap bitmap,
-      ResourceReleaser<Bitmap> resourceReleaser,
-      QualityInfo qualityInfo,
-      int rotationAngle) {
-    this(bitmap, resourceReleaser, qualityInfo, rotationAngle, ExifInterface.ORIENTATION_UNDEFINED);
-  }
-
-  /**
-   * Creates a new instance of a CloseableStaticBitmap.
-   *
-   * @param bitmap the bitmap to wrap
-   * @param resourceReleaser ResourceReleaser to release the bitmap to
-   */
-  public CloseableStaticBitmap(
+  private CloseableStaticBitmap(
       Bitmap bitmap,
       ResourceReleaser<Bitmap> resourceReleaser,
       QualityInfo qualityInfo,
@@ -65,24 +45,12 @@ public class CloseableStaticBitmap extends CloseableBitmap {
     mExifOrientation = exifOrientation;
   }
 
-  /**
-   * Creates a new instance of a CloseableStaticBitmap from an existing CloseableReference. The
-   * CloseableStaticBitmap will hold a reference to the Bitmap until it's closed.
-   *
-   * @param bitmapReference the bitmap reference.
-   */
-  public CloseableStaticBitmap(
+  private CloseableStaticBitmap(
       CloseableReference<Bitmap> bitmapReference, QualityInfo qualityInfo, int rotationAngle) {
     this(bitmapReference, qualityInfo, rotationAngle, ExifInterface.ORIENTATION_UNDEFINED);
   }
 
-  /**
-   * Creates a new instance of a CloseableStaticBitmap from an existing CloseableReference. The
-   * CloseableStaticBitmap will hold a reference to the Bitmap until it's closed.
-   *
-   * @param bitmapReference the bitmap reference.
-   */
-  public CloseableStaticBitmap(
+  private CloseableStaticBitmap(
       CloseableReference<Bitmap> bitmapReference,
       QualityInfo qualityInfo,
       int rotationAngle,
@@ -92,6 +60,63 @@ public class CloseableStaticBitmap extends CloseableBitmap {
     mQualityInfo = qualityInfo;
     mRotationAngle = rotationAngle;
     mExifOrientation = exifOrientation;
+  }
+
+  /**
+   * Creates a new instance of a CloseableStaticBitmap from an existing CloseableReference. The
+   * CloseableStaticBitmap will hold a reference to the Bitmap until it's closed.
+   *
+   * @param bitmapReference the bitmap reference.
+   */
+  public static CloseableStaticBitmap of(
+      CloseableReference<Bitmap> bitmapReference, QualityInfo qualityInfo, int rotationAngle) {
+    return of(bitmapReference, qualityInfo, rotationAngle, ExifInterface.ORIENTATION_UNDEFINED);
+  }
+
+  /**
+   * Creates a new instance of a CloseableStaticBitmap from an existing CloseableReference. The
+   * CloseableStaticBitmap will hold a reference to the Bitmap until it's closed.
+   *
+   * @param bitmapReference the bitmap reference.
+   */
+  public static CloseableStaticBitmap of(
+      CloseableReference<Bitmap> bitmapReference,
+      QualityInfo qualityInfo,
+      int rotationAngle,
+      int exifOrientation) {
+    return new CloseableStaticBitmap(bitmapReference, qualityInfo, rotationAngle, exifOrientation);
+  }
+
+  /**
+   * Creates a new instance of a CloseableStaticBitmap.
+   *
+   * @param bitmap the bitmap to wrap
+   * @param resourceReleaser ResourceReleaser to release the bitmap to
+   */
+  public static CloseableStaticBitmap of(
+      Bitmap bitmap,
+      ResourceReleaser<Bitmap> resourceReleaser,
+      QualityInfo qualityInfo,
+      int rotationAngle) {
+    return of(
+        bitmap, resourceReleaser, qualityInfo, rotationAngle, ExifInterface.ORIENTATION_UNDEFINED);
+  }
+
+  /**
+   * Creates a new instance of a CloseableStaticBitmap from an existing CloseableReference. The
+   * CloseableStaticBitmap will hold a reference to the Bitmap until it's closed.
+   *
+   * @param bitmap the bitmap to wrap
+   * @param resourceReleaser ResourceReleaser to release the bitmap to
+   */
+  public static CloseableStaticBitmap of(
+      Bitmap bitmap,
+      ResourceReleaser<Bitmap> resourceReleaser,
+      QualityInfo qualityInfo,
+      int rotationAngle,
+      int orientation) {
+    return new CloseableStaticBitmap(
+        bitmap, resourceReleaser, qualityInfo, rotationAngle, orientation);
   }
 
   /** Releases the bitmap to the pool. */

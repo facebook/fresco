@@ -30,7 +30,7 @@ public class CloseableBitmapTest {
   public void setup() {
     MockitoAnnotations.initMocks(this);
     mCloseableStaticBitmap =
-        new CloseableStaticBitmap(
+        CloseableStaticBitmap.of(
             mBitmap,
             mResourceReleaser,
             ImmutableQualityInfo.FULL_QUALITY,

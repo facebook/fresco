@@ -60,7 +60,7 @@ public class FrescoVitoRegionDecoder implements ImageDecoder {
               options.bitmapTransformation, decodedBitmapReference);
 
       CloseableStaticBitmap closeableStaticBitmap =
-          new CloseableStaticBitmap(
+          CloseableStaticBitmap.of(
               decodedBitmapReference,
               ImmutableQualityInfo.FULL_QUALITY,
               encodedImage.getRotationAngle(),

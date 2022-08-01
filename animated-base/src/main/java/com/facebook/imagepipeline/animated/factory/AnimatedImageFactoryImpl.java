@@ -136,7 +136,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
     try {
       final int frameForPreview = options.useLastFrameForPreview ? image.getFrameCount() - 1 : 0;
       if (options.forceStaticImage) {
-        return new CloseableStaticBitmap(
+        return CloseableStaticBitmap.of(
             createPreviewBitmap(image, bitmapConfig, frameForPreview),
             ImmutableQualityInfo.FULL_QUALITY,
             0);

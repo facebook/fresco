@@ -224,7 +224,7 @@ public class FrescoFrameCache implements BitmapFrameCache {
     // The given CloseableStaticBitmap will be cached and then released by the resource releaser
     // of the closeable reference
     CloseableImage closeableImage =
-        new CloseableStaticBitmap(bitmapReference, ImmutableQualityInfo.FULL_QUALITY, 0);
+        CloseableStaticBitmap.of(bitmapReference, ImmutableQualityInfo.FULL_QUALITY, 0);
     return CloseableReference.of(closeableImage);
   }
 }
