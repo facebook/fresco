@@ -118,8 +118,8 @@ class ProducerSequenceFactory(
       Producer<CloseableReference<PooledByteBuffer>>? by lazy {
     traceSection(
         "ProducerSequenceFactory#getLocalContentUriFetchEncodedImageProducerSequence:init") {
-      RemoveImageTransformMetaDataProducer(backgroundLocalContentUriFetchToEncodeMemorySequence)
-    }
+          RemoveImageTransformMetaDataProducer(backgroundLocalContentUriFetchToEncodeMemorySequence)
+        }
   }
 
   /**
@@ -314,12 +314,12 @@ class ProducerSequenceFactory(
   val backgroundLocalContentUriFetchToEncodeMemorySequence: Producer<EncodedImage?> by lazy {
     traceSection(
         "ProducerSequenceFactory#getBackgroundLocalContentUriFetchToEncodeMemorySequence:init") {
-      val localFileFetchProducer = producerFactory.newLocalContentUriFetchProducer()
-      val toEncodedMultiplexProducer =
-          newEncodedCacheMultiplexToTranscodeSequence(localFileFetchProducer)
-      producerFactory.newBackgroundThreadHandoffProducer(
-          toEncodedMultiplexProducer, threadHandoffProducerQueue)
-    }
+          val localFileFetchProducer = producerFactory.newLocalContentUriFetchProducer()
+          val toEncodedMultiplexProducer =
+              newEncodedCacheMultiplexToTranscodeSequence(localFileFetchProducer)
+          producerFactory.newBackgroundThreadHandoffProducer(
+              toEncodedMultiplexProducer, threadHandoffProducerQueue)
+        }
   }
 
   /**

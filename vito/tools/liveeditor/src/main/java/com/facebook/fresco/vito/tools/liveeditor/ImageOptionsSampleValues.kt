@@ -34,8 +34,8 @@ object ImageOptionsSampleValues {
               "as circle" to RoundingOptions.asCircle(),
               "corner radius" to RoundingOptions.forCornerRadiusPx(20f),
               "different radii" to RoundingOptions.forCornerRadii(0f, 20f, 30f, 40f))) { b, v ->
-        b.round(v)
-      }
+            b.round(v)
+          }
 
   val borderOptions =
       Entry(
@@ -48,8 +48,8 @@ object ImageOptionsSampleValues {
               "border with small padding" to BorderOptions.create(Color.GREEN, 20f, 10f),
               "border with same padding" to BorderOptions.create(Color.GREEN, 20f, 20f),
               "border with more padding" to BorderOptions.create(Color.GREEN, 20f, 40f))) { b, v ->
-        b.borders(v)
-      }
+            b.borders(v)
+          }
 
   val scaleTypes =
       Entry(
@@ -64,7 +64,9 @@ object ImageOptionsSampleValues {
               "fit_xy" to Pair(ScalingUtils.ScaleType.FIT_XY, null),
               "focus_crop (0, 0)" to Pair(ScalingUtils.ScaleType.FOCUS_CROP, PointF(0f, 0f)),
               "focus_crop (1, 0.5)" to Pair(ScalingUtils.ScaleType.FOCUS_CROP, PointF(1f, 0.5f)),
-              "null" to Pair(null, null))) { b, v -> b.scale(v.first).focusPoint(v.second) }
+              "null" to Pair(null, null))) { b, v ->
+            b.scale(v.first).focusPoint(v.second)
+          }
 
   val colorFilters =
       Entry(
@@ -80,9 +82,9 @@ object ImageOptionsSampleValues {
               "tint: red" to PorterDuffColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP),
               "tint: green" to PorterDuffColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP),
               "tint: blue" to PorterDuffColorFilter(Color.BLUE, PorterDuff.Mode.SRC_ATOP))) { b, v
-        ->
-        b.colorFilter(v)
-      }
+            ->
+            b.colorFilter(v)
+          }
 
   val fadingOptions =
       Entry(
@@ -96,7 +98,9 @@ object ImageOptionsSampleValues {
               "1000 ms" to 1000,
               "2000 ms" to 2000,
               "5000 ms" to 5000,
-              "10000 ms" to 10000)) { b, v -> b.fadeDurationMs(v) }
+              "10000 ms" to 10000)) { b, v ->
+            b.fadeDurationMs(v)
+          }
 
   val autoPlay = Entry("Autoplay", listOf("off" to false, "on" to true)) { b, v -> b.autoPlay(v) }
 
@@ -112,7 +116,9 @@ object ImageOptionsSampleValues {
               else null,
               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                   "HARDWARE" to Bitmap.Config.HARDWARE
-              else null)) { b, v -> b.bitmapConfig(v) }
+              else null)) { b, v ->
+            b.bitmapConfig(v)
+          }
 
   val delayConfig =
       Entry(
@@ -126,7 +132,9 @@ object ImageOptionsSampleValues {
               "1000 ms" to 1000,
               "2000 ms" to 2000,
               "5000 ms" to 5000,
-              "10000 ms" to 10000)) { b, v -> b.delayMs(v) }
+              "10000 ms" to 10000)) { b, v ->
+            b.delayMs(v)
+          }
 
   val resizeToViewportConfig =
       Entry("Resize to viewport", listOf("off" to false, "on" to true)) { b, v ->
