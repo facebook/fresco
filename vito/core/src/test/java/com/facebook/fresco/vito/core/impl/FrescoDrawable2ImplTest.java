@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.fresco.vito.core.NopDrawable;
+import com.facebook.imagepipeline.image.BaseCloseableImage;
 import com.facebook.imagepipeline.image.CloseableImage;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -114,7 +115,7 @@ public class FrescoDrawable2ImplTest {
     Assert.assertTrue(mLatch.await(3, TimeUnit.SECONDS));
   }
 
-  static class DummyCloseableImage extends CloseableImage {
+  static class DummyCloseableImage extends BaseCloseableImage {
 
     private boolean mClosed = false;
 
