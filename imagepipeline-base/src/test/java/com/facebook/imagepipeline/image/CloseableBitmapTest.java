@@ -24,13 +24,13 @@ public class CloseableBitmapTest {
 
   @Mock public Bitmap mBitmap;
   @Mock public ResourceReleaser<Bitmap> mResourceReleaser;
-  private DefaultCloseableStaticBitmap mCloseableStaticBitmap;
+  private CloseableStaticBitmap mCloseableStaticBitmap;
 
   @Before
   public void setup() {
     MockitoAnnotations.initMocks(this);
     mCloseableStaticBitmap =
-        new DefaultCloseableStaticBitmap(
+        CloseableStaticBitmap.of(
             mBitmap,
             mResourceReleaser,
             ImmutableQualityInfo.FULL_QUALITY,

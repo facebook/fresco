@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
  * AnimatedImage}.
  */
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public class CloseableAnimatedImage extends DefaultCloseableImage {
+public class CloseableAnimatedImage extends CloseableImage {
 
   private @Nullable AnimatedImageResult mImageResult;
 
