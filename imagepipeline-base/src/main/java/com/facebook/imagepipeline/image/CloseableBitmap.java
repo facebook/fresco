@@ -12,7 +12,7 @@ import com.facebook.infer.annotation.Nullsafe;
 
 /** {@link CloseableImage} that wraps a bitmap. */
 @Nullsafe(Nullsafe.Mode.STRICT)
-public abstract class CloseableBitmap extends CloseableImage {
+public interface CloseableBitmap extends CloseableImage {
 
   /**
    * Gets the underlying bitmap. Note: care must be taken because subclasses might be more
@@ -21,5 +21,5 @@ public abstract class CloseableBitmap extends CloseableImage {
    *
    * @return the underlying bitmap
    */
-  public abstract Bitmap getUnderlyingBitmap();
+  Bitmap getUnderlyingBitmap();
 }
