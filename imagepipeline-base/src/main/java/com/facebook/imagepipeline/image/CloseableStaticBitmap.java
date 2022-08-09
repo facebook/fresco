@@ -43,6 +43,17 @@ public interface CloseableStaticBitmap extends CloseableBitmap {
    * Creates a new instance of a CloseableStaticBitmap from an existing CloseableReference. The
    * CloseableStaticBitmap will hold a reference to the Bitmap until it's closed.
    *
+   * @param bitmapReference the bitmap reference.
+   */
+  static CloseableStaticBitmap of(
+      CloseableReference<Bitmap> bitmapReference, QualityInfo qualityInfo, int rotationAngle) {
+    return of(bitmapReference, qualityInfo, rotationAngle, ExifInterface.ORIENTATION_UNDEFINED);
+  }
+
+  /**
+   * Creates a new instance of a CloseableStaticBitmap from an existing CloseableReference. The
+   * CloseableStaticBitmap will hold a reference to the Bitmap until it's closed.
+   *
    * @param bitmap the bitmap to wrap
    * @param resourceReleaser ResourceReleaser to release the bitmap to
    */
@@ -52,19 +63,13 @@ public interface CloseableStaticBitmap extends CloseableBitmap {
       QualityInfo qualityInfo,
       int rotationAngle,
       int orientation) {
-    return new DefaultCloseableStaticBitmap(
-        bitmap, resourceReleaser, qualityInfo, rotationAngle, orientation);
-  }
-
-  /**
-   * Creates a new instance of a CloseableStaticBitmap from an existing CloseableReference. The
-   * CloseableStaticBitmap will hold a reference to the Bitmap until it's closed.
-   *
-   * @param bitmapReference the bitmap reference.
-   */
-  static CloseableStaticBitmap of(
-      CloseableReference<Bitmap> bitmapReference, QualityInfo qualityInfo, int rotationAngle) {
-    return of(bitmapReference, qualityInfo, rotationAngle, ExifInterface.ORIENTATION_UNDEFINED);
+    if (BaseCloseableStaticBitmap.shouldUseSimpleCloseableStaticBitmap()) {
+      return new BaseCloseableStaticBitmap(
+          bitmap, resourceReleaser, qualityInfo, rotationAngle, orientation);
+    } else {
+      return new DefaultCloseableStaticBitmap(
+          bitmap, resourceReleaser, qualityInfo, rotationAngle, orientation);
+    }
   }
 
   /**
@@ -78,7 +83,12 @@ public interface CloseableStaticBitmap extends CloseableBitmap {
       QualityInfo qualityInfo,
       int rotationAngle,
       int exifOrientation) {
-    return new DefaultCloseableStaticBitmap(
-        bitmapReference, qualityInfo, rotationAngle, exifOrientation);
+    if (BaseCloseableStaticBitmap.shouldUseSimpleCloseableStaticBitmap()) {
+      return new BaseCloseableStaticBitmap(
+          bitmapReference, qualityInfo, rotationAngle, exifOrientation);
+    } else {
+      return new DefaultCloseableStaticBitmap(
+          bitmapReference, qualityInfo, rotationAngle, exifOrientation);
+    }
   }
 }

@@ -19,8 +19,9 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /** CloseableImage that contains one Bitmap. */
 @ThreadSafe
-public abstract class BaseCloseableStaticBitmap extends BaseCloseableImage
-    implements CloseableStaticBitmap {
+public class BaseCloseableStaticBitmap extends BaseCloseableImage implements CloseableStaticBitmap {
+
+  private static boolean sUseSimpleCloseableStaticBitmap = false;
 
   @GuardedBy("this")
   private CloseableReference<Bitmap> mBitmapReference;
@@ -180,5 +181,13 @@ public abstract class BaseCloseableStaticBitmap extends BaseCloseableImage
   @Override
   public QualityInfo getQualityInfo() {
     return mQualityInfo;
+  }
+
+  public static void setUseSimpleCloseableStaticBitmap(boolean useSimpleCloseableStaticBitmap) {
+    sUseSimpleCloseableStaticBitmap = useSimpleCloseableStaticBitmap;
+  }
+
+  public static boolean shouldUseSimpleCloseableStaticBitmap() {
+    return sUseSimpleCloseableStaticBitmap;
   }
 }

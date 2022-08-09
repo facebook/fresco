@@ -8,7 +8,6 @@
 package com.facebook.imagepipeline.image;
 
 import android.graphics.Bitmap;
-import android.media.ExifInterface;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
@@ -20,25 +19,20 @@ class DefaultCloseableStaticBitmap extends BaseCloseableStaticBitmap {
   private static final String TAG = "DefaultCloseableStaticBitmap";
 
   protected DefaultCloseableStaticBitmap(
+      CloseableReference<Bitmap> bitmapReference,
+      QualityInfo qualityInfo,
+      int rotationAngle,
+      int exifOrientation) {
+    super(bitmapReference, qualityInfo, rotationAngle, exifOrientation);
+  }
+
+  protected DefaultCloseableStaticBitmap(
       Bitmap bitmap,
       ResourceReleaser<Bitmap> resourceReleaser,
       QualityInfo qualityInfo,
       int rotationAngle,
       int exifOrientation) {
     super(bitmap, resourceReleaser, qualityInfo, rotationAngle, exifOrientation);
-  }
-
-  protected DefaultCloseableStaticBitmap(
-      CloseableReference<Bitmap> bitmapReference, QualityInfo qualityInfo, int rotationAngle) {
-    super(bitmapReference, qualityInfo, rotationAngle, ExifInterface.ORIENTATION_UNDEFINED);
-  }
-
-  protected DefaultCloseableStaticBitmap(
-      CloseableReference<Bitmap> bitmapReference,
-      QualityInfo qualityInfo,
-      int rotationAngle,
-      int exifOrientation) {
-    super(bitmapReference, qualityInfo, rotationAngle, exifOrientation);
   }
 
   /** Ensures that the underlying resources are always properly released. */
