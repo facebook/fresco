@@ -14,7 +14,12 @@ import com.facebook.fresco.vito.renderer.DrawableImageDataModel
 class DebugOverlayHandler(
     private val isEnabled: Supplier<Boolean>,
     private val debugDataProviders: List<DebugDataProvider> =
-        listOf(imageIDProvider, drawableDimensionsProvider, imageDimensionsProvider)
+        listOf(
+            imageIDProvider,
+            drawableDimensionsProvider,
+            imageDimensionsProvider,
+            imageOriginProvider,
+            imageOriginSubcategoryProvider)
 ) {
 
   fun update(drawable: KFrescoVitoDrawable) {
@@ -23,9 +28,14 @@ class DebugOverlayHandler(
     }
 
     val debugOverlayDrawable = extractDebugOverlayDrawable(drawable)
-    if (debugOverlayDrawable is DebugOverlayDrawable) {
-      debugDataProviders.forEach {
-        debugOverlayDrawable.addDebugData(it.shortName, it.extractData(drawable).toString())
+    debugDataProviders.forEach {
+      when (it) {
+        is StringDebugDataProvider ->
+            debugOverlayDrawable.addDebugData(it.shortName, it.extractData(drawable))
+        is StringAndColorDebugDataProvider -> {
+          val (data, color) = it.extractDataAndColor(drawable)
+          debugOverlayDrawable.addDebugData(it.shortName, data, color)
+        }
       }
     }
   }

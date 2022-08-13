@@ -17,11 +17,11 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.Spinner
-import com.facebook.fresco.vito.core.impl.DebugDataProvider
+import com.facebook.fresco.vito.core.impl.StringDebugDataProvider
 
 class LiveEditorUiUtils(
     var liveEditor: ImageLiveEditor?,
-    var debugDataProviders: List<DebugDataProvider>? = null
+    var debugDataProviders: List<StringDebugDataProvider>? = null
 ) {
 
   fun createView(

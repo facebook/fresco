@@ -23,7 +23,7 @@ import android.widget.LinearLayout
 import androidx.annotation.ColorInt
 import com.facebook.common.internal.Supplier
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
-import com.facebook.fresco.vito.core.impl.DebugDataProvider
+import com.facebook.fresco.vito.core.impl.StringDebugDataProvider
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.fresco.vito.tools.liveeditor.ImageOptionsSampleValues.Entry
 import com.facebook.fresco.vito.tools.liveeditor.LiveEditorUiUtils.Companion.dpToPx
@@ -36,7 +36,7 @@ class LiveEditorOnScreenButtonController(
     @ColorInt private val editorBackgroundColor: Int = Color.WHITE,
     additionalButtonConfig: ButtonConfig? = null,
     private val customOptions: CustomOptions,
-    private val debugDataProviders: List<DebugDataProvider> = emptyList()
+    private val debugDataProviders: List<StringDebugDataProvider> = emptyList()
 ) {
 
   /** Called from fblite java code */
