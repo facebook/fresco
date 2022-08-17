@@ -56,5 +56,8 @@ class ImageLiveEditor(
   fun getSource(): ImageSource =
       drawable.imageRequest?.imageSource ?: ImageSourceProvider.emptySource()
 
+  fun getOriginalSource(): ImageSource =
+      originalRequest?.imageSource ?: ImageSourceProvider.emptySource()
+
   fun reset() = originalRequest?.let(::fetch)
 }

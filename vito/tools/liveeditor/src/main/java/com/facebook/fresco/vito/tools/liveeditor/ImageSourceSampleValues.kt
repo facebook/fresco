@@ -42,7 +42,7 @@ object ImageSourceSampleValues {
               Pair(
                   "non-existing",
                   ImageSourceProvider.forUri(
-                      "https://frescolib.org/static/sample-images/does_not_exist.jpg")))) { a, b ->
-            b
+                      "https://frescolib.org/static/sample-images/does_not_exist.jpg")))) { _, s ->
+            s
           }
 }

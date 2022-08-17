@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.core.impl;
 
 import android.content.res.Resources;
 import android.graphics.ColorFilter;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import androidx.annotation.Nullable;
 import com.facebook.common.references.CloseableReference;
@@ -56,6 +57,8 @@ public class HierarcherImpl implements Hierarcher {
       @Nullable Drawable placeholderDrawable = imageOptions.getPlaceholderDrawable();
       if (placeholderDrawable == null && imageOptions.getPlaceholderRes() != 0) {
         placeholderDrawable = resources.getDrawable(imageOptions.getPlaceholderRes());
+      } else if (placeholderDrawable == null && imageOptions.getPlaceholderColor() != null) {
+        placeholderDrawable = new ColorDrawable(imageOptions.getPlaceholderColor());
       }
       if (placeholderDrawable == null) {
         return NOP_DRAWABLE;

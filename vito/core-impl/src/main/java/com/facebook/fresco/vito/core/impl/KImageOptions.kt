@@ -13,6 +13,7 @@ import android.graphics.PointF
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.util.TypedValue
 import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.renderer.CanvasTransformation
@@ -22,7 +23,7 @@ import com.facebook.fresco.vito.renderer.ImageDataModel
 
 // Models
 fun ImageOptions.createPlaceholderModel(resources: Resources): ImageDataModel? =
-    toModel(createPlaceholderDrawable(resources))
+    toModel(resources, placeholderDrawable, placeholderRes, placeholderColor)
 
 fun ImageOptions.createOverlayModel(resources: Resources): ImageDataModel? =
     toModel(createOverlayDrawable(resources))
@@ -31,9 +32,6 @@ fun ImageOptions.createErrorModel(resources: Resources): ImageDataModel? =
     toModel(createErrorDrawable(resources))
 
 // Drawables
-fun ImageOptions.createPlaceholderDrawable(resources: Resources): Drawable? =
-    create(resources, placeholderDrawable, placeholderRes)
-
 fun ImageOptions.createProgressDrawable(resources: Resources): Drawable? =
     create(resources, progressDrawable, progressRes)
 
@@ -69,24 +67,51 @@ private fun toModel(drawable: Drawable?): ImageDataModel? {
   }
 }
 
+private fun toModel(
+    resources: Resources,
+    drawable: Drawable?,
+    colorOrDrawableRes: Int,
+    colorInt: Int?
+): ImageDataModel? =
+    when {
+      drawable != null -> toModel(drawable)
+      colorOrDrawableRes != 0 -> resources.getColorOrDrawableModel(colorOrDrawableRes)
+      colorInt != null -> ColorIntImageDataModel(colorInt)
+      else -> null
+    }
+
+private fun Resources.getColorOrDrawableModel(colorOrDrawableRes: Int): ImageDataModel? =
+    if (colorOrDrawableRes != 0) {
+      val value = TypedValue()
+      getValue(colorOrDrawableRes, value, true)
+
+      if (value.type >= TypedValue.TYPE_FIRST_COLOR_INT &&
+          value.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+        ColorIntImageDataModel(value.data)
+      } else {
+        toModel(getDrawable(colorOrDrawableRes))
+      }
+    } else {
+      null
+    }
+
 fun ScalingUtils.ScaleType.getCanvasTransformation(
     focusPoint: PointF? = null
-): CanvasTransformation {
-  return object : CanvasTransformation {
-    override fun calculateTransformation(
-        outTransform: Matrix,
-        parentBounds: Rect,
-        childWidth: Int,
-        childHeight: Int
-    ): Matrix {
-      getTransform(
-          outTransform,
-          parentBounds,
-          childWidth,
-          childHeight,
-          focusPoint?.x ?: 0.5f,
-          focusPoint?.y ?: 0.5f)
-      return outTransform
+): CanvasTransformation =
+    object : CanvasTransformation {
+      override fun calculateTransformation(
+          outTransform: Matrix,
+          parentBounds: Rect,
+          childWidth: Int,
+          childHeight: Int
+      ): Matrix {
+        getTransform(
+            outTransform,
+            parentBounds,
+            childWidth,
+            childHeight,
+            focusPoint?.x ?: 0.5f,
+            focusPoint?.y ?: 0.5f)
+        return outTransform
+      }
     }
-  }
-}

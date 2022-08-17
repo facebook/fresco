@@ -150,6 +150,26 @@ object ImageOptionsSampleValues {
         b.progressiveRendering(v)
       }
 
+  val placeholderColors =
+      Entry(
+          "Placeholder color",
+          listOf(
+              "Black" to Color.BLACK,
+              "Dark Gray" to Color.DKGRAY,
+              "Gray" to Color.GRAY,
+              "Light Gray" to Color.LTGRAY,
+              "White" to Color.WHITE,
+              "Red" to Color.RED,
+              "Green" to Color.GREEN,
+              "Blue" to Color.BLUE,
+              "Yellow" to Color.YELLOW,
+              "Cyan" to Color.CYAN,
+              "Magenta" to Color.MAGENTA,
+              "Transparent" to Color.TRANSPARENT,
+          )) { builder, colorInt ->
+            builder.placeholderColor(colorInt)
+          }
+
   fun <T> nameForValue(data: List<Pair<String, T?>>, value: T?): String {
     return data.find { value == it.second }?.first ?: "unknown"
   }

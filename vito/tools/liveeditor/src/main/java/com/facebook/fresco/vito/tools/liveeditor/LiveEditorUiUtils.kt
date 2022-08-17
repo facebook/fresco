@@ -57,6 +57,7 @@ class LiveEditorUiUtils(
                   addView(
                       createWithList(
                           context, ImageOptionsSampleValues.progressiveRenderingEnabledConfig))
+                  addView(createWithList(context, ImageOptionsSampleValues.placeholderColors))
 
                   customEntries.forEach { addView(createWithList(context, it)) }
                   addView(createImageInfoButton(context))
@@ -141,7 +142,9 @@ class LiveEditorUiUtils(
                 position: Int,
                 id: Long
             ) {
-              if (position > 0) {
+              if (position == 0) {
+                liveEditor?.editSource(context) { liveEditor?.getOriginalSource() ?: it }
+              } else {
                 liveEditor?.editSource(context) {
                   entry.updateFunction(it, entry.data[position - 1].second)
                 }

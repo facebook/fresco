@@ -10,6 +10,7 @@ package com.facebook.fresco.vito.options
 import android.graphics.ColorFilter
 import android.graphics.PointF
 import android.graphics.drawable.Drawable
+import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import com.facebook.common.internal.Objects
 import com.facebook.drawee.drawable.ScalingUtils
@@ -18,6 +19,7 @@ import com.facebook.imagepipeline.common.Priority
 class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
 
   // Placeholder
+  @get:ColorInt @ColorInt val placeholderColor: Int? = builder._placeholderColor
   @get:DrawableRes @DrawableRes val placeholderRes: Int = builder._placeholderRes
   val placeholderDrawable: Drawable? = builder._placeholderDrawable
   val placeholderScaleType: ScalingUtils.ScaleType? = builder._placeholderScaleType
@@ -85,14 +87,12 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     return equalDecodedOptions(other)
   }
 
-  override fun equals(obj: Any?): Boolean {
-    if (this === obj) {
-      return true
-    }
-    if (obj == null || javaClass != obj.javaClass) return false
-    val other = obj as ImageOptions
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other == null || other !is ImageOptions || javaClass != other.javaClass) return false
     if (isPerfMediaRemountInstrumentationFix) {
-      if (placeholderRes != other.placeholderRes ||
+      if (placeholderColor != other.placeholderColor ||
+          placeholderRes != other.placeholderRes ||
           !Objects.equal(placeholderDrawable, other.placeholderDrawable) ||
           !Objects.equal(placeholderScaleType, other.placeholderScaleType) ||
           !Objects.equal(placeholderFocusPoint, other.placeholderFocusPoint) ||
@@ -118,7 +118,8 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
         return false
       }
     } else {
-      if (placeholderRes != other.placeholderRes ||
+      if (placeholderColor != other.placeholderColor ||
+          placeholderRes != other.placeholderRes ||
           !Objects.equal(placeholderDrawable, other.placeholderDrawable) ||
           !Objects.equal(placeholderScaleType, other.placeholderScaleType) ||
           !Objects.equal(placeholderFocusPoint, other.placeholderFocusPoint) ||
@@ -148,6 +149,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
 
   override fun hashCode(): Int {
     var result = super.hashCode()
+    result = 31 * result + (placeholderColor ?: 0)
     result = 31 * result + placeholderRes
     result = 31 * result + (placeholderDrawable?.hashCode() ?: 0)
     result = 31 * result + (placeholderScaleType?.hashCode() ?: 0)
@@ -178,6 +180,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
 
   override fun toStringHelper(): Objects.ToStringHelper =
       super.toStringHelper()
+          .add("placeholderColor", placeholderColor)
           .add("placeholderRes", placeholderRes)
           .add("placeholderDrawable", placeholderDrawable)
           .add("placeholderScaleType", placeholderScaleType)
@@ -203,6 +206,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
           .add("delayMs", delayMs)
 
   class Builder : DecodedImageOptions.Builder<Builder> {
+    @ColorInt internal var _placeholderColor: Int? = null
     @DrawableRes internal var _placeholderRes = 0
     internal var _placeholderDrawable: Drawable? = null
     internal var _placeholderScaleType: ScalingUtils.ScaleType? = null
@@ -231,9 +235,10 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     internal var _delayMs = 0
     internal var _experimentalDynamicSize = false
 
-    internal constructor() : super() {}
+    internal constructor() : super()
 
     internal constructor(defaultOptions: ImageOptions) : super(defaultOptions) {
+      _placeholderColor = defaultOptions.placeholderColor
       _placeholderRes = defaultOptions.placeholderRes
       _placeholderDrawable = defaultOptions.placeholderDrawable
       _placeholderScaleType = defaultOptions.placeholderScaleType
@@ -259,6 +264,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
 
     fun placeholder(placeholder: Drawable?): Builder = modify {
       _placeholderDrawable = placeholder
+      _placeholderColor = null
       _placeholderRes = 0
     }
 
@@ -268,11 +274,19 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     ): Builder = modify {
       _placeholderDrawable = placeholder
       _placeholderScaleType = placeholderScaleType
+      _placeholderColor = null
       _placeholderRes = 0
+    }
+
+    fun placeholderColor(@ColorInt placeholderColor: Int): Builder = modify {
+      _placeholderColor = placeholderColor
+      _placeholderRes = 0
+      _placeholderDrawable = null
     }
 
     fun placeholderRes(@DrawableRes placeholderRes: Int): Builder = modify {
       _placeholderRes = placeholderRes
+      _placeholderColor = null
       _placeholderDrawable = null
     }
 
@@ -282,6 +296,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     ): Builder = modify {
       _placeholderRes = placeholderRes
       _placeholderScaleType = placeholderScaleType
+      _placeholderColor = null
       _placeholderDrawable = null
     }
 
