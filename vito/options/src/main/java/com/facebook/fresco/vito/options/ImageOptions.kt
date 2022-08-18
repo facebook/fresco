@@ -87,9 +87,11 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     return equalDecodedOptions(other)
   }
 
-  override fun equals(other: Any?): Boolean {
-    if (this === other) return true
-    if (other == null || other !is ImageOptions || javaClass != other.javaClass) return false
+  override fun equals(otherObject: Any?): Boolean {
+    if (this === otherObject) return true
+    if (otherObject == null || javaClass != otherObject.javaClass) return false
+
+    val other = otherObject as ImageOptions
     if (isPerfMediaRemountInstrumentationFix) {
       if (placeholderColor != other.placeholderColor ||
           placeholderRes != other.placeholderRes ||
