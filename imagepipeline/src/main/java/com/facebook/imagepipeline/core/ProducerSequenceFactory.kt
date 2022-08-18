@@ -186,9 +186,8 @@ class ProducerSequenceFactory(
       imageRequest: ImageRequest
   ): Producer<CloseableReference<CloseableImage>> =
       traceSection("ProducerSequenceFactory#getBasicDecodedImageSequence") {
-        Preconditions.checkNotNull(imageRequest)
         val uri = imageRequest.sourceUri
-        Preconditions.checkNotNull(uri, "Uri is null.")
+        checkNotNull(uri) { "Uri is null." }
         when (imageRequest.sourceUriType) {
           SourceUriType.SOURCE_TYPE_NETWORK -> networkFetchSequence
           SourceUriType.SOURCE_TYPE_LOCAL_VIDEO_FILE -> localVideoFileFetchSequence
@@ -270,9 +269,8 @@ class ProducerSequenceFactory(
   ): Producer<EncodedImage> =
       traceSection("ProducerSequenceFactory#createCommonNetworkFetchToEncodedMemorySequence") {
         val inputProducer: Producer<EncodedImage> =
-            Preconditions.checkNotNull(
-                newEncodedCacheMultiplexToTranscodeSequence(
-                    producerFactory.newNetworkFetchProducer(networkFetcher)))
+            newEncodedCacheMultiplexToTranscodeSequence(
+                producerFactory.newNetworkFetchProducer(networkFetcher))
         var networkFetchToEncodedMemorySequence: Producer<EncodedImage?> =
             ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer)
         networkFetchToEncodedMemorySequence =
@@ -600,7 +598,6 @@ class ProducerSequenceFactory(
 
   companion object {
     private fun validateEncodedImageRequest(imageRequest: ImageRequest) {
-      Preconditions.checkNotNull(imageRequest)
       Preconditions.checkArgument(
           imageRequest.lowestPermittedRequestLevel.value <=
               ImageRequest.RequestLevel.ENCODED_MEMORY_CACHE.value)
