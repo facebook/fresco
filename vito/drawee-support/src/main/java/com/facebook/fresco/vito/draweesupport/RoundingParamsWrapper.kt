@@ -19,7 +19,7 @@ object RoundingParamsWrapper {
       roundingParams == null -> null
       roundingParams.roundAsCircle -> RoundingOptions.asCircle(true)
       roundingParams.cornersRadii != null ->
-          RoundingOptions.forCornerRadii(roundingParams.cornersRadii, true)
+          RoundingOptions.forCornerRadii(roundingParams.cornersRadii!!, true)
       // TODO: we also have an overlay color mode where you specify a color to be drawn on top. Vito
       // does not support this.
       // Probably only used for borders
