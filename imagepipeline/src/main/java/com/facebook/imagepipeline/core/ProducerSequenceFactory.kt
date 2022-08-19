@@ -359,7 +359,11 @@ class ProducerSequenceFactory(
    */
   @get:RequiresApi(Build.VERSION_CODES.Q)
   val localContentUriThumbnailFetchSequence: Producer<CloseableReference<CloseableImage>> by lazy {
-    newBitmapCacheGetToBitmapCacheSequence(producerFactory.newLocalThumbnailBitmapProducer())
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      newBitmapCacheGetToBitmapCacheSequence(producerFactory.newLocalThumbnailBitmapProducer())
+    } else {
+      throw Throwable("Unreachable exception. Just to make linter happy for the lazy block.")
+    }
   }
 
   /**

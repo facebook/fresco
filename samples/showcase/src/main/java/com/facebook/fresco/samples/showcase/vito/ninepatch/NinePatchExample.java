@@ -19,16 +19,19 @@ import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.Map;
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class NinePatchExample {
 
-  public static class NinePatchClosableImage extends CloseableImage {
+  public static class NinePatchClosableImage implements CloseableImage {
     private boolean mClosed = false;
     @Nullable private NinePatch mNinePatch;
     private final int mSizeInBytes;
@@ -55,6 +58,17 @@ public class NinePatchExample {
     }
 
     @Override
+    public void setImageExtras(@Nullable Map<String, Object> extras) {}
+
+    @Override
+    public void setImageExtra(String extra, Object value) {}
+
+    @Override
+    public boolean isStateful() {
+      return false;
+    }
+
+    @Override
     public int getWidth() {
       return 0;
     }
@@ -64,9 +78,19 @@ public class NinePatchExample {
       return 0;
     }
 
+    @Override
+    public QualityInfo getQualityInfo() {
+      return ImmutableQualityInfo.FULL_QUALITY;
+    }
+
     @Nullable
     public NinePatch getNinePatch() {
       return mNinePatch;
+    }
+
+    @Override
+    public Map<String, Object> getExtras() {
+      return Collections.emptyMap();
     }
   }
 
@@ -96,7 +120,8 @@ public class NinePatchExample {
 
     @Nullable
     @Override
-    public Drawable createDrawable(CloseableImage closeableImage, ImageOptions imageOptions) {
+    public Drawable createDrawable(
+        Resources resources, CloseableImage closeableImage, ImageOptions imageOptions) {
       NinePatch ninePatch = ((NinePatchClosableImage) closeableImage).getNinePatch();
       if (ninePatch != null) {
         return new NinePatchDrawable(mRes, ninePatch);

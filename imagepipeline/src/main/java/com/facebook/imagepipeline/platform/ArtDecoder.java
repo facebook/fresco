@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.platform;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,6 +32,7 @@ public class ArtDecoder extends DefaultDecoder {
 
   @Override
   public int getBitmapSize(final int width, final int height, final BitmapFactory.Options options) {
+    @SuppressLint("RestrictedApi")
     Bitmap.Config c = Preconditions.checkNotNull(options.inPreferredConfig);
     return BitmapUtil.getSizeInByteForBitmap(width, height, c);
   }

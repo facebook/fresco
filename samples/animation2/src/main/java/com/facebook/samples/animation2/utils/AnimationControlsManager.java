@@ -7,6 +7,7 @@
 
 package com.facebook.samples.animation2.utils;
 
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
@@ -25,24 +26,24 @@ public class AnimationControlsManager {
   @Nullable private final ToggleButton mPlayPauseToggleButton;
   @Nullable private final View mResetButton;
 
-  private AnimationListener mAnimationListener =
+  private final AnimationListener mAnimationListener =
       new BaseAnimationListener() {
         @Override
-        public void onAnimationStart(AnimatedDrawable2 drawable) {
+        public void onAnimationStart(Drawable drawable) {
           if (mPlayPauseToggleButton != null) {
             mPlayPauseToggleButton.setChecked(true);
           }
         }
 
         @Override
-        public void onAnimationStop(AnimatedDrawable2 drawable) {
+        public void onAnimationStop(Drawable drawable) {
           if (mPlayPauseToggleButton != null) {
             mPlayPauseToggleButton.setChecked(false);
           }
         }
 
         @Override
-        public void onAnimationFrame(AnimatedDrawable2 drawable, int frameNumber) {
+        public void onAnimationFrame(Drawable drawable, int frameNumber) {
           if (mSeekBar != null) {
             mSeekBar.setProgress(frameNumber);
           }

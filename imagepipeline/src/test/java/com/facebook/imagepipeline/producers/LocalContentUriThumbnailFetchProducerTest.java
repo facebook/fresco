@@ -30,6 +30,7 @@ import java.io.InputStream;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
+import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -103,7 +104,7 @@ public class LocalContentUriThumbnailFetchProducerTest {
     PowerMockito.when(
             MediaStore.Images.Thumbnails.queryMiniThumbnail(
                 any(ContentResolver.class), anyLong(), anyInt(), any(String[].class)))
-        .thenReturn(mCursor);
+        .thenAnswer((Answer<Cursor>) invocation -> mCursor);
     Whitebox.setInternalState(
         MediaStore.Images.Media.class,
         "EXTERNAL_CONTENT_URI",
@@ -115,22 +116,26 @@ public class LocalContentUriThumbnailFetchProducerTest {
   }
 
   private void mockThumbnailFile() throws Exception {
-    PowerMockito.whenNew(File.class).withArguments(THUMBNAIL_FILE_NAME).thenReturn(mThumbnailFile);
+    PowerMockito.whenNew(File.class)
+        .withArguments(THUMBNAIL_FILE_NAME)
+        .thenAnswer((Answer<File>) i -> mThumbnailFile);
     when(mThumbnailFile.exists()).thenReturn(true);
     when(mThumbnailFile.length()).thenReturn(THUMBNAIL_FILE_SIZE);
 
     PowerMockito.whenNew(FileInputStream.class)
         .withArguments(THUMBNAIL_FILE_NAME)
-        .thenReturn(mock(FileInputStream.class));
+        .thenAnswer((Answer<FileInputStream>) i -> mock(FileInputStream.class));
 
     PowerMockito.whenNew(ExifInterface.class)
         .withArguments(THUMBNAIL_FILE_NAME)
-        .thenReturn(mock(ExifInterface.class));
+        .thenAnswer((Answer<ExifInterface>) i -> mock(ExifInterface.class));
 
     EncodedImage encodedImage = mock(EncodedImage.class);
     when(encodedImage.getSize()).thenReturn((int) THUMBNAIL_FILE_SIZE);
 
-    PowerMockito.whenNew(EncodedImage.class).withAnyArguments().thenReturn(encodedImage);
+    PowerMockito.whenNew(EncodedImage.class)
+        .withAnyArguments()
+        .thenAnswer((Answer<EncodedImage>) i -> encodedImage);
   }
 
   private void mockContentResolver() throws Exception {

@@ -118,7 +118,9 @@ public class JobSchedulerTest {
     mTestExecutorService = new TestExecutorService(mFakeClockForWorker);
     mTestScheduledExecutorService = new TestScheduledExecutorService(mFakeClockForScheduled);
     PowerMockito.mockStatic(JobScheduler.JobStartExecutorSupplier.class);
-    when(JobScheduler.JobStartExecutorSupplier.get()).thenReturn(mTestScheduledExecutorService);
+    when(JobScheduler.JobStartExecutorSupplier.get())
+        .thenAnswer(
+            (Answer<TestScheduledExecutorService>) invocation -> mTestScheduledExecutorService);
 
     mTestJobRunnable = new TestJobRunnable();
     mJobScheduler = new JobScheduler(mTestExecutorService, mTestJobRunnable, INTERVAL);

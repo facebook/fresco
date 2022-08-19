@@ -29,7 +29,7 @@ dependencies {
 
     testImplementation TestDeps.junit
     testImplementation TestDeps.assertjCore
-    testImplementation TestDeps.mockitoCore
+    testImplementation TestDeps.mockitoInline
     testImplementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'

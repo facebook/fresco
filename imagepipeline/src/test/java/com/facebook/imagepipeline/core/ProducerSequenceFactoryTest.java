@@ -47,6 +47,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -105,8 +106,9 @@ public class ProducerSequenceFactoryTest {
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
     mUri = Uri.parse("http://dummy");
     when(mImageRequest.getSourceUri()).thenReturn(mUri);
-    when(MediaUtils.extractMime(mUri.getPath())).thenReturn(mDummyMime);
-    when(MediaUtils.isVideo(mDummyMime)).thenReturn(false);
+    when(MediaUtils.extractMime(mUri.getPath()))
+        .thenAnswer((Answer<String>) invocation -> mDummyMime);
+    when(MediaUtils.isVideo(mDummyMime)).thenAnswer((Answer<Boolean>) invocation -> false);
   }
 
   @Test

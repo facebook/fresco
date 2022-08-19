@@ -130,20 +130,18 @@ public class ResizeAndRotateProducerTest {
     when(mUiThreadImmediateExecutorService.schedule(
             any(Runnable.class), anyLong(), any(TimeUnit.class)))
         .thenAnswer(
-            new Answer<Object>() {
-              @Override
-              public Object answer(InvocationOnMock invocation) throws Throwable {
-                return mTestScheduledExecutorService.schedule(
+            invocation ->
+                mTestScheduledExecutorService.schedule(
                     (Runnable) invocation.getArguments()[0],
                     (long) invocation.getArguments()[1],
-                    (TimeUnit) invocation.getArguments()[2]);
-              }
-            });
+                    (TimeUnit) invocation.getArguments()[2]));
 
     PowerMockito.mockStatic(NativeJpegTranscoder.class);
     PowerMockito.mockStatic(UiThreadImmediateExecutorService.class);
     when(UiThreadImmediateExecutorService.getInstance())
-        .thenReturn(mUiThreadImmediateExecutorService);
+        .thenAnswer(
+            (Answer<UiThreadImmediateExecutorService>)
+                invocation -> mUiThreadImmediateExecutorService);
 
     mTestExecutorService = new TestExecutorService(mFakeClockForWorker);
 

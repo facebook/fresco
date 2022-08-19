@@ -8,6 +8,7 @@
 package com.facebook.fresco.samples.showcase.vito
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.PointF
 import android.graphics.PorterDuff
@@ -248,9 +249,10 @@ object VitoSpinners {
                     builder.customDrawableFactory(
                         object : ImageOptionsDrawableFactory {
                           override fun createDrawable(
+                              resources: Resources,
                               closeableImage: CloseableImage,
                               imageOptions: ImageOptions
-                          ): Drawable? = ColorDrawable(Color.BLUE)
+                          ): Drawable = ColorDrawable(Color.BLUE)
                         })
                   }),
           "Custom Drawable Factory")

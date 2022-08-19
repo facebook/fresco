@@ -25,17 +25,17 @@ dependencies {
     implementation Comparison.AndroidQuery.aquery
     implementation Deps.Tools.Stetho.okhttp3
 
+    implementation project(':animated-gif')
     implementation project(':drawee')
     implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':fbcore')
     implementation project(':imagepipeline')
+    implementation project(':imagepipeline-backends:imagepipeline-okhttp3')
     implementation project(':imagepipeline-native')
     implementation project(':memory-types:ashmem')
     implementation project(':memory-types:nativememory')
     implementation project(':memory-types:simple')
-    implementation project(':imagepipeline-backends:imagepipeline-okhttp3')
     implementation project(':native-imagetranscoder')
-    implementation project(':animated-gif')
     implementation project(':tools:stetho')
 }
 

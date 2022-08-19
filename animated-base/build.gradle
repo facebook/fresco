@@ -31,7 +31,7 @@ dependencies {
     testImplementation project(':imagepipeline-test')
     testImplementation TestDeps.junit
     testImplementation TestDeps.festAssertCore
-    testImplementation TestDeps.mockitoCore
+    testImplementation TestDeps.mockitoInline
     testImplementation(TestDeps.Powermock.apiMockito) {
         exclude group: 'org.mockito', module: 'mockito-all'
     }

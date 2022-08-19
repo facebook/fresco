@@ -55,7 +55,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -111,21 +110,19 @@ public class ArtDecoderTest {
     doReturn(mBitmap).when(mBitmapPool).get(MockBitmapFactory.DEFAULT_BITMAP_SIZE);
 
     mBitmapFactoryDefaultAnswer =
-        new Answer<Bitmap>() {
-          @Override
-          public Bitmap answer(InvocationOnMock invocation) throws Throwable {
-            final BitmapFactory.Options options =
-                (BitmapFactory.Options) invocation.getArguments()[2];
-            options.outWidth = MockBitmapFactory.DEFAULT_BITMAP_WIDTH;
-            options.outHeight = MockBitmapFactory.DEFAULT_BITMAP_HEIGHT;
-            verifyBitmapFactoryOptions(options);
-            return options.inJustDecodeBounds ? null : mBitmap;
-          }
+        invocation -> {
+          final BitmapFactory.Options options =
+              (BitmapFactory.Options) invocation.getArguments()[2];
+          options.outWidth = MockBitmapFactory.DEFAULT_BITMAP_WIDTH;
+          options.outHeight = MockBitmapFactory.DEFAULT_BITMAP_HEIGHT;
+          verifyBitmapFactoryOptions(options);
+          return options.inJustDecodeBounds ? null : mBitmap;
         };
     whenBitmapFactoryDecodeStream().thenAnswer(mBitmapFactoryDefaultAnswer);
 
     mBitmapRegionDecoder = mock(BitmapRegionDecoder.class);
-    whenBitmapRegionDecoderNewInstance().thenReturn(mBitmapRegionDecoder);
+    whenBitmapRegionDecoderNewInstance()
+        .thenAnswer((Answer<BitmapRegionDecoder>) invocation -> mBitmapRegionDecoder);
 
     ByteBuffer buf = mArtDecoder.mDecodeBuffers.acquire();
     mTempStorage = buf.array();
@@ -161,7 +158,7 @@ public class ArtDecoderTest {
   public void testBitmapFactoryReturnsNewBitmap() {
     whenBitmapFactoryDecodeStream()
         .thenAnswer(mBitmapFactoryDefaultAnswer)
-        .thenReturn(MockBitmapFactory.create());
+        .thenAnswer((Answer<Bitmap>) invocation -> MockBitmapFactory.create());
     try {
       mArtDecoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG, null);
     } finally {

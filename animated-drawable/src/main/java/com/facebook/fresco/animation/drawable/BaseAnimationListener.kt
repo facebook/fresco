@@ -15,7 +15,7 @@ import android.graphics.drawable.Drawable
  *
  * See [AnimationListener] for more information.
  */
-class BaseAnimationListener : AnimationListener {
+open class BaseAnimationListener : AnimationListener {
   override fun onAnimationStart(drawable: Drawable) = Unit
 
   override fun onAnimationStop(drawable: Drawable) = Unit

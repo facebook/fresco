@@ -88,8 +88,10 @@ public class LocalExifThumbnailProducerTest {
 
     when(mExifInterface.getAttribute(ExifInterface.TAG_ORIENTATION))
         .thenReturn(Integer.toString(ORIENTATION));
-    when(JfifUtil.getAutoRotateAngleFromOrientation(ORIENTATION)).thenReturn(ANGLE);
-    when(BitmapUtil.decodeDimensions(any(InputStream.class))).thenReturn(new Pair(WIDTH, HEIGHT));
+    when(JfifUtil.getAutoRotateAngleFromOrientation(ORIENTATION))
+        .thenAnswer((Answer<Integer>) invocation -> ANGLE);
+    when(BitmapUtil.decodeDimensions(any(InputStream.class)))
+        .thenAnswer((Answer<Pair<Integer, Integer>>) invocation -> new Pair(WIDTH, HEIGHT));
 
     doAnswer(
             new Answer() {

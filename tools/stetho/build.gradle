@@ -8,6 +8,7 @@
 import com.facebook.fresco.buildsrc.Deps
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 dependencies {
     compileOnly Deps.inferAnnotation
@@ -18,11 +19,11 @@ dependencies {
     implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':fbcore')
     implementation project(':imagepipeline')
+    implementation project(':imagepipeline-base')
     implementation project(':imagepipeline-native')
     implementation project(':memory-types:ashmem')
     implementation project(':memory-types:nativememory')
     implementation project(':memory-types:simple')
-    implementation project(':imagepipeline-base')
 }
 
 android {

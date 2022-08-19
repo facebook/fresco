@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
@@ -54,7 +55,8 @@ public class AnimatedDrawableBackendImplTest {
     when(mImage.getFrame(anyInt())).thenReturn(mFrame);
 
     PowerMockito.mockStatic(Bitmap.class);
-    when(Bitmap.createBitmap(anyInt(), anyInt(), isA(Bitmap.Config.class))).thenReturn(mBitmap);
+    when(Bitmap.createBitmap(anyInt(), anyInt(), isA(Bitmap.Config.class)))
+        .thenAnswer((Answer<Bitmap>) invocation -> mBitmap);
   }
 
   private void testBasic(

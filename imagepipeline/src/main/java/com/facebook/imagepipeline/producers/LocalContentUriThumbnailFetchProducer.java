@@ -89,9 +89,12 @@ public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer
         final EncodedImage thumbnail =
             this.getThumbnail(resizeOptions, cursor.getLong(imageIdColumnIndex));
         if (thumbnail != null) {
-          final String pathname =
-              cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
-          thumbnail.setRotationAngle(getRotationAngle(pathname));
+          final int imageDataColumnIndex =
+              cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+          if (imageDataColumnIndex >= 0) {
+            final String pathname = cursor.getString(imageDataColumnIndex);
+            thumbnail.setRotationAngle(getRotationAngle(pathname));
+          }
           return thumbnail;
         }
       }
@@ -119,12 +122,14 @@ public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer
     }
     try {
       if (thumbnailCursor.moveToFirst()) {
-        final String thumbnailUri =
-            Preconditions.checkNotNull(
-                thumbnailCursor.getString(
-                    thumbnailCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA)));
-        if (new File(thumbnailUri).exists()) {
-          return getEncodedImage(new FileInputStream(thumbnailUri), getLength(thumbnailUri));
+        final int thumbnailDataColumnIndex =
+            thumbnailCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA);
+        if (thumbnailDataColumnIndex >= 0) {
+          final String thumbnailUri =
+              Preconditions.checkNotNull(thumbnailCursor.getString(thumbnailDataColumnIndex));
+          if (new File(thumbnailUri).exists()) {
+            return getEncodedImage(new FileInputStream(thumbnailUri), getLength(thumbnailUri));
+          }
         }
       }
     } finally {

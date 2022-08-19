@@ -48,7 +48,9 @@ public class DataSourcesTest {
 
     PowerMockito.mockStatic(CountDownLatch.class);
     mCountDownLatch = mock(CountDownLatch.class);
-    PowerMockito.whenNew(CountDownLatch.class).withAnyArguments().thenReturn(mCountDownLatch);
+    PowerMockito.whenNew(CountDownLatch.class)
+        .withAnyArguments()
+        .thenAnswer((Answer<CountDownLatch>) invocation -> mCountDownLatch);
   }
 
   @Test

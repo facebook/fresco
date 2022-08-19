@@ -102,7 +102,7 @@ public class BufferedDiskCacheTest {
         .thenReturn(mPooledByteBuffer);
 
     mockStatic(StagingArea.class);
-    when(StagingArea.getInstance()).thenReturn(mStagingArea);
+    when(StagingArea.getInstance()).thenAnswer((Answer<StagingArea>) invocation -> mStagingArea);
 
     mBufferedDiskCache =
         new BufferedDiskCache(

@@ -18,6 +18,7 @@ import java.util.Random;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -36,7 +37,7 @@ public class ScoreBasedEvictionComparatorSupplierTest {
     Random random = new Random(RANDOM_SEED);
 
     PowerMockito.mockStatic(System.class);
-    when(System.currentTimeMillis()).thenReturn(0l);
+    when(System.currentTimeMillis()).thenAnswer((Answer<Long>) invocation -> 0L);
 
     entries = new ArrayList<>();
     for (int i = 0; i < 100; i++) {
