@@ -32,7 +32,7 @@ public class RetainingDataSourceSupplierFragment extends BaseShowcaseFragment {
   private List<Uri> mSampleUris;
   private int mUriIndex = 0;
 
-  private ControllerListener controllerListener =
+  private final ControllerListener<ImageInfo> controllerListener =
       new BaseControllerListener<ImageInfo>() {
         @Override
         public void onFinalImageSet(
@@ -69,13 +69,7 @@ public class RetainingDataSourceSupplierFragment extends BaseShowcaseFragment {
             .setControllerListener(controllerListener)
             .build());
     replaceImage(retainingSupplier);
-    simpleDraweeView.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-            replaceImage(retainingSupplier);
-          }
-        });
+    simpleDraweeView.setOnClickListener(v -> replaceImage(retainingSupplier));
   }
 
   private void replaceImage(

@@ -13,12 +13,16 @@ import android.view.View
 import android.view.ViewGroup
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment
 import com.facebook.fresco.samples.showcase.R
+import com.facebook.fresco.samples.showcase.databinding.FragmentVitoViewKtxBinding
 import com.facebook.fresco.vito.ktx.ViewExtensions.show
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.RoundingOptions
-import kotlinx.android.synthetic.main.fragment_vito_view_ktx.*
 
 class VitoViewKtxFragment : BaseShowcaseFragment() {
+
+  private var _binding: FragmentVitoViewKtxBinding? = null
+  private val binding
+    get() = _binding!!
 
   private val imageOptions =
       ImageOptions.create()
@@ -30,12 +34,18 @@ class VitoViewKtxFragment : BaseShowcaseFragment() {
       inflater: LayoutInflater,
       container: ViewGroup?,
       savedInstanceState: Bundle?
-  ): View? {
-    return inflater.inflate(R.layout.fragment_vito_view_ktx, container, false)
+  ): View {
+    _binding = FragmentVitoViewKtxBinding.inflate(inflater, container, false)
+    return binding.root
   }
 
   override fun onViewCreated(container: View, savedInstanceState: Bundle?) {
     val uri = sampleUris().createSampleUri()
-    image?.show(uri, imageOptions)
+    binding.image.show(uri, imageOptions)
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
   }
 }

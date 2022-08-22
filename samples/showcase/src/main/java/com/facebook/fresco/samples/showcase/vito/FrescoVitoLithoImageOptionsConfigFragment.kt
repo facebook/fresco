@@ -14,16 +14,54 @@ import android.view.ViewGroup
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment
 import com.facebook.fresco.samples.showcase.R
 import com.facebook.fresco.samples.showcase.common.SpinnerUtils.setupWithList
+import com.facebook.fresco.samples.showcase.databinding.FragmentVitoImageOptionsConfigBinding
 import com.facebook.fresco.samples.showcase.misc.DebugImageListener
 import com.facebook.fresco.vito.litho.FrescoVitoImage2
 import com.facebook.fresco.vito.litho.FrescoVitoTapToRetryImage
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.litho.ComponentContext
 import com.facebook.litho.LithoView
-import kotlinx.android.synthetic.main.fragment_vito_image_options_config.*
 
 /** Experimental Fresco Vito fragment that allows to configure ImageOptions via a simple UI. */
 class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
+
+  private var _binding: FragmentVitoImageOptionsConfigBinding? = null
+  private val binding
+    get() = _binding!!
+  private val container
+    get() = binding.container
+  private val spinnerRounding
+    get() = binding.spinnerRounding
+  private val spinnerBorder
+    get() = binding.spinnerBorder
+  private val spinnerScaleType
+    get() = binding.spinnerScaleType
+  private val spinnerImageSource
+    get() = binding.spinnerImageSource
+  private val spinnerImageFormat
+    get() = binding.spinnerImageFormat
+  private val spinnerColorFilter
+    get() = binding.spinnerColorFilter
+  private val spinnerPlaceholder
+    get() = binding.spinnerPlaceholder
+  private val spinnerError
+    get() = binding.spinnerError
+  private val spinnerOverlay
+    get() = binding.spinnerOverlay
+  private val spinnerFading
+    get() = binding.spinnerFading
+  private val spinnerProgress
+    get() = binding.spinnerProgress
+  private val spinnerPostprocessor
+    get() = binding.spinnerPostprocessor
+  private val spinnerRotation
+    get() = binding.spinnerRotation
+  private val spinnerResize
+    get() = binding.spinnerResize
+  private val spinnerCustomDrawableFactory
+    get() = binding.spinnerCustomDrawableFactory
+  private val switchAutoPlayAnimations
+    get() = binding.switchAutoPlayAnimations
 
   private val imageListener = DebugImageListener()
   private val imageOptionsBuilder = ImageOptions.create().placeholderApplyRoundingOptions(true)
@@ -49,51 +87,51 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
 
     container.setOnClickListener { refresh() }
 
-    spinner_rounding.setupWithList(VitoSpinners.roundingOptions) {
+    spinnerRounding.setupWithList(VitoSpinners.roundingOptions) {
       refresh(imageOptionsBuilder.round(it))
     }
-    spinner_border.setupWithList(VitoSpinners.borderOptions) {
+    spinnerBorder.setupWithList(VitoSpinners.borderOptions) {
       refresh(imageOptionsBuilder.borders(it))
     }
-    spinner_scale_type.setupWithList(VitoSpinners.scaleTypes) {
+    spinnerScaleType.setupWithList(VitoSpinners.scaleTypes) {
       refresh(imageOptionsBuilder.scale(it.first).focusPoint(it.second))
     }
-    spinner_image_source.setupWithList(imageSourceProvider.imageSources) {
+    spinnerImageSource.setupWithList(imageSourceProvider.imageSources) {
       it()
       refresh()
     }
-    spinner_image_format.setupWithList(imageSourceProvider.imageFormatUpdater) {
+    spinnerImageFormat.setupWithList(imageSourceProvider.imageFormatUpdater) {
       it()
       refresh()
     }
-    spinner_color_filter.setupWithList(VitoSpinners.colorFilters) {
+    spinnerColorFilter.setupWithList(VitoSpinners.colorFilters) {
       refresh(imageOptionsBuilder.colorFilter(it))
     }
-    spinner_placeholder.setupWithList(VitoSpinners.placeholderOptions) {
+    spinnerPlaceholder.setupWithList(VitoSpinners.placeholderOptions) {
       refresh(it(imageOptionsBuilder))
     }
-    spinner_error.setupWithList(VitoSpinners.errorOptions) { refresh(it(imageOptionsBuilder)) }
-    spinner_overlay.setupWithList(VitoSpinners.overlayOptions) { refresh(it(imageOptionsBuilder)) }
-    spinner_fading.setupWithList(VitoSpinners.fadingOptions) {
+    spinnerError.setupWithList(VitoSpinners.errorOptions) { refresh(it(imageOptionsBuilder)) }
+    spinnerOverlay.setupWithList(VitoSpinners.overlayOptions) { refresh(it(imageOptionsBuilder)) }
+    spinnerFading.setupWithList(VitoSpinners.fadingOptions) {
       refresh(imageOptionsBuilder.fadeDurationMs(it))
     }
-    spinner_progress.setupWithList(VitoSpinners.progressOptions) {
-      refresh(it(context!!, imageOptionsBuilder))
+    spinnerProgress.setupWithList(VitoSpinners.progressOptions) {
+      refresh(it(requireContext(), imageOptionsBuilder))
     }
-    spinner_postprocessor.setupWithList(VitoSpinners.postprocessorOptions) {
+    spinnerPostprocessor.setupWithList(VitoSpinners.postprocessorOptions) {
       refresh(it(imageOptionsBuilder))
     }
-    spinner_rotation.setupWithList(VitoSpinners.rotationOptions) {
+    spinnerRotation.setupWithList(VitoSpinners.rotationOptions) {
       refresh(imageOptionsBuilder.rotate(it))
     }
-    spinner_resize.setupWithList(VitoSpinners.resizeOptions) { refresh(it(imageOptionsBuilder)) }
-    spinner_custom_drawable_factory.setupWithList(VitoSpinners.customDrawableFactoryOptions) {
+    spinnerResize.setupWithList(VitoSpinners.resizeOptions) { refresh(it(imageOptionsBuilder)) }
+    spinnerCustomDrawableFactory.setupWithList(VitoSpinners.customDrawableFactoryOptions) {
       refresh(it(imageOptionsBuilder))
     }
-    switch_auto_play_animations.setOnCheckedChangeListener { _, isChecked ->
+    switchAutoPlayAnimations.setOnCheckedChangeListener { _, isChecked ->
       refresh(imageOptionsBuilder.autoPlay(isChecked))
     }
-    imageOptionsBuilder.autoPlay(switch_auto_play_animations.isChecked())
+    imageOptionsBuilder.autoPlay(switchAutoPlayAnimations.isChecked)
   }
 
   private fun refresh(builder: ImageOptions.Builder = imageOptionsBuilder) {
@@ -116,4 +154,9 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
             .imageListener(imageListener)
             .build()
       }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
+  }
 }

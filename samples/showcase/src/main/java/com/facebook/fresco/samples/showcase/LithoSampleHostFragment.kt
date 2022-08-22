@@ -11,28 +11,38 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.facebook.fresco.samples.showcase.databinding.FragmentLithoHostBinding
 import com.facebook.litho.ComponentContext
 import com.facebook.litho.LithoView
-import kotlinx.android.synthetic.main.fragment_litho_host.*
 
 class LithoSampleHostFragment(
     private val lithoSample: LithoSample,
     private val helpText: String? = null
 ) : BaseShowcaseFragment() {
 
+  private var _binding: FragmentLithoHostBinding? = null
+  private val binding
+    get() = _binding!!
+
   override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
       savedInstanceState: Bundle?
-  ): View? {
-    return inflater.inflate(R.layout.fragment_litho_host, container, false)
+  ): View {
+    _binding = FragmentLithoHostBinding.inflate(inflater, container, false)
+    return binding.root
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    text_help.setText(helpText)
+    binding.textHelp.text = helpText
     val c = ComponentContext(context)
     val lithoView =
         LithoView.create(c, lithoSample.createLithoComponent(c, sampleUris(), "Example"))
-    container.addView(lithoView)
+    binding.container.addView(lithoView)
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
   }
 }

@@ -7,20 +7,21 @@
 
 package com.facebook.fresco.samples.showcase.drawee
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment
-import com.facebook.fresco.samples.showcase.R
+import com.facebook.fresco.samples.showcase.databinding.FragmentDraweeMultiUriBinding
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.vito.ktx.ImageSourceExtensions.asImageSource
 import com.facebook.fresco.vito.source.ImageSourceProvider
 import com.facebook.fresco.vito.view.VitoView
 import com.facebook.imagepipeline.request.ImageRequest
-import kotlinx.android.synthetic.main.fragment_drawee_multi_uri.*
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 /**
  * Fragment that displays an image based on a set of image requests, either with increasing quality
@@ -28,35 +29,50 @@ import kotlinx.android.synthetic.main.fragment_drawee_multi_uri.*
  */
 class MultiUriFragment : BaseShowcaseFragment() {
 
+  private var _binding: FragmentDraweeMultiUriBinding? = null
+  private val binding
+    get() = _binding!!
+  private val draweeView: SimpleDraweeView
+    get() = binding.draweeView
+  private val switchUseVito: SwitchMaterial
+    get() = binding.switchUseVito
+  private val btnFirstAvailable: Button
+    get() = binding.btnFirstAvailable
+  private val btnIncreasingQuality
+    get() = binding.btnIncreasingQuality
+  private val btnBoth
+    get() = binding.btnBoth
+
   override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
       savedInstanceState: Bundle?
-  ): View? {
-    return inflater.inflate(R.layout.fragment_drawee_multi_uri, container, false)
+  ): View {
+    _binding = FragmentDraweeMultiUriBinding.inflate(inflater, container, false)
+    return binding.root
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    btn_first_available.setOnClickListener {
+    btnFirstAvailable.setOnClickListener {
       resetImageView()
-      if (switch_use_vito.isChecked) {
+      if (switchUseVito.isChecked) {
         val requests =
             sampleUris().createSampleUriSet().map(ImageSourceProvider::forUri).toTypedArray()
-        VitoView.show(ImageSourceProvider.firstAvailable(*requests), drawee_view)
+        VitoView.show(ImageSourceProvider.firstAvailable(*requests), draweeView)
       } else {
         val requests = sampleUris().createSampleUriSet().map(ImageRequest::fromUri).toTypedArray()
-        drawee_view.setController(
-            Fresco.newDraweeControllerBuilder().setFirstAvailableImageRequests(requests).build())
+        draweeView.controller =
+            Fresco.newDraweeControllerBuilder().setFirstAvailableImageRequests(requests).build()
       }
     }
 
-    btn_increasing_quality.setOnClickListener {
+    btnIncreasingQuality.setOnClickListener {
       resetImageView()
 
-      if (switch_use_vito.isChecked) {
+      if (switchUseVito.isChecked) {
         val lowRes = sampleUris().createSampleUri(ImageUriProvider.ImageSize.XS).asImageSource()
         val highRes = sampleUris().createSampleUri(ImageUriProvider.ImageSize.XXL).asImageSource()
-        VitoView.show(ImageSourceProvider.increasingQuality(lowRes, highRes), drawee_view)
+        VitoView.show(ImageSourceProvider.increasingQuality(lowRes, highRes), draweeView)
       } else {
         val lowRes =
             ImageRequest.fromUri(sampleUris().createSampleUri(ImageUriProvider.ImageSize.XS))
@@ -64,13 +80,13 @@ class MultiUriFragment : BaseShowcaseFragment() {
             ImageRequest.fromUri(sampleUris().createSampleUri(ImageUriProvider.ImageSize.XXL))
         val draweeControllerBuilder = Fresco.newDraweeControllerBuilder().setImageRequest(highRes)
         lowRes?.let { draweeControllerBuilder.setLowResImageRequest(it) }
-        drawee_view.controller = draweeControllerBuilder.build()
+        draweeView.controller = draweeControllerBuilder.build()
       }
     }
 
-    btn_both.setOnClickListener {
+    btnBoth.setOnClickListener {
       resetImageView()
-      if (switch_use_vito.isChecked) {
+      if (switchUseVito.isChecked) {
         val lowRes = sampleUris().createSampleUri(ImageUriProvider.ImageSize.XS).asImageSource()
         val anyHighRes =
             listOf(
@@ -82,7 +98,7 @@ class MultiUriFragment : BaseShowcaseFragment() {
         VitoView.show(
             ImageSourceProvider.increasingQuality(
                 lowRes, ImageSourceProvider.firstAvailable(*anyHighRes)),
-            drawee_view)
+            draweeView)
       } else {
         val lowRes =
             ImageRequest.fromUri(sampleUris().createSampleUri(ImageUriProvider.ImageSize.XS))
@@ -96,13 +112,18 @@ class MultiUriFragment : BaseShowcaseFragment() {
         val draweeControllerBuilder =
             Fresco.newDraweeControllerBuilder().setFirstAvailableImageRequests(anyHighRes)
         lowRes?.let { draweeControllerBuilder.setLowResImageRequest(it) }
-        drawee_view.controller = draweeControllerBuilder.build()
+        draweeView.controller = draweeControllerBuilder.build()
       }
     }
   }
 
   private fun resetImageView() {
-    drawee_view.controller = null
-    VitoView.show(null as? Uri, drawee_view)
+    draweeView.controller = null
+    VitoView.show(null, draweeView)
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
   }
 }

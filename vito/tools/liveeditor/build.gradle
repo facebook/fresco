@@ -9,7 +9,6 @@ import com.facebook.fresco.buildsrc.Deps
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 dependencies {
     implementation project(':drawee') // TODO RM; required for FadeDrawable access

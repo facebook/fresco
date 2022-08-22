@@ -9,48 +9,56 @@ package com.facebook.fresco.samples.showcase
 
 import android.graphics.Color
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
+import com.facebook.fresco.samples.showcase.databinding.ActivityMainBinding
 import com.facebook.fresco.samples.showcase.permissions.StoragePermissionHelper
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
 
+  private lateinit var binding: ActivityMainBinding
+  private val toolbar: Toolbar by lazy { binding.appBarMain.toolbar }
+  private val drawerLayout: DrawerLayout by lazy { binding.drawerLayout }
+  private val navView: NavigationView by lazy { binding.navView }
+  private val contentMain by lazy { binding.appBarMain.contentMain.root }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
     setSupportActionBar(toolbar)
 
     val toggle =
         ActionBarDrawerToggle(
             this,
-            drawer_layout,
+            drawerLayout,
             toolbar,
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close)
-    drawer_layout.addDrawerListener(toggle)
+    drawerLayout.addDrawerListener(toggle)
     toggle.syncState()
 
-    addNavDrawerEntry(nav_view.menu, ExampleDatabase.welcome)
+    addNavDrawerEntry(navView.menu, ExampleDatabase.welcome)
     for (category in ExampleDatabase.examples) {
-      val submenu = nav_view.menu.addSubMenu(category.name)
+      val submenu = navView.menu.addSubMenu(category.name)
       for (item in category.examples) {
         addNavDrawerEntry(submenu, item)
       }
     }
-    addNavDrawerEntry(nav_view.menu.addSubMenu("More"), ExampleDatabase.settings)
+    addNavDrawerEntry(navView.menu.addSubMenu("More"), ExampleDatabase.settings)
 
     if (savedInstanceState == null) {
-      nav_view.menu.performIdentifierAction(
+      navView.menu.performIdentifierAction(
           PreferenceManager.getDefaultSharedPreferences(this)
               .getInt(KEY_SELECTED_NAVDRAWER_ITEM_ID, ExampleDatabase.welcome.itemId),
           0)
@@ -63,8 +71,8 @@ class MainActivity : AppCompatActivity() {
         .setCheckable(true)
         .setOnMenuItemClickListener {
           showFragment(item.createFragment(), item.title, item.backstackTag)
-          drawer_layout.closeDrawer(GravityCompat.START)
-          nav_view.setCheckedItem(it)
+          drawerLayout.closeDrawer(GravityCompat.START)
+          navView.setCheckedItem(it)
           PreferenceManager.getDefaultSharedPreferences(this)
               .edit()
               .putInt(KEY_SELECTED_NAVDRAWER_ITEM_ID, it.itemId)
@@ -79,8 +87,8 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onBackPressed() {
-    if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-      drawer_layout.closeDrawer(GravityCompat.START)
+    if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+      drawerLayout.closeDrawer(GravityCompat.START)
     } else {
       super.onBackPressed()
     }
@@ -115,7 +123,7 @@ class MainActivity : AppCompatActivity() {
     return super.onOptionsItemSelected(item)
   }
 
-  fun showImageOptionsEditor() {
+  private fun showImageOptionsEditor() {
     supportFragmentManager.let {
       ImageOptionsBottomSheet.newInstance(ShowcaseApplication.imageSelector, Bundle()).apply {
         show(it, tag)
@@ -153,7 +161,7 @@ class MainActivity : AppCompatActivity() {
     if (ShowcaseApplication.imageUriProvider.uriOverride == null) {
       return
     }
-    Snackbar.make(content_main, R.string.snackbar_uri_override_reminder_text, Snackbar.LENGTH_LONG)
+    Snackbar.make(contentMain, R.string.snackbar_uri_override_reminder_text, Snackbar.LENGTH_LONG)
         .setAction(R.string.snackbar_uri_override_reminder_change_button) {
           showFragment(ExampleDatabase.settings)
         }

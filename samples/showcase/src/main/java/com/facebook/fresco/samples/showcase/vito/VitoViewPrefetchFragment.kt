@@ -7,7 +7,6 @@
 
 package com.facebook.fresco.samples.showcase.vito
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,14 +14,28 @@ import android.view.ViewGroup
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment
 import com.facebook.fresco.samples.showcase.R
+import com.facebook.fresco.samples.showcase.databinding.FragmentVitoViewPrefetchBinding
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.RoundingOptions
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.fresco.vito.view.VitoView
-import kotlinx.android.synthetic.main.fragment_vito_view_prefetch.*
 
 class VitoViewPrefetchFragment : BaseShowcaseFragment() {
+
+  private var _binding: FragmentVitoViewPrefetchBinding? = null
+  private val binding
+    get() = _binding!!
+  private val buttonPrefetchBitmap
+    get() = binding.buttonPrefetchBitmap
+  private val buttonPrefetchEncoded
+    get() = binding.buttonPrefetchEncoded
+  private val buttonPrefetchDisk
+    get() = binding.buttonPrefetchDisk
+  private val buttonToggleImages
+    get() = binding.buttonToggleImages
+  private val buttonClearCache
+    get() = binding.buttonClearCache
 
   private val imageOptions =
       ImageOptions.create()
@@ -36,8 +49,9 @@ class VitoViewPrefetchFragment : BaseShowcaseFragment() {
       inflater: LayoutInflater,
       container: ViewGroup?,
       savedInstanceState: Bundle?
-  ): View? {
-    return inflater.inflate(R.layout.fragment_vito_view_prefetch, container, false)
+  ): View {
+    _binding = FragmentVitoViewPrefetchBinding.inflate(inflater, container, false)
+    return binding.root
   }
 
   override fun onViewCreated(container: View, savedInstanceState: Bundle?) {
@@ -46,27 +60,32 @@ class VitoViewPrefetchFragment : BaseShowcaseFragment() {
 
     val prefetcher = FrescoVitoProvider.getPrefetcher()
 
-    button_prefetch_bitmap.setOnClickListener {
+    buttonPrefetchBitmap.setOnClickListener {
       prefetcher.prefetchToBitmapCache(uri, imageOptions, "prefetch_bitmap", "sample")
     }
 
-    button_prefetch_encoded.setOnClickListener {
+    buttonPrefetchEncoded.setOnClickListener {
       prefetcher.prefetchToEncodedCache(uri, imageOptions, "prefetch_encoded", "sample")
     }
 
-    button_prefetch_disk.setOnClickListener {
+    buttonPrefetchDisk.setOnClickListener {
       prefetcher.prefetchToDiskCache(uri, imageOptions, "prefetch_disk", "sample")
     }
 
-    button_toggle_images.setOnClickListener {
+    buttonToggleImages.setOnClickListener {
       if (imageVisible) {
-        VitoView.show(null as? Uri, view)
+        VitoView.show(null, view)
       } else {
         VitoView.show(uri, imageOptions, view)
       }
       imageVisible = !imageVisible
     }
 
-    button_clear_cache.setOnClickListener { Fresco.getImagePipeline().clearCaches() }
+    buttonClearCache.setOnClickListener { Fresco.getImagePipeline().clearCaches() }
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
   }
 }
