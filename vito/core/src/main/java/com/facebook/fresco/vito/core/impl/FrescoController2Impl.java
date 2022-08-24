@@ -280,7 +280,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   public void onNewResult(
       FrescoDrawable2Impl drawable,
       VitoImageRequest imageRequest,
-      DataSource<CloseableReference<CloseableImage>> dataSource) {
+      @Nullable DataSource<CloseableReference<CloseableImage>> dataSource) {
     if (dataSource == null || !dataSource.hasResult()) {
       return;
     }

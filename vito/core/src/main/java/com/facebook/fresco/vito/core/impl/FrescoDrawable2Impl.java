@@ -167,7 +167,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
   }
 
   public void setFetchSubmitted(boolean fetchSubmitted) {
-    mFetchSubmitted = fetchSubmitted;
+    this.mFetchSubmitted = fetchSubmitted;
   }
 
   @Override
@@ -176,7 +176,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
   }
 
   public void setDrawableDataSubscriber(@Nullable DrawableDataSubscriber drawableDataSubscriber) {
-    mDrawableDataSubscriber = drawableDataSubscriber;
+    this.mDrawableDataSubscriber = drawableDataSubscriber;
   }
 
   @Nullable
@@ -186,12 +186,12 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
 
   @Override
   public void setImageRequest(@Nullable VitoImageRequest imageRequest) {
-    mImageRequest = imageRequest;
+    this.mImageRequest = imageRequest;
   }
 
   @Override
   public void setCallerContext(@Nullable Object callerContext) {
-    mCallerContext = callerContext;
+    this.mCallerContext = callerContext;
   }
 
   @Override
@@ -230,7 +230,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
   }
 
   public synchronized void setImageId(long imageId) {
-    mImageId = imageId;
+    this.mImageId = imageId;
   }
 
   @Override
@@ -239,7 +239,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
   }
 
   public void setImageOrigin(@ImageOrigin int imageOrigin) {
-    mImageOrigin = imageOrigin;
+    this.mImageOrigin = imageOrigin;
   }
 
   public @ImageOrigin int getImageOrigin() {
@@ -359,7 +359,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
 
   @Override
   public void setExtras(@Nullable Object extras) {
-    mExtras = extras;
+    this.mExtras = extras;
   }
 
   @Nullable
@@ -370,7 +370,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
 
   @Override
   public void setRefetchRunnable(@Nullable Runnable refetchRunnable) {
-    mRefetchRunnable = refetchRunnable;
+    this.mRefetchRunnable = refetchRunnable;
   }
 
   @Override
