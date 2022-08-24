@@ -7,7 +7,10 @@
 
 package com.facebook.fresco.vito.renderer
 
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.RectF
 
 sealed class Shape {
   abstract fun draw(canvas: Canvas, paint: Paint)

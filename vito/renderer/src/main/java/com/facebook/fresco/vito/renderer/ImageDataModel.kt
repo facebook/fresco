@@ -8,12 +8,14 @@
 package com.facebook.fresco.vito.renderer
 
 import android.graphics.Bitmap
+import android.graphics.Paint
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 
 sealed class ImageDataModel {
   open val width = -1
   open val height = -1
+  open val defaultPaintFlags = Paint.ANTI_ALIAS_FLAG
 
   open fun setCallback(callback: Drawable.Callback?) = Unit
   open fun onAttach() = Unit
@@ -26,6 +28,7 @@ class BitmapImageDataModel(val bitmap: Bitmap, val isBitmapCircular: Boolean = f
     ImageDataModel() {
   override val width = bitmap.width
   override val height = bitmap.height
+  override val defaultPaintFlags: Int = Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG
 }
 
 open class DrawableImageDataModel(val drawable: Drawable) : ImageDataModel() {

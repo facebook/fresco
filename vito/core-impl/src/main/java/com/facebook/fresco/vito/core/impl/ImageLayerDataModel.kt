@@ -27,7 +27,7 @@ class ImageLayerDataModel(var drawableCallbackProvider: (() -> Drawable.Callback
   private var currentBounds: Rect? = null
   private val canvasTransformationHandler: CanvasTransformationHandler =
       CanvasTransformationHandler(null)
-  private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+  private val paint: Paint = Paint()
 
   private var renderCommand: RenderCommand? = null
   private var colorFilter: ColorFilter? = null
@@ -89,6 +89,7 @@ class ImageLayerDataModel(var drawableCallbackProvider: (() -> Drawable.Callback
     currentBounds = bounds
     canvasTransformationHandler.configure(bounds, model.width, model.height)
     paint.colorFilter = colorFilter
+    paint.flags = model.defaultPaintFlags
     renderCommand =
         ImageWithTransformationAndBorderRenderer.createRenderCommand(
             model,
@@ -97,8 +98,7 @@ class ImageLayerDataModel(var drawableCallbackProvider: (() -> Drawable.Callback
             canvasTransformationHandler.getMatrix(),
             bounds,
             paint,
-            alpha,
-            colorFilter)
+            alpha)
   }
 
   fun draw(canvas: Canvas) {
@@ -117,7 +117,6 @@ class ImageLayerDataModel(var drawableCallbackProvider: (() -> Drawable.Callback
     renderCommand = null
     currentBounds = null
     paint.reset()
-    paint.flags = Paint.ANTI_ALIAS_FLAG
     colorFilter = null
   }
 

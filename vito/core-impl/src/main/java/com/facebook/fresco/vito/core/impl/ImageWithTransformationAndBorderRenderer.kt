@@ -7,7 +7,6 @@
 
 package com.facebook.fresco.vito.core.impl
 
-import android.graphics.ColorFilter
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Rect
@@ -28,8 +27,7 @@ class ImageWithTransformationAndBorderRenderer {
         canvasTransform: Matrix?,
         bounds: Rect,
         paint: Paint,
-        alpha: Int = 255,
-        colorFilter: ColorFilter? = null
+        alpha: Int = 255
     ): RenderCommand {
       val borderWidth: Float = borderOptions?.width ?: 0f
       val hasBorders: Boolean = borderWidth > 0f
@@ -53,8 +51,7 @@ class ImageWithTransformationAndBorderRenderer {
       }
 
       val imageRenderCommand =
-          ImageRenderer.createImageDataModelRenderCommand(
-              model, imageShape, paint, imageTransform, colorFilter)
+          ImageRenderer.createImageDataModelRenderCommand(model, imageShape, paint, imageTransform)
 
       val imageClipRect =
           if (model.width > 0 && model.height > 0) {

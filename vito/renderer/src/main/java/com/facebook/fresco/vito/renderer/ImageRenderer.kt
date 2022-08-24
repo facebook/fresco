@@ -7,7 +7,12 @@
 
 package com.facebook.fresco.vito.renderer
 
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapShader
+import android.graphics.Canvas
+import android.graphics.Matrix
+import android.graphics.Paint
+import android.graphics.Shader
 import com.facebook.fresco.vito.renderer.util.ColorUtils
 
 typealias RenderCommand = (Canvas) -> Unit
@@ -24,14 +29,12 @@ object ImageRenderer {
       model: ImageDataModel,
       shape: Shape,
       paint: Paint,
-      imageTransformation: Matrix? = null,
-      colorFilter: ColorFilter? = null
+      imageTransformation: Matrix? = null
   ): RenderCommand {
     return when (model) {
       is BitmapImageDataModel -> model.createRenderCommand(shape, paint, imageTransformation)
-      is ColorIntImageDataModel -> model.createRenderCommand(shape, paint, imageTransformation)
-      is DrawableImageDataModel ->
-          model.createRenderCommand(shape, paint, imageTransformation, colorFilter)
+      is ColorIntImageDataModel -> model.createRenderCommand(shape, paint)
+      is DrawableImageDataModel -> model.createRenderCommand(shape, paint, imageTransformation)
     }
   }
 
@@ -53,12 +56,8 @@ object ImageRenderer {
         }
       }
 
-  inline fun ColorIntImageDataModel.createRenderCommand(
-      shape: Shape,
-      paint: Paint,
-      imageTransformation: Matrix? = null
-  ): RenderCommand {
-    // The image transformation is a no-op for solid colors since it is a no-op
+  inline fun ColorIntImageDataModel.createRenderCommand(shape: Shape, paint: Paint): RenderCommand {
+    // The image transformation is a no-op for solid colors since it remains a solid color
     paint.color = ColorUtils.multiplyColorAlpha(colorInt, paint.alpha)
     return paintRenderCommand(shape, paint)
   }
@@ -67,7 +66,6 @@ object ImageRenderer {
       shape: Shape,
       paint: Paint,
       imageTransformation: Matrix? = null,
-      colorFilter: ColorFilter? = null,
   ): RenderCommand {
     // We transform by scaling the Canvas, so we let the Drawable draw itself with its
     // preferred dimensions
@@ -85,7 +83,7 @@ object ImageRenderer {
                   shape.rect.right.toInt(),
                   shape.rect.bottom.toInt())
             }
-            drawable.colorFilter = colorFilter
+            drawable.colorFilter = paint.colorFilter
             drawable.alpha = paint.alpha
             drawable.draw(canvas)
           }
