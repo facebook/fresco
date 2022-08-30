@@ -53,7 +53,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val isLazyDataSource: Supplier<Boolean>?
   val isGingerbreadDecoderEnabled: Boolean
   val downscaleFrameToDrawableDimensions: Boolean
-  val bitmapCloseableRefType: Int
   val suppressBitmapPrefetchingSupplier: Supplier<Boolean>
   val isExperimentalThreadHandoffQueueEnabled: Boolean
   val memoryType: Long
@@ -94,8 +93,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var gingerbreadDecoderEnabled = false
 
     @JvmField var downscaleFrameToDrawableDimensions = false
-
-    @JvmField var bitmapCloseableRefType = 0
 
     @JvmField var suppressBitmapPrefetchingSupplier = Suppliers.of(false)
 
@@ -239,10 +236,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
         asBuilder {
           this.downscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions
         }
-
-    fun setBitmapCloseableRefType(bitmapCloseableRefType: Int) = asBuilder {
-      this.bitmapCloseableRefType = bitmapCloseableRefType
-    }
 
     fun setSuppressBitmapPrefetchingSupplier(suppressBitmapPrefetchingSupplier: Supplier<Boolean>) =
         asBuilder {
@@ -394,7 +387,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     isLazyDataSource = builder.lazyDataSource
     isGingerbreadDecoderEnabled = builder.gingerbreadDecoderEnabled
     downscaleFrameToDrawableDimensions = builder.downscaleFrameToDrawableDimensions
-    bitmapCloseableRefType = builder.bitmapCloseableRefType
     suppressBitmapPrefetchingSupplier = builder.suppressBitmapPrefetchingSupplier
     isExperimentalThreadHandoffQueueEnabled = builder.experimentalThreadHandoffQueueEnabled
     memoryType = builder.memoryType
