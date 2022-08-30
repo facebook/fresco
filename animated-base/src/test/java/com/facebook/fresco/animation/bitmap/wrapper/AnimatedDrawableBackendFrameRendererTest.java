@@ -73,7 +73,7 @@ public class AnimatedDrawableBackendFrameRendererTest {
   @Test
   public void testRenderFrame() {
     when(mAnimatedDrawableBackend.getHeight()).thenReturn(1200);
-    Bitmap bitmap = mock(Bitmap.class);
+    Bitmap bitmap = mockBitmap();
     AnimatedDrawableFrameInfo animatedDrawableFrameInfo = mock(AnimatedDrawableFrameInfo.class);
     when(mAnimatedDrawableBackend.getFrameInfo(anyInt())).thenReturn(animatedDrawableFrameInfo);
 
@@ -87,7 +87,7 @@ public class AnimatedDrawableBackendFrameRendererTest {
     int frameNumber = 0;
 
     when(mAnimatedDrawableBackend.getHeight()).thenReturn(1200);
-    Bitmap bitmap = mock(Bitmap.class);
+    Bitmap bitmap = mockBitmap();
     AnimatedDrawableFrameInfo animatedDrawableFrameInfo = mock(AnimatedDrawableFrameInfo.class);
     when(mAnimatedDrawableBackend.getFrameInfo(anyInt())).thenReturn(animatedDrawableFrameInfo);
     doThrow(new IllegalStateException())
@@ -97,5 +97,11 @@ public class AnimatedDrawableBackendFrameRendererTest {
     boolean rendered = mAnimatedDrawableBackendFrameRenderer.renderFrame(frameNumber, bitmap);
 
     assertThat(rendered).isFalse();
+  }
+
+  private static Bitmap mockBitmap() {
+    Bitmap mock = mock(Bitmap.class);
+    when(mock.isMutable()).thenReturn(true);
+    return mock;
   }
 }
