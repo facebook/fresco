@@ -57,6 +57,7 @@ data class RoundingOptions(
     }
 
     @JvmStatic
+    @JvmOverloads
     fun forCornerRadii(cornerRadii: FloatArray, antiAliasing: Boolean = false): RoundingOptions {
       return RoundingOptions(false, CORNER_RADIUS_UNSET, cornerRadii, antiAliasing, false)
     }
