@@ -38,10 +38,14 @@ public class GenericByteArrayPool extends BasePool<byte[]> implements ByteArrayP
       PoolParams poolParams,
       PoolStatsTracker poolStatsTracker) {
     super(memoryTrimmableRegistry, poolParams, poolStatsTracker);
-    final SparseIntArray bucketSizes = Preconditions.checkNotNull(poolParams.bucketSizes);
-    this.mBucketSizes = new int[bucketSizes.size()];
-    for (int i = 0; i < bucketSizes.size(); ++i) {
-      mBucketSizes[i] = bucketSizes.keyAt(i);
+    final SparseIntArray bucketSizes = poolParams.bucketSizes;
+    if (bucketSizes != null) {
+      this.mBucketSizes = new int[bucketSizes.size()];
+      for (int i = 0; i < bucketSizes.size(); ++i) {
+        mBucketSizes[i] = bucketSizes.keyAt(i);
+      }
+    } else {
+      this.mBucketSizes = new int[0];
     }
     initialize();
   }
@@ -52,7 +56,7 @@ public class GenericByteArrayPool extends BasePool<byte[]> implements ByteArrayP
    * @return the smallest buffer size supported by the pool
    */
   public int getMinBufferSize() {
-    return mBucketSizes[0];
+    return mBucketSizes.length > 0 ? mBucketSizes[0] : 0;
   }
 
   /**
