@@ -26,6 +26,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
   val actualImageScaleType: ScalingUtils.ScaleType = builder.actualImageScaleType
   val actualImageFocusPoint: PointF? = builder.actualFocusPoint
   val mLocalThumbnailPreviewsEnabled: Boolean = builder.localThumbnailPreviewsEnabled
+  val loadThumbnailOnly: Boolean = builder.loadThumbnailOnly
   val bitmapConfig: Bitmap.Config? = builder.bitmapConfig
   val isProgressiveDecodingEnabled: Boolean? = builder.progressiveDecodingEnabled
 
@@ -49,6 +50,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
         !Objects.equal(actualImageScaleType, other.actualImageScaleType) ||
         !Objects.equal(actualImageFocusPoint, other.actualImageFocusPoint) ||
         mLocalThumbnailPreviewsEnabled != other.mLocalThumbnailPreviewsEnabled ||
+        loadThumbnailOnly != other.loadThumbnailOnly ||
         isProgressiveDecodingEnabled !== other.isProgressiveDecodingEnabled ||
         !Objects.equal(bitmapConfig, other.bitmapConfig)) {
       false
@@ -66,6 +68,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
     result = 31 * result + actualImageScaleType.hashCode()
     result = 31 * result + (actualImageFocusPoint?.hashCode() ?: 0)
     result = 31 * result + if (mLocalThumbnailPreviewsEnabled) 1 else 0
+    result = 31 * result + if (loadThumbnailOnly) 1 else 0
     result = 31 * result + (bitmapConfig?.hashCode() ?: 0)
     result = (31 * result + (isProgressiveDecodingEnabled?.hashCode() ?: 0))
     return result
@@ -84,6 +87,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
           .add("actualImageScaleType", actualImageScaleType)
           .add("actualImageFocusPoint", actualImageFocusPoint)
           .add("localThumbnailPreviewsEnabled", mLocalThumbnailPreviewsEnabled)
+          .add("loadThumbnailOnly", loadThumbnailOnly)
           .add("bitmapConfig", bitmapConfig)
           .add("progressiveRenderingEnabled", isProgressiveDecodingEnabled)
 
@@ -97,6 +101,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
     internal var actualImageScaleType: ScalingUtils.ScaleType = ScalingUtils.ScaleType.CENTER_CROP
     internal var actualFocusPoint: PointF? = null
     internal var localThumbnailPreviewsEnabled = false
+    internal var loadThumbnailOnly = false
     internal var bitmapConfig: Bitmap.Config? = null
     internal var progressiveDecodingEnabled: Boolean? = null
 
@@ -112,6 +117,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
       actualImageScaleType = defaultOptions.actualImageScaleType
       actualFocusPoint = defaultOptions.actualImageFocusPoint
       localThumbnailPreviewsEnabled = defaultOptions.areLocalThumbnailPreviewsEnabled()
+      loadThumbnailOnly = defaultOptions.loadThumbnailOnly
       bitmapConfig = defaultOptions.bitmapConfig
       progressiveDecodingEnabled = defaultOptions.isProgressiveDecodingEnabled
     }
@@ -157,6 +163,10 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
      */
     fun localThumbnailPreviewsEnabled(localThumbnailPreviewsEnabled: Boolean): T = modify {
       this.localThumbnailPreviewsEnabled = localThumbnailPreviewsEnabled
+    }
+
+    fun loadThumbnailOnly(loadThumbnailOnly: Boolean): T = modify {
+      this.loadThumbnailOnly = loadThumbnailOnly
     }
 
     fun bitmapConfig(bitmapConfig: Bitmap.Config?): T = modify { this.bitmapConfig = bitmapConfig }

@@ -66,6 +66,7 @@ class ImagePipelineUtilsImpl(private val imageDecodeOptionsProvider: ImageDecode
           imageDecodeOptions = it
         }
         isLocalThumbnailPreviewsEnabled = imageOptions.areLocalThumbnailPreviewsEnabled()
+        loadThumbnailOnly = imageOptions.loadThumbnailOnly
         imageOptions.postprocessor?.let { postprocessor = it }
         imageOptions.isProgressiveDecodingEnabled?.let { isProgressiveRenderingEnabled = it }
       }
