@@ -343,7 +343,7 @@ object FrescoVitoImage2Spec {
   @OnExitedRange(name = "imagePrefetch")
   fun onExitedWorkingRange(
       c: ComponentContext,
-      @State workingRangePrefetchData: AtomicReference<DataSource<Void>>
+      @State workingRangePrefetchData: AtomicReference<DataSource<Void>>?
   ) {
     cancelWorkingRangePrefetch(workingRangePrefetchData)
   }
