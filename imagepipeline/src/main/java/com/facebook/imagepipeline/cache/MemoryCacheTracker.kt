@@ -5,12 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.imagepipeline.cache;
+package com.facebook.imagepipeline.cache
 
-public interface MemoryCacheTracker<K> {
-  void onCacheHit(K cacheKey);
+interface MemoryCacheTracker<K> {
+  fun onCacheHit(cacheKey: K)
 
-  void onCacheMiss(K cacheKey);
+  fun onCacheMiss(cacheKey: K)
 
-  void onCachePut(K cacheKey);
+  fun onCachePut(cacheKey: K)
 }
