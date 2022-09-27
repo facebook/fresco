@@ -6,4 +6,4 @@
  */
 
 /** Memory cache implementations for image pipeline. */
-package com.facebook.imagepipeline.cache;
+package com.facebook.imagepipeline.cache
