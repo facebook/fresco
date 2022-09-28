@@ -9,6 +9,8 @@ import com.facebook.fresco.buildsrc.Deps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 dependencies {
     compileOnly Deps.inferAnnotation
@@ -20,7 +22,7 @@ dependencies {
     implementation Deps.Litho.core
     implementation Deps.Litho.widget
 
-    annotationProcessor Deps.Litho.processor
+    kapt Deps.Litho.processor
 
     implementation project(':vito:core')
     implementation project(':vito:options')

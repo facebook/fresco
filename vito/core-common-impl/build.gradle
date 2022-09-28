@@ -20,11 +20,12 @@ dependencies {
     implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':fbcore')
     implementation project(':imagepipeline-base')
-    implementation project(':ui-common')
     implementation project(':middleware')
+    implementation project(':ui-common')
+    implementation project(':urimod')
+    implementation project(':vito:core')
     implementation project(':vito:options')
     implementation project(':vito:source')
-    implementation project(':urimod')
 }
 
 android {

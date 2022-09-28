@@ -10,36 +10,33 @@ import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 
 dependencies {
-    compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
+    compileOnly Deps.inferAnnotation
 
     implementation Deps.AndroidX.core
-    implementation Deps.Litho.lithoAnnotations
-    implementation Deps.Litho.core
-    implementation Deps.Litho.widget
 
-    kapt Deps.Litho.processor
-
-    implementation project(':drawee')
+    implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':fbcore')
+    implementation project(':imagepipeline-base')
+    implementation project(':middleware')
     implementation project(':ui-common')
+    implementation project(':urimod')
     implementation project(':vito:core')
+    implementation project(':vito:core-common-impl')
     implementation project(':vito:options')
-    implementation project(':vito:provider')
     implementation project(':vito:source')
 
     testImplementation TestDeps.junit
     testImplementation TestDeps.assertjCore
-    testImplementation TestDeps.mockitoCore
+    testImplementation TestDeps.mockitoInline
     testImplementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
-    implementation project(path: ':imagepipeline')
+    testImplementation project(':imagepipeline-base-test')
 }
 
 android {

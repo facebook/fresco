@@ -19,6 +19,7 @@ dependencies {
     implementation project(':fbcore')
     implementation project(':imagepipeline-base')
     implementation project(':vito:core')
+    implementation project(':vito:core-java-impl')
     implementation project(':native-filters')
 
     testImplementation TestDeps.junit

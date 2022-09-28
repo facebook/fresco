@@ -8,6 +8,7 @@
 import com.facebook.fresco.buildsrc.Deps
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
@@ -22,8 +23,8 @@ android {
 dependencies {
     compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
-    implementation project(path: ':fbcore')
-    implementation project(":ui-common")
+    implementation project(':fbcore')
+    implementation project(':ui-common')
 }
 
 apply plugin: "com.vanniktech.maven.publish"

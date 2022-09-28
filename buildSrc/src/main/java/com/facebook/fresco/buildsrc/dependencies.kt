@@ -34,7 +34,7 @@ object Deps {
   }
 
   object Litho {
-    private const val version = "0.41.1"
+    private const val version = "0.41.2"
 
     const val core = "com.facebook.litho:litho-core:$version"
     const val lithoAnnotations = "com.facebook.litho:litho-annotations:$version"

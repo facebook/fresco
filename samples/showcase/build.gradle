@@ -11,6 +11,7 @@ import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
@@ -127,17 +128,18 @@ dependencies {
     implementation Deps.Litho.Sections.core
     implementation Deps.Litho.Sections.widget
     compileOnly Deps.Litho.Sections.sectionsAnnotations
-    annotationProcessor Deps.Litho.Sections.processor
+    kapt Deps.Litho.Sections.processor
 
     // Experimental Fresco Vito
     implementation project(':vito:core')
+    implementation project(':vito:core-common-impl')
     implementation project(':vito:core-impl')
+    implementation project(':vito:drawee-support')
     implementation project(':vito:init')
     implementation project(':vito:ktx')
     implementation project(':vito:litho')
     implementation project(':vito:litho-slideshow')
     implementation project(':vito:options')
-    implementation project(':vito:drawee-support')
     implementation project(':vito:provider')
     implementation project(':vito:renderer')
     implementation project(':vito:source')

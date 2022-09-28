@@ -21,6 +21,7 @@ dependencies {
     implementation project(':ui-common')
     implementation project(':vito:core')
     implementation project(':vito:core-impl')
+    implementation project(':vito:core-java-impl')
     implementation project(':vito:drawee-support')
     implementation project(':vito:options')
 
