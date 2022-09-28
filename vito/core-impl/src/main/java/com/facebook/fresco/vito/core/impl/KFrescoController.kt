@@ -19,7 +19,13 @@ import com.facebook.drawee.backends.pipeline.info.ImageOrigin
 import com.facebook.fresco.ui.common.ControllerListener2
 import com.facebook.fresco.ui.common.OnFadeListener
 import com.facebook.fresco.ui.common.VitoUtils
-import com.facebook.fresco.vito.core.*
+import com.facebook.fresco.vito.core.FrescoController2
+import com.facebook.fresco.vito.core.FrescoDrawableInterface
+import com.facebook.fresco.vito.core.FrescoVitoConfig
+import com.facebook.fresco.vito.core.VitoImagePerfListener
+import com.facebook.fresco.vito.core.VitoImagePipeline
+import com.facebook.fresco.vito.core.VitoImageRequest
+import com.facebook.fresco.vito.core.VitoImageRequestListener
 import com.facebook.fresco.vito.listener.ImageListener
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory
