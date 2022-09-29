@@ -5,11 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.imagepipeline.cache;
+package com.facebook.imagepipeline.cache
 
 /** Interface used to get the information about the values. */
-public interface ValueDescriptor<V> {
-
+fun interface ValueDescriptor<V> {
   /** Returns the size in bytes of the given value. */
-  int getSizeInBytes(V value);
+  fun getSizeInBytes(value: V): Int
 }
