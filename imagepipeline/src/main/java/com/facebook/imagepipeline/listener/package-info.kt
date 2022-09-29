@@ -6,4 +6,4 @@
  */
 
 /** Listeners for the image pipeline. */
-package com.facebook.imagepipeline.listener;
+package com.facebook.imagepipeline.listener
