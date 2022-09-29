@@ -5,32 +5,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.imagepipeline.memory;
-
-import com.facebook.infer.annotation.Nullsafe;
-import javax.annotation.Nullable;
+package com.facebook.imagepipeline.memory
 
 /**
  * Manages pooled objects
  *
- * @param <T> type of pooled objects
+ * @param <T> type of pooled objects </T>
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
-interface PoolBackend<T> {
+internal interface PoolBackend<T> {
+
   /** @return available object from the pool or null */
-  @Nullable
-  T get(int size);
+  operator fun get(size: Int): T?
 
-  void put(T item);
+  fun put(item: T)
 
-  /** @return size for item which will be used in {@link #get(int)} */
-  int getSize(T item);
+  /** @return size for item which will be used in [get(int)] */
+  fun getSize(item: T): Int
 
   /**
    * Removed a single object (if any) from the pool
    *
    * @return the removed object or null
    */
-  @Nullable
-  T pop();
+  fun pop(): T?
 }
