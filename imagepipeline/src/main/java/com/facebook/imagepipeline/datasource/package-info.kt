@@ -6,4 +6,4 @@
  */
 
 /** DataSource implementations to use unto the image pipeline controller implementations. */
-package com.facebook.imagepipeline.datasource;
+package com.facebook.imagepipeline.datasource
