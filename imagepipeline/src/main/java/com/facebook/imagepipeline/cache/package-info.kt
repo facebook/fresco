@@ -6,4 +6,4 @@
  */
 
 /** Implementations for the cache abstractions related to memory and disk. */
-package com.facebook.imagepipeline.cache;
+package com.facebook.imagepipeline.cache
