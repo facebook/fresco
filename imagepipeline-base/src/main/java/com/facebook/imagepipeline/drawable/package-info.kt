@@ -6,4 +6,4 @@
  */
 
 /** Common drawable classes. */
-package com.facebook.imagepipeline.drawable;
+package com.facebook.imagepipeline.drawable
