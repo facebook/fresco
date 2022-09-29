@@ -6,4 +6,4 @@
  */
 
 /** All the Producer implementation which compose the image pipeline. */
-package com.facebook.imagepipeline.producers;
+package com.facebook.imagepipeline.producers
