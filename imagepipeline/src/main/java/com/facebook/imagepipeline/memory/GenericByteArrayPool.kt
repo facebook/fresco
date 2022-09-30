@@ -5,14 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.imagepipeline.memory;
+package com.facebook.imagepipeline.memory
 
-import android.util.SparseIntArray;
-import com.facebook.common.internal.Preconditions;
-import com.facebook.common.memory.ByteArrayPool;
-import com.facebook.common.memory.MemoryTrimmableRegistry;
-import com.facebook.infer.annotation.Nullsafe;
-import javax.annotation.concurrent.ThreadSafe;
+import com.facebook.common.memory.ByteArrayPool
+import com.facebook.common.memory.MemoryTrimmableRegistry
+import javax.annotation.concurrent.ThreadSafe
 
 /**
  * A pool of byte arrays. The pool manages a number of byte arrays of a predefined set of sizes.
@@ -21,10 +18,22 @@ import javax.annotation.concurrent.ThreadSafe;
  * size is at least as big as the requested size. On a release request, the pool adds the byte array
  * to the appropriate bucket. This byte array can then be used for a subsequent get request.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
-public class GenericByteArrayPool extends BasePool<byte[]> implements ByteArrayPool {
-  private final int[] mBucketSizes;
+open class GenericByteArrayPool(
+    memoryTrimmableRegistry: MemoryTrimmableRegistry,
+    poolParams: PoolParams,
+    poolStatsTracker: PoolStatsTracker
+) : BasePool<ByteArray?>(memoryTrimmableRegistry, poolParams, poolStatsTracker), ByteArrayPool {
+
+  private val bucketSizes: IntArray
+
+  /**
+   * Gets the smallest buffer size supported by the pool
+   *
+   * @return the smallest buffer size supported by the pool
+   */
+  val minBufferSize: Int
+    get() = if (bucketSizes.size > 0) bucketSizes[0] else 0
 
   /**
    * Creates a new instance of the GenericByteArrayPool class
@@ -33,30 +42,17 @@ public class GenericByteArrayPool extends BasePool<byte[]> implements ByteArrayP
    * @param poolParams provider for pool parameters
    * @param poolStatsTracker
    */
-  public GenericByteArrayPool(
-      MemoryTrimmableRegistry memoryTrimmableRegistry,
-      PoolParams poolParams,
-      PoolStatsTracker poolStatsTracker) {
-    super(memoryTrimmableRegistry, poolParams, poolStatsTracker);
-    final SparseIntArray bucketSizes = poolParams.bucketSizes;
+  init {
+    val bucketSizes = poolParams.bucketSizes
     if (bucketSizes != null) {
-      this.mBucketSizes = new int[bucketSizes.size()];
-      for (int i = 0; i < bucketSizes.size(); ++i) {
-        mBucketSizes[i] = bucketSizes.keyAt(i);
+      this.bucketSizes = IntArray(bucketSizes.size())
+      for (i in 0 until bucketSizes.size()) {
+        this.bucketSizes[i] = bucketSizes.keyAt(i)
       }
     } else {
-      this.mBucketSizes = new int[0];
+      this.bucketSizes = IntArray(0)
     }
-    initialize();
-  }
-
-  /**
-   * Gets the smallest buffer size supported by the pool
-   *
-   * @return the smallest buffer size supported by the pool
-   */
-  public int getMinBufferSize() {
-    return mBucketSizes.length > 0 ? mBucketSizes[0] : 0;
+    initialize()
   }
 
   /**
@@ -65,19 +61,15 @@ public class GenericByteArrayPool extends BasePool<byte[]> implements ByteArrayP
    * @param bucketedSize size of the buffer requested
    * @return a byte array of the specified or larger size. Null if the size is invalid
    */
-  @Override
-  protected byte[] alloc(int bucketedSize) {
-    return new byte[bucketedSize];
-  }
+  override fun alloc(bucketedSize: Int): ByteArray = ByteArray(bucketedSize)
 
   /**
    * Frees the 'value'
    *
    * @param value the value to free
    */
-  @Override
-  protected void free(byte[] value) {
-    Preconditions.checkNotNull(value);
+  override fun free(value: ByteArray) {
+    checkNotNull(value)
     // do nothing. Let the GC take care of this
   }
 
@@ -87,10 +79,7 @@ public class GenericByteArrayPool extends BasePool<byte[]> implements ByteArrayP
    * @param bucketedSize the bucketed size
    * @return size in bytes
    */
-  @Override
-  protected int getSizeInBytes(int bucketedSize) {
-    return bucketedSize;
-  }
+  override fun getSizeInBytes(bucketedSize: Int): Int = bucketedSize
 
   /**
    * Get the 'bucketed' size for the given request size. The 'bucketed' size is a size that is the
@@ -102,23 +91,21 @@ public class GenericByteArrayPool extends BasePool<byte[]> implements ByteArrayP
    * @return the bucketed size
    * @throws InvalidSizeException, if the requested size was invalid
    */
-  @Override
-  protected int getBucketedSize(int requestSize) {
-    int intRequestSize = requestSize;
-    if (intRequestSize <= 0) {
-      throw new InvalidSizeException(requestSize);
+  override fun getBucketedSize(requestSize: Int): Int {
+    if (requestSize <= 0) {
+      throw InvalidSizeException(requestSize)
     }
 
     // find the smallest bucketed size that is larger than the requested size
-    for (int bucketedSize : mBucketSizes) {
-      if (bucketedSize >= intRequestSize) {
-        return bucketedSize;
+    for (bucketedSize in bucketSizes) {
+      if (bucketedSize >= requestSize) {
+        return bucketedSize
       }
     }
 
     // requested size doesn't match our existing buckets - just return the requested size
     // this will eventually translate into a plain alloc/free paradigm
-    return requestSize;
+    return requestSize
   }
 
   /**
@@ -127,9 +114,8 @@ public class GenericByteArrayPool extends BasePool<byte[]> implements ByteArrayP
    * @param value the value
    * @return just the length of the value
    */
-  @Override
-  protected int getBucketedSizeForValue(byte[] value) {
-    Preconditions.checkNotNull(value);
-    return value.length;
+  override fun getBucketedSizeForValue(value: ByteArray): Int {
+    checkNotNull(value)
+    return value.size
   }
 }
