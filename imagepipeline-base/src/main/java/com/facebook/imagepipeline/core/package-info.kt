@@ -6,4 +6,4 @@
  */
 
 /** Supplier implementations for Executors and thread priorities */
-package com.facebook.imagepipeline.core;
+package com.facebook.imagepipeline.core
