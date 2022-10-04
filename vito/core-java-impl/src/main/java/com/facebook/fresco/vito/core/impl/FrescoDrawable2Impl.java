@@ -21,7 +21,6 @@ import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.vito.core.CombinedImageListener;
-import com.facebook.fresco.vito.core.FrescoDrawable2;
 import com.facebook.fresco.vito.core.NopDrawable;
 import com.facebook.fresco.vito.core.VitoImagePerfListener;
 import com.facebook.fresco.vito.core.VitoImageRequest;

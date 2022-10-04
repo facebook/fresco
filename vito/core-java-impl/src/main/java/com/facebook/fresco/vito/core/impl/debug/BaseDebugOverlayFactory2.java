@@ -11,7 +11,8 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import com.facebook.common.internal.Supplier;
 import com.facebook.fresco.ui.common.ControllerListener2;
-import com.facebook.fresco.vito.core.FrescoDrawable2;
+import com.facebook.fresco.vito.core.FrescoDrawableInterface;
+import com.facebook.fresco.vito.core.impl.FrescoDrawable2;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.OkToExtend;
 import javax.annotation.Nullable;
@@ -38,7 +39,7 @@ public abstract class BaseDebugOverlayFactory2 implements DebugOverlayFactory2 {
 
   protected abstract void setData(
       DebugOverlayDrawable overlay,
-      FrescoDrawable2 drawable,
+      FrescoDrawableInterface drawable,
       @Nullable ControllerListener2.Extras extras);
 
   private static DebugOverlayDrawable extractOrCreate(FrescoDrawable2 drawable) {
@@ -60,7 +61,7 @@ public abstract class BaseDebugOverlayFactory2 implements DebugOverlayFactory2 {
   }
 
   private static class DebugOverlayDrawableWrapper extends LayerDrawable {
-    private DebugOverlayDrawable mDebugOverlayDrawable;
+    private final DebugOverlayDrawable mDebugOverlayDrawable;
 
     public DebugOverlayDrawableWrapper(
         Drawable existingOverlayDrawable, DebugOverlayDrawable debugOverlayDrawable) {

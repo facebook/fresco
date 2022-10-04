@@ -8,7 +8,7 @@
 package com.facebook.fresco.vito.core.impl.debug;
 
 import com.facebook.fresco.ui.common.ControllerListener2;
-import com.facebook.fresco.vito.core.FrescoDrawable2;
+import com.facebook.fresco.vito.core.impl.FrescoDrawable2;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 

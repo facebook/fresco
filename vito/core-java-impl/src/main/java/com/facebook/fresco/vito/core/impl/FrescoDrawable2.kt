@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.core
+package com.facebook.fresco.vito.core.impl
 
 import android.graphics.PointF
 import android.graphics.Rect
@@ -18,6 +18,7 @@ import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.drawee.drawable.TransformAwareDrawable
 import com.facebook.drawee.drawable.TransformCallback
 import com.facebook.drawee.drawable.VisibilityCallback
+import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import java.io.Closeable
 
 abstract class FrescoDrawable2 :

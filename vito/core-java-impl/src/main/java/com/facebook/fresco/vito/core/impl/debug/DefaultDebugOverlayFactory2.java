@@ -12,8 +12,9 @@ import android.graphics.Rect;
 import com.facebook.common.internal.Supplier;
 import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.VitoUtils;
-import com.facebook.fresco.vito.core.FrescoDrawable2;
+import com.facebook.fresco.vito.core.FrescoDrawableInterface;
 import com.facebook.fresco.vito.core.VitoImageRequest;
+import com.facebook.fresco.vito.core.impl.FrescoDrawable2;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.Locale;
 import java.util.Map;
@@ -29,19 +30,24 @@ public class DefaultDebugOverlayFactory2 extends BaseDebugOverlayFactory2 {
   @Override
   protected void setData(
       DebugOverlayDrawable overlay,
-      FrescoDrawable2 drawable,
+      FrescoDrawableInterface drawable,
       @Nullable ControllerListener2.Extras extras) {
     setBasicData(overlay, drawable);
     setImageRequestData(overlay, drawable.getImageRequest());
     setImageOriginData(overlay, extras);
   }
 
-  private static void setBasicData(DebugOverlayDrawable overlay, FrescoDrawable2 drawable) {
+  private static void setBasicData(DebugOverlayDrawable overlay, FrescoDrawableInterface drawable) {
     overlay.addDebugData("ID", VitoUtils.getStringId(drawable.getImageId()));
-    Rect bounds = drawable.getBounds();
-    overlay.addDebugData("D", formatDimensions(bounds.width(), bounds.height()));
-    overlay.addDebugData(
-        "I", formatDimensions(drawable.getActualImageWidthPx(), drawable.getActualImageHeightPx()));
+    if (drawable instanceof FrescoDrawable2) {
+      FrescoDrawable2 abstractDrawable = (FrescoDrawable2) drawable;
+      Rect bounds = abstractDrawable.getBounds();
+      overlay.addDebugData("D", formatDimensions(bounds.width(), bounds.height()));
+      overlay.addDebugData(
+          "I",
+          formatDimensions(
+              abstractDrawable.getActualImageWidthPx(), abstractDrawable.getActualImageHeightPx()));
+    }
   }
 
   private static void setImageOriginData(
