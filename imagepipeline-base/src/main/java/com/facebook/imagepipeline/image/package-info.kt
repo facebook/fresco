@@ -6,4 +6,4 @@
  */
 
 /** CloseableReference implementation for objects used into image pipeline. */
-package com.facebook.imagepipeline.image;
+package com.facebook.imagepipeline.image
