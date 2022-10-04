@@ -6,4 +6,4 @@
  */
 
 /** Implementation for the factory classes of the animation framework for the image pipeline */
-package com.facebook.imagepipeline.animated.factory;
+package com.facebook.imagepipeline.animated.factory
