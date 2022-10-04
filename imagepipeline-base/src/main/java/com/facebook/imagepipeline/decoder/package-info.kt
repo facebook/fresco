@@ -6,4 +6,4 @@
  */
 
 /** Common image decoder classes. */
-package com.facebook.imagepipeline.decoder;
+package com.facebook.imagepipeline.decoder
