@@ -6,4 +6,4 @@
  */
 
 /** Classes which are commonly used into the image pipeline. */
-package com.facebook.imagepipeline.common;
+package com.facebook.imagepipeline.common
