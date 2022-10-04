@@ -24,10 +24,10 @@ import java.lang.annotation.RetentionPolicy;
  * <p>In order to migrate from ImageSpan, replace {@code new ImageSpan(drawable, alignment)} with
  * {@code new BetterImageSpan(drawable, BetterImageSpan.normalizeAlignment(alignment))}.
  *
- * <p>There are 2 main differences between BetterImageSpan and ImageSpan: 1. Pass in ALIGN_CENTER to
+ * <p>There are 3 main differences between BetterImageSpan and ImageSpan: 1. Pass in ALIGN_CENTER to
  * center images against the text. 2. ALIGN_BOTTOM no longer unnecessarily increases the size of the
  * text: DynamicDrawableSpan (ImageSpan's parent) adjusts sizes as if alignment was ALIGN_BASELINE
- * which can lead to unnecessary whitespace.
+ * which can lead to unnecessary whitespace. 3. BetterImageSpan supports margins around the image.
  */
 public class BetterImageSpan extends ReplacementSpan {
 
@@ -61,19 +61,30 @@ public class BetterImageSpan extends ReplacementSpan {
   private final int mAlignment;
   private final Paint.FontMetricsInt mFontMetricsInt = new Paint.FontMetricsInt();
   private final Drawable mDrawable;
+  private final Rect mMargin;
 
   public BetterImageSpan(Drawable drawable) {
     this(drawable, ALIGN_BASELINE);
   }
 
   public BetterImageSpan(Drawable drawable, @BetterImageSpanAlignment int verticalAlignment) {
+    this(drawable, verticalAlignment, new Rect());
+  }
+
+  public BetterImageSpan(
+      Drawable drawable, @BetterImageSpanAlignment int verticalAlignment, Rect margin) {
     mDrawable = drawable;
     mAlignment = verticalAlignment;
+    mMargin = margin;
     updateBounds();
   }
 
   public Drawable getDrawable() {
     return mDrawable;
+  }
+
+  public Rect getMargin() {
+    return mMargin;
   }
 
   /** Returns the width of the image span and increases the height if font metrics are available. */
@@ -91,6 +102,14 @@ public class BetterImageSpan extends ReplacementSpan {
 
     int offsetAbove = getOffsetAboveBaseline(fontMetrics);
     int offsetBelow = mHeight + offsetAbove;
+
+    if (mAlignment == ALIGN_CENTER) {
+      offsetAbove -= mMargin.top;
+      offsetBelow += mMargin.bottom;
+    } else {
+      offsetAbove -= mMargin.top;
+    }
+
     if (offsetAbove < fontMetrics.ascent) {
       fontMetrics.ascent = offsetAbove;
     }
@@ -123,29 +142,30 @@ public class BetterImageSpan extends ReplacementSpan {
       Paint paint) {
     paint.getFontMetricsInt(mFontMetricsInt);
     int iconTop = y + getOffsetAboveBaseline(mFontMetricsInt);
-    canvas.translate(x, iconTop);
+    float iconLeft = x + mMargin.left;
+    canvas.translate(iconLeft, iconTop);
     mDrawable.draw(canvas);
-    canvas.translate(-x, -iconTop);
+    canvas.translate(-iconLeft, -iconTop);
   }
 
   public void updateBounds() {
     mBounds = mDrawable.getBounds();
 
-    mWidth = mBounds.width();
+    mWidth = mBounds.width() + mMargin.left + mMargin.right;
     mHeight = mBounds.height();
   }
 
   private int getOffsetAboveBaseline(Paint.FontMetricsInt fm) {
     switch (mAlignment) {
       case ALIGN_BOTTOM:
-        return fm.descent - mHeight;
+        return fm.descent - mHeight - mMargin.bottom;
       case ALIGN_CENTER:
-        int textHeight = fm.descent - fm.ascent;
+        int textHeight = (fm.descent - fm.ascent) + mMargin.top + mMargin.bottom;
         int offset = (textHeight - mHeight) / 2;
-        return fm.ascent + offset;
+        return fm.ascent + offset - mMargin.bottom;
       case ALIGN_BASELINE:
       default:
-        return -mHeight;
+        return -mHeight - mMargin.bottom;
     }
   }
 }
