@@ -66,6 +66,21 @@ class ControllerListenerWrapper(private val controllerListener: ControllerListen
         id, imageInfo, dimensionsInfo)
   }
 
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as ControllerListenerWrapper
+
+    if (controllerListener != other.controllerListener) return false
+
+    return true
+  }
+
+  override fun hashCode(): Int {
+    return controllerListener.hashCode()
+  }
+
   companion object {
     /**
      * Create a new controller listener wrapper or return null if the listener is null.
