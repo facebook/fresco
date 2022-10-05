@@ -44,8 +44,11 @@ class ImageFetchSubscriber(
     val image = result.get()
     drawable.actualImageLayer.setActualImage(
         request.resources, request.imageOptions, image, imageToDataModelMapper)
+    invalidationExecutor?.execute {
+      drawable.actualImageLayer.fadeIn(request.imageOptions.fadeDurationMs)
+      drawable.placeholderLayer.fadeOut(request.imageOptions.fadeDurationMs, true)
+    }
     // Remove the progress image
-    drawable.placeholderLayer.reset()
     if (dataSource.isFinished) {
       drawable.hideProgressLayer()
     }

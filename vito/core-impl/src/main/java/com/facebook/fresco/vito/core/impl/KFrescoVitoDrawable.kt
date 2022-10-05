@@ -132,11 +132,12 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
   private var drawableColorFilter: ColorFilter? = null
 
   val callbackProvider: (() -> Callback?) = { callback }
+  val invalidateLayerCallback: (() -> Unit) = { invalidateSelf() }
 
-  val placeholderLayer = ImageLayerDataModel(callbackProvider)
-  val actualImageLayer = ImageLayerDataModel(callbackProvider)
+  val placeholderLayer = createLayer()
+  val actualImageLayer = createLayer()
   var progressLayer: ImageLayerDataModel? = null
-  val overlayImageLayer = ImageLayerDataModel(callbackProvider)
+  val overlayImageLayer = createLayer()
   var debugOverlayImageLayer: ImageLayerDataModel? = null
 
   override fun draw(canvas: Canvas) {
@@ -176,4 +177,6 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
 
   // TODO(T105148151) Calculate opacity based on layers
   override fun getOpacity(): Int = PixelFormat.TRANSPARENT
+
+  internal fun createLayer() = ImageLayerDataModel(callbackProvider, invalidateLayerCallback)
 }

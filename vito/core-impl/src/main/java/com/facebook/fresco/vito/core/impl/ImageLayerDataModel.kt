@@ -7,6 +7,8 @@
 
 package com.facebook.fresco.vito.core.impl
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.graphics.Canvas
 import android.graphics.ColorFilter
@@ -20,7 +22,10 @@ import com.facebook.fresco.vito.renderer.CanvasTransformationHandler
 import com.facebook.fresco.vito.renderer.ImageDataModel
 import com.facebook.fresco.vito.renderer.RenderCommand
 
-class ImageLayerDataModel(var drawableCallbackProvider: (() -> Drawable.Callback?)? = null) {
+class ImageLayerDataModel(
+    var drawableCallbackProvider: (() -> Drawable.Callback?)? = null,
+    var invalidateLayerCallback: (() -> Unit)? = null
+) {
   private var dataModel: ImageDataModel? = null
   private var roundingOptions: RoundingOptions? = null
   private var borderOptions: BorderOptions? = null
@@ -34,7 +39,11 @@ class ImageLayerDataModel(var drawableCallbackProvider: (() -> Drawable.Callback
 
   private var fadeAnimator: ValueAnimator? = null
 
-  var invalidateLayerCallback: (() -> Unit)? = null
+  private val animatorUpdateListener =
+      ValueAnimator.AnimatorUpdateListener {
+        paint.alpha = it.animatedValue as Int
+        invalidateLayerCallback?.invoke()
+      }
 
   fun getDataModel(): ImageDataModel? {
     return dataModel
@@ -118,33 +127,46 @@ class ImageLayerDataModel(var drawableCallbackProvider: (() -> Drawable.Callback
     currentBounds = null
     paint.reset()
     colorFilter = null
+    fadeAnimator?.end()
+    fadeAnimator = null
   }
 
   fun fadeIn(durationMs: Int) {
     fadeAnimator?.end()
+    if (durationMs == 0) {
+      paint.alpha = 255
+      // TODO: Do we need to invalidate?
+      return
+    }
     fadeAnimator =
         ValueAnimator.ofInt(0, 255).apply {
           duration = durationMs.toLong()
-          addUpdateListener {
-            paint.alpha = it.animatedValue as Int
-            invalidateLayerCallback?.invoke()
-          }
-
+          addUpdateListener(animatorUpdateListener)
           start()
         }
   }
 
-  fun fadeOut(durationMs: Int) {
+  fun fadeOut(durationMs: Int, resetLayerWhenInvisible: Boolean = false) {
     fadeAnimator?.end()
+    if (durationMs == 0) {
+      paint.alpha = 0
+      return
+    }
     fadeAnimator =
         ValueAnimator.ofInt(255, 0).apply {
           duration = durationMs.toLong()
-          addUpdateListener {
-            paint.alpha = it.animatedValue as Int
-            invalidateLayerCallback?.invoke()
+          addUpdateListener(animatorUpdateListener)
+          if (resetLayerWhenInvisible) {
+            addListener(
+                object : AnimatorListenerAdapter() {
+                  override fun onAnimationEnd(animation: Animator) {
+                    reset()
+                  }
+                })
           }
           start()
         }
+    // TODO use fadeAnimator.reverse() and reuse
   }
 
   fun getAlpha() = paint.alpha

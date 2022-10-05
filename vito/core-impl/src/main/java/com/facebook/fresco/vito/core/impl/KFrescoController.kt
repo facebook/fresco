@@ -158,7 +158,7 @@ class KFrescoController(
           vitoImagePipeline.fetchDecodedImage(imageRequest, callerContext, null, imageId)
       dataSource.subscribe(
           ImageFetchSubscriber(
-              imageId, drawable, imageToDataModelMapper, debugOverlayHandler, null),
+              imageId, drawable, imageToDataModelMapper, debugOverlayHandler, uiThreadExecutor),
           uiThreadExecutor) // Keyframes require callbacks to be on the main thread.
       drawable.dataSource = dataSource
     }

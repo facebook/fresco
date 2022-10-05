@@ -25,7 +25,7 @@ fun KFrescoVitoDrawable.setupProgressLayer(resources: Resources, imageOptions: I
   }
   var layer = progressLayer
   if (layer == null) {
-    layer = ImageLayerDataModel(callbackProvider)
+    layer = createLayer()
     progressLayer = layer
   }
   drawable.setProgress(0f)
