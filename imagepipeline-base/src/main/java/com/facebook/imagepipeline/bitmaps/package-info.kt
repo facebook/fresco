@@ -10,4 +10,4 @@
  * contains implementation of the Releaser which is responsible to close the specific
  * CloseableReference when not used anymore.
  */
-package com.facebook.imagepipeline.bitmaps;
+package com.facebook.imagepipeline.bitmaps
