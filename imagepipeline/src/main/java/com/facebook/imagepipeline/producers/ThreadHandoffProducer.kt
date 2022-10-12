@@ -55,8 +55,7 @@ class ThreadHandoffProducer<T>(
   companion object {
     const val PRODUCER_NAME = "BackgroundThreadHandoffProducer"
     private fun getInstrumentationTag(context: ProducerContext): String? {
-      return if (FrescoInstrumenter.isTracing())
-          "ThreadHandoffProducer_produceResults_" + context.id
+      return if (FrescoInstrumenter.isTracing) "ThreadHandoffProducer_produceResults_" + context.id
       else null
     }
 
