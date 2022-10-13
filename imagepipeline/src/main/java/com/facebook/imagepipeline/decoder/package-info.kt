@@ -6,4 +6,4 @@
  */
 
 /** Decoder abstraction and some implementations for the main image formats. */
-package com.facebook.imagepipeline.decoder;
+package com.facebook.imagepipeline.decoder
