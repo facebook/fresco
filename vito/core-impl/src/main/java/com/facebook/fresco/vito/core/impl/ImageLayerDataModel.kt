@@ -114,7 +114,7 @@ class ImageLayerDataModel(
     renderCommand?.let { it(canvas) }
   }
 
-  fun reset(endAnimator: Boolean = false) {
+  fun reset(endAnimator: Boolean = true) {
     canvasTransformationHandler.canvasTransformation = null
     dataModel?.apply {
       onDetach()
@@ -128,8 +128,8 @@ class ImageLayerDataModel(
     paint.reset()
     colorFilter = null
 
-    if (!endAnimator) {
-      // To prevent recursion (T134570663)
+    if (endAnimator) {
+      // Placed inside if block to prevent recursion (T134570663)
       fadeAnimator?.end()
     }
     fadeAnimator = null
@@ -164,7 +164,7 @@ class ImageLayerDataModel(
             addListener(
                 object : AnimatorListenerAdapter() {
                   override fun onAnimationEnd(animation: Animator) {
-                    reset(true)
+                    reset(false)
                   }
                 })
           }
