@@ -345,9 +345,6 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     float progress = dataSource.getProgress();
     if (!isFinished) {
       drawable.setProgress(progress);
-      if (imageRequest.imageOptions.shouldAlwaysShowProgressImmediately()) {
-        drawable.showProgressImmediately();
-      }
     }
   }
 

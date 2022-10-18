@@ -47,7 +47,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
   private val _resizeToViewport: Boolean = builder._resizeToViewport
   val fadeDurationMs: Int = builder._fadeDurationMs
   private val _autoPlay: Boolean = builder._autoPlay
-  private val _alwaysShowProgressImmediately: Boolean = builder._alwaysShowProgressImmediately
   val isPerfMediaRemountInstrumentationFix: Boolean = builder._perfMediaRemountInstrumentationFix
   val customDrawableFactory: ImageOptionsDrawableFactory? = builder._customDrawableFactory
   val delayMs: Int = builder._delayMs
@@ -56,8 +55,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
   fun extend(): Builder = extend(this)
 
   fun shouldAutoPlay(): Boolean = _autoPlay
-
-  fun shouldAlwaysShowProgressImmediately(): Boolean = _alwaysShowProgressImmediately
 
   fun shouldResizeToViewport(): Boolean = _resizeToViewport
 
@@ -112,7 +109,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
           _resizeToViewport != other._resizeToViewport ||
           fadeDurationMs != other.fadeDurationMs ||
           _autoPlay != other._autoPlay ||
-          _alwaysShowProgressImmediately != other._alwaysShowProgressImmediately ||
           !Objects.equal(customDrawableFactory, other.customDrawableFactory) ||
           delayMs != other.delayMs ||
           !Objects.equal(errorDrawable, other.errorDrawable) ||
@@ -139,7 +135,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
           _resizeToViewport != other._resizeToViewport ||
           fadeDurationMs != other.fadeDurationMs ||
           _autoPlay != other._autoPlay ||
-          _alwaysShowProgressImmediately != other._alwaysShowProgressImmediately ||
           !Objects.equal(customDrawableFactory, other.customDrawableFactory) ||
           delayMs != other.delayMs ||
           errorDrawable !== other.errorDrawable) {
@@ -170,7 +165,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     result = 31 * result + if (_resizeToViewport) 1 else 0
     result = 31 * result + fadeDurationMs
     result = 31 * result + if (_autoPlay) 1 else 0
-    result = 31 * result + if (_alwaysShowProgressImmediately) 1 else 0
     result = 31 * result + if (isPerfMediaRemountInstrumentationFix) 1 else 0
     result = 31 * result + progressRes
     result = 31 * result + (customDrawableFactory?.hashCode() ?: 0)
@@ -201,7 +195,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
           .add("overlayDrawable", overlayDrawable)
           .add("resizeToViewport", _resizeToViewport)
           .add("autoPlay", _autoPlay)
-          .add("mAlwaysShowProgressImmediately", _alwaysShowProgressImmediately)
           .add("mPerfMediaRemountInstrumentationFix", isPerfMediaRemountInstrumentationFix)
           .add("fadeDurationMs", fadeDurationMs)
           .add("customDrawableFactory", customDrawableFactory)
@@ -230,7 +223,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     internal var _overlayDrawable: Drawable? = null
     internal var _resizeToViewport = false
     internal var _autoPlay = false
-    internal var _alwaysShowProgressImmediately = false
     internal var _perfMediaRemountInstrumentationFix = false
     internal var _fadeDurationMs = 0
     internal var _customDrawableFactory: ImageOptionsDrawableFactory? = null
@@ -373,17 +365,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
      * @param autoPlay whether to enable autoplay for animated images
      */
     fun autoPlay(autoPlay: Boolean): Builder = modify { _autoPlay = autoPlay }
-
-    /**
-     * Whenever the progress is updated - the progress indicator is shown immediately. This is
-     * important for cases in which progressive decoding isn't used and we want to show progress
-     * bars.
-     *
-     * @param alwaysShow whether to show progress indicators immediately.
-     */
-    fun alwaysShowProgressImmediately(alwaysShow: Boolean): Builder = modify {
-      _alwaysShowProgressImmediately = alwaysShow
-    }
 
     fun perfMediaRemountInstrumentationFix(fix: Boolean): Builder = modify {
       _perfMediaRemountInstrumentationFix = fix
