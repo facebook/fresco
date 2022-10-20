@@ -5,28 +5,26 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.imagepipeline.memory;
+package com.facebook.imagepipeline.memory
 
-import com.facebook.infer.annotation.Nullsafe;
-import java.nio.ByteBuffer;
-import javax.annotation.Nullable;
+import java.nio.ByteBuffer
 
-@Nullsafe(Nullsafe.Mode.STRICT)
-public interface MemoryChunk {
+interface MemoryChunk {
+
   /**
    * This has to be called before we get rid of this object in order to release underlying memory
    */
-  void close();
+  fun close()
 
   /**
    * Check if this chunk is already closed
    *
    * @return true, if this chunk has already been closed
    */
-  boolean isClosed();
+  fun isClosed(): Boolean
 
   /** Get the size of this memory chunk. Ignores if this chunk has been closed */
-  int getSize();
+  val size: Int
 
   /**
    * Copy bytes from byte array to buffer.
@@ -37,8 +35,8 @@ public interface MemoryChunk {
    * @param count number of bytes to copy
    * @return number of bytes written
    */
-  int write(
-      final int memoryOffset, final byte[] byteArray, final int byteArrayOffset, final int count);
+  fun write(memoryOffset: Int, byteArray: ByteArray, byteArrayOffset: Int, count: Int): Int
+
   /**
    * Copy bytes from memory to byte array.
    *
@@ -48,8 +46,7 @@ public interface MemoryChunk {
    * @param count number of bytes to copy
    * @return number of bytes read
    */
-  int read(
-      final int memoryOffset, final byte[] byteArray, final int byteArrayOffset, final int count);
+  fun read(memoryOffset: Int, byteArray: ByteArray, byteArrayOffset: Int, count: Int): Int
 
   /**
    * Read byte at given offset.
@@ -57,7 +54,7 @@ public interface MemoryChunk {
    * @param offset The offset from which the byte will be read
    * @return byte at given offset
    */
-  byte read(final int offset);
+  fun read(offset: Int): Byte
 
   /**
    * Copy bytes from buffer memory wrapped by this MemoryChunk instance to buffer memory wrapped by
@@ -69,19 +66,18 @@ public interface MemoryChunk {
    * @param count number of bytes to copy
    * @throws IllegalArgumentException if the memory chunks don't have the same type
    */
-  void copy(final int offset, final MemoryChunk other, final int otherOffset, final int count);
+  fun copy(offset: Int, other: MemoryChunk, otherOffset: Int, count: Int)
 
   /**
    * Gets the pointer the native memory.
    *
    * @throws UnsupportedOperationException if the memory chunk is not in native memory
    */
-  long getNativePtr() throws UnsupportedOperationException;
+  @get:Throws(UnsupportedOperationException::class) val nativePtr: Long
 
   /** Gets the ByteBuffer associated with the memory chunk if available, else null. */
-  @Nullable
-  ByteBuffer getByteBuffer();
+  val byteBuffer: ByteBuffer?
 
   /** Gets the unique identifier associated with the memory chunk. */
-  long getUniqueId();
+  val uniqueId: Long
 }
