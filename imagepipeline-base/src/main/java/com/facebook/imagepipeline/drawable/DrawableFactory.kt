@@ -5,17 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.imagepipeline.drawable;
+package com.facebook.imagepipeline.drawable
 
-import android.graphics.drawable.Drawable;
-import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.infer.annotation.Nullsafe;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import android.graphics.drawable.Drawable
+import com.facebook.imagepipeline.image.CloseableImage
 
 /** Drawable factory to create Drawables for given images. */
-@Nullsafe(Nullsafe.Mode.STRICT)
-public interface DrawableFactory {
+interface DrawableFactory {
 
   /**
    * Returns true if the factory can create a Drawable for the given image.
@@ -23,15 +19,14 @@ public interface DrawableFactory {
    * @param image the image to check
    * @return true if a Drawable can be created
    */
-  boolean supportsImageType(@Nonnull CloseableImage image);
+  fun supportsImageType(image: CloseableImage): Boolean
 
   /**
    * Create a drawable for the given image. It is guaranteed that this method is only called if
-   * {@link #supportsImageType(CloseableImage)} returned true.
+   * [supportsImageType(CloseableImage)] returned true.
    *
    * @param image the image to create the drawable for
    * @return the Drawable for the image or null if an error occurred
    */
-  @Nullable
-  Drawable createDrawable(@Nonnull CloseableImage image);
+  fun createDrawable(image: CloseableImage): Drawable?
 }
