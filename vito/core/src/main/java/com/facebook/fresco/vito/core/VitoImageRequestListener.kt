@@ -85,4 +85,7 @@ interface VitoImageRequestListener {
    * @param id image id
    */
   fun onRelease(id: Long, imageRequest: VitoImageRequest, extras: Extras?)
+
+  /** Called on empty event. For instance when empty URI is requested. */
+  fun onEmptyEvent(callerContext: Any?)
 }

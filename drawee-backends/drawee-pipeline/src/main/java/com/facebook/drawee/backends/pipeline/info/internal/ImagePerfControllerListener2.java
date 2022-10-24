@@ -249,4 +249,10 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   private ImagePerfState obtainState() {
     return mUseNewState.get() ? new ImagePerfState() : mImagePerfState;
   }
+
+  @Override
+  public void onEmptyEvent(@androidx.annotation.Nullable Object callerContext) {
+    ImagePerfState state = obtainState();
+    mImagePerfNotifier.notifyStatusUpdated(state, ImageLoadStatus.EMPTY_EVENT);
+  }
 }

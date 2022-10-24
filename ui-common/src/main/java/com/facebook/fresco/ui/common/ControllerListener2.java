@@ -116,4 +116,6 @@ public interface ControllerListener2<INFO> {
    * @param extraData extra data
    */
   void onRelease(String id, @Nullable Extras extraData);
+
+  void onEmptyEvent(@Nullable Object callerContext);
 }

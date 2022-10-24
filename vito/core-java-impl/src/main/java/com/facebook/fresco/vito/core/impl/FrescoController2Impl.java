@@ -33,6 +33,7 @@ import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.core.VitoImageRequestListener;
 import com.facebook.fresco.vito.core.impl.debug.DebugOverlayFactory2;
 import com.facebook.fresco.vito.listener.ImageListener;
+import com.facebook.fresco.vito.source.EmptyImageSource;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.infer.annotation.Nullsafe;
@@ -57,6 +58,8 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   private final DebugOverlayFactory2 mDebugOverlayFactory;
   private final @Nullable Supplier<ControllerListener2<ImageInfo>> mImagePerfListenerSupplier;
   private final VitoImagePerfListener mVitoImagePerfListener;
+
+  private static final long EMPTY_IMAGE_ID = Long.MAX_VALUE;
 
   public FrescoController2Impl(
       FrescoVitoConfig config,
@@ -100,6 +103,14 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       throw new IllegalArgumentException("Drawable not supported " + drawable);
     }
     final FrescoDrawable2Impl frescoDrawable = (FrescoDrawable2Impl) drawable;
+
+    // Fast path for null-URIs
+    if (mConfig.fastPathForEmptyRequests()
+        && imageRequest.imageSource instanceof EmptyImageSource) {
+      emptyRequestFastPath(frescoDrawable, imageRequest, callerContext);
+      return true;
+    }
+
     // Save viewport dimension for future use
     frescoDrawable.setViewportDimensions(viewportDimensions);
 
@@ -159,12 +170,8 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     // Immediately show the progress image and set progress to 0
     frescoDrawable.setProgress(0f);
     frescoDrawable.showProgressImmediately();
-    Drawable placeholder =
-        mHierarcher.buildPlaceholderDrawable(imageRequest.resources, imageRequest.imageOptions);
-    frescoDrawable.setPlaceholderDrawable(placeholder);
-    frescoDrawable.setImageDrawable(null);
 
-    frescoDrawable.getInternalListener().onPlaceholderSet(imageId, imageRequest, placeholder);
+    setUpPlaceholder(frescoDrawable, imageRequest, imageId);
 
     // Fetch the image
     final Runnable fetchRunnable =
@@ -192,6 +199,29 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     mDebugOverlayFactory.update(frescoDrawable, null);
 
     return false;
+  }
+
+  private void emptyRequestFastPath(
+      FrescoDrawable2Impl frescoDrawable,
+      VitoImageRequest imageRequest,
+      @Nullable Object callerContext) {
+    frescoDrawable.close();
+    frescoDrawable.setVitoImageRequestListener(mGlobalImageListener);
+
+    frescoDrawable.getInternalListener().onEmptyEvent(callerContext);
+
+    frescoDrawable.setOverlayDrawable(
+        mHierarcher.buildOverlayDrawable(imageRequest.resources, imageRequest.imageOptions));
+    setUpPlaceholder(frescoDrawable, imageRequest, EMPTY_IMAGE_ID);
+  }
+
+  private void setUpPlaceholder(
+      FrescoDrawable2Impl frescoDrawable, VitoImageRequest imageRequest, long imageId) {
+    Drawable placeholder =
+        mHierarcher.buildPlaceholderDrawable(imageRequest.resources, imageRequest.imageOptions);
+    frescoDrawable.setPlaceholderDrawable(placeholder);
+    frescoDrawable.setImageDrawable(null);
+    frescoDrawable.getInternalListener().onPlaceholderSet(imageId, imageRequest, placeholder);
   }
 
   @Override

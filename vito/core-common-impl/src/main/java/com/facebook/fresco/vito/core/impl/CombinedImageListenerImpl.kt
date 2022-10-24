@@ -121,6 +121,12 @@ class CombinedImageListenerImpl : CombinedImageListener {
     imagePerfControllerListener?.onRelease(stringId, extras)
   }
 
+  override fun onEmptyEvent(callerContext: Any?) {
+    vitoImageRequestListener?.onEmptyEvent(callerContext)
+    controllerListener2?.onEmptyEvent(callerContext)
+    imagePerfControllerListener?.onEmptyEvent(callerContext)
+  }
+
   override fun onReset() {
     try {
       (imagePerfControllerListener as? Closeable)?.close()

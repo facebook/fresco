@@ -27,4 +27,6 @@ interface FrescoVitoConfig {
   fun stopAnimationInOnRelease(): Boolean
 
   fun onlyStopAnimationWhenAutoPlayEnabled(): Boolean
+
+  fun fastPathForEmptyRequests(): Boolean
 }

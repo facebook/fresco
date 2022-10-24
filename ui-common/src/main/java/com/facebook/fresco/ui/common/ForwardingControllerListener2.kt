@@ -66,6 +66,10 @@ open class ForwardingControllerListener2<I> : BaseControllerListener2<I>() {
     forEachListener("onIntermediateImageFailed") { it.onIntermediateImageFailed(id) }
   }
 
+  override fun onEmptyEvent(callerContext: Any?) {
+    forEachListener("onEmptyEvent") { it.onEmptyEvent(callerContext) }
+  }
+
   companion object {
     private const val TAG = "FwdControllerListener2"
   }
