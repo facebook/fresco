@@ -95,7 +95,7 @@ object VitoSpanLoader {
       // Example: Text = "ABC", insert image at position 18.
       return
     }
-    (imageSpan.drawable as Drawable).setBounds(0, 0, imageWidthPx, imageHeightPx)
+    (imageSpan.drawableInterface as Drawable).setBounds(0, 0, imageWidthPx, imageHeightPx)
     imageSpan.parentView = parentView
 
     sb.setSpan(imageSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)

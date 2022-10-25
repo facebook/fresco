@@ -8,8 +8,11 @@
 package com.facebook.fresco.vito.textspan
 
 import android.content.res.Resources
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.os.SystemClock
+import android.text.style.ReplacementSpan
 import android.view.View
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.widget.text.span.BetterImageSpan
@@ -17,8 +20,11 @@ import com.facebook.widget.text.span.BetterImageSpan
 open class VitoSpan(
     val resources: Resources,
     val drawableInterface: FrescoDrawableInterface,
-    @BetterImageSpan.BetterImageSpanAlignment verticalAlignment: Int
-) : BetterImageSpan(drawableInterface as Drawable, verticalAlignment), Drawable.Callback {
+    @BetterImageSpan.BetterImageSpanAlignment
+    verticalAlignment: Int = BetterImageSpan.ALIGN_BASELINE,
+    private val imageSpan: BetterImageSpan =
+        BetterImageSpan(drawableInterface as Drawable, verticalAlignment)
+) : ReplacementSpan(), Drawable.Callback {
 
   var parentView: View? = null
 
@@ -26,6 +32,30 @@ open class VitoSpan(
 
   init {
     (drawableInterface as Drawable).callback = this
+  }
+
+  override fun getSize(
+      paint: Paint,
+      text: CharSequence?,
+      start: Int,
+      end: Int,
+      fm: Paint.FontMetricsInt?
+  ): Int {
+    return imageSpan.getSize(paint, text, start, end, fm)
+  }
+
+  override fun draw(
+      canvas: Canvas,
+      text: CharSequence?,
+      start: Int,
+      end: Int,
+      x: Float,
+      top: Int,
+      y: Int,
+      bottom: Int,
+      paint: Paint
+  ) {
+    imageSpan.draw(canvas, text, start, end, x, top, y, bottom, paint)
   }
 
   override fun invalidateDrawable(who: Drawable) {
