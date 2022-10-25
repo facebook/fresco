@@ -9,4 +9,4 @@
  * Pool implementations for the image pipeline. Here we have the implementations which use the
  * native memory code about MemChunk.
  */
-package com.facebook.imagepipeline.memory;
+package com.facebook.imagepipeline.memory
