@@ -17,6 +17,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import com.facebook.drawee.R;
 import com.facebook.drawee.drawable.AutoRotateDrawable;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.ReturnsOwnership;
 import javax.annotation.Nullable;
@@ -254,7 +255,7 @@ public class GenericDraweeHierarchyInflater {
   }
 
   @Nullable
-  private static Drawable getDrawable(Context context, TypedArray gdhAttrs, int attrId) {
+  public static Drawable getDrawable(Context context, TypedArray gdhAttrs, int attrId) {
     int resourceId = gdhAttrs.getResourceId(attrId, 0);
     if (resourceId == 0) {
       return null;
@@ -271,7 +272,7 @@ public class GenericDraweeHierarchyInflater {
    * Important: these values need to be in sync with GenericDraweeHierarchy styleable attributes.
    */
   @Nullable
-  private static ScaleType getScaleTypeFromXml(TypedArray gdhAttrs, int attrId) {
+  public static ScalingUtils.ScaleType getScaleTypeFromXml(TypedArray gdhAttrs, int attrId) {
     switch (gdhAttrs.getInt(attrId, -2)) {
       case -1: // none
         return null;
