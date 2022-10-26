@@ -72,7 +72,8 @@ public class BitmapAnimationBackendTest {
             mAnimationInformation,
             mBitmapFrameRenderer,
             mBitmapFramePreparationStrategy,
-            mBitmapFramePreparer);
+            mBitmapFramePreparer,
+            null);
     mBitmapAnimationBackend.setFrameListener(mFrameListener);
   }
 

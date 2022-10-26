@@ -22,6 +22,7 @@ import com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactiv
 import com.facebook.fresco.animation.backend.AnimationInformation
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer
+import com.facebook.fresco.vito.options.RoundingOptions
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
 import java.lang.RuntimeException
 
@@ -39,7 +40,8 @@ class BitmapAnimationBackend(
     private val animationInformation: AnimationInformation,
     private val bitmapFrameRenderer: BitmapFrameRenderer,
     private val bitmapFramePreparationStrategy: BitmapFramePreparationStrategy?,
-    private val bitmapFramePreparer: BitmapFramePreparer?
+    private val bitmapFramePreparer: BitmapFramePreparer?,
+    private val roundingOptions: RoundingOptions? = null,
 ) : AnimationBackend, InactivityListener {
 
   interface FrameListener {
