@@ -9,4 +9,4 @@
  * This package contains abstractions and related implementations about the ImageRequest and related
  * attributes.
  */
-package com.facebook.imagepipeline.request;
+package com.facebook.imagepipeline.request
