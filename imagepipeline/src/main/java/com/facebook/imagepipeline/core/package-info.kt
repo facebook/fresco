@@ -6,4 +6,4 @@
  */
 
 /** Main classes related to the Fresco API. */
-package com.facebook.imagepipeline.core;
+package com.facebook.imagepipeline.core
