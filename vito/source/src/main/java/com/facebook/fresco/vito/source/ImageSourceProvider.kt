@@ -86,5 +86,7 @@ object ImageSourceProvider {
    */
   @JvmStatic
   fun increasingQuality(lowResImageUri: Uri?, highResImageUri: Uri?): ImageSource =
-      IncreasingQualityImageSource(forUri(lowResImageUri), forUri(highResImageUri))
+      if (lowResImageUri == null) {
+        forUri(highResImageUri)
+      } else IncreasingQualityImageSource(forUri(lowResImageUri), forUri(highResImageUri))
 }
