@@ -49,7 +49,6 @@ class LiveEditorUiUtils(
                   addView(createWithList(context, ImageOptionsSampleValues.fadingOptions))
                   addView(createWithList(context, ImageOptionsSampleValues.autoPlay))
                   addView(createWithList(context, ImageOptionsSampleValues.bitmapConfig))
-                  addView(createWithList(context, ImageOptionsSampleValues.delayConfig))
                   addView(createWithList(context, ImageOptionsSampleValues.resizeToViewportConfig))
                   addView(
                       createWithList(

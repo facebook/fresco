@@ -50,7 +50,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
   private val _autoStop: Boolean = builder._autoStop
   val isPerfMediaRemountInstrumentationFix: Boolean = builder._perfMediaRemountInstrumentationFix
   val customDrawableFactory: ImageOptionsDrawableFactory? = builder._customDrawableFactory
-  val delayMs: Int = builder._delayMs
   val experimentalDynamicSize: Boolean = builder._experimentalDynamicSize
 
   fun extend(): Builder = extend(this)
@@ -114,7 +113,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
           _autoPlay != other._autoPlay ||
           _autoStop != other._autoStop ||
           !Objects.equal(customDrawableFactory, other.customDrawableFactory) ||
-          delayMs != other.delayMs ||
           !Objects.equal(errorDrawable, other.errorDrawable) ||
           isPerfMediaRemountInstrumentationFix != other.isPerfMediaRemountInstrumentationFix) {
         return false
@@ -141,7 +139,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
           _autoPlay != other._autoPlay ||
           _autoStop != other._autoStop ||
           !Objects.equal(customDrawableFactory, other.customDrawableFactory) ||
-          delayMs != other.delayMs ||
           errorDrawable !== other.errorDrawable) {
         return false
       }
@@ -174,7 +171,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     result = 31 * result + if (isPerfMediaRemountInstrumentationFix) 1 else 0
     result = 31 * result + progressRes
     result = 31 * result + (customDrawableFactory?.hashCode() ?: 0)
-    result = 31 * result + delayMs
     return result
   }
 
@@ -205,7 +201,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
           .add("mPerfMediaRemountInstrumentationFix", isPerfMediaRemountInstrumentationFix)
           .add("fadeDurationMs", fadeDurationMs)
           .add("customDrawableFactory", customDrawableFactory)
-          .add("delayMs", delayMs)
 
   class Builder : DecodedImageOptions.Builder<Builder> {
     @ColorInt internal var _placeholderColor: Int? = null
@@ -234,7 +229,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     internal var _perfMediaRemountInstrumentationFix = false
     internal var _fadeDurationMs = 0
     internal var _customDrawableFactory: ImageOptionsDrawableFactory? = null
-    internal var _delayMs = 0
     internal var _experimentalDynamicSize = false
 
     internal constructor() : super()
@@ -260,7 +254,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
       _resizeToViewport = defaultOptions.shouldResizeToViewport()
       _fadeDurationMs = defaultOptions.fadeDurationMs
       _customDrawableFactory = defaultOptions.customDrawableFactory
-      _delayMs = defaultOptions.delayMs
       _experimentalDynamicSize = defaultOptions.experimentalDynamicSize
     }
 
@@ -413,14 +406,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     fun customDrawableFactory(drawableFactory: ImageOptionsDrawableFactory?): Builder = modify {
       _customDrawableFactory = drawableFactory
     }
-
-    /**
-     * Set an artificial delay for the final image. Useful for running negative tests on image load
-     * time. This will apply on top of any "natural" delay like the image fetch time.
-     *
-     * @param delayMs The delay to introduce, in milliseconds.
-     */
-    fun delayMs(delayMs: Int): Builder = modify { _delayMs = delayMs }
 
     fun experimentalDynamicSize(dynamicSize: Boolean): Builder = modify {
       _experimentalDynamicSize = dynamicSize
