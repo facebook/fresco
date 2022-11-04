@@ -5,9 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.imagepipeline.memory;
+package com.facebook.imagepipeline.memory
 
-import android.graphics.Bitmap;
-import com.facebook.common.memory.Pool;
+import android.graphics.Bitmap
+import com.facebook.common.memory.Pool
 
-public interface BitmapPool extends Pool<Bitmap> {}
+interface BitmapPool : Pool<Bitmap>
