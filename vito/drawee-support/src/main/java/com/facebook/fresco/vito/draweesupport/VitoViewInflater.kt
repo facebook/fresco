@@ -1,4 +1,9 @@
-// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 package java.com.facebook.fresco.vito.draweesupport
 
@@ -72,7 +77,8 @@ object VitoViewInflater {
                 throw UnsupportedOperationException("Not supported for Vito")
             R.styleable.GenericDraweeHierarchy_overlayImage ->
                 overlay(getDrawable(context, attrs, attr))
-            R.styleable.GenericDraweeHierarchy_roundAsCircle -> round(RoundingOptions.asCircle())
+            R.styleable.GenericDraweeHierarchy_roundAsCircle ->
+                round(RoundingOptions.asCircle(antiAliasing = true, forceRoundAtDecode = true))
             R.styleable.GenericDraweeHierarchy_roundedCornerRadius -> {
               // Set rounded corner radii if requested
               val roundedCornerRadius = attrs.getDimensionPixelSize(attr, 0)
