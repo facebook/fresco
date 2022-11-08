@@ -64,11 +64,15 @@ public class AnimatedImageCompositor {
   private final AnimatedDrawableBackend mAnimatedDrawableBackend;
   private final Callback mCallback;
   private final Paint mTransparentFillPaint;
+  private final boolean mIsNewRenderImplementation;
 
   public AnimatedImageCompositor(
-      AnimatedDrawableBackend animatedDrawableBackend, Callback callback) {
+      AnimatedDrawableBackend animatedDrawableBackend,
+      boolean isNewRenderImplementation,
+      Callback callback) {
     mAnimatedDrawableBackend = animatedDrawableBackend;
     mCallback = callback;
+    mIsNewRenderImplementation = isNewRenderImplementation;
     mTransparentFillPaint = new Paint();
     mTransparentFillPaint.setColor(Color.TRANSPARENT);
     mTransparentFillPaint.setStyle(Paint.Style.FILL);
@@ -162,7 +166,9 @@ public class AnimatedImageCompositor {
               }
               return index + 1;
             } finally {
-              startBitmap.close();
+              if (!mIsNewRenderImplementation) {
+                startBitmap.close();
+              }
             }
           } else {
             if (isKeyFrame(index)) {

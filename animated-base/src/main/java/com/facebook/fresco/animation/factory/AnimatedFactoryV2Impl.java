@@ -51,6 +51,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   private final ExecutorSupplier mExecutorSupplier;
   private final CountingMemoryCache<CacheKey, CloseableImage> mBackingCache;
   private final boolean mDownscaleFrameToDrawableDimensions;
+  private final Supplier<Boolean> useNewBitmapRender = Suppliers.BOOLEAN_TRUE;
 
   private @Nullable AnimatedImageFactory mAnimatedImageFactory;
   private @Nullable AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
@@ -124,7 +125,8 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
         mBackingCache,
         cachingStrategySupplier,
         numberOfFramesToPrepareSupplier,
-        useDeepEquals);
+        useDeepEquals,
+        useNewBitmapRender);
   }
 
   private AnimatedDrawableUtil getAnimatedDrawableUtil() {
@@ -152,7 +154,8 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
                   getAnimatedDrawableUtil(),
                   animatedImageResult,
                   bounds,
-                  mDownscaleFrameToDrawableDimensions);
+                  mDownscaleFrameToDrawableDimensions,
+                  useNewBitmapRender.get());
             }
           };
     }
@@ -169,9 +172,11 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
                 getAnimatedDrawableUtil(),
                 imageResult,
                 bounds,
-                mDownscaleFrameToDrawableDimensions);
+                mDownscaleFrameToDrawableDimensions,
+                useNewBitmapRender.get());
           }
         };
-    return new AnimatedImageFactoryImpl(animatedDrawableBackendProvider, mPlatformBitmapFactory);
+    return new AnimatedImageFactoryImpl(
+        animatedDrawableBackendProvider, mPlatformBitmapFactory, useNewBitmapRender.get());
   }
 }

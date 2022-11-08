@@ -36,6 +36,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
 
   private final AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
   private final PlatformBitmapFactory mBitmapFactory;
+  private final boolean mIsNewRenderImplementation;
 
   static @Nullable AnimatedImageDecoder sGifAnimatedImageDecoder = null;
   static @Nullable AnimatedImageDecoder sWebpAnimatedImageDecoder = null;
@@ -56,9 +57,11 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
 
   public AnimatedImageFactoryImpl(
       AnimatedDrawableBackendProvider animatedDrawableBackendProvider,
-      PlatformBitmapFactory bitmapFactory) {
+      PlatformBitmapFactory bitmapFactory,
+      boolean isNewRenderImplementation) {
     mAnimatedDrawableBackendProvider = animatedDrawableBackendProvider;
     mBitmapFactory = bitmapFactory;
+    mIsNewRenderImplementation = isNewRenderImplementation;
   }
 
   /**
@@ -174,6 +177,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
     AnimatedImageCompositor animatedImageCompositor =
         new AnimatedImageCompositor(
             drawableBackend,
+            mIsNewRenderImplementation,
             new AnimatedImageCompositor.Callback() {
               @Override
               public void onIntermediateResult(int frameNumber, Bitmap bitmap) {
@@ -199,6 +203,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
     AnimatedImageCompositor animatedImageCompositor =
         new AnimatedImageCompositor(
             drawableBackend,
+            mIsNewRenderImplementation,
             new AnimatedImageCompositor.Callback() {
               @Override
               public void onIntermediateResult(int frameNumber, Bitmap bitmap) {

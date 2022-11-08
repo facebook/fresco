@@ -92,7 +92,8 @@ public class AnimatedImageFactoryWebPImplTest {
     mMockBitmapFactory = mock(PlatformBitmapFactory.class);
 
     mAnimatedImageFactory =
-        new AnimatedImageFactoryImpl(mMockAnimatedDrawableBackendProvider, mMockBitmapFactory);
+        new AnimatedImageFactoryImpl(
+            mMockAnimatedDrawableBackendProvider, mMockBitmapFactory, false);
 
     ((AnimatedImageFactoryImpl) mAnimatedImageFactory).sWebpAnimatedImageDecoder = mWebPImageMock;
   }

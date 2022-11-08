@@ -57,6 +57,8 @@ public class ExampleBitmapAnimationFactory {
             bitmapFrameCache,
             animationInformation,
             bitmapFrameRenderer,
+            executorServiceForFramePreparer,
+            false,
             framePreparationStrategy,
             bitmapFramePreparer);
 

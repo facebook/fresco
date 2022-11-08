@@ -72,7 +72,8 @@ public class AnimatedDrawableBackendImplTest {
     when(mFrame.getHeight()).thenReturn(frameOriginalHeight);
 
     final AnimatedDrawableBackendImpl animatedDrawableBackendImpl =
-        new AnimatedDrawableBackendImpl(mAnimatedDrawableUtil, mAnimatedImageResult, mRect, true);
+        new AnimatedDrawableBackendImpl(
+            mAnimatedDrawableUtil, mAnimatedImageResult, mRect, true, false);
 
     animatedDrawableBackendImpl.renderFrame(0, mCanvas);
 

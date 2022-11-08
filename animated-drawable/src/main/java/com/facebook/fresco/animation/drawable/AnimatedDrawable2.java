@@ -184,6 +184,7 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     if (mAnimationBackend == null || mFrameScheduler == null) {
       return;
     }
+
     long actualRenderTimeStartMs = now();
     long animationTimeMs =
         mIsRunning
@@ -215,7 +216,6 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
       mAnimationListener.onAnimationFrame(this, frameNumberToDraw);
       mLastDrawnFrameNumber = frameNumberToDraw;
     }
-
     // Log potential dropped frames
 
     if (!frameDrawn) {

@@ -29,6 +29,8 @@ import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationSt
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer
 import com.facebook.fresco.vito.options.RoundingOptions
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Bitmap animation backend that renders bitmap frames.
@@ -43,6 +45,8 @@ class BitmapAnimationBackend(
     private val bitmapFrameCache: BitmapFrameCache,
     private val animationInformation: AnimationInformation,
     private val bitmapFrameRenderer: BitmapFrameRenderer,
+    private val executorService: ExecutorService,
+    private val isNewRenderImplementation: Boolean,
     private val bitmapFramePreparationStrategy: BitmapFramePreparationStrategy?,
     private val bitmapFramePreparer: BitmapFramePreparer?,
     private val roundingOptions: RoundingOptions? = null,
@@ -96,8 +100,9 @@ class BitmapAnimationBackend(
       FRAME_TYPE_FALLBACK)
   annotation class FrameType
 
-  var bitmapConfig = Bitmap.Config.ARGB_8888
+  private val bitmapConfig = Bitmap.Config.ARGB_8888
 
+  private val fetchingFrames = AtomicBoolean(false)
   private val paint: Paint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG)
   private var bounds: Rect? = null
   private var bitmapWidth = 0
@@ -117,6 +122,29 @@ class BitmapAnimationBackend(
     this.frameListener = frameListener
   }
 
+  private fun fetchMissingFrames() {
+    if (fetchingFrames.getAndSet(true)) {
+      return
+    }
+
+    executorService.execute {
+      (0 until frameCount)
+          .filter { !CloseableReference.isValid(bitmapFrameCache.getCachedFrame(it)) }
+          .forEach { frameNumber ->
+            val bm = platformBitmapFactory.createBitmap(bitmapWidth, bitmapHeight, bitmapConfig)
+            val frameRendered = bitmapFrameRenderer.renderFrame(frameNumber, bm.get())
+            if (!frameRendered) {
+              CloseableReference.closeSafely(bm)
+            }
+
+            // TODO Next diff: Optimise bitmap size to cache
+            bitmapFrameCache.onFramePrepared(frameNumber, bm, FRAME_TYPE_CREATED)
+          }
+
+      fetchingFrames.set(false)
+    }
+  }
+
   override fun getFrameCount(): Int = animationInformation.frameCount
 
   override fun getFrameDurationMs(frameNumber: Int): Int =
@@ -131,10 +159,13 @@ class BitmapAnimationBackend(
     // We could not draw anything
     if (!drawn) {
       frameListener?.onFrameDropped(this, frameNumber)
+      if (isNewRenderImplementation) {
+        fetchMissingFrames()
+      }
     }
 
     // Prepare next frames
-    if (bitmapFramePreparer != null) {
+    if (!isNewRenderImplementation && bitmapFramePreparer != null) {
       bitmapFramePreparationStrategy?.prepareFrames(
           bitmapFramePreparer, bitmapFrameCache, this, frameNumber)
     }
@@ -149,6 +180,12 @@ class BitmapAnimationBackend(
     var bitmapReference: CloseableReference<Bitmap>? = null
     var drawn = false
     var nextFrameType = FRAME_TYPE_UNKNOWN
+
+    if (isNewRenderImplementation) {
+      bitmapReference = bitmapFrameCache.getCachedFrame(frameNumber)
+      return drawBitmapAndCache(frameNumber, bitmapReference, canvas, FRAME_TYPE_CACHED)
+    }
+
     try {
       when (frameType) {
         FRAME_TYPE_CACHED -> {
@@ -218,7 +255,11 @@ class BitmapAnimationBackend(
   override fun getSizeInBytes(): Int = bitmapFrameCache.sizeInBytes
 
   override fun clear() {
-    bitmapFrameCache.clear()
+    if (isNewRenderImplementation) {
+      executorService.execute { bitmapFrameCache.clear() }
+    } else {
+      bitmapFrameCache.clear()
+    }
   }
 
   override fun onInactive() {
@@ -325,10 +366,11 @@ class BitmapAnimationBackend(
 
     // Notify the cache that a frame has been rendered.
     // We should not cache fallback frames since they do not represent the actual frame.
-    if (frameType != FRAME_TYPE_FALLBACK) {
+    if (frameType != FRAME_TYPE_FALLBACK && !isNewRenderImplementation) {
       bitmapFrameCache.onFrameRendered(frameNumber, bitmapReference, frameType)
     }
     frameListener?.onFrameDrawn(this, frameNumber, frameType)
+
     return true
   }
 

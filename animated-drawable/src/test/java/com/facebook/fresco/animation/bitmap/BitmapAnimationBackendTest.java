@@ -29,6 +29,8 @@ import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy;
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import com.facebook.imagepipeline.testing.FakeClock;
+import com.facebook.imagepipeline.testing.TestExecutorService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,6 +73,8 @@ public class BitmapAnimationBackendTest {
             mBitmapFrameCache,
             mAnimationInformation,
             mBitmapFrameRenderer,
+            new TestExecutorService(new FakeClock()),
+            false /* isNewRenderImplementation */,
             mBitmapFramePreparationStrategy,
             mBitmapFramePreparer,
             null);

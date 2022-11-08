@@ -23,6 +23,7 @@ import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer;
 import com.facebook.fresco.animation.bitmap.cache.AnimationFrameCacheKey;
 import com.facebook.fresco.animation.bitmap.cache.FrescoFrameCache;
+import com.facebook.fresco.animation.bitmap.cache.FrescoFrameCache2;
 import com.facebook.fresco.animation.bitmap.cache.KeepLastFrameCache;
 import com.facebook.fresco.animation.bitmap.cache.NoOpCache;
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy;
@@ -70,6 +71,7 @@ public class DefaultBitmapAnimationDrawableFactory
   private final Supplier<Integer> mCachingStrategySupplier;
   private final Supplier<Integer> mNumberOfFramesToPrepareSupplier;
   private final Supplier<Boolean> mUseDeepEqualsForCacheKey;
+  private final Supplier<Boolean> mUseNewBitmapRender;
 
   // Change the value to true to use KAnimatedDrawable2.kt
   private final Supplier<Boolean> useRendererAnimatedDrawable = Suppliers.BOOLEAN_FALSE;
@@ -83,7 +85,8 @@ public class DefaultBitmapAnimationDrawableFactory
       CountingMemoryCache<CacheKey, CloseableImage> backingCache,
       Supplier<Integer> cachingStrategySupplier,
       Supplier<Integer> numberOfFramesToPrepareSupplier,
-      Supplier<Boolean> useDeepEqualsForCacheKey) {
+      Supplier<Boolean> useDeepEqualsForCacheKey,
+      Supplier<Boolean> useNewBitmapRender) {
     mAnimatedDrawableBackendProvider = animatedDrawableBackendProvider;
     mScheduledExecutorServiceForUiThread = scheduledExecutorServiceForUiThread;
     mExecutorServiceForFramePreparing = executorServiceForFramePreparing;
@@ -93,6 +96,7 @@ public class DefaultBitmapAnimationDrawableFactory
     mCachingStrategySupplier = cachingStrategySupplier;
     mNumberOfFramesToPrepareSupplier = numberOfFramesToPrepareSupplier;
     mUseDeepEqualsForCacheKey = useDeepEqualsForCacheKey;
+    mUseNewBitmapRender = useNewBitmapRender;
   }
 
   @Override
@@ -142,7 +146,8 @@ public class DefaultBitmapAnimationDrawableFactory
 
     BitmapFrameCache bitmapFrameCache = createBitmapFrameCache(animatedImageResult);
     BitmapFrameRenderer bitmapFrameRenderer =
-        new AnimatedDrawableBackendFrameRenderer(bitmapFrameCache, animatedDrawableBackend);
+        new AnimatedDrawableBackendFrameRenderer(
+            bitmapFrameCache, animatedDrawableBackend, mUseNewBitmapRender.get());
 
     int numberOfFramesToPrefetch = mNumberOfFramesToPrepareSupplier.get();
     BitmapFramePreparationStrategy bitmapFramePreparationStrategy = null;
@@ -164,6 +169,8 @@ public class DefaultBitmapAnimationDrawableFactory
             bitmapFrameCache,
             new AnimatedDrawableBackendAnimationInformation(animatedDrawableBackend),
             bitmapFrameRenderer,
+            mExecutorServiceForFramePreparing,
+            mUseNewBitmapRender.get(),
             bitmapFramePreparationStrategy,
             bitmapFramePreparer,
             roundingOptions);
@@ -189,6 +196,10 @@ public class DefaultBitmapAnimationDrawableFactory
   }
 
   private BitmapFrameCache createBitmapFrameCache(AnimatedImageResult animatedImageResult) {
+    if (mUseNewBitmapRender.get()) {
+      return new FrescoFrameCache2();
+    }
+
     switch (mCachingStrategySupplier.get()) {
       case CACHING_STRATEGY_FRESCO_CACHE:
         return new FrescoFrameCache(createAnimatedFrameCache(animatedImageResult), true);
