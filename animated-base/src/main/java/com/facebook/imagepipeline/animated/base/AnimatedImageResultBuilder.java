@@ -23,6 +23,7 @@ public class AnimatedImageResultBuilder {
   private @Nullable List<CloseableReference<Bitmap>> mDecodedFrames;
   private int mFrameForPreview;
   private @Nullable BitmapTransformation mBitmapTransformation;
+  private @Nullable String mSource;
 
   AnimatedImageResultBuilder(AnimatedImage image) {
     mImage = image;
@@ -91,6 +92,12 @@ public class AnimatedImageResultBuilder {
     return CloseableReference.cloneOrNull(mDecodedFrames);
   }
 
+  /** @return animated image uri path */
+  @Nullable
+  public String getSource() {
+    return mSource;
+  }
+
   /**
    * Sets the decoded frames. Only used if the {@code ImageDecodeOptions} were configured to decode
    * all frames at decode time.
@@ -121,6 +128,17 @@ public class AnimatedImageResultBuilder {
   public AnimatedImageResultBuilder setBitmapTransformation(
       @Nullable BitmapTransformation bitmapTransformation) {
     mBitmapTransformation = bitmapTransformation;
+    return this;
+  }
+
+  /**
+   * Sets the source of the animated image
+   *
+   * @param source uri path
+   * @return bitmapTransformation the transformation that is to be applied to the image
+   */
+  public AnimatedImageResultBuilder setSource(@Nullable String source) {
+    mSource = source;
     return this;
   }
 

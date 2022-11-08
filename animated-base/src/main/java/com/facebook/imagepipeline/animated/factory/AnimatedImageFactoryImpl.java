@@ -92,7 +92,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
             sGifAnimatedImageDecoder.decodeFromNativeMemory(
                 input.getNativePtr(), input.size(), options);
       }
-      return getCloseableImage(options, gifImage, bitmapConfig);
+      return getCloseableImage(encodedImage.getSource(), options, gifImage, bitmapConfig);
     } finally {
       CloseableReference.closeSafely(bytesRef);
     }
@@ -126,14 +126,17 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
             sWebpAnimatedImageDecoder.decodeFromNativeMemory(
                 input.getNativePtr(), input.size(), options);
       }
-      return getCloseableImage(options, webPImage, bitmapConfig);
+      return getCloseableImage(encodedImage.getSource(), options, webPImage, bitmapConfig);
     } finally {
       CloseableReference.closeSafely(bytesRef);
     }
   }
 
   private CloseableImage getCloseableImage(
-      ImageDecodeOptions options, AnimatedImage image, Bitmap.Config bitmapConfig) {
+      @Nullable String sourceUri,
+      ImageDecodeOptions options,
+      AnimatedImage image,
+      Bitmap.Config bitmapConfig) {
     List<CloseableReference<Bitmap>> decodedFrames = null;
     CloseableReference<Bitmap> previewBitmap = null;
     try {
@@ -159,6 +162,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
               .setFrameForPreview(frameForPreview)
               .setDecodedFrames(decodedFrames)
               .setBitmapTransformation(options.bitmapTransformation)
+              .setSource(sourceUri)
               .build();
       return new CloseableAnimatedImage(animatedImageResult);
     } finally {

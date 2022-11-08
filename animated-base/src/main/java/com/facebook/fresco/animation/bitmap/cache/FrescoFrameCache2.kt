@@ -12,19 +12,20 @@ import com.facebook.common.references.CloseableReference
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend.FrameType
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache.FrameCacheListener
-import com.facebook.imageutils.BitmapUtil
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentMap
+import com.facebook.imagepipeline.animated.base.AnimatedImageResult
+import com.facebook.imagepipeline.cache.AnimatedCache
 
 /** Bitmap frame cache used for animated drawables */
-class FrescoFrameCache2 : BitmapFrameCache {
+class FrescoFrameCache2(
+    animatedImageResult: AnimatedImageResult,
+    private val animatedDrawableCache: AnimatedCache
+) : BitmapFrameCache {
 
-  private val cache: ConcurrentMap<Int, CloseableReference<Bitmap>> = ConcurrentHashMap()
+  private val cacheKey: String =
+      animatedImageResult.source ?: animatedImageResult.image.hashCode().toString()
 
   override fun getCachedFrame(frameNumber: Int): CloseableReference<Bitmap>? {
-    return if (cache.containsKey(frameNumber)) {
-      cache[frameNumber]
-    } else null
+    return animatedDrawableCache.getAnimationFrame(cacheKey, frameNumber)
   }
 
   override fun getFallbackFrame(frameNumber: Int): CloseableReference<Bitmap>? {
@@ -40,30 +41,31 @@ class FrescoFrameCache2 : BitmapFrameCache {
   }
 
   override fun contains(frameNumber: Int): Boolean {
-    return cache.containsKey(frameNumber)
+    return getCachedFrame(frameNumber) != null
   }
 
   override val sizeInBytes: Int
-    get() = cache.values.filter { it.isValid }.sumOf { BitmapUtil.getSizeInBytes(it.get()) }
+    get() = 0
 
   override fun clear() {
-    cache.values.forEach { CloseableReference.closeSafely(it) }
-    cache.clear()
+    return animatedDrawableCache.removeAnimation(cacheKey)
   }
 
   override fun onFrameRendered(
       frameNumber: Int,
       bitmapReference: CloseableReference<Bitmap>,
       @FrameType frameType: Int
-  ) {}
+  ) = Unit
 
   override fun onFramePrepared(
       frameNumber: Int,
       bitmapReference: CloseableReference<Bitmap>,
       @FrameType frameType: Int
-  ) {
-    cache[frameNumber] = bitmapReference
+  ) = Unit
+
+  override fun onAnimationPrepared(frameReferences: Map<Int, CloseableReference<Bitmap>>) {
+    animatedDrawableCache.saveAnimation(cacheKey, frameReferences)
   }
 
-  override fun setFrameCacheListener(frameCacheListener: FrameCacheListener?) {}
+  override fun setFrameCacheListener(frameCacheListener: FrameCacheListener?) = Unit
 }

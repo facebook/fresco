@@ -9,6 +9,7 @@ package com.facebook.fresco.animation.bitmap.cache;
 
 import android.graphics.Bitmap;
 import android.util.SparseArray;
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
@@ -22,6 +23,7 @@ import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.infer.annotation.Nullsafe;
+import java.util.Map;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
@@ -227,4 +229,8 @@ public class FrescoFrameCache implements BitmapFrameCache {
         CloseableStaticBitmap.of(bitmapReference, ImmutableQualityInfo.FULL_QUALITY, 0);
     return CloseableReference.of(closeableImage);
   }
+
+  @Override
+  public void onAnimationPrepared(
+      @NonNull Map<Integer, ? extends CloseableReference<Bitmap>> frameReferences) {}
 }

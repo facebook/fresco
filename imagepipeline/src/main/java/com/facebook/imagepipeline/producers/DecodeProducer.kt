@@ -394,10 +394,12 @@ class DecodeProducer(
 
       val job = JobRunnable { encodedImage, status ->
         if (encodedImage != null) {
+          val request = producerContext.imageRequest
           producerContext.setExtra(
               ProducerContext.ExtraKeys.IMAGE_FORMAT, encodedImage.imageFormat.name)
+          encodedImage.source = request.sourceUri?.toString()
+
           if (downsampleEnabled || !statusHasFlag(status, IS_RESIZING_DONE)) {
-            val request = producerContext.imageRequest
             if (downsampleEnabledForNetwork || !UriUtil.isNetworkUri(request.sourceUri)) {
               encodedImage.sampleSize =
                   DownsampleUtil.determineSampleSize(

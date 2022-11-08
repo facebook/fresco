@@ -43,6 +43,7 @@ import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider;
 import com.facebook.imagepipeline.animated.impl.AnimatedFrameCache;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import com.facebook.imagepipeline.cache.AnimatedCache;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
@@ -72,6 +73,7 @@ public class DefaultBitmapAnimationDrawableFactory
   private final Supplier<Integer> mNumberOfFramesToPrepareSupplier;
   private final Supplier<Boolean> mUseDeepEqualsForCacheKey;
   private final Supplier<Boolean> mUseNewBitmapRender;
+  private final AnimatedCache mAnimatedDrawableCache;
 
   // Change the value to true to use KAnimatedDrawable2.kt
   private final Supplier<Boolean> useRendererAnimatedDrawable = Suppliers.BOOLEAN_FALSE;
@@ -97,6 +99,7 @@ public class DefaultBitmapAnimationDrawableFactory
     mNumberOfFramesToPrepareSupplier = numberOfFramesToPrepareSupplier;
     mUseDeepEqualsForCacheKey = useDeepEqualsForCacheKey;
     mUseNewBitmapRender = useNewBitmapRender;
+    mAnimatedDrawableCache = new AnimatedCache(300);
   }
 
   @Override
@@ -197,7 +200,7 @@ public class DefaultBitmapAnimationDrawableFactory
 
   private BitmapFrameCache createBitmapFrameCache(AnimatedImageResult animatedImageResult) {
     if (mUseNewBitmapRender.get()) {
-      return new FrescoFrameCache2();
+      return new FrescoFrameCache2(animatedImageResult, mAnimatedDrawableCache);
     }
 
     switch (mCachingStrategySupplier.get()) {

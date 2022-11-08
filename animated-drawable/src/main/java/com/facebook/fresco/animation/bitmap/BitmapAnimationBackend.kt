@@ -45,7 +45,7 @@ class BitmapAnimationBackend(
     private val bitmapFrameCache: BitmapFrameCache,
     private val animationInformation: AnimationInformation,
     private val bitmapFrameRenderer: BitmapFrameRenderer,
-    private val executorService: ExecutorService,
+    private val fixedPoolExecutorService: ExecutorService,
     private val isNewRenderImplementation: Boolean,
     private val bitmapFramePreparationStrategy: BitmapFramePreparationStrategy?,
     private val bitmapFramePreparer: BitmapFramePreparer?,
@@ -122,44 +122,64 @@ class BitmapAnimationBackend(
     this.frameListener = frameListener
   }
 
-  private fun fetchMissingFrames(heightCanvas: Int, widthCanvas: Int) {
+  private fun fetchMissingFrames(frameIndex: Int, heightCanvas: Int, widthCanvas: Int) {
     if (fetchingFrames.getAndSet(true)) {
       return
     }
 
-    executorService.execute {
-      // The maximum size for the bitmap is the size of the animation if the canvas is bigger
-      var previousFrame =
-          if (widthCanvas < intrinsicWidth && heightCanvas < intrinsicHeight) {
-            platformBitmapFactory.createBitmap(widthCanvas, heightCanvas, bitmapConfig)
-          } else {
-            platformBitmapFactory.createBitmap(intrinsicWidth, intrinsicHeight, bitmapConfig)
-          }
-
+    fixedPoolExecutorService.execute {
+      var canvasBitmapFrame =
+          generateBaseFrame(widthCanvas, heightCanvas, intrinsicWidth, intrinsicHeight)
+      val frameCollection = mutableMapOf<Int, CloseableReference<Bitmap>>()
       // Animation frames have to be render incrementally
       (0 until frameCount).forEach { frameNumber ->
-        // If bitmap frame was already rendered, it is not needed to render it again
-        bitmapFrameCache.getCachedFrame(frameNumber)?.let { cachedBitmapRef ->
-          if (cachedBitmapRef.isValid) {
-            previousFrame = platformBitmapFactory.createBitmap(cachedBitmapRef.get())
-            return@forEach
-          }
-        }
-
-        val frameRendered = bitmapFrameRenderer.renderFrame(frameNumber, previousFrame.get())
-        if (!frameRendered) {
-          // If we couldnt render the frame, then we create a new empty bitmap
-          CloseableReference.closeSafely(previousFrame)
-          return@execute
-        }
-
-        // Save rendered bitmap
-        val copyFrame = platformBitmapFactory.createBitmap(previousFrame.get())
-        bitmapFrameCache.onFramePrepared(frameNumber, copyFrame, FRAME_TYPE_CREATED)
+        val currentRenderedFrame =
+            renderAndSaveFrame(frameNumber, frameCollection, canvasBitmapFrame)
+        canvasBitmapFrame = currentRenderedFrame ?: return@execute
       }
 
-      fetchingFrames.set(false)
+      bitmapFrameCache.onAnimationPrepared(frameCollection)
+      CloseableReference.closeSafely(canvasBitmapFrame)
+      onPreparationFinished()
     }
+  }
+
+  private fun onPreparationFinished() {
+    fetchingFrames.set(false)
+  }
+
+  private fun generateBaseFrame(
+      canvasWidth: Int,
+      canvasHeight: Int,
+      intrinsicWidth: Int,
+      intrinsicHeight: Int,
+  ): CloseableReference<Bitmap> {
+    // The maximum size for the bitmap is the size of the animation if the canvas is bigger
+    return if (canvasWidth < intrinsicWidth && canvasHeight < intrinsicHeight) {
+      platformBitmapFactory.createBitmap(canvasWidth, canvasHeight, bitmapConfig)
+    } else {
+      platformBitmapFactory.createBitmap(intrinsicWidth, intrinsicHeight, bitmapConfig)
+    }
+  }
+
+  /** @return current rendered frame */
+  private fun renderAndSaveFrame(
+      frameNumber: Int,
+      frameCollection: MutableMap<Int, CloseableReference<Bitmap>>,
+      canvasBitmapRef: CloseableReference<Bitmap>
+  ): CloseableReference<Bitmap>? {
+    val frameRendered = bitmapFrameRenderer.renderFrame(frameNumber, canvasBitmapRef.get())
+    if (!frameRendered) {
+      // If we couldnt render the frame, then we create a new empty bitmap
+      CloseableReference.closeSafely(canvasBitmapRef)
+      return null
+    }
+
+    // Save rendered bitmap
+    val copyFrame = platformBitmapFactory.createBitmap(canvasBitmapRef.get())
+    frameCollection[frameNumber] = copyFrame
+
+    return canvasBitmapRef
   }
 
   override fun getFrameCount(): Int = animationInformation.frameCount
@@ -177,7 +197,7 @@ class BitmapAnimationBackend(
     if (!drawn) {
       frameListener?.onFrameDropped(this, frameNumber)
       if (isNewRenderImplementation) {
-        fetchMissingFrames(canvas.height, canvas.width)
+        fetchMissingFrames(frameNumber, canvas.height, canvas.width)
       }
     }
 
@@ -273,7 +293,7 @@ class BitmapAnimationBackend(
 
   override fun clear() {
     if (isNewRenderImplementation) {
-      executorService.execute { bitmapFrameCache.clear() }
+      fixedPoolExecutorService.execute { bitmapFrameCache.clear() }
     } else {
       bitmapFrameCache.clear()
     }
