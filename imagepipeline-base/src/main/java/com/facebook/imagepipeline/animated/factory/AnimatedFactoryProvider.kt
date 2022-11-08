@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.animated.factory
 import com.facebook.cache.common.CacheKey
 import com.facebook.common.executors.SerialExecutorService
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
+import com.facebook.imagepipeline.cache.AnimatedCache
 import com.facebook.imagepipeline.cache.CountingMemoryCache
 import com.facebook.imagepipeline.core.ExecutorSupplier
 import com.facebook.imagepipeline.image.CloseableImage
@@ -24,6 +25,7 @@ object AnimatedFactoryProvider {
       platformBitmapFactory: PlatformBitmapFactory?,
       executorSupplier: ExecutorSupplier?,
       backingCache: CountingMemoryCache<CacheKey?, CloseableImage?>?,
+      animatedCache: AnimatedCache,
       downscaleFrameToDrawableDimensions: Boolean,
       serialExecutorService: ExecutorService?
   ): AnimatedFactory? {
@@ -35,6 +37,7 @@ object AnimatedFactoryProvider {
                 PlatformBitmapFactory::class.java,
                 ExecutorSupplier::class.java,
                 CountingMemoryCache::class.java,
+                AnimatedCache::class.java,
                 java.lang.Boolean.TYPE,
                 SerialExecutorService::class.java)
         impl =
@@ -42,6 +45,7 @@ object AnimatedFactoryProvider {
                 platformBitmapFactory,
                 executorSupplier,
                 backingCache,
+                animatedCache,
                 downscaleFrameToDrawableDimensions,
                 serialExecutorService) as AnimatedFactory
       } catch (e: Throwable) {

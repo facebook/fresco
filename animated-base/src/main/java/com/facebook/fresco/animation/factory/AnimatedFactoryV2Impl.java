@@ -27,6 +27,7 @@ import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendImpl;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider;
 import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import com.facebook.imagepipeline.cache.AnimatedCache;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.core.ExecutorSupplier;
@@ -58,17 +59,20 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   private @Nullable AnimatedDrawableUtil mAnimatedDrawableUtil;
   private @Nullable DrawableFactory mAnimatedDrawableFactory;
   private @Nullable SerialExecutorService mSerialExecutorService;
+  private final AnimatedCache mAnimatedCache;
 
   @DoNotStrip
   public AnimatedFactoryV2Impl(
       PlatformBitmapFactory platformBitmapFactory,
       ExecutorSupplier executorSupplier,
       CountingMemoryCache<CacheKey, CloseableImage> backingCache,
+      AnimatedCache animatedCache,
       boolean downscaleFrameToDrawableDimensions,
       SerialExecutorService serialExecutorServiceForFramePreparing) {
     mPlatformBitmapFactory = platformBitmapFactory;
     mExecutorSupplier = executorSupplier;
     mBackingCache = backingCache;
+    mAnimatedCache = animatedCache;
     mDownscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions;
     mSerialExecutorService = serialExecutorServiceForFramePreparing;
   }
@@ -115,6 +119,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
     Supplier<Integer> numberOfFramesToPrepareSupplier = () -> NUMBER_OF_FRAMES_TO_PREPARE;
 
     final Supplier<Boolean> useDeepEquals = Suppliers.BOOLEAN_FALSE;
+    final Supplier<AnimatedCache> animatedCacheSupplier = () -> mAnimatedCache;
 
     return new DefaultBitmapAnimationDrawableFactory(
         getAnimatedDrawableBackendProvider(),
@@ -123,6 +128,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
         RealtimeSinceBootClock.get(),
         mPlatformBitmapFactory,
         mBackingCache,
+        animatedCacheSupplier,
         cachingStrategySupplier,
         numberOfFramesToPrepareSupplier,
         useDeepEquals,

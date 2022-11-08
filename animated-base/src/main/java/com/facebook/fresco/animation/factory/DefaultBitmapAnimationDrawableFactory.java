@@ -73,7 +73,7 @@ public class DefaultBitmapAnimationDrawableFactory
   private final Supplier<Integer> mNumberOfFramesToPrepareSupplier;
   private final Supplier<Boolean> mUseDeepEqualsForCacheKey;
   private final Supplier<Boolean> mUseNewBitmapRender;
-  private final AnimatedCache mAnimatedDrawableCache;
+  private final Supplier<AnimatedCache> mAnimatedDrawableCache;
 
   // Change the value to true to use KAnimatedDrawable2.kt
   private final Supplier<Boolean> useRendererAnimatedDrawable = Suppliers.BOOLEAN_FALSE;
@@ -85,6 +85,7 @@ public class DefaultBitmapAnimationDrawableFactory
       MonotonicClock monotonicClock,
       PlatformBitmapFactory platformBitmapFactory,
       CountingMemoryCache<CacheKey, CloseableImage> backingCache,
+      Supplier<AnimatedCache> animatedDrawableCache,
       Supplier<Integer> cachingStrategySupplier,
       Supplier<Integer> numberOfFramesToPrepareSupplier,
       Supplier<Boolean> useDeepEqualsForCacheKey,
@@ -99,7 +100,7 @@ public class DefaultBitmapAnimationDrawableFactory
     mNumberOfFramesToPrepareSupplier = numberOfFramesToPrepareSupplier;
     mUseDeepEqualsForCacheKey = useDeepEqualsForCacheKey;
     mUseNewBitmapRender = useNewBitmapRender;
-    mAnimatedDrawableCache = new AnimatedCache(300);
+    mAnimatedDrawableCache = animatedDrawableCache;
   }
 
   @Override
@@ -200,7 +201,7 @@ public class DefaultBitmapAnimationDrawableFactory
 
   private BitmapFrameCache createBitmapFrameCache(AnimatedImageResult animatedImageResult) {
     if (mUseNewBitmapRender.get()) {
-      return new FrescoFrameCache2(animatedImageResult, mAnimatedDrawableCache);
+      return new FrescoFrameCache2(animatedImageResult, mAnimatedDrawableCache.get());
     }
 
     switch (mCachingStrategySupplier.get()) {

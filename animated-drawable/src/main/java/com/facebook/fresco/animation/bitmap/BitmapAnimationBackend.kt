@@ -49,7 +49,7 @@ class BitmapAnimationBackend(
     private val isNewRenderImplementation: Boolean,
     private val bitmapFramePreparationStrategy: BitmapFramePreparationStrategy?,
     private val bitmapFramePreparer: BitmapFramePreparer?,
-    private val roundingOptions: RoundingOptions? = null,
+    roundingOptions: RoundingOptions? = null,
 ) : AnimationBackend, InactivityListener {
 
   val cornerRadii: FloatArray? =
