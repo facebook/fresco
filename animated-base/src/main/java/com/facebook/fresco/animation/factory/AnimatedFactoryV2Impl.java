@@ -154,8 +154,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
                   getAnimatedDrawableUtil(),
                   animatedImageResult,
                   bounds,
-                  mDownscaleFrameToDrawableDimensions,
-                  useNewBitmapRender.get());
+                  mDownscaleFrameToDrawableDimensions);
             }
           };
     }
@@ -172,8 +171,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
                 getAnimatedDrawableUtil(),
                 imageResult,
                 bounds,
-                mDownscaleFrameToDrawableDimensions,
-                useNewBitmapRender.get());
+                mDownscaleFrameToDrawableDimensions);
           }
         };
     return new AnimatedImageFactoryImpl(

@@ -96,6 +96,16 @@ public interface AnimatedDrawableBackend {
   void renderFrame(int frameNumber, Canvas canvas);
 
   /**
+   * Renders the specified frame onto the canvas. The idea is the same than renderFrame(...) with
+   * this differences: 1) Creates a new bitmap on each call. This allows to not block threads. 2)
+   * Blend is applied here
+   *
+   * @param frameNumber the frame number (0-based)
+   * @param canvas the canvas to render onto
+   */
+  void renderDeltas(int frameNumber, Canvas canvas);
+
+  /**
    * Gets the frame index for specified timestamp.
    *
    * @param timestampMs the timestamp

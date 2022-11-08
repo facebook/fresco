@@ -79,6 +79,11 @@ public class AnimatedImageCompositor {
     mTransparentFillPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
   }
 
+  public void renderDeltas(int frameNumber, Bitmap baseBitmap) {
+    Canvas canvas = new Canvas(baseBitmap);
+    mAnimatedDrawableBackend.renderDeltas(frameNumber, canvas);
+  }
+
   /**
    * Renders the specified frame. Only should be called on the rendering thread.
    *
@@ -86,6 +91,11 @@ public class AnimatedImageCompositor {
    * @param bitmap the bitmap to render into
    */
   public void renderFrame(int frameNumber, Bitmap bitmap) {
+    if (mIsNewRenderImplementation) {
+      renderDeltas(frameNumber, bitmap);
+      return;
+    }
+
     Canvas canvas = new Canvas(bitmap);
     canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC);
 
