@@ -40,7 +40,8 @@ public class AnimatedDrawableBackendFrameRendererTest {
     mAnimatedDrawableBackend = mock(AnimatedDrawableBackend.class);
     mBitmapFrameCache = mock(BitmapFrameCache.class);
     mAnimatedDrawableBackendFrameRenderer =
-        new AnimatedDrawableBackendFrameRenderer(mBitmapFrameCache, mAnimatedDrawableBackend);
+        new AnimatedDrawableBackendFrameRenderer(
+            mBitmapFrameCache, mAnimatedDrawableBackend, false);
   }
 
   @Test
