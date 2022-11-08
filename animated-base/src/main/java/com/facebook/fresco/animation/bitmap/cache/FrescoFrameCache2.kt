@@ -45,7 +45,7 @@ class FrescoFrameCache2(
   }
 
   override val sizeInBytes: Int
-    get() = 0
+    get() = animatedDrawableCache.getSize(cacheKey)
 
   override fun clear() {
     return animatedDrawableCache.removeAnimation(cacheKey)

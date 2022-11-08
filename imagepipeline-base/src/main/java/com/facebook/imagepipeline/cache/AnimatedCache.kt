@@ -52,6 +52,16 @@ class AnimatedCache(memoryMegaBytes: Int) {
     return null
   }
 
+  fun getSize(key: String): Int {
+    lruCache[key]?.let {
+      if (it.isValid) {
+        return it.get().sizeBytes
+      }
+    }
+
+    return 0
+  }
+
   fun saveAnimation(key: String, newFrames: Map<Int, CloseableReference<Bitmap>>) {
     val cachedAnimation = lruCache[key]
     val mergedFrames = newFrames.toMutableMap()
