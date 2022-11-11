@@ -7,23 +7,9 @@
 
 package com.facebook.imagepipeline.memory
 
-class BitmapCounterConfig(builder: Builder) {
-
-  var maxBitmapCount = builder.maxBitmapCount
-
-  class Builder internal constructor() {
-    var maxBitmapCount = DEFAULT_MAX_BITMAP_COUNT
-      private set
-
-    fun setMaxBitmapCount(maxBitmapCount: Int): Builder = apply {
-      this.maxBitmapCount = maxBitmapCount
-    }
-
-    fun build(): BitmapCounterConfig = BitmapCounterConfig(this)
-  }
+class BitmapCounterConfig(val maxBitmapCount: Int = DEFAULT_MAX_BITMAP_COUNT) {
 
   companion object {
     const val DEFAULT_MAX_BITMAP_COUNT = 384
-    @JvmStatic fun newBuilder(): Builder = Builder()
   }
 }

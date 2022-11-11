@@ -47,8 +47,6 @@ import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig
 import com.facebook.imagepipeline.listener.ForwardingRequestListener
 import com.facebook.imagepipeline.listener.RequestListener
 import com.facebook.imagepipeline.listener.RequestLoggingListener
-import com.facebook.imagepipeline.memory.BitmapCounterConfig
-import com.facebook.imagepipeline.memory.BitmapCounterProvider
 import com.facebook.imagepipeline.stetho.FrescoStethoPlugin
 import com.facebook.stetho.Stetho
 import com.facebook.stetho.okhttp3.StethoInterceptor
@@ -120,10 +118,6 @@ class ShowcaseApplication : Application() {
           })
     }
 
-    BitmapCounterProvider.initialize(
-        BitmapCounterConfig.newBuilder()
-            .setMaxBitmapCount(BitmapCounterConfig.DEFAULT_MAX_BITMAP_COUNT)
-            .build())
     Fresco.initialize(this, imagePipelineConfig, draweeConfigBuilder.build())
     imageTracker = ImageTracker()
     initVito(resources)
