@@ -52,7 +52,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   private final ExecutorSupplier mExecutorSupplier;
   private final CountingMemoryCache<CacheKey, CloseableImage> mBackingCache;
   private final boolean mDownscaleFrameToDrawableDimensions;
-  private final Supplier<Boolean> useNewBitmapRender = Suppliers.BOOLEAN_TRUE;
+  private final Supplier<Boolean> useNewBitmapRender = Suppliers.BOOLEAN_FALSE;
 
   private @Nullable AnimatedImageFactory mAnimatedImageFactory;
   private @Nullable AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
