@@ -8,6 +8,7 @@
 package com.facebook.fresco.animation.bitmap.preparation
 
 import android.graphics.Bitmap
+import androidx.annotation.IntRange
 import com.facebook.common.references.CloseableReference
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer
@@ -47,6 +48,10 @@ class DefaultLoadAnimationStrategy(
       intrinsicWidth: Int,
       intrinsicHeight: Int,
   ) {
+    if (canvasWidth <= 0 || canvasHeight <= 0 || intrinsicWidth <= 0 || intrinsicHeight <= 0) {
+      return
+    }
+
     if (fetchingFrames.getAndSet(true) || forceStopSignal.get()) {
       return
     }
@@ -92,17 +97,27 @@ class DefaultLoadAnimationStrategy(
   }
 
   private fun generateBaseFrame(
-      canvasWidth: Int,
-      canvasHeight: Int,
-      intrinsicWidth: Int,
-      intrinsicHeight: Int,
+      @IntRange(from = 1) canvasWidth: Int,
+      @IntRange(from = 1) canvasHeight: Int,
+      @IntRange(from = 1) intrinsicWidth: Int,
+      @IntRange(from = 1) intrinsicHeight: Int,
   ): CloseableReference<Bitmap> {
+    var bitmapWidth: Int = intrinsicWidth
+    var bitmapHeight: Int = intrinsicHeight
+
     // The maximum size for the bitmap is the size of the animation if the canvas is bigger
-    return if (canvasWidth < intrinsicWidth && canvasHeight < intrinsicHeight) {
-      platformBitmapFactory.createBitmap(canvasWidth, canvasHeight, bitmapConfig)
-    } else {
-      platformBitmapFactory.createBitmap(intrinsicWidth, intrinsicHeight, bitmapConfig)
+    if (canvasWidth < intrinsicWidth || canvasHeight < intrinsicHeight) {
+      val ratioW = intrinsicWidth.toDouble().div(intrinsicHeight)
+      if (ratioW <= 1) {
+        bitmapHeight = canvasHeight
+        bitmapWidth = bitmapHeight.times(ratioW).toInt()
+      } else {
+        bitmapWidth = canvasWidth
+        bitmapHeight = bitmapWidth.div(ratioW).toInt()
+      }
     }
+
+    return platformBitmapFactory.createBitmap(bitmapWidth, bitmapHeight, bitmapConfig)
   }
 
   /** @return current rendered frame */

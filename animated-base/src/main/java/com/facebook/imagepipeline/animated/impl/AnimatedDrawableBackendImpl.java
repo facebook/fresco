@@ -201,18 +201,17 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
   public void renderDeltas(int frameNumber, Canvas canvas) {
     AnimatedImageFrame frame = mAnimatedImage.getFrame(frameNumber);
     AnimatedDrawableFrameInfo frameInfo = mAnimatedImage.getFrameInfo(frameNumber);
-
+    AnimatedDrawableFrameInfo previousFrameInfo =
+        frameNumber == 0 ? null : mAnimatedImage.getFrameInfo(frameNumber - 1);
     try {
       if (frame.getWidth() <= 0 || frame.getHeight() <= 0) {
         return; // Frame not visible -> skipping
       }
 
       if (mAnimatedImage.doesRenderSupportScaling()) {
-        AnimatedDrawableFrameInfo previousFrameInfo =
-            frameNumber == 0 ? null : mAnimatedImage.getFrameInfo(frameNumber - 1);
-        applyFrameDeltasIntoCanvasScaling(canvas, frame, frameInfo, previousFrameInfo);
+        renderScalingFrames(canvas, frame, frameInfo, previousFrameInfo);
       } else {
-        renderImageDoesNotSupportScalingNonBlocking(canvas, frame);
+        renderNonScalingFrames(canvas, frame, frameInfo, previousFrameInfo);
       }
 
     } finally {
@@ -261,7 +260,7 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     }
   }
 
-  private void applyFrameDeltasIntoCanvasScaling(
+  private void renderScalingFrames(
       Canvas canvas,
       AnimatedImageFrame frame,
       AnimatedDrawableFrameInfo frameInfo,
@@ -270,8 +269,8 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     int canvasWidth = canvas.getWidth();
     int canvasHeight = canvas.getHeight();
 
-    double xScale = canvasWidth / (double) mAnimatedImage.getWidth();
-    double yScale = canvasHeight / (double) mAnimatedImage.getHeight();
+    float xScale = canvasWidth / (float) mAnimatedImage.getWidth();
+    float yScale = canvasHeight / (float) mAnimatedImage.getHeight();
 
     int frameWidth = (int) Math.round(frame.getWidth() * xScale);
     int frameHeight = (int) Math.round(frame.getHeight() * yScale);
@@ -286,6 +285,21 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     Rect renderDstRect = new Rect(xOffset, yOffset, xOffset + frameWidth, yOffset + frameHeight);
 
     // Clean previous frame surface if that frame was disposable
+    maybeDisposeBackground(canvas, xScale, yScale, frameInfo);
+
+    // If current frame is no_blend, then we have to clean their surface before rendering
+    if (frameInfo.blendOperation == BlendOperation.NO_BLEND) {
+      canvas.drawRect(renderDstRect, mTransparentPaint);
+    }
+
+    canvas.drawBitmap(frameBitmap, renderSrcRect, renderDstRect, null);
+  }
+
+  private void maybeDisposeBackground(
+      Canvas canvas,
+      float xScale,
+      float yScale,
+      @Nullable AnimatedDrawableFrameInfo previousFrameInfo) {
     if (previousFrameInfo != null
         && previousFrameInfo.disposalMethod == DisposalMethod.DISPOSE_TO_BACKGROUND) {
       int prevFrameWidth = (int) Math.round(previousFrameInfo.width * xScale);
@@ -300,13 +314,6 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
               prevYOffset + prevFrameHeight);
       canvas.drawRect(prevFrameSurface, mTransparentPaint);
     }
-
-    // If current frame is no_blend, then we have to clean their surface before rendering
-    if (frameInfo.blendOperation == BlendOperation.NO_BLEND) {
-      canvas.drawRect(renderDstRect, mTransparentPaint);
-    }
-
-    canvas.drawBitmap(frameBitmap, renderSrcRect, renderDstRect, null);
   }
 
   private void renderImageDoesNotSupportScaling(Canvas canvas, AnimatedImageFrame frame) {
@@ -341,35 +348,42 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     }
   }
 
-  private void renderImageDoesNotSupportScalingNonBlocking(
-      Canvas canvas, AnimatedImageFrame frame) {
-    int frameWidth, frameHeight, xOffset, yOffset;
-    if (mDownscaleFrameToDrawableDimensions) {
-      final int fittedWidth = Math.min(frame.getWidth(), canvas.getWidth());
-      final int fittedHeight = Math.min(frame.getHeight(), canvas.getHeight());
-
-      final float scaleX = (float) frame.getWidth() / (float) fittedWidth;
-      final float scaleY = (float) frame.getHeight() / (float) fittedHeight;
-      final float scale = Math.max(scaleX, scaleY);
-
-      frameWidth = (int) (frame.getWidth() / scale);
-      frameHeight = (int) (frame.getHeight() / scale);
-      xOffset = (int) (frame.getXOffset() / scale);
-      yOffset = (int) (frame.getYOffset() / scale);
-    } else {
-      frameWidth = frame.getWidth();
-      frameHeight = frame.getHeight();
-      xOffset = frame.getXOffset();
-      yOffset = frame.getYOffset();
+  private void renderNonScalingFrames(
+      Canvas canvas,
+      AnimatedImageFrame frame,
+      AnimatedDrawableFrameInfo frameInfo,
+      @Nullable AnimatedDrawableFrameInfo previousFrameInfo) {
+    if (mRenderedBounds == null || mRenderedBounds.width() <= 0 || mRenderedBounds.height() <= 0) {
+      return;
     }
+
+    float scale = (float) canvas.getWidth() / mRenderedBounds.width();
+
+    // Clean previous frame surface if that frame was disposable
+    maybeDisposeBackground(canvas, scale, scale, frameInfo);
+
+    // Prepare the new frame
+    int frameWidth = frame.getWidth();
+    int frameHeight = frame.getHeight();
 
     Bitmap bitmap = Bitmap.createBitmap(frameWidth, frameHeight, Bitmap.Config.ARGB_8888);
     frame.renderFrame(frameWidth, frameHeight, bitmap);
 
-    canvas.save();
-    canvas.translate(xOffset, yOffset);
-    canvas.drawBitmap(bitmap, 0, 0, null);
-    canvas.restore();
+    int resizedWidth = (int) (frameWidth * scale);
+    int resizedHeight = (int) (frameHeight * scale);
+
+    int xOffset = (int) (frame.getXOffset() * scale);
+    int yOffset = (int) (frame.getYOffset() * scale);
+
+    // Clear the canvas if this frame doesnt blend
+    Rect renderDstRect =
+        new Rect(xOffset, yOffset, xOffset + resizedWidth, yOffset + resizedHeight);
+    if (frameInfo.blendOperation == BlendOperation.NO_BLEND) {
+      canvas.drawRect(renderDstRect, mTransparentPaint);
+    }
+    // Draw canvas frame
+    Rect src = new Rect(0, 0, frameWidth, frameHeight);
+    canvas.drawBitmap(bitmap, src, renderDstRect, null);
   }
 
   @Override
