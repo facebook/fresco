@@ -77,7 +77,8 @@ protected constructor(
     Preconditions.checkState(isClosed)
   }
 
-  override fun getImageRequest(): ImageRequest? = settableProducerContext.imageRequest
+  override val imageRequest: ImageRequest?
+    get() = settableProducerContext.imageRequest
 
   override fun close(): Boolean {
     if (!super.close()) {

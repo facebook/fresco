@@ -5,12 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.imagepipeline.request;
+package com.facebook.imagepipeline.request
 
-import javax.annotation.Nullable;
-
-public interface HasImageRequest {
-
-  @Nullable
-  ImageRequest getImageRequest();
+interface HasImageRequest {
+  val imageRequest: ImageRequest?
 }
