@@ -377,6 +377,10 @@ public class PipelineDraweeController
     final String originText = ImageOriginUtils.toString(origin);
     final int originColor = DebugOverlayImageOriginColor.getImageOriginColor(origin);
     debugOverlay.setOrigin(originText, originColor);
+    String callerContextString = getCallerContextString();
+    if (callerContextString != null) {
+      debugOverlay.addAdditionalData("cc", callerContextString);
+    }
 
     if (image != null) {
       debugOverlay.setDimensions(image.getWidth(), image.getHeight());
@@ -469,5 +473,13 @@ public class PipelineDraweeController
         mLowResImageRequest,
         mFirstAvailableImageRequests,
         ImageRequest.REQUEST_TO_URI_FN);
+  }
+
+  protected @Nullable String getCallerContextString() {
+    Object cc = getCallerContext();
+    if (cc == null) {
+      return null;
+    }
+    return cc.toString();
   }
 }
