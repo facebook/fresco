@@ -32,6 +32,19 @@ public interface AnimationInformation {
   int getFrameDurationMs(int frameNumber);
 
   /**
+   * Loop duration in ms
+   *
+   * @return duration in ms
+   */
+  int getLoopDurationMs();
+
+  /** @return Animation asset width */
+  int width();
+
+  /** @return Animation asset height */
+  int height();
+
+  /**
    * Get the number of loops the animation has or {@link #LOOP_COUNT_INFINITE} for infinite looping.
    *
    * @return the loop count or {@link #LOOP_COUNT_INFINITE}

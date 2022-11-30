@@ -63,10 +63,8 @@ class FrescoFrameCache2(
       @FrameType frameType: Int
   ) = Unit
 
-  override fun onAnimationPrepared(frameBitmaps: List<CloseableReference<Bitmap>>) {
-    val bitmapMap =
-        frameBitmaps.mapIndexed { index, closeableReference -> index to closeableReference }.toMap()
-    animatedDrawableCache.saveAnimation(cacheKey, bitmapMap)
+  override fun onAnimationPrepared(frameBitmaps: Map<Int, CloseableReference<Bitmap>>) {
+    animatedDrawableCache.saveAnimation(cacheKey, frameBitmaps)
   }
 
   override fun setFrameCacheListener(frameCacheListener: FrameCacheListener?) = Unit

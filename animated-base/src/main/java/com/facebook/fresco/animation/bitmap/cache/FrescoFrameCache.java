@@ -22,7 +22,7 @@ import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.infer.annotation.Nullsafe;
-import java.util.List;
+import java.util.Map;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
@@ -230,5 +230,6 @@ public class FrescoFrameCache implements BitmapFrameCache {
   }
 
   @Override
-  public void onAnimationPrepared(List<? extends CloseableReference<Bitmap>> frameBitmaps) {}
+  public void onAnimationPrepared(
+      Map<Integer, ? extends CloseableReference<Bitmap>> frameBitmaps) {}
 }

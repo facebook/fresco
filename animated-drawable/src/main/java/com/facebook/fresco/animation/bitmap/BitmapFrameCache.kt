@@ -76,7 +76,7 @@ interface BitmapFrameCache {
   val sizeInBytes: Int
 
   /** Send the list of frames when the animation frames are loaded */
-  fun onAnimationPrepared(frameBitmaps: List<CloseableReference<Bitmap>>) = Unit
+  fun onAnimationPrepared(frameBitmaps: Map<Int, CloseableReference<Bitmap>>) = Unit
 
   /** Clear the cache. */
   fun clear()

@@ -36,4 +36,19 @@ public class AnimatedDrawableBackendAnimationInformation implements AnimationInf
   public int getLoopCount() {
     return mAnimatedDrawableBackend.getLoopCount();
   }
+
+  @Override
+  public int getLoopDurationMs() {
+    return mAnimatedDrawableBackend.getDurationMs();
+  }
+
+  @Override
+  public int width() {
+    return mAnimatedDrawableBackend.getWidth();
+  }
+
+  @Override
+  public int height() {
+    return mAnimatedDrawableBackend.getHeight();
+  }
 }

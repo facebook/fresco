@@ -99,8 +99,7 @@ class KAnimatedDrawable2(private var animationBackend: AnimationBackend) :
    *
    * @return the duration of 1 animation loop in ms
    */
-  fun loopDurationMs(): Int =
-      (0 until animationBackend.frameCount).sumOf { animationBackend.getFrameDurationMs(it) }
+  fun loopDurationMs(): Int = animationBackend.loopDurationMs
 
   /**
    * Get the number of frames for the animation. If no animation backend is set, 0 will be returned.

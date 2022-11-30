@@ -147,12 +147,22 @@ public class DropFramesFrameSchedulerTest {
       mFrameCount = frameCount;
     }
 
-    public long getLoopDurationMs() {
+    public int getLoopDurationMs() {
       long loopDuration = 0;
       for (int i = 0; i < getFrameCount(); i++) {
         loopDuration += getFrameDurationMs(i);
       }
-      return loopDuration;
+      return (int) loopDuration;
+    }
+
+    @Override
+    public int width() {
+      return getIntrinsicWidth();
+    }
+
+    @Override
+    public int height() {
+      return getIntrinsicHeight();
     }
 
     public long getAnimationDurationMs() {

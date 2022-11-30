@@ -364,6 +364,8 @@ public class BitmapAnimationBackendTest {
     verify(mBitmapFrameCache).getBitmapToReuseForFrame(4, 0, 0);
     verify(mPlatformBitmapFactory).createBitmap(0, 0, Bitmap.Config.ARGB_8888);
     verify(mBitmapFrameCache).getFallbackFrame(4);
+    verify(mCanvas).getWidth();
+    verify(mCanvas).getHeight();
     verifyNoMoreInteractions(mCanvas, mBitmapFrameCache);
     verifyFramePreparationStrategyCalled(4);
     verify(mFrameListener).onFrameDropped(mBitmapAnimationBackend, 4);

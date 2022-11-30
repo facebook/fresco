@@ -96,6 +96,25 @@ public class LocalDrawableAnimationBackend implements AnimationBackend {
   }
 
   @Override
+  public int width() {
+    return INTRINSIC_DIMENSION_UNSET;
+  }
+
+  @Override
+  public int height() {
+    return INTRINSIC_DIMENSION_UNSET;
+  }
+
+  @Override
+  public int getLoopDurationMs() {
+    int total = 0;
+    for (int i = 0; i < getFrameCount(); i++) {
+      total += getFrameDurationMs(i);
+    }
+    return total;
+  }
+
+  @Override
   public void clear() {
     mCache.clear();
   }

@@ -123,9 +123,17 @@ class BitmapAnimationBackend(
   override fun getFrameDurationMs(frameNumber: Int): Int =
       animationInformation.getFrameDurationMs(frameNumber)
 
+  override fun width(): Int = animationInformation.width()
+
+  override fun height(): Int = animationInformation.height()
+
+  override fun getLoopDurationMs(): Int = animationInformation.loopDurationMs
+
   override fun getLoopCount(): Int = animationInformation.loopCount
 
   override fun drawFrame(parent: Drawable, canvas: Canvas, frameNumber: Int): Boolean {
+    bitmapFramePreparationStrategy?.prepareFrames(canvas.width, canvas.height)
+
     frameListener?.onDrawFrameStart(this, frameNumber)
     val drawn = drawFrameOrFallback(canvas, frameNumber, FRAME_TYPE_CACHED)
 
@@ -152,14 +160,7 @@ class BitmapAnimationBackend(
     var nextFrameType = FRAME_TYPE_UNKNOWN
 
     if (isNewRenderImplementation) {
-      bitmapReference = getFrame(frameNumber)
-
-      // If frame is missing, we find the previous nearest and request to load the frames
-      if (bitmapReference == null || !bitmapReference.isValid) {
-        bitmapReference = bitmapFramePreparationStrategy?.findNearestFrame(frameNumber, frameCount)
-        bitmapFramePreparationStrategy?.prepareFrames(
-            frameCount, canvas.width, canvas.height, intrinsicWidth, intrinsicHeight)
-      }
+      bitmapReference = bitmapFramePreparationStrategy?.getBitmapFrame(frameNumber)
 
       if (bitmapReference != null && bitmapReference.isValid) {
         drawBitmap(frameNumber, bitmapReference.get(), canvas)
@@ -215,11 +216,6 @@ class BitmapAnimationBackend(
     } else {
       drawFrameOrFallback(canvas, frameNumber, nextFrameType)
     }
-  }
-
-  private fun getFrame(frameToRender: Int): CloseableReference<Bitmap>? {
-    val cache = bitmapFrameCache.getCachedFrame(frameToRender)
-    return if (cache?.isValid == true) cache else null
   }
 
   override fun setAlpha(@IntRange(from = 0, to = 255) alpha: Int) {

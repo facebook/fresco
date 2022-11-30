@@ -33,20 +33,13 @@ interface BitmapFramePreparationStrategy {
    * Prepare the frames for the animation giving the size of the animation and the size of the
    * canvas
    */
-  fun prepareFrames(
-      frameCount: Int,
-      canvasWidth: Int,
-      canvasHeight: Int,
-      intrinsicWidth: Int,
-      intrinsicHeight: Int,
-  ) = Unit
-
-  /** Find the nearest previous frame given a frame number */
-  fun findNearestFrame(fromFrame: Int, frameCount: Int): CloseableReference<Bitmap>? = null
+  fun prepareFrames(canvasWidth: Int, canvasHeight: Int) = Unit
 
   /** Force stop any task running on the strategy */
   fun onStop() = Unit
 
   /** Clear the frames from cache */
   fun clearFrames() = Unit
+
+  fun getBitmapFrame(frameNumber: Int): CloseableReference<Bitmap>? = null
 }
