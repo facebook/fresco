@@ -12,7 +12,6 @@ import androidx.annotation.UiThread
 import com.facebook.common.references.CloseableReference
 import com.facebook.fresco.animation.backend.AnimationInformation
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache
-import com.facebook.fresco.animation.bitmap.preparation.BalancedAnimationStrategy.Companion.ON_DEMAND_PREPARATION_TIME_MS
 import com.facebook.fresco.animation.bitmap.preparation.loadframe.AnimationLoaderExecutor
 import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFrameTaskFactory
 import java.io.Closeable
@@ -35,6 +34,7 @@ import kotlin.math.ceil
  */
 class BalancedAnimationStrategy(
     animationInformation: AnimationInformation,
+    onDemandPreparationMs: Int,
     private val loadFrameTaskFactory: LoadFrameTaskFactory,
     private val bitmapCache: BitmapFrameCache,
 ) : BitmapFramePreparationStrategy {
@@ -47,13 +47,14 @@ class BalancedAnimationStrategy(
   private val frameCount: Int = animationInformation.frameCount
   private val animationWidth: Int = animationInformation.width()
   private val animationHeight: Int = animationInformation.height()
-  private val onDemandRatio: Int by lazy {
-    val avgFrameDurationMs = animationInformation.loopDurationMs.div(frameCount)
-    val optimisticRatio =
-        ceil(ON_DEMAND_PREPARATION_TIME_MS.div(avgFrameDurationMs.toFloat())).toInt()
-    optimisticRatio.coerceAtLeast(2)
-  }
+  private val onDemandRatio: Int
   private var onDemandBitmap: OnDemandFrame? = null
+
+  init {
+    val avgFrameDurationMs = animationInformation.loopDurationMs.div(frameCount)
+    val optimisticRatio = ceil(onDemandPreparationMs.div(avgFrameDurationMs.toFloat())).toInt()
+    onDemandRatio = optimisticRatio.coerceAtLeast(2)
+  }
 
   private fun isFirstFrameReady() = bitmapCache.getCachedFrame(0)?.isValid == true
 
@@ -194,10 +195,6 @@ class BalancedAnimationStrategy(
     }
 
     return Size(bitmapWidth, bitmapHeight)
-  }
-
-  companion object {
-    private const val ON_DEMAND_PREPARATION_TIME_MS = 300
   }
 }
 

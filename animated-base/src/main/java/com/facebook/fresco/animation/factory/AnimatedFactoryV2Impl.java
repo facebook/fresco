@@ -47,6 +47,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 public class AnimatedFactoryV2Impl implements AnimatedFactory {
 
   private static final int NUMBER_OF_FRAMES_TO_PREPARE = 3;
+  private static final int BALANCED_STRATEGY_PREPARATION_MS = 10000; // No CPU
 
   private final PlatformBitmapFactory mPlatformBitmapFactory;
   private final ExecutorSupplier mExecutorSupplier;
@@ -117,6 +118,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
             : mSerialExecutorService;
 
     Supplier<Integer> numberOfFramesToPrepareSupplier = () -> NUMBER_OF_FRAMES_TO_PREPARE;
+    Supplier<Integer> balancedAnimationStrategyMs = () -> BALANCED_STRATEGY_PREPARATION_MS;
 
     final Supplier<Boolean> useDeepEquals = Suppliers.BOOLEAN_FALSE;
     final Supplier<AnimatedCache> animatedCacheSupplier = () -> mAnimatedCache;
@@ -132,7 +134,8 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
         cachingStrategySupplier,
         numberOfFramesToPrepareSupplier,
         useDeepEquals,
-        useNewBitmapRender);
+        useNewBitmapRender,
+        balancedAnimationStrategyMs);
   }
 
   private AnimatedDrawableUtil getAnimatedDrawableUtil() {

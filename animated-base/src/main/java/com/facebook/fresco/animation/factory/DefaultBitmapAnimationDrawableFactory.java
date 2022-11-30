@@ -78,6 +78,7 @@ public class DefaultBitmapAnimationDrawableFactory
   private final Supplier<Boolean> mUseDeepEqualsForCacheKey;
   private final Supplier<Boolean> mUseNewBitmapRender;
   private final Supplier<AnimatedCache> mAnimatedDrawableCache;
+  private final Supplier<Integer> mBalancedStrategyPreparationMs;
 
   // Change the value to true to use KAnimatedDrawable2.kt
   private final Supplier<Boolean> useRendererAnimatedDrawable = Suppliers.BOOLEAN_FALSE;
@@ -93,7 +94,8 @@ public class DefaultBitmapAnimationDrawableFactory
       Supplier<Integer> cachingStrategySupplier,
       Supplier<Integer> numberOfFramesToPrepareSupplier,
       Supplier<Boolean> useDeepEqualsForCacheKey,
-      Supplier<Boolean> useNewBitmapRender) {
+      Supplier<Boolean> useNewBitmapRender,
+      Supplier<Integer> balancedStrategyPreparationMs) {
     mAnimatedDrawableBackendProvider = animatedDrawableBackendProvider;
     mScheduledExecutorServiceForUiThread = scheduledExecutorServiceForUiThread;
     mExecutorServiceForFramePreparing = executorServiceForFramePreparing;
@@ -105,6 +107,7 @@ public class DefaultBitmapAnimationDrawableFactory
     mUseDeepEqualsForCacheKey = useDeepEqualsForCacheKey;
     mUseNewBitmapRender = useNewBitmapRender;
     mAnimatedDrawableCache = animatedDrawableCache;
+    mBalancedStrategyPreparationMs = balancedStrategyPreparationMs;
   }
 
   @Override
@@ -177,6 +180,7 @@ public class DefaultBitmapAnimationDrawableFactory
       bitmapFramePreparationStrategy =
           new BalancedAnimationStrategy(
               animationInfo,
+              mBalancedStrategyPreparationMs.get(),
               new LoadFrameTaskFactory(mPlatformBitmapFactory, bitmapFrameRenderer),
               bitmapFrameCache);
     }
