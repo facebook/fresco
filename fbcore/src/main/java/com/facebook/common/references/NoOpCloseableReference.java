@@ -28,7 +28,19 @@ public class NoOpCloseableReference<T> extends CloseableReference<T> {
   }
 
   @Override
+  public CloseableReference<T> cloneOrNull() {
+    // No ref counting
+    return this;
+  }
+
+  @Override
   public void close() {
     // Nop
+  }
+
+  @Override
+  public boolean isValid() {
+    // Always valid
+    return true;
   }
 }
