@@ -132,8 +132,6 @@ class BitmapAnimationBackend(
   override fun getLoopCount(): Int = animationInformation.loopCount
 
   override fun drawFrame(parent: Drawable, canvas: Canvas, frameNumber: Int): Boolean {
-    bitmapFramePreparationStrategy?.prepareFrames(canvas.width, canvas.height)
-
     frameListener?.onDrawFrameStart(this, frameNumber)
     val drawn = drawFrameOrFallback(canvas, frameNumber, FRAME_TYPE_CACHED)
 
@@ -160,13 +158,16 @@ class BitmapAnimationBackend(
     var nextFrameType = FRAME_TYPE_UNKNOWN
 
     if (isNewRenderImplementation) {
-      bitmapReference = bitmapFramePreparationStrategy?.getBitmapFrame(frameNumber)
+      bitmapReference =
+          bitmapFramePreparationStrategy?.getBitmapFrame(frameNumber, canvas.width, canvas.height)
 
       if (bitmapReference != null && bitmapReference.isValid) {
         drawBitmap(frameNumber, bitmapReference.get(), canvas)
         return true
       }
 
+      // If bitmap couldnt be drawn, then fetch frames
+      bitmapFramePreparationStrategy?.prepareFrames(canvas.width, canvas.height)
       return false
     }
 

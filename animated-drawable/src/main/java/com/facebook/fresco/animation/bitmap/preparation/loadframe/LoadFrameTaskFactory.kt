@@ -71,4 +71,7 @@ class LoadFrameTaskFactory(
   }
 }
 
-typealias LoadFrameOutput = (Map<Int, CloseableReference<Bitmap>>) -> Unit
+interface LoadFrameOutput {
+  fun onSuccess(frames: Map<Int, CloseableReference<Bitmap>>)
+  fun onFail()
+}

@@ -230,6 +230,13 @@ public class FrescoFrameCache implements BitmapFrameCache {
   }
 
   @Override
-  public void onAnimationPrepared(
-      Map<Integer, ? extends CloseableReference<Bitmap>> frameBitmaps) {}
+  public boolean onAnimationPrepared(
+      Map<Integer, ? extends CloseableReference<Bitmap>> frameBitmaps) {
+    return true;
+  }
+
+  @Override
+  public boolean isAnimationReady() {
+    return false;
+  }
 }

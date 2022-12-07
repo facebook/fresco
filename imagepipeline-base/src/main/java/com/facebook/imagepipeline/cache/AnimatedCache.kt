@@ -19,6 +19,13 @@ import java.util.concurrent.TimeUnit
 class AnimatedCache(memoryMegaBytes: Int) {
 
   private val sizeBytes = memoryMegaBytes * MB
+
+  /** % Memory for animations which were recently used, but they are not running now */
+  private val evictionRatio = if (memoryMegaBytes < 90) 0.15f else 0.30f
+
+  /** 10% Memory is the maximum size of an animation */
+  private val maxCacheEntrySize = sizeBytes.times(0.1).toInt()
+
   private val lruCache =
       LruCountingMemoryCache<String, AnimationFrames>(
           { it.sizeBytes },
@@ -26,10 +33,10 @@ class AnimatedCache(memoryMegaBytes: Int) {
           {
             MemoryCacheParams(
                 maxCacheSize = sizeBytes,
-                maxCacheEntries = 2000,
-                maxEvictionQueueSize = sizeBytes.times(0.5).toInt(),
-                maxEvictionQueueEntries = 1000,
-                maxCacheEntrySize = sizeBytes.times(0.1).toInt(),
+                maxCacheEntries = Int.MAX_VALUE,
+                maxEvictionQueueSize = sizeBytes.times(evictionRatio).toInt(),
+                maxEvictionQueueEntries = EVICTION_QUEUE,
+                maxCacheEntrySize = maxCacheEntrySize,
                 paramsCheckIntervalMs = TimeUnit.SECONDS.toMillis(5))
           },
           null,
@@ -37,52 +44,27 @@ class AnimatedCache(memoryMegaBytes: Int) {
           false,
       )
 
-  fun getAnimationFrame(key: String, frameIndex: Int): CloseableReference<Bitmap>? {
-    lruCache[key]?.let { cache ->
-      if (!cache.isValid) {
-        return@let
-      }
+  fun getSize(key: String): Int = lruCache.sizeInBytes
 
-      val frame = cache.get().getFrame(frameIndex) ?: return@let
-      if (frame.isValid) {
-        return frame
-      }
-    }
+  fun findAnimation(key: String): CloseableReference<AnimationFrames>? = lruCache[key]
 
-    return null
-  }
-
-  fun getSize(key: String): Int {
-    lruCache[key]?.let {
-      if (it.isValid) {
-        return it.get().sizeBytes
-      }
-    }
-
-    return 0
-  }
-
-  fun saveAnimation(key: String, newFrames: Map<Int, CloseableReference<Bitmap>>) {
-    val cachedAnimation = lruCache[key]
-    val mergedFrames = newFrames.toMutableMap()
-
-    if (cachedAnimation?.isValid == true) {
-      cachedAnimation
-          .get()
-          .frames
-          .filter { !mergedFrames.contains(it.key) }
-          .forEach { mergedFrames[it.key] = it.value.clone() }
-    }
-
-    lruCache.cache(key, CloseableReference.of(AnimationFrames(mergedFrames)))
+  fun saveAnimation(
+      key: String,
+      newFrames: Map<Int, CloseableReference<Bitmap>>
+  ): CloseableReference<AnimationFrames>? {
+    return lruCache.cache(key, CloseableReference.of(AnimationFrames(newFrames)))
   }
 
   fun removeAnimation(key: String) {
     lruCache[key]?.close()
   }
+
+  companion object {
+    private const val EVICTION_QUEUE = 50
+  }
 }
 
-private class AnimationFrames(map: Map<Int, CloseableReference<Bitmap>>) : Closeable {
+class AnimationFrames(map: Map<Int, CloseableReference<Bitmap>>) : Closeable {
   val frames = ConcurrentHashMap(map)
 
   val sizeBytes: Int =
@@ -92,7 +74,10 @@ private class AnimationFrames(map: Map<Int, CloseableReference<Bitmap>>) : Close
         } else 0
       }
 
-  fun getFrame(frameIndex: Int): CloseableReference<Bitmap>? = frames[frameIndex]
+  fun getFrame(frameIndex: Int): CloseableReference<Bitmap>? {
+    val frame = frames[frameIndex]
+    return if (frame?.isValid == true) frame else null
+  }
 
   override fun close() {
     frames.values.forEach { it.close() }

@@ -8,14 +8,17 @@
 package com.facebook.fresco.animation.bitmap.preparation
 
 import android.graphics.Bitmap
+import android.os.SystemClock
 import androidx.annotation.UiThread
 import com.facebook.common.references.CloseableReference
 import com.facebook.fresco.animation.backend.AnimationInformation
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache
 import com.facebook.fresco.animation.bitmap.preparation.loadframe.AnimationLoaderExecutor
+import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFrameOutput
 import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFrameTaskFactory
 import java.io.Closeable
 import java.util.SortedSet
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.ceil
 
@@ -41,8 +44,10 @@ class BalancedAnimationStrategy(
 
   private val fetchingFrames = AtomicBoolean(false)
   private val fetchingOnDemand = AtomicBoolean(false)
-  private val framesCached = AtomicBoolean(false)
+  private val framesCached: Boolean
+    get() = bitmapCache.isAnimationReady()
   private val onDemandFrames: SortedSet<Int> = sortedSetOf()
+  private var nextPrepareFrames = SystemClock.uptimeMillis()
 
   private val frameCount: Int = animationInformation.frameCount
   private val animationWidth: Int = animationInformation.width()
@@ -61,46 +66,74 @@ class BalancedAnimationStrategy(
   @UiThread
   override fun prepareFrames(canvasWidth: Int, canvasHeight: Int) {
     // Validate inputs
-    if (canvasWidth == 0 || canvasHeight == 0 || animationWidth == 0 || animationHeight == 0) {
+    if (canvasWidth <= 0 || canvasHeight <= 0 || animationWidth <= 0 || animationHeight <= 0) {
       return
     }
 
     // Validate status
-    if (framesCached.get() || fetchingFrames.get()) {
+    if (framesCached || fetchingFrames.get() || SystemClock.uptimeMillis() < nextPrepareFrames) {
       return
     }
 
     fetchingFrames.set(true)
-    val frameSize = generateBaseFrame(canvasWidth, canvasHeight)
+    val frameSize = calculateFrameSize(canvasWidth, canvasHeight)
+
     val task =
         if (!isFirstFrameReady()) {
-          loadFrameTaskFactory.createFirstFrameTask(frameSize.width, frameSize.height) {
-            bitmapCache.onAnimationPrepared(it)
-            fetchingFrames.set(false)
-          }
+          loadFrameTaskFactory.createFirstFrameTask(
+              frameSize.width,
+              frameSize.height,
+              object : LoadFrameOutput {
+                override fun onSuccess(frames: Map<Int, CloseableReference<Bitmap>>) {
+                  val cachedSucceed = bitmapCache.onAnimationPrepared(frames)
+                  if (!cachedSucceed) {
+                    nextPrepareFrames = SystemClock.uptimeMillis() + FETCH_FIRST_CACHE_DELAY_MS
+                  }
+                  fetchingFrames.set(false)
+                }
+
+                override fun onFail() {
+                  bitmapCache.clear()
+                  fetchingFrames.set(false)
+                }
+              })
         } else {
           loadFrameTaskFactory.createLoadFullAnimationTask(
-              frameSize.width, frameSize.height, frameCount) { frames ->
-                onDemandFrames.clear()
-                onDemandFrames.addAll(frames.filter { isOnDemandFrame(it.key) }.map { it.key })
+              frameSize.width,
+              frameSize.height,
+              frameCount,
+              object : LoadFrameOutput {
+                override fun onSuccess(frames: Map<Int, CloseableReference<Bitmap>>) {
+                  onDemandFrames.clear()
+                  onDemandFrames.addAll(frames.filter { isOnDemandFrame(it.key) }.map { it.key })
 
-                val memoryFrames = frames.filter { !onDemandFrames.contains(it.key) }
+                  val memoryFrames = frames.filter { !onDemandFrames.contains(it.key) }
 
-                bitmapCache.onAnimationPrepared(memoryFrames)
-                framesCached.set(true)
-                fetchingFrames.set(false)
-              }
+                  val cachedSucceed = bitmapCache.onAnimationPrepared(memoryFrames)
+                  if (!cachedSucceed) {
+                    nextPrepareFrames =
+                        SystemClock.uptimeMillis() + FETCH_FULL_ANIMATION_CACHE_DELAY_MS
+                  }
+
+                  fetchingFrames.set(false)
+                }
+
+                override fun onFail() {
+                  bitmapCache.clear()
+                  fetchingFrames.set(false)
+                }
+              })
         }
 
     AnimationLoaderExecutor.execute(task)
   }
 
   @UiThread
-  override fun getBitmapFrame(frameNumber: Int): CloseableReference<Bitmap>? {
-    if (!framesCached.get()) {
-      return bitmapCache.getCachedFrame(0)
-    }
-
+  override fun getBitmapFrame(
+      frameNumber: Int,
+      canvasWidth: Int,
+      canvasHeight: Int
+  ): CloseableReference<Bitmap>? {
     // Find the bitmap in cache memory (RAM)
     val cache = bitmapCache.getCachedFrame(frameNumber)
     if (cache?.isValid == true) {
@@ -110,14 +143,14 @@ class BalancedAnimationStrategy(
 
     // Check if bitmap should be cached
     if (!isOnDemandFrame(frameNumber)) {
-      framesCached.set(false)
+      prepareFrames(canvasWidth, canvasHeight)
     }
 
     if (onDemandBitmap?.isValidFor(frameNumber) == true) {
       return onDemandBitmap?.bitmap
     }
 
-    return findNearestFrame(frameNumber, 0)
+    return findNearestFrame(frameNumber)
   }
 
   private fun prepareNextOnDemandFrame(lastFrameRendered: Int) {
@@ -153,7 +186,7 @@ class BalancedAnimationStrategy(
     return frameNumber % onDemandRatio == 1
   }
 
-  private fun findNearestFrame(fromFrame: Int, frameCount: Int): CloseableReference<Bitmap>? {
+  private fun findNearestFrame(fromFrame: Int): CloseableReference<Bitmap>? {
     return (fromFrame downTo 0).asSequence().firstNotNullOfOrNull {
       val frame = bitmapCache.getCachedFrame(it)
       if (frame?.isValid == true) frame else null
@@ -162,6 +195,7 @@ class BalancedAnimationStrategy(
 
   override fun onStop() {
     onDemandBitmap?.close()
+    bitmapCache.clear()
   }
 
   override fun clearFrames() {
@@ -178,7 +212,7 @@ class BalancedAnimationStrategy(
     return onDemandFrames.firstOrNull { it > from } ?: onDemandFrames.first()
   }
 
-  private fun generateBaseFrame(canvasWidth: Int, canvasHeight: Int): Size {
+  private fun calculateFrameSize(canvasWidth: Int, canvasHeight: Int): Size {
     var bitmapWidth: Int = animationWidth
     var bitmapHeight: Int = animationHeight
 
@@ -195,6 +229,11 @@ class BalancedAnimationStrategy(
     }
 
     return Size(bitmapWidth, bitmapHeight)
+  }
+
+  companion object {
+    private val FETCH_FIRST_CACHE_DELAY_MS = 500
+    private val FETCH_FULL_ANIMATION_CACHE_DELAY_MS = TimeUnit.SECONDS.toMillis(5)
   }
 }
 

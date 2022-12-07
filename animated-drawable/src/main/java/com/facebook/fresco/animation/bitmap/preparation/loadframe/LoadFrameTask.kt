@@ -37,6 +37,9 @@ class LoadFrameTask(
       // Render frame
       val renderSucceed = bitmapFrameRenderer.renderFrame(frameNumber, canvasBitmapFrame.get())
       if (!renderSucceed) {
+        canvasBitmapFrame.close()
+        frameCollection.values.forEach { it.close() }
+        output.onFail()
         return@forEach
       }
 
@@ -46,6 +49,6 @@ class LoadFrameTask(
     }
 
     canvasBitmapFrame.close()
-    output(frameCollection)
+    output.onSuccess(frameCollection)
   }
 }

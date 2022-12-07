@@ -41,5 +41,9 @@ interface BitmapFramePreparationStrategy {
   /** Clear the frames from cache */
   fun clearFrames() = Unit
 
-  fun getBitmapFrame(frameNumber: Int): CloseableReference<Bitmap>? = null
+  fun getBitmapFrame(
+      frameNumber: Int,
+      canvasWidth: Int,
+      canvasHeight: Int
+  ): CloseableReference<Bitmap>? = null
 }
