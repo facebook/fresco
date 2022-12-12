@@ -44,7 +44,7 @@ object MediaUtils {
 
   /**
    * @return true if the mime type is one of our whitelisted mimetypes that we support beyond what
-   * the native platform supports.
+   *   the native platform supports.
    */
   @JvmStatic
   fun isNonNativeSupportedMimeType(@NonNull mimeType: String): Boolean {

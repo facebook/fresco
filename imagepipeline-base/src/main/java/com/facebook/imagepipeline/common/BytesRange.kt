@@ -102,9 +102,9 @@ data class BytesRange(
      * The header spec is at https://tools.ietf.org/html/rfc2616#section-14.16
      *
      * @param header
-     * @throws IllegalArgumentException if the header is non-null but fails to match the format per
-     * the spec
      * @return the parsed range
+     * @throws IllegalArgumentException if the header is non-null but fails to match the format per
+     *   the spec
      */
     @JvmStatic
     @Throws(IllegalArgumentException::class)

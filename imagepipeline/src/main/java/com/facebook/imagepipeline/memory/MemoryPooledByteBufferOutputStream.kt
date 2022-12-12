@@ -81,7 +81,7 @@ constructor(pool: MemoryChunkPool, initialCapacity: Int = pool.minBufferSize) :
    * @param count the number of bytes from `buffer` to write to this stream.
    * @throws IOException if an error occurs while writing to this stream.
    * @throws IndexOutOfBoundsException if `offset < 0` or `count < 0`, or if `offset + count` is
-   * bigger than the length of `buffer`.
+   *   bigger than the length of `buffer`.
    * @throws InvalidStreamException if the stream is invalid
    */
   @Throws(IOException::class)

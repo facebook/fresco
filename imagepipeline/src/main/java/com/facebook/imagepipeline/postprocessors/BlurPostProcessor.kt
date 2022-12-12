@@ -28,7 +28,7 @@ class BlurPostProcessor
  * Creates an instance of [BlurPostProcessor].
  *
  * @param blurRadius The radius of the blur in range 0 < radius <= [ ]
- * [RenderScriptBlurFilter.BLUR_MAX_RADIUS].
+ *   [RenderScriptBlurFilter.BLUR_MAX_RADIUS].
  * @param context A valid [Context].
  * @param iterations The number of iterations of the blurring algorithm > 0.
  */

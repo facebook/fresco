@@ -181,11 +181,11 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
      *
      * @param useBitmapPrepareToDraw set true for enabling prepareToDraw
      * @param minBitmapSizeBytes Bitmaps with a [Bitmap.getByteCount] smaller than this value are
-     * not uploaded
+     *   not uploaded
      * @param maxBitmapSizeBytes Bitmaps with a [Bitmap.getByteCount] larger than this value are not
-     * uploaded
+     *   uploaded
      * @param preparePrefetch If this is true, also pre-fetching image requests will trigger the
-     * [android.graphics.Bitmap.prepareToDraw] call.
+     *   [android.graphics.Bitmap.prepareToDraw] call.
      * @return The Builder itself for chaining
      */
     fun setBitmapPrepareToDraw(

@@ -109,7 +109,7 @@ class BufferedDiskCache(
    *
    * @param key
    * @return Task that resolves to cached element or null if one cannot be retrieved; returned task
-   * never rethrows any exception
+   *   never rethrows any exception
    */
   operator fun get(key: CacheKey, isCancelled: AtomicBoolean): Task<EncodedImage> =
       try {

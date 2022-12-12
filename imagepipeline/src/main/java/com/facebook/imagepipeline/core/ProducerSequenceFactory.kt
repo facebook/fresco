@@ -434,7 +434,7 @@ class ProducerSequenceFactory(
    *
    * @param inputProducer the source producer
    * @param thumbnailProducers the thumbnail producers from which to request the image before
-   * falling back to the full image producer sequence
+   *   falling back to the full image producer sequence
    * @return the new sequence
    */
   private fun newBitmapCacheGetToLocalTransformSequence(
@@ -529,7 +529,7 @@ class ProducerSequenceFactory(
    *
    * @param inputProducer producer providing the input to add meta data producer
    * @param thumbnailProducers the thumbnail producers from which to request the image before
-   * falling back to the full image producer sequence
+   *   falling back to the full image producer sequence
    * @return local transformations sequence
    */
   private fun newLocalTransformationsSequence(

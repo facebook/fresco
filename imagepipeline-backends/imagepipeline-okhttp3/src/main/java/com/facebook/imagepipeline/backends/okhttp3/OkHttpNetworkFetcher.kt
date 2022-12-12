@@ -32,9 +32,10 @@ import okhttp3.ResponseBody
 
 /**
  * Network fetcher that uses OkHttp 3 as a backend.
+ *
  * @param callFactory custom [Call.Factory] for fetching image from the network
  * @param cancellationExecutor executor on which fetching cancellation is performed if cancellation
- * is requested from the UI Thread
+ *   is requested from the UI Thread
  * @param disableOkHttpCache true if network requests should not be cached by OkHttp
  */
 open class OkHttpNetworkFetcher

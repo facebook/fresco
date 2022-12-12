@@ -26,9 +26,9 @@ interface ImageTranscoder {
    * @param rotationOptions The [RotationOptions] used when transcoding the image.
    * @param resizeOptions The [ResizeOptions] used when transcoding the image.
    * @param outputFormat The desired [ImageFormat] of the newly created image. If this is null the
-   * same format as the input image will be used.
+   *   same format as the input image will be used.
    * @param quality The desired quality of the newly created image. If this is null, the default
-   * quality of the transcoder will be applied.
+   *   quality of the transcoder will be applied.
    * @return The [ImageTranscodeResult] generated when encoding the image.
    * @throws IOException if I/O error happens when reading or writing the images.
    */

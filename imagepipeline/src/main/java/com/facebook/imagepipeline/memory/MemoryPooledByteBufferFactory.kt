@@ -76,7 +76,7 @@ private val pool: MemoryChunkPool, private val pooledByteStreams: PooledByteStre
    *
    * @param inputStream the input stream to read from
    * @param outputStream output stream used to transform content of input stream to
-   * MemoryPooledByteBuffer
+   *   MemoryPooledByteBuffer
    * @return an instance of MemoryPooledByteBuffer
    * @throws IOException
    */

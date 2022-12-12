@@ -68,8 +68,8 @@ interface PlatformDecoder {
    * @param bitmapConfig the [android.graphics.Bitmap.Config] used to create the decoded Bitmap
    * @param regionToDecode optional image region to decode or null to decode the whole image
    * @param colorSpace the target color space of the decoded bitmap, must be one of the named color
-   * space in [android.graphics.ColorSpace.Named]. If null, then SRGB color space is assumed if the
-   * SDK version >= 26.
+   *   space in [android.graphics.ColorSpace.Named]. If null, then SRGB color space is assumed if
+   *   the SDK version >= 26.
    * @return the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
@@ -91,8 +91,8 @@ interface PlatformDecoder {
    * @param regionToDecode optional image region to decode or null to decode the whole image.
    * @param length the number of encoded bytes in the buffer
    * @param colorSpace the target color space of the decoded bitmap, must be one of the named color
-   * space in [android.graphics.ColorSpace.Named]. If null, then SRGB color space is assumed if the
-   * SDK version >= 26.
+   *   space in [android.graphics.ColorSpace.Named]. If null, then SRGB color space is assumed if
+   *   the SDK version >= 26.
    * @return the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated

@@ -122,7 +122,7 @@ interface FrescoVitoPrefetcher {
    * Sets the image's relative distance to the viewport for the purpose of prioritization.
    *
    * @param distance the image's distance to the viewport. Positive values mean below the viewport,
-   * negative values mean above the viewport and zero means visible
+   *   negative values mean above the viewport and zero means visible
    * @param callerContext the caller context for the iamge
    * @param uri the image URI
    * @param callsite the callsite from which this request is being made, for logging

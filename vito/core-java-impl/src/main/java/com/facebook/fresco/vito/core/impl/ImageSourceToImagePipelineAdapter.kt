@@ -44,7 +44,7 @@ object ImageSourceToImagePipelineAdapter {
    *
    * @param imagePipelineUtils util class to create the final image request
    * @param imageOptions the image options to use, important if for example rounding is done at
-   * decode time
+   *   decode time
    * @return the final image request or null if not possible to determine
    */
   @JvmStatic
