@@ -34,8 +34,6 @@ public abstract class BaseCloseableImage implements CloseableImage {
               "is_rounded",
               "non_fatal_decode_error"));
 
-  private @Nullable MutableImageInfo mCacheImageInfo;
-
   /**
    * Returns quality information for the image.
    *
@@ -82,19 +80,5 @@ public abstract class BaseCloseableImage implements CloseableImage {
     if (mImageExtrasList.contains(extra)) {
       mExtras.put(extra, value);
     }
-  }
-
-  @Override
-  public ImageInfo getImageInfo() {
-    if (mCacheImageInfo == null) {
-      mCacheImageInfo =
-          new MutableImageInfo(getWidth(), getHeight(), getQualityInfo(), getExtras());
-    } else {
-      mCacheImageInfo.width = getWidth();
-      mCacheImageInfo.height = getHeight();
-      mCacheImageInfo.qualityInfo = getQualityInfo();
-      mCacheImageInfo.extras = getExtras();
-    }
-    return mCacheImageInfo;
   }
 }

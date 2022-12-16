@@ -14,7 +14,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public interface CloseableImage extends Closeable, HasBitmap, HasImageMetadata {
+public interface CloseableImage extends Closeable, ImageInfo, HasBitmap {
   /** @return size in bytes of the bitmap(s) */
   int getSizeInBytes();
 
@@ -30,15 +30,4 @@ public interface CloseableImage extends Closeable, HasBitmap, HasImageMetadata {
   void setImageExtra(String extra, Object value);
 
   boolean isStateful();
-
-  /** @return width of the image */
-  int getWidth();
-
-  /** @return height of the image */
-  int getHeight();
-
-  /** @return quality information for the image */
-  QualityInfo getQualityInfo();
-
-  ImageInfo getImageInfo();
 }
