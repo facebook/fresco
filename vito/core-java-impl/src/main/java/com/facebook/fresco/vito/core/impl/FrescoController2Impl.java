@@ -281,6 +281,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       ((Animatable) actualDrawable).start();
     }
     Extras extras = obtainExtras(dataSource, image, drawable);
+    ImageInfo imageInfo = image.get().getImageInfo();
     if (notifyFinalResult(dataSource)) {
       drawable
           .getInternalListener()
@@ -288,13 +289,13 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
               drawable.getImageId(),
               imageRequest,
               drawable.getImageOrigin(),
-              image.get(),
+              imageInfo,
               extras,
               actualDrawable);
     } else {
       drawable
           .getInternalListener()
-          .onIntermediateImageSet(drawable.getImageId(), imageRequest, image.get());
+          .onIntermediateImageSet(drawable.getImageId(), imageRequest, imageInfo);
     }
     drawable.getImagePerfListener().onImageSuccess(drawable, isImmediate);
     float progress = 1f;

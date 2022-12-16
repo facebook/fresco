@@ -127,11 +127,12 @@ class KFrescoController(
               imageRequest.resources, options, image, imageToDataModelMapper)
           // TODO(T105148151): trigger listeners
           drawable.invalidateSelf()
+          val imageInfo = image.imageInfo
           drawable.listenerManager.onFinalImageSet(
               imageId,
               imageRequest,
               ImageOrigin.MEMORY_BITMAP_SHORTCUT,
-              image,
+              imageInfo,
               drawable.obtainExtras(null, cachedImage),
               drawable.actualImageDrawable)
           debugOverlayHandler?.update(drawable)
