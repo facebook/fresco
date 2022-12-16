@@ -18,9 +18,7 @@ import javax.annotation.Nullable;
 
 /** A simple wrapper around an image that implements {@link Closeable} */
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public abstract class BaseCloseableImage implements CloseableImage, ImageInfo {
-  public static boolean sCreateImageInfo;
-
+public abstract class BaseCloseableImage implements CloseableImage {
   private Map<String, Object> mExtras = new HashMap<>();
 
   /* Extras we want to set to the image */
@@ -88,9 +86,6 @@ public abstract class BaseCloseableImage implements CloseableImage, ImageInfo {
 
   @Override
   public ImageInfo getImageInfo() {
-    if (!sCreateImageInfo) {
-      return this;
-    }
     if (mCacheImageInfo == null) {
       mCacheImageInfo =
           new MutableImageInfo(getWidth(), getHeight(), getQualityInfo(), getExtras());
