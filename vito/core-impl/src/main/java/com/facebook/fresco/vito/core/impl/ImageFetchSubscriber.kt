@@ -52,16 +52,17 @@ class ImageFetchSubscriber(
     if (dataSource.isFinished) {
       drawable.hideProgressLayer()
     }
+    val imageInfo = image.imageInfo
     if (notifyFinalResult(dataSource)) {
       drawable.listenerManager.onFinalImageSet(
           imageId,
           request,
           ImageOrigin.UNKNOWN,
-          image,
+          imageInfo,
           drawable.obtainExtras(dataSource, result),
           drawable.actualImageDrawable)
     } else {
-      drawable.listenerManager.onIntermediateImageSet(imageId, request, image)
+      drawable.listenerManager.onIntermediateImageSet(imageId, request, imageInfo)
     }
     invalidate(drawable)
   }
