@@ -30,4 +30,15 @@ public interface CloseableImage extends Closeable, ImageInfo, HasBitmap {
   void setImageExtra(String extra, Object value);
 
   boolean isStateful();
+
+  /** @return width of the image */
+  int getWidth();
+
+  /** @return height of the image */
+  int getHeight();
+
+  /** @return quality information for the image */
+  QualityInfo getQualityInfo();
+
+  ImageInfo getImageInfo();
 }

@@ -393,7 +393,7 @@ public class PipelineDraweeController
   @Override
   protected ImageInfo getImageInfo(CloseableReference<CloseableImage> image) {
     Preconditions.checkState(CloseableReference.isValid(image));
-    return image.get();
+    return image.get().getImageInfo();
   }
 
   @Override
