@@ -94,12 +94,14 @@ public abstract class BaseCloseableImage implements CloseableImage {
 
     if (mCacheImageInfo == null) {
       mCacheImageInfo =
-          new MutableImageInfo(getWidth(), getHeight(), getQualityInfo(), getExtras());
+          new MutableImageInfo(
+              getWidth(), getHeight(), getSizeInBytes(), getQualityInfo(), getExtras());
     } else {
       mCacheImageInfo.width = getWidth();
       mCacheImageInfo.height = getHeight();
       mCacheImageInfo.qualityInfo = getQualityInfo();
       mCacheImageInfo.extras = getExtras();
+      mCacheImageInfo.sizeInBytes = getSizeInBytes();
     }
     return mCacheImageInfo;
   }

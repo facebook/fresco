@@ -13,19 +13,20 @@ import java.util.Map;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class MutableImageInfo implements ImageInfo {
+  int width;
+  int height;
+  int sizeInBytes;
+  QualityInfo qualityInfo;
+  Map<String, Object> extras;
 
   public MutableImageInfo(
-      int width, int height, QualityInfo qualityInfo, Map<String, Object> extras) {
+      int width, int height, int sizeInBytes, QualityInfo qualityInfo, Map<String, Object> extras) {
     this.width = width;
     this.height = height;
+    this.sizeInBytes = sizeInBytes;
     this.qualityInfo = qualityInfo;
     this.extras = extras;
   }
-
-  int width;
-  int height;
-  QualityInfo qualityInfo;
-  Map<String, Object> extras;
 
   @NonNull
   @Override
@@ -41,6 +42,11 @@ public class MutableImageInfo implements ImageInfo {
   @Override
   public int getHeight() {
     return height;
+  }
+
+  @Override
+  public int getSizeInBytes() {
+    return sizeInBytes;
   }
 
   @Override
