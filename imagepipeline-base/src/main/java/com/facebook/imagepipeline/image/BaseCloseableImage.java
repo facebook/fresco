@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 /** A simple wrapper around an image that implements {@link Closeable} */
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class BaseCloseableImage implements CloseableImage {
-  public boolean sCreateImageInfo;
+  private static boolean sCreateImageInfo;
 
   private Map<String, Object> mExtras = new HashMap<>();
 
@@ -104,5 +104,13 @@ public abstract class BaseCloseableImage implements CloseableImage {
       mCacheImageInfo.sizeInBytes = getSizeInBytes();
     }
     return mCacheImageInfo;
+  }
+
+  public static boolean shouldCreateImageInfo() {
+    return sCreateImageInfo;
+  }
+
+  public static void setCreateImageInfo(boolean createImageInfo) {
+    sCreateImageInfo = createImageInfo;
   }
 }
