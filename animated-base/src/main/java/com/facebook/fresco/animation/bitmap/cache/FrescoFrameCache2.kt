@@ -15,7 +15,6 @@ import com.facebook.fresco.animation.bitmap.BitmapFrameCache.FrameCacheListener
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult
 import com.facebook.imagepipeline.cache.AnimatedCache
 import com.facebook.imagepipeline.cache.AnimationFrames
-import java.util.concurrent.atomic.AtomicBoolean
 
 /** Bitmap frame cache used for animated drawables */
 class FrescoFrameCache2(
@@ -25,21 +24,11 @@ class FrescoFrameCache2(
 
   private val cacheKey: String =
       animatedImageResult.source ?: animatedImageResult.image.hashCode().toString()
-  private var animatedCache: CloseableReference<AnimationFrames>? =
+  private var animationFrames: CloseableReference<AnimationFrames>? =
       animatedDrawableCache.findAnimation(cacheKey)
-  private val isCleared = AtomicBoolean(true)
 
   override fun getCachedFrame(frameNumber: Int): CloseableReference<Bitmap>? {
-    if (isCleared.getAndSet(false)) {
-      animatedCache = animatedDrawableCache.findAnimation(cacheKey)
-    }
-
-    return if (animatedCache?.isValid == true) {
-      animatedCache?.get()?.getFrame(frameNumber)
-    } else {
-      releaseCache()
-      null
-    }
+    return safeAnimationFrames()?.getFrame(frameNumber)
   }
 
   override fun getFallbackFrame(frameNumber: Int): CloseableReference<Bitmap>? {
@@ -59,22 +48,18 @@ class FrescoFrameCache2(
   }
 
   override val sizeInBytes: Int
-    get() = if (animatedCache?.isValid == true) animatedCache?.get()?.sizeBytes ?: 0 else 0
+    get() = safeAnimationFrames()?.sizeBytes ?: 0
 
   override fun clear() {
-    isCleared.set(true)
     releaseCache()
   }
 
   private fun releaseCache() {
-    animatedCache?.close()
-    animatedCache = null
+    animationFrames?.close()
+    animationFrames = null
   }
 
-  override fun isAnimationReady(): Boolean {
-    return if (animatedCache?.isValid == true) animatedCache?.get()?.frames.orEmpty().size > 1
-    else false
-  }
+  override fun isAnimationReady(): Boolean = safeAnimationFrames()?.frames.orEmpty().size > 1
 
   override fun onFrameRendered(
       frameNumber: Int,
@@ -89,7 +74,9 @@ class FrescoFrameCache2(
   ) = Unit
 
   override fun onAnimationPrepared(frameBitmaps: Map<Int, CloseableReference<Bitmap>>): Boolean {
-    if (frameBitmaps.size >= animatedCache?.get()?.frames.orEmpty().size) {
+    val loadedFramesCount = safeAnimationFrames()?.frames.orEmpty().size
+
+    if (frameBitmaps.size >= loadedFramesCount) {
       val cacheRef = animatedDrawableCache.saveAnimation(cacheKey, frameBitmaps)
 
       // Check if we had enough space to allocate the animation
@@ -99,10 +86,20 @@ class FrescoFrameCache2(
         return false
       } else {
         releaseCache()
-        animatedCache = cacheRef
+        this.animationFrames = cacheRef
       }
     }
     return true
+  }
+
+  @Synchronized
+  private fun safeAnimationFrames(): AnimationFrames? {
+    val animatedCache =
+        animationFrames ?: animatedDrawableCache.findAnimation(cacheKey) ?: return null
+
+    // animatedCache instance is shared between this class and AnimatedCache class. Then we need to
+    // specify that this instance cannot be modified when we perform .get()
+    return synchronized(animatedCache) { if (animatedCache.isValid) animatedCache.get() else null }
   }
 
   override fun setFrameCacheListener(frameCacheListener: FrameCacheListener?) = Unit
