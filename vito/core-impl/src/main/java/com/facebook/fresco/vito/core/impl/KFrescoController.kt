@@ -13,6 +13,7 @@ import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import com.facebook.common.callercontext.ContextChain
 import com.facebook.common.internal.Supplier
+import com.facebook.common.logging.FLog
 import com.facebook.common.references.CloseableReference
 import com.facebook.datasource.DataSource
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin
@@ -76,7 +77,7 @@ class KFrescoController(
   }
 
   override fun fetch(
-      frescoDrawable: FrescoDrawableInterface,
+      drawable: FrescoDrawableInterface,
       imageRequest: VitoImageRequest,
       callerContext: Any?,
       contextChain: ContextChain?,
@@ -84,7 +85,10 @@ class KFrescoController(
       onFadeListener: OnFadeListener?,
       viewportDimensions: Rect?
   ): Boolean {
-    val drawable = frescoDrawable as KFrescoVitoDrawable
+    if (drawable !is KFrescoVitoDrawable) {
+      FLog.e(TAG, "Drawable not supported $drawable")
+      return false
+    }
 
     // Check if we already fetched that image
     if (isAlreadyLoadingImage(imageRequest, drawable)) {
@@ -170,15 +174,27 @@ class KFrescoController(
   }
 
   override fun releaseDelayed(drawable: FrescoDrawableInterface) {
-    ImageReleaseScheduler.releaseDelayed(drawable as KFrescoVitoDrawable)
+    if (drawable !is KFrescoVitoDrawable) {
+      FLog.e(TAG, "Drawable not supported $drawable")
+      return
+    }
+    ImageReleaseScheduler.releaseDelayed(drawable)
   }
 
   override fun release(drawable: FrescoDrawableInterface) {
-    ImageReleaseScheduler.releaseNextFrame(drawable as KFrescoVitoDrawable)
+    if (drawable !is KFrescoVitoDrawable) {
+      FLog.e(TAG, "Drawable not supported $drawable")
+      return
+    }
+    ImageReleaseScheduler.releaseNextFrame(drawable)
   }
 
   override fun releaseImmediately(drawable: FrescoDrawableInterface) {
-    ImageReleaseScheduler.releaseImmediately(drawable as KFrescoVitoDrawable)
+    if (drawable !is KFrescoVitoDrawable) {
+      FLog.e(TAG, "Drawable not supported $drawable")
+      return
+    }
+    ImageReleaseScheduler.releaseImmediately(drawable)
   }
 
   private fun isAlreadyLoadingImage(
@@ -197,4 +213,8 @@ class KFrescoController(
       } else {
         DrawableImageDataModel(drawable)
       }
+
+  companion object {
+    private const val TAG = "KFrescoController"
+  }
 }

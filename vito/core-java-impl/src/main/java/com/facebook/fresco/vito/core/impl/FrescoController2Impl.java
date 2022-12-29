@@ -14,6 +14,7 @@ import android.net.Uri;
 import com.facebook.common.callercontext.ContextChain;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Supplier;
+import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
@@ -48,6 +49,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       ImmutableMap.<String, Object>of("component_tag", "vito2");
   private static final Map<String, Object> SHORTCUT_EXTRAS =
       ImmutableMap.<String, Object>of("origin", "memory_bitmap", "origin_sub", "shortcut");
+  private static final String TAG = "FrescoController2Impl";
 
   private final FrescoVitoConfig mConfig;
   private final Hierarcher mHierarcher;
@@ -100,7 +102,8 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       final @Nullable OnFadeListener onFadeListener,
       final @Nullable Rect viewportDimensions) {
     if (!(drawable instanceof FrescoDrawable2Impl)) {
-      throw new IllegalArgumentException("Drawable not supported " + drawable);
+      FLog.e(TAG, "Drawable not supported " + drawable);
+      return false;
     }
     final FrescoDrawable2Impl frescoDrawable = (FrescoDrawable2Impl) drawable;
 
@@ -227,7 +230,8 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   @Override
   public void releaseDelayed(final FrescoDrawableInterface drawable) {
     if (!(drawable instanceof FrescoDrawable2Impl)) {
-      throw new IllegalArgumentException("Drawable not supported " + drawable);
+      FLog.e(TAG, "Drawable not supported " + drawable);
+      return;
     }
     FrescoDrawable2Impl frescoDrawable = (FrescoDrawable2Impl) drawable;
     frescoDrawable.getImagePerfListener().onScheduleReleaseDelayed(frescoDrawable);
@@ -237,7 +241,8 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   @Override
   public void release(final FrescoDrawableInterface drawable) {
     if (!(drawable instanceof FrescoDrawable2Impl)) {
-      throw new IllegalArgumentException("Drawable not supported " + drawable);
+      FLog.e(TAG, "Drawable not supported " + drawable);
+      return;
     }
     FrescoDrawable2Impl frescoDrawable = (FrescoDrawable2Impl) drawable;
     frescoDrawable.getImagePerfListener().onScheduleReleaseNextFrame(frescoDrawable);
@@ -247,7 +252,8 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
   @Override
   public void releaseImmediately(FrescoDrawableInterface drawable) {
     if (!(drawable instanceof FrescoDrawable2Impl)) {
-      throw new IllegalArgumentException("Drawable not supported " + drawable);
+      FLog.e(TAG, "Drawable not supported " + drawable);
+      return;
     }
     FrescoDrawable2Impl frescoDrawable = (FrescoDrawable2Impl) drawable;
     frescoDrawable.getImagePerfListener().onReleaseImmediately(frescoDrawable);
