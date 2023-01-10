@@ -13,6 +13,7 @@ import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 
 /**
@@ -45,6 +46,8 @@ public class ContextChain implements Parcelable {
 
   private @Nullable String mSerializedString;
 
+  private static boolean sUseConcurrentHashMap = false;
+
   public ContextChain(
       final String tag,
       final String name,
@@ -60,12 +63,20 @@ public class ContextChain implements Parcelable {
       parentExtraData = parent.getExtraData();
     }
     if (parentExtraData != null) {
-      mExtraData = new HashMap<>(parentExtraData);
+      if (sUseConcurrentHashMap) {
+        mExtraData = new ConcurrentHashMap<>(parentExtraData);
+      } else {
+        mExtraData = new HashMap<>(parentExtraData);
+      }
     }
 
     if (extraData != null) {
       if (mExtraData == null) {
-        mExtraData = new HashMap<>();
+        if (sUseConcurrentHashMap) {
+          mExtraData = new ConcurrentHashMap<>();
+        } else {
+          mExtraData = new HashMap<>();
+        }
       }
       mExtraData.putAll(extraData);
     }
@@ -80,6 +91,10 @@ public class ContextChain implements Parcelable {
     mName = in.readString();
     mLevel = in.readInt();
     mParent = in.readParcelable(ContextChain.class.getClassLoader());
+  }
+
+  public static void setUseConcurrentHashMap(boolean useConcurrentHashMap) {
+    sUseConcurrentHashMap = useConcurrentHashMap;
   }
 
   public String getName() {
@@ -115,7 +130,11 @@ public class ContextChain implements Parcelable {
 
   public void putObjectExtra(String key, Object value) {
     if (mExtraData == null) {
-      mExtraData = new HashMap<>();
+      if (sUseConcurrentHashMap) {
+        mExtraData = new ConcurrentHashMap<>();
+      } else {
+        mExtraData = new HashMap<>();
+      }
     }
     mExtraData.put(key, value);
   }
