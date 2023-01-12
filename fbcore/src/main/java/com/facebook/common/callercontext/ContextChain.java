@@ -124,11 +124,19 @@ public class ContextChain implements Parcelable {
     if (mExtraData == null) {
       return null;
     }
+    // concurrenthashmap will throw NPE when key parameter is null
+    if (sUseConcurrentHashMap && key == null) {
+      return null;
+    }
     Object val = mExtraData.get(key);
     return val == null ? null : String.valueOf(val);
   }
 
   public void putObjectExtra(String key, Object value) {
+    // concurrenthashmap will throw NPE when key or value is null
+    if (sUseConcurrentHashMap && (key == null || value == null)) {
+      return;
+    }
     if (mExtraData == null) {
       if (sUseConcurrentHashMap) {
         mExtraData = new ConcurrentHashMap<>();
