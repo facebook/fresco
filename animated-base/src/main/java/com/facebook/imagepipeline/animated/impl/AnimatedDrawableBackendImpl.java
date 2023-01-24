@@ -272,10 +272,10 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     float xScale = canvasWidth / (float) mAnimatedImage.getWidth();
     float yScale = canvasHeight / (float) mAnimatedImage.getHeight();
 
-    int frameWidth = (int) Math.round(frame.getWidth() * xScale);
-    int frameHeight = (int) Math.round(frame.getHeight() * yScale);
-    int xOffset = (int) (frame.getXOffset() * xScale);
-    int yOffset = (int) (frame.getYOffset() * yScale);
+    int frameWidth = (int) Math.ceil(frame.getWidth() * xScale);
+    int frameHeight = (int) Math.ceil(frame.getHeight() * yScale);
+    int xOffset = (int) Math.ceil(frame.getXOffset() * xScale);
+    int yOffset = (int) Math.ceil(frame.getYOffset() * yScale);
 
     // Impress the frame in the bitmap
     Bitmap frameBitmap = Bitmap.createBitmap(frameWidth, frameHeight, Bitmap.Config.ARGB_8888);
@@ -285,7 +285,9 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     Rect renderDstRect = new Rect(xOffset, yOffset, xOffset + frameWidth, yOffset + frameHeight);
 
     // Clean previous frame surface if that frame was disposable
-    maybeDisposeBackground(canvas, xScale, yScale, frameInfo);
+    if (previousFrameInfo != null) {
+      maybeDisposeBackground(canvas, xScale, yScale, previousFrameInfo);
+    }
 
     // If current frame is no_blend, then we have to clean their surface before rendering
     if (frameInfo.blendOperation == BlendOperation.NO_BLEND) {
@@ -296,16 +298,12 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
   }
 
   private void maybeDisposeBackground(
-      Canvas canvas,
-      float xScale,
-      float yScale,
-      @Nullable AnimatedDrawableFrameInfo previousFrameInfo) {
-    if (previousFrameInfo != null
-        && previousFrameInfo.disposalMethod == DisposalMethod.DISPOSE_TO_BACKGROUND) {
-      int prevFrameWidth = (int) Math.round(previousFrameInfo.width * xScale);
-      int prevFrameHeight = (int) Math.round(previousFrameInfo.height * yScale);
-      int prevXOffset = (int) (previousFrameInfo.xOffset * xScale);
-      int prevYOffset = (int) (previousFrameInfo.yOffset * yScale);
+      Canvas canvas, float xScale, float yScale, AnimatedDrawableFrameInfo previousFrameInfo) {
+    if (previousFrameInfo.disposalMethod == DisposalMethod.DISPOSE_TO_BACKGROUND) {
+      int prevFrameWidth = (int) Math.ceil(previousFrameInfo.width * xScale);
+      int prevFrameHeight = (int) Math.ceil(previousFrameInfo.height * yScale);
+      int prevXOffset = (int) Math.ceil(previousFrameInfo.xOffset * xScale);
+      int prevYOffset = (int) Math.ceil(previousFrameInfo.yOffset * yScale);
       Rect prevFrameSurface =
           new Rect(
               prevXOffset,
@@ -360,7 +358,9 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     float scale = (float) canvas.getWidth() / mRenderedBounds.width();
 
     // Clean previous frame surface if that frame was disposable
-    maybeDisposeBackground(canvas, scale, scale, frameInfo);
+    if (previousFrameInfo != null) {
+      maybeDisposeBackground(canvas, scale, scale, previousFrameInfo);
+    }
 
     // Prepare the new frame
     int frameWidth = frame.getWidth();
