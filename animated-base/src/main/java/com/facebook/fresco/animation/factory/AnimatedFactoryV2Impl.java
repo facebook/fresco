@@ -53,7 +53,6 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   private final ExecutorSupplier mExecutorSupplier;
   private final CountingMemoryCache<CacheKey, CloseableImage> mBackingCache;
   private final boolean mDownscaleFrameToDrawableDimensions;
-  private final Supplier<Boolean> useNewBitmapRender = Suppliers.BOOLEAN_FALSE;
 
   private @Nullable AnimatedImageFactory mAnimatedImageFactory;
   private @Nullable AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
@@ -61,6 +60,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   private @Nullable DrawableFactory mAnimatedDrawableFactory;
   private @Nullable SerialExecutorService mSerialExecutorService;
   private final AnimatedCache mAnimatedCache;
+  private final boolean mUseBalancedAnimationStrategy;
 
   @DoNotStrip
   public AnimatedFactoryV2Impl(
@@ -69,11 +69,13 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
       CountingMemoryCache<CacheKey, CloseableImage> backingCache,
       AnimatedCache animatedCache,
       boolean downscaleFrameToDrawableDimensions,
+      boolean useBalancedAnimationStrategy,
       SerialExecutorService serialExecutorServiceForFramePreparing) {
     mPlatformBitmapFactory = platformBitmapFactory;
     mExecutorSupplier = executorSupplier;
     mBackingCache = backingCache;
     mAnimatedCache = animatedCache;
+    this.mUseBalancedAnimationStrategy = useBalancedAnimationStrategy;
     mDownscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions;
     mSerialExecutorService = serialExecutorServiceForFramePreparing;
   }
@@ -134,7 +136,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
         cachingStrategySupplier,
         numberOfFramesToPrepareSupplier,
         useDeepEquals,
-        useNewBitmapRender,
+        Suppliers.of(mUseBalancedAnimationStrategy),
         balancedAnimationStrategyMs);
   }
 
@@ -184,6 +186,8 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
           }
         };
     return new AnimatedImageFactoryImpl(
-        animatedDrawableBackendProvider, mPlatformBitmapFactory, useNewBitmapRender.get());
+        animatedDrawableBackendProvider,
+        mPlatformBitmapFactory,
+        this.mUseBalancedAnimationStrategy);
   }
 }

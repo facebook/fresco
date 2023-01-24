@@ -27,6 +27,7 @@ object AnimatedFactoryProvider {
       backingCache: CountingMemoryCache<CacheKey?, CloseableImage?>?,
       animatedCache: AnimatedCache,
       downscaleFrameToDrawableDimensions: Boolean,
+      useBalancedAnimationStrategy: Boolean,
       serialExecutorService: ExecutorService?
   ): AnimatedFactory? {
     if (!implLoaded) {
@@ -39,6 +40,7 @@ object AnimatedFactoryProvider {
                 CountingMemoryCache::class.java,
                 AnimatedCache::class.java,
                 java.lang.Boolean.TYPE,
+                java.lang.Boolean.TYPE,
                 SerialExecutorService::class.java)
         impl =
             constructor.newInstance(
@@ -47,6 +49,7 @@ object AnimatedFactoryProvider {
                 backingCache,
                 animatedCache,
                 downscaleFrameToDrawableDimensions,
+                useBalancedAnimationStrategy,
                 serialExecutorService) as AnimatedFactory
       } catch (e: Throwable) {
         // Head in the sand

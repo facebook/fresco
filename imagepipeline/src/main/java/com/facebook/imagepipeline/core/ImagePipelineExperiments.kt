@@ -43,6 +43,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val webpBitmapFactory: WebpBitmapFactory?
   val useDownsamplingRatioForResizing: Boolean
   val useBitmapPrepareToDraw: Boolean
+  val useBalancedAnimationStrategy: Boolean
   val bitmapPrepareToDrawMinSizeBytes: Int
   val bitmapPrepareToDrawMaxSizeBytes: Int
   val bitmapPrepareToDrawForPrefetch: Boolean
@@ -79,6 +80,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var webpBitmapFactory: WebpBitmapFactory? = null
     @JvmField var useDownsamplingRatioForResizing = false
     @JvmField var useBitmapPrepareToDraw = false
+    @JvmField var useBalancedAnimationStrategy = false
     @JvmField var bitmapPrepareToDrawMinSizeBytes = 0
     @JvmField var bitmapPrepareToDrawMaxSizeBytes = 0
 
@@ -198,6 +200,11 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
       this.bitmapPrepareToDrawMinSizeBytes = minBitmapSizeBytes
       this.bitmapPrepareToDrawMaxSizeBytes = maxBitmapSizeBytes
       this.bitmapPrepareToDrawForPrefetch = preparePrefetch
+    }
+
+    /** Enable balance strategy between RAM and CPU for rendering bitmap animations (WebP, Gif) */
+    fun setBalancedAnimationStrategy(useBalancedAnimationStrategy: Boolean) = asBuilder {
+      this.useBalancedAnimationStrategy = useBalancedAnimationStrategy
     }
 
     /**
@@ -377,6 +384,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     webpBitmapFactory = builder.webpBitmapFactory
     useDownsamplingRatioForResizing = builder.useDownsamplingRatioForResizing
     useBitmapPrepareToDraw = builder.useBitmapPrepareToDraw
+    useBalancedAnimationStrategy = builder.useBalancedAnimationStrategy
     bitmapPrepareToDrawMinSizeBytes = builder.bitmapPrepareToDrawMinSizeBytes
     bitmapPrepareToDrawMaxSizeBytes = builder.bitmapPrepareToDrawMaxSizeBytes
     bitmapPrepareToDrawForPrefetch = builder.bitmapPrepareToDrawForPrefetch
