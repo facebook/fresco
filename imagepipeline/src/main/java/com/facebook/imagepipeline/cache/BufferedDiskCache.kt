@@ -152,7 +152,6 @@ class BufferedDiskCache(
   }
 
   fun addKeyForAsyncProbing(key: CacheKey) {
-    key
     fileCache.probe(key)
   }
 
@@ -243,7 +242,6 @@ class BufferedDiskCache(
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.beginSection("BufferedDiskCache#put")
       }
-      checkNotNull(key)
       check(EncodedImage.isValid(encodedImage))
 
       // Store encodedImage in staging area
@@ -286,7 +284,6 @@ class BufferedDiskCache(
 
   /** Removes the item from the disk cache and the staging area. */
   fun remove(key: CacheKey): Task<Void> {
-    checkNotNull(key)
     stagingArea.remove(key)
     return try {
       val token = FrescoInstrumenter.onBeforeSubmitWork("BufferedDiskCache_remove")
