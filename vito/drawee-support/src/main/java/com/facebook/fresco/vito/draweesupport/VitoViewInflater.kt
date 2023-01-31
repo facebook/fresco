@@ -41,15 +41,13 @@ object VitoViewInflater {
                 scale(getScaleType(attrs, attr))
             R.styleable.GenericDraweeHierarchy_placeholderImage ->
                 placeholder(GenericDraweeHierarchyInflater.getDrawable(context, attrs, attr))
-            R.styleable.GenericDraweeHierarchy_pressedStateOverlayImage ->
-                throw UnsupportedOperationException("Not supported for Vito")
             R.styleable.GenericDraweeHierarchy_progressBarImage -> {
               val progressBarDrawable = getDrawable(context, attrs, attr)
-              // wrap progress bar if auto-rotating requested
-              val progressBarAutoRotateInterval =
-                  attrs.getInteger(
-                      R.styleable.GenericDraweeHierarchy_progressBarAutoRotateInterval, 0)
               if (progressBarDrawable != null) {
+                // wrap progress bar if auto-rotating requested
+                val progressBarAutoRotateInterval =
+                    attrs.getInteger(
+                        R.styleable.GenericDraweeHierarchy_progressBarAutoRotateInterval, 0)
                 progress(
                     if (progressBarAutoRotateInterval > 0) {
                       AutoRotateDrawable(progressBarDrawable, progressBarAutoRotateInterval)
@@ -59,22 +57,14 @@ object VitoViewInflater {
               }
             }
             R.styleable.GenericDraweeHierarchy_fadeDuration -> fadeDurationMs(attrs.getInt(attr, 0))
-            R.styleable.GenericDraweeHierarchy_viewAspectRatio ->
-                throw UnsupportedOperationException("Not supported for Vito")
             R.styleable.GenericDraweeHierarchy_placeholderImageScaleType ->
                 placeholderScaleType(getScaleType(attrs, attr))
-            R.styleable.GenericDraweeHierarchy_retryImage ->
-                throw UnsupportedOperationException("Not supported for Vito")
-            R.styleable.GenericDraweeHierarchy_retryImageScaleType ->
-                throw UnsupportedOperationException("Not supported for Vito")
             R.styleable.GenericDraweeHierarchy_failureImage ->
                 errorDrawable(getDrawable(context, attrs, attr))
             R.styleable.GenericDraweeHierarchy_failureImageScaleType ->
                 errorScaleType(getScaleType(attrs, attr))
             R.styleable.GenericDraweeHierarchy_progressBarImageScaleType ->
                 progressScaleType(getScaleType(attrs, attr))
-            R.styleable.GenericDraweeHierarchy_backgroundImage ->
-                throw UnsupportedOperationException("Not supported for Vito")
             R.styleable.GenericDraweeHierarchy_overlayImage ->
                 overlay(getDrawable(context, attrs, attr))
             R.styleable.GenericDraweeHierarchy_roundAsCircle ->
@@ -121,8 +111,6 @@ object VitoViewInflater {
                         if (roundBottomLeft) radius else 0f))
               }
             }
-            R.styleable.GenericDraweeHierarchy_roundWithOverlayColor ->
-                throw UnsupportedOperationException("Not supported for Vito")
             R.styleable.GenericDraweeHierarchy_roundingBorderWidth -> {
               val borderWidth = attrs.getDimensionPixelSize(attr, 0).toFloat()
               if (borderWidth != 0f) {
@@ -136,6 +124,13 @@ object VitoViewInflater {
                             .toFloat()))
               }
             }
+            R.styleable.GenericDraweeHierarchy_viewAspectRatio,
+            R.styleable.GenericDraweeHierarchy_retryImage,
+            R.styleable.GenericDraweeHierarchy_retryImageScaleType,
+            R.styleable.GenericDraweeHierarchy_roundWithOverlayColor,
+            R.styleable.GenericDraweeHierarchy_pressedStateOverlayImage,
+            R.styleable.GenericDraweeHierarchy_backgroundImage ->
+                throw UnsupportedOperationException("Not supported for Vito")
           }
         }
       }
