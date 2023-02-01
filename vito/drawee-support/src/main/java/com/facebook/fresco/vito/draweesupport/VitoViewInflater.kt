@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package java.com.facebook.fresco.vito.draweesupport
+package com.facebook.fresco.vito.draweesupport
 
 import android.content.Context
 import android.content.res.TypedArray
