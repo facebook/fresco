@@ -163,7 +163,6 @@ public class PipelineDraweeController
       }
       mImagePerfMonitor.addImagePerfDataListener(imagePerfDataListener);
       mImagePerfMonitor.setEnabled(true);
-      mImagePerfMonitor.updateImageRequestData(builder);
     }
 
     mImageRequest = builder.getImageRequest();
