@@ -1040,4 +1040,9 @@ public class ImagePipeline {
   public ImagePipelineConfigInterface getConfig() {
     return mConfig;
   }
+
+  public void init() {
+    // Yes, this does nothing. It's a placeholder method to be used in locations where
+    // an injection would otherwise appear to be unused.
+  }
 }
