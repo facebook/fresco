@@ -5,15 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.cache.common;
+package com.facebook.cache.common
 
-import com.facebook.infer.annotation.Nullsafe;
-import javax.annotation.Nullable;
-
-@Nullsafe(Nullsafe.Mode.STRICT)
-public interface HasDebugData {
-
+interface HasDebugData {
   /** Return a string describing this object and to be used for debugging or logging */
-  @Nullable
-  String getDebugData();
+  val debugData: String?
 }
