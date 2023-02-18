@@ -367,7 +367,7 @@ class BitmapAnimationBackend(
   }
 
   companion object {
-    const val FRAME_TYPE_UNKNOWN = -1
+    const val FRAME_TYPE_UNKNOWN: Int = -1
     const val FRAME_TYPE_CACHED = 0
     const val FRAME_TYPE_REUSED = 1
     const val FRAME_TYPE_CREATED = 2

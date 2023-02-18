@@ -241,7 +241,7 @@ private class Size(val width: Int, val height: Int)
 
 private class OnDemandFrame(val frameNumber: Int, val bitmap: CloseableReference<Bitmap>) :
     Closeable {
-  fun isValidFor(frameNumber: Int) = this.frameNumber == frameNumber && bitmap.isValid
+  fun isValidFor(frameNumber: Int): Boolean = this.frameNumber == frameNumber && bitmap.isValid
 
   override fun close() {
     bitmap.close()
