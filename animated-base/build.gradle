@@ -26,6 +26,7 @@ dependencies {
     api project(':memory-types:simple')
     api project(':animated-drawable')
     implementation Deps.Bolts.tasks
+    implementation project(':vito:options')
 
     testCompileOnly Deps.inferAnnotation
     testImplementation project(':animated-base-test')

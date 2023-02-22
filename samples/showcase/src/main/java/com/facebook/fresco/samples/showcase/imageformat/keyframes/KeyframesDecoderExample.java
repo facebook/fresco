@@ -17,6 +17,7 @@ import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.keyframes.KeyframesDrawableBuilder;
@@ -145,6 +146,11 @@ public class KeyframesDecoderExample {
     @Override
     public QualityInfo getQualityInfo() {
       return ImmutableQualityInfo.FULL_QUALITY;
+    }
+
+    @Override
+    public ImageInfo getImageInfo() {
+      return this;
     }
 
     @Override
