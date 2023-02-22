@@ -75,8 +75,9 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
       inflater: LayoutInflater,
       container: ViewGroup?,
       savedInstanceState: Bundle?
-  ): View? {
-    return inflater.inflate(R.layout.fragment_vito_image_options_config, container, false)
+  ): View {
+    _binding = FragmentVitoImageOptionsConfigBinding.inflate(inflater, container, false)
+    return binding.root
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
