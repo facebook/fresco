@@ -1,0 +1,34 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+    }
+
+    dependencies {
+        implementation project(':android')
+        implementation deps.fresco
+        implementation deps.frescoFlipper
+        compileOnly deps.jsr305
+
+        api deps.boltsTasks
+
+        // Exclude the actual stetho dep as we only want some of the fresco APIs here
+        implementation(deps.frescoStetho) {
+            exclude group: 'com.facebook.stetho'
+        }
+    }
+}
+
+apply plugin: 'com.vanniktech.maven.publish'
