@@ -7,11 +7,10 @@
 
 package com.facebook.drawee.backends.pipeline.info.internal;
 
-import com.facebook.drawee.backends.pipeline.info.ImageLoadStatus;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
-import com.facebook.drawee.backends.pipeline.info.ImagePerfMonitor;
-import com.facebook.drawee.backends.pipeline.info.ImagePerfState;
+import com.facebook.drawee.backends.pipeline.info.ImagePerfExtra;
+import com.facebook.fresco.ui.common.ImagePerfState;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
@@ -19,12 +18,9 @@ import javax.annotation.Nullable;
 public class ImagePerfImageOriginListener implements ImageOriginListener {
 
   private final ImagePerfState mImagePerfState;
-  private final ImagePerfMonitor mImagePerfMonitor;
 
-  public ImagePerfImageOriginListener(
-      ImagePerfState imagePerfState, ImagePerfMonitor imagePerfMonitor) {
+  public ImagePerfImageOriginListener(ImagePerfState imagePerfState) {
     mImagePerfState = imagePerfState;
-    mImagePerfMonitor = imagePerfMonitor;
   }
 
   @Override
@@ -33,8 +29,7 @@ public class ImagePerfImageOriginListener implements ImageOriginListener {
       @ImageOrigin int imageOrigin,
       boolean successful,
       @Nullable String ultimateProducerName) {
-    mImagePerfState.setImageOrigin(imageOrigin);
+    mImagePerfState.setPipelineExtra(ImagePerfExtra.IMAGE_ORIGIN, imageOrigin);
     mImagePerfState.setUltimateProducerName(ultimateProducerName);
-    mImagePerfMonitor.notifyStatusUpdated(mImagePerfState, ImageLoadStatus.ORIGIN_AVAILABLE);
   }
 }

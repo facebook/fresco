@@ -25,10 +25,7 @@ import com.facebook.common.memory.manager.NoOpDebugMemoryManager;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.SharedReference;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.backends.pipeline.info.ImageLoadStatus;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
-import com.facebook.drawee.backends.pipeline.info.ImagePerfData;
-import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener;
 import com.facebook.flipper.core.FlipperArray;
 import com.facebook.flipper.core.FlipperConnection;
 import com.facebook.flipper.core.FlipperObject;
@@ -38,6 +35,10 @@ import com.facebook.flipper.perflogger.FlipperPerfLogger;
 import com.facebook.flipper.perflogger.NoOpFlipperPerfLogger;
 import com.facebook.flipper.plugins.common.BufferingFlipperPlugin;
 import com.facebook.flipper.plugins.fresco.objecthelper.FlipperObjectHelper;
+import com.facebook.fresco.ui.common.ImageLoadStatus;
+import com.facebook.fresco.ui.common.ImagePerfData;
+import com.facebook.fresco.ui.common.ImagePerfDataListener;
+import com.facebook.fresco.ui.common.VisibilityState;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.CountingMemoryCacheInspector;
 import com.facebook.imagepipeline.cache.CountingMemoryCacheInspector.DumpInfoEntry;
@@ -553,7 +554,7 @@ public class FrescoFlipperPlugin extends BufferingFlipperPlugin
   }
 
   public void onImageLoadStatusUpdated(
-      ImagePerfData imagePerfData, @ImageLoadStatus int imageLoadStatus) {
+      ImagePerfData imagePerfData, ImageLoadStatus imageLoadStatus) {
     if (imageLoadStatus != ImageLoadStatus.SUCCESS) {
       return;
     }
@@ -598,7 +599,10 @@ public class FrescoFlipperPlugin extends BufferingFlipperPlugin
             .put("attribution", attribution)
             .put("startTime", imagePerfData.getControllerSubmitTimeMs())
             .put("endTime", imagePerfData.getControllerFinalImageSetTimeMs())
-            .put("source", ImageOriginUtils.toString(imagePerfData.getImageOrigin()));
+            .put(
+                "source",
+                ImageOriginUtils.toString(
+                    ImageOriginUtils.getImageOriginFromImagePerfData(imagePerfData)));
 
     if (!imagePerfData.isPrefetch()) {
       response.put(
@@ -614,7 +618,8 @@ public class FrescoFlipperPlugin extends BufferingFlipperPlugin
     send(FRESCO_EVENT, responseObject);
   }
 
-  public void onImageVisibilityUpdated(ImagePerfData imagePerfData, int visibilityState) {
+  public void onImageVisibilityUpdated(
+      ImagePerfData imagePerfData, VisibilityState visibilityState) {
     // ignored
   }
 

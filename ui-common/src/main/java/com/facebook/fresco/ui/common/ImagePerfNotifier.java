@@ -5,12 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.drawee.backends.pipeline.info;
+package com.facebook.fresco.ui.common;
 
 public interface ImagePerfNotifier {
 
   void notifyListenersOfVisibilityStateUpdate(
-      ImagePerfState state, @VisibilityState int visibilityState);
+      ImagePerfState state, VisibilityState visibilityState);
 
-  void notifyStatusUpdated(ImagePerfState state, @ImageLoadStatus int imageLoadStatus);
+  void notifyStatusUpdated(ImagePerfState state, ImageLoadStatus imageLoadStatus);
 }

@@ -16,6 +16,12 @@ import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerLi
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfRequestListener;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
+import com.facebook.fresco.ui.common.ImageLoadStatus;
+import com.facebook.fresco.ui.common.ImagePerfData;
+import com.facebook.fresco.ui.common.ImagePerfDataListener;
+import com.facebook.fresco.ui.common.ImagePerfNotifier;
+import com.facebook.fresco.ui.common.ImagePerfState;
+import com.facebook.fresco.ui.common.VisibilityState;
 import com.facebook.imagepipeline.listener.ForwardingRequestListener;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.List;
@@ -100,7 +106,7 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
   }
 
   @Override
-  public void notifyStatusUpdated(ImagePerfState state, @ImageLoadStatus int imageLoadStatus) {
+  public void notifyStatusUpdated(ImagePerfState state, ImageLoadStatus imageLoadStatus) {
     state.setImageLoadStatus(imageLoadStatus);
     if (!mEnabled || mImagePerfDataListeners == null || mImagePerfDataListeners.isEmpty()) {
       return;
@@ -116,7 +122,7 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
 
   @Override
   public void notifyListenersOfVisibilityStateUpdate(
-      ImagePerfState state, @VisibilityState int visibilityState) {
+      ImagePerfState state, VisibilityState visibilityState) {
     if (!mEnabled || mImagePerfDataListeners == null || mImagePerfDataListeners.isEmpty()) {
       return;
     }
@@ -146,7 +152,7 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
       mImagePerfRequestListener = new ImagePerfRequestListener(mMonotonicClock, mImagePerfState);
     }
     if (mImageOriginListener == null) {
-      mImageOriginListener = new ImagePerfImageOriginListener(mImagePerfState, this);
+      mImageOriginListener = new ImagePerfImageOriginListener(mImagePerfState);
     }
     if (mImageOriginRequestListener == null) {
       mImageOriginRequestListener =

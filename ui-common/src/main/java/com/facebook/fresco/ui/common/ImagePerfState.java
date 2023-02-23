@@ -5,26 +5,25 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.drawee.backends.pipeline.info;
+package com.facebook.fresco.ui.common;
 
-import static com.facebook.drawee.backends.pipeline.info.ImagePerfData.UNSET;
+import static com.facebook.fresco.ui.common.ImagePerfData.UNSET;
 
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
-import com.facebook.fresco.ui.common.DimensionsInfo;
-import com.facebook.imagepipeline.image.ImageInfo;
-import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImagePerfState {
 
   // General image metadata
   private @Nullable String mControllerId;
   private @Nullable String mRequestId;
-  private @Nullable ImageRequest mImageRequest;
+  private @Nullable Object mImageRequest;
   private @Nullable Object mCallerContext;
-  private @Nullable ImageInfo mImageInfo;
+  private @Nullable Object mImageInfo;
 
   // Controller timings
   private long mControllerSubmitTimeMs = UNSET;
@@ -38,7 +37,6 @@ public class ImagePerfState {
   private long mImageRequestEndTimeMs = UNSET;
 
   // Image pipeline information
-  private @ImageOrigin int mImageOrigin = ImageOrigin.UNKNOWN;
   private @Nullable String mUltimateProducerName;
   private boolean mIsPrefetch;
 
@@ -50,9 +48,9 @@ public class ImagePerfState {
   private @Nullable Throwable mErrorThrowable;
 
   // Internal parameters
-  private @ImageLoadStatus int mImageLoadStatus = ImageLoadStatus.UNKNOWN;
+  private ImageLoadStatus mImageLoadStatus = ImageLoadStatus.UNKNOWN;
   // Visibility
-  private @VisibilityState int mVisibilityState = VisibilityState.UNKNOWN;
+  private VisibilityState mVisibilityState = VisibilityState.UNKNOWN;
   private long mVisibilityEventTimeMs = UNSET;
   private long mInvisibilityEventTimeMs = UNSET;
 
@@ -64,13 +62,14 @@ public class ImagePerfState {
 
   private @Nullable Extras mExtraData;
 
+  private final Map<String, Object> mPipelineExtras = new HashMap<>();
+
   public void reset() {
     mRequestId = null;
     mImageRequest = null;
     mCallerContext = null;
     mImageInfo = null;
 
-    mImageOrigin = ImageOrigin.UNKNOWN;
     mUltimateProducerName = null;
     mIsPrefetch = false;
 
@@ -88,6 +87,7 @@ public class ImagePerfState {
     mDimensionsInfo = null;
 
     mExtraData = null;
+    mPipelineExtras.clear();
 
     resetPointsTimestamps();
   }
@@ -108,12 +108,11 @@ public class ImagePerfState {
     mImageDrawTimeMs = UNSET;
   }
 
-  public void setImageLoadStatus(@ImageLoadStatus int imageLoadStatus) {
+  public void setImageLoadStatus(ImageLoadStatus imageLoadStatus) {
     mImageLoadStatus = imageLoadStatus;
   }
 
-  @ImageLoadStatus
-  public int getImageLoadStatus() {
+  public ImageLoadStatus getImageLoadStatus() {
     return mImageLoadStatus;
   }
 
@@ -125,7 +124,7 @@ public class ImagePerfState {
     mRequestId = requestId;
   }
 
-  public void setImageRequest(@Nullable ImageRequest imageRequest) {
+  public void setImageRequest(@Nullable Object imageRequest) {
     mImageRequest = imageRequest;
   }
 
@@ -169,10 +168,6 @@ public class ImagePerfState {
     mInvisibilityEventTimeMs = invisibilityEventTimeMs;
   }
 
-  public void setImageOrigin(@ImageOrigin int imageOrigin) {
-    mImageOrigin = imageOrigin;
-  }
-
   public void setUltimateProducerName(@Nullable String ultimateProducerName) {
     mUltimateProducerName = ultimateProducerName;
   }
@@ -181,7 +176,7 @@ public class ImagePerfState {
     mIsPrefetch = prefetch;
   }
 
-  public void setImageInfo(@Nullable ImageInfo imageInfo) {
+  public void setImageInfo(@Nullable Object imageInfo) {
     mImageInfo = imageInfo;
   }
 
@@ -223,7 +218,6 @@ public class ImagePerfState {
         mControllerCancelTimeMs,
         mImageRequestStartTimeMs,
         mImageRequestEndTimeMs,
-        mImageOrigin,
         mUltimateProducerName,
         mIsPrefetch,
         mOnScreenWidthPx,
@@ -235,7 +229,8 @@ public class ImagePerfState {
         mComponentTag,
         mImageDrawTimeMs,
         mDimensionsInfo,
-        mExtraData);
+        mExtraData,
+        mPipelineExtras);
   }
 
   public long getImageDrawTimeMs() {
@@ -256,5 +251,17 @@ public class ImagePerfState {
 
   public @Nullable Object getExtraData() {
     return mExtraData;
+  }
+
+  public void setPipelineExtra(String key, @Nullable Object value) {
+    mPipelineExtras.put(key, value);
+  }
+
+  public @Nullable Object getPipelineExtra(String key) {
+    if (mPipelineExtras.containsKey(key)) {
+      return mPipelineExtras.get(key);
+    } else {
+      return null;
+    }
   }
 }

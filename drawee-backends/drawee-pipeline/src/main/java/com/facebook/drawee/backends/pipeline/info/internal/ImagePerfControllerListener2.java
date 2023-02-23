@@ -16,14 +16,14 @@ import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.time.MonotonicClock;
-import com.facebook.drawee.backends.pipeline.info.ImageLoadStatus;
-import com.facebook.drawee.backends.pipeline.info.ImagePerfNotifier;
-import com.facebook.drawee.backends.pipeline.info.ImagePerfState;
-import com.facebook.drawee.backends.pipeline.info.VisibilityState;
 import com.facebook.fresco.ui.common.BaseControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.DimensionsInfo;
+import com.facebook.fresco.ui.common.ImageLoadStatus;
+import com.facebook.fresco.ui.common.ImagePerfNotifier;
+import com.facebook.fresco.ui.common.ImagePerfState;
 import com.facebook.fresco.ui.common.OnDrawControllerListener;
+import com.facebook.fresco.ui.common.VisibilityState;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
@@ -58,10 +58,18 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
       ImagePerfState state = (ImagePerfState) Preconditions.checkNotNull(msg.obj);
       switch (msg.what) {
         case WHAT_STATUS:
-          mNotifier.notifyStatusUpdated(state, msg.arg1);
+          ImageLoadStatus imageLoadStatusFromVal = ImageLoadStatus.Companion.fromInt(msg.arg1);
+          if (imageLoadStatusFromVal == null) {
+            throw new IllegalArgumentException("Invalid ImageLoadStatus value: " + msg.arg1);
+          }
+          mNotifier.notifyStatusUpdated(state, imageLoadStatusFromVal);
           break;
         case WHAT_VISIBILITY:
-          mNotifier.notifyListenersOfVisibilityStateUpdate(state, msg.arg1);
+          VisibilityState visibilityStateFromVal = VisibilityState.Companion.fromInt(msg.arg1);
+          if (visibilityStateFromVal == null) {
+            throw new IllegalArgumentException("Invalid VisibilityState value: " + msg.arg1);
+          }
+          mNotifier.notifyListenersOfVisibilityStateUpdate(state, visibilityStateFromVal);
           break;
       }
     }
@@ -156,7 +164,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     state.setExtraData(extras);
     state.setControllerId(id);
 
-    int lastImageLoadStatus = state.getImageLoadStatus();
+    ImageLoadStatus lastImageLoadStatus = state.getImageLoadStatus();
     if (lastImageLoadStatus != ImageLoadStatus.SUCCESS
         && lastImageLoadStatus != ImageLoadStatus.ERROR
         && lastImageLoadStatus != ImageLoadStatus.DRAW) {
@@ -203,11 +211,11 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     updateVisibility(state, VisibilityState.INVISIBLE);
   }
 
-  private void updateStatus(ImagePerfState state, @ImageLoadStatus int imageLoadStatus) {
+  private void updateStatus(ImagePerfState state, ImageLoadStatus imageLoadStatus) {
     if (shouldDispatchAsync()) {
       Message msg = Preconditions.checkNotNull(sHandler).obtainMessage();
       msg.what = WHAT_STATUS;
-      msg.arg1 = imageLoadStatus;
+      msg.arg1 = imageLoadStatus.getValue();
       msg.obj = state;
       sHandler.sendMessage(msg);
     } else {
@@ -215,11 +223,11 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     }
   }
 
-  private void updateVisibility(ImagePerfState state, @VisibilityState int visibilityState) {
+  private void updateVisibility(ImagePerfState state, VisibilityState visibilityState) {
     if (shouldDispatchAsync()) {
       Message msg = Preconditions.checkNotNull(sHandler).obtainMessage();
       msg.what = WHAT_VISIBILITY;
-      msg.arg1 = visibilityState;
+      msg.arg1 = visibilityState.getValue();
       msg.obj = state;
       sHandler.sendMessage(msg);
     } else {

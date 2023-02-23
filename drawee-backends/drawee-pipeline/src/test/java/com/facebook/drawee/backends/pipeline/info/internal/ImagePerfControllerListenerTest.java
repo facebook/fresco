@@ -17,10 +17,10 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.facebook.common.time.MonotonicClock;
-import com.facebook.drawee.backends.pipeline.info.ImageLoadStatus;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfMonitor;
-import com.facebook.drawee.backends.pipeline.info.ImagePerfState;
-import com.facebook.drawee.backends.pipeline.info.VisibilityState;
+import com.facebook.fresco.ui.common.ImageLoadStatus;
+import com.facebook.fresco.ui.common.ImagePerfState;
+import com.facebook.fresco.ui.common.VisibilityState;
 import org.junit.Before;
 import org.junit.Test;
 

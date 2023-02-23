@@ -5,17 +5,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.drawee.backends.pipeline.info;
+package com.facebook.fresco.ui.common;
 
 import com.facebook.common.internal.Objects;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
-import com.facebook.fresco.ui.common.DimensionsInfo;
-import com.facebook.imagepipeline.image.ImageInfo;
-import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImagePerfData {
 
   public static final int UNSET = -1;
@@ -23,8 +22,8 @@ public class ImagePerfData {
   private final @Nullable String mControllerId;
   private final @Nullable String mRequestId;
   private final @Nullable Object mCallerContext;
-  private final @Nullable ImageRequest mImageRequest;
-  private final @Nullable ImageInfo mImageInfo;
+  private final @Nullable Object mImageRequest;
+  private final @Nullable Object mImageInfo;
 
   private final long mControllerSubmitTimeMs;
   private final long mControllerIntermediateImageSetTimeMs;
@@ -34,7 +33,6 @@ public class ImagePerfData {
 
   private final long mImageRequestStartTimeMs;
   private final long mImageRequestEndTimeMs;
-  private final @ImageOrigin int mImageOrigin;
   private final @Nullable String mUltimateProducerName;
   private final boolean mIsPrefetch;
 
@@ -44,7 +42,7 @@ public class ImagePerfData {
   private final @Nullable Throwable mErrorThrowable;
 
   // Visibility
-  @VisibilityState private final int mVisibilityState;
+  private final VisibilityState mVisibilityState;
   private final long mVisibilityEventTimeMs;
   private final long mInvisibilityEventTimeMs;
 
@@ -56,12 +54,14 @@ public class ImagePerfData {
 
   private @Nullable Extras mExtraData;
 
+  private Map<String, Object> mPipelineExtras;
+
   public ImagePerfData(
       @Nullable String controllerId,
       @Nullable String requestId,
-      @Nullable ImageRequest imageRequest,
+      @Nullable Object imageRequest,
       @Nullable Object callerContext,
-      @Nullable ImageInfo imageInfo,
+      @Nullable Object imageInfo,
       long controllerSubmitTimeMs,
       long controllerIntermediateImageSetTimeMs,
       long controllerFinalImageSetTimeMs,
@@ -69,19 +69,19 @@ public class ImagePerfData {
       long controllerCancelTimeMs,
       long imageRequestStartTimeMs,
       long imageRequestEndTimeMs,
-      @ImageOrigin int imageOrigin,
       @Nullable String ultimateProducerName,
       boolean isPrefetch,
       int onScreenWidthPx,
       int onScreenHeightPx,
       @Nullable Throwable errorThrowable,
-      int visibilityState,
+      VisibilityState visibilityState,
       long visibilityEventTimeMs,
       long invisibilityEventTime,
       @Nullable String componentTag,
       long imageDrawTimeMs,
       @Nullable DimensionsInfo dimensionsInfo,
-      @Nullable Extras extraData) {
+      @Nullable Extras extraData,
+      Map<String, Object> pipelineExtras) {
     mControllerId = controllerId;
     mRequestId = requestId;
     mImageRequest = imageRequest;
@@ -94,7 +94,6 @@ public class ImagePerfData {
     mControllerCancelTimeMs = controllerCancelTimeMs;
     mImageRequestStartTimeMs = imageRequestStartTimeMs;
     mImageRequestEndTimeMs = imageRequestEndTimeMs;
-    mImageOrigin = imageOrigin;
     mUltimateProducerName = ultimateProducerName;
     mIsPrefetch = isPrefetch;
     mOnScreenWidthPx = onScreenWidthPx;
@@ -107,6 +106,7 @@ public class ImagePerfData {
     mImageDrawTimeMs = imageDrawTimeMs;
     mDimensionsInfo = dimensionsInfo;
     mExtraData = extraData;
+    mPipelineExtras = new HashMap<>(pipelineExtras);
   }
 
   public long getImageDrawTimeMs() {
@@ -124,7 +124,7 @@ public class ImagePerfData {
   }
 
   @Nullable
-  public ImageRequest getImageRequest() {
+  public Object getImageRequest() {
     return mImageRequest;
   }
 
@@ -134,7 +134,7 @@ public class ImagePerfData {
   }
 
   @Nullable
-  public ImageInfo getImageInfo() {
+  public Object getImageInfo() {
     return mImageInfo;
   }
 
@@ -160,10 +160,6 @@ public class ImagePerfData {
 
   public long getImageRequestEndTimeMs() {
     return mImageRequestEndTimeMs;
-  }
-
-  public @ImageOrigin int getImageOrigin() {
-    return mImageOrigin;
   }
 
   @Nullable
@@ -200,7 +196,7 @@ public class ImagePerfData {
     return mControllerIntermediateImageSetTimeMs;
   }
 
-  public int getVisibilityState() {
+  public VisibilityState getVisibilityState() {
     return mVisibilityState;
   }
 
@@ -231,6 +227,15 @@ public class ImagePerfData {
     mExtraData = extraData;
   }
 
+  @Nullable
+  public Object getPipelineExtra(String key) {
+    if (mPipelineExtras.containsKey(key)) {
+      return mPipelineExtras.get(key);
+    } else {
+      return null;
+    }
+  }
+
   public String createDebugString() {
     return Objects.toStringHelper(this)
         .add("controller ID", mControllerId)
@@ -241,7 +246,6 @@ public class ImagePerfData {
         .add("controller cancel", mControllerCancelTimeMs)
         .add("start time", mImageRequestStartTimeMs)
         .add("end time", mImageRequestEndTimeMs)
-        .add("origin", ImageOriginUtils.toString(mImageOrigin))
         .add("ultimateProducerName", mUltimateProducerName)
         .add("prefetch", mIsPrefetch)
         .add("caller context", mCallerContext)
@@ -256,6 +260,7 @@ public class ImagePerfData {
         .add("image draw event", mImageDrawTimeMs)
         .add("dimensions info", mDimensionsInfo)
         .add("extra data", mExtraData)
+        .add("pipeline extras", mPipelineExtras)
         .toString();
   }
 }

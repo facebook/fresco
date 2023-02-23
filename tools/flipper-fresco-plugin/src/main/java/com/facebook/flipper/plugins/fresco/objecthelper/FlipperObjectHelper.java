@@ -11,11 +11,11 @@ import static com.facebook.flipper.plugins.inspector.InspectorValue.Type.Color;
 
 import android.text.TextUtils;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
-import com.facebook.drawee.backends.pipeline.info.ImagePerfData;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.flipper.core.FlipperArray;
 import com.facebook.flipper.core.FlipperObject;
 import com.facebook.flipper.plugins.inspector.InspectorValue;
+import com.facebook.fresco.ui.common.ImagePerfData;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
@@ -147,11 +147,13 @@ public abstract class FlipperObjectHelper {
     objectJson.put("controllerFinalTimeMs", imagePerfData.getControllerFinalImageSetTimeMs());
     objectJson.put("imageRequestStartTimeMs", imagePerfData.getImageRequestStartTimeMs());
     objectJson.put("imageRequestEndTimeMs", imagePerfData.getImageRequestEndTimeMs());
-    objectJson.put("imageOrigin", ImageOriginUtils.toString(imagePerfData.getImageOrigin()));
+    objectJson.put(
+        "imageOrigin",
+        ImageOriginUtils.toString(ImageOriginUtils.getImageOriginFromImagePerfData(imagePerfData)));
     objectJson.put("isPrefetch", imagePerfData.isPrefetch());
     objectJson.put("callerContext", imagePerfData.getCallerContext());
-    objectJson.put("imageRequest", toFlipperObject(imagePerfData.getImageRequest()));
-    objectJson.put("imageInfo", toFlipperObject(imagePerfData.getImageInfo()));
+    objectJson.put("imageRequest", toFlipperObject((ImageRequest) imagePerfData.getImageRequest()));
+    objectJson.put("imageInfo", toFlipperObject((ImageInfo) imagePerfData.getImageInfo()));
     return objectJson.build();
   }
 

@@ -10,13 +10,13 @@ package com.facebook.drawee.backends.pipeline.info.internal;
 import android.graphics.drawable.Animatable;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.time.MonotonicClock;
-import com.facebook.drawee.backends.pipeline.info.ImageLoadStatus;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfMonitor;
-import com.facebook.drawee.backends.pipeline.info.ImagePerfState;
-import com.facebook.drawee.backends.pipeline.info.VisibilityState;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.fresco.ui.common.DimensionsInfo;
+import com.facebook.fresco.ui.common.ImageLoadStatus;
+import com.facebook.fresco.ui.common.ImagePerfState;
 import com.facebook.fresco.ui.common.OnDrawControllerListener;
+import com.facebook.fresco.ui.common.VisibilityState;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
@@ -92,7 +92,7 @@ public class ImagePerfControllerListener extends BaseControllerListener<ImageInf
     super.onRelease(id);
     final long now = mClock.now();
 
-    int lastImageLoadStatus = mImagePerfState.getImageLoadStatus();
+    ImageLoadStatus lastImageLoadStatus = mImagePerfState.getImageLoadStatus();
     if (lastImageLoadStatus != ImageLoadStatus.SUCCESS
         && lastImageLoadStatus != ImageLoadStatus.ERROR
         && lastImageLoadStatus != ImageLoadStatus.DRAW) {
