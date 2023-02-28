@@ -9,7 +9,6 @@ package com.facebook.drawee.backends.pipeline.info;
 
 import android.graphics.Rect;
 import com.facebook.common.internal.Supplier;
-import com.facebook.common.internal.Suppliers;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
@@ -145,8 +144,7 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
   private void setupListeners() {
     if (mImagePerfControllerListener2 == null) {
       mImagePerfControllerListener2 =
-          new ImagePerfControllerListener2(
-              mMonotonicClock, mImagePerfState, this, mAsyncLogging, Suppliers.BOOLEAN_FALSE);
+          new ImagePerfControllerListener2(mMonotonicClock, mImagePerfState, this, mAsyncLogging);
     }
     if (mImagePerfRequestListener == null) {
       mImagePerfRequestListener = new ImagePerfRequestListener(mMonotonicClock, mImagePerfState);

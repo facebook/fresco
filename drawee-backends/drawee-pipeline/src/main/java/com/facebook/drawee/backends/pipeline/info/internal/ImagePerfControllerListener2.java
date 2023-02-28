@@ -40,7 +40,6 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   private final ImagePerfState mImagePerfState;
   private final ImagePerfNotifier mImagePerfNotifier;
   private final Supplier<Boolean> mAsyncLogging;
-  private final Supplier<Boolean> mUseNewState;
 
   private static @Nullable Handler sHandler;
 
@@ -73,20 +72,18 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
           break;
       }
     }
-  };
+  }
 
   public ImagePerfControllerListener2(
       MonotonicClock clock,
       ImagePerfState imagePerfState,
       ImagePerfNotifier imagePerfNotifier,
-      Supplier<Boolean> asyncLogging,
-      Supplier<Boolean> useNewState) {
+      Supplier<Boolean> asyncLogging) {
     mClock = clock;
     mImagePerfState = imagePerfState;
     mImagePerfNotifier = imagePerfNotifier;
 
     mAsyncLogging = asyncLogging;
-    mUseNewState = useNewState;
   }
 
   @Override
@@ -94,7 +91,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
       String id, @Nullable Object callerContext, @Nullable ControllerListener2.Extras extraData) {
     final long now = mClock.now();
 
-    ImagePerfState state = obtainState();
+    ImagePerfState state = mImagePerfState;
     state.resetPointsTimestamps();
 
     state.setControllerSubmitTimeMs(now);
@@ -111,7 +108,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   public void onIntermediateImageSet(String id, @Nullable ImageInfo imageInfo) {
     final long now = mClock.now();
 
-    ImagePerfState state = obtainState();
+    ImagePerfState state = mImagePerfState;
 
     state.setControllerIntermediateImageSetTimeMs(now);
     state.setControllerId(id);
@@ -125,7 +122,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
       String id, @Nullable ImageInfo imageInfo, @Nullable ControllerListener2.Extras extraData) {
     final long now = mClock.now();
 
-    ImagePerfState state = obtainState();
+    ImagePerfState state = mImagePerfState;
 
     state.setExtraData(extraData);
 
@@ -142,7 +139,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
       String id, @Nullable Throwable throwable, @Nullable ControllerListener2.Extras extras) {
     final long now = mClock.now();
 
-    ImagePerfState state = obtainState();
+    ImagePerfState state = mImagePerfState;
 
     state.setExtraData(extras);
 
@@ -159,7 +156,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   public void onRelease(String id, @Nullable ControllerListener2.Extras extras) {
     final long now = mClock.now();
 
-    ImagePerfState state = obtainState();
+    ImagePerfState state = mImagePerfState;
 
     state.setExtraData(extras);
     state.setControllerId(id);
@@ -178,7 +175,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
 
   @Override
   public void onImageDrawn(String id, ImageInfo info, DimensionsInfo dimensionsInfo) {
-    ImagePerfState state = obtainState();
+    ImagePerfState state = mImagePerfState;
 
     state.setControllerId(id);
     state.setImageDrawTimeMs(mClock.now());
@@ -195,7 +192,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   }
 
   public void resetState() {
-    obtainState().reset();
+    mImagePerfState.reset();
   }
 
   @Override
@@ -254,13 +251,8 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     return enabled;
   }
 
-  private ImagePerfState obtainState() {
-    return mUseNewState.get() ? new ImagePerfState() : mImagePerfState;
-  }
-
   @Override
   public void onEmptyEvent(@androidx.annotation.Nullable Object callerContext) {
-    ImagePerfState state = obtainState();
-    mImagePerfNotifier.notifyStatusUpdated(state, ImageLoadStatus.EMPTY_EVENT);
+    mImagePerfNotifier.notifyStatusUpdated(mImagePerfState, ImageLoadStatus.EMPTY_EVENT);
   }
 }
