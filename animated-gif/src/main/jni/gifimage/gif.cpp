@@ -1004,6 +1004,12 @@ jobject GifImage_nativeGetFrame(JNIEnv* pEnv, jobject thiz, jint index) {
   GifFileType* pGifFile = spNativeContext->spGifWrapper->get();
 
   ReaderLock rlock_{spNativeContext->spGifWrapper->getSavedImagesRWLock()};
+
+  if (index < 0 || index >= pGifFile->ImageCount) {
+    throwIllegalStateException(pEnv, "Index exceeds GIF file image count");
+    return nullptr;
+  }
+
   SavedImage* pSavedImage = &pGifFile->SavedImages[index];
 
   std::unique_ptr<GifFrameNativeContext> spFrameNativeContext(new GifFrameNativeContext());
