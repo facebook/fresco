@@ -48,7 +48,13 @@ class ImageLiveEditor(
 
   fun fetch(request: VitoImageRequest) {
     frescoController.fetch(
-        drawable, request, drawable.callerContext, null, drawable.imageListener, null, null)
+        frescoDrawable = drawable,
+        imageRequest = request,
+        callerContext = drawable.callerContext,
+        contextChain = null,
+        listener = drawable.imageListener,
+        onFadeListener = null,
+        viewportDimensions = null)
   }
 
   fun getOptions(): ImageOptions = drawable.imageRequest?.imageOptions ?: ImageOptions.defaults()

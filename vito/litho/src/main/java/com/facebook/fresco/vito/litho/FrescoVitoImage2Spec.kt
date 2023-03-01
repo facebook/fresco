@@ -177,13 +177,13 @@ object FrescoVitoImage2Spec {
     }
     FrescoVitoProvider.getController()
         .fetch(
-            frescoDrawable,
-            request!!,
-            callerContext,
-            contextChain,
-            imageListener,
-            onFadeListener,
-            viewportDimensions)
+            frescoDrawable = frescoDrawable,
+            imageRequest = request!!,
+            callerContext = callerContext,
+            contextChain = contextChain,
+            listener = imageListener,
+            onFadeListener = onFadeListener,
+            viewportDimensions = viewportDimensions)
     frescoDrawable.imagePerfListener.onImageMount(frescoDrawable)
     prefetchDataSource?.close()
     if (FrescoVitoProvider.getConfig().prefetchConfig.cancelPrefetchWhenFetched()) {
@@ -211,13 +211,13 @@ object FrescoVitoImage2Spec {
     // We'll only trigger an actual fetch if needed. Most of the time, this will be a no-op.
     FrescoVitoProvider.getController()
         .fetch(
-            frescoDrawable,
-            request!!,
-            callerContext,
-            contextChain,
-            imageListener,
-            onFadeListener,
-            viewportDimensions)
+            frescoDrawable = frescoDrawable,
+            imageRequest = request!!,
+            callerContext = callerContext,
+            contextChain = contextChain,
+            listener = imageListener,
+            onFadeListener = onFadeListener,
+            viewportDimensions = viewportDimensions)
     frescoDrawable.imagePerfListener.onImageBind(frescoDrawable)
     prefetchDataSource?.close()
     if (FrescoVitoProvider.getConfig().prefetchConfig.cancelPrefetchWhenFetched()) {

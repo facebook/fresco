@@ -18,6 +18,8 @@ import com.facebook.common.references.CloseableReference
 import com.facebook.datasource.DataSource
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin
 import com.facebook.fresco.ui.common.ControllerListener2
+import com.facebook.fresco.ui.common.ImagePerfDataListener
+import com.facebook.fresco.ui.common.ImagePerfDataNotifier
 import com.facebook.fresco.ui.common.OnFadeListener
 import com.facebook.fresco.ui.common.VitoUtils
 import com.facebook.fresco.vito.core.FrescoController2
@@ -82,6 +84,7 @@ class KFrescoController(
       callerContext: Any?,
       contextChain: ContextChain?,
       listener: ImageListener?,
+      perfDataListener: ImagePerfDataListener?,
       onFadeListener: OnFadeListener?,
       viewportDimensions: Rect?
   ): Boolean {
@@ -107,6 +110,12 @@ class KFrescoController(
       this.callerContext = callerContext
       imageListener = listener
       listenerManager.setVitoImageRequestListener(globalImageRequestListener)
+
+      // Setup local perf data listener
+      perfDataListener
+          ?.let { ImagePerfDataNotifier(it) }
+          ?.let { listenerManager.setLocalImagePerfStateListener(it) }
+
       _imageId = imageId
       this.viewportDimensions = viewportDimensions
     }

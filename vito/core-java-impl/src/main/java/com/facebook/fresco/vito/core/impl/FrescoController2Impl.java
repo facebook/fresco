@@ -22,6 +22,9 @@ import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.fresco.middleware.MiddlewareUtils;
 import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
+import com.facebook.fresco.ui.common.ImagePerfDataListener;
+import com.facebook.fresco.ui.common.ImagePerfDataNotifier;
+import com.facebook.fresco.ui.common.ImagePerfNotifier;
 import com.facebook.fresco.ui.common.OnFadeListener;
 import com.facebook.fresco.ui.common.VitoUtils;
 import com.facebook.fresco.vito.core.FrescoController2;
@@ -99,6 +102,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       final @Nullable Object callerContext,
       final @Nullable ContextChain contextChain,
       final @Nullable ImageListener listener,
+      final @Nullable ImagePerfDataListener perfDataListener,
       final @Nullable OnFadeListener onFadeListener,
       final @Nullable Rect viewportDimensions) {
     if (!(drawable instanceof FrescoDrawable2Impl)) {
@@ -135,6 +139,12 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     frescoDrawable.setImageListener(listener);
 
     frescoDrawable.setVitoImageRequestListener(mGlobalImageListener);
+
+    // Setup local perf data listener
+    if (perfDataListener != null) {
+      ImagePerfNotifier perfDataNotifier = new ImagePerfDataNotifier(perfDataListener);
+      frescoDrawable.getInternalListener().setLocalImagePerfStateListener(perfDataNotifier);
+    }
 
     frescoDrawable.setOnFadeListener(onFadeListener);
 

@@ -12,6 +12,8 @@ import com.facebook.drawee.backends.pipeline.info.ImageOrigin
 import com.facebook.fresco.ui.common.BaseControllerListener2
 import com.facebook.fresco.ui.common.ControllerListener2
 import com.facebook.fresco.ui.common.ControllerListener2.Extras
+import com.facebook.fresco.ui.common.ImagePerfNotifier
+import com.facebook.fresco.ui.common.ImagePerfNotifierHolder
 import com.facebook.fresco.ui.common.VitoUtils
 import com.facebook.fresco.vito.core.CombinedImageListener
 import com.facebook.fresco.vito.core.VitoImageRequest
@@ -28,6 +30,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
   private var controllerListener2: ControllerListener2<ImageInfo>? =
       BaseControllerListener2.getNoOpListener()
   private var imagePerfControllerListener: ControllerListener2<ImageInfo>? = null
+  private var localImagePerfStateListener: ImagePerfNotifier? = null
 
   override fun setVitoImageRequestListener(vitoImageRequestListener: VitoImageRequestListener?) {
     this.vitoImageRequestListener = vitoImageRequestListener
@@ -37,8 +40,22 @@ class CombinedImageListenerImpl : CombinedImageListener {
     this.controllerListener2 = controllerListener2
   }
 
-  fun setImagePerfControllerListener(imagePerfControllerListener: ControllerListener2<ImageInfo>?) {
+  override fun setImagePerfControllerListener(
+      imagePerfControllerListener: ControllerListener2<ImageInfo>?
+  ) {
     this.imagePerfControllerListener = imagePerfControllerListener
+    checkAndSetLocalImagePerfStateListener()
+  }
+
+  override fun setLocalImagePerfStateListener(imagePerfNotifier: ImagePerfNotifier) {
+    localImagePerfStateListener = imagePerfNotifier
+    checkAndSetLocalImagePerfStateListener()
+  }
+
+  private fun checkAndSetLocalImagePerfStateListener() {
+    (imagePerfControllerListener as? ImagePerfNotifierHolder)?.let { localPerfStatePublisher ->
+      localImagePerfStateListener?.let { localPerfStatePublisher.setImagePerfNotifier(it) }
+    }
   }
 
   override fun onSubmit(

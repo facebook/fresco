@@ -21,6 +21,7 @@ import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.DimensionsInfo;
 import com.facebook.fresco.ui.common.ImageLoadStatus;
 import com.facebook.fresco.ui.common.ImagePerfNotifier;
+import com.facebook.fresco.ui.common.ImagePerfNotifierHolder;
 import com.facebook.fresco.ui.common.ImagePerfState;
 import com.facebook.fresco.ui.common.OnDrawControllerListener;
 import com.facebook.fresco.ui.common.VisibilityState;
@@ -31,30 +32,44 @@ import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageInfo>
-    implements OnDrawControllerListener<ImageInfo>, Closeable {
+    implements ImagePerfNotifierHolder, OnDrawControllerListener<ImageInfo>, Closeable {
 
   private static final int WHAT_STATUS = 1;
   private static final int WHAT_VISIBILITY = 2;
+
+  private static @Nullable LogHandler sHandler;
 
   private final MonotonicClock mClock;
   private final ImagePerfState mImagePerfState;
   private final ImagePerfNotifier mImagePerfNotifier;
   private final Supplier<Boolean> mAsyncLogging;
 
-  private static @Nullable Handler sHandler;
+  private @Nullable ImagePerfNotifier mLocalImagePerfNotifier = null;
 
-  static class LogHandler extends Handler {
+  static class LogHandler extends Handler implements ImagePerfNotifierHolder {
 
     private final ImagePerfNotifier mNotifier;
+    private @Nullable ImagePerfNotifier mLocalNotifier;
 
-    public LogHandler(@NonNull Looper looper, @NonNull ImagePerfNotifier notifier) {
+    public LogHandler(
+        @NonNull Looper looper,
+        @NonNull ImagePerfNotifier notifier,
+        @Nullable ImagePerfNotifier localNotifier) {
       super(looper);
       mNotifier = notifier;
+      mLocalNotifier = localNotifier;
+    }
+
+    @Override
+    public void setImagePerfNotifier(@Nullable ImagePerfNotifier imagePerfNotifier) {
+      mLocalNotifier = imagePerfNotifier;
     }
 
     @Override
     public void handleMessage(@NonNull Message msg) {
       ImagePerfState state = (ImagePerfState) Preconditions.checkNotNull(msg.obj);
+      ImagePerfNotifier localNotifier = mLocalNotifier;
+
       switch (msg.what) {
         case WHAT_STATUS:
           ImageLoadStatus imageLoadStatusFromVal = ImageLoadStatus.Companion.fromInt(msg.arg1);
@@ -62,6 +77,9 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
             throw new IllegalArgumentException("Invalid ImageLoadStatus value: " + msg.arg1);
           }
           mNotifier.notifyStatusUpdated(state, imageLoadStatusFromVal);
+          if (localNotifier != null) {
+            localNotifier.notifyStatusUpdated(state, imageLoadStatusFromVal);
+          }
           break;
         case WHAT_VISIBILITY:
           VisibilityState visibilityStateFromVal = VisibilityState.Companion.fromInt(msg.arg1);
@@ -69,6 +87,9 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
             throw new IllegalArgumentException("Invalid VisibilityState value: " + msg.arg1);
           }
           mNotifier.notifyListenersOfVisibilityStateUpdate(state, visibilityStateFromVal);
+          if (localNotifier != null) {
+            localNotifier.notifyListenersOfVisibilityStateUpdate(state, visibilityStateFromVal);
+          }
           break;
       }
     }
@@ -77,13 +98,21 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   public ImagePerfControllerListener2(
       MonotonicClock clock,
       ImagePerfState imagePerfState,
-      ImagePerfNotifier imagePerfNotifier,
+      ImagePerfNotifier globalImagePerfNotifier,
       Supplier<Boolean> asyncLogging) {
     mClock = clock;
     mImagePerfState = imagePerfState;
-    mImagePerfNotifier = imagePerfNotifier;
+    mImagePerfNotifier = globalImagePerfNotifier;
 
     mAsyncLogging = asyncLogging;
+  }
+
+  @Override
+  public void setImagePerfNotifier(@Nullable ImagePerfNotifier imagePerfNotifier) {
+    mLocalImagePerfNotifier = imagePerfNotifier;
+    if (sHandler != null) {
+      sHandler.setImagePerfNotifier(imagePerfNotifier);
+    }
   }
 
   @Override
@@ -209,6 +238,8 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   }
 
   private void updateStatus(ImagePerfState state, ImageLoadStatus imageLoadStatus) {
+    state.setImageLoadStatus(imageLoadStatus);
+
     if (shouldDispatchAsync()) {
       Message msg = Preconditions.checkNotNull(sHandler).obtainMessage();
       msg.what = WHAT_STATUS;
@@ -217,6 +248,10 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
       sHandler.sendMessage(msg);
     } else {
       mImagePerfNotifier.notifyStatusUpdated(state, imageLoadStatus);
+      ImagePerfNotifier localImagePerfNotifier = mLocalImagePerfNotifier;
+      if (localImagePerfNotifier != null) {
+        localImagePerfNotifier.notifyStatusUpdated(state, imageLoadStatus);
+      }
     }
   }
 
@@ -230,6 +265,10 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     } else {
       // sync
       mImagePerfNotifier.notifyListenersOfVisibilityStateUpdate(state, visibilityState);
+      ImagePerfNotifier localImagePerfNotifier = mLocalImagePerfNotifier;
+      if (localImagePerfNotifier != null) {
+        localImagePerfNotifier.notifyListenersOfVisibilityStateUpdate(state, visibilityState);
+      }
     }
   }
 
@@ -240,7 +279,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     HandlerThread handlerThread = new HandlerThread("ImagePerfControllerListener2Thread");
     handlerThread.start();
     Looper looper = Preconditions.checkNotNull(handlerThread.getLooper());
-    sHandler = new LogHandler(looper, mImagePerfNotifier);
+    sHandler = new LogHandler(looper, mImagePerfNotifier, mLocalImagePerfNotifier);
   }
 
   private boolean shouldDispatchAsync() {
@@ -253,6 +292,12 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
 
   @Override
   public void onEmptyEvent(@androidx.annotation.Nullable Object callerContext) {
-    mImagePerfNotifier.notifyStatusUpdated(mImagePerfState, ImageLoadStatus.EMPTY_EVENT);
+    ImagePerfState state = mImagePerfState;
+    state.setImageLoadStatus(ImageLoadStatus.EMPTY_EVENT);
+    mImagePerfNotifier.notifyStatusUpdated(state, ImageLoadStatus.EMPTY_EVENT);
+    ImagePerfNotifier localImagePerfNotifier = mLocalImagePerfNotifier;
+    if (localImagePerfNotifier != null) {
+      localImagePerfNotifier.notifyStatusUpdated(state, ImageLoadStatus.EMPTY_EVENT);
+    }
   }
 }

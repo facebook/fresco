@@ -186,13 +186,14 @@ object FrescoVitoSlideshowComponentSpec {
   ) {
     FrescoVitoProvider.getController()
         .fetch(
-            slideshowDrawable.nextImage,
-            FrescoVitoProvider.getImagePipeline()
-                .createImageRequest(resources, ImageSourceProvider.forUri(uri), options),
-            callerContext,
-            contextChain,
-            null,
-            null,
-            null)
+            frescoDrawable = slideshowDrawable.nextImage,
+            imageRequest =
+                FrescoVitoProvider.getImagePipeline()
+                    .createImageRequest(resources, ImageSourceProvider.forUri(uri), options),
+            callerContext = callerContext,
+            contextChain = contextChain,
+            listener = null,
+            onFadeListener = null,
+            viewportDimensions = null)
   }
 }

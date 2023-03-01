@@ -76,7 +76,15 @@ object VitoViewImpl2 {
     }
     frescoDrawable.refetchRunnable = Runnable {
       FrescoVitoProvider.getController()
-          .fetch(frescoDrawable, imageRequest, callerContext, null, imageListener, null, null)
+          .fetch(
+              frescoDrawable = frescoDrawable,
+              imageRequest = imageRequest,
+              callerContext = callerContext,
+              contextChain = null,
+              listener = imageListener,
+              perfDataListener = null,
+              onFadeListener = null,
+              viewportDimensions = null)
     }
     if (useSimpleFetchLogic.get()) {
       frescoDrawable.imagePerfListener.onImageMount(frescoDrawable)
