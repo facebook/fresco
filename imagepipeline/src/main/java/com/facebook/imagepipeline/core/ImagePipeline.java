@@ -40,6 +40,7 @@ import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicLong;
@@ -340,6 +341,43 @@ public class ImagePipeline {
   }
 
   /**
+   * Submits a request for execution and returns a DataSource representing the pending decoded
+   * image(s).
+   *
+   * <p>The returned DataSource must be closed once the client has finished with it.
+   *
+   * @param imageRequest the request to submit
+   * @param callerContext the caller context for image request
+   * @param lowestPermittedRequestLevelOnSubmit the lowest request level permitted for image reques
+   * @param requestListener additional image request listener independent of ImageRequest listeners
+   * @param uiComponentId optional UI component ID that is requesting the image
+   * @param extras optional extra data
+   * @return a DataSource representing the pending decoded image(s)
+   */
+  public DataSource<CloseableReference<CloseableImage>> fetchDecodedImage(
+      ImageRequest imageRequest,
+      @Nullable Object callerContext,
+      ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit,
+      @Nullable RequestListener requestListener,
+      @Nullable String uiComponentId,
+      @Nullable Map<String, ?> extras) {
+    try {
+      Producer<CloseableReference<CloseableImage>> producerSequence =
+          mProducerSequenceFactory.getDecodedImageProducerSequence(imageRequest);
+      return submitFetchRequest(
+          producerSequence,
+          imageRequest,
+          lowestPermittedRequestLevelOnSubmit,
+          callerContext,
+          requestListener,
+          uiComponentId,
+          extras);
+    } catch (Exception exception) {
+      return DataSources.immediateFailedDataSource(exception);
+    }
+  }
+
+  /**
    * Submits a request for execution and returns a DataSource representing the pending encoded
    * image(s).
    *
@@ -389,6 +427,7 @@ public class ImagePipeline {
           ImageRequest.RequestLevel.FULL_FETCH,
           callerContext,
           requestListener,
+          null,
           null);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
@@ -881,6 +920,24 @@ public class ImagePipeline {
       @Nullable Object callerContext,
       @Nullable RequestListener requestListener,
       @Nullable String uiComponentId) {
+    return submitFetchRequest(
+        producerSequence,
+        imageRequest,
+        lowestPermittedRequestLevelOnSubmit,
+        callerContext,
+        requestListener,
+        uiComponentId,
+        null);
+  }
+
+  private <T> DataSource<CloseableReference<T>> submitFetchRequest(
+      Producer<CloseableReference<T>> producerSequence,
+      ImageRequest imageRequest,
+      ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit,
+      @Nullable Object callerContext,
+      @Nullable RequestListener requestListener,
+      @Nullable String uiComponentId,
+      @Nullable Map<String, ?> extras) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("ImagePipeline#submitFetchRequest");
     }
@@ -901,6 +958,53 @@ public class ImagePipeline {
               imageRequest,
               generateUniqueFutureId(),
               uiComponentId,
+              requestListener2,
+              callerContext,
+              lowestPermittedRequestLevel,
+              /* isPrefetch */ false,
+              imageRequest.getProgressiveRenderingEnabled()
+                  || !UriUtil.isNetworkUri(imageRequest.getSourceUri()),
+              imageRequest.getPriority(),
+              mConfig);
+      settableProducerContext.putExtras(extras);
+      return CloseableProducerToDataSourceAdapter.create(
+          producerSequence, settableProducerContext, requestListener2);
+    } catch (Exception exception) {
+      return DataSources.immediateFailedDataSource(exception);
+    } finally {
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
+    }
+  }
+
+  private <T> DataSource<CloseableReference<T>> submitFetchRequest(
+      Producer<CloseableReference<T>> producerSequence,
+      ImageRequest imageRequest,
+      ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit,
+      @Nullable Object callerContext,
+      @Nullable RequestListener requestListener,
+      @Nullable Map<String, ?> extras) {
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("ImagePipeline#submitFetchRequest");
+    }
+    final RequestListener2 requestListener2 =
+        new InternalRequestListener(
+            getRequestListenerForRequest(imageRequest, requestListener), mRequestListener2);
+
+    if (mCallerContextVerifier != null) {
+      mCallerContextVerifier.verifyCallerContext(callerContext, false);
+    }
+
+    try {
+      ImageRequest.RequestLevel lowestPermittedRequestLevel =
+          ImageRequest.RequestLevel.getMax(
+              imageRequest.getLowestPermittedRequestLevel(), lowestPermittedRequestLevelOnSubmit);
+      SettableProducerContext settableProducerContext =
+          new SettableProducerContext(
+              imageRequest,
+              generateUniqueFutureId(),
+              null,
               requestListener2,
               callerContext,
               lowestPermittedRequestLevel,

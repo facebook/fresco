@@ -46,22 +46,21 @@ class VitoImagePipelineImpl(
       viewport: Rect?
   ): VitoImageRequest {
     val imageOptions = options ?: defaults()
+    val extras: MutableMap<String, Any?> = mutableMapOf()
+    var finalImageSource = imageSource
+    if (imageSource is SingleImageSource) {
+      val uri = imageSource.uri
+      val maybeModifiedUri =
+          UriModifier.INSTANCE.modifyUri(
+              uri,
+              viewport?.let { Dimensions(it.width(), it.height()) },
+              imageOptions.actualImageScaleType)
 
-    val finalImageSource =
-        when {
-          imageOptions.experimentalDynamicSize && imageSource is SingleImageSource -> {
-            val uri = imageSource.uri
-            val maybeModifiedUri =
-                UriModifier.INSTANCE.modifyUri(
-                    uri,
-                    viewport?.let { Dimensions(it.width(), it.height()) },
-                    imageOptions.actualImageScaleType)
-
-            if (maybeModifiedUri != uri) ImageSourceProvider.forUri(maybeModifiedUri)
-            else imageSource
-          }
-          else -> imageSource
-        }
+      if (maybeModifiedUri != uri) {
+        extras["modified_url"] = true
+        finalImageSource = ImageSourceProvider.forUri(maybeModifiedUri)
+      }
+    }
 
     val finalImageRequest =
         ImageSourceToImagePipelineAdapter.maybeExtractFinalImageRequest(
@@ -69,7 +68,7 @@ class VitoImagePipelineImpl(
     val finalImageCacheKey = finalImageRequest?.let { imagePipeline.getCacheKey(it, null) }
 
     return VitoImageRequest(
-        resources, finalImageSource, imageOptions, finalImageRequest, finalImageCacheKey)
+        resources, finalImageSource, imageOptions, finalImageRequest, finalImageCacheKey, extras)
   }
 
   override fun getCachedImage(imageRequest: VitoImageRequest): CloseableReference<CloseableImage>? {
@@ -104,6 +103,7 @@ class VitoImagePipelineImpl(
               imageRequest.imageOptions,
               callerContext,
               requestListener,
-              VitoUtils.getStringId(uiComponentId))
+              VitoUtils.getStringId(uiComponentId),
+              imageRequest.extras)
           .get()
 }

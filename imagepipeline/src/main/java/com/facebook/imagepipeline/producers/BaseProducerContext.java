@@ -73,6 +73,7 @@ public class BaseProducerContext implements ProducerContext {
         imageRequest,
         id,
         null,
+        null,
         producerListener,
         callerContext,
         lowestPermittedRequestLevel,
@@ -86,6 +87,7 @@ public class BaseProducerContext implements ProducerContext {
       ImageRequest imageRequest,
       String id,
       @Nullable String uiComponentId,
+      @Nullable Map<String, ?> extras,
       ProducerListener2 producerListener,
       Object callerContext,
       ImageRequest.RequestLevel lowestPermittedRequestLevel,
@@ -100,6 +102,7 @@ public class BaseProducerContext implements ProducerContext {
     mExtras.put("id", mId);
     mExtras.put(
         ExtraKeys.URI_SOURCE, imageRequest == null ? "null-request" : imageRequest.getSourceUri());
+    putExtras(extras);
 
     mUiComponentId = uiComponentId;
     mProducerListener = producerListener;

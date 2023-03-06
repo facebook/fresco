@@ -34,7 +34,8 @@ public abstract class BaseCloseableImage implements CloseableImage {
               "image_format",
               "bitmap_config",
               "is_rounded",
-              "non_fatal_decode_error"));
+              "non_fatal_decode_error",
+              "modified_url"));
 
   private @Nullable MutableImageInfo mCacheImageInfo;
 

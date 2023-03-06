@@ -84,6 +84,7 @@ public class SettableProducerContext extends BaseProducerContext {
         imageRequest,
         id,
         uiComponentId,
+        null,
         producerListener,
         callerContext,
         lowestPermittedRequestLevel,
