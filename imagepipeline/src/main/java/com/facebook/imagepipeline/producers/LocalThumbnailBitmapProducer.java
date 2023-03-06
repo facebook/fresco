@@ -85,8 +85,8 @@ public class LocalThumbnailBitmapProducer implements Producer<CloseableReference
                     SimpleBitmapReleaser.getInstance(),
                     ImmutableQualityInfo.FULL_QUALITY,
                     0);
-            context.setExtra(ProducerContext.ExtraKeys.IMAGE_FORMAT, "thumbnail");
-            closeableStaticBitmap.setImageExtras(context.getExtras());
+            context.putExtra(ProducerContext.ExtraKeys.IMAGE_FORMAT, "thumbnail");
+            closeableStaticBitmap.putExtras(context.getExtras());
             return CloseableReference.<CloseableImage>of(closeableStaticBitmap);
           }
 

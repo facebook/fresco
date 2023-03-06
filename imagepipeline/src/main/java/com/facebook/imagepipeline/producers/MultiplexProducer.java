@@ -382,7 +382,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
                 producerContext.getImagePipelineConfig());
         mMultiplexProducerContext.putExtras(producerContext.getExtras());
         if (startedAsPrefetch.isSet()) {
-          mMultiplexProducerContext.setExtra(
+          mMultiplexProducerContext.putExtra(
               EXTRAS_STARTED_AS_PREFETCH, startedAsPrefetch.asBoolean());
         }
 
@@ -507,7 +507,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
             if (mMultiplexProducerContext != null) {
               pair.second.putExtras(mMultiplexProducerContext.getExtras());
             }
-            pair.second.setExtra(mDedupedRequestsCountKey, size);
+            pair.second.putExtra(mDedupedRequestsCountKey, size);
           }
           pair.first.onNewResult(closeableObject, status);
         }

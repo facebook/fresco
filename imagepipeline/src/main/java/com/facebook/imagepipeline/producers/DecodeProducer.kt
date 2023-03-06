@@ -276,16 +276,16 @@ class DecodeProducer(
         image: CloseableImage?,
         lastScheduledScanNumber: Int
     ) {
-      producerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_WIDTH, encodedImage.width)
-      producerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_HEIGHT, encodedImage.height)
-      producerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_SIZE, encodedImage.size)
+      producerContext.putExtra(ProducerContext.ExtraKeys.ENCODED_WIDTH, encodedImage.width)
+      producerContext.putExtra(ProducerContext.ExtraKeys.ENCODED_HEIGHT, encodedImage.height)
+      producerContext.putExtra(ProducerContext.ExtraKeys.ENCODED_SIZE, encodedImage.size)
       if (image is CloseableBitmap) {
         val bitmap = image.underlyingBitmap
         val config = if (bitmap == null) null else bitmap.config
-        producerContext.setExtra("bitmap_config", config.toString())
+        producerContext.putExtra("bitmap_config", config.toString())
       }
-      image?.setImageExtras(producerContext.extras)
-      producerContext.setExtra(ProducerContext.ExtraKeys.LAST_SCAN_NUMBER, lastScheduledScanNumber)
+      image?.putExtras(producerContext.getExtras())
+      producerContext.putExtra(ProducerContext.ExtraKeys.LAST_SCAN_NUMBER, lastScheduledScanNumber)
     }
 
     private fun getExtraMap(
@@ -395,7 +395,7 @@ class DecodeProducer(
       val job = JobRunnable { encodedImage, status ->
         if (encodedImage != null) {
           val request = producerContext.imageRequest
-          producerContext.setExtra(
+          producerContext.putExtra(
               ProducerContext.ExtraKeys.IMAGE_FORMAT, encodedImage.imageFormat.name)
           encodedImage.source = request.sourceUri?.toString()
 

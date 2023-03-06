@@ -320,7 +320,7 @@ public class BaseProducerContext implements ProducerContext {
   }
 
   @Override
-  public void setExtra(String key, @Nullable Object value) {
+  public void putExtra(String key, @Nullable Object value) {
     if (INITIAL_KEYS.contains(key)) return;
     mExtras.put(key, value);
   }
@@ -329,7 +329,7 @@ public class BaseProducerContext implements ProducerContext {
   public void putExtras(@Nullable Map<String, ?> extras) {
     if (extras == null) return;
     for (Map.Entry<String, ?> entry : extras.entrySet()) {
-      setExtra(entry.getKey(), entry.getValue());
+      putExtra(entry.getKey(), entry.getValue());
     }
   }
 

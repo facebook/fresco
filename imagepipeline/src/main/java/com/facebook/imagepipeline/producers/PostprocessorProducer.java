@@ -251,7 +251,7 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
         CloseableStaticBitmap closeableStaticBitmap =
             CloseableStaticBitmap.of(
                 bitmapRef, sourceImage.getQualityInfo(), rotationAngle, exifOrientation);
-        closeableStaticBitmap.setImageExtras(staticBitmap.getExtras());
+        closeableStaticBitmap.putExtras(staticBitmap.getExtras());
         return CloseableReference.<CloseableImage>of(closeableStaticBitmap);
       } finally {
         CloseableReference.closeSafely(bitmapRef);

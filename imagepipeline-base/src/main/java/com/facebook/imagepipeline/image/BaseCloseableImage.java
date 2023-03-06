@@ -65,7 +65,7 @@ public abstract class BaseCloseableImage implements CloseableImage {
 
   /** Sets extras that match mImageExtrasList to this image from supplied extras */
   @Override
-  public void setImageExtras(@Nullable Map<String, Object> extras) {
+  public void putExtras(@Nullable Map<String, ?> extras) {
     if (extras == null) {
       return;
     }
@@ -80,10 +80,25 @@ public abstract class BaseCloseableImage implements CloseableImage {
   }
 
   @Override
-  public void setImageExtra(String extra, Object value) {
+  public <E> void putExtra(String extra, @Nullable E value) {
     if (mImageExtrasList.contains(extra)) {
       mExtras.put(extra, value);
     }
+  }
+
+  @Override
+  public <T> T getExtra(String key) {
+    return getExtra(key, null);
+  }
+
+  @Override
+  public <T> T getExtra(String key, @Nullable T valueIfNotFound) {
+    Object value = mExtras.get(key);
+    if (value == null) {
+      return valueIfNotFound;
+    }
+    //noinspection unchecked
+    return (T) value;
   }
 
   @Override

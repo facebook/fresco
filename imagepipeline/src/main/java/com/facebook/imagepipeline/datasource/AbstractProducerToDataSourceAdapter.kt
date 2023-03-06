@@ -63,8 +63,8 @@ protected constructor(
     }
   }
 
-  protected fun getExtras(producerContext: ProducerContext): Map<String, Any> =
-      producerContext.extras
+  protected fun getExtras(producerContext: ProducerContext): Map<String, Any?> =
+      producerContext.getExtras()
 
   private fun onFailureImpl(throwable: Throwable) {
     if (super.setFailure(throwable, getExtras(settableProducerContext))) {
@@ -93,7 +93,7 @@ protected constructor(
 
   init {
     traceSection("AbstractProducerToDataSourceAdapter()") {
-      extras = settableProducerContext.extras
+      extras = settableProducerContext.getExtras()
       traceSection("AbstractProducerToDataSourceAdapter()->onRequestStart") {
         requestListener.onRequestStart(settableProducerContext)
       }

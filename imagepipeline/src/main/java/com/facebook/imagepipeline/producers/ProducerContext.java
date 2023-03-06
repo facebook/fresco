@@ -8,12 +8,12 @@
 package com.facebook.imagepipeline.producers;
 
 import androidx.annotation.StringDef;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfigInterface;
 import com.facebook.imagepipeline.image.EncodedImageOrigin;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
-import java.util.Map;
 import javax.annotation.Nullable;
 
 /**
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * pipeline client cancels the image request.
  */
 @Nullsafe(Nullsafe.Mode.STRICT)
-public interface ProducerContext {
+public interface ProducerContext extends HasExtraData {
 
   @StringDef({
     ExtraKeys.ORIGIN,
@@ -103,18 +103,6 @@ public interface ProducerContext {
   EncodedImageOrigin getEncodedImageOrigin();
 
   void setEncodedImageOrigin(EncodedImageOrigin encodedImageOrigin);
-
-  <E> void setExtra(String key, @Nullable E value);
-
-  void putExtras(@Nullable Map<String, ?> extras);
-
-  @Nullable
-  <E> E getExtra(String key);
-
-  @Nullable
-  <E> E getExtra(String key, @Nullable E valueIfNotFound);
-
-  Map<String, Object> getExtras();
 
   /** Helper to set {@link ExtraKeys#ORIGIN} and {@link ExtraKeys#ORIGIN_SUBCATEGORY} */
   void putOriginExtra(@Nullable String origin, @Nullable String subcategory);

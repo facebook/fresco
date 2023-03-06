@@ -167,7 +167,7 @@ public class DefaultImageDecoder implements ImageDecoder {
               encodedImage.getRotationAngle(),
               encodedImage.getExifOrientation());
 
-      closeableStaticBitmap.setImageExtra(
+      closeableStaticBitmap.putExtra(
           "is_rounded",
           didApplyTransformation && options.bitmapTransformation instanceof CircularTransformation);
 
@@ -205,7 +205,7 @@ public class DefaultImageDecoder implements ImageDecoder {
               encodedImage.getRotationAngle(),
               encodedImage.getExifOrientation());
 
-      closeableStaticBitmap.setImageExtra(
+      closeableStaticBitmap.putExtra(
           "is_rounded",
           didApplyTransformation && options.bitmapTransformation instanceof CircularTransformation);
 

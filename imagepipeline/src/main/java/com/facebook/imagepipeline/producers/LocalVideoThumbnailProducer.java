@@ -108,8 +108,8 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
                     SimpleBitmapReleaser.getInstance(),
                     ImmutableQualityInfo.FULL_QUALITY,
                     0);
-            producerContext.setExtra(ProducerContext.ExtraKeys.IMAGE_FORMAT, "thumbnail");
-            closeableStaticBitmap.setImageExtras(producerContext.getExtras());
+            producerContext.putExtra(ProducerContext.ExtraKeys.IMAGE_FORMAT, "thumbnail");
+            closeableStaticBitmap.putExtras(producerContext.getExtras());
             return CloseableReference.<CloseableImage>of(closeableStaticBitmap);
           }
 

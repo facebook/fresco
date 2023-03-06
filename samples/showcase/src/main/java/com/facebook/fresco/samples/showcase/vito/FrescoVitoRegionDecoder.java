@@ -66,7 +66,7 @@ public class FrescoVitoRegionDecoder implements ImageDecoder {
               encodedImage.getRotationAngle(),
               encodedImage.getExifOrientation());
 
-      closeableStaticBitmap.setImageExtra(
+      closeableStaticBitmap.putExtra(
           "is_rounded",
           didApplyTransformation && options.bitmapTransformation instanceof CircularTransformation);
 
