@@ -172,7 +172,7 @@ public class ImagePipelineFactory {
               getPlatformBitmapFactory(),
               mConfig.getExecutorSupplier(),
               getBitmapCountingMemoryCache(),
-              getAnimatedCache(80),
+              getAnimatedCache(mConfig.getExperiments().getAnimatedCacheMemoryPercentage()),
               mConfig.getExperiments().getDownscaleFrameToDrawableDimensions(),
               mConfig.getExperiments().getUseBalancedAnimationStrategy(),
               mConfig.getExecutorServiceForAnimatedImages());
@@ -206,7 +206,7 @@ public class ImagePipelineFactory {
     if (mAnimatedCache == null) {
       final long maxMemory = Math.min(Runtime.getRuntime().maxMemory(), Integer.MAX_VALUE);
       long cacheSizeMb = (maxMemory / 100 * memoryPercentage) / MB;
-      mAnimatedCache = new AnimatedCache((int) cacheSizeMb);
+      mAnimatedCache = AnimatedCache.getInstance((int) cacheSizeMb);
     }
     return mAnimatedCache;
   }

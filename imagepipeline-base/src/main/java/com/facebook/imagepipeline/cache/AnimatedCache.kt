@@ -16,12 +16,12 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
 /** Store frames from animations which are being displayed at this moment */
-class AnimatedCache(memoryMegaBytes: Int) {
+class AnimatedCache private constructor(memoryMB: Int) {
 
-  private val sizeBytes = memoryMegaBytes * MB
+  private val sizeBytes = memoryMB * MB
 
   /** % Memory for animations which were recently used, but they are not running now */
-  private val evictionRatio = if (memoryMegaBytes < 90) 0.15f else 0.30f
+  private val evictionRatio = if (memoryMB < 90) 0.15f else 0.30f
 
   /** 10% Memory is the maximum size of an animation */
   private val maxCacheEntrySize = sizeBytes.times(0.1).toInt()
@@ -61,6 +61,11 @@ class AnimatedCache(memoryMegaBytes: Int) {
 
   companion object {
     private const val EVICTION_QUEUE = 50
+    private var instance: AnimatedCache? = null
+
+    @JvmStatic
+    fun getInstance(memoryMB: Int): AnimatedCache =
+        instance ?: AnimatedCache(memoryMB).also { instance = it }
   }
 }
 

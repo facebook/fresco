@@ -45,6 +45,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val useBitmapPrepareToDraw: Boolean
   val useBalancedAnimationStrategy: Boolean
   val bitmapPrepareToDrawMinSizeBytes: Int
+  val animatedCacheMemoryPercentage: Int
   val bitmapPrepareToDrawMaxSizeBytes: Int
   val bitmapPrepareToDrawForPrefetch: Boolean
   val maxBitmapSize: Int
@@ -81,6 +82,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var useDownsamplingRatioForResizing = false
     @JvmField var useBitmapPrepareToDraw = false
     @JvmField var useBalancedAnimationStrategy = false
+    @JvmField var animatedCacheMemoryPercentage = 40
     @JvmField var bitmapPrepareToDrawMinSizeBytes = 0
     @JvmField var bitmapPrepareToDrawMaxSizeBytes = 0
 
@@ -205,6 +207,13 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     /** Enable balance strategy between RAM and CPU for rendering bitmap animations (WebP, Gif) */
     fun setBalancedAnimationStrategy(useBalancedAnimationStrategy: Boolean) = asBuilder {
       this.useBalancedAnimationStrategy = useBalancedAnimationStrategy
+    }
+
+    /**
+     * Maximum heap memory percentage available for caching bitmaps from animated asset (WebP, Gif)
+     */
+    fun setAnimatedCacheMemoryPercentage(animatedCacheMemoryPercentage: Int) = asBuilder {
+      this.animatedCacheMemoryPercentage = animatedCacheMemoryPercentage
     }
 
     /**
@@ -385,6 +394,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     useDownsamplingRatioForResizing = builder.useDownsamplingRatioForResizing
     useBitmapPrepareToDraw = builder.useBitmapPrepareToDraw
     useBalancedAnimationStrategy = builder.useBalancedAnimationStrategy
+    animatedCacheMemoryPercentage = builder.animatedCacheMemoryPercentage
     bitmapPrepareToDrawMinSizeBytes = builder.bitmapPrepareToDrawMinSizeBytes
     bitmapPrepareToDrawMaxSizeBytes = builder.bitmapPrepareToDrawMaxSizeBytes
     bitmapPrepareToDrawForPrefetch = builder.bitmapPrepareToDrawForPrefetch
