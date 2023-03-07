@@ -11,6 +11,7 @@ import android.content.res.Resources
 import android.graphics.Rect
 import com.facebook.common.references.CloseableReference
 import com.facebook.datasource.DataSource
+import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.fresco.ui.common.VitoUtils
 import com.facebook.fresco.urimod.Dimensions
 import com.facebook.fresco.urimod.UriModifier
@@ -57,7 +58,7 @@ class VitoImagePipelineImpl(
               imageOptions.actualImageScaleType)
 
       if (maybeModifiedUri != uri) {
-        extras["modified_url"] = true
+        extras[HasExtraData.KEY_MODIFIED_URL] = true
         finalImageSource = ImageSourceProvider.forUri(maybeModifiedUri)
       }
     }

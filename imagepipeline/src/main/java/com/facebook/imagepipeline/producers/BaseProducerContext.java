@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.common.internal.ImmutableSet;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfigInterface;
 import com.facebook.imagepipeline.image.EncodedImageOrigin;
@@ -101,7 +102,8 @@ public class BaseProducerContext implements ProducerContext {
     mExtras = new HashMap<>();
     mExtras.put("id", mId);
     mExtras.put(
-        ExtraKeys.URI_SOURCE, imageRequest == null ? "null-request" : imageRequest.getSourceUri());
+        HasExtraData.KEY_URI_SOURCE,
+        imageRequest == null ? "null-request" : imageRequest.getSourceUri());
     putExtras(extras);
 
     mUiComponentId = uiComponentId;
@@ -361,8 +363,8 @@ public class BaseProducerContext implements ProducerContext {
 
   @Override
   public void putOriginExtra(@Nullable String origin, @Nullable String subcategory) {
-    mExtras.put(ExtraKeys.ORIGIN, origin);
-    mExtras.put(ExtraKeys.ORIGIN_SUBCATEGORY, subcategory);
+    mExtras.put(HasExtraData.KEY_ORIGIN, origin);
+    mExtras.put(HasExtraData.KEY_ORIGIN_SUBCATEGORY, subcategory);
   }
 
   @Override

@@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imagepipeline.bitmaps.SimpleBitmapReleaser;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
@@ -85,7 +86,7 @@ public class LocalThumbnailBitmapProducer implements Producer<CloseableReference
                     SimpleBitmapReleaser.getInstance(),
                     ImmutableQualityInfo.FULL_QUALITY,
                     0);
-            context.putExtra(ProducerContext.ExtraKeys.IMAGE_FORMAT, "thumbnail");
+            context.putExtra(HasExtraData.KEY_IMAGE_FORMAT, "thumbnail");
             closeableStaticBitmap.putExtras(context.getExtras());
             return CloseableReference.<CloseableImage>of(closeableStaticBitmap);
           }

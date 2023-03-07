@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.producers;
 
 import android.util.Pair;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -29,7 +30,7 @@ public class EncodedCacheKeyMultiplexProducer
     super(
         inputProducer,
         "EncodedCacheKeyMultiplexProducer",
-        ProducerContext.ExtraKeys.MULTIPLEX_ENCODED_COUNT,
+        HasExtraData.KEY_MULTIPLEX_ENCODED_COUNT,
         keepCancelledFetchAsLowPriority);
     mCacheKeyFactory = cacheKeyFactory;
   }

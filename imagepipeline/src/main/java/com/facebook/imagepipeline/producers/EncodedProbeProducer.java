@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.cache.common.CacheKey;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.cache.BoundedLinkedHashSet;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
@@ -127,7 +128,7 @@ public class EncodedProbeProducer implements Producer<EncodedImage> {
             mCacheKeyFactory.getEncodedCacheKey(imageRequest, mProducerContext.getCallerContext());
 
         mEncodedMemoryCacheHistory.add(cacheKey);
-        if ("memory_encoded".equals(mProducerContext.getExtra(ProducerContext.ExtraKeys.ORIGIN))) {
+        if ("memory_encoded".equals(mProducerContext.getExtra(HasExtraData.KEY_ORIGIN))) {
           if (!mDiskCacheHistory.contains(cacheKey)) {
             final boolean isSmallRequest =
                 (imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL);
@@ -136,7 +137,7 @@ public class EncodedProbeProducer implements Producer<EncodedImage> {
             preferredCache.addKeyForAsyncProbing(cacheKey);
             mDiskCacheHistory.add(cacheKey);
           }
-        } else if ("disk".equals(mProducerContext.getExtra(ProducerContext.ExtraKeys.ORIGIN))) {
+        } else if ("disk".equals(mProducerContext.getExtra(HasExtraData.KEY_ORIGIN))) {
           // image was fetched from disk cache, therefore it was probed in disk cache by default
           mDiskCacheHistory.add(cacheKey);
         }

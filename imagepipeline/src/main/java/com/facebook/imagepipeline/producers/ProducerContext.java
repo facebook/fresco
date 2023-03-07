@@ -7,7 +7,6 @@
 
 package com.facebook.imagepipeline.producers;
 
-import androidx.annotation.StringDef;
 import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfigInterface;
@@ -29,38 +28,6 @@ import javax.annotation.Nullable;
  */
 @Nullsafe(Nullsafe.Mode.STRICT)
 public interface ProducerContext extends HasExtraData {
-
-  @StringDef({
-    ExtraKeys.ORIGIN,
-    ExtraKeys.ORIGIN_SUBCATEGORY,
-    ExtraKeys.NORMALIZED_URI,
-    ExtraKeys.SOURCE_URI,
-    ExtraKeys.IMAGE_FORMAT,
-    ExtraKeys.ENCODED_WIDTH,
-    ExtraKeys.ENCODED_HEIGHT,
-    ExtraKeys.ENCODED_SIZE,
-    ExtraKeys.MULTIPLEX_BITMAP_COUNT,
-    ExtraKeys.MULTIPLEX_ENCODED_COUNT,
-    ExtraKeys.LAST_SCAN_NUMBER,
-  })
-  @interface ExtraKeys {
-    final String ORIGIN = "origin";
-    final String ORIGIN_SUBCATEGORY = "origin_sub";
-    final String SOURCE_URI = "uri_source";
-    final String NORMALIZED_URI = "uri_norm";
-    final String IMAGE_FORMAT = "image_format";
-    final String ENCODED_WIDTH = "encoded_width";
-    final String ENCODED_HEIGHT = "encoded_height";
-    final String ENCODED_SIZE = "encoded_size";
-    final String URI_SOURCE = "uri_source";
-    /* number of deduped request in BitmapMemoryCacheKeyMultiplexProducer */
-    final /* number of deduped request in BitmapMemoryCacheKeyMultiplexProducer */ String
-        MULTIPLEX_BITMAP_COUNT = "multiplex_bmp_cnt";
-    /* number of deduped request in EncodedCacheKeyMultiplexProducer */
-    final /* number of deduped request in EncodedCacheKeyMultiplexProducer */ String
-        MULTIPLEX_ENCODED_COUNT = "multiplex_enc_cnt";
-    final String LAST_SCAN_NUMBER = "last_scan_num";
-  }
 
   /** @return image request that is being executed */
   ImageRequest getImageRequest();
@@ -104,9 +71,11 @@ public interface ProducerContext extends HasExtraData {
 
   void setEncodedImageOrigin(EncodedImageOrigin encodedImageOrigin);
 
-  /** Helper to set {@link ExtraKeys#ORIGIN} and {@link ExtraKeys#ORIGIN_SUBCATEGORY} */
+  /**
+   * Helper to set {@link HasExtraData#KEY_ORIGIN} and {@link HasExtraData#KEY_ORIGIN_SUBCATEGORY}
+   */
   void putOriginExtra(@Nullable String origin, @Nullable String subcategory);
 
-  /** Helper to set {@link ExtraKeys#ORIGIN} */
+  /** Helper to set {@link HasExtraData#KEY_ORIGIN} */
   void putOriginExtra(@Nullable String origin);
 }

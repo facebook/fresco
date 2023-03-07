@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.producers;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imagepipeline.cache.BoundedLinkedHashSet;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
@@ -137,7 +138,7 @@ public class BitmapProbeProducer implements Producer<CloseableReference<Closeabl
         final ImageRequest imageRequest = mProducerContext.getImageRequest();
         final CacheKey cacheKey =
             mCacheKeyFactory.getEncodedCacheKey(imageRequest, mProducerContext.getCallerContext());
-        String producerContextExtra = mProducerContext.getExtra(ProducerContext.ExtraKeys.ORIGIN);
+        String producerContextExtra = mProducerContext.getExtra(HasExtraData.KEY_ORIGIN);
         if (producerContextExtra != null && producerContextExtra.equals("memory_bitmap")) {
           if (mProducerContext
                   .getImagePipelineConfig()

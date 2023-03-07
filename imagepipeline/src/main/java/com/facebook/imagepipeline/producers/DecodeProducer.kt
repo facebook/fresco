@@ -14,6 +14,7 @@ import com.facebook.common.memory.ByteArrayPool
 import com.facebook.common.references.CloseableReference
 import com.facebook.common.util.ExceptionWithNoStacktrace
 import com.facebook.common.util.UriUtil
+import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.imageformat.DefaultImageFormats
 import com.facebook.imagepipeline.common.ImageDecodeOptions
 import com.facebook.imagepipeline.core.CloseableReferenceFactory
@@ -276,16 +277,16 @@ class DecodeProducer(
         image: CloseableImage?,
         lastScheduledScanNumber: Int
     ) {
-      producerContext.putExtra(ProducerContext.ExtraKeys.ENCODED_WIDTH, encodedImage.width)
-      producerContext.putExtra(ProducerContext.ExtraKeys.ENCODED_HEIGHT, encodedImage.height)
-      producerContext.putExtra(ProducerContext.ExtraKeys.ENCODED_SIZE, encodedImage.size)
+      producerContext.putExtra(HasExtraData.KEY_ENCODED_WIDTH, encodedImage.width)
+      producerContext.putExtra(HasExtraData.KEY_ENCODED_HEIGHT, encodedImage.height)
+      producerContext.putExtra(HasExtraData.KEY_ENCODED_SIZE, encodedImage.size)
       if (image is CloseableBitmap) {
         val bitmap = image.underlyingBitmap
         val config = if (bitmap == null) null else bitmap.config
-        producerContext.putExtra("bitmap_config", config.toString())
+        producerContext.putExtra(HasExtraData.KEY_BITMAP_CONFIG, config.toString())
       }
       image?.putExtras(producerContext.getExtras())
-      producerContext.putExtra(ProducerContext.ExtraKeys.LAST_SCAN_NUMBER, lastScheduledScanNumber)
+      producerContext.putExtra(HasExtraData.KEY_LAST_SCAN_NUMBER, lastScheduledScanNumber)
     }
 
     private fun getExtraMap(
@@ -395,8 +396,7 @@ class DecodeProducer(
       val job = JobRunnable { encodedImage, status ->
         if (encodedImage != null) {
           val request = producerContext.imageRequest
-          producerContext.putExtra(
-              ProducerContext.ExtraKeys.IMAGE_FORMAT, encodedImage.imageFormat.name)
+          producerContext.putExtra(HasExtraData.KEY_IMAGE_FORMAT, encodedImage.imageFormat.name)
           encodedImage.source = request.sourceUri?.toString()
 
           if (downsampleEnabled || !statusHasFlag(status, IS_RESIZING_DONE)) {

@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.image;
 
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 import java.util.Arrays;
@@ -27,15 +28,15 @@ public abstract class BaseCloseableImage implements CloseableImage {
   private static final Set<String> mImageExtrasList =
       new HashSet<>(
           Arrays.asList(
-              "encoded_size",
-              "encoded_width",
-              "encoded_height",
-              "uri_source",
-              "image_format",
-              "bitmap_config",
-              "is_rounded",
-              "non_fatal_decode_error",
-              "modified_url"));
+              HasExtraData.KEY_ENCODED_SIZE,
+              HasExtraData.KEY_ENCODED_WIDTH,
+              HasExtraData.KEY_ENCODED_HEIGHT,
+              HasExtraData.KEY_URI_SOURCE,
+              HasExtraData.KEY_IMAGE_FORMAT,
+              HasExtraData.KEY_BITMAP_CONFIG,
+              HasExtraData.KEY_IS_ROUNDED,
+              HasExtraData.KEY_NON_FATAL_DECODE_ERROR,
+              HasExtraData.KEY_MODIFIED_URL));
 
   private @Nullable MutableImageInfo mCacheImageInfo;
 

@@ -20,4 +20,27 @@ interface HasExtraData {
   fun getExtras(): Extras
 
   fun putExtras(extras: Extras)
+
+  companion object {
+    const val KEY_ENCODED_SIZE = "encoded_size"
+    const val KEY_ENCODED_WIDTH = "encoded_width"
+    const val KEY_ENCODED_HEIGHT = "encoded_height"
+    const val KEY_URI_SOURCE = "uri_source"
+    const val KEY_IMAGE_FORMAT = "image_format"
+    const val KEY_BITMAP_CONFIG = "bitmap_config"
+    const val KEY_IS_ROUNDED = "is_rounded"
+    const val KEY_NON_FATAL_DECODE_ERROR = "non_fatal_decode_error"
+    const val KEY_MODIFIED_URL = "modified_url"
+
+    const val KEY_ORIGIN = "origin"
+    const val KEY_ORIGIN_SUBCATEGORY = "origin_sub"
+    const val KEY_SOURCE_URI = "uri_source"
+    const val KEY_NORMALIZED_URI = "uri_norm"
+
+    /* number of deduped request in BitmapMemoryCacheKeyMultiplexProducer */
+    const val KEY_MULTIPLEX_BITMAP_COUNT = "multiplex_bmp_cnt"
+    /* number of deduped request in EncodedCacheKeyMultiplexProducer */
+    const val KEY_MULTIPLEX_ENCODED_COUNT = "multiplex_enc_cnt"
+    const val KEY_LAST_SCAN_NUMBER = "last_scan_num"
+  }
 }

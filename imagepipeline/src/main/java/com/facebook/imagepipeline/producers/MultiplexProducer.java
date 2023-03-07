@@ -65,16 +65,14 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
   private final String mDedupedRequestsCountKey;
 
   protected MultiplexProducer(
-      Producer<T> inputProducer,
-      String producerName,
-      @ProducerContext.ExtraKeys String dedupedRequestsCountKey) {
+      Producer<T> inputProducer, String producerName, String dedupedRequestsCountKey) {
     this(inputProducer, producerName, dedupedRequestsCountKey, false);
   }
 
   protected MultiplexProducer(
       Producer<T> inputProducer,
       String producerName,
-      @ProducerContext.ExtraKeys String dedupedRequestsCountKey,
+      String dedupedRequestsCountKey,
       boolean keepCancelledFetchAsLowPriority) {
     mInputProducer = inputProducer;
     mMultiplexers = new HashMap<>();

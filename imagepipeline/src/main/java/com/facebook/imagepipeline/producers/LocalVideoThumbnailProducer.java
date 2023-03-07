@@ -22,6 +22,7 @@ import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imagepipeline.bitmaps.SimpleBitmapReleaser;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
@@ -108,7 +109,7 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
                     SimpleBitmapReleaser.getInstance(),
                     ImmutableQualityInfo.FULL_QUALITY,
                     0);
-            producerContext.putExtra(ProducerContext.ExtraKeys.IMAGE_FORMAT, "thumbnail");
+            producerContext.putExtra(HasExtraData.KEY_IMAGE_FORMAT, "thumbnail");
             closeableStaticBitmap.putExtras(producerContext.getExtras());
             return CloseableReference.<CloseableImage>of(closeableStaticBitmap);
           }
