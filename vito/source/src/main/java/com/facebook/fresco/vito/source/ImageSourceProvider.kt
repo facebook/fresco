@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.source
 
+import android.graphics.Bitmap
 import android.net.Uri
 
 /**
@@ -89,4 +90,12 @@ object ImageSourceProvider {
       if (lowResImageUri == null) {
         forUri(highResImageUri)
       } else IncreasingQualityImageSource(forUri(lowResImageUri), forUri(highResImageUri))
+
+  /**
+   * Create a bitmap image source for a given bitmap image buffer.
+   *
+   * @param bitmap the bitmap image buffer to be used
+   * @return the ImageSource be be passed to the UI component
+   */
+  @JvmStatic fun bitmap(bitmap: Bitmap): ImageSource = BitmapImageSource(bitmap)
 }

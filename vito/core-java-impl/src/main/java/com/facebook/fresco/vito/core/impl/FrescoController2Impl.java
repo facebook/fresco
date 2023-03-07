@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.core.impl;
 
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
@@ -37,9 +38,13 @@ import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.fresco.vito.core.VitoImageRequestListener;
 import com.facebook.fresco.vito.core.impl.debug.DebugOverlayFactory2;
 import com.facebook.fresco.vito.listener.ImageListener;
+import com.facebook.fresco.vito.source.BitmapImageSource;
 import com.facebook.fresco.vito.source.EmptyImageSource;
+import com.facebook.imagepipeline.image.CloseableBitmap;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -127,6 +132,27 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       frescoDrawable.cancelReleaseDelayed();
       return true; // already set
     }
+
+    // Direct bitmap available
+    if (imageRequest.imageSource instanceof BitmapImageSource) {
+      Bitmap bitmap = ((BitmapImageSource) imageRequest.imageSource).getBitmap();
+      CloseableBitmap closeableBitmap =
+          CloseableStaticBitmap.of(
+              bitmap, noOpReleaser -> {}, ImmutableQualityInfo.FULL_QUALITY, 0);
+
+      CloseableReference<CloseableImage> bitmapRef = CloseableReference.of(closeableBitmap);
+      try {
+        frescoDrawable.setImageOrigin(ImageOrigin.MEMORY_BITMAP);
+        // Immediately display the actual image.
+        setActualImage(frescoDrawable, imageRequest, bitmapRef, true, null);
+        frescoDrawable.setFetchSubmitted(true);
+        mDebugOverlayFactory.update(frescoDrawable, obtainExtras(null, null, frescoDrawable));
+        return true;
+      } finally {
+        CloseableReference.closeSafely(bitmapRef);
+      }
+    }
+
     if (frescoDrawable.isFetchSubmitted()) {
       frescoDrawable.getImagePerfListener().onDrawableReconfigured(frescoDrawable);
     }

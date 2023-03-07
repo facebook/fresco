@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.core.impl
 
 import android.content.res.Resources
+import android.graphics.Bitmap
 import android.graphics.Rect
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
@@ -36,9 +37,12 @@ import com.facebook.fresco.vito.renderer.AnimatedDrawableImageDataModel
 import com.facebook.fresco.vito.renderer.BitmapImageDataModel
 import com.facebook.fresco.vito.renderer.DrawableImageDataModel
 import com.facebook.fresco.vito.renderer.ImageDataModel
+import com.facebook.fresco.vito.source.BitmapImageSource
 import com.facebook.imagepipeline.image.CloseableBitmap
 import com.facebook.imagepipeline.image.CloseableImage
+import com.facebook.imagepipeline.image.CloseableStaticBitmap
 import com.facebook.imagepipeline.image.ImageInfo
+import com.facebook.imagepipeline.image.ImmutableQualityInfo
 import java.util.concurrent.Executor
 
 class KFrescoController(
@@ -98,9 +102,11 @@ class KFrescoController(
       ImageReleaseScheduler.cancelAllReleasing(drawable)
       return true
     }
+
     if (drawable.isFetchSubmitted) {
       drawable.imagePerfListener.onDrawableReconfigured(drawable)
     }
+
     // We didn't -> reset everything and set up new fetch
     // TODO(T105148151): move to new package so that no legacy impl dep
     val imageId: Long = VitoUtils.generateIdentifier()
@@ -120,11 +126,36 @@ class KFrescoController(
       this.viewportDimensions = viewportDimensions
     }
 
+    val options: ImageOptions = imageRequest.imageOptions
+    val resources: Resources = imageRequest.resources
+    // Direct bitmap available
+    if (imageRequest.imageSource is BitmapImageSource) {
+      val bitmap: Bitmap = (imageRequest.imageSource as BitmapImageSource).bitmap
+      val closeableBitmap: CloseableBitmap =
+          CloseableStaticBitmap.of(bitmap, {}, ImmutableQualityInfo.FULL_QUALITY, 0)
+      val bitmapRef = CloseableReference.of<CloseableImage>(closeableBitmap)
+      return try {
+        // Immediately display the actual image.
+        drawable.setFetchSubmitted(true)
+        drawable.actualImageLayer.setActualImage(
+            resources, options, closeableBitmap, imageToDataModelMapper)
+        drawable.invalidateSelf()
+        drawable.listenerManager.onFinalImageSet(
+            imageId,
+            imageRequest,
+            ImageOrigin.MEMORY_BITMAP_SHORTCUT,
+            closeableBitmap.imageInfo,
+            drawable.obtainExtras(null, bitmapRef),
+            drawable.actualImageDrawable)
+        debugOverlayHandler?.update(drawable)
+        true
+      } finally {
+        CloseableReference.closeSafely(bitmapRef)
+      }
+    }
+
     drawable.listenerManager.onSubmit(imageId, imageRequest, callerContext, drawable.obtainExtras())
     drawable.imagePerfListener.onImageFetch(drawable)
-
-    val options = imageRequest.imageOptions
-
     drawable.overlayImageLayer.setOverlay(imageRequest.resources, options)
 
     // Check if the image is in cache
@@ -137,7 +168,7 @@ class KFrescoController(
           drawable.setFetchSubmitted(true)
           drawable.closeable = cachedImage.clone()
           drawable.actualImageLayer.setActualImage(
-              imageRequest.resources, options, image, imageToDataModelMapper)
+              resources, options, image, imageToDataModelMapper)
           // TODO(T105148151): trigger listeners
           drawable.invalidateSelf()
           val imageInfo = image.imageInfo
