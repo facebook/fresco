@@ -16,8 +16,6 @@ import com.facebook.common.logging.FLog
 import com.facebook.common.memory.manager.NoOpDebugMemoryManager
 import com.facebook.drawee.backends.pipeline.DraweeConfig
 import com.facebook.drawee.backends.pipeline.Fresco
-import com.facebook.drawee.backends.pipeline.info.ImagePerfData
-import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener
 import com.facebook.flipper.android.AndroidFlipperClient
 import com.facebook.flipper.android.utils.FlipperUtils
 import com.facebook.flipper.perflogger.NoOpFlipperPerfLogger
@@ -29,6 +27,10 @@ import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.samples.showcase.misc.LogcatRequestListener2
 import com.facebook.fresco.samples.showcase.settings.SettingsFragment.KEY_VITO_KOTLIN
+import com.facebook.fresco.ui.common.ImageLoadStatus
+import com.facebook.fresco.ui.common.ImagePerfData
+import com.facebook.fresco.ui.common.ImagePerfDataListener
+import com.facebook.fresco.ui.common.VisibilityState
 import com.facebook.fresco.vito.core.DefaultFrescoVitoConfig
 import com.facebook.fresco.vito.core.FrescoVitoConfig
 import com.facebook.fresco.vito.core.impl.DebugOverlayHandler
@@ -101,7 +103,7 @@ class ShowcaseApplication : Application() {
           object : ImagePerfDataListener {
             override fun onImageLoadStatusUpdated(
                 imagePerfData: ImagePerfData,
-                imageLoadStatus: Int
+                imageLoadStatus: ImageLoadStatus
             ) {
               frescoFlipperPlugin
                   ?.flipperImageTracker
@@ -111,7 +113,7 @@ class ShowcaseApplication : Application() {
 
             override fun onImageVisibilityUpdated(
                 imagePerfData: ImagePerfData,
-                visibilityState: Int
+                visibilityState: VisibilityState
             ) {
               // nop
             }

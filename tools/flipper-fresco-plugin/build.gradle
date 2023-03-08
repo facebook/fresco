@@ -5,30 +5,37 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import com.facebook.fresco.buildsrc.Deps
+
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
 
 android {
-    compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
+    buildToolsVersion FrescoConfig.buildToolsVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion rootProject.minSdkVersion
-        targetSdkVersion rootProject.targetSdkVersion
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
     }
 
     dependencies {
-        implementation project(':android')
-        implementation deps.fresco
-        implementation deps.frescoFlipper
-        compileOnly deps.jsr305
+        implementation project(':drawee-backends:drawee-pipeline')
+        implementation project(':imagepipeline-base')
+        implementation project(':middleware')
+        implementation project(':tools:flipper')
+        implementation project(':ui-common')
+        implementation Deps.Tools.Flipper.flipper
+        compileOnly Deps.jsr305
 
-        api deps.boltsTasks
+        api Deps.Bolts.tasks
 
         // Exclude the actual stetho dep as we only want some of the fresco APIs here
-        implementation(deps.frescoStetho) {
+        implementation(Deps.Tools.Stetho.stetho) {
             exclude group: 'com.facebook.stetho'
         }
     }
 }
 
-apply plugin: 'com.vanniktech.maven.publish'
+apply plugin: "com.vanniktech.maven.publish"
