@@ -27,6 +27,7 @@ dependencies {
     api project(':animated-drawable')
     implementation Deps.Bolts.tasks
     implementation project(':vito:options')
+    implementation project(':middleware')
 
     testCompileOnly Deps.inferAnnotation
     testImplementation project(':animated-base-test')

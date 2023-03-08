@@ -91,5 +91,5 @@ class LogcatRequestListener2(
       logExtraMap
 
   private fun toString(producerContext: ProducerContext) =
-      producerContext.run { "id=$id, extras=$extras, request=$imageRequest" }
+      producerContext.run { "id=$id, extras=${getExtras()}, request=$imageRequest" }
 }

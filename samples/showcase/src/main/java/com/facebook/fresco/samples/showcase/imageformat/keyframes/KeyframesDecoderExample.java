@@ -15,6 +15,7 @@ import com.facebook.imageformat.ImageFormatCheckerUtils;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
+import com.facebook.imagepipeline.image.BaseCloseableImage;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImageInfo;
@@ -25,8 +26,6 @@ import com.facebook.keyframes.deserializers.KFImageDeserializer;
 import com.facebook.keyframes.model.KFImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.Map;
 
 /** Decoder and related classes for loading and displaying Keyframe animated images. */
 public class KeyframesDecoderExample {
@@ -99,7 +98,7 @@ public class KeyframesDecoderExample {
     }
   }
 
-  private static class CloseableKeyframesImage implements CloseableImage {
+  private static class CloseableKeyframesImage extends BaseCloseableImage {
 
     private boolean mClosed;
     private final KFImage mImage;
@@ -128,12 +127,6 @@ public class KeyframesDecoderExample {
     }
 
     @Override
-    public void setImageExtras(@Nullable Map<String, Object> extras) {}
-
-    @Override
-    public void setImageExtra(String extra, Object value) {}
-
-    @Override
     public int getWidth() {
       return (int) mImage.getCanvasSize()[0];
     }
@@ -156,11 +149,6 @@ public class KeyframesDecoderExample {
     @Override
     public boolean isStateful() {
       return true;
-    }
-
-    @Override
-    public Map<String, Object> getExtras() {
-      return Collections.emptyMap();
     }
   }
 

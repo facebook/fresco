@@ -8,5 +8,5 @@
 package com.facebook.drawee.backends.pipeline.info
 
 object ImagePerfExtra {
-  const val IMAGE_ORIGIN = "IMAGE_ORIGIN"
+  const val IMAGE_ORIGIN: String = "IMAGE_ORIGIN"
 }

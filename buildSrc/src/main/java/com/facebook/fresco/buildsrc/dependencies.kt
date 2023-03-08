@@ -58,9 +58,8 @@ object Deps {
 
   object Tools {
     object Flipper {
-      private const val version = "0.121.0"
+      private const val version = "0.183.0"
       const val flipper = "com.facebook.flipper:flipper:$version"
-      const val fresco = "com.facebook.flipper:flipper-fresco-plugin:$version"
     }
     object Stetho {
       private const val version = "1.6.0"
