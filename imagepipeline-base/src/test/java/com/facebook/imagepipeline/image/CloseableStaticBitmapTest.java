@@ -7,7 +7,7 @@
 
 package com.facebook.imagepipeline.image;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import android.graphics.Bitmap;
 import android.media.ExifInterface;
