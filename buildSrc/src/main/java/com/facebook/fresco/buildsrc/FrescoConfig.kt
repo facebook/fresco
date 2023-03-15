@@ -10,6 +10,6 @@ object FrescoConfig {
 
   const val compileSdkVersion = 31
   const val minSdkVersion = 14
-  const val samplesMinSdkVersion = 15
+  const val samplesMinSdkVersion = 16
   const val targetSdkVersion = 28
 }

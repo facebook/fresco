@@ -22,6 +22,7 @@ dependencies {
     testCompileOnly Deps.inferAnnotation
     testImplementation project(':imagepipeline-base-test')
     testImplementation project(':imagepipeline-test')
+    testImplementation project(':middleware')
     testImplementation TestDeps.junit
     testImplementation TestDeps.mockitoCore
     testImplementation(TestDeps.Powermock.apiMockito) {

@@ -15,6 +15,7 @@ object TestDeps {
   const val mockitoCore = "org.mockito:mockito-core:2.28.2"
 
   const val mockitoInline = "org.mockito:mockito-inline:2.28.2"
+  const val mockitoKotlin = "org.mockito.kotlin:mockito-kotlin:2.2.11"
 
   const val festAssertCore = "org.easytesting:fest-assert-core:2.0M10"
 

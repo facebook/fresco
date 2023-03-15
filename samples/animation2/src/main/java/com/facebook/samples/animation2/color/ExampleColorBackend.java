@@ -55,6 +55,21 @@ public class ExampleColorBackend implements AnimationBackend {
   }
 
   @Override
+  public int getLoopDurationMs() {
+    return getFrameCount() * mFrameDurationMs;
+  }
+
+  @Override
+  public int width() {
+    return -1;
+  }
+
+  @Override
+  public int height() {
+    return -1;
+  }
+
+  @Override
   public int getLoopCount() {
     return 3;
   }

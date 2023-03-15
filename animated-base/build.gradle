@@ -58,6 +58,9 @@ android {
     lintOptions {
         abortOnError false
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 apply plugin: "com.vanniktech.maven.publish"
