@@ -37,6 +37,7 @@ dependencies {
     testCompileOnly Deps.inferAnnotation
     testImplementation Deps.AndroidX.androidxAnnotation
     testImplementation Deps.jsr305
+    testImplementation TestDeps.assertjCore
     testImplementation TestDeps.junit
     testImplementation TestDeps.festAssertCore
     testImplementation TestDeps.mockitoCore

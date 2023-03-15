@@ -22,6 +22,7 @@ dependencies {
     testImplementation Deps.inferAnnotation
     testImplementation project(':mockito-config')
     testImplementation Deps.jsr305
+    testImplementation TestDeps.assertjCore
     testImplementation TestDeps.junit
     testImplementation TestDeps.festAssertCore
     testImplementation TestDeps.mockitoCore
