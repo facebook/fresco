@@ -193,7 +193,7 @@ class ProducerSequenceFactory(
           SourceUriType.SOURCE_TYPE_LOCAL_VIDEO_FILE -> localVideoFileFetchSequence
           SourceUriType.SOURCE_TYPE_LOCAL_IMAGE_FILE -> localImageFileFetchSequence
           SourceUriType.SOURCE_TYPE_LOCAL_CONTENT -> {
-            if (imageRequest.loadThumbnailOnly && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (imageRequest.loadThumbnailOnlyForAndroidSdkAboveQ) {
               return localContentUriThumbnailFetchSequence
             } else if (isVideo(contentResolver.getType(uri))) {
               return localVideoFileFetchSequence

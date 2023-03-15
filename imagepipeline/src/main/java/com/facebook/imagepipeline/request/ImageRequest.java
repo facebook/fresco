@@ -18,6 +18,7 @@ import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_QUALIF
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_UNKNOWN;
 
 import android.net.Uri;
+import android.os.Build;
 import androidx.annotation.IntDef;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Fn;
@@ -224,8 +225,8 @@ public class ImageRequest {
     return mLocalThumbnailPreviewsEnabled;
   }
 
-  public boolean getLoadThumbnailOnly() {
-    return mLoadThumbnailOnly;
+  public boolean getLoadThumbnailOnlyForAndroidSdkAboveQ() {
+    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && mLoadThumbnailOnly;
   }
 
   public Priority getPriority() {

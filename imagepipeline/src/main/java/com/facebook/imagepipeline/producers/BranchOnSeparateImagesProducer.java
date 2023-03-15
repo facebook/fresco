@@ -58,7 +58,7 @@ public class BranchOnSeparateImagesProducer implements Producer<EncodedImage> {
           getConsumer().onNewResult(newResult, alteredStatus);
         }
       }
-      if (isLast && !isGoodEnough && !request.getLoadThumbnailOnly()) {
+      if (isLast && !isGoodEnough && !request.getLoadThumbnailOnlyForAndroidSdkAboveQ()) {
         EncodedImage.closeSafely(newResult);
 
         mInputProducer2.produceResults(getConsumer(), mProducerContext);

@@ -92,7 +92,7 @@ public class ImageRequestBuilder {
         .setBytesRange(imageRequest.getBytesRange())
         .setCacheChoice(imageRequest.getCacheChoice())
         .setLocalThumbnailPreviewsEnabled(imageRequest.getLocalThumbnailPreviewsEnabled())
-        .setLoadThumbnailOnly(imageRequest.getLoadThumbnailOnly())
+        .setLoadThumbnailOnly(imageRequest.getLoadThumbnailOnlyForAndroidSdkAboveQ())
         .setLowestPermittedRequestLevel(imageRequest.getLowestPermittedRequestLevel())
         .setCachesDisabled(imageRequest.getCachesDisabled())
         .setPostprocessor(imageRequest.getPostprocessor())
