@@ -30,7 +30,6 @@ dependencies {
     implementation project(':middleware')
 
     testCompileOnly Deps.inferAnnotation
-    testImplementation project(':animated-base-test')
     testImplementation project(':imagepipeline-test')
     testImplementation TestDeps.junit
     testImplementation TestDeps.festAssertCore

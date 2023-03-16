@@ -6,7 +6,6 @@
  */
 
 include ':animated-base'
-include ':animated-base-test'
 include ':animated-drawable'
 include ':animated-gif'
 include ':animated-gif-lite'
