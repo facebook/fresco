@@ -31,6 +31,7 @@ dependencies {
 
     testCompileOnly Deps.inferAnnotation
     testImplementation project(':imagepipeline-test')
+    testImplementation project(':imagepipeline-base-test')
     testImplementation TestDeps.junit
     testImplementation TestDeps.festAssertCore
     testImplementation TestDeps.mockitoInline

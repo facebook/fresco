@@ -53,7 +53,7 @@ subprojects {
     configurations.all {
         resolutionStrategy.force Deps.jsr305
     }
-
+    
     task allclean {
     }
 

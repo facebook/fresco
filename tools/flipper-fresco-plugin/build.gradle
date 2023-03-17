@@ -16,7 +16,7 @@ android {
     compileSdkVersion FrescoConfig.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion FrescoConfig.minSdkVersion
+        minSdkVersion FrescoConfig.flipperPluginMinSdkVersion
         targetSdkVersion FrescoConfig.targetSdkVersion
     }
 

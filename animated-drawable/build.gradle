@@ -52,6 +52,8 @@ dependencies {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
     testImplementation project(':imagepipeline-test')
+    testImplementation project(':imagepipeline-base-test')
+
 
     implementation project(':imagepipeline-base')
     implementation project(':drawee')
