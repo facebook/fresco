@@ -48,7 +48,7 @@ android {
     compileSdkVersion FrescoConfig.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion FrescoConfig.minSdkVersion
+        minSdkVersion FrescoConfig.vitoLithoMinSdkVersion
         targetSdkVersion FrescoConfig.targetSdkVersion
     }
 
