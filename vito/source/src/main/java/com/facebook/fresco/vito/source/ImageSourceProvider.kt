@@ -27,12 +27,13 @@ object ImageSourceProvider {
    * @param uri the image URI to use
    * @return the ImageSource to be passed to the UI component
    */
+  @JvmOverloads
   @JvmStatic
-  fun forUri(uri: Uri?): ImageSource =
+  fun forUri(uri: Uri?, extras: Map<String, Any>? = null): ImageSource =
       if (uri == null) {
         emptySource()
       } else {
-        SingleImageSource(uri)
+        SingleImageSource(uri, extras)
       }
 
   /**
@@ -41,12 +42,13 @@ object ImageSourceProvider {
    * @param uriString the image URI String to use
    * @return the ImageSource to be passed to the UI component
    */
+  @JvmOverloads
   @JvmStatic
-  fun forUri(uriString: String?): ImageSource =
+  fun forUri(uriString: String?, extras: Map<String, Any>? = null): ImageSource =
       if (uriString == null) {
         emptySource()
       } else {
-        SingleImageSource(Uri.parse(uriString))
+        SingleImageSource(Uri.parse(uriString), extras)
       }
 
   /**

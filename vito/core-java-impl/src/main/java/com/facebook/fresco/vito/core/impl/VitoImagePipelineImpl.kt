@@ -61,6 +61,9 @@ class VitoImagePipelineImpl(
         extras[HasExtraData.KEY_MODIFIED_URL] = true
         finalImageSource = ImageSourceProvider.forUri(maybeModifiedUri)
       }
+      if (imageSource.extras != null) {
+        extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = imageSource.extras
+      }
     }
 
     val finalImageRequest =

@@ -42,5 +42,7 @@ interface HasExtraData {
     /* number of deduped request in EncodedCacheKeyMultiplexProducer */
     const val KEY_MULTIPLEX_ENCODED_COUNT = "multiplex_enc_cnt"
     const val KEY_LAST_SCAN_NUMBER = "last_scan_num"
+
+    const val KEY_IMAGE_SOURCE_EXTRAS = "image_source_extras"
   }
 }
