@@ -34,6 +34,7 @@ dependencies {
     testImplementation project(':imagepipeline-test')
     testImplementation project(':imagepipeline-base-test')
     testImplementation project(':native-imagetranscoder')
+    testImplementation TestDeps.assertjCore
     testImplementation TestDeps.junit
     testImplementation TestDeps.festAssertCore
     testImplementation TestDeps.mockitoCore
