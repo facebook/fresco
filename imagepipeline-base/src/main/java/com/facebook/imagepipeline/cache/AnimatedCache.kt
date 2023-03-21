@@ -21,7 +21,7 @@ class AnimatedCache private constructor(memoryMB: Int) {
   private val sizeBytes = memoryMB * MB
 
   /** % Memory for animations which were recently used, but they are not running now */
-  private val evictionRatio = if (memoryMB < 90) 0.15f else 0.30f
+  private val evictionRatio = if (memoryMB < 90) 0.0f else 0.30f
 
   /** 10% Memory is the maximum size of an animation */
   private val maxCacheEntrySize = sizeBytes.times(0.1).toInt()

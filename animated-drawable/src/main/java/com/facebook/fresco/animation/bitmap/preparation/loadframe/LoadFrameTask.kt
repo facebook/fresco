@@ -34,21 +34,28 @@ class LoadFrameTask(
 
     // Animation frames have to be render incrementally
     (0 until untilFrame).forEach { frameNumber ->
+      var currentFrame: Bitmap? = null
+      var renderSucceed = false
+
       // Render frame
-      val renderSucceed = bitmapFrameRenderer.renderFrame(frameNumber, canvasBitmapFrame.get())
-      if (!renderSucceed) {
-        canvasBitmapFrame.close()
-        frameCollection.values.forEach { it.close() }
+      if (CloseableReference.isValid(canvasBitmapFrame)) {
+        currentFrame = canvasBitmapFrame.get()
+        renderSucceed = bitmapFrameRenderer.renderFrame(frameNumber, currentFrame)
+      }
+
+      if (currentFrame == null || !renderSucceed) {
+        CloseableReference.closeSafely(canvasBitmapFrame)
+        frameCollection.values.forEach { CloseableReference.closeSafely(it) }
         output.onFail()
         return@forEach
       }
 
       // Save frame
-      val copyFrame = platformBitmapFactory.createBitmap(canvasBitmapFrame.get())
+      val copyFrame = platformBitmapFactory.createBitmap(currentFrame)
       frameCollection[frameNumber] = copyFrame
     }
 
-    canvasBitmapFrame.close()
+    CloseableReference.closeSafely(canvasBitmapFrame)
     output.onSuccess(frameCollection)
   }
 }
