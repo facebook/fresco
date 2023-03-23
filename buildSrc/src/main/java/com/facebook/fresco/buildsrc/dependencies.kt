@@ -13,7 +13,7 @@ object Deps {
 
   const val inferAnnotation = "com.facebook.infer.annotation:infer-annotation:0.18.0"
 
-  const val okhttp3 = "com.squareup.okhttp3:okhttp:3.12.1"
+  const val okhttp3 = "com.squareup.okhttp3:okhttp:4.10.0"
 
   const val volley = "com.android.volley:volley:1.2.1"
 
