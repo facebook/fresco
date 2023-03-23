@@ -37,12 +37,6 @@ class VitoImagePipelineImpl(
   override fun createImageRequest(
       resources: Resources,
       imageSource: ImageSource,
-      options: ImageOptions?
-  ): VitoImageRequest = createImageRequest(resources, imageSource, options, null)
-
-  override fun createImageRequest(
-      resources: Resources,
-      imageSource: ImageSource,
       options: ImageOptions?,
       viewport: Rect?
   ): VitoImageRequest {

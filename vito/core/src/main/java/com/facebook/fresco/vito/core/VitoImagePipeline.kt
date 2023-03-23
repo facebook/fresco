@@ -22,7 +22,7 @@ interface VitoImagePipeline {
       resources: Resources,
       imageSource: ImageSource,
       options: ImageOptions?,
-  ): VitoImageRequest
+  ): VitoImageRequest = createImageRequest(resources, imageSource, options, null)
 
   fun createImageRequest(
       resources: Resources,
