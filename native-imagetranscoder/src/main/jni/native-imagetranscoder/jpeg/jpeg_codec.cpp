@@ -120,6 +120,12 @@ void encodeJpegIntoOutputStream(
 
   // write all pixels, row by row
   JSAMPROW row_pointer = decoded_image.getPixelsPtr();
+  if (row_pointer == nullptr) {
+    jpegSafeThrow(
+      (j_common_ptr) &cinfo,
+      "Decoded image pixels ptr is null"
+    );
+  }
   const int stride = decoded_image.getStride();
   while (cinfo.next_scanline < cinfo.image_height) {
     if (jpeg_write_scanlines(&cinfo, &row_pointer, 1) != 1) {
