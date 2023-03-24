@@ -44,5 +44,6 @@ interface HasExtraData {
     const val KEY_LAST_SCAN_NUMBER = "last_scan_num"
 
     const val KEY_IMAGE_SOURCE_EXTRAS = "image_source_extras"
+    const val KEY_COLOR_SPACE = "image_color_space"
   }
 }

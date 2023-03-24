@@ -11,6 +11,7 @@ import com.facebook.common.internal.Closeables;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
@@ -53,6 +54,7 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
             encodedImage.parseMetaData();
             listener.onUltimateProducerReached(producerContext, getProducerName(), true);
             producerContext.putOriginExtra("local");
+            producerContext.putExtra(HasExtraData.KEY_COLOR_SPACE, encodedImage.getColorSpace());
             return encodedImage;
           }
 
