@@ -80,7 +80,9 @@ class ImagePipelineUtilsImpl(private val imageDecodeOptionsProvider: ImageDecode
     }
     val builder = ImageRequestBuilder.newBuilderWithSource(uri)
     maybeSetRequestPriority(builder, imageOptions.priority)
-    builder.cacheChoice = imageOptions.cacheChoice
+    if (imageOptions.cacheChoice != null) {
+      builder.cacheChoice = imageOptions.cacheChoice
+    }
     return builder
   }
 
