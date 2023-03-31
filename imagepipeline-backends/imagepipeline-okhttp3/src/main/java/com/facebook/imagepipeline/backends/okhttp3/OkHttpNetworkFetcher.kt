@@ -96,7 +96,7 @@ constructor(
           TOTAL_TIME to (fetchState.fetchCompleteTime - fetchState.submitTime).toString(),
           IMAGE_SIZE to byteSize.toString())
 
-  protected fun fetchWithRequest(
+  protected open fun fetchWithRequest(
       fetchState: OkHttpNetworkFetchState,
       callback: NetworkFetcher.Callback,
       request: Request
