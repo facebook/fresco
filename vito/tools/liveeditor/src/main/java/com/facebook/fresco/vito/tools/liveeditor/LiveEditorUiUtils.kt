@@ -28,53 +28,51 @@ class LiveEditorUiUtils(
       context: Context,
       customEntries: List<ImageOptionsSampleValues.Entry<out Any>> = emptyList(),
       closeAction: ((View) -> Unit)? = null
-  ): View {
-    return LinearLayout(context).apply {
-      addView(
-          ScrollView(context).apply {
-            layoutParams =
-                LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            val child =
-                LinearLayout(context).apply {
-                  layoutParams =
-                      LinearLayout.LayoutParams(
-                          ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                  orientation = LinearLayout.VERTICAL
-                  addView(createWithList(context, ImageSourceSampleValues.entries))
-                  addView(createWithList(context, ImageOptionsSampleValues.roundingOptions))
-                  addView(createWithList(context, ImageOptionsSampleValues.borderOptions))
-                  addView(createWithList(context, ImageOptionsSampleValues.scaleTypes))
-                  addView(createWithList(context, ImageOptionsSampleValues.colorFilters))
-                  addView(createWithList(context, ImageOptionsSampleValues.fadingOptions))
-                  addView(createWithList(context, ImageOptionsSampleValues.autoPlay))
-                  addView(createWithList(context, ImageOptionsSampleValues.bitmapConfig))
-                  addView(createWithList(context, ImageOptionsSampleValues.resizeToViewportConfig))
-                  addView(
-                      createWithList(
-                          context, ImageOptionsSampleValues.localThumbnailPreviewsEnabledConfig))
-                  addView(
-                      createWithList(
-                          context, ImageOptionsSampleValues.progressiveRenderingEnabledConfig))
-                  addView(createWithList(context, ImageOptionsSampleValues.placeholderColors))
+  ): View =
+      createScrollingList(context, closeAction) {
+        addView(createWithList(context, ImageSourceSampleValues.entries))
+        addView(createWithList(context, ImageOptionsSampleValues.roundingOptions))
+        addView(createWithList(context, ImageOptionsSampleValues.borderOptions))
+        addView(createWithList(context, ImageOptionsSampleValues.scaleTypes))
+        addView(createWithList(context, ImageOptionsSampleValues.colorFilters))
+        addView(createWithList(context, ImageOptionsSampleValues.fadingOptions))
+        addView(createWithList(context, ImageOptionsSampleValues.autoPlay))
+        addView(createWithList(context, ImageOptionsSampleValues.bitmapConfig))
+        addView(createWithList(context, ImageOptionsSampleValues.resizeToViewportConfig))
+        addView(
+            createWithList(context, ImageOptionsSampleValues.localThumbnailPreviewsEnabledConfig))
+        addView(createWithList(context, ImageOptionsSampleValues.progressiveRenderingEnabledConfig))
+        addView(createWithList(context, ImageOptionsSampleValues.placeholderColors))
 
-                  customEntries.forEach { addView(createWithList(context, it)) }
-                  addView(createImageInfoButton(context))
-                  if (closeAction != null) {
-                    addView(createButton(context, "Close", closeAction))
-                  }
-                }
+        customEntries.forEach { addView(createWithList(context, it)) }
+      }
 
-            addView(child)
-          })
-    }
-  }
+  private fun createScrollingList(
+      context: Context,
+      closeAction: ((View) -> Unit)? = null,
+      block: LinearLayout.() -> Unit
+  ): View =
+      ScrollView(context).apply {
+        layoutParams =
+            LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        addView(
+            LinearLayout(context).apply {
+              layoutParams =
+                  LinearLayout.LayoutParams(
+                      ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+              orientation = LinearLayout.VERTICAL
+              if (closeAction != null) {
+                addView(createButton(context, "Close", closeAction))
+              }
+              block(this)
+            })
+      }
 
-  private fun createImageInfoButton(context: Context): Button =
-      createButton(context, "Image Info") {
+  fun createImageInfoView(context: Context, closeAction: (View) -> Unit): View =
+      createScrollingList(context, closeAction) {
         var source: List<Pair<String, String>> =
             ImageSourceParser.convertSourceToKeyValue(liveEditor?.getSource().toString())
-
         liveEditor?.let { liveEditorNonNull ->
           debugDataProviders?.forEach {
             val debugData: Pair<String, String> =
@@ -82,7 +80,7 @@ class LiveEditorUiUtils(
             source = source + debugData
           }
         }
-        ImageSourceUiUtil(context).apply { createSourceDialog(source)?.show() }
+        addView(ImageSourceUiUtil(context).createImageInfoView(source))
       }
 
   private fun createButton(context: Context, btnText: String, clickAction: (View) -> Unit): Button =

@@ -1,4 +1,9 @@
-// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 package com.facebook.fresco.vito.tools.liveeditor
 
@@ -9,6 +14,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan
 import android.util.TypedValue
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
@@ -67,6 +73,33 @@ class ImageSourceUiUtil(private val context: Context) {
     }
 
     return dialog
+  }
+
+  fun createImageInfoView(source: List<Pair<String, String>>): View {
+    if (source.isEmpty()) {
+      return TextView(context).apply { text = "Source is Empty" }
+    }
+    val items =
+        source.map {
+          val spannable = SpannableString("${it.first} \n${it.second}")
+          spannable.apply {
+            setSpan(
+                StyleSpan(Typeface.BOLD), 0, it.first.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+            setSpan(
+                StyleSpan(Typeface.ITALIC),
+                it.first.length,
+                spannable.length,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+          }
+        }
+
+    val layout = createView()
+    val adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, items)
+    for (i in 0 until adapter.count) {
+      val item = adapter.getView(i, null, layout)
+      layout.addView(item)
+    }
+    return layout
   }
 
   private fun Int.spToPx(context: Context): Float =
