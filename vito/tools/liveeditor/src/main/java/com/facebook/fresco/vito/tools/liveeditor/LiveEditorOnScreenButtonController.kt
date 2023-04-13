@@ -41,7 +41,14 @@ class LiveEditorOnScreenButtonController(
     @ColorInt private val editorBackgroundColor: Int = Color.WHITE,
     additionalButtonConfig: ButtonConfig? = null,
     private val customOptions: CustomOptions,
-    private val debugDataProviders: List<StringDebugDataProvider> = emptyList()
+    private val debugDataProviders: List<StringDebugDataProvider> = emptyList(),
+    private val showOverlayPermissionMessage: ((Context) -> Unit) = {
+      Toast.makeText(
+              it,
+              "In order to use Image Live Editing, you must allow your app to 'Display over other apps' via Android settings",
+              Toast.LENGTH_LONG)
+          .show()
+    }
 ) {
 
   /** Called from fblite java code */
@@ -277,11 +284,7 @@ class LiveEditorOnScreenButtonController(
       return it
     }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(context)) {
-      Toast.makeText(
-              context,
-              "In order to use Image Live Editing, you must allow your app to 'Display over other apps' via Android settings",
-              Toast.LENGTH_LONG)
-          .show()
+      showOverlayPermissionMessage(context)
       overlayPermissionStatus = false
     } else {
       overlayPermissionStatus = true
