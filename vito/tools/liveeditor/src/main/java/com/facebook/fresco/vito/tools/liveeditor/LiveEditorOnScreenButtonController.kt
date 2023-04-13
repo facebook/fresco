@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.hardware.display.DisplayManager
 import android.os.Build
+import android.provider.Settings
 import android.util.DisplayMetrics
 import android.view.Display.DEFAULT_DISPLAY
 import android.view.Gravity
@@ -23,6 +24,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.annotation.ColorInt
 import com.facebook.common.internal.Supplier
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
@@ -104,9 +106,10 @@ class LiveEditorOnScreenButtonController(
 
   private var isAttached: Boolean = false
   private var currentView: View? = null
+  private var overlayPermissionStatus: Boolean? = null
 
   fun attachImageSelector(context: Context?) {
-    if (isAttached || context == null) {
+    if (isAttached || context == null || !canShowOverlays(context)) {
       // already attached or no context available to get the WindowManager from
       return
     }
@@ -124,6 +127,10 @@ class LiveEditorOnScreenButtonController(
       return
     }
     val current = currentView ?: return
+
+    if (!canShowOverlays(current.context)) {
+      return
+    }
 
     val windowManager = current.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     windowManager.removeView(current)
@@ -264,4 +271,21 @@ class LiveEditorOnScreenButtonController(
         }
         else -> null
       }
+
+  private fun canShowOverlays(context: Context): Boolean {
+    overlayPermissionStatus?.let {
+      return it
+    }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(context)) {
+      Toast.makeText(
+              context,
+              "In order to use Image Live Editing, you must allow your app to 'Display over other apps' via Android settings",
+              Toast.LENGTH_LONG)
+          .show()
+      overlayPermissionStatus = false
+    } else {
+      overlayPermissionStatus = true
+    }
+    return overlayPermissionStatus ?: false
+  }
 }
