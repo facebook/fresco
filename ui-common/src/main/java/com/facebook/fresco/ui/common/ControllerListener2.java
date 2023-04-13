@@ -29,8 +29,8 @@ public interface ControllerListener2<INFO> {
     public int viewportWidth = -1;
     public int viewportHeight = -1;
     public @Nullable Object scaleType;
-    public float focusX = -1;
-    public float focusY = -1;
+    public @Nullable Float focusX;
+    public @Nullable Float focusY;
 
     public static Extras of(@Nullable Map<String, Object> componentExtras) {
       Extras extras = new Extras();
