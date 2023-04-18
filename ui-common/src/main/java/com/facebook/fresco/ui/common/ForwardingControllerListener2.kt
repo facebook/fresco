@@ -32,9 +32,16 @@ open class ForwardingControllerListener2<I> : BaseControllerListener2<I>() {
   }
 
   private inline fun forEachListener(methodName: String, block: (ControllerListener2<I>) -> Unit) {
-    listeners.forEach {
+    for (i in listeners.indices) {
+      val listener =
+          try {
+            listeners[i]
+          } catch (ignore: IndexOutOfBoundsException) {
+            break
+          }
+
       try {
-        block(it)
+        block(listener)
       } catch (exception: Exception) {
         // Don't punish the other listeners if we're given a bad one.
         Log.e(TAG, "InternalListener exception in $methodName", exception)
