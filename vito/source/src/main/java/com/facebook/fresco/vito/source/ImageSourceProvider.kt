@@ -18,13 +18,13 @@ import android.net.Uri
  */
 object ImageSourceProvider {
 
-    /**
-     * Uri parsing function from String to URI. The default implementation can be replaced with any 
-     * custom URI parsing logic if required.
-     */
-  var uriParser: (String) -> Uri = { 
-        val uri: Uri = Uri.parse(it) 
-        uri
+  /**
+   * Uri parsing function from String to URI. The default implementation can be replaced with any
+   * custom URI parsing logic if required.
+   */
+  var uriParser: (String) -> Uri = {
+    val uri: Uri = Uri.parse(it)
+    uri
   }
 
   /** @return an empty image source if no image URI is available to pass to the UI component */
