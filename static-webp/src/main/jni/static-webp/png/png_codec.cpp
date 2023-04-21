@@ -69,6 +69,10 @@ void encodePngIntoOutputStream(
   // write the image
   const int row_stride = decoded_image.getStride();
   png_bytep row_pointer = decoded_image.getPixelsPtr();
+  if (row_pointer == nullptr) {
+    safeThrowJavaException(env, jRuntimeException_class, "error encoding png");
+    return;
+  }
   png_write_info(png_ptr, info_ptr);
   for (unsigned i = 0; i < decoded_image.getHeight(); ++i) {
     png_write_row(png_ptr, row_pointer);
