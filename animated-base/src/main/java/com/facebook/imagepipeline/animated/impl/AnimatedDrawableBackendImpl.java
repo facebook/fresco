@@ -265,17 +265,45 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
       AnimatedImageFrame frame,
       AnimatedDrawableFrameInfo frameInfo,
       @Nullable AnimatedDrawableFrameInfo previousFrameInfo) {
+    int assetWidth = mAnimatedImage.getWidth();
+    int assetHeight = mAnimatedImage.getHeight();
 
-    int canvasWidth = canvas.getWidth();
-    int canvasHeight = canvas.getHeight();
+    // Find the best scale asset size. Maximum scaleSize would be the assetSize.
+    float scaledWidth = assetWidth;
+    float scaledHeight = assetHeight;
 
-    float xScale = canvasWidth / (float) mAnimatedImage.getWidth();
-    float yScale = canvasHeight / (float) mAnimatedImage.getHeight();
+    // Apply the scale to the frame
+    float xScale = 1f;
+    float yScale = 1f;
 
-    int frameWidth = (int) Math.ceil(frame.getWidth() * xScale);
-    int frameHeight = (int) Math.ceil(frame.getHeight() * yScale);
-    int xOffset = (int) Math.ceil(frame.getXOffset() * xScale);
-    int yOffset = (int) Math.ceil(frame.getYOffset() * yScale);
+    int frameWidth = frame.getWidth();
+    int frameHeight = frame.getHeight();
+    int xOffset = frame.getXOffset();
+    int yOffset = frame.getYOffset();
+
+    // Check if we need to down scale the asset to the canvas size
+    if (scaledWidth > canvas.getWidth() || scaledHeight > canvas.getHeight()) {
+      // Canvas could have wrong sizes as 314573336x200. Then we limit the frame sizes
+      int maxCanvasWidth = Math.min(canvas.getWidth(), assetWidth);
+      int maxCanvasHeight = Math.min(canvas.getHeight(), assetHeight);
+
+      float assetRatio = assetWidth / (float) assetHeight;
+      if (maxCanvasWidth > maxCanvasHeight) {
+        scaledWidth = maxCanvasWidth;
+        scaledHeight = maxCanvasWidth / assetRatio;
+      } else {
+        scaledWidth = maxCanvasHeight * assetRatio;
+        scaledHeight = maxCanvasHeight;
+      }
+
+      xScale = scaledWidth / (float) assetWidth;
+      yScale = scaledHeight / (float) assetHeight;
+
+      frameWidth = (int) Math.ceil(frame.getWidth() * xScale);
+      frameHeight = (int) Math.ceil(frame.getHeight() * yScale);
+      xOffset = (int) Math.ceil(frame.getXOffset() * xScale);
+      yOffset = (int) Math.ceil(frame.getYOffset() * yScale);
+    }
 
     // Impress the frame in the bitmap
     Bitmap frameBitmap = Bitmap.createBitmap(frameWidth, frameHeight, Bitmap.Config.ARGB_8888);
