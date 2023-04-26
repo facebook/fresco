@@ -17,6 +17,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.Spinner
+import android.widget.TextView
 import com.facebook.fresco.vito.core.impl.StringDebugDataProvider
 
 class LiveEditorUiUtils(
@@ -80,7 +81,13 @@ class LiveEditorUiUtils(
             source = source + debugData
           }
         }
-        addView(ImageSourceUiUtil(context).createImageInfoView(source))
+        if (source.isEmpty()) {
+          addView(TextView(context).apply { text = "Source is Empty" })
+        }
+        source.forEach {
+          val view = ImageSourceUiUtil(context).createImageInfoView(it, this)
+          addView(view)
+        }
       }
 
   private fun createButton(context: Context, btnText: String, clickAction: (View) -> Unit): Button =

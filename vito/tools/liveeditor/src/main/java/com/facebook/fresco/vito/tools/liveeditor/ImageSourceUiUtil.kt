@@ -14,6 +14,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan
 import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -75,31 +76,21 @@ class ImageSourceUiUtil(private val context: Context) {
     return dialog
   }
 
-  fun createImageInfoView(source: List<Pair<String, String>>): View {
-    if (source.isEmpty()) {
-      return TextView(context).apply { text = "Source is Empty" }
+  fun createImageInfoView(info: Pair<String, String>, parent: ViewGroup): View {
+    val spannable = SpannableString("${info.first} \n${info.second}")
+    spannable.apply {
+      setSpan(StyleSpan(Typeface.BOLD), 0, info.first.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+      setSpan(
+          StyleSpan(Typeface.ITALIC),
+          info.first.length,
+          spannable.length,
+          Spannable.SPAN_INCLUSIVE_INCLUSIVE)
     }
-    val items =
-        source.map {
-          val spannable = SpannableString("${it.first} \n${it.second}")
-          spannable.apply {
-            setSpan(
-                StyleSpan(Typeface.BOLD), 0, it.first.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            setSpan(
-                StyleSpan(Typeface.ITALIC),
-                it.first.length,
-                spannable.length,
-                Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-          }
-        }
 
-    val layout = createView()
-    val adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, items)
-    for (i in 0 until adapter.count) {
-      val item = adapter.getView(i, null, layout)
-      layout.addView(item)
-    }
-    return layout
+    val textView: TextView =
+        LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1, parent, false)
+            as TextView
+    return textView.apply { text = spannable }
   }
 
   private fun Int.spToPx(context: Context): Float =
