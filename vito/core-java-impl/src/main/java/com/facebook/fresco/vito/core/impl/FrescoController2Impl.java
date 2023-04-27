@@ -133,26 +133,6 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       return true; // already set
     }
 
-    // Direct bitmap available
-    if (imageRequest.imageSource instanceof BitmapImageSource) {
-      Bitmap bitmap = ((BitmapImageSource) imageRequest.imageSource).getBitmap();
-      CloseableBitmap closeableBitmap =
-          CloseableStaticBitmap.of(
-              bitmap, noOpReleaser -> {}, ImmutableQualityInfo.FULL_QUALITY, 0);
-
-      CloseableReference<CloseableImage> bitmapRef = CloseableReference.of(closeableBitmap);
-      try {
-        frescoDrawable.setImageOrigin(ImageOrigin.MEMORY_BITMAP);
-        // Immediately display the actual image.
-        setActualImage(frescoDrawable, imageRequest, bitmapRef, true, null);
-        frescoDrawable.setFetchSubmitted(true);
-        mDebugOverlayFactory.update(frescoDrawable, obtainExtras(null, null, frescoDrawable));
-        return true;
-      } finally {
-        CloseableReference.closeSafely(bitmapRef);
-      }
-    }
-
     if (frescoDrawable.isFetchSubmitted()) {
       frescoDrawable.getImagePerfListener().onDrawableReconfigured(frescoDrawable);
     }
@@ -187,6 +167,26 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     // Notify listeners that we're about to fetch an image
     frescoDrawable.getInternalListener().onSubmit(imageId, imageRequest, callerContext, extras);
     frescoDrawable.getImagePerfListener().onImageFetch(frescoDrawable);
+
+    // Direct bitmap available
+    if (imageRequest.imageSource instanceof BitmapImageSource) {
+      Bitmap bitmap = ((BitmapImageSource) imageRequest.imageSource).getBitmap();
+      CloseableBitmap closeableBitmap =
+          CloseableStaticBitmap.of(
+              bitmap, noOpReleaser -> {}, ImmutableQualityInfo.FULL_QUALITY, 0);
+
+      CloseableReference<CloseableImage> bitmapRef = CloseableReference.of(closeableBitmap);
+      try {
+        frescoDrawable.setImageOrigin(ImageOrigin.MEMORY_BITMAP);
+        // Immediately display the actual image.
+        setActualImage(frescoDrawable, imageRequest, bitmapRef, true, null);
+        frescoDrawable.setFetchSubmitted(true);
+        mDebugOverlayFactory.update(frescoDrawable, extras);
+        return true;
+      } finally {
+        CloseableReference.closeSafely(bitmapRef);
+      }
+    }
 
     // Check if the image is in cache
     CloseableReference<CloseableImage> cachedImage = mImagePipeline.getCachedImage(imageRequest);

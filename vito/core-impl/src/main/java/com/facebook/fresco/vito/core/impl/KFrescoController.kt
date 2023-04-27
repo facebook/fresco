@@ -128,6 +128,11 @@ class KFrescoController(
 
     val options: ImageOptions = imageRequest.imageOptions
     val resources: Resources = imageRequest.resources
+
+    drawable.listenerManager.onSubmit(imageId, imageRequest, callerContext, drawable.obtainExtras())
+    drawable.imagePerfListener.onImageFetch(drawable)
+    drawable.overlayImageLayer.setOverlay(imageRequest.resources, options)
+
     // Direct bitmap available
     if (imageRequest.imageSource is BitmapImageSource) {
       val bitmap: Bitmap = (imageRequest.imageSource as BitmapImageSource).bitmap
@@ -153,10 +158,6 @@ class KFrescoController(
         CloseableReference.closeSafely(bitmapRef)
       }
     }
-
-    drawable.listenerManager.onSubmit(imageId, imageRequest, callerContext, drawable.obtainExtras())
-    drawable.imagePerfListener.onImageFetch(drawable)
-    drawable.overlayImageLayer.setOverlay(imageRequest.resources, options)
 
     // Check if the image is in cache
     val cachedImage = vitoImagePipeline.getCachedImage(imageRequest)
