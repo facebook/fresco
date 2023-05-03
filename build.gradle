@@ -50,10 +50,22 @@ subprojects {
         enabled = false
     }
 
+    if (System.getenv("SANDCASTLE") == "1") {
+        tasks.withType(Test).all {
+            systemProperty("robolectric.dependency.repo.id", "central")
+            systemProperty("robolectric.dependency.repo.url", "https://maven.thefacebook.com/nexus/content/repositories/central/")
+            systemProperty("robolectric.logging", "stdout")
+            systemProperty("robolectric.logging.enabled", "true")
+            systemProperty("java.net.preferIPv6Addresses", "true")
+            systemProperty("java.net.preferIPv4Stack", "false")
+            systemProperty("jdk.attach.allowAttachSelf", "true")
+        }
+    }
+
     configurations.all {
         resolutionStrategy.force Deps.jsr305
     }
-    
+
     task allclean {
     }
 
