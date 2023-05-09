@@ -45,10 +45,9 @@ class FrescoVito {
     @JvmOverloads
     @JvmStatic
     fun initialize(
-        imagePipeline: ImagePipeline = ImagePipelineFactory.getInstance().imagePipeline,
-        lightweightBackgroundThreadExecutor: Executor =
-            imagePipeline.config.executorSupplier.forLightweightBackgroundTasks(),
-        uiThreadExecutor: Executor = UiThreadImmediateExecutorService.getInstance(),
+        imagePipeline: ImagePipeline? = null,
+        lightweightBackgroundThreadExecutor: Executor? = null,
+        uiThreadExecutor: Executor? = null,
         debugOverlayEnabledSupplier: Supplier<Boolean?>? = null,
         useNativeCode: Supplier<Boolean> = Suppliers.BOOLEAN_TRUE,
         vitoConfig: FrescoVitoConfig = DefaultFrescoVitoConfig(),
@@ -58,6 +57,11 @@ class FrescoVito {
       if (isInitialized) {
         return
       }
+      val imagePipeline = imagePipeline ?: ImagePipelineFactory.getInstance().imagePipeline
+      val lightweightBackgroundThreadExecutor =
+          lightweightBackgroundThreadExecutor
+              ?: imagePipeline.config.executorSupplier.forLightweightBackgroundTasks()
+      val uiThreadExecutor = uiThreadExecutor ?: UiThreadImmediateExecutorService.getInstance()
       initialize(
           DefaultFrescoVitoProvider(
               vitoConfig,
