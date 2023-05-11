@@ -108,6 +108,13 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
   }
 
   @Override
+  public void preloadAnimation() {
+    if (mAnimationBackend != null) {
+      mAnimationBackend.preloadAnimation();
+    }
+  }
+
+  @Override
   public int getIntrinsicWidth() {
     return mAnimationBackend == null
         ? INTRINSIC_DIMENSION_UNSET

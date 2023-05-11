@@ -285,6 +285,12 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     return PixelFormat.TRANSLUCENT;
   }
 
+  public void preloadAnimation() {
+    if (mAnimationBackend != null) {
+      mAnimationBackend.preloadAnimation();
+    }
+  }
+
   /**
    * Update the animation backend to be used for the animation. This will also stop the animation.
    * In order to remove the current animation backend, call this method with null.

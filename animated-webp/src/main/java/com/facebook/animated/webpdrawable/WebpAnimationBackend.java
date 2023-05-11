@@ -152,6 +152,11 @@ public class WebpAnimationBackend implements AnimationBackend {
     return mWebPImage.getLoopCount();
   }
 
+  @Override
+  public void preloadAnimation() {
+    // not needed as bitmaps are extracted on fly
+  }
+
   private synchronized void prepareTempBitmapForThisSize(int width, int height) {
     // Different webp frames can be different size,
     // So we need to ensure we can fit next frame to temporary bitmap

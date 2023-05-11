@@ -215,5 +215,8 @@ public class DropFramesFrameSchedulerTest {
 
     @Override
     public void clear() {}
+
+    @Override
+    public void preloadAnimation() {}
   }
 }

@@ -247,6 +247,11 @@ class BitmapAnimationBackend(
     }
   }
 
+  override fun preloadAnimation() {
+    bitmapFramePreparationStrategy?.prepareFrames(
+        animationInformation.width(), animationInformation.height())
+  }
+
   override fun onInactive() {
     if (isNewRenderImplementation) {
       bitmapFramePreparationStrategy?.onStop()

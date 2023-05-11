@@ -99,6 +99,11 @@ public class GifAnimationBackend implements AnimationBackend {
   }
 
   @Override
+  public void preloadAnimation() {
+    // unimplemented
+  }
+
+  @Override
   public int width() {
     return mMovie.width();
   }

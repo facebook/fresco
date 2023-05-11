@@ -120,6 +120,11 @@ public class LocalDrawableAnimationBackend implements AnimationBackend {
   }
 
   @Override
+  public void preloadAnimation() {
+    // not needed
+  }
+
+  @Override
   public int getSizeInBytes() {
     return 0;
   }

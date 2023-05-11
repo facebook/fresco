@@ -15,6 +15,7 @@ import com.facebook.fresco.animation.backend.AnimationInformation
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache
 import com.facebook.fresco.animation.bitmap.preparation.loadframe.AnimationLoaderExecutor
 import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFrameOutput
+import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFrameTask
 import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFrameTaskFactory
 import java.io.Closeable
 import java.util.SortedSet
@@ -91,7 +92,9 @@ class BalancedAnimationStrategy(
                   if (!cachedSucceed) {
                     nextPrepareFrames = SystemClock.uptimeMillis() + FETCH_FIRST_CACHE_DELAY_MS
                   }
-                  fetchingFrames.set(false)
+
+                  // Once first frame is loaded, then load the rest of frames
+                  AnimationLoaderExecutor.execute(loadAllFrames(frameSize))
                 }
 
                 override fun onFail() {
@@ -100,34 +103,36 @@ class BalancedAnimationStrategy(
                 }
               })
         } else {
-          loadFrameTaskFactory.createLoadFullAnimationTask(
-              frameSize.width,
-              frameSize.height,
-              frameCount,
-              object : LoadFrameOutput {
-                override fun onSuccess(frames: Map<Int, CloseableReference<Bitmap>>) {
-                  onDemandFrames.clear()
-                  onDemandFrames.addAll(frames.filter { isOnDemandFrame(it.key) }.map { it.key })
-
-                  val memoryFrames = frames.filter { !onDemandFrames.contains(it.key) }
-
-                  val cachedSucceed = bitmapCache.onAnimationPrepared(memoryFrames)
-                  if (!cachedSucceed) {
-                    nextPrepareFrames =
-                        SystemClock.uptimeMillis() + FETCH_FULL_ANIMATION_CACHE_DELAY_MS
-                  }
-
-                  fetchingFrames.set(false)
-                }
-
-                override fun onFail() {
-                  bitmapCache.clear()
-                  fetchingFrames.set(false)
-                }
-              })
+          loadAllFrames(frameSize)
         }
 
     AnimationLoaderExecutor.execute(task)
+  }
+  private fun loadAllFrames(frameSize: Size): LoadFrameTask {
+    return loadFrameTaskFactory.createLoadFullAnimationTask(
+        frameSize.width,
+        frameSize.height,
+        frameCount,
+        object : LoadFrameOutput {
+          override fun onSuccess(frames: Map<Int, CloseableReference<Bitmap>>) {
+            onDemandFrames.clear()
+            onDemandFrames.addAll(frames.filter { isOnDemandFrame(it.key) }.map { it.key })
+
+            val memoryFrames = frames.filter { !onDemandFrames.contains(it.key) }
+
+            val cachedSucceed = bitmapCache.onAnimationPrepared(memoryFrames)
+            if (!cachedSucceed) {
+              nextPrepareFrames = SystemClock.uptimeMillis() + FETCH_FULL_ANIMATION_CACHE_DELAY_MS
+            }
+
+            fetchingFrames.set(false)
+          }
+
+          override fun onFail() {
+            bitmapCache.clear()
+            fetchingFrames.set(false)
+          }
+        })
   }
 
   @UiThread

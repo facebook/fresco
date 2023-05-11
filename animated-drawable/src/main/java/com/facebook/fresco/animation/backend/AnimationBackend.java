@@ -97,4 +97,7 @@ public interface AnimationBackend extends AnimationInformation {
    * example, drop all cached frames.
    */
   void clear();
+
+  /** Load animation bitmaps using the animation frame as canvas size. */
+  void preloadAnimation();
 }

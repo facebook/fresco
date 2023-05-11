@@ -108,6 +108,9 @@ public class ExampleColorBackend implements AnimationBackend {
   public void clear() {}
 
   @Override
+  public void preloadAnimation() {}
+
+  @Override
   public int getIntrinsicWidth() {
     return INTRINSIC_DIMENSION_UNSET;
   }
