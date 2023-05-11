@@ -21,6 +21,7 @@ import java.util.SortedSet
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.ceil
+import kotlin.math.max
 
 /**
  * Balanced strategy consist on retrieving the animation frames balancing between RAM and CPU.
@@ -40,6 +41,7 @@ class BalancedAnimationStrategy(
     onDemandPreparationMs: Int,
     private val loadFrameTaskFactory: LoadFrameTaskFactory,
     private val bitmapCache: BitmapFrameCache,
+    private val downscaleFrameToDrawableDimensions: Boolean,
 ) : BitmapFramePreparationStrategy {
 
   private val fetchingFrames = AtomicBoolean(false)
@@ -213,17 +215,21 @@ class BalancedAnimationStrategy(
   }
 
   private fun calculateFrameSize(canvasWidth: Int, canvasHeight: Int): Size {
+    if (!downscaleFrameToDrawableDimensions) {
+      return Size(animationWidth, animationHeight)
+    }
+
     var bitmapWidth: Int = animationWidth
     var bitmapHeight: Int = animationHeight
 
     // The maximum size for the bitmap is the size of the animation if the canvas is bigger
     if (canvasWidth < animationWidth || canvasHeight < animationHeight) {
       val ratioW = animationWidth.toDouble().div(animationHeight)
-      if (ratioW <= 1) {
-        bitmapHeight = canvasHeight
+      if (canvasHeight > canvasWidth) {
+        bitmapHeight = max(canvasHeight, animationHeight)
         bitmapWidth = bitmapHeight.times(ratioW).toInt()
       } else {
-        bitmapWidth = canvasWidth
+        bitmapWidth = max(canvasWidth, animationWidth)
         bitmapHeight = bitmapWidth.div(ratioW).toInt()
       }
     }

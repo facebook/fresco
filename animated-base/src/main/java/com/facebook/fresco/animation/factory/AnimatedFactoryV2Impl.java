@@ -137,6 +137,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
         numberOfFramesToPrepareSupplier,
         useDeepEquals,
         Suppliers.of(mUseBalancedAnimationStrategy),
+        Suppliers.of(mDownscaleFrameToDrawableDimensions),
         balancedAnimationStrategyMs);
   }
 

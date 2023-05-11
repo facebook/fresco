@@ -77,6 +77,7 @@ public class DefaultBitmapAnimationDrawableFactory
   private final Supplier<Integer> mNumberOfFramesToPrepareSupplier;
   private final Supplier<Boolean> mUseDeepEqualsForCacheKey;
   private final Supplier<Boolean> mUseNewBitmapRender;
+  private final Supplier<Boolean> mDownscaleFrameToDrawableDimensions;
   private final Supplier<AnimatedCache> mAnimatedDrawableCache;
   private final Supplier<Integer> mBalancedStrategyPreparationMs;
 
@@ -95,6 +96,7 @@ public class DefaultBitmapAnimationDrawableFactory
       Supplier<Integer> numberOfFramesToPrepareSupplier,
       Supplier<Boolean> useDeepEqualsForCacheKey,
       Supplier<Boolean> useNewBitmapRender,
+      Supplier<Boolean> downscaleFrameToDrawableDimensions,
       Supplier<Integer> balancedStrategyPreparationMs) {
     mAnimatedDrawableBackendProvider = animatedDrawableBackendProvider;
     mScheduledExecutorServiceForUiThread = scheduledExecutorServiceForUiThread;
@@ -108,6 +110,7 @@ public class DefaultBitmapAnimationDrawableFactory
     mUseNewBitmapRender = useNewBitmapRender;
     mAnimatedDrawableCache = animatedDrawableCache;
     mBalancedStrategyPreparationMs = balancedStrategyPreparationMs;
+    mDownscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions;
   }
 
   @Override
@@ -182,7 +185,8 @@ public class DefaultBitmapAnimationDrawableFactory
               animationInfo,
               mBalancedStrategyPreparationMs.get(),
               new LoadFrameTaskFactory(mPlatformBitmapFactory, bitmapFrameRenderer),
-              bitmapFrameCache);
+              bitmapFrameCache,
+              mDownscaleFrameToDrawableDimensions.get());
     }
 
     BitmapAnimationBackend bitmapAnimationBackend =
