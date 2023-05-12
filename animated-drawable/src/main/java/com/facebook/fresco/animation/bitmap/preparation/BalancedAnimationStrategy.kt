@@ -22,7 +22,6 @@ import java.util.SortedSet
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.ceil
-import kotlin.math.max
 
 /**
  * Balanced strategy consist on retrieving the animation frames balancing between RAM and CPU.
@@ -231,10 +230,10 @@ class BalancedAnimationStrategy(
     if (canvasWidth < animationWidth || canvasHeight < animationHeight) {
       val ratioW = animationWidth.toDouble().div(animationHeight)
       if (canvasHeight > canvasWidth) {
-        bitmapHeight = max(canvasHeight, animationHeight)
+        bitmapHeight = canvasHeight.coerceAtMost(animationHeight)
         bitmapWidth = bitmapHeight.times(ratioW).toInt()
       } else {
-        bitmapWidth = max(canvasWidth, animationWidth)
+        bitmapWidth = canvasWidth.coerceAtMost(animationWidth)
         bitmapHeight = bitmapWidth.div(ratioW).toInt()
       }
     }
