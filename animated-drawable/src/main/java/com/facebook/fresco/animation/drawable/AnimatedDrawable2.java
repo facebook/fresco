@@ -340,6 +340,12 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     }
     // In order to jump to a given frame, we have to compute the correct start time
     mLastFrameAnimationTimeMs = mFrameScheduler.getTargetRenderTimeMs(targetFrameNumber);
+
+    // Reset the paused timing as we broke the animation frame flow
+    mPausedLastDrawnFrameNumber = targetFrameNumber;
+    mPausedStartTimeMsDifference = 0;
+    mPausedLastFrameAnimationTimeMsDifference = 0;
+
     mStartTimeMs = now() - mLastFrameAnimationTimeMs;
     mExpectedRenderTimeMs = mStartTimeMs;
     invalidateSelf();
