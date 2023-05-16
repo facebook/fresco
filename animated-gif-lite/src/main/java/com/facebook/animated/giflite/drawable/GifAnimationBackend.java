@@ -104,6 +104,11 @@ public class GifAnimationBackend implements AnimationBackend {
   }
 
   @Override
+  public void setAnimationListener(@Nullable Listener listener) {
+    // unimplemented
+  }
+
+  @Override
   public int width() {
     return mMovie.width();
   }

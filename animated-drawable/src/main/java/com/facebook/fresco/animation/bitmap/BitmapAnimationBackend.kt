@@ -109,6 +109,7 @@ class BitmapAnimationBackend(
   private var pathFrameNumber: Int = -1
 
   private var frameListener: FrameListener? = null
+  private var animationListener: AnimationBackend.Listener? = null
 
   init {
     updateBitmapDimensions()
@@ -167,7 +168,7 @@ class BitmapAnimationBackend(
       }
 
       // If bitmap couldnt be drawn, then fetch frames
-      bitmapFramePreparationStrategy?.prepareFrames(canvas.width, canvas.height)
+      bitmapFramePreparationStrategy?.prepareFrames(canvas.width, canvas.height, null)
       return false
     }
 
@@ -248,8 +249,17 @@ class BitmapAnimationBackend(
   }
 
   override fun preloadAnimation() {
-    bitmapFramePreparationStrategy?.prepareFrames(
-        animationInformation.width(), animationInformation.height())
+    if (!isNewRenderImplementation && bitmapFramePreparer != null) {
+      bitmapFramePreparationStrategy?.prepareFrames(
+          bitmapFramePreparer, bitmapFrameCache, this, 0) {
+            animationListener?.onAnimationLoaded()
+          }
+    } else {
+      bitmapFramePreparationStrategy?.prepareFrames(
+          animationInformation.width(), animationInformation.height()) {
+            animationListener?.onAnimationLoaded()
+          }
+    }
   }
 
   override fun onInactive() {
@@ -258,6 +268,10 @@ class BitmapAnimationBackend(
     } else {
       clear()
     }
+  }
+
+  override fun setAnimationListener(listener: AnimationBackend.Listener?) {
+    animationListener = listener
   }
 
   private fun updateBitmapDimensions() {

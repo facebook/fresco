@@ -66,7 +66,11 @@ class BalancedAnimationStrategy(
   private fun isFirstFrameReady() = bitmapCache.getCachedFrame(0)?.isValid == true
 
   @UiThread
-  override fun prepareFrames(canvasWidth: Int, canvasHeight: Int) {
+  override fun prepareFrames(
+      canvasWidth: Int,
+      canvasHeight: Int,
+      onAnimationLoaded: (() -> Unit)?
+  ) {
     // Validate inputs
     if (canvasWidth <= 0 || canvasHeight <= 0 || animationWidth <= 0 || animationHeight <= 0) {
       return
@@ -74,6 +78,9 @@ class BalancedAnimationStrategy(
 
     // Validate status
     if (framesCached || fetchingFrames.get() || SystemClock.uptimeMillis() < nextPrepareFrames) {
+      if (framesCached) {
+        onAnimationLoaded?.invoke()
+      }
       return
     }
 
@@ -93,7 +100,7 @@ class BalancedAnimationStrategy(
                   }
 
                   // Once first frame is loaded, then load the rest of frames
-                  AnimationLoaderExecutor.execute(loadAllFrames(frameSize))
+                  AnimationLoaderExecutor.execute(loadAllFrames(frameSize, onAnimationLoaded))
                 }
 
                 override fun onFail() {
@@ -102,12 +109,12 @@ class BalancedAnimationStrategy(
                 }
               })
         } else {
-          loadAllFrames(frameSize)
+          loadAllFrames(frameSize, onAnimationLoaded)
         }
 
     AnimationLoaderExecutor.execute(task)
   }
-  private fun loadAllFrames(frameSize: Size): LoadFrameTask {
+  private fun loadAllFrames(frameSize: Size, notifyOnLoad: (() -> Unit)?): LoadFrameTask {
     return loadFrameTaskFactory.createLoadFullAnimationTask(
         frameSize.width,
         frameSize.height,
@@ -124,6 +131,7 @@ class BalancedAnimationStrategy(
               nextPrepareFrames = SystemClock.uptimeMillis() + FETCH_FULL_ANIMATION_CACHE_DELAY_MS
             }
 
+            notifyOnLoad?.invoke()
             fetchingFrames.set(false)
           }
 
@@ -149,7 +157,7 @@ class BalancedAnimationStrategy(
 
     // Check if bitmap should be cached
     if (!isOnDemandFrame(frameNumber)) {
-      prepareFrames(canvasWidth, canvasHeight)
+      prepareFrames(canvasWidth, canvasHeight) {}
     }
 
     if (onDemandBitmap?.isValidFor(frameNumber) == true) {

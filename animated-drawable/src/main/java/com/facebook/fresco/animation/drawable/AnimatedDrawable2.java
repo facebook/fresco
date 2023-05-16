@@ -78,6 +78,8 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
   // Listeners
   private volatile AnimationListener mAnimationListener = NO_OP_LISTENER;
   @Nullable private volatile DrawListener mDrawListener = null;
+  private final AnimationBackend.Listener animationBackendListener =
+      () -> mAnimationListener.onAnimationLoaded();
 
   // Holder for drawable properties like alpha to be able to re-apply if the backend changes.
   // The instance is created lazily only if needed.
@@ -106,6 +108,10 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
   public AnimatedDrawable2(@Nullable AnimationBackend animationBackend) {
     mAnimationBackend = animationBackend;
     mFrameScheduler = createSchedulerForBackendAndDelayMethod(mAnimationBackend);
+
+    if (animationBackend != null) {
+      animationBackend.setAnimationListener(animationBackendListener);
+    }
   }
 
   @Override
@@ -298,9 +304,14 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
    * @param animationBackend the animation backend to be used or null
    */
   public void setAnimationBackend(@Nullable AnimationBackend animationBackend) {
+    if (this.mAnimationBackend != null) {
+      this.mAnimationBackend.setAnimationListener(null);
+    }
+
     this.mAnimationBackend = animationBackend;
     if (mAnimationBackend != null) {
       mFrameScheduler = new DropFramesFrameScheduler(mAnimationBackend);
+      mAnimationBackend.setAnimationListener(animationBackendListener);
       mAnimationBackend.setBounds(getBounds());
       if (mDrawableProperties != null) {
         // re-apply to the same drawable so that the animation backend is updated.

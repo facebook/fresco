@@ -372,7 +372,7 @@ public class BitmapAnimationBackendTest {
   private void verifyFramePreparationStrategyCalled(int frameNumber) {
     verify(mBitmapFramePreparationStrategy)
         .prepareFrames(
-            mBitmapFramePreparer, mBitmapFrameCache, mBitmapAnimationBackend, frameNumber);
+            mBitmapFramePreparer, mBitmapFrameCache, mBitmapAnimationBackend, frameNumber, null);
   }
 
   private void verifyListenersAndCacheNotified(

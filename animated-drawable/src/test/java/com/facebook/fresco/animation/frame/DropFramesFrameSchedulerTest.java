@@ -218,5 +218,8 @@ public class DropFramesFrameSchedulerTest {
 
     @Override
     public void preloadAnimation() {}
+
+    @Override
+    public void setAnimationListener(@Nullable Listener listener) {}
   }
 }

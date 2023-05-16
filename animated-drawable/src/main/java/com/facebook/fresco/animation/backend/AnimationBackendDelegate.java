@@ -115,6 +115,13 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
   }
 
   @Override
+  public void setAnimationListener(@Nullable Listener listener) {
+    if (mAnimationBackend != null) {
+      mAnimationBackend.setAnimationListener(listener);
+    }
+  }
+
+  @Override
   public int getIntrinsicWidth() {
     return mAnimationBackend == null
         ? INTRINSIC_DIMENSION_UNSET

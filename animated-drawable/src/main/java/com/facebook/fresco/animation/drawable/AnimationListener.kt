@@ -4,6 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.animation.drawable
 
 import android.graphics.drawable.Drawable
@@ -49,4 +50,7 @@ interface AnimationListener {
    * @param frameNumber the frame number to be rendered
    */
   fun onAnimationFrame(drawable: Drawable, frameNumber: Int)
+
+  /** Triggered when animation is loaded in memory and ready to play */
+  fun onAnimationLoaded() = Unit
 }

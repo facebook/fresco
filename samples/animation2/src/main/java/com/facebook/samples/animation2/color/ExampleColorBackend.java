@@ -119,4 +119,7 @@ public class ExampleColorBackend implements AnimationBackend {
   public int getIntrinsicHeight() {
     return INTRINSIC_DIMENSION_UNSET;
   }
+
+  @Override
+  public void setAnimationListener(@javax.annotation.Nullable Listener listener) {}
 }

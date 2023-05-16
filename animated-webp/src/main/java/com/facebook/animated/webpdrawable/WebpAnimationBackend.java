@@ -157,6 +157,11 @@ public class WebpAnimationBackend implements AnimationBackend {
     // not needed as bitmaps are extracted on fly
   }
 
+  @Override
+  public void setAnimationListener(@Nullable Listener listener) {
+    // unimplementedå
+  }
+
   private synchronized void prepareTempBitmapForThisSize(int width, int height) {
     // Different webp frames can be different size,
     // So we need to ensure we can fit next frame to temporary bitmap

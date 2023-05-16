@@ -17,6 +17,12 @@ import javax.annotation.Nullable;
 /** Animation backend interface that is used to draw frames. */
 public interface AnimationBackend extends AnimationInformation {
 
+  interface Listener {
+
+    /** Trigger when full animation is loaded and ready to play */
+    void onAnimationLoaded();
+  }
+
   /**
    * Default value if the intrinsic dimensions are not set.
    *
@@ -100,4 +106,7 @@ public interface AnimationBackend extends AnimationInformation {
 
   /** Load animation bitmaps using the animation frame as canvas size. */
   void preloadAnimation();
+
+  /** Set listener for animation events */
+  void setAnimationListener(@Nullable Listener listener);
 }
