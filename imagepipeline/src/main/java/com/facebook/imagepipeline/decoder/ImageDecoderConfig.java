@@ -57,12 +57,14 @@ public class ImageDecoderConfig {
     public Builder addDecodingCapability(
         ImageFormat imageFormat,
         ImageFormat.FormatChecker imageFormatChecker,
-        ImageDecoder decoder) {
+        @Nullable ImageDecoder decoder) {
       if (mCustomImageFormats == null) {
         mCustomImageFormats = new ArrayList<>();
       }
       mCustomImageFormats.add(imageFormatChecker);
-      overrideDecoder(imageFormat, decoder);
+      if (decoder != null) {
+        overrideDecoder(imageFormat, decoder);
+      }
       return this;
     }
 
