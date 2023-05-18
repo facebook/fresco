@@ -8,5 +8,5 @@
 package com.facebook.fresco.ui.common
 
 interface ImagePerfNotifierHolder {
-  fun setImagePerfNotifier(imagePerfNotifier: ImagePerfNotifier)
+  fun setImagePerfNotifier(imagePerfNotifier: ImagePerfNotifier?)
 }

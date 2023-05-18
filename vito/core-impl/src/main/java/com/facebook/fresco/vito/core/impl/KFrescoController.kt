@@ -118,9 +118,8 @@ class KFrescoController(
       listenerManager.setVitoImageRequestListener(globalImageRequestListener)
 
       // Setup local perf data listener
-      perfDataListener
-          ?.let { ImagePerfDataNotifier(it) }
-          ?.let { listenerManager.setLocalImagePerfStateListener(it) }
+      val localPerfStateListener = perfDataListener?.let { ImagePerfDataNotifier(it) }
+      listenerManager.setLocalImagePerfStateListener(localPerfStateListener)
 
       _imageId = imageId
       this.viewportDimensions = viewportDimensions

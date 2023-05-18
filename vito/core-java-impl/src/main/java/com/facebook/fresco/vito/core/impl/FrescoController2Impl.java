@@ -148,8 +148,10 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
 
     // Setup local perf data listener
     if (perfDataListener != null) {
-      ImagePerfNotifier perfDataNotifier = new ImagePerfDataNotifier(perfDataListener);
-      frescoDrawable.getInternalListener().setLocalImagePerfStateListener(perfDataNotifier);
+      ImagePerfNotifier localPerfStateListener = new ImagePerfDataNotifier(perfDataListener);
+      frescoDrawable.getInternalListener().setLocalImagePerfStateListener(localPerfStateListener);
+    } else {
+      frescoDrawable.getInternalListener().setLocalImagePerfStateListener(null);
     }
 
     frescoDrawable.setOnFadeListener(onFadeListener);

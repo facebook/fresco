@@ -47,15 +47,14 @@ class CombinedImageListenerImpl : CombinedImageListener {
     checkAndSetLocalImagePerfStateListener()
   }
 
-  override fun setLocalImagePerfStateListener(imagePerfNotifier: ImagePerfNotifier) {
+  override fun setLocalImagePerfStateListener(imagePerfNotifier: ImagePerfNotifier?) {
     localImagePerfStateListener = imagePerfNotifier
     checkAndSetLocalImagePerfStateListener()
   }
 
   private fun checkAndSetLocalImagePerfStateListener() {
-    (imagePerfControllerListener as? ImagePerfNotifierHolder)?.let { localPerfStatePublisher ->
-      localImagePerfStateListener?.let { localPerfStatePublisher.setImagePerfNotifier(it) }
-    }
+    val localPerfStatePublisher = imagePerfControllerListener as? ImagePerfNotifierHolder
+    localPerfStatePublisher?.setImagePerfNotifier(localImagePerfStateListener)
   }
 
   override fun onSubmit(
