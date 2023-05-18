@@ -54,6 +54,10 @@ class CombinedImageListenerImpl : CombinedImageListener {
 
   private fun checkAndSetLocalImagePerfStateListener() {
     val localPerfStatePublisher = imagePerfControllerListener as? ImagePerfNotifierHolder
+    if (localImagePerfStateListener != null && localPerfStatePublisher == null) {
+      throw NullPointerException(
+          "trying to set localImagePerfStateListener without a localPerfStatePublisher")
+    }
     localPerfStatePublisher?.setImagePerfNotifier(localImagePerfStateListener)
   }
 
