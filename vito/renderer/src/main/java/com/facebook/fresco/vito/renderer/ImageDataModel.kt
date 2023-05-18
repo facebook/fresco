@@ -11,6 +11,7 @@ import android.graphics.Bitmap
 import android.graphics.Paint
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.NinePatchDrawable
 
 sealed class ImageDataModel {
   open val width = -1
@@ -32,8 +33,8 @@ class BitmapImageDataModel(val bitmap: Bitmap, val isBitmapCircular: Boolean = f
 }
 
 open class DrawableImageDataModel(val drawable: Drawable) : ImageDataModel() {
-  override val width = drawable.intrinsicWidth
-  override val height = drawable.intrinsicHeight
+  override val width = if (drawable is NinePatchDrawable) -1 else drawable.intrinsicWidth
+  override val height = if (drawable is NinePatchDrawable) -1 else drawable.intrinsicHeight
 
   override fun setCallback(callback: Drawable.Callback?) {
     drawable.callback = callback
