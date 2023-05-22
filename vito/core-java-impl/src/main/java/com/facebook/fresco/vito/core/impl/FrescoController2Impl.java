@@ -20,6 +20,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.fresco.middleware.MiddlewareUtils;
 import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
@@ -466,16 +467,20 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
 
     Uri sourceUri = null;
     VitoImageRequest vitoImageRequest = drawable.getImageRequest();
+    Map<String, Object> imageSourceExtras = null;
     if (vitoImageRequest != null) {
       if (vitoImageRequest.finalImageRequest != null) {
         sourceUri = vitoImageRequest.finalImageRequest.getSourceUri();
       }
+      imageSourceExtras =
+          (Map<String, Object>) vitoImageRequest.extras.get(HasExtraData.KEY_IMAGE_SOURCE_EXTRAS);
     }
 
     return MiddlewareUtils.obtainExtras(
         COMPONENT_EXTRAS,
         SHORTCUT_EXTRAS,
         dataSource == null ? null : dataSource.getExtras(),
+        imageSourceExtras,
         drawable.getViewportDimensions(),
         String.valueOf(drawable.getActualImageScaleType()),
         drawable.getActualImageFocusPoint(),

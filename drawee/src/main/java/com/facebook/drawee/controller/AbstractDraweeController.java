@@ -851,6 +851,7 @@ public abstract class AbstractDraweeController<T, INFO>
         COMPONENT_EXTRAS,
         SHORTCUT_EXTRAS,
         datasourceExtras,
+        null,
         getDimensions(),
         scaleType,
         focusPoint,

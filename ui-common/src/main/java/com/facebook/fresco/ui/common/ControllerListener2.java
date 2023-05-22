@@ -22,6 +22,7 @@ public interface ControllerListener2<INFO> {
     public @Nullable Map<String, Object> shortcutExtras;
     public @Nullable Map<String, Object> datasourceExtras;
     public @Nullable Map<String, Object> imageExtras;
+    public @Nullable Map<String, Object> imageSourceExtras;
 
     public @Nullable Object callerContext;
     public @Nullable Uri mainUri;

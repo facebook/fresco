@@ -18,6 +18,7 @@ object MiddlewareUtils {
       componentAttribution: Map<String, Any>,
       shortcutAttribution: Map<String, Any>,
       dataSourceExtras: Map<String, Any>?,
+      imageSourceExtras: Map<String, Any>?,
       viewportDimensions: Rect?,
       scaleType: String?,
       focusPoint: PointF?,
@@ -41,6 +42,7 @@ object MiddlewareUtils {
     extras.imageExtras = imageExtras
     extras.shortcutExtras = shortcutAttribution
     extras.componentExtras = componentAttribution
+    extras.imageSourceExtras = imageSourceExtras
     return extras
   }
 }
