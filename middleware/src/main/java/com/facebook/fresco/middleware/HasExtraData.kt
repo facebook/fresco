@@ -22,6 +22,7 @@ interface HasExtraData {
   fun putExtras(extras: Extras)
 
   companion object {
+    const val KEY_ID = "id"
     const val KEY_ENCODED_SIZE = "encoded_size"
     const val KEY_ENCODED_WIDTH = "encoded_width"
     const val KEY_ENCODED_HEIGHT = "encoded_height"

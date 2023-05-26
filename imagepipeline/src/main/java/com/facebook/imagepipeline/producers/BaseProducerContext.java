@@ -31,7 +31,8 @@ public class BaseProducerContext implements ProducerContext {
 
   private static final String ORIGIN_SUBCATEGORY_DEFAULT = "default";
 
-  public static final Set<String> INITIAL_KEYS = ImmutableSet.of("id", "uri_source");
+  public static final Set<String> INITIAL_KEYS =
+      ImmutableSet.of(HasExtraData.KEY_ID, HasExtraData.KEY_URI_SOURCE);
 
   private final ImageRequest mImageRequest;
   private final String mId;
@@ -100,7 +101,7 @@ public class BaseProducerContext implements ProducerContext {
     mId = id;
 
     mExtras = new HashMap<>();
-    mExtras.put("id", mId);
+    mExtras.put(HasExtraData.KEY_ID, mId);
     mExtras.put(
         HasExtraData.KEY_URI_SOURCE,
         imageRequest == null ? "null-request" : imageRequest.getSourceUri());
