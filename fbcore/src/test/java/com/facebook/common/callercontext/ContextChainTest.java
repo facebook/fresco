@@ -1,0 +1,97 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+package com.facebook.common.callercontext;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.facebook.testing.robolectric.v4.WithTestDefaultsRunner;
+import com.facebook.ultralight.testing.MockitoWithUltralightAutoMockSupport;
+import com.google.common.collect.ImmutableMap;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+@RunWith(WithTestDefaultsRunner.class)
+public class ContextChainTest extends MockitoWithUltralightAutoMockSupport {
+
+  @Test
+  public void testGetStringExtra() {
+    ContextChain contextChain =
+        new ContextChain(
+            "grandchild_tag",
+            "grandchild_name",
+            ImmutableMap.of("keyA", "valueA"),
+            new ContextChain(
+                "child_tag",
+                "child_name",
+                ImmutableMap.of("keyB", "valueB"),
+                new ContextChain(
+                    "root_tag", "root_name", ImmutableMap.of("keyC", "valueC"), null)));
+    assertThat(contextChain.getStringExtra("keyA")).isEqualTo("valueA");
+    assertThat(contextChain.getStringExtra("keyB")).isEqualTo("valueB");
+    assertThat(contextChain.getStringExtra("keyC")).isEqualTo("valueC");
+    assertThat(contextChain.getStringExtra("unknownKey")).isNull();
+  }
+
+  @Test
+  public void testPutStringExtra() {
+    ContextChain contextChain =
+        new ContextChain(
+            "grandchild_tag",
+            "grandchild_name",
+            null,
+            new ContextChain(
+                "child_tag",
+                "child_name",
+                null,
+                new ContextChain("root_tag", "root_name", null, null)));
+    assertThat(contextChain.getStringExtra("keyA")).isNull();
+    contextChain.putObjectExtra("keyA", "valueA");
+    assertThat(contextChain.getStringExtra("keyA")).isEqualTo("valueA");
+    contextChain.putObjectExtra("keyA", "valueAA");
+    assertThat(contextChain.getStringExtra("keyA")).isEqualTo("valueAA");
+    assertThat(contextChain.getStringExtra("unknownKey")).isNull();
+  }
+
+  @Test
+  public void testSerialize() {
+    ContextChain contextChain =
+        new ContextChain(
+            "grandchild_tag",
+            "grandchild_name",
+            null,
+            new ContextChain(
+                "child_tag",
+                "child_name",
+                null,
+                new ContextChain("root_tag", "root_name", null, null)));
+
+    assertThat(contextChain.toString())
+        .isEqualTo("root_tag:root_name/child_tag:child_name/grandchild_tag:grandchild_name");
+  }
+
+  @Test
+  public void testSerializeToStringList() {
+    ContextChain contextChain =
+        new ContextChain(
+            "grandchild_tag",
+            "grandchild_name",
+            null,
+            new ContextChain(
+                "child_tag",
+                "child_name",
+                null,
+                new ContextChain("root_tag", "root_name", null, null)));
+
+    String[] res = contextChain.toStringArray();
+
+    assertThat(res.length).isEqualTo(3);
+    assertThat(res[0]).isEqualTo("root_tag:root_name");
+    assertThat(res[1]).isEqualTo("child_tag:child_name");
+    assertThat(res[2]).isEqualTo("grandchild_tag:grandchild_name");
+  }
+}
