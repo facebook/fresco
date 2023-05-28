@@ -35,8 +35,6 @@ interface HasExtraData {
 
     const val KEY_ORIGIN = "origin"
     const val KEY_ORIGIN_SUBCATEGORY = "origin_sub"
-    const val KEY_SOURCE_URI = "uri_source"
-    const val KEY_NORMALIZED_URI = "uri_norm"
 
     /* number of deduped request in BitmapMemoryCacheKeyMultiplexProducer */
     const val KEY_MULTIPLEX_BITMAP_COUNT = "multiplex_bmp_cnt"
