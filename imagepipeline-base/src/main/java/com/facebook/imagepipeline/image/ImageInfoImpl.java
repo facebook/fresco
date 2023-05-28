@@ -12,14 +12,14 @@ import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public class MutableImageInfo implements ImageInfo {
-  int width;
-  int height;
-  int sizeInBytes;
-  QualityInfo qualityInfo;
-  Map<String, Object> extras;
+public class ImageInfoImpl implements ImageInfo {
+  private final int width;
+  private final int height;
+  private final int sizeInBytes;
+  private final QualityInfo qualityInfo;
+  private final Map<String, Object> extras;
 
-  public MutableImageInfo(
+  public ImageInfoImpl(
       int width, int height, int sizeInBytes, QualityInfo qualityInfo, Map<String, Object> extras) {
     this.width = width;
     this.height = height;

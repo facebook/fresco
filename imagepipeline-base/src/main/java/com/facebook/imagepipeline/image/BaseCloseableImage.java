@@ -37,7 +37,7 @@ public abstract class BaseCloseableImage implements CloseableImage {
               HasExtraData.KEY_NON_FATAL_DECODE_ERROR,
               HasExtraData.KEY_MODIFIED_URL));
 
-  private @Nullable MutableImageInfo mCacheImageInfo;
+  private @Nullable ImageInfo mCacheImageInfo;
 
   /**
    * Returns quality information for the image.
@@ -106,14 +106,8 @@ public abstract class BaseCloseableImage implements CloseableImage {
   public ImageInfo getImageInfo() {
     if (mCacheImageInfo == null) {
       mCacheImageInfo =
-          new MutableImageInfo(
+          new ImageInfoImpl(
               getWidth(), getHeight(), getSizeInBytes(), getQualityInfo(), getExtras());
-    } else {
-      mCacheImageInfo.width = getWidth();
-      mCacheImageInfo.height = getHeight();
-      mCacheImageInfo.qualityInfo = getQualityInfo();
-      mCacheImageInfo.extras = getExtras();
-      mCacheImageInfo.sizeInBytes = getSizeInBytes();
     }
     return mCacheImageInfo;
   }
