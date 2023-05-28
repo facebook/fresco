@@ -12,6 +12,7 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -67,7 +68,7 @@ public class FrescoVitoRegionDecoder implements ImageDecoder {
               encodedImage.getExifOrientation());
 
       closeableStaticBitmap.putExtra(
-          "is_rounded",
+          HasExtraData.KEY_IS_ROUNDED,
           didApplyTransformation && options.bitmapTransformation instanceof CircularTransformation);
 
       return closeableStaticBitmap;

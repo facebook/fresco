@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.decoder;
 
 import android.graphics.Bitmap;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
@@ -168,7 +169,7 @@ public class DefaultImageDecoder implements ImageDecoder {
               encodedImage.getExifOrientation());
 
       closeableStaticBitmap.putExtra(
-          "is_rounded",
+          HasExtraData.KEY_IS_ROUNDED,
           didApplyTransformation && options.bitmapTransformation instanceof CircularTransformation);
 
       return closeableStaticBitmap;
@@ -206,7 +207,7 @@ public class DefaultImageDecoder implements ImageDecoder {
               encodedImage.getExifOrientation());
 
       closeableStaticBitmap.putExtra(
-          "is_rounded",
+          HasExtraData.KEY_IS_ROUNDED,
           didApplyTransformation && options.bitmapTransformation instanceof CircularTransformation);
 
       return closeableStaticBitmap;
