@@ -126,7 +126,6 @@ class KFrescoController(
     }
 
     val options: ImageOptions = imageRequest.imageOptions
-    val resources: Resources = imageRequest.resources
 
     drawable.listenerManager.onSubmit(imageId, imageRequest, callerContext, drawable.obtainExtras())
     drawable.imagePerfListener.onImageFetch(drawable)
@@ -138,53 +137,13 @@ class KFrescoController(
       val closeableBitmap: CloseableBitmap =
           CloseableStaticBitmap.of(bitmap, {}, ImmutableQualityInfo.FULL_QUALITY, 0)
       val bitmapRef = CloseableReference.of<CloseableImage>(closeableBitmap)
-      return try {
-        // Immediately display the actual image.
-        drawable.setFetchSubmitted(true)
-        drawable.actualImageLayer.setActualImage(
-            resources, options, closeableBitmap, imageToDataModelMapper)
-        drawable.invalidateSelf()
-        drawable.listenerManager.onFinalImageSet(
-            imageId,
-            imageRequest,
-            ImageOrigin.MEMORY_BITMAP_SHORTCUT,
-            closeableBitmap.imageInfo,
-            drawable.obtainExtras(null, bitmapRef),
-            drawable.actualImageDrawable)
-        debugOverlayHandler?.update(drawable)
-        true
-      } finally {
-        CloseableReference.closeSafely(bitmapRef)
-      }
+      return drawable.setActualImage(imageRequest, bitmapRef)
     }
 
     // Check if the image is in cache
     val cachedImage = vitoImagePipeline.getCachedImage(imageRequest)
-    try {
-      if (CloseableReference.isValid(cachedImage)) {
-        // Immediately display the actual image.
-        val image = cachedImage?.get()
-        if (image != null) {
-          drawable.setFetchSubmitted(true)
-          drawable.closeable = cachedImage.clone()
-          drawable.actualImageLayer.setActualImage(
-              resources, options, image, imageToDataModelMapper)
-          // TODO(T105148151): trigger listeners
-          drawable.invalidateSelf()
-          val imageInfo = image.imageInfo
-          drawable.listenerManager.onFinalImageSet(
-              imageId,
-              imageRequest,
-              ImageOrigin.MEMORY_BITMAP_SHORTCUT,
-              imageInfo,
-              drawable.obtainExtras(null, cachedImage),
-              drawable.actualImageDrawable)
-          debugOverlayHandler?.update(drawable)
-          return true
-        }
-      }
-    } finally {
-      CloseableReference.closeSafely(cachedImage)
+    if (drawable.setActualImage(imageRequest, cachedImage)) {
+      return true
     }
 
     // The image is not in cache -> Set up layers visible until the image is available
@@ -235,6 +194,44 @@ class KFrescoController(
       return
     }
     ImageReleaseScheduler.releaseImmediately(drawable)
+  }
+
+  /**
+   * Set the actual image to be the given image reference.
+   *
+   * @return true if the image has been set, false if it failed (e.g. invalid/null image reference)
+   */
+  private fun KFrescoVitoDrawable.setActualImage(
+      imageRequest: VitoImageRequest,
+      imageReference: CloseableReference<CloseableImage>?
+  ): Boolean {
+    try {
+      if (CloseableReference.isValid(imageReference)) {
+        // Immediately display the actual image.
+        val image = imageReference?.get()
+        if (image != null) {
+          setFetchSubmitted(true)
+          closeable = imageReference.clone()
+          actualImageLayer.setActualImage(
+              imageRequest.resources, imageRequest.imageOptions, image, imageToDataModelMapper)
+          // TODO(T105148151): trigger listeners
+          invalidateSelf()
+          val imageInfo = image.imageInfo
+          listenerManager.onFinalImageSet(
+              imageId,
+              imageRequest,
+              ImageOrigin.MEMORY_BITMAP_SHORTCUT,
+              imageInfo,
+              obtainExtras(null, imageReference),
+              actualImageDrawable)
+          debugOverlayHandler?.update(this)
+          return true
+        }
+      }
+    } finally {
+      CloseableReference.closeSafely(imageReference)
+    }
+    return false
   }
 
   private fun isAlreadyLoadingImage(
