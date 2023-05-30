@@ -19,6 +19,7 @@ import android.graphics.drawable.InsetDrawable
 import androidx.core.content.ContextCompat
 import com.facebook.drawee.drawable.AutoRotateDrawable
 import com.facebook.drawee.drawable.ProgressBarDrawable
+import com.facebook.drawee.drawable.RoundedCornersDrawable
 import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.fresco.samples.showcase.R
 import com.facebook.fresco.samples.showcase.common.CustomScaleTypes
@@ -183,6 +184,22 @@ object VitoSpinners {
               "9-patch" to
                   { builder: ImageOptions.Builder ->
                     builder.overlayRes(R.drawable.ninepatch)
+                  },
+              "color overlay circular rounding" to
+                  { builder: ImageOptions.Builder ->
+                    builder.overlay(
+                        RoundedCornersDrawable(ColorDrawable(Color.TRANSPARENT)).apply {
+                          isCircle = true
+                          overlayColor = Color.BLUE
+                        })
+                  },
+              "color overlay rounded corners" to
+                  { builder: ImageOptions.Builder ->
+                    builder.overlay(
+                        RoundedCornersDrawable(ColorDrawable(Color.TRANSPARENT)).apply {
+                          setRadius(50f)
+                          overlayColor = Color.GREEN
+                        })
                   }),
           "Overlay")
 
