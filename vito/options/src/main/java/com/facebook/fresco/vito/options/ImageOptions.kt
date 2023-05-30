@@ -252,6 +252,8 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
       _overlayRes = defaultOptions.overlayRes
       _overlayDrawable = defaultOptions.overlayDrawable
       _resizeToViewport = defaultOptions.shouldResizeToViewport()
+      _autoPlay = defaultOptions.shouldAutoPlay()
+      _autoStop = defaultOptions.shouldAutoStop()
       _fadeDurationMs = defaultOptions.fadeDurationMs
       _customDrawableFactory = defaultOptions.customDrawableFactory
       _experimentalDynamicSize = defaultOptions.experimentalDynamicSize
