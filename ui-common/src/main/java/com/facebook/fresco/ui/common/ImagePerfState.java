@@ -37,7 +37,6 @@ public class ImagePerfState {
   private long mImageRequestEndTimeMs = UNSET;
 
   // Image pipeline information
-  private @Nullable String mUltimateProducerName;
   private boolean mIsPrefetch;
 
   // On screen information
@@ -68,7 +67,6 @@ public class ImagePerfState {
     mCallerContext = null;
     mImageInfo = null;
 
-    mUltimateProducerName = null;
     mIsPrefetch = false;
 
     mOnScreenWidthPx = UNSET;
@@ -164,10 +162,6 @@ public class ImagePerfState {
     mInvisibilityEventTimeMs = invisibilityEventTimeMs;
   }
 
-  public void setUltimateProducerName(@Nullable String ultimateProducerName) {
-    mUltimateProducerName = ultimateProducerName;
-  }
-
   public void setPrefetch(boolean prefetch) {
     mIsPrefetch = prefetch;
   }
@@ -210,7 +204,6 @@ public class ImagePerfState {
         mControllerCancelTimeMs,
         mImageRequestStartTimeMs,
         mImageRequestEndTimeMs,
-        mUltimateProducerName,
         mIsPrefetch,
         mOnScreenWidthPx,
         mOnScreenHeightPx,

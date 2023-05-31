@@ -33,7 +33,6 @@ public class ImagePerfData {
 
   private final long mImageRequestStartTimeMs;
   private final long mImageRequestEndTimeMs;
-  private final @Nullable String mUltimateProducerName;
   private final boolean mIsPrefetch;
 
   private final int mOnScreenWidthPx;
@@ -67,7 +66,6 @@ public class ImagePerfData {
       long controllerCancelTimeMs,
       long imageRequestStartTimeMs,
       long imageRequestEndTimeMs,
-      @Nullable String ultimateProducerName,
       boolean isPrefetch,
       int onScreenWidthPx,
       int onScreenHeightPx,
@@ -91,7 +89,6 @@ public class ImagePerfData {
     mControllerCancelTimeMs = controllerCancelTimeMs;
     mImageRequestStartTimeMs = imageRequestStartTimeMs;
     mImageRequestEndTimeMs = imageRequestEndTimeMs;
-    mUltimateProducerName = ultimateProducerName;
     mIsPrefetch = isPrefetch;
     mOnScreenWidthPx = onScreenWidthPx;
     mOnScreenHeightPx = onScreenHeightPx;
@@ -156,11 +153,6 @@ public class ImagePerfData {
 
   public long getImageRequestEndTimeMs() {
     return mImageRequestEndTimeMs;
-  }
-
-  @Nullable
-  public String getUltimateProducerName() {
-    return mUltimateProducerName;
   }
 
   public boolean isPrefetch() {
@@ -237,7 +229,6 @@ public class ImagePerfData {
         .add("controller cancel", mControllerCancelTimeMs)
         .add("start time", mImageRequestStartTimeMs)
         .add("end time", mImageRequestEndTimeMs)
-        .add("ultimateProducerName", mUltimateProducerName)
         .add("prefetch", mIsPrefetch)
         .add("caller context", mCallerContext)
         .add("image request", mImageRequest)

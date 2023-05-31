@@ -30,6 +30,5 @@ public class ImagePerfImageOriginListener implements ImageOriginListener {
       boolean successful,
       @Nullable String ultimateProducerName) {
     mImagePerfState.setPipelineExtra(ImagePerfExtra.IMAGE_ORIGIN, imageOrigin);
-    mImagePerfState.setUltimateProducerName(ultimateProducerName);
   }
 }
