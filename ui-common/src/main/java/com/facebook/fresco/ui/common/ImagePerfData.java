@@ -46,8 +46,6 @@ public class ImagePerfData {
   private final long mVisibilityEventTimeMs;
   private final long mInvisibilityEventTimeMs;
 
-  private final @Nullable String mComponentTag;
-
   private final long mImageDrawTimeMs;
 
   private final @Nullable DimensionsInfo mDimensionsInfo;
@@ -77,7 +75,6 @@ public class ImagePerfData {
       VisibilityState visibilityState,
       long visibilityEventTimeMs,
       long invisibilityEventTime,
-      @Nullable String componentTag,
       long imageDrawTimeMs,
       @Nullable DimensionsInfo dimensionsInfo,
       @Nullable Extras extraData,
@@ -102,7 +99,6 @@ public class ImagePerfData {
     mVisibilityState = visibilityState;
     mVisibilityEventTimeMs = visibilityEventTimeMs;
     mInvisibilityEventTimeMs = invisibilityEventTime;
-    mComponentTag = componentTag;
     mImageDrawTimeMs = imageDrawTimeMs;
     mDimensionsInfo = dimensionsInfo;
     mExtraData = extraData;
@@ -209,11 +205,6 @@ public class ImagePerfData {
   }
 
   @Nullable
-  public String getComponentTag() {
-    return mComponentTag;
-  }
-
-  @Nullable
   public DimensionsInfo getDimensionsInfo() {
     return mDimensionsInfo;
   }
@@ -254,7 +245,6 @@ public class ImagePerfData {
         .add("on-screen width", mOnScreenWidthPx)
         .add("on-screen height", mOnScreenHeightPx)
         .add("visibility state", mVisibilityState)
-        .add("component tag", mComponentTag)
         .add("visibility event", mVisibilityEventTimeMs)
         .add("invisibility event", mInvisibilityEventTimeMs)
         .add("image draw event", mImageDrawTimeMs)

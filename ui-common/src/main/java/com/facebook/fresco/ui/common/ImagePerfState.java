@@ -56,8 +56,6 @@ public class ImagePerfState {
 
   private long mImageDrawTimeMs = UNSET;
 
-  private @Nullable String mComponentTag;
-
   private @Nullable DimensionsInfo mDimensionsInfo;
 
   private @Nullable Extras mExtraData;
@@ -81,8 +79,6 @@ public class ImagePerfState {
     mImageLoadStatus = ImageLoadStatus.UNKNOWN;
 
     mVisibilityState = VisibilityState.UNKNOWN;
-
-    mComponentTag = null;
 
     mDimensionsInfo = null;
 
@@ -196,10 +192,6 @@ public class ImagePerfState {
     mVisibilityState = visible ? VisibilityState.VISIBLE : VisibilityState.INVISIBLE;
   }
 
-  public void setComponentTag(@Nullable String componentTag) {
-    mComponentTag = componentTag;
-  }
-
   public void setImageDrawTimeMs(long imageDrawTimeMs) {
     mImageDrawTimeMs = imageDrawTimeMs;
   }
@@ -226,7 +218,6 @@ public class ImagePerfState {
         mVisibilityState,
         mVisibilityEventTimeMs,
         mInvisibilityEventTimeMs,
-        mComponentTag,
         mImageDrawTimeMs,
         mDimensionsInfo,
         mExtraData,
