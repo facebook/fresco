@@ -62,7 +62,7 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
     final ProducerListener2 listener = producerContext.getProducerListener();
     final ImageRequest imageRequest = producerContext.getImageRequest();
     producerContext.putOriginExtra("local", "video");
-    final StatefulProducerRunnable cancellableProducerRunnable =
+    final StatefulProducerRunnable<CloseableReference<CloseableImage>> cancellableProducerRunnable =
         new StatefulProducerRunnable<CloseableReference<CloseableImage>>(
             consumer, listener, producerContext, PRODUCER_NAME) {
           @Override

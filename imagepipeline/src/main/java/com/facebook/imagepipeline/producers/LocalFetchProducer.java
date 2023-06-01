@@ -39,7 +39,7 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
     final ProducerListener2 listener = producerContext.getProducerListener();
     final ImageRequest imageRequest = producerContext.getImageRequest();
     producerContext.putOriginExtra("local", "fetch");
-    final StatefulProducerRunnable cancellableProducerRunnable =
+    final StatefulProducerRunnable<EncodedImage> cancellableProducerRunnable =
         new StatefulProducerRunnable<EncodedImage>(
             consumer, listener, producerContext, getProducerName()) {
 
@@ -59,8 +59,7 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
           }
 
           @Override
-          // NULLSAFE_FIXME[Inconsistent Subclass Parameter Annotation]
-          protected void disposeResult(EncodedImage result) {
+          protected void disposeResult(@Nullable EncodedImage result) {
             EncodedImage.closeSafely(result);
           }
         };
