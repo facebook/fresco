@@ -94,4 +94,41 @@ public class ContextChainTest extends MockitoWithUltralightAutoMockSupport {
     assertThat(res[1]).isEqualTo("child_tag:child_name");
     assertThat(res[2]).isEqualTo("grandchild_tag:grandchild_name");
   }
+
+  @Test
+  public void testSerializedContextChainToArray() {
+    ContextChain contextChain =
+        new ContextChain(
+            "root_tag:root_name/child_tag:child_name/grandchild_tag:grandchild_name", null);
+    String[] res = contextChain.toStringArray();
+    assertThat(res.length).isEqualTo(3);
+    assertThat(res[0]).isEqualTo("root_tag:root_name");
+    assertThat(res[1]).isEqualTo("child_tag:child_name");
+    assertThat(res[2]).isEqualTo("grandchild_tag:grandchild_name");
+  }
+
+  @Test
+  public void testSerializedContextChainToString() {
+    ContextChain contextChain =
+        new ContextChain(
+            "root_tag:root_name/child_tag:child_name/grandchild_tag:grandchild_name", null);
+    assertThat(contextChain.toString())
+        .isEqualTo("root_tag:root_name/child_tag:child_name/grandchild_tag:grandchild_name");
+  }
+
+  @Test
+  public void testCombiningChains() {
+    ContextChain nativeChain =
+        new ContextChain("native_tag:native_tag_name/native_child_tag:native_child_tag_name", null);
+    ContextChain remoteChain =
+        new ContextChain(
+            "root_tag:root_name/child_tag:child_name/grandchild_tag:grandchild_name", nativeChain);
+    String[] res = remoteChain.toStringArray();
+    assertThat(res.length).isEqualTo(5);
+    assertThat(res[0]).isEqualTo("native_tag:native_tag_name");
+    assertThat(res[1]).isEqualTo("native_child_tag:native_child_tag_name");
+    assertThat(res[2]).isEqualTo("root_tag:root_name");
+    assertThat(res[3]).isEqualTo("child_tag:child_name");
+    assertThat(res[4]).isEqualTo("grandchild_tag:grandchild_name");
+  }
 }

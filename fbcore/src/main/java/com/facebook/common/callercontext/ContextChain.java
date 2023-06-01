@@ -10,7 +10,6 @@ package com.facebook.common.callercontext;
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.facebook.common.internal.Objects;
-import com.facebook.common.internal.Preconditions;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,13 +37,13 @@ public class ContextChain implements Parcelable {
 
   private final String mTag;
   private final String mName;
-  private final int mLevel;
   private final @Nullable ContextChain mParent;
 
   // Allows setting arbitrary key:value String pairs without polluting Context Chain names.
   private @Nullable Map<String, Object> mExtraData;
 
-  private @Nullable String mSerializedString;
+  private @Nullable String mSerializedChainString;
+  private String mSerializedNodeString;
 
   private static boolean sUseConcurrentHashMap = false;
 
@@ -55,7 +54,7 @@ public class ContextChain implements Parcelable {
       final @Nullable ContextChain parent) {
     mTag = tag;
     mName = name;
-    mLevel = parent != null ? parent.mLevel + 1 : 0;
+    mSerializedNodeString = mTag + ":" + mName;
     mParent = parent;
 
     Map<String, Object> parentExtraData = null;
@@ -82,6 +81,11 @@ public class ContextChain implements Parcelable {
     }
   }
 
+  public ContextChain(final String serializedNodeString, final @Nullable ContextChain parent) {
+    this("serialized_tag", "serialized_name", null, parent);
+    mSerializedNodeString = serializedNodeString;
+  }
+
   public ContextChain(final String tag, final String name, final @Nullable ContextChain parent) {
     this(tag, name, null, parent);
   }
@@ -89,7 +93,7 @@ public class ContextChain implements Parcelable {
   protected ContextChain(Parcel in) {
     mTag = in.readString();
     mName = in.readString();
-    mLevel = in.readInt();
+    mSerializedNodeString = in.readString();
     mParent = in.readParcelable(ContextChain.class.getClassLoader());
   }
 
@@ -149,24 +153,26 @@ public class ContextChain implements Parcelable {
 
   @Override
   public String toString() {
-    if (mSerializedString == null) {
-      mSerializedString = mTag + ":" + mName;
+    if (mSerializedChainString == null) {
+      mSerializedChainString = getNodeString();
       if (mParent != null) {
-        mSerializedString = mParent.toString() + PARENT_SEPARATOR + mSerializedString;
+        mSerializedChainString = mParent.toString() + PARENT_SEPARATOR + mSerializedChainString;
       }
     }
-    return mSerializedString;
+    return mSerializedChainString;
+  }
+
+  /**
+   * Get serialized representation of ContextChain node
+   *
+   * @return serialized string
+   */
+  protected String getNodeString() {
+    return mSerializedNodeString;
   }
 
   public String[] toStringArray() {
-    String[] result = new String[mLevel + 1];
-    ContextChain current = this;
-    for (int i = mLevel; i >= 0; i--) {
-      Preconditions.checkNotNull(current, "ContextChain level mismatch, this should not happen.");
-      result[i] = current.mTag + ":" + current.mName;
-      current = current.mParent;
-    }
-    return result;
+    return toString().split(String.valueOf(PARENT_SEPARATOR));
   }
 
   @Override
@@ -178,19 +184,14 @@ public class ContextChain implements Parcelable {
       return false;
     }
     ContextChain other = (ContextChain) obj;
-    return Objects.equal(mTag, other.mTag)
-        && Objects.equal(mName, other.mName)
-        && mLevel == other.mLevel
-        && (mParent == other.mParent || (mParent != null && mParent.equals(other.mParent)));
+    return Objects.equal(getNodeString(), other.getNodeString())
+        && (Objects.equal(mParent, other.mParent));
   }
 
   @Override
   public int hashCode() {
     int result = super.hashCode();
-    result = 31 * result + (mTag != null ? mTag.hashCode() : 0);
-    result = 31 * result + (mName != null ? mName.hashCode() : 0);
-    result = 31 * result + mLevel;
-    result = 31 * result + (mParent != null ? mParent.hashCode() : 0);
+    result = 31 * result + (getNodeString().hashCode());
     return result;
   }
 
@@ -203,7 +204,7 @@ public class ContextChain implements Parcelable {
   public void writeToParcel(Parcel dest, int flags) {
     dest.writeString(mTag);
     dest.writeString(mName);
-    dest.writeInt(mLevel);
+    dest.writeString(getNodeString());
     dest.writeParcelable(mParent, flags);
   }
 
