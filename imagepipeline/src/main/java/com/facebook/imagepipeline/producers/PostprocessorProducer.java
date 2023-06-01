@@ -307,9 +307,8 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
     }
 
     @Override
-    // NULLSAFE_FIXME[Inconsistent Subclass Parameter Annotation]
     protected void onNewResultImpl(
-        final CloseableReference<CloseableImage> newResult, @Status int status) {
+        final @Nullable CloseableReference<CloseableImage> newResult, @Status int status) {
       // ignore intermediate results
       if (isNotLast(status)) {
         return;
