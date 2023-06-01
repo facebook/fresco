@@ -262,8 +262,7 @@ class DecodeProducer(
               throw e
             }
 
-            // NULLSAFE_FIXME[Nullable Dereference]
-            reclaimMemoryRunnable!!.run()
+            reclaimMemoryRunnable?.run()
             System.gc()
 
             // Now we retry only once
