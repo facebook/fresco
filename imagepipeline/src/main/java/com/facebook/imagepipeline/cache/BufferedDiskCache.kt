@@ -256,13 +256,11 @@ class BufferedDiskCache(
         writeExecutor.execute {
           val currentToken = FrescoInstrumenter.onBeginWork(token, null)
           try {
-            // NULLSAFE_FIXME[Parameter Not Nullable]
             writeToDiskCache(key, finalEncodedImage)
           } catch (th: Throwable) {
             FrescoInstrumenter.markFailure(token, th)
             throw th
           } finally {
-            // NULLSAFE_FIXME[Parameter Not Nullable]
             stagingArea.remove(key, finalEncodedImage!!)
             EncodedImage.closeSafely(finalEncodedImage)
             FrescoInstrumenter.onEndWork(currentToken)
