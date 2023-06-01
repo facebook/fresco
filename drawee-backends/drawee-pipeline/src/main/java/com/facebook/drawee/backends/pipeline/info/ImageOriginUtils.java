@@ -7,7 +7,6 @@
 
 package com.facebook.drawee.backends.pipeline.info;
 
-import com.facebook.fresco.ui.common.ImagePerfData;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheGetProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.DataFetchProducer;
@@ -79,18 +78,6 @@ public class ImageOriginUtils {
       default:
         return ImageOrigin.UNKNOWN;
     }
-  }
-
-  public static @ImageOrigin int getImageOriginFromImagePerfData(ImagePerfData imagePerfData) {
-    Object originFromPipelineExtras = imagePerfData.getPipelineExtra(ImagePerfExtra.IMAGE_ORIGIN);
-    final int imageOrigin;
-    if (originFromPipelineExtras == null) {
-      imageOrigin = ImageOrigin.UNKNOWN;
-    } else {
-      imageOrigin = (int) originFromPipelineExtras;
-    }
-
-    return imageOrigin;
   }
 
   private ImageOriginUtils() {}

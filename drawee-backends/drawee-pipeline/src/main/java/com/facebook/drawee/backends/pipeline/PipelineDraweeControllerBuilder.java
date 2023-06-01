@@ -132,8 +132,7 @@ public class PipelineDraweeControllerBuilder
           controllerId,
           getCacheKey(),
           getCallerContext(),
-          mCustomDrawableFactories,
-          mImageOriginListener);
+          mCustomDrawableFactories);
       controller.initializePerformanceMonitoring(
           mImagePerfDataListener, this, Suppliers.BOOLEAN_FALSE);
       return controller;

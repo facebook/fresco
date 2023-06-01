@@ -10,7 +10,6 @@ package com.facebook.flipper.plugins.fresco.objecthelper;
 import static com.facebook.flipper.plugins.inspector.InspectorValue.Type.Color;
 
 import android.text.TextUtils;
-import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.flipper.core.FlipperArray;
 import com.facebook.flipper.core.FlipperObject;
@@ -147,9 +146,7 @@ public abstract class FlipperObjectHelper {
     objectJson.put("controllerFinalTimeMs", imagePerfData.getControllerFinalImageSetTimeMs());
     objectJson.put("imageRequestStartTimeMs", imagePerfData.getImageRequestStartTimeMs());
     objectJson.put("imageRequestEndTimeMs", imagePerfData.getImageRequestEndTimeMs());
-    objectJson.put(
-        "imageOrigin",
-        ImageOriginUtils.toString(ImageOriginUtils.getImageOriginFromImagePerfData(imagePerfData)));
+    objectJson.put("imageOrigin", "UNKNOWN");
     objectJson.put("isPrefetch", imagePerfData.isPrefetch());
     objectJson.put("callerContext", imagePerfData.getCallerContext());
     objectJson.put("imageRequest", toFlipperObject((ImageRequest) imagePerfData.getImageRequest()));

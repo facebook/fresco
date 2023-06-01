@@ -12,7 +12,6 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
-import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfRequestListener;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.fresco.ui.common.ImageLoadStatus;
@@ -35,8 +34,6 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
   private final ImagePerfState mImagePerfState;
   private final Supplier<Boolean> mAsyncLogging;
 
-  private @Nullable ImageOriginRequestListener mImageOriginRequestListener;
-  private @Nullable ImageOriginListener mImageOriginListener;
   private @Nullable ImagePerfRequestListener mImagePerfRequestListener;
   private @Nullable ImagePerfControllerListener2 mImagePerfControllerListener2;
   private @Nullable ForwardingRequestListener mForwardingRequestListener;
@@ -59,9 +56,6 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
     mEnabled = enabled;
     if (enabled) {
       setupListeners();
-      if (mImageOriginListener != null) {
-        mPipelineDraweeController.addImageOriginListener(mImageOriginListener);
-      }
       if (mImagePerfControllerListener2 != null) {
         mPipelineDraweeController.addControllerListener2(mImagePerfControllerListener2);
       }
@@ -69,9 +63,6 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
         mPipelineDraweeController.addRequestListener(mForwardingRequestListener);
       }
     } else {
-      if (mImageOriginListener != null) {
-        mPipelineDraweeController.removeImageOriginListener(mImageOriginListener);
-      }
       if (mImagePerfControllerListener2 != null) {
         mPipelineDraweeController.removeControllerListener2(mImagePerfControllerListener2);
       }
@@ -149,19 +140,8 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
     if (mImagePerfRequestListener == null) {
       mImagePerfRequestListener = new ImagePerfRequestListener(mMonotonicClock, mImagePerfState);
     }
-    if (mImageOriginListener == null) {
-      mImageOriginListener = new ImagePerfImageOriginListener(mImagePerfState);
-    }
-    if (mImageOriginRequestListener == null) {
-      mImageOriginRequestListener =
-          new ImageOriginRequestListener(mPipelineDraweeController.getId(), mImageOriginListener);
-    } else {
-      // The ID could have changed
-      mImageOriginRequestListener.init(mPipelineDraweeController.getId());
-    }
     if (mForwardingRequestListener == null) {
-      mForwardingRequestListener =
-          new ForwardingRequestListener(mImagePerfRequestListener, mImageOriginRequestListener);
+      mForwardingRequestListener = new ForwardingRequestListener(mImagePerfRequestListener);
     }
   }
 

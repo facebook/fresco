@@ -25,7 +25,6 @@ import com.facebook.common.memory.manager.NoOpDebugMemoryManager;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.SharedReference;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
 import com.facebook.flipper.core.FlipperArray;
 import com.facebook.flipper.core.FlipperConnection;
 import com.facebook.flipper.core.FlipperObject;
@@ -599,10 +598,7 @@ public class FrescoFlipperPlugin extends BufferingFlipperPlugin
             .put("attribution", attribution)
             .put("startTime", imagePerfData.getControllerSubmitTimeMs())
             .put("endTime", imagePerfData.getControllerFinalImageSetTimeMs())
-            .put(
-                "source",
-                ImageOriginUtils.toString(
-                    ImageOriginUtils.getImageOriginFromImagePerfData(imagePerfData)));
+            .put("source", "UNKNOWN");
 
     if (!imagePerfData.isPrefetch()) {
       response.put(

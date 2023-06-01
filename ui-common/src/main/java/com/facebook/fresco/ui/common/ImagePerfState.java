@@ -213,8 +213,7 @@ public class ImagePerfState {
         mInvisibilityEventTimeMs,
         mImageDrawTimeMs,
         mDimensionsInfo,
-        mExtraData,
-        mPipelineExtras);
+        mExtraData);
   }
 
   public long getImageDrawTimeMs() {
@@ -235,17 +234,5 @@ public class ImagePerfState {
 
   public @Nullable Object getExtraData() {
     return mExtraData;
-  }
-
-  public void setPipelineExtra(String key, @Nullable Object value) {
-    mPipelineExtras.put(key, value);
-  }
-
-  public @Nullable Object getPipelineExtra(String key) {
-    if (mPipelineExtras.containsKey(key)) {
-      return mPipelineExtras.get(key);
-    } else {
-      return null;
-    }
   }
 }

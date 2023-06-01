@@ -10,8 +10,6 @@ package com.facebook.fresco.ui.common;
 import com.facebook.common.internal.Objects;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.infer.annotation.Nullsafe;
-import java.util.HashMap;
-import java.util.Map;
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
@@ -51,8 +49,6 @@ public class ImagePerfData {
 
   private @Nullable Extras mExtraData;
 
-  private Map<String, Object> mPipelineExtras;
-
   public ImagePerfData(
       @Nullable String controllerId,
       @Nullable String requestId,
@@ -75,8 +71,7 @@ public class ImagePerfData {
       long invisibilityEventTime,
       long imageDrawTimeMs,
       @Nullable DimensionsInfo dimensionsInfo,
-      @Nullable Extras extraData,
-      Map<String, Object> pipelineExtras) {
+      @Nullable Extras extraData) {
     mControllerId = controllerId;
     mRequestId = requestId;
     mImageRequest = imageRequest;
@@ -99,7 +94,6 @@ public class ImagePerfData {
     mImageDrawTimeMs = imageDrawTimeMs;
     mDimensionsInfo = dimensionsInfo;
     mExtraData = extraData;
-    mPipelineExtras = new HashMap<>(pipelineExtras);
   }
 
   public long getImageDrawTimeMs() {
@@ -210,15 +204,6 @@ public class ImagePerfData {
     mExtraData = extraData;
   }
 
-  @Nullable
-  public Object getPipelineExtra(String key) {
-    if (mPipelineExtras.containsKey(key)) {
-      return mPipelineExtras.get(key);
-    } else {
-      return null;
-    }
-  }
-
   public String createDebugString() {
     return Objects.toStringHelper(this)
         .add("controller ID", mControllerId)
@@ -241,7 +226,6 @@ public class ImagePerfData {
         .add("image draw event", mImageDrawTimeMs)
         .add("dimensions info", mDimensionsInfo)
         .add("extra data", mExtraData)
-        .add("pipeline extras", mPipelineExtras)
         .toString();
   }
 }

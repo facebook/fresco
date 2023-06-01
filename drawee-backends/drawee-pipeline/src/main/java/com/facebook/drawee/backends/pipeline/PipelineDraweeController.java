@@ -20,13 +20,10 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.time.AwakeTimeSinceBootClock;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawable.base.DrawableWithCaches;
-import com.facebook.drawee.backends.pipeline.debug.DebugOverlayImageOriginColor;
-import com.facebook.drawee.backends.pipeline.debug.DebugOverlayImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.ForwardingImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginRequestListener;
-import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfMonitor;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.AbstractDraweeController;
@@ -95,7 +92,6 @@ public class PipelineDraweeController
   @Nullable
   private ImageOriginListener mImageOriginListener;
 
-  private DebugOverlayImageOriginListener mDebugOverlayImageOriginListener;
   private @Nullable ImageRequest mImageRequest;
   private @Nullable ImageRequest[] mFirstAvailableImageRequests;
   private @Nullable ImageRequest mLowResImageRequest;
@@ -128,8 +124,7 @@ public class PipelineDraweeController
       String id,
       CacheKey cacheKey,
       Object callerContext,
-      @Nullable ImmutableList<DrawableFactory> customDrawableFactories,
-      @Nullable ImageOriginListener imageOriginListener) {
+      @Nullable ImmutableList<DrawableFactory> customDrawableFactories) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("PipelineDraweeController#initialize");
     }
@@ -137,9 +132,7 @@ public class PipelineDraweeController
     init(dataSourceSupplier);
     mCacheKey = cacheKey;
     setCustomDrawableFactories(customDrawableFactories);
-    clearImageOriginListeners();
     maybeUpdateDebugOverlay(null);
-    addImageOriginListener(imageOriginListener);
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.endSection();
     }
@@ -193,18 +186,6 @@ public class PipelineDraweeController
     mRequestListeners.remove(requestListener);
   }
 
-  public synchronized void addImageOriginListener(ImageOriginListener imageOriginListener) {
-    if (mImageOriginListener instanceof ForwardingImageOriginListener) {
-      ((ForwardingImageOriginListener) mImageOriginListener)
-          .addImageOriginListener(imageOriginListener);
-    } else if (mImageOriginListener != null) {
-      mImageOriginListener =
-          new ForwardingImageOriginListener(mImageOriginListener, imageOriginListener);
-    } else {
-      mImageOriginListener = imageOriginListener;
-    }
-  }
-
   public synchronized void removeImageOriginListener(ImageOriginListener imageOriginListener) {
     if (mImageOriginListener instanceof ForwardingImageOriginListener) {
       ((ForwardingImageOriginListener) mImageOriginListener)
@@ -212,12 +193,6 @@ public class PipelineDraweeController
       return;
     }
     if (mImageOriginListener == imageOriginListener) {
-      mImageOriginListener = null;
-    }
-  }
-
-  protected void clearImageOriginListeners() {
-    synchronized (this) {
       mImageOriginListener = null;
     }
   }
@@ -340,13 +315,8 @@ public class PipelineDraweeController
       final DebugControllerOverlayDrawable controllerOverlay = new DebugControllerOverlayDrawable();
       ImageLoadingTimeControllerListener overlayImageLoadListener =
           new ImageLoadingTimeControllerListener(controllerOverlay);
-      mDebugOverlayImageOriginListener = new DebugOverlayImageOriginListener();
       addControllerListener(overlayImageLoadListener);
       setControllerOverlay(controllerOverlay);
-    }
-
-    if (mImageOriginListener == null) {
-      addImageOriginListener(mDebugOverlayImageOriginListener);
     }
 
     if (getControllerOverlay() instanceof DebugControllerOverlayDrawable) {
@@ -371,11 +341,6 @@ public class PipelineDraweeController
     }
     debugOverlay.setScaleType(scaleType);
 
-    // fill in image origin text and color hint
-    final int origin = mDebugOverlayImageOriginListener.getImageOrigin();
-    final String originText = ImageOriginUtils.toString(origin);
-    final int originColor = DebugOverlayImageOriginColor.getImageOriginColor(origin);
-    debugOverlay.setOrigin(originText, originColor);
     String callerContextString = getCallerContextString();
     if (callerContextString != null) {
       debugOverlay.addAdditionalData("cc", callerContextString);
