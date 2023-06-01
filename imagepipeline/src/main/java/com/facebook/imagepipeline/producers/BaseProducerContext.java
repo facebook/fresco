@@ -33,6 +33,7 @@ public class BaseProducerContext implements ProducerContext {
 
   public static final Set<String> INITIAL_KEYS =
       ImmutableSet.of(HasExtraData.KEY_ID, HasExtraData.KEY_URI_SOURCE);
+  private static final Object CALLER_CONTEXT_UNSET = new Object();
 
   private final ImageRequest mImageRequest;
   private final String mId;
@@ -65,7 +66,7 @@ public class BaseProducerContext implements ProducerContext {
       ImageRequest imageRequest,
       String id,
       ProducerListener2 producerListener,
-      Object callerContext,
+      @Nullable Object callerContext,
       ImageRequest.RequestLevel lowestPermittedRequestLevel,
       boolean isPrefetch,
       boolean isIntermediateResultExpected,
@@ -91,7 +92,7 @@ public class BaseProducerContext implements ProducerContext {
       @Nullable String uiComponentId,
       @Nullable Map<String, ?> extras,
       ProducerListener2 producerListener,
-      Object callerContext,
+      @Nullable Object callerContext,
       ImageRequest.RequestLevel lowestPermittedRequestLevel,
       boolean isPrefetch,
       boolean isIntermediateResultExpected,
@@ -109,7 +110,7 @@ public class BaseProducerContext implements ProducerContext {
 
     mUiComponentId = uiComponentId;
     mProducerListener = producerListener;
-    mCallerContext = callerContext;
+    mCallerContext = callerContext != null ? callerContext : CALLER_CONTEXT_UNSET;
     mLowestPermittedRequestLevel = lowestPermittedRequestLevel;
 
     mIsPrefetch = isPrefetch;
