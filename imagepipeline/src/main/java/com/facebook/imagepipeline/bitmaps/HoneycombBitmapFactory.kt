@@ -56,6 +56,7 @@ class HoneycombBitmapFactory(
         val bitmapRef =
             purgeableDecoder.decodeJPEGFromEncodedImage(
                 encodedImage, bitmapConfig, null, jpgRef.get().size())
+        checkNotNull(bitmapRef)
         if (!bitmapRef.get().isMutable) {
           CloseableReference.closeSafely(bitmapRef)
           immutableBitmapFallback = true

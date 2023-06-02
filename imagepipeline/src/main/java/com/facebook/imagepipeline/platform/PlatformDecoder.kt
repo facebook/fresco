@@ -34,7 +34,7 @@ interface PlatformDecoder {
       encodedImage: EncodedImage,
       bitmapConfig: Bitmap.Config,
       regionToDecode: Rect?
-  ): CloseableReference<Bitmap>
+  ): CloseableReference<Bitmap>?
 
   /**
    * Creates a bitmap from encoded JPEG bytes. Supports a partial JPEG image. In addition, a region
@@ -56,7 +56,7 @@ interface PlatformDecoder {
       bitmapConfig: Bitmap.Config,
       regionToDecode: Rect?,
       length: Int
-  ): CloseableReference<Bitmap>
+  ): CloseableReference<Bitmap>?
 
   /**
    * Creates a bitmap from encoded bytes. Supports JPEG but callers should use
@@ -79,7 +79,7 @@ interface PlatformDecoder {
       bitmapConfig: Bitmap.Config,
       regionToDecode: Rect?,
       colorSpace: ColorSpace?
-  ): CloseableReference<Bitmap>
+  ): CloseableReference<Bitmap>?
 
   /**
    * Creates a bitmap from encoded JPEG bytes. Supports a partial JPEG image. In addition, a region
@@ -103,5 +103,5 @@ interface PlatformDecoder {
       regionToDecode: Rect?,
       length: Int,
       colorSpace: ColorSpace?
-  ): CloseableReference<Bitmap>
+  ): CloseableReference<Bitmap>?
 }
