@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.decoder;
 
 import android.graphics.Bitmap;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imageformat.DefaultImageFormats;
@@ -161,6 +162,7 @@ public class DefaultImageDecoder implements ImageDecoder {
           TransformationUtils.maybeApplyTransformation(
               options.bitmapTransformation, bitmapReference);
 
+      Preconditions.checkNotNull(bitmapReference);
       CloseableStaticBitmap closeableStaticBitmap =
           CloseableStaticBitmap.of(
               bitmapReference,
@@ -174,7 +176,7 @@ public class DefaultImageDecoder implements ImageDecoder {
 
       return closeableStaticBitmap;
     } finally {
-      bitmapReference.close();
+      CloseableReference.closeSafely(bitmapReference);
     }
   }
 
@@ -199,6 +201,7 @@ public class DefaultImageDecoder implements ImageDecoder {
           TransformationUtils.maybeApplyTransformation(
               options.bitmapTransformation, bitmapReference);
 
+      Preconditions.checkNotNull(bitmapReference);
       CloseableStaticBitmap closeableStaticBitmap =
           CloseableStaticBitmap.of(
               bitmapReference,
@@ -212,7 +215,7 @@ public class DefaultImageDecoder implements ImageDecoder {
 
       return closeableStaticBitmap;
     } finally {
-      bitmapReference.close();
+      CloseableReference.closeSafely(bitmapReference);
     }
   }
 
