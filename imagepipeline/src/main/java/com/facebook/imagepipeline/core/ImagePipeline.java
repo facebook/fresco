@@ -40,6 +40,7 @@ import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
@@ -49,6 +50,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /** The entry point for the image pipeline. */
 @ThreadSafe
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImagePipeline {
 
   private static final CancellationException PREFETCH_EXCEPTION =
@@ -243,7 +245,7 @@ public class ImagePipeline {
    * @return a DataSource representing the pending decoded image(s)
    */
   public DataSource<CloseableReference<CloseableImage>> fetchDecodedImage(
-      ImageRequest imageRequest, @Nullable Object callerContext) {
+      @Nullable ImageRequest imageRequest, @Nullable Object callerContext) {
     return fetchDecodedImage(imageRequest, callerContext, ImageRequest.RequestLevel.FULL_FETCH);
   }
 
@@ -278,7 +280,7 @@ public class ImagePipeline {
    * @return a DataSource representing the pending decoded image(s)
    */
   public DataSource<CloseableReference<CloseableImage>> fetchDecodedImage(
-      ImageRequest imageRequest,
+      @Nullable ImageRequest imageRequest,
       @Nullable Object callerContext,
       ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit) {
     return fetchDecodedImage(
@@ -298,7 +300,7 @@ public class ImagePipeline {
    * @return a DataSource representing the pending decoded image(s)
    */
   public DataSource<CloseableReference<CloseableImage>> fetchDecodedImage(
-      ImageRequest imageRequest,
+      @Nullable ImageRequest imageRequest,
       @Nullable Object callerContext,
       ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit,
       @Nullable RequestListener requestListener) {
@@ -320,12 +322,13 @@ public class ImagePipeline {
    * @return a DataSource representing the pending decoded image(s)
    */
   public DataSource<CloseableReference<CloseableImage>> fetchDecodedImage(
-      ImageRequest imageRequest,
+      @Nullable ImageRequest imageRequest,
       @Nullable Object callerContext,
       ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit,
       @Nullable RequestListener requestListener,
       @Nullable String uiComponentId) {
     try {
+      Preconditions.checkNotNull(imageRequest);
       Producer<CloseableReference<CloseableImage>> producerSequence =
           mProducerSequenceFactory.getDecodedImageProducerSequence(imageRequest);
       return submitFetchRequest(
@@ -498,12 +501,12 @@ public class ImagePipeline {
    * @return a DataSource that can safely be ignored.
    */
   public DataSource<Void> prefetchToDiskCache(
-      ImageRequest imageRequest, @Nullable Object callerContext) {
+      @Nullable ImageRequest imageRequest, @Nullable Object callerContext) {
     return prefetchToDiskCache(imageRequest, callerContext, Priority.MEDIUM);
   }
 
   public DataSource<Void> prefetchToDiskCache(
-      ImageRequest imageRequest,
+      @Nullable ImageRequest imageRequest,
       @Nullable Object callerContext,
       @Nullable RequestListener requestListener) {
     return prefetchToDiskCache(imageRequest, callerContext, Priority.MEDIUM, requestListener);
@@ -520,17 +523,21 @@ public class ImagePipeline {
    * @return a DataSource that can safely be ignored.
    */
   public DataSource<Void> prefetchToDiskCache(
-      ImageRequest imageRequest, @Nullable Object callerContext, Priority priority) {
+      @Nullable ImageRequest imageRequest, @Nullable Object callerContext, Priority priority) {
     return prefetchToDiskCache(imageRequest, callerContext, priority, null);
   }
 
   public DataSource<Void> prefetchToDiskCache(
-      ImageRequest imageRequest,
+      @Nullable ImageRequest imageRequest,
       @Nullable Object callerContext,
       Priority priority,
       @Nullable RequestListener requestListener) {
     if (!mIsPrefetchEnabledSupplier.get()) {
       return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION);
+    }
+    if (imageRequest == null) {
+      return DataSources.immediateFailedDataSource(
+          new NullPointerException("imageRequest is null"));
     }
     try {
       Producer<Void> producerSequence =
@@ -635,7 +642,7 @@ public class ImagePipeline {
    * @param uri The uri of the image to evict
    */
   public void evictFromDiskCache(final Uri uri) {
-    evictFromDiskCache(ImageRequest.fromUri(uri));
+    evictFromDiskCache(Preconditions.checkNotNull(ImageRequest.fromUri(uri)));
   }
 
   /**
@@ -643,7 +650,10 @@ public class ImagePipeline {
    *
    * @param imageRequest The imageRequest for the image to evict from disk cache
    */
-  public void evictFromDiskCache(final ImageRequest imageRequest) {
+  public void evictFromDiskCache(final @Nullable ImageRequest imageRequest) {
+    if (imageRequest == null) {
+      return;
+    }
     CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest, null);
     mMainBufferedDiskCache.remove(cacheKey);
     mSmallImageBufferedDiskCache.remove(cacheKey);
@@ -830,7 +840,7 @@ public class ImagePipeline {
    * @return true if the image was found in the disk cache, false otherwise.
    */
   public DataSource<Boolean> isInDiskCache(final Uri uri) {
-    return isInDiskCache(ImageRequest.fromUri(uri));
+    return isInDiskCache(Preconditions.checkNotNull(ImageRequest.fromUri(uri)));
   }
 
   /**

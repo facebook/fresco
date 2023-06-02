@@ -76,7 +76,7 @@ class ProducerSequenceFactory(
    */
   fun getEncodedImageProducerSequence(
       imageRequest: ImageRequest
-  ): Producer<CloseableReference<PooledByteBuffer>>? =
+  ): Producer<CloseableReference<PooledByteBuffer>> =
       traceSection("ProducerSequenceFactory#getEncodedImageProducerSequence") {
         validateEncodedImageRequest(imageRequest)
         val uri = imageRequest.sourceUri
@@ -104,7 +104,7 @@ class ProducerSequenceFactory(
   /** Returns a sequence that can be used for a request for an encoded image from a local file. */
   @VisibleForTesting
   val localFileFetchEncodedImageProducerSequence:
-      Producer<CloseableReference<PooledByteBuffer>>? by lazy {
+      Producer<CloseableReference<PooledByteBuffer>> by lazy {
     traceSection("ProducerSequenceFactory#getLocalFileFetchEncodedImageProducerSequence:init") {
       RemoveImageTransformMetaDataProducer(backgroundLocalFileFetchToEncodeMemorySequence)
     }
@@ -115,7 +115,7 @@ class ProducerSequenceFactory(
    * uri.
    */
   val localContentUriFetchEncodedImageProducerSequence:
-      Producer<CloseableReference<PooledByteBuffer>>? by lazy {
+      Producer<CloseableReference<PooledByteBuffer>> by lazy {
     traceSection(
         "ProducerSequenceFactory#getLocalContentUriFetchEncodedImageProducerSequence:init") {
           RemoveImageTransformMetaDataProducer(backgroundLocalContentUriFetchToEncodeMemorySequence)
