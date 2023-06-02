@@ -11,7 +11,6 @@ import com.facebook.common.internal.ImmutableSet;
 import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfigInterface;
-import com.facebook.imagepipeline.image.EncodedImageOrigin;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
@@ -59,8 +58,6 @@ public class BaseProducerContext implements ProducerContext {
   private final List<ProducerContextCallbacks> mCallbacks;
 
   private final ImagePipelineConfigInterface mImagePipelineConfig;
-
-  private EncodedImageOrigin mEncodedImageOrigin = EncodedImageOrigin.NOT_SET;
 
   public BaseProducerContext(
       ImageRequest imageRequest,
@@ -190,15 +187,6 @@ public class BaseProducerContext implements ProducerContext {
   @Override
   public ImagePipelineConfigInterface getImagePipelineConfig() {
     return mImagePipelineConfig;
-  }
-
-  @Override
-  public EncodedImageOrigin getEncodedImageOrigin() {
-    return mEncodedImageOrigin;
-  }
-
-  public void setEncodedImageOrigin(EncodedImageOrigin encodedImageOrigin) {
-    this.mEncodedImageOrigin = encodedImageOrigin;
   }
 
   /** Cancels the request processing and calls appropriate callbacks. */

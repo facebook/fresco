@@ -9,7 +9,6 @@ package com.facebook.imagepipeline.producers
 import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.imagepipeline.common.Priority
 import com.facebook.imagepipeline.core.ImagePipelineConfigInterface
-import com.facebook.imagepipeline.image.EncodedImageOrigin
 import com.facebook.imagepipeline.request.ImageRequest
 
 /**
@@ -61,10 +60,6 @@ interface ProducerContext : HasExtraData {
   fun addCallbacks(callbacks: ProducerContextCallbacks)
 
   val imagePipelineConfig: ImagePipelineConfigInterface
-
-  fun getEncodedImageOrigin(): EncodedImageOrigin
-
-  fun setEncodedImageOrigin(encodedImageOrigin: EncodedImageOrigin)
 
   /** Helper to set [HasExtraData.KEY_ORIGIN] and [HasExtraData.KEY_ORIGIN_SUBCATEGORY] */
   fun putOriginExtra(origin: String?, subcategory: String?)

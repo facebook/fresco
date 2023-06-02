@@ -17,7 +17,6 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.image.EncodedImageOrigin;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
@@ -186,7 +185,6 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
       encodedImage = new EncodedImage(result);
       encodedImage.setBytesRange(responseBytesRange);
       encodedImage.parseMetaData();
-      context.setEncodedImageOrigin(EncodedImageOrigin.NETWORK);
       consumer.onNewResult(encodedImage, status);
     } finally {
       EncodedImage.closeSafely(encodedImage);
