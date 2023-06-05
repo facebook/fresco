@@ -23,8 +23,8 @@ import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer;
 import com.facebook.fresco.animation.bitmap.cache.AnimationFrameCacheKey;
+import com.facebook.fresco.animation.bitmap.cache.FrescoFpsCache;
 import com.facebook.fresco.animation.bitmap.cache.FrescoFrameCache;
-import com.facebook.fresco.animation.bitmap.cache.FrescoFrameCache2;
 import com.facebook.fresco.animation.bitmap.cache.KeepLastFrameCache;
 import com.facebook.fresco.animation.bitmap.cache.NoOpCache;
 import com.facebook.fresco.animation.bitmap.preparation.BalancedAnimationStrategy;
@@ -80,6 +80,7 @@ public class DefaultBitmapAnimationDrawableFactory
   private final Supplier<Boolean> mDownscaleFrameToDrawableDimensions;
   private final Supplier<AnimatedCache> mAnimatedDrawableCache;
   private final Supplier<Integer> mBalancedStrategyPreparationMs;
+  private final Supplier<Integer> mAnimationFpsLimit;
 
   // Change the value to true to use KAnimatedDrawable2.kt
   private final Supplier<Boolean> useRendererAnimatedDrawable = Suppliers.BOOLEAN_FALSE;
@@ -110,6 +111,7 @@ public class DefaultBitmapAnimationDrawableFactory
     mUseDeepEqualsForCacheKey = useDeepEqualsForCacheKey;
     mUseNewBitmapRender = useNewBitmapRender;
     mAnimatedDrawableCache = animatedDrawableCache;
+    mAnimationFpsLimit = animationFpsLimit;
     mBalancedStrategyPreparationMs = balancedStrategyPreparationMs;
     mDownscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions;
   }
@@ -223,8 +225,8 @@ public class DefaultBitmapAnimationDrawableFactory
 
   private BitmapFrameCache createBitmapFrameCache(AnimatedImageResult animatedImageResult) {
     if (mUseNewBitmapRender.get()) {
-      // TODO use animationFpsLimit
-      return new FrescoFrameCache2(animatedImageResult, mAnimatedDrawableCache.get());
+      return new FrescoFpsCache(
+          animatedImageResult, mAnimationFpsLimit.get(), mAnimatedDrawableCache.get());
     }
 
     switch (mCachingStrategySupplier.get()) {

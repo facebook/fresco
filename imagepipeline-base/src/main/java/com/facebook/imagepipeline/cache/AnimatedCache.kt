@@ -50,9 +50,9 @@ class AnimatedCache private constructor(memoryMB: Int) {
 
   fun saveAnimation(
       key: String,
-      newFrames: Map<Int, CloseableReference<Bitmap>>
+      animationFrames: AnimationFrames
   ): CloseableReference<AnimationFrames>? {
-    return lruCache.cache(key, CloseableReference.of(AnimationFrames(newFrames)))
+    return lruCache.cache(key, CloseableReference.of(animationFrames))
   }
 
   fun removeAnimation(key: String) {
@@ -69,21 +69,47 @@ class AnimatedCache private constructor(memoryMB: Int) {
   }
 }
 
-class AnimationFrames(map: Map<Int, CloseableReference<Bitmap>>) : Closeable {
-  val frames = ConcurrentHashMap(map)
+/**
+ * Represents the bitmaps of one animation.
+ *
+ * @param bitmapsByFrame are amount of final bitmap that we will render given a frame index. These
+ *   amount could be less than original animation if the animation were reduced
+ * @param realToCompressIndexMap If animation was reduced, this map describes the equivalence
+ *   between original frame number and reduced frame number
+ */
+class AnimationFrames(
+    bitmapsByFrame: Map<Int, CloseableReference<Bitmap>>,
+    private val realToCompressIndexMap: Map<Int, Int>
+) : Closeable {
+  val frames = ConcurrentHashMap(bitmapsByFrame)
 
+  /** Calculate the size of animation */
   val sizeBytes: Int =
-      map.values.sumOf {
+      bitmapsByFrame.values.sumOf {
         if (it.isValid) {
           BitmapUtil.getSizeInBytes(it.get())
         } else 0
       }
 
+  /**
+   * Return the bitmap (if exists) given a the animation frame.
+   *
+   * @param frameIndex Frame index in original animation (not reduced animation frame number).
+   * @return Bitmap for [frameIndex] if it is available
+   */
   fun getFrame(frameIndex: Int): CloseableReference<Bitmap>? {
-    val frame = frames[frameIndex]
+    val frame =
+        if (realToCompressIndexMap.isEmpty()) {
+          frames[frameIndex]
+        } else {
+          val reducedIndex = realToCompressIndexMap[frameIndex] ?: return null
+          frames[reducedIndex]
+        }
+
     return if (frame?.isValid == true) frame else null
   }
 
+  /** Release the stored bitmaps */
   override fun close() {
     frames.values.forEach { it.close() }
     frames.clear()
