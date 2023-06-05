@@ -97,6 +97,7 @@ public class DefaultBitmapAnimationDrawableFactory
       Supplier<Boolean> useDeepEqualsForCacheKey,
       Supplier<Boolean> useNewBitmapRender,
       Supplier<Boolean> downscaleFrameToDrawableDimensions,
+      Supplier<Integer> animationFpsLimit,
       Supplier<Integer> balancedStrategyPreparationMs) {
     mAnimatedDrawableBackendProvider = animatedDrawableBackendProvider;
     mScheduledExecutorServiceForUiThread = scheduledExecutorServiceForUiThread;
@@ -222,6 +223,7 @@ public class DefaultBitmapAnimationDrawableFactory
 
   private BitmapFrameCache createBitmapFrameCache(AnimatedImageResult animatedImageResult) {
     if (mUseNewBitmapRender.get()) {
+      // TODO use animationFpsLimit
       return new FrescoFrameCache2(animatedImageResult, mAnimatedDrawableCache.get());
     }
 

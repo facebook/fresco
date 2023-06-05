@@ -59,6 +59,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   private @Nullable AnimatedDrawableUtil mAnimatedDrawableUtil;
   private @Nullable DrawableFactory mAnimatedDrawableFactory;
   private @Nullable SerialExecutorService mSerialExecutorService;
+  private int mAnimationFpsLimit;
   private final AnimatedCache mAnimatedCache;
   private final boolean mUseBalancedAnimationStrategy;
 
@@ -70,12 +71,14 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
       AnimatedCache animatedCache,
       boolean downscaleFrameToDrawableDimensions,
       boolean useBalancedAnimationStrategy,
+      int animationFpsLimit,
       SerialExecutorService serialExecutorServiceForFramePreparing) {
     mPlatformBitmapFactory = platformBitmapFactory;
     mExecutorSupplier = executorSupplier;
     mBackingCache = backingCache;
     mAnimatedCache = animatedCache;
-    this.mUseBalancedAnimationStrategy = useBalancedAnimationStrategy;
+    mAnimationFpsLimit = animationFpsLimit;
+    mUseBalancedAnimationStrategy = useBalancedAnimationStrategy;
     mDownscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions;
     mSerialExecutorService = serialExecutorServiceForFramePreparing;
   }
@@ -138,6 +141,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
         useDeepEquals,
         Suppliers.of(mUseBalancedAnimationStrategy),
         Suppliers.of(mDownscaleFrameToDrawableDimensions),
+        Suppliers.of(mAnimationFpsLimit),
         balancedAnimationStrategyMs);
   }
 
