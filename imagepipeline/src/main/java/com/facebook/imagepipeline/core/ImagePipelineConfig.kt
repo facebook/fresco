@@ -59,7 +59,6 @@ import com.facebook.imagepipeline.systrace.FrescoSystrace.endSection
 import com.facebook.imagepipeline.systrace.FrescoSystrace.isTracing
 import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory
-import java.util.HashSet
 
 /**
  * Main configuration class for the image pipeline library.
@@ -161,8 +160,8 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     platformBitmapFactory = builder.platformBitmapFactory
     poolFactory = builder.poolFactory ?: PoolFactory(PoolConfig.newBuilder().build())
     progressiveJpegConfig = builder.progressiveJpegConfig ?: SimpleProgressiveJpegConfig()
-    requestListeners = builder.requestListeners ?: HashSet()
-    requestListener2s = builder.requestListener2s ?: HashSet()
+    requestListeners = builder.requestListeners ?: emptySet()
+    requestListener2s = builder.requestListener2s ?: emptySet()
     customProducerSequenceFactories = builder.customProducerSequenceFactories
     isResizeAndRotateEnabledForNetwork = builder.resizeAndRotateEnabledForNetwork
     smallImageDiskCacheConfig = builder.smallImageDiskCacheConfig ?: mainDiskCacheConfig
