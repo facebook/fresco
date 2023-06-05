@@ -23,7 +23,7 @@ import java.lang.annotation.Retention;
   ASHMEM_MEMORY,
 })
 public @interface MemoryChunkType {
-  final int NATIVE_MEMORY = 0;
-  final int BUFFER_MEMORY = 1;
-  final int ASHMEM_MEMORY = 2;
+  int NATIVE_MEMORY = 0;
+  int BUFFER_MEMORY = 1;
+  int ASHMEM_MEMORY = 2;
 }
