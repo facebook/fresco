@@ -13,8 +13,6 @@ import android.net.Uri
 /**
  * Create image sources that can be passed to Fresco's image components. For example, to create a
  * single image source for a given URI, call [forUri(Uri)] or [forUri(String)].
- *
- * It is also possible to set your own provider by calling [setImplementation(Implementation)]
  */
 object ImageSourceProvider {
 
