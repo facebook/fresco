@@ -46,6 +46,7 @@ import com.facebook.imagepipeline.transcoder.ImageTranscoder;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import com.facebook.imagepipeline.transcoder.MultiImageTranscoderFactory;
 import com.facebook.imagepipeline.transcoder.SimpleImageTranscoderFactory;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -58,11 +59,12 @@ import javax.annotation.concurrent.NotThreadSafe;
  * applications create just one instance of this class and of the pipeline.
  */
 @NotThreadSafe
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImagePipelineFactory {
 
   private static final Class<?> TAG = ImagePipelineFactory.class;
 
-  private static ImagePipelineFactory sInstance = null;
+  private static @Nullable ImagePipelineFactory sInstance = null;
   private static ImagePipeline sImagePipeline;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
   private static boolean sForceSingleInstance;
@@ -127,10 +129,10 @@ public class ImagePipelineFactory {
 
   private final ImagePipelineConfigInterface mConfig;
   private final CloseableReferenceFactory mCloseableReferenceFactory;
-  private CountingMemoryCache<CacheKey, CloseableImage> mBitmapCountingMemoryCache;
+  @Nullable private CountingMemoryCache<CacheKey, CloseableImage> mBitmapCountingMemoryCache;
   @Nullable private AnimatedCache mAnimatedCache;
   @Nullable private InstrumentedMemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
-  private CountingMemoryCache<CacheKey, PooledByteBuffer> mEncodedCountingMemoryCache;
+  @Nullable private CountingMemoryCache<CacheKey, PooledByteBuffer> mEncodedCountingMemoryCache;
   @Nullable private InstrumentedMemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
   @Nullable private BufferedDiskCache mMainBufferedDiskCache;
   @Nullable private FileCache mMainFileCache;
@@ -464,9 +466,13 @@ public class ImagePipelineFactory {
 
   @Nullable
   public String reportData() {
-    return Objects.toStringHelper("ImagePipelineFactory")
-        .add("bitmapCountingMemoryCache", mBitmapCountingMemoryCache.getDebugData())
-        .add("encodedCountingMemoryCache", mEncodedCountingMemoryCache.getDebugData())
-        .toString();
+    Objects.ToStringHelper b = Objects.toStringHelper("ImagePipelineFactory");
+    if (mBitmapCountingMemoryCache != null) {
+      b.add("bitmapCountingMemoryCache", mBitmapCountingMemoryCache.getDebugData());
+    }
+    if (mEncodedCountingMemoryCache != null) {
+      b.add("encodedCountingMemoryCache", mEncodedCountingMemoryCache.getDebugData());
+    }
+    return b.toString();
   }
 }

@@ -102,7 +102,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
   override val progressiveJpegConfig: ProgressiveJpegConfig
   override val requestListeners: Set<RequestListener>
   override val requestListener2s: Set<RequestListener2>
-  override val customProducerSequenceFactories: Set<CustomProducerSequenceFactory>?
+  override val customProducerSequenceFactories: Set<CustomProducerSequenceFactory>
   override val isResizeAndRotateEnabledForNetwork: Boolean
   override val smallImageDiskCacheConfig: DiskCacheConfig
   override val imageDecoderConfig: ImageDecoderConfig?
@@ -162,7 +162,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     progressiveJpegConfig = builder.progressiveJpegConfig ?: SimpleProgressiveJpegConfig()
     requestListeners = builder.requestListeners ?: emptySet()
     requestListener2s = builder.requestListener2s ?: emptySet()
-    customProducerSequenceFactories = builder.customProducerSequenceFactories
+    customProducerSequenceFactories = builder.customProducerSequenceFactories ?: emptySet()
     isResizeAndRotateEnabledForNetwork = builder.resizeAndRotateEnabledForNetwork
     smallImageDiskCacheConfig = builder.smallImageDiskCacheConfig ?: mainDiskCacheConfig
     imageDecoderConfig = builder.imageDecoderConfig

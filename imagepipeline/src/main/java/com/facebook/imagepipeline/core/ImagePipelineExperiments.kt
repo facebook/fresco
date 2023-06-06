@@ -51,8 +51,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val maxBitmapSize: Int
   val isNativeCodeDisabled: Boolean
   val isPartialImageCachingEnabled: Boolean
-  val producerFactoryMethod: ProducerFactoryMethod?
-  val isLazyDataSource: Supplier<Boolean>?
+  val producerFactoryMethod: ProducerFactoryMethod
+  val isLazyDataSource: Supplier<Boolean>
   val isGingerbreadDecoderEnabled: Boolean
   val downscaleFrameToDrawableDimensions: Boolean
   val suppressBitmapPrefetchingSupplier: Supplier<Boolean>
@@ -408,7 +408,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     isNativeCodeDisabled = builder.nativeCodeDisabled
     isPartialImageCachingEnabled = builder.isPartialImageCachingEnabled
     producerFactoryMethod = builder.producerFactoryMethod ?: DefaultProducerFactoryMethod()
-    isLazyDataSource = builder.lazyDataSource
+    isLazyDataSource = builder.lazyDataSource ?: Suppliers.BOOLEAN_FALSE
     isGingerbreadDecoderEnabled = builder.gingerbreadDecoderEnabled
     downscaleFrameToDrawableDimensions = builder.downscaleFrameToDrawableDimensions
     suppressBitmapPrefetchingSupplier = builder.suppressBitmapPrefetchingSupplier
