@@ -23,6 +23,7 @@ import androidx.annotation.IntDef;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Fn;
 import com.facebook.common.internal.Objects;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.media.MediaUtils;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.common.BytesRange;
@@ -33,6 +34,7 @@ import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.common.SourceUriType;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.memory.config.MemorySpikeConfig;
 import com.facebook.memory.helper.HashCode;
 import java.io.File;
@@ -44,6 +46,7 @@ import javax.annotation.concurrent.Immutable;
  * Immutable object encapsulating everything pipeline has to know about requested image to proceed.
  */
 @Immutable
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImageRequest {
 
   private static boolean sUseCachedHashcodeInEquals;
@@ -268,6 +271,7 @@ public class ImageRequest {
 
   public synchronized File getSourceFile() {
     if (mSourceFile == null) {
+      Preconditions.checkNotNull(mSourceUri.getPath());
       mSourceFile = new File(mSourceUri.getPath());
     }
     return mSourceFile;
@@ -518,13 +522,13 @@ public class ImageRequest {
    * @param uri The Uri to test
    * @return The type of the given Uri if available or SOURCE_TYPE_UNKNOWN if not
    */
-  private static @SourceUriType int getSourceUriType(final Uri uri) {
+  private static @SourceUriType int getSourceUriType(final @Nullable Uri uri) {
     if (uri == null) {
       return SOURCE_TYPE_UNKNOWN;
     }
     if (UriUtil.isNetworkUri(uri)) {
       return SOURCE_TYPE_NETWORK;
-    } else if (UriUtil.isLocalFileUri(uri)) {
+    } else if (uri.getPath() != null && UriUtil.isLocalFileUri(uri)) {
       if (MediaUtils.isVideo(MediaUtils.extractMime(uri.getPath()))) {
         return SOURCE_TYPE_LOCAL_VIDEO_FILE;
       } else {
