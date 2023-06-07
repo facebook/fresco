@@ -89,12 +89,12 @@ object BitmapUtil {
    * Decodes the bounds of an image and returns its width and height or null if the size can't be
    * determined
    *
-   * @param is the InputStream containing the image data
+   * @param inputStream the InputStream containing the image data
    * @return dimensions of the image
    */
   @JvmStatic
-  fun decodeDimensions(`is`: InputStream?): Pair<Int, Int>? {
-    checkNotNull(`is`)
+  fun decodeDimensions(inputStream: InputStream?): Pair<Int, Int>? {
+    checkNotNull(inputStream)
     var byteBuffer = acquireByteBuffer()
     if (byteBuffer == null) {
       byteBuffer = ByteBuffer.allocate(DecodeBufferHelper.getRecommendedDecodeBufferSize())
@@ -103,7 +103,7 @@ object BitmapUtil {
     options.inJustDecodeBounds = true
     return try {
       options.inTempStorage = byteBuffer!!.array()
-      BitmapFactory.decodeStream(`is`, null, options)
+      BitmapFactory.decodeStream(inputStream, null, options)
       if (options.outWidth == -1 || options.outHeight == -1) null
       else Pair(options.outWidth, options.outHeight)
     } finally {
@@ -115,12 +115,12 @@ object BitmapUtil {
    * Decodes the bounds of an image and returns its width and height or null if the size can't be
    * determined. It also recovers the color space of the image, or null if it can't be determined.
    *
-   * @param is the InputStream containing the image data
+   * @param inputStream the InputStream containing the image data
    * @return the metadata of the image
    */
   @JvmStatic
-  fun decodeDimensionsAndColorSpace(`is`: InputStream?): ImageMetaData {
-    checkNotNull(`is`)
+  fun decodeDimensionsAndColorSpace(inputStream: InputStream?): ImageMetaData {
+    checkNotNull(inputStream)
     var byteBuffer = acquireByteBuffer()
     if (byteBuffer == null) {
       byteBuffer = ByteBuffer.allocate(DecodeBufferHelper.getRecommendedDecodeBufferSize())
@@ -129,7 +129,7 @@ object BitmapUtil {
     options.inJustDecodeBounds = true
     return try {
       options.inTempStorage = byteBuffer!!.array()
-      BitmapFactory.decodeStream(`is`, null, options)
+      BitmapFactory.decodeStream(inputStream, null, options)
       val colorSpace: ColorSpace? =
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) options.outColorSpace else null
 
