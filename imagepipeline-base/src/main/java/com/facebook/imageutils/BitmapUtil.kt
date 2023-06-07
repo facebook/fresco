@@ -25,7 +25,9 @@ import java.nio.ByteBuffer
 object BitmapUtil {
 
   private const val POOL_SIZE = 12
-  private var DECODE_BUFFERS: Pools.SynchronizedPool<ByteBuffer?>? = null
+  private val DECODE_BUFFERS: Pools.SynchronizedPool<ByteBuffer?> by lazy {
+    Pools.SynchronizedPool(POOL_SIZE)
+  }
 
   /** Bytes per pixel definitions */
   const val ALPHA_8_BYTES_PER_PIXEL = 1
@@ -178,19 +180,12 @@ object BitmapUtil {
       if (useDecodeBufferHelper) {
         DecodeBufferHelper.INSTANCE.acquire()
       } else {
-        if (DECODE_BUFFERS == null) {
-          synchronized(BitmapUtil::class.java) {
-            if (DECODE_BUFFERS == null) {
-              DECODE_BUFFERS = Pools.SynchronizedPool(POOL_SIZE)
-            }
-          }
-        }
-        DECODE_BUFFERS!!.acquire()
+        DECODE_BUFFERS.acquire()
       }
 
   private fun releaseByteBuffer(byteBuffer: ByteBuffer?) {
     if (!useDecodeBufferHelper) {
-      DECODE_BUFFERS!!.release(byteBuffer!!)
+      DECODE_BUFFERS.release(byteBuffer!!)
     }
   }
 
