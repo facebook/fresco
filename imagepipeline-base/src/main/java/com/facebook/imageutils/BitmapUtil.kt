@@ -97,14 +97,11 @@ object BitmapUtil {
   @JvmStatic
   fun decodeDimensions(inputStream: InputStream?): Pair<Int, Int>? {
     checkNotNull(inputStream)
-    var byteBuffer = acquireByteBuffer()
-    if (byteBuffer == null) {
-      byteBuffer = ByteBuffer.allocate(DecodeBufferHelper.getRecommendedDecodeBufferSize())
-    }
+    val byteBuffer = obtainByteBuffer()
     val options = BitmapFactory.Options()
     options.inJustDecodeBounds = true
     return try {
-      options.inTempStorage = byteBuffer!!.array()
+      options.inTempStorage = byteBuffer.array()
       BitmapFactory.decodeStream(inputStream, null, options)
       if (options.outWidth == -1 || options.outHeight == -1) null
       else Pair(options.outWidth, options.outHeight)
@@ -123,14 +120,11 @@ object BitmapUtil {
   @JvmStatic
   fun decodeDimensionsAndColorSpace(inputStream: InputStream?): ImageMetaData {
     checkNotNull(inputStream)
-    var byteBuffer = acquireByteBuffer()
-    if (byteBuffer == null) {
-      byteBuffer = ByteBuffer.allocate(DecodeBufferHelper.getRecommendedDecodeBufferSize())
-    }
+    val byteBuffer = obtainByteBuffer()
     val options = BitmapFactory.Options()
     options.inJustDecodeBounds = true
     return try {
-      options.inTempStorage = byteBuffer!!.array()
+      options.inTempStorage = byteBuffer.array()
       BitmapFactory.decodeStream(inputStream, null, options)
       val colorSpace: ColorSpace? =
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) options.outColorSpace else null
@@ -183,14 +177,19 @@ object BitmapUtil {
         DECODE_BUFFERS.acquire()
       }
 
-  private fun releaseByteBuffer(byteBuffer: ByteBuffer?) {
+  private fun releaseByteBuffer(byteBuffer: ByteBuffer) {
     if (!useDecodeBufferHelper) {
-      DECODE_BUFFERS.release(byteBuffer!!)
+      DECODE_BUFFERS.release(byteBuffer)
     }
   }
 
   @JvmStatic
   fun setUseDecodeBufferHelper(useDecodeBufferHelper: Boolean) {
     this.useDecodeBufferHelper = useDecodeBufferHelper
+  }
+
+  private fun obtainByteBuffer(): ByteBuffer {
+    return acquireByteBuffer()
+        ?: ByteBuffer.allocate(DecodeBufferHelper.getRecommendedDecodeBufferSize())
   }
 }
