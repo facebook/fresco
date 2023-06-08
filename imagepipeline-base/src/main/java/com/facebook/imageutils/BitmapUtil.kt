@@ -163,11 +163,20 @@ object BitmapUtil {
    * @param height the height of the image
    * @param bitmapConfig the [android.graphics.Bitmap.Config] for which the size in byte will be
    *   returned
-   * @return
+   * @return calculated size in bytes
+   * @throws IllegalArgumentException if width or height is less than or equal to zero
+   * @throws IllegalStateException if calculated size overflows Integer datatype
    */
   @JvmStatic
   fun getSizeInByteForBitmap(width: Int, height: Int, bitmapConfig: Bitmap.Config?): Int {
-    return width * height * getPixelSizeForBitmapConfig(bitmapConfig)
+    require(width > 0) { "width must be > 0, width is: $width" }
+    require(height > 0) { "height must be > 0, height is: $height" }
+    val pixelSize = getPixelSizeForBitmapConfig(bitmapConfig)
+    val size = width * height * pixelSize
+    check(size > 0) {
+      "size must be > 0: size: $size, width: $width, height: $height, pixelSize: $pixelSize"
+    }
+    return size
   }
 
   private fun acquireByteBuffer(): ByteBuffer? =
