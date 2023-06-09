@@ -54,19 +54,19 @@ object JfifUtil {
   /**
    * Get orientation information from jpeg input stream.
    *
-   * @param is the input stream of jpeg image
+   * @param inputStream the input stream of jpeg image
    * @return orientation: 1/8/3/6. Returns {@value
    * * android.media.ExifInterface#ORIENTATION_UNDEFINED} if there is no valid orientation
    *   information.
    */
   @JvmStatic
-  fun getOrientation(`is`: InputStream): Int =
+  fun getOrientation(inputStream: InputStream): Int =
       try {
-        val length = moveToAPP1EXIF(`is`)
+        val length = moveToAPP1EXIF(inputStream)
         if (length == 0) {
           ExifInterface.ORIENTATION_UNDEFINED
         } else {
-          TiffUtil.readOrientationFromTIFF(`is`, length)
+          TiffUtil.readOrientationFromTIFF(inputStream, length)
         }
       } catch (ioe: IOException) {
         ExifInterface.ORIENTATION_UNDEFINED
@@ -76,19 +76,19 @@ object JfifUtil {
    * Reads the content of the input stream until specified marker is found. Marker will be consumed
    * and the input stream will be positioned after the specified marker.
    *
-   * @param is the input stream to read bytes from
+   * @param inputStream the input stream to read bytes from
    * @param markerToFind the marker we are looking for
    * @return boolean: whether or not we found the expected marker from input stream.
    */
   @JvmStatic
   @Throws(IOException::class)
-  fun moveToMarker(`is`: InputStream, markerToFind: Int): Boolean {
-    checkNotNull(`is`)
+  fun moveToMarker(inputStream: InputStream, markerToFind: Int): Boolean {
+    checkNotNull(inputStream)
     // ISO/IEC 10918-1:1993(E)
-    while (StreamProcessor.readPackedInt(`is`, 1, false) == MARKER_FIRST_BYTE) {
+    while (StreamProcessor.readPackedInt(inputStream, 1, false) == MARKER_FIRST_BYTE) {
       var marker = MARKER_FIRST_BYTE
       while (marker == MARKER_FIRST_BYTE) {
-        marker = StreamProcessor.readPackedInt(`is`, 1, false)
+        marker = StreamProcessor.readPackedInt(inputStream, 1, false)
       }
       if (markerToFind == MARKER_SOFn && isSOFn(marker)) {
         return true
@@ -110,9 +110,9 @@ object JfifUtil {
 
       // read block length
       // subtract 2 as length contain SIZE field we just read
-      val length = StreamProcessor.readPackedInt(`is`, 2, false) - 2
+      val length = StreamProcessor.readPackedInt(inputStream, 2, false) - 2
       // Skip other markers.
-      `is`.skip(length.toLong())
+      inputStream.skip(length.toLong())
     }
     return false
   }
@@ -139,19 +139,19 @@ object JfifUtil {
   /**
    * Positions the given input stream to the beginning of the EXIF data in the JPEG APP1 block.
    *
-   * @param is the input stream of jpeg image
+   * @param inputStream the input stream of jpeg image
    * @return length of EXIF data
    */
   @Throws(IOException::class)
-  private fun moveToAPP1EXIF(`is`: InputStream): Int {
-    if (moveToMarker(`is`, MARKER_APP1)) {
+  private fun moveToAPP1EXIF(inputStream: InputStream): Int {
+    if (moveToMarker(inputStream, MARKER_APP1)) {
       // read block length
       // subtract 2 as length contain SIZE field we just read
-      var length = StreamProcessor.readPackedInt(`is`, 2, false) - 2
+      var length = StreamProcessor.readPackedInt(inputStream, 2, false) - 2
       if (length > 6) {
-        val magic = StreamProcessor.readPackedInt(`is`, 4, false)
+        val magic = StreamProcessor.readPackedInt(inputStream, 4, false)
         length -= 4
-        val zero = StreamProcessor.readPackedInt(`is`, 2, false)
+        val zero = StreamProcessor.readPackedInt(inputStream, 2, false)
         length -= 2
         if (magic == APP1_EXIF_MAGIC && zero == 0) {
           // JEITA CP-3451 Exif Version 2.2
