@@ -10,13 +10,7 @@ import android.graphics.ColorSpace
 import android.util.Pair
 
 /** Wrapper class representing the recovered meta data of an image when decoding. */
-class ImageMetaData(width: Int, height: Int, colorSpace: ColorSpace?) {
+class ImageMetaData(width: Int, height: Int, val colorSpace: ColorSpace?) {
 
   val dimensions: Pair<Int, Int>? = if (width == -1 || height == -1) null else Pair(width, height)
-  val colorSpace: ColorSpace?
-
-  init {
-
-    this.colorSpace = colorSpace
-  }
 }
