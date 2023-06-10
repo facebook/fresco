@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.source
 
 import android.graphics.Bitmap
 import android.net.Uri
+import com.facebook.fresco.middleware.HasExtraData
 
 /**
  * Create image sources that can be passed to Fresco's image components. For example, to create a
@@ -40,7 +41,14 @@ object ImageSourceProvider {
       if (uri == null) {
         emptySource()
       } else {
-        SingleImageSource(uri, extras)
+        SingleImageSource(
+            uri,
+            buildMap {
+              if (extras != null) {
+                putAll(extras)
+              }
+              put(HasExtraData.KEY_URI_SOURCE, uri)
+            })
       }
 
   /**
@@ -51,12 +59,10 @@ object ImageSourceProvider {
    */
   @JvmOverloads
   @JvmStatic
-  fun forUri(uriString: String?, extras: Map<String, Any>? = null): ImageSource =
-      if (uriString == null) {
-        emptySource()
-      } else {
-        SingleImageSource(uriParser(uriString), extras)
-      }
+  fun forUri(uriString: String?, extras: Map<String, Any>? = null): ImageSource {
+    val uri: Uri? = uriString?.let { uriParser(it) }
+    return forUri(uri, extras)
+  }
 
   /**
    * Create a multi image source for a given set of sources. Image sources are obtained in order.
