@@ -96,6 +96,7 @@ class DecodeProducer(
     @get:Synchronized @GuardedBy("this") private var isFinished: Boolean = false
     private val jobScheduler: JobScheduler
     protected var lastScheduledScanNumber = 0
+
     private fun maybeIncreaseSampleSize(encodedImage: EncodedImage) {
       if (encodedImage.imageFormat !== DefaultImageFormats.JPEG) {
         return
@@ -388,6 +389,7 @@ class DecodeProducer(
     }
 
     protected abstract fun getIntermediateImageEndOffset(encodedImage: EncodedImage): Int
+
     protected abstract val qualityInfo: QualityInfo
 
     init {

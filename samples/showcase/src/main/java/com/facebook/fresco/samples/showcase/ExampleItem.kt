@@ -21,5 +21,6 @@ data class ExampleItem(
       helpText: String? = null,
       backstackTag: String? = null
   ) : this(title, helpText, backstackTag, { LithoSampleHostFragment(lithoSample, helpText) })
+
   val itemId = title.hashCode()
 }

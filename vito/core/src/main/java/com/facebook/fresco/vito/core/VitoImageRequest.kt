@@ -30,6 +30,7 @@ class VitoImageRequest(
   }
 
   @Suppress("UNCHECKED_CAST") override fun <E> getExtra(key: String): E? = extras[key] as? E
+
   override fun <E> getExtra(key: String, valueIfNotFound: E?): E? = getExtra(key) ?: valueIfNotFound
 
   override fun getExtras(): Extras = extras

@@ -19,7 +19,9 @@ sealed class ImageDataModel {
   open val defaultPaintFlags = Paint.ANTI_ALIAS_FLAG
 
   open fun setCallback(callback: Drawable.Callback?) = Unit
+
   open fun onAttach() = Unit
+
   open fun onDetach() = Unit
 }
 
@@ -51,6 +53,7 @@ class AnimatedDrawableImageDataModel(
       animatable.start()
     }
   }
+
   override fun onDetach() {
     // We only update if we started the animation
     if (isAutoPlay) {

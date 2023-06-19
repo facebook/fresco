@@ -205,79 +205,111 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
   class Builder(context: Context) {
     var bitmapConfig: Bitmap.Config? = null
       private set
+
     var bitmapMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>? = null
       private set
+
     var bitmapMemoryCacheEntryStateObserver: EntryStateObserver<CacheKey>? = null
       private set
+
     var bitmapMemoryCacheTrimStrategy: CacheTrimStrategy? = null
       private set
+
     var encodedMemoryCacheTrimStrategy: CacheTrimStrategy? = null
       private set
+
     var cacheKeyFactory: CacheKeyFactory? = null
       private set
+
     val context: Context
     var downsampleEnabled = false
       private set
+
     var encodedMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>? = null
       private set
+
     var executorSupplier: ExecutorSupplier? = null
       private set
+
     var imageCacheStatsTracker: ImageCacheStatsTracker? = null
       private set
+
     var imageDecoder: ImageDecoder? = null
       private set
+
     var imageTranscoderFactory: ImageTranscoderFactory? = null
       private set
 
     @ImageTranscoderType var imageTranscoderType: Int? = null
     var isPrefetchEnabledSupplier: Supplier<Boolean>? = null
       private set
+
     var mainDiskCacheConfig: DiskCacheConfig? = null
       private set
+
     var memoryTrimmableRegistry: MemoryTrimmableRegistry? = null
       private set
 
     @MemoryChunkType var memoryChunkType: Int? = null
     var networkFetcher: NetworkFetcher<*>? = null
       private set
+
     var platformBitmapFactory: PlatformBitmapFactory? = null
       private set
+
     var poolFactory: PoolFactory? = null
       private set
+
     var progressiveJpegConfig: ProgressiveJpegConfig? = null
       private set
+
     var requestListeners: Set<RequestListener>? = null
       private set
+
     var requestListener2s: Set<RequestListener2>? = null
       private set
+
     var customProducerSequenceFactories: Set<CustomProducerSequenceFactory>? = null
       private set
+
     var resizeAndRotateEnabledForNetwork = true
       private set
+
     var smallImageDiskCacheConfig: DiskCacheConfig? = null
       private set
+
     var fileCacheFactory: FileCacheFactory? = null
       private set
+
     var imageDecoderConfig: ImageDecoderConfig? = null
       private set
+
     var httpConnectionTimeout = -1
       private set
+
     val experimentsBuilder = ImagePipelineExperiments.Builder(this)
     var diskCacheEnabled = true
       private set
+
     var callerContextVerifier: CallerContextVerifier? = null
       private set
+
     var closeableReferenceLeakTracker: CloseableReferenceLeakTracker =
         NoOpCloseableReferenceLeakTracker()
       private set
+
     var bitmapMemoryCache: MemoryCache<CacheKey, CloseableImage>? = null
       private set
+
     var encodedMemoryCache: MemoryCache<CacheKey, PooledByteBuffer>? = null
       private set
+
     var serialExecutorServiceForAnimatedImages: SerialExecutorService? = null
       private set
+
     var bitmapMemoryCacheFactory: BitmapMemoryCacheFactory? = null
       private set
+
     fun setBitmapsConfig(config: Bitmap.Config?): Builder = apply { this.bitmapConfig = config }
 
     fun setBitmapMemoryCacheParamsSupplier(

@@ -110,6 +110,7 @@ object FrescoVitoSlideshowComponentSpec {
       val animation: Runnable =
           object : Runnable {
             var currentIndex = nextImageIndex
+
             override fun run() {
               val nextIndex = (currentIndex + 1) % listSize
               animateToNextImage(

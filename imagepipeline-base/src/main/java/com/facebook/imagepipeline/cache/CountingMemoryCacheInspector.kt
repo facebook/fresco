@@ -25,6 +25,7 @@ class CountingMemoryCacheInspector<K, V>(
 
     // The value
     @JvmField val value: CloseableReference<V>?
+
     fun release() {
       CloseableReference.closeSafely(value)
     }
@@ -52,6 +53,7 @@ class CountingMemoryCacheInspector<K, V>(
     @JvmField val sharedEntries: MutableList<DumpInfoEntry<K, V>>
 
     @JvmField val otherEntries: MutableMap<Bitmap, Any>
+
     fun release() {
       for (entry in lruEntries) {
         entry.release()

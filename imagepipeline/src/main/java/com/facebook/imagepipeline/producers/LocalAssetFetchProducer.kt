@@ -48,6 +48,7 @@ class LocalAssetFetchProducer(
 
   companion object {
     const val PRODUCER_NAME = "LocalAssetFetchProducer"
+
     private fun getAssetName(imageRequest: ImageRequest): String =
         imageRequest.sourceUri.path!!.substring(1)
   }

@@ -81,6 +81,7 @@ class LiveEditorOnScreenButtonController(
   val imageTrackerListener =
       object : ImageTracker() {
         private var isTracking = false
+
         override fun onImageBind(drawable: FrescoDrawableInterface) {
           ifEnabled {
             super.onImageBind(drawable)

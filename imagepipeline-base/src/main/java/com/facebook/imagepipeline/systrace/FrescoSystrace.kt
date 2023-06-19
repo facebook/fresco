@@ -64,8 +64,11 @@ object FrescoSystrace {
 
   interface Systrace {
     fun beginSection(name: String)
+
     fun beginSectionWithArgs(name: String): ArgsBuilder
+
     fun endSection()
+
     fun isTracing(): Boolean
   }
 
@@ -97,9 +100,13 @@ object FrescoSystrace {
 
   private class NoOpArgsBuilder : ArgsBuilder {
     override fun flush() = Unit
+
     override fun arg(key: String, value: Any): ArgsBuilder = this
+
     override fun arg(key: String, value: Int): ArgsBuilder = this
+
     override fun arg(key: String, value: Long): ArgsBuilder = this
+
     override fun arg(key: String, value: Double): ArgsBuilder = this
   }
 }

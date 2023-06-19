@@ -55,6 +55,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
   fun extend(): Builder = extend(this)
 
   fun shouldAutoPlay(): Boolean = _autoPlay
+
   fun shouldAutoStop(): Boolean = _autoStop
 
   fun shouldResizeToViewport(): Boolean = _resizeToViewport

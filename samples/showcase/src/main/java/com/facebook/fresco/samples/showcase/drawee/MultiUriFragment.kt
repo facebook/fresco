@@ -32,14 +32,19 @@ class MultiUriFragment : BaseShowcaseFragment() {
   private var _binding: FragmentDraweeMultiUriBinding? = null
   private val binding
     get() = _binding!!
+
   private val draweeView: SimpleDraweeView
     get() = binding.draweeView
+
   private val switchUseVito: SwitchMaterial
     get() = binding.switchUseVito
+
   private val btnFirstAvailable: Button
     get() = binding.btnFirstAvailable
+
   private val btnIncreasingQuality
     get() = binding.btnIncreasingQuality
+
   private val btnBoth
     get() = binding.btnBoth
 

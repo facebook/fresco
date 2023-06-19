@@ -61,6 +61,7 @@ object Deps {
       private const val version = "0.183.0"
       const val flipper = "com.facebook.flipper:flipper:$version"
     }
+
     object Stetho {
       private const val version = "1.6.0"
       const val stetho = "com.facebook.stetho:stetho:$version"

@@ -335,6 +335,7 @@ abstract class BaseFrescoStethoPlugin() : DumperPlugin {
   companion object {
     private const val NAME = "image"
     private const val KB = 1_024f
+
     private fun emptyHistogram(): SparseIntArray {
       val histogram = SparseIntArray()
       histogram.put(0, 0)

@@ -190,8 +190,10 @@ class ShowcaseApplication : Application() {
     private val sFlipperImageTracker = FlipperImageTracker()
     lateinit var imageTracker: ImageTracker
       private set
+
     lateinit var imageUriProvider: ImageUriProvider
       private set
+
     lateinit var imageSelector: ImageSelector
       private set
   }

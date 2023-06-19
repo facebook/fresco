@@ -161,6 +161,7 @@ class FlipperImageTracker : DebugImageTracker, ImagePerfDataListener {
 
     val requestIds: Set<String?>?
       get() = _requestIds
+
     val uniqueId: String
       get() = hashCode().toString()
 

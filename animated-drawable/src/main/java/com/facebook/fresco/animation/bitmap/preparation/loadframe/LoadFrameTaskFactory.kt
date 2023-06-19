@@ -73,5 +73,6 @@ class LoadFrameTaskFactory(
 
 interface LoadFrameOutput {
   fun onSuccess(frames: Map<Int, CloseableReference<Bitmap>>)
+
   fun onFail()
 }

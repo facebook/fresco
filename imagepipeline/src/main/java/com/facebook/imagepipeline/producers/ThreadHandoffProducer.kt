@@ -35,6 +35,7 @@ class ThreadHandoffProducer<T>(
             }
 
             override fun disposeResult(ignored: T?) = Unit
+
             @Throws(Exception::class)
             override fun getResult(): T? {
               return null
@@ -54,6 +55,7 @@ class ThreadHandoffProducer<T>(
 
   companion object {
     const val PRODUCER_NAME = "BackgroundThreadHandoffProducer"
+
     private fun getInstrumentationTag(context: ProducerContext): String? {
       return if (FrescoInstrumenter.isTracing) "ThreadHandoffProducer_produceResults_" + context.id
       else null

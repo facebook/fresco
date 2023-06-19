@@ -48,6 +48,7 @@ class LocalResourceFetchProducer(
 
   companion object {
     const val PRODUCER_NAME = "LocalResourceFetchProducer"
+
     private fun getResourceId(imageRequest: ImageRequest): Int {
       val path = imageRequest.sourceUri.path
       checkNotNull(path)

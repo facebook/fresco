@@ -48,6 +48,7 @@ class BalancedAnimationStrategy(
   private val fetchingOnDemand = AtomicBoolean(false)
   private val framesCached: Boolean
     get() = bitmapCache.isAnimationReady()
+
   private val onDemandFrames: SortedSet<Int> = sortedSetOf()
   private var nextPrepareFrames = SystemClock.uptimeMillis()
 
@@ -114,6 +115,7 @@ class BalancedAnimationStrategy(
 
     AnimationLoaderExecutor.execute(task)
   }
+
   private fun loadAllFrames(frameSize: Size, notifyOnLoad: (() -> Unit)?): LoadFrameTask {
     return loadFrameTaskFactory.createLoadFullAnimationTask(
         frameSize.width,

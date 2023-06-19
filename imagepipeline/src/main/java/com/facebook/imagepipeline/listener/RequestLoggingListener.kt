@@ -212,6 +212,7 @@ class RequestLoggingListener : RequestListener {
 
   companion object {
     private const val TAG = "RequestLoggingListener"
+
     private fun getElapsedTime(startTime: Long?, endTime: Long): Long =
         if (startTime != null) {
           endTime - startTime

@@ -31,6 +31,7 @@ class DefaultImageDecodeOptionsProviderImpl(
 
   companion object {
     private const val TAG = "DefaultImageOptionsProvider"
+
     @JvmStatic
     fun maybeCreateFromConfigAndCustomDecoder(
         imageOptions: DecodedImageOptions

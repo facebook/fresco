@@ -14,6 +14,7 @@ enum class VisibilityState(val value: Int) {
 
   companion object {
     private val VALUES = values()
+
     fun fromInt(value: Int) = VALUES.firstOrNull { it.value == value }
   }
 }
