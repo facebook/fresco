@@ -125,6 +125,8 @@ public class HierarcherImpl implements Hierarcher {
       Drawable drawable = imageOptions.getErrorDrawable();
       if (drawable == null && imageOptions.getErrorRes() != 0) {
         drawable = resources.getDrawable(imageOptions.getErrorRes());
+      } else if (drawable == null && imageOptions.getErrorColor() != null) {
+        drawable = new ColorDrawable(imageOptions.getErrorColor());
       }
       if (drawable == null) {
         return null;

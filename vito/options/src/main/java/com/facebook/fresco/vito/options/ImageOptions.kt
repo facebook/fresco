@@ -32,6 +32,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
   val progressScaleType: ScalingUtils.ScaleType? = builder._progressScaleType
 
   // Error
+  @get:ColorInt @ColorInt val errorColor: Int? = builder._errorColor
   @get:DrawableRes @DrawableRes val errorRes: Int = builder._errorRes
   val errorScaleType: ScalingUtils.ScaleType? = builder._errorScaleType
   val errorFocusPoint: PointF? = builder._errorFocusPoint
@@ -99,6 +100,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
           !Objects.equal(placeholderScaleType, other.placeholderScaleType) ||
           !Objects.equal(placeholderFocusPoint, other.placeholderFocusPoint) ||
           placeholderApplyRoundingOptions != other.placeholderApplyRoundingOptions ||
+          errorColor != other.errorColor ||
           errorRes != other.errorRes ||
           !Objects.equal(errorScaleType, other.errorScaleType) ||
           !Objects.equal(errorFocusPoint, other.errorFocusPoint) ||
@@ -125,6 +127,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
           !Objects.equal(placeholderScaleType, other.placeholderScaleType) ||
           !Objects.equal(placeholderFocusPoint, other.placeholderFocusPoint) ||
           placeholderApplyRoundingOptions != other.placeholderApplyRoundingOptions ||
+          errorColor != other.errorColor ||
           errorRes != other.errorRes ||
           !Objects.equal(errorScaleType, other.errorScaleType) ||
           !Objects.equal(errorFocusPoint, other.errorFocusPoint) ||
@@ -155,6 +158,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     result = 31 * result + (placeholderScaleType?.hashCode() ?: 0)
     result = 31 * result + (placeholderFocusPoint?.hashCode() ?: 0)
     result = 31 * result + if (placeholderApplyRoundingOptions) 1 else 0
+    result = 31 * result + (errorColor ?: 0)
     result = 31 * result + errorRes
     result = 31 * result + (errorScaleType?.hashCode() ?: 0)
     result = 31 * result + (errorFocusPoint?.hashCode() ?: 0)
@@ -188,6 +192,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
           .add("progressRes", progressRes)
           .add("progressDrawable", progressDrawable)
           .add("progressScaleType", progressScaleType)
+          .add("errorColor", errorColor)
           .add("errorRes", errorRes)
           .add("errorScaleType", errorScaleType)
           .add("errorFocusPoint", errorFocusPoint)
@@ -215,6 +220,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     internal var _progressDrawable: Drawable? = null
     internal var _progressScaleType: ScalingUtils.ScaleType? = null
 
+    @ColorInt internal var _errorColor: Int? = null
     @DrawableRes internal var _errorRes = 0
     internal var _errorScaleType: ScalingUtils.ScaleType? = null
     internal var _errorFocusPoint: PointF? = null
@@ -244,6 +250,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
       _progressRes = defaultOptions.progressRes
       _progressDrawable = defaultOptions.progressDrawable
       _progressScaleType = defaultOptions.progressScaleType
+      _errorColor = defaultOptions.errorColor
       _errorRes = defaultOptions.errorRes
       _errorScaleType = defaultOptions.errorScaleType
       _errorFocusPoint = defaultOptions.errorFocusPoint
@@ -311,7 +318,17 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
           _placeholderApplyRoundingOptions = placeholderApplyRoundingOptions
         }
 
-    fun errorRes(@DrawableRes errorRes: Int): Builder = modify { _errorRes = errorRes }
+    fun errorColor(@ColorInt errorColor: Int): Builder = modify {
+      _errorColor = errorColor
+      _errorRes = 0
+      _errorDrawable = null
+    }
+
+    fun errorRes(@DrawableRes errorRes: Int): Builder = modify {
+      _errorColor = null
+      _errorRes = errorRes
+      _errorDrawable = null
+    }
 
     fun errorScaleType(errorScaleType: ScalingUtils.ScaleType?): Builder = modify {
       _errorScaleType = errorScaleType
@@ -321,7 +338,11 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
       _errorFocusPoint = errorFocusPoint
     }
 
-    fun errorDrawable(errorDrawable: Drawable?): Builder = modify { _errorDrawable = errorDrawable }
+    fun errorDrawable(errorDrawable: Drawable?): Builder = modify {
+      _errorColor = null
+      _errorRes = 0
+      _errorDrawable = errorDrawable
+    }
 
     fun errorApplyRoundingOptions(errorApplyRoundingOptions: Boolean): Builder = modify {
       _errorApplyRoundingOptions = errorApplyRoundingOptions
