@@ -88,6 +88,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
   override val imageCacheStatsTracker: ImageCacheStatsTracker
   override val imageDecoder: ImageDecoder?
   override val imageTranscoderFactory: ImageTranscoderFactory?
+  override val enableEncodedImageColorSpaceUsage: Supplier<Boolean>
 
   @get:ImageTranscoderType @ImageTranscoderType override val imageTranscoderType: Int?
   override val isPrefetchEnabledSupplier: Supplier<Boolean>
@@ -142,6 +143,8 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     imageCacheStatsTracker =
         builder.imageCacheStatsTracker ?: NoOpImageCacheStatsTracker.getInstance()
     imageDecoder = builder.imageDecoder
+    enableEncodedImageColorSpaceUsage =
+        builder.enableEncodedImageColorSpaceUsage ?: Suppliers.BOOLEAN_FALSE
     imageTranscoderFactory = getImageTranscoderFactory(builder)
     imageTranscoderType = builder.imageTranscoderType
     isPrefetchEnabledSupplier = builder.isPrefetchEnabledSupplier ?: Suppliers.BOOLEAN_TRUE
@@ -235,6 +238,9 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
       private set
 
     var imageDecoder: ImageDecoder? = null
+      private set
+
+    var enableEncodedImageColorSpaceUsage: Supplier<Boolean>? = null
       private set
 
     var imageTranscoderFactory: ImageTranscoderFactory? = null
@@ -373,6 +379,12 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
 
     fun setImageDecoder(imageDecoder: ImageDecoder?): Builder = apply {
       this.imageDecoder = imageDecoder
+    }
+
+    fun setEnableEncodedImageColorSpaceUsage(
+        enableEncodedImageColorSpaceUsage: Supplier<Boolean>?
+    ): Builder = apply {
+      this.enableEncodedImageColorSpaceUsage = enableEncodedImageColorSpaceUsage
     }
 
     fun setImageTranscoderType(@ImageTranscoderType imageTranscoderType: Int): Builder = apply {

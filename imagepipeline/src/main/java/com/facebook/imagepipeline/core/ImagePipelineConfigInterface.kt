@@ -57,6 +57,7 @@ interface ImagePipelineConfigInterface {
 
   @get:ImageTranscoderType val imageTranscoderType: Int?
   val isPrefetchEnabledSupplier: Supplier<Boolean>
+  val enableEncodedImageColorSpaceUsage: Supplier<Boolean>
   val mainDiskCacheConfig: DiskCacheConfig
   val memoryTrimmableRegistry: MemoryTrimmableRegistry
 
