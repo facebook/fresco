@@ -34,6 +34,8 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
 
   override fun fastPathForEmptyRequests(): Boolean = false
 
+  override fun enableWindowWideColorGamut(): Boolean = false
+
   open class DefaultPrefetchConfig : PrefetchConfig {
     override fun prefetchInOnPrepare(): Boolean = true
 

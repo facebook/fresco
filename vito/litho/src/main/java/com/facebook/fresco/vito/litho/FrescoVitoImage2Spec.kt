@@ -7,9 +7,12 @@
 
 package com.facebook.fresco.vito.litho
 
+import android.app.Activity
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.graphics.Rect
 import android.net.Uri
+import android.os.Build
 import android.view.View
 import androidx.core.util.ObjectsCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
@@ -28,6 +31,7 @@ import com.facebook.litho.AccessibilityRole
 import com.facebook.litho.BoundaryWorkingRange
 import com.facebook.litho.ComponentContext
 import com.facebook.litho.ComponentLayout
+import com.facebook.litho.ContextUtils
 import com.facebook.litho.Diff
 import com.facebook.litho.Output
 import com.facebook.litho.Size
@@ -175,6 +179,13 @@ object FrescoVitoImage2Spec {
     if (FrescoVitoProvider.getConfig().useBindOnly()) {
       return
     }
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+        FrescoVitoProvider.getConfig().enableWindowWideColorGamut()) {
+      val activity: Activity? = ContextUtils.findActivityInContext(c.androidContext)
+      activity?.window?.colorMode = ActivityInfo.COLOR_MODE_WIDE_COLOR_GAMUT
+    }
+
     FrescoVitoProvider.getController()
         .fetch(
             frescoDrawable = frescoDrawable,
