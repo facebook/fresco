@@ -73,6 +73,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val allowProgressiveOnPrefetch: Boolean
   val cancelDecodeOnCacheMiss: Boolean
   val animationRenderFpsLimit: Int
+  val prefetchShortcutEnabled: Boolean
 
   class Builder(private val configBuilder: ImagePipelineConfig.Builder) {
     @JvmField var shouldUseDecodingBufferHelper = false
@@ -122,6 +123,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var allowProgressiveOnPrefetch = false
     @JvmField var animationRenderFpsLimit = 30
     @JvmField var cancelDecodeOnCacheMiss = false
+    @JvmField var prefetchShortcutEnabled = false
 
     private fun asBuilder(block: () -> Unit): ImagePipelineConfig.Builder {
       block()
@@ -142,6 +144,10 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
 
     fun setWebpSupportEnabled(webpSupportEnabled: Boolean) = asBuilder {
       this.webpSupportEnabled = webpSupportEnabled
+    }
+
+    fun setPrefetchShortcutEnabled(prefetchShortcutEnabled: Boolean) = asBuilder {
+      this.prefetchShortcutEnabled = prefetchShortcutEnabled
     }
 
     fun shouldUseDecodingBufferHelper(): Boolean = shouldUseDecodingBufferHelper
@@ -429,6 +435,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     shouldIgnoreCacheSizeMismatch = builder.shouldIgnoreCacheSizeMismatch
     shouldUseDecodingBufferHelper = builder.shouldUseDecodingBufferHelper
     cancelDecodeOnCacheMiss = builder.cancelDecodeOnCacheMiss
+    prefetchShortcutEnabled = builder.prefetchShortcutEnabled
   }
 
   companion object {
