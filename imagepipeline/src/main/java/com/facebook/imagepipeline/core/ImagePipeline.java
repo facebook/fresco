@@ -464,6 +464,11 @@ public class ImagePipeline {
         return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION);
       }
       try {
+        if (mConfig.getExperiments() != null
+            && mConfig.getExperiments().getPrefetchShortcutEnabled()
+            && isInBitmapMemoryCache(imageRequest)) {
+          return DataSources.immediateSuccessfulDataSource();
+        }
         final Boolean shouldDecodePrefetches = imageRequest.shouldDecodePrefetches();
         final boolean skipBitmapCache =
             shouldDecodePrefetches != null
@@ -604,6 +609,11 @@ public class ImagePipeline {
         return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION);
       }
       try {
+        if (mConfig.getExperiments() != null
+            && mConfig.getExperiments().getPrefetchShortcutEnabled()
+            && isInEncodedMemoryCache(imageRequest)) {
+          return DataSources.immediateSuccessfulDataSource();
+        }
         Producer<Void> producerSequence =
             mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(imageRequest);
         return submitPrefetchRequest(
