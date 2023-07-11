@@ -108,6 +108,7 @@ object FrescoVitoImage2Spec {
   @OnCalculateCachedValue(name = "requestCachedValue")
   fun onCalculateImageRequest(
       c: ComponentContext,
+      @Prop(optional = true) uriString: String?,
       @Prop(optional = true) uri: Uri?,
       @Prop(optional = true) imageSource: ImageSource?,
       @Prop(optional = true) imageOptions: ImageOptions?
@@ -115,20 +116,21 @@ object FrescoVitoImage2Spec {
       if (imageOptions?.experimentalDynamicSize == true) {
         null
       } else {
-        createVitoImageRequest(c, uri, imageSource, imageOptions, null)
+        createVitoImageRequest(c, imageSource, uri, uriString, imageOptions, null)
       }
 
   private fun createVitoImageRequest(
       c: ComponentContext,
-      uri: Uri?,
       imageSource: ImageSource?,
+      uri: Uri?,
+      uriString: String?,
       imageOptions: ImageOptions?,
       viewportRect: Rect?
   ): VitoImageRequest =
       FrescoVitoProvider.getImagePipeline()
           .createImageRequest(
               c.resources,
-              imageSource ?: ImageSourceProvider.forUri(uri),
+              determineImageSource(imageSource, uri, uriString),
               imageOptions,
               viewportRect)
 
@@ -299,6 +301,7 @@ object FrescoVitoImage2Spec {
       layout: ComponentLayout,
       viewportDimensions: Output<Rect>,
       requestFromBoundsDefined: Output<VitoImageRequest>,
+      @Prop(optional = true) uriString: String?,
       @Prop(optional = true) uri: Uri?,
       @Prop(optional = true) imageSource: ImageSource?,
       @Prop(optional = true) imageOptions: ImageOptions?
@@ -315,7 +318,7 @@ object FrescoVitoImage2Spec {
     viewportDimensions.set(viewportRect)
     if (imageOptions != null && imageOptions.experimentalDynamicSize) {
       requestFromBoundsDefined.set(
-          createVitoImageRequest(c, uri, imageSource, imageOptions, viewportRect))
+          createVitoImageRequest(c, imageSource, uri, uriString, imageOptions, viewportRect))
     }
   }
 
@@ -428,6 +431,18 @@ object FrescoVitoImage2Spec {
     FrescoVitoProvider.getPrefetcher()
         .setDistanceToViewport(-1, callerContext, getUri(requestCachedValue), "FrescoVitoImage2")
   }
+
+  private fun determineImageSource(
+      imageSource: ImageSource?,
+      uri: Uri?,
+      uriString: String?
+  ): ImageSource =
+      when {
+        imageSource != null -> imageSource
+        uri != null -> ImageSourceProvider.forUri(uri)
+        uriString != null -> ImageSourceProvider.forUri(uriString)
+        else -> ImageSourceProvider.emptySource()
+      }
 
   private fun getUri(requestCachedValue: VitoImageRequest): Uri? =
       requestCachedValue.finalImageRequest?.sourceUri
