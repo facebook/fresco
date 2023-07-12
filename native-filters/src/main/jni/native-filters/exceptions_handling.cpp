@@ -16,4 +16,5 @@ void safeJavaThrowException(JNIEnv* env, jclass exceptionCls, const char* msg) {
   }
 }
 
-} }
+} // namespace imagepipeline
+} // namespace facebook

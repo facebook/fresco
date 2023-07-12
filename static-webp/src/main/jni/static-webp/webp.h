@@ -8,6 +8,6 @@
 #ifndef _WEBP_H_
 #define _WEBP_H_
 
-int initWebPImage(JNIEnv* pEnv) ;
+int initWebPImage(JNIEnv* pEnv);
 
 #endif /* _WEBP_H_ */

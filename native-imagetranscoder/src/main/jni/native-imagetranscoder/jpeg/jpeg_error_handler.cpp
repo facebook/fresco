@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <stdio.h>
 #include <setjmp.h>
+#include <stdio.h>
 
 #include <jni.h>
 #include <jpeglib.h>
@@ -55,14 +55,12 @@ static void jpegCleanup(JpegErrorHandler* error_handler) {
 void jpegThrow(j_common_ptr cinfo) {
   // create and throw the jpeg-turbo error message
   char buffer[JMSG_LENGTH_MAX];
-  (*cinfo->err->format_message) (cinfo, buffer);
+  (*cinfo->err->format_message)(cinfo, buffer);
   jpegSafeThrow(cinfo, buffer);
 }
 
-void jpegSafeThrow(
-    j_common_ptr cinfo,
-    const char* msg) {
-  JpegErrorHandler* error_handler = (JpegErrorHandler*) cinfo->err;
+void jpegSafeThrow(j_common_ptr cinfo, const char* msg) {
+  JpegErrorHandler* error_handler = (JpegErrorHandler*)cinfo->err;
 
   if (!error_handler->env->ExceptionCheck()) {
     error_handler->env->ThrowNew(jRuntimeExceptionclass, msg);
@@ -71,10 +69,12 @@ void jpegSafeThrow(
 }
 
 void jpegJumpOnException(j_common_ptr cinfo) {
-  JpegErrorHandler* error_handler = (JpegErrorHandler*) cinfo->err;
+  JpegErrorHandler* error_handler = (JpegErrorHandler*)cinfo->err;
   if (error_handler->env->ExceptionCheck()) {
     jpegCleanup(error_handler);
   }
 }
 
-} } }
+} // namespace jpeg
+} // namespace imagepipeline
+} // namespace facebook

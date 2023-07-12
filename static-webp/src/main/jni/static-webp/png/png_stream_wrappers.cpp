@@ -19,15 +19,14 @@ namespace facebook {
 namespace imagepipeline {
 namespace png {
 
-void pngNoOpFlush(png_structp png_ptr) {
-}
+void pngNoOpFlush(png_structp png_ptr) {}
 
 void pngWriteToJavaOutputStream(
     png_structp png_ptr,
     png_bytep data,
     png_size_t length) {
   PngOutputStreamWrapper* os_wrapper =
-    reinterpret_cast<PngOutputStreamWrapper*>(png_get_io_ptr(png_ptr));
+      reinterpret_cast<PngOutputStreamWrapper*>(png_get_io_ptr(png_ptr));
   os_wrapper->write(png_ptr, data, length);
 }
 
@@ -68,4 +67,6 @@ void PngOutputStreamWrapper::write(
   }
 }
 
-} } }
+} // namespace png
+} // namespace imagepipeline
+} // namespace facebook

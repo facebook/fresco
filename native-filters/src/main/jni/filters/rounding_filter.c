@@ -17,10 +17,11 @@ typedef struct {
 } pixel_t;
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
-#define UNUSED(expr) ((void) (expr));
+#define UNUSED(expr) ((void)(expr));
 #define POW2(x) ((x) * (x))
 
-// These values are chosen arbitrarily but small enough to avoid integer-overflows
+// These values are chosen arbitrarily but small enough to avoid
+// integer-overflows
 #define BITMAP_MAX_DIMENSION 32768
 #define BITMAP_MAX_PIXELS (BITMAP_MAX_DIMENSION * BITMAP_MAX_DIMENSION)
 // Transparent pixel color
@@ -29,8 +30,12 @@ typedef struct {
 #define ANTI_ALIASING_PIXELS 4
 
 static jclass runtime_exception_class;
-static inline int min(const int a, const int b) { return a < b ? a : b;}
-static inline int max(const int a, const int b) { return a > b ? a : b;}
+static inline int min(const int a, const int b) {
+  return a < b ? a : b;
+}
+static inline int max(const int a, const int b) {
+  return a > b ? a : b;
+}
 
 static void safe_throw_exception(JNIEnv* env, const char* msg) {
   if (!(*env)->ExceptionCheck(env)) {
@@ -39,26 +44,35 @@ static void safe_throw_exception(JNIEnv* env, const char* msg) {
 }
 
 /**
-  * Step function that returns in [0,1]. If the pixel is in the circle it returns 1. Else it returns
-  * 0 if the pixel is too far away or a value in ]0,1[ otherwise.
-  */
-static float getPixelAlpha(const int x, const int y, const int centerX, const int centerY, const float radius) {
+ * Step function that returns in [0,1]. If the pixel is in the circle it
+ * returns 1. Else it returns 0 if the pixel is too far away or a value in ]0,1[
+ * otherwise.
+ */
+static float getPixelAlpha(
+    const int x,
+    const int y,
+    const int centerX,
+    const int centerY,
+    const float radius) {
   const float distance = POW2(centerX - x) + POW2(centerY - y);
   const float targetDistUpper = POW2(radius + (ANTI_ALIASING_PIXELS / 2.0));
-  const float targetDistLower = POW2(max(0.0, radius - (ANTI_ALIASING_PIXELS / 2.0)));
+  const float targetDistLower =
+      POW2(max(0.0, radius - (ANTI_ALIASING_PIXELS / 2.0)));
   if (distance >= targetDistUpper) {
     return 0.0;
   } else if (distance < targetDistLower) {
     return 1.0;
   }
-  return 1.0 - ((distance - targetDistLower) / (targetDistUpper - targetDistLower));
+  return 1.0 -
+      ((distance - targetDistLower) / (targetDistUpper - targetDistLower));
 }
 
 /**
-  * Modify the transparency of a pixel.
-  */
+ * Modify the transparency of a pixel.
+ */
 static void setPixelAlpha(const float alpha, pixel_t* p) {
-  // We need to multiply the colors also by alpha, because they are using premultiplied alpha.
+  // We need to multiply the colors also by alpha, because they are using
+  // premultiplied alpha.
   p->a = p->a * alpha;
   p->r = p->r * alpha;
   p->g = p->g * alpha;
@@ -66,18 +80,15 @@ static void setPixelAlpha(const float alpha, pixel_t* p) {
 }
 
 /**
-  * This require an image of at least 6x6 pixels to have enough margin for the antialiasing and at
-  * the same time, having a radius > 1.
-  */
-static void toAntiAliasedCircle(
-    JNIEnv* env,
-    pixel_t* pixelPtr,
-    const int w,
-    const int h) {
+ * This require an image of at least 6x6 pixels to have enough margin for the
+ * antialiasing and at the same time, having a radius > 1.
+ */
+static void
+toAntiAliasedCircle(JNIEnv* env, pixel_t* pixelPtr, const int w, const int h) {
   // Distance from border of real circle
   const int blend_distance = ANTI_ALIASING_PIXELS / 2.0;
   // Radius of the circle with margin for antialiasing.
-  const float radius = (min(w,h) / 2.0) - blend_distance;
+  const float radius = (min(w, h) / 2.0) - blend_distance;
   // Imaginary center of the circle.
   const float centerX = (w - 1.0L) / 2.0;
   const float centerY = (h - 1.0L) / 2.0;
@@ -86,7 +97,8 @@ static void toAntiAliasedCircle(
     safe_throw_exception(env, "Circle radius too small!");
     return;
   }
-  if (w <= 0 || h <= 0 || w > BITMAP_MAX_DIMENSION || h > BITMAP_MAX_DIMENSION) {
+  if (w <= 0 || h <= 0 || w > BITMAP_MAX_DIMENSION ||
+      h > BITMAP_MAX_DIMENSION) {
     safe_throw_exception(env, "Invalid bitmap dimensions!");
     return;
   }
@@ -113,11 +125,13 @@ static void toAntiAliasedCircle(
   const float delta = 2 * blend_distance;
   const float r_square = POW2(radius);
   for (int y = top_boundary; y < bottom_boundary; y++) {
-    // Square formula: (x-cx)^2 + (y-cy)^2 = r^2  <=>  (x-cx) = -cx^2 + 2cy*y - y^2 + r^2
-    x_offset = -POW2(centerY) + (2*centerY*y) - POW2(y) + r_square;
-    // Rows on top/bottom not in the actual circle but rather in the antialiasing 'ring'
-    // are traversed entirely for better looking images at top/bottom.
-    // There are ANTI_ALIASING_PIXELS lines that will be traversed entirely.
+    // Square formula: (x-cx)^2 + (y-cy)^2 = r^2  <=>  (x-cx) = -cx^2 + 2cy*y -
+    // y^2 + r^2
+    x_offset = -POW2(centerY) + (2 * centerY * y) - POW2(y) + r_square;
+    // Rows on top/bottom not in the actual circle but rather in the
+    // antialiasing 'ring' are traversed entirely for better looking images at
+    // top/bottom. There are ANTI_ALIASING_PIXELS lines that will be traversed
+    // entirely.
     if (x_offset < 0) {
       for (int x = 0; x < w; x++) {
         alpha = getPixelAlpha(x, y, centerX, centerY, radius);
@@ -133,20 +147,28 @@ static void toAntiAliasedCircle(
       // Clear left part of the image keeping an delta margin with the circle
       left_boundary = max(centerX - x_offset, 0);
       left_boundary = max(left_boundary - delta, 0);
-      memset(pixelPtr + y * w, TRANSPARENT_PIXEL_COLOR, sizeof(pixel_t) * left_boundary);
+      memset(
+          pixelPtr + y * w,
+          TRANSPARENT_PIXEL_COLOR,
+          sizeof(pixel_t) * left_boundary);
 
       // Clear right part of the image keeping an delta margin with the circle
       right_boundary = min(centerX + x_offset, w);
-      right_boundary = min(right_boundary + delta , w);
-      memset(pixelPtr + y * w + right_boundary, TRANSPARENT_PIXEL_COLOR, sizeof(pixel_t) * (w - right_boundary));
+      right_boundary = min(right_boundary + delta, w);
+      memset(
+          pixelPtr + y * w + right_boundary,
+          TRANSPARENT_PIXEL_COLOR,
+          sizeof(pixel_t) * (w - right_boundary));
 
-      // Visit the pixels at the left of the circle at row y to apply antialiasing
+      // Visit the pixels at the left of the circle at row y to apply
+      // antialiasing
       for (int x = left_boundary; x < left_boundary + (2 * delta); x++) {
         alpha = getPixelAlpha(x, y, centerX, centerY, radius);
         setPixelAlpha(alpha, &pixelPtr[(y * w) + x]);
       }
-      // Visit the pixels at the right of the circle at row y to apply antialiasing
-      for (int x = right_boundary - (2*delta); x < right_boundary; x++) {
+      // Visit the pixels at the right of the circle at row y to apply
+      // antialiasing
+      for (int x = right_boundary - (2 * delta); x < right_boundary; x++) {
         alpha = getPixelAlpha(x, y, centerX, centerY, radius);
         setPixelAlpha(alpha, &pixelPtr[(y * w) + x]);
       }
@@ -157,20 +179,17 @@ static void toAntiAliasedCircle(
 /**
  * Modified midpoint circle algorithm. Clears all pixels outside the circle.
  */
-static void toCircle(
-    JNIEnv* env,
-    pixel_t* pixelPtr,
-    const int w,
-    const int h) {
+static void toCircle(JNIEnv* env, pixel_t* pixelPtr, const int w, const int h) {
   const int centerX = w / 2;
   const int centerY = h / 2;
-  const int radius = min(w,h) / 2;
+  const int radius = min(w, h) / 2;
 
   if (radius < 1) {
     safe_throw_exception(env, "Circle radius too small!");
     return;
   }
-  if (w <= 0 || h <= 0 || w > BITMAP_MAX_DIMENSION || h > BITMAP_MAX_DIMENSION) {
+  if (w <= 0 || h <= 0 || w > BITMAP_MAX_DIMENSION ||
+      h > BITMAP_MAX_DIMENSION) {
     safe_throw_exception(env, "Invalid bitmap dimensions!");
     return;
   }
@@ -195,11 +214,10 @@ static void toCircle(
   int dx = 1;
   int dy = 1;
 
-  const int rInc = - radius * 2;
+  const int rInc = -radius * 2;
   int err = dx + rInc;
 
   while (x >= y) {
-
     const int cXpX = centerX + x;
     const int cXmX = centerX - x;
     const int cXpY = centerX + y;
@@ -222,8 +240,8 @@ static void toCircle(
 
     const size_t leftBytesX = sizeof(pixel_t) * cXmX;
     const size_t leftBytesY = sizeof(pixel_t) * cXmY;
-    const size_t rightBytesX = sizeof(pixel_t) * (w-cXpX);
-    const size_t rightBytesY = sizeof(pixel_t) * (w-cXpY);
+    const size_t rightBytesX = sizeof(pixel_t) * (w - cXpX);
+    const size_t rightBytesY = sizeof(pixel_t) * (w - cXpY);
 
     // clear left
     memset(pixelPtr + offA, TRANSPARENT_PIXEL_COLOR, leftBytesX);
@@ -263,20 +281,18 @@ static void toCircle(
   }
 }
 
-static void toCircleFast(
-    JNIEnv* env,
-    pixel_t* pixelPtr,
-    const int w,
-    const int h) {
+static void
+toCircleFast(JNIEnv* env, pixel_t* pixelPtr, const int w, const int h) {
   const int centerX = w / 2;
   const int centerY = h / 2;
-  const int radius = min(w,h) / 2;
+  const int radius = min(w, h) / 2;
 
   if (radius < 1) {
     safe_throw_exception(env, "Circle radius too small!");
     return;
   }
-  if (w <= 0 || h <= 0 || w > BITMAP_MAX_DIMENSION || h > BITMAP_MAX_DIMENSION) {
+  if (w <= 0 || h <= 0 || w > BITMAP_MAX_DIMENSION ||
+      h > BITMAP_MAX_DIMENSION) {
     safe_throw_exception(env, "Invalid bitmap dimensions!");
     return;
   }
@@ -301,17 +317,28 @@ static void toCircleFast(
   int dx = 1;
   int dy = 1;
 
-  const int rInc = - radius * 2;
+  const int rInc = -radius * 2;
   int err = dx + rInc;
 
-  memset(pixelPtr + (centerY + radius - 1)*w, TRANSPARENT_PIXEL_COLOR, centerX*sizeof(pixel_t));
-  memset(pixelPtr + (centerY - radius + 1)*w, TRANSPARENT_PIXEL_COLOR, centerX*sizeof(pixel_t));
+  memset(
+      pixelPtr + (centerY + radius - 1) * w,
+      TRANSPARENT_PIXEL_COLOR,
+      centerX * sizeof(pixel_t));
+  memset(
+      pixelPtr + (centerY - radius + 1) * w,
+      TRANSPARENT_PIXEL_COLOR,
+      centerX * sizeof(pixel_t));
 
-  memset(pixelPtr + (centerY + radius - 1)*w + centerX, TRANSPARENT_PIXEL_COLOR, (w - centerX)*sizeof(pixel_t));
-  memset(pixelPtr + (centerY - radius + 1)*w + centerX, TRANSPARENT_PIXEL_COLOR, (w - centerX)*sizeof(pixel_t));
+  memset(
+      pixelPtr + (centerY + radius - 1) * w + centerX,
+      TRANSPARENT_PIXEL_COLOR,
+      (w - centerX) * sizeof(pixel_t));
+  memset(
+      pixelPtr + (centerY - radius + 1) * w + centerX,
+      TRANSPARENT_PIXEL_COLOR,
+      (w - centerX) * sizeof(pixel_t));
 
   while (x >= y) {
-
     const int cXpX = centerX + x;
     const int cXmX = centerX - x;
     const int cXpY = centerX + y;
@@ -334,22 +361,34 @@ static void toCircleFast(
 
     const size_t leftBytesX = sizeof(pixel_t) * cXmX;
     const size_t leftBytesY = sizeof(pixel_t) * cXmY;
-    const size_t rightBytesX = sizeof(pixel_t) * (w-cXpX);
-    const size_t rightBytesY = sizeof(pixel_t) * (w-cXpY);
+    const size_t rightBytesX = sizeof(pixel_t) * (w - cXpX);
+    const size_t rightBytesY = sizeof(pixel_t) * (w - cXpY);
 
     if (err <= 0 && err + dy + 2 > 0 && x > y + 1) {
-        memset(pixelPtr + offC - w, TRANSPARENT_PIXEL_COLOR, leftBytesY - sizeof(pixel_t));
-        memset(pixelPtr + offD + w, TRANSPARENT_PIXEL_COLOR, leftBytesY - sizeof(pixel_t));
+      memset(
+          pixelPtr + offC - w,
+          TRANSPARENT_PIXEL_COLOR,
+          leftBytesY - sizeof(pixel_t));
+      memset(
+          pixelPtr + offD + w,
+          TRANSPARENT_PIXEL_COLOR,
+          leftBytesY - sizeof(pixel_t));
 
-        memset(pixelPtr + offC - w + cXpY + 1, TRANSPARENT_PIXEL_COLOR, rightBytesY - sizeof(pixel_t));
-        memset(pixelPtr + offD + w + cXpY + 1, TRANSPARENT_PIXEL_COLOR, rightBytesY - sizeof(pixel_t));
+      memset(
+          pixelPtr + offC - w + cXpY + 1,
+          TRANSPARENT_PIXEL_COLOR,
+          rightBytesY - sizeof(pixel_t));
+      memset(
+          pixelPtr + offD + w + cXpY + 1,
+          TRANSPARENT_PIXEL_COLOR,
+          rightBytesY - sizeof(pixel_t));
     }
     if (err > 0 && x > y) {
-        memset(pixelPtr + offC - w, TRANSPARENT_PIXEL_COLOR, leftBytesY);
-        memset(pixelPtr + offD + w, TRANSPARENT_PIXEL_COLOR, leftBytesY);
+      memset(pixelPtr + offC - w, TRANSPARENT_PIXEL_COLOR, leftBytesY);
+      memset(pixelPtr + offD + w, TRANSPARENT_PIXEL_COLOR, leftBytesY);
 
-        memset(pixelPtr + offC - w + cXpY, TRANSPARENT_PIXEL_COLOR, rightBytesY);
-        memset(pixelPtr + offD + w + cXpY, TRANSPARENT_PIXEL_COLOR, rightBytesY);
+      memset(pixelPtr + offC - w + cXpY, TRANSPARENT_PIXEL_COLOR, rightBytesY);
+      memset(pixelPtr + offD + w + cXpY, TRANSPARENT_PIXEL_COLOR, rightBytesY);
     }
 
     if (err <= 0) {
@@ -384,7 +423,7 @@ static void toCircleFast(
   }
 }
 
-enum Corner{TOP_LEFT, TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT};
+enum Corner { TOP_LEFT, TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT };
 
 static void addRoundCorner(
     JNIEnv* env,
@@ -393,7 +432,6 @@ static void addRoundCorner(
     const int h,
     const int radius,
     const enum Corner corner) {
-
   int centerX, centerY;
 
   switch (corner) {
@@ -418,7 +456,8 @@ static void addRoundCorner(
     safe_throw_exception(env, "Circle radius too small!");
     return;
   }
-  if (w <= 0 || h <= 0 || w > BITMAP_MAX_DIMENSION || h > BITMAP_MAX_DIMENSION) {
+  if (w <= 0 || h <= 0 || w > BITMAP_MAX_DIMENSION ||
+      h > BITMAP_MAX_DIMENSION) {
     safe_throw_exception(env, "Invalid bitmap dimensions!");
     return;
   }
@@ -433,11 +472,10 @@ static void addRoundCorner(
   int dx = 1;
   int dy = 1;
 
-  const int rInc = - radius * 2;
+  const int rInc = -radius * 2;
   int err = dx + rInc;
 
   while (x >= y) {
-
     const int cXpX = centerX + x;
     const int cXmX = centerX - x;
     const int cXpY = centerX + y;
@@ -460,8 +498,8 @@ static void addRoundCorner(
 
     const size_t leftBytesX = sizeof(pixel_t) * cXmX;
     const size_t leftBytesY = sizeof(pixel_t) * cXmY;
-    const size_t rightBytesX = sizeof(pixel_t) * (w-cXpX);
-    const size_t rightBytesY = sizeof(pixel_t) * (w-cXpY);
+    const size_t rightBytesX = sizeof(pixel_t) * (w - cXpX);
+    const size_t rightBytesY = sizeof(pixel_t) * (w - cXpY);
 
     switch (corner) {
       case TOP_LEFT:
@@ -496,10 +534,16 @@ static void addRoundCorner(
   }
 }
 
-static float getBorderPixelWeight(const int x, const int y, const int centerX, const int centerY, const float innerRadius) {
+static float getBorderPixelWeight(
+    const int x,
+    const int y,
+    const int centerX,
+    const int centerY,
+    const float innerRadius) {
   const float distance = POW2(centerX - x) + POW2(centerY - y);
   const float targetDistUpper = POW2(innerRadius);
-  const float targetDistLower = POW2(max(0.0, innerRadius - (ANTI_ALIASING_PIXELS / 2.0)));
+  const float targetDistLower =
+      POW2(max(0.0, innerRadius - (ANTI_ALIASING_PIXELS / 2.0)));
   if (distance >= targetDistUpper) {
     return 1.0;
   } else if (distance < targetDistLower) {
@@ -523,9 +567,12 @@ static void antialiasBorderPixel(
     const pixel_t borderPixel) {
   const float weightWithAlpha = weight * (borderPixel.a / 255.0);
   pixel->a = min(255, pixel->a + borderPixel.a * weight);
-  pixel->r = (pixel->r * (1.0 - weightWithAlpha) + borderPixel.r * weightWithAlpha);
-  pixel->g = (pixel->g * (1.0 - weightWithAlpha) + borderPixel.g * weightWithAlpha);
-  pixel->b = (pixel->b * (1.0 - weightWithAlpha) + borderPixel.b * weightWithAlpha);
+  pixel->r =
+      (pixel->r * (1.0 - weightWithAlpha) + borderPixel.r * weightWithAlpha);
+  pixel->g =
+      (pixel->g * (1.0 - weightWithAlpha) + borderPixel.g * weightWithAlpha);
+  pixel->b =
+      (pixel->b * (1.0 - weightWithAlpha) + borderPixel.b * weightWithAlpha);
 }
 
 static void paintRowSegment(pixel_t* start, int pixels, int32_t colorABGR) {
@@ -543,19 +590,26 @@ static void antialiasInternalBorder(
     const float centerY,
     const float inner_x_offset,
     const float innerRadius) {
-  int distanceFromCenter = (int) inner_x_offset - 1;
+  int distanceFromCenter = (int)inner_x_offset - 1;
 
-  while(distanceFromCenter >= 0) {
-    float weight = getBorderPixelWeight((int) centerX - distanceFromCenter, row, centerX, centerY, innerRadius);
-    if(weight == 0){
+  while (distanceFromCenter >= 0) {
+    float weight = getBorderPixelWeight(
+        (int)centerX - distanceFromCenter, row, centerX, centerY, innerRadius);
+    if (weight == 0) {
       return;
     }
 
-    antialiasBorderPixel(&pixelPtr[row * width + (int) centerX - distanceFromCenter], weight, borderColorPixel);
+    antialiasBorderPixel(
+        &pixelPtr[row * width + (int)centerX - distanceFromCenter],
+        weight,
+        borderColorPixel);
     if (distanceFromCenter == 0) { // avoid antialiasing central pixel twice
       return;
     }
-    antialiasBorderPixel(&pixelPtr[row * width + (int) centerX + distanceFromCenter], weight, borderColorPixel);
+    antialiasBorderPixel(
+        &pixelPtr[row * width + (int)centerX + distanceFromCenter],
+        weight,
+        borderColorPixel);
 
     distanceFromCenter--;
   }
@@ -569,9 +623,9 @@ static void drawBorder(
     int32_t colorABGR,
     int borderWidth) {
   // Radius of the circle
-  const float radius = min(w,h) / 2.0;
-  //const float borderSize = radius * 0.038;
-  const float borderSize = min(borderWidth, radius-1);
+  const float radius = min(w, h) / 2.0;
+  // const float borderSize = radius * 0.038;
+  const float borderSize = min(borderWidth, radius - 1);
   const float innerRadius = radius - borderSize;
   // increase radius to avoid outer border on the sides
 
@@ -583,7 +637,8 @@ static void drawBorder(
     safe_throw_exception(env, "Circle radius too small!");
     return;
   }
-  if (w <= 0 || h <= 0 || w > BITMAP_MAX_DIMENSION || h > BITMAP_MAX_DIMENSION) {
+  if (w <= 0 || h <= 0 || w > BITMAP_MAX_DIMENSION ||
+      h > BITMAP_MAX_DIMENSION) {
     safe_throw_exception(env, "Invalid bitmap dimensions!");
     return;
   }
@@ -606,37 +661,59 @@ static void drawBorder(
   pixel_t borderColorPixel = colorABGRtoPixel(colorABGR);
 
   for (int y = top_boundary; y < bottom_boundary; y++) {
-      // Square formula: (x-cx)^2 + (y-cy)^2 = r^2  <=>  (x-cx) = -cx^2 + 2cy*y - y^2 + r^2
-      outer_x_offset_sq = -POW2(centerY) + (2*centerY*y) - POW2(y) + outer_r_square;
-      inner_x_offset_sq = -POW2(centerY) + (2*centerY*y) - POW2(y) + inner_r_square;
+    // Square formula: (x-cx)^2 + (y-cy)^2 = r^2  <=>  (x-cx) = -cx^2 + 2cy*y -
+    // y^2 + r^2
+    outer_x_offset_sq =
+        -POW2(centerY) + (2 * centerY * y) - POW2(y) + outer_r_square;
+    inner_x_offset_sq =
+        -POW2(centerY) + (2 * centerY * y) - POW2(y) + inner_r_square;
 
-      if(outer_x_offset_sq > 0 && inner_x_offset_sq > 0) {
-        outer_x_offset = ceil(sqrt(outer_x_offset_sq));
-        inner_x_offset = ceil(sqrt(inner_x_offset_sq));
-        int borderSizeInLine = outer_x_offset - inner_x_offset + 1;
+    if (outer_x_offset_sq > 0 && inner_x_offset_sq > 0) {
+      outer_x_offset = ceil(sqrt(outer_x_offset_sq));
+      inner_x_offset = ceil(sqrt(inner_x_offset_sq));
+      int borderSizeInLine = outer_x_offset - inner_x_offset + 1;
 
-        if (borderSizeInLine>0) {
-          paintRowSegment(pixelPtr + y * w + (int) centerX - (int) outer_x_offset, borderSizeInLine, colorABGR);
-          paintRowSegment(pixelPtr + y * w + (int) centerX + (int) inner_x_offset, borderSizeInLine, colorABGR);
-        }
-        // internal border antialiasing
-        antialiasInternalBorder(pixelPtr, borderColorPixel, y, w, centerX, centerY, inner_x_offset, innerRadius);
-      } else if (outer_x_offset >= 0) {
-        outer_x_offset = sqrt(outer_x_offset_sq);
-        paintRowSegment(pixelPtr + y * w + (int) (centerX - outer_x_offset), (int) outer_x_offset * 2, colorABGR);
-      } else if (inner_x_offset >= 0) {
-        inner_x_offset = sqrt(inner_x_offset_sq);
-        paintRowSegment(pixelPtr + y * w + (int) (centerX - inner_x_offset), (int) outer_x_offset * 2, colorABGR);
+      if (borderSizeInLine > 0) {
+        paintRowSegment(
+            pixelPtr + y * w + (int)centerX - (int)outer_x_offset,
+            borderSizeInLine,
+            colorABGR);
+        paintRowSegment(
+            pixelPtr + y * w + (int)centerX + (int)inner_x_offset,
+            borderSizeInLine,
+            colorABGR);
       }
+      // internal border antialiasing
+      antialiasInternalBorder(
+          pixelPtr,
+          borderColorPixel,
+          y,
+          w,
+          centerX,
+          centerY,
+          inner_x_offset,
+          innerRadius);
+    } else if (outer_x_offset >= 0) {
+      outer_x_offset = sqrt(outer_x_offset_sq);
+      paintRowSegment(
+          pixelPtr + y * w + (int)(centerX - outer_x_offset),
+          (int)outer_x_offset * 2,
+          colorABGR);
+    } else if (inner_x_offset >= 0) {
+      inner_x_offset = sqrt(inner_x_offset_sq);
+      paintRowSegment(
+          pixelPtr + y * w + (int)(centerX - inner_x_offset),
+          (int)outer_x_offset * 2,
+          colorABGR);
+    }
   }
 }
 
 static int argbToABGR(int argbColor) {
-    int r = (argbColor >> 16) & 0xFF;
-    int b = argbColor & 0xFF;
-    return (argbColor & 0xFF00FF00) | (b << 16) | r;
+  int r = (argbColor >> 16) & 0xFF;
+  int b = argbColor & 0xFF;
+  return (argbColor & 0xFF00FF00) | (b << 16) | r;
 }
-
 
 static void toCircleWithOptionalBorder(
     JNIEnv* env,
@@ -651,12 +728,14 @@ static void toCircleWithOptionalBorder(
 
   int rc = AndroidBitmap_getInfo(env, bitmap, &bitmapInfo);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "Rounding#toCircleWithOptionalBorder: Failed to get Bitmap info");
+    safe_throw_exception(
+        env, "Rounding#toCircleWithOptionalBorder: Failed to get Bitmap info");
     return;
   }
 
   if (bitmapInfo.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
-    safe_throw_exception(env, "Rounding#toCircleWithOptionalBorder: Unexpected bitmap format");
+    safe_throw_exception(
+        env, "Rounding#toCircleWithOptionalBorder: Unexpected bitmap format");
     return;
   }
 
@@ -664,21 +743,25 @@ static void toCircleWithOptionalBorder(
   const int h = bitmapInfo.height;
 
   if (w > BITMAP_MAX_DIMENSION || h > BITMAP_MAX_DIMENSION) {
-    safe_throw_exception(env, "Rounding#toCircleWithOptionalBorder: Bitmap dimensions too large");
+    safe_throw_exception(
+        env,
+        "Rounding#toCircleWithOptionalBorder: Bitmap dimensions too large");
     return;
   }
 
   pixel_t* pixelPtr;
 
   // Locking pixels such that they will not get moved around during processing
-  rc = AndroidBitmap_lockPixels(env, bitmap, (void*) &pixelPtr);
+  rc = AndroidBitmap_lockPixels(env, bitmap, (void*)&pixelPtr);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "Rounding#toCircleWithOptionalBorder: Failed to lock Bitmap pixels");
+    safe_throw_exception(
+        env,
+        "Rounding#toCircleWithOptionalBorder: Failed to lock Bitmap pixels");
     return;
   }
 
   // DRAW THE BORDER
-  if(border_width > 0) {
+  if (border_width > 0) {
     drawBorder(env, pixelPtr, w, h, argbToABGR(colorARGB), border_width);
   }
 
@@ -691,7 +774,9 @@ static void toCircleWithOptionalBorder(
   // Unlocking the pixels
   rc = AndroidBitmap_unlockPixels(env, bitmap);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "Rounding#toCircleWithOptionalBorder: Failed to unlock Bitmap pixels");
+    safe_throw_exception(
+        env,
+        "Rounding#toCircleWithOptionalBorder: Failed to unlock Bitmap pixels");
   }
 }
 
@@ -709,12 +794,14 @@ static void addRoundedCorners(
 
   int rc = AndroidBitmap_getInfo(env, bitmap, &bitmapInfo);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "Rounding#addRoundedCorners: Failed to get Bitmap info");
+    safe_throw_exception(
+        env, "Rounding#addRoundedCorners: Failed to get Bitmap info");
     return;
   }
 
   if (bitmapInfo.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
-    safe_throw_exception(env, "Rounding#addRoundedCorners: nexpected bitmap format");
+    safe_throw_exception(
+        env, "Rounding#addRoundedCorners: nexpected bitmap format");
     return;
   }
 
@@ -722,16 +809,18 @@ static void addRoundedCorners(
   const int h = bitmapInfo.height;
 
   if (w > BITMAP_MAX_DIMENSION || h > BITMAP_MAX_DIMENSION) {
-    safe_throw_exception(env, "Rounding#addRoundedCorners: Bitmap dimensions too large");
+    safe_throw_exception(
+        env, "Rounding#addRoundedCorners: Bitmap dimensions too large");
     return;
   }
 
   pixel_t* pixelPtr;
 
   // Locking pixels such that they will not get moved around during processing
-  rc = AndroidBitmap_lockPixels(env, bitmap, (void*) &pixelPtr);
+  rc = AndroidBitmap_lockPixels(env, bitmap, (void*)&pixelPtr);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "Rounding#addRoundedCorners: Failed to lock Bitmap pixels");
+    safe_throw_exception(
+        env, "Rounding#addRoundedCorners: Failed to lock Bitmap pixels");
     return;
   }
 
@@ -743,14 +832,16 @@ static void addRoundedCorners(
   // Unlocking the pixels
   rc = AndroidBitmap_unlockPixels(env, bitmap);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "Rounding#addRoundedCorners: Failed to unlock Bitmap pixels");
+    safe_throw_exception(
+        env, "Rounding#addRoundedCorners: Failed to unlock Bitmap pixels");
   }
 }
 
 /**
  * A native implementation for rounding a given bitmap to a circular shape.
- * The underlying implementation uses a modified midpoint circle algorithm but instead of
- * drawing a circle, it clears all pixels starting from the circle all the way to the bitmap edges.
+ * The underlying implementation uses a modified midpoint circle algorithm but
+ * instead of drawing a circle, it clears all pixels starting from the circle
+ * all the way to the bitmap edges.
  */
 static void RoundingFilter_toCircle(
     JNIEnv* env,
@@ -759,7 +850,6 @@ static void RoundingFilter_toCircle(
     jboolean anti_aliased) {
   toCircleWithOptionalBorder(env, clazz, bitmap, 0, 0, anti_aliased);
 }
-
 
 static void toCircleFastWithOptionalBorder(
     JNIEnv* env,
@@ -774,12 +864,16 @@ static void toCircleFastWithOptionalBorder(
 
   int rc = AndroidBitmap_getInfo(env, bitmap, &bitmapInfo);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "Rounding#toCircleFastWithOptionalBorder: Failed to get Bitmap info");
+    safe_throw_exception(
+        env,
+        "Rounding#toCircleFastWithOptionalBorder: Failed to get Bitmap info");
     return;
   }
 
   if (bitmapInfo.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
-    safe_throw_exception(env, "Rounding#toCircleFastWithOptionalBorder: Unexpected bitmap format");
+    safe_throw_exception(
+        env,
+        "Rounding#toCircleFastWithOptionalBorder: Unexpected bitmap format");
     return;
   }
 
@@ -787,21 +881,25 @@ static void toCircleFastWithOptionalBorder(
   const int h = bitmapInfo.height;
 
   if (w > BITMAP_MAX_DIMENSION || h > BITMAP_MAX_DIMENSION) {
-    safe_throw_exception(env, "Rounding#toCircleFastWithOptionalBorder: Bitmap dimensions too large");
+    safe_throw_exception(
+        env,
+        "Rounding#toCircleFastWithOptionalBorder: Bitmap dimensions too large");
     return;
   }
 
   pixel_t* pixelPtr;
 
   // Locking pixels such that they will not get moved around during processing
-  rc = AndroidBitmap_lockPixels(env, bitmap, (void*) &pixelPtr);
+  rc = AndroidBitmap_lockPixels(env, bitmap, (void*)&pixelPtr);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "Rounding#toCircleFastWithOptionalBorder: Failed to lock Bitmap pixels");
+    safe_throw_exception(
+        env,
+        "Rounding#toCircleFastWithOptionalBorder: Failed to lock Bitmap pixels");
     return;
   }
 
   // DRAW THE BORDER
-  if(border_width > 0) {
+  if (border_width > 0) {
     drawBorder(env, pixelPtr, w, h, argbToABGR(colorARGB), border_width);
   }
 
@@ -814,26 +912,30 @@ static void toCircleFastWithOptionalBorder(
   // Unlocking the pixels
   rc = AndroidBitmap_unlockPixels(env, bitmap);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "Rounding#toCircleFastWithOptionalBorder: Failed to unlock Bitmap pixels");
+    safe_throw_exception(
+        env,
+        "Rounding#toCircleFastWithOptionalBorder: Failed to unlock Bitmap pixels");
   }
 }
 /**
  * A native implementation for rounding a given bitmap to a circular shape.
- * The underlying implementation uses a modified midpoint circle algorithm but instead of
- * drawing a circle, it clears all pixels starting from the circle all the way to the bitmap edges.
+ * The underlying implementation uses a modified midpoint circle algorithm but
+ * instead of drawing a circle, it clears all pixels starting from the circle
+ * all the way to the bitmap edges.
  */
 static void RoundingFilter_toCircleFast(
     JNIEnv* env,
     jclass clazz,
     jobject bitmap,
     jboolean anti_aliased) {
-    toCircleFastWithOptionalBorder(env, clazz, bitmap, 0, 0, anti_aliased);
+  toCircleFastWithOptionalBorder(env, clazz, bitmap, 0, 0, anti_aliased);
 }
 
 /**
- * A native implementation for rounding a given bitmap to a circular shape and adds a border around
- * it. The underlying implementation uses a modified midpoint circle algorithm to draw the round
- * border and then clears all pixels starting from the circle all the way to the bitmap edges.
+ * A native implementation for rounding a given bitmap to a circular shape and
+ * adds a border around it. The underlying implementation uses a modified
+ * midpoint circle algorithm to draw the round border and then clears all pixels
+ * starting from the circle all the way to the bitmap edges.
  */
 static void RoundingFilter_toCircleWithBorder(
     JNIEnv* env,
@@ -842,13 +944,15 @@ static void RoundingFilter_toCircleWithBorder(
     jint colorARGB,
     jint border_width,
     jboolean anti_aliased) {
-  toCircleWithOptionalBorder(env, clazz, bitmap, colorARGB, border_width, anti_aliased);
+  toCircleWithOptionalBorder(
+      env, clazz, bitmap, colorARGB, border_width, anti_aliased);
 }
 
 /**
  * A native implementation for rounding corners of a given bitmap.
- * The underlying implementation uses a modified midpoint circle algorithm to draw the round
- * border and then clears all pixels starting from the circle all the way to the bitmap edges.
+ * The underlying implementation uses a modified midpoint circle algorithm to
+ * draw the round border and then clears all pixels starting from the circle all
+ * the way to the bitmap edges.
  */
 
 static void RoundingFilter_addRoundedCorners(
@@ -859,36 +963,41 @@ static void RoundingFilter_addRoundedCorners(
     jint radiusTopRight,
     jint radiusBottomRight,
     jint radiusBottomLeft) {
-  addRoundedCorners(env, clazz, bitmap, radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft);
+  addRoundedCorners(
+      env,
+      clazz,
+      bitmap,
+      radiusTopLeft,
+      radiusTopRight,
+      radiusBottomRight,
+      radiusBottomLeft);
 }
 
 static JNINativeMethod rounding_native_methods[] = {
-  { "nativeToCircleFilter",
-    "(Landroid/graphics/Bitmap;Z)V",
-    (void*) RoundingFilter_toCircle },
-  { "nativeToCircleWithBorderFilter",
-        "(Landroid/graphics/Bitmap;IIZ)V",
-        (void*) RoundingFilter_toCircleWithBorder },
-  { "nativeAddRoundedCornersFilter",
-          "(Landroid/graphics/Bitmap;IIII)V",
-          (void*) RoundingFilter_addRoundedCorners },
-  { "nativeToCircleFastFilter",
-        "(Landroid/graphics/Bitmap;Z)V",
-        (void*) RoundingFilter_toCircleFast },
+    {"nativeToCircleFilter",
+     "(Landroid/graphics/Bitmap;Z)V",
+     (void*)RoundingFilter_toCircle},
+    {"nativeToCircleWithBorderFilter",
+     "(Landroid/graphics/Bitmap;IIZ)V",
+     (void*)RoundingFilter_toCircleWithBorder},
+    {"nativeAddRoundedCornersFilter",
+     "(Landroid/graphics/Bitmap;IIII)V",
+     (void*)RoundingFilter_addRoundedCorners},
+    {"nativeToCircleFastFilter",
+     "(Landroid/graphics/Bitmap;Z)V",
+     (void*)RoundingFilter_toCircleFast},
 };
 
 jint registerRoundingFilterMethods(JNIEnv* env) {
-  jclass runtime_exception = (*env)->FindClass(
-      env,
-      "java/lang/RuntimeException");
+  jclass runtime_exception =
+      (*env)->FindClass(env, "java/lang/RuntimeException");
   if (!runtime_exception) {
     return JNI_ERR;
   }
   runtime_exception_class = (*env)->NewGlobalRef(env, runtime_exception);
 
   jclass rounding_filter_class = (*env)->FindClass(
-       env,
-      "com/facebook/imagepipeline/nativecode/NativeRoundingFilter");
+      env, "com/facebook/imagepipeline/nativecode/NativeRoundingFilter");
   if (!rounding_filter_class) {
     return JNI_ERR;
   }

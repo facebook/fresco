@@ -54,9 +54,7 @@ static void memSourceInit(j_decompress_ptr dinfo) {
 static boolean memSourceFillInputBuffer(j_decompress_ptr dinfo) {
   // "read" EOI marker
   // implementation borrowed from libjepg's jdatasrc.c
-  static const JOCTET mybuffer[4] = {
-    (JOCTET) 0xFF, (JOCTET) JPEG_EOI, 0, 0
-  };
+  static const JOCTET mybuffer[4] = {(JOCTET)0xFF, (JOCTET)JPEG_EOI, 0, 0};
   dinfo->src->next_input_byte = mybuffer;
   dinfo->src->bytes_in_buffer = 2;
   return true;
@@ -116,14 +114,12 @@ JpegMemorySource::JpegMemorySource() {
  */
 static void memDestinationInit(j_compress_ptr cinfo) {
   JpegMemoryDestination* dest =
-    reinterpret_cast<JpegMemoryDestination*>(cinfo->dest);
-  dest->write_memory = (JOCTET *) (*cinfo->mem->alloc_small)(
-      (j_common_ptr) cinfo,
-      JPOOL_IMAGE,
-      kBufferSize * sizeof(JOCTET));
+      reinterpret_cast<JpegMemoryDestination*>(cinfo->dest);
+  dest->write_memory = (JOCTET*)(*cinfo->mem->alloc_small)(
+      (j_common_ptr)cinfo, JPOOL_IMAGE, kBufferSize * sizeof(JOCTET));
   if (dest->write_memory == nullptr) {
     jpegSafeThrow(
-        (j_common_ptr) cinfo,
+        (j_common_ptr)cinfo,
         "Failed to allocate memory for libjpeg output buffer.");
   }
   dest->public_fields.next_output_byte = dest->write_memory;
@@ -142,11 +138,9 @@ static void memDestinationInit(j_compress_ptr cinfo) {
  */
 static boolean memDestinationEmptyOutputBuffer(j_compress_ptr cinfo) {
   JpegMemoryDestination* dest =
-    reinterpret_cast<JpegMemoryDestination*>(cinfo->dest);
+      reinterpret_cast<JpegMemoryDestination*>(cinfo->dest);
   dest->buffer.insert(
-      dest->buffer.end(),
-      dest->write_memory,
-      dest->write_memory + kBufferSize);
+      dest->buffer.end(), dest->write_memory, dest->write_memory + kBufferSize);
   dest->public_fields.next_output_byte = dest->write_memory;
   dest->public_fields.free_in_buffer = kBufferSize;
   return true;
@@ -164,7 +158,7 @@ static boolean memDestinationEmptyOutputBuffer(j_compress_ptr cinfo) {
  */
 static void memDestinationTerm(j_compress_ptr cinfo) {
   JpegMemoryDestination* dest =
-    reinterpret_cast<JpegMemoryDestination*>(cinfo->dest);
+      reinterpret_cast<JpegMemoryDestination*>(cinfo->dest);
   const long bytes_written = kBufferSize - dest->public_fields.free_in_buffer;
   dest->buffer.insert(
       dest->buffer.end(),
@@ -178,4 +172,6 @@ JpegMemoryDestination::JpegMemoryDestination() {
   public_fields.term_destination = memDestinationTerm;
 }
 
-} } }
+} // namespace jpeg
+} // namespace imagepipeline
+} // namespace facebook
