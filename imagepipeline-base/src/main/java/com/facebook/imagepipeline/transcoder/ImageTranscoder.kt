@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.transcoder
 
+import android.graphics.ColorSpace
 import com.facebook.imageformat.ImageFormat
 import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.common.RotationOptions
@@ -39,7 +40,8 @@ interface ImageTranscoder {
       rotationOptions: RotationOptions?,
       resizeOptions: ResizeOptions?,
       outputFormat: ImageFormat?,
-      quality: Int?
+      quality: Int?,
+      colorSpace: ColorSpace?
   ): ImageTranscodeResult
 
   /**

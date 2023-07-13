@@ -14,6 +14,7 @@ import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.MIN_QUAL
 import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.MIN_SCALE_NUMERATOR;
 import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.SCALE_DENOMINATOR;
 
+import android.graphics.ColorSpace;
 import android.media.ExifInterface;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Closeables;
@@ -89,7 +90,8 @@ public class NativeJpegTranscoder implements ImageTranscoder {
       @Nullable RotationOptions rotationOptions,
       @Nullable final ResizeOptions resizeOptions,
       @Nullable ImageFormat outputFormat,
-      @Nullable Integer quality)
+      @Nullable Integer quality,
+      @Nullable ColorSpace colorSpace)
       throws IOException {
     if (quality == null) {
       quality = DEFAULT_JPEG_QUALITY;

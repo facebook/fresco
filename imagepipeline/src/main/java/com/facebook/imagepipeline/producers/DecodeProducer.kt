@@ -280,6 +280,7 @@ class DecodeProducer(
       producerContext.putExtra(HasExtraData.KEY_ENCODED_WIDTH, encodedImage.width)
       producerContext.putExtra(HasExtraData.KEY_ENCODED_HEIGHT, encodedImage.height)
       producerContext.putExtra(HasExtraData.KEY_ENCODED_SIZE, encodedImage.size)
+      producerContext.putExtra(HasExtraData.KEY_COLOR_SPACE, encodedImage.colorSpace)
       if (image is CloseableBitmap) {
         val bitmap = image.underlyingBitmap
         val config = if (bitmap == null) null else bitmap.config
