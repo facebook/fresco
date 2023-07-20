@@ -22,6 +22,7 @@ import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.ImageOptions.Companion.defaults
 import com.facebook.fresco.vito.source.ImageSource
 import com.facebook.fresco.vito.source.ImageSourceProvider
+import com.facebook.fresco.vito.source.IncreasingQualityImageSource
 import com.facebook.fresco.vito.source.SingleImageSource
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.image.CloseableImage
@@ -56,6 +57,10 @@ class VitoImagePipelineImpl(
         extras[HasExtraData.KEY_MODIFIED_URL] = true
         finalImageSource = ImageSourceProvider.forUri(maybeModifiedUri)
       }
+      if (imageSource.extras != null) {
+        extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = imageSource.extras
+      }
+    } else if (imageSource is IncreasingQualityImageSource) {
       if (imageSource.extras != null) {
         extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = imageSource.extras
       }
