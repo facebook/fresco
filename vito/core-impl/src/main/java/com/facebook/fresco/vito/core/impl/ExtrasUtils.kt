@@ -21,20 +21,16 @@ private val SHORTCUT_EXTRAS: Map<String, Any> =
 fun KFrescoVitoDrawable.obtainExtras(
     dataSource: DataSource<CloseableReference<CloseableImage>>? = null,
     image: CloseableReference<CloseableImage>? = null,
-): ControllerListener2.Extras {
-  return MiddlewareUtils.obtainExtras(
-          COMPONENT_EXTRAS,
-          SHORTCUT_EXTRAS,
-          dataSource?.extras,
-          null, // FIXME
-          viewportDimensions,
-          imageRequest?.imageOptions?.actualImageScaleType.toString(),
-          imageRequest?.imageOptions?.actualImageFocusPoint,
-          image?.get()?.extras,
-          callerContext,
-          imageRequest?.finalImageRequest?.sourceUri)
-      .apply {
-        // This can be moved into the MiddlewareUtils.obtainExtras method once Drawee is gone
-        logWithHighSamplingRate = imageRequest?.logWithHighSamplingRate ?: false
-      }
-}
+): ControllerListener2.Extras =
+    MiddlewareUtils.obtainExtras(
+        COMPONENT_EXTRAS,
+        SHORTCUT_EXTRAS,
+        dataSource?.extras,
+        null, // FIXME
+        viewportDimensions,
+        imageRequest?.imageOptions?.actualImageScaleType.toString(),
+        imageRequest?.imageOptions?.actualImageFocusPoint,
+        image?.get()?.extras,
+        callerContext,
+        imageRequest?.logWithHighSamplingRate ?: false,
+        imageRequest?.finalImageRequest?.sourceUri)

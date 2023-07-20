@@ -478,22 +478,18 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
           (Map<String, Object>) vitoImageRequest.extras.get(HasExtraData.KEY_IMAGE_SOURCE_EXTRAS);
     }
 
-    Extras middlewareExtras =
-        MiddlewareUtils.obtainExtras(
-            COMPONENT_EXTRAS,
-            SHORTCUT_EXTRAS,
-            dataSource == null ? null : dataSource.getExtras(),
-            imageSourceExtras,
-            drawable.getViewportDimensions(),
-            String.valueOf(drawable.getActualImageScaleType()),
-            drawable.getActualImageFocusPoint(),
-            imageExtras,
-            drawable.getCallerContext(),
-            sourceUri);
-
-    // This can be moved into the MiddlewareUtils.obtainExtras method once Drawee is gone
-    middlewareExtras.logWithHighSamplingRate = logWithHighSamplingRate;
-    return middlewareExtras;
+    return MiddlewareUtils.obtainExtras(
+        COMPONENT_EXTRAS,
+        SHORTCUT_EXTRAS,
+        dataSource == null ? null : dataSource.getExtras(),
+        imageSourceExtras,
+        drawable.getViewportDimensions(),
+        String.valueOf(drawable.getActualImageScaleType()),
+        drawable.getActualImageFocusPoint(),
+        imageExtras,
+        drawable.getCallerContext(),
+        logWithHighSamplingRate,
+        sourceUri);
   }
 
   private static boolean notifyFinalResult(

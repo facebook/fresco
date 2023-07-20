@@ -70,6 +70,7 @@ public abstract class AbstractDraweeControllerBuilder<
   private boolean mTapToRetryEnabled;
   private boolean mAutoPlayAnimations;
   private boolean mRetainImageOnFailure;
+  private boolean mLogWithHighSamplingRate = false;
   @Nullable private String mContentDescription;
   // old controller to reuse
   private @Nullable DraweeController mOldController;
@@ -98,6 +99,7 @@ public abstract class AbstractDraweeControllerBuilder<
     mControllerViewportVisibilityListener = null;
     mTapToRetryEnabled = false;
     mAutoPlayAnimations = false;
+    mLogWithHighSamplingRate = false;
     mOldController = null;
     mContentDescription = null;
   }
@@ -239,6 +241,15 @@ public abstract class AbstractDraweeControllerBuilder<
     return mAutoPlayAnimations;
   }
 
+  public boolean isLogWithHighSamplingRate() {
+    return mLogWithHighSamplingRate;
+  }
+
+  public BUILDER setLogWithHighSamplingRate(boolean logWithHighSamplingRate) {
+    mLogWithHighSamplingRate = logWithHighSamplingRate;
+    return getThis();
+  }
+
   /** Sets the controller listener. */
   public BUILDER setControllerListener(
       @Nullable ControllerListener<? super INFO> controllerListener) {
@@ -333,6 +344,7 @@ public abstract class AbstractDraweeControllerBuilder<
       FrescoSystrace.beginSection("AbstractDraweeControllerBuilder#buildController");
     }
     AbstractDraweeController controller = obtainController();
+    controller.setLogWithHighSamplingRate(isLogWithHighSamplingRate());
     controller.setRetainImageOnFailure(getRetainImageOnFailure());
     controller.setContentDescription(getContentDescription());
     controller.setControllerViewportVisibilityListener(getControllerViewportVisibilityListener());
