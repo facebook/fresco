@@ -468,7 +468,9 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     Uri sourceUri = null;
     VitoImageRequest vitoImageRequest = drawable.getImageRequest();
     Map<String, Object> imageSourceExtras = null;
+    boolean logWithHighSamplingRate = false;
     if (vitoImageRequest != null) {
+      logWithHighSamplingRate = vitoImageRequest.logWithHighSamplingRate;
       if (vitoImageRequest.finalImageRequest != null) {
         sourceUri = vitoImageRequest.finalImageRequest.getSourceUri();
       }
@@ -476,17 +478,22 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
           (Map<String, Object>) vitoImageRequest.extras.get(HasExtraData.KEY_IMAGE_SOURCE_EXTRAS);
     }
 
-    return MiddlewareUtils.obtainExtras(
-        COMPONENT_EXTRAS,
-        SHORTCUT_EXTRAS,
-        dataSource == null ? null : dataSource.getExtras(),
-        imageSourceExtras,
-        drawable.getViewportDimensions(),
-        String.valueOf(drawable.getActualImageScaleType()),
-        drawable.getActualImageFocusPoint(),
-        imageExtras,
-        drawable.getCallerContext(),
-        sourceUri);
+    Extras middlewareExtras =
+        MiddlewareUtils.obtainExtras(
+            COMPONENT_EXTRAS,
+            SHORTCUT_EXTRAS,
+            dataSource == null ? null : dataSource.getExtras(),
+            imageSourceExtras,
+            drawable.getViewportDimensions(),
+            String.valueOf(drawable.getActualImageScaleType()),
+            drawable.getActualImageFocusPoint(),
+            imageExtras,
+            drawable.getCallerContext(),
+            sourceUri);
+
+    // This can be moved into the MiddlewareUtils.obtainExtras method once Drawee is gone
+    middlewareExtras.logWithHighSamplingRate = logWithHighSamplingRate;
+    return middlewareExtras;
   }
 
   private static boolean notifyFinalResult(

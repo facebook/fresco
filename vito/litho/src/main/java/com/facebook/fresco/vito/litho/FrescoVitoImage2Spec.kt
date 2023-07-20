@@ -111,12 +111,14 @@ object FrescoVitoImage2Spec {
       @Prop(optional = true) uriString: String?,
       @Prop(optional = true) uri: Uri?,
       @Prop(optional = true) imageSource: ImageSource?,
-      @Prop(optional = true) imageOptions: ImageOptions?
+      @Prop(optional = true) imageOptions: ImageOptions?,
+      @Prop(optional = true) logWithHighSamplingRate: Boolean?,
   ): VitoImageRequest? =
       if (imageOptions?.experimentalDynamicSize == true) {
         null
       } else {
-        createVitoImageRequest(c, imageSource, uri, uriString, imageOptions, null)
+        createVitoImageRequest(
+            c, imageSource, uri, uriString, imageOptions, logWithHighSamplingRate, null)
       }
 
   private fun createVitoImageRequest(
@@ -125,6 +127,7 @@ object FrescoVitoImage2Spec {
       uri: Uri?,
       uriString: String?,
       imageOptions: ImageOptions?,
+      logWithHighSamplingRate: Boolean?,
       viewportRect: Rect?
   ): VitoImageRequest =
       FrescoVitoProvider.getImagePipeline()
@@ -132,6 +135,7 @@ object FrescoVitoImage2Spec {
               c.resources,
               determineImageSource(imageSource, uri, uriString),
               imageOptions,
+              logWithHighSamplingRate ?: false,
               viewportRect)
 
   @JvmStatic
@@ -304,7 +308,8 @@ object FrescoVitoImage2Spec {
       @Prop(optional = true) uriString: String?,
       @Prop(optional = true) uri: Uri?,
       @Prop(optional = true) imageSource: ImageSource?,
-      @Prop(optional = true) imageOptions: ImageOptions?
+      @Prop(optional = true) imageOptions: ImageOptions?,
+      @Prop(optional = true) logWithHighSamplingRate: Boolean?,
   ) {
     val width = layout.width
     val height = layout.height
@@ -318,7 +323,8 @@ object FrescoVitoImage2Spec {
     viewportDimensions.set(viewportRect)
     if (imageOptions != null && imageOptions.experimentalDynamicSize) {
       requestFromBoundsDefined.set(
-          createVitoImageRequest(c, imageSource, uri, uriString, imageOptions, viewportRect))
+          createVitoImageRequest(
+              c, imageSource, uri, uriString, imageOptions, logWithHighSamplingRate, viewportRect))
     }
   }
 

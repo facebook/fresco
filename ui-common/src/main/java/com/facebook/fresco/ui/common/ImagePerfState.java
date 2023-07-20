@@ -11,8 +11,6 @@ import static com.facebook.fresco.ui.common.ImagePerfData.UNSET;
 
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.infer.annotation.Nullsafe;
-import java.util.HashMap;
-import java.util.Map;
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
@@ -52,14 +50,11 @@ public class ImagePerfState {
   private VisibilityState mVisibilityState = VisibilityState.UNKNOWN;
   private long mVisibilityEventTimeMs = UNSET;
   private long mInvisibilityEventTimeMs = UNSET;
-
+  // Fetch efficiency
   private long mImageDrawTimeMs = UNSET;
-
   private @Nullable DimensionsInfo mDimensionsInfo;
-
+  // Pipeline and view extras
   private @Nullable Extras mExtraData;
-
-  private final Map<String, Object> mPipelineExtras = new HashMap<>();
 
   public void reset() {
     mRequestId = null;
@@ -81,7 +76,6 @@ public class ImagePerfState {
     mDimensionsInfo = null;
 
     mExtraData = null;
-    mPipelineExtras.clear();
 
     resetPointsTimestamps();
   }

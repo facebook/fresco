@@ -38,7 +38,8 @@ class VitoImagePipelineImpl(
       resources: Resources,
       imageSource: ImageSource,
       options: ImageOptions?,
-      viewport: Rect?
+      logWithHighSamplingRate: Boolean,
+      viewport: Rect?,
   ): VitoImageRequest {
     val imageOptions = options ?: defaults()
     val extras: MutableMap<String, Any?> = mutableMapOf()
@@ -66,7 +67,13 @@ class VitoImagePipelineImpl(
     val finalImageCacheKey = finalImageRequest?.let { imagePipeline.getCacheKey(it, null) }
 
     return VitoImageRequest(
-        resources, finalImageSource, imageOptions, finalImageRequest, finalImageCacheKey, extras)
+        resources,
+        finalImageSource,
+        imageOptions,
+        logWithHighSamplingRate,
+        finalImageRequest,
+        finalImageCacheKey,
+        extras)
   }
 
   override fun getCachedImage(imageRequest: VitoImageRequest): CloseableReference<CloseableImage>? {

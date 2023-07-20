@@ -37,6 +37,7 @@ object VitoSpanLoader {
   fun show(
       imageSource: ImageSource,
       imageOptions: ImageOptions,
+      logWithHighSamplingRate: Boolean = false,
       callerContext: Any?,
       contextChain: ContextChain?,
       imageListener: ImageListener?,
@@ -44,7 +45,8 @@ object VitoSpanLoader {
   ) {
     show(
         FrescoVitoProvider.getImagePipeline()
-            .createImageRequest(target.resources, imageSource, imageOptions),
+            .createImageRequest(
+                target.resources, imageSource, imageOptions, logWithHighSamplingRate),
         callerContext,
         contextChain,
         imageListener,

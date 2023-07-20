@@ -21,10 +21,12 @@ class VitoImageRequest(
     @JvmField val resources: Resources,
     @JvmField val imageSource: ImageSource,
     @JvmField val imageOptions: ImageOptions,
+    @JvmField val logWithHighSamplingRate: Boolean = false,
     @JvmField val finalImageRequest: ImageRequest?,
     @JvmField val finalImageCacheKey: CacheKey?,
     @JvmField val extras: MutableMap<String, Any?> = mutableMapOf(),
 ) : HasExtraData {
+
   override fun <E> putExtra(key: String, value: E?) {
     extras[key] = value
   }
