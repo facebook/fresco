@@ -64,15 +64,15 @@ import com.facebook.litho.annotations.TreeProp
 import com.facebook.litho.utils.MeasureUtils
 import java.util.concurrent.atomic.AtomicReference
 
-/** Simple Fresco Vito component for Litho */
+/** Fresco Vito component for Litho */
 @MountSpec(isPureRender = true, canPreallocate = true, poolSize = 15)
 object FrescoVitoImage2Spec {
 
-  @PropDefault const val imageAspectRatio = 1f
+  @PropDefault const val imageAspectRatio: Float = 1f
 
-  @PropDefault val prefetch = Prefetch.AUTO
+  @PropDefault val prefetch: Prefetch = Prefetch.AUTO
 
-  @PropDefault const val mutateDrawables = true
+  @PropDefault const val mutateDrawables: Boolean = true
 
   @JvmStatic
   @OnCreateMountContent(mountingType = MountingType.DRAWABLE)
@@ -83,7 +83,7 @@ object FrescoVitoImage2Spec {
   @OnCreateInitialState
   fun onCreateInitialState(
       context: ComponentContext,
-      workingRangePrefetchData: StateValue<AtomicReference<DataSource<Void>>>
+      workingRangePrefetchData: StateValue<AtomicReference<DataSource<Void>>>,
   ) {
     if (FrescoVitoProvider.hasBeenInitialized() &&
         FrescoVitoProvider.getConfig().prefetchConfig.prefetchWithWorkingRange()) {
@@ -99,7 +99,7 @@ object FrescoVitoImage2Spec {
       widthSpec: Int,
       heightSpec: Int,
       size: Size,
-      @Prop(optional = true, resType = ResType.FLOAT) imageAspectRatio: Float
+      @Prop(optional = true, resType = ResType.FLOAT) imageAspectRatio: Float,
   ) {
     MeasureUtils.measureWithAspectRatio(widthSpec, heightSpec, imageAspectRatio, size)
   }
@@ -128,7 +128,7 @@ object FrescoVitoImage2Spec {
       uriString: String?,
       imageOptions: ImageOptions?,
       logWithHighSamplingRate: Boolean?,
-      viewportRect: Rect?
+      viewportRect: Rect?,
   ): VitoImageRequest =
       FrescoVitoProvider.getImagePipeline()
           .createImageRequest(
@@ -146,7 +146,7 @@ object FrescoVitoImage2Spec {
       @Prop(optional = true) prefetch: Prefetch?,
       @Prop(optional = true) prefetchRequestListener: RequestListener?,
       @CachedValue requestCachedValue: VitoImageRequest?,
-      prefetchDataSource: Output<DataSource<Void>>
+      prefetchDataSource: Output<DataSource<Void>>,
   ) {
     if (requestCachedValue == null) {
       return
@@ -178,7 +178,7 @@ object FrescoVitoImage2Spec {
       @FromPrepare prefetchDataSource: DataSource<Void?>?,
       @FromBoundsDefined viewportDimensions: Rect,
       @State workingRangePrefetchData: AtomicReference<DataSource<Void>>?,
-      @TreeProp contextChain: ContextChain?
+      @TreeProp contextChain: ContextChain?,
   ) {
     val request = requestCachedValue ?: requestFromBoundsDefined
     frescoDrawable.setMutateDrawables(mutateDrawables)
@@ -221,7 +221,7 @@ object FrescoVitoImage2Spec {
       @FromBoundsDefined requestFromBoundsDefined: VitoImageRequest?,
       @FromPrepare prefetchDataSource: DataSource<Void?>?,
       @FromBoundsDefined viewportDimensions: Rect,
-      @State workingRangePrefetchData: AtomicReference<DataSource<Void>>?
+      @State workingRangePrefetchData: AtomicReference<DataSource<Void>>?,
   ) {
     val request = requestCachedValue ?: requestFromBoundsDefined
     // We fetch in both mount and bind in case an unbind event triggered a delayed release.
@@ -247,7 +247,7 @@ object FrescoVitoImage2Spec {
   fun onUnbind(
       c: ComponentContext,
       frescoDrawable: FrescoDrawableInterface,
-      @FromPrepare prefetchDataSource: DataSource<Void>?
+      @FromPrepare prefetchDataSource: DataSource<Void>?,
   ) {
     frescoDrawable.imagePerfListener.onImageUnbind(frescoDrawable)
     if (FrescoVitoProvider.getConfig().useBindOnly()) {
@@ -263,7 +263,7 @@ object FrescoVitoImage2Spec {
   fun onUnmount(
       c: ComponentContext,
       frescoDrawable: FrescoDrawableInterface,
-      @FromPrepare prefetchDataSource: DataSource<Void>?
+      @FromPrepare prefetchDataSource: DataSource<Void>?,
   ) {
     frescoDrawable.imagePerfListener.onImageUnmount(frescoDrawable)
     if (FrescoVitoProvider.getConfig().useBindOnly()) {
@@ -280,7 +280,7 @@ object FrescoVitoImage2Spec {
       @Prop(optional = true) imageSource: Diff<ImageSource>,
       @Prop(optional = true) imageOptions: Diff<ImageOptions>,
       @Prop(optional = true, resType = ResType.FLOAT) imageAspectRatio: Diff<Float>,
-      @Prop(optional = true) imageListener: Diff<ImageListener>
+      @Prop(optional = true) imageListener: Diff<ImageListener>,
   ): Boolean =
       !ObjectsCompat.equals(uri.previous, uri.next) ||
           !ObjectsCompat.equals(imageSource.previous, imageSource.next) ||
@@ -336,7 +336,7 @@ object FrescoVitoImage2Spec {
       @Prop(optional = true) callerContext: Any?,
       @CachedValue requestCachedValue: VitoImageRequest?,
       @FromPrepare prefetchDataSource: DataSource<Void>?,
-      @State workingRangePrefetchData: AtomicReference<DataSource<Void>>?
+      @State workingRangePrefetchData: AtomicReference<DataSource<Void>>?,
   ) {
     if (requestCachedValue == null || workingRangePrefetchData == null) {
       return
@@ -363,7 +363,7 @@ object FrescoVitoImage2Spec {
   @OnExitedRange(name = "imagePrefetch")
   fun onExitedWorkingRange(
       c: ComponentContext,
-      @State workingRangePrefetchData: AtomicReference<DataSource<Void>>?
+      @State workingRangePrefetchData: AtomicReference<DataSource<Void>>?,
   ) {
     cancelWorkingRangePrefetch(workingRangePrefetchData)
   }
@@ -373,7 +373,7 @@ object FrescoVitoImage2Spec {
   fun onEnteredBelow3WorkingRange(
       c: ComponentContext,
       @Prop(optional = true) callerContext: Any?,
-      @CachedValue requestCachedValue: VitoImageRequest?
+      @CachedValue requestCachedValue: VitoImageRequest?,
   ) {
     if (requestCachedValue == null) {
       return
@@ -387,7 +387,7 @@ object FrescoVitoImage2Spec {
   fun onEnteredBelow2WorkingRange(
       c: ComponentContext,
       @Prop(optional = true) callerContext: Any?,
-      @CachedValue requestCachedValue: VitoImageRequest?
+      @CachedValue requestCachedValue: VitoImageRequest?,
   ) {
     if (requestCachedValue == null) {
       return
@@ -401,7 +401,7 @@ object FrescoVitoImage2Spec {
   fun onEnteredBelowWorkingRange(
       c: ComponentContext,
       @Prop(optional = true) callerContext: Any?,
-      @CachedValue requestCachedValue: VitoImageRequest?
+      @CachedValue requestCachedValue: VitoImageRequest?,
   ) {
     if (requestCachedValue == null) {
       return
@@ -415,7 +415,7 @@ object FrescoVitoImage2Spec {
   fun onEnteredVisibleWorkingRange(
       c: ComponentContext,
       @Prop(optional = true) callerContext: Any?,
-      @CachedValue requestCachedValue: VitoImageRequest?
+      @CachedValue requestCachedValue: VitoImageRequest?,
   ) {
     if (requestCachedValue == null) {
       return
@@ -429,7 +429,7 @@ object FrescoVitoImage2Spec {
   fun onEnteredAboveWorkingRange(
       c: ComponentContext,
       @Prop(optional = true) callerContext: Any?,
-      @CachedValue requestCachedValue: VitoImageRequest?
+      @CachedValue requestCachedValue: VitoImageRequest?,
   ) {
     if (requestCachedValue == null) {
       return
@@ -441,7 +441,7 @@ object FrescoVitoImage2Spec {
   private fun determineImageSource(
       imageSource: ImageSource?,
       uri: Uri?,
-      uriString: String?
+      uriString: String?,
   ): ImageSource =
       when {
         imageSource != null -> imageSource
@@ -455,7 +455,10 @@ object FrescoVitoImage2Spec {
 
   @JvmStatic
   @OnRegisterRanges
-  fun registerWorkingRanges(c: ComponentContext, @Prop(optional = true) prefetch: Prefetch?) {
+  fun registerWorkingRanges(
+      c: ComponentContext,
+      @Prop(optional = true) prefetch: Prefetch?,
+  ) {
     if (FrescoVitoProvider.hasBeenInitialized()) {
       val prefetchConfig = FrescoVitoProvider.getConfig().prefetchConfig
       if (shouldPrefetchWithWorkingRange(prefetch)) {
