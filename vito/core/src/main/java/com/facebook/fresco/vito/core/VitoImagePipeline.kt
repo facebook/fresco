@@ -18,12 +18,6 @@ import com.facebook.imagepipeline.listener.RequestListener
 
 interface VitoImagePipeline {
 
-  fun createImageRequest(
-      resources: Resources,
-      imageSource: ImageSource,
-      options: ImageOptions?,
-  ): VitoImageRequest = createImageRequest(resources, imageSource, options, false, null)
-
   /**
    * @param logWithHighSamplingRate The flag is a hint to loggers that they should log all events
    *   for this request at a higher sampling rate. A logger may choose to satisfy this request for
