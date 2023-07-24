@@ -468,7 +468,9 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     Uri sourceUri = null;
     VitoImageRequest vitoImageRequest = drawable.getImageRequest();
     Map<String, Object> imageSourceExtras = null;
+    boolean logWithHighSamplingRate = false;
     if (vitoImageRequest != null) {
+      logWithHighSamplingRate = vitoImageRequest.logWithHighSamplingRate;
       if (vitoImageRequest.finalImageRequest != null) {
         sourceUri = vitoImageRequest.finalImageRequest.getSourceUri();
       }
@@ -486,6 +488,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
         drawable.getActualImageFocusPoint(),
         imageExtras,
         drawable.getCallerContext(),
+        logWithHighSamplingRate,
         sourceUri);
   }
 

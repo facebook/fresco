@@ -20,7 +20,7 @@
  * intentionally unused arguments requires tricks like casting to void. This
  * macro provides a readable name for this operation.
  */
-#define UNUSED(expr) ((void) (expr));
+#define UNUSED(expr) ((void)(expr));
 
 static jclass runtime_exception_class;
 
@@ -62,10 +62,7 @@ static void unlock_pixels_safe(JNIEnv* env, jobject bitmap) {
  *
  * <p> Throws RuntimeException if unable to pin.
  */
-static void Bitmaps_pinBitmap(
-    JNIEnv* env,
-    jclass clazz,
-    jobject bitmap) {
+static void Bitmaps_pinBitmap(JNIEnv* env, jclass clazz, jobject bitmap) {
   UNUSED(clazz);
   int rc = AndroidBitmap_lockPixels(env, bitmap, 0);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
@@ -115,30 +112,28 @@ static void Bitmaps_copyBitmap(
     }
   }
 
- unlock_source:
+unlock_source:
   unlock_pixels_safe(env, src);
- unlock_destination:
+unlock_destination:
   unlock_pixels_safe(env, dest);
 }
 
 static JNINativeMethod bitmaps_native_methods[] = {
-  { "nativeCopyBitmap",
-    "(Landroid/graphics/Bitmap;ILandroid/graphics/Bitmap;II)V",
-    (void*) Bitmaps_copyBitmap },
+    {"nativeCopyBitmap",
+     "(Landroid/graphics/Bitmap;ILandroid/graphics/Bitmap;II)V",
+     (void*)Bitmaps_copyBitmap},
 };
 
 jint registerBitmapsMethods(JNIEnv* env) {
-  jclass runtime_exception = (*env)->FindClass(
-      env,
-      "java/lang/RuntimeException");
+  jclass runtime_exception =
+      (*env)->FindClass(env, "java/lang/RuntimeException");
   if (!runtime_exception) {
     return JNI_ERR;
   }
   runtime_exception_class = (*env)->NewGlobalRef(env, runtime_exception);
 
-  jclass bitmaps_class = (*env)->FindClass(
-       env,
-      "com/facebook/imagepipeline/nativecode/Bitmaps");
+  jclass bitmaps_class =
+      (*env)->FindClass(env, "com/facebook/imagepipeline/nativecode/Bitmaps");
   if (!bitmaps_class) {
     return JNI_ERR;
   }
@@ -156,23 +151,21 @@ jint registerBitmapsMethods(JNIEnv* env) {
 }
 
 static JNINativeMethod dalvik_decoder_native_methods[] = {
-  { "nativePinBitmap",
-    "(Landroid/graphics/Bitmap;)V",
-    (void*) Bitmaps_pinBitmap },
+    {"nativePinBitmap",
+     "(Landroid/graphics/Bitmap;)V",
+     (void*)Bitmaps_pinBitmap},
 };
 
 jint registerDalvikDecoderMethods(JNIEnv* env) {
-  jclass runtime_exception = (*env)->FindClass(
-      env,
-      "java/lang/RuntimeException");
+  jclass runtime_exception =
+      (*env)->FindClass(env, "java/lang/RuntimeException");
   if (!runtime_exception) {
     return JNI_ERR;
   }
   runtime_exception_class = (*env)->NewGlobalRef(env, runtime_exception);
 
   jclass dalvik_decoder_class = (*env)->FindClass(
-       env,
-      "com/facebook/imagepipeline/nativecode/DalvikPurgeableDecoder");
+      env, "com/facebook/imagepipeline/nativecode/DalvikPurgeableDecoder");
   if (!dalvik_decoder_class) {
     return JNI_ERR;
   }

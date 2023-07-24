@@ -89,7 +89,24 @@ object ImageSourceProvider {
   fun increasingQuality(
       lowResImageSource: ImageSource,
       highResImageSource: ImageSource
-  ): ImageSource = IncreasingQualityImageSource(lowResImageSource, highResImageSource)
+  ): ImageSource = IncreasingQualityImageSource(lowResImageSource, highResImageSource, null)
+
+  /**
+   * Create a multi image source for a low- and high resolution image. Both requests will be sent
+   * off, the low resolution will be used as an intermediate image until the high resolution one is
+   * available.
+   *
+   * @param lowResImageSource the low resolution image source to be used
+   * @param highResImageSource the high resolution image source to be used
+   * @param extras optional extra metadata to be used for logging
+   * @return the ImageSource to be passed to the UI component
+   */
+  @JvmStatic
+  fun increasingQuality(
+      lowResImageSource: ImageSource,
+      highResImageSource: ImageSource,
+      extras: Map<String, Any>? = null
+  ): ImageSource = IncreasingQualityImageSource(lowResImageSource, highResImageSource, extras)
 
   /**
    * Create a multi image source for a low- and high resolution image. Both requests will be sent
@@ -101,7 +118,10 @@ object ImageSourceProvider {
    * @return the ImageSource to be passed to the UI component
    */
   @JvmStatic
-  fun increasingQuality(lowResImageUri: Uri?, highResImageUri: Uri?): ImageSource =
+  fun increasingQuality(
+      lowResImageUri: Uri?,
+      highResImageUri: Uri?,
+  ): ImageSource =
       if (lowResImageUri == null) {
         forUri(highResImageUri)
       } else IncreasingQualityImageSource(forUri(lowResImageUri), forUri(highResImageUri))

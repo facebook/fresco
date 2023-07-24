@@ -7,10 +7,10 @@
 
 #include <jni.h>
 
+#include "JpegTranscoder.h"
 #include "exceptions_handler.h"
 #include "java_globals.h"
 #include "logging.h"
-#include "JpegTranscoder.h"
 
 jmethodID midInputStreamRead;
 jmethodID midInputStreamSkip;
@@ -28,8 +28,8 @@ jclass jRuntimeExceptionclass;
  *
  * <p> In case of method registration failure a RuntimeException is thrown.
  */
-__attribute__((visibility("default")))
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
+__attribute__((visibility("default"))) JNIEXPORT jint JNICALL
+JNI_OnLoad(JavaVM* vm, void*) {
   JNIEnv* env;
 
   if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK) {
@@ -43,7 +43,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
     return -1;
   }
   jRuntimeExceptionclass =
-    reinterpret_cast<jclass>(env->NewGlobalRef(runtimeException));
+      reinterpret_cast<jclass>(env->NewGlobalRef(runtimeException));
 
   jclass isClass = env->FindClass("java/io/InputStream");
   THROW_AND_RETURNVAL_IF(isClass == nullptr, "could not find InputStream", -1);
@@ -54,15 +54,11 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
   // find java methods
   midInputStreamRead = env->GetMethodID(isClass, "read", "([B)I");
   THROW_AND_RETURNVAL_IF(
-      midInputStreamRead == nullptr,
-      "failed to register InputStream.read",
-      -1);
+      midInputStreamRead == nullptr, "failed to register InputStream.read", -1);
 
   midInputStreamSkip = env->GetMethodID(isClass, "skip", "(J)J");
   THROW_AND_RETURNVAL_IF(
-      midInputStreamSkip == nullptr,
-      "failed to register InputStream.skip",
-      -1);
+      midInputStreamSkip == nullptr, "failed to register InputStream.skip", -1);
 
   midOutputStreamWrite = env->GetMethodID(osClass, "write", "([B)V");
   THROW_AND_RETURNVAL_IF(
@@ -70,7 +66,8 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
       "failed to register OutputStream.write",
       -1);
 
-  midOutputStreamWriteWithBounds = env->GetMethodID(osClass, "write", "([BII)V");
+  midOutputStreamWriteWithBounds =
+      env->GetMethodID(osClass, "write", "([BII)V");
   THROW_AND_RETURNVAL_IF(
       midOutputStreamWriteWithBounds == nullptr,
       "failed to register OutputStream.write",

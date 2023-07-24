@@ -9,5 +9,10 @@ package com.facebook.fresco.vito.source
 
 data class IncreasingQualityImageSource(
     val lowResSource: ImageSource,
-    val highResSource: ImageSource
-) : ImageSource
+    val highResSource: ImageSource,
+    val extras: Map<String, Any>? = null
+) : ImageSource {
+  fun getExtra(key: String): Any? = extras?.get(key)
+
+  fun getStringExtra(key: String): String? = getExtra(key) as? String
+}

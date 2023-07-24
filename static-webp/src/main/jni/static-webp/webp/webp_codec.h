@@ -25,11 +25,11 @@ namespace webp {
  * @param is
  * @param pixel_format
  */
-std::unique_ptr<DecodedImage> decodeWebpFromInputStream(
-    JNIEnv* env,
-    jobject is,
-    PixelFormat pixel_format);
+std::unique_ptr<DecodedImage>
+decodeWebpFromInputStream(JNIEnv* env, jobject is, PixelFormat pixel_format);
 
-} } }
+} // namespace webp
+} // namespace imagepipeline
+} // namespace facebook
 
 #endif /* _WEBP_CODEC_H_ */

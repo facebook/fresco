@@ -33,6 +33,8 @@ public interface ControllerListener2<INFO> {
     public @Nullable Float focusX;
     public @Nullable Float focusY;
 
+    public boolean logWithHighSamplingRate = false;
+
     public static Extras of(@Nullable Map<String, Object> componentExtras) {
       Extras extras = new Extras();
       extras.componentExtras = componentExtras;

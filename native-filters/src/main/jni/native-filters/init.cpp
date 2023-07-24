@@ -7,10 +7,10 @@
 
 #include <jni.h>
 
+#include "blur_filter.h"
 #include "exceptions_handling.h"
 #include "java_globals.h"
 #include "logging.h"
-#include "blur_filter.h"
 #include "rounding_filter.h"
 
 jclass javaRuntimeException_class;
@@ -24,8 +24,8 @@ jclass javaRuntimeException_class;
  *
  * <p> In case of method registration failure a RuntimeException is thrown.
  */
-__attribute__((visibility("default")))
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
+__attribute__((visibility("default"))) JNIEXPORT jint JNICALL
+JNI_OnLoad(JavaVM* vm, void*) {
   JNIEnv* env;
 
   if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK) {
@@ -39,7 +39,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
     return -1;
   }
   javaRuntimeException_class =
-    reinterpret_cast<jclass>(env->NewGlobalRef(runtimeException));
+      reinterpret_cast<jclass>(env->NewGlobalRef(runtimeException));
 
   THROW_AND_RETURNVAL_IF(
       registerBlurFilterMethods(env) == JNI_ERR,

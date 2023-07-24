@@ -36,7 +36,7 @@ struct JpegInputStreamWrapper {
   /**
    * Wraps given input stream.
    */
-  JpegInputStreamWrapper(JNIEnv *env, jobject is);
+  JpegInputStreamWrapper(JNIEnv* env, jobject is);
 };
 
 /**
@@ -52,7 +52,6 @@ static_assert(
     offsetof(JpegInputStreamWrapper, public_fields) == 0,
     "offset of JpegInputStreamWrapper.public_fields should be 0");
 
-
 /**
  * Java OutputStream wrapper for libjpeg.
  *
@@ -64,19 +63,19 @@ struct JpegOutputStreamWrapper {
   jobject outputStream;
   jbyteArray javaBuffer;
   JOCTET* buffer;
-  JNIEnv * env;
+  JNIEnv* env;
 
   /**
    * Wraps given output stream.
    */
-  JpegOutputStreamWrapper(JNIEnv *env, jobject os);
+  JpegOutputStreamWrapper(JNIEnv* env, jobject os);
 };
 
 /**
- * We cast pointers of type struct jpeg_destination_mgr* pointing to public_fields
- * to a pointer of type struct JpegOutputStreamWrapper* and expect that we
- * obtain a valid pointer to enclosing structure. Assertions below ensure
- * that this assumption is always true.
+ * We cast pointers of type struct jpeg_destination_mgr* pointing to
+ * public_fields to a pointer of type struct JpegOutputStreamWrapper* and expect
+ * that we obtain a valid pointer to enclosing structure. Assertions below
+ * ensure that this assumption is always true.
  */
 static_assert(
     std::is_standard_layout<JpegOutputStreamWrapper>::value,
@@ -85,7 +84,8 @@ static_assert(
     offsetof(JpegOutputStreamWrapper, public_fields) == 0,
     "offset of JpegOutputStreamWrapper.public_fields should be 0");
 
-
-} } }
+} // namespace jpeg
+} // namespace imagepipeline
+} // namespace facebook
 
 #endif /* _FB_JPEG_STREAM_WRAPPERS_H_ */

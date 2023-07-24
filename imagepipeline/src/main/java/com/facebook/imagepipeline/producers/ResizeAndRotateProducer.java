@@ -232,7 +232,8 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
                 imageRequest.getRotationOptions(),
                 imageRequest.getResizeOptions(),
                 null,
-                DEFAULT_JPEG_QUALITY);
+                DEFAULT_JPEG_QUALITY,
+                encodedImage.getColorSpace());
 
         if (result.getTranscodeStatus() == TranscodeStatus.TRANSCODING_ERROR) {
           throw new RuntimeException("Error while transcoding the image");

@@ -30,7 +30,8 @@ void encodePngIntoOutputStream(
     DecodedImage& decoded_image,
     jobject os);
 
-} } }
-
+} // namespace png
+} // namespace imagepipeline
+} // namespace facebook
 
 #endif /* _PNG_CODEC_H_ */

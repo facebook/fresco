@@ -10,11 +10,11 @@
 #include <jni.h>
 #include <png.h>
 
-#include "exceptions.h"
-#include "png_stream_wrappers.h"
 #include "decoded_image.h"
-#include "png_utils.h"
+#include "exceptions.h"
 #include "png_codec.h"
+#include "png_stream_wrappers.h"
+#include "png_utils.h"
 
 namespace facebook {
 namespace imagepipeline {
@@ -28,11 +28,8 @@ void encodePngIntoOutputStream(
       decoded_image.getPixelFormat() != PixelFormat::RGBA,
       "png encode function expect ARGB pixel format");
 
-  png_structp png_ptr = png_create_write_struct(
-      PNG_LIBPNG_VER_STRING,
-      nullptr,
-      nullptr,
-      nullptr);
+  png_structp png_ptr =
+      png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
   THROW_AND_RETURN_IF(png_ptr == nullptr, "could not create png struct");
   PngStructGuard png_guard{png_ptr};
 
@@ -50,21 +47,17 @@ void encodePngIntoOutputStream(
   }
 
   png_set_IHDR(
-    png_ptr,
-    info_ptr,
-    decoded_image.getWidth(),
-    decoded_image.getHeight(),
-    8,
-    PNG_COLOR_TYPE_RGBA,
-    PNG_INTERLACE_NONE,
-    PNG_COMPRESSION_TYPE_BASE,
-    PNG_FILTER_TYPE_BASE
-  );
-  png_set_write_fn(
       png_ptr,
-      &os_wrapper,
-      pngWriteToJavaOutputStream,
-      pngNoOpFlush);
+      info_ptr,
+      decoded_image.getWidth(),
+      decoded_image.getHeight(),
+      8,
+      PNG_COLOR_TYPE_RGBA,
+      PNG_INTERLACE_NONE,
+      PNG_COMPRESSION_TYPE_BASE,
+      PNG_FILTER_TYPE_BASE);
+  png_set_write_fn(
+      png_ptr, &os_wrapper, pngWriteToJavaOutputStream, pngNoOpFlush);
 
   // write the image
   const int row_stride = decoded_image.getStride();
@@ -81,4 +74,6 @@ void encodePngIntoOutputStream(
   png_write_end(png_ptr, info_ptr);
 }
 
-} } }
+} // namespace png
+} // namespace imagepipeline
+} // namespace facebook

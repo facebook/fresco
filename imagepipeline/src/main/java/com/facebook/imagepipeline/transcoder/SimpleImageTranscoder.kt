@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.transcoder
 import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat
 import android.graphics.BitmapFactory
+import android.graphics.ColorSpace
 import android.os.Build
 import com.facebook.common.logging.FLog
 import com.facebook.imageformat.DefaultImageFormats
@@ -32,7 +33,8 @@ class SimpleImageTranscoder(private val resizingEnabled: Boolean, private val ma
       rotationOptions: RotationOptions?,
       resizeOptions: ResizeOptions?,
       outputFormat: ImageFormat?,
-      quality: Int?
+      quality: Int?,
+      colorSpace: ColorSpace?,
   ): ImageTranscodeResult {
     var rotationOptions = rotationOptions
     var quality = quality
@@ -45,6 +47,9 @@ class SimpleImageTranscoder(private val resizingEnabled: Boolean, private val ma
     val sampleSize = getSampleSize(encodedImage, rotationOptions, resizeOptions)
     val options = BitmapFactory.Options()
     options.inSampleSize = sampleSize
+    if (colorSpace != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      options.inPreferredColorSpace = colorSpace
+    }
     val resizedBitmap: Bitmap? =
         try {
           BitmapFactory.decodeStream(encodedImage.inputStream, null, options)

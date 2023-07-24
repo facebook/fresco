@@ -22,6 +22,7 @@ import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.ImageOptions.Companion.defaults
 import com.facebook.fresco.vito.source.ImageSource
 import com.facebook.fresco.vito.source.ImageSourceProvider
+import com.facebook.fresco.vito.source.IncreasingQualityImageSource
 import com.facebook.fresco.vito.source.SingleImageSource
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.image.CloseableImage
@@ -38,7 +39,8 @@ class VitoImagePipelineImpl(
       resources: Resources,
       imageSource: ImageSource,
       options: ImageOptions?,
-      viewport: Rect?
+      logWithHighSamplingRate: Boolean,
+      viewport: Rect?,
   ): VitoImageRequest {
     val imageOptions = options ?: defaults()
     val extras: MutableMap<String, Any?> = mutableMapOf()
@@ -58,6 +60,10 @@ class VitoImagePipelineImpl(
       if (imageSource.extras != null) {
         extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = imageSource.extras
       }
+    } else if (imageSource is IncreasingQualityImageSource) {
+      if (imageSource.extras != null) {
+        extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = imageSource.extras
+      }
     }
 
     val finalImageRequest =
@@ -66,7 +72,13 @@ class VitoImagePipelineImpl(
     val finalImageCacheKey = finalImageRequest?.let { imagePipeline.getCacheKey(it, null) }
 
     return VitoImageRequest(
-        resources, finalImageSource, imageOptions, finalImageRequest, finalImageCacheKey, extras)
+        resources,
+        finalImageSource,
+        imageOptions,
+        logWithHighSamplingRate,
+        finalImageRequest,
+        finalImageCacheKey,
+        extras)
   }
 
   override fun getCachedImage(imageRequest: VitoImageRequest): CloseableReference<CloseableImage>? {

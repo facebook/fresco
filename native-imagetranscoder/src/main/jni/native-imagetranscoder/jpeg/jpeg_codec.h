@@ -34,7 +34,6 @@ void encodeJpegIntoOutputStream(
     jobject os,
     int quality);
 
-
 /**
  * Downscales and rotates jpeg image
  *
@@ -54,6 +53,8 @@ void transformJpeg(
     const ScaleFactor& scale_factor,
     int quality);
 
-} } }
+} // namespace jpeg
+} // namespace imagepipeline
+} // namespace facebook
 
 #endif /* _JPEG_CODEC_H_ */

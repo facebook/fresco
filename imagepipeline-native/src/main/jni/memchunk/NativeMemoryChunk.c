@@ -5,15 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <string.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <jni.h>
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
-#define JLONG_TO_PTR(j) ((void*) (intptr_t) (j))
-#define PTR_TO_JLONG(p) ((jlong) (intptr_t) (p))
+#define JLONG_TO_PTR(j) ((void*)(intptr_t)(j))
+#define PTR_TO_JLONG(p) ((jlong)(intptr_t)(p))
 
 /**
  * Explicitly marks result of an expression as unused.
@@ -23,14 +23,12 @@
  * intentionally unused arguments requires tricks like casting to void. This
  * macro provides a readable name for this operation.
  */
-#define UNUSED(p) ((void) (p))
+#define UNUSED(p) ((void)(p))
 
 static jclass jRuntimeException_class;
 
-static jlong NativeMemoryChunk_nativeAllocate(
-    JNIEnv* env,
-    jclass clzz,
-    jint size) {
+static jlong
+NativeMemoryChunk_nativeAllocate(JNIEnv* env, jclass clzz, jint size) {
   UNUSED(clzz);
   void* pointer = malloc(size);
   if (!pointer) {
@@ -40,10 +38,8 @@ static jlong NativeMemoryChunk_nativeAllocate(
   return PTR_TO_JLONG(pointer);
 }
 
-static void NativeMemoryChunk_nativeFree(
-    JNIEnv* env,
-    jclass clzz,
-    jlong lpointer) {
+static void
+NativeMemoryChunk_nativeFree(JNIEnv* env, jclass clzz, jlong lpointer) {
   UNUSED(env);
   UNUSED(clzz);
   free(JLONG_TO_PTR(lpointer));
@@ -58,11 +54,7 @@ static void NativeMemoryChunk_nativeCopyToByteArray(
     jint count) {
   UNUSED(clzz);
   (*env)->SetByteArrayRegion(
-      env,
-      byteArray,
-      offset,
-      count,
-      JLONG_TO_PTR(lpointer));
+      env, byteArray, offset, count, JLONG_TO_PTR(lpointer));
 }
 
 static void NativeMemoryChunk_nativeCopyFromByteArray(
@@ -74,11 +66,7 @@ static void NativeMemoryChunk_nativeCopyFromByteArray(
     jint count) {
   UNUSED(clzz);
   (*env)->GetByteArrayRegion(
-      env,
-      byteArray,
-      offset,
-      count,
-      JLONG_TO_PTR(lpointer));
+      env, byteArray, offset, count, JLONG_TO_PTR(lpointer));
 }
 
 static void NativeMemoryChunk_nativeMemcpy(
@@ -92,10 +80,8 @@ static void NativeMemoryChunk_nativeMemcpy(
   memcpy(JLONG_TO_PTR(dst), JLONG_TO_PTR(src), count);
 }
 
-static jbyte NativeMemoryChunk_nativeReadByte(
-    JNIEnv* env,
-    jclass clzz,
-    jlong lpointer){
+static jbyte
+NativeMemoryChunk_nativeReadByte(JNIEnv* env, jclass clzz, jlong lpointer) {
   UNUSED(env);
   UNUSED(clzz);
   jbyte* jbyte_ptr = JLONG_TO_PTR(lpointer);
@@ -103,14 +89,16 @@ static jbyte NativeMemoryChunk_nativeReadByte(
 }
 
 static JNINativeMethod gNativeMemoryChunkMethods[] = {
-  { "nativeAllocate", "(I)J", (void*) NativeMemoryChunk_nativeAllocate },
-  { "nativeFree", "(J)V", (void*) NativeMemoryChunk_nativeFree },
-  { "nativeCopyToByteArray", "(J[BII)V",
-    (void*) NativeMemoryChunk_nativeCopyToByteArray },
-  { "nativeCopyFromByteArray", "(J[BII)V",
-    (void*) NativeMemoryChunk_nativeCopyFromByteArray },
-  { "nativeMemcpy", "(JJI)V", (void*) NativeMemoryChunk_nativeMemcpy },
-  { "nativeReadByte", "(J)B", (void*) NativeMemoryChunk_nativeReadByte },
+    {"nativeAllocate", "(I)J", (void*)NativeMemoryChunk_nativeAllocate},
+    {"nativeFree", "(J)V", (void*)NativeMemoryChunk_nativeFree},
+    {"nativeCopyToByteArray",
+     "(J[BII)V",
+     (void*)NativeMemoryChunk_nativeCopyToByteArray},
+    {"nativeCopyFromByteArray",
+     "(J[BII)V",
+     (void*)NativeMemoryChunk_nativeCopyFromByteArray},
+    {"nativeMemcpy", "(JJI)V", (void*)NativeMemoryChunk_nativeMemcpy},
+    {"nativeReadByte", "(J)B", (void*)NativeMemoryChunk_nativeReadByte},
 };
 
 /**
@@ -121,17 +109,15 @@ static JNINativeMethod gNativeMemoryChunkMethods[] = {
  * - registers native methods of NativeMemoryChunk
  */
 jint registerNativeMemoryChunkMethods(JNIEnv* env) {
-  jclass runtimeException = (*env)->FindClass(
-      env,
-      "java/lang/RuntimeException");
+  jclass runtimeException =
+      (*env)->FindClass(env, "java/lang/RuntimeException");
   if (!runtimeException) {
     return JNI_ERR;
   }
   jRuntimeException_class = (*env)->NewGlobalRef(env, runtimeException);
 
   jclass chunk_class = (*env)->FindClass(
-      env,
-      "com/facebook/imagepipeline/memory/NativeMemoryChunk");
+      env, "com/facebook/imagepipeline/memory/NativeMemoryChunk");
   if (!chunk_class) {
     return JNI_ERR;
   }

@@ -22,7 +22,11 @@ namespace facebook {
  * @param ... sprintf-style args
  * @return 0 on success; a negative value on failure
  */
-jint throwException(JNIEnv* pEnv, const char* szClassName, const char* szFmt, va_list va_args) {
+jint throwException(
+    JNIEnv* pEnv,
+    const char* szClassName,
+    const char* szFmt,
+    va_list va_args) {
   char szMsg[MSG_SIZE];
   vsnprintf(szMsg, MSG_SIZE, szFmt, va_args);
   jclass exClass = pEnv->FindClass(szClassName);
@@ -40,7 +44,8 @@ jint throwException(JNIEnv* pEnv, const char* szClassName, const char* szFmt, va
 jint throwNoClassDefError(JNIEnv* pEnv, const char* szFmt, ...) {
   va_list va_args;
   va_start(va_args, szFmt);
-  jint ret = throwException(pEnv, "java/lang/NoClassDefFoundError", szFmt, va_args);
+  jint ret =
+      throwException(pEnv, "java/lang/NoClassDefFoundError", szFmt, va_args);
   va_end(va_args);
   return ret;
 }
@@ -72,7 +77,8 @@ jint throwRuntimeException(JNIEnv* pEnv, const char* szFmt, ...) {
 jint throwIllegalArgumentException(JNIEnv* pEnv, const char* szFmt, ...) {
   va_list va_args;
   va_start(va_args, szFmt);
-  jint ret = throwException(pEnv, "java/lang/IllegalArgumentException", szFmt, va_args);
+  jint ret = throwException(
+      pEnv, "java/lang/IllegalArgumentException", szFmt, va_args);
   va_end(va_args);
   return ret;
 }
@@ -88,7 +94,8 @@ jint throwIllegalArgumentException(JNIEnv* pEnv, const char* szFmt, ...) {
 jint throwIllegalStateException(JNIEnv* pEnv, const char* szFmt, ...) {
   va_list va_args;
   va_start(va_args, szFmt);
-  jint ret = throwException(pEnv, "java/lang/IllegalStateException", szFmt, va_args);
+  jint ret =
+      throwException(pEnv, "java/lang/IllegalStateException", szFmt, va_args);
   va_end(va_args);
   return ret;
 }
@@ -142,45 +149,52 @@ jint throwIOException(JNIEnv* pEnv, const char* szFmt, ...) {
 }
 
 /**
- * Finds the specified class. If it's not found, instructs the JNI environment to throw an
- * exception.
+ * Finds the specified class. If it's not found, instructs the JNI environment
+ * to throw an exception.
  *
  * @param pEnv JNI environment
- * @param szClassName the classname to find in JNI format (e.g. "java/lang/String")
- * @return the class or NULL if not found (in which case a pending exception will be queued). This
- *     returns a global reference (JNIEnv::NewGlobalRef).
+ * @param szClassName the classname to find in JNI format (e.g.
+ * "java/lang/String")
+ * @return the class or NULL if not found (in which case a pending exception
+ * will be queued). This returns a global reference (JNIEnv::NewGlobalRef).
  */
 jclass findClassOrThrow(JNIEnv* pEnv, const char* szClassName) {
   jclass clazz = pEnv->FindClass(szClassName);
   if (!clazz) {
     return NULL;
   }
-  return (jclass) pEnv->NewGlobalRef(clazz);
+  return (jclass)pEnv->NewGlobalRef(clazz);
 }
 
 /**
- * Finds the specified field of the specified class. If it's not found, instructs the JNI
- * environment to throw an exception.
+ * Finds the specified field of the specified class. If it's not found,
+ * instructs the JNI environment to throw an exception.
  *
  * @param pEnv JNI environment
  * @param clazz the class to lookup the field in
  * @param szFieldName the name of the field to find
  * @param szSig the signature of the field
- * @return the field or NULL if not found (in which case a pending exception will be queued)
+ * @return the field or NULL if not found (in which case a pending exception
+ * will be queued)
  */
-jfieldID getFieldIdOrThrow(JNIEnv* pEnv, jclass clazz, const char* szFieldName, const char* szSig) {
+jfieldID getFieldIdOrThrow(
+    JNIEnv* pEnv,
+    jclass clazz,
+    const char* szFieldName,
+    const char* szSig) {
   return pEnv->GetFieldID(clazz, szFieldName, szSig);
 }
 
 /**
- * Finds the specified method of the specified class. If it's not found, instructs the JNI
- * environment to throw an exception.
+ * Finds the specified method of the specified class. If it's not found,
+ * instructs the JNI environment to throw an exception.
  *
  * @param pEnv JNI environment
  * @param clazz the class to lookup the method in
  * @param szMethodName the name of the method to find
  * @param szSig the signature of the method
- * @return the method or NULL if not found (in which case a pending exception will be queued)
+ * @return the method or NULL if not found (in which case a pending exception
+ * will be queued)
  */
 jmethodID getMethodIdOrThrow(
     JNIEnv* pEnv,

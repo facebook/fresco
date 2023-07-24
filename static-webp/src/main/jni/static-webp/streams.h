@@ -8,8 +8,8 @@
 #ifndef _STREAMS_H_
 #define _STREAMS_H_
 
-#include <vector>
 #include <stdint.h>
+#include <vector>
 
 #include <jni.h>
 
@@ -34,6 +34,7 @@ static const unsigned int kMaxAllowedImageSize = 8 * 1024 * 1024;
  */
 std::vector<uint8_t> readStreamFully(JNIEnv* env, jobject is);
 
-} }
+} // namespace imagepipeline
+} // namespace facebook
 
 #endif /* _STREAMS_H_ */
