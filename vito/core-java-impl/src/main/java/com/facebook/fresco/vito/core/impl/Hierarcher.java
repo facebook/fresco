@@ -103,4 +103,14 @@ public interface Hierarcher {
       ScaleTypeDrawable actualImageWrapper,
       ImageOptions imageOptions,
       @Nullable Object callerContext);
+
+  /**
+   * Round the given Drawable if set via the given on imageOptions
+   *
+   * @param resources
+   * @param drawable
+   * @param imageOptions
+   * @return the rounded drawable or original if no rounding specified
+   */
+  Drawable applyRoundingOptions(Resources resources, Drawable drawable, ImageOptions imageOptions);
 }
