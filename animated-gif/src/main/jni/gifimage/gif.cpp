@@ -21,6 +21,7 @@
 #include "gif_lib.h"
 #include "jni_helpers.h"
 #include "locks.h"
+#include "secure_memcpy.h"
 
 using namespace facebook;
 
@@ -72,9 +73,17 @@ class BytesDataWrapper : public DataWrapper {
   size_t read(GifByteType* dest, size_t size) override {
     size_t endPosition = rangeAdd(m_position, size, m_length);
     size_t readSize = endPosition - m_position;
-    memcpy(dest, m_pBuffer.data() + m_position, readSize);
-    m_position = endPosition;
-    return readSize;
+    if (try_checked_memcpy(
+            dest,
+            m_length - m_position, // total buffer len - current position =
+                                   // # of remaining bytes in dest
+            m_pBuffer.data() + m_position,
+            readSize) != 0) {
+      return 0; // memcpy error
+    } else {
+      m_position = endPosition;
+      return readSize;
+    }
   }
 
   size_t getBufferSize() override {
