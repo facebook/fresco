@@ -6,4 +6,4 @@
  */
 
 /** Classes for the NetworkFetcher implementation with OkHttp3 */
-package com.facebook.imagepipeline.backends.okhttp3;
+package com.facebook.imagepipeline.backends.okhttp3
