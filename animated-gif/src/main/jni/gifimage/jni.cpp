@@ -20,7 +20,7 @@ __attribute__((visibility("default"))) jint JNI_OnLoad(
     JavaVM* vm,
     void* reserved) {
   // get the current env
-  JNIEnv* env;
+  JNIEnv* env = nullptr;
   if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK) {
     return JNI_ERR;
   }

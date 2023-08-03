@@ -656,7 +656,7 @@ void WebPFrame_nativeRenderFrame(
     return;
   }
 
-  uint8_t* pixels;
+  uint8_t* pixels = nullptr;
   if (AndroidBitmap_lockPixels(pEnv, bitmap, (void**)&pixels) !=
       ANDROID_BITMAP_RESULT_SUCCESS) {
     spNativeContext.reset();

@@ -432,7 +432,7 @@ static void addRoundCorner(
     const int h,
     const int radius,
     const enum Corner corner) {
-  int centerX, centerY;
+  int centerX = 0, centerY = 0;
 
   switch (corner) {
     case TOP_LEFT:
@@ -749,7 +749,7 @@ static void toCircleWithOptionalBorder(
     return;
   }
 
-  pixel_t* pixelPtr;
+  pixel_t* pixelPtr = NULL;
 
   // Locking pixels such that they will not get moved around during processing
   rc = AndroidBitmap_lockPixels(env, bitmap, (void*)&pixelPtr);
@@ -814,7 +814,7 @@ static void addRoundedCorners(
     return;
   }
 
-  pixel_t* pixelPtr;
+  pixel_t* pixelPtr = NULL;
 
   // Locking pixels such that they will not get moved around during processing
   rc = AndroidBitmap_lockPixels(env, bitmap, (void*)&pixelPtr);
@@ -887,7 +887,7 @@ static void toCircleFastWithOptionalBorder(
     return;
   }
 
-  pixel_t* pixelPtr;
+  pixel_t* pixelPtr = NULL;
 
   // Locking pixels such that they will not get moved around during processing
   rc = AndroidBitmap_lockPixels(env, bitmap, (void*)&pixelPtr);

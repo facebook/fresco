@@ -27,7 +27,7 @@ jint throwException(
     const char* szClassName,
     const char* szFmt,
     va_list va_args) {
-  char szMsg[MSG_SIZE];
+  char szMsg[MSG_SIZE] = {};
   vsnprintf(szMsg, MSG_SIZE, szFmt, va_args);
   jclass exClass = pEnv->FindClass(szClassName);
   return pEnv->ThrowNew(exClass, szMsg);

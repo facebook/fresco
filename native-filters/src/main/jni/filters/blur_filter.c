@@ -202,7 +202,7 @@ static void BlurFilter_iterativeBoxBlur(
     return;
   }
 
-  pixel_t* pixelPtr;
+  pixel_t* pixelPtr = NULL;
 
   const int w = bitmapInfo.width;
   const int h = bitmapInfo.height;

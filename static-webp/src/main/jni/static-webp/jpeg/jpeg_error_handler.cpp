@@ -54,8 +54,9 @@ static void jpegCleanup(JpegErrorHandler* error_handler) {
 
 void jpegThrow(j_common_ptr cinfo) {
   // create and throw the jpeg-turbo error message
-  char buffer[JMSG_LENGTH_MAX];
+  char buffer[JMSG_LENGTH_MAX] = {};
   (*cinfo->err->format_message)(cinfo, buffer);
+
   jpegSafeThrow(cinfo, buffer);
 }
 
