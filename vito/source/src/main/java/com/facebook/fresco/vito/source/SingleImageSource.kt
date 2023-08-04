@@ -17,6 +17,10 @@ data class SingleImageSource(val uri: Uri, val extras: Map<String, Any>? = null)
   fun getStringExtra(key: String): String? = getExtra(key) as? String
 
   override fun equals(other: Any?): Boolean {
+    if (ImageSourceConfig.doNotUseOverriddenDataClassMembers) {
+      return super.equals(other)
+    }
+
     if (this === other) {
       return true
     }
@@ -26,17 +30,14 @@ data class SingleImageSource(val uri: Uri, val extras: Map<String, Any>? = null)
 
     val otherImageSource: SingleImageSource = other as SingleImageSource
 
-    if (uri != otherImageSource.uri) {
-      return false
-    }
-    if (extras != otherImageSource.extras) {
-      return false
-    }
-
-    return true
+    return uri == otherImageSource.uri && extras == otherImageSource.extras
   }
 
   override fun hashCode(): Int {
+    if (ImageSourceConfig.doNotUseOverriddenDataClassMembers) {
+      return super.hashCode()
+    }
+
     var result = uri.hashCode()
     result = 31 * result + (extras?.hashCode() ?: 0)
     return result

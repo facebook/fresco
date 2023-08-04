@@ -9,17 +9,31 @@ package com.facebook.fresco.vito.source
 
 import android.graphics.drawable.Drawable
 
+@Suppress("KtDataClass")
 data class DrawableImageSource(val drawable: Drawable) : ImageSource {
 
-  override fun hashCode(): Int {
-    return drawable.hashCode()
-  }
-
   override fun equals(other: Any?): Boolean {
+    if (ImageSourceConfig.doNotUseOverriddenDataClassMembers) {
+      return super.equals(other)
+    }
+
     if (this === other) {
       return true
     }
-    if (other == null || javaClass != other.javaClass) return false
-    return drawable == (other as DrawableImageSource).drawable
+    if (javaClass != other?.javaClass) {
+      return false
+    }
+
+    other as DrawableImageSource
+
+    return drawable == other.drawable
+  }
+
+  override fun hashCode(): Int {
+    return if (ImageSourceConfig.doNotUseOverriddenDataClassMembers) {
+      super.hashCode()
+    } else {
+      drawable.hashCode()
+    }
   }
 }

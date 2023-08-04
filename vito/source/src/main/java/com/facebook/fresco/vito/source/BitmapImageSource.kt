@@ -9,4 +9,29 @@ package com.facebook.fresco.vito.source
 
 import android.graphics.Bitmap
 
-data class BitmapImageSource(val bitmap: Bitmap) : ImageSource
+@Suppress("KtDataClass")
+data class BitmapImageSource(val bitmap: Bitmap) : ImageSource {
+
+  override fun equals(other: Any?): Boolean {
+    if (ImageSourceConfig.doNotUseOverriddenDataClassMembers) {
+      return super.equals(other)
+    }
+
+    if (this === other) {
+      return true
+    }
+    if (javaClass != other?.javaClass) {
+      return false
+    }
+
+    return bitmap == (other as BitmapImageSource).bitmap
+  }
+
+  override fun hashCode(): Int {
+    return if (ImageSourceConfig.doNotUseOverriddenDataClassMembers) {
+      super.hashCode()
+    } else {
+      bitmap.hashCode()
+    }
+  }
+}
