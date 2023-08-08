@@ -7,9 +7,6 @@
 
 package com.facebook.fresco.urimod
 
-import android.net.Uri
-import com.facebook.drawee.drawable.ScalingUtils.ScaleType
-
-interface UriModifierInterface {
-  fun modifyUri(uri: Uri, viewport: Dimensions?, scaleType: ScaleType): Uri
+data class Dimensions(val w: Int, val h: Int) {
+  override fun toString() = "${w}x${h}"
 }
