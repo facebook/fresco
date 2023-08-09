@@ -8,5 +8,5 @@
 package com.facebook.fresco.vito.source
 
 object ImageSourceConfig {
-  var doNotUseOverriddenDataClassMembers: Boolean = true
+  var doNotUseOverriddenDataClassMembers: Boolean = false
 }
