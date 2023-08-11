@@ -81,7 +81,9 @@ class AnimationFrames(
     bitmapsByFrame: Map<Int, CloseableReference<Bitmap>>,
     private val realToCompressIndexMap: Map<Int, Int>
 ) : Closeable {
-  val frames = ConcurrentHashMap(bitmapsByFrame)
+  private val concurrentFrames = ConcurrentHashMap(bitmapsByFrame)
+  val frames: Map<Int, CloseableReference<Bitmap>>
+    get() = concurrentFrames.filter { (_, frame) -> frame.isValid }
 
   /** Calculate the size of animation */
   val sizeBytes: Int =
@@ -100,10 +102,10 @@ class AnimationFrames(
   fun getFrame(frameIndex: Int): CloseableReference<Bitmap>? {
     val frame =
         if (realToCompressIndexMap.isEmpty()) {
-          frames[frameIndex]
+          concurrentFrames[frameIndex]
         } else {
           val reducedIndex = realToCompressIndexMap[frameIndex] ?: return null
-          frames[reducedIndex]
+          concurrentFrames[reducedIndex]
         }
 
     return if (frame?.isValid == true) frame else null
@@ -111,7 +113,7 @@ class AnimationFrames(
 
   /** Release the stored bitmaps */
   override fun close() {
-    frames.values.forEach { it.close() }
-    frames.clear()
+    concurrentFrames.values.forEach { it.close() }
+    concurrentFrames.clear()
   }
 }
