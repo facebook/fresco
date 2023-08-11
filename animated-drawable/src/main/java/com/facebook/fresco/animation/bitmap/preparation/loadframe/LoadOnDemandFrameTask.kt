@@ -10,6 +10,7 @@ package com.facebook.fresco.animation.bitmap.preparation.loadframe
 import android.graphics.Bitmap
 import com.facebook.common.references.CloseableReference
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer
+import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFramePriorityTask.Priority
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
 
 /**
@@ -20,7 +21,7 @@ import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
 class LoadOnDemandFrameTask(
     private val frameNumber: Int,
     private val getCachedBitmap: (Int) -> CloseableReference<Bitmap>?,
-    override val priority: Int,
+    override val priority: Priority,
     private val output: (CloseableReference<Bitmap>?) -> Unit,
     private val platformBitmapFactory: PlatformBitmapFactory,
     private val bitmapFrameRenderer: BitmapFrameRenderer,
