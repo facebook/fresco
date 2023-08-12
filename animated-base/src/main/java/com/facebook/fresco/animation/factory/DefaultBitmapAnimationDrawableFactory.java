@@ -32,7 +32,9 @@ import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationSt
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer;
 import com.facebook.fresco.animation.bitmap.preparation.DefaultBitmapFramePreparer;
 import com.facebook.fresco.animation.bitmap.preparation.FixedNumberBitmapFramePreparationStrategy;
+import com.facebook.fresco.animation.bitmap.preparation.OnDemandAnimationStrategy;
 import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFrameTaskFactory;
+import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.FrameLoaderFactory;
 import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendAnimationInformation;
 import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendFrameRenderer;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
@@ -183,13 +185,22 @@ public class DefaultBitmapAnimationDrawableFactory
     }
 
     if (mUseNewBitmapRender.get()) {
-      bitmapFramePreparationStrategy =
-          new BalancedAnimationStrategy(
-              animationInfo,
-              mBalancedStrategyPreparationMs.get(),
-              new LoadFrameTaskFactory(mPlatformBitmapFactory, bitmapFrameRenderer),
-              bitmapFrameCache,
-              mDownscaleFrameToDrawableDimensions.get());
+      if (mBalancedStrategyPreparationMs.get() != 0) {
+        bitmapFramePreparationStrategy =
+            new BalancedAnimationStrategy(
+                animationInfo,
+                mBalancedStrategyPreparationMs.get(),
+                new LoadFrameTaskFactory(mPlatformBitmapFactory, bitmapFrameRenderer),
+                bitmapFrameCache,
+                mDownscaleFrameToDrawableDimensions.get());
+      } else {
+        bitmapFramePreparationStrategy =
+            new OnDemandAnimationStrategy(
+                animationInfo,
+                new FrameLoaderFactory(
+                    mPlatformBitmapFactory, bitmapFrameRenderer, bitmapFrameCache),
+                mDownscaleFrameToDrawableDimensions.get());
+      }
     }
 
     BitmapAnimationBackend bitmapAnimationBackend =
