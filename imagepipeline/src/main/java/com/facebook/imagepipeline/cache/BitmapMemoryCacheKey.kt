@@ -10,12 +10,12 @@ package com.facebook.imagepipeline.cache
 import android.net.Uri
 import com.facebook.cache.common.CacheKey
 import com.facebook.common.time.RealtimeSinceBootClock
-import com.facebook.common.util.HashCodeUtil
 import com.facebook.imagepipeline.common.ImageDecodeOptions
 import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.common.RotationOptions
 
 /** Cache key for BitmapMemoryCache */
+@Suppress("KtDataClass")
 data class BitmapMemoryCacheKey(
     val sourceString: String,
     val resizeOptions: ResizeOptions?,
@@ -27,14 +27,15 @@ data class BitmapMemoryCacheKey(
 
   var callerContext: Any? = null
 
-  private val hash: Int =
-      HashCodeUtil.hashCode(
-          sourceString.hashCode(),
-          resizeOptions?.hashCode() ?: 0,
-          rotationOptions.hashCode(),
-          imageDecodeOptions,
-          postprocessorCacheKey,
-          postprocessorName)
+  private val hash: Int = run {
+    var result = sourceString.hashCode()
+    result = 31 * result + (resizeOptions?.hashCode() ?: 0)
+    result = 31 * result + rotationOptions.hashCode()
+    result = 31 * result + imageDecodeOptions.hashCode()
+    result = 31 * result + (postprocessorCacheKey?.hashCode() ?: 0)
+    result = 31 * result + (postprocessorName?.hashCode() ?: 0)
+    result
+  }
   val inBitmapCacheSince: Long = RealtimeSinceBootClock.get().now()
 
   override fun hashCode(): Int = hash
@@ -45,5 +46,31 @@ data class BitmapMemoryCacheKey(
 
   override fun getUriString(): String = sourceString
 
-  override fun isResourceIdForDebugging() = false
+  override fun isResourceIdForDebugging(): Boolean = false
+
+  override fun equals(other: Any?): Boolean {
+    if (doNotUseOverriddenDataClassMembers) {
+      return super.equals(other)
+    }
+
+    if (this === other) {
+      return true
+    }
+    if (javaClass != other?.javaClass) {
+      return false
+    }
+
+    val otherKey: BitmapMemoryCacheKey = other as BitmapMemoryCacheKey
+
+    return sourceString == otherKey.sourceString &&
+        resizeOptions == otherKey.resizeOptions &&
+        rotationOptions == otherKey.rotationOptions &&
+        imageDecodeOptions == otherKey.imageDecodeOptions &&
+        postprocessorCacheKey == otherKey.postprocessorCacheKey &&
+        postprocessorName == otherKey.postprocessorName
+  }
+
+  companion object {
+    var doNotUseOverriddenDataClassMembers: Boolean = false
+  }
 }
