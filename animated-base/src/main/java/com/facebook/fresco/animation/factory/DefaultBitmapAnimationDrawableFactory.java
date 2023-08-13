@@ -23,6 +23,7 @@ import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer;
 import com.facebook.fresco.animation.bitmap.cache.AnimationFrameCacheKey;
+import com.facebook.fresco.animation.bitmap.cache.FpsCompressorInfo;
 import com.facebook.fresco.animation.bitmap.cache.FrescoFpsCache;
 import com.facebook.fresco.animation.bitmap.cache.FrescoFrameCache;
 import com.facebook.fresco.animation.bitmap.cache.KeepLastFrameCache;
@@ -237,7 +238,9 @@ public class DefaultBitmapAnimationDrawableFactory
   private BitmapFrameCache createBitmapFrameCache(AnimatedImageResult animatedImageResult) {
     if (mUseNewBitmapRender.get()) {
       return new FrescoFpsCache(
-          animatedImageResult, mAnimationFpsLimit.get(), mAnimatedDrawableCache.get());
+          animatedImageResult,
+          new FpsCompressorInfo(mAnimationFpsLimit.get()),
+          mAnimatedDrawableCache.get());
     }
 
     switch (mCachingStrategySupplier.get()) {
