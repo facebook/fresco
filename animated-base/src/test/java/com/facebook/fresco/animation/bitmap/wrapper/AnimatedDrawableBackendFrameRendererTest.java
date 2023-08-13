@@ -7,7 +7,7 @@
 
 package com.facebook.fresco.animation.bitmap.wrapper;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
@@ -40,7 +40,8 @@ public class AnimatedDrawableBackendFrameRendererTest {
     mAnimatedDrawableBackend = mock(AnimatedDrawableBackend.class);
     mBitmapFrameCache = mock(BitmapFrameCache.class);
     mAnimatedDrawableBackendFrameRenderer =
-        new AnimatedDrawableBackendFrameRenderer(mBitmapFrameCache, mAnimatedDrawableBackend);
+        new AnimatedDrawableBackendFrameRenderer(
+            mBitmapFrameCache, mAnimatedDrawableBackend, false);
   }
 
   @Test

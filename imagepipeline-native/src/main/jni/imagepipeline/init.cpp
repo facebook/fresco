@@ -8,9 +8,9 @@
 #include <jni.h>
 
 #include "Bitmaps.h"
+#include "NativeMemoryChunk.h"
 #include "exceptions.h"
 #include "logging.h"
-#include "NativeMemoryChunk.h"
 
 jclass jRuntimeException_class;
 
@@ -23,9 +23,9 @@ jclass jRuntimeException_class;
  *
  * <p> In case of method registration failure a RuntimeException is thrown.
  */
-__attribute__((visibility("default")))
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
-  JNIEnv* env;
+__attribute__((visibility("default"))) JNIEXPORT jint JNICALL
+JNI_OnLoad(JavaVM* vm, void*) {
+  JNIEnv* env = nullptr;
 
   if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK) {
     return -1;
@@ -38,7 +38,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
     return -1;
   }
   jRuntimeException_class =
-    reinterpret_cast<jclass>(env->NewGlobalRef(runtimeException));
+      reinterpret_cast<jclass>(env->NewGlobalRef(runtimeException));
 
   // register native methods
   THROW_AND_RETURNVAL_IF(

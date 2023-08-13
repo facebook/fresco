@@ -36,6 +36,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
 
   private final AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
   private final PlatformBitmapFactory mBitmapFactory;
+  private final boolean mIsNewRenderImplementation;
 
   static @Nullable AnimatedImageDecoder sGifAnimatedImageDecoder = null;
   static @Nullable AnimatedImageDecoder sWebpAnimatedImageDecoder = null;
@@ -56,9 +57,11 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
 
   public AnimatedImageFactoryImpl(
       AnimatedDrawableBackendProvider animatedDrawableBackendProvider,
-      PlatformBitmapFactory bitmapFactory) {
+      PlatformBitmapFactory bitmapFactory,
+      boolean isNewRenderImplementation) {
     mAnimatedDrawableBackendProvider = animatedDrawableBackendProvider;
     mBitmapFactory = bitmapFactory;
+    mIsNewRenderImplementation = isNewRenderImplementation;
   }
 
   /**
@@ -89,7 +92,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
             sGifAnimatedImageDecoder.decodeFromNativeMemory(
                 input.getNativePtr(), input.size(), options);
       }
-      return getCloseableImage(options, gifImage, bitmapConfig);
+      return getCloseableImage(encodedImage.getSource(), options, gifImage, bitmapConfig);
     } finally {
       CloseableReference.closeSafely(bytesRef);
     }
@@ -123,14 +126,17 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
             sWebpAnimatedImageDecoder.decodeFromNativeMemory(
                 input.getNativePtr(), input.size(), options);
       }
-      return getCloseableImage(options, webPImage, bitmapConfig);
+      return getCloseableImage(encodedImage.getSource(), options, webPImage, bitmapConfig);
     } finally {
       CloseableReference.closeSafely(bytesRef);
     }
   }
 
   private CloseableImage getCloseableImage(
-      ImageDecodeOptions options, AnimatedImage image, Bitmap.Config bitmapConfig) {
+      @Nullable String sourceUri,
+      ImageDecodeOptions options,
+      AnimatedImage image,
+      Bitmap.Config bitmapConfig) {
     List<CloseableReference<Bitmap>> decodedFrames = null;
     CloseableReference<Bitmap> previewBitmap = null;
     try {
@@ -156,6 +162,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
               .setFrameForPreview(frameForPreview)
               .setDecodedFrames(decodedFrames)
               .setBitmapTransformation(options.bitmapTransformation)
+              .setSource(sourceUri)
               .build();
       return new CloseableAnimatedImage(animatedImageResult);
     } finally {
@@ -174,6 +181,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
     AnimatedImageCompositor animatedImageCompositor =
         new AnimatedImageCompositor(
             drawableBackend,
+            mIsNewRenderImplementation,
             new AnimatedImageCompositor.Callback() {
               @Override
               public void onIntermediateResult(int frameNumber, Bitmap bitmap) {
@@ -199,6 +207,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
     AnimatedImageCompositor animatedImageCompositor =
         new AnimatedImageCompositor(
             drawableBackend,
+            mIsNewRenderImplementation,
             new AnimatedImageCompositor.Callback() {
               @Override
               public void onIntermediateResult(int frameNumber, Bitmap bitmap) {

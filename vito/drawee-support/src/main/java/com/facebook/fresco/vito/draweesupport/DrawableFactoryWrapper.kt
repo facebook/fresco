@@ -22,7 +22,11 @@ class DrawableFactoryWrapper(private val drawableFactory: DrawableFactory) :
       imageOptions: ImageOptions
   ): Drawable? =
       if (drawableFactory.supportsImageType(closeableImage)) {
-        drawableFactory.createDrawable(closeableImage)
+        if (drawableFactory is ImageOptionsDrawableFactory) {
+          drawableFactory.createDrawable(resources, closeableImage, imageOptions)
+        } else {
+          drawableFactory.createDrawable(closeableImage)
+        }
       } else {
         null
       }

@@ -37,6 +37,7 @@ object VitoSpanLoader {
   fun show(
       imageSource: ImageSource,
       imageOptions: ImageOptions,
+      logWithHighSamplingRate: Boolean = false,
       callerContext: Any?,
       contextChain: ContextChain?,
       imageListener: ImageListener?,
@@ -44,7 +45,8 @@ object VitoSpanLoader {
   ) {
     show(
         FrescoVitoProvider.getImagePipeline()
-            .createImageRequest(target.resources, imageSource, imageOptions),
+            .createImageRequest(
+                target.resources, imageSource, imageOptions, logWithHighSamplingRate),
         callerContext,
         contextChain,
         imageListener,
@@ -62,13 +64,13 @@ object VitoSpanLoader {
     val fetchCommand = {
       FrescoVitoProvider.getController()
           .fetch(
-              target.drawableInterface,
-              imageRequest,
-              callerContext,
-              contextChain,
-              imageListener,
-              null,
-              null)
+              frescoDrawable = target.drawableInterface,
+              imageRequest = imageRequest,
+              callerContext = callerContext,
+              contextChain = contextChain,
+              listener = imageListener,
+              onFadeListener = null,
+              viewportDimensions = null)
     }
     target.imageFetchCommand = fetchCommand
     fetchCommand()
@@ -95,7 +97,7 @@ object VitoSpanLoader {
       // Example: Text = "ABC", insert image at position 18.
       return
     }
-    (imageSpan.drawable as Drawable).setBounds(0, 0, imageWidthPx, imageHeightPx)
+    (imageSpan.drawableInterface as Drawable).setBounds(0, 0, imageWidthPx, imageHeightPx)
     imageSpan.parentView = parentView
 
     sb.setSpan(imageSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)

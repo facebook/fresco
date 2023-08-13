@@ -57,7 +57,7 @@ private constructor(
    * Gets the explicit angle to rotate to, if one was set.
    *
    * @throws IllegalStateException if the instance was create using one of the `autoRotate()`
-   * constructors.
+   *   constructors.
    */
   @get:RotationAngle
   val forcedAngle: Int

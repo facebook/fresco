@@ -24,6 +24,7 @@ open class ImageTracker : BaseVitoImagePerfListener() {
   private fun trackDrawable(drawable: FrescoDrawableInterface) {
     drawables.add(WeakReference(drawable))
   }
+
   private fun removeDrawable(drawable: FrescoDrawableInterface) {
     // Remove the Drawable and any null drawables that have been collected (weak reference)
     drawables.removeAll { it.get() == drawable || it.get() == null }

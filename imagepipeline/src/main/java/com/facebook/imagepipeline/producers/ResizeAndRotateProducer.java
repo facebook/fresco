@@ -10,7 +10,6 @@ package com.facebook.imagepipeline.producers;
 import static com.facebook.imageformat.DefaultImageFormats.HEIF;
 import static com.facebook.imageformat.DefaultImageFormats.JPEG;
 import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.DEFAULT_JPEG_QUALITY;
-import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.INVERTED_EXIF_ORIENTATIONS;
 
 import android.media.ExifInterface;
 import androidx.annotation.VisibleForTesting;
@@ -233,7 +232,8 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
                 imageRequest.getRotationOptions(),
                 imageRequest.getResizeOptions(),
                 null,
-                DEFAULT_JPEG_QUALITY);
+                DEFAULT_JPEG_QUALITY,
+                encodedImage.getColorSpace());
 
         if (result.getTranscodeStatus() == TranscodeStatus.TRANSCODING_ERROR) {
           throw new RuntimeException("Error while transcoding the image");
@@ -337,6 +337,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       encodedImage.setExifOrientation(ExifInterface.ORIENTATION_UNDEFINED);
       return false;
     }
-    return INVERTED_EXIF_ORIENTATIONS.contains(encodedImage.getExifOrientation());
+    return JpegTranscoderUtils.INVERTED_EXIF_ORIENTATIONS.contains(
+        encodedImage.getExifOrientation());
   }
 }

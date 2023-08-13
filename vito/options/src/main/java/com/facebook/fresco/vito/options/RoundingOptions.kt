@@ -7,6 +7,9 @@
 
 package com.facebook.fresco.vito.options
 
+import java.util.Arrays
+
+@Suppress("KtDataClass")
 data class RoundingOptions(
     val isCircular: Boolean,
     val cornerRadius: Float,
@@ -14,7 +17,42 @@ data class RoundingOptions(
     val isAntiAliased: Boolean,
     val isForceRoundAtDecode: Boolean
 ) {
+
   fun hasRoundedCorners(): Boolean = cornerRadius != CORNER_RADIUS_UNSET || cornerRadii != null
+
+  override fun equals(other: Any?): Boolean {
+    if (ImageOptionsConfig.doNotUseOverriddenDataClassMembers) {
+      return super.equals(other)
+    }
+
+    if (this === other) {
+      return true
+    }
+    if (javaClass != other?.javaClass) {
+      return false
+    }
+
+    val otherOptions: RoundingOptions = other as RoundingOptions
+
+    return isCircular == otherOptions.isCircular &&
+        cornerRadius == otherOptions.cornerRadius &&
+        cornerRadii.contentEquals(otherOptions.cornerRadii) &&
+        isAntiAliased == otherOptions.isAntiAliased &&
+        isForceRoundAtDecode == otherOptions.isForceRoundAtDecode
+  }
+
+  override fun hashCode(): Int {
+    if (ImageOptionsConfig.doNotUseOverriddenDataClassMembers) {
+      return super.hashCode()
+    }
+
+    var result = isCircular.hashCode()
+    result = 31 * result + cornerRadius.hashCode()
+    result = 31 * result + Arrays.hashCode(cornerRadii)
+    result = 31 * result + isAntiAliased.hashCode()
+    result = 31 * result + isForceRoundAtDecode.hashCode()
+    return result
+  }
 
   companion object {
     const val CORNER_RADIUS_UNSET = 0f

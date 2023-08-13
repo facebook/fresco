@@ -63,8 +63,8 @@ protected constructor(
     }
   }
 
-  protected fun getExtras(producerContext: ProducerContext): Map<String, Any> =
-      producerContext.extras
+  protected fun getExtras(producerContext: ProducerContext): Map<String, Any?> =
+      producerContext.getExtras()
 
   private fun onFailureImpl(throwable: Throwable) {
     if (super.setFailure(throwable, getExtras(settableProducerContext))) {
@@ -77,7 +77,8 @@ protected constructor(
     Preconditions.checkState(isClosed)
   }
 
-  override fun getImageRequest(): ImageRequest? = settableProducerContext.imageRequest
+  override val imageRequest: ImageRequest?
+    get() = settableProducerContext.imageRequest
 
   override fun close(): Boolean {
     if (!super.close()) {
@@ -92,7 +93,7 @@ protected constructor(
 
   init {
     traceSection("AbstractProducerToDataSourceAdapter()") {
-      extras = settableProducerContext.extras
+      extras = settableProducerContext.getExtras()
       traceSection("AbstractProducerToDataSourceAdapter()->onRequestStart") {
         requestListener.onRequestStart(settableProducerContext)
       }

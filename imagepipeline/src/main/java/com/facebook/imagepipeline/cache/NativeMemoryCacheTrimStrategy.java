@@ -33,7 +33,7 @@ public class NativeMemoryCacheTrimStrategy implements MemoryCache.CacheTrimStrat
       case OnAppBackgrounded:
       case OnSystemMemoryCriticallyLowWhileAppInForeground:
       case OnSystemLowMemoryWhileAppInForeground:
-      case OnSystemLowMemoryWhileAppInBackground:
+      case OnSystemLowMemoryWhileAppInBackgroundLowSeverity:
         return 1;
       default:
         FLog.wtf(TAG, "unknown trim type: %s", trimType);

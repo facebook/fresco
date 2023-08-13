@@ -78,6 +78,8 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
   // Listeners
   private volatile AnimationListener mAnimationListener = NO_OP_LISTENER;
   @Nullable private volatile DrawListener mDrawListener = null;
+  private final AnimationBackend.Listener animationBackendListener =
+      () -> mAnimationListener.onAnimationLoaded();
 
   // Holder for drawable properties like alpha to be able to re-apply if the backend changes.
   // The instance is created lazily only if needed.
@@ -106,6 +108,10 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
   public AnimatedDrawable2(@Nullable AnimationBackend animationBackend) {
     mAnimationBackend = animationBackend;
     mFrameScheduler = createSchedulerForBackendAndDelayMethod(mAnimationBackend);
+
+    if (animationBackend != null) {
+      animationBackend.setAnimationListener(animationBackendListener);
+    }
   }
 
   @Override
@@ -184,6 +190,7 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     if (mAnimationBackend == null || mFrameScheduler == null) {
       return;
     }
+
     long actualRenderTimeStartMs = now();
     long animationTimeMs =
         mIsRunning
@@ -215,7 +222,6 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
       mAnimationListener.onAnimationFrame(this, frameNumberToDraw);
       mLastDrawnFrameNumber = frameNumberToDraw;
     }
-
     // Log potential dropped frames
 
     if (!frameDrawn) {
@@ -285,6 +291,12 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     return PixelFormat.TRANSLUCENT;
   }
 
+  public void preloadAnimation() {
+    if (mAnimationBackend != null) {
+      mAnimationBackend.preloadAnimation();
+    }
+  }
+
   /**
    * Update the animation backend to be used for the animation. This will also stop the animation.
    * In order to remove the current animation backend, call this method with null.
@@ -292,9 +304,14 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
    * @param animationBackend the animation backend to be used or null
    */
   public void setAnimationBackend(@Nullable AnimationBackend animationBackend) {
+    if (this.mAnimationBackend != null) {
+      this.mAnimationBackend.setAnimationListener(null);
+    }
+
     this.mAnimationBackend = animationBackend;
     if (mAnimationBackend != null) {
       mFrameScheduler = new DropFramesFrameScheduler(mAnimationBackend);
+      mAnimationBackend.setAnimationListener(animationBackendListener);
       mAnimationBackend.setBounds(getBounds());
       if (mDrawableProperties != null) {
         // re-apply to the same drawable so that the animation backend is updated.
@@ -334,6 +351,12 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     }
     // In order to jump to a given frame, we have to compute the correct start time
     mLastFrameAnimationTimeMs = mFrameScheduler.getTargetRenderTimeMs(targetFrameNumber);
+
+    // Reset the paused timing as we broke the animation frame flow
+    mPausedLastDrawnFrameNumber = targetFrameNumber;
+    mPausedStartTimeMsDifference = 0;
+    mPausedLastFrameAnimationTimeMsDifference = 0;
+
     mStartTimeMs = now() - mLastFrameAnimationTimeMs;
     mExpectedRenderTimeMs = mStartTimeMs;
     invalidateSelf();

@@ -55,6 +55,21 @@ public class ExampleColorBackend implements AnimationBackend {
   }
 
   @Override
+  public int getLoopDurationMs() {
+    return getFrameCount() * mFrameDurationMs;
+  }
+
+  @Override
+  public int width() {
+    return -1;
+  }
+
+  @Override
+  public int height() {
+    return -1;
+  }
+
+  @Override
   public int getLoopCount() {
     return 3;
   }
@@ -93,6 +108,9 @@ public class ExampleColorBackend implements AnimationBackend {
   public void clear() {}
 
   @Override
+  public void preloadAnimation() {}
+
+  @Override
   public int getIntrinsicWidth() {
     return INTRINSIC_DIMENSION_UNSET;
   }
@@ -101,4 +119,7 @@ public class ExampleColorBackend implements AnimationBackend {
   public int getIntrinsicHeight() {
     return INTRINSIC_DIMENSION_UNSET;
   }
+
+  @Override
+  public void setAnimationListener(@javax.annotation.Nullable Listener listener) {}
 }

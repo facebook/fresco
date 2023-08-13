@@ -27,4 +27,8 @@ interface FrescoVitoConfig {
   fun stopAnimationInOnRelease(): Boolean
 
   fun onlyStopAnimationWhenAutoPlayEnabled(): Boolean
+
+  fun fastPathForEmptyRequests(): Boolean
+
+  fun enableWindowWideColorGamut(): Boolean
 }

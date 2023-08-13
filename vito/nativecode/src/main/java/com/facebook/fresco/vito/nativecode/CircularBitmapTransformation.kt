@@ -12,6 +12,7 @@ import com.facebook.imagepipeline.nativecode.NativeRoundingFilter
 import com.facebook.imagepipeline.transformation.BitmapTransformation
 import com.facebook.imagepipeline.transformation.CircularTransformation
 
+@Suppress("KtDataClass")
 data class CircularBitmapTransformation(
     val isAntiAliased: Boolean = true,
     private val useFastNativeRounding: Boolean = false
@@ -26,4 +27,36 @@ data class CircularBitmapTransformation(
   }
 
   override fun modifiesTransparency(): Boolean = true
+
+  override fun equals(other: Any?): Boolean {
+    if (doNotUseOverriddenDataClassMembers) {
+      return super.equals(other)
+    }
+
+    if (this === other) {
+      return true
+    }
+    if (javaClass != other?.javaClass) {
+      return false
+    }
+
+    val otherTransformation: CircularBitmapTransformation = other as CircularBitmapTransformation
+
+    return isAntiAliased == otherTransformation.isAntiAliased &&
+        useFastNativeRounding == otherTransformation.useFastNativeRounding
+  }
+
+  override fun hashCode(): Int {
+    if (doNotUseOverriddenDataClassMembers) {
+      return super.hashCode()
+    }
+
+    var result = isAntiAliased.hashCode()
+    result = 31 * result + useFastNativeRounding.hashCode()
+    return result
+  }
+
+  companion object {
+    var doNotUseOverriddenDataClassMembers: Boolean = false
+  }
 }

@@ -28,7 +28,7 @@ class BlurPostProcessor
  * Creates an instance of [BlurPostProcessor].
  *
  * @param blurRadius The radius of the blur in range 0 < radius <= [ ]
- * [RenderScriptBlurFilter.BLUR_MAX_RADIUS].
+ *   [RenderScriptBlurFilter.BLUR_MAX_RADIUS].
  * @param context A valid [Context].
  * @param iterations The number of iterations of the blurring algorithm > 0.
  */
@@ -41,6 +41,7 @@ constructor(val blurRadius: Int, val context: Context, val iterations: Int = DEF
         blurRadius > 0 && blurRadius <= RenderScriptBlurFilter.BLUR_MAX_RADIUS)
     Preconditions.checkArgument(iterations > 0)
   }
+
   private val cacheKey: CacheKey =
       SimpleCacheKey(
           if (canUseRenderScript) {
@@ -48,6 +49,7 @@ constructor(val blurRadius: Int, val context: Context, val iterations: Int = DEF
           } else {
             String.format(null as Locale?, "IterativeBoxBlur;%d;%d", iterations, blurRadius)
           })
+
   override fun getPostprocessorCacheKey(): CacheKey = cacheKey
 
   override fun process(destBitmap: Bitmap, sourceBitmap: Bitmap) {

@@ -6,11 +6,11 @@
  */
 
 #include <jni.h>
-#include <webp/demux.h>
 #include <webp/decode.h>
+#include <webp/demux.h>
 
-#include "exceptions.h"
 #include "decoded_image.h"
+#include "exceptions.h"
 #include "streams.h"
 #include "webp_codec.h"
 
@@ -32,8 +32,7 @@ const std::vector<uint8_t> extractMetadata(
   // Thsnks to using RAII we do not need to worry about
   // releasing WebPDemuxer structure
   auto demux = std::unique_ptr<WebPDemuxer, decltype(&WebPDemuxDelete)>{
-      WebPDemux(&webpdata),
-      WebPDemuxDelete};
+      WebPDemux(&webpdata), WebPDemuxDelete};
   THROW_AND_RETURNVAL_IF(
       demux == nullptr,
       "Could not create WebPDemux from image. This webp might be malformed.",
@@ -62,10 +61,8 @@ const std::vector<uint8_t> extractMetadata(
   return {metadata_ptr, metadata_ptr + metadata_length};
 }
 
-std::unique_ptr<DecodedImage> decodeWebpFromInputStream(
-    JNIEnv* env,
-    jobject is,
-    PixelFormat pixel_format) {
+std::unique_ptr<DecodedImage>
+decodeWebpFromInputStream(JNIEnv* env, jobject is, PixelFormat pixel_format) {
   // get image into decoded heap
   auto encoded_image = readStreamFully(env, is);
   RETURNVAL_IF_EXCEPTION_PENDING({});
@@ -80,35 +77,36 @@ std::unique_ptr<DecodedImage> decodeWebpFromInputStream(
   uint8_t* raw_pixels = nullptr;
 
   switch (pixel_format) {
-  case PixelFormat::RGB:
-    raw_pixels = WebPDecodeRGB(
-        encoded_image.data(),
-        encoded_image.size(),
-        &image_width,
-        &image_height);
-    break;
+    case PixelFormat::RGB:
+      raw_pixels = WebPDecodeRGB(
+          encoded_image.data(),
+          encoded_image.size(),
+          &image_width,
+          &image_height);
+      break;
 
-  case PixelFormat::RGBA:
-    raw_pixels = WebPDecodeRGBA(
-        encoded_image.data(),
-        encoded_image.size(),
-        &image_width,
-        &image_height);
-    break;
+    case PixelFormat::RGBA:
+      raw_pixels = WebPDecodeRGBA(
+          encoded_image.data(),
+          encoded_image.size(),
+          &image_width,
+          &image_height);
+      break;
 
-  default:
-    THROW_AND_RETURNVAL_IF(true, "unrecognized pixel format", {});
+    default:
+      THROW_AND_RETURNVAL_IF(true, "unrecognized pixel format", {});
   }
 
-  auto pixels = pixels_t{raw_pixels, (void(*)(uint8_t*)) &free};
+  auto pixels = pixels_t{raw_pixels, (void (*)(uint8_t*)) & free};
 
-  return std::unique_ptr<DecodedImage>{
-      new DecodedImage{
-          std::move(pixels),
-          pixel_format,
-          (unsigned int) image_width,
-          (unsigned int) image_height,
-          std::move(metadata)}};
+  return std::unique_ptr<DecodedImage>{new DecodedImage{
+      std::move(pixels),
+      pixel_format,
+      (unsigned int)image_width,
+      (unsigned int)image_height,
+      std::move(metadata)}};
 }
 
-} } }
+} // namespace webp
+} // namespace imagepipeline
+} // namespace facebook

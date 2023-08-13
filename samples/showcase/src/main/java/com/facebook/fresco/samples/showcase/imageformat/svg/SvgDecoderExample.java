@@ -17,12 +17,12 @@ import com.facebook.imageformat.ImageFormatCheckerUtils;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
+import com.facebook.imagepipeline.image.BaseCloseableImage;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
-import java.util.Collections;
-import java.util.Map;
 import javax.annotation.Nullable;
 
 /** SVG example that defines all classes required to decode and render SVG images. */
@@ -66,7 +66,7 @@ public class SvgDecoderExample {
     }
   }
 
-  public static class CloseableSvgImage implements CloseableImage {
+  public static class CloseableSvgImage extends BaseCloseableImage {
 
     private final SVG mSvg;
 
@@ -96,12 +96,6 @@ public class SvgDecoderExample {
     }
 
     @Override
-    public void setImageExtras(@Nullable Map<String, Object> extras) {}
-
-    @Override
-    public void setImageExtra(String extra, Object value) {}
-
-    @Override
     public boolean isStateful() {
       return false;
     }
@@ -122,8 +116,8 @@ public class SvgDecoderExample {
     }
 
     @Override
-    public Map<String, Object> getExtras() {
-      return Collections.emptyMap();
+    public ImageInfo getImageInfo() {
+      return this;
     }
   }
 

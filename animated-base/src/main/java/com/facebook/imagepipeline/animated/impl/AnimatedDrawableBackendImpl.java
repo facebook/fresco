@@ -10,11 +10,16 @@ package com.facebook.imagepipeline.animated.impl;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
+import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.BlendOperation;
+import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.DisposalMethod;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.base.AnimatedImageFrame;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
@@ -39,6 +44,7 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
   private final Rect mRenderSrcRect = new Rect();
   private final Rect mRenderDstRect = new Rect();
   private final boolean mDownscaleFrameToDrawableDimensions;
+  private final Paint mTransparentPaint;
 
   @GuardedBy("this")
   private @Nullable Bitmap mTempBitmap;
@@ -61,6 +67,8 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     for (int i = 0; i < mAnimatedImage.getFrameCount(); i++) {
       mFrameInfos[i] = mAnimatedImage.getFrameInfo(i);
     }
+    mTransparentPaint = new Paint();
+    mTransparentPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
   }
 
   private static Rect getBoundsToUse(AnimatedImage image, @Nullable Rect targetBounds) {
@@ -178,11 +186,34 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
       if (frame.getWidth() <= 0 || frame.getHeight() <= 0) {
         return; // Frame not visible -> skipping
       }
+
       if (mAnimatedImage.doesRenderSupportScaling()) {
         renderImageSupportsScaling(canvas, frame);
       } else {
         renderImageDoesNotSupportScaling(canvas, frame);
       }
+    } finally {
+      frame.dispose();
+    }
+  }
+
+  @Override
+  public void renderDeltas(int frameNumber, Canvas canvas) {
+    AnimatedImageFrame frame = mAnimatedImage.getFrame(frameNumber);
+    AnimatedDrawableFrameInfo frameInfo = mAnimatedImage.getFrameInfo(frameNumber);
+    AnimatedDrawableFrameInfo previousFrameInfo =
+        frameNumber == 0 ? null : mAnimatedImage.getFrameInfo(frameNumber - 1);
+    try {
+      if (frame.getWidth() <= 0 || frame.getHeight() <= 0) {
+        return; // Frame not visible -> skipping
+      }
+
+      if (mAnimatedImage.doesRenderSupportScaling()) {
+        renderScalingFrames(canvas, frame, frameInfo, previousFrameInfo);
+      } else {
+        renderNonScalingFrames(canvas, frame, frameInfo, previousFrameInfo);
+      }
+
     } finally {
       frame.dispose();
     }
@@ -229,6 +260,88 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     }
   }
 
+  private void renderScalingFrames(
+      Canvas canvas,
+      AnimatedImageFrame frame,
+      AnimatedDrawableFrameInfo frameInfo,
+      @Nullable AnimatedDrawableFrameInfo previousFrameInfo) {
+    int assetWidth = mAnimatedImage.getWidth();
+    int assetHeight = mAnimatedImage.getHeight();
+
+    // Find the best scale asset size. Maximum scaleSize would be the assetSize.
+    float scaledWidth = assetWidth;
+    float scaledHeight = assetHeight;
+
+    // Apply the scale to the frame
+    float xScale = 1f;
+    float yScale = 1f;
+
+    int frameWidth = frame.getWidth();
+    int frameHeight = frame.getHeight();
+    int xOffset = frame.getXOffset();
+    int yOffset = frame.getYOffset();
+
+    // Check if we need to down scale the asset to the canvas size
+    if (scaledWidth > canvas.getWidth() || scaledHeight > canvas.getHeight()) {
+      // Canvas could have wrong sizes as 314573336x200. Then we limit the frame sizes
+      int maxCanvasWidth = Math.min(canvas.getWidth(), assetWidth);
+      int maxCanvasHeight = Math.min(canvas.getHeight(), assetHeight);
+
+      float assetRatio = assetWidth / (float) assetHeight;
+      if (maxCanvasWidth > maxCanvasHeight) {
+        scaledWidth = maxCanvasWidth;
+        scaledHeight = maxCanvasWidth / assetRatio;
+      } else {
+        scaledWidth = maxCanvasHeight * assetRatio;
+        scaledHeight = maxCanvasHeight;
+      }
+
+      xScale = scaledWidth / (float) assetWidth;
+      yScale = scaledHeight / (float) assetHeight;
+
+      frameWidth = (int) Math.ceil(frame.getWidth() * xScale);
+      frameHeight = (int) Math.ceil(frame.getHeight() * yScale);
+      xOffset = (int) Math.ceil(frame.getXOffset() * xScale);
+      yOffset = (int) Math.ceil(frame.getYOffset() * yScale);
+    }
+
+    // Impress the frame in the bitmap
+    Bitmap frameBitmap = Bitmap.createBitmap(frameWidth, frameHeight, Bitmap.Config.ARGB_8888);
+    frame.renderFrame(frameWidth, frameHeight, frameBitmap);
+
+    Rect renderSrcRect = new Rect(0, 0, frameWidth, frameHeight);
+    Rect renderDstRect = new Rect(xOffset, yOffset, xOffset + frameWidth, yOffset + frameHeight);
+
+    // Clean previous frame surface if that frame was disposable
+    if (previousFrameInfo != null) {
+      maybeDisposeBackground(canvas, xScale, yScale, previousFrameInfo);
+    }
+
+    // If current frame is no_blend, then we have to clean their surface before rendering
+    if (frameInfo.blendOperation == BlendOperation.NO_BLEND) {
+      canvas.drawRect(renderDstRect, mTransparentPaint);
+    }
+
+    canvas.drawBitmap(frameBitmap, renderSrcRect, renderDstRect, null);
+  }
+
+  private void maybeDisposeBackground(
+      Canvas canvas, float xScale, float yScale, AnimatedDrawableFrameInfo previousFrameInfo) {
+    if (previousFrameInfo.disposalMethod == DisposalMethod.DISPOSE_TO_BACKGROUND) {
+      int prevFrameWidth = (int) Math.ceil(previousFrameInfo.width * xScale);
+      int prevFrameHeight = (int) Math.ceil(previousFrameInfo.height * yScale);
+      int prevXOffset = (int) Math.ceil(previousFrameInfo.xOffset * xScale);
+      int prevYOffset = (int) Math.ceil(previousFrameInfo.yOffset * yScale);
+      Rect prevFrameSurface =
+          new Rect(
+              prevXOffset,
+              prevYOffset,
+              prevXOffset + prevFrameWidth,
+              prevYOffset + prevFrameHeight);
+      canvas.drawRect(prevFrameSurface, mTransparentPaint);
+    }
+  }
+
   private void renderImageDoesNotSupportScaling(Canvas canvas, AnimatedImageFrame frame) {
     int frameWidth, frameHeight, xOffset, yOffset;
     if (mDownscaleFrameToDrawableDimensions) {
@@ -259,6 +372,46 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
       canvas.drawBitmap(mTempBitmap, 0, 0, null);
       canvas.restore();
     }
+  }
+
+  private void renderNonScalingFrames(
+      Canvas canvas,
+      AnimatedImageFrame frame,
+      AnimatedDrawableFrameInfo frameInfo,
+      @Nullable AnimatedDrawableFrameInfo previousFrameInfo) {
+    if (mRenderedBounds == null || mRenderedBounds.width() <= 0 || mRenderedBounds.height() <= 0) {
+      return;
+    }
+
+    float scale = (float) canvas.getWidth() / mRenderedBounds.width();
+
+    // Clean previous frame surface if that frame was disposable
+    if (previousFrameInfo != null) {
+      maybeDisposeBackground(canvas, scale, scale, previousFrameInfo);
+    }
+
+    // Prepare the new frame
+    int frameWidth = frame.getWidth();
+    int frameHeight = frame.getHeight();
+
+    Bitmap bitmap = Bitmap.createBitmap(frameWidth, frameHeight, Bitmap.Config.ARGB_8888);
+    frame.renderFrame(frameWidth, frameHeight, bitmap);
+
+    int resizedWidth = (int) (frameWidth * scale);
+    int resizedHeight = (int) (frameHeight * scale);
+
+    int xOffset = (int) (frame.getXOffset() * scale);
+    int yOffset = (int) (frame.getYOffset() * scale);
+
+    // Clear the canvas if this frame doesnt blend
+    Rect renderDstRect =
+        new Rect(xOffset, yOffset, xOffset + resizedWidth, yOffset + resizedHeight);
+    if (frameInfo.blendOperation == BlendOperation.NO_BLEND) {
+      canvas.drawRect(renderDstRect, mTransparentPaint);
+    }
+    // Draw canvas frame
+    Rect src = new Rect(0, 0, frameWidth, frameHeight);
+    canvas.drawBitmap(bitmap, src, renderDstRect, null);
   }
 
   @Override

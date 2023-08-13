@@ -24,7 +24,7 @@ class PngStructGuard {
    * Create PngStructGuard initializing it with pointer to png_struct
    */
   PngStructGuard(png_structp pngStructP)
-    : pngStructP_(pngStructP), pngInfoP_(nullptr) {}
+      : pngStructP_(pngStructP), pngInfoP_(nullptr) {}
 
   /**
    * Release libpng resources.
@@ -36,13 +36,17 @@ class PngStructGuard {
   /**
    * Associate png_info with the guard.
    */
-  void setInfoPtr(png_infop pngInfoP) { pngInfoP_ = pngInfoP; }
+  void setInfoPtr(png_infop pngInfoP) {
+    pngInfoP_ = pngInfoP;
+  }
 
  private:
   png_structp pngStructP_;
   png_infop pngInfoP_;
 };
 
-} } }
+} // namespace png
+} // namespace imagepipeline
+} // namespace facebook
 
 #endif /* _PNG_UTILS_H_ */

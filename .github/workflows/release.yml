@@ -1,10 +1,14 @@
 name: Publish
 
 on:
-  release:
-    types:
-      - created
+  push:
+    tags:
+      - v*
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to upload artifacts to"
+        required: false
 
 jobs:
   build:
@@ -12,17 +16,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: set up JDK 1.8
+    - uses: actions/checkout@v3
+    - name: set up JDK
       uses: actions/setup-java@v1
       with:
-        java-version: 1.8
+        java-version: 11
+        distribution: 'zulu'
     - name: Setup Android SDK
       uses: android-actions/setup-android@v2
     - name: Install NDK
-      run: echo "y" | sudo /usr/local/lib/android/sdk/tools/bin/sdkmanager --install "ndk;21.2.6472646" --sdk_root=${ANDROID_SDK_ROOT}
+      run: echo "y" | sudo /usr/local/lib/android/sdk/tools/bin/sdkmanager --install "ndk;25.0.8775105" --sdk_root=${ANDROID_SDK_ROOT}
     - name: Register NDK
-      run: "echo 'ndk.path=/usr/local/lib/android/sdk/ndk/21.2.6472646/' >> local.properties"
+      run: "echo 'ndk.path=/usr/local/lib/android/sdk/ndk/25.0.8775105/' >> local.properties"
     - name: Write GPG Sec Ring
       run: echo '${{ secrets.GPG_KEY_CONTENTS }}' | base64 -d > /tmp/secring.gpg
     - name: Update gradle.properties

@@ -20,7 +20,11 @@ namespace facebook {
  * @param ... sprintf-style args
  * @return 0 on success; a negative value on failure
  */
-jint throwException(JNIEnv* pEnv, const char* szClassName, const char* szFmt, va_list va_args);
+jint throwException(
+    JNIEnv* pEnv,
+    const char* szClassName,
+    const char* szFmt,
+    va_list va_args);
 
 /**
  * Instructs the JNI environment to throw a NoClassDefFoundError.
@@ -93,37 +97,44 @@ jint throwAssertionError(JNIEnv* pEnv, const char* szFmt, ...);
 jint throwOutOfMemoryError(JNIEnv* pEnv, const char* szFmt, ...);
 
 /**
- * Finds the specified class. If it's not found, instructs the JNI environment to throw an
- * exception.
+ * Finds the specified class. If it's not found, instructs the JNI environment
+ * to throw an exception.
  *
  * @param pEnv JNI environment
- * @param szClassName the classname to find in JNI format (e.g. "java/lang/String")
- * @return the class or NULL if not found (in which case a pending exception will be queued). This
- *     returns a global reference (JNIEnv::NewGlobalRef).
+ * @param szClassName the classname to find in JNI format (e.g.
+ * "java/lang/String")
+ * @return the class or NULL if not found (in which case a pending exception
+ * will be queued). This returns a global reference (JNIEnv::NewGlobalRef).
  */
-jclass findClassOrThrow(JNIEnv *pEnv, const char* szClassName);
+jclass findClassOrThrow(JNIEnv* pEnv, const char* szClassName);
 
 /**
- * Finds the specified field of the specified class. If it's not found, instructs the JNI
- * environment to throw an exception.
+ * Finds the specified field of the specified class. If it's not found,
+ * instructs the JNI environment to throw an exception.
  *
  * @param pEnv JNI environment
  * @param clazz the class to lookup the field in
  * @param szFieldName the name of the field to find
  * @param szSig the signature of the field
- * @return the field or NULL if not found (in which case a pending exception will be queued)
+ * @return the field or NULL if not found (in which case a pending exception
+ * will be queued)
  */
-jfieldID getFieldIdOrThrow(JNIEnv* pEnv, jclass clazz, const char* szFieldName, const char* szSig);
+jfieldID getFieldIdOrThrow(
+    JNIEnv* pEnv,
+    jclass clazz,
+    const char* szFieldName,
+    const char* szSig);
 
 /**
- * Finds the specified method of the specified class. If it's not found, instructs the JNI
- * environment to throw an exception.
+ * Finds the specified method of the specified class. If it's not found,
+ * instructs the JNI environment to throw an exception.
  *
  * @param pEnv JNI environment
  * @param clazz the class to lookup the method in
  * @param szMethodName the name of the method to find
  * @param szSig the signature of the method
- * @return the method or NULL if not found (in which case a pending exception will be queued)
+ * @return the method or NULL if not found (in which case a pending exception
+ * will be queued)
  */
 jmethodID getMethodIdOrThrow(
     JNIEnv* pEnv,
@@ -132,4 +143,3 @@ jmethodID getMethodIdOrThrow(
     const char* szSig);
 
 } // namespace facebook
-

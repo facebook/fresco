@@ -31,6 +31,10 @@ public class DataSources {
     return simpleDataSource;
   }
 
+  public static DataSource<Void> immediateSuccessfulDataSource() {
+    return SuccessfulVoidDataSource.INSTANCE;
+  }
+
   public static <T> Supplier<DataSource<T>> getFailedDataSourceSupplier(final Throwable failure) {
     return new Supplier<DataSource<T>>() {
       @Override

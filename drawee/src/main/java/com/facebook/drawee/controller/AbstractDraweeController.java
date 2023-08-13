@@ -117,6 +117,7 @@ public abstract class AbstractDraweeController<T, INFO>
   private @Nullable DataSource<T> mDataSource;
   private @Nullable T mFetchedImage;
   private boolean mJustConstructed = true;
+  private boolean mLogWithHighSamplingRate = false;
 
   protected @Nullable Drawable mDrawable;
 
@@ -141,6 +142,7 @@ public abstract class AbstractDraweeController<T, INFO>
   protected void initialize(String id, Object callerContext) {
     init(id, callerContext);
     mJustConstructed = false;
+    mLogWithHighSamplingRate = false;
   }
 
   private synchronized void init(String id, Object callerContext) {
@@ -271,6 +273,14 @@ public abstract class AbstractDraweeController<T, INFO>
   /** Sets whether to display last available image in case of failure. */
   protected void setRetainImageOnFailure(boolean enabled) {
     mRetainImageOnFailure = enabled;
+  }
+
+  protected boolean isLogWithHighSamplingRate() {
+    return mLogWithHighSamplingRate;
+  }
+
+  protected void setLogWithHighSamplingRate(boolean logWithHighSamplingRate) {
+    mLogWithHighSamplingRate = logWithHighSamplingRate;
   }
 
   /** Gets accessibility content description. */
@@ -851,11 +861,13 @@ public abstract class AbstractDraweeController<T, INFO>
         COMPONENT_EXTRAS,
         SHORTCUT_EXTRAS,
         datasourceExtras,
+        null,
         getDimensions(),
         scaleType,
         focusPoint,
         imageExtras,
         getCallerContext(),
+        isLogWithHighSamplingRate(),
         mainUri);
   }
 

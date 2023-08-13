@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable
 import com.facebook.common.closeables.AutoCleanupDelegate
 import com.facebook.datasource.DataSource
 import com.facebook.drawee.drawable.VisibilityCallback
+import com.facebook.fresco.vito.core.CombinedImageListener
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.VitoImagePerfListener
 import com.facebook.fresco.vito.core.VitoImageRequest
@@ -23,15 +24,16 @@ import com.facebook.fresco.vito.renderer.DrawableImageDataModel
 import java.io.Closeable
 import java.io.IOException
 
-class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopImagePerfListener()) :
-    Drawable(), FrescoDrawableInterface {
+class KFrescoVitoDrawable(
+    private val _imagePerfListener: VitoImagePerfListener = NopImagePerfListener()
+) : Drawable(), FrescoDrawableInterface, Drawable.Callback {
 
   var _imageId: Long = 0
   var _isLoading: Boolean = false
   override var callerContext: Any? = null
   var _visibilityCallback: VisibilityCallback? = null
   var _fetchSubmitted: Boolean = false
-  val listenerManager: CombinedImageListenerImpl = CombinedImageListenerImpl()
+  val listenerManager: CombinedImageListener = CombinedImageListenerImpl()
   override var extras: Any? = null
   var viewportDimensions: Rect? = null
   var dataSource: DataSource<out Any>? by DataSourceCleanupDelegate()
@@ -131,7 +133,7 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
   private var drawableAlpha: Int = 255
   private var drawableColorFilter: ColorFilter? = null
 
-  val callbackProvider: (() -> Callback?) = { callback }
+  val callbackProvider: (() -> Callback?) = { this }
   val invalidateLayerCallback: (() -> Unit) = { invalidateSelf() }
 
   val placeholderLayer = createLayer()
@@ -179,4 +181,16 @@ class KFrescoVitoDrawable(val _imagePerfListener: VitoImagePerfListener = NopIma
   override fun getOpacity(): Int = PixelFormat.TRANSPARENT
 
   internal fun createLayer() = ImageLayerDataModel(callbackProvider, invalidateLayerCallback)
+
+  override fun invalidateDrawable(who: Drawable) {
+    invalidateSelf()
+  }
+
+  override fun scheduleDrawable(who: Drawable, what: Runnable, `when`: Long) {
+    scheduleSelf(what, `when`)
+  }
+
+  override fun unscheduleDrawable(who: Drawable, what: Runnable) {
+    unscheduleSelf(what)
+  }
 }

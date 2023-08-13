@@ -7,7 +7,44 @@
 
 package com.facebook.fresco.vito.source
 
+@Suppress("KtDataClass")
 data class IncreasingQualityImageSource(
     val lowResSource: ImageSource,
-    val highResSource: ImageSource
-) : ImageSource
+    val highResSource: ImageSource,
+    val extras: Map<String, Any>? = null
+) : ImageSource {
+
+  fun getExtra(key: String): Any? = extras?.get(key)
+
+  fun getStringExtra(key: String): String? = getExtra(key) as? String
+
+  override fun equals(other: Any?): Boolean {
+    if (ImageSourceConfig.doNotUseOverriddenDataClassMembers) {
+      return super.equals(other)
+    }
+
+    if (this === other) {
+      return true
+    }
+    if (javaClass != other?.javaClass) {
+      return false
+    }
+
+    val otherImageSource: IncreasingQualityImageSource = other as IncreasingQualityImageSource
+
+    return lowResSource == otherImageSource.lowResSource &&
+        highResSource == otherImageSource.highResSource &&
+        extras == otherImageSource.extras
+  }
+
+  override fun hashCode(): Int {
+    if (ImageSourceConfig.doNotUseOverriddenDataClassMembers) {
+      return super.hashCode()
+    }
+
+    var result = lowResSource.hashCode()
+    result = 31 * result + highResSource.hashCode()
+    result = 31 * result + (extras?.hashCode() ?: 0)
+    return result
+  }
+}

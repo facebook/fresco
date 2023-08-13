@@ -28,10 +28,7 @@ class PngOutputStreamWrapper {
       jobject os,
       const int bufferSize = kIOBufferSize);
 
-  void write(
-      png_structp png_ptr,
-      png_bytep data,
-      png_size_t length);
+  void write(png_structp png_ptr, png_bytep data, png_size_t length);
 
  private:
   JNIEnv* env_;
@@ -53,6 +50,8 @@ void pngWriteToJavaOutputStream(
  */
 void pngNoOpFlush(png_structp png_ptr);
 
-} } }
+} // namespace png
+} // namespace imagepipeline
+} // namespace facebook
 
 #endif /* _PNG_STREAM_WRAPPERS_H_ */

@@ -30,6 +30,7 @@ import javax.annotation.concurrent.Immutable
  * `ImagePipelineExperiments.isPartialImageCachingEnabled()` is true in the image pipeline config.
  * It is also dependent on a `NetworkFetcher` which writes and reads these headers.
  */
+@Suppress("KtDataClass")
 @Immutable
 data class BytesRange(
     @JvmField
@@ -61,9 +62,38 @@ data class BytesRange(
     return String.format(null as Locale?, "%s-%s", valueOrEmpty(from), valueOrEmpty(to))
   }
 
+  override fun equals(other: Any?): Boolean {
+    if (doNotUseOverriddenDataClassMembers) {
+      return super.equals(other)
+    }
+
+    if (this === other) {
+      return true
+    }
+    if (javaClass != other?.javaClass) {
+      return false
+    }
+
+    val otherRange: BytesRange = other as BytesRange
+
+    return from == otherRange.from && to == otherRange.to
+  }
+
+  override fun hashCode(): Int {
+    if (doNotUseOverriddenDataClassMembers) {
+      return super.hashCode()
+    }
+
+    var result = from
+    result = 31 * result + to
+    return result
+  }
+
   companion object {
     const val TO_END_OF_CONTENT = Int.MAX_VALUE
+    var doNotUseOverriddenDataClassMembers: Boolean = false
     private val headerParsingRegEx: Pattern by lazy { Pattern.compile("[-/ ]") }
+
     private fun valueOrEmpty(n: Int): String {
       return if (n == TO_END_OF_CONTENT) "" else n.toString()
     }
@@ -102,9 +132,9 @@ data class BytesRange(
      * The header spec is at https://tools.ietf.org/html/rfc2616#section-14.16
      *
      * @param header
-     * @throws IllegalArgumentException if the header is non-null but fails to match the format per
-     * the spec
      * @return the parsed range
+     * @throws IllegalArgumentException if the header is non-null but fails to match the format per
+     *   the spec
      */
     @JvmStatic
     @Throws(IllegalArgumentException::class)

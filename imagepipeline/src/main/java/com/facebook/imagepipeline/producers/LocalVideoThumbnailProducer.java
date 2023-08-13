@@ -22,6 +22,7 @@ import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imagepipeline.bitmaps.SimpleBitmapReleaser;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
@@ -61,7 +62,7 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
     final ProducerListener2 listener = producerContext.getProducerListener();
     final ImageRequest imageRequest = producerContext.getImageRequest();
     producerContext.putOriginExtra("local", "video");
-    final StatefulProducerRunnable cancellableProducerRunnable =
+    final StatefulProducerRunnable<CloseableReference<CloseableImage>> cancellableProducerRunnable =
         new StatefulProducerRunnable<CloseableReference<CloseableImage>>(
             consumer, listener, producerContext, PRODUCER_NAME) {
           @Override
@@ -108,8 +109,8 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
                     SimpleBitmapReleaser.getInstance(),
                     ImmutableQualityInfo.FULL_QUALITY,
                     0);
-            producerContext.setExtra(ProducerContext.ExtraKeys.IMAGE_FORMAT, "thumbnail");
-            closeableStaticBitmap.setImageExtras(producerContext.getExtras());
+            producerContext.putExtra(HasExtraData.KEY_IMAGE_FORMAT, "thumbnail");
+            closeableStaticBitmap.putExtras(producerContext.getExtras());
             return CloseableReference.<CloseableImage>of(closeableStaticBitmap);
           }
 
@@ -120,8 +121,7 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
           }
 
           @Override
-          // NULLSAFE_FIXME[Inconsistent Subclass Parameter Annotation]
-          protected void disposeResult(CloseableReference<CloseableImage> result) {
+          protected void disposeResult(@Nullable CloseableReference<CloseableImage> result) {
             CloseableReference.closeSafely(result);
           }
         };

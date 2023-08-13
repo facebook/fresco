@@ -20,6 +20,7 @@ dependencies {
     implementation project(path: ':imagepipeline-base')
     implementation project(':ui-common')
 
+    testImplementation TestDeps.assertjCore
     testImplementation TestDeps.junit
     testImplementation TestDeps.festAssertCore
     testImplementation TestDeps.mockitoCore

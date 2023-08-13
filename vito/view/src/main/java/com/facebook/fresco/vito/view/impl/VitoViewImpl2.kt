@@ -25,8 +25,8 @@ import com.facebook.fresco.vito.source.ImageSource
 
 /** Vito View implementation */
 object VitoViewImpl2 {
-  @JvmStatic var useVisibilityCallbacks: Supplier<Boolean> = Suppliers.BOOLEAN_TRUE
-  @JvmStatic var useSimpleFetchLogic: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE
+  @JvmField var useVisibilityCallbacks: Supplier<Boolean> = Suppliers.BOOLEAN_TRUE
+  @JvmField var useSimpleFetchLogic: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE
 
   private val onAttachStateChangeListenerCallback: OnAttachStateChangeListener =
       object : OnAttachStateChangeListener {
@@ -76,7 +76,15 @@ object VitoViewImpl2 {
     }
     frescoDrawable.refetchRunnable = Runnable {
       FrescoVitoProvider.getController()
-          .fetch(frescoDrawable, imageRequest, callerContext, null, imageListener, null, null)
+          .fetch(
+              frescoDrawable = frescoDrawable,
+              imageRequest = imageRequest,
+              callerContext = callerContext,
+              contextChain = null,
+              listener = imageListener,
+              perfDataListener = null,
+              onFadeListener = null,
+              viewportDimensions = null)
     }
     if (useSimpleFetchLogic.get()) {
       frescoDrawable.imagePerfListener.onImageMount(frescoDrawable)

@@ -25,6 +25,7 @@ import com.facebook.imagepipeline.bitmaps.SimpleBitmapReleaser;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imageutils.JfifUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -33,6 +34,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /** Bitmap decoder for ART VM (Lollipop and up). */
 @ThreadSafe
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class DefaultDecoder implements PlatformDecoder {
 
   private static final Class<?> TAG = DefaultDecoder.class;
@@ -62,13 +64,13 @@ public abstract class DefaultDecoder implements PlatformDecoder {
   }
 
   @Override
-  public CloseableReference<Bitmap> decodeFromEncodedImage(
+  public @Nullable CloseableReference<Bitmap> decodeFromEncodedImage(
       EncodedImage encodedImage, Bitmap.Config bitmapConfig, @Nullable Rect regionToDecode) {
     return decodeFromEncodedImageWithColorSpace(encodedImage, bitmapConfig, regionToDecode, null);
   }
 
   @Override
-  public CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
+  public @Nullable CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
       EncodedImage encodedImage,
       Bitmap.Config bitmapConfig,
       @Nullable Rect regionToDecode,
@@ -91,7 +93,7 @@ public abstract class DefaultDecoder implements PlatformDecoder {
    * @exception java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   @Override
-  public CloseableReference<Bitmap> decodeFromEncodedImageWithColorSpace(
+  public @Nullable CloseableReference<Bitmap> decodeFromEncodedImageWithColorSpace(
       EncodedImage encodedImage,
       Bitmap.Config bitmapConfig,
       @Nullable Rect regionToDecode,
@@ -125,7 +127,7 @@ public abstract class DefaultDecoder implements PlatformDecoder {
    * @exception java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   @Override
-  public CloseableReference<Bitmap> decodeJPEGFromEncodedImageWithColorSpace(
+  public @Nullable CloseableReference<Bitmap> decodeJPEGFromEncodedImageWithColorSpace(
       EncodedImage encodedImage,
       Bitmap.Config bitmapConfig,
       @Nullable Rect regionToDecode,
@@ -170,7 +172,7 @@ public abstract class DefaultDecoder implements PlatformDecoder {
    * @param regionToDecode optional image region to decode or null to decode the whole image
    * @return the bitmap
    */
-  protected CloseableReference<Bitmap> decodeStaticImageFromStream(
+  protected @Nullable CloseableReference<Bitmap> decodeStaticImageFromStream(
       InputStream inputStream, BitmapFactory.Options options, @Nullable Rect regionToDecode) {
     return decodeFromStream(inputStream, options, regionToDecode, null);
   }
@@ -186,7 +188,7 @@ public abstract class DefaultDecoder implements PlatformDecoder {
    *     assumed if the SDK version >= 26.
    * @return the bitmap
    */
-  private CloseableReference<Bitmap> decodeFromStream(
+  private @Nullable CloseableReference<Bitmap> decodeFromStream(
       InputStream inputStream,
       BitmapFactory.Options options,
       @Nullable Rect regionToDecode,
@@ -238,12 +240,15 @@ public abstract class DefaultDecoder implements PlatformDecoder {
       options.inTempStorage = byteBuffer.array();
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
           && regionToDecode != null
-          && bitmapToReuse != null) {
+          && bitmapToReuse != null
+          && options.inPreferredConfig != null) {
         BitmapRegionDecoder bitmapRegionDecoder = null;
         try {
           bitmapToReuse.reconfigure(targetWidth, targetHeight, options.inPreferredConfig);
           bitmapRegionDecoder = BitmapRegionDecoder.newInstance(inputStream, true);
-          decodedBitmap = bitmapRegionDecoder.decodeRegion(regionToDecode, options);
+          if (bitmapRegionDecoder != null) {
+            decodedBitmap = bitmapRegionDecoder.decodeRegion(regionToDecode, options);
+          }
         } catch (IOException e) {
           FLog.e(TAG, "Could not decode region %s, decoding full bitmap instead.", regionToDecode);
         } finally {
@@ -288,7 +293,9 @@ public abstract class DefaultDecoder implements PlatformDecoder {
     // expected
     if (bitmapToReuse != null && bitmapToReuse != decodedBitmap) {
       mBitmapPool.release(bitmapToReuse);
-      decodedBitmap.recycle();
+      if (decodedBitmap != null) {
+        decodedBitmap.recycle();
+      }
       throw new IllegalStateException();
     }
 

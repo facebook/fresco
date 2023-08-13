@@ -77,13 +77,14 @@ public class HierarcherImpl implements Hierarcher {
     }
   }
 
-  protected Drawable applyRoundingOptions(
-      Resources resources, Drawable placeholderDrawable, ImageOptions imageOptions) {
+  @Override
+  public Drawable applyRoundingOptions(
+      Resources resources, Drawable drawable, ImageOptions imageOptions) {
     RoundingOptions roundingOptions = imageOptions.getRoundingOptions();
     BorderOptions borderOptions = imageOptions.getBorderOptions();
 
     return RoundingUtils.INSTANCE.roundedDrawable(
-        resources, placeholderDrawable, borderOptions, roundingOptions);
+        resources, drawable, borderOptions, roundingOptions);
   }
 
   @Override
@@ -125,6 +126,8 @@ public class HierarcherImpl implements Hierarcher {
       Drawable drawable = imageOptions.getErrorDrawable();
       if (drawable == null && imageOptions.getErrorRes() != 0) {
         drawable = resources.getDrawable(imageOptions.getErrorRes());
+      } else if (drawable == null && imageOptions.getErrorColor() != null) {
+        drawable = new ColorDrawable(imageOptions.getErrorColor());
       }
       if (drawable == null) {
         return null;

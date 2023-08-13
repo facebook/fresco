@@ -8,10 +8,15 @@
 package com.facebook.fresco.animation.bitmap
 
 import android.graphics.Bitmap
+import android.graphics.BitmapShader
 import android.graphics.Canvas
 import android.graphics.ColorFilter
+import android.graphics.Matrix
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.Rect
+import android.graphics.RectF
+import android.graphics.Shader
 import android.graphics.drawable.Drawable
 import androidx.annotation.IntDef
 import androidx.annotation.IntRange
@@ -22,8 +27,8 @@ import com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactiv
 import com.facebook.fresco.animation.backend.AnimationInformation
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer
+import com.facebook.fresco.vito.options.RoundingOptions
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
-import java.lang.RuntimeException
 
 /**
  * Bitmap animation backend that renders bitmap frames.
@@ -38,9 +43,22 @@ class BitmapAnimationBackend(
     private val bitmapFrameCache: BitmapFrameCache,
     private val animationInformation: AnimationInformation,
     private val bitmapFrameRenderer: BitmapFrameRenderer,
+    private val isNewRenderImplementation: Boolean,
     private val bitmapFramePreparationStrategy: BitmapFramePreparationStrategy?,
-    private val bitmapFramePreparer: BitmapFramePreparer?
+    private val bitmapFramePreparer: BitmapFramePreparer?,
+    roundingOptions: RoundingOptions? = null,
 ) : AnimationBackend, InactivityListener {
+
+  val cornerRadii: FloatArray? =
+      roundingOptions?.let { roundingOptions ->
+        if (roundingOptions.cornerRadius != RoundingOptions.CORNER_RADIUS_UNSET) {
+          val corners = FloatArray(8)
+          corners.fill(roundingOptions.cornerRadius)
+          corners
+        } else {
+          roundingOptions.cornerRadii
+        }
+      }
 
   interface FrameListener {
     /**
@@ -79,14 +97,19 @@ class BitmapAnimationBackend(
       FRAME_TYPE_FALLBACK)
   annotation class FrameType
 
-  var bitmapConfig = Bitmap.Config.ARGB_8888
+  private val bitmapConfig = Bitmap.Config.ARGB_8888
 
   private val paint: Paint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG)
   private var bounds: Rect? = null
   private var bitmapWidth = 0
   private var bitmapHeight = 0
 
+  private val path: Path = Path()
+  private val matrix: Matrix = Matrix()
+  private var pathFrameNumber: Int = -1
+
   private var frameListener: FrameListener? = null
+  private var animationListener: AnimationBackend.Listener? = null
 
   init {
     updateBitmapDimensions()
@@ -101,6 +124,12 @@ class BitmapAnimationBackend(
   override fun getFrameDurationMs(frameNumber: Int): Int =
       animationInformation.getFrameDurationMs(frameNumber)
 
+  override fun width(): Int = animationInformation.width()
+
+  override fun height(): Int = animationInformation.height()
+
+  override fun getLoopDurationMs(): Int = animationInformation.loopDurationMs
+
   override fun getLoopCount(): Int = animationInformation.loopCount
 
   override fun drawFrame(parent: Drawable, canvas: Canvas, frameNumber: Int): Boolean {
@@ -113,7 +142,7 @@ class BitmapAnimationBackend(
     }
 
     // Prepare next frames
-    if (bitmapFramePreparer != null) {
+    if (!isNewRenderImplementation && bitmapFramePreparer != null) {
       bitmapFramePreparationStrategy?.prepareFrames(
           bitmapFramePreparer, bitmapFrameCache, this, frameNumber)
     }
@@ -126,8 +155,23 @@ class BitmapAnimationBackend(
       @FrameType frameType: Int
   ): Boolean {
     var bitmapReference: CloseableReference<Bitmap>? = null
-    var drawn = false
+    val drawn: Boolean
     var nextFrameType = FRAME_TYPE_UNKNOWN
+
+    if (isNewRenderImplementation) {
+      bitmapReference =
+          bitmapFramePreparationStrategy?.getBitmapFrame(frameNumber, canvas.width, canvas.height)
+
+      if (bitmapReference != null && bitmapReference.isValid) {
+        drawBitmap(frameNumber, bitmapReference.get(), canvas)
+        return true
+      }
+
+      // If bitmap couldnt be drawn, then fetch frames
+      bitmapFramePreparationStrategy?.prepareFrames(canvas.width, canvas.height, null)
+      return false
+    }
+
     try {
       when (frameType) {
         FRAME_TYPE_CACHED -> {
@@ -197,11 +241,37 @@ class BitmapAnimationBackend(
   override fun getSizeInBytes(): Int = bitmapFrameCache.sizeInBytes
 
   override fun clear() {
-    bitmapFrameCache.clear()
+    if (isNewRenderImplementation) {
+      bitmapFramePreparationStrategy?.clearFrames()
+    } else {
+      bitmapFrameCache.clear()
+    }
+  }
+
+  override fun preloadAnimation() {
+    if (!isNewRenderImplementation && bitmapFramePreparer != null) {
+      bitmapFramePreparationStrategy?.prepareFrames(
+          bitmapFramePreparer, bitmapFrameCache, this, 0) {
+            animationListener?.onAnimationLoaded()
+          }
+    } else {
+      bitmapFramePreparationStrategy?.prepareFrames(
+          animationInformation.width(), animationInformation.height()) {
+            animationListener?.onAnimationLoaded()
+          }
+    }
   }
 
   override fun onInactive() {
-    clear()
+    if (isNewRenderImplementation) {
+      bitmapFramePreparationStrategy?.onStop()
+    } else {
+      clear()
+    }
+  }
+
+  override fun setAnimationListener(listener: AnimationBackend.Listener?) {
+    animationListener = listener
   }
 
   private fun updateBitmapDimensions() {
@@ -240,6 +310,47 @@ class BitmapAnimationBackend(
     return frameRendered
   }
 
+  private fun updatePath(
+      frameNumber: Int,
+      bitmap: Bitmap,
+      currentBoundsWidth: Float,
+      currentBoundsHeight: Float
+  ): Boolean {
+    if (cornerRadii == null) {
+      return false
+    }
+    if (frameNumber == pathFrameNumber) {
+      return true
+    }
+
+    val bitmapShader = BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+    val src = RectF(0f, 0f, bitmapWidth.toFloat(), bitmapHeight.toFloat())
+    val dst = RectF(0f, 0f, currentBoundsWidth, currentBoundsHeight)
+    matrix.setRectToRect(src, dst, Matrix.ScaleToFit.FILL)
+    bitmapShader.setLocalMatrix(matrix)
+    paint.shader = bitmapShader
+    path.addRoundRect(
+        RectF(0f, 0f, currentBoundsWidth, currentBoundsHeight), cornerRadii, Path.Direction.CW)
+
+    pathFrameNumber = frameNumber
+    return true
+  }
+
+  private fun drawBitmap(frameNumber: Int, bitmap: Bitmap, canvas: Canvas) {
+    val currentBounds = bounds
+
+    if (currentBounds == null) {
+      canvas.drawBitmap(bitmap, 0f, 0f, paint)
+    } else {
+      if (updatePath(
+          frameNumber, bitmap, currentBounds.width().toFloat(), currentBounds.height().toFloat())) {
+        canvas.drawPath(path, paint)
+      } else {
+        canvas.drawBitmap(bitmap, null, currentBounds, paint)
+      }
+    }
+  }
+
   /**
    * Helper method that draws the given bitmap on the canvas respecting the bounds (if set).
    *
@@ -261,24 +372,21 @@ class BitmapAnimationBackend(
     if (bitmapReference == null || !CloseableReference.isValid(bitmapReference)) {
       return false
     }
-    val currentBounds = bounds
-    if (currentBounds == null) {
-      canvas.drawBitmap(bitmapReference.get(), 0f, 0f, paint)
-    } else {
-      canvas.drawBitmap(bitmapReference.get(), null, currentBounds, paint)
-    }
+
+    this.drawBitmap(frameNumber, bitmapReference.get(), canvas)
 
     // Notify the cache that a frame has been rendered.
     // We should not cache fallback frames since they do not represent the actual frame.
-    if (frameType != FRAME_TYPE_FALLBACK) {
+    if (frameType != FRAME_TYPE_FALLBACK && !isNewRenderImplementation) {
       bitmapFrameCache.onFrameRendered(frameNumber, bitmapReference, frameType)
     }
     frameListener?.onFrameDrawn(this, frameNumber, frameType)
+
     return true
   }
 
   companion object {
-    const val FRAME_TYPE_UNKNOWN = -1
+    const val FRAME_TYPE_UNKNOWN: Int = -1
     const val FRAME_TYPE_CACHED = 0
     const val FRAME_TYPE_REUSED = 1
     const val FRAME_TYPE_CREATED = 2

@@ -7,7 +7,7 @@
 
 package com.facebook.common.media;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import android.webkit.MimeTypeMap;
 import org.junit.Test;

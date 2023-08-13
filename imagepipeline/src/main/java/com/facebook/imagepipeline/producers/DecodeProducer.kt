@@ -14,6 +14,7 @@ import com.facebook.common.memory.ByteArrayPool
 import com.facebook.common.references.CloseableReference
 import com.facebook.common.util.ExceptionWithNoStacktrace
 import com.facebook.common.util.UriUtil
+import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.imageformat.DefaultImageFormats
 import com.facebook.imagepipeline.common.ImageDecodeOptions
 import com.facebook.imagepipeline.core.CloseableReferenceFactory
@@ -95,6 +96,7 @@ class DecodeProducer(
     @get:Synchronized @GuardedBy("this") private var isFinished: Boolean = false
     private val jobScheduler: JobScheduler
     protected var lastScheduledScanNumber = 0
+
     private fun maybeIncreaseSampleSize(encodedImage: EncodedImage) {
       if (encodedImage.imageFormat !== DefaultImageFormats.JPEG) {
         return
@@ -261,8 +263,7 @@ class DecodeProducer(
               throw e
             }
 
-            // NULLSAFE_FIXME[Nullable Dereference]
-            reclaimMemoryRunnable!!.run()
+            reclaimMemoryRunnable?.run()
             System.gc()
 
             // Now we retry only once
@@ -276,16 +277,17 @@ class DecodeProducer(
         image: CloseableImage?,
         lastScheduledScanNumber: Int
     ) {
-      producerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_WIDTH, encodedImage.width)
-      producerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_HEIGHT, encodedImage.height)
-      producerContext.setExtra(ProducerContext.ExtraKeys.ENCODED_SIZE, encodedImage.size)
+      producerContext.putExtra(HasExtraData.KEY_ENCODED_WIDTH, encodedImage.width)
+      producerContext.putExtra(HasExtraData.KEY_ENCODED_HEIGHT, encodedImage.height)
+      producerContext.putExtra(HasExtraData.KEY_ENCODED_SIZE, encodedImage.size)
+      producerContext.putExtra(HasExtraData.KEY_COLOR_SPACE, encodedImage.colorSpace)
       if (image is CloseableBitmap) {
         val bitmap = image.underlyingBitmap
         val config = if (bitmap == null) null else bitmap.config
-        producerContext.setExtra("bitmap_config", config.toString())
+        producerContext.putExtra(HasExtraData.KEY_BITMAP_CONFIG, config.toString())
       }
-      image?.setImageExtras(producerContext.extras)
-      producerContext.setExtra(ProducerContext.ExtraKeys.LAST_SCAN_NUMBER, lastScheduledScanNumber)
+      image?.putExtras(producerContext.getExtras())
+      producerContext.putExtra(HasExtraData.KEY_LAST_SCAN_NUMBER, lastScheduledScanNumber)
     }
 
     private fun getExtraMap(
@@ -388,16 +390,18 @@ class DecodeProducer(
     }
 
     protected abstract fun getIntermediateImageEndOffset(encodedImage: EncodedImage): Int
+
     protected abstract val qualityInfo: QualityInfo
 
     init {
 
       val job = JobRunnable { encodedImage, status ->
         if (encodedImage != null) {
-          producerContext.setExtra(
-              ProducerContext.ExtraKeys.IMAGE_FORMAT, encodedImage.imageFormat.name)
+          val request = producerContext.imageRequest
+          producerContext.putExtra(HasExtraData.KEY_IMAGE_FORMAT, encodedImage.imageFormat.name)
+          encodedImage.source = request.sourceUri?.toString()
+
           if (downsampleEnabled && !statusHasFlag(status, IS_RESIZING_DONE)) {
-            val request = producerContext.imageRequest
             if (downsampleEnabledForNetwork || !UriUtil.isNetworkUri(request.sourceUri)) {
               encodedImage.sampleSize =
                   DownsampleUtil.determineSampleSize(

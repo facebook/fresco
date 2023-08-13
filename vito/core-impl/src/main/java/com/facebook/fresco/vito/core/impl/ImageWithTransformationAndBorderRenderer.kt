@@ -29,25 +29,32 @@ class ImageWithTransformationAndBorderRenderer {
         paint: Paint,
         alpha: Int = 255
     ): RenderCommand {
+      val borderPadding: Float = borderOptions?.padding ?: 0f
       val borderWidth: Float = borderOptions?.width ?: 0f
       val hasBorders: Boolean = borderWidth > 0f
       val scaleDownInsideBorders = borderOptions?.scaleDownInsideBorders ?: false
-
       val layerBounds = RectF(bounds)
+      val cornerRadiusAdjustment = borderWidth + borderPadding
 
       val imageTransform: Matrix?
       val imageShape: Shape
-      if (hasBorders && scaleDownInsideBorders) {
-        val insideBorderBounds = RectF(layerBounds).apply { inset(borderWidth, borderWidth) }
+      if (hasBorders && (scaleDownInsideBorders || borderPadding != 0f)) {
+        val insideBorderBounds =
+            if (scaleDownInsideBorders) {
+              RectF(layerBounds).apply { inset(cornerRadiusAdjustment, cornerRadiusAdjustment) }
+            } else {
+              RectF(layerBounds).apply { inset(borderWidth, borderWidth) }
+            }
         val insideBorderTransform =
             Matrix().apply {
               setRectToRect(layerBounds, insideBorderBounds, Matrix.ScaleToFit.FILL)
             }
         imageTransform = Matrix(canvasTransform).apply { postConcat(insideBorderTransform) }
-        imageShape = ShapeCalculator.getShape(insideBorderBounds, roundingOptions, -borderWidth)
+        imageShape =
+            ShapeCalculator.getShape(insideBorderBounds, roundingOptions, -cornerRadiusAdjustment)
       } else {
         imageTransform = canvasTransform
-        imageShape = ShapeCalculator.getShape(layerBounds, roundingOptions, -borderWidth)
+        imageShape = ShapeCalculator.getShape(layerBounds, roundingOptions, -cornerRadiusAdjustment)
       }
 
       val imageRenderCommand =

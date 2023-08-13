@@ -22,6 +22,7 @@ dependencies {
 
     testImplementation TestDeps.junit
 
+    androidTestImplementation project(':imagepipeline')
     androidTestImplementation TestDeps.junit
     androidTestImplementation TestDeps.AndroidX.testRules
     androidTestImplementation TestDeps.AndroidX.testRunner

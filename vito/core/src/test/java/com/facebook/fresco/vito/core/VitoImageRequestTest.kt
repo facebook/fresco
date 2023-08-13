@@ -24,8 +24,8 @@ class VitoImageRequestTest {
     val res = mock<Resources>()
     val imageSource = mock<ImageSource>()
     val options = mock<ImageOptions>()
-    val a = VitoImageRequest(res, imageSource, options, null, null)
-    val b = VitoImageRequest(res, imageSource, options, null, null)
+    val a = VitoImageRequest(res, imageSource, options, false, null, null)
+    val b = VitoImageRequest(res, imageSource, options, false, null, null)
 
     assertThat(a).isEqualTo(b)
   }
@@ -35,8 +35,8 @@ class VitoImageRequestTest {
     val res = mock<Resources>()
     val imageSource = mock<ImageSource>()
     val options = mock<ImageOptions>()
-    val a = VitoImageRequest(res, imageSource, options, null, null)
-    val b = VitoImageRequest(res, imageSource, options, null, null)
+    val a = VitoImageRequest(res, imageSource, options, false, null, null)
+    val b = VitoImageRequest(res, imageSource, options, false, null, null)
 
     assertThat(a.hashCode()).isEqualTo(b.hashCode())
   }

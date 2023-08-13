@@ -279,7 +279,11 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
 
   @Override
   public @Nullable V inspect(K key) {
-    return null; // Not supported. TODO T66165815
+    Entry<K, V> entry = mCachedEntries.get(key);
+    if (entry == null) {
+      return null;
+    }
+    return entry.valueRef.get();
   }
 
   /**
@@ -816,6 +820,6 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
 
   @Override
   public Map<Bitmap, Object> getOtherEntries() {
-    return Collections.emptyMap(); // TODO T66165815
+    return Collections.emptyMap();
   }
 }

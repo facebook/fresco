@@ -1,4 +1,9 @@
-// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 package com.facebook.fresco.vito.tools.liveeditor
 
@@ -9,6 +14,8 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan
 import android.util.TypedValue
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
@@ -67,6 +74,23 @@ class ImageSourceUiUtil(private val context: Context) {
     }
 
     return dialog
+  }
+
+  fun createImageInfoView(info: Pair<String, String>, parent: ViewGroup): View {
+    val spannable = SpannableString("${info.first} \n${info.second}")
+    spannable.apply {
+      setSpan(StyleSpan(Typeface.BOLD), 0, info.first.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+      setSpan(
+          StyleSpan(Typeface.ITALIC),
+          info.first.length,
+          spannable.length,
+          Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+    }
+
+    val textView: TextView =
+        LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1, parent, false)
+            as TextView
+    return textView.apply { text = spannable }
   }
 
   private fun Int.spToPx(context: Context): Float =

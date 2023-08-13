@@ -34,7 +34,7 @@ public class DefaultCloseableReference<T> extends CloseableReference<T> {
   public CloseableReference<T> clone() {
     Preconditions.checkState(isValid());
     return new DefaultCloseableReference<T>(
-        mSharedReference, mLeakHandler, mStacktrace != null ? new Throwable(mStacktrace) : null);
+        mSharedReference, mLeakHandler, mStacktrace != null ? new Throwable() : null);
   }
 
   @Override

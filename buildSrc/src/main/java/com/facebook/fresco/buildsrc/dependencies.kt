@@ -50,7 +50,7 @@ object Deps {
   }
 
   object SoLoader {
-    private const val version = "0.10.4"
+    private const val version = "0.10.5"
     const val soloaderAnnotation = "com.facebook.soloader:annotation:$version"
     const val nativeloader = "com.facebook.soloader:nativeloader:$version"
     const val soloader = "com.facebook.soloader:soloader:$version"
@@ -58,10 +58,10 @@ object Deps {
 
   object Tools {
     object Flipper {
-      private const val version = "0.121.0"
+      private const val version = "0.183.0"
       const val flipper = "com.facebook.flipper:flipper:$version"
-      const val fresco = "com.facebook.flipper:flipper-fresco-plugin:$version"
     }
+
     object Stetho {
       private const val version = "1.6.0"
       const val stetho = "com.facebook.stetho:stetho:$version"

@@ -29,10 +29,10 @@ object IterativeBoxBlurFilter {
    * height * 4 Bytes (+constant)
    *
    * @param bitmap The [Bitmap] containing the image. The bitmap dimension need to be smaller than
-   * [BitmapUtil.MAX_BITMAP_SIZE]
+   *   [BitmapUtil.MAX_BITMAP_SIZE]
    * @param iterations The number of iterations of the blurring algorithm > 0.
    * @param radius The radius of the blur with a supported range 0 < radius <= [ ]
-   * [RenderScriptBlurFilter.BLUR_MAX_RADIUS]
+   *   [RenderScriptBlurFilter.BLUR_MAX_RADIUS]
    */
   @JvmStatic
   fun boxBlurBitmapInPlace(bitmap: Bitmap, iterations: Int, radius: Int) {

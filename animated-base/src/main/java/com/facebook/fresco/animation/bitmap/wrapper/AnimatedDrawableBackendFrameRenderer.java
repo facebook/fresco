@@ -25,6 +25,7 @@ public class AnimatedDrawableBackendFrameRenderer implements BitmapFrameRenderer
   private static final Class<?> TAG = AnimatedDrawableBackendFrameRenderer.class;
 
   private final BitmapFrameCache mBitmapFrameCache;
+  private final boolean mIsNewRenderImplementation;
 
   private AnimatedDrawableBackend mAnimatedDrawableBackend;
   private AnimatedImageCompositor mAnimatedImageCompositor;
@@ -44,11 +45,14 @@ public class AnimatedDrawableBackendFrameRenderer implements BitmapFrameRenderer
       };
 
   public AnimatedDrawableBackendFrameRenderer(
-      BitmapFrameCache bitmapFrameCache, AnimatedDrawableBackend animatedDrawableBackend) {
+      BitmapFrameCache bitmapFrameCache,
+      AnimatedDrawableBackend animatedDrawableBackend,
+      boolean isNewRenderImplementation) {
     mBitmapFrameCache = bitmapFrameCache;
     mAnimatedDrawableBackend = animatedDrawableBackend;
-
-    mAnimatedImageCompositor = new AnimatedImageCompositor(mAnimatedDrawableBackend, mCallback);
+    mIsNewRenderImplementation = isNewRenderImplementation;
+    mAnimatedImageCompositor =
+        new AnimatedImageCompositor(mAnimatedDrawableBackend, isNewRenderImplementation, mCallback);
   }
 
   @Override
@@ -56,7 +60,9 @@ public class AnimatedDrawableBackendFrameRenderer implements BitmapFrameRenderer
     AnimatedDrawableBackend newBackend = mAnimatedDrawableBackend.forNewBounds(bounds);
     if (newBackend != mAnimatedDrawableBackend) {
       mAnimatedDrawableBackend = newBackend;
-      mAnimatedImageCompositor = new AnimatedImageCompositor(mAnimatedDrawableBackend, mCallback);
+      mAnimatedImageCompositor =
+          new AnimatedImageCompositor(
+              mAnimatedDrawableBackend, mIsNewRenderImplementation, mCallback);
     }
   }
 

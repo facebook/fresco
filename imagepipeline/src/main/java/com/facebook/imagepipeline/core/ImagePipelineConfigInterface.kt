@@ -40,41 +40,42 @@ interface ImagePipelineConfigInterface {
 
   val bitmapConfig: Bitmap.Config?
   val bitmapMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>
-  val bitmapMemoryCacheTrimStrategy: CacheTrimStrategy?
-  val encodedMemoryCacheTrimStrategy: CacheTrimStrategy?
+  val bitmapMemoryCacheTrimStrategy: CacheTrimStrategy
+  val encodedMemoryCacheTrimStrategy: CacheTrimStrategy
   val bitmapMemoryCacheEntryStateObserver: EntryStateObserver<CacheKey>?
-  val cacheKeyFactory: CacheKeyFactory?
-  val context: Context?
-  val fileCacheFactory: FileCacheFactory?
+  val cacheKeyFactory: CacheKeyFactory
+  val context: Context
+  val fileCacheFactory: FileCacheFactory
   val isDownsampleEnabled: Boolean
   val isDiskCacheEnabled: Boolean
   val encodedMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>
   val executorSupplier: ExecutorSupplier
   val executorServiceForAnimatedImages: SerialExecutorService?
-  val imageCacheStatsTracker: ImageCacheStatsTracker?
+  val imageCacheStatsTracker: ImageCacheStatsTracker
   val imageDecoder: ImageDecoder?
   val imageTranscoderFactory: ImageTranscoderFactory?
 
   @get:ImageTranscoderType val imageTranscoderType: Int?
   val isPrefetchEnabledSupplier: Supplier<Boolean>
-  val mainDiskCacheConfig: DiskCacheConfig?
-  val memoryTrimmableRegistry: MemoryTrimmableRegistry?
+  val enableEncodedImageColorSpaceUsage: Supplier<Boolean>
+  val mainDiskCacheConfig: DiskCacheConfig
+  val memoryTrimmableRegistry: MemoryTrimmableRegistry
 
   @get:MemoryChunkType val memoryChunkType: Int
-  val networkFetcher: NetworkFetcher<*>?
+  val networkFetcher: NetworkFetcher<*>
   val platformBitmapFactory: PlatformBitmapFactory?
-  val poolFactory: PoolFactory?
-  val progressiveJpegConfig: ProgressiveJpegConfig?
-  val requestListeners: Set<RequestListener?>?
-  val requestListener2s: Set<RequestListener2?>?
-  val customProducerSequenceFactories: Set<CustomProducerSequenceFactory>?
+  val poolFactory: PoolFactory
+  val progressiveJpegConfig: ProgressiveJpegConfig
+  val requestListeners: Set<RequestListener?>
+  val requestListener2s: Set<RequestListener2?>
+  val customProducerSequenceFactories: Set<CustomProducerSequenceFactory>
   val isResizeAndRotateEnabledForNetwork: Boolean
-  val smallImageDiskCacheConfig: DiskCacheConfig?
+  val smallImageDiskCacheConfig: DiskCacheConfig
   val imageDecoderConfig: ImageDecoderConfig?
   val callerContextVerifier: CallerContextVerifier?
   val experiments: ImagePipelineExperiments
-  val closeableReferenceLeakTracker: CloseableReferenceLeakTracker?
+  val closeableReferenceLeakTracker: CloseableReferenceLeakTracker
   val bitmapCacheOverride: MemoryCache<CacheKey, CloseableImage>?
   val encodedMemoryCacheOverride: MemoryCache<CacheKey, PooledByteBuffer>?
-  val bitmapMemoryCacheFactory: BitmapMemoryCacheFactory?
+  val bitmapMemoryCacheFactory: BitmapMemoryCacheFactory
 }

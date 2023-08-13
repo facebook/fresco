@@ -37,7 +37,9 @@ RotationType getRotationTypeFromDegrees(JNIEnv* env, uint16_t degrees);
 /**
  * Transforms raw EXIF orientation values into RotationType
  */
-RotationType getRotationTypeFromRawExifOrientation(JNIEnv* env, uint16_t exif_orientation);
+RotationType getRotationTypeFromRawExifOrientation(
+    JNIEnv* env,
+    uint16_t exif_orientation);
 
 /**
  * Scale factor to be used for resizing.
@@ -45,7 +47,7 @@ RotationType getRotationTypeFromRawExifOrientation(JNIEnv* env, uint16_t exif_or
 class ScaleFactor {
  public:
   ScaleFactor(uint8_t numerator, uint8_t denominator)
-  : numerator_(numerator), denominator_(denominator) {}
+      : numerator_(numerator), denominator_(denominator) {}
 
   uint8_t getNumerator() const {
     return numerator_;
@@ -71,6 +73,7 @@ class ScaleFactor {
   const uint8_t denominator_;
 };
 
-} }
+} // namespace imagepipeline
+} // namespace facebook
 
 #endif /* TRANSFORMATIONS_H */

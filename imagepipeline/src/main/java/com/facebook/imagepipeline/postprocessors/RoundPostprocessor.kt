@@ -18,6 +18,7 @@ class RoundPostprocessor @JvmOverloads constructor(private val enableAntiAliasin
     BasePostprocessor() {
 
   private val cacheKey: CacheKey = SimpleCacheKey("XferRoundFilter")
+
   override fun getPostprocessorCacheKey(): CacheKey = cacheKey
 
   override fun process(destBitmap: Bitmap, sourceBitmap: Bitmap) {

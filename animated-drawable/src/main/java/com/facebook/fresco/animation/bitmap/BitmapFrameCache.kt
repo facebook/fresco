@@ -10,7 +10,6 @@ package com.facebook.fresco.animation.bitmap
 import android.graphics.Bitmap
 import com.facebook.common.references.CloseableReference
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend.FrameType
-import com.facebook.fresco.animation.bitmap.BitmapFrameCache.FrameCacheListener
 
 /** Bitmap frame cache that is used for animated images. */
 interface BitmapFrameCache {
@@ -75,8 +74,14 @@ interface BitmapFrameCache {
   /** @return the size in bytes of all cached data */
   val sizeInBytes: Int
 
+  /** Send the list of frames when the animation frames are loaded */
+  fun onAnimationPrepared(frameBitmaps: Map<Int, CloseableReference<Bitmap>>): Boolean = true
+
   /** Clear the cache. */
   fun clear()
+
+  /** Indicates if animation is loaded in cache and ready for usage */
+  fun isAnimationReady(): Boolean = false
 
   /**
    * Callback when the given bitmap has been drawn to a canvas. This bitmap can either be a reused

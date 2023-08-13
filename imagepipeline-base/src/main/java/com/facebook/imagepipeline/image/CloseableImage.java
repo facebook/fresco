@@ -8,13 +8,12 @@
 package com.facebook.imagepipeline.image;
 
 import com.facebook.common.references.HasBitmap;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
-import java.util.Map;
-import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public interface CloseableImage extends Closeable, ImageInfo, HasBitmap {
+public interface CloseableImage extends Closeable, ImageInfo, HasBitmap, HasExtraData {
   /** @return size in bytes of the bitmap(s) */
   int getSizeInBytes();
 
@@ -25,9 +24,16 @@ public interface CloseableImage extends Closeable, ImageInfo, HasBitmap {
   /** Returns whether this instance is closed. */
   boolean isClosed();
 
-  void setImageExtras(@Nullable Map<String, Object> extras);
-
-  void setImageExtra(String extra, Object value);
-
   boolean isStateful();
+
+  /** @return width of the image */
+  int getWidth();
+
+  /** @return height of the image */
+  int getHeight();
+
+  /** @return quality information for the image */
+  QualityInfo getQualityInfo();
+
+  ImageInfo getImageInfo();
 }

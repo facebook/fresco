@@ -64,6 +64,5 @@
       android:layout_marginTop="@dimen/margin_medium"
       app:placeholderImageScaleType="centerInside"
       app:placeholderImage="@drawable/logo"
-      app:retryImage="@drawable/ic_retry_black_48dp"
       />
 </LinearLayout>

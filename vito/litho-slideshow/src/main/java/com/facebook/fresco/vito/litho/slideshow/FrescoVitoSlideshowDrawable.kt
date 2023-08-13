@@ -21,13 +21,16 @@ T : FrescoDrawableInterface {
   var timerTask: TimerTask? = null
   val currentImage: FrescoDrawableInterface
     get() = checkNotNull(getDrawable(currentLayer) as FrescoDrawableInterface?)
+
   val nextImage: FrescoDrawableInterface
     get() = checkNotNull(getDrawable(nextLayerIndex) as FrescoDrawableInterface?)
+
   val previousImage: FrescoDrawableInterface
     get() = checkNotNull(getDrawable(previousLayerIndex) as FrescoDrawableInterface?)
 
   private val nextLayerIndex: Int
     get() = (currentLayer + 1) % numberOfLayers
+
   private val previousLayerIndex: Int
     get() = (currentLayer - 1 + numberOfLayers) % numberOfLayers
 

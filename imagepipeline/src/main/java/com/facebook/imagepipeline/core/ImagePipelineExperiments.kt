@@ -43,14 +43,16 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val webpBitmapFactory: WebpBitmapFactory?
   val useDownsamplingRatioForResizing: Boolean
   val useBitmapPrepareToDraw: Boolean
+  val useBalancedAnimationStrategy: Boolean
   val bitmapPrepareToDrawMinSizeBytes: Int
+  val animatedCacheMemoryPercentage: Int
   val bitmapPrepareToDrawMaxSizeBytes: Int
   val bitmapPrepareToDrawForPrefetch: Boolean
   val maxBitmapSize: Int
   val isNativeCodeDisabled: Boolean
   val isPartialImageCachingEnabled: Boolean
-  val producerFactoryMethod: ProducerFactoryMethod?
-  val isLazyDataSource: Supplier<Boolean>?
+  val producerFactoryMethod: ProducerFactoryMethod
+  val isLazyDataSource: Supplier<Boolean>
   val isGingerbreadDecoderEnabled: Boolean
   val downscaleFrameToDrawableDimensions: Boolean
   val suppressBitmapPrefetchingSupplier: Supplier<Boolean>
@@ -70,6 +72,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val shouldUseDecodingBufferHelper: Boolean
   val allowProgressiveOnPrefetch: Boolean
   val cancelDecodeOnCacheMiss: Boolean
+  val animationRenderFpsLimit: Int
+  val prefetchShortcutEnabled: Boolean
 
   class Builder(private val configBuilder: ImagePipelineConfig.Builder) {
     @JvmField var shouldUseDecodingBufferHelper = false
@@ -79,6 +83,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var webpBitmapFactory: WebpBitmapFactory? = null
     @JvmField var useDownsamplingRatioForResizing = false
     @JvmField var useBitmapPrepareToDraw = false
+    @JvmField var useBalancedAnimationStrategy = false
+    @JvmField var animatedCacheMemoryPercentage = 40
     @JvmField var bitmapPrepareToDrawMinSizeBytes = 0
     @JvmField var bitmapPrepareToDrawMaxSizeBytes = 0
 
@@ -115,7 +121,9 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
 
     @JvmField var shouldIgnoreCacheSizeMismatch = false
     @JvmField var allowProgressiveOnPrefetch = false
+    @JvmField var animationRenderFpsLimit = 30
     @JvmField var cancelDecodeOnCacheMiss = false
+    @JvmField var prefetchShortcutEnabled = false
 
     private fun asBuilder(block: () -> Unit): ImagePipelineConfig.Builder {
       block()
@@ -136,6 +144,10 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
 
     fun setWebpSupportEnabled(webpSupportEnabled: Boolean) = asBuilder {
       this.webpSupportEnabled = webpSupportEnabled
+    }
+
+    fun setPrefetchShortcutEnabled(prefetchShortcutEnabled: Boolean) = asBuilder {
+      this.prefetchShortcutEnabled = prefetchShortcutEnabled
     }
 
     fun shouldUseDecodingBufferHelper(): Boolean = shouldUseDecodingBufferHelper
@@ -181,11 +193,11 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
      *
      * @param useBitmapPrepareToDraw set true for enabling prepareToDraw
      * @param minBitmapSizeBytes Bitmaps with a [Bitmap.getByteCount] smaller than this value are
-     * not uploaded
+     *   not uploaded
      * @param maxBitmapSizeBytes Bitmaps with a [Bitmap.getByteCount] larger than this value are not
-     * uploaded
+     *   uploaded
      * @param preparePrefetch If this is true, also pre-fetching image requests will trigger the
-     * [android.graphics.Bitmap.prepareToDraw] call.
+     *   [android.graphics.Bitmap.prepareToDraw] call.
      * @return The Builder itself for chaining
      */
     fun setBitmapPrepareToDraw(
@@ -198,6 +210,18 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
       this.bitmapPrepareToDrawMinSizeBytes = minBitmapSizeBytes
       this.bitmapPrepareToDrawMaxSizeBytes = maxBitmapSizeBytes
       this.bitmapPrepareToDrawForPrefetch = preparePrefetch
+    }
+
+    /** Enable balance strategy between RAM and CPU for rendering bitmap animations (WebP, Gif) */
+    fun setBalancedAnimationStrategy(useBalancedAnimationStrategy: Boolean) = asBuilder {
+      this.useBalancedAnimationStrategy = useBalancedAnimationStrategy
+    }
+
+    /**
+     * Maximum heap memory percentage available for caching bitmaps from animated asset (WebP, Gif)
+     */
+    fun setAnimatedCacheMemoryPercentage(animatedCacheMemoryPercentage: Int) = asBuilder {
+      this.animatedCacheMemoryPercentage = animatedCacheMemoryPercentage
     }
 
     /**
@@ -282,6 +306,10 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
 
     fun setAllowProgressiveOnPrefetch(allowProgressiveOnPrefetch: Boolean) = asBuilder {
       this.allowProgressiveOnPrefetch = allowProgressiveOnPrefetch
+    }
+
+    fun setAnimationRenderFpsLimit(animationRenderFpsLimit: Int) = asBuilder {
+      this.animationRenderFpsLimit = animationRenderFpsLimit
     }
 
     fun setCancelDecodeOnCacheMiss(cancelDecodeOnCacheMiss: Boolean) = asBuilder {
@@ -377,6 +405,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     webpBitmapFactory = builder.webpBitmapFactory
     useDownsamplingRatioForResizing = builder.useDownsamplingRatioForResizing
     useBitmapPrepareToDraw = builder.useBitmapPrepareToDraw
+    useBalancedAnimationStrategy = builder.useBalancedAnimationStrategy
+    animatedCacheMemoryPercentage = builder.animatedCacheMemoryPercentage
     bitmapPrepareToDrawMinSizeBytes = builder.bitmapPrepareToDrawMinSizeBytes
     bitmapPrepareToDrawMaxSizeBytes = builder.bitmapPrepareToDrawMaxSizeBytes
     bitmapPrepareToDrawForPrefetch = builder.bitmapPrepareToDrawForPrefetch
@@ -384,7 +414,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     isNativeCodeDisabled = builder.nativeCodeDisabled
     isPartialImageCachingEnabled = builder.isPartialImageCachingEnabled
     producerFactoryMethod = builder.producerFactoryMethod ?: DefaultProducerFactoryMethod()
-    isLazyDataSource = builder.lazyDataSource
+    isLazyDataSource = builder.lazyDataSource ?: Suppliers.BOOLEAN_FALSE
     isGingerbreadDecoderEnabled = builder.gingerbreadDecoderEnabled
     downscaleFrameToDrawableDimensions = builder.downscaleFrameToDrawableDimensions
     suppressBitmapPrefetchingSupplier = builder.suppressBitmapPrefetchingSupplier
@@ -398,12 +428,14 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     isDiskCacheProbingEnabled = builder.isDiskCacheProbingEnabled
     trackedKeysSize = builder.trackedKeysSize
     allowProgressiveOnPrefetch = builder.allowProgressiveOnPrefetch
+    animationRenderFpsLimit = builder.animationRenderFpsLimit
     allowDelay = builder.allowDelay
     handOffOnUiThreadOnly = builder.handOffOnUiThreadOnly
     shouldStoreCacheEntrySize = builder.shouldStoreCacheEntrySize
     shouldIgnoreCacheSizeMismatch = builder.shouldIgnoreCacheSizeMismatch
     shouldUseDecodingBufferHelper = builder.shouldUseDecodingBufferHelper
     cancelDecodeOnCacheMiss = builder.cancelDecodeOnCacheMiss
+    prefetchShortcutEnabled = builder.prefetchShortcutEnabled
   }
 
   companion object {

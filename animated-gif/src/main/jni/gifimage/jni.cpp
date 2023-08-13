@@ -5,21 +5,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <stdio.h>
 #include <assert.h>
-#include <limits.h>
-#include <unistd.h>
 #include <fcntl.h>
+#include <limits.h>
+#include <stdio.h>
+#include <unistd.h>
 
 #include <jni.h>
 
-int initGifImage(JNIEnv *env);
+int initGifImage(JNIEnv* env);
 
 // Registers jni methods.
-__attribute__((visibility("default")))
-jint JNI_OnLoad(JavaVM* vm, void* reserved) {
+__attribute__((visibility("default"))) jint JNI_OnLoad(
+    JavaVM* vm,
+    void* reserved) {
   // get the current env
-  JNIEnv* env;
+  JNIEnv* env = nullptr;
   if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK) {
     return JNI_ERR;
   }

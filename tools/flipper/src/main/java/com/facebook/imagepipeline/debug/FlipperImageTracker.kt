@@ -9,13 +9,11 @@ package com.facebook.imagepipeline.debug
 
 import com.facebook.cache.common.CacheKey
 import com.facebook.cache.common.CacheKeyUtil
-import com.facebook.drawee.backends.pipeline.info.ImageLoadStatus
-import com.facebook.drawee.backends.pipeline.info.ImagePerfData
-import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener
-import com.facebook.drawee.backends.pipeline.info.VisibilityState
-import com.facebook.imagepipeline.debug.FlipperImageTracker.ImageDebugData
+import com.facebook.fresco.ui.common.ImageLoadStatus
+import com.facebook.fresco.ui.common.ImagePerfData
+import com.facebook.fresco.ui.common.ImagePerfDataListener
+import com.facebook.fresco.ui.common.VisibilityState
 import com.facebook.imagepipeline.request.ImageRequest
-import java.util.HashSet
 
 private const val MAX_IMAGES_TO_TRACK = 1_000
 
@@ -117,7 +115,7 @@ class FlipperImageTracker : DebugImageTracker, ImagePerfDataListener {
   @Synchronized
   override fun onImageLoadStatusUpdated(
       imagePerfData: ImagePerfData,
-      @ImageLoadStatus imageLoadStatus: Int
+      imageLoadStatus: ImageLoadStatus
   ) {
     if (imagePerfData?.imageRequest == null) {
       return
@@ -126,16 +124,17 @@ class FlipperImageTracker : DebugImageTracker, ImagePerfDataListener {
     if (debugData != null) {
       debugData.imagePerfData = imagePerfData
     } else {
-      val imageDebugData = ImageDebugData(imagePerfData.imageRequest)
+      val imageRequest = imagePerfData?.imageRequest as? ImageRequest
+      val imageDebugData = ImageDebugData(imageRequest)
       imageDebugData.imagePerfData = imagePerfData
-      imageRequestDebugDataMap[imagePerfData.imageRequest] = imageDebugData
+      imageRequestDebugDataMap[imageRequest] = imageDebugData
     }
   }
 
   @Synchronized
   override fun onImageVisibilityUpdated(
       imagePerfData: ImagePerfData,
-      @VisibilityState visibilityState: Int
+      visibilityState: VisibilityState
   ) {
     // ignore
   }
@@ -162,6 +161,7 @@ class FlipperImageTracker : DebugImageTracker, ImagePerfDataListener {
 
     val requestIds: Set<String?>?
       get() = _requestIds
+
     val uniqueId: String
       get() = hashCode().toString()
 

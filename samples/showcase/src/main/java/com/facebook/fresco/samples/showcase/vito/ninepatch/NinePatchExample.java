@@ -17,21 +17,21 @@ import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.image.BaseCloseableImage;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.Map;
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class NinePatchExample {
 
-  public static class NinePatchClosableImage implements CloseableImage {
+  public static class NinePatchClosableImage extends BaseCloseableImage {
     private boolean mClosed = false;
     @Nullable private NinePatch mNinePatch;
     private final int mSizeInBytes;
@@ -58,12 +58,6 @@ public class NinePatchExample {
     }
 
     @Override
-    public void setImageExtras(@Nullable Map<String, Object> extras) {}
-
-    @Override
-    public void setImageExtra(String extra, Object value) {}
-
-    @Override
     public boolean isStateful() {
       return false;
     }
@@ -83,14 +77,14 @@ public class NinePatchExample {
       return ImmutableQualityInfo.FULL_QUALITY;
     }
 
+    @Override
+    public ImageInfo getImageInfo() {
+      return this;
+    }
+
     @Nullable
     public NinePatch getNinePatch() {
       return mNinePatch;
-    }
-
-    @Override
-    public Map<String, Object> getExtras() {
-      return Collections.emptyMap();
     }
   }
 

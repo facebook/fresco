@@ -37,4 +37,7 @@ public class BaseControllerListener2<INFO> implements ControllerListener2<INFO> 
 
   @Override
   public void onRelease(String id, @Nullable Extras extras) {}
+
+  @Override
+  public void onEmptyEvent(@Nullable Object callerContext) {}
 }

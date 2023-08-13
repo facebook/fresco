@@ -17,7 +17,6 @@ namespace facebook {
 namespace imagepipeline {
 namespace jpeg {
 
-
 /**
  * Provides jpeg data from std::vector.
  *
@@ -56,7 +55,6 @@ static_assert(
     offsetof(JpegMemorySource, public_fields) == 0,
     "offset of JpegMemorySource.public_fields should be 0");
 
-
 /**
  * Stores libjpeg output in memory using std::vector
  *
@@ -80,7 +78,7 @@ struct JpegMemoryDestination {
    * copy written bytes to given vector later.
    */
   std::vector<uint8_t> buffer;
-  JOCTET *write_memory;
+  JOCTET* write_memory;
 
   /**
    * Creates jpeg_destination_mgr storing output bytes in std::vector.
@@ -89,10 +87,10 @@ struct JpegMemoryDestination {
 };
 
 /**
- * We cast pointers of type struct jpeg_destination_mgr* pointing to public_fields
- * to a pointer of type struct JpegMemoryDestination* and expect that we obtain a
- * valid pointer to enclosing structure. Assertions below ensure that this
- * assumption is always true.
+ * We cast pointers of type struct jpeg_destination_mgr* pointing to
+ * public_fields to a pointer of type struct JpegMemoryDestination* and expect
+ * that we obtain a valid pointer to enclosing structure. Assertions below
+ * ensure that this assumption is always true.
  */
 static_assert(
     std::is_standard_layout<JpegMemoryDestination>::value,
@@ -101,7 +99,8 @@ static_assert(
     offsetof(JpegMemoryDestination, public_fields) == 0,
     "offset of JpegMemoryDestination.public_fields should be 0");
 
-
-} } }
+} // namespace jpeg
+} // namespace imagepipeline
+} // namespace facebook
 
 #endif /* JPEG_MEMORY_IO_H */

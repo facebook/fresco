@@ -11,6 +11,7 @@ import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.infer.annotation.Nullsafe;
 import java.nio.ByteBuffer;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
@@ -18,12 +19,14 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /** An implementation of {@link PooledByteBuffer} that uses ({@link MemoryChunk}) to store data */
 @ThreadSafe
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class MemoryPooledByteBuffer implements PooledByteBuffer {
 
   private final int mSize;
 
   @GuardedBy("this")
   @VisibleForTesting
+  @Nullable
   CloseableReference<MemoryChunk> mBufRef;
 
   public MemoryPooledByteBuffer(CloseableReference<MemoryChunk> bufRef, int size) {
@@ -50,6 +53,7 @@ public class MemoryPooledByteBuffer implements PooledByteBuffer {
     ensureValid();
     Preconditions.checkArgument(offset >= 0);
     Preconditions.checkArgument(offset < mSize);
+    Preconditions.checkNotNull(mBufRef);
     return mBufRef.get().read(offset);
   }
 
@@ -59,18 +63,21 @@ public class MemoryPooledByteBuffer implements PooledByteBuffer {
     // We need to make sure that PooledByteBuffer's length is preserved.
     // Al the other bounds checks will be performed by NativeMemoryChunk.read method.
     Preconditions.checkArgument(offset + length <= mSize);
+    Preconditions.checkNotNull(mBufRef);
     return mBufRef.get().read(offset, buffer, bufferOffset, length);
   }
 
   @Override
   public synchronized long getNativePtr() throws UnsupportedOperationException {
     ensureValid();
+    Preconditions.checkNotNull(mBufRef);
     return mBufRef.get().getNativePtr();
   }
 
   @Override
   @Nullable
   public synchronized ByteBuffer getByteBuffer() {
+    Preconditions.checkNotNull(mBufRef);
     return mBufRef.get().getByteBuffer();
   }
 
@@ -105,6 +112,7 @@ public class MemoryPooledByteBuffer implements PooledByteBuffer {
 
   @GuardedBy("this")
   @VisibleForTesting
+  @Nullable
   CloseableReference<MemoryChunk> getCloseableReference() {
     return mBufRef;
   }

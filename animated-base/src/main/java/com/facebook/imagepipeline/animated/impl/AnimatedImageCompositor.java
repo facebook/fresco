@@ -64,15 +64,24 @@ public class AnimatedImageCompositor {
   private final AnimatedDrawableBackend mAnimatedDrawableBackend;
   private final Callback mCallback;
   private final Paint mTransparentFillPaint;
+  private final boolean mIsNewRenderImplementation;
 
   public AnimatedImageCompositor(
-      AnimatedDrawableBackend animatedDrawableBackend, Callback callback) {
+      AnimatedDrawableBackend animatedDrawableBackend,
+      boolean isNewRenderImplementation,
+      Callback callback) {
     mAnimatedDrawableBackend = animatedDrawableBackend;
     mCallback = callback;
+    mIsNewRenderImplementation = isNewRenderImplementation;
     mTransparentFillPaint = new Paint();
     mTransparentFillPaint.setColor(Color.TRANSPARENT);
     mTransparentFillPaint.setStyle(Paint.Style.FILL);
     mTransparentFillPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+  }
+
+  public void renderDeltas(int frameNumber, Bitmap baseBitmap) {
+    Canvas canvas = new Canvas(baseBitmap);
+    mAnimatedDrawableBackend.renderDeltas(frameNumber, canvas);
   }
 
   /**
@@ -82,6 +91,11 @@ public class AnimatedImageCompositor {
    * @param bitmap the bitmap to render into
    */
   public void renderFrame(int frameNumber, Bitmap bitmap) {
+    if (mIsNewRenderImplementation) {
+      renderDeltas(frameNumber, bitmap);
+      return;
+    }
+
     Canvas canvas = new Canvas(bitmap);
     canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC);
 
@@ -162,7 +176,9 @@ public class AnimatedImageCompositor {
               }
               return index + 1;
             } finally {
-              startBitmap.close();
+              if (!mIsNewRenderImplementation) {
+                startBitmap.close();
+              }
             }
           } else {
             if (isKeyFrame(index)) {

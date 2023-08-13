@@ -18,6 +18,7 @@ object ImageReleaseScheduler {
       Runnable, DeferredReleaser.Releasable {
 
     var delayedReleasePending = false
+
     override fun run() {
       // the Runnable interface is used to release next frame
       releaseNextFrame(drawable)

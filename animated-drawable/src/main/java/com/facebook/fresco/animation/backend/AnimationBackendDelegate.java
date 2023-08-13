@@ -47,6 +47,21 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
   }
 
   @Override
+  public int getLoopDurationMs() {
+    return mAnimationBackend == null ? 0 : mAnimationBackend.getLoopDurationMs();
+  }
+
+  @Override
+  public int width() {
+    return mAnimationBackend == null ? 0 : mAnimationBackend.width();
+  }
+
+  @Override
+  public int height() {
+    return mAnimationBackend == null ? 0 : mAnimationBackend.height();
+  }
+
+  @Override
   public int getLoopCount() {
     return mAnimationBackend == null ? LOOP_COUNT_INFINITE : mAnimationBackend.getLoopCount();
   }
@@ -89,6 +104,20 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
   public void clear() {
     if (mAnimationBackend != null) {
       mAnimationBackend.clear();
+    }
+  }
+
+  @Override
+  public void preloadAnimation() {
+    if (mAnimationBackend != null) {
+      mAnimationBackend.preloadAnimation();
+    }
+  }
+
+  @Override
+  public void setAnimationListener(@Nullable Listener listener) {
+    if (mAnimationBackend != null) {
+      mAnimationBackend.setAnimationListener(listener);
     }
   }
 

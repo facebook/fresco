@@ -18,7 +18,6 @@ internal object ProducerConstants {
   const val EXTRA_CACHED_VALUE_FOUND = "cached_value_found"
   const val EXTRA_BITMAP_SIZE = "bitmapSize"
   const val EXTRA_HAS_GOOD_QUALITY = "hasGoodQuality"
-  const val EXTRA_IMAGE_TYPE = "imageType"
   const val EXTRA_IS_FINAL = "isFinal"
   const val EXTRA_IMAGE_FORMAT_NAME = "imageFormat"
   const val EXTRA_BYTES = "byteCount"

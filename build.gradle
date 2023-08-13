@@ -30,7 +30,7 @@ buildscript {
 }
 
 plugins {
-    id "de.undercouch.download" version "3.1.2"
+    id "de.undercouch.download" version "5.3.1"
 }
 
 project.ext {
@@ -48,6 +48,18 @@ subprojects {
     // Need to configure this more carefully.
     tasks.withType(Javadoc).all {
         enabled = false
+    }
+
+    if (System.getenv("SANDCASTLE") == "1") {
+        tasks.withType(Test).all {
+            systemProperty("robolectric.dependency.repo.id", "central")
+            systemProperty("robolectric.dependency.repo.url", "https://maven.thefacebook.com/nexus/content/repositories/central/")
+            systemProperty("robolectric.logging", "stdout")
+            systemProperty("robolectric.logging.enabled", "true")
+            systemProperty("java.net.preferIPv6Addresses", "true")
+            systemProperty("java.net.preferIPv4Stack", "false")
+            systemProperty("jdk.attach.allowAttachSelf", "true")
+        }
     }
 
     configurations.all {

@@ -10,6 +10,7 @@ package com.facebook.fresco.vito.core
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import com.facebook.common.callercontext.ContextChain
+import com.facebook.fresco.ui.common.ImagePerfDataListener
 import com.facebook.fresco.ui.common.OnFadeListener
 import com.facebook.fresco.vito.listener.ImageListener
 
@@ -23,6 +24,7 @@ interface FrescoController2 {
       callerContext: Any?,
       contextChain: ContextChain?,
       listener: ImageListener?,
+      perfDataListener: ImagePerfDataListener? = null,
       onFadeListener: OnFadeListener?,
       viewportDimensions: Rect?
   ): Boolean

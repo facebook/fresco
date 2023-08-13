@@ -37,6 +37,7 @@ dependencies {
     testCompileOnly Deps.inferAnnotation
     testImplementation Deps.AndroidX.androidxAnnotation
     testImplementation Deps.jsr305
+    testImplementation TestDeps.assertjCore
     testImplementation TestDeps.junit
     testImplementation TestDeps.festAssertCore
     testImplementation TestDeps.mockitoCore
@@ -51,11 +52,14 @@ dependencies {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
     testImplementation project(':imagepipeline-test')
+    testImplementation project(':imagepipeline-base-test')
+
 
     implementation project(':imagepipeline-base')
     implementation project(':drawee')
     implementation project(':fbcore')
     implementation project(':vito:renderer')
+    implementation project(':vito:options')
 }
 
 apply plugin: "com.vanniktech.maven.publish"

@@ -17,17 +17,22 @@ typedef struct {
 } pixel_t;
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
-#define UNUSED(expr) ((void) (expr));
+#define UNUSED(expr) ((void)(expr));
 
-// These values are chosen arbitrarily but small enough to avoid integer-overflows
+// These values are chosen arbitrarily but small enough to avoid
+// integer-overflows
 #define BITMAP_MAX_DIMENSION 65536
 #define BLUR_MAX_ITERATIONS 65536
 #define BLUR_MAX_RADIUS 65536
 
 static jclass runtime_exception_class;
 
-static inline int max(int a, int b) { return a > b ? a : b;}
-static inline int bound(int x, int l, int h) {return x < l ? l : (x > h ? h : x);}
+static inline int max(int a, int b) {
+  return a > b ? a : b;
+}
+static inline int bound(int x, int l, int h) {
+  return x < l ? l : (x > h ? h : x);
+}
 
 static void safe_throw_exception(JNIEnv* env, const char* msg) {
   if (!(*env)->ExceptionCheck(env)) {
@@ -36,12 +41,12 @@ static void safe_throw_exception(JNIEnv* env, const char* msg) {
 }
 
 /**
- * Creates a blurred version of the given `row` of `pixelsIn`. It uses a moving average algorithm
- * such that it reads every pixel of the row just once. The edge pixels are repeated to avoid
- * artifacts.
+ * Creates a blurred version of the given `row` of `pixelsIn`. It uses a moving
+ * average algorithm such that it reads every pixel of the row just once. The
+ * edge pixels are repeated to avoid artifacts.
  *
- * Requires a pre-computed `div` table of size `255 * diameter` that maps `x -> x / diameter` (can
- * be rounded)
+ * Requires a pre-computed `div` table of size `255 * diameter` that maps `x ->
+ * x / diameter` (can be rounded)
  */
 static inline void internalHorizontalBlur(
     pixel_t* pixelsIn,
@@ -86,19 +91,20 @@ static inline void internalHorizontalBlur(
 }
 
 /**
- * Creates a blurred version of the given `col` of `pixelsIn`. It uses a moving average algorithm
- * such that it reads every pixel of the column just once. The edge pixels are repeated to avoid
- * artifacts.
+ * Creates a blurred version of the given `col` of `pixelsIn`. It uses a moving
+ * average algorithm such that it reads every pixel of the column just once. The
+ * edge pixels are repeated to avoid artifacts.
  *
- * [ 0        ] [          ] [          ] [          ] [ col      ] [          ] [ w-1      ]
- * [          ] [          ] [          ] [          ] [ col+1w   ] [          ] [          ]
- * [          ] [          ] [          ] [          ] [          ] [          ] [          ]
- * [          ] [          ] [          ] [          ] [          ] [          ] [          ]
- * [          ] [          ] [          ] [          ] [          ] [          ] [          ]
- * [          ] [          ] [          ] [          ] [col+(h-1)w] [          ] [          ]
+ * [ 0        ] [          ] [          ] [          ] [ col      ] [          ]
+ * [ w-1      ] [          ] [          ] [          ] [          ] [ col+1w   ]
+ * [          ] [          ] [          ] [          ] [          ] [          ]
+ * [          ] [          ] [          ] [          ] [          ] [          ]
+ * [          ] [          ] [          ] [          ] [          ] [          ]
+ * [          ] [          ] [          ] [          ] [          ] [          ]
+ * [          ] [          ] [          ] [col+(h-1)w] [          ] [          ]
  *
- * Requires a pre-computed `div` table of size `255 * diameter` that maps `x -> x / diameter` (can
- * be rounded)
+ * Requires a pre-computed `div` table of size `255 * diameter` that maps `x ->
+ * x / diameter` (can be rounded)
  */
 static inline void internalVerticalBlur(
     pixel_t* pixelsIn,
@@ -116,8 +122,10 @@ static inline void internalVerticalBlur(
   int a = 0, r = 0, g = 0, b = 0;
   pixel_t p;
 
-  // iterate over absolute positions in `pixelsIn`; `w` is the step width for moving down one row
-  for (int i = firstInByte - radiusTimesW; i <= lastInByte + radiusTimesW; i += w) {
+  // iterate over absolute positions in `pixelsIn`; `w` is the step width for
+  // moving down one row
+  for (int i = firstInByte - radiusTimesW; i <= lastInByte + radiusTimesW;
+       i += w) {
     const int ii = bound(i, firstInByte, lastInByte);
     p = pixelsIn[ii];
     a += p.a;
@@ -145,16 +153,19 @@ static inline void internalVerticalBlur(
 }
 
 /**
- * A native implementation of an iterative box blur algorithm that runs fast and with little extra
- * memory. It requires bitmap's format to be ARGB_8888 and works in-place (see actual memory usage
- * below).
+ * A native implementation of an iterative box blur algorithm that runs fast and
+ * with little extra memory. It requires bitmap's format to be ARGB_8888 and
+ * works in-place (see actual memory usage below).
  *
- * The individual box blurs are split up in vertical and horizontal direction. That allows us to
- * use a moving average implementation for blurring individual rows and columns.
+ * The individual box blurs are split up in vertical and horizontal direction.
+ * That allows us to use a moving average implementation for blurring individual
+ * rows and columns.
  *
- * The runtime is: O(iterations * width * height) and therefore linear in the number of pixels
+ * The runtime is: O(iterations * width * height) and therefore linear in the
+ * number of pixels
  *
- * The required memory is: 2 * radius * 256 * 1 Bytes + max(width, height) * 4 Bytes (+constant)
+ * The required memory is: 2 * radius * 256 * 1 Bytes + max(width, height) * 4
+ * Bytes (+constant)
  */
 static void BlurFilter_iterativeBoxBlur(
     JNIEnv* env,
@@ -165,12 +176,14 @@ static void BlurFilter_iterativeBoxBlur(
   UNUSED(clazz);
 
   if (iterations <= 0 || iterations > BLUR_MAX_ITERATIONS) {
-    safe_throw_exception(env, "BlurFilter_iterativeBoxBlur: Iterations argument out of bounds");
+    safe_throw_exception(
+        env, "BlurFilter_iterativeBoxBlur: Iterations argument out of bounds");
     return;
   }
 
   if (radius <= 0 || radius > BLUR_MAX_RADIUS) {
-    safe_throw_exception(env, "BlurFilter_iterativeBoxBlur: Blur radius argument out of bounds");
+    safe_throw_exception(
+        env, "BlurFilter_iterativeBoxBlur: Blur radius argument out of bounds");
     return;
   }
 
@@ -178,45 +191,52 @@ static void BlurFilter_iterativeBoxBlur(
 
   int rc = AndroidBitmap_getInfo(env, bitmap, &bitmapInfo);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "BlurFilter_iterativeBoxBlur: Failed to get Bitmap info");
+    safe_throw_exception(
+        env, "BlurFilter_iterativeBoxBlur: Failed to get Bitmap info");
     return;
   }
 
   if (bitmapInfo.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
-    safe_throw_exception(env, "BlurFilter_iterativeBoxBlur: Unexpected bitmap format");
+    safe_throw_exception(
+        env, "BlurFilter_iterativeBoxBlur: Unexpected bitmap format");
     return;
   }
 
-  pixel_t* pixelPtr;
+  pixel_t* pixelPtr = NULL;
 
   const int w = bitmapInfo.width;
   const int h = bitmapInfo.height;
 
   if (w > BITMAP_MAX_DIMENSION || h > BITMAP_MAX_DIMENSION) {
-    safe_throw_exception(env, "BlurFilter_iterativeBoxBlur: Bitmap dimensions too large");
+    safe_throw_exception(
+        env, "BlurFilter_iterativeBoxBlur: Bitmap dimensions too large");
     return;
   }
 
   // locking pixels such that they will not get moved around during processing
-  rc = AndroidBitmap_lockPixels(env, bitmap, (void*) &pixelPtr);
+  rc = AndroidBitmap_lockPixels(env, bitmap, (void*)&pixelPtr);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "BlurFilter_iterativeBoxBlur: Failed to lock Bitmap pixels");
+    safe_throw_exception(
+        env, "BlurFilter_iterativeBoxBlur: Failed to lock Bitmap pixels");
     return;
   }
 
-  // the information written to an output pixels `x` are from `[x-radius, x+radius]` (inclusive)
+  // the information written to an output pixels `x` are from `[x-radius,
+  // x+radius]` (inclusive)
   const int diameter = radius + 1 + radius;
 
   // pre-compute division table: speed-up by factor 5(!)
-  uint8_t* div = (uint8_t*) malloc(256 * diameter * sizeof(uint8_t));
+  uint8_t* div = (uint8_t*)malloc(256 * diameter * sizeof(uint8_t));
   if (!div) {
     AndroidBitmap_unlockPixels(env, bitmap);
-    safe_throw_exception(env, "BlurFilter_iterativeBoxBlur: Failed to allocate memory: div");
+    safe_throw_exception(
+        env, "BlurFilter_iterativeBoxBlur: Failed to allocate memory: div");
     return;
   }
 
-  // the following lines will fill-up at least the first `255 * diameter` entries with the mapping
-  // `div[x] = (x + r) / d` (i.e. division of x by d rounded to the nearest number).
+  // the following lines will fill-up at least the first `255 * diameter`
+  // entries with the mapping `div[x] = (x + r) / d` (i.e. division of x by d
+  // rounded to the nearest number).
   uint8_t* ptr = div;
   for (int r = 0; r <= radius; r++) {
     *(ptr++) = 0;
@@ -228,11 +248,13 @@ static void BlurFilter_iterativeBoxBlur(
   }
 
   // temporary array for the output of the currently blurred row OR column
-  pixel_t* tempRowOrColumn = (pixel_t*) malloc(max(w, h) * sizeof(pixel_t));
+  pixel_t* tempRowOrColumn = (pixel_t*)malloc(max(w, h) * sizeof(pixel_t));
   if (!tempRowOrColumn) {
     free(div);
     AndroidBitmap_unlockPixels(env, bitmap);
-    safe_throw_exception(env, "BlurFilter_iterativeBoxBlur: Failed to allocate memory: tempRowOrColumn");
+    safe_throw_exception(
+        env,
+        "BlurFilter_iterativeBoxBlur: Failed to allocate memory: tempRowOrColumn");
     return;
   }
 
@@ -263,28 +285,27 @@ static void BlurFilter_iterativeBoxBlur(
 
   rc = AndroidBitmap_unlockPixels(env, bitmap);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    safe_throw_exception(env, "BlurFilter_iterativeBoxBlur: Failed to unlock Bitmap pixels");
+    safe_throw_exception(
+        env, "BlurFilter_iterativeBoxBlur: Failed to unlock Bitmap pixels");
   }
 }
 
 static JNINativeMethod blur_filter_native_methods[] = {
-  { "nativeIterativeBoxBlur",
-    "(Landroid/graphics/Bitmap;II)V",
-    (void*) BlurFilter_iterativeBoxBlur },
+    {"nativeIterativeBoxBlur",
+     "(Landroid/graphics/Bitmap;II)V",
+     (void*)BlurFilter_iterativeBoxBlur},
 };
 
 jint registerBlurFilterMethods(JNIEnv* env) {
-  jclass runtime_exception = (*env)->FindClass(
-      env,
-      "java/lang/RuntimeException");
+  jclass runtime_exception =
+      (*env)->FindClass(env, "java/lang/RuntimeException");
   if (!runtime_exception) {
     return JNI_ERR;
   }
   runtime_exception_class = (*env)->NewGlobalRef(env, runtime_exception);
 
   jclass blur_filter_class = (*env)->FindClass(
-       env,
-      "com/facebook/imagepipeline/nativecode/NativeBlurFilter");
+      env, "com/facebook/imagepipeline/nativecode/NativeBlurFilter");
   if (!blur_filter_class) {
     return JNI_ERR;
   }

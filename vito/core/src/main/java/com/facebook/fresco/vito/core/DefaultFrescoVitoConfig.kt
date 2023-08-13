@@ -27,8 +27,14 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
   override fun layoutPrefetchingEnabled(callerContext: Any?): Boolean = false
 
   override fun useSmartPropertyDiffing(): Boolean = false
+
   override fun stopAnimationInOnRelease(): Boolean = false
+
   override fun onlyStopAnimationWhenAutoPlayEnabled(): Boolean = true
+
+  override fun fastPathForEmptyRequests(): Boolean = false
+
+  override fun enableWindowWideColorGamut(): Boolean = false
 
   open class DefaultPrefetchConfig : PrefetchConfig {
     override fun prefetchInOnPrepare(): Boolean = true

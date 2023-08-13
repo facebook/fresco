@@ -40,7 +40,7 @@ import java.util.ArrayList
  *
  * Applications should instantiate
  */
-abstract class BaseFrescoStethoPlugin : DumperPlugin {
+abstract class BaseFrescoStethoPlugin() : DumperPlugin {
 
   protected var initialized = false
   private var bitmapMemoryCacheInspector: CountingMemoryCacheInspector<CacheKey, CloseableImage>? =
@@ -49,9 +49,7 @@ abstract class BaseFrescoStethoPlugin : DumperPlugin {
   private var smallFileCache: FileCache? = null
   private var imagePipeline: ImagePipeline? = null
 
-  protected constructor()
-
-  protected constructor(factory: ImagePipelineFactory) {
+  protected constructor(factory: ImagePipelineFactory) : this() {
     initialize(factory)
   }
 
@@ -337,6 +335,7 @@ abstract class BaseFrescoStethoPlugin : DumperPlugin {
   companion object {
     private const val NAME = "image"
     private const val KB = 1_024f
+
     private fun emptyHistogram(): SparseIntArray {
       val histogram = SparseIntArray()
       histogram.put(0, 0)

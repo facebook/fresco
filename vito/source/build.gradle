@@ -15,6 +15,7 @@ dependencies {
     compileOnly Deps.jsr305
     compileOnly Deps.javaxAnnotation
     compileOnly Deps.AndroidX.androidxAnnotation
+    implementation project(':middleware')
 }
 
 android {

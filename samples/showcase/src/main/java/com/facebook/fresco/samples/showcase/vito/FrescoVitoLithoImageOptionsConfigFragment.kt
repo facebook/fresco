@@ -28,38 +28,55 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
   private var _binding: FragmentVitoImageOptionsConfigBinding? = null
   private val binding
     get() = _binding!!
+
   private val container
     get() = binding.container
+
   private val spinnerRounding
     get() = binding.spinnerRounding
+
   private val spinnerBorder
     get() = binding.spinnerBorder
+
   private val spinnerScaleType
     get() = binding.spinnerScaleType
+
   private val spinnerImageSource
     get() = binding.spinnerImageSource
+
   private val spinnerImageFormat
     get() = binding.spinnerImageFormat
+
   private val spinnerColorFilter
     get() = binding.spinnerColorFilter
+
   private val spinnerPlaceholder
     get() = binding.spinnerPlaceholder
+
   private val spinnerError
     get() = binding.spinnerError
+
   private val spinnerOverlay
     get() = binding.spinnerOverlay
+
   private val spinnerFading
     get() = binding.spinnerFading
+
   private val spinnerProgress
     get() = binding.spinnerProgress
+
   private val spinnerPostprocessor
     get() = binding.spinnerPostprocessor
+
   private val spinnerRotation
     get() = binding.spinnerRotation
+
   private val spinnerResize
     get() = binding.spinnerResize
+
   private val spinnerCustomDrawableFactory
     get() = binding.spinnerCustomDrawableFactory
+
   private val switchAutoPlayAnimations
     get() = binding.switchAutoPlayAnimations
 
@@ -75,8 +92,9 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
       inflater: LayoutInflater,
       container: ViewGroup?,
       savedInstanceState: Bundle?
-  ): View? {
-    return inflater.inflate(R.layout.fragment_vito_image_options_config, container, false)
+  ): View {
+    _binding = FragmentVitoImageOptionsConfigBinding.inflate(inflater, container, false)
+    return binding.root
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

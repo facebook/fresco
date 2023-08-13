@@ -71,6 +71,7 @@ public class EncodedImage implements Closeable {
   private int mStreamSize = UNKNOWN_STREAM_SIZE;
   private @Nullable BytesRange mBytesRange;
   private @Nullable ColorSpace mColorSpace;
+  private @Nullable String mSource;
   private boolean mHasParsedMetadata;
 
   public EncodedImage(CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
@@ -209,6 +210,15 @@ public class EncodedImage implements Closeable {
 
   public void setBytesRange(@Nullable BytesRange bytesRange) {
     mBytesRange = bytesRange;
+  }
+
+  public void setSource(@Nullable String source) {
+    mSource = source;
+  }
+
+  @Nullable
+  public String getSource() {
+    return mSource;
   }
 
   /** Returns the image format if known, otherwise ImageFormat.UNKNOWN. */

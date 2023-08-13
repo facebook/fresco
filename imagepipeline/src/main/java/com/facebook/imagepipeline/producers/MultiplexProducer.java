@@ -65,16 +65,14 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
   private final String mDedupedRequestsCountKey;
 
   protected MultiplexProducer(
-      Producer<T> inputProducer,
-      String producerName,
-      @ProducerContext.ExtraKeys String dedupedRequestsCountKey) {
+      Producer<T> inputProducer, String producerName, String dedupedRequestsCountKey) {
     this(inputProducer, producerName, dedupedRequestsCountKey, false);
   }
 
   protected MultiplexProducer(
       Producer<T> inputProducer,
       String producerName,
-      @ProducerContext.ExtraKeys String dedupedRequestsCountKey,
+      String dedupedRequestsCountKey,
       boolean keepCancelledFetchAsLowPriority) {
     mInputProducer = inputProducer;
     mMultiplexers = new HashMap<>();
@@ -382,7 +380,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
                 producerContext.getImagePipelineConfig());
         mMultiplexProducerContext.putExtras(producerContext.getExtras());
         if (startedAsPrefetch.isSet()) {
-          mMultiplexProducerContext.setExtra(
+          mMultiplexProducerContext.putExtra(
               EXTRAS_STARTED_AS_PREFETCH, startedAsPrefetch.asBoolean());
         }
 
@@ -507,7 +505,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
             if (mMultiplexProducerContext != null) {
               pair.second.putExtras(mMultiplexProducerContext.getExtras());
             }
-            pair.second.setExtra(mDedupedRequestsCountKey, size);
+            pair.second.putExtra(mDedupedRequestsCountKey, size);
           }
           pair.first.onNewResult(closeableObject, status);
         }

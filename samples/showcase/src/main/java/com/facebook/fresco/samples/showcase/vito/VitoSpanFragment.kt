@@ -42,7 +42,9 @@ class VitoSpanFragment : BaseShowcaseKotlinFragment(R.layout.fragment_vito_text_
           setImageSpan(span, text.indexOf('['), text.indexOf(']'), 100, 100, textView)
         }
 
-    VitoSpanLoader.show(ImageSourceProvider.forUri(uri), imageOptions, null, null, null, span)
+    VitoSpanLoader.show(
+        ImageSourceProvider.forUri(uri), imageOptions, false, null, null, null, span)
+
     imageSpan = span
   }
 

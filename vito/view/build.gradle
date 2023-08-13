@@ -32,6 +32,7 @@ dependencies {
 
     implementation project(':drawee')
     implementation project(':fbcore')
+    implementation project(':middleware')
     implementation project(':vito:core')
     implementation project(':vito:options')
     implementation project(':vito:provider')

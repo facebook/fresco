@@ -32,9 +32,10 @@ import okhttp3.ResponseBody
 
 /**
  * Network fetcher that uses OkHttp 3 as a backend.
+ *
  * @param callFactory custom [Call.Factory] for fetching image from the network
  * @param cancellationExecutor executor on which fetching cancellation is performed if cancellation
- * is requested from the UI Thread
+ *   is requested from the UI Thread
  * @param disableOkHttpCache true if network requests should not be cached by OkHttp
  */
 open class OkHttpNetworkFetcher
@@ -95,7 +96,7 @@ constructor(
           TOTAL_TIME to (fetchState.fetchCompleteTime - fetchState.submitTime).toString(),
           IMAGE_SIZE to byteSize.toString())
 
-  protected fun fetchWithRequest(
+  protected open fun fetchWithRequest(
       fetchState: OkHttpNetworkFetchState,
       callback: NetworkFetcher.Callback,
       request: Request

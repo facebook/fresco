@@ -22,7 +22,8 @@ constructor(private val framesToPrepare: Int = 3) : BitmapFramePreparationStrate
       bitmapFramePreparer: BitmapFramePreparer,
       bitmapFrameCache: BitmapFrameCache,
       animationBackend: AnimationBackend,
-      lastDrawnFrameNumber: Int
+      lastDrawnFrameNumber: Int,
+      onAnimationLoaded: (() -> Unit)?
   ) {
     for (i in 1..framesToPrepare) {
       val nextFrameNumber = (lastDrawnFrameNumber + i) % animationBackend.frameCount
@@ -34,5 +35,7 @@ constructor(private val framesToPrepare: Int = 3) : BitmapFramePreparationStrate
         return
       }
     }
+
+    onAnimationLoaded?.invoke()
   }
 }

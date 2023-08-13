@@ -9,6 +9,7 @@ import com.facebook.fresco.buildsrc.Deps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 dependencies {
     compileOnly Deps.AndroidX.legacySupportCoreUtils
@@ -19,6 +20,7 @@ dependencies {
     implementation project (':soloader')
     implementation Deps.SoLoader.nativeloader
     implementation project(':ui-common')
+    implementation project(':middleware')
 
     api project(':fbcore')
     api project(':drawee')

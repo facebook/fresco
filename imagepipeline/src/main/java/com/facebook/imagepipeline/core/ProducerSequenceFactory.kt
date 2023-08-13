@@ -76,7 +76,7 @@ class ProducerSequenceFactory(
    */
   fun getEncodedImageProducerSequence(
       imageRequest: ImageRequest
-  ): Producer<CloseableReference<PooledByteBuffer>>? =
+  ): Producer<CloseableReference<PooledByteBuffer>> =
       traceSection("ProducerSequenceFactory#getEncodedImageProducerSequence") {
         validateEncodedImageRequest(imageRequest)
         val uri = imageRequest.sourceUri
@@ -104,7 +104,7 @@ class ProducerSequenceFactory(
   /** Returns a sequence that can be used for a request for an encoded image from a local file. */
   @VisibleForTesting
   val localFileFetchEncodedImageProducerSequence:
-      Producer<CloseableReference<PooledByteBuffer>>? by lazy {
+      Producer<CloseableReference<PooledByteBuffer>> by lazy {
     traceSection("ProducerSequenceFactory#getLocalFileFetchEncodedImageProducerSequence:init") {
       RemoveImageTransformMetaDataProducer(backgroundLocalFileFetchToEncodeMemorySequence)
     }
@@ -115,7 +115,7 @@ class ProducerSequenceFactory(
    * uri.
    */
   val localContentUriFetchEncodedImageProducerSequence:
-      Producer<CloseableReference<PooledByteBuffer>>? by lazy {
+      Producer<CloseableReference<PooledByteBuffer>> by lazy {
     traceSection(
         "ProducerSequenceFactory#getLocalContentUriFetchEncodedImageProducerSequence:init") {
           RemoveImageTransformMetaDataProducer(backgroundLocalContentUriFetchToEncodeMemorySequence)
@@ -193,7 +193,7 @@ class ProducerSequenceFactory(
           SourceUriType.SOURCE_TYPE_LOCAL_VIDEO_FILE -> localVideoFileFetchSequence
           SourceUriType.SOURCE_TYPE_LOCAL_IMAGE_FILE -> localImageFileFetchSequence
           SourceUriType.SOURCE_TYPE_LOCAL_CONTENT -> {
-            if (imageRequest.loadThumbnailOnly && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (imageRequest.loadThumbnailOnlyForAndroidSdkAboveQ) {
               return localContentUriThumbnailFetchSequence
             } else if (isVideo(contentResolver.getType(uri))) {
               return localVideoFileFetchSequence
@@ -434,7 +434,7 @@ class ProducerSequenceFactory(
    *
    * @param inputProducer the source producer
    * @param thumbnailProducers the thumbnail producers from which to request the image before
-   * falling back to the full image producer sequence
+   *   falling back to the full image producer sequence
    * @return the new sequence
    */
   private fun newBitmapCacheGetToLocalTransformSequence(
@@ -529,7 +529,7 @@ class ProducerSequenceFactory(
    *
    * @param inputProducer producer providing the input to add meta data producer
    * @param thumbnailProducers the thumbnail producers from which to request the image before
-   * falling back to the full image producer sequence
+   *   falling back to the full image producer sequence
    * @return local transformations sequence
    */
   private fun newLocalTransformationsSequence(

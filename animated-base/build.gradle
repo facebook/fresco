@@ -9,6 +9,7 @@ import com.facebook.fresco.buildsrc.Deps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 dependencies {
     compileOnly Deps.inferAnnotation
@@ -25,10 +26,13 @@ dependencies {
     api project(':memory-types:simple')
     api project(':animated-drawable')
     implementation Deps.Bolts.tasks
+    implementation project(':vito:options')
+    implementation project(':middleware')
 
     testCompileOnly Deps.inferAnnotation
-    testImplementation project(':animated-base-test')
     testImplementation project(':imagepipeline-test')
+    testImplementation project(':imagepipeline-base-test')
+    testImplementation TestDeps.assertjCore
     testImplementation TestDeps.junit
     testImplementation TestDeps.festAssertCore
     testImplementation TestDeps.mockitoInline
@@ -54,6 +58,9 @@ android {
     }
     lintOptions {
         abortOnError false
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 }
 

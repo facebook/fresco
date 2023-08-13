@@ -22,6 +22,7 @@ dependencies {
     implementation project(':memory-types:ashmem')
     implementation project(':memory-types:nativememory')
     implementation project(':memory-types:simple')
+    implementation project(':middleware')
 }
 
 android {

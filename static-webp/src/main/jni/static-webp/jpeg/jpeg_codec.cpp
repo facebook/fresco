@@ -8,23 +8,23 @@
 #include <algorithm>
 #include <iterator>
 
-#include <stdio.h>
 #include <setjmp.h>
+#include <stdio.h>
 
 #include <jni.h>
 #include <jpeglib.h>
 extern "C" {
-  #include "transupp.h"
+#include "transupp.h"
 }
 
 #include "decoded_image.h"
 #include "exceptions.h"
-#include "logging.h"
+#include "jpeg_codec.h"
 #include "jpeg_error_handler.h"
 #include "jpeg_memory_io.h"
 #include "jpeg_stream_wrappers.h"
+#include "logging.h"
 #include "transformations.h"
-#include "jpeg_codec.h"
 
 namespace facebook {
 namespace imagepipeline {
@@ -42,7 +42,7 @@ static const char* const JPEG_XMP_SEGMENT_HEADER =
  * The upper bound for xmp metadata length stored in jpeg file
  */
 static const unsigned int JPEG_METADATA_LIMIT =
-  0xFFFF - 2 - JPEG_XMP_SEGMENT_HEADER_LENGTH;
+    0xFFFF - 2 - JPEG_XMP_SEGMENT_HEADER_LENGTH;
 
 /**
  * Uses jpeg library api to write APP01 segment consisting
@@ -56,18 +56,15 @@ static const unsigned int JPEG_METADATA_LIMIT =
 static void writeMetadata(
     jpeg_compress_struct& cinfo,
     const DecodedImage& decoded_image) {
-
   const unsigned metadata_length = decoded_image.getMetadataLength();
   if (metadata_length == 0 || metadata_length > JPEG_METADATA_LIMIT) {
     return;
   }
 
   jpeg_write_m_header(
-      &cinfo,
-      JPEG_APP0 + 1,
-      JPEG_XMP_SEGMENT_HEADER_LENGTH + metadata_length);
+      &cinfo, JPEG_APP0 + 1, JPEG_XMP_SEGMENT_HEADER_LENGTH + metadata_length);
 
-  auto jpeg_metadata_writer = [&] (int c) { jpeg_write_m_byte(&cinfo, c); };
+  auto jpeg_metadata_writer = [&](int c) { jpeg_write_m_byte(&cinfo, c); };
 
   // Write xmp header
   std::for_each(
@@ -120,12 +117,13 @@ void encodeJpegIntoOutputStream(
 
   // write all pixels, row by row
   JSAMPROW row_pointer = decoded_image.getPixelsPtr();
+  if (row_pointer == nullptr) {
+    jpegSafeThrow((j_common_ptr)&cinfo, "Decoded image pixels ptr is null");
+  }
   const int stride = decoded_image.getStride();
   while (cinfo.next_scanline < cinfo.image_height) {
     if (jpeg_write_scanlines(&cinfo, &row_pointer, 1) != 1) {
-      jpegSafeThrow(
-          (j_common_ptr) &cinfo,
-          "Could not write scanline");
+      jpegSafeThrow((j_common_ptr)&cinfo, "Could not write scanline");
     }
     std::advance(row_pointer, stride);
   }
@@ -139,23 +137,23 @@ void encodeJpegIntoOutputStream(
  */
 JXFORM_CODE getTransformForRotationType(RotationType rotation_type) {
   switch (rotation_type) {
-  case RotationType::ROTATE_90:
-    return JXFORM_ROT_90;
-  case RotationType::ROTATE_180:
-    return JXFORM_ROT_180;
-  case RotationType::ROTATE_270:
-    return JXFORM_ROT_270;
-  case RotationType::FLIP_HORIZONTAL:
-    return JXFORM_FLIP_H;
-  case RotationType::FLIP_VERTICAL:
-    return JXFORM_FLIP_V;
-  case RotationType::TRANSPOSE:
-    return JXFORM_TRANSPOSE;
-  case RotationType::TRANSVERSE:
-    return JXFORM_TRANSVERSE;
-  case RotationType::ROTATE_0:
-  default:
-    return JXFORM_NONE;
+    case RotationType::ROTATE_90:
+      return JXFORM_ROT_90;
+    case RotationType::ROTATE_180:
+      return JXFORM_ROT_180;
+    case RotationType::ROTATE_270:
+      return JXFORM_ROT_270;
+    case RotationType::FLIP_HORIZONTAL:
+      return JXFORM_FLIP_H;
+    case RotationType::FLIP_VERTICAL:
+      return JXFORM_FLIP_V;
+    case RotationType::TRANSPOSE:
+      return JXFORM_TRANSPOSE;
+    case RotationType::TRANSVERSE:
+      return JXFORM_TRANSVERSE;
+    case RotationType::ROTATE_0:
+    default:
+      return JXFORM_NONE;
   }
 }
 
@@ -260,7 +258,8 @@ static void rotateJpeg(
   // transform
   jvirt_barray_ptr* srccoefs = jpeg_read_coefficients(&dinfo);
   jpeg_copy_critical_parameters(&dinfo, &cinfo);
-  jvirt_barray_ptr* dstcoefs = jtransform_adjust_parameters(&dinfo, &cinfo, srccoefs, &xinfo);
+  jvirt_barray_ptr* dstcoefs =
+      jtransform_adjust_parameters(&dinfo, &cinfo, srccoefs, &xinfo);
   jpeg_write_coefficients(&cinfo, dstcoefs);
   jcopy_markers_execute(&dinfo, &cinfo, JCOPYOPT_ALL);
   jtransform_execute_transformation(&dinfo, &cinfo, srccoefs, &xinfo);
@@ -285,8 +284,7 @@ static void resizeJpeg(
   THROW_AND_RETURN_IF(quality < 1, "quality should not be lower than 1");
   THROW_AND_RETURN_IF(quality > 100, "quality should not be greater than 100");
   THROW_AND_RETURN_IF(
-      8 % scale_factor.getDenominator() > 0,
-      "wrong scale denominator");
+      8 % scale_factor.getDenominator() > 0, "wrong scale denominator");
   THROW_AND_RETURN_IF(
       scale_factor.getNumerator() < 1,
       "scale numerator cannot be lower than 1");
@@ -305,7 +303,7 @@ static void resizeJpeg(
   dinfo.scale_num = scale_factor.getNumerator();
   dinfo.scale_denom = scale_factor.getDenominator();
   dinfo.out_color_space = JCS_RGB;
-  (void) jpeg_start_decompress(&dinfo);
+  (void)jpeg_start_decompress(&dinfo);
 
   // create compress struct
   struct jpeg_compress_struct cinfo;
@@ -315,11 +313,11 @@ static void resizeJpeg(
 
   jcopy_markers_execute(&dinfo, &cinfo, JCOPYOPT_ALL);
   size_t row_stride = dinfo.output_width * dinfo.output_components;
-  JSAMPARRAY buffer = (*dinfo.mem->alloc_sarray)
-    ((j_common_ptr) &dinfo, JPOOL_IMAGE, row_stride, 1);
+  JSAMPARRAY buffer = (*dinfo.mem->alloc_sarray)(
+      (j_common_ptr)&dinfo, JPOOL_IMAGE, row_stride, 1);
   while (dinfo.output_scanline < dinfo.output_height) {
     jpeg_read_scanlines(&dinfo, buffer, 1);
-    (void) jpeg_write_scanlines(&cinfo, buffer, 1);
+    (void)jpeg_write_scanlines(&cinfo, buffer, 1);
   }
 
   // tear down
@@ -338,8 +336,7 @@ void transformJpeg(
   const bool should_scale = scale_factor.shouldScale();
   const bool should_rotate = rotation_type != RotationType::ROTATE_0;
   THROW_AND_RETURN_IF(
-      !should_scale && !should_rotate,
-      "no transformation to perform");
+      !should_scale && !should_rotate, "no transformation to perform");
 
   JpegInputStreamWrapper is_wrapper{env, is};
   JpegOutputStreamWrapper os_wrapper{env, os};
@@ -350,8 +347,8 @@ void transformJpeg(
     resizeJpeg(
         env,
         is_wrapper.public_fields,
-        should_rotate ?
-            mem_destination.public_fields : os_wrapper.public_fields,
+        should_rotate ? mem_destination.public_fields
+                      : os_wrapper.public_fields,
         scale_factor,
         quality);
     RETURN_IF_EXCEPTION_PENDING;
@@ -369,4 +366,6 @@ void transformJpeg(
   }
 }
 
-} } }
+} // namespace jpeg
+} // namespace imagepipeline
+} // namespace facebook

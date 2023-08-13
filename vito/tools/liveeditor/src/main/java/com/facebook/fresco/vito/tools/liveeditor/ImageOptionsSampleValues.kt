@@ -120,22 +120,6 @@ object ImageOptionsSampleValues {
             b.bitmapConfig(v)
           }
 
-  val delayConfig =
-      Entry(
-          "Artificial delay",
-          listOf(
-              "none" to 0,
-              "50 ms" to 50,
-              "100 ms" to 100,
-              "200 ms" to 200,
-              "500 ms" to 500,
-              "1000 ms" to 1000,
-              "2000 ms" to 2000,
-              "5000 ms" to 5000,
-              "10000 ms" to 10000)) { b, v ->
-            b.delayMs(v)
-          }
-
   val resizeToViewportConfig =
       Entry("Resize to viewport", listOf("off" to false, "on" to true)) { b, v ->
         b.resizeToViewport(v)

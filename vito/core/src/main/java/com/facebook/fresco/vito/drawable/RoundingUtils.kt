@@ -16,10 +16,10 @@ import android.graphics.drawable.NinePatchDrawable
 import com.facebook.drawee.drawable.Rounded
 import com.facebook.drawee.drawable.RoundedBitmapDrawable
 import com.facebook.drawee.drawable.RoundedColorDrawable
+import com.facebook.drawee.drawable.RoundedCornersDrawable
 import com.facebook.drawee.drawable.RoundedNinePatchDrawable
 import com.facebook.fresco.vito.options.BorderOptions
 import com.facebook.fresco.vito.options.RoundingOptions
-import java.lang.UnsupportedOperationException
 
 /**
  * A class that contains helper methods for rounding a bitmap or different kind of Drawables. It
@@ -128,9 +128,7 @@ object RoundingUtils {
         is BitmapDrawable -> getRoundedDrawable(resources, drawable.bitmap)
         is NinePatchDrawable -> RoundedNinePatchDrawable(drawable) as T
         is ColorDrawable -> RoundedColorDrawable.fromColorDrawable(drawable) as T
-        else ->
-            throw UnsupportedOperationException(
-                "Rounding of the drawable type not supported: $drawable")
+        else -> RoundedCornersDrawable(drawable) as T
       }
 
   private fun <T> applyRounding(

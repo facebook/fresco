@@ -23,6 +23,6 @@ import java.lang.annotation.Retention;
   JAVA_TRANSCODER,
 })
 public @interface ImageTranscoderType {
-  final int NATIVE_TRANSCODER = 0;
-  final int JAVA_TRANSCODER = 1;
+  int NATIVE_TRANSCODER = 0;
+  int JAVA_TRANSCODER = 1;
 }

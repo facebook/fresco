@@ -8,9 +8,9 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.common.internal.ImmutableSet;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfigInterface;
-import com.facebook.imagepipeline.image.EncodedImageOrigin;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
@@ -30,7 +30,9 @@ public class BaseProducerContext implements ProducerContext {
 
   private static final String ORIGIN_SUBCATEGORY_DEFAULT = "default";
 
-  public static final Set<String> INITIAL_KEYS = ImmutableSet.of("id", "uri_source");
+  public static final Set<String> INITIAL_KEYS =
+      ImmutableSet.of(HasExtraData.KEY_ID, HasExtraData.KEY_URI_SOURCE);
+  private static final Object CALLER_CONTEXT_UNSET = new Object();
 
   private final ImageRequest mImageRequest;
   private final String mId;
@@ -57,13 +59,11 @@ public class BaseProducerContext implements ProducerContext {
 
   private final ImagePipelineConfigInterface mImagePipelineConfig;
 
-  private EncodedImageOrigin mEncodedImageOrigin = EncodedImageOrigin.NOT_SET;
-
   public BaseProducerContext(
       ImageRequest imageRequest,
       String id,
       ProducerListener2 producerListener,
-      Object callerContext,
+      @Nullable Object callerContext,
       ImageRequest.RequestLevel lowestPermittedRequestLevel,
       boolean isPrefetch,
       boolean isIntermediateResultExpected,
@@ -72,6 +72,7 @@ public class BaseProducerContext implements ProducerContext {
     this(
         imageRequest,
         id,
+        null,
         null,
         producerListener,
         callerContext,
@@ -86,8 +87,9 @@ public class BaseProducerContext implements ProducerContext {
       ImageRequest imageRequest,
       String id,
       @Nullable String uiComponentId,
+      @Nullable Map<String, ?> extras,
       ProducerListener2 producerListener,
-      Object callerContext,
+      @Nullable Object callerContext,
       ImageRequest.RequestLevel lowestPermittedRequestLevel,
       boolean isPrefetch,
       boolean isIntermediateResultExpected,
@@ -97,13 +99,15 @@ public class BaseProducerContext implements ProducerContext {
     mId = id;
 
     mExtras = new HashMap<>();
-    mExtras.put("id", mId);
+    mExtras.put(HasExtraData.KEY_ID, mId);
     mExtras.put(
-        ExtraKeys.URI_SOURCE, imageRequest == null ? "null-request" : imageRequest.getSourceUri());
+        HasExtraData.KEY_URI_SOURCE,
+        imageRequest == null ? "null-request" : imageRequest.getSourceUri());
+    putExtras(extras);
 
     mUiComponentId = uiComponentId;
     mProducerListener = producerListener;
-    mCallerContext = callerContext;
+    mCallerContext = callerContext != null ? callerContext : CALLER_CONTEXT_UNSET;
     mLowestPermittedRequestLevel = lowestPermittedRequestLevel;
 
     mIsPrefetch = isPrefetch;
@@ -183,15 +187,6 @@ public class BaseProducerContext implements ProducerContext {
   @Override
   public ImagePipelineConfigInterface getImagePipelineConfig() {
     return mImagePipelineConfig;
-  }
-
-  @Override
-  public EncodedImageOrigin getEncodedImageOrigin() {
-    return mEncodedImageOrigin;
-  }
-
-  public void setEncodedImageOrigin(EncodedImageOrigin encodedImageOrigin) {
-    this.mEncodedImageOrigin = encodedImageOrigin;
   }
 
   /** Cancels the request processing and calls appropriate callbacks. */
@@ -320,7 +315,7 @@ public class BaseProducerContext implements ProducerContext {
   }
 
   @Override
-  public void setExtra(String key, @Nullable Object value) {
+  public void putExtra(String key, @Nullable Object value) {
     if (INITIAL_KEYS.contains(key)) return;
     mExtras.put(key, value);
   }
@@ -329,7 +324,7 @@ public class BaseProducerContext implements ProducerContext {
   public void putExtras(@Nullable Map<String, ?> extras) {
     if (extras == null) return;
     for (Map.Entry<String, ?> entry : extras.entrySet()) {
-      setExtra(entry.getKey(), entry.getValue());
+      putExtra(entry.getKey(), entry.getValue());
     }
   }
 
@@ -358,8 +353,8 @@ public class BaseProducerContext implements ProducerContext {
 
   @Override
   public void putOriginExtra(@Nullable String origin, @Nullable String subcategory) {
-    mExtras.put(ExtraKeys.ORIGIN, origin);
-    mExtras.put(ExtraKeys.ORIGIN_SUBCATEGORY, subcategory);
+    mExtras.put(HasExtraData.KEY_ORIGIN, origin);
+    mExtras.put(HasExtraData.KEY_ORIGIN_SUBCATEGORY, subcategory);
   }
 
   @Override

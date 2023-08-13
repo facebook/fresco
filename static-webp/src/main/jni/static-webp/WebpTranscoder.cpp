@@ -9,13 +9,13 @@
 
 #include <jni.h>
 
+#include "WebpTranscoder.h"
+#include "decoded_image.h"
 #include "exceptions.h"
 #include "jpeg/jpeg_codec.h"
 #include "logging.h"
-#include "decoded_image.h"
 #include "png/png_codec.h"
 #include "webp/webp_codec.h"
-#include "WebpTranscoder.h"
 
 using facebook::imagepipeline::PixelFormat;
 using facebook::imagepipeline::jpeg::encodeJpegIntoOutputStream;
@@ -45,15 +45,15 @@ static void WebpTranscoder_transcodeToPng(
 }
 
 static JNINativeMethod gWebpTranscoderMethods[] = {
-  { "nativeTranscodeWebpToJpeg",
-    "(Ljava/io/InputStream;Ljava/io/OutputStream;I)V",
-    (void*) WebpTranscoder_transcodeToJpeg },
-  { "nativeTranscodeWebpToPng",
-    "(Ljava/io/InputStream;Ljava/io/OutputStream;)V",
-    (void*) WebpTranscoder_transcodeToPng },
+    {"nativeTranscodeWebpToJpeg",
+     "(Ljava/io/InputStream;Ljava/io/OutputStream;I)V",
+     (void*)WebpTranscoder_transcodeToJpeg},
+    {"nativeTranscodeWebpToPng",
+     "(Ljava/io/InputStream;Ljava/io/OutputStream;)V",
+     (void*)WebpTranscoder_transcodeToPng},
 };
 
-bool registerWebpTranscoderMethods(JNIEnv* env){
+bool registerWebpTranscoderMethods(JNIEnv* env) {
   auto webPTranscoderClass = env->FindClass(
       "com/facebook/imagepipeline/nativecode/WebpTranscoderImpl");
   if (webPTranscoderClass == nullptr) {

@@ -24,8 +24,8 @@ import kotlin.math.min
 open class DebugOverlayDrawable @JvmOverloads constructor(private val identifier: String = "") :
     Drawable() {
 
-  @ColorInt var backgroundColor = Color.TRANSPARENT
-  var textGravity = Gravity.TOP
+  @ColorInt var backgroundColor: Int = Color.TRANSPARENT
+  var textGravity: Int = Gravity.TOP
 
   // Internal helpers
   private val debugData = LinkedHashMap<String, Pair<String, Int>>()

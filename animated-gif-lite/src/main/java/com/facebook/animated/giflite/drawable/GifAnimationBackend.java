@@ -99,6 +99,35 @@ public class GifAnimationBackend implements AnimationBackend {
   }
 
   @Override
+  public void preloadAnimation() {
+    // unimplemented
+  }
+
+  @Override
+  public void setAnimationListener(@Nullable Listener listener) {
+    // unimplemented
+  }
+
+  @Override
+  public int width() {
+    return mMovie.width();
+  }
+
+  @Override
+  public int height() {
+    return mMovie.height();
+  }
+
+  @Override
+  public int getLoopDurationMs() {
+    int total = 0;
+    for (int i = 0; i < getFrameCount(); i++) {
+      total += getFrameDurationMs(i);
+    }
+    return total;
+  }
+
+  @Override
   public int getFrameCount() {
     return mGifDecoder.getFrameCount();
   }

@@ -16,11 +16,11 @@ import com.facebook.common.internal.Suppliers;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
-import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener;
 import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.fresco.ui.common.ControllerListener2;
+import com.facebook.fresco.ui.common.ImagePerfDataListener;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.core.ImagePipeline;
@@ -132,8 +132,7 @@ public class PipelineDraweeControllerBuilder
           controllerId,
           getCacheKey(),
           getCallerContext(),
-          mCustomDrawableFactories,
-          mImageOriginListener);
+          mCustomDrawableFactories);
       controller.initializePerformanceMonitoring(
           mImagePerfDataListener, this, Suppliers.BOOLEAN_FALSE);
       return controller;

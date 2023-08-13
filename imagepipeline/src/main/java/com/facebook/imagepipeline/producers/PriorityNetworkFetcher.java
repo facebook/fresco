@@ -54,7 +54,6 @@ import javax.annotation.Nullable;
 public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
     implements NetworkFetcher<PriorityNetworkFetcher.PriorityFetchState<FETCH_STATE>> {
   public static final String TAG = PriorityNetworkFetcher.class.getSimpleName();
-  private static final int HTTP_408_REQUEST_TIMEOUT = 408;
 
   private final NetworkFetcher<FETCH_STATE> mDelegate;
 

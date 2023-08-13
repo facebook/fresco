@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.image;
 
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 import java.util.Arrays;
@@ -19,20 +20,25 @@ import javax.annotation.Nullable;
 /** A simple wrapper around an image that implements {@link Closeable} */
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class BaseCloseableImage implements CloseableImage {
+
   private Map<String, Object> mExtras = new HashMap<>();
 
   /* Extras we want to set to the image */
   private static final Set<String> mImageExtrasList =
       new HashSet<>(
           Arrays.asList(
-              "encoded_size",
-              "encoded_width",
-              "encoded_height",
-              "uri_source",
-              "image_format",
-              "bitmap_config",
-              "is_rounded",
-              "non_fatal_decode_error"));
+              HasExtraData.KEY_ENCODED_SIZE,
+              HasExtraData.KEY_ENCODED_WIDTH,
+              HasExtraData.KEY_ENCODED_HEIGHT,
+              HasExtraData.KEY_URI_SOURCE,
+              HasExtraData.KEY_IMAGE_FORMAT,
+              HasExtraData.KEY_BITMAP_CONFIG,
+              HasExtraData.KEY_IS_ROUNDED,
+              HasExtraData.KEY_NON_FATAL_DECODE_ERROR,
+              HasExtraData.KEY_MODIFIED_URL,
+              HasExtraData.KEY_COLOR_SPACE));
+
+  private @Nullable ImageInfo mCacheImageInfo;
 
   /**
    * Returns quality information for the image.
@@ -61,7 +67,7 @@ public abstract class BaseCloseableImage implements CloseableImage {
 
   /** Sets extras that match mImageExtrasList to this image from supplied extras */
   @Override
-  public void setImageExtras(@Nullable Map<String, Object> extras) {
+  public void putExtras(@Nullable Map<String, ?> extras) {
     if (extras == null) {
       return;
     }
@@ -76,9 +82,34 @@ public abstract class BaseCloseableImage implements CloseableImage {
   }
 
   @Override
-  public void setImageExtra(String extra, Object value) {
+  public <E> void putExtra(String extra, @Nullable E value) {
     if (mImageExtrasList.contains(extra)) {
       mExtras.put(extra, value);
     }
+  }
+
+  @Override
+  public <T> T getExtra(String key) {
+    return getExtra(key, null);
+  }
+
+  @Override
+  public <T> T getExtra(String key, @Nullable T valueIfNotFound) {
+    Object value = mExtras.get(key);
+    if (value == null) {
+      return valueIfNotFound;
+    }
+    //noinspection unchecked
+    return (T) value;
+  }
+
+  @Override
+  public ImageInfo getImageInfo() {
+    if (mCacheImageInfo == null) {
+      mCacheImageInfo =
+          new ImageInfoImpl(
+              getWidth(), getHeight(), getSizeInBytes(), getQualityInfo(), getExtras());
+    }
+    return mCacheImageInfo;
   }
 }

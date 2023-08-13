@@ -9,12 +9,46 @@ package com.facebook.fresco.vito.options
 
 import androidx.annotation.ColorInt
 
+@Suppress("KtDataClass")
 data class BorderOptions(
     @JvmField @field:ColorInt @param:ColorInt val color: Int,
     @JvmField val width: Float,
     @JvmField val padding: Float = 0f,
     @JvmField val scaleDownInsideBorders: Boolean = false
 ) {
+
+  override fun equals(other: Any?): Boolean {
+    if (ImageOptionsConfig.doNotUseOverriddenDataClassMembers) {
+      return super.equals(other)
+    }
+
+    if (this === other) {
+      return true
+    }
+    if (javaClass != other?.javaClass) {
+      return false
+    }
+
+    val otherOptions: BorderOptions = other as BorderOptions
+
+    return color == otherOptions.color &&
+        width == otherOptions.width &&
+        padding == otherOptions.padding &&
+        scaleDownInsideBorders == otherOptions.scaleDownInsideBorders
+  }
+
+  override fun hashCode(): Int {
+    if (ImageOptionsConfig.doNotUseOverriddenDataClassMembers) {
+      return super.hashCode()
+    }
+
+    var result = color
+    result = 31 * result + width.hashCode()
+    result = 31 * result + padding.hashCode()
+    result = 31 * result + scaleDownInsideBorders.hashCode()
+    return result
+  }
+
   companion object {
     /**
      * Create border options with padding and scaleDownInsideBorders. Note that currently padding is

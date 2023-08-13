@@ -8,7 +8,12 @@
 package com.facebook.imagepipeline.decoder;
 
 import android.graphics.Bitmap;
+import android.graphics.ColorSpace;
+import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.Supplier;
+import com.facebook.common.internal.Suppliers;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
@@ -47,6 +52,7 @@ public class DefaultImageDecoder implements ImageDecoder {
   private final @Nullable ImageDecoder mAnimatedGifDecoder;
   private final @Nullable ImageDecoder mAnimatedWebPDecoder;
   private final PlatformDecoder mPlatformDecoder;
+  private final Supplier<Boolean> mEnableEncodedImageColorSpaceUsage;
 
   private final ImageDecoder mDefaultDecoder =
       new ImageDecoder() {
@@ -57,8 +63,15 @@ public class DefaultImageDecoder implements ImageDecoder {
             QualityInfo qualityInfo,
             ImageDecodeOptions options) {
           ImageFormat imageFormat = encodedImage.getImageFormat();
+          ColorSpace colorSpace = null;
+          if (mEnableEncodedImageColorSpaceUsage.get()) {
+            colorSpace =
+                options.colorSpace == null ? encodedImage.getColorSpace() : options.colorSpace;
+          } else {
+            colorSpace = options.colorSpace;
+          }
           if (imageFormat == DefaultImageFormats.JPEG) {
-            return decodeJpeg(encodedImage, length, qualityInfo, options);
+            return decodeJpeg(encodedImage, length, qualityInfo, options, colorSpace);
           } else if (imageFormat == DefaultImageFormats.GIF) {
             return decodeGif(encodedImage, length, qualityInfo, options);
           } else if (imageFormat == DefaultImageFormats.WEBP_ANIMATED) {
@@ -88,6 +101,20 @@ public class DefaultImageDecoder implements ImageDecoder {
     mAnimatedWebPDecoder = animatedWebPDecoder;
     mPlatformDecoder = platformDecoder;
     mCustomDecoders = customDecoders;
+    mEnableEncodedImageColorSpaceUsage = Suppliers.BOOLEAN_FALSE;
+  }
+
+  public DefaultImageDecoder(
+      @Nullable final ImageDecoder animatedGifDecoder,
+      @Nullable final ImageDecoder animatedWebPDecoder,
+      final PlatformDecoder platformDecoder,
+      @Nullable Map<ImageFormat, ImageDecoder> customDecoders,
+      final Supplier<Boolean> enableEncodedImageColorSpaceUsage) {
+    mAnimatedGifDecoder = animatedGifDecoder;
+    mAnimatedWebPDecoder = animatedWebPDecoder;
+    mPlatformDecoder = platformDecoder;
+    mCustomDecoders = customDecoders;
+    mEnableEncodedImageColorSpaceUsage = enableEncodedImageColorSpaceUsage;
   }
 
   /**
@@ -160,6 +187,7 @@ public class DefaultImageDecoder implements ImageDecoder {
           TransformationUtils.maybeApplyTransformation(
               options.bitmapTransformation, bitmapReference);
 
+      Preconditions.checkNotNull(bitmapReference);
       CloseableStaticBitmap closeableStaticBitmap =
           CloseableStaticBitmap.of(
               bitmapReference,
@@ -167,13 +195,13 @@ public class DefaultImageDecoder implements ImageDecoder {
               encodedImage.getRotationAngle(),
               encodedImage.getExifOrientation());
 
-      closeableStaticBitmap.setImageExtra(
-          "is_rounded",
+      closeableStaticBitmap.putExtra(
+          HasExtraData.KEY_IS_ROUNDED,
           didApplyTransformation && options.bitmapTransformation instanceof CircularTransformation);
 
       return closeableStaticBitmap;
     } finally {
-      bitmapReference.close();
+      CloseableReference.closeSafely(bitmapReference);
     }
   }
 
@@ -189,15 +217,17 @@ public class DefaultImageDecoder implements ImageDecoder {
       final EncodedImage encodedImage,
       int length,
       QualityInfo qualityInfo,
-      ImageDecodeOptions options) {
+      ImageDecodeOptions options,
+      @Nullable ColorSpace colorSpace) {
     CloseableReference<Bitmap> bitmapReference =
         mPlatformDecoder.decodeJPEGFromEncodedImageWithColorSpace(
-            encodedImage, options.bitmapConfig, null, length, options.colorSpace);
+            encodedImage, options.bitmapConfig, null, length, colorSpace);
     try {
       boolean didApplyTransformation =
           TransformationUtils.maybeApplyTransformation(
               options.bitmapTransformation, bitmapReference);
 
+      Preconditions.checkNotNull(bitmapReference);
       CloseableStaticBitmap closeableStaticBitmap =
           CloseableStaticBitmap.of(
               bitmapReference,
@@ -205,13 +235,13 @@ public class DefaultImageDecoder implements ImageDecoder {
               encodedImage.getRotationAngle(),
               encodedImage.getExifOrientation());
 
-      closeableStaticBitmap.setImageExtra(
-          "is_rounded",
+      closeableStaticBitmap.putExtra(
+          HasExtraData.KEY_IS_ROUNDED,
           didApplyTransformation && options.bitmapTransformation instanceof CircularTransformation);
 
       return closeableStaticBitmap;
     } finally {
-      bitmapReference.close();
+      CloseableReference.closeSafely(bitmapReference);
     }
   }
 

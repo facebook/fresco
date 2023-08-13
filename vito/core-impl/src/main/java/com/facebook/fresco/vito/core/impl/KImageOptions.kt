@@ -29,14 +29,11 @@ fun ImageOptions.createOverlayModel(resources: Resources): ImageDataModel? =
     toModel(createOverlayDrawable(resources))
 
 fun ImageOptions.createErrorModel(resources: Resources): ImageDataModel? =
-    toModel(createErrorDrawable(resources))
+    toModel(resources, errorDrawable, errorRes, errorColor)
 
 // Drawables
 fun ImageOptions.createProgressDrawable(resources: Resources): Drawable? =
     create(resources, progressDrawable, progressRes)
-
-fun ImageOptions.createErrorDrawable(resources: Resources): Drawable? =
-    create(resources, errorDrawable, errorRes)
 
 fun ImageOptions.createOverlayDrawable(resources: Resources): Drawable? =
     create(resources, overlayDrawable, overlayRes)

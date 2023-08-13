@@ -57,8 +57,10 @@ public class ExampleBitmapAnimationFactory {
             bitmapFrameCache,
             animationInformation,
             bitmapFrameRenderer,
+            false,
             framePreparationStrategy,
-            bitmapFramePreparer);
+            bitmapFramePreparer,
+            null);
 
     bitmapAnimationBackend.setFrameListener(new DebugBitmapAnimationFrameListener());
     return bitmapAnimationBackend;
@@ -82,6 +84,21 @@ public class ExampleBitmapAnimationFactory {
     @Override
     public int getFrameDurationMs(int frameNumber) {
       return mAnimationDurationMs;
+    }
+
+    @Override
+    public int getLoopDurationMs() {
+      return getFrameCount() * mAnimationDurationMs;
+    }
+
+    @Override
+    public int width() {
+      return -1;
+    }
+
+    @Override
+    public int height() {
+      return -1;
     }
 
     @Override

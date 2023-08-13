@@ -7,6 +7,8 @@
 
 package com.facebook.imagepipeline.core;
 
+import static com.facebook.common.util.ByteConstants.MB;
+
 import android.content.Context;
 import android.os.Build;
 import com.facebook.cache.common.CacheKey;
@@ -22,6 +24,7 @@ import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactoryProvider;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactoryProvider;
+import com.facebook.imagepipeline.cache.AnimatedCache;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.cache.EncodedCountingMemoryCacheFactory;
@@ -43,6 +46,7 @@ import com.facebook.imagepipeline.transcoder.ImageTranscoder;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import com.facebook.imagepipeline.transcoder.MultiImageTranscoderFactory;
 import com.facebook.imagepipeline.transcoder.SimpleImageTranscoderFactory;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -55,11 +59,12 @@ import javax.annotation.concurrent.NotThreadSafe;
  * applications create just one instance of this class and of the pipeline.
  */
 @NotThreadSafe
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImagePipelineFactory {
 
   private static final Class<?> TAG = ImagePipelineFactory.class;
 
-  private static ImagePipelineFactory sInstance = null;
+  private static @Nullable ImagePipelineFactory sInstance = null;
   private static ImagePipeline sImagePipeline;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
   private static boolean sForceSingleInstance;
@@ -124,9 +129,10 @@ public class ImagePipelineFactory {
 
   private final ImagePipelineConfigInterface mConfig;
   private final CloseableReferenceFactory mCloseableReferenceFactory;
-  private CountingMemoryCache<CacheKey, CloseableImage> mBitmapCountingMemoryCache;
+  @Nullable private CountingMemoryCache<CacheKey, CloseableImage> mBitmapCountingMemoryCache;
+  @Nullable private AnimatedCache mAnimatedCache;
   @Nullable private InstrumentedMemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
-  private CountingMemoryCache<CacheKey, PooledByteBuffer> mEncodedCountingMemoryCache;
+  @Nullable private CountingMemoryCache<CacheKey, PooledByteBuffer> mEncodedCountingMemoryCache;
   @Nullable private InstrumentedMemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
   @Nullable private BufferedDiskCache mMainBufferedDiskCache;
   @Nullable private FileCache mMainFileCache;
@@ -168,7 +174,10 @@ public class ImagePipelineFactory {
               getPlatformBitmapFactory(),
               mConfig.getExecutorSupplier(),
               getBitmapCountingMemoryCache(),
+              getAnimatedCache(mConfig.getExperiments().getAnimatedCacheMemoryPercentage()),
               mConfig.getExperiments().getDownscaleFrameToDrawableDimensions(),
+              mConfig.getExperiments().getUseBalancedAnimationStrategy(),
+              mConfig.getExperiments().getAnimationRenderFpsLimit(),
               mConfig.getExecutorServiceForAnimatedImages());
     }
     return mAnimatedFactory;
@@ -194,6 +203,15 @@ public class ImagePipelineFactory {
                   mConfig.getBitmapMemoryCacheEntryStateObserver());
     }
     return mBitmapCountingMemoryCache;
+  }
+
+  public AnimatedCache getAnimatedCache(int memoryPercentage) {
+    if (mAnimatedCache == null) {
+      final long maxMemory = Math.min(Runtime.getRuntime().maxMemory(), Integer.MAX_VALUE);
+      long cacheSizeMb = (maxMemory / 100 * memoryPercentage) / MB;
+      mAnimatedCache = AnimatedCache.getInstance((int) cacheSizeMb);
+    }
+    return mAnimatedCache;
   }
 
   public InstrumentedMemoryCache<CacheKey, CloseableImage> getBitmapMemoryCache() {
@@ -448,9 +466,13 @@ public class ImagePipelineFactory {
 
   @Nullable
   public String reportData() {
-    return Objects.toStringHelper("ImagePipelineFactory")
-        .add("bitmapCountingMemoryCache", mBitmapCountingMemoryCache.getDebugData())
-        .add("encodedCountingMemoryCache", mEncodedCountingMemoryCache.getDebugData())
-        .toString();
+    Objects.ToStringHelper b = Objects.toStringHelper("ImagePipelineFactory");
+    if (mBitmapCountingMemoryCache != null) {
+      b.add("bitmapCountingMemoryCache", mBitmapCountingMemoryCache.getDebugData());
+    }
+    if (mEncodedCountingMemoryCache != null) {
+      b.add("encodedCountingMemoryCache", mEncodedCountingMemoryCache.getDebugData());
+    }
+    return b.toString();
   }
 }

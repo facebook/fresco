@@ -51,5 +51,4 @@ fun KFrescoVitoDrawable.updateProgress(dataSource: DataSource<CloseableReference
 fun Drawable.setProgress(progress: Float) {
   level = (progress * 10000).roundToInt()
   toggleAnimation(level <= 9990)
-  // TODO(T105148151): Support imageOptions.shouldAlwaysShowProgressImmediately()
 }

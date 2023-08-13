@@ -23,6 +23,7 @@ class LithoSlideshowSample : LithoSample {
           .round(RoundingOptions.asCircle())
           .fadeDurationMs(0)
           .build()
+
   override fun createLithoComponent(
       c: ComponentContext,
       uris: ImageUriProvider,

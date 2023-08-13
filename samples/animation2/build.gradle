@@ -18,6 +18,7 @@ dependencies {
 
     implementation project(':animated-base')
     implementation project(':drawee-backends:drawee-pipeline')
+    implementation project(':vito:options')
 
 }
 

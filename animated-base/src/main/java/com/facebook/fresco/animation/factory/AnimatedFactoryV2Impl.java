@@ -27,6 +27,7 @@ import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendImpl;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider;
 import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import com.facebook.imagepipeline.cache.AnimatedCache;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.core.ExecutorSupplier;
@@ -46,6 +47,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 public class AnimatedFactoryV2Impl implements AnimatedFactory {
 
   private static final int NUMBER_OF_FRAMES_TO_PREPARE = 3;
+  private static final int BALANCED_STRATEGY_PREPARATION_MS = 10000; // No CPU
 
   private final PlatformBitmapFactory mPlatformBitmapFactory;
   private final ExecutorSupplier mExecutorSupplier;
@@ -57,17 +59,26 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   private @Nullable AnimatedDrawableUtil mAnimatedDrawableUtil;
   private @Nullable DrawableFactory mAnimatedDrawableFactory;
   private @Nullable SerialExecutorService mSerialExecutorService;
+  private int mAnimationFpsLimit;
+  private final AnimatedCache mAnimatedCache;
+  private final boolean mUseBalancedAnimationStrategy;
 
   @DoNotStrip
   public AnimatedFactoryV2Impl(
       PlatformBitmapFactory platformBitmapFactory,
       ExecutorSupplier executorSupplier,
       CountingMemoryCache<CacheKey, CloseableImage> backingCache,
+      AnimatedCache animatedCache,
       boolean downscaleFrameToDrawableDimensions,
+      boolean useBalancedAnimationStrategy,
+      int animationFpsLimit,
       SerialExecutorService serialExecutorServiceForFramePreparing) {
     mPlatformBitmapFactory = platformBitmapFactory;
     mExecutorSupplier = executorSupplier;
     mBackingCache = backingCache;
+    mAnimatedCache = animatedCache;
+    mAnimationFpsLimit = animationFpsLimit;
+    mUseBalancedAnimationStrategy = useBalancedAnimationStrategy;
     mDownscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions;
     mSerialExecutorService = serialExecutorServiceForFramePreparing;
   }
@@ -112,8 +123,10 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
             : mSerialExecutorService;
 
     Supplier<Integer> numberOfFramesToPrepareSupplier = () -> NUMBER_OF_FRAMES_TO_PREPARE;
+    Supplier<Integer> balancedAnimationStrategyMs = () -> BALANCED_STRATEGY_PREPARATION_MS;
 
     final Supplier<Boolean> useDeepEquals = Suppliers.BOOLEAN_FALSE;
+    final Supplier<AnimatedCache> animatedCacheSupplier = () -> mAnimatedCache;
 
     return new DefaultBitmapAnimationDrawableFactory(
         getAnimatedDrawableBackendProvider(),
@@ -122,9 +135,14 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
         RealtimeSinceBootClock.get(),
         mPlatformBitmapFactory,
         mBackingCache,
+        animatedCacheSupplier,
         cachingStrategySupplier,
         numberOfFramesToPrepareSupplier,
-        useDeepEquals);
+        useDeepEquals,
+        Suppliers.of(mUseBalancedAnimationStrategy),
+        Suppliers.of(mDownscaleFrameToDrawableDimensions),
+        Suppliers.of(mAnimationFpsLimit),
+        balancedAnimationStrategyMs);
   }
 
   private AnimatedDrawableUtil getAnimatedDrawableUtil() {
@@ -172,6 +190,9 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
                 mDownscaleFrameToDrawableDimensions);
           }
         };
-    return new AnimatedImageFactoryImpl(animatedDrawableBackendProvider, mPlatformBitmapFactory);
+    return new AnimatedImageFactoryImpl(
+        animatedDrawableBackendProvider,
+        mPlatformBitmapFactory,
+        this.mUseBalancedAnimationStrategy);
   }
 }

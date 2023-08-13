@@ -11,6 +11,7 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.widget.ImageView;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
@@ -146,6 +147,30 @@ public class ScalingUtils {
       }
     }
     return null;
+  }
+
+  @Nullable
+  public static ScaleType convertFromImageViewScaleType(ImageView.ScaleType scaleType) {
+    switch (scaleType) {
+      case CENTER:
+        return ScaleType.CENTER;
+      case CENTER_CROP:
+        return ScaleType.CENTER_CROP;
+      case CENTER_INSIDE:
+        return ScaleType.CENTER_INSIDE;
+      case FIT_CENTER:
+        return ScaleType.FIT_CENTER;
+      case FIT_START:
+        return ScaleType.FIT_START;
+      case FIT_END:
+        return ScaleType.FIT_END;
+      case FIT_XY:
+        return ScaleType.FIT_XY;
+        // Matrix is not supported
+      case MATRIX:
+      default:
+        return null;
+    }
   }
 
   /** A convenience base class that has some common logic. */

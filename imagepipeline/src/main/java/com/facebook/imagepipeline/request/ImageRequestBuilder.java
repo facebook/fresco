@@ -22,11 +22,14 @@ import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineExperiments;
 import com.facebook.imagepipeline.listener.RequestListener;
+import java.util.HashSet;
+import java.util.Set;
 import javax.annotation.Nullable;
 
 /** Builder class for {@link ImageRequest}s. */
 public class ImageRequestBuilder {
 
+  private static final Set<String> CUSTOM_NETWORK_SCHEMES = new HashSet<>();
   private Uri mSourceUri = null;
   private RequestLevel mLowestPermittedRequestLevel = RequestLevel.FULL_FETCH;
   private int mCachesDisabled = 0; // All caches enabled by default
@@ -89,7 +92,7 @@ public class ImageRequestBuilder {
         .setBytesRange(imageRequest.getBytesRange())
         .setCacheChoice(imageRequest.getCacheChoice())
         .setLocalThumbnailPreviewsEnabled(imageRequest.getLocalThumbnailPreviewsEnabled())
-        .setLoadThumbnailOnly(imageRequest.getLoadThumbnailOnly())
+        .setLoadThumbnailOnly(imageRequest.getLoadThumbnailOnlyForAndroidSdkAboveQ())
         .setLowestPermittedRequestLevel(imageRequest.getLowestPermittedRequestLevel())
         .setCachesDisabled(imageRequest.getCachesDisabled())
         .setPostprocessor(imageRequest.getPostprocessor())
@@ -100,6 +103,10 @@ public class ImageRequestBuilder {
         .setRotationOptions(imageRequest.getRotationOptions())
         .setShouldDecodePrefetches(imageRequest.shouldDecodePrefetches())
         .setDelayMs(imageRequest.getDelayMs());
+  }
+
+  public static void addCustomUriNetworkScheme(String scheme) {
+    CUSTOM_NETWORK_SCHEMES.add(scheme);
   }
 
   private ImageRequestBuilder() {}
@@ -304,10 +311,23 @@ public class ImageRequestBuilder {
     return this;
   }
 
+  private boolean isCustomNetworkUri(@Nullable Uri uri) {
+    if (CUSTOM_NETWORK_SCHEMES == null || uri == null) {
+      return false;
+    }
+    for (String scheme : CUSTOM_NETWORK_SCHEMES) {
+      if (scheme.equals(uri.getScheme())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /** Returns whether the use of the disk cache is enabled, which is partly dependent on the URI. */
   public boolean isDiskCacheEnabled() {
     int mask = CachesLocationsMasks.DISK_READ | CachesLocationsMasks.DISK_WRITE;
-    return ((mCachesDisabled & mask) == 0) && UriUtil.isNetworkUri(mSourceUri);
+    return ((mCachesDisabled & mask) == 0)
+        && (UriUtil.isNetworkUri(mSourceUri) || isCustomNetworkUri(mSourceUri));
   }
 
   /** Disables memory cache for this request. */

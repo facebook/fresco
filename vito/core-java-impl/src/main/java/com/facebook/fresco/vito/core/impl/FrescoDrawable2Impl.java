@@ -52,7 +52,7 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
 
   private @Nullable Runnable mRefetchRunnable;
 
-  private final CombinedImageListenerImpl mImageListener = new CombinedImageListenerImpl();
+  private final CombinedImageListener mImageListener = new CombinedImageListenerImpl();
   private final VitoImagePerfListener mImagePerfListener;
 
   private final Runnable mReleaseRunnable =

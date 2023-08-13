@@ -30,18 +30,11 @@ static void JpegTranscoder_transcodeJpeg(
     jint rotation_degrees,
     jint downscale_numerator,
     jint quality) {
-  ScaleFactor scale_factor{(uint8_t) downscale_numerator, 8};
-  RotationType rotation_type = getRotationTypeFromDegrees(
-      env,
-      rotation_degrees);
+  ScaleFactor scale_factor{(uint8_t)downscale_numerator, 8};
+  RotationType rotation_type =
+      getRotationTypeFromDegrees(env, rotation_degrees);
   RETURN_IF_EXCEPTION_PENDING;
-  transformJpeg(
-      env,
-      is,
-      os,
-      rotation_type,
-      scale_factor,
-      quality);
+  transformJpeg(env, is, os, rotation_type, scale_factor, quality);
 }
 
 static void JpegTranscoder_transcodeJpegWithExifOrientation(
@@ -52,27 +45,20 @@ static void JpegTranscoder_transcodeJpegWithExifOrientation(
     jint exif_orientation,
     jint downscale_numerator,
     jint quality) {
-  ScaleFactor scale_factor{(uint8_t) downscale_numerator, 8};
-  RotationType rotation_type = getRotationTypeFromRawExifOrientation(
-      env,
-      exif_orientation);
+  ScaleFactor scale_factor{(uint8_t)downscale_numerator, 8};
+  RotationType rotation_type =
+      getRotationTypeFromRawExifOrientation(env, exif_orientation);
   RETURN_IF_EXCEPTION_PENDING;
-  transformJpeg(
-      env,
-      is,
-      os,
-      rotation_type,
-      scale_factor,
-      quality);
+  transformJpeg(env, is, os, rotation_type, scale_factor, quality);
 }
 
 static JNINativeMethod gJpegTranscoderMethods[] = {
-  { "nativeTranscodeJpeg",
-    "(Ljava/io/InputStream;Ljava/io/OutputStream;III)V",
-    (void*) JpegTranscoder_transcodeJpeg },
-  { "nativeTranscodeJpegWithExifOrientation",
-    "(Ljava/io/InputStream;Ljava/io/OutputStream;III)V",
-    (void*) JpegTranscoder_transcodeJpegWithExifOrientation },
+    {"nativeTranscodeJpeg",
+     "(Ljava/io/InputStream;Ljava/io/OutputStream;III)V",
+     (void*)JpegTranscoder_transcodeJpeg},
+    {"nativeTranscodeJpegWithExifOrientation",
+     "(Ljava/io/InputStream;Ljava/io/OutputStream;III)V",
+     (void*)JpegTranscoder_transcodeJpegWithExifOrientation},
 };
 
 bool registerJpegTranscoderMethods(JNIEnv* env) {

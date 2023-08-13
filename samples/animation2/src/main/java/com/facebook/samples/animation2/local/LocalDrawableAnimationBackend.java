@@ -17,6 +17,7 @@ import android.util.SparseArray;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
 
 /** Local drawable animation backend that chains local drawables together. */
 public class LocalDrawableAnimationBackend implements AnimationBackend {
@@ -96,8 +97,37 @@ public class LocalDrawableAnimationBackend implements AnimationBackend {
   }
 
   @Override
+  public int width() {
+    return INTRINSIC_DIMENSION_UNSET;
+  }
+
+  @Override
+  public int height() {
+    return INTRINSIC_DIMENSION_UNSET;
+  }
+
+  @Override
+  public int getLoopDurationMs() {
+    int total = 0;
+    for (int i = 0; i < getFrameCount(); i++) {
+      total += getFrameDurationMs(i);
+    }
+    return total;
+  }
+
+  @Override
   public void clear() {
     mCache.clear();
+  }
+
+  @Override
+  public void preloadAnimation() {
+    // not needed
+  }
+
+  @Override
+  public void setAnimationListener(@Nullable Listener listener) {
+    // unimplemented
   }
 
   @Override

@@ -22,7 +22,6 @@ interface CanvasTransformation {
    * @param parentBounds the bounds to fill
    * @param childWidth the width of the child to draw
    * @param childHeight the height of the child to draw
-   *
    * @return a Matrix (usually outTransform) or null if no transformation required
    */
   fun calculateTransformation(

@@ -21,6 +21,7 @@ dependencies {
     implementation Deps.SoLoader.soloaderAnnotation
     implementation Deps.Bolts.tasks
     implementation project(':fbcore')
+    implementation project(':middleware')
 
     testImplementation project(':imagepipeline-base-test')
     testImplementation TestDeps.junit

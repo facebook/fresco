@@ -11,7 +11,6 @@
 #include <pthread.h>
 #include <string.h>
 
-
 class RWLock {
  public:
   RWLock() : mutex_(PTHREAD_RWLOCK_INITIALIZER){};

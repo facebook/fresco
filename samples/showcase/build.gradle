@@ -113,6 +113,8 @@ dependencies {
     implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':drawee-span')
     implementation project(':imagepipeline-backends:imagepipeline-okhttp3')
+    implementation project(':middleware')
+    implementation project(':tools:flipper-fresco-plugin')
     implementation project(':tools:stetho')
 
     implementation 'com.facebook.keyframes:keyframes:1.0'
@@ -157,9 +159,7 @@ dependencies {
     androidTestImplementation TestDeps.junit
 
     implementation(Deps.Tools.Flipper.flipper)
-    implementation(Deps.Tools.Flipper.fresco) {
-        exclude group: 'com.facebook.fresco'
-    }
+
     implementation project(':tools:flipper')
 
     implementation Deps.Kotlin.stdlibJdk

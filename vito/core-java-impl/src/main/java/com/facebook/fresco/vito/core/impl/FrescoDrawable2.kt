@@ -98,11 +98,13 @@ abstract class FrescoDrawable2 :
 
   val overlayDrawable: Drawable?
     get() = getDrawable(OVERLAY_DRAWABLE_INDEX)
+
   val actualImageScaleType: ScalingUtils.ScaleType?
     get() {
       val actual = getDrawable(IMAGE_DRAWABLE_INDEX)
       return if (actual !is ScaleTypeDrawable) null else actual.scaleType
     }
+
   val actualImageFocusPoint: PointF?
     get() {
       val actual = getDrawable(IMAGE_DRAWABLE_INDEX)
@@ -126,6 +128,7 @@ abstract class FrescoDrawable2 :
     const val IMAGE_DRAWABLE_INDEX = 1
     private const val PROGRESS_DRAWABLE_INDEX = 2
     private const val OVERLAY_DRAWABLE_INDEX = 3
+
     private fun maybeStopAnimation(drawable: Drawable?) {
       if (drawable is Animatable) {
         (drawable as Animatable).stop()

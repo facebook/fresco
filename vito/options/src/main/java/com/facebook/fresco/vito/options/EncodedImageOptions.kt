@@ -44,6 +44,7 @@ open class EncodedImageOptions(builder: Builder<*>) {
     internal var cacheChoice: CacheChoice? = null
 
     protected constructor()
+
     protected constructor(defaultOptions: EncodedImageOptions) {
       priority = defaultOptions.priority
       cacheChoice = defaultOptions.cacheChoice

@@ -6,7 +6,6 @@
  */
 
 include ':animated-base'
-include ':animated-base-test'
 include ':animated-drawable'
 include ':animated-gif'
 include ':animated-gif-lite'
@@ -39,6 +38,7 @@ include ':samples:zoomableapp'
 include ':soloader'
 include ':static-webp'
 include ':tools:flipper'
+include ':tools:flipper-fresco-plugin'
 include ':tools:stetho'
 include ':ui-common'
 include ':urimod'

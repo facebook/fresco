@@ -106,6 +106,8 @@ object ExampleDatabase {
                   ExampleItem(
                       "Vito Litho: NinePatch", LithoNinePatchSample(), "Litho nine patch example"),
                   ExampleItem("Vito Text Span") { VitoSpanFragment() },
+                  ExampleItem(
+                      "Vito Litho DrawableImageSource", FrescoVitoLithoDrawableImageSourceExample),
               )),
           ExampleCategory(
               "Vito Renderer",

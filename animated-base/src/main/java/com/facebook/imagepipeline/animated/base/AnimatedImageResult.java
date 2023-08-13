@@ -24,6 +24,7 @@ public class AnimatedImageResult {
 
   private final AnimatedImage mImage;
   private final int mFrameForPreview;
+  private @Nullable String mSource;
   private @Nullable CloseableReference<Bitmap> mPreviewBitmap;
   private @Nullable List<CloseableReference<Bitmap>> mDecodedFrames;
   private @Nullable BitmapTransformation mBitmapTransformation;
@@ -34,6 +35,7 @@ public class AnimatedImageResult {
     mPreviewBitmap = builder.getPreviewBitmap();
     mDecodedFrames = builder.getDecodedFrames();
     mBitmapTransformation = builder.getBitmapTransformation();
+    mSource = builder.getSource();
   }
 
   private AnimatedImageResult(AnimatedImage image) {
@@ -68,6 +70,16 @@ public class AnimatedImageResult {
    */
   public AnimatedImage getImage() {
     return mImage;
+  }
+
+  /**
+   * Gets the animated result source uri
+   *
+   * @return source uri
+   */
+  @Nullable
+  public String getSource() {
+    return mSource;
   }
 
   /**

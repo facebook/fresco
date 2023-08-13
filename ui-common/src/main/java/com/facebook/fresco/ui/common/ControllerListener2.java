@@ -22,6 +22,7 @@ public interface ControllerListener2<INFO> {
     public @Nullable Map<String, Object> shortcutExtras;
     public @Nullable Map<String, Object> datasourceExtras;
     public @Nullable Map<String, Object> imageExtras;
+    public @Nullable Map<String, Object> imageSourceExtras;
 
     public @Nullable Object callerContext;
     public @Nullable Uri mainUri;
@@ -29,8 +30,10 @@ public interface ControllerListener2<INFO> {
     public int viewportWidth = -1;
     public int viewportHeight = -1;
     public @Nullable Object scaleType;
-    public float focusX = -1;
-    public float focusY = -1;
+    public @Nullable Float focusX;
+    public @Nullable Float focusY;
+
+    public boolean logWithHighSamplingRate = false;
 
     public static Extras of(@Nullable Map<String, Object> componentExtras) {
       Extras extras = new Extras();
@@ -116,4 +119,6 @@ public interface ControllerListener2<INFO> {
    * @param extraData extra data
    */
   void onRelease(String id, @Nullable Extras extraData);
+
+  void onEmptyEvent(@Nullable Object callerContext);
 }

@@ -17,13 +17,13 @@ import com.facebook.imageformat.ImageFormatCheckerUtils;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
+import com.facebook.imagepipeline.image.BaseCloseableImage;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Map;
 import javax.annotation.Nullable;
 
 /**
@@ -89,7 +89,7 @@ public class ColorImageExample {
   }
 
   /** Custom closeable color image that holds a single color int value. */
-  public static class CloseableColorImage implements CloseableImage {
+  public static class CloseableColorImage extends BaseCloseableImage {
 
     @ColorInt private final int mColor;
 
@@ -120,12 +120,6 @@ public class ColorImageExample {
     }
 
     @Override
-    public void setImageExtras(@Nullable Map<String, Object> extras) {}
-
-    @Override
-    public void setImageExtra(String extra, Object value) {}
-
-    @Override
     public boolean isStateful() {
       return false;
     }
@@ -146,8 +140,8 @@ public class ColorImageExample {
     }
 
     @Override
-    public Map<String, Object> getExtras() {
-      return Collections.emptyMap();
+    public ImageInfo getImageInfo() {
+      return this;
     }
   }
 

@@ -7,7 +7,11 @@
 
 package com.facebook.common.internal;
 
-public interface Fn<A, R> {
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
+public interface Fn<A, R> {
+  @Nullable
   R apply(A arg);
 }

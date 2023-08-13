@@ -13,6 +13,7 @@ import com.facebook.datasource.DataSource
 import com.facebook.datasource.DataSources
 import com.facebook.datasource.FirstAvailableDataSourceSupplier
 import com.facebook.datasource.IncreasingQualityDataSourceSupplier
+import com.facebook.fresco.middleware.Extras
 import com.facebook.fresco.vito.core.ImagePipelineUtils
 import com.facebook.fresco.vito.core.impl.source.ImagePipelineImageSource
 import com.facebook.fresco.vito.options.ImageOptions
@@ -44,7 +45,7 @@ object ImageSourceToImagePipelineAdapter {
    *
    * @param imagePipelineUtils util class to create the final image request
    * @param imageOptions the image options to use, important if for example rounding is done at
-   * decode time
+   *   decode time
    * @return the final image request or null if not possible to determine
    */
   @JvmStatic
@@ -74,14 +75,21 @@ object ImageSourceToImagePipelineAdapter {
       imageOptions: ImageOptions,
       callerContext: Any?,
       requestListener: RequestListener?,
-      uiComponentId: String
+      uiComponentId: String,
+      extras: MutableMap<String, Any?>
   ): Supplier<DataSource<CloseableReference<CloseableImage>>> {
     return when (imageSource) {
       is SingleImageSource -> {
         return Supplier<DataSource<CloseableReference<CloseableImage>>> {
           val imageRequest = imageSource.extractSingleRequest(imagePipelineUtils, imageOptions)
           createDataSource(
-              imageRequest, imagePipeline, callerContext, requestListener, uiComponentId)
+              imageRequest,
+              imagePipeline,
+              callerContext,
+              requestListener,
+              uiComponentId,
+              ImageRequest.RequestLevel.FULL_FETCH,
+              extras)
         }
       }
       is ImagePipelineImageSource -> {
@@ -94,7 +102,8 @@ object ImageSourceToImagePipelineAdapter {
               callerContext,
               requestListener,
               uiComponentId,
-              imageSource.getRequestLevelForFetch())
+              imageSource.getRequestLevelForFetch(),
+              extras)
         }
       }
       is EmptyImageSource -> NO_REQUEST_SUPPLIER
@@ -108,7 +117,8 @@ object ImageSourceToImagePipelineAdapter {
                     imageOptions,
                     callerContext,
                     requestListener,
-                    uiComponentId)
+                    uiComponentId,
+                    extras)
               })
       is IncreasingQualityImageSource ->
           return IncreasingQualityDataSourceSupplier.create(
@@ -120,7 +130,8 @@ object ImageSourceToImagePipelineAdapter {
                       imageOptions,
                       callerContext,
                       requestListener,
-                      uiComponentId),
+                      uiComponentId,
+                      extras),
                   createDataSourceSupplier(
                       imageSource.lowResSource,
                       imagePipeline,
@@ -128,7 +139,8 @@ object ImageSourceToImagePipelineAdapter {
                       imageOptions,
                       callerContext,
                       requestListener,
-                      uiComponentId)))
+                      uiComponentId,
+                      extras)))
       else -> NO_REQUEST_SUPPLIER
     }
   }
@@ -140,7 +152,8 @@ object ImageSourceToImagePipelineAdapter {
       callerContext: Any?,
       requestListener: RequestListener?,
       uiComponentId: String,
-      requestLevel: ImageRequest.RequestLevel = ImageRequest.RequestLevel.FULL_FETCH
+      requestLevel: ImageRequest.RequestLevel = ImageRequest.RequestLevel.FULL_FETCH,
+      extras: Extras
   ): DataSource<CloseableReference<CloseableImage>> {
     return if (imageRequest != null) {
       imagePipeline.fetchDecodedImage(
@@ -148,7 +161,8 @@ object ImageSourceToImagePipelineAdapter {
           callerContext,
           requestLevel,
           requestListener, // TODO: Check if this is correct !!
-          uiComponentId)
+          uiComponentId,
+          extras)
     } else {
       NO_REQUEST_SUPPLIER.get()
     }

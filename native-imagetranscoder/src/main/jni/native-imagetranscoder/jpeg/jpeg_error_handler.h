@@ -10,8 +10,8 @@
 
 #include <type_traits>
 
-#include <stdio.h>
 #include <setjmp.h>
+#include <stdio.h>
 
 #include <jni.h>
 #include <jpeglib.h>
@@ -34,10 +34,9 @@ namespace jpeg {
  * be used with libjpeg which is a c library.
  */
 struct JpegErrorHandler {
-
-  struct jpeg_error_mgr pub;      // default fields defined by libjpeg
-  jmp_buf setjmpBuffer;           // return point
-  JNIEnv* env;                    // JNI environment
+  struct jpeg_error_mgr pub; // default fields defined by libjpeg
+  jmp_buf setjmpBuffer; // return point
+  JNIEnv* env; // JNI environment
 
   jpeg_decompress_struct* dinfoPtr;
   jpeg_compress_struct* cinfoPtr;
@@ -85,9 +84,7 @@ void jpegThrow(j_common_ptr cinfo);
  * with passed message. In any case, returns control to the place poitned
  * by setjmp buffer of associated JpegErrorHandler structure.
  */
-void jpegSafeThrow(
-    j_common_ptr cinfo,
-    const char* msg);
+void jpegSafeThrow(j_common_ptr cinfo, const char* msg);
 
 /**
  * Checks for pending java exception and if one occured
@@ -96,6 +93,8 @@ void jpegSafeThrow(
  */
 void jpegJumpOnException(j_common_ptr cinfo);
 
-} } }
+} // namespace jpeg
+} // namespace imagepipeline
+} // namespace facebook
 
 #endif /* _JPEG_ERROR_HANDLER_H_ */

@@ -133,8 +133,33 @@ public class WebpAnimationBackend implements AnimationBackend {
   }
 
   @Override
+  public int getLoopDurationMs() {
+    return mWebPImage.getDuration();
+  }
+
+  @Override
+  public int width() {
+    return mWebPImage.getWidth();
+  }
+
+  @Override
+  public int height() {
+    return mWebPImage.getHeight();
+  }
+
+  @Override
   public int getLoopCount() {
     return mWebPImage.getLoopCount();
+  }
+
+  @Override
+  public void preloadAnimation() {
+    // not needed as bitmaps are extracted on fly
+  }
+
+  @Override
+  public void setAnimationListener(@Nullable Listener listener) {
+    // unimplementedå
   }
 
   private synchronized void prepareTempBitmapForThisSize(int width, int height) {

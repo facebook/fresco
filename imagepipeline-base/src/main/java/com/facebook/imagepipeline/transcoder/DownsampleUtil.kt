@@ -28,7 +28,7 @@ object DownsampleUtil {
    * @param resizeOptions the resize options of the request
    * @param encodedImage the encoded image with the actual dimensions
    * @param maxBitmapSize the maximum supported bitmap size (in pixels) when not specified in the
-   * encoded image resizeOptions.
+   *   encoded image resizeOptions.
    * @return
    */
   @JvmStatic

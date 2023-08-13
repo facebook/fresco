@@ -25,6 +25,7 @@
         android:name=".MainActivity"
         android:label="@string/app_name"
         android:theme="@style/AppTheme.NoActionBar"
+        android:exported="true"
         >
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
@@ -38,6 +39,7 @@
         android:label="@string/drawee_transition_details_title"
         android:parentActivityName=".MainActivity"
         android:theme="@style/AppTheme.ImageDetails"
+        android:exported="false"
         >
       <meta-data
           android:name="android.support.PARENT_ACTIVITY"

@@ -26,14 +26,19 @@ class VitoViewPrefetchFragment : BaseShowcaseFragment() {
   private var _binding: FragmentVitoViewPrefetchBinding? = null
   private val binding
     get() = _binding!!
+
   private val buttonPrefetchBitmap
     get() = binding.buttonPrefetchBitmap
+
   private val buttonPrefetchEncoded
     get() = binding.buttonPrefetchEncoded
+
   private val buttonPrefetchDisk
     get() = binding.buttonPrefetchDisk
+
   private val buttonToggleImages
     get() = binding.buttonToggleImages
+
   private val buttonClearCache
     get() = binding.buttonClearCache
 

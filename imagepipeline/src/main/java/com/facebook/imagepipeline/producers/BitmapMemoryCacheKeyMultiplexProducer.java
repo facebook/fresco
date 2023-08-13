@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.producers;
 import android.util.Pair;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -29,7 +30,7 @@ public class BitmapMemoryCacheKeyMultiplexProducer
     super(
         inputProducer,
         "BitmapMemoryCacheKeyMultiplexProducer",
-        ProducerContext.ExtraKeys.MULTIPLEX_BITMAP_COUNT);
+        HasExtraData.KEY_MULTIPLEX_BITMAP_COUNT);
     mCacheKeyFactory = cacheKeyFactory;
   }
 

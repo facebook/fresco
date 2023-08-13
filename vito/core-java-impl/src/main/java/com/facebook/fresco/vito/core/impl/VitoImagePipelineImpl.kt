@@ -11,6 +11,7 @@ import android.content.res.Resources
 import android.graphics.Rect
 import com.facebook.common.references.CloseableReference
 import com.facebook.datasource.DataSource
+import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.fresco.ui.common.VitoUtils
 import com.facebook.fresco.urimod.Dimensions
 import com.facebook.fresco.urimod.UriModifier
@@ -21,6 +22,7 @@ import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.ImageOptions.Companion.defaults
 import com.facebook.fresco.vito.source.ImageSource
 import com.facebook.fresco.vito.source.ImageSourceProvider
+import com.facebook.fresco.vito.source.IncreasingQualityImageSource
 import com.facebook.fresco.vito.source.SingleImageSource
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.image.CloseableImage
@@ -36,32 +38,33 @@ class VitoImagePipelineImpl(
   override fun createImageRequest(
       resources: Resources,
       imageSource: ImageSource,
-      options: ImageOptions?
-  ): VitoImageRequest = createImageRequest(resources, imageSource, options, null)
-
-  override fun createImageRequest(
-      resources: Resources,
-      imageSource: ImageSource,
       options: ImageOptions?,
-      viewport: Rect?
+      logWithHighSamplingRate: Boolean,
+      viewport: Rect?,
   ): VitoImageRequest {
     val imageOptions = options ?: defaults()
+    val extras: MutableMap<String, Any?> = mutableMapOf()
+    var finalImageSource = imageSource
+    if (imageSource is SingleImageSource) {
+      val uri = imageSource.uri
+      val maybeModifiedUri =
+          UriModifier.INSTANCE.modifyUri(
+              uri,
+              viewport?.let { Dimensions(it.width(), it.height()) },
+              imageOptions.actualImageScaleType)
 
-    val finalImageSource =
-        when {
-          imageOptions.experimentalDynamicSize && imageSource is SingleImageSource -> {
-            val uri = imageSource.uri
-            val maybeModifiedUri =
-                UriModifier.INSTANCE.modifyUri(
-                    uri,
-                    viewport?.let { Dimensions(it.width(), it.height()) },
-                    imageOptions.actualImageScaleType)
-
-            if (maybeModifiedUri != uri) ImageSourceProvider.forUri(maybeModifiedUri)
-            else imageSource
-          }
-          else -> imageSource
-        }
+      if (maybeModifiedUri != uri) {
+        extras[HasExtraData.KEY_MODIFIED_URL] = true
+        finalImageSource = ImageSourceProvider.forUri(maybeModifiedUri)
+      }
+      if (imageSource.extras != null) {
+        extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = imageSource.extras
+      }
+    } else if (imageSource is IncreasingQualityImageSource) {
+      if (imageSource.extras != null) {
+        extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = imageSource.extras
+      }
+    }
 
     val finalImageRequest =
         ImageSourceToImagePipelineAdapter.maybeExtractFinalImageRequest(
@@ -69,7 +72,13 @@ class VitoImagePipelineImpl(
     val finalImageCacheKey = finalImageRequest?.let { imagePipeline.getCacheKey(it, null) }
 
     return VitoImageRequest(
-        resources, finalImageSource, imageOptions, finalImageRequest, finalImageCacheKey)
+        resources,
+        finalImageSource,
+        imageOptions,
+        logWithHighSamplingRate,
+        finalImageRequest,
+        finalImageCacheKey,
+        extras)
   }
 
   override fun getCachedImage(imageRequest: VitoImageRequest): CloseableReference<CloseableImage>? {
@@ -104,6 +113,7 @@ class VitoImagePipelineImpl(
               imageRequest.imageOptions,
               callerContext,
               requestListener,
-              VitoUtils.getStringId(uiComponentId))
+              VitoUtils.getStringId(uiComponentId),
+              imageRequest.extras)
           .get()
 }

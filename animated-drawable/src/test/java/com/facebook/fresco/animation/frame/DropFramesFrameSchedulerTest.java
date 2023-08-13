@@ -7,7 +7,7 @@
 
 package com.facebook.fresco.animation.frame;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
@@ -147,12 +147,22 @@ public class DropFramesFrameSchedulerTest {
       mFrameCount = frameCount;
     }
 
-    public long getLoopDurationMs() {
+    public int getLoopDurationMs() {
       long loopDuration = 0;
       for (int i = 0; i < getFrameCount(); i++) {
         loopDuration += getFrameDurationMs(i);
       }
-      return loopDuration;
+      return (int) loopDuration;
+    }
+
+    @Override
+    public int width() {
+      return getIntrinsicWidth();
+    }
+
+    @Override
+    public int height() {
+      return getIntrinsicHeight();
     }
 
     public long getAnimationDurationMs() {
@@ -205,5 +215,11 @@ public class DropFramesFrameSchedulerTest {
 
     @Override
     public void clear() {}
+
+    @Override
+    public void preloadAnimation() {}
+
+    @Override
+    public void setAnimationListener(@Nullable Listener listener) {}
   }
 }

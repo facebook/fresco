@@ -18,12 +18,14 @@ object MiddlewareUtils {
       componentAttribution: Map<String, Any>,
       shortcutAttribution: Map<String, Any>,
       dataSourceExtras: Map<String, Any>?,
+      imageSourceExtras: Map<String, Any>?,
       viewportDimensions: Rect?,
       scaleType: String?,
       focusPoint: PointF?,
-      imageExtras: Map<String?, Any?>?,
+      imageExtras: Map<String, Any?>?,
       callerContext: Any?,
-      mainUri: Uri?
+      logWithHighSamplingRate: Boolean = false,
+      mainUri: Uri?,
   ): Extras {
     val extras = Extras()
     if (viewportDimensions != null) {
@@ -36,11 +38,13 @@ object MiddlewareUtils {
       extras.focusY = focusPoint.y
     }
     extras.callerContext = callerContext
+    extras.logWithHighSamplingRate = logWithHighSamplingRate
     extras.mainUri = mainUri
     extras.datasourceExtras = dataSourceExtras
     extras.imageExtras = imageExtras
     extras.shortcutExtras = shortcutAttribution
     extras.componentExtras = componentAttribution
+    extras.imageSourceExtras = imageSourceExtras
     return extras
   }
 }

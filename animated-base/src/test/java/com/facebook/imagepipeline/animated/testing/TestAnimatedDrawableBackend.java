@@ -107,6 +107,11 @@ public class TestAnimatedDrawableBackend implements AnimatedDrawableBackend {
   }
 
   @Override
+  public void renderDeltas(int frameNumber, Canvas canvas) {
+    renderFrame(frameNumber, canvas);
+  }
+
+  @Override
   public int getFrameForTimestampMs(int timestampMs) {
     int accumulator = 0;
     for (int i = 0; i < mFrameDurations.length; i++) {

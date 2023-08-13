@@ -9,20 +9,18 @@ package com.facebook.drawee.backends.pipeline.info;
 
 import android.graphics.Rect;
 import com.facebook.common.internal.Supplier;
-import com.facebook.common.internal.Suppliers;
-import com.facebook.common.references.CloseableReference;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
-import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
-import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfRequestListener;
-import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
-import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.fresco.ui.common.ImageLoadStatus;
+import com.facebook.fresco.ui.common.ImagePerfData;
+import com.facebook.fresco.ui.common.ImagePerfDataListener;
+import com.facebook.fresco.ui.common.ImagePerfNotifier;
+import com.facebook.fresco.ui.common.ImagePerfState;
+import com.facebook.fresco.ui.common.VisibilityState;
 import com.facebook.imagepipeline.listener.ForwardingRequestListener;
-import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -36,8 +34,6 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
   private final ImagePerfState mImagePerfState;
   private final Supplier<Boolean> mAsyncLogging;
 
-  private @Nullable ImageOriginRequestListener mImageOriginRequestListener;
-  private @Nullable ImageOriginListener mImageOriginListener;
   private @Nullable ImagePerfRequestListener mImagePerfRequestListener;
   private @Nullable ImagePerfControllerListener2 mImagePerfControllerListener2;
   private @Nullable ForwardingRequestListener mForwardingRequestListener;
@@ -56,26 +52,10 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
     mAsyncLogging = asyncLogging;
   }
 
-  public void updateImageRequestData(
-      AbstractDraweeControllerBuilder<
-              PipelineDraweeControllerBuilder,
-              ImageRequest,
-              CloseableReference<CloseableImage>,
-              ImageInfo>
-          pipelineDraweeControllerBuilder) {
-    mImagePerfState.setControllerImageRequests(
-        pipelineDraweeControllerBuilder.getImageRequest(),
-        pipelineDraweeControllerBuilder.getLowResImageRequest(),
-        pipelineDraweeControllerBuilder.getFirstAvailableImageRequests());
-  }
-
   public void setEnabled(boolean enabled) {
     mEnabled = enabled;
     if (enabled) {
       setupListeners();
-      if (mImageOriginListener != null) {
-        mPipelineDraweeController.addImageOriginListener(mImageOriginListener);
-      }
       if (mImagePerfControllerListener2 != null) {
         mPipelineDraweeController.addControllerListener2(mImagePerfControllerListener2);
       }
@@ -83,9 +63,6 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
         mPipelineDraweeController.addRequestListener(mForwardingRequestListener);
       }
     } else {
-      if (mImageOriginListener != null) {
-        mPipelineDraweeController.removeImageOriginListener(mImageOriginListener);
-      }
       if (mImagePerfControllerListener2 != null) {
         mPipelineDraweeController.removeControllerListener2(mImagePerfControllerListener2);
       }
@@ -119,7 +96,7 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
   }
 
   @Override
-  public void notifyStatusUpdated(ImagePerfState state, @ImageLoadStatus int imageLoadStatus) {
+  public void notifyStatusUpdated(ImagePerfState state, ImageLoadStatus imageLoadStatus) {
     state.setImageLoadStatus(imageLoadStatus);
     if (!mEnabled || mImagePerfDataListeners == null || mImagePerfDataListeners.isEmpty()) {
       return;
@@ -135,7 +112,7 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
 
   @Override
   public void notifyListenersOfVisibilityStateUpdate(
-      ImagePerfState state, @VisibilityState int visibilityState) {
+      ImagePerfState state, VisibilityState visibilityState) {
     if (!mEnabled || mImagePerfDataListeners == null || mImagePerfDataListeners.isEmpty()) {
       return;
     }
@@ -158,25 +135,13 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
   private void setupListeners() {
     if (mImagePerfControllerListener2 == null) {
       mImagePerfControllerListener2 =
-          new ImagePerfControllerListener2(
-              mMonotonicClock, mImagePerfState, this, mAsyncLogging, Suppliers.BOOLEAN_FALSE);
+          new ImagePerfControllerListener2(mMonotonicClock, mImagePerfState, this, mAsyncLogging);
     }
     if (mImagePerfRequestListener == null) {
       mImagePerfRequestListener = new ImagePerfRequestListener(mMonotonicClock, mImagePerfState);
     }
-    if (mImageOriginListener == null) {
-      mImageOriginListener = new ImagePerfImageOriginListener(mImagePerfState, this);
-    }
-    if (mImageOriginRequestListener == null) {
-      mImageOriginRequestListener =
-          new ImageOriginRequestListener(mPipelineDraweeController.getId(), mImageOriginListener);
-    } else {
-      // The ID could have changed
-      mImageOriginRequestListener.init(mPipelineDraweeController.getId());
-    }
     if (mForwardingRequestListener == null) {
-      mForwardingRequestListener =
-          new ForwardingRequestListener(mImagePerfRequestListener, mImageOriginRequestListener);
+      mForwardingRequestListener = new ForwardingRequestListener(mImagePerfRequestListener);
     }
   }
 

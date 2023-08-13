@@ -55,8 +55,8 @@ public class BetterImageSpan extends ReplacementSpan {
     }
   }
 
-  private int mWidth;
-  private int mHeight;
+  protected int mWidth;
+  protected int mHeight;
   private Rect mBounds;
   private final int mAlignment;
   private final Paint.FontMetricsInt mFontMetricsInt = new Paint.FontMetricsInt();
@@ -87,7 +87,6 @@ public class BetterImageSpan extends ReplacementSpan {
     return mMargin;
   }
 
-  /** Returns the width of the image span and increases the height if font metrics are available. */
   @Override
   public int getSize(
       Paint paint,
@@ -100,33 +99,7 @@ public class BetterImageSpan extends ReplacementSpan {
       return mWidth;
     }
 
-    int offsetAbove = getOffsetAboveBaseline(fontMetrics);
-    int offsetBelow = mHeight + offsetAbove;
-
-    if (mAlignment == ALIGN_CENTER) {
-      offsetAbove -= mMargin.top;
-      offsetBelow += mMargin.bottom;
-    } else {
-      offsetAbove -= mMargin.top;
-    }
-
-    if (offsetAbove < fontMetrics.ascent) {
-      fontMetrics.ascent = offsetAbove;
-    }
-
-    if (offsetAbove < fontMetrics.top) {
-      fontMetrics.top = offsetAbove;
-    }
-
-    if (offsetBelow > fontMetrics.descent) {
-      fontMetrics.descent = offsetBelow;
-    }
-
-    if (offsetBelow > fontMetrics.bottom) {
-      fontMetrics.bottom = offsetBelow;
-    }
-
-    return mWidth;
+    return calculateLineWidthAndFontHeight(fontMetrics);
   }
 
   @Override
@@ -141,7 +114,7 @@ public class BetterImageSpan extends ReplacementSpan {
       int bottom,
       Paint paint) {
     paint.getFontMetricsInt(mFontMetricsInt);
-    int iconTop = y + getOffsetAboveBaseline(mFontMetricsInt);
+    int iconTop = getIconTop(y, mFontMetricsInt.ascent, mFontMetricsInt.descent, top, bottom);
     float iconLeft = x + mMargin.left;
     canvas.translate(iconLeft, iconTop);
     mDrawable.draw(canvas);
@@ -155,17 +128,58 @@ public class BetterImageSpan extends ReplacementSpan {
     mHeight = mBounds.height();
   }
 
-  private int getOffsetAboveBaseline(Paint.FontMetricsInt fm) {
+  protected int getOffsetAboveBaseline(final int ascent, final int descent) {
     switch (mAlignment) {
       case ALIGN_BOTTOM:
-        return fm.descent - mHeight - mMargin.bottom;
+        return descent - mHeight - mMargin.bottom;
       case ALIGN_CENTER:
-        int textHeight = (fm.descent - fm.ascent) + mMargin.top + mMargin.bottom;
+        int textHeight = (descent - ascent) + mMargin.top + mMargin.bottom;
         int offset = (textHeight - mHeight) / 2;
-        return fm.ascent + offset - mMargin.bottom;
+        return ascent + offset - mMargin.bottom;
       case ALIGN_BASELINE:
       default:
         return -mHeight - mMargin.bottom;
+    }
+  }
+
+  protected int getIconTop(
+      final int baseline, final int ascent, final int descent, final int top, final int bottom) {
+    return baseline + getOffsetAboveBaseline(mFontMetricsInt.ascent, mFontMetricsInt.descent);
+  }
+
+  /** Returns the width of the image span and increases the height if font metrics are available. */
+  protected int calculateLineWidthAndFontHeight(Paint.FontMetricsInt fontMetrics) {
+    int offsetAbove = getOffsetAboveBaseline(fontMetrics.ascent, fontMetrics.descent);
+    int offsetBelow = mHeight + offsetAbove;
+
+    if (mAlignment == ALIGN_CENTER) {
+      offsetAbove -= mMargin.top;
+      offsetBelow += mMargin.bottom;
+    } else {
+      offsetAbove -= mMargin.top;
+    }
+
+    updateFontHeight(fontMetrics, offsetAbove, offsetBelow);
+
+    return mWidth;
+  }
+
+  protected void updateFontHeight(
+      Paint.FontMetricsInt fontMetrics, final int offsetAbove, final int offsetBelow) {
+    if (offsetAbove < fontMetrics.ascent) {
+      fontMetrics.ascent = offsetAbove;
+    }
+
+    if (offsetAbove < fontMetrics.top) {
+      fontMetrics.top = offsetAbove;
+    }
+
+    if (offsetBelow > fontMetrics.descent) {
+      fontMetrics.descent = offsetBelow;
+    }
+
+    if (offsetBelow > fontMetrics.bottom) {
+      fontMetrics.bottom = offsetBelow;
     }
   }
 }

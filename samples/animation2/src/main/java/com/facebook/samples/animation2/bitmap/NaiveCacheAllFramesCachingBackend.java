@@ -9,10 +9,12 @@ package com.facebook.samples.animation2.bitmap;
 
 import android.graphics.Bitmap;
 import android.util.SparseArray;
+import androidx.annotation.NonNull;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.imageutils.BitmapUtil;
+import java.util.Map;
 import javax.annotation.Nullable;
 
 /**
@@ -91,5 +93,16 @@ public class NaiveCacheAllFramesCachingBackend implements BitmapFrameCache {
   @Override
   public void setFrameCacheListener(FrameCacheListener frameCacheListener) {
     mFrameCacheListener = frameCacheListener;
+  }
+
+  @Override
+  public boolean onAnimationPrepared(
+      @NonNull Map<Integer, ? extends CloseableReference<Bitmap>> frameBitmaps) {
+    return true;
+  }
+
+  @Override
+  public boolean isAnimationReady() {
+    return false;
   }
 }

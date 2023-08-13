@@ -7,6 +7,10 @@
 
 package com.facebook.drawee.backends.pipeline.info;
 
+import com.facebook.fresco.ui.common.ImageLoadStatus;
+import com.facebook.fresco.ui.common.ImagePerfData;
+import com.facebook.fresco.ui.common.ImagePerfDataListener;
+import com.facebook.fresco.ui.common.VisibilityState;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.Collection;
 
@@ -21,7 +25,7 @@ public class ForwardingImagePerfDataListener implements ImagePerfDataListener {
 
   @Override
   public void onImageLoadStatusUpdated(
-      ImagePerfData imagePerfData, @ImageLoadStatus int imageLoadStatus) {
+      ImagePerfData imagePerfData, ImageLoadStatus imageLoadStatus) {
     for (ImagePerfDataListener listener : mListeners) {
       listener.onImageLoadStatusUpdated(imagePerfData, imageLoadStatus);
     }
@@ -29,7 +33,7 @@ public class ForwardingImagePerfDataListener implements ImagePerfDataListener {
 
   @Override
   public void onImageVisibilityUpdated(
-      ImagePerfData imagePerfData, @VisibilityState int visibilityState) {
+      ImagePerfData imagePerfData, VisibilityState visibilityState) {
     for (ImagePerfDataListener listener : mListeners) {
       listener.onImageVisibilityUpdated(imagePerfData, visibilityState);
     }

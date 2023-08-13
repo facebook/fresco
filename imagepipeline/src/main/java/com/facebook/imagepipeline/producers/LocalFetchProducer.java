@@ -11,6 +11,7 @@ import com.facebook.common.internal.Closeables;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
@@ -38,7 +39,7 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
     final ProducerListener2 listener = producerContext.getProducerListener();
     final ImageRequest imageRequest = producerContext.getImageRequest();
     producerContext.putOriginExtra("local", "fetch");
-    final StatefulProducerRunnable cancellableProducerRunnable =
+    final StatefulProducerRunnable<EncodedImage> cancellableProducerRunnable =
         new StatefulProducerRunnable<EncodedImage>(
             consumer, listener, producerContext, getProducerName()) {
 
@@ -53,12 +54,12 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
             encodedImage.parseMetaData();
             listener.onUltimateProducerReached(producerContext, getProducerName(), true);
             producerContext.putOriginExtra("local");
+            producerContext.putExtra(HasExtraData.KEY_COLOR_SPACE, encodedImage.getColorSpace());
             return encodedImage;
           }
 
           @Override
-          // NULLSAFE_FIXME[Inconsistent Subclass Parameter Annotation]
-          protected void disposeResult(EncodedImage result) {
+          protected void disposeResult(@Nullable EncodedImage result) {
             EncodedImage.closeSafely(result);
           }
         };
