@@ -15,7 +15,7 @@ data class RoundingOptions(
     val cornerRadius: Float,
     val cornerRadii: FloatArray?,
     val isAntiAliased: Boolean,
-    val isForceRoundAtDecode: Boolean
+    val isForceRoundAtDecode: Boolean,
 ) {
 
   fun hasRoundedCorners(): Boolean = cornerRadius != CORNER_RADIUS_UNSET || cornerRadii != null
@@ -54,10 +54,12 @@ data class RoundingOptions(
     return result
   }
 
+  @Suppress("BooleanLiteralArgument")
   companion object {
-    const val CORNER_RADIUS_UNSET = 0f
-    val AS_CIRCLE = RoundingOptions(true, CORNER_RADIUS_UNSET, null, false, false)
-    val AS_CIRCLE_ANTI_ALIASING = RoundingOptions(true, CORNER_RADIUS_UNSET, null, true, false)
+    const val CORNER_RADIUS_UNSET: Float = 0f
+    val AS_CIRCLE: RoundingOptions = RoundingOptions(true, CORNER_RADIUS_UNSET, null, false, false)
+    val AS_CIRCLE_ANTI_ALIASING: RoundingOptions =
+        RoundingOptions(true, CORNER_RADIUS_UNSET, null, true, false)
 
     @JvmStatic fun asCircle(): RoundingOptions = AS_CIRCLE
 
@@ -66,14 +68,12 @@ data class RoundingOptions(
         if (antiAliasing) AS_CIRCLE_ANTI_ALIASING else AS_CIRCLE
 
     @JvmStatic
-    fun asCircle(antiAliasing: Boolean, forceRoundAtDecode: Boolean): RoundingOptions {
-      return RoundingOptions(true, CORNER_RADIUS_UNSET, null, antiAliasing, forceRoundAtDecode)
-    }
+    fun asCircle(antiAliasing: Boolean, forceRoundAtDecode: Boolean): RoundingOptions =
+        RoundingOptions(true, CORNER_RADIUS_UNSET, null, antiAliasing, forceRoundAtDecode)
 
     @JvmStatic
-    fun forCornerRadiusPx(cornerRadiusPx: Float): RoundingOptions {
-      return RoundingOptions(false, cornerRadiusPx, null, false, false)
-    }
+    fun forCornerRadiusPx(cornerRadiusPx: Float): RoundingOptions =
+        RoundingOptions(false, cornerRadiusPx, null, false, false)
 
     @JvmStatic
     fun forCornerRadii(
@@ -81,23 +81,25 @@ data class RoundingOptions(
         topRight: Float,
         bottomRight: Float,
         bottomLeft: Float
-    ): RoundingOptions {
-      val radii = FloatArray(8)
-      radii[0] = topLeft
-      radii[1] = topLeft
-      radii[2] = topRight
-      radii[3] = topRight
-      radii[4] = bottomRight
-      radii[5] = bottomRight
-      radii[6] = bottomLeft
-      radii[7] = bottomLeft
-      return RoundingOptions(false, CORNER_RADIUS_UNSET, radii, false, false)
-    }
+    ): RoundingOptions =
+        RoundingOptions(
+            false,
+            CORNER_RADIUS_UNSET,
+            floatArrayOf(
+                topLeft,
+                topLeft,
+                topRight,
+                topRight,
+                bottomRight,
+                bottomRight,
+                bottomLeft,
+                bottomLeft),
+            false,
+            false)
 
     @JvmStatic
     @JvmOverloads
-    fun forCornerRadii(cornerRadii: FloatArray, antiAliasing: Boolean = false): RoundingOptions {
-      return RoundingOptions(false, CORNER_RADIUS_UNSET, cornerRadii, antiAliasing, false)
-    }
+    fun forCornerRadii(cornerRadii: FloatArray, antiAliasing: Boolean = false): RoundingOptions =
+        RoundingOptions(false, CORNER_RADIUS_UNSET, cornerRadii, antiAliasing, false)
   }
 }
