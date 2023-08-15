@@ -33,7 +33,7 @@ import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationSt
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer;
 import com.facebook.fresco.animation.bitmap.preparation.DefaultBitmapFramePreparer;
 import com.facebook.fresco.animation.bitmap.preparation.FixedNumberBitmapFramePreparationStrategy;
-import com.facebook.fresco.animation.bitmap.preparation.OnDemandAnimationStrategy;
+import com.facebook.fresco.animation.bitmap.preparation.FrameLoaderStrategy;
 import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFrameTaskFactory;
 import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.FrameLoaderFactory;
 import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendAnimationInformation;
@@ -196,7 +196,7 @@ public class DefaultBitmapAnimationDrawableFactory
                 mDownscaleFrameToDrawableDimensions.get());
       } else {
         bitmapFramePreparationStrategy =
-            new OnDemandAnimationStrategy(
+            new FrameLoaderStrategy(
                 animationInfo,
                 new FrameLoaderFactory(
                     mPlatformBitmapFactory, bitmapFrameRenderer, bitmapFrameCache),

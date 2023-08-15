@@ -14,14 +14,17 @@ import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFrameTaskF
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
 
 class FrameLoaderFactory(
-    platformBitmapFactory: PlatformBitmapFactory,
-    bitmapFrameRenderer: BitmapFrameRenderer,
+    private val platformBitmapFactory: PlatformBitmapFactory,
+    private val bitmapFrameRenderer: BitmapFrameRenderer,
     private val bitmapCache: BitmapFrameCache,
 ) {
   private val loadFrameTaskFactory by lazy {
     LoadFrameTaskFactory(platformBitmapFactory, bitmapFrameRenderer)
   }
 
-  fun cacheLoader(animationInformation: AnimationInformation): FrameLoader =
+  fun createCacheLoader(animationInformation: AnimationInformation): FrameLoader =
       CacheFrameLoader(loadFrameTaskFactory, bitmapCache, animationInformation)
+
+  fun createBufferLoader(animationInformation: AnimationInformation): FrameLoader =
+      BufferFrameLoader(platformBitmapFactory, bitmapFrameRenderer, animationInformation)
 }

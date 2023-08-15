@@ -32,6 +32,8 @@ interface FrameLoader {
    */
   @UiThread fun prepareFrames(width: Int, height: Int, onAnimationLoaded: () -> Unit)
 
+  fun onStop() = Unit
+
   /** Release resources */
   fun clear()
 }
