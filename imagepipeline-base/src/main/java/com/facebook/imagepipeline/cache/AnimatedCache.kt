@@ -56,7 +56,7 @@ class AnimatedCache private constructor(memoryMB: Int) {
   }
 
   fun removeAnimation(key: String) {
-    lruCache[key]?.close()
+    lruCache.removeAll { cacheKey -> key == cacheKey }
   }
 
   companion object {

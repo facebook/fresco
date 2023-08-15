@@ -61,7 +61,7 @@ class FrescoFpsCache(
   }
 
   private fun releaseCache() {
-    animationFrames?.close()
+    animatedDrawableCache.removeAnimation(cacheKey)
     animationFrames = null
   }
 
@@ -87,13 +87,8 @@ class FrescoFpsCache(
       return true
     }
 
-    val cacheRef = compressAnimation(frameBitmaps)
-    if (cacheRef != null) {
-      releaseCache()
-      animationFrames = cacheRef
-    }
-
-    return cacheRef != null
+    animationFrames = compressAnimation(frameBitmaps)
+    return animationFrames != null
   }
 
   private fun compressAnimation(
@@ -144,6 +139,6 @@ class FrescoFpsCache(
   }
 
   companion object {
-    private const val FPS_COMPRESSION_STEP = 4
+    private const val FPS_COMPRESSION_STEP = 1
   }
 }
