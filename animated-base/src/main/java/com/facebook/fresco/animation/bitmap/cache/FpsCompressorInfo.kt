@@ -10,7 +10,6 @@ package com.facebook.fresco.animation.bitmap.cache
 import android.graphics.Bitmap
 import com.facebook.common.references.CloseableReference
 import com.facebook.imagepipeline.animated.base.AnimatedImage
-import java.util.concurrent.TimeUnit
 
 class FpsCompressorInfo(private val maxFpsLimit: Int) {
 
@@ -35,18 +34,17 @@ class FpsCompressorInfo(private val maxFpsLimit: Int) {
   /**
    * Create a Map<AssetBitmapIndex, CompressBitmapIndex> calculated based on the maximum FPS allowed
    *
-   * @param duration duration of the animation in ms
+   * @param durationMs duration of the animation in ms
    * @param frameCount Number of frames extracted from the animation asset
    * @param targetFps
    * @return Map of equivalences between the original frame number and compress frame number
    */
   private fun calculateReducedIndexes(
-      duration: Int,
+      durationMs: Int,
       frameCount: Int,
       targetFps: Int
   ): Map<Int, Int> {
-    val maxAllowedFrames =
-        targetFps.times(TimeUnit.MILLISECONDS.toSeconds(duration.toLong())).coerceAtLeast(0)
+    val maxAllowedFrames = targetFps.times(durationMs.millisecondsToSeconds()).coerceAtLeast(0f)
 
     return if (maxAllowedFrames >= frameCount) {
       (0 until frameCount).associateWith { it }
@@ -113,4 +111,6 @@ class FpsCompressorInfo(private val maxFpsLimit: Int) {
       val realToReducedIndex: Map<Int, Int>,
       val removedFrames: List<CloseableReference<Bitmap>>
   )
+
+  fun Int.millisecondsToSeconds(): Float = this.div(1000f)
 }
