@@ -125,9 +125,9 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var cancelDecodeOnCacheMiss = false
     @JvmField var prefetchShortcutEnabled = false
 
-    private fun asBuilder(block: () -> Unit): ImagePipelineConfig.Builder {
+    private fun asBuilder(block: () -> Unit): Builder {
       block()
-      return configBuilder
+      return this
     }
 
     fun setHandOffOnUiThreadOnly(handOffOnUiThreadOnly: Boolean) = asBuilder {
