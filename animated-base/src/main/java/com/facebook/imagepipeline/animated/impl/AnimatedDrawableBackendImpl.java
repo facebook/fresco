@@ -306,7 +306,7 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     }
 
     // Impress the frame in the bitmap
-    Bitmap frameBitmap = Bitmap.createBitmap(frameWidth, frameHeight, Bitmap.Config.ARGB_8888);
+    Bitmap frameBitmap = prepareTempBitmapForThisSize(frameWidth, frameHeight);
     frame.renderFrame(frameWidth, frameHeight, frameBitmap);
 
     Rect renderSrcRect = new Rect(0, 0, frameWidth, frameHeight);
@@ -394,7 +394,7 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     int frameWidth = frame.getWidth();
     int frameHeight = frame.getHeight();
 
-    Bitmap bitmap = Bitmap.createBitmap(frameWidth, frameHeight, Bitmap.Config.ARGB_8888);
+    Bitmap bitmap = prepareTempBitmapForThisSize(frameWidth, frameHeight);
     frame.renderFrame(frameWidth, frameHeight, bitmap);
 
     int resizedWidth = (int) (frameWidth * scale);

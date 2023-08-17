@@ -12,7 +12,11 @@ class CircularList(val size: Int) {
   fun isTargetAhead(from: Int, target: Int, lenght: Int): Boolean =
       (0 until lenght).any { getPosition(from + it) == target }
 
-  fun getPosition(target: Int): Int = target % size
+  fun getPosition(target: Int): Int {
+    val circularPosition = target % size
+
+    return circularPosition.takeIf { it >= 0 } ?: (circularPosition + size)
+  }
 
   fun sublist(from: Int, length: Int): List<Int> = (0 until length).map { getPosition(from + it) }
 }
