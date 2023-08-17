@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.producers;
 
+import android.annotation.SuppressLint;
 import com.facebook.common.logging.FLog;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
@@ -75,6 +76,7 @@ public abstract class BaseConsumer<T> implements Consumer<T> {
   }
 
   /** Creates a simple status value which only identifies whether this is the last result. */
+  @SuppressLint("WrongConstant")
   public static @Status int simpleStatusForIsLast(boolean isLast) {
     return isLast ? IS_LAST : NO_FLAGS;
   }
