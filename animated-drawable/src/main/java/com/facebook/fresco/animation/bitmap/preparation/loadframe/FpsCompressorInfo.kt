@@ -5,11 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.animation.bitmap.cache
+package com.facebook.fresco.animation.bitmap.preparation.loadframe
 
 import android.graphics.Bitmap
 import com.facebook.common.references.CloseableReference
-import com.facebook.imagepipeline.animated.base.AnimatedImage
 
 class FpsCompressorInfo(private val maxFpsLimit: Int) {
 
@@ -20,14 +19,11 @@ class FpsCompressorInfo(private val maxFpsLimit: Int) {
    *   animation couldn't be allocated
    */
   fun compress(
-      animatedImage: AnimatedImage,
+      durationMs: Int,
       frameBitmaps: Map<Int, CloseableReference<Bitmap>>,
       targetFps: Int
   ): CompressionResult {
-    val sanitiseFps = targetFps.coerceAtLeast(1).coerceAtMost(maxFpsLimit)
-
-    val realToCompressIndex =
-        calculateReducedIndexes(animatedImage.duration, frameBitmaps.size, sanitiseFps)
+    val realToCompressIndex = calculateReducedIndexes(durationMs, frameBitmaps.size, targetFps)
     return compressAnimation(frameBitmaps, realToCompressIndex)
   }
 
@@ -39,18 +35,18 @@ class FpsCompressorInfo(private val maxFpsLimit: Int) {
    * @param targetFps
    * @return Map of equivalences between the original frame number and compress frame number
    */
-  private fun calculateReducedIndexes(
-      durationMs: Int,
-      frameCount: Int,
-      targetFps: Int
-  ): Map<Int, Int> {
-    val maxAllowedFrames = targetFps.times(durationMs.millisecondsToSeconds()).coerceAtLeast(0f)
+  fun calculateReducedIndexes(durationMs: Int, frameCount: Int, targetFps: Int): Map<Int, Int> {
+    val sanitiseFps = targetFps.coerceAtLeast(1).coerceAtMost(maxFpsLimit)
+    val maxAllowedFrames = sanitiseFps.times(durationMs.millisecondsToSeconds()).coerceAtLeast(0f)
 
-    return if (maxAllowedFrames >= frameCount) {
-      (0 until frameCount).associateWith { it }
-    } else {
-      val offset = maxAllowedFrames.div(frameCount.toFloat())
-      (0 until frameCount).associateWith { it.times(offset).toInt() }
+    val skipRatio = frameCount.div(maxAllowedFrames.coerceAtMost(frameCount.toFloat()))
+    var prevFrame = 0
+    return (0 until frameCount).associateWith {
+      if ((it % skipRatio).toInt() == 0) {
+        prevFrame = it
+      }
+
+      prevFrame
     }
   }
 
