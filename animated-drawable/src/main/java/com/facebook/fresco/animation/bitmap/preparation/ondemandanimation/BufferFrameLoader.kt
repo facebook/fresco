@@ -17,6 +17,7 @@ import com.facebook.common.references.CloseableReference
 import com.facebook.fresco.animation.backend.AnimationInformation
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer
 import com.facebook.fresco.animation.bitmap.preparation.loadframe.AnimationLoaderExecutor
+import com.facebook.fresco.animation.bitmap.preparation.loadframe.FpsCompressorInfo
 import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFramePriorityTask
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
 import java.util.ArrayDeque
@@ -31,10 +32,11 @@ import java.util.concurrent.atomic.AtomicBoolean
 class BufferFrameLoader(
     private val platformBitmapFactory: PlatformBitmapFactory,
     private val bitmapFrameRenderer: BitmapFrameRenderer,
+    fpsCompressor: FpsCompressorInfo,
     override val animationInformation: AnimationInformation
 ) : FrameLoader {
 
-  private val bufferSize = animationInformation.fps()
+  private val bufferSize = animationInformation.fps() * BUFFER_SECOND_SIZE
   private val bufferFramesHash = ConcurrentHashMap<Int, CloseableReference<Bitmap>>()
   private var bufferFramesSequence: List<Int> = emptyList()
 
@@ -42,24 +44,34 @@ class BufferFrameLoader(
 
   private val frameSequence = CircularList(animationInformation.frameCount)
   private var lastRenderedFrameNumber: Int = -1
+  private val compressionFrameMap: Map<Int, Int> =
+      fpsCompressor.calculateReducedIndexes(
+          durationMs =
+              animationInformation.loopDurationMs.times(
+                  animationInformation.loopCount.coerceAtLeast(1)),
+          frameCount = animationInformation.frameCount,
+          targetFps = animationInformation.fps())
+  private val renderableFrameIndexes = compressionFrameMap.values.toSet()
 
   @UiThread
   override fun getFrame(frameNumber: Int, width: Int, height: Int): CloseableReference<Bitmap>? {
-    lastRenderedFrameNumber = frameNumber
+    val cachedFrameIndex =
+        compressionFrameMap[frameNumber] ?: return nearestFrame(frameNumber)?.bitmap
 
-    val cachedFrame = bufferFramesHash[frameNumber]
+    lastRenderedFrameNumber = cachedFrameIndex
+
+    val cachedFrame = bufferFramesHash[cachedFrameIndex]
     if (cachedFrame?.isValid == true) {
 
       if (frameSequence.isTargetAhead(
-          from = getThreshold(), target = frameNumber, lenght = bufferSize)) {
+          from = getThreshold(), target = cachedFrameIndex, lenght = bufferSize)) {
         loadNextFrameIfNeeded(width, height)
       }
-
       return cachedFrame
     }
 
     loadNextFrameIfNeeded(width, height)
-    return nearestFrame(frameNumber)?.bitmap
+    return nearestFrame(cachedFrameIndex)?.bitmap
   }
 
   private fun getThreshold() =
@@ -119,7 +131,10 @@ class BufferFrameLoader(
       height: Int,
       count: Int = 0
   ): Boolean {
-    val nextWindow = frameSequence.sublist(targetFrame, bufferSize)
+    val nextWindow =
+        frameSequence.sublist(targetFrame, bufferSize).filter {
+          renderableFrameIndexes.contains(it)
+        }
     val nextWindowIndexes = nextWindow.toSet()
     val oldFramesNumbers = ArrayDeque(bufferFramesHash.keys.minus(nextWindowIndexes))
 
@@ -202,8 +217,9 @@ class BufferFrameLoader(
   }
 
   private fun Bitmap.copy(src: Bitmap) {
-    clear()
-    Canvas(this).drawBitmap(src, 0f, 0f, null)
+    val canvas = Canvas(this)
+    canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+    canvas.drawBitmap(src, 0f, 0f, null)
   }
 
   private fun AnimationInformation.fps(): Int =
@@ -216,5 +232,11 @@ class BufferFrameLoader(
      * render frame
      */
     private const val THRESHOLD_PERCENTAGE = 0.5f
+
+    /**
+     * Used to calculate how many bitmaps are needed to render this animation. The seconds are
+     * multiplied with the FPS of the animation to get required of bitmaps.
+     */
+    private const val BUFFER_SECOND_SIZE = 2
   }
 }

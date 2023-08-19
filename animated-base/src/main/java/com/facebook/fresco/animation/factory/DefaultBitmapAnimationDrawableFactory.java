@@ -199,7 +199,10 @@ public class DefaultBitmapAnimationDrawableFactory
             new FrameLoaderStrategy(
                 animationInfo,
                 new FrameLoaderFactory(
-                    mPlatformBitmapFactory, bitmapFrameRenderer, bitmapFrameCache),
+                    mPlatformBitmapFactory,
+                    bitmapFrameRenderer,
+                    bitmapFrameCache,
+                    mAnimationFpsLimit.get()),
                 mDownscaleFrameToDrawableDimensions.get());
       }
     }
