@@ -21,10 +21,6 @@ data class RoundingOptions(
   fun hasRoundedCorners(): Boolean = cornerRadius != CORNER_RADIUS_UNSET || cornerRadii != null
 
   override fun equals(other: Any?): Boolean {
-    if (ImageOptionsConfig.doNotUseOverriddenDataClassMembers) {
-      return super.equals(other)
-    }
-
     if (this === other) {
       return true
     }
@@ -42,10 +38,6 @@ data class RoundingOptions(
   }
 
   override fun hashCode(): Int {
-    if (ImageOptionsConfig.doNotUseOverriddenDataClassMembers) {
-      return super.hashCode()
-    }
-
     var result = isCircular.hashCode()
     result = 31 * result + cornerRadius.hashCode()
     result = 31 * result + Arrays.hashCode(cornerRadii)
