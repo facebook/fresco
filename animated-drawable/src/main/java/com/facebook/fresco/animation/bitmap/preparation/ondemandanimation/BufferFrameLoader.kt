@@ -61,7 +61,7 @@ class BufferFrameLoader(
     lastRenderedFrameNumber = cachedFrameIndex
 
     val cachedFrame = bufferFramesHash[cachedFrameIndex]
-    if (cachedFrame?.isValid == true) {
+    if (cachedFrame?.isValidBitmap() == true) {
 
       if (frameSequence.isTargetAhead(
           from = getThreshold(), target = cachedFrameIndex, lenght = bufferSize)) {
@@ -168,12 +168,13 @@ class BufferFrameLoader(
       height: Int
   ): CloseableReference<Bitmap> {
     nearestFrame(targetFrame)?.let { closerFrame ->
+      val nearestBitmap = closerFrame.bitmap.get()
       val copyBitmap =
-          if (oldBitmapRef?.isValid == true) {
-            oldBitmapRef.get().copy(closerFrame.bitmap.get())
+          if (oldBitmapRef?.isValidBitmap() == true) {
+            oldBitmapRef.get().copy(nearestBitmap)
             oldBitmapRef
           } else {
-            platformBitmapFactory.createBitmap(closerFrame.bitmap.get())
+            platformBitmapFactory.createBitmap(nearestBitmap)
           }
 
       updateBitmap(copyBitmap.get(), closerFrame.frameNumber, targetFrame)
@@ -189,7 +190,7 @@ class BufferFrameLoader(
     (0..frameSequence.size).forEach {
       val closestFrame = frameSequence.getPosition(targetFrame - it)
       val frame = bufferFramesHash[closestFrame] ?: return@forEach
-      if (frame.isValid) {
+      if (frame.isValidBitmap()) {
         return AnimationBitmapFrame(closestFrame, frame)
       }
     }
@@ -224,6 +225,8 @@ class BufferFrameLoader(
 
   private fun AnimationInformation.fps(): Int =
       TimeUnit.SECONDS.toMillis(1).div(loopDurationMs.div(frameCount)).coerceAtLeast(1).toInt()
+
+  private fun CloseableReference<Bitmap>.isValidBitmap() = isValid && !get().isRecycled
 
   companion object {
 
