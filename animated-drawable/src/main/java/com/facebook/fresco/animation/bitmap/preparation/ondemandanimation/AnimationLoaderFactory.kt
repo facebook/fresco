@@ -10,18 +10,27 @@ package com.facebook.fresco.animation.bitmap.preparation.ondemandanimation
 import com.facebook.fresco.animation.backend.AnimationInformation
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer
+import com.facebook.fresco.animation.bitmap.preparation.loadframe.FpsCompressorInfo
 import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFrameTaskFactory
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
 
 class FrameLoaderFactory(
-    platformBitmapFactory: PlatformBitmapFactory,
-    bitmapFrameRenderer: BitmapFrameRenderer,
+    private val platformBitmapFactory: PlatformBitmapFactory,
+    private val bitmapFrameRenderer: BitmapFrameRenderer,
     private val bitmapCache: BitmapFrameCache,
+    private val maxFpsRender: Int
 ) {
   private val loadFrameTaskFactory by lazy {
     LoadFrameTaskFactory(platformBitmapFactory, bitmapFrameRenderer)
   }
 
-  fun cacheLoader(animationInformation: AnimationInformation): FrameLoader =
+  fun createCacheLoader(animationInformation: AnimationInformation): FrameLoader =
       CacheFrameLoader(loadFrameTaskFactory, bitmapCache, animationInformation)
+
+  fun createBufferLoader(animationInformation: AnimationInformation): FrameLoader =
+      BufferFrameLoader(
+          platformBitmapFactory,
+          bitmapFrameRenderer,
+          FpsCompressorInfo(maxFpsRender),
+          animationInformation)
 }

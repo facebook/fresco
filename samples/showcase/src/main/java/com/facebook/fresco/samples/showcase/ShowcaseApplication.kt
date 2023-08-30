@@ -80,14 +80,15 @@ class ShowcaseApplication : Application() {
             .setRequestListener2s(requestListener2s)
             .setProgressiveJpegConfig(SimpleProgressiveJpegConfig())
             .setImageDecoderConfig(CustomImageFormatConfigurator.createImageDecoderConfig(this))
-            .experiment()
-            .setBitmapPrepareToDraw(true, 0, Integer.MAX_VALUE, true)
 
     if (shouldEnableFlipper()) {
       imagePipelineConfigBuilder.setCacheKeyFactory(FlipperCacheKeyFactory(sFlipperImageTracker))
     }
 
-    imagePipelineConfigBuilder.experiment().setDownsampleIfLargeBitmap(true)
+    imagePipelineConfigBuilder
+        .experiment()
+        .setBitmapPrepareToDraw(true, 0, Integer.MAX_VALUE, true)
+        .setDownsampleIfLargeBitmap(true)
 
     val imagePipelineConfig = imagePipelineConfigBuilder.build()
     ImagePipelineConfig.defaultImageRequestConfig.isProgressiveRenderingEnabled = true

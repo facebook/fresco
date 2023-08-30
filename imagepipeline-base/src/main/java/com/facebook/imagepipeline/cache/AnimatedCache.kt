@@ -56,7 +56,7 @@ class AnimatedCache private constructor(memoryMB: Int) {
   }
 
   fun removeAnimation(key: String) {
-    lruCache[key]?.close()
+    lruCache.removeAll { cacheKey -> key == cacheKey }
   }
 
   companion object {
@@ -83,7 +83,7 @@ class AnimationFrames(
 ) : Closeable {
   private val concurrentFrames = ConcurrentHashMap(bitmapsByFrame)
   val frames: Map<Int, CloseableReference<Bitmap>>
-    get() = concurrentFrames.filter { (_, frame) -> frame.isValid }
+    get() = concurrentFrames.filter { (_, frame) -> frame.isValidBitmap() }
 
   /** Calculate the size of animation */
   val sizeBytes: Int =
@@ -108,7 +108,7 @@ class AnimationFrames(
           concurrentFrames[reducedIndex]
         }
 
-    return if (frame?.isValid == true) frame else null
+    return if (frame?.isValidBitmap() == true) frame else null
   }
 
   /** Release the stored bitmaps */
@@ -116,4 +116,6 @@ class AnimationFrames(
     concurrentFrames.values.forEach { it.close() }
     concurrentFrames.clear()
   }
+
+  private fun CloseableReference<Bitmap>.isValidBitmap() = isValid && !get().isRecycled
 }

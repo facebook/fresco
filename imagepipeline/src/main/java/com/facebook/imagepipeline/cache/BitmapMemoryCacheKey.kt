@@ -49,10 +49,6 @@ data class BitmapMemoryCacheKey(
   override fun isResourceIdForDebugging(): Boolean = false
 
   override fun equals(other: Any?): Boolean {
-    if (doNotUseOverriddenDataClassMembers) {
-      return super.equals(other)
-    }
-
     if (this === other) {
       return true
     }
@@ -68,9 +64,5 @@ data class BitmapMemoryCacheKey(
         imageDecodeOptions == otherKey.imageDecodeOptions &&
         postprocessorCacheKey == otherKey.postprocessorCacheKey &&
         postprocessorName == otherKey.postprocessorName
-  }
-
-  companion object {
-    var doNotUseOverriddenDataClassMembers: Boolean = false
   }
 }

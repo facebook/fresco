@@ -18,9 +18,6 @@ data class DimensionsInfo(
     val scaleType: String
 ) {
   override fun equals(other: Any?): Boolean {
-    if (doNotUseOverriddenDataClassMembers) {
-      return super.equals(other)
-    }
 
     if (this === other) {
       return true
@@ -41,10 +38,6 @@ data class DimensionsInfo(
   }
 
   override fun hashCode(): Int {
-    if (doNotUseOverriddenDataClassMembers) {
-      return super.hashCode()
-    }
-
     var result = viewportWidth
     result = 31 * result + viewportHeight
     result = 31 * result + encodedImageWidth
@@ -53,9 +46,5 @@ data class DimensionsInfo(
     result = 31 * result + decodedImageHeight
     result = 31 * result + scaleType.hashCode()
     return result
-  }
-
-  companion object {
-    var doNotUseOverriddenDataClassMembers: Boolean = false
   }
 }

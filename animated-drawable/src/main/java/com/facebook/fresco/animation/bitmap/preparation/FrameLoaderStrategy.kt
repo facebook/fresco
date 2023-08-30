@@ -11,16 +11,11 @@ import android.graphics.Bitmap
 import androidx.annotation.UiThread
 import com.facebook.common.references.CloseableReference
 import com.facebook.fresco.animation.backend.AnimationInformation
-import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.AnimationRenderManager
 import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.FrameLoader
 import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.FrameLoaderFactory
 
-/**
- * Balanced strategy consist on retrieving the animation frames balancing between RAM and CPU.
- * - RAM: Bitmap cache allocates the bitmaps in memory
- * - CPU: Background threads load the next required bitmap on demand. O(1) Memory
- */
-class OnDemandAnimationStrategy(
+/** Use a [FrameLoader] strategy to render the animaion */
+class FrameLoaderStrategy(
     private val animationInformation: AnimationInformation,
     private val frameLoaderFactory: FrameLoaderFactory,
     private val downscaleFrameToDrawableDimensions: Boolean,
@@ -31,7 +26,7 @@ class OnDemandAnimationStrategy(
   private var frameLoader: FrameLoader? = null
     get() {
       if (field == null) {
-        field = AnimationRenderManager.allocate(frameLoaderFactory, animationInformation)
+        field = frameLoaderFactory.createBufferLoader(animationInformation)
       }
       return field
     }
@@ -61,7 +56,9 @@ class OnDemandAnimationStrategy(
     return frameLoader?.getFrame(frameNumber, frameSize.width, frameSize.height)
   }
 
-  override fun onStop(): Unit = clear()
+  override fun onStop() {
+    frameLoader?.onStop()
+  }
 
   override fun clearFrames(): Unit = clear()
 

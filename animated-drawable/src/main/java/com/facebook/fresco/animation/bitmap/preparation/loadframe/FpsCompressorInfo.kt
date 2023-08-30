@@ -5,12 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.animation.bitmap.cache
+package com.facebook.fresco.animation.bitmap.preparation.loadframe
 
 import android.graphics.Bitmap
 import com.facebook.common.references.CloseableReference
-import com.facebook.imagepipeline.animated.base.AnimatedImage
-import java.util.concurrent.TimeUnit
 
 class FpsCompressorInfo(private val maxFpsLimit: Int) {
 
@@ -21,38 +19,34 @@ class FpsCompressorInfo(private val maxFpsLimit: Int) {
    *   animation couldn't be allocated
    */
   fun compress(
-      animatedImage: AnimatedImage,
+      durationMs: Int,
       frameBitmaps: Map<Int, CloseableReference<Bitmap>>,
       targetFps: Int
   ): CompressionResult {
-    val sanitiseFps = targetFps.coerceAtLeast(1).coerceAtMost(maxFpsLimit)
-
-    val realToCompressIndex =
-        calculateReducedIndexes(animatedImage.duration, frameBitmaps.size, sanitiseFps)
+    val realToCompressIndex = calculateReducedIndexes(durationMs, frameBitmaps.size, targetFps)
     return compressAnimation(frameBitmaps, realToCompressIndex)
   }
 
   /**
    * Create a Map<AssetBitmapIndex, CompressBitmapIndex> calculated based on the maximum FPS allowed
    *
-   * @param duration duration of the animation in ms
+   * @param durationMs duration of the animation in ms
    * @param frameCount Number of frames extracted from the animation asset
    * @param targetFps
    * @return Map of equivalences between the original frame number and compress frame number
    */
-  private fun calculateReducedIndexes(
-      duration: Int,
-      frameCount: Int,
-      targetFps: Int
-  ): Map<Int, Int> {
-    val maxAllowedFrames =
-        targetFps.times(TimeUnit.MILLISECONDS.toSeconds(duration.toLong())).coerceAtLeast(0)
+  fun calculateReducedIndexes(durationMs: Int, frameCount: Int, targetFps: Int): Map<Int, Int> {
+    val sanitiseFps = targetFps.coerceAtLeast(1).coerceAtMost(maxFpsLimit)
+    val maxAllowedFrames = sanitiseFps.times(durationMs.millisecondsToSeconds()).coerceAtLeast(0f)
 
-    return if (maxAllowedFrames >= frameCount) {
-      (0 until frameCount).associateWith { it }
-    } else {
-      val offset = maxAllowedFrames.div(frameCount.toFloat())
-      (0 until frameCount).associateWith { it.times(offset).toInt() }
+    val skipRatio = frameCount.div(maxAllowedFrames.coerceAtMost(frameCount.toFloat()))
+    var prevFrame = 0
+    return (0 until frameCount).associateWith {
+      if ((it % skipRatio).toInt() == 0) {
+        prevFrame = it
+      }
+
+      prevFrame
     }
   }
 
@@ -113,4 +107,6 @@ class FpsCompressorInfo(private val maxFpsLimit: Int) {
       val realToReducedIndex: Map<Int, Int>,
       val removedFrames: List<CloseableReference<Bitmap>>
   )
+
+  fun Int.millisecondsToSeconds(): Float = this.div(1000f)
 }

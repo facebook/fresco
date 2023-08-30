@@ -12,6 +12,7 @@ import com.facebook.common.references.CloseableReference
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend.FrameType
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache.FrameCacheListener
+import com.facebook.fresco.animation.bitmap.preparation.loadframe.FpsCompressorInfo
 import com.facebook.imagepipeline.animated.base.AnimatedImage
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult
 import com.facebook.imagepipeline.cache.AnimatedCache
@@ -61,7 +62,7 @@ class FrescoFpsCache(
   }
 
   private fun releaseCache() {
-    animationFrames?.close()
+    animatedDrawableCache.removeAnimation(cacheKey)
     animationFrames = null
   }
 
@@ -87,13 +88,8 @@ class FrescoFpsCache(
       return true
     }
 
-    val cacheRef = compressAnimation(frameBitmaps)
-    if (cacheRef != null) {
-      releaseCache()
-      animationFrames = cacheRef
-    }
-
-    return cacheRef != null
+    animationFrames = compressAnimation(frameBitmaps)
+    return animationFrames != null
   }
 
   private fun compressAnimation(
@@ -104,7 +100,7 @@ class FrescoFpsCache(
 
     while (animationFrames == null && fps > 1) {
       val compressionResult =
-          fpsCompressorInfo.compress(animatedImageResult.image, frameBitmaps, fps)
+          fpsCompressorInfo.compress(animatedImageResult.image.duration, frameBitmaps, fps)
       val animation =
           AnimationFrames(compressionResult.compressedAnim, compressionResult.realToReducedIndex)
       animationFrames = animatedDrawableCache.saveAnimation(cacheKey, animation)
@@ -144,6 +140,6 @@ class FrescoFpsCache(
   }
 
   companion object {
-    private const val FPS_COMPRESSION_STEP = 4
+    private const val FPS_COMPRESSION_STEP = 1
   }
 }

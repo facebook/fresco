@@ -63,7 +63,7 @@ android {
         }
         fast {
             dimension "main"
-            minSdkVersion FrescoConfig.targetSdkVersion
+            minSdkVersion FrescoConfig.minSdkVersion
         }
         internal {
             dimension "main"

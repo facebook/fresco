@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.producers;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.ImmutableMap;
@@ -386,6 +387,7 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
       updateInternal();
     }
 
+    @SuppressLint("WrongConstant")
     private void updateInternal() {
       CloseableReference<CloseableImage> sourceImageRef;
       synchronized (RepeatedPostprocessorConsumer.this) {

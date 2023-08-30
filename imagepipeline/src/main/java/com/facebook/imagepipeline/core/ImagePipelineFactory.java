@@ -177,6 +177,7 @@ public class ImagePipelineFactory {
               getAnimatedCache(mConfig.getExperiments().getAnimatedCacheMemoryPercentage()),
               mConfig.getExperiments().getDownscaleFrameToDrawableDimensions(),
               mConfig.getExperiments().getUseBalancedAnimationStrategy(),
+              mConfig.getExperiments().getBalancedStrategyPreparationMs(),
               mConfig.getExperiments().getAnimationRenderFpsLimit(),
               mConfig.getExecutorServiceForAnimatedImages());
     }
