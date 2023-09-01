@@ -11,10 +11,6 @@ package com.facebook.fresco.vito.source
 data class FirstAvailableImageSource(val imageSources: Array<out ImageSource>) : ImageSource {
 
   override fun equals(other: Any?): Boolean {
-    if (ImageSourceConfig.doNotUseOverriddenDataClassMembers) {
-      return super.equals(other)
-    }
-
     if (this === other) {
       return true
     }
@@ -25,11 +21,5 @@ data class FirstAvailableImageSource(val imageSources: Array<out ImageSource>) :
     return imageSources.contentEquals((other as FirstAvailableImageSource).imageSources)
   }
 
-  override fun hashCode(): Int {
-    return if (ImageSourceConfig.doNotUseOverriddenDataClassMembers) {
-      super.hashCode()
-    } else {
-      imageSources.contentHashCode()
-    }
-  }
+  override fun hashCode(): Int = imageSources.contentHashCode()
 }

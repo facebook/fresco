@@ -13,10 +13,6 @@ import android.graphics.Bitmap
 data class BitmapImageSource(val bitmap: Bitmap) : ImageSource {
 
   override fun equals(other: Any?): Boolean {
-    if (ImageSourceConfig.doNotUseOverriddenDataClassMembers) {
-      return super.equals(other)
-    }
-
     if (this === other) {
       return true
     }
@@ -27,11 +23,5 @@ data class BitmapImageSource(val bitmap: Bitmap) : ImageSource {
     return bitmap == (other as BitmapImageSource).bitmap
   }
 
-  override fun hashCode(): Int {
-    return if (ImageSourceConfig.doNotUseOverriddenDataClassMembers) {
-      super.hashCode()
-    } else {
-      bitmap.hashCode()
-    }
-  }
+  override fun hashCode(): Int = bitmap.hashCode()
 }
