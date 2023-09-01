@@ -63,10 +63,6 @@ data class BytesRange(
   }
 
   override fun equals(other: Any?): Boolean {
-    if (doNotUseOverriddenDataClassMembers) {
-      return super.equals(other)
-    }
-
     if (this === other) {
       return true
     }
@@ -80,10 +76,6 @@ data class BytesRange(
   }
 
   override fun hashCode(): Int {
-    if (doNotUseOverriddenDataClassMembers) {
-      return super.hashCode()
-    }
-
     var result = from
     result = 31 * result + to
     return result
@@ -91,7 +83,6 @@ data class BytesRange(
 
   companion object {
     const val TO_END_OF_CONTENT = Int.MAX_VALUE
-    var doNotUseOverriddenDataClassMembers: Boolean = false
     private val headerParsingRegEx: Pattern by lazy { Pattern.compile("[-/ ]") }
 
     private fun valueOrEmpty(n: Int): String {
