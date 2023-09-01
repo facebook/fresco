@@ -10,6 +10,7 @@ package com.facebook.fresco.vito.view
 import android.net.Uri
 import android.view.View
 import com.facebook.fresco.vito.core.VitoImageRequest
+import com.facebook.fresco.vito.core.VitoImageRequestListener
 import com.facebook.fresco.vito.listener.ImageListener
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.source.ImageSource
@@ -40,7 +41,7 @@ object VitoView {
    */
   @JvmStatic
   fun show(imageSource: ImageSource, target: View) {
-    VitoViewImpl2.show(imageSource, ImageOptions.defaults(), null, null, target)
+    VitoViewImpl2.show(imageSource, ImageOptions.defaults(), null, null, null, target)
   }
 
   /*
@@ -48,7 +49,7 @@ object VitoView {
    */
   @JvmStatic
   fun show(imageSource: ImageSource, callerContext: Any, target: View) {
-    VitoViewImpl2.show(imageSource, ImageOptions.defaults(), callerContext, null, target)
+    VitoViewImpl2.show(imageSource, ImageOptions.defaults(), callerContext, null, null, target)
   }
 
   /*
@@ -64,7 +65,7 @@ object VitoView {
    */
   @JvmStatic
   fun show(imageSource: ImageSource, imageOptions: ImageOptions, target: View) {
-    VitoViewImpl2.show(imageSource, imageOptions, null, null, target)
+    VitoViewImpl2.show(imageSource, imageOptions, null, null, null, target)
   }
 
   /*
@@ -85,7 +86,7 @@ object VitoView {
       callerContext: Any?,
       target: View
   ) {
-    VitoViewImpl2.show(imageSource, imageOptions, callerContext, null, target)
+    VitoViewImpl2.show(imageSource, imageOptions, callerContext, null, null, target)
   }
 
   /*
@@ -113,7 +114,20 @@ object VitoView {
       imageListener: ImageListener?,
       target: View
   ) {
-    VitoViewImpl2.show(imageSource, imageOptions, callerContext, imageListener, target)
+    VitoViewImpl2.show(imageSource, imageOptions, callerContext, imageListener, null, target)
+  }
+
+  @JvmStatic
+  fun show(
+      imageSource: ImageSource,
+      imageOptions: ImageOptions,
+      callerContext: Any?,
+      imageListener: ImageListener?,
+      imageRequestListener: VitoImageRequestListener?,
+      target: View
+  ) {
+    VitoViewImpl2.show(
+        imageSource, imageOptions, callerContext, imageListener, imageRequestListener, target)
   }
 
   @JvmStatic
@@ -123,7 +137,7 @@ object VitoView {
       imageListener: ImageListener?,
       target: View
   ) {
-    VitoViewImpl2.show(vitoImageRequest, callerContext, imageListener, target)
+    VitoViewImpl2.show(vitoImageRequest, callerContext, imageListener, null, target)
   }
 
   /**
