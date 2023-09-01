@@ -91,7 +91,8 @@ class KFrescoController(
       listener: ImageListener?,
       perfDataListener: ImagePerfDataListener?,
       onFadeListener: OnFadeListener?,
-      viewportDimensions: Rect?
+      viewportDimensions: Rect?,
+      vitoImageRequestListener: VitoImageRequestListener?,
   ): Boolean {
     if (drawable !is KFrescoVitoDrawable) {
       FLog.e(TAG, "Drawable not supported $drawable")
@@ -117,6 +118,7 @@ class KFrescoController(
       this.callerContext = callerContext
       imageListener = listener
       listenerManager.setVitoImageRequestListener(globalImageRequestListener)
+      listenerManager.setLocalVitoImageRequestListener(vitoImageRequestListener)
 
       // Setup local perf data listener
       val localPerfStateListener = perfDataListener?.let { ImagePerfDataNotifier(it) }

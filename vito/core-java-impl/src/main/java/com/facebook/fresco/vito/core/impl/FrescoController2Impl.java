@@ -113,7 +113,8 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       final @Nullable ImageListener listener,
       final @Nullable ImagePerfDataListener perfDataListener,
       final @Nullable OnFadeListener onFadeListener,
-      final @Nullable Rect viewportDimensions) {
+      final @Nullable Rect viewportDimensions,
+      final @Nullable VitoImageRequestListener vitoImageRequestListener) {
     if (!(drawable instanceof FrescoDrawable2Impl)) {
       FLog.e(TAG, "Drawable not supported " + drawable);
       return false;
@@ -149,6 +150,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     frescoDrawable.setImageListener(listener);
 
     frescoDrawable.setVitoImageRequestListener(mGlobalImageListener);
+    frescoDrawable.setLocalVitoImageRequestListener(vitoImageRequestListener);
 
     // Setup local perf data listener
     if (perfDataListener != null) {
