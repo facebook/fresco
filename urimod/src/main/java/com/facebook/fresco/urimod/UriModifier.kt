@@ -5,5 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/** Classes for the NetworkFetcher implementation with OkHttp3 */
-package com.facebook.imagepipeline.backends.okhttp3;
+package com.facebook.fresco.urimod
+
+object UriModifier {
+  @JvmField var INSTANCE: UriModifierInterface = NopUriModifier
+}

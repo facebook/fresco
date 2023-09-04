@@ -44,6 +44,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val useDownsamplingRatioForResizing: Boolean
   val useBitmapPrepareToDraw: Boolean
   val useBalancedAnimationStrategy: Boolean
+  val balancedStrategyPreparationMs: Int
   val bitmapPrepareToDrawMinSizeBytes: Int
   val animatedCacheMemoryPercentage: Int
   val bitmapPrepareToDrawMaxSizeBytes: Int
@@ -84,6 +85,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var useDownsamplingRatioForResizing = false
     @JvmField var useBitmapPrepareToDraw = false
     @JvmField var useBalancedAnimationStrategy = false
+    @JvmField var balancedStrategyPreparationMs = 10000
     @JvmField var animatedCacheMemoryPercentage = 40
     @JvmField var bitmapPrepareToDrawMinSizeBytes = 0
     @JvmField var bitmapPrepareToDrawMaxSizeBytes = 0
@@ -125,9 +127,9 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var cancelDecodeOnCacheMiss = false
     @JvmField var prefetchShortcutEnabled = false
 
-    private fun asBuilder(block: () -> Unit): ImagePipelineConfig.Builder {
+    private fun asBuilder(block: () -> Unit): Builder {
       block()
-      return configBuilder
+      return this
     }
 
     fun setHandOffOnUiThreadOnly(handOffOnUiThreadOnly: Boolean) = asBuilder {
@@ -215,6 +217,11 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     /** Enable balance strategy between RAM and CPU for rendering bitmap animations (WebP, Gif) */
     fun setBalancedAnimationStrategy(useBalancedAnimationStrategy: Boolean) = asBuilder {
       this.useBalancedAnimationStrategy = useBalancedAnimationStrategy
+    }
+
+    /** Indicates needed ms to extract a frame using CPU */
+    fun setBalancedStrategyPreparationMs(balancedStrategyPreparationMs: Int) = asBuilder {
+      this.balancedStrategyPreparationMs = balancedStrategyPreparationMs
     }
 
     /**
@@ -406,6 +413,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     useDownsamplingRatioForResizing = builder.useDownsamplingRatioForResizing
     useBitmapPrepareToDraw = builder.useBitmapPrepareToDraw
     useBalancedAnimationStrategy = builder.useBalancedAnimationStrategy
+    balancedStrategyPreparationMs = builder.balancedStrategyPreparationMs
     animatedCacheMemoryPercentage = builder.animatedCacheMemoryPercentage
     bitmapPrepareToDrawMinSizeBytes = builder.bitmapPrepareToDrawMinSizeBytes
     bitmapPrepareToDrawMaxSizeBytes = builder.bitmapPrepareToDrawMaxSizeBytes

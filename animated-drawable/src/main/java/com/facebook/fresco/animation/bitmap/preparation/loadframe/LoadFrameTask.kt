@@ -10,6 +10,7 @@ package com.facebook.fresco.animation.bitmap.preparation.loadframe
 import android.graphics.Bitmap
 import com.facebook.common.references.CloseableReference
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer
+import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFramePriorityTask.Priority
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
 
 /**
@@ -20,7 +21,7 @@ class LoadFrameTask(
     private val width: Int,
     private val height: Int,
     private val untilFrame: Int,
-    override val priority: Int,
+    override val priority: Priority,
     private val output: LoadFrameOutput,
     private val platformBitmapFactory: PlatformBitmapFactory,
     private val bitmapFrameRenderer: BitmapFrameRenderer,

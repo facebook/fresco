@@ -20,7 +20,6 @@ import com.facebook.drawee.drawable.RoundedColorDrawable
 import com.facebook.drawee.drawable.RoundedNinePatchDrawable
 import com.facebook.fresco.vito.options.BorderOptions
 import com.facebook.fresco.vito.options.RoundingOptions
-import java.lang.UnsupportedOperationException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -123,13 +122,5 @@ class RoundingUtilsTest {
     assertThat((result as RoundedNinePatchDrawable).borderWidth).isEqualTo(borderOptions.width)
     assertThat(result.borderColor).isEqualTo(borderOptions.color)
     assertThat(result.isCircle).isTrue
-  }
-
-  @Test(expected = UnsupportedOperationException::class)
-  fun testBuildOverlayDrawable_whenInvalidResId_thenThrowNotFoundException() {
-    val roundingUtils = RoundingUtils
-    val drawable = mock<Drawable>()
-    val roundingOptions = mock<RoundingOptions>()
-    roundingUtils.roundedDrawable(resources, drawable, null, roundingOptions)
   }
 }

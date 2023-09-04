@@ -10,6 +10,7 @@ package com.facebook.fresco.animation.bitmap.preparation.loadframe
 import android.graphics.Bitmap
 import com.facebook.common.references.CloseableReference
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer
+import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFramePriorityTask.Priority
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
 
 /** This factory provides task for the animation and set the priority on each task */
@@ -27,7 +28,7 @@ class LoadFrameTaskFactory(
         width = width,
         height = height,
         untilFrame = 1,
-        priority = LOAD_FIRST_FRAME_PRIORITY,
+        priority = Priority.HIGH,
         output = output,
         platformBitmapFactory = platformBitmapFactory,
         bitmapFrameRenderer = bitmapFrameRenderer)
@@ -43,7 +44,7 @@ class LoadFrameTaskFactory(
         width = width,
         height = height,
         untilFrame = frameCount,
-        priority = LOAD_FULL_FRAMES_PRIORITY,
+        priority = Priority.LOW,
         output = output,
         platformBitmapFactory = platformBitmapFactory,
         bitmapFrameRenderer = bitmapFrameRenderer)
@@ -57,17 +58,11 @@ class LoadFrameTaskFactory(
     return LoadOnDemandFrameTask(
         frameNumber = frameNumber,
         getCachedBitmap = getCachedBitmap,
-        priority = LOAD_ON_DEMAND_PRIORITY,
+        priority = Priority.MEDIUM,
         output = output,
         platformBitmapFactory = platformBitmapFactory,
         bitmapFrameRenderer = bitmapFrameRenderer,
     )
-  }
-
-  companion object {
-    private const val LOAD_FIRST_FRAME_PRIORITY = 10
-    private const val LOAD_ON_DEMAND_PRIORITY = 5
-    private const val LOAD_FULL_FRAMES_PRIORITY = 1
   }
 }
 

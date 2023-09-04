@@ -40,13 +40,16 @@ import com.facebook.fresco.vito.core.VitoImageRequestListener;
 import com.facebook.fresco.vito.core.impl.debug.DebugOverlayFactory2;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.source.BitmapImageSource;
+import com.facebook.fresco.vito.source.DrawableImageSource;
 import com.facebook.fresco.vito.source.EmptyImageSource;
 import com.facebook.imagepipeline.image.CloseableBitmap;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.imagepipeline.image.ImageInfoImpl;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.infer.annotation.Nullsafe;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
@@ -110,7 +113,8 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       final @Nullable ImageListener listener,
       final @Nullable ImagePerfDataListener perfDataListener,
       final @Nullable OnFadeListener onFadeListener,
-      final @Nullable Rect viewportDimensions) {
+      final @Nullable Rect viewportDimensions,
+      final @Nullable VitoImageRequestListener vitoImageRequestListener) {
     if (!(drawable instanceof FrescoDrawable2Impl)) {
       FLog.e(TAG, "Drawable not supported " + drawable);
       return false;
@@ -146,6 +150,7 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
     frescoDrawable.setImageListener(listener);
 
     frescoDrawable.setVitoImageRequestListener(mGlobalImageListener);
+    frescoDrawable.setLocalVitoImageRequestListener(vitoImageRequestListener);
 
     // Setup local perf data listener
     if (perfDataListener != null) {
@@ -189,6 +194,51 @@ public class FrescoController2Impl implements DrawableDataSubscriber, FrescoCont
       } finally {
         CloseableReference.closeSafely(bitmapRef);
       }
+    } else if (imageRequest.imageSource instanceof DrawableImageSource) {
+      Drawable actualImageDrawable = ((DrawableImageSource) imageRequest.imageSource).getDrawable();
+
+      ScaleTypeDrawable actualImageWrapperDrawable = frescoDrawable.getActualImageWrapper();
+      mHierarcher.setupActualImageWrapper(
+          actualImageWrapperDrawable, imageRequest.imageOptions, drawable.getCallerContext());
+      Drawable actualDrawable =
+          mHierarcher.applyRoundingOptions(
+              imageRequest.resources, actualImageDrawable, imageRequest.imageOptions);
+      actualImageWrapperDrawable.setCurrent(actualDrawable);
+
+      frescoDrawable.setImage(actualImageWrapperDrawable, null);
+      frescoDrawable.showImageImmediately();
+
+      frescoDrawable.setImageOrigin(ImageOrigin.LOCAL);
+      frescoDrawable.setFetchSubmitted(true);
+
+      if (imageRequest.imageOptions.shouldAutoPlay() && actualImageDrawable instanceof Animatable) {
+        ((Animatable) actualDrawable).start();
+      }
+
+      Map<String, Object> imageInfoExtras;
+      if (extras.imageExtras != null) {
+        imageInfoExtras = extras.imageExtras;
+      } else {
+        imageInfoExtras = new HashMap<>();
+      }
+
+      frescoDrawable
+          .getInternalListener()
+          .onFinalImageSet(
+              drawable.getImageId(),
+              imageRequest,
+              ImageOrigin.LOCAL,
+              new ImageInfoImpl(
+                  actualImageDrawable.getIntrinsicWidth(),
+                  actualImageDrawable.getIntrinsicHeight(),
+                  0,
+                  ImmutableQualityInfo.FULL_QUALITY,
+                  imageInfoExtras),
+              extras,
+              actualDrawable);
+      drawable.getImagePerfListener().onImageSuccess(drawable, true);
+      mDebugOverlayFactory.update(frescoDrawable, extras);
+      return true;
     }
 
     // Check if the image is in cache

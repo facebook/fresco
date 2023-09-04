@@ -30,6 +30,7 @@ import javax.annotation.concurrent.Immutable
  * `ImagePipelineExperiments.isPartialImageCachingEnabled()` is true in the image pipeline config.
  * It is also dependent on a `NetworkFetcher` which writes and reads these headers.
  */
+@Suppress("KtDataClass")
 @Immutable
 data class BytesRange(
     @JvmField
@@ -59,6 +60,25 @@ data class BytesRange(
 
   override fun toString(): String {
     return String.format(null as Locale?, "%s-%s", valueOrEmpty(from), valueOrEmpty(to))
+  }
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) {
+      return true
+    }
+    if (javaClass != other?.javaClass) {
+      return false
+    }
+
+    val otherRange: BytesRange = other as BytesRange
+
+    return from == otherRange.from && to == otherRange.to
+  }
+
+  override fun hashCode(): Int {
+    var result = from
+    result = 31 * result + to
+    return result
   }
 
   companion object {

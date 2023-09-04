@@ -36,7 +36,7 @@ class BitmapMemoryCacheTrimStrategy : CacheTrimStrategy {
         MemoryTrimType.OnAppBackgrounded,
         MemoryTrimType.OnSystemMemoryCriticallyLowWhileAppInForeground,
         MemoryTrimType.OnSystemLowMemoryWhileAppInForeground,
-        MemoryTrimType.OnSystemLowMemoryWhileAppInBackground -> 1.0
+        MemoryTrimType.OnSystemLowMemoryWhileAppInBackgroundLowSeverity -> 1.0
         else -> {
           FLog.wtf(TAG, "unknown trim type: %s", trimType)
           0.0

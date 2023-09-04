@@ -18,6 +18,7 @@ import com.facebook.common.internal.Suppliers
 import com.facebook.drawee.drawable.VisibilityCallback
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.VitoImageRequest
+import com.facebook.fresco.vito.core.VitoImageRequestListener
 import com.facebook.fresco.vito.listener.ImageListener
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
@@ -51,6 +52,7 @@ object VitoViewImpl2 {
       imageOptions: ImageOptions,
       callerContext: Any?,
       imageListener: ImageListener?,
+      imageRequestListener: VitoImageRequestListener?,
       target: View
   ) {
     show(
@@ -58,6 +60,7 @@ object VitoViewImpl2 {
             .createImageRequest(target.resources, imageSource, imageOptions),
         callerContext,
         imageListener,
+        imageRequestListener,
         target)
   }
 
@@ -66,6 +69,7 @@ object VitoViewImpl2 {
       imageRequest: VitoImageRequest,
       callerContext: Any?,
       imageListener: ImageListener?,
+      imageRequestListener: VitoImageRequestListener?,
       target: View
   ) {
     val frescoDrawable = ensureDrawableSet(target)
@@ -84,7 +88,8 @@ object VitoViewImpl2 {
               listener = imageListener,
               perfDataListener = null,
               onFadeListener = null,
-              viewportDimensions = null)
+              viewportDimensions = null,
+              vitoImageRequestListener = imageRequestListener)
     }
     if (useSimpleFetchLogic.get()) {
       frescoDrawable.imagePerfListener.onImageMount(frescoDrawable)

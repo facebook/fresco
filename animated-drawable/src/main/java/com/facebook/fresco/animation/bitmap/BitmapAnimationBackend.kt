@@ -158,21 +158,21 @@ class BitmapAnimationBackend(
     val drawn: Boolean
     var nextFrameType = FRAME_TYPE_UNKNOWN
 
-    if (isNewRenderImplementation) {
-      bitmapReference =
-          bitmapFramePreparationStrategy?.getBitmapFrame(frameNumber, canvas.width, canvas.height)
+    try {
+      if (isNewRenderImplementation) {
+        bitmapReference =
+            bitmapFramePreparationStrategy?.getBitmapFrame(frameNumber, canvas.width, canvas.height)
 
-      if (bitmapReference != null && bitmapReference.isValid) {
-        drawBitmap(frameNumber, bitmapReference.get(), canvas)
-        return true
+        if (bitmapReference != null && bitmapReference.isValid) {
+          drawBitmap(frameNumber, bitmapReference.get(), canvas)
+          return true
+        }
+
+        // If bitmap couldnt be drawn, then fetch frames
+        bitmapFramePreparationStrategy?.prepareFrames(canvas.width, canvas.height, null)
+        return false
       }
 
-      // If bitmap couldnt be drawn, then fetch frames
-      bitmapFramePreparationStrategy?.prepareFrames(canvas.width, canvas.height, null)
-      return false
-    }
-
-    try {
       when (frameType) {
         FRAME_TYPE_CACHED -> {
           bitmapReference = bitmapFrameCache.getCachedFrame(frameNumber)

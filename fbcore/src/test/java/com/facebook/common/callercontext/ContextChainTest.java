@@ -9,14 +9,10 @@ package com.facebook.common.callercontext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.facebook.testing.robolectric.v4.WithTestDefaultsRunner;
-import com.facebook.ultralight.testing.MockitoWithUltralightAutoMockSupport;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-@RunWith(WithTestDefaultsRunner.class)
-public class ContextChainTest extends MockitoWithUltralightAutoMockSupport {
+public class ContextChainTest {
 
   @Test
   public void testGetStringExtra() {

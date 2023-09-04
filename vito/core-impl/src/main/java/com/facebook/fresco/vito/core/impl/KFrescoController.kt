@@ -8,7 +8,6 @@
 package com.facebook.fresco.vito.core.impl
 
 import android.content.res.Resources
-import android.graphics.Bitmap
 import android.graphics.Rect
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
@@ -38,10 +37,12 @@ import com.facebook.fresco.vito.renderer.BitmapImageDataModel
 import com.facebook.fresco.vito.renderer.DrawableImageDataModel
 import com.facebook.fresco.vito.renderer.ImageDataModel
 import com.facebook.fresco.vito.source.BitmapImageSource
+import com.facebook.fresco.vito.source.DrawableImageSource
 import com.facebook.imagepipeline.image.CloseableBitmap
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.image.CloseableStaticBitmap
 import com.facebook.imagepipeline.image.ImageInfo
+import com.facebook.imagepipeline.image.ImageInfoImpl
 import com.facebook.imagepipeline.image.ImmutableQualityInfo
 import java.util.concurrent.Executor
 
@@ -90,7 +91,8 @@ class KFrescoController(
       listener: ImageListener?,
       perfDataListener: ImagePerfDataListener?,
       onFadeListener: OnFadeListener?,
-      viewportDimensions: Rect?
+      viewportDimensions: Rect?,
+      vitoImageRequestListener: VitoImageRequestListener?,
   ): Boolean {
     if (drawable !is KFrescoVitoDrawable) {
       FLog.e(TAG, "Drawable not supported $drawable")
@@ -116,6 +118,7 @@ class KFrescoController(
       this.callerContext = callerContext
       imageListener = listener
       listenerManager.setVitoImageRequestListener(globalImageRequestListener)
+      listenerManager.setLocalVitoImageRequestListener(vitoImageRequestListener)
 
       // Setup local perf data listener
       val localPerfStateListener = perfDataListener?.let { ImagePerfDataNotifier(it) }
@@ -131,13 +134,33 @@ class KFrescoController(
     drawable.imagePerfListener.onImageFetch(drawable)
     drawable.overlayImageLayer.setOverlay(imageRequest.resources, options)
 
-    // Direct bitmap available
-    if (imageRequest.imageSource is BitmapImageSource) {
-      val bitmap: Bitmap = (imageRequest.imageSource as BitmapImageSource).bitmap
-      val closeableBitmap: CloseableBitmap =
-          CloseableStaticBitmap.of(bitmap, {}, ImmutableQualityInfo.FULL_QUALITY, 0)
-      val bitmapRef = CloseableReference.of<CloseableImage>(closeableBitmap)
-      return drawable.setActualImage(imageRequest, bitmapRef)
+    when (val source = imageRequest.imageSource) {
+      // Direct bitmap available
+      is BitmapImageSource -> {
+        val closeableBitmap: CloseableBitmap =
+            CloseableStaticBitmap.of(source.bitmap, {}, ImmutableQualityInfo.FULL_QUALITY, 0)
+        val bitmapRef = CloseableReference.of<CloseableImage>(closeableBitmap)
+        return drawable.setActualImage(imageRequest, bitmapRef)
+      }
+      // Direct Drawable available
+      is DrawableImageSource -> {
+        val extras = drawable.obtainExtras(null, null)
+        drawable.actualImageLayer.setActualImageDrawable(imageRequest.imageOptions, source.drawable)
+        drawable.listenerManager.onFinalImageSet(
+            imageId,
+            imageRequest,
+            ImageOrigin.LOCAL,
+            ImageInfoImpl(
+                source.drawable.intrinsicWidth,
+                source.drawable.intrinsicHeight,
+                0,
+                ImmutableQualityInfo.FULL_QUALITY,
+                extras.imageExtras ?: emptyMap()),
+            extras,
+            drawable.actualImageDrawable)
+        debugOverlayHandler?.update(drawable)
+        return true
+      }
     }
 
     // Check if the image is in cache

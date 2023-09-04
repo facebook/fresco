@@ -26,7 +26,8 @@ interface FrescoController2 {
       listener: ImageListener?,
       perfDataListener: ImagePerfDataListener? = null,
       onFadeListener: OnFadeListener?,
-      viewportDimensions: Rect?
+      viewportDimensions: Rect?,
+      vitoImageRequestListener: VitoImageRequestListener? = null,
   ): Boolean
 
   fun releaseDelayed(drawable: FrescoDrawableInterface)

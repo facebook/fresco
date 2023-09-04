@@ -12,23 +12,23 @@ import com.facebook.common.references.CloseableReference
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend.FrameType
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache.FrameCacheListener
+import com.facebook.fresco.animation.bitmap.preparation.loadframe.FpsCompressorInfo
+import com.facebook.imagepipeline.animated.base.AnimatedImage
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult
 import com.facebook.imagepipeline.cache.AnimatedCache
 import com.facebook.imagepipeline.cache.AnimationFrames
+import java.util.concurrent.TimeUnit
 
 /** Bitmap frame cache used for animated drawables */
 class FrescoFpsCache(
-    animatedImageResult: AnimatedImageResult,
-    private val maxFps: Int,
+    private val animatedImageResult: AnimatedImageResult,
+    private val fpsCompressorInfo: FpsCompressorInfo,
     private val animatedDrawableCache: AnimatedCache
 ) : BitmapFrameCache {
 
   /** Unique reference for this animation asset */
   private val cacheKey: String =
       animatedImageResult.source ?: animatedImageResult.image.hashCode().toString()
-
-  /** Duration in ms of the animation */
-  private val assetDurationMs = animatedImageResult.image.duration.toLong()
 
   /** Reference to the loaded animation */
   private var animationFrames: CloseableReference<AnimationFrames>? =
@@ -62,7 +62,7 @@ class FrescoFpsCache(
   }
 
   private fun releaseCache() {
-    animationFrames?.close()
+    animatedDrawableCache.removeAnimation(cacheKey)
     animationFrames = null
   }
 
@@ -88,82 +88,31 @@ class FrescoFpsCache(
       return true
     }
 
-    val cacheRef = compressAnimation(frameBitmaps)
-    if (cacheRef != null) {
-      releaseCache()
-      this.animationFrames = cacheRef
-    }
-
-    return cacheRef != null
+    animationFrames = compressAnimation(frameBitmaps)
+    return animationFrames != null
   }
 
-  /**
-   * Creates a AnimationFrame reference allocated in AnimatedCache. This method compress the
-   * animation based on the maximum fps allowed. The animation will reduce the number of frames
-   * until it can be allocated in memory
-   *
-   * @param frameBitmaps has the bitmaps of the animation. FrameNumber -> Bitmap
-   * @return AnimationFrame reference if the animation was saved in memory. Returns null if
-   *   animation couldn't be allocated
-   */
   private fun compressAnimation(
       frameBitmaps: Map<Int, CloseableReference<Bitmap>>
   ): CloseableReference<AnimationFrames>? {
-    var fps = maxFps
+    var fps = animatedImageResult.image.fps()
     var animationFrames: CloseableReference<AnimationFrames>? = null
 
     while (animationFrames == null && fps > 1) {
-      val realToCompressIndex = calculateReducedIndexes(frameBitmaps.size, fps)
-      val compressedAnimation = releaseCompressedBitmaps(frameBitmaps, realToCompressIndex)
-      val animation = AnimationFrames(compressedAnimation, realToCompressIndex)
-
+      val compressionResult =
+          fpsCompressorInfo.compress(animatedImageResult.image.duration, frameBitmaps, fps)
+      val animation =
+          AnimationFrames(compressionResult.compressedAnim, compressionResult.realToReducedIndex)
       animationFrames = animatedDrawableCache.saveAnimation(cacheKey, animation)
+
+      if (animationFrames != null) {
+        compressionResult.removedFrames.forEach { it.close() }
+      }
+
       fps -= FPS_COMPRESSION_STEP
     }
 
     return animationFrames
-  }
-
-  /**
-   * Create a Map<AssetBitmapIndex, CompressBitmapIndex> calculated based on the maximum FPS allowed
-   *
-   * @param animationFramesCount Number of frames extracted from the animation asset
-   * @param fpsTarget Maximum fps
-   * @return Map of equivalences between the original frame number and compress frame number
-   */
-  private fun calculateReducedIndexes(animationFramesCount: Int, fpsTarget: Int): Map<Int, Int> {
-    val maxAllowedFrames = fpsTarget.times(assetDurationMs.div(1000f)).coerceAtLeast(0f)
-
-    return if (maxAllowedFrames >= animationFramesCount) {
-      (0 until animationFramesCount).associateWith { it }
-    } else {
-      val offset = maxAllowedFrames.div(animationFramesCount.toFloat())
-      (0 until animationFramesCount).associateWith { it.times(offset).toInt() }
-    }
-  }
-
-  /**
-   * Compress animation releasing those bitmaps which wont be in the final animation
-   *
-   * @param frameBitmaps relation frameNumber->bitmap of the original animation
-   * @param realToReducedIndex map of equivalences between originalFrameNumber->compressFrameNumber
-   * @return map associating compressFrameNumber->bitmap
-   */
-  private fun releaseCompressedBitmaps(
-      frameBitmaps: Map<Int, CloseableReference<Bitmap>>,
-      realToReducedIndex: Map<Int, Int>
-  ): Map<Int, CloseableReference<Bitmap>> {
-    val compressedAnim = mutableMapOf<Int, CloseableReference<Bitmap>>()
-    frameBitmaps.forEach { (i, bitmapRef) ->
-      val reducedIndex = realToReducedIndex[i] ?: return@forEach
-      if (compressedAnim.contains(reducedIndex)) {
-        // Release this bitmap because it wont be used
-        CloseableReference.closeSafely(bitmapRef)
-      } else {
-        compressedAnim[reducedIndex] = bitmapRef
-      }
-    }
-    return compressedAnim
   }
 
   /**
@@ -185,7 +134,12 @@ class FrescoFpsCache(
 
   override fun setFrameCacheListener(frameCacheListener: FrameCacheListener?) = Unit
 
+  private fun AnimatedImage.fps(): Int {
+    val frameMs = duration.div(frameCount.coerceAtLeast(1))
+    return TimeUnit.SECONDS.toMillis(1).div(frameMs.coerceAtLeast(1)).toInt()
+  }
+
   companion object {
-    private const val FPS_COMPRESSION_STEP = 4
+    private const val FPS_COMPRESSION_STEP = 1
   }
 }

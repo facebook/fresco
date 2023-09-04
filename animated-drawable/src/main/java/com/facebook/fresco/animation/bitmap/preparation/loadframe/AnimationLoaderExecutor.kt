@@ -36,9 +36,15 @@ object AnimationLoaderExecutor {
 }
 
 interface LoadFramePriorityTask : Comparable<LoadFramePriorityTask>, Runnable {
-  val priority: Int
+  val priority: Priority
 
   override fun compareTo(other: LoadFramePriorityTask): Int {
     return other.priority.compareTo(priority)
+  }
+
+  enum class Priority(val value: Int) {
+    HIGH(Thread.MAX_PRIORITY),
+    MEDIUM(Thread.NORM_PRIORITY),
+    LOW(Thread.MIN_PRIORITY)
   }
 }

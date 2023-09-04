@@ -305,10 +305,6 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
       yOffset = (int) Math.ceil(frame.getYOffset() * yScale);
     }
 
-    // Impress the frame in the bitmap
-    Bitmap frameBitmap = Bitmap.createBitmap(frameWidth, frameHeight, Bitmap.Config.ARGB_8888);
-    frame.renderFrame(frameWidth, frameHeight, frameBitmap);
-
     Rect renderSrcRect = new Rect(0, 0, frameWidth, frameHeight);
     Rect renderDstRect = new Rect(xOffset, yOffset, xOffset + frameWidth, yOffset + frameHeight);
 
@@ -322,7 +318,12 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
       canvas.drawRect(renderDstRect, mTransparentPaint);
     }
 
-    canvas.drawBitmap(frameBitmap, renderSrcRect, renderDstRect, null);
+    synchronized (this) {
+      // Impress the frame in the bitmap
+      Bitmap frameBitmap = prepareTempBitmapForThisSize(frameWidth, frameHeight);
+      frame.renderFrame(frameWidth, frameHeight, frameBitmap);
+      canvas.drawBitmap(frameBitmap, renderSrcRect, renderDstRect, null);
+    }
   }
 
   private void maybeDisposeBackground(
@@ -393,9 +394,7 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     // Prepare the new frame
     int frameWidth = frame.getWidth();
     int frameHeight = frame.getHeight();
-
-    Bitmap bitmap = Bitmap.createBitmap(frameWidth, frameHeight, Bitmap.Config.ARGB_8888);
-    frame.renderFrame(frameWidth, frameHeight, bitmap);
+    Rect src = new Rect(0, 0, frameWidth, frameHeight);
 
     int resizedWidth = (int) (frameWidth * scale);
     int resizedHeight = (int) (frameHeight * scale);
@@ -409,9 +408,12 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     if (frameInfo.blendOperation == BlendOperation.NO_BLEND) {
       canvas.drawRect(renderDstRect, mTransparentPaint);
     }
-    // Draw canvas frame
-    Rect src = new Rect(0, 0, frameWidth, frameHeight);
-    canvas.drawBitmap(bitmap, src, renderDstRect, null);
+    synchronized (this) {
+      // Draw canvas frame
+      Bitmap bitmap = prepareTempBitmapForThisSize(frameWidth, frameHeight);
+      frame.renderFrame(frameWidth, frameHeight, bitmap);
+      canvas.drawBitmap(bitmap, src, renderDstRect, null);
+    }
   }
 
   @Override

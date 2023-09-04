@@ -7,4 +7,19 @@
 
 package com.facebook.fresco.vito.source
 
-data class FirstAvailableImageSource(val imageSources: Array<out ImageSource>) : ImageSource
+@Suppress("KtDataClass")
+data class FirstAvailableImageSource(val imageSources: Array<out ImageSource>) : ImageSource {
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) {
+      return true
+    }
+    if (javaClass != other?.javaClass) {
+      return false
+    }
+
+    return imageSources.contentEquals((other as FirstAvailableImageSource).imageSources)
+  }
+
+  override fun hashCode(): Int = imageSources.contentHashCode()
+}
