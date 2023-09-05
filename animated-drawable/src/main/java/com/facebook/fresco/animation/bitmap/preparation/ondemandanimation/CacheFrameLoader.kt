@@ -17,6 +17,7 @@ import com.facebook.fresco.animation.bitmap.preparation.loadframe.AnimationLoade
 import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFrameOutput
 import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFrameTask
 import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFrameTaskFactory
+import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.FrameResult.FrameType
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -40,15 +41,16 @@ class CacheFrameLoader(
   private fun isFirstFrameReady() = bitmapCache.getCachedFrame(0)?.isValid == true
 
   @UiThread
-  override fun getFrame(frameNumber: Int, width: Int, height: Int): CloseableReference<Bitmap>? {
+  override fun getFrame(frameNumber: Int, width: Int, height: Int): FrameResult {
     val cache = bitmapCache.getCachedFrame(frameNumber)
     if (cache?.isValid == true) {
-      return cache
+      return FrameResult(cache, FrameType.SUCCESS)
     }
 
     prepareFrames(width, height) {}
 
-    return findNearestFrame(frameNumber)
+    return findNearestFrame(frameNumber)?.let { FrameResult(it, FrameType.NEAREST) }
+        ?: FrameResult(null, FrameType.MISSING)
   }
 
   @UiThread

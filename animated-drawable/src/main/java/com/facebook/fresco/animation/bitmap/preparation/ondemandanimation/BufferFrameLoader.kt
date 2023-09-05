@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class BufferFrameLoader(
     private val platformBitmapFactory: PlatformBitmapFactory,
     private val bitmapFrameRenderer: BitmapFrameRenderer,
-    fpsCompressor: FpsCompressorInfo,
+    private val fpsCompressor: FpsCompressorInfo,
     override val animationInformation: AnimationInformation
 ) : FrameLoader {
 
@@ -44,20 +44,24 @@ class BufferFrameLoader(
 
   private val frameSequence = CircularList(animationInformation.frameCount)
   private var lastRenderedFrameNumber: Int = -1
-  private val compressionFrameMap: Map<Int, Int> =
-      fpsCompressor.calculateReducedIndexes(
-          durationMs =
-              animationInformation.loopDurationMs.times(
-                  animationInformation.loopCount.coerceAtLeast(1)),
-          frameCount = animationInformation.frameCount,
-          targetFps = animationInformation.fps())
-  private val renderableFrameIndexes = compressionFrameMap.values.toSet()
+  private var compressionFrameMap: Map<Int, Int> = emptyMap()
+  private var renderableFrameIndexes: Set<Int> = emptySet()
+
+  init {
+    compressToFps(animationInformation.fps())
+  }
 
   @UiThread
-  override fun getFrame(frameNumber: Int, width: Int, height: Int): CloseableReference<Bitmap>? {
+  override fun getFrame(frameNumber: Int, width: Int, height: Int): FrameResult {
     val cachedFrameIndex =
         compressionFrameMap[frameNumber]
-            ?: return findNearestFrame(frameNumber)?.bitmap?.cloneOrNull()
+            ?: return findNearestFrame(frameNumber)?.bitmap.let {
+              val bitmapRef = it?.cloneOrNull()
+              FrameResult(
+                  bitmapRef,
+                  if (bitmapRef == null) FrameResult.FrameType.MISSING
+                  else FrameResult.FrameType.NEAREST)
+            }
 
     lastRenderedFrameNumber = cachedFrameIndex
 
@@ -68,11 +72,16 @@ class BufferFrameLoader(
           from = getThreshold(), target = cachedFrameIndex, lenght = bufferSize)) {
         loadNextFrameIfNeeded(width, height)
       }
-      return cachedFrame
+      return FrameResult(cachedFrame, FrameResult.FrameType.SUCCESS)
     }
 
     loadNextFrameIfNeeded(width, height)
-    return findNearestFrame(cachedFrameIndex)?.bitmap?.cloneOrNull()
+    return findNearestFrame(cachedFrameIndex)?.bitmap.let {
+      val bitmapRef = it?.cloneOrNull()
+      FrameResult(
+          bitmapRef,
+          if (bitmapRef == null) FrameResult.FrameType.MISSING else FrameResult.FrameType.NEAREST)
+    }
   }
 
   private fun getThreshold() =
@@ -86,6 +95,18 @@ class BufferFrameLoader(
   override fun prepareFrames(width: Int, height: Int, onAnimationLoaded: () -> Unit) {
     loadNextFrameIfNeeded(width, height)
     onAnimationLoaded()
+  }
+
+  override fun compressToFps(fps: Int) {
+    val durationMs =
+        animationInformation.loopDurationMs.times(animationInformation.loopCount.coerceAtLeast(1))
+    compressionFrameMap =
+        fpsCompressor.calculateReducedIndexes(
+            durationMs = durationMs,
+            frameCount = animationInformation.frameCount,
+            targetFps = fps.coerceAtMost(animationInformation.fps()))
+
+    renderableFrameIndexes = compressionFrameMap.values.toSet()
   }
 
   /** Left only the last rendered bitmap on the buffer */
@@ -245,6 +266,6 @@ class BufferFrameLoader(
      * Used to calculate how many bitmaps are needed to render this animation. The seconds are
      * multiplied with the FPS of the animation to get required of bitmaps.
      */
-    private const val BUFFER_SECOND_SIZE = 2
+    private const val BUFFER_SECOND_SIZE = 1
   }
 }
