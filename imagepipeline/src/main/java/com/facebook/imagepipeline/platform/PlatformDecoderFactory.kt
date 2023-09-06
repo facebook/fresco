@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.platform
 import android.os.Build
 import androidx.core.util.Pools
 import androidx.core.util.Pools.SynchronizedPool
+import com.facebook.common.internal.Suppliers
 import com.facebook.common.memory.DecodeBufferHelper
 import com.facebook.imagepipeline.core.NativeCodeSetup
 import com.facebook.imagepipeline.memory.FlexByteArrayPool
@@ -34,7 +35,11 @@ object PlatformDecoderFactory {
       useDecodeBufferHelper: Boolean = false
   ): PlatformDecoder =
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        OreoDecoder(poolFactory.bitmapPool, createPool(poolFactory, useDecodeBufferHelper))
+        OreoDecoder(
+            poolFactory.bitmapPool,
+            createPool(poolFactory, useDecodeBufferHelper),
+            Suppliers.BOOLEAN_FALSE,
+            Suppliers.BOOLEAN_FALSE)
       } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ||
           !NativeCodeSetup.getUseNativeCode()) {
         ArtDecoder(poolFactory.bitmapPool, createPool(poolFactory, useDecodeBufferHelper))

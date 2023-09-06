@@ -12,6 +12,7 @@ import android.annotation.TargetApi
 import android.graphics.BitmapFactory.Options
 import android.os.Build
 import androidx.core.util.Pools
+import com.facebook.common.internal.Suppliers
 import com.facebook.imagepipeline.memory.BitmapPool
 import com.facebook.imageutils.BitmapUtil
 import java.nio.ByteBuffer
@@ -21,7 +22,7 @@ import javax.annotation.concurrent.ThreadSafe
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 @ThreadSafe
 class ArtDecoder(bitmapPool: BitmapPool, decodeBuffers: Pools.Pool<ByteBuffer>) :
-    DefaultDecoder(bitmapPool, decodeBuffers) {
+    DefaultDecoder(bitmapPool, decodeBuffers, Suppliers.BOOLEAN_FALSE) {
   override fun getBitmapSize(width: Int, height: Int, options: Options): Int {
     @SuppressLint("RestrictedApi") val c = checkNotNull(options.inPreferredConfig)
     return BitmapUtil.getSizeInByteForBitmap(width, height, c)
