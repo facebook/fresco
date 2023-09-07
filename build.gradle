@@ -59,6 +59,7 @@ subprojects {
             systemProperty("java.net.preferIPv6Addresses", "true")
             systemProperty("java.net.preferIPv4Stack", "false")
             systemProperty("jdk.attach.allowAttachSelf", "true")
+            jvmArgs '-XX:+StartAttachListener'
         }
     }
 
