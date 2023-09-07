@@ -12,7 +12,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory.Options
 import android.os.Build
 import androidx.core.util.Pools
-import com.facebook.common.internal.Supplier
 import com.facebook.imagepipeline.memory.BitmapPool
 import com.facebook.imageutils.BitmapUtil
 import java.nio.ByteBuffer
@@ -24,12 +23,12 @@ import javax.annotation.concurrent.ThreadSafe
 class OreoDecoder(
     bitmapPool: BitmapPool,
     decodeBuffers: Pools.Pool<ByteBuffer>,
-    private val useOutConfig: Supplier<Boolean>,
-    fixReadingOptions: Supplier<Boolean>,
+    private val useOutConfig: Boolean,
+    fixReadingOptions: Boolean,
 ) : DefaultDecoder(bitmapPool, decodeBuffers, fixReadingOptions) {
 
   override fun getBitmapSize(width: Int, height: Int, options: Options): Int {
-    if (useOutConfig.get()) {
+    if (useOutConfig) {
       return BitmapUtil.getSizeInByteForBitmap(
           width, height, options.outConfig ?: Bitmap.Config.ARGB_8888)
     }
