@@ -77,6 +77,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val prefetchShortcutEnabled: Boolean
   val useOutConfig: Boolean
   val fixReadingOptions: Boolean
+  val avoidPool: Boolean
 
   class Builder(private val configBuilder: ImagePipelineConfig.Builder) {
     @JvmField var shouldUseDecodingBufferHelper = false
@@ -131,6 +132,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
 
     @JvmField var useOutConfig = false
     @JvmField var fixReadingOptions = false
+    @JvmField var avoidPool = false
 
     private fun asBuilder(block: () -> Unit): Builder {
       block()
@@ -334,6 +336,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
       this.fixReadingOptions = fixReadingOptions
     }
 
+    fun setAvoidPool(avoidPool: Boolean) = asBuilder { this.avoidPool = avoidPool }
+
     fun build(): ImagePipelineExperiments = ImagePipelineExperiments(this)
   }
 
@@ -457,6 +461,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     prefetchShortcutEnabled = builder.prefetchShortcutEnabled
     useOutConfig = builder.useOutConfig
     fixReadingOptions = builder.fixReadingOptions
+    avoidPool = builder.avoidPool
   }
 
   companion object {

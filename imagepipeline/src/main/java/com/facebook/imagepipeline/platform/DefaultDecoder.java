@@ -24,6 +24,7 @@ import com.facebook.common.streams.TailAppendingInputStream;
 import com.facebook.imagepipeline.bitmaps.SimpleBitmapReleaser;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapPool;
+import com.facebook.imagepipeline.memory.DummyBitmapPool;
 import com.facebook.imageutils.JfifUtil;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
@@ -40,6 +41,7 @@ public abstract class DefaultDecoder implements PlatformDecoder {
   private static final Class<?> TAG = DefaultDecoder.class;
 
   private final BitmapPool mBitmapPool;
+  private boolean mAvoidPool;
 
   private final @Nullable PreverificationHelper mPreverificationHelper;
   private final boolean mFixReadingOptions;
@@ -60,8 +62,12 @@ public abstract class DefaultDecoder implements PlatformDecoder {
       new byte[] {(byte) JfifUtil.MARKER_FIRST_BYTE, (byte) JfifUtil.MARKER_EOI};
 
   public DefaultDecoder(
-      BitmapPool bitmapPool, Pools.Pool<ByteBuffer> decodeBuffers, boolean fixReadingOptions) {
+      BitmapPool bitmapPool,
+      Pools.Pool<ByteBuffer> decodeBuffers,
+      boolean fixReadingOptions,
+      boolean avoidPool) {
     mBitmapPool = bitmapPool;
+    mAvoidPool = avoidPool && bitmapPool instanceof DummyBitmapPool;
     mDecodeBuffers = decodeBuffers;
     mFixReadingOptions = fixReadingOptions;
   }
@@ -102,7 +108,7 @@ public abstract class DefaultDecoder implements PlatformDecoder {
       @Nullable Rect regionToDecode,
       @Nullable final ColorSpace colorSpace) {
     final BitmapFactory.Options options =
-        getDecodeOptionsForStream(encodedImage, bitmapConfig, mFixReadingOptions);
+        getDecodeOptionsForStream(encodedImage, bitmapConfig, mFixReadingOptions, mAvoidPool);
     boolean retryOnFail = options.inPreferredConfig != Bitmap.Config.ARGB_8888;
     try {
       InputStream s = Preconditions.checkNotNull(encodedImage.getInputStream());
@@ -139,7 +145,7 @@ public abstract class DefaultDecoder implements PlatformDecoder {
       @Nullable final ColorSpace colorSpace) {
     boolean isJpegComplete = encodedImage.isCompleteAt(length);
     final BitmapFactory.Options options =
-        getDecodeOptionsForStream(encodedImage, bitmapConfig, mFixReadingOptions);
+        getDecodeOptionsForStream(encodedImage, bitmapConfig, mFixReadingOptions, mAvoidPool);
     InputStream jpegDataStream = encodedImage.getInputStream();
     // At this point the InputStream from the encoded image should not be null since in the
     // pipeline,this comes from a call stack where this was checked before. Also this method needs
@@ -220,10 +226,12 @@ public abstract class DefaultDecoder implements PlatformDecoder {
         // If region decoding was requested we need to fallback to default config
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
       }
-      final int sizeInBytes = getBitmapSize(targetWidth, targetHeight, options);
-      bitmapToReuse = mBitmapPool.get(sizeInBytes);
-      if (bitmapToReuse == null) {
-        throw new NullPointerException("BitmapPool.get returned null");
+      if (!mAvoidPool) {
+        final int sizeInBytes = getBitmapSize(targetWidth, targetHeight, options);
+        bitmapToReuse = mBitmapPool.get(sizeInBytes);
+        if (bitmapToReuse == null) {
+          throw new NullPointerException("BitmapPool.get returned null");
+        }
       }
     }
     // inBitmap can be nullable
@@ -311,7 +319,10 @@ public abstract class DefaultDecoder implements PlatformDecoder {
    * Options returned by this method are configured with mDecodeBuffer which is GuardedBy("this")
    */
   private static BitmapFactory.Options getDecodeOptionsForStream(
-      EncodedImage encodedImage, Bitmap.Config bitmapConfig, boolean fixReadingOptions) {
+      EncodedImage encodedImage,
+      Bitmap.Config bitmapConfig,
+      boolean fixReadingOptions,
+      boolean skipDecoding) {
     final BitmapFactory.Options options = new BitmapFactory.Options();
     // Sample size should ONLY be different than 1 when downsampling is enabled in the pipeline
     options.inSampleSize = encodedImage.getSampleSize();
@@ -321,10 +332,12 @@ public abstract class DefaultDecoder implements PlatformDecoder {
       options.inPreferredConfig = bitmapConfig;
       options.inMutable = true;
     }
-    // fill outWidth and outHeight
-    BitmapFactory.decodeStream(encodedImage.getInputStream(), null, options);
-    if (options.outWidth == -1 || options.outHeight == -1) {
-      throw new IllegalArgumentException();
+    if (!skipDecoding) {
+      // fill outWidth and outHeight
+      BitmapFactory.decodeStream(encodedImage.getInputStream(), null, options);
+      if (options.outWidth == -1 || options.outHeight == -1) {
+        throw new IllegalArgumentException();
+      }
     }
 
     if (!fixReadingOptions) {

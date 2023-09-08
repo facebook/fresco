@@ -25,7 +25,8 @@ class OreoDecoder(
     decodeBuffers: Pools.Pool<ByteBuffer>,
     private val useOutConfig: Boolean,
     fixReadingOptions: Boolean,
-) : DefaultDecoder(bitmapPool, decodeBuffers, fixReadingOptions) {
+    avoidPool: Boolean,
+) : DefaultDecoder(bitmapPool, decodeBuffers, fixReadingOptions, avoidPool) {
 
   override fun getBitmapSize(width: Int, height: Int, options: Options): Int {
     if (useOutConfig) {

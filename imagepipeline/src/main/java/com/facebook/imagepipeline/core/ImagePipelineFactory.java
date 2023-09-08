@@ -346,7 +346,8 @@ public class ImagePipelineFactory {
               mConfig.getExperiments().isGingerbreadDecoderEnabled(),
               mConfig.getExperiments().getShouldUseDecodingBufferHelper(),
               mConfig.getExperiments().getUseOutConfig(),
-              mConfig.getExperiments().getFixReadingOptions());
+              mConfig.getExperiments().getFixReadingOptions(),
+              mConfig.getExperiments().getAvoidPool());
     }
     return mPlatformDecoder;
   }
