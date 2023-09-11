@@ -13,10 +13,6 @@ import android.graphics.drawable.Drawable
 data class DrawableImageSource(val drawable: Drawable) : ImageSource {
 
   override fun equals(other: Any?): Boolean {
-    if (ImageSourceConfig.doNotUseOverriddenDataClassMembers) {
-      return super.equals(other)
-    }
-
     if (this === other) {
       return true
     }
@@ -29,11 +25,5 @@ data class DrawableImageSource(val drawable: Drawable) : ImageSource {
     return drawable == other.drawable
   }
 
-  override fun hashCode(): Int {
-    return if (ImageSourceConfig.doNotUseOverriddenDataClassMembers) {
-      super.hashCode()
-    } else {
-      drawable.hashCode()
-    }
-  }
+  override fun hashCode(): Int = drawable.hashCode()
 }

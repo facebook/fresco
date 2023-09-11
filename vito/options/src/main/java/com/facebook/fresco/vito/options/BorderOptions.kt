@@ -18,10 +18,6 @@ data class BorderOptions(
 ) {
 
   override fun equals(other: Any?): Boolean {
-    if (ImageOptionsConfig.doNotUseOverriddenDataClassMembers) {
-      return super.equals(other)
-    }
-
     if (this === other) {
       return true
     }
@@ -38,10 +34,6 @@ data class BorderOptions(
   }
 
   override fun hashCode(): Int {
-    if (ImageOptionsConfig.doNotUseOverriddenDataClassMembers) {
-      return super.hashCode()
-    }
-
     var result = color
     result = 31 * result + width.hashCode()
     result = 31 * result + padding.hashCode()

@@ -214,6 +214,10 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
     mImageListener.setVitoImageRequestListener(listener);
   }
 
+  public void setLocalVitoImageRequestListener(@Nullable VitoImageRequestListener listener) {
+    mImageListener.setLocalVitoImageRequestListener(listener);
+  }
+
   public CombinedImageListener getInternalListener() {
     return mImageListener;
   }

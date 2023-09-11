@@ -101,7 +101,7 @@ public class ArtDecoderTest {
     mBitmapPool = mock(BitmapPool.class);
     Pools.SynchronizedPool<ByteBuffer> pool = new Pools.SynchronizedPool<ByteBuffer>(1);
     pool.release(ByteBuffer.allocate(16 * 1024));
-    mArtDecoder = new ArtDecoder(mBitmapPool, pool);
+    mArtDecoder = new ArtDecoder(mBitmapPool, pool, false, false);
 
     mByteBufferRef = CloseableReference.of(mPooledByteBuffer);
     mEncodedImage = new EncodedImage(mByteBufferRef);

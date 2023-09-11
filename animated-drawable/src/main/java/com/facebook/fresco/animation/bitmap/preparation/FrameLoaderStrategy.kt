@@ -11,8 +11,11 @@ import android.graphics.Bitmap
 import androidx.annotation.UiThread
 import com.facebook.common.references.CloseableReference
 import com.facebook.fresco.animation.backend.AnimationInformation
+import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.AnimationCoordinator
+import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.DynamicRenderingFps
 import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.FrameLoader
 import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.FrameLoaderFactory
+import java.util.concurrent.TimeUnit
 
 /** Use a [FrameLoader] strategy to render the animaion */
 class FrameLoaderStrategy(
@@ -30,6 +33,24 @@ class FrameLoaderStrategy(
       }
       return field
     }
+
+  private val maxAnimationFps = animationInformation.fps()
+  private var currentFps = maxAnimationFps
+
+  private val dynamicFpsRender =
+      object : DynamicRenderingFps {
+        override val animationFps: Int = maxAnimationFps
+
+        override val renderingFps: Int
+          get() = currentFps
+
+        override fun setRenderingFps(renderingFps: Int) {
+          if (renderingFps != currentFps) {
+            currentFps = renderingFps.coerceIn(1, maxAnimationFps)
+            frameLoader?.compressToFps(currentFps)
+          }
+        }
+      }
 
   @UiThread
   override fun prepareFrames(
@@ -53,7 +74,9 @@ class FrameLoaderStrategy(
       canvasHeight: Int
   ): CloseableReference<Bitmap>? {
     val frameSize = calculateFrameSize(canvasWidth, canvasHeight)
-    return frameLoader?.getFrame(frameNumber, frameSize.width, frameSize.height)
+    val frame = frameLoader?.getFrame(frameNumber, frameSize.width, frameSize.height)
+    frame?.let { AnimationCoordinator.onRenderFrame(dynamicFpsRender, it) }
+    return frame?.bitmapRef
   }
 
   override fun onStop() {
@@ -89,6 +112,9 @@ class FrameLoaderStrategy(
 
     return FrameSize(bitmapWidth, bitmapHeight)
   }
+
+  private fun AnimationInformation.fps(): Int =
+      TimeUnit.SECONDS.toMillis(1).div(loopDurationMs.div(frameCount)).coerceAtLeast(1).toInt()
 }
 
 private class FrameSize(val width: Int, val height: Int)

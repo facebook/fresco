@@ -17,6 +17,7 @@ import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.fresco.vito.options.BorderOptions
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.RoundingOptions
+import kotlin.Pair
 
 object ImageOptionsSampleValues {
 
@@ -26,7 +27,7 @@ object ImageOptionsSampleValues {
       val updateFunction: (ImageOptions.Builder, T) -> ImageOptions.Builder
   )
 
-  val roundingOptions =
+  val roundingOptions: ImageOptionsSampleValues.Entry<RoundingOptions?> =
       Entry(
           "Rounding",
           listOf(
@@ -37,7 +38,7 @@ object ImageOptionsSampleValues {
             b.round(v)
           }
 
-  val borderOptions =
+  val borderOptions: ImageOptionsSampleValues.Entry<BorderOptions?> =
       Entry(
           "Border",
           listOf(
@@ -51,7 +52,7 @@ object ImageOptionsSampleValues {
             b.borders(v)
           }
 
-  val scaleTypes =
+  val scaleTypes: ImageOptionsSampleValues.Entry<Pair<ScalingUtils.ScaleType?, PointF?>> =
       Entry(
           "Scale type",
           listOf(
@@ -68,7 +69,7 @@ object ImageOptionsSampleValues {
             b.scale(v.first).focusPoint(v.second)
           }
 
-  val colorFilters =
+  val colorFilters: ImageOptionsSampleValues.Entry<PorterDuffColorFilter> =
       Entry(
           "Color filter",
           listOf(
@@ -86,7 +87,7 @@ object ImageOptionsSampleValues {
             b.colorFilter(v)
           }
 
-  val fadingOptions =
+  val fadingOptions: ImageOptionsSampleValues.Entry<Int> =
       Entry(
           "Fading",
           listOf(
@@ -102,9 +103,10 @@ object ImageOptionsSampleValues {
             b.fadeDurationMs(v)
           }
 
-  val autoPlay = Entry("Autoplay", listOf("off" to false, "on" to true)) { b, v -> b.autoPlay(v) }
+  val autoPlay: ImageOptionsSampleValues.Entry<Boolean> =
+      Entry("Autoplay", listOf("off" to false, "on" to true)) { b, v -> b.autoPlay(v) }
 
-  val bitmapConfig =
+  val bitmapConfig: ImageOptionsSampleValues.Entry<Bitmap.Config> =
       Entry(
           "Bitmap config",
           listOfNotNull(
@@ -120,21 +122,21 @@ object ImageOptionsSampleValues {
             b.bitmapConfig(v)
           }
 
-  val resizeToViewportConfig =
+  val resizeToViewportConfig: ImageOptionsSampleValues.Entry<Boolean> =
       Entry("Resize to viewport", listOf("off" to false, "on" to true)) { b, v ->
         b.resizeToViewport(v)
       }
 
-  val localThumbnailPreviewsEnabledConfig =
+  val localThumbnailPreviewsEnabledConfig: ImageOptionsSampleValues.Entry<Boolean> =
       Entry("Local thumbnail preview", listOf("off" to false, "on" to true)) { b, v ->
         b.localThumbnailPreviewsEnabled(v)
       }
-  val progressiveRenderingEnabledConfig =
+  val progressiveRenderingEnabledConfig: ImageOptionsSampleValues.Entry<Boolean> =
       Entry("Progressive rendering", listOf("off" to false, "on" to true)) { b, v ->
         b.progressiveRendering(v)
       }
 
-  val placeholderColors =
+  val placeholderColors: ImageOptionsSampleValues.Entry<Int> =
       Entry(
           "Placeholder color",
           listOf(

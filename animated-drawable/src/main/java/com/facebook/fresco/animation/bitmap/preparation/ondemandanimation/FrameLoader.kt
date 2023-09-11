@@ -23,7 +23,7 @@ interface FrameLoader {
    *
    * This method is always executed by the main thread, so its performance needs to be O(1)
    */
-  @UiThread fun getFrame(frameNumber: Int, width: Int, height: Int): CloseableReference<Bitmap>?
+  @UiThread fun getFrame(frameNumber: Int, width: Int, height: Int): FrameResult
 
   /**
    * Prepare the frames to be rendered. [onAnimationLoaded] is executed once the preparation is done
@@ -32,8 +32,23 @@ interface FrameLoader {
    */
   @UiThread fun prepareFrames(width: Int, height: Int, onAnimationLoaded: () -> Unit)
 
+  /**
+   * Force the animation to run to indicated fps
+   *
+   * @param fps fps that animation should run
+   */
+  fun compressToFps(fps: Int): Unit = Unit
+
   fun onStop() = Unit
 
   /** Release resources */
   fun clear()
+}
+
+class FrameResult(val bitmapRef: CloseableReference<Bitmap>?, val type: FrameType) {
+  enum class FrameType {
+    SUCCESS,
+    NEAREST,
+    MISSING
+  }
 }

@@ -20,8 +20,12 @@ import javax.annotation.concurrent.ThreadSafe
 /** Bitmap decoder for ART VM (Lollipop and up). */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 @ThreadSafe
-class ArtDecoder(bitmapPool: BitmapPool, decodeBuffers: Pools.Pool<ByteBuffer>) :
-    DefaultDecoder(bitmapPool, decodeBuffers) {
+class ArtDecoder(
+    bitmapPool: BitmapPool,
+    decodeBuffers: Pools.Pool<ByteBuffer>,
+    fixReadingOptions: Boolean,
+    avoidPool: Boolean
+) : DefaultDecoder(bitmapPool, decodeBuffers, fixReadingOptions, avoidPool) {
   override fun getBitmapSize(width: Int, height: Int, options: Options): Int {
     @SuppressLint("RestrictedApi") val c = checkNotNull(options.inPreferredConfig)
     return BitmapUtil.getSizeInByteForBitmap(width, height, c)

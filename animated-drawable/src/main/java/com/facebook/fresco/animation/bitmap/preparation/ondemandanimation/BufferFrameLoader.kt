@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class BufferFrameLoader(
     private val platformBitmapFactory: PlatformBitmapFactory,
     private val bitmapFrameRenderer: BitmapFrameRenderer,
-    fpsCompressor: FpsCompressorInfo,
+    private val fpsCompressor: FpsCompressorInfo,
     override val animationInformation: AnimationInformation
 ) : FrameLoader {
 
@@ -44,34 +44,44 @@ class BufferFrameLoader(
 
   private val frameSequence = CircularList(animationInformation.frameCount)
   private var lastRenderedFrameNumber: Int = -1
-  private val compressionFrameMap: Map<Int, Int> =
-      fpsCompressor.calculateReducedIndexes(
-          durationMs =
-              animationInformation.loopDurationMs.times(
-                  animationInformation.loopCount.coerceAtLeast(1)),
-          frameCount = animationInformation.frameCount,
-          targetFps = animationInformation.fps())
-  private val renderableFrameIndexes = compressionFrameMap.values.toSet()
+  private var compressionFrameMap: Map<Int, Int> = emptyMap()
+  private var renderableFrameIndexes: Set<Int> = emptySet()
+
+  init {
+    compressToFps(animationInformation.fps())
+  }
 
   @UiThread
-  override fun getFrame(frameNumber: Int, width: Int, height: Int): CloseableReference<Bitmap>? {
+  override fun getFrame(frameNumber: Int, width: Int, height: Int): FrameResult {
     val cachedFrameIndex =
-        compressionFrameMap[frameNumber] ?: return nearestFrame(frameNumber)?.bitmap
+        compressionFrameMap[frameNumber]
+            ?: return findNearestFrame(frameNumber)?.bitmap.let {
+              val bitmapRef = it?.cloneOrNull()
+              FrameResult(
+                  bitmapRef,
+                  if (bitmapRef == null) FrameResult.FrameType.MISSING
+                  else FrameResult.FrameType.NEAREST)
+            }
 
     lastRenderedFrameNumber = cachedFrameIndex
 
-    val cachedFrame = bufferFramesHash[cachedFrameIndex]
-    if (cachedFrame?.isValidBitmap() == true) {
+    val cachedFrame = bufferFramesHash[cachedFrameIndex]?.cloneOrNull()
+    if (cachedFrame != null) {
 
       if (frameSequence.isTargetAhead(
           from = getThreshold(), target = cachedFrameIndex, lenght = bufferSize)) {
         loadNextFrameIfNeeded(width, height)
       }
-      return cachedFrame
+      return FrameResult(cachedFrame, FrameResult.FrameType.SUCCESS)
     }
 
     loadNextFrameIfNeeded(width, height)
-    return nearestFrame(cachedFrameIndex)?.bitmap
+    return findNearestFrame(cachedFrameIndex)?.bitmap.let {
+      val bitmapRef = it?.cloneOrNull()
+      FrameResult(
+          bitmapRef,
+          if (bitmapRef == null) FrameResult.FrameType.MISSING else FrameResult.FrameType.NEAREST)
+    }
   }
 
   private fun getThreshold() =
@@ -87,20 +97,32 @@ class BufferFrameLoader(
     onAnimationLoaded()
   }
 
+  override fun compressToFps(fps: Int) {
+    val durationMs =
+        animationInformation.loopDurationMs.times(animationInformation.loopCount.coerceAtLeast(1))
+    compressionFrameMap =
+        fpsCompressor.calculateReducedIndexes(
+            durationMs = durationMs,
+            frameCount = animationInformation.frameCount,
+            targetFps = fps.coerceAtMost(animationInformation.fps()))
+
+    renderableFrameIndexes = compressionFrameMap.values.toSet()
+  }
+
   /** Left only the last rendered bitmap on the buffer */
   override fun onStop() {
-    val nearestFrame = nearestFrame(lastRenderedFrameNumber)
+    val nearestFrame = findNearestFrame(lastRenderedFrameNumber)
 
-    val indexesToClose = bufferFramesHash.keys.minus(nearestFrame?.frameNumber)
-    indexesToClose.forEach {
-      bufferFramesHash[it]?.close()
-      bufferFramesHash.remove(it)
+    val indexesToClose = bufferFramesHash.keys.minus(nearestFrame?.frameNumber).filterNotNull()
+    indexesToClose.forEach { frameNumber ->
+      CloseableReference.closeSafely(bufferFramesHash[frameNumber])
+      bufferFramesHash.remove(frameNumber)
     }
   }
 
   /** Release all bitmaps */
   override fun clear() {
-    bufferFramesHash.values.forEach { it.close() }
+    bufferFramesHash.values.forEach { CloseableReference.closeSafely(it) }
     bufferFramesHash.clear()
     lastRenderedFrameNumber = -1
   }
@@ -148,13 +170,18 @@ class BufferFrameLoader(
         return false
       }
 
-      bufferFramesHash[newFrameNumber] =
-          oldFramesNumbers.pollFirst()?.let {
-            val oldBitmap = bufferFramesHash[it]
-            bufferFramesHash.remove(it)
-            obtainFrame(oldBitmap, newFrameNumber, width, height)
-          }
-              ?: obtainFrame(null, newFrameNumber, width, height)
+      val deprecatedFrameNumber = oldFramesNumbers.pollFirst()
+      val deprecatedFrameBitmap =
+          if (deprecatedFrameNumber != null) bufferFramesHash[deprecatedFrameNumber] else null
+
+      val newFrame =
+          if (deprecatedFrameBitmap == null) obtainFrame(null, newFrameNumber, width, height)
+          else obtainFrame(deprecatedFrameBitmap, newFrameNumber, width, height)
+
+      CloseableReference.closeSafely(deprecatedFrameBitmap)
+      deprecatedFrameNumber?.let { bufferFramesHash.remove(it) }
+
+      bufferFramesHash[newFrameNumber] = newFrame
     }
 
     bufferFramesSequence = nextWindow
@@ -167,17 +194,18 @@ class BufferFrameLoader(
       width: Int,
       height: Int
   ): CloseableReference<Bitmap> {
-    nearestFrame(targetFrame)?.let { closerFrame ->
-      val nearestBitmap = closerFrame.bitmap.get()
-      val copyBitmap =
-          if (oldBitmapRef?.isValidBitmap() == true) {
-            oldBitmapRef.get().copy(nearestBitmap)
-            oldBitmapRef
-          } else {
-            platformBitmapFactory.createBitmap(nearestBitmap)
-          }
+    val nearestFrame = findNearestFrame(targetFrame)
+    val nearestBitmap = nearestFrame?.bitmap?.cloneOrNull()
 
-      updateBitmap(copyBitmap.get(), closerFrame.frameNumber, targetFrame)
+    if (nearestFrame != null && nearestBitmap != null) {
+      val copyOldBitmap = oldBitmapRef?.cloneOrNull()
+
+      val copyBitmap =
+          copyOldBitmap?.set(nearestBitmap.get())
+              ?: platformBitmapFactory.createBitmap(nearestBitmap.get())
+      CloseableReference.closeSafely(nearestBitmap)
+
+      updateBitmap(copyBitmap.get(), nearestFrame.frameNumber, targetFrame)
       return copyBitmap
     }
 
@@ -186,16 +214,13 @@ class BufferFrameLoader(
     return bitmap
   }
 
-  private fun nearestFrame(targetFrame: Int): AnimationBitmapFrame? {
-    (0..frameSequence.size).forEach {
-      val closestFrame = frameSequence.getPosition(targetFrame - it)
-      val frame = bufferFramesHash[closestFrame] ?: return@forEach
-      if (frame.isValidBitmap()) {
-        return AnimationBitmapFrame(closestFrame, frame)
-      }
+  private fun findNearestFrame(targetFrame: Int): AnimationBitmapFrame? {
+    return (0..frameSequence.size).firstNotNullOfOrNull { position ->
+      val closestFrame = frameSequence.getPosition(targetFrame - position)
+      bufferFramesHash[closestFrame]
+          ?.takeIf { it.isValid }
+          ?.let { AnimationBitmapFrame(closestFrame, it) }
     }
-
-    return null
   }
 
   private fun renderFirstBitmap(width: Int, height: Int): CloseableReference<Bitmap> {
@@ -217,16 +242,17 @@ class BufferFrameLoader(
     Canvas(this).drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
   }
 
-  private fun Bitmap.copy(src: Bitmap) {
-    val canvas = Canvas(this)
-    canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-    canvas.drawBitmap(src, 0f, 0f, null)
+  private fun CloseableReference<Bitmap>.set(src: Bitmap): CloseableReference<Bitmap> {
+    if (isValid) {
+      val canvas = Canvas(get())
+      canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+      canvas.drawBitmap(src, 0f, 0f, null)
+    }
+    return this
   }
 
   private fun AnimationInformation.fps(): Int =
       TimeUnit.SECONDS.toMillis(1).div(loopDurationMs.div(frameCount)).coerceAtLeast(1).toInt()
-
-  private fun CloseableReference<Bitmap>.isValidBitmap() = isValid && !get().isRecycled
 
   companion object {
 
@@ -240,6 +266,6 @@ class BufferFrameLoader(
      * Used to calculate how many bitmaps are needed to render this animation. The seconds are
      * multiplied with the FPS of the animation to get required of bitmaps.
      */
-    private const val BUFFER_SECOND_SIZE = 2
+    private const val BUFFER_SECOND_SIZE = 1
   }
 }
