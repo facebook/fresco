@@ -32,24 +32,19 @@ object PlatformDecoderFactory {
       poolFactory: PoolFactory,
       gingerbreadDecoderEnabled: Boolean,
       useDecodeBufferHelper: Boolean = false,
-      useOutConfig: Boolean,
-      fixReadingOptions: Boolean,
-      avoidPool: Boolean
+      platformDecoderOptions: PlatformDecoderOptions
   ): PlatformDecoder =
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         OreoDecoder(
             poolFactory.bitmapPool,
             createPool(poolFactory, useDecodeBufferHelper),
-            useOutConfig,
-            fixReadingOptions,
-            avoidPool)
+            platformDecoderOptions)
       } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ||
           !NativeCodeSetup.getUseNativeCode()) {
         ArtDecoder(
             poolFactory.bitmapPool,
             createPool(poolFactory, useDecodeBufferHelper),
-            fixReadingOptions,
-            avoidPool)
+            platformDecoderOptions)
       } else {
         try {
           if (gingerbreadDecoderEnabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {

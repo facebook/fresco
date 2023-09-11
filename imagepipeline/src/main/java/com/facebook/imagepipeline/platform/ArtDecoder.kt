@@ -23,9 +23,8 @@ import javax.annotation.concurrent.ThreadSafe
 class ArtDecoder(
     bitmapPool: BitmapPool,
     decodeBuffers: Pools.Pool<ByteBuffer>,
-    fixReadingOptions: Boolean,
-    avoidPool: Boolean
-) : DefaultDecoder(bitmapPool, decodeBuffers, fixReadingOptions, avoidPool) {
+    platformDecoderOptions: PlatformDecoderOptions
+) : DefaultDecoder(bitmapPool, decodeBuffers, platformDecoderOptions) {
   override fun getBitmapSize(width: Int, height: Int, options: Options): Int {
     @SuppressLint("RestrictedApi") val c = checkNotNull(options.inPreferredConfig)
     return BitmapUtil.getSizeInByteForBitmap(width, height, c)

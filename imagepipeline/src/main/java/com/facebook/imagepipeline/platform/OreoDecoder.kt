@@ -23,13 +23,11 @@ import javax.annotation.concurrent.ThreadSafe
 class OreoDecoder(
     bitmapPool: BitmapPool,
     decodeBuffers: Pools.Pool<ByteBuffer>,
-    private val useOutConfig: Boolean,
-    fixReadingOptions: Boolean,
-    avoidPool: Boolean,
-) : DefaultDecoder(bitmapPool, decodeBuffers, fixReadingOptions, avoidPool) {
+    val platformDecoderOptions: PlatformDecoderOptions,
+) : DefaultDecoder(bitmapPool, decodeBuffers, platformDecoderOptions) {
 
   override fun getBitmapSize(width: Int, height: Int, options: Options): Int {
-    if (useOutConfig) {
+    if (platformDecoderOptions.useOutConfig) {
       return BitmapUtil.getSizeInByteForBitmap(
           width, height, options.outConfig ?: Bitmap.Config.ARGB_8888)
     }

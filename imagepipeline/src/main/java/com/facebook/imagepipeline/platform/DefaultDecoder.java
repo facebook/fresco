@@ -64,12 +64,11 @@ public abstract class DefaultDecoder implements PlatformDecoder {
   public DefaultDecoder(
       BitmapPool bitmapPool,
       Pools.Pool<ByteBuffer> decodeBuffers,
-      boolean fixReadingOptions,
-      boolean avoidPool) {
+      PlatformDecoderOptions platformDecoderOptions) {
     mBitmapPool = bitmapPool;
-    mAvoidPool = avoidPool && bitmapPool instanceof DummyBitmapPool;
+    mAvoidPool = platformDecoderOptions.getAvoidPool() && bitmapPool instanceof DummyBitmapPool;
     mDecodeBuffers = decodeBuffers;
-    mFixReadingOptions = fixReadingOptions;
+    mFixReadingOptions = platformDecoderOptions.getFixReadingOptions();
   }
 
   @Override
