@@ -11,6 +11,7 @@ import android.graphics.Bitmap
 import androidx.annotation.UiThread
 import com.facebook.common.references.CloseableReference
 import com.facebook.fresco.animation.backend.AnimationInformation
+import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer
 import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.AnimationCoordinator
 import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.DynamicRenderingFps
 import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.FrameLoader
@@ -20,6 +21,7 @@ import java.util.concurrent.TimeUnit
 /** Use a [FrameLoader] strategy to render the animaion */
 class FrameLoaderStrategy(
     private val animationInformation: AnimationInformation,
+    private val bitmapFrameRenderer: BitmapFrameRenderer,
     private val frameLoaderFactory: FrameLoaderFactory,
     private val downscaleFrameToDrawableDimensions: Boolean,
 ) : BitmapFramePreparationStrategy {
@@ -29,7 +31,7 @@ class FrameLoaderStrategy(
   private var frameLoader: FrameLoader? = null
     get() {
       if (field == null) {
-        field = frameLoaderFactory.createBufferLoader(animationInformation)
+        field = frameLoaderFactory.createBufferLoader(bitmapFrameRenderer, animationInformation)
       }
       return field
     }
