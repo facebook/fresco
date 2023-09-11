@@ -20,18 +20,22 @@ import java.util.concurrent.TimeUnit
 
 /** Use a [FrameLoader] strategy to render the animaion */
 class FrameLoaderStrategy(
+    source: String?,
     private val animationInformation: AnimationInformation,
     private val bitmapFrameRenderer: BitmapFrameRenderer,
     private val frameLoaderFactory: FrameLoaderFactory,
     private val downscaleFrameToDrawableDimensions: Boolean,
 ) : BitmapFramePreparationStrategy {
 
+  private val cacheKey = source ?: this.hashCode().toString()
   private val animationWidth: Int = animationInformation.width()
   private val animationHeight: Int = animationInformation.height()
   private var frameLoader: FrameLoader? = null
     get() {
       if (field == null) {
-        field = frameLoaderFactory.createBufferLoader(bitmapFrameRenderer, animationInformation)
+        field =
+            frameLoaderFactory.createBufferLoader(
+                cacheKey, bitmapFrameRenderer, animationInformation)
       }
       return field
     }
@@ -83,12 +87,11 @@ class FrameLoaderStrategy(
 
   override fun onStop() {
     frameLoader?.onStop()
+    clearFrames()
   }
 
-  override fun clearFrames(): Unit = clear()
-
-  private fun clear() {
-    frameLoader?.clear()
+  override fun clearFrames() {
+    frameLoader?.let { FrameLoaderFactory.saveUnusedFrame(cacheKey, it) }
     frameLoader = null
   }
 

@@ -10,13 +10,15 @@ package com.facebook.fresco.animation.bitmap.preparation.ondemandanimation
 import android.os.Handler
 import android.os.HandlerThread
 import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.FrameResult.FrameType
+import java.util.Date
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
 object AnimationCoordinator {
 
   /** Frequency in ms to adjust the rendering fps based con device performance */
-  private const val FREQUENCY_MS = 2000L
+  private const val FREQUENCY_PERFORMANCE_MS = 2000L
+  private const val FREQUENCY_LOADERS_MS = 10000L
 
   /** This is the % of fps that animation will increase or decrease based on device performance */
   private const val FPS_STEP_PERCENTAGE = 0.20f
@@ -34,7 +36,7 @@ object AnimationCoordinator {
     Handler(handlerThread.looper)
   }
 
-  private val runnable: Runnable = Runnable {
+  private val calculatePerformance: Runnable = Runnable {
     val success = successCounter.getAndSet(0).toFloat()
     val failures = failuresCounter.getAndSet(0).toFloat()
     val critical = criticalCounter.getAndSet(0).toFloat()
@@ -60,14 +62,24 @@ object AnimationCoordinator {
       runningAnimations.clear()
     }
 
-    scheduleRunnable()
+    schedulePerformance()
+  }
+
+  private val clearUnusedFrameLoaders: Runnable = Runnable {
+    val maxUnusedTime = System.currentTimeMillis() - FREQUENCY_LOADERS_MS
+    FrameLoaderFactory.clearUnusedUntil(Date(maxUnusedTime))
+    scheduleLoaders()
   }
 
   init {
-    handler.post(runnable)
+    handler.post(calculatePerformance)
+    handler.post(clearUnusedFrameLoaders)
   }
 
-  private fun scheduleRunnable() = handler.postDelayed(runnable, FREQUENCY_MS)
+  private fun schedulePerformance() =
+      handler.postDelayed(calculatePerformance, FREQUENCY_PERFORMANCE_MS)
+
+  private fun scheduleLoaders() = handler.postDelayed(clearUnusedFrameLoaders, FREQUENCY_LOADERS_MS)
 
   private fun updateRenderingFps(animation: DynamicRenderingFps, delta: Int) {
     val minRenderingFps =
@@ -82,8 +94,8 @@ object AnimationCoordinator {
 
   /**
    * This method is executed everytime that a frame is render in one animation. This allow to
-   * collect what is the running animation performance per [FREQUENCY_MS] We will adjust the
-   * animation performance based on this data.
+   * collect what is the running animation performance per [FREQUENCY_PERFORMANCE_MS] We will adjust
+   * the animation performance based on this data.
    */
   fun onRenderFrame(animation: DynamicRenderingFps, frameResult: FrameResult) {
     if (!runningAnimations.contains(animation)) {

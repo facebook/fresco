@@ -57,6 +57,7 @@ class BufferFrameLoader(
         compressionFrameMap[frameNumber]
             ?: return findNearestFrame(frameNumber)?.bitmap.let {
               val bitmapRef = it?.cloneOrNull()
+              lastRenderedFrameNumber = frameNumber
               FrameResult(
                   bitmapRef,
                   if (bitmapRef == null) FrameResult.FrameType.MISSING

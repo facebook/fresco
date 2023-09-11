@@ -11,6 +11,8 @@ import com.facebook.fresco.animation.backend.AnimationInformation
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer
 import com.facebook.fresco.animation.bitmap.preparation.loadframe.FpsCompressorInfo
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
+import java.util.Date
+import java.util.concurrent.ConcurrentHashMap
 
 class FrameLoaderFactory(
     private val platformBitmapFactory: PlatformBitmapFactory,
@@ -18,12 +20,43 @@ class FrameLoaderFactory(
 ) {
 
   fun createBufferLoader(
+      cacheKey: String,
       bitmapFrameRenderer: BitmapFrameRenderer,
       animationInformation: AnimationInformation
-  ): FrameLoader =
-      BufferFrameLoader(
-          platformBitmapFactory,
-          bitmapFrameRenderer,
-          FpsCompressorInfo(maxFpsRender),
-          animationInformation)
+  ): FrameLoader {
+    synchronized(UNUSED_FRAME_LOADERS) {
+      val unusedFrameLoader = UNUSED_FRAME_LOADERS[cacheKey]
+      if (unusedFrameLoader != null) {
+        UNUSED_FRAME_LOADERS.remove(cacheKey)
+        return unusedFrameLoader.frameLoader
+      }
+    }
+
+    return BufferFrameLoader(
+        platformBitmapFactory,
+        bitmapFrameRenderer,
+        FpsCompressorInfo(maxFpsRender),
+        animationInformation)
+  }
+
+  companion object {
+    private val UNUSED_FRAME_LOADERS = ConcurrentHashMap<String, UnusedFrameLoader>()
+
+    fun saveUnusedFrame(cacheKey: String, frameLoader: FrameLoader) {
+      UNUSED_FRAME_LOADERS[cacheKey] = UnusedFrameLoader(frameLoader, Date())
+    }
+
+    fun clearUnusedUntil(until: Date) {
+      synchronized(UNUSED_FRAME_LOADERS) {
+        val oldItems = UNUSED_FRAME_LOADERS.filter { it.value.insertedTime < until }
+
+        oldItems.forEach {
+          it.value.frameLoader.clear()
+          UNUSED_FRAME_LOADERS.remove(it.key)
+        }
+      }
+    }
+  }
 }
+
+private class UnusedFrameLoader(val frameLoader: FrameLoader, val insertedTime: Date)

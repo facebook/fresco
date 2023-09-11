@@ -197,6 +197,7 @@ public class DefaultBitmapAnimationDrawableFactory
       } else {
         bitmapFramePreparationStrategy =
             new FrameLoaderStrategy(
+                animatedImageResult.getSource(),
                 animationInfo,
                 bitmapFrameRenderer,
                 new FrameLoaderFactory(mPlatformBitmapFactory, mAnimationFpsLimit.get()),
