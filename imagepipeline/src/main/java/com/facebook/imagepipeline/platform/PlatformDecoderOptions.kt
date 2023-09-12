@@ -10,5 +10,6 @@ package com.facebook.imagepipeline.platform
 class PlatformDecoderOptions(
     val useOutConfig: Boolean = false,
     val fixReadingOptions: Boolean = false,
-    val avoidPool: Boolean = false,
+    val avoidPoolGet: Boolean = false,
+    val avoidPoolRelease: Boolean = false,
 )
