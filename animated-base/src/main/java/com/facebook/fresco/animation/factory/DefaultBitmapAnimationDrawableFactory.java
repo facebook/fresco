@@ -197,12 +197,10 @@ public class DefaultBitmapAnimationDrawableFactory
       } else {
         bitmapFramePreparationStrategy =
             new FrameLoaderStrategy(
+                animatedImageResult.getSource(),
                 animationInfo,
-                new FrameLoaderFactory(
-                    mPlatformBitmapFactory,
-                    bitmapFrameRenderer,
-                    bitmapFrameCache,
-                    mAnimationFpsLimit.get()),
+                bitmapFrameRenderer,
+                new FrameLoaderFactory(mPlatformBitmapFactory, mAnimationFpsLimit.get()),
                 mDownscaleFrameToDrawableDimensions.get());
       }
     }

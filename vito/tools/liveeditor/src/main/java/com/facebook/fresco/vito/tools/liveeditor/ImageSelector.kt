@@ -15,6 +15,7 @@ import com.facebook.fresco.vito.core.FrescoController2
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.VitoImagePipeline
 import com.facebook.fresco.vito.tools.liveeditor.LiveEditorUiUtils.Companion.dpToPx
+import kotlin.Unit
 
 class ImageSelector(
     val tracker: ImageTracker,
@@ -26,9 +27,13 @@ class ImageSelector(
 
   var currentEditor: ImageLiveEditor? = null
 
-  fun selectNext(context: Context) = highlightDrawable(context, incrementIndexBy(1))
+  fun selectNext(context: Context) {
+    highlightDrawable(context, incrementIndexBy(1))
+  }
 
-  fun selectPrevious(context: Context) = highlightDrawable(context, incrementIndexBy(-1))
+  fun selectPrevious(context: Context) {
+    highlightDrawable(context, incrementIndexBy(-1))
+  }
 
   fun highlightDrawable(context: Context, drawable: FrescoDrawableInterface?) {
 
@@ -52,7 +57,8 @@ class ImageSelector(
     editor.editOptions(context) { it.overlay(overlayColorDrawable) }
   }
 
-  fun removeHighlight(context: Context) = currentEditor?.editOptions(context) { it.overlay(null) }
+  fun removeHighlight(context: Context): Unit? =
+      currentEditor?.editOptions(context) { it.overlay(null) }
 
   private fun highlightDrawable(context: Context, index: Int?) {
     if (index != null) {

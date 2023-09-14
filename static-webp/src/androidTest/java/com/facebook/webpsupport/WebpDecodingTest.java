@@ -38,9 +38,8 @@ public class WebpDecodingTest extends TestCase {
     mInstrumentation = InstrumentationRegistry.getInstrumentation();
     mWebpBitmapFactory = new WebpBitmapFactoryImpl();
     ImagePipelineConfig.Builder configBuilder =
-        ImagePipelineConfig.newBuilder(mInstrumentation.getContext())
-            .experiment()
-            .setWebpBitmapFactory(mWebpBitmapFactory);
+        ImagePipelineConfig.newBuilder(mInstrumentation.getContext());
+    configBuilder.experiment().setWebpBitmapFactory(mWebpBitmapFactory);
     ImagePipelineFactory.initialize(configBuilder.build());
   }
 

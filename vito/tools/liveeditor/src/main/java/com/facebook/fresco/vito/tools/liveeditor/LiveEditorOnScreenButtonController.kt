@@ -78,7 +78,7 @@ class LiveEditorOnScreenButtonController(
           ButtonConfig("Info") { showImageInfo(it.context) },
           additionalButtonConfig)
 
-  val imageTrackerListener =
+  val imageTrackerListener: ImageTracker =
       object : ImageTracker() {
         private var isTracking = false
 

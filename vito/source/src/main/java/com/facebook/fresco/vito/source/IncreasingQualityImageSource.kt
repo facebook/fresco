@@ -19,10 +19,6 @@ data class IncreasingQualityImageSource(
   fun getStringExtra(key: String): String? = getExtra(key) as? String
 
   override fun equals(other: Any?): Boolean {
-    if (ImageSourceConfig.doNotUseOverriddenDataClassMembers) {
-      return super.equals(other)
-    }
-
     if (this === other) {
       return true
     }
@@ -38,10 +34,6 @@ data class IncreasingQualityImageSource(
   }
 
   override fun hashCode(): Int {
-    if (ImageSourceConfig.doNotUseOverriddenDataClassMembers) {
-      return super.hashCode()
-    }
-
     var result = lowResSource.hashCode()
     result = 31 * result + highResSource.hashCode()
     result = 31 * result + (extras?.hashCode() ?: 0)

@@ -25,6 +25,7 @@ import com.facebook.imagepipeline.cache.MemoryCache
 import com.facebook.imagepipeline.decoder.ImageDecoder
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig
 import com.facebook.imagepipeline.image.CloseableImage
+import com.facebook.imagepipeline.platform.PlatformDecoderOptions
 import com.facebook.imageutils.BitmapUtil
 import kotlin.jvm.JvmField
 
@@ -75,6 +76,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val cancelDecodeOnCacheMiss: Boolean
   val animationRenderFpsLimit: Int
   val prefetchShortcutEnabled: Boolean
+  val platformDecoderOptions: PlatformDecoderOptions
 
   class Builder(private val configBuilder: ImagePipelineConfig.Builder) {
     @JvmField var shouldUseDecodingBufferHelper = false
@@ -126,6 +128,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var animationRenderFpsLimit = 30
     @JvmField var cancelDecodeOnCacheMiss = false
     @JvmField var prefetchShortcutEnabled = false
+
+    @JvmField var platformDecoderOptions = PlatformDecoderOptions()
 
     private fun asBuilder(block: () -> Unit): Builder {
       block()
@@ -323,6 +327,10 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
       this.cancelDecodeOnCacheMiss = cancelDecodeOnCacheMiss
     }
 
+    fun setPlatformDecoderOptions(platformDecoderOptions: PlatformDecoderOptions) = asBuilder {
+      this.platformDecoderOptions = platformDecoderOptions
+    }
+
     fun build(): ImagePipelineExperiments = ImagePipelineExperiments(this)
   }
 
@@ -444,6 +452,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     shouldUseDecodingBufferHelper = builder.shouldUseDecodingBufferHelper
     cancelDecodeOnCacheMiss = builder.cancelDecodeOnCacheMiss
     prefetchShortcutEnabled = builder.prefetchShortcutEnabled
+    platformDecoderOptions = builder.platformDecoderOptions
   }
 
   companion object {

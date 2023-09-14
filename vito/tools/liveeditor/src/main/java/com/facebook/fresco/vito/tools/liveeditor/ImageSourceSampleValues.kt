@@ -17,7 +17,7 @@ object ImageSourceSampleValues {
       val updateFunction: (ImageSource, T) -> ImageSource
   )
 
-  val entries =
+  val entries: ImageSourceSampleValues.Entry<ImageSource> =
       Entry(
           "Image Source",
           listOf(

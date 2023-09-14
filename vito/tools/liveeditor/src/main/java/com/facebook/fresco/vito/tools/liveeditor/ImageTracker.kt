@@ -19,7 +19,9 @@ open class ImageTracker : BaseVitoImagePerfListener() {
 
   fun getDrawableOrNull(index: Int): FrescoDrawableInterface? = drawables.getOrNull(index)?.get()
 
-  fun reset() = drawables.clear()
+  fun reset() {
+    drawables.clear()
+  }
 
   private fun trackDrawable(drawable: FrescoDrawableInterface) {
     drawables.add(WeakReference(drawable))
@@ -30,7 +32,11 @@ open class ImageTracker : BaseVitoImagePerfListener() {
     drawables.removeAll { it.get() == drawable || it.get() == null }
   }
 
-  override fun onImageMount(drawable: FrescoDrawableInterface) = trackDrawable(drawable)
+  override fun onImageMount(drawable: FrescoDrawableInterface) {
+    trackDrawable(drawable)
+  }
 
-  override fun onImageUnmount(drawable: FrescoDrawableInterface) = removeDrawable(drawable)
+  override fun onImageUnmount(drawable: FrescoDrawableInterface) {
+    removeDrawable(drawable)
+  }
 }

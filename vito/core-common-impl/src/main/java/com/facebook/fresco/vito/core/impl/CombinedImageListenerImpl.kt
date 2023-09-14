@@ -25,6 +25,7 @@ import java.io.IOException
 
 class CombinedImageListenerImpl : CombinedImageListener {
 
+  private var localVitoImageRequestListener: VitoImageRequestListener? = null
   private var vitoImageRequestListener: VitoImageRequestListener? = null
   override var imageListener: ImageListener? = null
   private var controllerListener2: ControllerListener2<ImageInfo>? =
@@ -34,6 +35,12 @@ class CombinedImageListenerImpl : CombinedImageListener {
 
   override fun setVitoImageRequestListener(vitoImageRequestListener: VitoImageRequestListener?) {
     this.vitoImageRequestListener = vitoImageRequestListener
+  }
+
+  override fun setLocalVitoImageRequestListener(
+      vitoImageRequestListener: VitoImageRequestListener?
+  ) {
+    this.localVitoImageRequestListener = vitoImageRequestListener
   }
 
   override fun setControllerListener2(controllerListener2: ControllerListener2<ImageInfo>?) {
@@ -68,6 +75,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
       extras: Extras?
   ) {
     vitoImageRequestListener?.onSubmit(id, imageRequest, callerContext, extras)
+    localVitoImageRequestListener?.onSubmit(id, imageRequest, callerContext, extras)
     imageListener?.onSubmit(id, callerContext)
     val stringId = VitoUtils.getStringId(id)
     controllerListener2?.onSubmit(stringId, callerContext, extras)
@@ -76,6 +84,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
 
   override fun onPlaceholderSet(id: Long, imageRequest: VitoImageRequest, placeholder: Drawable?) {
     vitoImageRequestListener?.onPlaceholderSet(id, imageRequest, placeholder)
+    localVitoImageRequestListener?.onPlaceholderSet(id, imageRequest, placeholder)
     imageListener?.onPlaceholderSet(id, placeholder)
   }
 
@@ -89,6 +98,8 @@ class CombinedImageListenerImpl : CombinedImageListener {
   ) {
     vitoImageRequestListener?.onFinalImageSet(
         id, imageRequest, imageOrigin, imageInfo, extras, drawable)
+    localVitoImageRequestListener?.onFinalImageSet(
+        id, imageRequest, imageOrigin, imageInfo, extras, drawable)
     imageListener?.onFinalImageSet(id, imageOrigin, imageInfo, drawable)
     val stringId = VitoUtils.getStringId(id)
     controllerListener2?.onFinalImageSet(stringId, imageInfo, extras)
@@ -101,6 +112,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
       imageInfo: ImageInfo?
   ) {
     vitoImageRequestListener?.onIntermediateImageSet(id, imageRequest, imageInfo)
+    localVitoImageRequestListener?.onIntermediateImageSet(id, imageRequest, imageInfo)
     imageListener?.onIntermediateImageSet(id, imageInfo)
     val stringId = VitoUtils.getStringId(id)
     controllerListener2?.onIntermediateImageSet(stringId, imageInfo)
@@ -113,6 +125,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
       throwable: Throwable?
   ) {
     vitoImageRequestListener?.onIntermediateImageFailed(id, imageRequest, throwable)
+    localVitoImageRequestListener?.onIntermediateImageFailed(id, imageRequest, throwable)
     imageListener?.onIntermediateImageFailed(id, throwable)
     val stringId = VitoUtils.getStringId(id)
     controllerListener2?.onIntermediateImageFailed(stringId)
@@ -127,6 +140,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
       extras: Extras?
   ) {
     vitoImageRequestListener?.onFailure(id, imageRequest, error, throwable, extras)
+    localVitoImageRequestListener?.onFailure(id, imageRequest, error, throwable, extras)
     imageListener?.onFailure(id, error, throwable)
     val stringId = VitoUtils.getStringId(id)
     controllerListener2?.onFailure(stringId, throwable, extras)
@@ -135,6 +149,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
 
   override fun onRelease(id: Long, imageRequest: VitoImageRequest, extras: Extras?) {
     vitoImageRequestListener?.onRelease(id, imageRequest, extras)
+    localVitoImageRequestListener?.onRelease(id, imageRequest, extras)
     imageListener?.onRelease(id)
     val stringId = VitoUtils.getStringId(id)
     controllerListener2?.onRelease(stringId, extras)
@@ -143,6 +158,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
 
   override fun onEmptyEvent(callerContext: Any?) {
     vitoImageRequestListener?.onEmptyEvent(callerContext)
+    localVitoImageRequestListener?.onEmptyEvent(callerContext)
     controllerListener2?.onEmptyEvent(callerContext)
     imagePerfControllerListener?.onEmptyEvent(callerContext)
   }

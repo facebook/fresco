@@ -31,13 +31,20 @@ object PlatformDecoderFactory {
   fun buildPlatformDecoder(
       poolFactory: PoolFactory,
       gingerbreadDecoderEnabled: Boolean,
-      useDecodeBufferHelper: Boolean = false
+      useDecodeBufferHelper: Boolean = false,
+      platformDecoderOptions: PlatformDecoderOptions
   ): PlatformDecoder =
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        OreoDecoder(poolFactory.bitmapPool, createPool(poolFactory, useDecodeBufferHelper))
+        OreoDecoder(
+            poolFactory.bitmapPool,
+            createPool(poolFactory, useDecodeBufferHelper),
+            platformDecoderOptions)
       } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ||
           !NativeCodeSetup.getUseNativeCode()) {
-        ArtDecoder(poolFactory.bitmapPool, createPool(poolFactory, useDecodeBufferHelper))
+        ArtDecoder(
+            poolFactory.bitmapPool,
+            createPool(poolFactory, useDecodeBufferHelper),
+            platformDecoderOptions)
       } else {
         try {
           if (gingerbreadDecoderEnabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {

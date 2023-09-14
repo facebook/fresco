@@ -11,25 +11,52 @@ import android.graphics.Bitmap
 import androidx.annotation.UiThread
 import com.facebook.common.references.CloseableReference
 import com.facebook.fresco.animation.backend.AnimationInformation
+import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer
+import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.AnimationCoordinator
+import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.DynamicRenderingFps
 import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.FrameLoader
 import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.FrameLoaderFactory
+import java.util.concurrent.TimeUnit
 
 /** Use a [FrameLoader] strategy to render the animaion */
 class FrameLoaderStrategy(
+    source: String?,
     private val animationInformation: AnimationInformation,
+    private val bitmapFrameRenderer: BitmapFrameRenderer,
     private val frameLoaderFactory: FrameLoaderFactory,
     private val downscaleFrameToDrawableDimensions: Boolean,
 ) : BitmapFramePreparationStrategy {
 
+  private val cacheKey = source ?: this.hashCode().toString()
   private val animationWidth: Int = animationInformation.width()
   private val animationHeight: Int = animationInformation.height()
   private var frameLoader: FrameLoader? = null
     get() {
       if (field == null) {
-        field = frameLoaderFactory.createBufferLoader(animationInformation)
+        field =
+            frameLoaderFactory.createBufferLoader(
+                cacheKey, bitmapFrameRenderer, animationInformation)
       }
       return field
     }
+
+  private val maxAnimationFps = animationInformation.fps()
+  private var currentFps = maxAnimationFps
+
+  private val dynamicFpsRender =
+      object : DynamicRenderingFps {
+        override val animationFps: Int = maxAnimationFps
+
+        override val renderingFps: Int
+          get() = currentFps
+
+        override fun setRenderingFps(renderingFps: Int) {
+          if (renderingFps != currentFps) {
+            currentFps = renderingFps.coerceIn(1, maxAnimationFps)
+            frameLoader?.compressToFps(currentFps)
+          }
+        }
+      }
 
   @UiThread
   override fun prepareFrames(
@@ -53,17 +80,18 @@ class FrameLoaderStrategy(
       canvasHeight: Int
   ): CloseableReference<Bitmap>? {
     val frameSize = calculateFrameSize(canvasWidth, canvasHeight)
-    return frameLoader?.getFrame(frameNumber, frameSize.width, frameSize.height)
+    val frame = frameLoader?.getFrame(frameNumber, frameSize.width, frameSize.height)
+    frame?.let { AnimationCoordinator.onRenderFrame(dynamicFpsRender, it) }
+    return frame?.bitmapRef
   }
 
   override fun onStop() {
     frameLoader?.onStop()
+    clearFrames()
   }
 
-  override fun clearFrames(): Unit = clear()
-
-  private fun clear() {
-    frameLoader?.clear()
+  override fun clearFrames() {
+    frameLoader?.let { FrameLoaderFactory.saveUnusedFrame(cacheKey, it) }
     frameLoader = null
   }
 
@@ -89,6 +117,9 @@ class FrameLoaderStrategy(
 
     return FrameSize(bitmapWidth, bitmapHeight)
   }
+
+  private fun AnimationInformation.fps(): Int =
+      TimeUnit.SECONDS.toMillis(1).div(loopDurationMs.div(frameCount)).coerceAtLeast(1).toInt()
 }
 
 private class FrameSize(val width: Int, val height: Int)

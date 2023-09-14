@@ -15,6 +15,8 @@ import com.facebook.imagepipeline.image.ImageInfo
 interface CombinedImageListener : VitoImageRequestListener {
   fun setVitoImageRequestListener(vitoImageRequestListener: VitoImageRequestListener?)
 
+  fun setLocalVitoImageRequestListener(vitoImageRequestListener: VitoImageRequestListener?)
+
   fun setControllerListener2(controllerListener2: ControllerListener2<ImageInfo>?)
 
   var imageListener: ImageListener?
