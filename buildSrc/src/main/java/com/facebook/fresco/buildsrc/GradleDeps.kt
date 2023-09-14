@@ -22,6 +22,6 @@ object GradleDeps {
   }
 
   object Publishing {
-    const val gradleMavenPublishPlugin = "com.vanniktech:gradle-maven-publish-plugin:0.15.1"
+    const val gradleMavenPublishPlugin = "com.vanniktech:gradle-maven-publish-plugin:0.25.3"
   }
 }
