@@ -20,6 +20,7 @@ object Deps {
   object AndroidX {
     const val androidxAnnotation = "androidx.annotation:annotation:1.1.0"
     const val core = "androidx.core:core:1.3.1"
+    const val exifInterface = "androidx.exifinterface:exifinterface:1.3.6"
     const val legacySupportCoreUtils = "androidx.legacy:legacy-support-core-utils:1.0.0"
   }
 
