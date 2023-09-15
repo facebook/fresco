@@ -7,7 +7,6 @@
 package com.facebook.imageutils
 
 import android.graphics.ColorSpace
-import android.util.Pair
 
 /** Wrapper class representing the recovered meta data of an image when decoding. */
 class ImageMetaData(width: Int, height: Int, val colorSpace: ColorSpace?) {
