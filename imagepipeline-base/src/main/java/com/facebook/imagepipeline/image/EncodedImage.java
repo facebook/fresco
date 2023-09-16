@@ -9,7 +9,6 @@ package com.facebook.imagepipeline.image;
 
 import android.graphics.ColorSpace;
 import android.media.ExifInterface;
-import android.util.Pair;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
@@ -33,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
+import kotlin.Pair;
 
 /**
  * Class that contains all the information for an encoded image, both the image bytes (held on a
@@ -390,10 +390,15 @@ public class EncodedImage implements Closeable {
   /** We get the size from a WebP image */
   @Nullable
   private Pair<Integer, Integer> readWebPImageSize() {
-    final Pair<Integer, Integer> dimensions = WebpUtil.getSize(getInputStream());
+    final InputStream stream = getInputStream();
+    if (stream == null) {
+      return null;
+    }
+
+    final Pair<Integer, Integer> dimensions = WebpUtil.getSize(stream);
     if (dimensions != null) {
-      mWidth = dimensions.first;
-      mHeight = dimensions.second;
+      mWidth = dimensions.component1();
+      mHeight = dimensions.component2();
     }
     return dimensions;
   }
@@ -408,8 +413,8 @@ public class EncodedImage implements Closeable {
       mColorSpace = metaData.getColorSpace();
       Pair<Integer, Integer> dimensions = metaData.getDimensions();
       if (dimensions != null) {
-        mWidth = dimensions.first;
-        mHeight = dimensions.second;
+        mWidth = dimensions.component1();
+        mHeight = dimensions.component2();
       }
     } finally {
       if (inputStream != null) {

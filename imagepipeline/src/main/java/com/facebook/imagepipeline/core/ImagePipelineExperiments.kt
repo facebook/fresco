@@ -25,6 +25,7 @@ import com.facebook.imagepipeline.cache.MemoryCache
 import com.facebook.imagepipeline.decoder.ImageDecoder
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig
 import com.facebook.imagepipeline.image.CloseableImage
+import com.facebook.imagepipeline.platform.PlatformDecoderOptions
 import com.facebook.imageutils.BitmapUtil
 import kotlin.jvm.JvmField
 
@@ -75,9 +76,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val cancelDecodeOnCacheMiss: Boolean
   val animationRenderFpsLimit: Int
   val prefetchShortcutEnabled: Boolean
-  val useOutConfig: Boolean
-  val fixReadingOptions: Boolean
-  val avoidPool: Boolean
+  val platformDecoderOptions: PlatformDecoderOptions
 
   class Builder(private val configBuilder: ImagePipelineConfig.Builder) {
     @JvmField var shouldUseDecodingBufferHelper = false
@@ -130,9 +129,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var cancelDecodeOnCacheMiss = false
     @JvmField var prefetchShortcutEnabled = false
 
-    @JvmField var useOutConfig = false
-    @JvmField var fixReadingOptions = false
-    @JvmField var avoidPool = false
+    @JvmField var platformDecoderOptions = PlatformDecoderOptions()
 
     private fun asBuilder(block: () -> Unit): Builder {
       block()
@@ -330,13 +327,9 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
       this.cancelDecodeOnCacheMiss = cancelDecodeOnCacheMiss
     }
 
-    fun setUseOutConfig(useOutConfig: Boolean) = asBuilder { this.useOutConfig = useOutConfig }
-
-    fun setFixReadingOptions(fixReadingOptions: Boolean) = asBuilder {
-      this.fixReadingOptions = fixReadingOptions
+    fun setPlatformDecoderOptions(platformDecoderOptions: PlatformDecoderOptions) = asBuilder {
+      this.platformDecoderOptions = platformDecoderOptions
     }
-
-    fun setAvoidPool(avoidPool: Boolean) = asBuilder { this.avoidPool = avoidPool }
 
     fun build(): ImagePipelineExperiments = ImagePipelineExperiments(this)
   }
@@ -459,9 +452,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     shouldUseDecodingBufferHelper = builder.shouldUseDecodingBufferHelper
     cancelDecodeOnCacheMiss = builder.cancelDecodeOnCacheMiss
     prefetchShortcutEnabled = builder.prefetchShortcutEnabled
-    useOutConfig = builder.useOutConfig
-    fixReadingOptions = builder.fixReadingOptions
-    avoidPool = builder.avoidPool
+    platformDecoderOptions = builder.platformDecoderOptions
   }
 
   companion object {

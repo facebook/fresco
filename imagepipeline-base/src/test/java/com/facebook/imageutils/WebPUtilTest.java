@@ -9,11 +9,10 @@ package com.facebook.imageutils;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static org.junit.Assert.*;
 
-import android.util.Pair;
 import java.io.IOException;
 import java.io.InputStream;
+import kotlin.Pair;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -74,7 +73,7 @@ public class WebPUtilTest {
       throws IOException {
     Pair<Integer, Integer> size = WebpUtil.getSize(getResourceStream(imagePath));
     assertNotNull("Something went wrong during parsing WebP! " + imagePath, size);
-    assertEquals(expectedWidth, size.first.intValue());
-    assertEquals(expectedHeight, size.second.intValue());
+    assertEquals(expectedWidth, size.component1().intValue());
+    assertEquals(expectedHeight, size.component2().intValue());
   }
 }

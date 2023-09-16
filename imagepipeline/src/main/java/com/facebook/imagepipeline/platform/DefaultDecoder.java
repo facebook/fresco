@@ -19,6 +19,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.DecodeBufferHelper;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.common.references.ResourceReleaser;
 import com.facebook.common.streams.LimitedInputStream;
 import com.facebook.common.streams.TailAppendingInputStream;
 import com.facebook.imagepipeline.bitmaps.SimpleBitmapReleaser;
@@ -41,7 +42,8 @@ public abstract class DefaultDecoder implements PlatformDecoder {
   private static final Class<?> TAG = DefaultDecoder.class;
 
   private final BitmapPool mBitmapPool;
-  private boolean mAvoidPool;
+  private boolean mAvoidPoolGet;
+  private boolean mAvoidPoolRelease;
 
   private final @Nullable PreverificationHelper mPreverificationHelper;
   private final boolean mFixReadingOptions;
@@ -64,12 +66,14 @@ public abstract class DefaultDecoder implements PlatformDecoder {
   public DefaultDecoder(
       BitmapPool bitmapPool,
       Pools.Pool<ByteBuffer> decodeBuffers,
-      boolean fixReadingOptions,
-      boolean avoidPool) {
+      PlatformDecoderOptions platformDecoderOptions) {
     mBitmapPool = bitmapPool;
-    mAvoidPool = avoidPool && bitmapPool instanceof DummyBitmapPool;
+    if (bitmapPool instanceof DummyBitmapPool) {
+      mAvoidPoolGet = platformDecoderOptions.getAvoidPoolGet();
+      mAvoidPoolRelease = platformDecoderOptions.getAvoidPoolRelease();
+    }
     mDecodeBuffers = decodeBuffers;
-    mFixReadingOptions = fixReadingOptions;
+    mFixReadingOptions = platformDecoderOptions.getFixReadingOptions();
   }
 
   @Override
@@ -108,7 +112,7 @@ public abstract class DefaultDecoder implements PlatformDecoder {
       @Nullable Rect regionToDecode,
       @Nullable final ColorSpace colorSpace) {
     final BitmapFactory.Options options =
-        getDecodeOptionsForStream(encodedImage, bitmapConfig, mFixReadingOptions, mAvoidPool);
+        getDecodeOptionsForStream(encodedImage, bitmapConfig, mFixReadingOptions, mAvoidPoolGet);
     boolean retryOnFail = options.inPreferredConfig != Bitmap.Config.ARGB_8888;
     try {
       InputStream s = Preconditions.checkNotNull(encodedImage.getInputStream());
@@ -145,7 +149,7 @@ public abstract class DefaultDecoder implements PlatformDecoder {
       @Nullable final ColorSpace colorSpace) {
     boolean isJpegComplete = encodedImage.isCompleteAt(length);
     final BitmapFactory.Options options =
-        getDecodeOptionsForStream(encodedImage, bitmapConfig, mFixReadingOptions, mAvoidPool);
+        getDecodeOptionsForStream(encodedImage, bitmapConfig, mFixReadingOptions, mAvoidPoolGet);
     InputStream jpegDataStream = encodedImage.getInputStream();
     // At this point the InputStream from the encoded image should not be null since in the
     // pipeline,this comes from a call stack where this was checked before. Also this method needs
@@ -226,7 +230,7 @@ public abstract class DefaultDecoder implements PlatformDecoder {
         // If region decoding was requested we need to fallback to default config
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
       }
-      if (!mAvoidPool) {
+      if (!mAvoidPoolGet) {
         final int sizeInBytes = getBitmapSize(targetWidth, targetHeight, options);
         bitmapToReuse = mBitmapPool.get(sizeInBytes);
         if (bitmapToReuse == null) {
@@ -312,7 +316,11 @@ public abstract class DefaultDecoder implements PlatformDecoder {
       throw new IllegalStateException();
     }
 
-    return CloseableReference.of(decodedBitmap, mBitmapPool);
+    if (mAvoidPoolRelease) {
+      return CloseableReference.of(decodedBitmap, NoOpResourceReleaser.INSTANCE);
+    } else {
+      return CloseableReference.of(decodedBitmap, mBitmapPool);
+    }
   }
 
   /**
@@ -351,4 +359,13 @@ public abstract class DefaultDecoder implements PlatformDecoder {
 
   public abstract int getBitmapSize(
       final int width, final int height, final BitmapFactory.Options options);
+
+  private static final class NoOpResourceReleaser implements ResourceReleaser<Bitmap> {
+    private static final NoOpResourceReleaser INSTANCE = new NoOpResourceReleaser();
+
+    @Override
+    public void release(Bitmap value) {
+      // NoOp
+    }
+  }
 }

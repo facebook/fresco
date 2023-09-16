@@ -8,29 +8,55 @@
 package com.facebook.fresco.animation.bitmap.preparation.ondemandanimation
 
 import com.facebook.fresco.animation.backend.AnimationInformation
-import com.facebook.fresco.animation.bitmap.BitmapFrameCache
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer
 import com.facebook.fresco.animation.bitmap.preparation.loadframe.FpsCompressorInfo
-import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFrameTaskFactory
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
+import java.util.Date
+import java.util.concurrent.ConcurrentHashMap
 
 class FrameLoaderFactory(
     private val platformBitmapFactory: PlatformBitmapFactory,
-    private val bitmapFrameRenderer: BitmapFrameRenderer,
-    private val bitmapCache: BitmapFrameCache,
     private val maxFpsRender: Int
 ) {
-  private val loadFrameTaskFactory by lazy {
-    LoadFrameTaskFactory(platformBitmapFactory, bitmapFrameRenderer)
+
+  fun createBufferLoader(
+      cacheKey: String,
+      bitmapFrameRenderer: BitmapFrameRenderer,
+      animationInformation: AnimationInformation
+  ): FrameLoader {
+    synchronized(UNUSED_FRAME_LOADERS) {
+      val unusedFrameLoader = UNUSED_FRAME_LOADERS[cacheKey]
+      if (unusedFrameLoader != null) {
+        UNUSED_FRAME_LOADERS.remove(cacheKey)
+        return unusedFrameLoader.frameLoader
+      }
+    }
+
+    return BufferFrameLoader(
+        platformBitmapFactory,
+        bitmapFrameRenderer,
+        FpsCompressorInfo(maxFpsRender),
+        animationInformation)
   }
 
-  fun createCacheLoader(animationInformation: AnimationInformation): FrameLoader =
-      CacheFrameLoader(loadFrameTaskFactory, bitmapCache, animationInformation)
+  companion object {
+    private val UNUSED_FRAME_LOADERS = ConcurrentHashMap<String, UnusedFrameLoader>()
 
-  fun createBufferLoader(animationInformation: AnimationInformation): FrameLoader =
-      BufferFrameLoader(
-          platformBitmapFactory,
-          bitmapFrameRenderer,
-          FpsCompressorInfo(maxFpsRender),
-          animationInformation)
+    fun saveUnusedFrame(cacheKey: String, frameLoader: FrameLoader) {
+      UNUSED_FRAME_LOADERS[cacheKey] = UnusedFrameLoader(frameLoader, Date())
+    }
+
+    fun clearUnusedUntil(until: Date) {
+      synchronized(UNUSED_FRAME_LOADERS) {
+        val oldItems = UNUSED_FRAME_LOADERS.filter { it.value.insertedTime < until }
+
+        oldItems.forEach {
+          it.value.frameLoader.clear()
+          UNUSED_FRAME_LOADERS.remove(it.key)
+        }
+      }
+    }
+  }
 }
+
+private class UnusedFrameLoader(val frameLoader: FrameLoader, val insertedTime: Date)
