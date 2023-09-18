@@ -18,7 +18,9 @@ public class DefaultCloseableReference<T> extends CloseableReference<T> {
   private static final String TAG = "DefaultCloseableReference";
 
   private DefaultCloseableReference(
-      SharedReference<T> sharedReference, LeakHandler leakHandler, @Nullable Throwable stacktrace) {
+      SharedReference<T> sharedReference,
+      @Nullable LeakHandler leakHandler,
+      @Nullable Throwable stacktrace) {
     super(sharedReference, leakHandler, stacktrace);
   }
 
@@ -56,7 +58,9 @@ public class DefaultCloseableReference<T> extends CloseableReference<T> {
           System.identityHashCode(mSharedReference),
           ref == null ? null : ref.getClass().getName());
 
-      mLeakHandler.reportLeak((SharedReference<Object>) mSharedReference, mStacktrace);
+      if (mLeakHandler != null) {
+        mLeakHandler.reportLeak((SharedReference<Object>) mSharedReference, mStacktrace);
+      }
 
       close();
     } finally {
