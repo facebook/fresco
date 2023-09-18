@@ -37,6 +37,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
   private final AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
   private final PlatformBitmapFactory mBitmapFactory;
   private final boolean mIsNewRenderImplementation;
+  private final boolean mTreatAnimatedImagesAsStateful;
 
   static @Nullable AnimatedImageDecoder sGifAnimatedImageDecoder = null;
   static @Nullable AnimatedImageDecoder sWebpAnimatedImageDecoder = null;
@@ -59,9 +60,18 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
       AnimatedDrawableBackendProvider animatedDrawableBackendProvider,
       PlatformBitmapFactory bitmapFactory,
       boolean isNewRenderImplementation) {
+    this(animatedDrawableBackendProvider, bitmapFactory, isNewRenderImplementation, true);
+  }
+
+  public AnimatedImageFactoryImpl(
+      AnimatedDrawableBackendProvider animatedDrawableBackendProvider,
+      PlatformBitmapFactory bitmapFactory,
+      boolean isNewRenderImplementation,
+      boolean treatAnimatedImagesAsStateful) {
     mAnimatedDrawableBackendProvider = animatedDrawableBackendProvider;
     mBitmapFactory = bitmapFactory;
     mIsNewRenderImplementation = isNewRenderImplementation;
+    mTreatAnimatedImagesAsStateful = treatAnimatedImagesAsStateful;
   }
 
   /**
@@ -164,7 +174,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
               .setBitmapTransformation(options.bitmapTransformation)
               .setSource(sourceUri)
               .build();
-      return new CloseableAnimatedImage(animatedImageResult);
+      return new CloseableAnimatedImage(animatedImageResult, mTreatAnimatedImagesAsStateful);
     } finally {
       CloseableReference.closeSafely(previewBitmap);
       CloseableReference.closeSafely(decodedFrames);
