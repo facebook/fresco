@@ -35,6 +35,7 @@ object BitmapUtil {
   const val ARGB_8888_BYTES_PER_PIXEL: Int = 4
   const val RGB_565_BYTES_PER_PIXEL: Int = 2
   const val RGBA_F16_BYTES_PER_PIXEL: Int = 8
+  const val RGBA_1010102_BYTES_PER_PIXEL = 4
   const val MAX_BITMAP_SIZE: Float = 2_048f
   private var useDecodeBufferHelper = false
 
@@ -150,6 +151,7 @@ object BitmapUtil {
         Bitmap.Config.ARGB_4444 -> ARGB_4444_BYTES_PER_PIXEL
         Bitmap.Config.RGB_565 -> RGB_565_BYTES_PER_PIXEL
         Bitmap.Config.RGBA_F16 -> RGBA_F16_BYTES_PER_PIXEL
+        Bitmap.Config.RGBA_1010102 -> RGBA_1010102_BYTES_PER_PIXEL
         Bitmap.Config.HARDWARE ->
             ARGB_8888_BYTES_PER_PIXEL // We assume ARGB_8888 is used underneath
         else -> throw UnsupportedOperationException("The provided Bitmap.Config is not supported")
