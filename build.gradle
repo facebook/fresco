@@ -21,7 +21,6 @@ buildscript {
         classpath GradleDeps.Android.gradlePlugin
         classpath GradleDeps.Kotlin.gradlePlugin
 
-        classpath GradleDeps.Publishing.gradleMavenPublishPlugin
         classpath GradleDeps.Kotlin.gradlePlugin
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -31,6 +30,7 @@ buildscript {
 
 plugins {
     id "de.undercouch.download" version "5.3.1"
+    id "com.vanniktech.maven.publish" version "0.25.3"
 }
 
 project.ext {
@@ -49,6 +49,11 @@ subprojects {
     tasks.withType(Javadoc).all {
         enabled = false
     }
+
+    tasks.withType(com.android.build.gradle.tasks.JavaDocGenerationTask).all {
+        enabled = false
+    }
+
 
     if (System.getenv("SANDCASTLE") == "1") {
         tasks.withType(Test).all {
