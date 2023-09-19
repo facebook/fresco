@@ -15,7 +15,9 @@ import javax.annotation.Nullable;
 public class RefCountCloseableReference<T> extends CloseableReference<T> {
 
   private RefCountCloseableReference(
-      SharedReference<T> sharedReference, LeakHandler leakHandler, @Nullable Throwable stacktrace) {
+      SharedReference<T> sharedReference,
+      @Nullable LeakHandler leakHandler,
+      @Nullable Throwable stacktrace) {
     super(sharedReference, leakHandler, stacktrace);
   }
 

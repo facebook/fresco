@@ -7,12 +7,12 @@
 
 package com.facebook.fresco.ui.common
 
-object NoOpImagePerfNotifier : ImagePerfNotifier {
-  override fun notifyListenersOfVisibilityStateUpdate(
+interface ImagePerfNotifier {
+
+  fun notifyListenersOfVisibilityStateUpdate(
       state: ImagePerfState,
       visibilityState: VisibilityState
-  ): Unit = Unit
+  )
 
-  override fun notifyStatusUpdated(state: ImagePerfState, imageLoadStatus: ImageLoadStatus): Unit =
-      Unit
+  fun notifyStatusUpdated(state: ImagePerfState, imageLoadStatus: ImageLoadStatus)
 }

@@ -76,7 +76,7 @@ public class SharedReference<T> {
   @GuardedBy("this")
   private int mRefCount;
 
-  private final ResourceReleaser<T> mResourceReleaser;
+  private final @Nullable ResourceReleaser<T> mResourceReleaser;
 
   /**
    * Construct a new shared-reference that will 'own' the supplied {@code value}. The reference
@@ -87,9 +87,10 @@ public class SharedReference<T> {
    * @param resourceReleaser non-null ResourceReleaser for the value
    * @param keepAlive whether to add to {@code sLiveObjects}
    */
-  public SharedReference(T value, ResourceReleaser<T> resourceReleaser, boolean keepAlive) {
+  public SharedReference(
+      T value, @Nullable ResourceReleaser<T> resourceReleaser, boolean keepAlive) {
     mValue = Preconditions.checkNotNull(value);
-    mResourceReleaser = Preconditions.checkNotNull(resourceReleaser);
+    mResourceReleaser = resourceReleaser;
     mRefCount = 1;
     if (keepAlive) {
       addLiveReference(value);
@@ -205,7 +206,9 @@ public class SharedReference<T> {
         mValue = null;
       }
       if (deleted != null) {
-        mResourceReleaser.release(deleted);
+        if (mResourceReleaser != null) {
+          mResourceReleaser.release(deleted);
+        }
         removeLiveReference(deleted);
       }
     }

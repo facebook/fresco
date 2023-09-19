@@ -91,8 +91,8 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
   protected boolean mIsClosed = false;
 
   protected final SharedReference<T> mSharedReference;
-  protected final LeakHandler mLeakHandler;
-  @Nullable protected final Throwable mStacktrace;
+  protected final @Nullable LeakHandler mLeakHandler;
+  protected final @Nullable Throwable mStacktrace;
 
   public interface LeakHandler {
     void reportLeak(SharedReference<Object> reference, @Nullable Throwable stacktrace);
@@ -136,7 +136,9 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
       };
 
   protected CloseableReference(
-      SharedReference<T> sharedReference, LeakHandler leakHandler, @Nullable Throwable stacktrace) {
+      SharedReference<T> sharedReference,
+      @Nullable LeakHandler leakHandler,
+      @Nullable Throwable stacktrace) {
     mSharedReference = Preconditions.checkNotNull(sharedReference);
     sharedReference.addReference();
     mLeakHandler = leakHandler;
@@ -145,8 +147,8 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
 
   protected CloseableReference(
       T t,
-      ResourceReleaser<T> resourceReleaser,
-      LeakHandler leakHandler,
+      @Nullable ResourceReleaser<T> resourceReleaser,
+      @Nullable LeakHandler leakHandler,
       @Nullable Throwable stacktrace,
       boolean keepAlive) {
     mSharedReference = new SharedReference<T>(t, resourceReleaser, keepAlive);
@@ -224,7 +226,7 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
           case REF_TYPE_REF_COUNT:
             return new RefCountCloseableReference<>(t, resourceReleaser, leakHandler, stacktrace);
           case REF_TYPE_NOOP:
-            return new NoOpCloseableReference<>(t, resourceReleaser, leakHandler, stacktrace);
+            return new NoOpCloseableReference<>(t);
           case REF_TYPE_DEFAULT:
             // return default
         }
