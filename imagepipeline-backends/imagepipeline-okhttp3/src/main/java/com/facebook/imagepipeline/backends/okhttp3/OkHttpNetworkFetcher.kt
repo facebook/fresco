@@ -22,6 +22,7 @@ import com.facebook.imagepipeline.producers.ProducerContext
 import java.io.IOException
 import java.lang.Exception
 import java.util.concurrent.Executor
+import kotlin.collections.Map
 import okhttp3.CacheControl
 import okhttp3.Call
 import okhttp3.Callback
@@ -89,7 +90,10 @@ constructor(
     fetchState.fetchCompleteTime = SystemClock.elapsedRealtime()
   }
 
-  override fun getExtraMap(fetchState: OkHttpNetworkFetchState, byteSize: Int) =
+  override fun getExtraMap(
+      fetchState: OkHttpNetworkFetchState,
+      byteSize: Int
+  ): Map<String, String>? =
       mapOf(
           QUEUE_TIME to (fetchState.responseTime - fetchState.submitTime).toString(),
           FETCH_TIME to (fetchState.fetchCompleteTime - fetchState.responseTime).toString(),
@@ -139,8 +143,7 @@ constructor(
               } catch (e: Exception) {
                 handleException(call, e, callback)
               }
-            }
-                ?: handleException(call, IOException("Response body null: $response"), callback)
+            } ?: handleException(call, IOException("Response body null: $response"), callback)
           }
 
           override fun onFailure(call: Call, e: IOException) = handleException(call, e, callback)

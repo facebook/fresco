@@ -124,7 +124,6 @@ object VitoViewInflater {
                             .toFloat()))
               }
             }
-            R.styleable.GenericDraweeHierarchy_viewAspectRatio,
             R.styleable.GenericDraweeHierarchy_retryImage,
             R.styleable.GenericDraweeHierarchy_retryImageScaleType,
             R.styleable.GenericDraweeHierarchy_roundWithOverlayColor,

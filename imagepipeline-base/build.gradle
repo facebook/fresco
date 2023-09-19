@@ -13,6 +13,7 @@ apply plugin: 'kotlin-android'
 
 dependencies {
     compileOnly Deps.AndroidX.androidxAnnotation
+    compileOnly Deps.AndroidX.exifInterface
     compileOnly Deps.AndroidX.legacySupportCoreUtils
     implementation Deps.inferAnnotation
     compileOnly Deps.jsr305

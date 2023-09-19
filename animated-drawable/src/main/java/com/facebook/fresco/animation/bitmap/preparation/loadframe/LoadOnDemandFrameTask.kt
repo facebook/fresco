@@ -35,8 +35,7 @@ class LoadOnDemandFrameTask(
               val bitmap = getCachedBitmap(it) ?: return@mapNotNull null
               Pair(it, bitmap)
             }
-            .firstOrNull()
-            ?: return exit(null)
+            .firstOrNull() ?: return exit(null)
 
     val canvasBitmap = platformBitmapFactory.createBitmap(nearestFrame.second.get())
     (nearestFrame.first + 1..frameNumber).forEach {
