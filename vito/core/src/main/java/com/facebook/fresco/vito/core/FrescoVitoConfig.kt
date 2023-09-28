@@ -31,4 +31,6 @@ interface FrescoVitoConfig {
   fun fastPathForEmptyRequests(): Boolean
 
   fun enableWindowWideColorGamut(): Boolean
+
+  fun handleImageResultInBackground(): Boolean
 }

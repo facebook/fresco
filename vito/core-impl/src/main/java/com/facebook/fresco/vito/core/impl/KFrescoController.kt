@@ -186,7 +186,8 @@ class KFrescoController(
       dataSource.subscribe(
           ImageFetchSubscriber(
               imageId, drawable, imageToDataModelMapper, debugOverlayHandler, uiThreadExecutor),
-          uiThreadExecutor) // Keyframes require callbacks to be on the main thread.
+          if (config.handleImageResultInBackground()) lightweightBackgroundThreadExecutor
+          else uiThreadExecutor) // Keyframes require callbacks to be on the main thread.
       drawable.dataSource = dataSource
     }
     drawable.setFetchSubmitted(true)
