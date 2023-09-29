@@ -36,6 +36,8 @@ LOCAL_LDLIBS := -latomic -llog -ljnigraphics
 LOCAL_LDFLAGS += $(FRESCO_CPP_LDFLAGS)
 
 LOCAL_SHARED_LIBRARIES += webp
+LOCAL_SHARED_LIBRARIES += webpdemux
+LOCAL_SHARED_LIBRARIES += webpmux
 
 LOCAL_STATIC_LIBRARIES += fb_jpegturbo
 LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_jpegturbo.a
@@ -47,5 +49,5 @@ LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_png.a
 
 include $(BUILD_SHARED_LIBRARY)
 $(call import-module,libpng-1.6.37)
-$(call import-module,libwebp-1.0.0)
+$(call import-module,libwebp-1.3.2)
 $(call import-module,libjpeg-turbo-1.5.3)
