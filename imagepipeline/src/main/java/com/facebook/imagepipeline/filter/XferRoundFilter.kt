@@ -13,7 +13,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
-import com.facebook.common.internal.Preconditions
 
 /**
  * Not-in-place rounding image algorithm using [Canvas] that requires an Android version >= 3.1. If
@@ -24,8 +23,8 @@ import com.facebook.common.internal.Preconditions
 object XferRoundFilter {
   @JvmStatic
   fun xferRoundBitmap(output: Bitmap, source: Bitmap, enableAntiAliasing: Boolean) {
-    Preconditions.checkNotNull(source)
-    Preconditions.checkNotNull(output)
+    checkNotNull(source)
+    checkNotNull(output)
     output.setHasAlpha(true)
     val circlePaint: Paint
     val xfermodePaint: Paint
