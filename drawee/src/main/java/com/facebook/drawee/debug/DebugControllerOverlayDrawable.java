@@ -210,10 +210,16 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
       addDebugText(canvas, "ID", mControllerId);
     }
     addDebugText(canvas, "D", format("%dx%d", bounds.width(), bounds.height()));
+    if (bounds.height() > 0) {
+      addDebugText(canvas, "DAR", bounds.width() / (float) bounds.height());
+    }
 
     // use text color to indicate dimension differences
     final int sizeColor = determineSizeHintColor(mWidthPx, mHeightPx, mScaleType);
     addDebugText(canvas, "I", format("%dx%d", mWidthPx, mHeightPx), sizeColor);
+    if (mHeightPx > 0) {
+      addDebugText(canvas, "IAR", mWidthPx / (float) mHeightPx);
+    }
 
     addDebugText(canvas, "I", format("%d KiB", (mImageSizeBytes / 1024)));
     if (mImageFormat != null) {

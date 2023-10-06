@@ -43,10 +43,18 @@ public class DefaultDebugOverlayFactory2 extends BaseDebugOverlayFactory2 {
       FrescoDrawable2 abstractDrawable = (FrescoDrawable2) drawable;
       Rect bounds = abstractDrawable.getBounds();
       overlay.addDebugData("D", formatDimensions(bounds.width(), bounds.height()));
+      overlay.addDebugData("DAR", String.valueOf(bounds.width() / (float) bounds.height()));
       overlay.addDebugData(
           "I",
           formatDimensions(
               abstractDrawable.getActualImageWidthPx(), abstractDrawable.getActualImageHeightPx()));
+      if (abstractDrawable.getActualImageHeightPx() > 0) {
+        overlay.addDebugData(
+            "IAR",
+            String.valueOf(
+                abstractDrawable.getActualImageWidthPx()
+                    / (float) abstractDrawable.getActualImageHeightPx()));
+      }
     }
   }
 
