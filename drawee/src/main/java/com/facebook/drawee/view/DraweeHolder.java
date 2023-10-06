@@ -189,6 +189,10 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     }
   }
 
+  public void resetActualImage() {
+    setController(null);
+  }
+
   /** Gets the controller if set, null otherwise. */
   @Nullable
   public DraweeController getController() {

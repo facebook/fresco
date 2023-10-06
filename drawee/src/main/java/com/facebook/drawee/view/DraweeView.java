@@ -144,6 +144,10 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
     return mDraweeHolder.getController() != null;
   }
 
+  public void resetActualImage() {
+    setController(null);
+  }
+
   @Override
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
