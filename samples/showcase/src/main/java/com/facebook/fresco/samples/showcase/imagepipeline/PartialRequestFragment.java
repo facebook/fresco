@@ -49,8 +49,8 @@ public class PartialRequestFragment extends BaseShowcaseFragment {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            partialDrawee.setController(null);
-            fullDrawee.setController(null);
+            partialDrawee.resetActualImage();
+            fullDrawee.resetActualImage();
             Fresco.getImagePipeline().clearDiskCaches();
             Fresco.getImagePipeline().clearMemoryCaches();
           }

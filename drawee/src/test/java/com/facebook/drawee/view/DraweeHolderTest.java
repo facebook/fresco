@@ -83,7 +83,7 @@ public class DraweeHolderTest {
   @Test
   public void testClearControllerKeepsHierarchy() {
     mDraweeHolder.setController(mController);
-    mDraweeHolder.setController(null);
+    mDraweeHolder.resetActualImage();
     assertSame(mDraweeHierarchy, mDraweeHolder.getHierarchy());
     assertNull(mDraweeHolder.getController());
     assertNull(mController.getHierarchy());
@@ -125,7 +125,7 @@ public class DraweeHolderTest {
 
   @Test
   public void testSetNullController() {
-    mDraweeHolder.setController(null);
+    mDraweeHolder.resetActualImage();
     mDraweeHolder.onAttach();
     mDraweeHolder.onDetach();
     mDraweeHolder.onAttach();
@@ -140,7 +140,7 @@ public class DraweeHolderTest {
     mDraweeHolder.setController(mController);
     draweeHolder2.setController(mController);
 
-    mDraweeHolder.setController(null);
+    mDraweeHolder.resetActualImage();
     verify(mController, never()).onDetach();
     assertEquals(draweeHierarchy2, mController.getHierarchy());
   }

@@ -221,7 +221,7 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
   @Deprecated
   public void setImageDrawable(@Nullable Drawable drawable) {
     init(getContext());
-    mDraweeHolder.setController(null);
+    mDraweeHolder.resetActualImage();
     super.setImageDrawable(drawable);
   }
 
@@ -234,7 +234,7 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
   @Deprecated
   public void setImageBitmap(Bitmap bm) {
     init(getContext());
-    mDraweeHolder.setController(null);
+    mDraweeHolder.resetActualImage();
     super.setImageBitmap(bm);
   }
 
@@ -247,7 +247,7 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
   @Deprecated
   public void setImageResource(int resId) {
     init(getContext());
-    mDraweeHolder.setController(null);
+    mDraweeHolder.resetActualImage();
     super.setImageResource(resId);
   }
 
@@ -260,7 +260,7 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
   @Deprecated
   public void setImageURI(Uri uri) {
     init(getContext());
-    mDraweeHolder.setController(null);
+    mDraweeHolder.resetActualImage();
     super.setImageURI(uri);
   }
 

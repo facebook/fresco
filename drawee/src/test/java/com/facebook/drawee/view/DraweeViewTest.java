@@ -80,7 +80,7 @@ public class DraweeViewTest {
   public void testClearControllerKeepsHierarchy() {
     mDraweeView.setHierarchy(mDraweeHierarchy);
     mDraweeView.setController(mController);
-    mDraweeView.setController(null);
+    mDraweeView.resetActualImage();
     assertNull(mDraweeView.getController());
     assertSame(mTopLevelDrawable, mDraweeView.getDrawable());
     verify(mController).setHierarchy(null);
@@ -156,7 +156,7 @@ public class DraweeViewTest {
   @Test
   public void testLifecycle_NullController() {
     mDraweeView.setHierarchy(mDraweeHierarchy);
-    mDraweeView.setController(null);
+    mDraweeView.resetActualImage();
     mDraweeView.onStartTemporaryDetach();
     mDraweeView.onFinishTemporaryDetach();
   }
