@@ -167,12 +167,7 @@ class DecodeProducer(
         return
       }
       val imageFormat = encodedImage.imageFormat
-      val imageFormatStr =
-          if (imageFormat != null) {
-            imageFormat.name
-          } else {
-            "unknown"
-          }
+      val imageFormatStr = imageFormat?.name ?: "unknown"
       val encodedImageSize = encodedImage.width.toString() + "x" + encodedImage.height
       val sampleSize = encodedImage.sampleSize.toString()
       val isLast = isLast(status)
