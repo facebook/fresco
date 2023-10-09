@@ -199,7 +199,7 @@ public class ImagePipelinePrefetchFragment extends BaseShowcaseFragment {
               }
             } else {
               for (int i = 0; i < mDraweesHolder.getChildCount(); i++) {
-                ((SimpleDraweeView) mDraweesHolder.getChildAt(i)).setController(null);
+                ((SimpleDraweeView) mDraweesHolder.getChildAt(i)).resetActualImage();
               }
             }
             mShowing = !mShowing;

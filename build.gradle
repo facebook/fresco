@@ -248,7 +248,7 @@ subprojects {
             "v${LIBWEBP_VERSION}.tar.gz", // The downloaded file
             'libwebp', // The folder where the file is downloaded
             "libwebp-${LIBWEBP_VERSION}", // The first dir where we have put our customisation
-            ['src/**/*.c', 'src/**/*.h', '*.mk'], // Files to compile
+            ['**/*.c', '**/*.h', '*.mk'], // Files to compile
             "libwebp-${LIBWEBP_VERSION}" // Final destination dir
     )
 }

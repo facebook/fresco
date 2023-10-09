@@ -26,7 +26,7 @@ object InPlaceRoundFilter {
    */
   @JvmStatic
   fun roundBitmapInPlace(bitmap: Bitmap) {
-    Preconditions.checkNotNull(bitmap)
+    checkNotNull(bitmap)
     val w = bitmap.width
     val h = bitmap.height
     val radius = Math.min(w, h) / 2

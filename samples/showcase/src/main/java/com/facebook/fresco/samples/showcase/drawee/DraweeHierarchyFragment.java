@@ -92,7 +92,7 @@ public class DraweeHierarchyFragment extends BaseShowcaseFragment {
             new View.OnClickListener() {
               @Override
               public void onClick(View v) {
-                draweeView.setController(null);
+                draweeView.resetActualImage();
                 Fresco.getImagePipeline().evictFromCache(uriSuccess);
               }
             });

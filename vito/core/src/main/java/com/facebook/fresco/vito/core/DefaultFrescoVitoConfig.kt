@@ -36,6 +36,8 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
 
   override fun enableWindowWideColorGamut(): Boolean = false
 
+  override fun handleImageResultInBackground(): Boolean = false
+
   open class DefaultPrefetchConfig : PrefetchConfig {
     override fun prefetchInOnPrepare(): Boolean = true
 

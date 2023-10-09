@@ -33,20 +33,20 @@ object RenderScriptBlurFilter {
   @JvmStatic
   @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
   fun blurBitmap(dest: Bitmap, src: Bitmap, context: Context, radius: Int) {
-    Preconditions.checkNotNull(dest)
-    Preconditions.checkNotNull(src)
-    Preconditions.checkNotNull(context)
+    checkNotNull(dest)
+    checkNotNull(src)
+    checkNotNull(context)
     Preconditions.checkArgument(radius > 0 && radius <= BLUR_MAX_RADIUS)
     var rs: RenderScript? = null
     try {
-      rs = Preconditions.checkNotNull(RenderScript.create(context))
+      rs = checkNotNull(RenderScript.create(context))
 
       // Create an Intrinsic Blur Script using the Renderscript
       val blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs))
 
       // Create the input/output allocations with Renderscript and the src/dest bitmaps
-      val allIn = Preconditions.checkNotNull(Allocation.createFromBitmap(rs, src))
-      val allOut = Preconditions.checkNotNull(Allocation.createFromBitmap(rs, dest))
+      val allIn = checkNotNull(Allocation.createFromBitmap(rs, src))
+      val allOut = checkNotNull(Allocation.createFromBitmap(rs, dest))
 
       // Set the radius of the blur
       blurScript.setRadius(radius.toFloat())
