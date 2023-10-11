@@ -159,7 +159,7 @@ class DecodeProducer(
         lastScheduledScanNumber: Int
     ) {
       // do not run for partial results of anything except JPEG
-      var status = status
+      var newStatus = status
       if (encodedImage.imageFormat !== DefaultImageFormats.JPEG && isNotLast(status)) {
         return
       }
@@ -208,7 +208,7 @@ class DecodeProducer(
                 throw e
               }
           if (encodedImage.sampleSize != EncodedImage.DEFAULT_SAMPLE_SIZE) {
-            status = status or IS_RESIZING_DONE
+            newStatus = status or IS_RESIZING_DONE
           }
         } catch (e: Exception) {
           val extraMap =
@@ -237,7 +237,7 @@ class DecodeProducer(
                 sampleSize)
         producerListener.onProducerFinishWithSuccess(producerContext, PRODUCER_NAME, extraMap)
         setImageExtras(encodedImage, image, lastScheduledScanNumber)
-        handleResult(image, status)
+        handleResult(image, newStatus)
       } finally {
         EncodedImage.closeSafely(encodedImage)
       }
