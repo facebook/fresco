@@ -277,8 +277,7 @@ class DecodeProducer(
       producerContext.putExtra(HasExtraData.KEY_ENCODED_SIZE, encodedImage.size)
       producerContext.putExtra(HasExtraData.KEY_COLOR_SPACE, encodedImage.colorSpace)
       if (image is CloseableBitmap) {
-        val bitmap = image.underlyingBitmap
-        val config = if (bitmap == null) null else bitmap.config
+        val config = image.underlyingBitmap.config
         producerContext.putExtra(HasExtraData.KEY_BITMAP_CONFIG, config.toString())
       }
       image?.putExtras(producerContext.getExtras())
@@ -301,16 +300,9 @@ class DecodeProducer(
       val queueStr = queueTime.toString()
       val qualityStr = quality.isOfGoodEnoughQuality.toString()
       val finalStr = isFinal.toString()
-      var nonFatalErrorStr: String? = null
-      if (image != null) {
-        val nonFatalError = image.extras[NON_FATAL_DECODE_ERROR]
-        if (nonFatalError != null) {
-          nonFatalErrorStr = nonFatalError.toString()
-        }
-      }
+      val nonFatalErrorStr: String? = image?.extras?.get(NON_FATAL_DECODE_ERROR)?.toString()
       return if (image is CloseableStaticBitmap) {
         val bitmap = image.underlyingBitmap
-        checkNotNull(bitmap)
         val sizeStr = bitmap.width.toString() + "x" + bitmap.height
         // We need this because the copyOf() utility method doesn't have a proper overload method
         // for all these parameters
