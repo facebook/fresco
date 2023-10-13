@@ -301,13 +301,7 @@ class DecodeProducer(
       val queueStr = queueTime.toString()
       val qualityStr = quality.isOfGoodEnoughQuality.toString()
       val finalStr = isFinal.toString()
-      var nonFatalErrorStr: String? = null
-      if (image != null) {
-        val nonFatalError = image.extras[NON_FATAL_DECODE_ERROR]
-        if (nonFatalError != null) {
-          nonFatalErrorStr = nonFatalError.toString()
-        }
-      }
+      val nonFatalErrorStr = image?.extras?.get(NON_FATAL_DECODE_ERROR)?.toString()
       return if (image is CloseableStaticBitmap) {
         val bitmap = image.underlyingBitmap
         checkNotNull(bitmap)
