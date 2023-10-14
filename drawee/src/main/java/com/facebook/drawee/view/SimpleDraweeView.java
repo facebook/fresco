@@ -117,7 +117,7 @@ public class SimpleDraweeView extends GenericDraweeView {
     }
   }
 
-  protected AbstractDraweeControllerBuilder getControllerBuilder() {
+  public AbstractDraweeControllerBuilder getControllerBuilder() {
     return mControllerBuilder;
   }
 
