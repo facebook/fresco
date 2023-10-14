@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.producers
 
+import android.graphics.Bitmap
 import com.facebook.common.internal.ImmutableMap
 import com.facebook.common.internal.Supplier
 import com.facebook.common.logging.FLog
@@ -277,8 +278,8 @@ class DecodeProducer(
       producerContext.putExtra(HasExtraData.KEY_ENCODED_SIZE, encodedImage.size)
       producerContext.putExtra(HasExtraData.KEY_COLOR_SPACE, encodedImage.colorSpace)
       if (image is CloseableBitmap) {
-        val bitmap = image.underlyingBitmap
-        val config = if (bitmap == null) null else bitmap.config
+        @Suppress("RedundantNullableReturnType")
+        val config: Bitmap.Config? = image.underlyingBitmap.config
         producerContext.putExtra(HasExtraData.KEY_BITMAP_CONFIG, config.toString())
       }
       image?.putExtras(producerContext.getExtras())
