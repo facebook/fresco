@@ -189,7 +189,10 @@ object FrescoVitoImage2Spec {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
         FrescoVitoProvider.getConfig().enableWindowWideColorGamut()) {
       val activity: Activity? = ContextUtils.findActivityInContext(c.androidContext)
-      activity?.window?.colorMode = ActivityInfo.COLOR_MODE_WIDE_COLOR_GAMUT
+      val window = activity?.window
+      if (window != null && window.colorMode != ActivityInfo.COLOR_MODE_WIDE_COLOR_GAMUT) {
+        window.colorMode = ActivityInfo.COLOR_MODE_WIDE_COLOR_GAMUT
+      }
     }
 
     FrescoVitoProvider.getController()
