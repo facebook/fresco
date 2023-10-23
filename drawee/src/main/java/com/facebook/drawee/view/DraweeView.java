@@ -49,6 +49,8 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
 
   private static boolean sGlobalLegacyVisibilityHandlingEnabled = false;
 
+  private @Nullable Object mExtraData = null;
+
   public static void setGlobalLegacyVisibilityHandlingEnabled(
       boolean legacyVisibilityHandlingEnabled) {
     sGlobalLegacyVisibilityHandlingEnabled = legacyVisibilityHandlingEnabled;
@@ -103,6 +105,14 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
         FrescoSystrace.endSection();
       }
     }
+  }
+
+  public void setExtraData(@Nullable Object extraData) {
+    mExtraData = extraData;
+  }
+
+  public @Nullable Object getExtraData() {
+    return mExtraData;
   }
 
   /** Sets the hierarchy. */
