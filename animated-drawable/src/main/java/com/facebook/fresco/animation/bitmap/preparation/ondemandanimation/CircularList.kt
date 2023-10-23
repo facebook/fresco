@@ -9,8 +9,15 @@ package com.facebook.fresco.animation.bitmap.preparation.ondemandanimation
 
 class CircularList(val size: Int) {
 
-  fun isTargetAhead(from: Int, target: Int, lenght: Int): Boolean =
-      (0 until lenght).any { getPosition(from + it) == target }
+  fun isTargetAhead(from: Int, target: Int, length: Int): Boolean {
+    val endPosition = getPosition(from + length)
+
+    return if (from < endPosition) {
+      target in from..endPosition
+    } else {
+      target in from..size || target in 0..endPosition
+    }
+  }
 
   fun getPosition(target: Int): Int {
     val circularPosition = target % size
