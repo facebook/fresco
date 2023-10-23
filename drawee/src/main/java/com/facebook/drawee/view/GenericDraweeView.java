@@ -27,6 +27,18 @@ import javax.annotation.Nullable;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
 
+  private static @Nullable InflateHierarchyListener sInflateHierarchyListener;
+
+  public static void setInflateHierarchyListener(
+      @Nullable InflateHierarchyListener inflateHierarchyListener) {
+    sInflateHierarchyListener = inflateHierarchyListener;
+  }
+
+  public interface InflateHierarchyListener {
+    void onInflateHierarchy(
+        GenericDraweeView draweeview, Context context, @Nullable AttributeSet attrs);
+  }
+
   public GenericDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
     super(context);
     setHierarchy(hierarchy);
@@ -61,6 +73,9 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
         GenericDraweeHierarchyInflater.inflateBuilder(context, attrs);
     setAspectRatio(builder.getDesiredAspectRatio());
     setHierarchy(builder.build());
+    if (sInflateHierarchyListener != null) {
+      sInflateHierarchyListener.onInflateHierarchy(this, context, attrs);
+    }
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.endSection();
     }
