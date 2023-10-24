@@ -649,16 +649,16 @@ public abstract class AbstractDraweeController<T, INFO>
         if (isFinished) {
           logMessageAndImage("set_final_result @ onNewResult", image);
           mDataSource = null;
-          mSettableDraweeHierarchy.setImage(drawable, 1f, wasImmediate);
+          getSettableDraweeHierarchy().setImage(drawable, 1f, wasImmediate);
           reportSuccess(id, image, dataSource);
         } else if (deliverTempResult) {
           logMessageAndImage("set_temporary_result @ onNewResult", image);
-          mSettableDraweeHierarchy.setImage(drawable, 1f, wasImmediate);
+          getSettableDraweeHierarchy().setImage(drawable, 1f, wasImmediate);
           reportSuccess(id, image, dataSource);
           // IMPORTANT: do not execute any instance-specific code after this point
         } else {
           logMessageAndImage("set_intermediate_result @ onNewResult", image);
-          mSettableDraweeHierarchy.setImage(drawable, progress, wasImmediate);
+          getSettableDraweeHierarchy().setImage(drawable, progress, wasImmediate);
           reportIntermediateSet(id, image);
           // IMPORTANT: do not execute any instance-specific code after this point
         }
@@ -889,4 +889,13 @@ public abstract class AbstractDraweeController<T, INFO>
   }
 
   public abstract @Nullable Map<String, Object> obtainExtrasFromImage(INFO info);
+
+  private SettableDraweeHierarchy getSettableDraweeHierarchy() {
+    SettableDraweeHierarchy hierarchy = mSettableDraweeHierarchy;
+    if (hierarchy == null) {
+      throw new IllegalStateException(
+          "mSettableDraweeHierarchy is null; Caller context: " + mCallerContext);
+    }
+    return hierarchy;
+  }
 }
