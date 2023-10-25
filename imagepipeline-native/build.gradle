@@ -71,6 +71,11 @@ android {
         }
     }
     ndkLibs.each { lib -> makeNdkTasks lib[0], lib[1] }
+    preBuild.dependsOn(
+        "ndk_build_bitmaps",
+        "ndk_build_imagepipeline",
+        "ndk_build_memchunk"
+    )
 }
 
 apply plugin: "com.vanniktech.maven.publish"
