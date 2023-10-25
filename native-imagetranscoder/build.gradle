@@ -48,7 +48,6 @@ task fetchNativeDeps(dependsOn: [copyLibjpeg]) {
 }
 
 android {
-
     def ndkLibs = [
             ['native-imagetranscoder', [copyLibjpeg]]]
 
@@ -76,6 +75,10 @@ android {
         abortOnError false
     }
     ndkLibs.each { lib -> makeNdkTasks lib[0], lib[1] }
+    preBuild.dependsOn(
+        "ndk_build_native-imagetranscoder",
+        "copyLibjpeg"
+    )
 }
 
 apply plugin: "com.vanniktech.maven.publish"
