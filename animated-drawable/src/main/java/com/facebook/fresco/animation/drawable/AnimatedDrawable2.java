@@ -391,6 +391,16 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
   }
 
   /**
+   * Get the duration of a specific frame. If not animation backend is set, 0 will be returned.
+   *
+   * @param frameNumber the requested frame
+   * @return the duration of the frame
+   */
+  public int getFrameDurationMs(int frameNumber) {
+    return mAnimationBackend == null ? 0 : mAnimationBackend.getFrameDurationMs(frameNumber);
+  }
+
+  /**
    * Get the loop count of the animation. The returned value is either
    * [AnimationInformation#LOOP_COUNT_INFINITE] if the animation is repeated infinitely or a
    * positive integer that corresponds to the number of loops. If no animation backend is set,
