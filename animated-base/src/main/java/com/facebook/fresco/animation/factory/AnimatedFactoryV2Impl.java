@@ -67,7 +67,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
       boolean downscaleFrameToDrawableDimensions,
       boolean useBufferLoaderStrategy,
       int animationFpsLimit,
-      SerialExecutorService serialExecutorServiceForFramePreparing) {
+      @Nullable SerialExecutorService serialExecutorServiceForFramePreparing) {
     mPlatformBitmapFactory = platformBitmapFactory;
     mExecutorSupplier = executorSupplier;
     mBackingCache = backingCache;
