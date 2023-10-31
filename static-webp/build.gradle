@@ -57,6 +57,12 @@ android {
         abortOnError false
     }
     ndkLibs.each { lib -> makeNdkTasks lib[0], lib[1] }
+    preBuild.dependsOn(
+        "ndk_build_static-webp",
+        "copyLibjpeg",
+        "copyLibpng",
+        "copyLibwebp"
+    )
 }
 
 apply plugin: "com.vanniktech.maven.publish"

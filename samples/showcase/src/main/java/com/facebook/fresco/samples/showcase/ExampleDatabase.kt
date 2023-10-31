@@ -37,7 +37,6 @@ object ExampleDatabase {
           ExampleCategory(
               "Drawee",
               listOf(
-                  ExampleItem("Simple Drawee") { DraweeSimpleFragment() },
                   ExampleItem("Media Provider") { DraweeMediaPickerFragment() },
                   ExampleItem("Scale Type") { DraweeScaleTypeFragment() },
                   ExampleItem("Simple DraweeSpan") { DraweeSpanSimpleTextFragment() },
@@ -96,6 +95,7 @@ object ExampleDatabase {
                       "Vito Litho component with listener."),
                   ExampleItem("Vito Litho: Gallery") { FrescoVitoLithoGalleryFragment() },
                   ExampleItem("Vito View: Simple") { VitoViewSimpleFragment() },
+                  ExampleItem("Vito View: Simple 2") { VitoSimpleFragment() },
                   ExampleItem("Vito View: Recycler") { VitoViewRecyclerFragment() },
                   ExampleItem("Vito View: Prefetch") { VitoViewPrefetchFragment() },
                   ExampleItem("Vito View: Kotlin Extensions") { VitoViewKtxFragment() },

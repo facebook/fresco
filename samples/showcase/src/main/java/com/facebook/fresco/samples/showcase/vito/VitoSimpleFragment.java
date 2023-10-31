@@ -5,43 +5,39 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.samples.showcase.drawee;
+package com.facebook.fresco.samples.showcase.vito;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import androidx.annotation.Nullable;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
-import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
+import com.facebook.fresco.vito.view.VitoView;
 
-/** Simple drawee fragment that just displays an image. */
-public class DraweeSimpleFragment extends BaseShowcaseFragment {
+/** Simple Vito fragment that just displays an image. */
+public class VitoSimpleFragment extends BaseShowcaseFragment {
 
   @Nullable
   @Override
   public View onCreateView(
       LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_drawee_simple, container, false);
+    return inflater.inflate(R.layout.fragment_vito_simple, container, false);
   }
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    final Uri uri = sampleUris().createSampleUri(ImageUriProvider.ImageSize.M);
-
-    final SimpleDraweeView simpleDraweeView =
-        (SimpleDraweeView) view.findViewById(R.id.drawee_view);
-    simpleDraweeView.setImageURI(uri);
+    final ImageView imageView = (ImageView) view.findViewById(R.id.image);
+    VitoView.show(sampleUris().createSampleUri(), imageView);
 
     view.findViewById(R.id.btn_random_uri)
         .setOnClickListener(
             new View.OnClickListener() {
               @Override
               public void onClick(View v) {
-                simpleDraweeView.setImageURI(sampleUris().createSampleUri());
+                VitoView.show(sampleUris().createSampleUri(), imageView);
               }
             });
   }

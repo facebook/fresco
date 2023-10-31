@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.producers
 
+import android.graphics.Bitmap
 import com.facebook.common.internal.ImmutableMap
 import com.facebook.common.internal.Supplier
 import com.facebook.common.logging.FLog
@@ -159,7 +160,7 @@ class DecodeProducer(
         lastScheduledScanNumber: Int
     ) {
       // do not run for partial results of anything except JPEG
-      var status = status
+      var newStatus = status
       if (encodedImage.imageFormat !== DefaultImageFormats.JPEG && isNotLast(status)) {
         return
       }
@@ -167,12 +168,7 @@ class DecodeProducer(
         return
       }
       val imageFormat = encodedImage.imageFormat
-      val imageFormatStr =
-          if (imageFormat != null) {
-            imageFormat.name
-          } else {
-            "unknown"
-          }
+      val imageFormatStr = imageFormat?.name ?: "unknown"
       val encodedImageSize = encodedImage.width.toString() + "x" + encodedImage.height
       val sampleSize = encodedImage.sampleSize.toString()
       val isLast = isLast(status)
@@ -213,7 +209,7 @@ class DecodeProducer(
                 throw e
               }
           if (encodedImage.sampleSize != EncodedImage.DEFAULT_SAMPLE_SIZE) {
-            status = status or IS_RESIZING_DONE
+            newStatus = status or IS_RESIZING_DONE
           }
         } catch (e: Exception) {
           val extraMap =
@@ -242,7 +238,7 @@ class DecodeProducer(
                 sampleSize)
         producerListener.onProducerFinishWithSuccess(producerContext, PRODUCER_NAME, extraMap)
         setImageExtras(encodedImage, image, lastScheduledScanNumber)
-        handleResult(image, status)
+        handleResult(image, newStatus)
       } finally {
         EncodedImage.closeSafely(encodedImage)
       }
@@ -282,8 +278,8 @@ class DecodeProducer(
       producerContext.putExtra(HasExtraData.KEY_ENCODED_SIZE, encodedImage.size)
       producerContext.putExtra(HasExtraData.KEY_COLOR_SPACE, encodedImage.colorSpace)
       if (image is CloseableBitmap) {
-        val bitmap = image.underlyingBitmap
-        val config = if (bitmap == null) null else bitmap.config
+        @Suppress("RedundantNullableReturnType")
+        val config: Bitmap.Config? = image.underlyingBitmap.config
         producerContext.putExtra(HasExtraData.KEY_BITMAP_CONFIG, config.toString())
       }
       image?.putExtras(producerContext.getExtras())
@@ -306,13 +302,7 @@ class DecodeProducer(
       val queueStr = queueTime.toString()
       val qualityStr = quality.isOfGoodEnoughQuality.toString()
       val finalStr = isFinal.toString()
-      var nonFatalErrorStr: String? = null
-      if (image != null) {
-        val nonFatalError = image.extras[NON_FATAL_DECODE_ERROR]
-        if (nonFatalError != null) {
-          nonFatalErrorStr = nonFatalError.toString()
-        }
-      }
+      val nonFatalErrorStr = image?.extras?.get(NON_FATAL_DECODE_ERROR)?.toString()
       return if (image is CloseableStaticBitmap) {
         val bitmap = image.underlyingBitmap
         checkNotNull(bitmap)

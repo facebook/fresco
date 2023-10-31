@@ -23,18 +23,14 @@ import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer;
 import com.facebook.fresco.animation.bitmap.cache.AnimationFrameCacheKey;
-import com.facebook.fresco.animation.bitmap.cache.FrescoFpsCache;
 import com.facebook.fresco.animation.bitmap.cache.FrescoFrameCache;
 import com.facebook.fresco.animation.bitmap.cache.KeepLastFrameCache;
 import com.facebook.fresco.animation.bitmap.cache.NoOpCache;
-import com.facebook.fresco.animation.bitmap.preparation.BalancedAnimationStrategy;
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy;
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer;
 import com.facebook.fresco.animation.bitmap.preparation.DefaultBitmapFramePreparer;
 import com.facebook.fresco.animation.bitmap.preparation.FixedNumberBitmapFramePreparationStrategy;
 import com.facebook.fresco.animation.bitmap.preparation.FrameLoaderStrategy;
-import com.facebook.fresco.animation.bitmap.preparation.loadframe.FpsCompressorInfo;
-import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFrameTaskFactory;
 import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.FrameLoaderFactory;
 import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendAnimationInformation;
 import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendFrameRenderer;
@@ -49,7 +45,6 @@ import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider;
 import com.facebook.imagepipeline.animated.impl.AnimatedFrameCache;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
-import com.facebook.imagepipeline.cache.AnimatedCache;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
@@ -81,8 +76,6 @@ public class DefaultBitmapAnimationDrawableFactory
   private final Supplier<Boolean> mUseDeepEqualsForCacheKey;
   private final Supplier<Boolean> mUseNewBitmapRender;
   private final Supplier<Boolean> mDownscaleFrameToDrawableDimensions;
-  private final Supplier<AnimatedCache> mAnimatedDrawableCache;
-  private final Supplier<Integer> mBalancedStrategyPreparationMs;
   private final Supplier<Integer> mAnimationFpsLimit;
 
   // Change the value to true to use KAnimatedDrawable2.kt
@@ -95,14 +88,12 @@ public class DefaultBitmapAnimationDrawableFactory
       MonotonicClock monotonicClock,
       PlatformBitmapFactory platformBitmapFactory,
       CountingMemoryCache<CacheKey, CloseableImage> backingCache,
-      Supplier<AnimatedCache> animatedDrawableCache,
       Supplier<Integer> cachingStrategySupplier,
       Supplier<Integer> numberOfFramesToPrepareSupplier,
       Supplier<Boolean> useDeepEqualsForCacheKey,
       Supplier<Boolean> useNewBitmapRender,
       Supplier<Boolean> downscaleFrameToDrawableDimensions,
-      Supplier<Integer> animationFpsLimit,
-      Supplier<Integer> balancedStrategyPreparationMs) {
+      Supplier<Integer> animationFpsLimit) {
     mAnimatedDrawableBackendProvider = animatedDrawableBackendProvider;
     mScheduledExecutorServiceForUiThread = scheduledExecutorServiceForUiThread;
     mExecutorServiceForFramePreparing = executorServiceForFramePreparing;
@@ -113,9 +104,7 @@ public class DefaultBitmapAnimationDrawableFactory
     mNumberOfFramesToPrepareSupplier = numberOfFramesToPrepareSupplier;
     mUseDeepEqualsForCacheKey = useDeepEqualsForCacheKey;
     mUseNewBitmapRender = useNewBitmapRender;
-    mAnimatedDrawableCache = animatedDrawableCache;
     mAnimationFpsLimit = animationFpsLimit;
-    mBalancedStrategyPreparationMs = balancedStrategyPreparationMs;
     mDownscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions;
   }
 
@@ -186,23 +175,13 @@ public class DefaultBitmapAnimationDrawableFactory
     }
 
     if (mUseNewBitmapRender.get()) {
-      if (mBalancedStrategyPreparationMs.get() != 0) {
-        bitmapFramePreparationStrategy =
-            new BalancedAnimationStrategy(
-                animationInfo,
-                mBalancedStrategyPreparationMs.get(),
-                new LoadFrameTaskFactory(mPlatformBitmapFactory, bitmapFrameRenderer),
-                bitmapFrameCache,
-                mDownscaleFrameToDrawableDimensions.get());
-      } else {
-        bitmapFramePreparationStrategy =
-            new FrameLoaderStrategy(
-                animatedImageResult.getSource(),
-                animationInfo,
-                bitmapFrameRenderer,
-                new FrameLoaderFactory(mPlatformBitmapFactory, mAnimationFpsLimit.get()),
-                mDownscaleFrameToDrawableDimensions.get());
-      }
+      bitmapFramePreparationStrategy =
+          new FrameLoaderStrategy(
+              animatedImageResult.getSource(),
+              animationInfo,
+              bitmapFrameRenderer,
+              new FrameLoaderFactory(mPlatformBitmapFactory, mAnimationFpsLimit.get()),
+              mDownscaleFrameToDrawableDimensions.get());
     }
 
     BitmapAnimationBackend bitmapAnimationBackend =
@@ -237,13 +216,6 @@ public class DefaultBitmapAnimationDrawableFactory
   }
 
   private BitmapFrameCache createBitmapFrameCache(AnimatedImageResult animatedImageResult) {
-    if (mUseNewBitmapRender.get()) {
-      return new FrescoFpsCache(
-          animatedImageResult,
-          new FpsCompressorInfo(mAnimationFpsLimit.get()),
-          mAnimatedDrawableCache.get());
-    }
-
     switch (mCachingStrategySupplier.get()) {
       case CACHING_STRATEGY_FRESCO_CACHE:
         return new FrescoFrameCache(createAnimatedFrameCache(animatedImageResult), true);

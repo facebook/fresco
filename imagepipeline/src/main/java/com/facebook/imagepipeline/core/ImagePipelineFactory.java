@@ -7,8 +7,6 @@
 
 package com.facebook.imagepipeline.core;
 
-import static com.facebook.common.util.ByteConstants.MB;
-
 import android.content.Context;
 import android.os.Build;
 import com.facebook.cache.common.CacheKey;
@@ -24,7 +22,6 @@ import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactoryProvider;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactoryProvider;
-import com.facebook.imagepipeline.cache.AnimatedCache;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.cache.EncodedCountingMemoryCacheFactory;
@@ -130,7 +127,6 @@ public class ImagePipelineFactory {
   private final ImagePipelineConfigInterface mConfig;
   private final CloseableReferenceFactory mCloseableReferenceFactory;
   @Nullable private CountingMemoryCache<CacheKey, CloseableImage> mBitmapCountingMemoryCache;
-  @Nullable private AnimatedCache mAnimatedCache;
   @Nullable private InstrumentedMemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   @Nullable private CountingMemoryCache<CacheKey, PooledByteBuffer> mEncodedCountingMemoryCache;
   @Nullable private InstrumentedMemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
@@ -174,10 +170,8 @@ public class ImagePipelineFactory {
               getPlatformBitmapFactory(),
               mConfig.getExecutorSupplier(),
               getBitmapCountingMemoryCache(),
-              getAnimatedCache(mConfig.getExperiments().getAnimatedCacheMemoryPercentage()),
               mConfig.getExperiments().getDownscaleFrameToDrawableDimensions(),
               mConfig.getExperiments().getUseBalancedAnimationStrategy(),
-              mConfig.getExperiments().getBalancedStrategyPreparationMs(),
               mConfig.getExperiments().getAnimationRenderFpsLimit(),
               mConfig.getExecutorServiceForAnimatedImages());
     }
@@ -204,15 +198,6 @@ public class ImagePipelineFactory {
                   mConfig.getBitmapMemoryCacheEntryStateObserver());
     }
     return mBitmapCountingMemoryCache;
-  }
-
-  public AnimatedCache getAnimatedCache(int memoryPercentage) {
-    if (mAnimatedCache == null) {
-      final long maxMemory = Math.min(Runtime.getRuntime().maxMemory(), Integer.MAX_VALUE);
-      long cacheSizeMb = (maxMemory / 100 * memoryPercentage) / MB;
-      mAnimatedCache = AnimatedCache.getInstance((int) cacheSizeMb);
-    }
-    return mAnimatedCache;
   }
 
   public InstrumentedMemoryCache<CacheKey, CloseableImage> getBitmapMemoryCache() {

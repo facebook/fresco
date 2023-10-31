@@ -113,6 +113,9 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
 
   @VisibleForTesting @Nullable CloseableReference<CloseableImage> mImageReference;
 
+  private int mIntrinsicWidth = -1;
+  private int mIntrinsicHeight = -1;
+
   public FrescoDrawable2Impl(
       boolean useNewReleaseCallbacks,
       @Nullable ControllerListener2<ImageInfo> imagePerfControllerListener,
@@ -397,5 +400,27 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
       return mImageReference.get().getHeight();
     }
     return -1;
+  }
+
+  @Override
+  public void setIntrinsicSize(int width, int height) {
+    mIntrinsicWidth = width;
+    mIntrinsicHeight = height;
+  }
+
+  @Override
+  public int getIntrinsicWidth() {
+    if (mIntrinsicWidth != -1) {
+      return mIntrinsicWidth;
+    }
+    return super.getIntrinsicWidth();
+  }
+
+  @Override
+  public int getIntrinsicHeight() {
+    if (mIntrinsicHeight != -1) {
+      return mIntrinsicHeight;
+    }
+    return super.getIntrinsicHeight();
   }
 }

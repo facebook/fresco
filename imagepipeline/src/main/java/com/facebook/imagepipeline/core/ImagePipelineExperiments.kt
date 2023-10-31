@@ -27,7 +27,6 @@ import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.platform.PlatformDecoderOptions
 import com.facebook.imageutils.BitmapUtil
-import kotlin.jvm.JvmField
 
 /**
  * Encapsulates additional elements of the [ImagePipelineConfig] which are currently in an
@@ -45,9 +44,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val useDownsamplingRatioForResizing: Boolean
   val useBitmapPrepareToDraw: Boolean
   val useBalancedAnimationStrategy: Boolean
-  val balancedStrategyPreparationMs: Int
   val bitmapPrepareToDrawMinSizeBytes: Int
-  val animatedCacheMemoryPercentage: Int
   val bitmapPrepareToDrawMaxSizeBytes: Int
   val bitmapPrepareToDrawForPrefetch: Boolean
   val maxBitmapSize: Int
@@ -87,8 +84,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var useDownsamplingRatioForResizing = false
     @JvmField var useBitmapPrepareToDraw = false
     @JvmField var useBalancedAnimationStrategy = false
-    @JvmField var balancedStrategyPreparationMs = 10000
-    @JvmField var animatedCacheMemoryPercentage = 40
     @JvmField var bitmapPrepareToDrawMinSizeBytes = 0
     @JvmField var bitmapPrepareToDrawMaxSizeBytes = 0
 
@@ -221,18 +216,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     /** Enable balance strategy between RAM and CPU for rendering bitmap animations (WebP, Gif) */
     fun setBalancedAnimationStrategy(useBalancedAnimationStrategy: Boolean) = asBuilder {
       this.useBalancedAnimationStrategy = useBalancedAnimationStrategy
-    }
-
-    /** Indicates needed ms to extract a frame using CPU */
-    fun setBalancedStrategyPreparationMs(balancedStrategyPreparationMs: Int) = asBuilder {
-      this.balancedStrategyPreparationMs = balancedStrategyPreparationMs
-    }
-
-    /**
-     * Maximum heap memory percentage available for caching bitmaps from animated asset (WebP, Gif)
-     */
-    fun setAnimatedCacheMemoryPercentage(animatedCacheMemoryPercentage: Int) = asBuilder {
-      this.animatedCacheMemoryPercentage = animatedCacheMemoryPercentage
     }
 
     /**
@@ -421,8 +404,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     useDownsamplingRatioForResizing = builder.useDownsamplingRatioForResizing
     useBitmapPrepareToDraw = builder.useBitmapPrepareToDraw
     useBalancedAnimationStrategy = builder.useBalancedAnimationStrategy
-    balancedStrategyPreparationMs = builder.balancedStrategyPreparationMs
-    animatedCacheMemoryPercentage = builder.animatedCacheMemoryPercentage
     bitmapPrepareToDrawMinSizeBytes = builder.bitmapPrepareToDrawMinSizeBytes
     bitmapPrepareToDrawMaxSizeBytes = builder.bitmapPrepareToDrawMaxSizeBytes
     bitmapPrepareToDrawForPrefetch = builder.bitmapPrepareToDrawForPrefetch
