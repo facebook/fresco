@@ -9,7 +9,7 @@
 
   <string name="action_settings">Settings</string>
 
-  <string name="drawee_simple_help">Basic SimpleDraweeView example that just sets the image URI.</string>
+  <string name="vito_simple_help">Basic Vito example that just sets the image URI.</string>
 
   <string name="drawee_media_picker_help">Select an image by pressing one of the media picker buttons.</string>
   <string name="drawee_media_picker_button_action_open_document">ACTION_OPEN_DOCUMENT</string>
