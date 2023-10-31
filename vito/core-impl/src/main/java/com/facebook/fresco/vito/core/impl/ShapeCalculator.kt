@@ -27,7 +27,11 @@ class ShapeCalculator {
       return when {
         roundingOptions == null -> RectShape(bounds)
         roundingOptions.isCircular -> {
-          CircleShape(bounds.centerX(), bounds.centerY(), min(bounds.width(), bounds.height()) / 2f)
+          CircleShape(
+              bounds.centerX(),
+              bounds.centerY(),
+              min(bounds.width(), bounds.height()) / 2f,
+              roundingOptions.isAntiAliased)
         }
         roundingOptions.hasRoundedCorners() -> {
           when {
