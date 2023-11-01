@@ -176,12 +176,22 @@ class BufferFrameLoader(
       }
 
       val deprecatedFrameNumber = oldFramesNumbers.pollFirst() ?: -1
-      val bufferFrame =
-          bufferFramesHash[deprecatedFrameNumber]
-              ?: BufferFrame(platformBitmapFactory.createBitmap(width, height))
+      val cachedFrame = bufferFramesHash[deprecatedFrameNumber]
 
+      var bufferFrame: BufferFrame
+      var bitmapRef: CloseableReference<Bitmap>
+
+      val ref = cachedFrame?.bitmapRef?.cloneOrNull()
+      if (ref != null) {
+        bufferFrame = cachedFrame
+        bitmapRef = ref
+      } else {
+        bufferFrame = BufferFrame(platformBitmapFactory.createBitmap(width, height))
+        bitmapRef = bufferFrame.bitmapRef.clone()
+      }
       bufferFrame.isUpdatingFrame = true
-      obtainFrame(bufferFrame, newFrameNumber, width, height)
+      obtainFrame(bitmapRef, newFrameNumber, width, height)
+      bitmapRef.close()
       bufferFramesHash.remove(deprecatedFrameNumber)
       bufferFrame.isUpdatingFrame = false
 
@@ -199,7 +209,12 @@ class BufferFrameLoader(
     return true
   }
 
-  private fun obtainFrame(bufferFrame: BufferFrame, targetFrame: Int, width: Int, height: Int) {
+  private fun obtainFrame(
+      targetBitmap: CloseableReference<Bitmap>,
+      targetFrame: Int,
+      width: Int,
+      height: Int
+  ) {
     val nearestFrame = findNearestFrame(targetFrame)
     val nearestBitmap = nearestFrame?.bitmap
 
@@ -207,14 +222,12 @@ class BufferFrameLoader(
       val from = nearestFrame.frameNumber
 
       if (from < targetFrame) {
-        val targetBitmap = bufferFrame.bitmapRef
         targetBitmap.set(nearestBitmap.get())
         (from + 1..targetFrame).forEach { bitmapFrameRenderer.renderFrame(it, targetBitmap.get()) }
         return
       }
     }
 
-    val targetBitmap = bufferFrame.bitmapRef
     targetBitmap.clear()
     (0..targetFrame).forEach { bitmapFrameRenderer.renderFrame(it, targetBitmap.get()) }
   }

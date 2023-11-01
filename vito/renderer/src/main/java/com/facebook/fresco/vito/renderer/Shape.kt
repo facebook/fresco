@@ -20,8 +20,25 @@ class RectShape(val rect: RectF) : Shape() {
   override fun draw(canvas: Canvas, paint: Paint) = canvas.drawRect(rect, paint)
 }
 
-class CircleShape(val cx: Float, val cy: Float, val radius: Float) : Shape() {
-  override fun draw(canvas: Canvas, paint: Paint) = canvas.drawCircle(cx, cy, radius, paint)
+class CircleShape(
+    private val cx: Float,
+    private val cy: Float,
+    private val radius: Float,
+    private val antiAliased: Boolean? = null
+) : Shape() {
+  override fun draw(canvas: Canvas, paint: Paint) {
+    if (antiAliased != null) {
+      // Store the value for the anti-alias property this paint has
+      val paintAntiAliasValue = paint.isAntiAlias
+      // Temporarily apply anti-alias property for circle
+      paint.isAntiAlias = antiAliased
+      canvas.drawCircle(cx, cy, radius, paint)
+      // Restore previous value on the paint object to avoid collateral unexpected behaviours
+      paint.isAntiAlias = paintAntiAliasValue
+    } else {
+      canvas.drawCircle(cx, cy, radius, paint)
+    }
+  }
 }
 
 class RoundedRectShape(val rect: RectF, val rx: Float, val ry: Float) : Shape() {
