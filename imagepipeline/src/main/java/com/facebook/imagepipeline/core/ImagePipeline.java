@@ -447,12 +447,12 @@ public class ImagePipeline {
    * @return a DataSource that can safely be ignored.
    */
   public DataSource<Void> prefetchToBitmapCache(
-      ImageRequest imageRequest, @Nullable Object callerContext) {
+      @Nullable ImageRequest imageRequest, @Nullable Object callerContext) {
     return prefetchToBitmapCache(imageRequest, callerContext, null);
   }
 
   public DataSource<Void> prefetchToBitmapCache(
-      ImageRequest imageRequest,
+      @Nullable ImageRequest imageRequest,
       @Nullable Object callerContext,
       @Nullable RequestListener requestListener) {
     try {
@@ -469,6 +469,7 @@ public class ImagePipeline {
             && isInBitmapMemoryCache(imageRequest)) {
           return DataSources.immediateSuccessfulDataSource();
         }
+        Preconditions.checkNotNull(imageRequest);
         final Boolean shouldDecodePrefetches = imageRequest.shouldDecodePrefetches();
         final boolean skipBitmapCache =
             shouldDecodePrefetches != null
@@ -722,7 +723,7 @@ public class ImagePipeline {
    * @param uri the uri for the image to be looked up.
    * @return true if the image was found in the bitmap memory cache, false otherwise
    */
-  public boolean isInBitmapMemoryCache(final Uri uri) {
+  public boolean isInBitmapMemoryCache(@Nullable final Uri uri) {
     if (uri == null) {
       return false;
     }
@@ -741,7 +742,7 @@ public class ImagePipeline {
    * @param imageRequest the imageRequest for the image to be looked up.
    * @return true if the image was found in the bitmap memory cache, false otherwise.
    */
-  public boolean isInBitmapMemoryCache(final ImageRequest imageRequest) {
+  public boolean isInBitmapMemoryCache(@Nullable final ImageRequest imageRequest) {
     if (imageRequest == null) {
       return false;
     }
@@ -760,7 +761,7 @@ public class ImagePipeline {
    * @param uri the uri for the image to be looked up.
    * @return true if the image was found in the encoded memory cache, false otherwise
    */
-  public boolean isInEncodedMemoryCache(final Uri uri) {
+  public boolean isInEncodedMemoryCache(@Nullable final Uri uri) {
     if (uri == null) {
       return false;
     }
@@ -774,7 +775,7 @@ public class ImagePipeline {
    * @param imageRequest the imageRequest for the image to be looked up.
    * @return true if the image was found in the encoded memory cache, false otherwise.
    */
-  public boolean isInEncodedMemoryCache(final ImageRequest imageRequest) {
+  public boolean isInEncodedMemoryCache(@Nullable final ImageRequest imageRequest) {
     if (imageRequest == null) {
       return false;
     }
