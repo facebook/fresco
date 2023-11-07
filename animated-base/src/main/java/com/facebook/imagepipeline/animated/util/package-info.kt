@@ -6,4 +6,4 @@
  */
 
 /** Utility classes for the animation framework */
-package com.facebook.imagepipeline.animated.util;
+package com.facebook.imagepipeline.animated.util
