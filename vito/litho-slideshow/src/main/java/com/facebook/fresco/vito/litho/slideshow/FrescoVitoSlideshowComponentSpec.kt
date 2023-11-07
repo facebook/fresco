@@ -14,6 +14,7 @@ import android.os.Handler
 import android.os.Looper
 import com.facebook.common.callercontext.ContextChain
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
+import com.facebook.fresco.vito.listener.ImageListener
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.fresco.vito.source.ImageSourceProvider
@@ -68,6 +69,7 @@ object FrescoVitoSlideshowComponentSpec {
       @Prop(optional = true) isPlaying: Boolean,
       @Prop(optional = true) imageOptions: ImageOptions?,
       @Prop(optional = true) callerContext: Any?,
+      @Prop(optional = true) imageListener: ImageListener?,
       @TreeProp contextChain: ContextChain?,
       @State(canUpdateLazily = true) slideshowIndex: Int,
       @State(canUpdateLazily = true) timer: Timer,
@@ -90,7 +92,8 @@ object FrescoVitoSlideshowComponentSpec {
         uris[slideshowIndex],
         imageOptions,
         callerContext,
-        contextChain)
+        contextChain,
+        imageListener)
     // Immediately show current image
     slideshowDrawable.fadeToNext()
     slideshowDrawable.finishTransitionImmediately()
@@ -104,7 +107,8 @@ object FrescoVitoSlideshowComponentSpec {
           uris[nextImageIndex],
           imageOptions,
           callerContext,
-          contextChain)
+          contextChain,
+          imageListener)
 
       // Set up task for animating to next image
       val animation: Runnable =
@@ -120,7 +124,8 @@ object FrescoVitoSlideshowComponentSpec {
                   imageOptions,
                   callerContext,
                   contextChain,
-                  nextIndex)
+                  nextIndex,
+                  imageListener)
               currentIndex = nextIndex
               FrescoVitoSlideshowComponent.lazyUpdateSlideshowIndex(c, currentIndex)
             }
@@ -160,7 +165,8 @@ object FrescoVitoSlideshowComponentSpec {
       options: ImageOptions?,
       callerContext: Any?,
       contextChain: ContextChain?,
-      nextIndex: Int
+      nextIndex: Int,
+      listener: ImageListener?
   ) {
     // Do not transition until both current and next images are available
     if (isStillLoading(slideshowDrawable.currentImage) ||
@@ -171,7 +177,13 @@ object FrescoVitoSlideshowComponentSpec {
     slideshowDrawable.fadeToNext()
     // Fetch the next image ahead of time
     fetchNextImage(
-        resources, slideshowDrawable, uris[nextIndex], options, callerContext, contextChain)
+        resources,
+        slideshowDrawable,
+        uris[nextIndex],
+        options,
+        callerContext,
+        contextChain,
+        listener)
   }
 
   private fun isStillLoading(frescoDrawable: FrescoDrawableInterface): Boolean =
@@ -183,7 +195,8 @@ object FrescoVitoSlideshowComponentSpec {
       uri: Uri?,
       options: ImageOptions?,
       callerContext: Any?,
-      contextChain: ContextChain?
+      contextChain: ContextChain?,
+      listener: ImageListener?
   ) {
     FrescoVitoProvider.getController()
         .fetch(
@@ -193,7 +206,7 @@ object FrescoVitoSlideshowComponentSpec {
                     .createImageRequest(resources, ImageSourceProvider.forUri(uri), options),
             callerContext = callerContext,
             contextChain = contextChain,
-            listener = null,
+            listener = listener,
             onFadeListener = null,
             viewportDimensions = null)
   }
