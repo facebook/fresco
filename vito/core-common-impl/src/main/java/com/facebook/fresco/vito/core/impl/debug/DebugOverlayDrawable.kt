@@ -21,8 +21,12 @@ import java.util.LinkedHashMap
 import kotlin.math.max
 import kotlin.math.min
 
-open class DebugOverlayDrawable @JvmOverloads constructor(private val identifier: String = "") :
-    Drawable() {
+open class DebugOverlayDrawable
+@JvmOverloads
+constructor(
+    private val identifier: String = "",
+    private val identifierColor: Int = 0xFF00FF00.toInt(),
+) : Drawable() {
 
   @ColorInt var backgroundColor: Int = Color.TRANSPARENT
   var textGravity: Int = Gravity.TOP
@@ -89,7 +93,7 @@ open class DebugOverlayDrawable @JvmOverloads constructor(private val identifier
     // Reset the text position
     currentTextXPx = startTextXPx
     currentTextYPx = startTextYPx
-    addDebugText(canvas, "Vito", identifier, IDENTIFIER_COLOR)
+    addDebugText(canvas, "Vito", identifier, identifierColor)
     for ((key, value) in debugData) {
       addDebugText(canvas, key, value.first, value.second)
     }
@@ -166,7 +170,6 @@ open class DebugOverlayDrawable @JvmOverloads constructor(private val identifier
     private const val OUTLINE_COLOR = 0xFFFF9800.toInt()
     private const val TEXT_BACKGROUND_COLOR = 0x66000000
     private const val TEXT_COLOR = Color.WHITE
-    private const val IDENTIFIER_COLOR = 0xFF00FF00.toInt()
     private const val OUTLINE_STROKE_WIDTH_PX = 2
     private const val MAX_TEXT_SIZE_PX = 72
     private const val MIN_TEXT_SIZE_PX = 16
