@@ -14,6 +14,8 @@ import com.facebook.drawee.components.DeferredReleaser
 object ImageReleaseScheduler {
   private const val RELEASE_DELAY: Long = 16 * 5 // Roughly 5 frames.
 
+  var improveDelayedReleasing = false
+
   class ImageReleaseState(val drawable: KFrescoVitoDrawable) :
       Runnable, DeferredReleaser.Releasable {
 
@@ -44,6 +46,9 @@ object ImageReleaseScheduler {
     }
     drawable.imagePerfListener.onScheduleReleaseDelayed(drawable)
     handler.postDelayed(drawable.releaseState, RELEASE_DELAY)
+    if (improveDelayedReleasing) {
+      drawable.releaseState.delayedReleasePending = true
+    }
   }
 
   fun releaseNextFrame(drawable: KFrescoVitoDrawable) {
@@ -58,7 +63,9 @@ object ImageReleaseScheduler {
   }
 
   fun cancelReleaseDelayed(drawable: KFrescoVitoDrawable) {
-    handler.removeCallbacks(drawable.releaseState)
+    if (!improveDelayedReleasing || drawable.releaseState.delayedReleasePending) {
+      handler.removeCallbacks(drawable.releaseState)
+    }
     drawable.releaseState.delayedReleasePending = false
   }
 
