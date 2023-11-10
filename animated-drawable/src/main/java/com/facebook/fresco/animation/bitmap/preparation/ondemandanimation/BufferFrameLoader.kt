@@ -18,22 +18,11 @@ import com.facebook.fresco.animation.backend.AnimationInformation
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer
 import com.facebook.fresco.animation.bitmap.preparation.loadframe.AnimationLoaderExecutor
 import com.facebook.fresco.animation.bitmap.preparation.loadframe.FpsCompressorInfo
-import com.facebook.fresco.animation.bitmap.preparation.loadframe.LoadFramePriorityTask
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
 import java.util.ArrayDeque
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
-import kotlin.collections.Map
-import kotlin.collections.Set
-import kotlin.collections.emptyMap
-import kotlin.collections.emptySet
-import kotlin.collections.filter
-import kotlin.collections.filterNotNull
-import kotlin.collections.firstNotNullOfOrNull
-import kotlin.collections.forEach
-import kotlin.collections.minus
 import kotlin.collections.set
-import kotlin.collections.toSet
 
 /**
  * This frame loader uses a fixed number of bitmap. The buffer loads the next bunch of frames when
@@ -113,17 +102,6 @@ class BufferFrameLoader(
     renderableFrameIndexes = compressionFrameMap.values.toSet()
   }
 
-  /** Left only the last rendered bitmap on the buffer */
-  override fun onStop() {
-    val nearestFrame = findNearestFrame(lastRenderedFrameNumber)
-
-    val indexesToClose = bufferFramesHash.keys.minus(nearestFrame?.frameNumber).filterNotNull()
-    indexesToClose.forEach { frameNumber ->
-      bufferFramesHash[frameNumber]?.release()
-      bufferFramesHash.remove(frameNumber)
-    }
-  }
-
   /** Release all bitmaps */
   override fun clear() {
     bufferFramesHash.values.forEach { it.release() }
@@ -137,18 +115,13 @@ class BufferFrameLoader(
     }
     isFetching = true
 
-    AnimationLoaderExecutor.execute(
-        object : LoadFramePriorityTask {
-          override val priority = LoadFramePriorityTask.Priority.HIGH
-
-          override fun run() {
-            do {
-              val targetFrame = lastRenderedFrameNumber.coerceAtLeast(0)
-              val success = extractDemandedFrame(targetFrame, width, height)
-            } while (!success)
-            isFetching = false
-          }
-        })
+    AnimationLoaderExecutor.execute {
+      do {
+        val targetFrame = lastRenderedFrameNumber.coerceAtLeast(0)
+        val success = extractDemandedFrame(targetFrame, width, height)
+      } while (!success)
+      isFetching = false
+    }
   }
 
   @WorkerThread
@@ -177,11 +150,10 @@ class BufferFrameLoader(
 
       val deprecatedFrameNumber = oldFramesNumbers.pollFirst() ?: -1
       val cachedFrame = bufferFramesHash[deprecatedFrameNumber]
-
-      var bufferFrame: BufferFrame
-      var bitmapRef: CloseableReference<Bitmap>
-
+      val bufferFrame: BufferFrame
+      val bitmapRef: CloseableReference<Bitmap>
       val ref = cachedFrame?.bitmapRef?.cloneOrNull()
+
       if (ref != null) {
         bufferFrame = cachedFrame
         bitmapRef = ref

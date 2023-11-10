@@ -7,44 +7,20 @@
 
 package com.facebook.fresco.animation.bitmap.preparation.loadframe
 
-import java.util.concurrent.PriorityBlockingQueue
+import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
 
-/**
- * This executor allocated a high priority pool of thread. The priority is high because the task
- * affect directly to the UI render frame. In order to avoid glitches or bad UX, this tasks should
- * be finished asap
- */
 object AnimationLoaderExecutor {
-  private val THREADS = Runtime.getRuntime().availableProcessors() * 2
 
-  private val uiThreadFactory = ThreadFactory { runnable: Runnable? ->
+  private val frameThreadFactory = ThreadFactory { runnable: Runnable? ->
     val thread = Thread(runnable)
-    thread.priority = Thread.MAX_PRIORITY - 1
+    thread.priority = Thread.MIN_PRIORITY
     thread
   }
 
-  private val executor: ThreadPoolExecutor =
-      ThreadPoolExecutor(
-          THREADS, THREADS, 0L, TimeUnit.MILLISECONDS, PriorityBlockingQueue(), uiThreadFactory)
+  private val executor = Executors.newCachedThreadPool(frameThreadFactory)
 
-  fun execute(task: LoadFramePriorityTask) {
+  fun execute(task: Runnable) {
     executor.execute(task)
-  }
-}
-
-interface LoadFramePriorityTask : Comparable<LoadFramePriorityTask>, Runnable {
-  val priority: Priority
-
-  override fun compareTo(other: LoadFramePriorityTask): Int {
-    return other.priority.compareTo(priority)
-  }
-
-  enum class Priority(val value: Int) {
-    HIGH(Thread.MAX_PRIORITY),
-    MEDIUM(Thread.NORM_PRIORITY),
-    LOW(Thread.MIN_PRIORITY)
   }
 }
