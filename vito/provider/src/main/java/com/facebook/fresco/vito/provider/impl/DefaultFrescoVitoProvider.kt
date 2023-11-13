@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.provider.impl
 
 import com.facebook.callercontext.CallerContextVerifier
 import com.facebook.common.internal.Supplier
+import com.facebook.fresco.ui.common.ControllerListener2
 import com.facebook.fresco.vito.core.FrescoController2
 import com.facebook.fresco.vito.core.FrescoVitoConfig
 import com.facebook.fresco.vito.core.FrescoVitoPrefetcher
@@ -28,6 +29,7 @@ import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.core.ImagePipelineFactory
+import com.facebook.imagepipeline.image.ImageInfo
 import java.lang.RuntimeException
 import java.util.concurrent.Executor
 
@@ -40,6 +42,7 @@ class DefaultFrescoVitoProvider(
     debugOverlayEnabledSupplier: Supplier<Boolean?>?,
     callerContextVerifier: CallerContextVerifier,
     vitoImagePerfListener: VitoImagePerfListener,
+    imagePerfListenerSupplier: Supplier<ControllerListener2<ImageInfo>>? = null,
 ) : FrescoVitoProvider.Implementation {
 
   private val frescoController: FrescoController2
@@ -66,7 +69,7 @@ class DefaultFrescoVitoProvider(
             null,
             debugOverlayEnabledSupplier?.let { DefaultDebugOverlayFactory2(it) }
                 ?: NoOpDebugOverlayFactory2(),
-            null,
+            imagePerfListenerSupplier,
             vitoImagePerfListener)
   }
 

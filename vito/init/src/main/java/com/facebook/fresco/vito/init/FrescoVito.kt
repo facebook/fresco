@@ -11,6 +11,7 @@ import com.facebook.callercontext.CallerContextVerifier
 import com.facebook.common.executors.UiThreadImmediateExecutorService
 import com.facebook.common.internal.Supplier
 import com.facebook.common.internal.Suppliers
+import com.facebook.fresco.ui.common.ControllerListener2
 import com.facebook.fresco.vito.core.DefaultFrescoVitoConfig
 import com.facebook.fresco.vito.core.FrescoVitoConfig
 import com.facebook.fresco.vito.core.ImagePipelineUtils
@@ -25,6 +26,7 @@ import com.facebook.fresco.vito.provider.impl.DefaultFrescoVitoProvider
 import com.facebook.fresco.vito.provider.impl.NoOpCallerContextVerifier
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.core.ImagePipelineFactory
+import com.facebook.imagepipeline.image.ImageInfo
 import java.util.concurrent.Executor
 
 class FrescoVito {
@@ -52,7 +54,8 @@ class FrescoVito {
         useNativeCode: Supplier<Boolean> = Suppliers.BOOLEAN_TRUE,
         vitoConfig: FrescoVitoConfig = DefaultFrescoVitoConfig(),
         callerContextVerifier: CallerContextVerifier = NoOpCallerContextVerifier,
-        vitoImagePerfListener: VitoImagePerfListener = BaseVitoImagePerfListener()
+        vitoImagePerfListener: VitoImagePerfListener = BaseVitoImagePerfListener(),
+        imagePerfListenerSupplier: Supplier<ControllerListener2<ImageInfo>>? = null,
     ) {
       if (isInitialized) {
         return
@@ -71,7 +74,8 @@ class FrescoVito {
               uiThreadExecutor,
               debugOverlayEnabledSupplier,
               callerContextVerifier,
-              vitoImagePerfListener))
+              vitoImagePerfListener,
+              imagePerfListenerSupplier))
     }
 
     /**
