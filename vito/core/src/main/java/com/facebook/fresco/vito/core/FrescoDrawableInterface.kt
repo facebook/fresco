@@ -9,7 +9,9 @@ package com.facebook.fresco.vito.core
 
 import android.graphics.drawable.Drawable
 import com.facebook.drawee.drawable.VisibilityCallback
+import com.facebook.fresco.ui.common.ControllerListener2
 import com.facebook.fresco.vito.listener.ImageListener
+import com.facebook.imagepipeline.image.ImageInfo
 
 interface FrescoDrawableInterface {
 
@@ -42,4 +44,6 @@ interface FrescoDrawableInterface {
    * @return the refetch runnable if set
    */
   var refetchRunnable: Runnable?
+
+  fun getImagePerfControllerListener(): ControllerListener2<ImageInfo>?
 }
