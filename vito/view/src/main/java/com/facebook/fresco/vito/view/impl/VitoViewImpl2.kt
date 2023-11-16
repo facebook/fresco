@@ -158,7 +158,7 @@ object VitoViewImpl2 {
     }
   }
 
-  private fun getDrawable(view: View): FrescoDrawableInterface? {
+  fun getDrawable(view: View): FrescoDrawableInterface? {
     return (if (view is ImageView) view.drawable else view.background) as? FrescoDrawableInterface
   }
 
