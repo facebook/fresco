@@ -215,6 +215,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
       // The image request was canceled
       updateStatus(state, ImageLoadStatus.CANCELED);
     }
+    updateStatus(state, ImageLoadStatus.RELEASED);
 
     if (mReportVisibleOnSubmitAndRelease) {
       reportViewInvisible(state, now);
