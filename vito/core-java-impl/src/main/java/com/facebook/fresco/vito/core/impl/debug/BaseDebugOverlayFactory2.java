@@ -35,6 +35,7 @@ public abstract class BaseDebugOverlayFactory2 implements DebugOverlayFactory2 {
     DebugOverlayDrawable overlay = extractOrCreate(drawable);
     overlay.reset();
     setData(overlay, drawable, extras);
+    overlay.invalidateSelf();
   }
 
   protected abstract void setData(

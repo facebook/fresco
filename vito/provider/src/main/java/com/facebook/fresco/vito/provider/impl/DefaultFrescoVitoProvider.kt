@@ -20,7 +20,7 @@ import com.facebook.fresco.vito.core.impl.FrescoController2Impl
 import com.facebook.fresco.vito.core.impl.FrescoVitoPrefetcherImpl
 import com.facebook.fresco.vito.core.impl.HierarcherImpl
 import com.facebook.fresco.vito.core.impl.VitoImagePipelineImpl
-import com.facebook.fresco.vito.core.impl.debug.DefaultDebugOverlayFactory2
+import com.facebook.fresco.vito.core.impl.debug.DebugOverlayFactory2
 import com.facebook.fresco.vito.core.impl.debug.NoOpDebugOverlayFactory2
 import com.facebook.fresco.vito.drawable.ArrayVitoDrawableFactory
 import com.facebook.fresco.vito.drawable.BitmapDrawableFactory
@@ -39,9 +39,9 @@ class DefaultFrescoVitoProvider(
     imagePipelineUtils: ImagePipelineUtils,
     lightweightBackgroundThreadExecutor: Executor,
     uiThreadExecutor: Executor,
-    debugOverlayEnabledSupplier: Supplier<Boolean?>?,
     callerContextVerifier: CallerContextVerifier,
     vitoImagePerfListener: VitoImagePerfListener,
+    debugOverlayFactory: DebugOverlayFactory2 = NoOpDebugOverlayFactory2(),
     imagePerfListenerSupplier: Supplier<ControllerListener2<ImageInfo>>? = null,
 ) : FrescoVitoProvider.Implementation {
 
@@ -67,8 +67,7 @@ class DefaultFrescoVitoProvider(
             uiThreadExecutor,
             vitoImagePipeline,
             null,
-            debugOverlayEnabledSupplier?.let { DefaultDebugOverlayFactory2(it) }
-                ?: NoOpDebugOverlayFactory2(),
+            debugOverlayFactory,
             imagePerfListenerSupplier,
             vitoImagePerfListener)
   }

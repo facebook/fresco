@@ -20,6 +20,8 @@ import com.facebook.fresco.vito.core.impl.BaseVitoImagePerfListener
 import com.facebook.fresco.vito.core.impl.DefaultImageDecodeOptionsProviderImpl
 import com.facebook.fresco.vito.core.impl.ImagePipelineUtilsImpl
 import com.facebook.fresco.vito.core.impl.ImagePipelineUtilsImpl.CircularBitmapRounding
+import com.facebook.fresco.vito.core.impl.debug.DefaultDebugOverlayFactory2
+import com.facebook.fresco.vito.core.impl.debug.NoOpDebugOverlayFactory2
 import com.facebook.fresco.vito.nativecode.NativeCircularBitmapRounding
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.fresco.vito.provider.impl.DefaultFrescoVitoProvider
@@ -50,12 +52,13 @@ class FrescoVito {
         imagePipeline: ImagePipeline? = null,
         lightweightBackgroundThreadExecutor: Executor? = null,
         uiThreadExecutor: Executor? = null,
-        debugOverlayEnabledSupplier: Supplier<Boolean?>? = null,
+        debugOverlayEnabledSupplier: Supplier<Boolean>? = null,
         useNativeCode: Supplier<Boolean> = Suppliers.BOOLEAN_TRUE,
         vitoConfig: FrescoVitoConfig = DefaultFrescoVitoConfig(),
         callerContextVerifier: CallerContextVerifier = NoOpCallerContextVerifier,
         vitoImagePerfListener: VitoImagePerfListener = BaseVitoImagePerfListener(),
         imagePerfListenerSupplier: Supplier<ControllerListener2<ImageInfo>>? = null,
+        showExtendedDebugOverlayInformation: Boolean = true
     ) {
       if (isInitialized) {
         return
@@ -72,9 +75,11 @@ class FrescoVito {
               createImagePipelineUtils(useNativeCode),
               lightweightBackgroundThreadExecutor,
               uiThreadExecutor,
-              debugOverlayEnabledSupplier,
               callerContextVerifier,
               vitoImagePerfListener,
+              debugOverlayEnabledSupplier?.let {
+                DefaultDebugOverlayFactory2(showExtendedDebugOverlayInformation, it)
+              } ?: NoOpDebugOverlayFactory2(),
               imagePerfListenerSupplier))
     }
 
