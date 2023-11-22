@@ -166,12 +166,12 @@ class ShowcaseApplication : Application() {
               vitoConfig,
               ImagePipelineFactory.getInstance().imagePipeline,
               FrescoVito.createImagePipelineUtils(Suppliers.BOOLEAN_TRUE),
+              UiThreadImmediateExecutorService.getInstance(),
               ImagePipelineFactory.getInstance()
                   .imagePipeline
                   .config
                   .executorSupplier
                   .forLightweightBackgroundTasks(),
-              UiThreadImmediateExecutorService.getInstance(),
               NoOpCallerContextVerifier,
               DebugOverlayHandler(DebugOverlaySupplierSingleton.getInstance(applicationContext))))
     } else {
