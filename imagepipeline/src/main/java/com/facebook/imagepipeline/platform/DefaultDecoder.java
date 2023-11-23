@@ -331,7 +331,11 @@ public abstract class DefaultDecoder implements PlatformDecoder {
     options.inSampleSize = encodedImage.getSampleSize();
     options.inJustDecodeBounds = true;
     options.inDither = true;
-    options.inPreferredConfig = bitmapConfig;
+    boolean isHardwareBitmap =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && bitmapConfig == Bitmap.Config.HARDWARE;
+    if (!isHardwareBitmap) {
+      options.inPreferredConfig = bitmapConfig;
+    }
     options.inMutable = true;
     if (!skipDecoding) {
       // fill outWidth and outHeight
@@ -340,7 +344,9 @@ public abstract class DefaultDecoder implements PlatformDecoder {
         throw new IllegalArgumentException();
       }
     }
-
+    if (isHardwareBitmap) {
+      options.inPreferredConfig = bitmapConfig;
+    }
     options.inJustDecodeBounds = false;
     return options;
   }
