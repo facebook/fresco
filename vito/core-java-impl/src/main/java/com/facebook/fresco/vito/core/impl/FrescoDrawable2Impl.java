@@ -423,4 +423,10 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
     }
     return super.getIntrinsicHeight();
   }
+
+  @Nullable
+  @Override
+  public ControllerListener2<ImageInfo> getImagePerfControllerListener() {
+    return mImageListener.getImagePerfControllerListener();
+  }
 }

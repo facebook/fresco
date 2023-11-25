@@ -162,8 +162,7 @@ class BufferFrameLoader(
         bitmapRef = bufferFrame.bitmapRef.clone()
       }
       bufferFrame.isUpdatingFrame = true
-      obtainFrame(bitmapRef, newFrameNumber, width, height)
-      bitmapRef.close()
+      bitmapRef.use { obtainFrame(it, newFrameNumber, width, height) }
       bufferFramesHash.remove(deprecatedFrameNumber)
       bufferFrame.isUpdatingFrame = false
 
@@ -188,9 +187,8 @@ class BufferFrameLoader(
       height: Int
   ) {
     val nearestFrame = findNearestFrame(targetFrame)
-    val nearestBitmap = nearestFrame?.bitmap
 
-    if (nearestFrame != null && nearestBitmap != null) {
+    nearestFrame?.bitmap?.cloneOrNull()?.use { nearestBitmap ->
       val from = nearestFrame.frameNumber
 
       if (from < targetFrame) {

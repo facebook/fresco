@@ -23,8 +23,24 @@ import javax.annotation.Nullable;
 @Nullsafe(Nullsafe.Mode.STRICT)
 public class DefaultDebugOverlayFactory2 extends BaseDebugOverlayFactory2 {
 
+  private boolean mShowExtendedInformation;
+
   public DefaultDebugOverlayFactory2(Supplier<Boolean> debugOverlayEnabled) {
+    this(true, debugOverlayEnabled);
+  }
+
+  public DefaultDebugOverlayFactory2(
+      boolean showExtendedInformation, Supplier<Boolean> debugOverlayEnabled) {
     super(debugOverlayEnabled);
+    mShowExtendedInformation = showExtendedInformation;
+  }
+
+  public void setShowExtendedInformation(boolean showExtendedInformation) {
+    mShowExtendedInformation = showExtendedInformation;
+  }
+
+  public boolean getShowExtendedInformation() {
+    return mShowExtendedInformation;
   }
 
   @Override
@@ -37,18 +53,22 @@ public class DefaultDebugOverlayFactory2 extends BaseDebugOverlayFactory2 {
     setImageOriginData(overlay, extras);
   }
 
-  private static void setBasicData(DebugOverlayDrawable overlay, FrescoDrawableInterface drawable) {
-    overlay.addDebugData("ID", VitoUtils.getStringId(drawable.getImageId()));
+  private void setBasicData(DebugOverlayDrawable overlay, FrescoDrawableInterface drawable) {
+    overlay.setDrawIdentifier(mShowExtendedInformation);
+    String tag = mShowExtendedInformation ? "ID" : overlay.getIdentifier();
+    overlay.addDebugData(tag, VitoUtils.getStringId(drawable.getImageId()));
     if (drawable instanceof FrescoDrawable2) {
       FrescoDrawable2 abstractDrawable = (FrescoDrawable2) drawable;
       Rect bounds = abstractDrawable.getBounds();
       overlay.addDebugData("D", formatDimensions(bounds.width(), bounds.height()));
-      overlay.addDebugData("DAR", String.valueOf(bounds.width() / (float) bounds.height()));
+      if (mShowExtendedInformation) {
+        overlay.addDebugData("DAR", String.valueOf(bounds.width() / (float) bounds.height()));
+      }
       overlay.addDebugData(
           "I",
           formatDimensions(
               abstractDrawable.getActualImageWidthPx(), abstractDrawable.getActualImageHeightPx()));
-      if (abstractDrawable.getActualImageHeightPx() > 0) {
+      if (mShowExtendedInformation && abstractDrawable.getActualImageHeightPx() > 0) {
         overlay.addDebugData(
             "IAR",
             String.valueOf(
@@ -58,7 +78,7 @@ public class DefaultDebugOverlayFactory2 extends BaseDebugOverlayFactory2 {
     }
   }
 
-  private static void setImageOriginData(
+  private void setImageOriginData(
       DebugOverlayDrawable overlay, @Nullable ControllerListener2.Extras extras) {
     String origin = "unknown";
     String originSubcategory = "unknown";
@@ -74,14 +94,21 @@ public class DefaultDebugOverlayFactory2 extends BaseDebugOverlayFactory2 {
         originSubcategory = String.valueOf(originExtras.get("origin_sub"));
       }
     }
-    overlay.addDebugData(
-        "origin", origin, DebugOverlayImageOriginColor.getImageOriginColor(origin));
-    overlay.addDebugData("origin_sub", originSubcategory, Color.GRAY);
+    if (mShowExtendedInformation) {
+      overlay.addDebugData(
+          "origin", origin, DebugOverlayImageOriginColor.getImageOriginColor(origin));
+      overlay.addDebugData("origin_sub", originSubcategory, Color.GRAY);
+    } else {
+      overlay.addDebugData(
+          "o",
+          origin + " | " + originSubcategory,
+          DebugOverlayImageOriginColor.getImageOriginColor(origin));
+    }
   }
 
-  private static void setImageRequestData(
+  private void setImageRequestData(
       DebugOverlayDrawable overlay, @Nullable VitoImageRequest imageRequest) {
-    if (imageRequest == null) {
+    if (imageRequest == null || !mShowExtendedInformation) {
       return;
     }
     overlay.addDebugData(

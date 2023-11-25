@@ -16,6 +16,7 @@ import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.time.MonotonicClock;
+import com.facebook.drawee.drawable.VisibilityCallback;
 import com.facebook.fresco.ui.common.BaseControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.DimensionsInfo;
@@ -32,7 +33,10 @@ import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageInfo>
-    implements ImagePerfNotifierHolder, OnDrawControllerListener<ImageInfo>, Closeable {
+    implements ImagePerfNotifierHolder,
+        OnDrawControllerListener<ImageInfo>,
+        Closeable,
+        VisibilityCallback {
 
   private static final int WHAT_STATUS = 1;
   private static final int WHAT_VISIBILITY = 2;
@@ -45,6 +49,8 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
   private final Supplier<Boolean> mAsyncLogging;
 
   private @Nullable ImagePerfNotifier mLocalImagePerfNotifier = null;
+
+  private final boolean mReportVisibleOnSubmitAndRelease;
 
   static class LogHandler extends Handler implements ImagePerfNotifierHolder {
 
@@ -100,11 +106,20 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
       ImagePerfState imagePerfState,
       ImagePerfNotifier globalImagePerfNotifier,
       Supplier<Boolean> asyncLogging) {
+    this(clock, imagePerfState, globalImagePerfNotifier, asyncLogging, true);
+  }
+
+  public ImagePerfControllerListener2(
+      MonotonicClock clock,
+      ImagePerfState imagePerfState,
+      ImagePerfNotifier globalImagePerfNotifier,
+      Supplier<Boolean> asyncLogging,
+      boolean reportVisibleOnSubmitAndRelease) {
     mClock = clock;
     mImagePerfState = imagePerfState;
     mImagePerfNotifier = globalImagePerfNotifier;
-
     mAsyncLogging = asyncLogging;
+    mReportVisibleOnSubmitAndRelease = reportVisibleOnSubmitAndRelease;
   }
 
   @Override
@@ -130,7 +145,9 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     state.setExtraData(extraData);
 
     updateStatus(state, ImageLoadStatus.REQUESTED);
-    reportViewVisible(state, now);
+    if (mReportVisibleOnSubmitAndRelease) {
+      reportViewVisible(state, now);
+    }
   }
 
   @Override
@@ -198,8 +215,11 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
       // The image request was canceled
       updateStatus(state, ImageLoadStatus.CANCELED);
     }
+    updateStatus(state, ImageLoadStatus.RELEASED);
 
-    reportViewInvisible(state, now);
+    if (mReportVisibleOnSubmitAndRelease) {
+      reportViewInvisible(state, now);
+    }
   }
 
   @Override
@@ -299,5 +319,19 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     if (localImagePerfNotifier != null) {
       localImagePerfNotifier.notifyStatusUpdated(state, ImageLoadStatus.EMPTY_EVENT);
     }
+  }
+
+  @Override
+  public void onVisibilityChange(boolean visible) {
+    if (visible) {
+      reportViewVisible(mImagePerfState, mClock.now());
+    } else {
+      reportViewInvisible(mImagePerfState, mClock.now());
+    }
+  }
+
+  @Override
+  public void onDraw() {
+    // No-op
   }
 }

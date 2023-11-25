@@ -15,7 +15,8 @@ enum class ImageLoadStatus(val value: Int) {
   CANCELED(4),
   ERROR(5),
   DRAW(6),
-  EMPTY_EVENT(7);
+  EMPTY_EVENT(7),
+  RELEASED(8);
 
   /**
    * This was probably only used in open source version, so we might be able to remove this custom
@@ -28,6 +29,7 @@ enum class ImageLoadStatus(val value: Int) {
       CANCELED -> "canceled"
       INTERMEDIATE_AVAILABLE -> "intermediate_available"
       ERROR -> "error"
+      RELEASED -> "released"
       else -> "unknown"
     }
   }

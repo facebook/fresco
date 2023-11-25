@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.provider.impl
 
 import com.facebook.callercontext.CallerContextVerifier
 import com.facebook.common.internal.Supplier
+import com.facebook.fresco.ui.common.ControllerListener2
 import com.facebook.fresco.vito.core.FrescoController2
 import com.facebook.fresco.vito.core.FrescoVitoConfig
 import com.facebook.fresco.vito.core.FrescoVitoPrefetcher
@@ -19,7 +20,7 @@ import com.facebook.fresco.vito.core.impl.FrescoController2Impl
 import com.facebook.fresco.vito.core.impl.FrescoVitoPrefetcherImpl
 import com.facebook.fresco.vito.core.impl.HierarcherImpl
 import com.facebook.fresco.vito.core.impl.VitoImagePipelineImpl
-import com.facebook.fresco.vito.core.impl.debug.DefaultDebugOverlayFactory2
+import com.facebook.fresco.vito.core.impl.debug.DebugOverlayFactory2
 import com.facebook.fresco.vito.core.impl.debug.NoOpDebugOverlayFactory2
 import com.facebook.fresco.vito.drawable.ArrayVitoDrawableFactory
 import com.facebook.fresco.vito.drawable.BitmapDrawableFactory
@@ -28,6 +29,7 @@ import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.core.ImagePipelineFactory
+import com.facebook.imagepipeline.image.ImageInfo
 import java.lang.RuntimeException
 import java.util.concurrent.Executor
 
@@ -37,9 +39,10 @@ class DefaultFrescoVitoProvider(
     imagePipelineUtils: ImagePipelineUtils,
     lightweightBackgroundThreadExecutor: Executor,
     uiThreadExecutor: Executor,
-    debugOverlayEnabledSupplier: Supplier<Boolean?>?,
     callerContextVerifier: CallerContextVerifier,
     vitoImagePerfListener: VitoImagePerfListener,
+    debugOverlayFactory: DebugOverlayFactory2 = NoOpDebugOverlayFactory2(),
+    imagePerfListenerSupplier: Supplier<ControllerListener2<ImageInfo>>? = null,
 ) : FrescoVitoProvider.Implementation {
 
   private val frescoController: FrescoController2
@@ -64,9 +67,8 @@ class DefaultFrescoVitoProvider(
             uiThreadExecutor,
             vitoImagePipeline,
             null,
-            debugOverlayEnabledSupplier?.let { DefaultDebugOverlayFactory2(it) }
-                ?: NoOpDebugOverlayFactory2(),
-            null,
+            debugOverlayFactory,
+            imagePerfListenerSupplier,
             vitoImagePerfListener)
   }
 

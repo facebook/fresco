@@ -54,6 +54,10 @@ class CombinedImageListenerImpl : CombinedImageListener {
     checkAndSetLocalImagePerfStateListener()
   }
 
+  override fun getImagePerfControllerListener(): ControllerListener2<ImageInfo>? {
+    return imagePerfControllerListener
+  }
+
   override fun setLocalImagePerfStateListener(imagePerfNotifier: ImagePerfNotifier?) {
     localImagePerfStateListener = imagePerfNotifier
     checkAndSetLocalImagePerfStateListener()

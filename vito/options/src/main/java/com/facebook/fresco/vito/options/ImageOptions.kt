@@ -45,6 +45,10 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
   // Overlay
   @get:DrawableRes @DrawableRes val overlayRes: Int = builder._overlayRes
   val overlayDrawable: Drawable? = builder._overlayDrawable
+
+  // Background
+  val backgroundDrawable: Drawable? = builder._backgroundDrawable
+
   private val _resizeToViewport: Boolean = builder._resizeToViewport
   val fadeDurationMs: Int = builder._fadeDurationMs
   private val _autoPlay: Boolean = builder._autoPlay
@@ -68,6 +72,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     if (isPerfMediaRemountInstrumentationFix) {
       if (overlayRes != other.overlayRes ||
           !Objects.equal(overlayDrawable, other.overlayDrawable) ||
+          !Objects.equal(backgroundDrawable, other.backgroundDrawable) ||
           !Objects.equal(actualImageColorFilter, other.actualImageColorFilter) ||
           _resizeToViewport != other._resizeToViewport ||
           _autoPlay != other._autoPlay ||
@@ -79,6 +84,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     } else {
       if (overlayRes != other.overlayRes ||
           !Objects.equal(overlayDrawable, other.overlayDrawable) ||
+          !Objects.equal(backgroundDrawable, other.backgroundDrawable) ||
           !Objects.equal(actualImageColorFilter, other.actualImageColorFilter) ||
           _resizeToViewport != other._resizeToViewport ||
           !Objects.equal(customDrawableFactory, other.customDrawableFactory)) {
@@ -107,6 +113,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
           errorApplyRoundingOptions != other.errorApplyRoundingOptions ||
           overlayRes != other.overlayRes ||
           !Objects.equal(overlayDrawable, other.overlayDrawable) ||
+          !Objects.equal(errorDrawable, other.errorDrawable) ||
           progressRes != other.progressRes ||
           !Objects.equal(progressDrawable, other.progressDrawable) ||
           !Objects.equal(progressScaleType, other.progressScaleType) ||
@@ -134,6 +141,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
           errorApplyRoundingOptions != other.errorApplyRoundingOptions ||
           overlayRes != other.overlayRes ||
           !Objects.equal(overlayDrawable, other.overlayDrawable) ||
+          !Objects.equal(errorDrawable, other.errorDrawable) ||
           progressRes != other.progressRes ||
           progressDrawable !== other.progressDrawable ||
           progressScaleType !== other.progressScaleType ||
@@ -166,6 +174,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     result = 31 * result + if (errorApplyRoundingOptions) 1 else 0
     result = 31 * result + overlayRes
     result = 31 * result + (overlayDrawable?.hashCode() ?: 0)
+    result = 31 * result + (backgroundDrawable?.hashCode() ?: 0)
     result = 31 * result + (progressDrawable?.hashCode() ?: 0)
     result = 31 * result + (progressScaleType?.hashCode() ?: 0)
     result = 31 * result + (actualImageColorFilter?.hashCode() ?: 0)
@@ -201,6 +210,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
           .add("actualImageColorFilter", actualImageColorFilter)
           .add("overlayRes", overlayRes)
           .add("overlayDrawable", overlayDrawable)
+          .add("backgroundDrawable", backgroundDrawable)
           .add("resizeToViewport", _resizeToViewport)
           .add("autoPlay", _autoPlay)
           .add("autoStop", _autoStop)
@@ -230,6 +240,9 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
 
     @DrawableRes internal var _overlayRes = 0
     internal var _overlayDrawable: Drawable? = null
+
+    internal var _backgroundDrawable: Drawable? = null
+
     internal var _resizeToViewport = false
     internal var _autoPlay = false
     internal var _autoStop = true
@@ -379,6 +392,8 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
       _overlayDrawable = overlayDrawable
       _overlayRes = 0
     }
+
+    fun background(drawable: Drawable?): Builder = modify { _backgroundDrawable = drawable }
 
     fun colorFilter(colorFilter: ColorFilter?): Builder = modify {
       _actualImageColorFilter = colorFilter

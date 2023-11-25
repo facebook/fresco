@@ -24,12 +24,14 @@ import kotlin.math.min
 open class DebugOverlayDrawable
 @JvmOverloads
 constructor(
-    private val identifier: String = "",
+    val identifier: String = "",
     private val identifierColor: Int = 0xFF00FF00.toInt(),
 ) : Drawable() {
 
   @ColorInt var backgroundColor: Int = Color.TRANSPARENT
   var textGravity: Int = Gravity.TOP
+
+  var drawIdentifier: Boolean = true
 
   // Internal helpers
   private val debugData = LinkedHashMap<String, Pair<String, Int>>()
@@ -93,7 +95,9 @@ constructor(
     // Reset the text position
     currentTextXPx = startTextXPx
     currentTextYPx = startTextYPx
-    addDebugText(canvas, "Vito", identifier, identifierColor)
+    if (drawIdentifier) {
+      addDebugText(canvas, "Vito", identifier, identifierColor)
+    }
     for ((key, value) in debugData) {
       addDebugText(canvas, key, value.first, value.second)
     }

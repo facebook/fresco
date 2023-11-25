@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.view
 
 import android.net.Uri
 import android.view.View
+import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.VitoImageRequest
 import com.facebook.fresco.vito.core.VitoImageRequestListener
 import com.facebook.fresco.vito.listener.ImageListener
@@ -148,5 +149,10 @@ object VitoView {
   @JvmStatic
   fun release(target: View) {
     VitoViewImpl2.release(target)
+  }
+
+  @JvmStatic
+  fun getDrawable(target: View): FrescoDrawableInterface? {
+    return VitoViewImpl2.getDrawable(target)
   }
 }
