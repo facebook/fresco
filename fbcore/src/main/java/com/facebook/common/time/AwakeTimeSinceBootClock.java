@@ -14,13 +14,10 @@ import com.facebook.infer.annotation.Nullsafe;
  * A clock that returns number of milliseconds since boot. It guarantees that every next call to
  * now() will return a value that is not less that was returned from previous call to now(). This
  * happens regardless system time changes, time zone changes, daylight saving changes etc.
- *
- * <p>DO USE THIS CLOCK FOR PERFORMANCE MEASUREMENT. IT STOPS TICKING WHILE THE DEVICE SLEEPS, THAT
- * IS, WHILE THE DEVICE CANNOT RUN THE CODE WE ARE PURPORTEDLY MEASURING.
  */
 @Nullsafe(Nullsafe.Mode.LOCAL)
 @DoNotStrip
-public class AwakeTimeSinceBootClock implements MonotonicClock, MonotonicNanoClock {
+public class AwakeTimeSinceBootClock implements MonotonicNanoClock {
   @DoNotStrip private static final AwakeTimeSinceBootClock INSTANCE = new AwakeTimeSinceBootClock();
 
   private AwakeTimeSinceBootClock() {}
@@ -37,14 +34,8 @@ public class AwakeTimeSinceBootClock implements MonotonicClock, MonotonicNanoClo
 
   @Override
   @DoNotStrip
-  public long now() {
-    // Guaranteed to be monotonic according to documentation.
-    return android.os.SystemClock.uptimeMillis();
-  }
-
-  @Override
-  @DoNotStrip
   public long nowNanos() {
+    // Guaranteed to be monotonic according to documentation.
     return java.lang.System.nanoTime();
   }
 }

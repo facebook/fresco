@@ -9,6 +9,7 @@ package com.facebook.common.time;
 
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.infer.annotation.Nullsafe;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A clock that returns number of milliseconds since boot. It guarantees that every next call to
@@ -38,6 +39,12 @@ public class RealtimeSinceBootClock implements MonotonicClock {
   @Override
   public long now() {
     // Guaranteed to be monotonic according to documentation.
-    return android.os.SystemClock.elapsedRealtime /*sic*/();
+    return android.os.SystemClock.elapsedRealtime();
+  }
+
+  @Override
+  public long nowNanos() {
+    // Guaranteed to be monotonic according to documentation.
+    return TimeUnit.MILLISECONDS.toNanos(now());
   }
 }
