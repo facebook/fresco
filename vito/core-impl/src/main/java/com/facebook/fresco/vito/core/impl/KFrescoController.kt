@@ -44,6 +44,7 @@ import com.facebook.imagepipeline.image.CloseableStaticBitmap
 import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.image.ImageInfoImpl
 import com.facebook.imagepipeline.image.ImmutableQualityInfo
+import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
 import java.util.concurrent.Executor
 
 class KFrescoController(
@@ -60,27 +61,31 @@ class KFrescoController(
 
   private val imageToDataModelMapper: (Resources, CloseableImage, ImageOptions) -> ImageDataModel? =
       { r, a, b ->
-        b.customDrawableFactory?.createDrawable(r, a, b)?.let { createDrawableModel(it, b) }
-            ?: when (a) {
-              is CloseableBitmap ->
-                  BitmapImageDataModel(
-                      a.underlyingBitmap,
-                      java.lang.Boolean.TRUE.equals(a.getExtras()["is_rounded"]))
-              // TODO(T105148151): handle rotation for closeable static bitmap, handle other types
-              else -> {
-                drawableFactory?.createDrawable(r, a, b)?.let { createDrawableModel(it, b) }
+        traceSection("KFrescoController#imageToDataModelMapper") {
+          b.customDrawableFactory?.createDrawable(r, a, b)?.let { createDrawableModel(it, b) }
+              ?: when (a) {
+                is CloseableBitmap ->
+                    BitmapImageDataModel(
+                        a.underlyingBitmap,
+                        java.lang.Boolean.TRUE.equals(a.getExtras()["is_rounded"]))
+                // TODO(T105148151): handle rotation for closeable static bitmap, handle other types
+                else -> {
+                  drawableFactory?.createDrawable(r, a, b)?.let { createDrawableModel(it, b) }
+                }
               }
-            }
+        }
       }
 
   var debugOverlayHandler: DebugOverlayHandler? = null
 
   override fun <T> createDrawable(): T where T : Drawable, T : FrescoDrawableInterface {
-    val drawable = KFrescoVitoDrawable(imagePerfListener)
-    imagePerfControllerListenerSupplier?.get()?.let {
-      drawable.listenerManager.setImagePerfControllerListener(it)
+    traceSection("KFrescoController#createDrawable") {
+      val drawable = KFrescoVitoDrawable(imagePerfListener)
+      imagePerfControllerListenerSupplier?.get()?.let { bla ->
+        drawable.listenerManager.setImagePerfControllerListener(bla)
+      }
+      return drawable as T
     }
-    return drawable as T
   }
 
   override fun fetch(
@@ -94,130 +99,141 @@ class KFrescoController(
       viewportDimensions: Rect?,
       vitoImageRequestListener: VitoImageRequestListener?,
   ): Boolean {
-    if (drawable !is KFrescoVitoDrawable) {
-      FLog.e(TAG, "Drawable not supported $drawable")
-      return false
-    }
-
-    // Check if we already fetched that image
-    if (isAlreadyLoadingImage(imageRequest, drawable)) {
-      ImageReleaseScheduler.cancelAllReleasing(drawable)
-      return true
-    }
-
-    if (drawable.isFetchSubmitted) {
-      drawable.imagePerfListener.onDrawableReconfigured(drawable)
-    }
-
-    // We didn't -> reset everything and set up new fetch
-    // TODO(T105148151): move to new package so that no legacy impl dep
-    val imageId: Long = VitoUtils.generateIdentifier()
-    drawable.apply {
-      reset()
-      this.imageRequest = imageRequest
-      this.callerContext = callerContext
-      imageListener = listener
-      listenerManager.setVitoImageRequestListener(globalImageRequestListener)
-      listenerManager.setLocalVitoImageRequestListener(vitoImageRequestListener)
-
-      // Setup local perf data listener
-      val localPerfStateListener = perfDataListener?.let { ImagePerfDataNotifier(it) }
-      listenerManager.setLocalImagePerfStateListener(localPerfStateListener)
-
-      _imageId = imageId
-      this.viewportDimensions = viewportDimensions
-    }
-
-    val options: ImageOptions = imageRequest.imageOptions
-
-    drawable.listenerManager.onSubmit(imageId, imageRequest, callerContext, drawable.obtainExtras())
-    drawable.imagePerfListener.onImageFetch(drawable)
-    drawable.overlayImageLayer.setOverlay(imageRequest.resources, options)
-
-    when (val source = imageRequest.imageSource) {
-      // Direct bitmap available
-      is BitmapImageSource -> {
-        val closeableBitmap: CloseableBitmap =
-            CloseableStaticBitmap.of(source.bitmap, {}, ImmutableQualityInfo.FULL_QUALITY, 0)
-        val bitmapRef = CloseableReference.of<CloseableImage>(closeableBitmap)
-        return drawable.setActualImage(imageRequest, bitmapRef)
+    traceSection("KFrescoController#fetch") {
+      if (drawable !is KFrescoVitoDrawable) {
+        FLog.e(TAG, "Drawable not supported $drawable")
+        return false
       }
-      // Direct Drawable available
-      is DrawableImageSource -> {
-        val extras = drawable.obtainExtras(null, null)
-        drawable.actualImageLayer.setActualImageDrawable(imageRequest.imageOptions, source.drawable)
-        drawable.listenerManager.onFinalImageSet(
-            imageId,
-            imageRequest,
-            ImageOrigin.LOCAL,
-            ImageInfoImpl(
-                source.drawable.intrinsicWidth,
-                source.drawable.intrinsicHeight,
-                0,
-                ImmutableQualityInfo.FULL_QUALITY,
-                extras.imageExtras ?: emptyMap()),
-            extras,
-            drawable.actualImageDrawable)
-        debugOverlayHandler?.update(drawable)
+
+      // Check if we already fetched that image
+      if (isAlreadyLoadingImage(imageRequest, drawable)) {
+        ImageReleaseScheduler.cancelAllReleasing(drawable)
         return true
       }
-    }
 
-    // Check if the image is in cache
-    val cachedImage = vitoImagePipeline.getCachedImage(imageRequest)
-    if (drawable.setActualImage(imageRequest, cachedImage)) {
-      return true
-    }
-
-    // The image is not in cache -> Set up layers visible until the image is available
-    drawable.placeholderLayer.setPlaceholder(imageRequest.resources, options)
-    drawable.listenerManager.onPlaceholderSet(
-        imageId, imageRequest, drawable.placeholderLayer.getDataModel().maybeGetDrawable())
-
-    drawable.setupProgressLayer(imageRequest.resources, options)
-
-    // Fetch the image
-    lightweightBackgroundThreadExecutor.execute {
-      if (imageId != drawable.imageId) {
-        return@execute
+      if (drawable.isFetchSubmitted) {
+        drawable.imagePerfListener.onDrawableReconfigured(drawable)
       }
-      val dataSource: DataSource<CloseableReference<CloseableImage>> =
-          vitoImagePipeline.fetchDecodedImage(imageRequest, callerContext, null, imageId)
-      dataSource.subscribe(
-          ImageFetchSubscriber(
-              imageId, drawable, imageToDataModelMapper, debugOverlayHandler, uiThreadExecutor),
-          if (config.handleImageResultInBackground()) lightweightBackgroundThreadExecutor
-          else uiThreadExecutor) // Keyframes require callbacks to be on the main thread.
-      drawable.dataSource = dataSource
+
+      // We didn't -> reset everything and set up new fetch
+      // TODO(T105148151): move to new package so that no legacy impl dep
+      val imageId: Long = VitoUtils.generateIdentifier()
+      drawable.apply {
+        reset()
+        this.imageRequest = imageRequest
+        this.callerContext = callerContext
+        imageListener = listener
+        listenerManager.setVitoImageRequestListener(globalImageRequestListener)
+        listenerManager.setLocalVitoImageRequestListener(vitoImageRequestListener)
+
+        // Setup local perf data listener
+        val localPerfStateListener =
+            perfDataListener?.let { listener -> ImagePerfDataNotifier(listener) }
+        listenerManager.setLocalImagePerfStateListener(localPerfStateListener)
+
+        _imageId = imageId
+        this.viewportDimensions = viewportDimensions
+      }
+
+      val options: ImageOptions = imageRequest.imageOptions
+
+      drawable.listenerManager.onSubmit(
+          imageId, imageRequest, callerContext, drawable.obtainExtras())
+      drawable.imagePerfListener.onImageFetch(drawable)
+      drawable.overlayImageLayer.setOverlay(imageRequest.resources, options)
+
+      when (val source = imageRequest.imageSource) {
+        // Direct bitmap available
+        is BitmapImageSource -> {
+          val closeableBitmap: CloseableBitmap =
+              CloseableStaticBitmap.of(source.bitmap, {}, ImmutableQualityInfo.FULL_QUALITY, 0)
+          val bitmapRef = CloseableReference.of<CloseableImage>(closeableBitmap)
+          return drawable.setActualImage(imageRequest, bitmapRef)
+        }
+        // Direct Drawable available
+        is DrawableImageSource -> {
+          val extras = drawable.obtainExtras(null, null)
+          drawable.actualImageLayer.setActualImageDrawable(
+              imageRequest.imageOptions, source.drawable)
+          drawable.listenerManager.onFinalImageSet(
+              imageId,
+              imageRequest,
+              ImageOrigin.LOCAL,
+              ImageInfoImpl(
+                  source.drawable.intrinsicWidth,
+                  source.drawable.intrinsicHeight,
+                  0,
+                  ImmutableQualityInfo.FULL_QUALITY,
+                  extras.imageExtras ?: emptyMap()),
+              extras,
+              drawable.actualImageDrawable)
+          debugOverlayHandler?.update(drawable)
+          return true
+        }
+      }
+
+      // Check if the image is in cache
+      val cachedImage = vitoImagePipeline.getCachedImage(imageRequest)
+      if (drawable.setActualImage(imageRequest, cachedImage)) {
+        return true
+      }
+
+      // The image is not in cache -> Set up layers visible until the image is available
+      drawable.placeholderLayer.setPlaceholder(imageRequest.resources, options)
+      drawable.listenerManager.onPlaceholderSet(
+          imageId, imageRequest, drawable.placeholderLayer.getDataModel().maybeGetDrawable())
+
+      drawable.setupProgressLayer(imageRequest.resources, options)
+
+      // Fetch the image
+      lightweightBackgroundThreadExecutor.execute {
+        if (imageId != drawable.imageId) {
+          return@execute
+        }
+        val dataSource: DataSource<CloseableReference<CloseableImage>> =
+            vitoImagePipeline.fetchDecodedImage(imageRequest, callerContext, null, imageId)
+        dataSource.subscribe(
+            ImageFetchSubscriber(
+                imageId, drawable, imageToDataModelMapper, debugOverlayHandler, uiThreadExecutor),
+            if (config.handleImageResultInBackground()) lightweightBackgroundThreadExecutor
+            else uiThreadExecutor) // Keyframes require callbacks to be on the main thread.
+        drawable.dataSource = dataSource
+      }
+      drawable.setFetchSubmitted(true)
+      drawable.invalidateSelf()
+      debugOverlayHandler?.update(drawable)
+      return false
     }
-    drawable.setFetchSubmitted(true)
-    drawable.invalidateSelf()
-    debugOverlayHandler?.update(drawable)
-    return false
   }
 
   override fun releaseDelayed(drawable: FrescoDrawableInterface) {
-    if (drawable !is KFrescoVitoDrawable) {
-      FLog.e(TAG, "Drawable not supported $drawable")
-      return
+    traceSection("KFrescoController#releaseDelayed") {
+      if (drawable !is KFrescoVitoDrawable) {
+        FLog.e(TAG, "Drawable not supported $drawable")
+        return
+      }
+      ImageReleaseScheduler.releaseDelayed(drawable)
     }
-    ImageReleaseScheduler.releaseDelayed(drawable)
   }
 
   override fun release(drawable: FrescoDrawableInterface) {
-    if (drawable !is KFrescoVitoDrawable) {
-      FLog.e(TAG, "Drawable not supported $drawable")
-      return
+    traceSection("KFrescoController#release") {
+      if (drawable !is KFrescoVitoDrawable) {
+        FLog.e(TAG, "Drawable not supported $drawable")
+        return
+      }
+      ImageReleaseScheduler.releaseNextFrame(drawable)
     }
-    ImageReleaseScheduler.releaseNextFrame(drawable)
   }
 
   override fun releaseImmediately(drawable: FrescoDrawableInterface) {
-    if (drawable !is KFrescoVitoDrawable) {
-      FLog.e(TAG, "Drawable not supported $drawable")
-      return
+    traceSection("KFrescoController#releaseImmediately") {
+      if (drawable !is KFrescoVitoDrawable) {
+        FLog.e(TAG, "Drawable not supported $drawable")
+        return
+      }
+      ImageReleaseScheduler.releaseImmediately(drawable)
     }
-    ImageReleaseScheduler.releaseImmediately(drawable)
   }
 
   /**
@@ -229,44 +245,49 @@ class KFrescoController(
       imageRequest: VitoImageRequest,
       imageReference: CloseableReference<CloseableImage>?
   ): Boolean {
-    try {
-      if (CloseableReference.isValid(imageReference)) {
-        // Immediately display the actual image.
-        val image = imageReference?.get()
-        if (image != null) {
-          setFetchSubmitted(true)
-          closeable = imageReference.clone()
-          actualImageLayer.setActualImage(
-              imageRequest.resources, imageRequest.imageOptions, image, imageToDataModelMapper)
-          // TODO(T105148151): trigger listeners
-          invalidateSelf()
-          val imageInfo = image.imageInfo
-          listenerManager.onFinalImageSet(
-              imageId,
-              imageRequest,
-              ImageOrigin.MEMORY_BITMAP_SHORTCUT,
-              imageInfo,
-              obtainExtras(null, imageReference),
-              actualImageDrawable)
-          debugOverlayHandler?.update(this)
-          return true
+    traceSection("KFrescoController#setActualImage") {
+      try {
+        if (CloseableReference.isValid(imageReference)) {
+          // Immediately display the actual image.
+          val image = imageReference?.get()
+          if (image != null) {
+            setFetchSubmitted(true)
+            closeable = imageReference.clone()
+            actualImageLayer.setActualImage(
+                imageRequest.resources, imageRequest.imageOptions, image, imageToDataModelMapper)
+            // TODO(T105148151): trigger listeners
+            invalidateSelf()
+            val imageInfo = image.imageInfo
+            listenerManager.onFinalImageSet(
+                imageId,
+                imageRequest,
+                ImageOrigin.MEMORY_BITMAP_SHORTCUT,
+                imageInfo,
+                obtainExtras(null, imageReference),
+                actualImageDrawable)
+            debugOverlayHandler?.update(this)
+            return true
+          }
         }
+      } finally {
+        CloseableReference.closeSafely(imageReference)
       }
-    } finally {
-      CloseableReference.closeSafely(imageReference)
+      return false
     }
-    return false
   }
 
   private fun isAlreadyLoadingImage(
       imageRequest: VitoImageRequest,
       drawable: KFrescoVitoDrawable
-  ): Boolean =
-      if (config.useSmartPropertyDiffing()) {
+  ): Boolean {
+    traceSection("KFrescoController#isAlreadyLoadingImage") {
+      return if (config.useSmartPropertyDiffing()) {
         imageRequest.equalsIfHasImage(drawable.imageRequest, drawable.hasImage())
       } else {
         imageRequest == drawable.imageRequest
       }
+    }
+  }
 
   private fun createDrawableModel(drawable: Drawable, options: ImageOptions): ImageDataModel =
       if (drawable is Animatable) {
