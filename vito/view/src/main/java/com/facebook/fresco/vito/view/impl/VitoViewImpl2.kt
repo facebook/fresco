@@ -29,6 +29,7 @@ object VitoViewImpl2 {
   @JvmField var useVisibilityCallbacks: Supplier<Boolean> = Suppliers.BOOLEAN_TRUE
   @JvmField var useSimpleFetchLogic: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE
   @JvmField var useReleaseInViewDetached: Supplier<Boolean> = Suppliers.BOOLEAN_TRUE
+  @JvmField var useReleaseDelayedInViewDetached: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE
 
   private val onAttachStateChangeListenerCallback: OnAttachStateChangeListener =
       object : OnAttachStateChangeListener {
@@ -44,6 +45,9 @@ object VitoViewImpl2 {
             imagePerfListener.onImageUnmount(this)
             if (useReleaseInViewDetached.get()) {
               FrescoVitoProvider.getController().release(this)
+            }
+            if (useReleaseDelayedInViewDetached.get()) {
+              FrescoVitoProvider.getController().releaseDelayed(this)
             }
           }
         }
