@@ -12,7 +12,7 @@ import android.os.Looper
 import com.facebook.drawee.components.DeferredReleaser
 
 object ImageReleaseScheduler {
-  private const val RELEASE_DELAY: Long = 16 * 5 // Roughly 5 frames.
+  var releaseDelayMs: Long = 16 * 5 // Roughly 5 frames.
 
   var improveDelayedReleasing = false
 
@@ -45,7 +45,7 @@ object ImageReleaseScheduler {
       return
     }
     drawable.imagePerfListener.onScheduleReleaseDelayed(drawable)
-    handler.postDelayed(drawable.releaseState, RELEASE_DELAY)
+    handler.postDelayed(drawable.releaseState, releaseDelayMs)
     if (improveDelayedReleasing) {
       drawable.releaseState.delayedReleasePending = true
     }
