@@ -22,7 +22,6 @@ import com.facebook.imagepipeline.core.MemoryChunkType;
 import com.facebook.imagepipeline.core.NativeCodeSetup;
 import com.facebook.infer.annotation.Nullsafe;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -107,15 +106,7 @@ public class PoolFactory {
                     mConfig.getMemoryTrimmableRegistry(),
                     mConfig.getMemoryChunkPoolParams(),
                     mConfig.getMemoryChunkPoolStatsTracker());
-      } catch (ClassNotFoundException e) {
-        mBufferMemoryChunkPool = null;
-      } catch (IllegalAccessException e) {
-        mBufferMemoryChunkPool = null;
-      } catch (InstantiationException e) {
-        mBufferMemoryChunkPool = null;
-      } catch (NoSuchMethodException e) {
-        mBufferMemoryChunkPool = null;
-      } catch (InvocationTargetException e) {
+      } catch (ReflectiveOperationException e) {
         mBufferMemoryChunkPool = null;
       }
     }
@@ -149,19 +140,7 @@ public class PoolFactory {
                     mConfig.getMemoryTrimmableRegistry(),
                     mConfig.getMemoryChunkPoolParams(),
                     mConfig.getMemoryChunkPoolStatsTracker());
-      } catch (ClassNotFoundException e) {
-        FLog.e("PoolFactory", "", e);
-        mNativeMemoryChunkPool = null;
-      } catch (IllegalAccessException e) {
-        FLog.e("PoolFactory", "", e);
-        mNativeMemoryChunkPool = null;
-      } catch (InstantiationException e) {
-        FLog.e("PoolFactory", "", e);
-        mNativeMemoryChunkPool = null;
-      } catch (NoSuchMethodException e) {
-        FLog.e("PoolFactory", "", e);
-        mNativeMemoryChunkPool = null;
-      } catch (InvocationTargetException e) {
+      } catch (ReflectiveOperationException e) {
         FLog.e("PoolFactory", "", e);
         mNativeMemoryChunkPool = null;
       }
@@ -183,15 +162,7 @@ public class PoolFactory {
                     mConfig.getMemoryTrimmableRegistry(),
                     mConfig.getMemoryChunkPoolParams(),
                     mConfig.getMemoryChunkPoolStatsTracker());
-      } catch (ClassNotFoundException e) {
-        mAshmemMemoryChunkPool = null;
-      } catch (IllegalAccessException e) {
-        mAshmemMemoryChunkPool = null;
-      } catch (InstantiationException e) {
-        mAshmemMemoryChunkPool = null;
-      } catch (NoSuchMethodException e) {
-        mAshmemMemoryChunkPool = null;
-      } catch (InvocationTargetException e) {
+      } catch (ReflectiveOperationException e) {
         mAshmemMemoryChunkPool = null;
       }
     }
