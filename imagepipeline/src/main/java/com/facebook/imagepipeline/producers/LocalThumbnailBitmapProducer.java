@@ -58,14 +58,14 @@ public class LocalThumbnailBitmapProducer implements Producer<CloseableReference
           protected void onSuccess(@Nullable CloseableReference<CloseableImage> result) {
             super.onSuccess(result);
             listener.onUltimateProducerReached(context, PRODUCER_NAME, result != null);
-            context.putOriginExtra("local");
+            context.putOriginExtra("local", "thumbnail_bitmap");
           }
 
           @Override
           protected void onFailure(Exception e) {
             super.onFailure(e);
             listener.onUltimateProducerReached(context, PRODUCER_NAME, false);
-            context.putOriginExtra("local");
+            context.putOriginExtra("local", "thumbnail_bitmap");
           }
 
           @Override
