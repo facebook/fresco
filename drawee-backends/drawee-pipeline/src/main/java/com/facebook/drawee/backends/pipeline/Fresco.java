@@ -30,7 +30,7 @@ public class Fresco {
 
   private static final Class<?> TAG = Fresco.class;
 
-  private static PipelineDraweeControllerBuilderSupplier sDraweeControllerBuilderSupplier;
+  @Nullable private static PipelineDraweeControllerBuilderSupplier sDraweeControllerBuilderSupplier;
   private static volatile boolean sIsInitialized = false;
 
   private Fresco() {}

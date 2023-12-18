@@ -289,6 +289,7 @@ public class FrescoFlipperPlugin extends BufferingFlipperPlugin
 
             t.continueWith(
                 new Continuation<EncodedImage, Void>() {
+                  @Nullable
                   public Void then(Task<EncodedImage> task) throws Exception {
                     if (task.isCancelled() || task.isFaulted()) {
                       respondError(responder, "no bitmap withId=" + imageId);
