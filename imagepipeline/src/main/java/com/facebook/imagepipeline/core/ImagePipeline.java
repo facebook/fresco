@@ -877,6 +877,7 @@ public class ImagePipeline {
             })
         .continueWith(
             new Continuation<Boolean, Void>() {
+              @Nullable
               @Override
               public Void then(Task<Boolean> task) throws Exception {
                 dataSource.setResult(!task.isCancelled() && !task.isFaulted() && task.getResult());

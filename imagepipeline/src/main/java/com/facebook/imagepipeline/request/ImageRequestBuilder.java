@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 public class ImageRequestBuilder {
 
   private static final Set<String> CUSTOM_NETWORK_SCHEMES = new HashSet<>();
-  private Uri mSourceUri = null;
+  @Nullable private Uri mSourceUri = null;
   private RequestLevel mLowestPermittedRequestLevel = RequestLevel.FULL_FETCH;
   private int mCachesDisabled = 0; // All caches enabled by default
   private @Nullable ResizeOptions mResizeOptions = null;

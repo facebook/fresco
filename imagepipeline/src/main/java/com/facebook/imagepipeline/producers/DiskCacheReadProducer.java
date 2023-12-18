@@ -91,6 +91,7 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
       final Consumer<EncodedImage> consumer, final ProducerContext producerContext) {
     final ProducerListener2 listener = producerContext.getProducerListener();
     return new Continuation<EncodedImage, Void>() {
+      @Nullable
       @Override
       public Void then(Task<EncodedImage> task) throws Exception {
         if (isTaskCancelled(task)) {
