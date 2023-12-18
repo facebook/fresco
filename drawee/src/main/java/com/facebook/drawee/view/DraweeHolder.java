@@ -46,7 +46,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
   private boolean mIsVisible = true;
   @Nullable private DH mHierarchy;
 
-  private DraweeController mController = null;
+  @Nullable private DraweeController mController = null;
 
   private final DraweeEventTracker mEventTracker = DraweeEventTracker.newInstance();
 
