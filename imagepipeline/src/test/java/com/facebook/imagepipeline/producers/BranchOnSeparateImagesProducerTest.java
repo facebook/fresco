@@ -23,6 +23,7 @@ import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import javax.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,8 +46,8 @@ public class BranchOnSeparateImagesProducerTest {
 
   private Producer<EncodedImage> mInputProducer1;
   private Producer<EncodedImage> mInputProducer2;
-  private Consumer<EncodedImage> mFirstProducerConsumer;
-  private Consumer<EncodedImage> mSecondProducerConsumer;
+  @Nullable private Consumer<EncodedImage> mFirstProducerConsumer;
+  @Nullable private Consumer<EncodedImage> mSecondProducerConsumer;
   private EncodedImage mIntermediateResult;
   private EncodedImage mFirstProducerFinalResult;
   private EncodedImage mSecondProducerFinalResult;
@@ -78,6 +79,7 @@ public class BranchOnSeparateImagesProducerTest {
     mSecondProducerConsumer = null;
     doAnswer(
             new Answer() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 mFirstProducerConsumer = (Consumer<EncodedImage>) invocation.getArguments()[0];
@@ -88,6 +90,7 @@ public class BranchOnSeparateImagesProducerTest {
         .produceResults(any(Consumer.class), any(ProducerContext.class));
     doAnswer(
             new Answer() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 mSecondProducerConsumer = (Consumer<EncodedImage>) invocation.getArguments()[0];

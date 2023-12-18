@@ -34,6 +34,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -268,6 +269,7 @@ public class DiskCacheWriteProducerTest {
       final @Consumer.Status int statusFlags, final EncodedImage finalEncodedImage) {
     doAnswer(
             new Answer<Object>() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 Consumer consumer = (Consumer) invocation.getArguments()[0];
@@ -283,6 +285,7 @@ public class DiskCacheWriteProducerTest {
   private void setupInputProducerFailure() {
     doAnswer(
             new Answer<Object>() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 Consumer consumer = (Consumer) invocation.getArguments()[0];
@@ -297,6 +300,7 @@ public class DiskCacheWriteProducerTest {
   private void setupInputProducerNotFound() {
     doAnswer(
             new Answer<Object>() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 Consumer consumer = (Consumer) invocation.getArguments()[0];

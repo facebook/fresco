@@ -23,6 +23,7 @@ import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.producers.PriorityStarvingThrottlingProducer.Item;
 import com.facebook.imagepipeline.producers.PriorityStarvingThrottlingProducer.PriorityComparator;
+import javax.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,6 +65,7 @@ public class PriorityStarvingThrottlingProducerTest {
       final int iFinal = i;
       doAnswer(
               new Answer() {
+                @Nullable
                 @Override
                 public Object answer(InvocationOnMock invocation) throws Throwable {
                   mThrottlerConsumers[iFinal] = (Consumer<Object>) invocation.getArguments()[0];

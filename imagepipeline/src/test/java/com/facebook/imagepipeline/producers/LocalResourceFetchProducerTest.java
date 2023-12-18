@@ -24,6 +24,7 @@ import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import javax.annotation.Nullable;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -80,6 +81,7 @@ public class LocalResourceFetchProducerTest {
     when(mImageRequest.getSourceUri()).thenReturn(Uri.parse("res:///" + TEST_ID));
     doAnswer(
             new Answer() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 mCapturedEncodedImage =

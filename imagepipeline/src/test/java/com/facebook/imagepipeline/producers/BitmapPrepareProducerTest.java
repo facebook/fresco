@@ -19,6 +19,7 @@ import android.graphics.Bitmap;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
+import javax.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,6 +60,7 @@ public class BitmapPrepareProducerTest {
 
     doAnswer(
             new Answer() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] args = invocation.getArguments();

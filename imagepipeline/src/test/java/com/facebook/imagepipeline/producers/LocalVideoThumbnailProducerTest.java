@@ -32,6 +32,7 @@ import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
 import java.io.File;
 import java.util.Map;
+import javax.annotation.Nullable;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -117,6 +118,7 @@ public class LocalVideoThumbnailProducerTest {
         .thenReturn(mBitmap);
     doAnswer(
             new Answer() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 mCloseableReference = ((CloseableReference) invocation.getArguments()[0]).clone();
@@ -144,6 +146,7 @@ public class LocalVideoThumbnailProducerTest {
         .thenReturn(mBitmap);
     doAnswer(
             new Answer() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 mCloseableReference = ((CloseableReference) invocation.getArguments()[0]).clone();

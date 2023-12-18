@@ -49,6 +49,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
+import javax.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -94,7 +95,7 @@ public class ResizeAndRotateProducerTest {
   private static final int MAX_BITMAP_SIZE = 2024;
   private TestExecutorService mTestExecutorService;
   private ResizeAndRotateProducer mResizeAndRotateProducer;
-  private Consumer<EncodedImage> mResizeAndRotateProducerConsumer;
+  @Nullable private Consumer<EncodedImage> mResizeAndRotateProducerConsumer;
   private CloseableReference<PooledByteBuffer> mIntermediateResult;
   private CloseableReference<PooledByteBuffer> mFinalResult;
   private PooledByteBuffer mPooledByteBuffer;
@@ -154,6 +155,7 @@ public class ResizeAndRotateProducerTest {
     mResizeAndRotateProducerConsumer = null;
     doAnswer(
             new Answer() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 mResizeAndRotateProducerConsumer =

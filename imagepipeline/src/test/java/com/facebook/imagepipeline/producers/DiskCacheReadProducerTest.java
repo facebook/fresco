@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.annotation.Nullable;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -428,6 +429,7 @@ public class DiskCacheReadProducerTest {
   private void setupInputProducerSuccess() {
     doAnswer(
             new Answer<Object>() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 Consumer consumer = (Consumer) invocation.getArguments()[0];
@@ -443,6 +445,7 @@ public class DiskCacheReadProducerTest {
   private void setupInputProducerFailure() {
     doAnswer(
             new Answer<Object>() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 Consumer consumer = (Consumer) invocation.getArguments()[0];
@@ -457,6 +460,7 @@ public class DiskCacheReadProducerTest {
   private void setupInputProducerNotFound() {
     doAnswer(
             new Answer<Object>() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 Consumer consumer = (Consumer) invocation.getArguments()[0];

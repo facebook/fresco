@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import javax.annotation.Nullable;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -116,6 +117,7 @@ public class SwallowResultProducerTest {
       mResults = results;
     }
 
+    @Nullable
     @Override
     public Void answer(InvocationOnMock invocation) throws Throwable {
       Consumer consumer = (Consumer) invocation.getArguments()[0];
@@ -129,6 +131,7 @@ public class SwallowResultProducerTest {
   }
 
   private class ProduceResultsFailureAnswer implements Answer<Void> {
+    @Nullable
     @Override
     public Void answer(InvocationOnMock invocation) throws Throwable {
       Consumer consumer = (Consumer) invocation.getArguments()[0];
@@ -138,6 +141,7 @@ public class SwallowResultProducerTest {
   }
 
   private class ProduceResultsCancellationAnswer implements Answer<Void> {
+    @Nullable
     @Override
     public Void answer(InvocationOnMock invocation) throws Throwable {
       Consumer consumer = (Consumer) invocation.getArguments()[0];

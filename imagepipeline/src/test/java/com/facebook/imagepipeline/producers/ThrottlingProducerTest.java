@@ -11,6 +11,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import com.facebook.common.executors.CallerThreadExecutor;
+import javax.annotation.Nullable;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -52,6 +53,7 @@ public class ThrottlingProducerTest {
       final int iFinal = i;
       doAnswer(
               new Answer() {
+                @Nullable
                 @Override
                 public Object answer(InvocationOnMock invocation) throws Throwable {
                   mThrottlerConsumers[iFinal] = (Consumer<Object>) invocation.getArguments()[0];

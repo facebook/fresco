@@ -30,6 +30,7 @@ import com.facebook.imagepipeline.testing.TestExecutorService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -94,6 +95,7 @@ public class RepeatedPostprocessorProducerTest {
     when(mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)).thenReturn(true);
     doAnswer(
             new Answer<Object>() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 mResults.add(
