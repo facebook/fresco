@@ -23,10 +23,11 @@ public class BaseCloseableStaticBitmap extends BaseCloseableImage implements Clo
 
   private static boolean sUseSimpleCloseableStaticBitmap = false;
 
+  @Nullable
   @GuardedBy("this")
   private CloseableReference<Bitmap> mBitmapReference;
 
-  private volatile Bitmap mBitmap;
+  @Nullable private volatile Bitmap mBitmap;
 
   // quality info
   private final QualityInfo mQualityInfo;
