@@ -22,8 +22,9 @@ import javax.annotation.concurrent.ThreadSafe
  */
 @ThreadSafe
 class MemoryPooledByteBufferFactory( // memory pool
-private val pool: MemoryChunkPool, private val pooledByteStreams: PooledByteStreams) :
-    PooledByteBufferFactory {
+    private val pool: MemoryChunkPool,
+    private val pooledByteStreams: PooledByteStreams
+) : PooledByteBufferFactory {
 
   override fun newByteBuffer(size: Int): MemoryPooledByteBuffer {
     check(size > 0)
