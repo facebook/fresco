@@ -46,6 +46,7 @@ public class ContextChain implements Parcelable {
   private String mSerializedNodeString;
 
   private static boolean sUseConcurrentHashMap = false;
+  private static boolean sUseNewHashFunction = false;
 
   public ContextChain(
       final String tag,
@@ -99,6 +100,10 @@ public class ContextChain implements Parcelable {
 
   public static void setUseConcurrentHashMap(boolean useConcurrentHashMap) {
     sUseConcurrentHashMap = useConcurrentHashMap;
+  }
+
+  public static void setUseNewHashFunction(boolean useNewHashFunction) {
+    sUseNewHashFunction = useNewHashFunction;
   }
 
   public String getName() {
@@ -190,7 +195,13 @@ public class ContextChain implements Parcelable {
 
   @Override
   public int hashCode() {
-    return Objects.hash(mParent, getNodeString());
+    if (sUseNewHashFunction) {
+      return Objects.hash(mParent, getNodeString());
+    } else {
+      int result = super.hashCode();
+      result = 31 * result + (getNodeString().hashCode());
+      return result;
+    }
   }
 
   @Override
