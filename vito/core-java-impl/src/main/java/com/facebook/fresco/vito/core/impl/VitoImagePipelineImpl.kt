@@ -15,6 +15,7 @@ import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.fresco.ui.common.VitoUtils
 import com.facebook.fresco.urimod.Dimensions
 import com.facebook.fresco.urimod.UriModifier
+import com.facebook.fresco.urimod.UriModifierInterface
 import com.facebook.fresco.vito.core.ImagePipelineUtils
 import com.facebook.fresco.vito.core.VitoImagePipeline
 import com.facebook.fresco.vito.core.VitoImageRequest
@@ -46,16 +47,16 @@ class VitoImagePipelineImpl(
     val extras: MutableMap<String, Any?> = mutableMapOf()
     var finalImageSource = imageSource
     if (imageSource is SingleImageSource) {
-      val uri = imageSource.uri
-      val maybeModifiedUri =
+      val result: UriModifierInterface.ModificationResult =
           UriModifier.INSTANCE.modifyUri(
-              uri,
+              imageSource.uri,
               viewport?.let { Dimensions(it.width(), it.height()) },
               imageOptions.actualImageScaleType)
-
-      if (maybeModifiedUri != uri) {
-        extras[HasExtraData.KEY_MODIFIED_URL] = true
-        finalImageSource = ImageSourceProvider.forUri(maybeModifiedUri)
+      if (result !is UriModifierInterface.ModificationResult.Disabled) {
+        extras[HasExtraData.KEY_MODIFIED_URL] = result.toString()
+      }
+      if (result is UriModifierInterface.ModificationResult.Modified) {
+        finalImageSource = ImageSourceProvider.forUri(result.newUri)
       }
       if (imageSource.extras != null) {
         extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = imageSource.extras
