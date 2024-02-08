@@ -49,7 +49,7 @@ import com.facebook.imagepipeline.producers.LocalContentUriThumbnailFetchProduce
 import com.facebook.imagepipeline.producers.LocalExifThumbnailProducer;
 import com.facebook.imagepipeline.producers.LocalFileFetchProducer;
 import com.facebook.imagepipeline.producers.LocalResourceFetchProducer;
-import com.facebook.imagepipeline.producers.LocalThumbnailBitmapProducer;
+import com.facebook.imagepipeline.producers.LocalThumbnailBitmapSdk29Producer;
 import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
 import com.facebook.imagepipeline.producers.NetworkFetchProducer;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
@@ -379,8 +379,8 @@ public class ProducerFactory {
   }
 
   @RequiresApi(Build.VERSION_CODES.Q)
-  public LocalThumbnailBitmapProducer newLocalThumbnailBitmapProducer() {
-    return new LocalThumbnailBitmapProducer(
+  public LocalThumbnailBitmapSdk29Producer newLocalThumbnailBitmapSdk29Producer() {
+    return new LocalThumbnailBitmapSdk29Producer(
         mExecutorSupplier.forBackgroundTasks(), mContentResolver);
   }
 }

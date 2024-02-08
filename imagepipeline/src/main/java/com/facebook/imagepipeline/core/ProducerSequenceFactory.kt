@@ -190,11 +190,23 @@ class ProducerSequenceFactory(
         checkNotNull(uri) { "Uri is null." }
         when (imageRequest.sourceUriType) {
           SourceUriType.SOURCE_TYPE_NETWORK -> networkFetchSequence
-          SourceUriType.SOURCE_TYPE_LOCAL_VIDEO_FILE -> localVideoFileFetchSequence
-          SourceUriType.SOURCE_TYPE_LOCAL_IMAGE_FILE -> localImageFileFetchSequence
+          SourceUriType.SOURCE_TYPE_LOCAL_VIDEO_FILE -> {
+            if (imageRequest.loadThumbnailOnlyForAndroidSdkAboveQ) {
+              return localThumbnailBitmapSdk29FetchSequence
+            } else {
+              localVideoFileFetchSequence
+            }
+          }
+          SourceUriType.SOURCE_TYPE_LOCAL_IMAGE_FILE -> {
+            if (imageRequest.loadThumbnailOnlyForAndroidSdkAboveQ) {
+              return localThumbnailBitmapSdk29FetchSequence
+            } else {
+              localImageFileFetchSequence
+            }
+          }
           SourceUriType.SOURCE_TYPE_LOCAL_CONTENT -> {
             if (imageRequest.loadThumbnailOnlyForAndroidSdkAboveQ) {
-              return localContentUriThumbnailFetchSequence
+              return localThumbnailBitmapSdk29FetchSequence
             } else if (isVideo(contentResolver.getType(uri))) {
               return localVideoFileFetchSequence
             }
@@ -358,9 +370,9 @@ class ProducerSequenceFactory(
    * bitmap
    */
   @get:RequiresApi(Build.VERSION_CODES.Q)
-  val localContentUriThumbnailFetchSequence: Producer<CloseableReference<CloseableImage>> by lazy {
+  val localThumbnailBitmapSdk29FetchSequence: Producer<CloseableReference<CloseableImage>> by lazy {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-      newBitmapCacheGetToBitmapCacheSequence(producerFactory.newLocalThumbnailBitmapProducer())
+      newBitmapCacheGetToBitmapCacheSequence(producerFactory.newLocalThumbnailBitmapSdk29Producer())
     } else {
       throw Throwable("Unreachable exception. Just to make linter happy for the lazy block.")
     }

@@ -7,14 +7,19 @@
 
 package com.facebook.imagepipeline.producers;
 
+import static com.facebook.common.util.UriUtil.getRealPathFromUri;
+
 import android.content.ContentResolver;
 import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Build;
 import android.os.CancellationSignal;
 import android.util.Size;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.ImmutableMap;
+import com.facebook.common.media.MediaUtils;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imagepipeline.bitmaps.SimpleBitmapReleaser;
@@ -23,6 +28,7 @@ import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -30,15 +36,16 @@ import javax.annotation.Nullable;
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public class LocalThumbnailBitmapProducer implements Producer<CloseableReference<CloseableImage>> {
+public class LocalThumbnailBitmapSdk29Producer
+    implements Producer<CloseableReference<CloseableImage>> {
 
-  public static final String PRODUCER_NAME = "LocalThumbnailBitmapProducer";
+  public static final String PRODUCER_NAME = "LocalThumbnailBitmapSdk29Producer";
   @VisibleForTesting static final String CREATED_THUMBNAIL = "createdThumbnail";
 
   private final Executor mExecutor;
   private final ContentResolver mContentResolver;
 
-  public LocalThumbnailBitmapProducer(Executor executor, ContentResolver contentResolver) {
+  public LocalThumbnailBitmapSdk29Producer(Executor executor, ContentResolver contentResolver) {
     mExecutor = executor;
     mContentResolver = contentResolver;
   }
@@ -70,11 +77,30 @@ public class LocalThumbnailBitmapProducer implements Producer<CloseableReference
 
           @Override
           protected @Nullable CloseableReference<CloseableImage> getResult() throws IOException {
-            final Bitmap thumbnailBitmap =
-                mContentResolver.loadThumbnail(
-                    imageRequest.getSourceUri(),
-                    new Size(imageRequest.getPreferredWidth(), imageRequest.getPreferredHeight()),
-                    cancellationSignal);
+            Bitmap thumbnailBitmap = null;
+            String path;
+            Size size =
+                new Size(imageRequest.getPreferredWidth(), imageRequest.getPreferredHeight());
+            try {
+              path = getLocalFilePath(imageRequest);
+            } catch (IllegalArgumentException e) {
+              path = null;
+            }
+
+            if (path != null) {
+              thumbnailBitmap =
+                  MediaUtils.isVideo(MediaUtils.extractMime(path))
+                      ? ThumbnailUtils.createVideoThumbnail(
+                          new File(path), size, cancellationSignal)
+                      : ThumbnailUtils.createImageThumbnail(
+                          new File(path), size, cancellationSignal);
+            }
+
+            if (thumbnailBitmap == null) {
+              thumbnailBitmap =
+                  mContentResolver.loadThumbnail(
+                      imageRequest.getSourceUri(), size, cancellationSignal);
+            }
 
             if (thumbnailBitmap == null) {
               return null;
@@ -116,5 +142,11 @@ public class LocalThumbnailBitmapProducer implements Producer<CloseableReference
           }
         });
     mExecutor.execute(cancellableProducerRunnable);
+  }
+
+  @Nullable
+  private String getLocalFilePath(ImageRequest imageRequest) {
+    Uri uri = imageRequest.getSourceUri();
+    return getRealPathFromUri(mContentResolver, uri);
   }
 }
