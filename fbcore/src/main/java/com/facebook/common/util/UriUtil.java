@@ -13,8 +13,11 @@ import android.content.ContentResolver;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.ContactsContract;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.PropagatesNullable;
 import java.io.File;
@@ -202,12 +205,26 @@ public class UriUtil {
   @Nullable
   public static String getRealPathFromUri(ContentResolver contentResolver, final Uri srcUri) {
     String result = null;
-    if (isLocalContentUri(srcUri)) {
-      Cursor cursor = null;
+    Uri uri = srcUri;
+    String mimeTypeString = contentResolver.getType(uri);
+    if (isLocalContentUri(uri)) {
+      boolean isVideo = mimeTypeString != null && mimeTypeString.startsWith("video/");
+      String selection = null;
+      String[] selectionArgs = null;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+          && "com.android.providers.media.documents".equals(uri.getAuthority())) {
+        String documentId = DocumentsContract.getDocumentId(uri);
+        Preconditions.checkNotNull(documentId);
+        uri = Preconditions.checkNotNull(getExternalContentUri(isVideo));
+        selection = getMediaIdString(isVideo) + "=?";
+        selectionArgs = new String[] {documentId.split(":")[1]};
+      }
+      Cursor cursor =
+          contentResolver.query(
+              uri, new String[] {getDataPathString(isVideo)}, selection, selectionArgs, null);
       try {
-        cursor = contentResolver.query(srcUri, null, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
-          int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+          int idx = cursor.getColumnIndexOrThrow(getDataPathString(isVideo));
           if (idx != -1) {
             result = cursor.getString(idx);
           }
@@ -217,10 +234,24 @@ public class UriUtil {
           cursor.close();
         }
       }
-    } else if (isLocalFileUri(srcUri)) {
-      result = srcUri.getPath();
+    } else if (isLocalFileUri(uri)) {
+      result = uri.getPath();
     }
     return result;
+  }
+
+  private static Uri getExternalContentUri(boolean isVideo) {
+    return isVideo
+        ? MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+        : MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+  }
+
+  private static String getMediaIdString(boolean isVideo) {
+    return isVideo ? MediaStore.Video.Media._ID : MediaStore.Images.Media._ID;
+  }
+
+  private static String getDataPathString(boolean isVideo) {
+    return isVideo ? MediaStore.Video.Media.DATA : MediaStore.Images.Media.DATA;
   }
 
   /**
