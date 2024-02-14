@@ -169,6 +169,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
 
   override fun onReset() {
     try {
+      imageListener = null
       (imagePerfControllerListener as? Closeable)?.close()
     } catch (e: IOException) {}
   }

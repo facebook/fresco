@@ -253,7 +253,6 @@ object FrescoVitoImage2Spec {
       @FromPrepare prefetchDataSource: DataSource<Void>?,
   ) {
     frescoDrawable.imagePerfListener.onImageUnbind(frescoDrawable)
-    frescoDrawable.imageListener = null
     if (FrescoVitoProvider.getConfig().useBindOnly()) {
       FrescoVitoProvider.getController().releaseImmediately(frescoDrawable)
     } else {
@@ -270,7 +269,6 @@ object FrescoVitoImage2Spec {
       @FromPrepare prefetchDataSource: DataSource<Void>?,
   ) {
     frescoDrawable.imagePerfListener.onImageUnmount(frescoDrawable)
-    frescoDrawable.imageListener = null
     if (FrescoVitoProvider.getConfig().useBindOnly()) {
       return
     }
