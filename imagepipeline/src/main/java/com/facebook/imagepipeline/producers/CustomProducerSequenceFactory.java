@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imagepipeline.core.ProducerFactory;
 import com.facebook.imagepipeline.core.ProducerSequenceFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -24,5 +25,15 @@ public class CustomProducerSequenceFactory {
   public @Nullable Producer<CloseableReference<CloseableImage>> getCustomDecodedImageSequence(
       ImageRequest imageRequest, ProducerSequenceFactory producerSequenceFactory) {
     return null;
+  }
+
+  public @Nullable Producer<CloseableReference<CloseableImage>> getCustomDecodedImageSequence(
+      ImageRequest imageRequest,
+      ProducerSequenceFactory producerSequenceFactory,
+      ProducerFactory producerFactory,
+      ThreadHandoffProducerQueue threadHandoffProducerQueue,
+      boolean isEncodedMemoryCacheProbingEnabled,
+      boolean isDiskCacheProbingEnabled) {
+    return getCustomDecodedImageSequence(imageRequest, producerSequenceFactory);
   }
 }

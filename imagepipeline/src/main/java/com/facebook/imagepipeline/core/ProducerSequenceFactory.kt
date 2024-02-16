@@ -220,7 +220,13 @@ class ProducerSequenceFactory(
             if (customProducerSequenceFactories != null) {
               for (customProducerSequenceFactory in customProducerSequenceFactories) {
                 val sequence =
-                    customProducerSequenceFactory.getCustomDecodedImageSequence(imageRequest, this)
+                    customProducerSequenceFactory.getCustomDecodedImageSequence(
+                        imageRequest,
+                        this,
+                        producerFactory,
+                        threadHandoffProducerQueue,
+                        isEncodedMemoryCacheProbingEnabled,
+                        isDiskCacheProbingEnabled)
                 if (sequence != null) {
                   return sequence
                 }
