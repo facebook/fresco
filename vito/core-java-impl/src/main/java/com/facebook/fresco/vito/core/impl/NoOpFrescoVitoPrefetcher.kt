@@ -26,28 +26,28 @@ class NoOpFrescoVitoPrefetcher : FrescoVitoPrefetcher {
       imageOptions: ImageOptions?,
       callerContext: Any?,
       callsite: String
-  ): DataSource<Void> = throwUnsupportedOperationException()
+  ): DataSource<Void?> = throwUnsupportedOperationException()
 
   override fun prefetchToBitmapCache(
       uri: Uri,
       imageOptions: DecodedImageOptions?,
       callerContext: Any?,
       callsite: String
-  ): DataSource<Void> = throwUnsupportedOperationException()
+  ): DataSource<Void?> = throwUnsupportedOperationException()
 
   override fun prefetchToEncodedCache(
       uri: Uri,
       imageOptions: EncodedImageOptions?,
       callerContext: Any?,
       callsite: String
-  ): DataSource<Void> = throwUnsupportedOperationException()
+  ): DataSource<Void?> = throwUnsupportedOperationException()
 
   override fun prefetchToDiskCache(
       uri: Uri,
       imageOptions: ImageOptions?,
       callerContext: Any?,
       callsite: String
-  ): DataSource<Void> = throwUnsupportedOperationException()
+  ): DataSource<Void?> = throwUnsupportedOperationException()
 
   override fun prefetch(
       prefetchTarget: PrefetchTarget,
@@ -55,7 +55,7 @@ class NoOpFrescoVitoPrefetcher : FrescoVitoPrefetcher {
       callerContext: Any?,
       requestListener: RequestListener?,
       callsite: String
-  ): DataSource<Void> = throwUnsupportedOperationException()
+  ): DataSource<Void?> = throwUnsupportedOperationException()
 
   override fun setDistanceToViewport(
       distance: Int,

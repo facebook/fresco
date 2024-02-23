@@ -35,7 +35,7 @@ interface FrescoVitoPrefetcher {
       imageOptions: ImageOptions?,
       callerContext: Any?,
       callsite: String
-  ): DataSource<Void>
+  ): DataSource<Void?>
 
   /**
    * Prefetch an image to the bitmap memory cache (for decoded images). In order to cancel the
@@ -55,7 +55,7 @@ interface FrescoVitoPrefetcher {
       imageOptions: DecodedImageOptions?,
       callerContext: Any?,
       callsite: String
-  ): DataSource<Void>
+  ): DataSource<Void?>
 
   /**
    * Prefetch an image to the encoded memory cache. In order to cancel the prefetch, close the
@@ -75,7 +75,7 @@ interface FrescoVitoPrefetcher {
       imageOptions: EncodedImageOptions?,
       callerContext: Any?,
       callsite: String
-  ): DataSource<Void>
+  ): DataSource<Void?>
 
   /**
    * Prefetch an image to the disk cache. In order to cancel the prefetch, close the [DataSource]
@@ -95,7 +95,7 @@ interface FrescoVitoPrefetcher {
       imageOptions: ImageOptions?,
       callerContext: Any?,
       callsite: String
-  ): DataSource<Void>
+  ): DataSource<Void?>
 
   /**
    * Prefetch an image to the given [PrefetchTarget] using a [VitoImageRequest]. In order to cancel
@@ -116,7 +116,7 @@ interface FrescoVitoPrefetcher {
       callerContext: Any?,
       requestListener: RequestListener?,
       callsite: String
-  ): DataSource<Void>
+  ): DataSource<Void?>
 
   /**
    * Sets the image's relative distance to the viewport for the purpose of prioritization.

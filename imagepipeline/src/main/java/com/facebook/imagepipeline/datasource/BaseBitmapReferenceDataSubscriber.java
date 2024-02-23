@@ -15,7 +15,6 @@ import com.facebook.datasource.DataSubscriber;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.infer.annotation.Nullsafe;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -49,7 +48,7 @@ public abstract class BaseBitmapReferenceDataSubscriber
     extends BaseDataSubscriber<CloseableReference<CloseableImage>> {
 
   @Override
-  public void onNewResultImpl(@Nonnull DataSource<CloseableReference<CloseableImage>> dataSource) {
+  public void onNewResultImpl(DataSource<CloseableReference<CloseableImage>> dataSource) {
     if (!dataSource.isFinished()) {
       return;
     }

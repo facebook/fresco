@@ -37,7 +37,7 @@ class FrescoVitoPrefetcherImpl(
       imageOptions: ImageOptions?,
       callerContext: Any?,
       callsite: String
-  ): DataSource<Void> {
+  ): DataSource<Void?> {
     return when (prefetchTarget) {
       PrefetchTarget.MEMORY_DECODED ->
           prefetchToBitmapCache(uri, imageOptions, callerContext, callsite)
@@ -54,7 +54,7 @@ class FrescoVitoPrefetcherImpl(
       imageOptions: DecodedImageOptions?,
       callerContext: Any?,
       callsite: String
-  ): DataSource<Void> {
+  ): DataSource<Void?> {
     val imageRequest = imagePipelineUtils.buildImageRequest(uri, imageOptions ?: defaults())
     return prefetch(PrefetchTarget.MEMORY_DECODED, imageRequest, callerContext, null)
   }
@@ -64,7 +64,7 @@ class FrescoVitoPrefetcherImpl(
       imageOptions: EncodedImageOptions?,
       callerContext: Any?,
       callsite: String
-  ): DataSource<Void> {
+  ): DataSource<Void?> {
     val imageRequest = imagePipelineUtils.buildEncodedImageRequest(uri, imageOptions ?: defaults())
     return prefetch(PrefetchTarget.MEMORY_ENCODED, imageRequest, callerContext, null)
   }
@@ -74,7 +74,7 @@ class FrescoVitoPrefetcherImpl(
       imageOptions: ImageOptions?,
       callerContext: Any?,
       callsite: String
-  ): DataSource<Void> {
+  ): DataSource<Void?> {
     val imageRequest = imagePipelineUtils.buildEncodedImageRequest(uri, imageOptions ?: defaults())
     return prefetch(PrefetchTarget.DISK, imageRequest, callerContext, null)
   }
@@ -85,7 +85,7 @@ class FrescoVitoPrefetcherImpl(
       callerContext: Any?,
       requestListener: RequestListener?,
       callsite: String
-  ): DataSource<Void> =
+  ): DataSource<Void?> =
       prefetch(prefetchTarget, imageRequest.finalImageRequest, callerContext, requestListener)
 
   private fun prefetch(
@@ -93,7 +93,7 @@ class FrescoVitoPrefetcherImpl(
       imageRequest: ImageRequest?,
       callerContext: Any?,
       requestListener: RequestListener?
-  ): DataSource<Void> {
+  ): DataSource<Void?> {
     callerContextVerifier?.verifyCallerContext(callerContext, false)
     return if (imageRequest == null) {
       DataSources.immediateFailedDataSource(NULL_IMAGE_MESSAGE)
