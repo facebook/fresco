@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.core.impl.debug;
 
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import com.facebook.common.internal.Supplier;
@@ -16,6 +17,8 @@ import com.facebook.fresco.vito.core.impl.FrescoDrawable2;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.OkToExtend;
 import javax.annotation.Nullable;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 @OkToExtend
@@ -28,11 +31,20 @@ public abstract class BaseDebugOverlayFactory2 implements DebugOverlayFactory2 {
   }
 
   @Override
-  public void update(FrescoDrawable2 drawable, @Nullable ControllerListener2.Extras extras) {
+  public void update(
+      final FrescoDrawable2 drawable, final @Nullable ControllerListener2.Extras extras) {
     if (!mDebugOverlayEnabled.get()) {
       return;
     }
     DebugOverlayDrawable overlay = extractOrCreate(drawable);
+    overlay.setOnBoundsChangedCallback(
+        new Function1<Rect, Unit>() {
+          @Override
+          public Unit invoke(Rect rect) {
+            update(drawable, extras);
+            return Unit.INSTANCE;
+          }
+        });
     overlay.reset();
     setData(overlay, drawable, extras);
     overlay.invalidateSelf();
