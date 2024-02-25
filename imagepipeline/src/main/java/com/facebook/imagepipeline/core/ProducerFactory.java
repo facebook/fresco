@@ -83,7 +83,7 @@ public class ProducerFactory {
   protected final ByteArrayPool mByteArrayPool;
   protected final ImageDecoder mImageDecoder;
   protected final ProgressiveJpegConfig mProgressiveJpegConfig;
-  protected final boolean mDownsampleEnabled;
+  protected final DownsampleMode mDownsampleMode;
   protected final boolean mResizeAndRotateEnabledForNetwork;
   protected final boolean mDecodeCancellationEnabled;
 
@@ -120,7 +120,7 @@ public class ProducerFactory {
       ByteArrayPool byteArrayPool,
       ImageDecoder imageDecoder,
       ProgressiveJpegConfig progressiveJpegConfig,
-      boolean downsampleEnabled,
+      DownsampleMode downsampleMode,
       boolean resizeAndRotateEnabledForNetwork,
       boolean decodeCancellationEnabled,
       ExecutorSupplier executorSupplier,
@@ -145,7 +145,7 @@ public class ProducerFactory {
     mByteArrayPool = byteArrayPool;
     mImageDecoder = imageDecoder;
     mProgressiveJpegConfig = progressiveJpegConfig;
-    mDownsampleEnabled = downsampleEnabled;
+    mDownsampleMode = downsampleMode;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
     mDecodeCancellationEnabled = decodeCancellationEnabled;
 
@@ -206,7 +206,7 @@ public class ProducerFactory {
         mExecutorSupplier.forDecode(),
         mImageDecoder,
         mProgressiveJpegConfig,
-        mDownsampleEnabled,
+        mDownsampleMode,
         mResizeAndRotateEnabledForNetwork,
         mDecodeCancellationEnabled,
         inputProducer,

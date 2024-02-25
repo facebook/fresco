@@ -19,6 +19,7 @@ import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.imageformat.DefaultImageFormats
 import com.facebook.imagepipeline.common.ImageDecodeOptions
 import com.facebook.imagepipeline.core.CloseableReferenceFactory
+import com.facebook.imagepipeline.core.DownsampleMode
 import com.facebook.imagepipeline.decoder.DecodeException
 import com.facebook.imagepipeline.decoder.ImageDecoder
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig
@@ -49,7 +50,7 @@ class DecodeProducer(
     val executor: Executor,
     val imageDecoder: ImageDecoder,
     val progressiveJpegConfig: ProgressiveJpegConfig,
-    val downsampleEnabled: Boolean,
+    val downsampleMode: DownsampleMode,
     val downsampleEnabledForNetwork: Boolean,
     val decodeCancellationEnabled: Boolean,
     val inputProducer: Producer<EncodedImage?>,
@@ -391,7 +392,8 @@ class DecodeProducer(
           producerContext.putExtra(HasExtraData.KEY_IMAGE_FORMAT, encodedImage.imageFormat.name)
           encodedImage.source = request.sourceUri?.toString()
 
-          if (downsampleEnabled || !statusHasFlag(status, IS_RESIZING_DONE)) {
+          val isResizingDone = statusHasFlag(status, IS_RESIZING_DONE)
+          if (downsampleMode == DownsampleMode.ALWAYS || (downsampleMode == DownsampleMode.AUTO && !isResizingDone)) {
             if (downsampleEnabledForNetwork || !UriUtil.isNetworkUri(request.sourceUri)) {
               encodedImage.sampleSize =
                   DownsampleUtil.determineSampleSize(

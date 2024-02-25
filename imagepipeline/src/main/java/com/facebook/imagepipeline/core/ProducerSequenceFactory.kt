@@ -37,7 +37,7 @@ class ProducerSequenceFactory(
     private val resizeAndRotateEnabledForNetwork: Boolean,
     private val webpSupportEnabled: Boolean,
     private val threadHandoffProducerQueue: ThreadHandoffProducerQueue,
-    private val downSampleEnabled: Boolean,
+    private val downsampleMode: DownsampleMode,
     private val useBitmapPrepareToDraw: Boolean,
     private val partialImageCachingEnabled: Boolean,
     private val diskCacheEnabled: Boolean,
@@ -276,7 +276,7 @@ class ProducerSequenceFactory(
         networkFetchToEncodedMemorySequence =
             producerFactory.newResizeAndRotateProducer(
                 networkFetchToEncodedMemorySequence,
-                resizeAndRotateEnabledForNetwork && !downSampleEnabled,
+                resizeAndRotateEnabledForNetwork && downsampleMode != DownsampleMode.NEVER,
                 imageTranscoderFactory)
         return networkFetchToEncodedMemorySequence
       }
