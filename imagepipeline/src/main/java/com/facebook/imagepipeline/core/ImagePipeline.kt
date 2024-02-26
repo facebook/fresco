@@ -416,45 +416,38 @@ class ImagePipeline(
       imageRequest: ImageRequest?,
       callerContext: Any?,
       requestListener: RequestListener?
-  ): DataSource<Void?> {
-    return try {
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.beginSection("ImagePipeline#prefetchToBitmapCache")
-      }
-      if (!isPrefetchEnabledSupplier.get()) {
-        return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION)
-      }
-      try {
-        if (config.experiments.prefetchShortcutEnabled && isInBitmapMemoryCache(imageRequest)) {
-          return DataSources.immediateSuccessfulDataSource()
+  ): DataSource<Void?> =
+      FrescoSystrace.traceSection("ImagePipeline#prefetchToBitmapCache") {
+        if (!isPrefetchEnabledSupplier.get()) {
+          return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION)
         }
-        checkNotNull(imageRequest)
-        val shouldDecodePrefetches = imageRequest.shouldDecodePrefetches()
-        val skipBitmapCache =
-            if (shouldDecodePrefetches != null)
-                !shouldDecodePrefetches // use imagerequest param if specified
-            else
-                suppressBitmapPrefetchingSupplier.get() // otherwise fall back to pipeline's default
-        val producerSequence =
-            if (skipBitmapCache)
-                producerSequenceFactory.getEncodedImagePrefetchProducerSequence(imageRequest)
-            else producerSequenceFactory.getDecodedImagePrefetchProducerSequence(imageRequest)
-        submitPrefetchRequest(
-            producerSequence,
-            imageRequest,
-            RequestLevel.FULL_FETCH,
-            callerContext,
-            Priority.MEDIUM,
-            requestListener)
-      } catch (exception: Exception) {
-        DataSources.immediateFailedDataSource(exception)
+        try {
+          if (config.experiments.prefetchShortcutEnabled && isInBitmapMemoryCache(imageRequest)) {
+            return DataSources.immediateSuccessfulDataSource()
+          }
+          checkNotNull(imageRequest)
+          val shouldDecodePrefetches = imageRequest.shouldDecodePrefetches()
+          val skipBitmapCache =
+              if (shouldDecodePrefetches != null)
+                  !shouldDecodePrefetches // use imagerequest param if specified
+              else
+                  suppressBitmapPrefetchingSupplier
+                      .get() // otherwise fall back to pipeline's default
+          val producerSequence =
+              if (skipBitmapCache)
+                  producerSequenceFactory.getEncodedImagePrefetchProducerSequence(imageRequest)
+              else producerSequenceFactory.getDecodedImagePrefetchProducerSequence(imageRequest)
+          submitPrefetchRequest(
+              producerSequence,
+              imageRequest,
+              RequestLevel.FULL_FETCH,
+              callerContext,
+              Priority.MEDIUM,
+              requestListener)
+        } catch (exception: Exception) {
+          DataSources.immediateFailedDataSource(exception)
+        }
       }
-    } finally {
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.endSection()
-      }
-    }
-  }
 
   fun prefetchToDiskCache(
       imageRequest: ImageRequest?,
@@ -554,37 +547,29 @@ class ImagePipeline(
       callerContext: Any?,
       priority: Priority = Priority.MEDIUM,
       requestListener: RequestListener? = null
-  ): DataSource<Void?> {
-    return try {
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.beginSection("ImagePipeline#prefetchToEncodedCache")
-      }
-      if (!isPrefetchEnabledSupplier.get()) {
-        return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION)
-      }
-      try {
-        if (config.experiments?.prefetchShortcutEnabled == true &&
-            isInEncodedMemoryCache(imageRequest)) {
-          return DataSources.immediateSuccessfulDataSource()
+  ): DataSource<Void?> =
+      FrescoSystrace.traceSection("ImagePipeline#prefetchToEncodedCache") {
+        if (!isPrefetchEnabledSupplier.get()) {
+          return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION)
         }
-        val producerSequence =
-            producerSequenceFactory.getEncodedImagePrefetchProducerSequence(imageRequest!!)
-        submitPrefetchRequest(
-            producerSequence,
-            imageRequest,
-            RequestLevel.FULL_FETCH,
-            callerContext,
-            priority,
-            requestListener)
-      } catch (exception: Exception) {
-        DataSources.immediateFailedDataSource(exception)
+        try {
+          if (config.experiments?.prefetchShortcutEnabled == true &&
+              isInEncodedMemoryCache(imageRequest)) {
+            return DataSources.immediateSuccessfulDataSource()
+          }
+          val producerSequence =
+              producerSequenceFactory.getEncodedImagePrefetchProducerSequence(imageRequest!!)
+          submitPrefetchRequest(
+              producerSequence,
+              imageRequest!!,
+              RequestLevel.FULL_FETCH,
+              callerContext,
+              priority,
+              requestListener)
+        } catch (exception: Exception) {
+          DataSources.immediateFailedDataSource(exception)
+        }
       }
-    } finally {
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.endSection()
-      }
-    }
-  }
 
   /**
    * Removes all images with the specified [Uri] from memory cache.
@@ -813,25 +798,20 @@ class ImagePipeline(
   }
 
   /** @return [CacheKey] for doing bitmap cache lookups in the pipeline. */
-  fun getCacheKey(imageRequest: ImageRequest?, callerContext: Any?): CacheKey? {
-    if (FrescoSystrace.isTracing()) {
-      FrescoSystrace.beginSection("ImagePipeline#getCacheKey")
-    }
-    val cacheKeyFactory = cacheKeyFactory
-    var cacheKey: CacheKey? = null
-    if (cacheKeyFactory != null && imageRequest != null) {
-      cacheKey =
-          if (imageRequest.postprocessor != null) {
-            cacheKeyFactory.getPostprocessedBitmapCacheKey(imageRequest, callerContext)
-          } else {
-            cacheKeyFactory.getBitmapCacheKey(imageRequest, callerContext)
-          }
-    }
-    if (FrescoSystrace.isTracing()) {
-      FrescoSystrace.endSection()
-    }
-    return cacheKey
-  }
+  fun getCacheKey(imageRequest: ImageRequest?, callerContext: Any?): CacheKey? =
+      FrescoSystrace.traceSection("ImagePipeline#getCacheKey") {
+        val cacheKeyFactory = cacheKeyFactory
+        var cacheKey: CacheKey? = null
+        if (cacheKeyFactory != null && imageRequest != null) {
+          cacheKey =
+              if (imageRequest.postprocessor != null) {
+                cacheKeyFactory.getPostprocessedBitmapCacheKey(imageRequest, callerContext)
+              } else {
+                cacheKeyFactory.getBitmapCacheKey(imageRequest, callerContext)
+              }
+        }
+        return cacheKey
+      }
 
   /**
    * Returns a reference to the cached image
@@ -884,42 +864,36 @@ class ImagePipeline(
       requestListener: RequestListener?,
       uiComponentId: String?,
       extras: Map<String, *>?
-  ): DataSource<CloseableReference<T>> {
-    if (FrescoSystrace.isTracing()) {
-      FrescoSystrace.beginSection("ImagePipeline#submitFetchRequest")
-    }
-    val requestListener2 =
-        InternalRequestListener(
-            getRequestListenerForRequest(imageRequest, requestListener), requestListener2)
-    callerContextVerifier?.verifyCallerContext(callerContext, false)
-    return try {
-      val lowestPermittedRequestLevel =
-          RequestLevel.getMax(
-              imageRequest.lowestPermittedRequestLevel, lowestPermittedRequestLevelOnSubmit)
-      val settableProducerContext =
-          SettableProducerContext(
-              imageRequest,
-              generateUniqueFutureId(),
-              uiComponentId,
-              requestListener2,
-              callerContext,
-              lowestPermittedRequestLevel, /* isPrefetch */
-              false,
-              imageRequest.progressiveRenderingEnabled ||
-                  !UriUtil.isNetworkUri(imageRequest.sourceUri),
-              imageRequest.priority,
-              config)
-      settableProducerContext.putExtras(extras)
-      CloseableProducerToDataSourceAdapter.create(
-          producerSequence, settableProducerContext, requestListener2)
-    } catch (exception: Exception) {
-      DataSources.immediateFailedDataSource(exception)
-    } finally {
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.endSection()
+  ): DataSource<CloseableReference<T>> =
+      FrescoSystrace.traceSection("ImagePipeline#submitFetchRequest") {
+        val requestListener2 =
+            InternalRequestListener(
+                getRequestListenerForRequest(imageRequest, requestListener), requestListener2)
+        callerContextVerifier?.verifyCallerContext(callerContext, false)
+        return try {
+          val lowestPermittedRequestLevel =
+              RequestLevel.getMax(
+                  imageRequest.lowestPermittedRequestLevel, lowestPermittedRequestLevelOnSubmit)
+          val settableProducerContext =
+              SettableProducerContext(
+                  imageRequest,
+                  generateUniqueFutureId(),
+                  uiComponentId,
+                  requestListener2,
+                  callerContext,
+                  lowestPermittedRequestLevel, /* isPrefetch */
+                  false,
+                  imageRequest.progressiveRenderingEnabled ||
+                      !UriUtil.isNetworkUri(imageRequest.sourceUri),
+                  imageRequest.priority,
+                  config)
+          settableProducerContext.putExtras(extras)
+          CloseableProducerToDataSourceAdapter.create(
+              producerSequence, settableProducerContext, requestListener2)
+        } catch (exception: Exception) {
+          DataSources.immediateFailedDataSource(exception)
+        }
       }
-    }
-  }
 
   private fun <T> submitFetchRequest(
       producerSequence: Producer<CloseableReference<T>>,
@@ -928,62 +902,50 @@ class ImagePipeline(
       callerContext: Any?,
       requestListener: RequestListener?,
       extras: Map<String, *>?
-  ): DataSource<CloseableReference<T>> {
-    if (FrescoSystrace.isTracing()) {
-      FrescoSystrace.beginSection("ImagePipeline#submitFetchRequest")
-    }
-    val requestListener2 =
-        InternalRequestListener(
-            getRequestListenerForRequest(imageRequest, requestListener), requestListener2)
-    callerContextVerifier?.verifyCallerContext(callerContext, false)
-    return try {
-      val lowestPermittedRequestLevel =
-          RequestLevel.getMax(
-              imageRequest.lowestPermittedRequestLevel, lowestPermittedRequestLevelOnSubmit)
-      val settableProducerContext =
-          SettableProducerContext(
-              imageRequest,
-              generateUniqueFutureId(),
-              null,
-              requestListener2,
-              callerContext,
-              lowestPermittedRequestLevel, /* isPrefetch */
-              false,
-              imageRequest.progressiveRenderingEnabled ||
-                  !UriUtil.isNetworkUri(imageRequest.sourceUri),
-              imageRequest.priority,
-              config)
-      CloseableProducerToDataSourceAdapter.create(
-          producerSequence, settableProducerContext, requestListener2)
-    } catch (exception: Exception) {
-      DataSources.immediateFailedDataSource(exception)
-    } finally {
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.endSection()
+  ): DataSource<CloseableReference<T>> =
+      FrescoSystrace.traceSection("ImagePipeline#submitFetchRequest") {
+        val requestListener2 =
+            InternalRequestListener(
+                getRequestListenerForRequest(imageRequest, requestListener), requestListener2)
+        callerContextVerifier?.verifyCallerContext(callerContext, false)
+        return try {
+          val lowestPermittedRequestLevel =
+              RequestLevel.getMax(
+                  imageRequest.lowestPermittedRequestLevel, lowestPermittedRequestLevelOnSubmit)
+          val settableProducerContext =
+              SettableProducerContext(
+                  imageRequest,
+                  generateUniqueFutureId(),
+                  null,
+                  requestListener2,
+                  callerContext,
+                  lowestPermittedRequestLevel, /* isPrefetch */
+                  false,
+                  imageRequest.progressiveRenderingEnabled ||
+                      !UriUtil.isNetworkUri(imageRequest.sourceUri),
+                  imageRequest.priority,
+                  config)
+          CloseableProducerToDataSourceAdapter.create(
+              producerSequence, settableProducerContext, requestListener2)
+        } catch (exception: Exception) {
+          DataSources.immediateFailedDataSource(exception)
+        }
       }
-    }
-  }
 
   fun <T> submitFetchRequest(
       producerSequence: Producer<CloseableReference<T>?>,
       settableProducerContext: SettableProducerContext,
       requestListener: RequestListener?
-  ): DataSource<CloseableReference<T>> {
-    if (FrescoSystrace.isTracing()) {
-      FrescoSystrace.beginSection("ImagePipeline#submitFetchRequest")
-    }
-    return try {
-      val requestListener2 = InternalRequestListener(requestListener, requestListener2)
-      CloseableProducerToDataSourceAdapter.create(
-          producerSequence, settableProducerContext, requestListener2)
-    } catch (exception: Exception) {
-      DataSources.immediateFailedDataSource(exception)
-    } finally {
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.endSection()
+  ): DataSource<CloseableReference<T>> =
+      FrescoSystrace.traceSection("ImagePipeline#submitFetchRequest") {
+        return try {
+          val requestListener2 = InternalRequestListener(requestListener, requestListener2)
+          CloseableProducerToDataSourceAdapter.create(
+              producerSequence, settableProducerContext, requestListener2)
+        } catch (exception: Exception) {
+          DataSources.immediateFailedDataSource(exception)
+        }
       }
-    }
-  }
 
   private fun submitPrefetchRequest(
       producerSequence: Producer<Void?>,
