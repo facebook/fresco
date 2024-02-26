@@ -64,7 +64,7 @@ void jpegSafeThrow(j_common_ptr cinfo, const char* msg) {
   JpegErrorHandler* error_handler = (JpegErrorHandler*)cinfo->err;
 
   if (!error_handler->env->ExceptionCheck()) {
-    error_handler->env->ThrowNew(jRuntimeException_class, msg);
+    error_handler->env->ThrowNew(jRuntimeExceptionWebp_class, msg);
   }
   jpegCleanup(error_handler);
 }

@@ -42,7 +42,8 @@ void encodePngIntoOutputStream(
 
   // Create all png structs that needs releasing before this line.
   if (setjmp(png_jmpbuf(png_ptr))) {
-    safeThrowJavaException(env, jRuntimeException_class, "error encoding png");
+    safeThrowJavaExceptionWebp(
+        env, jRuntimeExceptionWebp_class, "error encoding png");
     return;
   }
 
@@ -63,7 +64,8 @@ void encodePngIntoOutputStream(
   const int row_stride = decoded_image.getStride();
   png_bytep row_pointer = decoded_image.getPixelsPtr();
   if (row_pointer == nullptr) {
-    safeThrowJavaException(env, jRuntimeException_class, "error encoding png");
+    safeThrowJavaExceptionWebp(
+        env, jRuntimeExceptionWebp_class, "error encoding png");
     return;
   }
   png_write_info(png_ptr, info_ptr);
