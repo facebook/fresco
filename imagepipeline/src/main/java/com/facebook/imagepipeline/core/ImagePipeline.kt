@@ -840,11 +840,10 @@ class ImagePipeline(
    * @return a closeable reference or null if image was not present in cache
    */
   fun getCachedImage(cacheKey: CacheKey?): CloseableReference<CloseableImage>? {
-    val memoryCache = bitmapMemoryCache
-    if (memoryCache == null || cacheKey == null) {
+    if (cacheKey == null) {
       return null
     }
-    val closeableImage = memoryCache[cacheKey]
+    val closeableImage = bitmapMemoryCache[cacheKey]
     if (closeableImage != null && !closeableImage.get().qualityInfo.isOfFullQuality) {
       closeableImage.close()
       return null
@@ -853,11 +852,10 @@ class ImagePipeline(
   }
 
   fun hasCachedImage(cacheKey: CacheKey?): Boolean {
-    val memoryCache = bitmapMemoryCache
-    return if (memoryCache == null || cacheKey == null) {
+    return if (cacheKey == null) {
       false
     } else {
-      memoryCache.contains(cacheKey)
+      bitmapMemoryCache.contains(cacheKey)
     }
   }
 
@@ -1024,21 +1022,23 @@ class ImagePipeline(
   fun getRequestListenerForRequest(
       imageRequest: ImageRequest?,
       requestListener: RequestListener?
-  ): RequestListener =
-      if (requestListener == null) {
-        if (imageRequest!!.requestListener == null) {
-          this.requestListener
-        } else {
-          ForwardingRequestListener(this.requestListener, imageRequest.requestListener)
-        }
+  ): RequestListener {
+    checkNotNull(imageRequest)
+    return if (requestListener == null) {
+      if (imageRequest.requestListener == null) {
+        this.requestListener
       } else {
-        if (imageRequest!!.requestListener == null) {
-          ForwardingRequestListener(this.requestListener, requestListener)
-        } else {
-          ForwardingRequestListener(
-              this.requestListener, requestListener, imageRequest.requestListener)
-        }
+        ForwardingRequestListener(this.requestListener, imageRequest.requestListener)
       }
+    } else {
+      if (imageRequest.requestListener == null) {
+        ForwardingRequestListener(this.requestListener, requestListener)
+      } else {
+        ForwardingRequestListener(
+            this.requestListener, requestListener, imageRequest.requestListener)
+      }
+    }
+  }
 
   fun getCombinedRequestListener(listener: RequestListener?): RequestListener =
       listener?.let { ForwardingRequestListener(requestListener, it) } ?: requestListener
