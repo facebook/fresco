@@ -49,7 +49,7 @@ import javax.annotation.concurrent.ThreadSafe
 class ImagePipeline(
     val producerSequenceFactory: ProducerSequenceFactory,
     requestListeners: Set<RequestListener?>,
-    requestListener2s: Set<RequestListener2?>?,
+    requestListener2s: Set<RequestListener2?>,
     private val isPrefetchEnabledSupplier: Supplier<Boolean>,
     bitmapMemoryCache: MemoryCache<CacheKey, CloseableImage>,
     encodedMemoryCache: MemoryCache<CacheKey, PooledByteBuffer>,
