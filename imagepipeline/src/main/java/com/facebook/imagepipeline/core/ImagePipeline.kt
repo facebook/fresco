@@ -208,39 +208,6 @@ class ImagePipeline(
    * @param uiComponentId optional UI component ID that is requesting the image
    * @return a DataSource representing the pending decoded image(s)
    */
-  /**
-   * Submits a request for execution and returns a DataSource representing the pending decoded
-   * image(s).
-   *
-   * The returned DataSource must be closed once the client has finished with it.
-   *
-   * @param imageRequest the request to submit
-   * @param callerContext the caller context for image request
-   * @param lowestPermittedRequestLevelOnSubmit the lowest request level permitted for image reques
-   * @param requestListener additional image request listener independent of ImageRequest listeners
-   * @return a DataSource representing the pending decoded image(s)
-   */
-  /**
-   * Submits a request for execution and returns a DataSource representing the pending decoded
-   * image(s).
-   *
-   * The returned DataSource must be closed once the client has finished with it.
-   *
-   * @param imageRequest the request to submit
-   * @param callerContext the caller context for image request
-   * @param lowestPermittedRequestLevelOnSubmit the lowest request level permitted for image request
-   * @return a DataSource representing the pending decoded image(s)
-   */
-  /**
-   * Submits a request for execution and returns a DataSource representing the pending decoded
-   * image(s).
-   *
-   * The returned DataSource must be closed once the client has finished with it.
-   *
-   * @param imageRequest the request to submit
-   * @param callerContext the caller context for image request
-   * @return a DataSource representing the pending decoded image(s)
-   */
   fun fetchDecodedImage(
       imageRequest: ImageRequest?,
       callerContext: Any?,
@@ -265,6 +232,16 @@ class ImagePipeline(
     }
   }
 
+  /**
+   * Submits a request for execution and returns a DataSource representing the pending decoded
+   * image(s).
+   *
+   * The returned DataSource must be closed once the client has finished with it.
+   *
+   * @param imageRequest the request to submit
+   * @param callerContext the caller context for image request
+   * @return a DataSource representing the pending decoded image(s)
+   */
   fun fetchDecodedImage(
       imageRequest: ImageRequest?,
       callerContext: Any?
@@ -272,18 +249,40 @@ class ImagePipeline(
     return fetchDecodedImage(imageRequest, callerContext, null)
   }
 
+  /**
+   * Submits a request for execution and returns a DataSource representing the pending decoded
+   * image(s).
+   *
+   * The returned DataSource must be closed once the client has finished with it.
+   *
+   * @param imageRequest the request to submit
+   * @param callerContext the caller context for image request
+   * @param requestListener additional image request listener independent of ImageRequest listeners
+   * @return a DataSource representing the pending decoded image(s)
+   */
   fun fetchDecodedImage(
       imageRequest: ImageRequest?,
       callerContext: Any?,
-      listener: RequestListener
+      requestListener: RequestListener
   ): DataSource<CloseableReference<CloseableImage>> {
     return fetchDecodedImage(
         imageRequest,
         callerContext,
         lowestPermittedRequestLevelOnSubmit = null,
-        requestListener = listener)
+        requestListener = requestListener)
   }
 
+  /**
+   * Submits a request for execution and returns a DataSource representing the pending decoded
+   * image(s).
+   *
+   * The returned DataSource must be closed once the client has finished with it.
+   *
+   * @param imageRequest the request to submit
+   * @param callerContext the caller context for image request
+   * @param lowestPermittedRequestLevelOnSubmit the lowest request level permitted for image reques
+   * @return a DataSource representing the pending decoded image(s)
+   */
   fun fetchDecodedImage(
       imageRequest: ImageRequest?,
       callerContext: Any?,
