@@ -252,7 +252,6 @@ class ImagePipeline(
       return DataSources.immediateFailedDataSource(NullPointerException())
     }
     return try {
-      imageRequest
       val producerSequence = producerSequenceFactory.getDecodedImageProducerSequence(imageRequest)
       submitFetchRequest(
           producerSequence,
@@ -553,8 +552,7 @@ class ImagePipeline(
           return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION)
         }
         try {
-          if (config.experiments?.prefetchShortcutEnabled == true &&
-              isInEncodedMemoryCache(imageRequest)) {
+          if (config.experiments.prefetchShortcutEnabled && isInEncodedMemoryCache(imageRequest)) {
             return DataSources.immediateSuccessfulDataSource()
           }
           val producerSequence =
@@ -800,9 +798,8 @@ class ImagePipeline(
   /** @return [CacheKey] for doing bitmap cache lookups in the pipeline. */
   fun getCacheKey(imageRequest: ImageRequest?, callerContext: Any?): CacheKey? =
       FrescoSystrace.traceSection("ImagePipeline#getCacheKey") {
-        val cacheKeyFactory = cacheKeyFactory
         var cacheKey: CacheKey? = null
-        if (cacheKeyFactory != null && imageRequest != null) {
+        if (imageRequest != null) {
           cacheKey =
               if (imageRequest.postprocessor != null) {
                 cacheKeyFactory.getPostprocessedBitmapCacheKey(imageRequest, callerContext)
@@ -1021,7 +1018,6 @@ class ImagePipeline(
     get() = threadHandoffProducerQueue.isQueueing
 
   init {
-
     this.bitmapMemoryCache = bitmapMemoryCache
     this.encodedMemoryCache = encodedMemoryCache
     this.mainBufferedDiskCache = mainBufferedDiskCache
