@@ -512,15 +512,8 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     }
 
     private fun getDefaultMainDiskCacheConfig(context: Context): DiskCacheConfig =
-        try {
-          if (isTracing()) {
-            beginSection("DiskCacheConfig.getDefaultMainDiskCacheConfig")
-          }
+        traceSection("DiskCacheConfig.getDefaultMainDiskCacheConfig") {
           DiskCacheConfig.newBuilder(context).build()
-        } finally {
-          if (isTracing()) {
-            endSection()
-          }
         }
 
     @JvmStatic
