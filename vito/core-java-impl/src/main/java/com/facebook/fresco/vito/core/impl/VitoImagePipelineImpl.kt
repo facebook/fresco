@@ -28,7 +28,7 @@ import com.facebook.fresco.vito.source.SingleImageSource
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.listener.RequestListener
-import com.facebook.imagepipeline.systrace.FrescoSystrace
+import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
 
 /** Vito image pipeline to fetch an image for a given VitoImageRequest. */
 class VitoImagePipelineImpl(
@@ -82,24 +82,15 @@ class VitoImagePipelineImpl(
         extras)
   }
 
-  override fun getCachedImage(imageRequest: VitoImageRequest): CloseableReference<CloseableImage>? {
-    if (FrescoSystrace.isTracing()) {
-      FrescoSystrace.beginSection("VitoImagePipeline#getCachedImage")
-    }
-
-    return try {
-      val cachedImageReference = imagePipeline.getCachedImage(imageRequest.finalImageCacheKey)
-      if (CloseableReference.isValid(cachedImageReference)) {
-        cachedImageReference
-      } else {
-        null
+  override fun getCachedImage(imageRequest: VitoImageRequest): CloseableReference<CloseableImage>? =
+      traceSection("VitoImagePipeline#getCachedImage") {
+        val cachedImageReference = imagePipeline.getCachedImage(imageRequest.finalImageCacheKey)
+        if (CloseableReference.isValid(cachedImageReference)) {
+          cachedImageReference
+        } else {
+          null
+        }
       }
-    } finally {
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.endSection()
-      }
-    }
-  }
 
   override fun fetchDecodedImage(
       imageRequest: VitoImageRequest,
