@@ -17,7 +17,6 @@ import com.facebook.common.memory.PooledByteStreams
 import com.facebook.common.references.CloseableReference
 import com.facebook.imagepipeline.image.EncodedImage
 import com.facebook.imagepipeline.instrumentation.FrescoInstrumenter
-import com.facebook.imagepipeline.systrace.FrescoSystrace
 import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
 import java.io.IOException
 import java.util.concurrent.Callable
@@ -113,7 +112,7 @@ class BufferedDiskCache(
    *   never rethrows any exception
    */
   operator fun get(key: CacheKey, isCancelled: AtomicBoolean): Task<EncodedImage> =
-      FrescoSystrace.traceSection("BufferedDiskCache#get") {
+      traceSection("BufferedDiskCache#get") {
         val pinnedImage = stagingArea[key]
         pinnedImage?.let { foundPinnedImage(key, it) } ?: getAsync(key, isCancelled)
       }
@@ -232,7 +231,7 @@ class BufferedDiskCache(
    * thread, so the caller of this method is not blocked
    */
   fun put(key: CacheKey, encodedImage: EncodedImage) =
-      FrescoSystrace.traceSection("BufferedDiskCache#put") {
+      traceSection("BufferedDiskCache#put") {
         check(EncodedImage.isValid(encodedImage))
 
         // Store encodedImage in staging area

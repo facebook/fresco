@@ -39,7 +39,7 @@ import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequest.CacheChoice
 import com.facebook.imagepipeline.request.ImageRequest.RequestLevel
 import com.facebook.imagepipeline.request.ImageRequestBuilder
-import com.facebook.imagepipeline.systrace.FrescoSystrace
+import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
 import java.util.concurrent.CancellationException
 import java.util.concurrent.atomic.AtomicLong
 import javax.annotation.concurrent.ThreadSafe
@@ -415,7 +415,7 @@ class ImagePipeline(
       callerContext: Any?,
       requestListener: RequestListener?
   ): DataSource<Void?> =
-      FrescoSystrace.traceSection("ImagePipeline#prefetchToBitmapCache") {
+      traceSection("ImagePipeline#prefetchToBitmapCache") {
         if (!isPrefetchEnabledSupplier.get()) {
           return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION)
         }
@@ -546,7 +546,7 @@ class ImagePipeline(
       priority: Priority = Priority.MEDIUM,
       requestListener: RequestListener? = null
   ): DataSource<Void?> =
-      FrescoSystrace.traceSection("ImagePipeline#prefetchToEncodedCache") {
+      traceSection("ImagePipeline#prefetchToEncodedCache") {
         if (!isPrefetchEnabledSupplier.get()) {
           return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION)
         }
@@ -796,7 +796,7 @@ class ImagePipeline(
 
   /** @return [CacheKey] for doing bitmap cache lookups in the pipeline. */
   fun getCacheKey(imageRequest: ImageRequest?, callerContext: Any?): CacheKey? =
-      FrescoSystrace.traceSection("ImagePipeline#getCacheKey") {
+      traceSection("ImagePipeline#getCacheKey") {
         var cacheKey: CacheKey? = null
         if (imageRequest != null) {
           cacheKey =
@@ -861,7 +861,7 @@ class ImagePipeline(
       uiComponentId: String?,
       extras: Map<String, *>?
   ): DataSource<CloseableReference<T>> =
-      FrescoSystrace.traceSection("ImagePipeline#submitFetchRequest") {
+      traceSection("ImagePipeline#submitFetchRequest") {
         val requestListener2 =
             InternalRequestListener(
                 getRequestListenerForRequest(imageRequest, requestListener), requestListener2)
@@ -899,7 +899,7 @@ class ImagePipeline(
       requestListener: RequestListener?,
       extras: Map<String, *>?
   ): DataSource<CloseableReference<T>> =
-      FrescoSystrace.traceSection("ImagePipeline#submitFetchRequest") {
+      traceSection("ImagePipeline#submitFetchRequest") {
         val requestListener2 =
             InternalRequestListener(
                 getRequestListenerForRequest(imageRequest, requestListener), requestListener2)
@@ -933,7 +933,7 @@ class ImagePipeline(
       settableProducerContext: SettableProducerContext,
       requestListener: RequestListener?
   ): DataSource<CloseableReference<T>> =
-      FrescoSystrace.traceSection("ImagePipeline#submitFetchRequest") {
+      traceSection("ImagePipeline#submitFetchRequest") {
         return try {
           val requestListener2 = InternalRequestListener(requestListener, requestListener2)
           CloseableProducerToDataSourceAdapter.create(
