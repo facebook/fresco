@@ -171,7 +171,35 @@ public class ProducerFactory {
     mKeepCancelledFetchAsLowPriority = keepCancelledFetchAsLowPriority;
   }
 
-  public static AddImageTransformMetaDataProducer newAddImageTransformMetaDataProducer(
+  @Deprecated
+  public ProducerFactory(
+      Context context,
+      ByteArrayPool byteArrayPool,
+      ImageDecoder imageDecoder,
+      ProgressiveJpegConfig progressiveJpegConfig,
+      boolean downsampleEnabled,
+      boolean resizeAndRotateEnabledForNetwork,
+      boolean decodeCancellationEnabled,
+      ExecutorSupplier executorSupplier,
+      PooledByteBufferFactory pooledByteBufferFactory,
+      MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
+      MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
+      BufferedDiskCache defaultBufferedDiskCache,
+      BufferedDiskCache smallImageBufferedDiskCache,
+      CacheKeyFactory cacheKeyFactory,
+      PlatformBitmapFactory platformBitmapFactory,
+      int bitmapPrepareToDrawMinSizeBytes,
+      int bitmapPrepareToDrawMaxSizeBytes,
+      boolean bitmapPrepareToDrawForPrefetch,
+      int maxBitmapSize,
+      CloseableReferenceFactory closeableReferenceFactory,
+      boolean keepCancelledFetchAsLowPriority,
+      int trackedKeysSize) {
+    return new ProducerFactory(context, byteArrayPool, imageDecoder, progressiveJpegConfig, downsampleEnabled ? DownsampleMode.ALWAYS : DownsampleMode.AUTO, resizeAndRotateEnabledForNetwork, decodeCancellationEnabled, executorSupplier, pooledByteBufferFactory, null, encodedMemoryCache, smallImageBufferedDiskCache, smallImageBufferedDiskCache, cacheKeyFactory, platformBitmapFactory, bitmapPrepareToDrawMinSizeBytes, bitmapPrepareToDrawMaxSizeBytes, bitmapPrepareToDrawForPrefetch, maxBitmapSize, closeableReferenceFactory, keepCancelledFetchAsLowPriority, trackedKeysSize)
+  }
+
+
+    public static AddImageTransformMetaDataProducer newAddImageTransformMetaDataProducer(
       Producer<EncodedImage> inputProducer) {
     return new AddImageTransformMetaDataProducer(inputProducer);
   }
