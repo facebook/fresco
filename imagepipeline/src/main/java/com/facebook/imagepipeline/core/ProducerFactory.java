@@ -195,7 +195,7 @@ public class ProducerFactory {
       CloseableReferenceFactory closeableReferenceFactory,
       boolean keepCancelledFetchAsLowPriority,
       int trackedKeysSize) {
-    return new ProducerFactory(context, byteArrayPool, imageDecoder, progressiveJpegConfig, downsampleEnabled ? DownsampleMode.ALWAYS : DownsampleMode.AUTO, resizeAndRotateEnabledForNetwork, decodeCancellationEnabled, executorSupplier, pooledByteBufferFactory, null, encodedMemoryCache, smallImageBufferedDiskCache, smallImageBufferedDiskCache, cacheKeyFactory, platformBitmapFactory, bitmapPrepareToDrawMinSizeBytes, bitmapPrepareToDrawMaxSizeBytes, bitmapPrepareToDrawForPrefetch, maxBitmapSize, closeableReferenceFactory, keepCancelledFetchAsLowPriority, trackedKeysSize)
+    this(context, byteArrayPool, imageDecoder, progressiveJpegConfig, downsampleEnabled ? DownsampleMode.ALWAYS : DownsampleMode.AUTO, resizeAndRotateEnabledForNetwork, decodeCancellationEnabled, executorSupplier, pooledByteBufferFactory, null, encodedMemoryCache, smallImageBufferedDiskCache, smallImageBufferedDiskCache, cacheKeyFactory, platformBitmapFactory, bitmapPrepareToDrawMinSizeBytes, bitmapPrepareToDrawMaxSizeBytes, bitmapPrepareToDrawForPrefetch, maxBitmapSize, closeableReferenceFactory, keepCancelledFetchAsLowPriority, trackedKeysSize);
   }
 
 
