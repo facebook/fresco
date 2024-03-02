@@ -185,15 +185,6 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     if (webpBitmapFactory != null) {
       val bitmapCreator: BitmapCreator = HoneycombBitmapCreator(poolFactory)
       setWebpBitmapFactory(webpBitmapFactory, experiments, bitmapCreator)
-    } else {
-      // We check using introspection only if the experiment is enabled
-      if (experiments.isWebpSupportEnabled && WebpSupportStatus.sIsWebpSupportRequired) {
-        webpBitmapFactory = WebpSupportStatus.loadWebpBitmapFactoryIfExists()
-        if (webpBitmapFactory != null) {
-          val bitmapCreator: BitmapCreator = HoneycombBitmapCreator(poolFactory)
-          setWebpBitmapFactory(webpBitmapFactory, experiments, bitmapCreator)
-        }
-      }
     }
     if (isTracing()) {
       endSection()

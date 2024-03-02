@@ -75,9 +75,6 @@ public class ImageFormatWebpFragment extends BaseShowcaseFragment {
     sb.append("WebpSupportStatus.sIsExtendedWebpSupported = ")
         .append(WebpSupportStatus.sIsExtendedWebpSupported)
         .append('\n');
-    sb.append("WebpSupportStatus.sIsWebpSupportRequired = ")
-        .append(WebpSupportStatus.sIsWebpSupportRequired)
-        .append('\n');
     supportStatusTextView.setText(sb.toString());
   }
 }

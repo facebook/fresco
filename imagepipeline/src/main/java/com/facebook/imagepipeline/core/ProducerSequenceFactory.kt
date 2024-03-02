@@ -16,7 +16,6 @@ import com.facebook.common.internal.Preconditions
 import com.facebook.common.media.MediaUtils.isVideo
 import com.facebook.common.memory.PooledByteBuffer
 import com.facebook.common.references.CloseableReference
-import com.facebook.common.webp.WebpSupportStatus
 import com.facebook.imagepipeline.common.SourceUriType
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.image.EncodedImage
@@ -423,10 +422,6 @@ class ProducerSequenceFactory(
    */
   val dataFetchSequence: Producer<CloseableReference<CloseableImage>> by lazy {
     var inputProducer: Producer<EncodedImage?> = producerFactory.newDataFetchProducer()
-    if (WebpSupportStatus.sIsWebpSupportRequired &&
-        (!webpSupportEnabled || WebpSupportStatus.sWebpBitmapFactory == null)) {
-      inputProducer = producerFactory.newWebpTranscodeProducer(inputProducer)
-    }
     inputProducer = ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer)
     inputProducer =
         producerFactory.newResizeAndRotateProducer(inputProducer, true, imageTranscoderFactory)
@@ -490,10 +485,6 @@ class ProducerSequenceFactory(
       inputProducer: Producer<EncodedImage>
   ): Producer<EncodedImage> {
     var ip = inputProducer
-    if (WebpSupportStatus.sIsWebpSupportRequired &&
-        (!webpSupportEnabled || WebpSupportStatus.sWebpBitmapFactory == null)) {
-      ip = producerFactory.newWebpTranscodeProducer(ip)
-    }
     if (diskCacheEnabled) {
       ip = newDiskCacheSequence(ip)
     }

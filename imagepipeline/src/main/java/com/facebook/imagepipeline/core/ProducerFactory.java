@@ -65,7 +65,6 @@ import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.producers.ThrottlingProducer;
 import com.facebook.imagepipeline.producers.ThumbnailBranchProducer;
 import com.facebook.imagepipeline.producers.ThumbnailProducer;
-import com.facebook.imagepipeline.producers.WebpTranscodeProducer;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import com.facebook.infer.annotation.Nullsafe;
 
@@ -356,11 +355,6 @@ public class ProducerFactory {
         MAX_SIMULTANEOUS_REQUESTS,
         mExecutorSupplier.forLightweightBackgroundTasks(),
         inputProducer);
-  }
-
-  public WebpTranscodeProducer newWebpTranscodeProducer(Producer<EncodedImage> inputProducer) {
-    return new WebpTranscodeProducer(
-        mExecutorSupplier.forBackgroundTasks(), mPooledByteBufferFactory, inputProducer);
   }
 
   public BitmapPrepareProducer newBitmapPrepareProducer(

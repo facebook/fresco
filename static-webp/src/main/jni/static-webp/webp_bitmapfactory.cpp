@@ -8,7 +8,6 @@
 #include <android/bitmap.h>
 #include <jni.h>
 
-#include "WebpTranscoder.h"
 #include "exceptions.h"
 #include "java_globals.h"
 #include "logging.h"
@@ -391,9 +390,6 @@ JNI_OnLoad(JavaVM* vm, void* reserved) {
   env = uenv.env;
 
   if (registerNatives(env) != JNI_TRUE) {
-    return -1;
-  }
-  if (registerWebpTranscoderMethods(env) != JNI_TRUE) {
     return -1;
   }
 

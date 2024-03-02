@@ -7,8 +7,6 @@
 
 package com.facebook.webpsupport;
 
-import static com.facebook.common.webp.WebpSupportStatus.isWebpHeader;
-
 import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -20,7 +18,6 @@ import android.util.TypedValue;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.webp.BitmapCreator;
 import com.facebook.common.webp.WebpBitmapFactory;
-import com.facebook.common.webp.WebpSupportStatus;
 import com.facebook.imagepipeline.nativecode.StaticWebpNativeLoader;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.BufferedInputStream;
@@ -33,6 +30,7 @@ import javax.annotation.Nullable;
 @Nullsafe(Nullsafe.Mode.STRICT)
 @DoNotStrip
 public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
+
   private static final int HEADER_SIZE = 20;
 
   private static final int IN_TEMP_BUFFER_SIZE = 8 * 1024;
@@ -133,26 +131,9 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   public static Bitmap hookDecodeByteArray(
       byte[] array, int offset, int length, @Nullable BitmapFactory.Options opts) {
     StaticWebpNativeLoader.ensure();
-    Bitmap bitmap;
-    if (WebpSupportStatus.sIsWebpSupportRequired && isWebpHeader(array, offset, length)) {
-      bitmap =
-          nativeDecodeByteArray(
-              array,
-              offset,
-              length,
-              opts,
-              getScaleFromOptions(opts),
-              getInTempStorageFromOptions(opts));
-      // We notify that the direct decoding failed
-      if (bitmap == null) {
-        sendWebpErrorLog("webp_direct_decode_array");
-      }
-      setWebpBitmapOptions(bitmap, opts);
-    } else {
-      bitmap = originalDecodeByteArray(array, offset, length, opts);
-      if (bitmap == null) {
-        sendWebpErrorLog("webp_direct_decode_array_failed_on_no_webp");
-      }
+    Bitmap bitmap = originalDecodeByteArray(array, offset, length, opts);
+    if (bitmap == null) {
+      sendWebpErrorLog("webp_direct_decode_array_failed_on_no_webp");
     }
     return bitmap;
   }
@@ -185,25 +166,11 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
 
     Bitmap bitmap;
 
-    byte[] header = getWebpHeader(inputStream, opts);
-    if (WebpSupportStatus.sIsWebpSupportRequired
-        && header != null
-        && isWebpHeader(header, 0, HEADER_SIZE)) {
-      bitmap =
-          nativeDecodeStream(
-              inputStream, opts, getScaleFromOptions(opts), getInTempStorageFromOptions(opts));
-      // We notify that the direct decoder failed
-      if (bitmap == null) {
-        sendWebpErrorLog("webp_direct_decode_stream");
-      }
-      setWebpBitmapOptions(bitmap, opts);
-      setPaddingDefaultValues(outPadding);
-    } else {
-      bitmap = originalDecodeStream(inputStream, outPadding, opts);
-      if (bitmap == null) {
-        sendWebpErrorLog("webp_direct_decode_stream_failed_on_no_webp");
-      }
+    bitmap = originalDecodeStream(inputStream, outPadding, opts);
+    if (bitmap == null) {
+      sendWebpErrorLog("webp_direct_decode_stream_failed_on_no_webp");
     }
+
     return bitmap;
   }
 
@@ -370,24 +337,10 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       InputStream inputStream = wrapToMarkSupportedStream(new FileInputStream(fd));
       try {
         byte[] header = getWebpHeader(inputStream, opts);
-        if (WebpSupportStatus.sIsWebpSupportRequired
-            && header != null
-            && isWebpHeader(header, 0, HEADER_SIZE)) {
-          bitmap =
-              nativeDecodeStream(
-                  inputStream, opts, getScaleFromOptions(opts), getInTempStorageFromOptions(opts));
-          // We send error if the direct decode failed
-          if (bitmap == null) {
-            sendWebpErrorLog("webp_direct_decode_fd");
-          }
-          setPaddingDefaultValues(outPadding);
-          setWebpBitmapOptions(bitmap, opts);
-        } else {
-          nativeSeek(fd, originalSeekPosition, true);
-          bitmap = originalDecodeFileDescriptor(fd, outPadding, opts);
-          if (bitmap == null) {
-            sendWebpErrorLog("webp_direct_decode_fd_failed_on_no_webp");
-          }
+        nativeSeek(fd, originalSeekPosition, true);
+        bitmap = originalDecodeFileDescriptor(fd, outPadding, opts);
+        if (bitmap == null) {
+          sendWebpErrorLog("webp_direct_decode_fd_failed_on_no_webp");
         }
       } finally {
         try {
