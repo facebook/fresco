@@ -141,6 +141,4 @@ abstract class FrescoDrawable2 :
       }
     }
   }
-
-  abstract fun setIntrinsicSize(width: Int, height: Int)
 }

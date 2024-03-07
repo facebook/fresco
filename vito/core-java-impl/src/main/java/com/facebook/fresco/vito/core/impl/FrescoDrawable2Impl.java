@@ -260,6 +260,8 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
   @Override
   public void reset() {
     // Close calls super.reset()
+    mIntrinsicWidth = -1;
+    mIntrinsicHeight = -1;
     close();
   }
 
