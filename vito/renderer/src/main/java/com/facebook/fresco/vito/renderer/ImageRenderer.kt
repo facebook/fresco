@@ -71,7 +71,7 @@ object ImageRenderer {
     // preferred dimensions
     when (shape) {
       is RectShape -> return { canvas ->
-            if (width >= 0 && height >= 0) {
+            if (width > 0 && height > 0) {
               drawable.setBounds(0, 0, width, height)
               canvas.concat(imageTransformation)
             } else {
