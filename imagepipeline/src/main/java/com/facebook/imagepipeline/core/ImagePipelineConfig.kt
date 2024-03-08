@@ -81,7 +81,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
   override val bitmapMemoryCacheEntryStateObserver: EntryStateObserver<CacheKey>?
   override val cacheKeyFactory: CacheKeyFactory
   override val context: Context
-  override val isDownsampleEnabled: Boolean
+  override val downsampleMode: DownsampleMode
   override val fileCacheFactory: FileCacheFactory
   override val encodedMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>
   override val executorSupplier: ExecutorSupplier
@@ -137,7 +137,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     context = checkNotNull(builder.context)
     fileCacheFactory =
         builder.fileCacheFactory ?: DiskStorageCacheFactory(DynamicDefaultDiskStorageFactory())
-    isDownsampleEnabled = builder.downsampleEnabled
+    downsampleMode = builder.downsampleMode
     encodedMemoryCacheParamsSupplier =
         builder.encodedMemoryCacheParamsSupplier ?: DefaultEncodedMemoryCacheParamsSupplier()
     imageCacheStatsTracker =
@@ -216,7 +216,8 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
       private set
 
     val context: Context
-    var downsampleEnabled = false
+
+    var downsampleMode = DownsampleMode.AUTO
       private set
 
     var encodedMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>? = null
@@ -341,10 +342,19 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
       this.fileCacheFactory = fileCacheFactory
     }
 
-    fun isDownsampleEnabled(): Boolean = this.downsampleEnabled
+    fun isDownsampleEnabled(): Boolean = this.downsampleMode === DownsampleMode.ALWAYS
 
+    fun setDownsampleMode(downsampleMode: DownsampleMode): Builder = apply {
+      this.downsampleMode = downsampleMode
+    }
+
+    @Deprecated("Use the new setDownsampleMode() method")
     fun setDownsampleEnabled(downsampleEnabled: Boolean): Builder = apply {
-      this.downsampleEnabled = downsampleEnabled
+      if (downsampleEnabled) {
+        setDownsampleMode(DownsampleMode.ALWAYS)
+      } else {
+        setDownsampleMode(DownsampleMode.AUTO)
+      }
     }
 
     fun isDiskCacheEnabled(): Boolean = this.diskCacheEnabled
@@ -542,4 +552,10 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
               MemoryChunkType.NATIVE_MEMORY
             }
   }
+}
+
+enum class DownsampleMode {
+  ALWAYS,
+  AUTO,
+  NEVER
 }

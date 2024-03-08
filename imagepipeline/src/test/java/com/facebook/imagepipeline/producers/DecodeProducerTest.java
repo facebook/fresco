@@ -21,6 +21,7 @@ import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.core.CloseableReferenceFactory;
+import com.facebook.imagepipeline.core.DownsampleMode;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineExperiments;
 import com.facebook.imagepipeline.debug.NoOpCloseableReferenceLeakTracker;
@@ -119,7 +120,7 @@ public class DecodeProducerTest {
             mExecutor,
             mImageDecoder,
             mProgressiveJpegConfig,
-            false, /* Set downsampleEnabled to false */
+            DownsampleMode.AUTO, /* Set downsampleMode to AUTO */
             false, /* Set resizeAndRotateForNetwork to false */
             false, /* We don't cancel when the request is cancelled */
             mInputProducer,

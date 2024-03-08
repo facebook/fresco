@@ -82,7 +82,7 @@ public class ProducerFactory {
   protected final ByteArrayPool mByteArrayPool;
   protected final ImageDecoder mImageDecoder;
   protected final ProgressiveJpegConfig mProgressiveJpegConfig;
-  protected final boolean mDownsampleEnabled;
+  protected final DownsampleMode mDownsampleMode;
   protected final boolean mResizeAndRotateEnabledForNetwork;
   protected final boolean mDecodeCancellationEnabled;
 
@@ -119,7 +119,7 @@ public class ProducerFactory {
       ByteArrayPool byteArrayPool,
       ImageDecoder imageDecoder,
       ProgressiveJpegConfig progressiveJpegConfig,
-      boolean downsampleEnabled,
+      DownsampleMode downsampleMode,
       boolean resizeAndRotateEnabledForNetwork,
       boolean decodeCancellationEnabled,
       ExecutorSupplier executorSupplier,
@@ -144,7 +144,7 @@ public class ProducerFactory {
     mByteArrayPool = byteArrayPool;
     mImageDecoder = imageDecoder;
     mProgressiveJpegConfig = progressiveJpegConfig;
-    mDownsampleEnabled = downsampleEnabled;
+    mDownsampleMode = downsampleMode;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
     mDecodeCancellationEnabled = decodeCancellationEnabled;
 
@@ -168,6 +168,55 @@ public class ProducerFactory {
     mCloseableReferenceFactory = closeableReferenceFactory;
 
     mKeepCancelledFetchAsLowPriority = keepCancelledFetchAsLowPriority;
+  }
+
+  @Deprecated
+  public ProducerFactory(
+      Context context,
+      ByteArrayPool byteArrayPool,
+      ImageDecoder imageDecoder,
+      ProgressiveJpegConfig progressiveJpegConfig,
+      boolean downsampleEnabled,
+      boolean resizeAndRotateEnabledForNetwork,
+      boolean decodeCancellationEnabled,
+      ExecutorSupplier executorSupplier,
+      PooledByteBufferFactory pooledByteBufferFactory,
+      MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
+      MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
+      BufferedDiskCache defaultBufferedDiskCache,
+      BufferedDiskCache smallImageBufferedDiskCache,
+      CacheKeyFactory cacheKeyFactory,
+      PlatformBitmapFactory platformBitmapFactory,
+      int bitmapPrepareToDrawMinSizeBytes,
+      int bitmapPrepareToDrawMaxSizeBytes,
+      boolean bitmapPrepareToDrawForPrefetch,
+      int maxBitmapSize,
+      CloseableReferenceFactory closeableReferenceFactory,
+      boolean keepCancelledFetchAsLowPriority,
+      int trackedKeysSize) {
+    this(
+        context,
+        byteArrayPool,
+        imageDecoder,
+        progressiveJpegConfig,
+        downsampleEnabled ? DownsampleMode.ALWAYS : DownsampleMode.AUTO,
+        resizeAndRotateEnabledForNetwork,
+        decodeCancellationEnabled,
+        executorSupplier,
+        pooledByteBufferFactory,
+        bitmapMemoryCache,
+        encodedMemoryCache,
+        defaultBufferedDiskCache,
+        smallImageBufferedDiskCache,
+        cacheKeyFactory,
+        platformBitmapFactory,
+        bitmapPrepareToDrawMinSizeBytes,
+        bitmapPrepareToDrawMaxSizeBytes,
+        bitmapPrepareToDrawForPrefetch,
+        maxBitmapSize,
+        closeableReferenceFactory,
+        keepCancelledFetchAsLowPriority,
+        trackedKeysSize);
   }
 
   public static AddImageTransformMetaDataProducer newAddImageTransformMetaDataProducer(
@@ -205,7 +254,7 @@ public class ProducerFactory {
         mExecutorSupplier.forDecode(),
         mImageDecoder,
         mProgressiveJpegConfig,
-        mDownsampleEnabled,
+        mDownsampleMode,
         mResizeAndRotateEnabledForNetwork,
         mDecodeCancellationEnabled,
         inputProducer,
