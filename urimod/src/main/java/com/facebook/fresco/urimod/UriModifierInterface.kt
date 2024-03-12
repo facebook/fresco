@@ -23,13 +23,13 @@ interface UriModifierInterface {
       }
     }
 
-    class Modified(val newUri: Uri) : ModificationResult() {
+    data class Modified(val newUri: Uri) : ModificationResult() {
       override fun toString(): String {
         return "Modified"
       }
     }
 
-    class Unmodified(val reason: String) : ModificationResult() {
+    data class Unmodified(val reason: String) : ModificationResult() {
       override fun toString(): String {
         return "Unmodified(reason='$reason')"
       }
