@@ -550,15 +550,18 @@ class ImagePipeline(
         if (!isPrefetchEnabledSupplier.get()) {
           return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION)
         }
+        if (imageRequest == null) {
+          return DataSources.immediateFailedDataSource(NULL_IMAGEREQUEST_EXCEPTION)
+        }
         try {
           if (config.experiments.prefetchShortcutEnabled && isInEncodedMemoryCache(imageRequest)) {
             return DataSources.immediateSuccessfulDataSource()
           }
           val producerSequence =
-              producerSequenceFactory.getEncodedImagePrefetchProducerSequence(imageRequest!!)
+              producerSequenceFactory.getEncodedImagePrefetchProducerSequence(imageRequest)
           submitPrefetchRequest(
               producerSequence,
-              imageRequest!!,
+              imageRequest,
               RequestLevel.FULL_FETCH,
               callerContext,
               priority,
@@ -1036,5 +1039,6 @@ class ImagePipeline(
 
   companion object {
     private val PREFETCH_EXCEPTION = CancellationException("Prefetching is not enabled")
+    private val NULL_IMAGEREQUEST_EXCEPTION = CancellationException("ImageRequest is null")
   }
 }
