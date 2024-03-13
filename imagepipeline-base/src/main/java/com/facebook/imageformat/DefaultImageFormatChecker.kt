@@ -7,7 +7,6 @@
 
 package com.facebook.imageformat
 
-import com.facebook.common.internal.Ints
 import com.facebook.common.webp.WebpSupportStatus
 import com.facebook.imageformat.ImageFormat.FormatChecker
 
@@ -19,16 +18,18 @@ class DefaultImageFormatChecker : FormatChecker {
    *
    * This determines how much data [reads][ImageFormatChecker.getImageFormat]
    */
-  override val headerSize =
-      Ints.max(
-          EXTENDED_WEBP_HEADER_LENGTH,
-          SIMPLE_WEBP_HEADER_LENGTH,
-          JPEG_HEADER_LENGTH,
-          PNG_HEADER_LENGTH,
-          GIF_HEADER_LENGTH,
-          BMP_HEADER_LENGTH,
-          ICO_HEADER_LENGTH,
-          HEIF_HEADER_LENGTH)
+  override val headerSize: Int =
+      checkNotNull(
+          arrayOf(
+                  EXTENDED_WEBP_HEADER_LENGTH,
+                  SIMPLE_WEBP_HEADER_LENGTH,
+                  JPEG_HEADER_LENGTH,
+                  PNG_HEADER_LENGTH,
+                  GIF_HEADER_LENGTH,
+                  BMP_HEADER_LENGTH,
+                  ICO_HEADER_LENGTH,
+                  HEIF_HEADER_LENGTH)
+              .maxOrNull())
   private var useNewOrder = false
 
   fun setUseNewOrder(useNewOrder: Boolean) {
