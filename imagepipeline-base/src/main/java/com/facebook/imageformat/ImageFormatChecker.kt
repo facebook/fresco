@@ -40,19 +40,17 @@ class ImageFormatChecker private constructor() {
     checkNotNull(`is`)
     val imageHeaderBytes = ByteArray(maxHeaderLength)
     val headerSize = readHeaderFromStream(maxHeaderLength, `is`, imageHeaderBytes)
-    var format = defaultFormatChecker.determineFormat(imageHeaderBytes, headerSize)
-    if (format != null && format !== ImageFormat.Companion.UNKNOWN) {
+    val format = defaultFormatChecker.determineFormat(imageHeaderBytes, headerSize)
+    if (format != null && format !== ImageFormat.UNKNOWN) {
       return format
     }
-    if (customImageFormatCheckers != null) {
-      for (formatChecker in customImageFormatCheckers!!) {
-        format = formatChecker.determineFormat(imageHeaderBytes, headerSize)
-        if (format != null && format !== ImageFormat.Companion.UNKNOWN) {
-          return format
-        }
+    customImageFormatCheckers?.forEach { formatChecker ->
+      val format = formatChecker.determineFormat(imageHeaderBytes, headerSize)
+      if (format != null && format !== ImageFormat.UNKNOWN) {
+        return format
       }
     }
-    return ImageFormat.Companion.UNKNOWN
+    return ImageFormat.UNKNOWN
   }
 
   private fun updateMaxHeaderLength() {
@@ -65,7 +63,6 @@ class ImageFormatChecker private constructor() {
   }
 
   companion object {
-    private var _instance: ImageFormatChecker? = null
     /**
      * Reads up to maxHeaderLength bytes from is InputStream. If mark is supported by is, it is used
      * to restore content of the stream after appropriate amount of data is read. Read bytes are
@@ -101,20 +98,15 @@ class ImageFormatChecker private constructor() {
       }
     }
 
+    /**
+     * Get the currently used instance of the image format checker
+     *
+     * @return the image format checker to use
+     */
     @get:JvmStatic
-    @get:Synchronized
-    val instance: ImageFormatChecker
-      /**
-       * Get the currently used instance of the image format checker
-       *
-       * @return the image format checker to use
-       */
-      get() {
-        if (_instance == null) {
-          _instance = ImageFormatChecker()
-        }
-        return _instance!!
-      }
+    val instance: ImageFormatChecker by
+        lazy(LazyThreadSafetyMode.SYNCHRONIZED) { ImageFormatChecker() }
+
     /**
      * Tries to read up to MAX_HEADER_LENGTH bytes from InputStream is and use read bytes to
      * determine type of the image contained in is. If provided input stream does not support mark,
@@ -128,7 +120,7 @@ class ImageFormatChecker private constructor() {
      */
     @JvmStatic
     @Throws(IOException::class)
-    fun getImageFormat(`is`: InputStream): ImageFormat = instance!!.determineImageFormat(`is`)
+    fun getImageFormat(`is`: InputStream): ImageFormat = instance.determineImageFormat(`is`)
 
     /*
      * A variant of getImageFormat that wraps IOException with RuntimeException.
