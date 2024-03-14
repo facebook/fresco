@@ -7,8 +7,6 @@
 
 package com.facebook.imageformat
 
-import com.facebook.common.internal.ImmutableList
-
 /** Default image formats that Fresco supports. */
 object DefaultImageFormats {
   @JvmField val JPEG = ImageFormat("JPEG", "jpeg")
@@ -32,7 +30,7 @@ object DefaultImageFormats {
    */
   @JvmStatic
   fun isWebpFormat(imageFormat: ImageFormat): Boolean {
-    return isStaticWebpFormat(imageFormat) || imageFormat === DefaultImageFormats.WEBP_ANIMATED
+    return isStaticWebpFormat(imageFormat) || imageFormat === WEBP_ANIMATED
   }
 
   /**
@@ -43,37 +41,30 @@ object DefaultImageFormats {
    */
   @JvmStatic
   fun isStaticWebpFormat(imageFormat: ImageFormat): Boolean {
-    return imageFormat === DefaultImageFormats.WEBP_SIMPLE ||
-        imageFormat === DefaultImageFormats.WEBP_LOSSLESS ||
-        imageFormat === DefaultImageFormats.WEBP_EXTENDED ||
-        imageFormat === DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA
+    return imageFormat === WEBP_SIMPLE ||
+        imageFormat === WEBP_LOSSLESS ||
+        imageFormat === WEBP_EXTENDED ||
+        imageFormat === WEBP_EXTENDED_WITH_ALPHA
   }
 
-  private var sAllDefaultFormats: ImmutableList<ImageFormat>? = null
-
-  @JvmStatic
-  val defaultFormats: List<ImageFormat>
-    /**
-     * Get all default formats supported by Fresco. Does not include [ImageFormat#UNKNOWN].
-     *
-     * @return all supported default formats
-     */
-    get() {
-      if (sAllDefaultFormats == null) {
-        val mDefaultFormats: MutableList<ImageFormat> = ArrayList(9)
-        mDefaultFormats.add(DefaultImageFormats.JPEG)
-        mDefaultFormats.add(DefaultImageFormats.PNG)
-        mDefaultFormats.add(DefaultImageFormats.GIF)
-        mDefaultFormats.add(DefaultImageFormats.BMP)
-        mDefaultFormats.add(DefaultImageFormats.ICO)
-        mDefaultFormats.add(DefaultImageFormats.WEBP_SIMPLE)
-        mDefaultFormats.add(DefaultImageFormats.WEBP_LOSSLESS)
-        mDefaultFormats.add(DefaultImageFormats.WEBP_EXTENDED)
-        mDefaultFormats.add(DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA)
-        mDefaultFormats.add(DefaultImageFormats.WEBP_ANIMATED)
-        mDefaultFormats.add(DefaultImageFormats.HEIF)
-        sAllDefaultFormats = ImmutableList.copyOf(mDefaultFormats)
-      }
-      return sAllDefaultFormats!!
-    }
+  /**
+   * Get all default formats supported by Fresco. Does not include [ImageFormat#UNKNOWN].
+   *
+   * @return all supported default formats
+   */
+  @JvmField
+  val defaultFormats: List<ImageFormat> =
+      listOf(
+          JPEG,
+          PNG,
+          GIF,
+          BMP,
+          ICO,
+          WEBP_SIMPLE,
+          WEBP_LOSSLESS,
+          WEBP_EXTENDED,
+          WEBP_EXTENDED_WITH_ALPHA,
+          WEBP_ANIMATED,
+          HEIF,
+      )
 }
