@@ -9,18 +9,19 @@ package com.facebook.imageformat
 
 /** Default image formats that Fresco supports. */
 object DefaultImageFormats {
-  @JvmField val JPEG = ImageFormat("JPEG", "jpeg")
-  @JvmField val PNG = ImageFormat("PNG", "png")
-  @JvmField val GIF = ImageFormat("GIF", "gif")
-  @JvmField val BMP = ImageFormat("BMP", "bmp")
-  @JvmField val ICO = ImageFormat("ICO", "ico")
-  @JvmField val WEBP_SIMPLE = ImageFormat("WEBP_SIMPLE", "webp")
-  @JvmField val WEBP_LOSSLESS = ImageFormat("WEBP_LOSSLESS", "webp")
-  @JvmField val WEBP_EXTENDED = ImageFormat("WEBP_EXTENDED", "webp")
-  @JvmField val WEBP_EXTENDED_WITH_ALPHA = ImageFormat("WEBP_EXTENDED_WITH_ALPHA", "webp")
-  @JvmField val WEBP_ANIMATED = ImageFormat("WEBP_ANIMATED", "webp")
-  @JvmField val HEIF = ImageFormat("HEIF", "heif")
-  @JvmField val DNG = ImageFormat("DNG", "dng")
+  @JvmField val JPEG: ImageFormat = ImageFormat("JPEG", "jpeg")
+  @JvmField val PNG: ImageFormat = ImageFormat("PNG", "png")
+  @JvmField val GIF: ImageFormat = ImageFormat("GIF", "gif")
+  @JvmField val BMP: ImageFormat = ImageFormat("BMP", "bmp")
+  @JvmField val ICO: ImageFormat = ImageFormat("ICO", "ico")
+  @JvmField val WEBP_SIMPLE: ImageFormat = ImageFormat("WEBP_SIMPLE", "webp")
+  @JvmField val WEBP_LOSSLESS: ImageFormat = ImageFormat("WEBP_LOSSLESS", "webp")
+  @JvmField val WEBP_EXTENDED: ImageFormat = ImageFormat("WEBP_EXTENDED", "webp")
+  @JvmField
+  val WEBP_EXTENDED_WITH_ALPHA: ImageFormat = ImageFormat("WEBP_EXTENDED_WITH_ALPHA", "webp")
+  @JvmField val WEBP_ANIMATED: ImageFormat = ImageFormat("WEBP_ANIMATED", "webp")
+  @JvmField val HEIF: ImageFormat = ImageFormat("HEIF", "heif")
+  @JvmField val DNG: ImageFormat = ImageFormat("DNG", "dng")
 
   /**
    * Check if the given image format is a WebP image format (static or animated).

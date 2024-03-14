@@ -43,6 +43,6 @@ data class ImageFormat(
 
   companion object {
     // Unknown image format
-    @JvmField val UNKNOWN = ImageFormat("UNKNOWN", null)
+    @JvmField val UNKNOWN: ImageFormat = ImageFormat("UNKNOWN", null)
   }
 }
