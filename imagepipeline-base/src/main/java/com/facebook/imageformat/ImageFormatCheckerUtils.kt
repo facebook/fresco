@@ -21,7 +21,6 @@ object ImageFormatCheckerUtils {
    */
   @JvmStatic
   fun asciiBytes(value: String): ByteArray {
-    checkNotNull(value)
     return try {
       value.toByteArray(charset("ASCII"))
     } catch (uee: UnsupportedEncodingException) {
@@ -52,9 +51,7 @@ object ImageFormatCheckerUtils {
    */
   @JvmStatic
   fun hasPatternAt(byteArray: ByteArray, pattern: ByteArray, offset: Int): Boolean {
-    checkNotNull(byteArray)
-    pattern
-    if (offset + pattern!!.size > byteArray.size) {
+    if (offset + pattern.size > byteArray.size) {
       return false
     }
     return pattern.indices.none { i -> byteArray[offset + i] != pattern[i] }
