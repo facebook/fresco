@@ -51,4 +51,10 @@ interface FrescoDrawableInterface {
   fun getImagePerfControllerListener(): ControllerListener2<ImageInfo>?
 
   fun setIntrinsicSize(width: Int, height: Int)
+
+  /**
+   * Configure the image, bounds, scale and reset the render command. Call it only when you are sure
+   * that underlying image has changed.
+   */
+  fun configureWhenUnderlyingChanged()
 }

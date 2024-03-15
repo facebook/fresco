@@ -209,6 +209,10 @@ class KFrescoVitoDrawable(
     _intrinsicHeight = height
   }
 
+  override fun configureWhenUnderlyingChanged() {
+    actualImageLayer.configure()
+  }
+
   override fun getIntrinsicWidth(): Int {
     return if (_intrinsicWidth !== -1) {
       _intrinsicWidth

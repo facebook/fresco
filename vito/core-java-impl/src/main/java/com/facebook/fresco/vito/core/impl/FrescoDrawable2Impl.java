@@ -431,4 +431,10 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
   public ControllerListener2<ImageInfo> getImagePerfControllerListener() {
     return mImageListener.getImagePerfControllerListener();
   }
+
+  @Override
+  public void configureWhenUnderlyingChanged() {
+    // This function is not needed in this flow because it is already handled in
+    // ScaleTypeDrawable.java
+  }
 }
