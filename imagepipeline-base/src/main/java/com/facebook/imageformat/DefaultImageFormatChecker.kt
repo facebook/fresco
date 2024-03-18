@@ -30,11 +30,6 @@ class DefaultImageFormatChecker : FormatChecker {
                   ICO_HEADER_LENGTH,
                   HEIF_HEADER_LENGTH)
               .maxOrNull())
-  private var useNewOrder = false
-
-  fun setUseNewOrder(useNewOrder: Boolean) {
-    this.useNewOrder = useNewOrder
-  }
 
   /**
    * Tries to match imageHeaderByte and headerSize against every known image format. If any match
@@ -45,8 +40,7 @@ class DefaultImageFormatChecker : FormatChecker {
    * @return ImageFormat for given imageHeaderBytes or UNKNOWN if no such type could be recognized
    */
   override fun determineFormat(headerBytes: ByteArray, headerSize: Int): ImageFormat? {
-    checkNotNull(headerBytes)
-    if (!useNewOrder && WebpSupportStatus.isWebpHeader(headerBytes, 0, headerSize)) {
+    if (WebpSupportStatus.isWebpHeader(headerBytes, 0, headerSize)) {
       return getWebpFormat(headerBytes, headerSize)
     }
     if (isJpegHeader(headerBytes, headerSize)) {
@@ -54,9 +48,6 @@ class DefaultImageFormatChecker : FormatChecker {
     }
     if (isPngHeader(headerBytes, headerSize)) {
       return DefaultImageFormats.PNG
-    }
-    if (useNewOrder && WebpSupportStatus.isWebpHeader(headerBytes, 0, headerSize)) {
-      return getWebpFormat(headerBytes, headerSize)
     }
     if (isGifHeader(headerBytes, headerSize)) {
       return DefaultImageFormats.GIF
@@ -187,7 +178,7 @@ class DefaultImageFormatChecker : FormatChecker {
      * @return true if imageHeaderBytes is a valid header for a bmp image
      */
     private fun isBmpHeader(imageHeaderBytes: ByteArray, headerSize: Int): Boolean =
-        if (headerSize < BMP_HEADER!!.size) {
+        if (headerSize < BMP_HEADER.size) {
           false
         } else {
           ImageFormatCheckerUtils.startsWithPattern(imageHeaderBytes, BMP_HEADER)
