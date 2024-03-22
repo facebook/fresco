@@ -46,10 +46,8 @@ import com.facebook.imagepipeline.image.CloseableStaticBitmap
 import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.image.ImageInfoImpl
 import com.facebook.imagepipeline.image.ImmutableQualityInfo
-import com.facebook.infer.annotation.Nullsafe
 import java.util.concurrent.Executor
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
 open class FrescoController2Impl(
     private val mConfig: FrescoVitoConfig,
     private val mHierarcher: Hierarcher,
@@ -167,13 +165,7 @@ open class FrescoController2Impl(
       if (imageRequest.imageOptions.shouldAutoPlay() && actualImageDrawable is Animatable) {
         (actualDrawable as Animatable).start()
       }
-      val imageInfoExtras: Map<String, Any>?
-      imageInfoExtras =
-          if (extras.imageExtras != null) {
-            extras.imageExtras
-          } else {
-            HashMap()
-          }
+      val imageInfoExtras: Map<String, Any> = extras.imageExtras ?: HashMap()
       frescoDrawable.internalListener.onFinalImageSet(
           drawable.imageId,
           imageRequest,
@@ -183,7 +175,7 @@ open class FrescoController2Impl(
               actualImageDrawable.intrinsicHeight,
               0,
               ImmutableQualityInfo.FULL_QUALITY,
-              imageInfoExtras!!),
+              imageInfoExtras),
           extras,
           actualDrawable)
       drawable.imagePerfListener.onImageSuccess(drawable, true)
@@ -335,10 +327,10 @@ open class FrescoController2Impl(
       imageRequest: VitoImageRequest,
       dataSource: DataSource<CloseableReference<CloseableImage>>
   ) {
-    if (dataSource == null || !dataSource.hasResult()) {
+    if (!dataSource.hasResult()) {
       return
     }
-    val image = dataSource.result!!
+    val image = dataSource.result
     try {
       if (!CloseableReference.isValid(image)) {
         onFailure(drawable, imageRequest, dataSource)
@@ -401,10 +393,9 @@ open class FrescoController2Impl(
           drawable.imageId, imageRequest, obtainExtras(null, null, drawable))
       if (mConfig.stopAnimationInOnRelease()) {
         // We automatically stop the animation if it was automatically started
-        if ((!mConfig.onlyStopAnimationWhenAutoPlayEnabled() ||
-            imageRequest.imageOptions.shouldAutoPlay()) &&
-            drawable.actualImageDrawable is Animatable) {
-          (drawable.actualImageDrawable as Animatable?)!!.stop()
+        if (!mConfig.onlyStopAnimationWhenAutoPlayEnabled() ||
+            imageRequest.imageOptions.shouldAutoPlay()) {
+          (drawable.actualImageDrawable as? Animatable)?.stop()
         }
       }
     }
@@ -447,8 +438,8 @@ open class FrescoController2Impl(
       var logWithHighSamplingRate = false
       if (vitoImageRequest != null) {
         logWithHighSamplingRate = vitoImageRequest.logWithHighSamplingRate
-        if (vitoImageRequest.finalImageRequest != null) {
-          sourceUri = vitoImageRequest.finalImageRequest!!.sourceUri
+        vitoImageRequest.finalImageRequest?.let { finalImageRequest ->
+          sourceUri = finalImageRequest.sourceUri
         }
         imageSourceExtras =
             vitoImageRequest.extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] as Map<String, Any>?
