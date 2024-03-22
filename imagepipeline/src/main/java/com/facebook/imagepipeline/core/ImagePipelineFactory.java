@@ -97,7 +97,9 @@ public class ImagePipelineFactory {
     if (sInstance != null) {
       FLog.w(
           TAG,
-          "ImagePipelineFactory has already been initialized! `ImagePipelineFactory.initialize(...)` should only be called once to avoid unexpected behavior.");
+          "ImagePipelineFactory has already been initialized!"
+              + " `ImagePipelineFactory.initialize(...)` should only be called once to avoid"
+              + " unexpected behavior.");
       if (sForceSingleInstance) {
         return;
       }

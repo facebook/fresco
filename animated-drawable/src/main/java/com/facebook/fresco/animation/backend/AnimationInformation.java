@@ -38,10 +38,14 @@ public interface AnimationInformation {
    */
   int getLoopDurationMs();
 
-  /** @return Animation asset width */
+  /**
+   * @return Animation asset width
+   */
   int width();
 
-  /** @return Animation asset height */
+  /**
+   * @return Animation asset height
+   */
   int height();
 
   /**

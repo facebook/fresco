@@ -60,26 +60,31 @@ public interface Consumer<T> {
    * for flags.
    */
   int NO_FLAGS = 0;
+
   /**
    * Status flag to show whether the result being received is the last one coming or to expect more.
    */
   int IS_LAST = 1;
+
   /**
    * Status flag to show the result should not be cached in disk or encoded caches, even if it's the
    * last result.
    */
   int DO_NOT_CACHE_ENCODED = 1 << 1;
+
   /**
    * Status flag to show whether the result is a placeholder for the final result. Should only be
    * set if IS_LAST is not set.
    */
   int IS_PLACEHOLDER = 1 << 2;
+
   /**
    * Status flag to show the result does not represent the whole image, just part of it. This may be
    * due to a cancellation or failure while the file was being downloaded or because only part of
    * the image was requested.
    */
   int IS_PARTIAL_RESULT = 1 << 3;
+
   /** Status flag that indicates whether the given image has been resized. */
   int IS_RESIZING_DONE = 1 << 4;
 

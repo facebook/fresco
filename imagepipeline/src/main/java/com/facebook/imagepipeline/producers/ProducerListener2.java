@@ -70,6 +70,8 @@ public interface ProducerListener2 {
   void onUltimateProducerReached(
       ProducerContext producerContext, String producerName, boolean successful);
 
-  /** @return true if listener makes use of extra map */
+  /**
+   * @return true if listener makes use of extra map
+   */
   boolean requiresExtraMap(ProducerContext producerContext, String producerName);
 }

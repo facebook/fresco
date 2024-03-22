@@ -33,6 +33,7 @@ public class PooledByteArrayBufferedInputStream extends InputStream {
 
   /** how many bytes in mByteArray were set by last call to mInputStream.read */
   private int mBufferedSize;
+
   /**
    * position of next buffered byte in mByteArray to be read
    *

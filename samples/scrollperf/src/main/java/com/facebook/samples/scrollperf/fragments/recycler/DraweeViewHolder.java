@@ -46,7 +46,9 @@ public class DraweeViewHolder extends RecyclerView.ViewHolder {
     mPerfListener = perfListener;
   }
 
-  /** @param uri The Uri to show into the DraweeView for this Holder */
+  /**
+   * @param uri The Uri to show into the DraweeView for this Holder
+   */
   public void bind(Uri uri) {
     mDraweeView.initInstrumentation(uri.toString(), mPerfListener);
     ImageRequestBuilder imageRequestBuilder =

@@ -395,7 +395,9 @@ public class ImageRequestBuilder {
     return this;
   }
 
-  /** @return the additional request listener to use for this image request */
+  /**
+   * @return the additional request listener to use for this image request
+   */
   public @Nullable RequestListener getRequestListener() {
     return mRequestListener;
   }

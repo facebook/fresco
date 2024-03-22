@@ -131,13 +131,17 @@ public class BaseCloseableStaticBitmap extends BaseCloseableImage implements Clo
     return mBitmap;
   }
 
-  /** @return size in bytes of the underlying bitmap */
+  /**
+   * @return size in bytes of the underlying bitmap
+   */
   @Override
   public int getSizeInBytes() {
     return BitmapUtil.getSizeInBytes(mBitmap);
   }
 
-  /** @return width of the image */
+  /**
+   * @return width of the image
+   */
   @Override
   public int getWidth() {
     if (mRotationAngle % 180 != 0
@@ -148,7 +152,9 @@ public class BaseCloseableStaticBitmap extends BaseCloseableImage implements Clo
     return getBitmapWidth(mBitmap);
   }
 
-  /** @return height of the image */
+  /**
+   * @return height of the image
+   */
   @Override
   public int getHeight() {
     if (mRotationAngle % 180 != 0
@@ -167,12 +173,16 @@ public class BaseCloseableStaticBitmap extends BaseCloseableImage implements Clo
     return (bitmap == null) ? 0 : bitmap.getHeight();
   }
 
-  /** @return the rotation angle of the image */
+  /**
+   * @return the rotation angle of the image
+   */
   public int getRotationAngle() {
     return mRotationAngle;
   }
 
-  /** @return the EXIF orientation of the image */
+  /**
+   * @return the EXIF orientation of the image
+   */
   @Override
   public int getExifOrientation() {
     return mExifOrientation;

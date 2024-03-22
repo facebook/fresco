@@ -873,7 +873,8 @@ public abstract class AbstractDraweeController<T, INFO>
 
   protected @Nullable Uri getMainUri() {
     return null;
-  };
+  }
+  ;
 
   private Extras obtainExtras(
       @Nullable DataSource<T> datasource, @Nullable INFO info, @Nullable Uri mainUri) {

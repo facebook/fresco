@@ -24,7 +24,9 @@ import javax.annotation.Nullable;
  */
 public interface DataSource<T> {
 
-  /** @return true if the data source is closed, false otherwise */
+  /**
+   * @return true if the data source is closed, false otherwise
+   */
   boolean isClosed();
 
   /**
@@ -51,7 +53,9 @@ public interface DataSource<T> {
    */
   boolean hasResult();
 
-  /** @return an object with extra data for this datasource */
+  /**
+   * @return an object with extra data for this datasource
+   */
   @Nullable
   Map<String, Object> getExtras();
 
@@ -61,17 +65,25 @@ public interface DataSource<T> {
    */
   boolean hasMultipleResults();
 
-  /** @return true if request is finished, false otherwise */
+  /**
+   * @return true if request is finished, false otherwise
+   */
   boolean isFinished();
 
-  /** @return true if request finished due to error */
+  /**
+   * @return true if request finished due to error
+   */
   boolean hasFailed();
 
-  /** @return failure cause if the source has failed, else null */
+  /**
+   * @return failure cause if the source has failed, else null
+   */
   @Nullable
   Throwable getFailureCause();
 
-  /** @return progress in range [0, 1] */
+  /**
+   * @return progress in range [0, 1]
+   */
   float getProgress();
 
   /**

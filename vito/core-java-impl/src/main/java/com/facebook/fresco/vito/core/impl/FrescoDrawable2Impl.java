@@ -386,7 +386,9 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
     return mImagePerfListener;
   }
 
-  /** @return the width of the underlying actual image or -1 if unset */
+  /**
+   * @return the width of the underlying actual image or -1 if unset
+   */
   @Override
   public int getActualImageWidthPx() {
     if (CloseableReference.isValid(mImageReference)) {
@@ -395,7 +397,9 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
     return -1;
   }
 
-  /** @return the width of the underlying actual image or -1 if unset */
+  /**
+   * @return the width of the underlying actual image or -1 if unset
+   */
   @Override
   public int getActualImageHeightPx() {
     if (CloseableReference.isValid(mImageReference)) {

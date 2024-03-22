@@ -149,7 +149,9 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
     invalidateSelf();
   }
 
-  /** @param imageSizeBytes the image size in bytes */
+  /**
+   * @param imageSizeBytes the image size in bytes
+   */
   public void setImageSize(int imageSizeBytes) {
     mImageSizeBytes = imageSizeBytes;
   }

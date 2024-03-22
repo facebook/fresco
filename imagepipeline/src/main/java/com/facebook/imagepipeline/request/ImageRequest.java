@@ -205,7 +205,9 @@ public class ImageRequest {
     return mRotationOptions;
   }
 
-  /** @deprecated Use {@link #getRotationOptions()} */
+  /**
+   * @deprecated Use {@link #getRotationOptions()}
+   */
   @Deprecated
   public boolean getAutoRotateEnabled() {
     return mRotationOptions.useImageMetadata();

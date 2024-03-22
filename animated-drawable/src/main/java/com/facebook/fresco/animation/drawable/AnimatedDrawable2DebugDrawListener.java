@@ -62,7 +62,9 @@ public class AnimatedDrawable2DebugDrawListener implements AnimatedDrawable2.Dra
     mLastFrameNumber = frameNumberToDraw;
     FLog.d(
         TAG,
-        "draw: frame: %2d, drawn: %b, delay: %3d ms, rendering: %3d ms, prev: %3d ms ago, duplicates: %3d, skipped: %3d, draw calls: %4d, anim time: %6d ms, next start: %6d ms, next scheduled: %6d ms",
+        "draw: frame: %2d, drawn: %b, delay: %3d ms, rendering: %3d ms, prev: %3d ms ago,"
+            + " duplicates: %3d, skipped: %3d, draw calls: %4d, anim time: %6d ms, next start: %6d"
+            + " ms, next scheduled: %6d ms",
         frameNumberToDraw,
         frameDrawn,
         animationTimeMs % frameScheduler.getLoopDurationMs()

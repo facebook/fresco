@@ -92,7 +92,9 @@ public class AnimatedImageResultBuilder {
     return CloseableReference.cloneOrNull(mDecodedFrames);
   }
 
-  /** @return animated image uri path */
+  /**
+   * @return animated image uri path
+   */
   @Nullable
   public String getSource() {
     return mSource;

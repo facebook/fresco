@@ -26,6 +26,7 @@ public class ScalingBlurPostprocessor extends BasePostprocessor {
   private final Paint mPaint = new Paint();
   private final int mIterations;
   private final int mBlurRadius;
+
   /**
    * A scale ration of 4 means that we reduce the total number of pixels to process by factor 16.
    */

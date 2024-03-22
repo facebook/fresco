@@ -83,6 +83,7 @@ public class PriorityNetworkFetcher<FETCH_STATE extends FetchState>
 
   /** the amount of time a request should wait before it gets re-queued again */
   private final long requeueDelayTimeInMillis;
+
   /** the number of immediate re-queue, with no delay */
   private final int immediateRequeueCount;
 
