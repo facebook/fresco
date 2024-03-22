@@ -39,7 +39,7 @@ class DefaultImageFormatChecker : FormatChecker {
    * @param headerSize the available header size
    * @return ImageFormat for given imageHeaderBytes or UNKNOWN if no such type could be recognized
    */
-  override fun determineFormat(headerBytes: ByteArray, headerSize: Int): ImageFormat? {
+  override fun determineFormat(headerBytes: ByteArray, headerSize: Int): ImageFormat {
     if (WebpSupportStatus.isWebpHeader(headerBytes, 0, headerSize)) {
       return getWebpFormat(headerBytes, headerSize)
     }
@@ -78,7 +78,7 @@ class DefaultImageFormatChecker : FormatChecker {
     /** Each VP8X WebP image has "features" byte following its ChunkHeader('VP8X') */
     private const val EXTENDED_WEBP_HEADER_LENGTH = 21
     /** Determines type of WebP image. imageHeaderBytes has to be header of a WebP image */
-    private fun getWebpFormat(imageHeaderBytes: ByteArray, headerSize: Int): ImageFormat? {
+    private fun getWebpFormat(imageHeaderBytes: ByteArray, headerSize: Int): ImageFormat {
       check(WebpSupportStatus.isWebpHeader(imageHeaderBytes, 0, headerSize))
       if (WebpSupportStatus.isSimpleWebpHeader(imageHeaderBytes, 0)) {
         return DefaultImageFormats.WEBP_SIMPLE

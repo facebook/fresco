@@ -32,9 +32,9 @@ data class ImageFormat(
      *
      * @param headerBytes the header bytes to check
      * @param headerSize the size of the header in bytes
-     * @return the image format or null if unknown
+     * @return the image format (ImageFormat.UNKNOWN if unknown)
      */
-    fun determineFormat(headerBytes: ByteArray, headerSize: Int): ImageFormat?
+    fun determineFormat(headerBytes: ByteArray, headerSize: Int): ImageFormat
   }
 
   override fun toString(): String {

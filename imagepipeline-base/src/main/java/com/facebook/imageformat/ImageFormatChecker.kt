@@ -33,16 +33,15 @@ class ImageFormatChecker private constructor() {
 
   @Throws(IOException::class)
   fun determineImageFormat(`is`: InputStream): ImageFormat {
-    checkNotNull(`is`)
     val imageHeaderBytes = ByteArray(maxHeaderLength)
     val headerSize = readHeaderFromStream(maxHeaderLength, `is`, imageHeaderBytes)
     val format = defaultFormatChecker.determineFormat(imageHeaderBytes, headerSize)
-    if (format != null && format !== ImageFormat.UNKNOWN) {
+    if (format !== ImageFormat.UNKNOWN) {
       return format
     }
     customImageFormatCheckers?.forEach { formatChecker ->
       val format = formatChecker.determineFormat(imageHeaderBytes, headerSize)
-      if (format != null && format !== ImageFormat.UNKNOWN) {
+      if (format !== ImageFormat.UNKNOWN) {
         return format
       }
     }
@@ -76,8 +75,6 @@ class ImageFormatChecker private constructor() {
         `is`: InputStream,
         imageHeaderBytes: ByteArray
     ): Int {
-      checkNotNull(`is`)
-      checkNotNull(imageHeaderBytes)
       check(imageHeaderBytes.size >= maxHeaderLength)
 
       // If mark is supported by the stream, use it to let the owner of the stream re-read the same
