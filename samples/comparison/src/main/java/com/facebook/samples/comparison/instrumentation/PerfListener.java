@@ -58,17 +58,23 @@ public class PerfListener {
     return completedRequests > 0 ? mSumOfWaitTime / completedRequests : 0;
   }
 
-  /** @return difference between number of started requests and number of completed requests */
+  /**
+   * @return difference between number of started requests and number of completed requests
+   */
   public long getOutstandingRequests() {
     return mStartedRequests - getCompletedRequests();
   }
 
-  /** @return number of cancelled requests */
+  /**
+   * @return number of cancelled requests
+   */
   public long getCancelledRequests() {
     return mCancelledRequests;
   }
 
-  /** @return number of completed requests, either by seting final image, failure or cancellation */
+  /**
+   * @return number of completed requests, either by seting final image, failure or cancellation
+   */
   public long getCompletedRequests() {
     return mSuccessfulRequests + mCancelledRequests + mFailedRequests;
   }

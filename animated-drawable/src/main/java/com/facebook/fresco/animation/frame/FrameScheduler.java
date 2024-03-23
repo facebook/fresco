@@ -49,6 +49,8 @@ public interface FrameScheduler {
    */
   long getTargetRenderTimeForNextFrameMs(long animationTimeMs);
 
-  /** @return true if the animation is infinite */
+  /**
+   * @return true if the animation is infinite
+   */
   boolean isInfiniteAnimation();
 }

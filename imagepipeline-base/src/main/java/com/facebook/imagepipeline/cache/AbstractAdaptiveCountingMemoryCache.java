@@ -79,6 +79,7 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
   @GuardedBy("this")
   @VisibleForTesting
   int mLFUFractionPromil;
+
   // default LFU Fraction
   static final int DEFAULT_LFU_FRACTION_PROMIL = 500;
 
@@ -100,6 +101,7 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
   @GuardedBy("this")
   @VisibleForTesting
   final int mAdaptiveRatePromil;
+
   // defualt adaptive rate
   static final int DEFAULT_ADAPTIVE_RATE_PROMIL = 10;
 

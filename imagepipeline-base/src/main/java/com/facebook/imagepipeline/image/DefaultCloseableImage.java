@@ -11,6 +11,7 @@ import com.facebook.common.logging.FLog;
 
 public abstract class DefaultCloseableImage extends BaseCloseableImage {
   private static final String TAG = "CloseableImage";
+
   /** Ensures that the underlying resources are always properly released. */
   @Override
   protected void finalize() throws Throwable {

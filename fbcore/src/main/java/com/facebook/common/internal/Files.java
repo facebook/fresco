@@ -52,6 +52,7 @@ public class Files {
         ? ByteStreams.toByteArray(in)
         : ByteStreams.toByteArray(in, (int) expectedSize);
   }
+
   /**
    * Reads all bytes from a file into a byte array.
    *

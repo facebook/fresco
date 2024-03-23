@@ -105,6 +105,8 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
   protected abstract @Nullable EncodedImage getEncodedImage(ImageRequest imageRequest)
       throws IOException;
 
-  /** @return name of the Producer */
+  /**
+   * @return name of the Producer
+   */
   protected abstract String getProducerName();
 }

@@ -14,7 +14,9 @@ import java.io.Closeable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public interface CloseableImage extends Closeable, ImageInfo, HasBitmap, HasExtraData {
-  /** @return size in bytes of the bitmap(s) */
+  /**
+   * @return size in bytes of the bitmap(s)
+   */
   int getSizeInBytes();
 
   /** Closes this instance and releases the resources. */
@@ -26,13 +28,19 @@ public interface CloseableImage extends Closeable, ImageInfo, HasBitmap, HasExtr
 
   boolean isStateful();
 
-  /** @return width of the image */
+  /**
+   * @return width of the image
+   */
   int getWidth();
 
-  /** @return height of the image */
+  /**
+   * @return height of the image
+   */
   int getHeight();
 
-  /** @return quality information for the image */
+  /**
+   * @return quality information for the image
+   */
   QualityInfo getQualityInfo();
 
   ImageInfo getImageInfo();

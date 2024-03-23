@@ -64,10 +64,14 @@ public interface FileCache extends DiskTrimmable {
    */
   void remove(CacheKey key);
 
-  /** @return the in-use size of the cache */
+  /**
+   * @return the in-use size of the cache
+   */
   long getSize();
 
-  /** @return the count of pictures in the cache */
+  /**
+   * @return the count of pictures in the cache
+   */
   long getCount();
 
   /**

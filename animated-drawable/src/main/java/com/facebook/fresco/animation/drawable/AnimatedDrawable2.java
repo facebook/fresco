@@ -470,7 +470,9 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     }
   }
 
-  /** @return the current uptime in ms */
+  /**
+   * @return the current uptime in ms
+   */
   private long now() {
     // This call has to return [SystemClock#uptimeMillis()] in order to preserve correct
     // frame scheduling.

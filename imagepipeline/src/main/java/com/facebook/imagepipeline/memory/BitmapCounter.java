@@ -80,12 +80,16 @@ public class BitmapCounter {
     mCount--;
   }
 
-  /** @return number of counted bitmaps */
+  /**
+   * @return number of counted bitmaps
+   */
   public synchronized int getCount() {
     return mCount;
   }
 
-  /** @return total size in bytes of counted bitmaps */
+  /**
+   * @return total size in bytes of counted bitmaps
+   */
   public synchronized long getSize() {
     return mSize;
   }

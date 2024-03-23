@@ -156,8 +156,10 @@ public interface DiskStorage {
   interface Entry {
     /** the id representing the resource */
     String getId();
+
     /** calculated on first time and never changes so it can be used as immutable * */
     long getTimestamp();
+
     /** calculated on first time and never changes so it can be used as immutable * */
     long getSize();
 
