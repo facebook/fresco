@@ -31,6 +31,7 @@ import com.facebook.imagepipeline.cache.InstrumentedMemoryCacheBitmapMemoryCache
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.decoder.DefaultImageDecoder;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.decoder.factory.AvifDecoderFactory;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
@@ -250,13 +251,22 @@ public class ImagePipelineFactory {
           webPDecoder = animatedFactory.getWebPDecoder();
         }
 
+        final AvifDecoderFactory avifDecoderFactory = getAvifDecoderFactory();
+
+        ImageDecoder avifDecoder = null;
+
+        if (avifDecoderFactory != null) {
+          avifDecoder = avifDecoderFactory.getAvifDecoder();
+        }
+
         if (mConfig.getImageDecoderConfig() == null) {
-          mImageDecoder = new DefaultImageDecoder(gifDecoder, webPDecoder, getPlatformDecoder());
+          mImageDecoder = new DefaultImageDecoder(gifDecoder, webPDecoder, avifDecoder, getPlatformDecoder());
         } else {
           mImageDecoder =
               new DefaultImageDecoder(
                   gifDecoder,
                   webPDecoder,
+                  avifDecoder,
                   getPlatformDecoder(),
                   mConfig.getImageDecoderConfig().getCustomImageDecoders());
           // Add custom image formats if needed
@@ -267,6 +277,11 @@ public class ImagePipelineFactory {
       }
     }
     return mImageDecoder;
+  }
+
+  @Nullable
+  private AvifDecoderFactory getAvifDecoderFactory() {
+    return null;
   }
 
   public BufferedDiskCache getMainBufferedDiskCache() {
