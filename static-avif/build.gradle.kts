@@ -22,6 +22,6 @@ dependencies {
 
   implementation(project(":middleware"))
   implementation(project(":fbcore"))
-  implementation(project(":imagepipeline-base"))
+  implementation(project(":imagepipeline"))
   implementation(Deps.avifAndroid)
 }
