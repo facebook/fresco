@@ -7,11 +7,13 @@ import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.image.CloseableStaticBitmap
 import com.facebook.imagepipeline.image.EncodedImage
 import com.facebook.imagepipeline.image.QualityInfo
+import com.facebook.imagepipeline.memory.BitmapPool
+import com.facebook.imageutils.BitmapUtil
 import com.facebook.imageutils.ByteBufferUtil
 import org.aomedia.avif.android.AvifDecoder
 import org.aomedia.avif.android.AvifDecoder.Info
 
-class AvifDecoder : ImageDecoder {
+class AvifDecoder(private val bitmapPool: BitmapPool) : ImageDecoder {
   override fun decode(
           encodedImage: EncodedImage,
           length: Int,
@@ -25,7 +27,7 @@ class AvifDecoder : ImageDecoder {
       return null
     }
 
-    val bitmap = Bitmap.createBitmap(info.width, info.height, options.bitmapConfig)
+    val bitmap = getBitmap(info.width, info.height, options.bitmapConfig)
 
     if (!AvifDecoder.decode(byteBuffer, byteBuffer.remaining(), bitmap)) {
       return null
@@ -34,10 +36,16 @@ class AvifDecoder : ImageDecoder {
 
     return CloseableStaticBitmap.of(
             bitmap,
-            { bitmap.recycle() },
+            bitmapPool::release,
             qualityInfo,
             encodedImage.rotationAngle,
             encodedImage.exifOrientation
     )
+  }
+
+  private fun getBitmap(width: Int, height: Int, config: Bitmap.Config): Bitmap {
+    return bitmapPool[BitmapUtil.getSizeInByteForBitmap(width, height, config)].also { bitmap ->
+      bitmap.reconfigure(width, height, config)
+    }
   }
 }

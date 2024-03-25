@@ -282,7 +282,7 @@ public class ImagePipelineFactory {
 
   @Nullable
   private AvifDecoderFactory getAvifDecoderFactory() {
-    return AvifDecoderFactoryProvider.loadIfExists();
+    return AvifDecoderFactoryProvider.loadIfExists(mConfig.getPoolFactory().getBitmapPool());
   }
 
   public BufferedDiskCache getMainBufferedDiskCache() {
