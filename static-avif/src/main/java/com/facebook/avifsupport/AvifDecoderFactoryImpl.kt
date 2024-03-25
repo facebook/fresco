@@ -7,4 +7,4 @@ import com.facebook.infer.annotation.Nullsafe
 
 @Nullsafe(Nullsafe.Mode.STRICT)
 @DoNotStrip
-class AvifDecoderFactoryImpl(override val avifDecoder: ImageDecoder? = null) : AvifDecoderFactory
+class AvifDecoderFactoryImpl(override val avifDecoder: ImageDecoder = AvifDecoder()) : AvifDecoderFactory
