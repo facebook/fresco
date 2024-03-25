@@ -9,7 +9,7 @@ package com.facebook.imagepipeline.listener
 
 import com.facebook.imagepipeline.producers.ProducerContext
 
-class BaseRequestListener2 : RequestListener2 {
+open class BaseRequestListener2 : RequestListener2 {
 
   override fun onRequestStart(producerContext: ProducerContext) = Unit
 
