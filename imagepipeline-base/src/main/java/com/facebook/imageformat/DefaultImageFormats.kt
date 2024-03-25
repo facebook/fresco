@@ -22,6 +22,7 @@ object DefaultImageFormats {
   @JvmField val WEBP_ANIMATED: ImageFormat = ImageFormat("WEBP_ANIMATED", "webp")
   @JvmField val HEIF: ImageFormat = ImageFormat("HEIF", "heif")
   @JvmField val DNG: ImageFormat = ImageFormat("DNG", "dng")
+  @JvmField val AVIF: ImageFormat = ImageFormat("AVIF", "avif")
 
   /**
    * Check if the given image format is a WebP image format (static or animated).
@@ -33,6 +34,9 @@ object DefaultImageFormats {
   fun isWebpFormat(imageFormat: ImageFormat): Boolean {
     return isStaticWebpFormat(imageFormat) || imageFormat === WEBP_ANIMATED
   }
+
+  @JvmStatic
+  fun isAvifFormat(imageFormat: ImageFormat) = imageFormat === AVIF
 
   /**
    * Check if the given image format is static WebP (not animated).
@@ -67,5 +71,6 @@ object DefaultImageFormats {
           WEBP_EXTENDED_WITH_ALPHA,
           WEBP_ANIMATED,
           HEIF,
+          AVIF,
       )
 }

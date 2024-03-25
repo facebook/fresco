@@ -77,6 +77,8 @@ public class DefaultImageDecoder implements ImageDecoder {
             return decodeGif(encodedImage, length, qualityInfo, options);
           } else if (imageFormat == DefaultImageFormats.WEBP_ANIMATED) {
             return decodeAnimatedWebp(encodedImage, length, qualityInfo, options);
+          } else if (imageFormat == DefaultImageFormats.AVIF) {
+            return decodeAvif(encodedImage, length, qualityInfo, options);
           } else if (imageFormat == ImageFormat.UNKNOWN) {
             throw new DecodeException("unknown image format", encodedImage);
           }
@@ -267,6 +269,17 @@ public class DefaultImageDecoder implements ImageDecoder {
       final ImageDecodeOptions options) {
     if (!options.forceStaticImage && mAnimatedWebPDecoder != null) {
       return mAnimatedWebPDecoder.decode(encodedImage, length, qualityInfo, options);
+    }
+    return decodeStaticImage(encodedImage, options);
+  }
+
+  private @Nullable CloseableImage decodeAvif(
+          final EncodedImage encodedImage,
+          final int length,
+          final QualityInfo qualityInfo,
+          final ImageDecodeOptions options) {
+    if (mAvifDecoder != null) {
+      return mAvifDecoder.decode(encodedImage, length, qualityInfo, options);
     }
     return decodeStaticImage(encodedImage, options);
   }
