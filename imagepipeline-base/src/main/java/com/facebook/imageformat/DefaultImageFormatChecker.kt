@@ -271,8 +271,13 @@ class DefaultImageFormatChecker : FormatChecker {
             (ImageFormatCheckerUtils.startsWithPattern(imageHeaderBytes, DNG_HEADER_II) ||
                 ImageFormatCheckerUtils.startsWithPattern(imageHeaderBytes, DNG_HEADER_MM))
 
+    /**
+     * Checks if [imageHeaderBytes] contains 'avif'.
+     *
+     * This check may not be sufficient, though it works for most AVIF images.
+     * Details on AVIF can be found [here](https://aomediacodec.github.io/av1-avif/).
+     * */
     private fun isAvifHeader(imageHeaderBytes: ByteArray): Boolean {
-      // This check may not enough
       return imageHeaderBytes
               .toString(Charset.forName("UTF-8"))
               .contains("avif")
