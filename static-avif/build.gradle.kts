@@ -20,6 +20,8 @@ android {
 dependencies {
   compileOnly(Deps.inferAnnotation)
 
+  implementation(project(":middleware"))
   implementation(project(":fbcore"))
   implementation(project(":imagepipeline-base"))
+  implementation(Deps.avifAndroid)
 }
