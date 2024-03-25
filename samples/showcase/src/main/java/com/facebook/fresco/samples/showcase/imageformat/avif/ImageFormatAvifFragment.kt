@@ -15,7 +15,7 @@ class ImageFormatAvifFragment : BaseShowcaseFragment() {
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    val draweeWebpStatic = view.findViewById<SimpleDraweeView>(R.id.drawee_view_avif_static)
-    draweeWebpStatic.setImageURI(sampleUris().createAvifStaticUri())
+    val draweeAvifStatic = view.findViewById<SimpleDraweeView>(R.id.drawee_view_avif_static)
+    draweeAvifStatic.setImageURI(sampleUris().createAvifStaticUri())
   }
 }
