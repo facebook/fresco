@@ -369,6 +369,8 @@ public class EncodedImage implements Closeable {
     final Pair<Integer, Integer> dimensions;
     if (DefaultImageFormats.isWebpFormat(imageFormat)) {
       dimensions = readWebPImageSize();
+    } else if (DefaultImageFormats.isAvifFormat(imageFormat)) {
+      dimensions = null;
     } else {
       dimensions = readImageMetaData().getDimensions();
     }
