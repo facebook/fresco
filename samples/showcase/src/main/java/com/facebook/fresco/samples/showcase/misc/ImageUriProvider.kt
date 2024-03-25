@@ -144,6 +144,9 @@ class ImageUriProvider constructor(context: Context) {
   fun createWebpStaticUri(): Uri =
       applyOverrideSettings(SAMPLE_URI_WEBP_STATIC, UriModification.NONE)
 
+  fun createAvifStaticUri(): Uri =
+          applyOverrideSettings(SAMPLE_URI_AVIF_STATIC, UriModification.NONE)
+
   fun createWebpTranslucentUri(): Uri =
       applyOverrideSettings(SAMPLE_URI_WEBP_TRANSLUCENT, UriModification.NONE)
 
@@ -281,6 +284,8 @@ class ImageUriProvider constructor(context: Context) {
     private val NON_EXISTING_URI = "https://frescolib.org/static/sample-images/does_not_exist.jpg"
 
     private val SAMPLE_URI_WEBP_STATIC = "https://www.gstatic.com/webp/gallery/2.webp"
+
+    private const val SAMPLE_URI_AVIF_STATIC = "https://raw.githubusercontent.com/link-u/avif-sample-images/master/kimono.avif"
 
     private val SAMPLE_URI_WEBP_TRANSLUCENT = "https://www.gstatic.com/webp/gallery3/5_webp_ll.webp"
 
