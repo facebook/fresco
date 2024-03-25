@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.cli.jvm.main
+import com.facebook.fresco.buildsrc.Deps
 
 plugins {
   id("com.android.library")
@@ -18,5 +18,8 @@ android {
 }
 
 dependencies {
+  compileOnly(Deps.inferAnnotation)
+
+  implementation(project(":fbcore"))
   implementation(project(":imagepipeline-base"))
 }

@@ -106,6 +106,7 @@ dependencies {
     implementation project(':animated-gif')
     implementation project(':animated-gif-lite')
     implementation project(':animated-webp')
+    implementation project(':static-avif')
     implementation project(':static-webp')
     implementation project(':native-filters')
     implementation project(':native-imagetranscoder')
