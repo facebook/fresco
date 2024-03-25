@@ -285,7 +285,7 @@ class ImageUriProvider constructor(context: Context) {
 
     private val SAMPLE_URI_WEBP_STATIC = "https://www.gstatic.com/webp/gallery/2.webp"
 
-    private const val SAMPLE_URI_AVIF_STATIC = "https://raw.githubusercontent.com/link-u/avif-sample-images/master/kimono.avif"
+    private const val SAMPLE_URI_AVIF_STATIC = "https://raw.githubusercontent.com/link-u/avif-sample-images/master/hato.profile2.12bpc.yuv422.avif"
 
     private val SAMPLE_URI_WEBP_TRANSLUCENT = "https://www.gstatic.com/webp/gallery3/5_webp_ll.webp"
 
