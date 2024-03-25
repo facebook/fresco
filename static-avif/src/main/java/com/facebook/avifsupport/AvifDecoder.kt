@@ -1,6 +1,8 @@
 package com.facebook.avifsupport
 
 import android.graphics.Bitmap
+import android.util.Log
+import com.facebook.common.logging.FLog
 import com.facebook.imagepipeline.common.ImageDecodeOptions
 import com.facebook.imagepipeline.decoder.ImageDecoder
 import com.facebook.imagepipeline.image.CloseableImage
@@ -24,15 +26,16 @@ class AvifDecoder(private val bitmapPool: BitmapPool) : ImageDecoder {
 
     val info = Info()
     if (!AvifDecoder.getInfo(byteBuffer, length, info)) {
+      FLog.e(TAG, "Error when getting Info from AvifDecoder")
       return null
     }
 
     val bitmap = getBitmap(info.width, info.height, options.bitmapConfig)
 
     if (!AvifDecoder.decode(byteBuffer, byteBuffer.remaining(), bitmap)) {
+      FLog.e(TAG, "Error while decoding")
       return null
     }
-
 
     return CloseableStaticBitmap.of(
             bitmap,
@@ -47,5 +50,9 @@ class AvifDecoder(private val bitmapPool: BitmapPool) : ImageDecoder {
     return bitmapPool[BitmapUtil.getSizeInByteForBitmap(width, height, config)].also { bitmap ->
       bitmap.reconfigure(width, height, config)
     }
+  }
+
+  companion object {
+    private const val TAG = "AvifDecoder"
   }
 }
