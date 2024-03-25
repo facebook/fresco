@@ -32,6 +32,7 @@ import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.decoder.DefaultImageDecoder;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.factory.AvifDecoderFactory;
+import com.facebook.imagepipeline.decoder.factory.provider.AvifDecoderFactoryProvider;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
@@ -281,7 +282,7 @@ public class ImagePipelineFactory {
 
   @Nullable
   private AvifDecoderFactory getAvifDecoderFactory() {
-    return null;
+    return AvifDecoderFactoryProvider.loadIfExists();
   }
 
   public BufferedDiskCache getMainBufferedDiskCache() {
