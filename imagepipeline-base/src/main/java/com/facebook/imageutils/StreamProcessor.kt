@@ -13,7 +13,7 @@ import java.io.InputStream
 /** Util for processing Stream. */
 internal object StreamProcessor {
   /**
-   * Consumes up to 4 bytes and returns them as int (taking into account endianess). Throws
+   * Consumes up to 4 bytes and returns them as int (taking into account endianness). Throws
    * exception if specified number of bytes cannot be consumed.
    *
    * @param stream the input stream to read bytes from
