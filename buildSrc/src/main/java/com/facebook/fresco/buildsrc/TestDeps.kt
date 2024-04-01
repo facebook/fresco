@@ -19,7 +19,7 @@ object TestDeps {
 
   const val festAssertCore = "org.easytesting:fest-assert-core:2.0M10"
 
-  const val robolectric = "org.robolectric:robolectric:4.9.2"
+  const val robolectric = "org.robolectric:robolectric:4.11"
 
   const val truth = "com.google.truth:truth:1.0.1"
 
