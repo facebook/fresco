@@ -125,7 +125,7 @@ constructor(
             responseBody?.use { body ->
               try {
                 if (!response.isSuccessful) {
-                  handleException(call, IOException("Unexpected HTTP code $response"), callback)
+                  handleException(call, IOException("Unexpected HTTP code $response", OkHttpNetworkFetcherException.fromResponse(response)), callback)
                   return@use
                 }
                 val responseRange = fromContentRangeHeader(response.header("Content-Range"))
@@ -143,7 +143,7 @@ constructor(
               } catch (e: Exception) {
                 handleException(call, e, callback)
               }
-            } ?: handleException(call, IOException("Response body null: $response"), callback)
+            } ?: handleException(call, IOException("Response body null: $response", OkHttpNetworkFetcherException.fromResponse(response)), callback)
           }
 
           override fun onFailure(call: Call, e: IOException) = handleException(call, e, callback)
