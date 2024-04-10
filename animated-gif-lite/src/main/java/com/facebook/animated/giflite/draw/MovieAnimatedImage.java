@@ -24,8 +24,18 @@ public class MovieAnimatedImage implements AnimatedImage {
   private final int mDuration;
   private final int mLoopCount;
   private final int[] mFrameDurations;
+  @Nullable private final Bitmap.Config mAnimatedBitmapConfig;
 
   public MovieAnimatedImage(MovieFrame[] frames, int sizeInBytes, int duration, int loopCount) {
+    this(frames, sizeInBytes, duration, loopCount, null);
+  }
+
+  public MovieAnimatedImage(
+      MovieFrame[] frames,
+      int sizeInBytes,
+      int duration,
+      int loopCount,
+      @Nullable Bitmap.Config animatedBitmapConfig) {
     mFrames = frames;
     mSizeInBytes = sizeInBytes;
     mDuration = duration;
@@ -34,6 +44,7 @@ public class MovieAnimatedImage implements AnimatedImage {
     for (int i = 0, N = mFrames.length; i < N; i++) {
       mFrameDurations[i] = mFrames[i].getDurationMs();
     }
+    mAnimatedBitmapConfig = animatedBitmapConfig;
   }
 
   @Override
@@ -100,6 +111,6 @@ public class MovieAnimatedImage implements AnimatedImage {
   @Override
   @Nullable
   public Bitmap.Config getAnimatedBitmapConfig() {
-    return null;
+    return mAnimatedBitmapConfig;
   }
 }
