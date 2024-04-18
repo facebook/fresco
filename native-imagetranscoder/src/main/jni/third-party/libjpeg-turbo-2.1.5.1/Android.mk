@@ -51,7 +51,6 @@ JPEGTURBO_SRC_FILES := \
 	jidctred.c \
 	jmemmgr.c \
 	jmemnobs.c \
-	jpeg_nbits_table.c \
 	jquant1.c \
 	jquant2.c \
 	jutils.c
