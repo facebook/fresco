@@ -53,7 +53,8 @@ JPEGTURBO_SRC_FILES := \
 	jmemnobs.c \
 	jquant1.c \
 	jquant2.c \
-	jutils.c
+	jutils.c \
+	transupp.c
 
 # switch between SIMD supported and non supported architectures
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
