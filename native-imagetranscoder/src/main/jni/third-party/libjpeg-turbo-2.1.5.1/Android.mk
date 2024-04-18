@@ -93,7 +93,6 @@ JPEGTURBO_SRC_FILES += \
 	simd/arm/jidctint-neon.c \
 	simd/arm/jidctred-neon.c \
 	simd/arm/jquanti-neon.c
-
 JPEGTURBO_CFLAGS += \
 	-DNEON_INTRINSICS=1
 else
