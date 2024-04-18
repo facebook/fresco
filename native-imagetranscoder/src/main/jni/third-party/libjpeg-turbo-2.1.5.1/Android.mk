@@ -74,6 +74,8 @@ JPEGTURBO_SRC_FILES += \
 	simd/arm/jidctint-neon.c \
 	simd/arm/jidctred-neon.c \
 	simd/arm/jquanti-neon.c
+JPEGTURBO_CFLAGS += \
+	-DNEON_INTRINSICS=1
 else ifeq ($(TARGET_ARCH_ABI),arm64-v8a)
 JPEGTURBO_SRC_FILES += \
 	simd/arm/aarch64/jchuff-neon.c \
@@ -91,6 +93,9 @@ JPEGTURBO_SRC_FILES += \
 	simd/arm/jidctint-neon.c \
 	simd/arm/jidctred-neon.c \
 	simd/arm/jquanti-neon.c
+
+JPEGTURBO_CFLAGS += \
+	-DNEON_INTRINSICS=1
 else
 JPEGTURBO_SRC_FILES += jsimd_none.c
 endif
