@@ -77,6 +77,7 @@ class DefaultImageFormatChecker : FormatChecker {
     private const val SIMPLE_WEBP_HEADER_LENGTH = 20
     /** Each VP8X WebP image has "features" byte following its ChunkHeader('VP8X') */
     private const val EXTENDED_WEBP_HEADER_LENGTH = 21
+
     /** Determines type of WebP image. imageHeaderBytes has to be header of a WebP image */
     private fun getWebpFormat(imageHeaderBytes: ByteArray, headerSize: Int): ImageFormat {
       check(WebpSupportStatus.isWebpHeader(imageHeaderBytes, 0, headerSize))
@@ -98,12 +99,14 @@ class DefaultImageFormatChecker : FormatChecker {
       }
       return ImageFormat.Companion.UNKNOWN
     }
+
     /**
      * Every JPEG image should start with SOI mark (0xFF, 0xD8) followed by beginning of another
      * segment (0xFF)
      */
     private val JPEG_HEADER = byteArrayOf(0xFF.toByte(), 0xD8.toByte(), 0xFF.toByte())
     private val JPEG_HEADER_LENGTH = JPEG_HEADER.size
+
     /**
      * Checks if imageHeaderBytes starts with SOI (start of image) marker, followed by 0xFF. If
      * headerSize is lower than 3 false is returned. Description of jpeg format can be found here:
@@ -130,6 +133,7 @@ class DefaultImageFormatChecker : FormatChecker {
             0x1A.toByte(),
             0x0A.toByte())
     private val PNG_HEADER_LENGTH = PNG_HEADER.size
+
     /**
      * Checks if array consisting of first headerSize bytes of imageHeaderBytes starts with png
      * signature. More information on PNG can be found there:
@@ -149,6 +153,7 @@ class DefaultImageFormatChecker : FormatChecker {
     private val GIF_HEADER_87A: ByteArray = ImageFormatCheckerUtils.asciiBytes("GIF87a")
     private val GIF_HEADER_89A: ByteArray = ImageFormatCheckerUtils.asciiBytes("GIF89a")
     private const val GIF_HEADER_LENGTH = 6
+
     /**
      * Checks if first headerSize bytes of imageHeaderBytes constitute a valid header for a gif
      * image. Details on GIF header can be found
@@ -165,9 +170,11 @@ class DefaultImageFormatChecker : FormatChecker {
       return ImageFormatCheckerUtils.startsWithPattern(imageHeaderBytes, GIF_HEADER_87A) ||
           ImageFormatCheckerUtils.startsWithPattern(imageHeaderBytes, GIF_HEADER_89A)
     }
+
     /** Every bmp image starts with "BM" bytes */
     private val BMP_HEADER: ByteArray = ImageFormatCheckerUtils.asciiBytes("BM")
     private val BMP_HEADER_LENGTH = BMP_HEADER.size
+
     /**
      * Checks if first headerSize bytes of imageHeaderBytes constitute a valid header for a bmp
      * image. Details on BMP header can be found [
@@ -187,6 +194,7 @@ class DefaultImageFormatChecker : FormatChecker {
     /** Every ico image starts with 0x00000100 bytes */
     private val ICO_HEADER = byteArrayOf(0x00.toByte(), 0x00.toByte(), 0x01.toByte(), 0x00.toByte())
     private val ICO_HEADER_LENGTH = ICO_HEADER.size
+
     /**
      * Checks if first headerSize bytes of imageHeaderBytes constitute a valid header for a ico
      * image. Details on ICO header can be found [
@@ -218,6 +226,7 @@ class DefaultImageFormatChecker : FormatChecker {
             ImageFormatCheckerUtils.asciiBytes("mif1"),
             ImageFormatCheckerUtils.asciiBytes("msf1"))
     private const val HEIF_HEADER_LENGTH = 12
+
     /**
      * Checks if first headerSize bytes of imageHeaderBytes constitute a valid header for a HEIF
      * image. Details on HEIF header can be found at:
@@ -242,6 +251,7 @@ class DefaultImageFormatChecker : FormatChecker {
         ImageFormatCheckerUtils.hasPatternAt(imageHeaderBytes, heifFtype, 8)
       }
     }
+
     /**
      * DNG has TIFF format which begins with binary order ('II' or 'MM' (stands for intel and
      * motorola binary order respectively)) then a word containing the number 42
@@ -252,6 +262,7 @@ class DefaultImageFormatChecker : FormatChecker {
     private val DNG_HEADER_MM =
         byteArrayOf(0x4D.toByte(), 0x4D.toByte(), 0x00.toByte(), 0x2A.toByte())
     private val DNG_HEADER_LENGTH = DNG_HEADER_II.size
+
     /**
      * Checks if imageHeaderBytes starts with 'II' or 'MM' then followed by a word containing 42
      * respecting the binary order. If headerSize is lower than 4 false is returned. Description of
