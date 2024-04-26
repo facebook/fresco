@@ -25,7 +25,7 @@ import java.nio.ByteBuffer
 object BitmapUtil {
 
   private const val POOL_SIZE = 12
-  private val DECODE_BUFFERS: Pools.SynchronizedPool<ByteBuffer?> by lazy {
+  private val DECODE_BUFFERS: Pools.SynchronizedPool<ByteBuffer> by lazy {
     Pools.SynchronizedPool(POOL_SIZE)
   }
 
