@@ -149,7 +149,14 @@ object FrescoVitoSlideshowComponentSpec {
 
   @JvmStatic
   @OnUnmount
-  internal fun onUnmount(c: ComponentContext, slideshowDrawable: FrescoVitoSlideshowDrawable<*>) {
+  internal fun onUnmount(
+      c: ComponentContext,
+      slideshowDrawable: FrescoVitoSlideshowDrawable<*>,
+      @State(canUpdateLazily = true) timer: Timer,
+  ) {
+    timer.cancel()
+    timer.purge()
+    FrescoVitoSlideshowComponent.lazyUpdateTimer(c, Timer("Fresco Vito slideshow timer"))
     val controller = FrescoVitoProvider.getController()
     controller.releaseImmediately(slideshowDrawable.previousImage)
     controller.releaseImmediately(slideshowDrawable.currentImage)
