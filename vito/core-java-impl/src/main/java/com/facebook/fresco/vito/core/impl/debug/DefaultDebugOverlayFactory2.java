@@ -24,15 +24,19 @@ import javax.annotation.Nullable;
 public class DefaultDebugOverlayFactory2 extends BaseDebugOverlayFactory2 {
 
   private boolean mShowExtendedInformation;
+  private boolean mShowExtendedImageSourceExtraInformation;
 
   public DefaultDebugOverlayFactory2(Supplier<Boolean> debugOverlayEnabled) {
-    this(true, debugOverlayEnabled);
+    this(true, false, debugOverlayEnabled);
   }
 
   public DefaultDebugOverlayFactory2(
-      boolean showExtendedInformation, Supplier<Boolean> debugOverlayEnabled) {
+      boolean showExtendedInformation,
+      boolean showExtendedImageSourceExtraInformation,
+      Supplier<Boolean> debugOverlayEnabled) {
     super(debugOverlayEnabled);
     mShowExtendedInformation = showExtendedInformation;
+    mShowExtendedImageSourceExtraInformation = showExtendedImageSourceExtraInformation;
   }
 
   public void setShowExtendedInformation(boolean showExtendedInformation) {
@@ -43,6 +47,11 @@ public class DefaultDebugOverlayFactory2 extends BaseDebugOverlayFactory2 {
     return mShowExtendedInformation;
   }
 
+  public void setShowExtendedImageSourceExtraInformation(
+      boolean showExtendedImageSourceExtraInformation) {
+    mShowExtendedImageSourceExtraInformation = showExtendedImageSourceExtraInformation;
+  }
+
   @Override
   protected void setData(
       DebugOverlayDrawable overlay,
@@ -51,6 +60,7 @@ public class DefaultDebugOverlayFactory2 extends BaseDebugOverlayFactory2 {
     setBasicData(overlay, drawable);
     setImageRequestData(overlay, drawable.getImageRequest());
     setImageOriginData(overlay, extras);
+    setImageSourceExtra(overlay, extras);
   }
 
   private void setBasicData(DebugOverlayDrawable overlay, FrescoDrawableInterface drawable) {
@@ -103,6 +113,18 @@ public class DefaultDebugOverlayFactory2 extends BaseDebugOverlayFactory2 {
           "o",
           origin + " | " + originSubcategory,
           DebugOverlayImageOriginColor.getImageOriginColor(origin));
+    }
+  }
+
+  private void setImageSourceExtra(
+      DebugOverlayDrawable overlay, @Nullable ControllerListener2.Extras extras) {
+    if (mShowExtendedImageSourceExtraInformation && extras != null) {
+      Map<String, Object> sourceExtras = extras.imageSourceExtras;
+      if (sourceExtras != null) {
+        for (Map.Entry<String, Object> entry : sourceExtras.entrySet()) {
+          overlay.addDebugData(entry.getKey(), entry.getValue().toString());
+        }
+      }
     }
   }
 

@@ -58,7 +58,8 @@ class FrescoVito {
         callerContextVerifier: CallerContextVerifier = NoOpCallerContextVerifier,
         vitoImagePerfListener: VitoImagePerfListener = BaseVitoImagePerfListener(),
         imagePerfListenerSupplier: Supplier<ControllerListener2<ImageInfo>>? = null,
-        showExtendedDebugOverlayInformation: Boolean = true
+        showExtendedDebugOverlayInformation: Boolean = true,
+        showExtendedImageSourceExtraInformation: Boolean = false,
     ) {
       if (isInitialized) {
         return
@@ -78,7 +79,10 @@ class FrescoVito {
               callerContextVerifier,
               vitoImagePerfListener,
               debugOverlayEnabledSupplier?.let {
-                DefaultDebugOverlayFactory2(showExtendedDebugOverlayInformation, it)
+                DefaultDebugOverlayFactory2(
+                    showExtendedDebugOverlayInformation,
+                    showExtendedImageSourceExtraInformation,
+                    it)
               } ?: NoOpDebugOverlayFactory2(),
               imagePerfListenerSupplier))
     }
