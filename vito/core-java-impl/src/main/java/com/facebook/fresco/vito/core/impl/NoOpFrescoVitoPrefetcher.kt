@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.core.impl
 
 import android.net.Uri
+import com.facebook.common.callercontext.ContextChain
 import com.facebook.datasource.DataSource
 import com.facebook.datasource.DataSources
 import com.facebook.fresco.vito.core.FrescoVitoPrefetcher
@@ -29,10 +30,27 @@ class NoOpFrescoVitoPrefetcher(private val throwException: Boolean = false) : Fr
       callsite: String
   ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
 
+  override fun prefetch(
+      prefetchTarget: PrefetchTarget,
+      uri: Uri,
+      imageOptions: ImageOptions?,
+      callerContext: Any?,
+      contextChain: ContextChain?,
+      callsite: String
+  ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
+
   override fun prefetchToBitmapCache(
       uri: Uri,
       imageOptions: DecodedImageOptions?,
       callerContext: Any?,
+      callsite: String
+  ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
+
+  override fun prefetchToBitmapCache(
+      uri: Uri,
+      imageOptions: DecodedImageOptions?,
+      callerContext: Any?,
+      contextChain: ContextChain?,
       callsite: String
   ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
 
@@ -43,6 +61,14 @@ class NoOpFrescoVitoPrefetcher(private val throwException: Boolean = false) : Fr
       callsite: String
   ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
 
+  override fun prefetchToEncodedCache(
+      uri: Uri,
+      imageOptions: EncodedImageOptions?,
+      callerContext: Any?,
+      contextChain: ContextChain?,
+      callsite: String
+  ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
+
   override fun prefetchToDiskCache(
       uri: Uri,
       imageOptions: ImageOptions?,
@@ -50,10 +76,27 @@ class NoOpFrescoVitoPrefetcher(private val throwException: Boolean = false) : Fr
       callsite: String
   ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
 
+  override fun prefetchToDiskCache(
+      uri: Uri,
+      imageOptions: ImageOptions?,
+      callerContext: Any?,
+      contextChain: ContextChain?,
+      callsite: String
+  ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
+
   override fun prefetch(
       prefetchTarget: PrefetchTarget,
       imageRequest: VitoImageRequest,
       callerContext: Any?,
+      requestListener: RequestListener?,
+      callsite: String
+  ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
+
+  override fun prefetch(
+      prefetchTarget: PrefetchTarget,
+      imageRequest: VitoImageRequest,
+      callerContext: Any?,
+      contextChain: ContextChain?,
       requestListener: RequestListener?,
       callsite: String
   ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
