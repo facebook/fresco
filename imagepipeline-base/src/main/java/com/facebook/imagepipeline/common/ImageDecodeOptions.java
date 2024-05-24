@@ -37,6 +37,9 @@ public class ImageDecodeOptions {
   /** Indicates that the last frame should be used as the preview frame instead of the first. */
   public final boolean useLastFrameForPreview;
 
+  /** Whether to use encoded image for preview. */
+  public final boolean useEncodedImageForPreview;
+
   /**
    * Whether to decode all the frames and store them in memory. This should only ever be used for
    * animations that are known to be small (e.g. stickers). Caching dozens of large Bitmaps in
@@ -77,6 +80,7 @@ public class ImageDecodeOptions {
     this.maxDimensionPx = b.getMaxDimensionPx();
     this.decodePreviewFrame = b.getDecodePreviewFrame();
     this.useLastFrameForPreview = b.getUseLastFrameForPreview();
+    this.useEncodedImageForPreview = b.getUseEncodedImageForPreview();
     this.decodeAllFrames = b.getDecodeAllFrames();
     this.forceStaticImage = b.getForceStaticImage();
     this.bitmapConfig = b.getBitmapConfig();
@@ -116,6 +120,7 @@ public class ImageDecodeOptions {
     if (maxDimensionPx != that.maxDimensionPx) return false;
     if (decodePreviewFrame != that.decodePreviewFrame) return false;
     if (useLastFrameForPreview != that.useLastFrameForPreview) return false;
+    if (useEncodedImageForPreview != that.useEncodedImageForPreview) return false;
     if (decodeAllFrames != that.decodeAllFrames) return false;
     if (forceStaticImage != that.forceStaticImage) return false;
     if (!excludeBitmapConfigFromComparison && bitmapConfig != that.bitmapConfig) return false;
@@ -133,6 +138,7 @@ public class ImageDecodeOptions {
     result = 31 * result + maxDimensionPx;
     result = 31 * result + (decodePreviewFrame ? 1 : 0);
     result = 31 * result + (useLastFrameForPreview ? 1 : 0);
+    result = 31 * result + (useEncodedImageForPreview ? 1 : 0);
     result = 31 * result + (decodeAllFrames ? 1 : 0);
     result = 31 * result + (forceStaticImage ? 1 : 0);
     if (!excludeBitmapConfigFromComparison) result = 31 * result + bitmapConfig.ordinal();
@@ -155,6 +161,7 @@ public class ImageDecodeOptions {
         .add("maxDimensionPx", maxDimensionPx)
         .add("decodePreviewFrame", decodePreviewFrame)
         .add("useLastFrameForPreview", useLastFrameForPreview)
+        .add("useEncodedImageForPreview", useEncodedImageForPreview)
         .add("decodeAllFrames", decodeAllFrames)
         .add("forceStaticImage", forceStaticImage)
         .add("bitmapConfigName", bitmapConfig.name())
