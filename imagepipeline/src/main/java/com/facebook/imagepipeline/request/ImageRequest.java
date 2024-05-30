@@ -121,6 +121,8 @@ public class ImageRequest {
    */
   private final @Nullable Boolean mResizingAllowedOverride;
 
+  private final @Nullable String mDiskCacheId;
+
   private final int mDelayMs;
 
   public static @Nullable ImageRequest fromFile(@Nullable File file) {
@@ -175,6 +177,8 @@ public class ImageRequest {
     mResizingAllowedOverride = builder.getResizingAllowedOverride();
 
     mDelayMs = builder.getDelayMs();
+
+    mDiskCacheId = builder.getDiskCacheId();
   }
 
   public CacheChoice getCacheChoice() {
@@ -287,6 +291,10 @@ public class ImageRequest {
     return mRequestListener;
   }
 
+  public @Nullable String getDiskCacheId() {
+    return mDiskCacheId;
+  }
+
   @Override
   public boolean equals(@Nullable Object o) {
     if (!(o instanceof ImageRequest)) {
@@ -305,6 +313,7 @@ public class ImageRequest {
     if (mIsMemoryCacheEnabled != request.mIsMemoryCacheEnabled) return false;
     if (!Objects.equal(mSourceUri, request.mSourceUri)
         || !Objects.equal(mCacheChoice, request.mCacheChoice)
+        || !Objects.equal(mDiskCacheId, request.mDiskCacheId)
         || !Objects.equal(mSourceFile, request.mSourceFile)
         || !Objects.equal(mBytesRange, request.mBytesRange)
         || !Objects.equal(mImageDecodeOptions, request.mImageDecodeOptions)
@@ -340,6 +349,7 @@ public class ImageRequest {
         result =
             Objects.hashCode(
                 mCacheChoice,
+                mDiskCacheId,
                 mSourceUri,
                 mLocalThumbnailPreviewsEnabled,
                 mBytesRange,
@@ -450,7 +460,10 @@ public class ImageRequest {
     SMALL,
 
     /* Default */
-    DEFAULT
+    DEFAULT,
+
+    /* Indicates that the image should go in the consumer provided cache, represent by the ImageRequest’s cacheId */
+    DYNAMIC
   }
 
   /**
