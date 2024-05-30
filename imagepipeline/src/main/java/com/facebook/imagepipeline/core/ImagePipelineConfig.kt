@@ -16,7 +16,6 @@ import com.facebook.cache.common.CacheKey
 import com.facebook.cache.disk.DiskCacheConfig
 import com.facebook.callercontext.CallerContextVerifier
 import com.facebook.common.executors.SerialExecutorService
-import com.facebook.common.internal.ImmutableMap
 import com.facebook.common.internal.Supplier
 import com.facebook.common.internal.Suppliers
 import com.facebook.common.memory.MemoryTrimmableRegistry
@@ -311,7 +310,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     var bitmapMemoryCacheFactory: BitmapMemoryCacheFactory? = null
       private set
 
-    var dynamicDiskCacheConfigMap: ImmutableMap<String, DiskCacheConfig>? = null
+    var dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>? = null
       private set
 
     fun setBitmapsConfig(config: Bitmap.Config?): Builder = apply { this.bitmapConfig = config }
@@ -489,7 +488,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
         }
 
     fun setDynamicDiskCacheConfigMap(
-        dynamicDiskCacheConfigMap: ImmutableMap<String, DiskCacheConfig>
+        dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>
     ): Builder = apply { this.dynamicDiskCacheConfigMap = dynamicDiskCacheConfigMap }
 
     fun experiment(): ImagePipelineExperiments.Builder = experimentsBuilder
