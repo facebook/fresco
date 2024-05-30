@@ -138,12 +138,26 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
       final ImageRequest imageRequest = mProducerContext.getImageRequest();
       final CacheKey cacheKey =
           mCacheKeyFactory.getEncodedCacheKey(imageRequest, mProducerContext.getCallerContext());
-
-      if (imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL) {
-        mSmallImageBufferedDiskCache.put(cacheKey, newResult);
-      } else {
-        mDefaultBufferedDiskCache.put(cacheKey, newResult);
+      BufferedDiskCache bufferedDiskCache =
+          DiskCacheDecision.chooseDiskCacheForRequest(
+              imageRequest,
+              mSmallImageBufferedDiskCache,
+              mDefaultBufferedDiskCache,
+              mDynamicBufferedDiskCaches);
+      if (bufferedDiskCache == null) {
+        mProducerContext
+            .getProducerListener()
+            .onProducerFinishWithFailure(
+                mProducerContext,
+                PRODUCER_NAME,
+                new DiskCacheDecision.DiskCacheDecisionNoDiskCacheChosenException(
+                    "Got no disk cache for CacheChoice: "
+                        + Integer.valueOf(imageRequest.getCacheChoice().ordinal()).toString()),
+                null);
+        getConsumer().onNewResult(newResult, status);
+        return;
       }
+      bufferedDiskCache.put(cacheKey, newResult);
       mProducerContext
           .getProducerListener()
           .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);

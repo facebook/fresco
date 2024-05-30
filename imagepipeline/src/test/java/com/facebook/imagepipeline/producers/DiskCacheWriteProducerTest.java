@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.producers;
 import static org.junit.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -177,6 +178,44 @@ public class DiskCacheWriteProducerTest {
     verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
     verify(mProducerListener, times(2)).onProducerStart(mProducerContext, PRODUCER_NAME);
     verify(mProducerListener, times(2))
+        .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
+  }
+
+  @Test
+  public void testDynamicImageDiskCacheInputProducerSuccess() {
+    when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.DYNAMIC);
+    when(mImageRequest.getDiskCacheId()).thenReturn(mDiskCacheId2);
+
+    setupInputProducerSuccess();
+    mDiskCacheWriteProducer.produceResults(mConsumer, mProducerContext);
+    verify(mBufferedDiskCache2, never()).put(mCacheKey, mIntermediateEncodedImage);
+    verify(mBufferedDiskCache2).put(mCacheKey, mFinalEncodedImage);
+    verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
+    verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
+    verify(mProducerListener, times(2)).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener, times(2))
+        .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
+  }
+
+  @Test
+  public void testDynamicImageDiskCacheInputProducerFailure_MissingDiskCacheId() {
+    when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.DYNAMIC);
+    when(mImageRequest.getDiskCacheId()).thenReturn(null);
+
+    setupInputProducerSuccess();
+    mDiskCacheWriteProducer.produceResults(mConsumer, mProducerContext);
+    verify(mBufferedDiskCache2, never()).put(mCacheKey, mIntermediateEncodedImage);
+    verify(mBufferedDiskCache2, never()).put(mCacheKey, mFinalEncodedImage);
+    verify(mProducerListener, times(1))
+        .onProducerFinishWithFailure(
+            eq(mProducerContext),
+            eq(PRODUCER_NAME),
+            isA(DiskCacheDecision.DiskCacheDecisionNoDiskCacheChosenException.class),
+            eq(null));
+    verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
+    verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
+    verify(mProducerListener, times(2)).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener, times(1))
         .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
   }
 
