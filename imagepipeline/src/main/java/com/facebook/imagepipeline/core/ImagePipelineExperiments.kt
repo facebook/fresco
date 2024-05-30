@@ -385,6 +385,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
             encodedMemoryCache!!,
             defaultBufferedDiskCache!!,
             smallImageBufferedDiskCache!!,
+            null, /* dynamicBufferedDiskCaches */
             cacheKeyFactory!!,
             platformBitmapFactory!!,
             bitmapPrepareToDrawMinSizeBytes,
