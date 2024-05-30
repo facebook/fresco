@@ -22,6 +22,7 @@ import static org.mockito.Mockito.when;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.MultiCacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
+import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.ImageFormat;
@@ -33,6 +34,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nullable;
 import org.junit.Before;
@@ -68,6 +70,13 @@ public class DiskCacheWriteProducerTest {
   @Mock public ImagePipelineConfig mConfig;
   private final BufferedDiskCache mDefaultBufferedDiskCache = mock(BufferedDiskCache.class);
   private final BufferedDiskCache mSmallImageBufferedDiskCache = mock(BufferedDiskCache.class);
+
+  private final String mDiskCacheId1 = "DISK_CACHE_ID_1";
+  private final BufferedDiskCache mBufferedDiskCache1 = mock(BufferedDiskCache.class);
+  private final String mDiskCacheId2 = "DISK_CACHE_ID_2";
+  private final BufferedDiskCache mBufferedDiskCache2 = mock(BufferedDiskCache.class);
+  private final Map<String, BufferedDiskCache> mDynamicBufferedDiskCaches =
+      ImmutableMap.of(mDiskCacheId1, mBufferedDiskCache1, mDiskCacheId2, mBufferedDiskCache2);
   private SettableProducerContext mProducerContext;
   private SettableProducerContext mLowestLevelProducerContext;
   private final String mRequestId = "mRequestId";
@@ -88,6 +97,7 @@ public class DiskCacheWriteProducerTest {
         new DiskCacheWriteProducer(
             mDefaultBufferedDiskCache,
             mSmallImageBufferedDiskCache,
+            mDynamicBufferedDiskCaches,
             mCacheKeyFactory,
             mInputProducer);
     List<CacheKey> keys = new ArrayList<>(1);
