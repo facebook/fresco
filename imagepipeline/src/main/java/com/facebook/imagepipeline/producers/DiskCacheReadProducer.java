@@ -49,13 +49,17 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
   private final CacheKeyFactory mCacheKeyFactory;
   private final Producer<EncodedImage> mInputProducer;
 
+  private final @Nullable Map<String, BufferedDiskCache> mDynamicBufferedDiskCaches;
+
   public DiskCacheReadProducer(
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
+      @Nullable Map<String, BufferedDiskCache> dynamicBufferedDiskCaches,
       CacheKeyFactory cacheKeyFactory,
       Producer<EncodedImage> inputProducer) {
     mDefaultBufferedDiskCache = defaultBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
+    mDynamicBufferedDiskCaches = dynamicBufferedDiskCaches;
     mCacheKeyFactory = cacheKeyFactory;
     mInputProducer = inputProducer;
   }

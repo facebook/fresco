@@ -61,6 +61,12 @@ public class DiskCacheReadProducerTest {
   @Mock public ImagePipelineConfig mConfig;
   private final BufferedDiskCache mDefaultBufferedDiskCache = mock(BufferedDiskCache.class);
   private final BufferedDiskCache mSmallImageBufferedDiskCache = mock(BufferedDiskCache.class);
+  private final String mDiskCacheId1 = "DISK_CACHE_ID_1";
+  private final BufferedDiskCache mBufferedDiskCache1 = mock(BufferedDiskCache.class);
+  private final String mDiskCacheId2 = "DISK_CACHE_ID_2";
+  private final BufferedDiskCache mBufferedDiskCache2 = mock(BufferedDiskCache.class);
+  private final Map<String, BufferedDiskCache> mDynamicBufferedDiskCaches =
+      ImmutableMap.of(mDiskCacheId1, mBufferedDiskCache1, mDiskCacheId2, mBufferedDiskCache2);
   private SettableProducerContext mProducerContext;
   private SettableProducerContext mLowestLevelProducerContext;
   private final String mRequestId = "mRequestId";
@@ -82,6 +88,7 @@ public class DiskCacheReadProducerTest {
         new DiskCacheReadProducer(
             mDefaultBufferedDiskCache,
             mSmallImageBufferedDiskCache,
+            mDynamicBufferedDiskCaches,
             mCacheKeyFactory,
             mInputProducer);
     List<CacheKey> keys = new ArrayList<>(1);

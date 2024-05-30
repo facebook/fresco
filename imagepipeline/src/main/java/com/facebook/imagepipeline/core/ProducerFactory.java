@@ -274,7 +274,11 @@ public class ProducerFactory {
 
   public DiskCacheReadProducer newDiskCacheReadProducer(Producer<EncodedImage> inputProducer) {
     return new DiskCacheReadProducer(
-        mDefaultBufferedDiskCache, mSmallImageBufferedDiskCache, mCacheKeyFactory, inputProducer);
+        mDefaultBufferedDiskCache,
+        mSmallImageBufferedDiskCache,
+        mDynamicBufferedDiskCaches,
+        mCacheKeyFactory,
+        inputProducer);
   }
 
   public DiskCacheWriteProducer newDiskCacheWriteProducer(Producer<EncodedImage> inputProducer) {
