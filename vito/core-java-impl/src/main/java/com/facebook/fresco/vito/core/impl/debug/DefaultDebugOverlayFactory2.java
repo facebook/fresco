@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.core.impl.debug;
 
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import com.facebook.common.internal.Supplier;
 import com.facebook.fresco.ui.common.ControllerListener2;
@@ -84,6 +85,11 @@ public class DefaultDebugOverlayFactory2 extends BaseDebugOverlayFactory2 {
             String.valueOf(
                 abstractDrawable.getActualImageWidthPx()
                     / (float) abstractDrawable.getActualImageHeightPx()));
+      }
+      @Nullable PointF focusPoint = abstractDrawable.getActualImageFocusPoint();
+      if (focusPoint != null) {
+        overlay.addDebugData("FocusPointX", String.valueOf(focusPoint.x));
+        overlay.addDebugData("FocusPointY", String.valueOf(focusPoint.y));
       }
     }
   }
