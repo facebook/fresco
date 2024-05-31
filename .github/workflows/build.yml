@@ -1,0 +1,30 @@
+name: facebook/fresco/build
+on:
+  push:
+    branches:
+    - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: nttld/setup-ndk@v1
+      with:
+        ndk-version: r25c
+    - name: Install JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: |
+          11
+          17
+        cache: gradle
+    - name: Build & run tests
+      run: ./gradlew test assembleDebug -PdisablePreDex
+    - name: Copy Results
+      run: |
+        mkdir -p /home/gh_actions/test-results/junit
+        find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} /home/gh_actions/test-results/junit \;
+    - uses: actions/upload-artifact@v4.0.0
+      with:
+        path: "/home/gh_actions/test-results"
