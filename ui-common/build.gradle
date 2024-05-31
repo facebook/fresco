@@ -10,9 +10,15 @@ import com.facebook.fresco.buildsrc.Deps
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
+kotlin {
+    jvmToolchain(11)
+}
+
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
+
+    namespace "com.facebook.fresco.ui.common"
 
     defaultConfig {
         minSdkVersion FrescoConfig.minSdkVersion

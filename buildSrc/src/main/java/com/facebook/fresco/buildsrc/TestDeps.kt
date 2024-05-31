@@ -19,7 +19,7 @@ object TestDeps {
 
   const val festAssertCore = "org.easytesting:fest-assert-core:2.0M10"
 
-  const val robolectric = "org.robolectric:robolectric:4.11"
+  const val robolectric = "org.robolectric:robolectric:4.12"
 
   const val truth = "com.google.truth:truth:1.0.1"
 
@@ -30,7 +30,7 @@ object TestDeps {
   }
 
   object Powermock {
-    private const val version = "2.0.2"
+    private const val version = "2.0.9"
 
     const val apiMockito = "org.powermock:powermock-api-mockito2:$version"
     const val moduleJunit4 = "org.powermock:powermock-module-junit4:$version"

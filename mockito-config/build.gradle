@@ -10,6 +10,12 @@ import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'java'
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
+}
+
 dependencies {
     compileOnly Deps.inferAnnotation
     implementation TestDeps.mockitoCore

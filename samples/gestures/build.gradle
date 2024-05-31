@@ -31,6 +31,8 @@ android {
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
 
+    namespace "com.facebook.samples.gestures"
+
     defaultConfig {
         minSdkVersion FrescoConfig.minSdkVersion
         targetSdkVersion FrescoConfig.targetSdkVersion

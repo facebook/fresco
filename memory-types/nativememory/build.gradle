@@ -36,6 +36,8 @@ android {
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
 
+    namespace "com.facebook.fresco.memorytypes.nativememory"
+
     defaultConfig {
         minSdkVersion FrescoConfig.minSdkVersion
         targetSdkVersion FrescoConfig.targetSdkVersion

@@ -27,6 +27,8 @@ android {
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
 
+    namespace "com.facebook.imagepipelinebase.test"
+
     defaultConfig {
         minSdkVersion FrescoConfig.minSdkVersion
         targetSdkVersion FrescoConfig.targetSdkVersion

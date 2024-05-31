@@ -98,7 +98,8 @@ class MainActivity : AppCompatActivity() {
     menuInflater.inflate(R.menu.main, menu)
     // the support toolbar should probably do this by default
     val styles =
-        obtainStyledAttributes(R.style.AppTheme_Toolbar, intArrayOf(R.attr.colorControlNormal))
+        obtainStyledAttributes(
+            R.style.AppTheme_Toolbar, intArrayOf(androidx.appcompat.R.attr.colorControlNormal))
     try {
       val tintColor = styles.getColor(0, Color.BLACK)
       for (i in 0 until menu.size()) {
