@@ -62,15 +62,6 @@ jobs:
       - android/accept-licenses
       - android/restore-gradle-cache:
           cache-prefix: v1a
-      - android/create-avd:
-          avd-name: testAVD
-          install: true
-          system-image: system-images;android-29;default;x86
-      - android/start-emulator:
-          avd-name: testAVD
-          no-window: true
-          restore-gradle-cache-prefix: v1a
-      - android/wait-for-emulator
       - print-debug-info
       - run-tests
       - android/save-gradle-cache:
