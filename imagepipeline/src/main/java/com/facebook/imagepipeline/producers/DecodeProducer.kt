@@ -32,6 +32,7 @@ import com.facebook.imagepipeline.image.ImmutableQualityInfo
 import com.facebook.imagepipeline.image.QualityInfo
 import com.facebook.imagepipeline.producers.JobScheduler.JobRunnable
 import com.facebook.imagepipeline.request.ImageRequest
+import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
 import com.facebook.imagepipeline.transcoder.DownsampleUtil
 import com.facebook.imageutils.BitmapUtil
@@ -67,7 +68,8 @@ class DecodeProducer(
       traceSection("DecodeProducer#produceResults") {
         val imageRequest = context.imageRequest
         val progressiveDecoder =
-            if (!UriUtil.isNetworkUri(imageRequest.sourceUri)) {
+            if (!UriUtil.isNetworkUri(imageRequest.sourceUri) &&
+                !ImageRequestBuilder.isCustomNetworkUri(imageRequest.sourceUri)) {
               LocalImagesProgressiveDecoder(
                   consumer, context, this.decodeCancellationEnabled, this.maxBitmapSize)
             } else {

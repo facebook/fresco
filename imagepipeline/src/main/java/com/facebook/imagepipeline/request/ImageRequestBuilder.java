@@ -316,7 +316,7 @@ public class ImageRequestBuilder {
     return this;
   }
 
-  private boolean isCustomNetworkUri(@Nullable Uri uri) {
+  public static boolean isCustomNetworkUri(@Nullable Uri uri) {
     if (CUSTOM_NETWORK_SCHEMES == null || uri == null) {
       return false;
     }
