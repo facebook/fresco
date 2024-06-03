@@ -26,6 +26,15 @@ commands:
           command: |
             mkdir -p /home/circleci/test-results/junit
             find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} /home/circleci/test-results/junit \;
+  setup-jdk-17:
+    steps:
+      - run:
+          name: Install OpenJDK 17
+          command: |
+            sudo apt-get update && sudo apt-get install openjdk-17-jdk
+            sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
+            sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
+            java -version
 
 jobs:
   build:
@@ -37,6 +46,7 @@ jobs:
       resource-class: large
     steps:
       - checkout
+      - setup-jdk-17
       - android/accept-licenses
       - android/restore-gradle-cache:
           cache-prefix: v1a
