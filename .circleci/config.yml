@@ -12,7 +12,9 @@ commands:
     steps:
       - run:
           name: Run Tests
-          command: ./gradlew test assembleDebug -PdisablePreDex --info
+          command: |
+            export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+            ./gradlew test assembleDebug -PdisablePreDex --info
   run-instrumentation-tests:
     steps:
       - run:
@@ -45,6 +47,7 @@ commands:
       - run:
           name: Print debug info
           command: |
+            export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
             echo "Printing Gradle Wrapper version"
             ./gradlew --version
 
