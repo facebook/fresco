@@ -33,7 +33,7 @@ jobs:
       TERM: 'dumb'
     executor:
       name: android/android-machine
-      tag: 2024.04.1
+      tag: 2021.10.1
       resource-class: large
     steps:
       - checkout
