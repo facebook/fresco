@@ -71,6 +71,7 @@ jobs:
           no-window: true
           restore-gradle-cache-prefix: v1a
       - android/wait-for-emulator
+      - print-debug-info
       - run-tests
       - android/save-gradle-cache:
           cache-prefix: v1a
