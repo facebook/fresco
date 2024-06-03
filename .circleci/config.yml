@@ -5,7 +5,7 @@
 #
 version: 2.1
 orbs:
-  android: circleci/android@2.2.0
+  android: circleci/android@2.5.0
 
 commands:
   run-tests:
@@ -33,7 +33,7 @@ jobs:
       TERM: 'dumb'
     executor:
       name: android/android-machine
-      tag: 2021.10.1
+      tag: 2024.04.1
       resource-class: large
     steps:
       - checkout

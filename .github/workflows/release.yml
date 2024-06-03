@@ -16,18 +16,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: set up JDK
-      uses: actions/setup-java@v1
+    - uses: actions/checkout@v4
+    - name: Install JDK
+      uses: actions/setup-java@v4
       with:
-        java-version: 11
-        distribution: 'zulu'
+        distribution: 'temurin'
+        java-version: |
+          11
+          17
+        cache: gradle
     - name: Setup Android SDK
-      uses: android-actions/setup-android@v2
+      uses: android-actions/setup-android@v3
     - name: Install NDK
-      run: echo "y" | sudo /usr/local/lib/android/sdk/tools/bin/sdkmanager --install "ndk;25.0.8775105" --sdk_root=${ANDROID_SDK_ROOT}
+    - uses: nttld/setup-ndk@v1
+      with:
+        ndk-version: r25c
     - name: Register NDK
-      run: "echo 'ndk.path=/usr/local/lib/android/sdk/ndk/25.0.8775105/' >> local.properties"
+      run: "echo 'ndk.path=/usr/local/lib/android/sdk/ndk/25.2.9519653' >> local.properties"
     - name: Write GPG Sec Ring
       run: echo '${{ secrets.GPG_KEY_CONTENTS }}' | base64 -d > /tmp/secring.gpg
     - name: Update gradle.properties
