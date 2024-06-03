@@ -35,7 +35,11 @@ commands:
             sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
             sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
             java -version
+            echo "Previous JAVA_HOME:"
+            echo $JAVA_HOME
             export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64/"
+            echo "New JAVA_HOME:"
+            echo $JAVA_HOME
 
 jobs:
   build:
