@@ -10,29 +10,24 @@ package com.facebook.fresco.urimod
 import android.net.Uri
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType
 
-const val NOT_MODIFIED_DISABLED: String = "Smart fetch is disabled"
-
 interface UriModifierInterface {
 
   fun modifyUri(uri: Uri, viewport: Dimensions?, scaleType: ScaleType?): ModificationResult
 
-  sealed class ModificationResult {
-    object Disabled : ModificationResult() {
-      override fun toString(): String {
-        return "Disabled"
-      }
+  /** This is used for IMAGE_LOAD_PERF logging. */
+  sealed class ModificationResult(private val comment: String) {
+    override fun toString(): String = comment
+
+    object Disabled : ModificationResult("Disabled")
+
+    sealed class Modified(val newUri: Uri, comment: String) : ModificationResult(comment) {
+      class ModifiedToAllowlistedSize(newUrl: Uri) : Modified(newUrl, "ModifiedToAllowlistedSize")
+
+      class ModifiedToMaxDimens(newUrl: Uri) : Modified(newUrl, "ModifiedToMaxDimens")
     }
 
-    data class Modified(val newUri: Uri) : ModificationResult() {
-      override fun toString(): String {
-        return "Modified"
-      }
-    }
+    object FallbackToOriginalUrl : ModificationResult("FallbackToOriginalUrl")
 
-    data class Unmodified(val reason: String) : ModificationResult() {
-      override fun toString(): String {
-        return "Unmodified(reason='$reason')"
-      }
-    }
+    data class Unmodified(val reason: String) : ModificationResult("Unmodified(reason='$reason'")
   }
 }
