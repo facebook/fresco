@@ -32,7 +32,7 @@ jobs:
     - name: Register NDK
       run: |
         echo $PATH
-        echo 'ndk.path=/usr/local/lib/android/sdk/ndk/25.2.9519653' >> local.properties
+        echo 'ndk.path=/opt/hostedtoolcache/ndk/r25c/x64' >> local.properties
     - name: Write GPG Sec Ring
       run: echo '${{ secrets.GPG_KEY_CONTENTS }}' | base64 -d > /tmp/secring.gpg
     - name: Update gradle.properties
