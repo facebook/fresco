@@ -23,7 +23,7 @@ jobs:
           17
         cache: gradle
     - name: Build & run tests
-      run: ./gradlew test assembleDebug -PdisablePreDex
+      run: ./ci/build-and-test.sh
     - name: Copy Results
       run: |
         mkdir -p ./gh_actions/test-results/junit
