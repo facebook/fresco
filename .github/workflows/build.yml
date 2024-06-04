@@ -22,12 +22,18 @@ jobs:
           11
           17
         cache: gradle
+    - name: Print debug info
+      run: |
+        echo "Printing env PATH var"
+        echo $PATH
+        echo "Printing Gradle Wrapper version"
+        ./gradlew --version
     - name: Build & run tests
       run: ./ci/build-and-test.sh
     - name: Copy Results
       run: |
         mkdir -p ./gh_actions/test-results/junit
         find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ./gh_actions/test-results/junit \;
-    - uses: actions/upload-artifact@v4.0.0
+    - uses: actions/upload-artifact@v4
       with:
         path: "./gh_actions/test-results"
