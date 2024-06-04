@@ -12,9 +12,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
     - name: Install JDK
@@ -28,11 +26,13 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
     - name: Install NDK
-    - uses: nttld/setup-ndk@v1
+      uses: nttld/setup-ndk@v1
       with:
         ndk-version: r25c
     - name: Register NDK
-      run: "echo 'ndk.path=/usr/local/lib/android/sdk/ndk/25.2.9519653' >> local.properties"
+      run: |
+        echo $PATH
+        echo 'ndk.path=/opt/hostedtoolcache/ndk/r25c/x64' >> local.properties
     - name: Write GPG Sec Ring
       run: echo '${{ secrets.GPG_KEY_CONTENTS }}' | base64 -d > /tmp/secring.gpg
     - name: Update gradle.properties

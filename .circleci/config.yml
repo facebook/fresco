@@ -14,7 +14,7 @@ commands:
           name: Run Tests
           command: |
             export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
-            ./gradlew test assembleDebug -PdisablePreDex --info
+            ./ci/build-and-test.sh
   run-instrumentation-tests:
     steps:
       - run:
