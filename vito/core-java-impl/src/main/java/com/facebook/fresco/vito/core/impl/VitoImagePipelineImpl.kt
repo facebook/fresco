@@ -47,16 +47,18 @@ class VitoImagePipelineImpl(
     val extras: MutableMap<String, Any?> = mutableMapOf()
     var finalImageSource = imageSource
     if (imageSource is SingleImageSource) {
-      val result: UriModifierInterface.ModificationResult =
-          UriModifier.INSTANCE.modifyUri(
-              imageSource.uri,
-              viewport?.let { Dimensions(it.width(), it.height()) },
-              imageOptions.actualImageScaleType)
-      if (result !is UriModifierInterface.ModificationResult.Disabled) {
-        extras[HasExtraData.KEY_MODIFIED_URL] = result.toString()
-      }
-      if (result is UriModifierInterface.ModificationResult.Modified) {
-        finalImageSource = ImageSourceProvider.forUri(result.newUri)
+      if (imageOptions.experimentalDynamicSize) {
+        val result: UriModifierInterface.ModificationResult =
+            UriModifier.INSTANCE.modifyUri(
+                imageSource.uri,
+                viewport?.let { Dimensions(it.width(), it.height()) },
+                imageOptions.actualImageScaleType)
+        if (result !is UriModifierInterface.ModificationResult.Disabled) {
+          extras[HasExtraData.KEY_MODIFIED_URL] = result.toString()
+        }
+        if (result is UriModifierInterface.ModificationResult.Modified) {
+          finalImageSource = ImageSourceProvider.forUri(result.newUri)
+        }
       }
       if (imageSource.extras != null) {
         extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = imageSource.extras
