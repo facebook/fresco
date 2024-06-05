@@ -107,20 +107,22 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
 
     constructor() : super()
 
-    constructor(defaultOptions: ImageOptions) : super(defaultOptions) {
-      resizeOptions = defaultOptions.resizeOptions
-      rotationOptions = defaultOptions.rotationOptions
-      postprocessor = defaultOptions.postprocessor
-      imageDecodeOptions = defaultOptions.imageDecodeOptions
-      roundingOptions = defaultOptions.roundingOptions
-      borderOptions = defaultOptions.borderOptions
-      actualImageScaleType = defaultOptions.actualImageScaleType
-      actualFocusPoint = defaultOptions.actualImageFocusPoint
-      localThumbnailPreviewsEnabled = defaultOptions.areLocalThumbnailPreviewsEnabled()
-      loadThumbnailOnly = defaultOptions.loadThumbnailOnly
-      bitmapConfig = defaultOptions.bitmapConfig
-      progressiveDecodingEnabled = defaultOptions.isProgressiveDecodingEnabled
+    constructor(decodedImageOptions: DecodedImageOptions) : super(decodedImageOptions) {
+      resizeOptions = decodedImageOptions.resizeOptions
+      rotationOptions = decodedImageOptions.rotationOptions
+      postprocessor = decodedImageOptions.postprocessor
+      imageDecodeOptions = decodedImageOptions.imageDecodeOptions
+      roundingOptions = decodedImageOptions.roundingOptions
+      borderOptions = decodedImageOptions.borderOptions
+      actualImageScaleType = decodedImageOptions.actualImageScaleType
+      actualFocusPoint = decodedImageOptions.actualImageFocusPoint
+      localThumbnailPreviewsEnabled = decodedImageOptions.areLocalThumbnailPreviewsEnabled()
+      loadThumbnailOnly = decodedImageOptions.loadThumbnailOnly
+      bitmapConfig = decodedImageOptions.bitmapConfig
+      progressiveDecodingEnabled = decodedImageOptions.isProgressiveDecodingEnabled
     }
+
+    constructor(defaultOptions: ImageOptions) : this(defaultOptions as DecodedImageOptions)
 
     fun resize(resizeOptions: ResizeOptions?): T = modify { this.resizeOptions = resizeOptions }
 

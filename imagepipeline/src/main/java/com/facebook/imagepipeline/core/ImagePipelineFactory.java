@@ -143,7 +143,6 @@ public class ImagePipelineFactory {
   @Nullable private ProducerSequenceFactory mProducerSequenceFactory;
   @Nullable private BufferedDiskCache mSmallImageBufferedDiskCache;
   @Nullable private FileCache mSmallImageFileCache;
-
   @Nullable private Map<String, FileCache> mDynamicFileCaches;
   @Nullable private ImmutableMap<String, BufferedDiskCache> mDynamicBufferedDiskCaches;
 
@@ -350,6 +349,7 @@ public class ImagePipelineFactory {
         getEncodedMemoryCache(),
         getMainBufferedDiskCache(),
         getSmallImageBufferedDiskCache(),
+        getDynamicBufferedDiskCaches(),
         mConfig.getCacheKeyFactory(),
         mThreadHandoffProducerQueue,
         mConfig.getExperiments().getSuppressBitmapPrefetchingSupplier(),
