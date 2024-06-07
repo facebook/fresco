@@ -16,7 +16,8 @@ import java.util.concurrent.ConcurrentHashMap
 
 class FrameLoaderFactory(
     private val platformBitmapFactory: PlatformBitmapFactory,
-    private val maxFpsRender: Int
+    private val maxFpsRender: Int,
+    private val bufferLengthMilliseconds: Int,
 ) {
 
   fun createBufferLoader(
@@ -36,7 +37,8 @@ class FrameLoaderFactory(
         platformBitmapFactory,
         bitmapFrameRenderer,
         FpsCompressorInfo(maxFpsRender),
-        animationInformation)
+        animationInformation,
+        bufferLengthMilliseconds)
   }
 
   companion object {

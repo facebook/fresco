@@ -180,6 +180,7 @@ public class ImagePipelineFactory {
               mConfig.getExperiments().getDownscaleFrameToDrawableDimensions(),
               mConfig.getExperiments().getUseBalancedAnimationStrategy(),
               mConfig.getExperiments().getAnimationRenderFpsLimit(),
+              mConfig.getExperiments().getBalancedStrategyBufferLengthMilliseconds(),
               mConfig.getExecutorServiceForAnimatedImages());
     }
     return mAnimatedFactory;

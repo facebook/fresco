@@ -77,6 +77,7 @@ public class DefaultBitmapAnimationDrawableFactory
   private final Supplier<Boolean> mUseNewBitmapRender;
   private final Supplier<Boolean> mDownscaleFrameToDrawableDimensions;
   private final Supplier<Integer> mAnimationFpsLimit;
+  private final Supplier<Integer> mBufferLengthMilliseconds;
 
   // Change the value to true to use KAnimatedDrawable2.kt
   private final Supplier<Boolean> useRendererAnimatedDrawable = Suppliers.BOOLEAN_FALSE;
@@ -93,7 +94,8 @@ public class DefaultBitmapAnimationDrawableFactory
       Supplier<Boolean> useDeepEqualsForCacheKey,
       Supplier<Boolean> useNewBitmapRender,
       Supplier<Boolean> downscaleFrameToDrawableDimensions,
-      Supplier<Integer> animationFpsLimit) {
+      Supplier<Integer> animationFpsLimit,
+      Supplier<Integer> bufferLengthMilliseconds) {
     mAnimatedDrawableBackendProvider = animatedDrawableBackendProvider;
     mScheduledExecutorServiceForUiThread = scheduledExecutorServiceForUiThread;
     mExecutorServiceForFramePreparing = executorServiceForFramePreparing;
@@ -106,6 +108,7 @@ public class DefaultBitmapAnimationDrawableFactory
     mUseNewBitmapRender = useNewBitmapRender;
     mAnimationFpsLimit = animationFpsLimit;
     mDownscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions;
+    mBufferLengthMilliseconds = bufferLengthMilliseconds;
   }
 
   @Override
@@ -180,7 +183,10 @@ public class DefaultBitmapAnimationDrawableFactory
               animatedImageResult.getSource(),
               animationInfo,
               bitmapFrameRenderer,
-              new FrameLoaderFactory(mPlatformBitmapFactory, mAnimationFpsLimit.get()),
+              new FrameLoaderFactory(
+                  mPlatformBitmapFactory,
+                  mAnimationFpsLimit.get(),
+                  mBufferLengthMilliseconds.get()),
               mDownscaleFrameToDrawableDimensions.get());
     }
 
