@@ -174,16 +174,24 @@ class KFrescoController(
 
       // Check if the image is in cache
       val cachedImage = vitoImagePipeline.getCachedImage(imageRequest)
-      if (drawable.setActualImage(imageRequest, cachedImage)) {
+
+      val isIntermediateImage =
+          config.useIntermediateImagesAsPlaceholder() &&
+              cachedImage?.get()?.qualityInfo?.isOfFullQuality != true
+      val hasImage = drawable.setActualImage(imageRequest, cachedImage, isIntermediateImage)
+      if (hasImage && !isIntermediateImage) {
+        // Immediately return since we have the full image
         return true
       }
 
-      // The image is not in cache -> Set up layers visible until the image is available
-      drawable.placeholderLayer.setPlaceholder(imageRequest.resources, options)
-      drawable.listenerManager.onPlaceholderSet(
-          imageId, imageRequest, drawable.placeholderLayer.getDataModel().maybeGetDrawable())
+      if (!hasImage) {
+        // The image is not in cache -> Set up layers visible until the image is available
+        drawable.placeholderLayer.setPlaceholder(imageRequest.resources, options)
+        drawable.listenerManager.onPlaceholderSet(
+            imageId, imageRequest, drawable.placeholderLayer.getDataModel().maybeGetDrawable())
 
-      drawable.setupProgressLayer(imageRequest.resources, options)
+        drawable.setupProgressLayer(imageRequest.resources, options)
+      }
 
       // Fetch the image
       lightweightBackgroundThreadExecutor.execute {
@@ -243,7 +251,8 @@ class KFrescoController(
    */
   private fun KFrescoVitoDrawable.setActualImage(
       imageRequest: VitoImageRequest,
-      imageReference: CloseableReference<CloseableImage>?
+      imageReference: CloseableReference<CloseableImage>?,
+      isIntermediateImage: Boolean = false,
   ): Boolean {
     traceSection("KFrescoController#setActualImage") {
       try {
@@ -258,13 +267,17 @@ class KFrescoController(
             // TODO(T105148151): trigger listeners
             invalidateSelf()
             val imageInfo = image.imageInfo
-            listenerManager.onFinalImageSet(
-                imageId,
-                imageRequest,
-                ImageOrigin.MEMORY_BITMAP_SHORTCUT,
-                imageInfo,
-                obtainExtras(null, imageReference),
-                actualImageDrawable)
+            if (isIntermediateImage) {
+              listenerManager.onIntermediateImageSet(imageId, imageRequest, imageInfo)
+            } else {
+              listenerManager.onFinalImageSet(
+                  imageId,
+                  imageRequest,
+                  ImageOrigin.MEMORY_BITMAP_SHORTCUT,
+                  imageInfo,
+                  obtainExtras(null, imageReference),
+                  actualImageDrawable)
+            }
             debugOverlayHandler?.update(this)
             return true
           }

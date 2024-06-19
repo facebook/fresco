@@ -4,6 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.vito.core.impl
 
 import android.graphics.Bitmap
@@ -185,26 +186,37 @@ open class FrescoController2Impl(
 
     // Check if the image is in cache
     val cachedImage = mImagePipeline.getCachedImage(imageRequest)
+    var needsPlaceholderDrawable = true
     try {
       if (CloseableReference.isValid(cachedImage)) {
         frescoDrawable.imageOrigin = ImageOrigin.MEMORY_BITMAP_SHORTCUT
+        val isIntermediateImage =
+            mConfig.useIntermediateImagesAsPlaceholder() &&
+                cachedImage?.get()?.qualityInfo?.isOfFullQuality != true
         // Immediately display the actual image.
-        setActualImage(frescoDrawable, imageRequest, cachedImage, true, null)
+        setActualImage(frescoDrawable, imageRequest, cachedImage, true, null, isIntermediateImage)
         frescoDrawable.setFetchSubmitted(true)
         mDebugOverlayFactory.update(frescoDrawable, extras)
-        return true
+        if (!isIntermediateImage) {
+          return true
+        } else {
+          // We are displaying an intermediate image and can skip setting up the placeholder
+          needsPlaceholderDrawable = false
+        }
       }
     } finally {
       CloseableReference.closeSafely(cachedImage)
     }
 
-    // The image is not in cache -> Set up layers visible until the image is available
-    frescoDrawable.setProgressDrawable(
-        mHierarcher.buildProgressDrawable(imageRequest.resources, imageRequest.imageOptions))
-    // Immediately show the progress image and set progress to 0
-    frescoDrawable.setProgress(0f)
-    frescoDrawable.showProgressImmediately()
-    setUpPlaceholder(frescoDrawable, imageRequest, imageId)
+    if (!needsPlaceholderDrawable) {
+      // The image is not in cache -> Set up layers visible until the image is available
+      frescoDrawable.setProgressDrawable(
+          mHierarcher.buildProgressDrawable(imageRequest.resources, imageRequest.imageOptions))
+      // Immediately show the progress image and set progress to 0
+      frescoDrawable.setProgress(0f)
+      frescoDrawable.showProgressImmediately()
+      setUpPlaceholder(frescoDrawable, imageRequest, imageId)
+    }
 
     // Fetch the image
     val fetchRunnable = Runnable {
@@ -286,8 +298,9 @@ open class FrescoController2Impl(
       drawable: FrescoDrawable2Impl,
       imageRequest: VitoImageRequest,
       image: CloseableReference<CloseableImage>?,
-      isImmediate: Boolean,
-      dataSource: DataSource<CloseableReference<CloseableImage>>?
+      displayImmediately: Boolean,
+      dataSource: DataSource<CloseableReference<CloseableImage>>?,
+      isIntermediateImage: Boolean = false,
   ) {
     val actualImageWrapperDrawable = drawable.actualImageWrapper
     mHierarcher.setupActualImageWrapper(
@@ -297,7 +310,7 @@ open class FrescoController2Impl(
             imageRequest.resources, imageRequest.imageOptions, image!!)
     actualImageWrapperDrawable.setCurrent(actualDrawable ?: NopDrawable)
     drawable.setImage(actualImageWrapperDrawable, image)
-    if (isImmediate || imageRequest.imageOptions.fadeDurationMs <= 0) {
+    if (displayImmediately || imageRequest.imageOptions.fadeDurationMs <= 0) {
       drawable.showImageImmediately()
     } else {
       drawable.fadeInImage(imageRequest.imageOptions.fadeDurationMs)
@@ -307,13 +320,13 @@ open class FrescoController2Impl(
     }
     val extras = obtainExtras(dataSource, image, drawable)
     val imageInfo = image.get().imageInfo
-    if (notifyFinalResult(dataSource)) {
+    if (!isIntermediateImage && notifyFinalResult(dataSource)) {
       drawable.internalListener.onFinalImageSet(
           drawable.imageId, imageRequest, drawable.imageOrigin, imageInfo, extras, actualDrawable)
     } else {
       drawable.internalListener.onIntermediateImageSet(drawable.imageId, imageRequest, imageInfo)
     }
-    drawable.imagePerfListener.onImageSuccess(drawable, isImmediate)
+    drawable.imagePerfListener.onImageSuccess(drawable, displayImmediately)
     var progress = 1f
     if (dataSource != null && !dataSource.isFinished) {
       progress = dataSource.progress

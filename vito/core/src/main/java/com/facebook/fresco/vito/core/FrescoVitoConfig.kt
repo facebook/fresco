@@ -33,4 +33,6 @@ interface FrescoVitoConfig {
   fun enableWindowWideColorGamut(): Boolean
 
   fun handleImageResultInBackground(): Boolean
+
+  fun useIntermediateImagesAsPlaceholder(): Boolean
 }
