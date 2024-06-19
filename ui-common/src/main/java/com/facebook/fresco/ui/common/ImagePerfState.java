@@ -28,7 +28,6 @@ public class ImagePerfState {
   private long mControllerIntermediateImageSetTimeMs = UNSET;
   private long mControllerFinalImageSetTimeMs = UNSET;
   private long mControllerFailureTimeMs = UNSET;
-  private long mControllerCancelTimeMs = UNSET;
 
   // Image request timings
   private long mImageRequestStartTimeMs = UNSET;
@@ -88,7 +87,6 @@ public class ImagePerfState {
     mControllerSubmitTimeMs = UNSET;
     mControllerFinalImageSetTimeMs = UNSET;
     mControllerFailureTimeMs = UNSET;
-    mControllerCancelTimeMs = UNSET;
 
     mVisibilityEventTimeMs = UNSET;
     mInvisibilityEventTimeMs = UNSET;
@@ -134,10 +132,6 @@ public class ImagePerfState {
 
   public void setControllerFailureTimeMs(long controllerFailureTimeMs) {
     mControllerFailureTimeMs = controllerFailureTimeMs;
-  }
-
-  public void setControllerCancelTimeMs(long controllerCancelTimeMs) {
-    mControllerCancelTimeMs = controllerCancelTimeMs;
   }
 
   public void setImageRequestStartTimeMs(long imageRequestStartTimeMs) {
@@ -195,7 +189,6 @@ public class ImagePerfState {
         mControllerIntermediateImageSetTimeMs,
         mControllerFinalImageSetTimeMs,
         mControllerFailureTimeMs,
-        mControllerCancelTimeMs,
         mImageRequestStartTimeMs,
         mImageRequestEndTimeMs,
         mIsPrefetch,

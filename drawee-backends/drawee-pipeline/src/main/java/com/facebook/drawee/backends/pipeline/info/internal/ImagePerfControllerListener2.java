@@ -207,14 +207,6 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     state.setExtraData(extras);
     state.setControllerId(id);
 
-    ImageLoadStatus lastImageLoadStatus = state.getImageLoadStatus();
-    if (lastImageLoadStatus != ImageLoadStatus.SUCCESS
-        && lastImageLoadStatus != ImageLoadStatus.ERROR
-        && lastImageLoadStatus != ImageLoadStatus.DRAW) {
-      state.setControllerCancelTimeMs(now);
-      // The image request was canceled
-      updateStatus(state, ImageLoadStatus.CANCELED);
-    }
     updateStatus(state, ImageLoadStatus.RELEASED);
 
     if (mReportVisibleOnSubmitAndRelease) {

@@ -128,10 +128,7 @@ public class ImagePerfControllerListenerTest {
     verify(mMonotonicClock, times(expectedNumOfTimestamps)).now();
     verify(mImagePerfMonitor)
         .notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
-    verify(mImagePerfMonitor)
-        .notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.CANCELED));
     verify(mImagePerfState).setControllerSubmitTimeMs(startTime);
-    verify(mImagePerfState).setControllerCancelTimeMs(imageReleaseTime);
   }
 
   @Test

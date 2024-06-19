@@ -96,10 +96,8 @@ public class ImagePerfControllerListener extends BaseControllerListener<ImageInf
     if (lastImageLoadStatus != ImageLoadStatus.SUCCESS
         && lastImageLoadStatus != ImageLoadStatus.ERROR
         && lastImageLoadStatus != ImageLoadStatus.DRAW) {
-      mImagePerfState.setControllerCancelTimeMs(now);
       mImagePerfState.setControllerId(id);
       // The image request was canceled
-      mImagePerfMonitor.notifyStatusUpdated(mImagePerfState, ImageLoadStatus.CANCELED);
     }
 
     reportViewInvisible(now);
