@@ -50,7 +50,6 @@ public class ImagePerfState {
   private long mVisibilityEventTimeMs = UNSET;
   private long mInvisibilityEventTimeMs = UNSET;
   // Fetch efficiency
-  private long mImageDrawTimeMs = UNSET;
   private @Nullable DimensionsInfo mDimensionsInfo;
   // Pipeline and view extras
   private @Nullable Extras mExtraData;
@@ -90,8 +89,6 @@ public class ImagePerfState {
 
     mVisibilityEventTimeMs = UNSET;
     mInvisibilityEventTimeMs = UNSET;
-
-    mImageDrawTimeMs = UNSET;
   }
 
   public void setImageLoadStatus(ImageLoadStatus imageLoadStatus) {
@@ -174,10 +171,6 @@ public class ImagePerfState {
     mVisibilityState = visible ? VisibilityState.VISIBLE : VisibilityState.INVISIBLE;
   }
 
-  public void setImageDrawTimeMs(long imageDrawTimeMs) {
-    mImageDrawTimeMs = imageDrawTimeMs;
-  }
-
   public ImagePerfData snapshot() {
     return new ImagePerfData(
         mControllerId,
@@ -198,13 +191,8 @@ public class ImagePerfState {
         mVisibilityState,
         mVisibilityEventTimeMs,
         mInvisibilityEventTimeMs,
-        mImageDrawTimeMs,
         mDimensionsInfo,
         mExtraData);
-  }
-
-  public long getImageDrawTimeMs() {
-    return mImageDrawTimeMs;
   }
 
   public void setDimensionsInfo(DimensionsInfo dimensionsInfo) {

@@ -219,9 +219,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     ImagePerfState state = mImagePerfState;
 
     state.setControllerId(id);
-    state.setImageDrawTimeMs(mClock.now());
     state.setDimensionsInfo(dimensionsInfo);
-    updateStatus(state, ImageLoadStatus.DRAW);
   }
 
   @VisibleForTesting

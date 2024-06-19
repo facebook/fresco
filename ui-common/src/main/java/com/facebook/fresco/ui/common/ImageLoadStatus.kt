@@ -13,7 +13,6 @@ enum class ImageLoadStatus(val value: Int) {
   INTERMEDIATE_AVAILABLE(2),
   SUCCESS(3),
   ERROR(5),
-  DRAW(6),
   EMPTY_EVENT(7),
   RELEASED(8);
 

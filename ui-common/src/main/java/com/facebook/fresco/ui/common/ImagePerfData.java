@@ -42,8 +42,6 @@ public class ImagePerfData {
   private final long mVisibilityEventTimeMs;
   private final long mInvisibilityEventTimeMs;
 
-  private final long mImageDrawTimeMs;
-
   private final @Nullable DimensionsInfo mDimensionsInfo;
 
   private @Nullable Extras mExtraData;
@@ -67,7 +65,6 @@ public class ImagePerfData {
       VisibilityState visibilityState,
       long visibilityEventTimeMs,
       long invisibilityEventTime,
-      long imageDrawTimeMs,
       @Nullable DimensionsInfo dimensionsInfo,
       @Nullable Extras extraData) {
     mControllerId = controllerId;
@@ -88,13 +85,8 @@ public class ImagePerfData {
     mVisibilityState = visibilityState;
     mVisibilityEventTimeMs = visibilityEventTimeMs;
     mInvisibilityEventTimeMs = invisibilityEventTime;
-    mImageDrawTimeMs = imageDrawTimeMs;
     mDimensionsInfo = dimensionsInfo;
     mExtraData = extraData;
-  }
-
-  public long getImageDrawTimeMs() {
-    return mImageDrawTimeMs;
   }
 
   @Nullable
@@ -219,7 +211,6 @@ public class ImagePerfData {
         .add("visibility state", mVisibilityState)
         .add("visibility event", mVisibilityEventTimeMs)
         .add("invisibility event", mInvisibilityEventTimeMs)
-        .add("image draw event", mImageDrawTimeMs)
         .add("dimensions info", mDimensionsInfo)
         .add("extra data", mExtraData)
         .toString();
