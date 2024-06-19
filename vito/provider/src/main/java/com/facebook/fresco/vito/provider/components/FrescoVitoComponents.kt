@@ -12,25 +12,23 @@ import com.facebook.fresco.vito.core.FrescoController2
 import com.facebook.fresco.vito.core.FrescoVitoConfig
 import com.facebook.fresco.vito.core.FrescoVitoPrefetcher
 import com.facebook.fresco.vito.core.VitoImagePipeline
+import com.facebook.fresco.vito.provider.setup.FrescoVitoSetup
 import java.lang.RuntimeException
 
-object FrescoVitoComponents {
+object FrescoVitoComponents : FrescoVitoSetup {
 
   private var _implementation: Implementation? = null
 
-  @JvmStatic
   @Synchronized
-  fun getController(): FrescoController2 = getImplementation().getController()
+  override fun getController(): FrescoController2 = getImplementation().getController()
 
-  @JvmStatic
   @Synchronized
-  fun getPrefetcher(): FrescoVitoPrefetcher = getImplementation().getPrefetcher()
+  override fun getPrefetcher(): FrescoVitoPrefetcher = getImplementation().getPrefetcher()
 
-  @JvmStatic
   @Synchronized
-  fun getImagePipeline(): VitoImagePipeline = getImplementation().getImagePipeline()
+  override fun getImagePipeline(): VitoImagePipeline = getImplementation().getImagePipeline()
 
-  @JvmStatic @Synchronized fun getConfig(): FrescoVitoConfig = getImplementation().getConfig()
+  @Synchronized override fun getConfig(): FrescoVitoConfig = getImplementation().getConfig()
 
   /**
    * Reset the implementation. This will remove any implementation currently set up and has to be
@@ -65,13 +63,5 @@ object FrescoVitoComponents {
     _implementation = implementation
   }
 
-  interface Implementation {
-    fun getController(): FrescoController2
-
-    fun getPrefetcher(): FrescoVitoPrefetcher
-
-    fun getImagePipeline(): VitoImagePipeline
-
-    fun getConfig(): FrescoVitoConfig
-  }
+  interface Implementation : FrescoVitoSetup
 }
