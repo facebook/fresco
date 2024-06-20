@@ -208,7 +208,7 @@ open class FrescoController2Impl(
       CloseableReference.closeSafely(cachedImage)
     }
 
-    if (!needsPlaceholderDrawable) {
+    if (needsPlaceholderDrawable) {
       // The image is not in cache -> Set up layers visible until the image is available
       frescoDrawable.setProgressDrawable(
           mHierarcher.buildProgressDrawable(imageRequest.resources, imageRequest.imageOptions))
