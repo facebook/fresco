@@ -15,6 +15,9 @@ object ImageReleaseScheduler {
   var releaseDelayMs: Long = 16 * 5 // Roughly 5 frames.
 
   var improveDelayedReleasing = false
+  var enableReleaseDelayed = true
+  var enableReleaseNextFrame = true
+  var enableReleaseImmediately = true
 
   class ImageReleaseState(val drawable: KFrescoVitoDrawable) :
       Runnable, DeferredReleaser.Releasable {
@@ -36,12 +39,15 @@ object ImageReleaseScheduler {
   private val deferredReleaser = DeferredReleaser.getInstance()
 
   fun releaseImmediately(drawable: KFrescoVitoDrawable) {
+    if (!enableReleaseImmediately) {
+      return
+    }
     drawable.imagePerfListener.onReleaseImmediately(drawable)
     drawable.reset()
   }
 
   fun releaseDelayed(drawable: KFrescoVitoDrawable) {
-    if (drawable.releaseState.delayedReleasePending) {
+    if (!enableReleaseDelayed || drawable.releaseState.delayedReleasePending) {
       return
     }
     drawable.imagePerfListener.onScheduleReleaseDelayed(drawable)
@@ -52,6 +58,9 @@ object ImageReleaseScheduler {
   }
 
   fun releaseNextFrame(drawable: KFrescoVitoDrawable) {
+    if (!enableReleaseNextFrame) {
+      return
+    }
     cancelReleaseDelayed(drawable)
     drawable.imagePerfListener.onScheduleReleaseNextFrame(drawable)
     deferredReleaser.scheduleDeferredRelease(drawable.releaseState)
