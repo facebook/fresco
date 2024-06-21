@@ -17,7 +17,7 @@ import java.lang.RuntimeException
 
 object FrescoVitoComponents : FrescoVitoSetup {
 
-  private var _implementation: Implementation? = null
+  private var _implementation: FrescoVitoSetup? = null
 
   @Synchronized
   override fun getController(): FrescoController2 = getImplementation().getController()
@@ -46,13 +46,13 @@ object FrescoVitoComponents : FrescoVitoSetup {
   // You can use #resetImplementation() if you must manually tear down Vito.
   @JvmStatic
   @Synchronized
-  fun getImplementation(): Implementation {
+  fun getImplementation(): FrescoVitoSetup {
     return _implementation ?: throw RuntimeException("Fresco context provider must be set")
   }
 
   @JvmStatic
   @Synchronized
-  fun setImplementation(implementation: Implementation) {
+  fun setImplementation(implementation: FrescoVitoSetup) {
     // We do not allow to re-initialize Vito directly.
     // You can use #resetImplementation() if you must manually tear down Vito.
     if (_implementation != null) {
@@ -62,6 +62,4 @@ object FrescoVitoComponents : FrescoVitoSetup {
     }
     _implementation = implementation
   }
-
-  interface Implementation : FrescoVitoSetup
 }

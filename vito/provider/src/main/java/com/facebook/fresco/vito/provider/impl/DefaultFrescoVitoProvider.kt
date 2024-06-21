@@ -26,7 +26,7 @@ import com.facebook.fresco.vito.drawable.ArrayVitoDrawableFactory
 import com.facebook.fresco.vito.drawable.BitmapDrawableFactory
 import com.facebook.fresco.vito.draweesupport.DrawableFactoryWrapper
 import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory
-import com.facebook.fresco.vito.provider.components.FrescoVitoComponents
+import com.facebook.fresco.vito.provider.setup.FrescoVitoSetup
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.core.ImagePipelineFactory
 import com.facebook.imagepipeline.image.ImageInfo
@@ -43,7 +43,7 @@ class DefaultFrescoVitoProvider(
     vitoImagePerfListener: VitoImagePerfListener,
     debugOverlayFactory: DebugOverlayFactory2 = NoOpDebugOverlayFactory2(),
     imagePerfListenerSupplier: Supplier<ControllerListener2<ImageInfo>>? = null,
-) : FrescoVitoComponents.Implementation {
+) : FrescoVitoSetup {
 
   private val frescoController: FrescoController2
 

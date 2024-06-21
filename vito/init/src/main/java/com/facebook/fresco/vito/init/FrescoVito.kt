@@ -26,6 +26,7 @@ import com.facebook.fresco.vito.nativecode.NativeCircularBitmapRounding
 import com.facebook.fresco.vito.provider.components.FrescoVitoComponents
 import com.facebook.fresco.vito.provider.impl.DefaultFrescoVitoProvider
 import com.facebook.fresco.vito.provider.impl.NoOpCallerContextVerifier
+import com.facebook.fresco.vito.provider.setup.FrescoVitoSetup
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.core.ImagePipelineFactory
 import com.facebook.imagepipeline.image.ImageInfo
@@ -94,7 +95,7 @@ class FrescoVito {
      * @param providerImplementation the provider implementation to be used
      */
     @Synchronized
-    fun initialize(providerImplementation: FrescoVitoComponents.Implementation) {
+    fun initialize(providerImplementation: FrescoVitoSetup) {
       if (isInitialized) {
         return
       }
