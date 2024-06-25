@@ -67,6 +67,8 @@ import com.facebook.imagepipeline.producers.ThumbnailBranchProducer;
 import com.facebook.imagepipeline.producers.ThumbnailProducer;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import com.facebook.infer.annotation.Nullsafe;
+import java.util.Map;
+import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class ProducerFactory {
@@ -114,6 +116,8 @@ public class ProducerFactory {
 
   protected final boolean mKeepCancelledFetchAsLowPriority;
 
+  protected final @Nullable Map<String, BufferedDiskCache> mDynamicBufferedDiskCaches;
+
   public ProducerFactory(
       Context context,
       ByteArrayPool byteArrayPool,
@@ -128,6 +132,7 @@ public class ProducerFactory {
       MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
+      @Nullable Map<String, BufferedDiskCache> dynamicBufferedDiskCaches,
       CacheKeyFactory cacheKeyFactory,
       PlatformBitmapFactory platformBitmapFactory,
       int bitmapPrepareToDrawMinSizeBytes,
@@ -155,6 +160,7 @@ public class ProducerFactory {
     mEncodedMemoryCache = encodedMemoryCache;
     mDefaultBufferedDiskCache = defaultBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
+    mDynamicBufferedDiskCaches = dynamicBufferedDiskCaches;
     mCacheKeyFactory = cacheKeyFactory;
     mPlatformBitmapFactory = platformBitmapFactory;
     mEncodedMemoryCacheHistory = new BoundedLinkedHashSet<>(trackedKeysSize);
@@ -185,6 +191,7 @@ public class ProducerFactory {
       MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
+      @Nullable Map<String, BufferedDiskCache> dynamicBufferedDiskCaches,
       CacheKeyFactory cacheKeyFactory,
       PlatformBitmapFactory platformBitmapFactory,
       int bitmapPrepareToDrawMinSizeBytes,
@@ -208,6 +215,7 @@ public class ProducerFactory {
         encodedMemoryCache,
         defaultBufferedDiskCache,
         smallImageBufferedDiskCache,
+        dynamicBufferedDiskCaches,
         cacheKeyFactory,
         platformBitmapFactory,
         bitmapPrepareToDrawMinSizeBytes,
@@ -266,12 +274,20 @@ public class ProducerFactory {
 
   public DiskCacheReadProducer newDiskCacheReadProducer(Producer<EncodedImage> inputProducer) {
     return new DiskCacheReadProducer(
-        mDefaultBufferedDiskCache, mSmallImageBufferedDiskCache, mCacheKeyFactory, inputProducer);
+        mDefaultBufferedDiskCache,
+        mSmallImageBufferedDiskCache,
+        mDynamicBufferedDiskCaches,
+        mCacheKeyFactory,
+        inputProducer);
   }
 
   public DiskCacheWriteProducer newDiskCacheWriteProducer(Producer<EncodedImage> inputProducer) {
     return new DiskCacheWriteProducer(
-        mDefaultBufferedDiskCache, mSmallImageBufferedDiskCache, mCacheKeyFactory, inputProducer);
+        mDefaultBufferedDiskCache,
+        mSmallImageBufferedDiskCache,
+        mDynamicBufferedDiskCaches,
+        mCacheKeyFactory,
+        inputProducer);
   }
 
   public PartialDiskCacheProducer newPartialDiskCacheProducer(

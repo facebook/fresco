@@ -68,7 +68,8 @@ import java.util.concurrent.atomic.AtomicReference
 @MountSpec(isPureRender = true, canPreallocate = true, poolSize = 15)
 object FrescoVitoImage2Spec {
 
-  @PropDefault const val imageAspectRatio: Float = 1f
+  private const val DEFAULT_IMAGE_ASPECT_RATIO = 1f
+  @PropDefault const val imageAspectRatio: Float = DEFAULT_IMAGE_ASPECT_RATIO
 
   @PropDefault val prefetch: Prefetch = Prefetch.AUTO
 
@@ -101,7 +102,15 @@ object FrescoVitoImage2Spec {
       size: Size,
       @Prop(optional = true, resType = ResType.FLOAT) imageAspectRatio: Float,
   ) {
-    MeasureUtils.measureWithAspectRatio(widthSpec, heightSpec, imageAspectRatio, size)
+    val resolvedAspectRatio: Float =
+        if (!(imageAspectRatio > 0f)) {
+          // If the image aspect ratio is not set correctly, we will use the default aspect ratio of
+          // 1.0f, we've seen bad inputs like 0.0f and NaN.
+          DEFAULT_IMAGE_ASPECT_RATIO
+        } else {
+          imageAspectRatio
+        }
+    MeasureUtils.measureWithAspectRatio(widthSpec, heightSpec, resolvedAspectRatio, size)
   }
 
   @JvmStatic

@@ -36,6 +36,7 @@ import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendAnima
 import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendFrameRenderer;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.fresco.animation.drawable.KAnimatedDrawable2;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
 import com.facebook.fresco.vito.options.RoundingOptions;
@@ -77,6 +78,7 @@ public class DefaultBitmapAnimationDrawableFactory
   private final Supplier<Boolean> mUseNewBitmapRender;
   private final Supplier<Boolean> mDownscaleFrameToDrawableDimensions;
   private final Supplier<Integer> mAnimationFpsLimit;
+  private final Supplier<Integer> mBufferLengthMilliseconds;
 
   // Change the value to true to use KAnimatedDrawable2.kt
   private final Supplier<Boolean> useRendererAnimatedDrawable = Suppliers.BOOLEAN_FALSE;
@@ -93,7 +95,8 @@ public class DefaultBitmapAnimationDrawableFactory
       Supplier<Boolean> useDeepEqualsForCacheKey,
       Supplier<Boolean> useNewBitmapRender,
       Supplier<Boolean> downscaleFrameToDrawableDimensions,
-      Supplier<Integer> animationFpsLimit) {
+      Supplier<Integer> animationFpsLimit,
+      Supplier<Integer> bufferLengthMilliseconds) {
     mAnimatedDrawableBackendProvider = animatedDrawableBackendProvider;
     mScheduledExecutorServiceForUiThread = scheduledExecutorServiceForUiThread;
     mExecutorServiceForFramePreparing = executorServiceForFramePreparing;
@@ -106,6 +109,7 @@ public class DefaultBitmapAnimationDrawableFactory
     mUseNewBitmapRender = useNewBitmapRender;
     mAnimationFpsLimit = animationFpsLimit;
     mDownscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions;
+    mBufferLengthMilliseconds = bufferLengthMilliseconds;
   }
 
   @Override
@@ -134,11 +138,21 @@ public class DefaultBitmapAnimationDrawableFactory
       Resources resources, CloseableImage closeableImage, ImageOptions imageOptions) {
     CloseableAnimatedImage closeable = ((CloseableAnimatedImage) closeableImage);
     AnimatedImage animatedImage = closeable.getImage();
-    AnimationBackend animationBackend =
-        createAnimationBackend(
-            Preconditions.checkNotNull(closeable.getImageResult()),
-            animatedImage != null ? animatedImage.getAnimatedBitmapConfig() : null,
-            imageOptions);
+    AnimationBackend animationBackend = null;
+    try {
+      animationBackend =
+          createAnimationBackend(
+              Preconditions.checkNotNull(closeable.getImageResult()),
+              animatedImage != null ? animatedImage.getAnimatedBitmapConfig() : null,
+              imageOptions);
+    } catch (NullPointerException e) {
+      Object uri = closeableImage.getExtra(HasExtraData.KEY_URI_SOURCE);
+      if (uri != null) {
+        throw new NullPointerException(e.getMessage() + " uri=" + uri.toString());
+      } else {
+        throw e;
+      }
+    }
     if (useRendererAnimatedDrawable.get()) {
       return new KAnimatedDrawable2(animationBackend);
     } else {
@@ -180,7 +194,10 @@ public class DefaultBitmapAnimationDrawableFactory
               animatedImageResult.getSource(),
               animationInfo,
               bitmapFrameRenderer,
-              new FrameLoaderFactory(mPlatformBitmapFactory, mAnimationFpsLimit.get()),
+              new FrameLoaderFactory(
+                  mPlatformBitmapFactory,
+                  mAnimationFpsLimit.get(),
+                  mBufferLengthMilliseconds.get()),
               mDownscaleFrameToDrawableDimensions.get());
     }
 

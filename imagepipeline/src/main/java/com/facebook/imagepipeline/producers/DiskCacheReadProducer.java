@@ -16,7 +16,6 @@ import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequest.CacheChoice;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
@@ -49,13 +48,17 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
   private final CacheKeyFactory mCacheKeyFactory;
   private final Producer<EncodedImage> mInputProducer;
 
+  private final @Nullable Map<String, BufferedDiskCache> mDynamicBufferedDiskCaches;
+
   public DiskCacheReadProducer(
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
+      @Nullable Map<String, BufferedDiskCache> dynamicBufferedDiskCaches,
       CacheKeyFactory cacheKeyFactory,
       Producer<EncodedImage> inputProducer) {
     mDefaultBufferedDiskCache = defaultBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
+    mDynamicBufferedDiskCaches = dynamicBufferedDiskCaches;
     mCacheKeyFactory = cacheKeyFactory;
     mInputProducer = inputProducer;
   }
@@ -76,9 +79,25 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
 
     final CacheKey cacheKey =
         mCacheKeyFactory.getEncodedCacheKey(imageRequest, producerContext.getCallerContext());
-    final boolean isSmallRequest = (imageRequest.getCacheChoice() == CacheChoice.SMALL);
     final BufferedDiskCache preferredCache =
-        isSmallRequest ? mSmallImageBufferedDiskCache : mDefaultBufferedDiskCache;
+        DiskCacheDecision.chooseDiskCacheForRequest(
+            imageRequest,
+            mSmallImageBufferedDiskCache,
+            mDefaultBufferedDiskCache,
+            mDynamicBufferedDiskCaches);
+    if (preferredCache == null) {
+      producerContext
+          .getProducerListener()
+          .onProducerFinishWithFailure(
+              producerContext,
+              PRODUCER_NAME,
+              new DiskCacheDecision.DiskCacheDecisionNoDiskCacheChosenException(
+                  "Got no disk cache for CacheChoice: "
+                      + Integer.valueOf(imageRequest.getCacheChoice().ordinal()).toString()),
+              null);
+      maybeStartInputProducer(consumer, producerContext);
+      return;
+    }
     final AtomicBoolean isCancelled = new AtomicBoolean(false);
     final Task<EncodedImage> diskLookupTask = preferredCache.get(cacheKey, isCancelled);
     final Continuation<EncodedImage, Void> continuation =

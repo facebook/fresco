@@ -11,9 +11,15 @@ import com.facebook.fresco.buildsrc.TestDeps
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
+kotlin {
+    jvmToolchain(11)
+}
+
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
+
+    namespace "com.facebook.fresco.vito.view"
 
     defaultConfig {
         minSdkVersion FrescoConfig.minSdkVersion

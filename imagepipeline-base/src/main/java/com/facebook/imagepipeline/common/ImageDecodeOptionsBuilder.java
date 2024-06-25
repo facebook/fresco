@@ -22,6 +22,8 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
   private int mMaxDimensionPx = Integer.MAX_VALUE;
   private boolean mDecodePreviewFrame;
   private boolean mUseLastFrameForPreview;
+
+  private boolean mUseEncodedImageForPreivew;
   private boolean mDecodeAllFrames;
   private boolean mForceStaticImage;
   private Bitmap.Config mBitmapConfig = Bitmap.Config.ARGB_8888;
@@ -135,6 +137,26 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
    */
   public T setUseLastFrameForPreview(boolean useLastFrameForPreview) {
     mUseLastFrameForPreview = useLastFrameForPreview;
+    return getThis();
+  }
+
+  /**
+   * Gets whether to use the encoded image for the preview image (defaults to the first frame).
+   *
+   * @return whether to use the encoded image for the preview image
+   */
+  public boolean getUseEncodedImageForPreview() {
+    return mUseEncodedImageForPreivew;
+  }
+
+  /**
+   * Sets whether to use the encoded image for the preview image (defaults to the first frame).
+   *
+   * @param useEncodedImageForPreview whether to use the encoded image for the preview image
+   * @return this builder
+   */
+  public T setUseEncodedImageForPreview(boolean useEncodedImageForPreview) {
+    mUseEncodedImageForPreivew = useEncodedImageForPreview;
     return getThis();
   }
 

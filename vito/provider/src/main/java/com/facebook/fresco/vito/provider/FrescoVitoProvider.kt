@@ -7,71 +7,29 @@
 
 package com.facebook.fresco.vito.provider
 
-import com.facebook.common.logging.FLog
 import com.facebook.fresco.vito.core.FrescoController2
 import com.facebook.fresco.vito.core.FrescoVitoConfig
 import com.facebook.fresco.vito.core.FrescoVitoPrefetcher
 import com.facebook.fresco.vito.core.VitoImagePipeline
-import java.lang.RuntimeException
+import com.facebook.fresco.vito.provider.components.FrescoVitoComponents
 
 object FrescoVitoProvider {
 
-  private var _implementation: Implementation? = null
+  @JvmStatic
+  @Synchronized
+  fun getController(): FrescoController2 = FrescoVitoComponents.getController()
 
   @JvmStatic
   @Synchronized
-  fun getController(): FrescoController2 = getImplementation().getController()
+  fun getPrefetcher(): FrescoVitoPrefetcher = FrescoVitoComponents.getPrefetcher()
 
   @JvmStatic
   @Synchronized
-  fun getPrefetcher(): FrescoVitoPrefetcher = getImplementation().getPrefetcher()
+  fun getImagePipeline(): VitoImagePipeline = FrescoVitoComponents.getImagePipeline()
+
+  @JvmStatic @Synchronized fun getConfig(): FrescoVitoConfig = FrescoVitoComponents.getConfig()
 
   @JvmStatic
   @Synchronized
-  fun getImagePipeline(): VitoImagePipeline = getImplementation().getImagePipeline()
-
-  @JvmStatic @Synchronized fun getConfig(): FrescoVitoConfig = getImplementation().getConfig()
-
-  /**
-   * Reset the implementation. This will remove any implementation currently set up and has to be
-   * used with caution.
-   */
-  @JvmStatic
-  @Synchronized
-  fun resetImplementation() {
-    _implementation = null
-  }
-
-  @JvmStatic @Synchronized fun hasBeenInitialized(): Boolean = _implementation != null
-
-  // We do not allow to re-initialize Vito directly.
-  // You can use #resetImplementation() if you must manually tear down Vito.
-  @JvmStatic
-  @Synchronized
-  fun getImplementation(): Implementation {
-    return _implementation ?: throw RuntimeException("Fresco context provider must be set")
-  }
-
-  @JvmStatic
-  @Synchronized
-  fun setImplementation(implementation: Implementation) {
-    // We do not allow to re-initialize Vito directly.
-    // You can use #resetImplementation() if you must manually tear down Vito.
-    if (_implementation != null) {
-      FLog.e(
-          "FrescoVitoProvider",
-          "Fresco Vito already initialized! Vito must be initialized only once.")
-    }
-    _implementation = implementation
-  }
-
-  interface Implementation {
-    fun getController(): FrescoController2
-
-    fun getPrefetcher(): FrescoVitoPrefetcher
-
-    fun getImagePipeline(): VitoImagePipeline
-
-    fun getConfig(): FrescoVitoConfig
-  }
+  fun hasBeenInitialized(): Boolean = FrescoVitoComponents.hasBeenInitialized()
 }

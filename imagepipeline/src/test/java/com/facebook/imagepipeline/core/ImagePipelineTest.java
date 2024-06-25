@@ -44,7 +44,9 @@ import com.facebook.imagepipeline.producers.ProducerContext;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -72,6 +74,8 @@ public class ImagePipelineTest {
   private MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
   private BufferedDiskCache mMainDiskStorageCache;
   private BufferedDiskCache mSmallImageDiskStorageCache;
+  private BufferedDiskCache mDynamicBufferedDiskCache;
+  private Map<String, BufferedDiskCache> mDynamicBufferedDiskCaches;
   private RequestListener mRequestListener1;
   private RequestListener mRequestListener2;
   private ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
@@ -91,6 +95,9 @@ public class ImagePipelineTest {
     mEncodedMemoryCache = mock(MemoryCache.class);
     mMainDiskStorageCache = mock(BufferedDiskCache.class);
     mSmallImageDiskStorageCache = mock(BufferedDiskCache.class);
+    mDynamicBufferedDiskCache = mock(BufferedDiskCache.class);
+    mDynamicBufferedDiskCaches = new HashMap<>();
+    mDynamicBufferedDiskCaches.put("dynamicId1", mDynamicBufferedDiskCache);
     mThreadHandoffProducerQueue = mock(ThreadHandoffProducerQueue.class);
     mImagePipeline =
         new ImagePipeline(
@@ -102,6 +109,7 @@ public class ImagePipelineTest {
             mEncodedMemoryCache,
             mMainDiskStorageCache,
             mSmallImageDiskStorageCache,
+            mDynamicBufferedDiskCaches,
             mCacheKeyFactory,
             mThreadHandoffProducerQueue,
             mSuppressBitmapPrefetchingSupplier,
@@ -468,6 +476,7 @@ public class ImagePipelineTest {
     mImagePipeline.evictFromDiskCache(uri);
     verify(mMainDiskStorageCache).remove(multiKey);
     verify(mSmallImageDiskStorageCache).remove(multiKey);
+    verify(mDynamicBufferedDiskCache).remove(multiKey);
   }
 
   @Test
@@ -526,6 +535,7 @@ public class ImagePipelineTest {
     mImagePipeline.clearDiskCaches();
     verify(mMainDiskStorageCache).clearAll();
     verify(mSmallImageDiskStorageCache).clearAll();
+    verify(mDynamicBufferedDiskCache).clearAll();
   }
 
   @Test
@@ -533,6 +543,7 @@ public class ImagePipelineTest {
     mImagePipeline.getUsedDiskCacheSize();
     verify(mMainDiskStorageCache).getSize();
     verify(mSmallImageDiskStorageCache).getSize();
+    verify(mDynamicBufferedDiskCache).getSize();
   }
 
   @Test

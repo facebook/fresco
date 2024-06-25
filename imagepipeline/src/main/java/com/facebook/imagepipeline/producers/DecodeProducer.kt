@@ -32,6 +32,7 @@ import com.facebook.imagepipeline.image.ImmutableQualityInfo
 import com.facebook.imagepipeline.image.QualityInfo
 import com.facebook.imagepipeline.producers.JobScheduler.JobRunnable
 import com.facebook.imagepipeline.request.ImageRequest
+import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
 import com.facebook.imagepipeline.transcoder.DownsampleUtil
 import com.facebook.imageutils.BitmapUtil
@@ -67,7 +68,8 @@ class DecodeProducer(
       traceSection("DecodeProducer#produceResults") {
         val imageRequest = context.imageRequest
         val progressiveDecoder =
-            if (!UriUtil.isNetworkUri(imageRequest.sourceUri)) {
+            if (!UriUtil.isNetworkUri(imageRequest.sourceUri) &&
+                !ImageRequestBuilder.isCustomNetworkUri(imageRequest.sourceUri)) {
               LocalImagesProgressiveDecoder(
                   consumer, context, this.decodeCancellationEnabled, this.maxBitmapSize)
             } else {
@@ -166,6 +168,15 @@ class DecodeProducer(
         return
       }
       if (isFinished || !EncodedImage.isValid(encodedImage)) {
+        return
+      }
+      if (encodedImage.imageFormat == DefaultImageFormats.GIF &&
+          isTooBig(encodedImage, imageDecodeOptions)) {
+        val e =
+            IllegalStateException(
+                "Image is too big to attempt decoding: w = ${encodedImage.width}, h = ${encodedImage.height}, pixel config = ${imageDecodeOptions.bitmapConfig}, max bitmap size = $MAX_BITMAP_SIZE")
+        producerListener.onProducerFinishWithFailure(producerContext, PRODUCER_NAME, e, null)
+        handleError(e)
         return
       }
       val imageFormat = encodedImage.imageFormat
@@ -519,5 +530,15 @@ class DecodeProducer(
     const val REQUESTED_IMAGE_SIZE = ProducerConstants.REQUESTED_IMAGE_SIZE
     const val SAMPLE_SIZE = ProducerConstants.SAMPLE_SIZE
     const val NON_FATAL_DECODE_ERROR = ProducerConstants.NON_FATAL_DECODE_ERROR
+
+    private fun isTooBig(
+        encodedImage: EncodedImage,
+        imageDecodeOptions: ImageDecodeOptions
+    ): Boolean {
+      val w: Long = encodedImage.width.toLong()
+      val h: Long = encodedImage.height.toLong()
+      val size = BitmapUtil.getPixelSizeForBitmapConfig(imageDecodeOptions.bitmapConfig)
+      return w * h * size > MAX_BITMAP_SIZE
+    }
   }
 }

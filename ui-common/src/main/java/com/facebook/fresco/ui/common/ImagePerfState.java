@@ -28,7 +28,6 @@ public class ImagePerfState {
   private long mControllerIntermediateImageSetTimeMs = UNSET;
   private long mControllerFinalImageSetTimeMs = UNSET;
   private long mControllerFailureTimeMs = UNSET;
-  private long mControllerCancelTimeMs = UNSET;
 
   // Image request timings
   private long mImageRequestStartTimeMs = UNSET;
@@ -51,7 +50,6 @@ public class ImagePerfState {
   private long mVisibilityEventTimeMs = UNSET;
   private long mInvisibilityEventTimeMs = UNSET;
   // Fetch efficiency
-  private long mImageDrawTimeMs = UNSET;
   private @Nullable DimensionsInfo mDimensionsInfo;
   // Pipeline and view extras
   private @Nullable Extras mExtraData;
@@ -88,12 +86,9 @@ public class ImagePerfState {
     mControllerSubmitTimeMs = UNSET;
     mControllerFinalImageSetTimeMs = UNSET;
     mControllerFailureTimeMs = UNSET;
-    mControllerCancelTimeMs = UNSET;
 
     mVisibilityEventTimeMs = UNSET;
     mInvisibilityEventTimeMs = UNSET;
-
-    mImageDrawTimeMs = UNSET;
   }
 
   public void setImageLoadStatus(ImageLoadStatus imageLoadStatus) {
@@ -136,10 +131,6 @@ public class ImagePerfState {
     mControllerFailureTimeMs = controllerFailureTimeMs;
   }
 
-  public void setControllerCancelTimeMs(long controllerCancelTimeMs) {
-    mControllerCancelTimeMs = controllerCancelTimeMs;
-  }
-
   public void setImageRequestStartTimeMs(long imageRequestStartTimeMs) {
     mImageRequestStartTimeMs = imageRequestStartTimeMs;
   }
@@ -180,10 +171,6 @@ public class ImagePerfState {
     mVisibilityState = visible ? VisibilityState.VISIBLE : VisibilityState.INVISIBLE;
   }
 
-  public void setImageDrawTimeMs(long imageDrawTimeMs) {
-    mImageDrawTimeMs = imageDrawTimeMs;
-  }
-
   public ImagePerfData snapshot() {
     return new ImagePerfData(
         mControllerId,
@@ -195,7 +182,6 @@ public class ImagePerfState {
         mControllerIntermediateImageSetTimeMs,
         mControllerFinalImageSetTimeMs,
         mControllerFailureTimeMs,
-        mControllerCancelTimeMs,
         mImageRequestStartTimeMs,
         mImageRequestEndTimeMs,
         mIsPrefetch,
@@ -205,13 +191,8 @@ public class ImagePerfState {
         mVisibilityState,
         mVisibilityEventTimeMs,
         mInvisibilityEventTimeMs,
-        mImageDrawTimeMs,
         mDimensionsInfo,
         mExtraData);
-  }
-
-  public long getImageDrawTimeMs() {
-    return mImageDrawTimeMs;
   }
 
   public void setDimensionsInfo(DimensionsInfo dimensionsInfo) {

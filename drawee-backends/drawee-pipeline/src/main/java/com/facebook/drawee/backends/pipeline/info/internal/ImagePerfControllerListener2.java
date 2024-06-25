@@ -207,14 +207,6 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     state.setExtraData(extras);
     state.setControllerId(id);
 
-    ImageLoadStatus lastImageLoadStatus = state.getImageLoadStatus();
-    if (lastImageLoadStatus != ImageLoadStatus.SUCCESS
-        && lastImageLoadStatus != ImageLoadStatus.ERROR
-        && lastImageLoadStatus != ImageLoadStatus.DRAW) {
-      state.setControllerCancelTimeMs(now);
-      // The image request was canceled
-      updateStatus(state, ImageLoadStatus.CANCELED);
-    }
     updateStatus(state, ImageLoadStatus.RELEASED);
 
     if (mReportVisibleOnSubmitAndRelease) {
@@ -227,9 +219,7 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
     ImagePerfState state = mImagePerfState;
 
     state.setControllerId(id);
-    state.setImageDrawTimeMs(mClock.now());
     state.setDimensionsInfo(dimensionsInfo);
-    updateStatus(state, ImageLoadStatus.DRAW);
   }
 
   @VisibleForTesting

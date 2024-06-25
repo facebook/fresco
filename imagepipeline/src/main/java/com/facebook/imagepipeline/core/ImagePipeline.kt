@@ -55,6 +55,7 @@ class ImagePipeline(
     encodedMemoryCache: MemoryCache<CacheKey, PooledByteBuffer>,
     mainBufferedDiskCache: BufferedDiskCache,
     smallImageBufferedDiskCache: BufferedDiskCache,
+    dynamicBufferedDiskCaches: Map<String, BufferedDiskCache>?,
     cacheKeyFactory: CacheKeyFactory,
     threadHandoffProducerQueue: ThreadHandoffProducerQueue,
     suppressBitmapPrefetchingSupplier: Supplier<Boolean>,
@@ -71,6 +72,7 @@ class ImagePipeline(
   private val encodedMemoryCache: MemoryCache<CacheKey, PooledByteBuffer>
   private val mainBufferedDiskCache: BufferedDiskCache
   private val smallImageBufferedDiskCache: BufferedDiskCache
+  private var dynamicBufferedDiskCaches: Map<String, BufferedDiskCache>?
 
   /** @return The CacheKeyFactory implementation used by ImagePipeline */
   val cacheKeyFactory: CacheKeyFactory
@@ -465,6 +467,7 @@ class ImagePipeline(
   ): DataSource<Void?> {
     return prefetchToDiskCache(imageRequest, callerContext, priority, null)
   }
+
   /**
    * Submits a request for prefetching to the disk cache.
    *
@@ -605,6 +608,7 @@ class ImagePipeline(
     val cacheKey = cacheKeyFactory.getEncodedCacheKey(imageRequest, null)
     mainBufferedDiskCache.remove(cacheKey)
     smallImageBufferedDiskCache.remove(cacheKey)
+    dynamicBufferedDiskCaches?.forEach { it.value.remove(cacheKey) }
   }
 
   /**
@@ -631,6 +635,7 @@ class ImagePipeline(
   fun clearDiskCaches() {
     mainBufferedDiskCache.clearAll()
     smallImageBufferedDiskCache.clearAll()
+    dynamicBufferedDiskCaches?.forEach { it.value.clearAll() }
   }
 
   val usedDiskCacheSize: Long
@@ -639,7 +644,10 @@ class ImagePipeline(
      *
      * @return size in Bytes
      */
-    get() = mainBufferedDiskCache.size + smallImageBufferedDiskCache.size
+    get() =
+        mainBufferedDiskCache.size +
+            smallImageBufferedDiskCache.size +
+            (dynamicBufferedDiskCaches?.values?.sumOf { it.size } ?: 0)
 
   /** Clear all the caches (memory and disk) */
   fun clearCaches() {
@@ -1024,6 +1032,7 @@ class ImagePipeline(
     this.encodedMemoryCache = encodedMemoryCache
     this.mainBufferedDiskCache = mainBufferedDiskCache
     this.smallImageBufferedDiskCache = smallImageBufferedDiskCache
+    this.dynamicBufferedDiskCaches = dynamicBufferedDiskCaches
     this.cacheKeyFactory = cacheKeyFactory
     this.threadHandoffProducerQueue = threadHandoffProducerQueue
     this.suppressBitmapPrefetchingSupplier = suppressBitmapPrefetchingSupplier

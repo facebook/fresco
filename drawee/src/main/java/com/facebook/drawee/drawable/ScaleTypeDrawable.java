@@ -219,6 +219,7 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
 
     // We need to do the scaling ourselves, so have the underlying drawable use its preferred size.
     underlyingDrawable.setBounds(0, 0, underlyingWidth, underlyingHeight);
+    mTempMatrix.reset();
     mScaleType.getTransform(
         mTempMatrix,
         bounds,

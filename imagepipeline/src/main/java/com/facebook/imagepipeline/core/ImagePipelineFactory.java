@@ -13,6 +13,7 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.cache.disk.FileCache;
 import com.facebook.common.internal.AndroidPredicates;
+import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
@@ -44,6 +45,8 @@ import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import com.facebook.imagepipeline.transcoder.MultiImageTranscoderFactory;
 import com.facebook.imagepipeline.transcoder.SimpleImageTranscoderFactory;
 import com.facebook.infer.annotation.Nullsafe;
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -140,6 +143,8 @@ public class ImagePipelineFactory {
   @Nullable private ProducerSequenceFactory mProducerSequenceFactory;
   @Nullable private BufferedDiskCache mSmallImageBufferedDiskCache;
   @Nullable private FileCache mSmallImageFileCache;
+  @Nullable private Map<String, FileCache> mDynamicFileCaches;
+  @Nullable private ImmutableMap<String, BufferedDiskCache> mDynamicBufferedDiskCaches;
 
   @Nullable private PlatformBitmapFactory mPlatformBitmapFactory;
   @Nullable private PlatformDecoder mPlatformDecoder;
@@ -175,6 +180,7 @@ public class ImagePipelineFactory {
               mConfig.getExperiments().getDownscaleFrameToDrawableDimensions(),
               mConfig.getExperiments().getUseBalancedAnimationStrategy(),
               mConfig.getExperiments().getAnimationRenderFpsLimit(),
+              mConfig.getExperiments().getAnimationStrategyBufferLengthMilliseconds(),
               mConfig.getExecutorServiceForAnimatedImages());
     }
     return mAnimatedFactory;
@@ -283,6 +289,42 @@ public class ImagePipelineFactory {
     return mMainBufferedDiskCache;
   }
 
+  private Map<String, FileCache> getDynamicFileCaches() {
+    if (mDynamicFileCaches == null) {
+      mDynamicFileCaches = new HashMap<>();
+      if (mConfig.getDynamicDiskCacheConfigMap() != null) {
+        for (Map.Entry<String, DiskCacheConfig> diskCacheConfigEntry :
+            mConfig.getDynamicDiskCacheConfigMap().entrySet()) {
+          mDynamicFileCaches.put(
+              diskCacheConfigEntry.getKey(),
+              mConfig.getFileCacheFactory().get(diskCacheConfigEntry.getValue()));
+        }
+      }
+    }
+
+    return mDynamicFileCaches;
+  }
+
+  private ImmutableMap<String, BufferedDiskCache> getDynamicBufferedDiskCaches() {
+    if (mDynamicBufferedDiskCaches == null) {
+      HashMap<String, BufferedDiskCache> bufferedDiskCaches = new HashMap<>();
+      for (Map.Entry<String, FileCache> fileCacheEntry : getDynamicFileCaches().entrySet()) {
+        bufferedDiskCaches.put(
+            fileCacheEntry.getKey(),
+            new BufferedDiskCache(
+                fileCacheEntry.getValue(),
+                mConfig.getPoolFactory().getPooledByteBufferFactory(mConfig.getMemoryChunkType()),
+                mConfig.getPoolFactory().getPooledByteStreams(),
+                mConfig.getExecutorSupplier().forLocalStorageRead(),
+                mConfig.getExecutorSupplier().forLocalStorageWrite(),
+                mConfig.getImageCacheStatsTracker()));
+      }
+      mDynamicBufferedDiskCaches = ImmutableMap.copyOf(bufferedDiskCaches);
+    }
+
+    return mDynamicBufferedDiskCaches;
+  }
+
   public FileCache getMainFileCache() {
     if (mMainFileCache == null) {
       DiskCacheConfig diskCacheConfig = mConfig.getMainDiskCacheConfig();
@@ -308,6 +350,7 @@ public class ImagePipelineFactory {
         getEncodedMemoryCache(),
         getMainBufferedDiskCache(),
         getSmallImageBufferedDiskCache(),
+        getDynamicBufferedDiskCaches(),
         mConfig.getCacheKeyFactory(),
         mThreadHandoffProducerQueue,
         mConfig.getExperiments().getSuppressBitmapPrefetchingSupplier(),
@@ -358,6 +401,7 @@ public class ImagePipelineFactory {
                   getEncodedMemoryCache(),
                   getMainBufferedDiskCache(),
                   getSmallImageBufferedDiskCache(),
+                  getDynamicBufferedDiskCaches(),
                   mConfig.getCacheKeyFactory(),
                   getPlatformBitmapFactory(),
                   mConfig.getExperiments().getBitmapPrepareToDrawMinSizeBytes(),

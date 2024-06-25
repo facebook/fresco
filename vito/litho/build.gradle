@@ -12,6 +12,10 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
+kotlin {
+    jvmToolchain(11)
+}
+
 dependencies {
     compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
@@ -46,6 +50,8 @@ dependencies {
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
+
+    namespace "com.facebook.fresco.vito.litho"
 
     defaultConfig {
         minSdkVersion FrescoConfig.vitoLithoMinSdkVersion

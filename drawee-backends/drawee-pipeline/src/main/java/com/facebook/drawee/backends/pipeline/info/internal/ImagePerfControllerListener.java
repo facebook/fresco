@@ -94,12 +94,9 @@ public class ImagePerfControllerListener extends BaseControllerListener<ImageInf
 
     ImageLoadStatus lastImageLoadStatus = mImagePerfState.getImageLoadStatus();
     if (lastImageLoadStatus != ImageLoadStatus.SUCCESS
-        && lastImageLoadStatus != ImageLoadStatus.ERROR
-        && lastImageLoadStatus != ImageLoadStatus.DRAW) {
-      mImagePerfState.setControllerCancelTimeMs(now);
+        && lastImageLoadStatus != ImageLoadStatus.ERROR) {
       mImagePerfState.setControllerId(id);
       // The image request was canceled
-      mImagePerfMonitor.notifyStatusUpdated(mImagePerfState, ImageLoadStatus.CANCELED);
     }
 
     reportViewInvisible(now);
@@ -107,9 +104,7 @@ public class ImagePerfControllerListener extends BaseControllerListener<ImageInf
 
   @Override
   public void onImageDrawn(String id, ImageInfo info, DimensionsInfo dimensionsInfo) {
-    mImagePerfState.setImageDrawTimeMs(mClock.now());
     mImagePerfState.setDimensionsInfo(dimensionsInfo);
-    mImagePerfMonitor.notifyStatusUpdated(mImagePerfState, ImageLoadStatus.DRAW);
   }
 
   @VisibleForTesting

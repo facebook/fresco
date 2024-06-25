@@ -42,6 +42,8 @@ android {
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
 
+    namespace "com.facebook.webpsupport"
+
     defaultConfig {
         minSdkVersion FrescoConfig.minSdkVersion
         targetSdkVersion FrescoConfig.targetSdkVersion

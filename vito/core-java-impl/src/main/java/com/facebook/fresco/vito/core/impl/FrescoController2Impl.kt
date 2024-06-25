@@ -4,6 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.fresco.vito.core.impl
 
 import android.graphics.Bitmap
@@ -49,24 +50,24 @@ import com.facebook.imagepipeline.image.ImmutableQualityInfo
 import java.util.concurrent.Executor
 
 open class FrescoController2Impl(
-    private val mConfig: FrescoVitoConfig,
-    private val mHierarcher: Hierarcher,
-    private val mLightweightBackgroundThreadExecutor: Executor,
-    private val mUiThreadExecutor: Executor,
-    private val mImagePipeline: VitoImagePipeline,
-    private val mGlobalImageListener: VitoImageRequestListener?,
-    private val mDebugOverlayFactory: DebugOverlayFactory2,
-    private val mImagePerfListenerSupplier: Supplier<ControllerListener2<ImageInfo>>?,
-    private val mVitoImagePerfListener: VitoImagePerfListener
+    private val config: FrescoVitoConfig,
+    private val hierarcher: Hierarcher,
+    private val lightweightBackgroundThreadExecutor: Executor,
+    private val uiThreadExecutor: Executor,
+    private val imagePipeline: VitoImagePipeline,
+    private val globalImageListener: VitoImageRequestListener?,
+    private val debugOverlayFactory: DebugOverlayFactory2,
+    private val imagePerfListenerSupplier: Supplier<ControllerListener2<ImageInfo>>?,
+    private val vitoImagePerfListener: VitoImagePerfListener
 ) : DrawableDataSubscriber, FrescoController2 {
   override fun <T : Drawable> createDrawable(): T where T : FrescoDrawableInterface {
     return FrescoDrawable2Impl(
-        mConfig.useNewReleaseCallback(), mImagePerfListenerSupplier?.get(), mVitoImagePerfListener)
+        config.useNewReleaseCallback(), imagePerfListenerSupplier?.get(), vitoImagePerfListener)
         as T
   }
 
   override fun fetch(
-      drawable: FrescoDrawableInterface,
+      frescoDrawable: FrescoDrawableInterface,
       imageRequest: VitoImageRequest,
       callerContext: Any?,
       contextChain: ContextChain?,
@@ -76,14 +77,12 @@ open class FrescoController2Impl(
       viewportDimensions: Rect?,
       vitoImageRequestListener: VitoImageRequestListener?
   ): Boolean {
-    if (drawable !is FrescoDrawable2Impl) {
-      FLog.e(TAG, "Drawable not supported $drawable")
+    if (frescoDrawable !is FrescoDrawable2Impl) {
+      FLog.e(TAG, "Drawable not supported $frescoDrawable")
       return false
     }
-    val frescoDrawable = drawable
-
     // Fast path for null-URIs
-    if (mConfig.fastPathForEmptyRequests() && imageRequest.imageSource is EmptyImageSource) {
+    if (config.fastPathForEmptyRequests() && imageRequest.imageSource is EmptyImageSource) {
       emptyRequestFastPath(frescoDrawable, imageRequest, callerContext)
       return true
     }
@@ -107,7 +106,7 @@ open class FrescoController2Impl(
     frescoDrawable.imageRequest = imageRequest
     frescoDrawable.callerContext = callerContext
     frescoDrawable.imageListener = listener
-    frescoDrawable.setVitoImageRequestListener(mGlobalImageListener)
+    frescoDrawable.setVitoImageRequestListener(globalImageListener)
     frescoDrawable.setLocalVitoImageRequestListener(vitoImageRequestListener)
 
     // Setup local perf data listener
@@ -121,7 +120,7 @@ open class FrescoController2Impl(
 
     // Set layers that are always visible
     frescoDrawable.setOverlayDrawable(
-        mHierarcher.buildOverlayDrawable(imageRequest.resources, imageRequest.imageOptions))
+        hierarcher.buildOverlayDrawable(imageRequest.resources, imageRequest.imageOptions))
 
     // We're fetching a new image, so we're updating the ID
     val imageId = generateIdentifier()
@@ -144,7 +143,7 @@ open class FrescoController2Impl(
         // Immediately display the actual image.
         setActualImage(frescoDrawable, imageRequest, bitmapRef, true, null)
         frescoDrawable.setFetchSubmitted(true)
-        mDebugOverlayFactory.update(frescoDrawable, extras)
+        debugOverlayFactory.update(frescoDrawable, extras)
         true
       } finally {
         CloseableReference.closeSafely(bitmapRef)
@@ -152,10 +151,10 @@ open class FrescoController2Impl(
     } else if (imageRequest.imageSource is DrawableImageSource) {
       val actualImageDrawable = (imageRequest.imageSource as DrawableImageSource).drawable
       val actualImageWrapperDrawable = frescoDrawable.actualImageWrapper
-      mHierarcher.setupActualImageWrapper(
-          actualImageWrapperDrawable, imageRequest.imageOptions, drawable.callerContext)
+      hierarcher.setupActualImageWrapper(
+          actualImageWrapperDrawable, imageRequest.imageOptions, frescoDrawable.callerContext)
       val actualDrawable =
-          mHierarcher.applyRoundingOptions(
+          hierarcher.applyRoundingOptions(
               imageRequest.resources, actualImageDrawable, imageRequest.imageOptions)
       actualImageWrapperDrawable.setCurrent(actualDrawable)
       frescoDrawable.setImage(actualImageWrapperDrawable, null)
@@ -167,7 +166,7 @@ open class FrescoController2Impl(
       }
       val imageInfoExtras: Map<String, Any> = extras.imageExtras ?: HashMap()
       frescoDrawable.internalListener.onFinalImageSet(
-          drawable.imageId,
+          frescoDrawable.imageId,
           imageRequest,
           ImageOrigin.LOCAL,
           ImageInfoImpl(
@@ -178,33 +177,44 @@ open class FrescoController2Impl(
               imageInfoExtras),
           extras,
           actualDrawable)
-      drawable.imagePerfListener.onImageSuccess(drawable, true)
-      mDebugOverlayFactory.update(frescoDrawable, extras)
+      frescoDrawable.imagePerfListener.onImageSuccess(frescoDrawable, true)
+      debugOverlayFactory.update(frescoDrawable, extras)
       return true
     }
 
     // Check if the image is in cache
-    val cachedImage = mImagePipeline.getCachedImage(imageRequest)
+    val cachedImage = imagePipeline.getCachedImage(imageRequest)
+    var needsPlaceholderDrawable = true
     try {
       if (CloseableReference.isValid(cachedImage)) {
         frescoDrawable.imageOrigin = ImageOrigin.MEMORY_BITMAP_SHORTCUT
+        val isIntermediateImage =
+            config.useIntermediateImagesAsPlaceholder() &&
+                cachedImage?.get()?.qualityInfo?.isOfFullQuality != true
         // Immediately display the actual image.
-        setActualImage(frescoDrawable, imageRequest, cachedImage, true, null)
+        setActualImage(frescoDrawable, imageRequest, cachedImage, true, null, isIntermediateImage)
         frescoDrawable.setFetchSubmitted(true)
-        mDebugOverlayFactory.update(frescoDrawable, extras)
-        return true
+        debugOverlayFactory.update(frescoDrawable, extras)
+        if (!isIntermediateImage) {
+          return true
+        } else {
+          // We are displaying an intermediate image and can skip setting up the placeholder
+          needsPlaceholderDrawable = false
+        }
       }
     } finally {
       CloseableReference.closeSafely(cachedImage)
     }
 
-    // The image is not in cache -> Set up layers visible until the image is available
-    frescoDrawable.setProgressDrawable(
-        mHierarcher.buildProgressDrawable(imageRequest.resources, imageRequest.imageOptions))
-    // Immediately show the progress image and set progress to 0
-    frescoDrawable.setProgress(0f)
-    frescoDrawable.showProgressImmediately()
-    setUpPlaceholder(frescoDrawable, imageRequest, imageId)
+    if (needsPlaceholderDrawable) {
+      // The image is not in cache -> Set up layers visible until the image is available
+      frescoDrawable.setProgressDrawable(
+          hierarcher.buildProgressDrawable(imageRequest.resources, imageRequest.imageOptions))
+      // Immediately show the progress image and set progress to 0
+      frescoDrawable.setProgress(0f)
+      frescoDrawable.showProgressImmediately()
+      setUpPlaceholder(frescoDrawable, imageRequest, imageId)
+    }
 
     // Fetch the image
     val fetchRunnable = Runnable {
@@ -212,18 +222,18 @@ open class FrescoController2Impl(
         return@Runnable // We're trying to load a different image -> ignore
       }
       val dataSource =
-          mImagePipeline.fetchDecodedImage(
+          imagePipeline.fetchDecodedImage(
               imageRequest, callerContext, frescoDrawable.imageOriginListener, imageId)
       frescoDrawable.setDataSource(imageId, dataSource)
-      dataSource.subscribe(frescoDrawable, mUiThreadExecutor)
+      dataSource.subscribe(frescoDrawable, uiThreadExecutor)
     }
-    if (mConfig.submitFetchOnBgThread()) {
-      mLightweightBackgroundThreadExecutor.execute(fetchRunnable)
+    if (config.submitFetchOnBgThread()) {
+      lightweightBackgroundThreadExecutor.execute(fetchRunnable)
     } else {
       fetchRunnable.run()
     }
     frescoDrawable.setFetchSubmitted(true)
-    mDebugOverlayFactory.update(frescoDrawable, null)
+    debugOverlayFactory.update(frescoDrawable, null)
     return false
   }
 
@@ -233,10 +243,10 @@ open class FrescoController2Impl(
       callerContext: Any?
   ) {
     frescoDrawable.close()
-    frescoDrawable.setVitoImageRequestListener(mGlobalImageListener)
+    frescoDrawable.setVitoImageRequestListener(globalImageListener)
     frescoDrawable.internalListener.onEmptyEvent(callerContext)
     frescoDrawable.setOverlayDrawable(
-        mHierarcher.buildOverlayDrawable(imageRequest.resources, imageRequest.imageOptions))
+        hierarcher.buildOverlayDrawable(imageRequest.resources, imageRequest.imageOptions))
     setUpPlaceholder(frescoDrawable, imageRequest, EMPTY_IMAGE_ID)
   }
 
@@ -246,38 +256,35 @@ open class FrescoController2Impl(
       imageId: Long
   ) {
     val placeholder =
-        mHierarcher.buildPlaceholderDrawable(imageRequest.resources, imageRequest.imageOptions)
+        hierarcher.buildPlaceholderDrawable(imageRequest.resources, imageRequest.imageOptions)
     frescoDrawable.setPlaceholderDrawable(placeholder)
     frescoDrawable.setImageDrawable(null)
     frescoDrawable.internalListener.onPlaceholderSet(imageId, imageRequest, placeholder)
   }
 
-  override fun releaseDelayed(drawable: FrescoDrawableInterface) {
-    if (drawable !is FrescoDrawable2Impl) {
-      FLog.e(TAG, "Drawable not supported $drawable")
+  override fun releaseDelayed(frescoDrawable: FrescoDrawableInterface) {
+    if (frescoDrawable !is FrescoDrawable2Impl) {
+      FLog.e(TAG, "Drawable not supported $frescoDrawable")
       return
     }
-    val frescoDrawable = drawable
     frescoDrawable.imagePerfListener.onScheduleReleaseDelayed(frescoDrawable)
     frescoDrawable.scheduleReleaseDelayed()
   }
 
-  override fun release(drawable: FrescoDrawableInterface) {
-    if (drawable !is FrescoDrawable2Impl) {
-      FLog.e(TAG, "Drawable not supported $drawable")
+  override fun release(frescoDrawable: FrescoDrawableInterface) {
+    if (frescoDrawable !is FrescoDrawable2Impl) {
+      FLog.e(TAG, "Drawable not supported $frescoDrawable")
       return
     }
-    val frescoDrawable = drawable
     frescoDrawable.imagePerfListener.onScheduleReleaseNextFrame(frescoDrawable)
     frescoDrawable.scheduleReleaseNextFrame()
   }
 
-  override fun releaseImmediately(drawable: FrescoDrawableInterface) {
-    if (drawable !is FrescoDrawable2Impl) {
-      FLog.e(TAG, "Drawable not supported $drawable")
+  override fun releaseImmediately(frescoDrawable: FrescoDrawableInterface) {
+    if (frescoDrawable !is FrescoDrawable2Impl) {
+      FLog.e(TAG, "Drawable not supported $frescoDrawable")
       return
     }
-    val frescoDrawable = drawable
     frescoDrawable.imagePerfListener.onReleaseImmediately(frescoDrawable)
     frescoDrawable.releaseImmediately()
   }
@@ -286,18 +293,19 @@ open class FrescoController2Impl(
       drawable: FrescoDrawable2Impl,
       imageRequest: VitoImageRequest,
       image: CloseableReference<CloseableImage>?,
-      isImmediate: Boolean,
-      dataSource: DataSource<CloseableReference<CloseableImage>>?
+      displayImmediately: Boolean,
+      dataSource: DataSource<CloseableReference<CloseableImage>>?,
+      isIntermediateImage: Boolean = false,
   ) {
     val actualImageWrapperDrawable = drawable.actualImageWrapper
-    mHierarcher.setupActualImageWrapper(
+    hierarcher.setupActualImageWrapper(
         actualImageWrapperDrawable, imageRequest.imageOptions, drawable.callerContext)
     val actualDrawable =
-        mHierarcher.buildActualImageDrawable(
+        hierarcher.buildActualImageDrawable(
             imageRequest.resources, imageRequest.imageOptions, image!!)
     actualImageWrapperDrawable.setCurrent(actualDrawable ?: NopDrawable)
     drawable.setImage(actualImageWrapperDrawable, image)
-    if (isImmediate || imageRequest.imageOptions.fadeDurationMs <= 0) {
+    if (displayImmediately || imageRequest.imageOptions.fadeDurationMs <= 0) {
       drawable.showImageImmediately()
     } else {
       drawable.fadeInImage(imageRequest.imageOptions.fadeDurationMs)
@@ -307,19 +315,19 @@ open class FrescoController2Impl(
     }
     val extras = obtainExtras(dataSource, image, drawable)
     val imageInfo = image.get().imageInfo
-    if (notifyFinalResult(dataSource)) {
+    if (!isIntermediateImage && notifyFinalResult(dataSource)) {
       drawable.internalListener.onFinalImageSet(
           drawable.imageId, imageRequest, drawable.imageOrigin, imageInfo, extras, actualDrawable)
     } else {
       drawable.internalListener.onIntermediateImageSet(drawable.imageId, imageRequest, imageInfo)
     }
-    drawable.imagePerfListener.onImageSuccess(drawable, isImmediate)
+    drawable.imagePerfListener.onImageSuccess(drawable, displayImmediately)
     var progress = 1f
     if (dataSource != null && !dataSource.isFinished) {
       progress = dataSource.progress
     }
     drawable.setProgress(progress)
-    mDebugOverlayFactory.update(drawable, extras)
+    debugOverlayFactory.update(drawable, extras)
   }
 
   override fun onNewResult(
@@ -348,7 +356,7 @@ open class FrescoController2Impl(
       dataSource: DataSource<CloseableReference<CloseableImage>>
   ) {
     val errorDrawable =
-        mHierarcher.buildErrorDrawable(imageRequest.resources, imageRequest.imageOptions)
+        hierarcher.buildErrorDrawable(imageRequest.resources, imageRequest.imageOptions)
     drawable.setProgress(1f)
     drawable.setImageDrawable(errorDrawable)
     if (!drawable.isDefaultLayerIsOn) {
@@ -370,7 +378,7 @@ open class FrescoController2Impl(
           drawable.imageId, imageRequest, dataSource.failureCause)
     }
     drawable.imagePerfListener.onImageError(drawable)
-    mDebugOverlayFactory.update(drawable, extras)
+    debugOverlayFactory.update(drawable, extras)
   }
 
   override fun onProgressUpdate(
@@ -378,10 +386,8 @@ open class FrescoController2Impl(
       imageRequest: VitoImageRequest,
       dataSource: DataSource<CloseableReference<CloseableImage>>
   ) {
-    val isFinished = dataSource.isFinished
-    val progress = dataSource.progress
-    if (!isFinished) {
-      drawable.setProgress(progress)
+    if (!dataSource.isFinished) {
+      drawable.setProgress(dataSource.progress)
     }
   }
 
@@ -391,9 +397,9 @@ open class FrescoController2Impl(
       // Notify listeners
       drawable.internalListener.onRelease(
           drawable.imageId, imageRequest, obtainExtras(null, null, drawable))
-      if (mConfig.stopAnimationInOnRelease()) {
+      if (config.stopAnimationInOnRelease()) {
         // We automatically stop the animation if it was automatically started
-        if (!mConfig.onlyStopAnimationWhenAutoPlayEnabled() ||
+        if (!config.onlyStopAnimationWhenAutoPlayEnabled() ||
             imageRequest.imageOptions.shouldAutoPlay()) {
           (drawable.actualImageDrawable as? Animatable)?.stop()
         }
@@ -409,7 +415,7 @@ open class FrescoController2Impl(
     if (drawable.drawableDataSubscriber !== this || !drawable.isFetchSubmitted) {
       return false
     }
-    return if (mConfig.useSmartPropertyDiffing()) {
+    return if (config.useSmartPropertyDiffing()) {
       imageRequest.equalsIfHasImage(drawable.imageRequest, drawable.hasImage())
     } else {
       imageRequest.equals(drawable.imageRequest)
@@ -460,8 +466,6 @@ open class FrescoController2Impl(
 
     private fun notifyFinalResult(
         dataSource: DataSource<CloseableReference<CloseableImage>>?
-    ): Boolean {
-      return dataSource == null || dataSource.isFinished || dataSource.hasMultipleResults()
-    }
+    ): Boolean = dataSource == null || dataSource.isFinished || dataSource.hasMultipleResults()
   }
 }

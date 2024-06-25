@@ -44,6 +44,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val useDownsamplingRatioForResizing: Boolean
   val useBitmapPrepareToDraw: Boolean
   val useBalancedAnimationStrategy: Boolean
+  val animationStrategyBufferLengthMilliseconds: Int
   val bitmapPrepareToDrawMinSizeBytes: Int
   val bitmapPrepareToDrawMaxSizeBytes: Int
   val bitmapPrepareToDrawForPrefetch: Boolean
@@ -84,6 +85,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var useDownsamplingRatioForResizing = false
     @JvmField var useBitmapPrepareToDraw = false
     @JvmField var useBalancedAnimationStrategy = false
+    @JvmField var animationStrategyBufferLengthMilliseconds = 1000
     @JvmField var bitmapPrepareToDrawMinSizeBytes = 0
     @JvmField var bitmapPrepareToDrawMaxSizeBytes = 0
 
@@ -218,6 +220,13 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
       this.useBalancedAnimationStrategy = useBalancedAnimationStrategy
     }
 
+    /** The balanced animation strategy buffer length for single animation */
+    fun setAnimationStrategyBufferLengthMilliseconds(
+        animationStrategyBufferLengthMilliseconds: Int
+    ) = asBuilder {
+      this.animationStrategyBufferLengthMilliseconds = animationStrategyBufferLengthMilliseconds
+    }
+
     /**
      * Sets the maximum bitmap size use to compute the downsampling value when decoding Jpeg images.
      */
@@ -333,6 +342,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
         encodedMemoryCache: MemoryCache<CacheKey?, PooledByteBuffer?>,
         defaultBufferedDiskCache: BufferedDiskCache,
         smallImageBufferedDiskCache: BufferedDiskCache,
+        dynamicBufferedDiskCaches: Map<String, BufferedDiskCache>?,
         cacheKeyFactory: CacheKeyFactory,
         platformBitmapFactory: PlatformBitmapFactory,
         bitmapPrepareToDrawMinSizeBytes: Int,
@@ -361,6 +371,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
         encodedMemoryCache: MemoryCache<CacheKey?, PooledByteBuffer?>,
         defaultBufferedDiskCache: BufferedDiskCache,
         smallImageBufferedDiskCache: BufferedDiskCache,
+        dynamicBufferedDiskCaches: Map<String, BufferedDiskCache>?,
         cacheKeyFactory: CacheKeyFactory,
         platformBitmapFactory: PlatformBitmapFactory,
         bitmapPrepareToDrawMinSizeBytes: Int,
@@ -385,6 +396,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
             encodedMemoryCache!!,
             defaultBufferedDiskCache!!,
             smallImageBufferedDiskCache!!,
+            dynamicBufferedDiskCaches,
             cacheKeyFactory!!,
             platformBitmapFactory!!,
             bitmapPrepareToDrawMinSizeBytes,
@@ -404,6 +416,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     useDownsamplingRatioForResizing = builder.useDownsamplingRatioForResizing
     useBitmapPrepareToDraw = builder.useBitmapPrepareToDraw
     useBalancedAnimationStrategy = builder.useBalancedAnimationStrategy
+    animationStrategyBufferLengthMilliseconds = builder.animationStrategyBufferLengthMilliseconds
     bitmapPrepareToDrawMinSizeBytes = builder.bitmapPrepareToDrawMinSizeBytes
     bitmapPrepareToDrawMaxSizeBytes = builder.bitmapPrepareToDrawMaxSizeBytes
     bitmapPrepareToDrawForPrefetch = builder.bitmapPrepareToDrawForPrefetch
