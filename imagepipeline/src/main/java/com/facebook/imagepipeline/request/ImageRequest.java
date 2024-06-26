@@ -193,11 +193,11 @@ public class ImageRequest {
   }
 
   public int getPreferredWidth() {
-    return (mResizeOptions != null) ? mResizeOptions.width : (int) BitmapUtil.MAX_BITMAP_SIZE;
+    return (mResizeOptions != null) ? mResizeOptions.width : (int) BitmapUtil.MAX_BITMAP_DIMENSION;
   }
 
   public int getPreferredHeight() {
-    return (mResizeOptions != null) ? mResizeOptions.height : (int) BitmapUtil.MAX_BITMAP_SIZE;
+    return (mResizeOptions != null) ? mResizeOptions.height : (int) BitmapUtil.MAX_BITMAP_DIMENSION;
   }
 
   public @Nullable ResizeOptions getResizeOptions() {

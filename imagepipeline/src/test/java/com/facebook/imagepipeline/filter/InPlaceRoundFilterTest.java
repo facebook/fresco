@@ -20,11 +20,12 @@ import org.robolectric.annotation.Config;
 @Config(manifest = Config.NONE)
 public class InPlaceRoundFilterTest {
 
-  private final int BITMAP_SIZE = (int) BitmapUtil.MAX_BITMAP_SIZE;
+  private final int BITMAP_DIMENSION = (int) BitmapUtil.MAX_BITMAP_DIMENSION;
 
   @Test
   public void whenMaximumSizeBitmap_thenRoundingReturnsWithoutError() {
-    Bitmap bitmap = Bitmap.createBitmap(BITMAP_SIZE, BITMAP_SIZE, Bitmap.Config.ARGB_8888);
+    Bitmap bitmap =
+        Bitmap.createBitmap(BITMAP_DIMENSION, BITMAP_DIMENSION, Bitmap.Config.ARGB_8888);
     assertNotNull(bitmap);
     InPlaceRoundFilter.roundBitmapInPlace(bitmap);
     bitmap.recycle();
@@ -51,7 +52,8 @@ public class InPlaceRoundFilterTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void whenTooBigBitmap_thenRoundingReturnsWithError() {
-    Bitmap bitmap = Bitmap.createBitmap(BITMAP_SIZE + 1, BITMAP_SIZE + 1, Bitmap.Config.ARGB_8888);
+    Bitmap bitmap =
+        Bitmap.createBitmap(BITMAP_DIMENSION + 1, BITMAP_DIMENSION + 1, Bitmap.Config.ARGB_8888);
     InPlaceRoundFilter.roundBitmapInPlace(bitmap);
     bitmap.recycle();
   }

@@ -407,7 +407,7 @@ public class ImagePipelineFactory {
                   mConfig.getExperiments().getBitmapPrepareToDrawMinSizeBytes(),
                   mConfig.getExperiments().getBitmapPrepareToDrawMaxSizeBytes(),
                   mConfig.getExperiments().getBitmapPrepareToDrawForPrefetch(),
-                  mConfig.getExperiments().getMaxBitmapSize(),
+                  mConfig.getExperiments().getMaxBitmapDimension(),
                   getCloseableReferenceFactory(),
                   mConfig.getExperiments().getKeepCancelledFetchAsLowPriority(),
                   mConfig.getExperiments().getTrackedKeysSize());
@@ -483,11 +483,11 @@ public class ImagePipelineFactory {
           && mConfig.getImageTranscoderType() == null
           && mConfig.getExperiments().isNativeCodeDisabled()) {
         mImageTranscoderFactory =
-            new SimpleImageTranscoderFactory(mConfig.getExperiments().getMaxBitmapSize());
+            new SimpleImageTranscoderFactory(mConfig.getExperiments().getMaxBitmapDimension());
       } else {
         mImageTranscoderFactory =
             new MultiImageTranscoderFactory(
-                mConfig.getExperiments().getMaxBitmapSize(),
+                mConfig.getExperiments().getMaxBitmapDimension(),
                 mConfig.getExperiments().getUseDownsamplingRatioForResizing(),
                 mConfig.getImageTranscoderFactory(),
                 mConfig.getImageTranscoderType(),

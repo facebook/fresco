@@ -27,8 +27,8 @@ object DownsampleUtil {
    * @param rotationOptions the rotations options of the request
    * @param resizeOptions the resize options of the request
    * @param encodedImage the encoded image with the actual dimensions
-   * @param maxBitmapSize the maximum supported bitmap size (in pixels) when not specified in the
-   *   encoded image resizeOptions.
+   * @param maxBitmapDimension the maximum supported bitmap dimension (in pixels) when not specified
+   *   in the encoded image resizeOptions.
    * @return
    */
   @JvmStatic
@@ -36,7 +36,7 @@ object DownsampleUtil {
       rotationOptions: RotationOptions,
       resizeOptions: ResizeOptions?,
       encodedImage: EncodedImage,
-      maxBitmapSize: Int
+      maxBitmapDimension: Int
   ): Int {
     if (!EncodedImage.isMetaDataAvailable(encodedImage)) {
       return DEFAULT_SAMPLE_SIZE
@@ -52,7 +52,7 @@ object DownsampleUtil {
     // Check the case when the dimension of the downsampled image is still larger than the max
     // possible dimension for an image.
     val maxDimension = Math.max(encodedImage.height, encodedImage.width)
-    val computedMaxBitmapSize = resizeOptions?.maxBitmapSize ?: maxBitmapSize.toFloat()
+    val computedMaxBitmapSize = resizeOptions?.maxBitmapDimension ?: maxBitmapDimension.toFloat()
     while (maxDimension / sampleSize > computedMaxBitmapSize) {
       if (encodedImage.imageFormat === DefaultImageFormats.JPEG) {
         sampleSize *= 2

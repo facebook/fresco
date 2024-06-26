@@ -55,7 +55,7 @@ class DecodeProducer(
     val downsampleEnabledForNetwork: Boolean,
     val decodeCancellationEnabled: Boolean,
     val inputProducer: Producer<EncodedImage?>,
-    val maxBitmapSize: Int,
+    val maxBitmapDimension: Int,
     val closeableReferenceFactory: CloseableReferenceFactory,
     val reclaimMemoryRunnable: Runnable?,
     val recoverFromDecoderOOM: Supplier<Boolean>
@@ -71,7 +71,7 @@ class DecodeProducer(
             if (!UriUtil.isNetworkUri(imageRequest.sourceUri) &&
                 !ImageRequestBuilder.isCustomNetworkUri(imageRequest.sourceUri)) {
               LocalImagesProgressiveDecoder(
-                  consumer, context, this.decodeCancellationEnabled, this.maxBitmapSize)
+                  consumer, context, this.decodeCancellationEnabled, this.maxBitmapDimension)
             } else {
               val jpegParser = ProgressiveJpegParser(this.byteArrayPool)
               NetworkImagesProgressiveDecoder(
@@ -80,7 +80,7 @@ class DecodeProducer(
                   jpegParser,
                   this.progressiveJpegConfig,
                   this.decodeCancellationEnabled,
-                  this.maxBitmapSize)
+                  this.maxBitmapDimension)
             }
         this.inputProducer.produceResults(progressiveDecoder, context)
       }
@@ -89,7 +89,7 @@ class DecodeProducer(
       consumer: Consumer<CloseableReference<CloseableImage>>,
       private val producerContext: ProducerContext,
       decodeCancellationEnabled: Boolean,
-      maxBitmapSize: Int
+      maxBitmapDimension: Int
   ) : DelegatingConsumer<EncodedImage?, CloseableReference<CloseableImage>>(consumer) {
     private val TAG = "ProgressiveDecoder"
     private val producerListener: ProducerListener2 = producerContext.producerListener
@@ -409,7 +409,10 @@ class DecodeProducer(
             if (downsampleEnabledForNetwork || !UriUtil.isNetworkUri(request.sourceUri)) {
               encodedImage.sampleSize =
                   DownsampleUtil.determineSampleSize(
-                      request.rotationOptions, request.resizeOptions, encodedImage, maxBitmapSize)
+                      request.rotationOptions,
+                      request.resizeOptions,
+                      encodedImage,
+                      maxBitmapDimension)
             }
           }
           if (producerContext.imagePipelineConfig.experiments.downsampleIfLargeBitmap) {
@@ -440,8 +443,8 @@ class DecodeProducer(
       consumer: Consumer<CloseableReference<CloseableImage>>,
       producerContext: ProducerContext,
       decodeCancellationEnabled: Boolean,
-      maxBitmapSize: Int
-  ) : ProgressiveDecoder(consumer, producerContext, decodeCancellationEnabled, maxBitmapSize) {
+      maxBitmapDimension: Int
+  ) : ProgressiveDecoder(consumer, producerContext, decodeCancellationEnabled, maxBitmapDimension) {
     @Synchronized
     override fun updateDecodeJob(
         encodedImage: EncodedImage?,
@@ -465,8 +468,8 @@ class DecodeProducer(
       val progressiveJpegParser: ProgressiveJpegParser,
       val progressiveJpegConfig: ProgressiveJpegConfig,
       decodeCancellationEnabled: Boolean,
-      maxBitmapSize: Int
-  ) : ProgressiveDecoder(consumer, producerContext, decodeCancellationEnabled, maxBitmapSize) {
+      maxBitmapDimension: Int
+  ) : ProgressiveDecoder(consumer, producerContext, decodeCancellationEnabled, maxBitmapDimension) {
     @Synchronized
     override fun updateDecodeJob(
         encodedImage: EncodedImage?,

@@ -29,7 +29,7 @@ object IterativeBoxBlurFilter {
    * height * 4 Bytes (+constant)
    *
    * @param bitmap The [Bitmap] containing the image. The bitmap dimension need to be smaller than
-   *   [BitmapUtil.MAX_BITMAP_SIZE]
+   *   [BitmapUtil.MAX_BITMAP_DIMENSION]
    * @param iterations The number of iterations of the blurring algorithm > 0.
    * @param radius The radius of the blur with a supported range 0 < radius <= [ ]
    *   [RenderScriptBlurFilter.BLUR_MAX_RADIUS]
@@ -38,8 +38,8 @@ object IterativeBoxBlurFilter {
   fun boxBlurBitmapInPlace(bitmap: Bitmap, iterations: Int, radius: Int) {
     checkNotNull(bitmap)
     Preconditions.checkArgument(bitmap.isMutable)
-    Preconditions.checkArgument(bitmap.height <= BitmapUtil.MAX_BITMAP_SIZE)
-    Preconditions.checkArgument(bitmap.width <= BitmapUtil.MAX_BITMAP_SIZE)
+    Preconditions.checkArgument(bitmap.height <= BitmapUtil.MAX_BITMAP_DIMENSION)
+    Preconditions.checkArgument(bitmap.width <= BitmapUtil.MAX_BITMAP_DIMENSION)
     Preconditions.checkArgument(radius > 0 && radius <= RenderScriptBlurFilter.BLUR_MAX_RADIUS)
     Preconditions.checkArgument(iterations > 0)
     try {

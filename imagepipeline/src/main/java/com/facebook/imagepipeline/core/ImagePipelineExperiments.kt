@@ -48,7 +48,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val bitmapPrepareToDrawMinSizeBytes: Int
   val bitmapPrepareToDrawMaxSizeBytes: Int
   val bitmapPrepareToDrawForPrefetch: Boolean
-  val maxBitmapSize: Int
+  val maxBitmapDimension: Int
   val isNativeCodeDisabled: Boolean
   val isPartialImageCachingEnabled: Boolean
   val producerFactoryMethod: ProducerFactoryMethod
@@ -90,7 +90,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var bitmapPrepareToDrawMaxSizeBytes = 0
 
     @JvmField var bitmapPrepareToDrawForPrefetch = false
-    @JvmField var maxBitmapSize = BitmapUtil.MAX_BITMAP_SIZE.toInt()
+    @JvmField var maxBitmapDimension = BitmapUtil.MAX_BITMAP_DIMENSION.toInt()
     @JvmField var nativeCodeDisabled = false
     @JvmField var isPartialImageCachingEnabled = false
     @JvmField var producerFactoryMethod: ProducerFactoryMethod? = null
@@ -230,7 +230,9 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     /**
      * Sets the maximum bitmap size use to compute the downsampling value when decoding Jpeg images.
      */
-    fun setMaxBitmapSize(maxBitmapSize: Int) = asBuilder { this.maxBitmapSize = maxBitmapSize }
+    fun setMaxBitmapDimension(maxBitmapDimension: Int) = asBuilder {
+      this.maxBitmapDimension = maxBitmapDimension
+    }
 
     /**
      * If true, the pipeline will use alternative implementations without native code.
@@ -420,7 +422,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     bitmapPrepareToDrawMinSizeBytes = builder.bitmapPrepareToDrawMinSizeBytes
     bitmapPrepareToDrawMaxSizeBytes = builder.bitmapPrepareToDrawMaxSizeBytes
     bitmapPrepareToDrawForPrefetch = builder.bitmapPrepareToDrawForPrefetch
-    maxBitmapSize = builder.maxBitmapSize
+    maxBitmapDimension = builder.maxBitmapDimension
     isNativeCodeDisabled = builder.nativeCodeDisabled
     isPartialImageCachingEnabled = builder.isPartialImageCachingEnabled
     producerFactoryMethod = builder.producerFactoryMethod ?: DefaultProducerFactoryMethod()

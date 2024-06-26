@@ -97,7 +97,7 @@ public abstract class FlipperObjectHelper {
     FlipperObject.Builder optionsJson = new FlipperObject.Builder();
     optionsJson.put("width", resizeOptions.width);
     optionsJson.put("height", resizeOptions.height);
-    optionsJson.put("maxBitmapSize", resizeOptions.maxBitmapSize);
+    optionsJson.put("maxBitmapSize", resizeOptions.maxBitmapDimension);
     optionsJson.put("roundUpFraction", resizeOptions.roundUpFraction);
     return optionsJson.build();
   }

@@ -35,7 +35,7 @@ object BitmapUtil {
   const val RGB_565_BYTES_PER_PIXEL: Int = 2
   const val RGBA_F16_BYTES_PER_PIXEL: Int = 8
   const val RGBA_1010102_BYTES_PER_PIXEL = 4
-  const val MAX_BITMAP_SIZE: Float = 2_048f
+  const val MAX_BITMAP_DIMENSION: Float = 2_048f
   private var useDecodeBufferHelper = false
   private var fixDecodeDrmImageCrash = false
 
