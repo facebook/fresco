@@ -19,6 +19,7 @@ dependencies {
     implementation Deps.Bolts.tasks
     implementation project(':fbcore')
     implementation project(':imagepipeline-base')
+    implementation project(':middleware')
 
     testImplementation TestDeps.junit
 
@@ -40,6 +41,8 @@ android {
 
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
+
+    namespace "com.facebook.webpsupport"
 
     defaultConfig {
         minSdkVersion FrescoConfig.minSdkVersion

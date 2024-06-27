@@ -139,11 +139,11 @@ object JpegTranscoderUtils {
     val widthRatio = resizeOptions.width.toFloat() / width
     val heightRatio = resizeOptions.height.toFloat() / height
     var ratio = Math.max(widthRatio, heightRatio)
-    if (width * ratio > resizeOptions.maxBitmapSize) {
-      ratio = resizeOptions.maxBitmapSize / width
+    if (width * ratio > resizeOptions.maxBitmapDimension) {
+      ratio = resizeOptions.maxBitmapDimension / width
     }
-    if (height * ratio > resizeOptions.maxBitmapSize) {
-      ratio = resizeOptions.maxBitmapSize / height
+    if (height * ratio > resizeOptions.maxBitmapDimension) {
+      ratio = resizeOptions.maxBitmapDimension / height
     }
     return ratio
   }

@@ -46,7 +46,7 @@ interface ImagePipelineConfigInterface {
   val cacheKeyFactory: CacheKeyFactory
   val context: Context
   val fileCacheFactory: FileCacheFactory
-  val isDownsampleEnabled: Boolean
+  val downsampleMode: DownsampleMode
   val isDiskCacheEnabled: Boolean
   val encodedMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>
   val executorSupplier: ExecutorSupplier
@@ -78,4 +78,5 @@ interface ImagePipelineConfigInterface {
   val bitmapCacheOverride: MemoryCache<CacheKey, CloseableImage>?
   val encodedMemoryCacheOverride: MemoryCache<CacheKey, PooledByteBuffer>?
   val bitmapMemoryCacheFactory: BitmapMemoryCacheFactory
+  val dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>?
 }

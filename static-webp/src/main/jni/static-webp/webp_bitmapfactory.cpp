@@ -8,7 +8,6 @@
 #include <android/bitmap.h>
 #include <jni.h>
 
-#include "WebpTranscoder.h"
 #include "exceptions.h"
 #include "java_globals.h"
 #include "logging.h"
@@ -55,7 +54,7 @@ jmethodID midInputStreamSkip;
 jmethodID midOutputStreamWrite;
 jmethodID midOutputStreamWriteWithBounds;
 
-jclass jRuntimeException_class;
+jclass jRuntimeExceptionWebp_class;
 
 std::vector<uint8_t>
 readStreamFully(JNIEnv* env, jobject is, jbyteArray inTempStorage) {
@@ -317,7 +316,7 @@ JNI_OnLoad(JavaVM* vm, void* reserved) {
     LOGE("could not find RuntimeException class");
     return -1;
   }
-  jRuntimeException_class =
+  jRuntimeExceptionWebp_class =
       reinterpret_cast<jclass>(env->NewGlobalRef(runtimeException));
 
   CREATE_AS_GLOBAL(runtimeExceptionClass, "java/lang/RuntimeException");
@@ -391,9 +390,6 @@ JNI_OnLoad(JavaVM* vm, void* reserved) {
   env = uenv.env;
 
   if (registerNatives(env) != JNI_TRUE) {
-    return -1;
-  }
-  if (registerWebpTranscoderMethods(env) != JNI_TRUE) {
     return -1;
   }
 

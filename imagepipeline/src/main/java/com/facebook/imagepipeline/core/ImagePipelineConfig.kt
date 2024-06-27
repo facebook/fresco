@@ -81,7 +81,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
   override val bitmapMemoryCacheEntryStateObserver: EntryStateObserver<CacheKey>?
   override val cacheKeyFactory: CacheKeyFactory
   override val context: Context
-  override val isDownsampleEnabled: Boolean
+  override val downsampleMode: DownsampleMode
   override val fileCacheFactory: FileCacheFactory
   override val encodedMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>
   override val executorSupplier: ExecutorSupplier
@@ -115,6 +115,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
   override val encodedMemoryCacheOverride: MemoryCache<CacheKey, PooledByteBuffer>?
   override val executorServiceForAnimatedImages: SerialExecutorService?
   override val bitmapMemoryCacheFactory: BitmapMemoryCacheFactory
+  override val dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>?
 
   init {
     if (isTracing()) {
@@ -137,7 +138,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     context = checkNotNull(builder.context)
     fileCacheFactory =
         builder.fileCacheFactory ?: DiskStorageCacheFactory(DynamicDefaultDiskStorageFactory())
-    isDownsampleEnabled = builder.downsampleEnabled
+    downsampleMode = builder.downsampleMode
     encodedMemoryCacheParamsSupplier =
         builder.encodedMemoryCacheParamsSupplier ?: DefaultEncodedMemoryCacheParamsSupplier()
     imageCacheStatsTracker =
@@ -180,20 +181,12 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
         builder.bitmapMemoryCacheFactory ?: CountingLruBitmapMemoryCacheFactory()
     encodedMemoryCacheOverride = builder.encodedMemoryCache
     executorServiceForAnimatedImages = builder.serialExecutorServiceForAnimatedImages
+    dynamicDiskCacheConfigMap = builder.dynamicDiskCacheConfigMap
     // Here we manage the WebpBitmapFactory implementation if any
     var webpBitmapFactory = experiments.webpBitmapFactory
     if (webpBitmapFactory != null) {
       val bitmapCreator: BitmapCreator = HoneycombBitmapCreator(poolFactory)
       setWebpBitmapFactory(webpBitmapFactory, experiments, bitmapCreator)
-    } else {
-      // We check using introspection only if the experiment is enabled
-      if (experiments.isWebpSupportEnabled && WebpSupportStatus.sIsWebpSupportRequired) {
-        webpBitmapFactory = WebpSupportStatus.loadWebpBitmapFactoryIfExists()
-        if (webpBitmapFactory != null) {
-          val bitmapCreator: BitmapCreator = HoneycombBitmapCreator(poolFactory)
-          setWebpBitmapFactory(webpBitmapFactory, experiments, bitmapCreator)
-        }
-      }
     }
     if (isTracing()) {
       endSection()
@@ -225,7 +218,8 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
       private set
 
     val context: Context
-    var downsampleEnabled = false
+
+    var downsampleMode = DownsampleMode.AUTO
       private set
 
     var encodedMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>? = null
@@ -316,6 +310,9 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     var bitmapMemoryCacheFactory: BitmapMemoryCacheFactory? = null
       private set
 
+    var dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>? = null
+      private set
+
     fun setBitmapsConfig(config: Bitmap.Config?): Builder = apply { this.bitmapConfig = config }
 
     fun setBitmapMemoryCacheParamsSupplier(
@@ -350,10 +347,19 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
       this.fileCacheFactory = fileCacheFactory
     }
 
-    fun isDownsampleEnabled(): Boolean = this.downsampleEnabled
+    fun isDownsampleEnabled(): Boolean = this.downsampleMode === DownsampleMode.ALWAYS
 
+    fun setDownsampleMode(downsampleMode: DownsampleMode): Builder = apply {
+      this.downsampleMode = downsampleMode
+    }
+
+    @Deprecated("Use the new setDownsampleMode() method")
     fun setDownsampleEnabled(downsampleEnabled: Boolean): Builder = apply {
-      this.downsampleEnabled = downsampleEnabled
+      if (downsampleEnabled) {
+        setDownsampleMode(DownsampleMode.ALWAYS)
+      } else {
+        setDownsampleMode(DownsampleMode.AUTO)
+      }
     }
 
     fun isDiskCacheEnabled(): Boolean = this.diskCacheEnabled
@@ -481,6 +487,10 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
           this.bitmapMemoryCacheFactory = bitmapMemoryCacheFactory
         }
 
+    fun setDynamicDiskCacheConfigMap(
+        dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>
+    ): Builder = apply { this.dynamicDiskCacheConfigMap = dynamicDiskCacheConfigMap }
+
     fun experiment(): ImagePipelineExperiments.Builder = experimentsBuilder
 
     fun build(): ImagePipelineConfig = ImagePipelineConfig(this)
@@ -512,15 +522,8 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     }
 
     private fun getDefaultMainDiskCacheConfig(context: Context): DiskCacheConfig =
-        try {
-          if (isTracing()) {
-            beginSection("DiskCacheConfig.getDefaultMainDiskCacheConfig")
-          }
+        traceSection("DiskCacheConfig.getDefaultMainDiskCacheConfig") {
           DiskCacheConfig.newBuilder(context).build()
-        } finally {
-          if (isTracing()) {
-            endSection()
-          }
         }
 
     @JvmStatic
@@ -558,4 +561,10 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
               MemoryChunkType.NATIVE_MEMORY
             }
   }
+}
+
+enum class DownsampleMode {
+  ALWAYS,
+  AUTO,
+  NEVER
 }

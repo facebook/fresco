@@ -19,7 +19,6 @@ import androidx.preference.CheckBoxPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import com.facebook.common.webp.WebpSupportStatus;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Const;
 import com.facebook.samples.scrollperf.preferences.SizePreferences;
@@ -72,12 +71,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateFadeDurationSummary(findPreference(Const.FADE_DURATION_KEY));
     updateDrawBorderSummary(findPreference(Const.DRAW_BORDER_KEY));
     updateDecodeCancellationSummary(findPreference(Const.DECODE_CANCELLATION_KEY));
-    // This has no meaning for Android > JELLY_BEAN_MR1 because it already supports WebP
-    if (WebpSupportStatus.sIsWebpSupportRequired) {
-      updateWebpSupportSummary(findPreference(Const.WEBP_SUPPORT_KEY));
-    } else {
-      findPreference(Const.WEBP_SUPPORT_KEY).setVisible(false);
-    }
+    findPreference(Const.WEBP_SUPPORT_KEY).setVisible(false);
   }
 
   @Override

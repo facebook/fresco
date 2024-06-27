@@ -49,7 +49,7 @@ import com.facebook.imagepipeline.producers.LocalContentUriThumbnailFetchProduce
 import com.facebook.imagepipeline.producers.LocalExifThumbnailProducer;
 import com.facebook.imagepipeline.producers.LocalFileFetchProducer;
 import com.facebook.imagepipeline.producers.LocalResourceFetchProducer;
-import com.facebook.imagepipeline.producers.LocalThumbnailBitmapProducer;
+import com.facebook.imagepipeline.producers.LocalThumbnailBitmapSdk29Producer;
 import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
 import com.facebook.imagepipeline.producers.NetworkFetchProducer;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
@@ -65,9 +65,10 @@ import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.producers.ThrottlingProducer;
 import com.facebook.imagepipeline.producers.ThumbnailBranchProducer;
 import com.facebook.imagepipeline.producers.ThumbnailProducer;
-import com.facebook.imagepipeline.producers.WebpTranscodeProducer;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import com.facebook.infer.annotation.Nullsafe;
+import java.util.Map;
+import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class ProducerFactory {
@@ -83,7 +84,7 @@ public class ProducerFactory {
   protected final ByteArrayPool mByteArrayPool;
   protected final ImageDecoder mImageDecoder;
   protected final ProgressiveJpegConfig mProgressiveJpegConfig;
-  protected final boolean mDownsampleEnabled;
+  protected final DownsampleMode mDownsampleMode;
   protected final boolean mResizeAndRotateEnabledForNetwork;
   protected final boolean mDecodeCancellationEnabled;
 
@@ -115,12 +116,14 @@ public class ProducerFactory {
 
   protected final boolean mKeepCancelledFetchAsLowPriority;
 
+  protected final @Nullable Map<String, BufferedDiskCache> mDynamicBufferedDiskCaches;
+
   public ProducerFactory(
       Context context,
       ByteArrayPool byteArrayPool,
       ImageDecoder imageDecoder,
       ProgressiveJpegConfig progressiveJpegConfig,
-      boolean downsampleEnabled,
+      DownsampleMode downsampleMode,
       boolean resizeAndRotateEnabledForNetwork,
       boolean decodeCancellationEnabled,
       ExecutorSupplier executorSupplier,
@@ -129,6 +132,7 @@ public class ProducerFactory {
       MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
+      @Nullable Map<String, BufferedDiskCache> dynamicBufferedDiskCaches,
       CacheKeyFactory cacheKeyFactory,
       PlatformBitmapFactory platformBitmapFactory,
       int bitmapPrepareToDrawMinSizeBytes,
@@ -145,7 +149,7 @@ public class ProducerFactory {
     mByteArrayPool = byteArrayPool;
     mImageDecoder = imageDecoder;
     mProgressiveJpegConfig = progressiveJpegConfig;
-    mDownsampleEnabled = downsampleEnabled;
+    mDownsampleMode = downsampleMode;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
     mDecodeCancellationEnabled = decodeCancellationEnabled;
 
@@ -156,6 +160,7 @@ public class ProducerFactory {
     mEncodedMemoryCache = encodedMemoryCache;
     mDefaultBufferedDiskCache = defaultBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
+    mDynamicBufferedDiskCaches = dynamicBufferedDiskCaches;
     mCacheKeyFactory = cacheKeyFactory;
     mPlatformBitmapFactory = platformBitmapFactory;
     mEncodedMemoryCacheHistory = new BoundedLinkedHashSet<>(trackedKeysSize);
@@ -169,6 +174,57 @@ public class ProducerFactory {
     mCloseableReferenceFactory = closeableReferenceFactory;
 
     mKeepCancelledFetchAsLowPriority = keepCancelledFetchAsLowPriority;
+  }
+
+  @Deprecated
+  public ProducerFactory(
+      Context context,
+      ByteArrayPool byteArrayPool,
+      ImageDecoder imageDecoder,
+      ProgressiveJpegConfig progressiveJpegConfig,
+      boolean downsampleEnabled,
+      boolean resizeAndRotateEnabledForNetwork,
+      boolean decodeCancellationEnabled,
+      ExecutorSupplier executorSupplier,
+      PooledByteBufferFactory pooledByteBufferFactory,
+      MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
+      MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
+      BufferedDiskCache defaultBufferedDiskCache,
+      BufferedDiskCache smallImageBufferedDiskCache,
+      @Nullable Map<String, BufferedDiskCache> dynamicBufferedDiskCaches,
+      CacheKeyFactory cacheKeyFactory,
+      PlatformBitmapFactory platformBitmapFactory,
+      int bitmapPrepareToDrawMinSizeBytes,
+      int bitmapPrepareToDrawMaxSizeBytes,
+      boolean bitmapPrepareToDrawForPrefetch,
+      int maxBitmapSize,
+      CloseableReferenceFactory closeableReferenceFactory,
+      boolean keepCancelledFetchAsLowPriority,
+      int trackedKeysSize) {
+    this(
+        context,
+        byteArrayPool,
+        imageDecoder,
+        progressiveJpegConfig,
+        downsampleEnabled ? DownsampleMode.ALWAYS : DownsampleMode.AUTO,
+        resizeAndRotateEnabledForNetwork,
+        decodeCancellationEnabled,
+        executorSupplier,
+        pooledByteBufferFactory,
+        bitmapMemoryCache,
+        encodedMemoryCache,
+        defaultBufferedDiskCache,
+        smallImageBufferedDiskCache,
+        dynamicBufferedDiskCaches,
+        cacheKeyFactory,
+        platformBitmapFactory,
+        bitmapPrepareToDrawMinSizeBytes,
+        bitmapPrepareToDrawMaxSizeBytes,
+        bitmapPrepareToDrawForPrefetch,
+        maxBitmapSize,
+        closeableReferenceFactory,
+        keepCancelledFetchAsLowPriority,
+        trackedKeysSize);
   }
 
   public static AddImageTransformMetaDataProducer newAddImageTransformMetaDataProducer(
@@ -206,7 +262,7 @@ public class ProducerFactory {
         mExecutorSupplier.forDecode(),
         mImageDecoder,
         mProgressiveJpegConfig,
-        mDownsampleEnabled,
+        mDownsampleMode,
         mResizeAndRotateEnabledForNetwork,
         mDecodeCancellationEnabled,
         inputProducer,
@@ -218,12 +274,20 @@ public class ProducerFactory {
 
   public DiskCacheReadProducer newDiskCacheReadProducer(Producer<EncodedImage> inputProducer) {
     return new DiskCacheReadProducer(
-        mDefaultBufferedDiskCache, mSmallImageBufferedDiskCache, mCacheKeyFactory, inputProducer);
+        mDefaultBufferedDiskCache,
+        mSmallImageBufferedDiskCache,
+        mDynamicBufferedDiskCaches,
+        mCacheKeyFactory,
+        inputProducer);
   }
 
   public DiskCacheWriteProducer newDiskCacheWriteProducer(Producer<EncodedImage> inputProducer) {
     return new DiskCacheWriteProducer(
-        mDefaultBufferedDiskCache, mSmallImageBufferedDiskCache, mCacheKeyFactory, inputProducer);
+        mDefaultBufferedDiskCache,
+        mSmallImageBufferedDiskCache,
+        mDynamicBufferedDiskCaches,
+        mCacheKeyFactory,
+        inputProducer);
   }
 
   public PartialDiskCacheProducer newPartialDiskCacheProducer(
@@ -358,11 +422,6 @@ public class ProducerFactory {
         inputProducer);
   }
 
-  public WebpTranscodeProducer newWebpTranscodeProducer(Producer<EncodedImage> inputProducer) {
-    return new WebpTranscodeProducer(
-        mExecutorSupplier.forBackgroundTasks(), mPooledByteBufferFactory, inputProducer);
-  }
-
   public BitmapPrepareProducer newBitmapPrepareProducer(
       Producer<CloseableReference<CloseableImage>> inputProducer) {
     return new BitmapPrepareProducer(
@@ -379,8 +438,8 @@ public class ProducerFactory {
   }
 
   @RequiresApi(Build.VERSION_CODES.Q)
-  public LocalThumbnailBitmapProducer newLocalThumbnailBitmapProducer() {
-    return new LocalThumbnailBitmapProducer(
+  public LocalThumbnailBitmapSdk29Producer newLocalThumbnailBitmapSdk29Producer() {
+    return new LocalThumbnailBitmapSdk29Producer(
         mExecutorSupplier.forBackgroundTasks(), mContentResolver);
   }
 }

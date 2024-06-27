@@ -155,12 +155,20 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
     mPaint.setColorFilter(colorFilter);
   }
 
-  Paint getPaint() {
+  public Paint getPaint() {
     return mPaint;
   }
 
   @Override
   public void setRepeatEdgePixels(boolean repeatEdgePixels) {
     mRepeatEdgePixels = repeatEdgePixels;
+  }
+
+  public @Nullable Bitmap getBitmap() {
+    return mBitmap;
+  }
+
+  public boolean getRepeatEdgePixels() {
+    return mRepeatEdgePixels;
   }
 }

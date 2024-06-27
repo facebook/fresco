@@ -15,6 +15,7 @@ import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.fresco.ui.common.VitoUtils
 import com.facebook.fresco.urimod.Dimensions
 import com.facebook.fresco.urimod.UriModifier
+import com.facebook.fresco.urimod.UriModifierInterface
 import com.facebook.fresco.vito.core.ImagePipelineUtils
 import com.facebook.fresco.vito.core.VitoImagePipeline
 import com.facebook.fresco.vito.core.VitoImageRequest
@@ -27,7 +28,7 @@ import com.facebook.fresco.vito.source.SingleImageSource
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.listener.RequestListener
-import com.facebook.imagepipeline.systrace.FrescoSystrace
+import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
 
 /** Vito image pipeline to fetch an image for a given VitoImageRequest. */
 class VitoImagePipelineImpl(
@@ -46,16 +47,18 @@ class VitoImagePipelineImpl(
     val extras: MutableMap<String, Any?> = mutableMapOf()
     var finalImageSource = imageSource
     if (imageSource is SingleImageSource) {
-      val uri = imageSource.uri
-      val maybeModifiedUri =
-          UriModifier.INSTANCE.modifyUri(
-              uri,
-              viewport?.let { Dimensions(it.width(), it.height()) },
-              imageOptions.actualImageScaleType)
-
-      if (maybeModifiedUri != uri) {
-        extras[HasExtraData.KEY_MODIFIED_URL] = true
-        finalImageSource = ImageSourceProvider.forUri(maybeModifiedUri)
+      if (imageOptions.experimentalDynamicSize) {
+        val result: UriModifierInterface.ModificationResult =
+            UriModifier.INSTANCE.modifyUri(
+                imageSource.uri,
+                viewport?.let { Dimensions(it.width(), it.height()) },
+                imageOptions.actualImageScaleType)
+        if (result !is UriModifierInterface.ModificationResult.Disabled) {
+          extras[HasExtraData.KEY_MODIFIED_URL] = result.toString()
+        }
+        if (result is UriModifierInterface.ModificationResult.Modified) {
+          finalImageSource = ImageSourceProvider.forUri(result.newUri)
+        }
       }
       if (imageSource.extras != null) {
         extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = imageSource.extras
@@ -81,24 +84,15 @@ class VitoImagePipelineImpl(
         extras)
   }
 
-  override fun getCachedImage(imageRequest: VitoImageRequest): CloseableReference<CloseableImage>? {
-    if (FrescoSystrace.isTracing()) {
-      FrescoSystrace.beginSection("VitoImagePipeline#getCachedImage")
-    }
-
-    return try {
-      val cachedImageReference = imagePipeline.getCachedImage(imageRequest.finalImageCacheKey)
-      if (CloseableReference.isValid(cachedImageReference)) {
-        cachedImageReference
-      } else {
-        null
+  override fun getCachedImage(imageRequest: VitoImageRequest): CloseableReference<CloseableImage>? =
+      traceSection("VitoImagePipeline#getCachedImage") {
+        val cachedImageReference = imagePipeline.getCachedImage(imageRequest.finalImageCacheKey)
+        if (CloseableReference.isValid(cachedImageReference)) {
+          cachedImageReference
+        } else {
+          null
+        }
       }
-    } finally {
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.endSection()
-      }
-    }
-  }
 
   override fun fetchDecodedImage(
       imageRequest: VitoImageRequest,

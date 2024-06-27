@@ -19,8 +19,8 @@ import com.facebook.fresco.vito.core.impl.KFrescoController
 import com.facebook.fresco.vito.core.impl.VitoImagePipelineImpl
 import com.facebook.fresco.vito.draweesupport.DrawableFactoryWrapper
 import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory
-import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.fresco.vito.provider.impl.NoOpCallerContextVerifier
+import com.facebook.fresco.vito.provider.setup.FrescoVitoSetup
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.core.ImagePipelineFactory
 import java.util.concurrent.Executor
@@ -33,7 +33,7 @@ class KFrescoVitoProvider(
     private val lightweightBackgroundExecutor: Executor,
     private val callerContextVerifier: CallerContextVerifier = NoOpCallerContextVerifier,
     private val debugOverlayHandler: DebugOverlayHandler? = null
-) : FrescoVitoProvider.Implementation {
+) : FrescoVitoSetup {
 
   private val _imagePipeline: VitoImagePipeline by lazy {
     VitoImagePipelineImpl(frescoImagePipeline, imagePipelineUtils)

@@ -38,6 +38,8 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
 
   override fun handleImageResultInBackground(): Boolean = false
 
+  override fun useIntermediateImagesAsPlaceholder(): Boolean = false
+
   open class DefaultPrefetchConfig : PrefetchConfig {
     override fun prefetchInOnPrepare(): Boolean = true
 

@@ -15,6 +15,6 @@ extern jmethodID midInputStreamSkip;
 extern jmethodID midOutputStreamWrite;
 extern jmethodID midOutputStreamWriteWithBounds;
 
-extern jclass jRuntimeException_class;
+extern jclass jRuntimeExceptionWebp_class;
 
 #endif /* _JAVACLASSES_H_ */

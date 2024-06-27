@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -398,6 +399,7 @@ public class BitmapMemoryCacheProducerTest {
       mResults = results;
     }
 
+    @Nullable
     @Override
     public Void answer(InvocationOnMock invocation) throws Throwable {
       Consumer consumer = (Consumer) invocation.getArguments()[0];
@@ -412,6 +414,7 @@ public class BitmapMemoryCacheProducerTest {
   }
 
   private class ProduceResultsFailureAnswer implements Answer<Void> {
+    @Nullable
     @Override
     public Void answer(InvocationOnMock invocation) throws Throwable {
       Consumer consumer = (Consumer) invocation.getArguments()[0];

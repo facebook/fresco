@@ -251,12 +251,16 @@ public class ProgressiveJpegParser {
     return mBytesParsed > 1 && mParserState != NOT_A_JPEG;
   }
 
-  /** @return offset at which parsed data should be cut to decode best available partial result */
+  /**
+   * @return offset at which parsed data should be cut to decode best available partial result
+   */
   public int getBestScanEndOffset() {
     return mBestScanEndOffset;
   }
 
-  /** @return number of the best scan found so far */
+  /**
+   * @return number of the best scan found so far
+   */
   public int getBestScanNumber() {
     return mBestScanNumber;
   }

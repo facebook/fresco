@@ -27,6 +27,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import org.junit.*;
 import org.junit.runner.*;
@@ -256,6 +257,7 @@ public class NetworkFetchProducerTest {
       final InputStream inputStream, final int length, final NetworkFetcher.Callback callback) {
     return mTestExecutor.submit(
         new Callable() {
+          @Nullable
           @Override
           public Object call() throws Exception {
             callback.onResponse(inputStream, length);

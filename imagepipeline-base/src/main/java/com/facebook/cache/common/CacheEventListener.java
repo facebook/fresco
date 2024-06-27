@@ -52,6 +52,7 @@ public interface CacheEventListener {
     CACHE_FULL,
     CONTENT_STALE,
     USER_FORCED,
-    CACHE_MANAGER_TRIMMED
+    CACHE_MANAGER_TRIMMED,
+    TRIM_EXPIRED,
   }
 }

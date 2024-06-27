@@ -58,6 +58,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   private @Nullable SerialExecutorService mSerialExecutorService;
   private int mAnimationFpsLimit;
   private final boolean mUseBufferLoaderStrategy;
+  private int mBufferLengthMilliseconds;
 
   @DoNotStrip
   public AnimatedFactoryV2Impl(
@@ -67,6 +68,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
       boolean downscaleFrameToDrawableDimensions,
       boolean useBufferLoaderStrategy,
       int animationFpsLimit,
+      int bufferLengthMilliseconds,
       @Nullable SerialExecutorService serialExecutorServiceForFramePreparing) {
     mPlatformBitmapFactory = platformBitmapFactory;
     mExecutorSupplier = executorSupplier;
@@ -75,6 +77,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
     mUseBufferLoaderStrategy = useBufferLoaderStrategy;
     mDownscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions;
     mSerialExecutorService = serialExecutorServiceForFramePreparing;
+    mBufferLengthMilliseconds = bufferLengthMilliseconds;
   }
 
   @Nullable
@@ -132,7 +135,8 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
         useDeepEquals,
         Suppliers.of(mUseBufferLoaderStrategy),
         Suppliers.of(mDownscaleFrameToDrawableDimensions),
-        Suppliers.of(mAnimationFpsLimit));
+        Suppliers.of(mAnimationFpsLimit),
+        Suppliers.of(mBufferLengthMilliseconds));
   }
 
   private AnimatedDrawableUtil getAnimatedDrawableUtil() {

@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -181,6 +182,7 @@ public class BufferedDiskCacheTest {
     when(mFileCache.insert(eq(mCacheKey), wcCapture.capture()))
         .then(
             new Answer<Void>() {
+              @Nullable
               @Override
               public Void answer(InvocationOnMock invocation) throws Throwable {
                 WriterCallback wc = (WriterCallback) invocation.getArguments()[1];

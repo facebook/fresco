@@ -38,8 +38,8 @@ object ThumbnailSizeChecker {
   @JvmStatic
   fun isImageBigEnough(width: Int, height: Int, resizeOptions: ResizeOptions?): Boolean =
       if (resizeOptions == null) {
-        (getAcceptableSize(width) >= BitmapUtil.MAX_BITMAP_SIZE &&
-            getAcceptableSize(height) >= BitmapUtil.MAX_BITMAP_SIZE.toInt())
+        (getAcceptableSize(width) >= BitmapUtil.MAX_BITMAP_DIMENSION &&
+            getAcceptableSize(height) >= BitmapUtil.MAX_BITMAP_DIMENSION.toInt())
       } else {
         (getAcceptableSize(width) >= resizeOptions.width &&
             getAcceptableSize(height) >= resizeOptions.height)

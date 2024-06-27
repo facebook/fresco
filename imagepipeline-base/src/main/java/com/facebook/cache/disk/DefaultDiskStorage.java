@@ -311,11 +311,14 @@ public class DefaultDiskStorage implements DiskStorage {
       return true;
     }
 
-    /** @return true if and only if the file is not old enough to be considered an old temp file */
+    /**
+     * @return true if and only if the file is not old enough to be considered an old temp file
+     */
     private boolean isRecentFile(File file) {
       return file.lastModified() > (mClock.now() - TEMP_FILE_LIFETIME_MS);
     }
-  };
+  }
+  ;
 
   @Override
   public void purgeUnexpectedResources() {

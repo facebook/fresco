@@ -35,7 +35,6 @@ import com.facebook.imagepipeline.common.SourceUriType;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.infer.annotation.Nullsafe;
-import com.facebook.memory.config.MemorySpikeConfig;
 import com.facebook.memory.helper.HashCode;
 import java.io.File;
 import java.util.HashMap;
@@ -121,6 +120,8 @@ public class ImageRequest {
    */
   private final @Nullable Boolean mResizingAllowedOverride;
 
+  private final @Nullable String mDiskCacheId;
+
   private final int mDelayMs;
 
   public static @Nullable ImageRequest fromFile(@Nullable File file) {
@@ -175,6 +176,8 @@ public class ImageRequest {
     mResizingAllowedOverride = builder.getResizingAllowedOverride();
 
     mDelayMs = builder.getDelayMs();
+
+    mDiskCacheId = builder.getDiskCacheId();
   }
 
   public CacheChoice getCacheChoice() {
@@ -190,11 +193,11 @@ public class ImageRequest {
   }
 
   public int getPreferredWidth() {
-    return (mResizeOptions != null) ? mResizeOptions.width : (int) BitmapUtil.MAX_BITMAP_SIZE;
+    return (mResizeOptions != null) ? mResizeOptions.width : (int) BitmapUtil.MAX_BITMAP_DIMENSION;
   }
 
   public int getPreferredHeight() {
-    return (mResizeOptions != null) ? mResizeOptions.height : (int) BitmapUtil.MAX_BITMAP_SIZE;
+    return (mResizeOptions != null) ? mResizeOptions.height : (int) BitmapUtil.MAX_BITMAP_DIMENSION;
   }
 
   public @Nullable ResizeOptions getResizeOptions() {
@@ -205,7 +208,9 @@ public class ImageRequest {
     return mRotationOptions;
   }
 
-  /** @deprecated Use {@link #getRotationOptions()} */
+  /**
+   * @deprecated Use {@link #getRotationOptions()}
+   */
   @Deprecated
   public boolean getAutoRotateEnabled() {
     return mRotationOptions.useImageMetadata();
@@ -285,6 +290,10 @@ public class ImageRequest {
     return mRequestListener;
   }
 
+  public @Nullable String getDiskCacheId() {
+    return mDiskCacheId;
+  }
+
   @Override
   public boolean equals(@Nullable Object o) {
     if (!(o instanceof ImageRequest)) {
@@ -303,6 +312,7 @@ public class ImageRequest {
     if (mIsMemoryCacheEnabled != request.mIsMemoryCacheEnabled) return false;
     if (!Objects.equal(mSourceUri, request.mSourceUri)
         || !Objects.equal(mCacheChoice, request.mCacheChoice)
+        || !Objects.equal(mDiskCacheId, request.mDiskCacheId)
         || !Objects.equal(mSourceFile, request.mSourceFile)
         || !Objects.equal(mBytesRange, request.mBytesRange)
         || !Objects.equal(mImageDecodeOptions, request.mImageDecodeOptions)
@@ -334,45 +344,23 @@ public class ImageRequest {
     if (result == 0) {
       final CacheKey postprocessorCacheKey =
           mPostprocessor != null ? mPostprocessor.getPostprocessorCacheKey() : null;
-      if (!MemorySpikeConfig.avoidObjectsHashCode()) {
-        result =
-            Objects.hashCode(
-                mCacheChoice,
-                mSourceUri,
-                mLocalThumbnailPreviewsEnabled,
-                mBytesRange,
-                mRequestPriority,
-                mLowestPermittedRequestLevel,
-                mCachesDisabled,
-                mIsDiskCacheEnabled,
-                mIsMemoryCacheEnabled,
-                mImageDecodeOptions,
-                mDecodePrefetches,
-                mResizeOptions,
-                mRotationOptions,
-                postprocessorCacheKey,
-                mResizingAllowedOverride,
-                mDelayMs,
-                mLoadThumbnailOnly);
-      } else {
-        result = HashCode.extend(0, mCacheChoice);
-        result = HashCode.extend(result, mSourceUri);
-        result = HashCode.extend(result, mLocalThumbnailPreviewsEnabled);
-        result = HashCode.extend(result, mBytesRange);
-        result = HashCode.extend(result, mRequestPriority);
-        result = HashCode.extend(result, mLowestPermittedRequestLevel);
-        result = HashCode.extend(result, mCachesDisabled);
-        result = HashCode.extend(result, mIsDiskCacheEnabled);
-        result = HashCode.extend(result, mIsMemoryCacheEnabled);
-        result = HashCode.extend(result, mImageDecodeOptions);
-        result = HashCode.extend(result, mDecodePrefetches);
-        result = HashCode.extend(result, mResizeOptions);
-        result = HashCode.extend(result, mRotationOptions);
-        result = HashCode.extend(result, postprocessorCacheKey);
-        result = HashCode.extend(result, mResizingAllowedOverride);
-        result = HashCode.extend(result, mDelayMs);
-        result = HashCode.extend(result, mLoadThumbnailOnly);
-      }
+      result = HashCode.extend(0, mCacheChoice);
+      result = HashCode.extend(result, mSourceUri);
+      result = HashCode.extend(result, mLocalThumbnailPreviewsEnabled);
+      result = HashCode.extend(result, mBytesRange);
+      result = HashCode.extend(result, mRequestPriority);
+      result = HashCode.extend(result, mLowestPermittedRequestLevel);
+      result = HashCode.extend(result, mCachesDisabled);
+      result = HashCode.extend(result, mIsDiskCacheEnabled);
+      result = HashCode.extend(result, mIsMemoryCacheEnabled);
+      result = HashCode.extend(result, mImageDecodeOptions);
+      result = HashCode.extend(result, mDecodePrefetches);
+      result = HashCode.extend(result, mResizeOptions);
+      result = HashCode.extend(result, mRotationOptions);
+      result = HashCode.extend(result, postprocessorCacheKey);
+      result = HashCode.extend(result, mResizingAllowedOverride);
+      result = HashCode.extend(result, mDelayMs);
+      result = HashCode.extend(result, mLoadThumbnailOnly);
       // ^ I *think* this is safe despite autoboxing...?
       if (cacheHashcode) {
         mHashcode = result;
@@ -448,7 +436,10 @@ public class ImageRequest {
     SMALL,
 
     /* Default */
-    DEFAULT
+    DEFAULT,
+
+    /* Indicates that the image should go in the consumer provided cache, represent by the ImageRequest’s cacheId */
+    DYNAMIC
   }
 
   /**

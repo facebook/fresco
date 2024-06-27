@@ -15,25 +15,25 @@
 namespace facebook {
 namespace imagepipeline {
 
-void safeThrowJavaException(JNIEnv*, jclass, const char*);
+void safeThrowJavaExceptionWebp(JNIEnv*, jclass, const char*);
 
 }
 } // namespace facebook
 
-#define THROW_AND_RETURN_IF(condition, message)        \
-  do {                                                 \
-    if (condition) {                                   \
-      facebook::imagepipeline::safeThrowJavaException( \
-          env, jRuntimeException_class, message);      \
-      return;                                          \
-    }                                                  \
+#define THROW_AND_RETURN_IF(condition, message)            \
+  do {                                                     \
+    if (condition) {                                       \
+      facebook::imagepipeline::safeThrowJavaExceptionWebp( \
+          env, jRuntimeExceptionWebp_class, message);      \
+      return;                                              \
+    }                                                      \
   } while (0)
 
 #define THROW_AND_RETURNVAL_IF(condition, message, return_value) \
   do {                                                           \
     if (condition) {                                             \
-      facebook::imagepipeline::safeThrowJavaException(           \
-          env, jRuntimeException_class, message);                \
+      facebook::imagepipeline::safeThrowJavaExceptionWebp(       \
+          env, jRuntimeExceptionWebp_class, message);            \
       return return_value;                                       \
     }                                                            \
   } while (0)

@@ -11,6 +11,10 @@ import com.facebook.fresco.buildsrc.TestDeps
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
+kotlin {
+    jvmToolchain(11)
+}
+
 dependencies {
     compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
@@ -41,6 +45,8 @@ android {
     compileSdkVersion FrescoConfig.compileSdkVersion
 
     useLibrary 'org.apache.http.legacy'
+
+    namespace "com.facebook.fbcore"
 
     defaultConfig {
         consumerProguardFiles 'proguard-fresco.pro'

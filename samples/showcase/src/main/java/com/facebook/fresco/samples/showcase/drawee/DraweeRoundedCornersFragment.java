@@ -154,7 +154,10 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
         getActivity()
             .getTheme()
             .obtainStyledAttributes(
-                R.style.AppTheme, new int[] {R.attr.colorPrimary, android.R.attr.windowBackground});
+                R.style.AppTheme,
+                new int[] {
+                  androidx.appcompat.R.attr.colorPrimary, android.R.attr.windowBackground
+                });
     try {
       mColorPrimary = attrs.getColor(0, Color.BLACK);
       mCornerBackgroundColor = Color.BLUE;

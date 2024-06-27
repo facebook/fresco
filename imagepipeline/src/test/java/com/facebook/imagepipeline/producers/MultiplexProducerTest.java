@@ -26,6 +26,7 @@ import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import javax.annotation.Nullable;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -141,6 +142,7 @@ public class MultiplexProducerTest {
 
     doAnswer(
             new Answer() {
+              @Nullable
               @Override
               public Void answer(InvocationOnMock invocation) throws Throwable {
                 if (mForwardingConsumer1 == null) {

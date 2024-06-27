@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.core.impl
 
 import android.net.Uri
 import com.facebook.callercontext.CallerContextVerifier
+import com.facebook.common.callercontext.ContextChain
 import com.facebook.datasource.DataSource
 import com.facebook.datasource.DataSources
 import com.facebook.fresco.vito.core.FrescoVitoPrefetcher
@@ -37,7 +38,7 @@ class FrescoVitoPrefetcherImpl(
       imageOptions: ImageOptions?,
       callerContext: Any?,
       callsite: String
-  ): DataSource<Void> {
+  ): DataSource<Void?> {
     return when (prefetchTarget) {
       PrefetchTarget.MEMORY_DECODED ->
           prefetchToBitmapCache(uri, imageOptions, callerContext, callsite)
@@ -49,14 +50,33 @@ class FrescoVitoPrefetcherImpl(
     }
   }
 
+  override fun prefetch(
+      prefetchTarget: PrefetchTarget,
+      uri: Uri,
+      imageOptions: ImageOptions?,
+      callerContext: Any?,
+      contextChain: ContextChain?,
+      callsite: String
+  ): DataSource<Void?> = prefetch(prefetchTarget, uri, imageOptions, callerContext, callsite)
+
   override fun prefetchToBitmapCache(
       uri: Uri,
       imageOptions: DecodedImageOptions?,
       callerContext: Any?,
       callsite: String
-  ): DataSource<Void> {
+  ): DataSource<Void?> {
     val imageRequest = imagePipelineUtils.buildImageRequest(uri, imageOptions ?: defaults())
     return prefetch(PrefetchTarget.MEMORY_DECODED, imageRequest, callerContext, null)
+  }
+
+  override fun prefetchToBitmapCache(
+      uri: Uri,
+      imageOptions: DecodedImageOptions?,
+      callerContext: Any?,
+      contextChain: ContextChain?,
+      callsite: String
+  ): DataSource<Void?> {
+    return prefetchToBitmapCache(uri, imageOptions, callerContext, callsite)
   }
 
   override fun prefetchToEncodedCache(
@@ -64,20 +84,36 @@ class FrescoVitoPrefetcherImpl(
       imageOptions: EncodedImageOptions?,
       callerContext: Any?,
       callsite: String
-  ): DataSource<Void> {
+  ): DataSource<Void?> {
     val imageRequest = imagePipelineUtils.buildEncodedImageRequest(uri, imageOptions ?: defaults())
     return prefetch(PrefetchTarget.MEMORY_ENCODED, imageRequest, callerContext, null)
   }
+
+  override fun prefetchToEncodedCache(
+      uri: Uri,
+      imageOptions: EncodedImageOptions?,
+      callerContext: Any?,
+      contextChain: ContextChain?,
+      callsite: String
+  ): DataSource<Void?> = prefetchToEncodedCache(uri, imageOptions, callerContext, callsite)
 
   override fun prefetchToDiskCache(
       uri: Uri,
       imageOptions: ImageOptions?,
       callerContext: Any?,
       callsite: String
-  ): DataSource<Void> {
+  ): DataSource<Void?> {
     val imageRequest = imagePipelineUtils.buildEncodedImageRequest(uri, imageOptions ?: defaults())
     return prefetch(PrefetchTarget.DISK, imageRequest, callerContext, null)
   }
+
+  override fun prefetchToDiskCache(
+      uri: Uri,
+      imageOptions: ImageOptions?,
+      callerContext: Any?,
+      contextChain: ContextChain?,
+      callsite: String
+  ): DataSource<Void?> = prefetchToDiskCache(uri, imageOptions, callerContext, callsite)
 
   override fun prefetch(
       prefetchTarget: PrefetchTarget,
@@ -85,15 +121,25 @@ class FrescoVitoPrefetcherImpl(
       callerContext: Any?,
       requestListener: RequestListener?,
       callsite: String
-  ): DataSource<Void> =
+  ): DataSource<Void?> =
       prefetch(prefetchTarget, imageRequest.finalImageRequest, callerContext, requestListener)
+
+  override fun prefetch(
+      prefetchTarget: PrefetchTarget,
+      imageRequest: VitoImageRequest,
+      callerContext: Any?,
+      contextChain: ContextChain?,
+      requestListener: RequestListener?,
+      callsite: String
+  ): DataSource<Void?> =
+      prefetch(prefetchTarget, imageRequest, callerContext, requestListener, callsite)
 
   private fun prefetch(
       prefetchTarget: PrefetchTarget,
       imageRequest: ImageRequest?,
       callerContext: Any?,
       requestListener: RequestListener?
-  ): DataSource<Void> {
+  ): DataSource<Void?> {
     callerContextVerifier?.verifyCallerContext(callerContext, false)
     return if (imageRequest == null) {
       DataSources.immediateFailedDataSource(NULL_IMAGE_MESSAGE)

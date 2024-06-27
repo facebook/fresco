@@ -84,7 +84,9 @@ public class BucketMap<T> {
     moveToFront(bucket);
   }
 
-  /** @return number of objects contained in the {@link BucketMap} */
+  /**
+   * @return number of objects contained in the {@link BucketMap}
+   */
   @VisibleForTesting
   synchronized int valueCount() {
     int count = 0;

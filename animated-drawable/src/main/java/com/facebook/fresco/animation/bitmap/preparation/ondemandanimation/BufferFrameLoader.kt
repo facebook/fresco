@@ -32,10 +32,12 @@ class BufferFrameLoader(
     private val platformBitmapFactory: PlatformBitmapFactory,
     private val bitmapFrameRenderer: BitmapFrameRenderer,
     private val fpsCompressor: FpsCompressorInfo,
-    override val animationInformation: AnimationInformation
+    override val animationInformation: AnimationInformation,
+    private val bufferLengthMilliseconds: Int
 ) : FrameLoader {
 
-  private val bufferSize = animationInformation.fps() * BUFFER_SECOND_SIZE
+  private val bufferSize =
+      ((animationInformation.fps() * bufferLengthMilliseconds) / 1000).coerceAtLeast(1)
   private val bufferFramesHash = ConcurrentHashMap<Int, BufferFrame>()
   @Volatile private var thresholdFrame: Int
   @Volatile private var isFetching = false
@@ -245,11 +247,5 @@ class BufferFrameLoader(
      * render frame
      */
     private const val THRESHOLD_PERCENTAGE = 0.5f
-
-    /**
-     * Used to calculate how many bitmaps are needed to render this animation. The seconds are
-     * multiplied with the FPS of the animation to get required of bitmaps.
-     */
-    private const val BUFFER_SECOND_SIZE = 1
   }
 }

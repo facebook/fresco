@@ -15,6 +15,7 @@ import static org.mockito.Mockito.any;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
+import javax.annotation.Nullable;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -33,7 +34,7 @@ public class RemoveImageTransformMetaDataProducerTest {
   @Mock public Exception mException;
 
   private RemoveImageTransformMetaDataProducer mRemoveMetaDataProducer;
-  private Consumer<EncodedImage> mRemoveMetaDataConsumer;
+  @Nullable private Consumer<EncodedImage> mRemoveMetaDataConsumer;
   private PooledByteBuffer mIntermediateByteBuffer;
   private PooledByteBuffer mFinalByteBuffer;
   private CloseableReference<PooledByteBuffer> mIntermediateResult;
@@ -53,6 +54,7 @@ public class RemoveImageTransformMetaDataProducerTest {
     mRemoveMetaDataConsumer = null;
     doAnswer(
             new Answer() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 mRemoveMetaDataConsumer = (Consumer<EncodedImage>) invocation.getArguments()[0];

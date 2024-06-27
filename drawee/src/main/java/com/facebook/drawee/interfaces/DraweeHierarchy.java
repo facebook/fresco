@@ -45,6 +45,8 @@ public interface DraweeHierarchy {
    */
   Drawable getTopLevelDrawable();
 
-  /** @return bounds of the top drawable */
+  /**
+   * @return bounds of the top drawable
+   */
   Rect getBounds();
 }

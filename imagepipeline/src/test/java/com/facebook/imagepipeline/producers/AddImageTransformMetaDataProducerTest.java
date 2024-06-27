@@ -23,6 +23,7 @@ import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.ImageMetaData;
 import com.facebook.imageutils.JfifUtil;
 import java.io.InputStream;
+import javax.annotation.Nullable;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -48,7 +49,7 @@ public class AddImageTransformMetaDataProducerTest {
   @Rule public PowerMockRule rule = new PowerMockRule();
 
   private AddImageTransformMetaDataProducer mAddMetaDataProducer;
-  private Consumer<EncodedImage> mAddMetaDataConsumer;
+  @Nullable private Consumer<EncodedImage> mAddMetaDataConsumer;
   private CloseableReference<PooledByteBuffer> mIntermediateResultBufferRef;
   private CloseableReference<PooledByteBuffer> mFinalResultBufferRef;
   private EncodedImage mIntermediateResult;
@@ -70,6 +71,7 @@ public class AddImageTransformMetaDataProducerTest {
     mAddMetaDataConsumer = null;
     doAnswer(
             new Answer() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 mAddMetaDataConsumer = (Consumer<EncodedImage>) invocation.getArguments()[0];

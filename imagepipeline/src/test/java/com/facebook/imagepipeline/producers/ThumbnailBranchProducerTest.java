@@ -20,6 +20,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import javax.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -250,6 +251,7 @@ public class ThumbnailBranchProducerTest {
       ThumbnailProducer<EncodedImage> mockProducer, final ConsumerCallback callback) {
     doAnswer(
             new Answer<Void>() {
+              @Nullable
               @Override
               public Void answer(InvocationOnMock invocation) throws Throwable {
                 Consumer<EncodedImage> consumer =

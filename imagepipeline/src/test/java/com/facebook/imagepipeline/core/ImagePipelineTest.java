@@ -13,7 +13,6 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -22,6 +21,7 @@ import static org.mockito.Mockito.when;
 
 import android.net.Uri;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.common.DebuggingCacheKey;
 import com.facebook.cache.common.MultiCacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.common.internal.Predicate;
@@ -44,7 +44,9 @@ import com.facebook.imagepipeline.producers.ProducerContext;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,11 +58,13 @@ import org.robolectric.RobolectricTestRunner;
 /** Tests for ImagePipeline */
 @RunWith(RobolectricTestRunner.class)
 public class ImagePipelineTest {
+
   @Mock public ImageRequest mImageRequest;
   @Mock public ProducerSequenceFactory mProducerSequenceFactory;
   @Mock public CacheKeyFactory mCacheKeyFactory;
   @Mock public Object mCallerContext;
   @Mock public ImagePipelineConfigInterface mConfig;
+  @Mock public ImagePipelineExperiments mImagePipelineExperiments;
 
   private Supplier<Boolean> mPrefetchEnabledSupplier;
   private Supplier<Boolean> mSuppressBitmapPrefetchingSupplier;
@@ -70,6 +74,8 @@ public class ImagePipelineTest {
   private MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
   private BufferedDiskCache mMainDiskStorageCache;
   private BufferedDiskCache mSmallImageDiskStorageCache;
+  private BufferedDiskCache mDynamicBufferedDiskCache;
+  private Map<String, BufferedDiskCache> mDynamicBufferedDiskCaches;
   private RequestListener mRequestListener1;
   private RequestListener mRequestListener2;
   private ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
@@ -89,6 +95,9 @@ public class ImagePipelineTest {
     mEncodedMemoryCache = mock(MemoryCache.class);
     mMainDiskStorageCache = mock(BufferedDiskCache.class);
     mSmallImageDiskStorageCache = mock(BufferedDiskCache.class);
+    mDynamicBufferedDiskCache = mock(BufferedDiskCache.class);
+    mDynamicBufferedDiskCaches = new HashMap<>();
+    mDynamicBufferedDiskCaches.put("dynamicId1", mDynamicBufferedDiskCache);
     mThreadHandoffProducerQueue = mock(ThreadHandoffProducerQueue.class);
     mImagePipeline =
         new ImagePipeline(
@@ -100,6 +109,7 @@ public class ImagePipelineTest {
             mEncodedMemoryCache,
             mMainDiskStorageCache,
             mSmallImageDiskStorageCache,
+            mDynamicBufferedDiskCaches,
             mCacheKeyFactory,
             mThreadHandoffProducerQueue,
             mSuppressBitmapPrefetchingSupplier,
@@ -112,6 +122,9 @@ public class ImagePipelineTest {
     when(mImageRequest.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
     when(mImageRequest.shouldDecodePrefetches()).thenReturn(null);
+
+    when(mConfig.getExperiments()).thenReturn(mImagePipelineExperiments);
+    when(mImagePipelineExperiments.getPrefetchShortcutEnabled()).thenReturn(false);
   }
 
   @Test
@@ -463,6 +476,7 @@ public class ImagePipelineTest {
     mImagePipeline.evictFromDiskCache(uri);
     verify(mMainDiskStorageCache).remove(multiKey);
     verify(mSmallImageDiskStorageCache).remove(multiKey);
+    verify(mDynamicBufferedDiskCache).remove(multiKey);
   }
 
   @Test
@@ -499,14 +513,20 @@ public class ImagePipelineTest {
   @Test
   public void testIsInDiskCacheFromMainDiskCache() {
     when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.DEFAULT);
-    when(mMainDiskStorageCache.diskCheckSync(isNull(CacheKey.class))).thenReturn(true);
+    CacheKey cacheKey = mock(DebuggingCacheKey.class);
+    when(mMainDiskStorageCache.diskCheckSync(cacheKey)).thenReturn(true);
+    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), anyObject()))
+        .thenReturn(cacheKey);
     assertTrue(mImagePipeline.isInDiskCacheSync(mImageRequest));
   }
 
   @Test
   public void testIsInDiskCacheFromSmallDiskCache() {
     when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.SMALL);
-    when(mSmallImageDiskStorageCache.diskCheckSync(isNull(CacheKey.class))).thenReturn(true);
+    CacheKey cacheKey = mock(DebuggingCacheKey.class);
+    when(mSmallImageDiskStorageCache.diskCheckSync(cacheKey)).thenReturn(true);
+    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), anyObject()))
+        .thenReturn(cacheKey);
     assertTrue(mImagePipeline.isInDiskCacheSync(mImageRequest));
   }
 
@@ -515,6 +535,7 @@ public class ImagePipelineTest {
     mImagePipeline.clearDiskCaches();
     verify(mMainDiskStorageCache).clearAll();
     verify(mSmallImageDiskStorageCache).clearAll();
+    verify(mDynamicBufferedDiskCache).clearAll();
   }
 
   @Test
@@ -522,6 +543,7 @@ public class ImagePipelineTest {
     mImagePipeline.getUsedDiskCacheSize();
     verify(mMainDiskStorageCache).getSize();
     verify(mSmallImageDiskStorageCache).getSize();
+    verify(mDynamicBufferedDiskCache).getSize();
   }
 
   @Test

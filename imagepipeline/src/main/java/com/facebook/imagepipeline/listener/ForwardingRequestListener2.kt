@@ -10,13 +10,16 @@ package com.facebook.imagepipeline.listener
 import com.facebook.common.logging.FLog
 import com.facebook.imagepipeline.producers.ProducerContext
 import java.util.ArrayList
-import java.util.Set
 
 class ForwardingRequestListener2 : RequestListener2 {
 
-  private var requestListeners: MutableList<RequestListener2>
+  private val requestListeners: MutableList<RequestListener2>
 
-  constructor(listenersToAdd: Set<RequestListener2?>) {
+  constructor(listenersToAdd: Set<RequestListener2?>?) {
+    if (listenersToAdd == null) {
+      requestListeners = mutableListOf()
+      return
+    }
     requestListeners = ArrayList(listenersToAdd.size)
     listenersToAdd.filterNotNullTo(requestListeners)
   }

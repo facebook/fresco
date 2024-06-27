@@ -16,9 +16,6 @@ import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.STRICT)
 public class WebpSupportStatus {
-  public static final boolean sIsWebpSupportRequired =
-      Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1;
-
   public static final boolean sIsSimpleWebpSupported =
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 

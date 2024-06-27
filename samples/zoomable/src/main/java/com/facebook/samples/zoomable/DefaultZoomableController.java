@@ -12,6 +12,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.facebook.common.logging.FLog;
 import com.facebook.samples.gestures.TransformGestureDetector;
@@ -270,6 +271,7 @@ public class DefaultZoomableController
    * Maps point from view-absolute to image-relative coordinates. This takes into account the
    * zoomable transformation.
    */
+  @NonNull
   public PointF mapViewToImage(PointF viewPoint) {
     float[] points = mTempValues;
     points[0] = viewPoint.x;

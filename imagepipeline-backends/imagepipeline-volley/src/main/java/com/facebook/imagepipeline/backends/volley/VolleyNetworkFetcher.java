@@ -53,7 +53,9 @@ public class VolleyNetworkFetcher
 
   private final RequestQueue mRequestQueue;
 
-  /** @param requestQueue The Volley {@link RequestQueue} to use */
+  /**
+   * @param requestQueue The Volley {@link RequestQueue} to use
+   */
   public VolleyNetworkFetcher(RequestQueue requestQueue) {
     mRequestQueue = requestQueue;
   }

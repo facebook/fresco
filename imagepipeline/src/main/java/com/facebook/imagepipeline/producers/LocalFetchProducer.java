@@ -48,12 +48,12 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
             EncodedImage encodedImage = LocalFetchProducer.this.getEncodedImage(imageRequest);
             if (encodedImage == null) {
               listener.onUltimateProducerReached(producerContext, getProducerName(), false);
-              producerContext.putOriginExtra("local");
+              producerContext.putOriginExtra("local", "fetch");
               return null;
             }
             encodedImage.parseMetaData();
             listener.onUltimateProducerReached(producerContext, getProducerName(), true);
-            producerContext.putOriginExtra("local");
+            producerContext.putOriginExtra("local", "fetch");
             producerContext.putExtra(HasExtraData.KEY_COLOR_SPACE, encodedImage.getColorSpace());
             return encodedImage;
           }
@@ -105,6 +105,8 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
   protected abstract @Nullable EncodedImage getEncodedImage(ImageRequest imageRequest)
       throws IOException;
 
-  /** @return name of the Producer */
+  /**
+   * @return name of the Producer
+   */
   protected abstract String getProducerName();
 }

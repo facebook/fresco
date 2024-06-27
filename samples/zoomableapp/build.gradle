@@ -13,6 +13,8 @@ android {
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
 
+    namespace "com.facebook.samples.zoomableapp"
+
     defaultConfig {
         applicationId "com.facebook.samples.zoomableapp"
         minSdkVersion FrescoConfig.samplesMinSdkVersion

@@ -293,6 +293,9 @@ public class EncodedImage implements Closeable {
     // The image should be backed by a ByteBuffer
     Preconditions.checkNotNull(mPooledByteBufferRef);
     PooledByteBuffer buf = mPooledByteBufferRef.get();
+    if (length < 2) {
+      return false;
+    }
     return (buf.read(length - 2) == (byte) JfifUtil.MARKER_FIRST_BYTE)
         && (buf.read(length - 1) == (byte) JfifUtil.MARKER_EOI);
   }

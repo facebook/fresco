@@ -45,6 +45,9 @@ class KFrescoVitoDrawable(
 
   override var imageRequest: VitoImageRequest? = null
 
+  var _intrinsicWidth: Int = -1
+  var _intrinsicHeight: Int = -1
+
   private val closeableCleanupFunction: (Closeable) -> Unit = {
     ImageReleaseScheduler.cancelAllReleasing(this)
     try {
@@ -81,7 +84,7 @@ class KFrescoVitoDrawable(
 
   override fun hasImage(): Boolean = actualImageLayer.getDataModel() != null
 
-  fun setFetchSubmitted(fetchSubmitted: Boolean) {
+  override fun setFetchSubmitted(fetchSubmitted: Boolean) {
     _fetchSubmitted = fetchSubmitted
   }
 
@@ -123,6 +126,8 @@ class KFrescoVitoDrawable(
     imageRequest = null
     _isLoading = false
     callerContext = null
+    _intrinsicWidth = -1
+    _intrinsicHeight = -1
 
     placeholderLayer.reset()
     actualImageLayer.reset()
@@ -197,5 +202,26 @@ class KFrescoVitoDrawable(
 
   override fun unscheduleDrawable(who: Drawable, what: Runnable) {
     unscheduleSelf(what)
+  }
+
+  override fun setIntrinsicSize(width: Int, height: Int) {
+    _intrinsicWidth = width
+    _intrinsicHeight = height
+  }
+
+  override fun configureWhenUnderlyingChanged() {
+    actualImageLayer.configure()
+  }
+
+  override fun getIntrinsicWidth(): Int {
+    return if (_intrinsicWidth !== -1) {
+      _intrinsicWidth
+    } else super.getIntrinsicWidth()
+  }
+
+  override fun getIntrinsicHeight(): Int {
+    return if (_intrinsicHeight !== -1) {
+      _intrinsicHeight
+    } else super.getIntrinsicHeight()
   }
 }

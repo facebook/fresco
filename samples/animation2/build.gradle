@@ -26,6 +26,8 @@ android {
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
 
+    namespace "com.facebook.samples.animation2"
+
     defaultConfig {
         applicationId "com.facebook.samples.animation2"
         minSdkVersion FrescoConfig.samplesMinSdkVersion

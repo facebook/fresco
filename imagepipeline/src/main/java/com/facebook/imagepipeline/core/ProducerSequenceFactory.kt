@@ -16,7 +16,6 @@ import com.facebook.common.internal.Preconditions
 import com.facebook.common.media.MediaUtils.isVideo
 import com.facebook.common.memory.PooledByteBuffer
 import com.facebook.common.references.CloseableReference
-import com.facebook.common.webp.WebpSupportStatus
 import com.facebook.imagepipeline.common.SourceUriType
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.image.EncodedImage
@@ -37,7 +36,7 @@ class ProducerSequenceFactory(
     private val resizeAndRotateEnabledForNetwork: Boolean,
     private val webpSupportEnabled: Boolean,
     private val threadHandoffProducerQueue: ThreadHandoffProducerQueue,
-    private val downSampleEnabled: Boolean,
+    private val downsampleMode: DownsampleMode,
     private val useBitmapPrepareToDraw: Boolean,
     private val partialImageCachingEnabled: Boolean,
     private val diskCacheEnabled: Boolean,
@@ -86,10 +85,21 @@ class ProducerSequenceFactory(
           SourceUriType.SOURCE_TYPE_LOCAL_IMAGE_FILE -> localFileFetchEncodedImageProducerSequence
           SourceUriType.SOURCE_TYPE_LOCAL_CONTENT ->
               localContentUriFetchEncodedImageProducerSequence
-          else ->
-              throw IllegalArgumentException(
-                  "Unsupported uri scheme for encoded image fetch! Uri is: " +
-                      getShortenedUriString(uri))
+          else -> {
+            if (customProducerSequenceFactories != null) {
+              for (customProducerSequenceFactory in customProducerSequenceFactories) {
+                val sequence =
+                    customProducerSequenceFactory.getCustomEncodedImageSequence(
+                        imageRequest, this, producerFactory, threadHandoffProducerQueue)
+                if (sequence != null) {
+                  return sequence
+                }
+              }
+            }
+            throw IllegalArgumentException(
+                "Unsupported uri scheme for encoded image fetch! Uri is: " +
+                    getShortenedUriString(uri))
+          }
         }
       }
 
@@ -190,11 +200,23 @@ class ProducerSequenceFactory(
         checkNotNull(uri) { "Uri is null." }
         when (imageRequest.sourceUriType) {
           SourceUriType.SOURCE_TYPE_NETWORK -> networkFetchSequence
-          SourceUriType.SOURCE_TYPE_LOCAL_VIDEO_FILE -> localVideoFileFetchSequence
-          SourceUriType.SOURCE_TYPE_LOCAL_IMAGE_FILE -> localImageFileFetchSequence
+          SourceUriType.SOURCE_TYPE_LOCAL_VIDEO_FILE -> {
+            if (imageRequest.loadThumbnailOnlyForAndroidSdkAboveQ) {
+              return localThumbnailBitmapSdk29FetchSequence
+            } else {
+              localVideoFileFetchSequence
+            }
+          }
+          SourceUriType.SOURCE_TYPE_LOCAL_IMAGE_FILE -> {
+            if (imageRequest.loadThumbnailOnlyForAndroidSdkAboveQ) {
+              return localThumbnailBitmapSdk29FetchSequence
+            } else {
+              localImageFileFetchSequence
+            }
+          }
           SourceUriType.SOURCE_TYPE_LOCAL_CONTENT -> {
             if (imageRequest.loadThumbnailOnlyForAndroidSdkAboveQ) {
-              return localContentUriThumbnailFetchSequence
+              return localThumbnailBitmapSdk29FetchSequence
             } else if (isVideo(contentResolver.getType(uri))) {
               return localVideoFileFetchSequence
             }
@@ -208,7 +230,13 @@ class ProducerSequenceFactory(
             if (customProducerSequenceFactories != null) {
               for (customProducerSequenceFactory in customProducerSequenceFactories) {
                 val sequence =
-                    customProducerSequenceFactory.getCustomDecodedImageSequence(imageRequest, this)
+                    customProducerSequenceFactory.getCustomDecodedImageSequence(
+                        imageRequest,
+                        this,
+                        producerFactory,
+                        threadHandoffProducerQueue,
+                        isEncodedMemoryCacheProbingEnabled,
+                        isDiskCacheProbingEnabled)
                 if (sequence != null) {
                   return sequence
                 }
@@ -276,7 +304,7 @@ class ProducerSequenceFactory(
         networkFetchToEncodedMemorySequence =
             producerFactory.newResizeAndRotateProducer(
                 networkFetchToEncodedMemorySequence,
-                resizeAndRotateEnabledForNetwork && !downSampleEnabled,
+                resizeAndRotateEnabledForNetwork && downsampleMode != DownsampleMode.NEVER,
                 imageTranscoderFactory)
         return networkFetchToEncodedMemorySequence
       }
@@ -358,9 +386,9 @@ class ProducerSequenceFactory(
    * bitmap
    */
   @get:RequiresApi(Build.VERSION_CODES.Q)
-  val localContentUriThumbnailFetchSequence: Producer<CloseableReference<CloseableImage>> by lazy {
+  val localThumbnailBitmapSdk29FetchSequence: Producer<CloseableReference<CloseableImage>> by lazy {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-      newBitmapCacheGetToBitmapCacheSequence(producerFactory.newLocalThumbnailBitmapProducer())
+      newBitmapCacheGetToBitmapCacheSequence(producerFactory.newLocalThumbnailBitmapSdk29Producer())
     } else {
       throw Throwable("Unreachable exception. Just to make linter happy for the lazy block.")
     }
@@ -405,10 +433,6 @@ class ProducerSequenceFactory(
    */
   val dataFetchSequence: Producer<CloseableReference<CloseableImage>> by lazy {
     var inputProducer: Producer<EncodedImage?> = producerFactory.newDataFetchProducer()
-    if (WebpSupportStatus.sIsWebpSupportRequired &&
-        (!webpSupportEnabled || WebpSupportStatus.sWebpBitmapFactory == null)) {
-      inputProducer = producerFactory.newWebpTranscodeProducer(inputProducer)
-    }
     inputProducer = ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer)
     inputProducer =
         producerFactory.newResizeAndRotateProducer(inputProducer, true, imageTranscoderFactory)
@@ -472,10 +496,6 @@ class ProducerSequenceFactory(
       inputProducer: Producer<EncodedImage>
   ): Producer<EncodedImage> {
     var ip = inputProducer
-    if (WebpSupportStatus.sIsWebpSupportRequired &&
-        (!webpSupportEnabled || WebpSupportStatus.sWebpBitmapFactory == null)) {
-      ip = producerFactory.newWebpTranscodeProducer(ip)
-    }
     if (diskCacheEnabled) {
       ip = newDiskCacheSequence(ip)
     }

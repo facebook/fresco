@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.textspan
 
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
+import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.view.View
@@ -83,7 +84,7 @@ object VitoSpanLoader {
 
   @JvmStatic
   fun setImageSpanOnBuilder(
-      sb: SpannableStringBuilder,
+      sb: Spannable,
       imageSpan: VitoSpan,
       startIndex: Int,
       endIndex: Int,

@@ -17,7 +17,7 @@ import com.facebook.common.memory.PooledByteStreams
 import com.facebook.common.references.CloseableReference
 import com.facebook.imagepipeline.image.EncodedImage
 import com.facebook.imagepipeline.instrumentation.FrescoInstrumenter
-import com.facebook.imagepipeline.systrace.FrescoSystrace
+import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
 import java.io.IOException
 import java.util.concurrent.Callable
 import java.util.concurrent.CancellationException
@@ -112,16 +112,9 @@ class BufferedDiskCache(
    *   never rethrows any exception
    */
   operator fun get(key: CacheKey, isCancelled: AtomicBoolean): Task<EncodedImage> =
-      try {
-        if (FrescoSystrace.isTracing()) {
-          FrescoSystrace.beginSection("BufferedDiskCache#get")
-        }
+      traceSection("BufferedDiskCache#get") {
         val pinnedImage = stagingArea[key]
         pinnedImage?.let { foundPinnedImage(key, it) } ?: getAsync(key, isCancelled)
-      } finally {
-        if (FrescoSystrace.isTracing()) {
-          FrescoSystrace.endSection()
-        }
       }
 
   /**
@@ -237,48 +230,40 @@ class BufferedDiskCache(
    * Associates encodedImage with given key in disk cache. Disk write is performed on background
    * thread, so the caller of this method is not blocked
    */
-  fun put(key: CacheKey, encodedImage: EncodedImage) {
-    try {
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.beginSection("BufferedDiskCache#put")
-      }
-      check(EncodedImage.isValid(encodedImage))
+  fun put(key: CacheKey, encodedImage: EncodedImage) =
+      traceSection("BufferedDiskCache#put") {
+        check(EncodedImage.isValid(encodedImage))
 
-      // Store encodedImage in staging area
-      stagingArea.put(key, encodedImage)
+        // Store encodedImage in staging area
+        stagingArea.put(key, encodedImage)
 
-      // Write to disk cache. This will be executed on background thread, so increment the ref
-      // count. When this write completes (with success/failure), then we will bump down the
-      // ref count again.
-      val finalEncodedImage = EncodedImage.cloneOrNull(encodedImage)
-      try {
-        val token = FrescoInstrumenter.onBeforeSubmitWork("BufferedDiskCache_putAsync")
-        writeExecutor.execute {
-          val currentToken = FrescoInstrumenter.onBeginWork(token, null)
-          try {
-            writeToDiskCache(key, finalEncodedImage)
-          } catch (th: Throwable) {
-            FrescoInstrumenter.markFailure(token, th)
-            throw th
-          } finally {
-            stagingArea.remove(key, finalEncodedImage!!)
-            EncodedImage.closeSafely(finalEncodedImage)
-            FrescoInstrumenter.onEndWork(currentToken)
+        // Write to disk cache. This will be executed on background thread, so increment the ref
+        // count. When this write completes (with success/failure), then we will bump down the
+        // ref count again.
+        val finalEncodedImage = EncodedImage.cloneOrNull(encodedImage)
+        try {
+          val token = FrescoInstrumenter.onBeforeSubmitWork("BufferedDiskCache_putAsync")
+          writeExecutor.execute {
+            val currentToken = FrescoInstrumenter.onBeginWork(token, null)
+            try {
+              writeToDiskCache(key, finalEncodedImage)
+            } catch (th: Throwable) {
+              FrescoInstrumenter.markFailure(token, th)
+              throw th
+            } finally {
+              stagingArea.remove(key, finalEncodedImage!!)
+              EncodedImage.closeSafely(finalEncodedImage)
+              FrescoInstrumenter.onEndWork(currentToken)
+            }
           }
+        } catch (exception: Exception) {
+          // We failed to enqueue cache write. Log failure and decrement ref count
+          // TODO: 3697790
+          FLog.w(TAG, exception, "Failed to schedule disk-cache write for %s", key.uriString)
+          stagingArea.remove(key, encodedImage)
+          EncodedImage.closeSafely(finalEncodedImage)
         }
-      } catch (exception: Exception) {
-        // We failed to enqueue cache write. Log failure and decrement ref count
-        // TODO: 3697790
-        FLog.w(TAG, exception, "Failed to schedule disk-cache write for %s", key.uriString)
-        stagingArea.remove(key, encodedImage)
-        EncodedImage.closeSafely(finalEncodedImage)
       }
-    } finally {
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.endSection()
-      }
-    }
-  }
 
   /** Removes the item from the disk cache and the staging area. */
   fun remove(key: CacheKey): Task<Void> {

@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 public class ImageRequestBuilder {
 
   private static final Set<String> CUSTOM_NETWORK_SCHEMES = new HashSet<>();
-  private Uri mSourceUri = null;
+  @Nullable private Uri mSourceUri = null;
   private RequestLevel mLowestPermittedRequestLevel = RequestLevel.FULL_FETCH;
   private int mCachesDisabled = 0; // All caches enabled by default
   private @Nullable ResizeOptions mResizeOptions = null;
@@ -48,6 +48,7 @@ public class ImageRequestBuilder {
   private @Nullable BytesRange mBytesRange = null;
   private @Nullable Boolean mResizingAllowedOverride = null;
   private int mDelayMs;
+  private @Nullable String mDiskCacheId = null;
 
   /**
    * Creates a new request builder instance. The setting will be done according to the source type.
@@ -102,7 +103,8 @@ public class ImageRequestBuilder {
         .setRequestListener(imageRequest.getRequestListener())
         .setRotationOptions(imageRequest.getRotationOptions())
         .setShouldDecodePrefetches(imageRequest.shouldDecodePrefetches())
-        .setDelayMs(imageRequest.getDelayMs());
+        .setDelayMs(imageRequest.getDelayMs())
+        .setDiskCacheId(imageRequest.getDiskCacheId());
   }
 
   public static void addCustomUriNetworkScheme(String scheme) {
@@ -154,6 +156,9 @@ public class ImageRequestBuilder {
    */
   private ImageRequestBuilder setCachesDisabled(int cachesDisabled) {
     this.mCachesDisabled = cachesDisabled;
+    if (mCacheChoice != CacheChoice.DYNAMIC) {
+      this.mDiskCacheId = null;
+    }
     return this;
   }
 
@@ -311,7 +316,7 @@ public class ImageRequestBuilder {
     return this;
   }
 
-  private boolean isCustomNetworkUri(@Nullable Uri uri) {
+  public static boolean isCustomNetworkUri(@Nullable Uri uri) {
     if (CUSTOM_NETWORK_SCHEMES == null || uri == null) {
       return false;
     }
@@ -395,9 +400,29 @@ public class ImageRequestBuilder {
     return this;
   }
 
-  /** @return the additional request listener to use for this image request */
+  /**
+   * @return the additional request listener to use for this image request
+   */
   public @Nullable RequestListener getRequestListener() {
     return mRequestListener;
+  }
+
+  /**
+   * Sets a disk cache id to determine which diskCache to use for this request.
+   *
+   * @param diskCacheId a disk cache id to determine which diskCache to use for this request.
+   * @return the modified builder instance
+   */
+  public ImageRequestBuilder setDiskCacheId(@Nullable String diskCacheId) {
+    this.mDiskCacheId = diskCacheId;
+    return this;
+  }
+
+  /**
+   * @return the disk cache id to determine which diskCache to use for this request.
+   */
+  public @Nullable String getDiskCacheId() {
+    return mDiskCacheId;
   }
 
   /**
@@ -471,6 +496,15 @@ public class ImageRequestBuilder {
     // resolved by AssetManager relative to configured asset folder of an app.
     if (UriUtil.isLocalAssetUri(mSourceUri) && !mSourceUri.isAbsolute()) {
       throw new BuilderException("Asset URI path must be absolute.");
+    }
+
+    if (mCacheChoice == CacheChoice.DYNAMIC) {
+      if (mDiskCacheId == null) {
+        throw new BuilderException("Disk cache id must be set for dynamic cache choice");
+      }
+    } else if (mDiskCacheId != null && mDiskCacheId.length() != 0) {
+      throw new BuilderException(
+          "Ensure that if you want to use a disk cache id, you set the CacheChoice to DYNAMIC");
     }
   }
 }

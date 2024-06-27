@@ -11,6 +11,9 @@ import android.net.Uri
 import com.facebook.drawee.drawable.ScalingUtils
 
 object NopUriModifier : UriModifierInterface {
-  override fun modifyUri(uri: Uri, viewport: Dimensions?, scaleType: ScalingUtils.ScaleType): Uri =
-      uri
+  override fun modifyUri(
+      uri: Uri,
+      viewport: Dimensions?,
+      scaleType: ScalingUtils.ScaleType?
+  ): UriModifierInterface.ModificationResult = UriModifierInterface.ModificationResult.Disabled
 }

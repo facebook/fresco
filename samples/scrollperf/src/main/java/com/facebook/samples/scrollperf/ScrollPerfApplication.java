@@ -8,7 +8,6 @@
 package com.facebook.samples.scrollperf;
 
 import android.app.Application;
-import com.facebook.common.webp.WebpSupportStatus;
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
@@ -31,9 +30,6 @@ public class ScrollPerfApplication extends Application {
         ImagePipelineConfig.newBuilder(this)
             .setResizeAndRotateEnabledForNetwork(false)
             .setDownsampleEnabled(config.downsampling);
-    if (WebpSupportStatus.sIsWebpSupportRequired) {
-      imagePipelineConfigBuilder.experiment().setWebpSupportEnabled(config.webpSupportEnabled);
-    }
     if (config.decodingThreadCount == 0) {
       imagePipelineConfigBuilder.setExecutorSupplier(
           new DefaultExecutorSupplier(Const.NUMBER_OF_PROCESSORS));

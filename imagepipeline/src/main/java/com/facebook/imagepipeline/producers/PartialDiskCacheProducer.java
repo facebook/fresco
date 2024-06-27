@@ -123,6 +123,7 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
       final CacheKey partialImageCacheKey) {
     final ProducerListener2 listener = producerContext.getProducerListener();
     return new Continuation<EncodedImage, Void>() {
+      @Nullable
       @Override
       public Void then(Task<EncodedImage> task) throws Exception {
         if (isTaskCancelled(task)) {

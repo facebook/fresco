@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -95,6 +96,7 @@ public class LocalExifThumbnailProducerTest {
 
     doAnswer(
             new Answer() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 mCapturedEncodedImage =
@@ -143,6 +145,7 @@ public class LocalExifThumbnailProducerTest {
       super(executor, pooledByteBufferFactory, contentResolver);
     }
 
+    @Nullable
     @Override
     ExifInterface getExifInterface(Uri uri) {
       if (uri.equals(mUri)) {

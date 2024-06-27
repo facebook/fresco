@@ -33,6 +33,7 @@ import javax.annotation.Nullable;
  */
 public class SimpleDraweeView extends GenericDraweeView {
 
+  @Nullable
   private static Supplier<? extends AbstractDraweeControllerBuilder>
       sDraweecontrollerbuildersupplier;
 

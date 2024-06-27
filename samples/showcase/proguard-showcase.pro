@@ -23,3 +23,7 @@
 
 -dontwarn org.mozilla.javascript.**
 -dontwarn org.mozilla.classfile.**
+
+-dontwarn com.facebook.kotlin.compilerplugins.dataclassgenerate.annotation.DataClassGenerate
+-dontwarn com.facebook.proguard.annotations.DoNotStrip
+-dontwarn org.slf4j.impl.StaticLoggerBinder

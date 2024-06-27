@@ -440,7 +440,9 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     getScaleTypeDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX).setScaleType(scaleType);
   }
 
-  /** @return true if there is a placeholder image set. */
+  /**
+   * @return true if there is a placeholder image set.
+   */
   public boolean hasPlaceholderImage() {
     return mFadeDrawable.getDrawable(PLACEHOLDER_IMAGE_INDEX) != null;
   }

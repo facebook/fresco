@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.annotation.Nullable;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -60,6 +61,12 @@ public class DiskCacheReadProducerTest {
   @Mock public ImagePipelineConfig mConfig;
   private final BufferedDiskCache mDefaultBufferedDiskCache = mock(BufferedDiskCache.class);
   private final BufferedDiskCache mSmallImageBufferedDiskCache = mock(BufferedDiskCache.class);
+  private final String mDiskCacheId1 = "DISK_CACHE_ID_1";
+  private final BufferedDiskCache mBufferedDiskCache1 = mock(BufferedDiskCache.class);
+  private final String mDiskCacheId2 = "DISK_CACHE_ID_2";
+  private final BufferedDiskCache mBufferedDiskCache2 = mock(BufferedDiskCache.class);
+  private final Map<String, BufferedDiskCache> mDynamicBufferedDiskCaches =
+      ImmutableMap.of(mDiskCacheId1, mBufferedDiskCache1, mDiskCacheId2, mBufferedDiskCache2);
   private SettableProducerContext mProducerContext;
   private SettableProducerContext mLowestLevelProducerContext;
   private final String mRequestId = "mRequestId";
@@ -81,6 +88,7 @@ public class DiskCacheReadProducerTest {
         new DiskCacheReadProducer(
             mDefaultBufferedDiskCache,
             mSmallImageBufferedDiskCache,
+            mDynamicBufferedDiskCaches,
             mCacheKeyFactory,
             mInputProducer);
     List<CacheKey> keys = new ArrayList<>(1);
@@ -186,6 +194,45 @@ public class DiskCacheReadProducerTest {
     assertEquals("0", resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE));
     verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, true);
     Assert.assertFalse(EncodedImage.isValid(mFinalEncodedImage));
+  }
+
+  @Test
+  public void testDynamicImageDiskCacheGetSuccessful() {
+    setUpDiskCacheProducerEnabled(true);
+    when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.DYNAMIC);
+    when(mImageRequest.getDiskCacheId()).thenReturn(mDiskCacheId2);
+    setupDiskCacheGetSuccess(mBufferedDiskCache2);
+    mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
+    verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    ArgumentCaptor<HashMap> captor = ArgumentCaptor.forClass(HashMap.class);
+    verify(mProducerListener)
+        .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
+    Map<String, String> resultMap = captor.getValue();
+    assertEquals("true", resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND));
+    assertEquals("0", resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE));
+    verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, true);
+    Assert.assertFalse(EncodedImage.isValid(mFinalEncodedImage));
+  }
+
+  @Test
+  public void testDynamicImageDiskCacheGetFailed_NoDiskCacheIdInImageRequest() {
+    setUpDiskCacheProducerEnabled(true);
+    when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.DYNAMIC);
+    setupDiskCacheGetSuccess(mBufferedDiskCache2);
+
+    mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
+    verify(mInputProducer).produceResults(mConsumer, mProducerContext);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    ArgumentCaptor<HashMap> captor = ArgumentCaptor.forClass(HashMap.class);
+    verify(mProducerListener, times(0))
+        .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
+    verify(mProducerListener, times(1))
+        .onProducerFinishWithFailure(
+            eq(mProducerContext),
+            eq(PRODUCER_NAME),
+            isA(DiskCacheDecision.DiskCacheDecisionNoDiskCacheChosenException.class),
+            eq(null));
   }
 
   @Test
@@ -428,6 +475,7 @@ public class DiskCacheReadProducerTest {
   private void setupInputProducerSuccess() {
     doAnswer(
             new Answer<Object>() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 Consumer consumer = (Consumer) invocation.getArguments()[0];
@@ -443,6 +491,7 @@ public class DiskCacheReadProducerTest {
   private void setupInputProducerFailure() {
     doAnswer(
             new Answer<Object>() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 Consumer consumer = (Consumer) invocation.getArguments()[0];
@@ -457,6 +506,7 @@ public class DiskCacheReadProducerTest {
   private void setupInputProducerNotFound() {
     doAnswer(
             new Answer<Object>() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 Consumer consumer = (Consumer) invocation.getArguments()[0];

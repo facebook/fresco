@@ -9,17 +9,25 @@ package com.facebook.imagepipeline.image;
 
 /** Interface containing information about an image. */
 public interface ImageInfo extends HasImageMetadata {
-  /** @return width of the image */
+  /**
+   * @return width of the image
+   */
   int getWidth();
 
-  /** @return height of the image */
+  /**
+   * @return height of the image
+   */
   int getHeight();
 
-  /** @return size in bytes of the image */
+  /**
+   * @return size in bytes of the image
+   */
   default int getSizeInBytes() {
     return 0;
   }
 
-  /** @return quality information for the image */
+  /**
+   * @return quality information for the image
+   */
   QualityInfo getQualityInfo();
 }

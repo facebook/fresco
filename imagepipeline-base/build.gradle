@@ -11,6 +11,10 @@ import com.facebook.fresco.buildsrc.TestDeps
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
+kotlin {
+    jvmToolchain(11)
+}
+
 dependencies {
     compileOnly Deps.AndroidX.androidxAnnotation
     compileOnly Deps.AndroidX.exifInterface
@@ -46,6 +50,8 @@ android {
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
 
+    namespace "com.facebook.imagepipelinebase"
+
     defaultConfig {
         minSdkVersion FrescoConfig.minSdkVersion
         targetSdkVersion FrescoConfig.targetSdkVersion
@@ -57,6 +63,10 @@ android {
                 exclude '**/BUCK'
             }
         }
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 }
 

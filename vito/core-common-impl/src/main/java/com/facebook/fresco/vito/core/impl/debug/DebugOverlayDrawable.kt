@@ -33,6 +33,8 @@ constructor(
 
   var drawIdentifier: Boolean = true
 
+  var onBoundsChangedCallback: ((Rect) -> Unit)? = null
+
   // Internal helpers
   private val debugData = LinkedHashMap<String, Pair<String, Int>>()
   private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -57,12 +59,14 @@ constructor(
   fun reset() {
     debugData.clear()
     maxLineLength = INITIAL_MAX_LINE_LENGTH
+    onBoundsChangedCallback = null
     invalidateSelf()
   }
 
   override fun onBoundsChange(bounds: Rect) {
     super.onBoundsChange(bounds)
     prepareDebugTextParameters(bounds)
+    onBoundsChangedCallback?.invoke(bounds)
   }
 
   override fun draw(canvas: Canvas) {

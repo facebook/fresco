@@ -26,6 +26,9 @@ interface FrescoDrawableInterface {
   fun hasImage(): Boolean
 
   val isFetchSubmitted: Boolean
+
+  fun setFetchSubmitted(fetchSubmitted: Boolean)
+
   var imageRequest: VitoImageRequest?
 
   fun setVisibilityCallback(visibilityCallback: VisibilityCallback?)
@@ -46,4 +49,12 @@ interface FrescoDrawableInterface {
   var refetchRunnable: Runnable?
 
   fun getImagePerfControllerListener(): ControllerListener2<ImageInfo>?
+
+  fun setIntrinsicSize(width: Int, height: Int)
+
+  /**
+   * Configure the image, bounds, scale and reset the render command. Call it only when you are sure
+   * that underlying image has changed.
+   */
+  fun configureWhenUnderlyingChanged()
 }

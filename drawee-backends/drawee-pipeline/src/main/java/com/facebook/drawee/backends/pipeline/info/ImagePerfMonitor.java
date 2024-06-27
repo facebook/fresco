@@ -8,7 +8,6 @@
 package com.facebook.drawee.backends.pipeline.info;
 
 import android.graphics.Rect;
-import com.facebook.common.internal.Supplier;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
@@ -26,13 +25,12 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImagePerfMonitor implements ImagePerfNotifier {
 
   private final PipelineDraweeController mPipelineDraweeController;
   private final MonotonicClock mMonotonicClock;
   private final ImagePerfState mImagePerfState;
-  private final Supplier<Boolean> mAsyncLogging;
 
   private @Nullable ImagePerfRequestListener mImagePerfRequestListener;
   private @Nullable ImagePerfControllerListener2 mImagePerfControllerListener2;
@@ -43,13 +41,10 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
   private boolean mEnabled;
 
   public ImagePerfMonitor(
-      MonotonicClock monotonicClock,
-      PipelineDraweeController pipelineDraweeController,
-      Supplier<Boolean> asyncLogging) {
+      MonotonicClock monotonicClock, PipelineDraweeController pipelineDraweeController) {
     mMonotonicClock = monotonicClock;
     mPipelineDraweeController = pipelineDraweeController;
     mImagePerfState = new ImagePerfState();
-    mAsyncLogging = asyncLogging;
   }
 
   public void setEnabled(boolean enabled) {
@@ -135,7 +130,7 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
   private void setupListeners() {
     if (mImagePerfControllerListener2 == null) {
       mImagePerfControllerListener2 =
-          new ImagePerfControllerListener2(mMonotonicClock, mImagePerfState, this, mAsyncLogging);
+          new ImagePerfControllerListener2(mMonotonicClock, mImagePerfState, this);
     }
     if (mImagePerfRequestListener == null) {
       mImagePerfRequestListener = new ImagePerfRequestListener(mMonotonicClock, mImagePerfState);

@@ -10,7 +10,10 @@
 namespace facebook {
 namespace imagepipeline {
 
-void safeThrowJavaException(JNIEnv* env, jclass exceptionCls, const char* msg) {
+void safeThrowJavaExceptionWebp(
+    JNIEnv* env,
+    jclass exceptionCls,
+    const char* msg) {
   if (!env->ExceptionCheck()) {
     env->ThrowNew(exceptionCls, msg);
   }

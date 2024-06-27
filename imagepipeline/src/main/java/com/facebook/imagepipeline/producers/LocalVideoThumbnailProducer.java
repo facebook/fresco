@@ -7,21 +7,20 @@
 
 package com.facebook.imagepipeline.producers;
 
+import static com.facebook.common.util.UriUtil.getRealPathFromUri;
+
 import android.content.ContentResolver;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
-import com.facebook.common.util.UriUtil;
 import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imagepipeline.bitmaps.SimpleBitmapReleaser;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -69,14 +68,14 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
           protected void onSuccess(@Nullable CloseableReference<CloseableImage> result) {
             super.onSuccess(result);
             listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, result != null);
-            producerContext.putOriginExtra("local");
+            producerContext.putOriginExtra("local", "video");
           }
 
           @Override
           protected void onFailure(Exception e) {
             super.onFailure(e);
             listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, false);
-            producerContext.putOriginExtra("local");
+            producerContext.putOriginExtra("local", "video");
           }
 
           @Override
@@ -145,33 +144,7 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
   @Nullable
   private String getLocalFilePath(ImageRequest imageRequest) {
     Uri uri = imageRequest.getSourceUri();
-    if (UriUtil.isLocalFileUri(uri)) {
-      return imageRequest.getSourceFile().getPath();
-    } else if (UriUtil.isLocalContentUri(uri)) {
-      String selection = null;
-      String[] selectionArgs = null;
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
-          && "com.android.providers.media.documents".equals(uri.getAuthority())) {
-        String documentId = DocumentsContract.getDocumentId(uri);
-        Preconditions.checkNotNull(documentId);
-        uri = Preconditions.checkNotNull(MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-        selection = MediaStore.Video.Media._ID + "=?";
-        selectionArgs = new String[] {documentId.split(":")[1]};
-      }
-      Cursor cursor =
-          mContentResolver.query(
-              uri, new String[] {MediaStore.Video.Media.DATA}, selection, selectionArgs, null);
-      try {
-        if (cursor != null && cursor.moveToFirst()) {
-          return cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
-        }
-      } finally {
-        if (cursor != null) {
-          cursor.close();
-        }
-      }
-    }
-    return null;
+    return getRealPathFromUri(mContentResolver, uri);
   }
 
   @Nullable
