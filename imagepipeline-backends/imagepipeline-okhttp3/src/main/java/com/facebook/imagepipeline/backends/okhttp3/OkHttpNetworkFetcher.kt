@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.backends.okhttp3
 
+import android.os.Build
 import android.os.Looper
 import android.os.SystemClock
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpNetworkFetcher.OkHttpNetworkFetchState
@@ -125,7 +126,10 @@ constructor(
             responseBody?.use { body ->
               try {
                 if (!response.isSuccessful) {
-                  handleException(call, IOException("Unexpected HTTP code $response"), callback)
+                  handleException(
+                      call,
+                      makeExceptionFromResponse("Unexpected HTTP code $response", response),
+                      callback)
                   return@use
                 }
                 val responseRange = fromContentRangeHeader(response.header("Content-Range"))
@@ -143,12 +147,23 @@ constructor(
               } catch (e: Exception) {
                 handleException(call, e, callback)
               }
-            } ?: handleException(call, IOException("Response body null: $response"), callback)
+            }
+                ?: handleException(
+                    call,
+                    makeExceptionFromResponse("Response body null: $response", response),
+                    callback)
           }
 
           override fun onFailure(call: Call, e: IOException) = handleException(call, e, callback)
         })
   }
+
+  private fun makeExceptionFromResponse(message: String, response: Response): IOException =
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+        IOException(message, OkHttpNetworkFetcherException.fromResponse(response))
+      } else {
+        IOException(message)
+      }
 
   /**
    * Handles exceptions.
