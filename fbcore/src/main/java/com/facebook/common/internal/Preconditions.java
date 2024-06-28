@@ -14,6 +14,7 @@
 
 package com.facebook.common.internal;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -97,6 +98,7 @@ import javax.annotation.Nullable;
  * @author Kevin Bourrillion
  * @since 2.0 (imported from Google Collections Library)
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public final class Preconditions {
   private Preconditions() {}
 
