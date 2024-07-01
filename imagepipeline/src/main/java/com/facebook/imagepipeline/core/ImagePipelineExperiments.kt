@@ -24,6 +24,7 @@ import com.facebook.imagepipeline.cache.CacheKeyFactory
 import com.facebook.imagepipeline.cache.MemoryCache
 import com.facebook.imagepipeline.decoder.ImageDecoder
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig
+import com.facebook.imagepipeline.decoder.factory.AvifDecoderFactory
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.platform.PlatformDecoderOptions
 import com.facebook.imageutils.BitmapUtil
@@ -41,6 +42,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val webpErrorLogger: WebpErrorLogger?
   val isDecodeCancellationEnabled: Boolean
   val webpBitmapFactory: WebpBitmapFactory?
+  val avifDecoderFactory: AvifDecoderFactory?
   val useDownsamplingRatioForResizing: Boolean
   val useBitmapPrepareToDraw: Boolean
   val useBalancedAnimationStrategy: Boolean
@@ -82,6 +84,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var webpErrorLogger: WebpErrorLogger? = null
     @JvmField var decodeCancellationEnabled = false
     @JvmField var webpBitmapFactory: WebpBitmapFactory? = null
+    @JvmField var avifDecoderFactory: AvifDecoderFactory? = null
     @JvmField var useDownsamplingRatioForResizing = false
     @JvmField var useBitmapPrepareToDraw = false
     @JvmField var useBalancedAnimationStrategy = false
@@ -415,6 +418,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     webpErrorLogger = builder.webpErrorLogger
     isDecodeCancellationEnabled = builder.decodeCancellationEnabled
     webpBitmapFactory = builder.webpBitmapFactory
+    avifDecoderFactory = builder.avifDecoderFactory
     useDownsamplingRatioForResizing = builder.useDownsamplingRatioForResizing
     useBitmapPrepareToDraw = builder.useBitmapPrepareToDraw
     useBalancedAnimationStrategy = builder.useBalancedAnimationStrategy

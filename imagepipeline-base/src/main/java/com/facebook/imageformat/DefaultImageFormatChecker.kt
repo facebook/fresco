@@ -9,6 +9,7 @@ package com.facebook.imageformat
 
 import com.facebook.common.webp.WebpSupportStatus
 import com.facebook.imageformat.ImageFormat.FormatChecker
+import java.nio.charset.Charset
 
 /** Default image format checker that is able to determine all [DefaultImageFormats]. */
 class DefaultImageFormatChecker : FormatChecker {
@@ -60,6 +61,9 @@ class DefaultImageFormatChecker : FormatChecker {
     }
     if (isHeifHeader(headerBytes, headerSize)) {
       return DefaultImageFormats.HEIF
+    }
+    if (isAvifHeader(headerBytes)) {
+      return DefaultImageFormats.AVIF
     }
     return if (isDngHeader(headerBytes, headerSize)) {
       DefaultImageFormats.DNG
@@ -277,5 +281,17 @@ class DefaultImageFormatChecker : FormatChecker {
         headerSize >= DNG_HEADER_LENGTH &&
             (ImageFormatCheckerUtils.startsWithPattern(imageHeaderBytes, DNG_HEADER_II) ||
                 ImageFormatCheckerUtils.startsWithPattern(imageHeaderBytes, DNG_HEADER_MM))
+
+    /**
+     * Checks if [imageHeaderBytes] contains 'avif'.
+     *
+     * This check may not be sufficient, though it works for most AVIF images.
+     * Details on AVIF can be found [here](https://aomediacodec.github.io/av1-avif/).
+     * */
+    private fun isAvifHeader(imageHeaderBytes: ByteArray): Boolean {
+      return imageHeaderBytes
+              .toString(Charset.forName("UTF-8"))
+              .contains("avif")
+    }
   }
 }
