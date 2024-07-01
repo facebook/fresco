@@ -5,22 +5,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.cache.common;
-
-import com.facebook.infer.annotation.Nullsafe;
-import javax.annotation.Nullable;
+package com.facebook.cache.common
 
 /** An interface for logging various cache errors. */
-@Nullsafe(Nullsafe.Mode.STRICT)
-public interface CacheErrorLogger {
+interface CacheErrorLogger {
 
   /** A categorizaton of different cache and storage related errors. */
-  enum CacheErrorCategory {
+  enum class CacheErrorCategory {
     READ_DECODE,
     READ_FILE,
     READ_FILE_NOT_FOUND,
     READ_INVALID_ENTRY,
-
     WRITE_ENCODE,
     WRITE_CREATE_TEMPFILE,
     WRITE_UPDATE_FILE_NOT_FOUND,
@@ -30,9 +25,7 @@ public interface CacheErrorLogger {
     WRITE_CREATE_DIR,
     WRITE_CALLBACK_ERROR,
     WRITE_INVALID_ENTRY,
-
     DELETE_FILE,
-
     EVICTION,
     GENERIC_IO,
     OTHER
@@ -46,6 +39,10 @@ public interface CacheErrorLogger {
    * @param message An optional error message
    * @param throwable An optional exception
    */
-  void logError(
-      CacheErrorCategory category, Class<?> clazz, String message, @Nullable Throwable throwable);
+  fun logError(
+      category: CacheErrorCategory?,
+      clazz: Class<*>?,
+      message: String?,
+      throwable: Throwable?
+  )
 }
