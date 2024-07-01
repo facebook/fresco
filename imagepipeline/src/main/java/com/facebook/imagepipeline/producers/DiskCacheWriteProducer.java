@@ -15,6 +15,7 @@ import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
+import java.util.Map;
 import javax.annotation.Nullable;
 
 /**
@@ -36,16 +37,19 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
 
   private final BufferedDiskCache mDefaultBufferedDiskCache;
   private final BufferedDiskCache mSmallImageBufferedDiskCache;
+  private final @Nullable Map<String, BufferedDiskCache> mDynamicBufferedDiskCaches;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Producer<EncodedImage> mInputProducer;
 
   public DiskCacheWriteProducer(
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
+      @Nullable Map<String, BufferedDiskCache> dynamicBufferedDiskCaches,
       CacheKeyFactory cacheKeyFactory,
       Producer<EncodedImage> inputProducer) {
     mDefaultBufferedDiskCache = defaultBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
+    mDynamicBufferedDiskCaches = dynamicBufferedDiskCaches;
     mCacheKeyFactory = cacheKeyFactory;
     mInputProducer = inputProducer;
   }
@@ -74,6 +78,7 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
                 producerContext,
                 mDefaultBufferedDiskCache,
                 mSmallImageBufferedDiskCache,
+                mDynamicBufferedDiskCaches,
                 mCacheKeyFactory);
       } else {
         consumer = consumerOfDiskCacheWriteProducer;
@@ -95,6 +100,8 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
     private final ProducerContext mProducerContext;
     private final BufferedDiskCache mDefaultBufferedDiskCache;
     private final BufferedDiskCache mSmallImageBufferedDiskCache;
+
+    private final @Nullable Map<String, BufferedDiskCache> mDynamicBufferedDiskCaches;
     private final CacheKeyFactory mCacheKeyFactory;
 
     private DiskCacheWriteConsumer(
@@ -102,11 +109,13 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
         final ProducerContext producerContext,
         final BufferedDiskCache defaultBufferedDiskCache,
         final BufferedDiskCache smallImageBufferedDiskCache,
+        @Nullable final Map<String, BufferedDiskCache> dynamicBufferedDiskCaches,
         final CacheKeyFactory cacheKeyFactory) {
       super(consumer);
       mProducerContext = producerContext;
       mDefaultBufferedDiskCache = defaultBufferedDiskCache;
       mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
+      mDynamicBufferedDiskCaches = dynamicBufferedDiskCaches;
       mCacheKeyFactory = cacheKeyFactory;
     }
 
@@ -129,12 +138,26 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
       final ImageRequest imageRequest = mProducerContext.getImageRequest();
       final CacheKey cacheKey =
           mCacheKeyFactory.getEncodedCacheKey(imageRequest, mProducerContext.getCallerContext());
-
-      if (imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL) {
-        mSmallImageBufferedDiskCache.put(cacheKey, newResult);
-      } else {
-        mDefaultBufferedDiskCache.put(cacheKey, newResult);
+      BufferedDiskCache bufferedDiskCache =
+          DiskCacheDecision.chooseDiskCacheForRequest(
+              imageRequest,
+              mSmallImageBufferedDiskCache,
+              mDefaultBufferedDiskCache,
+              mDynamicBufferedDiskCaches);
+      if (bufferedDiskCache == null) {
+        mProducerContext
+            .getProducerListener()
+            .onProducerFinishWithFailure(
+                mProducerContext,
+                PRODUCER_NAME,
+                new DiskCacheDecision.DiskCacheDecisionNoDiskCacheChosenException(
+                    "Got no disk cache for CacheChoice: "
+                        + Integer.valueOf(imageRequest.getCacheChoice().ordinal()).toString()),
+                null);
+        getConsumer().onNewResult(newResult, status);
+        return;
       }
+      bufferedDiskCache.put(cacheKey, newResult);
       mProducerContext
           .getProducerListener()
           .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);

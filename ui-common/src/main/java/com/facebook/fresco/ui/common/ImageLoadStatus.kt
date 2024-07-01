@@ -12,9 +12,7 @@ enum class ImageLoadStatus(val value: Int) {
   REQUESTED(0),
   INTERMEDIATE_AVAILABLE(2),
   SUCCESS(3),
-  CANCELED(4),
   ERROR(5),
-  DRAW(6),
   EMPTY_EVENT(7),
   RELEASED(8);
 
@@ -26,7 +24,6 @@ enum class ImageLoadStatus(val value: Int) {
     return when (this) {
       REQUESTED -> "requested"
       SUCCESS -> "success"
-      CANCELED -> "canceled"
       INTERMEDIATE_AVAILABLE -> "intermediate_available"
       ERROR -> "error"
       RELEASED -> "released"

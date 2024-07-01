@@ -23,9 +23,10 @@ import com.facebook.fresco.vito.core.impl.ImagePipelineUtilsImpl.CircularBitmapR
 import com.facebook.fresco.vito.core.impl.debug.DefaultDebugOverlayFactory2
 import com.facebook.fresco.vito.core.impl.debug.NoOpDebugOverlayFactory2
 import com.facebook.fresco.vito.nativecode.NativeCircularBitmapRounding
-import com.facebook.fresco.vito.provider.FrescoVitoProvider
+import com.facebook.fresco.vito.provider.components.FrescoVitoComponents
 import com.facebook.fresco.vito.provider.impl.DefaultFrescoVitoProvider
 import com.facebook.fresco.vito.provider.impl.NoOpCallerContextVerifier
+import com.facebook.fresco.vito.provider.setup.FrescoVitoSetup
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.core.ImagePipelineFactory
 import com.facebook.imagepipeline.image.ImageInfo
@@ -58,7 +59,8 @@ class FrescoVito {
         callerContextVerifier: CallerContextVerifier = NoOpCallerContextVerifier,
         vitoImagePerfListener: VitoImagePerfListener = BaseVitoImagePerfListener(),
         imagePerfListenerSupplier: Supplier<ControllerListener2<ImageInfo>>? = null,
-        showExtendedDebugOverlayInformation: Boolean = true
+        showExtendedDebugOverlayInformation: Boolean = true,
+        showExtendedImageSourceExtraInformation: Boolean = false,
     ) {
       if (isInitialized) {
         return
@@ -78,7 +80,10 @@ class FrescoVito {
               callerContextVerifier,
               vitoImagePerfListener,
               debugOverlayEnabledSupplier?.let {
-                DefaultDebugOverlayFactory2(showExtendedDebugOverlayInformation, it)
+                DefaultDebugOverlayFactory2(
+                    showExtendedDebugOverlayInformation,
+                    showExtendedImageSourceExtraInformation,
+                    it)
               } ?: NoOpDebugOverlayFactory2(),
               imagePerfListenerSupplier))
     }
@@ -90,11 +95,11 @@ class FrescoVito {
      * @param providerImplementation the provider implementation to be used
      */
     @Synchronized
-    fun initialize(providerImplementation: FrescoVitoProvider.Implementation) {
+    fun initialize(providerImplementation: FrescoVitoSetup) {
       if (isInitialized) {
         return
       }
-      FrescoVitoProvider.setImplementation(providerImplementation)
+      FrescoVitoComponents.setImplementation(providerImplementation)
       isInitialized = true
     }
 

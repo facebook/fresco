@@ -11,7 +11,7 @@ import com.facebook.imageformat.ImageFormat;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** Factory class to create an {@link SimpleImageTranscoder} */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class SimpleImageTranscoderFactory implements ImageTranscoderFactory {
 
   private final int mMaxBitmapSize;

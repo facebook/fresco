@@ -43,6 +43,7 @@ android {
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
 
+    namespace "com.facebook.samples.comparison"
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {

@@ -8,6 +8,10 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
+kotlin {
+    jvmToolchain(11)
+}
+
 dependencies {
     implementation project(':drawee')
     implementation project(':drawee-backends:drawee-pipeline')
@@ -26,6 +30,8 @@ dependencies {
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
+
+    namespace "com.facebook.fresco.vito.core.impl"
 
     defaultConfig {
         minSdkVersion FrescoConfig.minSdkVersion

@@ -146,6 +146,7 @@ constructor(pool: MemoryChunkPool, initialCapacity: Int = pool.minBufferSize) :
 
   /** An exception indicating that this stream is no longer valid */
   class InvalidStreamException : RuntimeException("OutputStream no longer valid")
+
   /**
    * Construct a new instance of this output stream with this initial capacity It is not an error to
    * have this initial capacity be inaccurate. If the actual contents end up being larger than the

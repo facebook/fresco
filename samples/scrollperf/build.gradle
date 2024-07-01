@@ -16,6 +16,8 @@ android {
     compileSdkVersion FrescoConfig.compileSdkVersion
     buildToolsVersion FrescoConfig.buildToolsVersion
 
+    namespace "com.facebook.samples.scrollperf"
+
     defaultConfig {
         applicationId "com.facebook.samples.scrollperf"
         minSdkVersion FrescoConfig.samplesMinSdkVersion
@@ -44,13 +46,8 @@ android {
         abortOnError false
     }
 
-    sourceSets {
-        main {
-            res.srcDirs = ['src/main/res', 'src/androidTest/res']
-        }
-        androidTest {
-            res.srcDirs = ['src/androidTest/res']
-        }
+    buildFeatures {
+        buildConfig = true
     }
 }
 

@@ -83,6 +83,9 @@ class ImagePipelineUtilsImpl(private val imageDecodeOptionsProvider: ImageDecode
     if (imageOptions.cacheChoice != null) {
       builder.cacheChoice = imageOptions.cacheChoice
     }
+    if (imageOptions.diskCacheId != null) {
+      builder.diskCacheId = imageOptions.diskCacheId
+    }
     return builder
   }
 

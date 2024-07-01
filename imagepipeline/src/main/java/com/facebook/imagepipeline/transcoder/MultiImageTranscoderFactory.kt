@@ -28,7 +28,7 @@ class MultiImageTranscoderFactory(
   override fun createImageTranscoder(
       imageFormat: ImageFormat,
       isResizingEnabled: Boolean
-  ): ImageTranscoder? {
+  ): ImageTranscoder {
     // Use custom ImageTranscoder, if any
     var imageTranscoder = getCustomImageTranscoder(imageFormat, isResizingEnabled)
     // Use ImageTranscoder based on type passed, if any

@@ -8,6 +8,10 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
+kotlin {
+    jvmToolchain(11)
+}
+
 dependencies {
     implementation project(':vito:core')
     implementation project(':vito:options')
@@ -18,6 +22,8 @@ dependencies {
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
+
+    namespace "com.facebook.fresco.vito.ktx"
 
     defaultConfig {
         minSdkVersion FrescoConfig.minSdkVersion

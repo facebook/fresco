@@ -78,4 +78,5 @@ interface ImagePipelineConfigInterface {
   val bitmapCacheOverride: MemoryCache<CacheKey, CloseableImage>?
   val encodedMemoryCacheOverride: MemoryCache<CacheKey, PooledByteBuffer>?
   val bitmapMemoryCacheFactory: BitmapMemoryCacheFactory
+  val dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>?
 }

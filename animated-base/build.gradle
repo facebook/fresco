@@ -11,6 +11,10 @@ import com.facebook.fresco.buildsrc.TestDeps
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
+kotlin {
+    jvmToolchain(11)
+}
+
 dependencies {
     compileOnly Deps.inferAnnotation
     compileOnly Deps.javaxAnnotation
@@ -51,6 +55,8 @@ dependencies {
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
+
+    namespace "com.facebook.imagepipeline.animated"
 
     defaultConfig {
         minSdkVersion FrescoConfig.minSdkVersion

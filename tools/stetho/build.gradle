@@ -10,6 +10,10 @@ import com.facebook.fresco.buildsrc.Deps
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
+kotlin {
+    jvmToolchain(11)
+}
+
 dependencies {
     compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
@@ -30,6 +34,8 @@ dependencies {
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
+
+    namespace "com.facebook.fresco.stetho"
 
     defaultConfig {
         minSdkVersion FrescoConfig.minSdkVersion

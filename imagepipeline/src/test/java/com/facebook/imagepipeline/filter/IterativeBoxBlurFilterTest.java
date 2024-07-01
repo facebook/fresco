@@ -21,16 +21,16 @@ import org.robolectric.annotation.Config;
 @Config(manifest = Config.NONE)
 public class IterativeBoxBlurFilterTest {
 
-  private final int BITMAP_SIZE = (int) BitmapUtil.MAX_BITMAP_SIZE;
+  private final int BITMAP_DIMENSION = (int) BitmapUtil.MAX_BITMAP_DIMENSION;
   private final Bitmap mBitmap =
-      Bitmap.createBitmap(BITMAP_SIZE, BITMAP_SIZE, Bitmap.Config.ARGB_8888);
+      Bitmap.createBitmap(BITMAP_DIMENSION, BITMAP_DIMENSION, Bitmap.Config.ARGB_8888);
 
   @Test
   public void testBitmapBlurInPlace() {
     IterativeBoxBlurFilter.boxBlurBitmapInPlace(mBitmap, 1, 4);
     assertNotNull(mBitmap);
-    assertEquals(mBitmap.getWidth(), BITMAP_SIZE);
-    assertEquals(mBitmap.getHeight(), BITMAP_SIZE);
+    assertEquals(mBitmap.getWidth(), BITMAP_DIMENSION);
+    assertEquals(mBitmap.getHeight(), BITMAP_DIMENSION);
     assertEquals(mBitmap.getConfig(), Bitmap.Config.ARGB_8888);
   }
 
@@ -38,8 +38,8 @@ public class IterativeBoxBlurFilterTest {
   public void maxRadiusBitmapBlurInPlace() {
     IterativeBoxBlurFilter.boxBlurBitmapInPlace(mBitmap, 1, RenderScriptBlurFilter.BLUR_MAX_RADIUS);
     assertNotNull(mBitmap);
-    assertEquals(mBitmap.getWidth(), BITMAP_SIZE);
-    assertEquals(mBitmap.getHeight(), BITMAP_SIZE);
+    assertEquals(mBitmap.getWidth(), BITMAP_DIMENSION);
+    assertEquals(mBitmap.getHeight(), BITMAP_DIMENSION);
     assertEquals(mBitmap.getConfig(), Bitmap.Config.ARGB_8888);
   }
 

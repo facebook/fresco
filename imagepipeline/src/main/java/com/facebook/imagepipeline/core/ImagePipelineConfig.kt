@@ -115,6 +115,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
   override val encodedMemoryCacheOverride: MemoryCache<CacheKey, PooledByteBuffer>?
   override val executorServiceForAnimatedImages: SerialExecutorService?
   override val bitmapMemoryCacheFactory: BitmapMemoryCacheFactory
+  override val dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>?
 
   init {
     if (isTracing()) {
@@ -180,6 +181,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
         builder.bitmapMemoryCacheFactory ?: CountingLruBitmapMemoryCacheFactory()
     encodedMemoryCacheOverride = builder.encodedMemoryCache
     executorServiceForAnimatedImages = builder.serialExecutorServiceForAnimatedImages
+    dynamicDiskCacheConfigMap = builder.dynamicDiskCacheConfigMap
     // Here we manage the WebpBitmapFactory implementation if any
     var webpBitmapFactory = experiments.webpBitmapFactory
     if (webpBitmapFactory != null) {
@@ -306,6 +308,9 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
       private set
 
     var bitmapMemoryCacheFactory: BitmapMemoryCacheFactory? = null
+      private set
+
+    var dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>? = null
       private set
 
     fun setBitmapsConfig(config: Bitmap.Config?): Builder = apply { this.bitmapConfig = config }
@@ -481,6 +486,10 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
         apply {
           this.bitmapMemoryCacheFactory = bitmapMemoryCacheFactory
         }
+
+    fun setDynamicDiskCacheConfigMap(
+        dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>
+    ): Builder = apply { this.dynamicDiskCacheConfigMap = dynamicDiskCacheConfigMap }
 
     fun experiment(): ImagePipelineExperiments.Builder = experimentsBuilder
 

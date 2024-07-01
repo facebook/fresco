@@ -85,10 +85,21 @@ class ProducerSequenceFactory(
           SourceUriType.SOURCE_TYPE_LOCAL_IMAGE_FILE -> localFileFetchEncodedImageProducerSequence
           SourceUriType.SOURCE_TYPE_LOCAL_CONTENT ->
               localContentUriFetchEncodedImageProducerSequence
-          else ->
-              throw IllegalArgumentException(
-                  "Unsupported uri scheme for encoded image fetch! Uri is: " +
-                      getShortenedUriString(uri))
+          else -> {
+            if (customProducerSequenceFactories != null) {
+              for (customProducerSequenceFactory in customProducerSequenceFactories) {
+                val sequence =
+                    customProducerSequenceFactory.getCustomEncodedImageSequence(
+                        imageRequest, this, producerFactory, threadHandoffProducerQueue)
+                if (sequence != null) {
+                  return sequence
+                }
+              }
+            }
+            throw IllegalArgumentException(
+                "Unsupported uri scheme for encoded image fetch! Uri is: " +
+                    getShortenedUriString(uri))
+          }
         }
       }
 

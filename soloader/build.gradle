@@ -9,6 +9,12 @@ import com.facebook.fresco.buildsrc.Deps
 
 apply plugin: 'com.android.library'
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
+}
+
 dependencies {
     compileOnly Deps.jsr305
     compileOnly Deps.inferAnnotation
@@ -20,6 +26,8 @@ dependencies {
 android {
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
+
+    namespace "com.facebook.fresco.soloader"
 
     defaultConfig {
         minSdkVersion FrescoConfig.minSdkVersion

@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.producers;
 
+import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.core.ProducerFactory;
 import com.facebook.imagepipeline.core.ProducerSequenceFactory;
@@ -35,5 +36,13 @@ public class CustomProducerSequenceFactory {
       boolean isEncodedMemoryCacheProbingEnabled,
       boolean isDiskCacheProbingEnabled) {
     return getCustomDecodedImageSequence(imageRequest, producerSequenceFactory);
+  }
+
+  public @Nullable Producer<CloseableReference<PooledByteBuffer>> getCustomEncodedImageSequence(
+      ImageRequest imageRequest,
+      ProducerSequenceFactory producerSequenceFactory,
+      ProducerFactory producerFactory,
+      ThreadHandoffProducerQueue threadHandoffProducerQueue) {
+    return null;
   }
 }

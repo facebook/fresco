@@ -89,7 +89,7 @@ object FrescoVitoSlideshowComponentSpec {
     fetchNextImage(
         c.resources,
         slideshowDrawable,
-        uris[slideshowIndex],
+        uris[slideshowIndex % uris.size],
         imageOptions,
         callerContext,
         contextChain,
@@ -179,7 +179,7 @@ object FrescoVitoSlideshowComponentSpec {
     fetchNextImage(
         resources,
         slideshowDrawable,
-        uris[nextIndex],
+        uris[nextIndex % uris.size],
         options,
         callerContext,
         contextChain,

@@ -10,6 +10,7 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ColorSpace
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.util.Pair
@@ -17,15 +18,13 @@ import androidx.core.util.Pools
 import com.facebook.common.memory.DecodeBufferHelper
 import java.io.ByteArrayInputStream
 import java.io.InputStream
-import java.lang.NullPointerException
-import java.lang.UnsupportedOperationException
 import java.nio.ByteBuffer
 
 /** This class contains utility method for Bitmap */
 object BitmapUtil {
 
   private const val POOL_SIZE = 12
-  private val DECODE_BUFFERS: Pools.SynchronizedPool<ByteBuffer?> by lazy {
+  private val DECODE_BUFFERS: Pools.SynchronizedPool<ByteBuffer> by lazy {
     Pools.SynchronizedPool(POOL_SIZE)
   }
 
@@ -36,8 +35,9 @@ object BitmapUtil {
   const val RGB_565_BYTES_PER_PIXEL: Int = 2
   const val RGBA_F16_BYTES_PER_PIXEL: Int = 8
   const val RGBA_1010102_BYTES_PER_PIXEL = 4
-  const val MAX_BITMAP_SIZE: Float = 2_048f
+  const val MAX_BITMAP_DIMENSION: Float = 2_048f
   private var useDecodeBufferHelper = false
+  private var fixDecodeDrmImageCrash = false
 
   /** @return size in bytes of the underlying bitmap */
   @JvmStatic
@@ -102,7 +102,7 @@ object BitmapUtil {
     options.inJustDecodeBounds = true
     return try {
       options.inTempStorage = byteBuffer.array()
-      BitmapFactory.decodeStream(inputStream, null, options)
+      decodeStreamInternal(inputStream, null, options)
       if (options.outWidth == -1 || options.outHeight == -1) null
       else Pair(options.outWidth, options.outHeight)
     } finally {
@@ -125,7 +125,7 @@ object BitmapUtil {
     options.inJustDecodeBounds = true
     return try {
       options.inTempStorage = byteBuffer.array()
-      BitmapFactory.decodeStream(inputStream, null, options)
+      decodeStreamInternal(inputStream, null, options)
       val colorSpace: ColorSpace? =
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) options.outColorSpace else null
 
@@ -133,6 +133,21 @@ object BitmapUtil {
     } finally {
       releaseByteBuffer(byteBuffer)
     }
+  }
+
+  fun decodeStreamInternal(
+      inputStream: InputStream?,
+      outPadding: Rect?,
+      options: BitmapFactory.Options?
+  ): Bitmap? {
+    if (this.fixDecodeDrmImageCrash) {
+      return try {
+        BitmapFactory.decodeStream(inputStream, outPadding, options)
+      } catch (ex: IllegalArgumentException) {
+        null
+      }
+    }
+    return BitmapFactory.decodeStream(inputStream, outPadding, options)
   }
 
   /**
@@ -196,6 +211,11 @@ object BitmapUtil {
   @JvmStatic
   fun setUseDecodeBufferHelper(useDecodeBufferHelper: Boolean) {
     this.useDecodeBufferHelper = useDecodeBufferHelper
+  }
+
+  @JvmStatic
+  fun setFixDecodeDrmImageCrash(fixDecodeDrmImageCrash: Boolean) {
+    this.fixDecodeDrmImageCrash = fixDecodeDrmImageCrash
   }
 
   private fun obtainByteBuffer(): ByteBuffer {
