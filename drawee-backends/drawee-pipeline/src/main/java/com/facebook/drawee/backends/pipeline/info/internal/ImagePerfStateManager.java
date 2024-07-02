@@ -25,7 +25,7 @@ import java.io.Closeable;
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageInfo>
+public class ImagePerfStateManager extends BaseControllerListener2<ImageInfo>
     implements ImagePerfNotifierHolder,
         OnDrawControllerListener<ImageInfo>,
         Closeable,
@@ -39,14 +39,14 @@ public class ImagePerfControllerListener2 extends BaseControllerListener2<ImageI
 
   private final boolean mReportVisibleOnSubmitAndRelease;
 
-  public ImagePerfControllerListener2(
+  public ImagePerfStateManager(
       MonotonicClock clock,
       ImagePerfState imagePerfState,
       ImagePerfNotifier globalImagePerfNotifier) {
     this(clock, imagePerfState, globalImagePerfNotifier, true);
   }
 
-  public ImagePerfControllerListener2(
+  public ImagePerfStateManager(
       MonotonicClock clock,
       ImagePerfState imagePerfState,
       ImagePerfNotifier globalImagePerfNotifier,

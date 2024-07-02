@@ -10,8 +10,8 @@ package com.facebook.drawee.backends.pipeline.info;
 import android.graphics.Rect;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
-import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener2;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfRequestListener;
+import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfStateManager;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.fresco.ui.common.ImageLoadStatus;
 import com.facebook.fresco.ui.common.ImagePerfData;
@@ -33,7 +33,7 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
   private final ImagePerfState mImagePerfState;
 
   private @Nullable ImagePerfRequestListener mImagePerfRequestListener;
-  private @Nullable ImagePerfControllerListener2 mImagePerfControllerListener2;
+  private @Nullable ImagePerfStateManager mImagePerfStateManager;
   private @Nullable ForwardingRequestListener mForwardingRequestListener;
 
   private @Nullable List<ImagePerfDataListener> mImagePerfDataListeners;
@@ -51,15 +51,15 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
     mEnabled = enabled;
     if (enabled) {
       setupListeners();
-      if (mImagePerfControllerListener2 != null) {
-        mPipelineDraweeController.addControllerListener2(mImagePerfControllerListener2);
+      if (mImagePerfStateManager != null) {
+        mPipelineDraweeController.addControllerListener2(mImagePerfStateManager);
       }
       if (mForwardingRequestListener != null) {
         mPipelineDraweeController.addRequestListener(mForwardingRequestListener);
       }
     } else {
-      if (mImagePerfControllerListener2 != null) {
-        mPipelineDraweeController.removeControllerListener2(mImagePerfControllerListener2);
+      if (mImagePerfStateManager != null) {
+        mPipelineDraweeController.removeControllerListener2(mImagePerfStateManager);
       }
       if (mForwardingRequestListener != null) {
         mPipelineDraweeController.removeRequestListener(mForwardingRequestListener);
@@ -128,9 +128,8 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
   }
 
   private void setupListeners() {
-    if (mImagePerfControllerListener2 == null) {
-      mImagePerfControllerListener2 =
-          new ImagePerfControllerListener2(mMonotonicClock, mImagePerfState, this);
+    if (mImagePerfStateManager == null) {
+      mImagePerfStateManager = new ImagePerfStateManager(mMonotonicClock, mImagePerfState, this);
     }
     if (mImagePerfRequestListener == null) {
       mImagePerfRequestListener = new ImagePerfRequestListener(mMonotonicClock, mImagePerfState);
