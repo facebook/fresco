@@ -14,20 +14,28 @@ interface UriModifierInterface {
 
   fun modifyUri(uri: Uri, viewport: Dimensions?, scaleType: ScaleType?): ModificationResult
 
-  /** This is used for IMAGE_LOAD_PERF logging. */
   sealed class ModificationResult(private val comment: String) {
+
+    abstract val bestAllowlistedSize: Int?
+
     override fun toString(): String = comment
 
-    object Disabled : ModificationResult("Disabled")
-
-    sealed class Modified(val newUri: Uri, comment: String) : ModificationResult(comment) {
-      class ModifiedToAllowlistedSize(newUrl: Uri) : Modified(newUrl, "ModifiedToAllowlistedSize")
-
-      class ModifiedToMaxDimens(newUrl: Uri) : Modified(newUrl, "ModifiedToMaxDimens")
+    object Disabled : ModificationResult("Disabled") {
+      override val bestAllowlistedSize: Int? = null
     }
 
-    object FallbackToOriginalUrl : ModificationResult("FallbackToOriginalUrl")
+    sealed class Modified(val newUri: Uri, comment: String) : ModificationResult(comment) {
+      class ModifiedToAllowlistedSize(newUrl: Uri, override val bestAllowlistedSize: Int?) :
+          Modified(newUrl, "ModifiedToAllowlistedSize")
 
-    data class Unmodified(val reason: String) : ModificationResult("Unmodified(reason='$reason'")
+      class ModifiedToMaxDimens(newUrl: Uri, override val bestAllowlistedSize: Int?) :
+          Modified(newUrl, "ModifiedToMaxDimens")
+    }
+
+    data class FallbackToOriginalUrl(override val bestAllowlistedSize: Int?) :
+        ModificationResult("FallbackToOriginalUrl")
+
+    data class Unmodified(val reason: String, override val bestAllowlistedSize: Int?) :
+        ModificationResult("Unmodified(reason='$reason'")
   }
 }

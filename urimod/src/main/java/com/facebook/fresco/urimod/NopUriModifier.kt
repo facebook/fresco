@@ -9,11 +9,12 @@ package com.facebook.fresco.urimod
 
 import android.net.Uri
 import com.facebook.drawee.drawable.ScalingUtils
+import com.facebook.fresco.urimod.UriModifierInterface.ModificationResult
 
 object NopUriModifier : UriModifierInterface {
   override fun modifyUri(
       uri: Uri,
       viewport: Dimensions?,
       scaleType: ScalingUtils.ScaleType?
-  ): UriModifierInterface.ModificationResult = UriModifierInterface.ModificationResult.Disabled
+  ): ModificationResult = ModificationResult.Disabled
 }
