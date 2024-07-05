@@ -11,16 +11,4 @@ interface PrefetchConfig {
   fun prefetchInOnPrepare(): Boolean
 
   fun prefetchTargetOnPrepare(): PrefetchTarget
-
-  fun cancelOnPreparePrefetchWhenWorkingRangePrefetch(): Boolean
-
-  fun cancelPrefetchWhenFetched(): Boolean
-
-  fun prefetchWithWorkingRange(): Boolean
-
-  fun prefetchWorkingRangeSize(): Int
-
-  fun prefetchTargetWorkingRange(): PrefetchTarget
-
-  fun prioritizeWithWorkingRange(): Boolean
 }

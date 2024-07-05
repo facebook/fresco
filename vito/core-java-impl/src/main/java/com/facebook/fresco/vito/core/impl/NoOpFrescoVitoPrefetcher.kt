@@ -101,13 +101,6 @@ class NoOpFrescoVitoPrefetcher(private val throwException: Boolean = false) : Fr
       callsite: String
   ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
 
-  override fun setDistanceToViewport(
-      distance: Int,
-      callerContext: Any?,
-      uri: Uri?,
-      callsite: String
-  ): Unit = Unit
-
   private fun maybeThrowUnsupportedOperationException(): DataSource<Void?> {
     if (throwException) {
       throw UnsupportedOperationException(EXCEPTION_MSG)

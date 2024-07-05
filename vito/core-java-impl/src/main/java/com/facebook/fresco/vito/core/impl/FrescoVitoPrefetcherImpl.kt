@@ -155,15 +155,6 @@ class FrescoVitoPrefetcherImpl(
     }
   }
 
-  override fun setDistanceToViewport(
-      distance: Int,
-      callerContext: Any?,
-      uri: Uri?,
-      callsite: String
-  ) {
-    // empty
-  }
-
   companion object {
     private val NULL_IMAGE_MESSAGE: Throwable = NullPointerException("No image to prefetch.")
   }
