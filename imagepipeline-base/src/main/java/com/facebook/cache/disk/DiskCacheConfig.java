@@ -35,7 +35,7 @@ public class DiskCacheConfig {
   private final long mMinimumSizeLimit;
   private final EntryEvictionComparatorSupplier mEntryEvictionComparatorSupplier;
   private final CacheErrorLogger mCacheErrorLogger;
-  private final CacheEventListener mCacheEventListener;
+  @Nullable private final CacheEventListener mCacheEventListener;
   private final DiskTrimmableRegistry mDiskTrimmableRegistry;
   @Nullable private final Context mContext;
   private final boolean mIndexPopulateAtStartupEnabled;
@@ -110,7 +110,7 @@ public class DiskCacheConfig {
     return mCacheErrorLogger;
   }
 
-  public CacheEventListener getCacheEventListener() {
+  public @Nullable CacheEventListener getCacheEventListener() {
     return mCacheEventListener;
   }
 
