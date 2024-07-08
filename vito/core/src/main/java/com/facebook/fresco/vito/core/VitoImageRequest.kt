@@ -24,11 +24,16 @@ class VitoImageRequest(
     @JvmField val logWithHighSamplingRate: Boolean = false,
     @JvmField val finalImageRequest: ImageRequest?,
     @JvmField val finalImageCacheKey: CacheKey?,
-    @JvmField val extras: MutableMap<String, Any?> = mutableMapOf(),
+    @JvmField val extras: MutableMap<String, Any> = mutableMapOf(),
 ) : HasExtraData {
 
+  /** Simplify this once BaseCloseableImage and BaseProducerContext are converted to Kotlin */
   override fun <E> putExtra(key: String, value: E?) {
-    extras[key] = value
+    if (value == null) {
+      extras.remove(key)
+    } else {
+      extras[key] = value
+    }
   }
 
   @Suppress("UNCHECKED_CAST") override fun <E> getExtra(key: String): E? = extras[key] as? E

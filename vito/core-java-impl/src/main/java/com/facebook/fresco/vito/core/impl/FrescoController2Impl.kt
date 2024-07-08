@@ -434,7 +434,7 @@ open class FrescoController2Impl(
         image: CloseableReference<CloseableImage>?,
         drawable: FrescoDrawable2
     ): Extras {
-      var imageExtras: Map<String, Any?>? = null
+      var imageExtras: Map<String, Any>? = null
       if (image != null) {
         imageExtras = image.get().extras
       }

@@ -76,7 +76,7 @@ object ImageSourceToImagePipelineAdapter {
       callerContext: Any?,
       requestListener: RequestListener?,
       uiComponentId: String,
-      extras: MutableMap<String, Any?>
+      extras: MutableMap<String, Any>
   ): Supplier<DataSource<CloseableReference<CloseableImage>>> {
     return when (imageSource) {
       is SingleImageSource -> {

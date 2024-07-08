@@ -44,7 +44,7 @@ class VitoImagePipelineImpl(
       viewport: Rect?,
   ): VitoImageRequest {
     val imageOptions = options ?: defaults()
-    val extras: MutableMap<String, Any?> = mutableMapOf()
+    val extras: MutableMap<String, Any> = mutableMapOf()
     var finalImageSource = imageSource
     if (imageSource is SingleImageSource) {
       if (imageOptions.experimentalDynamicSize) {
@@ -60,13 +60,9 @@ class VitoImagePipelineImpl(
           finalImageSource = ImageSourceProvider.forUri(result.newUri)
         }
       }
-      if (imageSource.extras != null) {
-        extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = imageSource.extras
-      }
+      imageSource.extras?.let { extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = it }
     } else if (imageSource is IncreasingQualityImageSource) {
-      if (imageSource.extras != null) {
-        extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = imageSource.extras
-      }
+      imageSource.extras?.let { extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = it }
     }
 
     val finalImageRequest =

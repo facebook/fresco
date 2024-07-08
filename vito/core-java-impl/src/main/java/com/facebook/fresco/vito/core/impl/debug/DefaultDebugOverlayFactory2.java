@@ -21,7 +21,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DefaultDebugOverlayFactory2 extends BaseDebugOverlayFactory2 {
 
   private boolean mShowExtendedInformation;
@@ -99,11 +99,11 @@ public class DefaultDebugOverlayFactory2 extends BaseDebugOverlayFactory2 {
     String origin = "unknown";
     String originSubcategory = "unknown";
     if (extras != null) {
-      Map<String, Object> originExtras = extras.datasourceExtras;
+      Map<String, Object> originExtras = (Map<String, Object>) extras.datasourceExtras;
       if (originExtras == null) {
         // We did not receive data source extras, so the image did not come from the image pipeline
         // but from the bitmap memory cache shortcut
-        originExtras = extras.shortcutExtras;
+        originExtras = (Map<String, Object>) extras.shortcutExtras;
       }
       if (originExtras != null) {
         origin = String.valueOf(originExtras.get("origin"));
@@ -125,7 +125,7 @@ public class DefaultDebugOverlayFactory2 extends BaseDebugOverlayFactory2 {
   private void setImageSourceExtra(
       DebugOverlayDrawable overlay, @Nullable ControllerListener2.Extras extras) {
     if (mShowExtendedImageSourceExtraInformation && extras != null) {
-      Map<String, Object> sourceExtras = extras.imageSourceExtras;
+      Map<String, Object> sourceExtras = (Map<String, Object>) extras.imageSourceExtras;
       if (sourceExtras != null) {
         for (Map.Entry<String, Object> entry : sourceExtras.entrySet()) {
           overlay.addDebugData(entry.getKey(), entry.getValue().toString());

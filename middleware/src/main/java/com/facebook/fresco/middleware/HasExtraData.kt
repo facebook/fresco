@@ -7,7 +7,7 @@
 
 package com.facebook.fresco.middleware
 
-typealias Extras = Map<String, Any?>
+typealias Extras = Map<String, Any>
 
 interface HasExtraData {
 

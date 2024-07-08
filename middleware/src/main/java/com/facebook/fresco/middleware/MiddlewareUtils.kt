@@ -22,7 +22,7 @@ object MiddlewareUtils {
       viewportDimensions: Rect?,
       scaleType: String?,
       focusPoint: PointF?,
-      imageExtras: Map<String, Any?>?,
+      imageExtras: Map<String, Any>?,
       callerContext: Any?,
       logWithHighSamplingRate: Boolean = false,
       mainUri: Uri?,

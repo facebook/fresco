@@ -67,7 +67,7 @@ public abstract class BaseCloseableImage implements CloseableImage {
 
   /** Sets extras that match mImageExtrasList to this image from supplied extras */
   @Override
-  public void putExtras(@Nullable Map<String, ?> extras) {
+  public void putExtras(@Nullable Map<String, ? extends Object> extras) {
     if (extras == null) {
       return;
     }
