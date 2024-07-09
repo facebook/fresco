@@ -34,6 +34,6 @@ enum class ImageLoadStatus(val value: Int) {
   companion object {
     private val VALUES = values()
 
-    fun fromInt(value: Int) = VALUES.firstOrNull { it.value == value }
+    fun fromInt(value: Int): ImageLoadStatus? = VALUES.firstOrNull { it.value == value }
   }
 }
