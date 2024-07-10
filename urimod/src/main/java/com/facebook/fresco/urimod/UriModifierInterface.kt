@@ -14,6 +14,8 @@ interface UriModifierInterface {
 
   fun modifyUri(uri: Uri, viewport: Dimensions?, scaleType: ScaleType?): ModificationResult
 
+  fun modifyPrefetchUri(uri: Uri, callerContext: Any?): Uri
+
   sealed class ModificationResult(private val comment: String) {
 
     abstract val bestAllowlistedSize: Int?

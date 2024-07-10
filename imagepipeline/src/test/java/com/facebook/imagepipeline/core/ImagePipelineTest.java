@@ -122,6 +122,7 @@ public class ImagePipelineTest {
     when(mImageRequest.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
     when(mImageRequest.shouldDecodePrefetches()).thenReturn(null);
+    when(mImageRequest.getSourceUri()).thenReturn(Uri.parse("http://www.test.org/"));
 
     when(mConfig.getExperiments()).thenReturn(mImagePipelineExperiments);
     when(mImagePipelineExperiments.getPrefetchShortcutEnabled()).thenReturn(false);

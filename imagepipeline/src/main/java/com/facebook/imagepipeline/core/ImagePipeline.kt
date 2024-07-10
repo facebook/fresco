@@ -20,6 +20,7 @@ import com.facebook.common.util.UriUtil
 import com.facebook.datasource.DataSource
 import com.facebook.datasource.DataSources
 import com.facebook.datasource.SimpleDataSource
+import com.facebook.fresco.urimod.UriModifier
 import com.facebook.imagepipeline.cache.BufferedDiskCache
 import com.facebook.imagepipeline.cache.CacheKeyFactory
 import com.facebook.imagepipeline.cache.MemoryCache
@@ -966,6 +967,14 @@ class ImagePipeline(
         InternalRequestListener(
             getRequestListenerForRequest(imageRequest, requestListener), requestListener2)
     callerContextVerifier?.verifyCallerContext(callerContext, true)
+    val uri = imageRequest.sourceUri
+    val newUri = UriModifier.INSTANCE.modifyPrefetchUri(uri, callerContext)
+    val imageRequest =
+        if (uri == newUri) {
+          imageRequest
+        } else {
+          ImageRequestBuilder.fromRequest(imageRequest).setSource(uri).build()
+        }
     return try {
       val lowestPermittedRequestLevel =
           RequestLevel.getMax(
