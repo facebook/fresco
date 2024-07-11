@@ -82,7 +82,7 @@ data class BytesRange(
   }
 
   companion object {
-    const val TO_END_OF_CONTENT = Int.MAX_VALUE
+    const val TO_END_OF_CONTENT: Int = Int.MAX_VALUE
     private val headerParsingRegEx: Pattern by lazy { Pattern.compile("[-/ ]") }
 
     private fun valueOrEmpty(n: Int): String {

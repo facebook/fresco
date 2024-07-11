@@ -26,7 +26,7 @@ import androidx.annotation.IntDef
     SourceUriType.SOURCE_TYPE_QUALIFIED_RESOURCE)
 annotation class SourceUriType {
   companion object {
-    const val SOURCE_TYPE_UNKNOWN = -1
+    const val SOURCE_TYPE_UNKNOWN: Int = -1
     const val SOURCE_TYPE_NETWORK = 0
     const val SOURCE_TYPE_LOCAL_FILE = 1
     const val SOURCE_TYPE_LOCAL_VIDEO_FILE = 2
