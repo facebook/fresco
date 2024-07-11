@@ -29,7 +29,7 @@ object JpegTranscoderUtils {
    * the next item in the list
    */
   @JvmField //
-  val INVERTED_EXIF_ORIENTATIONS =
+  val INVERTED_EXIF_ORIENTATIONS: ImmutableList<Int> =
       ImmutableList.of(
           ExifInterface.ORIENTATION_FLIP_HORIZONTAL,
           ExifInterface.ORIENTATION_TRANSVERSE,
