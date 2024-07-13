@@ -11,6 +11,7 @@ import android.graphics.Canvas
 import android.graphics.ColorFilter
 import android.graphics.PixelFormat
 import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import com.facebook.common.closeables.AutoCleanupDelegate
 import com.facebook.datasource.DataSource
@@ -211,6 +212,11 @@ class KFrescoVitoDrawable(
 
   override fun configureWhenUnderlyingChanged() {
     actualImageLayer.configure()
+  }
+
+  override fun getActualImageBounds(outBounds: RectF) {
+    // TODO
+    throw UnsupportedOperationException("Not implemented for KVito")
   }
 
   override fun getIntrinsicWidth(): Int {

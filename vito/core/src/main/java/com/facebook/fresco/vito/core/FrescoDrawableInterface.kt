@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.core
 
+import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import com.facebook.drawee.drawable.VisibilityCallback
 import com.facebook.fresco.ui.common.ControllerListener2
@@ -57,4 +58,7 @@ interface FrescoDrawableInterface {
    * that underlying image has changed.
    */
   fun configureWhenUnderlyingChanged()
+
+  /** Gets the non-cropped post-scaling bounds of the actual image. */
+  fun getActualImageBounds(outBounds: RectF)
 }

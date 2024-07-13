@@ -7,8 +7,10 @@
 
 package com.facebook.fresco.vito.core.impl
 
+import android.graphics.Matrix
 import android.graphics.PointF
 import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import com.facebook.drawee.components.DeferredReleaser.Releasable
@@ -121,6 +123,18 @@ abstract class FrescoDrawable2 :
   abstract fun cancelReleaseDelayed()
 
   abstract fun cancelReleaseNextFrame()
+
+  override fun getActualImageBounds(outBounds: RectF) {
+    val transform = Matrix()
+    // actualImageWrapper is the scale type Drawable, so we retrieve the current transform matrix
+    actualImageWrapper?.getTransform(transform)
+    // We store the actual image bounds (if present) in outBounds.
+    // IMPORTANT: {@code getBounds} should be called after {@code getTransform},
+    // because the parent may have to change our bounds.
+    outBounds.set(actualImageWrapper?.drawable?.bounds ?: return)
+    // We map the actual image bounds according to the current transform matrix
+    transform.mapRect(outBounds)
+  }
 
   companion object {
     private const val LAYER_COUNT = 4
