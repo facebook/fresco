@@ -8,6 +8,7 @@
 package com.facebook.fresco.vito.source
 
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import com.facebook.fresco.middleware.HasExtraData
 
@@ -133,4 +134,12 @@ object ImageSourceProvider {
    * @return the ImageSource be be passed to the UI component
    */
   @JvmStatic fun bitmap(bitmap: Bitmap): ImageSource = BitmapImageSource(bitmap)
+
+  /**
+   * Create a drawable image source for a given drawable.
+   *
+   * @param drawable the drawable to be used
+   * @return the ImageSource to be passed to the UI component
+   */
+  @JvmStatic fun drawable(drawable: Drawable): ImageSource = DrawableImageSource(drawable)
 }
