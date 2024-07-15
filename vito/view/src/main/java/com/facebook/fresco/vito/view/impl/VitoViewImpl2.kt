@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.view.impl
 
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.view.View
@@ -85,6 +86,7 @@ object VitoViewImpl2 {
     if (oldImageRequest != null && oldImageRequest != imageRequest) {
       FrescoVitoProvider.getController().releaseImmediately(frescoDrawable)
     }
+    val viewportDimensions = Rect(0, 0, target.width, target.height)
     frescoDrawable.refetchRunnable = Runnable {
       FrescoVitoProvider.getController()
           .fetch(
@@ -95,7 +97,7 @@ object VitoViewImpl2 {
               listener = imageListener,
               perfDataListener = null,
               onFadeListener = null,
-              viewportDimensions = null,
+              viewportDimensions = viewportDimensions,
               vitoImageRequestListener = imageRequestListener)
     }
     if (useSimpleFetchLogic.get()) {
