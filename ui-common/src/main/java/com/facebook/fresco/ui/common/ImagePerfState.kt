@@ -9,7 +9,7 @@ package com.facebook.fresco.ui.common
 
 import com.facebook.fresco.ui.common.ControllerListener2.Extras
 
-class ImagePerfState {
+class ImagePerfState(val infra: ImageRenderingInfra) {
 
   // General image metadata
   private var controllerId: String? = null
@@ -146,6 +146,7 @@ class ImagePerfState {
 
   fun snapshot(): ImagePerfData =
       ImagePerfData(
+          infra,
           controllerId,
           requestId,
           imageRequest,
@@ -165,7 +166,8 @@ class ImagePerfState {
           visibilityEventTimeMs,
           invisibilityEventTimeMs,
           dimensionsInfo,
-          _extraData)
+          _extraData,
+      )
 
   fun setExtraData(extraData: Extras?) {
     _extraData = extraData

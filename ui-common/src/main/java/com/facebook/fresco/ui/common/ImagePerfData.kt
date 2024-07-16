@@ -11,6 +11,7 @@ import com.facebook.common.internal.Objects
 import com.facebook.fresco.ui.common.ControllerListener2.Extras
 
 class ImagePerfData(
+    val infra: ImageRenderingInfra,
     val controllerId: String?,
     val requestId: String?,
     val imageRequest: Any?,
@@ -44,6 +45,7 @@ class ImagePerfData(
 
   fun createDebugString(): String =
       Objects.toStringHelper(this)
+          .add("rendering Infra", infra)
           .add("controller ID", controllerId)
           .add("request ID", requestId)
           .add("controller submit", controllerSubmitTimeMs)

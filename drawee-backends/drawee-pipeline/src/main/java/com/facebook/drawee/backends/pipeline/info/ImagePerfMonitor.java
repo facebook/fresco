@@ -18,6 +18,7 @@ import com.facebook.fresco.ui.common.ImagePerfData;
 import com.facebook.fresco.ui.common.ImagePerfDataListener;
 import com.facebook.fresco.ui.common.ImagePerfNotifier;
 import com.facebook.fresco.ui.common.ImagePerfState;
+import com.facebook.fresco.ui.common.ImageRenderingInfra;
 import com.facebook.fresco.ui.common.VisibilityState;
 import com.facebook.imagepipeline.listener.ForwardingRequestListener;
 import com.facebook.infer.annotation.Nullsafe;
@@ -44,7 +45,7 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
       MonotonicClock monotonicClock, PipelineDraweeController pipelineDraweeController) {
     mMonotonicClock = monotonicClock;
     mPipelineDraweeController = pipelineDraweeController;
-    mImagePerfState = new ImagePerfState();
+    mImagePerfState = new ImagePerfState(ImageRenderingInfra.DRAWEE);
   }
 
   public void setEnabled(boolean enabled) {
