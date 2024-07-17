@@ -968,7 +968,9 @@ class ImagePipeline(
             getRequestListenerForRequest(imageRequest, requestListener), requestListener2)
     callerContextVerifier?.verifyCallerContext(callerContext, true)
     val uri = imageRequest.sourceUri
-    val newUri = UriModifier.INSTANCE.modifyPrefetchUri(uri, callerContext)
+    val newUri =
+        UriModifier.INSTANCE.modifyPrefetchUri(uri, callerContext)
+            ?: return DataSources.immediateFailedDataSource(MODIFIED_URL_IS_NULL)
     val imageRequest =
         if (uri == newUri) {
           imageRequest
@@ -1058,5 +1060,6 @@ class ImagePipeline(
   companion object {
     private val PREFETCH_EXCEPTION = CancellationException("Prefetching is not enabled")
     private val NULL_IMAGEREQUEST_EXCEPTION = CancellationException("ImageRequest is null")
+    private val MODIFIED_URL_IS_NULL = CancellationException("Modified URL is null")
   }
 }
