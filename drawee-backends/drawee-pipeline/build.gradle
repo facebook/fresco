@@ -24,6 +24,7 @@ dependencies {
     implementation project (':soloader')
     implementation Deps.SoLoader.nativeloader
     implementation project(':ui-common')
+    implementation project(':ui-core')
     implementation project(':middleware')
 
     api project(':fbcore')

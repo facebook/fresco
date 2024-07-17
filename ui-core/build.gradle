@@ -28,6 +28,7 @@ android {
 
 dependencies {
     compileOnly Deps.jsr305
+    compileOnly Deps.inferAnnotation
 }
 
 apply plugin: "com.vanniktech.maven.publish"
