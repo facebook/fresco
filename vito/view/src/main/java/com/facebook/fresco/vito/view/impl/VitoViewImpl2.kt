@@ -86,7 +86,6 @@ object VitoViewImpl2 {
     if (oldImageRequest != null && oldImageRequest != imageRequest) {
       FrescoVitoProvider.getController().releaseImmediately(frescoDrawable)
     }
-    val viewportDimensions = Rect(0, 0, target.width, target.height)
     frescoDrawable.refetchRunnable = Runnable {
       FrescoVitoProvider.getController()
           .fetch(
@@ -97,7 +96,7 @@ object VitoViewImpl2 {
               listener = imageListener,
               perfDataListener = null,
               onFadeListener = null,
-              viewportDimensions = viewportDimensions,
+              viewportDimensions = Rect(0, 0, target.width, target.height),
               vitoImageRequestListener = imageRequestListener)
     }
     if (useSimpleFetchLogic.get()) {
