@@ -9,13 +9,13 @@ package com.facebook.fresco.ui.common
 
 import com.facebook.fresco.ui.common.ControllerListener2.Extras
 
-class ImagePerfState(val infra: ImageRenderingInfra) {
+class ImagePerfState(val infra: ImageRenderingInfra) : ImagePerfLoggingState() {
 
   // General image metadata
   private var controllerId: String? = null
   private var requestId: String? = null
   private var imageRequest: Any? = null
-  private var callerContext: Any? = null
+  var callerContext: Any? = null
   private var imageInfo: Any? = null
   // Controller timings
   private var controllerSubmitTimeMs: Long = ImagePerfData.UNSET.toLong()
@@ -82,10 +82,6 @@ class ImagePerfState(val infra: ImageRenderingInfra) {
 
   fun setImageRequest(imageRequest: Any?) {
     this.imageRequest = imageRequest
-  }
-
-  fun setCallerContext(callerContext: Any?) {
-    this.callerContext = callerContext
   }
 
   fun setControllerSubmitTimeMs(controllerSubmitTimeMs: Long) {
@@ -167,6 +163,15 @@ class ImagePerfState(val infra: ImageRenderingInfra) {
           invisibilityEventTimeMs,
           dimensionsInfo,
           _extraData,
+          callingClassNameOnVisible,
+          rootContextNameOnVisible,
+          contextChainArrayOnVisible,
+          contextChainExtrasOnVisible,
+          contentIdOnVisible,
+          surfaceOnVisible,
+          subSurfaceOnVisible,
+          msSinceLastNavigationOnVisible,
+          startupStatusOnVisible,
       )
 
   fun setExtraData(extraData: Extras?) {

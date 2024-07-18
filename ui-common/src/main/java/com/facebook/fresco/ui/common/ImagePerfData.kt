@@ -27,12 +27,20 @@ class ImagePerfData(
     val onScreenWidthPx: Int,
     val onScreenHeightPx: Int,
     val errorThrowable: Throwable?,
-    // Visibility
     val visibilityState: VisibilityState,
     val visibilityEventTimeMs: Long,
     val invisibilityEventTimeMs: Long,
     val dimensionsInfo: DimensionsInfo?,
-    var extraData: Extras?
+    val extraData: Extras?,
+    val callingClassNameOnVisible: String?,
+    val rootContextNameOnVisible: String?,
+    val contextChainArrayOnVisible: Array<String>?,
+    val contextChainExtrasOnVisible: String?,
+    val contentIdOnVisible: String?,
+    val surfaceOnVisible: String?,
+    val subSurfaceOnVisible: String?,
+    val msSinceLastNavigationOnVisible: Long?,
+    val startupStatusOnVisible: String?,
 ) {
 
   val finalImageLoadTimeMs: Long
