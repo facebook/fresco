@@ -5,25 +5,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.imagepipeline.testing;
+package com.facebook.imagepipeline.testing
 
-import com.facebook.infer.annotation.Nullsafe;
-import com.facebook.soloader.NativeLoaderToSoLoaderDelegate;
-import com.facebook.soloader.SoLoader;
-import com.facebook.soloader.nativeloader.NativeLoader;
+import com.facebook.soloader.NativeLoaderToSoLoaderDelegate
+import com.facebook.soloader.SoLoader
+import com.facebook.soloader.nativeloader.NativeLoader
 
 /** Delegate to properly set and initialize NativeLoader for unit tests. */
-@Nullsafe(Nullsafe.Mode.STRICT)
-public class TestNativeLoader {
-
+object TestNativeLoader {
   /**
    * Initialize NativeLoader by setting NativeLoaderToSoLoaderDelegate as delegate and calling
    * setInTestMode for SoLoader
    */
-  public static void init() {
+  @JvmStatic
+  fun init() {
     if (!NativeLoader.isInitialized()) {
-      NativeLoader.init(new NativeLoaderToSoLoaderDelegate());
+      NativeLoader.init(NativeLoaderToSoLoaderDelegate())
     }
-    SoLoader.setInTestMode();
+    SoLoader.setInTestMode()
   }
 }
