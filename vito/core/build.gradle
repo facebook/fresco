@@ -22,11 +22,12 @@ dependencies {
 
     implementation Deps.AndroidX.core
 
+    api project(':ui-common')
+
     implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':fbcore')
     implementation project(':imagepipeline-base')
     implementation project(':middleware')
-    implementation project(':ui-common')
     implementation project(':urimod')
     implementation project(':vito:options')
     implementation project(':vito:source')
