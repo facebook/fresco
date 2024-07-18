@@ -30,6 +30,7 @@ dependencies {
     implementation Deps.Bolts.tasks
     implementation project(':fbcore')
     implementation project(':middleware')
+    implementation project(':urimod')
 
     implementation GradleDeps.Kotlin.stdlib
 

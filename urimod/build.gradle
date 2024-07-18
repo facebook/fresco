@@ -30,7 +30,7 @@ dependencies {
     compileOnly Deps.jsr305
     compileOnly Deps.inferAnnotation
     implementation project(path: ':fbcore')
-    implementation project(':drawee')
+    implementation project(':ui-core')
 }
 
 apply plugin: "com.vanniktech.maven.publish"
