@@ -43,6 +43,10 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
   open class DefaultPrefetchConfig : PrefetchConfig {
     override fun prefetchInOnPrepare(): Boolean = true
 
+    override fun prefetchInOnBoundsDefinedForDynamicSize(): Boolean = false
+
     override fun prefetchTargetOnPrepare(): PrefetchTarget = PrefetchTarget.MEMORY_DECODED
+
+    override fun prefetchTargetOnBoundsDefined(): PrefetchTarget = PrefetchTarget.MEMORY_DECODED
   }
 }

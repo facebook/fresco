@@ -10,5 +10,9 @@ package com.facebook.fresco.vito.core
 interface PrefetchConfig {
   fun prefetchInOnPrepare(): Boolean
 
+  fun prefetchInOnBoundsDefinedForDynamicSize(): Boolean
+
   fun prefetchTargetOnPrepare(): PrefetchTarget
+
+  fun prefetchTargetOnBoundsDefined(): PrefetchTarget
 }

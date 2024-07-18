@@ -165,6 +165,7 @@ object FrescoVitoImage2Spec {
       @CachedValue requestCachedValue: VitoImageRequest?,
       @FromBoundsDefined requestFromBoundsDefined: VitoImageRequest?,
       @FromPrepare prefetchDataSource: DataSource<Void?>?,
+      @FromBoundsDefined prefetchDataSourceFromBoundsDefined: DataSource<Void?>?,
       @FromBoundsDefined viewportDimensions: Rect,
       @TreeProp contextChain: ContextChain?,
   ) {
@@ -194,6 +195,7 @@ object FrescoVitoImage2Spec {
             viewportDimensions = viewportDimensions)
     frescoDrawable.imagePerfListener.onImageMount(frescoDrawable)
     prefetchDataSource?.close()
+    prefetchDataSourceFromBoundsDefined?.close()
   }
 
   @JvmStatic
@@ -208,6 +210,7 @@ object FrescoVitoImage2Spec {
       @CachedValue requestCachedValue: VitoImageRequest?,
       @FromBoundsDefined requestFromBoundsDefined: VitoImageRequest?,
       @FromPrepare prefetchDataSource: DataSource<Void?>?,
+      @FromBoundsDefined prefetchDataSourceFromBoundsDefined: DataSource<Void?>?,
       @FromBoundsDefined viewportDimensions: Rect,
   ) {
     val request = requestCachedValue ?: requestFromBoundsDefined
@@ -224,6 +227,7 @@ object FrescoVitoImage2Spec {
             viewportDimensions = viewportDimensions)
     frescoDrawable.imagePerfListener.onImageBind(frescoDrawable)
     prefetchDataSource?.close()
+    prefetchDataSourceFromBoundsDefined?.close()
   }
 
   @JvmStatic
@@ -232,6 +236,7 @@ object FrescoVitoImage2Spec {
       c: ComponentContext,
       frescoDrawable: FrescoDrawableInterface,
       @FromPrepare prefetchDataSource: DataSource<Void?>?,
+      @FromBoundsDefined prefetchDataSourceFromBoundsDefined: DataSource<Void?>?,
   ) {
     frescoDrawable.imagePerfListener.onImageUnbind(frescoDrawable)
     if (FrescoVitoProvider.getConfig().useBindOnly()) {
@@ -240,6 +245,7 @@ object FrescoVitoImage2Spec {
       FrescoVitoProvider.getController().releaseDelayed(frescoDrawable)
     }
     prefetchDataSource?.close()
+    prefetchDataSourceFromBoundsDefined?.close()
   }
 
   @JvmStatic
@@ -248,6 +254,7 @@ object FrescoVitoImage2Spec {
       c: ComponentContext,
       frescoDrawable: FrescoDrawableInterface,
       @FromPrepare prefetchDataSource: DataSource<Void?>?,
+      @FromBoundsDefined prefetchDataSourceFromBoundsDefined: DataSource<Void?>?,
   ) {
     frescoDrawable.imagePerfListener.onImageUnmount(frescoDrawable)
     if (FrescoVitoProvider.getConfig().useBindOnly()) {
@@ -255,6 +262,7 @@ object FrescoVitoImage2Spec {
     }
     FrescoVitoProvider.getController().release(frescoDrawable)
     prefetchDataSource?.close()
+    prefetchDataSourceFromBoundsDefined?.close()
   }
 
   @JvmStatic
@@ -289,11 +297,15 @@ object FrescoVitoImage2Spec {
       layout: ComponentLayout,
       viewportDimensions: Output<Rect>,
       requestFromBoundsDefined: Output<VitoImageRequest>,
+      prefetchDataSourceFromBoundsDefined: Output<DataSource<Void?>>,
+      @Prop(optional = true) prefetch: Prefetch?,
       @Prop(optional = true) uriString: String?,
       @Prop(optional = true) uri: Uri?,
       @Prop(optional = true) imageSource: ImageSource?,
       @Prop(optional = true) imageOptions: ImageOptions?,
+      @Prop(optional = true) callerContext: Any?,
       @Prop(optional = true) logWithHighSamplingRate: Boolean?,
+      @Prop(optional = true) prefetchRequestListener: RequestListener?
   ) {
     val width = layout.width
     val height = layout.height
@@ -306,9 +318,22 @@ object FrescoVitoImage2Spec {
     val viewportRect = Rect(0, 0, width - paddingX, height - paddingY)
     viewportDimensions.set(viewportRect)
     if (imageOptions != null && imageOptions.experimentalDynamicSize) {
-      requestFromBoundsDefined.set(
+      val vitoImageRequest =
           createVitoImageRequest(
-              c, imageSource, uri, uriString, imageOptions, logWithHighSamplingRate, viewportRect))
+              c, imageSource, uri, uriString, imageOptions, logWithHighSamplingRate, viewportRect)
+      requestFromBoundsDefined.set(vitoImageRequest)
+
+      val config = FrescoVitoProvider.getConfig().prefetchConfig
+      if (shouldPrefetchInBoundsDefinedForDynamicSize(prefetch)) {
+        prefetchDataSourceFromBoundsDefined.set(
+            FrescoVitoProvider.getPrefetcher()
+                .prefetch(
+                    config.prefetchTargetOnBoundsDefined(),
+                    vitoImageRequest,
+                    callerContext,
+                    prefetchRequestListener,
+                    "OnBoundsDefined"))
+      }
     }
   }
 
@@ -330,6 +355,16 @@ object FrescoVitoImage2Spec {
         Prefetch.YES -> true
         Prefetch.NO -> false
         else -> FrescoVitoProvider.getConfig().prefetchConfig.prefetchInOnPrepare()
+      }
+
+  @JvmStatic
+  fun shouldPrefetchInBoundsDefinedForDynamicSize(prefetch: Prefetch?): Boolean =
+      when (prefetch ?: Prefetch.AUTO) {
+        Prefetch.YES ->
+            FrescoVitoProvider.getConfig().prefetchConfig.prefetchInOnBoundsDefinedForDynamicSize()
+        Prefetch.NO -> false
+        else ->
+            FrescoVitoProvider.getConfig().prefetchConfig.prefetchInOnBoundsDefinedForDynamicSize()
       }
 
   enum class Prefetch {
