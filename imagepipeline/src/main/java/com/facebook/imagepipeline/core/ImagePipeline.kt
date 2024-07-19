@@ -967,15 +967,15 @@ class ImagePipeline(
         InternalRequestListener(
             getRequestListenerForRequest(imageRequest, requestListener), requestListener2)
     callerContextVerifier?.verifyCallerContext(callerContext, true)
-    val uri = imageRequest.sourceUri
+    val originalUri = imageRequest.sourceUri
     val newUri =
-        UriModifier.INSTANCE.modifyPrefetchUri(uri, callerContext)
+        UriModifier.INSTANCE.modifyPrefetchUri(originalUri, callerContext)
             ?: return DataSources.immediateFailedDataSource(MODIFIED_URL_IS_NULL)
     val imageRequest =
-        if (uri == newUri) {
+        if (originalUri == newUri) {
           imageRequest
         } else {
-          ImageRequestBuilder.fromRequest(imageRequest).setSource(uri).build()
+          ImageRequestBuilder.fromRequest(imageRequest).setSource(newUri).build()
         }
     return try {
       val lowestPermittedRequestLevel =
