@@ -47,7 +47,7 @@ object ExampleDatabase {
                   ExampleItem("Retaining Data Source Supplier") {
                     RetainingDataSourceSupplierFragment()
                   },
-                  ExampleItem("Multi URI") { MultiUriFragment() })),
+              )),
           ExampleCategory(
               "Image Pipeline",
               listOf(
@@ -108,6 +108,7 @@ object ExampleDatabase {
                   ExampleItem(
                       "Vito Litho DrawableImageSource", FrescoVitoLithoDrawableImageSourceExample),
                   ExampleItem("Media Provider") { VitoMediaPickerFragment() },
+                  ExampleItem("Multi URI") { MultiUriFragment() },
               )),
           ExampleCategory(
               "Vito Renderer",

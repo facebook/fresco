@@ -7,8 +7,8 @@
     android:orientation="vertical"
     >
 
-  <com.facebook.drawee.view.SimpleDraweeView
-      android:id="@+id/drawee_view"
+  <ImageView
+      android:id="@+id/image_view"
       android:layout_width="@dimen/drawee_width_medium"
       android:layout_height="@dimen/drawee_height_medium"
       />
@@ -42,12 +42,5 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="@string/load_multi_uri_both"
-      />
-
-  <com.google.android.material.switchmaterial.SwitchMaterial
-      android:id="@+id/switch_use_vito"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/use_vito"
       />
 </LinearLayout>

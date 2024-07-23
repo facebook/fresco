@@ -220,7 +220,6 @@
   <string name="vito_view_prefetch_title">Prefetch to cache:</string>
   <string name="vito_view_ktx_help">Vito View Kotlin Extensions examples</string>
 
-  <string name="use_vito">Use Vito</string>
   <string name="preferences_category_vito">Vito</string>
   <string name="preference_vito_use_kotlin">Use Kotlin implementation</string>
   <string name="preference_vito_use_kotlin_summary">(requires restart)</string>
