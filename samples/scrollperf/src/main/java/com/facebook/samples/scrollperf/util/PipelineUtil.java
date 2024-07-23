@@ -7,8 +7,8 @@
 
 package com.facebook.samples.scrollperf.util;
 
+import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.request.Postprocessor;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.conf.Config;
@@ -21,10 +21,10 @@ public final class PipelineUtil {
   /**
    * Utility method which adds optional configuration to ImageRequest
    *
-   * @param imageRequestBuilder The Builder for ImageRequest
+   * @param imageOptionsBuilder The Builder for ImageOptions
    * @param config The Config
    */
-  public static void addOptionalFeatures(ImageRequestBuilder imageRequestBuilder, Config config) {
+  public static void addOptionalFeatures(ImageOptions.Builder imageOptionsBuilder, Config config) {
     if (config.usePostprocessor) {
       final Postprocessor postprocessor;
       switch (config.postprocessorType) {
@@ -37,13 +37,12 @@ public final class PipelineUtil {
         default:
           postprocessor = DelayPostprocessor.getMediumPostprocessor();
       }
-      imageRequestBuilder.setPostprocessor(postprocessor);
+      imageOptionsBuilder.postprocess(postprocessor);
     }
     if (config.rotateUsingMetaData) {
-      imageRequestBuilder.setRotationOptions(RotationOptions.autoRotateAtRenderTime());
+      imageOptionsBuilder.rotate(RotationOptions.autoRotateAtRenderTime());
     } else {
-      imageRequestBuilder.setRotationOptions(
-          RotationOptions.forceRotation(config.forcedRotationAngle));
+      imageOptionsBuilder.rotate(RotationOptions.forceRotation(config.forcedRotationAngle));
     }
   }
 }

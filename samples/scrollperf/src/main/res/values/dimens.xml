@@ -6,7 +6,7 @@
     <dimen name="size_selection_text_size">15sp</dimen>
     <integer name="default_size_value">400</integer>
 
-    <dimen name="drawee_border_width">2dp</dimen>
-    <dimen name="drawee_corner_radius">16dp</dimen>
-    <dimen name="drawee_padding">16dp</dimen>
+    <dimen name="vito_border_width">2dp</dimen>
+    <dimen name="vito_corner_radius">16dp</dimen>
+    <dimen name="vito_padding">16dp</dimen>
 </resources>

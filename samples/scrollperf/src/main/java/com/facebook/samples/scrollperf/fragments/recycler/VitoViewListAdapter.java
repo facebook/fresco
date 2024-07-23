@@ -12,24 +12,20 @@ import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
-import com.facebook.samples.scrollperf.instrumentation.InstrumentedDraweeView;
+import com.facebook.samples.scrollperf.instrumentation.InstrumentedVitoView;
 import com.facebook.samples.scrollperf.instrumentation.PerfListener;
-import com.facebook.samples.scrollperf.util.DraweeUtil;
 import com.facebook.samples.scrollperf.util.PipelineUtil;
 import com.facebook.samples.scrollperf.util.SizeUtil;
+import com.facebook.samples.scrollperf.util.VitoUtil;
 
 /** This is the implementation of the Adapter for the ListView */
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public class DraweeViewListAdapter extends BaseAdapter {
+public class VitoViewListAdapter extends BaseAdapter {
 
   private final SimpleAdapter<Uri> mSimpleAdapter;
 
@@ -39,11 +35,11 @@ public class DraweeViewListAdapter extends BaseAdapter {
 
   private final PerfListener mPerfListener;
 
-  public DraweeViewListAdapter(
+  public VitoViewListAdapter(
       Context context, SimpleAdapter<Uri> simpleAdapter, Config config, PerfListener perfListener) {
     this.mSimpleAdapter = simpleAdapter;
     this.mConfig = config;
-    this.mPaddingPx = context.getResources().getDimensionPixelSize(R.dimen.drawee_padding);
+    this.mPaddingPx = context.getResources().getDimensionPixelSize(R.dimen.vito_padding);
     this.mPerfListener = perfListener;
   }
 
@@ -64,34 +60,26 @@ public class DraweeViewListAdapter extends BaseAdapter {
 
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
-    InstrumentedDraweeView draweeView;
+    InstrumentedVitoView vitoView;
     if (convertView == null) {
       final Context context = parent.getContext();
-      GenericDraweeHierarchy gdh = DraweeUtil.createDraweeHierarchy(context, mConfig);
-      draweeView = new InstrumentedDraweeView(context, gdh, mConfig);
-      SizeUtil.setConfiguredSize(parent, draweeView, mConfig);
-      draweeView.setPadding(mPaddingPx, mPaddingPx, mPaddingPx, mPaddingPx);
+      vitoView =
+          new InstrumentedVitoView(context, VitoUtil.createImageOptions(context, mConfig), mConfig);
+      SizeUtil.setConfiguredSize(parent, vitoView, mConfig);
+      vitoView.setPadding(mPaddingPx, mPaddingPx, mPaddingPx, mPaddingPx);
     } else {
-      draweeView = (InstrumentedDraweeView) convertView;
+      vitoView = (InstrumentedVitoView) convertView;
     }
     final Uri uri = getItem(position);
-    draweeView.initInstrumentation(uri.toString(), mPerfListener);
-    ImageRequestBuilder imageRequestBuilder =
-        ImageRequestBuilder.newBuilderWithSource(uri)
-            .setResizeOptions(
+    vitoView.initInstrumentation(uri.toString(), mPerfListener);
+    PipelineUtil.addOptionalFeatures(
+        vitoView
+            .getImageOptionsBuilder()
+            .resize(
                 new ResizeOptions(
-                    draweeView.getLayoutParams().width, draweeView.getLayoutParams().height));
-    PipelineUtil.addOptionalFeatures(imageRequestBuilder, mConfig);
-    // Create the Builder
-    PipelineDraweeControllerBuilder builder =
-        Fresco.newDraweeControllerBuilder().setImageRequest(imageRequestBuilder.build());
-    if (mConfig.reuseOldController) {
-      builder.setOldController(draweeView.getController());
-    }
-    if (mConfig.instrumentationEnabled) {
-      draweeView.setListener(builder);
-    }
-    draweeView.setController(builder.build());
-    return draweeView;
+                    vitoView.getLayoutParams().width, vitoView.getLayoutParams().height)),
+        mConfig);
+    vitoView.setImageURI(uri, "VitoViewListAdapter");
+    return vitoView;
   }
 }

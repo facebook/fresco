@@ -31,8 +31,8 @@ import com.facebook.samples.scrollperf.data.SimpleAdapter;
 import com.facebook.samples.scrollperf.data.impl.ContentProviderSimpleAdapter;
 import com.facebook.samples.scrollperf.data.impl.DistinctUriDecorator;
 import com.facebook.samples.scrollperf.data.impl.LocalResourceSimpleAdapter;
-import com.facebook.samples.scrollperf.fragments.recycler.DraweeViewAdapter;
-import com.facebook.samples.scrollperf.fragments.recycler.DraweeViewListAdapter;
+import com.facebook.samples.scrollperf.fragments.recycler.VitoViewAdapter;
+import com.facebook.samples.scrollperf.fragments.recycler.VitoViewListAdapter;
 import com.facebook.samples.scrollperf.instrumentation.PerfListener;
 import com.facebook.samples.scrollperf.util.UI;
 
@@ -46,7 +46,7 @@ public class MainFragment extends Fragment {
 
   private ListView mListView;
 
-  private DraweeViewAdapter mDraweeViewAdapter;
+  private VitoViewAdapter mVitoViewAdapter;
 
   private ListAdapter mListAdapter;
 
@@ -166,14 +166,14 @@ public class MainFragment extends Fragment {
       case Const.RECYCLER_VIEW_LAYOUT_VALUE:
       case Const.GRID_RECYCLER_VIEW_LAYOUT_VALUE:
         // Create the Adapter
-        mDraweeViewAdapter =
-            new DraweeViewAdapter(getContext(), mSimpleAdapter, mConfig, mPerfListener);
-        mRecyclerView.setAdapter(mDraweeViewAdapter);
+        mVitoViewAdapter =
+            new VitoViewAdapter(getContext(), mSimpleAdapter, mConfig, mPerfListener);
+        mRecyclerView.setAdapter(mVitoViewAdapter);
         break;
       case Const.LISTVIEW_LAYOUT_VALUE:
         // Create the Adapter
         mListAdapter =
-            new DraweeViewListAdapter(getContext(), mSimpleAdapter, mConfig, mPerfListener);
+            new VitoViewListAdapter(getContext(), mSimpleAdapter, mConfig, mPerfListener);
         // Set the adapter
         mListView.setAdapter(mListAdapter);
         break;

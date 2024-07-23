@@ -11,18 +11,17 @@ import android.content.Context;
 import android.net.Uri;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
-import com.facebook.samples.scrollperf.instrumentation.InstrumentedDraweeView;
+import com.facebook.samples.scrollperf.instrumentation.InstrumentedVitoView;
 import com.facebook.samples.scrollperf.instrumentation.PerfListener;
-import com.facebook.samples.scrollperf.util.DraweeUtil;
+import com.facebook.samples.scrollperf.util.VitoUtil;
 
-/** The RecyclerView.Adapter for the DraweeView */
+/** The RecyclerView.Adapter for the VitoView */
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public class DraweeViewAdapter extends RecyclerView.Adapter<DraweeViewHolder> {
+public class VitoViewAdapter extends RecyclerView.Adapter<VitoViewHolder> {
 
   private final SimpleAdapter<Uri> mSimpleAdapter;
 
@@ -34,26 +33,25 @@ public class DraweeViewAdapter extends RecyclerView.Adapter<DraweeViewHolder> {
 
   private final PerfListener mPerfListener;
 
-  public DraweeViewAdapter(
+  public VitoViewAdapter(
       Context context, SimpleAdapter<Uri> simpleAdapter, Config config, PerfListener perfListener) {
     this.mContext = context;
     this.mSimpleAdapter = simpleAdapter;
     this.mConfig = config;
-    this.mPaddingPx = context.getResources().getDimensionPixelSize(R.dimen.drawee_padding);
+    this.mPaddingPx = context.getResources().getDimensionPixelSize(R.dimen.vito_padding);
     mPerfListener = perfListener;
   }
 
   @Override
-  public DraweeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    GenericDraweeHierarchy gdh = DraweeUtil.createDraweeHierarchy(mContext, mConfig);
-    final InstrumentedDraweeView simpleDraweeView =
-        new InstrumentedDraweeView(mContext, gdh, mConfig);
-    simpleDraweeView.setPadding(mPaddingPx, mPaddingPx, mPaddingPx, mPaddingPx);
-    return new DraweeViewHolder(parent, simpleDraweeView, mConfig, mPerfListener);
+  public VitoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    final InstrumentedVitoView vitoViewHolder =
+        new InstrumentedVitoView(mContext, VitoUtil.createImageOptions(mContext, mConfig), mConfig);
+    vitoViewHolder.setPadding(mPaddingPx, mPaddingPx, mPaddingPx, mPaddingPx);
+    return new VitoViewHolder(parent, vitoViewHolder, mConfig, mPerfListener);
   }
 
   @Override
-  public void onBindViewHolder(DraweeViewHolder holder, int position) {
+  public void onBindViewHolder(VitoViewHolder holder, int position) {
     holder.bind(mSimpleAdapter.get(position));
   }
 

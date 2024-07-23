@@ -48,7 +48,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateInfiniteDataSourceSummary(findPreference(Const.INFINITE_DATA_SOURCE_KEY));
     updateDistinctDataSourceSummary(findPreference(Const.DISTINCT_DATA_SOURCE_KEY));
     updateRecyclerLayoutSummary(findPreference(Const.RECYCLER_LAYOUT_KEY));
-    updateReuseOldControllerSummary(findPreference(Const.REUSE_OLD_CONTROLLER_KEY));
     updateRoundedCornersSummary(findPreference(Const.ROUNDED_CORNERS_KEY));
     updateRoundedAsCircleSummary(findPreference(Const.ROUNDED_AS_CIRCLE_KEY));
     updateUsePostprocessorSummary(findPreference(Const.USE_POSTPROCESSOR_KEY));
@@ -58,7 +57,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateRotationAngleSummary(findPreference(Const.FORCED_ROTATION_ANGLE_KEY));
     updateDownsamplingSummary(findPreference(Const.DOWNSAMPLING_KEY));
     updateOverrideSizeSummary(findPreference(Const.OVERRIDE_SIZE_KEY));
-    updateDraweeOverlaySummary(findPreference(Const.DRAWEE_OVERLAY_KEY));
+    updateVitoOverlaySummary(findPreference(Const.VITO_OVERLAY_KEY));
     updateBgColorSummary(findPreference(Const.BG_COLOR_KEY));
     updateInstrumentationSummary(findPreference(Const.INSTRUMENTATION_ENABLED_KEY));
     updateNumberOfDecodingThreadSummary(findPreference(Const.DECODING_THREAD_KEY));
@@ -98,9 +97,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
         break;
       case Const.DISTINCT_DATA_SOURCE_KEY:
         updateDistinctDataSourceSummary(preference);
-        break;
-      case Const.REUSE_OLD_CONTROLLER_KEY:
-        updateReuseOldControllerSummary(preference);
         break;
       case Const.ROUNDED_CORNERS_KEY:
         updateRoundedCornersSummary(preference);
@@ -142,8 +138,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
         updateDecodeCancellationSummary(preference);
         getShowRestartMessageDialog().show(getChildFragmentManager(), null);
         break;
-      case Const.DRAWEE_OVERLAY_KEY:
-        updateDraweeOverlaySummary(preference);
+      case Const.VITO_OVERLAY_KEY:
+        updateVitoOverlaySummary(preference);
         getShowRestartMessageDialog().show(getChildFragmentManager(), null);
         break;
       case Const.BG_COLOR_KEY:
@@ -206,14 +202,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
           getString(R.string.label_grid_recycler_span_count_summary, spanCountValue));
     }
     gridPreference.setVisible(gridGroupVisible);
-  }
-
-  private void updateReuseOldControllerSummary(final Preference preference) {
-    updateCheckBoxPreference(
-        getResources(),
-        (CheckBoxPreference) preference,
-        R.string.checked_reuse_old_controller_summary,
-        R.string.unchecked_reuse_old_controller_summary);
   }
 
   private void updateRoundedCornersSummary(final Preference preference) {
@@ -323,12 +311,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
     preference.setSummary(summary);
   }
 
-  private void updateDraweeOverlaySummary(final Preference preference) {
+  private void updateVitoOverlaySummary(final Preference preference) {
     updateCheckBoxPreference(
         getResources(),
         (CheckBoxPreference) preference,
-        R.string.checked_drawee_overlay_summary,
-        R.string.unchecked_drawee_overlay_summary);
+        R.string.checked_vito_overlay_summary,
+        R.string.unchecked_vito_overlay_summary);
   }
 
   private void updateInstrumentationSummary(final Preference preference) {

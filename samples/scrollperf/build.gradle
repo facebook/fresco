@@ -58,6 +58,11 @@ dependencies {
     implementation SampleDeps.AndroidX.appcompat
     implementation SampleDeps.AndroidX.recyclerview
     implementation SampleDeps.AndroidX.preference
+    implementation project(":vito:core")
+    implementation project(":vito:init")
+    implementation project(":vito:options")
+    implementation project(":vito:source")
+    implementation project(":vito:view")
 
     implementation (fileTree(dir: 'libs', include: ['*.jar']))
 

@@ -27,8 +27,6 @@ public class Config {
   public final String recyclerLayoutType;
   public final int gridSpanCount;
 
-  public final boolean reuseOldController;
-
   public final boolean useRoundedCorners;
   public final boolean useRoundedAsCircle;
 
@@ -56,7 +54,7 @@ public class Config {
 
   public final boolean drawBorder;
 
-  public final boolean draweeOverlayEnabled;
+  public final boolean vitoOverlayEnabled;
   public final boolean instrumentationEnabled;
 
   public static Config load(final Context context) {
@@ -73,7 +71,6 @@ public class Config {
             sharedPreferences.getString(
                 Const.RECYCLER_LAYOUT_KEY,
                 context.getString(R.string.value_recyclerview_recycler_layout)))
-        .setReuseOldController(sharedPreferences.getBoolean(Const.REUSE_OLD_CONTROLLER_KEY, false))
         .setUseRoundedCorners(sharedPreferences.getBoolean(Const.ROUNDED_CORNERS_KEY, false))
         .setUseRoundedAsCircle(sharedPreferences.getBoolean(Const.ROUNDED_AS_CIRCLE_KEY, false))
         .setUsePostprocessor(sharedPreferences.getBoolean(Const.USE_POSTPROCESSOR_KEY, false))
@@ -102,7 +99,7 @@ public class Config {
             Integer.parseInt(sharedPreferences.getString(Const.GRID_SPAN_COUNT_KEY, "3")))
         .setDecodeCancellation(sharedPreferences.getBoolean(Const.DECODE_CANCELLATION_KEY, false))
         .setWebpSupportEnabled(sharedPreferences.getBoolean(Const.WEBP_SUPPORT_KEY, false))
-        .setDraweeOverlayEnabled(sharedPreferences.getBoolean(Const.DRAWEE_OVERLAY_KEY, false))
+        .setVitoOverlayEnabled(sharedPreferences.getBoolean(Const.VITO_OVERLAY_KEY, false))
         .setInstrumentationEnabled(
             sharedPreferences.getBoolean(Const.INSTRUMENTATION_ENABLED_KEY, false))
         .setDecodingThreadCount(
@@ -117,7 +114,6 @@ public class Config {
     this.gridSpanCount = builder.mGridSpanCount;
     this.infiniteDataSource = builder.mInfiniteDataSource;
     this.distinctUriDataSource = builder.mDistinctUriDataSource;
-    this.reuseOldController = builder.mReuseOldController;
     this.useRoundedCorners = builder.mUseRoundedCorners;
     this.useRoundedAsCircle = builder.mUseRoundedAsCircle;
     this.usePostprocessor = builder.mUsePostprocessor;
@@ -133,7 +129,7 @@ public class Config {
     this.drawBorder = builder.mDrawBorder;
     this.decodeCancellation = builder.mDecodeCancellation;
     this.webpSupportEnabled = builder.mWebpSupportEnabled;
-    this.draweeOverlayEnabled = builder.mDraweeOverlayEnabled;
+    this.vitoOverlayEnabled = builder.mVitoOverlayEnabled;
     this.instrumentationEnabled = builder.mInstrumentationEnabled;
     this.decodingThreadCount = builder.mDecodingThreadCount;
     this.bgColor = builder.mBgColor;
@@ -146,7 +142,6 @@ public class Config {
     private boolean mDistinctUriDataSource;
     private String mRecyclerLayoutType;
     private int mGridSpanCount;
-    private boolean mReuseOldController;
     private boolean mUseRoundedCorners;
     private boolean mUseRoundedAsCircle;
     private boolean mUsePostprocessor;
@@ -162,7 +157,7 @@ public class Config {
     private boolean mDecodeCancellation;
     private boolean mWebpSupportEnabled;
     private boolean mDrawBorder;
-    private boolean mDraweeOverlayEnabled;
+    private boolean mVitoOverlayEnabled;
     private boolean mInstrumentationEnabled;
     private int mDecodingThreadCount;
     private int mBgColor;
@@ -195,11 +190,6 @@ public class Config {
 
     public Builder setGridSpanCount(int gridSpanCount) {
       this.mGridSpanCount = gridSpanCount;
-      return this;
-    }
-
-    public Builder setReuseOldController(boolean reuseOldController) {
-      this.mReuseOldController = reuseOldController;
       return this;
     }
 
@@ -288,8 +278,8 @@ public class Config {
       return this;
     }
 
-    public Builder setDraweeOverlayEnabled(boolean draweeOverlayEnabled) {
-      this.mDraweeOverlayEnabled = draweeOverlayEnabled;
+    public Builder setVitoOverlayEnabled(boolean vitoOverlayEnabled) {
+      this.mVitoOverlayEnabled = vitoOverlayEnabled;
       return this;
     }
 

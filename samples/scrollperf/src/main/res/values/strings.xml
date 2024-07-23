@@ -52,8 +52,8 @@
     <!-- Rounded corners -->
     <string translatable="false" name="title_preferences_rounded_corners">Rounded Corners</string>
     <string translatable="false" name="title_preferences_rounded_corners_enabled">Rounded Corners Enabled</string>
-    <string translatable="false" name="checked_rounded_corners_summary">Rounded corners for Drawee are enabled</string>
-    <string translatable="false" name="unchecked_rounded_corners_summary">No rounded corners for Drawee</string>
+    <string translatable="false" name="checked_rounded_corners_summary">Rounded corners for Vito are enabled</string>
+    <string translatable="false" name="unchecked_rounded_corners_summary">No rounded corners for Vito</string>
 
     <string translatable="false" name="title_preferences_rounded_as_circle_enabled">Rounded as circle</string>
     <string translatable="false" name="checked_rounded_as_circle_summary">The images will be rounded as a circle</string>
@@ -77,7 +77,7 @@
     <string translatable="false" name="value_postprocessor_fast_summary">Simulation of a very fast Postprocessor</string>
 
     <!-- Scale Types-->
-    <string translatable="false" name="title_preferences_drawee_group">Drawee</string>
+    <string translatable="false" name="title_preferences_vito_group">Vito</string>
     <string translatable="false" name="title_preferences_scale_type">Scale Type</string>
     <string translatable="false" name="value_scale_type_none">scale_type_none</string>
     <string translatable="false" name="value_scale_type_center">scale_type_center</string>
@@ -188,10 +188,10 @@
     <string translatable="false" name="checked_decode_cancellation_summary">Decoding is cancelled for cancelled requests</string>
     <string translatable="false" name="unchecked_decode_cancellation_summary">Decoding is NOT cancelled for cancelled requests</string>
 
-    <!-- Drawee debug overlay-->
-    <string translatable="false" name="title_drawee_overlay">Drawee debug overlay</string>
-    <string translatable="false" name="checked_drawee_overlay_summary">Debug overlay enabled</string>
-    <string translatable="false" name="unchecked_drawee_overlay_summary">Debug overlay disabled</string>
+    <!-- Vito debug overlay-->
+    <string translatable="false" name="title_vito_overlay">Vito debug overlay</string>
+    <string translatable="false" name="checked_vito_overlay_summary">Debug overlay enabled</string>
+    <string translatable="false" name="unchecked_vito_overlay_summary">Debug overlay disabled</string>
 
     <!-- Instrumentation-->
     <string translatable="false" name="title_instrumentation">Enable Instrumentation</string>
@@ -199,5 +199,5 @@
     <string translatable="false" name="unchecked_instrumentation_summary">Instrumentation is disabled</string>
 
     <!-- BgColor-->
-    <string translatable="false" name="title_bg_color">Drawee background color</string>
+    <string translatable="false" name="title_bg_color">Vito background color</string>
 </resources>

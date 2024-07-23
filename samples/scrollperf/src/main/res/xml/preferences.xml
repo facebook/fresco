@@ -99,7 +99,7 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:key="key_preferences_scale_type_group"
-        android:title="@string/title_preferences_drawee_group"
+        android:title="@string/title_preferences_vito_group"
         >
         <ListPreference
             android:defaultValue="@string/value_scale_type_fit_center"
@@ -118,8 +118,8 @@
             android:title="@string/title_bg_color"
         />
         <CheckBoxPreference
-            android:key="drawee_overlay_key"
-            android:title="@string/title_drawee_overlay"
+            android:key="vito_overlay_key"
+            android:title="@string/title_vito_overlay"
             />
     </PreferenceCategory>
     <PreferenceCategory

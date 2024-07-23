@@ -11,18 +11,18 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.view.View;
 import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.fresco.vito.options.BorderOptions;
+import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.options.RoundingOptions;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.conf.Const;
 
-/** Utility class about Drawee */
+/** Utility class about Vito */
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public final class DraweeUtil {
+public final class VitoUtil {
 
   /**
    * Creates the Hierarchy using the information into the Config
@@ -31,65 +31,66 @@ public final class DraweeUtil {
    * @param config The Config object
    * @return The Hierarchy to use
    */
-  public static GenericDraweeHierarchy createDraweeHierarchy(
+  public static ImageOptions.Builder createImageOptions(
       final Context context, final Config config) {
-    FrescoSystrace.beginSection("DraweeUtil#createDraweeHierarchy");
-    GenericDraweeHierarchyBuilder builder =
-        new GenericDraweeHierarchyBuilder(context.getResources())
-            .setFadeDuration(config.fadeDurationMs)
-            .setPlaceholderImage(Const.PLACEHOLDER)
-            .setFailureImage(Const.FAILURE)
-            .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
+    FrescoSystrace.beginSection("VitoUtil#createVitoHierarchy");
+    ImageOptions.Builder builder =
+        ImageOptions.create()
+            .fadeDurationMs(config.fadeDurationMs)
+            .placeholderColor(Const.PLACEHOLDER_COLOR)
+            .errorColor(Const.FAILURE_COLOR)
+            .scale(ScalingUtils.ScaleType.FIT_CENTER);
     applyScaleType(builder, config);
 
     if (config.useRoundedCorners || config.drawBorder) {
       final Resources res = context.getResources();
-      final RoundingParams roundingParams = new RoundingParams();
 
       if (config.useRoundedCorners) {
-        roundingParams.setRoundingMethod(RoundingParams.RoundingMethod.BITMAP_ONLY);
-        roundingParams.setCornersRadius(res.getDimensionPixelSize(R.dimen.drawee_corner_radius));
-        roundingParams.setRoundAsCircle(config.useRoundedAsCircle);
+        if (config.useRoundedAsCircle) {
+          builder.round(RoundingOptions.asCircle());
+        } else {
+          builder.round(
+              RoundingOptions.forCornerRadiusPx(
+                  res.getDimensionPixelSize(R.dimen.vito_corner_radius)));
+        }
       }
 
       if (config.drawBorder) {
-        //noinspection deprecation
-        roundingParams.setBorderColor(res.getColor(R.color.colorPrimary));
-        roundingParams.setBorderWidth(res.getDimensionPixelSize(R.dimen.drawee_border_width));
+        builder.borders(
+            BorderOptions.create(
+                res.getColor(R.color.colorPrimary),
+                res.getDimensionPixelSize(R.dimen.vito_border_width)));
       }
-
-      builder.setRoundingParams(roundingParams);
     }
-    GenericDraweeHierarchy result = builder.build();
     FrescoSystrace.endSection();
-    return result;
+    return builder;
   }
 
-  public static void applyScaleType(GenericDraweeHierarchyBuilder builder, final Config config) {
+  public static void applyScaleType(ImageOptions.Builder builder, final Config config) {
     switch (config.scaleType) {
       case "scale_type_none":
-        builder.setActualImageScaleType(null);
+        builder.scale(null);
         break;
       case "scale_type_center":
-        builder.setActualImageScaleType(ScalingUtils.ScaleType.CENTER);
+        builder.scale(ScalingUtils.ScaleType.CENTER);
         break;
       case "scale_type_center_crop":
-        builder.setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
+        builder.scale(ScalingUtils.ScaleType.CENTER_CROP);
         break;
       case "scale_type_center_inside":
-        builder.setActualImageScaleType(ScalingUtils.ScaleType.CENTER_INSIDE);
+        builder.scale(ScalingUtils.ScaleType.CENTER_INSIDE);
         break;
       case "scale_type_fit_center":
-        builder.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
+        builder.scale(ScalingUtils.ScaleType.FIT_CENTER);
         break;
       case "scale_type_fit_start":
-        builder.setActualImageScaleType(ScalingUtils.ScaleType.FIT_START);
+        builder.scale(ScalingUtils.ScaleType.FIT_START);
         break;
       case "scale_type_fit_end":
-        builder.setActualImageScaleType(ScalingUtils.ScaleType.FIT_END);
+        builder.scale(ScalingUtils.ScaleType.FIT_END);
         break;
       case "scale_type_fit_xy":
-        builder.setActualImageScaleType(ScalingUtils.ScaleType.FIT_XY);
+        builder.scale(ScalingUtils.ScaleType.FIT_XY);
         break;
     }
   }
