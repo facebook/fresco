@@ -14,8 +14,10 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Drawable that displays a progress bar based on the level. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ProgressBarDrawable extends Drawable implements CloneableDrawable {
 
   private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);

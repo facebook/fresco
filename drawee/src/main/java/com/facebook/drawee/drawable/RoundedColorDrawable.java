@@ -18,9 +18,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Arrays;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class RoundedColorDrawable extends Drawable implements Rounded {
   private final float[] mRadii = new float[8];
   @VisibleForTesting final float[] mBorderRadii = new float[8];
