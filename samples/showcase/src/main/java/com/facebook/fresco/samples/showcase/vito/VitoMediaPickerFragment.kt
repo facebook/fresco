@@ -9,38 +9,45 @@ package com.facebook.fresco.samples.showcase.drawee
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment
 import com.facebook.fresco.samples.showcase.R
-import com.facebook.fresco.samples.showcase.common.ToggleAnimationClickListener
 import com.facebook.fresco.samples.showcase.permissions.StoragePermissionHelper.withStoragePermission
+import com.facebook.fresco.vito.options.ImageOptions
+import com.facebook.fresco.vito.source.ImageSourceProvider
+import com.facebook.fresco.vito.view.VitoView
 
 /** Display images from media pickers. */
-class DraweeMediaPickerFragment : BaseShowcaseFragment() {
-  private var simpleDraweeView: SimpleDraweeView? = null
-  private var imagePath: TextView? = null
+class VitoMediaPickerFragment : BaseShowcaseFragment() {
+  private lateinit var imageView: ImageView
+  private lateinit var imagePath: TextView
+  private var callerContext: String = "VitoMediaPickerFragment"
+  private val imageOptions: ImageOptions =
+      ImageOptions.create()
+          .errorRes(R.color.error_color)
+          .placeholderRes(R.color.placeholder_color)
+          .build()
 
   override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
       savedInstanceState: Bundle?
   ): View? {
-    return inflater.inflate(R.layout.fragment_drawee_media_picker, container, false)
+    return inflater.inflate(R.layout.fragment_vito_media_picker, container, false)
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    simpleDraweeView = view.findViewById<View>(R.id.drawee_view) as SimpleDraweeView
-    imagePath = view.findViewById<View>(R.id.image_path) as TextView
-    simpleDraweeView!!.setOnClickListener(ToggleAnimationClickListener(simpleDraweeView))
+    imageView = view.findViewById(R.id.image_view)
+    imagePath = view.findViewById(R.id.image_path)
+
     val actionOpenDocumentButton = view.findViewById<View>(R.id.pick_action_open_document)
     actionOpenDocumentButton.setOnClickListener {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -70,16 +77,18 @@ class DraweeMediaPickerFragment : BaseShowcaseFragment() {
         null
       }
     }
+    // Show placeholder
+    VitoView.show(ImageSourceProvider.emptySource(), imageOptions, callerContext, imageView)
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     if (requestCode == REQUEST_CODE_PICK_MEDIA) {
-      if (resultCode != Activity.RESULT_OK) {
-        simpleDraweeView!!.setImageURI(null as Uri?)
-        imagePath!!.setText(R.string.drawee_media_picker_no_image)
+      if (resultCode != Activity.RESULT_OK || data == null) {
+        VitoView.show(ImageSourceProvider.emptySource(), imageOptions, callerContext, imageView)
+        imagePath.setText(R.string.drawee_media_picker_no_image)
       } else {
-        simpleDraweeView!!.setImageURI(data!!.data)
-        imagePath!!.text = data.dataString
+        VitoView.show(data.data, imageOptions, callerContext, imageView)
+        imagePath.text = data.dataString
       }
     } else {
       super.onActivityResult(requestCode, resultCode, data)

@@ -37,7 +37,6 @@ object ExampleDatabase {
           ExampleCategory(
               "Drawee",
               listOf(
-                  ExampleItem("Media Provider") { DraweeMediaPickerFragment() },
                   ExampleItem("Scale Type") { DraweeScaleTypeFragment() },
                   ExampleItem("Simple DraweeSpan") { DraweeSpanSimpleTextFragment() },
                   ExampleItem("Rounded Corners") { DraweeRoundedCornersFragment() },
@@ -108,6 +107,7 @@ object ExampleDatabase {
                   ExampleItem("Vito Text Span") { VitoSpanFragment() },
                   ExampleItem(
                       "Vito Litho DrawableImageSource", FrescoVitoLithoDrawableImageSourceExample),
+                  ExampleItem("Media Provider") { VitoMediaPickerFragment() },
               )),
           ExampleCategory(
               "Vito Renderer",
