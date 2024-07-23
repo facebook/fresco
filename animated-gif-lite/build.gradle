@@ -8,6 +8,11 @@
 import com.facebook.fresco.buildsrc.Deps
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+kotlin {
+    jvmToolchain(11)
+}
 
 dependencies {
     compileOnly Deps.inferAnnotation
