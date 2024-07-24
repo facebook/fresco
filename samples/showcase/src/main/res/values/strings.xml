@@ -18,7 +18,7 @@
   <string name="drawee_media_picker_no_image">No image selected.</string>
   <string name="drawee_media_picker_button_action_pick">ACTION_PICK</string>
 
-  <string name="drawee_scale_type_help">Select either the landscape or portrait picture. Then select a scale type to apply for the large Drawee.</string>
+  <string name="vito_scale_type_help">Select either the landscape or portrait picture. Then select a scale type to apply for the large image.</string>
 
   <string name="drawee_span_simple_text">Text with an # inline image using a DraweeSpan. Also works with @ animated images!</string>
   <string name="drawee_span_simple_help">This example shows how to render text with an inline image. Change the scale type using the drop-down menu.</string>

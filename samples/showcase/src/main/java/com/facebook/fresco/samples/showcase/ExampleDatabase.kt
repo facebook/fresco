@@ -37,7 +37,6 @@ object ExampleDatabase {
           ExampleCategory(
               "Drawee",
               listOf(
-                  ExampleItem("Scale Type") { DraweeScaleTypeFragment() },
                   ExampleItem("Simple DraweeSpan") { DraweeSpanSimpleTextFragment() },
                   ExampleItem("Rounded Corners") { DraweeRoundedCornersFragment() },
                   ExampleItem("Placeholder, Progress, Failure") { DraweeHierarchyFragment() },
@@ -92,6 +91,7 @@ object ExampleDatabase {
                       "Vito Litho: Listener",
                       FrescoVitoLithoListenerExample,
                       "Vito Litho component with listener."),
+                  ExampleItem("Scale Type") { VitoScaleTypeFragment() },
                   ExampleItem("Vito Litho: Gallery") { FrescoVitoLithoGalleryFragment() },
                   ExampleItem("Vito View: Simple") { VitoViewSimpleFragment() },
                   ExampleItem("Vito View: Simple 2") { VitoSimpleFragment() },

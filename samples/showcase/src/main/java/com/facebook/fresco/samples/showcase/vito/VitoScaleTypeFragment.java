@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.samples.showcase.drawee;
+package com.facebook.fresco.samples.showcase.vito;
 
 import android.graphics.PointF;
 import android.net.Uri;
@@ -14,29 +14,36 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import androidx.annotation.Nullable;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.common.SimpleScaleTypeAdapter;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
+import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.view.VitoView;
 
-/** Simple drawee fragment that illustrates different scale types */
-public class DraweeScaleTypeFragment extends BaseShowcaseFragment {
+/** Simple Vito fragment that illustrates different scale types */
+public class VitoScaleTypeFragment extends BaseShowcaseFragment {
 
-  private SimpleDraweeView mDraweeTop1;
-  private SimpleDraweeView mDraweeTop2;
-  private SimpleDraweeView mDraweeMain;
+  private static final String CALLER_CONTEXT = "VitoScaleTypeFragment";
+  private static final ImageOptions TOP_IMAGE_OPTIONS =
+      ImageOptions.create().scale(ScaleType.CENTER_INSIDE).build();
+
+  private ImageView mVitoTop1;
+  private ImageView mVitoTop2;
+  private ImageView mVitoMain;
   private Spinner mSpinner;
+
+  private Uri mCurrentUri;
 
   @Nullable
   @Override
   public View onCreateView(
       LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    final View view = inflater.inflate(R.layout.fragment_drawee_scale_type, container, false);
+    final View view = inflater.inflate(R.layout.fragment_vito_scale_type, container, false);
 
     final ImageUriProvider imageUriProvider = sampleUris();
     final Uri uri1 =
@@ -46,30 +53,30 @@ public class DraweeScaleTypeFragment extends BaseShowcaseFragment {
         imageUriProvider.createSampleUri(
             ImageUriProvider.ImageSize.M, ImageUriProvider.Orientation.PORTRAIT);
 
-    mDraweeTop1 = (SimpleDraweeView) view.findViewById(R.id.drawee_view_top_1);
-    mDraweeTop2 = (SimpleDraweeView) view.findViewById(R.id.drawee_view_top_2);
-    mDraweeMain = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
-    mSpinner = (Spinner) view.findViewById(R.id.spinner);
+    mVitoTop1 = view.findViewById(R.id.image_top_1);
+    mVitoTop2 = view.findViewById(R.id.image_top_2);
+    mVitoMain = view.findViewById(R.id.image);
+    mSpinner = view.findViewById(R.id.spinner);
 
-    mDraweeTop1.setImageURI(uri1);
-    mDraweeTop1.setOnClickListener(
+    VitoView.show(uri1, TOP_IMAGE_OPTIONS, CALLER_CONTEXT, mVitoTop1);
+    mVitoTop1.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            changeMainDraweeUri(uri1);
+            changeMainVitoUri(uri1);
           }
         });
 
-    mDraweeTop2.setImageURI(uri2);
-    mDraweeTop2.setOnClickListener(
+    VitoView.show(uri2, TOP_IMAGE_OPTIONS, CALLER_CONTEXT, mVitoTop2);
+    mVitoTop2.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            changeMainDraweeUri(uri2);
+            changeMainVitoUri(uri2);
           }
         });
 
-    changeMainDraweeUri(uri1);
+    changeMainVitoUri(uri1);
 
     final SimpleScaleTypeAdapter adapter = SimpleScaleTypeAdapter.createForAllScaleTypes();
     mSpinner.setAdapter(adapter);
@@ -79,7 +86,7 @@ public class DraweeScaleTypeFragment extends BaseShowcaseFragment {
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             final SimpleScaleTypeAdapter.Entry spinnerEntry =
                 (SimpleScaleTypeAdapter.Entry) adapter.getItem(position);
-            changeMainDraweeScaleType(spinnerEntry.scaleType, spinnerEntry.focusPoint);
+            changeMainVitoScaleType(spinnerEntry.scaleType, spinnerEntry.focusPoint);
           }
 
           @Override
@@ -90,13 +97,16 @@ public class DraweeScaleTypeFragment extends BaseShowcaseFragment {
     return view;
   }
 
-  private void changeMainDraweeUri(Uri uri) {
-    mDraweeMain.setImageURI(uri);
+  private void changeMainVitoUri(Uri uri) {
+    mCurrentUri = uri;
+    VitoView.show(uri, CALLER_CONTEXT, mVitoMain);
   }
 
-  private void changeMainDraweeScaleType(ScaleType scaleType, @Nullable PointF focusPoint) {
-    final GenericDraweeHierarchy hierarchy = mDraweeMain.getHierarchy();
-    hierarchy.setActualImageScaleType(scaleType);
-    hierarchy.setActualImageFocusPoint(focusPoint != null ? focusPoint : new PointF(0.5f, 0.5f));
+  private void changeMainVitoScaleType(ScaleType scaleType, @Nullable PointF focusPoint) {
+    VitoView.show(
+        mCurrentUri,
+        ImageOptions.create().scale(scaleType).focusPoint(focusPoint).build(),
+        CALLER_CONTEXT,
+        mVitoMain);
   }
 }
