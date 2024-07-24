@@ -40,7 +40,6 @@ object ExampleDatabase {
                   ExampleItem("Simple DraweeSpan") { DraweeSpanSimpleTextFragment() },
                   ExampleItem("Rounded Corners") { DraweeRoundedCornersFragment() },
                   ExampleItem("Placeholder, Progress, Failure") { DraweeHierarchyFragment() },
-                  ExampleItem("Rotation") { DraweeRotationFragment() },
                   ExampleItem("Recycler View") { DraweeRecyclerViewFragment() },
                   ExampleItem("Drawee Transition") { DraweeTransitionFragment() },
                   ExampleItem("Retaining Data Source Supplier") {
@@ -92,6 +91,7 @@ object ExampleDatabase {
                       FrescoVitoLithoListenerExample,
                       "Vito Litho component with listener."),
                   ExampleItem("Scale Type") { VitoScaleTypeFragment() },
+                  ExampleItem("Rotation") { VitoRotationFragment() },
                   ExampleItem("Vito Litho: Gallery") { FrescoVitoLithoGalleryFragment() },
                   ExampleItem("Vito View: Simple") { VitoViewSimpleFragment() },
                   ExampleItem("Vito View: Simple 2") { VitoSimpleFragment() },

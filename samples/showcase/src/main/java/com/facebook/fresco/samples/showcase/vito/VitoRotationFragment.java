@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.samples.showcase.drawee;
+package com.facebook.fresco.samples.showcase.vito;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,37 +14,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
-import com.facebook.imagepipeline.common.ImageDecodeOptionsBuilder;
+import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.view.VitoView;
 import com.facebook.imagepipeline.common.RotationOptions;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
-/** Simple drawee fragment that just displays an image. */
-public class DraweeRotationFragment extends BaseShowcaseFragment {
+/** Simple vito fragment that just displays an image. */
+public class VitoRotationFragment extends BaseShowcaseFragment {
 
-  private SimpleDraweeView mSimpleDraweeView;
+  private static final String CALLER_CONTEXT = "VitoRotationFragment";
+
+  private ImageView mImageView;
   private Uri mUri;
 
   @Nullable
   @Override
   public View onCreateView(
       LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_drawee_rotation, container, false);
+    return inflater.inflate(R.layout.fragment_vito_rotation, container, false);
   }
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     mUri = sampleUris().createSampleUri(ImageUriProvider.ImageSize.M);
 
-    mSimpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
-    final Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
+    mImageView = view.findViewById(R.id.image);
+    final Spinner spinner = view.findViewById(R.id.spinner);
 
     final SimpleRotationOptionsAdapter adapter = new SimpleRotationOptionsAdapter();
 
@@ -65,12 +66,8 @@ public class DraweeRotationFragment extends BaseShowcaseFragment {
   }
 
   private void setRotationOptions(RotationOptions rotationOptions) {
-    ImageRequest imageRequest =
-        ImageRequestBuilder.newBuilderWithSource(mUri)
-            .setRotationOptions(rotationOptions)
-            .setImageDecodeOptions(new ImageDecodeOptionsBuilder().build())
-            .build();
-    mSimpleDraweeView.setImageRequest(imageRequest);
+    VitoView.show(
+        mUri, ImageOptions.create().rotate(rotationOptions).build(), CALLER_CONTEXT, mImageView);
   }
 
   public class SimpleRotationOptionsAdapter extends BaseAdapter {
@@ -111,7 +108,7 @@ public class DraweeRotationFragment extends BaseShowcaseFragment {
               : layoutInflater.inflate(
                   android.R.layout.simple_spinner_dropdown_item, parent, false);
 
-      final TextView textView = (TextView) view.findViewById(android.R.id.text1);
+      final TextView textView = view.findViewById(android.R.id.text1);
       textView.setText(SPINNER_ENTRIES[position].description);
 
       return view;
