@@ -9,12 +9,13 @@ package com.facebook.drawee.drawable;
 
 import android.graphics.Matrix;
 import android.graphics.PointF;
+import javax.annotation.Nullable;
 import org.junit.Assert;
 
 /** Test utils for android.graphics classes. */
 public class AndroidGraphicsTestUtils {
 
-  public static void assertEquals(Matrix expectedMatrix, Matrix actualMatrix) {
+  public static void assertEquals(@Nullable Matrix expectedMatrix, Matrix actualMatrix) {
     if (expectedMatrix == null) {
       Assert.assertNull(actualMatrix);
       return;
@@ -27,7 +28,7 @@ public class AndroidGraphicsTestUtils {
     }
   }
 
-  public static void assertEquals(PointF expected, PointF actual, float delta) {
+  public static void assertEquals(@Nullable PointF expected, PointF actual, float delta) {
     if (expected == null) {
       Assert.assertNull(actual);
       return;
