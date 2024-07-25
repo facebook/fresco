@@ -12,14 +12,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import com.facebook.common.util.UriUtil;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
+import com.facebook.fresco.vito.view.VitoView;
 
 /** Simple drawee fragment that just displays an image. */
 public class ImagePipelineQualifiedResourceFragment extends BaseShowcaseFragment {
+
+  private static final String CALLER_CONTEXT = "ImagePipelineQualifiedResourceFragment";
 
   /**
    * This package name can pointing to another module that you include, but that does not share the
@@ -41,7 +44,7 @@ public class ImagePipelineQualifiedResourceFragment extends BaseShowcaseFragment
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    SimpleDraweeView simpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
-    simpleDraweeView.setImageURI(QUALIFIED_RESOURCE_URI);
+    ImageView image = view.findViewById(R.id.image);
+    VitoView.show(QUALIFIED_RESOURCE_URI, CALLER_CONTEXT, image);
   }
 }

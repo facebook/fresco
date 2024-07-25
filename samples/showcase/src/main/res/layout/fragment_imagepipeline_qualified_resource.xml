@@ -7,8 +7,8 @@
     android:orientation="vertical"
     >
 
-  <com.facebook.drawee.view.SimpleDraweeView
-      android:id="@+id/drawee_view"
+  <ImageView
+      android:id="@+id/image"
       android:layout_width="@dimen/drawee_width_medium"
       android:layout_height="@dimen/drawee_height_medium"
       />
