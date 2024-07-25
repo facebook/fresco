@@ -4,4 +4,10 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-./gradlew test assembleDebug assembleDebugAndroidTest -PdisablePreDex --info
+if [[ $1 == "--local" || $1 == "-l" ]]; then
+  # Local build with less verbose output
+  ./gradlew test assembleDebug assembleDebugAndroidTest -PdisablePreDex
+else
+  # Standard CI build command with maximum verbose output
+  ./gradlew test assembleDebug assembleDebugAndroidTest -PdisablePreDex --info
+fi
