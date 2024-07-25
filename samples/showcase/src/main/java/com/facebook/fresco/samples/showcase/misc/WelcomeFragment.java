@@ -17,16 +17,20 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.ImageView;
 import androidx.annotation.Nullable;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.common.util.UriUtil;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
+import com.facebook.fresco.vito.view.VitoView;
 
 /** Fragment shown on start-up */
 public class WelcomeFragment extends BaseShowcaseFragment {
 
   private static final String URL_DOCUMENTATION = "https://frescolib.org/";
   private static final String URL_GITHUB = "https://github.com/facebook/fresco";
+
+  private static final String CALLER_CONTEXT = "WelcomeFragment";
 
   @Nullable
   @Override
@@ -37,9 +41,9 @@ public class WelcomeFragment extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    final SimpleDraweeView draweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
-    draweeView.setActualImageResource(R.drawable.logo);
-    draweeView.setOnClickListener(
+    final ImageView imageView = view.findViewById(R.id.image);
+    VitoView.show(UriUtil.getUriForResourceId(R.drawable.logo), CALLER_CONTEXT, imageView);
+    imageView.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -48,14 +52,14 @@ public class WelcomeFragment extends BaseShowcaseFragment {
                     0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             rotateAnimation.setDuration(1000);
             rotateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-            draweeView.startAnimation(rotateAnimation);
+            imageView.startAnimation(rotateAnimation);
           }
         });
 
-    final Button buttonGitHub = (Button) view.findViewById(R.id.button_github);
+    final Button buttonGitHub = view.findViewById(R.id.button_github);
     setUriIntent(buttonGitHub, URL_GITHUB);
 
-    final Button buttonDocumentation = (Button) view.findViewById(R.id.button_documentation);
+    final Button buttonDocumentation = view.findViewById(R.id.button_documentation);
     setUriIntent(buttonDocumentation, URL_DOCUMENTATION);
   }
 
