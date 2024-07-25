@@ -17,27 +17,27 @@ import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.imagepipeline.widget.ResizableFrameLayout;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
-import com.facebook.imagepipeline.common.ImageDecodeOptionsBuilder;
+import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.view.VitoView;
 import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 /**
  * Fragment that illustrates how to use the image pipeline directly in order to create
  * notifications.
  */
 public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
+
+  private static final String CALLER_CONTEXT = "ImagePipelineResizingFragment";
 
   private final SizeEntry[] SPINNER_ENTRIES_SIZE =
       new SizeEntry[] {
@@ -60,7 +60,7 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
   private ImageFormatEntry[] mImageFormatEntries;
 
   private Button mButton;
-  private SimpleDraweeView mDraweeMain;
+  private ImageView mImage;
   private Spinner mSizeSpinner;
   private Spinner mFormatSpinner;
 
@@ -75,10 +75,10 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
   public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
     setupImageFormatEntries(sampleUris());
 
-    mButton = (Button) view.findViewById(R.id.button);
-    mDraweeMain = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
-    mSizeSpinner = (Spinner) view.findViewById(R.id.spinner_size);
-    mFormatSpinner = (Spinner) view.findViewById(R.id.spinner_format);
+    mButton = view.findViewById(R.id.button);
+    mImage = view.findViewById(R.id.image);
+    mSizeSpinner = view.findViewById(R.id.spinner_size);
+    mFormatSpinner = view.findViewById(R.id.spinner_format);
 
     mSizeSpinner.setAdapter(new SimpleResizeOptionsAdapter());
     mSizeSpinner.setOnItemSelectedListener(
@@ -106,7 +106,7 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
         });
     mFormatSpinner.setSelection(0);
 
-    mDraweeMain.setOnClickListener(
+    mImage.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -166,19 +166,16 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
   }
 
   private void reloadImage(Uri imageUri, @Nullable ResizeOptions resizeOptions) {
-    final ImageRequest imageRequest =
-        ImageRequestBuilder.newBuilderWithSource(imageUri)
-            .setResizeOptions(resizeOptions)
-            .setImageDecodeOptions(new ImageDecodeOptionsBuilder().build())
-            .build();
-
-    final DraweeController draweeController =
-        Fresco.newDraweeControllerBuilder()
-            .setOldController(mDraweeMain.getController())
-            .setImageRequest(imageRequest)
-            .build();
-
-    mDraweeMain.setController(draweeController);
+    VitoView.show(
+        imageUri,
+        ImageOptions.create()
+            .resize(resizeOptions)
+            .overlayRes(R.drawable.resize_outline)
+            .scale(ScalingUtils.ScaleType.CENTER_CROP)
+            .errorRes(R.color.primaryDark)
+            .build(),
+        CALLER_CONTEXT,
+        mImage);
   }
 
   private class SimpleResizeOptionsAdapter extends BaseAdapter {

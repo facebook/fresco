@@ -45,13 +45,10 @@
       android:minWidth="80dp"
       >
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/drawee_view"
+    <ImageView
+        android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        fresco:actualImageScaleType="centerCrop"
-        fresco:failureImage="@color/primaryDark"
-        fresco:overlayImage="@drawable/resize_outline"
         />
 
     <View
