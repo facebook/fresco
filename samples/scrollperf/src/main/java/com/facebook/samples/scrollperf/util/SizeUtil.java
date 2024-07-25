@@ -18,6 +18,7 @@ import android.widget.AbsListView;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.conf.Const;
+import javax.annotation.Nullable;
 
 /** Utility class for resizing */
 @Nullsafe(Nullsafe.Mode.LOCAL)
@@ -64,7 +65,7 @@ public final class SizeUtil {
    * @param config The Config object
    */
   public static void setConfiguredSize(
-      final View parentView, final View vitoView, final Config config) {
+      @Nullable final View parentView, final View vitoView, final Config config) {
     if (parentView != null) {
       if (config.overrideSize) {
         SizeUtil.updateViewLayoutParams(vitoView, config.overridenWidth, config.overridenHeight);
