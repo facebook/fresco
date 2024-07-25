@@ -23,8 +23,11 @@ import javax.annotation.Nullable;
  *
  * <p>The hierarchy can be set either programmatically or inflated from XML. See {@link
  * GenericDraweeHierarchyInflater} for supported XML attributes.
+ *
+ * <p>This class has been deprecated. Please use VitoView instead.
  */
 @Nullsafe(Nullsafe.Mode.LOCAL)
+@Deprecated
 public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
 
   private static @Nullable InflateHierarchyListener sInflateHierarchyListener;

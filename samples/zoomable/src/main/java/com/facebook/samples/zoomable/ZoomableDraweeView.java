@@ -34,7 +34,10 @@ import javax.annotation.Nullable;
  * DraweeView that has zoomable capabilities.
  *
  * <p>Once the image loads, pinch-to-zoom and translation gestures are enabled.
+ *
+ * <p>This class has been deprecated. Please use VitoView instead.
  */
+@Deprecated
 public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
     implements ScrollingView {
 

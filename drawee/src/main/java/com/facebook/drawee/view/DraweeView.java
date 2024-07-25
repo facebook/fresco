@@ -38,7 +38,10 @@ import javax.annotation.Nullable;
  * term solution in order to inherit some of its implementation (padding calculations, etc.). This
  * class is likely to be converted to extend View directly in the future, so avoid using ImageView's
  * methods and properties.
+ *
+ * <p>This class has been deprecated. Please use VitoView instead.
  */
+@Deprecated
 public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
 
   private final AspectRatioMeasure.Spec mMeasureSpec = new AspectRatioMeasure.Spec();

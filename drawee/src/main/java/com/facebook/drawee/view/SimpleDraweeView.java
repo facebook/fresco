@@ -30,7 +30,10 @@ import javax.annotation.Nullable;
  *
  * <p>This class must be statically initialized in order to be used. If you are using the Fresco
  * image pipeline, use {@link com.facebook.drawee.backends.pipeline.Fresco#initialize} to do this.
+ *
+ * <p>This class has been deprecated. Please use VitoView instead.
  */
+@Deprecated
 public class SimpleDraweeView extends GenericDraweeView {
 
   @Nullable
