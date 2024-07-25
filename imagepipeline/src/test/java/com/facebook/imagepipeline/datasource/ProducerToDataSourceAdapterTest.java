@@ -18,6 +18,7 @@ import com.facebook.imagepipeline.producers.BaseConsumer;
 import com.facebook.imagepipeline.producers.Consumer;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
+import javax.annotation.Nullable;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -115,17 +116,17 @@ public class ProducerToDataSourceAdapterTest {
     verifyNoMoreInteractionsAndReset();
   }
 
-  private void verifyWithResult(Object result, boolean isLast) {
+  private void verifyWithResult(@Nullable Object result, boolean isLast) {
     verifyState(isLast, result != null, result, NOT_FAILED, null);
     verifyNoMoreInteractionsAndReset();
   }
 
-  private void verifyFailed(Object result, Throwable throwable) {
+  private void verifyFailed(@Nullable Object result, Throwable throwable) {
     verifyState(FINISHED, result != null, result, FAILED, throwable);
     verifyNoMoreInteractionsAndReset();
   }
 
-  private void verifyClosed(boolean isFinished, Throwable throwable) {
+  private void verifyClosed(boolean isFinished, @Nullable Throwable throwable) {
     verifyState(isFinished, WITHOUT_RESULT, null, throwable != null, throwable);
     verifyNoMoreInteractionsAndReset();
   }
