@@ -7,7 +7,7 @@
 
 package com.facebook.fresco.samples.showcase.imageformat.pjpeg;
 
-import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,25 +16,24 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.fresco.samples.showcase.misc.LogcatImagePerfDataListener;
 import com.facebook.fresco.ui.common.ImagePerfDataListener;
+import com.facebook.fresco.vito.listener.BaseImageListener;
+import com.facebook.fresco.vito.listener.ImageListener;
+import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.view.VitoView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,12 +42,14 @@ import java.util.Locale;
 /** Progressive JPEG example that logs which frames of a progressive JPEG are rendered */
 public class ImageFormatProgressiveJpegFragment extends BaseShowcaseFragment {
 
+  private static final String CALLER_CONTEXT = "ImageFormatProgressiveJpegFragment";
   private Entry[] mSpinnerEntries;
 
   private final DateFormat mDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+  // TODO add new VIto API
   private final ImagePerfDataListener mImagePerfDataListener = new LogcatImagePerfDataListener();
 
-  private SimpleDraweeView mSimpleDraweeView;
+  private ImageView mImageView;
   private boolean mProgressiveRenderingEnabled;
   private TextView mDebugOutput;
   private ScrollView mDebugOutputScrollView;
@@ -77,13 +78,7 @@ public class ImageFormatProgressiveJpegFragment extends BaseShowcaseFragment {
           new Entry(R.string.format_pjpeg_label_slow, sampleUris().createPJPEGSlow()),
         };
 
-    ProgressBarDrawable progressBarDrawable = new ProgressBarDrawable();
-    progressBarDrawable.setColor(getResources().getColor(R.color.progress_bar_color));
-    progressBarDrawable.setBackgroundColor(
-        getResources().getColor(R.color.progress_bar_background));
-
-    mSimpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
-    mSimpleDraweeView.getHierarchy().setProgressBarImage(progressBarDrawable);
+    mImageView = view.findViewById(R.id.image);
 
     mDebugOutput = (TextView) view.findViewById(R.id.debug_output);
     mDebugOutputScrollView = (ScrollView) view.findViewById(R.id.debug_output_scroll_view);
@@ -118,48 +113,52 @@ public class ImageFormatProgressiveJpegFragment extends BaseShowcaseFragment {
 
   private void setImageUri(Uri uri) {
     mDebugOutput.setText("");
-    ImageRequest request =
-        ImageRequestBuilder.newBuilderWithSource(uri)
-            .setProgressiveRenderingEnabled(mProgressiveRenderingEnabled)
-            .build();
-    DraweeController controller =
-        Fresco.newDraweeControllerBuilder()
-            .setImageRequest(request)
-            .setRetainImageOnFailure(true)
-            .setPerfDataListener(mImagePerfDataListener)
-            .setControllerListener(
-                new BaseControllerListener<ImageInfo>() {
-                  @Override
-                  public void onFinalImageSet(
-                      String id,
-                      @javax.annotation.Nullable ImageInfo imageInfo,
-                      @javax.annotation.Nullable Animatable animatable) {
-                    if (imageInfo != null) {
-                      QualityInfo qualityInfo = imageInfo.getQualityInfo();
-                      logScan(qualityInfo, true);
-                    }
-                  }
+    final ImageListener listener =
+        new BaseImageListener() {
+          @Override
+          public void onFinalImageSet(
+              long id,
+              int imageOrigin,
+              @Nullable ImageInfo imageInfo,
+              @Nullable Drawable drawable) {
+            if (imageInfo != null) {
+              QualityInfo qualityInfo = imageInfo.getQualityInfo();
+              logScan(qualityInfo, true);
+            }
+          }
 
-                  @Override
-                  public void onIntermediateImageSet(
-                      String id, @javax.annotation.Nullable ImageInfo imageInfo) {
-                    if (imageInfo != null) {
-                      QualityInfo qualityInfo = imageInfo.getQualityInfo();
-                      logScan(qualityInfo, false);
-                    }
-                  }
+          @Override
+          public void onIntermediateImageSet(long id, @Nullable ImageInfo imageInfo) {
+            if (imageInfo != null) {
+              QualityInfo qualityInfo = imageInfo.getQualityInfo();
+              logScan(qualityInfo, false);
+            }
+          }
 
-                  @Override
-                  public void onIntermediateImageFailed(String id, Throwable throwable) {
-                    mDebugOutput.append(
-                        String.format(
-                            Locale.getDefault(),
-                            "onIntermediateImageFailed, %s\n",
-                            throwable.getMessage()));
-                  }
-                })
-            .build();
-    mSimpleDraweeView.setController(controller);
+          @Override
+          public void onIntermediateImageFailed(long id, @Nullable Throwable throwable) {
+            mDebugOutput.append(
+                String.format(
+                    Locale.getDefault(),
+                    "onIntermediateImageFailed, %s\n",
+                    throwable.getMessage()));
+          }
+        };
+
+    ProgressBarDrawable progressBarDrawable = new ProgressBarDrawable();
+    progressBarDrawable.setColor(getResources().getColor(R.color.progress_bar_color));
+    progressBarDrawable.setBackgroundColor(
+        getResources().getColor(R.color.progress_bar_background));
+
+    VitoView.show(
+        uri,
+        ImageOptions.create()
+            .progress(progressBarDrawable)
+            .progressiveRendering(mProgressiveRenderingEnabled)
+            .build(),
+        CALLER_CONTEXT,
+        listener,
+        mImageView);
   }
 
   private void logScan(QualityInfo qualityInfo, boolean isFinalImage) {

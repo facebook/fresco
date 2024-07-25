@@ -12,15 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import com.facebook.common.webp.WebpSupportStatus;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
+import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.view.VitoView;
 
 /**
  * This fragment displays different WebP images.
@@ -32,6 +33,9 @@ import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
  */
 public class ImageFormatWebpFragment extends BaseShowcaseFragment {
 
+  private static final String CALLER_CONTEXT = "ImageFormatWebpFragment";
+  private static final ImageOptions IMAGE_OPTIONS = ImageOptions.create().autoPlay(true).build();
+
   @Nullable
   @Override
   public View onCreateView(
@@ -41,31 +45,25 @@ public class ImageFormatWebpFragment extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    final SimpleDraweeView draweeWebpStatic = view.findViewById(R.id.drawee_view_webp_static);
-    draweeWebpStatic.setImageURI(sampleUris().createWebpStaticUri());
+    final ImageView imageWebPStatic = view.findViewById(R.id.image_view_webp_static);
+    VitoView.show(sampleUris().createWebpStaticUri(), CALLER_CONTEXT, imageWebPStatic);
 
-    final SimpleDraweeView draweeWebpTranslucent =
-        view.findViewById(R.id.drawee_view_webp_translucent);
-    draweeWebpTranslucent.setImageURI(sampleUris().createWebpTranslucentUri());
+    final ImageView imageWebPTranslucent = view.findViewById(R.id.image_view_webp_translucent);
+    VitoView.show(sampleUris().createWebpTranslucentUri(), CALLER_CONTEXT, imageWebPTranslucent);
 
     final SwitchCompat switchBackground = view.findViewById(R.id.switch_background);
     switchBackground.setOnCheckedChangeListener(
         new CompoundButton.OnCheckedChangeListener() {
           @Override
           public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            draweeWebpTranslucent
-                .getHierarchy()
-                .setBackgroundImage(isChecked ? new CheckerBoardDrawable(getResources()) : null);
+            imageWebPTranslucent.setBackground(
+                isChecked ? new CheckerBoardDrawable(getResources()) : null);
           }
         });
 
-    final SimpleDraweeView draweeWebpAnimated = view.findViewById(R.id.drawee_view_webp_animated);
-    draweeWebpAnimated.setController(
-        Fresco.newDraweeControllerBuilder()
-            .setAutoPlayAnimations(true)
-            .setOldController(draweeWebpAnimated.getController())
-            .setUri(sampleUris().createWebpAnimatedUri())
-            .build());
+    final ImageView imageWebpAnimated = view.findViewById(R.id.image_view_webp_animated);
+    VitoView.show(
+        sampleUris().createWebpAnimatedUri(), IMAGE_OPTIONS, CALLER_CONTEXT, imageWebpAnimated);
 
     final TextView supportStatusTextView = view.findViewById(R.id.text_webp_support_status);
     final StringBuilder sb = new StringBuilder();

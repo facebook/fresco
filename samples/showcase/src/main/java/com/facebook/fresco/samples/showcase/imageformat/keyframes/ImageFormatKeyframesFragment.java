@@ -12,20 +12,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.CustomImageFormatConfigurator;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
+import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.view.VitoView;
 
-/** Fragment using a SimpleDraweeView to display a Keyframes animation */
+/** Fragment using a ImageView to display a Keyframes animation */
 public class ImageFormatKeyframesFragment extends BaseShowcaseFragment {
 
-  private SimpleDraweeView mSimpleDraweeView;
+  private static final String CALLER_CONTEXT = "ImageFormatKeyframesFragment";
+  private static final ImageOptions IMAGE_OPTIONS = ImageOptions.create().autoPlay(true).build();
+  private ImageView mImageView;
 
   @Nullable
   @Override
@@ -42,24 +44,16 @@ public class ImageFormatKeyframesFragment extends BaseShowcaseFragment {
   }
 
   private void initAnimation(View view) {
-    mSimpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
-    mSimpleDraweeView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-    DraweeController controller =
-        Fresco.newDraweeControllerBuilder()
-            .setOldController(mSimpleDraweeView.getController())
-            .setUri(sampleUris().createKeyframesUri())
-            .setAutoPlayAnimations(true)
-            .build();
-    mSimpleDraweeView.setController(controller);
+    mImageView = view.findViewById(R.id.image);
+    mImageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+    VitoView.show(sampleUris().createKeyframesUri(), IMAGE_OPTIONS, CALLER_CONTEXT, mImageView);
 
     final SwitchCompat switchBackground = (SwitchCompat) view.findViewById(R.id.switch_background);
     switchBackground.setOnCheckedChangeListener(
         new CompoundButton.OnCheckedChangeListener() {
           @Override
           public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            mSimpleDraweeView
-                .getHierarchy()
-                .setBackgroundImage(isChecked ? new CheckerBoardDrawable(getResources()) : null);
+            mImageView.setBackground(isChecked ? new CheckerBoardDrawable(getResources()) : null);
           }
         });
   }

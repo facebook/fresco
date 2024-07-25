@@ -12,14 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import com.facebook.common.util.UriUtil;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.CustomImageFormatConfigurator;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
+import com.facebook.fresco.vito.view.VitoView;
 
 /**
  * Color XML example. It has a toggle to enable / disable Color XML support and displays 1 image.
@@ -28,8 +29,10 @@ import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
  */
 public class ImageFormatColorFragment extends BaseShowcaseFragment {
 
-  private SimpleDraweeView mSimpleDraweeView1;
-  private SimpleDraweeView mSimpleDraweeView2;
+  private static final String CALLER_CONTEXT = "ImageFormatColorFragment";
+
+  private ImageView mImageView1;
+  private ImageView mImageView2;
 
   @Nullable
   @Override
@@ -40,25 +43,21 @@ public class ImageFormatColorFragment extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    mSimpleDraweeView1 = (SimpleDraweeView) view.findViewById(R.id.drawee1);
-    mSimpleDraweeView2 = (SimpleDraweeView) view.findViewById(R.id.drawee2);
+    mImageView1 = view.findViewById(R.id.image1);
+    mImageView2 = view.findViewById(R.id.image2);
 
     // Set a simple custom color resource as the image.
     // The format of custom_color1 is <color>#rrggbb</color>
-    mSimpleDraweeView1.setImageURI(UriUtil.getUriForResourceId(R.raw.custom_color1));
-    mSimpleDraweeView2.setImageURI(UriUtil.getUriForResourceId(R.raw.custom_color2));
+    VitoView.show(UriUtil.getUriForResourceId(R.raw.custom_color1), CALLER_CONTEXT, mImageView1);
+    VitoView.show(UriUtil.getUriForResourceId(R.raw.custom_color2), CALLER_CONTEXT, mImageView2);
 
     final SwitchCompat switchBackground = (SwitchCompat) view.findViewById(R.id.switch_background);
     switchBackground.setOnCheckedChangeListener(
         new CompoundButton.OnCheckedChangeListener() {
           @Override
           public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            mSimpleDraweeView1
-                .getHierarchy()
-                .setBackgroundImage(isChecked ? new CheckerBoardDrawable(getResources()) : null);
-            mSimpleDraweeView2
-                .getHierarchy()
-                .setBackgroundImage(isChecked ? new CheckerBoardDrawable(getResources()) : null);
+            mImageView1.setBackground(isChecked ? new CheckerBoardDrawable(getResources()) : null);
+            mImageView2.setBackground(isChecked ? new CheckerBoardDrawable(getResources()) : null);
           }
         });
 

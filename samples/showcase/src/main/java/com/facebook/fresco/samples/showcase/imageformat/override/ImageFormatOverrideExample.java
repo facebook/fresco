@@ -12,20 +12,19 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import androidx.annotation.Nullable;
+import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.AbstractDraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.CustomImageFormatConfigurator;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.imageformat.color.ColorImageExample;
-import com.facebook.imagepipeline.common.ImageDecodeOptions;
+import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.view.VitoView;
 import com.facebook.imagepipeline.common.ImageDecodeOptionsBuilder;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 /**
  * Example that overrides the decoder for a given image request.
@@ -36,7 +35,14 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
  */
 public class ImageFormatOverrideExample extends BaseShowcaseFragment {
 
+  private static final String CALLER_CONTEXT = "ImageFormatOverrideExample";
+
   private static final ImageDecoder CUSTOM_COLOR_DECODER = ColorImageExample.createDecoder();
+  private static final ImageOptions IMAGE_OPTIONS =
+      ImageOptions.create()
+          .imageDecodeOptions(
+              new ImageDecodeOptionsBuilder().setCustomImageDecoder(CUSTOM_COLOR_DECODER).build())
+          .build();
 
   @Nullable
   @Override
@@ -47,18 +53,9 @@ public class ImageFormatOverrideExample extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    SimpleDraweeView simpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
+    ImageView imageView = view.findViewById(R.id.image);
 
-    ImageDecodeOptions imageDecodeOptionsWithCustomDecoder =
-        new ImageDecodeOptionsBuilder().setCustomImageDecoder(CUSTOM_COLOR_DECODER).build();
-
-    AbstractDraweeController controller =
-        Fresco.newDraweeControllerBuilder()
-            .setImageRequest(
-                ImageRequestBuilder.newBuilderWithResourceId(R.raw.custom_color1)
-                    .setImageDecodeOptions(imageDecodeOptionsWithCustomDecoder)
-                    .build())
-            .build();
-    simpleDraweeView.setController(controller);
+    VitoView.show(
+        UriUtil.getUriForResourceId(R.raw.custom_color1), IMAGE_OPTIONS, CALLER_CONTEXT, imageView);
   }
 }

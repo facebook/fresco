@@ -88,9 +88,9 @@
   <string name="format_gif_label_medium">Medium (512x512 px)</string>
   <string name="format_gif_label_large">Large (1024x1024 px)</string>
 
-  <string name="format_webp_static_help">The above Drawee displays a lossy WebP image.</string>
-  <string name="format_webp_translucent_help">The above Drawee displays a loss-less WebP image with semi-transparent areas.</string>
-  <string name="format_webp_animated_help">The above Drawee displays an animated WebP image</string>
+  <string name="format_webp_static_help">The above image displays a lossy WebP image.</string>
+  <string name="format_webp_translucent_help">The above image displays a loss-less WebP image with semi-transparent areas.</string>
+  <string name="format_webp_animated_help">The above image displays an animated WebP image</string>
 
   <string name="format_pjpeg_help">Select a progressive JPEG from the spinner and enable or disable progessive JPEG support with the switch.</string>
   <string name="format_pjpeg_switch_rendering_enabled">Progressive JPEG rendering enabled</string>

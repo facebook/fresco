@@ -14,20 +14,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.CustomImageFormatConfigurator;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
+import com.facebook.fresco.vito.view.VitoView;
 
 /** SVG example. It has a toggle to enable / disable SVG support and displays 1 image. */
 public class ImageFormatSvgFragment extends BaseShowcaseFragment {
 
-  private SimpleDraweeView mSimpleDraweeView;
+  private static final String CALLER_CONTEXT = "ImageFormatSvgFragment";
+
+  private ImageView mImageView;
   private ShowRestartMessageDialog mShowRestartMessageDialog;
 
   @Nullable
@@ -39,17 +42,15 @@ public class ImageFormatSvgFragment extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    mSimpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
-    mSimpleDraweeView.setImageURI(sampleUris().createSvgUri());
+    mImageView = view.findViewById(R.id.image);
+    VitoView.show(sampleUris().createSvgUri(), CALLER_CONTEXT, mImageView);
 
     final SwitchCompat switchBackground = (SwitchCompat) view.findViewById(R.id.switch_background);
     switchBackground.setOnCheckedChangeListener(
         new CompoundButton.OnCheckedChangeListener() {
           @Override
           public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            mSimpleDraweeView
-                .getHierarchy()
-                .setBackgroundImage(isChecked ? new CheckerBoardDrawable(getResources()) : null);
+            mImageView.setBackground(isChecked ? new CheckerBoardDrawable(getResources()) : null);
           }
         });
 

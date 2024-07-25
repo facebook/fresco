@@ -7,7 +7,6 @@
 
 package com.facebook.fresco.samples.showcase.imageformat.gif;
 
-import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,35 +16,34 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import com.facebook.animated.giflite.GifDecoder;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
-import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
+import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.view.VitoView;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.ImageDecodeOptionsBuilder;
-import com.facebook.imagepipeline.image.ImageInfo;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 /** GIF example that illustrates how to display a simple GIF file */
 public class ImageFormatGifFragment extends BaseShowcaseFragment {
 
+  private static final String CALLER_CONTEXT = "ImageFormatGifFragment";
   private Entry[] mSpinnerEntries;
 
   private Spinner mSpinner;
-  private SimpleDraweeView mSimpleDraweeView;
+  private ImageView mImageView;
   private @Nullable GifDecoder mGifDecoder;
   private boolean mAutoPlayEnabled;
+  private boolean mIsPlaying;
 
   @Nullable
   @Override
@@ -70,16 +68,14 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
               sampleUris().createGifUri(ImageUriProvider.ImageSize.L)),
         };
 
-    mSimpleDraweeView = view.findViewById(R.id.drawee_view);
+    mImageView = view.findViewById(R.id.image);
 
     final SwitchCompat switchBackground = view.findViewById(R.id.switch_background);
     switchBackground.setOnCheckedChangeListener(
         new CompoundButton.OnCheckedChangeListener() {
           @Override
           public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            mSimpleDraweeView
-                .getHierarchy()
-                .setBackgroundImage(isChecked ? new CheckerBoardDrawable(getResources()) : null);
+            mImageView.setBackground(isChecked ? new CheckerBoardDrawable(getResources()) : null);
           }
         });
     final SwitchCompat switchAutoPlay = view.findViewById(R.id.switch_autoplay);
@@ -98,9 +94,9 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
         new CompoundButton.OnCheckedChangeListener() {
           @Override
           public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            ViewGroup.LayoutParams layoutParams = mSimpleDraweeView.getLayoutParams();
+            ViewGroup.LayoutParams layoutParams = mImageView.getLayoutParams();
             layoutParams.height = layoutParams.width * (isChecked ? 2 : 1);
-            mSimpleDraweeView.setLayoutParams(layoutParams);
+            mImageView.setLayoutParams(layoutParams);
           }
         });
 
@@ -148,52 +144,34 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
   }
 
   private void setAnimationUri(Uri uri) {
-    final PipelineDraweeControllerBuilder controllerBuilder =
-        Fresco.newDraweeControllerBuilder()
-            .setAutoPlayAnimations(mAutoPlayEnabled)
-            .setOldController(mSimpleDraweeView.getController());
+
     final ImageDecodeOptionsBuilder optionsBuilder =
         ImageDecodeOptions.newBuilder().setMaxDimensionPx(4000);
 
     if (mGifDecoder != null) {
       optionsBuilder.setCustomImageDecoder(mGifDecoder);
     }
-
-    controllerBuilder.setImageRequest(
-        ImageRequestBuilder.newBuilderWithSource(uri)
-            .setImageDecodeOptions(optionsBuilder.build())
-            .build());
+    final ImageOptions imageOptionsAutoPlay =
+        ImageOptions.create().autoPlay(true).imageDecodeOptions(optionsBuilder.build()).build();
+    final ImageOptions imageOptionsPaused =
+        imageOptionsAutoPlay.extend().autoPlay(false).overlay(getPlayOverlayDrawable()).build();
     if (!mAutoPlayEnabled) {
-      controllerBuilder.setControllerListener(
-          new BaseControllerListener<ImageInfo>() {
-
+      mImageView.setOnClickListener(
+          new View.OnClickListener() {
             @Override
-            public void onFinalImageSet(
-                String id, @Nullable ImageInfo imageInfo, final @Nullable Animatable animatable) {
-              if (animatable != null) {
-                mSimpleDraweeView.getHierarchy().setOverlayImage(getPlayOverlayDrawable());
-                mSimpleDraweeView.setOnClickListener(
-                    new View.OnClickListener() {
-                      @Override
-                      public void onClick(View v) {
-                        if (animatable.isRunning()) {
-                          animatable.stop();
-                          mSimpleDraweeView
-                              .getHierarchy()
-                              .setOverlayImage(getPlayOverlayDrawable());
-                        } else {
-                          animatable.start();
-                          mSimpleDraweeView.getHierarchy().setOverlayImage(null);
-                        }
-                      }
-                    });
+            public void onClick(View v) {
+              if (mIsPlaying) {
+                VitoView.show(uri, imageOptionsPaused, CALLER_CONTEXT, mImageView);
+              } else {
+                VitoView.show(uri, imageOptionsAutoPlay, CALLER_CONTEXT, mImageView);
               }
+              mIsPlaying = !mIsPlaying;
             }
           });
+      VitoView.show(uri, imageOptionsPaused, CALLER_CONTEXT, mImageView);
     } else {
-      mSimpleDraweeView.getHierarchy().setOverlayImage(null);
+      VitoView.show(uri, imageOptionsAutoPlay, CALLER_CONTEXT, mImageView);
     }
-    mSimpleDraweeView.setController(controllerBuilder.build());
   }
 
   public Drawable getPlayOverlayDrawable() {

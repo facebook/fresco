@@ -23,16 +23,16 @@
       android:orientation="horizontal"
       android:layout_marginTop="@dimen/margin_medium"
       >
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/drawee1"
+    <ImageView
+        android:id="@+id/image1"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:layout_marginRight="@dimen/margin_medium"
         android:layout_marginEnd="@dimen/margin_medium"
         />
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/drawee2"
+    <ImageView
+        android:id="@+id/image2"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

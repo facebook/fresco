@@ -11,14 +11,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
+import com.facebook.fresco.vito.source.ImageSourceProvider;
+import com.facebook.fresco.vito.view.VitoView;
 
-/** Fragment using a SimpleDraweeView to display a Keyframes animation */
+/** Fragment using a ImageView to display a Keyframes animation */
 public class ImageFormatDataUriFragment extends BaseShowcaseFragment {
+
+  private static final String CALLER_CONTEXT = "ImageFormatDataUriFragment";
 
   /** A 100x100px PNG image with a blue star */
   public static final String dataUri =
@@ -49,9 +53,8 @@ public class ImageFormatDataUriFragment extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    final SimpleDraweeView simpleDraweeView = view.findViewById(R.id.drawee_view);
-    simpleDraweeView.setImageURI(dataUri, null);
-
+    final ImageView image = view.findViewById(R.id.image);
+    VitoView.show(ImageSourceProvider.forUri(dataUri), CALLER_CONTEXT, image);
     final TextView uriContentTextView = view.findViewById(R.id.datauri_content_textview);
     uriContentTextView.setText(dataUri);
   }
