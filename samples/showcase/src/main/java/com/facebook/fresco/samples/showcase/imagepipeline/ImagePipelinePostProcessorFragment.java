@@ -15,13 +15,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
@@ -33,13 +31,13 @@ import com.facebook.fresco.samples.showcase.postprocessor.FasterGreyScalePostpro
 import com.facebook.fresco.samples.showcase.postprocessor.ScalingBlurPostprocessor;
 import com.facebook.fresco.samples.showcase.postprocessor.SlowGreyScalePostprocessor;
 import com.facebook.fresco.samples.showcase.postprocessor.WatermarkPostprocessor;
+import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.view.VitoView;
 import com.facebook.imagepipeline.postprocessors.BlurPostProcessor;
 import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor;
 import com.facebook.imagepipeline.postprocessors.RoundAsCirclePostprocessor;
 import com.facebook.imagepipeline.postprocessors.RoundPostprocessor;
 import com.facebook.imagepipeline.postprocessors.RoundedCornersPostprocessor;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.request.Postprocessor;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,13 +51,14 @@ import java.util.Locale;
 public class ImagePipelinePostProcessorFragment extends BaseShowcaseFragment
     implements DurationCallback {
 
+  private static final String CALLER_CONTEXT = "WelcomeFragment";
   private static final int WATERMARK_COUNT = 10;
   private static final String WATERMARK_STRING = "WATERMARK";
 
   private List<Entry> mSpinnerEntries = new ArrayList<>();
 
   private Button mButton;
-  private SimpleDraweeView mDraweeMain;
+  private ImageView mImage;
   private Spinner mSpinner;
   private Uri mUri;
 
@@ -76,7 +75,7 @@ public class ImagePipelinePostProcessorFragment extends BaseShowcaseFragment
     mUri = sampleUris().createSampleUri(ImageUriProvider.ImageSize.L);
 
     mButton = (Button) view.findViewById(R.id.button);
-    mDraweeMain = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
+    mImage = view.findViewById(R.id.image);
     mSpinner = (Spinner) view.findViewById(R.id.spinner);
 
     mSpinner.setAdapter(new SimplePostprocessorAdapter());
@@ -118,16 +117,8 @@ public class ImagePipelinePostProcessorFragment extends BaseShowcaseFragment
   }
 
   private void setPostprocessor(Postprocessor postprocessor) {
-    final ImageRequest imageRequest =
-        ImageRequestBuilder.newBuilderWithSource(mUri).setPostprocessor(postprocessor).build();
-
-    final DraweeController draweeController =
-        Fresco.newDraweeControllerBuilder()
-            .setOldController(mDraweeMain.getController())
-            .setImageRequest(imageRequest)
-            .build();
-
-    mDraweeMain.setController(draweeController);
+    VitoView.show(
+        mUri, ImageOptions.create().postprocess(postprocessor).build(), CALLER_CONTEXT, mImage);
   }
 
   private class SimplePostprocessorAdapter extends BaseAdapter {
