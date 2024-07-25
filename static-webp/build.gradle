@@ -6,6 +6,7 @@
  */
 
 import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.GradleDeps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
@@ -36,6 +37,7 @@ task fetchNativeDeps(dependsOn: [copyLibwebp, copyLibpng, copyLibjpeg]) {
 }
 
 android {
+    ndkVersion GradleDeps.Native.version
 
     def ndkLibs = [['static-webp', [copyLibjpeg, copyLibpng, copyLibwebp]]]
 

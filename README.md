@@ -2,7 +2,7 @@
 
 <img alt="Fresco Logo" align="right" src="docs/static/sample-images/fresco_logo.svg" width="15%" />
 
-![Build Status](https://github.com/facebook/fresco/actions/workflows/build.yml/badge.svg?event=push)
+[![Build Status](https://github.com/facebook/fresco/actions/workflows/build.yml/badge.svg?event=push)](https://github.com/facebook/fresco/actions/workflows/build.yml?query=event%3Apush)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen)](https://github.com/facebook/fresco/blob/main/LICENSE)
 
 Fresco is a powerful system for displaying images in Android applications.
