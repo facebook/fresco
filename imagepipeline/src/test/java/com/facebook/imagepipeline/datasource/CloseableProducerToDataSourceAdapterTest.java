@@ -20,6 +20,7 @@ import com.facebook.imagepipeline.producers.BaseConsumer;
 import com.facebook.imagepipeline.producers.Consumer;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
+import javax.annotation.Nullable;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -91,7 +92,9 @@ public class CloseableProducerToDataSourceAdapterTest {
   }
 
   private static <T> void assertReferencesSame(
-      String errorMessage, CloseableReference<T> expectedRef, CloseableReference<T> actualRef) {
+      String errorMessage,
+      @Nullable CloseableReference<T> expectedRef,
+      CloseableReference<T> actualRef) {
     if (expectedRef == null) {
       assertNull(errorMessage, actualRef);
     } else {
@@ -143,19 +146,19 @@ public class CloseableProducerToDataSourceAdapterTest {
     verifyNoMoreInteractionsAndReset();
   }
 
-  private void verifyWithResult(CloseableReference<Object> resultRef, boolean isLast) {
+  private void verifyWithResult(@Nullable CloseableReference<Object> resultRef, boolean isLast) {
     verifyState(isLast, resultRef != null, resultRef, NOT_FAILED, null);
     verifyReferenceCount(resultRef);
     verifyNoMoreInteractionsAndReset();
   }
 
-  private void verifyFailed(CloseableReference<Object> resultRef, Throwable throwable) {
+  private void verifyFailed(@Nullable CloseableReference<Object> resultRef, Throwable throwable) {
     verifyState(FINISHED, resultRef != null, resultRef, FAILED, throwable);
     verifyReferenceCount(resultRef);
     verifyNoMoreInteractionsAndReset();
   }
 
-  private void verifyClosed(boolean isFinished, Throwable throwable) {
+  private void verifyClosed(boolean isFinished, @Nullable Throwable throwable) {
     verifyState(isFinished, WITHOUT_RESULT, null, throwable != null, throwable);
     verifyReferenceCount(null);
     verifyNoMoreInteractionsAndReset();
