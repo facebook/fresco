@@ -7,7 +7,14 @@
 
 package com.facebook.fresco.ui.common
 
-open class ImagePerfLoggingState {
+open class ImagePerfLoggingState(val infra: ImageRenderingInfra) {
+
+  /** Intermediate image point names with timestamps in nanoseconds */
+  val intermediateImageSetTimes: MutableList<Pair<String, Long>> = mutableListOf()
+
+  /** Stopgap measure before we refactor the logger to store-and-replay mode */
+  var newIntermediateImageSetPointAvailable: Boolean = false
+
   var callingClassNameOnVisible: String? = null
   var rootContextNameOnVisible: String? = null
   var contextChainArrayOnVisible: Array<String>? = null
@@ -17,4 +24,19 @@ open class ImagePerfLoggingState {
   var subSurfaceOnVisible: String? = null
   var msSinceLastNavigationOnVisible: Long? = null
   var startupStatusOnVisible: String? = null
+
+  internal fun resetLoggingState() {
+    intermediateImageSetTimes.clear()
+    newIntermediateImageSetPointAvailable = false
+
+    callingClassNameOnVisible = null
+    rootContextNameOnVisible = null
+    contextChainArrayOnVisible = null
+    contextChainExtrasOnVisible = null
+    contentIdOnVisible = null
+    surfaceOnVisible = null
+    subSurfaceOnVisible = null
+    msSinceLastNavigationOnVisible = null
+    startupStatusOnVisible = null
+  }
 }

@@ -41,7 +41,11 @@ class ImagePerfData(
     val subSurfaceOnVisible: String?,
     val msSinceLastNavigationOnVisible: Long?,
     val startupStatusOnVisible: String?,
+    val intermediateImageSetTimes: List<Pair<String, Long>>,
+    val newIntermediateImageSetPointAvailable: Boolean,
 ) {
+
+  val instanceId: Int = controllerId.hashCode()
 
   val finalImageLoadTimeMs: Long
     get() =

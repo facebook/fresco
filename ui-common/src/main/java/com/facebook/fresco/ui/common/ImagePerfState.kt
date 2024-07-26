@@ -9,7 +9,7 @@ package com.facebook.fresco.ui.common
 
 import com.facebook.fresco.ui.common.ControllerListener2.Extras
 
-class ImagePerfState(val infra: ImageRenderingInfra) : ImagePerfLoggingState() {
+class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) {
 
   // General image metadata
   private var controllerId: String? = null
@@ -59,6 +59,8 @@ class ImagePerfState(val infra: ImageRenderingInfra) : ImagePerfLoggingState() {
     dimensionsInfo = null
     _extraData = null
     resetPointsTimestamps()
+
+    resetLoggingState()
   }
 
   /** Useful when reusing the same [ImagePerfState] when component is being remounted */
@@ -70,6 +72,10 @@ class ImagePerfState(val infra: ImageRenderingInfra) : ImagePerfLoggingState() {
     controllerFailureTimeMs = ImagePerfData.UNSET.toLong()
     visibilityEventTimeMs = ImagePerfData.UNSET.toLong()
     invisibilityEventTimeMs = ImagePerfData.UNSET.toLong()
+
+    // Are these really required here? Adding to be safe for now, but verify its utility later.
+    newIntermediateImageSetPointAvailable = false
+    intermediateImageSetTimes.clear()
   }
 
   fun setControllerId(controllerId: String?) {
@@ -172,6 +178,8 @@ class ImagePerfState(val infra: ImageRenderingInfra) : ImagePerfLoggingState() {
           subSurfaceOnVisible,
           msSinceLastNavigationOnVisible,
           startupStatusOnVisible,
+          intermediateImageSetTimes.toList(),
+          newIntermediateImageSetPointAvailable,
       )
 
   fun setExtraData(extraData: Extras?) {
