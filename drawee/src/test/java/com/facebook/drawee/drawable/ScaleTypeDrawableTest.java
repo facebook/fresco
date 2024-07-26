@@ -19,6 +19,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import javax.annotation.Nullable;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -283,7 +284,7 @@ public class ScaleTypeDrawableTest {
       int underlyingWidth,
       int underlyingHeight,
       ScaleType scaleType,
-      PointF focusPoint,
+      @Nullable PointF focusPoint,
       Matrix expectedMatrix) {
     mScaleTypeDrawable.setScaleType(scaleType);
     if (focusPoint != null) {
