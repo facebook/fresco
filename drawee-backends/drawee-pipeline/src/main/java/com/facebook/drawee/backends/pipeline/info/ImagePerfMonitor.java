@@ -107,8 +107,7 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
   }
 
   @Override
-  public void notifyListenersOfVisibilityStateUpdate(
-      ImagePerfState state, VisibilityState visibilityState) {
+  public void notifyVisibilityUpdated(ImagePerfState state, VisibilityState visibilityState) {
     if (!mEnabled || mImagePerfDataListeners == null || mImagePerfDataListeners.isEmpty()) {
       return;
     }

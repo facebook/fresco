@@ -9,10 +9,7 @@ package com.facebook.fresco.ui.common
 
 interface ImagePerfNotifier {
 
-  fun notifyListenersOfVisibilityStateUpdate(
-      state: ImagePerfState,
-      visibilityState: VisibilityState
-  )
+  fun notifyVisibilityUpdated(state: ImagePerfState, visibilityState: VisibilityState)
 
   fun notifyStatusUpdated(state: ImagePerfState, imageLoadStatus: ImageLoadStatus)
 }

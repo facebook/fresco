@@ -13,10 +13,7 @@ package com.facebook.fresco.ui.common
 open class ImagePerfDataNotifier(private val perfDataListener: ImagePerfDataListener) :
     ImagePerfNotifier {
 
-  override fun notifyListenersOfVisibilityStateUpdate(
-      state: ImagePerfState,
-      visibilityState: VisibilityState
-  ) {
+  override fun notifyVisibilityUpdated(state: ImagePerfState, visibilityState: VisibilityState) {
     perfDataListener.onImageVisibilityUpdated(state.snapshot(), visibilityState)
   }
 

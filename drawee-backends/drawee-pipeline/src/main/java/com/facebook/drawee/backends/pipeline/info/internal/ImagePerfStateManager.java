@@ -190,10 +190,10 @@ public class ImagePerfStateManager extends BaseControllerListener2<ImageInfo>
   }
 
   private void updateVisibility(ImagePerfState state, VisibilityState visibilityState) {
-    mImagePerfNotifier.notifyListenersOfVisibilityStateUpdate(state, visibilityState);
+    mImagePerfNotifier.notifyVisibilityUpdated(state, visibilityState);
     ImagePerfNotifier localImagePerfNotifier = mLocalImagePerfNotifier;
     if (localImagePerfNotifier != null) {
-      localImagePerfNotifier.notifyListenersOfVisibilityStateUpdate(state, visibilityState);
+      localImagePerfNotifier.notifyVisibilityUpdated(state, visibilityState);
     }
   }
 
