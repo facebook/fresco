@@ -35,7 +35,7 @@ class LithoSampleHostFragment(
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     binding.textHelp.text = helpText
-    val c = ComponentContext(context)
+    val c = ComponentContext(requireContext())
     val lithoView =
         LithoView.create(c, lithoSample.createLithoComponent(c, sampleUris(), "Example"))
     binding.container.addView(lithoView)

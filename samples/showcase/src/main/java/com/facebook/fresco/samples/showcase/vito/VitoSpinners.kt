@@ -139,21 +139,21 @@ object VitoSpinners {
   val progressOptions =
       Pair(
           listOf(
-              "none" to { _, builder: ImageOptions.Builder -> builder.progress(null) },
+              "none" to { _: Context, builder: ImageOptions.Builder -> builder.progress(null) },
               "image" to
-                  { _, builder: ImageOptions.Builder ->
+                  { _: Context, builder: ImageOptions.Builder ->
                     builder.progressRes(R.drawable.logo)
                   },
               "color drawable" to
-                  { _, builder: ImageOptions.Builder ->
+                  { _: Context, builder: ImageOptions.Builder ->
                     builder.progress(ColorDrawable(Color.YELLOW))
                   },
               "color res" to
-                  { _, builder: ImageOptions.Builder ->
+                  { _: Context, builder: ImageOptions.Builder ->
                     builder.progressRes(R.color.progress_bar_color)
                   },
               "indeterminate" to
-                  { _, builder: ImageOptions.Builder ->
+                  { _: Context, builder: ImageOptions.Builder ->
                     builder.progress(
                         AutoRotateDrawable(InsetDrawable(ColorDrawable(Color.BLUE), 50), 1000))
                   },

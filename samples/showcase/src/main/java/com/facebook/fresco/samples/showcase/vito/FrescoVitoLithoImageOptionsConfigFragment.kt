@@ -98,7 +98,7 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    componentContext = ComponentContext(context)
+    componentContext = ComponentContext(requireContext())
 
     lithoView = LithoView.create(componentContext, createImage(imageOptionsBuilder.build()))
     container.addView(lithoView)
