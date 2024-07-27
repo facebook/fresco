@@ -6,6 +6,7 @@
  */
 
 import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.GradleDeps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
@@ -49,6 +50,8 @@ task fetchNativeDeps(dependsOn: [copyGiflib]) {
 }
 
 android {
+    ndkVersion GradleDeps.Native.version
+
     def ndkLibs = [['gifimage', [copyGiflib]]]
 
     buildToolsVersion FrescoConfig.buildToolsVersion

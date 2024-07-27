@@ -8,19 +8,19 @@
 package com.facebook.fresco.buildsrc
 
 object Deps {
-  const val javaxAnnotation = "javax.annotation:javax.annotation-api:1.2"
+  const val javaxAnnotation = "javax.annotation:javax.annotation-api:1.3.2"
   const val jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
 
   const val inferAnnotation = "com.facebook.infer.annotation:infer-annotation:0.18.0"
 
-  const val okhttp3 = "com.squareup.okhttp3:okhttp:3.12.1"
+  const val okhttp3 = "com.squareup.okhttp3:okhttp:3.14.9"
 
   const val volley = "com.android.volley:volley:1.2.1"
 
   object AndroidX {
-    const val androidxAnnotation = "androidx.annotation:annotation:1.1.0"
-    const val core = "androidx.core:core:1.3.1"
-    const val exifInterface = "androidx.exifinterface:exifinterface:1.3.6"
+    const val androidxAnnotation = "androidx.annotation:annotation:1.6.0"
+    const val core = "androidx.core:core:1.13.1"
+    const val exifInterface = "androidx.exifinterface:exifinterface:1.3.7"
     const val legacySupportCoreUtils = "androidx.legacy:legacy-support-core-utils:1.0.0"
   }
 
@@ -35,7 +35,7 @@ object Deps {
   }
 
   object Litho {
-    private const val version = "0.48.0"
+    private const val version = "0.50.1"
 
     const val core = "com.facebook.litho:litho-core:$version"
     const val lithoAnnotations = "com.facebook.litho:litho-annotations:$version"
@@ -51,7 +51,7 @@ object Deps {
   }
 
   object SoLoader {
-    private const val version = "0.10.5"
+    private const val version = "0.11.0"
     const val soloaderAnnotation = "com.facebook.soloader:annotation:$version"
     const val nativeloader = "com.facebook.soloader:nativeloader:$version"
     const val soloader = "com.facebook.soloader:soloader:$version"
