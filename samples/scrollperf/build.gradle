@@ -7,12 +7,15 @@
 
 
 import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.GradleDeps
 import com.facebook.fresco.buildsrc.SampleDeps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.application'
 
 android {
+    ndkVersion GradleDeps.Native.version
+
     compileSdkVersion FrescoConfig.compileSdkVersion
     buildToolsVersion FrescoConfig.buildToolsVersion
 

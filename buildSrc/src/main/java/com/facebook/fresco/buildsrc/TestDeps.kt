@@ -8,7 +8,7 @@
 package com.facebook.fresco.buildsrc
 
 object TestDeps {
-  const val assertjCore = "org.assertj:assertj-core:2.9.0"
+  const val assertjCore = "org.assertj:assertj-core:2.9.1"
 
   const val junit = "junit:junit:4.12"
 
