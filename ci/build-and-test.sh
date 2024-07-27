@@ -6,8 +6,8 @@
 
 if [[ $1 == "--local" || $1 == "-l" ]]; then
   # Local build with less verbose output
-  ./gradlew test assembleDebug assembleDebugAndroidTest -PdisablePreDex
+  ./gradlew test assembleDebug assembleDebugAndroidTest
 else
   # Standard CI build command with maximum verbose output
-  ./gradlew test assembleDebug assembleDebugAndroidTest -PdisablePreDex --info
+  ./gradlew test assembleDebug assembleDebugAndroidTest --info
 fi

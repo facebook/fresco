@@ -31,10 +31,6 @@ plugins {
     id "com.vanniktech.maven.publish" version "0.25.3"
 }
 
-project.ext {
-    preDexLibs = !project.hasProperty('disablePreDex')
-}
-
 subprojects {
 
     repositories {
@@ -71,14 +67,6 @@ subprojects {
     }
 
     task allclean {
-    }
-
-    project.plugins.whenPluginAdded { plugin ->
-        if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
-            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-        } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
-            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-        }
     }
 
     apply plugin: 'de.undercouch.download'

@@ -26,11 +26,6 @@ android {
 
     namespace "com.facebook.fresco.samples.showcase"
 
-    dexOptions {
-        maxProcessCount 2
-        javaMaxHeapSize "1g"
-    }
-
     defaultConfig {
         applicationId "com.facebook.fresco.samples.showcase"
         minSdkVersion FrescoConfig.samplesMinSdkVersion
