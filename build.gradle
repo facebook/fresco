@@ -69,6 +69,18 @@ subprojects {
     task allclean {
     }
 
+    // Sets the ndkPath for each module when running on CI
+    if (System.getenv("SANDCASTLE") == "1") {
+        String ndkDir = System.getenv("ANDROID_NDK_HOME")
+        project.plugins.whenPluginAdded { plugin ->
+            if ("com.android.build.gradle.AppPlugin" == plugin.class.name) {
+                project.android.ndkPath = ndkDir
+            } else if ("com.android.build.gradle.LibraryPlugin" == plugin.class.name) {
+                project.android.ndkPath = ndkDir
+            }
+        }
+    }
+
     apply plugin: 'de.undercouch.download'
 
     ext.makeNdkTasks = { name, deps ->
@@ -110,26 +122,50 @@ subprojects {
     }
 
     ext.getNdkBuildFullPath = { Project project ->
-        File propFile = project.rootProject.file('local.properties')
-        if (!propFile.exists()) {
-            return getNdkBuildName()
-        }
-        Properties properties = new Properties()
-        properties.load(propFile.newDataInputStream())
-        def ndkCommand = properties.getProperty('ndk.command')
-        if (ndkCommand != null) {
-            return ndkCommand
-        }
-        def path = null
-        def ndkPath = properties.getProperty('ndk.path')
-        if (ndkPath != null) {
-            path = ndkPath
-        } else {
-            def ndkDir = properties.getProperty('ndk.dir')
-            if (ndkDir != null) {
+        String path = null
+
+        // Latest method using the common NDK version used throughout the project and using the standard NDK SxS location on macOS
+        if (path == null) {
+            String ndkVersion = GradleDeps.Native.version
+            String ndkDir = "/opt/android_sdk/ndk/" + ndkVersion
+            File ndkFolder = new File(ndkDir)
+            if (ndkFolder.exists()) {
                 path = ndkDir
             }
         }
+
+        // Fallback method for CI
+        if (path == null) {
+            String ndkDir = System.getenv("ANDROID_NDK_HOME")
+            File ndkFolder = new File(ndkDir)
+            if (ndkFolder.exists()) {
+                path = ndkDir
+            }
+        }
+
+        // Legacy methods of finding NDK path
+        if (path == null) {
+            File propFile = project.rootProject.file('local.properties')
+            if (!propFile.exists()) {
+                return getNdkBuildName()
+            }
+            Properties properties = new Properties()
+            properties.load(propFile.newDataInputStream())
+            def ndkCommand = properties.getProperty('ndk.command')
+            if (ndkCommand != null) {
+                return ndkCommand
+            }
+            def ndkPath = properties.getProperty('ndk.path')
+            if (ndkPath != null) {
+                path = ndkPath
+            } else {
+                def ndkDir = properties.getProperty('ndk.dir')
+                if (ndkDir != null) {
+                    path = ndkDir
+                }
+            }
+        }
+
         if (path != null) {
             if (!path.endsWith(File.separator)) {
                 path += File.separator
