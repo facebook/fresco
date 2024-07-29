@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import com.facebook.fresco.buildsrc.GradleDeps
+
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
@@ -20,6 +22,8 @@ dependencies {
 }
 
 android {
+    ndkVersion GradleDeps.Native.version
+
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
 
