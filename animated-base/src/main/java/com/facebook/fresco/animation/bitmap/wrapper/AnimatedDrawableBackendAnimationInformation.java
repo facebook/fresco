@@ -12,7 +12,7 @@ import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** {@link AnimationInformation} that wraps an {@link AnimatedDrawableBackend}. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedDrawableBackendAnimationInformation implements AnimationInformation {
 
   private final AnimatedDrawableBackend mAnimatedDrawableBackend;

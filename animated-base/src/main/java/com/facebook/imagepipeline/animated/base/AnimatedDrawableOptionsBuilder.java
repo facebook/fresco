@@ -10,7 +10,7 @@ package com.facebook.imagepipeline.animated.base;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** Builder for {@link AnimatedDrawableOptions}. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedDrawableOptionsBuilder {
 
   private boolean mForceKeepAllFramesInMemory;

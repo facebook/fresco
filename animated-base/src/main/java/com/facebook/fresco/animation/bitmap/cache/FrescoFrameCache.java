@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
 /** Bitmap frame cache that uses Fresco's {@link AnimatedFrameCache} to cache frames. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FrescoFrameCache implements BitmapFrameCache {
 
   private static final Class<?> TAG = FrescoFrameCache.class;

@@ -11,7 +11,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.Immutable;
 
 /** Options for creating {@link com.facebook.fresco.animation.drawable.AnimatedDrawable2}. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @Immutable
 public class AnimatedDrawableOptions {
 

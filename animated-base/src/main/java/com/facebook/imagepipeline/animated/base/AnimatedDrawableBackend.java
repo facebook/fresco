@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
  * Interface that {@link com.facebook.fresco.animation.drawable.BaseAnimatedDrawable} uses that
  * abstracts out the image format.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface AnimatedDrawableBackend {
 
   /**
