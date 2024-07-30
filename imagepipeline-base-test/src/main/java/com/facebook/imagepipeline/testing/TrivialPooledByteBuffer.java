@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 
 /** A trivial implementation of {@link PooledByteBuffer} */
 public class TrivialPooledByteBuffer implements PooledByteBuffer {
-  private byte[] mBuf;
+  @Nullable private byte[] mBuf;
   private long mNativePtr;
 
   public TrivialPooledByteBuffer(byte[] buf) {
