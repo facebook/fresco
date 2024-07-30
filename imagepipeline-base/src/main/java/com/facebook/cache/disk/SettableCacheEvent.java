@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
  * Implementation of {@link CacheEvent} that allows the values to be set and supports recycling of
  * instances.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class SettableCacheEvent implements CacheEvent {
 
   private static final Object RECYCLER_LOCK = new Object();

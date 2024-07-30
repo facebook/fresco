@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * full opacity, fades out all other layers to zero opacity. fadeUpToLayer fades in all layers up to
  * specified layer to full opacity and fades out all other layers to zero opacity.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FadeDrawable extends ArrayDrawable {
 
   /** A transition is about to start. */

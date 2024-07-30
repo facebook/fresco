@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
  * <p>Controlled via {@link
  * com.facebook.imagepipeline.core.ImagePipelineExperiments#mUseBitmapPrepareToDraw}
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class BitmapPrepareProducer implements Producer<CloseableReference<CloseableImage>> {
 
   public static final String PRODUCER_NAME = "BitmapPrepareProducer";

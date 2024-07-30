@@ -11,7 +11,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.soloader.nativeloader.NativeLoader;
 
 /** Single place responsible for loading libnative-filters.so and its dependencies. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class NativeFiltersLoader {
 
   public static void load() {

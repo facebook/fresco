@@ -18,7 +18,7 @@ import com.facebook.infer.annotation.Nullsafe;
  * <p>Implementations of this class should notify all the trimmables that have registered with it
  * when they need to trim their disk usage.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface DiskTrimmableRegistry {
 
   /** Register an object. */

@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  *
  * <p>{@see Executor}
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface ExecutorSupplier {
 
   /** Executor used to do all disk reads, whether for disk cache or local files. */

@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
  * build.gradle file: <code>implementation 'com.facebook.fresco:static-webp:${FRESCO_VERSION}'
  * </code>
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface WebpBitmapFactory {
 
   /** We listen to events in Webp direct decoding */

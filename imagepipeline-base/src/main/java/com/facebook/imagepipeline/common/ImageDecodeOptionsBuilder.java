@@ -15,7 +15,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Builder for {@link ImageDecodeOptions}. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
 
   private int mMinDecodeIntervalMs = 100;

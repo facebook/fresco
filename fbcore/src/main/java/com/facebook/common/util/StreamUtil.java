@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /** Utility method for dealing with Streams. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class StreamUtil {
 
   /**

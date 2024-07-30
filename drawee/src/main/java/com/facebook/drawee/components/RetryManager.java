@@ -10,7 +10,7 @@ package com.facebook.drawee.components;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** Manages retries for an image. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class RetryManager {
   private static final int MAX_TAP_TO_RETRY_ATTEMPTS = 4;
 

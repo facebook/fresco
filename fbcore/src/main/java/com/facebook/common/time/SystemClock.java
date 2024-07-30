@@ -10,7 +10,7 @@ package com.facebook.common.time;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** Implementation of {@link Clock} that delegates to the system clock. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class SystemClock implements Clock {
 
   private static final SystemClock INSTANCE = new SystemClock();

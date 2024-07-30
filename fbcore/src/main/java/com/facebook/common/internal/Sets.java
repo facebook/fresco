@@ -28,7 +28,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /** Static utility methods pertaining to {@link Set} instances. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public final class Sets {
   private Sets() {}
 

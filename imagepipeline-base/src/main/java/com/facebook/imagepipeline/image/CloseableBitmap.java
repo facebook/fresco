@@ -11,7 +11,7 @@ import android.graphics.Bitmap;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** {@link CloseableImage} that wraps a bitmap. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface CloseableBitmap extends CloseableImage {
 
   /**

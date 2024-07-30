@@ -11,7 +11,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Implementation of {@link DiskTrimmableRegistry} that does not do anything. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class NoOpDiskTrimmableRegistry implements DiskTrimmableRegistry {
   private static @Nullable NoOpDiskTrimmableRegistry sInstance = null;
 

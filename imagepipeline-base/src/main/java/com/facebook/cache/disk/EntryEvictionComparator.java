@@ -11,5 +11,5 @@ import com.facebook.infer.annotation.Nullsafe;
 import java.util.Comparator;
 
 /** Defines an order the items are being evicted from the cache. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface EntryEvictionComparator extends Comparator<DiskStorage.Entry> {}

@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  *
  * <p>This class currently only detects clicks.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class GestureDetector {
 
   /** Interface for the click listener. */

@@ -14,7 +14,7 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class CountingLruBitmapMemoryCacheFactory implements BitmapMemoryCacheFactory {
 
   @Override

@@ -11,7 +11,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** An implementation of {@link CacheErrorLogger} that doesn't do anything. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class NoOpCacheErrorLogger implements CacheErrorLogger {
   private static @Nullable NoOpCacheErrorLogger sInstance = null;
 

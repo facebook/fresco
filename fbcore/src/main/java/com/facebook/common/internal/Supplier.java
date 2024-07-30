@@ -26,7 +26,7 @@ import com.facebook.infer.annotation.Nullsafe;
  * @author Harry Heymann
  * @since 2.0 (imported from Google Collections Library)
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface Supplier<T> {
   /**
    * Retrieves an instance of the appropriate type. The returned object may or may not be a new

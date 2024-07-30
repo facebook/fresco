@@ -13,7 +13,7 @@ import com.facebook.infer.annotation.Nullsafe;
  * Instantiate an exception with an empty stacktrace. This is more performant than instantiating a
  * regular exception since it doesn't incur the cost of getting the stack trace.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ExceptionWithNoStacktrace extends Exception {
   @Override
   public synchronized Throwable fillInStackTrace() {

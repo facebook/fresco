@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
  *
  * <p>Clients should override exactly one of the three provided {@link #process} methods.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class BasePostprocessor implements Postprocessor {
 
   /**

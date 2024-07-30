@@ -27,7 +27,7 @@ import java.io.OutputStream;
  * @author Chris Nokleberg
  * @since 1.0
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class CountingOutputStream extends FilterOutputStream {
 
   private long mCount;

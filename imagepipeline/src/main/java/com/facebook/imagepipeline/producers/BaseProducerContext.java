@@ -25,7 +25,7 @@ import javax.annotation.concurrent.GuardedBy;
  * ProducerContext that can be cancelled. Exposes low level API to manipulate state of the
  * ProducerContext.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class BaseProducerContext implements ProducerContext {
 
   private static final String ORIGIN_SUBCATEGORY_DEFAULT = "default";

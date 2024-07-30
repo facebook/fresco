@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /** Callback that writes to an {@link OutputStream}. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface WriterCallback {
   void write(OutputStream os) throws IOException;
 }

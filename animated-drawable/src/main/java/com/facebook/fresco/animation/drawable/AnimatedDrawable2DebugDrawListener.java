@@ -15,7 +15,7 @@ import com.facebook.infer.annotation.Nullsafe;
  * [com.facebook.fresco.animation.drawable.AnimatedDrawable2.DrawListener] for debugging
  * [AnimatedDrawable2].
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedDrawable2DebugDrawListener implements AnimatedDrawable2.DrawListener {
 
   private static final Class<?> TAG = AnimatedDrawable2DebugDrawListener.class;

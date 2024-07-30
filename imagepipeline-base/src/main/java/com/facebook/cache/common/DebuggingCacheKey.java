@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
  * Extension of {@link SimpleCacheKey} which adds the ability to hold a caller context. This can be
  * of use for debugging and has no bearing on equality.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DebuggingCacheKey extends SimpleCacheKey {
 
   private final @Nullable Object mCallerContext;

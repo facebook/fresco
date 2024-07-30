@@ -11,7 +11,7 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.infer.annotation.Nullsafe;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class InstrumentedMemoryCacheBitmapMemoryCacheFactory {
 
   public static InstrumentedMemoryCache<CacheKey, CloseableImage> get(

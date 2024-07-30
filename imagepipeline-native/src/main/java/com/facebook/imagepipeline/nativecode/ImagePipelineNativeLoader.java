@@ -27,7 +27,7 @@ import java.util.List;
  *   }
  * </code>
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImagePipelineNativeLoader {
   public static final String DSO_NAME = "imagepipeline";
 

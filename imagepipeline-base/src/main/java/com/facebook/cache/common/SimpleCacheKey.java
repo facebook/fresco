@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
  * <p>Users of CacheKey should construct it by providing a unique string that unambiguously
  * identifies the cached resource.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class SimpleCacheKey implements CacheKey {
   final String mKey;
   final boolean mIsResourceIdForDebugging;

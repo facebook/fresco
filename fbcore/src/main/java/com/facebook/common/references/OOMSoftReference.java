@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * just to be on the safe side. TLDR: It's a reference that's cleared if and only if we otherwise
  * would have encountered an OOM.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class OOMSoftReference<T> {
 
   @Nullable SoftReference<T> softRef1;

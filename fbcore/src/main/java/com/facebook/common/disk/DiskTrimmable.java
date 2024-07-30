@@ -10,7 +10,7 @@ package com.facebook.common.disk;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** Any class that uses a lot of disk space and should implement this interface. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface DiskTrimmable {
   /** Called when there is very little disk space left. */
   void trimToMinimum();

@@ -18,7 +18,7 @@ import com.facebook.infer.annotation.Nullsafe;
  *
  * <p>TODO: move to the framework and consider implementing as native code.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class Hex {
 
   private static final char[] HEX_DIGITS =

@@ -43,7 +43,7 @@ import javax.annotation.Nullable;
  * </code>
  * </pre>
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class BaseBitmapReferenceDataSubscriber
     extends BaseDataSubscriber<CloseableReference<CloseableImage>> {
 

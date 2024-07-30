@@ -16,7 +16,7 @@ import java.util.List;
  * An implementation of {@link ZoomableController.Listener} that allows multiple child listeners to
  * be added and notified about {@link ZoomableController} events.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class MultiZoomableControllerListener implements ZoomableController.Listener {
 
   private final List<ZoomableController.Listener> mListeners = new ArrayList<>();

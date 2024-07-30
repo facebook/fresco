@@ -21,7 +21,7 @@ import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 
 /** Represents a local fetch producer. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class LocalFetchProducer implements Producer<EncodedImage> {
 
   private final Executor mExecutor;

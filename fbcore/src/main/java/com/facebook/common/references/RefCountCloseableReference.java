@@ -11,7 +11,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class RefCountCloseableReference<T> extends CloseableReference<T> {
 
   private RefCountCloseableReference(

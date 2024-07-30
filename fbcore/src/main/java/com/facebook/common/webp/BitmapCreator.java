@@ -14,7 +14,7 @@ import com.facebook.infer.annotation.Nullsafe;
  * This is a utility class we use in order to allocate a Bitmap that will be wrapped later with a
  * CloseableReference
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface BitmapCreator {
 
   /**

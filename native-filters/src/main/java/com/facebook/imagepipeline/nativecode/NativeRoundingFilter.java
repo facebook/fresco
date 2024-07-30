@@ -14,7 +14,7 @@ import com.facebook.infer.annotation.Nullsafe;
 
 /** A fast native rounding filter. */
 @DoNotStrip
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class NativeRoundingFilter {
 
   static {

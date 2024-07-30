@@ -16,7 +16,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface CountingMemoryCache<K, V> extends MemoryCache<K, V>, MemoryTrimmable {
 
   @Nullable

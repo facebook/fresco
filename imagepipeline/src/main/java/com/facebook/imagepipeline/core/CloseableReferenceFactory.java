@@ -18,7 +18,7 @@ import com.facebook.infer.annotation.PropagatesNullable;
 import java.io.Closeable;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class CloseableReferenceFactory {
 
   private final CloseableReference.LeakHandler mLeakHandler;

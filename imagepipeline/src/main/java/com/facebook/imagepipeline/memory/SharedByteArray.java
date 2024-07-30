@@ -33,7 +33,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * <p>This class will also release the byte array if it is unused and collecting it can prevent an
  * OOM.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
 public class SharedByteArray implements MemoryTrimmable {
   @VisibleForTesting final int mMinByteArraySize;

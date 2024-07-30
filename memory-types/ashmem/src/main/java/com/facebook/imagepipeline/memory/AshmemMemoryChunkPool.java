@@ -14,7 +14,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** Manages a pool of ashmem memory chunks ({@link AshmemMemoryChunk}) */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
 @DoNotStrip
 @TargetApi(27)

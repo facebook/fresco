@@ -11,7 +11,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** An interface for logging various cache errors. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface CacheErrorLogger {
 
   /** A categorizaton of different cache and storage related errors. */

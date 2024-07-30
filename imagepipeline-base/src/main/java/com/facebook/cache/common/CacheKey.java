@@ -15,7 +15,7 @@ import com.facebook.infer.annotation.Nullsafe;
  *
  * <p>{@link #toString}, {@link #equals} and {@link #hashCode} methods must be implemented.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface CacheKey {
 
   /** This is useful for instrumentation and debugging purposes. */

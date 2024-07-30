@@ -16,7 +16,7 @@ import java.util.Set;
  * A dummy representation of an immutable set. This can be used temporarily as a type until we have
  * an actual non-gauva implementation.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImmutableSet<E> extends HashSet<E> {
 
   // Prevent direct instantiation.

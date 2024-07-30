@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ForwardingRequestListener implements RequestListener {
   private static final String TAG = "ForwardingRequestListener";
 

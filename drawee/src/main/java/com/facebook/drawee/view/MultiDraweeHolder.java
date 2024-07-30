@@ -30,7 +30,7 @@ import java.util.ArrayList;
  * {@link #onAttach} from its {@link View#onFinishTemporaryDetach()} and {@link
  * View#onAttachedToWindow()} methods.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class MultiDraweeHolder<DH extends DraweeHierarchy> {
 
   @VisibleForTesting boolean mIsAttached = false;

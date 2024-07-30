@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
  * Storage for files in the cache. Responsible for maintaining state (count, size, watch file
  * existence, reachability)
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface DiskStorage {
 
   class DiskDumpInfoEntry {

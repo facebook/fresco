@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @DoNotStrip
 public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
 

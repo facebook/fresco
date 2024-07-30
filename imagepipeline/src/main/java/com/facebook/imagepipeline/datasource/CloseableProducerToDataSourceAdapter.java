@@ -23,7 +23,7 @@ import javax.annotation.concurrent.ThreadSafe;
  *
  * @param <T>
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
 public class CloseableProducerToDataSourceAdapter<T>
     extends AbstractProducerToDataSourceAdapter<CloseableReference<T>> {

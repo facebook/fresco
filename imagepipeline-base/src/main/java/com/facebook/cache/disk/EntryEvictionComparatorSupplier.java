@@ -10,7 +10,7 @@ package com.facebook.cache.disk;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** Provides an instance of eviction comparator */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface EntryEvictionComparatorSupplier {
   EntryEvictionComparator get();
 }

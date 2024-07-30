@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
  * gives the same results as Objects.hashCode, but does not create array consisting of all
  * components
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class HashCodeUtil {
 
   /**

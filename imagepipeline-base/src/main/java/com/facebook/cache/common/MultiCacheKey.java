@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  * <p>It is fine to use this key with AnyOf semantics, but one should be aware of {@code equals} and
  * {@code hashcode} behavior, and should implement AnyOf logic manually.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class MultiCacheKey implements CacheKey {
 
   final List<CacheKey> mCacheKeys;

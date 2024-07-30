@@ -13,7 +13,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.TimeUnit;
 
 /** Supplies {@link MemoryCacheParams} for the encoded image memory cache */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DefaultEncodedMemoryCacheParamsSupplier implements Supplier<MemoryCacheParams> {
 
   // We want memory cache to be bound only by its memory consumption

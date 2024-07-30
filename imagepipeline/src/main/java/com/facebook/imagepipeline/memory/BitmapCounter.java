@@ -15,7 +15,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.GuardedBy;
 
 /** Counts bitmaps - keeps track of both, count and total size in bytes. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class BitmapCounter {
 
   @GuardedBy("this")

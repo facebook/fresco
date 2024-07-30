@@ -37,7 +37,7 @@ import javax.annotation.concurrent.NotThreadSafe;
  *
  * @param <V> type of values to be 'stored' in the bucket
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @NotThreadSafe
 @VisibleForTesting
 class Bucket<V> {

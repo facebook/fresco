@@ -18,7 +18,7 @@ import com.facebook.infer.annotation.Nullsafe;
  * <p>Native code used by this class is shipped as part of libimagepipeline.so
  */
 @DoNotStrip
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class Bitmaps {
 
   static {

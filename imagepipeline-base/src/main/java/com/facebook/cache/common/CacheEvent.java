@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
  * <p>All values may be null depending on the kind of event. See the docs for each method to see
  * when to expect values to be available.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface CacheEvent {
 
   /**

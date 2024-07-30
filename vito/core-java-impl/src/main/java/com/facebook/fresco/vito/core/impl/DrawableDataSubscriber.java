@@ -13,7 +13,7 @@ import com.facebook.fresco.vito.core.VitoImageRequest;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.infer.annotation.Nullsafe;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface DrawableDataSubscriber {
   void onNewResult(
       FrescoDrawable2Impl drawable,

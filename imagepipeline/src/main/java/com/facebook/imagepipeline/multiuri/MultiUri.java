@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  * com.facebook.datasource.IncreasingQualityDataSourceSupplier} and/or {@link
  * com.facebook.datasource.FirstAvailableDataSourceSupplier} with Vito
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class MultiUri {
   private @Nullable ImageRequest mLowResImageRequest;
   private @Nullable ImageRequest[] mMultiImageRequests;

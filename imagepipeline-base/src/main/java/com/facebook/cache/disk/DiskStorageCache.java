@@ -38,7 +38,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /** Cache that manages disk storage. */
 @ThreadSafe
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DiskStorageCache implements FileCache, DiskTrimmable {
 
   private static final Class<?> TAG = DiskStorageCache.class;

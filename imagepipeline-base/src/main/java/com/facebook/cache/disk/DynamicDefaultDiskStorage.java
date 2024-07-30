@@ -22,7 +22,7 @@ import java.util.Collection;
 import javax.annotation.Nullable;
 
 /** A supplier of a DiskStorage concrete implementation. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DynamicDefaultDiskStorage implements DiskStorage {
   private static final Class<?> TAG = DynamicDefaultDiskStorage.class;
 

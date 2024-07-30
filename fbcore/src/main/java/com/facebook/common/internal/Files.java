@@ -31,7 +31,7 @@ import java.io.InputStream;
  * @author Colin Decker
  * @since 1.0
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class Files {
   private Files() {}
 

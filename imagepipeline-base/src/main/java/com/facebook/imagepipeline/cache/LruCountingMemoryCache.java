@@ -39,7 +39,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * @param <V> the value type
  */
 @ThreadSafe
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class LruCountingMemoryCache<K, V>
     implements CountingMemoryCache<K, V>, MemoryCache<K, V>, HasDebugData {
 

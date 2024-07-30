@@ -24,7 +24,7 @@ import java.io.File;
 import javax.annotation.Nullable;
 
 /** Configuration class for a {@link DiskStorageCache}. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DiskCacheConfig {
 
   private final int mVersion;

@@ -16,7 +16,7 @@ import java.io.IOException;
 import javax.annotation.Nullable;
 
 /** Interface that caches based on disk should implement. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface FileCache extends DiskTrimmable {
 
   /**

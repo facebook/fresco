@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /** Reads the wrapped InputStream only until a specified number of bytes, the 'limit' is reached. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class LimitedInputStream extends FilterInputStream {
   private int mBytesToRead;
   private int mBytesToReadWhenMarked;

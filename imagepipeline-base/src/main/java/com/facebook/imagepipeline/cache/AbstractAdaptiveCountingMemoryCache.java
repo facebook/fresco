@@ -39,7 +39,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * @param <V> the value type
  */
 @ThreadSafe
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
     implements CountingMemoryCache<K, V> {
   private static final String TAG = "AbstractArcCountingMemoryCache";

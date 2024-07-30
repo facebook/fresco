@@ -26,7 +26,7 @@ import javax.annotation.concurrent.GuardedBy;
  * PooledByteBuffers. It is used by SimpleImageCache to store values that are being written to disk
  * cache, so that they can be returned by parallel cache get operations.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class StagingArea {
   private static final Class<?> TAG = StagingArea.class;
 

@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  * @author Ben Yu
  * @since 1.0
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public final class Throwables {
   private Throwables() {}
 

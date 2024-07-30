@@ -25,7 +25,7 @@ import java.io.FileNotFoundException;
 import java.net.URL;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class UriUtil {
 
   /** http scheme for URIs */

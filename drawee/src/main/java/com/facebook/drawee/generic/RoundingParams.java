@@ -16,7 +16,7 @@ import java.util.Arrays;
 import javax.annotation.Nullable;
 
 /** Class that encapsulates rounding parameters. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class RoundingParams {
 
   public enum RoundingMethod {

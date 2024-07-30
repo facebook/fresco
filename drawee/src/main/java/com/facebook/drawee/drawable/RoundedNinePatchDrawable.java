@@ -12,7 +12,7 @@ import android.graphics.drawable.NinePatchDrawable;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.Nullsafe;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class RoundedNinePatchDrawable extends RoundedDrawable {
 
   public RoundedNinePatchDrawable(NinePatchDrawable ninePatchDrawable) {

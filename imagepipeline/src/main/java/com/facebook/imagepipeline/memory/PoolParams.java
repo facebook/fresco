@@ -39,7 +39,7 @@ import javax.annotation.Nullable;
  * restricts all buckets to only accept elements smaller or equal to this size. If this size is
  * exceeded, an exception will be thrown.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PoolParams {
   /** If maxNumThreads is set to this level, the pool doesn't actually care what it is */
   public static final int IGNORE_THREADS = -1;

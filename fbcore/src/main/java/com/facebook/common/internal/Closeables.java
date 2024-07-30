@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
  * @author Michael Lancaster
  * @since 1.0
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public final class Closeables {
   @VisibleForTesting static final Logger logger = Logger.getLogger(Closeables.class.getName());
 

@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** ProducerContext that allows the client to change its internal state. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
 public class SettableProducerContext extends BaseProducerContext {
 

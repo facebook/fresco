@@ -18,7 +18,7 @@ import javax.annotation.concurrent.Immutable;
 
 /** Options for changing the behavior of the {@code ImageDecoder}. */
 @Immutable
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImageDecodeOptions {
 
   private static final ImageDecodeOptions DEFAULTS = ImageDecodeOptions.newBuilder().build();

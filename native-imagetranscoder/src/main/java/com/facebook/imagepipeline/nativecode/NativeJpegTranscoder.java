@@ -37,7 +37,7 @@ import java.io.OutputStream;
 import javax.annotation.Nullable;
 
 /** Transcoder for jpeg images, using native code and libjpeg-turbo library. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @DoNotStrip
 public class NativeJpegTranscoder implements ImageTranscoder {
   public static final String TAG = "NativeJpegTranscoder";

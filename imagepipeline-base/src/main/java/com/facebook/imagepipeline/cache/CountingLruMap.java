@@ -19,7 +19,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /** Map that keeps track of the elements order (according to the LRU policy) and their size. */
 @ThreadSafe
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class CountingLruMap<K, V> {
 
   private final ValueDescriptor<V> mValueDescriptor;

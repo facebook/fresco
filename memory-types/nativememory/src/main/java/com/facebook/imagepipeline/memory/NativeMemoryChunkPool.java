@@ -13,7 +13,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** Manages a pool of native memory chunks ({@link NativeMemoryChunk}) */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
 @DoNotStrip
 public class NativeMemoryChunkPool extends MemoryChunkPool {

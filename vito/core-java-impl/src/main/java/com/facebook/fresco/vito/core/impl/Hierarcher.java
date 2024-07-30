@@ -19,7 +19,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.ThreadSafe;
 
 /** Helper for building drawables */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface Hierarcher {
   /**
    * Build an actual image drawable for the given closeable image. For scaling, color filters and

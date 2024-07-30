@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
  * <p>Native code used by this class is shipped as part of libimagepipeline.so
  */
 @DoNotStrip
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class DalvikPurgeableDecoder implements PlatformDecoder {
 
   static {

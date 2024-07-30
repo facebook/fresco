@@ -39,7 +39,7 @@ import javax.annotation.Nullable;
  * and below.
  */
 @DoNotStrip
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class GingerbreadPurgeableDecoder extends DalvikPurgeableDecoder {
 
   private static Method sGetFileDescriptorMethod;

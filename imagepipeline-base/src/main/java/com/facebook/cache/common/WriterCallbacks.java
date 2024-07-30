@@ -14,7 +14,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /** Utility class to create typical {@link WriterCallback}s. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class WriterCallbacks {
 
   /**

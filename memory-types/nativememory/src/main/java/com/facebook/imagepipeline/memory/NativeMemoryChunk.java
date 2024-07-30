@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  *
  * <p>Native code used by this class is shipped as part of libimagepipeline.so @ThreadSafe
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @DoNotStrip
 public class NativeMemoryChunk implements MemoryChunk, Closeable {
   private static final String TAG = "NativeMemoryChunk";

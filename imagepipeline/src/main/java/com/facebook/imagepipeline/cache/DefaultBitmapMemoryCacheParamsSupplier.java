@@ -14,7 +14,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.TimeUnit;
 
 /** Supplies {@link MemoryCacheParams} for the bitmap memory cache. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DefaultBitmapMemoryCacheParamsSupplier implements Supplier<MemoryCacheParams> {
   private static final int MAX_CACHE_ENTRIES = 256;
   private static final int MAX_EVICTION_QUEUE_SIZE = Integer.MAX_VALUE;

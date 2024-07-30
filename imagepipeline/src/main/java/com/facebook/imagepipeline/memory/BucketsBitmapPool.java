@@ -25,7 +25,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * if it matches the desired dimensions; if no such bitmap is found in the pool, a new one is
  * allocated. release() returns a bitmap to the pool.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
 @TargetApi(21)
 public class BucketsBitmapPool extends BasePool<Bitmap> implements BitmapPool {

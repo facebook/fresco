@@ -15,7 +15,7 @@ import java.io.InputStream;
 /**
  * InputStream that returns all bytes from another stream, then appends the specified 'tail' bytes.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class TailAppendingInputStream extends FilterInputStream {
   private final byte[] mTail;
   private int mTailOffset;

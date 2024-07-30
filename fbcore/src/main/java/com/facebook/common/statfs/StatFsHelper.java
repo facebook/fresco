@@ -34,7 +34,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * additional cost.
  */
 @ThreadSafe
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class StatFsHelper {
 
   public enum StorageType {

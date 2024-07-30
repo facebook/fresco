@@ -11,7 +11,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Empty implementation of PoolStatsTracker that does not perform any tracking. */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class NoOpPoolStatsTracker implements PoolStatsTracker {
   private static @Nullable NoOpPoolStatsTracker sInstance = null;
 

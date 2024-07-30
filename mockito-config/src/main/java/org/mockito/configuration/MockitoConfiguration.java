@@ -15,7 +15,7 @@ import com.facebook.infer.annotation.Nullsafe;
  * <p>Mockito loads this with reflection, so this class might appear unused.
  */
 @SuppressWarnings("unused")
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class MockitoConfiguration extends DefaultMockitoConfiguration {
 
   /* (non-Javadoc)

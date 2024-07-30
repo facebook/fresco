@@ -11,7 +11,7 @@ import com.facebook.common.logging.FLog;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FinalizerCloseableReference<T> extends CloseableReference<T> {
 
   private static final String TAG = "FinalizerCloseableReference";

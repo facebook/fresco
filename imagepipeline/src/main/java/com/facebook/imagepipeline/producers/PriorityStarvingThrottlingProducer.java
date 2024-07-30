@@ -24,7 +24,7 @@ import javax.annotation.concurrent.GuardedBy;
  * the lower priority items. Within the groups, send order is the same as order they were given to
  * the class. (based on nano time).
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PriorityStarvingThrottlingProducer<T> implements Producer<T> {
 
   public static final String PRODUCER_NAME = "PriorityStarvingThrottlingProducer";

@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
  *
  * @param <T>
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class LruBucketsPoolBackend<T> implements PoolBackend<T> {
 
   private final Set<T> mCurrentItems = new HashSet<>();

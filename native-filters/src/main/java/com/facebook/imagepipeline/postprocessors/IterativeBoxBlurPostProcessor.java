@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
  * A fast and memory-efficient post processor performing an iterative box blur. For details see
  * {@link NativeBlurFilter#iterativeBoxBlur(Bitmap, int, int)}.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class IterativeBoxBlurPostProcessor extends BasePostprocessor {
 
   private static final int DEFAULT_ITERATIONS = 3;

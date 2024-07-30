@@ -18,7 +18,7 @@ import com.facebook.infer.annotation.Nullsafe;
  *
  * @param <T> type of resource managed by this ResourceReleaser
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface ResourceReleaser<T> {
 
   /**

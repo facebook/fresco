@@ -27,7 +27,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * A representation of a WebP image. An instance of this class will hold a copy of the encoded data
  * in memory along with the parsed header data. Frames are decoded on demand via {@link WebPFrame}.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
 @DoNotStrip
 public class WebPImage implements AnimatedImage, AnimatedImageDecoder {

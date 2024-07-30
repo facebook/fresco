@@ -61,7 +61,7 @@ import javax.annotation.concurrent.GuardedBy;
  * Preconditions.checkArgument(SharedReference.isValid(r)); ... // increment ref count before
  * returning r.addReference(); return r; }
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class SharedReference<T> {
 
   // Keeps references to all live objects so finalization of those Objects always happens after

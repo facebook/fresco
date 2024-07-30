@@ -14,7 +14,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import java.io.UnsupportedEncodingException;
 import javax.annotation.Nullable;
 
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class WebpSupportStatus {
   public static final boolean sIsSimpleWebpSupported =
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;

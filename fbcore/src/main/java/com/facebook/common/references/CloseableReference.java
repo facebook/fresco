@@ -67,7 +67,7 @@ import javax.annotation.concurrent.GuardedBy;
  * released without waiting for the garbage collector. The finalizer will log an error if the close
  * method has not been called.
  */
-@Nullsafe(Nullsafe.Mode.STRICT)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class CloseableReference<T> implements Cloneable, Closeable {
 
   @IntDef({REF_TYPE_DEFAULT, REF_TYPE_FINALIZER, REF_TYPE_REF_COUNT, REF_TYPE_NOOP})
