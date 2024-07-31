@@ -57,6 +57,11 @@ public class ContextChain implements Parcelable {
     mSerializedNodeString = mTag + ":" + mName;
     mParent = parent;
 
+    initializeExtraData(parent, extraData);
+  }
+
+  private void initializeExtraData(
+      final @Nullable ContextChain parent, final @Nullable Map<String, ?> extraData) {
     Map<String, Object> parentExtraData = null;
     if (parent != null) {
       parentExtraData = parent.getExtraData();
@@ -81,9 +86,20 @@ public class ContextChain implements Parcelable {
     }
   }
 
-  public ContextChain(final String serializedNodeString, final @Nullable ContextChain parent) {
-    this("serialized_tag", "serialized_name", null, parent);
+  public ContextChain(
+      final String serializedNodeString,
+      final @Nullable Map<String, Object> extraData,
+      final @Nullable ContextChain parent) {
+    mTag = "serialized_tag";
+    mName = "serialized_name";
     mSerializedNodeString = serializedNodeString;
+    mParent = parent;
+
+    initializeExtraData(parent, extraData);
+  }
+
+  public ContextChain(final String serializedNodeString, final @Nullable ContextChain parent) {
+    this(serializedNodeString, (Map<String, Object>) null, parent);
   }
 
   public ContextChain(final String tag, final String name, final @Nullable ContextChain parent) {
