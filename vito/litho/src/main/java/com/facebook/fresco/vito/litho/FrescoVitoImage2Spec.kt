@@ -132,6 +132,7 @@ object FrescoVitoImage2Spec {
   fun onPrepare(
       c: ComponentContext,
       @Prop(optional = true) callerContext: Any?,
+      @TreeProp contextChain: ContextChain?,
       @Prop(optional = true) prefetch: Prefetch?,
       @Prop(optional = true) prefetchRequestListener: RequestListener?,
       @CachedValue requestCachedValue: VitoImageRequest?,
@@ -148,6 +149,7 @@ object FrescoVitoImage2Spec {
                   config.prefetchTargetOnPrepare(),
                   requestCachedValue,
                   callerContext,
+                  contextChain,
                   prefetchRequestListener,
                   "OnPrepare"))
     }
@@ -296,6 +298,7 @@ object FrescoVitoImage2Spec {
       c: ComponentContext,
       layout: ComponentLayout,
       viewportDimensions: Output<Rect>,
+      @TreeProp contextChain: ContextChain?,
       requestFromBoundsDefined: Output<VitoImageRequest>,
       prefetchDataSourceFromBoundsDefined: Output<DataSource<Void?>>,
       @Prop(optional = true) prefetch: Prefetch?,
@@ -331,6 +334,7 @@ object FrescoVitoImage2Spec {
                     config.prefetchTargetOnBoundsDefined(),
                     vitoImageRequest,
                     callerContext,
+                    contextChain,
                     prefetchRequestListener,
                     "OnBoundsDefined"))
       }
