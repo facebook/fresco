@@ -25,6 +25,9 @@ open class ImagePerfLoggingState(val infra: ImageRenderingInfra) {
   var msSinceLastNavigationOnVisible: Long? = null
   var startupStatusOnVisible: String? = null
 
+  var errorMessageOnFailure: String? = null
+  var errorCodeOnFailure: Int? = null
+
   internal fun resetLoggingState() {
     intermediateImageSetTimes.clear()
     newIntermediateImageSetPointAvailable = false
@@ -38,5 +41,8 @@ open class ImagePerfLoggingState(val infra: ImageRenderingInfra) {
     subSurfaceOnVisible = null
     msSinceLastNavigationOnVisible = null
     startupStatusOnVisible = null
+
+    errorMessageOnFailure = null
+    errorCodeOnFailure = null
   }
 }

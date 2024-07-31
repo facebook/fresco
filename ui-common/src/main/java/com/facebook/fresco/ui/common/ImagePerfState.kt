@@ -180,6 +180,8 @@ class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) 
           startupStatusOnVisible,
           intermediateImageSetTimes.toList(),
           newIntermediateImageSetPointAvailable,
+          errorMessageOnFailure,
+          errorCodeOnFailure,
       )
 
   fun setExtraData(extraData: Extras?) {

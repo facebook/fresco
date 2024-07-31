@@ -43,6 +43,8 @@ class ImagePerfData(
     val startupStatusOnVisible: String?,
     val intermediateImageSetTimes: List<Pair<String, Long>>,
     val newIntermediateImageSetPointAvailable: Boolean,
+    val errorMessageOnFailure: String?,
+    val errorCodeOnFailure: Int?,
 ) {
 
   val instanceId: Int = controllerId.hashCode()
