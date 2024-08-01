@@ -45,6 +45,7 @@ class ImagePerfData(
     val newIntermediateImageSetPointAvailable: Boolean,
     val errorMessageOnFailure: String?,
     val errorCodeOnFailure: Int?,
+    val densityDpiOnSuccess: Int?,
 ) {
 
   val instanceId: Int = controllerId.hashCode()

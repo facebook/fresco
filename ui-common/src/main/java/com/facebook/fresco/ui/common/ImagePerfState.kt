@@ -182,6 +182,7 @@ class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) 
           newIntermediateImageSetPointAvailable,
           errorMessageOnFailure,
           errorCodeOnFailure,
+          densityDpiOnSuccess,
       )
 
   fun setExtraData(extraData: Extras?) {
