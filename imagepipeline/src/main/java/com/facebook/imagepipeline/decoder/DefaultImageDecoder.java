@@ -51,6 +51,7 @@ public class DefaultImageDecoder implements ImageDecoder {
 
   private final @Nullable ImageDecoder mAnimatedGifDecoder;
   private final @Nullable ImageDecoder mAnimatedWebPDecoder;
+  private final @Nullable ImageDecoder mAvifDecoder;
   private final PlatformDecoder mPlatformDecoder;
   private final Supplier<Boolean> mEnableEncodedImageColorSpaceUsage;
 
@@ -76,6 +77,8 @@ public class DefaultImageDecoder implements ImageDecoder {
             return decodeGif(encodedImage, length, qualityInfo, options);
           } else if (imageFormat == DefaultImageFormats.WEBP_ANIMATED) {
             return decodeAnimatedWebp(encodedImage, length, qualityInfo, options);
+          } else if (imageFormat == DefaultImageFormats.AVIF) {
+            return decodeAvif(encodedImage, length, qualityInfo, options);
           } else if (imageFormat == ImageFormat.UNKNOWN) {
             throw new DecodeException("unknown image format", encodedImage);
           }
@@ -88,17 +91,20 @@ public class DefaultImageDecoder implements ImageDecoder {
   public DefaultImageDecoder(
       @Nullable final ImageDecoder animatedGifDecoder,
       @Nullable final ImageDecoder animatedWebPDecoder,
+      @Nullable final ImageDecoder avifDecoder,
       final PlatformDecoder platformDecoder) {
-    this(animatedGifDecoder, animatedWebPDecoder, platformDecoder, null);
+    this(animatedGifDecoder, animatedWebPDecoder, avifDecoder, platformDecoder, null);
   }
 
   public DefaultImageDecoder(
       @Nullable final ImageDecoder animatedGifDecoder,
       @Nullable final ImageDecoder animatedWebPDecoder,
+      @Nullable final ImageDecoder avifDecoder,
       final PlatformDecoder platformDecoder,
       @Nullable Map<ImageFormat, ImageDecoder> customDecoders) {
     mAnimatedGifDecoder = animatedGifDecoder;
     mAnimatedWebPDecoder = animatedWebPDecoder;
+    mAvifDecoder = avifDecoder;
     mPlatformDecoder = platformDecoder;
     mCustomDecoders = customDecoders;
     mEnableEncodedImageColorSpaceUsage = Suppliers.BOOLEAN_FALSE;
@@ -107,11 +113,13 @@ public class DefaultImageDecoder implements ImageDecoder {
   public DefaultImageDecoder(
       @Nullable final ImageDecoder animatedGifDecoder,
       @Nullable final ImageDecoder animatedWebPDecoder,
+      @Nullable final ImageDecoder avifDecoder,
       final PlatformDecoder platformDecoder,
       @Nullable Map<ImageFormat, ImageDecoder> customDecoders,
       final Supplier<Boolean> enableEncodedImageColorSpaceUsage) {
     mAnimatedGifDecoder = animatedGifDecoder;
     mAnimatedWebPDecoder = animatedWebPDecoder;
+    mAvifDecoder = avifDecoder;
     mPlatformDecoder = platformDecoder;
     mCustomDecoders = customDecoders;
     mEnableEncodedImageColorSpaceUsage = enableEncodedImageColorSpaceUsage;
@@ -261,6 +269,17 @@ public class DefaultImageDecoder implements ImageDecoder {
       final ImageDecodeOptions options) {
     if (!options.forceStaticImage && mAnimatedWebPDecoder != null) {
       return mAnimatedWebPDecoder.decode(encodedImage, length, qualityInfo, options);
+    }
+    return decodeStaticImage(encodedImage, options);
+  }
+
+  private @Nullable CloseableImage decodeAvif(
+          final EncodedImage encodedImage,
+          final int length,
+          final QualityInfo qualityInfo,
+          final ImageDecodeOptions options) {
+    if (mAvifDecoder != null) {
+      return mAvifDecoder.decode(encodedImage, length, qualityInfo, options);
     }
     return decodeStaticImage(encodedImage, options);
   }

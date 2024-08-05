@@ -17,6 +17,8 @@ object Deps {
 
   const val volley = "com.android.volley:volley:1.2.1"
 
+  const val avifAndroid = "org.aomedia.avif.android:avif:1.0.1.262e11d"
+
   object AndroidX {
     const val androidxAnnotation = "androidx.annotation:annotation:1.6.0"
     const val core = "androidx.core:core:1.13.1"

@@ -9,6 +9,7 @@ package com.facebook.fresco.samples.showcase
 
 import com.facebook.fresco.samples.showcase.drawee.*
 import com.facebook.fresco.samples.showcase.drawee.transition.DraweeTransitionFragment
+import com.facebook.fresco.samples.showcase.imageformat.avif.ImageFormatAvifFragment
 import com.facebook.fresco.samples.showcase.imageformat.color.ImageFormatColorFragment
 import com.facebook.fresco.samples.showcase.imageformat.datauri.ImageFormatDataUriFragment
 import com.facebook.fresco.samples.showcase.imageformat.gif.ImageFormatGifFragment
@@ -66,6 +67,7 @@ object ExampleDatabase {
                   ExampleItem("Color") { ImageFormatColorFragment() },
                   ExampleItem("GIF") { ImageFormatGifFragment() },
                   ExampleItem("WebP") { ImageFormatWebpFragment() },
+                  ExampleItem("AVIF") { ImageFormatAvifFragment() },
                   ExampleItem("SVG") { ImageFormatSvgFragment() },
                   ExampleItem("Keyframes") { ImageFormatKeyframesFragment() },
                   ExampleItem("Decoder Override") { ImageFormatOverrideExample() },
