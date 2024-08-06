@@ -16,6 +16,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.util.SizeUtil;
+import javax.annotation.Nullable;
 
 /** A simple Preference containing a SeekBar in order to select a size */
 public class SizePreferences extends Preference implements SeekBar.OnSeekBarChangeListener {
@@ -25,7 +26,7 @@ public class SizePreferences extends Preference implements SeekBar.OnSeekBarChan
 
   private SeekBar mSeekBar;
 
-  private TextView mSeekBarValueTextView;
+  @Nullable private TextView mSeekBarValueTextView;
   private TextView mTitleView;
 
   private int mProgressValue;
