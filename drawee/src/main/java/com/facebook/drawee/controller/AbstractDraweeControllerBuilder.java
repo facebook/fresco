@@ -54,8 +54,8 @@ public abstract class AbstractDraweeControllerBuilder<
 
   // components
   private final Context mContext;
-  private final Set<ControllerListener> mBoundControllerListeners;
-  private final Set<ControllerListener2> mBoundControllerListeners2;
+  @Nullable private final Set<ControllerListener> mBoundControllerListeners;
+  @Nullable private final Set<ControllerListener2> mBoundControllerListeners2;
 
   // builder parameters
   private @Nullable Object mCallerContext;
