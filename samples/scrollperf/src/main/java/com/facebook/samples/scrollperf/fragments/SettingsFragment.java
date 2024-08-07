@@ -31,7 +31,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   /** The Tag for this Fragment */
   public static final String TAG = SettingsFragment.class.getSimpleName();
 
-  private ShowRestartMessageDialog mShowRestartMessageDialog;
+  @Nullable private ShowRestartMessageDialog mShowRestartMessageDialog;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
