@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.core
 
 import android.content.res.Resources
 import android.graphics.Rect
+import com.facebook.common.callercontext.ContextChain
 import com.facebook.common.references.CloseableReference
 import com.facebook.datasource.DataSource
 import com.facebook.fresco.vito.options.ImageOptions
@@ -32,7 +33,8 @@ interface VitoImagePipeline {
       options: ImageOptions?,
       logWithHighSamplingRate: Boolean = false,
       viewport: Rect? = null,
-      callerContext: Any? = null
+      callerContext: Any? = null,
+      contextChain: ContextChain? = null
   ): VitoImageRequest
 
   fun getCachedImage(imageRequest: VitoImageRequest): CloseableReference<CloseableImage>?
