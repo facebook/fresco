@@ -9,7 +9,6 @@ package com.facebook.fresco.vito.core.impl
 
 import android.content.res.Resources
 import android.graphics.Rect
-import com.facebook.common.callercontext.ContextChain
 import com.facebook.common.references.CloseableReference
 import com.facebook.datasource.DataSource
 import com.facebook.fresco.middleware.HasExtraData
@@ -43,8 +42,7 @@ class VitoImagePipelineImpl(
       options: ImageOptions?,
       logWithHighSamplingRate: Boolean,
       viewport: Rect?,
-      callerContext: Any?,
-      contextChain: ContextChain?
+      callerContext: Any?
   ): VitoImageRequest {
     val imageOptions = options ?: defaults()
     val extras: MutableMap<String, Any> = mutableMapOf()
@@ -56,8 +54,7 @@ class VitoImagePipelineImpl(
                 imageSource.uri,
                 viewport?.let { Dimensions(it.width(), it.height()) },
                 imageOptions.actualImageScaleType,
-                callerContext,
-                contextChain)
+                callerContext)
         if (result !is UriModifierInterface.ModificationResult.Disabled) {
           extras[HasExtraData.KEY_MODIFIED_URL] = result.toString()
         }

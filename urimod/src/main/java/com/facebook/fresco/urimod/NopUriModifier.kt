@@ -8,7 +8,6 @@
 package com.facebook.fresco.urimod
 
 import android.net.Uri
-import com.facebook.common.callercontext.ContextChain
 import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.fresco.urimod.UriModifierInterface.ModificationResult
 
@@ -17,8 +16,7 @@ object NopUriModifier : UriModifierInterface {
       uri: Uri,
       viewport: Dimensions?,
       scaleType: ScalingUtils.ScaleType?,
-      callerContext: Any?,
-      contextChain: ContextChain?
+      callerContext: Any?
   ): ModificationResult = ModificationResult.Disabled
 
   override fun modifyPrefetchUri(uri: Uri, callerContext: Any?): Uri = uri
