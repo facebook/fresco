@@ -42,6 +42,7 @@ class VitoImagePipelineImpl(
       options: ImageOptions?,
       logWithHighSamplingRate: Boolean,
       viewport: Rect?,
+      callerContext: Any?
   ): VitoImageRequest {
     val imageOptions = options ?: defaults()
     val extras: MutableMap<String, Any> = mutableMapOf()
@@ -52,7 +53,8 @@ class VitoImagePipelineImpl(
             UriModifier.INSTANCE.modifyUri(
                 imageSource.uri,
                 viewport?.let { Dimensions(it.width(), it.height()) },
-                imageOptions.actualImageScaleType)
+                imageOptions.actualImageScaleType,
+                callerContext)
         if (result !is UriModifierInterface.ModificationResult.Disabled) {
           extras[HasExtraData.KEY_MODIFIED_URL] = result.toString()
         }

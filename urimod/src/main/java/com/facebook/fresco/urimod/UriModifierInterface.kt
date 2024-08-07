@@ -12,7 +12,12 @@ import com.facebook.drawee.drawable.ScalingUtils.ScaleType
 
 interface UriModifierInterface {
 
-  fun modifyUri(uri: Uri, viewport: Dimensions?, scaleType: ScaleType?): ModificationResult
+  fun modifyUri(
+      uri: Uri,
+      viewport: Dimensions?,
+      scaleType: ScaleType?,
+      callerContext: Any?
+  ): ModificationResult
 
   fun modifyPrefetchUri(uri: Uri, callerContext: Any?): Uri?
 

@@ -203,7 +203,11 @@ object FrescoVitoSlideshowComponentSpec {
             frescoDrawable = slideshowDrawable.nextImage,
             imageRequest =
                 FrescoVitoProvider.getImagePipeline()
-                    .createImageRequest(resources, ImageSourceProvider.forUri(uri), options),
+                    .createImageRequest(
+                        resources,
+                        ImageSourceProvider.forUri(uri),
+                        options,
+                        callerContext = callerContext),
             callerContext = callerContext,
             contextChain = contextChain,
             listener = listener,

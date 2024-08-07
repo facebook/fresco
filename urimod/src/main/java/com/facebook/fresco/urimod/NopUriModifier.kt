@@ -15,7 +15,8 @@ object NopUriModifier : UriModifierInterface {
   override fun modifyUri(
       uri: Uri,
       viewport: Dimensions?,
-      scaleType: ScalingUtils.ScaleType?
+      scaleType: ScalingUtils.ScaleType?,
+      callerContext: Any?
   ): ModificationResult = ModificationResult.Disabled
 
   override fun modifyPrefetchUri(uri: Uri, callerContext: Any?): Uri = uri

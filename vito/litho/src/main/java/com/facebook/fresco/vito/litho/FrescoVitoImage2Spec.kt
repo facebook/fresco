@@ -97,6 +97,8 @@ object FrescoVitoImage2Spec {
   @OnCalculateCachedValue(name = "requestCachedValue")
   fun onCalculateImageRequest(
       c: ComponentContext,
+      @Prop(optional = true) callerContext: Any?,
+      @TreeProp contextChain: ContextChain?,
       @Prop(optional = true) uriString: String?,
       @Prop(optional = true) uri: Uri?,
       @Prop(optional = true) imageSource: ImageSource?,
@@ -107,11 +109,19 @@ object FrescoVitoImage2Spec {
         null
       } else {
         createVitoImageRequest(
-            c, imageSource, uri, uriString, imageOptions, logWithHighSamplingRate, null)
+            c,
+            callerContext,
+            imageSource,
+            uri,
+            uriString,
+            imageOptions,
+            logWithHighSamplingRate,
+            null)
       }
 
   private fun createVitoImageRequest(
       c: ComponentContext,
+      callerContext: Any?,
       imageSource: ImageSource?,
       uri: Uri?,
       uriString: String?,
@@ -125,7 +135,8 @@ object FrescoVitoImage2Spec {
               determineImageSource(imageSource, uri, uriString),
               imageOptions,
               logWithHighSamplingRate ?: false,
-              viewportRect)
+              viewportRect,
+              callerContext)
 
   @JvmStatic
   @OnPrepare
@@ -323,7 +334,14 @@ object FrescoVitoImage2Spec {
     if (imageOptions != null && imageOptions.experimentalDynamicSize) {
       val vitoImageRequest =
           createVitoImageRequest(
-              c, imageSource, uri, uriString, imageOptions, logWithHighSamplingRate, viewportRect)
+              c,
+              callerContext,
+              imageSource,
+              uri,
+              uriString,
+              imageOptions,
+              logWithHighSamplingRate,
+              viewportRect)
       requestFromBoundsDefined.set(vitoImageRequest)
 
       val config = FrescoVitoProvider.getConfig().prefetchConfig
