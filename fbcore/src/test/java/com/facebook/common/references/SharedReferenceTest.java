@@ -10,6 +10,7 @@ package com.facebook.common.references;
 import com.facebook.common.internal.Closeables;
 import java.io.Closeable;
 import java.io.IOException;
+import javax.annotation.Nullable;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -91,7 +92,7 @@ public class SharedReferenceTest {
   }
 
   public static class Thing implements Closeable {
-    private String mValue;
+    @Nullable private String mValue;
 
     public Thing(String value) {
       mValue = value;
