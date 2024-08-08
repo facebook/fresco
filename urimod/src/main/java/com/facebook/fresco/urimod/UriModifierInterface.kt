@@ -8,6 +8,7 @@
 package com.facebook.fresco.urimod
 
 import android.net.Uri
+import com.facebook.common.callercontext.ContextChain
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType
 
 interface UriModifierInterface {
@@ -16,7 +17,8 @@ interface UriModifierInterface {
       uri: Uri,
       viewport: Dimensions?,
       scaleType: ScaleType?,
-      callerContext: Any?
+      callerContext: Any?,
+      contextChain: ContextChain? = null
   ): ModificationResult
 
   fun modifyPrefetchUri(uri: Uri, callerContext: Any?): Uri?
