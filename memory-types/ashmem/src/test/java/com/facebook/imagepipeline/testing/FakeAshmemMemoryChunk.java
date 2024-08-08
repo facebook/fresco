@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.testing;
 
 import com.facebook.imagepipeline.memory.AshmemMemoryChunk;
 import com.facebook.imagepipeline.memory.MemoryChunk;
+import javax.annotation.Nullable;
 
 /**
  * A fake implementation of {@link com.facebook.memory.ashmem.AshmemMemoryChunk} to allow us to test
@@ -16,7 +17,7 @@ import com.facebook.imagepipeline.memory.MemoryChunk;
  * supports the same public interface
  */
 public class FakeAshmemMemoryChunk extends AshmemMemoryChunk {
-  private byte[] mBuf;
+  @Nullable private byte[] mBuf;
 
   public FakeAshmemMemoryChunk(int bufSize) {
     super();
