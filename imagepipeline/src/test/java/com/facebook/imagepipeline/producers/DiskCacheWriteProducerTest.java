@@ -24,12 +24,14 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.MultiCacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.common.internal.ImmutableMap;
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.core.DiskCachesStore;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -69,6 +71,7 @@ public class DiskCacheWriteProducerTest {
   @Mock public ProducerListener2 mProducerListener;
   @Mock public Exception mException;
   @Mock public ImagePipelineConfig mConfig;
+  private final Supplier<DiskCachesStore> mDiskCachesStoreSupplier = mock(Supplier.class);
   private final BufferedDiskCache mDefaultBufferedDiskCache = mock(BufferedDiskCache.class);
   private final BufferedDiskCache mSmallImageBufferedDiskCache = mock(BufferedDiskCache.class);
 
@@ -95,12 +98,7 @@ public class DiskCacheWriteProducerTest {
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     mDiskCacheWriteProducer =
-        new DiskCacheWriteProducer(
-            mDefaultBufferedDiskCache,
-            mSmallImageBufferedDiskCache,
-            mDynamicBufferedDiskCaches,
-            mCacheKeyFactory,
-            mInputProducer);
+        new DiskCacheWriteProducer(mDiskCachesStoreSupplier, mCacheKeyFactory, mInputProducer);
     List<CacheKey> keys = new ArrayList<>(1);
     keys.add(new SimpleCacheKey("http://dummy.uri"));
     mCacheKey = new MultiCacheKey(keys);
@@ -142,6 +140,12 @@ public class DiskCacheWriteProducerTest {
     when(mCacheKeyFactory.getEncodedCacheKey(mImageRequest, mCallerContext)).thenReturn(mCacheKey);
     when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.DEFAULT);
     setUpCacheEnabled(true);
+    DiskCachesStore diskCachesStore = mock(DiskCachesStore.class);
+    when(mDiskCachesStoreSupplier.get()).thenReturn(diskCachesStore);
+    when(diskCachesStore.getMainBufferedDiskCache()).thenReturn(mDefaultBufferedDiskCache);
+    when(diskCachesStore.getSmallImageBufferedDiskCache()).thenReturn(mSmallImageBufferedDiskCache);
+    when(diskCachesStore.getDynamicBufferedDiskCaches())
+        .thenReturn(ImmutableMap.copyOf(mDynamicBufferedDiskCaches));
   }
 
   private void setUpCacheEnabled(boolean enabled) {

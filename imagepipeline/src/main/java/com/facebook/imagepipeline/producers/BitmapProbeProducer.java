@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.cache.common.CacheKey;
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.middleware.HasExtraData;
@@ -15,6 +16,7 @@ import com.facebook.imagepipeline.cache.BoundedLinkedHashSet;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
+import com.facebook.imagepipeline.core.DiskCachesStore;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
@@ -30,8 +32,7 @@ public class BitmapProbeProducer implements Producer<CloseableReference<Closeabl
   public static final String PRODUCER_NAME = "BitmapProbeProducer";
 
   private final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
-  private final BufferedDiskCache mDefaultBufferedDiskCache;
-  private final BufferedDiskCache mSmallImageBufferedDiskCache;
+  private final Supplier<DiskCachesStore> mDiskCachesStoreSupplier;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Producer<CloseableReference<CloseableImage>> mInputProducer;
   private final BoundedLinkedHashSet<CacheKey> mEncodedMemoryCacheHistory;
@@ -39,15 +40,13 @@ public class BitmapProbeProducer implements Producer<CloseableReference<Closeabl
 
   public BitmapProbeProducer(
       MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
-      BufferedDiskCache defaultBufferedDiskCache,
-      BufferedDiskCache smallImageBufferedDiskCache,
+      Supplier<DiskCachesStore> diskCachesStoreSupplier,
       CacheKeyFactory cacheKeyFactory,
       BoundedLinkedHashSet<CacheKey> encodedMemoryCacheHistory,
       BoundedLinkedHashSet<CacheKey> diskCacheHistory,
       Producer<CloseableReference<CloseableImage>> inputProducer) {
     mEncodedMemoryCache = encodedMemoryCache;
-    mDefaultBufferedDiskCache = defaultBufferedDiskCache;
-    mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
+    mDiskCachesStoreSupplier = diskCachesStoreSupplier;
     mCacheKeyFactory = cacheKeyFactory;
     mEncodedMemoryCacheHistory = encodedMemoryCacheHistory;
     mDiskCacheHistory = diskCacheHistory;
@@ -69,8 +68,7 @@ public class BitmapProbeProducer implements Producer<CloseableReference<Closeabl
               consumer,
               producerContext,
               mEncodedMemoryCache,
-              mDefaultBufferedDiskCache,
-              mSmallImageBufferedDiskCache,
+              mDiskCachesStoreSupplier,
               mCacheKeyFactory,
               mEncodedMemoryCacheHistory,
               mDiskCacheHistory);
@@ -96,8 +94,7 @@ public class BitmapProbeProducer implements Producer<CloseableReference<Closeabl
 
     private final ProducerContext mProducerContext;
     private final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
-    private final BufferedDiskCache mDefaultBufferedDiskCache;
-    private final BufferedDiskCache mSmallImageBufferedDiskCache;
+    private final Supplier<DiskCachesStore> mDiskCachesStoreSupplier;
     private final CacheKeyFactory mCacheKeyFactory;
     private final BoundedLinkedHashSet<CacheKey> mEncodedMemoryCacheHistory;
     private final BoundedLinkedHashSet<CacheKey> mDiskCacheHistory;
@@ -106,16 +103,14 @@ public class BitmapProbeProducer implements Producer<CloseableReference<Closeabl
         Consumer<CloseableReference<CloseableImage>> consumer,
         ProducerContext producerContext,
         MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
-        BufferedDiskCache defaultBufferedDiskCache,
-        BufferedDiskCache smallImageBufferedDiskCache,
+        Supplier<DiskCachesStore> diskCachesStoreSupplier,
         CacheKeyFactory cacheKeyFactory,
         BoundedLinkedHashSet<CacheKey> encodedMemoryCacheHistory,
         BoundedLinkedHashSet<CacheKey> diskCacheHistory) {
       super(consumer);
       mProducerContext = producerContext;
       mEncodedMemoryCache = encodedMemoryCache;
-      mDefaultBufferedDiskCache = defaultBufferedDiskCache;
-      mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
+      mDiskCachesStoreSupplier = diskCachesStoreSupplier;
       mCacheKeyFactory = cacheKeyFactory;
       mEncodedMemoryCacheHistory = encodedMemoryCacheHistory;
       mDiskCacheHistory = diskCacheHistory;
@@ -152,8 +147,11 @@ public class BitmapProbeProducer implements Producer<CloseableReference<Closeabl
               && !mDiskCacheHistory.contains(cacheKey)) {
             final boolean isSmallRequest =
                 (imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL);
+            final DiskCachesStore diskCachesStore = mDiskCachesStoreSupplier.get();
             final BufferedDiskCache preferredCache =
-                isSmallRequest ? mSmallImageBufferedDiskCache : mDefaultBufferedDiskCache;
+                isSmallRequest
+                    ? diskCachesStore.getSmallImageBufferedDiskCache()
+                    : diskCachesStore.getMainBufferedDiskCache();
             preferredCache.addKeyForAsyncProbing(cacheKey);
             mDiskCacheHistory.add(cacheKey);
           }

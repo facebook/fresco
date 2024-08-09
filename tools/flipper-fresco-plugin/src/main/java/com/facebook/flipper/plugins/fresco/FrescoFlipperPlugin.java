@@ -284,6 +284,8 @@ public class FrescoFlipperPlugin extends BufferingFlipperPlugin
               final String imageId, final CacheKey cacheKey, final FlipperResponder responder) {
             Task<EncodedImage> t =
                 Fresco.getImagePipelineFactory()
+                    .getDiskCachesStoreSupplier()
+                    .get()
                     .getMainBufferedDiskCache()
                     .get(cacheKey, new AtomicBoolean(false));
 
@@ -410,7 +412,12 @@ public class FrescoFlipperPlugin extends BufferingFlipperPlugin
       levelsBuilder.put(
           getDiskStats(
               "Disk images",
-              Fresco.getImagePipelineFactory().getMainFileCache().getDumpInfo().entries));
+              Fresco.getImagePipelineFactory()
+                  .getDiskCachesStoreSupplier()
+                  .get()
+                  .getMainFileCache()
+                  .getDumpInfo()
+                  .entries));
     }
 
     return new FlipperObject.Builder().put("levels", levelsBuilder.build()).build();
@@ -441,7 +448,13 @@ public class FrescoFlipperPlugin extends BufferingFlipperPlugin
     return new FlipperObject.Builder()
         .put("cacheType", cacheType)
         .put("clearKey", "disk")
-        .put("sizeBytes", Fresco.getImagePipelineFactory().getMainFileCache().getSize())
+        .put(
+            "sizeBytes",
+            Fresco.getImagePipelineFactory()
+                .getDiskCachesStoreSupplier()
+                .get()
+                .getMainFileCache()
+                .getSize())
         .put("imageIds", buildImageIdListDisk(diskEntries))
         .build();
   }

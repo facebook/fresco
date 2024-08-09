@@ -19,7 +19,6 @@ import com.facebook.common.memory.PooledByteStreams
 import com.facebook.common.webp.WebpBitmapFactory
 import com.facebook.common.webp.WebpBitmapFactory.WebpErrorLogger
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
-import com.facebook.imagepipeline.cache.BufferedDiskCache
 import com.facebook.imagepipeline.cache.CacheKeyFactory
 import com.facebook.imagepipeline.cache.MemoryCache
 import com.facebook.imagepipeline.decoder.ImageDecoder
@@ -342,9 +341,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
         pooledByteStreams: PooledByteStreams,
         bitmapMemoryCache: MemoryCache<CacheKey?, CloseableImage?>,
         encodedMemoryCache: MemoryCache<CacheKey?, PooledByteBuffer?>,
-        defaultBufferedDiskCache: BufferedDiskCache,
-        smallImageBufferedDiskCache: BufferedDiskCache,
-        dynamicBufferedDiskCaches: Map<String, BufferedDiskCache>?,
+        diskCachesStoreSupplier: Supplier<DiskCachesStore>,
         cacheKeyFactory: CacheKeyFactory,
         platformBitmapFactory: PlatformBitmapFactory,
         bitmapPrepareToDrawMinSizeBytes: Int,
@@ -371,9 +368,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
         pooledByteStreams: PooledByteStreams,
         bitmapMemoryCache: MemoryCache<CacheKey?, CloseableImage?>,
         encodedMemoryCache: MemoryCache<CacheKey?, PooledByteBuffer?>,
-        defaultBufferedDiskCache: BufferedDiskCache,
-        smallImageBufferedDiskCache: BufferedDiskCache,
-        dynamicBufferedDiskCaches: Map<String, BufferedDiskCache>?,
+        diskCachesStoreSupplier: Supplier<DiskCachesStore>,
         cacheKeyFactory: CacheKeyFactory,
         platformBitmapFactory: PlatformBitmapFactory,
         bitmapPrepareToDrawMinSizeBytes: Int,
@@ -396,9 +391,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
             pooledByteBufferFactory!!,
             bitmapMemoryCache!!,
             encodedMemoryCache!!,
-            defaultBufferedDiskCache!!,
-            smallImageBufferedDiskCache!!,
-            dynamicBufferedDiskCaches,
+            diskCachesStoreSupplier,
             cacheKeyFactory!!,
             platformBitmapFactory!!,
             bitmapPrepareToDrawMinSizeBytes,

@@ -10,12 +10,10 @@ package com.facebook.imagepipeline.core;
 import android.content.Context;
 import android.os.Build;
 import com.facebook.cache.common.CacheKey;
-import com.facebook.cache.disk.DiskCacheConfig;
-import com.facebook.cache.disk.FileCache;
 import com.facebook.common.internal.AndroidPredicates;
-import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.imageformat.ImageFormatChecker;
@@ -23,7 +21,6 @@ import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactoryProvider;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactoryProvider;
-import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.cache.EncodedCountingMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.EncodedMemoryCacheFactory;
@@ -45,8 +42,6 @@ import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import com.facebook.imagepipeline.transcoder.MultiImageTranscoderFactory;
 import com.facebook.imagepipeline.transcoder.SimpleImageTranscoderFactory;
 import com.facebook.infer.annotation.Nullsafe;
-import java.util.HashMap;
-import java.util.Map;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -131,21 +126,15 @@ public class ImagePipelineFactory {
 
   private final ImagePipelineConfigInterface mConfig;
   private final CloseableReferenceFactory mCloseableReferenceFactory;
+  private final Supplier<DiskCachesStore> mDiskCachesStoreSupplier;
   @Nullable private CountingMemoryCache<CacheKey, CloseableImage> mBitmapCountingMemoryCache;
   @Nullable private InstrumentedMemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   @Nullable private CountingMemoryCache<CacheKey, PooledByteBuffer> mEncodedCountingMemoryCache;
   @Nullable private InstrumentedMemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
-  @Nullable private BufferedDiskCache mMainBufferedDiskCache;
-  @Nullable private FileCache mMainFileCache;
   @Nullable private ImageDecoder mImageDecoder;
   @Nullable private ImageTranscoderFactory mImageTranscoderFactory;
   @Nullable private ProducerFactory mProducerFactory;
   @Nullable private ProducerSequenceFactory mProducerSequenceFactory;
-  @Nullable private BufferedDiskCache mSmallImageBufferedDiskCache;
-  @Nullable private FileCache mSmallImageFileCache;
-  @Nullable private Map<String, FileCache> mDynamicFileCaches;
-  @Nullable private ImmutableMap<String, BufferedDiskCache> mDynamicBufferedDiskCaches;
-
   @Nullable private PlatformBitmapFactory mPlatformBitmapFactory;
   @Nullable private PlatformDecoder mPlatformDecoder;
 
@@ -167,6 +156,7 @@ public class ImagePipelineFactory {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.endSection();
     }
+    mDiskCachesStoreSupplier = mConfig.getDiskCachesStoreSupplier();
   }
 
   @Nullable
@@ -275,62 +265,8 @@ public class ImagePipelineFactory {
     return mImageDecoder;
   }
 
-  public BufferedDiskCache getMainBufferedDiskCache() {
-    if (mMainBufferedDiskCache == null) {
-      mMainBufferedDiskCache =
-          new BufferedDiskCache(
-              getMainFileCache(),
-              mConfig.getPoolFactory().getPooledByteBufferFactory(mConfig.getMemoryChunkType()),
-              mConfig.getPoolFactory().getPooledByteStreams(),
-              mConfig.getExecutorSupplier().forLocalStorageRead(),
-              mConfig.getExecutorSupplier().forLocalStorageWrite(),
-              mConfig.getImageCacheStatsTracker());
-    }
-    return mMainBufferedDiskCache;
-  }
-
-  private Map<String, FileCache> getDynamicFileCaches() {
-    if (mDynamicFileCaches == null) {
-      mDynamicFileCaches = new HashMap<>();
-      if (mConfig.getDynamicDiskCacheConfigMap() != null) {
-        for (Map.Entry<String, DiskCacheConfig> diskCacheConfigEntry :
-            mConfig.getDynamicDiskCacheConfigMap().entrySet()) {
-          mDynamicFileCaches.put(
-              diskCacheConfigEntry.getKey(),
-              mConfig.getFileCacheFactory().get(diskCacheConfigEntry.getValue()));
-        }
-      }
-    }
-
-    return mDynamicFileCaches;
-  }
-
-  private ImmutableMap<String, BufferedDiskCache> getDynamicBufferedDiskCaches() {
-    if (mDynamicBufferedDiskCaches == null) {
-      HashMap<String, BufferedDiskCache> bufferedDiskCaches = new HashMap<>();
-      for (Map.Entry<String, FileCache> fileCacheEntry : getDynamicFileCaches().entrySet()) {
-        bufferedDiskCaches.put(
-            fileCacheEntry.getKey(),
-            new BufferedDiskCache(
-                fileCacheEntry.getValue(),
-                mConfig.getPoolFactory().getPooledByteBufferFactory(mConfig.getMemoryChunkType()),
-                mConfig.getPoolFactory().getPooledByteStreams(),
-                mConfig.getExecutorSupplier().forLocalStorageRead(),
-                mConfig.getExecutorSupplier().forLocalStorageWrite(),
-                mConfig.getImageCacheStatsTracker()));
-      }
-      mDynamicBufferedDiskCaches = ImmutableMap.copyOf(bufferedDiskCaches);
-    }
-
-    return mDynamicBufferedDiskCaches;
-  }
-
-  public FileCache getMainFileCache() {
-    if (mMainFileCache == null) {
-      DiskCacheConfig diskCacheConfig = mConfig.getMainDiskCacheConfig();
-      mMainFileCache = mConfig.getFileCacheFactory().get(diskCacheConfig);
-    }
-    return mMainFileCache;
+  public Supplier<DiskCachesStore> getDiskCachesStoreSupplier() {
+    return mDiskCachesStoreSupplier;
   }
 
   public ImagePipeline getImagePipeline() {
@@ -348,9 +284,7 @@ public class ImagePipelineFactory {
         mConfig.isPrefetchEnabledSupplier(),
         getBitmapMemoryCache(),
         getEncodedMemoryCache(),
-        getMainBufferedDiskCache(),
-        getSmallImageBufferedDiskCache(),
-        getDynamicBufferedDiskCaches(),
+        mDiskCachesStoreSupplier,
         mConfig.getCacheKeyFactory(),
         mThreadHandoffProducerQueue,
         mConfig.getExperiments().getSuppressBitmapPrefetchingSupplier(),
@@ -399,9 +333,7 @@ public class ImagePipelineFactory {
                   mConfig.getPoolFactory().getPooledByteStreams(),
                   getBitmapMemoryCache(),
                   getEncodedMemoryCache(),
-                  getMainBufferedDiskCache(),
-                  getSmallImageBufferedDiskCache(),
-                  getDynamicBufferedDiskCaches(),
+                  mDiskCachesStoreSupplier,
                   mConfig.getCacheKeyFactory(),
                   getPlatformBitmapFactory(),
                   mConfig.getExperiments().getBitmapPrepareToDrawMinSizeBytes(),
@@ -443,30 +375,8 @@ public class ImagePipelineFactory {
     return mProducerSequenceFactory;
   }
 
-  public FileCache getSmallImageFileCache() {
-    if (mSmallImageFileCache == null) {
-      DiskCacheConfig diskCacheConfig = mConfig.getSmallImageDiskCacheConfig();
-      mSmallImageFileCache = mConfig.getFileCacheFactory().get(diskCacheConfig);
-    }
-    return mSmallImageFileCache;
-  }
-
   public CloseableReferenceFactory getCloseableReferenceFactory() {
     return mCloseableReferenceFactory;
-  }
-
-  private BufferedDiskCache getSmallImageBufferedDiskCache() {
-    if (mSmallImageBufferedDiskCache == null) {
-      mSmallImageBufferedDiskCache =
-          new BufferedDiskCache(
-              getSmallImageFileCache(),
-              mConfig.getPoolFactory().getPooledByteBufferFactory(mConfig.getMemoryChunkType()),
-              mConfig.getPoolFactory().getPooledByteStreams(),
-              mConfig.getExecutorSupplier().forLocalStorageRead(),
-              mConfig.getExecutorSupplier().forLocalStorageWrite(),
-              mConfig.getImageCacheStatsTracker());
-    }
-    return mSmallImageBufferedDiskCache;
   }
 
   /**
