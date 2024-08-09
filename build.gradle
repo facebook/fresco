@@ -31,6 +31,12 @@ plugins {
     id "com.vanniktech.maven.publish" version "0.25.3"
 }
 
+// Make sure to add trailing slash to the absolute paths
+LinkedHashMap<String, String> commonNdkLocations = [
+        "macOS-internal":"/opt/android_sdk/ndk/",
+        "linux-ubuntu":"/usr/local/lib/android/sdk/ndk/",
+]
+
 subprojects {
 
     repositories {
@@ -121,25 +127,41 @@ subprojects {
         }
     }
 
+    ext.discoverNdkPathFromCommonLocations = { String ndkVersion ->
+        String foundNdkLocation = null
+        for (entry in commonNdkLocations) {
+            String variant = entry.key
+            String location = entry.value
+
+            String ndkDir = location + ndkVersion
+            File ndkFolder = new File(ndkDir)
+            if (ndkFolder.exists()) {
+                println("NDK Path found using: common $variant location")
+                foundNdkLocation = ndkDir
+                break
+            }
+        }
+
+        return foundNdkLocation
+    }
+
     ext.getNdkBuildFullPath = { Project project ->
         String path = null
 
         // Latest method using the common NDK version used throughout the project and using the standard NDK SxS location on macOS
         if (path == null) {
-            String ndkVersion = GradleDeps.Native.version
-            String ndkDir = "/opt/android_sdk/ndk/" + ndkVersion
-            File ndkFolder = new File(ndkDir)
-            if (ndkFolder.exists()) {
-                path = ndkDir
-            }
+            path = discoverNdkPathFromCommonLocations(GradleDeps.Native.version)
         }
 
         // Fallback method for CI
         if (path == null) {
             String ndkDir = System.getenv("ANDROID_NDK_HOME")
-            File ndkFolder = new File(ndkDir)
-            if (ndkFolder.exists()) {
-                path = ndkDir
+            if (ndkDir != null) {
+                File ndkFolder = new File(ndkDir)
+                if (ndkFolder.exists()) {
+                    path = ndkDir
+                    println("NDK Path found using: ANDROID_NDK_HOME")
+                }
             }
         }
 
@@ -147,20 +169,24 @@ subprojects {
         if (path == null) {
             File propFile = project.rootProject.file('local.properties')
             if (!propFile.exists()) {
+                println("NDK Path found using: local.props missing, just the command name")
                 return getNdkBuildName()
             }
             Properties properties = new Properties()
             properties.load(propFile.newDataInputStream())
             def ndkCommand = properties.getProperty('ndk.command')
             if (ndkCommand != null) {
+                println("NDK Path found using: ndk.command")
                 return ndkCommand
             }
             def ndkPath = properties.getProperty('ndk.path')
             if (ndkPath != null) {
+                println("NDK Path found using: ndk.path")
                 path = ndkPath
             } else {
                 def ndkDir = properties.getProperty('ndk.dir')
                 if (ndkDir != null) {
+                    println("NDK Path found using: ndk.dir")
                     path = ndkDir
                 }
             }
