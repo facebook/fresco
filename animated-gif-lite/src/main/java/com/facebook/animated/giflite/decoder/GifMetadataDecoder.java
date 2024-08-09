@@ -7,6 +7,7 @@
 
 package com.facebook.animated.giflite.decoder;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class GifMetadataDecoder {
 
   private static final int MAX_BLOCK_SIZE = 256; // blocks sizes are defined by a single byte
@@ -256,6 +258,7 @@ public class GifMetadataDecoder {
     int count = mInputStream.read(block, offset, length);
     mCurrentOffset += length;
     if (shouldFixStream) {
+      // NULLSAFE_FIXME[Nullable Dereference]
       mOutputStream.write(block, offset, length);
     }
     if (count == -1) {
@@ -272,6 +275,7 @@ public class GifMetadataDecoder {
 
   private void writeNextByte(int b) throws IOException {
     if (shouldFixStream) {
+      // NULLSAFE_FIXME[Nullable Dereference]
       mOutputStream.write(b);
     }
   }
@@ -283,6 +287,7 @@ public class GifMetadataDecoder {
 
   private void skipAndWriteBytes(int length) throws IOException {
     if (shouldFixStream) {
+      // NULLSAFE_FIXME[Parameter Not Nullable]
       copyFromIsToOs(mInputStream, mOutputStream, length);
     } else {
       mInputStream.skip(length);
