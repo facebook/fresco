@@ -8,6 +8,7 @@
 package com.facebook.common.executors;
 
 import android.os.Handler;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.ExecutionException;
@@ -19,6 +20,7 @@ import java.util.concurrent.TimeoutException;
 import javax.annotation.Nullable;
 
 /** A {@link ScheduledFuture} for {@link HandlerExecutorServiceImpl}. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ScheduledFutureImpl<V> implements RunnableFuture<V>, ScheduledFuture<V> {
 
   private final Handler mHandler;
