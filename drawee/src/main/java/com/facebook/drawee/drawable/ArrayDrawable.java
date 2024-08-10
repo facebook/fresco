@@ -17,6 +17,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -25,6 +26,7 @@ import javax.annotation.Nullable;
  *
  * <p>Similar to android's LayerDrawable but it doesn't support adding/removing layers dynamically.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ArrayDrawable extends Drawable
     implements Drawable.Callback, TransformCallback, TransformAwareDrawable {
 
@@ -302,12 +304,15 @@ public class ArrayDrawable extends Drawable
   private DrawableParent createDrawableParentForIndex(final int index) {
     return new DrawableParent() {
       @Override
+      // NULLSAFE_FIXME[Inconsistent Subclass Parameter Annotation]
       public Drawable setDrawable(Drawable newDrawable) {
+        // NULLSAFE_FIXME[Return Not Nullable]
         return ArrayDrawable.this.setDrawable(index, newDrawable);
       }
 
       @Override
       public Drawable getDrawable() {
+        // NULLSAFE_FIXME[Return Not Nullable]
         return ArrayDrawable.this.getDrawable(index);
       }
     };
