@@ -10,6 +10,7 @@ package com.facebook.samples.scrollperf.conf;
 import android.content.Context;
 import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.util.SizeUtil;
 
@@ -17,6 +18,7 @@ import com.facebook.samples.scrollperf.util.SizeUtil;
  * We use this class to keep in memory all the information from the Settings. It's a kind of buffer
  * of those information in order to avoid repeated reading
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class Config {
 
   public final String dataSourceType;
@@ -59,15 +61,18 @@ public class Config {
 
   public static Config load(final Context context) {
     final SharedPreferences sharedPreferences =
+        // NULLSAFE_FIXME[Not Vetted Third-Party]
         PreferenceManager.getDefaultSharedPreferences(context);
     return Builder.newBuilder()
         .setDataSourceType(
+            // NULLSAFE_FIXME[Parameter Not Nullable]
             sharedPreferences.getString(
                 Const.DATA_SOURCE_KEY, context.getString(R.string.value_local_uri)))
         .setInfiniteDataSource(sharedPreferences.getBoolean(Const.INFINITE_DATA_SOURCE_KEY, false))
         .setDistinctUriDataSource(
             sharedPreferences.getBoolean(Const.DISTINCT_DATA_SOURCE_KEY, false))
         .setRecyclerLayoutType(
+            // NULLSAFE_FIXME[Parameter Not Nullable]
             sharedPreferences.getString(
                 Const.RECYCLER_LAYOUT_KEY,
                 context.getString(R.string.value_recyclerview_recycler_layout)))
@@ -75,14 +80,17 @@ public class Config {
         .setUseRoundedAsCircle(sharedPreferences.getBoolean(Const.ROUNDED_AS_CIRCLE_KEY, false))
         .setUsePostprocessor(sharedPreferences.getBoolean(Const.USE_POSTPROCESSOR_KEY, false))
         .setPostprocessorType(
+            // NULLSAFE_FIXME[Parameter Not Nullable]
             sharedPreferences.getString(
                 Const.POSTPROCESSOR_TYPE_KEY,
                 context.getString(R.string.value_postprocessor_medium)))
         .setScaleType(
+            // NULLSAFE_FIXME[Parameter Not Nullable]
             sharedPreferences.getString(
                 Const.SCALE_TYPE_KEY, context.getString(R.string.value_scale_type_fit_center)))
         .setRotateUsingMetaData(sharedPreferences.getBoolean(Const.AUTO_ROTATE_KEY, false))
         .setForcedRotationAngle(
+            // NULLSAFE_FIXME[Parameter Not Nullable]
             Integer.parseInt(sharedPreferences.getString(Const.FORCED_ROTATION_ANGLE_KEY, "0")))
         .setDownsampling(sharedPreferences.getBoolean(Const.DOWNSAMPLING_KEY, false))
         .setOverrideSize(sharedPreferences.getBoolean(Const.OVERRIDE_SIZE_KEY, false))
@@ -92,10 +100,12 @@ public class Config {
             sharedPreferences.getInt(Const.OVERRIDEN_HEIGHT_KEY, SizeUtil.DISPLAY_HEIGHT / 2))
         .setFadeDurationMs(
             Integer.parseInt(
+                // NULLSAFE_FIXME[Parameter Not Nullable]
                 sharedPreferences.getString(
                     Const.FADE_DURATION_KEY, context.getString(R.string.value_fast_fade_duration))))
         .setDrawBorder(sharedPreferences.getBoolean(Const.DRAW_BORDER_KEY, false))
         .setGridSpanCount(
+            // NULLSAFE_FIXME[Parameter Not Nullable]
             Integer.parseInt(sharedPreferences.getString(Const.GRID_SPAN_COUNT_KEY, "3")))
         .setDecodeCancellation(sharedPreferences.getBoolean(Const.DECODE_CANCELLATION_KEY, false))
         .setWebpSupportEnabled(sharedPreferences.getBoolean(Const.WEBP_SUPPORT_KEY, false))
@@ -103,7 +113,9 @@ public class Config {
         .setInstrumentationEnabled(
             sharedPreferences.getBoolean(Const.INSTRUMENTATION_ENABLED_KEY, false))
         .setDecodingThreadCount(
+            // NULLSAFE_FIXME[Parameter Not Nullable]
             Integer.parseInt(sharedPreferences.getString(Const.DECODING_THREAD_KEY, "0")))
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         .setBgColor(Integer.parseInt(sharedPreferences.getString(Const.BG_COLOR_KEY, "0")))
         .build();
   }
@@ -137,15 +149,19 @@ public class Config {
 
   public static class Builder {
 
+    // NULLSAFE_FIXME[Field Not Initialized]
     private String mDataSourceType;
     private boolean mInfiniteDataSource;
     private boolean mDistinctUriDataSource;
+    // NULLSAFE_FIXME[Field Not Initialized]
     private String mRecyclerLayoutType;
     private int mGridSpanCount;
     private boolean mUseRoundedCorners;
     private boolean mUseRoundedAsCircle;
     private boolean mUsePostprocessor;
+    // NULLSAFE_FIXME[Field Not Initialized]
     private String mPostprocessorType;
+    // NULLSAFE_FIXME[Field Not Initialized]
     private String mScaleType;
     private boolean mRotateUsingMetaData;
     private int mForcedRotationAngle;
