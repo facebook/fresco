@@ -11,6 +11,7 @@ import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -22,6 +23,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * <p>Data sources are obtained in order. Only if the current data source fails, or if it finishes
  * without result, the next one will be tried.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
 public class FirstAvailableDataSourceSupplier<T> implements Supplier<DataSource<T>> {
 
@@ -113,6 +115,7 @@ public class FirstAvailableDataSourceSupplier<T> implements Supplier<DataSource<
     private boolean startNextDataSource() {
       Supplier<DataSource<T>> dataSourceSupplier = getNextSupplier();
       DataSource<T> dataSource = (dataSourceSupplier != null) ? dataSourceSupplier.get() : null;
+      // NULLSAFE_FIXME[Parameter Not Nullable]
       if (setCurrentDataSource(dataSource) && dataSource != null) {
         dataSource.subscribe(new InternalDataSubscriber(), CallerThreadExecutor.getInstance());
         return true;
