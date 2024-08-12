@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.testing;
 
 import com.facebook.common.executors.SerialExecutorService;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.List;
 import java.util.concurrent.AbstractExecutorService;
 import java.util.concurrent.Callable;
@@ -15,6 +16,7 @@ import java.util.concurrent.RunnableFuture;
 import java.util.concurrent.TimeUnit;
 
 /** Implementation of {@link java.util.concurrent.ExecutorService} for unit tests. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class TestExecutorService extends AbstractExecutorService implements SerialExecutorService {
 
   protected final ScheduledQueue scheduledQueue;
@@ -43,6 +45,7 @@ public class TestExecutorService extends AbstractExecutorService implements Seri
 
   @Override
   public List<Runnable> shutdownNow() {
+    // NULLSAFE_FIXME[Return Not Nullable]
     return null;
   }
 
