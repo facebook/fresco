@@ -7,10 +7,13 @@
 
 package com.facebook.samples.scrollperf.data;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * This is a simple version of an Adapter which just provides the number of element and the element
  * itself based on an index
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface SimpleAdapter<E> {
 
   int getSize();
@@ -31,6 +34,7 @@ public interface SimpleAdapter<E> {
 
           @Override
           public Object get(int position) {
+            // NULLSAFE_FIXME[Return Not Nullable]
             return null;
           }
 
