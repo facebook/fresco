@@ -8,10 +8,12 @@
 package com.facebook.imagepipeline.testing;
 
 import com.facebook.common.memory.PooledByteBuffer;
+import com.facebook.infer.annotation.Nullsafe;
 import java.nio.ByteBuffer;
 import javax.annotation.Nullable;
 
 /** A trivial implementation of {@link PooledByteBuffer} */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class TrivialPooledByteBuffer implements PooledByteBuffer {
   @Nullable private byte[] mBuf;
   private long mNativePtr;
@@ -27,16 +29,19 @@ public class TrivialPooledByteBuffer implements PooledByteBuffer {
 
   @Override
   public int size() {
+    // NULLSAFE_FIXME[Nullable Dereference]
     return isClosed() ? -1 : mBuf.length;
   }
 
   @Override
   public byte read(int offset) {
+    // NULLSAFE_FIXME[Nullable Dereference]
     return mBuf[offset];
   }
 
   @Override
   public int read(int offset, byte[] buffer, int bufferOffset, int length) {
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     System.arraycopy(mBuf, offset, buffer, bufferOffset, length);
     return length;
   }
