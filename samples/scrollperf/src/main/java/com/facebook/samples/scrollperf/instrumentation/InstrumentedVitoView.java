@@ -18,14 +18,17 @@ import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.view.VitoView;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.util.VitoUtil;
 
 /** {@link ImageView} with instrumentation and Vito utils. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class InstrumentedVitoView extends ImageView implements Instrumented {
 
   private Instrumentation mInstrumentation;
   private Config mConfig;
+  // NULLSAFE_FIXME[Field Not Initialized]
   private ImageListener mListener;
   private ImageOptions.Builder mImageOptionsBuilder;
 
