@@ -160,6 +160,8 @@ class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) 
           controllerFailureTimeMs,
           imageRequestStartTimeMs,
           imageRequestEndTimeMs,
+          emptyEventTimestampNs,
+          releasedEventTimestampNs,
           isPrefetch,
           onScreenWidthPx,
           onScreenHeightPx,

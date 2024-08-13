@@ -23,6 +23,8 @@ class ImagePerfData(
     val controllerFailureTimeMs: Long,
     val imageRequestStartTimeMs: Long,
     val imageRequestEndTimeMs: Long,
+    val emptyEventTimestampNs: Long?,
+    val releasedEventTimestampNs: Long?,
     val isPrefetch: Boolean,
     val onScreenWidthPx: Int,
     val onScreenHeightPx: Int,

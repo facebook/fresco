@@ -15,6 +15,9 @@ open class ImagePerfLoggingState(val infra: ImageRenderingInfra) {
   /** Stopgap measure before we refactor the logger to store-and-replay mode */
   var newIntermediateImageSetPointAvailable: Boolean = false
 
+  var emptyEventTimestampNs: Long? = null
+  var releasedEventTimestampNs: Long? = null
+
   var callingClassNameOnVisible: String? = null
   var rootContextNameOnVisible: String? = null
   var contextChainArrayOnVisible: Array<String>? = null
@@ -33,6 +36,9 @@ open class ImagePerfLoggingState(val infra: ImageRenderingInfra) {
   internal fun resetLoggingState() {
     intermediateImageSetTimes.clear()
     newIntermediateImageSetPointAvailable = false
+
+    emptyEventTimestampNs = null
+    releasedEventTimestampNs = null
 
     callingClassNameOnVisible = null
     rootContextNameOnVisible = null
