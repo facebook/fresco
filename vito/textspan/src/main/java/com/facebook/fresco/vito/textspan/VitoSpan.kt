@@ -23,7 +23,8 @@ open class VitoSpan(
     @BetterImageSpan.BetterImageSpanAlignment
     verticalAlignment: Int = BetterImageSpan.ALIGN_BASELINE,
     private val imageSpan: BetterImageSpan =
-        BetterImageSpan(drawableInterface as Drawable, verticalAlignment)
+        BetterImageSpan(drawableInterface as Drawable, verticalAlignment),
+    private val customCallback: Drawable.Callback? = null,
 ) : ReplacementSpan(), Drawable.Callback {
 
   var parentView: View? = null
@@ -31,7 +32,7 @@ open class VitoSpan(
   var imageFetchCommand: (() -> Boolean)? = null
 
   init {
-    (drawableInterface as Drawable).callback = this
+    (drawableInterface as Drawable).callback = customCallback ?: this
   }
 
   override fun getSize(

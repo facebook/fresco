@@ -20,6 +20,11 @@ dependencies {
     implementation project(path: ':fbcore')
     implementation project(path: ':imagepipeline-base')
     implementation project(':ui-common')
+    implementation project(':vito:core')
+    implementation project(':vito:drawee-support')
+    implementation project(':vito:source')
+    implementation project(':vito:options')
+    implementation project(':vito:textspan')
 
     testImplementation TestDeps.assertjCore
     testImplementation TestDeps.junit
