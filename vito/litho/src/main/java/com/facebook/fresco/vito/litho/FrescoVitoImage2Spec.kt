@@ -13,6 +13,7 @@ import android.content.pm.ActivityInfo
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
+import android.os.Looper
 import android.view.View
 import androidx.core.util.ObjectsCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
@@ -105,7 +106,9 @@ object FrescoVitoImage2Spec {
       @Prop(optional = true) imageOptions: ImageOptions?,
       @Prop(optional = true) logWithHighSamplingRate: Boolean?,
   ): VitoImageRequest? =
-      if (imageOptions?.experimentalDynamicSize == true) {
+      if (imageOptions?.experimentalDynamicSize == true &&
+          imageOptions?.experimentalDynamicSizeWithCacheFallback == false) {
+        // we won't do anything with the original URI, so we can just return null
         null
       } else {
         createVitoImageRequest(
@@ -116,7 +119,8 @@ object FrescoVitoImage2Spec {
             uriString,
             imageOptions,
             logWithHighSamplingRate,
-            null)
+            null,
+            true)
       }
 
   private fun createVitoImageRequest(
@@ -128,6 +132,7 @@ object FrescoVitoImage2Spec {
       imageOptions: ImageOptions?,
       logWithHighSamplingRate: Boolean?,
       viewportRect: Rect?,
+      forceKeepOriginalSize: Boolean
   ): VitoImageRequest =
       FrescoVitoProvider.getImagePipeline()
           .createImageRequest(
@@ -136,7 +141,9 @@ object FrescoVitoImage2Spec {
               imageOptions,
               logWithHighSamplingRate ?: false,
               viewportRect,
-              callerContext)
+              callerContext,
+              null,
+              forceKeepOriginalSize)
 
   @JvmStatic
   @OnPrepare
@@ -146,23 +153,39 @@ object FrescoVitoImage2Spec {
       @TreeProp contextChain: ContextChain?,
       @Prop(optional = true) prefetch: Prefetch?,
       @Prop(optional = true) prefetchRequestListener: RequestListener?,
+      @Prop(optional = true) imageOptions: ImageOptions?,
       @CachedValue requestCachedValue: VitoImageRequest?,
       prefetchDataSource: Output<DataSource<Void?>>,
+      forceKeepOriginalSize: Output<Boolean>,
   ) {
     if (requestCachedValue == null) {
+      forceKeepOriginalSize.set(false)
       return
     }
-    val config = FrescoVitoProvider.getConfig().prefetchConfig
-    if (shouldPrefetchInOnPrepare(prefetch)) {
-      prefetchDataSource.set(
-          FrescoVitoProvider.getPrefetcher()
-              .prefetch(
-                  config.prefetchTargetOnPrepare(),
-                  requestCachedValue,
-                  callerContext,
-                  contextChain,
-                  prefetchRequestListener,
-                  "OnPrepare"))
+
+    if (imageOptions?.experimentalDynamicSize == true &&
+        imageOptions?.experimentalDynamicSizeWithCacheFallback == true) {
+      if (Looper.myLooper() == Looper.getMainLooper()) {
+        // we don't want to check cache if we are running on the main thread
+        forceKeepOriginalSize.set(false)
+      } else {
+        forceKeepOriginalSize.set(
+            FrescoVitoProvider.getImagePipeline().isInDiskCacheSync(requestCachedValue))
+      }
+    } else {
+      forceKeepOriginalSize.set(false)
+      val config = FrescoVitoProvider.getConfig().prefetchConfig
+      if (shouldPrefetchInOnPrepare(prefetch)) {
+        prefetchDataSource.set(
+            FrescoVitoProvider.getPrefetcher()
+                .prefetch(
+                    config.prefetchTargetOnPrepare(),
+                    requestCachedValue,
+                    callerContext,
+                    contextChain,
+                    prefetchRequestListener,
+                    "OnPrepare"))
+      }
     }
   }
 
@@ -182,7 +205,9 @@ object FrescoVitoImage2Spec {
       @FromBoundsDefined viewportDimensions: Rect,
       @TreeProp contextChain: ContextChain?,
   ) {
-    val request = requestCachedValue ?: requestFromBoundsDefined
+    // if requestFromBoundsDefined is not null, we are using SF
+    val request = requestFromBoundsDefined ?: requestCachedValue
+
     frescoDrawable.setMutateDrawables(mutateDrawables)
     if (FrescoVitoProvider.getConfig().useBindOnly()) {
       return
@@ -226,7 +251,9 @@ object FrescoVitoImage2Spec {
       @FromBoundsDefined prefetchDataSourceFromBoundsDefined: DataSource<Void?>?,
       @FromBoundsDefined viewportDimensions: Rect,
   ) {
-    val request = requestCachedValue ?: requestFromBoundsDefined
+    // if requestFromBoundsDefined is not null, we are using SF
+    val request = requestFromBoundsDefined ?: requestCachedValue
+
     // We fetch in both mount and bind in case an unbind event triggered a delayed release.
     // We'll only trigger an actual fetch if needed. Most of the time, this will be a no-op.
     FrescoVitoProvider.getController()
@@ -319,7 +346,8 @@ object FrescoVitoImage2Spec {
       @Prop(optional = true) imageOptions: ImageOptions?,
       @Prop(optional = true) callerContext: Any?,
       @Prop(optional = true) logWithHighSamplingRate: Boolean?,
-      @Prop(optional = true) prefetchRequestListener: RequestListener?
+      @Prop(optional = true) prefetchRequestListener: RequestListener?,
+      @FromPrepare forceKeepOriginalSize: Boolean
   ) {
     val width = layout.width
     val height = layout.height
@@ -331,7 +359,7 @@ object FrescoVitoImage2Spec {
     }
     val viewportRect = Rect(0, 0, width - paddingX, height - paddingY)
     viewportDimensions.set(viewportRect)
-    if (imageOptions != null && imageOptions.experimentalDynamicSize) {
+    if (imageOptions?.experimentalDynamicSize == true && !forceKeepOriginalSize) {
       val vitoImageRequest =
           createVitoImageRequest(
               c,
@@ -341,7 +369,8 @@ object FrescoVitoImage2Spec {
               uriString,
               imageOptions,
               logWithHighSamplingRate,
-              viewportRect)
+              viewportRect,
+              false)
       requestFromBoundsDefined.set(vitoImageRequest)
 
       val config = FrescoVitoProvider.getConfig().prefetchConfig

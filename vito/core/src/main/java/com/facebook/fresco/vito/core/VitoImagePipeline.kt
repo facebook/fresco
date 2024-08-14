@@ -34,7 +34,8 @@ interface VitoImagePipeline {
       logWithHighSamplingRate: Boolean = false,
       viewport: Rect? = null,
       callerContext: Any? = null,
-      contextChain: ContextChain? = null
+      contextChain: ContextChain? = null,
+      forceKeepOriginalSize: Boolean = false,
   ): VitoImageRequest
 
   fun getCachedImage(imageRequest: VitoImageRequest): CloseableReference<CloseableImage>?
@@ -45,4 +46,8 @@ interface VitoImagePipeline {
       requestListener: RequestListener?,
       uiComponentId: Long
   ): DataSource<CloseableReference<CloseableImage>>
+
+  fun isInDiskCacheSync(
+      imageRequest: VitoImageRequest,
+  ): Boolean
 }

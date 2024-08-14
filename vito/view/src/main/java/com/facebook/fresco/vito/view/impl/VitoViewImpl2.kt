@@ -66,7 +66,11 @@ object VitoViewImpl2 {
     show(
         FrescoVitoProvider.getImagePipeline()
             .createImageRequest(
-                target.resources, imageSource, imageOptions, callerContext = callerContext),
+                target.resources,
+                imageSource,
+                imageOptions,
+                callerContext = callerContext,
+                forceKeepOriginalSize = false),
         callerContext,
         imageListener,
         imageRequestListener,

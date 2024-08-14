@@ -44,13 +44,14 @@ class VitoImagePipelineImpl(
       logWithHighSamplingRate: Boolean,
       viewport: Rect?,
       callerContext: Any?,
-      contextChain: ContextChain?
+      contextChain: ContextChain?,
+      forceKeepOriginalSize: Boolean,
   ): VitoImageRequest {
     val imageOptions = options ?: defaults()
     val extras: MutableMap<String, Any> = mutableMapOf()
     var finalImageSource = imageSource
     if (imageSource is SingleImageSource) {
-      if (imageOptions.experimentalDynamicSize) {
+      if (imageOptions.experimentalDynamicSize && !forceKeepOriginalSize) {
         val result: UriModifierInterface.ModificationResult =
             UriModifier.INSTANCE.modifyUri(
                 imageSource.uri,
@@ -111,4 +112,11 @@ class VitoImagePipelineImpl(
               VitoUtils.getStringId(uiComponentId),
               imageRequest.extras)
           .get()
+
+  override fun isInDiskCacheSync(
+      vitoImageRequest: VitoImageRequest,
+  ): Boolean {
+    val imageRequest = vitoImageRequest.finalImageRequest ?: return false
+    return imagePipeline.isInDiskCacheSync(imageRequest)
+  }
 }
