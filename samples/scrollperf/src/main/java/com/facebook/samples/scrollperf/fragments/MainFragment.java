@@ -50,7 +50,7 @@ public class MainFragment extends Fragment {
 
   private ListAdapter mListAdapter;
 
-  private SimpleAdapter<Uri> mSimpleAdapter;
+  @Nullable private SimpleAdapter<Uri> mSimpleAdapter;
 
   private Config mConfig;
 
