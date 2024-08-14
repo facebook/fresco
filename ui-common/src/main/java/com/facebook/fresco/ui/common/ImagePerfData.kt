@@ -54,8 +54,8 @@ class ImagePerfData(
 
   val finalImageLoadTimeMs: Long
     get() =
-        if (imageRequestEndTimeMs == UNSET.toLong() || imageRequestStartTimeMs == UNSET.toLong()) {
-          UNSET.toLong()
+        if (imageRequestEndTimeMs == UNSET || imageRequestStartTimeMs == UNSET) {
+          UNSET
         } else {
           imageRequestEndTimeMs - imageRequestStartTimeMs
         }
@@ -84,6 +84,6 @@ class ImagePerfData(
           .toString()
 
   companion object {
-    const val UNSET: Int = -1
+    const val UNSET: Long = -1
   }
 }

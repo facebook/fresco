@@ -18,18 +18,18 @@ class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) 
   var callerContext: Any? = null
   private var imageInfo: Any? = null
   // Controller timings
-  private var controllerSubmitTimeMs: Long = ImagePerfData.UNSET.toLong()
-  private var controllerIntermediateImageSetTimeMs: Long = ImagePerfData.UNSET.toLong()
-  private var controllerFinalImageSetTimeMs: Long = ImagePerfData.UNSET.toLong()
-  private var controllerFailureTimeMs: Long = ImagePerfData.UNSET.toLong()
+  private var controllerSubmitTimeMs: Long = ImagePerfData.UNSET
+  private var controllerIntermediateImageSetTimeMs: Long = ImagePerfData.UNSET
+  private var controllerFinalImageSetTimeMs: Long = ImagePerfData.UNSET
+  private var controllerFailureTimeMs: Long = ImagePerfData.UNSET
   // Image request timings
-  private var imageRequestStartTimeMs: Long = ImagePerfData.UNSET.toLong()
-  private var imageRequestEndTimeMs: Long = ImagePerfData.UNSET.toLong()
+  private var imageRequestStartTimeMs: Long = ImagePerfData.UNSET
+  private var imageRequestEndTimeMs: Long = ImagePerfData.UNSET
   // Image pipeline information
   private var isPrefetch = false
   // On screen information
-  private var onScreenWidthPx: Int = ImagePerfData.UNSET
-  private var onScreenHeightPx: Int = ImagePerfData.UNSET
+  private var onScreenWidthPx: Int = ImagePerfData.UNSET.toInt()
+  private var onScreenHeightPx: Int = ImagePerfData.UNSET.toInt()
   // Error data
   private var errorThrowable: Throwable? = null
   // Internal parameters
@@ -37,8 +37,8 @@ class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) 
 
   // Visibility
   private var visibilityState = VisibilityState.UNKNOWN
-  private var visibilityEventTimeMs: Long = ImagePerfData.UNSET.toLong()
-  private var invisibilityEventTimeMs: Long = ImagePerfData.UNSET.toLong()
+  private var visibilityEventTimeMs: Long = ImagePerfData.UNSET
+  private var invisibilityEventTimeMs: Long = ImagePerfData.UNSET
   // Fetch efficiency
   var dimensionsInfo: DimensionsInfo? = null
 
@@ -51,8 +51,8 @@ class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) 
     callerContext = null
     imageInfo = null
     isPrefetch = false
-    onScreenWidthPx = ImagePerfData.UNSET
-    onScreenHeightPx = ImagePerfData.UNSET
+    onScreenWidthPx = ImagePerfData.UNSET.toInt()
+    onScreenHeightPx = ImagePerfData.UNSET.toInt()
     errorThrowable = null
     imageLoadStatus = ImageLoadStatus.UNKNOWN
     visibilityState = VisibilityState.UNKNOWN
@@ -65,13 +65,13 @@ class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) 
 
   /** Useful when reusing the same [ImagePerfState] when component is being remounted */
   fun resetPointsTimestamps() {
-    imageRequestStartTimeMs = ImagePerfData.UNSET.toLong()
-    imageRequestEndTimeMs = ImagePerfData.UNSET.toLong()
-    controllerSubmitTimeMs = ImagePerfData.UNSET.toLong()
-    controllerFinalImageSetTimeMs = ImagePerfData.UNSET.toLong()
-    controllerFailureTimeMs = ImagePerfData.UNSET.toLong()
-    visibilityEventTimeMs = ImagePerfData.UNSET.toLong()
-    invisibilityEventTimeMs = ImagePerfData.UNSET.toLong()
+    imageRequestStartTimeMs = ImagePerfData.UNSET
+    imageRequestEndTimeMs = ImagePerfData.UNSET
+    controllerSubmitTimeMs = ImagePerfData.UNSET
+    controllerFinalImageSetTimeMs = ImagePerfData.UNSET
+    controllerFailureTimeMs = ImagePerfData.UNSET
+    visibilityEventTimeMs = ImagePerfData.UNSET
+    invisibilityEventTimeMs = ImagePerfData.UNSET
 
     // Are these really required here? Adding to be safe for now, but verify its utility later.
     newIntermediateImageSetPointAvailable = false
