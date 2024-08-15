@@ -125,7 +125,7 @@ open class FrescoController2Impl(
     // We're fetching a new image, so we're updating the ID
     val imageId = generateIdentifier()
     frescoDrawable.setImageId(imageId)
-    val extras = obtainExtras(null, null, frescoDrawable)
+    val extras = obtainExtras(null, null, frescoDrawable, imageRequest)
 
     // Notify listeners that we're about to fetch an image
     frescoDrawable.internalListener.onSubmit(imageId, imageRequest, callerContext, extras)
@@ -313,7 +313,7 @@ open class FrescoController2Impl(
     if (imageRequest.imageOptions.shouldAutoPlay() && actualDrawable is Animatable) {
       (actualDrawable as Animatable).start()
     }
-    val extras = obtainExtras(dataSource, image, drawable)
+    val extras = obtainExtras(dataSource, image, drawable, imageRequest)
     val imageInfo = image.get().imageInfo
     if (!isIntermediateImage && notifyFinalResult(dataSource)) {
       drawable.internalListener.onFinalImageSet(
@@ -369,7 +369,7 @@ open class FrescoController2Impl(
       drawable.setPlaceholderDrawable(null)
       drawable.setProgressDrawable(null)
     }
-    val extras = obtainExtras(dataSource, dataSource.result, drawable)
+    val extras = obtainExtras(dataSource, dataSource.result, drawable, imageRequest)
     if (notifyFinalResult(dataSource)) {
       drawable.internalListener.onFailure(
           drawable.imageId, imageRequest, errorDrawable, dataSource.failureCause, extras)
@@ -396,7 +396,7 @@ open class FrescoController2Impl(
     if (imageRequest != null) {
       // Notify listeners
       drawable.internalListener.onRelease(
-          drawable.imageId, imageRequest, obtainExtras(null, null, drawable))
+          drawable.imageId, imageRequest, obtainExtras(null, null, drawable, imageRequest))
       if (config.stopAnimationInOnRelease()) {
         // We automatically stop the animation if it was automatically started
         if (!config.onlyStopAnimationWhenAutoPlayEnabled() ||
@@ -432,7 +432,8 @@ open class FrescoController2Impl(
     private fun obtainExtras(
         dataSource: DataSource<CloseableReference<CloseableImage>>?,
         image: CloseableReference<CloseableImage>?,
-        drawable: FrescoDrawable2
+        drawable: FrescoDrawable2,
+        imageRequest: VitoImageRequest
     ): Extras {
       var imageExtras: Map<String, Any>? = null
       if (image != null) {
@@ -450,18 +451,21 @@ open class FrescoController2Impl(
         imageSourceExtras =
             vitoImageRequest.extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] as Map<String, Any>?
       }
-      return obtainExtras(
-          COMPONENT_EXTRAS,
-          SHORTCUT_EXTRAS,
-          dataSource?.extras,
-          imageSourceExtras,
-          drawable.viewportDimensions,
-          drawable.actualImageScaleType.toString(),
-          drawable.actualImageFocusPoint,
-          imageExtras,
-          drawable.callerContext,
-          logWithHighSamplingRate,
-          sourceUri)
+      val extras =
+          obtainExtras(
+              COMPONENT_EXTRAS,
+              SHORTCUT_EXTRAS,
+              dataSource?.extras,
+              imageSourceExtras,
+              drawable.viewportDimensions,
+              drawable.actualImageScaleType.toString(),
+              drawable.actualImageFocusPoint,
+              imageExtras,
+              drawable.callerContext,
+              logWithHighSamplingRate,
+              sourceUri)
+      extras.modifiedUriStatus = imageRequest.extras[HasExtraData.KEY_MODIFIED_URL] as? String
+      return extras
     }
 
     private fun notifyFinalResult(

@@ -171,7 +171,7 @@ object ImageSourceToImagePipelineAdapter {
   fun SingleImageSource.extractSingleRequest(
       imagePipelineUtils: ImagePipelineUtils,
       imageOptions: ImageOptions
-  ): ImageRequest? = imagePipelineUtils.buildImageRequest(uri, imageOptions)
+  ): ImageRequest? = imagePipelineUtils.buildImageRequest(imageUri, imageOptions)
 
   fun FirstAvailableImageSource.extractFirstAvailableRequest(
       imagePipelineUtils: ImagePipelineUtils,

@@ -32,6 +32,7 @@ interface HasExtraData {
     const val KEY_IS_ROUNDED = "is_rounded"
     const val KEY_NON_FATAL_DECODE_ERROR = "non_fatal_decode_error"
     const val KEY_MODIFIED_URL = "modified_url"
+    const val KEY_IMAGE_SOURCE_TYPE: String = "image_source_type"
 
     const val KEY_ORIGIN = "origin"
     const val KEY_ORIGIN_SUBCATEGORY = "origin_sub"

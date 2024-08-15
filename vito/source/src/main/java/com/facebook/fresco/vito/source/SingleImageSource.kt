@@ -10,7 +10,8 @@ package com.facebook.fresco.vito.source
 import android.net.Uri
 
 @Suppress("KtDataClass")
-data class SingleImageSource(val uri: Uri, val extras: Map<String, Any>? = null) : ImageSource {
+data class SingleImageSource(val uri: Uri, override val extras: Map<String, Any>? = null) :
+    UriImageSource {
 
   fun getExtra(key: String): Any? = extras?.get(key)
 
@@ -26,12 +27,14 @@ data class SingleImageSource(val uri: Uri, val extras: Map<String, Any>? = null)
 
     val otherImageSource: SingleImageSource = other as SingleImageSource
 
-    return uri == otherImageSource.uri && extras == otherImageSource.extras
+    return imageUri == otherImageSource.imageUri && extras == otherImageSource.extras
   }
 
   override fun hashCode(): Int {
-    var result = uri.hashCode()
+    var result = imageUri.hashCode()
     result = 31 * result + (extras?.hashCode() ?: 0)
     return result
   }
+
+  override val imageUri: Uri = uri
 }

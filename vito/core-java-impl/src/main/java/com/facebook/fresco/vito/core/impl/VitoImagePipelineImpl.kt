@@ -25,7 +25,7 @@ import com.facebook.fresco.vito.options.ImageOptions.Companion.defaults
 import com.facebook.fresco.vito.source.ImageSource
 import com.facebook.fresco.vito.source.ImageSourceProvider
 import com.facebook.fresco.vito.source.IncreasingQualityImageSource
-import com.facebook.fresco.vito.source.SingleImageSource
+import com.facebook.fresco.vito.source.UriImageSource
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.listener.RequestListener
@@ -50,24 +50,34 @@ class VitoImagePipelineImpl(
     val imageOptions = options ?: defaults()
     val extras: MutableMap<String, Any> = mutableMapOf()
     var finalImageSource = imageSource
-    if (imageSource is SingleImageSource) {
-      if (imageOptions.experimentalDynamicSize && !forceKeepOriginalSize) {
+    val imageSourceClass = imageSource.javaClass.simpleName
+
+    val modifiedUriValue: String
+    if (imageOptions.experimentalDynamicSize && !forceKeepOriginalSize) {
+      if (imageSource is UriImageSource) {
         val result: UriModifierInterface.ModificationResult =
             UriModifier.INSTANCE.modifyUri(
-                imageSource.uri,
+                imageSource.imageUri,
                 viewport?.let { Dimensions(it.width(), it.height()) },
                 imageOptions.actualImageScaleType,
                 callerContext,
                 contextChain)
-        if (result !is UriModifierInterface.ModificationResult.Disabled) {
-          extras[HasExtraData.KEY_MODIFIED_URL] = result.toString()
-        }
+        modifiedUriValue = result.toString()
         if (result is UriModifierInterface.ModificationResult.Modified) {
           finalImageSource = ImageSourceProvider.forUri(result.newUri)
         }
+        imageSource.extras?.let { extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = it }
+      } else {
+        modifiedUriValue = "NotSupportedImageSource: $imageSourceClass"
       }
-      imageSource.extras?.let { extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = it }
-    } else if (imageSource is IncreasingQualityImageSource) {
+    } else {
+      modifiedUriValue = "Disabled"
+    }
+
+    extras[HasExtraData.KEY_MODIFIED_URL] = modifiedUriValue
+    extras[HasExtraData.KEY_IMAGE_SOURCE_TYPE] = imageSourceClass
+
+    if (imageSource is IncreasingQualityImageSource) {
       imageSource.extras?.let { extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = it }
     }
 

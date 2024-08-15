@@ -7,20 +7,17 @@
 
 package com.facebook.fresco.vito.core.impl.source
 
-import android.net.Uri
 import com.facebook.fresco.vito.core.ImagePipelineUtils
 import com.facebook.fresco.vito.options.ImageOptions
-import com.facebook.fresco.vito.source.ImageSource
+import com.facebook.fresco.vito.source.UriImageSource
 import com.facebook.imagepipeline.request.ImageRequest
 
 /** Image source specific for the Fresco ImagePipeline, based on an ImageRequest. */
-interface ImagePipelineImageSource : ImageSource {
+interface ImagePipelineImageSource : UriImageSource {
   fun maybeExtractFinalImageRequest(
       imagePipelineUtils: ImagePipelineUtils,
       imageOptions: ImageOptions
   ): ImageRequest?
 
   fun getRequestLevelForFetch(): ImageRequest.RequestLevel = ImageRequest.RequestLevel.FULL_FETCH
-
-  fun getUri(): Uri
 }
