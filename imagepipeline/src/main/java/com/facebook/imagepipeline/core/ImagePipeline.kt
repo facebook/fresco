@@ -21,6 +21,7 @@ import com.facebook.datasource.DataSource
 import com.facebook.datasource.DataSources
 import com.facebook.datasource.SimpleDataSource
 import com.facebook.fresco.urimod.UriModifier
+import com.facebook.imagepipeline.cache.BufferedDiskCache
 import com.facebook.imagepipeline.cache.CacheKeyFactory
 import com.facebook.imagepipeline.cache.MemoryCache
 import com.facebook.imagepipeline.common.Priority
@@ -53,7 +54,9 @@ class ImagePipeline(
     private val isPrefetchEnabledSupplier: Supplier<Boolean>,
     bitmapMemoryCache: MemoryCache<CacheKey, CloseableImage>,
     encodedMemoryCache: MemoryCache<CacheKey, PooledByteBuffer>,
-    private val diskCachesStoreSupplier: Supplier<DiskCachesStore>,
+    mainBufferedDiskCache: BufferedDiskCache,
+    smallImageBufferedDiskCache: BufferedDiskCache,
+    dynamicBufferedDiskCaches: Map<String, BufferedDiskCache>?,
     cacheKeyFactory: CacheKeyFactory,
     threadHandoffProducerQueue: ThreadHandoffProducerQueue,
     suppressBitmapPrefetchingSupplier: Supplier<Boolean>,
@@ -68,6 +71,9 @@ class ImagePipeline(
   /** @return The Bitmap MemoryCache */
   val bitmapMemoryCache: MemoryCache<CacheKey, CloseableImage>
   private val encodedMemoryCache: MemoryCache<CacheKey, PooledByteBuffer>
+  private val mainBufferedDiskCache: BufferedDiskCache
+  private val smallImageBufferedDiskCache: BufferedDiskCache
+  private var dynamicBufferedDiskCaches: Map<String, BufferedDiskCache>?
 
   /** @return The CacheKeyFactory implementation used by ImagePipeline */
   val cacheKeyFactory: CacheKeyFactory
@@ -601,10 +607,9 @@ class ImagePipeline(
       return
     }
     val cacheKey = cacheKeyFactory.getEncodedCacheKey(imageRequest, null)
-    val diskCachesStore = diskCachesStoreSupplier.get()
-    diskCachesStore.mainBufferedDiskCache.remove(cacheKey)
-    diskCachesStore.smallImageBufferedDiskCache.remove(cacheKey)
-    diskCachesStore.dynamicBufferedDiskCaches.forEach { it.value.remove(cacheKey) }
+    mainBufferedDiskCache.remove(cacheKey)
+    smallImageBufferedDiskCache.remove(cacheKey)
+    dynamicBufferedDiskCaches?.forEach { it.value.remove(cacheKey) }
   }
 
   /**
@@ -629,10 +634,9 @@ class ImagePipeline(
 
   /** Clear disk caches */
   fun clearDiskCaches() {
-    val diskCachesStore = diskCachesStoreSupplier.get()
-    diskCachesStore.mainBufferedDiskCache.clearAll()
-    diskCachesStore.smallImageBufferedDiskCache.clearAll()
-    diskCachesStore.dynamicBufferedDiskCaches.forEach { it.value.clearAll() }
+    mainBufferedDiskCache.clearAll()
+    smallImageBufferedDiskCache.clearAll()
+    dynamicBufferedDiskCaches?.forEach { it.value.clearAll() }
   }
 
   val usedDiskCacheSize: Long
@@ -641,12 +645,10 @@ class ImagePipeline(
      *
      * @return size in Bytes
      */
-    get() {
-      val diskCachesStore = diskCachesStoreSupplier.get()
-      return diskCachesStore.mainBufferedDiskCache.size +
-          diskCachesStore.smallImageBufferedDiskCache.size +
-          diskCachesStore.dynamicBufferedDiskCaches.values.sumOf { it.size }
-    }
+    get() =
+        mainBufferedDiskCache.size +
+            smallImageBufferedDiskCache.size +
+            (dynamicBufferedDiskCaches?.values?.sumOf { it.size } ?: 0)
 
   /** Clear all the caches (memory and disk) */
   fun clearCaches() {
@@ -757,12 +759,11 @@ class ImagePipeline(
    * @return true if the image was found in the disk cache, false otherwise.
    */
   fun isInDiskCacheSync(imageRequest: ImageRequest): Boolean {
-    val diskCachesStore = diskCachesStoreSupplier.get()
     val cacheKey = cacheKeyFactory.getEncodedCacheKey(imageRequest, null)
     val cacheChoice = imageRequest.cacheChoice
     return when (cacheChoice) {
-      CacheChoice.DEFAULT -> diskCachesStore.mainBufferedDiskCache.diskCheckSync(cacheKey)
-      CacheChoice.SMALL -> diskCachesStore.smallImageBufferedDiskCache.diskCheckSync(cacheKey)
+      CacheChoice.DEFAULT -> mainBufferedDiskCache.diskCheckSync(cacheKey)
+      CacheChoice.SMALL -> smallImageBufferedDiskCache.diskCheckSync(cacheKey)
       else -> false
     }
   }
@@ -787,16 +788,15 @@ class ImagePipeline(
    * @return true if the image was found in the disk cache, false otherwise.
    */
   fun isInDiskCache(imageRequest: ImageRequest?): DataSource<Boolean> {
-    val diskCachesStore = diskCachesStoreSupplier.get()
     val cacheKey = cacheKeyFactory.getEncodedCacheKey(imageRequest, null)
     val dataSource = SimpleDataSource.create<Boolean>()
-    diskCachesStore.mainBufferedDiskCache
+    mainBufferedDiskCache
         .contains(cacheKey)
         .continueWithTask<Boolean> { task ->
           if (!task.isCancelled && !task.isFaulted && task.result) {
             Task.forResult<Boolean>(true)
           } else {
-            diskCachesStore.smallImageBufferedDiskCache.contains(cacheKey)
+            smallImageBufferedDiskCache.contains(cacheKey)
           }
         }
         .continueWith<Void> { task ->
@@ -1041,6 +1041,9 @@ class ImagePipeline(
   init {
     this.bitmapMemoryCache = bitmapMemoryCache
     this.encodedMemoryCache = encodedMemoryCache
+    this.mainBufferedDiskCache = mainBufferedDiskCache
+    this.smallImageBufferedDiskCache = smallImageBufferedDiskCache
+    this.dynamicBufferedDiskCaches = dynamicBufferedDiskCaches
     this.cacheKeyFactory = cacheKeyFactory
     this.threadHandoffProducerQueue = threadHandoffProducerQueue
     this.suppressBitmapPrefetchingSupplier = suppressBitmapPrefetchingSupplier

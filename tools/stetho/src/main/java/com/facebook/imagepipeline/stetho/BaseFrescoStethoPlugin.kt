@@ -15,13 +15,11 @@ import com.facebook.cache.common.CacheKey
 import com.facebook.cache.disk.DiskStorage.DiskDumpInfo
 import com.facebook.cache.disk.DiskStorage.DiskDumpInfoEntry
 import com.facebook.cache.disk.FileCache
-import com.facebook.common.internal.Supplier
 import com.facebook.common.time.RealtimeSinceBootClock
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheKey
 import com.facebook.imagepipeline.cache.CountingMemoryCacheInspector
 import com.facebook.imagepipeline.cache.CountingMemoryCacheInspector.DumpInfo
 import com.facebook.imagepipeline.cache.CountingMemoryCacheInspector.DumpInfoEntry
-import com.facebook.imagepipeline.core.DiskCachesStore
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.core.ImagePipelineFactory
 import com.facebook.imagepipeline.image.CloseableBitmap
@@ -47,7 +45,8 @@ abstract class BaseFrescoStethoPlugin() : DumperPlugin {
   protected var initialized = false
   private var bitmapMemoryCacheInspector: CountingMemoryCacheInspector<CacheKey, CloseableImage>? =
       null
-  private lateinit var diskCachesStoreSupplier: Supplier<DiskCachesStore>
+  private var mainFileCache: FileCache? = null
+  private var smallFileCache: FileCache? = null
   private var imagePipeline: ImagePipeline? = null
 
   protected constructor(factory: ImagePipelineFactory) : this() {
@@ -58,7 +57,8 @@ abstract class BaseFrescoStethoPlugin() : DumperPlugin {
 
   protected fun initialize(factory: ImagePipelineFactory) {
     bitmapMemoryCacheInspector = CountingMemoryCacheInspector(factory.bitmapCountingMemoryCache)
-    diskCachesStoreSupplier = factory.diskCachesStoreSupplier
+    mainFileCache = factory.mainFileCache
+    smallFileCache = factory.smallImageFileCache
     imagePipeline = factory.imagePipeline
     initialized = true
   }
@@ -80,8 +80,8 @@ abstract class BaseFrescoStethoPlugin() : DumperPlugin {
     when {
       cmd != null && cmd == "memcache" -> memcache(writer, rest)
       cmd != null && cmd == "diskcache" -> {
-        val mainFileCache = checkNotNull(this.diskCachesStoreSupplier.get().mainFileCache)
-        val smallFileCache = checkNotNull(this.diskCachesStoreSupplier.get().smallImageFileCache)
+        val mainFileCache = checkNotNull(this.mainFileCache)
+        val smallFileCache = checkNotNull(this.smallFileCache)
 
         diskcache(mainFileCache, "Main", writer, rest)
         diskcache(smallFileCache, "Small", writer, rest)

@@ -12,10 +12,8 @@ import bolts.Continuation;
 import bolts.Task;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableMap;
-import com.facebook.common.internal.Supplier;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
-import com.facebook.imagepipeline.core.DiskCachesStore;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
@@ -45,15 +43,22 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
 
   public static final String ENCODED_IMAGE_SIZE = ProducerConstants.ENCODED_IMAGE_SIZE;
 
-  private final Supplier<DiskCachesStore> mDiskCachesStoreSupplier;
+  private final BufferedDiskCache mDefaultBufferedDiskCache;
+  private final BufferedDiskCache mSmallImageBufferedDiskCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Producer<EncodedImage> mInputProducer;
 
+  private final @Nullable Map<String, BufferedDiskCache> mDynamicBufferedDiskCaches;
+
   public DiskCacheReadProducer(
-      Supplier<DiskCachesStore> diskCachesStoreSupplier,
+      BufferedDiskCache defaultBufferedDiskCache,
+      BufferedDiskCache smallImageBufferedDiskCache,
+      @Nullable Map<String, BufferedDiskCache> dynamicBufferedDiskCaches,
       CacheKeyFactory cacheKeyFactory,
       Producer<EncodedImage> inputProducer) {
-    mDiskCachesStoreSupplier = diskCachesStoreSupplier;
+    mDefaultBufferedDiskCache = defaultBufferedDiskCache;
+    mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
+    mDynamicBufferedDiskCaches = dynamicBufferedDiskCaches;
     mCacheKeyFactory = cacheKeyFactory;
     mInputProducer = inputProducer;
   }
@@ -74,13 +79,12 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
 
     final CacheKey cacheKey =
         mCacheKeyFactory.getEncodedCacheKey(imageRequest, producerContext.getCallerContext());
-    final DiskCachesStore diskCachesStore = mDiskCachesStoreSupplier.get();
     final BufferedDiskCache preferredCache =
         DiskCacheDecision.chooseDiskCacheForRequest(
             imageRequest,
-            diskCachesStore.getSmallImageBufferedDiskCache(),
-            diskCachesStore.getMainBufferedDiskCache(),
-            diskCachesStore.getDynamicBufferedDiskCaches());
+            mSmallImageBufferedDiskCache,
+            mDefaultBufferedDiskCache,
+            mDynamicBufferedDiskCaches);
     if (preferredCache == null) {
       producerContext
           .getProducerListener()

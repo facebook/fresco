@@ -14,7 +14,6 @@ import android.content.res.Resources;
 import android.os.Build;
 import androidx.annotation.RequiresApi;
 import com.facebook.cache.common.CacheKey;
-import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBuffer;
@@ -22,6 +21,7 @@ import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.BoundedLinkedHashSet;
+import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
@@ -67,6 +67,8 @@ import com.facebook.imagepipeline.producers.ThumbnailBranchProducer;
 import com.facebook.imagepipeline.producers.ThumbnailProducer;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import com.facebook.infer.annotation.Nullsafe;
+import java.util.Map;
+import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class ProducerFactory {
@@ -91,7 +93,8 @@ public class ProducerFactory {
   protected final PooledByteBufferFactory mPooledByteBufferFactory;
 
   // Cache dependencies
-  protected final Supplier<DiskCachesStore> mDiskCachesStoreSupplier;
+  protected final BufferedDiskCache mDefaultBufferedDiskCache;
+  protected final BufferedDiskCache mSmallImageBufferedDiskCache;
   protected final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
   protected final MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   protected final CacheKeyFactory mCacheKeyFactory;
@@ -113,6 +116,8 @@ public class ProducerFactory {
 
   protected final boolean mKeepCancelledFetchAsLowPriority;
 
+  protected final @Nullable Map<String, BufferedDiskCache> mDynamicBufferedDiskCaches;
+
   public ProducerFactory(
       Context context,
       ByteArrayPool byteArrayPool,
@@ -125,7 +130,9 @@ public class ProducerFactory {
       PooledByteBufferFactory pooledByteBufferFactory,
       MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
       MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
-      Supplier<DiskCachesStore> diskCachesStoreSupplier,
+      BufferedDiskCache defaultBufferedDiskCache,
+      BufferedDiskCache smallImageBufferedDiskCache,
+      @Nullable Map<String, BufferedDiskCache> dynamicBufferedDiskCaches,
       CacheKeyFactory cacheKeyFactory,
       PlatformBitmapFactory platformBitmapFactory,
       int bitmapPrepareToDrawMinSizeBytes,
@@ -151,7 +158,9 @@ public class ProducerFactory {
 
     mBitmapMemoryCache = bitmapMemoryCache;
     mEncodedMemoryCache = encodedMemoryCache;
-    mDiskCachesStoreSupplier = diskCachesStoreSupplier;
+    mDefaultBufferedDiskCache = defaultBufferedDiskCache;
+    mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
+    mDynamicBufferedDiskCaches = dynamicBufferedDiskCaches;
     mCacheKeyFactory = cacheKeyFactory;
     mPlatformBitmapFactory = platformBitmapFactory;
     mEncodedMemoryCacheHistory = new BoundedLinkedHashSet<>(trackedKeysSize);
@@ -180,7 +189,9 @@ public class ProducerFactory {
       PooledByteBufferFactory pooledByteBufferFactory,
       MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
       MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
-      Supplier<DiskCachesStore> diskCachesStoreSupplier,
+      BufferedDiskCache defaultBufferedDiskCache,
+      BufferedDiskCache smallImageBufferedDiskCache,
+      @Nullable Map<String, BufferedDiskCache> dynamicBufferedDiskCaches,
       CacheKeyFactory cacheKeyFactory,
       PlatformBitmapFactory platformBitmapFactory,
       int bitmapPrepareToDrawMinSizeBytes,
@@ -202,7 +213,9 @@ public class ProducerFactory {
         pooledByteBufferFactory,
         bitmapMemoryCache,
         encodedMemoryCache,
-        diskCachesStoreSupplier,
+        defaultBufferedDiskCache,
+        smallImageBufferedDiskCache,
+        dynamicBufferedDiskCaches,
         cacheKeyFactory,
         platformBitmapFactory,
         bitmapPrepareToDrawMinSizeBytes,
@@ -260,17 +273,27 @@ public class ProducerFactory {
   }
 
   public DiskCacheReadProducer newDiskCacheReadProducer(Producer<EncodedImage> inputProducer) {
-    return new DiskCacheReadProducer(mDiskCachesStoreSupplier, mCacheKeyFactory, inputProducer);
+    return new DiskCacheReadProducer(
+        mDefaultBufferedDiskCache,
+        mSmallImageBufferedDiskCache,
+        mDynamicBufferedDiskCaches,
+        mCacheKeyFactory,
+        inputProducer);
   }
 
   public DiskCacheWriteProducer newDiskCacheWriteProducer(Producer<EncodedImage> inputProducer) {
-    return new DiskCacheWriteProducer(mDiskCachesStoreSupplier, mCacheKeyFactory, inputProducer);
+    return new DiskCacheWriteProducer(
+        mDefaultBufferedDiskCache,
+        mSmallImageBufferedDiskCache,
+        mDynamicBufferedDiskCaches,
+        mCacheKeyFactory,
+        inputProducer);
   }
 
   public PartialDiskCacheProducer newPartialDiskCacheProducer(
       Producer<EncodedImage> inputProducer) {
     return new PartialDiskCacheProducer(
-        mDiskCachesStoreSupplier,
+        mDefaultBufferedDiskCache,
         mCacheKeyFactory,
         mPooledByteBufferFactory,
         mByteArrayPool,
@@ -287,7 +310,8 @@ public class ProducerFactory {
       Producer<CloseableReference<CloseableImage>> inputProducer) {
     return new BitmapProbeProducer(
         mEncodedMemoryCache,
-        mDiskCachesStoreSupplier,
+        mDefaultBufferedDiskCache,
+        mSmallImageBufferedDiskCache,
         mCacheKeyFactory,
         mEncodedMemoryCacheHistory,
         mDiskCacheHistory,
@@ -296,7 +320,8 @@ public class ProducerFactory {
 
   public EncodedProbeProducer newEncodedProbeProducer(Producer<EncodedImage> inputProducer) {
     return new EncodedProbeProducer(
-        mDiskCachesStoreSupplier,
+        mDefaultBufferedDiskCache,
+        mSmallImageBufferedDiskCache,
         mCacheKeyFactory,
         mEncodedMemoryCacheHistory,
         mDiskCacheHistory,

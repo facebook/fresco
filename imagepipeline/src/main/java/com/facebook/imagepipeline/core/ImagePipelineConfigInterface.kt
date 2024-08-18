@@ -45,7 +45,7 @@ interface ImagePipelineConfigInterface {
   val bitmapMemoryCacheEntryStateObserver: EntryStateObserver<CacheKey>?
   val cacheKeyFactory: CacheKeyFactory
   val context: Context
-  val diskCachesStoreSupplier: Supplier<DiskCachesStore>
+  val fileCacheFactory: FileCacheFactory
   val downsampleMode: DownsampleMode
   val isDiskCacheEnabled: Boolean
   val encodedMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>

@@ -15,7 +15,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-/** Factory for the default implementation of the FileCacheFactory. */
+/** Factory for the default implementation of the FileCache. */
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class DiskStorageCacheFactory implements FileCacheFactory {
 
@@ -25,12 +25,12 @@ public class DiskStorageCacheFactory implements FileCacheFactory {
     mDiskStorageFactory = diskStorageFactory;
   }
 
-  private static DiskStorageCache buildDiskStorageCache(
+  public static DiskStorageCache buildDiskStorageCache(
       DiskCacheConfig diskCacheConfig, DiskStorage diskStorage) {
     return buildDiskStorageCache(diskCacheConfig, diskStorage, Executors.newSingleThreadExecutor());
   }
 
-  private static DiskStorageCache buildDiskStorageCache(
+  public static DiskStorageCache buildDiskStorageCache(
       DiskCacheConfig diskCacheConfig,
       DiskStorage diskStorage,
       Executor executorForBackgroundInit) {

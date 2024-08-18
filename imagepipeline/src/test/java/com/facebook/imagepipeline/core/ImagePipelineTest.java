@@ -24,7 +24,6 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.DebuggingCacheKey;
 import com.facebook.cache.common.MultiCacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
-import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Predicate;
 import com.facebook.common.internal.Sets;
 import com.facebook.common.internal.Supplier;
@@ -45,6 +44,7 @@ import com.facebook.imagepipeline.producers.ProducerContext;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.Before;
@@ -72,7 +72,6 @@ public class ImagePipelineTest {
   private ImagePipeline mImagePipeline;
   private MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
-  private Supplier<DiskCachesStore> mDiskCachesStoreSupplier;
   private BufferedDiskCache mMainDiskStorageCache;
   private BufferedDiskCache mSmallImageDiskStorageCache;
   private BufferedDiskCache mDynamicBufferedDiskCache;
@@ -97,14 +96,8 @@ public class ImagePipelineTest {
     mMainDiskStorageCache = mock(BufferedDiskCache.class);
     mSmallImageDiskStorageCache = mock(BufferedDiskCache.class);
     mDynamicBufferedDiskCache = mock(BufferedDiskCache.class);
-    mDynamicBufferedDiskCaches = ImmutableMap.of("dynamicId1", mDynamicBufferedDiskCache);
-    mDiskCachesStoreSupplier = mock(Supplier.class);
-    DiskCachesStore diskCachesStore = mock(DiskCachesStore.class);
-    when(mDiskCachesStoreSupplier.get()).thenReturn(diskCachesStore);
-    when(diskCachesStore.getMainBufferedDiskCache()).thenReturn(mMainDiskStorageCache);
-    when(diskCachesStore.getSmallImageBufferedDiskCache()).thenReturn(mSmallImageDiskStorageCache);
-    when(diskCachesStore.getDynamicBufferedDiskCaches())
-        .thenReturn(ImmutableMap.copyOf(mDynamicBufferedDiskCaches));
+    mDynamicBufferedDiskCaches = new HashMap<>();
+    mDynamicBufferedDiskCaches.put("dynamicId1", mDynamicBufferedDiskCache);
     mThreadHandoffProducerQueue = mock(ThreadHandoffProducerQueue.class);
     mImagePipeline =
         new ImagePipeline(
@@ -114,7 +107,9 @@ public class ImagePipelineTest {
             mPrefetchEnabledSupplier,
             mBitmapMemoryCache,
             mEncodedMemoryCache,
-            mDiskCachesStoreSupplier,
+            mMainDiskStorageCache,
+            mSmallImageDiskStorageCache,
+            mDynamicBufferedDiskCaches,
             mCacheKeyFactory,
             mThreadHandoffProducerQueue,
             mSuppressBitmapPrefetchingSupplier,
