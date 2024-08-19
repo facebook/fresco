@@ -82,7 +82,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
   override val cacheKeyFactory: CacheKeyFactory
   override val context: Context
   override val downsampleMode: DownsampleMode
-  override val fileCacheFactory: FileCacheFactory
+  override val diskCachesStoreSupplier: Supplier<DiskCachesStore>
   override val encodedMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>
   override val executorSupplier: ExecutorSupplier
   override val imageCacheStatsTracker: ImageCacheStatsTracker
@@ -136,8 +136,6 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     bitmapConfig = builder.bitmapConfig ?: Bitmap.Config.ARGB_8888
     cacheKeyFactory = builder.cacheKeyFactory ?: DefaultCacheKeyFactory.getInstance()
     context = checkNotNull(builder.context)
-    fileCacheFactory =
-        builder.fileCacheFactory ?: DiskStorageCacheFactory(DynamicDefaultDiskStorageFactory())
     downsampleMode = builder.downsampleMode
     encodedMemoryCacheParamsSupplier =
         builder.encodedMemoryCacheParamsSupplier ?: DefaultEncodedMemoryCacheParamsSupplier()
@@ -182,8 +180,14 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     encodedMemoryCacheOverride = builder.encodedMemoryCache
     executorServiceForAnimatedImages = builder.serialExecutorServiceForAnimatedImages
     dynamicDiskCacheConfigMap = builder.dynamicDiskCacheConfigMap
+    diskCachesStoreSupplier =
+        builder.diskCachesStoreSupplier
+            ?: DiskCachesStoreFactory(
+                builder.fileCacheFactory
+                    ?: DiskStorageCacheFactory(DynamicDefaultDiskStorageFactory()),
+                this@ImagePipelineConfig)
     // Here we manage the WebpBitmapFactory implementation if any
-    var webpBitmapFactory = experiments.webpBitmapFactory
+    val webpBitmapFactory = experiments.webpBitmapFactory
     if (webpBitmapFactory != null) {
       val bitmapCreator: BitmapCreator = HoneycombBitmapCreator(poolFactory)
       setWebpBitmapFactory(webpBitmapFactory, experiments, bitmapCreator)
@@ -281,6 +285,9 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     var fileCacheFactory: FileCacheFactory? = null
       private set
 
+    var diskCachesStoreSupplier: Supplier<DiskCachesStore>? = null
+      private set
+
     var imageDecoderConfig: ImageDecoderConfig? = null
       private set
 
@@ -343,9 +350,14 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
       this.httpConnectionTimeout = httpConnectionTimeoutMs
     }
 
-    fun setFileCacheFactory(fileCacheFactory: FileCacheFactory?): Builder = apply {
+    fun setFileCacheFactory(fileCacheFactory: FileCacheFactory): Builder = apply {
       this.fileCacheFactory = fileCacheFactory
     }
+
+    fun setDiskCachesStoreSupplier(diskCachesStoreSupplier: Supplier<DiskCachesStore>): Builder =
+        apply {
+          this.diskCachesStoreSupplier = diskCachesStoreSupplier
+        }
 
     fun isDownsampleEnabled(): Boolean = this.downsampleMode === DownsampleMode.ALWAYS
 
