@@ -39,56 +39,60 @@ class DiskCachesStoreFactory(
       smallImageDiskCacheConfig = config.smallImageDiskCacheConfig,
       dynamicDiskCacheConfigMap = config.dynamicDiskCacheConfigMap)
 
-  override fun get(): DiskCachesStore =
-      object : DiskCachesStore {
+  private val diskCachesStore: DiskCachesStore by
+      lazy(LazyThreadSafetyMode.NONE) {
+        object : DiskCachesStore {
 
-        override val mainFileCache: FileCache by
-            lazy((LazyThreadSafetyMode.NONE)) { fileCacheFactory.get(mainDiskCacheConfig) }
+          override val mainFileCache: FileCache by
+              lazy((LazyThreadSafetyMode.NONE)) { fileCacheFactory.get(mainDiskCacheConfig) }
 
-        override val mainBufferedDiskCache: BufferedDiskCache by
-            lazy((LazyThreadSafetyMode.NONE)) {
-              BufferedDiskCache(
-                  mainFileCache,
-                  poolFactory.getPooledByteBufferFactory(memoryChunkType),
-                  poolFactory.pooledByteStreams,
-                  executorSupplier.forLocalStorageRead(),
-                  executorSupplier.forLocalStorageWrite(),
-                  imageCacheStatsTracker)
-            }
+          override val mainBufferedDiskCache: BufferedDiskCache by
+              lazy((LazyThreadSafetyMode.NONE)) {
+                BufferedDiskCache(
+                    mainFileCache,
+                    poolFactory.getPooledByteBufferFactory(memoryChunkType),
+                    poolFactory.pooledByteStreams,
+                    executorSupplier.forLocalStorageRead(),
+                    executorSupplier.forLocalStorageWrite(),
+                    imageCacheStatsTracker)
+              }
 
-        override val smallImageFileCache: FileCache by
-            lazy((LazyThreadSafetyMode.NONE)) { fileCacheFactory.get(smallImageDiskCacheConfig) }
+          override val smallImageFileCache: FileCache by
+              lazy((LazyThreadSafetyMode.NONE)) { fileCacheFactory.get(smallImageDiskCacheConfig) }
 
-        override val smallImageBufferedDiskCache: BufferedDiskCache by
-            lazy(LazyThreadSafetyMode.NONE) {
-              BufferedDiskCache(
-                  smallImageFileCache,
-                  poolFactory.getPooledByteBufferFactory(memoryChunkType),
-                  poolFactory.pooledByteStreams,
-                  executorSupplier.forLocalStorageRead(),
-                  executorSupplier.forLocalStorageWrite(),
-                  imageCacheStatsTracker)
-            }
+          override val smallImageBufferedDiskCache: BufferedDiskCache by
+              lazy(LazyThreadSafetyMode.NONE) {
+                BufferedDiskCache(
+                    smallImageFileCache,
+                    poolFactory.getPooledByteBufferFactory(memoryChunkType),
+                    poolFactory.pooledByteStreams,
+                    executorSupplier.forLocalStorageRead(),
+                    executorSupplier.forLocalStorageWrite(),
+                    imageCacheStatsTracker)
+              }
 
-        override val dynamicFileCaches: Map<String, FileCache> by
-            lazy(LazyThreadSafetyMode.NONE) {
-              dynamicDiskCacheConfigMap?.let { cacheConfigMap ->
-                cacheConfigMap.mapValues { (_, cacheConfig) -> fileCacheFactory.get(cacheConfig) }
-              } ?: run { emptyMap() }
-            }
+          override val dynamicFileCaches: Map<String, FileCache> by
+              lazy(LazyThreadSafetyMode.NONE) {
+                dynamicDiskCacheConfigMap?.let { cacheConfigMap ->
+                  cacheConfigMap.mapValues { (_, cacheConfig) -> fileCacheFactory.get(cacheConfig) }
+                } ?: run { emptyMap() }
+              }
 
-        override val dynamicBufferedDiskCaches: ImmutableMap<String, BufferedDiskCache> by
-            lazy((LazyThreadSafetyMode.NONE)) {
-              ImmutableMap.copyOf(
-                  dynamicFileCaches.mapValues { (_, fileCache) ->
-                    BufferedDiskCache(
-                        fileCache,
-                        poolFactory.getPooledByteBufferFactory(memoryChunkType),
-                        poolFactory.pooledByteStreams,
-                        executorSupplier.forLocalStorageRead(),
-                        executorSupplier.forLocalStorageWrite(),
-                        imageCacheStatsTracker)
-                  })
-            }
+          override val dynamicBufferedDiskCaches: ImmutableMap<String, BufferedDiskCache> by
+              lazy((LazyThreadSafetyMode.NONE)) {
+                ImmutableMap.copyOf(
+                    dynamicFileCaches.mapValues { (_, fileCache) ->
+                      BufferedDiskCache(
+                          fileCache,
+                          poolFactory.getPooledByteBufferFactory(memoryChunkType),
+                          poolFactory.pooledByteStreams,
+                          executorSupplier.forLocalStorageRead(),
+                          executorSupplier.forLocalStorageWrite(),
+                          imageCacheStatsTracker)
+                    })
+              }
+        }
       }
+
+  override fun get(): DiskCachesStore = diskCachesStore
 }
