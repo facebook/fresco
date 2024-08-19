@@ -7,6 +7,8 @@
 
 package com.facebook.imagepipeline.testing;
 
+import javax.annotation.Nullable;
+
 /**
  * A queue of nodes sorted by timestamp for the purpose of implementing a scheduled executor. Used
  * for {@link ScheduledQueue}.
@@ -22,7 +24,7 @@ public class DeltaQueue<T> {
   private static class Node<T> {
     public final T value;
     public long delay;
-    public Node<T> next = null;
+    @Nullable public Node<T> next = null;
 
     public Node(T value, long nanos) {
       this.value = value;
@@ -30,7 +32,7 @@ public class DeltaQueue<T> {
     }
   }
 
-  private Node<T> head = null;
+  @Nullable private Node<T> head = null;
   private int size;
 
   /**
