@@ -67,7 +67,7 @@ public class MultiplexProducerTest {
   private Consumer<CloseableReference<CloseableImage>> mConsumer1;
   private Consumer<CloseableReference<CloseableImage>> mConsumer2;
   private Consumer<CloseableReference<CloseableImage>> mConsumer3;
-  private Consumer<CloseableReference<CloseableImage>> mForwardingConsumer1;
+  @Nullable private Consumer<CloseableReference<CloseableImage>> mForwardingConsumer1;
   private Consumer<CloseableReference<CloseableImage>> mForwardingConsumer2;
   private BaseProducerContext mMultiplexedContext1;
   private BaseProducerContext mMultiplexedContext2;
