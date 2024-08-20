@@ -66,7 +66,6 @@ class VitoImagePipelineImpl(
         if (result is UriModifierInterface.ModificationResult.Modified) {
           finalImageSource = ImageSourceProvider.forUri(result.newUri)
         }
-        imageSource.extras?.let { extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = it }
       } else {
         modifiedUriValue = "NotSupportedImageSource: $imageSourceClass"
       }
@@ -78,6 +77,8 @@ class VitoImagePipelineImpl(
     extras[HasExtraData.KEY_IMAGE_SOURCE_TYPE] = imageSourceClass
 
     if (imageSource is IncreasingQualityImageSource) {
+      imageSource.extras?.let { extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = it }
+    } else if (imageSource is UriImageSource) {
       imageSource.extras?.let { extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = it }
     }
 
