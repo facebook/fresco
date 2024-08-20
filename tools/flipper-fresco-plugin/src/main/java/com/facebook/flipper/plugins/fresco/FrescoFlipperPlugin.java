@@ -89,7 +89,7 @@ public class FrescoFlipperPlugin extends BufferingFlipperPlugin
   private final FlipperImageTracker mFlipperImageTracker;
   private final PlatformBitmapFactory mPlatformBitmapFactory;
   @Nullable private final FlipperObjectHelper mSonarObjectHelper;
-  private final DebugMemoryManager mMemoryManager;
+  @Nullable private final DebugMemoryManager mMemoryManager;
   private final FlipperPerfLogger mPerfLogger;
   @Nullable private final FrescoFlipperDebugPrefHelper mDebugPrefHelper;
   private final List<FlipperObject> mEvents = new ArrayList<>();
