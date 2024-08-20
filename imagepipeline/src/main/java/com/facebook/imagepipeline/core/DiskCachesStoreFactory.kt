@@ -40,14 +40,14 @@ class DiskCachesStoreFactory(
       dynamicDiskCacheConfigMap = config.dynamicDiskCacheConfigMap)
 
   private val diskCachesStore: DiskCachesStore by
-      lazy(LazyThreadSafetyMode.NONE) {
+      lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
         object : DiskCachesStore {
 
           override val mainFileCache: FileCache by
-              lazy((LazyThreadSafetyMode.NONE)) { fileCacheFactory.get(mainDiskCacheConfig) }
+              lazy(LazyThreadSafetyMode.SYNCHRONIZED) { fileCacheFactory.get(mainDiskCacheConfig) }
 
           override val mainBufferedDiskCache: BufferedDiskCache by
-              lazy((LazyThreadSafetyMode.NONE)) {
+              lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
                 BufferedDiskCache(
                     mainFileCache,
                     poolFactory.getPooledByteBufferFactory(memoryChunkType),
@@ -58,10 +58,12 @@ class DiskCachesStoreFactory(
               }
 
           override val smallImageFileCache: FileCache by
-              lazy((LazyThreadSafetyMode.NONE)) { fileCacheFactory.get(smallImageDiskCacheConfig) }
+              lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+                fileCacheFactory.get(smallImageDiskCacheConfig)
+              }
 
           override val smallImageBufferedDiskCache: BufferedDiskCache by
-              lazy(LazyThreadSafetyMode.NONE) {
+              lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
                 BufferedDiskCache(
                     smallImageFileCache,
                     poolFactory.getPooledByteBufferFactory(memoryChunkType),
@@ -72,14 +74,14 @@ class DiskCachesStoreFactory(
               }
 
           override val dynamicFileCaches: Map<String, FileCache> by
-              lazy(LazyThreadSafetyMode.NONE) {
+              lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
                 dynamicDiskCacheConfigMap?.let { cacheConfigMap ->
                   cacheConfigMap.mapValues { (_, cacheConfig) -> fileCacheFactory.get(cacheConfig) }
                 } ?: run { emptyMap() }
               }
 
           override val dynamicBufferedDiskCaches: ImmutableMap<String, BufferedDiskCache> by
-              lazy((LazyThreadSafetyMode.NONE)) {
+              lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
                 ImmutableMap.copyOf(
                     dynamicFileCaches.mapValues { (_, fileCache) ->
                       BufferedDiskCache(
