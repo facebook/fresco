@@ -37,7 +37,7 @@ class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) 
 
   // Visibility
   private var visibilityState = VisibilityState.UNKNOWN
-  private var visibilityEventTimeMs: Long = ImagePerfData.UNSET
+  var visibilityEventTimeMs: Long = ImagePerfData.UNSET
   private var invisibilityEventTimeMs: Long = ImagePerfData.UNSET
   // Fetch efficiency
   var dimensionsInfo: DimensionsInfo? = null
@@ -112,10 +112,6 @@ class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) 
 
   fun setImageRequestEndTimeMs(imageRequestEndTimeMs: Long) {
     this.imageRequestEndTimeMs = imageRequestEndTimeMs
-  }
-
-  fun setVisibilityEventTimeMs(visibilityEventTimeMs: Long) {
-    this.visibilityEventTimeMs = visibilityEventTimeMs
   }
 
   fun setInvisibilityEventTimeMs(invisibilityEventTimeMs: Long) {
