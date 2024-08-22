@@ -69,6 +69,10 @@ class VitoImagePipelineImpl(
       } else {
         modifiedUriValue = "NotSupportedImageSource: $imageSourceClass"
       }
+    } else if (imageOptions.experimentalDynamicSize &&
+        imageOptions.experimentalDynamicSizeWithCacheFallback &&
+        forceKeepOriginalSize) {
+      modifiedUriValue = "MBPDiskFallbackEnabled"
     } else {
       modifiedUriValue = "Disabled"
     }
