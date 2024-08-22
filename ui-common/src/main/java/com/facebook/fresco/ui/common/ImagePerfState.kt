@@ -32,7 +32,7 @@ class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) 
   private var onScreenHeightPx: Int = ImagePerfData.UNSET.toInt()
   // Error data
   private var errorThrowable: Throwable? = null
-  // Internal parameters
+  // Should be removed
   var imageLoadStatus: ImageLoadStatus = ImageLoadStatus.UNKNOWN
 
   // Visibility
@@ -73,9 +73,12 @@ class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) 
     visibilityEventTimeMs = ImagePerfData.UNSET
     invisibilityEventTimeMs = ImagePerfData.UNSET
 
+    // ImagePerfLoggingState specific params
     // Are these really required here? Adding to be safe for now, but verify its utility later.
-    newIntermediateImageSetPointAvailable = false
     intermediateImageSetTimes.clear()
+    newIntermediateImageSetPointAvailable = false
+    emptyEventTimestampNs = null
+    releasedEventTimestampNs = null
   }
 
   fun setControllerId(controllerId: String?) {
