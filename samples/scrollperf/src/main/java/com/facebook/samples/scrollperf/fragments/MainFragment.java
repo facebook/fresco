@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.conf.Const;
@@ -36,18 +37,23 @@ import com.facebook.samples.scrollperf.fragments.recycler.VitoViewListAdapter;
 import com.facebook.samples.scrollperf.instrumentation.PerfListener;
 import com.facebook.samples.scrollperf.util.UI;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class MainFragment extends Fragment {
 
   public static final String TAG = MainFragment.class.getSimpleName();
 
   private static final int REQUEST_READ_EXTERNAL_ID = 1;
 
+  // NULLSAFE_FIXME[Field Not Initialized]
   private RecyclerView mRecyclerView;
 
+  // NULLSAFE_FIXME[Field Not Initialized]
   private ListView mListView;
 
+  // NULLSAFE_FIXME[Field Not Initialized]
   private VitoViewAdapter mVitoViewAdapter;
 
+  // NULLSAFE_FIXME[Field Not Initialized]
   private ListAdapter mListAdapter;
 
   @Nullable private SimpleAdapter<Uri> mSimpleAdapter;
@@ -68,6 +74,7 @@ public class MainFragment extends Fragment {
   @Override
   public View onCreateView(
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     mConfig = Config.load(getContext());
     // Initialize the SimpleAdapter
     mSimpleAdapter = initializeSimpleAdapter(mConfig);
@@ -113,6 +120,7 @@ public class MainFragment extends Fragment {
     // Get RecyclerView
     mRecyclerView = UI.findViewById(layout, R.id.recycler_view);
     // Choose the LayoutManager
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     GridLayoutManager layoutManager = new GridLayoutManager(getContext(), mConfig.gridSpanCount);
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     layoutManager.scrollToPosition(0);
@@ -129,17 +137,21 @@ public class MainFragment extends Fragment {
     switch (config.dataSourceType) {
       case Const.LOCAL_RESOURCE_URIS:
         simpleAdapter =
+            // NULLSAFE_FIXME[Parameter Not Nullable]
             LocalResourceSimpleAdapter.getEagerAdapter(getContext(), R.array.example_uris);
         break;
       case Const.LOCAL_RESOURCE_WEBP_URIS:
         simpleAdapter =
+            // NULLSAFE_FIXME[Parameter Not Nullable]
             LocalResourceSimpleAdapter.getEagerAdapter(getContext(), R.array.example_webp_uris);
         break;
       case Const.LOCAL_RESOURCE_PNG_URIS:
         simpleAdapter =
+            // NULLSAFE_FIXME[Parameter Not Nullable]
             LocalResourceSimpleAdapter.getEagerAdapter(getContext(), R.array.example_png_uris);
         break;
       case Const.LOCAL_INTERNAL_PHOTO_URIS:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         simpleAdapter = ContentProviderSimpleAdapter.getInternalPhotoSimpleAdapter(getActivity());
         mDistinctUriCompatible = false;
         break;
@@ -148,6 +160,7 @@ public class MainFragment extends Fragment {
         mDistinctUriCompatible = false;
         break;
     }
+    // NULLSAFE_FIXME[Return Not Nullable]
     return simpleAdapter;
   }
 
@@ -167,12 +180,14 @@ public class MainFragment extends Fragment {
       case Const.GRID_RECYCLER_VIEW_LAYOUT_VALUE:
         // Create the Adapter
         mVitoViewAdapter =
+            // NULLSAFE_FIXME[Parameter Not Nullable]
             new VitoViewAdapter(getContext(), mSimpleAdapter, mConfig, mPerfListener);
         mRecyclerView.setAdapter(mVitoViewAdapter);
         break;
       case Const.LISTVIEW_LAYOUT_VALUE:
         // Create the Adapter
         mListAdapter =
+            // NULLSAFE_FIXME[Parameter Not Nullable]
             new VitoViewListAdapter(getContext(), mSimpleAdapter, mConfig, mPerfListener);
         // Set the adapter
         mListView.setAdapter(mListAdapter);
@@ -183,8 +198,10 @@ public class MainFragment extends Fragment {
   }
 
   private SimpleAdapter<Uri> getExternalPhotoSimpleAdapter() {
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
         == PackageManager.PERMISSION_GRANTED) {
+      // NULLSAFE_FIXME[Parameter Not Nullable]
       return ContentProviderSimpleAdapter.getExternalPhotoSimpleAdapter(getActivity());
     } else {
       requestPermissions(
@@ -198,6 +215,7 @@ public class MainFragment extends Fragment {
       int requestCode, String[] permissions, int[] grantResults) {
     if (requestCode == REQUEST_READ_EXTERNAL_ID
         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      // NULLSAFE_FIXME[Parameter Not Nullable]
       mSimpleAdapter = ContentProviderSimpleAdapter.getExternalPhotoSimpleAdapter(getActivity());
       updateAdapter();
     }
