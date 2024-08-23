@@ -35,4 +35,6 @@ interface FrescoVitoConfig {
   fun handleImageResultInBackground(): Boolean
 
   fun useIntermediateImagesAsPlaceholder(): Boolean
+
+  fun fallbackToDefaultImageOptions(): Boolean
 }

@@ -105,23 +105,25 @@ object FrescoVitoImage2Spec {
       @Prop(optional = true) imageSource: ImageSource?,
       @Prop(optional = true) imageOptions: ImageOptions?,
       @Prop(optional = true) logWithHighSamplingRate: Boolean?,
-  ): VitoImageRequest? =
-      if (imageOptions?.experimentalDynamicSize == true &&
-          imageOptions?.experimentalDynamicSizeWithCacheFallback == false) {
-        // we won't do anything with the original URI, so we can just return null
-        null
-      } else {
-        createVitoImageRequest(
-            c,
-            callerContext,
-            imageSource,
-            uri,
-            uriString,
-            imageOptions,
-            logWithHighSamplingRate,
-            null,
-            true)
-      }
+  ): VitoImageRequest? {
+    val imageOptions = ensureImageOptions(imageOptions)
+    if (imageOptions?.experimentalDynamicSize == true &&
+        imageOptions?.experimentalDynamicSizeWithCacheFallback == false) {
+      // we won't do anything with the original URI, so we can just return null
+      return null
+    } else {
+      return createVitoImageRequest(
+          c,
+          callerContext,
+          imageSource,
+          uri,
+          uriString,
+          imageOptions,
+          logWithHighSamplingRate,
+          null,
+          true)
+    }
+  }
 
   private fun createVitoImageRequest(
       c: ComponentContext,
@@ -158,11 +160,11 @@ object FrescoVitoImage2Spec {
       prefetchDataSource: Output<DataSource<Void?>>,
       forceKeepOriginalSize: Output<Boolean>,
   ) {
+    val imageOptions = ensureImageOptions(imageOptions)
     if (requestCachedValue == null) {
       forceKeepOriginalSize.set(false)
       return
     }
-
     if (imageOptions?.experimentalDynamicSize == true &&
         imageOptions?.experimentalDynamicSizeWithCacheFallback == true) {
       if (Looper.myLooper() == Looper.getMainLooper()) {
@@ -349,6 +351,7 @@ object FrescoVitoImage2Spec {
       @Prop(optional = true) prefetchRequestListener: RequestListener?,
       @FromPrepare forceKeepOriginalSize: Boolean
   ) {
+    val imageOptions = ensureImageOptions(imageOptions)
     val width = layout.width
     val height = layout.height
     var paddingX = 0
@@ -417,6 +420,14 @@ object FrescoVitoImage2Spec {
         else ->
             FrescoVitoProvider.getConfig().prefetchConfig.prefetchInOnBoundsDefinedForDynamicSize()
       }
+
+  private fun ensureImageOptions(imageOptionsProp: ImageOptions?): ImageOptions? {
+    if (imageOptionsProp == null &&
+        FrescoVitoProvider.getConfig().fallbackToDefaultImageOptions()) {
+      return ImageOptions.defaults()
+    }
+    return imageOptionsProp
+  }
 
   enum class Prefetch {
     AUTO,
