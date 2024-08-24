@@ -11,6 +11,7 @@ import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * <p>Outcome (success/failure) of the data source provided by this supplier is determined by the
  * outcome of the highest quality data source (the first data source in the array).
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
 public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSource<T>> {
 
@@ -110,6 +112,7 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
     private int mIndexOfDataSourceWithResult;
 
     private int mNumberOfDataSources;
+    // NULLSAFE_FIXME[Field Not Initialized]
     private AtomicInteger mFinishedDataSources;
     private @Nullable Throwable mDelayedError;
     private @Nullable Map<String, Object> mDelayedExtras;
@@ -217,6 +220,7 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
     }
 
     private void onDataSourceFailed(int index, DataSource<T> dataSource) {
+      // NULLSAFE_FIXME[Parameter Not Nullable]
       closeSafely(tryGetAndClearDataSource(index, dataSource));
       if (index == 0) {
         mDelayedError = dataSource.getFailureCause();
@@ -255,6 +259,7 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
       }
       // close data sources of lower quality than the one with the result
       for (int i = oldIndexOfDataSourceWithResult; i > newIndexOfDataSourceWithResult; i--) {
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         closeSafely(getAndClearDataSource(i));
       }
     }
