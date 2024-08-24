@@ -8,14 +8,17 @@
 package com.facebook.drawee.backends.pipeline.info;
 
 import com.facebook.imagepipeline.listener.BaseRequestListener;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
  * Image origin request listener that maps all image requests for a given Drawee controller to an
  * {@link ImageOrigin} and corresponding {@link ImageOriginListener}.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImageOriginRequestListener extends BaseRequestListener {
 
+  // NULLSAFE_FIXME[Field Not Initialized]
   private String mControllerId;
   private final @Nullable ImageOriginListener mImageOriginLister;
 
