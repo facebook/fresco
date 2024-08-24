@@ -21,6 +21,7 @@ import com.facebook.drawee.drawable.VisibilityAwareDrawable;
 import com.facebook.drawee.drawable.VisibilityCallback;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -39,6 +40,7 @@ import javax.annotation.Nullable;
  * {@link #onAttach} from its {@link View#onFinishTemporaryDetach()} and {@link
  * View#onAttachedToWindow()} methods.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallback {
 
   private boolean mIsControllerAttached = false;
@@ -120,6 +122,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     if (!isControllerValid()) {
       return false;
     }
+    // NULLSAFE_FIXME[Nullable Dereference]
     return mController.onTouchEvent(event);
   }
 
@@ -160,6 +163,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
   private void setVisibilityCallback(@Nullable VisibilityCallback visibilityCallback) {
     Drawable drawable = getTopLevelDrawable();
     if (drawable instanceof VisibilityAwareDrawable) {
+      // NULLSAFE_FIXME[Parameter Not Nullable]
       ((VisibilityAwareDrawable) drawable).setVisibilityCallback(visibilityCallback);
     }
   }
@@ -174,6 +178,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     // Clear the old controller
     if (isControllerValid()) {
       mEventTracker.recordEvent(Event.ON_CLEAR_OLD_CONTROLLER);
+      // NULLSAFE_FIXME[Nullable Dereference]
       mController.setHierarchy(null);
     }
     mController = draweeController;
@@ -211,6 +216,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     setVisibilityCallback(this);
 
     if (isControllerValid) {
+      // NULLSAFE_FIXME[Nullable Dereference]
       mController.setHierarchy(hierarchy);
     }
   }
@@ -260,6 +266,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     mEventTracker.recordEvent(Event.ON_DETACH_CONTROLLER);
     mIsControllerAttached = false;
     if (isControllerValid()) {
+      // NULLSAFE_FIXME[Nullable Dereference]
       mController.onDetach();
     }
   }
