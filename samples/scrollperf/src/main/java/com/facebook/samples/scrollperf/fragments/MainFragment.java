@@ -132,6 +132,7 @@ public class MainFragment extends Fragment {
     mListView = UI.findViewById(layout, R.id.list_view);
   }
 
+  @Nullable
   private SimpleAdapter<Uri> initializeSimpleAdapter(final Config config) {
     SimpleAdapter<Uri> simpleAdapter = null;
     switch (config.dataSourceType) {
@@ -160,7 +161,6 @@ public class MainFragment extends Fragment {
         mDistinctUriCompatible = false;
         break;
     }
-    // NULLSAFE_FIXME[Return Not Nullable]
     return simpleAdapter;
   }
 
