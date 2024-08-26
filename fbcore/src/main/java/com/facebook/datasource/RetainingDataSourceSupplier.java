@@ -9,6 +9,7 @@ package com.facebook.datasource;
 
 import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.common.internal.Supplier;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Collections;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -16,6 +17,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.NotThreadSafe;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @NotThreadSafe
 public class RetainingDataSourceSupplier<T> implements Supplier<DataSource<T>> {
 
@@ -55,6 +57,7 @@ public class RetainingDataSourceSupplier<T> implements Supplier<DataSource<T>> {
       DataSource<T> newDataSource = (supplier != null) ? supplier.get() : null;
       synchronized (RetainingDataSource.this) {
         if (isClosed()) {
+          // NULLSAFE_FIXME[Parameter Not Nullable]
           closeSafely(newDataSource);
           return;
         } else {
@@ -65,6 +68,7 @@ public class RetainingDataSourceSupplier<T> implements Supplier<DataSource<T>> {
       if (newDataSource != null) {
         newDataSource.subscribe(new InternalDataSubscriber(), CallerThreadExecutor.getInstance());
       }
+      // NULLSAFE_FIXME[Parameter Not Nullable]
       closeSafely(oldDataSource);
     }
 
@@ -91,6 +95,7 @@ public class RetainingDataSourceSupplier<T> implements Supplier<DataSource<T>> {
         dataSource = mDataSource;
         mDataSource = null;
       }
+      // NULLSAFE_FIXME[Parameter Not Nullable]
       closeSafely(dataSource);
       return true;
     }
