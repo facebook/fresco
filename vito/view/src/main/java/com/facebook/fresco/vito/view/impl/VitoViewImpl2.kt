@@ -69,6 +69,7 @@ object VitoViewImpl2 {
                 target.resources,
                 imageSource,
                 imageOptions,
+                viewport = Rect(0, 0, target.width, target.height),
                 callerContext = callerContext,
                 forceKeepOriginalSize = false),
         callerContext,
