@@ -20,11 +20,17 @@ import com.facebook.fresco.urimod.UriModifierInterface
 import com.facebook.fresco.vito.core.ImagePipelineUtils
 import com.facebook.fresco.vito.core.VitoImagePipeline
 import com.facebook.fresco.vito.core.VitoImageRequest
+import com.facebook.fresco.vito.core.impl.source.ImagePipelineImageSource
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.ImageOptions.Companion.defaults
+import com.facebook.fresco.vito.source.BitmapImageSource
+import com.facebook.fresco.vito.source.DrawableImageSource
+import com.facebook.fresco.vito.source.EmptyImageSource
+import com.facebook.fresco.vito.source.FirstAvailableImageSource
 import com.facebook.fresco.vito.source.ImageSource
 import com.facebook.fresco.vito.source.ImageSourceProvider
 import com.facebook.fresco.vito.source.IncreasingQualityImageSource
+import com.facebook.fresco.vito.source.SingleImageSource
 import com.facebook.fresco.vito.source.UriImageSource
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.image.CloseableImage
@@ -50,7 +56,6 @@ class VitoImagePipelineImpl(
     val imageOptions = options ?: defaults()
     val extras: MutableMap<String, Any> = mutableMapOf()
     var finalImageSource = imageSource
-    val imageSourceClass = imageSource.javaClass.simpleName
 
     val modifiedUriValue: String
     if (imageOptions.experimentalDynamicSize && !forceKeepOriginalSize) {
@@ -67,7 +72,7 @@ class VitoImagePipelineImpl(
           finalImageSource = ImageSourceProvider.forUri(result.newUri)
         }
       } else {
-        modifiedUriValue = "NotSupportedImageSource: $imageSourceClass"
+        modifiedUriValue = "NotSupportedImageSource: ${imageSource.getClassNameString()}"
       }
     } else if (imageOptions.experimentalDynamicSize &&
         imageOptions.experimentalDynamicSizeWithCacheFallback &&
@@ -78,7 +83,7 @@ class VitoImagePipelineImpl(
     }
 
     extras[HasExtraData.KEY_MODIFIED_URL] = modifiedUriValue
-    extras[HasExtraData.KEY_IMAGE_SOURCE_TYPE] = imageSourceClass
+    extras[HasExtraData.KEY_IMAGE_SOURCE_TYPE] = imageSource.getClassNameString()
 
     if (imageSource is IncreasingQualityImageSource) {
       imageSource.extras?.let { extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = it }
@@ -133,5 +138,20 @@ class VitoImagePipelineImpl(
   ): Boolean {
     val imageRequest = vitoImageRequest.finalImageRequest ?: return false
     return imagePipeline.isInDiskCacheSync(imageRequest)
+  }
+
+  private fun ImageSource.getClassNameString(): String {
+    return when (this) {
+      is BitmapImageSource -> "BitmapImageSource"
+      is DrawableImageSource -> "DrawableImageSource"
+      is EmptyImageSource -> "EmptyImageSource"
+      is FirstAvailableImageSource -> "FirstAvailableImageSource"
+      is IncreasingQualityImageSource -> "IncreasingQualityImageSource"
+      is ImagePipelineImageSource -> "ImagePipelineImageSource"
+      is SingleImageSource -> "SingleImageSource"
+      // Keep UriImageSource below known subclasses ImagePipelineImageSource/SingleImageSource
+      is UriImageSource -> "UriImageSource"
+      else -> "Other"
+    }
   }
 }
