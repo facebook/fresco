@@ -135,7 +135,7 @@ public class LocalDrawableAnimationBackend implements AnimationBackend {
     return 0;
   }
 
-  public static class Builder {
+  public static final class Builder {
 
     private final List<Integer> mResourceIds;
     private final Resources mResources;

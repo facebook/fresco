@@ -42,7 +42,7 @@ public class ImageDecoderConfig {
     return new Builder();
   }
 
-  public static class Builder {
+  public static final class Builder {
     @Nullable private Map<ImageFormat, ImageDecoder> mCustomImageDecoders;
     @Nullable private List<ImageFormat.FormatChecker> mCustomImageFormats;
 

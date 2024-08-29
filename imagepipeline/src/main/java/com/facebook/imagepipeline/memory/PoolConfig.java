@@ -147,7 +147,7 @@ public class PoolConfig {
     return new Builder();
   }
 
-  public static class Builder {
+  public static final class Builder {
 
     private @Nullable PoolParams mBitmapPoolParams;
     private @Nullable PoolStatsTracker mBitmapPoolStatsTracker;

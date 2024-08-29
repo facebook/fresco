@@ -63,7 +63,7 @@ public class DraweeConfig {
     return mDebugOverlayEnabledSupplier;
   }
 
-  public static class Builder {
+  public static final class Builder {
 
     @Nullable private List<DrawableFactory> mCustomDrawableFactories;
     @Nullable private Supplier<Boolean> mDebugOverlayEnabledSupplier;

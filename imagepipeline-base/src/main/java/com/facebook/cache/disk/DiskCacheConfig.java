@@ -139,7 +139,7 @@ public class DiskCacheConfig {
     return new Builder(context);
   }
 
-  public static class Builder {
+  public static final class Builder {
 
     private int mVersion = 1;
     private String mBaseDirectoryName = "image_cache";
