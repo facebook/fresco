@@ -7,7 +7,11 @@
 
 package com.facebook.drawee.drawable;
 
+import androidx.annotation.Nullable;
+import com.facebook.infer.annotation.Nullsafe;
+
 /** Interface that enables setting a transform callback. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface TransformAwareDrawable {
 
   /**
@@ -15,5 +19,5 @@ public interface TransformAwareDrawable {
    *
    * @param transformCallback the transform callback to be set
    */
-  void setTransformCallback(TransformCallback transformCallback);
+  void setTransformCallback(@Nullable TransformCallback transformCallback);
 }

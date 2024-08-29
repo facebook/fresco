@@ -23,8 +23,10 @@ import androidx.annotation.RequiresApi;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Arrays;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class RoundedDrawable extends Drawable implements Rounded, TransformAwareDrawable {
 
   private final Drawable mDelegate;
@@ -264,12 +266,12 @@ public abstract class RoundedDrawable extends Drawable implements Rounded, Trans
     if (!mParentTransform.equals(mPrevParentTransform)
         || !mBoundsTransform.equals(mPrevBoundsTransform)
         || (mInsideBorderTransform != null
-            && !mInsideBorderTransform.equals(mPrevInsideBorderTransform))) {
+            && !matrixEquals(mInsideBorderTransform, mPrevInsideBorderTransform))) {
       mIsShaderTransformDirty = true;
 
       mParentTransform.invert(mInverseParentTransform);
       mTransform.set(mParentTransform);
-      if (mScaleDownInsideBorders) {
+      if (mScaleDownInsideBorders && mInsideBorderTransform != null) {
         mTransform.postConcat(mInsideBorderTransform);
       }
       mTransform.preConcat(mBoundsTransform);
@@ -278,7 +280,7 @@ public abstract class RoundedDrawable extends Drawable implements Rounded, Trans
       mPrevBoundsTransform.set(mBoundsTransform);
       if (mScaleDownInsideBorders) {
         if (mPrevInsideBorderTransform == null) {
-          mPrevInsideBorderTransform = new Matrix(mInsideBorderTransform);
+          mPrevInsideBorderTransform = deepCopyMatrix(mInsideBorderTransform);
         } else {
           mPrevInsideBorderTransform.set(mInsideBorderTransform);
         }
@@ -408,5 +410,26 @@ public abstract class RoundedDrawable extends Drawable implements Rounded, Trans
   @Override
   public void setRepeatEdgePixels(boolean repeatEdgePixels) {
     // no-op
+  }
+
+  /** Nullsafe Matrix equality check. This is needed because Matrix.equals() is not nullsafe. */
+  private static boolean matrixEquals(@Nullable Matrix a, @Nullable Matrix b) {
+    if (a == null && b == null) {
+      return true;
+    }
+    if (a == null || b == null) {
+      return false;
+    }
+
+    return a.equals(b);
+  }
+
+  /** Nullsafe Matrix deep copy. */
+  private static @Nullable Matrix deepCopyMatrix(@Nullable Matrix matrix) {
+    if (matrix == null) {
+      return null;
+    } else {
+      return new Matrix(matrix);
+    }
   }
 }

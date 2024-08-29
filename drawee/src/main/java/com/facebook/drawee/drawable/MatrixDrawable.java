@@ -12,9 +12,11 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Drawable that can adjust underlying drawable based on specified {@link Matrix}. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class MatrixDrawable extends ForwardingDrawable {
 
   // Specified matrix.
@@ -41,7 +43,7 @@ public class MatrixDrawable extends ForwardingDrawable {
   }
 
   @Override
-  public Drawable setCurrent(@Nullable Drawable newDelegate) {
+  public @Nullable Drawable setCurrent(@Nullable Drawable newDelegate) {
     final Drawable previousDelegate = super.setCurrent(newDelegate);
     configureBounds();
 
@@ -90,8 +92,13 @@ public class MatrixDrawable extends ForwardingDrawable {
   }
 
   private void configureBoundsIfUnderlyingChanged() {
-    if (mUnderlyingWidth != getCurrent().getIntrinsicWidth()
-        || mUnderlyingHeight != getCurrent().getIntrinsicHeight()) {
+    Drawable current = getCurrent();
+    if (current == null) {
+      return;
+    }
+
+    if (mUnderlyingWidth != current.getIntrinsicWidth()
+        || mUnderlyingHeight != current.getIntrinsicHeight()) {
       configureBounds();
     }
   }
@@ -99,6 +106,10 @@ public class MatrixDrawable extends ForwardingDrawable {
   /** Determines bounds for the underlying drawable and a matrix that should be applied on it. */
   private void configureBounds() {
     Drawable underlyingDrawable = getCurrent();
+    if (underlyingDrawable == null) {
+      return;
+    }
+
     Rect bounds = getBounds();
     int underlyingWidth = mUnderlyingWidth = underlyingDrawable.getIntrinsicWidth();
     int underlyingHeight = mUnderlyingHeight = underlyingDrawable.getIntrinsicHeight();
@@ -115,11 +126,7 @@ public class MatrixDrawable extends ForwardingDrawable {
     }
   }
 
-  /**
-   * TransformationCallback method
-   *
-   * @param transform
-   */
+  /** TransformationCallback method */
   @Override
   public void getTransform(Matrix transform) {
     super.getTransform(transform);

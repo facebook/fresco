@@ -14,11 +14,13 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import androidx.annotation.VisibleForTesting;
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * Drawable that automatically rotates the underlying drawable with a pivot in the center of the
  * drawable bounds based on a rotation angle.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class OrientedDrawable extends ForwardingDrawable {
 
   @VisibleForTesting final Matrix mRotationMatrix;
@@ -93,6 +95,10 @@ public class OrientedDrawable extends ForwardingDrawable {
   @Override
   protected void onBoundsChange(Rect bounds) {
     Drawable underlyingDrawable = getCurrent();
+    if (underlyingDrawable == null) {
+      return;
+    }
+
     if (mRotationAngle > 0
         || (mExifOrientation != ExifInterface.ORIENTATION_UNDEFINED
             && mExifOrientation != ExifInterface.ORIENTATION_NORMAL)) {

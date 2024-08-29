@@ -262,7 +262,7 @@ public class ForwardingDrawable extends Drawable
   //  TransformAwareDrawable methods
 
   @Override
-  public void setTransformCallback(TransformCallback transformCallback) {
+  public void setTransformCallback(@Nullable TransformCallback transformCallback) {
     mTransformCallback = transformCallback;
   }
 

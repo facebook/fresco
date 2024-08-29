@@ -9,9 +9,11 @@ package com.facebook.drawee.drawable;
 
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Helper class containing functionality commonly used by drawables. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DrawableUtils {
 
   /**
@@ -20,7 +22,11 @@ public class DrawableUtils {
    * @param drawable the drawable to clone.
    * @return a clone of the drawable or null if the drawable cannot be cloned.
    */
-  public static @Nullable Drawable cloneDrawable(Drawable drawable) {
+  public static @Nullable Drawable cloneDrawable(@Nullable Drawable drawable) {
+    if (drawable == null) {
+      return null;
+    }
+
     if (drawable instanceof CloneableDrawable) {
       return ((CloneableDrawable) drawable).cloneDrawable();
     }

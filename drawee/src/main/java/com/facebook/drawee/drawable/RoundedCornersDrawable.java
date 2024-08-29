@@ -17,10 +17,12 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Arrays;
 import javax.annotation.Nullable;
 
 /** Drawable that draws underlying drawable with rounded corners. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class RoundedCornersDrawable extends ForwardingDrawable implements Rounded {
 
   public enum Type {
@@ -285,8 +287,10 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
             mInsideBorderBounds.set(mBounds);
           }
           mInsideBorderBounds.inset(mBorderWidth, mBorderWidth);
-          mInsideBorderTransform.setRectToRect(
-              mBounds, mInsideBorderBounds, Matrix.ScaleToFit.FILL);
+          if (mInsideBorderTransform != null) {
+            mInsideBorderTransform.setRectToRect(
+                mBounds, mInsideBorderBounds, Matrix.ScaleToFit.FILL);
+          }
 
           saveCount = canvas.save();
           canvas.clipRect(mBounds);

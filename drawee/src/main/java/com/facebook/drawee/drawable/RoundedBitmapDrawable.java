@@ -18,9 +18,11 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import java.lang.ref.WeakReference;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class RoundedBitmapDrawable extends RoundedDrawable {
 
   private static boolean sDefaultRepeatEdgePixels = false;
@@ -111,12 +113,17 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
   private void updatePaint() {
     if (mLastBitmap == null || mLastBitmap.get() != mBitmap) {
       mLastBitmap = new WeakReference<>(mBitmap);
-      mPaint.setShader(new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
-      mIsShaderTransformDirty = true;
+      if (mBitmap != null) {
+        mPaint.setShader(new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+        mIsShaderTransformDirty = true;
+      }
     }
     if (mIsShaderTransformDirty) {
-      mPaint.getShader().setLocalMatrix(mTransform);
-      mIsShaderTransformDirty = false;
+      Shader shader = mPaint.getShader();
+      if (shader != null) {
+        shader.setLocalMatrix(mTransform);
+        mIsShaderTransformDirty = false;
+      }
     }
     mPaint.setFilterBitmap(getPaintFilterBitmap());
   }

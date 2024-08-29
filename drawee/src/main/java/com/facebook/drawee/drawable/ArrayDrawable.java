@@ -336,7 +336,7 @@ public class ArrayDrawable extends Drawable
 
   /** TransformationCallbackSetter method */
   @Override
-  public void setTransformCallback(TransformCallback transformCallback) {
+  public void setTransformCallback(@Nullable TransformCallback transformCallback) {
     mTransformCallback = transformCallback;
   }
 

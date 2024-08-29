@@ -8,8 +8,11 @@
 package com.facebook.drawee.drawable;
 
 import android.graphics.drawable.Drawable;
+import androidx.annotation.Nullable;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** A drawable that is capable of cloning itself. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface CloneableDrawable {
 
   /**
@@ -17,5 +20,6 @@ public interface CloneableDrawable {
    *
    * @return the drawable copy
    */
+  @Nullable
   Drawable cloneDrawable();
 }

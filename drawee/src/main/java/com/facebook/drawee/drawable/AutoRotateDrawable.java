@@ -11,10 +11,13 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Drawable that automatically rotates underlying drawable. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AutoRotateDrawable extends ForwardingDrawable implements Runnable, CloneableDrawable {
   private static final int DEGREES_IN_FULL_ROTATION = 360;
   private static final int FRAME_INTERVAL_MS = 20;
@@ -94,9 +97,14 @@ public class AutoRotateDrawable extends ForwardingDrawable implements Runnable, 
   }
 
   @Override
+  @Nullable
   public AutoRotateDrawable cloneDrawable() {
     Drawable delegateCopy = DrawableUtils.cloneDrawable(getDrawable());
-    return new AutoRotateDrawable(delegateCopy, mInterval, mClockwise);
+    if (delegateCopy == null) {
+      return null;
+    } else {
+      return new AutoRotateDrawable(delegateCopy, mInterval, mClockwise);
+    }
   }
 
   /**
