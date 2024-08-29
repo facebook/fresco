@@ -36,7 +36,8 @@ fun ImageLayerDataModel.setActualImageDrawable(
       dataModel = DrawableImageDataModel(actualImageDrawable),
       canvasTransformation = imageOptions.createActualImageCanvasTransformation(),
       roundingOptions = imageOptions.roundingOptions,
-      borderOptions = imageOptions.borderOptions)
+      borderOptions = imageOptions.borderOptions,
+      colorFilter = imageOptions.actualImageColorFilter)
 }
 
 fun ImageLayerDataModel.setPlaceholder(resources: Resources, imageOptions: ImageOptions) {
