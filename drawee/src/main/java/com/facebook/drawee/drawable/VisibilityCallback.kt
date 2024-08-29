@@ -5,18 +5,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.drawee.drawable;
-
+package com.facebook.drawee.drawable
 /** Callback used to notify about drawable's visibility changes. */
-public interface VisibilityCallback {
+interface VisibilityCallback {
 
   /**
    * Called when the drawable's visibility changes.
    *
    * @param visible whether or not the drawable is visible
    */
-  void onVisibilityChange(boolean visible);
+  fun onVisibilityChange(visible: Boolean)
 
   /** Called when the drawable gets drawn. */
-  void onDraw();
+  fun onDraw()
 }
