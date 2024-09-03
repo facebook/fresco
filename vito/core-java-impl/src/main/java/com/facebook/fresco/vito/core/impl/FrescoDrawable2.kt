@@ -46,6 +46,7 @@ abstract class FrescoDrawable2 :
   fun setProgressDrawable(drawable: Drawable?): Drawable? =
       setDrawable(PROGRESS_DRAWABLE_INDEX, drawable)
 
+  @Suppress("ReplaceJavaStaticMethodWithKotlinAnalog")
   fun setProgress(progress: Float) {
     val progressBarDrawable = getDrawable(PROGRESS_DRAWABLE_INDEX) ?: return
     // display progressbar when not fully loaded, hide otherwise
@@ -84,7 +85,7 @@ abstract class FrescoDrawable2 :
 
   override fun close() {
     maybeStopAnimation(getDrawable(PLACEHOLDER_DRAWABLE_INDEX))
-    for (i in 0 until LAYER_COUNT) {
+    for (i in LAYER_RANGE) {
       setDrawable(i, null)
     }
   }
@@ -137,22 +138,20 @@ abstract class FrescoDrawable2 :
   }
 
   companion object {
+    const val IMAGE_DRAWABLE_INDEX: Int = 1
+
     private const val LAYER_COUNT = 4
     private const val PLACEHOLDER_DRAWABLE_INDEX = 0
-    const val IMAGE_DRAWABLE_INDEX = 1
     private const val PROGRESS_DRAWABLE_INDEX = 2
     private const val OVERLAY_DRAWABLE_INDEX = 3
+    private val LAYER_RANGE = 0 until LAYER_COUNT
 
     private fun maybeStopAnimation(drawable: Drawable?) {
-      if (drawable is Animatable) {
-        (drawable as Animatable).stop()
-      }
+      (drawable as? Animatable)?.stop()
     }
 
     private fun maybeStartAnimation(drawable: Drawable?) {
-      if (drawable is Animatable) {
-        (drawable as Animatable).start()
-      }
+      (drawable as? Animatable)?.start()
     }
   }
 }

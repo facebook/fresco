@@ -53,10 +53,9 @@ class KFrescoController(
     private val uiThreadExecutor: Executor,
     private val lightweightBackgroundThreadExecutor: Executor,
     private val globalImageRequestListener: VitoImageRequestListener? = null,
-    private val imagePerfControllerListenerSupplier: Supplier<ControllerListener2<ImageInfo>>? =
-        null,
+    private val imagePerfLoggingListenerSupplier: Supplier<ControllerListener2<ImageInfo>>? = null,
     private val imagePerfListener: VitoImagePerfListener = BaseVitoImagePerfListener(),
-    private val drawableFactory: ImageOptionsDrawableFactory? = null
+    private val drawableFactory: ImageOptionsDrawableFactory? = null,
 ) : FrescoController2 {
 
   private val imageToDataModelMapper: (Resources, CloseableImage, ImageOptions) -> ImageDataModel? =
@@ -65,9 +64,7 @@ class KFrescoController(
           b.customDrawableFactory?.createDrawable(r, a, b)?.let { createDrawableModel(it, b) }
               ?: when (a) {
                 is CloseableBitmap ->
-                    BitmapImageDataModel(
-                        a.underlyingBitmap,
-                        java.lang.Boolean.TRUE.equals(a.getExtras()["is_rounded"]))
+                    BitmapImageDataModel(a.underlyingBitmap, true == a.getExtras()["is_rounded"])
                 // TODO(T105148151): handle rotation for closeable static bitmap, handle other types
                 else -> {
                   drawableFactory?.createDrawable(r, a, b)?.let { createDrawableModel(it, b) }
@@ -78,12 +75,13 @@ class KFrescoController(
 
   var debugOverlayHandler: DebugOverlayHandler? = null
 
+  @Suppress("UNCHECKED_CAST")
   override fun <T> createDrawable(): T where T : Drawable, T : FrescoDrawableInterface {
     traceSection("KFrescoController#createDrawable") {
       val drawable = KFrescoVitoDrawable(imagePerfListener)
-      imagePerfControllerListenerSupplier?.get()?.let { bla ->
-        drawable.listenerManager.setImagePerfControllerListener(bla)
-      }
+      imagePerfLoggingListenerSupplier
+          ?.get()
+          ?.let(drawable.listenerManager::setImagePerfControllerListener)
       return drawable as T
     }
   }
@@ -127,8 +125,7 @@ class KFrescoController(
         listenerManager.setLocalVitoImageRequestListener(vitoImageRequestListener)
 
         // Setup local perf data listener
-        val localPerfStateListener =
-            perfDataListener?.let { listener -> ImagePerfDataNotifier(listener) }
+        val localPerfStateListener = perfDataListener?.let(::ImagePerfDataNotifier)
         listenerManager.setLocalImagePerfStateListener(localPerfStateListener)
 
         _imageId = imageId
@@ -258,29 +255,27 @@ class KFrescoController(
       try {
         if (CloseableReference.isValid(imageReference)) {
           // Immediately display the actual image.
-          val image = imageReference?.get()
-          if (image != null) {
-            setFetchSubmitted(true)
-            closeable = imageReference.clone()
-            actualImageLayer.setActualImage(
-                imageRequest.resources, imageRequest.imageOptions, image, imageToDataModelMapper)
-            // TODO(T105148151): trigger listeners
-            invalidateSelf()
-            val imageInfo = image.imageInfo
-            if (isIntermediateImage) {
-              listenerManager.onIntermediateImageSet(imageId, imageRequest, imageInfo)
-            } else {
-              listenerManager.onFinalImageSet(
-                  imageId,
-                  imageRequest,
-                  ImageOrigin.MEMORY_BITMAP_SHORTCUT,
-                  imageInfo,
-                  obtainExtras(null, imageReference),
-                  actualImageDrawable)
-            }
-            debugOverlayHandler?.update(this)
-            return true
+          val image = imageReference?.get() ?: return false
+          setFetchSubmitted(true)
+          closeable = imageReference.clone()
+          actualImageLayer.setActualImage(
+              imageRequest.resources, imageRequest.imageOptions, image, imageToDataModelMapper)
+          // TODO(T105148151): trigger listeners
+          invalidateSelf()
+          val imageInfo = image.imageInfo
+          if (isIntermediateImage) {
+            listenerManager.onIntermediateImageSet(imageId, imageRequest, imageInfo)
+          } else {
+            listenerManager.onFinalImageSet(
+                imageId,
+                imageRequest,
+                ImageOrigin.MEMORY_BITMAP_SHORTCUT,
+                imageInfo,
+                obtainExtras(null, imageReference),
+                actualImageDrawable)
           }
+          debugOverlayHandler?.update(this)
+          return true
         }
       } finally {
         CloseableReference.closeSafely(imageReference)

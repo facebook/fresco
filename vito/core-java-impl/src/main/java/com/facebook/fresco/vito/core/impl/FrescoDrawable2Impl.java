@@ -118,11 +118,11 @@ public class FrescoDrawable2Impl extends FrescoDrawable2
 
   public FrescoDrawable2Impl(
       boolean useNewReleaseCallbacks,
-      @Nullable ControllerListener2<ImageInfo> imagePerfControllerListener,
-      VitoImagePerfListener imagePerfListener) {
+      @Nullable ControllerListener2<ImageInfo> imagePerfLoggingListener,
+      VitoImagePerfListener vitoImagePerfListener) {
     mUseNewReleaseCallbacks = useNewReleaseCallbacks;
-    mImageListener.setImagePerfControllerListener(imagePerfControllerListener);
-    mImagePerfListener = imagePerfListener;
+    mImageListener.setImagePerfControllerListener(imagePerfLoggingListener);
+    mImagePerfListener = vitoImagePerfListener;
   }
 
   public @Nullable Drawable setImageDrawable(@Nullable Drawable newDrawable) {
