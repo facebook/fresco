@@ -64,6 +64,7 @@ object FrescoVitoSlideshowComponentSpec {
       c: ComponentContext,
       slideshowDrawable: FrescoVitoSlideshowDrawable<*>,
       @Prop(varArg = "uri") uris: List<Uri?>,
+      @Prop heroMediaTransitionMs: Int?,
       @Prop photoTransitionMs: Int,
       @Prop fadeTransitionMs: Int,
       @Prop(optional = true) isPlaying: Boolean,
