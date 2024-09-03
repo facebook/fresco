@@ -10,6 +10,12 @@ package com.facebook.fresco.vito.core.impl.debug
 import com.facebook.fresco.ui.common.ControllerListener2.Extras
 import com.facebook.fresco.vito.core.impl.FrescoDrawable2
 
-class NoOpDebugOverlayFactory2 : DebugOverlayFactory2 {
-  override fun update(drawable: FrescoDrawable2, extras: Extras?): Unit = Unit // no-op
+fun interface DebugOverlayFactory2 {
+  /**
+   * Create a new debug overlay for the given FrescoState. Returns null when debug overlays are
+   * disabled.
+   *
+   * @param drawable the drawable to update the overlay for
+   */
+  fun update(drawable: FrescoDrawable2, extras: Extras?)
 }
