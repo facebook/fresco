@@ -5,40 +5,38 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.core.impl;
+package com.facebook.fresco.vito.core.impl
 
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import androidx.annotation.Nullable;
-import com.facebook.common.references.CloseableReference;
-import com.facebook.drawee.drawable.ForwardingDrawable;
-import com.facebook.drawee.drawable.ScaleTypeDrawable;
-import com.facebook.fresco.vito.options.ImageOptions;
-import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.infer.annotation.Nullsafe;
-import com.facebook.infer.annotation.ThreadSafe;
+import android.content.res.Resources
+import android.graphics.drawable.Drawable
+import com.facebook.common.references.CloseableReference
+import com.facebook.drawee.drawable.ForwardingDrawable
+import com.facebook.drawee.drawable.ScaleTypeDrawable
+import com.facebook.fresco.vito.options.ImageOptions
+import com.facebook.imagepipeline.image.CloseableImage
+import com.facebook.infer.annotation.ThreadSafe
 
 /** Helper for building drawables */
-@Nullsafe(Nullsafe.Mode.LOCAL)
-public interface Hierarcher {
+interface Hierarcher {
+
   /**
    * Build an actual image drawable for the given closeable image. For scaling, color filters and
    * other transformation, the actual image wrapper is used. The drawable returned here does not
    * include scaling etc and should be combined with the actual image wrapper.
    *
-   * <p>NOTE: the Drawable returned by this method will not hold on to the image reference. This
-   * must be done separately.
+   * NOTE: the Drawable returned by this method will not hold on to the image reference. This must
+   * be done separately.
    *
    * @param resources resources to be used to load the drawable
    * @param imageOptions image options to be used to create the drawable
    * @param closeableImage the decoded image to create the Drawable for
    * @return the actual image drawable or null if it cannot be rendered
    */
-  @Nullable
-  Drawable buildActualImageDrawable(
-      Resources resources,
-      ImageOptions imageOptions,
-      CloseableReference<CloseableImage> closeableImage);
+  fun buildActualImageDrawable(
+      resources: Resources,
+      imageOptions: ImageOptions,
+      closeableImage: CloseableReference<CloseableImage>
+  ): Drawable?
 
   /**
    * Build a placeholder drawable if specified in the given image options.
@@ -47,8 +45,7 @@ public interface Hierarcher {
    * @param imageOptions image options to be used to create the placeholder drawable
    * @return the placeholder drawable or NopDrawable.INSTANCE if unset.
    */
-  @Nullable
-  Drawable buildPlaceholderDrawable(Resources resources, ImageOptions imageOptions);
+  fun buildPlaceholderDrawable(resources: Resources, imageOptions: ImageOptions): Drawable?
 
   /**
    * Build a progressbar drawable if specified in the given image options
@@ -57,8 +54,7 @@ public interface Hierarcher {
    * @param imageOptions image options to be used to create the progressbar drawable
    * @return the progressbar drawable or null if unset.
    */
-  @Nullable
-  Drawable buildProgressDrawable(Resources resources, ImageOptions imageOptions);
+  fun buildProgressDrawable(resources: Resources, imageOptions: ImageOptions): Drawable?
 
   /**
    * Build an error drawable if specified in the given image options.
@@ -67,8 +63,7 @@ public interface Hierarcher {
    * @param imageOptions image options to be used to create the error drawable
    * @return the error drawable or null if unset.
    */
-  @Nullable
-  Drawable buildErrorDrawable(Resources resources, ImageOptions imageOptions);
+  fun buildErrorDrawable(resources: Resources, imageOptions: ImageOptions): Drawable?
 
   /**
    * Build the actual image wrapper, a forwarding drawable that will forward to the actual image
@@ -79,8 +74,7 @@ public interface Hierarcher {
    * @return the actual image wrapper drawable
    */
   @ThreadSafe
-  ForwardingDrawable buildActualImageWrapper(
-      ImageOptions imageOptions, @Nullable Object callerContext);
+  fun buildActualImageWrapper(imageOptions: ImageOptions, callerContext: Any?): ForwardingDrawable
 
   /**
    * Builds the overlay drawable to be displayed for the given image options.
@@ -89,8 +83,7 @@ public interface Hierarcher {
    * @param imageOptions image options to be used to create the overlay
    * @return the overlay or null if not applicable
    */
-  @Nullable
-  Drawable buildOverlayDrawable(Resources resources, ImageOptions imageOptions);
+  fun buildOverlayDrawable(resources: Resources, imageOptions: ImageOptions): Drawable?
 
   /**
    * Set up the actual image wrapper scale type Drawable.
@@ -99,10 +92,11 @@ public interface Hierarcher {
    * @param imageOptions image options to be used
    * @param callerContext the caller's context, may be null
    */
-  void setupActualImageWrapper(
-      ScaleTypeDrawable actualImageWrapper,
-      ImageOptions imageOptions,
-      @Nullable Object callerContext);
+  fun setupActualImageWrapper(
+      actualImageWrapper: ScaleTypeDrawable,
+      imageOptions: ImageOptions,
+      callerContext: Any?
+  )
 
   /**
    * Round the given Drawable if set via the given on imageOptions
@@ -112,5 +106,9 @@ public interface Hierarcher {
    * @param imageOptions
    * @return the rounded drawable or original if no rounding specified
    */
-  Drawable applyRoundingOptions(Resources resources, Drawable drawable, ImageOptions imageOptions);
+  fun applyRoundingOptions(
+      resources: Resources,
+      drawable: Drawable,
+      imageOptions: ImageOptions
+  ): Drawable
 }

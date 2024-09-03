@@ -58,7 +58,7 @@ public class FrescoDrawable2ImplTest {
 
     mFrescoDrawable.close();
 
-    Assert.assertNull(mFrescoDrawable.mImageReference);
+    Assert.assertNull(mFrescoDrawable.imageReference);
     Assert.assertTrue(mCloseableImage.isClosed());
     Assert.assertTrue(mLatch.await(3, TimeUnit.SECONDS));
   }
@@ -97,7 +97,7 @@ public class FrescoDrawable2ImplTest {
     Drawable drawable = mock(Drawable.class);
     mFrescoDrawable.setImageDrawable(drawable);
 
-    Assert.assertNull(mFrescoDrawable.mImageReference);
+    Assert.assertNull(mFrescoDrawable.imageReference);
     Assert.assertTrue(mCloseableImage.isClosed());
     Assert.assertTrue(mLatch.await(3, TimeUnit.SECONDS));
   }
@@ -110,7 +110,7 @@ public class FrescoDrawable2ImplTest {
 
     mFrescoDrawable.setImageDrawable(null);
 
-    Assert.assertNull(mFrescoDrawable.mImageReference);
+    Assert.assertNull(mFrescoDrawable.imageReference);
     Assert.assertTrue(mCloseableImage.isClosed());
     Assert.assertTrue(mLatch.await(3, TimeUnit.SECONDS));
   }

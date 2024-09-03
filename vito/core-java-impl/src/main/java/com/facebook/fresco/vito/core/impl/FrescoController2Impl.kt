@@ -125,7 +125,7 @@ open class FrescoController2Impl(
 
     // We're fetching a new image, so we're updating the ID
     val imageId = generateIdentifier()
-    frescoDrawable.setImageId(imageId)
+    frescoDrawable.imageId = imageId
     val extras = obtainExtras(null, null, frescoDrawable, imageRequest)
 
     // Notify listeners that we're about to fetch an image
