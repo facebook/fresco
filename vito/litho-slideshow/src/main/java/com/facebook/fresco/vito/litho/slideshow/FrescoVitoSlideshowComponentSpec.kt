@@ -111,12 +111,26 @@ object FrescoVitoSlideshowComponentSpec {
           contextChain,
           imageListener)
 
+      var delayAttempt = 0
+      val maxDelayAttempts =
+          if (heroMediaTransitionMs !== null)
+              heroMediaTransitionMs.div(photoTransitionMs + fadeTransitionMs)
+          else 0
       // Set up task for animating to next image
       val animation: Runnable =
           object : Runnable {
             var currentIndex = nextImageIndex
 
             override fun run() {
+              if (heroMediaTransitionMs !== null) {
+                if (currentIndex == 1 && delayAttempt < maxDelayAttempts) {
+                  delayAttempt++
+                  return
+                } else {
+                  delayAttempt = 0
+                }
+              }
+
               val nextIndex = (currentIndex + 1) % listSize
               animateToNextImage(
                   c.resources,
