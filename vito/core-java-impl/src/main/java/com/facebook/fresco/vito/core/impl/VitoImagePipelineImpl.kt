@@ -70,6 +70,7 @@ class VitoImagePipelineImpl(
         modifiedUriValue = result.toString()
         if (result is UriModifierInterface.ModificationResult.Modified) {
           finalImageSource = ImageSourceProvider.forUri(result.newUri)
+          extras[HasExtraData.KEY_ORIGINAL_URL] = imageSource.imageUri
         }
       } else {
         modifiedUriValue = "NotSupportedImageSource: ${imageSource.getClassNameString()}"

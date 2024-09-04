@@ -31,6 +31,9 @@ interface HasExtraData {
     const val KEY_BITMAP_CONFIG = "bitmap_config"
     const val KEY_IS_ROUNDED = "is_rounded"
     const val KEY_NON_FATAL_DECODE_ERROR = "non_fatal_decode_error"
+    /** The original URL if it was modified by Dynamic Image URL */
+    const val KEY_ORIGINAL_URL = "original_url"
+    /** Information on if/why the url was modified by Dynamic Image URL */
     const val KEY_MODIFIED_URL = "modified_url"
     const val KEY_IMAGE_SOURCE_TYPE: String = "image_source_type"
 

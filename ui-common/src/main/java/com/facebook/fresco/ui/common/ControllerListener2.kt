@@ -29,6 +29,7 @@ interface ControllerListener2<INFO> {
     @JvmField var focusY: Float? = null
     @JvmField var logWithHighSamplingRate: Boolean = false
     @JvmField var modifiedUriStatus: String? = null
+    @JvmField var originalUri: Uri? = null
 
     fun makeExtrasCopy(): Extras {
       val extras = Extras()

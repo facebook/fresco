@@ -468,6 +468,7 @@ open class FrescoController2Impl(
               logWithHighSamplingRate,
               sourceUri)
       extras.modifiedUriStatus = imageRequest.extras[HasExtraData.KEY_MODIFIED_URL] as? String
+      extras.originalUri = imageRequest.extras[HasExtraData.KEY_ORIGINAL_URL] as? Uri
       return extras
     }
 
