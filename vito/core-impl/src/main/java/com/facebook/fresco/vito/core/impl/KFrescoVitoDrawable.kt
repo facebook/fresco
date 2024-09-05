@@ -16,14 +16,13 @@ import android.graphics.drawable.Drawable
 import com.facebook.common.closeables.AutoCleanupDelegate
 import com.facebook.datasource.DataSource
 import com.facebook.drawee.drawable.VisibilityCallback
-import com.facebook.fresco.ui.common.ControllerListener2
 import com.facebook.fresco.vito.core.CombinedImageListener
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
+import com.facebook.fresco.vito.core.ImagePerfLoggingListener
 import com.facebook.fresco.vito.core.VitoImagePerfListener
 import com.facebook.fresco.vito.core.VitoImageRequest
 import com.facebook.fresco.vito.listener.ImageListener
 import com.facebook.fresco.vito.renderer.DrawableImageDataModel
-import com.facebook.imagepipeline.image.ImageInfo
 import java.io.Closeable
 import java.io.IOException
 
@@ -62,8 +61,8 @@ class KFrescoVitoDrawable(
 
   override var refetchRunnable: Runnable? = null
 
-  override fun getImagePerfControllerListener(): ControllerListener2<ImageInfo>? =
-      listenerManager.getImagePerfControllerListener()
+  override fun getImagePerfLoggingListener(): ImagePerfLoggingListener? =
+      listenerManager.getImagePerfLoggingListener()
 
   override val imageId: Long
     get() = _imageId
@@ -217,6 +216,10 @@ class KFrescoVitoDrawable(
   override fun getActualImageBounds(outBounds: RectF) {
     // TODO
     throw UnsupportedOperationException("Not implemented for KVito")
+  }
+
+  override fun reportVisible(visible: Boolean) {
+    getImagePerfLoggingListener()?.reportVisible(visible)
   }
 
   override fun getIntrinsicWidth(): Int {

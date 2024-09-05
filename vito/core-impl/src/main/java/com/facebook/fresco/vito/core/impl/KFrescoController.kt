@@ -17,7 +17,6 @@ import com.facebook.common.logging.FLog
 import com.facebook.common.references.CloseableReference
 import com.facebook.datasource.DataSource
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin
-import com.facebook.fresco.ui.common.ControllerListener2
 import com.facebook.fresco.ui.common.ImagePerfDataListener
 import com.facebook.fresco.ui.common.ImagePerfDataNotifier
 import com.facebook.fresco.ui.common.OnFadeListener
@@ -25,6 +24,7 @@ import com.facebook.fresco.ui.common.VitoUtils
 import com.facebook.fresco.vito.core.FrescoController2
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.FrescoVitoConfig
+import com.facebook.fresco.vito.core.ImagePerfLoggingListener
 import com.facebook.fresco.vito.core.VitoImagePerfListener
 import com.facebook.fresco.vito.core.VitoImagePipeline
 import com.facebook.fresco.vito.core.VitoImageRequest
@@ -41,7 +41,6 @@ import com.facebook.fresco.vito.source.DrawableImageSource
 import com.facebook.imagepipeline.image.CloseableBitmap
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.image.CloseableStaticBitmap
-import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.image.ImageInfoImpl
 import com.facebook.imagepipeline.image.ImmutableQualityInfo
 import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
@@ -53,7 +52,7 @@ class KFrescoController(
     private val uiThreadExecutor: Executor,
     private val lightweightBackgroundThreadExecutor: Executor,
     private val globalImageRequestListener: VitoImageRequestListener? = null,
-    private val imagePerfLoggingListenerSupplier: Supplier<ControllerListener2<ImageInfo>>? = null,
+    private val imagePerfLoggingListenerSupplier: Supplier<ImagePerfLoggingListener>? = null,
     private val imagePerfListener: VitoImagePerfListener = BaseVitoImagePerfListener(),
     private val drawableFactory: ImageOptionsDrawableFactory? = null,
 ) : FrescoController2 {
@@ -81,7 +80,7 @@ class KFrescoController(
       val drawable = KFrescoVitoDrawable(imagePerfListener)
       imagePerfLoggingListenerSupplier
           ?.get()
-          ?.let(drawable.listenerManager::setImagePerfControllerListener)
+          ?.let(drawable.listenerManager::setImagePerfLoggingListener)
       return drawable as T
     }
   }

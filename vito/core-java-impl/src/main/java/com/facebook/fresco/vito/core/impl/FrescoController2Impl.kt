@@ -21,7 +21,6 @@ import com.facebook.datasource.DataSource
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin
 import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.fresco.middleware.MiddlewareUtils.obtainExtras
-import com.facebook.fresco.ui.common.ControllerListener2
 import com.facebook.fresco.ui.common.ControllerListener2.Extras
 import com.facebook.fresco.ui.common.ImagePerfDataListener
 import com.facebook.fresco.ui.common.ImagePerfDataNotifier
@@ -31,6 +30,7 @@ import com.facebook.fresco.ui.common.VitoUtils.generateIdentifier
 import com.facebook.fresco.vito.core.FrescoController2
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.FrescoVitoConfig
+import com.facebook.fresco.vito.core.ImagePerfLoggingListener
 import com.facebook.fresco.vito.core.NopDrawable
 import com.facebook.fresco.vito.core.VitoImagePerfListener
 import com.facebook.fresco.vito.core.VitoImagePipeline
@@ -44,7 +44,6 @@ import com.facebook.fresco.vito.source.EmptyImageSource
 import com.facebook.imagepipeline.image.CloseableBitmap
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.image.CloseableStaticBitmap
-import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.image.ImageInfoImpl
 import com.facebook.imagepipeline.image.ImmutableQualityInfo
 import java.util.concurrent.Executor
@@ -57,7 +56,7 @@ open class FrescoController2Impl(
     private val imagePipeline: VitoImagePipeline,
     private val globalImageListener: VitoImageRequestListener?,
     private val debugOverlayFactory: DebugOverlayFactory2,
-    private val imagePerfListenerSupplier: Supplier<ControllerListener2<ImageInfo>>?,
+    private val imagePerfListenerSupplier: Supplier<ImagePerfLoggingListener>?,
     private val vitoImagePerfListener: VitoImagePerfListener
 ) : DrawableDataSubscriber, FrescoController2 {
 

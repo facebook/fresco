@@ -18,6 +18,7 @@ import com.facebook.fresco.ui.common.ImagePerfNotifier;
 import com.facebook.fresco.ui.common.ImagePerfNotifierHolder;
 import com.facebook.fresco.ui.common.ImagePerfState;
 import com.facebook.fresco.ui.common.OnDrawControllerListener;
+import com.facebook.fresco.ui.common.VisibilityAware;
 import com.facebook.fresco.ui.common.VisibilityState;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.infer.annotation.Nullsafe;
@@ -29,6 +30,7 @@ public class ImagePerfStateManager extends BaseControllerListener2<ImageInfo>
     implements ImagePerfNotifierHolder,
         OnDrawControllerListener<ImageInfo>,
         Closeable,
+        VisibilityAware,
         VisibilityCallback {
 
   private final MonotonicClock mClock;
@@ -206,6 +208,11 @@ public class ImagePerfStateManager extends BaseControllerListener2<ImageInfo>
     if (localImagePerfNotifier != null) {
       localImagePerfNotifier.notifyStatusUpdated(state, ImageLoadStatus.EMPTY_EVENT);
     }
+  }
+
+  @Override
+  public void reportVisible(boolean visible) {
+    onVisibilityChange(visible);
   }
 
   @Override

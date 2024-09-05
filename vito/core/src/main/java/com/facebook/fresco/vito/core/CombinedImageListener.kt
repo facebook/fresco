@@ -21,9 +21,9 @@ interface CombinedImageListener : VitoImageRequestListener {
 
   var imageListener: ImageListener?
 
-  fun setImagePerfControllerListener(imagePerfControllerListener: ControllerListener2<ImageInfo>?)
+  fun setImagePerfLoggingListener(imagePerfLoggingListener: ImagePerfLoggingListener?)
 
-  fun getImagePerfControllerListener(): ControllerListener2<ImageInfo>?
+  fun getImagePerfLoggingListener(): ImagePerfLoggingListener?
 
   fun setLocalImagePerfStateListener(imagePerfNotifier: ImagePerfNotifier?)
 

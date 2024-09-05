@@ -16,6 +16,7 @@ import com.facebook.fresco.ui.common.ImagePerfNotifier
 import com.facebook.fresco.ui.common.ImagePerfNotifierHolder
 import com.facebook.fresco.ui.common.VitoUtils
 import com.facebook.fresco.vito.core.CombinedImageListener
+import com.facebook.fresco.vito.core.ImagePerfLoggingListener
 import com.facebook.fresco.vito.core.VitoImageRequest
 import com.facebook.fresco.vito.core.VitoImageRequestListener
 import com.facebook.fresco.vito.listener.ImageListener
@@ -30,7 +31,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
   override var imageListener: ImageListener? = null
   private var controllerListener2: ControllerListener2<ImageInfo>? =
       BaseControllerListener2.getNoOpListener()
-  private var imagePerfControllerListener: ControllerListener2<ImageInfo>? = null
+  private var imagePerfLoggingListener: ImagePerfLoggingListener? = null
   private var localImagePerfStateListener: ImagePerfNotifier? = null
 
   override fun setVitoImageRequestListener(vitoImageRequestListener: VitoImageRequestListener?) {
@@ -47,16 +48,12 @@ class CombinedImageListenerImpl : CombinedImageListener {
     this.controllerListener2 = controllerListener2
   }
 
-  override fun setImagePerfControllerListener(
-      imagePerfControllerListener: ControllerListener2<ImageInfo>?
-  ) {
-    this.imagePerfControllerListener = imagePerfControllerListener
+  override fun setImagePerfLoggingListener(imagePerfLoggingListener: ImagePerfLoggingListener?) {
+    this.imagePerfLoggingListener = imagePerfLoggingListener
     checkAndSetLocalImagePerfStateListener()
   }
 
-  override fun getImagePerfControllerListener(): ControllerListener2<ImageInfo>? {
-    return imagePerfControllerListener
-  }
+  override fun getImagePerfLoggingListener(): ImagePerfLoggingListener? = imagePerfLoggingListener
 
   override fun setLocalImagePerfStateListener(imagePerfNotifier: ImagePerfNotifier?) {
     localImagePerfStateListener = imagePerfNotifier
@@ -64,7 +61,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
   }
 
   private fun checkAndSetLocalImagePerfStateListener() {
-    val localPerfStatePublisher = imagePerfControllerListener as? ImagePerfNotifierHolder
+    val localPerfStatePublisher = imagePerfLoggingListener as? ImagePerfNotifierHolder
     if (localImagePerfStateListener != null && localPerfStatePublisher == null) {
       throw NullPointerException(
           "trying to set localImagePerfStateListener without a localPerfStatePublisher")
@@ -83,7 +80,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
     imageListener?.onSubmit(id, callerContext)
     val stringId = VitoUtils.getStringId(id)
     controllerListener2?.onSubmit(stringId, callerContext, extras)
-    imagePerfControllerListener?.onSubmit(stringId, callerContext, extras)
+    imagePerfLoggingListener?.onSubmit(stringId, callerContext, extras)
   }
 
   override fun onPlaceholderSet(id: Long, imageRequest: VitoImageRequest, placeholder: Drawable?) {
@@ -107,7 +104,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
     imageListener?.onFinalImageSet(id, imageOrigin, imageInfo, drawable)
     val stringId = VitoUtils.getStringId(id)
     controllerListener2?.onFinalImageSet(stringId, imageInfo, extras)
-    imagePerfControllerListener?.onFinalImageSet(stringId, imageInfo, extras)
+    imagePerfLoggingListener?.onFinalImageSet(stringId, imageInfo, extras)
   }
 
   override fun onIntermediateImageSet(
@@ -120,7 +117,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
     imageListener?.onIntermediateImageSet(id, imageInfo)
     val stringId = VitoUtils.getStringId(id)
     controllerListener2?.onIntermediateImageSet(stringId, imageInfo)
-    imagePerfControllerListener?.onIntermediateImageSet(stringId, imageInfo)
+    imagePerfLoggingListener?.onIntermediateImageSet(stringId, imageInfo)
   }
 
   override fun onIntermediateImageFailed(
@@ -133,7 +130,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
     imageListener?.onIntermediateImageFailed(id, throwable)
     val stringId = VitoUtils.getStringId(id)
     controllerListener2?.onIntermediateImageFailed(stringId)
-    imagePerfControllerListener?.onIntermediateImageFailed(stringId)
+    imagePerfLoggingListener?.onIntermediateImageFailed(stringId)
   }
 
   override fun onFailure(
@@ -148,7 +145,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
     imageListener?.onFailure(id, error, throwable)
     val stringId = VitoUtils.getStringId(id)
     controllerListener2?.onFailure(stringId, throwable, extras)
-    imagePerfControllerListener?.onFailure(stringId, throwable, extras)
+    imagePerfLoggingListener?.onFailure(stringId, throwable, extras)
   }
 
   override fun onRelease(id: Long, imageRequest: VitoImageRequest, extras: Extras?) {
@@ -157,20 +154,20 @@ class CombinedImageListenerImpl : CombinedImageListener {
     imageListener?.onRelease(id)
     val stringId = VitoUtils.getStringId(id)
     controllerListener2?.onRelease(stringId, extras)
-    imagePerfControllerListener?.onRelease(stringId, extras)
+    imagePerfLoggingListener?.onRelease(stringId, extras)
   }
 
   override fun onEmptyEvent(callerContext: Any?) {
     vitoImageRequestListener?.onEmptyEvent(callerContext)
     localVitoImageRequestListener?.onEmptyEvent(callerContext)
     controllerListener2?.onEmptyEvent(callerContext)
-    imagePerfControllerListener?.onEmptyEvent(callerContext)
+    imagePerfLoggingListener?.onEmptyEvent(callerContext)
   }
 
   override fun onReset() {
     try {
       imageListener = null
-      (imagePerfControllerListener as? Closeable)?.close()
+      (imagePerfLoggingListener as? Closeable)?.close()
     } catch (e: IOException) {}
   }
 }

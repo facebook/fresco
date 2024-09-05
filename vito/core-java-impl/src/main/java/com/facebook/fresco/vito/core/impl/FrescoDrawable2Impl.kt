@@ -18,22 +18,21 @@ import com.facebook.drawee.backends.pipeline.info.ImageOrigin
 import com.facebook.drawee.components.DeferredReleaser
 import com.facebook.drawee.drawable.ScaleTypeDrawable
 import com.facebook.drawee.drawable.ScalingUtils
-import com.facebook.fresco.ui.common.ControllerListener2
 import com.facebook.fresco.vito.core.CombinedImageListener
+import com.facebook.fresco.vito.core.ImagePerfLoggingListener
 import com.facebook.fresco.vito.core.NopDrawable
 import com.facebook.fresco.vito.core.VitoImagePerfListener
 import com.facebook.fresco.vito.core.VitoImageRequest
 import com.facebook.fresco.vito.core.VitoImageRequestListener
 import com.facebook.fresco.vito.listener.ImageListener
 import com.facebook.imagepipeline.image.CloseableImage
-import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.listener.BaseRequestListener
 import com.facebook.imagepipeline.listener.RequestListener
 import kotlin.jvm.JvmField
 
 class FrescoDrawable2Impl(
     private val useNewReleaseCallbacks: Boolean,
-    imagePerfLoggingListener: ControllerListener2<ImageInfo>?,
+    imagePerfLoggingListener: ImagePerfLoggingListener?,
     vitoImagePerfListener: VitoImagePerfListener
 ) : FrescoDrawable2(), DataSubscriber<CloseableReference<CloseableImage>> {
 
@@ -51,7 +50,7 @@ class FrescoDrawable2Impl(
   override val imagePerfListener: VitoImagePerfListener
 
   init {
-    internalListener.setImagePerfControllerListener(imagePerfLoggingListener)
+    internalListener.setImagePerfLoggingListener(imagePerfLoggingListener)
     imagePerfListener = vitoImagePerfListener
   }
 
@@ -295,14 +294,18 @@ class FrescoDrawable2Impl(
         super.getIntrinsicHeight()
       }
 
-  override fun getImagePerfControllerListener(): ControllerListener2<ImageInfo>? =
-      internalListener.getImagePerfControllerListener()
+  override fun getImagePerfLoggingListener(): ImagePerfLoggingListener? =
+      internalListener.getImagePerfLoggingListener()
 
   /**
    * This function is not needed in this flow because it is already handled in
    * ScaleTypeDrawable.java
    */
   override fun configureWhenUnderlyingChanged(): Unit = Unit
+
+  override fun reportVisible(visible: Boolean) {
+    getImagePerfLoggingListener()?.reportVisible(visible)
+  }
 
   companion object {
     private const val RELEASE_DELAY: Long = 16 * 5L // Roughly 5 frames.

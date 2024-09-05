@@ -10,11 +10,10 @@ package com.facebook.fresco.vito.core
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import com.facebook.drawee.drawable.VisibilityCallback
-import com.facebook.fresco.ui.common.ControllerListener2
+import com.facebook.fresco.ui.common.VisibilityAware
 import com.facebook.fresco.vito.listener.ImageListener
-import com.facebook.imagepipeline.image.ImageInfo
 
-interface FrescoDrawableInterface {
+interface FrescoDrawableInterface : VisibilityAware {
 
   val imageId: Long
   var callerContext: Any?
@@ -49,7 +48,7 @@ interface FrescoDrawableInterface {
    */
   var refetchRunnable: Runnable?
 
-  fun getImagePerfControllerListener(): ControllerListener2<ImageInfo>?
+  fun getImagePerfLoggingListener(): ImagePerfLoggingListener?
 
   fun setIntrinsicSize(width: Int, height: Int)
 
