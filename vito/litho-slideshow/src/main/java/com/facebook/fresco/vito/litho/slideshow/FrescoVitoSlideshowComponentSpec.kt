@@ -215,7 +215,7 @@ object FrescoVitoSlideshowComponentSpec {
   ) {
     FrescoVitoProvider.getController()
         .fetch(
-            frescoDrawable = slideshowDrawable.nextImage,
+            drawable = slideshowDrawable.nextImage,
             imageRequest =
                 FrescoVitoProvider.getImagePipeline()
                     .createImageRequest(

@@ -95,7 +95,7 @@ object VitoViewImpl2 {
     frescoDrawable.refetchRunnable = Runnable {
       FrescoVitoProvider.getController()
           .fetch(
-              frescoDrawable = frescoDrawable,
+              drawable = frescoDrawable,
               imageRequest = imageRequest,
               callerContext = callerContext,
               contextChain = null,

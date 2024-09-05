@@ -65,7 +65,7 @@ object VitoSpanLoader {
     val fetchCommand = {
       FrescoVitoProvider.getController()
           .fetch(
-              frescoDrawable = target.drawableInterface,
+              drawable = target.drawableInterface,
               imageRequest = imageRequest,
               callerContext = callerContext,
               contextChain = contextChain,

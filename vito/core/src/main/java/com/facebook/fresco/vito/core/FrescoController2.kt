@@ -19,7 +19,7 @@ interface FrescoController2 {
   fun <T> createDrawable(): T where T : Drawable, T : FrescoDrawableInterface
 
   fun fetch(
-      frescoDrawable: FrescoDrawableInterface,
+      drawable: FrescoDrawableInterface,
       imageRequest: VitoImageRequest,
       callerContext: Any?,
       contextChain: ContextChain?,

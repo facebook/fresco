@@ -49,7 +49,7 @@ class ImageLiveEditor(
 
   fun fetch(request: VitoImageRequest) {
     frescoController.fetch(
-        frescoDrawable = drawable,
+        drawable = drawable,
         imageRequest = request,
         callerContext = drawable.callerContext,
         contextChain = null,

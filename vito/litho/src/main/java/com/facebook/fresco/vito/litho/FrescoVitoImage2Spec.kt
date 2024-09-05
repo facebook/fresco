@@ -226,7 +226,7 @@ object FrescoVitoImage2Spec {
 
     FrescoVitoProvider.getController()
         .fetch(
-            frescoDrawable = frescoDrawable,
+            drawable = frescoDrawable,
             imageRequest = request!!,
             callerContext = callerContext,
             contextChain = contextChain,
@@ -260,7 +260,7 @@ object FrescoVitoImage2Spec {
     // We'll only trigger an actual fetch if needed. Most of the time, this will be a no-op.
     FrescoVitoProvider.getController()
         .fetch(
-            frescoDrawable = frescoDrawable,
+            drawable = frescoDrawable,
             imageRequest = request!!,
             callerContext = callerContext,
             contextChain = contextChain,
