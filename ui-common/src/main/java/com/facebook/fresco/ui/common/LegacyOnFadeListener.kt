@@ -7,7 +7,15 @@
 
 package com.facebook.fresco.ui.common
 
-interface LoggingListener {
+@Deprecated(
+    "Please use the OnFadeListener directly",
+    replaceWith =
+        ReplaceWith(
+            "OnFadeListener",
+            "import com.facebook.fresco.ui.common.OnFadeListener",
+        ),
+)
+interface LegacyOnFadeListener {
   fun onFadeStarted(id: String)
 
   fun onFadeFinished(id: String)

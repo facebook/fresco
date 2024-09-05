@@ -34,7 +34,7 @@ import com.facebook.fresco.middleware.MiddlewareUtils;
 import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.ui.common.ForwardingControllerListener2;
-import com.facebook.fresco.ui.common.LoggingListener;
+import com.facebook.fresco.ui.common.LegacyOnFadeListener;
 import com.facebook.fresco.ui.common.OnFadeListener;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.Nullsafe;
@@ -99,7 +99,7 @@ public abstract class AbstractDraweeController<T, INFO>
   protected @Nullable ControllerListener<INFO> mControllerListener;
   protected ForwardingControllerListener2<INFO> mControllerListener2 =
       new ForwardingControllerListener2<>();
-  protected @Nullable LoggingListener mLoggingListener;
+  protected @Nullable LegacyOnFadeListener mLegacyOnFadeListener;
 
   // Hierarchy
   private @Nullable SettableDraweeHierarchy mSettableDraweeHierarchy;
@@ -193,7 +193,7 @@ public abstract class AbstractDraweeController<T, INFO>
       FrescoSystrace.endSection();
     }
 
-    if (mLoggingListener != null) {
+    if (mLegacyOnFadeListener != null) {
       setUpLoggingListener();
     }
   }
@@ -324,12 +324,12 @@ public abstract class AbstractDraweeController<T, INFO>
     mControllerListener2.removeListener(controllerListener2);
   }
 
-  public void setLoggingListener(final LoggingListener loggingListener) {
-    mLoggingListener = loggingListener;
+  public void setLoggingListener(final LegacyOnFadeListener legacyOnFadeListener) {
+    mLegacyOnFadeListener = legacyOnFadeListener;
   }
 
-  protected @Nullable LoggingListener getLoggingListener() {
-    return mLoggingListener;
+  protected @Nullable LegacyOnFadeListener getLoggingListener() {
+    return mLegacyOnFadeListener;
   }
 
   /** Removes controller listener. */
@@ -403,7 +403,7 @@ public abstract class AbstractDraweeController<T, INFO>
       mSettableDraweeHierarchy.setControllerOverlay(mControllerOverlay);
     }
 
-    if (mLoggingListener != null) {
+    if (mLegacyOnFadeListener != null) {
       setUpLoggingListener();
     }
   }
@@ -415,8 +415,8 @@ public abstract class AbstractDraweeController<T, INFO>
               new OnFadeListener() {
                 @Override
                 public void onFadeFinished() {
-                  if (mLoggingListener != null) {
-                    mLoggingListener.onFadeFinished(mId);
+                  if (mLegacyOnFadeListener != null) {
+                    mLegacyOnFadeListener.onFadeFinished(mId);
                   }
                 }
 
@@ -425,8 +425,8 @@ public abstract class AbstractDraweeController<T, INFO>
 
                 @Override
                 public void onFadeStarted() {
-                  if (mLoggingListener != null) {
-                    mLoggingListener.onFadeStarted(mId);
+                  if (mLegacyOnFadeListener != null) {
+                    mLegacyOnFadeListener.onFadeStarted(mId);
                   }
                 }
               });
