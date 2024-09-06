@@ -28,9 +28,11 @@ import com.facebook.drawee.drawable.RoundedNinePatchDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** A class that contains helper methods for wrapping and rounding. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class WrappingUtils {
 
   private static final String TAG = "WrappingUtils";
@@ -220,6 +222,7 @@ public class WrappingUtils {
       if (drawable == null
           || roundingParams == null
           || roundingParams.getRoundingMethod() != RoundingParams.RoundingMethod.OVERLAY_COLOR) {
+        // NULLSAFE_FIXME[Return Not Nullable]
         return drawable;
       }
       RoundedCornersDrawable roundedCornersDrawable = new RoundedCornersDrawable(drawable);
@@ -259,11 +262,13 @@ public class WrappingUtils {
       if (drawable == null
           || roundingParams == null
           || roundingParams.getRoundingMethod() != RoundingParams.RoundingMethod.BITMAP_ONLY) {
+        // NULLSAFE_FIXME[Return Not Nullable]
         return drawable;
       }
       if (drawable instanceof ForwardingDrawable) {
         DrawableParent parent = findDrawableParentForLeaf((ForwardingDrawable) drawable);
         Drawable child = parent.setDrawable(sEmptyDrawable);
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         child = applyLeafRounding(child, roundingParams, resources);
         parent.setDrawable(child);
         return drawable;
