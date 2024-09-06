@@ -30,6 +30,7 @@ import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Set;
 import javax.annotation.Nullable;
 
@@ -38,6 +39,7 @@ import javax.annotation.Nullable;
  *
  * <p>See {@link AbstractDraweeControllerBuilder} for more details.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PipelineDraweeControllerBuilder
     extends AbstractDraweeControllerBuilder<
         PipelineDraweeControllerBuilder,
@@ -129,7 +131,9 @@ public class PipelineDraweeControllerBuilder
       controller.initialize(
           obtainDataSourceSupplier(controller, controllerId),
           controllerId,
+          // NULLSAFE_FIXME[Parameter Not Nullable]
           getCacheKey(),
+          // NULLSAFE_FIXME[Parameter Not Nullable]
           getCallerContext(),
           mCustomDrawableFactories);
       controller.initializePerformanceMonitoring(mImagePerfDataListener, this);
