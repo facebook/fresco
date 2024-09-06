@@ -19,11 +19,13 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 /** Drawee mocks */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DraweeMocks {
 
   /**
@@ -89,6 +91,7 @@ public class DraweeMocks {
               }
             })
         .when(controller)
+        // NULLSAFE_FIXME[Not Vetted Third-Party]
         .setContentDescription(any(String.class));
   }
 
@@ -101,6 +104,7 @@ public class DraweeMocks {
   public static ControllerListener stubControllerListener(final DraweeController controller) {
     final ForwardingControllerListener forwardingListener = new ForwardingControllerListener();
     if (!(controller instanceof AbstractDraweeController)) {
+      // NULLSAFE_FIXME[Return Not Nullable]
       return null;
     }
     AbstractDraweeController abstractController = (AbstractDraweeController) controller;
@@ -109,10 +113,12 @@ public class DraweeMocks {
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 forwardingListener.addListener((ControllerListener) invocation.getArguments()[0]);
+                // NULLSAFE_FIXME[Return Not Nullable]
                 return null;
               }
             })
         .when(abstractController)
+        // NULLSAFE_FIXME[Not Vetted Third-Party]
         .addControllerListener(any(ControllerListener.class));
     return forwardingListener;
   }
@@ -145,6 +151,7 @@ public class DraweeMocks {
    */
   public static GenericDraweeHierarchyBuilder mockGenericDraweeHierarchyBuilder() {
     GenericDraweeHierarchyBuilder builder =
+        // NULLSAFE_FIXME[Not Vetted Third-Party]
         mock(GenericDraweeHierarchyBuilder.class, CALLS_REAL_METHODS);
     doAnswer(
             new Answer<Object>() {
@@ -167,6 +174,7 @@ public class DraweeMocks {
   public static GenericDraweeHierarchyBuilder mockBuilderOf(
       GenericDraweeHierarchy... drawableHierarchies) {
     GenericDraweeHierarchyBuilder builder =
+        // NULLSAFE_FIXME[Not Vetted Third-Party]
         mock(GenericDraweeHierarchyBuilder.class, CALLS_REAL_METHODS);
     final Supplier<GenericDraweeHierarchy> gdhProvider = supplierOf(drawableHierarchies);
     doAnswer(
