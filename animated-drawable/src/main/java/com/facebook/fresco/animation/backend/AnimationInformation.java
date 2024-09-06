@@ -7,7 +7,10 @@
 
 package com.facebook.fresco.animation.backend;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /** Basic animation metadata: Frame and loop count & duration */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface AnimationInformation {
 
   /**
