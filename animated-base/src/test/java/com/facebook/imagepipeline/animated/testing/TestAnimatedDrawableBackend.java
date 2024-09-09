@@ -15,6 +15,7 @@ import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /** Implementation of {@link AnimatedDrawableBackend} for unit tests. */
 @Nullsafe(Nullsafe.Mode.LOCAL)
@@ -142,8 +143,7 @@ public class TestAnimatedDrawableBackend implements AnimatedDrawableBackend {
   }
 
   @Override
-  // NULLSAFE_FIXME[Inconsistent Subclass Parameter Annotation]
-  public AnimatedDrawableBackend forNewBounds(Rect bounds) {
+  public AnimatedDrawableBackend forNewBounds(@Nullable Rect bounds) {
     return this;
   }
 
