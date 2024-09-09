@@ -17,7 +17,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.VisibleForTesting;
@@ -364,7 +363,7 @@ public abstract class RoundedDrawable extends Drawable implements Rounded, Trans
   }
 
   @Override
-  public void setColorFilter(int color, @NonNull PorterDuff.Mode mode) {
+  public void setColorFilter(int color, PorterDuff.Mode mode) {
     mDelegate.setColorFilter(color, mode);
   }
 
@@ -397,7 +396,7 @@ public abstract class RoundedDrawable extends Drawable implements Rounded, Trans
   }
 
   @Override
-  public void draw(@NonNull Canvas canvas) {
+  public void draw(Canvas canvas) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("RoundedDrawable#draw");
     }

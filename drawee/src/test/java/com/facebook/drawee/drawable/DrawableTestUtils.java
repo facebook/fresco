@@ -26,6 +26,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import javax.annotation.Nullable;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -34,7 +35,7 @@ public class DrawableTestUtils {
 
   public abstract static class FakeDrawable extends Drawable implements VisibilityAwareDrawable {
     @Override
-    public void setVisibilityCallback(VisibilityCallback visibilityCallback) {}
+    public void setVisibilityCallback(@Nullable VisibilityCallback visibilityCallback) {}
   }
 
   /**
