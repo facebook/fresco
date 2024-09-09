@@ -82,15 +82,14 @@ public class DrawableTestUtils {
     final Rect rect = new Rect();
     when(drawable.getBounds()).thenReturn(rect);
     doAnswer(
-            new Answer() {
+            new Answer<Void>() {
               @Override
-              public Object answer(InvocationOnMock invocation) throws Throwable {
+              public Void answer(InvocationOnMock invocation) {
                 rect.set(
                     (Integer) invocation.getArguments()[0],
                     (Integer) invocation.getArguments()[1],
                     (Integer) invocation.getArguments()[2],
                     (Integer) invocation.getArguments()[3]);
-                // NULLSAFE_FIXME[Return Not Nullable]
                 return null;
               }
             })
@@ -109,24 +108,22 @@ public class DrawableTestUtils {
     // NULLSAFE_FIXME[Parameter Not Nullable]
     when(drawable.getCallback()).thenReturn(callback.get());
     doAnswer(
-            new Answer() {
+            new Answer<Void>() {
               @Override
-              public Object answer(InvocationOnMock invocation) throws Throwable {
+              public Void answer(InvocationOnMock invocation) throws Throwable {
                 callback.set((Drawable.Callback) invocation.getArguments()[0]);
-                // NULLSAFE_FIXME[Return Not Nullable]
                 return null;
               }
             })
         .when(drawable)
         .setCallback(any(Drawable.Callback.class));
     doAnswer(
-            new Answer() {
+            new Answer<Void>() {
               @Override
-              public Object answer(InvocationOnMock invocation) throws Throwable {
+              public Void answer(InvocationOnMock invocation) throws Throwable {
                 if (callback.get() != null) {
                   callback.get().invalidateDrawable(drawable);
                 }
-                // NULLSAFE_FIXME[Return Not Nullable]
                 return null;
               }
             })
@@ -147,48 +144,46 @@ public class DrawableTestUtils {
     }
     VisibilityAwareDrawable visibilityAwareDrawable = (VisibilityAwareDrawable) drawable;
     doAnswer(
-            new Answer() {
+            new Answer<Void>() {
               @Override
-              public Object answer(InvocationOnMock invocation) throws Throwable {
+              public Void answer(InvocationOnMock invocation) throws Throwable {
                 callback.set((VisibilityCallback) invocation.getArguments()[0]);
-                // NULLSAFE_FIXME[Return Not Nullable]
                 return null;
               }
             })
         .when(visibilityAwareDrawable)
-        // NULLSAFE_FIXME[Not Vetted Third-Party]
         .setVisibilityCallback(any(VisibilityCallback.class));
     doAnswer(
-            new Answer() {
+            new Answer<Boolean>() {
               @Override
-              public Object answer(InvocationOnMock invocation) throws Throwable {
+              public Boolean answer(InvocationOnMock invocation) throws Throwable {
+                boolean initialValue = isVisible.get();
+                boolean newValue = (Boolean) invocation.getArguments()[0];
                 if (callback.get() != null) {
-                  isVisible.set((Boolean) invocation.getArguments()[0]);
+                  isVisible.set(newValue);
                   callback.get().onVisibilityChange(isVisible.get());
                 }
-                // NULLSAFE_FIXME[Return Not Nullable]
-                return null;
+                return initialValue != newValue;
               }
             })
         .when(drawable)
         .setVisible(anyBoolean(), anyBoolean());
     doAnswer(
-            new Answer() {
+            new Answer<Boolean>() {
               @Override
-              public Object answer(InvocationOnMock invocation) throws Throwable {
+              public Boolean answer(InvocationOnMock invocation) throws Throwable {
                 return isVisible.get();
               }
             })
         .when(drawable)
         .isVisible();
     doAnswer(
-            new Answer() {
+            new Answer<Void>() {
               @Override
-              public Object answer(InvocationOnMock invocation) throws Throwable {
+              public Void answer(InvocationOnMock invocation) throws Throwable {
                 if (callback.get() != null) {
                   callback.get().onDraw();
                 }
-                // NULLSAFE_FIXME[Return Not Nullable]
                 return null;
               }
             })
@@ -205,13 +200,12 @@ public class DrawableTestUtils {
   public static void stubSetAlpha(final Drawable drawable) {
     final AtomicInteger atomicInteger = new AtomicInteger(255);
     doAnswer(
-            new Answer() {
+            new Answer<Void>() {
               @Override
-              public Object answer(InvocationOnMock invocation) throws Throwable {
+              public Void answer(InvocationOnMock invocation) throws Throwable {
                 Integer alpha = (Integer) invocation.getArguments()[0];
                 drawable.invalidateSelf();
                 atomicInteger.set(alpha);
-                // NULLSAFE_FIXME[Return Not Nullable]
                 return null;
               }
             })
@@ -233,11 +227,10 @@ public class DrawableTestUtils {
     // NULLSAFE_FIXME[Not Vetted Third-Party]
     when(bitmapDrawable.getPaint()).thenReturn(paint);
     doAnswer(
-            new Answer() {
+            new Answer<Void>() {
               @Override
-              public Object answer(InvocationOnMock invocation) throws Throwable {
+              public Void answer(InvocationOnMock invocation) throws Throwable {
                 paint.setColorFilter((ColorFilter) invocation.getArguments()[0]);
-                // NULLSAFE_FIXME[Return Not Nullable]
                 return null;
               }
             })
