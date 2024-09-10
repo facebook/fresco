@@ -213,6 +213,7 @@ public class WrappingUtils {
    * @return the wrapping rounded drawable, or the original drawable if the wrapping didn't take
    *     place
    */
+  @Nullable
   static Drawable maybeWrapWithRoundedOverlayColor(
       @Nullable Drawable drawable, @Nullable RoundingParams roundingParams) {
     try {
@@ -222,7 +223,6 @@ public class WrappingUtils {
       if (drawable == null
           || roundingParams == null
           || roundingParams.getRoundingMethod() != RoundingParams.RoundingMethod.OVERLAY_COLOR) {
-        // NULLSAFE_FIXME[Return Not Nullable]
         return drawable;
       }
       RoundedCornersDrawable roundedCornersDrawable = new RoundedCornersDrawable(drawable);
@@ -253,6 +253,7 @@ public class WrappingUtils {
    * @return the rounded drawable, or the original drawable if the rounding didn't take place or it
    *     took place on a drawable's child
    */
+  @Nullable
   static Drawable maybeApplyLeafRounding(
       @Nullable Drawable drawable, @Nullable RoundingParams roundingParams, Resources resources) {
     try {
@@ -262,7 +263,6 @@ public class WrappingUtils {
       if (drawable == null
           || roundingParams == null
           || roundingParams.getRoundingMethod() != RoundingParams.RoundingMethod.BITMAP_ONLY) {
-        // NULLSAFE_FIXME[Return Not Nullable]
         return drawable;
       }
       if (drawable instanceof ForwardingDrawable) {
