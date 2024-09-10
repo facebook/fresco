@@ -26,6 +26,7 @@ import com.facebook.imageutils.ImageMetaData;
 import com.facebook.imageutils.JfifUtil;
 import com.facebook.imageutils.WebpUtil;
 import com.facebook.infer.annotation.FalseOnNull;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -46,6 +47,7 @@ import kotlin.Pair;
  *
  * <p>Currently the data is useful for rotation and resize.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @Immutable
 public class EncodedImage implements Closeable {
   public static final int UNKNOWN_ROTATION_ANGLE = -1;
@@ -140,6 +142,7 @@ public class EncodedImage implements Closeable {
    * <p>The caller has to close the reference once it has finished using it.
    */
   public CloseableReference<PooledByteBuffer> getByteBufferRef() {
+    // NULLSAFE_FIXME[Return Not Nullable]
     return CloseableReference.cloneOrNull(mPooledByteBufferRef);
   }
 
@@ -365,6 +368,7 @@ public class EncodedImage implements Closeable {
   /** Sets the encoded image meta data. */
   private void internalParseMetaData() {
     final ImageFormat imageFormat =
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         ImageFormatChecker.getImageFormat_WrapIOException(getInputStream());
     mImageFormat = imageFormat;
     // BitmapUtil.decodeDimensions has a bug where it will return 100x100 for some WebPs even though
@@ -378,6 +382,7 @@ public class EncodedImage implements Closeable {
     if (imageFormat == DefaultImageFormats.JPEG && mRotationAngle == UNKNOWN_ROTATION_ANGLE) {
       // Load the JPEG rotation angle only if we have the dimensions
       if (dimensions != null) {
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         mExifOrientation = JfifUtil.getOrientation(getInputStream());
         mRotationAngle = JfifUtil.getAutoRotateAngleFromOrientation(mExifOrientation);
       }
