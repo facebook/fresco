@@ -186,7 +186,7 @@ object FrescoVitoImage2Spec {
                     callerContext,
                     contextChain,
                     prefetchRequestListener,
-                    "OnPrepare"))
+                    "FrescoVitoImage2Spec_OnPrepare"))
       }
     }
   }
@@ -386,7 +386,7 @@ object FrescoVitoImage2Spec {
                     callerContext,
                     contextChain,
                     prefetchRequestListener,
-                    "OnBoundsDefined"))
+                    "FrescoVitoImage2Spec_OnBoundsDefined"))
       }
     }
   }
