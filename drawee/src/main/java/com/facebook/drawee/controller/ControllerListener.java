@@ -46,7 +46,6 @@ public interface ControllerListener<INFO> {
    *
    * @param id controller id
    * @param imageInfo image info
-   * @param imageInfo image info
    */
   void onIntermediateImageSet(String id, @Nullable INFO imageInfo);
 
