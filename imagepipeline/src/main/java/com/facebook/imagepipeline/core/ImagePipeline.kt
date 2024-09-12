@@ -8,6 +8,8 @@
 package com.facebook.imagepipeline.core
 
 import android.net.Uri
+import bolts.CancellationTokenSource
+import bolts.Continuation
 import bolts.Task
 import com.facebook.cache.common.CacheKey
 import com.facebook.callercontext.CallerContextVerifier
@@ -730,7 +732,9 @@ class ImagePipeline(
    * @return true if the image was found in the disk cache, false otherwise.
    */
   fun isInDiskCacheSync(uri: Uri?): Boolean =
-      isInDiskCacheSync(uri, CacheChoice.SMALL) || isInDiskCacheSync(uri, CacheChoice.DEFAULT)
+      isInDiskCacheSync(uri, CacheChoice.SMALL) ||
+          isInDiskCacheSync(uri, CacheChoice.DEFAULT) ||
+          isInDiskCacheSync(uri, CacheChoice.DYNAMIC)
 
   /**
    * Returns whether the image is stored in the disk cache. Performs disk cache check synchronously.
@@ -749,6 +753,26 @@ class ImagePipeline(
   }
 
   /**
+   * Returns whether the image is stored in the Dynamic disk cache. If a diskCacheId is NOT provided
+   * we will search ALL Dynamic Disk Caches.
+   */
+  private fun isInDynamicDiskCachesSync(imageRequest: ImageRequest): Boolean {
+    val diskCachesStore = diskCachesStoreSupplier.get()
+    val cacheKey = cacheKeyFactory.getEncodedCacheKey(imageRequest, null)
+    val diskCacheId = imageRequest.diskCacheId
+    if (diskCacheId != null) {
+      return diskCachesStore.dynamicBufferedDiskCaches[diskCacheId]?.diskCheckSync(cacheKey)
+          ?: false
+    }
+    diskCachesStore.dynamicBufferedDiskCaches.forEach {
+      if (it.value.diskCheckSync(cacheKey)) {
+        return true
+      }
+    }
+    return false
+  }
+
+  /**
    * Performs disk cache check synchronously. It is not recommended to use this unless you know what
    * exactly you are doing. Disk cache check is a costly operation, the call will block the caller
    * thread until the cache check is completed.
@@ -763,7 +787,7 @@ class ImagePipeline(
     return when (cacheChoice) {
       CacheChoice.DEFAULT -> diskCachesStore.mainBufferedDiskCache.diskCheckSync(cacheKey)
       CacheChoice.SMALL -> diskCachesStore.smallImageBufferedDiskCache.diskCheckSync(cacheKey)
-      else -> false
+      CacheChoice.DYNAMIC -> isInDynamicDiskCachesSync(imageRequest)
     }
   }
 
@@ -780,6 +804,46 @@ class ImagePipeline(
   fun isInDiskCache(uri: Uri?): DataSource<Boolean> =
       isInDiskCache(checkNotNull(ImageRequest.fromUri(uri)))
 
+  private fun isInDynamicDiskCaches(
+      imageRequest: ImageRequest?,
+      cacheKey: CacheKey,
+      intermediateContinuation: Continuation<Boolean, Void>,
+      cts: CancellationTokenSource
+  ): Task<Boolean> {
+    val diskCachesStore = diskCachesStoreSupplier.get()
+    val diskCacheId = imageRequest?.diskCacheId
+    if (diskCacheId != null) {
+      return diskCachesStore.dynamicBufferedDiskCaches[diskCacheId]?.contains(cacheKey)
+          ?: Task.forResult(false)
+    }
+    if (diskCachesStore.dynamicBufferedDiskCaches.size == 0) {
+      return Task.forResult(false)
+    }
+
+    val dynamicDiskCacheIterator = diskCachesStore.dynamicBufferedDiskCaches.iterator()
+    var prevTask: Task<Boolean> = Task.forResult(false)
+    var curTask = prevTask
+
+    while (dynamicDiskCacheIterator.hasNext()) {
+      val curDynamicDiskCache = dynamicDiskCacheIterator.next().value
+      curTask = curDynamicDiskCache.contains(cacheKey)
+      prevTask.continueWithTask(
+          { task ->
+            if (!task.isCancelled && !task.isFaulted && task.result) {
+              cts.cancel()
+              Task.forResult<Boolean>(true).continueWith(intermediateContinuation)
+            } else if (task.isCancelled) {
+              Task.forResult<Boolean>(false)
+            } else {
+              curTask
+            }
+          },
+          cts.token)
+      prevTask = curTask
+    }
+    return prevTask
+  }
+
   /**
    * Returns whether the image is stored in the disk cache.
    *
@@ -790,6 +854,21 @@ class ImagePipeline(
     val diskCachesStore = diskCachesStoreSupplier.get()
     val cacheKey = cacheKeyFactory.getEncodedCacheKey(imageRequest, null)
     val dataSource = SimpleDataSource.create<Boolean>()
+    val cts = CancellationTokenSource()
+
+    val finalContinuation =
+        Continuation<Boolean, Void> { task ->
+          dataSource.result =
+              dataSource.result ?: false || !task.isCancelled && !task.isFaulted && task.result
+          null
+        }
+    val intermediateContinuation =
+        Continuation<Boolean, Void> { task ->
+          dataSource.setResult(
+              dataSource.result ?: false || (!task.isCancelled && !task.isFaulted && task.result),
+              false /* isLast */)
+          null
+        }
     diskCachesStore.mainBufferedDiskCache
         .contains(cacheKey)
         .continueWithTask<Boolean> { task ->
@@ -799,10 +878,16 @@ class ImagePipeline(
             diskCachesStore.smallImageBufferedDiskCache.contains(cacheKey)
           }
         }
-        .continueWith<Void> { task ->
-          dataSource.result = !task.isCancelled && !task.isFaulted && task.result
-          null
-        }
+        .continueWithTask<Boolean>(
+            { task ->
+              if (!task.isCancelled && !task.isFaulted && task.result) {
+                Task.forResult<Boolean>(true)
+              } else {
+                isInDynamicDiskCaches(imageRequest, cacheKey, intermediateContinuation, cts)
+              }
+            },
+            cts.token)
+        .continueWith(finalContinuation)
     return dataSource
   }
 
