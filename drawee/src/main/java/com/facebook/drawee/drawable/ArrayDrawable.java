@@ -303,16 +303,15 @@ public class ArrayDrawable extends Drawable
 
   private DrawableParent createDrawableParentForIndex(final int index) {
     return new DrawableParent() {
+      @Nullable
       @Override
-      // NULLSAFE_FIXME[Inconsistent Subclass Parameter Annotation]
-      public Drawable setDrawable(Drawable newDrawable) {
-        // NULLSAFE_FIXME[Return Not Nullable]
+      public Drawable setDrawable(@Nullable Drawable newDrawable) {
         return ArrayDrawable.this.setDrawable(index, newDrawable);
       }
 
+      @Nullable
       @Override
       public Drawable getDrawable() {
-        // NULLSAFE_FIXME[Return Not Nullable]
         return ArrayDrawable.this.getDrawable(index);
       }
     };

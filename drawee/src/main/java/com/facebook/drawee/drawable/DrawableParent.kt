@@ -5,15 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.drawee.drawable;
+package com.facebook.drawee.drawable
 
-import android.graphics.drawable.Drawable;
-import com.facebook.infer.annotation.Nullsafe;
-import javax.annotation.Nullable;
+import android.graphics.drawable.Drawable
 
 /** A drawable parent that has a single child. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
-public interface DrawableParent {
+interface DrawableParent {
 
   /**
    * Sets the new child drawable.
@@ -21,14 +18,12 @@ public interface DrawableParent {
    * @param newDrawable a new child drawable to set
    * @return the old child drawable
    */
-  @Nullable
-  Drawable setDrawable(@Nullable Drawable newDrawable);
+  fun setDrawable(newDrawable: Drawable?): Drawable?
 
   /**
    * Gets the child drawable.
    *
    * @return the current child drawable
    */
-  @Nullable
-  Drawable getDrawable();
+  val drawable: Drawable?
 }
