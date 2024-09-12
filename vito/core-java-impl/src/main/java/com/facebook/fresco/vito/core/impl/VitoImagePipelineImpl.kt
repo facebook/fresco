@@ -17,6 +17,7 @@ import com.facebook.fresco.ui.common.VitoUtils
 import com.facebook.fresco.urimod.Dimensions
 import com.facebook.fresco.urimod.UriModifier
 import com.facebook.fresco.urimod.UriModifierInterface
+import com.facebook.fresco.vito.core.FrescoVitoConfig
 import com.facebook.fresco.vito.core.ImagePipelineUtils
 import com.facebook.fresco.vito.core.VitoImagePipeline
 import com.facebook.fresco.vito.core.VitoImageRequest
@@ -40,7 +41,8 @@ import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
 /** Vito image pipeline to fetch an image for a given VitoImageRequest. */
 class VitoImagePipelineImpl(
     private val imagePipeline: ImagePipeline,
-    private val imagePipelineUtils: ImagePipelineUtils
+    private val imagePipelineUtils: ImagePipelineUtils,
+    private val config: FrescoVitoConfig
 ) : VitoImagePipeline {
 
   override fun createImageRequest(
@@ -58,7 +60,7 @@ class VitoImagePipelineImpl(
     var finalImageSource = imageSource
 
     val modifiedUriValue: String
-    if (imageOptions.experimentalDynamicSize && !forceKeepOriginalSize) {
+    if (experimentalDynamicSizeVito2() && !forceKeepOriginalSize) {
       if (imageSource is UriImageSource) {
         val result: UriModifierInterface.ModificationResult =
             UriModifier.INSTANCE.modifyUri(
@@ -75,13 +77,13 @@ class VitoImagePipelineImpl(
       } else {
         modifiedUriValue = "NotSupportedImageSource: ${imageSource.getClassNameString()}"
       }
-    } else if (imageOptions.experimentalDynamicSize &&
-        imageOptions.experimentalDynamicSizeWithCacheFallback &&
+    } else if (experimentalDynamicSizeVito2() &&
+        experimentalDynamicSizeWithCacheFallbackVito2() &&
         forceKeepOriginalSize) {
       modifiedUriValue = "MBPDiskFallbackEnabled"
     } else {
       modifiedUriValue =
-          "Disabled(exp=${imageOptions.experimentalDynamicSize}, fallback=${imageOptions.experimentalDynamicSizeWithCacheFallback}, force=${forceKeepOriginalSize})"
+          "Disabled(exp=${experimentalDynamicSizeVito2()}, fallback=${experimentalDynamicSizeWithCacheFallbackVito2()}, force=${forceKeepOriginalSize})"
     }
 
     extras[HasExtraData.KEY_MODIFIED_URL] = modifiedUriValue
@@ -141,6 +143,11 @@ class VitoImagePipelineImpl(
     val imageRequest = vitoImageRequest.finalImageRequest ?: return false
     return imagePipeline.isInDiskCacheSync(imageRequest)
   }
+
+  private fun experimentalDynamicSizeVito2(): Boolean = config.experimentalDynamicSizeVito2()
+
+  private fun experimentalDynamicSizeWithCacheFallbackVito2(): Boolean =
+      config.experimentalDynamicSizeWithCacheFallbackVito2()
 
   private fun ImageSource.getClassNameString(): String {
     return when (this) {

@@ -100,7 +100,6 @@ object FrescoVitoImage2Spec {
   fun onCalculateImageRequest(
       c: ComponentContext,
       @Prop(optional = true) callerContext: Any?,
-      @TreeProp contextChain: ContextChain?,
       @Prop(optional = true) uriString: String?,
       @Prop(optional = true) uri: Uri?,
       @Prop(optional = true) imageSource: ImageSource?,
@@ -108,8 +107,7 @@ object FrescoVitoImage2Spec {
       @Prop(optional = true) logWithHighSamplingRate: Boolean?,
   ): VitoImageRequest? {
     val imageOptions = ensureImageOptions(imageOptions)
-    if (imageOptions?.experimentalDynamicSize == true &&
-        imageOptions?.experimentalDynamicSizeWithCacheFallback == false) {
+    if (experimentalDynamicSizeVito2() && !experimentalDynamicSizeWithCacheFallbackVito2()) {
       // we won't do anything with the original URI, so we can just return null
       return null
     } else {
@@ -156,18 +154,15 @@ object FrescoVitoImage2Spec {
       @TreeProp contextChain: ContextChain?,
       @Prop(optional = true) prefetch: Prefetch?,
       @Prop(optional = true) prefetchRequestListener: RequestListener?,
-      @Prop(optional = true) imageOptions: ImageOptions?,
       @CachedValue requestCachedValue: VitoImageRequest?,
       prefetchDataSource: Output<DataSource<Void?>>,
       forceKeepOriginalSize: Output<Boolean>,
   ) {
-    val imageOptions = ensureImageOptions(imageOptions)
     if (requestCachedValue == null) {
       forceKeepOriginalSize.set(false)
       return
     }
-    if (imageOptions?.experimentalDynamicSize == true &&
-        imageOptions?.experimentalDynamicSizeWithCacheFallback == true) {
+    if (experimentalDynamicSizeVito2() && experimentalDynamicSizeWithCacheFallbackVito2()) {
       if (Looper.myLooper() == Looper.getMainLooper()) {
         // we don't want to check cache if we are running on the main thread
         forceKeepOriginalSize.set(false)
@@ -363,7 +358,7 @@ object FrescoVitoImage2Spec {
     }
     val viewportRect = Rect(0, 0, width - paddingX, height - paddingY)
     viewportDimensions.set(viewportRect)
-    if (imageOptions?.experimentalDynamicSize == true && !forceKeepOriginalSize) {
+    if (experimentalDynamicSizeVito2() && !forceKeepOriginalSize) {
       val vitoImageRequest =
           createVitoImageRequest(
               c,
@@ -434,6 +429,12 @@ object FrescoVitoImage2Spec {
     }
     return imageOptionsProp
   }
+
+  private fun experimentalDynamicSizeVito2(): Boolean =
+      FrescoVitoProvider.getConfig().experimentalDynamicSizeVito2()
+
+  private fun experimentalDynamicSizeWithCacheFallbackVito2(): Boolean =
+      FrescoVitoProvider.getConfig().experimentalDynamicSizeWithCacheFallbackVito2()
 
   enum class Prefetch {
     AUTO,

@@ -37,4 +37,8 @@ interface FrescoVitoConfig {
   fun useIntermediateImagesAsPlaceholder(): Boolean
 
   fun fallbackToDefaultImageOptions(): Boolean
+
+  fun experimentalDynamicSizeVito2(): Boolean
+
+  fun experimentalDynamicSizeWithCacheFallbackVito2(): Boolean
 }

@@ -36,7 +36,7 @@ class KFrescoVitoProvider(
 ) : FrescoVitoSetup {
 
   private val _imagePipeline: VitoImagePipeline by lazy {
-    VitoImagePipelineImpl(frescoImagePipeline, imagePipelineUtils)
+    VitoImagePipelineImpl(frescoImagePipeline, imagePipelineUtils, vitoConfig)
   }
 
   private val _controller: FrescoController2 by lazy {

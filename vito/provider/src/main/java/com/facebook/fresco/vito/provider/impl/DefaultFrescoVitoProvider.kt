@@ -56,7 +56,7 @@ class DefaultFrescoVitoProvider(
     }
     frescoVitoPrefetcher =
         FrescoVitoPrefetcherImpl(imagePipeline, imagePipelineUtils, callerContextVerifier)
-    vitoImagePipeline = VitoImagePipelineImpl(imagePipeline, imagePipelineUtils)
+    vitoImagePipeline = VitoImagePipelineImpl(imagePipeline, imagePipelineUtils, frescoVitoConfig)
     frescoController =
         FrescoController2Impl(
             frescoVitoConfig,
