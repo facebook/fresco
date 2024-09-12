@@ -19,7 +19,7 @@ object NopUriModifier : UriModifierInterface {
       scaleType: ScalingUtils.ScaleType?,
       callerContext: Any?,
       contextChain: ContextChain?
-  ): ModificationResult = ModificationResult.Disabled
+  ): ModificationResult = ModificationResult.Disabled("NopUriModifier")
 
   override fun modifyPrefetchUri(uri: Uri, callerContext: Any?): Uri = uri
 }

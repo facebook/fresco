@@ -29,7 +29,7 @@ interface UriModifierInterface {
 
     override fun toString(): String = comment
 
-    object Disabled : ModificationResult("Disabled") {
+    class Disabled(comment: String) : ModificationResult("Disabled:$comment") {
       override val bestAllowlistedSize: Int? = null
     }
 

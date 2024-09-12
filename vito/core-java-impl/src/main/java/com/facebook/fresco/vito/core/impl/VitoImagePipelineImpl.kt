@@ -80,7 +80,8 @@ class VitoImagePipelineImpl(
         forceKeepOriginalSize) {
       modifiedUriValue = "MBPDiskFallbackEnabled"
     } else {
-      modifiedUriValue = "Disabled"
+      modifiedUriValue =
+          "Disabled(exp=${imageOptions.experimentalDynamicSize}, fallback=${imageOptions.experimentalDynamicSizeWithCacheFallback}, force=${forceKeepOriginalSize})"
     }
 
     extras[HasExtraData.KEY_MODIFIED_URL] = modifiedUriValue
