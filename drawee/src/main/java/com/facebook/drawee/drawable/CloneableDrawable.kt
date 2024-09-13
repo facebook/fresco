@@ -5,21 +5,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.drawee.drawable;
+package com.facebook.drawee.drawable
 
-import android.graphics.drawable.Drawable;
-import androidx.annotation.Nullable;
-import com.facebook.infer.annotation.Nullsafe;
+import android.graphics.drawable.Drawable
 
 /** A drawable that is capable of cloning itself. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
-public interface CloneableDrawable {
-
+fun interface CloneableDrawable {
   /**
    * Creates a copy of the drawable.
    *
    * @return the drawable copy
    */
-  @Nullable
-  Drawable cloneDrawable();
+  fun cloneDrawable(): Drawable?
 }
