@@ -9,6 +9,7 @@ package com.facebook.drawee.span;
 
 import android.view.View;
 import com.facebook.drawee.view.DraweeHolder;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.widget.text.span.BetterImageSpan;
 
 /**
@@ -21,12 +22,14 @@ import com.facebook.widget.text.span.BetterImageSpan;
  *
  * <p>{@see DraweeHolder}
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DraweeSpan extends BetterImageSpan {
 
   private final DraweeHolder mDraweeHolder;
 
   public DraweeSpan(
       DraweeHolder draweeHolder, @BetterImageSpan.BetterImageSpanAlignment int verticalAlignment) {
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     super(draweeHolder.getTopLevelDrawable(), verticalAlignment);
     mDraweeHolder = draweeHolder;
   }
