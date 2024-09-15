@@ -19,12 +19,14 @@ import androidx.preference.CheckBoxPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Const;
 import com.facebook.samples.scrollperf.preferences.SizePreferences;
 import com.facebook.samples.scrollperf.util.SizeUtil;
 
 /** The Fragment for settings */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class SettingsFragment extends PreferenceFragmentCompat
     implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -42,40 +44,65 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Override
   public void onCreatePreferences(Bundle bundle, String s) {
     addPreferencesFromResource(R.xml.preferences);
+    // NULLSAFE_FIXME[Not Vetted Third-Party, Nullable Dereference]
     getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     // Update summaries
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateDataSourceSummary(findPreference(Const.DATA_SOURCE_KEY));
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateInfiniteDataSourceSummary(findPreference(Const.INFINITE_DATA_SOURCE_KEY));
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateDistinctDataSourceSummary(findPreference(Const.DISTINCT_DATA_SOURCE_KEY));
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateRecyclerLayoutSummary(findPreference(Const.RECYCLER_LAYOUT_KEY));
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateRoundedCornersSummary(findPreference(Const.ROUNDED_CORNERS_KEY));
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateRoundedAsCircleSummary(findPreference(Const.ROUNDED_AS_CIRCLE_KEY));
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateUsePostprocessorSummary(findPreference(Const.USE_POSTPROCESSOR_KEY));
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateWhatPostprocessorSummary(findPreference(Const.POSTPROCESSOR_TYPE_KEY));
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateWhatScaleTypeSummary(findPreference(Const.SCALE_TYPE_KEY));
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateAutoRotateSummary(findPreference(Const.AUTO_ROTATE_KEY));
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateRotationAngleSummary(findPreference(Const.FORCED_ROTATION_ANGLE_KEY));
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateDownsamplingSummary(findPreference(Const.DOWNSAMPLING_KEY));
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateOverrideSizeSummary(findPreference(Const.OVERRIDE_SIZE_KEY));
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateVitoOverlaySummary(findPreference(Const.VITO_OVERLAY_KEY));
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateBgColorSummary(findPreference(Const.BG_COLOR_KEY));
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateInstrumentationSummary(findPreference(Const.INSTRUMENTATION_ENABLED_KEY));
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateNumberOfDecodingThreadSummary(findPreference(Const.DECODING_THREAD_KEY));
     // Set sizes
     SizePreferences widthPreferences = (SizePreferences) findPreference(Const.OVERRIDEN_WIDTH_KEY);
+    // NULLSAFE_FIXME[Nullable Dereference]
     widthPreferences.setSeekBarMaxValue(SizeUtil.DISPLAY_WIDTH);
     SizePreferences heightPreferences =
         (SizePreferences) findPreference(Const.OVERRIDEN_HEIGHT_KEY);
+    // NULLSAFE_FIXME[Nullable Dereference]
     heightPreferences.setSeekBarMaxValue(SizeUtil.DISPLAY_HEIGHT);
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateFadeDurationSummary(findPreference(Const.FADE_DURATION_KEY));
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateDrawBorderSummary(findPreference(Const.DRAW_BORDER_KEY));
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     updateDecodeCancellationSummary(findPreference(Const.DECODE_CANCELLATION_KEY));
+    // NULLSAFE_FIXME[Nullable Dereference]
     findPreference(Const.WEBP_SUPPORT_KEY).setVisible(false);
   }
 
   @Override
   public void onDestroy() {
     super.onDestroy();
+    // NULLSAFE_FIXME[Nullable Dereference, Not Vetted Third-Party]
     getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
   }
 
@@ -84,74 +111,95 @@ public class SettingsFragment extends PreferenceFragmentCompat
     Preference preference = findPreference(key);
     switch (key) {
       case Const.DATA_SOURCE_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateDataSourceSummary(preference);
         break;
       case Const.RECYCLER_LAYOUT_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateRecyclerLayoutSummary(preference);
         break;
       case Const.GRID_SPAN_COUNT_KEY:
         updateGridRecyclerLayoutSummary();
         break;
       case Const.INFINITE_DATA_SOURCE_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateInfiniteDataSourceSummary(preference);
         break;
       case Const.DISTINCT_DATA_SOURCE_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateDistinctDataSourceSummary(preference);
         break;
       case Const.ROUNDED_CORNERS_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateRoundedCornersSummary(preference);
         break;
       case Const.ROUNDED_AS_CIRCLE_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateRoundedAsCircleSummary(preference);
         break;
       case Const.USE_POSTPROCESSOR_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateUsePostprocessorSummary(preference);
         break;
       case Const.POSTPROCESSOR_TYPE_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateWhatPostprocessorSummary(preference);
         break;
       case Const.SCALE_TYPE_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateWhatScaleTypeSummary(preference);
         break;
       case Const.AUTO_ROTATE_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateAutoRotateSummary(preference);
         break;
       case Const.FORCED_ROTATION_ANGLE_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateRotationAngleSummary(preference);
         break;
       case Const.DOWNSAMPLING_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateDownsamplingSummary(preference);
         getShowRestartMessageDialog().show(getChildFragmentManager(), null);
         break;
       case Const.WEBP_SUPPORT_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateWebpSupportSummary(preference);
         getShowRestartMessageDialog().show(getChildFragmentManager(), null);
         break;
       case Const.DECODING_THREAD_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateNumberOfDecodingThreadSummary(preference);
         getShowRestartMessageDialog().show(getChildFragmentManager(), null);
         break;
       case Const.INSTRUMENTATION_ENABLED_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateInstrumentationSummary(preference);
         break;
       case Const.DECODE_CANCELLATION_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateDecodeCancellationSummary(preference);
         getShowRestartMessageDialog().show(getChildFragmentManager(), null);
         break;
       case Const.VITO_OVERLAY_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateVitoOverlaySummary(preference);
         getShowRestartMessageDialog().show(getChildFragmentManager(), null);
         break;
       case Const.BG_COLOR_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateBgColorSummary(preference);
         break;
       case Const.OVERRIDE_SIZE_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateOverrideSizeSummary(preference);
         break;
       case Const.FADE_DURATION_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateFadeDurationSummary(preference);
         break;
       case Const.DRAW_BORDER_KEY:
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         updateDrawBorderSummary(preference);
         break;
     }
@@ -170,6 +218,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
             R.string.checked_infinite_data_source_summary,
             R.string.unchecked_infinite_data_source_summary);
     // We disableDistinct Uris if infinite is not enabled
+    // NULLSAFE_FIXME[Nullable Dereference]
     findPreference(Const.DISTINCT_DATA_SOURCE_KEY).setEnabled(currentState);
   }
 
@@ -193,14 +242,18 @@ public class SettingsFragment extends PreferenceFragmentCompat
     // We have to enable the Grid settings only if the selection is the related on
     final ListPreference gridPreference =
         (ListPreference) findPreference(Const.GRID_SPAN_COUNT_KEY);
+    // NULLSAFE_FIXME[Nullable Dereference]
     final String value = listPreference.getValue();
     final boolean gridGroupVisible = Const.GRID_RECYCLER_VIEW_LAYOUT_VALUE.equals(value);
     // We update summary
     if (gridGroupVisible) {
+      // NULLSAFE_FIXME[Nullable Dereference]
       final String spanCountValue = gridPreference.getValue();
+      // NULLSAFE_FIXME[Nullable Dereference]
       gridPreference.setSummary(
           getString(R.string.label_grid_recycler_span_count_summary, spanCountValue));
     }
+    // NULLSAFE_FIXME[Nullable Dereference]
     gridPreference.setVisible(gridGroupVisible);
   }
 
@@ -285,6 +338,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
             (CheckBoxPreference) preference,
             R.string.checked_auto_rotate_summary,
             R.string.unchecked_auto_rotate_summary);
+    // NULLSAFE_FIXME[Nullable Dereference]
     findPreference(Const.FORCED_ROTATION_ANGLE_KEY).setEnabled(!currentState);
   }
 
@@ -334,6 +388,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
             (CheckBoxPreference) preference,
             R.string.checked_auto_size_override,
             R.string.unchecked_auto_size_override);
+    // NULLSAFE_FIXME[Nullable Dereference]
     findPreference(Const.FORCED_ROTATION_ANGLE_KEY).setEnabled(!currentState);
   }
 
@@ -362,6 +417,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
       // Use the Builder class for convenient dialog construction
+      // NULLSAFE_FIXME[Parameter Not Nullable]
       AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
       builder
           .setMessage(R.string.message_application_needs_restart)
