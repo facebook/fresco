@@ -31,6 +31,7 @@ import java.util.ArrayList;
  * View#onAttachedToWindow()} methods.
  */
 @Nullsafe(Nullsafe.Mode.LOCAL)
+@Deprecated
 public class MultiDraweeHolder<DH extends DraweeHierarchy> {
 
   @VisibleForTesting boolean mIsAttached = false;
