@@ -14,6 +14,7 @@ import com.facebook.common.internal.Objects;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import javax.annotation.Nullable;
@@ -24,6 +25,7 @@ import javax.annotation.concurrent.GuardedBy;
  *
  * <p>Each animated image should have its own instance of this class.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AnimatedFrameCache {
 
   @VisibleForTesting
@@ -69,6 +71,7 @@ public class AnimatedFrameCache {
     }
 
     @Override
+    // NULLSAFE_FIXME[Inconsistent Subclass Return Annotation]
     public @Nullable String getUriString() {
       return null;
     }
