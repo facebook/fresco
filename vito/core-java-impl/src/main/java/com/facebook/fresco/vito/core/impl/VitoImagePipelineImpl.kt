@@ -64,7 +64,7 @@ class VitoImagePipelineImpl(
       if (imageSource is UriImageSource) {
         val result: UriModifierInterface.ModificationResult =
             UriModifier.INSTANCE.modifyUri(
-                imageSource.imageUri,
+                imageSource,
                 viewport?.let { Dimensions(it.width(), it.height()) },
                 imageOptions.actualImageScaleType,
                 callerContext,

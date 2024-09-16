@@ -31,6 +31,7 @@ dependencies {
     compileOnly Deps.inferAnnotation
     implementation project(path: ':fbcore')
     implementation project(':ui-core')
+    implementation project(':vito:source')
 }
 
 apply plugin: "com.vanniktech.maven.publish"

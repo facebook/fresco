@@ -10,11 +10,12 @@ package com.facebook.fresco.urimod
 import android.net.Uri
 import com.facebook.common.callercontext.ContextChain
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType
+import com.facebook.fresco.vito.source.UriImageSource
 
 interface UriModifierInterface {
 
   fun modifyUri(
-      uri: Uri,
+      imageSource: UriImageSource,
       viewport: Dimensions?,
       scaleType: ScaleType?,
       callerContext: Any?,

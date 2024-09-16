@@ -11,10 +11,11 @@ import android.net.Uri
 import com.facebook.common.callercontext.ContextChain
 import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.fresco.urimod.UriModifierInterface.ModificationResult
+import com.facebook.fresco.vito.source.UriImageSource
 
 object NopUriModifier : UriModifierInterface {
   override fun modifyUri(
-      uri: Uri,
+      imageSource: UriImageSource,
       viewport: Dimensions?,
       scaleType: ScalingUtils.ScaleType?,
       callerContext: Any?,
