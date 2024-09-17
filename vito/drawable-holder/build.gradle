@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.GradleDeps
+import com.facebook.fresco.buildsrc.TestDeps
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+kotlin {
+    jvmToolchain(11)
+}
+
+dependencies {
+    compileOnly Deps.jsr305
+    compileOnly Deps.javaxAnnotation
+    compileOnly Deps.AndroidX.androidxAnnotation
+    compileOnly Deps.inferAnnotation
+
+    implementation project(':ui-common')
+    implementation project(':vito:core')
+    implementation project(':vito:options')
+    implementation project(':vito:source')
+    implementation project(':vito:drawee-support')
+    implementation project(':vito:provider')
+
+    testImplementation TestDeps.junit
+    testImplementation TestDeps.assertjCore
+    testImplementation TestDeps.mockitoCore
+    testImplementation TestDeps.mockitoKotlin
+}
+
+android {
+    ndkVersion GradleDeps.Native.version
+
+    buildToolsVersion FrescoConfig.buildToolsVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
+
+    namespace "com.facebook.fresco.vito.drawableholder"
+
+    defaultConfig {
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+apply plugin: "com.vanniktech.maven.publish"
