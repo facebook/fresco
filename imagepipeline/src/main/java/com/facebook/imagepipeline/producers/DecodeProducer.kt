@@ -396,25 +396,27 @@ class DecodeProducer(
     protected abstract val qualityInfo: QualityInfo
 
     init {
-
       val job = JobRunnable { encodedImage, status ->
         if (encodedImage != null) {
           val request = producerContext.imageRequest
           producerContext.putExtra(HasExtraData.KEY_IMAGE_FORMAT, encodedImage.imageFormat.name)
           encodedImage.source = request.sourceUri?.toString()
 
+          val requestDownsampleMode = request.downsampleOverride ?: downsampleMode
           val isResizingDone = statusHasFlag(status, IS_RESIZING_DONE)
-          if (downsampleMode == DownsampleMode.ALWAYS ||
-              (downsampleMode == DownsampleMode.AUTO && !isResizingDone)) {
-            if (downsampleEnabledForNetwork || !UriUtil.isNetworkUri(request.sourceUri)) {
-              encodedImage.sampleSize =
-                  DownsampleUtil.determineSampleSize(
-                      request.rotationOptions,
-                      request.resizeOptions,
-                      encodedImage,
-                      maxBitmapDimension)
-            }
+          val shouldAdjustSampleSize =
+              (requestDownsampleMode == DownsampleMode.ALWAYS ||
+                  (requestDownsampleMode == DownsampleMode.AUTO && !isResizingDone)) &&
+                  (downsampleEnabledForNetwork || !UriUtil.isNetworkUri(request.sourceUri))
+          if (shouldAdjustSampleSize) {
+            encodedImage.sampleSize =
+                DownsampleUtil.determineSampleSize(
+                    request.rotationOptions,
+                    request.resizeOptions,
+                    encodedImage,
+                    maxBitmapDimension)
           }
+
           if (producerContext.imagePipelineConfig.experiments.downsampleIfLargeBitmap) {
             maybeIncreaseSampleSize(encodedImage)
           }

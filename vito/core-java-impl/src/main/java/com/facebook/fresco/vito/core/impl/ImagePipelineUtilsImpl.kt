@@ -61,6 +61,7 @@ class ImagePipelineUtilsImpl(private val imageDecodeOptionsProvider: ImageDecode
   ): ImageRequestBuilder? =
       imageRequestBuilder?.apply {
         imageOptions.resizeOptions?.let { resizeOptions = it }
+        imageOptions.downsampleOverride?.let { downsampleOverride = it }
         imageOptions.rotationOptions?.let { rotationOptions = it }
         imageDecodeOptionsProvider.create(imageRequestBuilder, imageOptions)?.let {
           imageDecodeOptions = it
