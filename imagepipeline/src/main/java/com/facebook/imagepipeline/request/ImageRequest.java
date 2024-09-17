@@ -32,6 +32,7 @@ import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.common.SourceUriType;
+import com.facebook.imagepipeline.core.DownsampleMode;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.infer.annotation.Nullsafe;
@@ -120,6 +121,9 @@ public class ImageRequest {
    */
   private final @Nullable Boolean mResizingAllowedOverride;
 
+  /** Custom downsample override for this request. null -> use default pipeline's setting. */
+  private final @Nullable DownsampleMode mDownsampleOverride;
+
   private final @Nullable String mDiskCacheId;
 
   private final int mDelayMs;
@@ -174,6 +178,8 @@ public class ImageRequest {
     mRequestListener = builder.getRequestListener();
 
     mResizingAllowedOverride = builder.getResizingAllowedOverride();
+
+    mDownsampleOverride = builder.getDownsampleOverride();
 
     mDelayMs = builder.getDelayMs();
 
@@ -270,6 +276,10 @@ public class ImageRequest {
     return mResizingAllowedOverride;
   }
 
+  public @Nullable DownsampleMode getDownsampleOverride() {
+    return mDownsampleOverride;
+  }
+
   public int getDelayMs() {
     return mDelayMs;
   }
@@ -322,6 +332,7 @@ public class ImageRequest {
         || !Objects.equal(mCachesDisabled, request.mCachesDisabled)
         || !Objects.equal(mDecodePrefetches, request.mDecodePrefetches)
         || !Objects.equal(mResizingAllowedOverride, request.mResizingAllowedOverride)
+        || !Objects.equal(mDownsampleOverride, request.mDownsampleOverride)
         || !Objects.equal(mRotationOptions, request.mRotationOptions)
         || mLoadThumbnailOnly != request.mLoadThumbnailOnly) {
       return false;
@@ -359,6 +370,7 @@ public class ImageRequest {
       result = HashCode.extend(result, mRotationOptions);
       result = HashCode.extend(result, postprocessorCacheKey);
       result = HashCode.extend(result, mResizingAllowedOverride);
+      result = HashCode.extend(result, mDownsampleOverride);
       result = HashCode.extend(result, mDelayMs);
       result = HashCode.extend(result, mLoadThumbnailOnly);
       // ^ I *think* this is safe despite autoboxing...?
@@ -393,6 +405,7 @@ public class ImageRequest {
     hashCodeLog.put("ImageRequest.postprocessorCacheKey", getHashCodeHelper(postprocessorCacheKey));
     hashCodeLog.put(
         "ImageRequest.mResizingAllowedOverride", getHashCodeHelper(mResizingAllowedOverride));
+    hashCodeLog.put("ImageRequest.mDownsampleOverride", getHashCodeHelper(mDownsampleOverride));
     hashCodeLog.put("ImageRequest.mDelayMs", getHashCodeHelper(mDelayMs));
     hashCodeLog.put("ImageRequest.mLoadThumbnailOnly", getHashCodeHelper(mLoadThumbnailOnly));
   }
@@ -417,6 +430,7 @@ public class ImageRequest {
         .add("rotationOptions", mRotationOptions)
         .add("bytesRange", mBytesRange)
         .add("resizingAllowedOverride", mResizingAllowedOverride)
+        .add("downsampleOverride", mDownsampleOverride)
         .add("progressiveRenderingEnabled", mProgressiveRenderingEnabled)
         .add("localThumbnailPreviewsEnabled", mLocalThumbnailPreviewsEnabled)
         .add("loadThumbnailOnly", mLoadThumbnailOnly)

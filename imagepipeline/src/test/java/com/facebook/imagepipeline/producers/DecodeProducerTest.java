@@ -414,11 +414,44 @@ public class DecodeProducerTest {
   }
 
   @Test
+  public void testDecode_WhenDownsampleOverrideProvidedAndLocalUri_ThenPerformNoDownsampling()
+      throws Exception {
+    int resizedWidth = 10;
+    int resizedHeight = 10;
+    setupLocalUri(ResizeOptions.forDimensions(resizedWidth, resizedHeight), DownsampleMode.NEVER);
+
+    produceResults();
+    JobScheduler.JobRunnable jobRunnable = getJobRunnable();
+
+    jobRunnable.run(mEncodedImage, Consumer.IS_LAST);
+
+    // The sample size was not modified, which means Downsampling has not been performed
+    assertEquals(mEncodedImage.getSampleSize(), EncodedImage.DEFAULT_SAMPLE_SIZE);
+  }
+
+  @Test
   public void testDecode_WhenSmartResizingEnabledAndNetworkUri_ThenPerformNoDownsampling()
       throws Exception {
     int resizedWidth = 10;
     int resizedHeight = 10;
     setupNetworkUri(ResizeOptions.forDimensions(resizedWidth, resizedHeight));
+
+    produceResults();
+    JobScheduler.JobRunnable jobRunnable = getJobRunnable();
+
+    jobRunnable.run(mEncodedImage, Consumer.IS_LAST);
+
+    // The sample size was not modified, which means Downsampling has not been performed
+    assertEquals(mEncodedImage.getSampleSize(), EncodedImage.DEFAULT_SAMPLE_SIZE);
+  }
+
+  @Test
+  public void testDecode_WhenDownsampleOverrideProvidedAndNetworkUri_ThenPerformNoDownsampling()
+      throws Exception {
+    int resizedWidth = 10;
+    int resizedHeight = 10;
+    setupNetworkUri(
+        ResizeOptions.forDimensions(resizedWidth, resizedHeight), DownsampleMode.ALWAYS);
 
     produceResults();
     JobScheduler.JobRunnable jobRunnable = getJobRunnable();
@@ -446,30 +479,42 @@ public class DecodeProducerTest {
   }
 
   private void setupNetworkUri() {
-    setupNetworkUri(null);
+    setupNetworkUri(null, null);
   }
 
   private void setupNetworkUri(@Nullable ResizeOptions resizeOptions) {
+    setupNetworkUri(resizeOptions, null);
+  }
+
+  private void setupNetworkUri(
+      @Nullable ResizeOptions resizeOptions, @Nullable DownsampleMode downsampleOverride) {
     setupImageRequest(
         "networkRequest1",
         ImageRequestBuilder.newBuilderWithSource(Uri.parse("http://www.fb.com/image"))
             .setProgressiveRenderingEnabled(true)
             .setImageDecodeOptions(IMAGE_DECODE_OPTIONS)
             .setResizeOptions(resizeOptions)
+            .setDownsampleOverride(downsampleOverride)
             .build());
   }
 
   private void setupLocalUri() {
-    setupLocalUri(null);
+    setupLocalUri(null, null);
   }
 
   private void setupLocalUri(@Nullable ResizeOptions resizeOptions) {
+    setupLocalUri(resizeOptions, null);
+  }
+
+  private void setupLocalUri(
+      @Nullable ResizeOptions resizeOptions, @Nullable DownsampleMode downsampleOverride) {
     setupImageRequest(
         "localRequest1",
         ImageRequestBuilder.newBuilderWithSource(Uri.parse("file://path/image"))
             .setProgressiveRenderingEnabled(true) // this should be ignored
             .setImageDecodeOptions(IMAGE_DECODE_OPTIONS)
             .setResizeOptions(resizeOptions)
+            .setDownsampleOverride(downsampleOverride)
             .build());
   }
 

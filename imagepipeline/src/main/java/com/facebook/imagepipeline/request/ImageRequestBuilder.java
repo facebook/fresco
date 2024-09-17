@@ -19,6 +19,7 @@ import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
+import com.facebook.imagepipeline.core.DownsampleMode;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineExperiments;
 import com.facebook.imagepipeline.listener.RequestListener;
@@ -47,6 +48,7 @@ public class ImageRequestBuilder {
   private @Nullable RequestListener mRequestListener;
   private @Nullable BytesRange mBytesRange = null;
   private @Nullable Boolean mResizingAllowedOverride = null;
+  private @Nullable DownsampleMode mDownsampleOverride = null;
   private int mDelayMs;
   private @Nullable String mDiskCacheId = null;
 
@@ -104,7 +106,8 @@ public class ImageRequestBuilder {
         .setRotationOptions(imageRequest.getRotationOptions())
         .setShouldDecodePrefetches(imageRequest.shouldDecodePrefetches())
         .setDelayMs(imageRequest.getDelayMs())
-        .setDiskCacheId(imageRequest.getDiskCacheId());
+        .setDiskCacheId(imageRequest.getDiskCacheId())
+        .setDownsampleOverride(imageRequest.getDownsampleOverride());
   }
 
   public static void addCustomUriNetworkScheme(String scheme) {
@@ -451,6 +454,15 @@ public class ImageRequestBuilder {
 
   public @Nullable Boolean getResizingAllowedOverride() {
     return mResizingAllowedOverride;
+  }
+
+  public ImageRequestBuilder setDownsampleOverride(@Nullable DownsampleMode downsampleOverride) {
+    this.mDownsampleOverride = downsampleOverride;
+    return this;
+  }
+
+  public @Nullable DownsampleMode getDownsampleOverride() {
+    return mDownsampleOverride;
   }
 
   public int getDelayMs() {

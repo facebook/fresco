@@ -15,6 +15,7 @@ import com.facebook.fresco.vito.options.RoundingOptions
 import com.facebook.imagepipeline.common.ImageDecodeOptions
 import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.common.RotationOptions
+import com.facebook.imagepipeline.core.DownsampleMode
 import com.facebook.imagepipeline.testing.TestNativeLoader
 import org.assertj.core.api.Java6Assertions
 import org.assertj.core.api.Java6Assertions.fail
@@ -140,6 +141,22 @@ class ImagePipelineUtilsImplTest {
 
     Java6Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
     Java6Assertions.assertThat(imageRequest.resizeOptions).isEqualTo(resizeOptions)
+  }
+
+  @Test
+  fun testBuildImageRequest_whenResizingOverrideDisabled_thenSetOverrideOption() {
+    val resizeOptions = ResizeOptions.forDimensions(123, 234)
+    val imageOptions =
+        ImageOptions.create().resize(resizeOptions).downsampleOverride(DownsampleMode.NEVER).build()
+    val imageRequest = imagePipelineUtils.buildImageRequest(URI, imageOptions)
+    if (imageRequest == null) {
+      fail("not null value expected")
+      return
+    }
+
+    Java6Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
+    Java6Assertions.assertThat(imageRequest.resizeOptions).isEqualTo(resizeOptions)
+    Java6Assertions.assertThat(imageRequest.downsampleOverride).isEqualTo(DownsampleMode.NEVER)
   }
 
   @Test

@@ -14,10 +14,12 @@ import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.imagepipeline.common.ImageDecodeOptions
 import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.common.RotationOptions
+import com.facebook.imagepipeline.core.DownsampleMode
 import com.facebook.imagepipeline.request.Postprocessor
 
 open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builder) {
   val resizeOptions: ResizeOptions? = builder.resizeOptions
+  val downsampleOverride: DownsampleMode? = builder.downsampleOverride
   val rotationOptions: RotationOptions? = builder.rotationOptions
   val postprocessor: Postprocessor? = builder.postprocessor
   val imageDecodeOptions: ImageDecodeOptions? = builder.imageDecodeOptions
@@ -42,6 +44,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
 
   protected fun equalDecodedOptions(other: DecodedImageOptions): Boolean {
     return if (!Objects.equal(resizeOptions, other.resizeOptions) ||
+        !Objects.equal(downsampleOverride, other.downsampleOverride) ||
         !Objects.equal(rotationOptions, other.rotationOptions) ||
         !Objects.equal(postprocessor, other.postprocessor) ||
         !Objects.equal(imageDecodeOptions, other.imageDecodeOptions) ||
@@ -60,6 +63,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
   override fun hashCode(): Int {
     var result = super.hashCode()
     result = 31 * result + (resizeOptions?.hashCode() ?: 0)
+    result = 31 * result + (downsampleOverride?.hashCode() ?: 0)
     result = 31 * result + (rotationOptions?.hashCode() ?: 0)
     result = 31 * result + (postprocessor?.hashCode() ?: 0)
     result = 31 * result + (imageDecodeOptions?.hashCode() ?: 0)
@@ -79,6 +83,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
   override fun toStringHelper(): Objects.ToStringHelper =
       super.toStringHelper()
           .add("resizeOptions", resizeOptions)
+          .add("downsampleOverride", downsampleOverride)
           .add("rotationOptions", resizeOptions)
           .add("postprocessor", postprocessor)
           .add("imageDecodeOptions", imageDecodeOptions)
@@ -93,6 +98,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
 
   open class Builder<T : Builder<T>> : EncodedImageOptions.Builder<T> {
     internal var resizeOptions: ResizeOptions? = null
+    internal var downsampleOverride: DownsampleMode? = null
     internal var rotationOptions: RotationOptions? = null
     internal var postprocessor: Postprocessor? = null
     internal var imageDecodeOptions: ImageDecodeOptions? = null
@@ -109,6 +115,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
 
     constructor(decodedImageOptions: DecodedImageOptions) : super(decodedImageOptions) {
       resizeOptions = decodedImageOptions.resizeOptions
+      downsampleOverride = decodedImageOptions.downsampleOverride
       rotationOptions = decodedImageOptions.rotationOptions
       postprocessor = decodedImageOptions.postprocessor
       imageDecodeOptions = decodedImageOptions.imageDecodeOptions
@@ -125,6 +132,16 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
     constructor(defaultOptions: ImageOptions) : this(defaultOptions as DecodedImageOptions)
 
     fun resize(resizeOptions: ResizeOptions?): T = modify { this.resizeOptions = resizeOptions }
+
+    /**
+     * Custom downsample override for this request. null -> use default pipeline's setting.
+     *
+     * @param downsampleOverride
+     * @return the builder
+     */
+    fun downsampleOverride(downsampleOverride: DownsampleMode?): T = modify {
+      this.downsampleOverride = downsampleOverride
+    }
 
     fun rotate(rotationOptions: RotationOptions?): T = modify {
       this.rotationOptions = rotationOptions

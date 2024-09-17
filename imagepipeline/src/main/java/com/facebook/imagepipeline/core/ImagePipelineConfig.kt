@@ -574,9 +574,3 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
             }
   }
 }
-
-enum class DownsampleMode {
-  ALWAYS,
-  AUTO,
-  NEVER
-}
