@@ -7,9 +7,11 @@
 
 package com.facebook.common.memory;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /** Implementation of {@link MemoryTrimmableRegistry} that does not do anything. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class NoOpMemoryTrimmableRegistry implements MemoryTrimmableRegistry {
   @Nullable private static NoOpMemoryTrimmableRegistry sInstance = null;
 

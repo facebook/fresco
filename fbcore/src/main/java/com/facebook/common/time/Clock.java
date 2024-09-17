@@ -7,9 +7,11 @@
 
 package com.facebook.common.time;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** Interface for getting the current time. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
 public interface Clock {
 

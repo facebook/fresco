@@ -8,10 +8,12 @@
 package com.facebook.common.time;
 
 import com.facebook.common.internal.DoNotStrip;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** A clock that is guaranteed not to go backward. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
 public interface MonotonicClock {
 
