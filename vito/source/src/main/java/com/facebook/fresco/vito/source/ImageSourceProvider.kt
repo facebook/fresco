@@ -42,7 +42,7 @@ object ImageSourceProvider {
       if (uri == null) {
         emptySource()
       } else {
-        SingleImageSource(
+        SingleImageSourceImpl(
             uri,
             buildMap {
               if (extras != null) {
