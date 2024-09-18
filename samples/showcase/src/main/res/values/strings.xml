@@ -33,6 +33,7 @@
 
   <string name="drawee_multi_uri_help">Example to load an image based on a set of URIs, either as "first available" or with "increasing quality".</string>
 
+  <string name="imagepipeline_downsample_help" description="Helper text for downsample example">Change the downsample mode using the drop-down menu on top.</string>
 
   <string name="imagepipeline_notification_button">Create Notification</string>
   <string name="imagepipeline_notification_content_title">Fresco Says Hello</string>
