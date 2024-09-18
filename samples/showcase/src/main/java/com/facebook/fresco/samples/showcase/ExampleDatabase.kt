@@ -49,6 +49,7 @@ object ExampleDatabase {
           ExampleCategory(
               "Image Pipeline",
               listOf(
+                  ExampleItem("Downsample Modes") { ImagePipelineDownsampleFragment() },
                   ExampleItem("Notifications") { ImagePipelineNotificationFragment() },
                   ExampleItem("Post-Processor") { ImagePipelinePostProcessorFragment() },
                   ExampleItem("Prefetch") { ImagePipelinePrefetchFragment() },
