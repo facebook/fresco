@@ -19,7 +19,7 @@ class MultiVitoDrawableHolder {
 
   class VitoDrawableHolder(
       var drawable: FrescoDrawableInterface,
-      var imageOptions: ImageOptions,
+      var imageOptionsBuilder: ImageOptions.Builder,
       var imageSource: ImageSource,
       var resources: Resources,
       var callerContext: Any,
@@ -98,10 +98,12 @@ class MultiVitoDrawableHolder {
   }
 
   companion object {
+    @JvmStatic
     fun attachHolder(holder: VitoDrawableHolder) {
       val vitoImageRequest =
           FrescoVitoProvider.getImagePipeline()
-              .createImageRequest(holder.resources, holder.imageSource, holder.imageOptions)
+              .createImageRequest(
+                  holder.resources, holder.imageSource, holder.imageOptionsBuilder.build())
       FrescoVitoProvider.getController()
           .fetch(
               drawable = holder.drawable,
@@ -114,6 +116,7 @@ class MultiVitoDrawableHolder {
           )
     }
 
+    @JvmStatic
     fun detachHolder(holder: VitoDrawableHolder) {
       FrescoVitoProvider.getController().release(holder.drawable)
     }
