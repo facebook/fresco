@@ -107,7 +107,8 @@ public class ImageRequestBuilder {
         .setShouldDecodePrefetches(imageRequest.shouldDecodePrefetches())
         .setDelayMs(imageRequest.getDelayMs())
         .setDiskCacheId(imageRequest.getDiskCacheId())
-        .setDownsampleOverride(imageRequest.getDownsampleOverride());
+        .setDownsampleOverride(imageRequest.getDownsampleOverride())
+        .setResizingAllowedOverride(imageRequest.getResizingAllowedOverride());
   }
 
   public static void addCustomUriNetworkScheme(String scheme) {

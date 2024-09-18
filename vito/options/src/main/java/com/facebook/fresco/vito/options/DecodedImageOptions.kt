@@ -84,7 +84,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
       super.toStringHelper()
           .add("resizeOptions", resizeOptions)
           .add("downsampleOverride", downsampleOverride)
-          .add("rotationOptions", resizeOptions)
+          .add("rotationOptions", rotationOptions)
           .add("postprocessor", postprocessor)
           .add("imageDecodeOptions", imageDecodeOptions)
           .add("roundingOptions", roundingOptions)
