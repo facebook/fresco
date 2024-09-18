@@ -163,7 +163,6 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
   private void setVisibilityCallback(@Nullable VisibilityCallback visibilityCallback) {
     Drawable drawable = getTopLevelDrawable();
     if (drawable instanceof VisibilityAwareDrawable) {
-      // NULLSAFE_FIXME[Parameter Not Nullable]
       ((VisibilityAwareDrawable) drawable).setVisibilityCallback(visibilityCallback);
     }
   }
