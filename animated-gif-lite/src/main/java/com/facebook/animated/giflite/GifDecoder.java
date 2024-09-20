@@ -20,12 +20,14 @@ import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.QualityInfo;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 /** A simple Gif decoder that uses Android's {@link Movie} class to decode Gif images. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class GifDecoder implements ImageDecoder {
 
   @Override
@@ -38,15 +40,19 @@ public class GifDecoder implements ImageDecoder {
     try {
       ByteArrayOutputStream out = new ByteArrayOutputStream();
 
+      // NULLSAFE_FIXME[Parameter Not Nullable]
       GifMetadataDecoder decoder = GifMetadataDecoder.create(is, out);
 
       if (out.size() > 0) { // let's use the fixed gif version if exists
+        // NULLSAFE_FIXME[Nullable Dereference]
         is.close();
         is = new ByteArrayInputStream(out.toByteArray());
       }
 
+      // NULLSAFE_FIXME[Nullable Dereference]
       is.reset();
 
+      // NULLSAFE_FIXME[Parameter Not Nullable]
       Movie movie = Movie.decodeStream(is);
 
       MovieDrawer drawer = new MovieDrawer(movie);
@@ -78,6 +84,7 @@ public class GifDecoder implements ImageDecoder {
       throw new RuntimeException("Error while decoding gif", e);
     } finally {
       try {
+        // NULLSAFE_FIXME[Nullable Dereference]
         is.close();
       } catch (IOException ignored) {
       }
