@@ -15,11 +15,13 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.gestures.TransformGestureDetector;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /** Zoomable controller that calculates transformation based on touch events. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DefaultZoomableController
     implements ZoomableController, TransformGestureDetector.Listener {
 
@@ -650,6 +652,7 @@ public class DefaultZoomableController
   }
 
   public Listener getListener() {
+    // NULLSAFE_FIXME[Return Not Nullable]
     return mListener;
   }
 }
