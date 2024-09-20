@@ -15,15 +15,21 @@ import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 
 /** Default implementation of {@link PipelineDraweeControllerFactory}. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PipelineDraweeControllerFactory {
 
+  // NULLSAFE_FIXME[Field Not Initialized]
   private Resources mResources;
+  // NULLSAFE_FIXME[Field Not Initialized]
   private DeferredReleaser mDeferredReleaser;
+  // NULLSAFE_FIXME[Field Not Initialized]
   private DrawableFactory mAnimatedDrawableFactory;
+  // NULLSAFE_FIXME[Field Not Initialized]
   private Executor mUiThreadExecutor;
   @Nullable private MemoryCache<CacheKey, CloseableImage> mMemoryCache;
   @Nullable private ImmutableList<DrawableFactory> mDrawableFactories;
