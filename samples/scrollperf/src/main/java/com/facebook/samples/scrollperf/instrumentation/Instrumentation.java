@@ -14,6 +14,7 @@ import android.graphics.Rect;
 import android.view.View;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * Tracks state of image request.
@@ -21,6 +22,7 @@ import com.facebook.common.logging.FLog;
  * <p>Components that implement {@link Instrumented} interface can use this class to track their
  * requests.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class Instrumentation {
   private static final String TAG = "Instrumentation";
 
@@ -36,8 +38,10 @@ public class Instrumentation {
   private final Rect mTextRect;
   private final View mView;
 
+  // NULLSAFE_FIXME[Field Not Initialized]
   private PerfListener mPerfListener;
   private long mStartTime;
+  // NULLSAFE_FIXME[Field Not Initialized]
   private String mTag;
   private long mFinishTime;
   private ImageRequestState mState;
