@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.testing;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -15,6 +16,7 @@ import javax.annotation.Nullable;
  *
  * @param <T> the type of node
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DeltaQueue<T> {
   /**
    * A node in the queue.
@@ -59,6 +61,7 @@ public class DeltaQueue<T> {
    * @return the next item in the queue
    */
   public T next() {
+    // NULLSAFE_FIXME[Nullable Dereference]
     return head.value;
   }
 
@@ -68,6 +71,7 @@ public class DeltaQueue<T> {
    * @return the delay until the next item
    */
   public long delay() {
+    // NULLSAFE_FIXME[Nullable Dereference]
     return head.delay;
   }
 
@@ -129,11 +133,14 @@ public class DeltaQueue<T> {
    * @return the next element off the queue.
    */
   public T pop() {
+    // NULLSAFE_FIXME[Nullable Dereference]
     if (head.delay > 0) {
       throw new IllegalStateException("cannot pop the head element when it has a non-zero delay");
     }
 
+    // NULLSAFE_FIXME[Nullable Dereference]
     T popped = head.value;
+    // NULLSAFE_FIXME[Nullable Dereference]
     head = head.next;
     size--;
     return popped;
