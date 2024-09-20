@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 /** A trivial implementation of {@link PooledByteBuffer} using {@link ByteBuffer} */
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class TrivialBufferPooledByteBuffer implements PooledByteBuffer {
-  private ByteBuffer mBuffer;
+  @Nullable private ByteBuffer mBuffer;
 
   public TrivialBufferPooledByteBuffer(byte[] buf) {
     mBuffer = ByteBuffer.allocateDirect(buf.length);
