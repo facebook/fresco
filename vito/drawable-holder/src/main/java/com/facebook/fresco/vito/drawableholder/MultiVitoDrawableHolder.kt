@@ -97,6 +97,15 @@ class MultiVitoDrawableHolder {
     return false
   }
 
+  fun clear() {
+    if (isAttached) {
+      for (i in holders.indices) {
+        detachHolder(holders[i])
+      }
+    }
+    holders.clear()
+  }
+
   companion object {
     @JvmStatic
     fun attachHolder(holder: VitoDrawableHolder) {
