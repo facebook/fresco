@@ -141,8 +141,8 @@ public class EncodedImage implements Closeable {
    *
    * <p>The caller has to close the reference once it has finished using it.
    */
+  @Nullable
   public CloseableReference<PooledByteBuffer> getByteBufferRef() {
-    // NULLSAFE_FIXME[Return Not Nullable]
     return CloseableReference.cloneOrNull(mPooledByteBufferRef);
   }
 
