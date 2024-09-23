@@ -22,7 +22,7 @@ class MultiVitoDrawableHolder {
       var imageOptionsBuilder: ImageOptions.Builder,
       var imageSource: ImageSource,
       var resources: Resources,
-      var callerContext: Any,
+      var callerContext: Any?,
       var imageListener: ImageListener? = null,
   )
 
