@@ -8,7 +8,6 @@
 package com.facebook.imagepipeline.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import android.net.Uri;
 import com.facebook.imagepipeline.common.ImageDecodeOptionsBuilder;
@@ -77,67 +76,6 @@ public class ImageRequestTest {
     assertThat(request).isNotNull();
     assertThat(request.getCacheChoice()).isEqualTo(ImageRequest.CacheChoice.DYNAMIC);
     assertThat(request.getDiskCacheId()).isEqualTo("dynamic_cache_id");
-  }
-
-  @Test
-  public void testCreatingRequestWithDynamicCacheChoice_nodiskCacheId() {
-    assertThatThrownBy(
-            () -> {
-              ImageRequest request =
-                  ImageRequestBuilder.newBuilderWithSource(
-                          Uri.parse("http://frescolib.org/image.jpg"))
-                      .setCacheChoice(ImageRequest.CacheChoice.DYNAMIC)
-                      .setImageDecodeOptions(new ImageDecodeOptionsBuilder().build())
-                      .setLocalThumbnailPreviewsEnabled(true)
-                      .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.DISK_CACHE)
-                      .setPostprocessor(
-                          new BasePostprocessor() {
-                            @Override
-                            public String getName() {
-                              return super.getName();
-                            }
-                          })
-                      .setProgressiveRenderingEnabled(true)
-                      .setRequestListener(new RequestLoggingListener())
-                      .setResizeOptions(new ResizeOptions(20, 20))
-                      .setRotationOptions(RotationOptions.forceRotation(RotationOptions.ROTATE_90))
-                      .setRequestPriority(Priority.HIGH)
-                      .build();
-            })
-        .isInstanceOf(ImageRequestBuilder.BuilderException.class)
-        .hasMessage("Invalid request builder: Disk cache id must be set for dynamic cache choice");
-  }
-
-  @Test
-  public void testCreatingRequestWithNONDynamicCacheChoice_withDiskCacheId() {
-    assertThatThrownBy(
-            () -> {
-              ImageRequest request =
-                  ImageRequestBuilder.newBuilderWithSource(
-                          Uri.parse("http://frescolib.org/image.jpg"))
-                      .setCacheChoice(ImageRequest.CacheChoice.SMALL)
-                      .setDiskCacheId("dynamic_cache_id")
-                      .setImageDecodeOptions(new ImageDecodeOptionsBuilder().build())
-                      .setLocalThumbnailPreviewsEnabled(true)
-                      .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.DISK_CACHE)
-                      .setPostprocessor(
-                          new BasePostprocessor() {
-                            @Override
-                            public String getName() {
-                              return super.getName();
-                            }
-                          })
-                      .setProgressiveRenderingEnabled(true)
-                      .setRequestListener(new RequestLoggingListener())
-                      .setResizeOptions(new ResizeOptions(20, 20))
-                      .setRotationOptions(RotationOptions.forceRotation(RotationOptions.ROTATE_90))
-                      .setRequestPriority(Priority.HIGH)
-                      .build();
-            })
-        .isInstanceOf(ImageRequestBuilder.BuilderException.class)
-        .hasMessage(
-            "Invalid request builder: Ensure that if you want to use a disk cache id, you set the"
-                + " CacheChoice to DYNAMIC");
   }
 
   @Test

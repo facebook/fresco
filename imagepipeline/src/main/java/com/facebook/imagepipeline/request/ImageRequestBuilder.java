@@ -510,14 +510,5 @@ public class ImageRequestBuilder {
     if (UriUtil.isLocalAssetUri(mSourceUri) && !mSourceUri.isAbsolute()) {
       throw new BuilderException("Asset URI path must be absolute.");
     }
-
-    if (mCacheChoice == CacheChoice.DYNAMIC) {
-      if (mDiskCacheId == null) {
-        throw new BuilderException("Disk cache id must be set for dynamic cache choice");
-      }
-    } else if (mDiskCacheId != null && mDiskCacheId.length() != 0) {
-      throw new BuilderException(
-          "Ensure that if you want to use a disk cache id, you set the CacheChoice to DYNAMIC");
-    }
   }
 }
