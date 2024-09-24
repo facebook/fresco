@@ -30,6 +30,8 @@ class MultiVitoDrawableHolder {
 
   private var isAttached: Boolean = false
 
+  fun iterator(): Iterator<VitoDrawableHolder> = holders.iterator()
+
   fun onAttach() {
     if (isAttached) {
       return
