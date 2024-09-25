@@ -31,6 +31,9 @@ public enum MemoryTrimType {
   /** The system as a whole is running out of memory, and this application is in the background. */
   OnSystemLowMemoryWhileAppInBackgroundLowSeverity(1),
 
+  /** The system as a whole is running out of memory, and this application is in the background. */
+  OnSystemModerateMemory(0.5),
+
   /** This app is moving into the background, usually because the user navigated to another app. */
   OnAppBackgrounded(1),
 
