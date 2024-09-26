@@ -13,7 +13,6 @@ LOCAL_SRC_FILES := \
 	exceptions.cpp \
 	streams.cpp \
 	transformations.cpp \
-	webp/webp_codec.cpp \
   jni_helpers.cpp \
   webp.cpp \
 
