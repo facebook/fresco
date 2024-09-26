@@ -36,25 +36,15 @@
   destClass = (jclass)env->NewGlobalRef(destClass); \
   RETURN_IF_ERROR
 
+jclass jRuntimeExceptionWebp_class;
+
+namespace {
+
 static constexpr const char* kHandlerClassName =
     "com/facebook/webpsupport/WebpBitmapFactoryImpl";
 
-static jclass bitmapOptionsClass;
-static jclass webpBitmapFactoryClass;
-static jclass runtimeExceptionClass;
-static jclass bitmapClass;
-static jclass bitmapConfigClass;
-static jclass fileDescriptorClass;
-static jmethodID createBitmapFunction;
-static jmethodID valueOfBitmapConfigFunction;
-static jstring configName;
-
-jmethodID midInputStreamRead;
-jmethodID midInputStreamSkip;
-jmethodID midOutputStreamWrite;
-jmethodID midOutputStreamWriteWithBounds;
-
-jclass jRuntimeExceptionWebp_class;
+jclass webpBitmapFactoryClass;
+jclass fileDescriptorClass;
 
 std::vector<uint8_t>
 readStreamFully(JNIEnv* env, jobject is, jbyteArray inTempStorage) {
@@ -82,12 +72,12 @@ readStreamFully(JNIEnv* env, jobject is, jbyteArray inTempStorage) {
   }
 }
 
-static jboolean setOutDimensions(
+jboolean setOutDimensions(
     JNIEnv* env,
     jobject bitmapOptions,
     int image_width,
     int image_height) {
-  jmethodID decodeBoundsMethodID = env->GetStaticMethodID(
+  static jmethodID decodeBoundsMethodID = env->GetStaticMethodID(
       webpBitmapFactoryClass,
       "setOutDimensions",
       "(Landroid/graphics/BitmapFactory$Options;II)Z");
@@ -100,12 +90,12 @@ static jboolean setOutDimensions(
   return hadDecodeBounds;
 }
 
-static void setBitmapSize(
+void setBitmapSize(
     JNIEnv* env,
     jobject bitmapOptions,
     int image_width,
     int image_height) {
-  jmethodID setBitmapSizeMethodID = env->GetStaticMethodID(
+  static jmethodID setBitmapSizeMethodID = env->GetStaticMethodID(
       webpBitmapFactoryClass,
       "setBitmapSize",
       "(Landroid/graphics/BitmapFactory$Options;II)V");
@@ -117,11 +107,15 @@ static void setBitmapSize(
       image_height);
 }
 
-static jobject createBitmap(
+jobject createBitmap(
     JNIEnv* env,
     int image_width,
     int image_height,
     jobject bitmapOptions) {
+  static jmethodID createBitmapFunction = env->GetStaticMethodID(
+      webpBitmapFactoryClass,
+      "createBitmap",
+      "(IILandroid/graphics/BitmapFactory$Options;)Landroid/graphics/Bitmap;");
   jobject bitmap = env->CallStaticObjectMethod(
       webpBitmapFactoryClass,
       createBitmapFunction,
@@ -169,7 +163,7 @@ jobject doDecode(
 
   int rc = AndroidBitmap_lockPixels(env, bitmap, (void**)&raw_pixels);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    env->ThrowNew(runtimeExceptionClass, "Decode error locking pixels");
+    env->ThrowNew(jRuntimeExceptionWebp_class, "Decode error locking pixels");
     return JNI_FALSE;
   }
 
@@ -183,7 +177,7 @@ jobject doDecode(
 
   rc = AndroidBitmap_unlockPixels(env, bitmap);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
-    env->ThrowNew(runtimeExceptionClass, "Decode error unlocking pixels");
+    env->ThrowNew(jRuntimeExceptionWebp_class, "Decode error unlocking pixels");
     return {};
   }
 
@@ -194,7 +188,7 @@ jobject doDecode(
   return bitmap;
 }
 
-static jobject nativeDecodeStream(
+jobject nativeDecodeStream(
     JNIEnv* env,
     jclass clazz,
     jobject is,
@@ -209,7 +203,7 @@ static jobject nativeDecodeStream(
   return {};
 }
 
-static jobject nativeDecodeByteArray(
+jobject nativeDecodeByteArray(
     JNIEnv* env,
     jclass clazz,
     jbyteArray array,
@@ -240,7 +234,7 @@ static jobject nativeDecodeByteArray(
   return bitmap;
 }
 
-static jlong nativeSeek(
+jlong nativeSeek(
     JNIEnv* env,
     jclass clazz,
     jobject fileDescriptor,
@@ -260,7 +254,7 @@ static jlong nativeSeek(
   return descriptor;
 }
 
-static JNINativeMethod methods[] = {
+JNINativeMethod methods[] = {
     {"nativeDecodeStream",
      "(Ljava/io/InputStream;Landroid/graphics/BitmapFactory$Options;F[B)Landroid/graphics/Bitmap;",
      (void*)&nativeDecodeStream},
@@ -270,7 +264,7 @@ static JNINativeMethod methods[] = {
     {"nativeSeek", "(Ljava/io/FileDescriptor;JZ)J", (void*)&nativeSeek},
 };
 
-static int registerNativeMethods(
+int registerNativeMethods(
     JNIEnv* env,
     const char* className,
     JNINativeMethod* gMethods,
@@ -286,7 +280,7 @@ static int registerNativeMethods(
   return JNI_TRUE;
 }
 
-static int registerNatives(JNIEnv* env) {
+int registerNatives(JNIEnv* env) {
   if (!registerNativeMethods(
           env,
           kHandlerClassName,
@@ -302,6 +296,8 @@ typedef union {
   void* venv;
 } UnionJNIEnvToVoid;
 
+} // namespace
+
 __attribute__((visibility("default"))) JNIEXPORT jint JNICALL
 JNI_OnLoad(JavaVM* vm, void* reserved) {
   JNIEnv* env;
@@ -311,75 +307,8 @@ JNI_OnLoad(JavaVM* vm, void* reserved) {
   }
 
   // find java classes
-  jclass runtimeException = env->FindClass("java/lang/RuntimeException");
-  if (runtimeException == nullptr) {
-    LOGE("could not find RuntimeException class");
-    return -1;
-  }
-  jRuntimeExceptionWebp_class =
-      reinterpret_cast<jclass>(env->NewGlobalRef(runtimeException));
-
-  CREATE_AS_GLOBAL(runtimeExceptionClass, "java/lang/RuntimeException");
-
-  jclass isClass = env->FindClass("java/io/InputStream");
-  THROW_AND_RETURNVAL_IF(isClass == nullptr, "could not find InputStream", -1);
-
-  jclass osClass = env->FindClass("java/io/OutputStream");
-  THROW_AND_RETURNVAL_IF(osClass == nullptr, "could not find OutputStream", -1);
-
-  // find java methods
-  midInputStreamRead = env->GetMethodID(isClass, "read", "([B)I");
-  THROW_AND_RETURNVAL_IF(
-      midInputStreamRead == nullptr, "failed to register InputStream.read", -1);
-
-  midInputStreamSkip = env->GetMethodID(isClass, "skip", "(J)J");
-  THROW_AND_RETURNVAL_IF(
-      midInputStreamSkip == nullptr, "failed to register InputStream.skip", -1);
-
-  midOutputStreamWrite = env->GetMethodID(osClass, "write", "([B)V");
-  THROW_AND_RETURNVAL_IF(
-      midOutputStreamWrite == nullptr,
-      "failed to register OutputStream.write",
-      -1);
-
-  midOutputStreamWriteWithBounds =
-      env->GetMethodID(osClass, "write", "([BII)V");
-  THROW_AND_RETURNVAL_IF(
-      midOutputStreamWriteWithBounds == nullptr,
-      "failed to register OutputStream.write",
-      -1);
-
-  bitmapOptionsClass = (jclass)env->NewGlobalRef(
-      env->FindClass("android/graphics/BitmapFactory$Options"));
-  RETURN_IF_ERROR
-
-  webpBitmapFactoryClass = (jclass)env->NewGlobalRef(
-      env->FindClass("com/facebook/webpsupport/WebpBitmapFactoryImpl"));
-  RETURN_IF_ERROR
-
-  CREATE_AS_GLOBAL(bitmapClass, "android/graphics/Bitmap");
-
+  CREATE_AS_GLOBAL(jRuntimeExceptionWebp_class, "java/lang/RuntimeException");
   CREATE_AS_GLOBAL(fileDescriptorClass, "java/io/FileDescriptor");
-
-  createBitmapFunction = env->GetStaticMethodID(
-      webpBitmapFactoryClass,
-      "createBitmap",
-      "(IILandroid/graphics/BitmapFactory$Options;)Landroid/graphics/Bitmap;");
-  RETURN_IF_ERROR
-
-  configName = env->NewStringUTF("ARGB_8888");
-  RETURN_IF_ERROR
-
-  configName = (jstring)env->NewGlobalRef(configName);
-  RETURN_IF_ERROR
-
-  CREATE_AS_GLOBAL(bitmapConfigClass, "android/graphics/Bitmap$Config");
-
-  valueOfBitmapConfigFunction = env->GetStaticMethodID(
-      bitmapConfigClass,
-      "valueOf",
-      "(Ljava/lang/String;)Landroid/graphics/Bitmap$Config;");
-  RETURN_IF_ERROR
 
   UnionJNIEnvToVoid uenv;
   uenv.venv = NULL;

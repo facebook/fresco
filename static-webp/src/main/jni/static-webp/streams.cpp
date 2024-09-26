@@ -11,7 +11,6 @@
 #include <jni.h>
 
 #include "exceptions.h"
-#include "java_globals.h"
 #include "streams.h"
 
 namespace facebook {
@@ -21,6 +20,19 @@ std::vector<uint8_t> readStreamFully(JNIEnv* env, jobject is) {
   std::vector<uint8_t> read_buffer;
   jbyteArray java_buffer = env->NewByteArray(kDefaultBufferSize);
   RETURNVAL_IF_EXCEPTION_PENDING({});
+
+  static jmethodID midInputStreamRead = [&]() -> jmethodID {
+    jclass isClass = env->FindClass("java/io/InputStream");
+    THROW_AND_RETURNVAL_IF(
+        isClass == nullptr, "could not find InputStream", nullptr);
+
+    jmethodID id = env->GetMethodID(isClass, "read", "([B)I");
+    THROW_AND_RETURNVAL_IF(
+        midInputStreamRead == nullptr,
+        "failed to register InputStream.read",
+        nullptr);
+    return id;
+  }();
 
   while (true) {
     const int chunk_size =

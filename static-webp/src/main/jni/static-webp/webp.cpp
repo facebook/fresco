@@ -18,7 +18,11 @@
 #include "webp/decode.h"
 #include "webp/demux.h"
 
+#if defined(__has_include) && __has_include(<jni/jni_helpers.h>)
+#include <jni/jni_helpers.h>
+#else
 #include "jni_helpers.h"
+#endif
 
 using namespace facebook;
 

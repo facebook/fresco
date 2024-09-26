@@ -19,9 +19,14 @@
 #include <vector>
 
 #include "gif_lib.h"
-#include "jni_helpers.h"
 #include "locks.h"
 #include "secure_memcpy.h"
+
+#if defined(__has_include) && __has_include(<jni/jni_helpers.h>)
+#include <jni/jni_helpers.h>
+#else
+#include "jni_helpers.h"
+#endif
 
 using namespace facebook;
 

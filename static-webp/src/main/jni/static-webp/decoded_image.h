@@ -13,6 +13,7 @@
 
 namespace facebook {
 namespace imagepipeline {
+namespace webp {
 
 /**
  * Describes pixel formats of DecodedImage
@@ -96,6 +97,7 @@ class DecodedImage {
   const std::vector<uint8_t> metadata_;
 };
 
+} // namespace webp
 } // namespace imagepipeline
 } // namespace facebook
 

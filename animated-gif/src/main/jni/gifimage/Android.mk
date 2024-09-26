@@ -10,7 +10,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := gifimage
 
 LOCAL_SRC_FILES := \
-  jni.cpp \
+  OnLoad.cpp \
   gif.cpp \
   jni_helpers.cpp \
 

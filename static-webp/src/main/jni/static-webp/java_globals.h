@@ -10,11 +10,6 @@
 
 #include <jni.h>
 
-extern jmethodID midInputStreamRead;
-extern jmethodID midInputStreamSkip;
-extern jmethodID midOutputStreamWrite;
-extern jmethodID midOutputStreamWriteWithBounds;
-
 extern jclass jRuntimeExceptionWebp_class;
 
 #endif /* _JAVACLASSES_H_ */

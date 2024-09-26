@@ -9,6 +9,7 @@
 
 namespace facebook {
 namespace imagepipeline {
+namespace webp {
 
 int bytesPerPixel(PixelFormat pixel_format) {
   switch (pixel_format) {
@@ -21,5 +22,6 @@ int bytesPerPixel(PixelFormat pixel_format) {
   }
 }
 
+} // namespace webp
 } // namespace imagepipeline
 } // namespace facebook
