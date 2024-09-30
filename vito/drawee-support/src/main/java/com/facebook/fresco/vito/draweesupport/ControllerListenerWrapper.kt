@@ -18,6 +18,7 @@ import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.infer.annotation.Assertions
 import com.facebook.infer.annotation.PropagatesNullable
 
+@Deprecated("ControllerListenerWrapper is only supposed to be used for DraweeMigration.")
 class ControllerListenerWrapper(private val controllerListener: ControllerListener<ImageInfo>) :
     ImageListener {
 
