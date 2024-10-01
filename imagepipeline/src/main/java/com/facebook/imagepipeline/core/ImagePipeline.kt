@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.core
 
 import android.net.Uri
+import android.os.StrictMode
 import bolts.CancellationTokenSource
 import bolts.Continuation
 import bolts.Task
@@ -784,10 +785,15 @@ class ImagePipeline(
     val diskCachesStore = diskCachesStoreSupplier.get()
     val cacheKey = cacheKeyFactory.getEncodedCacheKey(imageRequest, null)
     val cacheChoice = imageRequest.cacheChoice
-    return when (cacheChoice) {
-      CacheChoice.DEFAULT -> diskCachesStore.mainBufferedDiskCache.diskCheckSync(cacheKey)
-      CacheChoice.SMALL -> diskCachesStore.smallImageBufferedDiskCache.diskCheckSync(cacheKey)
-      CacheChoice.DYNAMIC -> isInDynamicDiskCachesSync(imageRequest)
+    val oldPolicy = StrictMode.allowThreadDiskReads()
+    try {
+      return when (cacheChoice) {
+        CacheChoice.DEFAULT -> diskCachesStore.mainBufferedDiskCache.diskCheckSync(cacheKey)
+        CacheChoice.SMALL -> diskCachesStore.smallImageBufferedDiskCache.diskCheckSync(cacheKey)
+        CacheChoice.DYNAMIC -> isInDynamicDiskCachesSync(imageRequest)
+      }
+    } finally {
+      StrictMode.setThreadPolicy(oldPolicy)
     }
   }
 
