@@ -140,7 +140,6 @@ class KFrescoVitoDrawable(
     listenerManager.imageListener = null
   }
 
-  private var drawableAlpha: Int = 255
   private var drawableColorFilter: ColorFilter? = null
 
   val callbackProvider: (() -> Callback?) = { this }
@@ -180,7 +179,11 @@ class KFrescoVitoDrawable(
   }
 
   override fun setAlpha(alpha: Int) {
-    drawableAlpha = alpha
+    placeholderLayer.setAlpha(alpha)
+    actualImageLayer.setAlpha(alpha)
+    progressLayer?.setAlpha(alpha)
+    overlayImageLayer.setAlpha(alpha)
+    debugOverlayImageLayer?.setAlpha(alpha)
   }
 
   override fun setColorFilter(colorFilter: ColorFilter?) {

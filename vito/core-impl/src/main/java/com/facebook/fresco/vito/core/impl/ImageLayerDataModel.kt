@@ -40,10 +40,7 @@ class ImageLayerDataModel(
   private var fadeAnimator: ValueAnimator? = null
 
   private val animatorUpdateListener =
-      ValueAnimator.AnimatorUpdateListener {
-        paint.alpha = it.animatedValue as Int
-        invalidateLayerCallback?.invoke()
-      }
+      ValueAnimator.AnimatorUpdateListener { setAlpha(it.animatedValue as Int) }
 
   fun getDataModel(): ImageDataModel? {
     return dataModel
@@ -173,5 +170,10 @@ class ImageLayerDataModel(
     // TODO use fadeAnimator.reverse() and reuse
   }
 
-  fun getAlpha() = paint.alpha
+  fun setAlpha(alpha: Int) {
+    paint.alpha = alpha
+    invalidateLayerCallback?.invoke()
+  }
+
+  fun getAlpha(): Int = paint.alpha
 }
