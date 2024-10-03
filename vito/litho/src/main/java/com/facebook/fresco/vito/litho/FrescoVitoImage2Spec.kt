@@ -164,8 +164,9 @@ object FrescoVitoImage2Spec {
     }
     if (experimentalDynamicSizeVito2() && experimentalDynamicSizeWithCacheFallbackVito2()) {
       if (Looper.myLooper() == Looper.getMainLooper()) {
-        // we don't want to check cache if we are running on the main thread
-        forceKeepOriginalSize.set(false)
+        // We don't want to check cache if we are running on the main thread
+        // By default uses the original URL
+        forceKeepOriginalSize.set(!experimentalDynamicSizeOnPrepareMainThreadVito2())
       } else {
         forceKeepOriginalSize.set(
             FrescoVitoProvider.getImagePipeline().isInDiskCacheSync(requestCachedValue))
@@ -435,6 +436,9 @@ object FrescoVitoImage2Spec {
 
   private fun experimentalDynamicSizeWithCacheFallbackVito2(): Boolean =
       FrescoVitoProvider.getConfig().experimentalDynamicSizeWithCacheFallbackVito2()
+
+  private fun experimentalDynamicSizeOnPrepareMainThreadVito2(): Boolean =
+      FrescoVitoProvider.getConfig().experimentalDynamicSizeOnPrepareMainThreadVito2()
 
   enum class Prefetch {
     AUTO,

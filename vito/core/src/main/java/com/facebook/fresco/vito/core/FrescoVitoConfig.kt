@@ -41,4 +41,6 @@ interface FrescoVitoConfig {
   fun experimentalDynamicSizeVito2(): Boolean
 
   fun experimentalDynamicSizeWithCacheFallbackVito2(): Boolean
+
+  fun experimentalDynamicSizeOnPrepareMainThreadVito2(): Boolean
 }
