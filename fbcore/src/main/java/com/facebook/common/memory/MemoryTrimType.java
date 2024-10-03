@@ -59,4 +59,14 @@ public enum MemoryTrimType {
   public double getSuggestedTrimRatio() {
     return mSuggestedTrimRatio;
   }
+
+  /** Map an integer to a MemoryTrimType enum. */
+  public static MemoryTrimType fromInt(int type) {
+    for (MemoryTrimType trimType : MemoryTrimType.values()) {
+      if (trimType.ordinal() == type) {
+        return trimType;
+      }
+    }
+    throw new IllegalArgumentException("Unknown type: " + type);
+  }
 }
