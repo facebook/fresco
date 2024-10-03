@@ -182,6 +182,7 @@ class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) 
           intermediateImageSetTimes.toList(),
           newIntermediateImageSetPointAvailable,
           errorMessageOnFailure,
+          errorStacktraceStringOnFailure,
           errorCodeOnFailure,
           densityDpiOnSuccess,
       )

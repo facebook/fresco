@@ -46,6 +46,7 @@ class ImagePerfData(
     val intermediateImageSetTimes: List<Pair<String, Long>>,
     val newIntermediateImageSetPointAvailable: Boolean,
     val errorMessageOnFailure: String?,
+    val errorStacktraceStringOnFailure: String?,
     val errorCodeOnFailure: Int?,
     val densityDpiOnSuccess: Int?,
 ) {

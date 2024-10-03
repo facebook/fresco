@@ -29,6 +29,7 @@ open class ImagePerfLoggingState(val infra: ImageRenderingInfra) {
   var startupStatusOnVisible: String? = null
 
   var errorMessageOnFailure: String? = null
+  var errorStacktraceStringOnFailure: String? = null
   var errorCodeOnFailure: Int? = null
 
   var densityDpiOnSuccess: Int? = null
@@ -51,6 +52,7 @@ open class ImagePerfLoggingState(val infra: ImageRenderingInfra) {
     startupStatusOnVisible = null
 
     errorMessageOnFailure = null
+    errorStacktraceStringOnFailure = null
     errorCodeOnFailure = null
 
     densityDpiOnSuccess = null
