@@ -171,20 +171,25 @@ object FrescoVitoImage2Spec {
         forceKeepOriginalSize.set(
             FrescoVitoProvider.getImagePipeline().isInDiskCacheSync(requestCachedValue))
       }
+      if (forceKeepOriginalSize.get() == true) {
+        // Prefetch in OnPrepare since no prefetch will happen in OnBoundsDefined
+        maybePrefetchInOnPrepare(
+            prefetch,
+            prefetchDataSource,
+            requestCachedValue,
+            callerContext,
+            contextChain,
+            prefetchRequestListener)
+      }
     } else {
       forceKeepOriginalSize.set(false)
-      val config = FrescoVitoProvider.getConfig().prefetchConfig
-      if (shouldPrefetchInOnPrepare(prefetch)) {
-        prefetchDataSource.set(
-            FrescoVitoProvider.getPrefetcher()
-                .prefetch(
-                    config.prefetchTargetOnPrepare(),
-                    requestCachedValue,
-                    callerContext,
-                    contextChain,
-                    prefetchRequestListener,
-                    "FrescoVitoImage2Spec_OnPrepare"))
-      }
+      maybePrefetchInOnPrepare(
+          prefetch,
+          prefetchDataSource,
+          requestCachedValue,
+          callerContext,
+          contextChain,
+          prefetchRequestListener)
     }
   }
 
@@ -404,6 +409,28 @@ object FrescoVitoImage2Spec {
         uriString != null -> ImageSourceProvider.forUri(uriString)
         else -> ImageSourceProvider.emptySource()
       }
+
+  private fun maybePrefetchInOnPrepare(
+      prefetch: Prefetch?,
+      prefetchDataSource: Output<DataSource<Void?>>,
+      requestCachedValue: VitoImageRequest,
+      callerContext: Any?,
+      contextChain: ContextChain?,
+      prefetchRequestListener: RequestListener?
+  ) {
+    val config = FrescoVitoProvider.getConfig().prefetchConfig
+    if (shouldPrefetchInOnPrepare(prefetch)) {
+      prefetchDataSource.set(
+          FrescoVitoProvider.getPrefetcher()
+              .prefetch(
+                  config.prefetchTargetOnPrepare(),
+                  requestCachedValue,
+                  callerContext,
+                  contextChain,
+                  prefetchRequestListener,
+                  "FrescoVitoImage2Spec_OnPrepare"))
+    }
+  }
 
   @JvmStatic
   fun shouldPrefetchInOnPrepare(prefetch: Prefetch?): Boolean =
