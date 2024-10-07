@@ -9,49 +9,54 @@ package com.facebook.fresco.samples.showcase.vito;
 
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
+import com.facebook.fresco.samples.showcase.common.ImageViewWithAspectRatio;
 import com.facebook.fresco.samples.showcase.imagepipeline.widget.ResizableFrameLayout;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
+import com.facebook.fresco.vito.listener.BaseImageListener;
+import com.facebook.fresco.vito.listener.ImageListener;
+import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.view.VitoView;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.image.ImageInfo;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 /** Simple experimental Fresco Vito fragment that just displays an image. */
 public class FrescoVitoLithoRegionDecodeFragment extends BaseShowcaseFragment {
 
-  private SimpleDraweeView mFullDraweeView;
+  private static final ImageOptions IMAGE_OPTIONS =
+      ImageOptions.create().scale(ScalingUtils.ScaleType.FIT_CENTER).build();
+
+  private ImageViewWithAspectRatio mFullImageView;
   private ResizableFrameLayout mSelectedParentBounds;
   private ResizableFrameLayout mSelectedFocusPoint;
-  private SimpleDraweeView mRegionDraweeView;
+  private ImageView mRegionImageView;
   private Uri mUri;
   private @Nullable ImageInfo mImageInfo;
 
-  private final ControllerListener<ImageInfo> mControllerListener =
-      new BaseControllerListener<ImageInfo>() {
+  private final ImageDecoder mRegionDecoder = createRegionDecoder();
+
+  private final ImageListener mImageListener =
+      new BaseImageListener() {
         @Override
         public void onFinalImageSet(
-            String id,
-            @javax.annotation.Nullable ImageInfo imageInfo,
-            @javax.annotation.Nullable Animatable animatable) {
+            long id, int imageOrigin, @Nullable ImageInfo imageInfo, @Nullable Drawable drawable) {
           mImageInfo = imageInfo;
           mSelectedParentBounds.setUpdateMaximumDimensionOnNextSizeChange(true);
           mSelectedFocusPoint.setUpdateMaximumDimensionOnNextSizeChange(true);
           if (imageInfo != null) {
-            mFullDraweeView.setAspectRatio(imageInfo.getWidth() / (float) imageInfo.getHeight());
-            mFullDraweeView.requestLayout();
+            mFullImageView.setAspectRatio(imageInfo.getWidth() / (float) imageInfo.getHeight());
+            mFullImageView.requestLayout();
             updateRegion();
           }
         }
@@ -78,12 +83,10 @@ public class FrescoVitoLithoRegionDecodeFragment extends BaseShowcaseFragment {
         sampleUris()
             .createSampleUri(ImageUriProvider.ImageSize.L, ImageUriProvider.Orientation.LANDSCAPE);
 
-    mFullDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view_full);
-    mFullDraweeView.setController(
-        Fresco.newDraweeControllerBuilder()
-            .setUri(mUri)
-            .setControllerListener(mControllerListener)
-            .build());
+    mFullImageView = (ImageViewWithAspectRatio) view.findViewById(R.id.image_full);
+    mFullImageView.setAspectRatio(2f);
+    VitoView.show(
+        mUri, IMAGE_OPTIONS, "FrescoVitoLithoRegionDecodeFragment", mImageListener, mFullImageView);
 
     mSelectedParentBounds = (ResizableFrameLayout) view.findViewById(R.id.frame_parent_bounds);
     mSelectedParentBounds.init(view.findViewById(R.id.btn_resize_parent_bounds));
@@ -93,8 +96,8 @@ public class FrescoVitoLithoRegionDecodeFragment extends BaseShowcaseFragment {
     mSelectedFocusPoint.init(view.findViewById(R.id.btn_resize_focus_point));
     mSelectedFocusPoint.setSizeChangedListener(mSizeChangedListener);
 
-    mRegionDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view_region);
-    mRegionDraweeView.setOnClickListener(
+    mRegionImageView = (ImageView) view.findViewById(R.id.image_region);
+    mRegionImageView.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -110,32 +113,31 @@ public class FrescoVitoLithoRegionDecodeFragment extends BaseShowcaseFragment {
     int right =
         mSelectedParentBounds.getMeasuredWidth()
             * mImageInfo.getWidth()
-            / mFullDraweeView.getMeasuredWidth();
+            / mFullImageView.getMeasuredWidth();
     int bottom =
         mSelectedParentBounds.getMeasuredHeight()
             * mImageInfo.getHeight()
-            / mFullDraweeView.getMeasuredHeight();
+            / mFullImageView.getMeasuredHeight();
     PointF focusPoint =
         new PointF(
             (float) mSelectedFocusPoint.getMeasuredWidth()
-                / (float) mFullDraweeView.getMeasuredWidth(),
+                / (float) mFullImageView.getMeasuredWidth(),
             (float) mSelectedFocusPoint.getMeasuredHeight()
-                / (float) mFullDraweeView.getMeasuredHeight());
+                / (float) mFullImageView.getMeasuredHeight());
 
-    ImageDecoder regionDecoder = createRegionDecoder();
-    mRegionDraweeView.setController(
-        Fresco.newDraweeControllerBuilder()
-            .setImageRequest(
-                ImageRequestBuilder.newBuilderWithSource(mUri)
-                    .setImageDecodeOptions(
-                        FrescoVitoImageDecodeOptions.newBuilder()
-                            .setCustomImageDecoder(regionDecoder)
-                            .setScaleType(ScalingUtils.ScaleType.FOCUS_CROP)
-                            .setFocusPoint(focusPoint)
-                            .setParentBounds(new Rect(0, 0, right, bottom))
-                            .build())
+    VitoView.show(
+        mUri,
+        ImageOptions.create()
+            .imageDecodeOptions(
+                FrescoVitoImageDecodeOptions.newBuilder()
+                    .setCustomImageDecoder(mRegionDecoder)
+                    .setScaleType(ScalingUtils.ScaleType.FOCUS_CROP)
+                    .setFocusPoint(focusPoint)
+                    .setParentBounds(new Rect(0, 0, right, bottom))
                     .build())
-            .build());
+            .build(),
+        "FrescoVitoLithoRegionDecodeFragment",
+        mRegionImageView);
   }
 
   private ImageDecoder createRegionDecoder() {
