@@ -43,7 +43,7 @@ public class VitoViewRecyclerFragment extends BaseShowcaseFragment {
   @Override
   public View onCreateView(
       LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_drawee_recycler, container, false);
+    return inflater.inflate(R.layout.fragment_recycler, container, false);
   }
 
   @Override

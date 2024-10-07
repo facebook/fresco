@@ -39,7 +39,6 @@ object ExampleDatabase {
               listOf(
                   ExampleItem("Simple DraweeSpan") { DraweeSpanSimpleTextFragment() },
                   ExampleItem("Rounded Corners") { DraweeRoundedCornersFragment() },
-                  ExampleItem("Recycler View") { DraweeRecyclerViewFragment() },
                   ExampleItem("Drawee Transition") { DraweeTransitionFragment() },
                   ExampleItem("Retaining Data Source Supplier") {
                     RetainingDataSourceSupplierFragment()
