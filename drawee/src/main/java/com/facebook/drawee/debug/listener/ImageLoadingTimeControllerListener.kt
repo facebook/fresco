@@ -21,7 +21,7 @@ class ImageLoadingTimeControllerListener(
   private var requestSubmitTimeMs = -1L
   private var finalImageSetTimeMs = -1L
 
-  override fun onSubmit(id: String, callerContext: Any) {
+  override fun onSubmit(id: String, callerContext: Any?) {
     requestSubmitTimeMs = System.currentTimeMillis()
   }
 
