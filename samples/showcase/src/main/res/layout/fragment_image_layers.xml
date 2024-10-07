@@ -34,14 +34,6 @@
         />
   </LinearLayout>
   <androidx.appcompat.widget.SwitchCompat
-      android:id="@+id/retry_enabled"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_horizontal"
-      android:layout_marginTop="@dimen/margin_medium"
-      android:text="@string/drawee_hierarchy_retry"
-      />
-  <androidx.appcompat.widget.SwitchCompat
       android:id="@+id/switch_rounded"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -57,12 +49,10 @@
       android:layout_marginTop="@dimen/margin_medium"
       android:text="@string/drawee_hierarchy_switch_ninepatch"
       />
-  <com.facebook.drawee.view.SimpleDraweeView
-      android:id="@+id/drawee"
+  <ImageView
+      android:id="@+id/image"
       android:layout_width="match_parent"
       android:layout_height="@dimen/drawee_height_medium"
       android:layout_marginTop="@dimen/margin_medium"
-      app:placeholderImageScaleType="centerInside"
-      app:placeholderImage="@drawable/logo"
       />
 </LinearLayout>

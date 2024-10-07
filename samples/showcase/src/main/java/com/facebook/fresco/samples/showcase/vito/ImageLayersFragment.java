@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.samples.showcase.drawee;
+package com.facebook.fresco.samples.showcase.vito;
 
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
@@ -23,16 +24,25 @@ import androidx.fragment.app.Fragment;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-import com.facebook.drawee.generic.RoundingParams;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
+import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.options.RoundingOptions;
+import com.facebook.fresco.vito.view.VitoView;
 
-/** A {@link Fragment} that illustrates the different drawables one can set in a hierarchy. */
-public class DraweeHierarchyFragment extends BaseShowcaseFragment {
+/** A {@link Fragment} that illustrates the different drawables one can set for ImageOptions. */
+public class ImageLayersFragment extends BaseShowcaseFragment {
 
-  public DraweeHierarchyFragment() {
+  private static final String CALLER_CONTEXT = "ImageLayersFragment";
+
+  private ImageOptions mImageOptions =
+      ImageOptions.create()
+          .placeholderRes(R.drawable.logo)
+          .placeholderScaleType(ScaleType.CENTER_INSIDE)
+          .build();
+
+  public ImageLayersFragment() {
     // Required empty public constructor
   }
 
@@ -40,7 +50,7 @@ public class DraweeHierarchyFragment extends BaseShowcaseFragment {
   public View onCreateView(
       LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-    return inflater.inflate(R.layout.fragment_drawee_hierarchy, container, false);
+    return inflater.inflate(R.layout.fragment_image_layers, container, false);
   }
 
   @Override
@@ -53,8 +63,7 @@ public class DraweeHierarchyFragment extends BaseShowcaseFragment {
                 ImageUriProvider.UriModification.CACHE_BREAKER);
     final Uri uriFailure = sampleUris().getNonExistingUri();
 
-    final SimpleDraweeView draweeView = view.findViewById(R.id.drawee);
-    final SwitchCompat retrySwitch = view.findViewById(R.id.retry_enabled);
+    final ImageView imageView = view.findViewById(R.id.image);
 
     //noinspection deprecation
     final Drawable failureDrawable = getResources().getDrawable(R.drawable.ic_error_black_96dp);
@@ -66,15 +75,20 @@ public class DraweeHierarchyFragment extends BaseShowcaseFragment {
     progressBarDrawable.setRadius(
         getResources().getDimensionPixelSize(R.dimen.drawee_hierarchy_progress_radius));
 
-    draweeView.getHierarchy().setProgressBarImage(progressBarDrawable);
-    draweeView.getHierarchy().setFailureImage(failureDrawable, ScaleType.CENTER_INSIDE);
+    mImageOptions =
+        mImageOptions
+            .extend()
+            .progress(progressBarDrawable)
+            .errorDrawable(failureDrawable)
+            .errorScaleType(ScaleType.CENTER_INSIDE)
+            .build();
 
     view.findViewById(R.id.load_success)
         .setOnClickListener(
             new View.OnClickListener() {
               @Override
               public void onClick(View v) {
-                setUri(draweeView, uriSuccess, retrySwitch.isChecked());
+                setUri(imageView, uriSuccess);
               }
             });
 
@@ -83,7 +97,7 @@ public class DraweeHierarchyFragment extends BaseShowcaseFragment {
             new View.OnClickListener() {
               @Override
               public void onClick(View v) {
-                setUri(draweeView, uriFailure, retrySwitch.isChecked());
+                setUri(imageView, uriFailure);
               }
             });
 
@@ -92,7 +106,7 @@ public class DraweeHierarchyFragment extends BaseShowcaseFragment {
             new View.OnClickListener() {
               @Override
               public void onClick(View v) {
-                draweeView.resetActualImage();
+                VitoView.release(imageView);
                 Fresco.getImagePipeline().evictFromCache(uriSuccess);
               }
             });
@@ -102,15 +116,15 @@ public class DraweeHierarchyFragment extends BaseShowcaseFragment {
         new CompoundButton.OnCheckedChangeListener() {
           @Override
           public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            RoundingParams roundingParams =
-                new RoundingParams()
-                    .setCornersRadius(
-                        isChecked
-                            ? buttonView
-                                .getResources()
-                                .getDimensionPixelSize(R.dimen.drawee_hierarchy_corner_radius)
-                            : 0);
-            draweeView.getHierarchy().setRoundingParams(roundingParams);
+            RoundingOptions roundingOptions = null;
+            if (isChecked) {
+              roundingOptions =
+                  RoundingOptions.forCornerRadiusPx(
+                      buttonView
+                          .getResources()
+                          .getDimensionPixelSize(R.dimen.drawee_hierarchy_corner_radius));
+            }
+            mImageOptions = mImageOptions.extend().round(roundingOptions).build();
           }
         });
 
@@ -119,21 +133,17 @@ public class DraweeHierarchyFragment extends BaseShowcaseFragment {
         new CompoundButton.OnCheckedChangeListener() {
           @Override
           public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            draweeView
-                .getHierarchy()
-                .setPlaceholderImage(
-                    isChecked ? R.drawable.ninepatch : R.drawable.logo,
-                    isChecked ? ScaleType.FIT_XY : ScaleType.CENTER_INSIDE);
+            mImageOptions =
+                mImageOptions
+                    .extend()
+                    .placeholderRes(isChecked ? R.drawable.ninepatch : R.drawable.logo)
+                    .placeholderScaleType(isChecked ? ScaleType.FIT_XY : ScaleType.CENTER_INSIDE)
+                    .build();
           }
         });
   }
 
-  private void setUri(SimpleDraweeView draweeView, Uri uri, boolean retryEnabled) {
-    draweeView.setController(
-        Fresco.newDraweeControllerBuilder()
-            .setOldController(draweeView.getController())
-            .setTapToRetryEnabled(retryEnabled)
-            .setUri(uri)
-            .build());
+  private void setUri(ImageView imageView, Uri uri) {
+    VitoView.show(uri, mImageOptions, CALLER_CONTEXT, imageView);
   }
 }

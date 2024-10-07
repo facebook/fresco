@@ -39,7 +39,6 @@ object ExampleDatabase {
               listOf(
                   ExampleItem("Simple DraweeSpan") { DraweeSpanSimpleTextFragment() },
                   ExampleItem("Rounded Corners") { DraweeRoundedCornersFragment() },
-                  ExampleItem("Placeholder, Progress, Failure") { DraweeHierarchyFragment() },
                   ExampleItem("Recycler View") { DraweeRecyclerViewFragment() },
                   ExampleItem("Drawee Transition") { DraweeTransitionFragment() },
                   ExampleItem("Retaining Data Source Supplier") {
@@ -110,6 +109,7 @@ object ExampleDatabase {
                       "Vito Litho DrawableImageSource", FrescoVitoLithoDrawableImageSourceExample),
                   ExampleItem("Media Provider") { VitoMediaPickerFragment() },
                   ExampleItem("Multi URI") { MultiUriFragment() },
+                  ExampleItem("Placeholder, Progress, Failure") { ImageLayersFragment() },
               )),
           ExampleCategory(
               "Vito Renderer",
