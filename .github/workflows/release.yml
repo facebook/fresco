@@ -26,6 +26,7 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
     - name: Install NDK
+      id: setup-ndk
       uses: nttld/setup-ndk@v1
       with:
         ndk-version: r25c
@@ -39,8 +40,12 @@ jobs:
       run: echo -e "signing.secretKeyRingFile=/tmp/secring.gpg\nsigning.keyId=${{ secrets.SIGNING_KEY_ID }}\nsigning.password=${{ secrets.SIGNING_PASSWORD }}\nmavenCentralPassword=${{ secrets.SONATYPE_NEXUS_PASSWORD }}\nmavenCentralUsername=${{ secrets.SONATYPE_NEXUS_USERNAME }}" >> gradle.properties
     - name: Upload Android Archives
       run: ./gradlew publish --no-daemon --no-parallel --info --stacktrace
+      env:
+        ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
     - name: Release and close
       run: ./gradlew closeAndReleaseRepository
+      env:
+        ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
     - name: Clean secrets
       if: always()
       run: rm /tmp/secring.gpg
