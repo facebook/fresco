@@ -16,7 +16,7 @@ jobs:
     - uses: nttld/setup-ndk@v1
       id: setup-ndk
       with:
-        ndk-version: r25c
+        ndk-version: r27b
     - name: Install JDK
       uses: actions/setup-java@v4
       with:

@@ -28,6 +28,7 @@ open class BaseControllerListener2<INFO> : ControllerListener2<INFO> {
   companion object {
     private val NO_OP_LISTENER: ControllerListener2<*> = BaseControllerListener2<Any?>()
 
+    @Suppress("UNCHECKED_CAST")
     @JvmStatic
     fun <I> getNoOpListener(): ControllerListener2<I> = NO_OP_LISTENER as ControllerListener2<I>
   }

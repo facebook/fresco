@@ -29,11 +29,11 @@ jobs:
       id: setup-ndk
       uses: nttld/setup-ndk@v1
       with:
-        ndk-version: r25c
+        ndk-version: r27b
     - name: Register NDK
       run: |
         echo $PATH
-        echo 'ndk.path=/opt/hostedtoolcache/ndk/r25c/x64' >> local.properties
+        echo 'ndk.path=/opt/hostedtoolcache/ndk/r27b/x64' >> local.properties
     - name: Write GPG Sec Ring
       run: echo '${{ secrets.GPG_KEY_CONTENTS }}' | base64 -d > /tmp/secring.gpg
     - name: Update gradle.properties

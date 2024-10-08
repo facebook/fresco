@@ -23,7 +23,7 @@ LOCAL_LDFLAGS += $(FRESCO_CPP_LDFLAGS)
 
 LOCAL_STATIC_LIBRARIES += bitmaps
 LOCAL_STATIC_LIBRARIES += memchunk
-LOCAL_LDFLAGS += -Wl,--exclude-libs
+LOCAL_LDFLAGS += -Wl
 
 include $(BUILD_SHARED_LIBRARY)
 $(call import-module,bitmaps)

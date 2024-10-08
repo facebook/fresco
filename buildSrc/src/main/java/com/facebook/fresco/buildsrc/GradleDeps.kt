@@ -22,7 +22,7 @@ object GradleDeps {
   }
 
   object Native {
-    const val version = "25.2.9519653"
+    const val version = "27.1.12297006"
   }
 
   object Publishing {
