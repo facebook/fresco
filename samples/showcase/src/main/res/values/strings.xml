@@ -182,15 +182,12 @@
   <string name="snackbar_uri_override_reminder_text">URI override is active</string>
   <string name="snackbar_uri_override_reminder_change_button">Change</string>
 
-  <string name="drawee_rounded_corners_as_circle">Using roundAsCircle</string>
-  <string name="drawee_rounded_corners_radius">16dp corner radius</string>
-  <string name="drawee_rounded_corners_some">Only rounding some corners</string>
-  <string name="drawee_rounded_corners_some_rtl">Only rounding some corners (RTL supported)</string>
-  <string name="drawee_rounded_corners_fancy">Fancy (different radii)</string>
-  <string name="drawee_rounded_corners_borders">Borders</string>
-  <string name="drawee_rounded_corners_scale_inside_borders">Scale inside borders</string>
-  <string name="drawee_rounded_corners_color_overlay">Use color overlay</string>
-  <string name="drawee_rounded_corners_fix_repeated_edges">Fix repeated edges</string>
+  <string name="image_rounded_corners_as_circle">Using roundAsCircle</string>
+  <string name="image_rounded_corners_radius">16dp corner radius</string>
+  <string name="image_rounded_corners_some">Only rounding some corners</string>
+  <string name="image_rounded_corners_fancy">Fancy (different radii)</string>
+  <string name="image_rounded_corners_borders">Borders</string>
+  <string name="image_rounded_corners_scale_inside_borders">Scale inside borders</string>
 
   <string name="drawee_hierarchy_load_success">Load (success)</string>
   <string name="drawee_hierarchy_load_fail">Load (fail)</string>

@@ -38,7 +38,6 @@ object ExampleDatabase {
               "Drawee",
               listOf(
                   ExampleItem("Simple DraweeSpan") { DraweeSpanSimpleTextFragment() },
-                  ExampleItem("Rounded Corners") { DraweeRoundedCornersFragment() },
                   ExampleItem("Drawee Transition") { DraweeTransitionFragment() },
                   ExampleItem("Retaining Data Source Supplier") {
                     RetainingDataSourceSupplierFragment()
@@ -109,6 +108,7 @@ object ExampleDatabase {
                   ExampleItem("Media Provider") { VitoMediaPickerFragment() },
                   ExampleItem("Multi URI") { MultiUriFragment() },
                   ExampleItem("Placeholder, Progress, Failure") { ImageLayersFragment() },
+                  ExampleItem("Rounded Corners") { VitoRoundedCornersFragment() },
               )),
           ExampleCategory(
               "Vito Renderer",

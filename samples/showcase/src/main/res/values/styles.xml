@@ -18,12 +18,11 @@
   <style name="AppTheme.Toolbar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
     <item name="colorControlNormal">@android:color/white</item>
   </style>
-  <style name="DraweeRoundedCorners.Drawee" parent="AppTheme">
+  <style name="VitoRoundedCorners.Image" parent="AppTheme">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">@dimen/drawee_height_medium</item>
     <item name="android:layout_marginTop">@dimen/margin_medium</item>
     <item name="android:layout_marginBottom">@dimen/margin_medium</item>
-    <item name="actualImageScaleType">center</item>
   </style>
 
   <style name="thumb">

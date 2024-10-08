@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.facebook.fresco.samples.showcase.drawee.DraweeRoundedCornersFragment"
+    tools:context="com.facebook.fresco.samples.showcase.vito.VitoRoundedCornersFragment"
     >
   <ScrollView
       android:layout_width="match_parent"
@@ -13,7 +13,7 @@
       android:layout_weight="1"
       >
     <LinearLayout
-        android:id="@+id/drawees"
+        android:id="@+id/images"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -22,63 +22,44 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-          android:text="@string/drawee_rounded_corners_as_circle"
+          android:text="@string/image_rounded_corners_as_circle"
           />
-      <com.facebook.drawee.view.SimpleDraweeView
-          android:id="@+id/drawee_round"
-          style="@style/DraweeRoundedCorners.Drawee"
-          app:roundAsCircle="true"
-          />
-
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-          android:text="@string/drawee_rounded_corners_radius"
-          />
-      <com.facebook.drawee.view.SimpleDraweeView
-          android:id="@+id/drawee_radius"
-          style="@style/DraweeRoundedCorners.Drawee"
-          app:roundedCornerRadius="16dp"
+      <ImageView
+          android:id="@+id/image_round"
+          style="@style/VitoRoundedCorners.Image"
           />
 
       <TextView
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-          android:text="@string/drawee_rounded_corners_some"
+          android:text="@string/image_rounded_corners_radius"
           />
-      <com.facebook.drawee.view.SimpleDraweeView
-          android:id="@+id/drawee_some"
-          style="@style/DraweeRoundedCorners.Drawee"
-          app:roundedCornerRadius="16dp"
-          app:roundBottomLeft="false"
-          app:roundTopRight="false"
+      <ImageView
+          android:id="@+id/image_radius"
+          style="@style/VitoRoundedCorners.Image"
           />
 
       <TextView
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-          android:text="@string/drawee_rounded_corners_some_rtl"
+          android:text="@string/image_rounded_corners_some"
           />
-      <com.facebook.drawee.view.SimpleDraweeView
-          android:id="@+id/drawee_some_rtl"
-          style="@style/DraweeRoundedCorners.Drawee"
-          app:roundedCornerRadius="16dp"
-          app:roundTopStart="false"
-          app:roundBottomStart="false"
+      <ImageView
+          android:id="@+id/image_some"
+          style="@style/VitoRoundedCorners.Image"
           />
 
       <TextView
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-          android:text="@string/drawee_rounded_corners_fancy"
+          android:text="@string/image_rounded_corners_fancy"
           />
-      <com.facebook.drawee.view.SimpleDraweeView
-          android:id="@+id/drawee_fancy"
-          style="@style/DraweeRoundedCorners.Drawee"
+      <ImageView
+          android:id="@+id/image_fancy"
+          style="@style/VitoRoundedCorners.Image"
           />
     </LinearLayout>
   </ScrollView>
@@ -104,26 +85,13 @@
           android:id="@+id/borders"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/drawee_rounded_corners_borders"
+          android:text="@string/image_rounded_corners_borders"
           />
       <CheckBox
           android:id="@+id/scaleInside"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/drawee_rounded_corners_scale_inside_borders"
-          />
-      <CheckBox
-          android:id="@+id/color_overlay"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/drawee_rounded_corners_color_overlay"
-          />
-      <CheckBox
-          android:id="@+id/fix_repeated_edges"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:checked="true"
-          android:text="@string/drawee_rounded_corners_fix_repeated_edges"
+          android:text="@string/image_rounded_corners_scale_inside_borders"
           />
     </LinearLayout>
   </LinearLayout>

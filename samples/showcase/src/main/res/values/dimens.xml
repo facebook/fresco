@@ -24,11 +24,11 @@
   <dimen name="drawee_width_large">300dp</dimen>
   <dimen name="drawee_height_large">300dp</dimen>
 
-  <dimen name="drawee_rounded_corners_border_width">8dp</dimen>
-  <dimen name="drawee_rounded_corners_fancy_top_left">8dp</dimen>
-  <dimen name="drawee_rounded_corners_fancy_top_right">16dp</dimen>
-  <dimen name="drawee_rounded_corners_fancy_bottom_right">32dp</dimen>
-  <dimen name="drawee_rounded_corners_fancy_bottom_left">64dp</dimen>
+  <dimen name="image_rounded_corners_border_width">8dp</dimen>
+  <dimen name="image_rounded_corners_fancy_top_left">8dp</dimen>
+  <dimen name="image_rounded_corners_fancy_top_right">16dp</dimen>
+  <dimen name="image_rounded_corners_fancy_bottom_right">32dp</dimen>
+  <dimen name="image_rounded_corners_fancy_bottom_left">64dp</dimen>
 
   <dimen name="drawee_hierarchy_progress_radius">4dp</dimen>
   <dimen name="drawee_hierarchy_corner_radius">16dp</dimen>
