@@ -7,7 +7,6 @@
 
 package com.facebook.imagepipeline.memory;
 
-import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.infer.annotation.Nullsafe;
@@ -39,7 +38,6 @@ import javax.annotation.concurrent.NotThreadSafe;
  */
 @Nullsafe(Nullsafe.Mode.LOCAL)
 @NotThreadSafe
-@VisibleForTesting
 class Bucket<V> {
 
   private static final String TAG = "BUCKET";
