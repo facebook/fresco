@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.samples.showcase.imagepipeline;
 
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
@@ -21,14 +23,17 @@ import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.datasource.BaseDataSubscriber;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
-import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider.ImageSize;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider.Orientation;
+import com.facebook.fresco.vito.listener.BaseImageListener;
+import com.facebook.fresco.vito.listener.ImageListener;
+import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.view.VitoView;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.Locale;
 
@@ -38,23 +43,27 @@ import java.util.Locale;
  */
 public class ImagePipelinePrefetchFragment extends BaseShowcaseFragment {
 
+  private static final ImageOptions IMAGE_OPTIONS =
+      ImageOptions.create()
+          .placeholderRes(R.mipmap.ic_launcher, ScalingUtils.ScaleType.FIT_CENTER)
+          .scale(ScalingUtils.ScaleType.CENTER_CROP)
+          .build();
+
   private Uri[] mUris;
 
   private Button mPrefetchDiskButton;
   private Button mPrefetchEncodedButton;
   private Button mPrefetchBitmapButton;
   private TextView mPrefetchStatus;
-  private ViewGroup mDraweesHolder;
+  private ViewGroup mImagesHolder;
   private final Handler mHandler = new Handler();
 
-  private final ImageOriginListener mImageOriginListener =
-      new ImageOriginListener() {
+  private final ImageListener mImageOriginListener =
+      new BaseImageListener() {
+
         @Override
-        public void onImageLoaded(
-            final String controllerId,
-            final @ImageOrigin int imageOrigin,
-            final boolean successful,
-            final @Nullable String ultimateProducerName) {
+        public void onFinalImageSet(
+            long id, int imageOrigin, @Nullable ImageInfo imageInfo, @Nullable Drawable drawable) {
           mHandler.post(
               new Runnable() {
                 @Override
@@ -63,10 +72,9 @@ public class ImagePipelinePrefetchFragment extends BaseShowcaseFragment {
                           getContext(),
                           String.format(
                               (Locale) null,
-                              "Image loaded: controllerId=%s, origin=%s, successful=%b",
-                              controllerId,
-                              ImageOriginUtils.toString(imageOrigin),
-                              successful),
+                              "Image loaded: controllerId=%s, origin=%s",
+                              id,
+                              ImageOriginUtils.toString(imageOrigin)),
                           Toast.LENGTH_SHORT)
                       .show();
                 }
@@ -179,7 +187,7 @@ public class ImagePipelinePrefetchFragment extends BaseShowcaseFragment {
           }
         });
 
-    mDraweesHolder = (ViewGroup) view.findViewById(R.id.drawees);
+    mImagesHolder = (ViewGroup) view.findViewById(R.id.images);
     Button toggleImages = (Button) view.findViewById(R.id.toggle_images);
     toggleImages.setOnClickListener(
         new View.OnClickListener() {
@@ -188,18 +196,18 @@ public class ImagePipelinePrefetchFragment extends BaseShowcaseFragment {
           @Override
           public void onClick(View v) {
             if (!mShowing) {
-              for (int i = 0; i < mDraweesHolder.getChildCount(); i++) {
-                SimpleDraweeView draweeView = (SimpleDraweeView) mDraweesHolder.getChildAt(i);
-                draweeView.setController(
-                    Fresco.newDraweeControllerBuilder()
-                        .setOldController(draweeView.getController())
-                        .setImageOriginListener(mImageOriginListener)
-                        .setUri(mUris[i])
-                        .build());
+              for (int i = 0; i < mImagesHolder.getChildCount(); i++) {
+                ImageView imageView = (ImageView) mImagesHolder.getChildAt(i);
+                VitoView.show(
+                    mUris[i],
+                    IMAGE_OPTIONS,
+                    "ImagePipelinePrefetchFragment",
+                    mImageOriginListener,
+                    imageView);
               }
             } else {
-              for (int i = 0; i < mDraweesHolder.getChildCount(); i++) {
-                ((SimpleDraweeView) mDraweesHolder.getChildAt(i)).resetActualImage();
+              for (int i = 0; i < mImagesHolder.getChildCount(); i++) {
+                VitoView.release(mImagesHolder.getChildAt(i));
               }
             }
             mShowing = !mShowing;

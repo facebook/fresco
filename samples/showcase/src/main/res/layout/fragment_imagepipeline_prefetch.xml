@@ -1,6 +1,5 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -57,27 +56,21 @@
   </LinearLayout>
 
   <LinearLayout
-      android:id="@+id/drawees"
+      android:id="@+id/images"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="@dimen/margin_medium"
       android:orientation="horizontal"
       >
-    <com.facebook.drawee.view.SimpleDraweeView
+    <ImageView
         android:layout_width="0dp"
         android:layout_height="@dimen/drawee_height_medium"
         android:layout_weight="1"
-        app:placeholderImage="@mipmap/ic_launcher"
-        app:placeholderImageScaleType="center"
-        app:actualImageScaleType="centerCrop"
         />
-    <com.facebook.drawee.view.SimpleDraweeView
+    <ImageView
         android:layout_width="0dp"
         android:layout_height="@dimen/drawee_height_medium"
         android:layout_weight="1"
-        app:placeholderImage="@mipmap/ic_launcher"
-        app:placeholderImageScaleType="center"
-        app:actualImageScaleType="centerCrop"
         />
   </LinearLayout>
 
