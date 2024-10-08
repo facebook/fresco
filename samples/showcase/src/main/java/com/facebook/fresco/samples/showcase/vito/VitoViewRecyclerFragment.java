@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
+import com.facebook.fresco.samples.showcase.common.ImageViewWithAspectRatio;
 import com.facebook.fresco.samples.showcase.misc.ImageSourceSpinner;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.view.VitoView;
@@ -132,11 +133,12 @@ public class VitoViewRecyclerFragment extends BaseShowcaseFragment {
 
   static class SimpleViewHolder extends RecyclerView.ViewHolder {
 
-    private final View mView;
+    private final ImageViewWithAspectRatio mView;
 
     SimpleViewHolder(View itemView) {
       super(itemView);
       mView = itemView.findViewById(R.id.view);
+      mView.setAspectRatio(1f);
     }
   }
 }
