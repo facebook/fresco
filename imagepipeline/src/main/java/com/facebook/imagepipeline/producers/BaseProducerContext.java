@@ -32,7 +32,7 @@ public class BaseProducerContext implements ProducerContext {
 
   public static final Set<String> INITIAL_KEYS =
       ImmutableSet.of(HasExtraData.KEY_ID, HasExtraData.KEY_URI_SOURCE);
-  private static final Object CALLER_CONTEXT_UNSET = new Object();
+  public static final Object CALLER_CONTEXT_UNSET = new Object();
 
   private final ImageRequest mImageRequest;
   private final String mId;
