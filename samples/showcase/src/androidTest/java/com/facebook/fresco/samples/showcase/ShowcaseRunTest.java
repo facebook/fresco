@@ -16,7 +16,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static com.facebook.fresco.samples.showcase.DraweeViewHasImageMatcher.hasImage;
 import static org.hamcrest.CoreMatchers.allOf;
 
 import android.view.View;
@@ -28,7 +27,6 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 import com.google.android.material.internal.NavigationMenuItemView;
 import org.hamcrest.Matcher;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,14 +45,6 @@ public class ShowcaseRunTest {
     onView(withId(R.id.toolbar)).check(matches(isDisplayed()));
     onView(allOf(isAssignableFrom(TextView.class), withParent(withId(R.id.toolbar))))
         .check(matches(withText(R.string.welcome_title)));
-  }
-
-  @Test
-  @Ignore /* TODO T34443404, Circle CI instrumentation test fails due to network issue */
-  public void testShowImage() {
-    openScreenFromMenu(R.string.drawee_simple_title);
-    onView(withId(R.id.drawee_view)).perform(waitFor(5000));
-    onView(withId(R.id.drawee_view)).check(matches(hasImage()));
   }
 
   private void openScreenFromMenu(int title) {
