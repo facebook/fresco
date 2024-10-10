@@ -18,7 +18,7 @@ android {
     buildToolsVersion FrescoConfig.buildToolsVersion
     compileSdkVersion FrescoConfig.compileSdkVersion
 
-    namespace "com.facebook.fresco.ui.common"
+    namespace "com.facebook.fresco.ui.core"
 
     defaultConfig {
         minSdkVersion FrescoConfig.minSdkVersion
