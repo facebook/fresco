@@ -42,7 +42,7 @@ public class ImageOriginUtils {
       case ImageOrigin.LOCAL:
         return "local";
       case ImageOrigin.UNKNOWN:
-        // fall through
+      // fall through
       default:
         return "unknown";
     }

@@ -141,7 +141,7 @@ public class ScalingUtils {
         return ScaleType.FIT_END;
       case FIT_XY:
         return ScaleType.FIT_XY;
-        // Matrix is not supported
+      // Matrix is not supported
       case MATRIX:
       default:
         return null;

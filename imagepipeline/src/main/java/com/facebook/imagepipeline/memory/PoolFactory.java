@@ -76,7 +76,7 @@ public class PoolFactory {
                   mConfig.isIgnoreBitmapPoolHardCap());
           break;
         case BitmapPoolType.LEGACY:
-          // fall through
+        // fall through
         default:
           if (Build.VERSION.SDK_INT >= 21) {
             mBitmapPool =

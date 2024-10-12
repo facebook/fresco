@@ -98,7 +98,7 @@ public class GifDecoder implements ImageDecoder {
       case 3: // restore to previous
         return AnimatedDrawableFrameInfo.DisposalMethod.DISPOSE_TO_PREVIOUS;
       case 1: // do not dispose
-        // fallthrough
+      // fallthrough
       default: // unspecified
         return AnimatedDrawableFrameInfo.DisposalMethod.DISPOSE_DO_NOT;
     }
