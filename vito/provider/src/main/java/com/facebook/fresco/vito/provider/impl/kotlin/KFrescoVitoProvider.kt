@@ -62,8 +62,8 @@ class KFrescoVitoProvider(
   override fun getConfig(): FrescoVitoConfig = vitoConfig
 
   private fun getFactory(): ImageOptionsDrawableFactory? {
-    return ImagePipelineFactory.getInstance().getAnimatedDrawableFactory(null)?.let {
-      DrawableFactoryWrapper(it)
-    }
+    return ImagePipelineFactory.getInstance()
+        .getAnimatedDrawableFactory(null)
+        ?.let(DrawableFactoryWrapper::wrap)
   }
 }

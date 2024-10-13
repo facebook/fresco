@@ -86,11 +86,8 @@ class DefaultFrescoVitoProvider(
       return if (animatedDrawableFactory == null) {
         bitmapFactory
       } else {
-        if (animatedDrawableFactory is ImageOptionsDrawableFactory) {
-          ArrayVitoDrawableFactory(bitmapFactory, animatedDrawableFactory)
-        } else {
-          ArrayVitoDrawableFactory(bitmapFactory, DrawableFactoryWrapper(animatedDrawableFactory))
-        }
+        ArrayVitoDrawableFactory(
+            bitmapFactory, DrawableFactoryWrapper.wrap(animatedDrawableFactory))
       }
     }
   }
