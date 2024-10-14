@@ -87,6 +87,11 @@ public class BetterImageSpan extends ReplacementSpan {
     return mMargin;
   }
 
+  @BetterImageSpanAlignment
+  public int getVerticalAlignment() {
+    return mAlignment;
+  }
+
   @Override
   public int getSize(
       Paint paint,
