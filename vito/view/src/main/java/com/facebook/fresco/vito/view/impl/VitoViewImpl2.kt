@@ -17,6 +17,7 @@ import androidx.core.view.ViewCompat
 import com.facebook.common.internal.Supplier
 import com.facebook.common.internal.Suppliers
 import com.facebook.drawee.drawable.VisibilityCallback
+import com.facebook.fresco.ui.common.OnFadeListener
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.VitoImageRequest
 import com.facebook.fresco.vito.core.VitoImageRequestListener
@@ -55,13 +56,15 @@ object VitoViewImpl2 {
       }
 
   @JvmStatic
+  @JvmOverloads
   fun show(
       imageSource: ImageSource,
       imageOptions: ImageOptions,
       callerContext: Any?,
       imageListener: ImageListener?,
       imageRequestListener: VitoImageRequestListener?,
-      target: View
+      target: View,
+      onFadeListener: OnFadeListener? = null,
   ) {
     show(
         FrescoVitoProvider.getImagePipeline()
@@ -75,16 +78,19 @@ object VitoViewImpl2 {
         callerContext,
         imageListener,
         imageRequestListener,
-        target)
+        target,
+        onFadeListener)
   }
 
   @JvmStatic
+  @JvmOverloads
   fun show(
       imageRequest: VitoImageRequest,
       callerContext: Any?,
       imageListener: ImageListener?,
       imageRequestListener: VitoImageRequestListener?,
-      target: View
+      target: View,
+      onFadeListener: OnFadeListener? = null,
   ) {
     val frescoDrawable = ensureDrawableSet(target)
     // The Drawable might be re-purposed before being cleaned up, so we release if necessary.
@@ -101,7 +107,7 @@ object VitoViewImpl2 {
               contextChain = null,
               listener = imageListener,
               perfDataListener = null,
-              onFadeListener = null,
+              onFadeListener = onFadeListener,
               viewportDimensions = Rect(0, 0, target.width, target.height),
               vitoImageRequestListener = imageRequestListener)
     }

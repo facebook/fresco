@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.view
 
 import android.net.Uri
 import android.view.View
+import com.facebook.fresco.ui.common.OnFadeListener
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.VitoImageRequest
 import com.facebook.fresco.vito.core.VitoImageRequestListener
@@ -108,14 +109,17 @@ object VitoView {
    * Display an image
    */
   @JvmStatic
+  @JvmOverloads
   fun show(
       imageSource: ImageSource,
       imageOptions: ImageOptions,
       callerContext: Any?,
       imageListener: ImageListener?,
-      target: View
+      target: View,
+      onFadeListener: OnFadeListener? = null,
   ) {
-    VitoViewImpl2.show(imageSource, imageOptions, callerContext, imageListener, null, target)
+    VitoViewImpl2.show(
+        imageSource, imageOptions, callerContext, imageListener, null, target, onFadeListener)
   }
 
   @JvmStatic
