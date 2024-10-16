@@ -27,8 +27,6 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
 
   override fun useSmartPropertyDiffing(): Boolean = false
 
-  override fun stopAnimationInOnRelease(): Boolean = false
-
   override fun onlyStopAnimationWhenAutoPlayEnabled(): Boolean = true
 
   override fun fastPathForEmptyRequests(): Boolean = false

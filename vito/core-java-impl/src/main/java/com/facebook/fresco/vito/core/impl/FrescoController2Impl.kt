@@ -398,13 +398,6 @@ open class FrescoController2Impl(
       // Notify listeners
       drawable.internalListener.onRelease(
           drawable.imageId, imageRequest, obtainExtras(null, null, drawable, imageRequest))
-      if (config.stopAnimationInOnRelease()) {
-        // We automatically stop the animation if it was automatically started
-        if (!config.onlyStopAnimationWhenAutoPlayEnabled() ||
-            imageRequest.imageOptions.shouldAutoPlay()) {
-          (drawable.actualImageDrawable as? Animatable)?.stop()
-        }
-      }
     }
     drawable.imagePerfListener.onImageRelease(drawable)
   }

@@ -24,8 +24,6 @@ interface FrescoVitoConfig {
 
   fun useSmartPropertyDiffing(): Boolean
 
-  fun stopAnimationInOnRelease(): Boolean
-
   fun onlyStopAnimationWhenAutoPlayEnabled(): Boolean
 
   fun fastPathForEmptyRequests(): Boolean
