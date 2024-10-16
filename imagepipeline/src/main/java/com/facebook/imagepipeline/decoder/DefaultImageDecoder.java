@@ -76,6 +76,8 @@ public class DefaultImageDecoder implements ImageDecoder {
             return decodeGif(encodedImage, length, qualityInfo, options);
           } else if (imageFormat == DefaultImageFormats.WEBP_ANIMATED) {
             return decodeAnimatedWebp(encodedImage, length, qualityInfo, options);
+          } else if (imageFormat == DefaultImageFormats.BINARY_XML) {
+            throw new DecodeException("unsupported image format", encodedImage);
           } else if (imageFormat == ImageFormat.UNKNOWN) {
             throw new DecodeException("unknown image format", encodedImage);
           }
