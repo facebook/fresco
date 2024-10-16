@@ -28,7 +28,9 @@ class DefaultImageFormatChecker : FormatChecker {
                   GIF_HEADER_LENGTH,
                   BMP_HEADER_LENGTH,
                   ICO_HEADER_LENGTH,
-                  HEIF_HEADER_LENGTH)
+                  HEIF_HEADER_LENGTH,
+                  BINARY_XML_HEADER_LENGTH,
+              )
               .maxOrNull())
 
   /**
@@ -60,6 +62,9 @@ class DefaultImageFormatChecker : FormatChecker {
     }
     if (isHeifHeader(headerBytes, headerSize)) {
       return DefaultImageFormats.HEIF
+    }
+    if (isBinaryXmlHeader(headerBytes, headerSize)) {
+      return DefaultImageFormats.BINARY_XML
     }
     return if (isDngHeader(headerBytes, headerSize)) {
       DefaultImageFormats.DNG
@@ -277,5 +282,27 @@ class DefaultImageFormatChecker : FormatChecker {
         headerSize >= DNG_HEADER_LENGTH &&
             (ImageFormatCheckerUtils.startsWithPattern(imageHeaderBytes, DNG_HEADER_II) ||
                 ImageFormatCheckerUtils.startsWithPattern(imageHeaderBytes, DNG_HEADER_MM))
+
+    /**
+     * These are the first 4 bytes of a binary XML file. We can only support binary XML files and
+     * not raw XML files because Android explicitly disallows raw XML files when inflating
+     * drawables. Binary XML files are created at build time by Android's AAPT.
+     *
+     * @see
+     *   https://developer.android.com/reference/android/view/LayoutInflater#inflate(org.xmlpull.v1.XmlPullParser,%20android.view.ViewGroup)
+     */
+    private val BINARY_XML_HEADER: ByteArray =
+        byteArrayOf(
+            3.toByte(),
+            0.toByte(),
+            8.toByte(),
+            0.toByte(),
+        )
+    private const val BINARY_XML_HEADER_LENGTH: Int = 4
+
+    private fun isBinaryXmlHeader(headerBytes: ByteArray, headerSize: Int): Boolean {
+      return headerSize >= BINARY_XML_HEADER_LENGTH &&
+          ImageFormatCheckerUtils.startsWithPattern(headerBytes, BINARY_XML_HEADER)
+    }
   }
 }
