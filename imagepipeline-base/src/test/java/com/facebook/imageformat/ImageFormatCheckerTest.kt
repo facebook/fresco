@@ -70,6 +70,27 @@ class ImageFormatCheckerTest constructor() {
     singleImageTypeTest(getName("heifs/1.heif"), DefaultImageFormats.HEIF)
   }
 
+  @Test
+  fun testXmlVectorDrawable() {
+    singleImageTypeTest(
+        getName("xmls/compiled/vector_drawable.xml"), DefaultImageFormats.BINARY_XML)
+  }
+
+  @Test
+  fun testXmlLayerListDrawable() {
+    singleImageTypeTest(getName("xmls/compiled/layer_list.xml"), DefaultImageFormats.BINARY_XML)
+  }
+
+  @Test
+  fun testXmlLevelListDrawable() {
+    singleImageTypeTest(getName("xmls/compiled/level_list.xml"), DefaultImageFormats.BINARY_XML)
+  }
+
+  @Test
+  fun testXmlStateListDrawable() {
+    singleImageTypeTest(getName("xmls/compiled/state_list.xml"), DefaultImageFormats.BINARY_XML)
+  }
+
   private fun singleImageTypeTest(resourceNames: List<String>, expectedImageType: ImageFormat) {
     for (name: String in resourceNames) {
       val resourceStream = getResourceStream(name)
