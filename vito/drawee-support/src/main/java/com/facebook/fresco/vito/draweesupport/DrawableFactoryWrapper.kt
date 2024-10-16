@@ -14,7 +14,7 @@ import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory
 import com.facebook.imagepipeline.drawable.DrawableFactory
 import com.facebook.imagepipeline.image.CloseableImage
 
-class DrawableFactoryWrapper(private val drawableFactory: DrawableFactory) :
+class DrawableFactoryWrapper private constructor(private val drawableFactory: DrawableFactory) :
     ImageOptionsDrawableFactory {
   override fun createDrawable(
       resources: Resources,
@@ -30,4 +30,15 @@ class DrawableFactoryWrapper(private val drawableFactory: DrawableFactory) :
       } else {
         null
       }
+
+  companion object {
+    @JvmStatic
+    fun wrap(drawableFactory: DrawableFactory): ImageOptionsDrawableFactory {
+      return if (drawableFactory is ImageOptionsDrawableFactory) {
+        drawableFactory
+      } else {
+        DrawableFactoryWrapper(drawableFactory)
+      }
+    }
+  }
 }
