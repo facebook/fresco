@@ -69,6 +69,10 @@ class KFrescoController(
                   drawableFactory?.createDrawable(r, a, b)?.let { createDrawableModel(it, b) }
                 }
               }
+              ?: run {
+                FLog.e(TAG, "Could not create Drawable for CloseableImage: $b")
+                null
+              }
         }
       }
 
