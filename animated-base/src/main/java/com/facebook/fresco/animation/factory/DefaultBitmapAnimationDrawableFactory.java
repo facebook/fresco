@@ -118,7 +118,11 @@ public class DefaultBitmapAnimationDrawableFactory
   }
 
   @Override
+  @Nullable
   public Drawable createDrawable(CloseableImage image) {
+    if (!supportsImageType(image)) {
+      return null;
+    }
     CloseableAnimatedImage closeable = ((CloseableAnimatedImage) image);
     AnimatedImage animatedImage = closeable.getImage();
     AnimationBackend animationBackend =
@@ -134,8 +138,12 @@ public class DefaultBitmapAnimationDrawableFactory
   }
 
   @Override
+  @Nullable
   public Drawable createDrawable(
       Resources resources, CloseableImage closeableImage, ImageOptions imageOptions) {
+    if (!supportsImageType(closeableImage)) {
+      return null;
+    }
     CloseableAnimatedImage closeable = ((CloseableAnimatedImage) closeableImage);
     AnimatedImage animatedImage = closeable.getImage();
     AnimationBackend animationBackend = null;
