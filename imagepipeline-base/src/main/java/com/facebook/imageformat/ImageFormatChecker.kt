@@ -21,21 +21,38 @@ class ImageFormatChecker private constructor() {
   private var maxHeaderLength = 0
   private var customImageFormatCheckers: List<FormatChecker>? = null
   private val defaultFormatChecker = DefaultImageFormatChecker()
+  private var binaryXmlEnabled = false
 
   init {
     updateMaxHeaderLength()
   }
 
-  fun setCustomImageFormatCheckers(customImageFormatCheckers: List<FormatChecker>?) {
+  fun setCustomImageFormatCheckers(
+      customImageFormatCheckers: List<FormatChecker>?
+  ): ImageFormatChecker {
     this.customImageFormatCheckers = customImageFormatCheckers
     updateMaxHeaderLength()
+    return this
+  }
+
+  fun setBinaryXmlEnabled(binaryXmlEnabled: Boolean): ImageFormatChecker {
+    this.binaryXmlEnabled = binaryXmlEnabled
+    return this
   }
 
   @Throws(IOException::class)
   fun determineImageFormat(`is`: InputStream): ImageFormat {
     val imageHeaderBytes = ByteArray(maxHeaderLength)
     val headerSize = readHeaderFromStream(maxHeaderLength, `is`, imageHeaderBytes)
-    val format = defaultFormatChecker.determineFormat(imageHeaderBytes, headerSize)
+    val format =
+        defaultFormatChecker.determineFormat(imageHeaderBytes, headerSize).run {
+          // Temporary block until binary XML support is fully enabled
+          if (this == DefaultImageFormats.BINARY_XML && !binaryXmlEnabled) {
+            ImageFormat.UNKNOWN
+          } else {
+            this
+          }
+        }
     if (format !== ImageFormat.UNKNOWN) {
       return format
     }
