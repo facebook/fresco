@@ -11,6 +11,7 @@ import java.io.InputStream
 import java.util.ArrayList
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertSame
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -18,6 +19,11 @@ import org.robolectric.RobolectricTestRunner
 /** Tests [ImageFormatChecker] */
 @RunWith(RobolectricTestRunner::class)
 class ImageFormatCheckerTest constructor() {
+
+  @Before
+  fun setUp() {
+    ImageFormatChecker.instance.setBinaryXmlEnabled(true)
+  }
 
   @Test
   fun testSimpleWebps() {
