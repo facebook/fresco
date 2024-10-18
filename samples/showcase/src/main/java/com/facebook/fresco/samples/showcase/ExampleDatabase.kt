@@ -17,6 +17,7 @@ import com.facebook.fresco.samples.showcase.imageformat.override.ImageFormatOver
 import com.facebook.fresco.samples.showcase.imageformat.pjpeg.ImageFormatProgressiveJpegFragment
 import com.facebook.fresco.samples.showcase.imageformat.svg.ImageFormatSvgFragment
 import com.facebook.fresco.samples.showcase.imageformat.webp.ImageFormatWebpFragment
+import com.facebook.fresco.samples.showcase.imageformat.xml.ImageFormatXmlFragment
 import com.facebook.fresco.samples.showcase.imagepipeline.*
 import com.facebook.fresco.samples.showcase.misc.WelcomeFragment
 import com.facebook.fresco.samples.showcase.settings.SettingsFragment
@@ -56,7 +57,9 @@ object ExampleDatabase {
                   },
                   ExampleItem("Partial Image Loading") { PartialRequestFragment() },
                   ExampleItem("Platform Bitmap Factory") { ImagePipelineBitmapFactoryFragment() },
-                  ExampleItem("Region Decoding") { ImagePipelineRegionDecodingFragment() })),
+                  ExampleItem("Region Decoding") { ImagePipelineRegionDecodingFragment() },
+              ),
+          ),
           ExampleCategory(
               "Image Formats",
               listOf(
@@ -67,7 +70,10 @@ object ExampleDatabase {
                   ExampleItem("SVG") { ImageFormatSvgFragment() },
                   ExampleItem("Keyframes") { ImageFormatKeyframesFragment() },
                   ExampleItem("Decoder Override") { ImageFormatOverrideExample() },
-                  ExampleItem("Data URI") { ImageFormatDataUriFragment() })),
+                  ExampleItem("Data URI") { ImageFormatDataUriFragment() },
+                  ExampleItem("XML") { ImageFormatXmlFragment() },
+              ),
+          ),
           ExampleCategory(
               "Fresco Vito",
               listOf(
