@@ -74,6 +74,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val animationRenderFpsLimit: Int
   val prefetchShortcutEnabled: Boolean
   val platformDecoderOptions: PlatformDecoderOptions
+  val isBinaryXmlEnabled: Boolean
 
   class Builder(private val configBuilder: ImagePipelineConfig.Builder) {
     @JvmField var shouldUseDecodingBufferHelper = false
@@ -126,6 +127,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var prefetchShortcutEnabled = false
 
     @JvmField var platformDecoderOptions = PlatformDecoderOptions()
+
+    @JvmField var isBinaryXmlEnabled = false
 
     private fun asBuilder(block: () -> Unit): Builder {
       block()
@@ -324,6 +327,10 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
       this.platformDecoderOptions = platformDecoderOptions
     }
 
+    fun setBinaryXmlEnabled(binaryXmlEnabled: Boolean) = asBuilder {
+      isBinaryXmlEnabled = binaryXmlEnabled
+    }
+
     fun build(): ImagePipelineExperiments = ImagePipelineExperiments(this)
   }
 
@@ -442,6 +449,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     cancelDecodeOnCacheMiss = builder.cancelDecodeOnCacheMiss
     prefetchShortcutEnabled = builder.prefetchShortcutEnabled
     platformDecoderOptions = builder.platformDecoderOptions
+    isBinaryXmlEnabled = builder.isBinaryXmlEnabled
   }
 
   companion object {
