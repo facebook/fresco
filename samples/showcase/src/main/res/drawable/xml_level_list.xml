@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/ic_retry_black_48dp"
+        android:minLevel="1"
+        />
+    <item
+        android:drawable="@drawable/xml_vector"
+        android:maxLevel="1"
+        android:minLevel="0"
+        />
+</level-list>

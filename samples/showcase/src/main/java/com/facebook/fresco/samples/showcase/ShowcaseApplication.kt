@@ -88,6 +88,7 @@ class ShowcaseApplication : Application() {
 
     imagePipelineConfigBuilder
         .experiment()
+        .setBinaryXmlEnabled(true)
         .setBitmapPrepareToDraw(true, 0, Integer.MAX_VALUE, true)
         .setDownsampleIfLargeBitmap(true)
 
