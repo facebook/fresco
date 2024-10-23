@@ -22,13 +22,16 @@ import com.facebook.imagepipeline.debug.FlipperImageTracker;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import javax.annotation.Nullable;
 
 /** Serialization helper to create {@link FlipperObject}s. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class FlipperObjectHelper {
 
   public FlipperObject keyValuePair(String key, @Nullable String value) {
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     return new FlipperObject.Builder().put(key, value).build();
   }
 
@@ -141,6 +144,7 @@ public abstract class FlipperObjectHelper {
       return null;
     }
     FlipperObject.Builder objectJson = new FlipperObject.Builder();
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     objectJson.put("requestId", imagePerfData.getRequestId());
     objectJson.put("controllerSubmitTimeMs", imagePerfData.getControllerSubmitTimeMs());
     objectJson.put("controllerFinalTimeMs", imagePerfData.getControllerFinalImageSetTimeMs());
@@ -148,6 +152,7 @@ public abstract class FlipperObjectHelper {
     objectJson.put("imageRequestEndTimeMs", imagePerfData.getImageRequestEndTimeMs());
     objectJson.put("imageOrigin", "UNKNOWN");
     objectJson.put("isPrefetch", imagePerfData.isPrefetch());
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     objectJson.put("callerContext", imagePerfData.getCallerContext());
     objectJson.put("imageRequest", toFlipperObject((ImageRequest) imagePerfData.getImageRequest()));
     objectJson.put("imageInfo", toFlipperObject((ImageInfo) imagePerfData.getImageInfo()));
@@ -155,7 +160,7 @@ public abstract class FlipperObjectHelper {
   }
 
   @Nullable
-  public FlipperObject toFlipperObject(ImageInfo imageInfo) {
+  public FlipperObject toFlipperObject(@Nullable ImageInfo imageInfo) {
     if (imageInfo == null) {
       return null;
     }
@@ -167,7 +172,7 @@ public abstract class FlipperObjectHelper {
   }
 
   @Nullable
-  public FlipperObject toFlipperObject(QualityInfo qualityInfo) {
+  public FlipperObject toFlipperObject(@Nullable QualityInfo qualityInfo) {
     if (qualityInfo == null) {
       return null;
     }
@@ -196,6 +201,7 @@ public abstract class FlipperObjectHelper {
         .put("postprocessor", String.valueOf(request.getPostprocessor()))
         .put("requestListener", String.valueOf(request.getRequestListener()))
         .put("imageDecodeOptions", toFlipperObject(request.getImageDecodeOptions()))
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         .put("bytesRange", request.getBytesRange())
         .put("resizeOptions", toFlipperObject(request.getResizeOptions()))
         .put("rotationOptions", toFlipperObject(request.getRotationOptions()));
