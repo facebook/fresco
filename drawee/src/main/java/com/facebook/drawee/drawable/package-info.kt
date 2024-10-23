@@ -6,4 +6,4 @@
  */
 
 /** Drawable implementations used by Drawee through a DraweeHierarchy. */
-package com.facebook.drawee.drawable;
+package com.facebook.drawee.drawable
