@@ -51,6 +51,7 @@ public class DefaultImageDecoder implements ImageDecoder {
 
   private final @Nullable ImageDecoder mAnimatedGifDecoder;
   private final @Nullable ImageDecoder mAnimatedWebPDecoder;
+  private final @Nullable ImageDecoder mXmlDecoder;
   private final PlatformDecoder mPlatformDecoder;
   private final Supplier<Boolean> mEnableEncodedImageColorSpaceUsage;
 
@@ -77,7 +78,7 @@ public class DefaultImageDecoder implements ImageDecoder {
           } else if (imageFormat == DefaultImageFormats.WEBP_ANIMATED) {
             return decodeAnimatedWebp(encodedImage, length, qualityInfo, options);
           } else if (imageFormat == DefaultImageFormats.BINARY_XML) {
-            throw new DecodeException("unsupported image format", encodedImage);
+            return decodeXml(encodedImage, length, qualityInfo, options);
           } else if (imageFormat == ImageFormat.UNKNOWN) {
             throw new DecodeException("unknown image format", encodedImage);
           }
@@ -90,17 +91,20 @@ public class DefaultImageDecoder implements ImageDecoder {
   public DefaultImageDecoder(
       @Nullable final ImageDecoder animatedGifDecoder,
       @Nullable final ImageDecoder animatedWebPDecoder,
+      @Nullable final ImageDecoder xmlDecoder,
       final PlatformDecoder platformDecoder) {
-    this(animatedGifDecoder, animatedWebPDecoder, platformDecoder, null);
+    this(animatedGifDecoder, animatedWebPDecoder, xmlDecoder, platformDecoder, null);
   }
 
   public DefaultImageDecoder(
       @Nullable final ImageDecoder animatedGifDecoder,
       @Nullable final ImageDecoder animatedWebPDecoder,
+      @Nullable final ImageDecoder xmlDecoder,
       final PlatformDecoder platformDecoder,
       @Nullable Map<ImageFormat, ImageDecoder> customDecoders) {
     mAnimatedGifDecoder = animatedGifDecoder;
     mAnimatedWebPDecoder = animatedWebPDecoder;
+    mXmlDecoder = xmlDecoder;
     mPlatformDecoder = platformDecoder;
     mCustomDecoders = customDecoders;
     mEnableEncodedImageColorSpaceUsage = Suppliers.BOOLEAN_FALSE;
@@ -109,11 +113,13 @@ public class DefaultImageDecoder implements ImageDecoder {
   public DefaultImageDecoder(
       @Nullable final ImageDecoder animatedGifDecoder,
       @Nullable final ImageDecoder animatedWebPDecoder,
+      @Nullable final ImageDecoder xmlDecoder,
       final PlatformDecoder platformDecoder,
       @Nullable Map<ImageFormat, ImageDecoder> customDecoders,
       final Supplier<Boolean> enableEncodedImageColorSpaceUsage) {
     mAnimatedGifDecoder = animatedGifDecoder;
     mAnimatedWebPDecoder = animatedWebPDecoder;
+    mXmlDecoder = xmlDecoder;
     mPlatformDecoder = platformDecoder;
     mCustomDecoders = customDecoders;
     mEnableEncodedImageColorSpaceUsage = enableEncodedImageColorSpaceUsage;
@@ -265,5 +271,24 @@ public class DefaultImageDecoder implements ImageDecoder {
       return mAnimatedWebPDecoder.decode(encodedImage, length, qualityInfo, options);
     }
     return decodeStaticImage(encodedImage, options);
+  }
+
+  /**
+   * Decodes a binary xml resource.
+   *
+   * @param encodedImage input image (encoded bytes plus meta data)
+   * @param length amount of currently available data in bytes
+   * @param qualityInfo quality info for the image
+   * @return a CloseableStaticBitmap
+   */
+  private @Nullable CloseableImage decodeXml(
+      final EncodedImage encodedImage,
+      final int length,
+      final QualityInfo qualityInfo,
+      final ImageDecodeOptions options) {
+    if (mXmlDecoder != null) {
+      return mXmlDecoder.decode(encodedImage, length, qualityInfo, options);
+    }
+    return null;
   }
 }

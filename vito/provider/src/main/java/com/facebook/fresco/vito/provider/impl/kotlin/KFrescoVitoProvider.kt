@@ -17,6 +17,7 @@ import com.facebook.fresco.vito.core.impl.DebugOverlayHandler
 import com.facebook.fresco.vito.core.impl.FrescoVitoPrefetcherImpl
 import com.facebook.fresco.vito.core.impl.KFrescoController
 import com.facebook.fresco.vito.core.impl.VitoImagePipelineImpl
+import com.facebook.fresco.vito.drawable.ArrayVitoDrawableFactory
 import com.facebook.fresco.vito.draweesupport.DrawableFactoryWrapper
 import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory
 import com.facebook.fresco.vito.provider.impl.NoOpCallerContextVerifier
@@ -62,8 +63,19 @@ class KFrescoVitoProvider(
   override fun getConfig(): FrescoVitoConfig = vitoConfig
 
   private fun getFactory(): ImageOptionsDrawableFactory? {
-    return ImagePipelineFactory.getInstance()
-        .getAnimatedDrawableFactory(null)
-        ?.let(DrawableFactoryWrapper::wrap)
+    val animatedDrawableFactory =
+        ImagePipelineFactory.getInstance()
+            .getAnimatedDrawableFactory(null)
+            ?.let(DrawableFactoryWrapper::wrap)
+    val xmlFactory =
+        ImagePipelineFactory.getInstance()
+            .getXmlDrawableFactory()
+            ?.let(DrawableFactoryWrapper::wrap)
+    val factories = listOfNotNull(animatedDrawableFactory, xmlFactory)
+    return when (factories.size) {
+      0 -> null
+      1 -> factories[0]
+      else -> ArrayVitoDrawableFactory(*factories.toTypedArray())
+    }
   }
 }

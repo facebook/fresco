@@ -81,13 +81,16 @@ class DefaultFrescoVitoProvider(
   companion object {
     private fun createDefaultDrawableFactory(): ImageOptionsDrawableFactory {
       val animatedDrawableFactory =
-          ImagePipelineFactory.getInstance().getAnimatedDrawableFactory(null)
+          ImagePipelineFactory.getInstance()
+              .getAnimatedDrawableFactory(null)
+              ?.let(DrawableFactoryWrapper::wrap)
       val bitmapFactory = BitmapDrawableFactory()
-      return if (animatedDrawableFactory == null) {
-        bitmapFactory
-      } else {
-        ArrayVitoDrawableFactory(
-            bitmapFactory, DrawableFactoryWrapper.wrap(animatedDrawableFactory))
+      val xmlFactory =
+          ImagePipelineFactory.getInstance().xmlDrawableFactory?.let(DrawableFactoryWrapper::wrap)
+      val factories = listOfNotNull(bitmapFactory, animatedDrawableFactory, xmlFactory)
+      return when (factories.size) {
+        1 -> factories[0]
+        else -> ArrayVitoDrawableFactory(*factories.toTypedArray())
       }
     }
   }
