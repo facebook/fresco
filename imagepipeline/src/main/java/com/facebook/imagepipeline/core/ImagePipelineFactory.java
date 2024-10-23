@@ -41,6 +41,8 @@ import com.facebook.imagepipeline.transcoder.ImageTranscoder;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import com.facebook.imagepipeline.transcoder.MultiImageTranscoderFactory;
 import com.facebook.imagepipeline.transcoder.SimpleImageTranscoderFactory;
+import com.facebook.imagepipeline.xml.XmlDrawableFactory;
+import com.facebook.imagepipeline.xml.XmlFormatDecoder;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -246,19 +248,23 @@ public class ImagePipelineFactory {
           webPDecoder = animatedFactory.getWebPDecoder();
         }
 
+        ImageDecoder xmlDecoder = getXmlImageDecoder();
+
         if (mConfig.getImageDecoderConfig() == null) {
-          mImageDecoder = new DefaultImageDecoder(gifDecoder, webPDecoder, getPlatformDecoder());
+          mImageDecoder =
+              new DefaultImageDecoder(gifDecoder, webPDecoder, xmlDecoder, getPlatformDecoder());
         } else {
           mImageDecoder =
               new DefaultImageDecoder(
                   gifDecoder,
                   webPDecoder,
+                  xmlDecoder,
                   getPlatformDecoder(),
                   mConfig.getImageDecoderConfig().getCustomImageDecoders());
           // Add custom image formats if needed
           ImageFormatChecker.getInstance()
-              .setCustomImageFormatCheckers(
-                  mConfig.getImageDecoderConfig().getCustomImageFormats());
+              .setCustomImageFormatCheckers(mConfig.getImageDecoderConfig().getCustomImageFormats())
+              .setBinaryXmlEnabled(mConfig.getExperiments().isBinaryXmlEnabled());
         }
       }
     }
@@ -417,5 +423,23 @@ public class ImagePipelineFactory {
       b.add("encodedCountingMemoryCache", mEncodedCountingMemoryCache.getDebugData());
     }
     return b.toString();
+  }
+
+  @Nullable
+  public ImageDecoder getXmlImageDecoder() {
+    if (mConfig.getExperiments().isBinaryXmlEnabled()) {
+      return new XmlFormatDecoder(mConfig.getContext().getApplicationContext().getResources());
+    } else {
+      return null;
+    }
+  }
+
+  @Nullable
+  public DrawableFactory getXmlDrawableFactory() {
+    if (mConfig.getExperiments().isBinaryXmlEnabled()) {
+      return new XmlDrawableFactory();
+    } else {
+      return null;
+    }
   }
 }
