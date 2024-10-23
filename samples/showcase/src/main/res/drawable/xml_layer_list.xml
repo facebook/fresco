@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:width="@dimen/drawee_height_medium"
+        android:height="@dimen/drawee_height_medium"
+        android:drawable="@drawable/ic_error_black_96dp"
+        android:gravity="center"
+        />
+
+    <item
+        android:width="@dimen/drawee_height_medium"
+        android:height="@dimen/drawee_height_medium"
+        android:drawable="@drawable/xml_vector"
+        android:gravity="center"
+        />
+
+    <item
+        android:width="@dimen/drawee_height_medium"
+        android:height="@dimen/drawee_height_medium"
+        android:drawable="@drawable/ic_edit"
+        android:gravity="center"
+        />
+
+</layer-list>

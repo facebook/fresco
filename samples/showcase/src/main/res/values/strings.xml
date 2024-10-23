@@ -112,6 +112,8 @@
 
   <string name="format_datauri_help">Images can also be provided by data URIs such as the one below:</string>
 
+  <string name="format_xml_help" description="Helper text for xml example">This example showcases different binary XML file types. Select different binary XML types from the spinner.</string>
+
   <string name="vito_litho_image_options_config_help_source">Configure the image source to be displayed</string>
   <string name="vito_litho_image_options_config_help_options">Configure image options to change the image\'s appearance</string>
   <string name="vito_litho_image_options_config_switch_auto_play_animations">Auto play animations</string>
