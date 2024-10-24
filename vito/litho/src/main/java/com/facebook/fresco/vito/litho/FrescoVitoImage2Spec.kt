@@ -19,7 +19,9 @@ import androidx.core.util.ObjectsCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import com.facebook.common.callercontext.ContextChain
 import com.facebook.datasource.DataSource
+import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.fresco.ui.common.OnFadeListener
+import com.facebook.fresco.urimod.UriModifierInterface.ModificationResult
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.VitoImageRequest
 import com.facebook.fresco.vito.listener.ImageListener
@@ -351,6 +353,7 @@ object FrescoVitoImage2Spec {
       @Prop(optional = true) callerContext: Any?,
       @Prop(optional = true) logWithHighSamplingRate: Boolean?,
       @Prop(optional = true) prefetchRequestListener: RequestListener?,
+      @CachedValue requestCachedValue: VitoImageRequest?,
       @FromPrepare forceKeepOriginalSize: Boolean
   ) {
     val imageOptions = ensureImageOptions(imageOptions)
@@ -364,7 +367,7 @@ object FrescoVitoImage2Spec {
     }
     val viewportRect = Rect(0, 0, width - paddingX, height - paddingY)
     viewportDimensions.set(viewportRect)
-    if (experimentalDynamicSizeVito2() && !forceKeepOriginalSize) {
+    if (experimentalDynamicSizeVito2()) {
       val vitoImageRequest =
           createVitoImageRequest(
               c,
@@ -376,19 +379,31 @@ object FrescoVitoImage2Spec {
               logWithHighSamplingRate,
               viewportRect,
               false)
-      requestFromBoundsDefined.set(vitoImageRequest)
 
-      val config = FrescoVitoProvider.getConfig().prefetchConfig
-      if (shouldPrefetchInBoundsDefinedForDynamicSize(prefetch)) {
-        prefetchDataSourceFromBoundsDefined.set(
-            FrescoVitoProvider.getPrefetcher()
-                .prefetch(
-                    config.prefetchTargetOnBoundsDefined(),
-                    vitoImageRequest,
-                    callerContext,
-                    contextChain,
-                    prefetchRequestListener,
-                    "FrescoVitoImage2Spec_OnBoundsDefined"))
+      if (!forceKeepOriginalSize) {
+        requestFromBoundsDefined.set(vitoImageRequest)
+
+        val config = FrescoVitoProvider.getConfig().prefetchConfig
+        if (shouldPrefetchInBoundsDefinedForDynamicSize(prefetch)) {
+          prefetchDataSourceFromBoundsDefined.set(
+              FrescoVitoProvider.getPrefetcher()
+                  .prefetch(
+                      config.prefetchTargetOnBoundsDefined(),
+                      vitoImageRequest,
+                      callerContext,
+                      contextChain,
+                      prefetchRequestListener,
+                      "FrescoVitoImage2Spec_OnBoundsDefined"))
+        }
+      } else {
+        // Force keep original size so we will not use the OnBoundsDefined URL
+        // Compare vitoImageRequest to requestCachedValue to see if original URL was the best URL
+        val isBestSize =
+            vitoImageRequest.finalImageRequest?.sourceUri ==
+                requestCachedValue?.finalImageRequest?.sourceUri
+        requestCachedValue?.putExtra(
+            HasExtraData.KEY_MODIFIED_URL,
+            ModificationResult.FallbackToMbpDiskCache(isBestSize).toString())
       }
     }
   }

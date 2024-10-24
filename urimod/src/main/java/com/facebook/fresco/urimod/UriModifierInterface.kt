@@ -47,5 +47,15 @@ interface UriModifierInterface {
 
     data class Unmodified(val reason: String, override val bestAllowlistedSize: Int?) :
         ModificationResult("Unmodified(reason='$reason'")
+
+    data class FallbackToMbpMemoryCache(val isBestSize: String) :
+        ModificationResult("FallbackToMbpMemoryCache($isBestSize") {
+      override val bestAllowlistedSize: Int? = null
+    }
+
+    data class FallbackToMbpDiskCache(val isBestSize: Boolean) :
+        ModificationResult("FallbackToMbpDiskCache(isBestSize=$isBestSize") {
+      override val bestAllowlistedSize: Int? = null
+    }
   }
 }
