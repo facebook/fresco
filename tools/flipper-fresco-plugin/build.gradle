@@ -31,6 +31,7 @@ android {
         implementation project(':middleware')
         implementation project(':tools:flipper')
         implementation project(':ui-common')
+        implementation Deps.inferAnnotation
         implementation Deps.Tools.Flipper.flipper
         compileOnly Deps.jsr305
 
