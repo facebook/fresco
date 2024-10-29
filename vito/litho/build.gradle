@@ -33,6 +33,7 @@ dependencies {
     implementation project(':fbcore')
     implementation project(':middleware')
     implementation project(':ui-common')
+    implementation project(':urimod')
     implementation project(':vito:core')
     implementation project(':vito:options')
     implementation project(':vito:provider')
