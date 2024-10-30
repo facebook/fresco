@@ -47,6 +47,10 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
 
   override fun experimentalDynamicSizeDiskCacheCheckTimeoutMs(): Long = 0
 
+  override fun isAppStarting(): Boolean = false
+
+  override fun experimentalDynamicSizeDisableWhenAppIsStarting(): Boolean = false
+
   open class DefaultPrefetchConfig : PrefetchConfig {
     override fun prefetchInOnPrepare(): Boolean = true
 

@@ -109,11 +109,20 @@ object FrescoVitoImage2Spec {
       @Prop(optional = true) imageOptions: ImageOptions?,
       @Prop(optional = true) logWithHighSamplingRate: Boolean?,
   ): VitoImageRequest? {
-    val imageOptions = ensureImageOptions(imageOptions)
-    if (experimentalDynamicSizeVito2() && !experimentalDynamicSizeWithCacheFallbackVito2()) {
-      // we won't do anything with the original URI, so we can just return null
-      return null
-    } else {
+    val config = FrescoVitoProvider.getConfig()
+    val shouldCreateRequest =
+        if (config.experimentalDynamicSizeDisableWhenAppIsStarting() && config.isAppStarting()) {
+          // App is still starting
+          true
+        } else if (experimentalDynamicSizeVito2() &&
+            !experimentalDynamicSizeWithCacheFallbackVito2()) {
+          // we won't do anything with the original URI, so we can just return null
+          false
+        } else {
+          true
+        }
+    return if (shouldCreateRequest) {
+      val imageOptions = ensureImageOptions(imageOptions)
       return createVitoImageRequest(
           c,
           callerContext,
@@ -124,6 +133,8 @@ object FrescoVitoImage2Spec {
           logWithHighSamplingRate,
           null,
           true)
+    } else {
+      null
     }
   }
 
