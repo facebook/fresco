@@ -13,6 +13,8 @@ import static org.mockito.Mockito.*;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -86,6 +88,26 @@ public class DataSourcesTest {
 
     verify(mCountDownLatch, times(1)).await();
     verify(mCountDownLatch, times(1)).countDown();
+  }
+
+  @Test
+  public void testWaitForFinalResult_withTimeout() throws Throwable {
+    when(mDataSource.isFinished()).thenReturn(true);
+    when(mDataSource.getResult()).thenReturn(mFinalResult);
+
+    final Object initial = new Object();
+    Object actual = initial;
+    Throwable throwable = null;
+    try {
+      actual = DataSources.waitForFinalResult(mDataSource, 1, TimeUnit.MILLISECONDS);
+    } catch (Throwable t) {
+      throwable = t;
+    }
+    assertEquals(initial, actual);
+    assertTrue(throwable instanceof TimeoutException);
+
+    verify(mCountDownLatch, times(1)).await(1, TimeUnit.MILLISECONDS);
+    verify(mCountDownLatch, times(0)).countDown();
   }
 
   @Test

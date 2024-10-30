@@ -11,6 +11,8 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import javax.annotation.Nullable;
 
 /** Static utility methods pertaining to the {@link DataSource} interface. */
@@ -57,6 +59,25 @@ public class DataSources {
    */
   @Nullable
   public static <T> T waitForFinalResult(DataSource<T> dataSource) throws Throwable {
+    return waitForFinalResult(dataSource, -1, TimeUnit.MILLISECONDS);
+  }
+
+  /**
+   * This methods blocks the calling thread until the {@link DataSource} has a final result, has
+   * been cancelled or has failed.
+   *
+   * @param dataSource The {@link DataSource} to wait for. The caller MUST close the data source
+   *     after this method returned!
+   * @param <T> The type parameter for the {@link DataSource}
+   * @param timeout The maximum time to wait for the final result
+   * @param unit The time unit of the timeout argument
+   * @return The final result of the {@link DataSource}. Intermediate results are ignored. Might be
+   *     <code>null</code> if the data source has been cancelled.
+   * @throws Throwable if the {@link DataSource} has failed
+   */
+  @Nullable
+  public static <T> T waitForFinalResult(DataSource<T> dataSource, long timeout, TimeUnit unit)
+      throws Throwable {
     final CountDownLatch latch = new CountDownLatch(1);
     final ValueHolder<T> resultHolder = new ValueHolder<>();
     final ValueHolder<Throwable> pendingException = new ValueHolder<>();
@@ -107,7 +128,13 @@ public class DataSources {
         });
 
     // wait for countdown() by the DataSubscriber
-    latch.await();
+    if (timeout < 0) {
+      latch.await();
+    } else {
+      if (!latch.await(timeout, unit)) {
+        throw new TimeoutException();
+      }
+    }
 
     // if the data source failed, throw its exception
     if (pendingException.value != null) {
