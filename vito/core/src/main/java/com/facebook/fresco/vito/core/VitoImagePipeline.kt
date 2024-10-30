@@ -16,6 +16,7 @@ import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.source.ImageSource
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.listener.RequestListener
+import java.util.concurrent.TimeUnit
 
 interface VitoImagePipeline {
 
@@ -50,4 +51,12 @@ interface VitoImagePipeline {
   fun isInDiskCacheSync(
       imageRequest: VitoImageRequest,
   ): Boolean
+
+  fun isInDiskCacheSync(
+      imageRequest: VitoImageRequest,
+      timeout: Long,
+      unit: TimeUnit,
+  ): Boolean {
+    throw UnsupportedOperationException("Not implemented yet")
+  }
 }

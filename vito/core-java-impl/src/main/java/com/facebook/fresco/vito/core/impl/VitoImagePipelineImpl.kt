@@ -12,6 +12,7 @@ import android.graphics.Rect
 import com.facebook.common.callercontext.ContextChain
 import com.facebook.common.references.CloseableReference
 import com.facebook.datasource.DataSource
+import com.facebook.datasource.DataSources
 import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.fresco.ui.common.VitoUtils
 import com.facebook.fresco.urimod.Dimensions
@@ -37,6 +38,7 @@ import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.listener.RequestListener
 import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
+import java.util.concurrent.TimeUnit
 
 /** Vito image pipeline to fetch an image for a given VitoImageRequest. */
 class VitoImagePipelineImpl(
@@ -142,6 +144,20 @@ class VitoImagePipelineImpl(
   ): Boolean {
     val imageRequest = vitoImageRequest.finalImageRequest ?: return false
     return imagePipeline.isInDiskCacheSync(imageRequest)
+  }
+
+  override fun isInDiskCacheSync(
+      vitoImageRequest: VitoImageRequest,
+      timeout: Long,
+      unit: TimeUnit
+  ): Boolean {
+    val imageRequest = vitoImageRequest.finalImageRequest ?: return false
+    return try {
+      DataSources.waitForFinalResult(imagePipeline.isInDiskCache(imageRequest), timeout, unit)
+          ?: false
+    } catch (t: Throwable) {
+      false
+    }
   }
 
   private fun experimentalDynamicSizeVito2(): Boolean = config.experimentalDynamicSizeVito2()
