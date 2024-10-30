@@ -11,10 +11,12 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.fragments.MainFragment;
 import com.facebook.samples.scrollperf.fragments.SettingsFragment;
 import com.facebook.samples.scrollperf.util.SizeUtil;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class MainActivity extends AppCompatActivity {
 
   @Override
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     SizeUtil.initSizeData(this);
     setContentView(R.layout.activity_main);
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    // NULLSAFE_FIXME[Nullable Dereference]
     toolbar.setTitle(R.string.app_name);
     setSupportActionBar(toolbar);
     if (savedInstanceState == null) {
