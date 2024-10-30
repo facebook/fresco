@@ -59,6 +59,7 @@ import com.facebook.litho.annotations.ShouldExcludeFromIncrementalMount
 import com.facebook.litho.annotations.ShouldUpdate
 import com.facebook.litho.annotations.TreeProp
 import com.facebook.litho.utils.MeasureUtils
+import java.util.concurrent.TimeUnit
 
 /** Fresco Vito component for Litho */
 @MountSpec(isPureRender = true, canPreallocate = true, poolSize = 15)
@@ -171,7 +172,11 @@ object FrescoVitoImage2Spec {
         forceKeepOriginalSize.set(!experimentalDynamicSizeOnPrepareMainThreadVito2())
       } else {
         forceKeepOriginalSize.set(
-            FrescoVitoProvider.getImagePipeline().isInDiskCacheSync(requestCachedValue))
+            FrescoVitoProvider.getImagePipeline()
+                .isInDiskCacheSync(
+                    requestCachedValue,
+                    FrescoVitoProvider.getConfig().experimentalDynamicSizeDiskCacheCheckTimeoutMs(),
+                    TimeUnit.MILLISECONDS))
       }
       if (forceKeepOriginalSize.get() == true) {
         // Prefetch in OnPrepare since no prefetch will happen in OnBoundsDefined

@@ -151,6 +151,9 @@ class VitoImagePipelineImpl(
       timeout: Long,
       unit: TimeUnit
   ): Boolean {
+    if (timeout <= 0) {
+      return isInDiskCacheSync(vitoImageRequest)
+    }
     val imageRequest = vitoImageRequest.finalImageRequest ?: return false
     return try {
       DataSources.waitForFinalResult(imagePipeline.isInDiskCache(imageRequest), timeout, unit)
