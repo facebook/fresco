@@ -181,6 +181,8 @@ object FrescoVitoImage2Spec {
         // We don't want to check cache if we are running on the main thread
         // By default uses the original URL
         forceKeepOriginalSize.set(!experimentalDynamicSizeOnPrepareMainThreadVito2())
+      } else if (isProductEnabled(callerContext, contextChain) == false) {
+        forceKeepOriginalSize.set(true)
       } else {
         forceKeepOriginalSize.set(
             FrescoVitoProvider.getImagePipeline()
@@ -209,6 +211,14 @@ object FrescoVitoImage2Spec {
           contextChain,
           prefetchRequestListener)
     }
+  }
+
+  private fun isProductEnabled(callerContext: Any?, contextChain: ContextChain?): Boolean? {
+    val config = FrescoVitoProvider.getConfig()
+    if (!config.experimentalDynamicSizeCheckIfProductIsEnabled()) {
+      return null
+    }
+    return config.experimentalDynamicSizeIsProductEnabled(callerContext, contextChain)
   }
 
   @JvmStatic

@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.core
 
+import com.facebook.common.callercontext.ContextChain
 import com.facebook.common.internal.Supplier
 
 interface FrescoVitoConfig {
@@ -47,4 +48,11 @@ interface FrescoVitoConfig {
   fun isAppStarting(): Boolean
 
   fun experimentalDynamicSizeDisableWhenAppIsStarting(): Boolean
+
+  fun experimentalDynamicSizeCheckIfProductIsEnabled(): Boolean
+
+  fun experimentalDynamicSizeIsProductEnabled(
+      callerContext: Any?,
+      contextChain: ContextChain?
+  ): Boolean
 }

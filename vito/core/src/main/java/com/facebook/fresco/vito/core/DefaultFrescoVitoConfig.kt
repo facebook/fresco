@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.core
 
+import com.facebook.common.callercontext.ContextChain
 import com.facebook.common.internal.Supplier
 import com.facebook.common.internal.Suppliers
 
@@ -50,6 +51,13 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
   override fun isAppStarting(): Boolean = false
 
   override fun experimentalDynamicSizeDisableWhenAppIsStarting(): Boolean = false
+
+  override fun experimentalDynamicSizeCheckIfProductIsEnabled(): Boolean = false
+
+  override fun experimentalDynamicSizeIsProductEnabled(
+      callerContext: Any?,
+      contextChain: ContextChain?
+  ): Boolean = true
 
   open class DefaultPrefetchConfig : PrefetchConfig {
     override fun prefetchInOnPrepare(): Boolean = true
