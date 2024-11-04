@@ -164,7 +164,7 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
     mImageFormat = imageFormat;
   }
 
-  public void setScaleType(ScaleType scaleType) {
+  public void setScaleType(@Nullable ScaleType scaleType) {
     mScaleType = scaleType;
   }
 
