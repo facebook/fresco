@@ -33,7 +33,8 @@ import kotlin.jvm.JvmField
 class FrescoDrawable2Impl(
     private val useNewReleaseCallbacks: Boolean,
     imagePerfLoggingListener: ImagePerfLoggingListener?,
-    vitoImagePerfListener: VitoImagePerfListener
+    vitoImagePerfListener: VitoImagePerfListener,
+    override var uiFramework: String? = null,
 ) : FrescoDrawable2(), DataSubscriber<CloseableReference<CloseableImage>> {
 
   override var imageRequest: VitoImageRequest? = null

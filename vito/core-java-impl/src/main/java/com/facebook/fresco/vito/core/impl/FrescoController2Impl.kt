@@ -461,6 +461,7 @@ open class FrescoController2Impl(
               sourceUri)
       extras.modifiedUriStatus = imageRequest.extras[HasExtraData.KEY_MODIFIED_URL] as? String
       extras.originalUri = imageRequest.extras[HasExtraData.KEY_ORIGINAL_URL] as? Uri
+      extras.uiFramework = drawable.uiFramework
       return extras
     }
 

@@ -30,6 +30,7 @@ interface ControllerListener2<INFO> {
     @JvmField var logWithHighSamplingRate: Boolean = false
     @JvmField var modifiedUriStatus: String? = null
     @JvmField var originalUri: Uri? = null
+    @JvmField var uiFramework: String? = null
 
     fun makeExtrasCopy(): Extras {
       val extras = Extras()
@@ -44,6 +45,7 @@ interface ControllerListener2<INFO> {
       extras.scaleType = scaleType
       extras.focusX = focusX
       extras.focusY = focusY
+      extras.uiFramework = uiFramework
       return extras
     }
 

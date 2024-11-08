@@ -33,6 +33,7 @@ class KFrescoVitoDrawable(
   var _imageId: Long = 0
   var _isLoading: Boolean = false
   override var callerContext: Any? = null
+  override var uiFramework: String? = null
   var _visibilityCallback: VisibilityCallback? = null
   var _fetchSubmitted: Boolean = false
   val listenerManager: CombinedImageListener = CombinedImageListenerImpl()

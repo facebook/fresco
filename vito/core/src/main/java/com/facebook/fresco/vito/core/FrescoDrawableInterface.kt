@@ -18,6 +18,7 @@ interface FrescoDrawableInterface : VisibilityAware {
   val imageId: Long
   var callerContext: Any?
   val imagePerfListener: VitoImagePerfListener
+  var uiFramework: String?
 
   fun setMutateDrawables(mutateDrawables: Boolean)
 
