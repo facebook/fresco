@@ -61,9 +61,14 @@ open class FrescoController2Impl(
 ) : DrawableDataSubscriber, FrescoController2 {
 
   @Suppress("UNCHECKED_CAST")
-  override fun <T> createDrawable(): T where T : Drawable, T : FrescoDrawableInterface =
+  override fun <T> createDrawable(uiFramework: String?): T where
+  T : Drawable,
+  T : FrescoDrawableInterface =
       FrescoDrawable2Impl(
-          config.useNewReleaseCallback(), imagePerfListenerSupplier?.get(), vitoImagePerfListener)
+          config.useNewReleaseCallback(),
+          imagePerfListenerSupplier?.get(),
+          vitoImagePerfListener,
+          uiFramework)
           as T
 
   override fun fetch(

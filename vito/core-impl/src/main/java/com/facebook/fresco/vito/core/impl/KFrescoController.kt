@@ -79,9 +79,12 @@ class KFrescoController(
   var debugOverlayHandler: DebugOverlayHandler? = null
 
   @Suppress("UNCHECKED_CAST")
-  override fun <T> createDrawable(): T where T : Drawable, T : FrescoDrawableInterface {
+  override fun <T> createDrawable(uiFramework: String?): T where
+  T : Drawable,
+  T : FrescoDrawableInterface {
     traceSection("KFrescoController#createDrawable") {
       val drawable = KFrescoVitoDrawable(imagePerfListener)
+      drawable.uiFramework = uiFramework
       imagePerfLoggingListenerSupplier
           ?.get()
           ?.let(drawable.listenerManager::setImagePerfLoggingListener)

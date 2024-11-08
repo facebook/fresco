@@ -16,7 +16,9 @@ import com.facebook.fresco.vito.listener.ImageListener
 
 interface FrescoController2 {
 
-  fun <T> createDrawable(): T where T : Drawable, T : FrescoDrawableInterface
+  fun <T> createDrawable(): T where T : Drawable, T : FrescoDrawableInterface = createDrawable(null)
+
+  fun <T> createDrawable(uiFramework: String?): T where T : Drawable, T : FrescoDrawableInterface
 
   fun fetch(
       drawable: FrescoDrawableInterface,
