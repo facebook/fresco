@@ -21,6 +21,7 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.atomic.AtomicInteger;
+import javax.annotation.Nullable;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -101,10 +102,10 @@ public class DraweeMocks {
    * @param controller
    * @return forwarding listener
    */
+  @Nullable
   public static ControllerListener stubControllerListener(final DraweeController controller) {
     final ForwardingControllerListener forwardingListener = new ForwardingControllerListener();
     if (!(controller instanceof AbstractDraweeController)) {
-      // NULLSAFE_FIXME[Return Not Nullable]
       return null;
     }
     AbstractDraweeController abstractController = (AbstractDraweeController) controller;
