@@ -1,0 +1,65 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import com.facebook.fresco.buildsrc.Deps
+import com.facebook.fresco.buildsrc.GradleDeps
+
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'org.jetbrains.kotlin.plugin.compose' version "2.0.0" // Must match GradleDeps.Kotlin.version
+}
+
+kotlin {
+    jvmToolchain(11)
+}
+
+android {
+    ndkVersion GradleDeps.Native.version
+
+    buildToolsVersion FrescoConfig.buildToolsVersion
+    compileSdkVersion FrescoConfig.compileSdkVersion
+
+    namespace "com.facebook.fresco.vito.compose"
+
+    defaultConfig {
+        minSdkVersion FrescoConfig.minSdkVersion
+        targetSdkVersion FrescoConfig.targetSdkVersion
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    buildFeatures {
+        compose true
+    }
+}
+
+dependencies {
+    compileOnly Deps.inferAnnotation
+
+    implementation Deps.AndroidX.core
+
+    implementation project(':vito:core')
+    implementation project(':vito:options')
+    implementation project(':vito:provider')
+    implementation project(':vito:source')
+    implementation project(':vito:view')
+    implementation project(':ui-common')
+
+    // Specify the Compose BOM with a version definition
+    Dependency composeBom = platform('androidx.compose:compose-bom:2024.10.01')
+    implementation composeBom
+    testImplementation composeBom
+    androidTestImplementation composeBom
+
+    // Specify Compose library dependencies without a version definition
+    implementation 'androidx.compose.foundation:foundation'
+}
+
+apply plugin: "com.vanniktech.maven.publish"
