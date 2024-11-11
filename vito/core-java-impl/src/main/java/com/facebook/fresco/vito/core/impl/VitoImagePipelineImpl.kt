@@ -163,6 +163,11 @@ class VitoImagePipelineImpl(
     }
   }
 
+  override fun evictFromCaches(imageRequest: VitoImageRequest) {
+    val uri = imageRequest.finalImageRequest?.sourceUri ?: return
+    imagePipeline.evictFromCache(uri)
+  }
+
   private fun experimentalDynamicSizeVito2(): Boolean = config.experimentalDynamicSizeVito2()
 
   private fun experimentalDynamicSizeWithCacheFallbackVito2(): Boolean =

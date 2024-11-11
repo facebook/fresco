@@ -171,7 +171,8 @@
   <string name="welcome_button_github">GitHub</string>
   <string name="welcome_button_doc">Documentation</string>
 
-  <string name="button_clear_cache">Clear Cache</string>
+  <string name="button_clear_cache">Clear Cache (all)</string>
+  <string name="button_clear_cache_single_item">Clear Cache (single item)</string>
   <string name="button_prefetch_disk">Prefetch Disk</string>
   <string name="button_prefetch_encoded">Prefetch Encoded</string>
   <string name="button_prefetch_bitmap">Prefetch Bitmap</string>

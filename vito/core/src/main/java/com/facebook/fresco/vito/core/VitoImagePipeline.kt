@@ -59,4 +59,9 @@ interface VitoImagePipeline {
   ): Boolean {
     throw UnsupportedOperationException("Not implemented yet")
   }
+
+  /** Remove an image from all disk & memory caches. */
+  fun evictFromCaches(imageRequest: VitoImageRequest) {
+    throw UnsupportedOperationException("Method not implemented: evictFromCaches")
+  }
 }

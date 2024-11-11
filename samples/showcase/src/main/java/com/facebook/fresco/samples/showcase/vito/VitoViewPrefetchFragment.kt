@@ -19,6 +19,7 @@ import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.RoundingOptions
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
+import com.facebook.fresco.vito.source.ImageSourceProvider
 import com.facebook.fresco.vito.view.VitoView
 
 class VitoViewPrefetchFragment : BaseShowcaseFragment() {
@@ -41,6 +42,9 @@ class VitoViewPrefetchFragment : BaseShowcaseFragment() {
 
   private val buttonClearCache
     get() = binding.buttonClearCache
+
+  private val buttonClearCacheSingleItem
+    get() = binding.buttonClearCacheSingleItem
 
   private val imageOptions =
       ImageOptions.create()
@@ -87,6 +91,12 @@ class VitoViewPrefetchFragment : BaseShowcaseFragment() {
     }
 
     buttonClearCache.setOnClickListener { Fresco.getImagePipeline().clearCaches() }
+    buttonClearCacheSingleItem.setOnClickListener {
+      FrescoVitoProvider.getImagePipeline()
+          .evictFromCaches(
+              FrescoVitoProvider.getImagePipeline()
+                  .createImageRequest(resources, ImageSourceProvider.forUri(uri), imageOptions))
+    }
   }
 
   override fun onDestroyView() {

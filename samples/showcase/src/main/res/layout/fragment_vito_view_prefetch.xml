@@ -45,15 +45,22 @@
       android:layout_width="match_parent" android:layout_height="wrap_content"
       android:orientation="horizontal" android:gravity="center"
       >
-
     <Button
         android:id="@+id/button_toggle_images" android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:text="@string/button_toggle_images"
         />
+  </LinearLayout>
 
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center">
     <Button
         android:id="@+id/button_clear_cache" android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:text="@string/button_clear_cache"
+        />
+    <Button
+        android:id="@+id/button_clear_cache_single_item" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:text="@string/button_clear_cache_single_item"
         />
   </LinearLayout>
 </LinearLayout>
