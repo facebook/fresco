@@ -65,6 +65,7 @@ object VitoViewImpl2 {
       imageRequestListener: VitoImageRequestListener?,
       target: View,
       onFadeListener: OnFadeListener? = null,
+      uiFramework: String = "view",
   ) {
     show(
         FrescoVitoProvider.getImagePipeline()
@@ -79,7 +80,8 @@ object VitoViewImpl2 {
         imageListener,
         imageRequestListener,
         target,
-        onFadeListener)
+        onFadeListener,
+        uiFramework)
   }
 
   @JvmStatic
@@ -91,8 +93,9 @@ object VitoViewImpl2 {
       imageRequestListener: VitoImageRequestListener?,
       target: View,
       onFadeListener: OnFadeListener? = null,
+      uiFramework: String = "view",
   ) {
-    val frescoDrawable = ensureDrawableSet(target)
+    val frescoDrawable = ensureDrawableSet(target, uiFramework)
     // The Drawable might be re-purposed before being cleaned up, so we release if necessary.
     val oldImageRequest = frescoDrawable.imageRequest
     if (oldImageRequest != null && oldImageRequest != imageRequest) {
@@ -154,13 +157,13 @@ object VitoViewImpl2 {
    * @param target the target to use
    * @return The drawable to use for the given target
    */
-  private fun ensureDrawableSet(target: View): FrescoDrawableInterface {
+  private fun ensureDrawableSet(target: View, uiFramework: String): FrescoDrawableInterface {
     return when (target) {
       is ImageView ->
           when (val current = target.drawable) {
             is FrescoDrawableInterface -> current
             else ->
-                createDrawable().also {
+                createDrawable(uiFramework).also {
                   // Force the Drawable to adjust its bounds to match the hosting ImageView's
                   // bounds, since Fresco has custom scale types that are separate from ImageView's
                   // scale type.
@@ -173,7 +176,10 @@ object VitoViewImpl2 {
       else ->
           when (val current = target.background) {
             is FrescoDrawableInterface -> current
-            else -> createDrawable().also { ViewCompat.setBackground(target, it as Drawable) }
+            else ->
+                createDrawable(uiFramework).also {
+                  ViewCompat.setBackground(target, it as Drawable)
+                }
           }
     }
   }
@@ -182,9 +188,9 @@ object VitoViewImpl2 {
     return (if (view is ImageView) view.drawable else view.background) as? FrescoDrawableInterface
   }
 
-  private fun createDrawable(): FrescoDrawableInterface {
+  private fun createDrawable(uiFramework: String): FrescoDrawableInterface {
     val frescoDrawable: FrescoDrawableInterface =
-        FrescoVitoProvider.getController().createDrawable()
+        FrescoVitoProvider.getController().createDrawable(uiFramework)
     if (useVisibilityCallbacks.get()) {
       frescoDrawable.setVisibilityCallback(
           object : VisibilityCallback {

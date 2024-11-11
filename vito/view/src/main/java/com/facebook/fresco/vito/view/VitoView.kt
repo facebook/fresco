@@ -117,9 +117,17 @@ object VitoView {
       imageListener: ImageListener?,
       target: View,
       onFadeListener: OnFadeListener? = null,
+      uiFramework: String = "view",
   ) {
     VitoViewImpl2.show(
-        imageSource, imageOptions, callerContext, imageListener, null, target, onFadeListener)
+        imageSource,
+        imageOptions,
+        callerContext,
+        imageListener,
+        null,
+        target,
+        onFadeListener,
+        uiFramework)
   }
 
   @JvmStatic
