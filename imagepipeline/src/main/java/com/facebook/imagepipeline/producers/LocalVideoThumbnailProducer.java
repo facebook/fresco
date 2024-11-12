@@ -29,6 +29,7 @@ import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
@@ -151,14 +152,23 @@ public class LocalVideoThumbnailProducer implements Producer<CloseableReference<
   private static Bitmap createThumbnailFromContentProvider(
       ContentResolver contentResolver, Uri uri) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1) {
+      MediaMetadataRetriever mediaMetadataRetriever = null;
       try {
         ParcelFileDescriptor videoFile = contentResolver.openFileDescriptor(uri, "r");
         Preconditions.checkNotNull(videoFile);
-        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+        mediaMetadataRetriever = new MediaMetadataRetriever();
         mediaMetadataRetriever.setDataSource(videoFile.getFileDescriptor());
         return mediaMetadataRetriever.getFrameAtTime(-1);
       } catch (FileNotFoundException e) {
         return null;
+      } finally {
+        if (mediaMetadataRetriever != null) {
+          try {
+            mediaMetadataRetriever.release();
+          } catch (IOException ex) {
+            // Nothing to do.
+          }
+        }
       }
     } else {
       return null;
