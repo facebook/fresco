@@ -75,7 +75,7 @@ object FrescoVitoImage2Spec {
   @JvmStatic
   @OnCreateMountContent(mountingType = MountingType.DRAWABLE)
   fun onCreateMountContent(c: Context?): FrescoDrawableInterface =
-      FrescoVitoProvider.getController().createDrawable()
+      FrescoVitoProvider.getController().createDrawable("litho")
 
   @JvmStatic
   @OnMeasure
