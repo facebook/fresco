@@ -13,7 +13,6 @@ import android.os.Build
 import android.view.View
 import android.view.View.OnAttachStateChangeListener
 import android.widget.ImageView
-import androidx.core.view.ViewCompat
 import com.facebook.common.internal.Supplier
 import com.facebook.common.internal.Suppliers
 import com.facebook.drawee.drawable.VisibilityCallback
@@ -163,23 +162,20 @@ object VitoViewImpl2 {
           when (val current = target.drawable) {
             is FrescoDrawableInterface -> current
             else ->
-                createDrawable(uiFramework).also {
+                createDrawable(uiFramework).also { image ->
                   // Force the Drawable to adjust its bounds to match the hosting ImageView's
                   // bounds, since Fresco has custom scale types that are separate from ImageView's
                   // scale type.
                   // Without this, the Drawable would not respect the given Fresco ScaleType,
                   // effectively resulting in CENTER_INSIDE.
                   target.scaleType = ImageView.ScaleType.FIT_XY
-                  target.setImageDrawable(it as Drawable)
+                  target.setImageDrawable(image as Drawable)
                 }
           }
       else ->
           when (val current = target.background) {
             is FrescoDrawableInterface -> current
-            else ->
-                createDrawable(uiFramework).also {
-                  ViewCompat.setBackground(target, it as Drawable)
-                }
+            else -> createDrawable(uiFramework).also { target.setBackground(it as Drawable) }
           }
     }
   }
