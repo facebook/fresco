@@ -117,7 +117,7 @@ object VitoSpanLoader {
   }
 
   fun createDrawable(): FrescoDrawableInterface =
-      FrescoVitoProvider.getController().createDrawable()
+      FrescoVitoProvider.getController().createDrawable("textspan")
 
   class VitoAttachDetachListener(val vitoSpan: VitoSpan) : AttachDetachListener {
     override fun onAttachToView(view: View) {
