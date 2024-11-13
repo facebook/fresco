@@ -56,7 +56,7 @@ interface VitoImagePipeline {
       imageRequest: VitoImageRequest,
       timeout: Long,
       unit: TimeUnit,
-  ): Boolean {
+  ): Boolean? {
     throw UnsupportedOperationException("Not implemented yet")
   }
 

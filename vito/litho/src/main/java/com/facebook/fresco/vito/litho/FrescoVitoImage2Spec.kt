@@ -183,12 +183,14 @@ object FrescoVitoImage2Spec {
         // App is still starting
         forceKeepOriginalSize.set(true)
       } else {
-        forceKeepOriginalSize.set(
+        val isInDiskCache =
             FrescoVitoProvider.getImagePipeline()
                 .isInDiskCacheSync(
                     requestCachedValue,
                     FrescoVitoProvider.getConfig().experimentalDynamicSizeDiskCacheCheckTimeoutMs(),
-                    TimeUnit.MILLISECONDS))
+                    TimeUnit.MILLISECONDS)
+        // Force keep original size if in disk cache OR unknown result (null)
+        forceKeepOriginalSize.set(isInDiskCache != false)
       }
       if (forceKeepOriginalSize.get() == true) {
         // Prefetch in OnPrepare since no prefetch will happen in OnBoundsDefined
