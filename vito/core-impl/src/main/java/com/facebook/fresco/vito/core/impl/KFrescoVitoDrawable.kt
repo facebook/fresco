@@ -27,7 +27,11 @@ import java.io.Closeable
 import java.io.IOException
 
 class KFrescoVitoDrawable(
-    private val _imagePerfListener: VitoImagePerfListener = NopImagePerfListener()
+    private val _imagePerfListener: VitoImagePerfListener = NopImagePerfListener(),
+    private val resetVitoImageRequestListener: Boolean = false,
+    private val resetLocalVitoImageRequestListener: Boolean = false,
+    private val resetLocalImagePerfStateListener: Boolean = false,
+    private val resetControllerListener2: Boolean = false,
 ) : Drawable(), FrescoDrawableInterface, Drawable.Callback {
 
   var _imageId: Long = 0
@@ -137,8 +141,11 @@ class KFrescoVitoDrawable(
     debugOverlayImageLayer?.reset()
     hasBoundsSet = false
 
-    listenerManager.onReset()
-    listenerManager.imageListener = null
+    listenerManager.onReset(
+        resetVitoImageRequestListener,
+        resetLocalVitoImageRequestListener,
+        resetLocalImagePerfStateListener,
+        resetControllerListener2)
   }
 
   private var drawableColorFilter: ColorFilter? = null

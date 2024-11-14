@@ -55,4 +55,12 @@ interface FrescoVitoConfig {
       callerContext: Any?,
       contextChain: ContextChain?
   ): Boolean
+
+  fun experimentalResetVitoImageRequestListener(): Boolean
+
+  fun experimentalResetLocalVitoImageRequestListener(): Boolean
+
+  fun experimentalResetLocalImagePerfStateListener(): Boolean
+
+  fun experimentalResetControllerListener2(): Boolean
 }

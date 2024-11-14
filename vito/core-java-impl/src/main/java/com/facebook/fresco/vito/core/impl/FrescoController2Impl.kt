@@ -68,7 +68,11 @@ open class FrescoController2Impl(
           config.useNewReleaseCallback(),
           imagePerfListenerSupplier?.get(),
           vitoImagePerfListener,
-          uiFramework)
+          uiFramework,
+          config.experimentalResetVitoImageRequestListener(),
+          config.experimentalResetLocalVitoImageRequestListener(),
+          config.experimentalResetLocalImagePerfStateListener(),
+          config.experimentalResetControllerListener2())
           as T
 
   override fun fetch(

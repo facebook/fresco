@@ -59,6 +59,14 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
       contextChain: ContextChain?
   ): Boolean = true
 
+  override fun experimentalResetVitoImageRequestListener() = false
+
+  override fun experimentalResetLocalVitoImageRequestListener() = false
+
+  override fun experimentalResetLocalImagePerfStateListener() = false
+
+  override fun experimentalResetControllerListener2() = false
+
   open class DefaultPrefetchConfig : PrefetchConfig {
     override fun prefetchInOnPrepare(): Boolean = true
 

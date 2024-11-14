@@ -164,10 +164,27 @@ class CombinedImageListenerImpl : CombinedImageListener {
     imagePerfLoggingListener?.onEmptyEvent(callerContext)
   }
 
-  override fun onReset() {
+  override fun onReset(
+      resetVitoImageRequestListener: Boolean,
+      resetLocalVitoImageRequestListener: Boolean,
+      resetLocalImagePerfStateListener: Boolean,
+      resetControllerListener2: Boolean,
+  ) {
     try {
       imageListener = null
       (imagePerfLoggingListener as? Closeable)?.close()
+      if (resetVitoImageRequestListener) {
+        vitoImageRequestListener = null
+      }
+      if (resetLocalVitoImageRequestListener) {
+        localVitoImageRequestListener = null
+      }
+      if (resetLocalImagePerfStateListener) {
+        localImagePerfStateListener = null
+      }
+      if (resetControllerListener2) {
+        controllerListener2 = null
+      }
     } catch (e: IOException) {}
   }
 }

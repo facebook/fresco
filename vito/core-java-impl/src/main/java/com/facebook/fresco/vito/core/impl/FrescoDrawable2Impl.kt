@@ -35,6 +35,10 @@ class FrescoDrawable2Impl(
     imagePerfLoggingListener: ImagePerfLoggingListener?,
     vitoImagePerfListener: VitoImagePerfListener,
     override var uiFramework: String? = null,
+    private val resetVitoImageRequestListener: Boolean = false,
+    private val resetLocalVitoImageRequestListener: Boolean = false,
+    private val resetLocalImagePerfStateListener: Boolean = false,
+    private val resetControllerListener2: Boolean = false,
 ) : FrescoDrawable2(), DataSubscriber<CloseableReference<CloseableImage>> {
 
   override var imageRequest: VitoImageRequest? = null
@@ -198,7 +202,11 @@ class FrescoDrawable2Impl(
     imageOrigin = ImageOrigin.UNKNOWN
     extras = null
     setOnFadeListener(null)
-    internalListener.onReset()
+    internalListener.onReset(
+        resetVitoImageRequestListener,
+        resetLocalVitoImageRequestListener,
+        resetLocalImagePerfStateListener,
+        resetControllerListener2)
   }
 
   fun scheduleReleaseDelayed() {
