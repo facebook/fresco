@@ -65,4 +65,6 @@ interface VitoImagePipeline {
   fun evictFromCaches(imageRequest: VitoImageRequest) {
     throw UnsupportedOperationException("Method not implemented: evictFromCaches")
   }
+
+  fun hintUnmodifiedUri(imageRequest: VitoImageRequest) = Unit
 }

@@ -25,6 +25,8 @@ interface UriModifierInterface {
 
   fun modifyPrefetchUri(uri: Uri, callerContext: Any?): Uri?
 
+  fun unregisterReverseFallbackUri(uri: Uri)
+
   sealed class ModificationResult(private val comment: String) {
 
     abstract val bestAllowlistedSize: Int?

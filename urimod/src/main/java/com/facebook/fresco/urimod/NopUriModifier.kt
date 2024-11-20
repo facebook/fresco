@@ -24,4 +24,6 @@ object NopUriModifier : UriModifierInterface {
   ): ModificationResult = ModificationResult.Disabled("NopUriModifier")
 
   override fun modifyPrefetchUri(uri: Uri, callerContext: Any?): Uri = uri
+
+  override fun unregisterReverseFallbackUri(uri: Uri) = Unit
 }

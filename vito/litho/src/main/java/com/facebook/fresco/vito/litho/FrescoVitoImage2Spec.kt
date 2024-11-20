@@ -196,6 +196,9 @@ object FrescoVitoImage2Spec {
         forceKeepOriginalSize.set(isInDiskCache != false)
       }
       if (forceKeepOriginalSize.get() == true) {
+        // Tell image pipeline that we're using an unmodified URL so it can ensure we can prefetch
+        FrescoVitoProvider.getImagePipeline().hintUnmodifiedUri(requestCachedValue)
+
         // Prefetch in OnPrepare since no prefetch will happen in OnBoundsDefined
         maybePrefetchInOnPrepare(
             prefetch,

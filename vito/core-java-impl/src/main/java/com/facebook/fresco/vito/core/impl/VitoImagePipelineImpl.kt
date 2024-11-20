@@ -169,6 +169,12 @@ class VitoImagePipelineImpl(
     imagePipeline.evictFromCache(uri)
   }
 
+  override fun hintUnmodifiedUri(imageRequest: VitoImageRequest) {
+    imageRequest.finalImageRequest?.sourceUri?.let {
+      UriModifier.INSTANCE.unregisterReverseFallbackUri(it)
+    }
+  }
+
   private fun experimentalDynamicSizeVito2(): Boolean = config.experimentalDynamicSizeVito2()
 
   private fun experimentalDynamicSizeWithCacheFallbackVito2(): Boolean =
