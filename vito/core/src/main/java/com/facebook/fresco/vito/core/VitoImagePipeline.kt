@@ -37,6 +37,7 @@ interface VitoImagePipeline {
       callerContext: Any? = null,
       contextChain: ContextChain? = null,
       forceKeepOriginalSize: Boolean = false,
+      forLoggingOnly: Boolean = false,
   ): VitoImageRequest
 
   fun getCachedImage(imageRequest: VitoImageRequest): CloseableReference<CloseableImage>?

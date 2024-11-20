@@ -56,6 +56,7 @@ class VitoImagePipelineImpl(
       callerContext: Any?,
       contextChain: ContextChain?,
       forceKeepOriginalSize: Boolean,
+      forLoggingOnly: Boolean,
   ): VitoImageRequest {
     val imageOptions = options ?: defaults()
     val extras: MutableMap<String, Any> = mutableMapOf()
@@ -70,7 +71,8 @@ class VitoImagePipelineImpl(
                 viewport?.let { Dimensions(it.width(), it.height()) },
                 imageOptions.actualImageScaleType,
                 callerContext,
-                contextChain)
+                contextChain,
+                forLoggingOnly)
         modifiedUriValue = result.toString()
         if (result is UriModifierInterface.ModificationResult.Modified) {
           finalImageSource = ImageSourceProvider.forUri(result.newUri)

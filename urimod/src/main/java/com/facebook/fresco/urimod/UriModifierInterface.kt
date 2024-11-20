@@ -19,7 +19,8 @@ interface UriModifierInterface {
       viewport: Dimensions?,
       scaleType: ScaleType?,
       callerContext: Any?,
-      contextChain: ContextChain? = null
+      contextChain: ContextChain? = null,
+      forLoggingOnly: Boolean = false,
   ): ModificationResult
 
   fun modifyPrefetchUri(uri: Uri, callerContext: Any?): Uri?

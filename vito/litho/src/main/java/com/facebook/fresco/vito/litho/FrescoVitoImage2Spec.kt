@@ -126,8 +126,9 @@ object FrescoVitoImage2Spec {
           uriString,
           imageOptions,
           logWithHighSamplingRate,
-          null,
-          true)
+          viewportRect = null,
+          forceKeepOriginalSize = true,
+          forLoggingOnly = false)
     } else {
       null
     }
@@ -142,7 +143,8 @@ object FrescoVitoImage2Spec {
       imageOptions: ImageOptions?,
       logWithHighSamplingRate: Boolean?,
       viewportRect: Rect?,
-      forceKeepOriginalSize: Boolean
+      forceKeepOriginalSize: Boolean,
+      forLoggingOnly: Boolean,
   ): VitoImageRequest =
       FrescoVitoProvider.getImagePipeline()
           .createImageRequest(
@@ -153,7 +155,8 @@ object FrescoVitoImage2Spec {
               viewportRect,
               callerContext,
               null,
-              forceKeepOriginalSize)
+              forceKeepOriginalSize,
+              forLoggingOnly)
 
   @JvmStatic
   @OnPrepare
@@ -405,8 +408,8 @@ object FrescoVitoImage2Spec {
               imageOptions,
               logWithHighSamplingRate,
               viewportRect,
-              false)
-
+              false,
+              forLoggingOnly = forceKeepOriginalSize)
       if (!forceKeepOriginalSize) {
         requestFromBoundsDefined.set(vitoImageRequest)
 
