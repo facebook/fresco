@@ -9,7 +9,7 @@ This script builds and runs the comparison app, switching from one library to th
 taking measurements as it goes, and outputs the results neatly.
 
 Due to a bug, you must specify the CPU when running the script.
-Use -c armeabi-v7a for most phones. Use -c arm64 for 64-bit ARM devices. 
+Use -c armeabi-v7a for most phones. Use -c arm64 for 64-bit ARM devices.
 Some emulators and tablets will need -c x86.
 
 To select a subset of the libraries, use the -s option with a
