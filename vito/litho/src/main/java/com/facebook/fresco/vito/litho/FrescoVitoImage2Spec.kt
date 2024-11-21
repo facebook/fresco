@@ -192,8 +192,13 @@ object FrescoVitoImage2Spec {
                     requestCachedValue,
                     FrescoVitoProvider.getConfig().experimentalDynamicSizeDiskCacheCheckTimeoutMs(),
                     TimeUnit.MILLISECONDS)
-        // Force keep original size if in disk cache OR unknown result (null)
-        forceKeepOriginalSize.set(isInDiskCache != false)
+        if (isInDiskCache == null) {
+          // On timeout, force keep original size by default
+          forceKeepOriginalSize.set(
+              !FrescoVitoProvider.getConfig().experimentalDynamicSizeUseSfOnDiskCacheTimeout())
+        } else {
+          forceKeepOriginalSize.set(isInDiskCache)
+        }
       }
       if (forceKeepOriginalSize.get() == true) {
         // Tell image pipeline that we're using an unmodified URL so it can ensure we can prefetch

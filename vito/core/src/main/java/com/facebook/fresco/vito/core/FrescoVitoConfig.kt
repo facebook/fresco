@@ -45,6 +45,8 @@ interface FrescoVitoConfig {
 
   fun experimentalDynamicSizeDiskCacheCheckTimeoutMs(): Long
 
+  fun experimentalDynamicSizeUseSfOnDiskCacheTimeout(): Boolean
+
   fun isAppStarting(): Boolean
 
   fun experimentalDynamicSizeDisableWhenAppIsStarting(): Boolean
