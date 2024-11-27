@@ -26,7 +26,7 @@ import kotlin.math.max
 /**
  * Experimental new animated drawable that uses a supplied [AnimationBackend] for drawing frames.
  */
-class AnimatedDrawable2
+open class AnimatedDrawable2
 @JvmOverloads
 constructor(private var _animationBackend: AnimationBackend? = null) :
     Drawable(), Animatable, DrawableWithCaches {

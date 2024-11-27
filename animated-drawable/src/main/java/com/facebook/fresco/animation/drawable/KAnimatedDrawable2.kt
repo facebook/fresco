@@ -19,7 +19,7 @@ import com.facebook.fresco.animation.backend.AnimationBackend
 import com.facebook.fresco.animation.frame.DropFramesFrameScheduler
 import com.facebook.fresco.animation.frame.FrameScheduler
 
-class KAnimatedDrawable2(private var animationBackend: AnimationBackend) :
+open class KAnimatedDrawable2(private var animationBackend: AnimationBackend) :
     Drawable(), Animatable, DrawableWithCaches {
 
   private val animatedFrameScheduler =
