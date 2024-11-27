@@ -47,6 +47,7 @@ import com.facebook.imagepipeline.listener.ForwardingRequestListener;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -60,6 +61,7 @@ import javax.annotation.concurrent.GuardedBy;
  * <p>The hierarchy's actual image is set to the image(s) obtained by the provided data source. The
  * data source is automatically obtained and closed based on attach / detach calls.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PipelineDraweeController
     extends AbstractDraweeController<CloseableReference<CloseableImage>, ImageInfo> {
 
@@ -73,9 +75,11 @@ public class PipelineDraweeController
 
   private final @Nullable MemoryCache<CacheKey, CloseableImage> mMemoryCache;
 
+  // NULLSAFE_FIXME[Field Not Initialized]
   private CacheKey mCacheKey;
 
   // Constant state (non-final because controllers can be reused)
+  // NULLSAFE_FIXME[Field Not Initialized]
   private Supplier<DataSource<CloseableReference<CloseableImage>>> mDataSourceSupplier;
 
   private boolean mDrawDebugOverlay;
@@ -104,6 +108,7 @@ public class PipelineDraweeController
       Executor uiThreadExecutor,
       @Nullable MemoryCache<CacheKey, CloseableImage> memoryCache,
       @Nullable ImmutableList<DrawableFactory> globalDrawableFactories) {
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     super(deferredReleaser, uiThreadExecutor, null, null);
     mResources = resources;
     mDefaultDrawableFactory = new DefaultDrawableFactory(resources, animatedDrawableFactory);
