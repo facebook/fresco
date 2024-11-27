@@ -14,6 +14,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import com.facebook.animated.giflite.decoder.GifMetadataDecoder;
 import com.facebook.fresco.animation.backend.AnimationBackend;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.BufferedInputStream;
 import java.io.Closeable;
 import java.io.FileInputStream;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class GifAnimationBackend implements AnimationBackend {
 
   private final GifMetadataDecoder mGifDecoder;
