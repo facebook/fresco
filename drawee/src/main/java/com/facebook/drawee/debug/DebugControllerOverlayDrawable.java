@@ -20,12 +20,14 @@ import android.view.Gravity;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.drawee.debug.listener.ImageLoadingTimeListener;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import javax.annotation.Nullable;
 
 /** Drawee Controller overlay that displays debug information. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DebugControllerOverlayDrawable extends Drawable implements ImageLoadingTimeListener {
 
   private static final String NO_CONTROLLER_ID = "none";
@@ -57,6 +59,7 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
   private static final int MAX_LINE_WIDTH_EM = 8;
 
   // General information
+  // NULLSAFE_FIXME[Field Not Initialized]
   private String mControllerId;
   @Nullable private String mImageId;
   private int mWidthPx;
