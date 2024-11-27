@@ -16,6 +16,7 @@ import android.graphics.drawable.Drawable;
 import com.facebook.animated.webp.WebPFrame;
 import com.facebook.animated.webp.WebPImage;
 import com.facebook.fresco.animation.backend.AnimationBackend;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.BufferedInputStream;
 import java.io.Closeable;
 import java.io.FileInputStream;
@@ -25,12 +26,14 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
 /** Animation backend that is used to draw webp frames. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class WebpAnimationBackend implements AnimationBackend {
 
   private final Rect mRenderDstRect = new Rect();
   private final Rect mRenderSrcRect = new Rect();
   private final WebPImage mWebPImage;
 
+  // NULLSAFE_FIXME[Field Not Initialized]
   private Rect mBounds;
 
   @GuardedBy("this")
