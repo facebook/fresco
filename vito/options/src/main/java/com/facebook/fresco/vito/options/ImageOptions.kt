@@ -55,9 +55,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
   private val _autoStop: Boolean = builder._autoStop
   val isPerfMediaRemountInstrumentationFix: Boolean = builder._perfMediaRemountInstrumentationFix
   val customDrawableFactory: ImageOptionsDrawableFactory? = builder._customDrawableFactory
-  val experimentalDynamicSize: Boolean = builder._experimentalDynamicSize
-  val experimentalDynamicSizeWithCacheFallback: Boolean =
-      builder._experimentalDynamicSizeWithCacheFallback
 
   fun extend(): Builder = extend(this)
 
@@ -251,8 +248,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     internal var _perfMediaRemountInstrumentationFix = false
     internal var _fadeDurationMs = 0
     internal var _customDrawableFactory: ImageOptionsDrawableFactory? = null
-    internal var _experimentalDynamicSize = false
-    internal var _experimentalDynamicSizeWithCacheFallback = false
 
     internal constructor() : super()
 
@@ -280,9 +275,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
       _autoStop = defaultOptions.shouldAutoStop()
       _fadeDurationMs = defaultOptions.fadeDurationMs
       _customDrawableFactory = defaultOptions.customDrawableFactory
-      _experimentalDynamicSize = defaultOptions.experimentalDynamicSize
-      _experimentalDynamicSizeWithCacheFallback =
-          defaultOptions.experimentalDynamicSizeWithCacheFallback
     }
 
     fun placeholder(placeholder: Drawable?): Builder = modify {
@@ -450,15 +442,6 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     fun customDrawableFactory(drawableFactory: ImageOptionsDrawableFactory?): Builder = modify {
       _customDrawableFactory = drawableFactory
     }
-
-    fun experimentalDynamicSize(dynamicSize: Boolean): Builder = modify {
-      _experimentalDynamicSize = dynamicSize
-    }
-
-    fun experimentalDynamicSizeWithCacheFallback(dynamicSizeWithCacheFallback: Boolean): Builder =
-        modify {
-          _experimentalDynamicSizeWithCacheFallback = dynamicSizeWithCacheFallback
-        }
 
     override fun build(): ImageOptions = ImageOptions(this)
 
