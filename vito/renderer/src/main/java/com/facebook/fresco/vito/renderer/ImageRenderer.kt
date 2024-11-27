@@ -13,6 +13,7 @@ import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Shader
+import android.os.Build
 import com.facebook.fresco.vito.renderer.util.ColorUtils
 
 typealias RenderCommand = (Canvas) -> Unit
@@ -83,14 +84,21 @@ object ImageRenderer {
                   shape.rect.right.toInt(),
                   shape.rect.bottom.toInt())
             }
-            drawable.colorFilter = paint.colorFilter
+            // Some drawable types (eg VectorDrawable) will always invalidate when colorFilter
+            // is modified, so check the current value before we update it
+            if (Build.VERSION.SDK_INT < 21 || drawable.colorFilter != paint.colorFilter) {
+              drawable.colorFilter = paint.colorFilter
+            }
             drawable.alpha = paint.alpha
             drawable.draw(canvas)
           }
       else -> {
         return { canvas ->
           drawable.setBounds(0, 0, width, height)
-          drawable.colorFilter = null // The Paint handles the color filter
+          if (Build.VERSION.SDK_INT < 21 || drawable.colorFilter != null) {
+            // The Paint handles the color filter
+            drawable.colorFilter = null
+          }
           val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
           drawable.draw(Canvas(bitmap))
           paint.setBitmap(bitmap, imageTransformation)
