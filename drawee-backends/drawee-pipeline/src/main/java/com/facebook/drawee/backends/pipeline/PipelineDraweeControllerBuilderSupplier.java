@@ -16,9 +16,11 @@ import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.ImagePerfDataListener;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Set;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PipelineDraweeControllerBuilderSupplier
     implements Supplier<PipelineDraweeControllerBuilder> {
 
@@ -42,6 +44,7 @@ public class PipelineDraweeControllerBuilderSupplier
       Context context,
       ImagePipelineFactory imagePipelineFactory,
       @Nullable DraweeConfig draweeConfig) {
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     this(context, imagePipelineFactory, null, null, draweeConfig);
   }
 
@@ -62,6 +65,7 @@ public class PipelineDraweeControllerBuilderSupplier
     mPipelineDraweeControllerFactory.init(
         context.getResources(),
         DeferredReleaser.getInstance(),
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         imagePipelineFactory.getAnimatedDrawableFactory(context),
         UiThreadImmediateExecutorService.getInstance(),
         mImagePipeline.getBitmapMemoryCache(),
