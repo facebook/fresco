@@ -249,6 +249,8 @@ public class ImagePipelineFactory {
         }
 
         ImageDecoder xmlDecoder = getXmlImageDecoder();
+        ImageFormatChecker imageFormatChecker = ImageFormatChecker.getInstance();
+        imageFormatChecker.setBinaryXmlEnabled(mConfig.getExperiments().isBinaryXmlEnabled());
 
         if (mConfig.getImageDecoderConfig() == null) {
           mImageDecoder =
@@ -262,9 +264,8 @@ public class ImagePipelineFactory {
                   getPlatformDecoder(),
                   mConfig.getImageDecoderConfig().getCustomImageDecoders());
           // Add custom image formats if needed
-          ImageFormatChecker.getInstance()
-              .setCustomImageFormatCheckers(mConfig.getImageDecoderConfig().getCustomImageFormats())
-              .setBinaryXmlEnabled(mConfig.getExperiments().isBinaryXmlEnabled());
+          imageFormatChecker.setCustomImageFormatCheckers(
+              mConfig.getImageDecoderConfig().getCustomImageFormats());
         }
       }
     }
