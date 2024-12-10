@@ -30,6 +30,7 @@ class DefaultImageFormatChecker : FormatChecker {
                   ICO_HEADER_LENGTH,
                   HEIF_HEADER_LENGTH,
                   BINARY_XML_HEADER_LENGTH,
+                  AVIF_HEADER_LENGTH,
               )
               .maxOrNull())
 
@@ -59,6 +60,9 @@ class DefaultImageFormatChecker : FormatChecker {
     }
     if (isIcoHeader(headerBytes, headerSize)) {
       return DefaultImageFormats.ICO
+    }
+    if (isAvifHeader(headerBytes, headerSize)) {
+      return DefaultImageFormats.AVIF
     }
     if (isHeifHeader(headerBytes, headerSize)) {
       return DefaultImageFormats.HEIF
@@ -303,6 +307,47 @@ class DefaultImageFormatChecker : FormatChecker {
     private fun isBinaryXmlHeader(headerBytes: ByteArray, headerSize: Int): Boolean {
       return headerSize >= BINARY_XML_HEADER_LENGTH &&
           ImageFormatCheckerUtils.startsWithPattern(headerBytes, BINARY_XML_HEADER)
+    }
+
+    /** AVIF specific constants */
+    private val AVIF_HEADER_PREFIX: ByteArray = ImageFormatCheckerUtils.asciiBytes("ftyp")
+    private val AVIF_HEADER_SUFFIX: ByteArray = ImageFormatCheckerUtils.asciiBytes("avif")
+    private const val AVIF_HEADER_LENGTH = 12
+
+    /**
+     * Checks if first headerSize bytes of imageHeaderBytes constitute a valid header for an AVIF
+     * image. AVIF is a subtype of HEIF with the brand "avif".
+     *
+     * @param imageHeaderBytes
+     * @param headerSize
+     * @return true if imageHeaderBytes is a valid header for an AVIF image
+     */
+    private fun isAvifHeader(imageHeaderBytes: ByteArray, headerSize: Int): Boolean {
+      if (headerSize < AVIF_HEADER_LENGTH) {
+        return false
+      }
+      val boxLength = getBoxLength(imageHeaderBytes)
+      if (boxLength < 8) {
+        return false
+      }
+      if (!ImageFormatCheckerUtils.hasPatternAt(imageHeaderBytes, AVIF_HEADER_PREFIX, 4)) {
+        return false
+      }
+      return ImageFormatCheckerUtils.hasPatternAt(imageHeaderBytes, AVIF_HEADER_SUFFIX, 8)
+    }
+
+    /**
+     * Helper function to extract the box length from the first four bytes.
+     *
+     * @param bytes The byte array containing the header.
+     * @return The box length as an integer.
+     */
+    private fun getBoxLength(bytes: ByteArray): Int {
+      if (bytes.size < 4) return -1
+      return ((bytes[0].toInt() and 0xFF) shl 24) or
+          ((bytes[1].toInt() and 0xFF) shl 16) or
+          ((bytes[2].toInt() and 0xFF) shl 8) or
+          (bytes[3].toInt() and 0xFF)
     }
   }
 }
