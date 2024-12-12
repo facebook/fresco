@@ -10,8 +10,10 @@ package com.facebook.flipper.plugins.fresco;
 import com.facebook.imagepipeline.debug.DebugImageTracker;
 import com.facebook.imagepipeline.listener.BaseRequestListener;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Fresco image {@link RequestListener} that logs events for Sonar. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FrescoFlipperRequestListener extends BaseRequestListener {
 
   private final DebugImageTracker mDebugImageTracker;
