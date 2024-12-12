@@ -14,19 +14,23 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.util.SizeUtil;
 import javax.annotation.Nullable;
 
 /** A simple Preference containing a SeekBar in order to select a size */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class SizePreferences extends Preference implements SeekBar.OnSeekBarChangeListener {
 
   // We always use half of the width as default
   private static final int DEFAULT_SIZE_VALUE = SizeUtil.DISPLAY_WIDTH / 2;
 
+  // NULLSAFE_FIXME[Field Not Initialized]
   private SeekBar mSeekBar;
 
   @Nullable private TextView mSeekBarValueTextView;
+  // NULLSAFE_FIXME[Field Not Initialized]
   private TextView mTitleView;
 
   private int mProgressValue;
@@ -54,10 +58,12 @@ public class SizePreferences extends Preference implements SeekBar.OnSeekBarChan
   public void onBindViewHolder(PreferenceViewHolder holder) {
     super.onBindViewHolder(holder);
     // We get the reference to the mSeekBar
+    // NULLSAFE_FIXME[Not Vetted Third-Party]
     mSeekBar = (SeekBar) holder.findViewById(R.id.size_seek_bar);
     mSeekBar.setMax(mMaxValue);
     mSeekBar.setOnSeekBarChangeListener(this);
     mSeekBarValueTextView = (TextView) holder.findViewById(R.id.seek_bar_value);
+    // NULLSAFE_FIXME[Not Vetted Third-Party]
     mTitleView = (TextView) holder.findViewById(R.id.title);
     mTitleView.setText(getTitle());
     // This is called after the initial value is set
