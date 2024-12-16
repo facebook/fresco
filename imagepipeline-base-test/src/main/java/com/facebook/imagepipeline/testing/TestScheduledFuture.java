@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.testing;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.ExecutionException;
@@ -16,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class TestScheduledFuture<V> implements ScheduledFuture<V> {
 
   private final FakeClock mFakeClock;
@@ -24,6 +26,7 @@ public class TestScheduledFuture<V> implements ScheduledFuture<V> {
   private final Runnable mWrap;
   private boolean mIsCanceled;
   private boolean mIsDone;
+  // NULLSAFE_FIXME[Field Not Initialized]
   private V mResult;
   @Nullable private Throwable mResultThrowable;
 
