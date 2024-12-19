@@ -49,6 +49,7 @@ import com.facebook.imagepipeline.image.CloseableBitmap;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,6 +65,7 @@ import javax.annotation.Nullable;
  * Allows Sonar to display the contents of Fresco's caches. This is useful for developers to debug
  * what images are being held in cache as they navigate through their app.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FrescoFlipperPlugin extends BufferingFlipperPlugin
     implements ImagePerfDataListener, CloseableReferenceLeakTracker.Listener {
 
