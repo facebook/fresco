@@ -8,10 +8,13 @@
 package com.facebook.common.media;
 
 import android.webkit.MimeTypeMap;
+import androidx.annotation.Nullable;
 import com.facebook.common.internal.ImmutableMap;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 
 /** Wrapper around the system's {@link MimeTypeMap} that also handles types it doesn't support. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class MimeTypeMapWrapper {
 
   private static final MimeTypeMap sMimeTypeMap = MimeTypeMap.getSingleton();
@@ -26,7 +29,7 @@ public class MimeTypeMapWrapper {
           "heif", "image/heif",
           "heic", "image/heic");
 
-  public static String getExtensionFromMimeType(String mimeType) {
+  public static @Nullable String getExtensionFromMimeType(String mimeType) {
     String result = sMimeTypeToExtensionMap.get(mimeType);
     if (result != null) {
       return result;
@@ -34,7 +37,7 @@ public class MimeTypeMapWrapper {
     return sMimeTypeMap.getExtensionFromMimeType(mimeType);
   }
 
-  public static String getMimeTypeFromExtension(String extension) {
+  public static @Nullable String getMimeTypeFromExtension(String extension) {
     String result = sExtensionToMimeTypeMap.get(extension);
     if (result != null) {
       return result;
