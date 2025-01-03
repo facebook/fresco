@@ -125,7 +125,7 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
     spinnerColorFilter.setupWithList(VitoSpinners.colorFilters) {
       refresh(imageOptionsBuilder.colorFilter(it))
     }
-    spinnerPlaceholder.setupWithList(VitoSpinners.placeholderOptions) {
+    spinnerPlaceholder.setupWithList(VitoSpinners.placeholderOptions(resources)) {
       refresh(it(imageOptionsBuilder))
     }
     spinnerError.setupWithList(VitoSpinners.errorOptions) { refresh(it(imageOptionsBuilder)) }

@@ -23,6 +23,7 @@ import com.facebook.drawee.drawable.RoundedCornersDrawable
 import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.fresco.samples.showcase.R
 import com.facebook.fresco.samples.showcase.common.CustomScaleTypes
+import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable
 import com.facebook.fresco.samples.showcase.postprocessor.CachedWatermarkPostprocessor
 import com.facebook.fresco.samples.showcase.postprocessor.FasterGreyScalePostprocessor
 import com.facebook.fresco.samples.showcase.postprocessor.ScalingBlurPostprocessor
@@ -108,7 +109,7 @@ object VitoSpinners {
               "10000 ms" to 10000),
           "Fading")
 
-  val placeholderOptions =
+  fun placeholderOptions(resources: Resources) =
       Pair(
           listOf(
               "none" to { builder: ImageOptions.Builder -> builder.placeholder(null) },
@@ -118,13 +119,18 @@ object VitoSpinners {
                   },
               "block color" to
                   { builder: ImageOptions.Builder ->
-                    builder.placeholder(ColorDrawable(Color.RED))
+                    builder.placeholderColor(Color.RED)
+                  },
+              "checker board drawable" to
+                  { builder: ImageOptions.Builder ->
+                    builder.placeholder(CheckerBoardDrawable(resources))
                   },
               "color res" to
                   { builder: ImageOptions.Builder ->
                     builder.placeholderRes(R.color.placeholder_color)
                   }),
           "Placeholder")
+
   val errorOptions =
       Pair(
           listOf(
