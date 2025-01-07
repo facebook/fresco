@@ -15,6 +15,7 @@ import com.facebook.common.util.UriUtil
 import com.facebook.imagepipeline.common.ImageDecodeOptions
 import com.facebook.imagepipeline.decoder.ImageDecoder
 import com.facebook.imagepipeline.image.CloseableImage
+import com.facebook.imagepipeline.image.DefaultCloseableXml
 import com.facebook.imagepipeline.image.EncodedImage
 import com.facebook.imagepipeline.image.QualityInfo
 import java.util.concurrent.ConcurrentHashMap
@@ -33,7 +34,7 @@ internal class XmlFormatDecoder(private val resources: Resources) : ImageDecoder
       val xmlResourceName = encodedImage.source ?: error("No source in encoded image")
       val xmlResourceId = getXmlResourceId(xmlResourceName)
       val drawable = ResourcesCompat.getDrawable(resources, xmlResourceId, null)
-      drawable?.let { CloseableXmlImage(it) }
+      drawable?.let { DefaultCloseableXml(it) }
     } catch (error: Throwable) {
       FLog.e(TAG, "Cannot decode xml", error)
       null

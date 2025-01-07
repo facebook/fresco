@@ -10,13 +10,14 @@ package com.facebook.imagepipeline.xml
 import android.graphics.drawable.Drawable
 import com.facebook.imagepipeline.drawable.DrawableFactory
 import com.facebook.imagepipeline.image.CloseableImage
+import com.facebook.imagepipeline.image.CloseableXml
 
 internal class XmlDrawableFactory : DrawableFactory {
   override fun supportsImageType(image: CloseableImage): Boolean {
-    return image is CloseableXmlImage
+    return image is CloseableXml
   }
 
   override fun createDrawable(image: CloseableImage): Drawable? {
-    return (image as? CloseableXmlImage)?.buildCopy()
+    return (image as? CloseableXml)?.buildDrawable()
   }
 }

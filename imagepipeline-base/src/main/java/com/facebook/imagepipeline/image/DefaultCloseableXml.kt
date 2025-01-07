@@ -5,12 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.imagepipeline.xml
+package com.facebook.imagepipeline.image
 
 import android.graphics.drawable.Drawable
-import com.facebook.imagepipeline.image.DefaultCloseableImage
 
-internal class CloseableXmlImage(private var drawable: Drawable?) : DefaultCloseableImage() {
+public class DefaultCloseableXml(private var drawable: Drawable?) :
+    DefaultCloseableImage(), CloseableXml {
   private var closed = false
 
   override fun getSizeInBytes(): Int {
@@ -34,7 +34,7 @@ internal class CloseableXmlImage(private var drawable: Drawable?) : DefaultClose
     return drawable?.intrinsicHeight?.takeIf { it >= 0 } ?: 0
   }
 
-  fun buildCopy(): Drawable? {
+  override fun buildDrawable(): Drawable? {
     return drawable?.constantState?.newDrawable()
   }
 }
