@@ -25,11 +25,20 @@ public class DefaultDrawableFactory implements DrawableFactory {
 
   private final Resources mResources;
   private final @Nullable DrawableFactory mAnimatedDrawableFactory;
+  private final @Nullable DrawableFactory mXmlDrawableFactory;
+
+  public DefaultDrawableFactory(
+      Resources resources,
+      @Nullable DrawableFactory animatedDrawableFactory,
+      @Nullable DrawableFactory xmlDrawableFactory) {
+    mResources = resources;
+    mAnimatedDrawableFactory = animatedDrawableFactory;
+    mXmlDrawableFactory = xmlDrawableFactory;
+  }
 
   public DefaultDrawableFactory(
       Resources resources, @Nullable DrawableFactory animatedDrawableFactory) {
-    mResources = resources;
-    mAnimatedDrawableFactory = animatedDrawableFactory;
+    this(resources, animatedDrawableFactory, null);
   }
 
   @Override
@@ -61,6 +70,9 @@ public class DefaultDrawableFactory implements DrawableFactory {
       } else if (mAnimatedDrawableFactory != null
           && mAnimatedDrawableFactory.supportsImageType(closeableImage)) {
         return mAnimatedDrawableFactory.createDrawable(closeableImage);
+      } else if (mXmlDrawableFactory != null
+          && mXmlDrawableFactory.supportsImageType(closeableImage)) {
+        return mXmlDrawableFactory.createDrawable(closeableImage);
       }
       return null;
     } finally {
