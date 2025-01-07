@@ -30,6 +30,7 @@ public class ScoreBasedEvictionComparatorSupplier implements EntryEvictionCompar
 
       /** Return <0 if lhs should be evicted before rhs. */
       @Override
+      // NULLSAFE_FIXME[Inconsistent Subclass Parameter Annotation]
       public int compare(DiskStorage.Entry lhs, DiskStorage.Entry rhs) {
         float score1 = calculateScore(lhs, now);
         float score2 = calculateScore(rhs, now);
