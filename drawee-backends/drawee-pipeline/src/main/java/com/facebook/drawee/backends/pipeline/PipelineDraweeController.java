@@ -104,14 +104,16 @@ public class PipelineDraweeController
   public PipelineDraweeController(
       Resources resources,
       DeferredReleaser deferredReleaser,
-      DrawableFactory animatedDrawableFactory,
+      @Nullable DrawableFactory animatedDrawableFactory,
+      @Nullable DrawableFactory xmlDrawableFactory,
       Executor uiThreadExecutor,
       @Nullable MemoryCache<CacheKey, CloseableImage> memoryCache,
       @Nullable ImmutableList<DrawableFactory> globalDrawableFactories) {
     // NULLSAFE_FIXME[Parameter Not Nullable]
     super(deferredReleaser, uiThreadExecutor, null, null);
     mResources = resources;
-    mDefaultDrawableFactory = new DefaultDrawableFactory(resources, animatedDrawableFactory);
+    mDefaultDrawableFactory =
+        new DefaultDrawableFactory(resources, animatedDrawableFactory, xmlDrawableFactory);
     mGlobalDrawableFactories = globalDrawableFactories;
     mMemoryCache = memoryCache;
   }

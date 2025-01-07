@@ -279,7 +279,7 @@ public class DefaultImageDecoder implements ImageDecoder {
    * @param encodedImage input image (encoded bytes plus meta data)
    * @param length amount of currently available data in bytes
    * @param qualityInfo quality info for the image
-   * @return a CloseableStaticBitmap
+   * @return a CloseableXml
    */
   private @Nullable CloseableImage decodeXml(
       final EncodedImage encodedImage,

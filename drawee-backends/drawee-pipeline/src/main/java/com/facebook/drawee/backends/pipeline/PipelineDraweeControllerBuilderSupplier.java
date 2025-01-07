@@ -65,8 +65,8 @@ public class PipelineDraweeControllerBuilderSupplier
     mPipelineDraweeControllerFactory.init(
         context.getResources(),
         DeferredReleaser.getInstance(),
-        // NULLSAFE_FIXME[Parameter Not Nullable]
         imagePipelineFactory.getAnimatedDrawableFactory(context),
+        imagePipelineFactory.getXmlDrawableFactory(),
         UiThreadImmediateExecutorService.getInstance(),
         mImagePipeline.getBitmapMemoryCache(),
         draweeConfig != null ? draweeConfig.getCustomDrawableFactories() : null,

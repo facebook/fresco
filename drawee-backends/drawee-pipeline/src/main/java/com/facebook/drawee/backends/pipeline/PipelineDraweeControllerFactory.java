@@ -27,8 +27,8 @@ public class PipelineDraweeControllerFactory {
   private Resources mResources;
   // NULLSAFE_FIXME[Field Not Initialized]
   private DeferredReleaser mDeferredReleaser;
-  // NULLSAFE_FIXME[Field Not Initialized]
-  private DrawableFactory mAnimatedDrawableFactory;
+  @Nullable private DrawableFactory mAnimatedDrawableFactory;
+  @Nullable private DrawableFactory mXmlDrawableFactory;
   // NULLSAFE_FIXME[Field Not Initialized]
   private Executor mUiThreadExecutor;
   @Nullable private MemoryCache<CacheKey, CloseableImage> mMemoryCache;
@@ -38,7 +38,8 @@ public class PipelineDraweeControllerFactory {
   public void init(
       Resources resources,
       DeferredReleaser deferredReleaser,
-      DrawableFactory animatedDrawableFactory,
+      @Nullable DrawableFactory animatedDrawableFactory,
+      @Nullable DrawableFactory xmlDrawableFactory,
       Executor uiThreadExecutor,
       MemoryCache<CacheKey, CloseableImage> memoryCache,
       @Nullable ImmutableList<DrawableFactory> drawableFactories,
@@ -46,6 +47,7 @@ public class PipelineDraweeControllerFactory {
     mResources = resources;
     mDeferredReleaser = deferredReleaser;
     mAnimatedDrawableFactory = animatedDrawableFactory;
+    mXmlDrawableFactory = xmlDrawableFactory;
     mUiThreadExecutor = uiThreadExecutor;
     mMemoryCache = memoryCache;
     mDrawableFactories = drawableFactories;
@@ -58,6 +60,7 @@ public class PipelineDraweeControllerFactory {
             mResources,
             mDeferredReleaser,
             mAnimatedDrawableFactory,
+            mXmlDrawableFactory,
             mUiThreadExecutor,
             mMemoryCache,
             mDrawableFactories);
@@ -70,7 +73,8 @@ public class PipelineDraweeControllerFactory {
   protected PipelineDraweeController internalCreateController(
       Resources resources,
       DeferredReleaser deferredReleaser,
-      DrawableFactory animatedDrawableFactory,
+      @Nullable DrawableFactory animatedDrawableFactory,
+      @Nullable DrawableFactory xmlDrawableFactory,
       Executor uiThreadExecutor,
       @Nullable MemoryCache<CacheKey, CloseableImage> memoryCache,
       @Nullable ImmutableList<DrawableFactory> drawableFactories) {
@@ -78,6 +82,7 @@ public class PipelineDraweeControllerFactory {
         resources,
         deferredReleaser,
         animatedDrawableFactory,
+        xmlDrawableFactory,
         uiThreadExecutor,
         memoryCache,
         drawableFactories);
