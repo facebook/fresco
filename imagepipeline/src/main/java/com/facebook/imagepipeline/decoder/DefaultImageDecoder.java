@@ -102,12 +102,13 @@ public class DefaultImageDecoder implements ImageDecoder {
       @Nullable final ImageDecoder xmlDecoder,
       final PlatformDecoder platformDecoder,
       @Nullable Map<ImageFormat, ImageDecoder> customDecoders) {
-    mAnimatedGifDecoder = animatedGifDecoder;
-    mAnimatedWebPDecoder = animatedWebPDecoder;
-    mXmlDecoder = xmlDecoder;
-    mPlatformDecoder = platformDecoder;
-    mCustomDecoders = customDecoders;
-    mEnableEncodedImageColorSpaceUsage = Suppliers.BOOLEAN_FALSE;
+    this(
+        animatedGifDecoder,
+        animatedWebPDecoder,
+        xmlDecoder,
+        platformDecoder,
+        customDecoders,
+        Suppliers.BOOLEAN_FALSE);
   }
 
   public DefaultImageDecoder(

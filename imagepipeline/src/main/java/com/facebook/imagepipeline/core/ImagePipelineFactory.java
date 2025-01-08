@@ -159,6 +159,9 @@ public class ImagePipelineFactory {
       FrescoSystrace.endSection();
     }
     mDiskCachesStoreSupplier = mConfig.getDiskCachesStoreSupplier();
+    if (mConfig.getExperiments().isBinaryXmlEnabled()) {
+      ImageFormatChecker.getInstance().setBinaryXmlEnabled(true);
+    }
   }
 
   @Nullable
@@ -249,8 +252,6 @@ public class ImagePipelineFactory {
         }
 
         ImageDecoder xmlDecoder = getXmlImageDecoder();
-        ImageFormatChecker imageFormatChecker = ImageFormatChecker.getInstance();
-        imageFormatChecker.setBinaryXmlEnabled(mConfig.getExperiments().isBinaryXmlEnabled());
 
         if (mConfig.getImageDecoderConfig() == null) {
           mImageDecoder =
@@ -264,8 +265,9 @@ public class ImagePipelineFactory {
                   getPlatformDecoder(),
                   mConfig.getImageDecoderConfig().getCustomImageDecoders());
           // Add custom image formats if needed
-          imageFormatChecker.setCustomImageFormatCheckers(
-              mConfig.getImageDecoderConfig().getCustomImageFormats());
+          ImageFormatChecker.getInstance()
+              .setCustomImageFormatCheckers(
+                  mConfig.getImageDecoderConfig().getCustomImageFormats());
         }
       }
     }
