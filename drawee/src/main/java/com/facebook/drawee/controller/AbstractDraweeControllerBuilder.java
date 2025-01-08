@@ -153,7 +153,7 @@ public abstract class AbstractDraweeControllerBuilder<
    * <p>For performance reasons, the array is not deep-copied, but only stored by reference. Please
    * don't modify once submitted.
    */
-  public BUILDER setFirstAvailableImageRequests(REQUEST[] firstAvailableImageRequests) {
+  public BUILDER setFirstAvailableImageRequests(@Nullable REQUEST[] firstAvailableImageRequests) {
     return setFirstAvailableImageRequests(firstAvailableImageRequests, true);
   }
 
@@ -167,7 +167,7 @@ public abstract class AbstractDraweeControllerBuilder<
    *     supplied requests.
    */
   public BUILDER setFirstAvailableImageRequests(
-      REQUEST[] firstAvailableImageRequests, boolean tryCacheOnlyFirst) {
+      @Nullable REQUEST[] firstAvailableImageRequests, boolean tryCacheOnlyFirst) {
     Preconditions.checkArgument(
         firstAvailableImageRequests == null || firstAvailableImageRequests.length > 0,
         "No requests specified!");
