@@ -44,9 +44,10 @@ public class TestAnimatedDrawableBackend implements AnimatedDrawableBackend {
     return ((frameNumber & 0xff) << 16) | ((x & 0xff) << 8) | ((y & 0xff));
   }
 
+  @Nullable
   @Override
+  // NULLSAFE_FIXME[Inconsistent Subclass Return Annotation]
   public AnimatedImageResult getAnimatedImageResult() {
-    // NULLSAFE_FIXME[Return Not Nullable]
     return null;
   }
 
