@@ -35,8 +35,8 @@
     </activity>
 
     <activity
-        android:name=".drawee.transition.ImageDetailsActivity"
-        android:label="@string/drawee_transition_details_title"
+        android:name=".vito.transition.ImageDetailsActivity"
+        android:label="@string/vito_transition_details_title"
         android:parentActivityName=".MainActivity"
         android:theme="@style/AppTheme.ImageDetails"
         android:exported="false"

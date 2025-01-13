@@ -25,9 +25,9 @@
 
   <string name="drawee_rotation_help">Change the used RotationOptions using the drop-down menu on top.</string>
 
-  <string name="drawee_transition_help">Tap the image to start the activity transition.</string>
-  <string name="drawee_transition_details_title">Image Detail Activity</string>
-  <string name="drawee_transition_details_help">This is the second activity. Press back to reverse the transition.</string>
+  <string name="vito_transition_help">Tap the image to start the activity transition.</string>
+  <string name="vito_transition_details_title">Image Detail Activity</string>
+  <string name="vito_transition_details_help">This is the second activity. Press back to reverse the transition.</string>
 
   <string name="drawee_retaining_supplier_help">Click on the image to show the next one. The previous one will be retained until the new image is ready.</string>
 

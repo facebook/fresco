@@ -28,6 +28,7 @@ import com.facebook.fresco.vito.source.ImageSource
 /** Vito View implementation */
 object VitoViewImpl2 {
   @JvmField var useVisibilityCallbacks: Supplier<Boolean> = Suppliers.BOOLEAN_TRUE
+  @JvmField var useVisibilityAggregatedCallbacks: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE
   @JvmField var useSimpleFetchLogic: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE
   @JvmField var useReleaseInViewDetached: Supplier<Boolean> = Suppliers.BOOLEAN_TRUE
   @JvmField var useReleaseDelayedInViewDetached: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE

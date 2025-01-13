@@ -8,7 +8,6 @@
 package com.facebook.fresco.samples.showcase
 
 import com.facebook.fresco.samples.showcase.drawee.*
-import com.facebook.fresco.samples.showcase.drawee.transition.DraweeTransitionFragment
 import com.facebook.fresco.samples.showcase.imageformat.color.ImageFormatColorFragment
 import com.facebook.fresco.samples.showcase.imageformat.datauri.ImageFormatDataUriFragment
 import com.facebook.fresco.samples.showcase.imageformat.gif.ImageFormatGifFragment
@@ -27,6 +26,7 @@ import com.facebook.fresco.samples.showcase.vito.renderer.RendererColorFilterExa
 import com.facebook.fresco.samples.showcase.vito.renderer.RendererFadeExampleFragment
 import com.facebook.fresco.samples.showcase.vito.renderer.RendererShapeExampleFragment
 import com.facebook.fresco.samples.showcase.vito.renderer.VitoLayerExample
+import com.facebook.fresco.samples.showcase.vito.transition.VitoTransitionFragment
 
 object ExampleDatabase {
 
@@ -39,7 +39,6 @@ object ExampleDatabase {
               "Drawee",
               listOf(
                   ExampleItem("Simple DraweeSpan") { DraweeSpanSimpleTextFragment() },
-                  ExampleItem("Drawee Transition") { DraweeTransitionFragment() },
                   ExampleItem("Retaining Data Source Supplier") {
                     RetainingDataSourceSupplierFragment()
                   },
@@ -115,6 +114,7 @@ object ExampleDatabase {
                   ExampleItem("Multi URI") { MultiUriFragment() },
                   ExampleItem("Placeholder, Progress, Failure") { ImageLayersFragment() },
                   ExampleItem("Rounded Corners") { VitoRoundedCornersFragment() },
+                  ExampleItem("Image Transition") { VitoTransitionFragment() },
               )),
           ExampleCategory(
               "Vito Renderer",

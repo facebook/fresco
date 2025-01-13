@@ -5,24 +5,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.samples.showcase.drawee.transition;
+package com.facebook.fresco.samples.showcase.vito.transition;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PointF;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.view.DraweeTransition;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.R;
+import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.view.VitoView;
+import com.facebook.vito.view.transition.VitoTransition;
 
 /** Image details activity */
 public class ImageDetailsActivity extends AppCompatActivity {
+
+  private static final String CALLER_CONTEXT = "VitoTransitionFragment";
 
   public static Intent getStartIntent(Context context, Uri imageUri) {
     Intent intent = new Intent(context, ImageDetailsActivity.class);
@@ -33,35 +36,34 @@ public class ImageDetailsActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_drawee_transition_detail);
+    setContentView(R.layout.activity_vito_transition_detail);
 
     ActionBar actionBar = getSupportActionBar();
     if (actionBar != null) {
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    SimpleDraweeView simpleDraweeView = (SimpleDraweeView) findViewById(R.id.image);
-    simpleDraweeView.setImageURI(getIntent().getData());
+    ImageView imageView = findViewById(R.id.image);
+    imageView.setImageURI(getIntent().getData());
 
     ScalingUtils.ScaleType toScaleType = ScalingUtils.ScaleType.FOCUS_CROP;
     PointF toFocusPoint = new PointF(0.5f, 0);
 
-    simpleDraweeView.getHierarchy().setActualImageScaleType(toScaleType);
-    simpleDraweeView.getHierarchy().setActualImageFocusPoint(toFocusPoint);
+    ImageOptions imageOptions =
+        ImageOptions.create().scale(toScaleType).focusPoint(toFocusPoint).build();
+    VitoView.show(getIntent().getData(), imageOptions, CALLER_CONTEXT, imageView);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      ScalingUtils.ScaleType fromScaleType = ScalingUtils.ScaleType.FOCUS_CROP;
-      PointF fromFocusPoint = DraweeTransitionFragment.FOCUS_POINT;
+    ScalingUtils.ScaleType fromScaleType = ScalingUtils.ScaleType.FOCUS_CROP;
+    PointF fromFocusPoint = VitoTransitionFragment.FOCUS_POINT;
 
-      getWindow()
-          .setSharedElementEnterTransition(
-              DraweeTransition.createTransitionSet(
-                  fromScaleType, toScaleType, fromFocusPoint, toFocusPoint));
-      getWindow()
-          .setSharedElementReturnTransition(
-              DraweeTransition.createTransitionSet(
-                  toScaleType, fromScaleType, toFocusPoint, fromFocusPoint));
-    }
+    getWindow()
+        .setSharedElementEnterTransition(
+            VitoTransition.createTransitionSet(
+                CALLER_CONTEXT, fromScaleType, toScaleType, fromFocusPoint, toFocusPoint));
+    getWindow()
+        .setSharedElementReturnTransition(
+            VitoTransition.createTransitionSet(
+                CALLER_CONTEXT, toScaleType, fromScaleType, toFocusPoint, fromFocusPoint));
   }
 
   @Override
