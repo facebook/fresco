@@ -36,11 +36,6 @@ object ExampleDatabase {
   val examples =
       listOf(
           ExampleCategory(
-              "Drawee",
-              listOf(
-                  ExampleItem("Simple DraweeSpan") { DraweeSpanSimpleTextFragment() },
-              )),
-          ExampleCategory(
               "Image Pipeline",
               listOf(
                   ExampleItem("Downsample Modes") { ImagePipelineDownsampleFragment() },
