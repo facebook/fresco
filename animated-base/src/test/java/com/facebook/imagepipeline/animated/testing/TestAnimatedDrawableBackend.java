@@ -153,9 +153,9 @@ public class TestAnimatedDrawableBackend implements AnimatedDrawableBackend {
     return 0;
   }
 
+  @Nullable
   @Override
   public CloseableReference<Bitmap> getPreDecodedFrame(int frameNumber) {
-    // NULLSAFE_FIXME[Return Not Nullable]
     return null;
   }
 
