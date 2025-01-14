@@ -29,7 +29,7 @@
   <string name="vito_transition_details_title">Image Detail Activity</string>
   <string name="vito_transition_details_help">This is the second activity. Press back to reverse the transition.</string>
 
-  <string name="drawee_retaining_supplier_help">Click on the image to show the next one. The previous one will be retained until the new image is ready.</string>
+  <string name="image_retaining_supplier_help">Click on the image to show the next one. The previous one will be retained until the new image is ready.</string>
 
   <string name="drawee_multi_uri_help">Example to load an image based on a set of URIs, either as "first available" or with "increasing quality".</string>
 

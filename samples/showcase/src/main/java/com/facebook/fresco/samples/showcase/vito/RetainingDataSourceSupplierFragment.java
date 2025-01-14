@@ -5,44 +5,34 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.samples.showcase.drawee;
+package com.facebook.fresco.samples.showcase.vito;
 
-import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.RetainingDataSourceSupplier;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.controller.ControllerListener;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
+import com.facebook.fresco.vito.core.impl.source.DataSourceImageSource;
+import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.view.VitoView;
 import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.List;
 
 public class RetainingDataSourceSupplierFragment extends BaseShowcaseFragment {
 
+  private static final String CALLER_CONTEXT = "RetainingDataSourceSupplierFragment";
+
+  private final ImageOptions mImageOptions = ImageOptions.create().autoPlay(true).build();
   private List<Uri> mSampleUris;
   private int mUriIndex = 0;
-
-  private final ControllerListener<ImageInfo> controllerListener =
-      new BaseControllerListener<ImageInfo>() {
-        @Override
-        public void onFinalImageSet(
-            String id, @Nullable ImageInfo imageInfo, @Nullable Animatable anim) {
-          if (anim != null) {
-            // app-specific logic to enable animation starting
-            anim.start();
-          }
-        }
-      };
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,21 +45,18 @@ public class RetainingDataSourceSupplierFragment extends BaseShowcaseFragment {
   @Override
   public View onCreateView(
       LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_drawee_retaining_supplier, container, false);
+    return inflater.inflate(R.layout.fragment_vito_retaining_supplier, container, false);
   }
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    final SimpleDraweeView simpleDraweeView = view.findViewById(R.id.drawee_view);
+    final ImageView imageView = view.findViewById(R.id.image_view);
     final RetainingDataSourceSupplier<CloseableReference<CloseableImage>> retainingSupplier =
         new RetainingDataSourceSupplier<>();
-    simpleDraweeView.setController(
-        Fresco.newDraweeControllerBuilder()
-            .setDataSourceSupplier(retainingSupplier)
-            .setControllerListener(controllerListener)
-            .build());
+    VitoView.show(
+        new DataSourceImageSource(retainingSupplier), mImageOptions, CALLER_CONTEXT, imageView);
     replaceImage(retainingSupplier);
-    simpleDraweeView.setOnClickListener(v -> replaceImage(retainingSupplier));
+    imageView.setOnClickListener(v -> replaceImage(retainingSupplier));
   }
 
   private void replaceImage(
@@ -78,7 +65,9 @@ public class RetainingDataSourceSupplierFragment extends BaseShowcaseFragment {
     retainingSupplier.replaceSupplier(
         Fresco.getImagePipeline()
             .getDataSourceSupplier(
-                ImageRequest.fromUri(getNextUri()), null, ImageRequest.RequestLevel.FULL_FETCH));
+                ImageRequest.fromUri(getNextUri()),
+                CALLER_CONTEXT,
+                ImageRequest.RequestLevel.FULL_FETCH));
   }
 
   private synchronized Uri getNextUri() {

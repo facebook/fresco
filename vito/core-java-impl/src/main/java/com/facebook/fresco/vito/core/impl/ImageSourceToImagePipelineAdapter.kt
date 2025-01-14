@@ -15,6 +15,7 @@ import com.facebook.datasource.FirstAvailableDataSourceSupplier
 import com.facebook.datasource.IncreasingQualityDataSourceSupplier
 import com.facebook.fresco.middleware.Extras
 import com.facebook.fresco.vito.core.ImagePipelineUtils
+import com.facebook.fresco.vito.core.impl.source.DataSourceImageSource
 import com.facebook.fresco.vito.core.impl.source.ImagePipelineImageSource
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.source.EmptyImageSource
@@ -141,6 +142,7 @@ object ImageSourceToImagePipelineAdapter {
                       requestListener,
                       uiComponentId,
                       extras)))
+      is DataSourceImageSource -> imageSource.dataSourceSupplier
       else -> NO_REQUEST_SUPPLIER
     }
   }

@@ -39,9 +39,6 @@ object ExampleDatabase {
               "Drawee",
               listOf(
                   ExampleItem("Simple DraweeSpan") { DraweeSpanSimpleTextFragment() },
-                  ExampleItem("Retaining Data Source Supplier") {
-                    RetainingDataSourceSupplierFragment()
-                  },
               )),
           ExampleCategory(
               "Image Pipeline",
@@ -115,6 +112,9 @@ object ExampleDatabase {
                   ExampleItem("Placeholder, Progress, Failure") { ImageLayersFragment() },
                   ExampleItem("Rounded Corners") { VitoRoundedCornersFragment() },
                   ExampleItem("Image Transition") { VitoTransitionFragment() },
+                  ExampleItem("Retaining Data Source Supplier") {
+                    RetainingDataSourceSupplierFragment()
+                  },
               )),
           ExampleCategory(
               "Vito Renderer",
