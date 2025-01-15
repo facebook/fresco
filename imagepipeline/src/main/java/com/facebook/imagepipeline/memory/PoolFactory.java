@@ -100,13 +100,17 @@ public class PoolFactory {
         Class<?> clazz = Class.forName("com.facebook.imagepipeline.memory.BufferMemoryChunkPool");
         Constructor<?> cons =
             clazz.getConstructor(
-                MemoryTrimmableRegistry.class, PoolParams.class, PoolStatsTracker.class);
+                MemoryTrimmableRegistry.class,
+                PoolParams.class,
+                PoolStatsTracker.class,
+                boolean.class);
         mBufferMemoryChunkPool =
             (MemoryChunkPool)
                 cons.newInstance(
                     mConfig.getMemoryTrimmableRegistry(),
                     mConfig.getMemoryChunkPoolParams(),
-                    mConfig.getMemoryChunkPoolStatsTracker());
+                    mConfig.getMemoryChunkPoolStatsTracker(),
+                    mConfig.isIgnoreBitmapPoolHardCap());
       } catch (ClassNotFoundException e) {
         mBufferMemoryChunkPool = null;
       } catch (IllegalAccessException e) {
@@ -142,13 +146,17 @@ public class PoolFactory {
         Class<?> clazz = Class.forName("com.facebook.imagepipeline.memory.NativeMemoryChunkPool");
         Constructor<?> cons =
             clazz.getConstructor(
-                MemoryTrimmableRegistry.class, PoolParams.class, PoolStatsTracker.class);
+                MemoryTrimmableRegistry.class,
+                PoolParams.class,
+                PoolStatsTracker.class,
+                boolean.class);
         mNativeMemoryChunkPool =
             (MemoryChunkPool)
                 cons.newInstance(
                     mConfig.getMemoryTrimmableRegistry(),
                     mConfig.getMemoryChunkPoolParams(),
-                    mConfig.getMemoryChunkPoolStatsTracker());
+                    mConfig.getMemoryChunkPoolStatsTracker(),
+                    mConfig.isIgnoreBitmapPoolHardCap());
       } catch (ClassNotFoundException e) {
         FLog.e("PoolFactory", "", e);
         mNativeMemoryChunkPool = null;
@@ -176,13 +184,17 @@ public class PoolFactory {
         Class<?> clazz = Class.forName("com.facebook.imagepipeline.memory.AshmemMemoryChunkPool");
         Constructor<?> cons =
             clazz.getConstructor(
-                MemoryTrimmableRegistry.class, PoolParams.class, PoolStatsTracker.class);
+                MemoryTrimmableRegistry.class,
+                PoolParams.class,
+                PoolStatsTracker.class,
+                boolean.class);
         mAshmemMemoryChunkPool =
             (MemoryChunkPool)
                 cons.newInstance(
                     mConfig.getMemoryTrimmableRegistry(),
                     mConfig.getMemoryChunkPoolParams(),
-                    mConfig.getMemoryChunkPoolStatsTracker());
+                    mConfig.getMemoryChunkPoolStatsTracker(),
+                    mConfig.isIgnoreBitmapPoolHardCap());
       } catch (ClassNotFoundException e) {
         mAshmemMemoryChunkPool = null;
       } catch (IllegalAccessException e) {

@@ -26,6 +26,15 @@ public class BufferMemoryChunkPool extends MemoryChunkPool {
     super(memoryTrimmableRegistry, poolParams, bufferMemoryChunkPoolStatsTracker);
   }
 
+  @DoNotStrip
+  public BufferMemoryChunkPool(
+      MemoryTrimmableRegistry memoryTrimmableRegistry,
+      PoolParams poolParams,
+      PoolStatsTracker bufferMemoryChunkPoolStatsTracker,
+      boolean ignoreHardCap) {
+    super(memoryTrimmableRegistry, poolParams, bufferMemoryChunkPoolStatsTracker, ignoreHardCap);
+  }
+
   @Override
   protected BufferMemoryChunk alloc(int bucketedSize) {
     return new BufferMemoryChunk(bucketedSize);
