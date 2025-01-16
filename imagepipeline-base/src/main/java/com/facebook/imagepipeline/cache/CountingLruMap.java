@@ -13,6 +13,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
@@ -61,10 +62,10 @@ public class CountingLruMap<K, V> {
   }
 
   /** Gets the all matching elements. */
-  public synchronized ArrayList<LinkedHashMap.Entry<K, V>> getMatchingEntries(
+  public synchronized ArrayList<Map.Entry<K, V>> getMatchingEntries(
       @Nullable Predicate<K> predicate) {
-    ArrayList<LinkedHashMap.Entry<K, V>> matchingEntries = new ArrayList<>(mMap.entrySet().size());
-    for (LinkedHashMap.Entry<K, V> entry : mMap.entrySet()) {
+    ArrayList<Map.Entry<K, V>> matchingEntries = new ArrayList<>(mMap.entrySet().size());
+    for (Map.Entry<K, V> entry : mMap.entrySet()) {
       if (predicate == null || predicate.apply(entry.getKey())) {
         matchingEntries.add(entry);
       }
@@ -106,9 +107,9 @@ public class CountingLruMap<K, V> {
   /** Removes all the matching elements from the map. */
   public synchronized ArrayList<V> removeAll(@Nullable Predicate<K> predicate) {
     ArrayList<V> oldValues = new ArrayList<>();
-    Iterator<LinkedHashMap.Entry<K, V>> iterator = mMap.entrySet().iterator();
+    Iterator<Map.Entry<K, V>> iterator = mMap.entrySet().iterator();
     while (iterator.hasNext()) {
-      LinkedHashMap.Entry<K, V> entry = iterator.next();
+      Map.Entry<K, V> entry = iterator.next();
       if (predicate == null || predicate.apply(entry.getKey())) {
         oldValues.add(entry.getValue());
         mSizeInBytes -= getValueSizeInBytes(entry.getValue());
