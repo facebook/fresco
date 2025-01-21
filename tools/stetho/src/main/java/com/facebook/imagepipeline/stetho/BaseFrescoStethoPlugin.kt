@@ -7,9 +7,6 @@
 
 package com.facebook.imagepipeline.stetho
 
-import android.graphics.Bitmap
-import android.graphics.Bitmap.CompressFormat
-import android.os.Environment
 import android.util.SparseIntArray
 import com.facebook.cache.common.CacheKey
 import com.facebook.cache.disk.DiskStorage.DiskDumpInfo
@@ -24,15 +21,11 @@ import com.facebook.imagepipeline.cache.CountingMemoryCacheInspector.DumpInfoEnt
 import com.facebook.imagepipeline.core.DiskCachesStore
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.core.ImagePipelineFactory
-import com.facebook.imagepipeline.image.CloseableBitmap
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.stetho.dumpapp.DumpException
 import com.facebook.stetho.dumpapp.DumpUsageException
 import com.facebook.stetho.dumpapp.DumperContext
 import com.facebook.stetho.dumpapp.DumperPlugin
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
 import java.io.IOException
 import java.io.PrintStream
 import java.util.ArrayList
@@ -247,88 +240,10 @@ abstract class BaseFrescoStethoPlugin() : DumperPlugin {
       for (entry in dumpInfo.sharedEntries) {
         writeCacheEntry(writer, entry)
       }
-      if (args.isNotEmpty() && "-g" == args[0]) {
-        getFiles(writer, dumpInfo)
-      }
     } catch (e: IOException) {
       throw DumpException(e.message)
     } finally {
       dumpInfo.release()
-    }
-  }
-
-  @SuppressWarnings("ExternalStorageUse")
-  @Throws(DumpException::class, IOException::class)
-  private fun getFiles(writer: PrintStream, dumpInfo: DumpInfo<CacheKey, CloseableImage>) {
-    writer.println("\nStoring all images in the memory cache into /sdcard/imagedumperfiles/ ...")
-    val dir = File("${Environment.getExternalStorageDirectory().path}/imagedumperfiles/")
-    if (dir.exists() && dir.isDirectory) {
-      val files = dir.listFiles()
-      if (files != null) {
-        for (file in files) {
-          file.delete()
-        }
-      }
-      if (!dir.delete()) {
-        throw DumpException("Failed to clear existing /sdcard/imagedumperfiles directory")
-      }
-    }
-    if (!dir.mkdirs()) {
-      throw DumpException("Failed to create /sdcard/imagedumperfiles directory")
-    }
-    if (dumpInfo.lruEntries.isNotEmpty()) {
-      writer.println("LRU Entries:")
-      storeEntries(dumpInfo.lruEntries, 1, writer, dir)
-    }
-    if (dumpInfo.sharedEntries.isNotEmpty()) {
-      writer.println("Shared Entries:")
-      storeEntries(dumpInfo.sharedEntries, dumpInfo.lruEntries.size + 1, writer, dir)
-    }
-    writer.println("Done!")
-  }
-
-  @Throws(IOException::class)
-  private fun storeEntries(
-      entries: List<DumpInfoEntry<CacheKey, CloseableImage>>,
-      i: Int,
-      writer: PrintStream,
-      directory: File
-  ) {
-    var i = i
-    var filename: String
-    for (entry in entries) {
-      val entryValue = checkNotNull(entry.value)
-      val closeableImage = entryValue.get()
-      if (closeableImage is CloseableBitmap) {
-        filename = "tmp$i.png"
-        writer.println(
-            formatStrLocaleSafe("Storing image %d as %s. Key: %s", i, filename, entry.key))
-        storeImage(
-            closeableImage.underlyingBitmap, File(directory, filename), CompressFormat.PNG, 100)
-      } else {
-        writer.println(
-            formatStrLocaleSafe(
-                "Image %d has unrecognized type %s. Key: %s", i, closeableImage, entry.key))
-      }
-      i++
-    }
-  }
-
-  @Throws(IOException::class)
-  private fun storeImage(
-      image: Bitmap,
-      pictureFile: File,
-      compressionFormat: CompressFormat,
-      quality: Int
-  ) {
-    var fos: FileOutputStream? = null
-    try {
-      fos = FileOutputStream(pictureFile)
-      image.compress(compressionFormat, quality, fos)
-    } catch (e: FileNotFoundException) {
-      throw IOException(e.message)
-    } finally {
-      fos?.close()
     }
   }
 
