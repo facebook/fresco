@@ -15,6 +15,7 @@ import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Throwables;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /** This is the test in order to directly decoding all types of webp images */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class WebpDecodingTest extends TestCase {
 
   private static Method sGetFileDescriptorMethod;
@@ -38,6 +40,7 @@ public class WebpDecodingTest extends TestCase {
     mInstrumentation = InstrumentationRegistry.getInstrumentation();
     mWebpBitmapFactory = new WebpBitmapFactoryImpl();
     ImagePipelineConfig.Builder configBuilder =
+        // NULLSAFE_FIXME[Not Vetted Third-Party]
         ImagePipelineConfig.newBuilder(mInstrumentation.getContext());
     configBuilder.experiment().setWebpBitmapFactory(mWebpBitmapFactory);
     ImagePipelineFactory.initialize(configBuilder.build());
@@ -69,6 +72,7 @@ public class WebpDecodingTest extends TestCase {
   private FileDescriptor getMemoryFileDescriptor(MemoryFile memoryFile) {
     try {
       Object rawFD = getFileDescriptorMethod().invoke(memoryFile);
+      // NULLSAFE_FIXME[Return Not Nullable]
       return (FileDescriptor) rawFD;
     } catch (Exception e) {
       throw Throwables.propagate(e);
@@ -77,6 +81,7 @@ public class WebpDecodingTest extends TestCase {
 
   private InputStream getTestImageInputStream(String path) {
     try {
+      // NULLSAFE_FIXME[Not Vetted Third-Party]
       return mInstrumentation.getContext().getResources().getAssets().open(path);
     } catch (IOException e) {
       throw Throwables.propagate(e);
@@ -87,6 +92,7 @@ public class WebpDecodingTest extends TestCase {
   public void test_webp_extended_decoding_inputstream_bitmap() throws Throwable {
     final Bitmap bitmap =
         mWebpBitmapFactory.decodeStream(getTestImageInputStream("webp_e.webp"), null, null);
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     assertBitmap(bitmap, 480, 320);
   }
 
@@ -96,6 +102,7 @@ public class WebpDecodingTest extends TestCase {
     final Bitmap bitmap =
         mWebpBitmapFactory.decodeFileDescriptor(getMemoryFileDescriptor(memoryFile), null, null);
     memoryFile.close();
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     assertBitmap(bitmap, 480, 320);
   }
 
@@ -104,6 +111,7 @@ public class WebpDecodingTest extends TestCase {
     final Bitmap bitmap =
         mWebpBitmapFactory.decodeStream(getTestImageInputStream("webp_ea.webp"), null, null);
 
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     assertBitmap(bitmap, 400, 301);
   }
 
@@ -113,6 +121,7 @@ public class WebpDecodingTest extends TestCase {
     final Bitmap bitmap =
         mWebpBitmapFactory.decodeFileDescriptor(getMemoryFileDescriptor(memoryFile), null, null);
     memoryFile.close();
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     assertBitmap(bitmap, 400, 301);
   }
 
@@ -121,6 +130,7 @@ public class WebpDecodingTest extends TestCase {
     final Bitmap bitmap =
         mWebpBitmapFactory.decodeStream(getTestImageInputStream("webp_ll.webp"), null, null);
 
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     assertBitmap(bitmap, 400, 301);
   }
 
@@ -130,6 +140,7 @@ public class WebpDecodingTest extends TestCase {
     final Bitmap bitmap =
         mWebpBitmapFactory.decodeFileDescriptor(getMemoryFileDescriptor(memoryFile), null, null);
     memoryFile.close();
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     assertBitmap(bitmap, 400, 301);
   }
 
@@ -138,6 +149,7 @@ public class WebpDecodingTest extends TestCase {
     final Bitmap bitmap =
         mWebpBitmapFactory.decodeStream(getTestImageInputStream("webp_plain.webp"), null, null);
 
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     assertBitmap(bitmap, 320, 214);
   }
 
@@ -147,6 +159,7 @@ public class WebpDecodingTest extends TestCase {
     final Bitmap bitmap =
         mWebpBitmapFactory.decodeFileDescriptor(getMemoryFileDescriptor(memoryFile), null, null);
     memoryFile.close();
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     assertBitmap(bitmap, 320, 214);
   }
 
