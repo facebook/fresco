@@ -90,6 +90,7 @@ public class PriorityStarvingThrottlingProducer<T> implements Producer<T> {
 
   static class PriorityComparator<T> implements Comparator<Item<T>> {
     @Override
+    // NULLSAFE_FIXME[Inconsistent Subclass Parameter Annotation]
     public int compare(Item<T> o1, Item<T> o2) {
 
       Priority p1 = o1.producerContext.getPriority();

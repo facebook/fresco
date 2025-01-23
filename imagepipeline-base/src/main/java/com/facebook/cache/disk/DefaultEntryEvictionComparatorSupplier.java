@@ -17,6 +17,7 @@ public class DefaultEntryEvictionComparatorSupplier implements EntryEvictionComp
   public EntryEvictionComparator get() {
     return new EntryEvictionComparator() {
       @Override
+      // NULLSAFE_FIXME[Inconsistent Subclass Parameter Annotation]
       public int compare(DiskStorage.Entry e1, DiskStorage.Entry e2) {
         long time1 = e1.getTimestamp();
         long time2 = e2.getTimestamp();
