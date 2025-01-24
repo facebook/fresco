@@ -12,18 +12,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
+import com.facebook.fresco.samples.showcase.vito.source.ImageRequestImageSource;
+import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.view.VitoView;
 import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 public class PartialRequestFragment extends BaseShowcaseFragment {
+
+  private static final String CALLER_CONTEXT = "PartialRequestFragment";
+
+  private static final ImageOptions IMAGE_OPTIONS =
+      ImageOptions.create()
+          .placeholderRes(R.mipmap.ic_launcher, ScalingUtils.ScaleType.CENTER)
+          .scale(ScalingUtils.ScaleType.CENTER_CROP)
+          .build();
 
   public PartialRequestFragment() {
     // Required empty public constructor
@@ -39,18 +50,17 @@ public class PartialRequestFragment extends BaseShowcaseFragment {
   public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    final SimpleDraweeView partialDrawee =
-        (SimpleDraweeView) view.findViewById(R.id.drawee_partial_img);
+    final ImageView partialImage = (ImageView) view.findViewById(R.id.partial_img);
 
-    final SimpleDraweeView fullDrawee = (SimpleDraweeView) view.findViewById(R.id.drawee_full_img);
+    final ImageView fullImage = (ImageView) view.findViewById(R.id.full_img);
 
     final Button clearCacheButton = (Button) view.findViewById(R.id.clear_cache);
     clearCacheButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            partialDrawee.resetActualImage();
-            fullDrawee.resetActualImage();
+            VitoView.release(partialImage);
+            VitoView.release(fullImage);
             Fresco.getImagePipeline().clearDiskCaches();
             Fresco.getImagePipeline().clearMemoryCaches();
           }
@@ -61,7 +71,7 @@ public class PartialRequestFragment extends BaseShowcaseFragment {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            loadImageIntoDrawee(partialDrawee, BytesRange.toMax(30000));
+            loadImage(partialImage, BytesRange.toMax(30000));
           }
         });
 
@@ -70,24 +80,18 @@ public class PartialRequestFragment extends BaseShowcaseFragment {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            loadImageIntoDrawee(fullDrawee, null);
+            loadImage(fullImage, null);
           }
         });
   }
 
-  private void loadImageIntoDrawee(SimpleDraweeView draweeView, @Nullable BytesRange bytesRange) {
+  private void loadImage(ImageView imageView, @Nullable BytesRange bytesRange) {
     final ImageRequest imageRequest =
         ImageRequestBuilder.newBuilderWithSource(
                 sampleUris().createSampleUri(ImageUriProvider.ImageSize.L))
             .setBytesRange(bytesRange)
             .build();
-
-    final DraweeController draweeController =
-        Fresco.newDraweeControllerBuilder()
-            .setOldController(draweeView.getController())
-            .setImageRequest(imageRequest)
-            .build();
-
-    draweeView.setController(draweeController);
+    VitoView.show(
+        new ImageRequestImageSource(imageRequest), IMAGE_OPTIONS, CALLER_CONTEXT, imageView);
   }
 }

@@ -35,8 +35,8 @@
             />
     </LinearLayout>
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/drawee_partial_img"
+    <ImageView
+        android:id="@+id/partial_img"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -44,8 +44,8 @@
         app:placeholderImageScaleType="center"
         app:actualImageScaleType="centerCrop"
         />
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/drawee_full_img"
+    <ImageView
+        android:id="@+id/full_img"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
