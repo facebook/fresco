@@ -10,6 +10,7 @@ package com.facebook.samples.scrollperf.conf;
 import android.content.Context;
 import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
+import com.facebook.common.preconditions.Preconditions;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.util.SizeUtil;
@@ -90,8 +91,9 @@ public class Config {
                 Const.SCALE_TYPE_KEY, context.getString(R.string.value_scale_type_fit_center)))
         .setRotateUsingMetaData(sharedPreferences.getBoolean(Const.AUTO_ROTATE_KEY, false))
         .setForcedRotationAngle(
-            // NULLSAFE_FIXME[Parameter Not Nullable]
-            Integer.parseInt(sharedPreferences.getString(Const.FORCED_ROTATION_ANGLE_KEY, "0")))
+            Integer.parseInt(
+                Preconditions.checkNotNull(
+                    sharedPreferences.getString(Const.FORCED_ROTATION_ANGLE_KEY, "0"))))
         .setDownsampling(sharedPreferences.getBoolean(Const.DOWNSAMPLING_KEY, false))
         .setOverrideSize(sharedPreferences.getBoolean(Const.OVERRIDE_SIZE_KEY, false))
         .setOverridenWidth(
@@ -105,18 +107,21 @@ public class Config {
                     Const.FADE_DURATION_KEY, context.getString(R.string.value_fast_fade_duration))))
         .setDrawBorder(sharedPreferences.getBoolean(Const.DRAW_BORDER_KEY, false))
         .setGridSpanCount(
-            // NULLSAFE_FIXME[Parameter Not Nullable]
-            Integer.parseInt(sharedPreferences.getString(Const.GRID_SPAN_COUNT_KEY, "3")))
+            Integer.parseInt(
+                Preconditions.checkNotNull(
+                    sharedPreferences.getString(Const.GRID_SPAN_COUNT_KEY, "3"))))
         .setDecodeCancellation(sharedPreferences.getBoolean(Const.DECODE_CANCELLATION_KEY, false))
         .setWebpSupportEnabled(sharedPreferences.getBoolean(Const.WEBP_SUPPORT_KEY, false))
         .setVitoOverlayEnabled(sharedPreferences.getBoolean(Const.VITO_OVERLAY_KEY, false))
         .setInstrumentationEnabled(
             sharedPreferences.getBoolean(Const.INSTRUMENTATION_ENABLED_KEY, false))
         .setDecodingThreadCount(
-            // NULLSAFE_FIXME[Parameter Not Nullable]
-            Integer.parseInt(sharedPreferences.getString(Const.DECODING_THREAD_KEY, "0")))
-        // NULLSAFE_FIXME[Parameter Not Nullable]
-        .setBgColor(Integer.parseInt(sharedPreferences.getString(Const.BG_COLOR_KEY, "0")))
+            Integer.parseInt(
+                Preconditions.checkNotNull(
+                    sharedPreferences.getString(Const.DECODING_THREAD_KEY, "0"))))
+        .setBgColor(
+            Integer.parseInt(
+                Preconditions.checkNotNull(sharedPreferences.getString(Const.BG_COLOR_KEY, "0"))))
         .build();
   }
 
