@@ -85,8 +85,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateNumberOfDecodingThreadSummary(findPreference(Const.DECODING_THREAD_KEY));
     // Set sizes
     SizePreferences widthPreferences = (SizePreferences) findPreference(Const.OVERRIDEN_WIDTH_KEY);
-    // NULLSAFE_FIXME[Nullable Dereference]
-    widthPreferences.setSeekBarMaxValue(SizeUtil.DISPLAY_WIDTH);
+    Preconditions.checkNotNull(widthPreferences).setSeekBarMaxValue(SizeUtil.DISPLAY_WIDTH);
     SizePreferences heightPreferences =
         (SizePreferences) findPreference(Const.OVERRIDEN_HEIGHT_KEY);
     // NULLSAFE_FIXME[Nullable Dereference]
