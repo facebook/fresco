@@ -15,8 +15,10 @@ import com.facebook.imagepipeline.memory.NativeMemoryChunk;
 import com.facebook.imagepipeline.memory.NativeMemoryChunkPool;
 import com.facebook.imagepipeline.memory.PoolParams;
 import com.facebook.imagepipeline.memory.PoolStatsTracker;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** A 'fake' {@link NativeMemoryChunkPool} instance as a test helper */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FakeNativeMemoryChunkPool extends NativeMemoryChunkPool {
   public FakeNativeMemoryChunkPool() {
     this(new PoolParams(128, getBucketSizes()));
