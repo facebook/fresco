@@ -88,8 +88,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     Preconditions.checkNotNull(widthPreferences).setSeekBarMaxValue(SizeUtil.DISPLAY_WIDTH);
     SizePreferences heightPreferences =
         (SizePreferences) findPreference(Const.OVERRIDEN_HEIGHT_KEY);
-    // NULLSAFE_FIXME[Nullable Dereference]
-    heightPreferences.setSeekBarMaxValue(SizeUtil.DISPLAY_HEIGHT);
+    Preconditions.checkNotNull(heightPreferences).setSeekBarMaxValue(SizeUtil.DISPLAY_HEIGHT);
     // NULLSAFE_FIXME[Parameter Not Nullable]
     updateFadeDurationSummary(findPreference(Const.FADE_DURATION_KEY));
     // NULLSAFE_FIXME[Parameter Not Nullable]
