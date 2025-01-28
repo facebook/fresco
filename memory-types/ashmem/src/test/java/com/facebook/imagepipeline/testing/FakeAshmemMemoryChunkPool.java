@@ -13,9 +13,11 @@ import com.facebook.imagepipeline.memory.AshmemMemoryChunk;
 import com.facebook.imagepipeline.memory.AshmemMemoryChunkPool;
 import com.facebook.imagepipeline.memory.PoolParams;
 import com.facebook.imagepipeline.memory.PoolStatsTracker;
+import com.facebook.infer.annotation.Nullsafe;
 import org.mockito.Mockito;
 
 /** A 'fake' {@link com.facebook.memory.ashmem.AshmemMemoryChunk} instance as a test helper */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FakeAshmemMemoryChunkPool extends AshmemMemoryChunkPool {
 
   public FakeAshmemMemoryChunkPool() {
