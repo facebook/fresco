@@ -16,6 +16,7 @@ import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Throwables;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -26,6 +27,7 @@ import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class WebpBitmapFactoryTest extends TestCase {
   private Instrumentation mInstrumentation;
 
@@ -37,6 +39,7 @@ public class WebpBitmapFactoryTest extends TestCase {
     mInstrumentation = InstrumentationRegistry.getInstrumentation();
     mWebpBitmapFactory = new WebpBitmapFactoryImpl();
     ImagePipelineConfig.Builder configBuilder =
+        // NULLSAFE_FIXME[Not Vetted Third-Party]
         ImagePipelineConfig.newBuilder(mInstrumentation.getContext());
     configBuilder.experiment().setWebpBitmapFactory(mWebpBitmapFactory);
     ImagePipelineFactory.initialize(configBuilder.build());
@@ -57,6 +60,7 @@ public class WebpBitmapFactoryTest extends TestCase {
 
   private InputStream getTestImageInputStream(String path) {
     try {
+      // NULLSAFE_FIXME[Not Vetted Third-Party]
       return mInstrumentation.getContext().getResources().getAssets().open(path);
     } catch (IOException e) {
       throw Throwables.propagate(e);
@@ -85,10 +89,14 @@ public class WebpBitmapFactoryTest extends TestCase {
   public void testJpegFallback() throws Throwable {
     final Bitmap bitmap = mWebpBitmapFactory.decodeStream(getTestJpegInputStream(), null, null);
 
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     assertNotNull("Bitmap should not be null", bitmap);
+    // NULLSAFE_FIXME[Nullable Dereference]
     assertEquals("Width should be decoded properly", 20, bitmap.getWidth());
+    // NULLSAFE_FIXME[Nullable Dereference]
     assertEquals("Height should be decoded properly", 20, bitmap.getHeight());
 
+    // NULLSAFE_FIXME[Nullable Dereference]
     assertEquals("Bitmap pixels should be red", 0xFFFF0100, bitmap.getPixel(5, 8));
   }
 
@@ -96,10 +104,14 @@ public class WebpBitmapFactoryTest extends TestCase {
   public void testWebpDecodeStream() throws Throwable {
     final Bitmap bitmap = mWebpBitmapFactory.decodeStream(getTestWebpInputStream(), null, null);
 
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     assertNotNull("Bitmap should not be null", bitmap);
+    // NULLSAFE_FIXME[Nullable Dereference]
     assertEquals("Width should be decoded properly", 20, bitmap.getWidth());
+    // NULLSAFE_FIXME[Nullable Dereference]
     assertEquals("Height should be decoded properly", 20, bitmap.getHeight());
 
+    // NULLSAFE_FIXME[Nullable Dereference]
     assertEquals("Bitmap pixels should be red", 0xFFFF0100, bitmap.getPixel(5, 8));
     // Alternatively, load image manually adb pull /mnt/sdcard/resulthooked.jpg
     //    bitmap.compress(
@@ -116,6 +128,7 @@ public class WebpBitmapFactoryTest extends TestCase {
 
     final Bitmap bitmap = mWebpBitmapFactory.decodeStream(getTestWebpInputStream(), null, options);
 
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     assertNull("Bitmap should be null", bitmap);
     assertEquals("Width should be decoded properly", 20, options.outWidth);
     assertEquals("Height should be decoded properly", 20, options.outHeight);
@@ -131,8 +144,11 @@ public class WebpBitmapFactoryTest extends TestCase {
     final Bitmap outBitmap =
         mWebpBitmapFactory.decodeStream(getTestWebpInputStream(), null, options);
 
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     assertNotNull("Bitmap should not be null", outBitmap);
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     assertSame("Output bitmap shuold be the same as input bitmap", inBitmap, outBitmap);
+    // NULLSAFE_FIXME[Nullable Dereference]
     assertEquals("Bitmap pixels should be red", 0xFFFF0100, outBitmap.getPixel(5, 8));
   }
 
@@ -141,6 +157,7 @@ public class WebpBitmapFactoryTest extends TestCase {
     byte[] data = ByteStreams.toByteArray(getTestWebpInputStream());
     final Bitmap bitmap = mWebpBitmapFactory.decodeByteArray(data, 0, data.length, null);
 
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     testBitmapDefault(bitmap, 20, 20);
   }
 
@@ -148,6 +165,7 @@ public class WebpBitmapFactoryTest extends TestCase {
   public void testOutMimeType() throws Throwable {
     BitmapFactory.Options options = new BitmapFactory.Options();
 
+    // NULLSAFE_FIXME[Not Vetted Third-Party]
     if (options.outMimeType != null) {
       // Not all devices are able to get this info from the image
       assertEquals("Mime type should be detected properly", "image/webp", options.outMimeType);
@@ -163,6 +181,7 @@ public class WebpBitmapFactoryTest extends TestCase {
     options.inTempStorage = new byte[128 * 1024];
 
     Bitmap bitmap = mWebpBitmapFactory.decodeStream(getTestWebpInputStream(), null, options);
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     testBitmapDefault(bitmap, 20, 20);
   }
 
@@ -173,6 +192,7 @@ public class WebpBitmapFactoryTest extends TestCase {
 
     final Bitmap bitmap = mWebpBitmapFactory.decodeStream(getTestWebpInputStream(), null, options);
 
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     testBitmapDefault(bitmap, 10, 10);
   }
 
@@ -182,6 +202,7 @@ public class WebpBitmapFactoryTest extends TestCase {
 
     final Bitmap bitmap = mWebpBitmapFactory.decodeStream(getTestWebpInputStream(), null, options);
 
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     assertNotNull("Bitmap should not be null", bitmap);
     assertEquals("Width should be scaled", 20, options.outWidth);
     assertEquals("Height should be scaled", 20, options.outHeight);
@@ -205,6 +226,7 @@ public class WebpBitmapFactoryTest extends TestCase {
     FileDescriptor fd = getImageFileDescriptor("redsquare.webp");
     final Bitmap bitmap = mWebpBitmapFactory.decodeFileDescriptor(fd, null, null);
 
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     testBitmapDefault(bitmap, 20, 20);
   }
 
@@ -213,6 +235,7 @@ public class WebpBitmapFactoryTest extends TestCase {
     FileDescriptor fd = getImageFileDescriptor("redsquare.jpg");
     final Bitmap bitmap = mWebpBitmapFactory.decodeFileDescriptor(fd, null, null);
 
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     testBitmapDefault(bitmap, 20, 20);
   }
 
@@ -226,6 +249,7 @@ public class WebpBitmapFactoryTest extends TestCase {
 
     final Bitmap bitmap = mWebpBitmapFactory.decodeStream(getTestWebpInputStream(), null, options);
 
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     testBitmapDefault(bitmap, 10, 10);
   }
 
@@ -239,6 +263,7 @@ public class WebpBitmapFactoryTest extends TestCase {
 
     final Bitmap bitmap = mWebpBitmapFactory.decodeStream(getTestWebpInputStream(), null, options);
 
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     testBitmapDefault(bitmap, 20, 20);
   }
 
@@ -252,6 +277,7 @@ public class WebpBitmapFactoryTest extends TestCase {
 
     final Bitmap bitmap = mWebpBitmapFactory.decodeStream(getTestWebpInputStream(), null, options);
 
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     testBitmapDefault(bitmap, 20, 20);
   }
 
