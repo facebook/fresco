@@ -12,8 +12,10 @@ import static org.mockito.Mockito.*;
 import android.graphics.Bitmap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Helper class for creating bitmap mocks in tests. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class MockBitmapFactory {
   public static int DEFAULT_BITMAP_WIDTH = 3;
   public static int DEFAULT_BITMAP_HEIGHT = 4;
@@ -37,6 +39,7 @@ public class MockBitmapFactory {
     Bitmap bitmap = mock(Bitmap.class);
     when(bitmap.getWidth()).thenReturn(width);
     when(bitmap.getHeight()).thenReturn(height);
+    // NULLSAFE_FIXME[Parameter Not Nullable]
     when(bitmap.getConfig()).thenReturn(config);
     when(bitmap.isMutable()).thenReturn(true);
     when(bitmap.getRowBytes()).thenReturn(width * BitmapUtil.getPixelSizeForBitmapConfig(config));
