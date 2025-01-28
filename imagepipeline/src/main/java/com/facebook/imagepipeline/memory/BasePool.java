@@ -441,6 +441,9 @@ public abstract class BasePool<V> implements Pool<V> {
    * values left
    */
   private synchronized void ensurePoolSizeInvariant() {
+    if (mIgnoreHardCap) {
+      return;
+    }
     Preconditions.checkState(!isMaxSizeSoftCapExceeded() || mFree.mNumBytes == 0);
   }
 
