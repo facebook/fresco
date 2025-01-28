@@ -13,11 +13,13 @@ import com.facebook.imagepipeline.memory.BufferMemoryChunk;
 import com.facebook.imagepipeline.memory.BufferMemoryChunkPool;
 import com.facebook.imagepipeline.memory.PoolParams;
 import com.facebook.imagepipeline.memory.PoolStatsTracker;
+import com.facebook.infer.annotation.Nullsafe;
 import org.mockito.Mockito;
 
 /**
  * A 'fake' {@link com.facebook.imagepipeline.memory.BufferMemoryChunk} instance as a test helper
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FakeBufferMemoryChunkPool extends BufferMemoryChunkPool {
 
   public FakeBufferMemoryChunkPool() {
