@@ -7,6 +7,7 @@
 
 package com.facebook.animated.giflite.decoder;
 
+import com.facebook.common.preconditions.Preconditions;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.EOFException;
 import java.io.IOException;
@@ -258,8 +259,7 @@ public class GifMetadataDecoder {
     int count = mInputStream.read(block, offset, length);
     mCurrentOffset += length;
     if (shouldFixStream) {
-      // NULLSAFE_FIXME[Nullable Dereference]
-      mOutputStream.write(block, offset, length);
+      Preconditions.checkNotNull(mOutputStream).write(block, offset, length);
     }
     if (count == -1) {
       throw new EOFException("Unexpected end of gif file");
@@ -275,8 +275,7 @@ public class GifMetadataDecoder {
 
   private void writeNextByte(int b) throws IOException {
     if (shouldFixStream) {
-      // NULLSAFE_FIXME[Nullable Dereference]
-      mOutputStream.write(b);
+      Preconditions.checkNotNull(mOutputStream).write(b);
     }
   }
 
