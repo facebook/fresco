@@ -14,6 +14,7 @@ import android.graphics.Rect;
 import androidx.test.InstrumentationRegistry;
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Throwables;
+import com.facebook.common.preconditions.Preconditions;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.infer.annotation.Nullsafe;
@@ -91,12 +92,10 @@ public class WebpBitmapFactoryTest extends TestCase {
 
     // NULLSAFE_FIXME[Parameter Not Nullable]
     assertNotNull("Bitmap should not be null", bitmap);
-    // NULLSAFE_FIXME[Nullable Dereference]
-    assertEquals("Width should be decoded properly", 20, bitmap.getWidth());
-    // NULLSAFE_FIXME[Nullable Dereference]
+    assertEquals(
+        "Width should be decoded properly", 20, Preconditions.checkNotNull(bitmap).getWidth());
     assertEquals("Height should be decoded properly", 20, bitmap.getHeight());
 
-    // NULLSAFE_FIXME[Nullable Dereference]
     assertEquals("Bitmap pixels should be red", 0xFFFF0100, bitmap.getPixel(5, 8));
   }
 
@@ -106,12 +105,10 @@ public class WebpBitmapFactoryTest extends TestCase {
 
     // NULLSAFE_FIXME[Parameter Not Nullable]
     assertNotNull("Bitmap should not be null", bitmap);
-    // NULLSAFE_FIXME[Nullable Dereference]
-    assertEquals("Width should be decoded properly", 20, bitmap.getWidth());
-    // NULLSAFE_FIXME[Nullable Dereference]
+    assertEquals(
+        "Width should be decoded properly", 20, Preconditions.checkNotNull(bitmap).getWidth());
     assertEquals("Height should be decoded properly", 20, bitmap.getHeight());
 
-    // NULLSAFE_FIXME[Nullable Dereference]
     assertEquals("Bitmap pixels should be red", 0xFFFF0100, bitmap.getPixel(5, 8));
     // Alternatively, load image manually adb pull /mnt/sdcard/resulthooked.jpg
     //    bitmap.compress(
