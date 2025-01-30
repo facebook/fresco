@@ -145,8 +145,10 @@ public class WebpBitmapFactoryTest extends TestCase {
     assertNotNull("Bitmap should not be null", outBitmap);
     // NULLSAFE_FIXME[Parameter Not Nullable]
     assertSame("Output bitmap shuold be the same as input bitmap", inBitmap, outBitmap);
-    // NULLSAFE_FIXME[Nullable Dereference]
-    assertEquals("Bitmap pixels should be red", 0xFFFF0100, outBitmap.getPixel(5, 8));
+    assertEquals(
+        "Bitmap pixels should be red",
+        0xFFFF0100,
+        Preconditions.checkNotNull(outBitmap).getPixel(5, 8));
   }
 
   @Test
