@@ -40,7 +40,6 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
             request.getImageDecodeOptions(),
             null,
             null);
-    cacheKey.setCallerContext(callerContext);
     return cacheKey;
   }
 
@@ -65,7 +64,6 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
             request.getImageDecodeOptions(),
             postprocessorCacheKey,
             postprocessorName);
-    cacheKey.setCallerContext(callerContext);
     return cacheKey;
   }
 

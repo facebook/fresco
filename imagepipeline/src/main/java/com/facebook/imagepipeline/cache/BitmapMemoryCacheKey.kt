@@ -25,8 +25,6 @@ data class BitmapMemoryCacheKey(
     val postprocessorName: String?,
 ) : CacheKey {
 
-  var callerContext: Any? = null
-
   private val hash: Int = run {
     var result = sourceString.hashCode()
     result = 31 * result + (resizeOptions?.hashCode() ?: 0)

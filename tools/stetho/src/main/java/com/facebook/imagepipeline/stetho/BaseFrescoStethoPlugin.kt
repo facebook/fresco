@@ -187,12 +187,11 @@ abstract class BaseFrescoStethoPlugin() : DumperPlugin {
     val entryValue = checkNotNull(entry.value)
     writer.println(
         formatStrLocaleSafe(
-            "size: %7.2fkB (%4d x %4d) key: %s, %s, duration: %dms",
+            "size: %7.2fkB (%4d x %4d) key: %s, duration: %dms",
             entryValue.get().sizeInBytes / KB,
             entryValue.get().width,
             entryValue.get().height,
             entry.key,
-            checkNotNull(cacheKey.callerContext),
             RealtimeSinceBootClock.get().now() - cacheKey.inBitmapCacheSince))
   }
 
