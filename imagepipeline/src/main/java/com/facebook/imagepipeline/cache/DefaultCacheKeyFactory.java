@@ -21,10 +21,6 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
 
   private static @Nullable DefaultCacheKeyFactory sInstance = null;
 
-  // Experiment with removing caller context from cache key. This should prevent leaking
-  // the caller context object by the cache key.
-  private static boolean sShouldRemoveCallerContextFromCacheKey = false;
-
   protected DefaultCacheKeyFactory() {}
 
   public static synchronized DefaultCacheKeyFactory getInstance() {
@@ -32,11 +28,6 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
       sInstance = new DefaultCacheKeyFactory();
     }
     return sInstance;
-  }
-
-  public static void setShouldRemoveCallerContextFromCacheKey(
-      boolean shouldRemoveCallerContextFromCacheKey) {
-    sShouldRemoveCallerContextFromCacheKey = shouldRemoveCallerContextFromCacheKey;
   }
 
   @Override
@@ -49,13 +40,7 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
             request.getImageDecodeOptions(),
             null,
             null);
-
-    if (sShouldRemoveCallerContextFromCacheKey) {
-      cacheKey.setCallerContext(null);
-    } else {
-      cacheKey.setCallerContext(callerContext);
-    }
-
+    cacheKey.setCallerContext(callerContext);
     return cacheKey;
   }
 
@@ -80,13 +65,7 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
             request.getImageDecodeOptions(),
             postprocessorCacheKey,
             postprocessorName);
-
-    if (sShouldRemoveCallerContextFromCacheKey) {
-      cacheKey.setCallerContext(null);
-    } else {
-      cacheKey.setCallerContext(callerContext);
-    }
-
+    cacheKey.setCallerContext(callerContext);
     return cacheKey;
   }
 
