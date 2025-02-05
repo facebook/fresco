@@ -9,6 +9,7 @@
 
 #include <android/bitmap.h>
 #include <android/log.h>
+#include <angliru/Angliru.h>
 #include <jni.h>
 #include <unistd.h>
 #include <algorithm>
@@ -805,7 +806,7 @@ jobject createFromDataWrapper(
  */
 jobject GifImage_nativeCreateFromByteVector(
     JNIEnv* pEnv,
-    std::vector<uint8_t>& vBuffer,
+    __ANGLIRU_SOURCE__ std::vector<uint8_t>& vBuffer,
     int maxDimension,
     bool forceStatic) {
   // Create the DataWrapper
