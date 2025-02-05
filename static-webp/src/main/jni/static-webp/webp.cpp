@@ -9,6 +9,7 @@
 
 #include <android/bitmap.h>
 #include <android/log.h>
+#include <angliru/Angliru.h>
 #include <jni.h>
 #include <array>
 #include <memory>
@@ -175,7 +176,7 @@ static jfieldID sWebPFrameFieldNativeContext;
  */
 jobject WebPImage_nativeCreateFromByteVector(
     JNIEnv* pEnv,
-    std::vector<uint8_t>& vBuffer) {
+    __ANGLIRU_SOURCE__ std::vector<uint8_t>& vBuffer) {
   std::unique_ptr<WebPImageNativeContext> spNativeContext(
       new WebPImageNativeContext());
   if (!spNativeContext) {
