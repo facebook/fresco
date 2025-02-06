@@ -70,7 +70,7 @@ class FrameLoaderStrategy(
     }
 
     val frameSize = calculateFrameSize(canvasWidth, canvasHeight)
-    frameLoader?.prepareFrames(frameSize.width, frameSize.width, onAnimationLoaded ?: {})
+    frameLoader?.prepareFrames(frameSize.width, frameSize.height, onAnimationLoaded ?: {})
   }
 
   @UiThread
