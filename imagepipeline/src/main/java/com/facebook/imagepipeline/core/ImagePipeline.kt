@@ -994,43 +994,6 @@ class ImagePipeline(
         }
       }
 
-  private fun <T> submitFetchRequest(
-      producerSequence: Producer<CloseableReference<T>>,
-      imageRequest: ImageRequest,
-      lowestPermittedRequestLevelOnSubmit: RequestLevel,
-      callerContext: Any?,
-      requestListener: RequestListener?,
-      extras: Map<String, *>?
-  ): DataSource<CloseableReference<T>> =
-      traceSection("ImagePipeline#submitFetchRequest") {
-        val requestListener2 =
-            InternalRequestListener(
-                getRequestListenerForRequest(imageRequest, requestListener), requestListener2)
-        callerContextVerifier?.verifyCallerContext(callerContext, false)
-        return try {
-          val lowestPermittedRequestLevel =
-              RequestLevel.getMax(
-                  imageRequest.lowestPermittedRequestLevel, lowestPermittedRequestLevelOnSubmit)
-          val settableProducerContext =
-              SettableProducerContext(
-                  imageRequest,
-                  generateUniqueFutureId(),
-                  null,
-                  requestListener2,
-                  callerContext,
-                  lowestPermittedRequestLevel, /* isPrefetch */
-                  false,
-                  imageRequest.progressiveRenderingEnabled ||
-                      !UriUtil.isNetworkUri(imageRequest.sourceUri),
-                  imageRequest.priority,
-                  config)
-          CloseableProducerToDataSourceAdapter.create(
-              producerSequence, settableProducerContext, requestListener2)
-        } catch (exception: Exception) {
-          DataSources.immediateFailedDataSource(exception)
-        }
-      }
-
   fun <T> submitFetchRequest(
       producerSequence: Producer<CloseableReference<T>?>,
       settableProducerContext: SettableProducerContext,
