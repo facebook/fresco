@@ -29,7 +29,7 @@ object MediaUtils {
 
   @JvmStatic
   fun extractMime(@NonNull path: String): String? {
-    val extension = extractExtension(path)?.toLowerCase(Locale.US) ?: return null
+    val extension = extractExtension(path)?.lowercase(Locale.US) ?: return null
 
     // If we did not find a mime type for the extension specified, check our additional
     // extension/mime-type mappings.
