@@ -25,6 +25,7 @@ import com.facebook.datasource.DataSubscriber;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.components.DraweeEventTracker;
 import com.facebook.drawee.components.RetryManager;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.gestures.GestureDetector;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -867,11 +868,11 @@ public abstract class AbstractDraweeController<T, INFO>
       @Nullable Map<String, Object> datasourceExtras,
       @Nullable Map<String, Object> imageExtras,
       @Nullable Uri mainUri) {
-    String scaleType = null;
+    ScalingUtils.ScaleType scaleType = null;
     PointF focusPoint = null;
     final SettableDraweeHierarchy hierarchy = mSettableDraweeHierarchy;
     if (hierarchy instanceof GenericDraweeHierarchy) {
-      scaleType = String.valueOf(((GenericDraweeHierarchy) hierarchy).getActualImageScaleType());
+      scaleType = ((GenericDraweeHierarchy) hierarchy).getActualImageScaleType();
       focusPoint = ((GenericDraweeHierarchy) hierarchy).getActualImageFocusPoint();
     }
     return MiddlewareUtils.obtainExtras(

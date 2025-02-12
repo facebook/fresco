@@ -462,13 +462,14 @@ open class FrescoController2Impl(
               dataSource?.extras,
               imageSourceExtras,
               drawable.viewportDimensions,
-              drawable.actualImageScaleType.toString(),
+              drawable.actualImageScaleType,
               drawable.actualImageFocusPoint,
               imageExtras,
               drawable.callerContext,
               logWithHighSamplingRate,
               sourceUri)
-      extras.modifiedUriStatus = imageRequest.extras[HasExtraData.KEY_MODIFIED_URL] as? String
+      extras.smartUrlFetchStrategy = imageRequest.extras[HasExtraData.KEY_SF_FETCH_STRATEGY]
+      extras.smartUrlModificationResult = imageRequest.extras[HasExtraData.KEY_SF_MOD_RESULT]
       extras.originalUri = imageRequest.extras[HasExtraData.KEY_ORIGINAL_URL] as? Uri
       extras.uiFramework = drawable.uiFramework
       return extras

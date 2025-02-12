@@ -28,7 +28,8 @@ interface ControllerListener2<INFO> {
     @JvmField var focusX: Float? = null
     @JvmField var focusY: Float? = null
     @JvmField var logWithHighSamplingRate: Boolean = false
-    @JvmField var modifiedUriStatus: String? = null
+    @JvmField var smartUrlFetchStrategy: Any? = null
+    @JvmField var smartUrlModificationResult: Any? = null
     @JvmField var originalUri: Uri? = null
     @JvmField var uiFramework: String? = null
 

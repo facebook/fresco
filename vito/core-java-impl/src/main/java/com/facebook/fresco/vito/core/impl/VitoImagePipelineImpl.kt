@@ -15,7 +15,11 @@ import com.facebook.datasource.DataSource
 import com.facebook.datasource.DataSources
 import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.fresco.ui.common.VitoUtils
+import com.facebook.fresco.urimod.ClassicFetchStrategy
 import com.facebook.fresco.urimod.Dimensions
+import com.facebook.fresco.urimod.FetchStrategy
+import com.facebook.fresco.urimod.NoPrefetchInOnPrepareStrategy
+import com.facebook.fresco.urimod.SmartFetchStrategy
 import com.facebook.fresco.urimod.UriModifier
 import com.facebook.fresco.urimod.UriModifierInterface
 import com.facebook.fresco.vito.core.FrescoVitoConfig
@@ -55,42 +59,48 @@ class VitoImagePipelineImpl(
       viewport: Rect?,
       callerContext: Any?,
       contextChain: ContextChain?,
-      forceKeepOriginalSize: Boolean,
-      forLoggingOnly: Boolean,
+      fetchStrategy: FetchStrategy?,
   ): VitoImageRequest {
     val imageOptions = options ?: defaults()
     val extras: MutableMap<String, Any> = mutableMapOf()
     var finalImageSource = imageSource
 
-    val modifiedUriValue: String
-    if (experimentalDynamicSizeVito2() && !forceKeepOriginalSize) {
-      if (imageSource is UriImageSource) {
-        val result: UriModifierInterface.ModificationResult =
-            UriModifier.INSTANCE.modifyUri(
-                imageSource,
-                viewport?.let { Dimensions(it.width(), it.height()) },
-                imageOptions.actualImageScaleType,
-                callerContext,
-                contextChain,
-                forLoggingOnly)
-        modifiedUriValue = result.toString()
-        if (result is UriModifierInterface.ModificationResult.Modified) {
-          finalImageSource = ImageSourceProvider.forUri(result.newUri)
-          extras[HasExtraData.KEY_ORIGINAL_URL] = imageSource.imageUri
+    val modifiedUriValue: String?
+    when (fetchStrategy) {
+      is SmartFetchStrategy -> {
+        if (imageSource is UriImageSource) {
+          val result: UriModifierInterface.ModificationResult =
+              UriModifier.INSTANCE.modifyUri(
+                  imageSource,
+                  viewport?.let { Dimensions(it.width(), it.height()) },
+                  imageOptions.actualImageScaleType,
+                  callerContext,
+                  contextChain)
+          modifiedUriValue = result.toString()
+          if (result is UriModifierInterface.ModificationResult.Modified) {
+            finalImageSource = ImageSourceProvider.forUri(result.newUri)
+            extras[HasExtraData.KEY_ORIGINAL_URL] = imageSource.imageUri
+          }
+        } else {
+          modifiedUriValue = "NotSupportedImageSource: ${imageSource.getClassNameString()}"
         }
-      } else {
-        modifiedUriValue = "NotSupportedImageSource: ${imageSource.getClassNameString()}"
       }
-    } else if (experimentalDynamicSizeVito2() &&
-        experimentalDynamicSizeWithCacheFallbackVito2() &&
-        forceKeepOriginalSize) {
-      modifiedUriValue = "MBPDiskFallbackEnabled"
-    } else {
-      modifiedUriValue =
-          "Disabled(exp=${experimentalDynamicSizeVito2()}, fallback=${experimentalDynamicSizeWithCacheFallbackVito2()}, force=${forceKeepOriginalSize})"
+
+      is ClassicFetchStrategy -> {
+        modifiedUriValue = "classic" // FIXME: no smart fetch
+      }
+
+      is NoPrefetchInOnPrepareStrategy -> {
+        modifiedUriValue = "noprefetch" // probably should be null (and above) FIXME
+      }
+
+      null -> {
+        modifiedUriValue = null
+      }
     }
 
-    extras[HasExtraData.KEY_MODIFIED_URL] = modifiedUriValue
+    fetchStrategy?.let { extras[HasExtraData.KEY_SF_FETCH_STRATEGY] = it }
+    modifiedUriValue?.let { extras[HasExtraData.KEY_SF_MOD_RESULT] = it }
     extras[HasExtraData.KEY_IMAGE_SOURCE_TYPE] = imageSource.getClassNameString()
 
     if (imageSource is IncreasingQualityImageSource) {

@@ -28,7 +28,7 @@ fun KFrescoVitoDrawable.obtainExtras(
         dataSource?.extras,
         null, // FIXME
         viewportDimensions,
-        imageRequest?.imageOptions?.actualImageScaleType.toString(),
+        imageRequest?.imageOptions?.actualImageScaleType,
         imageRequest?.imageOptions?.actualImageFocusPoint,
         image?.get()?.extras,
         callerContext,

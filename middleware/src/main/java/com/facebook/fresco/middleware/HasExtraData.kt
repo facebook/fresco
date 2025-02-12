@@ -34,7 +34,8 @@ interface HasExtraData {
     /** The original URL if it was modified by Dynamic Image URL */
     const val KEY_ORIGINAL_URL = "original_url"
     /** Information on if/why the url was modified by Dynamic Image URL */
-    const val KEY_MODIFIED_URL = "modified_url"
+    const val KEY_SF_FETCH_STRATEGY = "smart_fetch_strategy"
+    const val KEY_SF_MOD_RESULT = "smart_mod_result"
     const val KEY_IMAGE_SOURCE_TYPE: String = "image_source_type"
 
     const val KEY_ORIGIN = "origin"

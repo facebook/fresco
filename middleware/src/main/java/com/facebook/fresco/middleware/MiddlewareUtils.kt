@@ -10,6 +10,7 @@ package com.facebook.fresco.middleware
 import android.graphics.PointF
 import android.graphics.Rect
 import android.net.Uri
+import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.fresco.ui.common.ControllerListener2.Extras
 
 object MiddlewareUtils {
@@ -20,7 +21,7 @@ object MiddlewareUtils {
       dataSourceExtras: Map<String, Any>?,
       imageSourceExtras: Map<String, Any>?,
       viewportDimensions: Rect?,
-      scaleType: String?,
+      scaleType: ScalingUtils.ScaleType?,
       focusPoint: PointF?,
       imageExtras: Map<String, Any>?,
       callerContext: Any?,
