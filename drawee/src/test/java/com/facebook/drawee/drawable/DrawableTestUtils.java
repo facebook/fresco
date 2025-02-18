@@ -188,7 +188,6 @@ public class DrawableTestUtils {
               }
             })
         .when(drawable)
-        // NULLSAFE_FIXME[Not Vetted Third-Party]
         .draw(any(Canvas.class));
   }
 
