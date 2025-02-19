@@ -22,6 +22,8 @@ interface UriModifierInterface {
       contextChain: ContextChain? = null,
   ): ModificationResult
 
+  fun calculateBestUri(uri: Uri?, viewport: Dimensions?, scaleType: ScaleType?): Uri? = null
+
   fun modifyPrefetchUri(uri: Uri, callerContext: Any?): Uri?
 
   fun unregisterReverseFallbackUri(uri: Uri)
