@@ -13,7 +13,6 @@ import android.content.pm.ActivityInfo
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
-import android.os.Looper
 import android.view.View
 import androidx.core.util.ObjectsCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
@@ -62,7 +61,6 @@ import com.facebook.litho.annotations.ShouldExcludeFromIncrementalMount
 import com.facebook.litho.annotations.ShouldUpdate
 import com.facebook.litho.annotations.TreeProp
 import com.facebook.litho.utils.MeasureUtils
-import java.util.concurrent.TimeUnit
 
 /** Fresco Vito component for Litho */
 @MountSpec(isPureRender = true, canPreallocate = true, poolSize = 15)
@@ -165,7 +163,9 @@ object FrescoVitoImage2Spec {
       prefetchDataSource: Output<DataSource<Void?>>,
       fetchStrategy: Output<FetchStrategy>,
   ) {
-    val result = determineFetchStrategy(requestBeforeLayout, callerContext, contextChain)
+    val result =
+        FrescoVitoProvider.getImagePipeline()
+            .determineFetchStrategy(requestBeforeLayout, callerContext, contextChain)
     when (result) {
       is ClassicFetchStrategy -> {
         checkNotNull(requestBeforeLayout)
@@ -182,14 +182,6 @@ object FrescoVitoImage2Spec {
       NoPrefetchInOnPrepareStrategy -> {}
     }
     fetchStrategy.set(result)
-  }
-
-  private fun isProductEnabled(callerContext: Any?, contextChain: ContextChain?): Boolean? {
-    val config = FrescoVitoProvider.getConfig()
-    if (!config.experimentalDynamicSizeCheckIfProductIsEnabled()) {
-      return null
-    }
-    return config.experimentalDynamicSizeIsProductEnabled(callerContext, contextChain)
   }
 
   @JvmStatic
@@ -516,70 +508,5 @@ object FrescoVitoImage2Spec {
         }
       }
     }
-  }
-
-  /** Determine whether to SmartFetch for a given request */
-  private fun determineFetchStrategy(
-      requestBeforeLayout: VitoImageRequest?,
-      callerContext: Any?,
-      contextChain: ContextChain?
-  ): FetchStrategy {
-    if (requestBeforeLayout == null) {
-      if (experimentalDynamicSizeVito2()) {
-        return SmartFetchStrategy.DEFAULT
-      } else {
-        return NoPrefetchInOnPrepareStrategy
-      }
-    }
-
-    if (!experimentalDynamicSizeVito2()) {
-      return ClassicFetchStrategy.APP_DISABLED
-    }
-
-    if (experimentalDynamicSizeWithCacheFallbackVito2() &&
-        Looper.myLooper() == Looper.getMainLooper()) {
-      // We don't want to check cache if we are running on the main thread
-      // By default uses the original URL
-      val shouldSmartFetchOnMainThread = experimentalDynamicSizeOnPrepareMainThreadVito2()
-      if (shouldSmartFetchOnMainThread) {
-        return SmartFetchStrategy.MAIN_THREAD
-      } else {
-        return ClassicFetchStrategy.MAIN_THREAD
-      }
-    }
-
-    if (isProductEnabled(callerContext, contextChain) == false) {
-      return ClassicFetchStrategy.PRODUCT_DISABLED
-    }
-
-    val config = FrescoVitoProvider.getConfig()
-    if (config.experimentalDynamicSizeDisableWhenAppIsStarting() && config.isAppStarting()) {
-      return ClassicFetchStrategy.APP_STARTING
-    }
-
-    if (experimentalDynamicSizeWithCacheFallbackVito2()) {
-      val isInDiskCache =
-          FrescoVitoProvider.getImagePipeline()
-              .isInDiskCacheSync(
-                  requestBeforeLayout,
-                  FrescoVitoProvider.getConfig().experimentalDynamicSizeDiskCacheCheckTimeoutMs(),
-                  TimeUnit.MILLISECONDS)
-
-      if (isInDiskCache == null) {
-        // Disk cache request timed out
-        if (config.experimentalDynamicSizeUseSfOnDiskCacheTimeout()) {
-          return SmartFetchStrategy.DISK_CACHE_TIMEOUT
-        } else {
-          return ClassicFetchStrategy.DISK_CACHE_TIMEOUT
-        }
-      }
-
-      if (isInDiskCache) {
-        // Disk MBP fallback
-        return ClassicFetchStrategy.DISK_CACHE_HIT
-      }
-    }
-
-    return SmartFetchStrategy.DEFAULT
   }
 }

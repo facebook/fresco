@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.core.impl
 
 import android.content.res.Resources
 import android.graphics.Rect
+import android.os.Looper
 import com.facebook.common.callercontext.ContextChain
 import com.facebook.common.references.CloseableReference
 import com.facebook.datasource.DataSource
@@ -203,5 +204,74 @@ class VitoImagePipelineImpl(
       is UriImageSource -> "UriImageSource"
       else -> "Other"
     }
+  }
+
+  override fun determineFetchStrategy(
+      requestBeforeLayout: VitoImageRequest?,
+      callerContext: Any?,
+      contextChain: ContextChain?
+  ): FetchStrategy {
+    if (requestBeforeLayout == null) {
+      if (experimentalDynamicSizeVito2()) {
+        return SmartFetchStrategy.DEFAULT
+      } else {
+        return NoPrefetchInOnPrepareStrategy
+      }
+    }
+
+    if (!experimentalDynamicSizeVito2()) {
+      return ClassicFetchStrategy.APP_DISABLED
+    }
+
+    if (experimentalDynamicSizeWithCacheFallbackVito2() &&
+        Looper.myLooper() == Looper.getMainLooper()) {
+      // We don't want to check cache if we are running on the main thread
+      // By default uses the original URL
+      val shouldSmartFetchOnMainThread = config.experimentalDynamicSizeOnPrepareMainThreadVito2()
+      if (shouldSmartFetchOnMainThread) {
+        return SmartFetchStrategy.MAIN_THREAD
+      } else {
+        return ClassicFetchStrategy.MAIN_THREAD
+      }
+    }
+
+    if (isProductEnabled(callerContext, contextChain) == false) {
+      return ClassicFetchStrategy.PRODUCT_DISABLED
+    }
+
+    if (config.experimentalDynamicSizeDisableWhenAppIsStarting() && config.isAppStarting()) {
+      return ClassicFetchStrategy.APP_STARTING
+    }
+
+    if (experimentalDynamicSizeWithCacheFallbackVito2()) {
+      val isInDiskCache =
+          isInDiskCacheSync(
+              requestBeforeLayout,
+              config.experimentalDynamicSizeDiskCacheCheckTimeoutMs(),
+              TimeUnit.MILLISECONDS)
+
+      if (isInDiskCache == null) {
+        // Disk cache request timed out
+        if (config.experimentalDynamicSizeUseSfOnDiskCacheTimeout()) {
+          return SmartFetchStrategy.DISK_CACHE_TIMEOUT
+        } else {
+          return ClassicFetchStrategy.DISK_CACHE_TIMEOUT
+        }
+      }
+
+      if (isInDiskCache) {
+        // Disk MBP fallback
+        return ClassicFetchStrategy.DISK_CACHE_HIT
+      }
+    }
+
+    return SmartFetchStrategy.DEFAULT
+  }
+
+  private fun isProductEnabled(callerContext: Any?, contextChain: ContextChain?): Boolean? {
+    if (!config.experimentalDynamicSizeCheckIfProductIsEnabled()) {
+      return null
+    }
+    return config.experimentalDynamicSizeIsProductEnabled(callerContext, contextChain)
   }
 }

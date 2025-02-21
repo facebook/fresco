@@ -12,6 +12,7 @@ import android.graphics.Rect
 import com.facebook.common.callercontext.ContextChain
 import com.facebook.common.references.CloseableReference
 import com.facebook.datasource.DataSource
+import com.facebook.fresco.urimod.ClassicFetchStrategy
 import com.facebook.fresco.urimod.FetchStrategy
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.source.ImageSource
@@ -67,4 +68,10 @@ interface VitoImagePipeline {
   }
 
   fun hintUnmodifiedUri(imageRequest: VitoImageRequest) = Unit
+
+  fun determineFetchStrategy(
+      requestBeforeLayout: VitoImageRequest?,
+      callerContext: Any?,
+      contextChain: ContextChain?
+  ): FetchStrategy = ClassicFetchStrategy.DEFAULT
 }
