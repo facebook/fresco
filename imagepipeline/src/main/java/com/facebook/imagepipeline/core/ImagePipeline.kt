@@ -630,6 +630,26 @@ class ImagePipeline(
     encodedMemoryCache.removeAll(allPredicate)
   }
 
+  /**
+   * Clear a specific disk cache. For dynamic disk caches, if a diskCacheId is not specified, all
+   * the dynamic disk caches registered, will be cleared.
+   */
+  fun clearSpecificDiskCache(cacheChoice: CacheChoice, diskCacheId: String?) {
+    val diskCachesStore = diskCachesStoreSupplier.get()
+    if (cacheChoice == CacheChoice.SMALL) {
+      diskCachesStore.smallImageBufferedDiskCache.clearAll()
+    } else if (cacheChoice == CacheChoice.DEFAULT) {
+      diskCachesStore.mainBufferedDiskCache.clearAll()
+    } else if (cacheChoice == CacheChoice.DYNAMIC) {
+      if (diskCacheId == null) {
+        diskCachesStore.dynamicBufferedDiskCaches.forEach { it.value.clearAll() }
+      } else {
+        val specifiedDiskCache = diskCachesStore.dynamicBufferedDiskCaches[diskCacheId]
+        specifiedDiskCache?.clearAll()
+      }
+    }
+  }
+
   /** Clear disk caches */
   fun clearDiskCaches() {
     val diskCachesStore = diskCachesStoreSupplier.get()

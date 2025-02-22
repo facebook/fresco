@@ -15,6 +15,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -54,6 +56,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.verification.VerificationMode;
 import org.robolectric.RobolectricTestRunner;
 
 /** Tests for ImagePipeline */
@@ -632,9 +635,52 @@ public class ImagePipelineTest {
   @Test
   public void testClearDiskCaches() {
     mImagePipeline.clearDiskCaches();
-    verify(mMainDiskStorageCache).clearAll();
     verify(mSmallImageDiskStorageCache).clearAll();
     verify(mDynamicBufferedDiskCache).clearAll();
+  }
+
+  private void verifyAllDynamicDiskCachesClearAll(VerificationMode verificationMode) {
+    verify(mDynamicBufferedDiskCache, verificationMode).clearAll();
+    verify(mDynamicBufferedDiskCache2, verificationMode).clearAll();
+    verify(mDynamicBufferedDiskCache3, verificationMode).clearAll();
+  }
+
+  private void verifyOnlySpecifiedDynamicDiskCacheClearAll(String diskCacheId) {
+    verify(mDynamicBufferedDiskCache, diskCacheId == "dynamicId1" ? times(1) : never()).clearAll();
+    verify(mDynamicBufferedDiskCache2, diskCacheId == "dynamicId2" ? times(1) : never()).clearAll();
+    verify(mDynamicBufferedDiskCache3, diskCacheId == "dynamicId3" ? times(1) : never()).clearAll();
+  }
+
+  @Test
+  public void testClearSpecificDiskCaches__Small() {
+    mImagePipeline.clearSpecificDiskCache(ImageRequest.CacheChoice.SMALL, null);
+    verify(mSmallImageDiskStorageCache).clearAll();
+    verify(mMainDiskStorageCache, never()).clearAll();
+    verifyAllDynamicDiskCachesClearAll(never());
+  }
+
+  @Test
+  public void testClearSpecificDiskCaches__Main() {
+    mImagePipeline.clearSpecificDiskCache(ImageRequest.CacheChoice.DEFAULT, null);
+    verify(mMainDiskStorageCache).clearAll();
+    verify(mSmallImageDiskStorageCache, never()).clearAll();
+    verifyAllDynamicDiskCachesClearAll(never());
+  }
+
+  @Test
+  public void testClearSpecificDiskCaches__DynamicNoDiskCacheId() {
+    mImagePipeline.clearSpecificDiskCache(ImageRequest.CacheChoice.DYNAMIC, null);
+    verify(mSmallImageDiskStorageCache, never()).clearAll();
+    verify(mMainDiskStorageCache, never()).clearAll();
+    verifyAllDynamicDiskCachesClearAll(times(1));
+  }
+
+  @Test
+  public void testClearSpecificDiskCaches__DynamicWithDiskCacheId() {
+    mImagePipeline.clearSpecificDiskCache(ImageRequest.CacheChoice.DYNAMIC, "dynamicId1");
+    verifyOnlySpecifiedDynamicDiskCacheClearAll("dynamicId1");
+    verify(mSmallImageDiskStorageCache, never()).clearAll();
+    verify(mMainDiskStorageCache, never()).clearAll();
   }
 
   @Test
