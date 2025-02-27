@@ -244,6 +244,11 @@ class VitoImagePipelineImpl(
     }
 
     if (experimentalDynamicSizeWithCacheFallbackVito2()) {
+      if (config.experimentalDynamicSizeBloksDisableDiskCacheCheck() &&
+          config.isCallerContextBloks(callerContext)) {
+        return SmartFetchStrategy.DEFAULT
+      }
+
       val isInDiskCache =
           isInDiskCacheSync(
               requestBeforeLayout,

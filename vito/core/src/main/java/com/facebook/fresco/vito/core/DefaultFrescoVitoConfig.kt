@@ -61,6 +61,8 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
       contextChain: ContextChain?
   ): Boolean = true
 
+  override fun experimentalDynamicSizeBloksDisableDiskCacheCheck(): Boolean = false
+
   override fun experimentalResetVitoImageRequestListener() = false
 
   override fun experimentalResetLocalVitoImageRequestListener() = false
@@ -68,6 +70,8 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
   override fun experimentalResetLocalImagePerfStateListener() = false
 
   override fun experimentalResetControllerListener2() = false
+
+  override fun isCallerContextBloks(callerContext: Any?): Boolean = false
 
   open class DefaultPrefetchConfig : PrefetchConfig {
     override fun prefetchInOnPrepare(): Boolean = true

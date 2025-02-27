@@ -39,6 +39,8 @@ interface FrescoVitoConfig {
 
   fun experimentalDynamicSizeVito2(): Boolean
 
+  fun experimentalDynamicSizeBloksDisableDiskCacheCheck(): Boolean
+
   fun experimentalDynamicSizeWithCacheFallbackVito2(): Boolean
 
   fun experimentalDynamicSizeOnPrepareMainThreadVito2(): Boolean
@@ -57,6 +59,8 @@ interface FrescoVitoConfig {
       callerContext: Any?,
       contextChain: ContextChain?
   ): Boolean
+
+  fun isCallerContextBloks(callerContext: Any?): Boolean
 
   fun experimentalResetVitoImageRequestListener(): Boolean
 
