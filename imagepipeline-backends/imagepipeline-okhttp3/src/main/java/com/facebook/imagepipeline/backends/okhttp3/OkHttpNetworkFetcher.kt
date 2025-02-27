@@ -54,7 +54,7 @@ constructor(
   ) : this(okHttpClient, okHttpClient.dispatcher().executorService())
 
   class OkHttpNetworkFetchState(
-      consumer: Consumer<EncodedImage>,
+      consumer: Consumer<EncodedImage?>,
       producerContext: ProducerContext
   ) : FetchState(consumer, producerContext) {
     @JvmField var submitTime: Long = 0
@@ -66,7 +66,7 @@ constructor(
       if (disableOkHttpCache) CacheControl.Builder().noStore().build() else null
 
   override fun createFetchState(
-      consumer: Consumer<EncodedImage>,
+      consumer: Consumer<EncodedImage?>,
       context: ProducerContext
   ): OkHttpNetworkFetchState = OkHttpNetworkFetchState(consumer, context)
 
