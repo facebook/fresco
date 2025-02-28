@@ -38,7 +38,6 @@ import com.facebook.imageutils.BitmapUtil;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.memory.helper.HashCode;
 import java.io.File;
-import java.util.HashMap;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
@@ -379,43 +378,6 @@ public class ImageRequest {
       }
     }
     return result;
-  }
-
-  public void recordHashCode(HashMap<String, Integer> hashCodeLog) {
-    final CacheKey postprocessorCacheKey =
-        mPostprocessor != null ? mPostprocessor.getPostprocessorCacheKey() : null;
-    hashCodeLog.put("ImageRequest", hashCode());
-
-    hashCodeLog.put("ImageRequest.mSourceUri", getHashCodeHelper(mSourceUri));
-    hashCodeLog.put(
-        "ImageRequest.mLocalThumbnailPreviewsEnabled",
-        getHashCodeHelper(mLocalThumbnailPreviewsEnabled));
-    hashCodeLog.put("ImageRequest.mBytesRange", getHashCodeHelper(mBytesRange));
-    hashCodeLog.put("ImageRequest.mRequestPriority", getHashCodeHelper(mRequestPriority));
-    hashCodeLog.put(
-        "ImageRequest.mLowestPermittedRequestLevel",
-        getHashCodeHelper(mLowestPermittedRequestLevel));
-    hashCodeLog.put("ImageRequest.mCachesDisabled", getHashCodeHelper(mCachesDisabled));
-    hashCodeLog.put("ImageRequest.mIsDiskCacheEnabled", getHashCodeHelper(mIsDiskCacheEnabled));
-    hashCodeLog.put("ImageRequest.mIsMemoryCacheEnabled", getHashCodeHelper(mIsMemoryCacheEnabled));
-    hashCodeLog.put("ImageRequest.mImageDecodeOptions", getHashCodeHelper(mImageDecodeOptions));
-    hashCodeLog.put("ImageRequest.mDecodePrefetches", getHashCodeHelper(mDecodePrefetches));
-    hashCodeLog.put("ImageRequest.mSoumResizeOptionsrceUri", getHashCodeHelper(mResizeOptions));
-    hashCodeLog.put("ImageRequest.mRotationOptions", getHashCodeHelper(mRotationOptions));
-    hashCodeLog.put("ImageRequest.postprocessorCacheKey", getHashCodeHelper(postprocessorCacheKey));
-    hashCodeLog.put(
-        "ImageRequest.mResizingAllowedOverride", getHashCodeHelper(mResizingAllowedOverride));
-    hashCodeLog.put("ImageRequest.mDownsampleOverride", getHashCodeHelper(mDownsampleOverride));
-    hashCodeLog.put("ImageRequest.mDelayMs", getHashCodeHelper(mDelayMs));
-    hashCodeLog.put("ImageRequest.mLoadThumbnailOnly", getHashCodeHelper(mLoadThumbnailOnly));
-  }
-
-  private static int getHashCodeHelper(final @Nullable Object obj) {
-    if (obj == null) {
-      return 0;
-    } else {
-      return obj.hashCode();
-    }
   }
 
   @Override
