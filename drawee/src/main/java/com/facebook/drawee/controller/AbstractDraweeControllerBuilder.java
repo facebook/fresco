@@ -112,7 +112,7 @@ public abstract class AbstractDraweeControllerBuilder<
 
   /** Sets the caller context. */
   @Override
-  public BUILDER setCallerContext(Object callerContext) {
+  public BUILDER setCallerContext(@Nullable Object callerContext) {
     mCallerContext = callerContext;
     return getThis();
   }
