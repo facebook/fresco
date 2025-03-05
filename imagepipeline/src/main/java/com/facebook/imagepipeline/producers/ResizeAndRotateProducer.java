@@ -250,7 +250,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
             CloseableReference.of(outputStream.toByteBuffer());
         try {
           ret = new EncodedImage(ref);
-          ret.setImageFormat(JPEG);
+          ret.setImageFormat(result.getOutputFormat());
           try {
             ret.parseMetaData();
             mProducerContext
@@ -322,7 +322,8 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     return TriState.valueOf(
         shouldRotate(request.getRotationOptions(), encodedImage)
             || imageTranscoder.canResize(
-                encodedImage, request.getRotationOptions(), request.getResizeOptions()));
+                encodedImage, request.getRotationOptions(), request.getResizeOptions())
+            || imageTranscoder.canTransformAVIF(encodedImage.getImageFormat()));
   }
 
   private static boolean shouldRotate(RotationOptions rotationOptions, EncodedImage encodedImage) {

@@ -7,11 +7,13 @@
 
 package com.facebook.imagepipeline.transcoder
 
+import com.facebook.imageformat.ImageFormat
 import java.util.Locale
 
 /** Result returned by an [ImageTranscoder] when transcoding an image. */
 class ImageTranscodeResult(
-    @field:TranscodeStatus @get:TranscodeStatus @param:TranscodeStatus val transcodeStatus: Int
+    @field:TranscodeStatus @get:TranscodeStatus @param:TranscodeStatus val transcodeStatus: Int,
+    val outputFormat: ImageFormat
 ) {
   override fun toString(): String = String.format(null as Locale?, "Status: %d", transcodeStatus)
 }

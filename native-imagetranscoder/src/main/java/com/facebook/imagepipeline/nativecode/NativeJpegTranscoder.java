@@ -79,6 +79,11 @@ public class NativeJpegTranscoder implements ImageTranscoder {
   }
 
   @Override
+  public boolean canTransformAVIF(ImageFormat imageFormat) {
+    return false;
+  }
+
+  @Override
   public String getIdentifier() {
     return TAG;
   }
@@ -146,7 +151,8 @@ public class NativeJpegTranscoder implements ImageTranscoder {
     return new ImageTranscodeResult(
         downsampleRatio == DownsampleUtil.DEFAULT_SAMPLE_SIZE
             ? TranscodeStatus.TRANSCODING_NO_RESIZING
-            : TranscodeStatus.TRANSCODING_SUCCESS);
+            : TranscodeStatus.TRANSCODING_SUCCESS,
+        DefaultImageFormats.JPEG);
   }
 
   /**

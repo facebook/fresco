@@ -67,6 +67,14 @@ interface ImageTranscoder {
   fun canTranscode(imageFormat: ImageFormat): Boolean
 
   /**
+   * Determines whether the given image format should be transformed into a different format.
+   *
+   * @param imageFormat The [ImageFormat] of the input image.
+   * @return true if the image format should be transformed to a different format, else false.
+   */
+  fun canTransformAVIF(imageFormat: ImageFormat): Boolean
+
+  /**
    * Gets the identifier of the image transcoder. This is mostly used for logging purposes.
    *
    * @return the identifier of the image transcoder.

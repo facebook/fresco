@@ -55,11 +55,11 @@ class SimpleImageTranscoder(private val resizingEnabled: Boolean, private val ma
           BitmapFactory.decodeStream(encodedImage.inputStream, null, options)
         } catch (oom: OutOfMemoryError) {
           FLog.e(TAG, "Out-Of-Memory during transcode", oom)
-          return ImageTranscodeResult(TranscodeStatus.TRANSCODING_ERROR)
+          return ImageTranscodeResult(TranscodeStatus.TRANSCODING_ERROR, encodedImage.imageFormat)
         }
     if (resizedBitmap == null) {
       FLog.e(TAG, "Couldn't decode the EncodedImage InputStream ! ")
-      return ImageTranscodeResult(TranscodeStatus.TRANSCODING_ERROR)
+      return ImageTranscodeResult(TranscodeStatus.TRANSCODING_ERROR, encodedImage.imageFormat)
     }
     val transformationMatrix =
         JpegTranscoderUtils.getTransformationMatrix(encodedImage, rotationOptions)
@@ -76,13 +76,15 @@ class SimpleImageTranscoder(private val resizingEnabled: Boolean, private val ma
                 transformationMatrix,
                 false)
       }
-      srcBitmap.compress(getOutputFormat(outputFormat), quality, outputStream)
+      val outputFormat = getOutputFormat(outputFormat)
+      srcBitmap.compress(outputFormat, quality, outputStream)
       ImageTranscodeResult(
           if (sampleSize > DownsampleUtil.DEFAULT_SAMPLE_SIZE) TranscodeStatus.TRANSCODING_SUCCESS
-          else TranscodeStatus.TRANSCODING_NO_RESIZING)
+          else TranscodeStatus.TRANSCODING_NO_RESIZING,
+          convertCompressFormatToImageFormat(outputFormat))
     } catch (oom: OutOfMemoryError) {
       FLog.e(TAG, "Out-Of-Memory during transcode", oom)
-      ImageTranscodeResult(TranscodeStatus.TRANSCODING_ERROR)
+      ImageTranscodeResult(TranscodeStatus.TRANSCODING_ERROR, encodedImage.imageFormat)
     } finally {
       srcBitmap.recycle()
       resizedBitmap.recycle()
@@ -106,6 +108,8 @@ class SimpleImageTranscoder(private val resizingEnabled: Boolean, private val ma
 
   override fun canTranscode(imageFormat: ImageFormat): Boolean =
       imageFormat === DefaultImageFormats.HEIF || imageFormat === DefaultImageFormats.JPEG
+
+  override fun canTransformAVIF(imageFormat: ImageFormat): Boolean = false
 
   override val identifier: String = "SimpleImageTranscoder"
 
@@ -150,6 +154,16 @@ class SimpleImageTranscoder(private val resizingEnabled: Boolean, private val ma
           CompressFormat.JPEG
         }
       }
+    }
+  }
+
+  /** Maps an Android [CompressFormat] back to the corresponding [ImageFormat]. */
+  private fun convertCompressFormatToImageFormat(compressFormat: CompressFormat): ImageFormat {
+    return when (compressFormat) {
+      CompressFormat.JPEG -> DefaultImageFormats.JPEG
+      CompressFormat.PNG -> DefaultImageFormats.PNG
+      CompressFormat.WEBP -> DefaultImageFormats.WEBP_SIMPLE
+      else -> DefaultImageFormats.JPEG
     }
   }
 }
