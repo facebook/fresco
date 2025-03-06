@@ -7,6 +7,8 @@
 
 package com.facebook.fresco.urimod
 
+import android.graphics.Rect
+
 @Suppress("KtDataClass")
 data class Dimensions(val w: Int, val h: Int) {
 
@@ -27,3 +29,5 @@ data class Dimensions(val w: Int, val h: Int) {
 
   override fun hashCode(): Int = 31 * w + h
 }
+
+fun Rect.asDimensions() = Dimensions(width(), height())

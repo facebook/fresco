@@ -26,6 +26,14 @@ interface UriModifierInterface {
 
   fun modifyPrefetchUri(uri: Uri, callerContext: Any?): Uri?
 
+  fun modifyNetworkUriAdaptively(
+      uri: Uri,
+      viewport: Dimensions?,
+      scaleType: ScaleType?,
+      callerContext: Any?,
+      contextChain: ContextChain? = null,
+  ): ModificationResult = ModificationResult.Disabled("Default")
+
   fun unregisterReverseFallbackUri(uri: Uri)
 
   sealed class ModificationResult(private val comment: String) {

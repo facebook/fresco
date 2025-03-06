@@ -12,6 +12,7 @@ import com.facebook.cache.common.CacheKey
 import com.facebook.common.internal.Objects
 import com.facebook.fresco.middleware.Extras
 import com.facebook.fresco.middleware.HasExtraData
+import com.facebook.fresco.urimod.Dimensions
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.source.ImageSource
 import com.facebook.imagepipeline.request.ImageRequest
@@ -25,6 +26,7 @@ class VitoImageRequest(
     @JvmField val finalImageRequest: ImageRequest?,
     @JvmField val finalImageCacheKey: CacheKey?,
     @JvmField val extras: MutableMap<String, Any> = mutableMapOf(),
+    @JvmField val viewport: Dimensions? = null,
 ) : HasExtraData {
 
   /** Simplify this once BaseCloseableImage and BaseProducerContext are converted to Kotlin */

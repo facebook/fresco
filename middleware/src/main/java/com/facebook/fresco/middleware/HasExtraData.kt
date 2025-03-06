@@ -31,8 +31,10 @@ interface HasExtraData {
     const val KEY_BITMAP_CONFIG = "bitmap_config"
     const val KEY_IS_ROUNDED = "is_rounded"
     const val KEY_NON_FATAL_DECODE_ERROR = "non_fatal_decode_error"
+
     /** The original URL if it was modified by Dynamic Image URL */
     const val KEY_ORIGINAL_URL = "original_url"
+
     /** Information on if/why the url was modified by Dynamic Image URL */
     const val KEY_SF_FETCH_STRATEGY = "smart_fetch_strategy"
     const val KEY_SF_MOD_RESULT = "smart_mod_result"
@@ -43,11 +45,15 @@ interface HasExtraData {
 
     /* number of deduped request in BitmapMemoryCacheKeyMultiplexProducer */
     const val KEY_MULTIPLEX_BITMAP_COUNT = "multiplex_bmp_cnt"
+
     /* number of deduped request in EncodedCacheKeyMultiplexProducer */
     const val KEY_MULTIPLEX_ENCODED_COUNT = "multiplex_enc_cnt"
     const val KEY_LAST_SCAN_NUMBER = "last_scan_num"
 
     const val KEY_IMAGE_SOURCE_EXTRAS = "image_source_extras"
     const val KEY_COLOR_SPACE = "image_color_space"
+
+    const val KEY_VIEWPORT = "viewport"
+    const val KEY_IMAGEOPTIONS = "imageoptions"
   }
 }

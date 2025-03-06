@@ -23,6 +23,7 @@ import com.facebook.fresco.urimod.NoPrefetchInOnPrepareStrategy
 import com.facebook.fresco.urimod.SmartFetchStrategy
 import com.facebook.fresco.urimod.UriModifier
 import com.facebook.fresco.urimod.UriModifierInterface
+import com.facebook.fresco.urimod.asDimensions
 import com.facebook.fresco.vito.core.FrescoVitoConfig
 import com.facebook.fresco.vito.core.ImagePipelineUtils
 import com.facebook.fresco.vito.core.VitoImagePipeline
@@ -122,7 +123,8 @@ class VitoImagePipelineImpl(
         logWithHighSamplingRate,
         finalImageRequest,
         finalImageCacheKey,
-        extras)
+        extras,
+        viewport = viewport?.asDimensions())
   }
 
   override fun getCachedImage(imageRequest: VitoImageRequest): CloseableReference<CloseableImage>? =
@@ -139,7 +141,8 @@ class VitoImagePipelineImpl(
       imageRequest: VitoImageRequest,
       callerContext: Any?,
       requestListener: RequestListener?,
-      uiComponentId: Long
+      uiComponentId: Long,
+      viewport: Dimensions?,
   ): DataSource<CloseableReference<CloseableImage>> =
       ImageSourceToImagePipelineAdapter.createDataSourceSupplier(
               imageRequest.imageSource,
@@ -149,7 +152,9 @@ class VitoImagePipelineImpl(
               callerContext,
               requestListener,
               VitoUtils.getStringId(uiComponentId),
-              imageRequest.extras)
+              imageRequest.extras,
+              viewport,
+          )
           .get()
 
   override fun isInDiskCacheSync(
