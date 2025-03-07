@@ -121,6 +121,10 @@ class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) 
     this.invisibilityEventTimeMs = invisibilityEventTimeMs
   }
 
+  fun setReleasedEventTimeNs(releasedEventTimestampNs: Long) {
+    this.releasedEventTimestampNs = releasedEventTimestampNs
+  }
+
   fun setPrefetch(prefetch: Boolean) {
     isPrefetch = prefetch
   }
