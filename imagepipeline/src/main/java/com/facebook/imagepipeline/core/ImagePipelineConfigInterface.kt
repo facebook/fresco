@@ -38,45 +38,62 @@ import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory
 
 interface ImagePipelineConfigInterface {
 
-  val bitmapConfig: Bitmap.Config?
-  val bitmapMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>
-  val bitmapMemoryCacheTrimStrategy: CacheTrimStrategy
-  val encodedMemoryCacheTrimStrategy: CacheTrimStrategy
-  val bitmapMemoryCacheEntryStateObserver: EntryStateObserver<CacheKey>?
-  val cacheKeyFactory: CacheKeyFactory
-  val context: Context
-  val diskCachesStoreSupplier: Supplier<DiskCachesStore>
-  val downsampleMode: DownsampleMode
-  val isDiskCacheEnabled: Boolean
-  val encodedMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>
-  val executorSupplier: ExecutorSupplier
-  val executorServiceForAnimatedImages: SerialExecutorService?
-  val imageCacheStatsTracker: ImageCacheStatsTracker
-  val imageDecoder: ImageDecoder?
-  val imageTranscoderFactory: ImageTranscoderFactory?
-
-  @get:ImageTranscoderType val imageTranscoderType: Int?
-  val isPrefetchEnabledSupplier: Supplier<Boolean>
-  val enableEncodedImageColorSpaceUsage: Supplier<Boolean>
-  val mainDiskCacheConfig: DiskCacheConfig
-  val memoryTrimmableRegistry: MemoryTrimmableRegistry
-
-  @get:MemoryChunkType val memoryChunkType: Int
-  val networkFetcher: NetworkFetcher<*>
-  val platformBitmapFactory: PlatformBitmapFactory?
-  val poolFactory: PoolFactory
-  val progressiveJpegConfig: ProgressiveJpegConfig
+  // Global listeners
   val requestListeners: Set<RequestListener?>
   val requestListener2s: Set<RequestListener2?>
-  val customProducerSequenceFactories: Set<CustomProducerSequenceFactory>
-  val isResizeAndRotateEnabledForNetwork: Boolean
+
+  // General cache configuration
+  val cacheKeyFactory: CacheKeyFactory
+  val imageCacheStatsTracker: ImageCacheStatsTracker
+
+  // Disk cache
+  val isDiskCacheEnabled: Boolean
+  val diskCachesStoreSupplier: Supplier<DiskCachesStore>
+  val mainDiskCacheConfig: DiskCacheConfig
   val smallImageDiskCacheConfig: DiskCacheConfig
-  val imageDecoderConfig: ImageDecoderConfig?
-  val callerContextVerifier: CallerContextVerifier?
-  val experiments: ImagePipelineExperiments
-  val closeableReferenceLeakTracker: CloseableReferenceLeakTracker
-  val bitmapCacheOverride: MemoryCache<CacheKey, CloseableImage>?
-  val encodedMemoryCacheOverride: MemoryCache<CacheKey, PooledByteBuffer>?
-  val bitmapMemoryCacheFactory: BitmapMemoryCacheFactory
   val dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>?
+
+  // Encoded memory cache
+  val encodedMemoryCacheTrimStrategy: CacheTrimStrategy
+  val encodedMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>
+  val encodedMemoryCacheOverride: MemoryCache<CacheKey, PooledByteBuffer>?
+
+  // Bitmap memory cache
+  val bitmapMemoryCacheFactory: BitmapMemoryCacheFactory
+  val bitmapMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>
+  val bitmapMemoryCacheTrimStrategy: CacheTrimStrategy
+  val bitmapMemoryCacheEntryStateObserver: EntryStateObserver<CacheKey>?
+  val bitmapCacheOverride: MemoryCache<CacheKey, CloseableImage>?
+
+  // Network configuration
+  val networkFetcher: NetworkFetcher<*>
+  val isResizeAndRotateEnabledForNetwork: Boolean
+
+  // Image decoding
+  val imageDecoder: ImageDecoder?
+  val imageDecoderConfig: ImageDecoderConfig?
+  val bitmapConfig: Bitmap.Config?
+  val downsampleMode: DownsampleMode
+  val imageTranscoderFactory: ImageTranscoderFactory?
+  @get:ImageTranscoderType val imageTranscoderType: Int?
+  val enableEncodedImageColorSpaceUsage: Supplier<Boolean>
+  val progressiveJpegConfig: ProgressiveJpegConfig
+  val platformBitmapFactory: PlatformBitmapFactory?
+
+  // Memory handling
+  @get:MemoryChunkType val memoryChunkType: Int
+  val memoryTrimmableRegistry: MemoryTrimmableRegistry
+  val customProducerSequenceFactories: Set<CustomProducerSequenceFactory>
+  val closeableReferenceLeakTracker: CloseableReferenceLeakTracker
+  val poolFactory: PoolFactory
+
+  // Others
+  val context: Context
+  val executorSupplier: ExecutorSupplier
+  val executorServiceForAnimatedImages: SerialExecutorService?
+  val isPrefetchEnabledSupplier: Supplier<Boolean>
+  val callerContextVerifier: CallerContextVerifier?
+
+  // Experiments
+  val experiments: ImagePipelineExperiments
 }
