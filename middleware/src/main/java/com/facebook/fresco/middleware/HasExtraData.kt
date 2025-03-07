@@ -50,11 +50,17 @@ interface HasExtraData {
     /* number of deduped request in EncodedCacheKeyMultiplexProducer */
     const val KEY_MULTIPLEX_ENCODED_COUNT = "multiplex_enc_cnt"
     const val KEY_LAST_SCAN_NUMBER = "last_scan_num"
+    const val TARGET_SCAN = "target_scan"
 
     const val KEY_IMAGE_SOURCE_EXTRAS = "image_source_extras"
     const val KEY_COLOR_SPACE = "image_color_space"
 
     const val KEY_VIEWPORT = "viewport"
     const val KEY_IMAGEOPTIONS = "imageoptions"
+
+    /* HDR related image extra data */
+    const val STORED_IMAGE_HAS_GAIN_MAP = "stored_image_has_gain_map"
+    const val FETCHED_IMAGE_HAS_GAIN_MAP = "fetched_image_has_gain_map"
+    const val IS_HDR = "is_HDR"
   }
 }
