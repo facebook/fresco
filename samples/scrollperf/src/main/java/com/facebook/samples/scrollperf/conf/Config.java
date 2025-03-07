@@ -111,7 +111,6 @@ public class Config {
                 Preconditions.checkNotNull(
                     sharedPreferences.getString(Const.GRID_SPAN_COUNT_KEY, "3"))))
         .setDecodeCancellation(sharedPreferences.getBoolean(Const.DECODE_CANCELLATION_KEY, false))
-        .setWebpSupportEnabled(sharedPreferences.getBoolean(Const.WEBP_SUPPORT_KEY, false))
         .setVitoOverlayEnabled(sharedPreferences.getBoolean(Const.VITO_OVERLAY_KEY, false))
         .setInstrumentationEnabled(
             sharedPreferences.getBoolean(Const.INSTRUMENTATION_ENABLED_KEY, false))

@@ -36,7 +36,6 @@ import com.facebook.imageutils.BitmapUtil
  */
 class ImagePipelineExperiments private constructor(builder: Builder) {
 
-  val isWebpSupportEnabled: Boolean
   val webpErrorLogger: WebpErrorLogger?
   val isDecodeCancellationEnabled: Boolean
   val webpBitmapFactory: WebpBitmapFactory?
@@ -78,7 +77,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
 
   class Builder(private val configBuilder: ImagePipelineConfig.Builder) {
     @JvmField var shouldUseDecodingBufferHelper = false
-    @JvmField var webpSupportEnabled = false
     @JvmField var webpErrorLogger: WebpErrorLogger? = null
     @JvmField var decodeCancellationEnabled = false
     @JvmField var webpBitmapFactory: WebpBitmapFactory? = null
@@ -145,10 +143,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
 
     fun setIgnoreCacheSizeMismatch(shouldIgnoreCacheSizeMismatch: Boolean) = asBuilder {
       this.shouldIgnoreCacheSizeMismatch = shouldIgnoreCacheSizeMismatch
-    }
-
-    fun setWebpSupportEnabled(webpSupportEnabled: Boolean) = asBuilder {
-      this.webpSupportEnabled = webpSupportEnabled
     }
 
     fun setPrefetchShortcutEnabled(prefetchShortcutEnabled: Boolean) = asBuilder {
@@ -411,7 +405,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   }
 
   init {
-    isWebpSupportEnabled = builder.webpSupportEnabled
     webpErrorLogger = builder.webpErrorLogger
     isDecodeCancellationEnabled = builder.decodeCancellationEnabled
     webpBitmapFactory = builder.webpBitmapFactory

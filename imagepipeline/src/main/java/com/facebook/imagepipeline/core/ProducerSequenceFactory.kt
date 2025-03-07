@@ -34,7 +34,6 @@ class ProducerSequenceFactory(
     private val producerFactory: ProducerFactory,
     private val networkFetcher: NetworkFetcher<*>,
     private val resizeAndRotateEnabledForNetwork: Boolean,
-    private val webpSupportEnabled: Boolean,
     private val threadHandoffProducerQueue: ThreadHandoffProducerQueue,
     private val downsampleMode: DownsampleMode,
     private val useBitmapPrepareToDraw: Boolean,
