@@ -51,7 +51,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val isPartialImageCachingEnabled: Boolean
   val producerFactoryMethod: ProducerFactoryMethod
   val isLazyDataSource: Supplier<Boolean>
-  val isGingerbreadDecoderEnabled: Boolean
   val downscaleFrameToDrawableDimensions: Boolean
   val suppressBitmapPrefetchingSupplier: Supplier<Boolean>
   val isExperimentalThreadHandoffQueueEnabled: Boolean
@@ -94,8 +93,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var producerFactoryMethod: ProducerFactoryMethod? = null
 
     @JvmField var lazyDataSource: Supplier<Boolean>? = null
-
-    @JvmField var gingerbreadDecoderEnabled = false
 
     @JvmField var downscaleFrameToDrawableDimensions = false
 
@@ -251,10 +248,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     /** Stores an alternative lazy method to instantiate the data souce. */
     fun setLazyDataSource(lazyDataSource: Supplier<Boolean>?) = asBuilder {
       this.lazyDataSource = lazyDataSource
-    }
-
-    fun setGingerbreadDecoderEnabled(gingerbreadDecoderEnabled: Boolean) = asBuilder {
-      this.gingerbreadDecoderEnabled = gingerbreadDecoderEnabled
     }
 
     fun setShouldDownscaleFrameToDrawableDimensions(downscaleFrameToDrawableDimensions: Boolean) =
@@ -420,7 +413,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     isPartialImageCachingEnabled = builder.isPartialImageCachingEnabled
     producerFactoryMethod = builder.producerFactoryMethod ?: DefaultProducerFactoryMethod()
     isLazyDataSource = builder.lazyDataSource ?: Suppliers.BOOLEAN_FALSE
-    isGingerbreadDecoderEnabled = builder.gingerbreadDecoderEnabled
     downscaleFrameToDrawableDimensions = builder.downscaleFrameToDrawableDimensions
     suppressBitmapPrefetchingSupplier = builder.suppressBitmapPrefetchingSupplier
     isExperimentalThreadHandoffQueueEnabled = builder.experimentalThreadHandoffQueueEnabled

@@ -30,7 +30,6 @@ object PlatformDecoderFactory {
   @JvmOverloads
   fun buildPlatformDecoder(
       poolFactory: PoolFactory,
-      gingerbreadDecoderEnabled: Boolean,
       useDecodeBufferHelper: Boolean = false,
       platformDecoderOptions: PlatformDecoderOptions
   ): PlatformDecoder =
@@ -47,16 +46,10 @@ object PlatformDecoderFactory {
             platformDecoderOptions)
       } else {
         try {
-          if (gingerbreadDecoderEnabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            val clazz =
-                Class.forName("com.facebook.imagepipeline.platform.GingerbreadPurgeableDecoder")
-            clazz.getConstructor().newInstance() as PlatformDecoder
-          } else {
-            val clazz = Class.forName("com.facebook.imagepipeline.platform.KitKatPurgeableDecoder")
-            clazz
-                .getConstructor(FlexByteArrayPool::class.java)
-                .newInstance(poolFactory.flexByteArrayPool) as PlatformDecoder
-          }
+          val clazz = Class.forName("com.facebook.imagepipeline.platform.KitKatPurgeableDecoder")
+          clazz
+              .getConstructor(FlexByteArrayPool::class.java)
+              .newInstance(poolFactory.flexByteArrayPool) as PlatformDecoder
         } catch (e: ClassNotFoundException) {
           throw RuntimeException("Wrong Native code setup, reflection failed.", e)
         } catch (e: IllegalAccessException) {
