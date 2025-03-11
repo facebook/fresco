@@ -139,6 +139,12 @@ class FlipperImageTracker : DebugImageTracker, ImagePerfDataListener {
     // ignore
   }
 
+  @Synchronized
+  override fun clear() {
+    imageRequestDebugDataMap.clear()
+    imageDebugDataMap.clear()
+  }
+
   class ImageDebugData
   @JvmOverloads
   constructor(val imageRequest: ImageRequest? = null, val localPath: String? = null) {

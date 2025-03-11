@@ -20,4 +20,8 @@ class NoOpDebugImageTracker : DebugImageTracker {
   override fun trackImageRequest(imageRequest: ImageRequest?, requestId: String?) {
     // no-op
   }
+
+  override fun clear() {
+    // no-op
+  }
 }

@@ -15,4 +15,7 @@ interface DebugImageTracker {
   fun trackImage(imageRequest: ImageRequest?, cacheKey: CacheKey)
 
   fun trackImageRequest(imageRequest: ImageRequest?, requestId: String?)
+
+  // Clear all tracking data in DebugImageTracker to prevent false alarms for the leak detector.
+  fun clear()
 }
