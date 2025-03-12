@@ -134,7 +134,7 @@ class DecodeProducer(
           if (!updateDecodeJob(newResult, status)) {
             return
           }
-          val isPlaceholder = statusHasFlag(status, IS_PLACEHOLDER)
+          val isPlaceholder = statusHasFlag(status, Consumer.IS_PLACEHOLDER)
           if (isLast || isPlaceholder || producerContext.isIntermediateResultExpected) {
             jobScheduler.scheduleJob()
           }
@@ -184,8 +184,8 @@ class DecodeProducer(
       val encodedImageSize = encodedImage.width.toString() + "x" + encodedImage.height
       val sampleSize = encodedImage.sampleSize.toString()
       val isLast = isLast(status)
-      val isLastAndComplete = isLast && !statusHasFlag(status, IS_PARTIAL_RESULT)
-      val isPlaceholder = statusHasFlag(status, IS_PLACEHOLDER)
+      val isLastAndComplete = isLast && !statusHasFlag(status, Consumer.IS_PARTIAL_RESULT)
+      val isPlaceholder = statusHasFlag(status, Consumer.IS_PLACEHOLDER)
       val resizeOptions = producerContext.imageRequest.resizeOptions
       val requestedSizeStr =
           if (resizeOptions != null) {
@@ -221,7 +221,7 @@ class DecodeProducer(
                 throw e
               }
           if (encodedImage.sampleSize != EncodedImage.DEFAULT_SAMPLE_SIZE) {
-            newStatus = status or IS_RESIZING_DONE
+            newStatus = status or Consumer.IS_RESIZING_DONE
           }
         } catch (e: Exception) {
           val extraMap =
@@ -403,7 +403,7 @@ class DecodeProducer(
           encodedImage.source = request.sourceUri?.toString()
 
           val requestDownsampleMode = request.downsampleOverride ?: downsampleMode
-          val isResizingDone = statusHasFlag(status, IS_RESIZING_DONE)
+          val isResizingDone = statusHasFlag(status, Consumer.IS_RESIZING_DONE)
           val shouldAdjustSampleSize =
               (requestDownsampleMode == DownsampleMode.ALWAYS ||
                   (requestDownsampleMode == DownsampleMode.AUTO && !isResizingDone)) &&
@@ -481,8 +481,8 @@ class DecodeProducer(
         return false
       }
       val ret = super.updateDecodeJob(encodedImage, status)
-      if ((isNotLast(status) || statusHasFlag(status, IS_PARTIAL_RESULT)) &&
-          !statusHasFlag(status, IS_PLACEHOLDER) &&
+      if ((isNotLast(status) || statusHasFlag(status, Consumer.IS_PARTIAL_RESULT)) &&
+          !statusHasFlag(status, Consumer.IS_PLACEHOLDER) &&
           EncodedImage.isValid(encodedImage) &&
           encodedImage.imageFormat === DefaultImageFormats.JPEG) {
         if (!this.progressiveJpegParser.parseMoreData(encodedImage)) {

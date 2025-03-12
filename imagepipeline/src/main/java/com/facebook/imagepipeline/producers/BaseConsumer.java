@@ -95,13 +95,13 @@ public abstract class BaseConsumer<T> implements Consumer<T> {
   }
 
   @Override
-  public synchronized void onFailure(Throwable t) {
+  public synchronized void onFailure(@Nullable Throwable t) {
     if (mIsFinished) {
       return;
     }
     mIsFinished = true;
     try {
-      onFailureImpl(t);
+      onFailureImpl(t != null ? t : new Throwable("null throwable"));
     } catch (Exception e) {
       onUnhandledException(e);
     }
