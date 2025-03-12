@@ -71,8 +71,6 @@ import com.facebook.infer.annotation.Nullsafe;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class ProducerFactory {
 
-  private static final int MAX_SIMULTANEOUS_REQUESTS = 5;
-
   // Local dependencies
   protected ContentResolver mContentResolver;
   protected Resources mResources;
@@ -390,11 +388,10 @@ public class ProducerFactory {
     return new ThreadHandoffProducer<T>(inputProducer, inputThreadHandoffProducerQueue);
   }
 
-  public <T> ThrottlingProducer<T> newThrottlingProducer(Producer<T> inputProducer) {
+  public <T> ThrottlingProducer<T> newThrottlingProducer(
+      long maxSimultaneousRequests, Producer<T> inputProducer) {
     return new ThrottlingProducer<T>(
-        MAX_SIMULTANEOUS_REQUESTS,
-        mExecutorSupplier.forLightweightBackgroundTasks(),
-        inputProducer);
+        maxSimultaneousRequests, mExecutorSupplier.forLightweightBackgroundTasks(), inputProducer);
   }
 
   public BitmapPrepareProducer newBitmapPrepareProducer(
