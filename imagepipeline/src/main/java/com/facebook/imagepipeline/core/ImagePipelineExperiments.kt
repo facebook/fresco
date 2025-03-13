@@ -54,6 +54,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val downscaleFrameToDrawableDimensions: Boolean
   val suppressBitmapPrefetchingSupplier: Supplier<Boolean>
   val isExperimentalThreadHandoffQueueEnabled: Boolean
+  val throttlingProducerMaxSimultaneousRequests: Long
   val memoryType: Long
   val keepCancelledFetchAsLowPriority: Boolean
   val downsampleIfLargeBitmap: Boolean
@@ -99,6 +100,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var suppressBitmapPrefetchingSupplier = Suppliers.of(false)
 
     @JvmField var experimentalThreadHandoffQueueEnabled = false
+
+    @JvmField var throttlingProducerMaxSimultaneousRequests: Long = 5
 
     @JvmField var memoryType: Long = 0
     @JvmField var keepCancelledFetchAsLowPriority = false
@@ -265,6 +268,12 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
           this.experimentalThreadHandoffQueueEnabled = experimentalThreadHandoffQueueEnabled
         }
 
+    fun setThrottlingProducerMaxSimultaneousRequests(maxSimultaneousRequests: Long) = asBuilder {
+      if (maxSimultaneousRequests >= 1) {
+        this.throttlingProducerMaxSimultaneousRequests = maxSimultaneousRequests
+      }
+    }
+
     fun setExperimentalMemoryType(MemoryType: Long) = asBuilder { this.memoryType = MemoryType }
 
     fun setKeepCancelledFetchAsLowPriority(keepCancelledFetchAsLowPriority: Boolean) = asBuilder {
@@ -416,6 +425,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     downscaleFrameToDrawableDimensions = builder.downscaleFrameToDrawableDimensions
     suppressBitmapPrefetchingSupplier = builder.suppressBitmapPrefetchingSupplier
     isExperimentalThreadHandoffQueueEnabled = builder.experimentalThreadHandoffQueueEnabled
+    throttlingProducerMaxSimultaneousRequests = builder.throttlingProducerMaxSimultaneousRequests
     memoryType = builder.memoryType
     keepCancelledFetchAsLowPriority = builder.keepCancelledFetchAsLowPriority
     downsampleIfLargeBitmap = builder.downsampleIfLargeBitmap

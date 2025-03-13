@@ -43,7 +43,8 @@ class ProducerSequenceFactory(
     private val isEncodedMemoryCacheProbingEnabled: Boolean,
     private val isDiskCacheProbingEnabled: Boolean,
     private val allowDelay: Boolean,
-    private val customProducerSequenceFactories: Set<CustomProducerSequenceFactory>?
+    private val customProducerSequenceFactories: Set<CustomProducerSequenceFactory>?,
+    private val localImageThrottlingMaxSimultaneousRequests: Long
 ) {
 
   @VisibleForTesting
@@ -559,7 +560,9 @@ class ProducerSequenceFactory(
         ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer)
     localImageProducer =
         producerFactory.newResizeAndRotateProducer(localImageProducer, true, imageTranscoderFactory)
-    val localImageThrottlingProducer = producerFactory.newThrottlingProducer(localImageProducer)
+    val localImageThrottlingProducer =
+        producerFactory.newThrottlingProducer(
+            localImageThrottlingMaxSimultaneousRequests, localImageProducer)
     return ProducerFactory.newBranchOnSeparateImagesProducer(
         newLocalThumbnailProducer(thumbnailProducers), localImageThrottlingProducer)
   }

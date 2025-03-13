@@ -25,10 +25,10 @@ public class ThrottlingProducer<T> implements Producer<T> {
   public static final String PRODUCER_NAME = "ThrottlingProducer";
 
   private final Producer<T> mInputProducer;
-  private final int mMaxSimultaneousRequests;
+  private final long mMaxSimultaneousRequests;
 
   @GuardedBy("this")
-  private int mNumCurrentRequests;
+  private long mNumCurrentRequests;
 
   @GuardedBy("this")
   private final ConcurrentLinkedQueue<Pair<Consumer<T>, ProducerContext>> mPendingRequests;
@@ -36,12 +36,12 @@ public class ThrottlingProducer<T> implements Producer<T> {
   private final Executor mExecutor;
 
   public ThrottlingProducer(
-      int maxSimultaneousRequests, Executor executor, final Producer<T> inputProducer) {
+      long maxSimultaneousRequests, Executor executor, final Producer<T> inputProducer) {
     mMaxSimultaneousRequests = maxSimultaneousRequests;
     mExecutor = Preconditions.checkNotNull(executor);
     mInputProducer = Preconditions.checkNotNull(inputProducer);
     mPendingRequests = new ConcurrentLinkedQueue<Pair<Consumer<T>, ProducerContext>>();
-    mNumCurrentRequests = 0;
+    mNumCurrentRequests = 0L;
   }
 
   @Override
