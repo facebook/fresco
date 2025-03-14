@@ -14,22 +14,16 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import com.facebook.fresco.ui.common.OnFadeListener;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.robolectric.RobolectricTestRunner;
 
 /** Tests {@link FadeDrawable.OnFadeListener} */
 @RunWith(RobolectricTestRunner.class)
-@PrepareForTest({
-  //  SystemClock.class,
-  Rect.class,
-})
 public class FadeDrawableOnFadeListenerTest {
 
   public static final int DURATION = 1000;
