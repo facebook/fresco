@@ -41,7 +41,12 @@ public class ExampleBitmapAnimationFactory {
     final AnimationInformation animationInformation =
         new ColorListAnimationInformation(colors, animationDurationMs);
     final ExecutorService executorServiceForFramePreparer =
-        new DefaultSerialExecutorService(new DefaultExecutorSupplier(1).forDecode());
+        new DefaultSerialExecutorService(
+            new DefaultExecutorSupplier(
+                    1,
+                    DefaultExecutorSupplier.DEFAULT_NUM_IO_BOUND_THREADS,
+                    DefaultExecutorSupplier.DEFAULT_NUM_LIGHTWEIGHT_BACKGROUND_THREADS)
+                .forDecode());
     final BitmapFramePreparationStrategy framePreparationStrategy =
         new FixedNumberBitmapFramePreparationStrategy(NUMBER_OF_FRAMES_TO_PREPARE);
     final BitmapFramePreparer bitmapFramePreparer =

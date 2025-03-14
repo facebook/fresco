@@ -18,11 +18,15 @@ import java.util.concurrent.ScheduledExecutorService
  * Provides one thread pool for the CPU-bound operations and another thread pool for the IO-bound
  * operations.
  */
-class DefaultExecutorSupplier(numCpuBoundThreads: Int) : ExecutorSupplier {
+class DefaultExecutorSupplier(
+    numCpuBoundThreads: Int,
+    numIoBoundThreads: Int = DEFAULT_NUM_IO_BOUND_THREADS,
+    numLightweightBackgroundThreads: Int = DEFAULT_NUM_LIGHTWEIGHT_BACKGROUND_THREADS
+) : ExecutorSupplier {
 
   private val ioBoundExecutor: Executor =
       Executors.newFixedThreadPool(
-          NUM_IO_BOUND_THREADS,
+          numIoBoundThreads,
           PriorityThreadFactory(Process.THREAD_PRIORITY_BACKGROUND, "FrescoIoBoundExecutor", true))
   private val decodeExecutor: Executor =
       Executors.newFixedThreadPool(
@@ -35,7 +39,7 @@ class DefaultExecutorSupplier(numCpuBoundThreads: Int) : ExecutorSupplier {
               Process.THREAD_PRIORITY_BACKGROUND, "FrescoBackgroundExecutor", true))
   private val lightWeightBackgroundExecutor: Executor =
       Executors.newFixedThreadPool(
-          NUM_LIGHTWEIGHT_BACKGROUND_THREADS,
+          numLightweightBackgroundThreads,
           PriorityThreadFactory(
               Process.THREAD_PRIORITY_BACKGROUND, "FrescoLightWeightBackgroundExecutor", true))
   private val backgroundScheduledExecutorService: ScheduledExecutorService =
@@ -61,7 +65,7 @@ class DefaultExecutorSupplier(numCpuBoundThreads: Int) : ExecutorSupplier {
 
   companion object {
     // Allows for simultaneous reads and writes.
-    private const val NUM_IO_BOUND_THREADS = 2
-    private const val NUM_LIGHTWEIGHT_BACKGROUND_THREADS = 1
+    const val DEFAULT_NUM_IO_BOUND_THREADS = 2
+    const val DEFAULT_NUM_LIGHTWEIGHT_BACKGROUND_THREADS = 1
   }
 }

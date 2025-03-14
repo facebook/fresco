@@ -33,7 +33,10 @@ public class ScrollPerfApplication extends Application {
             .setDownsampleEnabled(config.downsampling);
     if (config.decodingThreadCount == 0) {
       imagePipelineConfigBuilder.setExecutorSupplier(
-          new DefaultExecutorSupplier(Const.NUMBER_OF_PROCESSORS));
+          new DefaultExecutorSupplier(
+              Const.NUMBER_OF_PROCESSORS,
+              DefaultExecutorSupplier.DEFAULT_NUM_IO_BOUND_THREADS,
+              DefaultExecutorSupplier.DEFAULT_NUM_LIGHTWEIGHT_BACKGROUND_THREADS));
     } else {
       imagePipelineConfigBuilder.setExecutorSupplier(
           new ScrollPerfExecutorSupplier(Const.NUMBER_OF_PROCESSORS, config.decodingThreadCount));
