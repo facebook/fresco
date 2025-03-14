@@ -17,6 +17,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -29,23 +30,18 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
-@PrepareForTest({SystemClock.class})
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 @Config(manifest = Config.NONE)
 public class AbstractAdaptiveCountingMemoryCacheTest {
 
@@ -61,8 +57,6 @@ public class AbstractAdaptiveCountingMemoryCacheTest {
   @Mock public Supplier<MemoryCacheParams> mParamsSupplier;
   @Mock public AbstractAdaptiveCountingMemoryCache.EntryStateObserver<String> mEntryStateObserver;
 
-  @Rule public PowerMockRule rule = new PowerMockRule();
-
   private MemoryCacheParams mParams;
   AbstractAdaptiveCountingMemoryCache<String, Integer> mCache;
   private ValueDescriptor<Integer> mValueDescriptor;
@@ -70,12 +64,13 @@ public class AbstractAdaptiveCountingMemoryCacheTest {
   private static final String[] KEYS =
       new String[] {"k0", "k1", "k2", "k3", "k4", "k5", "k6", "k7", "k8", "k9"};
   private static final int initialLFUCacheFractionPromil = 500;
+  private MockedStatic<SystemClock> mockedSystemClock;
 
   @Before
   public void setUp() {
+    mockedSystemClock = mockStatic(SystemClock.class);
     MockitoAnnotations.initMocks(this);
-    PowerMockito.mockStatic(SystemClock.class);
-    PowerMockito.when(SystemClock.uptimeMillis()).thenReturn(0L);
+    mockedSystemClock.when(() -> SystemClock.uptimeMillis()).thenReturn(0L);
     mValueDescriptor =
         new ValueDescriptor<Integer>() {
           @Override
@@ -98,6 +93,11 @@ public class AbstractAdaptiveCountingMemoryCacheTest {
    * test: pass illegal adaptive rate and illegal initial LFU cache fraction. expected result: fall
    * back and use the default adaptive rate and initial LFU fraction values.
    */
+  @After
+  public void tearDownStaticMocks() {
+    mockedSystemClock.close();
+  }
+
   @Test
   public void testPassIllegalArgumentsToTheCacheConstructor() {
     final int illegalAdaptiveRate = -1;
@@ -661,7 +661,9 @@ public class AbstractAdaptiveCountingMemoryCacheTest {
     mCache.get(KEY);
     inOrder.verify(mParamsSupplier).get();
 
-    PowerMockito.when(SystemClock.uptimeMillis()).thenReturn(PARAMS_CHECK_INTERVAL_MS - 1);
+    mockedSystemClock
+        .when(() -> SystemClock.uptimeMillis())
+        .thenReturn(PARAMS_CHECK_INTERVAL_MS - 1);
     mCache.get(KEY);
     inOrder.verify(mParamsSupplier, never()).get();
     mCache.get(KEY);
@@ -680,7 +682,7 @@ public class AbstractAdaptiveCountingMemoryCacheTest {
             PARAMS_CHECK_INTERVAL_MS);
     when(mParamsSupplier.get()).thenReturn(mParams);
 
-    PowerMockito.when(SystemClock.uptimeMillis()).thenReturn(PARAMS_CHECK_INTERVAL_MS);
+    mockedSystemClock.when(() -> SystemClock.uptimeMillis()).thenReturn(PARAMS_CHECK_INTERVAL_MS);
     mCache.get(KEY);
     inOrder.verify(mParamsSupplier).get();
 
@@ -794,7 +796,7 @@ public class AbstractAdaptiveCountingMemoryCacheTest {
             1,
             2,
             initialLFUCacheFractionPromil);
-    PowerMockito.when(SystemClock.uptimeMillis()).thenReturn(PARAMS_CHECK_INTERVAL_MS);
+    mockedSystemClock.when(() -> SystemClock.uptimeMillis()).thenReturn(PARAMS_CHECK_INTERVAL_MS);
     InOrder inOrder = inOrder(mReleaser);
 
     // create original references
@@ -905,7 +907,7 @@ public class AbstractAdaptiveCountingMemoryCacheTest {
     MemoryTrimType memoryTrimType = MemoryTrimType.OnCloseToDalvikHeapLimit;
     mParams = new MemoryCacheParams(2200, 16, 2200, 16, 110, PARAMS_CHECK_INTERVAL_MS);
     when(mParamsSupplier.get()).thenReturn(mParams);
-    PowerMockito.when(SystemClock.uptimeMillis()).thenReturn(PARAMS_CHECK_INTERVAL_MS);
+    mockedSystemClock.when(() -> SystemClock.uptimeMillis()).thenReturn(PARAMS_CHECK_INTERVAL_MS);
     InOrder inOrder = inOrder(mReleaser);
 
     // insert item1 to MFU

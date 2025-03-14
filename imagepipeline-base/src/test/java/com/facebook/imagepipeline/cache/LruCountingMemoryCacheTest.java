@@ -17,6 +17,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -29,23 +30,18 @@ import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import java.util.concurrent.TimeUnit;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
-@PrepareForTest({SystemClock.class})
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 @Config(manifest = Config.NONE)
 public class LruCountingMemoryCacheTest {
 
@@ -62,8 +58,6 @@ public class LruCountingMemoryCacheTest {
   @Mock public CountingMemoryCache.EntryStateObserver<String> mEntryStateObserver;
   @Mock public Bitmap mBitmap;
 
-  @Rule public PowerMockRule rule = new PowerMockRule();
-
   private ValueDescriptor<Integer> mValueDescriptor;
   private MemoryCacheParams mParams;
   private LruCountingMemoryCache<String, Integer> mCache;
@@ -79,12 +73,13 @@ public class LruCountingMemoryCacheTest {
         @Override
         public void release(Bitmap value) {}
       };
+  private MockedStatic<SystemClock> mockedSystemClock;
 
   @Before
   public void setUp() {
+    mockedSystemClock = mockStatic(SystemClock.class);
     MockitoAnnotations.initMocks(this);
-    PowerMockito.mockStatic(SystemClock.class);
-    PowerMockito.when(SystemClock.uptimeMillis()).thenReturn(0L);
+    mockedSystemClock.when(() -> SystemClock.uptimeMillis()).thenReturn(0L);
     mValueDescriptor =
         new ValueDescriptor<Integer>() {
           @Override
@@ -105,6 +100,11 @@ public class LruCountingMemoryCacheTest {
     mCache =
         new LruCountingMemoryCache<>(
             mValueDescriptor, mCacheTrimStrategy, mParamsSupplier, null, false, false);
+  }
+
+  @After
+  public void tearDownStaticMocks() {
+    mockedSystemClock.close();
   }
 
   @Test
@@ -485,7 +485,9 @@ public class LruCountingMemoryCacheTest {
     mCache.get(KEY);
     inOrder.verify(mParamsSupplier).get();
 
-    PowerMockito.when(SystemClock.uptimeMillis()).thenReturn(PARAMS_CHECK_INTERVAL_MS - 1);
+    mockedSystemClock
+        .when(() -> SystemClock.uptimeMillis())
+        .thenReturn(PARAMS_CHECK_INTERVAL_MS - 1);
     mCache.get(KEY);
     inOrder.verify(mParamsSupplier, never()).get();
     mCache.get(KEY);
@@ -504,7 +506,7 @@ public class LruCountingMemoryCacheTest {
             PARAMS_CHECK_INTERVAL_MS);
     when(mParamsSupplier.get()).thenReturn(mParams);
 
-    PowerMockito.when(SystemClock.uptimeMillis()).thenReturn(PARAMS_CHECK_INTERVAL_MS);
+    mockedSystemClock.when(() -> SystemClock.uptimeMillis()).thenReturn(PARAMS_CHECK_INTERVAL_MS);
     mCache.get(KEY);
     inOrder.verify(mParamsSupplier).get();
 
@@ -583,7 +585,7 @@ public class LruCountingMemoryCacheTest {
     MemoryTrimType memoryTrimType = MemoryTrimType.OnCloseToDalvikHeapLimit;
     mParams = new MemoryCacheParams(1100, 10, 1100, 10, 110, PARAMS_CHECK_INTERVAL_MS);
     when(mParamsSupplier.get()).thenReturn(mParams);
-    PowerMockito.when(SystemClock.uptimeMillis()).thenReturn(PARAMS_CHECK_INTERVAL_MS);
+    mockedSystemClock.when(() -> SystemClock.uptimeMillis()).thenReturn(PARAMS_CHECK_INTERVAL_MS);
     InOrder inOrder = inOrder(mReleaser);
 
     // create original references
