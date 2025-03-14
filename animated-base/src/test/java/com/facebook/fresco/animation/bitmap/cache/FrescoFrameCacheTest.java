@@ -21,12 +21,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.robolectric.RobolectricTestRunner;
 
 /** Tests {@link FrescoFrameCache}. */
 @RunWith(RobolectricTestRunner.class)
-@PrepareForTest(CloseableReference.class)
 public class FrescoFrameCacheTest {
 
   @Mock public CloseableReference<CloseableImage> mImageReference;
