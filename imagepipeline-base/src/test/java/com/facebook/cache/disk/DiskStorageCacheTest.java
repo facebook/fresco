@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -50,26 +51,19 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.mockito.MockedStatic;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
 /** Test for {@link DiskStorageCache} */
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
-@PrepareOnlyThisForTest({SystemClock.class})
 public class DiskStorageCacheTest {
-
-  @Rule public PowerMockRule rule = new PowerMockRule();
 
   private static final String CACHE_TYPE = "media_test";
 
@@ -88,9 +82,9 @@ public class DiskStorageCacheTest {
 
   @Before
   public void setUp() {
+    mockedSystemClock = mockStatic(SystemClock.class);
     mClock = mock(SystemClock.class);
-    PowerMockito.mockStatic(SystemClock.class);
-    PowerMockito.when(SystemClock.get()).thenReturn(mClock);
+    mockedSystemClock.when(() -> SystemClock.get()).thenReturn(mClock);
     mBackgroundExecutor = new TestExecutorService(new FakeClock());
     mDiskTrimmableRegistry = mock(DiskTrimmableRegistry.class);
     mCacheEventListener = mock(CacheEventListener.class);
@@ -117,6 +111,7 @@ public class DiskStorageCacheTest {
   // The threshold (in bytes) for the size of file cache
   private static final long FILE_CACHE_MAX_SIZE_HIGH_LIMIT = 200;
   private static final long FILE_CACHE_MAX_SIZE_LOW_LIMIT = 200;
+  private MockedStatic<SystemClock> mockedSystemClock;
 
   private static DiskStorage createDiskStorage(int version) {
     return new DiskStorageWithReadFailures(
@@ -141,6 +136,11 @@ public class DiskStorageCacheTest {
         mDiskTrimmableRegistry,
         mBackgroundExecutor,
         indexPopulateAtStartupEnabled);
+  }
+
+  @After
+  public void tearDownStaticMocks() {
+    mockedSystemClock.close();
   }
 
   @Test

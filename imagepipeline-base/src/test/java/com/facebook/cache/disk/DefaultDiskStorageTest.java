@@ -12,6 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import com.facebook.binaryresource.BinaryResource;
@@ -34,34 +35,28 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.mockito.MockedStatic;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
 /** Tests for 'default' disk storage */
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
-@PrepareOnlyThisForTest({SystemClock.class})
 public class DefaultDiskStorageTest {
-
-  @Rule public PowerMockRule rule = new PowerMockRule();
 
   private File mDirectory;
   private SystemClock mClock;
+  private MockedStatic<SystemClock> mockedSystemClock;
 
   @Before
   public void before() throws Exception {
+    mockedSystemClock = mockStatic(SystemClock.class);
     mClock = mock(SystemClock.class);
-    PowerMockito.mockStatic(SystemClock.class);
-    PowerMockito.when(SystemClock.get()).thenReturn(mClock);
+    mockedSystemClock.when(() -> SystemClock.get()).thenReturn(mClock);
     mDirectory =
         new File(RuntimeEnvironment.application.getCacheDir(), "sharded-disk-storage-test");
     Assert.assertTrue(mDirectory.mkdirs());
@@ -75,6 +70,11 @@ public class DefaultDiskStorageTest {
         return new DefaultDiskStorage(mDirectory, version, mock(CacheErrorLogger.class));
       }
     };
+  }
+
+  @After
+  public void tearDownStaticMocks() {
+    mockedSystemClock.close();
   }
 
   @Test

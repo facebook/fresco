@@ -11,6 +11,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import android.os.SystemClock;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,14 +19,10 @@ import java.util.Random;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.stubbing.Answer;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.robolectric.RobolectricTestRunner;
 
 /** Test for the score-based eviction comparator. */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({System.class})
+@RunWith(RobolectricTestRunner.class)
 public class ScoreBasedEvictionComparatorSupplierTest {
 
   private static final long RANDOM_SEED = 42;
@@ -36,8 +33,7 @@ public class ScoreBasedEvictionComparatorSupplierTest {
   public void setUp() {
     Random random = new Random(RANDOM_SEED);
 
-    PowerMockito.mockStatic(System.class);
-    when(System.currentTimeMillis()).thenAnswer((Answer<Long>) invocation -> 0L);
+    SystemClock.setCurrentTimeMillis(0L);
 
     entries = new ArrayList<>();
     for (int i = 0; i < 100; i++) {
