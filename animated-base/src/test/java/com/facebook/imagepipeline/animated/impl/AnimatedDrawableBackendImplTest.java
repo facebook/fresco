@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.animated.impl;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -19,23 +20,18 @@ import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.base.AnimatedImageFrame;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 import org.mockito.stubbing.Answer;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
-@PrepareForTest({Bitmap.class, Canvas.class})
 public class AnimatedDrawableBackendImplTest {
-
-  @Rule public PowerMockRule mPowerMockRule = new PowerMockRule();
 
   @Mock public AnimatedDrawableUtil mAnimatedDrawableUtil;
   @Mock public AnimatedImageResult mAnimatedImageResult;
@@ -44,9 +40,11 @@ public class AnimatedDrawableBackendImplTest {
   @Mock public AnimatedImageFrame mFrame;
   @Mock public Bitmap mBitmap;
   @Mock public Rect mRect;
+  private MockedStatic<Bitmap> mockedBitmap;
 
   @Before
   public void setUp() throws Exception {
+    mockedBitmap = mockStatic(Bitmap.class);
     MockitoAnnotations.initMocks(this);
 
     when(mAnimatedImageResult.getImage()).thenReturn(mImage);
@@ -54,8 +52,8 @@ public class AnimatedDrawableBackendImplTest {
 
     when(mImage.getFrame(anyInt())).thenReturn(mFrame);
 
-    PowerMockito.mockStatic(Bitmap.class);
-    when(Bitmap.createBitmap(anyInt(), anyInt(), isA(Bitmap.Config.class)))
+    mockedBitmap
+        .when(() -> Bitmap.createBitmap(anyInt(), anyInt(), isA(Bitmap.Config.class)))
         .thenAnswer((Answer<Bitmap>) invocation -> mBitmap);
   }
 
@@ -77,6 +75,11 @@ public class AnimatedDrawableBackendImplTest {
     animatedDrawableBackendImpl.renderFrame(0, mCanvas);
 
     verify(mFrame).renderFrame(frameExpectedRenderedWidth, frameExpectedRenderedHeight, mBitmap);
+  }
+
+  @After
+  public void tearDownStaticMocks() {
+    mockedBitmap.close();
   }
 
   @Test
