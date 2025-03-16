@@ -9,6 +9,9 @@ package com.facebook.imagepipeline.producers;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
@@ -28,32 +31,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import org.junit.*;
+import org.junit.After;
 import org.junit.runner.*;
 import org.mockito.*;
+import org.mockito.MockedStatic;
 import org.mockito.stubbing.Answer;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.*;
 
 /** Basic tests for LocalContentUriThumbnailFetchProducer */
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
-@PrepareForTest({
-  LocalContentUriThumbnailFetchProducer.class,
-  MediaStore.class,
-  MediaStore.Images.class
-})
 @Config(manifest = Config.NONE)
 public class LocalContentUriThumbnailFetchProducerTest {
   private static final String PRODUCER_NAME = LocalContentUriThumbnailFetchProducer.PRODUCER_NAME;
   private static final String THUMBNAIL_FILE_NAME = "////sdcard/thumb.jpg";
   private static final long THUMBNAIL_FILE_SIZE = 1374;
-
-  @Rule public PowerMockRule mPowerMockRule = new PowerMockRule();
 
   @Mock public PooledByteBufferFactory mPooledByteBufferFactory;
   @Mock public ContentResolver mContentResolver;
@@ -70,9 +62,15 @@ public class LocalContentUriThumbnailFetchProducerTest {
   private final String mRequestId = "mRequestId";
   private Uri mContentUri;
   private LocalContentUriThumbnailFetchProducer mLocalContentUriThumbnailFetchProducer;
+  private MockedStatic<MediaStore.Images.Thumbnails> mockedMediaStoreImagesThumbnails;
+  private MockedStatic<LocalContentUriThumbnailFetchProducer.FileUtil> mockedFileUtil;
+  private MockedConstruction<FileInputStream> mockedFileInputStream;
+  private MockedConstruction<ExifInterface> mockedExifInterface;
+  private MockedConstruction<EncodedImage> mockedEncodedImage;
 
   @Before
   public void setUp() throws Exception {
+    mockedMediaStoreImagesThumbnails = mockStatic(MediaStore.Images.Thumbnails.class);
     MockitoAnnotations.initMocks(this);
 
     mExecutor = new TestExecutorService(new FakeClock());
@@ -95,20 +93,23 @@ public class LocalContentUriThumbnailFetchProducerTest {
     when(mImageRequest.getSourceUri()).thenReturn(mContentUri);
 
     mockMediaStoreCursor();
-    mockThumbnailFile();
     mockContentResolver();
+    mockThumbnailFile();
+  }
+
+  @After
+  public void tearDown() {
+    mockedMediaStoreImagesThumbnails.close();
+    mockedFileUtil.close();
+    mockedFileInputStream.close();
+    mockedExifInterface.close();
+    mockedEncodedImage.close();
   }
 
   private void mockMediaStoreCursor() {
-    PowerMockito.mockStatic(MediaStore.Images.Thumbnails.class, File.class);
-    PowerMockito.when(
-            MediaStore.Images.Thumbnails.queryMiniThumbnail(
-                any(ContentResolver.class), anyLong(), anyInt(), any(String[].class)))
+    when(MediaStore.Images.Thumbnails.queryMiniThumbnail(
+            any(ContentResolver.class), anyLong(), anyInt(), any(String[].class)))
         .thenAnswer((Answer<Cursor>) invocation -> mCursor);
-    Whitebox.setInternalState(
-        MediaStore.Images.Media.class,
-        "EXTERNAL_CONTENT_URI",
-        Uri.parse("content://media/external/images/media"));
     final int dataColumnIndex = 5;
     when(mCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA)).thenReturn(dataColumnIndex);
     when(mCursor.getString(dataColumnIndex)).thenReturn(THUMBNAIL_FILE_NAME);
@@ -116,26 +117,18 @@ public class LocalContentUriThumbnailFetchProducerTest {
   }
 
   private void mockThumbnailFile() throws Exception {
-    PowerMockito.whenNew(File.class)
-        .withArguments(THUMBNAIL_FILE_NAME)
-        .thenAnswer((Answer<File>) i -> mThumbnailFile);
-    when(mThumbnailFile.exists()).thenReturn(true);
-    when(mThumbnailFile.length()).thenReturn(THUMBNAIL_FILE_SIZE);
-
-    PowerMockito.whenNew(FileInputStream.class)
-        .withArguments(THUMBNAIL_FILE_NAME)
-        .thenAnswer((Answer<FileInputStream>) i -> mock(FileInputStream.class));
-
-    PowerMockito.whenNew(ExifInterface.class)
-        .withArguments(THUMBNAIL_FILE_NAME)
-        .thenAnswer((Answer<ExifInterface>) i -> mock(ExifInterface.class));
-
-    EncodedImage encodedImage = mock(EncodedImage.class);
-    when(encodedImage.getSize()).thenReturn((int) THUMBNAIL_FILE_SIZE);
-
-    PowerMockito.whenNew(EncodedImage.class)
-        .withAnyArguments()
-        .thenAnswer((Answer<EncodedImage>) i -> encodedImage);
+    mockedFileUtil = mockStatic(LocalContentUriThumbnailFetchProducer.FileUtil.class);
+    when(LocalContentUriThumbnailFetchProducer.FileUtil.exists(any())).thenReturn(true);
+    when(LocalContentUriThumbnailFetchProducer.FileUtil.length(any()))
+        .thenReturn(THUMBNAIL_FILE_SIZE);
+    mockedFileInputStream = mockConstruction(FileInputStream.class);
+    mockedExifInterface = mockConstruction(ExifInterface.class);
+    mockedEncodedImage =
+        mockConstruction(
+            EncodedImage.class,
+            (mock, context) -> {
+              when(mock.getSize()).thenReturn((int) THUMBNAIL_FILE_SIZE);
+            });
   }
 
   private void mockContentResolver() throws Exception {

@@ -19,6 +19,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -45,36 +46,25 @@ import com.facebook.imagepipeline.testing.TestNativeLoader;
 import com.facebook.imagepipeline.testing.TestScheduledExecutorService;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 import com.facebook.imagepipeline.transcoder.JpegTranscoderUtils;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 @Config(manifest = Config.NONE)
-@PrepareOnlyThisForTest({
-  NativeJpegTranscoder.class,
-  SystemClock.class,
-  UiThreadImmediateExecutorService.class,
-  JpegTranscoderUtils.class
-})
 public class ResizeAndRotateProducerTest {
   static {
     TestNativeLoader.init();
@@ -87,8 +77,6 @@ public class ResizeAndRotateProducerTest {
   @Mock public ProducerContext mProducerContext;
   @Mock public PooledByteBufferFactory mPooledByteBufferFactory;
   @Mock public PooledByteBufferOutputStream mPooledByteBufferOutputStream;
-
-  @Rule public PowerMockRule rule = new PowerMockRule();
 
   private static final int MIN_TRANSFORM_INTERVAL_MS =
       ResizeAndRotateProducer.MIN_TRANSFORM_INTERVAL_MS;
@@ -106,16 +94,22 @@ public class ResizeAndRotateProducerTest {
   private UiThreadImmediateExecutorService mUiThreadImmediateExecutorService;
   private EncodedImage mIntermediateEncodedImage;
   private EncodedImage mFinalEncodedImage;
+  private MockedStatic<SystemClock> mockedSystemClock;
+  private MockedStatic<NativeJpegTranscoder> mockedNativeJpegTranscoder;
+  private MockedStatic<UiThreadImmediateExecutorService> mockedUiThreadImmediateExecutorService;
 
   @Before
   public void setUp() {
+    mockedUiThreadImmediateExecutorService = mockStatic(UiThreadImmediateExecutorService.class);
+    mockedNativeJpegTranscoder = mockStatic(NativeJpegTranscoder.class);
+    mockedSystemClock = mockStatic(SystemClock.class);
     MockitoAnnotations.initMocks(this);
     mFakeClockForWorker = new FakeClock();
     mFakeClockForScheduled = new FakeClock();
     mFakeClockForWorker.incrementBy(1000);
     mFakeClockForScheduled.incrementBy(1000);
-    PowerMockito.mockStatic(SystemClock.class);
-    when(SystemClock.uptimeMillis())
+    mockedSystemClock
+        .when(() -> SystemClock.uptimeMillis())
         .thenAnswer(
             new Answer<Long>() {
               @Override
@@ -137,9 +131,8 @@ public class ResizeAndRotateProducerTest {
                     (long) invocation.getArguments()[1],
                     (TimeUnit) invocation.getArguments()[2]));
 
-    PowerMockito.mockStatic(NativeJpegTranscoder.class);
-    PowerMockito.mockStatic(UiThreadImmediateExecutorService.class);
-    when(UiThreadImmediateExecutorService.getInstance())
+    mockedUiThreadImmediateExecutorService
+        .when(() -> UiThreadImmediateExecutorService.getInstance())
         .thenAnswer(
             (Answer<UiThreadImmediateExecutorService>)
                 invocation -> mUiThreadImmediateExecutorService);
@@ -168,6 +161,13 @@ public class ResizeAndRotateProducerTest {
     doReturn(mPooledByteBufferOutputStream).when(mPooledByteBufferFactory).newOutputStream();
     mPooledByteBuffer = new TrivialPooledByteBuffer(new byte[] {1}, 0);
     doReturn(mPooledByteBuffer).when(mPooledByteBufferOutputStream).toByteBuffer();
+  }
+
+  @After
+  public void tearDownStaticMocks() {
+    mockedSystemClock.close();
+    mockedNativeJpegTranscoder.close();
+    mockedUiThreadImmediateExecutorService.close();
   }
 
   @Test
@@ -620,53 +620,42 @@ public class ResizeAndRotateProducerTest {
     verify(mConsumer).onNewResult(any(EncodedImage.class), eq(Consumer.IS_LAST));
   }
 
-  private static void verifyJpegTranscoderInteractions(int numerator, int rotationAngle) {
-    PowerMockito.verifyStatic(NativeJpegTranscoder.class);
-    try {
-      NativeJpegTranscoder.transcodeJpeg(
-          any(InputStream.class),
-          any(OutputStream.class),
-          eq(rotationAngle),
-          eq(numerator),
-          eq(DEFAULT_JPEG_QUALITY));
-    } catch (IOException ioe) {
-      throw new RuntimeException(ioe);
-    }
+  private void verifyJpegTranscoderInteractions(int numerator, int rotationAngle) {
+    mockedNativeJpegTranscoder.verify(
+        () ->
+            NativeJpegTranscoder.transcodeJpeg(
+                any(InputStream.class),
+                any(OutputStream.class),
+                eq(rotationAngle),
+                eq(numerator),
+                eq(DEFAULT_JPEG_QUALITY)));
   }
 
-  private static void verifyJpegTranscoderExifOrientationInteractions(
-      int numerator, int exifOrientation) {
-    PowerMockito.verifyStatic(NativeJpegTranscoder.class);
-    try {
-      NativeJpegTranscoder.transcodeJpegWithExifOrientation(
-          any(InputStream.class),
-          any(OutputStream.class),
-          eq(exifOrientation),
-          eq(numerator),
-          eq(DEFAULT_JPEG_QUALITY));
-    } catch (IOException ioe) {
-      throw new RuntimeException(ioe);
-    }
+  private void verifyJpegTranscoderExifOrientationInteractions(int numerator, int exifOrientation) {
+    mockedNativeJpegTranscoder.verify(
+        () ->
+            NativeJpegTranscoder.transcodeJpegWithExifOrientation(
+                any(InputStream.class),
+                any(OutputStream.class),
+                eq(exifOrientation),
+                eq(numerator),
+                eq(DEFAULT_JPEG_QUALITY)));
   }
 
-  private static void verifyZeroJpegTranscoderInteractions() {
-    PowerMockito.verifyStatic(NativeJpegTranscoder.class, never());
-    try {
-      NativeJpegTranscoder.transcodeJpeg(
-          any(InputStream.class), any(OutputStream.class), anyInt(), anyInt(), anyInt());
-    } catch (IOException ioe) {
-      throw new RuntimeException(ioe);
-    }
+  private void verifyZeroJpegTranscoderInteractions() {
+    mockedNativeJpegTranscoder.verify(
+        () ->
+            NativeJpegTranscoder.transcodeJpeg(
+                any(InputStream.class), any(OutputStream.class), anyInt(), anyInt(), anyInt()),
+        never());
   }
 
-  private static void verifyZeroJpegTranscoderExifOrientationInteractions() {
-    PowerMockito.verifyStatic(NativeJpegTranscoder.class, never());
-    try {
-      NativeJpegTranscoder.transcodeJpegWithExifOrientation(
-          any(InputStream.class), any(OutputStream.class), anyInt(), anyInt(), anyInt());
-    } catch (IOException ioe) {
-      throw new RuntimeException(ioe);
-    }
+  private void verifyZeroJpegTranscoderExifOrientationInteractions() {
+    mockedNativeJpegTranscoder.verify(
+        () ->
+            NativeJpegTranscoder.transcodeJpegWithExifOrientation(
+                any(InputStream.class), any(OutputStream.class), anyInt(), anyInt(), anyInt()),
+        never());
   }
 
   private void provideIntermediateResult(ImageFormat imageFormat) {

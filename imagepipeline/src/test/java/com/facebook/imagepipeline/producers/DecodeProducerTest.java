@@ -9,6 +9,10 @@ package com.facebook.imagepipeline.producers;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -39,19 +43,17 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 import org.junit.*;
+import org.junit.After;
 import org.junit.runner.*;
 import org.mockito.*;
 import org.mockito.Mock;
-import org.powermock.api.mockito.*;
-import org.powermock.core.classloader.annotations.*;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.mockito.MockedConstruction;
+import org.mockito.MockedStatic;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 @Config(manifest = Config.NONE)
-@PrepareForTest({JobScheduler.class, ProgressiveJpegParser.class, DecodeProducer.class})
 public class DecodeProducerTest {
 
   private static final ImageDecodeOptions IMAGE_DECODE_OPTIONS =
@@ -88,10 +90,16 @@ public class DecodeProducerTest {
 
   private DecodeProducer mDecodeProducer;
 
-  @Rule public PowerMockRule rule = new PowerMockRule();
+  private MockedStatic<ProgressiveJpegParser> mockedProgressiveJpegParser;
+  private MockedStatic<JobScheduler> mockedJobScheduler;
+  private MockedConstruction<ProgressiveJpegParser> mockedConstructionProgressiveJpegParser;
+  private MockedConstruction<JobScheduler> mockedConstructionJobScheduler;
+  private JobScheduler.JobRunnable mJobRunnable;
 
   @Before
   public void setUp() throws Exception {
+    mockedJobScheduler = mockStatic(JobScheduler.class);
+    mockedProgressiveJpegParser = mockStatic(ProgressiveJpegParser.class);
     MockitoAnnotations.initMocks(this);
     mProgressiveJpegConfig =
         new SimpleProgressiveJpegConfig(
@@ -105,12 +113,19 @@ public class DecodeProducerTest {
               }
             });
 
-    PowerMockito.mockStatic(ProgressiveJpegParser.class);
-    PowerMockito.whenNew(ProgressiveJpegParser.class)
-        .withAnyArguments()
-        .thenReturn(mProgressiveJpegParser);
-    PowerMockito.mockStatic(JobScheduler.class);
-    PowerMockito.whenNew(JobScheduler.class).withAnyArguments().thenReturn(mJobScheduler);
+    mockedConstructionProgressiveJpegParser =
+        mockConstruction(
+            ProgressiveJpegParser.class,
+            (mock, context) -> {
+              mProgressiveJpegParser = mock;
+            });
+    mockedConstructionJobScheduler =
+        mockConstruction(
+            JobScheduler.class,
+            (mock, context) -> {
+              mJobRunnable = (JobScheduler.JobRunnable) context.arguments().get(1);
+              mJobScheduler = mock;
+            });
 
     when(mConfig.getExperiments()).thenReturn(mPipelineExperiments);
 
@@ -145,6 +160,14 @@ public class DecodeProducerTest {
     encodedImage.setWidth(IMAGE_WIDTH);
     encodedImage.setHeight(IMAGE_HEIGHT);
     return encodedImage;
+  }
+
+  @After
+  public void tearDownStaticMocks() {
+    mockedProgressiveJpegParser.close();
+    mockedJobScheduler.close();
+    mockedConstructionProgressiveJpegParser.close();
+    mockedConstructionJobScheduler.close();
   }
 
   @Test
@@ -526,11 +549,7 @@ public class DecodeProducerTest {
   }
 
   private JobScheduler.JobRunnable getJobRunnable() throws Exception {
-    ArgumentCaptor<JobScheduler.JobRunnable> runnableCaptor =
-        ArgumentCaptor.forClass(JobScheduler.JobRunnable.class);
-    PowerMockito.verifyNew(JobScheduler.class)
-        .withArguments(eq(mExecutor), runnableCaptor.capture(), anyInt());
-    return runnableCaptor.getValue();
+    return mJobRunnable;
   }
 
   private static PooledByteBuffer mockPooledByteBuffer(int size) {

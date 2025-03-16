@@ -13,8 +13,9 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.*;
 
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
@@ -33,20 +34,18 @@ import com.facebook.imagepipeline.testing.TestExecutorService;
 import java.util.Map;
 import javax.annotation.Nullable;
 import org.junit.*;
+import org.junit.After;
 import org.junit.runner.*;
 import org.mockito.*;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.invocation.*;
 import org.mockito.stubbing.*;
-import org.powermock.core.classloader.annotations.*;
-import org.powermock.modules.junit4.rule.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
 
 /** Basic tests for {@link LocalVideoThumbnailProducer} */
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
-@PrepareForTest(android.media.ThumbnailUtils.class)
 @Config(manifest = Config.NONE)
 public class LocalVideoThumbnailProducerTest {
   private static final String PRODUCER_NAME = LocalVideoThumbnailProducer.PRODUCER_NAME;
@@ -61,24 +60,23 @@ public class LocalVideoThumbnailProducerTest {
   @Mock public Bitmap mBitmap;
   @Mock public ImagePipelineConfig mConfig;
 
-  @Rule public PowerMockRule rule = new PowerMockRule();
-
   private TestExecutorService mExecutor;
   private SettableProducerContext mProducerContext;
   private final String mRequestId = "mRequestId";
   private LocalVideoThumbnailProducer mLocalVideoThumbnailProducer;
   private CloseableReference<CloseableStaticBitmap> mCloseableReference;
   private android.net.Uri mLocalVideoUri;
+  private MockedStatic<ThumbnailUtils> mockedThumbnailUtils;
 
   @Before
   public void setUp() throws Exception {
+    mockedThumbnailUtils = mockStatic(ThumbnailUtils.class);
     MockitoAnnotations.initMocks(this);
     mExecutor = new TestExecutorService(new FakeClock());
     mLocalVideoThumbnailProducer =
         new LocalVideoThumbnailProducer(
             mExecutor, RuntimeEnvironment.application.getContentResolver());
 
-    mockStatic(ThumbnailUtils.class);
     mProducerContext =
         new SettableProducerContext(
             mImageRequest,
@@ -91,6 +89,11 @@ public class LocalVideoThumbnailProducerTest {
             Priority.MEDIUM,
             mConfig);
     mLocalVideoUri = Uri.parse(TEST_FILEPATH);
+  }
+
+  @After
+  public void tearDownStaticMocks() {
+    mockedThumbnailUtils.close();
   }
 
   @Test

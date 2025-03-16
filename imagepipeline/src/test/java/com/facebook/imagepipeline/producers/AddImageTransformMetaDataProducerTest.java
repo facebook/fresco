@@ -11,6 +11,8 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
 
 import android.util.Pair;
 import com.facebook.common.memory.PooledByteBuffer;
@@ -25,20 +27,17 @@ import com.facebook.imageutils.JfifUtil;
 import java.io.InputStream;
 import javax.annotation.Nullable;
 import org.junit.*;
+import org.junit.After;
 import org.junit.runner.*;
 import org.mockito.*;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.invocation.*;
 import org.mockito.stubbing.*;
-import org.powermock.api.mockito.*;
-import org.powermock.core.classloader.annotations.*;
-import org.powermock.modules.junit4.rule.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
 
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
-@PrepareForTest({ImageFormatChecker.class, JfifUtil.class, BitmapUtil.class})
 @Config(manifest = Config.NONE)
 public class AddImageTransformMetaDataProducerTest {
   @Mock public Producer<EncodedImage> mInputProducer;
@@ -46,19 +45,22 @@ public class AddImageTransformMetaDataProducerTest {
   @Mock public ProducerContext mProducerContext;
   @Mock public Exception mException;
 
-  @Rule public PowerMockRule rule = new PowerMockRule();
-
   private AddImageTransformMetaDataProducer mAddMetaDataProducer;
   @Nullable private Consumer<EncodedImage> mAddMetaDataConsumer;
   private CloseableReference<PooledByteBuffer> mIntermediateResultBufferRef;
   private CloseableReference<PooledByteBuffer> mFinalResultBufferRef;
   private EncodedImage mIntermediateResult;
   private EncodedImage mFinalResult;
+  private MockedStatic<ImageFormatChecker> mockedImageFormatChecker;
+  private MockedStatic<BitmapUtil> mockedBitmapUtil;
+  private MockedStatic<JfifUtil> mockedJfifUtil;
 
   @Before
   public void setUp() {
+    mockedJfifUtil = mockStatic(JfifUtil.class);
+    mockedBitmapUtil = mockStatic(BitmapUtil.class);
+    mockedImageFormatChecker = mockStatic(ImageFormatChecker.class);
     MockitoAnnotations.initMocks(this);
-    PowerMockito.mockStatic(ImageFormatChecker.class, JfifUtil.class, BitmapUtil.class);
 
     mAddMetaDataProducer = new AddImageTransformMetaDataProducer(mInputProducer);
 
@@ -83,9 +85,17 @@ public class AddImageTransformMetaDataProducerTest {
     mAddMetaDataProducer.produceResults(mConsumer, mProducerContext);
   }
 
+  @After
+  public void tearDownStaticMocks() {
+    mockedImageFormatChecker.close();
+    mockedBitmapUtil.close();
+    mockedJfifUtil.close();
+  }
+
   @Test
   public void testOnNewResultLastNotJpeg() {
-    when(ImageFormatChecker.getImageFormat_WrapIOException(any(InputStream.class)))
+    mockedImageFormatChecker
+        .when(() -> ImageFormatChecker.getImageFormat_WrapIOException(any(InputStream.class)))
         .thenAnswer((Answer<ImageFormat>) i -> DefaultImageFormats.WEBP_SIMPLE);
     mAddMetaDataConsumer.onNewResult(mFinalResult, Consumer.IS_LAST);
     ArgumentCaptor<EncodedImage> argumentCaptor = ArgumentCaptor.forClass(EncodedImage.class);
@@ -100,9 +110,11 @@ public class AddImageTransformMetaDataProducerTest {
 
   @Test
   public void testOnNewResultNotLastNotJpeg() {
-    when(ImageFormatChecker.getImageFormat_WrapIOException(any(InputStream.class)))
+    mockedImageFormatChecker
+        .when(() -> ImageFormatChecker.getImageFormat_WrapIOException(any(InputStream.class)))
         .thenAnswer((Answer<ImageFormat>) i -> DefaultImageFormats.WEBP_SIMPLE);
-    when(BitmapUtil.decodeDimensions(any(InputStream.class)))
+    mockedBitmapUtil
+        .when(() -> BitmapUtil.decodeDimensions(any(InputStream.class)))
         .thenAnswer((Answer<Pair<Integer, Integer>>) i -> null);
     mAddMetaDataConsumer.onNewResult(mIntermediateResult, Consumer.NO_FLAGS);
     ArgumentCaptor<EncodedImage> argumentCaptor = ArgumentCaptor.forClass(EncodedImage.class);
@@ -119,11 +131,17 @@ public class AddImageTransformMetaDataProducerTest {
   public void testOnNewResultNotLast_DimensionsNotFound() {
     int rotationAngle = 180;
     int orientation = 1;
-    when(ImageFormatChecker.getImageFormat_WrapIOException(any(InputStream.class)))
+    mockedImageFormatChecker
+        .when(() -> ImageFormatChecker.getImageFormat_WrapIOException(any(InputStream.class)))
         .thenAnswer((Answer<ImageFormat>) i -> DefaultImageFormats.JPEG);
-    when(JfifUtil.getAutoRotateAngleFromOrientation(orientation)).thenReturn(rotationAngle);
-    when(JfifUtil.getOrientation(any(InputStream.class))).thenReturn(orientation);
-    when(BitmapUtil.decodeDimensionsAndColorSpace(any(InputStream.class)))
+    mockedJfifUtil
+        .when(() -> JfifUtil.getAutoRotateAngleFromOrientation(orientation))
+        .thenReturn(rotationAngle);
+    mockedJfifUtil
+        .when(() -> JfifUtil.getOrientation(any(InputStream.class)))
+        .thenReturn(orientation);
+    mockedBitmapUtil
+        .when(() -> BitmapUtil.decodeDimensionsAndColorSpace(any(InputStream.class)))
         .thenReturn(new ImageMetaData(-1, -1, null));
     mAddMetaDataConsumer.onNewResult(mIntermediateResult, Consumer.NO_FLAGS);
     ArgumentCaptor<EncodedImage> argumentCaptor = ArgumentCaptor.forClass(EncodedImage.class);
@@ -137,10 +155,14 @@ public class AddImageTransformMetaDataProducerTest {
 
   @Test
   public void testOnNewResultNotLast_RotationNotFound() {
-    when(ImageFormatChecker.getImageFormat_WrapIOException(any(InputStream.class)))
+    mockedImageFormatChecker
+        .when(() -> ImageFormatChecker.getImageFormat_WrapIOException(any(InputStream.class)))
         .thenAnswer((Answer<ImageFormat>) i -> DefaultImageFormats.JPEG);
-    when(JfifUtil.getOrientation(any(InputStream.class))).thenAnswer((Answer<Integer>) i -> 0);
-    when(BitmapUtil.decodeDimensionsAndColorSpace(any(InputStream.class)))
+    mockedJfifUtil
+        .when(() -> JfifUtil.getOrientation(any(InputStream.class)))
+        .thenAnswer((Answer<Integer>) i -> 0);
+    mockedBitmapUtil
+        .when(() -> BitmapUtil.decodeDimensionsAndColorSpace(any(InputStream.class)))
         .thenAnswer((Answer<ImageMetaData>) i -> new ImageMetaData(-1, -1, null));
     mAddMetaDataConsumer.onNewResult(mIntermediateResult, Consumer.NO_FLAGS);
     ArgumentCaptor<EncodedImage> argumentCaptor = ArgumentCaptor.forClass(EncodedImage.class);
@@ -158,13 +180,17 @@ public class AddImageTransformMetaDataProducerTest {
     int orientation = 1;
     int width = 10;
     int height = 20;
-    when(ImageFormatChecker.getImageFormat_WrapIOException(any(InputStream.class)))
+    mockedImageFormatChecker
+        .when(() -> ImageFormatChecker.getImageFormat_WrapIOException(any(InputStream.class)))
         .thenAnswer((Answer<ImageFormat>) i -> DefaultImageFormats.JPEG);
-    when(JfifUtil.getAutoRotateAngleFromOrientation(orientation))
+    mockedJfifUtil
+        .when(() -> JfifUtil.getAutoRotateAngleFromOrientation(orientation))
         .thenAnswer((Answer<Integer>) i -> rotationAngle);
-    when(JfifUtil.getOrientation(any(InputStream.class)))
+    mockedJfifUtil
+        .when(() -> JfifUtil.getOrientation(any(InputStream.class)))
         .thenAnswer((Answer<Integer>) i -> orientation);
-    when(BitmapUtil.decodeDimensionsAndColorSpace(any(InputStream.class)))
+    mockedBitmapUtil
+        .when(() -> BitmapUtil.decodeDimensionsAndColorSpace(any(InputStream.class)))
         .thenReturn(new ImageMetaData(width, height, null));
     mAddMetaDataConsumer.onNewResult(mFinalResult, Consumer.IS_LAST);
     ArgumentCaptor<EncodedImage> argumentCaptor = ArgumentCaptor.forClass(EncodedImage.class);
@@ -183,11 +209,17 @@ public class AddImageTransformMetaDataProducerTest {
     int orientation = 1;
     int width = 10;
     int height = 20;
-    when(ImageFormatChecker.getImageFormat_WrapIOException(any(InputStream.class)))
+    mockedImageFormatChecker
+        .when(() -> ImageFormatChecker.getImageFormat_WrapIOException(any(InputStream.class)))
         .thenAnswer((Answer<ImageFormat>) i -> DefaultImageFormats.JPEG);
-    when(JfifUtil.getAutoRotateAngleFromOrientation(orientation)).thenReturn(rotationAngle);
-    when(JfifUtil.getOrientation(any(InputStream.class))).thenReturn(orientation);
-    when(BitmapUtil.decodeDimensionsAndColorSpace(any(InputStream.class)))
+    mockedJfifUtil
+        .when(() -> JfifUtil.getAutoRotateAngleFromOrientation(orientation))
+        .thenReturn(rotationAngle);
+    mockedJfifUtil
+        .when(() -> JfifUtil.getOrientation(any(InputStream.class)))
+        .thenReturn(orientation);
+    mockedBitmapUtil
+        .when(() -> BitmapUtil.decodeDimensionsAndColorSpace(any(InputStream.class)))
         .thenReturn(new ImageMetaData(width, height, null));
     mAddMetaDataConsumer.onNewResult(mFinalResult, Consumer.IS_LAST);
     ArgumentCaptor<EncodedImage> argumentCaptor = ArgumentCaptor.forClass(EncodedImage.class);

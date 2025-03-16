@@ -33,6 +33,18 @@ import javax.annotation.Nullable;
 public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer
     implements ThumbnailProducer<EncodedImage> {
 
+  /** Wrapper around File operations to enable mocking in tests. */
+  static class FileUtil {
+
+    public static boolean exists(String pathname) {
+      return new File(pathname).exists();
+    }
+
+    public static long length(String pathname) {
+      return new File(pathname).length();
+    }
+  }
+
   private static final Class<?> TAG = LocalContentUriThumbnailFetchProducer.class;
 
   public static final String PRODUCER_NAME = "LocalContentUriThumbnailFetchProducer";
@@ -127,7 +139,7 @@ public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer
         if (thumbnailDataColumnIndex >= 0) {
           final String thumbnailUri =
               Preconditions.checkNotNull(thumbnailCursor.getString(thumbnailDataColumnIndex));
-          if (new File(thumbnailUri).exists()) {
+          if (FileUtil.exists(thumbnailUri)) {
             return getEncodedImage(new FileInputStream(thumbnailUri), getLength(thumbnailUri));
           }
         }
@@ -155,7 +167,7 @@ public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer
   }
 
   private static int getLength(String pathname) {
-    return pathname == null ? -1 : (int) new File(pathname).length();
+    return pathname == null ? -1 : (int) FileUtil.length(pathname);
   }
 
   @Override

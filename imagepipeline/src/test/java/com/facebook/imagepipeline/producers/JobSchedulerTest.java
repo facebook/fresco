@@ -14,8 +14,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 
 import android.os.SystemClock;
 import com.facebook.common.memory.PooledByteBuffer;
@@ -27,33 +27,22 @@ import com.facebook.imagepipeline.testing.TestScheduledExecutorService;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 @Config(manifest = Config.NONE)
-@PrepareForTest({
-  SystemClock.class,
-  JobScheduler.class,
-  JobScheduler.JobStartExecutorSupplier.class
-})
 public class JobSchedulerTest {
 
   private static final int INTERVAL = 100;
-
-  @Rule public PowerMockRule rule = new PowerMockRule();
 
   private static class TestJobRunnable implements JobScheduler.JobRunnable {
 
@@ -95,9 +84,15 @@ public class JobSchedulerTest {
   private TestScheduledExecutorService mTestScheduledExecutorService;
   private TestJobRunnable mTestJobRunnable;
   private JobScheduler mJobScheduler;
+  private MockedStatic<SystemClock> mockedSystemClock;
+  private MockedStatic<JobScheduler.JobStartExecutorSupplier>
+      mockedJobSchedulerJobStartExecutorSupplier;
 
   @Before
   public void setUp() {
+    mockedJobSchedulerJobStartExecutorSupplier =
+        mockStatic(JobScheduler.JobStartExecutorSupplier.class);
+    mockedSystemClock = mockStatic(SystemClock.class);
     MockitoAnnotations.initMocks(this);
     mFakeClockForTime = new FakeClock();
     mFakeClockForWorker = new FakeClock();
@@ -105,8 +100,8 @@ public class JobSchedulerTest {
     mFakeClockForTime.incrementBy(1000);
     mFakeClockForWorker.incrementBy(1000);
     mFakeClockForScheduled.incrementBy(1000);
-    PowerMockito.mockStatic(SystemClock.class);
-    when(SystemClock.uptimeMillis())
+    mockedSystemClock
+        .when(() -> SystemClock.uptimeMillis())
         .thenAnswer(
             new Answer<Long>() {
               @Override
@@ -117,8 +112,8 @@ public class JobSchedulerTest {
 
     mTestExecutorService = new TestExecutorService(mFakeClockForWorker);
     mTestScheduledExecutorService = new TestScheduledExecutorService(mFakeClockForScheduled);
-    PowerMockito.mockStatic(JobScheduler.JobStartExecutorSupplier.class);
-    when(JobScheduler.JobStartExecutorSupplier.get())
+    mockedJobSchedulerJobStartExecutorSupplier
+        .when(() -> JobScheduler.JobStartExecutorSupplier.get())
         .thenAnswer(
             (Answer<TestScheduledExecutorService>) invocation -> mTestScheduledExecutorService);
 
@@ -130,6 +125,12 @@ public class JobSchedulerTest {
     PooledByteBuffer buf = mock(PooledByteBuffer.class);
     CloseableReference<PooledByteBuffer> ref = CloseableReference.of(buf);
     return new EncodedImage(ref);
+  }
+
+  @After
+  public void tearDownStaticMocks() {
+    mockedSystemClock.close();
+    mockedJobSchedulerJobStartExecutorSupplier.close();
   }
 
   @Test

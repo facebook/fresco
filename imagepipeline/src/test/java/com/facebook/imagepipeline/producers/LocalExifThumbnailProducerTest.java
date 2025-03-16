@@ -9,6 +9,9 @@ package com.facebook.imagepipeline.producers;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import android.content.ContentResolver;
 import android.media.ExifInterface;
@@ -29,21 +32,18 @@ import java.io.InputStream;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 import org.junit.*;
+import org.junit.After;
 import org.junit.runner.*;
 import org.mockito.*;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.invocation.*;
 import org.mockito.stubbing.*;
-import org.powermock.api.mockito.*;
-import org.powermock.core.classloader.annotations.*;
-import org.powermock.modules.junit4.rule.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
 
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 @Config(manifest = Config.NONE)
-@PrepareForTest({JfifUtil.class, BitmapUtil.class})
 public class LocalExifThumbnailProducerTest {
 
   private static final int WIDTH = 10;
@@ -60,18 +60,19 @@ public class LocalExifThumbnailProducerTest {
   @Mock public File mFile;
   @Mock public ContentResolver mContentResolver;
 
-  @Rule public PowerMockRule rule = new PowerMockRule();
-
   private final Uri mUri = Uri.parse("/dummy/path");
   private byte[] mThumbnailBytes;
   private TestExecutorService mTestExecutorService;
   private TestLocalExifThumbnailProducer mTestLocalExifThumbnailProducer;
   private EncodedImage mCapturedEncodedImage;
+  private MockedStatic<JfifUtil> mockedJfifUtil;
+  private MockedStatic<BitmapUtil> mockedBitmapUtil;
 
   @Before
   public void setUp() throws IOException {
+    mockedBitmapUtil = mockStatic(BitmapUtil.class);
+    mockedJfifUtil = mockStatic(JfifUtil.class);
     MockitoAnnotations.initMocks(this);
-    PowerMockito.mockStatic(JfifUtil.class, BitmapUtil.class);
     mTestExecutorService = new TestExecutorService(new FakeClock());
 
     mTestLocalExifThumbnailProducer =
@@ -89,9 +90,11 @@ public class LocalExifThumbnailProducerTest {
 
     when(mExifInterface.getAttribute(ExifInterface.TAG_ORIENTATION))
         .thenReturn(Integer.toString(ORIENTATION));
-    when(JfifUtil.getAutoRotateAngleFromOrientation(ORIENTATION))
+    mockedJfifUtil
+        .when(() -> JfifUtil.getAutoRotateAngleFromOrientation(ORIENTATION))
         .thenAnswer((Answer<Integer>) invocation -> ANGLE);
-    when(BitmapUtil.decodeDimensions(any(InputStream.class)))
+    mockedBitmapUtil
+        .when(() -> BitmapUtil.decodeDimensions(any(InputStream.class)))
         .thenAnswer((Answer<Pair<Integer, Integer>>) invocation -> new Pair(WIDTH, HEIGHT));
 
     doAnswer(
@@ -106,6 +109,12 @@ public class LocalExifThumbnailProducerTest {
             })
         .when(mConsumer)
         .onNewResult(notNull(EncodedImage.class), anyInt());
+  }
+
+  @After
+  public void tearDownStaticMocks() {
+    mockedJfifUtil.close();
+    mockedBitmapUtil.close();
   }
 
   @Test

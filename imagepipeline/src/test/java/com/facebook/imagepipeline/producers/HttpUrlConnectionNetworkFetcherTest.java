@@ -12,13 +12,13 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import android.net.Uri;
-import android.provider.ContactsContract;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.producers.HttpUrlConnectionNetworkFetcher.HttpUrlConnectionNetworkFetchState;
@@ -30,33 +30,23 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.LinkedList;
 import java.util.Queue;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
-@PrepareForTest({
-  HttpUrlConnectionNetworkFetcher.class,
-  Uri.class,
-  UriUtil.class,
-  ContactsContract.class
-})
 public class HttpUrlConnectionNetworkFetcherTest {
 
   public static final String INITIAL_TEST_URL = "http://localhost/";
   public static final String HTTPS_URL = "https://localhost/";
-
-  @Rule public PowerMockRule mPowerMockRule = new PowerMockRule();
 
   @Mock private HttpUrlConnectionNetworkFetchState mMockFetchState;
   @Mock private ProducerContext mMockProducerContext;
@@ -64,9 +54,12 @@ public class HttpUrlConnectionNetworkFetcherTest {
 
   private HttpUrlConnectionNetworkFetcher mFetcher;
   private Queue<HttpURLConnection> mConnectionsQueue;
+  private MockedStatic<Uri> mockedUri;
+  private MockedStatic<UriUtil> mockedUriUtil;
 
   @Before
   public void setUp() throws Exception {
+    mockedUri = mockStatic(Uri.class);
     MockitoAnnotations.initMocks(this);
 
     mFetcher =
@@ -78,23 +71,28 @@ public class HttpUrlConnectionNetworkFetcherTest {
     mockFetchState();
   }
 
-  private void mockUrlConnections() throws Exception {
-    URL mockUrl = PowerMockito.mock(URL.class);
-    PowerMockito.whenNew(URL.class).withAnyArguments().thenReturn(mockUrl);
+  @After
+  public void tearDown() {
+    mockedUriUtil.close();
+  }
 
-    PowerMockito.when(mockUrl.openConnection())
-        .then(
+  private void mockUrlConnections() throws Exception {
+    mockedUriUtil = mockStatic(UriUtil.class);
+    URL mockURL = mock(URL.class);
+    when(mockURL.openConnection())
+        .thenAnswer(
             new Answer<URLConnection>() {
               @Override
               public URLConnection answer(InvocationOnMock invocation) throws Throwable {
                 return mConnectionsQueue.poll();
               }
             });
+    when(UriUtil.uriToUrl(any())).thenReturn(mockURL);
   }
 
   private void mockUriParse() {
-    PowerMockito.mockStatic(Uri.class);
-    PowerMockito.when(Uri.parse(anyString()))
+    mockedUri
+        .when(() -> Uri.parse(anyString()))
         .then(
             new Answer<Uri>() {
               @Override
@@ -105,7 +103,8 @@ public class HttpUrlConnectionNetworkFetcherTest {
   }
 
   private void mockUriWithAppendedPath() {
-    PowerMockito.when(Uri.withAppendedPath(any(Uri.class), anyString()))
+    mockedUri
+        .when(() -> Uri.withAppendedPath(any(Uri.class), anyString()))
         .then(
             new Answer<Uri>() {
               @Override
@@ -139,6 +138,11 @@ public class HttpUrlConnectionNetworkFetcherTest {
                 return mockUri(INITIAL_TEST_URL);
               }
             });
+  }
+
+  @After
+  public void tearDownStaticMocks() {
+    mockedUri.close();
   }
 
   @Test
@@ -221,14 +225,14 @@ public class HttpUrlConnectionNetworkFetcherTest {
   @Test
   public void testHttpUrlConnectionTimeout() throws Exception {
 
-    URL mockURL = PowerMockito.mock(URL.class);
-    HttpURLConnection mockConnection = PowerMockito.mock(HttpURLConnection.class);
+    URL mockURL = mock(URL.class);
+    HttpURLConnection mockConnection = mock(HttpURLConnection.class);
     mockConnection.setConnectTimeout(30000);
 
-    PowerMockito.when(mockURL.openConnection()).thenReturn(mockConnection);
+    when(mockURL.openConnection()).thenReturn(mockConnection);
 
     SocketTimeoutException expectedException = new SocketTimeoutException();
-    PowerMockito.when(mockConnection.getResponseCode()).thenThrow(expectedException);
+    when(mockConnection.getResponseCode()).thenThrow(expectedException);
 
     verify(mockConnection).setConnectTimeout(30000);
   }
