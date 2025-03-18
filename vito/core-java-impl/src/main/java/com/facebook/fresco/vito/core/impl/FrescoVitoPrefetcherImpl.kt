@@ -50,6 +50,24 @@ class FrescoVitoPrefetcherImpl(
     }
   }
 
+  fun prefetch(
+      prefetchTarget: PrefetchTarget,
+      imageRequest: ImageRequest,
+      imageOptions: ImageOptions?,
+      callerContext: Any?,
+      callsite: String
+  ): DataSource<Void?> {
+    return when (prefetchTarget) {
+      PrefetchTarget.MEMORY_DECODED ->
+          prefetch(PrefetchTarget.MEMORY_DECODED, imageRequest, callerContext, null)
+      PrefetchTarget.MEMORY_ENCODED ->
+          prefetch(PrefetchTarget.MEMORY_ENCODED, imageRequest, callerContext, null)
+      PrefetchTarget.DISK -> prefetch(PrefetchTarget.DISK, imageRequest, callerContext, null)
+      else ->
+          DataSources.immediateFailedDataSource(CancellationException("Prefetching is not enabled"))
+    }
+  }
+
   override fun prefetch(
       prefetchTarget: PrefetchTarget,
       uri: Uri,
