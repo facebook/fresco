@@ -228,6 +228,15 @@ class VitoImagePipelineImpl(
       return ClassicFetchStrategy.APP_DISABLED
     }
 
+    if (isProductEnabled(callerContext, contextChain) == false) {
+      return ClassicFetchStrategy.PRODUCT_DISABLED
+    }
+
+    if (experimentalDynamicSizeWithCacheFallbackVito2() &&
+        !isFallbackEnabled(callerContext, contextChain)) {
+      return SmartFetchStrategy.FALLBACK_DISABLED
+    }
+
     if (experimentalDynamicSizeWithCacheFallbackVito2() &&
         Looper.myLooper() == Looper.getMainLooper()) {
       // We don't want to check cache if we are running on the main thread
@@ -238,10 +247,6 @@ class VitoImagePipelineImpl(
       } else {
         return ClassicFetchStrategy.MAIN_THREAD
       }
-    }
-
-    if (isProductEnabled(callerContext, contextChain) == false) {
-      return ClassicFetchStrategy.PRODUCT_DISABLED
     }
 
     if (config.experimentalDynamicSizeDisableWhenAppIsStarting() && config.isAppStarting()) {
@@ -283,5 +288,9 @@ class VitoImagePipelineImpl(
       return null
     }
     return config.experimentalDynamicSizeIsProductEnabled(callerContext, contextChain)
+  }
+
+  private fun isFallbackEnabled(callerContext: Any?, contextChain: ContextChain?): Boolean {
+    return config.experimentalDynamicSizeIsFallbackEnabled(callerContext, contextChain)
   }
 }

@@ -61,6 +61,11 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
       contextChain: ContextChain?
   ): Boolean = true
 
+  override fun experimentalDynamicSizeIsFallbackEnabled(
+      callerContext: Any?,
+      contextChain: ContextChain?
+  ): Boolean = true
+
   override fun experimentalDynamicSizeBloksDisableDiskCacheCheck(): Boolean = false
 
   override fun experimentalResetVitoImageRequestListener() = false

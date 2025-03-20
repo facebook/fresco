@@ -60,6 +60,11 @@ interface FrescoVitoConfig {
       contextChain: ContextChain?
   ): Boolean
 
+  fun experimentalDynamicSizeIsFallbackEnabled(
+      callerContext: Any?,
+      contextChain: ContextChain?
+  ): Boolean
+
   fun isCallerContextBloks(callerContext: Any?): Boolean
 
   fun experimentalResetVitoImageRequestListener(): Boolean

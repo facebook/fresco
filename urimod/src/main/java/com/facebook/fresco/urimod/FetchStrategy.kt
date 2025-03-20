@@ -13,6 +13,7 @@ data object NoPrefetchInOnPrepareStrategy : FetchStrategy
 
 enum class SmartFetchStrategy : FetchStrategy {
   DEFAULT,
+  FALLBACK_DISABLED,
   MAIN_THREAD,
   DISK_CACHE_TIMEOUT,
   ;
