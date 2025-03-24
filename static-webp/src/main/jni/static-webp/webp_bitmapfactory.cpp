@@ -61,7 +61,7 @@ readStreamFully(JNIEnv* env, jobject is, jbyteArray inTempStorage) {
       return read_buffer;
     }
 
-    if (chunk_size > 0) {
+    if (chunk_size > 0 && chunk_size < env->GetArrayLength(inTempStorage)) {
       jbyte* data = env->GetByteArrayElements(inTempStorage, nullptr);
       RETURN_NULL_IF_EXCEPTION(env);
 
