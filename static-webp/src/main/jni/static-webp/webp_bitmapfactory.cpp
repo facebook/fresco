@@ -218,7 +218,8 @@ jobject nativeDecodeByteArray(
     env->ReleaseByteArrayElements(inTempStorage, data, JNI_ABORT);
     RETURN_NULL_IF_EXCEPTION(env);
   }
-  if (data == nullptr || offset + length > env->GetArrayLength(array)) {
+  if (data == nullptr || 0 > offset ||
+      offset + length > env->GetArrayLength(array)) {
     env->ReleaseByteArrayElements(array, data, JNI_ABORT);
     RETURN_NULL_IF_EXCEPTION(env);
   }
