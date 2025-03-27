@@ -17,11 +17,7 @@ import android.view.View;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.lifecycle.AttachDetachListener;
-import com.facebook.drawee.controller.AbstractDraweeController;
 import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.interfaces.DraweeHierarchy;
-import com.facebook.drawee.view.DraweeHolder;
 import com.facebook.fresco.vito.core.FrescoDrawableInterface;
 import com.facebook.fresco.vito.draweesupport.ControllerListenerWrapper;
 import com.facebook.fresco.vito.options.ImageOptions;
@@ -58,8 +54,6 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
 
   public static final int UNSET_SIZE = -1;
 
-  private final Set<DraweeSpan> mDraweeSpans = new HashSet<>();
-
   private final Set<VitoSpan> mVitoSpans = new HashSet<>();
 
   private final DrawableCallback mDrawableCallback = new DrawableCallback();
@@ -80,25 +74,37 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
     super(text, start, end);
   }
 
-  public void setImageSpan(
-      DraweeHolder draweeHolder,
-      int index,
+  public void setImageVitoSpan(
+      Context context,
+      ImageSource imageSource,
+      ImageOptions imageOptions,
+      Object callerContext,
+      int startIndex,
+      int endIndex,
       final int drawableWidthPx,
       final int drawableHeightPx,
       boolean enableResizing,
       @BetterImageSpan.BetterImageSpanAlignment int verticalAlignment) {
-    setImageSpan(
-        draweeHolder,
-        index,
-        index,
+    setImageVitoSpan(
+        context,
+        VitoSpanLoader.INSTANCE,
+        imageSource,
+        imageOptions,
+        callerContext,
+        startIndex,
+        endIndex,
         drawableWidthPx,
         drawableHeightPx,
         enableResizing,
         verticalAlignment);
   }
 
-  public void setImageSpan(
-      DraweeHolder draweeHolder,
+  public void setImageVitoSpan(
+      Context context,
+      VitoSpanLoader vitoSpanLoader,
+      ImageSource imageSource,
+      ImageOptions imageOptions,
+      Object callerContext,
       int startIndex,
       int endIndex,
       final int drawableWidthPx,
@@ -111,63 +117,7 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
       // Example: Text = "ABC", insert image at position 18.
       return;
     }
-    Drawable topLevelDrawable = draweeHolder.getTopLevelDrawable();
-    if (topLevelDrawable != null) {
-      if (topLevelDrawable.getBounds().isEmpty()) {
-        topLevelDrawable.setBounds(0, 0, drawableWidthPx, drawableHeightPx);
-      }
-      topLevelDrawable.setCallback(mDrawableCallback);
-    }
-    DraweeSpan draweeSpan = new DraweeSpan(draweeHolder, verticalAlignment);
-    final DraweeController controller = draweeHolder.getController();
-    if (controller instanceof AbstractDraweeController) {
-      ((AbstractDraweeController) controller)
-          .addControllerListener(
-              new DrawableChangedListener(draweeSpan, enableResizing, drawableHeightPx));
-    }
-    mDraweeSpans.add(draweeSpan);
-    setSpan(draweeSpan, startIndex, endIndex + 1, SPAN_EXCLUSIVE_EXCLUSIVE);
-  }
-
-  public void setImageSpan(
-      Context context,
-      DraweeHierarchy draweeHierarchy,
-      DraweeController draweeController,
-      int index,
-      final int drawableWidthPx,
-      final int drawableHeightPx,
-      boolean enableResizing,
-      @BetterImageSpan.BetterImageSpanAlignment int verticalAlignment) {
-    setImageSpan(
-        context,
-        draweeHierarchy,
-        draweeController,
-        index,
-        index,
-        drawableWidthPx,
-        drawableHeightPx,
-        enableResizing,
-        verticalAlignment);
-  }
-
-  public void setImageVitoSpan(
-      Context context,
-      ImageSource imageSource,
-      ImageOptions imageOptions,
-      Object callerContext,
-      int startIndex,
-      int endIndex,
-      final int drawableWidthPx,
-      final int drawableHeightPx,
-      boolean enableResizing,
-      @BetterImageSpan.BetterImageSpanAlignment int verticalAlignment) {
-    if (endIndex > length()) {
-      // Unfortunately, some callers use this wrong. The original implementation also swallows
-      // an exception if this happens (e.g. if you tap on a video that has a minutiae as well.
-      // Example: Text = "ABC", insert image at position 18.
-      return;
-    }
-    FrescoDrawableInterface drawableInterface = VitoSpanLoader.INSTANCE.createDrawable();
+    FrescoDrawableInterface drawableInterface = vitoSpanLoader.createDrawable();
     Drawable topLevelDrawable = (Drawable) drawableInterface;
     if (topLevelDrawable.getBounds().isEmpty()) {
       topLevelDrawable.setBounds(0, 0, drawableWidthPx, drawableHeightPx);
@@ -180,46 +130,32 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
             new BetterImageSpan((Drawable) drawableInterface, verticalAlignment),
             mDrawableCallback);
     mVitoSpans.add(span);
-    VitoSpanLoader.show(
+    vitoSpanShow(
         imageSource,
         imageOptions,
-        false,
         callerContext,
-        null,
         ControllerListenerWrapper.create(
             new VitoDrawableChangedListener(span, enableResizing, drawableHeightPx)),
         span);
     setSpan(span, startIndex, endIndex + 1, SPAN_EXCLUSIVE_EXCLUSIVE);
   }
 
-  public void setImageSpan(
-      Context context,
-      DraweeHierarchy draweeHierarchy,
-      DraweeController draweeController,
-      int startIndex,
-      int endIndex,
-      final int drawableWidthPx,
-      final int drawableHeightPx,
-      boolean enableResizing,
-      @BetterImageSpan.BetterImageSpanAlignment int verticalAlignment) {
-    DraweeHolder draweeHolder = DraweeHolder.create(draweeHierarchy, context);
-    draweeHolder.setController(draweeController);
-    setImageSpan(
-        draweeHolder,
-        startIndex,
-        endIndex,
-        drawableWidthPx,
-        drawableHeightPx,
-        enableResizing,
-        verticalAlignment);
+  public void vitoSpanShow(
+      ImageSource imageSource,
+      ImageOptions imageOptions,
+      Object callerContext,
+      ControllerListenerWrapper controllerListenerWrapper,
+      VitoSpan span) {
+    VitoSpanLoader.show(
+        imageSource, imageOptions, false, callerContext, null, controllerListenerWrapper, span);
   }
 
   public void setDraweeSpanChangedListener(DraweeSpanChangedListener draweeSpanChangedListener) {
     mDraweeSpanChangedListener = draweeSpanChangedListener;
   }
 
-  public boolean hasDraweeSpans() {
-    return !mDraweeSpans.isEmpty();
+  public boolean hasVitoSpans() {
+    return !mVitoSpans.isEmpty();
   }
 
   @Override
@@ -236,9 +172,6 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
 
   @VisibleForTesting
   void onAttach() {
-    for (DraweeSpan span : mDraweeSpans) {
-      span.onAttach();
-    }
     for (VitoSpan span : mVitoSpans) {
       if (span.getImageFetchCommand() != null) {
         span.getImageFetchCommand().invoke();
@@ -248,17 +181,14 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
 
   @VisibleForTesting
   void onDetach() {
-    for (DraweeSpan span : mDraweeSpans) {
-      span.onDetach();
-    }
     for (VitoSpan span : mVitoSpans) {
       VitoSpanLoader.release(span);
     }
   }
 
   @VisibleForTesting
-  public Set<DraweeSpan> getDraweeSpans() {
-    return mDraweeSpans;
+  public Set<VitoSpan> getVitoSpans() {
+    return mVitoSpans;
   }
 
   protected void bindToView(View view) {
@@ -326,69 +256,6 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
         mBoundView.removeCallbacks(what);
       } else if (mBoundDrawable != null) {
         mBoundDrawable.unscheduleSelf(what);
-      }
-    }
-  }
-
-  private class DrawableChangedListener extends BaseControllerListener<ImageInfo> {
-
-    private final DraweeSpan mDraweeSpan;
-
-    private final boolean mEnableResizing;
-
-    private final int mFixedHeight;
-
-    public DrawableChangedListener(DraweeSpan draweeSpan) {
-      this(draweeSpan, false);
-    }
-
-    public DrawableChangedListener(DraweeSpan draweeSpan, boolean enableResizing) {
-      this(draweeSpan, enableResizing, UNSET_SIZE);
-    }
-
-    /**
-     * Create a new DrawableChangedListener If resizing is enabled, the drawable will be resized to
-     * the size of the actual image once it is available. If a fixed height is given and resizing is
-     * enabled, the drawable will be resized to match the aspect ratio of the original image but
-     * will have the given fixed height.
-     *
-     * @param draweeSpan the Drawee span to listen to
-     * @param enableResizing if true, the drawable will be resized according to the final image size
-     * @param fixedHeight use a fixed height even if resizing is enabled {@link #UNSET_SIZE}
-     */
-    public DrawableChangedListener(DraweeSpan draweeSpan, boolean enableResizing, int fixedHeight) {
-      Preconditions.checkNotNull(draweeSpan);
-      mDraweeSpan = draweeSpan;
-      mEnableResizing = enableResizing;
-      mFixedHeight = fixedHeight;
-    }
-
-    @Override
-    public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
-      if (mEnableResizing
-          && imageInfo != null
-          && mDraweeSpan.getDraweeHolder().getTopLevelDrawable() != null) {
-        Drawable topLevelDrawable = mDraweeSpan.getDraweeHolder().getTopLevelDrawable();
-        Rect topLevelDrawableBounds = topLevelDrawable.getBounds();
-        if (mFixedHeight != UNSET_SIZE) {
-          float imageWidth = ((float) mFixedHeight / imageInfo.getHeight()) * imageInfo.getWidth();
-          int imageWidthPx = (int) imageWidth;
-          if (topLevelDrawableBounds.width() != imageWidthPx
-              || topLevelDrawableBounds.height() != mFixedHeight) {
-            topLevelDrawable.setBounds(0, 0, imageWidthPx, mFixedHeight);
-
-            if (mDraweeSpanChangedListener != null) {
-              mDraweeSpanChangedListener.onDraweeSpanChanged(DraweeSpanStringBuilder.this);
-            }
-          }
-        } else if (topLevelDrawableBounds.width() != imageInfo.getWidth()
-            || topLevelDrawableBounds.height() != imageInfo.getHeight()) {
-          topLevelDrawable.setBounds(0, 0, imageInfo.getWidth(), imageInfo.getHeight());
-
-          if (mDraweeSpanChangedListener != null) {
-            mDraweeSpanChangedListener.onDraweeSpanChanged(DraweeSpanStringBuilder.this);
-          }
-        }
       }
     }
   }
