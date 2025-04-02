@@ -95,7 +95,7 @@ public class ImagePipelineFactory {
   /** Initializes {@link ImagePipelineFactory} with the specified config. */
   public static synchronized void initialize(ImagePipelineConfigInterface imagePipelineConfig) {
     if (sInstance != null) {
-      FLog.w(
+      FLog.wtf(
           TAG,
           "ImagePipelineFactory has already been initialized!"
               + " `ImagePipelineFactory.initialize(...)` should only be called once to avoid"
