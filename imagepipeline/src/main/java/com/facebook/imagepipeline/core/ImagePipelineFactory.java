@@ -112,6 +112,10 @@ public class ImagePipelineFactory {
     sForceSingleInstance = true;
   }
 
+  public static synchronized void forceSingleInstance(boolean forceSingleInstance) {
+    sForceSingleInstance = forceSingleInstance;
+  }
+
   /** Checks if {@link ImagePipelineFactory} has already been initialized */
   public static synchronized boolean hasBeenInitialized() {
     return sInstance != null;
