@@ -29,6 +29,7 @@ import com.facebook.fresco.vito.provider.impl.NoOpCallerContextVerifier
 import com.facebook.fresco.vito.provider.setup.FrescoVitoSetup
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.core.ImagePipelineFactory
+import com.facebook.imagepipeline.drawable.DrawableFactory
 import java.util.concurrent.Executor
 
 class FrescoVito {
@@ -60,6 +61,7 @@ class FrescoVito {
         imagePerfListenerSupplier: Supplier<ImagePerfLoggingListener>? = null,
         showExtendedDebugOverlayInformation: Boolean = true,
         showExtendedImageSourceExtraInformation: Boolean = false,
+        externalImageOptionsDrawableFactories: List<DrawableFactory> = emptyList(),
     ) {
       if (isInitialized) {
         return
@@ -84,7 +86,10 @@ class FrescoVito {
                     showExtendedImageSourceExtraInformation,
                     it)
               } ?: NoOpDebugOverlayFactory2(),
-              imagePerfListenerSupplier))
+              imagePerfListenerSupplier,
+              externalImageOptionsDrawableFactories,
+          ),
+      )
     }
 
     /**
