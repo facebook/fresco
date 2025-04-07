@@ -243,7 +243,7 @@ class ProducerSequenceFactory(
               }
             }
             throw IllegalArgumentException(
-                "Unsupported uri scheme! Uri is: <${getShortenedUriString(uri)}>")
+                "Unsupported uri scheme! Uri is: <${getShortenedUriString(uri)}> ${customProducerSequenceFactories?.size} custom factories")
           }
         }
       }
