@@ -62,9 +62,10 @@ public class ImagePipelineFactory {
   private static final Class<?> TAG = ImagePipelineFactory.class;
 
   private static @Nullable ImagePipelineFactory sInstance = null;
-  private static ImagePipeline sImagePipeline;
+  private static @Nullable ImagePipeline sImagePipeline;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
   private static boolean sForceSingleInstance;
+  private static boolean sResetImagePipelineWhenFactoryChanges;
 
   /** Gets the instance of {@link ImagePipelineFactory}. */
   public static ImagePipelineFactory getInstance() {
@@ -106,6 +107,9 @@ public class ImagePipelineFactory {
     }
 
     sInstance = new ImagePipelineFactory(imagePipelineConfig);
+    if (sResetImagePipelineWhenFactoryChanges) {
+      sImagePipeline = null;
+    }
   }
 
   public static synchronized void forceSingleInstance() {
@@ -114,6 +118,11 @@ public class ImagePipelineFactory {
 
   public static synchronized void forceSingleInstance(boolean forceSingleInstance) {
     sForceSingleInstance = forceSingleInstance;
+  }
+
+  public static synchronized void resetImagePipelineWhenFactoryChanges(
+      boolean resetImagePipelineWhenFactoryChanges) {
+    sResetImagePipelineWhenFactoryChanges = resetImagePipelineWhenFactoryChanges;
   }
 
   /** Checks if {@link ImagePipelineFactory} has already been initialized */
