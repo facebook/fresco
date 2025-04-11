@@ -1,5 +1,3 @@
-// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
-
 /*
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -36,6 +34,10 @@ class ImageViewWithAspectRatio : ImageView {
     }
     currentAspectRatio = aspectRatio
     requestLayout()
+  }
+
+  fun getAspectRatio(): Float {
+    return currentAspectRatio
   }
 
   override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
