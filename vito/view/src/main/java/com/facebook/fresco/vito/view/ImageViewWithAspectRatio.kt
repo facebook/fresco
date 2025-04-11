@@ -1,3 +1,5 @@
+// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+
 /*
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -5,14 +7,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.samples.showcase.common
+package com.facebook.fresco.vito.view
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.appcompat.widget.AppCompatImageView
+import android.widget.ImageView
 import com.facebook.drawee.view.AspectRatioMeasure
 
-class ImageViewWithAspectRatio : AppCompatImageView {
+class ImageViewWithAspectRatio : ImageView {
   constructor(
       context: Context,
       attrSet: AttributeSet?,
