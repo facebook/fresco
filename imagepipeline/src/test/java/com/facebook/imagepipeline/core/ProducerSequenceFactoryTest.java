@@ -98,7 +98,8 @@ public class ProducerSequenceFactoryTest {
             false,
             false,
             null,
-            5);
+            5,
+            false);
 
     when(mImageRequest.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
@@ -386,7 +387,8 @@ public class ProducerSequenceFactoryTest {
             false,
             false,
             null,
-            5);
+            5,
+            false);
   }
 
   private void internalUseSequenceFactoryWithCustomSequence(
@@ -410,7 +412,8 @@ public class ProducerSequenceFactoryTest {
             false,
             false,
             Collections.singleton(customProducerSequenceFactory),
-            5);
+            5,
+            false);
   }
 
   private static class RecordingCustomProducerSequenceFactoryIsCalled

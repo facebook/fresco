@@ -74,6 +74,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val prefetchShortcutEnabled: Boolean
   val platformDecoderOptions: PlatformDecoderOptions
   val isBinaryXmlEnabled: Boolean
+  val loadThumbnailFromContentResolverFirst: Boolean
 
   class Builder(private val configBuilder: ImagePipelineConfig.Builder) {
     @JvmField var shouldUseDecodingBufferHelper = false
@@ -127,6 +128,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var platformDecoderOptions = PlatformDecoderOptions()
 
     @JvmField var isBinaryXmlEnabled = false
+
+    @JvmField var loadThumbnailFromContentResolverFirst = false
 
     private fun asBuilder(block: () -> Unit): Builder {
       block()
@@ -327,6 +330,11 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
       isBinaryXmlEnabled = binaryXmlEnabled
     }
 
+    fun setLoadThumbnailFromContentResolverFirst(loadThumbnailFromContentResolverFirst: Boolean) =
+        asBuilder {
+          this.loadThumbnailFromContentResolverFirst = loadThumbnailFromContentResolverFirst
+        }
+
     fun build(): ImagePipelineExperiments = ImagePipelineExperiments(this)
   }
 
@@ -445,6 +453,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     prefetchShortcutEnabled = builder.prefetchShortcutEnabled
     platformDecoderOptions = builder.platformDecoderOptions
     isBinaryXmlEnabled = builder.isBinaryXmlEnabled
+    loadThumbnailFromContentResolverFirst = builder.loadThumbnailFromContentResolverFirst
   }
 
   companion object {

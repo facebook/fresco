@@ -44,7 +44,8 @@ class ProducerSequenceFactory(
     private val isDiskCacheProbingEnabled: Boolean,
     private val allowDelay: Boolean,
     private val customProducerSequenceFactories: Set<CustomProducerSequenceFactory>?,
-    private val localImageThrottlingMaxSimultaneousRequests: Long
+    private val localImageThrottlingMaxSimultaneousRequests: Long,
+    private val loadThumbnailFromContentResolverFirst: Boolean
 ) {
 
   @VisibleForTesting
@@ -388,7 +389,9 @@ class ProducerSequenceFactory(
   @get:RequiresApi(Build.VERSION_CODES.Q)
   val localThumbnailBitmapSdk29FetchSequence: Producer<CloseableReference<CloseableImage>> by lazy {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-      newBitmapCacheGetToBitmapCacheSequence(producerFactory.newLocalThumbnailBitmapSdk29Producer())
+      newBitmapCacheGetToBitmapCacheSequence(
+          producerFactory.newLocalThumbnailBitmapSdk29Producer(
+              loadThumbnailFromContentResolverFirst))
     } else {
       throw Throwable("Unreachable exception. Just to make linter happy for the lazy block.")
     }
