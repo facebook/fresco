@@ -14,12 +14,12 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.same;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 import bolts.Task;
 import com.facebook.binaryresource.BinaryResource;
@@ -42,24 +42,20 @@ import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nullable;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
-@PrepareOnlyThisForTest(StagingArea.class)
 @Config(manifest = Config.NONE)
 public class BufferedDiskCacheTest {
   @Mock public FileCache mFileCache;
@@ -71,8 +67,6 @@ public class BufferedDiskCacheTest {
   @Mock public InputStream mInputStream;
   @Mock public BinaryResource mBinaryResource;
 
-  @Rule public PowerMockRule rule = new PowerMockRule();
-
   private MultiCacheKey mCacheKey;
   private AtomicBoolean mIsCancelled;
   private BufferedDiskCache mBufferedDiskCache;
@@ -80,9 +74,11 @@ public class BufferedDiskCacheTest {
   private EncodedImage mEncodedImage;
   private TestExecutorService mReadPriorityExecutor;
   private TestExecutorService mWritePriorityExecutor;
+  private MockedStatic<StagingArea> mockedStagingArea;
 
   @Before
   public void setUp() throws Exception {
+    mockedStagingArea = mockStatic(StagingArea.class);
     MockitoAnnotations.initMocks(this);
     mCloseableReference = CloseableReference.of(mPooledByteBuffer);
     mEncodedImage = new EncodedImage(mCloseableReference);
@@ -102,7 +98,6 @@ public class BufferedDiskCacheTest {
     when(mByteBufferFactory.newByteBuffer(same(mInputStream), eq(123)))
         .thenReturn(mPooledByteBuffer);
 
-    mockStatic(StagingArea.class);
     when(StagingArea.getInstance()).thenAnswer((Answer<StagingArea>) invocation -> mStagingArea);
 
     mBufferedDiskCache =
@@ -113,6 +108,11 @@ public class BufferedDiskCacheTest {
             mReadPriorityExecutor,
             mWritePriorityExecutor,
             mImageCacheStatsTracker);
+  }
+
+  @After
+  public void tearDownStaticMocks() {
+    mockedStagingArea.close();
   }
 
   @Test
