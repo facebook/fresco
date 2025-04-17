@@ -13,7 +13,7 @@
       android:layout_height="wrap_content"
       >
 
-    <com.facebook.fresco.samples.showcase.common.ImageViewWithAspectRatio
+    <com.facebook.fresco.vito.view.ImageViewWithAspectRatio
         android:id="@+id/image_full"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
       android:textAppearance="?android:attr/textAppearanceSmall"
       />
 
-  <com.facebook.fresco.samples.showcase.common.ImageViewWithAspectRatio
+  <com.facebook.fresco.vito.view.ImageViewWithAspectRatio
       android:id="@+id/image_region"
       android:layout_width="match_parent"
       android:layout_height="match_parent"

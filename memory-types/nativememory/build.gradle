@@ -22,6 +22,8 @@ dependencies {
 
     implementation Deps.SoLoader.nativeloader
 
+    testCompileOnly Deps.inferAnnotation
+
     testImplementation TestDeps.junit
     testImplementation TestDeps.assertjCore
     testImplementation TestDeps.mockitoCore

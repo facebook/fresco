@@ -42,7 +42,8 @@ dependencies {
     testImplementation TestDeps.assertjCore
     testImplementation TestDeps.junit
     testImplementation TestDeps.festAssertCore
-    testImplementation TestDeps.mockitoCore
+    testImplementation TestDeps.mockitoCore3
+    testImplementation TestDeps.mockitoInline3
     testImplementation(TestDeps.Powermock.apiMockito) {
         exclude group: 'org.mockito', module: 'mockito-all'
     }

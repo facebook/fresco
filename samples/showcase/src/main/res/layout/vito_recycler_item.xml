@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/recycler_view_grid_item_half_padding"
     >
-  <com.facebook.fresco.samples.showcase.common.ImageViewWithAspectRatio
+  <com.facebook.fresco.vito.view.ImageViewWithAspectRatio
       android:id="@+id/view"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

@@ -18,8 +18,9 @@ kotlin {
 dependencies {
     compileOnly Deps.inferAnnotation
     compileOnly Deps.jsr305
-
+    
     implementation project(':animated-base')
+    implementation project(':fbcore')
 }
 
 android {

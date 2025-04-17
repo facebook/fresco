@@ -19,6 +19,8 @@ dependencies {
     implementation project(':imagepipeline')
     implementation project(':imagepipeline-native')
 
+    testCompileOnly Deps.inferAnnotation
+
     testImplementation TestDeps.junit
     testImplementation TestDeps.assertjCore
     testImplementation TestDeps.mockitoCore

@@ -18,6 +18,8 @@ dependencies {
     implementation project(':fbcore')
     implementation project(':imagepipeline')
 
+    testCompileOnly Deps.inferAnnotation
+    
     testImplementation TestDeps.junit
     testImplementation TestDeps.assertjCore
     testImplementation TestDeps.mockitoCore
