@@ -19,12 +19,11 @@ import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -50,29 +49,23 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.Random;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.MockedStatic;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 /** Tests for {@link ArtDecoder}. */
 @RunWith(RobolectricTestRunner.class)
-@PrepareOnlyThisForTest({BitmapFactory.class, BitmapRegionDecoder.class})
 @Config(sdk = Build.VERSION_CODES.LOLLIPOP)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 public class ArtDecoderTest {
 
   private static final Bitmap.Config DEFAULT_BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
-
-  @Rule public PowerMockRule rule = new PowerMockRule();
 
   private static final int RANDOM_SEED = 10101;
   private static final int ENCODED_BYTES_LENGTH = 128;
@@ -89,9 +82,13 @@ public class ArtDecoderTest {
   private EncodedImage mEncodedImage;
   private byte[] mEncodedBytes;
   private byte[] mTempStorage;
+  private static MockedStatic<BitmapFactory> mockedBitmapFactory;
+  private static MockedStatic<BitmapRegionDecoder> mockedBitmapRegionDecoder;
 
   @Before
   public void setUp() throws Exception {
+    mockedBitmapRegionDecoder = mockStatic(BitmapRegionDecoder.class);
+    mockedBitmapFactory = mockStatic(BitmapFactory.class);
     final Random random = new Random();
     random.setSeed(RANDOM_SEED);
     mEncodedBytes = new byte[ENCODED_BYTES_LENGTH];
@@ -127,6 +124,12 @@ public class ArtDecoderTest {
     ByteBuffer buf = mArtDecoder.mDecodeBuffers.acquire();
     mTempStorage = buf.array();
     mArtDecoder.mDecodeBuffers.release(buf);
+  }
+
+  @After
+  public void tearDownStaticMocks() {
+    mockedBitmapFactory.close();
+    mockedBitmapRegionDecoder.close();
   }
 
   @Test
@@ -257,9 +260,13 @@ public class ArtDecoderTest {
   private static byte[] getDecodedBytes() {
     ArgumentCaptor<InputStream> inputStreamArgumentCaptor =
         ArgumentCaptor.forClass(InputStream.class);
-    verifyStatic(BitmapFactory.class, times(2));
-    BitmapFactory.decodeStream(
-        inputStreamArgumentCaptor.capture(), isNull(Rect.class), any(BitmapFactory.Options.class));
+    mockedBitmapFactory.verify(
+        () ->
+            BitmapFactory.decodeStream(
+                inputStreamArgumentCaptor.capture(),
+                isNull(Rect.class),
+                any(BitmapFactory.Options.class)),
+        times(2));
     InputStream decodedStream = inputStreamArgumentCaptor.getValue();
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     try {
@@ -283,16 +290,16 @@ public class ArtDecoderTest {
   }
 
   private static OngoingStubbing<Bitmap> whenBitmapFactoryDecodeStream() {
-    mockStatic(BitmapFactory.class);
-    return when(
-        BitmapFactory.decodeStream(
-            any(InputStream.class), isNull(Rect.class), any(BitmapFactory.Options.class)));
+    return mockedBitmapFactory.when(
+        () ->
+            BitmapFactory.decodeStream(
+                any(InputStream.class), isNull(Rect.class), any(BitmapFactory.Options.class)));
   }
 
   private static OngoingStubbing<BitmapRegionDecoder> whenBitmapRegionDecoderNewInstance()
       throws IOException {
-    mockStatic(BitmapRegionDecoder.class);
-    return when(BitmapRegionDecoder.newInstance(any(InputStream.class), anyBoolean()));
+    return mockedBitmapRegionDecoder.when(
+        () -> BitmapRegionDecoder.newInstance(any(InputStream.class), anyBoolean()));
   }
 
   private void closeAndVerifyClosed(CloseableReference<Bitmap> closeableImage) {
@@ -312,9 +319,13 @@ public class ArtDecoderTest {
   }
 
   private static void verifyDecodedFromStream() {
-    verifyStatic(BitmapFactory.class, times(2));
-    BitmapFactory.decodeStream(
-        (ByteArrayInputStream) anyObject(), isNull(Rect.class), any(BitmapFactory.Options.class));
+    mockedBitmapFactory.verify(
+        () ->
+            BitmapFactory.decodeStream(
+                (ByteArrayInputStream) anyObject(),
+                isNull(Rect.class),
+                any(BitmapFactory.Options.class)),
+        times(2));
   }
 
   private void verifyDecodedBytes(boolean complete, int length) {
