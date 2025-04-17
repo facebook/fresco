@@ -19,7 +19,7 @@ import androidx.preference.CheckBoxPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import com.facebook.common.preconditions.Preconditions;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Const;

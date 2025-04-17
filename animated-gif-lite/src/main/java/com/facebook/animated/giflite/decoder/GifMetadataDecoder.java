@@ -7,7 +7,7 @@
 
 package com.facebook.animated.giflite.decoder;
 
-import com.facebook.common.preconditions.Preconditions;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.EOFException;
 import java.io.IOException;

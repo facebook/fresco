@@ -10,7 +10,7 @@ package com.facebook.samples.scrollperf.conf;
 import android.content.Context;
 import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
-import com.facebook.common.preconditions.Preconditions;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.util.SizeUtil;

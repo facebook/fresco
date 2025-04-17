@@ -12,7 +12,7 @@ import com.facebook.animated.giflite.decoder.GifMetadataDecoder;
 import com.facebook.animated.giflite.draw.MovieAnimatedImage;
 import com.facebook.animated.giflite.draw.MovieDrawer;
 import com.facebook.animated.giflite.draw.MovieFrame;
-import com.facebook.common.preconditions.Preconditions;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
