@@ -125,6 +125,7 @@ dependencies {
     implementation 'com.facebook.keyframes:keyframes:1.0'
 
     implementation project(':ui-common')
+    implementation project(':urimod')
 
     // Litho
     compileOnly Deps.Litho.lithoAnnotations

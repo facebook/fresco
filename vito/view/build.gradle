@@ -47,6 +47,7 @@ dependencies {
     implementation project(':vito:provider')
     implementation project(':vito:source')
     implementation project(':ui-common')
+    implementation project(':urimod')
 }
 
 apply plugin: "com.vanniktech.maven.publish"

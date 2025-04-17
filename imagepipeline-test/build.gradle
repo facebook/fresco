@@ -15,6 +15,7 @@ dependencies {
     implementation project(':fbcore')
     implementation project(':imagepipeline')
     implementation project(':imagepipeline-base')
+    implementation Deps.inferAnnotation
     implementation TestDeps.mockitoCore
 }
 android {

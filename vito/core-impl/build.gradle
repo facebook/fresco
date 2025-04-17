@@ -22,6 +22,7 @@ dependencies {
     implementation project(':imagepipeline-base')
     implementation project(':middleware')
     implementation project(':ui-common')
+    implementation project(':urimod')
     implementation project(':vito:core')
     implementation project(':vito:core-common-impl')
     implementation project(':vito:options')

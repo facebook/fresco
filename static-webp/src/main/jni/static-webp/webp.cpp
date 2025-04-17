@@ -9,7 +9,6 @@
 
 #include <android/bitmap.h>
 #include <android/log.h>
-#include <angliru/Angliru.h>
 #include <jni.h>
 #include <array>
 #include <memory>
@@ -18,6 +17,12 @@
 
 #include "webp/decode.h"
 #include "webp/demux.h"
+
+#ifdef __ANGLIRU__
+#include <angliru/Angliru.h>
+#else
+#define __ANGLIRU_SOURCE__
+#endif // For Angliru analysis
 
 #if defined(__has_include) && __has_include(<jni/jni_helpers.h>)
 #include <jni/jni_helpers.h>
