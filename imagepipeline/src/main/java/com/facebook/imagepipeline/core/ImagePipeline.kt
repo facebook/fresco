@@ -394,11 +394,24 @@ class ImagePipeline(
     }
   }
 
-  @JvmOverloads
   fun prefetchToBitmapCache(
       imageRequest: ImageRequest?,
       callerContext: Any?,
-  ): DataSource<Void?> = prefetchToBitmapCache(imageRequest, callerContext, null)
+  ): DataSource<Void?> = prefetchToBitmapCache(imageRequest, callerContext, null, null)
+
+  fun prefetchToBitmapCache(
+      imageRequest: ImageRequest?,
+      callerContext: Any?,
+      extras: Map<String, *>,
+  ): DataSource<Void?> = prefetchToBitmapCache(imageRequest, callerContext, null, extras)
+
+  fun prefetchToBitmapCache(
+      imageRequest: ImageRequest?,
+      callerContext: Any?,
+      requestListener: RequestListener?,
+  ): DataSource<Void?> {
+    return prefetchToBitmapCache(imageRequest, callerContext, requestListener, null)
+  }
 
   /**
    * Submits a request for prefetching to the bitmap cache.
@@ -407,13 +420,14 @@ class ImagePipeline(
    * images which are immediately required on screen.
    *
    * @param imageRequest the request to submit
+   * @param extras optional extra data
    * @return a DataSource that can safely be ignored.
    */
-  @JvmOverloads
   fun prefetchToBitmapCache(
       imageRequest: ImageRequest?,
       callerContext: Any?,
-      requestListener: RequestListener?
+      requestListener: RequestListener?,
+      extras: Map<String, *>? = null,
   ): DataSource<Void?> =
       traceSection("ImagePipeline#prefetchToBitmapCache") {
         if (!isPrefetchEnabledSupplier.get()) {
@@ -441,7 +455,8 @@ class ImagePipeline(
               RequestLevel.FULL_FETCH,
               callerContext,
               Priority.MEDIUM,
-              requestListener)
+              requestListener,
+              extras)
         } catch (exception: Exception) {
           DataSources.immediateFailedDataSource(exception)
         }
@@ -454,8 +469,19 @@ class ImagePipeline(
   ): DataSource<Void?> =
       prefetchToDiskCache(imageRequest, callerContext, Priority.MEDIUM, requestListener)
 
-  fun prefetchToDiskCache(imageRequest: ImageRequest?, callerContext: Any?): DataSource<Void?> {
-    return prefetchToDiskCache(imageRequest, callerContext, Priority.MEDIUM, null)
+  fun prefetchToDiskCache(
+      imageRequest: ImageRequest?,
+      callerContext: Any?,
+  ): DataSource<Void?> {
+    return prefetchToDiskCache(imageRequest, callerContext, Priority.MEDIUM, null, null)
+  }
+
+  fun prefetchToDiskCache(
+      imageRequest: ImageRequest?,
+      callerContext: Any?,
+      extras: Map<String, *>,
+  ): DataSource<Void?> {
+    return prefetchToDiskCache(imageRequest, callerContext, Priority.MEDIUM, null, extras)
   }
 
   fun prefetchToDiskCache(
@@ -464,6 +490,15 @@ class ImagePipeline(
       priority: Priority
   ): DataSource<Void?> {
     return prefetchToDiskCache(imageRequest, callerContext, priority, null)
+  }
+
+  fun prefetchToDiskCache(
+      imageRequest: ImageRequest?,
+      callerContext: Any?,
+      priority: Priority,
+      requestListener: RequestListener?,
+  ): DataSource<Void?> {
+    return prefetchToDiskCache(imageRequest, callerContext, priority, requestListener, null)
   }
 
   /**
@@ -483,14 +518,15 @@ class ImagePipeline(
    * images which are immediately required on screen.
    *
    * @param imageRequest the request to submit
+   * @param extras optional extra data
    * @return a DataSource that can safely be ignored.
    */
-  @JvmOverloads
   fun prefetchToDiskCache(
       imageRequest: ImageRequest?,
       callerContext: Any?,
       priority: Priority,
-      requestListener: RequestListener?
+      requestListener: RequestListener?,
+      extras: Map<String, *>?,
   ): DataSource<Void?> {
     if (!isPrefetchEnabledSupplier.get()) {
       return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION)
@@ -507,7 +543,8 @@ class ImagePipeline(
             RequestLevel.FULL_FETCH,
             callerContext,
             priority,
-            requestListener)
+            requestListener,
+            extras)
       } catch (exception: Exception) {
         DataSources.immediateFailedDataSource(exception)
       }
@@ -517,9 +554,43 @@ class ImagePipeline(
   fun prefetchToEncodedCache(
       imageRequest: ImageRequest?,
       callerContext: Any?,
-      requestListener: RequestListener?
-  ): DataSource<Void?> =
-      prefetchToEncodedCache(imageRequest, callerContext, Priority.MEDIUM, requestListener)
+  ): DataSource<Void?> {
+    return prefetchToEncodedCache(imageRequest, callerContext, Priority.MEDIUM, null, null)
+  }
+
+  fun prefetchToEncodedCache(
+      imageRequest: ImageRequest?,
+      callerContext: Any?,
+      extras: Map<String, *>? = null
+  ): DataSource<Void?> {
+    return prefetchToEncodedCache(imageRequest, callerContext, Priority.MEDIUM, null, extras)
+  }
+
+  // fun prefetchToEncodedCache(
+  //     imageRequest: ImageRequest?,
+  //     callerContext: Any?,
+  //     requestListener: RequestListener?,
+  //     extras: Map<String, *>?
+  // ): DataSource<Void?> =
+  //     prefetchToEncodedCache(imageRequest, callerContext, Priority.MEDIUM, requestListener,
+  // extras)
+
+  fun prefetchToEncodedCache(
+      imageRequest: ImageRequest?,
+      callerContext: Any?,
+      priority: Priority = Priority.MEDIUM,
+  ): DataSource<Void?> {
+    return prefetchToEncodedCache(imageRequest, callerContext, priority, null, null)
+  }
+
+  fun prefetchToEncodedCache(
+      imageRequest: ImageRequest?,
+      callerContext: Any?,
+      priority: Priority = Priority.MEDIUM,
+      requestListener: RequestListener?,
+  ): DataSource<Void?> {
+    return prefetchToEncodedCache(imageRequest, callerContext, priority, requestListener, null)
+  }
 
   /**
    * Submits a request for prefetching to the encoded cache.
@@ -538,14 +609,15 @@ class ImagePipeline(
    * images which are immediately required on screen.
    *
    * @param imageRequest the request to submit
+   * @param extras optional extra data
    * @return a DataSource that can safely be ignored.
    */
-  @JvmOverloads
   fun prefetchToEncodedCache(
       imageRequest: ImageRequest?,
       callerContext: Any?,
       priority: Priority = Priority.MEDIUM,
-      requestListener: RequestListener? = null
+      requestListener: RequestListener? = null,
+      extras: Map<String, *>? = null,
   ): DataSource<Void?> =
       traceSection("ImagePipeline#prefetchToEncodedCache") {
         if (!isPrefetchEnabledSupplier.get()) {
@@ -566,7 +638,8 @@ class ImagePipeline(
               RequestLevel.FULL_FETCH,
               callerContext,
               priority,
-              requestListener)
+              requestListener,
+              extras)
         } catch (exception: Exception) {
           DataSources.immediateFailedDataSource(exception)
         }
@@ -1035,7 +1108,8 @@ class ImagePipeline(
       lowestPermittedRequestLevelOnSubmit: RequestLevel,
       callerContext: Any?,
       priority: Priority,
-      requestListener: RequestListener?
+      requestListener: RequestListener?,
+      extras: Map<String, *>?
   ): DataSource<Void?> {
     val requestListener2 =
         InternalRequestListener(
@@ -1067,6 +1141,7 @@ class ImagePipeline(
                   imageRequest.progressiveRenderingEnabled,
               priority,
               config)
+      settableProducerContext.putExtras(extras)
       create(producerSequence, settableProducerContext, requestListener2)
     } catch (exception: Exception) {
       DataSources.immediateFailedDataSource(exception)

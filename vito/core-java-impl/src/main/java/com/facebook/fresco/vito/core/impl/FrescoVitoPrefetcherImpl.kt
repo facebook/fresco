@@ -164,11 +164,14 @@ class FrescoVitoPrefetcherImpl(
     } else {
       when (prefetchTarget) {
         PrefetchTarget.MEMORY_DECODED ->
-            imagePipeline.prefetchToBitmapCache(imageRequest, callerContext, requestListener)
+            imagePipeline.prefetchToBitmapCache(
+                imageRequest, callerContext, requestListener = requestListener)
         PrefetchTarget.MEMORY_ENCODED ->
-            imagePipeline.prefetchToEncodedCache(imageRequest, callerContext, requestListener)
+            imagePipeline.prefetchToEncodedCache(
+                imageRequest, callerContext, requestListener = requestListener)
         PrefetchTarget.DISK ->
-            imagePipeline.prefetchToDiskCache(imageRequest, callerContext, requestListener)
+            imagePipeline.prefetchToDiskCache(
+                imageRequest, callerContext, requestListener = requestListener)
       }
     }
   }

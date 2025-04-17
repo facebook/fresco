@@ -178,7 +178,7 @@ object ImageSourceToImagePipelineAdapter {
     if (viewport != null) {
       extras[HasExtraData.KEY_VIEWPORT] = viewport
     }
-    extras[HasExtraData.KEY_IMAGEOPTIONS] = imageOptions
+    extras[HasExtraData.KEY_SCALETYPE] = imageOptions.actualImageScaleType
     return if (imageRequest != null) {
       imagePipeline.fetchDecodedImage(
           imageRequest,
