@@ -42,6 +42,7 @@ import com.facebook.fresco.vito.listener.ImageListener
 import com.facebook.fresco.vito.source.BitmapImageSource
 import com.facebook.fresco.vito.source.DrawableImageSource
 import com.facebook.fresco.vito.source.EmptyImageSource
+import com.facebook.fresco.vito.source.SmartImageSource
 import com.facebook.imagepipeline.image.CloseableBitmap
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.image.CloseableStaticBitmap
@@ -477,6 +478,8 @@ open class FrescoController2Impl(
       extras.smartUrlModificationResult = imageRequest.extras[HasExtraData.KEY_SF_MOD_RESULT]
       extras.originalUri = imageRequest.extras[HasExtraData.KEY_ORIGINAL_URL] as? Uri
       extras.uiFramework = drawable.uiFramework
+      extras.imageSource = imageRequest.imageSource
+      extras.sizingHint = (imageRequest.imageSource as? SmartImageSource)?.sizingHint
       return extras
     }
 
