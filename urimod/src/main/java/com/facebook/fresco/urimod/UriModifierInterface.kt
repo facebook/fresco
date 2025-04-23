@@ -35,6 +35,16 @@ interface UriModifierInterface {
       contextChain: ContextChain? = null,
   ): ModificationResult = ModificationResult.Disabled("Default")
 
+  /**
+   * Modifies the network uri adaptively based on current network or other conditions. No need to
+   * provide viewport or scale type since those are extracted from the uri itself.
+   */
+  fun modifyNetworkUriAdaptively(
+      uri: Uri,
+      callerContext: Any?,
+      contextChain: ContextChain? = null,
+  ): ModificationResult = ModificationResult.Disabled("Default")
+
   fun unregisterReverseFallbackUri(uri: Uri)
 
   sealed class ModificationResult(private val comment: String) {
