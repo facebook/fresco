@@ -41,6 +41,7 @@ import com.facebook.fresco.vito.core.impl.debug.DebugOverlayFactory2
 import com.facebook.fresco.vito.listener.ImageListener
 import com.facebook.fresco.vito.source.BitmapImageSource
 import com.facebook.fresco.vito.source.DrawableImageSource
+import com.facebook.fresco.vito.source.DrawableResImageSource
 import com.facebook.fresco.vito.source.EmptyImageSource
 import com.facebook.fresco.vito.source.SmartImageSource
 import com.facebook.imagepipeline.image.CloseableBitmap
@@ -159,37 +160,18 @@ open class FrescoController2Impl(
         CloseableReference.closeSafely(bitmapRef)
       }
     } else if (imageRequest.imageSource is DrawableImageSource) {
-      val actualImageDrawable = (imageRequest.imageSource as DrawableImageSource).drawable
-      val actualImageWrapperDrawable = drawable.actualImageWrapper
-      hierarcher.setupActualImageWrapper(
-          actualImageWrapperDrawable, imageRequest.imageOptions, drawable.callerContext)
-      val actualDrawable =
-          hierarcher.applyRoundingOptions(
-              imageRequest.resources, actualImageDrawable, imageRequest.imageOptions)
-      actualImageWrapperDrawable.setCurrent(actualDrawable)
-      drawable.setImage(actualImageWrapperDrawable, null)
-      drawable.showImageImmediately()
-      drawable.imageOrigin = ImageOrigin.LOCAL
-      drawable.setFetchSubmitted(true)
-      if (imageRequest.imageOptions.shouldAutoPlay() && actualImageDrawable is Animatable) {
-        (actualDrawable as Animatable).start()
-      }
-      val imageInfoExtras: Map<String, Any> = extras.imageExtras ?: HashMap()
-      drawable.internalListener.onFinalImageSet(
-          drawable.imageId,
+      return setActualDrawable(
+          drawable,
           imageRequest,
-          ImageOrigin.LOCAL,
-          ImageInfoImpl(
-              actualImageDrawable.intrinsicWidth,
-              actualImageDrawable.intrinsicHeight,
-              0,
-              ImmutableQualityInfo.FULL_QUALITY,
-              imageInfoExtras),
           extras,
-          actualDrawable)
-      drawable.imagePerfListener.onImageSuccess(drawable, true)
-      debugOverlayFactory.update(drawable, extras)
-      return true
+          (imageRequest.imageSource as DrawableImageSource).drawable)
+    } else if (imageRequest.imageSource is DrawableResImageSource) {
+      return setActualDrawable(
+          drawable,
+          imageRequest,
+          extras,
+          imageRequest.resources.getDrawable(
+              (imageRequest.imageSource as DrawableResImageSource).resId))
     }
 
     // Check if the image is in cache
@@ -429,6 +411,44 @@ open class FrescoController2Impl(
     } else {
       imageRequest == drawable.imageRequest
     }
+  }
+
+  fun setActualDrawable(
+      drawable: FrescoDrawable2Impl,
+      imageRequest: VitoImageRequest,
+      extras: Extras,
+      actualImageDrawable: Drawable
+  ): Boolean {
+    val actualImageWrapperDrawable = drawable.actualImageWrapper
+    hierarcher.setupActualImageWrapper(
+        actualImageWrapperDrawable, imageRequest.imageOptions, drawable.callerContext)
+    val actualDrawable =
+        hierarcher.applyRoundingOptions(
+            imageRequest.resources, actualImageDrawable, imageRequest.imageOptions)
+    actualImageWrapperDrawable.setCurrent(actualDrawable)
+    drawable.setImage(actualImageWrapperDrawable, null)
+    drawable.showImageImmediately()
+    drawable.imageOrigin = ImageOrigin.LOCAL
+    drawable.setFetchSubmitted(true)
+    if (imageRequest.imageOptions.shouldAutoPlay() && actualImageDrawable is Animatable) {
+      (actualDrawable as Animatable).start()
+    }
+    val imageInfoExtras: Map<String, Any> = extras.imageExtras ?: HashMap()
+    drawable.internalListener.onFinalImageSet(
+        drawable.imageId,
+        imageRequest,
+        ImageOrigin.LOCAL,
+        ImageInfoImpl(
+            actualImageDrawable.intrinsicWidth,
+            actualImageDrawable.intrinsicHeight,
+            0,
+            ImmutableQualityInfo.FULL_QUALITY,
+            imageInfoExtras),
+        extras,
+        actualDrawable)
+    drawable.imagePerfListener.onImageSuccess(drawable, true)
+    debugOverlayFactory.update(drawable, extras)
+    return true
   }
 
   companion object {

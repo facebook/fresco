@@ -142,4 +142,14 @@ object ImageSourceProvider {
    * @return the ImageSource to be passed to the UI component
    */
   @JvmStatic fun drawable(drawable: Drawable): ImageSource = DrawableImageSource(drawable)
+
+  @JvmStatic
+  fun uriOrRes(uriOrRes: String): ImageSource {
+    val prefix = "res://"
+    if (uriOrRes.startsWith(prefix)) {
+      val resId = uriOrRes.substring(prefix.length).toInt()
+      return DrawableResImageSource(resId)
+    }
+    return forUri(uriOrRes)
+  }
 }
