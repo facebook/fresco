@@ -27,6 +27,8 @@ object ImageSourceProvider {
     uri
   }
 
+  var shortcutResUris: Boolean = false
+
   /** @return an empty image source if no image URI is available to pass to the UI component */
   @JvmStatic fun emptySource(): ImageSource = EmptyImageSource
 
@@ -144,12 +146,14 @@ object ImageSourceProvider {
   @JvmStatic fun drawable(drawable: Drawable): ImageSource = DrawableImageSource(drawable)
 
   @JvmStatic
-  fun uriOrRes(uriOrRes: String): ImageSource {
-    val prefix = "res://"
-    if (uriOrRes.startsWith(prefix)) {
-      val resId = uriOrRes.substring(prefix.length).toInt()
+  fun uriOrRes(uriOrRes: Uri?): ImageSource {
+    return if (uriOrRes == null) {
+      emptySource()
+    } else if (shortcutResUris && uriOrRes.scheme == "res") {
+      val resId = uriOrRes.lastPathSegment?.toInt() ?: 0
       return DrawableResImageSource(resId)
+    } else {
+      forUri(uriOrRes)
     }
-    return forUri(uriOrRes)
   }
 }
