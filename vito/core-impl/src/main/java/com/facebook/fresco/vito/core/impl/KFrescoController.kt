@@ -38,6 +38,7 @@ import com.facebook.fresco.vito.renderer.DrawableImageDataModel
 import com.facebook.fresco.vito.renderer.ImageDataModel
 import com.facebook.fresco.vito.source.BitmapImageSource
 import com.facebook.fresco.vito.source.DrawableImageSource
+import com.facebook.fresco.vito.source.DrawableResImageSource
 import com.facebook.imagepipeline.image.CloseableBitmap
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.image.CloseableStaticBitmap
@@ -161,22 +162,12 @@ class KFrescoController(
         }
         // Direct Drawable available
         is DrawableImageSource -> {
-          val extras = drawable.obtainExtras(null, null)
-          drawable.actualImageLayer.setActualImageDrawable(
-              imageRequest.imageOptions, source.drawable)
-          drawable.listenerManager.onFinalImageSet(
-              imageId,
-              imageRequest,
-              ImageOrigin.LOCAL,
-              ImageInfoImpl(
-                  source.drawable.intrinsicWidth,
-                  source.drawable.intrinsicHeight,
-                  0,
-                  ImmutableQualityInfo.FULL_QUALITY,
-                  extras.imageExtras ?: emptyMap()),
-              extras,
-              drawable.actualImageDrawable)
-          debugOverlayHandler?.update(drawable)
+          setDrawableAsActualImage(drawable, source.drawable, imageRequest, imageId)
+          return true
+        }
+        is DrawableResImageSource -> {
+          setDrawableAsActualImage(
+              drawable, imageRequest.resources.getDrawable(source.resId), imageRequest, imageId)
           return true
         }
       }
@@ -221,6 +212,29 @@ class KFrescoController(
       debugOverlayHandler?.update(drawable)
       return false
     }
+  }
+
+  private fun setDrawableAsActualImage(
+      drawable: KFrescoVitoDrawable,
+      actualImageDrawable: Drawable,
+      imageRequest: VitoImageRequest,
+      imageId: Long
+  ) {
+    val extras = drawable.obtainExtras(null, null)
+    drawable.actualImageLayer.setActualImageDrawable(imageRequest.imageOptions, actualImageDrawable)
+    drawable.listenerManager.onFinalImageSet(
+        imageId,
+        imageRequest,
+        ImageOrigin.LOCAL,
+        ImageInfoImpl(
+            actualImageDrawable.intrinsicWidth,
+            actualImageDrawable.intrinsicHeight,
+            0,
+            ImmutableQualityInfo.FULL_QUALITY,
+            extras.imageExtras ?: emptyMap()),
+        extras,
+        drawable.actualImageDrawable)
+    debugOverlayHandler?.update(drawable)
   }
 
   override fun releaseDelayed(drawable: FrescoDrawableInterface) {
