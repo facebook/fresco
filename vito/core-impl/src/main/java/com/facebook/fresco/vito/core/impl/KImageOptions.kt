@@ -14,12 +14,15 @@ import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
+import com.facebook.common.logging.FLog
 import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.renderer.CanvasTransformation
 import com.facebook.fresco.vito.renderer.ColorIntImageDataModel
 import com.facebook.fresco.vito.renderer.DrawableImageDataModel
 import com.facebook.fresco.vito.renderer.ImageDataModel
+
+private const val TAG = "KImageOptions"
 
 // Models
 fun ImageOptions.createPlaceholderModel(resources: Resources): ImageDataModel? =
@@ -52,7 +55,7 @@ fun ImageOptions.createErrorCanvasTransformation(): CanvasTransformation? =
     errorScaleType?.getCanvasTransformation(errorFocusPoint)
 
 private fun create(resources: Resources, drawable: Drawable?, drawableRes: Int): Drawable? {
-  return drawable ?: if (drawableRes != 0) resources.getDrawable(drawableRes) else null
+  return drawable ?: if (drawableRes != 0) resources.getNullableDrawable(drawableRes) else null
 }
 
 private fun toModel(drawable: Drawable?): ImageDataModel? {
@@ -86,11 +89,20 @@ private fun Resources.getColorOrDrawableModel(colorOrDrawableRes: Int): ImageDat
           value.type <= TypedValue.TYPE_LAST_COLOR_INT) {
         ColorIntImageDataModel(value.data)
       } else {
-        toModel(getDrawable(colorOrDrawableRes))
+        toModel(getNullableDrawable(colorOrDrawableRes))
       }
     } else {
       null
     }
+
+private fun Resources.getNullableDrawable(drawableRes: Int): Drawable? {
+  try {
+    return getDrawable(drawableRes)
+  } catch (e: Resources.NotFoundException) {
+    FLog.e(TAG, "Drawable not found in Resources $drawableRes", e)
+    return null
+  }
+}
 
 fun ScalingUtils.ScaleType.getCanvasTransformation(
     focusPoint: PointF? = null
