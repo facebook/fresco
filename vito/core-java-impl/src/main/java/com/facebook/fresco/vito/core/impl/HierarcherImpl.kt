@@ -10,6 +10,7 @@ package com.facebook.fresco.vito.core.impl
 import android.content.res.Resources
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import com.facebook.common.logging.FLog
 import com.facebook.common.references.CloseableReference
 import com.facebook.drawee.drawable.ForwardingDrawable
 import com.facebook.drawee.drawable.ScaleTypeDrawable
@@ -21,6 +22,8 @@ import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.systrace.FrescoSystrace
 
 open class HierarcherImpl(private val drawableFactory: ImageOptionsDrawableFactory) : Hierarcher {
+
+  private val TAG = "HierarcherImpl"
 
   override fun buildActualImageDrawable(
       resources: Resources,
@@ -41,8 +44,13 @@ open class HierarcherImpl(private val drawableFactory: ImageOptionsDrawableFacto
     return try {
       var placeholderDrawable = imageOptions.placeholderDrawable
       if (placeholderDrawable == null && imageOptions.placeholderRes != 0) {
-        placeholderDrawable = resources.getDrawable(imageOptions.placeholderRes)
-      } else if (placeholderDrawable == null) {
+        try {
+          placeholderDrawable = resources.getDrawable(imageOptions.placeholderRes)
+        } catch (e: Resources.NotFoundException) {
+          FLog.e(TAG, "Placeholder drawable not found in Resources", e)
+        }
+      }
+      if (placeholderDrawable == null) {
         placeholderDrawable = imageOptions.placeholderColor?.let(::ColorDrawable)
       }
 
