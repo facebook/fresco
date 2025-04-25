@@ -14,16 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import androidx.annotation.Nullable;
-import com.facebook.common.references.CloseableReference;
-import com.facebook.datasource.RetainingDataSourceSupplier;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
-import com.facebook.fresco.vito.core.impl.source.DataSourceImageSource;
+import com.facebook.fresco.vito.core.impl.source.RetainingImageSource;
 import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.source.ImageSourceProvider;
 import com.facebook.fresco.vito.view.VitoView;
-import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.List;
 
 public class RetainingDataSourceSupplierFragment extends BaseShowcaseFragment {
@@ -51,23 +47,14 @@ public class RetainingDataSourceSupplierFragment extends BaseShowcaseFragment {
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     final ImageView imageView = view.findViewById(R.id.image_view);
-    final RetainingDataSourceSupplier<CloseableReference<CloseableImage>> retainingSupplier =
-        new RetainingDataSourceSupplier<>();
-    VitoView.show(
-        new DataSourceImageSource(retainingSupplier), mImageOptions, CALLER_CONTEXT, imageView);
-    replaceImage(retainingSupplier);
-    imageView.setOnClickListener(v -> replaceImage(retainingSupplier));
+    final RetainingImageSource imageSource = new RetainingImageSource();
+    VitoView.show(imageSource, mImageOptions, CALLER_CONTEXT, imageView);
+    replaceImage(imageSource);
+    imageView.setOnClickListener(v -> replaceImage(imageSource));
   }
 
-  private void replaceImage(
-      RetainingDataSourceSupplier<CloseableReference<CloseableImage>> retainingSupplier) {
-
-    retainingSupplier.replaceSupplier(
-        Fresco.getImagePipeline()
-            .getDataSourceSupplier(
-                ImageRequest.fromUri(getNextUri()),
-                CALLER_CONTEXT,
-                ImageRequest.RequestLevel.FULL_FETCH));
+  private void replaceImage(RetainingImageSource retainingImageSource) {
+    retainingImageSource.updateImageSource(ImageSourceProvider.forUri(getNextUri()));
   }
 
   private synchronized Uri getNextUri() {

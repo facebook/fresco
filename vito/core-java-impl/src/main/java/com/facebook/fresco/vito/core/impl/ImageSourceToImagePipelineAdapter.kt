@@ -18,6 +18,7 @@ import com.facebook.fresco.urimod.Dimensions
 import com.facebook.fresco.vito.core.ImagePipelineUtils
 import com.facebook.fresco.vito.core.impl.source.DataSourceImageSource
 import com.facebook.fresco.vito.core.impl.source.ImagePipelineImageSource
+import com.facebook.fresco.vito.core.impl.source.RetainingImageSource
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.source.EmptyImageSource
 import com.facebook.fresco.vito.source.FirstAvailableImageSource
@@ -158,7 +159,24 @@ object ImageSourceToImagePipelineAdapter {
                       extras,
                       viewport)))
 
+      is RetainingImageSource -> {
+        imageSource.setImageSourceUpdateFunction { newImageSource ->
+          createDataSourceSupplier(
+              newImageSource,
+              imagePipeline,
+              imagePipelineUtils,
+              imageOptions,
+              callerContext,
+              requestListener,
+              uiComponentId,
+              extras,
+              viewport)
+        }
+        imageSource.dataSourceSupplier
+      }
+
       is DataSourceImageSource -> imageSource.dataSourceSupplier
+
       else -> NO_REQUEST_SUPPLIER
     }
   }

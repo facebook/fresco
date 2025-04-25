@@ -14,6 +14,6 @@ import com.facebook.fresco.vito.source.ImageSource
 import com.facebook.imagepipeline.image.CloseableImage
 
 /** ImageSource that directly supplies a DataSource */
-class DataSourceImageSource(
+open class DataSourceImageSource(
     val dataSourceSupplier: Supplier<DataSource<CloseableReference<CloseableImage>>>
 ) : ImageSource
