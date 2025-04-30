@@ -117,14 +117,14 @@ class FlipperImageTracker : DebugImageTracker, ImagePerfDataListener {
       imagePerfData: ImagePerfData,
       imageLoadStatus: ImageLoadStatus
   ) {
-    if (imagePerfData?.imageRequest == null) {
+    if (imagePerfData.imageRequest == null) {
       return
     }
     val debugData = imageRequestDebugDataMap[imagePerfData.imageRequest]
     if (debugData != null) {
       debugData.imagePerfData = imagePerfData
     } else {
-      val imageRequest = imagePerfData?.imageRequest as? ImageRequest
+      val imageRequest = imagePerfData.imageRequest as? ImageRequest
       val imageDebugData = ImageDebugData(imageRequest)
       imageDebugData.imagePerfData = imagePerfData
       imageRequestDebugDataMap[imageRequest] = imageDebugData
