@@ -180,7 +180,7 @@ class DecodeProducer(
         return
       }
       val imageFormat = encodedImage.imageFormat
-      val imageFormatStr = imageFormat?.name ?: "unknown"
+      val imageFormatStr = imageFormat.name ?: "unknown"
       val encodedImageSize = encodedImage.width.toString() + "x" + encodedImage.height
       val sampleSize = encodedImage.sampleSize.toString()
       val isLast = isLast(status)
@@ -271,7 +271,7 @@ class DecodeProducer(
               throw e
             }
 
-            reclaimMemoryRunnable?.run()
+            reclaimMemoryRunnable.run()
             System.gc()
 
             // Now we retry only once
@@ -400,7 +400,7 @@ class DecodeProducer(
         if (encodedImage != null) {
           val request = producerContext.imageRequest
           producerContext.putExtra(HasExtraData.KEY_IMAGE_FORMAT, encodedImage.imageFormat.name)
-          encodedImage.source = request.sourceUri?.toString()
+          encodedImage.source = request.sourceUri.toString()
 
           val requestDownsampleMode = request.downsampleOverride ?: downsampleMode
           val isResizingDone = statusHasFlag(status, Consumer.IS_RESIZING_DONE)

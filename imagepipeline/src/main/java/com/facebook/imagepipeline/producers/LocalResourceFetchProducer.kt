@@ -52,7 +52,7 @@ class LocalResourceFetchProducer(
     private fun getResourceId(imageRequest: ImageRequest): Int {
       val path = imageRequest.sourceUri.path
       checkNotNull(path)
-      return path!!.substring(1).toInt()
+      return path.substring(1).toInt()
     }
   }
 }

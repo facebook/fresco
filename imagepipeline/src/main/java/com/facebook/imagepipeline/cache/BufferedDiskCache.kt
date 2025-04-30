@@ -205,7 +205,7 @@ class BufferedDiskCache(
               }
               if (Thread.interrupted()) {
                 FLog.v(TAG, "Host thread was interrupted, decreasing reference count")
-                result?.close()
+                result.close()
                 throw InterruptedException()
               } else {
                 return@Callable result
@@ -374,7 +374,7 @@ class BufferedDiskCache(
       fileCache.insert(key) { os ->
         val inputStream = encodedImage!!.inputStream
         checkNotNull(inputStream)
-        pooledByteStreams.copy(inputStream!!, os)
+        pooledByteStreams.copy(inputStream, os)
       }
       imageCacheStatsTracker.onDiskCachePut(key)
       FLog.v(TAG, "Successful disk-cache write for key %s", key.uriString)

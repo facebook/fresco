@@ -41,7 +41,7 @@ class LocalContentUriFetchProducer(
             try {
               val fd = contentResolver.openAssetFileDescriptor(uri, "r")
               checkNotNull(fd)
-              fd!!.createInputStream()
+              fd.createInputStream()
             } catch (e: IOException) {
               throw IOException("Contact photo does not exist: $uri")
             }
@@ -53,7 +53,7 @@ class LocalContentUriFetchProducer(
       }
       checkNotNull(inputStream)
       // If a Contact URI is provided, use the special helper to open that contact's photo.
-      return getEncodedImage(inputStream!!, EncodedImage.UNKNOWN_STREAM_SIZE)
+      return getEncodedImage(inputStream, EncodedImage.UNKNOWN_STREAM_SIZE)
     }
     if (UriUtil.isLocalCameraUri(uri)) {
       val cameraImage = getCameraImage(uri)
@@ -74,7 +74,7 @@ class LocalContentUriFetchProducer(
           return null
         }
     checkNotNull(parcelFileDescriptor)
-    val fd = parcelFileDescriptor!!.fileDescriptor
+    val fd = parcelFileDescriptor.fileDescriptor
     val encodedImage =
         this.getEncodedImage(FileInputStream(fd), parcelFileDescriptor.statSize.toInt())
     parcelFileDescriptor.close()

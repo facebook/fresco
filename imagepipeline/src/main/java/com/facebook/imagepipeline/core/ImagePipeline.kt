@@ -1137,7 +1137,7 @@ class ImagePipeline(
               callerContext,
               lowestPermittedRequestLevel, /* isPrefetch */
               true,
-              config.experiments?.allowProgressiveOnPrefetch == true &&
+              config.experiments.allowProgressiveOnPrefetch == true &&
                   imageRequest.progressiveRenderingEnabled,
               priority,
               config)
