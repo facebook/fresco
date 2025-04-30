@@ -18,6 +18,7 @@ import androidx.core.util.ObjectsCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import com.facebook.common.callercontext.ContextChain
 import com.facebook.datasource.DataSource
+import com.facebook.drawee.drawable.Viewport
 import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.fresco.ui.common.OnFadeListener
 import com.facebook.fresco.urimod.ClassicFetchStrategy
@@ -157,6 +158,12 @@ object FrescoVitoImage2Spec {
       c: ComponentContext,
       @Prop(optional = true) callerContext: Any?,
       @TreeProp contextChain: ContextChain?,
+      @TreeProp viewport: Viewport?,
+      @Prop(optional = true) uriString: String?,
+      @Prop(optional = true) uri: Uri?,
+      @Prop(optional = true) imageSource: ImageSource?,
+      @Prop(optional = true) imageOptions: ImageOptions?,
+      @Prop(optional = true) logWithHighSamplingRate: Boolean?,
       @Prop(optional = true) prefetch: Prefetch?,
       @Prop(optional = true) prefetchRequestListener: RequestListener?,
       @CachedValue requestBeforeLayout: VitoImageRequest?,
@@ -177,8 +184,28 @@ object FrescoVitoImage2Spec {
             contextChain,
             prefetchRequestListener)
       }
-
-      is SmartFetchStrategy,
+      is SmartFetchStrategy -> {
+        if (viewport != null) {
+          val viewportAwareImageRequest =
+              createVitoImageRequest(
+                  c,
+                  callerContext,
+                  imageSource,
+                  uri,
+                  uriString,
+                  imageOptions,
+                  logWithHighSamplingRate,
+                  viewport.toRect(),
+                  result)
+          maybePrefetchInOnPrepare(
+              prefetch,
+              prefetchDataSource,
+              viewportAwareImageRequest,
+              callerContext,
+              contextChain,
+              prefetchRequestListener)
+        }
+      }
       NoPrefetchInOnPrepareStrategy -> {}
     }
     fetchStrategy.set(result)
@@ -353,6 +380,7 @@ object FrescoVitoImage2Spec {
       layout: ComponentLayout,
       viewportDimensions: Output<Rect>,
       @TreeProp contextChain: ContextChain?,
+      @TreeProp viewport: Viewport?,
       requestWithLayout: Output<VitoImageRequest>,
       prefetchDataSourceFromBoundsDefined: Output<DataSource<Void?>>,
       @Prop(optional = true) prefetch: Prefetch?,
@@ -394,7 +422,8 @@ object FrescoVitoImage2Spec {
         requestWithLayout.set(vitoImageRequest)
 
         val config = FrescoVitoProvider.getConfig().prefetchConfig
-        if (shouldPrefetchInBoundsDefinedForDynamicSize(prefetch)) {
+        // Skip prefetch if viewport available, since it already happened in OnPrepare
+        if (shouldPrefetchInBoundsDefinedForDynamicSize(prefetch) && viewport == null) {
           prefetchDataSourceFromBoundsDefined.set(
               FrescoVitoProvider.getPrefetcher()
                   .prefetch(
