@@ -29,6 +29,7 @@ import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory
 import com.facebook.fresco.vito.provider.setup.FrescoVitoSetup
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.core.ImagePipelineFactory
+import com.facebook.imagepipeline.drawable.DrawableFactory
 import java.util.concurrent.Executor
 
 class DefaultFrescoVitoProvider(
@@ -41,6 +42,7 @@ class DefaultFrescoVitoProvider(
     vitoImagePerfListener: VitoImagePerfListener,
     debugOverlayFactory: DebugOverlayFactory2 = NoOpDebugOverlayFactory2(),
     imagePerfListenerSupplier: Supplier<ImagePerfLoggingListener>? = null,
+    externalImageOptionsDrawableFactories: List<DrawableFactory> = emptyList()
 ) : FrescoVitoSetup {
 
   private val frescoController: FrescoController2
@@ -60,7 +62,7 @@ class DefaultFrescoVitoProvider(
     frescoController =
         FrescoController2Impl(
             frescoVitoConfig,
-            HierarcherImpl(createDefaultDrawableFactory()),
+            HierarcherImpl(createDefaultDrawableFactory(externalImageOptionsDrawableFactories)),
             lightweightBackgroundThreadExecutor,
             uiThreadExecutor,
             vitoImagePipeline,
@@ -79,7 +81,9 @@ class DefaultFrescoVitoProvider(
   override fun getConfig(): FrescoVitoConfig = frescoVitoConfig
 
   companion object {
-    private fun createDefaultDrawableFactory(): ImageOptionsDrawableFactory {
+    private fun createDefaultDrawableFactory(
+        externalImageOptionsDrawableFactories: List<DrawableFactory>
+    ): ImageOptionsDrawableFactory {
       val animatedDrawableFactory =
           ImagePipelineFactory.getInstance()
               .getAnimatedDrawableFactory(null)
@@ -87,7 +91,8 @@ class DefaultFrescoVitoProvider(
       val bitmapFactory = BitmapDrawableFactory()
       val xmlFactory =
           ImagePipelineFactory.getInstance().xmlDrawableFactory?.let(DrawableFactoryWrapper::wrap)
-      val factories = listOfNotNull(bitmapFactory, animatedDrawableFactory, xmlFactory)
+      val factories = listOfNotNull(bitmapFactory, animatedDrawableFactory, xmlFactory) +
+        externalImageOptionsDrawableFactories.map(DrawableFactoryWrapper::wrap)
       return when (factories.size) {
         1 -> factories[0]
         else -> ArrayVitoDrawableFactory(*factories.toTypedArray())
