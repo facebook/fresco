@@ -113,7 +113,8 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
   private void updatePaint() {
     if (mLastBitmap == null || mLastBitmap.get() != mBitmap) {
       mLastBitmap = new WeakReference<>(mBitmap);
-      if (mBitmap != null) {
+
+      if (mBitmap != null && !mBitmap.isRecycled()) {
         mPaint.setShader(new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
         mIsShaderTransformDirty = true;
       }
