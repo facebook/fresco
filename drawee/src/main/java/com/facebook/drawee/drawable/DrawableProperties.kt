@@ -49,6 +49,7 @@ class DrawableProperties {
       drawable.alpha = alpha
     }
     if (isSetColorFilter) {
+      drawable.mutate()
       drawable.colorFilter = colorFilter
     }
     if (dither != UNSET) {
