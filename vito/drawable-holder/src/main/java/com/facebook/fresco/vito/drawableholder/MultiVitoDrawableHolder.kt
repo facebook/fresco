@@ -18,10 +18,10 @@ import com.facebook.fresco.vito.source.ImageSource
 class MultiVitoDrawableHolder {
 
   class VitoDrawableHolder(
-      var drawable: FrescoDrawableInterface,
+      val drawable: FrescoDrawableInterface,
       var imageOptionsBuilder: ImageOptions.Builder,
       var imageSource: ImageSource,
-      var resources: Resources,
+      val resources: Resources,
       var callerContext: Any?,
       var imageListener: ImageListener? = null,
   )
