@@ -139,6 +139,7 @@ class KFrescoVitoDrawable(
     progressLayer?.reset()
     overlayImageLayer.reset()
     debugOverlayImageLayer?.reset()
+    backgroundLayer?.reset()
     hasBoundsSet = false
 
     listenerManager.onReset(
@@ -158,11 +159,13 @@ class KFrescoVitoDrawable(
   var progressLayer: ImageLayerDataModel? = null
   val overlayImageLayer = createLayer()
   var debugOverlayImageLayer: ImageLayerDataModel? = null
+  var backgroundLayer: ImageLayerDataModel? = null
 
   override fun draw(canvas: Canvas) {
     if (!hasBoundsSet) {
       setLayerBounds(bounds)
     }
+    backgroundLayer?.draw(canvas)
     placeholderLayer.draw(canvas)
     actualImageLayer.draw(canvas)
     progressLayer?.draw(canvas)
@@ -182,6 +185,7 @@ class KFrescoVitoDrawable(
       progressLayer?.configure(bounds = bounds)
       overlayImageLayer.configure(bounds = bounds)
       debugOverlayImageLayer?.configure(bounds = bounds)
+      backgroundLayer?.configure(bounds = bounds)
       hasBoundsSet = true
     }
   }
@@ -192,6 +196,7 @@ class KFrescoVitoDrawable(
     progressLayer?.setAlpha(alpha)
     overlayImageLayer.setAlpha(alpha)
     debugOverlayImageLayer?.setAlpha(alpha)
+    backgroundLayer?.setAlpha(alpha)
   }
 
   override fun setColorFilter(colorFilter: ColorFilter?) {

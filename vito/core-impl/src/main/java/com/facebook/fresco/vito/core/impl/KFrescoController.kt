@@ -151,6 +151,7 @@ class KFrescoController(
           imageId, imageRequest, callerContext, drawable.obtainExtras())
       drawable.imagePerfListener.onImageFetch(drawable)
       drawable.overlayImageLayer.setOverlay(imageRequest.resources, options)
+      drawable.setupBackgroundLayer(imageRequest.resources, options)
 
       when (val source = imageRequest.imageSource) {
         // Direct bitmap available
