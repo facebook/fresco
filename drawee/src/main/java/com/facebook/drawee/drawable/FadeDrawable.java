@@ -340,7 +340,7 @@ public class FadeDrawable extends ArrayDrawable {
     }
   }
 
-  private void drawDrawableWithAlpha(Canvas canvas, Drawable drawable, int alpha) {
+  private void drawDrawableWithAlpha(Canvas canvas, @Nullable Drawable drawable, int alpha) {
     if (drawable != null && alpha > 0) {
       mPreventInvalidateCount++;
       if (mMutateDrawables) {
