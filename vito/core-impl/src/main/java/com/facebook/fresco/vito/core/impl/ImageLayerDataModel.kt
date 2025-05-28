@@ -30,8 +30,7 @@ class ImageLayerDataModel(
   private var roundingOptions: RoundingOptions? = null
   private var borderOptions: BorderOptions? = null
   private var currentBounds: Rect? = null
-  private val canvasTransformationHandler: CanvasTransformationHandler =
-      CanvasTransformationHandler(null)
+  val canvasTransformationHandler: CanvasTransformationHandler = CanvasTransformationHandler(null)
   private val paint: Paint = Paint()
 
   private var renderCommand: RenderCommand? = null
