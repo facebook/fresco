@@ -131,5 +131,11 @@ class MultiVitoDrawableHolder {
     fun detachHolder(holder: VitoDrawableHolder) {
       FrescoVitoProvider.getController().release(holder.drawable)
     }
+
+    @JvmStatic
+    fun draw(holder: VitoDrawableHolder, canvas: android.graphics.Canvas) {
+      val drawable = holder.drawable as Drawable
+      drawable.draw(canvas)
+    }
   }
 }
