@@ -14,6 +14,7 @@ import com.facebook.fresco.vito.listener.ImageListener
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.fresco.vito.source.ImageSource
+import com.facebook.fresco.vito.source.ImageSourceProvider
 
 class MultiVitoDrawableHolder {
 
@@ -106,6 +107,15 @@ class MultiVitoDrawableHolder {
       }
     }
     holders.clear()
+  }
+
+  fun reset() {
+    if (isAttached) {
+      for (i in holders.indices) {
+        detachHolder(holders[i])
+        holders[i].imageSource = ImageSourceProvider.emptySource()
+      }
+    }
   }
 
   companion object {
