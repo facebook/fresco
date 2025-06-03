@@ -69,6 +69,9 @@ object ImageSourceToImagePipelineAdapter {
       is ImagePipelineImageSource ->
           imageSource.maybeExtractFinalImageRequest(imagePipelineUtils, imageOptions)
 
+      is RetainingImageSource ->
+          maybeExtractFinalImageRequest(imageSource.currentSource, imagePipelineUtils, imageOptions)
+
       else -> null
     }
   }

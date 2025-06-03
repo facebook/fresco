@@ -21,10 +21,12 @@ import com.facebook.imagepipeline.image.CloseableImage
  * [updateImageSource].
  */
 class RetainingImageSource(
-    private var currentSource: ImageSource = ImageSourceProvider.emptySource(),
+    private var _currentSource: ImageSource = ImageSourceProvider.emptySource(),
     val dataSourceSupplier: RetainingDataSourceSupplier<CloseableReference<CloseableImage>> =
         RetainingDataSourceSupplier(),
 ) : ImageSource {
+  val currentSource
+    get() = _currentSource
 
   private var imageSourceUpdateFunction:
       ((ImageSource) -> Supplier<DataSource<CloseableReference<CloseableImage>>>)? =
@@ -39,8 +41,8 @@ class RetainingImageSource(
    */
   @JvmOverloads
   fun updateImageSource(imageSource: ImageSource, forceReload: Boolean = false) {
-    if (forceReload || currentSource != imageSource) {
-      currentSource = imageSource
+    if (forceReload || _currentSource != imageSource) {
+      _currentSource = imageSource
       imageSourceUpdateFunction?.let { dataSourceSupplier.replaceSupplier(it(imageSource)) }
     }
   }
@@ -49,6 +51,6 @@ class RetainingImageSource(
       function: (ImageSource) -> Supplier<DataSource<CloseableReference<CloseableImage>>>
   ) {
     imageSourceUpdateFunction = function
-    updateImageSource(currentSource, true)
+    updateImageSource(_currentSource, true)
   }
 }
