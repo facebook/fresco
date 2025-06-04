@@ -13,6 +13,7 @@ import bolts.Task;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Supplier;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.core.DiskCachesStore;
@@ -125,6 +126,9 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
                 getExtraMap(listener, producerContext, true, cachedReference.getSize()));
             listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, true);
             producerContext.putOriginExtra("disk");
+            producerContext.putExtra(HasExtraData.KEY_ENCODED_SIZE, cachedReference.getSize());
+            producerContext.putExtra(HasExtraData.KEY_ENCODED_WIDTH, cachedReference.getWidth());
+            producerContext.putExtra(HasExtraData.KEY_ENCODED_HEIGHT, cachedReference.getHeight());
             consumer.onProgressUpdate(1);
             consumer.onNewResult(cachedReference, Consumer.IS_LAST);
             cachedReference.close();
