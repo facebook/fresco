@@ -496,7 +496,7 @@ open class FrescoController2Impl(
               sourceUri)
       extras.smartUrlFetchStrategy = imageRequest.extras[HasExtraData.KEY_SF_FETCH_STRATEGY]
       extras.smartUrlModificationResult = imageRequest.extras[HasExtraData.KEY_SF_MOD_RESULT]
-      extras.originalUri = imageRequest.extras[HasExtraData.KEY_ORIGINAL_URL] as? Uri
+      extras.smartOriginalUri = imageRequest.extras[HasExtraData.KEY_SF_ORIGINAL_URL] as? Uri
       extras.uiFramework = drawable.uiFramework
       extras.imageSource = imageRequest.imageSource
       extras.sizingHint = (imageRequest.imageSource as? SmartImageSource)?.sizingHint

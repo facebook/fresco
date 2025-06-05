@@ -35,7 +35,7 @@ public abstract class BaseCloseableImage implements CloseableImage {
               HasExtraData.KEY_BITMAP_CONFIG,
               HasExtraData.KEY_IS_ROUNDED,
               HasExtraData.KEY_NON_FATAL_DECODE_ERROR,
-              HasExtraData.KEY_ORIGINAL_URL,
+              HasExtraData.KEY_SF_ORIGINAL_URL,
               HasExtraData.KEY_SF_FETCH_STRATEGY,
               HasExtraData.KEY_COLOR_SPACE));
 

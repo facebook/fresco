@@ -87,7 +87,7 @@ class VitoImagePipelineImpl(
                 } else {
                   ImageSourceProvider.forUri(result.newUri)
                 }
-            extras[HasExtraData.KEY_ORIGINAL_URL] = imageSource.imageUri
+            extras[HasExtraData.KEY_SF_ORIGINAL_URL] = imageSource.imageUri
           }
         } else {
           modifiedUriValue = "NotSupportedImageSource: ${imageSource.getClassNameString()}"

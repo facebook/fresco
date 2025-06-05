@@ -33,7 +33,7 @@ interface HasExtraData {
     const val KEY_NON_FATAL_DECODE_ERROR = "non_fatal_decode_error"
 
     /** The original URL if it was modified by Dynamic Image URL */
-    const val KEY_ORIGINAL_URL = "original_url"
+    const val KEY_SF_ORIGINAL_URL = "smart_original_url"
 
     /** Information on if/why the url was modified by Dynamic Image URL */
     const val KEY_SF_FETCH_STRATEGY = "smart_fetch_strategy"
