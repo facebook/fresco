@@ -57,6 +57,7 @@ interface HasExtraData {
 
     const val KEY_VIEWPORT = "viewport"
     const val KEY_SCALETYPE = "scaletype"
+    const val KEY_SIZING_HINT = "sizing_hint"
     const val KEY_IMAGEOPTIONS = "imageoptions"
 
     /* HDR related image extra data */
