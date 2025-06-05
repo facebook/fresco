@@ -39,6 +39,7 @@ import com.facebook.fresco.vito.source.ImageSource
 import com.facebook.fresco.vito.source.ImageSourceProvider
 import com.facebook.fresco.vito.source.IncreasingQualityImageSource
 import com.facebook.fresco.vito.source.SingleImageSource
+import com.facebook.fresco.vito.source.SmartImageSource
 import com.facebook.fresco.vito.source.UriImageSource
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.image.CloseableImage
@@ -80,7 +81,12 @@ class VitoImagePipelineImpl(
                   contextChain)
           modifiedUriValue = result.toString()
           if (result is UriModifierInterface.ModificationResult.Modified) {
-            finalImageSource = ImageSourceProvider.forUri(result.newUri)
+            finalImageSource =
+                if (imageSource is SmartImageSource) {
+                  SmartImageSource(result.newUri, imageSource.sizingHint, imageSource.extras)
+                } else {
+                  ImageSourceProvider.forUri(result.newUri)
+                }
             extras[HasExtraData.KEY_ORIGINAL_URL] = imageSource.imageUri
           }
         } else {
