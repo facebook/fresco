@@ -9,7 +9,6 @@ package com.facebook.common.callercontext;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,8 +44,6 @@ public class ContextChain implements Parcelable {
   private @Nullable String mSerializedChainString;
   private String mSerializedNodeString;
 
-  private static boolean sUseConcurrentHashMap = false;
-
   public ContextChain(
       final String tag,
       final String name,
@@ -67,20 +64,12 @@ public class ContextChain implements Parcelable {
       parentExtraData = parent.getExtraData();
     }
     if (parentExtraData != null) {
-      if (sUseConcurrentHashMap) {
-        mExtraData = new ConcurrentHashMap<>(parentExtraData);
-      } else {
-        mExtraData = new HashMap<>(parentExtraData);
-      }
+      mExtraData = new ConcurrentHashMap<>(parentExtraData);
     }
 
     if (extraData != null) {
       if (mExtraData == null) {
-        if (sUseConcurrentHashMap) {
-          mExtraData = new ConcurrentHashMap<>();
-        } else {
-          mExtraData = new HashMap<>();
-        }
+        mExtraData = new ConcurrentHashMap<>();
       }
       mExtraData.putAll(extraData);
     }
@@ -113,10 +102,6 @@ public class ContextChain implements Parcelable {
     mParent = in.readParcelable(ContextChain.class.getClassLoader());
   }
 
-  public static void setUseConcurrentHashMap(boolean useConcurrentHashMap) {
-    sUseConcurrentHashMap = useConcurrentHashMap;
-  }
-
   public String getName() {
     return mName;
   }
@@ -145,7 +130,7 @@ public class ContextChain implements Parcelable {
       return null;
     }
     // concurrenthashmap will throw NPE when key parameter is null
-    if (sUseConcurrentHashMap && key == null) {
+    if (key == null) {
       return null;
     }
     Object val = mExtraData.get(key);
@@ -154,15 +139,11 @@ public class ContextChain implements Parcelable {
 
   public void putObjectExtra(String key, Object value) {
     // concurrenthashmap will throw NPE when key or value is null
-    if (sUseConcurrentHashMap && (key == null || value == null)) {
+    if (key == null || value == null) {
       return;
     }
     if (mExtraData == null) {
-      if (sUseConcurrentHashMap) {
-        mExtraData = new ConcurrentHashMap<>();
-      } else {
-        mExtraData = new HashMap<>();
-      }
+      mExtraData = new ConcurrentHashMap<>();
     }
     mExtraData.put(key, value);
   }
