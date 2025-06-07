@@ -7,7 +7,9 @@
 
 package com.facebook.fresco.vito.core.impl
 
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import com.facebook.common.references.CloseableReference
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin
 import com.facebook.fresco.ui.common.BaseControllerListener2
 import com.facebook.fresco.ui.common.ControllerListener2
@@ -20,6 +22,7 @@ import com.facebook.fresco.vito.core.ImagePerfLoggingListener
 import com.facebook.fresco.vito.core.VitoImageRequest
 import com.facebook.fresco.vito.core.VitoImageRequestListener
 import com.facebook.fresco.vito.listener.ImageListener
+import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.image.ImageInfo
 import java.io.Closeable
 import java.io.IOException
@@ -186,5 +189,9 @@ class CombinedImageListenerImpl : CombinedImageListener {
         controllerListener2 = null
       }
     } catch (e: IOException) {}
+  }
+
+  override fun onImageSet(image: CloseableReference<CloseableImage>, viewportDimensions: Rect?) {
+    imagePerfLoggingListener?.onImageSet(image, viewportDimensions)
   }
 }

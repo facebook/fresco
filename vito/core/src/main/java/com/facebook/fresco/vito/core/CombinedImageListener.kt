@@ -7,9 +7,12 @@
 
 package com.facebook.fresco.vito.core
 
+import android.graphics.Rect
+import com.facebook.common.references.CloseableReference
 import com.facebook.fresco.ui.common.ControllerListener2
 import com.facebook.fresco.ui.common.ImagePerfNotifier
 import com.facebook.fresco.vito.listener.ImageListener
+import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.image.ImageInfo
 
 interface CombinedImageListener : VitoImageRequestListener {
@@ -33,4 +36,6 @@ interface CombinedImageListener : VitoImageRequestListener {
       resetLocalImagePerfStateListener: Boolean,
       resetControllerListener2: Boolean
   )
+
+  fun onImageSet(image: CloseableReference<CloseableImage>, viewportDimensions: Rect?)
 }

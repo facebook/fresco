@@ -290,6 +290,8 @@ class KFrescoController(
           // TODO(T105148151): trigger listeners
           invalidateSelf()
           val imageInfo = image.imageInfo
+          actualImageLayer.getDataModel() is BitmapImageDataModel
+          listenerManager.onImageSet(imageReference, viewportDimensions)
           if (isIntermediateImage) {
             listenerManager.onIntermediateImageSet(imageId, imageRequest, imageInfo)
           } else {

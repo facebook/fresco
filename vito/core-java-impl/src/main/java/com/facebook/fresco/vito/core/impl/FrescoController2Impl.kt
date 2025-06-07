@@ -313,6 +313,7 @@ open class FrescoController2Impl(
     }
     val extras = obtainExtras(dataSource, image, drawable, imageRequest)
     val imageInfo = image?.get()?.imageInfo
+    image?.let { drawable.internalListener.onImageSet(it, drawable.viewportDimensions) }
     if (!isIntermediateImage && notifyFinalResult(dataSource)) {
       drawable.internalListener.onFinalImageSet(
           drawable.imageId, imageRequest, drawable.imageOrigin, imageInfo, extras, actualDrawable)
