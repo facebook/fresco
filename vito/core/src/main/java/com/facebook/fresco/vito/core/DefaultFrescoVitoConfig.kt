@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.core
 
+import android.net.Uri
 import com.facebook.common.callercontext.ContextChain
 import com.facebook.common.internal.Supplier
 import com.facebook.common.internal.Suppliers
@@ -67,6 +68,8 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
   ): Boolean = true
 
   override fun experimentalDynamicSizeBloksDisableDiskCacheCheck(): Boolean = false
+
+  override fun experimentalDynamicSizeIsUriEligible(uri: Uri?): Boolean = true
 
   override fun experimentalResetVitoImageRequestListener() = false
 

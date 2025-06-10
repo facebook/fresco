@@ -29,6 +29,7 @@ enum class ClassicFetchStrategy : FetchStrategy {
   MAIN_THREAD,
   DISK_CACHE_TIMEOUT,
   DISK_CACHE_HIT,
+  URI_INELIGIBLE,
   ;
 
   override fun toString(): String = "ClassicFetchStrategy: ${this.name}"

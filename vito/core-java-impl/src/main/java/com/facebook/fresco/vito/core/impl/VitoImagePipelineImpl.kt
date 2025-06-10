@@ -234,6 +234,12 @@ class VitoImagePipelineImpl(
       return ClassicFetchStrategy.APP_DISABLED
     }
 
+    requestBeforeLayout.finalImageRequest?.sourceUri.let { uri ->
+      if (!config.experimentalDynamicSizeIsUriEligible(uri)) {
+        return ClassicFetchStrategy.URI_INELIGIBLE
+      }
+    }
+
     if (isProductEnabled(callerContext, contextChain) == false) {
       return ClassicFetchStrategy.PRODUCT_DISABLED
     }

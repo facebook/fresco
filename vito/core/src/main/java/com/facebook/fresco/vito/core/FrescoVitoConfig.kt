@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.core
 
+import android.net.Uri
 import com.facebook.common.callercontext.ContextChain
 import com.facebook.common.internal.Supplier
 
@@ -74,4 +75,6 @@ interface FrescoVitoConfig {
   fun experimentalResetLocalImagePerfStateListener(): Boolean
 
   fun experimentalResetControllerListener2(): Boolean
+
+  fun experimentalDynamicSizeIsUriEligible(uri: Uri?): Boolean
 }
