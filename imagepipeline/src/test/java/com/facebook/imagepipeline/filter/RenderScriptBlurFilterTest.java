@@ -26,7 +26,7 @@ public class RenderScriptBlurFilterTest {
 
   @Before
   public void setup() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
   }
 
   @Test(expected = IllegalArgumentException.class)
