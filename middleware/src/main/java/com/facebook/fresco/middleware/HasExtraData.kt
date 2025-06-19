@@ -39,6 +39,7 @@ interface HasExtraData {
     const val KEY_SF_FETCH_STRATEGY = "smart_fetch_strategy"
     const val KEY_SF_MOD_RESULT = "smart_mod_result"
     const val KEY_SF_ADAPTIVE = "smart_adaptive"
+    const val KEY_SF_VARIATION = "smart_variation"
     const val KEY_IMAGE_SOURCE_TYPE: String = "image_source_type"
 
     const val KEY_ORIGIN = "origin"

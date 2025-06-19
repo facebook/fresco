@@ -16,6 +16,7 @@ enum class SmartFetchStrategy : FetchStrategy {
   FALLBACK_DISABLED,
   MAIN_THREAD,
   DISK_CACHE_TIMEOUT,
+  VARIATION,
   ;
 
   override fun toString(): String = "SmartFetchStrategy: ${this.name}"

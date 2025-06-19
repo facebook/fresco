@@ -27,20 +27,13 @@ interface UriModifierInterface {
 
   fun modifyPrefetchUri(uri: Uri, callerContext: Any?): Uri?
 
-  fun modifyNetworkUriAdaptively(
-      uri: Uri,
-      viewport: Dimensions?,
-      scaleType: ScaleType?,
-      callerContext: Any?,
-      contextChain: ContextChain? = null,
-  ): ModificationResult = ModificationResult.Disabled("Default")
-
   /**
    * Modifies the network uri adaptively based on current network or other conditions. No need to
    * provide viewport or scale type since those are extracted from the uri itself.
    */
-  fun modifyNetworkUriAdaptively(
+  fun modifyNetworkUriForNetworkFetcher(
       uri: Uri,
+      viewport: Viewport?,
       callerContext: Any?,
       contextChain: ContextChain? = null,
   ): ModificationResult = ModificationResult.Disabled("Default")
@@ -58,6 +51,9 @@ interface UriModifierInterface {
     }
 
     sealed class Modified(val newUri: Uri, comment: String) : ModificationResult(comment) {
+
+      var isVariation: Boolean = false
+
       class ModifiedToAllowlistedSize(newUrl: Uri, override val bestAllowlistedSize: Int?) :
           Modified(newUrl, "ModifiedToAllowlistedSize")
 
