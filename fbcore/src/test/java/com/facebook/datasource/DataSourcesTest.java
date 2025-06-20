@@ -9,36 +9,31 @@ package com.facebook.datasource;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mockConstruction;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockedConstruction;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
-@PrepareOnlyThisForTest({DataSources.class})
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 public class DataSourcesTest {
-
-  @Rule public PowerMockRule rule = new PowerMockRule();
 
   private CountDownLatch mCountDownLatch;
   private Exception mException;
   private DataSource<Object> mDataSource;
+  private MockedConstruction<CountDownLatch> mMockedCountDownLatchConstruction;
 
   private final Object mFinalResult = "final";
   private final Object mIntermediateResult = "intermediate";
@@ -47,12 +42,19 @@ public class DataSourcesTest {
   public void setUp() throws Exception {
     mException = mock(Exception.class);
     mDataSource = mock(DataSource.class);
+    mMockedCountDownLatchConstruction =
+        mockConstruction(
+            CountDownLatch.class,
+            (mock, context) -> {
+              mCountDownLatch = mock;
+            });
+  }
 
-    PowerMockito.mockStatic(CountDownLatch.class);
-    mCountDownLatch = mock(CountDownLatch.class);
-    PowerMockito.whenNew(CountDownLatch.class)
-        .withAnyArguments()
-        .thenAnswer((Answer<CountDownLatch>) invocation -> mCountDownLatch);
+  @After
+  public void tearDown() {
+    if (mMockedCountDownLatchConstruction != null) {
+      mMockedCountDownLatchConstruction.close();
+    }
   }
 
   @Test

@@ -10,6 +10,7 @@ package com.facebook.datasource;
 import static com.facebook.datasource.DataSourceTestUtils.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
@@ -74,8 +75,8 @@ public class AbstractDataSourceTest {
   private void verifySubscribers(int expected) {
     switch (expected) {
       case NO_INTERACTIONS:
-        verifyZeroInteractions(mExecutor1, mDataSubscriber1);
-        verifyZeroInteractions(mExecutor2, mDataSubscriber2);
+        verifyNoMoreInteractions(mExecutor1, mDataSubscriber1);
+        verifyNoMoreInteractions(mExecutor2, mDataSubscriber2);
         break;
       case ON_NEW_RESULT:
         verifyExecutor(mExecutor1);
