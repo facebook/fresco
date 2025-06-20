@@ -10,7 +10,7 @@ package com.facebook.fresco.animation.backend;
 import static com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactivityCheck.INACTIVITY_THRESHOLD_MS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -49,11 +49,11 @@ public class AnimationBackendDelegateWithInactivityCheckTest {
 
   @Test
   public void testNotifyInactive() {
-    verifyZeroInteractions(mInactivityListener);
+    verifyNoMoreInteractions(mInactivityListener);
     mAnimationBackendDelegateWithInactivityCheck.drawFrame(mParent, mCanvas, 0);
-    verifyZeroInteractions(mInactivityListener);
+    verifyNoMoreInteractions(mInactivityListener);
     mFakeClock.incrementBy(100);
-    verifyZeroInteractions(mInactivityListener);
+    verifyNoMoreInteractions(mInactivityListener);
     mFakeClock.incrementBy(INACTIVITY_THRESHOLD_MS);
     verify(mInactivityListener).onInactive();
   }

@@ -12,7 +12,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import android.graphics.Bitmap;
@@ -80,7 +79,7 @@ public class DefaultBitmapFramePreparerTest {
 
     verify(mBitmapFrameCache).contains(1);
     verifyNoMoreInteractions(mBitmapFrameCache);
-    verifyZeroInteractions(mPlatformBitmapFactory, mBitmapFrameRenderer, mBitmapReference);
+    verifyNoMoreInteractions(mPlatformBitmapFactory, mBitmapFrameRenderer, mBitmapReference);
   }
 
   @Test
@@ -101,7 +100,7 @@ public class DefaultBitmapFramePreparerTest {
     verify(mPlatformBitmapFactory)
         .createBitmap(BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT, BITMAP_CONFIG);
 
-    verifyZeroInteractions(mBitmapFrameRenderer);
+    verifyNoMoreInteractions(mBitmapFrameRenderer);
   }
 
   @Test
@@ -123,7 +122,7 @@ public class DefaultBitmapFramePreparerTest {
     verify(mBitmapFrameCache)
         .onFramePrepared(1, mBitmapReference, BitmapAnimationBackend.FRAME_TYPE_REUSED);
 
-    verifyZeroInteractions(mPlatformBitmapFactory);
+    verifyNoMoreInteractions(mPlatformBitmapFactory);
   }
 
   @Test
@@ -172,7 +171,7 @@ public class DefaultBitmapFramePreparerTest {
     verify(mBitmapFrameCache)
         .onFramePrepared(1, mBitmapReference, BitmapAnimationBackend.FRAME_TYPE_REUSED);
 
-    verifyZeroInteractions(mPlatformBitmapFactory);
+    verifyNoMoreInteractions(mPlatformBitmapFactory);
   }
 
   @Test

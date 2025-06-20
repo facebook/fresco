@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import android.graphics.Canvas;
@@ -48,7 +48,7 @@ public class AnimationBackendDelegateTest {
     Rect bounds = mock(Rect.class);
     int alphaValue = 123;
 
-    verifyZeroInteractions(mAnimationBackend);
+    verifyNoMoreInteractions(mAnimationBackend);
 
     // Set values to be persisted
     mAnimationBackendDelegate.setAlpha(alphaValue);
@@ -107,7 +107,7 @@ public class AnimationBackendDelegateTest {
     Rect bounds = mock(Rect.class);
     int alphaValue = 123;
 
-    verifyZeroInteractions(backend2);
+    verifyNoMoreInteractions(backend2);
 
     // Set values to be persisted
     mAnimationBackendDelegate.setAlpha(alphaValue);
