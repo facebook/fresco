@@ -20,7 +20,6 @@ import org.mockito.kotlin.isNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 
 class ControllerListenerWrapperTest {
 
@@ -44,7 +43,7 @@ class ControllerListenerWrapperTest {
   fun testOnPlaceholderSet() {
     val placeholder = mock<Drawable>()
     controllerListenerWrapper.onPlaceholderSet(ID.toLong(), placeholder)
-    verifyZeroInteractions(controllerListener)
+    verifyNoMoreInteractions(controllerListener)
   }
 
   @Test
