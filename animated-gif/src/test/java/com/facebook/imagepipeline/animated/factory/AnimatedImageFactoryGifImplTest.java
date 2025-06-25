@@ -15,10 +15,12 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import android.graphics.Bitmap;
@@ -39,29 +41,19 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
 import com.facebook.imagepipeline.testing.TrivialBufferPooledByteBuffer;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.mockito.MockedConstruction;
+import org.mockito.MockedStatic;
 import org.robolectric.RobolectricTestRunner;
 
 /** Tests for {@link AnimatedImageFactory} */
 @RunWith(RobolectricTestRunner.class)
-@PrepareOnlyThisForTest({
-  GifImage.class,
-  AnimatedImageFactoryImpl.class,
-  AnimatedImageCompositor.class
-})
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 public class AnimatedImageFactoryGifImplTest {
 
   private static final Bitmap.Config DEFAULT_BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
-
-  @Rule public PowerMockRule rule = new PowerMockRule();
 
   private static ResourceReleaser<PooledByteBuffer> FAKE_RESOURCE_RELEASER =
       new ResourceReleaser<PooledByteBuffer>() {
@@ -82,10 +74,11 @@ public class AnimatedImageFactoryGifImplTest {
   private AnimatedImageFactory mAnimatedImageFactory;
 
   private GifImage mGifImageMock;
+  private MockedStatic<GifImage> mGifImageStaticMock;
 
   @Before
   public void setup() {
-    PowerMockito.mockStatic(GifImage.class);
+    mGifImageStaticMock = mockStatic(GifImage.class);
     mGifImageMock = mock(GifImage.class);
 
     mMockAnimatedDrawableBackendProvider = mock(AnimatedDrawableBackendProvider.class);
@@ -96,6 +89,11 @@ public class AnimatedImageFactoryGifImplTest {
             mMockAnimatedDrawableBackendProvider, mMockBitmapFactory, false);
 
     ((AnimatedImageFactoryImpl) mAnimatedImageFactory).sGifAnimatedImageDecoder = mGifImageMock;
+  }
+
+  @After
+  public void tearDown() {
+    mGifImageStaticMock.close();
   }
 
   @Test
@@ -171,7 +169,7 @@ public class AnimatedImageFactoryGifImplTest {
     when(mockGifImage.getWidth()).thenReturn(50);
     when(mockGifImage.getHeight()).thenReturn(50);
 
-    testCreateWithDecodeAlFrames(mockGifImage, mockBitmap1, mockBitmap2, byteBuffer);
+    testCreateWithDecodeAllFrames(mockGifImage, mockBitmap1, mockBitmap2, byteBuffer);
   }
 
   @Test
@@ -189,7 +187,7 @@ public class AnimatedImageFactoryGifImplTest {
     when(mockGifImage.getWidth()).thenReturn(50);
     when(mockGifImage.getHeight()).thenReturn(50);
 
-    testCreateWithDecodeAlFrames(mockGifImage, mockBitmap1, mockBitmap2, byteBuffer);
+    testCreateWithDecodeAllFrames(mockGifImage, mockBitmap1, mockBitmap2, byteBuffer);
   }
 
   private void testCreateDefaults(GifImage mockGifImage, PooledByteBuffer byteBuffer) {
@@ -209,8 +207,8 @@ public class AnimatedImageFactoryGifImplTest {
     assertFalse(imageResult.hasDecodedFrame(0));
 
     // Should not have interacted with these.
-    verifyZeroInteractions(mMockAnimatedDrawableBackendProvider);
-    verifyZeroInteractions(mMockBitmapFactory);
+    verifyNoInteractions(mMockAnimatedDrawableBackendProvider);
+    verifyNoInteractions(mMockBitmapFactory);
   }
 
   private void testCreateWithPreviewBitmap(
@@ -223,37 +221,37 @@ public class AnimatedImageFactoryGifImplTest {
         .thenReturn(mockAnimatedDrawableBackend);
     when(mMockBitmapFactory.createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG))
         .thenReturn(CloseableReference.of(mockBitmap, FAKE_BITMAP_RESOURCE_RELEASER));
-    AnimatedImageCompositor mockCompositor = mock(AnimatedImageCompositor.class);
-    PowerMockito.whenNew(AnimatedImageCompositor.class)
-        .withAnyArguments()
-        .thenReturn(mockCompositor);
 
-    ImageDecodeOptions imageDecodeOptions =
-        ImageDecodeOptions.newBuilder().setDecodePreviewFrame(true).build();
-    EncodedImage encodedImage =
-        new EncodedImage(CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
-    encodedImage.setImageFormat(ImageFormat.UNKNOWN);
-    CloseableAnimatedImage closeableImage =
-        (CloseableAnimatedImage)
-            mAnimatedImageFactory.decodeGif(
-                encodedImage, imageDecodeOptions, DEFAULT_BITMAP_CONFIG);
+    try (MockedConstruction<AnimatedImageCompositor> animatedImageCompositorConstruction =
+        mockConstruction(AnimatedImageCompositor.class)) {
 
-    // Verify we got the right result
-    AnimatedImageResult imageResult = closeableImage.getImageResult();
-    assertSame(mockGifImage, imageResult.getImage());
-    assertNotNull(imageResult.getPreviewBitmap());
-    assertFalse(imageResult.hasDecodedFrame(0));
+      ImageDecodeOptions imageDecodeOptions =
+          ImageDecodeOptions.newBuilder().setDecodePreviewFrame(true).build();
+      EncodedImage encodedImage =
+          new EncodedImage(CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
+      encodedImage.setImageFormat(ImageFormat.UNKNOWN);
+      CloseableAnimatedImage closeableImage =
+          (CloseableAnimatedImage)
+              mAnimatedImageFactory.decodeGif(
+                  encodedImage, imageDecodeOptions, DEFAULT_BITMAP_CONFIG);
 
-    // Should not have interacted with these.
-    verify(mMockAnimatedDrawableBackendProvider)
-        .get(any(AnimatedImageResult.class), isNull(Rect.class));
-    verifyNoMoreInteractions(mMockAnimatedDrawableBackendProvider);
-    verify(mMockBitmapFactory).createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG);
-    verifyNoMoreInteractions(mMockBitmapFactory);
-    verify(mockCompositor).renderFrame(0, mockBitmap);
+      // Verify we got the right result
+      AnimatedImageResult imageResult = closeableImage.getImageResult();
+      assertSame(mockGifImage, imageResult.getImage());
+      assertNotNull(imageResult.getPreviewBitmap());
+      assertFalse(imageResult.hasDecodedFrame(0));
+
+      // Should not have interacted with these.
+      verify(mMockAnimatedDrawableBackendProvider)
+          .get(any(AnimatedImageResult.class), isNull(Rect.class));
+      verifyNoMoreInteractions(mMockAnimatedDrawableBackendProvider);
+      verify(mMockBitmapFactory).createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG);
+      verifyNoMoreInteractions(mMockBitmapFactory);
+      verify(animatedImageCompositorConstruction.constructed().get(0)).renderFrame(0, mockBitmap);
+    }
   }
 
-  private void testCreateWithDecodeAlFrames(
+  private void testCreateWithDecodeAllFrames(
       GifImage mockGifImage, Bitmap mockBitmap1, Bitmap mockBitmap2, PooledByteBuffer byteBuffer)
       throws Exception {
     // For decoding preview frame, expect some calls.
@@ -267,41 +265,43 @@ public class AnimatedImageFactoryGifImplTest {
     when(mMockBitmapFactory.createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG))
         .thenReturn(CloseableReference.of(mockBitmap1, FAKE_BITMAP_RESOURCE_RELEASER))
         .thenReturn(CloseableReference.of(mockBitmap2, FAKE_BITMAP_RESOURCE_RELEASER));
-    AnimatedImageCompositor mockCompositor = mock(AnimatedImageCompositor.class);
-    PowerMockito.whenNew(AnimatedImageCompositor.class)
-        .withAnyArguments()
-        .thenReturn(mockCompositor);
 
-    ImageDecodeOptions imageDecodeOptions =
-        ImageDecodeOptions.newBuilder()
-            .setDecodePreviewFrame(true)
-            .setDecodeAllFrames(true)
-            .build();
+    try (MockedConstruction<AnimatedImageCompositor> animatedImageCompositorConstruction =
+        mockConstruction(AnimatedImageCompositor.class)) {
 
-    EncodedImage encodedImage =
-        new EncodedImage(CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
-    encodedImage.setImageFormat(ImageFormat.UNKNOWN);
+      ImageDecodeOptions imageDecodeOptions =
+          ImageDecodeOptions.newBuilder()
+              .setDecodePreviewFrame(true)
+              .setDecodeAllFrames(true)
+              .build();
 
-    CloseableAnimatedImage closeableImage =
-        (CloseableAnimatedImage)
-            mAnimatedImageFactory.decodeGif(
-                encodedImage, imageDecodeOptions, DEFAULT_BITMAP_CONFIG);
+      EncodedImage encodedImage =
+          new EncodedImage(CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
+      encodedImage.setImageFormat(ImageFormat.UNKNOWN);
 
-    // Verify we got the right result
-    AnimatedImageResult imageResult = closeableImage.getImageResult();
-    assertSame(mockGifImage, imageResult.getImage());
-    assertNotNull(imageResult.getDecodedFrame(0));
-    assertNotNull(imageResult.getDecodedFrame(1));
-    assertNotNull(imageResult.getPreviewBitmap());
+      CloseableAnimatedImage closeableImage =
+          (CloseableAnimatedImage)
+              mAnimatedImageFactory.decodeGif(
+                  encodedImage, imageDecodeOptions, DEFAULT_BITMAP_CONFIG);
 
-    // Should not have interacted with these.
-    verify(mMockAnimatedDrawableBackendProvider)
-        .get(any(AnimatedImageResult.class), isNull(Rect.class));
-    verifyNoMoreInteractions(mMockAnimatedDrawableBackendProvider);
-    verify(mMockBitmapFactory, times(2)).createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG);
-    verifyNoMoreInteractions(mMockBitmapFactory);
-    verify(mockCompositor).renderFrame(0, mockBitmap1);
-    verify(mockCompositor).renderFrame(1, mockBitmap2);
+      // Verify we got the right result
+      AnimatedImageResult imageResult = closeableImage.getImageResult();
+      assertSame(mockGifImage, imageResult.getImage());
+      assertNotNull(imageResult.getDecodedFrame(0));
+      assertNotNull(imageResult.getDecodedFrame(1));
+      assertNotNull(imageResult.getPreviewBitmap());
+
+      // Should not have interacted with these.
+      verify(mMockAnimatedDrawableBackendProvider)
+          .get(any(AnimatedImageResult.class), isNull(Rect.class));
+      verifyNoMoreInteractions(mMockAnimatedDrawableBackendProvider);
+      verify(mMockBitmapFactory, times(2)).createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG);
+      verifyNoMoreInteractions(mMockBitmapFactory);
+      final AnimatedImageCompositor mockCompositor =
+          animatedImageCompositorConstruction.constructed().get(0);
+      verify(mockCompositor).renderFrame(0, mockBitmap1);
+      verify(mockCompositor).renderFrame(1, mockBitmap2);
+    }
   }
 
   private TrivialPooledByteBuffer createByteBuffer() {
