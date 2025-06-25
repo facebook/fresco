@@ -15,10 +15,11 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import android.graphics.Bitmap;
@@ -39,29 +40,19 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
 import com.facebook.imagepipeline.testing.TrivialBufferPooledByteBuffer;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.mockito.MockedConstruction;
+import org.mockito.MockedStatic;
 import org.robolectric.RobolectricTestRunner;
 
 /** Tests for {@link AnimatedImageFactory} */
 @RunWith(RobolectricTestRunner.class)
-@PrepareOnlyThisForTest({
-  WebPImage.class,
-  AnimatedImageFactoryImpl.class,
-  AnimatedImageCompositor.class
-})
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 public class AnimatedImageFactoryWebPImplTest {
 
   private static final Bitmap.Config DEFAULT_BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
-
-  @Rule public PowerMockRule rule = new PowerMockRule();
 
   private static ResourceReleaser<PooledByteBuffer> FAKE_RESOURCE_RELEASER =
       new ResourceReleaser<PooledByteBuffer>() {
@@ -80,12 +71,15 @@ public class AnimatedImageFactoryWebPImplTest {
   private AnimatedDrawableBackendProvider mMockAnimatedDrawableBackendProvider;
   private PlatformBitmapFactory mMockBitmapFactory;
   private AnimatedImageFactory mAnimatedImageFactory;
+  private MockedStatic<WebPImage> webPImageMockedStatic;
+  private MockedConstruction<AnimatedImageCompositor> animatedImageCompositorConstruction;
 
   private WebPImage mWebPImageMock;
 
   @Before
   public void setup() {
-    PowerMockito.mockStatic(WebPImage.class);
+    webPImageMockedStatic = mockStatic(WebPImage.class);
+
     mWebPImageMock = mock(WebPImage.class);
 
     mMockAnimatedDrawableBackendProvider = mock(AnimatedDrawableBackendProvider.class);
@@ -96,6 +90,16 @@ public class AnimatedImageFactoryWebPImplTest {
             mMockAnimatedDrawableBackendProvider, mMockBitmapFactory, false);
 
     ((AnimatedImageFactoryImpl) mAnimatedImageFactory).sWebpAnimatedImageDecoder = mWebPImageMock;
+  }
+
+  @After
+  public void tearDown() {
+    if (webPImageMockedStatic != null) {
+      webPImageMockedStatic.close();
+    }
+    if (animatedImageCompositorConstruction != null) {
+      animatedImageCompositorConstruction.close();
+    }
   }
 
   @Test
@@ -209,8 +213,8 @@ public class AnimatedImageFactoryWebPImplTest {
     assertFalse(imageResult.hasDecodedFrame(0));
 
     // Should not have interacted with these.
-    verifyZeroInteractions(mMockAnimatedDrawableBackendProvider);
-    verifyZeroInteractions(mMockBitmapFactory);
+    verifyNoMoreInteractions(mMockAnimatedDrawableBackendProvider);
+    verifyNoMoreInteractions(mMockBitmapFactory);
   }
 
   private void testCreateWithPreviewBitmap(
@@ -225,9 +229,9 @@ public class AnimatedImageFactoryWebPImplTest {
     when(mMockBitmapFactory.createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG))
         .thenReturn(CloseableReference.of(mockBitmap, FAKE_BITMAP_RESOURCE_RELEASER));
     AnimatedImageCompositor mockCompositor = mock(AnimatedImageCompositor.class);
-    PowerMockito.whenNew(AnimatedImageCompositor.class)
-        .withAnyArguments()
-        .thenReturn(mockCompositor);
+
+    animatedImageCompositorConstruction =
+        mockConstruction(AnimatedImageCompositor.class, (mock, context) -> {});
 
     ImageDecodeOptions imageDecodeOptions =
         ImageDecodeOptions.newBuilder().setDecodePreviewFrame(true).build();
@@ -251,7 +255,7 @@ public class AnimatedImageFactoryWebPImplTest {
     verifyNoMoreInteractions(mMockAnimatedDrawableBackendProvider);
     verify(mMockBitmapFactory).createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG);
     verifyNoMoreInteractions(mMockBitmapFactory);
-    verify(mockCompositor).renderFrame(0, mockBitmap);
+    verify(animatedImageCompositorConstruction.constructed().get(0)).renderFrame(0, mockBitmap);
   }
 
   private void testCreateWithDecodeAlFrames(
@@ -268,9 +272,8 @@ public class AnimatedImageFactoryWebPImplTest {
         .thenReturn(CloseableReference.of(mockBitmap1, FAKE_BITMAP_RESOURCE_RELEASER))
         .thenReturn(CloseableReference.of(mockBitmap2, FAKE_BITMAP_RESOURCE_RELEASER));
     AnimatedImageCompositor mockCompositor = mock(AnimatedImageCompositor.class);
-    PowerMockito.whenNew(AnimatedImageCompositor.class)
-        .withAnyArguments()
-        .thenReturn(mockCompositor);
+    animatedImageCompositorConstruction =
+        mockConstruction(AnimatedImageCompositor.class, (mock, context) -> {});
 
     ImageDecodeOptions imageDecodeOptions =
         ImageDecodeOptions.newBuilder()
@@ -300,8 +303,8 @@ public class AnimatedImageFactoryWebPImplTest {
     verifyNoMoreInteractions(mMockAnimatedDrawableBackendProvider);
     verify(mMockBitmapFactory, times(2)).createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG);
     verifyNoMoreInteractions(mMockBitmapFactory);
-    verify(mockCompositor).renderFrame(0, mockBitmap1);
-    verify(mockCompositor).renderFrame(1, mockBitmap2);
+    verify(animatedImageCompositorConstruction.constructed().get(0)).renderFrame(0, mockBitmap1);
+    verify(animatedImageCompositorConstruction.constructed().get(0)).renderFrame(1, mockBitmap2);
   }
 
   private static TrivialPooledByteBuffer createByteBuffer() {
