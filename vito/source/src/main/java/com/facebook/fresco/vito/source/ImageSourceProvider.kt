@@ -43,6 +43,9 @@ object ImageSourceProvider {
   fun forUri(uri: Uri?, extras: Map<String, Any>? = null): ImageSource =
       if (uri == null) {
         emptySource()
+      } else if (shortcutResUris && uri.scheme == "res") {
+        val resId = uri.lastPathSegment?.toInt() ?: 0
+        DrawableResImageSource(resId)
       } else {
         SingleImageSourceImpl(
             uri,
@@ -144,16 +147,4 @@ object ImageSourceProvider {
    * @return the ImageSource to be passed to the UI component
    */
   @JvmStatic fun drawable(drawable: Drawable): ImageSource = DrawableImageSource(drawable)
-
-  @JvmStatic
-  fun uriOrRes(uriOrRes: Uri?): ImageSource {
-    return if (uriOrRes == null) {
-      emptySource()
-    } else if (shortcutResUris && uriOrRes.scheme == "res") {
-      val resId = uriOrRes.lastPathSegment?.toInt() ?: 0
-      return DrawableResImageSource(resId)
-    } else {
-      forUri(uriOrRes)
-    }
-  }
 }
