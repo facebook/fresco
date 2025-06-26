@@ -397,6 +397,12 @@ class ImagePipeline(
   fun prefetchToBitmapCache(
       imageRequest: ImageRequest?,
       callerContext: Any?,
+      priority: Priority
+  ): DataSource<Void?> = prefetchToBitmapCache(imageRequest, callerContext, null, null, priority)
+
+  fun prefetchToBitmapCache(
+      imageRequest: ImageRequest?,
+      callerContext: Any?,
   ): DataSource<Void?> = prefetchToBitmapCache(imageRequest, callerContext, null, null)
 
   fun prefetchToBitmapCache(
@@ -428,6 +434,7 @@ class ImagePipeline(
       callerContext: Any?,
       requestListener: RequestListener?,
       extras: Map<String, *>? = null,
+      priority: Priority = Priority.MEDIUM
   ): DataSource<Void?> =
       traceSection("ImagePipeline#prefetchToBitmapCache") {
         if (!isPrefetchEnabledSupplier.get()) {
@@ -454,7 +461,7 @@ class ImagePipeline(
               imageRequest,
               RequestLevel.FULL_FETCH,
               callerContext,
-              Priority.MEDIUM,
+              priority,
               requestListener,
               extras)
         } catch (exception: Exception) {
