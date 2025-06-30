@@ -31,7 +31,7 @@ object PlatformBitmapFactoryProvider {
         ArtBitmapFactory(poolFactory.bitmapPool, closeableReferenceFactory)
       } else {
         HoneycombBitmapFactory(
-            EmptyJpegGenerator(poolFactory.pooledByteBufferFactory),
+            EmptyJpegGenerator(poolFactory.pooledByteBufferFactory!!),
             platformDecoder,
             closeableReferenceFactory)
       }
