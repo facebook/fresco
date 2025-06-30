@@ -52,9 +52,12 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
   private val _resizeToViewport: Boolean = builder._resizeToViewport
   val fadeDurationMs: Int = builder._fadeDurationMs
   private val _autoPlay: Boolean = builder._autoPlay
+  private val _releaseOnWindowDetached: Boolean = builder._releaseOnWindowDetached
   private val _autoStop: Boolean = builder._autoStop
   val isPerfMediaRemountInstrumentationFix: Boolean = builder._perfMediaRemountInstrumentationFix
   val customDrawableFactory: ImageOptionsDrawableFactory? = builder._customDrawableFactory
+
+  fun releaseOnWindowDetached(): Boolean = _releaseOnWindowDetached
 
   fun extend(): Builder = extend(this)
 
@@ -244,6 +247,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
 
     internal var _resizeToViewport = false
     internal var _autoPlay = false
+    internal var _releaseOnWindowDetached = true
     internal var _autoStop = true
     internal var _perfMediaRemountInstrumentationFix = false
     internal var _fadeDurationMs = 0
@@ -275,6 +279,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
       _autoStop = defaultOptions.shouldAutoStop()
       _fadeDurationMs = defaultOptions.fadeDurationMs
       _customDrawableFactory = defaultOptions.customDrawableFactory
+      _releaseOnWindowDetached = defaultOptions.releaseOnWindowDetached()
     }
 
     fun placeholder(placeholder: Drawable?): Builder = modify {
@@ -388,6 +393,10 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     fun overlay(overlayDrawable: Drawable?): Builder = modify {
       _overlayDrawable = overlayDrawable
       _overlayRes = 0
+    }
+
+    fun releaseOnWindowDetached(value: Boolean): Builder = modify {
+      _releaseOnWindowDetached = value
     }
 
     fun background(drawable: Drawable?): Builder = modify { _backgroundDrawable = drawable }
