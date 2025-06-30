@@ -5,15 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.imagepipeline.animated.factory;
+package com.facebook.imagepipeline.animated.factory
 
-import com.facebook.imagepipeline.animated.base.AnimatedImage;
-import com.facebook.imagepipeline.common.ImageDecodeOptions;
-import com.facebook.infer.annotation.Nullsafe;
-import java.nio.ByteBuffer;
+import com.facebook.imagepipeline.animated.base.AnimatedImage
+import com.facebook.imagepipeline.common.ImageDecodeOptions
+import java.nio.ByteBuffer
 
-@Nullsafe(Nullsafe.Mode.LOCAL)
-public interface AnimatedImageDecoder {
+interface AnimatedImageDecoder {
 
   /**
    * Factory method to create the AnimatedImage from a native pointer
@@ -23,7 +21,11 @@ public interface AnimatedImageDecoder {
    * @param options The options for decoding
    * @return The AnimatedImage allocation
    */
-  AnimatedImage decodeFromNativeMemory(long nativePtr, int sizeInBytes, ImageDecodeOptions options);
+  fun decodeFromNativeMemory(
+      nativePtr: Long,
+      sizeInBytes: Int,
+      options: ImageDecodeOptions
+  ): AnimatedImage?
 
   /**
    * Factory method to create the AnimatedImage from a ByteBuffer
@@ -32,5 +34,5 @@ public interface AnimatedImageDecoder {
    * @param options The options for decoding
    * @return The AnimatedImage allocation
    */
-  AnimatedImage decodeFromByteBuffer(ByteBuffer byteBuffer, ImageDecodeOptions options);
+  fun decodeFromByteBuffer(byteBuffer: ByteBuffer, options: ImageDecodeOptions): AnimatedImage?
 }
