@@ -44,20 +44,20 @@ public class FlexByteArrayPoolTest {
                 MIN_BUFFER_SIZE,
                 MAX_BUFFER_SIZE,
                 1));
-    mDelegatePool = mPool.mDelegatePool;
+    mDelegatePool = mPool.getMDelegatePool();
   }
 
   @Test
   public void testBasic() throws Exception {
     assertEquals(MIN_BUFFER_SIZE, mPool.getMinBufferSize());
-    assertEquals(MAX_BUFFER_SIZE, mDelegatePool.mPoolParams.maxBucketSize);
-    assertEquals(0, mDelegatePool.mFree.mNumBytes);
+    assertEquals(MAX_BUFFER_SIZE, mDelegatePool.poolParams.maxBucketSize);
+    assertEquals(0, mDelegatePool.free.numBytes);
   }
 
   @Test
   public void testGet() throws Exception {
     CloseableReference<byte[]> arrayRef = mPool.get(1);
-    assertEquals(0, mDelegatePool.mFree.mNumBytes);
+    assertEquals(0, mDelegatePool.free.numBytes);
     assertEquals(MIN_BUFFER_SIZE, arrayRef.get().length);
   }
 
@@ -69,7 +69,7 @@ public class FlexByteArrayPoolTest {
   @Test
   public void testRelease() throws Exception {
     mPool.get(MIN_BUFFER_SIZE).close();
-    assertEquals(MIN_BUFFER_SIZE, mDelegatePool.mFree.mNumBytes);
+    assertEquals(MIN_BUFFER_SIZE, mDelegatePool.free.numBytes);
   }
 
   @Test

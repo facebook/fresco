@@ -38,7 +38,7 @@ import javax.annotation.concurrent.NotThreadSafe;
  */
 @Nullsafe(Nullsafe.Mode.LOCAL)
 @NotThreadSafe
-class Bucket<V> {
+public class Bucket<V> {
 
   private static final String TAG = "BUCKET";
 

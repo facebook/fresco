@@ -28,7 +28,7 @@ class HoneycombBitmapCreator(poolFactory: PoolFactory) : BitmapCreator {
   override fun createNakedBitmap(width: Int, height: Int, bitmapConfig: Bitmap.Config): Bitmap {
     val jpgRef = jpegGenerator.generate(width.toShort(), height.toShort())
     var encodedImage: EncodedImage? = null
-    var encodedBytesArrayRef: CloseableReference<ByteArray?>? = null
+    var encodedBytesArrayRef: CloseableReference<ByteArray>? = null
     return try {
       encodedImage = EncodedImage(jpgRef)
       encodedImage.imageFormat = DefaultImageFormats.JPEG

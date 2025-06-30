@@ -91,7 +91,7 @@ public class BasePoolTest {
     byte[] b1 = mPool.get(1);
     Assert.assertNotNull(b1);
     Assert.assertEquals(2, b1.length);
-    Assert.assertTrue(mPool.mInUseValues.contains(b1));
+    Assert.assertTrue(mPool.inUseValues.contains(b1));
     mStats.refresh();
     Assert.assertEquals(ImmutableMap.of(2, new IntPair(1, 0)), mStats.mBucketStats);
     Assert.assertEquals(0, mStats.mFreeBytes);
@@ -101,13 +101,13 @@ public class BasePoolTest {
 
     // release this buffer
     mPool.release(b1);
-    Assert.assertFalse(mPool.mInUseValues.contains(b1));
+    Assert.assertFalse(mPool.inUseValues.contains(b1));
 
     // get another buffer, but of a different size. No reuse possible
     byte[] b2 = mPool.get(3);
     Assert.assertNotNull(b2);
     Assert.assertEquals(4, b2.length);
-    Assert.assertTrue(mPool.mInUseValues.contains(b2));
+    Assert.assertTrue(mPool.inUseValues.contains(b2));
     mStats.refresh();
     Assert.assertEquals(
         ImmutableMap.of(
@@ -177,7 +177,7 @@ public class BasePoolTest {
     byte[] b2 = mPool.get(1);
     Assert.assertNotNull(b2);
     Assert.assertEquals(2, b2.length);
-    Assert.assertTrue(mPool.mInUseValues.contains(b2));
+    Assert.assertTrue(mPool.inUseValues.contains(b2));
     mStats.refresh();
     Assert.assertEquals(ImmutableMap.of(2, new IntPair(1, 0)), mStats.mBucketStats);
     Assert.assertEquals(0, mStats.mFreeBytes);

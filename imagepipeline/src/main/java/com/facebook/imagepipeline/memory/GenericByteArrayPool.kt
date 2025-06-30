@@ -23,7 +23,7 @@ open class GenericByteArrayPool(
     memoryTrimmableRegistry: MemoryTrimmableRegistry,
     poolParams: PoolParams,
     poolStatsTracker: PoolStatsTracker
-) : BasePool<ByteArray?>(memoryTrimmableRegistry, poolParams, poolStatsTracker), ByteArrayPool {
+) : BasePool<ByteArray>(memoryTrimmableRegistry, poolParams, poolStatsTracker), ByteArrayPool {
 
   private val bucketSizes: IntArray
 

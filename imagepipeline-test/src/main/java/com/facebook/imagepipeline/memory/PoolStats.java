@@ -37,17 +37,17 @@ public class PoolStats<V> {
   }
 
   public void refreshBasic() {
-    mUsedBytes = mPool.mUsed.mNumBytes;
-    mUsedCount = mPool.mUsed.mCount;
-    mFreeBytes = mPool.mFree.mNumBytes;
-    mFreeCount = mPool.mFree.mCount;
+    mUsedBytes = mPool.used.numBytes;
+    mUsedCount = mPool.used.count;
+    mFreeBytes = mPool.free.numBytes;
+    mFreeCount = mPool.free.count;
   }
 
   public void refreshBucketStats() {
     mBucketStats.clear();
-    for (int i = 0; i < mPool.mBuckets.size(); ++i) {
-      final int bucketedSize = mPool.mBuckets.keyAt(i);
-      final Bucket<V> bucket = mPool.mBuckets.valueAt(i);
+    for (int i = 0; i < mPool.buckets.size(); ++i) {
+      final int bucketedSize = mPool.buckets.keyAt(i);
+      final Bucket<V> bucket = mPool.buckets.valueAt(i);
       mBucketStats.put(bucketedSize, new IntPair(bucket.getInUseCount(), bucket.getFreeListSize()));
     }
   }
