@@ -9,7 +9,6 @@ package com.facebook.imagepipeline.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import android.graphics.Bitmap;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +23,6 @@ public class ImageDecodeOptionsTest {
 
   private static final int MIN_DECODE_INTERVAL_MS = 123;
 
-  public Bitmap.Config mBitmapConfig = Bitmap.Config.ARGB_8888;
   @Mock public ImageDecoder mImageDecoder;
 
   @Before
@@ -67,7 +65,6 @@ public class ImageDecodeOptionsTest {
 
   private ImageDecodeOptions createSampleDecodeOptions() {
     return ImageDecodeOptions.newBuilder()
-        .setBitmapConfig(mBitmapConfig)
         .setCustomImageDecoder(mImageDecoder)
         .setDecodeAllFrames(true)
         .setDecodePreviewFrame(true)
