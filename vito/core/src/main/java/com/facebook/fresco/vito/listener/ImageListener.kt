@@ -21,7 +21,7 @@ interface ImageListener : OnDrawControllerListener<ImageInfo> {
    * @param id image id
    * @param callerContext caller context
    */
-  fun onSubmit(id: Long, callerContext: Any?)
+  fun onSubmit(id: Long, callerContext: Any?): Unit = Unit
 
   /**
    * Called after a placeholder image has been set
@@ -29,7 +29,7 @@ interface ImageListener : OnDrawControllerListener<ImageInfo> {
    * @param id image id
    * @param placeholder the placeholder drawable if set
    */
-  fun onPlaceholderSet(id: Long, placeholder: Drawable?)
+  fun onPlaceholderSet(id: Long, placeholder: Drawable?): Unit = Unit
 
   /**
    * Called after the final image has been set.
@@ -44,7 +44,7 @@ interface ImageListener : OnDrawControllerListener<ImageInfo> {
       @ImageOrigin imageOrigin: Int,
       imageInfo: ImageInfo?,
       drawable: Drawable?
-  )
+  ): Unit = Unit
 
   /**
    * Called after any intermediate image has been set.
@@ -52,7 +52,7 @@ interface ImageListener : OnDrawControllerListener<ImageInfo> {
    * @param id image id
    * @param imageInfo image info
    */
-  fun onIntermediateImageSet(id: Long, imageInfo: ImageInfo?)
+  fun onIntermediateImageSet(id: Long, imageInfo: ImageInfo?): Unit = Unit
 
   /**
    * Called after the fetch of the intermediate image failed.
@@ -60,7 +60,7 @@ interface ImageListener : OnDrawControllerListener<ImageInfo> {
    * @param id image id
    * @param throwable failure cause
    */
-  fun onIntermediateImageFailed(id: Long, throwable: Throwable?)
+  fun onIntermediateImageFailed(id: Long, throwable: Throwable?): Unit = Unit
 
   /**
    * Called after the fetch of the final image failed.
@@ -69,12 +69,12 @@ interface ImageListener : OnDrawControllerListener<ImageInfo> {
    * @param error the displayed error drawable if set
    * @param throwable failure cause
    */
-  fun onFailure(id: Long, error: Drawable?, throwable: Throwable?)
+  fun onFailure(id: Long, error: Drawable?, throwable: Throwable?): Unit = Unit
 
   /**
    * Called after the controller released the fetched image.
    *
    * @param id image id
    */
-  fun onRelease(id: Long)
+  fun onRelease(id: Long): Unit = Unit
 }
