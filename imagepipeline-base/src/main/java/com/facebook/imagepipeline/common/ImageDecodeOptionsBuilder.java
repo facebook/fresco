@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.common;
 
 import android.graphics.Bitmap;
 import android.graphics.ColorSpace;
+import androidx.annotation.Discouraged;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.transformation.BitmapTransformation;
 import com.facebook.infer.annotation.Nullsafe;
@@ -240,7 +241,11 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
    *
    * @param bitmapConfig which config static image will be decode with;
    */
+  @Discouraged(message = "RGB_565 is not recommended due to low quality")
   public T setBitmapConfig(Bitmap.Config bitmapConfig) {
+    if (bitmapConfig == Bitmap.Config.RGB_565 && ImageDecodeOptions.DISALLOW_RGB565) {
+      return getThis();
+    }
     mBitmapConfig = bitmapConfig;
     return getThis();
   }

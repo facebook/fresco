@@ -21,6 +21,8 @@ import javax.annotation.concurrent.Immutable;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImageDecodeOptions {
 
+  public static boolean DISALLOW_RGB565 = false;
+
   private static final ImageDecodeOptions DEFAULTS = ImageDecodeOptions.newBuilder().build();
 
   /**
