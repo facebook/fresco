@@ -22,7 +22,7 @@ import com.facebook.imagepipeline.memory.PoolFactory
 class HoneycombBitmapCreator(poolFactory: PoolFactory) : BitmapCreator {
 
   private val jpegGenerator: EmptyJpegGenerator =
-      EmptyJpegGenerator(poolFactory.pooledByteBufferFactory!!)
+      EmptyJpegGenerator(poolFactory.pooledByteBufferFactory)
   private val flexByteArrayPool: FlexByteArrayPool = poolFactory.flexByteArrayPool
 
   override fun createNakedBitmap(width: Int, height: Int, bitmapConfig: Bitmap.Config): Bitmap {
