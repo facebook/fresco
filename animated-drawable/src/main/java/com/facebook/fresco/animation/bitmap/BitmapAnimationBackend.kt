@@ -35,8 +35,8 @@ import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
  *
  * The given [BitmapFrameCache] is used to cache frames and create new bitmaps.
  * [AnimationInformation] defines the main animation parameters, like frame and loop count.
- * [BitmapFrameRenderer] is used to render frames to the bitmaps aquired from the [BitmapFrameCache]
- * .
+ * [BitmapFrameRenderer] is used to render frames to the bitmaps acquired from the
+ * [BitmapFrameCache].
  */
 class BitmapAnimationBackend(
     private val platformBitmapFactory: PlatformBitmapFactory,
@@ -49,9 +49,14 @@ class BitmapAnimationBackend(
     roundingOptions: RoundingOptions? = null,
 ) : AnimationBackend, InactivityListener {
 
+  private val isCircular: Boolean = roundingOptions?.isCircular == true
+  private val isAntiAliased: Boolean = roundingOptions?.isAntiAliased == true
+
   val cornerRadii: FloatArray? =
       roundingOptions?.let { roundingOptions ->
-        if (roundingOptions.cornerRadius != RoundingOptions.CORNER_RADIUS_UNSET) {
+        if (isCircular) {
+          null
+        } else if (roundingOptions.cornerRadius != RoundingOptions.CORNER_RADIUS_UNSET) {
           val corners = FloatArray(8)
           corners.fill(roundingOptions.cornerRadius)
           corners
@@ -316,7 +321,7 @@ class BitmapAnimationBackend(
       currentBoundsWidth: Float,
       currentBoundsHeight: Float
   ): Boolean {
-    if (cornerRadii == null) {
+    if (!isCircular && cornerRadii == null) {
       return false
     }
     if (frameNumber == pathFrameNumber) {
@@ -329,9 +334,20 @@ class BitmapAnimationBackend(
     matrix.setRectToRect(src, dst, Matrix.ScaleToFit.FILL)
     bitmapShader.setLocalMatrix(matrix)
     paint.shader = bitmapShader
-    path.addRoundRect(
-        RectF(0f, 0f, currentBoundsWidth, currentBoundsHeight), cornerRadii, Path.Direction.CW)
+    paint.isAntiAlias = isAntiAliased
 
+    path.reset()
+    if (isCircular) {
+      val centerX = currentBoundsWidth / 2f
+      val centerY = currentBoundsHeight / 2f
+      val radius = minOf(centerX, centerY)
+      path.addCircle(centerX, centerY, radius, Path.Direction.CW)
+    } else {
+      path.addRoundRect(
+          RectF(0f, 0f, currentBoundsWidth, currentBoundsHeight),
+          cornerRadii ?: floatArrayOf(),
+          Path.Direction.CW)
+    }
     pathFrameNumber = frameNumber
     return true
   }
