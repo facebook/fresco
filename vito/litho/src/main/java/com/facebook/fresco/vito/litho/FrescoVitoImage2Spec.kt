@@ -273,8 +273,10 @@ object FrescoVitoImage2Spec {
             onFadeListener = onFadeListener,
             viewportDimensions = viewportDimensions)
     frescoDrawable.imagePerfListener.onImageMount(frescoDrawable)
-    prefetchDataSource?.close()
-    prefetchDataSourceFromBoundsDefined?.close()
+    if (shouldClosePrefetchDataSourceOnBindOrOnMount()) {
+      prefetchDataSource?.close()
+      prefetchDataSourceFromBoundsDefined?.close()
+    }
   }
 
   @JvmStatic
@@ -309,8 +311,10 @@ object FrescoVitoImage2Spec {
             onFadeListener = onFadeListener,
             viewportDimensions = viewportDimensions)
     frescoDrawable.imagePerfListener.onImageBind(frescoDrawable)
-    prefetchDataSource?.close()
-    prefetchDataSourceFromBoundsDefined?.close()
+    if (shouldClosePrefetchDataSourceOnBindOrOnMount()) {
+      prefetchDataSource?.close()
+      prefetchDataSourceFromBoundsDefined?.close()
+    }
   }
 
   @JvmStatic
@@ -501,6 +505,10 @@ object FrescoVitoImage2Spec {
         else ->
             FrescoVitoProvider.getConfig().prefetchConfig.prefetchInOnBoundsDefinedForDynamicSize()
       }
+
+  @JvmStatic
+  fun shouldClosePrefetchDataSourceOnBindOrOnMount(): Boolean =
+      FrescoVitoProvider.getConfig().prefetchConfig.closePrefetchDataSourceOnBindorOnMount()
 
   private fun ensureImageOptions(imageOptionsProp: ImageOptions?): ImageOptions? {
     if (imageOptionsProp == null &&
