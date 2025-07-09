@@ -88,7 +88,7 @@ public class AnimatedImageFactoryGifImplTest {
         new AnimatedImageFactoryImpl(
             mMockAnimatedDrawableBackendProvider, mMockBitmapFactory, false);
 
-    ((AnimatedImageFactoryImpl) mAnimatedImageFactory).sGifAnimatedImageDecoder = mGifImageMock;
+    ((AnimatedImageFactoryImpl) mAnimatedImageFactory).GifAnimatedImageDecoder = mGifImageMock;
   }
 
   @After
@@ -305,13 +305,61 @@ public class AnimatedImageFactoryGifImplTest {
   }
 
   private TrivialPooledByteBuffer createByteBuffer() {
-    byte[] buf = new byte[16];
-    return new TrivialPooledByteBuffer(buf);
+    byte[] gifData = createValidGif();
+    return new TrivialPooledByteBuffer(gifData);
   }
 
   private static TrivialBufferPooledByteBuffer createDirectByteBuffer() {
-    byte[] buf = new byte[16];
-    return new TrivialBufferPooledByteBuffer(buf);
+    byte[] gifData = createValidGif();
+    return new TrivialBufferPooledByteBuffer(gifData);
+  }
+
+  /**
+   * Creates a valid GIF Structure: Header + Logical Screen Descriptor + Image Descriptor + Image
+   * Data + Trailer
+   */
+  private static byte[] createValidGif() {
+    java.io.ByteArrayOutputStream gif = new java.io.ByteArrayOutputStream();
+
+    try {
+      // GIF Header (6 bytes) with GIF89a signature
+      gif.write("GIF89a".getBytes("ASCII"));
+
+      // Logical Screen Descriptor (7 bytes)
+      writeShort(gif, 1); // width = 1
+      writeShort(gif, 1); // height = 1
+      gif.write(0x00); // Packed field (no global color table)
+      gif.write(0x00); // Background color index
+      gif.write(0x00); // Pixel aspect ratio
+
+      // Image Descriptor (10 bytes)
+      gif.write(0x2C); // Image separator
+      writeShort(gif, 0); // Left position
+      writeShort(gif, 0); // Top position
+      writeShort(gif, 1); // width = 1
+      writeShort(gif, 1); // height = 1
+      gif.write(0x00); // Packed field (no local color table)
+
+      // Image Data
+      gif.write(0x02); // LZW minimum code size
+      gif.write(0x02); // Sub-block size
+      gif.write(0x4C); // Minimal LZW data
+      gif.write(0x01); // Minimal LZW data
+      gif.write(0x00); // Sub-block terminator
+
+      // GIF Trailer
+      gif.write(0x3B);
+
+      return gif.toByteArray();
+    } catch (java.io.IOException e) {
+      throw new RuntimeException("Failed to create test GIF data", e);
+    }
+  }
+
+  /** Helper method to write a 16-bit value in little-endian format */
+  private static void writeShort(java.io.ByteArrayOutputStream stream, int value) {
+    stream.write(value & 0xFF); // Low byte
+    stream.write((value >> 8) & 0xFF); // High byte
   }
 
   /**

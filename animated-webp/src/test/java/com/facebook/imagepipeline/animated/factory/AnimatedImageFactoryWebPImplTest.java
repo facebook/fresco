@@ -89,7 +89,7 @@ public class AnimatedImageFactoryWebPImplTest {
         new AnimatedImageFactoryImpl(
             mMockAnimatedDrawableBackendProvider, mMockBitmapFactory, false);
 
-    ((AnimatedImageFactoryImpl) mAnimatedImageFactory).sWebpAnimatedImageDecoder = mWebPImageMock;
+    ((AnimatedImageFactoryImpl) mAnimatedImageFactory).WebpAnimatedImageDecoder = mWebPImageMock;
   }
 
   @After
