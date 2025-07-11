@@ -524,9 +524,6 @@ object FrescoVitoImage2Spec {
   private fun experimentalDynamicSizeWithCacheFallbackVito2(): Boolean =
       FrescoVitoProvider.getConfig().experimentalDynamicSizeWithCacheFallbackVito2()
 
-  private fun experimentalDynamicSizeOnPrepareMainThreadVito2(): Boolean =
-      FrescoVitoProvider.getConfig().experimentalDynamicSizeOnPrepareMainThreadVito2()
-
   enum class Prefetch {
     AUTO,
     YES,
