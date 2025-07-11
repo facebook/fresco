@@ -115,7 +115,7 @@ public class ForwardingControllerListener<INFO>
   }
 
   @Override
-  public void onIntermediateImageFailed(String id, Throwable throwable) {
+  public synchronized void onIntermediateImageFailed(String id, Throwable throwable) {
     final int numberOfListeners = mListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       try {
