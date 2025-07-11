@@ -531,16 +531,12 @@ object FrescoVitoImage2Spec {
 
     companion object {
       @JvmStatic
-      fun parsePrefetch(value: Long): Prefetch {
-        if (value == 2L) {
-          return NO
-        }
-        return if (value == 1L) {
-          YES
-        } else {
-          AUTO
-        }
-      }
+      fun parsePrefetch(value: Long): Prefetch =
+          when (value) {
+            2L -> NO
+            1L -> YES
+            else -> AUTO
+          }
     }
   }
 }
