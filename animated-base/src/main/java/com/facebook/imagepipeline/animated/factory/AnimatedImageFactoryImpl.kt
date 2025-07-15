@@ -4,12 +4,14 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.imagepipeline.animated.factory
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.util.Log
+import com.facebook.animated.giflite.decoder.GifMetadataDecoder
 import com.facebook.common.references.CloseableReference
 import com.facebook.imagepipeline.animated.base.AnimatedImage
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult
@@ -22,6 +24,8 @@ import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.image.CloseableStaticBitmap
 import com.facebook.imagepipeline.image.EncodedImage
 import com.facebook.imagepipeline.image.ImmutableQualityInfo
+
+private const val MAX_GIF_TOTAL_PIXELS = 100_000_000
 
 /** Decoder for animated images. */
 class AnimatedImageFactoryImpl
@@ -220,13 +224,6 @@ constructor(
 
     @JvmField var WebpAnimatedImageDecoder: AnimatedImageDecoder? = null
 
-    // GIF validation constants
-    private const val HEADER_SIZE = 6
-    private const val LSD_SIZE = 7
-    private val GIF87A_SIGNATURE = byteArrayOf(0x47, 0x49, 0x46, 0x38, 0x37, 0x61)
-    private val GIF89A_SIGNATURE = byteArrayOf(0x47, 0x49, 0x46, 0x38, 0x39, 0x61)
-    private val GIF_TRAILER = 0x3B.toByte()
-
     private fun loadIfPresent(className: String): AnimatedImageDecoder? {
       try {
         val clazz = Class.forName(className)
@@ -248,46 +245,18 @@ constructor(
 
     try {
       inputStream.use { stream ->
-        val header = ByteArray(HEADER_SIZE)
+        val decoder = GifMetadataDecoder.create(stream, null)
 
-        if (stream.read(header) != HEADER_SIZE) {
-          return ValidationResult.Failure("Header too short")
-        }
-
-        if (!header.contentEquals(GIF87A_SIGNATURE) && !header.contentEquals(GIF89A_SIGNATURE)) {
-          return ValidationResult.Failure("Invalid GIF header")
-        }
-
-        val lsd = ByteArray(LSD_SIZE)
-        if (stream.read(lsd) != LSD_SIZE) {
-          return ValidationResult.Failure("Logical Screen Descriptor too short")
-        }
-
-        val width = (lsd[1].toInt() and 0xFF shl 8) or (lsd[0].toInt() and 0xFF)
-        val height = (lsd[3].toInt() and 0xFF shl 8) or (lsd[2].toInt() and 0xFF)
-
+        val width = decoder.screenWidth
+        val height = decoder.screenHeight
         if (width <= 0 || height <= 0) {
-          return ValidationResult.Failure("Invalid logical screen size")
+          return ValidationResult.Failure("GIF invalid logical screen size: $width x $height")
         }
 
-        var b = stream.read()
-        while (b != -1) {
-          if (b == 0x2C) { // Image Descriptor
-            val desc = ByteArray(9)
-            if (stream.read(desc) != 9) {
-              return ValidationResult.Failure("Incomplete image descriptor")
-            }
-
-            val frameWidth = (desc[5].toInt() and 0xFF shl 8) or (desc[4].toInt() and 0xFF)
-            val frameHeight = (desc[7].toInt() and 0xFF shl 8) or (desc[6].toInt() and 0xFF)
-
-            if (frameWidth == 0 || frameHeight == 0) {
-              return ValidationResult.Failure("Frame with 0x0 size found")
-            }
-          } else if (b == GIF_TRAILER.toInt()) {
-            break
-          }
-          b = stream.read()
+        val totalPixels = width * height * decoder.frameCount
+        if (totalPixels > MAX_GIF_TOTAL_PIXELS) {
+          return ValidationResult.Failure(
+              "GIF too large: $width x $height x ${decoder.frameCount} frames = $totalPixels pixels")
         }
       }
       return ValidationResult.Success
