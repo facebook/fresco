@@ -29,6 +29,8 @@ public class ScalingUtils {
    */
   public interface ScaleType {
 
+    ScaleType DISABLED = ScaleTypeDisabled.INSTANCE;
+
     /**
      * Scales width and height independently, so that the child matches the parent exactly. This may
      * change the aspect ratio of the child.
@@ -485,6 +487,28 @@ public class ScalingUtils {
     @Override
     public String toString() {
       return "fit_y";
+    }
+  }
+
+  private static class ScaleTypeDisabled implements ScaleType {
+
+    public static final ScaleType INSTANCE = new ScaleTypeDisabled();
+
+    @Override
+    public String toString() {
+      return "disabled";
+    }
+
+    @Override
+    public Matrix getTransform(
+        Matrix outTransform,
+        Rect parentBounds,
+        int childWidth,
+        int childHeight,
+        float focusX,
+        float focusY) {
+      // No-op
+      return outTransform;
     }
   }
 
