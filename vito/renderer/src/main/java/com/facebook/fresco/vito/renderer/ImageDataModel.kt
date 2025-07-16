@@ -34,9 +34,12 @@ class BitmapImageDataModel(val bitmap: Bitmap, val isBitmapCircular: Boolean = f
   override val defaultPaintFlags: Int = Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG
 }
 
-open class DrawableImageDataModel(val drawable: Drawable) : ImageDataModel() {
-  override val width: Int = if (drawable is NinePatchDrawable) -1 else drawable.intrinsicWidth
-  override val height: Int = if (drawable is NinePatchDrawable) -1 else drawable.intrinsicHeight
+open class DrawableImageDataModel(val drawable: Drawable, val disableScaling: Boolean = false) :
+    ImageDataModel() {
+  override val width: Int =
+      if (disableScaling || drawable is NinePatchDrawable) -1 else drawable.intrinsicWidth
+  override val height: Int =
+      if (disableScaling || drawable is NinePatchDrawable) -1 else drawable.intrinsicHeight
 
   override fun setCallback(callback: Drawable.Callback?) {
     drawable.callback = callback

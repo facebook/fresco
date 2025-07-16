@@ -17,6 +17,7 @@ import com.facebook.common.logging.FLog
 import com.facebook.common.references.CloseableReference
 import com.facebook.datasource.DataSource
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin
+import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.fresco.ui.common.ImagePerfDataListener
 import com.facebook.fresco.ui.common.ImagePerfDataNotifier
 import com.facebook.fresco.ui.common.OnFadeListener
@@ -330,7 +331,8 @@ class KFrescoController(
       if (drawable is Animatable) {
         AnimatedDrawableImageDataModel(drawable, drawable, options.shouldAutoPlay())
       } else {
-        DrawableImageDataModel(drawable)
+        DrawableImageDataModel(
+            drawable, options.actualImageScaleType == ScalingUtils.ScaleType.DISABLED)
       }
 
   companion object {
