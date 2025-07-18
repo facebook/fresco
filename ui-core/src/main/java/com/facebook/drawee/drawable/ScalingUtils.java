@@ -659,4 +659,25 @@ public class ScalingUtils {
           String.valueOf(mFocusPointTo));
     }
   }
+
+  public static class MatrixScaleType implements ScaleType {
+
+    private final Matrix mMatrix;
+
+    public MatrixScaleType(Matrix matrix) {
+      mMatrix = matrix;
+    }
+
+    @Override
+    public Matrix getTransform(
+        Matrix outTransform,
+        Rect parentBounds,
+        int childWidth,
+        int childHeight,
+        float focusX,
+        float focusY) {
+      outTransform.set(mMatrix);
+      return outTransform;
+    }
+  }
 }
