@@ -37,6 +37,7 @@ import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendFrame
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.fresco.animation.drawable.KAnimatedDrawable2;
 import com.facebook.fresco.middleware.HasExtraData;
+import com.facebook.fresco.vito.options.AnimatedOptions;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory;
 import com.facebook.fresco.vito.options.RoundingOptions;
@@ -196,6 +197,11 @@ public class DefaultBitmapAnimationDrawableFactory
       roundingOptions = imageOptions.getRoundingOptions();
     }
 
+    AnimatedOptions animatedOptions = null;
+    if (imageOptions != null) {
+      animatedOptions = imageOptions.getAnimatedOptions();
+    }
+
     if (mUseNewBitmapRender.get()) {
       bitmapFramePreparationStrategy =
           new FrameLoaderStrategy(
@@ -218,7 +224,8 @@ public class DefaultBitmapAnimationDrawableFactory
             mUseNewBitmapRender.get(),
             bitmapFramePreparationStrategy,
             bitmapFramePreparer,
-            roundingOptions);
+            roundingOptions,
+            animatedOptions);
 
     return AnimationBackendDelegateWithInactivityCheck.createForBackend(
         bitmapAnimationBackend, mMonotonicClock, mScheduledExecutorServiceForUiThread);

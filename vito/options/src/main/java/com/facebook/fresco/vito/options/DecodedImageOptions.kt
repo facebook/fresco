@@ -24,6 +24,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
   val postprocessor: Postprocessor? = builder.postprocessor
   val imageDecodeOptions: ImageDecodeOptions? = builder.imageDecodeOptions
   val roundingOptions: RoundingOptions? = builder.roundingOptions
+  val animatedOptions: AnimatedOptions? = builder.animatedOptions
   val borderOptions: BorderOptions? = builder.borderOptions
   val actualImageScaleType: ScalingUtils.ScaleType = builder.actualImageScaleType
   val actualImageFocusPoint: PointF? = builder.actualFocusPoint
@@ -49,6 +50,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
         !Objects.equal(postprocessor, other.postprocessor) ||
         !Objects.equal(imageDecodeOptions, other.imageDecodeOptions) ||
         !Objects.equal(roundingOptions, other.roundingOptions) ||
+        !Objects.equal(animatedOptions, other.animatedOptions) ||
         !Objects.equal(borderOptions, other.borderOptions) ||
         !Objects.equal(actualImageScaleType, other.actualImageScaleType) ||
         !Objects.equal(actualImageFocusPoint, other.actualImageFocusPoint) ||
@@ -68,6 +70,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
     result = 31 * result + (postprocessor?.hashCode() ?: 0)
     result = 31 * result + (imageDecodeOptions?.hashCode() ?: 0)
     result = 31 * result + (roundingOptions?.hashCode() ?: 0)
+    result = 31 * result + (animatedOptions?.hashCode() ?: 0)
     result = 31 * result + (borderOptions?.hashCode() ?: 0)
     result = 31 * result + actualImageScaleType.hashCode()
     result = 31 * result + (actualImageFocusPoint?.hashCode() ?: 0)
@@ -88,6 +91,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
           .add("postprocessor", postprocessor)
           .add("imageDecodeOptions", imageDecodeOptions)
           .add("roundingOptions", roundingOptions)
+          .add("animatedOptions", animatedOptions)
           .add("borderOptions", borderOptions)
           .add("actualImageScaleType", actualImageScaleType)
           .add("actualImageFocusPoint", actualImageFocusPoint)
@@ -103,6 +107,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
     internal var postprocessor: Postprocessor? = null
     internal var imageDecodeOptions: ImageDecodeOptions? = null
     internal var roundingOptions: RoundingOptions? = null
+    internal var animatedOptions: AnimatedOptions? = null
     internal var borderOptions: BorderOptions? = null
     internal var actualImageScaleType: ScalingUtils.ScaleType = ScalingUtils.ScaleType.CENTER_CROP
     internal var actualFocusPoint: PointF? = null
@@ -120,6 +125,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
       postprocessor = decodedImageOptions.postprocessor
       imageDecodeOptions = decodedImageOptions.imageDecodeOptions
       roundingOptions = decodedImageOptions.roundingOptions
+      animatedOptions = decodedImageOptions.animatedOptions
       borderOptions = decodedImageOptions.borderOptions
       actualImageScaleType = decodedImageOptions.actualImageScaleType
       actualFocusPoint = decodedImageOptions.actualImageFocusPoint
@@ -163,6 +169,16 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
      */
     fun round(roundingOptions: RoundingOptions?): T = modify {
       this.roundingOptions = roundingOptions
+    }
+
+    /**
+     * Set the animated options to be used or null if default animation behavior should be used.
+     *
+     * @param animatedOptions the animated options to use
+     * @return the builder
+     */
+    fun animated(animatedOptions: AnimatedOptions?): T = modify {
+      this.animatedOptions = animatedOptions
     }
 
     fun borders(borderOptions: BorderOptions?): T = modify { this.borderOptions = borderOptions }

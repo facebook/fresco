@@ -27,6 +27,7 @@ import com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactiv
 import com.facebook.fresco.animation.backend.AnimationInformation
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer
+import com.facebook.fresco.vito.options.AnimatedOptions
 import com.facebook.fresco.vito.options.RoundingOptions
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
 
@@ -38,7 +39,9 @@ import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
  * [BitmapFrameRenderer] is used to render frames to the bitmaps acquired from the
  * [BitmapFrameCache].
  */
-class BitmapAnimationBackend(
+class BitmapAnimationBackend
+@JvmOverloads
+constructor(
     private val platformBitmapFactory: PlatformBitmapFactory,
     private val bitmapFrameCache: BitmapFrameCache,
     private val animationInformation: AnimationInformation,
@@ -47,6 +50,7 @@ class BitmapAnimationBackend(
     private val bitmapFramePreparationStrategy: BitmapFramePreparationStrategy?,
     private val bitmapFramePreparer: BitmapFramePreparer?,
     roundingOptions: RoundingOptions? = null,
+    private val animatedOptions: AnimatedOptions? = null,
 ) : AnimationBackend, InactivityListener {
 
   private val isCircular: Boolean = roundingOptions?.isCircular == true
@@ -135,7 +139,18 @@ class BitmapAnimationBackend(
 
   override fun getLoopDurationMs(): Int = animationInformation.loopDurationMs
 
-  override fun getLoopCount(): Int = animationInformation.loopCount
+  override fun getLoopCount(): Int {
+    // If no animated options are set, use the default loop count
+    if (animatedOptions == null) {
+      return animationInformation.loopCount
+    }
+
+    return when (animatedOptions.loopCount) {
+      AnimatedOptions.LOOP_COUNT_INFINITE -> AnimationInformation.LOOP_COUNT_INFINITE
+      AnimatedOptions.LOOP_COUNT_STATIC -> 1
+      else -> animatedOptions.loopCount
+    }
+  }
 
   override fun drawFrame(parent: Drawable, canvas: Canvas, frameNumber: Int): Boolean {
     frameListener?.onDrawFrameStart(this, frameNumber)
