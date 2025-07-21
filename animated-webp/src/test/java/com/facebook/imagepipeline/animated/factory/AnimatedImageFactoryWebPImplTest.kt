@@ -64,7 +64,7 @@ class AnimatedImageFactoryWebPImplTest {
     if (backendProvider != null && bitmapFactory != null) {
       animatedImageFactory = AnimatedImageFactoryImpl(backendProvider, bitmapFactory, false)
     }
-    AnimatedImageFactoryImpl.WebpAnimatedImageDecoder = webPImageMock
+    AnimatedImageFactoryImpl.webpAnimatedImageDecoder = webPImageMock
   }
 
   @After

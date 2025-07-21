@@ -11,7 +11,7 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.util.Log
-import com.facebook.animated.giflite.decoder.GifMetadataDecoder
+import androidx.annotation.VisibleForTesting
 import com.facebook.common.references.CloseableReference
 import com.facebook.imagepipeline.animated.base.AnimatedImage
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult
@@ -24,8 +24,6 @@ import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.image.CloseableStaticBitmap
 import com.facebook.imagepipeline.image.EncodedImage
 import com.facebook.imagepipeline.image.ImmutableQualityInfo
-
-private const val MAX_GIF_TOTAL_PIXELS = 100_000_000
 
 /** Decoder for animated images. */
 class AnimatedImageFactoryImpl
@@ -50,31 +48,11 @@ constructor(
       options: ImageDecodeOptions,
       bitmapConfig: Bitmap.Config
   ): CloseableImage {
-    if (GifAnimatedImageDecoder == null) {
-      throw UnsupportedOperationException(
-          "To encode animated gif please add the dependency to the animated-gif module")
-    }
-    val bytesRef = encodedImage.byteBufferRef
-    checkNotNull(bytesRef)
-
-    val validationResult = validateGif(encodedImage)
-    if (!validationResult.isValid) {
-      Log.w("AnimatedImageFactory", "GIF validation failed: ${validationResult.message}")
-      throw UnsupportedOperationException("Invalid GIF: ${validationResult.message}")
-    }
-    try {
-      val input = bytesRef.get()
-      val gifImage =
-          if (input.byteBuffer != null) {
-            GifAnimatedImageDecoder!!.decodeFromByteBuffer(input.byteBuffer!!, options)
-          } else {
-            GifAnimatedImageDecoder!!.decodeFromNativeMemory(input.nativePtr, input.size(), options)
-          }
-
-      return getCloseableImage(encodedImage.source, options, checkNotNull(gifImage), bitmapConfig)
-    } finally {
-      CloseableReference.closeSafely(bytesRef)
-    }
+    val decoder =
+        gifAnimatedImageDecoder
+            ?: throw UnsupportedOperationException(
+                "To encode animated gif please add the dependency to the animated-gif module")
+    return decodeImage(encodedImage, options, bitmapConfig, decoder, GifImageValidator)
   }
 
   /**
@@ -90,24 +68,35 @@ constructor(
       options: ImageDecodeOptions,
       bitmapConfig: Bitmap.Config
   ): CloseableImage {
-    if (WebpAnimatedImageDecoder == null) {
-      throw UnsupportedOperationException(
-          "To encode animated webp please add the dependency to the animated-webp module")
-    }
+    val decoder =
+        webpAnimatedImageDecoder
+            ?: throw UnsupportedOperationException(
+                "To encode animated webp please add the dependency to the animated-webp module")
+    return decodeImage(encodedImage, options, bitmapConfig, decoder)
+  }
+
+  private fun decodeImage(
+      encodedImage: EncodedImage,
+      options: ImageDecodeOptions,
+      bitmapConfig: Bitmap.Config,
+      decoder: AnimatedImageDecoder,
+      validator: AnimatedImageValidator? = null
+  ): CloseableImage {
     val bytesRef = encodedImage.byteBufferRef
     checkNotNull(bytesRef)
-    try {
+
+    bytesRef.use {
+      val validationResult = validator?.validateImage(encodedImage)
+      if (validationResult?.isValid == false) {
+        Log.w("AnimatedImageFactory", "GIF validation failed: ${validationResult.message}")
+        throw UnsupportedOperationException("Invalid GIF: ${validationResult.message}")
+      }
       val input = bytesRef.get()
-      val webPImage =
-          if (input.byteBuffer != null) {
-            WebpAnimatedImageDecoder!!.decodeFromByteBuffer(input.byteBuffer!!, options)
-          } else {
-            WebpAnimatedImageDecoder!!.decodeFromNativeMemory(
-                input.nativePtr, input.size(), options)
-          }
-      return getCloseableImage(encodedImage.source, options, checkNotNull(webPImage), bitmapConfig)
-    } finally {
-      CloseableReference.closeSafely(bytesRef)
+      val image =
+          input.byteBuffer?.let { decoder.decodeFromByteBuffer(it, options) }
+              ?: decoder.decodeFromNativeMemory(input.nativePtr, input.size(), options)
+
+      return getCloseableImage(encodedImage.source, options, checkNotNull(image), bitmapConfig)
     }
   }
 
@@ -213,16 +202,10 @@ constructor(
     return bitmap
   }
 
-  sealed class ValidationResult(val isValid: Boolean, val message: String) {
-    object Success : ValidationResult(true, "GIF is valid and safe")
-
-    class Failure(message: String) : ValidationResult(false, message)
-  }
-
   companion object {
-    @JvmField var GifAnimatedImageDecoder: AnimatedImageDecoder? = null
+    @VisibleForTesting @JvmField var gifAnimatedImageDecoder: AnimatedImageDecoder? = null
 
-    @JvmField var WebpAnimatedImageDecoder: AnimatedImageDecoder? = null
+    @VisibleForTesting @JvmField var webpAnimatedImageDecoder: AnimatedImageDecoder? = null
 
     private fun loadIfPresent(className: String): AnimatedImageDecoder? {
       try {
@@ -234,34 +217,8 @@ constructor(
     }
 
     init {
-      GifAnimatedImageDecoder = loadIfPresent("com.facebook.animated.gif.GifImage")
-      WebpAnimatedImageDecoder = loadIfPresent("com.facebook.animated.webp.WebPImage")
-    }
-  }
-
-  private fun validateGif(encodedImage: EncodedImage): ValidationResult {
-    val inputStream =
-        encodedImage.inputStream ?: return ValidationResult.Failure("No input stream available")
-
-    try {
-      inputStream.use { stream ->
-        val decoder = GifMetadataDecoder.create(stream, null)
-
-        val width = decoder.screenWidth
-        val height = decoder.screenHeight
-        if (width <= 0 || height <= 0) {
-          return ValidationResult.Failure("GIF invalid logical screen size: $width x $height")
-        }
-
-        val totalPixels = width * height * decoder.frameCount
-        if (totalPixels > MAX_GIF_TOTAL_PIXELS) {
-          return ValidationResult.Failure(
-              "GIF too large: $width x $height x ${decoder.frameCount} frames = $totalPixels pixels")
-        }
-      }
-      return ValidationResult.Success
-    } catch (e: Exception) {
-      return ValidationResult.Failure("Error parsing GIF: ${e.message}")
+      gifAnimatedImageDecoder = loadIfPresent("com.facebook.animated.gif.GifImage")
+      webpAnimatedImageDecoder = loadIfPresent("com.facebook.animated.webp.WebPImage")
     }
   }
 }
