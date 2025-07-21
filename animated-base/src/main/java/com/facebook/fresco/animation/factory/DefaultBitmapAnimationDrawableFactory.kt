@@ -103,20 +103,26 @@ class DefaultBitmapAnimationDrawableFactory(
     val closeable = closeableImage as CloseableAnimatedImage
     val animatedImage = closeable.image
     val animationBackend: AnimationBackend =
-        try {
-          createAnimationBackend(
-              Preconditions.checkNotNull(closeable.imageResult),
-              animatedImage?.animatedBitmapConfig,
-              imageOptions)
-        } catch (e: NullPointerException) {
-          val uri = closeableImage.getExtra<Any?>(HasExtraData.KEY_URI_SOURCE)
+        runCatching {
+              createAnimationBackend(
+                  Preconditions.checkNotNull(closeable.imageResult),
+                  animatedImage?.animatedBitmapConfig,
+                  imageOptions)
+            }
+            .getOrElse { e ->
+              when (e) {
+                is NullPointerException -> {
+                  val uri = closeableImage.getExtra<Any?>(HasExtraData.KEY_URI_SOURCE)
+                  if (uri != null) {
+                    throw NullPointerException("${e.message} uri=${uri}")
+                  } else {
+                    throw e
+                  }
+                }
+                else -> throw e
+              }
+            }
 
-          if (uri != null) {
-            throw NullPointerException("${e.message} uri=${uri}")
-          } else {
-            throw e
-          }
-        }
     return if (useRendererAnimatedDrawable.get()) {
       KAnimatedDrawable2(animationBackend)
     } else {
@@ -124,6 +130,14 @@ class DefaultBitmapAnimationDrawableFactory(
     }
   }
 
+  /**
+   * Creates an animation backend for the given animated image result. * * @param
+   * animatedImageResult The animated image result to create a backend for
+   *
+   * @param animatedBitmapConfig Optional bitmap configuration for the animation
+   * @param imageOptions Optional image options for customizing the animation
+   * @return An animation backend for the given parameters
+   */
   private fun createAnimationBackend(
       animatedImageResult: AnimatedImageResult,
       animatedBitmapConfig: Bitmap.Config?,
