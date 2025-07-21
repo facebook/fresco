@@ -137,6 +137,7 @@ public class PooledByteArrayBufferedInputStream extends InputStream {
     }
   }
 
+  // This is a valid use of finalize. No other mechanism is appropriate.
   @Override
   protected void finalize() throws Throwable {
     if (!mClosed) {

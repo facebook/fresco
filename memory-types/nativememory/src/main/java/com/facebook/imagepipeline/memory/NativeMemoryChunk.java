@@ -185,6 +185,7 @@ public class NativeMemoryChunk implements MemoryChunk, Closeable {
    *
    * @throws Throwable
    */
+  // This is a valid use of finalize. No other mechanism is appropriate.
   @Override
   protected void finalize() throws Throwable {
     if (isClosed()) {

@@ -15,6 +15,7 @@ public abstract class DefaultCloseableImage extends BaseCloseableImage {
   private static final String TAG = "CloseableImage";
 
   /** Ensures that the underlying resources are always properly released. */
+  // This is a valid use of finalize. No other mechanism is appropriate.
   @Override
   protected void finalize() throws Throwable {
     if (isClosed()) {

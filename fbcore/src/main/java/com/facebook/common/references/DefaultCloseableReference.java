@@ -39,6 +39,7 @@ public class DefaultCloseableReference<T> extends CloseableReference<T> {
         mSharedReference, mLeakHandler, mStacktrace != null ? new Throwable() : null);
   }
 
+  // This is a valid use of finalize. No other mechanism is appropriate.
   @Override
   protected void finalize() throws Throwable {
     try {

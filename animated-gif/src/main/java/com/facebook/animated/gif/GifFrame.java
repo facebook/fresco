@@ -33,6 +33,7 @@ public class GifFrame implements AnimatedImageFrame {
     mNativeContext = nativeContext;
   }
 
+  // This is a valid use of finalize. No other mechanism is appropriate.
   @Override
   protected void finalize() {
     nativeFinalize();

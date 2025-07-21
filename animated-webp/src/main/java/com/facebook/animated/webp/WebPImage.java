@@ -52,6 +52,7 @@ public class WebPImage implements AnimatedImage, AnimatedImageDecoder {
     mNativeContext = nativeContext;
   }
 
+  // This is a valid use of finalize. No other mechanism is appropriate.
   @Override
   protected void finalize() {
     nativeFinalize();
