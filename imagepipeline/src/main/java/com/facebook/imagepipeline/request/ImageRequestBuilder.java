@@ -51,6 +51,7 @@ public class ImageRequestBuilder {
   private @Nullable DownsampleMode mDownsampleOverride = null;
   private int mDelayMs;
   private @Nullable String mDiskCacheId = null;
+  private Boolean mIsFirstFrameThumbnailEnabled = false;
 
   /**
    * Creates a new request builder instance. The setting will be done according to the source type.
@@ -108,7 +109,8 @@ public class ImageRequestBuilder {
         .setDelayMs(imageRequest.getDelayMs())
         .setDiskCacheId(imageRequest.getDiskCacheId())
         .setDownsampleOverride(imageRequest.getDownsampleOverride())
-        .setResizingAllowedOverride(imageRequest.getResizingAllowedOverride());
+        .setResizingAllowedOverride(imageRequest.getResizingAllowedOverride())
+        .setIsFirstFrameThumbnailEnabled(imageRequest.isFirstFrameThumbnailEnabled());
   }
 
   public static void addCustomUriNetworkScheme(String scheme) {
@@ -468,6 +470,15 @@ public class ImageRequestBuilder {
 
   public int getDelayMs() {
     return mDelayMs;
+  }
+
+  public ImageRequestBuilder setIsFirstFrameThumbnailEnabled(Boolean isFirstFrameThumbnailEnabled) {
+    this.mIsFirstFrameThumbnailEnabled = isFirstFrameThumbnailEnabled;
+    return this;
+  }
+
+  public Boolean getIsFirstFrameThumbnailEnabled() {
+    return mIsFirstFrameThumbnailEnabled;
   }
 
   /** Add an artificial delay for this image, in milliseconds. */

@@ -32,6 +32,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
   val loadThumbnailOnly: Boolean = builder.loadThumbnailOnly
   val bitmapConfig: Bitmap.Config? = builder.bitmapConfig
   val isProgressiveDecodingEnabled: Boolean? = builder.progressiveDecodingEnabled
+  val isFirstFrameThumbnailEnabled: Boolean = builder.isFirstFrameThumbnailEnabled
 
   fun areLocalThumbnailPreviewsEnabled(): Boolean = mLocalThumbnailPreviewsEnabled
 
@@ -57,7 +58,8 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
         mLocalThumbnailPreviewsEnabled != other.mLocalThumbnailPreviewsEnabled ||
         loadThumbnailOnly != other.loadThumbnailOnly ||
         isProgressiveDecodingEnabled !== other.isProgressiveDecodingEnabled ||
-        !Objects.equal(bitmapConfig, other.bitmapConfig)) {
+        !Objects.equal(bitmapConfig, other.bitmapConfig) ||
+        isFirstFrameThumbnailEnabled != other.isFirstFrameThumbnailEnabled) {
       false
     } else equalEncodedOptions(other)
   }
@@ -78,6 +80,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
     result = 31 * result + if (loadThumbnailOnly) 1 else 0
     result = 31 * result + (bitmapConfig?.hashCode() ?: 0)
     result = (31 * result + (isProgressiveDecodingEnabled?.hashCode() ?: 0))
+    result = 31 * result + if (isFirstFrameThumbnailEnabled) 1 else 0
     return result
   }
 
@@ -99,6 +102,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
           .add("loadThumbnailOnly", loadThumbnailOnly)
           .add("bitmapConfig", bitmapConfig)
           .add("progressiveRenderingEnabled", isProgressiveDecodingEnabled)
+          .add("isFirstFrameThumbnailEnabled", isFirstFrameThumbnailEnabled)
 
   open class Builder<T : Builder<T>> : EncodedImageOptions.Builder<T> {
     internal var resizeOptions: ResizeOptions? = null
@@ -115,6 +119,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
     internal var loadThumbnailOnly = false
     internal var bitmapConfig: Bitmap.Config? = null
     internal var progressiveDecodingEnabled: Boolean? = null
+    internal var isFirstFrameThumbnailEnabled: Boolean = false
 
     constructor() : super()
 
@@ -133,6 +138,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
       loadThumbnailOnly = decodedImageOptions.loadThumbnailOnly
       bitmapConfig = decodedImageOptions.bitmapConfig
       progressiveDecodingEnabled = decodedImageOptions.isProgressiveDecodingEnabled
+      isFirstFrameThumbnailEnabled = decodedImageOptions.isFirstFrameThumbnailEnabled
     }
 
     constructor(defaultOptions: ImageOptions) : this(defaultOptions as DecodedImageOptions)
@@ -208,6 +214,16 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
 
     fun progressiveRendering(progressiveDecodingEnabled: Boolean?): T = modify {
       this.progressiveDecodingEnabled = progressiveDecodingEnabled
+    }
+
+    /**
+     * Whether fetch first frame thumbnail from video.
+     *
+     * @param isFirstFrameThumbnailEnabled true if enforce extract first frame thumbnail
+     * @return the builder
+     */
+    fun isFirstFrameThumbnailEnabled(isFirstFrameThumbnailEnabled: Boolean): T = modify {
+      this.isFirstFrameThumbnailEnabled = isFirstFrameThumbnailEnabled
     }
 
     override fun build(): DecodedImageOptions = DecodedImageOptions(this)

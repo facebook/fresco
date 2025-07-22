@@ -70,6 +70,7 @@ class ImagePipelineUtilsImpl(private val imageDecodeOptionsProvider: ImageDecode
         loadThumbnailOnly = imageOptions.loadThumbnailOnly
         imageOptions.postprocessor?.let { postprocessor = it }
         imageOptions.isProgressiveDecodingEnabled?.let { isProgressiveRenderingEnabled = it }
+        isFirstFrameThumbnailEnabled = imageOptions.isFirstFrameThumbnailEnabled
       }
 
   protected fun createEncodedImageRequestBuilder(

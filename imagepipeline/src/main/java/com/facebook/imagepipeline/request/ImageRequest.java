@@ -127,6 +127,9 @@ public class ImageRequest {
 
   private final int mDelayMs;
 
+  /** Whether to extract first frame thumbnail from video. */
+  private final Boolean mIsFirstFrameThumbnailEnabled;
+
   public static @Nullable ImageRequest fromFile(@Nullable File file) {
     return (file == null) ? null : ImageRequest.fromUri(UriUtil.getUriForFile(file));
   }
@@ -183,6 +186,8 @@ public class ImageRequest {
     mDelayMs = builder.getDelayMs();
 
     mDiskCacheId = builder.getDiskCacheId();
+
+    mIsFirstFrameThumbnailEnabled = builder.getIsFirstFrameThumbnailEnabled();
   }
 
   public CacheChoice getCacheChoice() {
@@ -303,6 +308,10 @@ public class ImageRequest {
     return mDiskCacheId;
   }
 
+  public Boolean isFirstFrameThumbnailEnabled() {
+    return mIsFirstFrameThumbnailEnabled;
+  }
+
   @Override
   public boolean equals(@Nullable Object o) {
     if (!(o instanceof ImageRequest)) {
@@ -333,7 +342,8 @@ public class ImageRequest {
         || !Objects.equal(mResizingAllowedOverride, request.mResizingAllowedOverride)
         || !Objects.equal(mDownsampleOverride, request.mDownsampleOverride)
         || !Objects.equal(mRotationOptions, request.mRotationOptions)
-        || mLoadThumbnailOnly != request.mLoadThumbnailOnly) {
+        || mLoadThumbnailOnly != request.mLoadThumbnailOnly
+        || mIsFirstFrameThumbnailEnabled != request.mIsFirstFrameThumbnailEnabled) {
       return false;
     }
     final CacheKey thisPostprocessorKey =
@@ -372,6 +382,7 @@ public class ImageRequest {
       result = HashCode.extend(result, mDownsampleOverride);
       result = HashCode.extend(result, mDelayMs);
       result = HashCode.extend(result, mLoadThumbnailOnly);
+      result = HashCode.extend(result, mIsFirstFrameThumbnailEnabled);
       // ^ I *think* this is safe despite autoboxing...?
       if (cacheHashcode) {
         mHashcode = result;
@@ -402,6 +413,7 @@ public class ImageRequest {
         .add("isMemoryCacheEnabled", mIsMemoryCacheEnabled)
         .add("decodePrefetches", mDecodePrefetches)
         .add("delayMs", mDelayMs)
+        .add("isFirstFrameThumbnailEnabled", mIsFirstFrameThumbnailEnabled)
         .toString();
   }
 
