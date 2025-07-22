@@ -19,6 +19,14 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
 
   override fun submitFetchOnBgThread(): Boolean = true
 
+  override fun useBind(): Boolean = true
+
+  override fun useMount(): Boolean = true
+
+  override fun useUnbind(): Boolean = true
+
+  override fun useUnmount(): Boolean = true
+
   override fun useBindOnly(): Boolean = false
 
   override fun useNewReleaseCallback(): Boolean = false

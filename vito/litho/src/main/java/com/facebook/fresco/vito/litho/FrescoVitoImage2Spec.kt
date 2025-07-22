@@ -228,51 +228,53 @@ object FrescoVitoImage2Spec {
       @TreeProp contextChain: ContextChain?,
       @FromPrepare fetchStrategy: FetchStrategy,
   ) {
-    val request =
-        when {
-          requestWithLayout != null -> requestWithLayout
-          requestBeforeLayout != null -> {
-            val request =
-                VitoImageRequest(
-                    requestBeforeLayout.resources,
-                    requestBeforeLayout.imageSource,
-                    requestBeforeLayout.imageOptions,
-                    requestBeforeLayout.logWithHighSamplingRate,
-                    requestBeforeLayout.finalImageRequest,
-                    requestBeforeLayout.finalImageCacheKey,
-                    requestBeforeLayout.extras,
-                )
-            request.putExtra(HasExtraData.KEY_SF_FETCH_STRATEGY, fetchStrategy)
-            request
+    if (FrescoVitoProvider.getConfig().useMount()) {
+      val request =
+          when {
+            requestWithLayout != null -> requestWithLayout
+            requestBeforeLayout != null -> {
+              val request =
+                  VitoImageRequest(
+                      requestBeforeLayout.resources,
+                      requestBeforeLayout.imageSource,
+                      requestBeforeLayout.imageOptions,
+                      requestBeforeLayout.logWithHighSamplingRate,
+                      requestBeforeLayout.finalImageRequest,
+                      requestBeforeLayout.finalImageCacheKey,
+                      requestBeforeLayout.extras,
+                  )
+              request.putExtra(HasExtraData.KEY_SF_FETCH_STRATEGY, fetchStrategy)
+              request
+            }
+
+            else -> error("requestWithLayout and requestBeforeLayout are null")
           }
 
-          else -> error("requestWithLayout and requestBeforeLayout are null")
-        }
-
-    frescoDrawable.setMutateDrawables(mutateDrawables)
-    if (FrescoVitoProvider.getConfig().useBindOnly()) {
-      return
-    }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
-        FrescoVitoProvider.getConfig().enableWindowWideColorGamut()) {
-      val activity: Activity? = ContextUtils.findActivityInContext(c.androidContext)
-      val window = activity?.window
-      if (window != null && window.colorMode != ActivityInfo.COLOR_MODE_WIDE_COLOR_GAMUT) {
-        window.colorMode = ActivityInfo.COLOR_MODE_WIDE_COLOR_GAMUT
+      frescoDrawable.setMutateDrawables(mutateDrawables)
+      if (FrescoVitoProvider.getConfig().useBindOnly()) {
+        return
       }
-    }
 
-    FrescoVitoProvider.getController()
-        .fetch(
-            drawable = frescoDrawable,
-            imageRequest = request,
-            callerContext = callerContext,
-            contextChain = contextChain,
-            listener = imageListener,
-            onFadeListener = onFadeListener,
-            viewportDimensions = viewportDimensions)
-    frescoDrawable.imagePerfListener.onImageMount(frescoDrawable)
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+          FrescoVitoProvider.getConfig().enableWindowWideColorGamut()) {
+        val activity: Activity? = ContextUtils.findActivityInContext(c.androidContext)
+        val window = activity?.window
+        if (window != null && window.colorMode != ActivityInfo.COLOR_MODE_WIDE_COLOR_GAMUT) {
+          window.colorMode = ActivityInfo.COLOR_MODE_WIDE_COLOR_GAMUT
+        }
+      }
+
+      FrescoVitoProvider.getController()
+          .fetch(
+              drawable = frescoDrawable,
+              imageRequest = request,
+              callerContext = callerContext,
+              contextChain = contextChain,
+              listener = imageListener,
+              onFadeListener = onFadeListener,
+              viewportDimensions = viewportDimensions)
+      frescoDrawable.imagePerfListener.onImageMount(frescoDrawable)
+    }
     if (shouldClosePrefetchDataSourceOnBindOrOnMount()) {
       prefetchDataSource?.close()
       prefetchDataSourceFromBoundsDefined?.close()
@@ -295,22 +297,24 @@ object FrescoVitoImage2Spec {
       @FromBoundsDefined viewportDimensions: Rect,
       @FromPrepare fetchStrategy: FetchStrategy,
   ) {
-    // if requestWithLayout is not null, we are using SF
-    val request = checkNotNull(requestWithLayout ?: requestBeforeLayout)
-    request.putExtra(HasExtraData.KEY_SF_FETCH_STRATEGY, fetchStrategy)
+    if (FrescoVitoProvider.getConfig().useBind()) {
+      // if requestWithLayout is not null, we are using SF
+      val request = checkNotNull(requestWithLayout ?: requestBeforeLayout)
+      request.putExtra(HasExtraData.KEY_SF_FETCH_STRATEGY, fetchStrategy)
 
-    // We fetch in both mount and bind in case an unbind event triggered a delayed release.
-    // We'll only trigger an actual fetch if needed. Most of the time, this will be a no-op.
-    FrescoVitoProvider.getController()
-        .fetch(
-            drawable = frescoDrawable,
-            imageRequest = request,
-            callerContext = callerContext,
-            contextChain = contextChain,
-            listener = imageListener,
-            onFadeListener = onFadeListener,
-            viewportDimensions = viewportDimensions)
-    frescoDrawable.imagePerfListener.onImageBind(frescoDrawable)
+      // We fetch in both mount and bind in case an unbind event triggered a delayed release.
+      // We'll only trigger an actual fetch if needed. Most of the time, this will be a no-op.
+      FrescoVitoProvider.getController()
+          .fetch(
+              drawable = frescoDrawable,
+              imageRequest = request,
+              callerContext = callerContext,
+              contextChain = contextChain,
+              listener = imageListener,
+              onFadeListener = onFadeListener,
+              viewportDimensions = viewportDimensions)
+      frescoDrawable.imagePerfListener.onImageBind(frescoDrawable)
+    }
     if (shouldClosePrefetchDataSourceOnBindOrOnMount()) {
       prefetchDataSource?.close()
       prefetchDataSourceFromBoundsDefined?.close()
@@ -325,11 +329,13 @@ object FrescoVitoImage2Spec {
       @FromPrepare prefetchDataSource: DataSource<Void?>?,
       @FromBoundsDefined prefetchDataSourceFromBoundsDefined: DataSource<Void?>?,
   ) {
-    frescoDrawable.imagePerfListener.onImageUnbind(frescoDrawable)
-    if (FrescoVitoProvider.getConfig().useBindOnly()) {
-      FrescoVitoProvider.getController().releaseImmediately(frescoDrawable)
-    } else {
-      FrescoVitoProvider.getController().releaseDelayed(frescoDrawable)
+    if (FrescoVitoProvider.getConfig().useUnbind()) {
+      frescoDrawable.imagePerfListener.onImageUnbind(frescoDrawable)
+      if (FrescoVitoProvider.getConfig().useBindOnly()) {
+        FrescoVitoProvider.getController().releaseImmediately(frescoDrawable)
+      } else {
+        FrescoVitoProvider.getController().releaseDelayed(frescoDrawable)
+      }
     }
     prefetchDataSource?.close()
     prefetchDataSourceFromBoundsDefined?.close()
@@ -343,11 +349,13 @@ object FrescoVitoImage2Spec {
       @FromPrepare prefetchDataSource: DataSource<Void?>?,
       @FromBoundsDefined prefetchDataSourceFromBoundsDefined: DataSource<Void?>?,
   ) {
-    frescoDrawable.imagePerfListener.onImageUnmount(frescoDrawable)
-    if (FrescoVitoProvider.getConfig().useBindOnly()) {
-      return
+    if (FrescoVitoProvider.getConfig().useUnmount()) {
+      frescoDrawable.imagePerfListener.onImageUnmount(frescoDrawable)
+      if (FrescoVitoProvider.getConfig().useBindOnly()) {
+        return
+      }
+      FrescoVitoProvider.getController().release(frescoDrawable)
     }
-    FrescoVitoProvider.getController().release(frescoDrawable)
     prefetchDataSource?.close()
     prefetchDataSourceFromBoundsDefined?.close()
   }

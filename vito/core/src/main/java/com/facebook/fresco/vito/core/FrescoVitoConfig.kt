@@ -16,6 +16,14 @@ interface FrescoVitoConfig {
 
   fun submitFetchOnBgThread(): Boolean
 
+  fun useBind(): Boolean
+
+  fun useMount(): Boolean
+
+  fun useUnmount(): Boolean
+
+  fun useUnbind(): Boolean
+
   fun useBindOnly(): Boolean
 
   fun useNewReleaseCallback(): Boolean
