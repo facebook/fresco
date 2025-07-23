@@ -28,6 +28,9 @@ import com.facebook.fresco.urimod.SmartFetchStrategy
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.VitoImageRequest
 import com.facebook.fresco.vito.listener.ImageListener
+import com.facebook.fresco.vito.litho.FrescoVitoImage2Spec.Prefetch.AUTO
+import com.facebook.fresco.vito.litho.FrescoVitoImage2Spec.Prefetch.NO
+import com.facebook.fresco.vito.litho.FrescoVitoImage2Spec.Prefetch.YES
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.fresco.vito.source.ImageSource
@@ -39,7 +42,9 @@ import com.facebook.litho.ComponentLayout
 import com.facebook.litho.ContextUtils
 import com.facebook.litho.Diff
 import com.facebook.litho.Output
+import com.facebook.litho.Ref
 import com.facebook.litho.Size
+import com.facebook.litho.StateValue
 import com.facebook.litho.annotations.CachedValue
 import com.facebook.litho.annotations.FromBoundsDefined
 import com.facebook.litho.annotations.FromPrepare
@@ -48,7 +53,9 @@ import com.facebook.litho.annotations.MountingType
 import com.facebook.litho.annotations.OnBind
 import com.facebook.litho.annotations.OnBoundsDefined
 import com.facebook.litho.annotations.OnCalculateCachedValue
+import com.facebook.litho.annotations.OnCreateInitialState
 import com.facebook.litho.annotations.OnCreateMountContent
+import com.facebook.litho.annotations.OnDetached
 import com.facebook.litho.annotations.OnMeasure
 import com.facebook.litho.annotations.OnMount
 import com.facebook.litho.annotations.OnPopulateAccessibilityNode
@@ -60,6 +67,7 @@ import com.facebook.litho.annotations.PropDefault
 import com.facebook.litho.annotations.ResType
 import com.facebook.litho.annotations.ShouldExcludeFromIncrementalMount
 import com.facebook.litho.annotations.ShouldUpdate
+import com.facebook.litho.annotations.State
 import com.facebook.litho.annotations.TreeProp
 import com.facebook.litho.utils.MeasureUtils
 
@@ -79,6 +87,14 @@ object FrescoVitoImage2Spec {
   @OnCreateMountContent(mountingType = MountingType.DRAWABLE)
   fun onCreateMountContent(c: Context?): FrescoDrawableInterface =
       FrescoVitoProvider.getController().createDrawable("litho")
+
+  @JvmStatic
+  @OnCreateInitialState
+  fun onCreateInitialState(frescoDrawableRef: StateValue<Ref<FrescoDrawableInterface?>?>) {
+    if (FrescoVitoProvider.getConfig().useDetached()) {
+      frescoDrawableRef.set(Ref<FrescoDrawableInterface?>(null))
+    }
+  }
 
   @JvmStatic
   @OnMeasure
@@ -227,7 +243,11 @@ object FrescoVitoImage2Spec {
       @FromBoundsDefined viewportDimensions: Rect,
       @TreeProp contextChain: ContextChain?,
       @FromPrepare fetchStrategy: FetchStrategy,
+      @State frescoDrawableRef: Ref<FrescoDrawableInterface?>?,
   ) {
+    if (frescoDrawableRef != null && FrescoVitoProvider.getConfig().useDetached()) {
+      frescoDrawableRef.value = frescoDrawable
+    }
     if (FrescoVitoProvider.getConfig().useMount()) {
       val request =
           when {
@@ -358,6 +378,23 @@ object FrescoVitoImage2Spec {
     }
     prefetchDataSource?.close()
     prefetchDataSourceFromBoundsDefined?.close()
+  }
+
+  @JvmStatic
+  @OnDetached
+  fun onDetached(
+      c: ComponentContext,
+      @State frescoDrawableRef: Ref<FrescoDrawableInterface?>?,
+  ) {
+    if (FrescoVitoProvider.getConfig().useDetached()) {
+      val drawable = frescoDrawableRef?.value
+      if (drawable != null) {
+        releaseDrawableWithMechanism(
+            drawable,
+            ReleaseStrategy.parse(FrescoVitoProvider.getConfig().onDetachedReleaseStrategy()))
+        frescoDrawableRef?.value = null
+      }
+    }
   }
 
   @JvmStatic
@@ -531,6 +568,33 @@ object FrescoVitoImage2Spec {
 
   private fun experimentalDynamicSizeWithCacheFallbackVito2(): Boolean =
       FrescoVitoProvider.getConfig().experimentalDynamicSizeWithCacheFallbackVito2()
+
+  private fun releaseDrawableWithMechanism(
+      drawable: FrescoDrawableInterface,
+      releaseStrategy: ReleaseStrategy
+  ) {
+    when (releaseStrategy) {
+      ReleaseStrategy.IMMEDIATE -> FrescoVitoProvider.getController().releaseImmediately(drawable)
+      ReleaseStrategy.DELAYED -> FrescoVitoProvider.getController().releaseDelayed(drawable)
+      ReleaseStrategy.NEXT_FRAME -> FrescoVitoProvider.getController().release(drawable)
+    }
+  }
+
+  enum class ReleaseStrategy {
+    IMMEDIATE,
+    DELAYED,
+    NEXT_FRAME;
+
+    companion object {
+      @JvmStatic
+      fun parse(value: Long): ReleaseStrategy =
+          when (value) {
+            2L -> IMMEDIATE
+            1L -> DELAYED
+            else -> NEXT_FRAME
+          }
+    }
+  }
 
   enum class Prefetch {
     AUTO,
