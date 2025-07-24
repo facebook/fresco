@@ -7,7 +7,10 @@
 
 package com.facebook.samples.scrollperf.data;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /** Simple Decorator for the SimpleAdapter */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface Decorator<E> {
 
   /**
