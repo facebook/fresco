@@ -392,7 +392,7 @@ object FrescoVitoImage2Spec {
         releaseDrawableWithMechanism(
             drawable,
             ReleaseStrategy.parse(FrescoVitoProvider.getConfig().onDetachedReleaseStrategy()))
-        frescoDrawableRef?.value = null
+        frescoDrawableRef.value = null
       }
     }
   }
