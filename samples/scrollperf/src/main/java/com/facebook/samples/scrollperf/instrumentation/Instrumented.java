@@ -7,7 +7,10 @@
 
 package com.facebook.samples.scrollperf.instrumentation;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /** Interface implemented by instrumented components */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface Instrumented {
 
   /**
