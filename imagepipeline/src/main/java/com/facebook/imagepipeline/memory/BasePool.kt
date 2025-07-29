@@ -125,7 +125,7 @@ abstract class BasePool<V : Any>(
 
   private val poolStatsTracker = checkNotNull(poolStatsTracker)
 
-  private var ignoreHardCap = false
+  private var ignoreHardCap = true // changing default to true.
 
   constructor(
       memoryTrimmableRegistry: MemoryTrimmableRegistry,

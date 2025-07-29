@@ -74,7 +74,7 @@ class PoolConfig private constructor(builder: Builder) {
     internal var bitmapPoolMaxPoolSize: Int = 0
     internal var bitmapPoolMaxBitmapSize: Int = 0
     internal var registerLruBitmapPoolAsMemoryTrimmable: Boolean = false
-    internal var ignoreBitmapPoolHardCap: Boolean = false
+    internal var ignoreBitmapPoolHardCap: Boolean = true
 
     fun setBitmapPoolParams(bitmapPoolParams: PoolParams): Builder {
       this.bitmapPoolParams = bitmapPoolParams
