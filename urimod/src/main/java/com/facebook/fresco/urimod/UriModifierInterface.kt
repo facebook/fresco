@@ -59,6 +59,10 @@ interface UriModifierInterface {
 
       class ModifiedToMaxDimens(newUrl: Uri, override val bestAllowlistedSize: Int?) :
           Modified(newUrl, "ModifiedToMaxDimens")
+
+      class ModifiedScanEnd(newUrl: Uri) : Modified(newUrl, "ModifiedScanEnd") {
+        override val bestAllowlistedSize: Int? = null
+      }
     }
 
     data class FallbackToOriginalUrl(override val bestAllowlistedSize: Int?) :
