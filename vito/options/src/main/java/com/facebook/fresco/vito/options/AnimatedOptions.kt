@@ -10,11 +10,20 @@ package com.facebook.fresco.vito.options
 @Suppress("KtDataClass")
 data class AnimatedOptions(
     val loopCount: Int,
+    val thumbnailUrl: String? = null,
 ) {
 
   fun isInfinite(): Boolean = loopCount == LOOP_COUNT_INFINITE
 
   fun isStatic(): Boolean = loopCount == LOOP_COUNT_STATIC
+
+  /**
+   * Determines if thumbnail fallback should be used based on: A valid thumbnail URL is provided and
+   * The animation has a finite loop count
+   */
+  fun useFallbackThumbnail(): Boolean {
+    return !thumbnailUrl.isNullOrEmpty() && !isInfinite()
+  }
 
   override fun equals(other: Any?): Boolean {
     if (this === other) {
@@ -26,11 +35,13 @@ data class AnimatedOptions(
 
     val otherOptions = other as? AnimatedOptions ?: return false
 
-    return loopCount == otherOptions.loopCount
+    return loopCount == otherOptions.loopCount && thumbnailUrl == otherOptions.thumbnailUrl
   }
 
   override fun hashCode(): Int {
-    return loopCount.hashCode()
+    var result = loopCount.hashCode()
+    result = 31 * result + (thumbnailUrl?.hashCode() ?: 0)
+    return result
   }
 
   @Suppress("BooleanLiteralArgument")
@@ -45,5 +56,9 @@ data class AnimatedOptions(
     @JvmStatic fun static(): AnimatedOptions = STATIC_FIRST_FRAME
 
     @JvmStatic fun loop(loopCount: Int): AnimatedOptions = AnimatedOptions(loopCount)
+
+    @JvmStatic
+    fun loop(loopCount: Int, thumbnailUrl: String?): AnimatedOptions =
+        AnimatedOptions(loopCount, thumbnailUrl)
   }
 }
