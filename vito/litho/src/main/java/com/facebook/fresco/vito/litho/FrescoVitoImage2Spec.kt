@@ -46,6 +46,7 @@ import com.facebook.litho.Ref
 import com.facebook.litho.Size
 import com.facebook.litho.StateValue
 import com.facebook.litho.annotations.CachedValue
+import com.facebook.litho.annotations.ExcuseMySpec
 import com.facebook.litho.annotations.FromBoundsDefined
 import com.facebook.litho.annotations.FromPrepare
 import com.facebook.litho.annotations.MountSpec
@@ -55,6 +56,7 @@ import com.facebook.litho.annotations.OnBoundsDefined
 import com.facebook.litho.annotations.OnCalculateCachedValue
 import com.facebook.litho.annotations.OnCreateInitialState
 import com.facebook.litho.annotations.OnCreateMountContent
+import com.facebook.litho.annotations.OnCreateMountContentPool
 import com.facebook.litho.annotations.OnDetached
 import com.facebook.litho.annotations.OnMeasure
 import com.facebook.litho.annotations.OnMount
@@ -64,15 +66,18 @@ import com.facebook.litho.annotations.OnUnbind
 import com.facebook.litho.annotations.OnUnmount
 import com.facebook.litho.annotations.Prop
 import com.facebook.litho.annotations.PropDefault
+import com.facebook.litho.annotations.Reason
 import com.facebook.litho.annotations.ResType
 import com.facebook.litho.annotations.ShouldExcludeFromIncrementalMount
 import com.facebook.litho.annotations.ShouldUpdate
 import com.facebook.litho.annotations.State
 import com.facebook.litho.annotations.TreeProp
 import com.facebook.litho.utils.MeasureUtils
+import com.facebook.rendercore.MountContentPools
 
 /** Fresco Vito component for Litho */
-@MountSpec(isPureRender = true, canPreallocate = true, poolSize = 15)
+@ExcuseMySpec(reason = Reason.SECTION_USED_WITH_OTHER_SECTIONS)
+@MountSpec(isPureRender = true, canPreallocate = true)
 object FrescoVitoImage2Spec {
 
   private const val DEFAULT_IMAGE_ASPECT_RATIO = 1f
@@ -82,6 +87,13 @@ object FrescoVitoImage2Spec {
   @PropDefault val prefetch: Prefetch = Prefetch.AUTO
 
   @PropDefault const val mutateDrawables: Boolean = true
+
+  @JvmStatic
+  @OnCreateMountContentPool
+  fun onCreateMountContentPool(poolsize: Int): MountContentPools.ContentPool =
+      MountContentPools.DefaultContentPool(
+          FrescoVitoImage2Spec::class.java,
+          FrescoVitoProvider.getConfig().experimentalPoolSizeVito2().toInt())
 
   @JvmStatic
   @OnCreateMountContent(mountingType = MountingType.DRAWABLE)

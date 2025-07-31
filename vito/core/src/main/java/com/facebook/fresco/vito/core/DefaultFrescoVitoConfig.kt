@@ -53,6 +53,8 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
 
   override fun fallbackToDefaultImageOptions(): Boolean = false
 
+  override fun experimentalPoolSizeVito2(): Long = 15
+
   override fun experimentalDynamicSizeVito2(): Boolean = false
 
   override fun experimentalDynamicSizeWithCacheFallbackVito2(): Boolean = false
