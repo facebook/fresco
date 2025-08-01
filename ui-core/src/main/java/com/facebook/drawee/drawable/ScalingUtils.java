@@ -124,6 +124,8 @@ public class ScalingUtils {
         int childHeight,
         float focusX,
         float focusY);
+
+    String getDescription();
   }
 
   @Nullable
@@ -176,6 +178,11 @@ public class ScalingUtils {
         float focusY,
         float scaleX,
         float scaleY);
+
+    @Override
+    public String toString() {
+      return this.getDescription();
+    }
   }
 
   private static class ScaleTypeFitXY extends AbstractScaleType {
@@ -199,7 +206,7 @@ public class ScalingUtils {
     }
 
     @Override
-    public String toString() {
+    public String getDescription() {
       return "fit_xy";
     }
   }
@@ -226,7 +233,7 @@ public class ScalingUtils {
     }
 
     @Override
-    public String toString() {
+    public String getDescription() {
       return "fit_start";
     }
   }
@@ -253,7 +260,7 @@ public class ScalingUtils {
     }
 
     @Override
-    public String toString() {
+    public String getDescription() {
       return "fit_bottom_start";
     }
   }
@@ -280,7 +287,7 @@ public class ScalingUtils {
     }
 
     @Override
-    public String toString() {
+    public String getDescription() {
       return "fit_center";
     }
   }
@@ -307,7 +314,7 @@ public class ScalingUtils {
     }
 
     @Override
-    public String toString() {
+    public String getDescription() {
       return "fit_end";
     }
   }
@@ -332,7 +339,7 @@ public class ScalingUtils {
     }
 
     @Override
-    public String toString() {
+    public String getDescription() {
       return "center";
     }
   }
@@ -359,7 +366,7 @@ public class ScalingUtils {
     }
 
     @Override
-    public String toString() {
+    public String getDescription() {
       return "center_inside";
     }
   }
@@ -393,7 +400,7 @@ public class ScalingUtils {
     }
 
     @Override
-    public String toString() {
+    public String getDescription() {
       return "center_crop";
     }
   }
@@ -429,7 +436,7 @@ public class ScalingUtils {
     }
 
     @Override
-    public String toString() {
+    public String getDescription() {
       return "focus_crop";
     }
   }
@@ -457,7 +464,7 @@ public class ScalingUtils {
     }
 
     @Override
-    public String toString() {
+    public String getDescription() {
       return "fit_x";
     }
   }
@@ -485,7 +492,7 @@ public class ScalingUtils {
     }
 
     @Override
-    public String toString() {
+    public String getDescription() {
       return "fit_y";
     }
   }
@@ -509,6 +516,11 @@ public class ScalingUtils {
         float focusY) {
       // No-op
       return outTransform;
+    }
+
+    @Override
+    public String getDescription() {
+      return "disabled";
     }
   }
 
@@ -650,7 +662,7 @@ public class ScalingUtils {
     }
 
     @Override
-    public String toString() {
+    public String getDescription() {
       return String.format(
           "InterpolatingScaleType(%s (%s) -> %s (%s))",
           String.valueOf(mScaleTypeFrom),
@@ -678,6 +690,11 @@ public class ScalingUtils {
         float focusY) {
       outTransform.set(mMatrix);
       return outTransform;
+    }
+
+    @Override
+    public String getDescription() {
+      return "MatrixScaleType";
     }
   }
 }

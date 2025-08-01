@@ -34,7 +34,7 @@ class InstrumentedDrawable(drawable: Drawable, private val listener: Listener?) 
   private fun getScaleType(drawable: Drawable): String {
     if (drawable is ScaleTypeDrawable) {
       val type = drawable.scaleType
-      return type.toString()
+      return type.description
     }
     return "none"
   }
