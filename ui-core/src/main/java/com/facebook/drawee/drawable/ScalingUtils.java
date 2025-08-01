@@ -180,8 +180,8 @@ public class ScalingUtils {
         float scaleY);
 
     @Override
-    public String toString() {
-      return this.getDescription();
+    public String getDescription() {
+      return this.toString();
     }
   }
 
