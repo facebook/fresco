@@ -58,7 +58,7 @@ constructor(
     private val isNewRenderImplementation: Boolean,
     private val bitmapFramePreparationStrategy: BitmapFramePreparationStrategy?,
     private val bitmapFramePreparer: BitmapFramePreparer?,
-    roundingOptions: RoundingOptions? = null,
+    val roundingOptions: RoundingOptions? = null,
     val animatedOptions: AnimatedOptions? = null,
 ) : AnimationBackend, InactivityListener {
 
@@ -280,6 +280,12 @@ constructor(
     this.bounds = bounds
     bitmapFrameRenderer.setBounds(bounds)
     updateBitmapDimensions()
+
+    // Set bounds on thumbnail drawable when backend bounds change
+    thumbnailDrawable?.let { drawable ->
+      val thumbnailBounds = bounds ?: Rect(0, 0, width(), height())
+      (drawable as Drawable).setBounds(thumbnailBounds)
+    }
   }
 
   override fun getIntrinsicWidth(): Int = bitmapWidth
@@ -470,7 +476,7 @@ constructor(
     try {
       val uri = SecureUriParser.parseEncodedRFC2396(thumbnailUrl)
 
-      val imageOptions = ImageOptions.defaults()
+      val imageOptions = ImageOptions.defaults().extend().round(roundingOptions).build()
 
       val imageRequest =
           FrescoVitoProvider.getImagePipeline()
@@ -541,17 +547,9 @@ constructor(
       return false
     }
 
-    val actualDrawable = frescoDrawable.actualImageDrawable ?: return false
-    val currentBounds = bounds
-
     try {
-      if (currentBounds != null) {
-        actualDrawable.setBounds(currentBounds)
-      } else {
-        actualDrawable.setBounds(0, 0, canvas.width, canvas.height)
-      }
-
-      actualDrawable.draw(canvas)
+      val drawable = frescoDrawable as Drawable
+      drawable.draw(canvas)
       return true
     } catch (e: Exception) {
       FLog.w(TAG, "Failed to draw thumbnail drawable", e)
