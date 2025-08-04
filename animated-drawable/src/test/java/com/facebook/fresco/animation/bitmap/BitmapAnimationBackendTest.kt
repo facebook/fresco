@@ -412,6 +412,226 @@ class BitmapAnimationBackendTest {
     whenever(bitmapFrameRenderer.intrinsicHeight).thenReturn(backendIntrinsicHeight)
   }
 
+  fun createBackendWithRounding(roundingOptions: RoundingOptions?): BitmapAnimationBackend {
+    return BitmapAnimationBackend(
+        platformBitmapFactory,
+        bitmapFrameCache,
+        animationInformation,
+        bitmapFrameRenderer,
+        false,
+        bitmapFramePreparationStrategy,
+        bitmapFramePreparer,
+        roundingOptions)
+  }
+
+  /** Verifies circular rounding options are preserved and cornerRadii is null */
+  @Test
+  fun testCircularRoundingInitialization() {
+    val circularRounding = RoundingOptions.asCircle()
+    val backend = createBackendWithRounding(circularRounding)
+
+    assertThat(backend.roundingOptions).isEqualTo(circularRounding)
+    assertThat(backend.cornerRadii).isNull()
+  }
+
+  /** Verifies rectangular rounding creates an 8-element cornerRadii array with correct values */
+  @Test
+  fun testRectangularRoundingInitialization() {
+    val rectangularRounding = RoundingOptions.forCornerRadiusPx(20f)
+    val backend = createBackendWithRounding(rectangularRounding)
+
+    assertThat(backend.roundingOptions?.isCircular).isFalse()
+    assertThat(backend.cornerRadii).isNotNull()
+    assertThat(backend.cornerRadii).hasSize(8)
+    backend.cornerRadii?.forEach { radius -> assertThat(radius).isEqualTo(20f) }
+  }
+
+  /** Verifies null rounding options result in null cornerRadii */
+  @Test
+  fun testNoRoundingInitialization() {
+    val backend = createBackendWithRounding(null)
+
+    assertThat(backend.roundingOptions).isNull()
+    assertThat(backend.cornerRadii).isNull()
+  }
+
+  /** Verifies custom corner radii arrays are preserved correctly */
+  @Test
+  fun testRoundingWithCornerRadiiArray() {
+    val cornerRadii = floatArrayOf(10f, 10f, 20f, 20f, 30f, 30f, 40f, 40f)
+    val roundingOptions = RoundingOptions.forCornerRadii(cornerRadii)
+    val backend = createBackendWithRounding(roundingOptions)
+
+    assertThat(backend.roundingOptions?.isCircular).isFalse()
+    assertThat(backend.cornerRadii).isEqualTo(cornerRadii)
+  }
+
+  /** Verifies unset corner radius results in null cornerRadii */
+  @Test
+  fun testRoundingWithUnsetCornerRadius() {
+    val roundingOptions = RoundingOptions.forCornerRadiusPx(RoundingOptions.CORNER_RADIUS_UNSET)
+    val backend = createBackendWithRounding(roundingOptions)
+
+    assertThat(backend.roundingOptions?.isCircular).isFalse()
+    assertThat(backend.cornerRadii).isNull()
+  }
+
+  /** Verifies circular rounding options can be accessed and isCircular flag is true */
+  @Test
+  fun testRoundingOptionsAccessibilityForCircular() {
+    val circularRounding = RoundingOptions.asCircle()
+    val backend = createBackendWithRounding(circularRounding)
+
+    assertThat(backend.roundingOptions).isEqualTo(circularRounding)
+    assertThat(backend.roundingOptions?.isCircular).isTrue()
+  }
+
+  /** Verifies rectangular rounding options can be accessed and isCircular flag is false */
+  @Test
+  fun testRoundingOptionsAccessibilityForRectangular() {
+    val cornerRadius = 25f
+    val rectangularRounding = RoundingOptions.forCornerRadiusPx(cornerRadius)
+    val backend = createBackendWithRounding(rectangularRounding)
+
+    assertThat(backend.roundingOptions?.cornerRadius).isEqualTo(cornerRadius)
+    assertThat(backend.roundingOptions?.isCircular).isFalse()
+  }
+
+  /** Verifies frame drawing works correctly with circular rounding applied */
+  @Test
+  fun testDrawFrameWithCircularRounding() {
+    val circularRounding = RoundingOptions.asCircle()
+    val backend = createBackendWithRounding(circularRounding)
+    backend.setFrameListener(frameListener)
+
+    whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
+
+    val result = backend.drawFrame(parentDrawable, canvas, 1)
+
+    assertThat(result).isTrue()
+    verify(frameListener).onDrawFrameStart(backend, 1)
+  }
+
+  /** Verifies frame drawing works correctly with rectangular rounding applied */
+  @Test
+  fun testDrawFrameWithRectangularRounding() {
+    val rectangularRounding = RoundingOptions.forCornerRadiusPx(20f)
+    val backend = createBackendWithRounding(rectangularRounding)
+    backend.setFrameListener(frameListener)
+
+    whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
+
+    val result = backend.drawFrame(parentDrawable, canvas, 1)
+
+    assertThat(result).isTrue()
+    verify(frameListener).onDrawFrameStart(backend, 1)
+  }
+
+  /** Verifies bounds setting works correctly with circular rounding */
+  @Test
+  fun testCircularRoundingWithBounds() {
+    val circularRounding = RoundingOptions.asCircle()
+    val backend = createBackendWithRounding(circularRounding)
+
+    val testBounds = Rect(0, 0, 150, 150)
+    backend.setBounds(testBounds)
+
+    verify(bitmapFrameRenderer).setBounds(testBounds)
+  }
+
+  /** Verifies empty corner radii arrays are handled correctly */
+  @Test
+  fun testRoundingOptionsWithEmptyCornerRadiiArray() {
+    val emptyCornerRadii = floatArrayOf()
+    val roundingOptions = RoundingOptions.forCornerRadii(emptyCornerRadii)
+    val backend = createBackendWithRounding(roundingOptions)
+
+    assertThat(backend.roundingOptions?.isCircular).isFalse()
+    assertThat(backend.cornerRadii).isEqualTo(emptyCornerRadii)
+  }
+
+  /** Verifies cornerRadii is null specifically for circular rounding */
+  @Test
+  fun testCornerRadiiNullForCircularRounding() {
+    val circularRounding = RoundingOptions.asCircle()
+    val backend = createBackendWithRounding(circularRounding)
+
+    // For circular rounding, cornerRadii should be null
+    assertThat(backend.cornerRadii).isNull()
+    assertThat(backend.roundingOptions?.isCircular).isTrue()
+  }
+
+  /** Verifies cornerRadii is a proper 8-element array for rectangular rounding */
+  @Test
+  fun testCornerRadiiArrayForRectangularRounding() {
+    val cornerRadius = 15f
+    val rectangularRounding = RoundingOptions.forCornerRadiusPx(cornerRadius)
+    val backend = createBackendWithRounding(rectangularRounding)
+
+    // For rectangular rounding, cornerRadii should be an array of 8 elements
+    assertThat(backend.cornerRadii).isNotNull()
+    assertThat(backend.cornerRadii).hasSize(8)
+    backend.cornerRadii?.forEach { radius -> assertThat(radius).isEqualTo(cornerRadius) }
+  }
+
+  /** Verifies rounding options are preserved during backend creation */
+  @Test
+  fun testRoundingOptionsPreservation() {
+    val originalRounding = RoundingOptions.asCircle()
+    val backend = createBackendWithRounding(originalRounding)
+
+    assertThat(backend.roundingOptions).isEqualTo(originalRounding)
+  }
+
+  /** Verifies custom corner radii arrays are preserved in both backend and options */
+  @Test
+  fun testRoundingWithCustomCornerRadiiPreservation() {
+    val customRadii = floatArrayOf(5f, 5f, 10f, 10f, 15f, 15f, 20f, 20f)
+    val roundingOptions = RoundingOptions.forCornerRadii(customRadii)
+    val backend = createBackendWithRounding(roundingOptions)
+
+    assertThat(backend.cornerRadii).isEqualTo(customRadii)
+    assertThat(backend.roundingOptions?.cornerRadii).isEqualTo(customRadii)
+  }
+
+  /** Verifies circular rounding behavior when bounds are set and frames are drawn */
+  @Test
+  fun testCircularRoundingBehaviorWithBounds() {
+    val circularRounding = RoundingOptions.asCircle()
+    val backend = createBackendWithRounding(circularRounding)
+    backend.setFrameListener(frameListener)
+
+    val testBounds = Rect(0, 0, 100, 100)
+    backend.setBounds(testBounds)
+
+    whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
+
+    val result = backend.drawFrame(parentDrawable, canvas, 1)
+
+    assertThat(result).isTrue()
+    verify(bitmapFrameRenderer).setBounds(testBounds)
+    verify(frameListener).onDrawFrameStart(backend, 1)
+  }
+
+  /** Verifies rectangular rounding behavior when bounds are set and frames are drawn */
+  @Test
+  fun testRectangularRoundingBehaviorWithBounds() {
+    val rectangularRounding = RoundingOptions.forCornerRadiusPx(10f)
+    val backend = createBackendWithRounding(rectangularRounding)
+    backend.setFrameListener(frameListener)
+
+    val testBounds = Rect(0, 0, 200, 150)
+    backend.setBounds(testBounds)
+
+    whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
+
+    val result = backend.drawFrame(parentDrawable, canvas, 1)
+
+    assertThat(result).isTrue()
+    verify(bitmapFrameRenderer).setBounds(testBounds)
+    verify(frameListener).onDrawFrameStart(backend, 1)
+  }
+
   private fun createThumbnailBackend(
       thumbnailUrl: String?,
       loopCount: Int,
