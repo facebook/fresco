@@ -401,6 +401,7 @@ object FrescoVitoImage2Spec {
     if (FrescoVitoProvider.getConfig().useDetached()) {
       val drawable = frescoDrawableRef?.value
       if (drawable != null) {
+        drawable.imagePerfListener.onDetached(drawable)
         releaseDrawableWithMechanism(
             drawable,
             ReleaseStrategy.parse(FrescoVitoProvider.getConfig().onDetachedReleaseStrategy()))

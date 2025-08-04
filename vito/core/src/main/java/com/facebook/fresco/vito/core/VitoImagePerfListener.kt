@@ -35,4 +35,6 @@ interface VitoImagePerfListener {
   fun onIgnoreResult(drawable: FrescoDrawableInterface)
 
   fun onIgnoreFailure(drawable: FrescoDrawableInterface)
+
+  fun onDetached(drawable: FrescoDrawableInterface)
 }

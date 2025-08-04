@@ -38,4 +38,6 @@ open class BaseVitoImagePerfListener : VitoImagePerfListener {
   override fun onIgnoreResult(drawable: FrescoDrawableInterface) = Unit
 
   override fun onIgnoreFailure(drawable: FrescoDrawableInterface) = Unit
+
+  override fun onDetached(drawable: FrescoDrawableInterface) = Unit
 }

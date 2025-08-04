@@ -50,4 +50,7 @@ class ListVitoImagePerfListener(private vararg val listeners: VitoImagePerfListe
 
   override fun onIgnoreFailure(drawable: FrescoDrawableInterface): Unit =
       listeners.forEach { it.onIgnoreFailure(drawable) }
+
+  override fun onDetached(drawable: FrescoDrawableInterface): Unit =
+      listeners.forEach { it.onDetached(drawable) }
 }
