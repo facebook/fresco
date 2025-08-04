@@ -18,6 +18,8 @@ import com.facebook.fresco.animation.backend.AnimationBackend
 import com.facebook.fresco.animation.backend.AnimationInformation
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer
+import com.facebook.fresco.vito.options.AnimatedOptions
+import com.facebook.fresco.vito.options.RoundingOptions
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -28,13 +30,13 @@ import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Captor
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.capture
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 
@@ -358,7 +360,7 @@ class BitmapAnimationBackendTest {
     verify(bitmapFrameCache).getBitmapToReuseForFrame(4, 0, 0)
     verify(platformBitmapFactory).createBitmap(0, 0, Bitmap.Config.ARGB_8888)
     verify(bitmapFrameCache).getFallbackFrame(4)
-    Mockito.verifyNoMoreInteractions(canvas, bitmapFrameCache)
+    verifyNoMoreInteractions(canvas, bitmapFrameCache)
     verifyFramePreparationStrategyCalled(4)
     verify(frameListener).onFrameDropped(bitmapAnimationBackend, 4)
   }
@@ -408,5 +410,258 @@ class BitmapAnimationBackendTest {
 
     whenever(bitmapFrameRenderer.intrinsicWidth).thenReturn(backendIntrinsicWidth)
     whenever(bitmapFrameRenderer.intrinsicHeight).thenReturn(backendIntrinsicHeight)
+  }
+
+  private fun createThumbnailBackend(
+      thumbnailUrl: String?,
+      loopCount: Int,
+      roundingOptions: RoundingOptions? = null
+  ): BitmapAnimationBackend {
+    val animatedOptions =
+        if (thumbnailUrl != null) {
+          AnimatedOptions.loop(loopCount, thumbnailUrl)
+        } else {
+          AnimatedOptions.loop(loopCount)
+        }
+    return BitmapAnimationBackend(
+        platformBitmapFactory,
+        bitmapFrameCache,
+        animationInformation,
+        bitmapFrameRenderer,
+        false,
+        bitmapFramePreparationStrategy,
+        bitmapFramePreparer,
+        roundingOptions,
+        animatedOptions)
+  }
+
+  private fun createBackendWithAnimatedOptions(
+      animatedOptions: AnimatedOptions?
+  ): BitmapAnimationBackend {
+    return BitmapAnimationBackend(
+        platformBitmapFactory,
+        bitmapFrameCache,
+        animationInformation,
+        bitmapFrameRenderer,
+        false,
+        bitmapFramePreparationStrategy,
+        bitmapFramePreparer,
+        null,
+        animatedOptions)
+  }
+
+  private fun setupAnimationInformation(frameCount: Int = 3, loopCount: Int = 1) {
+    whenever(animationInformation.frameCount).thenReturn(frameCount)
+    whenever(animationInformation.loopCount).thenReturn(loopCount)
+  }
+
+  /**
+   * Tests that thumbnail fallback is enabled when valid thumbnail URL and finite loop count are
+   * provided.
+   */
+  @Test
+  fun testThumbnailInitializationWithValidOptions() {
+    val thumbnailUrl = "https://example.com/thumbnail.jpg"
+    val backend = createThumbnailBackend(thumbnailUrl, 3)
+
+    assertThat(backend.animatedOptions?.useFallbackThumbnail()).isTrue()
+    assertThat(backend.animatedOptions?.thumbnailUrl).isEqualTo(thumbnailUrl)
+  }
+
+  /** Tests that backend handles null AnimatedOptions without errors. */
+  @Test
+  fun testThumbnailInitializationWithNullOptions() {
+    val backend = createBackendWithAnimatedOptions(null)
+    assertThat(backend.animatedOptions).isNull()
+  }
+
+  /** Tests that thumbnail fallback is disabled when empty thumbnail URL is provided. */
+  @Test
+  fun testThumbnailInitializationWithEmptyUrl() {
+    val backend = createThumbnailBackend("", 3)
+    assertThat(backend.animatedOptions?.useFallbackThumbnail()).isFalse()
+  }
+
+  /** Tests that infinite loop animations don't use thumbnail fallback even with valid URL. */
+  @Test
+  fun testThumbnailInitializationWithInfiniteLoop() {
+    val backend =
+        createThumbnailBackend("https://example.com/thumb.jpg", AnimatedOptions.LOOP_COUNT_INFINITE)
+    assertThat(backend.animatedOptions?.useFallbackThumbnail()).isFalse()
+  }
+
+  /** Tests that AnimatedOptions loop count overrides AnimationInformation loop count. */
+  @Test
+  fun testLoopCountWithAnimatedOptions() {
+    setupAnimationInformation(loopCount = 10)
+    val backend = createBackendWithAnimatedOptions(AnimatedOptions.loop(5))
+
+    assertThat(backend.loopCount).isEqualTo(5)
+  }
+
+  /** Tests that infinite AnimatedOptions correctly returns infinite loop count. */
+  @Test
+  fun testLoopCountWithInfiniteAnimatedOptions() {
+    setupAnimationInformation(loopCount = 10)
+    val backend = createBackendWithAnimatedOptions(AnimatedOptions.infinite())
+
+    assertThat(backend.loopCount).isEqualTo(AnimationInformation.LOOP_COUNT_INFINITE)
+  }
+
+  /**
+   * Tests that backend falls back to AnimationInformation loop count when no AnimatedOptions
+   * provided.
+   */
+  @Test
+  fun testLoopCountWithoutAnimatedOptions() {
+    setupAnimationInformation(loopCount = 7)
+    val backend = createBackendWithAnimatedOptions(null)
+
+    assertThat(backend.loopCount).isEqualTo(7)
+  }
+
+  /** Tests that normal frame drawing works when animation hasn't completed yet. */
+  @Test
+  fun testDrawFrameWithThumbnailFallback() {
+    setupAnimationInformation(frameCount = 3)
+    whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
+
+    val backend = createThumbnailBackend("https://example.com/thumb.jpg", 2)
+    backend.setFrameListener(frameListener)
+
+    val result = backend.drawFrame(parentDrawable, canvas, 0)
+
+    assertThat(result).isTrue()
+    verify(frameListener).onDrawFrameStart(backend, 0)
+    verify(canvas).drawBitmap(eq(bitmap), eq(0f), eq(0f), any<Paint>())
+  }
+
+  /**
+   * Tests the useFallbackThumbnail() logic with various URL and loop configurations including
+   * static options.
+   */
+  @Test
+  fun testAnimatedOptionsUseFallbackThumbnail() {
+    val validOptions = AnimatedOptions.loop(3, "https://example.com/thumb.jpg")
+    assertThat(validOptions.useFallbackThumbnail()).isTrue()
+
+    val emptyUrlOptions = AnimatedOptions.loop(3, "")
+    assertThat(emptyUrlOptions.useFallbackThumbnail()).isFalse()
+
+    val nullUrlOptions = AnimatedOptions.loop(3, null)
+    assertThat(nullUrlOptions.useFallbackThumbnail()).isFalse()
+
+    val infiniteOptions = AnimatedOptions.infinite()
+    assertThat(infiniteOptions.useFallbackThumbnail()).isFalse()
+
+    val staticOptions = AnimatedOptions.static()
+    assertThat(staticOptions.useFallbackThumbnail()).isFalse()
+  }
+
+  /** Tests equality and hashCode methods for AnimatedOptions with thumbnail URLs. */
+  @Test
+  fun testAnimatedOptionsEquality() {
+    val options1 = AnimatedOptions.loop(3, "https://example.com/thumb.jpg")
+    val options2 = AnimatedOptions.loop(3, "https://example.com/thumb.jpg")
+    val options3 = AnimatedOptions.loop(3, "https://different.com/thumb.jpg")
+    val options4 = AnimatedOptions.loop(5, "https://example.com/thumb.jpg")
+
+    assertThat(options1).isEqualTo(options2)
+    assertThat(options1).isNotEqualTo(options3)
+    assertThat(options1).isNotEqualTo(options4)
+
+    assertThat(options1.hashCode()).isEqualTo(options2.hashCode())
+  }
+
+  /** Tests that thumbnail and rounding options work together correctly. */
+  @Test
+  fun testAnimatedOptionsWithRoundingOptions() {
+    val roundingOptions = RoundingOptions.asCircle()
+    val backend = createThumbnailBackend("https://example.com/thumb.jpg", 3, roundingOptions)
+
+    assertThat(backend.animatedOptions?.useFallbackThumbnail()).isTrue()
+    assertThat(backend.roundingOptions).isEqualTo(roundingOptions)
+  }
+
+  /** Tests that thumbnail resources are properly cleaned up when backend becomes inactive. */
+  @Test
+  fun testOnInactiveReleasesResources() {
+    val backend = createThumbnailBackend("https://example.com/thumb.jpg", 3)
+    backend.onInactive()
+
+    verify(bitmapFrameCache).clear()
+  }
+
+  /** Tests that setting bounds works correctly when thumbnail drawable is present. */
+  @Test
+  fun testSetBoundsWithThumbnailDrawable() {
+    val testBounds = Rect(10, 20, 110, 120)
+    val backend = createThumbnailBackend("https://example.com/thumb.jpg", 3)
+
+    backend.setBounds(testBounds)
+
+    verify(bitmapFrameRenderer).setBounds(testBounds)
+  }
+
+  /** Tests that setting null bounds with thumbnail drawable doesn't cause errors. */
+  @Test
+  fun testSetBoundsWithNullBoundsAndThumbnail() {
+    val backend = createThumbnailBackend("https://example.com/thumb.jpg", 3)
+
+    backend.setBounds(null)
+
+    verify(bitmapFrameRenderer).setBounds(null)
+  }
+
+  /** Tests that roundingOptions is accessible as a property for circular rounding. */
+  @Test
+  fun testRoundingOptionsAccessibility() {
+    val roundingOptions = RoundingOptions.asCircle()
+    val backend = createThumbnailBackend("https://example.com/thumb.jpg", 3, roundingOptions)
+
+    assertThat(backend.roundingOptions).isEqualTo(roundingOptions)
+    assertThat(backend.roundingOptions?.isCircular).isTrue()
+  }
+
+  /** Tests that corner radius rounding options are properly accessible and configured. */
+  @Test
+  fun testRoundingOptionsWithCornerRadius() {
+    val cornerRadius = 15f
+    val roundingOptions = RoundingOptions.forCornerRadiusPx(cornerRadius)
+    val backend = createThumbnailBackend("https://example.com/thumb.jpg", 3, roundingOptions)
+
+    assertThat(backend.roundingOptions?.cornerRadius).isEqualTo(cornerRadius)
+    assertThat(backend.roundingOptions?.isCircular).isFalse()
+  }
+
+  /** Tests that null rounding options are handled correctly without errors. */
+  @Test
+  fun testRoundingOptionsWithNullRounding() {
+    val backend = createThumbnailBackend("https://example.com/thumb.jpg", 3, null)
+    assertThat(backend.roundingOptions).isNull()
+  }
+
+  /** Tests that circular rounding and thumbnail fallback work together seamlessly. */
+  @Test
+  fun testThumbnailWithCircularRounding() {
+    val roundingOptions = RoundingOptions.asCircle()
+    val backend = createThumbnailBackend("https://example.com/thumb.jpg", 2, roundingOptions)
+
+    assertThat(backend.roundingOptions?.isCircular).isTrue()
+    assertThat(backend.animatedOptions?.useFallbackThumbnail()).isTrue()
+  }
+
+  /** Tests that thumbnail fallback is disabled when null thumbnail URL is provided. */
+  @Test
+  fun testThumbnailFallbackDisabledWithoutUrl() {
+    val backend = createThumbnailBackend(null, 3)
+    assertThat(backend.animatedOptions?.useFallbackThumbnail()).isFalse()
+  }
+
+  /** Tests that empty string thumbnail URL disables thumbnail fallback functionality. */
+  @Test
+  fun testThumbnailFallbackDisabledWithEmptyUrl() {
+    val backend = createThumbnailBackend("", 3)
+    assertThat(backend.animatedOptions?.useFallbackThumbnail()).isFalse()
   }
 }
