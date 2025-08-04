@@ -37,7 +37,8 @@ public abstract class BaseCloseableImage implements CloseableImage {
               HasExtraData.KEY_NON_FATAL_DECODE_ERROR,
               HasExtraData.KEY_SF_ORIGINAL_URL,
               HasExtraData.KEY_SF_FETCH_STRATEGY,
-              HasExtraData.KEY_COLOR_SPACE));
+              HasExtraData.KEY_COLOR_SPACE,
+              HasExtraData.KEY_SF_VARIATION));
 
   private @Nullable ImageInfo mCacheImageInfo;
 
