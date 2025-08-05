@@ -5,20 +5,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.cache.disk;
+package com.facebook.cache.disk
 
-import com.facebook.binaryresource.BinaryResource;
-import com.facebook.cache.common.CacheKey;
-import com.facebook.cache.common.WriterCallback;
-import com.facebook.common.disk.DiskTrimmable;
-import com.facebook.infer.annotation.Nullsafe;
-import java.io.IOException;
-import javax.annotation.Nullable;
+import com.facebook.binaryresource.BinaryResource
+import com.facebook.cache.common.CacheKey
+import com.facebook.cache.common.WriterCallback
+import com.facebook.cache.disk.DiskStorage.DiskDumpInfo
+import com.facebook.common.disk.DiskTrimmable
+import com.facebook.infer.annotation.Nullsafe
+import java.io.IOException
 
 /** Interface that caches based on disk should implement. */
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public interface FileCache extends DiskTrimmable {
-
+interface FileCache : DiskTrimmable {
   /**
    * Tells if this cache is enabled. It's important for some caches that can be disabled without
    * further notice (like in removable/unmountable storage). Anyway a disabled cache should just
@@ -26,25 +25,24 @@ public interface FileCache extends DiskTrimmable {
    *
    * @return true if this cache is usable, false otherwise.
    */
-  boolean isEnabled();
+  fun isEnabled(): Boolean
 
   /** Returns the binary resource cached with key. */
-  @Nullable
-  BinaryResource getResource(CacheKey key);
+  fun getResource(key: CacheKey): BinaryResource?
 
   /**
    * Returns true if the key is in the in-memory key index.
    *
-   * <p>Not guaranteed to be correct. The cache may yet have this key even if this returns false.
-   * But if it returns true, it definitely has it.
+   * Not guaranteed to be correct. The cache may yet have this key even if this returns false. But
+   * if it returns true, it definitely has it.
    *
-   * <p>Avoids a disk read.
+   * Avoids a disk read.
    */
-  boolean hasKeySync(CacheKey key);
+  fun hasKeySync(key: CacheKey): Boolean
 
-  boolean hasKey(CacheKey key);
+  fun hasKey(key: CacheKey): Boolean
 
-  boolean probe(CacheKey key);
+  fun probe(key: CacheKey): Boolean
 
   /**
    * Inserts resource into file with key
@@ -54,25 +52,20 @@ public interface FileCache extends DiskTrimmable {
    * @return a sequence of bytes
    * @throws IOException
    */
-  @Nullable
-  BinaryResource insert(CacheKey key, WriterCallback writer) throws IOException;
+  @Throws(IOException::class) fun insert(key: CacheKey, writer: WriterCallback): BinaryResource?
 
   /**
    * Removes a resource by key from cache.
    *
    * @param key cache key
    */
-  void remove(CacheKey key);
+  fun remove(key: CacheKey)
 
-  /**
-   * @return the in-use size of the cache
-   */
-  long getSize();
+  /** @return the in-use size of the cache */
+  fun getSize(): Long
 
-  /**
-   * @return the count of pictures in the cache
-   */
-  long getCount();
+  /** @return the count of pictures in the cache */
+  fun getCount(): Long
 
   /**
    * Deletes old cache files.
@@ -80,9 +73,9 @@ public interface FileCache extends DiskTrimmable {
    * @param cacheExpirationMs files older than this will be deleted.
    * @return the age in ms of the oldest file remaining in the cache.
    */
-  long clearOldEntries(long cacheExpirationMs);
+  fun clearOldEntries(cacheExpirationMs: Long): Long
 
-  void clearAll();
+  fun clearAll()
 
-  DiskStorage.DiskDumpInfo getDumpInfo() throws IOException;
+  @Throws(IOException::class) fun getDumpInfo(): DiskDumpInfo
 }

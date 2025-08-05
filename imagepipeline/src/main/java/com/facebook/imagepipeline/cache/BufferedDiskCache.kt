@@ -322,7 +322,7 @@ class BufferedDiskCache(
   }
 
   val size: Long
-    get() = fileCache.size
+    get() = fileCache.getSize()
 
   private fun foundPinnedImage(key: CacheKey, pinnedImage: EncodedImage): Task<EncodedImage> {
     FLog.v(TAG, "Found image for %s in staging area", key.uriString)

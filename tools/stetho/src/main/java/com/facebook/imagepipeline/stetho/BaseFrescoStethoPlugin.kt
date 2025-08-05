@@ -98,7 +98,7 @@ abstract class BaseFrescoStethoPlugin() : DumperPlugin {
   private fun diskcache(cache: FileCache, title: String, writer: PrintStream, args: List<String>) {
     val intDiskDumpInfo =
         try {
-          cache.dumpInfo
+          cache.getDumpInfo()
         } catch (e: IOException) {
           throw DumpException(e.message)
         }
