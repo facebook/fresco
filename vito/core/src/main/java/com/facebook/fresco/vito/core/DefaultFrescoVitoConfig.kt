@@ -109,5 +109,11 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
     override fun prefetchTargetOnBoundsDefined(): PrefetchTarget = PrefetchTarget.MEMORY_DECODED
 
     override fun closePrefetchDataSourceOnBindorOnMount(): Boolean = true
+
+    override fun closePrefetchDataSourceOnUnbind(): Boolean = true
+
+    override fun closePrefetchDataSourceOnUnmount(): Boolean = true
+
+    override fun closePrefetchDataSourceOnDetached(): Boolean = false
   }
 }

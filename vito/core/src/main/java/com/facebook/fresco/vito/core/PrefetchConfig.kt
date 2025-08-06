@@ -17,4 +17,10 @@ interface PrefetchConfig {
   fun prefetchTargetOnBoundsDefined(): PrefetchTarget
 
   fun closePrefetchDataSourceOnBindorOnMount(): Boolean
+
+  fun closePrefetchDataSourceOnUnbind(): Boolean
+
+  fun closePrefetchDataSourceOnUnmount(): Boolean
+
+  fun closePrefetchDataSourceOnDetached(): Boolean
 }

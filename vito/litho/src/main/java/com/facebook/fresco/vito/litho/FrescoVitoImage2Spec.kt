@@ -371,8 +371,10 @@ object FrescoVitoImage2Spec {
             .release(frescoDrawable, FrescoVitoProvider.getConfig().onUnbindReleaseStrategy())
       }
     }
-    prefetchDataSource?.close()
-    prefetchDataSourceFromBoundsDefined?.close()
+    if (FrescoVitoProvider.getConfig().prefetchConfig.closePrefetchDataSourceOnUnbind()) {
+      prefetchDataSource?.close()
+      prefetchDataSourceFromBoundsDefined?.close()
+    }
   }
 
   @JvmStatic
@@ -391,8 +393,10 @@ object FrescoVitoImage2Spec {
       FrescoVitoProvider.getController()
           .release(frescoDrawable, FrescoVitoProvider.getConfig().onUnmountReleaseStrategy())
     }
-    prefetchDataSource?.close()
-    prefetchDataSourceFromBoundsDefined?.close()
+    if (FrescoVitoProvider.getConfig().prefetchConfig.closePrefetchDataSourceOnUnmount()) {
+      prefetchDataSource?.close()
+      prefetchDataSourceFromBoundsDefined?.close()
+    }
   }
 
   @JvmStatic
