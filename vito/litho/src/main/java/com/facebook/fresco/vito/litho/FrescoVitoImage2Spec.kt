@@ -26,6 +26,7 @@ import com.facebook.fresco.urimod.FetchStrategy
 import com.facebook.fresco.urimod.NoPrefetchInOnPrepareStrategy
 import com.facebook.fresco.urimod.SmartFetchStrategy
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
+import com.facebook.fresco.vito.core.ReleaseStrategy.Companion.release
 import com.facebook.fresco.vito.core.VitoImageRequest
 import com.facebook.fresco.vito.listener.ImageListener
 import com.facebook.fresco.vito.litho.FrescoVitoImage2Spec.Prefetch.AUTO
@@ -402,9 +403,8 @@ object FrescoVitoImage2Spec {
       val drawable = frescoDrawableRef?.value
       if (drawable != null) {
         drawable.imagePerfListener.onDetached(drawable)
-        releaseDrawableWithMechanism(
-            drawable,
-            ReleaseStrategy.parse(FrescoVitoProvider.getConfig().onDetachedReleaseStrategy()))
+        FrescoVitoProvider.getController()
+            .release(drawable, FrescoVitoProvider.getConfig().onDetachedReleaseStrategy())
         frescoDrawableRef.value = null
       }
     }
@@ -581,33 +581,6 @@ object FrescoVitoImage2Spec {
 
   private fun experimentalDynamicSizeWithCacheFallbackVito2(): Boolean =
       FrescoVitoProvider.getConfig().experimentalDynamicSizeWithCacheFallbackVito2()
-
-  private fun releaseDrawableWithMechanism(
-      drawable: FrescoDrawableInterface,
-      releaseStrategy: ReleaseStrategy
-  ) {
-    when (releaseStrategy) {
-      ReleaseStrategy.IMMEDIATE -> FrescoVitoProvider.getController().releaseImmediately(drawable)
-      ReleaseStrategy.DELAYED -> FrescoVitoProvider.getController().releaseDelayed(drawable)
-      ReleaseStrategy.NEXT_FRAME -> FrescoVitoProvider.getController().release(drawable)
-    }
-  }
-
-  enum class ReleaseStrategy {
-    IMMEDIATE,
-    DELAYED,
-    NEXT_FRAME;
-
-    companion object {
-      @JvmStatic
-      fun parse(value: Long): ReleaseStrategy =
-          when (value) {
-            2L -> IMMEDIATE
-            1L -> DELAYED
-            else -> NEXT_FRAME
-          }
-    }
-  }
 
   enum class Prefetch {
     AUTO,

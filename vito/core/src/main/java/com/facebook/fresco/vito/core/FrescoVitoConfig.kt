@@ -26,7 +26,7 @@ interface FrescoVitoConfig {
 
   fun useDetached(): Boolean
 
-  fun onDetachedReleaseStrategy(): Long
+  fun onDetachedReleaseStrategy(): ReleaseStrategy
 
   fun useBindOnly(): Boolean
 
