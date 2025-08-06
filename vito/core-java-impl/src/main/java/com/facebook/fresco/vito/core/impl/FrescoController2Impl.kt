@@ -267,7 +267,7 @@ open class FrescoController2Impl(
     drawable.scheduleReleaseDelayed()
   }
 
-  override fun release(drawable: FrescoDrawableInterface) {
+  override fun releaseNextFrame(drawable: FrescoDrawableInterface) {
     if (drawable !is FrescoDrawable2Impl) {
       FLog.e(TAG, "Drawable not supported $drawable")
       return

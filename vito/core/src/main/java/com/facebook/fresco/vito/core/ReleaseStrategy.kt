@@ -7,10 +7,6 @@
 
 package com.facebook.fresco.vito.core
 
-import com.facebook.fresco.vito.core.ReleaseStrategy.DELAYED
-import com.facebook.fresco.vito.core.ReleaseStrategy.IMMEDIATE
-import com.facebook.fresco.vito.core.ReleaseStrategy.NEXT_FRAME
-
 /** Defines how an image is released. */
 enum class ReleaseStrategy {
   IMMEDIATE,
@@ -33,7 +29,7 @@ enum class ReleaseStrategy {
       when (releaseStrategy) {
         IMMEDIATE -> releaseImmediately(drawable)
         DELAYED -> releaseDelayed(drawable)
-        NEXT_FRAME -> release(drawable)
+        NEXT_FRAME -> releaseNextFrame(drawable)
       }
     }
   }

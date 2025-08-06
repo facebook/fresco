@@ -34,7 +34,7 @@ interface FrescoController2 {
 
   fun releaseDelayed(drawable: FrescoDrawableInterface)
 
-  fun release(drawable: FrescoDrawableInterface)
+  fun releaseNextFrame(drawable: FrescoDrawableInterface)
 
   fun releaseImmediately(drawable: FrescoDrawableInterface)
 }

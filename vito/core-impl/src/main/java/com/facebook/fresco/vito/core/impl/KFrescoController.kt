@@ -249,7 +249,7 @@ class KFrescoController(
     }
   }
 
-  override fun release(drawable: FrescoDrawableInterface) {
+  override fun releaseNextFrame(drawable: FrescoDrawableInterface) {
     traceSection("KFrescoController#release") {
       if (drawable !is KFrescoVitoDrawable) {
         FLog.e(TAG, "Drawable not supported $drawable")

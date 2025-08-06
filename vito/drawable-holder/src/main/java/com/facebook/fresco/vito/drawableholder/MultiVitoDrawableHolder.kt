@@ -139,7 +139,7 @@ class MultiVitoDrawableHolder {
 
     @JvmStatic
     fun detachHolder(holder: VitoDrawableHolder) {
-      FrescoVitoProvider.getController().release(holder.drawable)
+      FrescoVitoProvider.getController().releaseNextFrame(holder.drawable)
     }
 
     @JvmStatic

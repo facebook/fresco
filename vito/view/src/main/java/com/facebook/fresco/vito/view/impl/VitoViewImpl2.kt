@@ -46,7 +46,7 @@ object VitoViewImpl2 {
           getDrawable(view)?.apply {
             imagePerfListener.onImageUnmount(this)
             if (useReleaseInViewDetached.get()) {
-              FrescoVitoProvider.getController().release(this)
+              FrescoVitoProvider.getController().releaseNextFrame(this)
             }
             if (useReleaseDelayedInViewDetached.get()) {
               FrescoVitoProvider.getController().releaseDelayed(this)
@@ -192,7 +192,7 @@ object VitoViewImpl2 {
           object : VisibilityCallback {
             override fun onVisibilityChange(visible: Boolean) {
               if (!visible) {
-                FrescoVitoProvider.getController().release(frescoDrawable)
+                FrescoVitoProvider.getController().releaseNextFrame(frescoDrawable)
               } else {
                 maybeFetchImage(frescoDrawable)
               }
