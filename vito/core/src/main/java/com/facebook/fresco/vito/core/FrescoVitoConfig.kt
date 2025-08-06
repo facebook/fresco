@@ -26,6 +26,10 @@ interface FrescoVitoConfig {
 
   fun useDetached(): Boolean
 
+  fun onUnbindReleaseStrategy(): ReleaseStrategy
+
+  fun onUnmountReleaseStrategy(): ReleaseStrategy
+
   fun onDetachedReleaseStrategy(): ReleaseStrategy
 
   fun useBindOnly(): Boolean

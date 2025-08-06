@@ -367,7 +367,8 @@ object FrescoVitoImage2Spec {
       if (FrescoVitoProvider.getConfig().useBindOnly()) {
         FrescoVitoProvider.getController().releaseImmediately(frescoDrawable)
       } else {
-        FrescoVitoProvider.getController().releaseDelayed(frescoDrawable)
+        FrescoVitoProvider.getController()
+            .release(frescoDrawable, FrescoVitoProvider.getConfig().onUnbindReleaseStrategy())
       }
     }
     prefetchDataSource?.close()
@@ -387,7 +388,8 @@ object FrescoVitoImage2Spec {
       if (FrescoVitoProvider.getConfig().useBindOnly()) {
         return
       }
-      FrescoVitoProvider.getController().release(frescoDrawable)
+      FrescoVitoProvider.getController()
+          .release(frescoDrawable, FrescoVitoProvider.getConfig().onUnmountReleaseStrategy())
     }
     prefetchDataSource?.close()
     prefetchDataSourceFromBoundsDefined?.close()

@@ -27,6 +27,10 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
 
   override fun useDetached(): Boolean = false
 
+  override fun onUnbindReleaseStrategy(): ReleaseStrategy = ReleaseStrategy.DELAYED
+
+  override fun onUnmountReleaseStrategy(): ReleaseStrategy = ReleaseStrategy.NEXT_FRAME
+
   override fun onDetachedReleaseStrategy(): ReleaseStrategy = ReleaseStrategy.NEXT_FRAME
 
   override fun useUnmount(): Boolean = true
