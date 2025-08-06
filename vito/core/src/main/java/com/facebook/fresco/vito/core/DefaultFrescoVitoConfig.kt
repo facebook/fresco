@@ -11,6 +11,7 @@ import android.net.Uri
 import com.facebook.common.callercontext.ContextChain
 import com.facebook.common.internal.Supplier
 import com.facebook.common.internal.Suppliers
+import kotlin.Long
 
 open class DefaultFrescoVitoConfig
 @JvmOverloads
@@ -32,6 +33,8 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
   override fun onUnmountReleaseStrategy(): ReleaseStrategy = ReleaseStrategy.NEXT_FRAME
 
   override fun onDetachedReleaseStrategy(): ReleaseStrategy = ReleaseStrategy.NEXT_FRAME
+
+  override fun releaseDelayMs(): Long = 16 * 5L // Roughly 5 frames.
 
   override fun useUnmount(): Boolean = true
 

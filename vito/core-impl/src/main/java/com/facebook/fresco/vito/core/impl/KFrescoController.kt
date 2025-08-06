@@ -251,7 +251,7 @@ class KFrescoController(
         FLog.e(TAG, "Drawable not supported $drawable")
         return
       }
-      ImageReleaseScheduler.releaseDelayed(drawable)
+      ImageReleaseScheduler.releaseDelayed(drawable, config.releaseDelayMs())
     }
   }
 

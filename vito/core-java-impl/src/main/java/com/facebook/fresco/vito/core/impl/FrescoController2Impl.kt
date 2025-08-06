@@ -270,7 +270,7 @@ open class FrescoController2Impl(
       return
     }
     drawable.imagePerfListener.onScheduleReleaseDelayed(drawable)
-    drawable.scheduleReleaseDelayed()
+    drawable.scheduleReleaseDelayed(config.releaseDelayMs())
   }
 
   override fun releaseNextFrame(drawable: FrescoDrawableInterface) {

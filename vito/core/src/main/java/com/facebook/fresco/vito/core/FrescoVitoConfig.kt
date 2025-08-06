@@ -32,6 +32,8 @@ interface FrescoVitoConfig {
 
   fun onDetachedReleaseStrategy(): ReleaseStrategy
 
+  fun releaseDelayMs(): Long
+
   fun useBindOnly(): Boolean
 
   fun useNewReleaseCallback(): Boolean

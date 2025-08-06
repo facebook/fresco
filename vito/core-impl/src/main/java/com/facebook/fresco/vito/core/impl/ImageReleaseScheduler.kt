@@ -12,7 +12,6 @@ import android.os.Looper
 import com.facebook.drawee.components.DeferredReleaser
 
 object ImageReleaseScheduler {
-  var releaseDelayMs: Long = 16 * 5 // Roughly 5 frames.
 
   var improveDelayedReleasing = false
   var enableReleaseDelayed = true
@@ -46,7 +45,7 @@ object ImageReleaseScheduler {
     drawable.reset()
   }
 
-  fun releaseDelayed(drawable: KFrescoVitoDrawable) {
+  fun releaseDelayed(drawable: KFrescoVitoDrawable, releaseDelayMs: Long) {
     if (!enableReleaseDelayed || drawable.releaseState.delayedReleasePending) {
       return
     }

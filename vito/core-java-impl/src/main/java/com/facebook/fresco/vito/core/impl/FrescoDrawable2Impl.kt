@@ -211,11 +211,11 @@ class FrescoDrawable2Impl(
         resetControllerListener2)
   }
 
-  fun scheduleReleaseDelayed() {
+  fun scheduleReleaseDelayed(releaseDelayMs: Long) {
     if (delayedReleasePending) {
       return
     }
-    handler.postDelayed(releaseRunnable, RELEASE_DELAY)
+    handler.postDelayed(releaseRunnable, releaseDelayMs)
     delayedReleasePending = true
   }
 
@@ -319,7 +319,6 @@ class FrescoDrawable2Impl(
   }
 
   companion object {
-    private const val RELEASE_DELAY: Long = 16 * 5L // Roughly 5 frames.
     private val handler = Handler(Looper.getMainLooper())
     private val deferredReleaser = DeferredReleaser.getInstance()
   }
