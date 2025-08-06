@@ -29,9 +29,6 @@ import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.ReleaseStrategy.Companion.release
 import com.facebook.fresco.vito.core.VitoImageRequest
 import com.facebook.fresco.vito.listener.ImageListener
-import com.facebook.fresco.vito.litho.FrescoVitoImage2Spec.Prefetch.AUTO
-import com.facebook.fresco.vito.litho.FrescoVitoImage2Spec.Prefetch.NO
-import com.facebook.fresco.vito.litho.FrescoVitoImage2Spec.Prefetch.YES
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.fresco.vito.source.ImageSource
@@ -103,9 +100,10 @@ object FrescoVitoImage2Spec {
 
   @JvmStatic
   @OnCreateInitialState
-  fun onCreateInitialState(frescoDrawableRef: StateValue<Ref<FrescoDrawableInterface?>?>) {
-    if (FrescoVitoProvider.getConfig().useDetached()) {
-      frescoDrawableRef.set(Ref<FrescoDrawableInterface?>(null))
+  fun onCreateInitialState(frescoDrawableRef: StateValue<Ref<OnDetachedHolder?>?>) {
+    if (FrescoVitoProvider.getConfig().useDetached() ||
+        FrescoVitoProvider.getConfig().prefetchConfig.closePrefetchDataSourceOnDetached()) {
+      frescoDrawableRef.set(Ref<OnDetachedHolder?>(null))
     }
   }
 
@@ -257,10 +255,13 @@ object FrescoVitoImage2Spec {
       @FromBoundsDefined viewportDimensions: Rect,
       @TreeProp contextChain: ContextChain?,
       @FromPrepare fetchStrategy: FetchStrategy,
-      @State frescoDrawableRef: Ref<FrescoDrawableInterface?>?,
+      @State frescoDrawableRef: Ref<OnDetachedHolder?>?,
   ) {
-    if (frescoDrawableRef != null && FrescoVitoProvider.getConfig().useDetached()) {
-      frescoDrawableRef.value = frescoDrawable
+    if (frescoDrawableRef != null &&
+        (FrescoVitoProvider.getConfig().useDetached() ||
+            FrescoVitoProvider.getConfig().prefetchConfig.closePrefetchDataSourceOnDetached())) {
+      frescoDrawableRef.value =
+          OnDetachedHolder(frescoDrawable, prefetchDataSource, prefetchDataSourceFromBoundsDefined)
     }
     if (FrescoVitoProvider.getConfig().useMount()) {
       val request =
@@ -407,17 +408,22 @@ object FrescoVitoImage2Spec {
   @OnDetached
   fun onDetached(
       c: ComponentContext,
-      @State frescoDrawableRef: Ref<FrescoDrawableInterface?>?,
+      @State frescoDrawableRef: Ref<OnDetachedHolder?>?,
   ) {
+    val ref = frescoDrawableRef ?: return
     if (FrescoVitoProvider.getConfig().useDetached()) {
-      val drawable = frescoDrawableRef?.value
+      val drawable = ref.value?.drawable
       if (drawable != null) {
         drawable.imagePerfListener.onDetached(drawable)
         FrescoVitoProvider.getController()
             .release(drawable, FrescoVitoProvider.getConfig().onDetachedReleaseStrategy())
-        frescoDrawableRef.value = null
       }
     }
+    if (FrescoVitoProvider.getConfig().prefetchConfig.closePrefetchDataSourceOnDetached()) {
+      ref.value?.prefetchDataSource?.close()
+      ref.value?.prefetchDataSourceFromBoundsDefined?.close()
+    }
+    ref.value = null
   }
 
   @JvmStatic
@@ -607,4 +613,10 @@ object FrescoVitoImage2Spec {
           }
     }
   }
+
+  class OnDetachedHolder(
+      val drawable: FrescoDrawableInterface?,
+      val prefetchDataSource: DataSource<Void?>?,
+      val prefetchDataSourceFromBoundsDefined: DataSource<Void?>?
+  )
 }
