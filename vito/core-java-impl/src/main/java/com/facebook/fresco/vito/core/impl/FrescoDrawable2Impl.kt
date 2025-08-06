@@ -53,6 +53,7 @@ class FrescoDrawable2Impl(
   override var refetchRunnable: Runnable? = null
   val internalListener: CombinedImageListener = CombinedImageListenerImpl()
   override val imagePerfListener: VitoImagePerfListener
+  override var forceReloadIfImageAlreadySet: Boolean = false
 
   init {
     internalListener.setImagePerfLoggingListener(imagePerfLoggingListener)
@@ -201,6 +202,7 @@ class FrescoDrawable2Impl(
     imageRequest = null
     imageOrigin = ImageOrigin.UNKNOWN
     extras = null
+    forceReloadIfImageAlreadySet = false
     setOnFadeListener(null)
     internalListener.onReset(
         resetVitoImageRequestListener,

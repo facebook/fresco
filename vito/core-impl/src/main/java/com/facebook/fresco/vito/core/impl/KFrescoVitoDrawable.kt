@@ -38,6 +38,8 @@ class KFrescoVitoDrawable(
   var _isLoading: Boolean = false
   override var callerContext: Any? = null
   override var uiFramework: String? = null
+  override var forceReloadIfImageAlreadySet: Boolean = false
+
   var _visibilityCallback: VisibilityCallback? = null
   var _fetchSubmitted: Boolean = false
   val listenerManager: CombinedImageListener = CombinedImageListenerImpl()
@@ -133,6 +135,7 @@ class KFrescoVitoDrawable(
     callerContext = null
     _intrinsicWidth = -1
     _intrinsicHeight = -1
+    forceReloadIfImageAlreadySet = false
 
     placeholderLayer.reset()
     actualImageLayer.reset()

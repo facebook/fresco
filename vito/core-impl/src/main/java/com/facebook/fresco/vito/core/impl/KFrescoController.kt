@@ -117,8 +117,10 @@ class KFrescoController(
         return false
       }
 
+      val forceReload = drawable.forceReloadIfImageAlreadySet
+
       // Check if we already fetched that image
-      if (isAlreadyLoadingImage(imageRequest, drawable)) {
+      if (!forceReload && isAlreadyLoadingImage(imageRequest, drawable)) {
         ImageReleaseScheduler.cancelAllReleasing(drawable)
         return true
       }
@@ -132,6 +134,10 @@ class KFrescoController(
       val imageId: Long = VitoUtils.generateIdentifier()
       drawable.apply {
         reset()
+        // Restore force reload if it was set before
+        if (forceReload) {
+          forceReloadIfImageAlreadySet = forceReload
+        }
         this.imageRequest = imageRequest
         this.callerContext = callerContext
         imageListener = listener

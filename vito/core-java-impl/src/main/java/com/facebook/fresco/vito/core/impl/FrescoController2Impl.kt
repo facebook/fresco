@@ -102,8 +102,10 @@ open class FrescoController2Impl(
     // Save viewport dimension for future use
     drawable.viewportDimensions = viewportDimensions
 
+    val forceReload = drawable.forceReloadIfImageAlreadySet
+
     // Check if we already fetched the image
-    if (isAlreadyLoadingImage(drawable, imageRequest)) {
+    if (!forceReload && isAlreadyLoadingImage(drawable, imageRequest)) {
       drawable.cancelReleaseNextFrame()
       drawable.cancelReleaseDelayed()
       return true // already set
@@ -113,6 +115,10 @@ open class FrescoController2Impl(
     }
     // We didn't -> Reset everything
     drawable.close()
+    if (forceReload) {
+      // restore the forceReload flag
+      drawable.forceReloadIfImageAlreadySet = true
+    }
     // Basic setup
     drawable.drawableDataSubscriber = this
     drawable.imageRequest = imageRequest
