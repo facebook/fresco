@@ -118,10 +118,14 @@ class KFrescoController(
       }
 
       val forceReload = drawable.forceReloadIfImageAlreadySet
+      val retriggerListeners = drawable.retriggerListenersIfImageAlreadySet
 
       // Check if we already fetched that image
       if (!forceReload && isAlreadyLoadingImage(imageRequest, drawable)) {
         ImageReleaseScheduler.cancelAllReleasing(drawable)
+        if (retriggerListeners) {
+          // TODO: retrigger listeners
+        }
         return true
       }
 
@@ -137,6 +141,9 @@ class KFrescoController(
         // Restore force reload if it was set before
         if (forceReload) {
           forceReloadIfImageAlreadySet = forceReload
+        }
+        if (retriggerListeners) {
+          retriggerListenersIfImageAlreadySet = retriggerListeners
         }
         this.imageRequest = imageRequest
         this.callerContext = callerContext

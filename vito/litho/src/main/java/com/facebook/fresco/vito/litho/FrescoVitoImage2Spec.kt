@@ -248,6 +248,7 @@ object FrescoVitoImage2Spec {
       @Prop(optional = true) onFadeListener: OnFadeListener?,
       @Prop(optional = true) mutateDrawables: Boolean,
       @Prop(optional = true) forceReloadImageIfAlreadySet: Boolean?,
+      @Prop(optional = true) retriggerListenersIfImageAlreadySet: Boolean?,
       @CachedValue requestBeforeLayout: VitoImageRequest?,
       @FromBoundsDefined requestWithLayout: VitoImageRequest?,
       @FromPrepare prefetchDataSource: DataSource<Void?>?,
@@ -300,6 +301,9 @@ object FrescoVitoImage2Spec {
       }
 
       forceReloadImageIfAlreadySet?.let { frescoDrawable.forceReloadIfImageAlreadySet = it }
+      retriggerListenersIfImageAlreadySet?.let {
+        frescoDrawable.retriggerListenersIfImageAlreadySet = it
+      }
       FrescoVitoProvider.getController()
           .fetch(
               drawable = frescoDrawable,
@@ -326,6 +330,7 @@ object FrescoVitoImage2Spec {
       @Prop(optional = true) onFadeListener: OnFadeListener?,
       @Prop(optional = true) callerContext: Any?,
       @Prop(optional = true) forceReloadImageIfAlreadySet: Boolean?,
+      @Prop(optional = true) retriggerListenersIfImageAlreadySet: Boolean?,
       @TreeProp contextChain: ContextChain?,
       @CachedValue requestBeforeLayout: VitoImageRequest?,
       @FromBoundsDefined requestWithLayout: VitoImageRequest?,
@@ -340,6 +345,7 @@ object FrescoVitoImage2Spec {
       request.putExtra(HasExtraData.KEY_SF_FETCH_STRATEGY, fetchStrategy)
 
       forceReloadImageIfAlreadySet?.let { frescoDrawable.forceReloadIfImageAlreadySet = it }
+      retriggerListenersIfImageAlreadySet?.let { frescoDrawable.forceReloadIfImageAlreadySet = it }
       // We fetch in both mount and bind in case an unbind event triggered a delayed release.
       // We'll only trigger an actual fetch if needed. Most of the time, this will be a no-op.
       FrescoVitoProvider.getController()

@@ -18,6 +18,7 @@ import com.facebook.drawee.backends.pipeline.info.ImageOrigin
 import com.facebook.drawee.components.DeferredReleaser
 import com.facebook.drawee.drawable.ScaleTypeDrawable
 import com.facebook.drawee.drawable.ScalingUtils
+import com.facebook.fresco.ui.common.ControllerListener2.Extras
 import com.facebook.fresco.vito.core.CombinedImageListener
 import com.facebook.fresco.vito.core.ImagePerfLoggingListener
 import com.facebook.fresco.vito.core.NopDrawable
@@ -44,6 +45,7 @@ class FrescoDrawable2Impl(
   override var imageRequest: VitoImageRequest? = null
   override var callerContext: Any? = null
   var drawableDataSubscriber: DrawableDataSubscriber? = null
+  var tempFinalImageExtras: Extras? = null
 
   @get:Synchronized @set:Synchronized override var imageId: Long = 0
 
@@ -54,6 +56,7 @@ class FrescoDrawable2Impl(
   val internalListener: CombinedImageListener = CombinedImageListenerImpl()
   override val imagePerfListener: VitoImagePerfListener
   override var forceReloadIfImageAlreadySet: Boolean = false
+  override var retriggerListenersIfImageAlreadySet: Boolean = false
 
   init {
     internalListener.setImagePerfLoggingListener(imagePerfLoggingListener)
@@ -203,7 +206,9 @@ class FrescoDrawable2Impl(
     imageOrigin = ImageOrigin.UNKNOWN
     extras = null
     forceReloadIfImageAlreadySet = false
+    retriggerListenersIfImageAlreadySet = false
     setOnFadeListener(null)
+    tempFinalImageExtras = null
     internalListener.onReset(
         resetVitoImageRequestListener,
         resetLocalVitoImageRequestListener,

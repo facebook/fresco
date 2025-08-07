@@ -20,6 +20,7 @@ interface FrescoDrawableInterface : VisibilityAware {
   val imagePerfListener: VitoImagePerfListener
   var uiFramework: String?
   var forceReloadIfImageAlreadySet: Boolean
+  var retriggerListenersIfImageAlreadySet: Boolean
 
   fun setMutateDrawables(mutateDrawables: Boolean)
 

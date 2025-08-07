@@ -103,11 +103,40 @@ open class FrescoController2Impl(
     drawable.viewportDimensions = viewportDimensions
 
     val forceReload = drawable.forceReloadIfImageAlreadySet
+    val retriggerListeners = drawable.retriggerListenersIfImageAlreadySet
 
     // Check if we already fetched the image
     if (!forceReload && isAlreadyLoadingImage(drawable, imageRequest)) {
       drawable.cancelReleaseNextFrame()
       drawable.cancelReleaseDelayed()
+      if (retriggerListeners) {
+        val submitExtras = obtainExtras(null, null, drawable, imageRequest)
+        // Notify listeners that we're about to fetch an image
+        drawable.internalListener.onSubmit(
+            drawable.imageId, imageRequest, callerContext, submitExtras)
+        drawable.imagePerfListener.onImageFetch(drawable)
+        // image is set
+        val actualImageDrawable = drawable.actualImageDrawable
+        if (actualImageDrawable != null) {
+          val finalExtras = drawable.tempFinalImageExtras
+          if (finalExtras != null) {
+            val imageInfoExtras: Map<String, Any> = finalExtras.imageExtras ?: HashMap()
+            drawable.internalListener.onFinalImageSet(
+                drawable.imageId,
+                imageRequest,
+                ImageOrigin.LOCAL,
+                ImageInfoImpl(
+                    actualImageDrawable.intrinsicWidth,
+                    actualImageDrawable.intrinsicHeight,
+                    0,
+                    ImmutableQualityInfo.FULL_QUALITY,
+                    imageInfoExtras),
+                finalExtras,
+                actualImageDrawable)
+            drawable.imagePerfListener.onImageSuccess(drawable, true)
+          }
+        }
+      }
       return true // already set
     }
     if (drawable.isFetchSubmitted) {
@@ -118,6 +147,9 @@ open class FrescoController2Impl(
     if (forceReload) {
       // restore the forceReload flag
       drawable.forceReloadIfImageAlreadySet = true
+    }
+    if (retriggerListeners) {
+      drawable.retriggerListenersIfImageAlreadySet = retriggerListeners
     }
     // Basic setup
     drawable.drawableDataSubscriber = this
@@ -318,11 +350,15 @@ open class FrescoController2Impl(
       (actualDrawable as Animatable).start()
     }
     val extras = obtainExtras(dataSource, image, drawable, imageRequest)
+
     val imageInfo = image?.get()?.imageInfo
     image?.let { drawable.internalListener.onImageSet(it, drawable.viewportDimensions) }
     if (!isIntermediateImage && notifyFinalResult(dataSource)) {
       drawable.internalListener.onFinalImageSet(
           drawable.imageId, imageRequest, drawable.imageOrigin, imageInfo, extras, actualDrawable)
+      if (drawable.retriggerListenersIfImageAlreadySet) {
+        drawable.tempFinalImageExtras = extras
+      }
     } else {
       drawable.internalListener.onIntermediateImageSet(drawable.imageId, imageRequest, imageInfo)
     }
