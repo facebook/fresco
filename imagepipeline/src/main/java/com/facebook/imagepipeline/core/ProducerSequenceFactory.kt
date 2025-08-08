@@ -45,7 +45,8 @@ class ProducerSequenceFactory(
     private val allowDelay: Boolean,
     private val customProducerSequenceFactories: Set<CustomProducerSequenceFactory>?,
     private val localImageThrottlingMaxSimultaneousRequests: Long,
-    private val loadThumbnailFromContentResolverFirst: Boolean
+    private val loadThumbnailFromContentResolverFirst: Boolean,
+    private val loadThumbnailFromContentResolverForContentUriOnly: Boolean
 ) {
 
   @VisibleForTesting
@@ -391,7 +392,8 @@ class ProducerSequenceFactory(
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
       newBitmapCacheGetToBitmapCacheSequence(
           producerFactory.newLocalThumbnailBitmapSdk29Producer(
-              loadThumbnailFromContentResolverFirst))
+              loadThumbnailFromContentResolverFirst,
+              loadThumbnailFromContentResolverForContentUriOnly))
     } else {
       throw Throwable("Unreachable exception. Just to make linter happy for the lazy block.")
     }

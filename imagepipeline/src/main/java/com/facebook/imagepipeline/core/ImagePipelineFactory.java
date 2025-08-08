@@ -392,7 +392,8 @@ public class ImagePipelineFactory {
               mConfig.getExperiments().getAllowDelay(),
               mConfig.getCustomProducerSequenceFactories(),
               mConfig.getExperiments().getThrottlingProducerMaxSimultaneousRequests(),
-              mConfig.getExperiments().getLoadThumbnailFromContentResolverFirst());
+              mConfig.getExperiments().getLoadThumbnailFromContentResolverFirst(),
+              mConfig.getExperiments().getLoadThumbnailFromContentResolverForContentUriOnly());
     }
     return mProducerSequenceFactory;
   }

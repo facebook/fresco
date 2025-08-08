@@ -411,10 +411,12 @@ public class ProducerFactory {
 
   @RequiresApi(Build.VERSION_CODES.Q)
   public LocalThumbnailBitmapSdk29Producer newLocalThumbnailBitmapSdk29Producer(
-      Boolean loadThumbnailFromContentResolverFirst) {
+      Boolean loadThumbnailFromContentResolverFirst,
+      Boolean loadThumbnailFromContentResolverForContentUriOnly) {
     return new LocalThumbnailBitmapSdk29Producer(
         mExecutorSupplier.forBackgroundTasks(),
         mContentResolver,
-        loadThumbnailFromContentResolverFirst);
+        loadThumbnailFromContentResolverFirst,
+        loadThumbnailFromContentResolverForContentUriOnly);
   }
 }
