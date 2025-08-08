@@ -154,7 +154,8 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
           fetchState.getOnNewResultStatusFlags(),
           fetchState.getResponseBytesRange(),
           fetchState.getConsumer(),
-          fetchState.getContext());
+          fetchState.getContext(),
+          fetchState.getQuery());
     }
   }
 
@@ -170,7 +171,8 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
         Consumer.IS_LAST | fetchState.getOnNewResultStatusFlags(),
         fetchState.getResponseBytesRange(),
         fetchState.getConsumer(),
-        fetchState.getContext());
+        fetchState.getContext(),
+        fetchState.getQuery());
   }
 
   protected static void notifyConsumer(
@@ -178,17 +180,20 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
       @Consumer.Status int status,
       @Nullable BytesRange responseBytesRange,
       Consumer<EncodedImage> consumer,
-      ProducerContext context) {
+      ProducerContext context,
+      @Nullable String query) {
     CloseableReference<PooledByteBuffer> result =
         CloseableReference.of(pooledOutputStream.toByteBuffer());
     EncodedImage encodedImage = null;
     try {
       encodedImage = new EncodedImage(result);
       encodedImage.setBytesRange(responseBytesRange);
+      encodedImage.putExtra(HasExtraData.KEY_SF_QUERY, query);
       encodedImage.parseMetaData();
       context.putExtra(HasExtraData.KEY_ENCODED_SIZE, encodedImage.getSize());
       context.putExtra(HasExtraData.KEY_ENCODED_WIDTH, encodedImage.getWidth());
       context.putExtra(HasExtraData.KEY_ENCODED_HEIGHT, encodedImage.getHeight());
+      context.putExtra(HasExtraData.KEY_SF_QUERY, query);
       consumer.onNewResult(encodedImage, status);
     } finally {
       EncodedImage.closeSafely(encodedImage);

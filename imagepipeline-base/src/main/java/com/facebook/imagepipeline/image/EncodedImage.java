@@ -16,6 +16,7 @@ import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferInputStream;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.SharedReference;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
@@ -31,6 +32,8 @@ import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import kotlin.Pair;
@@ -49,7 +52,7 @@ import kotlin.Pair;
  */
 @Nullsafe(Nullsafe.Mode.LOCAL)
 @Immutable
-public class EncodedImage implements Closeable {
+public class EncodedImage implements Closeable, HasExtraData {
   public static final int UNKNOWN_ROTATION_ANGLE = -1;
   public static final int UNKNOWN_WIDTH = -1;
   public static final int UNKNOWN_HEIGHT = -1;
@@ -75,6 +78,8 @@ public class EncodedImage implements Closeable {
   private @Nullable ColorSpace mColorSpace;
   private @Nullable String mSource;
   private boolean mHasParsedMetadata;
+
+  private final Map<String, Object> mExtras = new HashMap<>();
 
   public EncodedImage(CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
     Preconditions.checkArgument(CloseableReference.isValid(pooledByteBufferRef));
@@ -452,6 +457,7 @@ public class EncodedImage implements Closeable {
     mBytesRange = encodedImage.getBytesRange();
     mColorSpace = encodedImage.getColorSpace();
     mHasParsedMetadata = encodedImage.hasParsedMetaData();
+    putExtras(encodedImage.getExtras());
   }
 
   /** Returns true if all the image information has loaded, false otherwise. */
@@ -500,5 +506,39 @@ public class EncodedImage implements Closeable {
 
   protected boolean hasParsedMetaData() {
     return mHasParsedMetadata;
+  }
+
+  @Override
+  public void putExtra(String key, @Nullable Object value) {
+    mExtras.put(key, value);
+  }
+
+  @Override
+  public void putExtras(@Nullable Map<String, ?> extras) {
+    if (extras == null) return;
+    mExtras.putAll(extras);
+  }
+
+  @Nullable
+  @Override
+  public <T> T getExtra(String key) {
+    //noinspection unchecked
+    return (T) mExtras.get(key);
+  }
+
+  @Nullable
+  @Override
+  public <E> E getExtra(String key, @Nullable E valueIfNotFound) {
+    Object maybeValue = mExtras.get(key);
+    if (maybeValue == null) {
+      return valueIfNotFound;
+    }
+    //noinspection unchecked
+    return (E) maybeValue;
+  }
+
+  @Override
+  public Map<String, Object> getExtras() {
+    return mExtras;
   }
 }

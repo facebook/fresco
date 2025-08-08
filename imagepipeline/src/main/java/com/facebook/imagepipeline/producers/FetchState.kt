@@ -39,4 +39,7 @@ open class FetchState(val consumer: Consumer<EncodedImage?>, val context: Produc
 
   open val uri: Uri
     get() = context.imageRequest.sourceUri
+
+  open val query: String?
+    get() = uri.query
 }

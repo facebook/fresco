@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.producers;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import android.net.Uri;
 import com.facebook.common.internal.Throwables;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBuffer;
@@ -78,6 +79,7 @@ public class NetworkFetchProducerTest {
     when(mConfig.getProgressiveJpegConfig()).thenReturn(mProgressiveJpegConfig);
     when(mProgressiveJpegConfig.decodeProgressively()).thenReturn(true);
     mFetchState = new FetchState(mConsumer, mProducerContext);
+    when(mImageRequest.getSourceUri()).thenReturn(Uri.parse("http://www.facebook.com"));
     mCommonByteArray = new byte[10];
     when(mByteArrayPool.get(anyInt())).thenReturn(mCommonByteArray);
     when(mPooledByteBufferFactory.newOutputStream(anyInt()))
