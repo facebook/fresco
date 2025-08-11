@@ -129,6 +129,8 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
             producerContext.putExtra(HasExtraData.KEY_ENCODED_SIZE, cachedReference.getSize());
             producerContext.putExtra(HasExtraData.KEY_ENCODED_WIDTH, cachedReference.getWidth());
             producerContext.putExtra(HasExtraData.KEY_ENCODED_HEIGHT, cachedReference.getHeight());
+            producerContext.putExtra(
+                HasExtraData.KEY_SF_QUERY, cachedReference.getExtra(HasExtraData.KEY_SF_QUERY));
             consumer.onProgressUpdate(1);
             consumer.onNewResult(cachedReference, Consumer.IS_LAST);
             cachedReference.close();
