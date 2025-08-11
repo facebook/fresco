@@ -23,6 +23,7 @@ import com.facebook.imagepipeline.core.DownsampleMode;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineExperiments;
 import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.infer.annotation.FalseOnNull;
 import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nullable;
@@ -322,6 +323,7 @@ public class ImageRequestBuilder {
     return this;
   }
 
+  @FalseOnNull
   public static boolean isCustomNetworkUri(@Nullable Uri uri) {
     if (CUSTOM_NETWORK_SCHEMES == null || uri == null) {
       return false;
