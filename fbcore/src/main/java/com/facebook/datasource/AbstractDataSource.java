@@ -171,30 +171,26 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
     }
 
     if (shouldNotify) {
-      notifyDataSubscriber(dataSubscriber, executor, hasFailed(), wasCancelled());
+      notifyDataSubscriber(dataSubscriber, executor);
     }
   }
 
   private void notifyDataSubscribers() {
-    final boolean isFailure = hasFailed();
-    final boolean isCancellation = wasCancelled();
     for (Pair<DataSubscriber<T>, Executor> pair : mSubscribers) {
-      notifyDataSubscriber(pair.first, pair.second, isFailure, isCancellation);
+      notifyDataSubscriber(pair.first, pair.second);
     }
   }
 
   protected void notifyDataSubscriber(
       final DataSubscriber<T> dataSubscriber,
-      final Executor executor,
-      final boolean isFailure,
-      final boolean isCancellation) {
+      final Executor executor) {
     Runnable runnable =
         new Runnable() {
           @Override
           public void run() {
-            if (isFailure) {
+            if (AbstractDataSource.this.hasFailed()) {
               dataSubscriber.onFailure(AbstractDataSource.this);
-            } else if (isCancellation) {
+            } else if (AbstractDataSource.this.wasCancelled()) {
               dataSubscriber.onCancellation(AbstractDataSource.this);
             } else {
               dataSubscriber.onNewResult(AbstractDataSource.this);
