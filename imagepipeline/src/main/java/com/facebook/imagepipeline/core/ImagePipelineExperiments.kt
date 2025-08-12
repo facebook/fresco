@@ -76,6 +76,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val isBinaryXmlEnabled: Boolean
   val loadThumbnailFromContentResolverFirst: Boolean
   val loadThumbnailFromContentResolverForContentUriOnly: Boolean
+  val preserveMetadataOnDisk: Boolean
 
   class Builder(private val configBuilder: ImagePipelineConfig.Builder) {
     @JvmField var shouldUseDecodingBufferHelper = false
@@ -132,6 +133,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
 
     @JvmField var loadThumbnailFromContentResolverFirst = false
     @JvmField var loadThumbnailFromContentResolverForContentUriOnly = false
+
+    @JvmField var preserveMetadataOnDisk = false
 
     private fun asBuilder(block: () -> Unit): Builder {
       block()
@@ -344,6 +347,10 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
           loadThumbnailFromContentResolverForContentUriOnly
     }
 
+    fun setPreserveMetadataOnDisk(preserveMetadataOnDisk: Boolean) = asBuilder {
+      this.preserveMetadataOnDisk = preserveMetadataOnDisk
+    }
+
     fun build(): ImagePipelineExperiments = ImagePipelineExperiments(this)
   }
 
@@ -465,6 +472,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     loadThumbnailFromContentResolverFirst = builder.loadThumbnailFromContentResolverFirst
     loadThumbnailFromContentResolverForContentUriOnly =
         builder.loadThumbnailFromContentResolverForContentUriOnly
+    preserveMetadataOnDisk = builder.preserveMetadataOnDisk
   }
 
   companion object {

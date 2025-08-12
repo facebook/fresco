@@ -15,6 +15,7 @@ import com.facebook.common.memory.PooledByteBuffer
 import com.facebook.common.memory.PooledByteBufferFactory
 import com.facebook.common.memory.PooledByteStreams
 import com.facebook.common.references.CloseableReference
+import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.imagepipeline.image.EncodedImage
 import com.facebook.imagepipeline.instrumentation.FrescoInstrumenter
 import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
@@ -34,7 +35,8 @@ class BufferedDiskCache(
     private val pooledByteStreams: PooledByteStreams,
     private val readExecutor: Executor,
     private val writeExecutor: Executor,
-    private val imageCacheStatsTracker: ImageCacheStatsTracker
+    private val imageCacheStatsTracker: ImageCacheStatsTracker,
+    private val preserveMetadata: Boolean,
 ) {
 
   private val stagingArea: StagingArea = StagingArea.getInstance()
@@ -195,7 +197,11 @@ class BufferedDiskCache(
                       val buffer = readFromDiskCache(key) ?: return@Callable null
                       val ref = CloseableReference.of(buffer)
                       try {
-                        EncodedImage(ref)
+                        EncodedImage(ref).also {
+                          if (preserveMetadata) {
+                            it.putExtra(HasExtraData.KEY_SF_QUERY, fileCache.getMetadata(key))
+                          }
+                        }
                       } finally {
                         CloseableReference.closeSafely(ref)
                       }
@@ -375,6 +381,11 @@ class BufferedDiskCache(
         val inputStream = encodedImage!!.inputStream
         checkNotNull(inputStream)
         pooledByteStreams.copy(inputStream, os)
+        if (preserveMetadata) {
+          encodedImage.getExtra<String>(HasExtraData.KEY_SF_QUERY)?.let {
+            fileCache.setMetadata(key, it)
+          }
+        }
       }
       imageCacheStatsTracker.onDiskCachePut(key)
       FLog.v(TAG, "Successful disk-cache write for key %s", key.uriString)

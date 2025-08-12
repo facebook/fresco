@@ -78,4 +78,8 @@ interface FileCache : DiskTrimmable {
   fun clearAll()
 
   @Throws(IOException::class) fun getDumpInfo(): DiskDumpInfo
+
+  fun getMetadata(key: CacheKey): String? = null
+
+  fun setMetadata(key: CacheKey, metadata: String): Unit = Unit
 }

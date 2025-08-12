@@ -54,7 +54,8 @@ class DiskCachesStoreFactory(
                     poolFactory.pooledByteStreams,
                     executorSupplier.forLocalStorageRead(),
                     executorSupplier.forLocalStorageWrite(),
-                    imageCacheStatsTracker)
+                    imageCacheStatsTracker,
+                    false)
               }
 
           override val smallImageFileCache: FileCache by
@@ -70,7 +71,8 @@ class DiskCachesStoreFactory(
                     poolFactory.pooledByteStreams,
                     executorSupplier.forLocalStorageRead(),
                     executorSupplier.forLocalStorageWrite(),
-                    imageCacheStatsTracker)
+                    imageCacheStatsTracker,
+                    false)
               }
 
           override val dynamicFileCaches: Map<String, FileCache> by
@@ -90,7 +92,8 @@ class DiskCachesStoreFactory(
                           poolFactory.pooledByteStreams,
                           executorSupplier.forLocalStorageRead(),
                           executorSupplier.forLocalStorageWrite(),
-                          imageCacheStatsTracker)
+                          imageCacheStatsTracker,
+                          false)
                     })
               }
         }
