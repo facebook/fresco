@@ -21,7 +21,7 @@ import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
-/** Probe producer for brobing disk cache on encoded memory cache hit requests. */
+/** Probe producer for probing disk cache on encoded memory cache hit requests. */
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class EncodedProbeProducer implements Producer<EncodedImage> {
 
