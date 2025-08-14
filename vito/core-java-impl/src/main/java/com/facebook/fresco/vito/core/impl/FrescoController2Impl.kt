@@ -347,7 +347,7 @@ open class FrescoController2Impl(
       drawable.fadeInImage(imageRequest.imageOptions.fadeDurationMs)
     }
     if (imageRequest.imageOptions.shouldAutoPlay() && actualDrawable is Animatable) {
-      (actualDrawable as Animatable).start()
+      actualDrawable.start()
     }
     val extras = obtainExtras(dataSource, image, drawable, imageRequest)
 
@@ -474,7 +474,7 @@ open class FrescoController2Impl(
     drawable.imageOrigin = ImageOrigin.LOCAL
     drawable.setFetchSubmitted(true)
     if (imageRequest.imageOptions.shouldAutoPlay() && actualImageDrawable is Animatable) {
-      (actualDrawable as Animatable).start()
+      actualImageDrawable.start()
     }
     val imageInfoExtras: Map<String, Any> = extras.imageExtras ?: HashMap()
     drawable.internalListener.onFinalImageSet(
