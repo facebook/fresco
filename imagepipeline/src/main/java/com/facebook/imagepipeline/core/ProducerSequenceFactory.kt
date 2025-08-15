@@ -580,7 +580,7 @@ class ProducerSequenceFactory(
         thumbnailBranchProducer, true, imageTranscoderFactory)
   }
 
-  /** post-processor producer -> copy producer -> inputProducer */
+  /** post-processor producer -> inputProducer */
   @Synchronized
   private fun getPostprocessorSequence(
       inputProducer: Producer<CloseableReference<CloseableImage>>
