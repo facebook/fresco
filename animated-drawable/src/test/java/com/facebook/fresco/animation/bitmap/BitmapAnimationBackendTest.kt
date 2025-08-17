@@ -901,6 +901,61 @@ class BitmapAnimationBackendTest {
     assertThat(backend.animatedOptions?.useFallbackThumbnail()).isFalse()
   }
 
+  /** Tests setAnimationListener and callback functionality */
+  @Test
+  fun testSetAnimationListener() {
+    val mockListener = mock<AnimationBackend.Listener>()
+    bitmapAnimationBackend.setAnimationListener(mockListener)
+
+    // Trigger preload to test listener callback
+    bitmapAnimationBackend.preloadAnimation()
+
+    verify(bitmapFramePreparationStrategy)
+        .prepareFrames(
+            eq(bitmapFramePreparer), eq(bitmapFrameCache), eq(bitmapAnimationBackend), eq(0), any())
+  }
+
+  /** Tests animation progress tracking for finite animations */
+  @Test
+  fun testAnimationProgressTrackingFiniteAnimation() {
+    setupAnimationInformation(frameCount = 3, loopCount = 2)
+    val backend = createThumbnailBackend("https://example.com/thumb.jpg", 2)
+    backend.setFrameListener(frameListener)
+
+    whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
+
+    // Draw frames for first loop
+    backend.drawFrame(parentDrawable, canvas, 0)
+    backend.drawFrame(parentDrawable, canvas, 1)
+    backend.drawFrame(parentDrawable, canvas, 2)
+
+    // Draw frames for second loop
+    backend.drawFrame(parentDrawable, canvas, 0)
+    backend.drawFrame(parentDrawable, canvas, 1)
+    backend.drawFrame(parentDrawable, canvas, 2) // This should complete the animation
+
+    // Verify frames were drawn
+    verify(frameListener, times(6)).onDrawFrameStart(eq(backend), anyInt())
+  }
+
+  /** Tests that infinite animations don't trigger animation completion */
+  @Test
+  fun testAnimationProgressTrackingInfiniteAnimation() {
+    setupAnimationInformation(frameCount = 3)
+    val backend =
+        createThumbnailBackend(
+            "https://example.com/thumb.jpg", AnimationInformation.LOOP_COUNT_INFINITE)
+    backend.setFrameListener(frameListener)
+
+    whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
+
+    for (i in 0..10) {
+      backend.drawFrame(parentDrawable, canvas, i % 3)
+    }
+
+    verify(frameListener, org.mockito.kotlin.times(11)).onDrawFrameStart(eq(backend), anyInt())
+  }
+
   /** Tests preloadAnimation with old render implementation */
   @Test
   fun testPreloadAnimationOldImplementation() {
