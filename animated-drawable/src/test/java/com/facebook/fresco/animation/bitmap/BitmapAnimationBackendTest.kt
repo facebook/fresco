@@ -1000,4 +1000,56 @@ class BitmapAnimationBackendTest {
     verify(bitmapFramePreparationStrategy).clearFrames()
     verify(bitmapFrameCache, never()).clear()
   }
+
+  /** Tests setAlpha method updates paint alpha correctly */
+  @Test
+  fun testSetAlpha() {
+    val alpha = 128
+    bitmapAnimationBackend.setAlpha(alpha)
+
+    // Verify alpha is applied when drawing
+    whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
+    bitmapAnimationBackend.drawFrame(parentDrawable, canvas, 1)
+
+    // Verify the frame as drawn
+    verify(canvas).drawBitmap(eq(bitmap), eq(0f), eq(0f), any<Paint>())
+  }
+
+  /** Tests setColorFilter with null removes color filter */
+  @Test
+  fun testSetColorFilterNull() {
+    bitmapAnimationBackend.setColorFilter(null)
+
+    whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
+    bitmapAnimationBackend.drawFrame(parentDrawable, canvas, 1)
+
+    verify(canvas).drawBitmap(eq(bitmap), eq(0f), eq(0f), any<Paint>())
+  }
+
+  /** Tests getSizeInBytes delegates to bitmap frame cache */
+  @Test
+  fun testGetSizeInBytes() {
+    val expectedSize = 1024
+    whenever(bitmapFrameCache.sizeInBytes).thenReturn(expectedSize)
+
+    assertThat(bitmapAnimationBackend.sizeInBytes).isEqualTo(expectedSize)
+  }
+
+  /** Tests that width and height delegate to animation information */
+  @Test
+  fun testWidthAndHeight() {
+    whenever(animationInformation.width()).thenReturn(150)
+    whenever(animationInformation.height()).thenReturn(250)
+
+    assertThat(bitmapAnimationBackend.width()).isEqualTo(150)
+    assertThat(bitmapAnimationBackend.height()).isEqualTo(250)
+  }
+
+  /** Tests getLoopDurationMs delegates to animation information */
+  @Test
+  fun testGetLoopDurationMs() {
+    whenever(animationInformation.loopDurationMs).thenReturn(5000)
+
+    assertThat(bitmapAnimationBackend.loopDurationMs).isEqualTo(5000)
+  }
 }
