@@ -34,7 +34,9 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.capture
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
@@ -422,6 +424,20 @@ class BitmapAnimationBackendTest {
         bitmapFramePreparationStrategy,
         bitmapFramePreparer,
         roundingOptions)
+  }
+
+  fun createBackendWithNewRenderImplementation(
+      isNewRenderImplementation: Boolean
+  ): BitmapAnimationBackend {
+    return BitmapAnimationBackend(
+        platformBitmapFactory,
+        bitmapFrameCache,
+        animationInformation,
+        bitmapFrameRenderer,
+        isNewRenderImplementation,
+        bitmapFramePreparationStrategy,
+        bitmapFramePreparer,
+        null)
   }
 
   /** Verifies circular rounding options are preserved and cornerRadii is null */
@@ -883,5 +899,105 @@ class BitmapAnimationBackendTest {
   fun testThumbnailFallbackDisabledWithEmptyUrl() {
     val backend = createThumbnailBackend("", 3)
     assertThat(backend.animatedOptions?.useFallbackThumbnail()).isFalse()
+  }
+
+  /** Tests preloadAnimation with old render implementation */
+  @Test
+  fun testPreloadAnimationOldImplementation() {
+    val mockListener = mock<AnimationBackend.Listener>()
+    bitmapAnimationBackend.setAnimationListener(mockListener)
+
+    bitmapAnimationBackend.preloadAnimation()
+
+    verify(bitmapFramePreparationStrategy)
+        .prepareFrames(
+            eq(bitmapFramePreparer), eq(bitmapFrameCache), eq(bitmapAnimationBackend), eq(0), any())
+  }
+
+  /** Tests preloadAnimation with new render implementation */
+  @Test
+  fun testPreloadAnimationNewImplementation() {
+    val newBackend = createBackendWithNewRenderImplementation(true)
+
+    whenever(animationInformation.width()).thenReturn(100)
+    whenever(animationInformation.height()).thenReturn(200)
+
+    newBackend.preloadAnimation()
+
+    verify(bitmapFramePreparationStrategy).prepareFrames(eq(100), eq(200), any())
+  }
+
+  /** Tests new render implementation draw frame path */
+  @Test
+  fun testDrawFrameNewImplementation() {
+    val newBackend = createBackendWithNewRenderImplementation(true)
+
+    whenever(canvas.width).thenReturn(100)
+    whenever(canvas.height).thenReturn(200)
+    whenever(bitmapFramePreparationStrategy.getBitmapFrame(anyInt(), anyInt(), anyInt()))
+        .thenReturn(bitmapReference)
+
+    val result = newBackend.drawFrame(parentDrawable, canvas, 1)
+
+    assertThat(result).isTrue()
+    verify(bitmapFramePreparationStrategy).getBitmapFrame(1, 100, 200)
+    verify(canvas).drawBitmap(eq(bitmap), eq(0f), eq(0f), any<Paint>())
+  }
+
+  /** Tests new render implementation when getBitmapFrame returns null */
+  @Test
+  fun testDrawFrameNewImplementationNoBitmap() {
+    val newBackend = createBackendWithNewRenderImplementation(true)
+
+    whenever(canvas.width).thenReturn(100)
+    whenever(canvas.height).thenReturn(200)
+    whenever(bitmapFramePreparationStrategy.getBitmapFrame(anyInt(), anyInt(), anyInt()))
+        .thenReturn(null)
+
+    val result = newBackend.drawFrame(parentDrawable, canvas, 1)
+
+    assertThat(result).isFalse()
+    verify(bitmapFramePreparationStrategy).getBitmapFrame(1, 100, 200)
+    verify(bitmapFramePreparationStrategy).prepareFrames(100, 200, null)
+  }
+
+  /** Tests onInactive with old render implementation */
+  @Test
+  fun testOnInactiveOldImplementation() {
+    bitmapAnimationBackend.onInactive()
+
+    verify(bitmapFrameCache).clear()
+    verify(bitmapFramePreparationStrategy, never()).onStop()
+  }
+
+  /** Tests onInactive with new render implementation */
+  @Test
+  fun testOnInactiveNewImplementation() {
+    val newBackend = createBackendWithNewRenderImplementation(true)
+
+    newBackend.onInactive()
+
+    verify(bitmapFramePreparationStrategy).onStop()
+    verify(bitmapFrameCache, never()).clear()
+  }
+
+  /** Tests clear method with old render implementation */
+  @Test
+  fun testClearOldImplementation() {
+    bitmapAnimationBackend.clear()
+
+    verify(bitmapFrameCache).clear()
+    verify(bitmapFramePreparationStrategy, never()).clearFrames()
+  }
+
+  /** Tests clear method with new render implementation */
+  @Test
+  fun testClearNewImplementation() {
+    val newBackend = createBackendWithNewRenderImplementation(true)
+
+    newBackend.clear()
+
+    verify(bitmapFramePreparationStrategy).clearFrames()
+    verify(bitmapFrameCache, never()).clear()
   }
 }
