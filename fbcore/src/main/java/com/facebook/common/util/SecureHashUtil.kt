@@ -75,7 +75,8 @@ object SecureHashUtil {
           'c'.code.toByte(),
           'd'.code.toByte(),
           'e'.code.toByte(),
-          'f'.code.toByte())
+          'f'.code.toByte(),
+      )
 
   @JvmStatic
   @Throws(UnsupportedEncodingException::class)

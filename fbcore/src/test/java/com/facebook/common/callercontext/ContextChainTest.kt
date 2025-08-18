@@ -24,7 +24,9 @@ class ContextChainTest {
                 "child_tag",
                 "child_name",
                 ImmutableMap.of("keyB", "valueB"),
-                ContextChain("root_tag", "root_name", ImmutableMap.of("keyC", "valueC"), null)))
+                ContextChain("root_tag", "root_name", ImmutableMap.of("keyC", "valueC"), null),
+            ),
+        )
     assertThat(contextChain.getStringExtra("keyA")).isEqualTo("valueA")
     assertThat(contextChain.getStringExtra("keyB")).isEqualTo("valueB")
     assertThat(contextChain.getStringExtra("keyC")).isEqualTo("valueC")
@@ -39,7 +41,12 @@ class ContextChainTest {
             "grandchild_name",
             null,
             ContextChain(
-                "child_tag", "child_name", null, ContextChain("root_tag", "root_name", null, null)))
+                "child_tag",
+                "child_name",
+                null,
+                ContextChain("root_tag", "root_name", null, null),
+            ),
+        )
     assertThat(contextChain.getStringExtra("keyA")).isNull()
     contextChain.putObjectExtra("keyA", "valueA")
     assertThat(contextChain.getStringExtra("keyA")).isEqualTo("valueA")
@@ -56,7 +63,12 @@ class ContextChainTest {
             "grandchild_name",
             null,
             ContextChain(
-                "child_tag", "child_name", null, ContextChain("root_tag", "root_name", null, null)))
+                "child_tag",
+                "child_name",
+                null,
+                ContextChain("root_tag", "root_name", null, null),
+            ),
+        )
     assertThat(contextChain.toString())
         .isEqualTo("root_tag:root_name/child_tag:child_name/grandchild_tag:grandchild_name")
   }
@@ -69,7 +81,12 @@ class ContextChainTest {
             "grandchild_name",
             null,
             ContextChain(
-                "child_tag", "child_name", null, ContextChain("root_tag", "root_name", null, null)))
+                "child_tag",
+                "child_name",
+                null,
+                ContextChain("root_tag", "root_name", null, null),
+            ),
+        )
     val res = contextChain.toStringArray()
     assertThat(res.size).isEqualTo(3)
     assertThat(res[0]).isEqualTo("root_tag:root_name")
@@ -102,7 +119,9 @@ class ContextChainTest {
         ContextChain("native_tag:native_tag_name/native_child_tag:native_child_tag_name", null)
     val remoteChain =
         ContextChain(
-            "root_tag:root_name/child_tag:child_name/grandchild_tag:grandchild_name", nativeChain)
+            "root_tag:root_name/child_tag:child_name/grandchild_tag:grandchild_name",
+            nativeChain,
+        )
     val res = remoteChain.toStringArray()
     assertThat(res.size).isEqualTo(5)
     assertThat(res[0]).isEqualTo("native_tag:native_tag_name")

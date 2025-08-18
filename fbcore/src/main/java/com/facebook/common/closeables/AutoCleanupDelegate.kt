@@ -17,7 +17,7 @@ import kotlin.reflect.KProperty
  */
 open class AutoCleanupDelegate<T>(
     private var currentValue: T? = null,
-    private val cleanupFunction: (T) -> Unit
+    private val cleanupFunction: (T) -> Unit,
 ) : ReadWriteProperty<Any?, T?> {
 
   override operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T?) {
