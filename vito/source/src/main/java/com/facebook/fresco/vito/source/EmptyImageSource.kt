@@ -7,4 +7,17 @@
 
 package com.facebook.fresco.vito.source
 
-object EmptyImageSource : ImageSource
+/**
+ * An empty image source. This is used to indicate that no image will be displayed. A reason must be
+ * supplied to indicate why the image is empty.
+ */
+open class EmptyImageSource(val reason: String) : ImageSource {
+
+  override fun equals(other: Any?): Boolean {
+    // We ignore the reason to avoid unnecessary image reloads
+    return this === other || other is EmptyImageSource
+  }
+
+  // We ignore the reason to avoid unnecessary image reloads
+  override fun hashCode(): Int = 0
+}
