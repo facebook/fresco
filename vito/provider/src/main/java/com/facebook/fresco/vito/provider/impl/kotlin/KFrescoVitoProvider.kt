@@ -24,6 +24,7 @@ import com.facebook.fresco.vito.provider.impl.NoOpCallerContextVerifier
 import com.facebook.fresco.vito.provider.setup.FrescoVitoSetup
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.core.ImagePipelineFactory
+import com.facebook.imagepipeline.drawable.DrawableFactory
 import java.util.concurrent.Executor
 
 class KFrescoVitoProvider(
@@ -33,7 +34,8 @@ class KFrescoVitoProvider(
     private val uiThreadExecutor: Executor,
     private val lightweightBackgroundExecutor: Executor,
     private val callerContextVerifier: CallerContextVerifier = NoOpCallerContextVerifier,
-    private val debugOverlayHandler: DebugOverlayHandler? = null
+    private val debugOverlayHandler: DebugOverlayHandler? = null,
+    private val externalImageOptionsDrawableFactories: List<DrawableFactory> = emptyList()
 ) : FrescoVitoSetup {
 
   private val _imagePipeline: VitoImagePipeline by lazy {
@@ -71,7 +73,8 @@ class KFrescoVitoProvider(
         ImagePipelineFactory.getInstance()
             .getXmlDrawableFactory()
             ?.let(DrawableFactoryWrapper::wrap)
-    val factories = listOfNotNull(animatedDrawableFactory, xmlFactory)
+    val factories = listOfNotNull(animatedDrawableFactory, xmlFactory) +
+            externalImageOptionsDrawableFactories.map(DrawableFactoryWrapper::wrap)
     return when (factories.size) {
       0 -> null
       1 -> factories[0]

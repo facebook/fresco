@@ -23,6 +23,7 @@ import com.facebook.flipper.plugins.fresco.FrescoFlipperPlugin
 import com.facebook.flipper.plugins.fresco.FrescoFlipperRequestListener
 import com.facebook.flipper.plugins.inspector.DescriptorMapping
 import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
+import com.facebook.fresco.samples.showcase.imageformat.svg.SvgDecoderExample
 import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.samples.showcase.misc.LogcatRequestListener2
@@ -164,6 +165,12 @@ class ShowcaseApplication : Application() {
       resources: Resources,
       vitoConfig: FrescoVitoConfig = DefaultFrescoVitoConfig(),
   ) {
+      val externalImageOptionsDrawableFactories = if (CustomImageFormatConfigurator.isSvgEnabled(this)) {
+          listOf(SvgDecoderExample.SvgDrawableFactory())
+      } else {
+          emptyList()
+      }
+
     if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(KEY_VITO_KOTLIN, false)) {
       FrescoVito.initialize(
           KFrescoVitoProvider(
@@ -177,13 +184,18 @@ class ShowcaseApplication : Application() {
                   .executorSupplier
                   .forLightweightBackgroundTasks(),
               NoOpCallerContextVerifier,
-              DebugOverlayHandler(DebugOverlaySupplierSingleton.getInstance(applicationContext))))
+              DebugOverlayHandler(DebugOverlaySupplierSingleton.getInstance(applicationContext)),
+              externalImageOptionsDrawableFactories,
+          )
+      )
     } else {
       FrescoVito.initialize(
           vitoConfig = vitoConfig,
           debugOverlayEnabledSupplier =
               DebugOverlaySupplierSingleton.getInstance(applicationContext),
-          vitoImagePerfListener = imageTracker)
+          vitoImagePerfListener = imageTracker,
+          externalImageOptionsDrawableFactories = externalImageOptionsDrawableFactories
+      )
     }
   }
 
