@@ -15,7 +15,7 @@ data class DimensionsInfo(
     val encodedImageHeight: Int,
     val decodedImageWidth: Int,
     val decodedImageHeight: Int,
-    val scaleType: String
+    val scaleType: String,
 ) {
   override fun equals(other: Any?): Boolean {
 

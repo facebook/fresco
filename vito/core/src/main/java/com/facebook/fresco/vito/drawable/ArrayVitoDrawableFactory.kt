@@ -19,7 +19,7 @@ class ArrayVitoDrawableFactory(private vararg val drawableFactories: ImageOption
   override fun createDrawable(
       resources: Resources,
       closeableImage: CloseableImage,
-      imageOptions: ImageOptions
+      imageOptions: ImageOptions,
   ): Drawable? =
       drawableFactories.firstNotNullOfOrNull { factory ->
         factory.createDrawable(resources, closeableImage, imageOptions)

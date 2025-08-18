@@ -28,7 +28,7 @@ open class HierarcherImpl(private val drawableFactory: ImageOptionsDrawableFacto
   override fun buildActualImageDrawable(
       resources: Resources,
       imageOptions: ImageOptions,
-      closeableImage: CloseableReference<CloseableImage>
+      closeableImage: CloseableReference<CloseableImage>,
   ): Drawable? {
     val drawableFactory = imageOptions.customDrawableFactory ?: drawableFactory
     return drawableFactory.createDrawable(resources, closeableImage.get(), imageOptions)
@@ -36,7 +36,7 @@ open class HierarcherImpl(private val drawableFactory: ImageOptionsDrawableFacto
 
   override fun buildPlaceholderDrawable(
       resources: Resources,
-      imageOptions: ImageOptions
+      imageOptions: ImageOptions,
   ): Drawable? {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("HierarcherImpl#buildPlaceholderDrawable")
@@ -72,7 +72,7 @@ open class HierarcherImpl(private val drawableFactory: ImageOptionsDrawableFacto
   override fun applyRoundingOptions(
       resources: Resources,
       drawable: Drawable,
-      imageOptions: ImageOptions
+      imageOptions: ImageOptions,
   ): Drawable {
     val roundingOptions = imageOptions.roundingOptions
     val borderOptions = imageOptions.borderOptions
@@ -135,11 +135,14 @@ open class HierarcherImpl(private val drawableFactory: ImageOptionsDrawableFacto
 
   override fun buildActualImageWrapper(
       imageOptions: ImageOptions,
-      callerContext: Any?
+      callerContext: Any?,
   ): ForwardingDrawable {
     val wrapper =
         ScaleTypeDrawable(
-            NopDrawable, imageOptions.actualImageScaleType, imageOptions.actualImageFocusPoint)
+            NopDrawable,
+            imageOptions.actualImageScaleType,
+            imageOptions.actualImageFocusPoint,
+        )
     imageOptions.actualImageColorFilter?.let(wrapper::setColorFilter)
     return wrapper
   }
@@ -147,7 +150,7 @@ open class HierarcherImpl(private val drawableFactory: ImageOptionsDrawableFacto
   override fun setupActualImageWrapper(
       actualImageWrapper: ScaleTypeDrawable,
       imageOptions: ImageOptions,
-      callerContext: Any?
+      callerContext: Any?,
   ) {
     actualImageWrapper.scaleType = imageOptions.actualImageScaleType
     actualImageWrapper.focusPoint = imageOptions.actualImageFocusPoint

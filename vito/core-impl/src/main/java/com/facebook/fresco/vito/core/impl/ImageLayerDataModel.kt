@@ -24,7 +24,7 @@ import com.facebook.fresco.vito.renderer.RenderCommand
 
 class ImageLayerDataModel(
     var drawableCallbackProvider: (() -> Drawable.Callback?)? = null,
-    var invalidateLayerCallback: (() -> Unit)? = null
+    var invalidateLayerCallback: (() -> Unit)? = null,
 ) {
   private var dataModel: ImageDataModel? = null
   private var roundingOptions: RoundingOptions? = null
@@ -52,7 +52,7 @@ class ImageLayerDataModel(
       canvasTransformation: CanvasTransformation? =
           canvasTransformationHandler.canvasTransformation,
       bounds: Rect? = this.currentBounds,
-      colorFilter: ColorFilter? = this.colorFilter
+      colorFilter: ColorFilter? = this.colorFilter,
   ) {
     if (dataModel != this.dataModel) {
       this.dataModel?.apply {
@@ -103,7 +103,8 @@ class ImageLayerDataModel(
             canvasTransformationHandler.getMatrix(),
             bounds,
             paint,
-            alpha)
+            alpha,
+        )
   }
 
   fun draw(canvas: Canvas) {

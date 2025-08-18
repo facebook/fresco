@@ -76,7 +76,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
       id: Long,
       imageRequest: VitoImageRequest,
       callerContext: Any?,
-      extras: Extras?
+      extras: Extras?,
   ) {
     vitoImageRequestListener?.onSubmit(id, imageRequest, callerContext, extras)
     localVitoImageRequestListener?.onSubmit(id, imageRequest, callerContext, extras)
@@ -98,12 +98,24 @@ class CombinedImageListenerImpl : CombinedImageListener {
       @ImageOrigin imageOrigin: Int,
       imageInfo: ImageInfo?,
       extras: Extras?,
-      drawable: Drawable?
+      drawable: Drawable?,
   ) {
     vitoImageRequestListener?.onFinalImageSet(
-        id, imageRequest, imageOrigin, imageInfo, extras, drawable)
+        id,
+        imageRequest,
+        imageOrigin,
+        imageInfo,
+        extras,
+        drawable,
+    )
     localVitoImageRequestListener?.onFinalImageSet(
-        id, imageRequest, imageOrigin, imageInfo, extras, drawable)
+        id,
+        imageRequest,
+        imageOrigin,
+        imageInfo,
+        extras,
+        drawable,
+    )
     imageListener?.onFinalImageSet(id, imageOrigin, imageInfo, drawable)
     val stringId = VitoUtils.getStringId(id)
     controllerListener2?.onFinalImageSet(stringId, imageInfo, extras)
@@ -113,7 +125,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
   override fun onIntermediateImageSet(
       id: Long,
       imageRequest: VitoImageRequest,
-      imageInfo: ImageInfo?
+      imageInfo: ImageInfo?,
   ) {
     vitoImageRequestListener?.onIntermediateImageSet(id, imageRequest, imageInfo)
     localVitoImageRequestListener?.onIntermediateImageSet(id, imageRequest, imageInfo)
@@ -126,7 +138,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
   override fun onIntermediateImageFailed(
       id: Long,
       imageRequest: VitoImageRequest,
-      throwable: Throwable?
+      throwable: Throwable?,
   ) {
     vitoImageRequestListener?.onIntermediateImageFailed(id, imageRequest, throwable)
     localVitoImageRequestListener?.onIntermediateImageFailed(id, imageRequest, throwable)
@@ -141,7 +153,7 @@ class CombinedImageListenerImpl : CombinedImageListener {
       imageRequest: VitoImageRequest,
       error: Drawable?,
       throwable: Throwable?,
-      extras: Extras?
+      extras: Extras?,
   ) {
     vitoImageRequestListener?.onFailure(id, imageRequest, error, throwable, extras)
     localVitoImageRequestListener?.onFailure(id, imageRequest, error, throwable, extras)

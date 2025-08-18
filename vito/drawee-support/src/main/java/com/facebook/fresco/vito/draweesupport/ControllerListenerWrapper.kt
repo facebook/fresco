@@ -25,7 +25,8 @@ class ControllerListenerWrapper(private val controllerListener: ControllerListen
   override fun onSubmit(id: Long, callerContext: Any?) {
     controllerListener.onSubmit(
         toStringId(id),
-        Assertions.nullsafeFIXME(callerContext, "Legacy ControllerListener is not nullsafe"))
+        Assertions.nullsafeFIXME(callerContext, "Legacy ControllerListener is not nullsafe"),
+    )
   }
 
   override fun onPlaceholderSet(id: Long, placeholder: Drawable?) {
@@ -36,10 +37,13 @@ class ControllerListenerWrapper(private val controllerListener: ControllerListen
       id: Long,
       @ImageOrigin imageOrigin: Int,
       imageInfo: ImageInfo?,
-      drawable: Drawable?
+      drawable: Drawable?,
   ) {
     controllerListener.onFinalImageSet(
-        toStringId(id), imageInfo, if (drawable is Animatable) drawable else null)
+        toStringId(id),
+        imageInfo,
+        if (drawable is Animatable) drawable else null,
+    )
   }
 
   override fun onIntermediateImageSet(id: Long, imageInfo: ImageInfo?) {
@@ -49,13 +53,15 @@ class ControllerListenerWrapper(private val controllerListener: ControllerListen
   override fun onIntermediateImageFailed(id: Long, throwable: Throwable?) {
     controllerListener.onIntermediateImageFailed(
         toStringId(id),
-        Assertions.nullsafeFIXME(throwable, "Legacy ControllerListener is not nullsafe"))
+        Assertions.nullsafeFIXME(throwable, "Legacy ControllerListener is not nullsafe"),
+    )
   }
 
   override fun onFailure(id: Long, error: Drawable?, throwable: Throwable?) {
     controllerListener.onFailure(
         toStringId(id),
-        Assertions.nullsafeFIXME(throwable, "Legacy ControllerListener is not nullsafe"))
+        Assertions.nullsafeFIXME(throwable, "Legacy ControllerListener is not nullsafe"),
+    )
   }
 
   override fun onRelease(id: Long) {
@@ -64,7 +70,10 @@ class ControllerListenerWrapper(private val controllerListener: ControllerListen
 
   override fun onImageDrawn(id: String, imageInfo: ImageInfo, dimensionsInfo: DimensionsInfo) {
     (controllerListener as? OnDrawControllerListener<ImageInfo>)?.onImageDrawn(
-        id, imageInfo, dimensionsInfo)
+        id,
+        imageInfo,
+        dimensionsInfo,
+    )
   }
 
   override fun equals(other: Any?): Boolean {

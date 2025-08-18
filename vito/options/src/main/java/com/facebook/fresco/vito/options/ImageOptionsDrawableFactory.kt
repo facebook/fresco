@@ -15,6 +15,6 @@ interface ImageOptionsDrawableFactory {
   fun createDrawable(
       resources: Resources,
       closeableImage: CloseableImage,
-      imageOptions: ImageOptions
+      imageOptions: ImageOptions,
   ): Drawable?
 }

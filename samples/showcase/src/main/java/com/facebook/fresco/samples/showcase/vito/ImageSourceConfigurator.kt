@@ -19,7 +19,7 @@ data class ImageSourceConfigurator(
     private val imageUriProvider: ImageUriProvider,
     var imageSource: ImageSource? = null,
     private var activeImageSourceProvider: () -> Unit = {},
-    private var currentImageFormat: ImageFormat = DefaultImageFormats.JPEG
+    private var currentImageFormat: ImageFormat = DefaultImageFormats.JPEG,
 ) {
 
   private val imageFormats =
@@ -30,7 +30,8 @@ data class ImageSourceConfigurator(
           "WebP simple" to DefaultImageFormats.WEBP_SIMPLE,
           "WebP with alpha" to DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA,
           "Animated WebP" to DefaultImageFormats.WEBP_ANIMATED,
-          "Keyframes" to KeyframesDecoderExample.IMAGE_FORMAT_KEYFRAMES)
+          "Keyframes" to KeyframesDecoderExample.IMAGE_FORMAT_KEYFRAMES,
+      )
 
   val imageFormatUpdater =
       Pair(
@@ -40,9 +41,11 @@ data class ImageSourceConfigurator(
                 {
                   currentImageFormat = it.second
                   activeImageSourceProvider()
-                })
+                },
+            )
           },
-          "Image format")
+          "Image format",
+      )
 
   val imageSources =
       Pair(
@@ -63,7 +66,8 @@ data class ImageSourceConfigurator(
                     set {
                       ImageSourceProvider.increasingQuality(
                           imageUriProvider.create(currentImageFormat)!!, // TODO: low res
-                          imageUriProvider.create(currentImageFormat)!!)
+                          imageUriProvider.create(currentImageFormat)!!,
+                      )
                     }
                   },
               "First available" to
@@ -71,7 +75,8 @@ data class ImageSourceConfigurator(
                     set {
                       ImageSourceProvider.firstAvailable(
                           ImageSourceProvider.forUri(imageUriProvider.create(currentImageFormat)),
-                          ImageSourceProvider.forUri(imageUriProvider.create(currentImageFormat)))
+                          ImageSourceProvider.forUri(imageUriProvider.create(currentImageFormat)),
+                      )
                     }
                   },
               "Empty Image Source" to { set { ImageSourceProvider.emptySource() } },
@@ -85,7 +90,8 @@ data class ImageSourceConfigurator(
                     set {
                       ImageSourceProvider.increasingQuality(
                           ImageSourceProvider.forUri(imageUriProvider.nonExistingUri),
-                          ImageSourceProvider.forUri(imageUriProvider.create(currentImageFormat)))
+                          ImageSourceProvider.forUri(imageUriProvider.create(currentImageFormat)),
+                      )
                     }
                   },
               "First available (all error)" to
@@ -93,7 +99,8 @@ data class ImageSourceConfigurator(
                     set {
                       ImageSourceProvider.firstAvailable(
                           ImageSourceProvider.forUri(imageUriProvider.nonExistingUri),
-                          ImageSourceProvider.forUri(imageUriProvider.nonExistingUri))
+                          ImageSourceProvider.forUri(imageUriProvider.nonExistingUri),
+                      )
                     }
                   },
               "Local icon" to
@@ -101,8 +108,10 @@ data class ImageSourceConfigurator(
                     set {
                       ImageSourceProvider.forUri(UriUtil.getUriForResourceId(R.drawable.ic_done))
                     }
-                  }),
-          "Image Source")
+                  },
+          ),
+          "Image Source",
+      )
 
   private fun set(create: () -> ImageSource?) {
     activeImageSourceProvider = { this.imageSource = create() }

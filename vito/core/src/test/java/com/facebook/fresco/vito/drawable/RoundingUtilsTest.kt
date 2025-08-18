@@ -96,7 +96,11 @@ class RoundingUtilsTest {
     val borderOptions = BorderOptions.create(Color.YELLOW, 10f)
     var result =
         roundingUtils.roundedDrawable(
-            resources, drawable, borderOptions, RoundingOptions.asCircle())
+            resources,
+            drawable,
+            borderOptions,
+            RoundingOptions.asCircle(),
+        )
     assertThat(result).isNotNull
     assertThat(result).isInstanceOf(RoundedBitmapDrawable::class.java)
     assertThat((result as RoundedBitmapDrawable).borderWidth).isEqualTo(borderOptions.width)
@@ -106,7 +110,11 @@ class RoundingUtilsTest {
     drawable = mock<ColorDrawable>()
     result =
         roundingUtils.roundedDrawable(
-            resources, drawable, borderOptions, RoundingOptions.asCircle())
+            resources,
+            drawable,
+            borderOptions,
+            RoundingOptions.asCircle(),
+        )
     assertThat(result).isNotNull
     assertThat(result).isInstanceOf(RoundedColorDrawable::class.java)
     assertThat((result as RoundedColorDrawable).borderWidth).isEqualTo(borderOptions.width)
@@ -116,7 +124,11 @@ class RoundingUtilsTest {
     drawable = mock<NinePatchDrawable>()
     result =
         roundingUtils.roundedDrawable(
-            resources, drawable, borderOptions, RoundingOptions.asCircle())
+            resources,
+            drawable,
+            borderOptions,
+            RoundingOptions.asCircle(),
+        )
     assertThat(result).isNotNull
     assertThat(result).isInstanceOf(RoundedNinePatchDrawable::class.java)
     assertThat((result as RoundedNinePatchDrawable).borderWidth).isEqualTo(borderOptions.width)

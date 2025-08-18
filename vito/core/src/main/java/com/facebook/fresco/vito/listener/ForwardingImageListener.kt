@@ -26,7 +26,7 @@ class ForwardingImageListener(private vararg val listeners: ImageListener?) : Im
       id: Long,
       @ImageOrigin imageOrigin: Int,
       imageInfo: ImageInfo?,
-      drawable: Drawable?
+      drawable: Drawable?,
   ) {
     listeners.forEach { it?.onFinalImageSet(id, imageOrigin, imageInfo, drawable) }
   }

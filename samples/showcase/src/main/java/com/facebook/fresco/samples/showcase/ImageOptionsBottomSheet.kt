@@ -22,7 +22,7 @@ class ImageOptionsBottomSheet(val imageSelector: ImageSelector) : BottomSheetDia
   override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
-      savedInstanceState: Bundle?
+      savedInstanceState: Bundle?,
   ): View {
     imageSelector.removeHighlight(requireContext())
     return uiUtils.createView(requireContext())

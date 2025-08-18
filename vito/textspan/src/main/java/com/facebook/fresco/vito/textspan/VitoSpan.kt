@@ -40,7 +40,7 @@ open class VitoSpan(
       text: CharSequence?,
       start: Int,
       end: Int,
-      fm: Paint.FontMetricsInt?
+      fm: Paint.FontMetricsInt?,
   ): Int {
     return imageSpan.getSize(paint, text, start, end, fm)
   }
@@ -54,7 +54,7 @@ open class VitoSpan(
       top: Int,
       y: Int,
       bottom: Int,
-      paint: Paint
+      paint: Paint,
   ) {
     imageSpan.draw(canvas, text, start, end, x, top, y, bottom, paint)
   }

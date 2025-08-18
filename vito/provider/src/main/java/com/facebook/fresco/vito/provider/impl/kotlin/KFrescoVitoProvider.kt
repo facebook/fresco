@@ -33,7 +33,7 @@ class KFrescoVitoProvider(
     private val uiThreadExecutor: Executor,
     private val lightweightBackgroundExecutor: Executor,
     private val callerContextVerifier: CallerContextVerifier = NoOpCallerContextVerifier,
-    private val debugOverlayHandler: DebugOverlayHandler? = null
+    private val debugOverlayHandler: DebugOverlayHandler? = null,
 ) : FrescoVitoSetup {
 
   private val _imagePipeline: VitoImagePipeline by lazy {
@@ -46,7 +46,8 @@ class KFrescoVitoProvider(
             vitoImagePipeline = _imagePipeline,
             uiThreadExecutor = uiThreadExecutor,
             lightweightBackgroundThreadExecutor = lightweightBackgroundExecutor,
-            drawableFactory = getFactory())
+            drawableFactory = getFactory(),
+        )
         .also { it.debugOverlayHandler = debugOverlayHandler }
   }
 

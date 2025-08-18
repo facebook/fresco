@@ -48,8 +48,10 @@ object VitoSpinners {
               "none" to null,
               "as circle" to RoundingOptions.asCircle(),
               "corner radius" to RoundingOptions.forCornerRadiusPx(20f),
-              "different radii" to RoundingOptions.forCornerRadii(0f, 20f, 30f, 40f)),
-          "Rounding")
+              "different radii" to RoundingOptions.forCornerRadii(0f, 20f, 30f, 40f),
+          ),
+          "Rounding",
+      )
 
   val borderOptions =
       Pair(
@@ -60,8 +62,10 @@ object VitoSpinners {
               "border with no padding" to BorderOptions.create(Color.GREEN, 20f, 0f),
               "border with small padding" to BorderOptions.create(Color.GREEN, 20f, 10f),
               "border with same padding" to BorderOptions.create(Color.GREEN, 20f, 20f),
-              "border with more padding" to BorderOptions.create(Color.GREEN, 20f, 40f)),
-          "Border")
+              "border with more padding" to BorderOptions.create(Color.GREEN, 20f, 40f),
+          ),
+          "Border",
+      )
 
   val scaleTypes =
       Pair(
@@ -77,8 +81,10 @@ object VitoSpinners {
               "focus_crop (1, 0.5)" to Pair(ScalingUtils.ScaleType.FOCUS_CROP, PointF(1f, 0.5f)),
               "custom: fit_x" to Pair(CustomScaleTypes.FIT_X, null),
               "custom: fit_y" to Pair(CustomScaleTypes.FIT_Y, null),
-              "null" to Pair(null, null)),
-          "Scale type")
+              "null" to Pair(null, null),
+          ),
+          "Scale type",
+      )
 
   val colorFilters =
       Pair(
@@ -92,8 +98,10 @@ object VitoSpinners {
               "tint: gray" to PorterDuffColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP),
               "tint: red" to PorterDuffColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP),
               "tint: green" to PorterDuffColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP),
-              "tint: blue" to PorterDuffColorFilter(Color.BLUE, PorterDuff.Mode.SRC_ATOP)),
-          "Color filter")
+              "tint: blue" to PorterDuffColorFilter(Color.BLUE, PorterDuff.Mode.SRC_ATOP),
+          ),
+          "Color filter",
+      )
 
   val fadingOptions =
       Pair(
@@ -106,8 +114,10 @@ object VitoSpinners {
               "1000 ms" to 1000,
               "2000 ms" to 2000,
               "5000 ms" to 5000,
-              "10000 ms" to 10000),
-          "Fading")
+              "10000 ms" to 10000,
+          ),
+          "Fading",
+      )
 
   fun placeholderOptions(resources: Resources) =
       Pair(
@@ -128,8 +138,10 @@ object VitoSpinners {
               "color res" to
                   { builder: ImageOptions.Builder ->
                     builder.placeholderRes(R.color.placeholder_color)
-                  }),
-          "Placeholder")
+                  },
+          ),
+          "Placeholder",
+      )
 
   val errorOptions =
       Pair(
@@ -139,8 +151,10 @@ object VitoSpinners {
               "color res" to
                   { builder: ImageOptions.Builder ->
                     builder.errorRes(R.color.error_color)
-                  }),
-          "Error")
+                  },
+          ),
+          "Error",
+      )
 
   val progressOptions =
       Pair(
@@ -171,8 +185,10 @@ object VitoSpinners {
                           backgroundColor =
                               ContextCompat.getColor(c, R.color.progress_bar_background)
                         })
-                  }),
-          "Progress")
+                  },
+          ),
+          "Progress",
+      )
 
   val overlayOptions =
       Pair(
@@ -206,8 +222,10 @@ object VitoSpinners {
                           setRadius(50f)
                           overlayColor = Color.GREEN
                         })
-                  }),
-          "Overlay")
+                  },
+          ),
+          "Overlay",
+      )
 
   val postprocessorOptions =
       Pair(
@@ -248,8 +266,10 @@ object VitoSpinners {
               "Round As Circle Postprocessor" to
                   { builder: ImageOptions.Builder ->
                     builder.postprocess(RoundPostprocessor())
-                  }),
-          "Postprocessor")
+                  },
+          ),
+          "Postprocessor",
+      )
 
   val rotationOptions =
       Pair(
@@ -260,8 +280,10 @@ object VitoSpinners {
               "no rotation" to RotationOptions.forceRotation(RotationOptions.NO_ROTATION),
               "rotate 90" to RotationOptions.forceRotation(RotationOptions.ROTATE_90),
               "rotate 180" to RotationOptions.forceRotation(RotationOptions.ROTATE_180),
-              "rotate 270" to RotationOptions.forceRotation(RotationOptions.ROTATE_270)),
-          "Rotation")
+              "rotate 270" to RotationOptions.forceRotation(RotationOptions.ROTATE_270),
+          ),
+          "Rotation",
+      )
 
   val customDrawableFactoryOptions =
       Pair(
@@ -274,11 +296,13 @@ object VitoSpinners {
                           override fun createDrawable(
                               resources: Resources,
                               closeableImage: CloseableImage,
-                              imageOptions: ImageOptions
+                              imageOptions: ImageOptions,
                           ): Drawable = ColorDrawable(Color.BLUE)
                         })
-                  }),
-          "Custom Drawable Factory")
+                  },
+          ),
+          "Custom Drawable Factory",
+      )
 
   val resizeOptions =
       Pair(
@@ -347,6 +371,8 @@ object VitoSpinners {
               "2160 x 4096" to
                   { builder: ImageOptions.Builder ->
                     builder.resize(ResizeOptions.forDimensions(2160, 4096))
-                  }),
-          "Resize options")
+                  },
+          ),
+          "Resize options",
+      )
 }

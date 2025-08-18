@@ -28,7 +28,8 @@ open class RendererExampleDrawable(
         imageDataModel,
         shape,
         Paint(Paint.ANTI_ALIAS_FLAG).apply { colorFilter = imageColorFilter },
-        transformationMatrix)(canvas)
+        transformationMatrix,
+    )(canvas)
   }
 
   override fun setAlpha(alpha: Int) = Unit

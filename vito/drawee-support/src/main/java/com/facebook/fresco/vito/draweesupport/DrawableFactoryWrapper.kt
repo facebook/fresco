@@ -19,7 +19,7 @@ class DrawableFactoryWrapper private constructor(private val drawableFactory: Dr
   override fun createDrawable(
       resources: Resources,
       closeableImage: CloseableImage,
-      imageOptions: ImageOptions
+      imageOptions: ImageOptions,
   ): Drawable? =
       if (drawableFactory.supportsImageType(closeableImage)) {
         if (drawableFactory is ImageOptionsDrawableFactory) {

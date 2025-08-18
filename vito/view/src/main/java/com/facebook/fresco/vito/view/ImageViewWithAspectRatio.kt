@@ -16,7 +16,7 @@ class ImageViewWithAspectRatio : ImageView {
   constructor(
       context: Context,
       attrSet: AttributeSet?,
-      defStyleAttr: Int
+      defStyleAttr: Int,
   ) : super(context, attrSet, defStyleAttr)
 
   constructor(context: Context, attrSet: AttributeSet?) : super(context, attrSet)
@@ -48,7 +48,8 @@ class ImageViewWithAspectRatio : ImageView {
         currentAspectRatio,
         layoutParams,
         paddingLeft + paddingRight,
-        paddingTop + paddingBottom)
+        paddingTop + paddingBottom,
+    )
     super.onMeasure(measureSpec.width, measureSpec.height)
   }
 }

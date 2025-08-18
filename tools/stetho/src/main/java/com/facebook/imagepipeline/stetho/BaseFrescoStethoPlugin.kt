@@ -166,7 +166,11 @@ abstract class BaseFrescoStethoPlugin() : DumperPlugin {
     }
     writer.println(
         formatStrLocaleSafe(
-            "type: %5s size: %7.2fkB path: %9s", entry.type, entry.size / KB, entry.path))
+            "type: %5s size: %7.2fkB path: %9s",
+            entry.type,
+            entry.size / KB,
+            entry.path,
+        ))
   }
 
   private fun writeDiskDumpInfoScriptReadable(writer: PrintStream, dumpInfo: DiskDumpInfo) {
@@ -192,7 +196,8 @@ abstract class BaseFrescoStethoPlugin() : DumperPlugin {
             entryValue.get().width,
             entryValue.get().height,
             entry.key,
-            RealtimeSinceBootClock.get().now() - cacheKey.inBitmapCacheSince))
+            RealtimeSinceBootClock.get().now() - cacheKey.inBitmapCacheSince,
+        ))
   }
 
   @Throws(DumpException::class)
@@ -213,16 +218,21 @@ abstract class BaseFrescoStethoPlugin() : DumperPlugin {
       writer.println(
           formatStrLocaleSafe(
               "Total size:        %7.2fMB (includes in-use content)",
-              dumpInfo.size / (1_024.0 * KB)))
+              dumpInfo.size / (1_024.0 * KB),
+          ))
       writer.println(
           formatStrLocaleSafe(
-              "Entries count:     %9d", dumpInfo.lruEntries.size + dumpInfo.sharedEntries.size))
+              "Entries count:     %9d",
+              dumpInfo.lruEntries.size + dumpInfo.sharedEntries.size,
+          ))
       writer.println(
           formatStrLocaleSafe("LRU size:          %7.2fMB", dumpInfo.lruSize / (1_024.0 * KB)))
       writer.println(formatStrLocaleSafe("LRU count:         %9d", dumpInfo.lruEntries.size))
       writer.println(
           formatStrLocaleSafe(
-              "Shared size:       %7.2fMB", (dumpInfo.size - dumpInfo.lruSize) / (1_024.0 * KB)))
+              "Shared size:       %7.2fMB",
+              (dumpInfo.size - dumpInfo.lruSize) / (1_024.0 * KB),
+          ))
       writer.println(formatStrLocaleSafe("Shared count:      %9d", dumpInfo.sharedEntries.size))
       writer.println()
       writer.println("The cache consists of two parts: Things currently being used and things not.")

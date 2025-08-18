@@ -20,7 +20,7 @@ import kotlin.Unit
 class ImageLiveEditor(
     val drawable: FrescoDrawableInterface,
     private val imagePipeline: VitoImagePipeline,
-    private val frescoController: FrescoController2
+    private val frescoController: FrescoController2,
 ) {
 
   private var originalRequest = drawable.imageRequest
@@ -38,7 +38,7 @@ class ImageLiveEditor(
   fun fetch(
       context: Context,
       imageSource: ImageSource = getSource(),
-      imageOptions: ImageOptions = getOptions()
+      imageOptions: ImageOptions = getOptions(),
   ) {
     if (originalRequest == null) {
       originalRequest = drawable.imageRequest
@@ -55,7 +55,8 @@ class ImageLiveEditor(
         contextChain = null,
         listener = drawable.imageListener,
         onFadeListener = null,
-        viewportDimensions = null)
+        viewportDimensions = null,
+    )
   }
 
   fun getOptions(): ImageOptions = drawable.imageRequest?.imageOptions ?: ImageOptions.defaults()

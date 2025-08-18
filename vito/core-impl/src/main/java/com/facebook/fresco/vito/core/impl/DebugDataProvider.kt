@@ -17,14 +17,14 @@ import java.util.Locale
 sealed class DebugDataProvider(
     val shortName: String,
     val longName: String,
-    val description: String
+    val description: String,
 )
 
 class StringDebugDataProvider(
     shortName: String,
     longName: String,
     description: String,
-    val extractData: (FrescoDrawableInterface) -> String
+    val extractData: (FrescoDrawableInterface) -> String,
 ) : DebugDataProvider(shortName, longName, description)
 
 val imageIDProvider =
@@ -34,13 +34,16 @@ val imageIDProvider =
 
 val drawableDimensionsProvider =
     StringDebugDataProvider(
-        "D", "Drawable dimensions", "The visible Drawable dimensions on screen") {
-          if (it is Drawable) {
-            formatDimensions(it.bounds.width(), it.bounds.height())
-          } else {
-            ""
-          }
-        }
+        "D",
+        "Drawable dimensions",
+        "The visible Drawable dimensions on screen",
+    ) {
+      if (it is Drawable) {
+        formatDimensions(it.bounds.width(), it.bounds.height())
+      } else {
+        ""
+      }
+    }
 
 val imageDimensionsProvider =
     StringDebugDataProvider("I", "Image dimensions", "The dimensions of the decoded image") {
@@ -61,7 +64,7 @@ class StringAndColorDebugDataProvider(
     shortName: String,
     longName: String,
     description: String,
-    val extractDataAndColor: (FrescoDrawableInterface) -> Pair<String, Int>
+    val extractDataAndColor: (FrescoDrawableInterface) -> Pair<String, Int>,
 ) : DebugDataProvider(shortName, longName, description)
 
 private fun KFrescoVitoDrawable.extractOriginExtras(): Map<String, Any>? =
@@ -85,13 +88,15 @@ val imageOriginProvider =
 
 val imageOriginSubcategoryProvider =
     StringAndColorDebugDataProvider(
-        "o_s", "Origin Subcategory", "The subcategory of source of the image") {
-          if (it is KFrescoVitoDrawable) {
-            val originSubcategory =
-                it.extractOriginExtras()?.get("origin_sub")?.toString() ?: "unknown"
+        "o_s",
+        "Origin Subcategory",
+        "The subcategory of source of the image",
+    ) {
+      if (it is KFrescoVitoDrawable) {
+        val originSubcategory = it.extractOriginExtras()?.get("origin_sub")?.toString() ?: "unknown"
 
-            originSubcategory to Color.GRAY
-          } else {
-            "" to Color.WHITE
-          }
-        }
+        originSubcategory to Color.GRAY
+      } else {
+        "" to Color.WHITE
+      }
+    }

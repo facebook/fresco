@@ -52,33 +52,39 @@ class VitoLayerExample : BaseShowcaseKotlinFragment() {
           w,
           h,
           "Scale Types, bitmap 160x90",
-          BitmapImageDataModel(createSampleBitmap(160, 90, 127)))
+          BitmapImageDataModel(createSampleBitmap(160, 90, 127)),
+      )
       addScaleTypeExamples(
           w,
           h,
           "Scale Types, bitmap 320x90",
-          BitmapImageDataModel(createSampleBitmap(320, 90, 127)))
+          BitmapImageDataModel(createSampleBitmap(320, 90, 127)),
+      )
       addScaleTypeExamples(
           w,
           h,
           "Scale Types, bitmap 90x160",
-          BitmapImageDataModel(createSampleBitmap(90, 160, 127)))
+          BitmapImageDataModel(createSampleBitmap(90, 160, 127)),
+      )
       addScaleTypeExamples(
           w,
           h,
           "Scale Types, bitmap 90x320",
-          BitmapImageDataModel(createSampleBitmap(90, 320, 127)))
+          BitmapImageDataModel(createSampleBitmap(90, 320, 127)),
+      )
       addScaleTypeExamples(
           w,
           h,
           "Scale Types, bitmap 800x600",
-          BitmapImageDataModel(createSampleBitmap(800, 600, 127)))
+          BitmapImageDataModel(createSampleBitmap(800, 600, 127)),
+      )
       addScaleTypeExamples(w, h, "Scale Types, color int", ColorIntImageDataModel(Color.RED))
       addScaleTypeExamples(
           w,
           h,
           "Scale Types, drawable",
-          DrawableImageDataModel(ContextCompat.getDrawable(context, R.drawable.logo)!!))
+          DrawableImageDataModel(ContextCompat.getDrawable(context, R.drawable.logo)!!),
+      )
     }
   }
 
@@ -86,7 +92,7 @@ class VitoLayerExample : BaseShowcaseKotlinFragment() {
       w: Int,
       h: Int,
       title: String,
-      imageDataModel: ImageDataModel
+      imageDataModel: ImageDataModel,
   ) {
     addRow(title, true) {
       for (entry in VitoSpinners.scaleTypes.first) {
@@ -99,8 +105,10 @@ class VitoLayerExample : BaseShowcaseKotlinFragment() {
                   dataModel = imageDataModel,
                   canvasTransformation =
                       entry.second.first?.getCanvasTransformation(entry.second.second),
-                  roundingOptions = RoundingOptions.asCircle())
-            })
+                  roundingOptions = RoundingOptions.asCircle(),
+              )
+            },
+        )
       }
     }
   }
@@ -109,7 +117,7 @@ class VitoLayerExample : BaseShowcaseKotlinFragment() {
       title: String,
       w: Int,
       h: Int,
-      imageLayerDataModel: ImageLayerDataModel
+      imageLayerDataModel: ImageLayerDataModel,
   ) {
     addImageViewWithText(title, w, h) {
       setImageDrawable(ExampleImageLayerDrawable(imageLayerDataModel))

@@ -19,7 +19,7 @@ data class ImageRequestImageSource(private val imageRequest: ImageRequest) :
     ImagePipelineImageSource {
   override fun maybeExtractFinalImageRequest(
       imagePipelineUtils: ImagePipelineUtils,
-      imageOptions: ImageOptions
+      imageOptions: ImageOptions,
   ): ImageRequest? {
     return imagePipelineUtils.wrapDecodedImageRequest(imageRequest, imageOptions)
   }

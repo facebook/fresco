@@ -45,7 +45,7 @@ class MultiUriFragment : BaseShowcaseFragment() {
   override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
-      savedInstanceState: Bundle?
+      savedInstanceState: Bundle?,
   ): View {
     _binding = FragmentVitoMultiUriBinding.inflate(inflater, container, false)
     return binding.root
@@ -70,13 +70,17 @@ class MultiUriFragment : BaseShowcaseFragment() {
           listOf(
                   sampleUris().createSampleUri(ImageUriProvider.ImageSize.L),
                   sampleUris().createSampleUri(ImageUriProvider.ImageSize.XL),
-                  sampleUris().createSampleUri(ImageUriProvider.ImageSize.XXL))
+                  sampleUris().createSampleUri(ImageUriProvider.ImageSize.XXL),
+              )
               .map(ImageSourceProvider::forUri)
               .toTypedArray()
       VitoView.show(
           ImageSourceProvider.increasingQuality(
-              lowRes, ImageSourceProvider.firstAvailable(*anyHighRes)),
-          imageView)
+              lowRes,
+              ImageSourceProvider.firstAvailable(*anyHighRes),
+          ),
+          imageView,
+      )
     }
   }
 

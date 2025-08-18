@@ -43,7 +43,7 @@ interface ImageListener : OnDrawControllerListener<ImageInfo> {
       id: Long,
       @ImageOrigin imageOrigin: Int,
       imageInfo: ImageInfo?,
-      drawable: Drawable?
+      drawable: Drawable?,
   ): Unit = Unit
 
   /**

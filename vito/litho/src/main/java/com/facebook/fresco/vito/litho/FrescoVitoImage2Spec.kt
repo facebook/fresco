@@ -91,7 +91,8 @@ object FrescoVitoImage2Spec {
   fun onCreateMountContentPool(poolsize: Int): MountContentPools.ContentPool =
       MountContentPools.DefaultContentPool(
           FrescoVitoImage2Spec::class.java,
-          FrescoVitoProvider.getConfig().experimentalPoolSizeVito2().toInt())
+          FrescoVitoProvider.getConfig().experimentalPoolSizeVito2().toInt(),
+      )
 
   @JvmStatic
   @OnCreateMountContent(mountingType = MountingType.DRAWABLE)
@@ -154,7 +155,8 @@ object FrescoVitoImage2Spec {
         imageOptions,
         logWithHighSamplingRate,
         viewportRect = null,
-        fetchStrategy = null)
+        fetchStrategy = null,
+    )
   }
 
   private fun createVitoImageRequest(
@@ -177,7 +179,8 @@ object FrescoVitoImage2Spec {
               viewportRect,
               callerContext,
               null,
-              fetchStrategy)
+              fetchStrategy,
+          )
 
   @JvmStatic
   @OnPrepare
@@ -209,7 +212,8 @@ object FrescoVitoImage2Spec {
             requestBeforeLayout,
             callerContext,
             contextChain,
-            prefetchRequestListener)
+            prefetchRequestListener,
+        )
       }
       is SmartFetchStrategy -> {
         if (viewport != null) {
@@ -223,14 +227,16 @@ object FrescoVitoImage2Spec {
                   imageOptions,
                   logWithHighSamplingRate,
                   viewport.toRect(),
-                  result)
+                  result,
+              )
           maybePrefetchInOnPrepare(
               prefetch,
               prefetchDataSource,
               viewportAwareImageRequest,
               callerContext,
               contextChain,
-              prefetchRequestListener)
+              prefetchRequestListener,
+          )
         }
       }
       NoPrefetchInOnPrepareStrategy -> {}
@@ -312,7 +318,8 @@ object FrescoVitoImage2Spec {
               contextChain = contextChain,
               listener = imageListener,
               onFadeListener = onFadeListener,
-              viewportDimensions = viewportDimensions)
+              viewportDimensions = viewportDimensions,
+          )
       frescoDrawable.imagePerfListener.onImageMount(frescoDrawable)
     }
     if (shouldClosePrefetchDataSourceOnBindOrOnMount()) {
@@ -356,7 +363,8 @@ object FrescoVitoImage2Spec {
               contextChain = contextChain,
               listener = imageListener,
               onFadeListener = onFadeListener,
-              viewportDimensions = viewportDimensions)
+              viewportDimensions = viewportDimensions,
+          )
       frescoDrawable.imagePerfListener.onImageBind(frescoDrawable)
     }
     if (shouldClosePrefetchDataSourceOnBindOrOnMount()) {
@@ -452,7 +460,7 @@ object FrescoVitoImage2Spec {
   fun onPopulateAccessibilityNode(
       c: ComponentContext,
       host: View,
-      node: AccessibilityNodeInfoCompat
+      node: AccessibilityNodeInfoCompat,
   ) {
     node.className = AccessibilityRole.IMAGE
   }
@@ -501,7 +509,8 @@ object FrescoVitoImage2Spec {
                 imageOptions,
                 logWithHighSamplingRate,
                 viewportRect,
-                fetchStrategy)
+                fetchStrategy,
+            )
 
         requestWithLayout.set(vitoImageRequest)
 
@@ -516,7 +525,8 @@ object FrescoVitoImage2Spec {
                       callerContext,
                       contextChain,
                       prefetchRequestListener,
-                      "FrescoVitoImage2Spec_OnBoundsDefined"))
+                      "FrescoVitoImage2Spec_OnBoundsDefined",
+                  ))
         }
       }
 
@@ -551,7 +561,7 @@ object FrescoVitoImage2Spec {
       requestBeforeLayout: VitoImageRequest,
       callerContext: Any?,
       contextChain: ContextChain?,
-      prefetchRequestListener: RequestListener?
+      prefetchRequestListener: RequestListener?,
   ) {
     val config = FrescoVitoProvider.getConfig().prefetchConfig
     if (shouldPrefetchInOnPrepare(prefetch)) {
@@ -563,7 +573,8 @@ object FrescoVitoImage2Spec {
                   callerContext,
                   contextChain,
                   prefetchRequestListener,
-                  "FrescoVitoImage2Spec_OnPrepare"))
+                  "FrescoVitoImage2Spec_OnPrepare",
+              ))
     }
   }
 
@@ -623,6 +634,6 @@ object FrescoVitoImage2Spec {
   class OnDetachedHolder(
       val drawable: FrescoDrawableInterface?,
       val prefetchDataSource: DataSource<Void?>?,
-      val prefetchDataSourceFromBoundsDefined: DataSource<Void?>?
+      val prefetchDataSourceFromBoundsDefined: DataSource<Void?>?,
   )
 }

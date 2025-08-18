@@ -15,7 +15,7 @@ import com.facebook.imagepipeline.transformation.CircularTransformation
 @Suppress("KtDataClass")
 data class CircularBitmapTransformation(
     val isAntiAliased: Boolean = true,
-    private val useFastNativeRounding: Boolean = false
+    private val useFastNativeRounding: Boolean = false,
 ) : BitmapTransformation, CircularTransformation {
 
   override fun transform(bitmap: Bitmap) {

@@ -74,7 +74,7 @@ private fun toModel(
     resources: Resources,
     drawable: Drawable?,
     colorOrDrawableRes: Int,
-    colorInt: Int?
+    colorInt: Int?,
 ): ImageDataModel? =
     when {
       drawable != null -> toModel(drawable)
@@ -115,7 +115,7 @@ fun ScalingUtils.ScaleType.getCanvasTransformation(
           outTransform: Matrix,
           parentBounds: Rect,
           childWidth: Int,
-          childHeight: Int
+          childHeight: Int,
       ): Matrix {
         getTransform(
             outTransform,
@@ -123,7 +123,8 @@ fun ScalingUtils.ScaleType.getCanvasTransformation(
             childWidth,
             childHeight,
             focusPoint?.x ?: 0.5f,
-            focusPoint?.y ?: 0.5f)
+            focusPoint?.y ?: 0.5f,
+        )
         return outTransform
       }
     }

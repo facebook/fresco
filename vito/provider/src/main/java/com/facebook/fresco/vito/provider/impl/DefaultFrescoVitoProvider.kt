@@ -67,7 +67,8 @@ class DefaultFrescoVitoProvider(
             null,
             debugOverlayFactory,
             imagePerfListenerSupplier,
-            vitoImagePerfListener)
+            vitoImagePerfListener,
+        )
   }
 
   override fun getController(): FrescoController2 = frescoController

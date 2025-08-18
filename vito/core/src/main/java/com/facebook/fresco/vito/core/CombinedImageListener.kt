@@ -34,7 +34,7 @@ interface CombinedImageListener : VitoImageRequestListener {
       resetVitoImageRequestListener: Boolean,
       resetLocalVitoImageRequestListener: Boolean,
       resetLocalImagePerfStateListener: Boolean,
-      resetControllerListener2: Boolean
+      resetControllerListener2: Boolean,
   )
 
   fun onImageSet(image: CloseableReference<CloseableImage>, viewportDimensions: Rect?)

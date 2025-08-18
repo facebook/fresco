@@ -29,7 +29,7 @@ import java.util.concurrent.CancellationException
 class FrescoVitoPrefetcherImpl(
     private val imagePipeline: ImagePipeline,
     private val imagePipelineUtils: ImagePipelineUtils,
-    private val callerContextVerifier: CallerContextVerifier?
+    private val callerContextVerifier: CallerContextVerifier?,
 ) : FrescoVitoPrefetcher {
 
   override fun prefetch(
@@ -37,7 +37,7 @@ class FrescoVitoPrefetcherImpl(
       uri: Uri,
       imageOptions: ImageOptions?,
       callerContext: Any?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> {
     return when (prefetchTarget) {
       PrefetchTarget.MEMORY_DECODED ->
@@ -55,7 +55,7 @@ class FrescoVitoPrefetcherImpl(
       imageRequest: ImageRequest,
       imageOptions: ImageOptions?,
       callerContext: Any?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> {
     return when (prefetchTarget) {
       PrefetchTarget.MEMORY_DECODED ->
@@ -74,14 +74,14 @@ class FrescoVitoPrefetcherImpl(
       imageOptions: ImageOptions?,
       callerContext: Any?,
       contextChain: ContextChain?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> = prefetch(prefetchTarget, uri, imageOptions, callerContext, callsite)
 
   override fun prefetchToBitmapCache(
       uri: Uri,
       imageOptions: DecodedImageOptions?,
       callerContext: Any?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> {
     val imageRequest = imagePipelineUtils.buildImageRequest(uri, imageOptions ?: defaults())
     return prefetch(PrefetchTarget.MEMORY_DECODED, imageRequest, callerContext, null)
@@ -92,7 +92,7 @@ class FrescoVitoPrefetcherImpl(
       imageOptions: DecodedImageOptions?,
       callerContext: Any?,
       contextChain: ContextChain?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> {
     return prefetchToBitmapCache(uri, imageOptions, callerContext, callsite)
   }
@@ -101,7 +101,7 @@ class FrescoVitoPrefetcherImpl(
       uri: Uri,
       imageOptions: EncodedImageOptions?,
       callerContext: Any?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> {
     val imageRequest = imagePipelineUtils.buildEncodedImageRequest(uri, imageOptions ?: defaults())
     return prefetch(PrefetchTarget.MEMORY_ENCODED, imageRequest, callerContext, null)
@@ -112,14 +112,14 @@ class FrescoVitoPrefetcherImpl(
       imageOptions: EncodedImageOptions?,
       callerContext: Any?,
       contextChain: ContextChain?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> = prefetchToEncodedCache(uri, imageOptions, callerContext, callsite)
 
   override fun prefetchToDiskCache(
       uri: Uri,
       imageOptions: ImageOptions?,
       callerContext: Any?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> {
     val imageRequest = imagePipelineUtils.buildEncodedImageRequest(uri, imageOptions ?: defaults())
     return prefetch(PrefetchTarget.DISK, imageRequest, callerContext, null)
@@ -130,7 +130,7 @@ class FrescoVitoPrefetcherImpl(
       imageOptions: ImageOptions?,
       callerContext: Any?,
       contextChain: ContextChain?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> = prefetchToDiskCache(uri, imageOptions, callerContext, callsite)
 
   override fun prefetch(
@@ -138,7 +138,7 @@ class FrescoVitoPrefetcherImpl(
       imageRequest: VitoImageRequest,
       callerContext: Any?,
       requestListener: RequestListener?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> =
       prefetch(prefetchTarget, imageRequest.finalImageRequest, callerContext, requestListener)
 
@@ -148,7 +148,7 @@ class FrescoVitoPrefetcherImpl(
       callerContext: Any?,
       contextChain: ContextChain?,
       requestListener: RequestListener?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> =
       prefetch(prefetchTarget, imageRequest, callerContext, requestListener, callsite)
 
@@ -156,7 +156,7 @@ class FrescoVitoPrefetcherImpl(
       prefetchTarget: PrefetchTarget,
       imageRequest: ImageRequest?,
       callerContext: Any?,
-      requestListener: RequestListener?
+      requestListener: RequestListener?,
   ): DataSource<Void?> {
     callerContextVerifier?.verifyCallerContext(callerContext, false)
     return if (imageRequest == null) {
@@ -165,13 +165,22 @@ class FrescoVitoPrefetcherImpl(
       when (prefetchTarget) {
         PrefetchTarget.MEMORY_DECODED ->
             imagePipeline.prefetchToBitmapCache(
-                imageRequest, callerContext, requestListener = requestListener)
+                imageRequest,
+                callerContext,
+                requestListener = requestListener,
+            )
         PrefetchTarget.MEMORY_ENCODED ->
             imagePipeline.prefetchToEncodedCache(
-                imageRequest, callerContext, requestListener = requestListener)
+                imageRequest,
+                callerContext,
+                requestListener = requestListener,
+            )
         PrefetchTarget.DISK ->
             imagePipeline.prefetchToDiskCache(
-                imageRequest, callerContext, requestListener = requestListener)
+                imageRequest,
+                callerContext,
+                requestListener = requestListener,
+            )
       }
     }
   }

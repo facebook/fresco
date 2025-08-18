@@ -28,6 +28,6 @@ interface CanvasTransformation {
       outTransform: Matrix,
       parentBounds: Rect,
       childWidth: Int,
-      childHeight: Int
+      childHeight: Int,
   ): Matrix?
 }

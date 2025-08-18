@@ -91,7 +91,8 @@ class KFrescoController(
               config.experimentalResetVitoImageRequestListener(),
               config.experimentalResetLocalVitoImageRequestListener(),
               config.experimentalResetLocalImagePerfStateListener(),
-              config.experimentalResetControllerListener2())
+              config.experimentalResetControllerListener2(),
+          )
       drawable.uiFramework = uiFramework
       imagePerfLoggingListenerSupplier
           ?.get()
@@ -162,7 +163,11 @@ class KFrescoController(
       val options: ImageOptions = imageRequest.imageOptions
 
       drawable.listenerManager.onSubmit(
-          imageId, imageRequest, callerContext, drawable.obtainExtras())
+          imageId,
+          imageRequest,
+          callerContext,
+          drawable.obtainExtras(),
+      )
       drawable.imagePerfListener.onImageFetch(drawable)
       drawable.overlayImageLayer.setOverlay(imageRequest.resources, options)
       drawable.setupBackgroundLayer(imageRequest.resources, options)
@@ -182,7 +187,11 @@ class KFrescoController(
         }
         is DrawableResImageSource -> {
           setDrawableAsActualImage(
-              drawable, imageRequest.resources.getDrawable(source.resId), imageRequest, imageId)
+              drawable,
+              imageRequest.resources.getDrawable(source.resId),
+              imageRequest,
+              imageId,
+          )
           return true
         }
       }
@@ -203,7 +212,10 @@ class KFrescoController(
         // The image is not in cache -> Set up layers visible until the image is available
         drawable.placeholderLayer.setPlaceholder(imageRequest.resources, options)
         drawable.listenerManager.onPlaceholderSet(
-            imageId, imageRequest, drawable.placeholderLayer.getDataModel().maybeGetDrawable())
+            imageId,
+            imageRequest,
+            drawable.placeholderLayer.getDataModel().maybeGetDrawable(),
+        )
 
         drawable.setupProgressLayer(imageRequest.resources, options)
       }
@@ -217,9 +229,15 @@ class KFrescoController(
             vitoImagePipeline.fetchDecodedImage(imageRequest, callerContext, null, imageId)
         dataSource.subscribe(
             ImageFetchSubscriber(
-                imageId, drawable, imageToDataModelMapper, debugOverlayHandler, uiThreadExecutor),
+                imageId,
+                drawable,
+                imageToDataModelMapper,
+                debugOverlayHandler,
+                uiThreadExecutor,
+            ),
             if (config.handleImageResultInBackground()) lightweightBackgroundThreadExecutor
-            else uiThreadExecutor) // Keyframes require callbacks to be on the main thread.
+            else uiThreadExecutor,
+        ) // Keyframes require callbacks to be on the main thread.
         drawable.dataSource = dataSource
       }
       drawable.setFetchSubmitted(true)
@@ -233,7 +251,7 @@ class KFrescoController(
       drawable: KFrescoVitoDrawable,
       actualImageDrawable: Drawable,
       imageRequest: VitoImageRequest,
-      imageId: Long
+      imageId: Long,
   ) {
     val extras = drawable.obtainExtras(null, null)
     drawable.actualImageLayer.setActualImageDrawable(imageRequest.imageOptions, actualImageDrawable)
@@ -246,9 +264,11 @@ class KFrescoController(
             actualImageDrawable.intrinsicHeight,
             0,
             ImmutableQualityInfo.FULL_QUALITY,
-            extras.imageExtras ?: emptyMap()),
+            extras.imageExtras ?: emptyMap(),
+        ),
         extras,
-        drawable.actualImageDrawable)
+        drawable.actualImageDrawable,
+    )
     debugOverlayHandler?.update(drawable)
   }
 
@@ -300,7 +320,11 @@ class KFrescoController(
           setFetchSubmitted(true)
           closeable = imageReference.clone()
           actualImageLayer.setActualImage(
-              imageRequest.resources, imageRequest.imageOptions, image, imageToDataModelMapper)
+              imageRequest.resources,
+              imageRequest.imageOptions,
+              image,
+              imageToDataModelMapper,
+          )
           // TODO(T105148151): trigger listeners
           invalidateSelf()
           val imageInfo = image.imageInfo
@@ -315,7 +339,8 @@ class KFrescoController(
                 ImageOrigin.MEMORY_BITMAP_SHORTCUT,
                 imageInfo,
                 obtainExtras(null, imageReference),
-                actualImageDrawable)
+                actualImageDrawable,
+            )
           }
           debugOverlayHandler?.update(this)
           return true
@@ -329,7 +354,7 @@ class KFrescoController(
 
   private fun isAlreadyLoadingImage(
       imageRequest: VitoImageRequest,
-      drawable: KFrescoVitoDrawable
+      drawable: KFrescoVitoDrawable,
   ): Boolean {
     traceSection("KFrescoController#isAlreadyLoadingImage") {
       return if (config.useSmartPropertyDiffing()) {
@@ -345,7 +370,9 @@ class KFrescoController(
         AnimatedDrawableImageDataModel(drawable, drawable, options.shouldAutoPlay())
       } else {
         DrawableImageDataModel(
-            drawable, options.actualImageScaleType == ScalingUtils.ScaleType.DISABLED)
+            drawable,
+            options.actualImageScaleType == ScalingUtils.ScaleType.DISABLED,
+        )
       }
 
   companion object {

@@ -82,9 +82,11 @@ class FrescoVito {
                 DefaultDebugOverlayFactory2(
                     showExtendedDebugOverlayInformation,
                     showExtendedImageSourceExtraInformation,
-                    it)
+                    it,
+                )
               } ?: NoOpDebugOverlayFactory2(),
-              imagePerfListenerSupplier))
+              imagePerfListenerSupplier,
+          ))
     }
 
     /**
@@ -104,7 +106,7 @@ class FrescoVito {
 
     fun createImagePipelineUtils(
         useNativeRounding: Supplier<Boolean>,
-        useFastNativeRounding: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE
+        useFastNativeRounding: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE,
     ): ImagePipelineUtils {
       val circularBitmapRounding: CircularBitmapRounding? =
           if (useNativeRounding.get()) NativeCircularBitmapRounding(useFastNativeRounding) else null

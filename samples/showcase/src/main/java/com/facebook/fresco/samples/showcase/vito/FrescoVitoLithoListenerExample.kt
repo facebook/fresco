@@ -32,7 +32,7 @@ object FrescoVitoLithoListenerExample : LithoSample {
   override fun createLithoComponent(
       c: ComponentContext,
       uris: ImageUriProvider,
-      callerContext: Any
+      callerContext: Any,
   ): Component {
     val uri = uris.createSampleUri()
     return FrescoVitoImage2.create(c)

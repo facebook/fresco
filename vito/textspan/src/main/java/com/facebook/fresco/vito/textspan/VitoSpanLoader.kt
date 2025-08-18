@@ -31,7 +31,7 @@ object VitoSpanLoader {
   fun createSpan(
       resources: Resources,
       @BetterImageSpan.BetterImageSpanAlignment
-      verticalAlignment: Int = BetterImageSpan.ALIGN_BASELINE
+      verticalAlignment: Int = BetterImageSpan.ALIGN_BASELINE,
   ): VitoSpan = VitoSpan(resources, createDrawable(), verticalAlignment)
 
   @JvmStatic
@@ -42,16 +42,21 @@ object VitoSpanLoader {
       callerContext: Any?,
       contextChain: ContextChain?,
       imageListener: ImageListener?,
-      target: VitoSpan
+      target: VitoSpan,
   ) {
     show(
         FrescoVitoProvider.getImagePipeline()
             .createImageRequest(
-                target.resources, imageSource, imageOptions, logWithHighSamplingRate),
+                target.resources,
+                imageSource,
+                imageOptions,
+                logWithHighSamplingRate,
+            ),
         callerContext,
         contextChain,
         imageListener,
-        target)
+        target,
+    )
   }
 
   @JvmStatic
@@ -60,7 +65,7 @@ object VitoSpanLoader {
       callerContext: Any?,
       contextChain: ContextChain?,
       imageListener: ImageListener?,
-      target: VitoSpan
+      target: VitoSpan,
   ) {
     val fetchCommand = {
       FrescoVitoProvider.getController()
@@ -71,7 +76,8 @@ object VitoSpanLoader {
               contextChain = contextChain,
               listener = imageListener,
               onFadeListener = null,
-              viewportDimensions = null)
+              viewportDimensions = null,
+          )
     }
     target.imageFetchCommand = fetchCommand
     fetchCommand()
@@ -90,7 +96,7 @@ object VitoSpanLoader {
       endIndex: Int,
       imageWidthPx: Int,
       imageHeightPx: Int,
-      parentView: View?
+      parentView: View?,
   ) {
     if (endIndex > sb.length) {
       // Unfortunately, some callers use this wrong. The original implementation also swallows
@@ -110,10 +116,17 @@ object VitoSpanLoader {
       endIndex: Int,
       imageWidthPx: Int,
       imageHeightPx: Int,
-      parentView: View?
+      parentView: View?,
   ) {
     setImageSpanOnBuilder(
-        this, imageSpan, startIndex, endIndex, imageWidthPx, imageHeightPx, parentView)
+        this,
+        imageSpan,
+        startIndex,
+        endIndex,
+        imageWidthPx,
+        imageHeightPx,
+        parentView,
+    )
   }
 
   fun createDrawable(): FrescoDrawableInterface =

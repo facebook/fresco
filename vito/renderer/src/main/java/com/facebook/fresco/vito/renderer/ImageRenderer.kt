@@ -30,7 +30,7 @@ object ImageRenderer {
       model: ImageDataModel,
       shape: Shape,
       paint: Paint,
-      imageTransformation: Matrix? = null
+      imageTransformation: Matrix? = null,
   ): RenderCommand {
     return when (model) {
       is BitmapImageDataModel -> model.createRenderCommand(shape, paint, imageTransformation)
@@ -42,7 +42,7 @@ object ImageRenderer {
   inline fun BitmapImageDataModel.createRenderCommand(
       shape: Shape,
       paint: Paint,
-      imageTransformation: Matrix? = null
+      imageTransformation: Matrix? = null,
   ): RenderCommand =
       when (shape) {
         is RectShape -> bitmapRenderCommand(paint, bitmap, imageTransformation)
@@ -82,7 +82,8 @@ object ImageRenderer {
                   shape.rect.left.toInt(),
                   shape.rect.top.toInt(),
                   shape.rect.right.toInt(),
-                  shape.rect.bottom.toInt())
+                  shape.rect.bottom.toInt(),
+              )
             }
             // Some drawable types (eg VectorDrawable) will always invalidate when colorFilter
             // is modified, so check the current value before we update it
@@ -111,7 +112,7 @@ object ImageRenderer {
   inline fun bitmapRenderCommand(
       paint: Paint,
       bitmap: Bitmap,
-      imageTransformation: Matrix?
+      imageTransformation: Matrix?,
   ): RenderCommand = { canvas ->
     canvas.concat(imageTransformation)
     canvas.drawBitmap(bitmap, 0f, 0f, paint)

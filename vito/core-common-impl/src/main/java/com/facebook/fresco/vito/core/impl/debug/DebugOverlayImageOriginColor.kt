@@ -19,7 +19,8 @@ object DebugOverlayImageOriginColor {
           "disk" to Color.YELLOW,
           "memory_encoded" to Color.YELLOW,
           "memory_bitmap" to Color.GREEN,
-          "local" to Color.GREEN)
+          "local" to Color.GREEN,
+      )
 
   @JvmStatic
   @ColorInt

@@ -40,7 +40,8 @@ class RendererColorFilterExampleFragment : BaseShowcaseKotlinFragment() {
             CircleShape(
                 exampleRect.exactCenterX(),
                 exampleRect.exactCenterY(),
-                min(exampleRect.width(), exampleRect.height()) / 2f),
+                min(exampleRect.width(), exampleRect.height()) / 2f,
+            ),
             RoundedRectShape(exampleRectF, 20f.dpToPx(), 80f.dpToPx()),
             PathShape(
                 Path().apply {
@@ -54,9 +55,12 @@ class RendererColorFilterExampleFragment : BaseShowcaseKotlinFragment() {
                           50f.dpToPx(),
                           60f.dpToPx(),
                           70f.dpToPx(),
-                          80f.dpToPx()),
-                      Path.Direction.CW)
-                }))
+                          80f.dpToPx(),
+                      ),
+                      Path.Direction.CW,
+                  )
+                }),
+        )
 
     container.findViewById<LinearLayout>(R.id.list).apply {
       addText("Example View dimensions: $w x $h px")
@@ -70,7 +74,8 @@ class RendererColorFilterExampleFragment : BaseShowcaseKotlinFragment() {
                 ColorIntImageDataModel(ContextCompat.getColor(context, R.color.primary)),
                 shape,
                 null,
-                colorFilter.second)
+                colorFilter.second,
+            )
             addExample(
                 w,
                 h,
@@ -78,14 +83,16 @@ class RendererColorFilterExampleFragment : BaseShowcaseKotlinFragment() {
                     ContextCompat.getDrawable(requireContext(), R.mipmap.ic_launcher)!!),
                 shape,
                 null,
-                colorFilter.second)
+                colorFilter.second,
+            )
             addExample(
                 w,
                 h,
                 BitmapImageDataModel(createSampleBitmap(w, h)),
                 shape,
                 null,
-                colorFilter.second)
+                colorFilter.second,
+            )
           }
         }
       }

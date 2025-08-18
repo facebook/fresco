@@ -55,7 +55,7 @@ object ImageSourceToImagePipelineAdapter {
   fun maybeExtractFinalImageRequest(
       imageSource: ImageSource,
       imagePipelineUtils: ImagePipelineUtils,
-      imageOptions: ImageOptions
+      imageOptions: ImageOptions,
   ): ImageRequest? {
     return when (imageSource) {
       is SingleImageSource -> imageSource.extractSingleRequest(imagePipelineUtils, imageOptions)
@@ -101,7 +101,8 @@ object ImageSourceToImagePipelineAdapter {
               ImageRequest.RequestLevel.FULL_FETCH,
               extras,
               viewport,
-              imageOptions)
+              imageOptions,
+          )
         }
       }
 
@@ -118,7 +119,8 @@ object ImageSourceToImagePipelineAdapter {
               imageSource.getRequestLevelForFetch(),
               extras,
               viewport,
-              imageOptions)
+              imageOptions,
+          )
         }
       }
 
@@ -135,7 +137,8 @@ object ImageSourceToImagePipelineAdapter {
                     requestListener,
                     uiComponentId,
                     extras,
-                    viewport)
+                    viewport,
+                )
               })
 
       is IncreasingQualityImageSource ->
@@ -150,7 +153,8 @@ object ImageSourceToImagePipelineAdapter {
                       requestListener,
                       uiComponentId,
                       extras,
-                      viewport),
+                      viewport,
+                  ),
                   createDataSourceSupplier(
                       imageSource.lowResSource,
                       imagePipeline,
@@ -160,7 +164,9 @@ object ImageSourceToImagePipelineAdapter {
                       requestListener,
                       uiComponentId,
                       extras,
-                      viewport)))
+                      viewport,
+                  ),
+              ))
 
       is RetainingImageSource -> {
         imageSource.setImageSourceUpdateFunction { newImageSource ->
@@ -173,7 +179,8 @@ object ImageSourceToImagePipelineAdapter {
               requestListener,
               uiComponentId,
               extras,
-              viewport)
+              viewport,
+          )
         }
         imageSource.dataSourceSupplier
       }
@@ -207,7 +214,8 @@ object ImageSourceToImagePipelineAdapter {
           requestLevel,
           requestListener, // TODO: Check if this is correct !!
           uiComponentId,
-          extras)
+          extras,
+      )
     } else {
       NO_REQUEST_SUPPLIER.get()
     }
@@ -215,12 +223,12 @@ object ImageSourceToImagePipelineAdapter {
 
   fun SingleImageSource.extractSingleRequest(
       imagePipelineUtils: ImagePipelineUtils,
-      imageOptions: ImageOptions
+      imageOptions: ImageOptions,
   ): ImageRequest? = imagePipelineUtils.buildImageRequest(imageUri, imageOptions)
 
   fun FirstAvailableImageSource.extractFirstAvailableRequest(
       imagePipelineUtils: ImagePipelineUtils,
-      imageOptions: ImageOptions
+      imageOptions: ImageOptions,
   ): ImageRequest? {
     imageSources.forEach {
       val request = maybeExtractFinalImageRequest(it, imagePipelineUtils, imageOptions)

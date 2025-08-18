@@ -12,7 +12,7 @@ import android.net.Uri
 @Suppress("KtDataClass")
 data class SingleImageSourceImpl(
     override val uri: Uri,
-    override val extras: Map<String, Any>? = null
+    override val extras: Map<String, Any>? = null,
 ) : SingleImageSource {
 
   fun getExtra(key: String): Any? = extras?.get(key)

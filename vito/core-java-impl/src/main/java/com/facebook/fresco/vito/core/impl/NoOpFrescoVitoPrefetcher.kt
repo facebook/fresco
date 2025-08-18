@@ -27,7 +27,7 @@ class NoOpFrescoVitoPrefetcher(private val throwException: Boolean = false) : Fr
       uri: Uri,
       imageOptions: ImageOptions?,
       callerContext: Any?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
 
   override fun prefetch(
@@ -36,14 +36,14 @@ class NoOpFrescoVitoPrefetcher(private val throwException: Boolean = false) : Fr
       imageOptions: ImageOptions?,
       callerContext: Any?,
       contextChain: ContextChain?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
 
   override fun prefetchToBitmapCache(
       uri: Uri,
       imageOptions: DecodedImageOptions?,
       callerContext: Any?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
 
   override fun prefetchToBitmapCache(
@@ -51,14 +51,14 @@ class NoOpFrescoVitoPrefetcher(private val throwException: Boolean = false) : Fr
       imageOptions: DecodedImageOptions?,
       callerContext: Any?,
       contextChain: ContextChain?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
 
   override fun prefetchToEncodedCache(
       uri: Uri,
       imageOptions: EncodedImageOptions?,
       callerContext: Any?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
 
   override fun prefetchToEncodedCache(
@@ -66,14 +66,14 @@ class NoOpFrescoVitoPrefetcher(private val throwException: Boolean = false) : Fr
       imageOptions: EncodedImageOptions?,
       callerContext: Any?,
       contextChain: ContextChain?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
 
   override fun prefetchToDiskCache(
       uri: Uri,
       imageOptions: ImageOptions?,
       callerContext: Any?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
 
   override fun prefetchToDiskCache(
@@ -81,7 +81,7 @@ class NoOpFrescoVitoPrefetcher(private val throwException: Boolean = false) : Fr
       imageOptions: ImageOptions?,
       callerContext: Any?,
       contextChain: ContextChain?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
 
   override fun prefetch(
@@ -89,7 +89,7 @@ class NoOpFrescoVitoPrefetcher(private val throwException: Boolean = false) : Fr
       imageRequest: VitoImageRequest,
       callerContext: Any?,
       requestListener: RequestListener?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
 
   override fun prefetch(
@@ -98,7 +98,7 @@ class NoOpFrescoVitoPrefetcher(private val throwException: Boolean = false) : Fr
       callerContext: Any?,
       contextChain: ContextChain?,
       requestListener: RequestListener?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?> = maybeThrowUnsupportedOperationException()
 
   private fun maybeThrowUnsupportedOperationException(): DataSource<Void?> {

@@ -10,7 +10,7 @@ package com.facebook.fresco.ui.common
 object NoOpImagePerfNotifier : ImagePerfNotifier {
   override fun notifyVisibilityUpdated(
       state: ImagePerfState,
-      visibilityState: VisibilityState
+      visibilityState: VisibilityState,
   ): Unit = Unit
 
   override fun notifyStatusUpdated(state: ImagePerfState, imageLoadStatus: ImageLoadStatus): Unit =

@@ -78,12 +78,12 @@ interface FrescoVitoConfig {
 
   fun experimentalDynamicSizeIsProductEnabled(
       callerContext: Any?,
-      contextChain: ContextChain?
+      contextChain: ContextChain?,
   ): Boolean
 
   fun experimentalDynamicSizeIsFallbackEnabled(
       callerContext: Any?,
-      contextChain: ContextChain?
+      contextChain: ContextChain?,
   ): Boolean
 
   fun isCallerContextBloks(callerContext: Any?): Boolean

@@ -24,7 +24,7 @@ class BitmapDrawableFactory : ImageOptionsDrawableFactory {
   override fun createDrawable(
       resources: Resources,
       closeableImage: CloseableImage,
-      imageOptions: ImageOptions
+      imageOptions: ImageOptions,
   ): Drawable? =
       traceSection("BitmapDrawableFactory#createDrawable") {
         if (closeableImage is CloseableStaticBitmap) {
@@ -54,7 +54,7 @@ class BitmapDrawableFactory : ImageOptionsDrawableFactory {
   protected fun handleCloseableStaticBitmap(
       resources: Resources,
       closeableStaticBitmap: CloseableStaticBitmap,
-      imageOptions: ImageOptions
+      imageOptions: ImageOptions,
   ): Drawable {
     val roundingOptions = imageOptions.roundingOptions
     val borderOptions = imageOptions.borderOptions
@@ -63,20 +63,27 @@ class BitmapDrawableFactory : ImageOptionsDrawableFactory {
         if (isBitmapRounded && roundingOptions != null && roundingOptions.isCircular) {
           if (borderOptions != null && borderOptions.width > 0) {
             CircularBorderBitmapDrawable(
-                resources, closeableStaticBitmap.underlyingBitmap, borderOptions)
+                resources,
+                closeableStaticBitmap.underlyingBitmap,
+                borderOptions,
+            )
           } else {
             BitmapDrawable(resources, closeableStaticBitmap.underlyingBitmap)
           }
         } else {
           RoundingUtils.roundedDrawable(
-              resources, closeableStaticBitmap.underlyingBitmap, borderOptions, roundingOptions)
+              resources,
+              closeableStaticBitmap.underlyingBitmap,
+              borderOptions,
+              roundingOptions,
+          )
         }
     return rotatedDrawable(closeableStaticBitmap, drawable)
   }
 
   protected fun rotatedDrawable(
       closeableStaticBitmap: CloseableStaticBitmap,
-      drawable: Drawable
+      drawable: Drawable,
   ): Drawable =
       if (!hasTransformableRotationAngle(closeableStaticBitmap) &&
           !hasTransformableExifOrientation(closeableStaticBitmap)) {
@@ -84,7 +91,10 @@ class BitmapDrawableFactory : ImageOptionsDrawableFactory {
         drawable
       } else {
         OrientedDrawable(
-            drawable, closeableStaticBitmap.rotationAngle, closeableStaticBitmap.exifOrientation)
+            drawable,
+            closeableStaticBitmap.rotationAngle,
+            closeableStaticBitmap.exifOrientation,
+        )
       }
 
   /* Returns true if there is anything to rotate using the rotation angle */

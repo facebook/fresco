@@ -22,7 +22,7 @@ class ImageSelector(
     private val imagePipeline: VitoImagePipeline,
     private val controller: FrescoController2,
     private val overlayColor: Int = Color.GREEN,
-    private var currentIndex: Int = -1
+    private var currentIndex: Int = -1,
 ) {
 
   var currentEditor: ImageLiveEditor? = null

@@ -74,6 +74,6 @@ interface VitoImagePipeline {
   fun determineFetchStrategy(
       requestBeforeLayout: VitoImageRequest?,
       callerContext: Any?,
-      contextChain: ContextChain?
+      contextChain: ContextChain?,
   ): FetchStrategy = ClassicFetchStrategy.DEFAULT
 }

@@ -86,7 +86,7 @@ object VitoView {
       imageSource: ImageSource,
       imageOptions: ImageOptions,
       callerContext: Any?,
-      target: View
+      target: View,
   ) {
     VitoViewImpl2.show(imageSource, imageOptions, callerContext, null, null, target)
   }
@@ -100,7 +100,7 @@ object VitoView {
       imageOptions: ImageOptions,
       callerContext: Any?,
       imageListener: ImageListener?,
-      target: View
+      target: View,
   ) {
     show(ImageSourceProvider.forUri(uri), imageOptions, callerContext, imageListener, target)
   }
@@ -127,7 +127,8 @@ object VitoView {
         null,
         target,
         onFadeListener,
-        uiFramework)
+        uiFramework,
+    )
   }
 
   @JvmStatic
@@ -137,10 +138,16 @@ object VitoView {
       callerContext: Any?,
       imageListener: ImageListener?,
       imageRequestListener: VitoImageRequestListener?,
-      target: View
+      target: View,
   ) {
     VitoViewImpl2.show(
-        imageSource, imageOptions, callerContext, imageListener, imageRequestListener, target)
+        imageSource,
+        imageOptions,
+        callerContext,
+        imageListener,
+        imageRequestListener,
+        target,
+    )
   }
 
   @JvmStatic
@@ -148,7 +155,7 @@ object VitoView {
       vitoImageRequest: VitoImageRequest,
       callerContext: Any?,
       imageListener: ImageListener?,
-      target: View
+      target: View,
   ) {
     VitoViewImpl2.show(vitoImageRequest, callerContext, imageListener, null, target)
   }

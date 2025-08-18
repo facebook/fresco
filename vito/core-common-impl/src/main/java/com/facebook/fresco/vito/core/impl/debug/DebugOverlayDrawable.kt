@@ -79,7 +79,8 @@ constructor(
         bounds.top.toFloat(),
         bounds.right.toFloat(),
         bounds.bottom.toFloat(),
-        paint)
+        paint,
+    )
 
     // Draw overlay
     paint.style = Paint.Style.FILL
@@ -89,7 +90,8 @@ constructor(
         bounds.top.toFloat(),
         bounds.right.toFloat(),
         bounds.bottom.toFloat(),
-        paint)
+        paint,
+    )
 
     // Draw text
     paint.style = Paint.Style.FILL
@@ -137,7 +139,8 @@ constructor(
         (currentTextYPx + TEXT_LINE_SPACING_PX).toFloat(),
         currentTextXPx + labelColonWidth + valueWidth + MARGIN,
         (currentTextYPx - lineIncrementPx + TEXT_LINE_SPACING_PX).toFloat(),
-        paint)
+        paint,
+    )
     paint.color = TEXT_COLOR
     canvas.drawText(labelColon, currentTextXPx.toFloat(), currentTextYPx.toFloat(), paint)
     paint.color = color
@@ -155,7 +158,7 @@ constructor(
       y: Int,
       label: String,
       value: String,
-      color: Int
+      color: Int,
   ) {
     val labelColon = "$label: "
     val labelColonWidth = paint.measureText(labelColon)
@@ -166,7 +169,8 @@ constructor(
         (y + TEXT_LINE_SPACING_PX).toFloat(),
         x + labelColonWidth + valueWidth + MARGIN,
         (y + lineIncrementPx + TEXT_LINE_SPACING_PX).toFloat(),
-        paint)
+        paint,
+    )
     paint.color = TEXT_COLOR
     canvas.drawText(labelColon, currentTextXPx.toFloat(), currentTextYPx.toFloat(), paint)
     paint.color = color

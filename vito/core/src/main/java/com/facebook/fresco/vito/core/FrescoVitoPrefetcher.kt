@@ -35,7 +35,7 @@ interface FrescoVitoPrefetcher {
       uri: Uri,
       imageOptions: ImageOptions?,
       callerContext: Any?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?>
 
   /**
@@ -58,7 +58,7 @@ interface FrescoVitoPrefetcher {
       imageOptions: ImageOptions?,
       callerContext: Any?,
       contextChain: ContextChain?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?>
 
   /**
@@ -78,7 +78,7 @@ interface FrescoVitoPrefetcher {
       uri: Uri,
       imageOptions: DecodedImageOptions?,
       callerContext: Any?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?>
 
   /**
@@ -100,7 +100,7 @@ interface FrescoVitoPrefetcher {
       imageOptions: DecodedImageOptions?,
       callerContext: Any?,
       contextChain: ContextChain?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?>
 
   /**
@@ -120,7 +120,7 @@ interface FrescoVitoPrefetcher {
       uri: Uri,
       imageOptions: EncodedImageOptions?,
       callerContext: Any?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?>
 
   /**
@@ -142,7 +142,7 @@ interface FrescoVitoPrefetcher {
       imageOptions: EncodedImageOptions?,
       callerContext: Any?,
       contextChain: ContextChain?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?>
 
   /**
@@ -162,7 +162,7 @@ interface FrescoVitoPrefetcher {
       uri: Uri,
       imageOptions: ImageOptions?,
       callerContext: Any?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?>
 
   /**
@@ -184,7 +184,7 @@ interface FrescoVitoPrefetcher {
       imageOptions: ImageOptions?,
       callerContext: Any?,
       contextChain: ContextChain?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?>
 
   /**
@@ -205,7 +205,7 @@ interface FrescoVitoPrefetcher {
       imageRequest: VitoImageRequest,
       callerContext: Any?,
       requestListener: RequestListener?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?>
 
   /**
@@ -228,6 +228,6 @@ interface FrescoVitoPrefetcher {
       callerContext: Any?,
       contextChain: ContextChain?,
       requestListener: RequestListener?,
-      callsite: String
+      callsite: String,
   ): DataSource<Void?>
 }

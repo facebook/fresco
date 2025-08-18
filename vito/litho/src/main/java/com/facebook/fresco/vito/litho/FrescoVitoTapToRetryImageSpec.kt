@@ -57,7 +57,7 @@ object FrescoVitoTapToRetryImageSpec {
       isTapToRetry: StateValue<Boolean>,
       tapCount: StateValue<Int>,
       useFallbackImageSource: StateValue<Boolean>,
-      @Prop(optional = true) isInitialTapToLoad: Boolean
+      @Prop(optional = true) isInitialTapToLoad: Boolean,
   ) {
     isTapToRetry.set(isInitialTapToLoad)
     tapCount.set(if (isInitialTapToLoad) 1 else 0)
@@ -85,7 +85,7 @@ object FrescoVitoTapToRetryImageSpec {
       @Prop(optional = true) retryImageScaleType: ScalingUtils.ScaleType?,
       @State isTapToRetry: Boolean,
       @State useFallbackImageSource: Boolean,
-      @State tapCount: Int
+      @State tapCount: Int,
   ): Component {
     if (isTapToRetry) {
       val scaledRetryDrawable =
@@ -127,7 +127,7 @@ object FrescoVitoTapToRetryImageSpec {
   fun onPopulateAccessibilityNode(
       c: ComponentContext,
       host: View,
-      node: AccessibilityNodeInfoCompat
+      node: AccessibilityNodeInfoCompat,
   ) {
     node.className = AccessibilityRole.IMAGE
   }
@@ -137,7 +137,7 @@ object FrescoVitoTapToRetryImageSpec {
   fun onImageFailure(
       isTapToRetry: StateValue<Boolean>,
       tapCount: StateValue<Int>,
-      useFallbackImageSource: StateValue<Boolean>
+      useFallbackImageSource: StateValue<Boolean>,
   ) {
     val oldTapCount = tapCount.get()
     val newTapCount = if (oldTapCount == null) 1 else oldTapCount + 1

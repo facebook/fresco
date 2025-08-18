@@ -23,11 +23,14 @@ class DefaultImageDecodeOptionsProviderImpl(
 
   override fun create(
       imageRequestBuilder: ImageRequestBuilder,
-      imageOptions: DecodedImageOptions
+      imageOptions: DecodedImageOptions,
   ): ImageDecodeOptions? =
       maybeCreateFromConfigAndCustomDecoder(imageOptions)
           ?: maybeSetupPipelineRounding(
-              imageOptions.roundingOptions, imageOptions.bitmapConfig, circularBitmapRounding)
+              imageOptions.roundingOptions,
+              imageOptions.bitmapConfig,
+              circularBitmapRounding,
+          )
 
   companion object {
     private const val TAG = "DefaultImageOptionsProvider"
@@ -60,7 +63,7 @@ class DefaultImageDecodeOptionsProviderImpl(
     fun maybeSetupPipelineRounding(
         roundingOptions: RoundingOptions?,
         bitmapConfig: Bitmap.Config?,
-        circularBitmapRounding: CircularBitmapRounding?
+        circularBitmapRounding: CircularBitmapRounding?,
     ): ImageDecodeOptions? =
         if (roundingOptions == null ||
             roundingOptions.isForceRoundAtDecode ||

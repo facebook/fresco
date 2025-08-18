@@ -45,7 +45,7 @@ interface VitoImageRequestListener {
       @ImageOrigin imageOrigin: Int,
       imageInfo: ImageInfo?,
       extras: Extras?,
-      drawable: Drawable?
+      drawable: Drawable?,
   )
 
   /**
@@ -76,7 +76,7 @@ interface VitoImageRequestListener {
       imageRequest: VitoImageRequest,
       error: Drawable?,
       throwable: Throwable?,
-      extras: Extras?
+      extras: Extras?,
   )
 
   /**

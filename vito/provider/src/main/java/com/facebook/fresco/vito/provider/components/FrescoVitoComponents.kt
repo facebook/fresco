@@ -58,7 +58,8 @@ object FrescoVitoComponents : FrescoVitoSetup {
     if (_implementation != null) {
       FLog.e(
           "FrescoVitoProvider",
-          "Fresco Vito already initialized! Vito must be initialized only once.")
+          "Fresco Vito already initialized! Vito must be initialized only once.",
+      )
     }
     _implementation = implementation
   }

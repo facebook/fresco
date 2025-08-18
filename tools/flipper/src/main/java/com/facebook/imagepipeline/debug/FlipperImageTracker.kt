@@ -115,7 +115,7 @@ class FlipperImageTracker : DebugImageTracker, ImagePerfDataListener {
   @Synchronized
   override fun onImageLoadStatusUpdated(
       imagePerfData: ImagePerfData,
-      imageLoadStatus: ImageLoadStatus
+      imageLoadStatus: ImageLoadStatus,
   ) {
     if (imagePerfData.imageRequest == null) {
       return
@@ -134,7 +134,7 @@ class FlipperImageTracker : DebugImageTracker, ImagePerfDataListener {
   @Synchronized
   override fun onImageVisibilityUpdated(
       imagePerfData: ImagePerfData,
-      visibilityState: VisibilityState
+      visibilityState: VisibilityState,
   ) {
     // ignore
   }

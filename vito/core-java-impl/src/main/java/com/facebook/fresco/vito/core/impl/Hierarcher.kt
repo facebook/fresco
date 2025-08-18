@@ -35,7 +35,7 @@ interface Hierarcher {
   fun buildActualImageDrawable(
       resources: Resources,
       imageOptions: ImageOptions,
-      closeableImage: CloseableReference<CloseableImage>
+      closeableImage: CloseableReference<CloseableImage>,
   ): Drawable?
 
   /**
@@ -95,7 +95,7 @@ interface Hierarcher {
   fun setupActualImageWrapper(
       actualImageWrapper: ScaleTypeDrawable,
       imageOptions: ImageOptions,
-      callerContext: Any?
+      callerContext: Any?,
   )
 
   /**
@@ -109,6 +109,6 @@ interface Hierarcher {
   fun applyRoundingOptions(
       resources: Resources,
       drawable: Drawable,
-      imageOptions: ImageOptions
+      imageOptions: ImageOptions,
   ): Drawable
 }

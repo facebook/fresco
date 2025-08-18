@@ -31,7 +31,7 @@ object ViewExtensions {
       uri: Uri,
       imageOptions: ImageOptions,
       imageListener: ImageListener,
-      callerContext: Any? = null
+      callerContext: Any? = null,
   ) {
     VitoView.show(uri, imageOptions, callerContext, imageListener, this)
   }

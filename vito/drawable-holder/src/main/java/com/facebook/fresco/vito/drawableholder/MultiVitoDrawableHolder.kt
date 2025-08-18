@@ -124,7 +124,10 @@ class MultiVitoDrawableHolder {
       val vitoImageRequest =
           FrescoVitoProvider.getImagePipeline()
               .createImageRequest(
-                  holder.resources, holder.imageSource, holder.imageOptionsBuilder.build())
+                  holder.resources,
+                  holder.imageSource,
+                  holder.imageOptionsBuilder.build(),
+              )
       FrescoVitoProvider.getController()
           .fetch(
               drawable = holder.drawable,

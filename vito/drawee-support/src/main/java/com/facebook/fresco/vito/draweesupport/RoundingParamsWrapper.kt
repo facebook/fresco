@@ -18,7 +18,7 @@ object RoundingParamsWrapper {
   @JvmOverloads
   fun roundingOptionsFromRoundingParams(
       roundingParams: RoundingParams?,
-      roundAtRenderTime: Boolean = false
+      roundAtRenderTime: Boolean = false,
   ): RoundingOptions? {
     return when {
       roundingParams == null -> null
@@ -50,6 +50,7 @@ object RoundingParamsWrapper {
             roundingParams.borderColor,
             roundingParams.borderWidth,
             roundingParams.padding,
-            roundingParams.scaleDownInsideBorders)
+            roundingParams.scaleDownInsideBorders,
+        )
       }
 }

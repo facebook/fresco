@@ -46,9 +46,10 @@ class LiveEditorOnScreenButtonController(
       Toast.makeText(
               it,
               "In order to use Image Live Editing, you must allow your app to 'Display over other apps' via Android settings",
-              Toast.LENGTH_LONG)
+              Toast.LENGTH_LONG,
+          )
           .show()
-    }
+    },
 ) {
 
   /** Called from fblite java code */
@@ -57,14 +58,15 @@ class LiveEditorOnScreenButtonController(
       @ColorInt buttonTextColor: Int = Color.WHITE,
       @ColorInt buttonBackgroundColor: Int = Color.BLUE,
       @ColorInt editorBackgroundColor: Int = Color.WHITE,
-      additionalButtonConfig: ButtonConfig? = null
+      additionalButtonConfig: ButtonConfig? = null,
   ) : this(
       isEnabled,
       buttonTextColor,
       buttonBackgroundColor,
       editorBackgroundColor,
       additionalButtonConfig,
-      CustomOptions(emptyList()))
+      CustomOptions(emptyList()),
+  )
 
   class ButtonConfig(val title: String, val action: View.OnClickListener)
 
@@ -76,7 +78,8 @@ class LiveEditorOnScreenButtonController(
           ButtonConfig("Next img") { imageSelector?.selectNext(it.context) },
           ButtonConfig("Edit img") { showLiveEditor(it.context) },
           ButtonConfig("Info") { showImageInfo(it.context) },
-          additionalButtonConfig)
+          additionalButtonConfig,
+      )
 
   val imageTrackerListener: ImageTracker =
       object : ImageTracker() {
@@ -126,7 +129,8 @@ class LiveEditorOnScreenButtonController(
         ImageSelector(
             imageTrackerListener,
             FrescoVitoProvider.getImagePipeline(),
-            FrescoVitoProvider.getController())
+            FrescoVitoProvider.getController(),
+        )
     showImageToggleButtons(context)
   }
 
@@ -158,7 +162,8 @@ class LiveEditorOnScreenButtonController(
         windowContext,
         LiveEditorUiUtils(imageSelector?.currentEditor, debugDataProviders)
             .createImageInfoView(windowContext) { showImageToggleButtons(windowContext) }
-            .apply { background = ColorDrawable(editorBackgroundColor) })
+            .apply { background = ColorDrawable(editorBackgroundColor) },
+    )
   }
 
   private fun showLiveEditor(context: Context) {
@@ -172,7 +177,8 @@ class LiveEditorOnScreenButtonController(
             .apply { background = ColorDrawable(editorBackgroundColor) },
         DisplayMetrics()
             .apply { getWindowManager(context).defaultDisplay.getMetrics(this) }
-            .heightPixels / 2)
+            .heightPixels / 2,
+    )
   }
 
   private fun getWindowContext(context: Context): Context {
@@ -199,7 +205,7 @@ class LiveEditorOnScreenButtonController(
   private fun addWindow(
       context: Context,
       view: View,
-      height: Int = WindowManager.LayoutParams.WRAP_CONTENT
+      height: Int = WindowManager.LayoutParams.WRAP_CONTENT,
   ) {
     if (!isEnabled.get()) {
       return
@@ -217,12 +223,14 @@ class LiveEditorOnScreenButtonController(
                 else WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
                     WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT)
+                PixelFormat.TRANSLUCENT,
+            )
             .apply {
               gravity = Gravity.BOTTOM or Gravity.RIGHT
               x = padding
               y = view.height
-            })
+            },
+    )
     currentView = view
   }
 
@@ -232,7 +240,9 @@ class LiveEditorOnScreenButtonController(
       val cornerRadius = 16.dpToPxF(context)
       val buttonLayoutParams: LinearLayout.LayoutParams =
           LinearLayout.LayoutParams(
-              LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
+              LinearLayout.LayoutParams.MATCH_PARENT,
+              LinearLayout.LayoutParams.MATCH_PARENT,
+          )
       buttonLayoutParams.bottomMargin = 8.dpToPx(context)
       val buttonPadding = 4.dpToPx(context)
       for (button in buttons) {
@@ -243,7 +253,8 @@ class LiveEditorOnScreenButtonController(
                 buttonLayoutParams,
                 cornerRadius,
                 button.title,
-                button.action))
+                button.action,
+            ))
       }
     }
   }
@@ -254,7 +265,7 @@ class LiveEditorOnScreenButtonController(
       layoutParams: ViewGroup.LayoutParams,
       cornerRadius: Float,
       text: String,
-      action: View.OnClickListener
+      action: View.OnClickListener,
   ): Button =
       Button(context).apply {
         setText(text)

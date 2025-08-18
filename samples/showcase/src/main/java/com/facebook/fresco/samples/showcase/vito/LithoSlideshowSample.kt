@@ -27,7 +27,7 @@ class LithoSlideshowSample : LithoSample {
   override fun createLithoComponent(
       c: ComponentContext,
       uris: ImageUriProvider,
-      callerContext: Any
+      callerContext: Any,
   ): Component {
     return FrescoVitoSlideshowComponent.create(c)
         .fadeTransitionMs(1000)

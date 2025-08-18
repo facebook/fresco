@@ -71,7 +71,8 @@ object ExampleDatabase {
                   ExampleItem(
                       "Vito Litho: Simple",
                       FrescoVitoLithoSimpleExample,
-                      "Simple Fresco Vito Litho component."),
+                      "Simple Fresco Vito Litho component.",
+                  ),
                   ExampleItem("Vito Litho: Region decoding") {
                     FrescoVitoLithoRegionDecodeFragment()
                   },
@@ -84,7 +85,8 @@ object ExampleDatabase {
                   ExampleItem(
                       "Vito Litho: Listener",
                       FrescoVitoLithoListenerExample,
-                      "Vito Litho component with listener."),
+                      "Vito Litho component with listener.",
+                  ),
                   ExampleItem("Scale Type") { VitoScaleTypeFragment() },
                   ExampleItem("Rotation") { VitoRotationFragment() },
                   ExampleItem("Vito Litho: Gallery") { FrescoVitoLithoGalleryFragment() },
@@ -96,12 +98,18 @@ object ExampleDatabase {
                   ExampleItem(
                       "Vito Litho: Slideshow",
                       LithoSlideshowSample(),
-                      "Litho slideshow that fades between images"),
+                      "Litho slideshow that fades between images",
+                  ),
                   ExampleItem(
-                      "Vito Litho: NinePatch", LithoNinePatchSample(), "Litho nine patch example"),
+                      "Vito Litho: NinePatch",
+                      LithoNinePatchSample(),
+                      "Litho nine patch example",
+                  ),
                   ExampleItem("Vito Text Span") { VitoSpanFragment() },
                   ExampleItem(
-                      "Vito Litho DrawableImageSource", FrescoVitoLithoDrawableImageSourceExample),
+                      "Vito Litho DrawableImageSource",
+                      FrescoVitoLithoDrawableImageSourceExample,
+                  ),
                   ExampleItem("Media Provider") { VitoMediaPickerFragment() },
                   ExampleItem("Multi URI") { MultiUriFragment() },
                   ExampleItem("Placeholder, Progress, Failure") { ImageLayersFragment() },
@@ -110,12 +118,16 @@ object ExampleDatabase {
                   ExampleItem("Retaining Data Source Supplier") {
                     RetainingDataSourceSupplierFragment()
                   },
-              )),
+              ),
+          ),
           ExampleCategory(
               "Vito Renderer",
               listOf(
                   ExampleItem("Renderer: Shapes") { RendererShapeExampleFragment() },
                   ExampleItem("Renderer: Color Filters") { RendererColorFilterExampleFragment() },
                   ExampleItem("Renderer: Fading") { RendererFadeExampleFragment() },
-                  ExampleItem("Layers: Scaling") { VitoLayerExample() })))
+                  ExampleItem("Layers: Scaling") { VitoLayerExample() },
+              ),
+          ),
+      )
 }

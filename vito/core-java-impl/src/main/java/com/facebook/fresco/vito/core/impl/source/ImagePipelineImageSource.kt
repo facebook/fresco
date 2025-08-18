@@ -16,7 +16,7 @@ import com.facebook.imagepipeline.request.ImageRequest
 interface ImagePipelineImageSource : UriImageSource {
   fun maybeExtractFinalImageRequest(
       imagePipelineUtils: ImagePipelineUtils,
-      imageOptions: ImageOptions
+      imageOptions: ImageOptions,
   ): ImageRequest?
 
   fun getRequestLevelForFetch(): ImageRequest.RequestLevel = ImageRequest.RequestLevel.FULL_FETCH

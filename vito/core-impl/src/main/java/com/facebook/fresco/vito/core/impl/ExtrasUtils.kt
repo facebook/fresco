@@ -33,4 +33,5 @@ fun KFrescoVitoDrawable.obtainExtras(
         image?.get()?.extras,
         callerContext,
         imageRequest?.logWithHighSamplingRate ?: false,
-        imageRequest?.finalImageRequest?.sourceUri)
+        imageRequest?.finalImageRequest?.sourceUri,
+    )

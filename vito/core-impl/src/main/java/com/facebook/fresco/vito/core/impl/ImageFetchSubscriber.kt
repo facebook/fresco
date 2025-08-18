@@ -43,7 +43,11 @@ class ImageFetchSubscriber(
     drawable.closeable = result
     val image = result.get()
     drawable.actualImageLayer.setActualImage(
-        request.resources, request.imageOptions, image, imageToDataModelMapper)
+        request.resources,
+        request.imageOptions,
+        image,
+        imageToDataModelMapper,
+    )
     invalidationExecutor?.execute {
       drawable.actualImageLayer.fadeIn(request.imageOptions.fadeDurationMs)
       drawable.placeholderLayer.fadeOut(request.imageOptions.fadeDurationMs, true)
@@ -60,7 +64,8 @@ class ImageFetchSubscriber(
           ImageOrigin.UNKNOWN,
           imageInfo,
           drawable.obtainExtras(dataSource, result),
-          drawable.actualImageDrawable)
+          drawable.actualImageDrawable,
+      )
     } else {
       drawable.listenerManager.onIntermediateImageSet(imageId, request, imageInfo)
     }
@@ -83,7 +88,8 @@ class ImageFetchSubscriber(
             request,
             drawable.actualImageLayer.getDataModel().maybeGetDrawable(),
             dataSource.failureCause,
-            drawable.obtainExtras(dataSource, result))
+            drawable.obtainExtras(dataSource, result),
+        )
       }
     } else {
       drawable.listenerManager.onIntermediateImageFailed(

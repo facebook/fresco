@@ -29,7 +29,7 @@ class ImagePipelineUtilsImpl(private val imageDecodeOptionsProvider: ImageDecode
   fun interface ImageDecodeOptionsProvider {
     fun create(
         imageRequestBuilder: ImageRequestBuilder,
-        imageOptions: DecodedImageOptions
+        imageOptions: DecodedImageOptions,
     ): ImageDecodeOptions?
   }
 
@@ -38,26 +38,30 @@ class ImagePipelineUtilsImpl(private val imageDecodeOptionsProvider: ImageDecode
       return null
     }
     return createDecodedImageRequestBuilder(
-            createEncodedImageRequestBuilder(uri, imageOptions), imageOptions)
+            createEncodedImageRequestBuilder(uri, imageOptions),
+            imageOptions,
+        )
         ?.build()
   }
 
   override fun wrapDecodedImageRequest(
       originalRequest: ImageRequest,
-      imageOptions: DecodedImageOptions
+      imageOptions: DecodedImageOptions,
   ): ImageRequest? =
       createDecodedImageRequestBuilder(
-              createEncodedImageRequestBuilder(originalRequest, imageOptions), imageOptions)
+              createEncodedImageRequestBuilder(originalRequest, imageOptions),
+              imageOptions,
+          )
           ?.build()
 
   override fun buildEncodedImageRequest(
       uri: Uri?,
-      imageOptions: EncodedImageOptions
+      imageOptions: EncodedImageOptions,
   ): ImageRequest? = createEncodedImageRequestBuilder(uri, imageOptions)?.build()
 
   protected fun createDecodedImageRequestBuilder(
       imageRequestBuilder: ImageRequestBuilder?,
-      imageOptions: DecodedImageOptions
+      imageOptions: DecodedImageOptions,
   ): ImageRequestBuilder? =
       imageRequestBuilder?.apply {
         imageOptions.resizeOptions?.let { resizeOptions = it }
@@ -75,7 +79,7 @@ class ImagePipelineUtilsImpl(private val imageDecodeOptionsProvider: ImageDecode
 
   protected fun createEncodedImageRequestBuilder(
       uri: Uri?,
-      imageOptions: EncodedImageOptions
+      imageOptions: EncodedImageOptions,
   ): ImageRequestBuilder? {
     if (uri == null) {
       return null
@@ -93,7 +97,7 @@ class ImagePipelineUtilsImpl(private val imageDecodeOptionsProvider: ImageDecode
 
   protected fun createEncodedImageRequestBuilder(
       imageRequest: ImageRequest?,
-      imageOptions: EncodedImageOptions
+      imageOptions: EncodedImageOptions,
   ): ImageRequestBuilder? {
     if (imageRequest == null) {
       return null

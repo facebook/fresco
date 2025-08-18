@@ -22,7 +22,7 @@ class ShapeCalculator {
     fun getShape(
         bounds: RectF,
         roundingOptions: RoundingOptions?,
-        cornerRadiusAdjustment: Float = 0f
+        cornerRadiusAdjustment: Float = 0f,
     ): Shape {
       return when {
         roundingOptions == null -> RectShape(bounds)
@@ -31,7 +31,8 @@ class ShapeCalculator {
               bounds.centerX(),
               bounds.centerY(),
               min(bounds.width(), bounds.height()) / 2f,
-              roundingOptions.isAntiAliased)
+              roundingOptions.isAntiAliased,
+          )
         }
         roundingOptions.hasRoundedCorners() -> {
           when {

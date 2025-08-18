@@ -14,7 +14,7 @@ object ImageSourceSampleValues {
   data class Entry<T>(
       val name: String,
       val data: List<Pair<String, T>>,
-      val updateFunction: (ImageSource, T) -> ImageSource
+      val updateFunction: (ImageSource, T) -> ImageSource,
   )
 
   val entries: ImageSourceSampleValues.Entry<ImageSource> =
@@ -24,25 +24,33 @@ object ImageSourceSampleValues {
               Pair(
                   "JPEG",
                   ImageSourceProvider.forUri(
-                      "https://frescolib.org/static/sample-images/animal_a_l.jpg")),
+                      "https://frescolib.org/static/sample-images/animal_a_l.jpg"),
+              ),
               Pair(
                   "PNG",
                   ImageSourceProvider.forUri(
-                      "https://frescolib.org/static/sample-images/animal_b.png")),
+                      "https://frescolib.org/static/sample-images/animal_b.png"),
+              ),
               Pair(
                   "WebP",
-                  ImageSourceProvider.forUri("https://www.gstatic.com/webp/gallery/2.webp")),
+                  ImageSourceProvider.forUri("https://www.gstatic.com/webp/gallery/2.webp"),
+              ),
               Pair(
                   "Animated WebP",
-                  ImageSourceProvider.forUri("https://www.gstatic.com/webp/animated/1.webp")),
+                  ImageSourceProvider.forUri("https://www.gstatic.com/webp/animated/1.webp"),
+              ),
               Pair(
                   "GIF",
                   ImageSourceProvider.forUri(
-                      "https://media2.giphy.com/media/3oge84qhopFbFFkwec/giphy.gif")),
+                      "https://media2.giphy.com/media/3oge84qhopFbFFkwec/giphy.gif"),
+              ),
               Pair(
                   "non-existing",
                   ImageSourceProvider.forUri(
-                      "https://frescolib.org/static/sample-images/does_not_exist.jpg")))) { _, s ->
-            s
-          }
+                      "https://frescolib.org/static/sample-images/does_not_exist.jpg"),
+              ),
+          ),
+      ) { _, s ->
+        s
+      }
 }

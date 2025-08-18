@@ -47,12 +47,17 @@ class ImageSourceUiUtil(private val context: Context) {
           val spannable = SpannableString("${it.first} \n${it.second}")
           spannable.apply {
             setSpan(
-                StyleSpan(Typeface.BOLD), 0, it.first.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+                StyleSpan(Typeface.BOLD),
+                0,
+                it.first.length,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE,
+            )
             setSpan(
                 StyleSpan(Typeface.ITALIC),
                 it.first.length,
                 spannable.length,
-                Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE,
+            )
           }
         }
 
@@ -84,7 +89,8 @@ class ImageSourceUiUtil(private val context: Context) {
           StyleSpan(Typeface.ITALIC),
           info.first.length,
           spannable.length,
-          Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+          Spannable.SPAN_INCLUSIVE_INCLUSIVE,
+      )
     }
 
     val textView: TextView =
@@ -95,5 +101,8 @@ class ImageSourceUiUtil(private val context: Context) {
 
   private fun Int.spToPx(context: Context): Float =
       TypedValue.applyDimension(
-          TypedValue.COMPLEX_UNIT_SP, this.toFloat(), context.resources.displayMetrics)
+          TypedValue.COMPLEX_UNIT_SP,
+          this.toFloat(),
+          context.resources.displayMetrics,
+      )
 }

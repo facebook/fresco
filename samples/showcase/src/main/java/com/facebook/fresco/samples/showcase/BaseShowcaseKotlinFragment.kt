@@ -22,7 +22,7 @@ abstract class BaseShowcaseKotlinFragment(
   override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
-      savedInstanceState: Bundle?
+      savedInstanceState: Bundle?,
   ): View? = inflater.inflate(layoutResId, container, false)
 
   fun Int.dpToPx(): Int = this.dpToPx(requireContext())

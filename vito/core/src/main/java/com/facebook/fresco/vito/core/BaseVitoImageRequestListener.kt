@@ -16,7 +16,7 @@ open class BaseVitoImageRequestListener : VitoImageRequestListener {
       id: Long,
       imageRequest: VitoImageRequest,
       callerContext: Any?,
-      extras: ControllerListener2.Extras?
+      extras: ControllerListener2.Extras?,
   ) = Unit
 
   override fun onPlaceholderSet(id: Long, imageRequest: VitoImageRequest, placeholder: Drawable?) =
@@ -28,19 +28,19 @@ open class BaseVitoImageRequestListener : VitoImageRequestListener {
       imageOrigin: Int,
       imageInfo: ImageInfo?,
       extras: ControllerListener2.Extras?,
-      drawable: Drawable?
+      drawable: Drawable?,
   ) = Unit
 
   override fun onIntermediateImageSet(
       id: Long,
       imageRequest: VitoImageRequest,
-      imageInfo: ImageInfo?
+      imageInfo: ImageInfo?,
   ) = Unit
 
   override fun onIntermediateImageFailed(
       id: Long,
       imageRequest: VitoImageRequest,
-      throwable: Throwable?
+      throwable: Throwable?,
   ) = Unit
 
   override fun onFailure(
@@ -48,13 +48,13 @@ open class BaseVitoImageRequestListener : VitoImageRequestListener {
       imageRequest: VitoImageRequest,
       error: Drawable?,
       throwable: Throwable?,
-      extras: ControllerListener2.Extras?
+      extras: ControllerListener2.Extras?,
   ) = Unit
 
   override fun onRelease(
       id: Long,
       imageRequest: VitoImageRequest,
-      extras: ControllerListener2.Extras?
+      extras: ControllerListener2.Extras?,
   ) = Unit
 
   override fun onEmptyEvent(callerContext: Any?) = Unit

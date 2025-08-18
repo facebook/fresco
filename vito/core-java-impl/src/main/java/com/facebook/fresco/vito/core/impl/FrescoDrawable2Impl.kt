@@ -74,7 +74,7 @@ class FrescoDrawable2Impl(
         override fun onUltimateProducerReached(
             requestId: String,
             producerName: String,
-            successful: Boolean
+            successful: Boolean,
         ) {
           imageOrigin = mapProducerNameToImageOrigin(producerName)
         }
@@ -117,7 +117,7 @@ class FrescoDrawable2Impl(
 
   fun setImage(
       imageDrawable: Drawable?,
-      imageReference: CloseableReference<CloseableImage>?
+      imageReference: CloseableReference<CloseableImage>?,
   ): Drawable? {
     cancelReleaseNextFrame()
     cancelReleaseDelayed()
@@ -213,7 +213,8 @@ class FrescoDrawable2Impl(
         resetVitoImageRequestListener,
         resetLocalVitoImageRequestListener,
         resetLocalImagePerfStateListener,
-        resetControllerListener2)
+        resetControllerListener2,
+    )
   }
 
   fun scheduleReleaseDelayed(releaseDelayMs: Long) {

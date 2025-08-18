@@ -24,7 +24,7 @@ class CircleShape(
     private val cx: Float,
     private val cy: Float,
     private val radius: Float,
-    private val antiAliased: Boolean? = null
+    private val antiAliased: Boolean? = null,
 ) : Shape() {
   override fun draw(canvas: Canvas, paint: Paint) {
     if (antiAliased != null) {

@@ -31,7 +31,8 @@ fun KFrescoVitoDrawable.setupProgressLayer(resources: Resources, imageOptions: I
   drawable.setProgress(0f)
   layer.configure(
       dataModel = DrawableImageDataModel(drawable),
-      canvasTransformation = imageOptions.createProgressCanvasTransformation())
+      canvasTransformation = imageOptions.createProgressCanvasTransformation(),
+  )
 }
 
 fun KFrescoVitoDrawable.hideProgressLayer() {

@@ -17,7 +17,7 @@ import com.facebook.litho.LithoView
 
 class LithoSampleHostFragment(
     private val lithoSample: LithoSample,
-    private val helpText: String? = null
+    private val helpText: String? = null,
 ) : BaseShowcaseFragment() {
 
   private var _binding: FragmentLithoHostBinding? = null
@@ -27,7 +27,7 @@ class LithoSampleHostFragment(
   override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
-      savedInstanceState: Bundle?
+      savedInstanceState: Bundle?,
   ): View {
     _binding = FragmentLithoHostBinding.inflate(inflater, container, false)
     return binding.root

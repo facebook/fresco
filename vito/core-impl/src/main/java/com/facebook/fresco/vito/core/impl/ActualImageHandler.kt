@@ -18,26 +18,28 @@ fun ImageLayerDataModel.setActualImage(
     resources: Resources,
     imageOptions: ImageOptions,
     closeableImage: CloseableImage,
-    imageToDataModelMapper: (Resources, CloseableImage, ImageOptions) -> ImageDataModel?
+    imageToDataModelMapper: (Resources, CloseableImage, ImageOptions) -> ImageDataModel?,
 ) {
   configure(
       dataModel = imageToDataModelMapper(resources, closeableImage, imageOptions),
       canvasTransformation = imageOptions.createActualImageCanvasTransformation(),
       roundingOptions = imageOptions.roundingOptions,
       borderOptions = imageOptions.borderOptions,
-      colorFilter = imageOptions.actualImageColorFilter)
+      colorFilter = imageOptions.actualImageColorFilter,
+  )
 }
 
 fun ImageLayerDataModel.setActualImageDrawable(
     imageOptions: ImageOptions,
-    actualImageDrawable: Drawable
+    actualImageDrawable: Drawable,
 ) {
   configure(
       dataModel = DrawableImageDataModel(actualImageDrawable),
       canvasTransformation = imageOptions.createActualImageCanvasTransformation(),
       roundingOptions = imageOptions.roundingOptions,
       borderOptions = imageOptions.borderOptions,
-      colorFilter = imageOptions.actualImageColorFilter)
+      colorFilter = imageOptions.actualImageColorFilter,
+  )
 }
 
 fun ImageLayerDataModel.setPlaceholder(resources: Resources, imageOptions: ImageOptions) {
@@ -52,7 +54,8 @@ fun ImageLayerDataModel.setPlaceholder(resources: Resources, imageOptions: Image
       roundingOptions =
           if (imageOptions.placeholderApplyRoundingOptions) imageOptions.roundingOptions else null,
       borderOptions =
-          if (imageOptions.placeholderApplyRoundingOptions) imageOptions.borderOptions else null)
+          if (imageOptions.placeholderApplyRoundingOptions) imageOptions.borderOptions else null,
+  )
 }
 
 fun ImageLayerDataModel.setOverlay(resources: Resources, imageOptions: ImageOptions) {
@@ -66,5 +69,7 @@ fun ImageLayerDataModel.setError(resources: Resources, imageOptions: ImageOption
     return
   }
   configure(
-      dataModel = model, canvasTransformation = imageOptions.createErrorCanvasTransformation())
+      dataModel = model,
+      canvasTransformation = imageOptions.createErrorCanvasTransformation(),
+  )
 }

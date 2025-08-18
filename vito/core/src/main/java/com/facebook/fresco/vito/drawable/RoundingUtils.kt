@@ -47,7 +47,7 @@ object RoundingUtils {
       resources: Resources,
       bitmap: Bitmap,
       borderOptions: BorderOptions?,
-      roundingOptions: RoundingOptions?
+      roundingOptions: RoundingOptions?,
   ): Drawable =
       if (borderOptions != null && borderOptions.width > 0) {
         roundedDrawableWithBorder(resources, bitmap, borderOptions, roundingOptions)
@@ -67,7 +67,7 @@ object RoundingUtils {
       resources: Resources,
       drawable: Drawable,
       borderOptions: BorderOptions?,
-      roundingOptions: RoundingOptions?
+      roundingOptions: RoundingOptions?,
   ): Drawable =
       if (borderOptions != null && borderOptions.width > 0) {
         roundedDrawableWithBorder(resources, drawable, borderOptions, roundingOptions)
@@ -78,7 +78,7 @@ object RoundingUtils {
   private fun roundedDrawableWithoutBorder(
       resources: Resources,
       bitmap: Bitmap,
-      roundingOptions: RoundingOptions?
+      roundingOptions: RoundingOptions?,
   ): Drawable =
       if (roundingOptions == null) {
         BitmapDrawable(resources, bitmap)
@@ -90,7 +90,7 @@ object RoundingUtils {
       resources: Resources,
       bitmap: Bitmap,
       borderOptions: BorderOptions,
-      roundingOptions: RoundingOptions?
+      roundingOptions: RoundingOptions?,
   ): Drawable =
       if (roundingOptions == null) {
         squareDrawableWithBorder(getRoundedDrawable(resources, bitmap), borderOptions)
@@ -101,7 +101,7 @@ object RoundingUtils {
   private fun roundedDrawableWithoutBorder(
       resources: Resources,
       drawable: Drawable,
-      roundingOptions: RoundingOptions?
+      roundingOptions: RoundingOptions?,
   ): Drawable =
       if (roundingOptions != null) {
         applyRounding(getRoundedDrawable(resources, drawable), null, roundingOptions)
@@ -113,7 +113,7 @@ object RoundingUtils {
       resources: Resources,
       drawable: Drawable,
       borderOptions: BorderOptions,
-      roundingOptions: RoundingOptions?
+      roundingOptions: RoundingOptions?,
   ): Drawable =
       if (roundingOptions == null) {
         squareDrawableWithBorder(getRoundedDrawable(resources, drawable), borderOptions)
@@ -134,7 +134,7 @@ object RoundingUtils {
   private fun <T> applyRounding(
       drawable: T,
       borderOptions: BorderOptions?,
-      roundingOptions: RoundingOptions
+      roundingOptions: RoundingOptions,
   ): Drawable where T : Drawable, T : Rounded =
       if (!roundingOptions.isCircular) {
         roundedCornerDrawable(drawable, borderOptions, roundingOptions)
@@ -166,7 +166,7 @@ object RoundingUtils {
   private fun <T> roundedCornerDrawable(
       drawable: T,
       borderOptions: BorderOptions?,
-      roundingOptions: RoundingOptions?
+      roundingOptions: RoundingOptions?,
   ): Drawable where T : Drawable, T : Rounded {
     if (borderOptions != null) {
       applyBorders(drawable, borderOptions)

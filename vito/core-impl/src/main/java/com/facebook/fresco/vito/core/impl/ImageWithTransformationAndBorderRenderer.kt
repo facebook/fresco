@@ -27,7 +27,7 @@ class ImageWithTransformationAndBorderRenderer {
         canvasTransform: Matrix?,
         bounds: Rect,
         paint: Paint,
-        alpha: Int = 255
+        alpha: Int = 255,
     ): RenderCommand {
       val borderPadding: Float = borderOptions?.padding ?: 0f
       val borderWidth: Float = borderOptions?.width ?: 0f

@@ -39,7 +39,7 @@ class VitoMediaPickerFragment : BaseShowcaseFragment() {
   override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
-      savedInstanceState: Bundle?
+      savedInstanceState: Bundle?,
   ): View? {
     return inflater.inflate(R.layout.fragment_vito_media_picker, container, false)
   }
@@ -59,7 +59,8 @@ class VitoMediaPickerFragment : BaseShowcaseFragment() {
         Toast.makeText(
                 context,
                 R.string.drawee_media_picker_action_open_document_not_supported,
-                Toast.LENGTH_SHORT)
+                Toast.LENGTH_SHORT,
+            )
             .show()
       }
     }

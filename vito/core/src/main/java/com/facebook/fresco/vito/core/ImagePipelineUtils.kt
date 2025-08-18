@@ -18,7 +18,7 @@ interface ImagePipelineUtils {
 
   fun wrapDecodedImageRequest(
       originalRequest: ImageRequest,
-      imageOptions: DecodedImageOptions
+      imageOptions: DecodedImageOptions,
   ): ImageRequest?
 
   fun buildEncodedImageRequest(uri: Uri?, imageOptions: EncodedImageOptions): ImageRequest?

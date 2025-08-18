@@ -29,7 +29,7 @@ open class DefaultDebugOverlayFactory2(
   override fun setData(
       overlay: DebugOverlayDrawable,
       drawable: FrescoDrawableInterface,
-      extras: Extras?
+      extras: Extras?,
   ) {
     setBasicData(overlay, drawable)
     setImageRequestData(overlay, drawable.imageRequest)
@@ -50,12 +50,14 @@ open class DefaultDebugOverlayFactory2(
     }
     overlay.addDebugData(
         "I",
-        formatDimensions(abstractDrawable.actualImageWidthPx, abstractDrawable.actualImageHeightPx))
+        formatDimensions(abstractDrawable.actualImageWidthPx, abstractDrawable.actualImageHeightPx),
+    )
     if (showExtendedInformation && abstractDrawable.actualImageHeightPx > 0) {
       overlay.addDebugData(
           "IAR",
           (abstractDrawable.actualImageWidthPx / abstractDrawable.actualImageHeightPx.toFloat())
-              .toString())
+              .toString(),
+      )
     }
     val focusPoint = abstractDrawable.actualImageFocusPoint
     if (focusPoint != null) {
@@ -81,13 +83,17 @@ open class DefaultDebugOverlayFactory2(
     }
     if (showExtendedInformation) {
       overlay.addDebugData(
-          "origin", origin, DebugOverlayImageOriginColor.getImageOriginColor(origin))
+          "origin",
+          origin,
+          DebugOverlayImageOriginColor.getImageOriginColor(origin),
+      )
       overlay.addDebugData("origin_sub", originSubcategory, Color.GRAY)
     } else {
       overlay.addDebugData(
           "o",
           "$origin | $originSubcategory",
-          DebugOverlayImageOriginColor.getImageOriginColor(origin))
+          DebugOverlayImageOriginColor.getImageOriginColor(origin),
+      )
     }
   }
 

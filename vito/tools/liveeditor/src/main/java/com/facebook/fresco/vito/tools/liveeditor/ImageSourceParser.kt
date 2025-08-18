@@ -132,7 +132,7 @@ object ImageSourceParser {
   private fun addPairAndClearBuffer(
       keyValues: MutableList<Pair<String, String>>,
       key: StringBuilder,
-      value: StringBuilder
+      value: StringBuilder,
   ) {
     if (key.isEmpty() && value.isEmpty()) {
       return

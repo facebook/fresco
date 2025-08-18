@@ -72,7 +72,7 @@ data class RoundingOptions(
         topLeft: Float,
         topRight: Float,
         bottomRight: Float,
-        bottomLeft: Float
+        bottomLeft: Float,
     ): RoundingOptions =
         RoundingOptions(
             false,
@@ -85,9 +85,11 @@ data class RoundingOptions(
                 bottomRight,
                 bottomRight,
                 bottomLeft,
-                bottomLeft),
+                bottomLeft,
+            ),
             false,
-            false)
+            false,
+        )
 
     @JvmStatic
     @JvmOverloads

@@ -106,7 +106,7 @@ class ShowcaseApplication : Application() {
           object : ImagePerfDataListener {
             override fun onImageLoadStatusUpdated(
                 imagePerfData: ImagePerfData,
-                imageLoadStatus: ImageLoadStatus
+                imageLoadStatus: ImageLoadStatus,
             ) {
               frescoFlipperPlugin
                   ?.flipperImageTracker
@@ -116,7 +116,7 @@ class ShowcaseApplication : Application() {
 
             override fun onImageVisibilityUpdated(
                 imagePerfData: ImagePerfData,
-                visibilityState: VisibilityState
+                visibilityState: VisibilityState,
             ) {
               // nop
             }
@@ -128,7 +128,10 @@ class ShowcaseApplication : Application() {
     initVito(resources)
     imageSelector =
         ImageSelector(
-            imageTracker, FrescoVitoProvider.getImagePipeline(), FrescoVitoProvider.getController())
+            imageTracker,
+            FrescoVitoProvider.getImagePipeline(),
+            FrescoVitoProvider.getController(),
+        )
     val context = this
     Stetho.initialize(
         Stetho.newInitializerBuilder(context)
@@ -149,7 +152,8 @@ class ShowcaseApplication : Application() {
               NoOpDebugMemoryManager(),
               NoOpFlipperPerfLogger(),
               null,
-              null)
+              null,
+          )
       forwardingRequestListener.addRequestListener(
           FrescoFlipperRequestListener(frescoFlipperPlugin!!.flipperImageTracker))
       AndroidFlipperClient.getInstance(context).apply {
@@ -177,13 +181,15 @@ class ShowcaseApplication : Application() {
                   .executorSupplier
                   .forLightweightBackgroundTasks(),
               NoOpCallerContextVerifier,
-              DebugOverlayHandler(DebugOverlaySupplierSingleton.getInstance(applicationContext))))
+              DebugOverlayHandler(DebugOverlaySupplierSingleton.getInstance(applicationContext)),
+          ))
     } else {
       FrescoVito.initialize(
           vitoConfig = vitoConfig,
           debugOverlayEnabledSupplier =
               DebugOverlaySupplierSingleton.getInstance(applicationContext),
-          vitoImagePerfListener = imageTracker)
+          vitoImagePerfListener = imageTracker,
+      )
     }
   }
 

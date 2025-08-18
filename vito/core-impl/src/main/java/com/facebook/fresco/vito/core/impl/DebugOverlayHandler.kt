@@ -19,7 +19,8 @@ class DebugOverlayHandler(
             drawableDimensionsProvider,
             imageDimensionsProvider,
             imageOriginProvider,
-            imageOriginSubcategoryProvider)
+            imageOriginSubcategoryProvider,
+        ),
 ) {
 
   fun update(drawable: KFrescoVitoDrawable) {

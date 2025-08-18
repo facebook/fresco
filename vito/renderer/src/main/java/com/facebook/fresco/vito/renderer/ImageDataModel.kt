@@ -49,7 +49,7 @@ open class DrawableImageDataModel(val drawable: Drawable, val disableScaling: Bo
 class AnimatedDrawableImageDataModel(
     drawable: Drawable,
     val animatable: Animatable,
-    val isAutoPlay: Boolean
+    val isAutoPlay: Boolean,
 ) : DrawableImageDataModel(drawable) {
   override fun onAttach() {
     if (isAutoPlay) {

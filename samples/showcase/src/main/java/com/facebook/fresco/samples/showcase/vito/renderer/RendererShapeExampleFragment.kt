@@ -39,7 +39,8 @@ class RendererShapeExampleFragment : BaseShowcaseKotlinFragment() {
             CircleShape(
                 exampleRect.exactCenterX(),
                 exampleRect.exactCenterY(),
-                min(exampleRect.width(), exampleRect.height()) / 2f),
+                min(exampleRect.width(), exampleRect.height()) / 2f,
+            ),
             RoundedRectShape(exampleRectF, 40f.dpToPx(), 40f.dpToPx()),
             RoundedRectShape(exampleRectF, 20f.dpToPx(), 80f.dpToPx()),
             PathShape(
@@ -54,22 +55,30 @@ class RendererShapeExampleFragment : BaseShowcaseKotlinFragment() {
                           50f.dpToPx(),
                           60f.dpToPx(),
                           70f.dpToPx(),
-                          80f.dpToPx()),
-                      Path.Direction.CW)
-                }))
+                          80f.dpToPx(),
+                      ),
+                      Path.Direction.CW,
+                  )
+                }),
+        )
 
     container.findViewById<LinearLayout>(R.id.list).apply {
       addText("Example View dimensions: $w x $h px")
       for (shape in shapes) {
         addRow {
           addExample(
-              w, h, ColorIntImageDataModel(ContextCompat.getColor(context, R.color.primary)), shape)
+              w,
+              h,
+              ColorIntImageDataModel(ContextCompat.getColor(context, R.color.primary)),
+              shape,
+          )
           addExample(
               w,
               h,
               DrawableImageDataModel(
                   ContextCompat.getDrawable(requireContext(), R.mipmap.ic_launcher)!!),
-              shape)
+              shape,
+          )
           addExample(w, h, BitmapImageDataModel(createSampleBitmap(w, h)), shape)
         }
       }

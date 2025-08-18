@@ -17,19 +17,19 @@ interface DrawableDataSubscriber {
   fun onNewResult(
       drawable: FrescoDrawable2Impl,
       imageRequest: VitoImageRequest,
-      dataSource: DataSource<CloseableReference<CloseableImage>>
+      dataSource: DataSource<CloseableReference<CloseableImage>>,
   )
 
   fun onFailure(
       drawable: FrescoDrawable2Impl,
       imageRequest: VitoImageRequest,
-      dataSource: DataSource<CloseableReference<CloseableImage>>
+      dataSource: DataSource<CloseableReference<CloseableImage>>,
   )
 
   fun onProgressUpdate(
       drawable: FrescoDrawable2Impl,
       imageRequest: VitoImageRequest,
-      dataSource: DataSource<CloseableReference<CloseableImage>>
+      dataSource: DataSource<CloseableReference<CloseableImage>>,
   )
 
   fun onRelease(drawable: FrescoDrawable2Impl)

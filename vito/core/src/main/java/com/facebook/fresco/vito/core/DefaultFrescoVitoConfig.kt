@@ -80,12 +80,12 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
 
   override fun experimentalDynamicSizeIsProductEnabled(
       callerContext: Any?,
-      contextChain: ContextChain?
+      contextChain: ContextChain?,
   ): Boolean = true
 
   override fun experimentalDynamicSizeIsFallbackEnabled(
       callerContext: Any?,
-      contextChain: ContextChain?
+      contextChain: ContextChain?,
   ): Boolean = true
 
   override fun experimentalDynamicSizeBloksDisableDiskCacheCheck(): Boolean = false

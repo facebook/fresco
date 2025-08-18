@@ -13,13 +13,13 @@ data class ExampleItem(
     val title: String,
     val helpText: String? = null,
     val backstackTag: String? = null,
-    val createFragment: () -> Fragment
+    val createFragment: () -> Fragment,
 ) {
   constructor(
       title: String,
       lithoSample: LithoSample,
       helpText: String? = null,
-      backstackTag: String? = null
+      backstackTag: String? = null,
   ) : this(title, helpText, backstackTag, { LithoSampleHostFragment(lithoSample, helpText) })
 
   val itemId = title.hashCode()

@@ -10,5 +10,5 @@ package com.facebook.fresco.vito.core
 enum class PrefetchTarget {
   MEMORY_DECODED,
   MEMORY_ENCODED,
-  DISK
+  DISK,
 }

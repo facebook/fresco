@@ -14,7 +14,7 @@ data class BorderOptions(
     @JvmField @field:ColorInt @param:ColorInt val color: Int,
     @JvmField val width: Float,
     @JvmField val padding: Float = 0f,
-    @JvmField val scaleDownInsideBorders: Boolean = false
+    @JvmField val scaleDownInsideBorders: Boolean = false,
 ) {
 
   override fun equals(other: Any?): Boolean {
@@ -58,7 +58,7 @@ data class BorderOptions(
         @ColorInt color: Int,
         width: Float,
         padding: Float = 0f,
-        scaleDownInsideBorders: Boolean = false
+        scaleDownInsideBorders: Boolean = false,
     ): BorderOptions {
       return BorderOptions(color, width, padding, scaleDownInsideBorders)
     }

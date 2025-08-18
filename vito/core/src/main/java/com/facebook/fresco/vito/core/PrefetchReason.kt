@@ -25,5 +25,5 @@ enum class PrefetchReason {
    * the image will not be visible until people tap on something to show a different surface than
    * the current one
    */
-  ON_TAP
+  ON_TAP,
 }

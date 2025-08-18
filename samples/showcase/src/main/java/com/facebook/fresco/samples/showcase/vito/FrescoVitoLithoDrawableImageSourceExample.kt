@@ -31,7 +31,7 @@ object FrescoVitoLithoDrawableImageSourceExample : LithoSample {
   override fun createLithoComponent(
       c: ComponentContext,
       uris: ImageUriProvider,
-      callerContext: Any
+      callerContext: Any,
   ): Component =
       FrescoVitoImage2.create(c)
           .imageSource(

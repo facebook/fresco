@@ -16,7 +16,7 @@ class FlipperCloseableReferenceLeakTracker : CloseableReferenceLeakTracker {
 
   override fun trackCloseableReferenceLeak(
       reference: SharedReference<Any?>,
-      stacktrace: Throwable?
+      stacktrace: Throwable?,
   ) {
     if (listener == null) {
       Log.w("FRESCO", "No Flipper listener registered to track CloseableReference leak.")

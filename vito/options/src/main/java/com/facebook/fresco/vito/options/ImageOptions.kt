@@ -290,7 +290,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
 
     fun placeholder(
         placeholder: Drawable?,
-        placeholderScaleType: ScalingUtils.ScaleType?
+        placeholderScaleType: ScalingUtils.ScaleType?,
     ): Builder = modify {
       _placeholderDrawable = placeholder
       _placeholderScaleType = placeholderScaleType
@@ -312,7 +312,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
 
     fun placeholderRes(
         @DrawableRes placeholderRes: Int,
-        placeholderScaleType: ScalingUtils.ScaleType?
+        placeholderScaleType: ScalingUtils.ScaleType?,
     ): Builder = modify {
       _placeholderRes = placeholderRes
       _placeholderScaleType = placeholderScaleType
@@ -375,7 +375,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
 
     fun progressRes(
         @DrawableRes progressRes: Int,
-        progressScaleType: ScalingUtils.ScaleType?
+        progressScaleType: ScalingUtils.ScaleType?,
     ): Builder = modify {
       _progressRes = progressRes
       _progressScaleType = progressScaleType

@@ -28,6 +28,6 @@ interface HasTransform {
       childWidth: Int,
       childHeight: Int,
       focusX: Float,
-      focusY: Float
+      focusY: Float,
   ): Matrix
 }

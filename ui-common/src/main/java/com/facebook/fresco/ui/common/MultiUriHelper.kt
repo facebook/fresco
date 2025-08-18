@@ -16,7 +16,7 @@ object MultiUriHelper {
       mainRequest: T?,
       lowResRequest: T?,
       firstAvailableRequest: Array<T?>?,
-      requestToUri: Fn<T, Uri?>
+      requestToUri: Fn<T, Uri?>,
   ): Uri? {
 
     val uri = mainRequest?.let(requestToUri::apply)

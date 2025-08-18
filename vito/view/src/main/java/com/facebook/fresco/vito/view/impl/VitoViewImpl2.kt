@@ -74,13 +74,15 @@ object VitoViewImpl2 {
                 imageSource,
                 imageOptions,
                 viewport = Rect(0, 0, target.width, target.height),
-                callerContext = callerContext),
+                callerContext = callerContext,
+            ),
         callerContext,
         imageListener,
         imageRequestListener,
         target,
         onFadeListener,
-        uiFramework)
+        uiFramework,
+    )
   }
 
   @JvmStatic
@@ -111,7 +113,8 @@ object VitoViewImpl2 {
               perfDataListener = null,
               onFadeListener = onFadeListener,
               viewportDimensions = Rect(0, 0, target.width, target.height),
-              vitoImageRequestListener = imageRequestListener)
+              vitoImageRequestListener = imageRequestListener,
+          )
     }
     if (useSimpleFetchLogic.get()) {
       frescoDrawable.imagePerfListener.onImageMount(frescoDrawable)

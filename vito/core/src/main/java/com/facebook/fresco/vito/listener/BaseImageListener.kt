@@ -22,7 +22,7 @@ open class BaseImageListener : ImageListener {
       id: Long,
       @ImageOrigin imageOrigin: Int,
       imageInfo: ImageInfo?,
-      drawable: Drawable?
+      drawable: Drawable?,
   ) = Unit
 
   override fun onIntermediateImageSet(id: Long, imageInfo: ImageInfo?) = Unit

@@ -43,7 +43,14 @@ class VitoSpanFragment : BaseShowcaseKotlinFragment(R.layout.fragment_vito_text_
         }
 
     VitoSpanLoader.show(
-        ImageSourceProvider.forUri(uri), imageOptions, false, null, null, null, span)
+        ImageSourceProvider.forUri(uri),
+        imageOptions,
+        false,
+        null,
+        null,
+        null,
+        span,
+    )
 
     imageSpan = span
   }

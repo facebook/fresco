@@ -51,7 +51,7 @@ import java.util.concurrent.TimeUnit
 class VitoImagePipelineImpl(
     private val imagePipeline: ImagePipeline,
     private val imagePipelineUtils: ImagePipelineUtils,
-    private val config: FrescoVitoConfig
+    private val config: FrescoVitoConfig,
 ) : VitoImagePipeline {
 
   override fun createImageRequest(
@@ -78,7 +78,8 @@ class VitoImagePipelineImpl(
                   viewport?.let { Dimensions(it.width(), it.height()) },
                   imageOptions.actualImageScaleType,
                   callerContext,
-                  contextChain)
+                  contextChain,
+              )
           modifiedUriValue = result.toString()
           if (result is UriModifierInterface.ModificationResult.Modified) {
             finalImageSource =
@@ -119,7 +120,10 @@ class VitoImagePipelineImpl(
 
     val finalImageRequest =
         ImageSourceToImagePipelineAdapter.maybeExtractFinalImageRequest(
-            finalImageSource, imagePipelineUtils, imageOptions)
+            finalImageSource,
+            imagePipelineUtils,
+            imageOptions,
+        )
     val finalImageCacheKey = finalImageRequest?.let { imagePipeline.getCacheKey(it, null) }
 
     return VitoImageRequest(
@@ -130,7 +134,8 @@ class VitoImagePipelineImpl(
         finalImageRequest,
         finalImageCacheKey,
         extras,
-        viewport = viewport?.asDimensions())
+        viewport = viewport?.asDimensions(),
+    )
   }
 
   override fun getCachedImage(imageRequest: VitoImageRequest): CloseableReference<CloseableImage>? =
@@ -173,7 +178,7 @@ class VitoImagePipelineImpl(
   override fun isInDiskCacheSync(
       vitoImageRequest: VitoImageRequest,
       timeout: Long,
-      unit: TimeUnit
+      unit: TimeUnit,
   ): Boolean? {
     if (timeout <= 0) {
       return isInDiskCacheSync(vitoImageRequest)
@@ -220,7 +225,7 @@ class VitoImagePipelineImpl(
   override fun determineFetchStrategy(
       requestBeforeLayout: VitoImageRequest?,
       callerContext: Any?,
-      contextChain: ContextChain?
+      contextChain: ContextChain?,
   ): FetchStrategy {
     if (requestBeforeLayout == null) {
       if (experimentalDynamicSizeVito2()) {
@@ -275,7 +280,8 @@ class VitoImagePipelineImpl(
           isInDiskCacheSync(
               requestBeforeLayout,
               config.experimentalDynamicSizeDiskCacheCheckTimeoutMs(),
-              TimeUnit.MILLISECONDS)
+              TimeUnit.MILLISECONDS,
+          )
 
       if (isInDiskCache == null) {
         // Disk cache request timed out

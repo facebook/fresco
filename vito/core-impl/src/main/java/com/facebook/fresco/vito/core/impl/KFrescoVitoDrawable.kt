@@ -114,7 +114,8 @@ class KFrescoVitoDrawable(
       configure(
           dataModel = if (drawable == null) null else DrawableImageDataModel(drawable),
           roundingOptions = null,
-          borderOptions = null)
+          borderOptions = null,
+      )
     }
     return drawable
   }
@@ -151,7 +152,8 @@ class KFrescoVitoDrawable(
         resetVitoImageRequestListener,
         resetLocalVitoImageRequestListener,
         resetLocalImagePerfStateListener,
-        resetControllerListener2)
+        resetControllerListener2,
+    )
   }
 
   private var drawableColorFilter: ColorFilter? = null

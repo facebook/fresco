@@ -29,7 +29,7 @@ object FrescoVitoLithoSimpleExample : LithoSample {
   override fun createLithoComponent(
       c: ComponentContext,
       uris: ImageUriProvider,
-      callerContext: Any
+      callerContext: Any,
   ): Component {
     val uri = uris.createSampleUri()
     return FrescoVitoImage2.create(c).uri(uri).imageOptions(IMAGE_OPTIONS).build()

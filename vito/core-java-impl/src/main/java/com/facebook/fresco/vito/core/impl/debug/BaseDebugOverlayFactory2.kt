@@ -32,12 +32,12 @@ abstract class BaseDebugOverlayFactory2(private val debugOverlayEnabled: Supplie
   protected abstract fun setData(
       overlay: DebugOverlayDrawable,
       drawable: FrescoDrawableInterface,
-      extras: Extras?
+      extras: Extras?,
   )
 
   private class DebugOverlayDrawableWrapper(
       existingOverlayDrawable: Drawable,
-      val debugOverlayDrawable: DebugOverlayDrawable
+      val debugOverlayDrawable: DebugOverlayDrawable,
   ) : LayerDrawable(arrayOf(existingOverlayDrawable, debugOverlayDrawable))
 
   companion object {

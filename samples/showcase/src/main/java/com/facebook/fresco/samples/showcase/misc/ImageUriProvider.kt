@@ -51,7 +51,7 @@ class ImageUriProvider constructor(context: Context) {
     LANDSCAPE,
 
     /** Any orientation */
-    ANY
+    ANY,
   }
 
   /** Indicates whether to perform some action on the URI before returning */
@@ -61,7 +61,7 @@ class ImageUriProvider constructor(context: Context) {
     NONE,
 
     /** Add a unique parameter to the URI to prevent it to be served from any cache */
-    CACHE_BREAKER
+    CACHE_BREAKER,
   }
 
   enum class ImageSize(val sizeSuffix: String) {
@@ -81,7 +81,7 @@ class ImageUriProvider constructor(context: Context) {
     XL("xl"),
 
     /** Within ~4096x4096 px bounds */
-    XXL("xxl")
+    XXL("xxl"),
   }
 
   /** Creates an URI of an image that will result in a 404 (not found) HTTP error */
@@ -104,7 +104,7 @@ class ImageUriProvider constructor(context: Context) {
   fun createSampleUri(
       imageSize: ImageSize = ImageSize.M,
       orientation: Orientation = Orientation.ANY,
-      urlModification: UriModification = UriModification.NONE
+      urlModification: UriModification = UriModification.NONE,
   ): Uri {
     val fullUri = String.format(randomBaseJpegUri(orientation), imageSize.sizeSuffix)
     return applyOverrideSettings(fullUri, urlModification)
@@ -113,7 +113,7 @@ class ImageUriProvider constructor(context: Context) {
   @JvmOverloads
   fun createSampleUriSet(
       orientation: Orientation = Orientation.ANY,
-      urlModification: UriModification = UriModification.NONE
+      urlModification: UriModification = UriModification.NONE,
   ): List<Uri> {
     val baseUri: String = randomBaseJpegUri(orientation)
     return listOf(
@@ -122,7 +122,8 @@ class ImageUriProvider constructor(context: Context) {
         applyOverrideSettings(String.format(baseUri, ImageSize.M.sizeSuffix), urlModification),
         applyOverrideSettings(String.format(baseUri, ImageSize.L.sizeSuffix), urlModification),
         applyOverrideSettings(String.format(baseUri, ImageSize.XL.sizeSuffix), urlModification),
-        applyOverrideSettings(String.format(baseUri, ImageSize.XXL.sizeSuffix), urlModification))
+        applyOverrideSettings(String.format(baseUri, ImageSize.XXL.sizeSuffix), urlModification),
+    )
   }
 
   fun createPJPEGSlow(): Uri = applyOverrideSettings(SAMPLE_URI_PJPEG_SLOW, UriModification.NONE)
@@ -130,7 +131,7 @@ class ImageUriProvider constructor(context: Context) {
   @JvmOverloads
   fun createPngUri(
       orientation: Orientation = Orientation.ANY,
-      urlModification: UriModification = UriModification.NONE
+      urlModification: UriModification = UriModification.NONE,
   ): Uri {
     val baseUri =
         when (orientation) {
@@ -152,13 +153,16 @@ class ImageUriProvider constructor(context: Context) {
 
   fun createGifUri(imageSize: ImageSize = ImageSize.M): Uri {
     return applyOverrideSettings(
-        String.format(SAMPLE_URI_GIF_PATTERN, imageSize.sizeSuffix), UriModification.NONE)
+        String.format(SAMPLE_URI_GIF_PATTERN, imageSize.sizeSuffix),
+        UriModification.NONE,
+    )
   }
 
   fun createGifUriWithPause(imageSize: ImageSize): Uri {
     return applyOverrideSettings(
         String.format(SAMPLE_URI_GIF_WITH_PAUSE_PATTERN, imageSize.sizeSuffix),
-        UriModification.NONE)
+        UriModification.NONE,
+    )
   }
 
   fun createKeyframesUri() = applyOverrideSettings(SAMPLE_URI_KEYFRAMES, UriModification.NONE)
@@ -197,13 +201,16 @@ class ImageUriProvider constructor(context: Context) {
             arrayOf(MediaStore.Images.Media._ID),
             null,
             null,
-            null)
+            null,
+        )
         ?.use {
           val dataIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
           while (it.moveToNext()) {
             uris.add(
                 ContentUris.withAppendedId(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, it.getLong(dataIndex)))
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    it.getLong(dataIndex),
+                ))
           }
         }
     return uris
@@ -259,7 +266,8 @@ class ImageUriProvider constructor(context: Context) {
             "https://frescolib.org/static/sample-images/animal_c_%s.jpg",
             "https://frescolib.org/static/sample-images/animal_e_%s.jpg",
             "https://frescolib.org/static/sample-images/animal_f_%s.jpg",
-            "https://frescolib.org/static/sample-images/animal_g_%s.jpg")
+            "https://frescolib.org/static/sample-images/animal_g_%s.jpg",
+        )
 
     private val SAMPLE_URIS_PORTRAIT =
         arrayOf("https://frescolib.org/static/sample-images/animal_d_%s.jpg")
@@ -273,7 +281,8 @@ class ImageUriProvider constructor(context: Context) {
             "https://frescolib.org/static/sample-images/animal_c.png",
             "https://frescolib.org/static/sample-images/animal_e.png",
             "https://frescolib.org/static/sample-images/animal_f.png",
-            "https://frescolib.org/static/sample-images/animal_g.png")
+            "https://frescolib.org/static/sample-images/animal_g.png",
+        )
 
     private val SAMPLE_URIS_PORTRAIT_PNG =
         arrayOf("https://frescolib.org/static/sample-images/animal_d.png")
@@ -296,7 +305,8 @@ class ImageUriProvider constructor(context: Context) {
         arrayOf(
             "https://media2.giphy.com/media/3oge84qhopFbFFkwec/giphy.gif",
             "https://media3.giphy.com/media/uegrGBitPHtKM/giphy.gif",
-            "https://media0.giphy.com/media/SWd9mTHEMIxQ4/giphy.gif")
+            "https://media0.giphy.com/media/SWd9mTHEMIxQ4/giphy.gif",
+        )
 
     private val SAMPLE_URI_KEYFRAMES =
         "https://frescolib.org/static/sample-images/animation.keyframes"
