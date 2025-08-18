@@ -80,7 +80,7 @@ object FrescoInstrumenter {
     if (instrumenter == null || runnable == null) {
       return runnable
     }
-    val nonNullTag = tag ?: ""
+    val nonNullTag = tag.orEmpty()
     return instrumenter.decorateRunnable(runnable, nonNullTag)
   }
 
