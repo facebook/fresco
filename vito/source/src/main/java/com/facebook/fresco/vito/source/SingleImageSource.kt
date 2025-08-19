@@ -14,4 +14,6 @@ interface SingleImageSource : UriImageSource {
   val uri: Uri
 
   fun getStringExtra(key: String): String?
+
+  override fun getClassNameString(): String = "SingleImageSource"
 }

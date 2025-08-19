@@ -20,4 +20,6 @@ interface ImagePipelineImageSource : UriImageSource {
   ): ImageRequest?
 
   fun getRequestLevelForFetch(): ImageRequest.RequestLevel = ImageRequest.RequestLevel.FULL_FETCH
+
+  override fun getClassNameString(): String = "ImagePipelineImageSource"
 }

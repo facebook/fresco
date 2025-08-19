@@ -53,4 +53,6 @@ class RetainingImageSource(
     imageSourceUpdateFunction = function
     updateImageSource(_currentSource, true)
   }
+
+  override fun getClassNameString(): String = "RetainingImageSource"
 }

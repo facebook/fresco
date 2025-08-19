@@ -22,4 +22,6 @@ data class FirstAvailableImageSource(val imageSources: Array<out ImageSource>) :
   }
 
   override fun hashCode(): Int = imageSources.contentHashCode()
+
+  override fun getClassNameString(): String = "FirstAvailableImageSource"
 }

@@ -28,17 +28,11 @@ import com.facebook.fresco.vito.core.FrescoVitoConfig
 import com.facebook.fresco.vito.core.ImagePipelineUtils
 import com.facebook.fresco.vito.core.VitoImagePipeline
 import com.facebook.fresco.vito.core.VitoImageRequest
-import com.facebook.fresco.vito.core.impl.source.ImagePipelineImageSource
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.ImageOptions.Companion.defaults
-import com.facebook.fresco.vito.source.BitmapImageSource
-import com.facebook.fresco.vito.source.DrawableImageSource
-import com.facebook.fresco.vito.source.EmptyImageSource
-import com.facebook.fresco.vito.source.FirstAvailableImageSource
 import com.facebook.fresco.vito.source.ImageSource
 import com.facebook.fresco.vito.source.ImageSourceProvider
 import com.facebook.fresco.vito.source.IncreasingQualityImageSource
-import com.facebook.fresco.vito.source.SingleImageSource
 import com.facebook.fresco.vito.source.SmartImageSource
 import com.facebook.fresco.vito.source.UriImageSource
 import com.facebook.imagepipeline.core.ImagePipeline
@@ -110,7 +104,6 @@ class VitoImagePipelineImpl(
 
     fetchStrategy?.let { extras[HasExtraData.KEY_SF_FETCH_STRATEGY] = it }
     modifiedUriValue?.let { extras[HasExtraData.KEY_SF_MOD_RESULT] = it }
-    extras[HasExtraData.KEY_IMAGE_SOURCE_TYPE] = imageSource.getClassNameString()
 
     if (imageSource is IncreasingQualityImageSource) {
       imageSource.extras?.let { extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = it }
@@ -206,21 +199,6 @@ class VitoImagePipelineImpl(
 
   private fun experimentalDynamicSizeWithCacheFallbackVito2(): Boolean =
       config.experimentalDynamicSizeWithCacheFallbackVito2()
-
-  private fun ImageSource.getClassNameString(): String {
-    return when (this) {
-      is BitmapImageSource -> "BitmapImageSource"
-      is DrawableImageSource -> "DrawableImageSource"
-      is EmptyImageSource -> "EmptyImageSource"
-      is FirstAvailableImageSource -> "FirstAvailableImageSource"
-      is IncreasingQualityImageSource -> "IncreasingQualityImageSource"
-      is ImagePipelineImageSource -> "ImagePipelineImageSource"
-      is SingleImageSource -> "SingleImageSource"
-      // Keep UriImageSource below known subclasses ImagePipelineImageSource/SingleImageSource
-      is UriImageSource -> "UriImageSource"
-      else -> "Other"
-    }
-  }
 
   override fun determineFetchStrategy(
       requestBeforeLayout: VitoImageRequest?,

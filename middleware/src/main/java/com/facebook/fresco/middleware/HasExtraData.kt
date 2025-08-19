@@ -41,7 +41,6 @@ interface HasExtraData {
     const val KEY_SF_ADAPTIVE = "smart_adaptive"
     const val KEY_SF_VARIATION = "smart_variation"
     const val KEY_SF_QUERY = "smart_query"
-    const val KEY_IMAGE_SOURCE_TYPE: String = "image_source_type"
 
     const val KEY_ORIGIN = "origin"
     const val KEY_ORIGIN_SUBCATEGORY = "origin_sub"

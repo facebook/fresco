@@ -11,4 +11,7 @@ package com.facebook.fresco.vito.source
  * Image source that can be passed to Fresco's image components. New image sources can be created
  * via [ImageSourceProvider].
  */
-interface ImageSource
+interface ImageSource {
+
+  fun getClassNameString(): String
+}

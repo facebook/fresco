@@ -48,4 +48,6 @@ class SmartImageSource(
     result = 31 * result + (extras?.hashCode() ?: 0)
     return result
   }
+
+  override fun getClassNameString(): String = "SmartImageSource"
 }

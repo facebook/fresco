@@ -24,4 +24,6 @@ data class DrawableResImageSource(val resId: Int) : ImageSource {
   }
 
   override fun hashCode(): Int = resId
+
+  override fun getClassNameString(): String = "DrawableResImageSource"
 }

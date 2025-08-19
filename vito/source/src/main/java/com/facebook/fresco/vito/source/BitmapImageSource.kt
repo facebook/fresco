@@ -24,4 +24,6 @@ data class BitmapImageSource(val bitmap: Bitmap) : ImageSource {
   }
 
   override fun hashCode(): Int = bitmap.hashCode()
+
+  override fun getClassNameString(): String = "BitmapImageSource"
 }

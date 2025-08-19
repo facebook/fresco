@@ -20,4 +20,6 @@ open class EmptyImageSource(val reason: String) : ImageSource {
 
   // We ignore the reason to avoid unnecessary image reloads
   override fun hashCode(): Int = 0
+
+  override fun getClassNameString(): String = "EmptyImageSource($reason)"
 }

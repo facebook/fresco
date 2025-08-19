@@ -29,4 +29,6 @@ data class ImageRequestImageSource(private val imageRequest: ImageRequest) :
   override val extras: Map<String, Any> = emptyMap()
 
   override fun getRequestLevelForFetch(): RequestLevel = RequestLevel.FULL_FETCH
+
+  override fun getClassNameString(): String = "ImageRequestImageSource"
 }
