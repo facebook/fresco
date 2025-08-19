@@ -94,7 +94,8 @@ class AnimatedRepeatedPostprocessorProducerTest {
             false /* isPrefetch */,
             false /* isIntermediateResultExpected */,
             Priority.MEDIUM,
-            config)
+            config,
+        )
     whenever(imageRequest.postprocessor).thenReturn(postprocessor)
     results = ArrayList()
     whenever(postprocessor.name).thenReturn(POSTPROCESSOR_NAME)
@@ -178,7 +179,7 @@ class AnimatedRepeatedPostprocessorProducerTest {
 
   private fun performUpdate(
       repeatedPostprocessorRunner: RepeatedPostprocessorRunner,
-      run: Boolean
+      run: Boolean,
   ) {
     setupNewDestinationImage()
     repeatedPostprocessorRunner.update()

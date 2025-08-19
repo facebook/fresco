@@ -30,14 +30,17 @@ abstract class AbstractProducerToDataSourceAdapter<T>
 protected constructor(
     producer: Producer<T>,
     val settableProducerContext: SettableProducerContext,
-    val requestListener: RequestListener2
+    val requestListener: RequestListener2,
 ) : AbstractDataSource<T>(), HasImageRequest {
 
   private fun createConsumer(): Consumer<T> {
     return object : BaseConsumer<T>() {
       override fun onNewResultImpl(newResult: T?, @Consumer.Status status: Int) {
         this@AbstractProducerToDataSourceAdapter.onNewResultImpl(
-            newResult, status, settableProducerContext)
+            newResult,
+            status,
+            settableProducerContext,
+        )
       }
 
       override fun onFailureImpl(throwable: Throwable) {

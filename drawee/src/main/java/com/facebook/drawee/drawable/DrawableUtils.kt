@@ -68,7 +68,7 @@ object DrawableUtils {
   fun setCallbacks(
       drawable: Drawable?,
       callback: Drawable.Callback?,
-      transformCallback: TransformCallback?
+      transformCallback: TransformCallback?,
   ) {
     drawable ?: return
     drawable.callback = callback

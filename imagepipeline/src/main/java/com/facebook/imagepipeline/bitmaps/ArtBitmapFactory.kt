@@ -21,7 +21,7 @@ import javax.annotation.concurrent.ThreadSafe
 @ThreadSafe
 class ArtBitmapFactory(
     private val bitmapPool: BitmapPool,
-    private val closeableReferenceFactory: CloseableReferenceFactory
+    private val closeableReferenceFactory: CloseableReferenceFactory,
 ) : PlatformBitmapFactory() {
   /**
    * Creates a bitmap of the specified width and height.
@@ -35,7 +35,7 @@ class ArtBitmapFactory(
   override fun createBitmapInternal(
       width: Int,
       height: Int,
-      bitmapConfig: Bitmap.Config
+      bitmapConfig: Bitmap.Config,
   ): CloseableReference<Bitmap> {
     val sizeInBytes = BitmapUtil.getSizeInByteForBitmap(width, height, bitmapConfig)
     val bitmap = bitmapPool[sizeInBytes]

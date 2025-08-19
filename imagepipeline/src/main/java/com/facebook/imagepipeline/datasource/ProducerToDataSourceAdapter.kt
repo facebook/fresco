@@ -23,14 +23,14 @@ class ProducerToDataSourceAdapter<T>
 private constructor(
     producer: Producer<T>,
     settableProducerContext: SettableProducerContext,
-    listener: RequestListener2
+    listener: RequestListener2,
 ) : AbstractProducerToDataSourceAdapter<T>(producer, settableProducerContext, listener) {
   companion object {
     @JvmStatic
     fun <T> create(
         producer: Producer<T>,
         settableProducerContext: SettableProducerContext,
-        listener: RequestListener2
+        listener: RequestListener2,
     ): DataSource<T> = ProducerToDataSourceAdapter(producer, settableProducerContext, listener)
   }
 }

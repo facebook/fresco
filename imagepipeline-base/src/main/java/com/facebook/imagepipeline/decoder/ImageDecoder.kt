@@ -18,6 +18,6 @@ fun interface ImageDecoder {
       encodedImage: EncodedImage,
       length: Int,
       qualityInfo: QualityInfo,
-      options: ImageDecodeOptions
+      options: ImageDecodeOptions,
   ): CloseableImage?
 }

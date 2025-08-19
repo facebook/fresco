@@ -86,7 +86,8 @@ class LocalContentUriThumbnailFetchProducerTest {
             false,
             true,
             Priority.MEDIUM,
-            config)
+            config,
+        )
     Mockito.`when`(imageRequest.sourceUri).thenReturn(contentUri)
 
     mockMediaStoreCursor()
@@ -109,7 +110,8 @@ class LocalContentUriThumbnailFetchProducerTest {
                 ArgumentMatchers.any(ContentResolver::class.java),
                 ArgumentMatchers.anyLong(),
                 ArgumentMatchers.anyInt(),
-                ArgumentMatchers.any()))
+                ArgumentMatchers.any(),
+            ))
         .thenAnswer { cursor }
     val dataColumnIndex = 5
     Mockito.`when`(cursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA))
@@ -134,7 +136,8 @@ class LocalContentUriThumbnailFetchProducerTest {
                 mock: EncodedImage,
                 context: MockedConstruction.Context ->
               Mockito.`when`(mock.getSize()).thenReturn(THUMBNAIL_FILE_SIZE.toInt())
-            })
+            },
+        )
   }
 
   @Throws(Exception::class)
@@ -145,7 +148,8 @@ class LocalContentUriThumbnailFetchProducerTest {
                 ArgumentMatchers.any(),
                 ArgumentMatchers.any(),
                 ArgumentMatchers.any(),
-                ArgumentMatchers.any()))
+                ArgumentMatchers.any(),
+            ))
         .thenReturn(cursor)
     Mockito.`when`(contentResolver.openInputStream(contentUri))
         .thenReturn(Mockito.mock(InputStream::class.java))

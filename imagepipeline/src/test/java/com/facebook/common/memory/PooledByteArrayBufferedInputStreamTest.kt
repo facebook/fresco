@@ -159,7 +159,7 @@ class PooledByteArrayBufferedInputStreamTest {
       byteArray: ByteArray,
       startOffset: Int,
       endOffset: Int,
-      firstByte: Int
+      firstByte: Int,
   ) {
     var expectedByte = firstByte
     for (i in startOffset until endOffset) {

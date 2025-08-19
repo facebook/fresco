@@ -119,7 +119,8 @@ class ProgressiveJpegParserTest {
             0x03.toByte(),
             0x00.toByte(),
             0xff.toByte(),
-            0xda.toByte())
+            0xda.toByte(),
+        )
 
     testFirstNBytes(veryFakeJpeg, 3, false, 0, 0)
     testFirstNBytes(veryFakeJpeg, 6, false, 0, 0)
@@ -152,7 +153,7 @@ class ProgressiveJpegParserTest {
       n: Int,
       foundNewScan: Boolean,
       expectedBestScan: Int,
-      bestScanEndOffset: Int
+      bestScanEndOffset: Int,
   ) {
     assertThat(
             progressiveJpegParser.parseMoreData(

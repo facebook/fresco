@@ -64,7 +64,11 @@ class DefaultBitmapFramePreparerTest {
 
     defaultBitmapFramePreparer =
         DefaultBitmapFramePreparer(
-            platformBitmapFactory, bitmapFrameRenderer, BITMAP_CONFIG, executorService)
+            platformBitmapFactory,
+            bitmapFrameRenderer,
+            BITMAP_CONFIG,
+            executorService,
+        )
     whenever(animationBackend.frameCount).thenReturn(FRAME_COUNT)
     whenever(animationBackend.intrinsicWidth).thenReturn(BACKEND_INTRINSIC_WIDTH)
     whenever(animationBackend.intrinsicHeight).thenReturn(BACKEND_INTRINSIC_HEIGHT)
@@ -111,7 +115,10 @@ class DefaultBitmapFramePreparerTest {
   fun testPrepareFrame_whenReusedBitmapAvailable_thenCacheReusedBitmap() {
     whenever(
             bitmapFrameCache.getBitmapToReuseForFrame(
-                1, BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT))
+                1,
+                BACKEND_INTRINSIC_WIDTH,
+                BACKEND_INTRINSIC_HEIGHT,
+            ))
         .thenReturn(bitmapReference)
     whenever(bitmapFrameRenderer.renderFrame(1, bitmap)).thenReturn(true)
 
@@ -134,7 +141,10 @@ class DefaultBitmapFramePreparerTest {
   fun testPrepareFrame_whenPlatformBitmapAvailable_thenCacheCreatedBitmap() {
     whenever(
             platformBitmapFactory.createBitmap(
-                BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT, BITMAP_CONFIG))
+                BACKEND_INTRINSIC_WIDTH,
+                BACKEND_INTRINSIC_HEIGHT,
+                BITMAP_CONFIG,
+            ))
         .thenReturn(bitmapReference)
     whenever(bitmapFrameRenderer.renderFrame(1, bitmap)).thenReturn(true)
 
@@ -159,11 +169,17 @@ class DefaultBitmapFramePreparerTest {
   fun testPrepareFrame_whenReusedAndPlatformBitmapAvailable_thenCacheReusedBitmap() {
     whenever(
             bitmapFrameCache.getBitmapToReuseForFrame(
-                1, BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT))
+                1,
+                BACKEND_INTRINSIC_WIDTH,
+                BACKEND_INTRINSIC_HEIGHT,
+            ))
         .thenReturn(bitmapReference)
     whenever(
             platformBitmapFactory.createBitmap(
-                BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT, BITMAP_CONFIG))
+                BACKEND_INTRINSIC_WIDTH,
+                BACKEND_INTRINSIC_HEIGHT,
+                BITMAP_CONFIG,
+            ))
         .thenReturn(bitmapReference)
     whenever(bitmapFrameRenderer.renderFrame(1, bitmap)).thenReturn(true)
 
@@ -186,11 +202,17 @@ class DefaultBitmapFramePreparerTest {
   fun testPrepareFrame_whenRenderingFails_thenDoNothing() {
     whenever(
             bitmapFrameCache.getBitmapToReuseForFrame(
-                1, BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT))
+                1,
+                BACKEND_INTRINSIC_WIDTH,
+                BACKEND_INTRINSIC_HEIGHT,
+            ))
         .thenReturn(bitmapReference)
     whenever(
             platformBitmapFactory.createBitmap(
-                BACKEND_INTRINSIC_WIDTH, BACKEND_INTRINSIC_HEIGHT, BITMAP_CONFIG))
+                BACKEND_INTRINSIC_WIDTH,
+                BACKEND_INTRINSIC_HEIGHT,
+                BITMAP_CONFIG,
+            ))
         .thenReturn(bitmapReference)
     whenever(bitmapFrameRenderer.renderFrame(1, bitmap)).thenReturn(false)
 

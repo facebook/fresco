@@ -37,7 +37,10 @@ class ThumbnailSizeCheckerTest {
   fun testWithLargeEnoughWidthAndHeightWhenNoResizeOptions() {
     assertThat(
             isImageBigEnough(
-                BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS, BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS, null))
+                BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS,
+                BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS,
+                null,
+            ))
         .isTrue()
   }
 
@@ -47,7 +50,8 @@ class ThumbnailSizeCheckerTest {
             isImageBigEnough(
                 BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS - 1,
                 BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS,
-                null))
+                null,
+            ))
         .isFalse()
   }
 
@@ -57,7 +61,8 @@ class ThumbnailSizeCheckerTest {
             isImageBigEnough(
                 BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS,
                 BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS - 1,
-                null))
+                null,
+            ))
         .isFalse()
   }
 
@@ -99,8 +104,10 @@ class ThumbnailSizeCheckerTest {
                   mockImage(
                       BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS,
                       BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS,
-                      rotation),
-                  null))
+                      rotation,
+                  ),
+                  null,
+              ))
           .isTrue()
     }
   }
@@ -113,7 +120,8 @@ class ThumbnailSizeCheckerTest {
           mockImage(
               BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS - 1,
               BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS,
-              rotation)
+              rotation,
+          )
       assertThat(isImageBigEnough(mockImage, null)).isFalse()
     }
   }
@@ -125,7 +133,8 @@ class ThumbnailSizeCheckerTest {
           mockImage(
               BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS,
               BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS - 1,
-              rotation)
+              rotation,
+          )
       assertThat(isImageBigEnough(mockImage, null)).isFalse()
     }
   }
@@ -141,13 +150,14 @@ class ThumbnailSizeCheckerTest {
 
     private fun testWithWidthAndHeightNotBigEnoughForResizeOptions(
         additionalRequestWidth: Int,
-        additionalRequestHeight: Int
+        additionalRequestHeight: Int,
     ) {
       for (i in 0..<TEST_COUNT) {
         val resizeOptions =
             ResizeOptions(
                 REQUEST_WIDTHS[i] + additionalRequestWidth,
-                REQUEST_HEIGHTS[i] + additionalRequestHeight)
+                REQUEST_HEIGHTS[i] + additionalRequestHeight,
+            )
         assertThat(isImageBigEnough(IMAGE_WIDTHS[i], IMAGE_HEIGHTS[i], resizeOptions)).isFalse()
       }
     }
@@ -155,7 +165,7 @@ class ThumbnailSizeCheckerTest {
     private fun testWithImageBigEnoughForResizeOptions(
         imageWidths: IntArray,
         imageHeights: IntArray,
-        startRotation: Int
+        startRotation: Int,
     ) {
       for (rotation in startRotation until 360 step 180) {
         for (i in 0..<TEST_COUNT) {
@@ -171,14 +181,15 @@ class ThumbnailSizeCheckerTest {
         imageHeights: IntArray,
         startRotation: Int,
         additionalRequestWidth: Int,
-        additionalRequestHeight: Int
+        additionalRequestHeight: Int,
     ) {
       for (rotation in startRotation until 360 step 180) {
         for (i in 0..<TEST_COUNT) {
           val resizeOptions =
               ResizeOptions(
                   REQUEST_WIDTHS[i] + additionalRequestWidth,
-                  REQUEST_HEIGHTS[i] + additionalRequestHeight)
+                  REQUEST_HEIGHTS[i] + additionalRequestHeight,
+              )
           val encodedImage: EncodedImage = mockImage(imageWidths[i], imageHeights[i], rotation)
           assertThat(isImageBigEnough(encodedImage, resizeOptions)).isFalse()
         }

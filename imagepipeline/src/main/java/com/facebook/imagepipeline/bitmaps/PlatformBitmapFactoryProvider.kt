@@ -25,7 +25,7 @@ object PlatformBitmapFactoryProvider {
   fun buildPlatformBitmapFactory(
       poolFactory: PoolFactory,
       platformDecoder: PlatformDecoder,
-      closeableReferenceFactory: CloseableReferenceFactory
+      closeableReferenceFactory: CloseableReferenceFactory,
   ): PlatformBitmapFactory =
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         ArtBitmapFactory(poolFactory.bitmapPool, closeableReferenceFactory)
@@ -33,6 +33,7 @@ object PlatformBitmapFactoryProvider {
         HoneycombBitmapFactory(
             EmptyJpegGenerator(poolFactory.pooledByteBufferFactory),
             platformDecoder,
-            closeableReferenceFactory)
+            closeableReferenceFactory,
+        )
       }
 }

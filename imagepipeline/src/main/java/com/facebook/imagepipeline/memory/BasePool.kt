@@ -94,7 +94,7 @@ import kotlin.math.min
 abstract class BasePool<V : Any>(
     memoryTrimmableRegistry: MemoryTrimmableRegistry,
     poolParams: PoolParams,
-    poolStatsTracker: PoolStatsTracker
+    poolStatsTracker: PoolStatsTracker,
 ) : Pool<V> {
 
   private val TAG: String = this.javaClass.simpleName.toString()
@@ -131,7 +131,7 @@ abstract class BasePool<V : Any>(
       memoryTrimmableRegistry: MemoryTrimmableRegistry,
       poolParams: PoolParams,
       poolStatsTracker: PoolStatsTracker,
-      ignoreHardCap: Boolean
+      ignoreHardCap: Boolean,
   ) : this(memoryTrimmableRegistry, poolParams, poolStatsTracker) {
     this.ignoreHardCap = ignoreHardCap
   }
@@ -185,7 +185,8 @@ abstract class BasePool<V : Any>(
                 TAG,
                 "get (reuse) (object, size) = (%x, %s)",
                 System.identityHashCode(value),
-                bucketedSize)
+                bucketedSize,
+            )
           }
           return value
         }
@@ -195,7 +196,11 @@ abstract class BasePool<V : Any>(
       sizeInBytes = this.getSizeInBytes(bucketedSize)
       if (!canAllocate(sizeInBytes)) {
         throw PoolSizeViolationException(
-            poolParams.maxSizeHardCap, used.numBytes, free.numBytes, sizeInBytes)
+            poolParams.maxSizeHardCap,
+            used.numBytes,
+            free.numBytes,
+            sizeInBytes,
+        )
       }
 
       // Optimistically assume that allocation succeeds - if it fails, we need to undo those changes
@@ -236,7 +241,8 @@ abstract class BasePool<V : Any>(
             TAG,
             "get (alloc) (object, size) = (%x, %s)",
             System.identityHashCode(value),
-            bucketedSize)
+            bucketedSize,
+        )
       }
     }
 
@@ -266,7 +272,8 @@ abstract class BasePool<V : Any>(
             TAG,
             "release (free, value unrecognized) (object, size) = (%x, %s)",
             System.identityHashCode(value),
-            bucketedSize)
+            bucketedSize,
+        )
         free(value)
         poolStatsTracker.onFree(sizeInBytes)
       } else {
@@ -290,7 +297,8 @@ abstract class BasePool<V : Any>(
                 TAG,
                 "release (free) (object, size) = (%x, %s)",
                 System.identityHashCode(value),
-                bucketedSize)
+                bucketedSize,
+            )
           }
           free(value)
           used.decrement(sizeInBytes)
@@ -305,7 +313,8 @@ abstract class BasePool<V : Any>(
                 TAG,
                 "release (reuse) (object, size) = (%x, %s)",
                 System.identityHashCode(value),
-                bucketedSize)
+                bucketedSize,
+            )
           }
         }
       }
@@ -423,7 +432,9 @@ abstract class BasePool<V : Any>(
                 getSizeInBytes(bucketSize),
                 maxLength,
                 bucketInUseCount,
-                poolParams.fixBucketsReinitialization))
+                poolParams.fixBucketsReinitialization,
+            ),
+        )
       }
       allowNewBuckets = false
     } else {
@@ -460,7 +471,8 @@ abstract class BasePool<V : Any>(
       val maxLength = bucketSizes.valueAt(i)
       buckets.put(
           bucketSize,
-          Bucket(getSizeInBytes(bucketSize), maxLength, 0, poolParams.fixBucketsReinitialization))
+          Bucket(getSizeInBytes(bucketSize), maxLength, 0, poolParams.fixBucketsReinitialization),
+      )
     }
   }
 
@@ -484,7 +496,9 @@ abstract class BasePool<V : Any>(
               getSizeInBytes(bucketSize),
               maxLength,
               bucketInUseCount,
-              poolParams.fixBucketsReinitialization))
+              poolParams.fixBucketsReinitialization,
+          ),
+      )
       ++i
     }
 
@@ -582,7 +596,8 @@ abstract class BasePool<V : Any>(
           "trimToSize: TargetSize = %d; Initial Size = %d; Bytes to free = %d",
           targetSize,
           used.numBytes + free.numBytes,
-          bytesToFree)
+          bytesToFree,
+      )
     }
     logStats()
 
@@ -608,7 +623,8 @@ abstract class BasePool<V : Any>(
           TAG,
           "trimToSize: TargetSize = %d; Final Size = %d",
           targetSize,
-          used.numBytes + free.numBytes)
+          used.numBytes + free.numBytes,
+      )
     }
   }
 
@@ -651,7 +667,8 @@ abstract class BasePool<V : Any>(
           getSizeInBytes(bucketedSize), /*maxLength*/
           Int.MAX_VALUE, /*inUseLength*/
           0,
-          poolParams.fixBucketsReinitialization)
+          poolParams.fixBucketsReinitialization,
+      )
 
   @get:Synchronized
   @get:VisibleForTesting
@@ -718,7 +735,8 @@ abstract class BasePool<V : Any>(
           used.count,
           used.numBytes,
           free.count,
-          free.numBytes)
+          free.numBytes,
+      )
     }
   }
 
@@ -799,7 +817,8 @@ abstract class BasePool<V : Any>(
             "Unexpected decrement of %d. Current numBytes = %d, count = %d",
             numBytes,
             this.numBytes,
-            this.count)
+            this.count,
+        )
       }
     }
 

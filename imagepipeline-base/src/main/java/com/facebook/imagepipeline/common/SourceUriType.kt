@@ -23,7 +23,8 @@ import androidx.annotation.IntDef
     SourceUriType.SOURCE_TYPE_LOCAL_ASSET,
     SourceUriType.SOURCE_TYPE_LOCAL_RESOURCE,
     SourceUriType.SOURCE_TYPE_DATA,
-    SourceUriType.SOURCE_TYPE_QUALIFIED_RESOURCE)
+    SourceUriType.SOURCE_TYPE_QUALIFIED_RESOURCE,
+)
 annotation class SourceUriType {
   companion object {
     const val SOURCE_TYPE_UNKNOWN: Int = -1

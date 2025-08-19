@@ -42,7 +42,11 @@ class AnimationBackendDelegateWithInactivityCheckTest {
 
     animationBackendDelegateWithInactivityCheck =
         AnimationBackendDelegateWithInactivityCheck.createForBackend(
-            animationBackend, inactivityListener, fakeClock, testScheduledExecutorService)
+            animationBackend,
+            inactivityListener,
+            fakeClock,
+            testScheduledExecutorService,
+        )
   }
 
   @Test

@@ -46,14 +46,15 @@ class ProducerSequenceFactory(
     private val customProducerSequenceFactories: Set<CustomProducerSequenceFactory>?,
     private val localImageThrottlingMaxSimultaneousRequests: Long,
     private val loadThumbnailFromContentResolverFirst: Boolean,
-    private val loadThumbnailFromContentResolverForContentUriOnly: Boolean
+    private val loadThumbnailFromContentResolverForContentUriOnly: Boolean,
 ) {
 
   @VisibleForTesting
   var postprocessorSequences:
       MutableMap<
           Producer<CloseableReference<CloseableImage>>,
-          Producer<CloseableReference<CloseableImage>>> =
+          Producer<CloseableReference<CloseableImage>>,
+      > =
       mutableMapOf()
 
   @VisibleForTesting
@@ -65,7 +66,8 @@ class ProducerSequenceFactory(
   var bitmapPrepareSequences:
       MutableMap<
           Producer<CloseableReference<CloseableImage>>,
-          Producer<CloseableReference<CloseableImage>>> =
+          Producer<CloseableReference<CloseableImage>>,
+      > =
       mutableMapOf()
 
   /**
@@ -92,7 +94,11 @@ class ProducerSequenceFactory(
               for (customProducerSequenceFactory in customProducerSequenceFactories) {
                 val sequence =
                     customProducerSequenceFactory.getCustomEncodedImageSequence(
-                        imageRequest, this, producerFactory, threadHandoffProducerQueue)
+                        imageRequest,
+                        this,
+                        producerFactory,
+                        threadHandoffProducerQueue,
+                    )
                 if (sequence != null) {
                   return sequence
                 }
@@ -238,7 +244,8 @@ class ProducerSequenceFactory(
                         producerFactory,
                         threadHandoffProducerQueue,
                         isEncodedMemoryCacheProbingEnabled,
-                        isDiskCacheProbingEnabled)
+                        isDiskCacheProbingEnabled,
+                    )
                 if (sequence != null) {
                   return sequence
                 }
@@ -269,7 +276,9 @@ class ProducerSequenceFactory(
     traceSection("ProducerSequenceFactory#getBackgroundNetworkFetchToEncodedMemorySequence:init") {
       // Use hand-off producer to ensure that we don't do any unnecessary work on the UI thread.
       producerFactory.newBackgroundThreadHandoffProducer(
-          commonNetworkFetchToEncodedMemorySequence, threadHandoffProducerQueue)
+          commonNetworkFetchToEncodedMemorySequence,
+          threadHandoffProducerQueue,
+      )
     }
   }
 
@@ -307,7 +316,8 @@ class ProducerSequenceFactory(
             producerFactory.newResizeAndRotateProducer(
                 networkFetchToEncodedMemorySequence,
                 resizeAndRotateEnabledForNetwork && downsampleMode != DownsampleMode.NEVER,
-                imageTranscoderFactory)
+                imageTranscoderFactory,
+            )
         return networkFetchToEncodedMemorySequence
       }
 
@@ -331,7 +341,9 @@ class ProducerSequenceFactory(
       val toEncodedMultiplexProducer =
           newEncodedCacheMultiplexToTranscodeSequence(localFileFetchProducer)
       producerFactory.newBackgroundThreadHandoffProducer(
-          toEncodedMultiplexProducer, threadHandoffProducerQueue)
+          toEncodedMultiplexProducer,
+          threadHandoffProducerQueue,
+      )
     }
   }
 
@@ -346,7 +358,9 @@ class ProducerSequenceFactory(
           val toEncodedMultiplexProducer =
               newEncodedCacheMultiplexToTranscodeSequence(localFileFetchProducer)
           producerFactory.newBackgroundThreadHandoffProducer(
-              toEncodedMultiplexProducer, threadHandoffProducerQueue)
+              toEncodedMultiplexProducer,
+              threadHandoffProducerQueue,
+          )
         }
   }
 
@@ -393,7 +407,8 @@ class ProducerSequenceFactory(
       newBitmapCacheGetToBitmapCacheSequence(
           producerFactory.newLocalThumbnailBitmapSdk29Producer(
               loadThumbnailFromContentResolverFirst,
-              loadThumbnailFromContentResolverForContentUriOnly))
+              loadThumbnailFromContentResolverForContentUriOnly,
+          ))
     } else {
       throw Throwable("Unreachable exception. Just to make linter happy for the lazy block.")
     }
@@ -468,7 +483,7 @@ class ProducerSequenceFactory(
    */
   private fun newBitmapCacheGetToLocalTransformSequence(
       inputProducer: Producer<EncodedImage>,
-      thumbnailProducers: Array<ThumbnailProducer<EncodedImage>>
+      thumbnailProducers: Array<ThumbnailProducer<EncodedImage>>,
   ): Producer<CloseableReference<CloseableImage>> {
     var ip = inputProducer
     ip = newEncodedCacheMultiplexToTranscodeSequence(ip)
@@ -539,7 +554,9 @@ class ProducerSequenceFactory(
         producerFactory.newBitmapMemoryCacheKeyMultiplexProducer(bitmapMemoryCacheProducer)
     val threadHandoffProducer =
         producerFactory.newBackgroundThreadHandoffProducer(
-            bitmapKeyMultiplexProducer, threadHandoffProducerQueue)
+            bitmapKeyMultiplexProducer,
+            threadHandoffProducerQueue,
+        )
     if (isEncodedMemoryCacheProbingEnabled || isDiskCacheProbingEnabled) {
       val bitmapMemoryCacheGetProducer =
           producerFactory.newBitmapMemoryCacheGetProducer(threadHandoffProducer)
@@ -559,7 +576,7 @@ class ProducerSequenceFactory(
    */
   private fun newLocalTransformationsSequence(
       inputProducer: Producer<EncodedImage>,
-      thumbnailProducers: Array<ThumbnailProducer<EncodedImage>>
+      thumbnailProducers: Array<ThumbnailProducer<EncodedImage>>,
   ): Producer<EncodedImage> {
     var localImageProducer: Producer<EncodedImage> =
         ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer)
@@ -567,9 +584,13 @@ class ProducerSequenceFactory(
         producerFactory.newResizeAndRotateProducer(localImageProducer, true, imageTranscoderFactory)
     val localImageThrottlingProducer =
         producerFactory.newThrottlingProducer(
-            localImageThrottlingMaxSimultaneousRequests, localImageProducer)
+            localImageThrottlingMaxSimultaneousRequests,
+            localImageProducer,
+        )
     return ProducerFactory.newBranchOnSeparateImagesProducer(
-        newLocalThumbnailProducer(thumbnailProducers), localImageThrottlingProducer)
+        newLocalThumbnailProducer(thumbnailProducers),
+        localImageThrottlingProducer,
+    )
   }
 
   private fun newLocalThumbnailProducer(
@@ -577,7 +598,10 @@ class ProducerSequenceFactory(
   ): Producer<EncodedImage> {
     val thumbnailBranchProducer = producerFactory.newThumbnailBranchProducer(thumbnailProducers)
     return producerFactory.newResizeAndRotateProducer(
-        thumbnailBranchProducer, true, imageTranscoderFactory)
+        thumbnailBranchProducer,
+        true,
+        imageTranscoderFactory,
+    )
   }
 
   /** post-processor producer -> inputProducer */

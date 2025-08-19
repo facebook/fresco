@@ -65,7 +65,8 @@ class QualifiedResourceFetchProducerTest {
             false,
             true,
             Priority.MEDIUM,
-            config)
+            config,
+        )
     Mockito.`when`<Uri?>(imageRequest.getSourceUri()).thenReturn(contentUri)
   }
 

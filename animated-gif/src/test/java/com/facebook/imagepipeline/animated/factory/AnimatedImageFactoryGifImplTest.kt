@@ -87,7 +87,8 @@ class AnimatedImageFactoryGifImplTest {
             gifImageMock?.decodeFromNativeMemory(
                 ArgumentMatchers.eq(byteBuffer.getNativePtr()),
                 ArgumentMatchers.eq(byteBuffer.size()),
-                Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java)))
+                Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+            ))
         .thenReturn(mockGifImage)
 
     testCreateDefaults(mockGifImage, byteBuffer)
@@ -102,7 +103,8 @@ class AnimatedImageFactoryGifImplTest {
     whenever(
             gifImageMock?.decodeFromByteBuffer(
                 ArgumentMatchers.eq<ByteBuffer?>(byteBuffer.getByteBuffer()),
-                Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java)))
+                Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+            ))
         .thenReturn(mockGifImage)
 
     testCreateDefaults(mockGifImage, byteBuffer)
@@ -120,7 +122,8 @@ class AnimatedImageFactoryGifImplTest {
             gifImageMock?.decodeFromNativeMemory(
                 ArgumentMatchers.eq(byteBuffer.getNativePtr()),
                 ArgumentMatchers.eq(byteBuffer.size()),
-                Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java)))
+                Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+            ))
         .thenReturn(mockGifImage)
     whenever(mockGifImage.getWidth()).thenReturn(50)
     whenever(mockGifImage.getHeight()).thenReturn(50)
@@ -139,7 +142,8 @@ class AnimatedImageFactoryGifImplTest {
     whenever(
             gifImageMock?.decodeFromByteBuffer(
                 ArgumentMatchers.eq<ByteBuffer?>(byteBuffer.getByteBuffer()),
-                Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java)))
+                Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+            ))
         .thenReturn(mockGifImage)
     whenever(mockGifImage.getWidth()).thenReturn(50)
     whenever(mockGifImage.getHeight()).thenReturn(50)
@@ -161,7 +165,8 @@ class AnimatedImageFactoryGifImplTest {
             gifImageMock?.decodeFromNativeMemory(
                 ArgumentMatchers.eq(byteBuffer.getNativePtr()),
                 ArgumentMatchers.eq(byteBuffer.size()),
-                Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java)))
+                Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+            ))
         .thenReturn(mockGifImage)
     whenever(mockGifImage.getWidth()).thenReturn(50)
     whenever(mockGifImage.getHeight()).thenReturn(50)
@@ -182,7 +187,8 @@ class AnimatedImageFactoryGifImplTest {
     whenever(
             gifImageMock?.decodeFromByteBuffer(
                 ArgumentMatchers.eq<ByteBuffer?>(byteBuffer.getByteBuffer()),
-                Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java)))
+                Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+            ))
         .thenReturn(mockGifImage)
     whenever(mockGifImage.getWidth()).thenReturn(50)
     whenever(mockGifImage.getHeight()).thenReturn(50)
@@ -197,8 +203,10 @@ class AnimatedImageFactoryGifImplTest {
 
     val closeableImage: CloseableAnimatedImage? =
         animatedImageFactory?.decodeGif(
-            encodedImage, ImageDecodeOptions.defaults(), DEFAULT_BITMAP_CONFIG)
-            as? CloseableAnimatedImage
+            encodedImage,
+            ImageDecodeOptions.defaults(),
+            DEFAULT_BITMAP_CONFIG,
+        ) as? CloseableAnimatedImage
 
     // Verify we got the right result
     val imageResult: AnimatedImageResult? = closeableImage?.getImageResult()
@@ -215,14 +223,15 @@ class AnimatedImageFactoryGifImplTest {
   private fun testCreateWithPreviewBitmap(
       mockGifImage: GifImage?,
       mockBitmap: Bitmap,
-      byteBuffer: PooledByteBuffer
+      byteBuffer: PooledByteBuffer,
   ) {
     // For decoding preview frame, expect some calls.
     val mockAnimatedDrawableBackend: AnimatedDrawableBackend = createAnimatedDrawableBackendMock(1)
     whenever(
             mockAnimatedDrawableBackendProvider?.get(
                 Matchers.any<AnimatedImageResult?>(AnimatedImageResult::class.java),
-                Matchers.isNull<Rect?>(Rect::class.java)))
+                Matchers.isNull<Rect?>(Rect::class.java),
+            ))
         .thenReturn(mockAnimatedDrawableBackend)
     whenever(mockBitmapFactory?.createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG))
         .thenReturn(CloseableReference.of<Bitmap?>(mockBitmap, FAKE_BITMAP_RESOURCE_RELEASER))
@@ -249,7 +258,8 @@ class AnimatedImageFactoryGifImplTest {
         verify(provider)
             .get(
                 Matchers.any<AnimatedImageResult?>(AnimatedImageResult::class.java),
-                Matchers.isNull<Rect?>(Rect::class.java))
+                Matchers.isNull<Rect?>(Rect::class.java),
+            )
         verifyNoMoreInteractions(provider)
       }
       mockBitmapFactory?.let { factory ->
@@ -265,7 +275,7 @@ class AnimatedImageFactoryGifImplTest {
       mockGifImage: GifImage?,
       mockBitmap1: Bitmap,
       mockBitmap2: Bitmap,
-      byteBuffer: PooledByteBuffer
+      byteBuffer: PooledByteBuffer,
   ) {
     // For decoding preview frame, expect some calls.
     val mockAnimatedDrawableBackend: AnimatedDrawableBackend = createAnimatedDrawableBackendMock(2)
@@ -273,7 +283,8 @@ class AnimatedImageFactoryGifImplTest {
     whenever(
             mockAnimatedDrawableBackendProvider?.get(
                 Matchers.any<AnimatedImageResult?>(AnimatedImageResult::class.java),
-                Matchers.isNull<Rect?>(Rect::class.java)))
+                Matchers.isNull<Rect?>(Rect::class.java),
+            ))
         .thenReturn(mockAnimatedDrawableBackend)
 
     whenever(mockBitmapFactory?.createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG))
@@ -307,7 +318,8 @@ class AnimatedImageFactoryGifImplTest {
         verify(provider)
             .get(
                 Matchers.any<AnimatedImageResult?>(AnimatedImageResult::class.java),
-                Matchers.isNull<Rect?>(Rect::class.java))
+                Matchers.isNull<Rect?>(Rect::class.java),
+            )
         verifyNoMoreInteractions(provider)
       }
       mockBitmapFactory?.let { factory ->

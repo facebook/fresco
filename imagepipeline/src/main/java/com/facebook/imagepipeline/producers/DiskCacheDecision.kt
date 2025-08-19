@@ -18,7 +18,7 @@ object DiskCacheDecision {
       imageRequest: ImageRequest,
       smallDiskCache: BufferedDiskCache?,
       defaultDiskCache: BufferedDiskCache?,
-      dynamicDiskCaches: Map<String, BufferedDiskCache>?
+      dynamicDiskCaches: Map<String, BufferedDiskCache>?,
   ): BufferedDiskCache? {
     if (imageRequest.cacheChoice == CacheChoice.SMALL) {
       return smallDiskCache

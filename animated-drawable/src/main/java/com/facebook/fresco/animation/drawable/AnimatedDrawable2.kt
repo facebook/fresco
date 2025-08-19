@@ -46,7 +46,7 @@ constructor(private var _animationBackend: AnimationBackend? = null) :
         actualRenderTimeStartMs: Long,
         actualRenderTimeEndMs: Long,
         startRenderTimeForNextFrameMs: Long,
-        scheduledRenderTimeForNextFrameMs: Long
+        scheduledRenderTimeForNextFrameMs: Long,
     )
   }
 
@@ -229,7 +229,8 @@ constructor(private var _animationBackend: AnimationBackend? = null) :
         actualRenderTimeStartMs,
         actualRenderTimeEnd,
         targetRenderTimeForNextFrameMs,
-        scheduledRenderTimeForNextFrameMs)
+        scheduledRenderTimeForNextFrameMs,
+    )
     lastFrameAnimationTimeMs = animationTimeMs
   }
 

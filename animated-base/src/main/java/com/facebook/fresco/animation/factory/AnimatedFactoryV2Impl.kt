@@ -52,7 +52,7 @@ constructor(
     private val useBufferLoaderStrategy: Boolean,
     var animationFpsLimit: Int,
     var bufferLengthMilliseconds: Int,
-    var serialExecutorService: SerialExecutorService?
+    var serialExecutorService: SerialExecutorService?,
 ) : AnimatedFactory {
 
   private var animatedImageFactory: AnimatedImageFactory? = null
@@ -102,7 +102,8 @@ constructor(
         Suppliers.of(useBufferLoaderStrategy),
         Suppliers.of(downscaleFrameToDrawableDimensions),
         Suppliers.of(animationFpsLimit),
-        Suppliers.of(bufferLengthMilliseconds))
+        Suppliers.of(bufferLengthMilliseconds),
+    )
   }
 
   private fun getAnimatedDrawableUtil(): AnimatedDrawableUtil {
@@ -119,13 +120,14 @@ constructor(
           object : AnimatedDrawableBackendProvider {
             override fun get(
                 animatedImageResult: AnimatedImageResult,
-                bounds: Rect?
+                bounds: Rect?,
             ): AnimatedDrawableBackend {
               return AnimatedDrawableBackendImpl(
                   getAnimatedDrawableUtil(),
                   animatedImageResult,
                   bounds,
-                  downscaleFrameToDrawableDimensions)
+                  downscaleFrameToDrawableDimensions,
+              )
             }
           }
     }
@@ -137,10 +139,14 @@ constructor(
         object : AnimatedDrawableBackendProvider {
           override fun get(
               imageResult: AnimatedImageResult,
-              bounds: Rect?
+              bounds: Rect?,
           ): AnimatedDrawableBackend {
             return AnimatedDrawableBackendImpl(
-                getAnimatedDrawableUtil(), imageResult, bounds, downscaleFrameToDrawableDimensions)
+                getAnimatedDrawableUtil(),
+                imageResult,
+                bounds,
+                downscaleFrameToDrawableDimensions,
+            )
           }
         }
     return AnimatedImageFactoryImpl(provider, platformBitmapFactory, useBufferLoaderStrategy)

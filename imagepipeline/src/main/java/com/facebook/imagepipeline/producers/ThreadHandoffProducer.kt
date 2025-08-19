@@ -15,7 +15,7 @@ import java.lang.Exception
 /** Uses ExecutorService to move further computation to different thread */
 class ThreadHandoffProducer<T>(
     val inputProducer: Producer<T>,
-    val threadHandoffProducerQueue: ThreadHandoffProducerQueue
+    val threadHandoffProducerQueue: ThreadHandoffProducerQueue,
 ) : Producer<T> {
 
   override fun produceResults(consumer: Consumer<T>, context: ProducerContext) {

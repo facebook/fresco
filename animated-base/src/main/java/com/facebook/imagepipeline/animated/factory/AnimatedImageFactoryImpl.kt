@@ -32,7 +32,7 @@ constructor(
     private val animatedDrawableBackendProvider: AnimatedDrawableBackendProvider,
     private val bitmapFactory: PlatformBitmapFactory,
     private val isNewRenderImplementation: Boolean,
-    private val treatAnimatedImagesAsStateful: Boolean = true
+    private val treatAnimatedImagesAsStateful: Boolean = true,
 ) : AnimatedImageFactory {
 
   /**
@@ -46,7 +46,7 @@ constructor(
   override fun decodeGif(
       encodedImage: EncodedImage,
       options: ImageDecodeOptions,
-      bitmapConfig: Bitmap.Config
+      bitmapConfig: Bitmap.Config,
   ): CloseableImage {
     val decoder =
         gifAnimatedImageDecoder
@@ -66,7 +66,7 @@ constructor(
   override fun decodeWebP(
       encodedImage: EncodedImage,
       options: ImageDecodeOptions,
-      bitmapConfig: Bitmap.Config
+      bitmapConfig: Bitmap.Config,
   ): CloseableImage {
     val decoder =
         webpAnimatedImageDecoder
@@ -80,7 +80,7 @@ constructor(
       options: ImageDecodeOptions,
       bitmapConfig: Bitmap.Config,
       decoder: AnimatedImageDecoder,
-      validator: AnimatedImageValidator? = null
+      validator: AnimatedImageValidator? = null,
   ): CloseableImage {
     val bytesRef = encodedImage.byteBufferRef
     checkNotNull(bytesRef)
@@ -104,7 +104,7 @@ constructor(
       sourceUri: String?,
       options: ImageDecodeOptions,
       image: AnimatedImage,
-      bitmapConfig: Bitmap.Config
+      bitmapConfig: Bitmap.Config,
   ): CloseableImage {
     var decodedFrames: List<CloseableReference<Bitmap>?>? = null
     var previewBitmap: CloseableReference<Bitmap>? = null
@@ -114,7 +114,8 @@ constructor(
         return CloseableStaticBitmap.of(
             createPreviewBitmap(image, bitmapConfig, frameForPreview),
             ImmutableQualityInfo.FULL_QUALITY,
-            0)
+            0,
+        )
       }
 
       if (options.decodeAllFrames) {
@@ -143,7 +144,7 @@ constructor(
   private fun createPreviewBitmap(
       image: AnimatedImage,
       bitmapConfig: Bitmap.Config,
-      frameForPreview: Int
+      frameForPreview: Int,
   ): CloseableReference<Bitmap> {
     val bitmap = createBitmap(image.width, image.height, bitmapConfig)
     val tempResult = AnimatedImageResult.forAnimatedImage(image)
@@ -158,14 +159,15 @@ constructor(
               }
 
               override fun getCachedBitmap(frameNumber: Int): CloseableReference<Bitmap>? = null
-            })
+            },
+        )
     animatedImageCompositor.renderFrame(frameForPreview, bitmap.get())
     return bitmap
   }
 
   private fun decodeAllFrames(
       image: AnimatedImage,
-      bitmapConfig: Bitmap.Config
+      bitmapConfig: Bitmap.Config,
   ): List<CloseableReference<Bitmap>?> {
     val tempResult = AnimatedImageResult.forAnimatedImage(image)
     val drawableBackend = animatedDrawableBackendProvider.get(tempResult, null)
@@ -181,7 +183,8 @@ constructor(
 
               override fun getCachedBitmap(frameNumber: Int): CloseableReference<Bitmap>? =
                   CloseableReference.cloneOrNull(bitmaps[frameNumber])
-            })
+            },
+        )
     for (i in 0..<drawableBackend.frameCount) {
       val bitmap = createBitmap(drawableBackend.width, drawableBackend.height, bitmapConfig)
       animatedImageCompositor.renderFrame(i, bitmap.get())
@@ -194,7 +197,7 @@ constructor(
   private fun createBitmap(
       width: Int,
       height: Int,
-      bitmapConfig: Bitmap.Config
+      bitmapConfig: Bitmap.Config,
   ): CloseableReference<Bitmap> {
     val bitmap = bitmapFactory.createBitmapInternal(width, height, bitmapConfig)
     bitmap.get().eraseColor(Color.TRANSPARENT)

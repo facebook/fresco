@@ -39,7 +39,7 @@ class KeepLastFrameCache : BitmapFrameCache {
   override fun getBitmapToReuseForFrame(
       frameNumber: Int,
       width: Int,
-      height: Int
+      height: Int,
   ): CloseableReference<Bitmap>? =
       try {
         CloseableReference.cloneOrNull(lastBitmapReference)
@@ -66,7 +66,7 @@ class KeepLastFrameCache : BitmapFrameCache {
   override fun onFrameRendered(
       frameNumber: Int,
       bitmapReference: CloseableReference<Bitmap>,
-      @FrameType frameType: Int
+      @FrameType frameType: Int,
   ) {
     if (lastBitmapReference != null && bitmapReference.get() == lastBitmapReference?.get()) {
       return
@@ -83,7 +83,7 @@ class KeepLastFrameCache : BitmapFrameCache {
   override fun onFramePrepared(
       frameNumber: Int,
       bitmapReference: CloseableReference<Bitmap>,
-      @FrameType frameType: Int
+      @FrameType frameType: Int,
   ) = Unit
 
   override fun setFrameCacheListener(frameCacheListener: FrameCacheListener?) {

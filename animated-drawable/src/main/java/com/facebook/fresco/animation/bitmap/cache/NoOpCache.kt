@@ -23,7 +23,7 @@ class NoOpCache : BitmapFrameCache {
   override fun getBitmapToReuseForFrame(
       frameNumber: Int,
       width: Int,
-      height: Int
+      height: Int,
   ): CloseableReference<Bitmap>? = null
 
   override fun contains(frameNumber: Int): Boolean = false
@@ -37,7 +37,7 @@ class NoOpCache : BitmapFrameCache {
   override fun onFrameRendered(
       frameNumber: Int,
       bitmapReference: CloseableReference<Bitmap>,
-      @FrameType frameType: Int
+      @FrameType frameType: Int,
   ) {
     // no-op
   }
@@ -45,7 +45,7 @@ class NoOpCache : BitmapFrameCache {
   override fun onFramePrepared(
       frameNumber: Int,
       bitmapReference: CloseableReference<Bitmap>,
-      @FrameType frameType: Int
+      @FrameType frameType: Int,
   ) {
     // Does not cache anything
   }

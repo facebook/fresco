@@ -211,7 +211,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
         useBitmapPrepareToDraw: Boolean,
         minBitmapSizeBytes: Int,
         maxBitmapSizeBytes: Int,
-        preparePrefetch: Boolean
+        preparePrefetch: Boolean,
     ) = asBuilder {
       this.useBitmapPrepareToDraw = useBitmapPrepareToDraw
       this.bitmapPrepareToDrawMinSizeBytes = minBitmapSizeBytes
@@ -377,7 +377,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
         maxBitmapSize: Int,
         closeableReferenceFactory: CloseableReferenceFactory,
         keepCancelledFetchAsLowPriority: Boolean,
-        trackedKeysSize: Int
+        trackedKeysSize: Int,
     ): ProducerFactory
   }
 
@@ -404,7 +404,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
         maxBitmapSize: Int,
         closeableReferenceFactory: CloseableReferenceFactory,
         keepCancelledFetchAsLowPriority: Boolean,
-        trackedKeysSize: Int
+        trackedKeysSize: Int,
     ): ProducerFactory =
         ProducerFactory(
             context,
@@ -427,7 +427,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
             maxBitmapSize,
             closeableReferenceFactory,
             keepCancelledFetchAsLowPriority,
-            trackedKeysSize)
+            trackedKeysSize,
+        )
   }
 
   init {

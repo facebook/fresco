@@ -22,7 +22,7 @@ class RemoveImageTransformMetaDataProducer(private val inputProducer: Producer<E
 
   override fun produceResults(
       consumer: Consumer<CloseableReference<PooledByteBuffer>>,
-      context: ProducerContext
+      context: ProducerContext,
   ) {
     inputProducer.produceResults(RemoveImageTransformMetaDataConsumer(consumer), context)
   }

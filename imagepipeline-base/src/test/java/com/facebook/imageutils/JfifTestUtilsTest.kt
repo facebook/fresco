@@ -41,8 +41,8 @@ class JfifTestUtilsTest {
                 10, // length
                 3, // bit depth
                 310, // width
-                255 // height
-                ))
+                255, // height
+            ))
         .isEqualTo("FFC0000A0300FF0136000000")
 
     assertThat(
@@ -50,8 +50,8 @@ class JfifTestUtilsTest {
                 20, // length
                 1, // bit depth
                 255, // width
-                310 // height
-                ))
+                310, // height
+            ))
         .isEqualTo("FFC0001401013600FF00000000000000000000000000")
   }
 

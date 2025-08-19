@@ -17,7 +17,7 @@ data class ImageFormat(
      *
      * @return file extension for the image format
      */
-    val fileExtension: String?
+    val fileExtension: String?,
 ) {
   interface FormatChecker {
     /**

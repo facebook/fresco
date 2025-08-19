@@ -19,6 +19,8 @@ class OkHttpNetworkFetcherException(
     @JvmStatic
     fun fromResponse(response: Response): OkHttpNetworkFetcherException =
         OkHttpNetworkFetcherException(
-            response.networkResponse()?.code(), response.networkResponse()?.headers())
+            response.networkResponse()?.code(),
+            response.networkResponse()?.headers(),
+        )
   }
 }

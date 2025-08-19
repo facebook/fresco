@@ -66,7 +66,8 @@ class PooledByteStreamsTest {
             override fun write(oneByte: Int) {
               throw IOException()
             }
-          })
+          },
+      )
       Assertions.fail("Expected IOException was not thrown")
     } catch (ioe: IOException) {
       // expected
@@ -94,7 +95,8 @@ class PooledByteStreamsTest {
               throw IOException()
             }
           },
-          3)
+          3,
+      )
       Assertions.fail("Expected IOException was not thrown")
     } catch (ioe: IOException) {
       // expected

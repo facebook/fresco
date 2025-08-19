@@ -19,18 +19,19 @@ import java.util.concurrent.TimeUnit.MILLISECONDS
  */
 class DelayProducer(
     private val inputProducer: Producer<CloseableReference<CloseableImage>>,
-    private val backgroundTasksExecutor: ScheduledExecutorService?
+    private val backgroundTasksExecutor: ScheduledExecutorService?,
 ) : Producer<CloseableReference<CloseableImage>> {
   override fun produceResults(
       consumer: Consumer<CloseableReference<CloseableImage>>,
-      context: ProducerContext
+      context: ProducerContext,
   ) {
     val request = context.imageRequest
     if (backgroundTasksExecutor != null) {
       backgroundTasksExecutor.schedule(
           Runnable { inputProducer.produceResults(consumer, context) },
           request.delayMs.toLong(),
-          TimeUnit.MILLISECONDS)
+          TimeUnit.MILLISECONDS,
+      )
     } else {
       inputProducer.produceResults(consumer, context)
     }

@@ -37,7 +37,7 @@ class JobSchedulerTest {
   private class TestJobRunnable : JobRunnable {
     class Job(
         encodedImage: EncodedImage?,
-        @field:Consumer.Status @param:Consumer.Status val status: Int
+        @field:Consumer.Status @param:Consumer.Status val status: Int,
     ) {
       val encodedImage: EncodedImage? = EncodedImage.cloneOrNull(encodedImage)
     }
@@ -393,7 +393,7 @@ class JobSchedulerTest {
     private fun assertJobsEqual(
         job: TestJobRunnable.Job,
         encodedImage: EncodedImage?,
-        @Consumer.Status status: Int
+        @Consumer.Status status: Int,
     ) {
       job.encodedImage?.let { assertReferencesEqual(encodedImage, it) }
       assertThat(job.status).isEqualTo(status)

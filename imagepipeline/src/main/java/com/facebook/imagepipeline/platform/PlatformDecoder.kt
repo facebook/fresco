@@ -33,7 +33,7 @@ interface PlatformDecoder {
   fun decodeFromEncodedImage(
       encodedImage: EncodedImage,
       bitmapConfig: Bitmap.Config,
-      regionToDecode: Rect?
+      regionToDecode: Rect?,
   ): CloseableReference<Bitmap>?
 
   /**
@@ -55,7 +55,7 @@ interface PlatformDecoder {
       encodedImage: EncodedImage,
       bitmapConfig: Bitmap.Config,
       regionToDecode: Rect?,
-      length: Int
+      length: Int,
   ): CloseableReference<Bitmap>?
 
   /**
@@ -78,7 +78,7 @@ interface PlatformDecoder {
       encodedImage: EncodedImage,
       bitmapConfig: Bitmap.Config,
       regionToDecode: Rect?,
-      colorSpace: ColorSpace?
+      colorSpace: ColorSpace?,
   ): CloseableReference<Bitmap>?
 
   /**
@@ -102,6 +102,6 @@ interface PlatformDecoder {
       bitmapConfig: Bitmap.Config,
       regionToDecode: Rect?,
       length: Int,
-      colorSpace: ColorSpace?
+      colorSpace: ColorSpace?,
   ): CloseableReference<Bitmap>?
 }

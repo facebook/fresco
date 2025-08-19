@@ -33,7 +33,7 @@ class AnimatedDrawable2DebugDrawListener : AnimatedDrawable2.DrawListener {
       actualRenderTimeStartMs: Long,
       actualRenderTimeEndMs: Long,
       startRenderTimeForNextFrameMs: Long,
-      scheduledRenderTimeForNextFrameMs: Long
+      scheduledRenderTimeForNextFrameMs: Long,
   ) {
     val frameCount = animatedDrawable.animationBackend?.getFrameCount() ?: return
 
@@ -67,7 +67,8 @@ class AnimatedDrawable2DebugDrawListener : AnimatedDrawable2.DrawListener {
         drawCalls,
         animationTimeMs,
         startRenderTimeForNextFrameMs,
-        scheduledRenderTimeForNextFrameMs)
+        scheduledRenderTimeForNextFrameMs,
+    )
   }
 
   companion object {

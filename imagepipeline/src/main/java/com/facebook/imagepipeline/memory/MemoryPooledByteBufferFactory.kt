@@ -23,7 +23,7 @@ import javax.annotation.concurrent.ThreadSafe
 @ThreadSafe
 class MemoryPooledByteBufferFactory( // memory pool
     private val pool: MemoryChunkPool,
-    private val pooledByteStreams: PooledByteStreams
+    private val pooledByteStreams: PooledByteStreams,
 ) : PooledByteBufferFactory {
 
   override fun newByteBuffer(size: Int): MemoryPooledByteBuffer {
@@ -61,7 +61,7 @@ class MemoryPooledByteBufferFactory( // memory pool
   @Throws(IOException::class)
   override fun newByteBuffer(
       inputStream: InputStream,
-      initialCapacity: Int
+      initialCapacity: Int,
   ): MemoryPooledByteBuffer {
     val outputStream = MemoryPooledByteBufferOutputStream(pool, initialCapacity)
     return try {
@@ -85,7 +85,7 @@ class MemoryPooledByteBufferFactory( // memory pool
   @Throws(IOException::class)
   fun newByteBuf(
       inputStream: InputStream,
-      outputStream: MemoryPooledByteBufferOutputStream
+      outputStream: MemoryPooledByteBufferOutputStream,
   ): MemoryPooledByteBuffer {
     pooledByteStreams.copy(inputStream, outputStream)
     return outputStream.toByteBuffer()

@@ -17,13 +17,13 @@ import com.facebook.imagepipeline.image.CloseableImage
 class BitmapMemoryCacheGetProducer(
     memoryCache: MemoryCache<CacheKey, CloseableImage>,
     cacheKeyFactory: CacheKeyFactory,
-    inputProducer: Producer<CloseableReference<CloseableImage>>
+    inputProducer: Producer<CloseableReference<CloseableImage>>,
 ) : BitmapMemoryCacheProducer(memoryCache, cacheKeyFactory, inputProducer) {
 
   override fun wrapConsumer(
       consumer: Consumer<CloseableReference<CloseableImage>>,
       cacheKey: CacheKey,
-      isMemoryCacheEnabled: Boolean
+      isMemoryCacheEnabled: Boolean,
   ): Consumer<CloseableReference<CloseableImage>> =
       // since this cache is read-only, we can pass our consumer directly to the next producer
       consumer

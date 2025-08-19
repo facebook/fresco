@@ -26,7 +26,7 @@ import java.util.concurrent.Executor
 class LocalContentUriFetchProducer(
     executor: Executor,
     pooledByteBufferFactory: PooledByteBufferFactory,
-    private val contentResolver: ContentResolver
+    private val contentResolver: ContentResolver,
 ) : LocalFetchProducer(executor, pooledByteBufferFactory) {
 
   @Throws(IOException::class)
@@ -62,7 +62,9 @@ class LocalContentUriFetchProducer(
       }
     }
     return getEncodedImage(
-        checkNotNull(contentResolver.openInputStream(uri)), EncodedImage.UNKNOWN_STREAM_SIZE)
+        checkNotNull(contentResolver.openInputStream(uri)),
+        EncodedImage.UNKNOWN_STREAM_SIZE,
+    )
   }
 
   @Throws(IOException::class)

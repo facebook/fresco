@@ -26,7 +26,7 @@ class BucketsBitmapPool(
     memoryTrimmableRegistry: MemoryTrimmableRegistry?,
     poolParams: PoolParams?,
     poolStatsTracker: PoolStatsTracker?,
-    ignoreHardCap: Boolean
+    ignoreHardCap: Boolean,
 ) :
     BasePool<Bitmap>(memoryTrimmableRegistry!!, poolParams!!, poolStatsTracker!!, ignoreHardCap),
     BitmapPool {
@@ -51,7 +51,8 @@ class BucketsBitmapPool(
     return Bitmap.createBitmap(
         1,
         ceil(size / BitmapUtil.RGB_565_BYTES_PER_PIXEL.toDouble()).toInt(),
-        Bitmap.Config.RGB_565)
+        Bitmap.Config.RGB_565,
+    )
   }
 
   /**

@@ -24,7 +24,7 @@ interface AnimatedImageDecoder {
   fun decodeFromNativeMemory(
       nativePtr: Long,
       sizeInBytes: Int,
-      options: ImageDecodeOptions
+      options: ImageDecodeOptions,
   ): AnimatedImage?
 
   /**

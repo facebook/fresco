@@ -15,7 +15,7 @@ import org.robolectric.ParameterizedRobolectricTestRunner
 @RunWith(ParameterizedRobolectricTestRunner::class)
 class ImageRequestBuilderCacheEnabledTest(
     private val uriScheme: String?,
-    private val expectedDefaultDiskCacheEnabled: Boolean
+    private val expectedDefaultDiskCacheEnabled: Boolean,
 ) {
 
   @Test
@@ -46,7 +46,8 @@ class ImageRequestBuilderCacheEnabledTest(
           arrayOf("file", false),
           arrayOf("http", true),
           arrayOf("https", true),
-          arrayOf("res", false))
+          arrayOf("res", false),
+      )
     }
   }
 }

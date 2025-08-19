@@ -46,7 +46,8 @@ class SettableProducerContextTest {
             false,
             true,
             Priority.MEDIUM,
-            config)
+            config,
+        )
     callbacks1 = Mockito.mock(ProducerContextCallbacks::class.java)
     callbacks2 = Mockito.mock(ProducerContextCallbacks::class.java)
   }

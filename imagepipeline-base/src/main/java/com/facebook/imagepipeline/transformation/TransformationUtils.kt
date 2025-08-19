@@ -14,7 +14,7 @@ object TransformationUtils {
   @JvmStatic
   fun maybeApplyTransformation(
       transformation: BitmapTransformation?,
-      bitmapReference: CloseableReference<Bitmap>?
+      bitmapReference: CloseableReference<Bitmap>?,
   ): Boolean {
 
     if (transformation == null || bitmapReference == null) {

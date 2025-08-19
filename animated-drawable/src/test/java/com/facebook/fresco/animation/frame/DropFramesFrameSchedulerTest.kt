@@ -103,7 +103,8 @@ class DropFramesFrameSchedulerTest {
     assertThat(
             frameScheduler.getFrameNumberToRender(
                 animationDurationMs + dummyAnimationBackend.getFrameDurationMs(lastFrameNumber),
-                -1))
+                -1,
+            ))
         .isEqualTo(FrameScheduler.FRAME_NUMBER_DONE)
 
     assertThat(
@@ -111,7 +112,8 @@ class DropFramesFrameSchedulerTest {
                 animationDurationMs +
                     dummyAnimationBackend.getFrameDurationMs(lastFrameNumber) +
                     100,
-                -1))
+                -1,
+            ))
         .isEqualTo(FrameScheduler.FRAME_NUMBER_DONE)
   }
 

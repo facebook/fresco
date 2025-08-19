@@ -21,7 +21,7 @@ import com.facebook.imagepipeline.animated.impl.AnimatedImageCompositor.Callback
 class AnimatedDrawableBackendFrameRenderer(
     private val bitmapFrameCache: BitmapFrameCache,
     private var animatedDrawableBackend: AnimatedDrawableBackend,
-    private val isNewRenderImplementation: Boolean
+    private val isNewRenderImplementation: Boolean,
 ) : BitmapFrameRenderer {
 
   private var animatedImageCompositor: AnimatedImageCompositor
@@ -56,7 +56,8 @@ class AnimatedDrawableBackendFrameRenderer(
         AnimatedImageCompositor(
             this@AnimatedDrawableBackendFrameRenderer.animatedDrawableBackend,
             isNewRenderImplementation,
-            callback)
+            callback,
+        )
   }
 
   override fun renderFrame(frameNumber: Int, targetBitmap: Bitmap): Boolean {

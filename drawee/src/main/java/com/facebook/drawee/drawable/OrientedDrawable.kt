@@ -25,7 +25,7 @@ class OrientedDrawable
 constructor(
     drawable: Drawable?,
     rotationAngle: Int,
-    exifOrientation: Int = ExifInterface.ORIENTATION_UNDEFINED
+    exifOrientation: Int = ExifInterface.ORIENTATION_UNDEFINED,
 ) : ForwardingDrawable(drawable) {
 
   @JvmField @VisibleForTesting val mRotationMatrix: Matrix = Matrix()
@@ -96,7 +96,10 @@ constructor(
 
         else ->
             mRotationMatrix.setRotate(
-                rotationAngle.toFloat(), bounds.centerX().toFloat(), bounds.centerY().toFloat())
+                rotationAngle.toFloat(),
+                bounds.centerX().toFloat(),
+                bounds.centerY().toFloat(),
+            )
       }
 
       // Set the rotated bounds on the underlying drawable
@@ -108,7 +111,8 @@ constructor(
           tempRectF.left.toInt(),
           tempRectF.top.toInt(),
           tempRectF.right.toInt(),
-          tempRectF.bottom.toInt())
+          tempRectF.bottom.toInt(),
+      )
     } else {
       underlyingDrawable.bounds = bounds
     }

@@ -15,7 +15,7 @@ open class BaseRequestListener : RequestListener {
       request: ImageRequest,
       callerContext: Any,
       requestId: String,
-      isPrefetch: Boolean
+      isPrefetch: Boolean,
   ) = Unit
 
   override fun onRequestSuccess(request: ImageRequest, requestId: String, isPrefetch: Boolean) =
@@ -25,7 +25,7 @@ open class BaseRequestListener : RequestListener {
       request: ImageRequest,
       requestId: String,
       throwable: Throwable,
-      isPrefetch: Boolean
+      isPrefetch: Boolean,
   ) = Unit
 
   override fun onRequestCancellation(requestId: String) = Unit
@@ -37,26 +37,26 @@ open class BaseRequestListener : RequestListener {
   override fun onProducerFinishWithSuccess(
       requestId: String,
       producerName: String,
-      extraMap: Map<String, String>?
+      extraMap: Map<String, String>?,
   ) = Unit
 
   override fun onProducerFinishWithFailure(
       requestId: String,
       producerName: String,
       t: Throwable,
-      extraMap: Map<String, String>?
+      extraMap: Map<String, String>?,
   ) = Unit
 
   override fun onProducerFinishWithCancellation(
       requestId: String,
       producerName: String,
-      extraMap: Map<String, String>?
+      extraMap: Map<String, String>?,
   ) = Unit
 
   override fun onUltimateProducerReached(
       requestId: String,
       producerName: String,
-      successful: Boolean
+      successful: Boolean,
   ) = Unit
 
   override fun requiresExtraMap(requestId: String): Boolean = false

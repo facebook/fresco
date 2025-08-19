@@ -27,7 +27,7 @@ import javax.annotation.concurrent.GuardedBy
 /** Bitmap frame cache that uses Fresco's [AnimatedFrameCache] to cache frames. */
 class FrescoFrameCache(
     private val animatedFrameCache: AnimatedFrameCache,
-    private val enableBitmapReusing: Boolean
+    private val enableBitmapReusing: Boolean,
 ) : BitmapFrameCache {
 
   @GuardedBy("this")
@@ -47,7 +47,7 @@ class FrescoFrameCache(
   override fun getBitmapToReuseForFrame(
       frameNumber: Int,
       width: Int,
-      height: Int
+      height: Int,
   ): CloseableReference<Bitmap>? {
     if (!enableBitmapReusing) {
       return null
@@ -78,7 +78,7 @@ class FrescoFrameCache(
   override fun onFrameRendered(
       frameNumber: Int,
       bitmapReference: CloseableReference<Bitmap>,
-      @BitmapAnimationBackend.FrameType frameType: Int
+      @BitmapAnimationBackend.FrameType frameType: Int,
   ) {
     checkNotNull(bitmapReference)
 
@@ -102,7 +102,7 @@ class FrescoFrameCache(
   override fun onFramePrepared(
       frameNumber: Int,
       bitmapReference: CloseableReference<Bitmap>,
-      @BitmapAnimationBackend.FrameType frameType: Int
+      @BitmapAnimationBackend.FrameType frameType: Int,
   ) {
     checkNotNull(bitmapReference)
     var closableReference: CloseableReference<CloseableImage?>? = null
@@ -122,7 +122,8 @@ class FrescoFrameCache(
             TAG,
             "cachePreparedFrame(%d) cached. Pending frames: %s",
             frameNumber,
-            preparedPendingFrames)
+            preparedPendingFrames,
+        )
       }
     } finally {
       CloseableReference.closeSafely(closableReference)
@@ -153,7 +154,8 @@ class FrescoFrameCache(
           TAG,
           "removePreparedReference(%d) removed. Pending frames: %s",
           frameNumber,
-          preparedPendingFrames)
+          preparedPendingFrames,
+      )
     }
   }
 

@@ -60,7 +60,7 @@ interface BitmapFrameCache {
   fun getBitmapToReuseForFrame(
       frameNumber: Int,
       width: Int,
-      height: Int
+      height: Int,
   ): CloseableReference<Bitmap>?
 
   /**
@@ -98,7 +98,7 @@ interface BitmapFrameCache {
   fun onFrameRendered(
       frameNumber: Int,
       bitmapReference: CloseableReference<Bitmap>,
-      @FrameType frameType: Int
+      @FrameType frameType: Int,
   )
 
   /**
@@ -124,7 +124,7 @@ interface BitmapFrameCache {
   fun onFramePrepared(
       frameNumber: Int,
       bitmapReference: CloseableReference<Bitmap>,
-      @FrameType frameType: Int
+      @FrameType frameType: Int,
   )
 
   /**

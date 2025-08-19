@@ -33,7 +33,8 @@ class CloseableStaticBitmapTest {
             releaser,
             ImmutableQualityInfo.FULL_QUALITY,
             0,
-            ExifInterface.ORIENTATION_NORMAL)
+            ExifInterface.ORIENTATION_NORMAL,
+        )
   }
 
   @Test
@@ -53,7 +54,8 @@ class CloseableStaticBitmapTest {
             releaser,
             ImmutableQualityInfo.FULL_QUALITY,
             90,
-            ExifInterface.ORIENTATION_ROTATE_90)
+            ExifInterface.ORIENTATION_ROTATE_90,
+        )
 
     assertThat(closeableStaticBitmap.width).isEqualTo(WIDTH)
     assertThat(closeableStaticBitmap.height).isEqualTo(HEIGHT)
@@ -70,7 +72,8 @@ class CloseableStaticBitmapTest {
             releaser,
             ImmutableQualityInfo.FULL_QUALITY,
             0,
-            ExifInterface.ORIENTATION_TRANSPOSE)
+            ExifInterface.ORIENTATION_TRANSPOSE,
+        )
 
     assertThat(closeableStaticBitmap.width).isEqualTo(WIDTH)
     assertThat(closeableStaticBitmap.height).isEqualTo(HEIGHT)

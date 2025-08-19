@@ -32,7 +32,7 @@ import com.facebook.imagepipeline.request.ImageRequest
 class DiskCacheWriteProducer(
     private val diskCachesStoreSupplier: Supplier<DiskCachesStore>,
     private val cacheKeyFactory: CacheKeyFactory,
-    private val inputProducer: Producer<EncodedImage?>
+    private val inputProducer: Producer<EncodedImage?>,
 ) : Producer<EncodedImage?> {
   override fun produceResults(consumer: Consumer<EncodedImage?>, producerContext: ProducerContext) {
     maybeStartInputProducer(consumer, producerContext)
@@ -40,7 +40,7 @@ class DiskCacheWriteProducer(
 
   private fun maybeStartInputProducer(
       consumerOfDiskCacheWriteProducer: Consumer<EncodedImage?>,
-      producerContext: ProducerContext
+      producerContext: ProducerContext,
   ) {
     if (producerContext.lowestPermittedRequestLevel.getValue() >=
         ImageRequest.RequestLevel.DISK_CACHE.getValue()) {
@@ -56,7 +56,8 @@ class DiskCacheWriteProducer(
                 consumerOfDiskCacheWriteProducer,
                 producerContext,
                 diskCachesStoreSupplier,
-                cacheKeyFactory)
+                cacheKeyFactory,
+            )
       } else {
         consumer = consumerOfDiskCacheWriteProducer
       }
@@ -75,7 +76,7 @@ class DiskCacheWriteProducer(
       consumer: Consumer<EncodedImage?>,
       private val producerContext: ProducerContext,
       private val diskCachesStoreSupplier: Supplier<DiskCachesStore>,
-      private val cacheKeyFactory: CacheKeyFactory
+      private val cacheKeyFactory: CacheKeyFactory,
   ) : DelegatingConsumer<EncodedImage?, EncodedImage?>(consumer) {
     override fun onNewResultImpl(newResult: EncodedImage?, @Consumer.Status status: Int) {
       producerContext.producerListener.onProducerStart(producerContext, PRODUCER_NAME)
@@ -85,10 +86,14 @@ class DiskCacheWriteProducer(
           newResult == null ||
           statusHasAnyFlag(
               status,
-              Consumer.Companion.DO_NOT_CACHE_ENCODED or Consumer.Companion.IS_PARTIAL_RESULT) ||
+              Consumer.Companion.DO_NOT_CACHE_ENCODED or Consumer.Companion.IS_PARTIAL_RESULT,
+          ) ||
           newResult.imageFormat === ImageFormat.UNKNOWN) {
         producerContext.producerListener.onProducerFinishWithSuccess(
-            producerContext, PRODUCER_NAME, null)
+            producerContext,
+            PRODUCER_NAME,
+            null,
+        )
         consumer.onNewResult(newResult, status)
         return
       }
@@ -101,7 +106,8 @@ class DiskCacheWriteProducer(
               imageRequest,
               diskCachesStore.smallImageBufferedDiskCache,
               diskCachesStore.mainBufferedDiskCache,
-              diskCachesStore.dynamicBufferedDiskCaches)
+              diskCachesStore.dynamicBufferedDiskCaches,
+          )
       if (bufferedDiskCache == null) {
         producerContext.producerListener.onProducerFinishWithFailure(
             producerContext,
@@ -109,13 +115,17 @@ class DiskCacheWriteProducer(
             DiskCacheDecisionNoDiskCacheChosenException(
                 "Got no disk cache for CacheChoice: " +
                     imageRequest.cacheChoice.ordinal.toString()),
-            null)
+            null,
+        )
         consumer.onNewResult(newResult, status)
         return
       }
       bufferedDiskCache.put(cacheKey, newResult)
       producerContext.producerListener.onProducerFinishWithSuccess(
-          producerContext, PRODUCER_NAME, null)
+          producerContext,
+          PRODUCER_NAME,
+          null,
+      )
 
       consumer.onNewResult(newResult, status)
     }

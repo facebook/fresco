@@ -22,12 +22,12 @@ class MultiImageTranscoderFactory(
     private val useDownSamplingRatio: Boolean,
     private val primaryImageTranscoderFactory: ImageTranscoderFactory?,
     @field:ImageTranscoderType @param:ImageTranscoderType private val imageTranscoderType: Int?,
-    private val ensureTranscoderLibraryLoaded: Boolean
+    private val ensureTranscoderLibraryLoaded: Boolean,
 ) : ImageTranscoderFactory {
 
   override fun createImageTranscoder(
       imageFormat: ImageFormat,
-      isResizingEnabled: Boolean
+      isResizingEnabled: Boolean,
   ): ImageTranscoder {
     // Use custom ImageTranscoder, if any
     var imageTranscoder = getCustomImageTranscoder(imageFormat, isResizingEnabled)
@@ -46,28 +46,31 @@ class MultiImageTranscoderFactory(
 
   private fun getCustomImageTranscoder(
       imageFormat: ImageFormat,
-      isResizingEnabled: Boolean
+      isResizingEnabled: Boolean,
   ): ImageTranscoder? =
       primaryImageTranscoderFactory?.createImageTranscoder(imageFormat, isResizingEnabled)
 
   private fun getNativeImageTranscoder(
       imageFormat: ImageFormat,
-      isResizingEnabled: Boolean
+      isResizingEnabled: Boolean,
   ): ImageTranscoder? =
       NativeImageTranscoderFactory.getNativeImageTranscoderFactory(
-              maxBitmapSize, useDownSamplingRatio, ensureTranscoderLibraryLoaded)
+              maxBitmapSize,
+              useDownSamplingRatio,
+              ensureTranscoderLibraryLoaded,
+          )
           .createImageTranscoder(imageFormat, isResizingEnabled)
 
   private fun getSimpleImageTranscoder(
       imageFormat: ImageFormat,
-      isResizingEnabled: Boolean
+      isResizingEnabled: Boolean,
   ): ImageTranscoder =
       SimpleImageTranscoderFactory(maxBitmapSize)
           .createImageTranscoder(imageFormat, isResizingEnabled)
 
   private fun getImageTranscoderWithType(
       imageFormat: ImageFormat,
-      isResizingEnabled: Boolean
+      isResizingEnabled: Boolean,
   ): ImageTranscoder? =
       if (imageTranscoderType == null) {
         null

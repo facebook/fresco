@@ -57,7 +57,10 @@ class AnimatedDrawableBackendImplTest {
     mockedBitmap
         .`when`<Bitmap> {
           Bitmap.createBitmap(
-              Mockito.anyInt(), Mockito.anyInt(), Mockito.any(Bitmap.Config::class.java))
+              Mockito.anyInt(),
+              Mockito.anyInt(),
+              Mockito.any(Bitmap.Config::class.java),
+          )
         }
         .thenReturn(bitmap)
   }
@@ -68,7 +71,7 @@ class AnimatedDrawableBackendImplTest {
       frameOriginalWidth: Int,
       frameOriginalHeight: Int,
       frameExpectedRenderedWidth: Int,
-      frameExpectedRenderedHeight: Int
+      frameExpectedRenderedHeight: Int,
   ) {
     whenever(canvas.width).thenReturn(canvasWidth)
     whenever(canvas.height).thenReturn(canvasHeight)

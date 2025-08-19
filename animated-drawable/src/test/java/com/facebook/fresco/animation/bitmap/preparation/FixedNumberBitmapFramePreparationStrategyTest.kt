@@ -51,28 +51,48 @@ class FixedNumberBitmapFramePreparationStrategyTest {
   @Test
   fun testPrepareFrames_FromFirstFrame() {
     bitmapFramePreparationStrategy.prepareFrames(
-        bitmapFramePreparer, bitmapFrameCache, animationBackend, 0, onAnimationLoaded)
+        bitmapFramePreparer,
+        bitmapFrameCache,
+        animationBackend,
+        0,
+        onAnimationLoaded,
+    )
     verifyPrepareCalledForFramesInOrder(1, 2, 3)
   }
 
   @Test
   fun testPrepareFrames_FromLastFrame() {
     bitmapFramePreparationStrategy.prepareFrames(
-        bitmapFramePreparer, bitmapFrameCache, animationBackend, 9, onAnimationLoaded)
+        bitmapFramePreparer,
+        bitmapFrameCache,
+        animationBackend,
+        9,
+        onAnimationLoaded,
+    )
     verifyPrepareCalledForFramesInOrder(0, 1, 2)
   }
 
   @Test
   fun testPrepareFrames_ExactlyLastFrames() {
     bitmapFramePreparationStrategy.prepareFrames(
-        bitmapFramePreparer, bitmapFrameCache, animationBackend, 6, onAnimationLoaded)
+        bitmapFramePreparer,
+        bitmapFrameCache,
+        animationBackend,
+        6,
+        onAnimationLoaded,
+    )
     verifyPrepareCalledForFramesInOrder(7, 8, 9)
   }
 
   @Test
   fun testPrepareFrames_FrameOverflow() {
     bitmapFramePreparationStrategy.prepareFrames(
-        bitmapFramePreparer, bitmapFrameCache, animationBackend, 8, onAnimationLoaded)
+        bitmapFramePreparer,
+        bitmapFrameCache,
+        animationBackend,
+        8,
+        onAnimationLoaded,
+    )
     verifyPrepareCalledForFramesInOrder(9, 0, 1)
   }
 
@@ -81,7 +101,12 @@ class FixedNumberBitmapFramePreparationStrategyTest {
     whenever(bitmapFramePreparer.prepareFrame(eq(bitmapFrameCache), eq(animationBackend), any()))
         .thenReturn(false)
     bitmapFramePreparationStrategy.prepareFrames(
-        bitmapFramePreparer, bitmapFrameCache, animationBackend, 0, onAnimationLoaded)
+        bitmapFramePreparer,
+        bitmapFrameCache,
+        animationBackend,
+        0,
+        onAnimationLoaded,
+    )
     verifyPrepareCalledForFramesInOrder(1)
   }
 
@@ -92,14 +117,24 @@ class FixedNumberBitmapFramePreparationStrategyTest {
     whenever(bitmapFramePreparer.prepareFrame(eq(bitmapFrameCache), eq(animationBackend), eq(3)))
         .thenReturn(false)
     bitmapFramePreparationStrategy.prepareFrames(
-        bitmapFramePreparer, bitmapFrameCache, animationBackend, 0, onAnimationLoaded)
+        bitmapFramePreparer,
+        bitmapFrameCache,
+        animationBackend,
+        0,
+        onAnimationLoaded,
+    )
     verifyPrepareCalledForFramesInOrder(1, 2)
   }
 
   @Test
   fun testPrepareFrames_onAnimationLoadedIsTrigger_WhenFramesAreLoaded() {
     bitmapFramePreparationStrategy.prepareFrames(
-        bitmapFramePreparer, bitmapFrameCache, animationBackend, 0, onAnimationLoaded)
+        bitmapFramePreparer,
+        bitmapFrameCache,
+        animationBackend,
+        0,
+        onAnimationLoaded,
+    )
 
     verify(onAnimationLoaded).invoke()
   }

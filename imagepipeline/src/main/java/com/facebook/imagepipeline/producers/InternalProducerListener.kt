@@ -9,7 +9,7 @@ package com.facebook.imagepipeline.producers
 
 open class InternalProducerListener(
     val producerListener: ProducerListener?,
-    val producerListener2: ProducerListener2?
+    val producerListener2: ProducerListener2?,
 ) : ProducerListener2 {
 
   override fun onProducerStart(context: ProducerContext, producerName: String?) {
@@ -20,7 +20,7 @@ open class InternalProducerListener(
   override fun onProducerEvent(
       context: ProducerContext,
       producerName: String?,
-      eventName: String?
+      eventName: String?,
   ) {
     producerListener?.onProducerEvent(context.id, producerName, eventName)
     producerListener2?.onProducerEvent(context, producerName, eventName)
@@ -29,7 +29,7 @@ open class InternalProducerListener(
   override fun onProducerFinishWithSuccess(
       context: ProducerContext,
       producerName: String?,
-      extraMap: Map<String?, String?>?
+      extraMap: Map<String?, String?>?,
   ) {
     producerListener?.onProducerFinishWithSuccess(context.id, producerName, extraMap)
     producerListener2?.onProducerFinishWithSuccess(context, producerName, extraMap)
@@ -39,7 +39,7 @@ open class InternalProducerListener(
       context: ProducerContext,
       producerName: String?,
       t: Throwable?,
-      extraMap: Map<String?, String?>?
+      extraMap: Map<String?, String?>?,
   ) {
     producerListener?.onProducerFinishWithFailure(context.id, producerName, t, extraMap)
     producerListener2?.onProducerFinishWithFailure(context, producerName, t, extraMap)
@@ -48,7 +48,7 @@ open class InternalProducerListener(
   override fun onProducerFinishWithCancellation(
       context: ProducerContext,
       producerName: String?,
-      extraMap: Map<String?, String?>?
+      extraMap: Map<String?, String?>?,
   ) {
     producerListener?.onProducerFinishWithCancellation(context.id, producerName, extraMap)
     producerListener2?.onProducerFinishWithCancellation(context, producerName, extraMap)
@@ -57,7 +57,7 @@ open class InternalProducerListener(
   override fun onUltimateProducerReached(
       context: ProducerContext,
       producerName: String?,
-      successful: Boolean
+      successful: Boolean,
   ) {
     producerListener?.onUltimateProducerReached(context.id, producerName, successful)
     producerListener2?.onUltimateProducerReached(context, producerName, successful)

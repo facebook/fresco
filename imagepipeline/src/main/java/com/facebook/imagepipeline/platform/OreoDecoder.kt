@@ -28,6 +28,9 @@ class OreoDecoder(
 
   override fun getBitmapSize(width: Int, height: Int, options: Options): Int {
     return BitmapUtil.getSizeInByteForBitmap(
-        width, height, options.outConfig ?: Bitmap.Config.ARGB_8888)
+        width,
+        height,
+        options.outConfig ?: Bitmap.Config.ARGB_8888,
+    )
   }
 }

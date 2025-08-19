@@ -19,7 +19,7 @@ abstract class StatefulProducerRunnable<T>(
     private val consumer: Consumer<T>,
     private val producerListener: ProducerListener2,
     private val producerContext: ProducerContext,
-    private val producerName: String
+    private val producerName: String,
 ) : StatefulRunnable<T>() {
   override fun onSuccess(result: T?) {
     producerListener.onProducerFinishWithSuccess(
@@ -27,7 +27,8 @@ abstract class StatefulProducerRunnable<T>(
         producerName,
         if (producerListener.requiresExtraMap(producerContext, producerName))
             getExtraMapOnSuccess(result)
-        else null)
+        else null,
+    )
     consumer.onNewResult(result, Consumer.IS_LAST)
   }
 
@@ -38,7 +39,8 @@ abstract class StatefulProducerRunnable<T>(
         e,
         if (producerListener.requiresExtraMap(producerContext, producerName))
             getExtraMapOnFailure(e)
-        else null)
+        else null,
+    )
     consumer.onFailure(e)
   }
 
@@ -47,7 +49,8 @@ abstract class StatefulProducerRunnable<T>(
         producerContext,
         producerName,
         if (producerListener.requiresExtraMap(producerContext, producerName)) extraMapOnCancellation
-        else null)
+        else null,
+    )
     consumer.onCancellation()
   }
 

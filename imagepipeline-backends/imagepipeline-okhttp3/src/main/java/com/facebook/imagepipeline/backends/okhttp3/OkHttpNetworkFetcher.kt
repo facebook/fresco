@@ -45,7 +45,7 @@ open class OkHttpNetworkFetcher
 constructor(
     private val callFactory: Call.Factory,
     private val cancellationExecutor: Executor,
-    disableOkHttpCache: Boolean = true
+    disableOkHttpCache: Boolean = true,
 ) : BaseNetworkFetcher<OkHttpNetworkFetchState>() {
 
   /** @param okHttpClient client to use */
@@ -55,7 +55,7 @@ constructor(
 
   class OkHttpNetworkFetchState(
       consumer: Consumer<EncodedImage?>,
-      producerContext: ProducerContext
+      producerContext: ProducerContext,
   ) : FetchState(consumer, producerContext) {
     @JvmField var submitTime: Long = 0
     @JvmField var responseTime: Long = 0
@@ -67,7 +67,7 @@ constructor(
 
   override fun createFetchState(
       consumer: Consumer<EncodedImage?>,
-      context: ProducerContext
+      context: ProducerContext,
   ): OkHttpNetworkFetchState = OkHttpNetworkFetchState(consumer, context)
 
   override fun fetch(fetchState: OkHttpNetworkFetchState, callback: NetworkFetcher.Callback) {
@@ -93,18 +93,19 @@ constructor(
 
   override fun getExtraMap(
       fetchState: OkHttpNetworkFetchState,
-      byteSize: Int
+      byteSize: Int,
   ): Map<String, String>? =
       mapOf(
           QUEUE_TIME to (fetchState.responseTime - fetchState.submitTime).toString(),
           FETCH_TIME to (fetchState.fetchCompleteTime - fetchState.responseTime).toString(),
           TOTAL_TIME to (fetchState.fetchCompleteTime - fetchState.submitTime).toString(),
-          IMAGE_SIZE to byteSize.toString())
+          IMAGE_SIZE to byteSize.toString(),
+      )
 
   protected open fun fetchWithRequest(
       fetchState: OkHttpNetworkFetchState,
       callback: NetworkFetcher.Callback,
-      request: Request
+      request: Request,
   ) {
     val call = callFactory.newCall(request)
     fetchState.context.addCallbacks(
@@ -129,7 +130,8 @@ constructor(
                   handleException(
                       call,
                       makeExceptionFromResponse("Unexpected HTTP code $response", response),
-                      callback)
+                      callback,
+                  )
                   return@use
                 }
                 val responseRange = fromContentRangeHeader(response.header("Content-Range"))
@@ -151,7 +153,8 @@ constructor(
                 ?: handleException(
                     call,
                     makeExceptionFromResponse("Response body null: $response", response),
-                    callback)
+                    callback,
+                )
           }
 
           override fun onFailure(call: Call, e: IOException) = handleException(call, e, callback)

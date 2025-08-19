@@ -138,7 +138,7 @@ object BitmapUtil {
   fun decodeStreamInternal(
       inputStream: InputStream?,
       outPadding: Rect?,
-      options: BitmapFactory.Options?
+      options: BitmapFactory.Options?,
   ): Bitmap? {
     if (this.fixDecodeDrmImageCrash) {
       return try {

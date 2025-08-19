@@ -29,7 +29,7 @@ constructor(
     @JvmField val maxEvictionQueueSize: Int,
     @JvmField val maxEvictionQueueEntries: Int,
     @JvmField val maxCacheEntrySize: Int,
-    @JvmField val paramsCheckIntervalMs: Long = TimeUnit.MINUTES.toMillis(5)
+    @JvmField val paramsCheckIntervalMs: Long = TimeUnit.MINUTES.toMillis(5),
 ) {
   /**
    * Pass arguments to control the cache's behavior in the constructor.

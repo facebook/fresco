@@ -28,7 +28,7 @@ class DefaultBitmapFramePreparer(
     private val platformBitmapFactory: PlatformBitmapFactory,
     private val bitmapFrameRenderer: BitmapFrameRenderer,
     private val bitmapConfig: Bitmap.Config,
-    private val executorService: ExecutorService
+    private val executorService: ExecutorService,
 ) : BitmapFramePreparer {
 
   private val TAG = DefaultBitmapFramePreparer::class.java
@@ -38,7 +38,7 @@ class DefaultBitmapFramePreparer(
   override fun prepareFrame(
       bitmapFrameCache: BitmapFrameCache,
       animationBackend: AnimationBackend,
-      frameNumber: Int
+      frameNumber: Int,
   ): Boolean {
     // Create a unique ID to identify the frame for the given backend.
     val frameId = getUniqueId(animationBackend, frameNumber)
@@ -68,7 +68,7 @@ class DefaultBitmapFramePreparer(
       private val animationBackend: AnimationBackend,
       private val bitmapFrameCache: BitmapFrameCache,
       private val frameNumber: Int,
-      private val frameId: Int
+      private val frameId: Int,
   ) : Runnable {
     override fun run() {
       try {
@@ -98,7 +98,10 @@ class DefaultBitmapFramePreparer(
           BitmapAnimationBackend.FRAME_TYPE_REUSED -> {
             bitmapReference =
                 bitmapFrameCache.getBitmapToReuseForFrame(
-                    frameNumber, animationBackend.intrinsicWidth, animationBackend.intrinsicHeight)
+                    frameNumber,
+                    animationBackend.intrinsicWidth,
+                    animationBackend.intrinsicHeight,
+                )
             nextFrameType = BitmapAnimationBackend.FRAME_TYPE_CREATED
           }
           BitmapAnimationBackend.FRAME_TYPE_CREATED -> {
@@ -107,7 +110,8 @@ class DefaultBitmapFramePreparer(
                   platformBitmapFactory.createBitmap(
                       animationBackend.intrinsicWidth,
                       animationBackend.intrinsicHeight,
-                      bitmapConfig)
+                      bitmapConfig,
+                  )
                 } catch (e: RuntimeException) {
                   // Failed to create the bitmap for the frame, return and report that we could not
                   // prepare the frame.
@@ -133,7 +137,7 @@ class DefaultBitmapFramePreparer(
     private fun renderFrameAndCache(
         frameNumber: Int,
         bitmapReference: CloseableReference<Bitmap>?,
-        @FrameType frameType: Int
+        @FrameType frameType: Int,
     ): Boolean {
       // Check if the bitmap is valid
       if (!CloseableReference.isValid(bitmapReference)) {

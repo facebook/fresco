@@ -192,7 +192,7 @@ class EncodedImageTest {
       imagePath: String,
       imageFormat: ImageFormat,
       expectedWidth: Int,
-      expectedHeight: Int
+      expectedHeight: Int,
   ) {
     val buf: PooledByteBuffer =
         TrivialPooledByteBuffer(

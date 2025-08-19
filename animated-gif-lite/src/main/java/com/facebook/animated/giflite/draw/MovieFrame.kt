@@ -21,7 +21,7 @@ class MovieFrame(
     private val frameDuration: Int,
     private val frameWidth: Int,
     private val frameHeight: Int,
-    val disposalMode: DisposalMethod
+    val disposalMode: DisposalMethod,
 ) : AnimatedImageFrame {
 
   override fun dispose() = Unit

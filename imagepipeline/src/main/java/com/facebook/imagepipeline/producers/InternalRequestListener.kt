@@ -12,7 +12,7 @@ import com.facebook.imagepipeline.listener.RequestListener2
 
 class InternalRequestListener(
     private val requestListener: RequestListener?,
-    private val requestListener2: RequestListener2?
+    private val requestListener2: RequestListener2?,
 ) : InternalProducerListener(requestListener, requestListener2), RequestListener2 {
 
   override fun onRequestStart(producerContext: ProducerContext) {
@@ -20,19 +20,27 @@ class InternalRequestListener(
         producerContext.imageRequest,
         producerContext.callerContext,
         producerContext.id,
-        producerContext.isPrefetch)
+        producerContext.isPrefetch,
+    )
     requestListener2?.onRequestStart(producerContext)
   }
 
   override fun onRequestSuccess(producerContext: ProducerContext) {
     requestListener?.onRequestSuccess(
-        producerContext.imageRequest, producerContext.id, producerContext.isPrefetch)
+        producerContext.imageRequest,
+        producerContext.id,
+        producerContext.isPrefetch,
+    )
     requestListener2?.onRequestSuccess(producerContext)
   }
 
   override fun onRequestFailure(producerContext: ProducerContext, throwable: Throwable?) {
     requestListener?.onRequestFailure(
-        producerContext.imageRequest, producerContext.id, throwable, producerContext.isPrefetch)
+        producerContext.imageRequest,
+        producerContext.id,
+        throwable,
+        producerContext.isPrefetch,
+    )
     requestListener2?.onRequestFailure(producerContext, throwable)
   }
 

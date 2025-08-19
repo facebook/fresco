@@ -75,7 +75,8 @@ class BitmapAnimationBackendTest {
             false, /* isNewRenderImplementation */
             bitmapFramePreparationStrategy,
             bitmapFramePreparer,
-            null)
+            null,
+        )
     bitmapAnimationBackend.setFrameListener(frameListener)
   }
 
@@ -92,7 +93,11 @@ class BitmapAnimationBackendTest {
     val backendIntrinsicWidth = AnimationBackend.INTRINSIC_DIMENSION_UNSET
     val backendIntrinsicHeight = AnimationBackend.INTRINSIC_DIMENSION_UNSET
     setupBoundsAndRendererDimensions(
-        boundsWidth, boundsHeight, backendIntrinsicWidth, backendIntrinsicHeight)
+        boundsWidth,
+        boundsHeight,
+        backendIntrinsicWidth,
+        backendIntrinsicHeight,
+    )
 
     bitmapAnimationBackend.setBounds(bounds)
 
@@ -107,7 +112,11 @@ class BitmapAnimationBackendTest {
     val backendIntrinsicWidth = 260
     val backendIntrinsicHeight = AnimationBackend.INTRINSIC_DIMENSION_UNSET
     setupBoundsAndRendererDimensions(
-        boundsWidth, boundsHeight, backendIntrinsicWidth, backendIntrinsicHeight)
+        boundsWidth,
+        boundsHeight,
+        backendIntrinsicWidth,
+        backendIntrinsicHeight,
+    )
 
     bitmapAnimationBackend.setBounds(bounds)
 
@@ -122,7 +131,11 @@ class BitmapAnimationBackendTest {
     val backendIntrinsicWidth = AnimationBackend.INTRINSIC_DIMENSION_UNSET
     val backendIntrinsicHeight = 260
     setupBoundsAndRendererDimensions(
-        boundsWidth, boundsHeight, backendIntrinsicWidth, backendIntrinsicHeight)
+        boundsWidth,
+        boundsHeight,
+        backendIntrinsicWidth,
+        backendIntrinsicHeight,
+    )
 
     bitmapAnimationBackend.setBounds(bounds)
 
@@ -137,7 +150,11 @@ class BitmapAnimationBackendTest {
     val backendIntrinsicWidth = 260
     val backendIntrinsicHeight = 300
     setupBoundsAndRendererDimensions(
-        boundsWidth, boundsHeight, backendIntrinsicWidth, backendIntrinsicHeight)
+        boundsWidth,
+        boundsHeight,
+        backendIntrinsicWidth,
+        backendIntrinsicHeight,
+    )
 
     bitmapAnimationBackend.setBounds(bounds)
 
@@ -152,7 +169,11 @@ class BitmapAnimationBackendTest {
     val backendIntrinsicWidth = AnimationBackend.INTRINSIC_DIMENSION_UNSET
     val backendIntrinsicHeight = AnimationBackend.INTRINSIC_DIMENSION_UNSET
     setupBoundsAndRendererDimensions(
-        boundsWidth, boundsHeight, backendIntrinsicWidth, backendIntrinsicHeight)
+        boundsWidth,
+        boundsHeight,
+        backendIntrinsicWidth,
+        backendIntrinsicHeight,
+    )
 
     bitmapAnimationBackend.setBounds(null)
 
@@ -169,7 +190,11 @@ class BitmapAnimationBackendTest {
     val backendIntrinsicWidth = 260
     val backendIntrinsicHeight = 300
     setupBoundsAndRendererDimensions(
-        boundsWidth, boundsHeight, backendIntrinsicWidth, backendIntrinsicHeight)
+        boundsWidth,
+        boundsHeight,
+        backendIntrinsicWidth,
+        backendIntrinsicHeight,
+    )
 
     bitmapAnimationBackend.setBounds(null)
 
@@ -184,7 +209,11 @@ class BitmapAnimationBackendTest {
     val backendIntrinsicWidth = 260
     val backendIntrinsicHeight = AnimationBackend.INTRINSIC_DIMENSION_UNSET
     setupBoundsAndRendererDimensions(
-        boundsWidth, boundsHeight, backendIntrinsicWidth, backendIntrinsicHeight)
+        boundsWidth,
+        boundsHeight,
+        backendIntrinsicWidth,
+        backendIntrinsicHeight,
+    )
 
     bitmapAnimationBackend.setBounds(null)
 
@@ -199,7 +228,11 @@ class BitmapAnimationBackendTest {
     val backendIntrinsicWidth = AnimationBackend.INTRINSIC_DIMENSION_UNSET
     val backendIntrinsicHeight = 400
     setupBoundsAndRendererDimensions(
-        boundsWidth, boundsHeight, backendIntrinsicWidth, backendIntrinsicHeight)
+        boundsWidth,
+        boundsHeight,
+        backendIntrinsicWidth,
+        backendIntrinsicHeight,
+    )
 
     bitmapAnimationBackend.setBounds(null)
 
@@ -370,12 +403,17 @@ class BitmapAnimationBackendTest {
   private fun verifyFramePreparationStrategyCalled(frameNumber: Int) {
     verify(bitmapFramePreparationStrategy)
         .prepareFrames(
-            bitmapFramePreparer, bitmapFrameCache, bitmapAnimationBackend, frameNumber, null)
+            bitmapFramePreparer,
+            bitmapFrameCache,
+            bitmapAnimationBackend,
+            frameNumber,
+            null,
+        )
   }
 
   private fun verifyListenersAndCacheNotified(
       frameNumber: Int,
-      @BitmapAnimationBackend.FrameType frameType: Int
+      @BitmapAnimationBackend.FrameType frameType: Int,
   ) {
     // Verify cache callback
     verify(bitmapFrameCache)
@@ -388,7 +426,7 @@ class BitmapAnimationBackendTest {
 
   private fun verifyListenersNotifiedWithoutCache(
       frameNumber: Int,
-      @BitmapAnimationBackend.FrameType frameType: Int
+      @BitmapAnimationBackend.FrameType frameType: Int,
   ) {
     // Verify cache callback
     verify(bitmapFrameCache, never()).onFrameRendered(anyInt(), any(), eq(frameType))
@@ -405,7 +443,7 @@ class BitmapAnimationBackendTest {
       boundsWidth: Int,
       boundsHeight: Int,
       backendIntrinsicWidth: Int,
-      backendIntrinsicHeight: Int
+      backendIntrinsicHeight: Int,
   ) {
     whenever(bounds.width()).thenReturn(boundsWidth)
     whenever(bounds.height()).thenReturn(boundsHeight)
@@ -423,7 +461,8 @@ class BitmapAnimationBackendTest {
         false,
         bitmapFramePreparationStrategy,
         bitmapFramePreparer,
-        roundingOptions)
+        roundingOptions,
+    )
   }
 
   fun createBackendWithNewRenderImplementation(
@@ -437,7 +476,8 @@ class BitmapAnimationBackendTest {
         isNewRenderImplementation,
         bitmapFramePreparationStrategy,
         bitmapFramePreparer,
-        null)
+        null,
+    )
   }
 
   /** Verifies circular rounding options are preserved and cornerRadii is null */
@@ -651,7 +691,7 @@ class BitmapAnimationBackendTest {
   private fun createThumbnailBackend(
       thumbnailUrl: String?,
       loopCount: Int,
-      roundingOptions: RoundingOptions? = null
+      roundingOptions: RoundingOptions? = null,
   ): BitmapAnimationBackend {
     val animatedOptions =
         if (thumbnailUrl != null) {
@@ -668,7 +708,8 @@ class BitmapAnimationBackendTest {
         bitmapFramePreparationStrategy,
         bitmapFramePreparer,
         roundingOptions,
-        animatedOptions)
+        animatedOptions,
+    )
   }
 
   private fun createBackendWithAnimatedOptions(
@@ -683,7 +724,8 @@ class BitmapAnimationBackendTest {
         bitmapFramePreparationStrategy,
         bitmapFramePreparer,
         null,
-        animatedOptions)
+        animatedOptions,
+    )
   }
 
   private fun setupAnimationInformation(frameCount: Int = 3, loopCount: Int = 1) {
@@ -912,7 +954,12 @@ class BitmapAnimationBackendTest {
 
     verify(bitmapFramePreparationStrategy)
         .prepareFrames(
-            eq(bitmapFramePreparer), eq(bitmapFrameCache), eq(bitmapAnimationBackend), eq(0), any())
+            eq(bitmapFramePreparer),
+            eq(bitmapFrameCache),
+            eq(bitmapAnimationBackend),
+            eq(0),
+            any(),
+        )
   }
 
   /** Tests animation progress tracking for finite animations */
@@ -944,7 +991,9 @@ class BitmapAnimationBackendTest {
     setupAnimationInformation(frameCount = 3)
     val backend =
         createThumbnailBackend(
-            "https://example.com/thumb.jpg", AnimationInformation.LOOP_COUNT_INFINITE)
+            "https://example.com/thumb.jpg",
+            AnimationInformation.LOOP_COUNT_INFINITE,
+        )
     backend.setFrameListener(frameListener)
 
     whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
@@ -966,7 +1015,12 @@ class BitmapAnimationBackendTest {
 
     verify(bitmapFramePreparationStrategy)
         .prepareFrames(
-            eq(bitmapFramePreparer), eq(bitmapFrameCache), eq(bitmapAnimationBackend), eq(0), any())
+            eq(bitmapFramePreparer),
+            eq(bitmapFrameCache),
+            eq(bitmapAnimationBackend),
+            eq(0),
+            any(),
+        )
   }
 
   /** Tests preloadAnimation with new render implementation */

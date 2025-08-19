@@ -29,7 +29,7 @@ import java.util.Locale
 class RotationOptions
 private constructor(
     @field:Rotation @param:Rotation private val rotation: Int,
-    private val deferUntilRendered: Boolean
+    private val deferUntilRendered: Boolean,
 ) {
 
   @IntDef(
@@ -41,7 +41,9 @@ private constructor(
               ROTATE_180,
               ROTATE_270,
               USE_EXIF_ROTATION_ANGLE,
-              DISABLE_ROTATION])
+              DISABLE_ROTATION,
+          ],
+  )
   @Retention(AnnotationRetention.SOURCE)
   private annotation class Rotation
 

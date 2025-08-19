@@ -33,7 +33,7 @@ class BufferFrameLoader(
     private val bitmapFrameRenderer: BitmapFrameRenderer,
     private val fpsCompressor: FpsCompressorInfo,
     override val animationInformation: AnimationInformation,
-    private val bufferLengthMilliseconds: Int
+    private val bufferLengthMilliseconds: Int,
 ) : FrameLoader {
 
   private val bufferSize =
@@ -99,7 +99,8 @@ class BufferFrameLoader(
         fpsCompressor.calculateReducedIndexes(
             durationMs = durationMs,
             frameCount = animationInformation.frameCount,
-            targetFps = fps.coerceAtMost(animationInformation.fps()))
+            targetFps = fps.coerceAtMost(animationInformation.fps()),
+        )
 
     renderableFrameIndexes = compressionFrameMap.values.toSet()
   }
@@ -131,7 +132,7 @@ class BufferFrameLoader(
       targetFrame: Int,
       width: Int,
       height: Int,
-      count: Int = 0
+      count: Int = 0,
   ): Boolean {
     val nextWindow =
         frameSequence.sublist(targetFrame, bufferSize).filter {
@@ -186,7 +187,7 @@ class BufferFrameLoader(
       targetBitmap: CloseableReference<Bitmap>,
       targetFrame: Int,
       width: Int,
-      height: Int
+      height: Int,
   ) {
     val nearestFrame = findNearestFrame(targetFrame)
 

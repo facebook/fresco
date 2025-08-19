@@ -73,7 +73,8 @@ class LocalFileFetchProducerTest {
             false,
             true,
             Priority.MEDIUM,
-            config)
+            config,
+        )
     Mockito.`when`<File?>(imageRequest.getSourceFile()).thenReturn(file)
     Mockito.doAnswer(
             object : Answer<Any?> {
@@ -87,7 +88,8 @@ class LocalFileFetchProducerTest {
         .`when`<Consumer<EncodedImage?>?>(consumer)
         .onNewResult(
             ArgumentMatchers.notNull<EncodedImage?>(EncodedImage::class.java),
-            ArgumentMatchers.anyInt())
+            ArgumentMatchers.anyInt(),
+        )
   }
 
   @Test
@@ -110,7 +112,8 @@ class LocalFileFetchProducerTest {
     Mockito.`when`<PooledByteBuffer?>(
             pooledByteBufferFactory.newByteBuffer(
                 ArgumentMatchers.any<InputStream?>(InputStream::class.java),
-                ArgumentMatchers.eq(INPUT_STREAM_LENGTH)))
+                ArgumentMatchers.eq(INPUT_STREAM_LENGTH),
+            ))
         .thenReturn(pooledByteBuffer)
     localFileFetchProducer.produceResults(consumer, producerContext)
     executor.runUntilIdle()
@@ -136,7 +139,8 @@ class LocalFileFetchProducerTest {
     Mockito.`when`<PooledByteBuffer?>(
             pooledByteBufferFactory.newByteBuffer(
                 ArgumentMatchers.any<InputStream?>(InputStream::class.java),
-                ArgumentMatchers.eq(INPUT_STREAM_LENGTH)))
+                ArgumentMatchers.eq(INPUT_STREAM_LENGTH),
+            ))
         .thenThrow(exception)
     Mockito.verify<Consumer<EncodedImage?>?>(consumer).onFailure(exception)
     Mockito.verify<ProducerListener2?>(producerListener)

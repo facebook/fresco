@@ -41,7 +41,7 @@ interface ImageTranscoder {
       resizeOptions: ResizeOptions?,
       outputFormat: ImageFormat?,
       quality: Int?,
-      colorSpace: ColorSpace?
+      colorSpace: ColorSpace?,
   ): ImageTranscodeResult
 
   /**
@@ -55,7 +55,7 @@ interface ImageTranscoder {
   fun canResize(
       encodedImage: EncodedImage,
       rotationOptions: RotationOptions?,
-      resizeOptions: ResizeOptions?
+      resizeOptions: ResizeOptions?,
   ): Boolean
 
   /**

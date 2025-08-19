@@ -28,7 +28,7 @@ internal class XmlFormatDecoder(private val resources: Resources) : ImageDecoder
       encodedImage: EncodedImage,
       length: Int,
       qualityInfo: QualityInfo,
-      options: ImageDecodeOptions
+      options: ImageDecodeOptions,
   ): CloseableImage? {
     return try {
       val xmlResourceName = encodedImage.source ?: error("No source in encoded image")

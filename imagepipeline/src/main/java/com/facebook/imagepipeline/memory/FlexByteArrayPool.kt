@@ -53,7 +53,7 @@ class FlexByteArrayPool(memoryTrimmableRegistry: MemoryTrimmableRegistry?, param
   class SoftRefByteArrayPool(
       memoryTrimmableRegistry: MemoryTrimmableRegistry?,
       poolParams: PoolParams?,
-      poolStatsTracker: PoolStatsTracker?
+      poolStatsTracker: PoolStatsTracker?,
   ) : GenericByteArrayPool(memoryTrimmableRegistry!!, poolParams!!, poolStatsTracker!!) {
     override fun newBucket(bucketedSize: Int): Bucket<ByteArray> {
       return OOMSoftReferenceBucket(getSizeInBytes(bucketedSize), poolParams.maxNumThreads, 0)

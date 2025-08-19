@@ -24,6 +24,6 @@ interface BitmapFramePreparer {
   fun prepareFrame(
       bitmapFrameCache: BitmapFrameCache,
       animationBackend: AnimationBackend,
-      frameNumber: Int
+      frameNumber: Int,
   ): Boolean
 }

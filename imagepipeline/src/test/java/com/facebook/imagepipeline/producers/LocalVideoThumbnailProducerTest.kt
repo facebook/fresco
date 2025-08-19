@@ -76,7 +76,8 @@ class LocalVideoThumbnailProducerTest {
             false,
             false,
             Priority.MEDIUM,
-            config)
+            config,
+        )
     localVideoUri = Uri.parse(TEST_FILEPATH)
   }
 
@@ -96,7 +97,8 @@ class LocalVideoThumbnailProducerTest {
         .onUltimateProducerReached(
             ArgumentMatchers.eq(producerContext),
             ArgumentMatchers.anyString(),
-            ArgumentMatchers.anyBoolean())
+            ArgumentMatchers.anyBoolean(),
+        )
     Mockito.verify(consumer).onCancellation()
   }
 
@@ -108,7 +110,9 @@ class LocalVideoThumbnailProducerTest {
     Mockito.`when`(imageRequest.sourceUri).thenReturn(localVideoUri)
     Mockito.`when`(
             ThumbnailUtils.createVideoThumbnail(
-                TEST_FILENAME, MediaStore.Images.Thumbnails.MINI_KIND))
+                TEST_FILENAME,
+                MediaStore.Images.Thumbnails.MINI_KIND,
+            ))
         .thenReturn(bitmap)
     Mockito.doAnswer(
             object : Answer<Any?> {
@@ -123,7 +127,8 @@ class LocalVideoThumbnailProducerTest {
         .`when`(consumer)
         .onNewResult(
             ArgumentMatchers.any<CloseableReference<CloseableImage>>(),
-            ArgumentMatchers.eq(Consumer.IS_LAST))
+            ArgumentMatchers.eq(Consumer.IS_LAST),
+        )
     localVideoThumbnailProducer.produceResults(consumer, producerContext)
     executor.runUntilIdle()
     assertThat(closeableReference?.underlyingReferenceTestOnly?.refCountTestOnly).isEqualTo(1)
@@ -143,7 +148,9 @@ class LocalVideoThumbnailProducerTest {
         .thenReturn(true)
     Mockito.`when`(
             ThumbnailUtils.createVideoThumbnail(
-                TEST_FILENAME, MediaStore.Images.Thumbnails.MICRO_KIND))
+                TEST_FILENAME,
+                MediaStore.Images.Thumbnails.MICRO_KIND,
+            ))
         .thenReturn(bitmap)
     Mockito.doAnswer(
             object : Answer<Any?> {
@@ -158,7 +165,8 @@ class LocalVideoThumbnailProducerTest {
         .`when`(consumer)
         .onNewResult(
             ArgumentMatchers.any<CloseableReference<CloseableImage>>(),
-            ArgumentMatchers.eq(Consumer.IS_LAST))
+            ArgumentMatchers.eq(Consumer.IS_LAST),
+        )
     localVideoThumbnailProducer.produceResults(consumer, producerContext)
     executor.runUntilIdle()
     assertThat(closeableReference?.underlyingReferenceTestOnly?.refCountTestOnly).isEqualTo(1)
@@ -179,7 +187,9 @@ class LocalVideoThumbnailProducerTest {
         .thenReturn(true)
     Mockito.`when`(
             ThumbnailUtils.createVideoThumbnail(
-                TEST_FILENAME, MediaStore.Images.Thumbnails.MICRO_KIND))
+                TEST_FILENAME,
+                MediaStore.Images.Thumbnails.MICRO_KIND,
+            ))
         .thenReturn(null)
     localVideoThumbnailProducer.produceResults(consumer, producerContext)
     executor.runUntilIdle()
@@ -199,7 +209,9 @@ class LocalVideoThumbnailProducerTest {
     Mockito.`when`(imageRequest.sourceUri).thenReturn(localVideoUri)
     Mockito.`when`(
             ThumbnailUtils.createVideoThumbnail(
-                TEST_FILENAME, MediaStore.Images.Thumbnails.MICRO_KIND))
+                TEST_FILENAME,
+                MediaStore.Images.Thumbnails.MICRO_KIND,
+            ))
         .thenThrow(exception)
     localVideoThumbnailProducer.produceResults(consumer, producerContext)
     executor.runUntilIdle()

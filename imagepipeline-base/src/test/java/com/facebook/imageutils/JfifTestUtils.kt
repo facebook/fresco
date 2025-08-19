@@ -93,7 +93,7 @@ object JfifTestUtils {
       count: Int,
       value: Int,
       valueNumBytes: Int,
-      littleEndian: Boolean
+      littleEndian: Boolean,
   ): String {
     return (encodeInt2HexString(tag, 2, littleEndian) +
         encodeInt2HexString(type, 2, littleEndian) +

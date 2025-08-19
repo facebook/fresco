@@ -49,6 +49,6 @@ class FrameResult(val bitmapRef: CloseableReference<Bitmap>?, val type: FrameTyp
   enum class FrameType {
     SUCCESS,
     NEAREST,
-    MISSING
+    MISSING,
   }
 }

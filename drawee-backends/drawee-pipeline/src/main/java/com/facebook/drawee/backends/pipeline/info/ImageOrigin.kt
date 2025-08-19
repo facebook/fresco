@@ -20,7 +20,8 @@ import androidx.annotation.IntDef
     ImageOrigin.MEMORY_ENCODED,
     ImageOrigin.MEMORY_BITMAP,
     ImageOrigin.MEMORY_BITMAP_SHORTCUT,
-    ImageOrigin.LOCAL)
+    ImageOrigin.LOCAL,
+)
 annotation class ImageOrigin {
   companion object {
     const val UNKNOWN: Int = 1

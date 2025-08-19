@@ -49,7 +49,8 @@ class DownsampleUtilTest {
                     imageRequest.getRotationOptions(),
                     imageRequest.getResizeOptions(),
                     encodedImage,
-                    MAX_BITMAP_SIZE)
+                    MAX_BITMAP_SIZE,
+                )
                 .toLong())
         .isEqualTo(1)
   }
@@ -63,7 +64,8 @@ class DownsampleUtilTest {
                     imageRequest.getRotationOptions(),
                     imageRequest.getResizeOptions(),
                     encodedImage,
-                    MAX_BITMAP_SIZE)
+                    MAX_BITMAP_SIZE,
+                )
                 .toLong())
         .isEqualTo(1)
 
@@ -74,7 +76,8 @@ class DownsampleUtilTest {
                     imageRequest.getRotationOptions(),
                     imageRequest.getResizeOptions(),
                     encodedImage,
-                    MAX_BITMAP_SIZE)
+                    MAX_BITMAP_SIZE,
+                )
                 .toLong())
         .isEqualTo(1)
     encodedImage.setWidth(0)
@@ -84,7 +87,8 @@ class DownsampleUtilTest {
                     imageRequest.getRotationOptions(),
                     imageRequest.getResizeOptions(),
                     encodedImage,
-                    MAX_BITMAP_SIZE)
+                    MAX_BITMAP_SIZE,
+                )
                 .toLong())
         .isEqualTo(1)
   }
@@ -98,7 +102,8 @@ class DownsampleUtilTest {
                     imageRequest.getRotationOptions(),
                     imageRequest.getResizeOptions(),
                     encodedImage,
-                    MAX_BITMAP_SIZE)
+                    MAX_BITMAP_SIZE,
+                )
                 .toLong())
         .isEqualTo(2)
 
@@ -108,7 +113,8 @@ class DownsampleUtilTest {
                     imageRequest.getRotationOptions(),
                     imageRequest.getResizeOptions(),
                     encodedImage,
-                    MAX_BITMAP_SIZE)
+                    MAX_BITMAP_SIZE,
+                )
                 .toLong())
         .isEqualTo(2)
   }
@@ -123,7 +129,8 @@ class DownsampleUtilTest {
                     imageRequest.getRotationOptions(),
                     imageRequest.getResizeOptions(),
                     encodedImage,
-                    MAX_BITMAP_SIZE)
+                    MAX_BITMAP_SIZE,
+                )
                 .toLong())
         .isEqualTo(3)
   }
@@ -138,7 +145,8 @@ class DownsampleUtilTest {
                     imageRequest.getRotationOptions(),
                     imageRequest.getResizeOptions(),
                     encodedImage,
-                    MAX_BITMAP_SIZE)
+                    MAX_BITMAP_SIZE,
+                )
                 .toLong())
         .isEqualTo(2)
 
@@ -148,7 +156,8 @@ class DownsampleUtilTest {
                     imageRequest.getRotationOptions(),
                     imageRequest.getResizeOptions(),
                     encodedImage,
-                    MAX_BITMAP_SIZE)
+                    MAX_BITMAP_SIZE,
+                )
                 .toLong())
         .isEqualTo(1)
   }
@@ -165,7 +174,8 @@ class DownsampleUtilTest {
                     imageRequest.getRotationOptions(),
                     imageRequest.getResizeOptions(),
                     encodedImage,
-                    MAX_BITMAP_SIZE)
+                    MAX_BITMAP_SIZE,
+                )
                 .toLong())
         .isEqualTo(1)
 
@@ -176,7 +186,8 @@ class DownsampleUtilTest {
                     imageRequest.getRotationOptions(),
                     imageRequest.getResizeOptions(),
                     encodedImage,
-                    MAX_BITMAP_SIZE)
+                    MAX_BITMAP_SIZE,
+                )
                 .toLong())
         .isEqualTo(2)
 
@@ -187,7 +198,8 @@ class DownsampleUtilTest {
                     imageRequest.getRotationOptions(),
                     imageRequest.getResizeOptions(),
                     encodedImage,
-                    MAX_BITMAP_SIZE)
+                    MAX_BITMAP_SIZE,
+                )
                 .toLong())
         .isEqualTo(5)
   }
@@ -202,7 +214,8 @@ class DownsampleUtilTest {
                     imageRequest.getRotationOptions(),
                     imageRequest.getResizeOptions(),
                     encodedImage,
-                    MAX_BITMAP_SIZE)
+                    MAX_BITMAP_SIZE,
+                )
                 .toLong())
         .isEqualTo(2)
 
@@ -213,7 +226,8 @@ class DownsampleUtilTest {
                     imageRequest.getRotationOptions(),
                     imageRequest.getResizeOptions(),
                     encodedImage,
-                    MAX_BITMAP_SIZE)
+                    MAX_BITMAP_SIZE,
+                )
                 .toLong())
         .isEqualTo(4)
   }
@@ -228,7 +242,8 @@ class DownsampleUtilTest {
                     imageRequest.getRotationOptions(),
                     imageRequest.getResizeOptions(),
                     encodedImage,
-                    MAX_BITMAP_SIZE)
+                    MAX_BITMAP_SIZE,
+                )
                 .toLong())
         .isEqualTo(1)
 
@@ -239,7 +254,8 @@ class DownsampleUtilTest {
                     imageRequest.getRotationOptions(),
                     imageRequest.getResizeOptions(),
                     encodedImage,
-                    MAX_BITMAP_SIZE)
+                    MAX_BITMAP_SIZE,
+                )
                 .toLong())
         .isEqualTo(2)
   }
@@ -310,7 +326,7 @@ class DownsampleUtilTest {
   private fun whenRequestResizeWidthHeightAndForcedRotation(
       width: Int,
       height: Int,
-      rotationAngle: Int
+      rotationAngle: Int,
   ) {
     Mockito.`when`(imageRequest.getPreferredWidth()).thenReturn(width)
     Mockito.`when`(imageRequest.getPreferredHeight()).thenReturn(height)
@@ -321,7 +337,7 @@ class DownsampleUtilTest {
   private fun whenRequestResizeWidthHeightAndMaxBitmapSize(
       width: Int,
       height: Int,
-      maxBitmapSize: Float
+      maxBitmapSize: Float,
   ) {
     Mockito.`when`(imageRequest.getPreferredWidth()).thenReturn(width)
     Mockito.`when`(imageRequest.getPreferredHeight()).thenReturn(height)

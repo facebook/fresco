@@ -42,8 +42,10 @@ object DefaultFlexByteArrayPoolParams {
           generateBuckets(
               DEFAULT_MIN_BYTE_ARRAY_SIZE,
               DEFAULT_MAX_BYTE_ARRAY_SIZE,
-              DEFAULT_MAX_NUM_THREADS), /* minBucketSize */
+              DEFAULT_MAX_NUM_THREADS,
+          ), /* minBucketSize */
           DEFAULT_MIN_BYTE_ARRAY_SIZE, /* maxBucketSize */
           DEFAULT_MAX_BYTE_ARRAY_SIZE, /* maxNumThreads */
-          DEFAULT_MAX_NUM_THREADS)
+          DEFAULT_MAX_NUM_THREADS,
+      )
 }

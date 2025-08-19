@@ -42,6 +42,10 @@ class RenderScriptBlurFilterTest {
   @Test(expected = IllegalArgumentException::class)
   fun invalidBigRadiusBlur() {
     RenderScriptBlurFilter.blurBitmap(
-        destBitmap, srcBitmap, context, RenderScriptBlurFilter.BLUR_MAX_RADIUS + 1)
+        destBitmap,
+        srcBitmap,
+        context,
+        RenderScriptBlurFilter.BLUR_MAX_RADIUS + 1,
+    )
   }
 }

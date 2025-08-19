@@ -10,5 +10,5 @@ package com.facebook.imagepipeline.core
 enum class DownsampleMode {
   ALWAYS,
   AUTO,
-  NEVER
+  NEVER,
 }

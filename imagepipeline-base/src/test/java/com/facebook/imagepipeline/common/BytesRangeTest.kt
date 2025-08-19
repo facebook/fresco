@@ -67,7 +67,7 @@ class BytesRangeTest {
     private fun assertValidFromContentRangeHeader(
         header: String?,
         expectedFrom: Int,
-        expectedEnd: Int
+        expectedEnd: Int,
     ) {
       val bytesRange = fromContentRangeHeader(header)
       assertThat(bytesRange).isNotNull()

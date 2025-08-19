@@ -35,7 +35,10 @@ class FrameLoaderStrategy(
       if (field == null) {
         field =
             frameLoaderFactory.createBufferLoader(
-                cacheKey, bitmapFrameRenderer, animationInformation)
+                cacheKey,
+                bitmapFrameRenderer,
+                animationInformation,
+            )
       }
       return field
     }
@@ -62,7 +65,7 @@ class FrameLoaderStrategy(
   override fun prepareFrames(
       canvasWidth: Int,
       canvasHeight: Int,
-      onAnimationLoaded: (() -> Unit)?
+      onAnimationLoaded: (() -> Unit)?,
   ) {
     // Validate inputs
     if (canvasWidth <= 0 || canvasHeight <= 0 || animationWidth <= 0 || animationHeight <= 0) {
@@ -77,7 +80,7 @@ class FrameLoaderStrategy(
   override fun getBitmapFrame(
       frameNumber: Int,
       canvasWidth: Int,
-      canvasHeight: Int
+      canvasHeight: Int,
   ): CloseableReference<Bitmap>? {
     val frameSize = calculateFrameSize(canvasWidth, canvasHeight)
     val frame = frameLoader?.getFrame(frameNumber, frameSize.width, frameSize.height)

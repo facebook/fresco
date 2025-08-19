@@ -70,7 +70,7 @@ class ProducerToDataSourceAdapterTest {
       hasResult: Boolean,
       result: Any?,
       hasFailed: Boolean,
-      failureCause: Throwable?
+      failureCause: Throwable?,
   ) {
     assertThat(dataSource.isFinished).isEqualTo(isFinished)
     assertThat(dataSource.hasResult()).isEqualTo(hasResult)

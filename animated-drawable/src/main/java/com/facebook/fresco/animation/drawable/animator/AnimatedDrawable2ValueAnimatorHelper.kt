@@ -20,8 +20,10 @@ object AnimatedDrawable2ValueAnimatorHelper {
   fun createValueAnimator(animatedDrawable: AnimatedDrawable2, maxDurationMs: Int): ValueAnimator? {
     val animator =
         createValueAnimator(
-            animatedDrawable, animatedDrawable.loopCount, animatedDrawable.loopDurationMs)
-            ?: return null
+            animatedDrawable,
+            animatedDrawable.loopCount,
+            animatedDrawable.loopDurationMs,
+        ) ?: return null
     val repeatCount = Math.max(maxDurationMs / animatedDrawable.loopDurationMs, 1).toInt()
     animator.repeatCount = repeatCount
     return animator
@@ -31,7 +33,7 @@ object AnimatedDrawable2ValueAnimatorHelper {
   fun createValueAnimator(
       animatedDrawable: Drawable,
       loopCount: Int,
-      loopDurationMs: Long
+      loopDurationMs: Long,
   ): ValueAnimator {
     val animator = ValueAnimator()
     animator.setIntValues(0, loopDurationMs.toInt())

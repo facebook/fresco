@@ -21,32 +21,46 @@ import java.util.concurrent.ScheduledExecutorService
 class DefaultExecutorSupplier(
     numCpuBoundThreads: Int,
     numIoBoundThreads: Int = DEFAULT_NUM_IO_BOUND_THREADS,
-    numLightweightBackgroundThreads: Int = DEFAULT_NUM_LIGHTWEIGHT_BACKGROUND_THREADS
+    numLightweightBackgroundThreads: Int = DEFAULT_NUM_LIGHTWEIGHT_BACKGROUND_THREADS,
 ) : ExecutorSupplier {
 
   private val ioBoundExecutor: Executor =
       Executors.newFixedThreadPool(
           numIoBoundThreads,
-          PriorityThreadFactory(Process.THREAD_PRIORITY_BACKGROUND, "FrescoIoBoundExecutor", true))
+          PriorityThreadFactory(Process.THREAD_PRIORITY_BACKGROUND, "FrescoIoBoundExecutor", true),
+      )
   private val decodeExecutor: Executor =
       Executors.newFixedThreadPool(
           numCpuBoundThreads,
-          PriorityThreadFactory(Process.THREAD_PRIORITY_BACKGROUND, "FrescoDecodeExecutor", true))
+          PriorityThreadFactory(Process.THREAD_PRIORITY_BACKGROUND, "FrescoDecodeExecutor", true),
+      )
   private val backgroundExecutor: Executor =
       Executors.newFixedThreadPool(
           numCpuBoundThreads,
           PriorityThreadFactory(
-              Process.THREAD_PRIORITY_BACKGROUND, "FrescoBackgroundExecutor", true))
+              Process.THREAD_PRIORITY_BACKGROUND,
+              "FrescoBackgroundExecutor",
+              true,
+          ),
+      )
   private val lightWeightBackgroundExecutor: Executor =
       Executors.newFixedThreadPool(
           numLightweightBackgroundThreads,
           PriorityThreadFactory(
-              Process.THREAD_PRIORITY_BACKGROUND, "FrescoLightWeightBackgroundExecutor", true))
+              Process.THREAD_PRIORITY_BACKGROUND,
+              "FrescoLightWeightBackgroundExecutor",
+              true,
+          ),
+      )
   private val backgroundScheduledExecutorService: ScheduledExecutorService =
       Executors.newScheduledThreadPool(
           numCpuBoundThreads,
           PriorityThreadFactory(
-              Process.THREAD_PRIORITY_BACKGROUND, "FrescoBackgroundExecutor", true))
+              Process.THREAD_PRIORITY_BACKGROUND,
+              "FrescoBackgroundExecutor",
+              true,
+          ),
+      )
 
   override fun forLocalStorageRead(): Executor = ioBoundExecutor
 

@@ -38,7 +38,9 @@ class ImageFormatCheckerTest constructor() {
   @Test
   fun testExtendedWebpsWithAlpha() {
     singleImageTypeTest(
-        getNames(5, "webps/%d_webp_ea.webp"), DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA)
+        getNames(5, "webps/%d_webp_ea.webp"),
+        DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA,
+    )
   }
 
   @Test
@@ -79,7 +81,9 @@ class ImageFormatCheckerTest constructor() {
   @Test
   fun testXmlVectorDrawable() {
     singleImageTypeTest(
-        getName("xmls/compiled/vector_drawable.xml"), DefaultImageFormats.BINARY_XML)
+        getName("xmls/compiled/vector_drawable.xml"),
+        DefaultImageFormats.BINARY_XML,
+    )
   }
 
   @Test
@@ -104,7 +108,8 @@ class ImageFormatCheckerTest constructor() {
         assertSame(
             "failed with resource: ${name}",
             expectedImageType,
-            ImageFormatChecker.getImageFormat(resourceStream))
+            ImageFormatChecker.getImageFormat(resourceStream),
+        )
       } finally {
         resourceStream.close()
       }

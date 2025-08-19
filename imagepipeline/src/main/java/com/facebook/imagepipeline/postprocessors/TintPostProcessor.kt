@@ -31,7 +31,7 @@ import com.facebook.imagepipeline.request.BasePostprocessor
 class TintPostProcessor(
     @ColorInt color: Int,
     alphaPercent: Float? = null,
-    private val porterDuffMode: PorterDuff.Mode? = null
+    private val porterDuffMode: PorterDuff.Mode? = null,
 ) : BasePostprocessor() {
   @ColorInt
   private val tintColor: Int =

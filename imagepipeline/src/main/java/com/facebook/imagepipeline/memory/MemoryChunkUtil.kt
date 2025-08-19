@@ -28,12 +28,18 @@ object MemoryChunkUtil {
     Preconditions.checkArgument(offset >= 0, "offset (%d) ! >= 0", offset)
     Preconditions.checkArgument(otherOffset >= 0, "otherOffset (%d) ! >= 0", otherOffset)
     Preconditions.checkArgument(
-        offset + count <= memorySize, "offset (%d) + count (%d) ! <= %d", offset, count, memorySize)
+        offset + count <= memorySize,
+        "offset (%d) + count (%d) ! <= %d",
+        offset,
+        count,
+        memorySize,
+    )
     Preconditions.checkArgument(
         otherOffset + count <= otherLength,
         "otherOffset (%d) + count (%d) ! <= %d",
         otherOffset,
         count,
-        otherLength)
+        otherLength,
+    )
   }
 }

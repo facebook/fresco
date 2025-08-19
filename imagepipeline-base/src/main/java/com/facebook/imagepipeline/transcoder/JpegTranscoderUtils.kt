@@ -34,7 +34,8 @@ object JpegTranscoderUtils {
           ExifInterface.ORIENTATION_FLIP_HORIZONTAL,
           ExifInterface.ORIENTATION_TRANSVERSE,
           ExifInterface.ORIENTATION_FLIP_VERTICAL,
-          ExifInterface.ORIENTATION_TRANSPOSE)
+          ExifInterface.ORIENTATION_TRANSPOSE,
+      )
 
   @VisibleForTesting const val DEFAULT_JPEG_QUALITY = 85
 
@@ -66,7 +67,7 @@ object JpegTranscoderUtils {
       rotationOptions: RotationOptions,
       resizeOptions: ResizeOptions?,
       encodedImage: EncodedImage,
-      resizingEnabled: Boolean
+      resizingEnabled: Boolean,
   ): Int {
     if (!resizingEnabled) {
       return SCALE_DENOMINATOR
@@ -117,7 +118,7 @@ object JpegTranscoderUtils {
   @JvmStatic
   fun getForceRotatedInvertedExifOrientation(
       rotationOptions: RotationOptions,
-      encodedImage: EncodedImage
+      encodedImage: EncodedImage,
   ): Int {
     val exifOrientation = encodedImage.exifOrientation
     val index = INVERTED_EXIF_ORIENTATIONS.indexOf(exifOrientation)
@@ -175,7 +176,7 @@ object JpegTranscoderUtils {
   @JvmStatic
   fun getTransformationMatrix(
       encodedImage: EncodedImage,
-      rotationOptions: RotationOptions
+      rotationOptions: RotationOptions,
   ): Matrix? {
     var transformationMatrix: Matrix? = null
     if (INVERTED_EXIF_ORIENTATIONS.contains(encodedImage.exifOrientation)) {

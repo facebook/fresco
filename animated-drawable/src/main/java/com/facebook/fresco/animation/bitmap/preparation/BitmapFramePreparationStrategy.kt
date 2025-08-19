@@ -27,7 +27,7 @@ interface BitmapFramePreparationStrategy {
       bitmapFrameCache: BitmapFrameCache,
       animationBackend: AnimationBackend,
       lastDrawnFrameNumber: Int,
-      onAnimationLoaded: (() -> Unit)? = null
+      onAnimationLoaded: (() -> Unit)? = null,
   ) = Unit
 
   /**
@@ -49,6 +49,6 @@ interface BitmapFramePreparationStrategy {
   fun getBitmapFrame(
       frameNumber: Int,
       canvasWidth: Int,
-      canvasHeight: Int
+      canvasHeight: Int,
   ): CloseableReference<Bitmap>? = null
 }

@@ -58,12 +58,12 @@ class DecodeProducer(
     val maxBitmapDimension: Int,
     val closeableReferenceFactory: CloseableReferenceFactory,
     val reclaimMemoryRunnable: Runnable?,
-    val recoverFromDecoderOOM: Supplier<Boolean>
+    val recoverFromDecoderOOM: Supplier<Boolean>,
 ) : Producer<CloseableReference<CloseableImage>> {
 
   override fun produceResults(
       consumer: Consumer<CloseableReference<CloseableImage>>,
-      context: ProducerContext
+      context: ProducerContext,
   ) =
       traceSection("DecodeProducer#produceResults") {
         val imageRequest = context.imageRequest
@@ -71,7 +71,11 @@ class DecodeProducer(
             if (!UriUtil.isNetworkUri(imageRequest.sourceUri) &&
                 !ImageRequestBuilder.isCustomNetworkUri(imageRequest.sourceUri)) {
               LocalImagesProgressiveDecoder(
-                  consumer, context, this.decodeCancellationEnabled, this.maxBitmapDimension)
+                  consumer,
+                  context,
+                  this.decodeCancellationEnabled,
+                  this.maxBitmapDimension,
+              )
             } else {
               val jpegParser = ProgressiveJpegParser(this.byteArrayPool)
               NetworkImagesProgressiveDecoder(
@@ -80,7 +84,8 @@ class DecodeProducer(
                   jpegParser,
                   this.progressiveJpegConfig,
                   this.decodeCancellationEnabled,
-                  this.maxBitmapDimension)
+                  this.maxBitmapDimension,
+              )
             }
         this.inputProducer.produceResults(progressiveDecoder, context)
       }
@@ -89,7 +94,7 @@ class DecodeProducer(
       consumer: Consumer<CloseableReference<CloseableImage>>,
       private val producerContext: ProducerContext,
       decodeCancellationEnabled: Boolean,
-      maxBitmapDimension: Int
+      maxBitmapDimension: Int,
   ) : DelegatingConsumer<EncodedImage?, CloseableReference<CloseableImage>>(consumer) {
     private val TAG = "ProgressiveDecoder"
     private val producerListener: ProducerListener2 = producerContext.producerListener
@@ -160,7 +165,7 @@ class DecodeProducer(
     private fun doDecode(
         encodedImage: EncodedImage,
         @Consumer.Status status: Int,
-        lastScheduledScanNumber: Int
+        lastScheduledScanNumber: Int,
     ) {
       // do not run for partial results of anything except JPEG
       var newStatus = status
@@ -217,7 +222,8 @@ class DecodeProducer(
                     requestUri,
                     failedEncodedImage.getFirstBytesAsHexString(
                         DECODE_EXCEPTION_MESSAGE_NUM_HEADER_BYTES),
-                    failedEncodedImage.size)
+                    failedEncodedImage.size,
+                )
                 throw e
               }
           if (encodedImage.sampleSize != EncodedImage.DEFAULT_SAMPLE_SIZE) {
@@ -233,7 +239,8 @@ class DecodeProducer(
                   imageFormatStr,
                   encodedImageSize,
                   requestedSizeStr,
-                  sampleSize)
+                  sampleSize,
+              )
           producerListener.onProducerFinishWithFailure(producerContext, PRODUCER_NAME, e, extraMap)
           handleError(e)
           return
@@ -247,7 +254,8 @@ class DecodeProducer(
                 imageFormatStr,
                 encodedImageSize,
                 requestedSizeStr,
-                sampleSize)
+                sampleSize,
+            )
         producerListener.onProducerFinishWithSuccess(producerContext, PRODUCER_NAME, extraMap)
         setImageExtras(encodedImage, image, lastScheduledScanNumber)
         handleResult(image, newStatus)
@@ -260,7 +268,7 @@ class DecodeProducer(
     private fun internalDecode(
         encodedImage: EncodedImage,
         length: Int,
-        quality: QualityInfo
+        quality: QualityInfo,
     ): CloseableImage? {
       val recover = reclaimMemoryRunnable != null && recoverFromDecoderOOM.get()
       val image =
@@ -283,7 +291,7 @@ class DecodeProducer(
     private fun setImageExtras(
         encodedImage: EncodedImage,
         image: CloseableImage?,
-        lastScheduledScanNumber: Int
+        lastScheduledScanNumber: Int,
     ) {
       producerContext.putExtra(HasExtraData.KEY_ENCODED_WIDTH, encodedImage.width)
       producerContext.putExtra(HasExtraData.KEY_ENCODED_HEIGHT, encodedImage.height)
@@ -306,7 +314,7 @@ class DecodeProducer(
         imageFormatName: String,
         encodedImageSize: String,
         requestImageSize: String,
-        sampleSize: String
+        sampleSize: String,
     ): Map<String, String>? {
       if (!producerListener.requiresExtraMap(producerContext, PRODUCER_NAME)) {
         return null
@@ -414,7 +422,8 @@ class DecodeProducer(
                     request.rotationOptions,
                     request.resizeOptions,
                     encodedImage,
-                    maxBitmapDimension)
+                    maxBitmapDimension,
+                )
           }
 
           if (producerContext.imagePipelineConfig.experiments.downsampleIfLargeBitmap) {
@@ -445,12 +454,12 @@ class DecodeProducer(
       consumer: Consumer<CloseableReference<CloseableImage>>,
       producerContext: ProducerContext,
       decodeCancellationEnabled: Boolean,
-      maxBitmapDimension: Int
+      maxBitmapDimension: Int,
   ) : ProgressiveDecoder(consumer, producerContext, decodeCancellationEnabled, maxBitmapDimension) {
     @Synchronized
     override fun updateDecodeJob(
         encodedImage: EncodedImage?,
-        @Consumer.Status status: Int
+        @Consumer.Status status: Int,
     ): Boolean =
         if (isNotLast(status)) {
           false
@@ -470,12 +479,12 @@ class DecodeProducer(
       val progressiveJpegParser: ProgressiveJpegParser,
       val progressiveJpegConfig: ProgressiveJpegConfig,
       decodeCancellationEnabled: Boolean,
-      maxBitmapDimension: Int
+      maxBitmapDimension: Int,
   ) : ProgressiveDecoder(consumer, producerContext, decodeCancellationEnabled, maxBitmapDimension) {
     @Synchronized
     override fun updateDecodeJob(
         encodedImage: EncodedImage?,
-        @Consumer.Status status: Int
+        @Consumer.Status status: Int,
     ): Boolean {
       if (encodedImage == null) {
         return false
@@ -538,7 +547,7 @@ class DecodeProducer(
 
     private fun isTooBig(
         encodedImage: EncodedImage,
-        imageDecodeOptions: ImageDecodeOptions
+        imageDecodeOptions: ImageDecodeOptions,
     ): Boolean {
       val w: Long = encodedImage.width.toLong()
       val h: Long = encodedImage.height.toLong()

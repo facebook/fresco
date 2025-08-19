@@ -64,7 +64,8 @@ class LocalAssetFetchProducerTest {
     Mockito.`when`(
             pooledByteBufferFactory.newByteBuffer(
                 ArgumentMatchers.any(InputStream::class.java),
-                ArgumentMatchers.eq(TEST_DATA_LENGTH)))
+                ArgumentMatchers.eq(TEST_DATA_LENGTH),
+            ))
         .thenReturn(pooledByteBuffer)
 
     executor = TestExecutorService(FakeClock())
@@ -81,7 +82,8 @@ class LocalAssetFetchProducerTest {
             false,
             true,
             Priority.MEDIUM,
-            config)
+            config,
+        )
     Mockito.`when`(imageRequest.sourceUri).thenReturn(Uri.parse("asset:///$TEST_FILENAME"))
     Mockito.doAnswer(
             object : Answer<Any?> {
@@ -101,7 +103,9 @@ class LocalAssetFetchProducerTest {
   fun tearDown() {
     Mockito.verify(pooledByteBufferFactory, Mockito.atMost(1))
         .newByteBuffer(
-            ArgumentMatchers.any(InputStream::class.java), ArgumentMatchers.eq(TEST_DATA_LENGTH))
+            ArgumentMatchers.any(InputStream::class.java),
+            ArgumentMatchers.eq(TEST_DATA_LENGTH),
+        )
   }
 
   @Test
@@ -111,12 +115,14 @@ class LocalAssetFetchProducerTest {
     Mockito.`when`(
             assetManager.open(
                 ArgumentMatchers.eq(TEST_FILENAME),
-                ArgumentMatchers.eq(AssetManager.ACCESS_STREAMING)))
+                ArgumentMatchers.eq(AssetManager.ACCESS_STREAMING),
+            ))
         .thenReturn(ByteArrayInputStream(ByteArray(TEST_DATA_LENGTH)))
     Mockito.`when`(
             pooledByteBufferFactory.newByteBuffer(
                 ArgumentMatchers.any(InputStream::class.java),
-                ArgumentMatchers.eq(TEST_DATA_LENGTH)))
+                ArgumentMatchers.eq(TEST_DATA_LENGTH),
+            ))
         .thenReturn(pooledByteBuffer)
 
     localAssetFetchProducer.produceResults(consumer, producerContext)
@@ -142,7 +148,8 @@ class LocalAssetFetchProducerTest {
     Mockito.`when`(
             assetManager.open(
                 ArgumentMatchers.eq(TEST_FILENAME),
-                ArgumentMatchers.eq(AssetManager.ACCESS_STREAMING)))
+                ArgumentMatchers.eq(AssetManager.ACCESS_STREAMING),
+            ))
         .thenThrow(exception)
     localAssetFetchProducer.produceResults(consumer, producerContext)
     executor.runUntilIdle()

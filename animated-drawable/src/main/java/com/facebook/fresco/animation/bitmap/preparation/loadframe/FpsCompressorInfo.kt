@@ -21,7 +21,7 @@ class FpsCompressorInfo(private val maxFpsLimit: Int) {
   fun compress(
       durationMs: Int,
       frameBitmaps: Map<Int, CloseableReference<Bitmap>>,
-      targetFps: Int
+      targetFps: Int,
   ): CompressionResult {
     val realToCompressIndex = calculateReducedIndexes(durationMs, frameBitmaps.size, targetFps)
     return compressAnimation(frameBitmaps, realToCompressIndex)
@@ -59,7 +59,7 @@ class FpsCompressorInfo(private val maxFpsLimit: Int) {
    */
   private fun compressAnimation(
       frameBitmaps: Map<Int, CloseableReference<Bitmap>>,
-      realToReducedIndex: Map<Int, Int>
+      realToReducedIndex: Map<Int, Int>,
   ): CompressionResult {
     val compressedAnim = mutableMapOf<Int, CloseableReference<Bitmap>>()
     val removedFrames = mutableListOf<CloseableReference<Bitmap>>()
@@ -105,7 +105,7 @@ class FpsCompressorInfo(private val maxFpsLimit: Int) {
   class CompressionResult(
       val compressedAnim: Map<Int, CloseableReference<Bitmap>>,
       val realToReducedIndex: Map<Int, Int>,
-      val removedFrames: List<CloseableReference<Bitmap>>
+      val removedFrames: List<CloseableReference<Bitmap>>,
   )
 
   fun Int.millisecondsToSeconds(): Float = this.div(1000f)

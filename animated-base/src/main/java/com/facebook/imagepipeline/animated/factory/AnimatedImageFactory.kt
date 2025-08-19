@@ -26,7 +26,7 @@ interface AnimatedImageFactory {
   fun decodeGif(
       encodedImage: EncodedImage,
       options: ImageDecodeOptions,
-      bitmapConfig: Bitmap.Config
+      bitmapConfig: Bitmap.Config,
   ): CloseableImage
 
   /**
@@ -40,6 +40,6 @@ interface AnimatedImageFactory {
   fun decodeWebP(
       encodedImage: EncodedImage,
       options: ImageDecodeOptions,
-      bitmapConfig: Bitmap.Config
+      bitmapConfig: Bitmap.Config,
   ): CloseableImage
 }

@@ -54,7 +54,8 @@ class ThreadHandoffProducerTest {
             false,
             true,
             Priority.MEDIUM,
-            config)
+            config,
+        )
     testExecutorService = TestExecutorService(FakeClock())
     threadHandoffProducer =
         ThreadHandoffProducer(inputProducer, ThreadHandoffProducerQueueImpl(testExecutorService))
@@ -90,7 +91,10 @@ class ThreadHandoffProducerTest {
         .requiresExtraMap(producerContext, ThreadHandoffProducer.PRODUCER_NAME)
     Mockito.verify(producerListener)
         .onProducerFinishWithCancellation(
-            producerContext, ThreadHandoffProducer.PRODUCER_NAME, null)
+            producerContext,
+            ThreadHandoffProducer.PRODUCER_NAME,
+            null,
+        )
     Mockito.verifyNoMoreInteractions(producerListener)
   }
 }

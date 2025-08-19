@@ -185,7 +185,8 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
             ?: DiskCachesStoreFactory(
                 builder.fileCacheFactory
                     ?: DiskStorageCacheFactory(DynamicDefaultDiskStorageFactory()),
-                this@ImagePipelineConfig)
+                this@ImagePipelineConfig,
+            )
     // Here we manage the WebpBitmapFactory implementation if any
     val webpBitmapFactory = experiments.webpBitmapFactory
     if (webpBitmapFactory != null) {
@@ -521,7 +522,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     private fun setWebpBitmapFactory(
         webpBitmapFactory: WebpBitmapFactory,
         imagePipelineExperiments: ImagePipelineExperiments,
-        bitmapCreator: BitmapCreator?
+        bitmapCreator: BitmapCreator?,
     ) {
       WebpSupportStatus.sWebpBitmapFactory = webpBitmapFactory
       val webpErrorLogger = imagePipelineExperiments.webpErrorLogger
@@ -557,7 +558,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     @MemoryChunkType
     private fun getMemoryChunkType(
         builder: Builder,
-        imagePipelineExperiments: ImagePipelineExperiments
+        imagePipelineExperiments: ImagePipelineExperiments,
     ): Int =
         builder.memoryChunkType
             ?: if (imagePipelineExperiments.memoryType == MemoryChunkType.ASHMEM_MEMORY.toLong() &&

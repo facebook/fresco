@@ -35,7 +35,8 @@ interface Consumer<T> {
   @Retention(AnnotationRetention.SOURCE)
   @IntDef(
       flag = true,
-      value = [IS_LAST, DO_NOT_CACHE_ENCODED, IS_PLACEHOLDER, IS_PARTIAL_RESULT, IS_RESIZING_DONE])
+      value = [IS_LAST, DO_NOT_CACHE_ENCODED, IS_PLACEHOLDER, IS_PARTIAL_RESULT, IS_RESIZING_DONE],
+  )
   annotation class Status
 
   /**

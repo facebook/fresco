@@ -22,7 +22,8 @@ class LocalFileFetchProducer(executor: Executor, pooledByteBufferFactory: Pooled
   override fun getEncodedImage(imageRequest: ImageRequest): EncodedImage? =
       getEncodedImage(
           FileInputStream(imageRequest.sourceFile.toString()),
-          imageRequest.sourceFile.length().toInt())
+          imageRequest.sourceFile.length().toInt(),
+      )
 
   override fun getProducerName(): String = PRODUCER_NAME
 

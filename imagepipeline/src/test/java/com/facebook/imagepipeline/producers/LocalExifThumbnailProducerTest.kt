@@ -70,7 +70,10 @@ class LocalExifThumbnailProducerTest {
 
     testLocalExifThumbnailProducer =
         TestLocalExifThumbnailProducer(
-            testExecutorService, pooledByteBufferFactory, contentResolver)
+            testExecutorService,
+            pooledByteBufferFactory,
+            contentResolver,
+        )
 
     Mockito.`when`(producerContext.imageRequest).thenReturn(imageRequest)
     Mockito.`when`(imageRequest.getSourceUri()).thenReturn(uri)
@@ -144,7 +147,7 @@ class LocalExifThumbnailProducerTest {
   private inner class TestLocalExifThumbnailProducer(
       executor: Executor,
       pooledByteBufferFactory: PooledByteBufferFactory,
-      contentResolver: ContentResolver
+      contentResolver: ContentResolver,
   ) : LocalExifThumbnailProducer(executor, pooledByteBufferFactory, contentResolver) {
     override fun getExifInterface(uri: Uri): ExifInterface? {
       if (uri == this@LocalExifThumbnailProducerTest.uri) {

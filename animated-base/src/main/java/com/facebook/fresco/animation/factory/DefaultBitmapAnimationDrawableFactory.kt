@@ -64,7 +64,7 @@ class DefaultBitmapAnimationDrawableFactory(
     private val useNewBitmapRender: Supplier<Boolean>,
     private val downscaleFrameToDrawableDimensions: Supplier<Boolean>,
     private val animationFpsLimit: Supplier<Int>,
-    private val bufferLengthMilliseconds: Supplier<Int>
+    private val bufferLengthMilliseconds: Supplier<Int>,
 ) : DrawableFactory, ImageOptionsDrawableFactory {
 
   // Change the value to true to use KAnimatedDrawable2.kt
@@ -84,7 +84,8 @@ class DefaultBitmapAnimationDrawableFactory(
         createAnimationBackend(
             Preconditions.checkNotNull(closeable.imageResult),
             animatedImage?.animatedBitmapConfig,
-            null)
+            null,
+        )
     return if (useRendererAnimatedDrawable.get()) {
       KAnimatedDrawable2(animationBackend)
     } else {
@@ -95,7 +96,7 @@ class DefaultBitmapAnimationDrawableFactory(
   override fun createDrawable(
       resources: Resources,
       closeableImage: CloseableImage,
-      imageOptions: ImageOptions
+      imageOptions: ImageOptions,
   ): Drawable? {
     if (!supportsImageType(closeableImage)) {
       return null
@@ -107,7 +108,8 @@ class DefaultBitmapAnimationDrawableFactory(
               createAnimationBackend(
                   Preconditions.checkNotNull(closeable.imageResult),
                   animatedImage?.animatedBitmapConfig,
-                  imageOptions)
+                  imageOptions,
+              )
             }
             .getOrElse { e ->
               when (e) {
@@ -141,7 +143,7 @@ class DefaultBitmapAnimationDrawableFactory(
   private fun createAnimationBackend(
       animatedImageResult: AnimatedImageResult,
       animatedBitmapConfig: Bitmap.Config?,
-      imageOptions: ImageOptions?
+      imageOptions: ImageOptions?,
   ): AnimationBackend {
     val animatedDrawableBackend = createAnimatedDrawableBackend(animatedImageResult)
     val animationInfo = AnimatedDrawableBackendAnimationInformation(animatedDrawableBackend)
@@ -149,7 +151,10 @@ class DefaultBitmapAnimationDrawableFactory(
     val bitmapFrameCache = createBitmapFrameCache(animatedImageResult)
     val bitmapFrameRenderer =
         AnimatedDrawableBackendFrameRenderer(
-            bitmapFrameCache, animatedDrawableBackend, useNewBitmapRender.get())
+            bitmapFrameCache,
+            animatedDrawableBackend,
+            useNewBitmapRender.get(),
+        )
 
     val numberOfFramesToPrefetch = numberOfFramesToPrepareSupplier.get()
     var bitmapFramePreparationStrategy: BitmapFramePreparationStrategy? = null
@@ -171,8 +176,12 @@ class DefaultBitmapAnimationDrawableFactory(
               animationInfo,
               bitmapFrameRenderer,
               FrameLoaderFactory(
-                  platformBitmapFactory, animationFpsLimit.get(), bufferLengthMilliseconds.get()),
-              downscaleFrameToDrawableDimensions.get())
+                  platformBitmapFactory,
+                  animationFpsLimit.get(),
+                  bufferLengthMilliseconds.get(),
+              ),
+              downscaleFrameToDrawableDimensions.get(),
+          )
     }
 
     val bitmapAnimationBackend =
@@ -185,21 +194,26 @@ class DefaultBitmapAnimationDrawableFactory(
             bitmapFramePreparationStrategy,
             bitmapFramePreparer,
             roundingOptions,
-            animatedOptions)
+            animatedOptions,
+        )
 
     return AnimationBackendDelegateWithInactivityCheck.createForBackend(
-        bitmapAnimationBackend, monotonicClock, scheduledExecutorServiceForUiThread)
+        bitmapAnimationBackend,
+        monotonicClock,
+        scheduledExecutorServiceForUiThread,
+    )
   }
 
   private fun createBitmapFramePreparer(
       bitmapFrameRenderer: BitmapFrameRenderer,
-      animatedBitmapConfig: Bitmap.Config?
+      animatedBitmapConfig: Bitmap.Config?,
   ): BitmapFramePreparer {
     return DefaultBitmapFramePreparer(
         platformBitmapFactory,
         bitmapFrameRenderer,
         animatedBitmapConfig ?: Bitmap.Config.ARGB_8888,
-        executorServiceForFramePreparing)
+        executorServiceForFramePreparing,
+    )
   }
 
   private fun createAnimatedDrawableBackend(
@@ -227,7 +241,8 @@ class DefaultBitmapAnimationDrawableFactory(
   ): AnimatedFrameCache {
     return AnimatedFrameCache(
         AnimationFrameCacheKey(animatedImageResult.hashCode(), useDeepEqualsForCacheKey.get()),
-        backingCache ?: throw IllegalStateException("backingCache is null"))
+        backingCache ?: throw IllegalStateException("backingCache is null"),
+    )
   }
 
   companion object {

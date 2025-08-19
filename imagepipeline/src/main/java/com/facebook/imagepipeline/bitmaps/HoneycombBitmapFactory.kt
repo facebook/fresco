@@ -24,7 +24,7 @@ import javax.annotation.concurrent.ThreadSafe
 class HoneycombBitmapFactory(
     private val jpegGenerator: EmptyJpegGenerator,
     private val purgeableDecoder: PlatformDecoder,
-    private val closeableReferenceFactory: CloseableReferenceFactory
+    private val closeableReferenceFactory: CloseableReferenceFactory,
 ) : PlatformBitmapFactory() {
 
   private var immutableBitmapFallback = false
@@ -43,7 +43,7 @@ class HoneycombBitmapFactory(
   override fun createBitmapInternal(
       width: Int,
       height: Int,
-      bitmapConfig: Bitmap.Config
+      bitmapConfig: Bitmap.Config,
   ): CloseableReference<Bitmap> {
     if (immutableBitmapFallback) {
       return createFallbackBitmap(width, height, bitmapConfig)
@@ -55,7 +55,11 @@ class HoneycombBitmapFactory(
       try {
         val bitmapRef =
             purgeableDecoder.decodeJPEGFromEncodedImage(
-                encodedImage, bitmapConfig, null, jpgRef.get().size())
+                encodedImage,
+                bitmapConfig,
+                null,
+                jpgRef.get().size(),
+            )
         checkNotNull(bitmapRef)
         if (!bitmapRef.get().isMutable) {
           CloseableReference.closeSafely(bitmapRef)
@@ -79,10 +83,12 @@ class HoneycombBitmapFactory(
   private fun createFallbackBitmap(
       width: Int,
       height: Int,
-      bitmapConfig: Bitmap.Config
+      bitmapConfig: Bitmap.Config,
   ): CloseableReference<Bitmap> =
       closeableReferenceFactory.create(
-          Bitmap.createBitmap(width, height, bitmapConfig), SimpleBitmapReleaser.getInstance())
+          Bitmap.createBitmap(width, height, bitmapConfig),
+          SimpleBitmapReleaser.getInstance(),
+      )
 
   companion object {
     private val TAG = HoneycombBitmapFactory::class.java.simpleName

@@ -42,7 +42,7 @@ class DiskStorageCache(
     private val cacheErrorLogger: CacheErrorLogger,
     diskTrimmableRegistry: DiskTrimmableRegistry?,
     executorForBackgrountInit: Executor,
-    private val indexPopulateAtStartupEnabled: Boolean
+    private val indexPopulateAtStartupEnabled: Boolean,
 ) : FileCache, DiskTrimmable {
   private val lowDiskSpaceCacheSizeLimit: Long
   private val defaultCacheSizeLimit: Long
@@ -111,7 +111,7 @@ class DiskStorageCache(
   class Params(
       val cacheSizeLimitMinimum: Long,
       val lowDiskSpaceCacheSizeLimit: Long,
-      val defaultCacheSizeLimit: Long
+      val defaultCacheSizeLimit: Long,
   )
 
   init {
@@ -219,7 +219,11 @@ class DiskStorageCache(
       }
     } catch (ioe: IOException) {
       cacheErrorLogger.logError(
-          CacheErrorLogger.CacheErrorCategory.GENERIC_IO, TAG, "getResource", ioe)
+          CacheErrorLogger.CacheErrorCategory.GENERIC_IO,
+          TAG,
+          "getResource",
+          ioe,
+      )
       cacheEvent.setException(ioe)
       if (cacheEventListener != null) {
         cacheEventListener.onReadException(cacheEvent)
@@ -280,7 +284,7 @@ class DiskStorageCache(
   private fun endInsert(
       inserter: DiskStorage.Inserter,
       key: CacheKey?,
-      resourceId: String?
+      resourceId: String?,
   ): BinaryResource {
     synchronized(lock) {
       val resource = inserter.commit(key!!)
@@ -345,7 +349,11 @@ class DiskStorageCache(
         }
       } catch (e: IOException) {
         cacheErrorLogger.logError(
-            CacheErrorLogger.CacheErrorCategory.DELETE_FILE, TAG, "delete: " + e.message, e)
+            CacheErrorLogger.CacheErrorCategory.DELETE_FILE,
+            TAG,
+            "delete: " + e.message,
+            e,
+        )
       }
     }
   }
@@ -400,7 +408,8 @@ class DiskStorageCache(
             CacheErrorLogger.CacheErrorCategory.EVICTION,
             TAG,
             "clearOldEntries: " + ioe.message,
-            ioe)
+            ioe,
+        )
       }
     }
     return oldestRemainingEntryAgeMs
@@ -442,7 +451,11 @@ class DiskStorageCache(
       entries = getSortedEntries(storage.getEntries())
     } catch (ioe: IOException) {
       cacheErrorLogger.logError(
-          CacheErrorLogger.CacheErrorCategory.EVICTION, TAG, "evictAboveSize: " + ioe.message, ioe)
+          CacheErrorLogger.CacheErrorCategory.EVICTION,
+          TAG,
+          "evictAboveSize: " + ioe.message,
+          ioe,
+      )
       throw ioe
     }
 
@@ -539,10 +552,18 @@ class DiskStorageCache(
         }
       } catch (e: IOException) {
         cacheErrorLogger.logError(
-            CacheErrorLogger.CacheErrorCategory.EVICTION, TAG, "clearAll: " + e.message, e)
+            CacheErrorLogger.CacheErrorCategory.EVICTION,
+            TAG,
+            "clearAll: " + e.message,
+            e,
+        )
       } catch (e: NullPointerException) {
         cacheErrorLogger.logError(
-            CacheErrorLogger.CacheErrorCategory.EVICTION, TAG, "clearAll: " + e.message, e)
+            CacheErrorLogger.CacheErrorCategory.EVICTION,
+            TAG,
+            "clearAll: " + e.message,
+            e,
+        )
       }
       cacheStats.reset()
     }
@@ -613,7 +634,11 @@ class DiskStorageCache(
         evictAboveSize(newMaxBytesInFiles, EvictionReason.CACHE_MANAGER_TRIMMED)
       } catch (ioe: IOException) {
         cacheErrorLogger.logError(
-            CacheErrorLogger.CacheErrorCategory.EVICTION, TAG, "trimBy: " + ioe.message, ioe)
+            CacheErrorLogger.CacheErrorCategory.EVICTION,
+            TAG,
+            "trimBy: " + ioe.message,
+            ioe,
+        )
       }
     }
   }
@@ -682,7 +707,8 @@ class DiskStorageCache(
                 " bytes, and a maximum time delta of " +
                 maxTimeDelta +
                 "ms"),
-            null)
+            null,
+        )
       }
       if (cacheStats.count != count.toLong() || cacheStats.size != size) {
         if (indexPopulateAtStartupEnabled && resourceIndex !== tempResourceIndex) {
@@ -697,7 +723,8 @@ class DiskStorageCache(
           CacheErrorLogger.CacheErrorCategory.GENERIC_IO,
           TAG,
           "calcFileCacheSize: " + ioe.message,
-          ioe)
+          ioe,
+      )
       return false
     }
     cacheSizeLastUpdateTime = now

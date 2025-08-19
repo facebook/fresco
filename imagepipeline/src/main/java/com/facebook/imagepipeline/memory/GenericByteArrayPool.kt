@@ -22,7 +22,7 @@ import javax.annotation.concurrent.ThreadSafe
 open class GenericByteArrayPool(
     memoryTrimmableRegistry: MemoryTrimmableRegistry,
     poolParams: PoolParams,
-    poolStatsTracker: PoolStatsTracker
+    poolStatsTracker: PoolStatsTracker,
 ) : BasePool<ByteArray>(memoryTrimmableRegistry, poolParams, poolStatsTracker), ByteArrayPool {
 
   private val bucketSizes: IntArray

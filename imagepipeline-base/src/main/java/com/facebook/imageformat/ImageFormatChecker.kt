@@ -90,7 +90,7 @@ class ImageFormatChecker private constructor() {
     private fun readHeaderFromStream(
         maxHeaderLength: Int,
         `is`: InputStream,
-        imageHeaderBytes: ByteArray
+        imageHeaderBytes: ByteArray,
     ): Int {
       check(imageHeaderBytes.size >= maxHeaderLength)
 

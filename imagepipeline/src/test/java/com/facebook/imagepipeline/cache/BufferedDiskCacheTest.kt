@@ -98,7 +98,8 @@ class BufferedDiskCacheTest {
             readPriorityExecutor,
             writePriorityExecutor,
             imageCacheStatsTracker,
-            false)
+            false,
+        )
   }
 
   @After

@@ -21,7 +21,8 @@ class DummyBitmapPool : BitmapPool {
       Bitmap.createBitmap(
           1,
           Math.ceil(size / BitmapUtil.RGB_565_BYTES_PER_PIXEL.toDouble()).toInt(),
-          Bitmap.Config.RGB_565)
+          Bitmap.Config.RGB_565,
+      )
 
   override fun release(value: Bitmap) {
     checkNotNull(value)

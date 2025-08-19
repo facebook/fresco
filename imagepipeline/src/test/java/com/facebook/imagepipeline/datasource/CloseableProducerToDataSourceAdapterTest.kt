@@ -55,7 +55,10 @@ class CloseableProducerToDataSourceAdapterTest {
 
     dataSource =
         CloseableProducerToDataSourceAdapter.create(
-            producer, settableProducerContext, requestListener)
+            producer,
+            settableProducerContext,
+            requestListener,
+        )
 
     val captor = argumentCaptor<Consumer<CloseableReference<Any>>>()
     verify(requestListener).onRequestStart(settableProducerContext)
@@ -71,7 +74,7 @@ class CloseableProducerToDataSourceAdapterTest {
       hasResult: Boolean,
       resultRef: CloseableReference<Any>?,
       hasFailed: Boolean,
-      failureCause: Throwable?
+      failureCause: Throwable?,
   ) {
     assertThat(dataSource.isFinished).isEqualTo(isFinished)
     assertThat(dataSource.hasResult()).isEqualTo(hasResult)
@@ -139,7 +142,7 @@ class CloseableProducerToDataSourceAdapterTest {
   private fun testNewResult(
       resultRef: CloseableReference<Any>?,
       isLast: Boolean,
-      numSubscribers: Int
+      numSubscribers: Int,
   ) {
     internalConsumer.onNewResult(resultRef, BaseConsumer.simpleStatusForIsLast(isLast))
     if (isLast) {
@@ -403,7 +406,7 @@ class CloseableProducerToDataSourceAdapterTest {
     private fun <T> assertReferencesSame(
         errorMessage: String,
         expectedRef: CloseableReference<T>?,
-        actualRef: CloseableReference<T>?
+        actualRef: CloseableReference<T>?,
     ) {
       if (expectedRef == null) {
         assertThat(actualRef).withFailMessage(errorMessage).isNull()

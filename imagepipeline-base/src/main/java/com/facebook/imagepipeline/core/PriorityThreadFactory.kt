@@ -23,7 +23,7 @@ class PriorityThreadFactory
 constructor(
     private val threadPriority: Int,
     private val prefix: String = "PriorityThreadFactory",
-    private val addThreadNumber: Boolean = true
+    private val addThreadNumber: Boolean = true,
 ) : ThreadFactory {
   private val threadNumber = AtomicInteger(1)
 

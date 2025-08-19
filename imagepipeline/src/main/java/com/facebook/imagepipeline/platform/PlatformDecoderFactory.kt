@@ -31,19 +31,21 @@ object PlatformDecoderFactory {
   fun buildPlatformDecoder(
       poolFactory: PoolFactory,
       useDecodeBufferHelper: Boolean = false,
-      platformDecoderOptions: PlatformDecoderOptions
+      platformDecoderOptions: PlatformDecoderOptions,
   ): PlatformDecoder =
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         OreoDecoder(
             poolFactory.bitmapPool,
             createPool(poolFactory, useDecodeBufferHelper),
-            platformDecoderOptions)
+            platformDecoderOptions,
+        )
       } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ||
           !NativeCodeSetup.getUseNativeCode()) {
         ArtDecoder(
             poolFactory.bitmapPool,
             createPool(poolFactory, useDecodeBufferHelper),
-            platformDecoderOptions)
+            platformDecoderOptions,
+        )
       } else {
         try {
           val clazz = Class.forName("com.facebook.imagepipeline.platform.KitKatPurgeableDecoder")

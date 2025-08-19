@@ -16,7 +16,7 @@ object NativeImageTranscoderFactory {
   fun getNativeImageTranscoderFactory(
       maxBitmapSize: Int,
       useDownSamplingRatio: Boolean,
-      ensureTranscoderLibraryLoaded: Boolean
+      ensureTranscoderLibraryLoaded: Boolean,
   ): ImageTranscoderFactory =
       try {
         Class.forName("com.facebook.imagepipeline.nativecode.NativeJpegTranscoderFactory")
@@ -26,30 +26,37 @@ object NativeImageTranscoderFactory {
       } catch (e: NoSuchMethodException) {
         throw RuntimeException(
             "Dependency ':native-imagetranscoder' is needed to use the default native image transcoder.",
-            e)
+            e,
+        )
       } catch (e: SecurityException) {
         throw RuntimeException(
             "Dependency ':native-imagetranscoder' is needed to use the default native image transcoder.",
-            e)
+            e,
+        )
       } catch (e: InstantiationException) {
         throw RuntimeException(
             "Dependency ':native-imagetranscoder' is needed to use the default native image transcoder.",
-            e)
+            e,
+        )
       } catch (e: InvocationTargetException) {
         throw RuntimeException(
             "Dependency ':native-imagetranscoder' is needed to use the default native image transcoder.",
-            e)
+            e,
+        )
       } catch (e: IllegalAccessException) {
         throw RuntimeException(
             "Dependency ':native-imagetranscoder' is needed to use the default native image transcoder.",
-            e)
+            e,
+        )
       } catch (e: IllegalArgumentException) {
         throw RuntimeException(
             "Dependency ':native-imagetranscoder' is needed to use the default native image transcoder.",
-            e)
+            e,
+        )
       } catch (e: ClassNotFoundException) {
         throw RuntimeException(
             "Dependency ':native-imagetranscoder' is needed to use the default native image transcoder.",
-            e)
+            e,
+        )
       }
 }

@@ -32,7 +32,9 @@ object AnimatedDrawableValueAnimatorHelper {
   fun createValueAnimator(drawable: Drawable?, maxDurationMs: Int): ValueAnimator? =
       if (drawable is AnimatedDrawable2) {
         AnimatedDrawable2ValueAnimatorHelper.createValueAnimator(
-            checkNotNull((drawable as AnimatedDrawable2?)), maxDurationMs)
+            checkNotNull((drawable as AnimatedDrawable2?)),
+            maxDurationMs,
+        )
       } else {
         null
       }
@@ -48,7 +50,10 @@ object AnimatedDrawableValueAnimatorHelper {
     if (drawable is AnimatedDrawable2) {
       val animatedDrawable2 = drawable
       return createValueAnimator(
-          animatedDrawable2, animatedDrawable2.loopCount, animatedDrawable2.loopDurationMs)
+          animatedDrawable2,
+          animatedDrawable2.loopCount,
+          animatedDrawable2.loopDurationMs,
+      )
     }
     return null
   }

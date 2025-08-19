@@ -53,6 +53,9 @@ class IterativeBoxBlurFilterTest {
   @Test(expected = IllegalArgumentException::class)
   fun invalidBigRadiusBlurInPlace() {
     IterativeBoxBlurFilter.boxBlurBitmapInPlace(
-        bitmap, 1, RenderScriptBlurFilter.BLUR_MAX_RADIUS + 1)
+        bitmap,
+        1,
+        RenderScriptBlurFilter.BLUR_MAX_RADIUS + 1,
+    )
   }
 }

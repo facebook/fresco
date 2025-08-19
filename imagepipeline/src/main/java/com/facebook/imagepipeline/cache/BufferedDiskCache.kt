@@ -82,7 +82,8 @@ class BufferedDiskCache(
               FrescoInstrumenter.onEndWork(currentToken)
             }
           },
-          readExecutor)
+          readExecutor,
+      )
     } catch (exception: Exception) {
       // Log failure
       // TODO: 3697790
@@ -139,7 +140,8 @@ class BufferedDiskCache(
             }
             null
           },
-          writeExecutor)
+          writeExecutor,
+      )
     } catch (exception: Exception) {
       FLog.w(TAG, exception, "Failed to schedule disk-cache probe for %s", key.uriString)
       Task.forError(exception)
@@ -223,7 +225,8 @@ class BufferedDiskCache(
               FrescoInstrumenter.onEndWork(currentToken)
             }
           },
-          readExecutor)
+          readExecutor,
+      )
     } catch (exception: Exception) {
       // Log failure
       // TODO: 3697790
@@ -290,7 +293,8 @@ class BufferedDiskCache(
             }
             null
           },
-          writeExecutor)
+          writeExecutor,
+      )
     } catch (exception: Exception) {
       // Log failure
       // TODO: 3697790
@@ -318,7 +322,8 @@ class BufferedDiskCache(
               FrescoInstrumenter.onEndWork(currentToken)
             }
           },
-          writeExecutor)
+          writeExecutor,
+      )
     } catch (exception: Exception) {
       // Log failure
       // TODO: 3697790

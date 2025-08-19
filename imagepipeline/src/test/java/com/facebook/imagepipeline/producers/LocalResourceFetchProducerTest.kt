@@ -75,7 +75,8 @@ class LocalResourceFetchProducerTest {
             false,
             true,
             Priority.MEDIUM,
-            config)
+            config,
+        )
     Mockito.`when`(imageRequest.sourceUri).thenReturn(Uri.parse("res:///$TEST_ID"))
     Mockito.doAnswer(
             object : Answer<Any?> {
@@ -95,7 +96,9 @@ class LocalResourceFetchProducerTest {
   fun tearDown() {
     Mockito.verify(pooledByteBufferFactory, Mockito.atMost(1))
         .newByteBuffer(
-            ArgumentMatchers.any(InputStream::class.java), ArgumentMatchers.eq(TEST_DATA_LENGTH))
+            ArgumentMatchers.any(InputStream::class.java),
+            ArgumentMatchers.eq(TEST_DATA_LENGTH),
+        )
   }
 
   @Test
@@ -105,7 +108,8 @@ class LocalResourceFetchProducerTest {
     Mockito.`when`(
             pooledByteBufferFactory.newByteBuffer(
                 ArgumentMatchers.any(InputStream::class.java),
-                ArgumentMatchers.eq(TEST_DATA_LENGTH)))
+                ArgumentMatchers.eq(TEST_DATA_LENGTH),
+            ))
         .thenReturn(pooledByteBuffer)
     Mockito.`when`(resources.openRawResource(ArgumentMatchers.eq(TEST_ID)))
         .thenReturn(ByteArrayInputStream(ByteArray(TEST_DATA_LENGTH)))

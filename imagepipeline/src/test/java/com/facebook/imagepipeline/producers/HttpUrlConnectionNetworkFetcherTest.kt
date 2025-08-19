@@ -52,7 +52,10 @@ class HttpUrlConnectionNetworkFetcherTest {
 
     fetcher =
         HttpUrlConnectionNetworkFetcher(
-            "user-agent-blabla", null, Mockito.mock(MonotonicClock::class.java))
+            "user-agent-blabla",
+            null,
+            Mockito.mock(MonotonicClock::class.java),
+        )
     connectionsQueue = LinkedList()
     mockUrlConnections()
     mockUriParse()
@@ -243,7 +246,9 @@ class HttpUrlConnectionNetworkFetcherTest {
 
     Mockito.verify(connection)
         .setRequestProperty(
-            ArgumentMatchers.eq("User-Agent"), ArgumentMatchers.eq("user-agent-blabla"))
+            ArgumentMatchers.eq("User-Agent"),
+            ArgumentMatchers.eq("user-agent-blabla"),
+        )
   }
 
   @Throws(IOException::class)

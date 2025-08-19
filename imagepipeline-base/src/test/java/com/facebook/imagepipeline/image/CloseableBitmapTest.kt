@@ -35,7 +35,8 @@ class CloseableBitmapTest {
             resourceReleaser,
             ImmutableQualityInfo.FULL_QUALITY,
             0,
-            ExifInterface.ORIENTATION_UNDEFINED)
+            ExifInterface.ORIENTATION_UNDEFINED,
+        )
   }
 
   @Test

@@ -48,7 +48,8 @@ private constructor(private val gifDecoder: GifMetadataDecoder, private val movi
         bounds.right - bounds.left, /* viewPortWidth */
         bounds.bottom - bounds.top, /* viewPortHeight */
         movie.width(), /* sourceWidth */
-        movie.height() /* sourceHeight */)
+        movie.height(), /* sourceHeight */
+    )
   }
 
   override fun getIntrinsicWidth(): Int = movie.width()

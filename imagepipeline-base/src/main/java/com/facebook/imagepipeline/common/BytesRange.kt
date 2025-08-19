@@ -42,7 +42,7 @@ data class BytesRange(
      *
      * If not TO_END_OF_CONTENT, values are inclusive. e.g. for the first 100 bytes this is 99.
      */
-    val to: Int
+    val to: Int,
 ) {
 
   fun toHttpRangeHeaderValue(): String {
@@ -149,7 +149,9 @@ data class BytesRange(
         }
       } catch (x: IllegalArgumentException) {
         throw IllegalArgumentException(
-            String.format(null as Locale?, "Invalid Content-Range header value: \"%s\"", header), x)
+            String.format(null as Locale?, "Invalid Content-Range header value: \"%s\"", header),
+            x,
+        )
       }
     }
   }

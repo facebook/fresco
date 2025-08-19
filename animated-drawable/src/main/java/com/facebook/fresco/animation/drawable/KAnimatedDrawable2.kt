@@ -215,7 +215,7 @@ open class KAnimatedDrawable2(private var animationBackend: AnimationBackend) :
         actualRenderTimeStartMs: Long,
         actualRenderTimeEndMs: Long,
         startRenderTimeForNextFrameMs: Long,
-        scheduledRenderTimeForNextFrameMs: Long
+        scheduledRenderTimeForNextFrameMs: Long,
     )
   }
 }

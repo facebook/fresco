@@ -55,7 +55,7 @@ class ForwardingRequestListener2 : RequestListener2 {
   override fun onProducerFinishWithSuccess(
       producerContext: ProducerContext?,
       producerName: String?,
-      extraMap: MutableMap<String, String>?
+      extraMap: MutableMap<String, String>?,
   ) {
     forEachListener("onProducerFinishWithSuccess") {
       it.onProducerFinishWithSuccess(producerContext, producerName, extraMap)
@@ -66,7 +66,7 @@ class ForwardingRequestListener2 : RequestListener2 {
       producerContext: ProducerContext?,
       producerName: String?,
       t: Throwable?,
-      extraMap: MutableMap<String, String>?
+      extraMap: MutableMap<String, String>?,
   ) {
     forEachListener("onProducerFinishWithFailure") {
       it.onProducerFinishWithFailure(producerContext, producerName, t, extraMap)
@@ -76,7 +76,7 @@ class ForwardingRequestListener2 : RequestListener2 {
   override fun onProducerFinishWithCancellation(
       producerContext: ProducerContext?,
       producerName: String?,
-      extraMap: MutableMap<String, String>?
+      extraMap: MutableMap<String, String>?,
   ) {
     forEachListener("onProducerFinishWithCancellation") {
       it.onProducerFinishWithCancellation(producerContext, producerName, extraMap)
@@ -86,7 +86,7 @@ class ForwardingRequestListener2 : RequestListener2 {
   override fun onProducerEvent(
       producerContext: ProducerContext,
       producerName: String,
-      producerEventName: String
+      producerEventName: String,
   ) {
     forEachListener("onIntermediateChunkStart") {
       it.onProducerEvent(producerContext, producerName, producerEventName)
@@ -96,7 +96,7 @@ class ForwardingRequestListener2 : RequestListener2 {
   override fun onUltimateProducerReached(
       producerContext: ProducerContext,
       producerName: String,
-      successful: Boolean
+      successful: Boolean,
   ) {
     forEachListener("onProducerFinishWithSuccess") {
       it.onUltimateProducerReached(producerContext, producerName, successful)

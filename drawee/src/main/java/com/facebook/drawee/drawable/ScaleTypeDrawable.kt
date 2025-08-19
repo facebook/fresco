@@ -64,7 +64,7 @@ class ScaleTypeDrawable : ForwardingDrawable {
   constructor(
       drawable: Drawable?,
       scaleType: ScalingUtils.ScaleType,
-      focusPoint: PointF?
+      focusPoint: PointF?,
   ) : super(drawable) {
     this.mScaleType = scaleType
     this.mFocusPoint = focusPoint
@@ -217,7 +217,8 @@ class ScaleTypeDrawable : ForwardingDrawable {
         underlyingWidth,
         underlyingHeight,
         if (mFocusPoint != null) mFocusPoint!!.x else 0.5f,
-        if (mFocusPoint != null) mFocusPoint!!.y else 0.5f)
+        if (mFocusPoint != null) mFocusPoint!!.y else 0.5f,
+    )
     mDrawMatrix = tempMatrix
   }
 

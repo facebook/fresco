@@ -13,7 +13,7 @@ class NoOpCloseableReferenceLeakTracker : CloseableReferenceLeakTracker {
 
   override fun trackCloseableReferenceLeak(
       reference: SharedReference<Any?>,
-      stacktrace: Throwable?
+      stacktrace: Throwable?,
   ) = Unit
 
   override fun setListener(listener: CloseableReferenceLeakTracker.Listener?) = Unit

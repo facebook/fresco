@@ -36,7 +36,7 @@ object DownsampleUtil {
       rotationOptions: RotationOptions,
       resizeOptions: ResizeOptions?,
       encodedImage: EncodedImage,
-      maxBitmapDimension: Int
+      maxBitmapDimension: Int,
   ): Int {
     if (!EncodedImage.isMetaDataAvailable(encodedImage)) {
       return DEFAULT_SAMPLE_SIZE
@@ -67,7 +67,7 @@ object DownsampleUtil {
   fun determineSampleSizeJPEG(
       encodedImage: EncodedImage,
       pixelSize: Int,
-      maxBitmapSizeInBytes: Int
+      maxBitmapSizeInBytes: Int,
   ): Int {
     var sampleSize = encodedImage.sampleSize
     val base = encodedImage.width * encodedImage.height * pixelSize
@@ -82,7 +82,7 @@ object DownsampleUtil {
   fun determineDownsampleRatio(
       rotationOptions: RotationOptions,
       resizeOptions: ResizeOptions?,
-      encodedImage: EncodedImage
+      encodedImage: EncodedImage,
   ): Float {
     check(EncodedImage.isMetaDataAvailable(encodedImage))
     if (resizeOptions == null ||
@@ -109,7 +109,8 @@ object DownsampleUtil {
         heightAfterRotation,
         widthRatio,
         heightRatio,
-        ratio)
+        ratio,
+    )
     return ratio
   }
 

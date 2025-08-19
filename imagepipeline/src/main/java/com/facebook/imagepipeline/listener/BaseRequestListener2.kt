@@ -24,32 +24,32 @@ open class BaseRequestListener2 : RequestListener2 {
   override fun onProducerEvent(
       producerContext: ProducerContext,
       producerName: String,
-      eventName: String
+      eventName: String,
   ) = Unit
 
   override fun onProducerFinishWithSuccess(
       producerContext: ProducerContext,
       producerName: String,
-      extraMap: Map<String, String>?
+      extraMap: Map<String, String>?,
   ) = Unit
 
   override fun onProducerFinishWithFailure(
       producerContext: ProducerContext,
       producerName: String,
       t: Throwable?,
-      extraMap: Map<String, String>?
+      extraMap: Map<String, String>?,
   ) = Unit
 
   override fun onProducerFinishWithCancellation(
       producerContext: ProducerContext,
       producerName: String,
-      extraMap: Map<String, String>?
+      extraMap: Map<String, String>?,
   ) = Unit
 
   override fun onUltimateProducerReached(
       producerContext: ProducerContext,
       producerName: String,
-      successful: Boolean
+      successful: Boolean,
   ) = Unit
 
   override fun requiresExtraMap(producerContext: ProducerContext, producerName: String): Boolean =

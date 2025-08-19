@@ -112,7 +112,8 @@ constructor(
       FRAME_TYPE_CACHED,
       FRAME_TYPE_REUSED,
       FRAME_TYPE_CREATED,
-      FRAME_TYPE_FALLBACK)
+      FRAME_TYPE_FALLBACK,
+  )
   annotation class FrameType
 
   private val bitmapConfig = Bitmap.Config.ARGB_8888
@@ -192,7 +193,11 @@ constructor(
     // Prepare next frames
     if (!isNewRenderImplementation && bitmapFramePreparer != null) {
       bitmapFramePreparationStrategy?.prepareFrames(
-          bitmapFramePreparer, bitmapFrameCache, this, frameNumber)
+          bitmapFramePreparer,
+          bitmapFrameCache,
+          this,
+          frameNumber,
+      )
     }
     return drawn
   }
@@ -200,7 +205,7 @@ constructor(
   private fun drawFrameOrFallback(
       canvas: Canvas,
       frameNumber: Int,
-      @FrameType frameType: Int
+      @FrameType frameType: Int,
   ): Boolean {
     var bitmapReference: CloseableReference<Bitmap>? = null
     val drawn: Boolean
@@ -305,14 +310,20 @@ constructor(
   override fun preloadAnimation() {
     if (!isNewRenderImplementation && bitmapFramePreparer != null) {
       bitmapFramePreparationStrategy?.prepareFrames(
-          bitmapFramePreparer, bitmapFrameCache, this, 0) {
-            animationListener?.onAnimationLoaded()
-          }
+          bitmapFramePreparer,
+          bitmapFrameCache,
+          this,
+          0,
+      ) {
+        animationListener?.onAnimationLoaded()
+      }
     } else {
       bitmapFramePreparationStrategy?.prepareFrames(
-          animationInformation.width(), animationInformation.height()) {
-            animationListener?.onAnimationLoaded()
-          }
+          animationInformation.width(),
+          animationInformation.height(),
+      ) {
+        animationListener?.onAnimationLoaded()
+      }
     }
   }
 
@@ -353,7 +364,7 @@ constructor(
    */
   private fun renderFrameInBitmap(
       frameNumber: Int,
-      targetBitmap: CloseableReference<Bitmap>?
+      targetBitmap: CloseableReference<Bitmap>?,
   ): Boolean {
     if (targetBitmap == null || !targetBitmap.isValid) {
       return false
@@ -370,7 +381,7 @@ constructor(
       frameNumber: Int,
       bitmap: Bitmap,
       currentBoundsWidth: Float,
-      currentBoundsHeight: Float
+      currentBoundsHeight: Float,
   ): Boolean {
     if (!isCircular && cornerRadii == null) {
       return false
@@ -398,7 +409,8 @@ constructor(
       path.addRoundRect(
           RectF(0f, 0f, currentBoundsWidth, currentBoundsHeight),
           cornerRadii ?: floatArrayOf(),
-          Path.Direction.CW)
+          Path.Direction.CW,
+      )
     }
 
     pathFrameNumber = frameNumber
@@ -412,7 +424,11 @@ constructor(
       canvas.drawBitmap(bitmap, 0f, 0f, paint)
     } else {
       if (updatePath(
-          frameNumber, bitmap, currentBounds.width().toFloat(), currentBounds.height().toFloat())) {
+          frameNumber,
+          bitmap,
+          currentBounds.width().toFloat(),
+          currentBounds.height().toFloat(),
+      )) {
         canvas.drawPath(path, paint)
       } else {
         canvas.drawBitmap(bitmap, null, currentBounds, paint)
@@ -436,7 +452,7 @@ constructor(
       frameNumber: Int,
       bitmapReference: CloseableReference<Bitmap>?,
       canvas: Canvas,
-      @FrameType frameType: Int
+      @FrameType frameType: Int,
   ): Boolean {
     if (bitmapReference == null || !CloseableReference.isValid(bitmapReference)) {
       return false
@@ -484,7 +500,8 @@ constructor(
                   Resources.getSystem(),
                   ImageSourceProvider.forUri(uri),
                   imageOptions,
-                  callerContext = CALLER_CONTEXT)
+                  callerContext = CALLER_CONTEXT,
+              )
 
       val imageListener =
           object : ImageListener {
@@ -492,7 +509,7 @@ constructor(
                 id: Long,
                 imageOrigin: Int,
                 imageInfo: ImageInfo?,
-                drawable: Drawable?
+                drawable: Drawable?,
             ) = Unit
 
             override fun onFailure(id: Long, error: Drawable?, throwable: Throwable?) {
@@ -503,7 +520,7 @@ constructor(
             override fun onImageDrawn(
                 id: String,
                 imageInfo: ImageInfo,
-                dimensionsInfo: DimensionsInfo
+                dimensionsInfo: DimensionsInfo,
             ) {
               // Image drawn
             }
@@ -517,7 +534,8 @@ constructor(
               contextChain = null,
               listener = imageListener,
               onFadeListener = null,
-              viewportDimensions = null)
+              viewportDimensions = null,
+          )
     } catch (e: Exception) {
       FLog.w(TAG, "Failed to load thumbnail through Fresco: $thumbnailUrl", e)
       // Release the image

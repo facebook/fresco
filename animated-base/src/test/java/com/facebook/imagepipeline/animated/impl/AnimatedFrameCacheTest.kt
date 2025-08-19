@@ -52,7 +52,8 @@ class AnimatedFrameCacheTest {
             Int.Companion.MAX_VALUE,
             Int.Companion.MAX_VALUE,
             Int.Companion.MAX_VALUE,
-            TimeUnit.MINUTES.toMillis(5))
+            TimeUnit.MINUTES.toMillis(5),
+        )
     whenever(memoryCacheParamsSupplier.get()).thenReturn(params)
     val countingMemoryCache: CountingMemoryCache<CacheKey, CloseableImage> =
         CountingLruBitmapMemoryCacheFactory()
@@ -62,7 +63,8 @@ class AnimatedFrameCacheTest {
                 BitmapMemoryCacheTrimStrategy(),
                 false,
                 false,
-                null)
+                null,
+            )
     cacheKey = SimpleCacheKey("key")
     animatedFrameCache = AnimatedFrameCache(cacheKey, countingMemoryCache)
     frame1 = CloseableReference.of(mock<CloseableImage>())

@@ -53,7 +53,9 @@ object IterativeBoxBlurFilter {
               iterations,
               bitmap.width,
               bitmap.height,
-              radius))
+              radius,
+          ),
+      )
       throw oom
     }
   }
@@ -113,7 +115,7 @@ object IterativeBoxBlurFilter {
       w: Int,
       row: Int,
       diameter: Int,
-      div: IntArray
+      div: IntArray,
   ) {
     val firstInByte = w * row
     val lastInByte = w * (row + 1) - 1
@@ -161,7 +163,7 @@ object IterativeBoxBlurFilter {
       h: Int,
       col: Int,
       diameter: Int,
-      div: IntArray
+      div: IntArray,
   ) {
     val lastInByte = w * (h - 1) + col
     val radiusTimesW = (diameter shr 1) * w

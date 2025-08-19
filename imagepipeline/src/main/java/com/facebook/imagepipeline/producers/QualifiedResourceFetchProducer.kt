@@ -21,7 +21,7 @@ import java.util.concurrent.Executor
 class QualifiedResourceFetchProducer(
     executor: Executor,
     pooledByteBufferFactory: PooledByteBufferFactory,
-    private val contentResolver: ContentResolver
+    private val contentResolver: ContentResolver,
 ) : LocalFetchProducer(executor, pooledByteBufferFactory) {
 
   @Throws(IOException::class)
@@ -30,7 +30,8 @@ class QualifiedResourceFetchProducer(
         checkNotNull(contentResolver.openInputStream(imageRequest.sourceUri)) {
           "ContentResolver returned null InputStream"
         },
-        EncodedImage.UNKNOWN_STREAM_SIZE)
+        EncodedImage.UNKNOWN_STREAM_SIZE,
+    )
   }
 
   override fun getProducerName(): String = PRODUCER_NAME

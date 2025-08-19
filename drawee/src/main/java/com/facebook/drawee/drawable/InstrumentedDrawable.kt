@@ -25,7 +25,7 @@ class InstrumentedDrawable(drawable: Drawable, private val listener: Listener?) 
         imageHeight: Int,
         scaledWidth: Int,
         scaledHeight: Int,
-        scaleType: String?
+        scaleType: String?,
     )
   }
 
@@ -52,7 +52,14 @@ class InstrumentedDrawable(drawable: Drawable, private val listener: Listener?) 
       val imageWidth = intrinsicWidth
       val imageHeight = intrinsicHeight
       listener?.track(
-          viewWidth, viewHeight, imageWidth, imageHeight, scaledWidth, scaledHeight, _scaleType)
+          viewWidth,
+          viewHeight,
+          imageWidth,
+          imageHeight,
+          scaledWidth,
+          scaledHeight,
+          _scaleType,
+      )
     }
     super.draw(canvas)
   }

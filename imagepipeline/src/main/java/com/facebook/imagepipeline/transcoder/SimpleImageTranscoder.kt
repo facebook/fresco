@@ -74,14 +74,16 @@ class SimpleImageTranscoder(private val resizingEnabled: Boolean, private val ma
                 resizedBitmap.width,
                 resizedBitmap.height,
                 transformationMatrix,
-                false)
+                false,
+            )
       }
       val outputFormat = getOutputFormat(outputFormat)
       srcBitmap.compress(outputFormat, quality, outputStream)
       ImageTranscodeResult(
           if (sampleSize > DownsampleUtil.DEFAULT_SAMPLE_SIZE) TranscodeStatus.TRANSCODING_SUCCESS
           else TranscodeStatus.TRANSCODING_NO_RESIZING,
-          convertCompressFormatToImageFormat(outputFormat))
+          convertCompressFormatToImageFormat(outputFormat),
+      )
     } catch (oom: OutOfMemoryError) {
       FLog.e(TAG, "Out-Of-Memory during transcode", oom)
       ImageTranscodeResult(TranscodeStatus.TRANSCODING_ERROR, encodedImage.imageFormat)
@@ -94,7 +96,7 @@ class SimpleImageTranscoder(private val resizingEnabled: Boolean, private val ma
   override fun canResize(
       encodedImage: EncodedImage,
       rotationOptions: RotationOptions?,
-      resizeOptions: ResizeOptions?
+      resizeOptions: ResizeOptions?,
   ): Boolean {
     var rotationOptions = rotationOptions
     if (rotationOptions == null) {
@@ -102,8 +104,11 @@ class SimpleImageTranscoder(private val resizingEnabled: Boolean, private val ma
     }
     return resizingEnabled &&
         DownsampleUtil.determineSampleSize(
-            rotationOptions, resizeOptions, encodedImage, maxBitmapSize) >
-            DownsampleUtil.DEFAULT_SAMPLE_SIZE
+            rotationOptions,
+            resizeOptions,
+            encodedImage,
+            maxBitmapSize,
+        ) > DownsampleUtil.DEFAULT_SAMPLE_SIZE
   }
 
   override fun canTranscode(imageFormat: ImageFormat): Boolean =
@@ -116,14 +121,18 @@ class SimpleImageTranscoder(private val resizingEnabled: Boolean, private val ma
   private fun getSampleSize(
       encodedImage: EncodedImage,
       rotationOptions: RotationOptions,
-      resizeOptions: ResizeOptions?
+      resizeOptions: ResizeOptions?,
   ): Int {
     val sampleSize: Int =
         if (!resizingEnabled) {
           DownsampleUtil.DEFAULT_SAMPLE_SIZE
         } else {
           DownsampleUtil.determineSampleSize(
-              rotationOptions, resizeOptions, encodedImage, maxBitmapSize)
+              rotationOptions,
+              resizeOptions,
+              encodedImage,
+              maxBitmapSize,
+          )
         }
     return sampleSize
   }

@@ -21,6 +21,6 @@ fun interface BitmapMemoryCacheFactory {
       trimStrategy: CacheTrimStrategy,
       storeEntrySize: Boolean,
       ignoreSizeMismatch: Boolean,
-      observer: EntryStateObserver<CacheKey>?
+      observer: EntryStateObserver<CacheKey>?,
   ): CountingMemoryCache<CacheKey, CloseableImage>
 }

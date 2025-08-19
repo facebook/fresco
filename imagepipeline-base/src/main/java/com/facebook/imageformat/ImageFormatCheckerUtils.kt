@@ -69,7 +69,7 @@ object ImageFormatCheckerUtils {
       byteArray: ByteArray,
       byteArrayLen: Int,
       pattern: ByteArray,
-      patternLen: Int
+      patternLen: Int,
   ): Int {
     checkNotNull(byteArray)
     checkNotNull(pattern)

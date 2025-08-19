@@ -23,7 +23,7 @@ constructor(
     private val _sizeInBytes: Int,
     private val _duration: Int,
     private val _loopCount: Int,
-    animatedBitmapConfig: Bitmap.Config? = null
+    animatedBitmapConfig: Bitmap.Config? = null,
 ) : AnimatedImage {
 
   private val _frameDurations: IntArray = IntArray(frames.size)
@@ -69,7 +69,8 @@ constructor(
         frame.width,
         frame.height,
         AnimatedDrawableFrameInfo.BlendOperation.BLEND_WITH_PREVIOUS,
-        frames[frameNumber].disposalMode)
+        frames[frameNumber].disposalMode,
+    )
   }
 
   override fun getAnimatedBitmapConfig(): Bitmap.Config? = _animatedBitmapConfig

@@ -270,7 +270,11 @@ class ArtDecoderTest {
       }
       val result: CloseableReference<Bitmap>? =
           artDecoder.decodeJPEGFromEncodedImage(
-              encodedImage, DEFAULT_BITMAP_CONFIG, null, dataLength)
+              encodedImage,
+              DEFAULT_BITMAP_CONFIG,
+              null,
+              dataLength,
+          )
       verifyDecodedFromStream(mockedBitmapFactory)
       verifyNoLeaks()
       verifyDecodedBytes(complete, dataLength, mockedBitmapFactory)
@@ -312,7 +316,7 @@ class ArtDecoderTest {
 
   private fun closeAndVerifyClosed(
       closeableImage: CloseableReference<Bitmap>?,
-      expectedBitmap: Bitmap
+      expectedBitmap: Bitmap,
   ) {
     verify(bitmapPool, never()).release(expectedBitmap)
     closeableImage?.close()
@@ -326,7 +330,7 @@ class ArtDecoderTest {
   private fun verifyDecodedBytes(
       complete: Boolean,
       length: Int,
-      mockedBitmapFactory: org.mockito.MockedStatic<BitmapFactory>
+      mockedBitmapFactory: org.mockito.MockedStatic<BitmapFactory>,
   ) {
     val decodedBytes: ByteArray = getDecodedBytes(mockedBitmapFactory)
     assertThat(decodedBytes.copyOfRange(0, length)).isEqualTo(encodedBytes.copyOfRange(0, length))
@@ -346,9 +350,13 @@ class ArtDecoderTest {
     mockedBitmapFactory.verify(
         {
           BitmapFactory.decodeStream(
-              inputStreamArgumentCaptor.capture(), isNull<Rect>(), any<BitmapFactory.Options>())
+              inputStreamArgumentCaptor.capture(),
+              isNull<Rect>(),
+              any<BitmapFactory.Options>(),
+          )
         },
-        times(2))
+        times(2),
+    )
     val decodedStream = inputStreamArgumentCaptor.value
     val baos = ByteArrayOutputStream()
     try {
@@ -365,9 +373,13 @@ class ArtDecoderTest {
     mockedBitmapFactory.verify(
         {
           BitmapFactory.decodeStream(
-              any<InputStream>(), isNull<Rect>(), any<BitmapFactory.Options>())
+              any<InputStream>(),
+              isNull<Rect>(),
+              any<BitmapFactory.Options>(),
+          )
         },
-        times(2))
+        times(2),
+    )
   }
 
   companion object {

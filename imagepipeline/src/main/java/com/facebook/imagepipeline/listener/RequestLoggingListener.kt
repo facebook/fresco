@@ -27,7 +27,7 @@ class RequestLoggingListener : RequestListener {
       request: ImageRequest,
       callerContextObject: Any,
       requestId: String,
-      isPrefetch: Boolean
+      isPrefetch: Boolean,
   ) {
     if (FLog.isLoggable(FLog.VERBOSE)) {
       FLog.v(
@@ -36,7 +36,8 @@ class RequestLoggingListener : RequestListener {
           time,
           requestId,
           callerContextObject,
-          isPrefetch)
+          isPrefetch,
+      )
       requestStartTimeMap[requestId] = time
     }
   }
@@ -52,7 +53,8 @@ class RequestLoggingListener : RequestListener {
           "time %d: onProducerStart: {requestId: %s, producer: %s}",
           startTime,
           requestId,
-          producerName)
+          producerName,
+      )
     }
   }
 
@@ -60,7 +62,7 @@ class RequestLoggingListener : RequestListener {
   override fun onProducerFinishWithSuccess(
       requestId: String,
       producerName: String,
-      extraMap: Map<String, String>?
+      extraMap: Map<String, String>?,
   ) {
     if (FLog.isLoggable(FLog.VERBOSE)) {
       val mapKey = Pair.create(requestId, producerName)
@@ -73,7 +75,8 @@ class RequestLoggingListener : RequestListener {
           requestId,
           producerName,
           getElapsedTime(startTime, currentTime),
-          extraMap)
+          extraMap,
+      )
     }
   }
 
@@ -82,7 +85,7 @@ class RequestLoggingListener : RequestListener {
       requestId: String,
       producerName: String,
       throwable: Throwable,
-      extraMap: Map<String, String>?
+      extraMap: Map<String, String>?,
   ) {
     if (FLog.isLoggable(FLog.WARN)) {
       val mapKey = Pair.create(requestId, producerName)
@@ -97,7 +100,8 @@ class RequestLoggingListener : RequestListener {
           producerName,
           getElapsedTime(startTime, currentTime),
           extraMap,
-          throwable.toString())
+          throwable.toString(),
+      )
     }
   }
 
@@ -105,7 +109,7 @@ class RequestLoggingListener : RequestListener {
   override fun onProducerFinishWithCancellation(
       requestId: String,
       producerName: String,
-      extraMap: Map<String, String>?
+      extraMap: Map<String, String>?,
   ) {
     if (FLog.isLoggable(FLog.VERBOSE)) {
       val mapKey = Pair.create(requestId, producerName)
@@ -118,7 +122,8 @@ class RequestLoggingListener : RequestListener {
           requestId,
           producerName,
           getElapsedTime(startTime, currentTime),
-          extraMap)
+          extraMap,
+      )
     }
   }
 
@@ -135,7 +140,8 @@ class RequestLoggingListener : RequestListener {
           requestId,
           producerName,
           producerEventName,
-          getElapsedTime(startTime, currentTime))
+          getElapsedTime(startTime, currentTime),
+      )
     }
   }
 
@@ -143,7 +149,7 @@ class RequestLoggingListener : RequestListener {
   override fun onUltimateProducerReached(
       requestId: String,
       producerName: String,
-      successful: Boolean
+      successful: Boolean,
   ) {
     if (FLog.isLoggable(FLog.VERBOSE)) {
       val mapKey = Pair.create(requestId, producerName)
@@ -156,7 +162,8 @@ class RequestLoggingListener : RequestListener {
           requestId,
           producerName,
           getElapsedTime(startTime, currentTime),
-          successful)
+          successful,
+      )
     }
   }
 
@@ -170,7 +177,8 @@ class RequestLoggingListener : RequestListener {
           "time %d: onRequestSuccess: {requestId: %s, elapsedTime: %d ms}",
           currentTime,
           requestId,
-          getElapsedTime(startTime, currentTime))
+          getElapsedTime(startTime, currentTime),
+      )
     }
   }
 
@@ -179,7 +187,7 @@ class RequestLoggingListener : RequestListener {
       request: ImageRequest,
       requestId: String,
       throwable: Throwable,
-      isPrefetch: Boolean
+      isPrefetch: Boolean,
   ) {
     if (FLog.isLoggable(FLog.WARN)) {
       val startTime = requestStartTimeMap.remove(requestId)
@@ -190,7 +198,8 @@ class RequestLoggingListener : RequestListener {
           currentTime,
           requestId,
           getElapsedTime(startTime, currentTime),
-          throwable.toString())
+          throwable.toString(),
+      )
     }
   }
 
@@ -204,7 +213,8 @@ class RequestLoggingListener : RequestListener {
           "time %d: onRequestCancellation: {requestId: %s, elapsedTime: %d ms}",
           currentTime,
           requestId,
-          getElapsedTime(startTime, currentTime))
+          getElapsedTime(startTime, currentTime),
+      )
     }
   }
 

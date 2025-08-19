@@ -46,7 +46,8 @@ class DynamicDefaultDiskStorageTest {
           Suppliers.of(context.cacheDir)
         },
         baseDirectoryName,
-        cacheErrorLogger)
+        cacheErrorLogger,
+    )
   }
 
   private fun createInternalCacheDirStorage(): DynamicDefaultDiskStorage {

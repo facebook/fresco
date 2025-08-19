@@ -70,7 +70,8 @@ class LocalContentUriFetchProducerTest {
             false,
             true,
             Priority.MEDIUM,
-            config)
+            config,
+        )
     Mockito.`when`(imageRequest.getSourceUri()).thenReturn(contentUri)
     Mockito.doAnswer(
             object : Answer<Any?> {

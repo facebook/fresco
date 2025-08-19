@@ -177,7 +177,8 @@ open class ProgressBarDrawable : Drawable(), CloneableDrawable {
         rect,
         min(_radius.toDouble(), (_barWidth / 2).toDouble()).toFloat(),
         min(_radius.toDouble(), (_barWidth / 2).toDouble()).toFloat(),
-        Path.Direction.CW)
+        Path.Direction.CW,
+    )
     canvas.drawPath(path, paint)
   }
 }

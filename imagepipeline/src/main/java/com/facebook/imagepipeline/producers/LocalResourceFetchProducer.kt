@@ -20,13 +20,15 @@ import java.util.concurrent.Executor
 class LocalResourceFetchProducer(
     executor: Executor,
     pooledByteBufferFactory: PooledByteBufferFactory,
-    private val resources: Resources
+    private val resources: Resources,
 ) : LocalFetchProducer(executor, pooledByteBufferFactory) {
 
   @Throws(IOException::class)
   override fun getEncodedImage(imageRequest: ImageRequest): EncodedImage? =
       getEncodedImage(
-          resources.openRawResource(getResourceId(imageRequest)), getLength(imageRequest))
+          resources.openRawResource(getResourceId(imageRequest)),
+          getLength(imageRequest),
+      )
 
   private fun getLength(imageRequest: ImageRequest): Int {
     var fd: AssetFileDescriptor? = null

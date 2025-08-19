@@ -28,7 +28,7 @@ object AnimatedFactoryProvider {
       useBalancedAnimationStrategy: Boolean,
       animationFpsLimit: Int,
       bufferLengthMilliseconds: Int,
-      serialExecutorService: ExecutorService?
+      serialExecutorService: ExecutorService?,
   ): AnimatedFactory? {
     if (!implLoaded) {
       try {
@@ -42,7 +42,8 @@ object AnimatedFactoryProvider {
                 java.lang.Boolean.TYPE,
                 Integer.TYPE,
                 Integer.TYPE,
-                SerialExecutorService::class.java)
+                SerialExecutorService::class.java,
+            )
         impl =
             constructor.newInstance(
                 platformBitmapFactory,
@@ -52,7 +53,8 @@ object AnimatedFactoryProvider {
                 useBalancedAnimationStrategy,
                 animationFpsLimit,
                 bufferLengthMilliseconds,
-                serialExecutorService) as AnimatedFactory
+                serialExecutorService,
+            ) as AnimatedFactory
       } catch (e: Throwable) {
         // Head in the sand
       }
