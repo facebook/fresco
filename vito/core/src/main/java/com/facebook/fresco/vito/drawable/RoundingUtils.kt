@@ -121,9 +121,8 @@ object RoundingUtils {
         applyRounding(getRoundedDrawable(resources, drawable), borderOptions, roundingOptions)
       }
 
-  private fun <T> getRoundedDrawable(resources: Resources, drawable: Drawable): T where
-  T : Drawable,
-  T : Rounded =
+  private fun <T> getRoundedDrawable(resources: Resources, drawable: Drawable): T
+      where T : Drawable, T : Rounded =
       when (drawable) {
         is BitmapDrawable -> getRoundedDrawable(resources, drawable.bitmap)
         is NinePatchDrawable -> RoundedNinePatchDrawable(drawable) as T
@@ -142,20 +141,16 @@ object RoundingUtils {
         circularDrawable(drawable, borderOptions)
       }
 
-  private fun <T> squareDrawableWithBorder(
-      drawable: T,
-      borderOptions: BorderOptions
-  ): Drawable where T : Drawable, T : Rounded =
+  private fun <T> squareDrawableWithBorder(drawable: T, borderOptions: BorderOptions): Drawable
+      where T : Drawable, T : Rounded =
       // We use the same rounded corner drawable to draw the border without applying rounding
       roundedCornerDrawable(drawable, borderOptions, null)
 
-  private fun <T> getRoundedDrawable(resources: Resources, bitmap: Bitmap?): T where
-  T : Drawable,
-  T : Rounded = RoundedBitmapDrawable(resources, bitmap) as T
+  private fun <T> getRoundedDrawable(resources: Resources, bitmap: Bitmap?): T
+      where T : Drawable, T : Rounded = RoundedBitmapDrawable(resources, bitmap) as T
 
-  private fun <T> circularDrawable(drawable: T, borderOptions: BorderOptions?): Drawable where
-  T : Drawable,
-  T : Rounded {
+  private fun <T> circularDrawable(drawable: T, borderOptions: BorderOptions?): Drawable
+      where T : Drawable, T : Rounded {
     drawable.isCircle = true
     if (borderOptions != null) {
       applyBorders(drawable, borderOptions)
@@ -188,9 +183,8 @@ object RoundingUtils {
    * @param drawable the drawable where the borders are applied
    * @param borderOptions [BorderOptions]
    */
-  private fun <T> applyBorders(drawable: T, borderOptions: BorderOptions) where
-  T : Drawable,
-  T : Rounded {
+  private fun <T> applyBorders(drawable: T, borderOptions: BorderOptions)
+      where T : Drawable, T : Rounded {
     drawable.setBorder(borderOptions.color, borderOptions.width)
     drawable.padding = borderOptions.padding
   }

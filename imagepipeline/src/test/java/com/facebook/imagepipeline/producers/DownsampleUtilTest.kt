@@ -51,7 +51,8 @@ class DownsampleUtilTest {
                     encodedImage,
                     MAX_BITMAP_SIZE,
                 )
-                .toLong())
+                .toLong()
+        )
         .isEqualTo(1)
   }
 
@@ -66,7 +67,8 @@ class DownsampleUtilTest {
                     encodedImage,
                     MAX_BITMAP_SIZE,
                 )
-                .toLong())
+                .toLong()
+        )
         .isEqualTo(1)
 
     // Width or height of the encoded image are 0
@@ -78,7 +80,8 @@ class DownsampleUtilTest {
                     encodedImage,
                     MAX_BITMAP_SIZE,
                 )
-                .toLong())
+                .toLong()
+        )
         .isEqualTo(1)
     encodedImage.setWidth(0)
     encodedImage.setHeight(100)
@@ -89,7 +92,8 @@ class DownsampleUtilTest {
                     encodedImage,
                     MAX_BITMAP_SIZE,
                 )
-                .toLong())
+                .toLong()
+        )
         .isEqualTo(1)
   }
 
@@ -104,7 +108,8 @@ class DownsampleUtilTest {
                     encodedImage,
                     MAX_BITMAP_SIZE,
                 )
-                .toLong())
+                .toLong()
+        )
         .isEqualTo(2)
 
     whenRequestResizeWidthAndHeightWithExifRotation(50, 25)
@@ -115,7 +120,8 @@ class DownsampleUtilTest {
                     encodedImage,
                     MAX_BITMAP_SIZE,
                 )
-                .toLong())
+                .toLong()
+        )
         .isEqualTo(2)
   }
 
@@ -131,7 +137,8 @@ class DownsampleUtilTest {
                     encodedImage,
                     MAX_BITMAP_SIZE,
                 )
-                .toLong())
+                .toLong()
+        )
         .isEqualTo(3)
   }
 
@@ -147,7 +154,8 @@ class DownsampleUtilTest {
                     encodedImage,
                     MAX_BITMAP_SIZE,
                 )
-                .toLong())
+                .toLong()
+        )
         .isEqualTo(2)
 
     whenRequestResizeWidthAndHeightWithExifRotation(25, 50)
@@ -158,7 +166,8 @@ class DownsampleUtilTest {
                     encodedImage,
                     MAX_BITMAP_SIZE,
                 )
-                .toLong())
+                .toLong()
+        )
         .isEqualTo(1)
   }
 
@@ -176,7 +185,8 @@ class DownsampleUtilTest {
                     encodedImage,
                     MAX_BITMAP_SIZE,
                 )
-                .toLong())
+                .toLong()
+        )
         .isEqualTo(1)
 
     // 50,100 -> 25,50 = 2
@@ -188,7 +198,8 @@ class DownsampleUtilTest {
                     encodedImage,
                     MAX_BITMAP_SIZE,
                 )
-                .toLong())
+                .toLong()
+        )
         .isEqualTo(2)
 
     // 50,100 -> 10,20 = 5
@@ -200,7 +211,8 @@ class DownsampleUtilTest {
                     encodedImage,
                     MAX_BITMAP_SIZE,
                 )
-                .toLong())
+                .toLong()
+        )
         .isEqualTo(5)
   }
 
@@ -216,7 +228,8 @@ class DownsampleUtilTest {
                     encodedImage,
                     MAX_BITMAP_SIZE,
                 )
-                .toLong())
+                .toLong()
+        )
         .isEqualTo(2)
 
     whenImageWidthAndHeight(8000, 8000)
@@ -228,7 +241,8 @@ class DownsampleUtilTest {
                     encodedImage,
                     MAX_BITMAP_SIZE,
                 )
-                .toLong())
+                .toLong()
+        )
         .isEqualTo(4)
   }
 
@@ -244,7 +258,8 @@ class DownsampleUtilTest {
                     encodedImage,
                     MAX_BITMAP_SIZE,
                 )
-                .toLong())
+                .toLong()
+        )
         .isEqualTo(1)
 
     whenImageWidthAndHeight(8000, 8000)
@@ -256,7 +271,8 @@ class DownsampleUtilTest {
                     encodedImage,
                     MAX_BITMAP_SIZE,
                 )
-                .toLong())
+                .toLong()
+        )
         .isEqualTo(2)
   }
 
@@ -312,7 +328,9 @@ class DownsampleUtilTest {
     encodedImage =
         EncodedImage(
             CloseableReference.of<PooledByteBuffer?>(
-                Mockito.mock<PooledByteBuffer?>(PooledByteBuffer::class.java)))
+                Mockito.mock<PooledByteBuffer?>(PooledByteBuffer::class.java)
+            )
+        )
     encodedImage.setWidth(width)
     encodedImage.setHeight(height)
     encodedImage.setRotationAngle(rotationAngle)

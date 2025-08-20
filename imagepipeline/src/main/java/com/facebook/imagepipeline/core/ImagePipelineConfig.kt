@@ -127,7 +127,8 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
         builder.bitmapMemoryCacheParamsSupplier
             ?: DefaultBitmapMemoryCacheParamsSupplier(
                 (checkNotNull(builder.context.getSystemService(Context.ACTIVITY_SERVICE))
-                    as ActivityManager))
+                    as ActivityManager)
+            )
     bitmapMemoryCacheTrimStrategy =
         builder.bitmapMemoryCacheTrimStrategy ?: BitmapMemoryCacheTrimStrategy()
     encodedMemoryCacheTrimStrategy =
@@ -561,14 +562,18 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
         imagePipelineExperiments: ImagePipelineExperiments,
     ): Int =
         builder.memoryChunkType
-            ?: if (imagePipelineExperiments.memoryType == MemoryChunkType.ASHMEM_MEMORY.toLong() &&
-                Build.VERSION.SDK_INT >= 27) {
+            ?: if (
+                imagePipelineExperiments.memoryType == MemoryChunkType.ASHMEM_MEMORY.toLong() &&
+                    Build.VERSION.SDK_INT >= 27
+            ) {
               MemoryChunkType.ASHMEM_MEMORY
-            } else if (imagePipelineExperiments.memoryType ==
-                MemoryChunkType.BUFFER_MEMORY.toLong()) {
+            } else if (
+                imagePipelineExperiments.memoryType == MemoryChunkType.BUFFER_MEMORY.toLong()
+            ) {
               MemoryChunkType.BUFFER_MEMORY
-            } else if (imagePipelineExperiments.memoryType ==
-                MemoryChunkType.NATIVE_MEMORY.toLong()) {
+            } else if (
+                imagePipelineExperiments.memoryType == MemoryChunkType.NATIVE_MEMORY.toLong()
+            ) {
               MemoryChunkType.NATIVE_MEMORY
             } else {
               MemoryChunkType.NATIVE_MEMORY

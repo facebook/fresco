@@ -181,7 +181,8 @@ class ImageUriProvider constructor(context: Context) {
           ImageSize.XL,
           ImageSize.XXL ->
               throw IllegalArgumentException(
-                  "Don't have random sample URIs for image size: $imageSize")
+                  "Don't have random sample URIs for image size: $imageSize"
+              )
         }
 
     val random = Random(0) // fix seed for reproducible order
@@ -210,7 +211,8 @@ class ImageUriProvider constructor(context: Context) {
                 ContentUris.withAppendedId(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     it.getLong(dataIndex),
-                ))
+                )
+            )
           }
         }
     return uris

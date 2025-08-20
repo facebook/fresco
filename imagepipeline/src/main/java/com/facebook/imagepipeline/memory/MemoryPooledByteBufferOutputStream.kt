@@ -88,7 +88,8 @@ constructor(pool: MemoryChunkPool, initialCapacity: Int = pool.minBufferSize) :
   override fun write(buffer: ByteArray, offset: Int, count: Int) {
     if (offset < 0 || count < 0 || offset + count > buffer.size) {
       throw ArrayIndexOutOfBoundsException(
-          "length=${buffer.size}; regionStart=${offset}; regionLength=${count}")
+          "length=${buffer.size}; regionStart=${offset}; regionLength=${count}"
+      )
     }
     ensureValid()
     realloc(this.count + count)
@@ -121,8 +122,9 @@ constructor(pool: MemoryChunkPool, initialCapacity: Int = pool.minBufferSize) :
   fun realloc(newLength: Int) {
     ensureValid()
     checkNotNull(bufRef)
-    /* Can the buffer handle @i more bytes, if not expand it */ if (newLength <=
-        bufRef!!.get().size) {
+    /* Can the buffer handle @i more bytes, if not expand it */ if (
+        newLength <= bufRef!!.get().size
+    ) {
       return
     }
     val newbuf = this.pool[newLength]

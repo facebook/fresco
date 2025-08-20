@@ -24,12 +24,14 @@ object ImageSourceSampleValues {
               Pair(
                   "JPEG",
                   ImageSourceProvider.forUri(
-                      "https://frescolib.org/static/sample-images/animal_a_l.jpg"),
+                      "https://frescolib.org/static/sample-images/animal_a_l.jpg"
+                  ),
               ),
               Pair(
                   "PNG",
                   ImageSourceProvider.forUri(
-                      "https://frescolib.org/static/sample-images/animal_b.png"),
+                      "https://frescolib.org/static/sample-images/animal_b.png"
+                  ),
               ),
               Pair(
                   "WebP",
@@ -42,12 +44,14 @@ object ImageSourceSampleValues {
               Pair(
                   "GIF",
                   ImageSourceProvider.forUri(
-                      "https://media2.giphy.com/media/3oge84qhopFbFFkwec/giphy.gif"),
+                      "https://media2.giphy.com/media/3oge84qhopFbFFkwec/giphy.gif"
+                  ),
               ),
               Pair(
                   "non-existing",
                   ImageSourceProvider.forUri(
-                      "https://frescolib.org/static/sample-images/does_not_exist.jpg"),
+                      "https://frescolib.org/static/sample-images/does_not_exist.jpg"
+                  ),
               ),
           ),
       ) { _, s ->

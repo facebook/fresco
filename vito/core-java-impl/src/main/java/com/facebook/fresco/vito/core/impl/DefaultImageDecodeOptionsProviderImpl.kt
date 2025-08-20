@@ -65,11 +65,13 @@ class DefaultImageDecodeOptionsProviderImpl(
         bitmapConfig: Bitmap.Config?,
         circularBitmapRounding: CircularBitmapRounding?,
     ): ImageDecodeOptions? =
-        if (roundingOptions == null ||
-            roundingOptions.isForceRoundAtDecode ||
-            !roundingOptions.isCircular ||
-            circularBitmapRounding == null ||
-            pipelineRoundingUnsupportedForBitmapConfig(bitmapConfig)) {
+        if (
+            roundingOptions == null ||
+                roundingOptions.isForceRoundAtDecode ||
+                !roundingOptions.isCircular ||
+                circularBitmapRounding == null ||
+                pipelineRoundingUnsupportedForBitmapConfig(bitmapConfig)
+        ) {
           null
         } else {
           circularBitmapRounding.getDecodeOptions(roundingOptions.isAntiAliased)

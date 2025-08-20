@@ -85,8 +85,10 @@ class BitmapDrawableFactory : ImageOptionsDrawableFactory {
       closeableStaticBitmap: CloseableStaticBitmap,
       drawable: Drawable,
   ): Drawable =
-      if (!hasTransformableRotationAngle(closeableStaticBitmap) &&
-          !hasTransformableExifOrientation(closeableStaticBitmap)) {
+      if (
+          !hasTransformableRotationAngle(closeableStaticBitmap) &&
+              !hasTransformableExifOrientation(closeableStaticBitmap)
+      ) {
         // Return the bitmap drawable directly as there's nothing to transform in it
         drawable
       } else {

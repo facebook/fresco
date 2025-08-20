@@ -39,8 +39,10 @@ object PlatformDecoderFactory {
             createPool(poolFactory, useDecodeBufferHelper),
             platformDecoderOptions,
         )
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ||
-          !NativeCodeSetup.getUseNativeCode()) {
+      } else if (
+          Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ||
+              !NativeCodeSetup.getUseNativeCode()
+      ) {
         ArtDecoder(
             poolFactory.bitmapPool,
             createPool(poolFactory, useDecodeBufferHelper),

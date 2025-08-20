@@ -88,8 +88,10 @@ private fun Resources.getColorOrDrawableModel(colorOrDrawableRes: Int): ImageDat
       val value = TypedValue()
       getValue(colorOrDrawableRes, value, true)
 
-      if (value.type >= TypedValue.TYPE_FIRST_COLOR_INT &&
-          value.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+      if (
+          value.type >= TypedValue.TYPE_FIRST_COLOR_INT &&
+              value.type <= TypedValue.TYPE_LAST_COLOR_INT
+      ) {
         ColorIntImageDataModel(value.data)
       } else {
         toModel(getNullableDrawable(colorOrDrawableRes))

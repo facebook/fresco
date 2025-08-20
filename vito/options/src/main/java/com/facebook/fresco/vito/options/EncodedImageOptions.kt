@@ -24,7 +24,8 @@ open class EncodedImageOptions(builder: Builder<*>) {
       }
     } else if (!diskCacheId.isNullOrEmpty()) {
       throw BuilderException(
-          "Ensure that if you want to use a disk cache id, you set the CacheChoice to DYNAMIC")
+          "Ensure that if you want to use a disk cache id, you set the CacheChoice to DYNAMIC"
+      )
     }
   }
 

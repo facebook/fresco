@@ -65,7 +65,8 @@ class LocalAssetFetchProducerTest {
             pooledByteBufferFactory.newByteBuffer(
                 ArgumentMatchers.any(InputStream::class.java),
                 ArgumentMatchers.eq(TEST_DATA_LENGTH),
-            ))
+            )
+        )
         .thenReturn(pooledByteBuffer)
 
     executor = TestExecutorService(FakeClock())
@@ -93,7 +94,8 @@ class LocalAssetFetchProducerTest {
                     EncodedImage.cloneOrNull(invocation.arguments[0] as EncodedImage?)
                 return null
               }
-            })
+            }
+        )
         .`when`(consumer)
         .onNewResult(ArgumentMatchers.notNull(EncodedImage::class.java), ArgumentMatchers.anyInt())
   }
@@ -116,13 +118,15 @@ class LocalAssetFetchProducerTest {
             assetManager.open(
                 ArgumentMatchers.eq(TEST_FILENAME),
                 ArgumentMatchers.eq(AssetManager.ACCESS_STREAMING),
-            ))
+            )
+        )
         .thenReturn(ByteArrayInputStream(ByteArray(TEST_DATA_LENGTH)))
     Mockito.`when`(
             pooledByteBufferFactory.newByteBuffer(
                 ArgumentMatchers.any(InputStream::class.java),
                 ArgumentMatchers.eq(TEST_DATA_LENGTH),
-            ))
+            )
+        )
         .thenReturn(pooledByteBuffer)
 
     localAssetFetchProducer.produceResults(consumer, producerContext)
@@ -133,7 +137,8 @@ class LocalAssetFetchProducerTest {
                 ?.byteBufferRef
                 ?.getUnderlyingReferenceTestOnly()
                 ?.refCountTestOnly
-                ?.toLong())
+                ?.toLong()
+        )
         .isEqualTo(2)
     assertThat(capturedEncodedImage?.byteBufferRef?.get()).isSameAs(pooledByteBuffer)
     Mockito.verify(producerListener).onProducerStart(producerContext, PRODUCER_NAME)
@@ -149,7 +154,8 @@ class LocalAssetFetchProducerTest {
             assetManager.open(
                 ArgumentMatchers.eq(TEST_FILENAME),
                 ArgumentMatchers.eq(AssetManager.ACCESS_STREAMING),
-            ))
+            )
+        )
         .thenThrow(exception)
     localAssetFetchProducer.produceResults(consumer, producerContext)
     executor.runUntilIdle()

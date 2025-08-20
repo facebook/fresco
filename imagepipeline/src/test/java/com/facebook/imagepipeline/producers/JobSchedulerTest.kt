@@ -93,7 +93,8 @@ class JobSchedulerTest {
               override fun answer(invocation: InvocationOnMock?): Long {
                 return fakeClockForTime.now()
               }
-            })
+            }
+        )
 
     testExecutorService = TestExecutorService(fakeClockForWorker)
     testScheduledExecutorService = TestScheduledExecutorService(fakeClockForScheduled)
@@ -305,7 +306,8 @@ class JobSchedulerTest {
                     .isEqualTo(JobScheduler.JobState.RUNNING_AND_PENDING)
                 testJobRunnable.wait.set(false)
               }
-            })
+            }
+        )
 
     // block running until the above code executed on another thread finishes
     testJobRunnable.wait.set(true)

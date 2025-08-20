@@ -55,7 +55,8 @@ object VitoViewInflater {
                       AutoRotateDrawable(progressBarDrawable, progressBarAutoRotateInterval)
                     } else {
                       progressBarDrawable
-                    })
+                    }
+                )
               }
             }
             R.styleable.GenericDraweeHierarchy_fadeDuration -> fadeDurationMs(attrs.getInt(attr, 0))
@@ -93,8 +94,10 @@ object VitoViewInflater {
                 val roundBottomEnd =
                     attrs.getBoolean(R.styleable.GenericDraweeHierarchy_roundBottomEnd, true)
 
-                if (Build.VERSION.SDK_INT >= 17 &&
-                    context.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
+                if (
+                    Build.VERSION.SDK_INT >= 17 &&
+                        context.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
+                ) {
                   roundTopLeft = roundTopLeft && roundTopEnd
                   roundTopRight = roundTopRight && roundTopStart
                   roundBottomRight = roundBottomRight && roundBottomStart
@@ -111,7 +114,8 @@ object VitoViewInflater {
                         if (roundTopRight) radius else 0f,
                         if (roundBottomRight) radius else 0f,
                         if (roundBottomLeft) radius else 0f,
-                    ))
+                    )
+                )
               }
             }
             R.styleable.GenericDraweeHierarchy_roundingBorderWidth -> {
@@ -127,7 +131,8 @@ object VitoViewInflater {
                                 0,
                             )
                             .toFloat(),
-                    ))
+                    )
+                )
               }
             }
             R.styleable.GenericDraweeHierarchy_retryImage,

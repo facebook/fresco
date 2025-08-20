@@ -58,7 +58,8 @@ data class ImageSourceConfigurator(
                   {
                     set {
                       ImageSourceProvider.forUri(
-                          imageUriProvider.create(currentImageFormat)?.toString())
+                          imageUriProvider.create(currentImageFormat)?.toString()
+                      )
                     }
                   },
               "Increasing quality" to

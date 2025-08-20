@@ -175,7 +175,8 @@ object VitoSpinners {
               "indeterminate" to
                   { _: Context, builder: ImageOptions.Builder ->
                     builder.progress(
-                        AutoRotateDrawable(InsetDrawable(ColorDrawable(Color.BLUE), 50), 1000))
+                        AutoRotateDrawable(InsetDrawable(ColorDrawable(Color.BLUE), 50), 1000)
+                    )
                   },
               "progress bar" to
                   { c: Context, builder: ImageOptions.Builder ->
@@ -184,7 +185,8 @@ object VitoSpinners {
                           color = ContextCompat.getColor(c, R.color.progress_bar_color)
                           backgroundColor =
                               ContextCompat.getColor(c, R.color.progress_bar_background)
-                        })
+                        }
+                    )
                   },
           ),
           "Progress",
@@ -213,7 +215,8 @@ object VitoSpinners {
                         RoundedCornersDrawable(ColorDrawable(Color.TRANSPARENT)).apply {
                           isCircle = true
                           overlayColor = Color.BLUE
-                        })
+                        }
+                    )
                   },
               "color overlay rounded corners" to
                   { builder: ImageOptions.Builder ->
@@ -221,7 +224,8 @@ object VitoSpinners {
                         RoundedCornersDrawable(ColorDrawable(Color.TRANSPARENT)).apply {
                           setRadius(50f)
                           overlayColor = Color.GREEN
-                        })
+                        }
+                    )
                   },
           ),
           "Overlay",
@@ -298,7 +302,8 @@ object VitoSpinners {
                               closeableImage: CloseableImage,
                               imageOptions: ImageOptions,
                           ): Drawable = ColorDrawable(Color.BLUE)
-                        })
+                        }
+                    )
                   },
           ),
           "Custom Drawable Factory",

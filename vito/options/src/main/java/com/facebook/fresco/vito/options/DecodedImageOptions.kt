@@ -45,21 +45,23 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
   }
 
   protected fun equalDecodedOptions(other: DecodedImageOptions): Boolean {
-    return if (!Objects.equal(resizeOptions, other.resizeOptions) ||
-        !Objects.equal(downsampleOverride, other.downsampleOverride) ||
-        !Objects.equal(rotationOptions, other.rotationOptions) ||
-        !Objects.equal(postprocessor, other.postprocessor) ||
-        !Objects.equal(imageDecodeOptions, other.imageDecodeOptions) ||
-        !Objects.equal(roundingOptions, other.roundingOptions) ||
-        !Objects.equal(animatedOptions, other.animatedOptions) ||
-        !Objects.equal(borderOptions, other.borderOptions) ||
-        !Objects.equal(actualImageScaleType, other.actualImageScaleType) ||
-        !Objects.equal(actualImageFocusPoint, other.actualImageFocusPoint) ||
-        mLocalThumbnailPreviewsEnabled != other.mLocalThumbnailPreviewsEnabled ||
-        loadThumbnailOnly != other.loadThumbnailOnly ||
-        isProgressiveDecodingEnabled !== other.isProgressiveDecodingEnabled ||
-        !Objects.equal(bitmapConfig, other.bitmapConfig) ||
-        isFirstFrameThumbnailEnabled != other.isFirstFrameThumbnailEnabled) {
+    return if (
+        !Objects.equal(resizeOptions, other.resizeOptions) ||
+            !Objects.equal(downsampleOverride, other.downsampleOverride) ||
+            !Objects.equal(rotationOptions, other.rotationOptions) ||
+            !Objects.equal(postprocessor, other.postprocessor) ||
+            !Objects.equal(imageDecodeOptions, other.imageDecodeOptions) ||
+            !Objects.equal(roundingOptions, other.roundingOptions) ||
+            !Objects.equal(animatedOptions, other.animatedOptions) ||
+            !Objects.equal(borderOptions, other.borderOptions) ||
+            !Objects.equal(actualImageScaleType, other.actualImageScaleType) ||
+            !Objects.equal(actualImageFocusPoint, other.actualImageFocusPoint) ||
+            mLocalThumbnailPreviewsEnabled != other.mLocalThumbnailPreviewsEnabled ||
+            loadThumbnailOnly != other.loadThumbnailOnly ||
+            isProgressiveDecodingEnabled !== other.isProgressiveDecodingEnabled ||
+            !Objects.equal(bitmapConfig, other.bitmapConfig) ||
+            isFirstFrameThumbnailEnabled != other.isFirstFrameThumbnailEnabled
+    ) {
       false
     } else equalEncodedOptions(other)
   }

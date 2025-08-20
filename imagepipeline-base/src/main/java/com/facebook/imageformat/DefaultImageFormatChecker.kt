@@ -32,7 +32,8 @@ class DefaultImageFormatChecker : FormatChecker {
                   BINARY_XML_HEADER_LENGTH,
                   AVIF_HEADER_LENGTH,
               )
-              .maxOrNull())
+              .maxOrNull()
+      )
 
   /**
    * Tries to match imageHeaderByte and headerSize against every known image format. If any match

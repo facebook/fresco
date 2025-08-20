@@ -83,7 +83,8 @@ class AnimatedImageFactoryWebPImplTest {
                 ArgumentMatchers.eq(byteBuffer.getNativePtr()),
                 ArgumentMatchers.eq(byteBuffer.size()),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            ))
+            )
+        )
         .thenReturn(mockWebPImage)
 
     testCreateDefaults(mockWebPImage, byteBuffer)
@@ -99,7 +100,8 @@ class AnimatedImageFactoryWebPImplTest {
             webPImageMock?.decodeFromByteBuffer(
                 ArgumentMatchers.any<ByteBuffer>(),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            ))
+            )
+        )
         .thenReturn(mockWebPImage)
 
     testCreateDefaults(mockWebPImage, byteBuffer)
@@ -118,7 +120,8 @@ class AnimatedImageFactoryWebPImplTest {
                 ArgumentMatchers.eq(byteBuffer.nativePtr),
                 ArgumentMatchers.eq(byteBuffer.size()),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            ))
+            )
+        )
         .thenReturn(mockWebPImage)
     whenever(mockWebPImage.width).thenReturn(50)
     whenever(mockWebPImage.height).thenReturn(50)
@@ -138,7 +141,8 @@ class AnimatedImageFactoryWebPImplTest {
             webPImageMock?.decodeFromByteBuffer(
                 ArgumentMatchers.any<ByteBuffer>(),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            ))
+            )
+        )
         .thenReturn(mockWebPImage)
     whenever(mockWebPImage.width).thenReturn(50)
     whenever(mockWebPImage.height).thenReturn(50)
@@ -161,7 +165,8 @@ class AnimatedImageFactoryWebPImplTest {
                 ArgumentMatchers.eq(byteBuffer.nativePtr),
                 ArgumentMatchers.eq(byteBuffer.size()),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            ))
+            )
+        )
         .thenReturn(mockWebPImage)
     whenever(mockWebPImage.width).thenReturn(50)
     whenever(mockWebPImage.height).thenReturn(50)
@@ -183,7 +188,8 @@ class AnimatedImageFactoryWebPImplTest {
             webPImageMock?.decodeFromByteBuffer(
                 ArgumentMatchers.any<ByteBuffer>(),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            ))
+            )
+        )
         .thenReturn(mockWebPImage)
     whenever(mockWebPImage.width).thenReturn(50)
     whenever(mockWebPImage.height).thenReturn(50)
@@ -227,7 +233,8 @@ class AnimatedImageFactoryWebPImplTest {
             mockAnimatedDrawableBackendProvider?.get(
                 Matchers.any<AnimatedImageResult?>(AnimatedImageResult::class.java),
                 Matchers.isNull<Rect?>(Rect::class.java),
-            ))
+            )
+        )
         .thenReturn(mockAnimatedDrawableBackend)
     whenever(mockBitmapFactory?.createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG))
         .thenReturn(CloseableReference.of(mockBitmap, FAKE_BITMAP_RESOURCE_RELEASER))
@@ -281,7 +288,8 @@ class AnimatedImageFactoryWebPImplTest {
             mockAnimatedDrawableBackendProvider?.get(
                 Matchers.any<AnimatedImageResult?>(AnimatedImageResult::class.java),
                 Matchers.isNull<Rect?>(Rect::class.java),
-            ))
+            )
+        )
         .thenReturn(mockAnimatedDrawableBackend)
 
     whenever(mockBitmapFactory?.createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG))

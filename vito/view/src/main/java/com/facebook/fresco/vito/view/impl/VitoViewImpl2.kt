@@ -204,7 +204,8 @@ object VitoViewImpl2 {
             override fun onDraw() {
               // NOP
             }
-          })
+          }
+      )
     }
     return frescoDrawable
   }

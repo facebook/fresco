@@ -144,7 +144,8 @@ class DiskStorageCache(
               indexReady = true
               countDownLatch!!.countDown()
             }
-          })
+          }
+      )
     } else {
       countDownLatch = CountDownLatch(0)
     }
@@ -652,9 +653,11 @@ class DiskStorageCache(
   @GuardedBy("lock")
   private fun maybeUpdateFileCacheSize(): Boolean {
     val now = clock.now()
-    if ((!cacheStats.isInitialized) ||
-        cacheSizeLastUpdateTime == UNINITIALIZED ||
-        (now - cacheSizeLastUpdateTime) > FILECACHE_SIZE_UPDATE_PERIOD_MS) {
+    if (
+        (!cacheStats.isInitialized) ||
+            cacheSizeLastUpdateTime == UNINITIALIZED ||
+            (now - cacheSizeLastUpdateTime) > FILECACHE_SIZE_UPDATE_PERIOD_MS
+    ) {
       return maybeUpdateFileCacheSizeAndIndex()
     }
     return false

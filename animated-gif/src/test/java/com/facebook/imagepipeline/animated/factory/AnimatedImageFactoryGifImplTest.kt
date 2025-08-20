@@ -88,7 +88,8 @@ class AnimatedImageFactoryGifImplTest {
                 ArgumentMatchers.eq(byteBuffer.getNativePtr()),
                 ArgumentMatchers.eq(byteBuffer.size()),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            ))
+            )
+        )
         .thenReturn(mockGifImage)
 
     testCreateDefaults(mockGifImage, byteBuffer)
@@ -104,7 +105,8 @@ class AnimatedImageFactoryGifImplTest {
             gifImageMock?.decodeFromByteBuffer(
                 ArgumentMatchers.eq<ByteBuffer?>(byteBuffer.getByteBuffer()),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            ))
+            )
+        )
         .thenReturn(mockGifImage)
 
     testCreateDefaults(mockGifImage, byteBuffer)
@@ -123,7 +125,8 @@ class AnimatedImageFactoryGifImplTest {
                 ArgumentMatchers.eq(byteBuffer.getNativePtr()),
                 ArgumentMatchers.eq(byteBuffer.size()),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            ))
+            )
+        )
         .thenReturn(mockGifImage)
     whenever(mockGifImage.getWidth()).thenReturn(50)
     whenever(mockGifImage.getHeight()).thenReturn(50)
@@ -143,7 +146,8 @@ class AnimatedImageFactoryGifImplTest {
             gifImageMock?.decodeFromByteBuffer(
                 ArgumentMatchers.eq<ByteBuffer?>(byteBuffer.getByteBuffer()),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            ))
+            )
+        )
         .thenReturn(mockGifImage)
     whenever(mockGifImage.getWidth()).thenReturn(50)
     whenever(mockGifImage.getHeight()).thenReturn(50)
@@ -166,7 +170,8 @@ class AnimatedImageFactoryGifImplTest {
                 ArgumentMatchers.eq(byteBuffer.getNativePtr()),
                 ArgumentMatchers.eq(byteBuffer.size()),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            ))
+            )
+        )
         .thenReturn(mockGifImage)
     whenever(mockGifImage.getWidth()).thenReturn(50)
     whenever(mockGifImage.getHeight()).thenReturn(50)
@@ -188,7 +193,8 @@ class AnimatedImageFactoryGifImplTest {
             gifImageMock?.decodeFromByteBuffer(
                 ArgumentMatchers.eq<ByteBuffer?>(byteBuffer.getByteBuffer()),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            ))
+            )
+        )
         .thenReturn(mockGifImage)
     whenever(mockGifImage.getWidth()).thenReturn(50)
     whenever(mockGifImage.getHeight()).thenReturn(50)
@@ -231,7 +237,8 @@ class AnimatedImageFactoryGifImplTest {
             mockAnimatedDrawableBackendProvider?.get(
                 Matchers.any<AnimatedImageResult?>(AnimatedImageResult::class.java),
                 Matchers.isNull<Rect?>(Rect::class.java),
-            ))
+            )
+        )
         .thenReturn(mockAnimatedDrawableBackend)
     whenever(mockBitmapFactory?.createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG))
         .thenReturn(CloseableReference.of<Bitmap?>(mockBitmap, FAKE_BITMAP_RESOURCE_RELEASER))
@@ -284,7 +291,8 @@ class AnimatedImageFactoryGifImplTest {
             mockAnimatedDrawableBackendProvider?.get(
                 Matchers.any<AnimatedImageResult?>(AnimatedImageResult::class.java),
                 Matchers.isNull<Rect?>(Rect::class.java),
-            ))
+            )
+        )
         .thenReturn(mockAnimatedDrawableBackend)
 
     whenever(mockBitmapFactory?.createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG))

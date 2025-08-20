@@ -35,7 +35,8 @@ class ImageRequestTest {
                   override fun getName(): String {
                     return super.getName()
                   }
-                })
+                }
+            )
             .setProgressiveRenderingEnabled(true)
             .setRequestListener(RequestLoggingListener())
             .setResizeOptions(ResizeOptions(20, 20))
@@ -62,7 +63,8 @@ class ImageRequestTest {
                   override fun getName(): String {
                     return super.getName()
                   }
-                })
+                }
+            )
             .setProgressiveRenderingEnabled(true)
             .setRequestListener(RequestLoggingListener())
             .setResizeOptions(ResizeOptions(20, 20))

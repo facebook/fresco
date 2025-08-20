@@ -41,7 +41,8 @@ class ArtBitmapFactory(
     val bitmap = bitmapPool[sizeInBytes]
     check(
         bitmap.allocationByteCount >=
-            width * height * BitmapUtil.getPixelSizeForBitmapConfig(bitmapConfig))
+            width * height * BitmapUtil.getPixelSizeForBitmapConfig(bitmapConfig)
+    )
     bitmap.reconfigure(width, height, bitmapConfig)
     return closeableReferenceFactory.create(bitmap, bitmapPool)
   }

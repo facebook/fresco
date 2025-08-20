@@ -423,12 +423,14 @@ constructor(
     if (currentBounds == null) {
       canvas.drawBitmap(bitmap, 0f, 0f, paint)
     } else {
-      if (updatePath(
-          frameNumber,
-          bitmap,
-          currentBounds.width().toFloat(),
-          currentBounds.height().toFloat(),
-      )) {
+      if (
+          updatePath(
+              frameNumber,
+              bitmap,
+              currentBounds.width().toFloat(),
+              currentBounds.height().toFloat(),
+          )
+      ) {
         canvas.drawPath(path, paint)
       } else {
         canvas.drawBitmap(bitmap, null, currentBounds, paint)

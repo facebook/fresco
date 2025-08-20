@@ -31,7 +31,8 @@ internal object GifImageValidator : AnimatedImageValidator {
         val totalPixels = width * height * decoder.frameCount
         if (totalPixels > MAX_GIF_TOTAL_PIXELS) {
           return ValidationResult.Failure(
-              "GIF too large: $width x $height x ${decoder.frameCount} frames = $totalPixels pixels")
+              "GIF too large: $width x $height x ${decoder.frameCount} frames = $totalPixels pixels"
+          )
         }
       }
       return ValidationResult.Success

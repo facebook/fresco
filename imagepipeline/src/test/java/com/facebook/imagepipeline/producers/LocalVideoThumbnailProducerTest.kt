@@ -112,7 +112,8 @@ class LocalVideoThumbnailProducerTest {
             ThumbnailUtils.createVideoThumbnail(
                 TEST_FILENAME,
                 MediaStore.Images.Thumbnails.MINI_KIND,
-            ))
+            )
+        )
         .thenReturn(bitmap)
     Mockito.doAnswer(
             object : Answer<Any?> {
@@ -123,7 +124,8 @@ class LocalVideoThumbnailProducerTest {
                         as CloseableReference<CloseableStaticBitmap>
                 return null
               }
-            })
+            }
+        )
         .`when`(consumer)
         .onNewResult(
             ArgumentMatchers.any<CloseableReference<CloseableImage>>(),
@@ -150,7 +152,8 @@ class LocalVideoThumbnailProducerTest {
             ThumbnailUtils.createVideoThumbnail(
                 TEST_FILENAME,
                 MediaStore.Images.Thumbnails.MICRO_KIND,
-            ))
+            )
+        )
         .thenReturn(bitmap)
     Mockito.doAnswer(
             object : Answer<Any?> {
@@ -161,7 +164,8 @@ class LocalVideoThumbnailProducerTest {
                         as CloseableReference<CloseableStaticBitmap>
                 return null
               }
-            })
+            }
+        )
         .`when`(consumer)
         .onNewResult(
             ArgumentMatchers.any<CloseableReference<CloseableImage>>(),
@@ -189,7 +193,8 @@ class LocalVideoThumbnailProducerTest {
             ThumbnailUtils.createVideoThumbnail(
                 TEST_FILENAME,
                 MediaStore.Images.Thumbnails.MICRO_KIND,
-            ))
+            )
+        )
         .thenReturn(null)
     localVideoThumbnailProducer.produceResults(consumer, producerContext)
     executor.runUntilIdle()
@@ -211,7 +216,8 @@ class LocalVideoThumbnailProducerTest {
             ThumbnailUtils.createVideoThumbnail(
                 TEST_FILENAME,
                 MediaStore.Images.Thumbnails.MICRO_KIND,
-            ))
+            )
+        )
         .thenThrow(exception)
     localVideoThumbnailProducer.produceResults(consumer, producerContext)
     executor.runUntilIdle()

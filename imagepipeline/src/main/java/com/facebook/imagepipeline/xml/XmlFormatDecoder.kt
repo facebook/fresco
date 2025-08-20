@@ -56,8 +56,9 @@ internal class XmlFormatDecoder(private val resources: Resources) : ImageDecoder
    * @throws IllegalStateException if the resource ID cannot be parsed from the provided uri
    */
   private fun parseImageSourceResourceId(xmlResource: Uri): Int {
-    return if (UriUtil.isLocalResourceUri(xmlResource) ||
-        UriUtil.isQualifiedResourceUri(xmlResource)) {
+    return if (
+        UriUtil.isLocalResourceUri(xmlResource) || UriUtil.isQualifiedResourceUri(xmlResource)
+    ) {
       xmlResource.pathSegments.lastOrNull()?.toIntOrNull()
           ?: error("Unable to read resource ID from ${xmlResource.path}")
     } else {

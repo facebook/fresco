@@ -139,7 +139,8 @@ object ImageSourceToImagePipelineAdapter {
                     extras,
                     viewport,
                 )
-              })
+              }
+          )
 
       is IncreasingQualityImageSource ->
           return IncreasingQualityDataSourceSupplier.create(
@@ -166,7 +167,8 @@ object ImageSourceToImagePipelineAdapter {
                       extras,
                       viewport,
                   ),
-              ))
+              )
+          )
 
       is RetainingImageSource -> {
         imageSource.setImageSourceUpdateFunction { newImageSource ->

@@ -178,7 +178,8 @@ class CountingLruMapTest {
           override fun apply(key: String): Boolean {
             return key == "key2" || key == "key3"
           }
-        })
+        }
+    )
     assertThat(countingLruMap.count).isEqualTo(2)
     assertThat(countingLruMap.sizeInBytes).isEqualTo(250)
     assertKeyOrder("key1", "key4")
@@ -212,7 +213,8 @@ class CountingLruMapTest {
               override fun apply(key: String): Boolean {
                 return key == "key2" || key == "key3"
               }
-            })
+            }
+        )
     assertThat(entries).isNotNull()
     assertThat(entries.size).isEqualTo(2)
     assertThat(entries[0]?.key).isEqualTo("key2")

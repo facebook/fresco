@@ -40,7 +40,8 @@ class ThumbnailSizeCheckerTest {
                 BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS,
                 BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS,
                 null,
-            ))
+            )
+        )
         .isTrue()
   }
 
@@ -51,7 +52,8 @@ class ThumbnailSizeCheckerTest {
                 BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS - 1,
                 BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS,
                 null,
-            ))
+            )
+        )
         .isFalse()
   }
 
@@ -62,7 +64,8 @@ class ThumbnailSizeCheckerTest {
                 BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS,
                 BIG_ENOUGH_SIZE_FOR_NO_RESIZE_OPTIONS - 1,
                 null,
-            ))
+            )
+        )
         .isFalse()
   }
 
@@ -107,7 +110,8 @@ class ThumbnailSizeCheckerTest {
                       rotation,
                   ),
                   null,
-              ))
+              )
+          )
           .isTrue()
     }
   }

@@ -161,7 +161,9 @@ class EncodedImageTest {
     val buf: PooledByteBuffer =
         TrivialPooledByteBuffer(
             ByteStreams.toByteArray(
-                EncodedImageTest::class.java.getResourceAsStream("images/image.jpg")!!))
+                EncodedImageTest::class.java.getResourceAsStream("images/image.jpg")!!
+            )
+        )
     val encodedImage: EncodedImage = EncodedImage(CloseableReference.of(buf))
     encodedImage.parseMetaData()
     assertThat(encodedImage.imageFormat).isSameAs(DefaultImageFormats.JPEG)
@@ -177,7 +179,9 @@ class EncodedImageTest {
     val buf: PooledByteBuffer =
         TrivialPooledByteBuffer(
             ByteStreams.toByteArray(
-                EncodedImageTest::class.java.getResourceAsStream("images/image.png")!!))
+                EncodedImageTest::class.java.getResourceAsStream("images/image.png")!!
+            )
+        )
     val encodedImage: EncodedImage = EncodedImage(CloseableReference.of(buf))
     encodedImage.parseMetaData()
     assertThat(encodedImage.imageFormat).isSameAs(DefaultImageFormats.PNG)
@@ -196,7 +200,8 @@ class EncodedImageTest {
   ) {
     val buf: PooledByteBuffer =
         TrivialPooledByteBuffer(
-            ByteStreams.toByteArray(EncodedImageTest::class.java.getResourceAsStream(imagePath)!!))
+            ByteStreams.toByteArray(EncodedImageTest::class.java.getResourceAsStream(imagePath)!!)
+        )
     val encodedImage: EncodedImage = EncodedImage(CloseableReference.of(buf))
     encodedImage.parseMetaData()
     assertThat(encodedImage.imageFormat).isSameAs(imageFormat)

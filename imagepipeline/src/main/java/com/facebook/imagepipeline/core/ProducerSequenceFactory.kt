@@ -106,7 +106,8 @@ class ProducerSequenceFactory(
             }
             throw IllegalArgumentException(
                 "Unsupported uri scheme for encoded image fetch! Uri is: " +
-                    getShortenedUriString(uri))
+                    getShortenedUriString(uri)
+            )
           }
         }
       }
@@ -135,9 +136,10 @@ class ProducerSequenceFactory(
   val localContentUriFetchEncodedImageProducerSequence:
       Producer<CloseableReference<PooledByteBuffer>> by lazy {
     traceSection(
-        "ProducerSequenceFactory#getLocalContentUriFetchEncodedImageProducerSequence:init") {
-          RemoveImageTransformMetaDataProducer(backgroundLocalContentUriFetchToEncodeMemorySequence)
-        }
+        "ProducerSequenceFactory#getLocalContentUriFetchEncodedImageProducerSequence:init"
+    ) {
+      RemoveImageTransformMetaDataProducer(backgroundLocalContentUriFetchToEncodeMemorySequence)
+    }
   }
 
   /**
@@ -158,7 +160,8 @@ class ProducerSequenceFactory(
       else -> {
         val uri = imageRequest.sourceUri
         throw IllegalArgumentException(
-            "Unsupported uri scheme for encoded image fetch! Uri is: " + getShortenedUriString(uri))
+            "Unsupported uri scheme for encoded image fetch! Uri is: " + getShortenedUriString(uri)
+        )
       }
     }
   }
@@ -252,7 +255,8 @@ class ProducerSequenceFactory(
               }
             }
             throw IllegalArgumentException(
-                "Unsupported uri scheme! Uri is: <${getShortenedUriString(uri)}> ${customProducerSequenceFactories?.size} custom factories")
+                "Unsupported uri scheme! Uri is: <${getShortenedUriString(uri)}> ${customProducerSequenceFactories?.size} custom factories"
+            )
           }
         }
       }
@@ -309,7 +313,8 @@ class ProducerSequenceFactory(
       traceSection("ProducerSequenceFactory#createCommonNetworkFetchToEncodedMemorySequence") {
         val inputProducer: Producer<EncodedImage> =
             newEncodedCacheMultiplexToTranscodeSequence(
-                producerFactory.newNetworkFetchProducer(networkFetcher))
+                producerFactory.newNetworkFetchProducer(networkFetcher)
+            )
         var networkFetchToEncodedMemorySequence: Producer<EncodedImage?> =
             ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer)
         networkFetchToEncodedMemorySequence =
@@ -353,15 +358,16 @@ class ProducerSequenceFactory(
    */
   val backgroundLocalContentUriFetchToEncodeMemorySequence: Producer<EncodedImage?> by lazy {
     traceSection(
-        "ProducerSequenceFactory#getBackgroundLocalContentUriFetchToEncodeMemorySequence:init") {
-          val localFileFetchProducer = producerFactory.newLocalContentUriFetchProducer()
-          val toEncodedMultiplexProducer =
-              newEncodedCacheMultiplexToTranscodeSequence(localFileFetchProducer)
-          producerFactory.newBackgroundThreadHandoffProducer(
-              toEncodedMultiplexProducer,
-              threadHandoffProducerQueue,
-          )
-        }
+        "ProducerSequenceFactory#getBackgroundLocalContentUriFetchToEncodeMemorySequence:init"
+    ) {
+      val localFileFetchProducer = producerFactory.newLocalContentUriFetchProducer()
+      val toEncodedMultiplexProducer =
+          newEncodedCacheMultiplexToTranscodeSequence(localFileFetchProducer)
+      producerFactory.newBackgroundThreadHandoffProducer(
+          toEncodedMultiplexProducer,
+          threadHandoffProducerQueue,
+      )
+    }
   }
 
   /**
@@ -408,7 +414,8 @@ class ProducerSequenceFactory(
           producerFactory.newLocalThumbnailBitmapSdk29Producer(
               loadThumbnailFromContentResolverFirst,
               loadThumbnailFromContentResolverForContentUriOnly,
-          ))
+          )
+      )
     } else {
       throw Throwable("Unreachable exception. Just to make linter happy for the lazy block.")
     }
@@ -655,7 +662,8 @@ class ProducerSequenceFactory(
     private fun validateEncodedImageRequest(imageRequest: ImageRequest) {
       Preconditions.checkArgument(
           imageRequest.lowestPermittedRequestLevel.value <=
-              ImageRequest.RequestLevel.ENCODED_MEMORY_CACHE.value)
+              ImageRequest.RequestLevel.ENCODED_MEMORY_CACHE.value
+      )
     }
 
     private fun getShortenedUriString(uri: Uri): String {

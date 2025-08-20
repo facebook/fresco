@@ -81,7 +81,8 @@ class LocalContentUriFetchProducerTest {
                     EncodedImage.cloneOrNull(invocation.getArguments()[0] as EncodedImage?)
                 return null
               }
-            })
+            }
+        )
         .`when`(consumer)
         .onNewResult(ArgumentMatchers.notNull(EncodedImage::class.java), ArgumentMatchers.anyInt())
   }
@@ -103,7 +104,8 @@ class LocalContentUriFetchProducerTest {
   fun testFetchLocalContentUri() {
     val pooledByteBuffer = Mockito.mock(PooledByteBuffer::class.java)
     Mockito.`when`(
-            pooledByteBufferFactory.newByteBuffer(ArgumentMatchers.any(InputStream::class.java)))
+            pooledByteBufferFactory.newByteBuffer(ArgumentMatchers.any(InputStream::class.java))
+        )
         .thenReturn(pooledByteBuffer)
 
     Mockito.`when`(contentResolver.openInputStream(contentUri))
@@ -116,7 +118,8 @@ class LocalContentUriFetchProducerTest {
             capturedEncodedImage
                 ?.getByteBufferRef()
                 ?.getUnderlyingReferenceTestOnly()
-                ?.getRefCountTestOnly())
+                ?.getRefCountTestOnly()
+        )
         .isEqualTo(2)
     assertThat(capturedEncodedImage?.getByteBufferRef()?.get()).isSameAs(pooledByteBuffer)
     Mockito.verify(producerListener).onProducerStart(producerContext, PRODUCER_NAME)
@@ -127,7 +130,8 @@ class LocalContentUriFetchProducerTest {
   @Throws(Exception::class)
   fun testFetchLocalContentUriFailsByThrowing() {
     Mockito.`when`(
-            pooledByteBufferFactory.newByteBuffer(ArgumentMatchers.any(InputStream::class.java)))
+            pooledByteBufferFactory.newByteBuffer(ArgumentMatchers.any(InputStream::class.java))
+        )
         .thenThrow(exception)
     Mockito.verify(consumer).onFailure(exception)
     Mockito.verify(producerListener).onProducerStart(producerContext, PRODUCER_NAME)

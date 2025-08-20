@@ -286,10 +286,12 @@ abstract class BasePool<V : Any>(
         // We should free the value if no bucket is found, or if the bucket length cap is exceeded.
         // However, if the pool max size softcap is exceeded, it may not always be best to free
         // *this* value.
-        if (bucket == null ||
-            bucket.isMaxLengthExceeded ||
-            isMaxSizeSoftCapExceeded ||
-            !isReusable(value)) {
+        if (
+            bucket == null ||
+                bucket.isMaxLengthExceeded ||
+                isMaxSizeSoftCapExceeded ||
+                !isReusable(value)
+        ) {
           bucket?.decrementInUseCount()
 
           if (FLog.isLoggable(FLog.VERBOSE)) {
@@ -850,5 +852,6 @@ abstract class BasePool<V : Any>(
    */
   class PoolSizeViolationException(hardCap: Int, usedBytes: Int, freeBytes: Int, allocSize: Int) :
       RuntimeException(
-          "Pool hard cap violation? Hard cap = ${hardCap} Used size = ${usedBytes} Free size = ${freeBytes} Request size = ${allocSize}")
+          "Pool hard cap violation? Hard cap = ${hardCap} Used size = ${usedBytes} Free size = ${freeBytes} Request size = ${allocSize}"
+      )
 }

@@ -50,17 +50,23 @@ class BitmapUtilTest {
   fun testDecodeDimensions_testPngs() {
     assertThat(
             BitmapUtil.decodeDimensions(
-                BitmapUtilTest::class.java.getResourceAsStream("pngs/1.png")))
+                BitmapUtilTest::class.java.getResourceAsStream("pngs/1.png")
+            )
+        )
         .isEqualTo(Pair(240, 181))
 
     assertThat(
             BitmapUtil.decodeDimensions(
-                BitmapUtilTest::class.java.getResourceAsStream("pngs/2.png")))
+                BitmapUtilTest::class.java.getResourceAsStream("pngs/2.png")
+            )
+        )
         .isEqualTo(Pair(240, 246))
 
     assertThat(
             BitmapUtil.decodeDimensions(
-                BitmapUtilTest::class.java.getResourceAsStream("pngs/3.png")))
+                BitmapUtilTest::class.java.getResourceAsStream("pngs/3.png")
+            )
+        )
         .isEqualTo(Pair(240, 180))
   }
 
@@ -68,17 +74,23 @@ class BitmapUtilTest {
   fun testDecodeDimensions_testJpegs() {
     assertThat(
             BitmapUtil.decodeDimensions(
-                BitmapUtilTest::class.java.getResourceAsStream("jpegs/1.jpeg")))
+                BitmapUtilTest::class.java.getResourceAsStream("jpegs/1.jpeg")
+            )
+        )
         .isEqualTo(Pair(240, 181))
 
     assertThat(
             BitmapUtil.decodeDimensions(
-                BitmapUtilTest::class.java.getResourceAsStream("jpegs/2.jpeg")))
+                BitmapUtilTest::class.java.getResourceAsStream("jpegs/2.jpeg")
+            )
+        )
         .isEqualTo(Pair(240, 93))
 
     assertThat(
             BitmapUtil.decodeDimensions(
-                BitmapUtilTest::class.java.getResourceAsStream("jpegs/3.jpeg")))
+                BitmapUtilTest::class.java.getResourceAsStream("jpegs/3.jpeg")
+            )
+        )
         .isEqualTo(Pair(240, 240))
   }
 
@@ -86,7 +98,9 @@ class BitmapUtilTest {
   fun testDecodeDimensions_testIncompleteJpegs() {
     assertThat(
             BitmapUtil.decodeDimensions(
-                BitmapUtilTest::class.java.getResourceAsStream("jpegs/1cut.jpeg")))
+                BitmapUtilTest::class.java.getResourceAsStream("jpegs/1cut.jpeg")
+            )
+        )
         .isEqualTo(Pair(240, 181))
   }
 
@@ -94,12 +108,16 @@ class BitmapUtilTest {
   fun testDecodeDimensions_testProgressiveJpegs() {
     assertThat(
             BitmapUtil.decodeDimensions(
-                BitmapUtilTest::class.java.getResourceAsStream("jpegs/1prog.jpeg")))
+                BitmapUtilTest::class.java.getResourceAsStream("jpegs/1prog.jpeg")
+            )
+        )
         .isEqualTo(Pair(981, 657))
 
     assertThat(
             BitmapUtil.decodeDimensions(
-                BitmapUtilTest::class.java.getResourceAsStream("jpegs/2prog.jpeg")))
+                BitmapUtilTest::class.java.getResourceAsStream("jpegs/2prog.jpeg")
+            )
+        )
         .isEqualTo(Pair(800, 531))
   }
 
@@ -107,17 +125,23 @@ class BitmapUtilTest {
   fun testDecodeDimensions_testStaticGifs() {
     assertThat(
             BitmapUtil.decodeDimensions(
-                BitmapUtilTest::class.java.getResourceAsStream("gifs/1.gif")))
+                BitmapUtilTest::class.java.getResourceAsStream("gifs/1.gif")
+            )
+        )
         .isEqualTo(Pair(240, 181))
 
     assertThat(
             BitmapUtil.decodeDimensions(
-                BitmapUtilTest::class.java.getResourceAsStream("gifs/2.gif")))
+                BitmapUtilTest::class.java.getResourceAsStream("gifs/2.gif")
+            )
+        )
         .isEqualTo(Pair(240, 246))
 
     assertThat(
             BitmapUtil.decodeDimensions(
-                BitmapUtilTest::class.java.getResourceAsStream("gifs/3.gif")))
+                BitmapUtilTest::class.java.getResourceAsStream("gifs/3.gif")
+            )
+        )
         .isEqualTo(Pair(240, 180))
   }
 
@@ -125,12 +149,16 @@ class BitmapUtilTest {
   fun testDecodeDimensions_testAnimatedGifs() {
     assertThat(
             BitmapUtil.decodeDimensions(
-                BitmapUtilTest::class.java.getResourceAsStream("animatedgifs/1.gif")))
+                BitmapUtilTest::class.java.getResourceAsStream("animatedgifs/1.gif")
+            )
+        )
         .isEqualTo(Pair(500, 500))
 
     assertThat(
             BitmapUtil.decodeDimensions(
-                BitmapUtilTest::class.java.getResourceAsStream("animatedgifs/2.gif")))
+                BitmapUtilTest::class.java.getResourceAsStream("animatedgifs/2.gif")
+            )
+        )
         .isEqualTo(Pair(550, 400))
   }
 
@@ -138,17 +166,23 @@ class BitmapUtilTest {
   fun testDecodeDimensions_testBmps() {
     assertThat(
             BitmapUtil.decodeDimensions(
-                BitmapUtilTest::class.java.getResourceAsStream("bmps/1.bmp")))
+                BitmapUtilTest::class.java.getResourceAsStream("bmps/1.bmp")
+            )
+        )
         .isEqualTo(Pair(240, 181))
 
     assertThat(
             BitmapUtil.decodeDimensions(
-                BitmapUtilTest::class.java.getResourceAsStream("bmps/2.bmp")))
+                BitmapUtilTest::class.java.getResourceAsStream("bmps/2.bmp")
+            )
+        )
         .isEqualTo(Pair(240, 246))
 
     assertThat(
             BitmapUtil.decodeDimensions(
-                BitmapUtilTest::class.java.getResourceAsStream("bmps/3.bmp")))
+                BitmapUtilTest::class.java.getResourceAsStream("bmps/3.bmp")
+            )
+        )
         .isEqualTo(Pair(240, 180))
   }
 }

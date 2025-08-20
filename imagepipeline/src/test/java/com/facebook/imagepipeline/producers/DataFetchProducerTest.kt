@@ -36,7 +36,9 @@ class DataFetchProducerTest {
     // 5-character Tamil sequence 'thamizh'
     assertThat(
             DataFetchProducer.getData(
-                "data:text/plain;,%E0%AE%A4%E0%AE%AE%E0%AE%BF%E0%AE%B4%E0%AF%8D"))
+                "data:text/plain;,%E0%AE%A4%E0%AE%AE%E0%AE%BF%E0%AE%B4%E0%AF%8D"
+            )
+        )
         .isEqualTo("\u0ba4\u0bae\u0bbf\u0bb4\u0bcd".toByteArray())
   }
 
@@ -50,7 +52,8 @@ class DataFetchProducerTest {
                 "vUUlvONmOZtfzgFzByTB10QgxOR0TqBQejhRNzOfkVJ+5YiUqrXF5Y5lKh/DeuNcP5yLWGsEbtLiOSpa/TP" +
                 "g7JpJHxyendzWTBfX0cxOnKPjgBzi4diinWGdkF8kjdfnycQZXZeYGejmJlZeGl9i2icVqaNVailT6F5iJ9" +
                 "0m6mvuTS4OK05M0vDk0Q4XUtwvKOzrcd3iq9uisF81M1OIcR7lEewwcLp7tuNNkM3uNna3F2JQFo97Vriy/" +
-                "Xl4/f1cf5VWzXyym7PHhhx4dbgYKAAA7")
+                "Xl4/f1cf5VWzXyym7PHhhx4dbgYKAAA7"
+        )
     assertThat(ImageFormatChecker.getImageFormat(ByteArrayInputStream(gif)))
         .isEqualTo(DefaultImageFormats.GIF)
   }

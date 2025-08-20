@@ -219,7 +219,8 @@ class BufferedDiskCacheTest {
                 .get(cacheKey, isCancelled)
                 .result
                 .byteBufferRef
-                .underlyingReferenceTestOnly)
+                .underlyingReferenceTestOnly
+        )
         .isSameAs(closeableReference.underlyingReferenceTestOnly)
   }
 

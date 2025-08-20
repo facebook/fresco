@@ -64,9 +64,8 @@ open class FrescoController2Impl(
 ) : DrawableDataSubscriber, FrescoController2 {
 
   @Suppress("UNCHECKED_CAST")
-  override fun <T> createDrawable(uiFramework: String?): T where
-  T : Drawable,
-  T : FrescoDrawableInterface =
+  override fun <T> createDrawable(uiFramework: String?): T
+      where T : Drawable, T : FrescoDrawableInterface =
       FrescoDrawable2Impl(
           config.useNewReleaseCallback(),
           imagePerfListenerSupplier?.get(),
@@ -177,7 +176,8 @@ open class FrescoController2Impl(
 
     // Set layers that are always visible
     drawable.setOverlayDrawable(
-        hierarcher.buildOverlayDrawable(imageRequest.resources, imageRequest.imageOptions))
+        hierarcher.buildOverlayDrawable(imageRequest.resources, imageRequest.imageOptions)
+    )
 
     // We're fetching a new image, so we're updating the ID
     val imageId = generateIdentifier()
@@ -217,7 +217,8 @@ open class FrescoController2Impl(
           imageRequest,
           extras,
           imageRequest.resources.getDrawable(
-              (imageRequest.imageSource as DrawableResImageSource).resId),
+              (imageRequest.imageSource as DrawableResImageSource).resId
+          ),
       )
     }
 
@@ -248,7 +249,8 @@ open class FrescoController2Impl(
     if (needsPlaceholderDrawable) {
       // The image is not in cache -> Set up layers visible until the image is available
       drawable.setProgressDrawable(
-          hierarcher.buildProgressDrawable(imageRequest.resources, imageRequest.imageOptions))
+          hierarcher.buildProgressDrawable(imageRequest.resources, imageRequest.imageOptions)
+      )
       // Immediately show the progress image and set progress to 0
       drawable.setProgress(0f)
       drawable.showProgressImmediately()
@@ -290,7 +292,8 @@ open class FrescoController2Impl(
     frescoDrawable.setVitoImageRequestListener(globalImageListener)
     frescoDrawable.internalListener.onEmptyEvent(callerContext)
     frescoDrawable.setOverlayDrawable(
-        hierarcher.buildOverlayDrawable(imageRequest.resources, imageRequest.imageOptions))
+        hierarcher.buildOverlayDrawable(imageRequest.resources, imageRequest.imageOptions)
+    )
     setUpPlaceholder(frescoDrawable, imageRequest, EMPTY_IMAGE_ID)
   }
 

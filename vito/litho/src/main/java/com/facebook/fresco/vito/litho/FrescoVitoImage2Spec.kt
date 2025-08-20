@@ -102,8 +102,10 @@ object FrescoVitoImage2Spec {
   @JvmStatic
   @OnCreateInitialState
   fun onCreateInitialState(frescoDrawableRef: StateValue<Ref<OnDetachedHolder?>?>) {
-    if (FrescoVitoProvider.getConfig().useDetached() ||
-        FrescoVitoProvider.getConfig().prefetchConfig.closePrefetchDataSourceOnDetached()) {
+    if (
+        FrescoVitoProvider.getConfig().useDetached() ||
+            FrescoVitoProvider.getConfig().prefetchConfig.closePrefetchDataSourceOnDetached()
+    ) {
       frescoDrawableRef.set(Ref<OnDetachedHolder?>(null))
     }
   }
@@ -264,9 +266,11 @@ object FrescoVitoImage2Spec {
       @FromPrepare fetchStrategy: FetchStrategy,
       @State frescoDrawableRef: Ref<OnDetachedHolder?>?,
   ) {
-    if (frescoDrawableRef != null &&
-        (FrescoVitoProvider.getConfig().useDetached() ||
-            FrescoVitoProvider.getConfig().prefetchConfig.closePrefetchDataSourceOnDetached())) {
+    if (
+        frescoDrawableRef != null &&
+            (FrescoVitoProvider.getConfig().useDetached() ||
+                FrescoVitoProvider.getConfig().prefetchConfig.closePrefetchDataSourceOnDetached())
+    ) {
       frescoDrawableRef.value =
           OnDetachedHolder(frescoDrawable, prefetchDataSource, prefetchDataSourceFromBoundsDefined)
     }
@@ -297,8 +301,10 @@ object FrescoVitoImage2Spec {
         return
       }
 
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
-          FrescoVitoProvider.getConfig().enableWindowWideColorGamut()) {
+      if (
+          Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+              FrescoVitoProvider.getConfig().enableWindowWideColorGamut()
+      ) {
         val activity: Activity? = ContextUtils.findActivityInContext(c.androidContext)
         val window = activity?.window
         if (window != null && window.colorMode != ActivityInfo.COLOR_MODE_WIDE_COLOR_GAMUT) {
@@ -526,7 +532,8 @@ object FrescoVitoImage2Spec {
                       contextChain,
                       prefetchRequestListener,
                       "FrescoVitoImage2Spec_OnBoundsDefined",
-                  ))
+                  )
+          )
         }
       }
 
@@ -574,7 +581,8 @@ object FrescoVitoImage2Spec {
                   contextChain,
                   prefetchRequestListener,
                   "FrescoVitoImage2Spec_OnPrepare",
-              ))
+              )
+      )
     }
   }
 
@@ -602,8 +610,9 @@ object FrescoVitoImage2Spec {
       FrescoVitoProvider.getConfig().prefetchConfig.closePrefetchDataSourceOnBindorOnMount()
 
   private fun ensureImageOptions(imageOptionsProp: ImageOptions?): ImageOptions? {
-    if (imageOptionsProp == null &&
-        FrescoVitoProvider.getConfig().fallbackToDefaultImageOptions()) {
+    if (
+        imageOptionsProp == null && FrescoVitoProvider.getConfig().fallbackToDefaultImageOptions()
+    ) {
       return ImageOptions.defaults()
     }
     return imageOptionsProp

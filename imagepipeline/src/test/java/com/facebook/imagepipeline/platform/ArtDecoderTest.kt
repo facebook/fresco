@@ -137,8 +137,8 @@ class ArtDecoderTest {
     Mockito.mockStatic(BitmapFactory::class.java).use { mockedBitmapFactory ->
       // Setup mock to return null for bounds check, then a different bitmap
       whenever(
-              BitmapFactory.decodeStream(
-                  any<InputStream>(), isNull(), any<BitmapFactory.Options>()))
+              BitmapFactory.decodeStream(any<InputStream>(), isNull(), any<BitmapFactory.Options>())
+          )
           .thenAnswer { invocation ->
             val options = invocation.getArgument<BitmapFactory.Options>(2)
             options.outWidth = MockBitmapFactory.DEFAULT_BITMAP_WIDTH
@@ -160,8 +160,8 @@ class ArtDecoderTest {
     Mockito.mockStatic(BitmapFactory::class.java).use { mockedBitmapFactory ->
       // Setup mock to return null for bounds check, then throw exception
       whenever(
-              BitmapFactory.decodeStream(
-                  any<InputStream>(), isNull(), any<BitmapFactory.Options>()))
+              BitmapFactory.decodeStream(any<InputStream>(), isNull(), any<BitmapFactory.Options>())
+          )
           .thenAnswer { invocation ->
             val options = invocation.getArgument<BitmapFactory.Options>(2)
             options.outWidth = MockBitmapFactory.DEFAULT_BITMAP_WIDTH

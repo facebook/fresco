@@ -85,11 +85,13 @@ object DownsampleUtil {
       encodedImage: EncodedImage,
   ): Float {
     check(EncodedImage.isMetaDataAvailable(encodedImage))
-    if (resizeOptions == null ||
-        resizeOptions.height <= 0 ||
-        resizeOptions.width <= 0 ||
-        encodedImage.width == 0 ||
-        encodedImage.height == 0) {
+    if (
+        resizeOptions == null ||
+            resizeOptions.height <= 0 ||
+            resizeOptions.width <= 0 ||
+            encodedImage.width == 0 ||
+            encodedImage.height == 0
+    ) {
       return 1.0f
     }
     val rotationAngle = getRotationAngle(rotationOptions, encodedImage)

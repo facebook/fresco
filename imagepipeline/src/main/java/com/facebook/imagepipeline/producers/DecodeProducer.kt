@@ -68,8 +68,10 @@ class DecodeProducer(
       traceSection("DecodeProducer#produceResults") {
         val imageRequest = context.imageRequest
         val progressiveDecoder =
-            if (!UriUtil.isNetworkUri(imageRequest.sourceUri) &&
-                !ImageRequestBuilder.isCustomNetworkUri(imageRequest.sourceUri)) {
+            if (
+                !UriUtil.isNetworkUri(imageRequest.sourceUri) &&
+                    !ImageRequestBuilder.isCustomNetworkUri(imageRequest.sourceUri)
+            ) {
               LocalImagesProgressiveDecoder(
                   consumer,
                   context,
@@ -124,10 +126,12 @@ class DecodeProducer(
               val cacheHit =
                   producerContext.getExtra<Boolean>(ProducerConstants.EXTRA_CACHED_VALUE_FOUND) ==
                       true
-              if (!producerContext.imagePipelineConfig.experiments.cancelDecodeOnCacheMiss ||
-                  producerContext.lowestPermittedRequestLevel ==
-                      ImageRequest.RequestLevel.FULL_FETCH ||
-                  cacheHit) {
+              if (
+                  !producerContext.imagePipelineConfig.experiments.cancelDecodeOnCacheMiss ||
+                      producerContext.lowestPermittedRequestLevel ==
+                          ImageRequest.RequestLevel.FULL_FETCH ||
+                      cacheHit
+              ) {
                 handleError(ExceptionWithNoStacktrace("Encoded image is null."))
                 return
               }
@@ -175,11 +179,14 @@ class DecodeProducer(
       if (isFinished || !EncodedImage.isValid(encodedImage)) {
         return
       }
-      if (encodedImage.imageFormat == DefaultImageFormats.GIF &&
-          isTooBig(encodedImage, imageDecodeOptions)) {
+      if (
+          encodedImage.imageFormat == DefaultImageFormats.GIF &&
+              isTooBig(encodedImage, imageDecodeOptions)
+      ) {
         val e =
             IllegalStateException(
-                "Image is too big to attempt decoding: w = ${encodedImage.width}, h = ${encodedImage.height}, pixel config = ${imageDecodeOptions.bitmapConfig}, max bitmap size = $MAX_BITMAP_SIZE")
+                "Image is too big to attempt decoding: w = ${encodedImage.width}, h = ${encodedImage.height}, pixel config = ${imageDecodeOptions.bitmapConfig}, max bitmap size = $MAX_BITMAP_SIZE"
+            )
         producerListener.onProducerFinishWithFailure(producerContext, PRODUCER_NAME, e, null)
         handleError(e)
         return
@@ -221,7 +228,8 @@ class DecodeProducer(
                     e.message,
                     requestUri,
                     failedEncodedImage.getFirstBytesAsHexString(
-                        DECODE_EXCEPTION_MESSAGE_NUM_HEADER_BYTES),
+                        DECODE_EXCEPTION_MESSAGE_NUM_HEADER_BYTES
+                    ),
                     failedEncodedImage.size,
                 )
                 throw e
@@ -446,7 +454,8 @@ class DecodeProducer(
                 handleCancellation()
               }
             }
-          })
+          }
+      )
     }
   }
 
@@ -490,10 +499,12 @@ class DecodeProducer(
         return false
       }
       val ret = super.updateDecodeJob(encodedImage, status)
-      if ((isNotLast(status) || statusHasFlag(status, Consumer.IS_PARTIAL_RESULT)) &&
-          !statusHasFlag(status, Consumer.IS_PLACEHOLDER) &&
-          EncodedImage.isValid(encodedImage) &&
-          encodedImage.imageFormat === DefaultImageFormats.JPEG) {
+      if (
+          (isNotLast(status) || statusHasFlag(status, Consumer.IS_PARTIAL_RESULT)) &&
+              !statusHasFlag(status, Consumer.IS_PLACEHOLDER) &&
+              EncodedImage.isValid(encodedImage) &&
+              encodedImage.imageFormat === DefaultImageFormats.JPEG
+      ) {
         if (!this.progressiveJpegParser.parseMoreData(encodedImage)) {
           return false
         }
@@ -502,8 +513,10 @@ class DecodeProducer(
           // We have already decoded this scan, no need to do so again
           return false
         }
-        if (scanNum < progressiveJpegConfig.getNextScanNumberToDecode(lastScheduledScanNumber) &&
-            !this.progressiveJpegParser.isEndMarkerRead) {
+        if (
+            scanNum < progressiveJpegConfig.getNextScanNumberToDecode(lastScheduledScanNumber) &&
+                !this.progressiveJpegParser.isEndMarkerRead
+        ) {
           // We have not reached the minimum scan set by the configuration and there
           // are still more scans to be read (the end marker is not reached)
           return false

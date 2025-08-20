@@ -42,7 +42,8 @@ class ForwardingRequestListenerTest {
     whenever(requestListener3.requiresExtraMap(requestId)).thenReturn(false)
     listenerManager =
         ForwardingRequestListener(
-            Sets.newHashSet(requestListener1, requestListener2, requestListener3))
+            Sets.newHashSet(requestListener1, requestListener2, requestListener3)
+        )
   }
 
   @Test

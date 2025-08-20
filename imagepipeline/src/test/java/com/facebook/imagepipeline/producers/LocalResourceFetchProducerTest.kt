@@ -86,7 +86,8 @@ class LocalResourceFetchProducerTest {
                     EncodedImage.cloneOrNull(invocation.getArguments()[0] as EncodedImage)
                 return null
               }
-            })
+            }
+        )
         .`when`(consumer)
         .onNewResult(ArgumentMatchers.notNull(EncodedImage::class.java), ArgumentMatchers.anyInt())
   }
@@ -109,7 +110,8 @@ class LocalResourceFetchProducerTest {
             pooledByteBufferFactory.newByteBuffer(
                 ArgumentMatchers.any(InputStream::class.java),
                 ArgumentMatchers.eq(TEST_DATA_LENGTH),
-            ))
+            )
+        )
         .thenReturn(pooledByteBuffer)
     Mockito.`when`(resources.openRawResource(ArgumentMatchers.eq(TEST_ID)))
         .thenReturn(ByteArrayInputStream(ByteArray(TEST_DATA_LENGTH)))

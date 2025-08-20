@@ -191,8 +191,10 @@ object FrescoVitoSlideshowComponentSpec {
       listener: ImageListener?,
   ) {
     // Do not transition until both current and next images are available
-    if (isStillLoading(slideshowDrawable.currentImage) ||
-        isStillLoading(slideshowDrawable.nextImage)) {
+    if (
+        isStillLoading(slideshowDrawable.currentImage) ||
+            isStillLoading(slideshowDrawable.nextImage)
+    ) {
       return
     }
     // Both images are available -> we can fade

@@ -180,8 +180,10 @@ class FrescoFrameCache(
         closeableImage: CloseableReference<CloseableImage>?
     ): CloseableReference<Bitmap>? {
       try {
-        if (CloseableReference.isValid(closeableImage) &&
-            closeableImage!!.get() is CloseableStaticBitmap) {
+        if (
+            CloseableReference.isValid(closeableImage) &&
+                closeableImage!!.get() is CloseableStaticBitmap
+        ) {
           val closeableStaticBitmap = closeableImage.get() as CloseableStaticBitmap
           if (closeableStaticBitmap != null) {
             // We return a clone of the underlying bitmap reference that has to be manually closed

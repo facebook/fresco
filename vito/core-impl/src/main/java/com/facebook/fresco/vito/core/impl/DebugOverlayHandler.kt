@@ -43,9 +43,9 @@ class DebugOverlayHandler(
 
   private fun extractDebugOverlayDrawable(drawable: KFrescoVitoDrawable): DebugOverlayDrawable {
     val model = drawable.debugOverlayImageLayer?.getDataModel()
-    if (model == null ||
-        model !is DrawableImageDataModel ||
-        model.drawable !is DebugOverlayDrawable) {
+    if (
+        model == null || model !is DrawableImageDataModel || model.drawable !is DebugOverlayDrawable
+    ) {
       val debugOverlayDrawable = DebugOverlayDrawable("K")
       drawable.debugOverlayImageLayer =
           drawable.createLayer().apply {

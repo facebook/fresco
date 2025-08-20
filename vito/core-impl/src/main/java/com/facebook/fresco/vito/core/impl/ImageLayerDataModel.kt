@@ -163,7 +163,8 @@ class ImageLayerDataModel(
                   override fun onAnimationEnd(animation: Animator) {
                     reset(false)
                   }
-                })
+                }
+            )
           }
           start()
         }

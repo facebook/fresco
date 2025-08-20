@@ -45,9 +45,11 @@ constructor(
    * @param exifOrientation EXIF values (1-8), or 0 if unknown. Invalid value is replaced with 0.
    */
   override fun draw(canvas: Canvas) {
-    if (rotationAngle <= 0 &&
-        (exifOrientation == ExifInterface.ORIENTATION_UNDEFINED ||
-            exifOrientation == ExifInterface.ORIENTATION_NORMAL)) {
+    if (
+        rotationAngle <= 0 &&
+            (exifOrientation == ExifInterface.ORIENTATION_UNDEFINED ||
+                exifOrientation == ExifInterface.ORIENTATION_NORMAL)
+    ) {
       super.draw(canvas)
       return
     }
@@ -58,18 +60,22 @@ constructor(
   }
 
   override fun getIntrinsicWidth(): Int =
-      if (exifOrientation == ExifInterface.ORIENTATION_TRANSPOSE ||
-          exifOrientation == ExifInterface.ORIENTATION_TRANSVERSE ||
-          rotationAngle % 180 != 0) {
+      if (
+          exifOrientation == ExifInterface.ORIENTATION_TRANSPOSE ||
+              exifOrientation == ExifInterface.ORIENTATION_TRANSVERSE ||
+              rotationAngle % 180 != 0
+      ) {
         super.getIntrinsicHeight()
       } else {
         super.getIntrinsicWidth()
       }
 
   override fun getIntrinsicHeight(): Int =
-      if (exifOrientation == ExifInterface.ORIENTATION_TRANSPOSE ||
-          exifOrientation == ExifInterface.ORIENTATION_TRANSVERSE ||
-          rotationAngle % 180 != 0) {
+      if (
+          exifOrientation == ExifInterface.ORIENTATION_TRANSPOSE ||
+              exifOrientation == ExifInterface.ORIENTATION_TRANSVERSE ||
+              rotationAngle % 180 != 0
+      ) {
         super.getIntrinsicWidth()
       } else {
         super.getIntrinsicHeight()
@@ -78,9 +84,11 @@ constructor(
   override fun onBoundsChange(bounds: Rect) {
     val underlyingDrawable = current ?: return
 
-    if (rotationAngle > 0 ||
-        (exifOrientation != ExifInterface.ORIENTATION_UNDEFINED &&
-            exifOrientation != ExifInterface.ORIENTATION_NORMAL)) {
+    if (
+        rotationAngle > 0 ||
+            (exifOrientation != ExifInterface.ORIENTATION_UNDEFINED &&
+                exifOrientation != ExifInterface.ORIENTATION_NORMAL)
+    ) {
       when (exifOrientation) {
         ExifInterface.ORIENTATION_FLIP_HORIZONTAL -> mRotationMatrix.setScale(-1f, 1f)
         ExifInterface.ORIENTATION_FLIP_VERTICAL -> mRotationMatrix.setScale(1f, -1f)

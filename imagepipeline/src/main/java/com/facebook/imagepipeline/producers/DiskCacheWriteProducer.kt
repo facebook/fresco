@@ -42,8 +42,10 @@ class DiskCacheWriteProducer(
       consumerOfDiskCacheWriteProducer: Consumer<EncodedImage?>,
       producerContext: ProducerContext,
   ) {
-    if (producerContext.lowestPermittedRequestLevel.getValue() >=
-        ImageRequest.RequestLevel.DISK_CACHE.getValue()) {
+    if (
+        producerContext.lowestPermittedRequestLevel.getValue() >=
+            ImageRequest.RequestLevel.DISK_CACHE.getValue()
+    ) {
       producerContext.putOriginExtra("disk", "nil-result_write")
       consumerOfDiskCacheWriteProducer.onNewResult(null, Consumer.IS_LAST)
     } else {
@@ -82,13 +84,15 @@ class DiskCacheWriteProducer(
       producerContext.producerListener.onProducerStart(producerContext, PRODUCER_NAME)
       // intermediate, null or uncacheable results are not cached, so we just forward them
       // as well as the images with unknown format which could be html response from the server
-      if (isNotLast(status) ||
-          newResult == null ||
-          statusHasAnyFlag(
-              status,
-              Consumer.Companion.DO_NOT_CACHE_ENCODED or Consumer.Companion.IS_PARTIAL_RESULT,
-          ) ||
-          newResult.imageFormat === ImageFormat.UNKNOWN) {
+      if (
+          isNotLast(status) ||
+              newResult == null ||
+              statusHasAnyFlag(
+                  status,
+                  Consumer.Companion.DO_NOT_CACHE_ENCODED or Consumer.Companion.IS_PARTIAL_RESULT,
+              ) ||
+              newResult.imageFormat === ImageFormat.UNKNOWN
+      ) {
         producerContext.producerListener.onProducerFinishWithSuccess(
             producerContext,
             PRODUCER_NAME,
@@ -113,8 +117,8 @@ class DiskCacheWriteProducer(
             producerContext,
             PRODUCER_NAME,
             DiskCacheDecisionNoDiskCacheChosenException(
-                "Got no disk cache for CacheChoice: " +
-                    imageRequest.cacheChoice.ordinal.toString()),
+                "Got no disk cache for CacheChoice: " + imageRequest.cacheChoice.ordinal.toString()
+            ),
             null,
         )
         consumer.onNewResult(newResult, status)

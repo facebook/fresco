@@ -26,8 +26,10 @@ object StoragePermissionHelper {
    * permissions were requested, false otherwise
    */
   fun withStoragePermission(activity: Activity, action: (Unit) -> Unit = {}) {
-    if (ContextCompat.checkSelfPermission(activity, READ_EXTERNAL_STORAGE) !=
-        PackageManager.PERMISSION_GRANTED) {
+    if (
+        ContextCompat.checkSelfPermission(activity, READ_EXTERNAL_STORAGE) !=
+            PackageManager.PERMISSION_GRANTED
+    ) {
       ActivityCompat.requestPermissions(
           activity,
           arrayOf(READ_EXTERNAL_STORAGE),

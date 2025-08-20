@@ -68,7 +68,8 @@ object AnimatedDrawableValueAnimatorHelper {
   fun createAnimatorUpdateListener(drawable: Drawable?): AnimatorUpdateListener? =
       if (drawable is AnimatedDrawable2) {
         AnimatedDrawable2ValueAnimatorHelper.createAnimatorUpdateListener(
-            checkNotNull((drawable as AnimatedDrawable2?)))
+            checkNotNull((drawable as AnimatedDrawable2?))
+        )
       } else {
         null
       }

@@ -57,7 +57,8 @@ object ImageSourceProvider {
                 putAll(extras)
               }
               put(HasExtraData.KEY_URI_SOURCE, uri)
-            })
+            },
+        )
       }
 
   /**
@@ -97,7 +98,7 @@ object ImageSourceProvider {
   @JvmStatic
   fun increasingQuality(
       lowResImageSource: ImageSource,
-      highResImageSource: ImageSource
+      highResImageSource: ImageSource,
   ): ImageSource = IncreasingQualityImageSource(lowResImageSource, highResImageSource, null)
 
   /**
@@ -114,7 +115,7 @@ object ImageSourceProvider {
   fun increasingQuality(
       lowResImageSource: ImageSource,
       highResImageSource: ImageSource,
-      extras: Map<String, Any>? = null
+      extras: Map<String, Any>? = null,
   ): ImageSource = IncreasingQualityImageSource(lowResImageSource, highResImageSource, extras)
 
   /**

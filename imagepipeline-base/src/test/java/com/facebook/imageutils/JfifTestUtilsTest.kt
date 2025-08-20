@@ -42,7 +42,8 @@ class JfifTestUtilsTest {
                 3, // bit depth
                 310, // width
                 255, // height
-            ))
+            )
+        )
         .isEqualTo("FFC0000A0300FF0136000000")
 
     assertThat(
@@ -51,7 +52,8 @@ class JfifTestUtilsTest {
                 1, // bit depth
                 255, // width
                 310, // height
-            ))
+            )
+        )
         .isEqualTo("FFC0001401013600FF00000000000000000000000000")
   }
 
@@ -107,7 +109,8 @@ class JfifTestUtilsTest {
                 "011A00030000000100FF0000" +
                 "011B00030000000100FF0000" +
                 "011C00030000000100FF0000" +
-                "00000008")
+                "00000008"
+        )
 
     // Test little endian
     ifdEntry1 = JfifTestUtils.makeIfdEntry(IFD_ENTRY_TAG_1, TYPE_SHORT, 1, 255, 2, true)
@@ -119,7 +122,8 @@ class JfifTestUtilsTest {
                 "1A01030001000000FF000000" +
                 "1B01030001000000FF000000" +
                 "1C01030001000000FF000000" +
-                "09000000")
+                "09000000"
+        )
   }
 
   @Test

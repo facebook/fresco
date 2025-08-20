@@ -55,7 +55,9 @@ class RendererFadeExampleFragment : BaseShowcaseKotlinFragment() {
           it.configure(
               dataModel =
                   DrawableImageDataModel(
-                      ContextCompat.getDrawable(requireContext(), R.drawable.logo)!!))
+                      ContextCompat.getDrawable(requireContext(), R.drawable.logo)!!
+                  )
+          )
         }
 
     val colorImageDataModel =

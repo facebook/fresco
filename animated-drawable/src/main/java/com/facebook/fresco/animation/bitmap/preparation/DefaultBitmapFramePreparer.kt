@@ -144,8 +144,10 @@ class DefaultBitmapFramePreparer(
         return false
       }
       // Try to render the frame
-      if (bitmapReference == null ||
-          !bitmapFrameRenderer.renderFrame(frameNumber, bitmapReference.get())) {
+      if (
+          bitmapReference == null ||
+              !bitmapFrameRenderer.renderFrame(frameNumber, bitmapReference.get())
+      ) {
         return false
       }
       FLog.v(TAG, "Frame %d ready.", frameNumber)

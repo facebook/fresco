@@ -167,7 +167,8 @@ open class PoolFactory(private val config: PoolConfig) {
   val pooledByteBufferFactory: PooledByteBufferFactory
     get() =
         getPooledByteBufferFactory(
-            if (NativeCodeSetup.getUseNativeCode()) NATIVE_MEMORY else BUFFER_MEMORY)
+            if (NativeCodeSetup.getUseNativeCode()) NATIVE_MEMORY else BUFFER_MEMORY
+        )
 
   private var _pooledByteBufferFactory: PooledByteBufferFactory? = null
 

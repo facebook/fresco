@@ -98,7 +98,8 @@ class DiskCachesStoreFactory(
                           imageCacheStatsTracker,
                           false,
                       )
-                    })
+                    }
+                )
               }
         }
       }

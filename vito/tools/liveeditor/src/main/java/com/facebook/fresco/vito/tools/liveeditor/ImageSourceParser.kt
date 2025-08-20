@@ -46,7 +46,8 @@ object ImageSourceParser {
 
     val throwable =
         ImageSourceSyntaxException(
-            "source is not a valid representation for instance ${ImageSource::class.java.name}")
+            "source is not a valid representation for instance ${ImageSource::class.java.name}"
+        )
 
     outer@ while (index < source.length) {
 
@@ -89,9 +90,11 @@ object ImageSourceParser {
         }
         ASSIGN_TOKEN -> {
           ++index
-          while (index < source.length &&
-              source[index] != SEPARATOR_TOKEN &&
-              source[index] != CLOSE_TOKEN) {
+          while (
+              index < source.length &&
+                  source[index] != SEPARATOR_TOKEN &&
+                  source[index] != CLOSE_TOKEN
+          ) {
 
             if (source[index] == WHITESPACE && value.isEmpty()) {
               ++index

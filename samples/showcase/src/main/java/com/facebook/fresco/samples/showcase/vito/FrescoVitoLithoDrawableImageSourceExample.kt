@@ -35,7 +35,8 @@ object FrescoVitoLithoDrawableImageSourceExample : LithoSample {
   ): Component =
       FrescoVitoImage2.create(c)
           .imageSource(
-              DrawableImageSource(ContextCompat.getDrawable(c.androidContext, R.drawable.logo)!!))
+              DrawableImageSource(ContextCompat.getDrawable(c.androidContext, R.drawable.logo)!!)
+          )
           .imageOptions(IMAGE_OPTIONS)
           .callerContext("FrescoVitoLithoDrawableImageSourceExample")
           .build()

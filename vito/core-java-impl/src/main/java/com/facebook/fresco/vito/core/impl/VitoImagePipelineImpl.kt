@@ -227,13 +227,17 @@ class VitoImagePipelineImpl(
       return ClassicFetchStrategy.PRODUCT_DISABLED
     }
 
-    if (experimentalDynamicSizeWithCacheFallbackVito2() &&
-        !isFallbackEnabled(callerContext, contextChain)) {
+    if (
+        experimentalDynamicSizeWithCacheFallbackVito2() &&
+            !isFallbackEnabled(callerContext, contextChain)
+    ) {
       return SmartFetchStrategy.FALLBACK_DISABLED
     }
 
-    if (experimentalDynamicSizeWithCacheFallbackVito2() &&
-        Looper.myLooper() == Looper.getMainLooper()) {
+    if (
+        experimentalDynamicSizeWithCacheFallbackVito2() &&
+            Looper.myLooper() == Looper.getMainLooper()
+    ) {
       // We don't want to check cache if we are running on the main thread
       // By default uses the original URL
       val shouldSmartFetchOnMainThread = config.experimentalDynamicSizeOnPrepareMainThreadVito2()
@@ -249,8 +253,10 @@ class VitoImagePipelineImpl(
     }
 
     if (experimentalDynamicSizeWithCacheFallbackVito2()) {
-      if (config.experimentalDynamicSizeBloksDisableDiskCacheCheck() &&
-          config.isCallerContextBloks(callerContext)) {
+      if (
+          config.experimentalDynamicSizeBloksDisableDiskCacheCheck() &&
+              config.isCallerContextBloks(callerContext)
+      ) {
         return SmartFetchStrategy.DEFAULT
       }
 

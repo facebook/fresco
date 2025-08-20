@@ -118,7 +118,8 @@ class DefaultBitmapFramePreparerTest {
                 1,
                 BACKEND_INTRINSIC_WIDTH,
                 BACKEND_INTRINSIC_HEIGHT,
-            ))
+            )
+        )
         .thenReturn(bitmapReference)
     whenever(bitmapFrameRenderer.renderFrame(1, bitmap)).thenReturn(true)
 
@@ -144,7 +145,8 @@ class DefaultBitmapFramePreparerTest {
                 BACKEND_INTRINSIC_WIDTH,
                 BACKEND_INTRINSIC_HEIGHT,
                 BITMAP_CONFIG,
-            ))
+            )
+        )
         .thenReturn(bitmapReference)
     whenever(bitmapFrameRenderer.renderFrame(1, bitmap)).thenReturn(true)
 
@@ -172,14 +174,16 @@ class DefaultBitmapFramePreparerTest {
                 1,
                 BACKEND_INTRINSIC_WIDTH,
                 BACKEND_INTRINSIC_HEIGHT,
-            ))
+            )
+        )
         .thenReturn(bitmapReference)
     whenever(
             platformBitmapFactory.createBitmap(
                 BACKEND_INTRINSIC_WIDTH,
                 BACKEND_INTRINSIC_HEIGHT,
                 BITMAP_CONFIG,
-            ))
+            )
+        )
         .thenReturn(bitmapReference)
     whenever(bitmapFrameRenderer.renderFrame(1, bitmap)).thenReturn(true)
 
@@ -205,14 +209,16 @@ class DefaultBitmapFramePreparerTest {
                 1,
                 BACKEND_INTRINSIC_WIDTH,
                 BACKEND_INTRINSIC_HEIGHT,
-            ))
+            )
+        )
         .thenReturn(bitmapReference)
     whenever(
             platformBitmapFactory.createBitmap(
                 BACKEND_INTRINSIC_WIDTH,
                 BACKEND_INTRINSIC_HEIGHT,
                 BITMAP_CONFIG,
-            ))
+            )
+        )
         .thenReturn(bitmapReference)
     whenever(bitmapFrameRenderer.renderFrame(1, bitmap)).thenReturn(false)
 

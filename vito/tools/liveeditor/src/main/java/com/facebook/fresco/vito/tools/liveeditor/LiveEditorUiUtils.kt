@@ -41,7 +41,8 @@ class LiveEditorUiUtils(
         addView(createWithList(context, ImageOptionsSampleValues.bitmapConfig))
         addView(createWithList(context, ImageOptionsSampleValues.resizeToViewportConfig))
         addView(
-            createWithList(context, ImageOptionsSampleValues.localThumbnailPreviewsEnabledConfig))
+            createWithList(context, ImageOptionsSampleValues.localThumbnailPreviewsEnabledConfig)
+        )
         addView(createWithList(context, ImageOptionsSampleValues.progressiveRenderingEnabledConfig))
         addView(createWithList(context, ImageOptionsSampleValues.placeholderColors))
 
@@ -71,7 +72,8 @@ class LiveEditorUiUtils(
                 addView(createButton(context, "Close", closeAction))
               }
               block(this)
-            })
+            }
+        )
       }
 
   fun createImageInfoView(context: Context, closeAction: (View) -> Unit): View =

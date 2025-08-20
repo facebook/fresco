@@ -254,7 +254,8 @@ class LiveEditorOnScreenButtonController(
                 cornerRadius,
                 button.title,
                 button.action,
-            ))
+            )
+        )
       }
     }
   }

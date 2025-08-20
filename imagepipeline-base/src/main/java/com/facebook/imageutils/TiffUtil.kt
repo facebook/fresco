@@ -94,8 +94,10 @@ internal object TiffUtil {
     // read the byte order
     tiffHeader.byteOrder = StreamProcessor.readPackedInt(stream, 4, false)
     remainingLength -= 4
-    if (tiffHeader.byteOrder != TIFF_BYTE_ORDER_LITTLE_END &&
-        tiffHeader.byteOrder != TIFF_BYTE_ORDER_BIG_END) {
+    if (
+        tiffHeader.byteOrder != TIFF_BYTE_ORDER_LITTLE_END &&
+            tiffHeader.byteOrder != TIFF_BYTE_ORDER_BIG_END
+    ) {
       FLog.e(TAG, "Invalid TIFF header")
       return 0
     }

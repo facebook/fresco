@@ -13,9 +13,8 @@ import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import java.util.TimerTask
 
 class FrescoVitoSlideshowDrawable<T>(drawable1: T, drawable2: T, drawable3: T) :
-    FadeDrawable(arrayOf<Drawable>(drawable1, drawable2, drawable3)) where
-T : Drawable,
-T : FrescoDrawableInterface {
+    FadeDrawable(arrayOf<Drawable>(drawable1, drawable2, drawable3))
+    where T : Drawable, T : FrescoDrawableInterface {
 
   private var currentLayer = 0
   var timerTask: TimerTask? = null

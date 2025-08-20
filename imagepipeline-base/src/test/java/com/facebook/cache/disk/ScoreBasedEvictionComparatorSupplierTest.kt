@@ -74,7 +74,8 @@ class ScoreBasedEvictionComparatorSupplierTest {
 
     for (i in 0 until entries.size - 1) {
       assertThat(
-              supplier.calculateScore(entries[i], 0) > supplier.calculateScore(entries[i + 1], 0))
+              supplier.calculateScore(entries[i], 0) > supplier.calculateScore(entries[i + 1], 0)
+          )
           .isTrue()
     }
   }

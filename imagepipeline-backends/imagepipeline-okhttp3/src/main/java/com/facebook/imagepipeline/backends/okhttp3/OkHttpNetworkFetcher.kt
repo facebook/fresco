@@ -117,7 +117,8 @@ constructor(
               cancellationExecutor.execute { call.cancel() }
             }
           }
-        })
+        }
+    )
     call.enqueue(
         object : Callback {
           @Throws(IOException::class)
@@ -135,9 +136,11 @@ constructor(
                   return@use
                 }
                 val responseRange = fromContentRangeHeader(response.header("Content-Range"))
-                if (responseRange != null &&
-                    !(responseRange.from == 0 &&
-                        responseRange.to == BytesRange.TO_END_OF_CONTENT)) {
+                if (
+                    responseRange != null &&
+                        !(responseRange.from == 0 &&
+                            responseRange.to == BytesRange.TO_END_OF_CONTENT)
+                ) {
                   // Only treat as a partial image if the range is not all of the content
                   fetchState.responseBytesRange = responseRange
                   fetchState.onNewResultStatusFlags = Consumer.IS_PARTIAL_RESULT
@@ -158,7 +161,8 @@ constructor(
           }
 
           override fun onFailure(call: Call, e: IOException) = handleException(call, e, callback)
-        })
+        }
+    )
   }
 
   private fun makeExceptionFromResponse(message: String, response: Response): IOException =

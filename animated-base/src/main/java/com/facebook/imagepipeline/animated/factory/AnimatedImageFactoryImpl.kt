@@ -51,7 +51,8 @@ constructor(
     val decoder =
         gifAnimatedImageDecoder
             ?: throw UnsupportedOperationException(
-                "To encode animated gif please add the dependency to the animated-gif module")
+                "To encode animated gif please add the dependency to the animated-gif module"
+            )
     return decodeImage(encodedImage, options, bitmapConfig, decoder, GifImageValidator)
   }
 
@@ -71,7 +72,8 @@ constructor(
     val decoder =
         webpAnimatedImageDecoder
             ?: throw UnsupportedOperationException(
-                "To encode animated webp please add the dependency to the animated-webp module")
+                "To encode animated webp please add the dependency to the animated-webp module"
+            )
     return decodeImage(encodedImage, options, bitmapConfig, decoder)
   }
 

@@ -38,7 +38,8 @@ constructor(val blurRadius: Int, val context: Context, val iterations: Int = DEF
 
   init {
     Preconditions.checkArgument(
-        blurRadius > 0 && blurRadius <= RenderScriptBlurFilter.BLUR_MAX_RADIUS)
+        blurRadius > 0 && blurRadius <= RenderScriptBlurFilter.BLUR_MAX_RADIUS
+    )
     Preconditions.checkArgument(iterations > 0)
   }
 
@@ -48,7 +49,8 @@ constructor(val blurRadius: Int, val context: Context, val iterations: Int = DEF
             String.format(null as Locale?, "IntrinsicBlur;%d", blurRadius)
           } else {
             String.format(null as Locale?, "IterativeBoxBlur;%d;%d", iterations, blurRadius)
-          })
+          }
+      )
 
   override fun getPostprocessorCacheKey(): CacheKey = cacheKey
 
