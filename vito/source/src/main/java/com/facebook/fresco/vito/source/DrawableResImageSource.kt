@@ -36,6 +36,7 @@ data class DrawableResImageSource(private val resId: Int) : ImageSource {
     if (isPrefetchEnabled) {
       createPrefetchDrawable(resources)
     }
+    customPrefetchFunction?.invoke(resources, resId)
   }
 
   fun createDrawable(resources: Resources): Drawable {
@@ -51,5 +52,6 @@ data class DrawableResImageSource(private val resId: Int) : ImageSource {
 
   companion object {
     var isPrefetchEnabled: Boolean = false
+    var customPrefetchFunction: ((Resources, Int) -> Any)? = null
   }
 }
