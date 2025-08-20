@@ -28,13 +28,13 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
   val borderOptions: BorderOptions? = builder.borderOptions
   val actualImageScaleType: ScalingUtils.ScaleType = builder.actualImageScaleType
   val actualImageFocusPoint: PointF? = builder.actualFocusPoint
-  val mLocalThumbnailPreviewsEnabled: Boolean = builder.localThumbnailPreviewsEnabled
+  val localThumbnailPreviewsEnabled: Boolean = builder.localThumbnailPreviewsEnabled
   val loadThumbnailOnly: Boolean = builder.loadThumbnailOnly
   val bitmapConfig: Bitmap.Config? = builder.bitmapConfig
   val isProgressiveDecodingEnabled: Boolean? = builder.progressiveDecodingEnabled
   val isFirstFrameThumbnailEnabled: Boolean = builder.isFirstFrameThumbnailEnabled
 
-  fun areLocalThumbnailPreviewsEnabled(): Boolean = mLocalThumbnailPreviewsEnabled
+  fun areLocalThumbnailPreviewsEnabled(): Boolean = localThumbnailPreviewsEnabled
 
   override fun equals(other: Any?): Boolean {
     if (this === other) {
@@ -56,7 +56,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
             !Objects.equal(borderOptions, other.borderOptions) ||
             !Objects.equal(actualImageScaleType, other.actualImageScaleType) ||
             !Objects.equal(actualImageFocusPoint, other.actualImageFocusPoint) ||
-            mLocalThumbnailPreviewsEnabled != other.mLocalThumbnailPreviewsEnabled ||
+            localThumbnailPreviewsEnabled != other.localThumbnailPreviewsEnabled ||
             loadThumbnailOnly != other.loadThumbnailOnly ||
             isProgressiveDecodingEnabled !== other.isProgressiveDecodingEnabled ||
             !Objects.equal(bitmapConfig, other.bitmapConfig) ||
@@ -78,7 +78,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
     result = 31 * result + (borderOptions?.hashCode() ?: 0)
     result = 31 * result + actualImageScaleType.hashCode()
     result = 31 * result + (actualImageFocusPoint?.hashCode() ?: 0)
-    result = 31 * result + if (mLocalThumbnailPreviewsEnabled) 1 else 0
+    result = 31 * result + if (localThumbnailPreviewsEnabled) 1 else 0
     result = 31 * result + if (loadThumbnailOnly) 1 else 0
     result = 31 * result + (bitmapConfig?.hashCode() ?: 0)
     result = (31 * result + (isProgressiveDecodingEnabled?.hashCode() ?: 0))
@@ -100,7 +100,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
           .add("borderOptions", borderOptions)
           .add("actualImageScaleType", actualImageScaleType)
           .add("actualImageFocusPoint", actualImageFocusPoint)
-          .add("localThumbnailPreviewsEnabled", mLocalThumbnailPreviewsEnabled)
+          .add("localThumbnailPreviewsEnabled", localThumbnailPreviewsEnabled)
           .add("loadThumbnailOnly", loadThumbnailOnly)
           .add("bitmapConfig", bitmapConfig)
           .add("progressiveRenderingEnabled", isProgressiveDecodingEnabled)
