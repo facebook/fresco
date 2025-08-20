@@ -59,7 +59,16 @@ class DecodeProducer(
     val closeableReferenceFactory: CloseableReferenceFactory,
     val reclaimMemoryRunnable: Runnable?,
     val recoverFromDecoderOOM: Supplier<Boolean>,
+    val decodedOriginalImageAnalyzer: DecodedOriginalImageAnalyzer? = null,
 ) : Producer<CloseableReference<CloseableImage>> {
+
+  interface DecodedOriginalImageAnalyzer {
+    fun analyze(
+        context: ProducerContext,
+        imageRef: CloseableReference<CloseableImage>,
+        encodedImage: EncodedImage,
+    )
+  }
 
   override fun produceResults(
       consumer: Consumer<CloseableReference<CloseableImage>>,
@@ -266,7 +275,7 @@ class DecodeProducer(
             )
         producerListener.onProducerFinishWithSuccess(producerContext, PRODUCER_NAME, extraMap)
         setImageExtras(encodedImage, image, lastScheduledScanNumber)
-        handleResult(image, newStatus)
+        handleResult(image, newStatus, encodedImage)
       } finally {
         EncodedImage.closeSafely(encodedImage)
       }
@@ -384,11 +393,23 @@ class DecodeProducer(
     }
 
     /** Notifies consumer of new result and finishes if the result is final. */
-    private fun handleResult(decodedImage: CloseableImage?, @Consumer.Status status: Int) {
+    private fun handleResult(
+        decodedImage: CloseableImage?,
+        @Consumer.Status status: Int,
+        encodedImage: EncodedImage
+    ) {
       val decodedImageRef: CloseableReference<CloseableImage>? =
           closeableReferenceFactory.create(decodedImage)
       try {
-        maybeFinish(isLast(status))
+        val isLast = isLast(status)
+        maybeFinish(isLast)
+        if (isLast) {
+          decodedOriginalImageAnalyzer?.let {
+            if (decodedImageRef != null) {
+              it.analyze(producerContext, decodedImageRef, encodedImage)
+            }
+          }
+        }
         consumer.onNewResult(decodedImageRef, status)
       } finally {
         CloseableReference.closeSafely(decodedImageRef)

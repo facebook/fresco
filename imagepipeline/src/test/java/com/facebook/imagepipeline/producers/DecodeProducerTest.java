@@ -142,7 +142,8 @@ public class DecodeProducerTest {
             MAX_BITMAP_SIZE,
             new CloseableReferenceFactory(new NoOpCloseableReferenceLeakTracker()),
             null,
-            Suppliers.BOOLEAN_FALSE);
+            Suppliers.BOOLEAN_FALSE,
+            null);
 
     PooledByteBuffer pooledByteBuffer = mockPooledByteBuffer(IMAGE_SIZE);
     mByteBufferRef = CloseableReference.of(pooledByteBuffer);

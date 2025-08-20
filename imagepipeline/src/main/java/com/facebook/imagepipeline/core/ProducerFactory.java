@@ -254,7 +254,8 @@ public class ProducerFactory {
         mMaxBitmapSize,
         mCloseableReferenceFactory,
         null,
-        Suppliers.BOOLEAN_FALSE);
+        Suppliers.BOOLEAN_FALSE,
+        null);
   }
 
   public DiskCacheReadProducer newDiskCacheReadProducer(Producer<EncodedImage> inputProducer) {
