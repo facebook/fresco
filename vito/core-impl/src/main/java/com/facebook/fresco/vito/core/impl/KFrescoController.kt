@@ -187,7 +187,7 @@ class KFrescoController(
         is DrawableResImageSource -> {
           setDrawableAsActualImage(
               drawable,
-              imageRequest.resources.getDrawable(source.resId),
+              source.createDrawable(imageRequest.resources),
               imageRequest,
               imageId,
           )

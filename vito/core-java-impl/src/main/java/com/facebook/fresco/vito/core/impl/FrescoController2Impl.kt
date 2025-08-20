@@ -216,8 +216,8 @@ open class FrescoController2Impl(
           drawable,
           imageRequest,
           extras,
-          imageRequest.resources.getDrawable(
-              (imageRequest.imageSource as DrawableResImageSource).resId
+          (imageRequest.imageSource as DrawableResImageSource).createDrawable(
+              imageRequest.resources
           ),
       )
     }

@@ -20,6 +20,7 @@ import com.facebook.fresco.vito.options.DecodedImageOptions
 import com.facebook.fresco.vito.options.EncodedImageOptions
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.ImageOptions.Companion.defaults
+import com.facebook.fresco.vito.source.DrawableResImageSource
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.listener.RequestListener
 import com.facebook.imagepipeline.request.ImageRequest
@@ -139,8 +140,14 @@ class FrescoVitoPrefetcherImpl(
       callerContext: Any?,
       requestListener: RequestListener?,
       callsite: String,
-  ): DataSource<Void?> =
+  ): DataSource<Void?> {
+    return if (imageRequest.imageSource is DrawableResImageSource) {
+      (imageRequest.imageSource as DrawableResImageSource).prefetch(imageRequest.resources)
+      DataSources.immediateSuccessfulDataSource()
+    } else {
       prefetch(prefetchTarget, imageRequest.finalImageRequest, callerContext, requestListener)
+    }
+  }
 
   override fun prefetch(
       prefetchTarget: PrefetchTarget,
