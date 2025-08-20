@@ -63,6 +63,10 @@ interface UriModifierInterface {
       class ModifiedScanEnd(newUrl: Uri) : Modified(newUrl, "ModifiedScanEnd") {
         override val bestAllowlistedSize: Int? = null
       }
+
+      class ModifiedQuality(newUrl: Uri) : Modified(newUrl, "ModifiedQuality") {
+        override val bestAllowlistedSize: Int? = null
+      }
     }
 
     data class FallbackToOriginalUrl(override val bestAllowlistedSize: Int?) :
