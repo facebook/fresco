@@ -232,8 +232,8 @@ object ImageSourceToImagePipelineAdapter {
       imagePipelineUtils: ImagePipelineUtils,
       imageOptions: ImageOptions,
   ): ImageRequest? {
-    imageSources.forEach {
-      val request = maybeExtractFinalImageRequest(it, imagePipelineUtils, imageOptions)
+    imageSources.forEach { imageSource ->
+      val request = maybeExtractFinalImageRequest(imageSource, imagePipelineUtils, imageOptions)
       if (request != null) {
         return request
       }
