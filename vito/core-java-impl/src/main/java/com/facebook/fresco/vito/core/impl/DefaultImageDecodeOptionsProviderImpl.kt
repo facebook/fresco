@@ -41,6 +41,9 @@ class DefaultImageDecodeOptionsProviderImpl(
     ): ImageDecodeOptions? {
       val bitmapConfig = imageOptions.bitmapConfig
       val imageDecodeOptions = imageOptions.imageDecodeOptions
+      val animatedOptions = imageOptions.animatedOptions
+      // Check if animation should be disabled
+      val forceStaticImage = animatedOptions?.isAnimationDisabled() == true
       if (bitmapConfig != null) {
         if (imageOptions.roundingOptions != null || imageOptions.postprocessor != null) {
           FLog.wtf(TAG, "Trying to use bitmap config incompatible with rounding.")
@@ -48,12 +51,16 @@ class DefaultImageDecodeOptionsProviderImpl(
           return ImageDecodeOptions.newBuilder()
               .setBitmapConfig(bitmapConfig)
               .setCustomImageDecoder(imageOptions.imageDecodeOptions?.customImageDecoder)
+              .setForceStaticImage(forceStaticImage)
               .build()
         }
       } else if (imageDecodeOptions?.customImageDecoder != null) {
         return ImageDecodeOptions.newBuilder()
             .setCustomImageDecoder(imageDecodeOptions.customImageDecoder)
+            .setForceStaticImage(forceStaticImage)
             .build()
+      } else if (forceStaticImage) {
+        return ImageDecodeOptions.newBuilder().setForceStaticImage(true).build()
       }
 
       return null

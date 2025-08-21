@@ -164,7 +164,6 @@ constructor(
 
     return when (animatedOptions.loopCount) {
       AnimatedOptions.LOOP_COUNT_INFINITE -> AnimationInformation.LOOP_COUNT_INFINITE
-      AnimatedOptions.LOOP_COUNT_STATIC -> 1
       else -> animatedOptions.loopCount
     }
   }

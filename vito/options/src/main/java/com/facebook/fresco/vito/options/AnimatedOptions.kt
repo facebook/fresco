@@ -11,11 +11,12 @@ package com.facebook.fresco.vito.options
 data class AnimatedOptions(
     val loopCount: Int,
     val thumbnailUrl: String? = null,
+    val disableAnimation: Boolean = false,
 ) {
 
   fun isInfinite(): Boolean = loopCount == LOOP_COUNT_INFINITE
 
-  fun isStatic(): Boolean = loopCount == LOOP_COUNT_STATIC
+  fun isAnimationDisabled(): Boolean = disableAnimation
 
   /**
    * Determines if thumbnail fallback should be used based on: A valid thumbnail URL is provided and
@@ -35,30 +36,31 @@ data class AnimatedOptions(
 
     val otherOptions = other as? AnimatedOptions ?: return false
 
-    return loopCount == otherOptions.loopCount && thumbnailUrl == otherOptions.thumbnailUrl
+    return loopCount == otherOptions.loopCount &&
+        thumbnailUrl == otherOptions.thumbnailUrl &&
+        disableAnimation == otherOptions.disableAnimation
   }
 
   override fun hashCode(): Int {
     var result = loopCount.hashCode()
     result = 31 * result + (thumbnailUrl?.hashCode() ?: 0)
+    result = 31 * result + disableAnimation.hashCode()
     return result
   }
 
   @Suppress("BooleanLiteralArgument")
   companion object {
     const val LOOP_COUNT_INFINITE: Int = 0
-    const val LOOP_COUNT_STATIC: Int = 1
     val INFINITE: AnimatedOptions = AnimatedOptions(LOOP_COUNT_INFINITE)
-    val STATIC_FIRST_FRAME: AnimatedOptions = AnimatedOptions(LOOP_COUNT_STATIC)
 
     @JvmStatic fun infinite(): AnimatedOptions = INFINITE
-
-    @JvmStatic fun static(): AnimatedOptions = STATIC_FIRST_FRAME
 
     @JvmStatic fun loop(loopCount: Int): AnimatedOptions = AnimatedOptions(loopCount)
 
     @JvmStatic
     fun loop(loopCount: Int, thumbnailUrl: String?): AnimatedOptions =
         AnimatedOptions(loopCount, thumbnailUrl)
+
+    @JvmStatic fun disableAnimation(): AnimatedOptions = AnimatedOptions(-1, null, true)
   }
 }

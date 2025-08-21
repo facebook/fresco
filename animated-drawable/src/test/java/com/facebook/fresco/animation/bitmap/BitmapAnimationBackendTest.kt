@@ -831,9 +831,6 @@ class BitmapAnimationBackendTest {
 
     val infiniteOptions = AnimatedOptions.infinite()
     assertThat(infiniteOptions.useFallbackThumbnail()).isFalse()
-
-    val staticOptions = AnimatedOptions.static()
-    assertThat(staticOptions.useFallbackThumbnail()).isFalse()
   }
 
   /** Tests equality and hashCode methods for AnimatedOptions with thumbnail URLs. */
