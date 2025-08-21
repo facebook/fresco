@@ -396,7 +396,7 @@ class DecodeProducer(
     private fun handleResult(
         decodedImage: CloseableImage?,
         @Consumer.Status status: Int,
-        encodedImage: EncodedImage
+        encodedImage: EncodedImage,
     ) {
       val decodedImageRef: CloseableReference<CloseableImage>? =
           closeableReferenceFactory.create(decodedImage)
