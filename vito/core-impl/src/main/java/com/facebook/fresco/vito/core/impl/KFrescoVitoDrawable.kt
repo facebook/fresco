@@ -56,10 +56,10 @@ class KFrescoVitoDrawable(
   var _intrinsicWidth: Int = -1
   var _intrinsicHeight: Int = -1
 
-  private val closeableCleanupFunction: (Closeable) -> Unit = {
+  private val closeableCleanupFunction: (Closeable) -> Unit = { closeableResource ->
     ImageReleaseScheduler.cancelAllReleasing(this)
     try {
-      it.close()
+      closeableResource.close()
     } catch (e: IOException) {
       // swallow
     }
