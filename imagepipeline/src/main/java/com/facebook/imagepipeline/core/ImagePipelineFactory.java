@@ -16,6 +16,8 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.PooledByteBuffer;
+import com.facebook.imageformat.DefaultImageFormats;
+import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactoryProvider;
@@ -44,6 +46,9 @@ import com.facebook.imagepipeline.transcoder.SimpleImageTranscoderFactory;
 import com.facebook.imagepipeline.xml.XmlDrawableFactory;
 import com.facebook.imagepipeline.xml.XmlFormatDecoder;
 import com.facebook.infer.annotation.Nullsafe;
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -254,29 +259,20 @@ public class ImagePipelineFactory {
       if (mConfig.getImageDecoder() != null) {
         mImageDecoder = mConfig.getImageDecoder();
       } else {
-        final AnimatedFactory animatedFactory = this.getAnimatedFactory();
-
-        ImageDecoder gifDecoder = null;
-        ImageDecoder webPDecoder = null;
-
-        if (animatedFactory != null) {
-          gifDecoder = animatedFactory.getGifDecoder();
-          webPDecoder = animatedFactory.getWebPDecoder();
-        }
-
         ImageDecoder xmlDecoder = getXmlImageDecoder();
 
         if (mConfig.getImageDecoderConfig() == null) {
-          mImageDecoder =
-              new DefaultImageDecoder(gifDecoder, webPDecoder, xmlDecoder, getPlatformDecoder());
+          Map<ImageFormat, ImageDecoder> allDecoders = new HashMap<>();
+          addAnimatedDecoders(allDecoders);
+          mImageDecoder = new DefaultImageDecoder(xmlDecoder, getPlatformDecoder(), allDecoders);
         } else {
-          mImageDecoder =
-              new DefaultImageDecoder(
-                  gifDecoder,
-                  webPDecoder,
-                  xmlDecoder,
-                  getPlatformDecoder(),
-                  mConfig.getImageDecoderConfig().getCustomImageDecoders());
+          Map<ImageFormat, ImageDecoder> allDecoders = new HashMap<>();
+          addAnimatedDecoders(allDecoders);
+          if (mConfig.getImageDecoderConfig().getCustomImageDecoders() != null) {
+            allDecoders.putAll(mConfig.getImageDecoderConfig().getCustomImageDecoders());
+          }
+
+          mImageDecoder = new DefaultImageDecoder(xmlDecoder, getPlatformDecoder(), allDecoders);
           // Add custom image formats if needed
           ImageFormatChecker.getInstance()
               .setCustomImageFormatCheckers(
@@ -457,6 +453,59 @@ public class ImagePipelineFactory {
       return new XmlDrawableFactory();
     } else {
       return null;
+    }
+  }
+
+  /**
+   * Adds animated decoders for GIF and WebP formats to the provided map if the native libraries are
+   * available.
+   */
+  private void addAnimatedDecoders(Map<ImageFormat, ImageDecoder> decoders) {
+    // Register GIF decoder using reflection
+    try {
+      Class<?> clazz = Class.forName("com.facebook.animated.gif.GifImageDecoder");
+      Constructor<?> constructor =
+          clazz.getConstructor(
+              PlatformBitmapFactory.class,
+              java.lang.Boolean.TYPE,
+              java.lang.Boolean.TYPE,
+              java.lang.Boolean.TYPE);
+      ImageDecoder gifDecoder =
+          (ImageDecoder)
+              constructor.newInstance(
+                  getPlatformBitmapFactory(),
+                  mConfig.getExperiments().getUseBalancedAnimationStrategy(),
+                  mConfig.getExperiments().getDownscaleFrameToDrawableDimensions(),
+                  true);
+      decoders.put(DefaultImageFormats.GIF, gifDecoder); // Add to unified map of decoders
+    } catch (ClassNotFoundException e) {
+      // GIF support not available
+    } catch (Exception e) {
+      FLog.w(TAG, "Failed to instantiate GIF decoder via reflection", e);
+    }
+
+    try {
+      // Register WebP decoder using reflection
+      Class<?> clazz = Class.forName("com.facebook.animated.webp.WebPImageDecoder");
+      Constructor<?> constructor =
+          clazz.getConstructor(
+              PlatformBitmapFactory.class,
+              java.lang.Boolean.TYPE,
+              java.lang.Boolean.TYPE,
+              java.lang.Boolean.TYPE);
+      ImageDecoder webpDecoder =
+          (ImageDecoder)
+              constructor.newInstance(
+                  getPlatformBitmapFactory(),
+                  mConfig.getExperiments().getUseBalancedAnimationStrategy(),
+                  mConfig.getExperiments().getDownscaleFrameToDrawableDimensions(),
+                  true);
+      decoders.put(
+          DefaultImageFormats.WEBP_ANIMATED, webpDecoder); // Add to unified map of decoders
+    } catch (ClassNotFoundException e) {
+      // WebP support not available
+    } catch (Exception e) {
+      FLog.w(TAG, "Failed to instantiate WebP decoder via reflection", e);
     }
   }
 }

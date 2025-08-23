@@ -48,9 +48,6 @@ import javax.annotation.Nullable;
  */
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class DefaultImageDecoder implements ImageDecoder {
-
-  private final @Nullable ImageDecoder mAnimatedGifDecoder;
-  private final @Nullable ImageDecoder mAnimatedWebPDecoder;
   private final @Nullable ImageDecoder mXmlDecoder;
   private final PlatformDecoder mPlatformDecoder;
   private final Supplier<Boolean> mEnableEncodedImageColorSpaceUsage;
@@ -73,10 +70,9 @@ public class DefaultImageDecoder implements ImageDecoder {
           }
           if (imageFormat == DefaultImageFormats.JPEG) {
             return decodeJpeg(encodedImage, length, qualityInfo, options, colorSpace);
-          } else if (imageFormat == DefaultImageFormats.GIF) {
-            return decodeGif(encodedImage, length, qualityInfo, options);
-          } else if (imageFormat == DefaultImageFormats.WEBP_ANIMATED) {
-            return decodeAnimatedWebp(encodedImage, length, qualityInfo, options);
+          } else if (imageFormat == DefaultImageFormats.GIF
+              || imageFormat == DefaultImageFormats.WEBP_ANIMATED) {
+            return decodeAnimatedFormat(encodedImage, length, qualityInfo, options, imageFormat);
           } else if (imageFormat == DefaultImageFormats.BINARY_XML) {
             return decodeXml(encodedImage, length, qualityInfo, options);
           } else if (imageFormat == ImageFormat.UNKNOWN) {
@@ -89,37 +85,22 @@ public class DefaultImageDecoder implements ImageDecoder {
   @Nullable private final Map<ImageFormat, ImageDecoder> mCustomDecoders;
 
   public DefaultImageDecoder(
-      @Nullable final ImageDecoder animatedGifDecoder,
-      @Nullable final ImageDecoder animatedWebPDecoder,
-      @Nullable final ImageDecoder xmlDecoder,
-      final PlatformDecoder platformDecoder) {
-    this(animatedGifDecoder, animatedWebPDecoder, xmlDecoder, platformDecoder, null);
+      @Nullable final ImageDecoder xmlDecoder, final PlatformDecoder platformDecoder) {
+    this(xmlDecoder, platformDecoder, null);
   }
 
   public DefaultImageDecoder(
-      @Nullable final ImageDecoder animatedGifDecoder,
-      @Nullable final ImageDecoder animatedWebPDecoder,
       @Nullable final ImageDecoder xmlDecoder,
       final PlatformDecoder platformDecoder,
       @Nullable Map<ImageFormat, ImageDecoder> customDecoders) {
-    this(
-        animatedGifDecoder,
-        animatedWebPDecoder,
-        xmlDecoder,
-        platformDecoder,
-        customDecoders,
-        Suppliers.BOOLEAN_FALSE);
+    this(xmlDecoder, platformDecoder, customDecoders, Suppliers.BOOLEAN_FALSE);
   }
 
   public DefaultImageDecoder(
-      @Nullable final ImageDecoder animatedGifDecoder,
-      @Nullable final ImageDecoder animatedWebPDecoder,
       @Nullable final ImageDecoder xmlDecoder,
       final PlatformDecoder platformDecoder,
       @Nullable Map<ImageFormat, ImageDecoder> customDecoders,
       final Supplier<Boolean> enableEncodedImageColorSpaceUsage) {
-    mAnimatedGifDecoder = animatedGifDecoder;
-    mAnimatedWebPDecoder = animatedWebPDecoder;
     mXmlDecoder = xmlDecoder;
     mPlatformDecoder = platformDecoder;
     mCustomDecoders = customDecoders;
@@ -144,6 +125,7 @@ public class DefaultImageDecoder implements ImageDecoder {
     if (options.customImageDecoder != null) {
       return options.customImageDecoder.decode(encodedImage, length, qualityInfo, options);
     }
+
     ImageFormat imageFormat = encodedImage.getImageFormat();
     if (imageFormat == null || imageFormat == ImageFormat.UNKNOWN) {
       InputStream inputStream = encodedImage.getInputStream();
@@ -152,32 +134,35 @@ public class DefaultImageDecoder implements ImageDecoder {
         encodedImage.setImageFormat(imageFormat);
       }
     }
+
     if (mCustomDecoders != null) {
       ImageDecoder decoder = mCustomDecoders.get(imageFormat);
       if (decoder != null) {
         return decoder.decode(encodedImage, length, qualityInfo, options);
       }
     }
+
     return mDefaultDecoder.decode(encodedImage, length, qualityInfo, options);
   }
 
-  /**
-   * Decodes gif into CloseableImage.
-   *
-   * @param encodedImage input image (encoded bytes plus meta data)
-   * @return a CloseableImage
-   */
-  public @Nullable CloseableImage decodeGif(
+  private @Nullable CloseableImage decodeAnimatedFormat(
       final EncodedImage encodedImage,
       final int length,
       final QualityInfo qualityInfo,
-      final ImageDecodeOptions options) {
+      final ImageDecodeOptions options,
+      final ImageFormat imageFormat) {
+
     if (encodedImage.getWidth() == EncodedImage.UNKNOWN_WIDTH
         || encodedImage.getHeight() == EncodedImage.UNKNOWN_HEIGHT) {
-      throw new DecodeException("image width or height is incorrect", encodedImage);
+      throw new DecodeException(
+          imageFormat.getName() + " image width or height is incorrect", encodedImage);
     }
-    if (!options.forceStaticImage && mAnimatedGifDecoder != null) {
-      return mAnimatedGifDecoder.decode(encodedImage, length, qualityInfo, options);
+
+    if (mCustomDecoders != null) {
+      ImageDecoder animatedDecoder = mCustomDecoders.get(imageFormat);
+      if (!options.forceStaticImage && animatedDecoder != null) {
+        return animatedDecoder.decode(encodedImage, length, qualityInfo, options);
+      }
     }
     return decodeStaticImage(encodedImage, options);
   }
@@ -252,26 +237,6 @@ public class DefaultImageDecoder implements ImageDecoder {
     } finally {
       CloseableReference.closeSafely(bitmapReference);
     }
-  }
-
-  /**
-   * Decode a webp animated image into a CloseableImage.
-   *
-   * <p>The image is decoded into a 'pinned' purgeable bitmap.
-   *
-   * @param encodedImage input image (encoded bytes plus meta data)
-   * @param options
-   * @return a {@link CloseableImage}
-   */
-  public @Nullable CloseableImage decodeAnimatedWebp(
-      final EncodedImage encodedImage,
-      final int length,
-      final QualityInfo qualityInfo,
-      final ImageDecodeOptions options) {
-    if (!options.forceStaticImage && mAnimatedWebPDecoder != null) {
-      return mAnimatedWebPDecoder.decode(encodedImage, length, qualityInfo, options);
-    }
-    return decodeStaticImage(encodedImage, options);
   }
 
   /**
