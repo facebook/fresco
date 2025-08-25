@@ -71,13 +71,13 @@ class MainActivity : AppCompatActivity() {
     menu
         .add(Menu.NONE, item.itemId, Menu.NONE, item.title)
         .setCheckable(true)
-        .setOnMenuItemClickListener {
+        .setOnMenuItemClickListener { menuItem ->
           showFragment(item.createFragment(), item.title, item.backstackTag)
           drawerLayout.closeDrawer(GravityCompat.START)
-          navView.setCheckedItem(it)
+          navView.setCheckedItem(menuItem)
           PreferenceManager.getDefaultSharedPreferences(this)
               .edit()
-              .putInt(KEY_SELECTED_NAVDRAWER_ITEM_ID, it.itemId)
+              .putInt(KEY_SELECTED_NAVDRAWER_ITEM_ID, menuItem.itemId)
               .apply()
           true
         }
