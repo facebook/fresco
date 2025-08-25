@@ -81,17 +81,17 @@ class LiveEditorUiUtils(
         var source: List<Pair<String, String>> =
             ImageSourceParser.convertSourceToKeyValue(liveEditor?.getSource().toString())
         liveEditor?.let { liveEditorNonNull ->
-          debugDataProviders?.forEach {
+          debugDataProviders?.forEach { debugProvider ->
             val debugData: Pair<String, String> =
-                Pair(it.longName, it.extractData(liveEditorNonNull.drawable))
+                Pair(debugProvider.longName, debugProvider.extractData(liveEditorNonNull.drawable))
             source = source + debugData
           }
         }
         if (source.isEmpty()) {
           addView(TextView(context).apply { text = "Source is Empty" })
         }
-        source.forEach {
-          val view = ImageSourceUiUtil(context).createImageInfoView(it, this)
+        source.forEach { sourceInfo ->
+          val view = ImageSourceUiUtil(context).createImageInfoView(sourceInfo, this)
           addView(view)
         }
       }
