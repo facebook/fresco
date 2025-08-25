@@ -204,13 +204,13 @@ class ImageUriProvider constructor(context: Context) {
             null,
             null,
         )
-        ?.use {
-          val dataIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-          while (it.moveToNext()) {
+        ?.use { cursor ->
+          val dataIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+          while (cursor.moveToNext()) {
             uris.add(
                 ContentUris.withAppendedId(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    it.getLong(dataIndex),
+                    cursor.getLong(dataIndex),
                 )
             )
           }
