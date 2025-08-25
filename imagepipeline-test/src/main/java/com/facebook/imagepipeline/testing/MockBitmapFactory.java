@@ -39,7 +39,6 @@ public class MockBitmapFactory {
     Bitmap bitmap = mock(Bitmap.class);
     when(bitmap.getWidth()).thenReturn(width);
     when(bitmap.getHeight()).thenReturn(height);
-    // NULLSAFE_FIXME[Parameter Not Nullable]
     when(bitmap.getConfig()).thenReturn(config);
     when(bitmap.isMutable()).thenReturn(true);
     when(bitmap.getRowBytes()).thenReturn(width * BitmapUtil.getPixelSizeForBitmapConfig(config));
