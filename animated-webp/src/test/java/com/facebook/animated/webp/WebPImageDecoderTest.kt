@@ -5,23 +5,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.imagepipeline.animated.factory
+package com.facebook.animated.webp
 
 import android.graphics.Bitmap
-import android.graphics.Rect
-import com.facebook.animated.webp.WebPImage
 import com.facebook.common.memory.PooledByteBuffer
 import com.facebook.common.references.CloseableReference
 import com.facebook.common.references.ResourceReleaser
 import com.facebook.imageformat.ImageFormat
-import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult
-import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider
 import com.facebook.imagepipeline.animated.impl.AnimatedImageCompositor
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
 import com.facebook.imagepipeline.common.ImageDecodeOptions
 import com.facebook.imagepipeline.image.CloseableAnimatedImage
+import com.facebook.imagepipeline.image.CloseableStaticBitmap
 import com.facebook.imagepipeline.image.EncodedImage
+import com.facebook.imagepipeline.image.ImmutableQualityInfo
 import com.facebook.imagepipeline.testing.MockBitmapFactory
 import com.facebook.imagepipeline.testing.TrivialBufferPooledByteBuffer
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer
@@ -43,28 +41,28 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 
-/** Tests for [AnimatedImageFactory] */
+/** Tests for [WebPImageDecoder] */
 @RunWith(RobolectricTestRunner::class)
-class AnimatedImageFactoryWebPImplTest {
-  private var mockAnimatedDrawableBackendProvider: AnimatedDrawableBackendProvider? = null
+class WebPImageDecoderTest {
   private var mockBitmapFactory: PlatformBitmapFactory? = null
-  private var animatedImageFactory: AnimatedImageFactory? = null
+  private var webPImageDecoder: WebPImageDecoder? = null
   private var webPImageMockedStatic: MockedStatic<WebPImage>? = null
-  private var webPImageMock: WebPImage? = null
 
   @Before
   fun setup() {
     webPImageMockedStatic = Mockito.mockStatic(WebPImage::class.java)
-    webPImageMock = mock<WebPImage>()
-    mockAnimatedDrawableBackendProvider = mock<AnimatedDrawableBackendProvider>()
     mockBitmapFactory = mock<PlatformBitmapFactory>()
 
-    val backendProvider = mockAnimatedDrawableBackendProvider
     val bitmapFactory = mockBitmapFactory
-    if (backendProvider != null && bitmapFactory != null) {
-      animatedImageFactory = AnimatedImageFactoryImpl(backendProvider, bitmapFactory, false)
+    if (bitmapFactory != null) {
+      webPImageDecoder =
+          WebPImageDecoder(
+              bitmapFactory,
+              isNewRenderImplementation = false,
+              downscaleFrameToDrawableDimensions = false,
+              treatAnimatedImagesAsStateful = true,
+          )
     }
-    AnimatedImageFactoryImpl.webpAnimatedImageDecoder = webPImageMock
   }
 
   @After
@@ -76,10 +74,10 @@ class AnimatedImageFactoryWebPImplTest {
   fun testCreateDefaultsUsingPointer() {
     val mockWebPImage: WebPImage = mock<WebPImage>()
 
-    // Expect a call to WebPImage.decodeFromNativeMemory
+    // Expect a call to WebPImage.createFromNativeMemory
     val byteBuffer: TrivialPooledByteBuffer = createByteBuffer()
     whenever(
-            webPImageMock?.decodeFromNativeMemory(
+            WebPImage.createFromNativeMemory(
                 ArgumentMatchers.eq(byteBuffer.getNativePtr()),
                 ArgumentMatchers.eq(byteBuffer.size()),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
@@ -94,10 +92,10 @@ class AnimatedImageFactoryWebPImplTest {
   fun testCreateDefaultsUsingByteBuffer() {
     val mockWebPImage: WebPImage = mock<WebPImage>()
 
-    // Expect a call to WebPImage.decodeFromByteBuffer
+    // Expect a call to WebPImage.createFromByteBuffer
     val byteBuffer: TrivialBufferPooledByteBuffer = createDirectByteBuffer()
     whenever(
-            webPImageMock?.decodeFromByteBuffer(
+            WebPImage.createFromByteBuffer(
                 ArgumentMatchers.any<ByteBuffer>(),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
             )
@@ -113,11 +111,11 @@ class AnimatedImageFactoryWebPImplTest {
     val mockWebPImage: WebPImage = mock<WebPImage>()
     val mockBitmap: Bitmap = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG)
 
-    // Expect a call to WebPImage.decodeFromNativeMemory
+    // Expect a call to WebPImage.createFromNativeMemory
     val byteBuffer: TrivialPooledByteBuffer = createByteBuffer()
     whenever(
-            webPImageMock?.decodeFromNativeMemory(
-                ArgumentMatchers.eq(byteBuffer.nativePtr),
+            WebPImage.createFromNativeMemory(
+                ArgumentMatchers.eq(byteBuffer.getNativePtr()),
                 ArgumentMatchers.eq(byteBuffer.size()),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
             )
@@ -125,6 +123,8 @@ class AnimatedImageFactoryWebPImplTest {
         .thenReturn(mockWebPImage)
     whenever(mockWebPImage.width).thenReturn(50)
     whenever(mockWebPImage.height).thenReturn(50)
+    whenever(mockWebPImage.frameCount).thenReturn(1)
+    whenever(mockWebPImage.frameDurations).thenReturn(intArrayOf(100))
 
     testCreateWithPreviewBitmap(mockWebPImage, byteBuffer, mockBitmap)
   }
@@ -135,10 +135,10 @@ class AnimatedImageFactoryWebPImplTest {
     val mockWebPImage: WebPImage = mock<WebPImage>()
     val mockBitmap: Bitmap = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG)
 
-    // Expect a call to WebPImage.decodeFromByteBuffer
+    // Expect a call to WebPImage.createFromByteBuffer
     val byteBuffer: TrivialBufferPooledByteBuffer = createDirectByteBuffer()
     whenever(
-            webPImageMock?.decodeFromByteBuffer(
+            WebPImage.createFromByteBuffer(
                 ArgumentMatchers.any<ByteBuffer>(),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
             )
@@ -146,6 +146,8 @@ class AnimatedImageFactoryWebPImplTest {
         .thenReturn(mockWebPImage)
     whenever(mockWebPImage.width).thenReturn(50)
     whenever(mockWebPImage.height).thenReturn(50)
+    whenever(mockWebPImage.frameCount).thenReturn(1)
+    whenever(mockWebPImage.frameDurations).thenReturn(intArrayOf(100))
 
     testCreateWithPreviewBitmap(mockWebPImage, byteBuffer, mockBitmap)
   }
@@ -158,11 +160,11 @@ class AnimatedImageFactoryWebPImplTest {
     val mockBitmap1: Bitmap = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG)
     val mockBitmap2: Bitmap = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG)
 
-    // Expect a call to WebPImage.decodeFromNativeMemory
+    // Expect a call to WebPImage.createFromNativeMemory
     val byteBuffer: TrivialPooledByteBuffer = createByteBuffer()
     whenever(
-            webPImageMock?.decodeFromNativeMemory(
-                ArgumentMatchers.eq(byteBuffer.nativePtr),
+            WebPImage.createFromNativeMemory(
+                ArgumentMatchers.eq(byteBuffer.getNativePtr()),
                 ArgumentMatchers.eq(byteBuffer.size()),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
             )
@@ -170,6 +172,8 @@ class AnimatedImageFactoryWebPImplTest {
         .thenReturn(mockWebPImage)
     whenever(mockWebPImage.width).thenReturn(50)
     whenever(mockWebPImage.height).thenReturn(50)
+    whenever(mockWebPImage.frameCount).thenReturn(2)
+    whenever(mockWebPImage.frameDurations).thenReturn(intArrayOf(100, 150))
 
     testCreateWithDecodeAlFrames(mockWebPImage, byteBuffer, mockBitmap1, mockBitmap2)
   }
@@ -182,10 +186,10 @@ class AnimatedImageFactoryWebPImplTest {
     val mockBitmap1: Bitmap = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG)
     val mockBitmap2: Bitmap = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG)
 
-    // Expect a call to WebPImage.decodeFromByteBuffer
+    // Expect a call to WebPImage.createFromByteBuffer
     val byteBuffer: TrivialBufferPooledByteBuffer = createDirectByteBuffer()
     whenever(
-            webPImageMock?.decodeFromByteBuffer(
+            WebPImage.createFromByteBuffer(
                 ArgumentMatchers.any<ByteBuffer>(),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
             )
@@ -193,6 +197,8 @@ class AnimatedImageFactoryWebPImplTest {
         .thenReturn(mockWebPImage)
     whenever(mockWebPImage.width).thenReturn(50)
     whenever(mockWebPImage.height).thenReturn(50)
+    whenever(mockWebPImage.frameCount).thenReturn(2)
+    whenever(mockWebPImage.frameDurations).thenReturn(intArrayOf(100, 150))
 
     testCreateWithDecodeAlFrames(mockWebPImage, byteBuffer, mockBitmap1, mockBitmap2)
   }
@@ -203,10 +209,11 @@ class AnimatedImageFactoryWebPImplTest {
     encodedImage.imageFormat = ImageFormat.UNKNOWN
 
     val closeableImage: CloseableAnimatedImage? =
-        animatedImageFactory?.decodeWebP(
+        webPImageDecoder?.decode(
             encodedImage,
+            byteBuffer.size(),
+            ImmutableQualityInfo.FULL_QUALITY,
             ImageDecodeOptions.defaults(),
-            DEFAULT_BITMAP_CONFIG,
         ) as? CloseableAnimatedImage
 
     // Verify we got the right result
@@ -215,8 +222,7 @@ class AnimatedImageFactoryWebPImplTest {
     assertThat(imageResult?.previewBitmap).isNull()
     assertThat(imageResult?.hasDecodedFrame(0) == true).isFalse()
 
-    // Should not have interacted with these.
-    mockAnimatedDrawableBackendProvider?.let { Mockito.verifyNoInteractions(it) }
+    // Should not have interacted with bitmap factory for basic decoding
     mockBitmapFactory?.let { Mockito.verifyNoInteractions(it) }
   }
 
@@ -226,16 +232,6 @@ class AnimatedImageFactoryWebPImplTest {
       byteBuffer: PooledByteBuffer,
       mockBitmap: Bitmap,
   ) {
-    // For decoding preview frame, expect some calls.
-    val mockAnimatedDrawableBackend: AnimatedDrawableBackend = createAnimatedDrawableBackendMock(1)
-
-    whenever(
-            mockAnimatedDrawableBackendProvider?.get(
-                Matchers.any<AnimatedImageResult?>(AnimatedImageResult::class.java),
-                Matchers.isNull<Rect?>(Rect::class.java),
-            )
-        )
-        .thenReturn(mockAnimatedDrawableBackend)
     whenever(mockBitmapFactory?.createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG))
         .thenReturn(CloseableReference.of(mockBitmap, FAKE_BITMAP_RESOURCE_RELEASER))
 
@@ -247,8 +243,12 @@ class AnimatedImageFactoryWebPImplTest {
           EncodedImage(CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER))
       encodedImage.imageFormat = ImageFormat.UNKNOWN
       val closeableImage: CloseableAnimatedImage? =
-          animatedImageFactory?.decodeWebP(encodedImage, imageDecodeOptions, DEFAULT_BITMAP_CONFIG)
-              as? CloseableAnimatedImage
+          webPImageDecoder?.decode(
+              encodedImage,
+              byteBuffer.size(),
+              ImmutableQualityInfo.FULL_QUALITY,
+              imageDecodeOptions,
+          ) as? CloseableAnimatedImage
 
       // Verify we got the right result
       val imageResult: AnimatedImageResult? = closeableImage?.imageResult
@@ -256,15 +256,6 @@ class AnimatedImageFactoryWebPImplTest {
       assertThat(imageResult?.previewBitmap).isNotNull()
       assertThat(imageResult?.hasDecodedFrame(0) == true).isFalse()
 
-      // Should not have interacted with these.
-      mockAnimatedDrawableBackendProvider?.let { provider ->
-        verify(provider)
-            .get(
-                Matchers.any<AnimatedImageResult?>(AnimatedImageResult::class.java),
-                Matchers.isNull<Rect?>(Rect::class.java),
-            )
-        verifyNoMoreInteractions(provider)
-      }
       mockBitmapFactory?.let { factory ->
         verify(factory).createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG)
         verifyNoMoreInteractions(factory)
@@ -282,16 +273,6 @@ class AnimatedImageFactoryWebPImplTest {
       mockBitmap1: Bitmap,
       mockBitmap2: Bitmap,
   ) {
-    // For decoding preview frame, expect some calls.
-    val mockAnimatedDrawableBackend: AnimatedDrawableBackend = createAnimatedDrawableBackendMock(2)
-    whenever(
-            mockAnimatedDrawableBackendProvider?.get(
-                Matchers.any<AnimatedImageResult?>(AnimatedImageResult::class.java),
-                Matchers.isNull<Rect?>(Rect::class.java),
-            )
-        )
-        .thenReturn(mockAnimatedDrawableBackend)
-
     whenever(mockBitmapFactory?.createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG))
         .thenReturn(CloseableReference.of(mockBitmap1, FAKE_BITMAP_RESOURCE_RELEASER))
         .thenReturn(CloseableReference.of(mockBitmap2, FAKE_BITMAP_RESOURCE_RELEASER))
@@ -309,8 +290,12 @@ class AnimatedImageFactoryWebPImplTest {
       encodedImage.imageFormat = ImageFormat.UNKNOWN
 
       val closeableImage: CloseableAnimatedImage? =
-          animatedImageFactory?.decodeWebP(encodedImage, imageDecodeOptions, DEFAULT_BITMAP_CONFIG)
-              as? CloseableAnimatedImage
+          webPImageDecoder?.decode(
+              encodedImage,
+              byteBuffer.size(),
+              ImmutableQualityInfo.FULL_QUALITY,
+              imageDecodeOptions,
+          ) as? CloseableAnimatedImage
 
       // Verify we got the right result
       val imageResult: AnimatedImageResult? = closeableImage?.imageResult
@@ -319,15 +304,6 @@ class AnimatedImageFactoryWebPImplTest {
       assertThat(imageResult?.getDecodedFrame(1)).isNotNull()
       assertThat(imageResult?.previewBitmap).isNotNull()
 
-      // Should not have interacted with these.
-      mockAnimatedDrawableBackendProvider?.let { provider ->
-        verify(provider)
-            .get(
-                Matchers.any<AnimatedImageResult?>(AnimatedImageResult::class.java),
-                Matchers.isNull<Rect?>(Rect::class.java),
-            )
-        verifyNoMoreInteractions(provider)
-      }
       mockBitmapFactory?.let { factory ->
         verify(factory, times(2)).createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG)
         verifyNoMoreInteractions(factory)
@@ -340,18 +316,77 @@ class AnimatedImageFactoryWebPImplTest {
     }
   }
 
-  /**
-   * Creates the mock for the AnimatedDrawableBackend with the number of frame
-   *
-   * @param frameCount The number of frame to mock
-   */
-  private fun createAnimatedDrawableBackendMock(frameCount: Int): AnimatedDrawableBackend {
-    // For decoding preview frame, expect some calls.
-    val mockAnimatedDrawableBackend: AnimatedDrawableBackend = mock<AnimatedDrawableBackend>()
-    whenever(mockAnimatedDrawableBackend.getFrameCount()).thenReturn(frameCount)
-    whenever(mockAnimatedDrawableBackend.getWidth()).thenReturn(50)
-    whenever(mockAnimatedDrawableBackend.getHeight()).thenReturn(50)
-    return mockAnimatedDrawableBackend
+  @Test
+  fun testDecodeForceStaticImage() {
+    val mockWebPImage: WebPImage = mock<WebPImage>()
+    val mockBitmap: Bitmap = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG)
+
+    val byteBuffer: TrivialPooledByteBuffer = createByteBuffer()
+    whenever(
+            WebPImage.createFromNativeMemory(
+                ArgumentMatchers.eq(byteBuffer.getNativePtr()),
+                ArgumentMatchers.eq(byteBuffer.size()),
+                Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+            )
+        )
+        .thenReturn(mockWebPImage)
+    whenever(mockWebPImage.width).thenReturn(50)
+    whenever(mockWebPImage.height).thenReturn(50)
+    whenever(mockWebPImage.frameCount).thenReturn(1)
+    whenever(mockWebPImage.frameDurations).thenReturn(intArrayOf(100))
+    whenever(mockBitmapFactory?.createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG))
+        .thenReturn(CloseableReference.of(mockBitmap, FAKE_BITMAP_RESOURCE_RELEASER))
+
+    Mockito.mockConstruction(AnimatedImageCompositor::class.java).use {
+        animatedImageCompositorConstruction: MockedConstruction<AnimatedImageCompositor> ->
+      val imageDecodeOptions: ImageDecodeOptions =
+          ImageDecodeOptions.newBuilder().setForceStaticImage(true).build()
+      val encodedImage: EncodedImage =
+          EncodedImage(CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER))
+      encodedImage.imageFormat = ImageFormat.UNKNOWN
+
+      val closeableImage: CloseableStaticBitmap? =
+          webPImageDecoder?.decode(
+              encodedImage,
+              byteBuffer.size(),
+              ImmutableQualityInfo.FULL_QUALITY,
+              imageDecodeOptions,
+          ) as? CloseableStaticBitmap
+
+      // Verify we got a static bitmap instead of animated image
+      assertThat(closeableImage).isNotNull()
+      assertThat(closeableImage?.underlyingBitmap).isNotNull()
+
+      mockBitmapFactory?.let { factory ->
+        verify(factory).createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG)
+        verifyNoMoreInteractions(factory)
+      }
+      verify(animatedImageCompositorConstruction.constructed()[0]).renderFrame(0, mockBitmap)
+    }
+  }
+
+  @Test
+  fun testDecodeWithInvalidWebP() {
+    // Create an invalid WebP by using an empty byte buffer
+    val invalidWebPData = ByteArray(0) // Empty array will cause validation to fail
+    val byteBuffer = TrivialPooledByteBuffer(invalidWebPData)
+
+    val encodedImage: EncodedImage =
+        EncodedImage(CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER))
+    encodedImage.imageFormat = ImageFormat.UNKNOWN
+
+    try {
+      webPImageDecoder?.decode(
+          encodedImage,
+          byteBuffer.size(),
+          ImmutableQualityInfo.FULL_QUALITY,
+          ImageDecodeOptions.defaults(),
+      )
+      assertThat(false).`as`("Expected exception to be thrown").isTrue()
+    } catch (e: Exception) {
+      // Expected - invalid WebP should cause an exception
+      assertThat(e).isNotNull()
+    }
   }
 
   companion object {
