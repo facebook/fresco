@@ -6,4 +6,4 @@
  */
 
 /** Abstractions useful for trim data from the DiskCache */
-package com.facebook.common.disk;
+package com.facebook.common.disk
