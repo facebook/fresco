@@ -73,7 +73,7 @@ public class DiskCacheConfig {
             : builder.mCacheEventListener;
     mDiskTrimmableRegistry =
         builder.mDiskTrimmableRegistry == null
-            ? NoOpDiskTrimmableRegistry.getInstance()
+            ? NoOpDiskTrimmableRegistry.INSTANCE
             : builder.mDiskTrimmableRegistry;
     mIndexPopulateAtStartupEnabled = builder.mIndexPopulateAtStartupEnabled;
   }
