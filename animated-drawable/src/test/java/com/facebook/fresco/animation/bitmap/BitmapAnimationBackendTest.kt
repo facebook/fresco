@@ -848,6 +848,63 @@ class BitmapAnimationBackendTest {
     assertThat(options1.hashCode()).isEqualTo(options2.hashCode())
   }
 
+  /** Tests isAnimationDisabled() method returns correct values. */
+  @Test
+  fun testIsAnimationDisabled() {
+    val normalOptions = AnimatedOptions.loop(3)
+    assertThat(normalOptions.isAnimationDisabled()).isFalse()
+
+    val infiniteOptions = AnimatedOptions.infinite()
+    assertThat(infiniteOptions.isAnimationDisabled()).isFalse()
+
+    val disabledOptions = AnimatedOptions.disableAnimation()
+    assertThat(disabledOptions.isAnimationDisabled()).isTrue()
+
+    val thumbnailOptions = AnimatedOptions.loop(2, "https://example.com/thumb.jpg")
+    assertThat(thumbnailOptions.isAnimationDisabled()).isFalse()
+  }
+
+  /** Tests that disableAnimation() creates options with correct properties. */
+  @Test
+  fun testDisableAnimationOptions() {
+    val disabledOptions = AnimatedOptions.disableAnimation()
+
+    assertThat(disabledOptions.isAnimationDisabled()).isTrue()
+    assertThat(disabledOptions.loopCount).isEqualTo(-1)
+    assertThat(disabledOptions.thumbnailUrl).isNull()
+    assertThat(disabledOptions.isInfinite()).isFalse()
+    assertThat(disabledOptions.useFallbackThumbnail()).isFalse()
+  }
+
+  /** Tests equality and hashCode for AnimatedOptions with disableAnimation flag. */
+  @Test
+  fun testAnimatedOptionsEqualityWithDisableAnimation() {
+    val disabledOptions1 = AnimatedOptions.disableAnimation()
+    val disabledOptions2 = AnimatedOptions.disableAnimation()
+    val normalOptions = AnimatedOptions.loop(3)
+
+    assertThat(disabledOptions1).isEqualTo(disabledOptions2)
+    assertThat(disabledOptions1).isNotEqualTo(normalOptions)
+    assertThat(disabledOptions1.hashCode()).isEqualTo(disabledOptions2.hashCode())
+  }
+
+  /** Tests that disabled animation options don't use thumbnail fallback. */
+  @Test
+  fun testDisabledAnimationWithThumbnailFallback() {
+    val disabledOptions = AnimatedOptions.disableAnimation()
+    assertThat(disabledOptions.useFallbackThumbnail()).isFalse()
+  }
+
+  /** Tests backend behavior with disabled animation options. */
+  @Test
+  fun testBackendWithDisabledAnimationOptions() {
+    val disabledOptions = AnimatedOptions.disableAnimation()
+    val backend = createBackendWithAnimatedOptions(disabledOptions)
+
+    assertThat(backend.animatedOptions?.isAnimationDisabled()).isTrue()
+    assertThat(backend.animatedOptions?.useFallbackThumbnail()).isFalse()
+  }
+
   /** Tests that thumbnail and rounding options work together correctly. */
   @Test
   fun testAnimatedOptionsWithRoundingOptions() {
