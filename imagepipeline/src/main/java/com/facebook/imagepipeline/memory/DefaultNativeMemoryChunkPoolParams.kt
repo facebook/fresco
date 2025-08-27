@@ -36,7 +36,7 @@ object DefaultNativeMemoryChunkPoolParams {
     DEFAULT_BUCKETS.put(256 * ByteConstants.KB, LARGE_BUCKET_LENGTH)
     DEFAULT_BUCKETS.put(512 * ByteConstants.KB, LARGE_BUCKET_LENGTH)
     DEFAULT_BUCKETS.put(1_024 * ByteConstants.KB, LARGE_BUCKET_LENGTH)
-    return PoolParams(maxSizeSoftCap, maxSizeHardCap, DEFAULT_BUCKETS)
+    return PoolParams(DEFAULT_BUCKETS)
   }
 
   /**

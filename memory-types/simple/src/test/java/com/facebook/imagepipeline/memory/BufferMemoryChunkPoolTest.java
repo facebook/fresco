@@ -28,7 +28,7 @@ public class BufferMemoryChunkPoolTest {
     bucketSizes.put(32, 2);
     bucketSizes.put(64, 1);
     bucketSizes.put(128, 1);
-    mPool = new FakeBufferMemoryChunkPool(new PoolParams(128, bucketSizes));
+    mPool = new FakeBufferMemoryChunkPool(new PoolParams(bucketSizes));
   }
 
   @Test

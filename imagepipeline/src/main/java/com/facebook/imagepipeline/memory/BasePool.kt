@@ -17,7 +17,6 @@ import com.facebook.common.logging.FLog
 import com.facebook.common.memory.MemoryTrimType
 import com.facebook.common.memory.MemoryTrimmableRegistry
 import com.facebook.common.memory.Pool
-import com.facebook.imagepipeline.memory.BasePool.PoolSizeViolationException
 import java.util.ArrayList
 import java.util.HashMap
 import javax.annotation.concurrent.GuardedBy
@@ -71,19 +70,6 @@ import kotlin.math.min
  *
  * PoolParams Pools are "configured" with a set of parameters (the PoolParams) supplied via a
  * provider. This set of parameters includes
- * * [PoolParams#maxSizeSoftCap] The size of a pool includes its used and free space. The maxSize
- *   setting for a pool is a soft cap on the overall size of the pool. A key point is that
- *   [get(int)] requests will not fail because the max size has been exceeded (unless the underlying
- *   [alloc(int)] function fails). However, the pool's free portion will be trimmed as much as
- *   possible so that the pool's size may fall below the max size. Note that when the free portion
- *   has fallen to zero, the pool may still be larger than its maxSizeSoftCap. On a
- *   [release(Object)] request, the value will be 'freed' instead of being added to the free portion
- *   of the pool, if the pool exceeds its maxSizeSoftCap. The invariant we want to maintain - see
- *   [ensurePoolSizeInvariant()] - is that the pool must be below the max size soft cap OR the free
- *   lists must be empty.
- * * [PoolParams#maxSizeHardCap] The hard cap is a stronger limit on the pool size. When this limit
- *   is reached, we first attempt to trim the pool. If the pool size is still over the hard, the
- *   [get(int)] call will fail with a [PoolSizeViolationException]
  * * [PoolParams#bucketSizes] The pool can be configured with a set of 'sizes' - a bucket is created
  *   for each such size. Additionally, each bucket can have a a max-length specified, which is the
  *   sum of the used and free items in that bucket. As with the MaxSize parameter above, the
@@ -125,17 +111,6 @@ abstract class BasePool<V : Any>(
 
   private val poolStatsTracker = checkNotNull(poolStatsTracker)
 
-  private var ignoreHardCap = true // changing default to true.
-
-  constructor(
-      memoryTrimmableRegistry: MemoryTrimmableRegistry,
-      poolParams: PoolParams,
-      poolStatsTracker: PoolStatsTracker,
-      ignoreHardCap: Boolean,
-  ) : this(memoryTrimmableRegistry, poolParams, poolStatsTracker) {
-    this.ignoreHardCap = ignoreHardCap
-  }
-
   /** Finish pool initialization. */
   protected fun initialize() {
     memoryTrimmableRegistry.registerMemoryTrimmable(this)
@@ -148,19 +123,14 @@ abstract class BasePool<V : Any>(
       bucket.get()
 
   /**
-   * Gets a new 'value' from the pool, if available. Allocates a new value if necessary. If we need
-   * to perform an allocation, - If the pool size exceeds the max-size soft cap, then we attempt to
-   * trim the free portion of the pool. - If the pool size exceeds the max-size hard-cap (after
-   * trimming), then we throw an [PoolSizeViolationException] Bucket length constraints are not
-   * considered in this function
+   * Gets a new 'value' from the pool, if available. Allocates a new value if necessary. Bucket
+   * length constraints are not considered in this function
    *
    * @param size the logical size to allocate
    * @return a new value
    * @throws InvalidSizeException
    */
   override fun get(size: Int): V {
-    ensurePoolSizeInvariant()
-
     var bucketedSize = this.getBucketedSize(size)
     var sizeInBytes = -1
 
@@ -194,14 +164,6 @@ abstract class BasePool<V : Any>(
       }
       // check to see if we can allocate a value of the given size without exceeding the hard cap
       sizeInBytes = this.getSizeInBytes(bucketedSize)
-      if (!canAllocate(sizeInBytes)) {
-        throw PoolSizeViolationException(
-            poolParams.maxSizeHardCap,
-            used.numBytes,
-            free.numBytes,
-            sizeInBytes,
-        )
-      }
 
       // Optimistically assume that allocation succeeds - if it fails, we need to undo those changes
       used.increment(sizeInBytes)
@@ -232,8 +194,6 @@ abstract class BasePool<V : Any>(
     // be able to trim back memory usage.
     synchronized(this) {
       check(inUseValues.add(value))
-      // If we're over the pool's max size, try to trim the pool appropriately
-      trimToSoftCap()
       poolStatsTracker.onAlloc(sizeInBytes)
       logStats()
       if (FLog.isLoggable(FLog.VERBOSE)) {
@@ -286,12 +246,7 @@ abstract class BasePool<V : Any>(
         // We should free the value if no bucket is found, or if the bucket length cap is exceeded.
         // However, if the pool max size softcap is exceeded, it may not always be best to free
         // *this* value.
-        if (
-            bucket == null ||
-                bucket.isMaxLengthExceeded ||
-                isMaxSizeSoftCapExceeded ||
-                !isReusable(value)
-        ) {
+        if (bucket == null || bucket.isMaxLengthExceeded || !isReusable(value)) {
           bucket?.decrementInUseCount()
 
           if (FLog.isLoggable(FLog.VERBOSE)) {
@@ -394,18 +349,6 @@ abstract class BasePool<V : Any>(
   protected open fun isReusable(value: V): Boolean {
     checkNotNull(value)
     return true
-  }
-
-  /**
-   * Ensure pool size invariants. The pool must either be below the soft-cap OR it must have no free
-   * values left
-   */
-  @Synchronized
-  private fun ensurePoolSizeInvariant() {
-    if (ignoreHardCap) {
-      return
-    }
-    check(!isMaxSizeSoftCapExceeded || free.numBytes == 0)
   }
 
   /**
@@ -558,19 +501,6 @@ abstract class BasePool<V : Any>(
   }
 
   /**
-   * Trim the (free portion of the) pool so that the pool size is at or below the soft cap. This
-   * will try to free up values in the free portion of the pool, until (a) the pool size is now
-   * below the soft cap configured OR (b) the free portion of the pool is empty
-   */
-  @VisibleForTesting
-  @Synchronized
-  fun trimToSoftCap() {
-    if (isMaxSizeSoftCapExceeded) {
-      trimToSize(poolParams.maxSizeSoftCap)
-    }
-  }
-
-  /**
    * (Try to) trim the pool until its total space falls below the max size (soft cap). This will get
    * rid of values on the free list, until the free lists are empty, or we fall below the max size;
    * whichever comes first. NOTE: It is NOT an error if we have eliminated all the free values, but
@@ -672,61 +602,6 @@ abstract class BasePool<V : Any>(
           poolParams.fixBucketsReinitialization,
       )
 
-  @get:Synchronized
-  @get:VisibleForTesting
-  val isMaxSizeSoftCapExceeded: Boolean
-    /**
-     * Returns true if the pool size (sum of the used and the free portions) exceeds its 'max size'
-     * soft cap as specified by the pool parameters.
-     */
-    get() {
-      val isMaxSizeSoftCapExceeded = (used.numBytes + free.numBytes) > poolParams.maxSizeSoftCap
-      if (isMaxSizeSoftCapExceeded) {
-        poolStatsTracker.onSoftCapReached()
-      }
-      return isMaxSizeSoftCapExceeded
-    }
-
-  /**
-   * Can we allocate a value of size 'sizeInBytes' without exceeding the hard cap on the pool size?
-   * If allocating this value will take the pool over the hard cap, we will first trim the pool down
-   * to its soft cap, and then check again. If the current used bytes + this new value will take us
-   * above the hard cap, then we return false immediately - there is no point freeing up anything.
-   *
-   * @param sizeInBytes the size (in bytes) of the value to allocate
-   * @return true, if we can allocate this; false otherwise
-   */
-  @VisibleForTesting
-  @Synchronized
-  fun canAllocate(sizeInBytes: Int): Boolean {
-    if (ignoreHardCap) {
-      return true
-    }
-
-    val hardCap = poolParams.maxSizeHardCap
-
-    // even with our best effort we cannot ensure hard cap limit.
-    // Return immediately - no point in trimming any space
-    if (sizeInBytes > hardCap - used.numBytes) {
-      poolStatsTracker.onHardCapReached()
-      return false
-    }
-
-    // trim if we need to
-    val softCap = poolParams.maxSizeSoftCap
-    if (sizeInBytes > softCap - (used.numBytes + free.numBytes)) {
-      trimToSize(softCap - sizeInBytes)
-    }
-
-    // check again to see if we're below the hard cap
-    if (sizeInBytes > hardCap - (used.numBytes + free.numBytes)) {
-      poolStatsTracker.onHardCapReached()
-      return false
-    }
-
-    return true
-  }
-
   /** Simple 'debug' logging of stats. WARNING: The caller is responsible for synchronization */
   @SuppressLint("InvalidAccessToGuardedField")
   private fun logStats() {
@@ -754,8 +629,6 @@ abstract class BasePool<V : Any>(
         stats[BUCKET_USED_KEY] = bucket.inUseCount
       }
 
-      stats[PoolStatsTracker.SOFT_CAP] = poolParams.maxSizeSoftCap
-      stats[PoolStatsTracker.HARD_CAP] = poolParams.maxSizeHardCap
       stats[PoolStatsTracker.USED_COUNT] = used.count
       stats[PoolStatsTracker.USED_BYTES] = used.numBytes
       stats[PoolStatsTracker.FREE_COUNT] = free.count
@@ -845,13 +718,4 @@ abstract class BasePool<V : Any>(
    * A specific case of InvalidSizeException used to indicate that the requested size was too large
    */
   class SizeTooLargeException(size: Any) : InvalidSizeException(size)
-
-  /**
-   * Indicates that the pool size will exceed the hard cap if we allocated a value of size
-   * 'allocSize'
-   */
-  class PoolSizeViolationException(hardCap: Int, usedBytes: Int, freeBytes: Int, allocSize: Int) :
-      RuntimeException(
-          "Pool hard cap violation? Hard cap = ${hardCap} Used size = ${usedBytes} Free size = ${freeBytes} Request size = ${allocSize}"
-      )
 }

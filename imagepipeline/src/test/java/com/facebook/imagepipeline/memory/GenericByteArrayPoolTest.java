@@ -31,7 +31,7 @@ public class GenericByteArrayPoolTest {
     mPool =
         new GenericByteArrayPool(
             mock(MemoryTrimmableRegistry.class),
-            new PoolParams(128, bucketSizes),
+            new PoolParams(bucketSizes),
             mock(PoolStatsTracker.class));
   }
 

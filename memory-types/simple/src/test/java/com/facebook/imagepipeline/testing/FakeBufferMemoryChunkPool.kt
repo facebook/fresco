@@ -18,7 +18,7 @@ import org.mockito.kotlin.mock
 /** A 'fake' [com.facebook.imagepipeline.memory.BufferMemoryChunk] instance as a test helper */
 class FakeBufferMemoryChunkPool
 @JvmOverloads
-constructor(poolParams: PoolParams = PoolParams(128, bucketSizes)) :
+constructor(poolParams: PoolParams = PoolParams(bucketSizes)) :
     BufferMemoryChunkPool(mock<MemoryTrimmableRegistry>(), poolParams, mock<PoolStatsTracker>()) {
 
   override fun alloc(bucketedSize: Int): BufferMemoryChunk = BufferMemoryChunk(bucketedSize)

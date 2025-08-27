@@ -28,15 +28,6 @@ public class AshmemMemoryChunkPool extends MemoryChunkPool {
     super(memoryTrimmableRegistry, poolParams, ashmemMemoryChunkPoolStatsTracker);
   }
 
-  @DoNotStrip
-  public AshmemMemoryChunkPool(
-      MemoryTrimmableRegistry memoryTrimmableRegistry,
-      PoolParams poolParams,
-      PoolStatsTracker ashmemMemoryChunkPoolStatsTracker,
-      boolean ignoreHardCap) {
-    super(memoryTrimmableRegistry, poolParams, ashmemMemoryChunkPoolStatsTracker, ignoreHardCap);
-  }
-
   @Override
   public AshmemMemoryChunk alloc(int bucketedSize) {
     return new AshmemMemoryChunk(bucketedSize);

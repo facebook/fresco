@@ -21,7 +21,7 @@ import com.facebook.infer.annotation.Nullsafe;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class FakeNativeMemoryChunkPool extends NativeMemoryChunkPool {
   public FakeNativeMemoryChunkPool() {
-    this(new PoolParams(128, getBucketSizes()));
+    this(new PoolParams(getBucketSizes()));
   }
 
   public FakeNativeMemoryChunkPool(PoolParams poolParams) {

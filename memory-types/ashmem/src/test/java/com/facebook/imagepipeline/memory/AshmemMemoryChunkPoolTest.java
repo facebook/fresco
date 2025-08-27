@@ -29,7 +29,7 @@ public class AshmemMemoryChunkPoolTest {
     bucketSizes.put(32, 2);
     bucketSizes.put(64, 1);
     bucketSizes.put(128, 1);
-    mPool = new FakeAshmemMemoryChunkPool(new PoolParams(128, bucketSizes));
+    mPool = new FakeAshmemMemoryChunkPool(new PoolParams(bucketSizes));
   }
 
   @Test

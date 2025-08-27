@@ -41,7 +41,6 @@ open class PoolFactory(private val config: PoolConfig) {
               config.memoryTrimmableRegistry,
               get(),
               config.bitmapPoolStatsTracker,
-              config.isIgnoreBitmapPoolHardCap,
           )
 
       BitmapPoolType.LEGACY ->
@@ -50,7 +49,6 @@ open class PoolFactory(private val config: PoolConfig) {
                 config.memoryTrimmableRegistry,
                 config.bitmapPoolParams,
                 config.bitmapPoolStatsTracker,
-                config.isIgnoreBitmapPoolHardCap,
             )
           } else {
             DummyBitmapPool()
@@ -62,7 +60,6 @@ open class PoolFactory(private val config: PoolConfig) {
                 config.memoryTrimmableRegistry,
                 config.bitmapPoolParams,
                 config.bitmapPoolStatsTracker,
-                config.isIgnoreBitmapPoolHardCap,
             )
           } else {
             DummyBitmapPool()
@@ -78,13 +75,11 @@ open class PoolFactory(private val config: PoolConfig) {
               MemoryTrimmableRegistry::class.java,
               PoolParams::class.java,
               PoolStatsTracker::class.java,
-              Boolean::class.javaPrimitiveType,
           )
       cons.newInstance(
           config.memoryTrimmableRegistry,
           config.memoryChunkPoolParams,
           config.memoryChunkPoolStatsTracker,
-          config.isIgnoreBitmapPoolHardCap,
       ) as MemoryChunkPool
     } catch (e: ClassNotFoundException) {
       null
@@ -114,13 +109,11 @@ open class PoolFactory(private val config: PoolConfig) {
               MemoryTrimmableRegistry::class.java,
               PoolParams::class.java,
               PoolStatsTracker::class.java,
-              Boolean::class.javaPrimitiveType,
           )
       cons.newInstance(
           config.memoryTrimmableRegistry,
           config.memoryChunkPoolParams,
           config.memoryChunkPoolStatsTracker,
-          config.isIgnoreBitmapPoolHardCap,
       ) as MemoryChunkPool
     } catch (e: ClassNotFoundException) {
       null
@@ -143,13 +136,11 @@ open class PoolFactory(private val config: PoolConfig) {
               MemoryTrimmableRegistry::class.java,
               PoolParams::class.java,
               PoolStatsTracker::class.java,
-              Boolean::class.javaPrimitiveType,
           )
       cons.newInstance(
           config.memoryTrimmableRegistry,
           config.memoryChunkPoolParams,
           config.memoryChunkPoolStatsTracker,
-          config.isIgnoreBitmapPoolHardCap,
       ) as MemoryChunkPool
     } catch (e: ClassNotFoundException) {
       null

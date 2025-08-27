@@ -27,9 +27,7 @@ public class SharedByteArrayTest {
   @Before
   public void setup() {
     mArray =
-        new SharedByteArray(
-            mock(MemoryTrimmableRegistry.class),
-            new PoolParams(Integer.MAX_VALUE, Integer.MAX_VALUE, null, 4, 16, 1));
+        new SharedByteArray(mock(MemoryTrimmableRegistry.class), new PoolParams(null, 4, 16, 1));
   }
 
   @Test

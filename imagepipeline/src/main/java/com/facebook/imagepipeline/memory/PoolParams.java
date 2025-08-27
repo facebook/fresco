@@ -8,21 +8,11 @@
 package com.facebook.imagepipeline.memory;
 
 import android.util.SparseIntArray;
-import com.facebook.common.internal.Preconditions;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
  * Config parameters for pools ({@link BasePool}. Supplied via a provider.
- *
- * <p>{@link #maxSizeSoftCap} This represents a soft cap on the size of the pool. When the pool size
- * hits this limit, the pool tries to trim its free space until either the pool size is below the
- * soft cap, or the free space is zero. Note that allocations will not fail because we have exceeded
- * the soft cap
- *
- * <p>{@link #maxSizeHardCap} The hard cap represents a hard cap on the size of the pool. When the
- * pool size exceeds this cap, allocations will start failing with a {@link
- * BasePool.PoolSizeViolationException}
  *
  * <p>{@link #bucketSizes} The pool can be configured with a set of 'sizes' - a bucket is created
  * for each such size. Additionally, each bucket can have a a max-length specified, which is the sum
@@ -44,8 +34,6 @@ public class PoolParams {
   /** If maxNumThreads is set to this level, the pool doesn't actually care what it is */
   public static final int IGNORE_THREADS = -1;
 
-  public final int maxSizeHardCap;
-  public final int maxSizeSoftCap;
   public final @Nullable SparseIntArray bucketSizes;
   public final int minBucketSize;
   public final int maxBucketSize;
@@ -62,44 +50,25 @@ public class PoolParams {
   /**
    * Set up pool params
    *
-   * @param maxSize soft-cap and hard-cap on size of the pool
    * @param bucketSizes (optional) bucket sizes and lengths for the pool
    */
-  public PoolParams(int maxSize, @Nullable SparseIntArray bucketSizes) {
-    this(maxSize, maxSize, bucketSizes, 0, Integer.MAX_VALUE, IGNORE_THREADS);
+  public PoolParams(@Nullable SparseIntArray bucketSizes) {
+    this(bucketSizes, 0, Integer.MAX_VALUE, IGNORE_THREADS);
   }
 
   /**
    * Set up pool params
    *
-   * @param maxSizeSoftCap soft cap on max size of the pool
-   * @param maxSizeHardCap hard cap on max size of the pool
-   * @param bucketSizes (optional) bucket sizes and lengths for the pool
-   */
-  public PoolParams(int maxSizeSoftCap, int maxSizeHardCap, @Nullable SparseIntArray bucketSizes) {
-    this(maxSizeSoftCap, maxSizeHardCap, bucketSizes, 0, Integer.MAX_VALUE, IGNORE_THREADS);
-  }
-
-  /**
-   * Set up pool params
-   *
-   * @param maxSizeSoftCap soft cap on max size of the pool
-   * @param maxSizeHardCap hard cap on max size of the pool
    * @param bucketSizes (optional) bucket sizes and lengths for the pool
    * @param minBucketSize min bucket size for the pool
    * @param maxBucketSize max bucket size for the pool
    * @param maxNumThreads the maximum number of threads in the pool, or -1 if the pool doesn't care
    */
   public PoolParams(
-      int maxSizeSoftCap,
-      int maxSizeHardCap,
       @Nullable SparseIntArray bucketSizes,
       int minBucketSize,
       int maxBucketSize,
       int maxNumThreads) {
-    Preconditions.checkState(maxSizeSoftCap >= 0 && maxSizeHardCap >= maxSizeSoftCap);
-    this.maxSizeSoftCap = maxSizeSoftCap;
-    this.maxSizeHardCap = maxSizeHardCap;
     this.bucketSizes = bucketSizes;
     this.minBucketSize = minBucketSize;
     this.maxBucketSize = maxBucketSize;

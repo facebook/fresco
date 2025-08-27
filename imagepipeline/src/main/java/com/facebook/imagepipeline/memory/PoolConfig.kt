@@ -29,7 +29,6 @@ class PoolConfig private constructor(builder: Builder) {
   val bitmapPoolMaxPoolSize: Int
   val bitmapPoolMaxBitmapSize: Int
   val isRegisterLruBitmapPoolAsMemoryTrimmable: Boolean
-  val isIgnoreBitmapPoolHardCap: Boolean
 
   init {
     if (isTracing()) {
@@ -58,7 +57,6 @@ class PoolConfig private constructor(builder: Builder) {
     if (isTracing()) {
       endSection()
     }
-    isIgnoreBitmapPoolHardCap = builder.ignoreBitmapPoolHardCap
   }
 
   class Builder {
@@ -74,7 +72,6 @@ class PoolConfig private constructor(builder: Builder) {
     internal var bitmapPoolMaxPoolSize: Int = 0
     internal var bitmapPoolMaxBitmapSize: Int = 0
     internal var registerLruBitmapPoolAsMemoryTrimmable: Boolean = false
-    internal var ignoreBitmapPoolHardCap: Boolean = true
 
     fun setBitmapPoolParams(bitmapPoolParams: PoolParams): Builder {
       this.bitmapPoolParams = bitmapPoolParams
@@ -143,11 +140,6 @@ class PoolConfig private constructor(builder: Builder) {
         registerLruBitmapPoolAsMemoryTrimmable: Boolean
     ): Builder {
       this.registerLruBitmapPoolAsMemoryTrimmable = registerLruBitmapPoolAsMemoryTrimmable
-      return this
-    }
-
-    fun setIgnoreBitmapPoolHardCap(ignoreBitmapPoolHardCap: Boolean): Builder {
-      this.ignoreBitmapPoolHardCap = ignoreBitmapPoolHardCap
       return this
     }
   }

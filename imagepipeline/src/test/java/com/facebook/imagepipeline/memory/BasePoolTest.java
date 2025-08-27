@@ -13,7 +13,6 @@ import android.util.SparseIntArray;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
-import com.facebook.imagepipeline.memory.BasePool.PoolSizeViolationException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +27,7 @@ public class BasePoolTest {
 
   @Before
   public void setup() {
-    mPool = new TestPool(10, 14);
+    mPool = new TestPool();
     mStats = new PoolStats<byte[]>(mPool);
   }
 
@@ -120,44 +119,6 @@ public class BasePoolTest {
     Assert.assertEquals(1, mStats.mUsedCount);
   }
 
-  // Get via alloc+trim
-  @Test
-  public void testGet_AllocAndTrim() throws Exception {
-    mPool = new TestPool(10, 10, makeBucketSizeArray(2, 2, 4, 2, 6, 2));
-    mStats.setPool(mPool);
-
-    // allocate and release multiple buffers
-    byte[] b1;
-    b1 = mPool.get(2);
-    mPool.release(b1);
-    b1 = mPool.get(6);
-    mPool.release(b1);
-
-    // get current stats
-    mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(
-            2, new IntPair(0, 1),
-            4, new IntPair(0, 0),
-            6, new IntPair(0, 1)),
-        mStats.mBucketStats);
-
-    // get a new buffer; this should cause an alloc and a trim
-    mPool.get(3);
-    mStats.refresh();
-    // validate stats
-    Assert.assertEquals(
-        ImmutableMap.of(
-            2, new IntPair(0, 0),
-            4, new IntPair(1, 0),
-            6, new IntPair(0, 1)),
-        mStats.mBucketStats);
-    Assert.assertEquals(6, mStats.mFreeBytes);
-    Assert.assertEquals(4, mStats.mUsedBytes);
-    Assert.assertEquals(1, mStats.mFreeCount);
-    Assert.assertEquals(1, mStats.mUsedCount);
-  }
-
   // Tests that we can reuse a free buffer in the pool
   @Test
   public void testGet_Reuse() throws Exception {
@@ -186,19 +147,6 @@ public class BasePoolTest {
     Assert.assertEquals(1, mStats.mUsedCount);
   }
 
-  // Get via alloc - exception on max size hard cap
-  @Test
-  public void testGet_AllocFailure() throws Exception {
-    TestPool pool = new TestPool(4, 5);
-    pool.get(4);
-    try {
-      pool.get(4);
-      Assert.fail();
-    } catch (PoolSizeViolationException e) {
-      // expected exception
-    }
-  }
-
   // test a simple release
   @Test
   public void testRelease() throws Exception {
@@ -216,46 +164,10 @@ public class BasePoolTest {
     Assert.assertEquals(0, mStats.mUsedCount);
   }
 
-  // test out release(), when it should free the value, instead of adding to the pool
-  @Test
-  public void testRelease_Free() throws Exception {
-    // get a set of buffers that bump up above the max size
-    mPool.get(6);
-    // get and release another buffer. this should cause a free
-    byte[] b3 = mPool.get(6);
-    mPool.release(b3);
-
-    mStats.refresh();
-    Assert.assertEquals(ImmutableMap.of(6, new IntPair(1, 0)), mStats.mBucketStats);
-    Assert.assertEquals(0, mStats.mFreeBytes);
-    Assert.assertEquals(6, mStats.mUsedBytes);
-    Assert.assertEquals(0, mStats.mFreeCount);
-    Assert.assertEquals(1, mStats.mUsedCount);
-  }
-
-  // test release on  zero-sized pool
-  @Test
-  public void testRelease_Free2() throws Exception {
-    // create a new pool with a max size cap of zero.
-    mPool = new TestPool(0, 10);
-    mStats.setPool(mPool);
-
-    // get a buffer and release it - this should trigger the soft cap
-    byte[] b1 = mPool.get(4);
-    mPool.release(b1);
-
-    mStats.refresh();
-    Assert.assertEquals(ImmutableMap.of(4, new IntPair(0, 0)), mStats.mBucketStats);
-    Assert.assertEquals(0, mStats.mFreeBytes);
-    Assert.assertEquals(0, mStats.mUsedBytes);
-    Assert.assertEquals(0, mStats.mFreeCount);
-    Assert.assertEquals(0, mStats.mUsedCount);
-  }
-
   // Test release with bucket length constraints
   @Test
   public void testRelease_BucketLengths() throws Exception {
-    mPool = new TestPool(Integer.MAX_VALUE, Integer.MAX_VALUE, makeBucketSizeArray(2, 2));
+    mPool = new TestPool(makeBucketSizeArray(2, 2));
     mStats.setPool(mPool);
 
     byte[] b0 = mPool.get(2);
@@ -302,7 +214,7 @@ public class BasePoolTest {
   // test out release with non reusable values
   @Test
   public void testRelease_NonReusable() throws Exception {
-    TestPool pool = new TestPool(100, 100, makeBucketSizeArray(2, 3));
+    TestPool pool = new TestPool(makeBucketSizeArray(2, 3));
     mPool.mIsReusable = false;
     mStats.setPool(pool);
 
@@ -322,7 +234,7 @@ public class BasePoolTest {
   // test buffers outside the 'normal' bucket sizes
   @Test
   public void testGetRelease_NonBucketSizes() throws Exception {
-    mPool = new TestPool(10, 10, makeBucketSizeArray(2, 1, 4, 1, 6, 1));
+    mPool = new TestPool(makeBucketSizeArray(2, 1, 4, 1, 6, 1));
     mStats.setPool(mPool);
 
     mPool.get(2);
@@ -381,7 +293,7 @@ public class BasePoolTest {
   // test out trimToSize functionality
   @Test
   public void testTrimToSize() throws Exception {
-    mPool = new TestPool(100, 100, makeBucketSizeArray(2, 2, 4, 2, 6, 2));
+    mPool = new TestPool(makeBucketSizeArray(2, 2, 4, 2, 6, 2));
     mStats.setPool(mPool);
 
     // allocate and release multiple buffers
@@ -429,19 +341,6 @@ public class BasePoolTest {
         mStats.mBucketStats);
   }
 
-  @Test
-  public void test_canAllocate() throws Exception {
-    TestPool pool = new TestPool(4, 8);
-
-    pool.get(4);
-    Assert.assertFalse(pool.isMaxSizeSoftCapExceeded());
-    Assert.assertTrue(pool.canAllocate(2));
-    pool.get(2);
-    Assert.assertTrue(pool.isMaxSizeSoftCapExceeded());
-    Assert.assertTrue(pool.canAllocate(2));
-    Assert.assertFalse(pool.canAllocate(4));
-  }
-
   /**
    * A simple test pool that allocates byte arrays, and always allocates buffers of double the size
    * requested
@@ -449,14 +348,14 @@ public class BasePoolTest {
   public static class TestPool extends BasePool<byte[]> {
     public boolean mIsReusable;
 
-    public TestPool(int maxPoolSizeSoftCap, int maxPoolSizeHardCap) {
-      this(maxPoolSizeSoftCap, maxPoolSizeHardCap, null);
+    public TestPool() {
+      this(null);
     }
 
-    public TestPool(int maxPoolSizeSoftCap, int maxPoolSizeHardCap, SparseIntArray bucketSizes) {
+    public TestPool(SparseIntArray bucketSizes) {
       super(
           mock(MemoryTrimmableRegistry.class),
-          new PoolParams(maxPoolSizeSoftCap, maxPoolSizeHardCap, bucketSizes),
+          new PoolParams(bucketSizes),
           mock(PoolStatsTracker.class));
       mIsReusable = true;
       initialize();

@@ -29,7 +29,7 @@ public class NativeMemoryChunkPoolTest extends TestUsingNativeMemoryChunk {
     bucketSizes.put(32, 2);
     bucketSizes.put(64, 1);
     bucketSizes.put(128, 1);
-    mPool = new FakeNativeMemoryChunkPool(new PoolParams(128, bucketSizes));
+    mPool = new FakeNativeMemoryChunkPool(new PoolParams(bucketSizes));
   }
 
   // Test out the alloc method

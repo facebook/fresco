@@ -30,23 +30,7 @@ public abstract class MemoryChunkPool extends BasePool<MemoryChunk> {
       MemoryTrimmableRegistry memoryTrimmableRegistry,
       PoolParams poolParams,
       PoolStatsTracker memoryChunkPoolStatsTracker) {
-    this(memoryTrimmableRegistry, poolParams, memoryChunkPoolStatsTracker, false);
-  }
-
-  /**
-   * Initialize a new instance of the MemoryChunkPool
-   *
-   * @param memoryTrimmableRegistry the memory manager to register with
-   * @param poolParams provider for pool parameters
-   * @param memoryChunkPoolStatsTracker the pool stats tracker
-   * @param ignoreHardCap whether to ignore the hard cap on the pool size
-   */
-  MemoryChunkPool(
-      MemoryTrimmableRegistry memoryTrimmableRegistry,
-      PoolParams poolParams,
-      PoolStatsTracker memoryChunkPoolStatsTracker,
-      boolean ignoreHardCap) {
-    super(memoryTrimmableRegistry, poolParams, memoryChunkPoolStatsTracker, ignoreHardCap);
+    super(memoryTrimmableRegistry, poolParams, memoryChunkPoolStatsTracker);
     SparseIntArray bucketSizes = Preconditions.checkNotNull(poolParams.bucketSizes);
     this.mBucketSizes = new int[bucketSizes.size()];
     for (int i = 0; i < mBucketSizes.length; ++i) {

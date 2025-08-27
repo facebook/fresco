@@ -22,10 +22,6 @@ object DefaultByteArrayPoolParams {
    * We should be able to satisfy these requirements without any allocations
    */
   private const val DEFAULT_BUCKET_SIZE = 5
-  private const val MAX_SIZE_SOFT_CAP = 5 * DEFAULT_IO_BUFFER_SIZE
-
-  /** We don't need hard cap here. */
-  private const val MAX_SIZE_HARD_CAP = 1 * ByteConstants.MB
 
   /** Get default [PoolParams]. */
   @JvmStatic
@@ -33,6 +29,6 @@ object DefaultByteArrayPoolParams {
     // This pool supports only one bucket size: DEFAULT_IO_BUFFER_SIZE
     val defaultBuckets = SparseIntArray()
     defaultBuckets.put(DEFAULT_IO_BUFFER_SIZE, DEFAULT_BUCKET_SIZE)
-    return PoolParams(MAX_SIZE_SOFT_CAP, MAX_SIZE_HARD_CAP, defaultBuckets)
+    return PoolParams(defaultBuckets)
   }
 }

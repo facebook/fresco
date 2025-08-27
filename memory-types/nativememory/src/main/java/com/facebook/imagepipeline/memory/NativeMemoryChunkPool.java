@@ -26,15 +26,6 @@ public class NativeMemoryChunkPool extends MemoryChunkPool {
     super(memoryTrimmableRegistry, poolParams, nativeMemoryChunkPoolStatsTracker);
   }
 
-  @DoNotStrip
-  public NativeMemoryChunkPool(
-      MemoryTrimmableRegistry memoryTrimmableRegistry,
-      PoolParams poolParams,
-      PoolStatsTracker nativeMemoryChunkPoolStatsTracker,
-      boolean ignoreHardCap) {
-    super(memoryTrimmableRegistry, poolParams, nativeMemoryChunkPoolStatsTracker, ignoreHardCap);
-  }
-
   @Override
   protected NativeMemoryChunk alloc(int bucketedSize) {
     return new NativeMemoryChunk(bucketedSize);

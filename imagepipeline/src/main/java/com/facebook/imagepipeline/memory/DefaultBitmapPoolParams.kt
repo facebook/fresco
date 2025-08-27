@@ -13,16 +13,13 @@ import com.facebook.common.util.ByteConstants
 /** Provides pool parameters for [BitmapPool] */
 object DefaultBitmapPoolParams {
 
-  /** We are not reusing Bitmaps and want to free them as soon as possible. */
-  private const val MAX_SIZE_SOFT_CAP = 0
-
   /**
    * Our Bitmaps live in ashmem, meaning that they are pinned in androids' shared native memory.
    * Therefore, we are not constrained by the max heap size of the dalvik heap, but we want to make
    * sure we don't use too much memory on low end devices, so that we don't force other background
    * process to be evicted.
    */
-  private val maxSizeHardCap: Int
+  val maxSizeHardCap: Int
     get() {
       val maxMemory = Math.min(Runtime.getRuntime().maxMemory(), Int.MAX_VALUE.toLong()).toInt()
       return if (maxMemory > 16 * ByteConstants.MB) {
@@ -35,5 +32,5 @@ object DefaultBitmapPoolParams {
   /** This will cause all get/release calls to behave like alloc/free calls i.e. no pooling. */
   private val DEFAULT_BUCKETS = SparseIntArray(0)
 
-  @JvmStatic fun get(): PoolParams = PoolParams(MAX_SIZE_SOFT_CAP, maxSizeHardCap, DEFAULT_BUCKETS)
+  @JvmStatic fun get(): PoolParams = PoolParams(DEFAULT_BUCKETS)
 }

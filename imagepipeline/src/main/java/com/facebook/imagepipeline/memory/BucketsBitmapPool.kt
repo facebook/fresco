@@ -26,10 +26,7 @@ class BucketsBitmapPool(
     memoryTrimmableRegistry: MemoryTrimmableRegistry?,
     poolParams: PoolParams?,
     poolStatsTracker: PoolStatsTracker?,
-    ignoreHardCap: Boolean,
-) :
-    BasePool<Bitmap>(memoryTrimmableRegistry!!, poolParams!!, poolStatsTracker!!, ignoreHardCap),
-    BitmapPool {
+) : BasePool<Bitmap>(memoryTrimmableRegistry!!, poolParams!!, poolStatsTracker!!), BitmapPool {
   /**
    * Creates an instance of a bitmap pool.
    *

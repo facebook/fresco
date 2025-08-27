@@ -21,7 +21,7 @@ import org.mockito.Mockito;
 public class FakeAshmemMemoryChunkPool extends AshmemMemoryChunkPool {
 
   public FakeAshmemMemoryChunkPool() {
-    this(new PoolParams(128, getBucketSizes()));
+    this(new PoolParams(getBucketSizes()));
   }
 
   public FakeAshmemMemoryChunkPool(PoolParams poolParams) {
