@@ -41,9 +41,9 @@ class FpsCompressorInfo(private val maxFpsLimit: Int) {
 
     val skipRatio = frameCount.div(maxAllowedFrames.coerceAtMost(frameCount.toFloat()))
     var prevFrame = 0
-    return (0 until frameCount).associateWith {
-      if ((it % skipRatio).toInt() == 0) {
-        prevFrame = it
+    return (0 until frameCount).associateWith { frameIndex ->
+      if ((frameIndex % skipRatio).toInt() == 0) {
+        prevFrame = frameIndex
       }
 
       prevFrame
