@@ -117,10 +117,7 @@ object ImageOptionsSampleValues {
   val bitmapConfig: ImageOptionsSampleValues.Entry<BitmapConfig> =
       Entry(
           "Bitmap config",
-          listOfNotNull(
-              "ARGB 8888" to BitmapConfig.ARGB_8888,
-              "HARDWARE" to BitmapConfig.HARDWARE,
-          ),
+          BitmapConfig.values().map { it.name to it },
       ) { b, v ->
         b.bitmapConfig(v)
       }
