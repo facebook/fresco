@@ -36,7 +36,7 @@ class MultiImageTranscoderFactory(
       imageTranscoder = getImageTranscoderWithType(imageFormat, isResizingEnabled)
     }
     // First fallback using native ImageTranscoder
-    if (imageTranscoder == null && NativeCodeSetup.getUseNativeCode()) {
+    if (imageTranscoder == null && NativeCodeSetup.useNativeCode) {
       imageTranscoder = getNativeImageTranscoder(imageFormat, isResizingEnabled)
     }
 

@@ -40,8 +40,7 @@ object PlatformDecoderFactory {
             platformDecoderOptions,
         )
       } else if (
-          Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ||
-              !NativeCodeSetup.getUseNativeCode()
+          Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP || !NativeCodeSetup.useNativeCode
       ) {
         ArtDecoder(
             poolFactory.bitmapPool,
