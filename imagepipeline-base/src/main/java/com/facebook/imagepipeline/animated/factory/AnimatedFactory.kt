@@ -8,14 +8,10 @@
 package com.facebook.imagepipeline.animated.factory
 
 import android.content.Context
-import com.facebook.imagepipeline.decoder.ImageDecoder
 import com.facebook.imagepipeline.drawable.DrawableFactory
 import javax.annotation.concurrent.NotThreadSafe
 
 @NotThreadSafe
 interface AnimatedFactory {
   fun getAnimatedDrawableFactory(context: Context?): DrawableFactory?
-
-  val gifDecoder: ImageDecoder?
-  val webPDecoder: ImageDecoder?
 }

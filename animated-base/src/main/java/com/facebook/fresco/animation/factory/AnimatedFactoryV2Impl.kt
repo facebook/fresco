@@ -21,15 +21,12 @@ import com.facebook.fresco.animation.drawable.AnimatedDrawable2
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult
 import com.facebook.imagepipeline.animated.factory.AnimatedFactory
-import com.facebook.imagepipeline.animated.factory.AnimatedImageFactory
-import com.facebook.imagepipeline.animated.factory.AnimatedImageFactoryImpl
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendImpl
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider
 import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
 import com.facebook.imagepipeline.cache.CountingMemoryCache
 import com.facebook.imagepipeline.core.ExecutorSupplier
-import com.facebook.imagepipeline.decoder.ImageDecoder
 import com.facebook.imagepipeline.drawable.DrawableFactory
 import com.facebook.imagepipeline.image.CloseableImage
 import javax.annotation.concurrent.NotThreadSafe
@@ -37,8 +34,8 @@ import javax.annotation.concurrent.NotThreadSafe
 /**
  * [AnimatedFactory] implementation for animations v2 that creates [AnimatedDrawable2] drawables.
  *
- * This factory handles the creation of animated drawables and decoders for GIF and WebP formats. It
- * manages the backend providers and utilities needed for animation processing.
+ * This factory handles the creation of animated drawables for GIF and WebP formats. It manages the
+ * backend providers and utilities needed for animation processing.
  */
 @NotThreadSafe
 @DoNotStrip
@@ -55,7 +52,6 @@ constructor(
     var serialExecutorService: SerialExecutorService?,
 ) : AnimatedFactory {
 
-  private var animatedImageFactory: AnimatedImageFactory? = null
   private var animatedDrawableBackendProvider: AnimatedDrawableBackendProvider? = null
   private var animatedDrawableUtil: AnimatedDrawableUtil? = null
   private var animatedDrawableFactory: DrawableFactory? = null
@@ -66,16 +62,6 @@ constructor(
     }
     return animatedDrawableFactory
   }
-
-  override val gifDecoder: ImageDecoder?
-    get() = ImageDecoder { encodedImage, length, qualityInfo, options ->
-      getAnimatedImageFactory().decodeGif(encodedImage, options, options.animatedBitmapConfig)
-    }
-
-  override val webPDecoder: ImageDecoder?
-    get() = ImageDecoder { encodedImage, length, qualityInfo, options ->
-      getAnimatedImageFactory().decodeWebP(encodedImage, options, options.animatedBitmapConfig)
-    }
 
   private fun createDrawableFactory(): DefaultBitmapAnimationDrawableFactory {
     val cachingStrategySupplier: Supplier<Int> = Supplier {
@@ -110,10 +96,6 @@ constructor(
     return animatedDrawableUtil ?: AnimatedDrawableUtil().also { animatedDrawableUtil = it }
   }
 
-  private fun getAnimatedImageFactory(): AnimatedImageFactory {
-    return animatedImageFactory ?: buildAnimatedImageFactory().also { animatedImageFactory = it }
-  }
-
   private fun getAnimatedDrawableBackendProvider(): AnimatedDrawableBackendProvider {
     if (animatedDrawableBackendProvider == null) {
       animatedDrawableBackendProvider =
@@ -132,24 +114,6 @@ constructor(
           }
     }
     return animatedDrawableBackendProvider as AnimatedDrawableBackendProvider
-  }
-
-  private fun buildAnimatedImageFactory(): AnimatedImageFactory {
-    val provider =
-        object : AnimatedDrawableBackendProvider {
-          override fun get(
-              imageResult: AnimatedImageResult,
-              bounds: Rect?,
-          ): AnimatedDrawableBackend {
-            return AnimatedDrawableBackendImpl(
-                getAnimatedDrawableUtil(),
-                imageResult,
-                bounds,
-                downscaleFrameToDrawableDimensions,
-            )
-          }
-        }
-    return AnimatedImageFactoryImpl(provider, platformBitmapFactory, useBufferLoaderStrategy)
   }
 
   companion object {
