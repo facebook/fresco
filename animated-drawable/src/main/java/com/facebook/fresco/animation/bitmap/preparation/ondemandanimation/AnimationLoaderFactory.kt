@@ -53,9 +53,9 @@ class FrameLoaderFactory(
       synchronized(UNUSED_FRAME_LOADERS) {
         val oldItems = UNUSED_FRAME_LOADERS.filter { it.value.insertedTime < until }
 
-        oldItems.forEach {
-          it.value.frameLoader.clear()
-          UNUSED_FRAME_LOADERS.remove(it.key)
+        oldItems.forEach { entry ->
+          entry.value.frameLoader.clear()
+          UNUSED_FRAME_LOADERS.remove(entry.key)
         }
       }
     }
