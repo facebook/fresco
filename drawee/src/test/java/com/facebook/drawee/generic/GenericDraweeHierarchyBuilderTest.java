@@ -27,7 +27,6 @@ import org.robolectric.RobolectricTestRunner;
 @RunWith(RobolectricTestRunner.class)
 public class GenericDraweeHierarchyBuilderTest {
 
-  private final Drawable mBackgroundDrawable1 = mock(BitmapDrawable.class);
   private final Drawable mBackgroundDrawable2 = mock(BitmapDrawable.class);
   private final Drawable mOverlayDrawable1 = mock(BitmapDrawable.class);
   private final Drawable mOverlayDrawable2 = mock(BitmapDrawable.class);
