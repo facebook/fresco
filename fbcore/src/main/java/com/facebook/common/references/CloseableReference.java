@@ -78,7 +78,7 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
   public static final int REF_TYPE_REF_COUNT = 2;
   public static final int REF_TYPE_NOOP = 3;
 
-  private static Class<CloseableReference> TAG = CloseableReference.class;
+  private static final Class<CloseableReference> TAG = CloseableReference.class;
 
   private static @CloseableRefType int sBitmapCloseableRefType = REF_TYPE_DEFAULT;
 
