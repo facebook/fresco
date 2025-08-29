@@ -58,7 +58,7 @@ class AnimatedSingleUsePostprocessorProducerTest {
 
   @Mock lateinit var imageRequest: ImageRequest
 
-  private val mRequestId = "mRequestId"
+  private val requestId = "mRequestId"
   private lateinit var sourceBitmap: Bitmap
   private lateinit var sourceCloseableStaticBitmap: CloseableStaticBitmap
   private lateinit var sourceCloseableImageRef: CloseableReference<CloseableImage>
@@ -78,7 +78,7 @@ class AnimatedSingleUsePostprocessorProducerTest {
         PostprocessorProducer(inputProducer, platformBitmapFactory, testExecutorService)
 
     whenever(imageRequest.postprocessor).thenReturn(postprocessor)
-    whenever(producerContext.id).thenReturn(mRequestId)
+    whenever(producerContext.id).thenReturn(requestId)
     whenever(producerContext.producerListener).thenReturn(producerListener)
     whenever(producerContext.imageRequest).thenReturn(imageRequest)
 
