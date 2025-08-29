@@ -86,7 +86,7 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
 
   private var componentContext: ComponentContext? = null
   private var lithoView: LithoView? = null
-  private var useTapToRetry = false
+  private val useTapToRetry = false
 
   override fun onCreateView(
       inflater: LayoutInflater,

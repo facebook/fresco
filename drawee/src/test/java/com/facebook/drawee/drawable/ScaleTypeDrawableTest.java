@@ -28,10 +28,10 @@ import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
 public class ScaleTypeDrawableTest {
-  private Drawable mUnderlyingDrawable = mock(Drawable.class);
-  private PointF mFocusPoint = new PointF(0.1f, 0.4f);
-  private Drawable.Callback mCallback = mock(Drawable.Callback.class);
-  private Rect mViewBounds = new Rect(10, 10, 410, 310);
+  private final Drawable mUnderlyingDrawable = mock(Drawable.class);
+  private final PointF mFocusPoint = new PointF(0.1f, 0.4f);
+  private final Drawable.Callback mCallback = mock(Drawable.Callback.class);
+  private final Rect mViewBounds = new Rect(10, 10, 410, 310);
   private ScaleTypeDrawable mScaleTypeDrawable;
 
   @Before

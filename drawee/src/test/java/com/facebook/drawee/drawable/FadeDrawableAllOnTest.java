@@ -32,7 +32,7 @@ import org.robolectric.RobolectricTestRunner;
  */
 @RunWith(RobolectricTestRunner.class)
 public class FadeDrawableAllOnTest {
-  private Drawable[] mLayers =
+  private final Drawable[] mLayers =
       new Drawable[] {
         DrawableTestUtils.mockDrawable(),
         DrawableTestUtils.mockDrawable(),
@@ -40,8 +40,8 @@ public class FadeDrawableAllOnTest {
       };
 
   private FakeFadeDrawable mFadeDrawable;
-  private Canvas mCanvas = mock(Canvas.class);
-  private Drawable.Callback mCallback = mock(Drawable.Callback.class);
+  private final Canvas mCanvas = mock(Canvas.class);
+  private final Drawable.Callback mCallback = mock(Drawable.Callback.class);
 
   @Before
   public void setUp() {

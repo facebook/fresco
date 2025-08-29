@@ -29,7 +29,7 @@ import com.facebook.fresco.vito.view.VitoView
 class VitoMediaPickerFragment : BaseShowcaseFragment() {
   private lateinit var imageView: ImageView
   private lateinit var imagePath: TextView
-  private var callerContext: String = "VitoMediaPickerFragment"
+  private val callerContext: String = "VitoMediaPickerFragment"
   private val imageOptions: ImageOptions =
       ImageOptions.create()
           .errorRes(R.color.error_color)

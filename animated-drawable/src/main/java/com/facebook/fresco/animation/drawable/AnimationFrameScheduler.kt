@@ -31,7 +31,7 @@ class AnimationFrameScheduler(private val frameScheduler: FrameScheduler) {
 
   // Frame management
   var lastDrawnFrameNumber = -1
-  private var pausedLastDrawnFrameNumber = -1
+  private val pausedLastDrawnFrameNumber = -1
 
   // Stats
   private var framesDropped = 0

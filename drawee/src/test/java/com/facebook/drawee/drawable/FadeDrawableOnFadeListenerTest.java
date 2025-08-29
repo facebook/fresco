@@ -30,7 +30,7 @@ public class FadeDrawableOnFadeListenerTest {
   public static final int ACTUAL_LAYER_INDEX = 1;
   public static final int OTHER_LAYER_INDEX = 2;
 
-  private Drawable[] mLayers =
+  private final Drawable[] mLayers =
       new Drawable[] {
         DrawableTestUtils.mockDrawable(),
         DrawableTestUtils.mockDrawable(),
@@ -40,7 +40,7 @@ public class FadeDrawableOnFadeListenerTest {
   private FadeDrawable mFadeDrawable;
   private final OnFadeListener mOnFadeListener = mock(OnFadeListener.class);
 
-  private Canvas mCanvas = mock(Canvas.class);
+  private final Canvas mCanvas = mock(Canvas.class);
 
   @Before
   public void setUp() {

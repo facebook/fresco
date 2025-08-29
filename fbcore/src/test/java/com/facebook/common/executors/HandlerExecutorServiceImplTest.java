@@ -26,7 +26,7 @@ import org.robolectric.shadows.ShadowLooper;
 @LooperMode(LooperMode.Mode.LEGACY) // Required for pausing and unpausing the looper
 public class HandlerExecutorServiceImplTest {
 
-  private AtomicInteger mCounter = new AtomicInteger();
+  private final AtomicInteger mCounter = new AtomicInteger();
 
   private HandlerExecutorServiceImpl mExecutorService;
 

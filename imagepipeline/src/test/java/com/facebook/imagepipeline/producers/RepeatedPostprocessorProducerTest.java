@@ -60,7 +60,7 @@ public class RepeatedPostprocessorProducerTest {
   @Mock public ImagePipelineConfig mConfig;
 
   private SettableProducerContext mProducerContext;
-  private String mRequestId = "mRequestId";
+  private final String mRequestId = "mRequestId";
   private Bitmap mSourceBitmap;
   private CloseableStaticBitmap mSourceCloseableStaticBitmap;
   private CloseableReference<CloseableImage> mSourceCloseableImageRef;

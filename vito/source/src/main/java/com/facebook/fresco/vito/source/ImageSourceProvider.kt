@@ -29,8 +29,8 @@ object ImageSourceProvider {
 
   var shortcutResUris: Boolean = false
 
-  private var emptyImageSource = EmptyImageSource("emptySource()")
-  private var nullUriImageSource = EmptyImageSource("forUri(null)")
+  private val emptyImageSource = EmptyImageSource("emptySource()")
+  private val nullUriImageSource = EmptyImageSource("forUri(null)")
 
   /** @return an empty image source if no image URI is available to pass to the UI component */
   @JvmStatic fun emptySource(): ImageSource = emptyImageSource
