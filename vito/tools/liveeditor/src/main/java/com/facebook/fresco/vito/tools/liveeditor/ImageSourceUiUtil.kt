@@ -69,10 +69,10 @@ class ImageSourceUiUtil(private val context: Context) {
             .create()
     dialog?.setView(layout)
     dialog?.setOnDismissListener {
-      items.forEach {
-        val spans = it.getSpans(0, it.length, StyleSpan::class.java)
+      items.forEach { item ->
+        val spans = item.getSpans(0, item.length, StyleSpan::class.java)
         for (span in spans) {
-          it.removeSpan(span)
+          item.removeSpan(span)
         }
       }
       dialog = null
