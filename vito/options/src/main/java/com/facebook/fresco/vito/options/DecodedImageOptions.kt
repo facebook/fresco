@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.options
 
+import android.graphics.Bitmap
 import android.graphics.PointF
 import com.facebook.common.internal.Objects
 import com.facebook.drawee.drawable.ScalingUtils
@@ -29,7 +30,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
   val actualImageFocusPoint: PointF? = builder.actualFocusPoint
   val localThumbnailPreviewsEnabled: Boolean = builder.localThumbnailPreviewsEnabled
   val loadThumbnailOnly: Boolean = builder.loadThumbnailOnly
-  val bitmapConfig: BitmapConfig = builder.bitmapConfig ?: BitmapConfig.ARGB_8888
+  val bitmapConfig: Bitmap.Config? = builder.bitmapConfig
   val isProgressiveDecodingEnabled: Boolean? = builder.progressiveDecodingEnabled
   val isFirstFrameThumbnailEnabled: Boolean = builder.isFirstFrameThumbnailEnabled
 
@@ -118,7 +119,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
     internal var actualFocusPoint: PointF? = null
     internal var localThumbnailPreviewsEnabled = false
     internal var loadThumbnailOnly = false
-    internal var bitmapConfig: BitmapConfig? = null
+    internal var bitmapConfig: Bitmap.Config? = null
     internal var progressiveDecodingEnabled: Boolean? = null
     internal var isFirstFrameThumbnailEnabled: Boolean = false
 
@@ -211,7 +212,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
       this.loadThumbnailOnly = loadThumbnailOnly
     }
 
-    fun bitmapConfig(bitmapConfig: BitmapConfig?): T = modify { this.bitmapConfig = bitmapConfig }
+    fun bitmapConfig(bitmapConfig: Bitmap.Config?): T = modify { this.bitmapConfig = bitmapConfig }
 
     fun progressiveRendering(progressiveDecodingEnabled: Boolean?): T = modify {
       this.progressiveDecodingEnabled = progressiveDecodingEnabled
