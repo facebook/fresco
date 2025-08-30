@@ -12,6 +12,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Rect
 import com.facebook.common.references.CloseableReference
+import com.facebook.fresco.vito.core.AnimatedImagePerfLoggingListener
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend
 import com.facebook.imagepipeline.animated.base.AnimatedImage
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult
@@ -40,6 +41,12 @@ abstract class AnimatedImageDecoderBase(
 
   protected val animatedDrawableBackendProvider: AnimatedDrawableBackendProvider =
       createAnimatedDrawableBackendProvider(downscaleFrameToDrawableDimensions)
+
+  private var animatedImagePerfLoggingListener: AnimatedImagePerfLoggingListener? = null
+
+  fun setAnimatedImagePerfLoggingListener(listener: AnimatedImagePerfLoggingListener?) {
+    this.animatedImagePerfLoggingListener = listener
+  }
 
   companion object {
     /** Creates an AnimatedDrawableBackendProvider for animated image decoding. */
@@ -88,6 +95,12 @@ abstract class AnimatedImageDecoderBase(
       if (options.decodePreviewFrame && previewBitmap == null) {
         previewBitmap = createPreviewBitmap(image, bitmapConfig, frameForPreview)
       }
+
+      // Log CloseableAnimatedImage creation start
+      val imageId = sourceUri ?: "unknown_${System.identityHashCode(image)}"
+      val startTime = System.nanoTime()
+      animatedImagePerfLoggingListener?.onCloseableAnimatedImageCreationStart(imageId, startTime)
+
       val animatedImageResult =
           AnimatedImageResult.newBuilder(image)
               .setPreviewBitmap(previewBitmap)
@@ -96,7 +109,18 @@ abstract class AnimatedImageDecoderBase(
               .setBitmapTransformation(options.bitmapTransformation)
               .setSource(sourceUri)
               .build()
-      return CloseableAnimatedImage(animatedImageResult, treatAnimatedImagesAsStateful)
+      val closeableAnimatedImage =
+          CloseableAnimatedImage(animatedImageResult, treatAnimatedImagesAsStateful)
+
+      // Log CloseableAnimatedImage creation success
+      val endTime = System.nanoTime()
+      animatedImagePerfLoggingListener?.onCloseableAnimatedImageCreationEnd(
+          imageId,
+          endTime,
+          true,
+      )
+
+      return closeableAnimatedImage
     } finally {
       CloseableReference.closeSafely(previewBitmap)
       CloseableReference.closeSafely(decodedFrames)
