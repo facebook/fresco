@@ -82,6 +82,7 @@ class DefaultBitmapAnimationDrawableFactory(
     }
     val closeable = image as CloseableAnimatedImage
     val animatedImage = closeable.image
+
     val animationBackend =
         createAnimationBackend(
             Preconditions.checkNotNull(closeable.imageResult),
@@ -105,6 +106,13 @@ class DefaultBitmapAnimationDrawableFactory(
     }
     val closeable = closeableImage as CloseableAnimatedImage
     val animatedImage = closeable.image
+
+    // Log drawable creation start
+    val imageId =
+        closeable.imageResult?.source ?: "unknown_${System.identityHashCode(closeableImage)}"
+    val startTime = System.nanoTime()
+    animatedImagePerfLoggingListener?.onDrawableCreationStart(imageId, startTime)
+
     val animationBackend: AnimationBackend =
         runCatching {
               createAnimationBackend(
@@ -127,11 +135,18 @@ class DefaultBitmapAnimationDrawableFactory(
               }
             }
 
-    return if (useRendererAnimatedDrawable.get()) {
-      KAnimatedDrawable2(animationBackend)
-    } else {
-      AnimatedDrawable2(animationBackend)
-    }
+    val drawable =
+        if (useRendererAnimatedDrawable.get()) {
+          KAnimatedDrawable2(animationBackend)
+        } else {
+          AnimatedDrawable2(animationBackend)
+        }
+
+    // Log drawable creation success
+    val endTime = System.nanoTime()
+    animatedImagePerfLoggingListener?.onDrawableCreationEnd(imageId, endTime, true)
+
+    return drawable
   }
 
   /**
