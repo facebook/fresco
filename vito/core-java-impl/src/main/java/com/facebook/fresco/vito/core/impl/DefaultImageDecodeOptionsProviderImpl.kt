@@ -7,11 +7,11 @@
 
 package com.facebook.fresco.vito.core.impl
 
-import android.graphics.Bitmap
 import android.os.Build
 import com.facebook.common.logging.FLog
 import com.facebook.fresco.vito.core.impl.ImagePipelineUtilsImpl.CircularBitmapRounding
 import com.facebook.fresco.vito.core.impl.ImagePipelineUtilsImpl.ImageDecodeOptionsProvider
+import com.facebook.fresco.vito.options.BitmapConfig
 import com.facebook.fresco.vito.options.DecodedImageOptions
 import com.facebook.fresco.vito.options.RoundingOptions
 import com.facebook.imagepipeline.common.ImageDecodeOptions
@@ -49,7 +49,7 @@ class DefaultImageDecodeOptionsProviderImpl(
           FLog.wtf(TAG, "Trying to use bitmap config incompatible with rounding.")
         } else {
           return ImageDecodeOptions.newBuilder()
-              .setBitmapConfig(bitmapConfig)
+              .setBitmapConfig(bitmapConfig.toAndroidBitmapConfig())
               .setCustomImageDecoder(imageOptions.imageDecodeOptions?.customImageDecoder)
               .setForceStaticImage(forceStaticImage)
               .build()
@@ -69,7 +69,7 @@ class DefaultImageDecodeOptionsProviderImpl(
     @JvmStatic
     fun maybeSetupPipelineRounding(
         roundingOptions: RoundingOptions?,
-        bitmapConfig: Bitmap.Config?,
+        bitmapConfig: BitmapConfig?,
         circularBitmapRounding: CircularBitmapRounding?,
     ): ImageDecodeOptions? =
         if (
@@ -84,9 +84,7 @@ class DefaultImageDecodeOptionsProviderImpl(
           circularBitmapRounding.getDecodeOptions(roundingOptions.isAntiAliased)
         }
 
-    private fun pipelineRoundingUnsupportedForBitmapConfig(bitmapConfig: Bitmap.Config?): Boolean =
-        bitmapConfig == Bitmap.Config.RGB_565 ||
-            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
-                bitmapConfig == Bitmap.Config.HARDWARE)
+    private fun pipelineRoundingUnsupportedForBitmapConfig(bitmapConfig: BitmapConfig?): Boolean =
+        (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && bitmapConfig == BitmapConfig.HARDWARE)
   }
 }

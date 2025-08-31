@@ -7,13 +7,12 @@
 
 package com.facebook.fresco.vito.tools.liveeditor
 
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PointF
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
-import android.os.Build
 import com.facebook.drawee.drawable.ScalingUtils
+import com.facebook.fresco.vito.options.BitmapConfig
 import com.facebook.fresco.vito.options.BorderOptions
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.RoundingOptions
@@ -115,20 +114,10 @@ object ImageOptionsSampleValues {
   val autoPlay: ImageOptionsSampleValues.Entry<Boolean> =
       Entry("Autoplay", listOf("off" to false, "on" to true)) { b, v -> b.autoPlay(v) }
 
-  val bitmapConfig: ImageOptionsSampleValues.Entry<Bitmap.Config> =
+  val bitmapConfig: ImageOptionsSampleValues.Entry<BitmapConfig> =
       Entry(
           "Bitmap config",
-          listOfNotNull(
-              "ARGB 8888" to Bitmap.Config.ARGB_8888,
-              "RGB 565" to Bitmap.Config.RGB_565,
-              "ALPHA 8" to Bitmap.Config.ALPHA_8,
-              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                  "RGBA F16" to Bitmap.Config.RGBA_F16
-              else null,
-              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                  "HARDWARE" to Bitmap.Config.HARDWARE
-              else null,
-          ),
+          BitmapConfig.values().map { it.name to it },
       ) { b, v ->
         b.bitmapConfig(v)
       }
