@@ -36,6 +36,7 @@ import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendFrame
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2
 import com.facebook.fresco.animation.drawable.KAnimatedDrawable2
 import com.facebook.fresco.middleware.HasExtraData
+import com.facebook.fresco.vito.core.AnimatedImagePerfLoggingListener
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.ImageOptionsDrawableFactory
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend
@@ -65,6 +66,7 @@ class DefaultBitmapAnimationDrawableFactory(
     private val downscaleFrameToDrawableDimensions: Supplier<Boolean>,
     private val animationFpsLimit: Supplier<Int>,
     private val bufferLengthMilliseconds: Supplier<Int>,
+    private val animatedImagePerfLoggingListener: AnimatedImagePerfLoggingListener? = null,
 ) : DrawableFactory, ImageOptionsDrawableFactory {
 
   // Change the value to true to use KAnimatedDrawable2.kt
@@ -196,6 +198,9 @@ class DefaultBitmapAnimationDrawableFactory(
             roundingOptions,
             animatedOptions,
         )
+
+    // Set the animated image performance logging listener
+    bitmapAnimationBackend.setAnimatedImagePerfLoggingListener(animatedImagePerfLoggingListener)
 
     return AnimationBackendDelegateWithInactivityCheck.createForBackend(
         bitmapAnimationBackend,

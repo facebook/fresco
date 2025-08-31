@@ -29,6 +29,7 @@ import com.facebook.fresco.animation.backend.AnimationInformation
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer
 import com.facebook.fresco.ui.common.DimensionsInfo
+import com.facebook.fresco.vito.core.AnimatedImagePerfLoggingListener
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.listener.ImageListener
 import com.facebook.fresco.vito.options.AnimatedOptions
@@ -129,6 +130,7 @@ constructor(
 
   private var frameListener: FrameListener? = null
   private var animationListener: AnimationBackend.Listener? = null
+  private var animatedImagePerfLoggingListener: AnimatedImagePerfLoggingListener? = null
 
   // Thumbnail fallback functionality
   private var thumbnailDrawable: FrescoDrawableInterface? = null
@@ -143,6 +145,10 @@ constructor(
 
   fun setFrameListener(frameListener: FrameListener?) {
     this.frameListener = frameListener
+  }
+
+  fun setAnimatedImagePerfLoggingListener(listener: AnimatedImagePerfLoggingListener?) {
+    this.animatedImagePerfLoggingListener = listener
   }
 
   override fun getFrameCount(): Int = animationInformation.frameCount
@@ -187,6 +193,11 @@ constructor(
     // We could not draw anything
     if (!drawn) {
       frameListener?.onFrameDropped(this, frameNumber)
+
+      // Log frame drop for performance monitoring
+      val imageId = animationInformation.toString() // Use animation info as identifier
+      val timestamp = System.currentTimeMillis()
+      animatedImagePerfLoggingListener?.onFrameDropped(imageId, frameNumber, timestamp)
     }
 
     // Prepare next frames
