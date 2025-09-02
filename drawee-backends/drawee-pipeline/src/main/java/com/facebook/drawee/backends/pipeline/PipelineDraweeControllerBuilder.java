@@ -14,7 +14,6 @@ import com.facebook.common.internal.ImmutableList;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
-import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
 import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -51,7 +50,6 @@ public class PipelineDraweeControllerBuilder
   private final PipelineDraweeControllerFactory mPipelineDraweeControllerFactory;
 
   @Nullable private ImmutableList<DrawableFactory> mCustomDrawableFactories;
-  @Nullable private ImageOriginListener mImageOriginListener;
   @Nullable private ImagePerfDataListener mImagePerfDataListener;
 
   public PipelineDraweeControllerBuilder(
@@ -100,12 +98,6 @@ public class PipelineDraweeControllerBuilder
   public PipelineDraweeControllerBuilder setCustomDrawableFactory(DrawableFactory drawableFactory) {
     Preconditions.checkNotNull(drawableFactory);
     return setCustomDrawableFactories(ImmutableList.of(drawableFactory));
-  }
-
-  public PipelineDraweeControllerBuilder setImageOriginListener(
-      @Nullable ImageOriginListener imageOriginListener) {
-    mImageOriginListener = imageOriginListener;
-    return getThis();
   }
 
   public PipelineDraweeControllerBuilder setPerfDataListener(
