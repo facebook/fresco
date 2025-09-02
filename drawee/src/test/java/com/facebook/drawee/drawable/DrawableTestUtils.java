@@ -105,7 +105,6 @@ public class DrawableTestUtils {
   @TargetApi(11)
   public static void stubGetAndSetCallback(final Drawable drawable) {
     final AtomicReference<Drawable.Callback> callback = new AtomicReference<Drawable.Callback>();
-    // NULLSAFE_FIXME[Parameter Not Nullable]
     when(drawable.getCallback()).thenReturn(callback.get());
     doAnswer(
             new Answer<Void>() {
@@ -223,7 +222,6 @@ public class DrawableTestUtils {
     }
     BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
     final Paint paint = new Paint();
-    // NULLSAFE_FIXME[Not Vetted Third-Party]
     when(bitmapDrawable.getPaint()).thenReturn(paint);
     doAnswer(
             new Answer<Void>() {
@@ -248,7 +246,6 @@ public class DrawableTestUtils {
     }
     BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
     final Bitmap bitmap = mock(Bitmap.class);
-    // NULLSAFE_FIXME[Parameter Not Nullable]
     when(bitmapDrawable.getBitmap()).thenReturn(bitmap);
   }
 }
