@@ -92,7 +92,6 @@ public class DraweeMocks {
               }
             })
         .when(controller)
-        // NULLSAFE_FIXME[Not Vetted Third-Party]
         .setContentDescription(any(String.class));
   }
 
@@ -119,7 +118,6 @@ public class DraweeMocks {
               }
             })
         .when(abstractController)
-        // NULLSAFE_FIXME[Not Vetted Third-Party]
         .addControllerListener(any(ControllerListener.class));
     return forwardingListener;
   }
