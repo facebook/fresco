@@ -59,7 +59,7 @@ class DecodeProducer(
     val closeableReferenceFactory: CloseableReferenceFactory,
     val reclaimMemoryRunnable: Runnable?,
     val recoverFromDecoderOOM: Supplier<Boolean>,
-    val decodedOriginalImageAnalyzer: DecodedOriginalImageAnalyzer? = null,
+    val decodedOriginalImageAnalyzers: Set<DecodedOriginalImageAnalyzer>? = null,
 ) : Producer<CloseableReference<CloseableImage>> {
 
   interface DecodedOriginalImageAnalyzer {
@@ -404,7 +404,7 @@ class DecodeProducer(
         val isLast = isLast(status)
         maybeFinish(isLast)
         if (isLast) {
-          decodedOriginalImageAnalyzer?.let {
+          decodedOriginalImageAnalyzers?.forEach {
             if (decodedImageRef != null) {
               it.analyze(producerContext, decodedImageRef, encodedImage)
             }

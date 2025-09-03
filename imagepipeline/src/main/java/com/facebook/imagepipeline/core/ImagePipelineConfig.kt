@@ -52,6 +52,7 @@ import com.facebook.imagepipeline.listener.RequestListener2
 import com.facebook.imagepipeline.memory.PoolConfig
 import com.facebook.imagepipeline.memory.PoolFactory
 import com.facebook.imagepipeline.producers.CustomProducerSequenceFactory
+import com.facebook.imagepipeline.producers.DecodeProducer
 import com.facebook.imagepipeline.producers.HttpUrlConnectionNetworkFetcher
 import com.facebook.imagepipeline.producers.NetworkFetcher
 import com.facebook.imagepipeline.systrace.FrescoSystrace.beginSection
@@ -116,6 +117,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
   override val executorServiceForAnimatedImages: SerialExecutorService?
   override val bitmapMemoryCacheFactory: BitmapMemoryCacheFactory
   override val dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>?
+  override val decodedOriginalImageAnalyzers: Set<DecodeProducer.DecodedOriginalImageAnalyzer>
 
   init {
     if (isTracing()) {
@@ -165,6 +167,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     progressiveJpegConfig = builder.progressiveJpegConfig ?: SimpleProgressiveJpegConfig()
     requestListeners = builder.requestListeners ?: emptySet()
     requestListener2s = builder.requestListener2s ?: emptySet()
+    decodedOriginalImageAnalyzers = builder.decodedOriginalImageAnalyzers ?: emptySet()
     customProducerSequenceFactories = builder.customProducerSequenceFactories ?: emptySet()
     isResizeAndRotateEnabledForNetwork = builder.resizeAndRotateEnabledForNetwork
     smallImageDiskCacheConfig = builder.smallImageDiskCacheConfig ?: mainDiskCacheConfig
@@ -320,6 +323,9 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
       private set
 
     var dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>? = null
+      private set
+
+    var decodedOriginalImageAnalyzers: Set<DecodeProducer.DecodedOriginalImageAnalyzer>? = null
       private set
 
     fun setBitmapsConfig(config: Bitmap.Config?): Builder = apply { this.bitmapConfig = config }
@@ -506,6 +512,10 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     ): Builder = apply { this.dynamicDiskCacheConfigMap = dynamicDiskCacheConfigMap }
 
     fun experiment(): ImagePipelineExperiments.Builder = experimentsBuilder
+
+    fun setDecodedOriginalImageAnalyzers(
+        decodedOriginalImageAnalyzers: Set<DecodeProducer.DecodedOriginalImageAnalyzer>?
+    ): Builder = apply { this.decodedOriginalImageAnalyzers = decodedOriginalImageAnalyzers }
 
     fun build(): ImagePipelineConfig = ImagePipelineConfig(this)
 
