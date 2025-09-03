@@ -118,8 +118,8 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
       it()
       refresh()
     }
-    spinnerImageFormat.setupWithList(imageSourceProvider.imageFormatUpdater) {
-      it()
+    spinnerImageFormat.setupWithList(imageSourceProvider.imageFormatUpdater) { formatUpdater ->
+      formatUpdater()
       refresh()
     }
     spinnerColorFilter.setupWithList(VitoSpinners.colorFilters) {
