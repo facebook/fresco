@@ -385,7 +385,6 @@ class CloseableProducerToDataSourceAdapterTest {
   companion object {
     private const val FINISHED = true
     private const val NOT_FINISHED = false
-    private const val WITH_RESULT = true
     private const val WITHOUT_RESULT = false
     private const val FAILED = true
     private const val NOT_FAILED = false
