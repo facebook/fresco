@@ -35,11 +35,11 @@ data class ImageSourceConfigurator(
 
   val imageFormatUpdater =
       Pair(
-          imageFormats.map {
+          imageFormats.map { formatPair ->
             Pair(
-                it.first,
+                formatPair.first,
                 {
-                  currentImageFormat = it.second
+                  currentImageFormat = formatPair.second
                   activeImageSourceProvider()
                 },
             )
