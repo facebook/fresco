@@ -13,7 +13,6 @@ import com.facebook.common.internal.Supplier
 import com.facebook.common.memory.MemoryTrimmableRegistry
 import com.facebook.common.references.CloseableReference
 import com.facebook.common.util.ByteConstants
-import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheTrimStrategy
 import com.facebook.imagepipeline.cache.CountingLruBitmapMemoryCacheFactory
 import com.facebook.imagepipeline.cache.CountingMemoryCache
@@ -32,7 +31,6 @@ import org.robolectric.RobolectricTestRunner
 class AnimatedFrameCacheTest {
   private lateinit var memoryTrimmableRegistry: MemoryTrimmableRegistry
   private lateinit var memoryCacheParamsSupplier: Supplier<MemoryCacheParams>
-  private lateinit var platformBitmapFactory: PlatformBitmapFactory
 
   private lateinit var cacheKey: CacheKey
   private lateinit var animatedFrameCache: AnimatedFrameCache
@@ -43,7 +41,6 @@ class AnimatedFrameCacheTest {
   fun setUp() {
     memoryTrimmableRegistry = mock()
     memoryCacheParamsSupplier = mock()
-    platformBitmapFactory = mock()
 
     val params: MemoryCacheParams =
         MemoryCacheParams(
