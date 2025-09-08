@@ -81,9 +81,9 @@ class CircularBorderBitmapDrawable(
   }
 
   private fun ensureBorderPaint() {
-    borderOptions?.let {
-      borderPaint.strokeWidth = it.width
-      borderPaint.color = DrawableUtils.multiplyColorAlpha(it.color, _alpha)
+    borderOptions?.let { options ->
+      borderPaint.strokeWidth = options.width
+      borderPaint.color = DrawableUtils.multiplyColorAlpha(options.color, _alpha)
     }
   }
 }
