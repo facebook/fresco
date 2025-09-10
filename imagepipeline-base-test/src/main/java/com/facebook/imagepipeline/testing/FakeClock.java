@@ -21,10 +21,8 @@ public class FakeClock implements MonotonicClock {
     void onTick();
   }
 
-  private final Map<OnTickListener, OnTickListener> otherClocks =
-      new ConcurrentHashMap<OnTickListener, OnTickListener>();
-  private final Map<OnTickListener, OnTickListener> listeners =
-      new ConcurrentHashMap<OnTickListener, OnTickListener>();
+  private final Map<OnTickListener, OnTickListener> otherClocks = new ConcurrentHashMap<>();
+  private final Map<OnTickListener, OnTickListener> listeners = new ConcurrentHashMap<>();
 
   private long now;
 
