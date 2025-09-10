@@ -187,7 +187,7 @@ public final class Throwables {
    */
   public static List<Throwable> getCausalChain(Throwable throwable) {
     Preconditions.checkNotNull(throwable);
-    List<Throwable> causes = new ArrayList<Throwable>(4);
+    List<Throwable> causes = new ArrayList<>(4);
     while (throwable != null) {
       causes.add(throwable);
       throwable = throwable.getCause();
