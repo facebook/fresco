@@ -34,7 +34,7 @@ public class ImagePipelineNativeLoader {
   public static final List<String> DEPENDENCIES;
 
   static {
-    List<String> dependencies = new ArrayList<String>();
+    List<String> dependencies = new ArrayList<>();
     DEPENDENCIES = Collections.unmodifiableList(dependencies);
   }
 
