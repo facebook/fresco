@@ -20,6 +20,7 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import javax.annotation.Nullable;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +29,7 @@ import org.junit.Test;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class WebpDecodingTest extends TestCase {
 
-  private static Method sGetFileDescriptorMethod;
+  @Nullable private static Method sGetFileDescriptorMethod;
 
   private Instrumentation mInstrumentation;
 
