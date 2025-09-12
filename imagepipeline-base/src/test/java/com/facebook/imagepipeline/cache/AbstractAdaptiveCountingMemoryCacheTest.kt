@@ -1779,11 +1779,11 @@ class AbstractAdaptiveCountingMemoryCacheTest {
         .isTrue()
     val entry = cache.mCachedEntries.get(key)
     assertThat(entry).describedAs("entry not found in the cache").isNotNull()
-    entry?.let {
-      assertThat(it.key).describedAs("key mismatch").isEqualTo(key)
-      assertThat(it.valueRef.get()).describedAs("value mismatch").isEqualTo(value)
-      assertThat(it.clientCount).describedAs("client count greater than zero").isEqualTo(0)
-      assertThat(it.isOrphan).describedAs("entry is an orphan").isFalse()
+    entry?.let { cacheEntry ->
+      assertThat(cacheEntry.key).describedAs("key mismatch").isEqualTo(key)
+      assertThat(cacheEntry.valueRef.get()).describedAs("value mismatch").isEqualTo(value)
+      assertThat(cacheEntry.clientCount).describedAs("client count greater than zero").isEqualTo(0)
+      assertThat(cacheEntry.isOrphan).describedAs("entry is an orphan").isFalse()
     }
   }
 
