@@ -12,6 +12,7 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
+import com.facebook.imagepipeline.core.ImagePipelineConfigInterface;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
@@ -26,11 +27,14 @@ public class BitmapMemoryCacheKeyMultiplexProducer
   private final CacheKeyFactory mCacheKeyFactory;
 
   public BitmapMemoryCacheKeyMultiplexProducer(
-      CacheKeyFactory cacheKeyFactory, Producer inputProducer) {
+      CacheKeyFactory cacheKeyFactory,
+      Producer inputProducer,
+      ImagePipelineConfigInterface config) {
     super(
         inputProducer,
         "BitmapMemoryCacheKeyMultiplexProducer",
-        HasExtraData.KEY_MULTIPLEX_BITMAP_COUNT);
+        HasExtraData.KEY_MULTIPLEX_BITMAP_COUNT,
+        config);
     mCacheKeyFactory = cacheKeyFactory;
   }
 

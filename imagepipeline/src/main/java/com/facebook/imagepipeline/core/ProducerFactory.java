@@ -111,6 +111,8 @@ public class ProducerFactory {
 
   protected final boolean mKeepCancelledFetchAsLowPriority;
 
+  private final ImagePipelineConfigInterface mConfig;
+
   public ProducerFactory(
       Context context,
       ByteArrayPool byteArrayPool,
@@ -132,7 +134,8 @@ public class ProducerFactory {
       int maxBitmapSize,
       CloseableReferenceFactory closeableReferenceFactory,
       boolean keepCancelledFetchAsLowPriority,
-      int trackedKeysSize) {
+      int trackedKeysSize,
+      ImagePipelineConfigInterface config) {
     mContentResolver = context.getApplicationContext().getContentResolver();
     mResources = context.getApplicationContext().getResources();
     mAssetManager = context.getApplicationContext().getAssets();
@@ -163,6 +166,8 @@ public class ProducerFactory {
     mCloseableReferenceFactory = closeableReferenceFactory;
 
     mKeepCancelledFetchAsLowPriority = keepCancelledFetchAsLowPriority;
+
+    mConfig = config;
   }
 
   @Deprecated
@@ -187,7 +192,8 @@ public class ProducerFactory {
       int maxBitmapSize,
       CloseableReferenceFactory closeableReferenceFactory,
       boolean keepCancelledFetchAsLowPriority,
-      int trackedKeysSize) {
+      int trackedKeysSize,
+      ImagePipelineConfigInterface config) {
     this(
         context,
         byteArrayPool,
@@ -209,7 +215,8 @@ public class ProducerFactory {
         maxBitmapSize,
         closeableReferenceFactory,
         keepCancelledFetchAsLowPriority,
-        trackedKeysSize);
+        trackedKeysSize,
+        config);
   }
 
   public static AddImageTransformMetaDataProducer newAddImageTransformMetaDataProducer(
@@ -224,7 +231,7 @@ public class ProducerFactory {
 
   public BitmapMemoryCacheKeyMultiplexProducer newBitmapMemoryCacheKeyMultiplexProducer(
       Producer<CloseableReference<CloseableImage>> inputProducer) {
-    return new BitmapMemoryCacheKeyMultiplexProducer(mCacheKeyFactory, inputProducer);
+    return new BitmapMemoryCacheKeyMultiplexProducer(mCacheKeyFactory, inputProducer, mConfig);
   }
 
   public BitmapMemoryCacheProducer newBitmapMemoryCacheProducer(
@@ -279,7 +286,7 @@ public class ProducerFactory {
   public EncodedCacheKeyMultiplexProducer newEncodedCacheKeyMultiplexProducer(
       Producer<EncodedImage> inputProducer) {
     return new EncodedCacheKeyMultiplexProducer(
-        mCacheKeyFactory, mKeepCancelledFetchAsLowPriority, inputProducer);
+        mCacheKeyFactory, mKeepCancelledFetchAsLowPriority, inputProducer, mConfig);
   }
 
   public BitmapProbeProducer newBitmapProbeProducer(

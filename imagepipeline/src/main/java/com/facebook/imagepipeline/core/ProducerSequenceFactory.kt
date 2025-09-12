@@ -308,12 +308,12 @@ class ProducerSequenceFactory(
 
   @Synchronized
   fun newCommonNetworkFetchToEncodedMemorySequence(
-      networkFetcher: NetworkFetcher<*>
+      networkFetcher: NetworkFetcher<*>,
   ): Producer<EncodedImage> =
       traceSection("ProducerSequenceFactory#createCommonNetworkFetchToEncodedMemorySequence") {
         val inputProducer: Producer<EncodedImage> =
             newEncodedCacheMultiplexToTranscodeSequence(
-                producerFactory.newNetworkFetchProducer(networkFetcher)
+                producerFactory.newNetworkFetchProducer(networkFetcher),
             )
         var networkFetchToEncodedMemorySequence: Producer<EncodedImage?> =
             ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer)
@@ -473,11 +473,14 @@ class ProducerSequenceFactory(
    * @return the new sequence
    */
   private fun newBitmapCacheGetToLocalTransformSequence(
-      inputProducer: Producer<EncodedImage>
+      inputProducer: Producer<EncodedImage>,
   ): Producer<CloseableReference<CloseableImage>> {
     val defaultThumbnailProducers: Array<ThumbnailProducer<EncodedImage>> =
         arrayOf(producerFactory.newLocalExifThumbnailProducer())
-    return newBitmapCacheGetToLocalTransformSequence(inputProducer, defaultThumbnailProducers)
+    return newBitmapCacheGetToLocalTransformSequence(
+        inputProducer,
+        defaultThumbnailProducers,
+    )
   }
 
   /**
@@ -520,7 +523,7 @@ class ProducerSequenceFactory(
    * @return encoded cache multiplex to webp transcode sequence
    */
   private fun newEncodedCacheMultiplexToTranscodeSequence(
-      inputProducer: Producer<EncodedImage>
+      inputProducer: Producer<EncodedImage>,
   ): Producer<EncodedImage> {
     var ip = inputProducer
     if (diskCacheEnabled) {

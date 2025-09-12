@@ -85,7 +85,7 @@ public class MultiplexProducerTest {
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     mMultiplexProducer =
-        new BitmapMemoryCacheKeyMultiplexProducer(mCacheKeyFactory, mInputProducer);
+        new BitmapMemoryCacheKeyMultiplexProducer(mCacheKeyFactory, mInputProducer, mConfig);
     mImageRequest1 = mock(ImageRequest.class);
     mImageRequest2 = mock(ImageRequest.class);
     mProducerContext1 =

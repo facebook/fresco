@@ -11,6 +11,7 @@ import android.util.Pair;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
+import com.facebook.imagepipeline.core.ImagePipelineConfigInterface;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.infer.annotation.Nullsafe;
@@ -26,12 +27,14 @@ public class EncodedCacheKeyMultiplexProducer
   public EncodedCacheKeyMultiplexProducer(
       CacheKeyFactory cacheKeyFactory,
       boolean keepCancelledFetchAsLowPriority,
-      Producer inputProducer) {
+      Producer inputProducer,
+      ImagePipelineConfigInterface config) {
     super(
         inputProducer,
         "EncodedCacheKeyMultiplexProducer",
         HasExtraData.KEY_MULTIPLEX_ENCODED_COUNT,
-        keepCancelledFetchAsLowPriority);
+        keepCancelledFetchAsLowPriority,
+        config);
     mCacheKeyFactory = cacheKeyFactory;
   }
 

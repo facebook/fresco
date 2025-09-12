@@ -378,6 +378,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
         closeableReferenceFactory: CloseableReferenceFactory,
         keepCancelledFetchAsLowPriority: Boolean,
         trackedKeysSize: Int,
+        config: ImagePipelineConfigInterface,
     ): ProducerFactory
   }
 
@@ -405,6 +406,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
         closeableReferenceFactory: CloseableReferenceFactory,
         keepCancelledFetchAsLowPriority: Boolean,
         trackedKeysSize: Int,
+        config: ImagePipelineConfigInterface,
     ): ProducerFactory =
         ProducerFactory(
             context,
@@ -428,6 +430,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
             closeableReferenceFactory,
             keepCancelledFetchAsLowPriority,
             trackedKeysSize,
+            config,
         )
   }
 
