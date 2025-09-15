@@ -43,18 +43,18 @@ class ImageSourceUiUtil(private val context: Context) {
     }
 
     val items =
-        source.map {
-          val spannable = SpannableString("${it.first} \n${it.second}")
+        source.map { pair ->
+          val spannable = SpannableString("${pair.first} \n${pair.second}")
           spannable.apply {
             setSpan(
                 StyleSpan(Typeface.BOLD),
                 0,
-                it.first.length,
+                pair.first.length,
                 Spannable.SPAN_INCLUSIVE_INCLUSIVE,
             )
             setSpan(
                 StyleSpan(Typeface.ITALIC),
-                it.first.length,
+                pair.first.length,
                 spannable.length,
                 Spannable.SPAN_INCLUSIVE_INCLUSIVE,
             )
