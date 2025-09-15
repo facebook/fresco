@@ -1711,11 +1711,11 @@ class AbstractAdaptiveCountingMemoryCacheTest {
         .isFalse()
     val entry = cache.mCachedEntries.get(key)
     assertThat(entry).describedAs("entry not found in the cache").isNotNull()
-    entry?.let {
-      assertThat(it.key).describedAs("key mismatch").isEqualTo(key)
-      assertThat(it.valueRef.get()).describedAs("value mismatch").isEqualTo(value)
-      assertThat(it.clientCount).describedAs("client count mismatch").isEqualTo(count)
-      assertThat(it.isOrphan).describedAs("entry is an orphan").isFalse()
+    entry?.let { memoryEntry ->
+      assertThat(memoryEntry.key).describedAs("key mismatch").isEqualTo(key)
+      assertThat(memoryEntry.valueRef.get()).describedAs("value mismatch").isEqualTo(value)
+      assertThat(memoryEntry.clientCount).describedAs("client count mismatch").isEqualTo(count)
+      assertThat(memoryEntry.isOrphan).describedAs("entry is an orphan").isFalse()
     }
   }
 
@@ -1725,11 +1725,11 @@ class AbstractAdaptiveCountingMemoryCacheTest {
         .isTrue()
     val entry = cache.mCachedEntries.get(key)
     assertThat(entry).describedAs("entry not found in the cache").isNotNull()
-    entry?.let {
-      assertThat(it.key).describedAs("key mismatch").isEqualTo(key)
-      assertThat(it.valueRef.get()).describedAs("value mismatch").isEqualTo(value)
-      assertThat(it.accessCount).describedAs("access count mismatch").isEqualTo(count)
-      assertThat(it.isOrphan).describedAs("entry is an orphan").isFalse()
+    entry?.let { accessEntry ->
+      assertThat(accessEntry.key).describedAs("key mismatch").isEqualTo(key)
+      assertThat(accessEntry.valueRef.get()).describedAs("value mismatch").isEqualTo(value)
+      assertThat(accessEntry.accessCount).describedAs("access count mismatch").isEqualTo(count)
+      assertThat(accessEntry.isOrphan).describedAs("entry is an orphan").isFalse()
     }
   }
 
@@ -1745,11 +1745,13 @@ class AbstractAdaptiveCountingMemoryCacheTest {
         .isTrue()
     val entry = cache.mCachedEntries.get(key)
     assertThat(entry).describedAs("entry not found in the cache").isNotNull()
-    entry?.let {
-      assertThat(it.key).describedAs("key mismatch").isEqualTo(key)
-      assertThat(it.valueRef.get()).describedAs("value mismatch").isEqualTo(value)
-      assertThat(it.clientCount).describedAs("client count greater than zero").isEqualTo(0)
-      assertThat(it.isOrphan).describedAs("entry is an orphan").isFalse()
+    entry?.let { exclusiveEntry ->
+      assertThat(exclusiveEntry.key).describedAs("key mismatch").isEqualTo(key)
+      assertThat(exclusiveEntry.valueRef.get()).describedAs("value mismatch").isEqualTo(value)
+      assertThat(exclusiveEntry.clientCount)
+          .describedAs("client count greater than zero")
+          .isEqualTo(0)
+      assertThat(exclusiveEntry.isOrphan).describedAs("entry is an orphan").isFalse()
     }
   }
 
@@ -1762,11 +1764,11 @@ class AbstractAdaptiveCountingMemoryCacheTest {
         .isTrue()
     val entry = cache.mCachedEntries.get(key)
     assertThat(entry).describedAs("entry not found in the cache").isNotNull()
-    entry?.let {
-      assertThat(it.key).describedAs("key mismatch").isEqualTo(key)
-      assertThat(it.valueRef.get()).describedAs("value mismatch").isEqualTo(value)
-      assertThat(it.clientCount).describedAs("client count greater than zero").isEqualTo(0)
-      assertThat(it.isOrphan).describedAs("entry is an orphan").isFalse()
+    entry?.let { mfuEntry ->
+      assertThat(mfuEntry.key).describedAs("key mismatch").isEqualTo(key)
+      assertThat(mfuEntry.valueRef.get()).describedAs("value mismatch").isEqualTo(value)
+      assertThat(mfuEntry.clientCount).describedAs("client count greater than zero").isEqualTo(0)
+      assertThat(mfuEntry.isOrphan).describedAs("entry is an orphan").isFalse()
     }
   }
 
