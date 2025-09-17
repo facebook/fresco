@@ -77,6 +77,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val loadThumbnailFromContentResolverFirst: Boolean
   val loadThumbnailFromContentResolverForContentUriOnly: Boolean
   val preserveMetadataOnDisk: Boolean
+  val intermediateProgressUpdatesDisabled: Boolean
+  val intermediateProgressUpdatesForPrefetchDisabled: Boolean
 
   class Builder(private val configBuilder: ImagePipelineConfig.Builder) {
     @JvmField var shouldUseDecodingBufferHelper = false
@@ -135,6 +137,9 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var loadThumbnailFromContentResolverForContentUriOnly = false
 
     @JvmField var preserveMetadataOnDisk = false
+
+    @JvmField var intermediateProgressUpdatesDisabled = false
+    @JvmField var intermediateProgressUpdatesForPrefetchDisabled = false
 
     private fun asBuilder(block: () -> Unit): Builder {
       block()
@@ -351,6 +356,14 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
       this.preserveMetadataOnDisk = preserveMetadataOnDisk
     }
 
+    fun setIntermediateProgressUpdatesDisabled(updatesDisabled: Boolean) = asBuilder {
+      this.intermediateProgressUpdatesDisabled = updatesDisabled
+    }
+
+    fun setIntermediateProgressUpdatesForPrefetchDisabled(updatesDisabled: Boolean) = asBuilder {
+      this.intermediateProgressUpdatesForPrefetchDisabled = updatesDisabled
+    }
+
     fun build(): ImagePipelineExperiments = ImagePipelineExperiments(this)
   }
 
@@ -477,6 +490,9 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     loadThumbnailFromContentResolverForContentUriOnly =
         builder.loadThumbnailFromContentResolverForContentUriOnly
     preserveMetadataOnDisk = builder.preserveMetadataOnDisk
+    intermediateProgressUpdatesDisabled = builder.intermediateProgressUpdatesDisabled
+    intermediateProgressUpdatesForPrefetchDisabled =
+        builder.intermediateProgressUpdatesForPrefetchDisabled
   }
 
   companion object {

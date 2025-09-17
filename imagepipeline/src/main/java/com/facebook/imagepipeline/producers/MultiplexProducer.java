@@ -539,6 +539,15 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
     }
 
     public void onProgressUpdate(ForwardingConsumer forwardingConsumer, float progress) {
+      if (mConfig.getExperiments().getIntermediateProgressUpdatesDisabled()) {
+        return;
+      }
+      if (mConfig.getExperiments().getIntermediateProgressUpdatesForPrefetchDisabled()) {
+        BaseProducerContext context = mMultiplexProducerContext;
+        if (context != null && context.isPrefetch()) {
+          return;
+        }
+      }
       Iterator<Pair<Consumer<T>, ProducerContext>> iterator;
       synchronized (Multiplexer.this) {
         // check for late callbacks
