@@ -12,7 +12,6 @@ import com.facebook.common.internal.Preconditions
 import com.facebook.common.memory.MemoryTrimmableRegistry
 import com.facebook.common.references.CloseableReference
 import com.facebook.common.references.ResourceReleaser
-import com.facebook.infer.annotation.Nullsafe
 import javax.annotation.concurrent.ThreadSafe
 
 /**
@@ -23,7 +22,6 @@ import javax.annotation.concurrent.ThreadSafe
  * The free list of each bucket uses [OOMSoftReference]s.
  */
 @ThreadSafe
-@Nullsafe(Nullsafe.Mode.LOCAL)
 class FlexByteArrayPool(memoryTrimmableRegistry: MemoryTrimmableRegistry?, params: PoolParams) {
   private val mResourceReleaser: ResourceReleaser<ByteArray>
   @VisibleForTesting val mDelegatePool: SoftRefByteArrayPool

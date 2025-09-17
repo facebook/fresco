@@ -23,7 +23,6 @@ import android.widget.ImageView
 import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.drawee.drawable.ScalingUtils.InterpolatingScaleType
 import com.facebook.fresco.vito.view.VitoView
-import com.facebook.infer.annotation.Nullsafe
 
 /**
  * This Transition animates changes of an [ImageView] using Vito between two ScaleTypes
@@ -31,7 +30,6 @@ import com.facebook.infer.annotation.Nullsafe
  * In combination with ChangeBounds, VitoTransition allows ImageViews that change size, shape, or
  * [ScalingUtils.ScaleType] to animate contents smoothly.
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
 @TargetApi(Build.VERSION_CODES.KITKAT)
 class VitoTransition
 @JvmOverloads
