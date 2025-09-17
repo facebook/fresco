@@ -720,11 +720,11 @@ class LruCountingMemoryCacheTest {
         .isFalse()
     val entry = cache.mCachedEntries[key]
     assertThat(entry).describedAs("entry not found in the cache").isNotNull()
-    entry?.let {
-      assertThat(it.key).describedAs("key mismatch").isEqualTo(key)
-      assertThat(it.valueRef.get()).describedAs("value mismatch").isEqualTo(value)
-      assertThat(it.clientCount).describedAs("client count mismatch").isEqualTo(count)
-      assertThat(it.isOrphan).describedAs("entry is an orphan").isFalse()
+    entry?.let { sharedEntry ->
+      assertThat(sharedEntry.key).describedAs("key mismatch").isEqualTo(key)
+      assertThat(sharedEntry.valueRef.get()).describedAs("value mismatch").isEqualTo(value)
+      assertThat(sharedEntry.clientCount).describedAs("client count mismatch").isEqualTo(count)
+      assertThat(sharedEntry.isOrphan).describedAs("entry is an orphan").isFalse()
     }
   }
 
