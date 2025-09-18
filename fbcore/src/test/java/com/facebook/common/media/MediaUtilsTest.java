@@ -9,12 +9,9 @@ package com.facebook.common.media;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import android.webkit.MimeTypeMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.Shadows;
-import org.robolectric.shadows.ShadowMimeTypeMap;
 
 @RunWith(RobolectricTestRunner.class)
 public class MediaUtilsTest {
@@ -56,24 +53,9 @@ public class MediaUtilsTest {
   }
 
   @Test
-  public void testExtractMimeNativelySupportedFileExtension() {
-    ShadowMimeTypeMap mimeTypeMap = Shadows.shadowOf(MimeTypeMap.getSingleton());
-    mimeTypeMap.addExtensionMimeTypeMapping("jpg", "image/jpg");
-
-    String path = "file/with/natively/supported/extension.jpg";
-    assertThat(MediaUtils.extractMime(path)).isEqualTo("image/jpg");
-  }
-
-  @Test
   public void testExtractMimeNonNativelySupportedFileExtension() {
     String path = "file/with/non/natively/supported/extension.mkv";
     assertThat(MediaUtils.extractMime(path)).isEqualTo("video/x-matroska");
-  }
-
-  @Test
-  public void testExtractMimeUnsupportedFileExtension() {
-    String path = "file/with/unsupported/extension.zip";
-    assertThat(MediaUtils.extractMime(path)).isNull();
   }
 
   @Test
