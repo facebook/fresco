@@ -7,7 +7,6 @@
 
 package com.facebook.imagepipeline.backends.okhttp3
 
-import android.os.Build
 import android.os.Looper
 import android.os.SystemClock
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpNetworkFetcher.OkHttpNetworkFetchState
@@ -166,11 +165,7 @@ constructor(
   }
 
   private fun makeExceptionFromResponse(message: String, response: Response): IOException =
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-        IOException(message, OkHttpNetworkFetcherException.fromResponse(response))
-      } else {
-        IOException(message)
-      }
+      IOException(message, OkHttpNetworkFetcherException.fromResponse(response))
 
   /**
    * Handles exceptions.
