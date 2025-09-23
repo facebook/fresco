@@ -48,7 +48,7 @@ import org.robolectric.annotation.Config
 
 /** Tests for [ArtDecoder]. */
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [Build.VERSION_CODES.LOLLIPOP])
+@Config(sdk = [Build.VERSION_CODES.M])
 class ArtDecoderTest {
   private lateinit var bitmapPool: BitmapPool
   private lateinit var pooledByteBuffer: PooledByteBuffer
