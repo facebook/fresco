@@ -41,6 +41,7 @@ public class ImageRequestBuilder {
   private CacheChoice mCacheChoice = CacheChoice.DEFAULT;
   private boolean mProgressiveRenderingEnabled =
       ImagePipelineConfig.getDefaultImageRequestConfig().isProgressiveRenderingEnabled();
+  private boolean mSkipEncodedPartialImagesInCachesNotInRequestRange = false;
   private boolean mLocalThumbnailPreviewsEnabled = false;
   private boolean mLoadThumbnailOnly = false;
   private Priority mRequestPriority = Priority.HIGH;
@@ -111,7 +112,9 @@ public class ImageRequestBuilder {
         .setDiskCacheId(imageRequest.getDiskCacheId())
         .setDownsampleOverride(imageRequest.getDownsampleOverride())
         .setResizingAllowedOverride(imageRequest.getResizingAllowedOverride())
-        .setIsFirstFrameThumbnailEnabled(imageRequest.isFirstFrameThumbnailEnabled());
+        .setIsFirstFrameThumbnailEnabled(imageRequest.isFirstFrameThumbnailEnabled())
+        .setSkipEncodedPartialImagesInCachesNotInRequestRange(
+            imageRequest.getSkipEncodedPartialImagesInCachesNotInRequestRange());
   }
 
   public static void addCustomUriNetworkScheme(String scheme) {
@@ -283,6 +286,24 @@ public class ImageRequestBuilder {
   public ImageRequestBuilder setProgressiveRenderingEnabled(boolean enabled) {
     mProgressiveRenderingEnabled = enabled;
     return this;
+  }
+
+  /**
+   * Enables or disables skipping partial cached images in disk cache.
+   *
+   * @param skipEncodedPartialImagesInCachesNotInRequestRange
+   * @return the modified builder instance
+   */
+  public ImageRequestBuilder setSkipEncodedPartialImagesInCachesNotInRequestRange(
+      boolean skipEncodedPartialImagesInCachesNotInRequestRange) {
+    mSkipEncodedPartialImagesInCachesNotInRequestRange =
+        skipEncodedPartialImagesInCachesNotInRequestRange;
+    return this;
+  }
+
+  /** Returns whether skipping encoded partial images in caches is enabled. */
+  public boolean getSkipEncodedPartialImagesInCachesNotInRequestRange() {
+    return mSkipEncodedPartialImagesInCachesNotInRequestRange;
   }
 
   /** Returns whether progressive loading is enabled. */

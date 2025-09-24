@@ -66,6 +66,13 @@ public class ImageRequest {
   /** If set - the client will receive intermediate results */
   private final boolean mProgressiveRenderingEnabled;
 
+  /**
+   * If set - the client will not return the partial images stored in caches that store encoded
+   * images and will attempt to make a network request where feasible to fetch the rest of the
+   * image.
+   */
+  private final boolean mSkipEncodedPartialImagesInCachesNotInRequestRange;
+
   /** If set the client will receive thumbnail previews for local images, before the whole image */
   private final boolean mLocalThumbnailPreviewsEnabled;
 
@@ -148,6 +155,8 @@ public class ImageRequest {
     mSourceUriType = getSourceUriType(mSourceUri);
 
     mProgressiveRenderingEnabled = builder.isProgressiveRenderingEnabled();
+    mSkipEncodedPartialImagesInCachesNotInRequestRange =
+        builder.getSkipEncodedPartialImagesInCachesNotInRequestRange();
     mLocalThumbnailPreviewsEnabled = builder.isLocalThumbnailPreviewsEnabled();
     mLoadThumbnailOnly = builder.getLoadThumbnailOnly();
 
@@ -237,6 +246,10 @@ public class ImageRequest {
 
   public boolean getProgressiveRenderingEnabled() {
     return mProgressiveRenderingEnabled;
+  }
+
+  public boolean getSkipEncodedPartialImagesInCachesNotInRequestRange() {
+    return mSkipEncodedPartialImagesInCachesNotInRequestRange;
   }
 
   public boolean getLocalThumbnailPreviewsEnabled() {
