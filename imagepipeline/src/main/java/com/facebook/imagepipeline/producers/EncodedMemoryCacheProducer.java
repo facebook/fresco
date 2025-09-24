@@ -61,8 +61,11 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
       CloseableReference<PooledByteBuffer> cachedReference =
           isEncodedCacheEnabledForRead ? mMemoryCache.get(cacheKey) : null;
       try {
-        if (cachedReference != null) {
-          EncodedImage cachedEncodedImage = new EncodedImage(cachedReference);
+        EncodedImage cachedEncodedImage =
+            cachedReference == null ? null : new EncodedImage(cachedReference);
+        if (cachedEncodedImage != null
+            && !DiskCacheReadProducer.shouldSkipPartialEncodedImage(
+                cachedEncodedImage, imageRequest)) {
           try {
             listener.onProducerFinishWithSuccess(
                 producerContext,

@@ -22,6 +22,7 @@ import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
+import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.DiskCachesStore;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
@@ -183,6 +184,24 @@ public class DiskCacheReadProducerTest {
   }
 
   @Test
+  public void testDefaultDiskCacheGetSuccessful__SkipEncodePartialImagesInCacheEnabled() {
+    setupDiskCacheGetSuccess(mDefaultBufferedDiskCache);
+    setupDiskCacheEnoughBytes(1000);
+    when(mImageRequest.getSkipEncodedPartialImagesInCachesNotInRequestRange()).thenReturn(true);
+    mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
+    verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    ArgumentCaptor<HashMap> captor = ArgumentCaptor.forClass(HashMap.class);
+    verify(mProducerListener)
+        .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
+    Map<String, String> resultMap = captor.getValue();
+    assertEquals("true", resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND));
+    assertEquals("1000", resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE));
+    verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, true);
+    Assert.assertFalse(EncodedImage.isValid(mFinalEncodedImage));
+  }
+
+  @Test
   public void testSmallImageDiskCacheGetSuccessful() {
     setUpDiskCacheProducerEnabled(true);
     when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.SMALL);
@@ -336,6 +355,28 @@ public class DiskCacheReadProducerTest {
   }
 
   @Test
+  public void
+      testDefaultDiskCacheGetNotFoundInputProducerSuccess__SkipEncodePartialImagesInCacheEnabled_OnlyPartialImageFound() {
+    setUpDiskCacheProducerEnabled(true);
+    setupDiskCacheGetSuccess(mDefaultBufferedDiskCache);
+    setupDiskCacheNotEnoughBytes(1000);
+    setupInputProducerSuccess();
+    when(mImageRequest.getSkipEncodedPartialImagesInCachesNotInRequestRange()).thenReturn(true);
+    mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
+    verify(mInputProducer).produceResults(mConsumer, mProducerContext);
+    verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    ArgumentCaptor<HashMap> captor = ArgumentCaptor.forClass(HashMap.class);
+    verify(mProducerListener)
+        .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
+    Map<String, String> resultMap = captor.getValue();
+    assertEquals("false", resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND));
+    verify(mProducerListener, never())
+        .onUltimateProducerReached(eq(mProducerContext), anyString(), anyBoolean());
+    assertNull(resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE));
+  }
+
+  @Test
   public void testSmallImageDiskCacheGetNotFoundInputProducerSuccess() {
     setUpDiskCacheProducerEnabled(true);
     when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.SMALL);
@@ -469,6 +510,16 @@ public class DiskCacheReadProducerTest {
   private void setupDiskCacheGetNotFound(BufferedDiskCache bufferedDiskCache) {
     when(bufferedDiskCache.get(eq(mCacheKey), any(AtomicBoolean.class)))
         .thenReturn(Task.<EncodedImage>forResult(null));
+  }
+
+  private void setupDiskCacheNotEnoughBytes(int availableBytes) {
+    when(mImageRequest.getBytesRange()).thenReturn(BytesRange.toMax(availableBytes + 1000));
+    when(mFinalPooledByteBuffer.size()).thenReturn(availableBytes);
+  }
+
+  private void setupDiskCacheEnoughBytes(int availableBytes) {
+    when(mImageRequest.getBytesRange()).thenReturn(BytesRange.toMax(availableBytes - 1));
+    when(mFinalPooledByteBuffer.size()).thenReturn(availableBytes);
   }
 
   private void setupDiskCacheGetFailure(BufferedDiskCache bufferedDiskCache) {

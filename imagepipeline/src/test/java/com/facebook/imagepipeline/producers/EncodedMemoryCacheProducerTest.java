@@ -20,6 +20,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
+import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineExperiments;
 import com.facebook.imagepipeline.image.EncodedImage;
@@ -149,9 +150,61 @@ public class EncodedMemoryCacheProducerTest {
   }
 
   @Test
+  public void testEncodedMemoryCacheGetSuccessful__SkipEncodePartialImagesInCacheEnabled() {
+    setupEncodedMemoryCacheGetSuccess();
+    setEncodedMemoryCacheEnoughBytes(1000);
+    when(mImageRequest.getSkipEncodedPartialImagesInCachesNotInRequestRange()).thenReturn(true);
+    when(mProducerContext.getLowestPermittedRequestLevel())
+        .thenReturn(ImageRequest.RequestLevel.ENCODED_MEMORY_CACHE);
+    mEncodedMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
+    ArgumentCaptor<EncodedImage> argumentCaptor = ArgumentCaptor.forClass(EncodedImage.class);
+    verify(mConsumer).onNewResult(argumentCaptor.capture(), eq(Consumer.IS_LAST));
+    EncodedImage encodedImage = argumentCaptor.getValue();
+    Assert.assertSame(
+        mFinalEncodedImage.getUnderlyingReferenceTestOnly(),
+        encodedImage.getUnderlyingReferenceTestOnly());
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    Map<String, String> extraMap =
+        ImmutableMap.of(EncodedMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "true");
+    verify(mProducerListener)
+        .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, extraMap);
+    verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, true);
+    Assert.assertFalse(mFinalImageReference.isValid());
+  }
+
+  @Test
   public void testEncodedMemoryCacheGetNotFoundInputProducerSuccess() {
     setupEncodedMemoryCacheGetNotFound();
     setupInputProducerStreamingSuccess();
+    mEncodedMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
+    verify(mMemoryCache, never()).cache(mCacheKey, mIntermediateImageReference);
+    ArgumentCaptor<CloseableReference> argumentCaptor =
+        ArgumentCaptor.forClass(CloseableReference.class);
+    verify(mMemoryCache).cache(eq(mCacheKey), argumentCaptor.capture());
+    CloseableReference<PooledByteBuffer> capturedRef =
+        (CloseableReference<PooledByteBuffer>) argumentCaptor.getValue();
+    Assert.assertSame(
+        mFinalImageReference.getUnderlyingReferenceTestOnly(),
+        capturedRef.getUnderlyingReferenceTestOnly());
+    verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
+    verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
+    Assert.assertTrue(EncodedImage.isValid(mFinalEncodedImageClone));
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    Map<String, String> extraMap =
+        ImmutableMap.of(EncodedMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
+    verify(mProducerListener)
+        .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, extraMap);
+    verify(mProducerListener, never())
+        .onUltimateProducerReached(eq(mProducerContext), anyString(), anyBoolean());
+  }
+
+  @Test
+  public void
+      testEncodedMemoryCacheGetNotFoundInputProducerSuccess__SkipEncodePartialImagesInCacheEnabled_OnlyPartialImageFound() {
+    setupEncodedMemoryCacheGetSuccess();
+    setEncodedMemoryCacheNotEnoughBytes(1000);
+    setupInputProducerStreamingSuccess();
+    when(mImageRequest.getSkipEncodedPartialImagesInCachesNotInRequestRange()).thenReturn(true);
     mEncodedMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
     verify(mMemoryCache, never()).cache(mCacheKey, mIntermediateImageReference);
     ArgumentCaptor<CloseableReference> argumentCaptor =
@@ -303,6 +356,16 @@ public class EncodedMemoryCacheProducerTest {
     doAnswer(new ProduceResultsFailureAnswer())
         .when(mInputProducer)
         .produceResults(any(Consumer.class), eq(mProducerContext));
+  }
+
+  private void setEncodedMemoryCacheNotEnoughBytes(int availableBytes) {
+    when(mImageRequest.getBytesRange()).thenReturn(BytesRange.toMax(availableBytes + 1000));
+    when(mPooledByteBuffer1.size()).thenReturn(availableBytes);
+  }
+
+  private void setEncodedMemoryCacheEnoughBytes(int availableBytes) {
+    when(mImageRequest.getBytesRange()).thenReturn(BytesRange.toMax(availableBytes - 1));
+    when(mPooledByteBuffer1.size()).thenReturn(availableBytes);
   }
 
   private static class ProduceResultsNewResultAnswer implements Answer<Void> {
