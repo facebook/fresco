@@ -23,6 +23,7 @@ import com.facebook.common.memory.PooledByteBufferOutputStream;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.ByteConstants;
 import com.facebook.imageformat.ImageFormat;
+import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.core.DiskCachesStore;
@@ -76,6 +77,16 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
     mInputProducer = inputProducer;
   }
 
+  private static @Nullable BufferedDiskCache getBufferedDiskCache(
+      Supplier<DiskCachesStore> diskCachesStoreSupplier, ImageRequest imageRequest) {
+    DiskCachesStore diskCachesStore = diskCachesStoreSupplier.get();
+    return DiskCacheDecision.chooseDiskCacheForRequest(
+        imageRequest,
+        diskCachesStore.getSmallImageBufferedDiskCache(),
+        diskCachesStore.getMainBufferedDiskCache(),
+        diskCachesStore.getDynamicBufferedDiskCaches());
+  }
+
   public void produceResults(
       final Consumer<EncodedImage> consumer, final ProducerContext producerContext) {
     final ImageRequest imageRequest = producerContext.getImageRequest();
@@ -109,11 +120,23 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
     }
 
     final AtomicBoolean isCancelled = new AtomicBoolean(false);
+    BufferedDiskCache bufferedDiskCache =
+        getBufferedDiskCache(mDiskCachesStoreSupplier, imageRequest);
+    if (bufferedDiskCache == null) {
+      producerContext
+          .getProducerListener()
+          .onProducerFinishWithFailure(
+              producerContext,
+              PRODUCER_NAME,
+              new DiskCacheDecision.DiskCacheDecisionNoDiskCacheChosenException(
+                  "Got no disk cache for CacheChoice: "
+                      + Integer.valueOf(imageRequest.getCacheChoice().ordinal()).toString()),
+              null);
+      startInputProducer(consumer, producerContext, partialImageCacheKey, null);
+      return;
+    }
     final Task<EncodedImage> diskLookupTask =
-        mDiskCachesStoreSupplier
-            .get()
-            .getMainBufferedDiskCache()
-            .get(partialImageCacheKey, isCancelled);
+        bufferedDiskCache.get(partialImageCacheKey, isCancelled);
     final Continuation<EncodedImage, Void> continuation =
         onFinishDiskReads(consumer, producerContext, partialImageCacheKey);
 
@@ -193,6 +216,7 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
             mPooledByteBufferFactory,
             mByteArrayPool,
             partialResultFromCache,
+            producerContext.getImageRequest(),
             producerContext
                 .getImageRequest()
                 .isCacheEnabled(ImageRequest.CachesLocationsMasks.DISK_WRITE));
@@ -254,7 +278,8 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
    * <p>If a partial image is already held, it combines new results with that partial data and
    * passes the combination to the next consumer.
    */
-  private static class PartialDiskCacheConsumer
+  @VisibleForTesting
+  public static class PartialDiskCacheConsumer
       extends DelegatingConsumer<EncodedImage, EncodedImage> {
 
     private static final int READ_SIZE = 16 * ByteConstants.KB;
@@ -265,6 +290,7 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
     private final ByteArrayPool mByteArrayPool;
     private final @Nullable EncodedImage mPartialEncodedImageFromCache;
     private final boolean mIsDiskCacheEnabledForWrite;
+    private final ImageRequest mImageRequest;
 
     private PartialDiskCacheConsumer(
         final Consumer<EncodedImage> consumer,
@@ -273,6 +299,7 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
         final PooledByteBufferFactory pooledByteBufferFactory,
         final ByteArrayPool byteArrayPool,
         final @Nullable EncodedImage partialEncodedImageFromCache,
+        final ImageRequest imageRequest,
         final boolean isDiskCacheEnabledForWrite) {
       super(consumer);
       mDiskCachesStoreSupplier = diskCachesStoreSupplier;
@@ -281,12 +308,23 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
       mByteArrayPool = byteArrayPool;
       mPartialEncodedImageFromCache = partialEncodedImageFromCache;
       mIsDiskCacheEnabledForWrite = isDiskCacheEnabledForWrite;
+      mImageRequest = imageRequest;
     }
 
     @Override
     public void onNewResultImpl(@Nullable EncodedImage newResult, @Status int status) {
       if (isNotLast(status)) {
         // TODO 19247361 Consider merging of non-final results
+        return;
+      }
+      BufferedDiskCache bufferedDiskCache =
+          getBufferedDiskCache(mDiskCachesStoreSupplier, mImageRequest);
+      if (bufferedDiskCache == null) {
+        getConsumer()
+            .onFailure(
+                new DiskCacheDecision.DiskCacheDecisionNoDiskCacheChosenException(
+                    "Got no disk cache for CacheChoice: "
+                        + Integer.valueOf(mImageRequest.getCacheChoice().ordinal()).toString()));
         return;
       }
 
@@ -306,23 +344,21 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
           mPartialEncodedImageFromCache.close();
         }
 
-        mDiskCachesStoreSupplier.get().getMainBufferedDiskCache().remove(mPartialImageCacheKey);
+        bufferedDiskCache.remove(mPartialImageCacheKey);
       } else if (mIsDiskCacheEnabledForWrite
           && statusHasFlag(status, IS_PARTIAL_RESULT)
           && isLast(status)
           && newResult != null
           && newResult.getImageFormat() != ImageFormat.UNKNOWN) {
-        mDiskCachesStoreSupplier
-            .get()
-            .getMainBufferedDiskCache()
-            .put(mPartialImageCacheKey, newResult);
+        bufferedDiskCache.put(mPartialImageCacheKey, newResult);
         getConsumer().onNewResult(newResult, status);
       } else {
         getConsumer().onNewResult(newResult, status);
       }
     }
 
-    private PooledByteBufferOutputStream merge(EncodedImage initialData, EncodedImage remainingData)
+    @VisibleForTesting
+    public PooledByteBufferOutputStream merge(EncodedImage initialData, EncodedImage remainingData)
         throws IOException {
       int bytesToReadFromInitialData =
           Preconditions.checkNotNull(remainingData.getBytesRange()).from;
