@@ -247,6 +247,10 @@ public class ImageRequest {
     return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && mLoadThumbnailOnly;
   }
 
+  public ImageRequest newImageRequestFromImageRequestBuilder(ImageRequestBuilder builder) {
+    return builder.build();
+  }
+
   public Priority getPriority() {
     return mRequestPriority;
   }

@@ -160,9 +160,9 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
 
               // Pass the request on, but only for the remaining bytes
               final ImageRequest remainingRequest =
-                  ImageRequestBuilder.fromRequest(originalRequest)
-                      .setBytesRange(BytesRange.from(cachedLength - 1))
-                      .build();
+                  originalRequest.newImageRequestFromImageRequestBuilder(
+                      ImageRequestBuilder.fromRequest(originalRequest)
+                          .setBytesRange(BytesRange.from(cachedLength - 1)));
               final SettableProducerContext contextForRemainingRequest =
                   new SettableProducerContext(remainingRequest, producerContext);
 

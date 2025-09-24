@@ -103,4 +103,32 @@ class ImageRequestTest {
     assertThat(imageRequest).isNotNull()
     assertThat(imageRequest?.sourceFile?.absolutePath).isEqualTo(file.absolutePath)
   }
+
+  @Test
+  fun testNewImageRequestFromExistingBuilder() {
+    val originalImageRequest =
+        ImageRequestBuilder.newBuilderWithSource(Uri.parse("http://frescolib.org/image.jpg"))
+            .setCacheChoice(ImageRequest.CacheChoice.DYNAMIC)
+            .setDiskCacheId("dynamic_cache_id")
+            .setImageDecodeOptions(ImageDecodeOptions.newBuilder().build())
+            .setLocalThumbnailPreviewsEnabled(true)
+            .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.DISK_CACHE)
+            .setPostprocessor(
+                object : BasePostprocessor() {
+                  override fun getName(): String {
+                    return super.getName()
+                  }
+                }
+            )
+            .setProgressiveRenderingEnabled(true)
+            .setRequestListener(RequestLoggingListener())
+            .setResizeOptions(ResizeOptions(20, 20))
+            .setRotationOptions(RotationOptions.forceRotation(RotationOptions.ROTATE_90))
+            .setRequestPriority(Priority.HIGH)
+            .build()
+    val newBuilder = ImageRequestBuilder.fromRequest(originalImageRequest)
+    newBuilder.setLocalThumbnailPreviewsEnabled(false)
+    assertThat(originalImageRequest.newImageRequestFromImageRequestBuilder(newBuilder))
+        .isEqualTo(newBuilder.build())
+  }
 }
