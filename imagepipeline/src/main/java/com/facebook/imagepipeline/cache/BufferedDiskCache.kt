@@ -37,6 +37,8 @@ class BufferedDiskCache(
     private val writeExecutor: Executor,
     private val imageCacheStatsTracker: ImageCacheStatsTracker,
     private val preserveMetadata: Boolean,
+    private val preserveMetadataDuringStartup: Boolean,
+    private val isAppStarting: (() -> Boolean)?,
 ) {
 
   private val stagingArea: StagingArea = StagingArea.getInstance()
@@ -199,11 +201,9 @@ class BufferedDiskCache(
                       val buffer = readFromDiskCache(key) ?: return@Callable null
                       val ref = CloseableReference.of(buffer)
                       try {
-                        EncodedImage(ref).also {
-                          if (preserveMetadata) {
-                            it.putExtra(HasExtraData.KEY_SF_QUERY, fileCache.getMetadata(key))
-                          }
-                        }
+                        val image = EncodedImage(ref)
+                        maybeRestoreMetadata(key, image)
+                        image
                       } finally {
                         CloseableReference.closeSafely(ref)
                       }
@@ -386,11 +386,7 @@ class BufferedDiskCache(
         val inputStream = encodedImage!!.inputStream
         checkNotNull(inputStream)
         pooledByteStreams.copy(inputStream, os)
-        if (preserveMetadata) {
-          encodedImage.getExtra<String>(HasExtraData.KEY_SF_QUERY)?.let {
-            fileCache.setMetadata(key, it)
-          }
-        }
+        maybeSaveMetadata(key, encodedImage)
       }
       imageCacheStatsTracker.onDiskCachePut(key)
       FLog.v(TAG, "Successful disk-cache write for key %s", key.uriString)
@@ -398,6 +394,24 @@ class BufferedDiskCache(
       // Log failure
       // TODO: 3697790
       FLog.w(TAG, ioe, "Failed to write to disk-cache for key %s", key.uriString)
+    }
+  }
+
+  private fun maybeSaveMetadata(key: CacheKey, image: EncodedImage) {
+    if (!preserveMetadataDuringStartup && isAppStarting?.invoke() == true) {
+      return
+    }
+    if (preserveMetadata) {
+      image.getExtra<String>(HasExtraData.KEY_SF_QUERY)?.let { fileCache.setMetadata(key, it) }
+    }
+  }
+
+  private fun maybeRestoreMetadata(key: CacheKey, image: EncodedImage) {
+    if (!preserveMetadataDuringStartup && isAppStarting?.invoke() == true) {
+      return
+    }
+    if (preserveMetadata) {
+      fileCache.getMetadata(key)?.let { data -> image.putExtra(HasExtraData.KEY_SF_QUERY, data) }
     }
   }
 

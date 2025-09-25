@@ -95,6 +95,7 @@ interface ImagePipelineConfigInterface {
   val isPrefetchEnabledSupplier: Supplier<Boolean>
   val callerContextVerifier: CallerContextVerifier?
   val decodedOriginalImageAnalyzers: Set<DecodeProducer.DecodedOriginalImageAnalyzer>
+  val isAppStarting: (() -> Boolean)?
 
   // Experiments
   val experiments: ImagePipelineExperiments

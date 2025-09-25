@@ -77,6 +77,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val loadThumbnailFromContentResolverFirst: Boolean
   val loadThumbnailFromContentResolverForContentUriOnly: Boolean
   val preserveMetadataOnDisk: Boolean
+  val preserveMetadataOnDiskDuringStartup: Boolean
   val intermediateProgressUpdatesDisabled: Boolean
   val intermediateProgressUpdatesForPrefetchDisabled: Boolean
 
@@ -137,6 +138,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var loadThumbnailFromContentResolverForContentUriOnly = false
 
     @JvmField var preserveMetadataOnDisk = false
+    @JvmField var preserveMetadataOnDiskDuringStartup = false
 
     @JvmField var intermediateProgressUpdatesDisabled = false
     @JvmField var intermediateProgressUpdatesForPrefetchDisabled = false
@@ -352,8 +354,12 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
           loadThumbnailFromContentResolverForContentUriOnly
     }
 
-    fun setPreserveMetadataOnDisk(preserveMetadataOnDisk: Boolean) = asBuilder {
-      this.preserveMetadataOnDisk = preserveMetadataOnDisk
+    fun setPreserveMetadataOnDisk(preserve: Boolean) = asBuilder {
+      this.preserveMetadataOnDisk = preserve
+    }
+
+    fun setPreserveMetadataOnDiskDuringStartup(preserve: Boolean) = asBuilder {
+      this.preserveMetadataOnDiskDuringStartup = preserve
     }
 
     fun setIntermediateProgressUpdatesDisabled(updatesDisabled: Boolean) = asBuilder {
@@ -490,6 +496,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     loadThumbnailFromContentResolverForContentUriOnly =
         builder.loadThumbnailFromContentResolverForContentUriOnly
     preserveMetadataOnDisk = builder.preserveMetadataOnDisk
+    preserveMetadataOnDiskDuringStartup = builder.preserveMetadataOnDiskDuringStartup
     intermediateProgressUpdatesDisabled = builder.intermediateProgressUpdatesDisabled
     intermediateProgressUpdatesForPrefetchDisabled =
         builder.intermediateProgressUpdatesForPrefetchDisabled

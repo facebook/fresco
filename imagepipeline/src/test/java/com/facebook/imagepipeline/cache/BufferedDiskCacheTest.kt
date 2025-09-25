@@ -99,6 +99,8 @@ class BufferedDiskCacheTest {
             writePriorityExecutor,
             imageCacheStatsTracker,
             false,
+            false,
+            null,
         )
   }
 

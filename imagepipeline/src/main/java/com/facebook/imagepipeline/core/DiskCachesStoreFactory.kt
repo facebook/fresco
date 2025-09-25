@@ -57,6 +57,8 @@ class DiskCachesStoreFactory(
                     executorSupplier.forLocalStorageWrite(),
                     imageCacheStatsTracker,
                     false,
+                    false,
+                    null,
                 )
               }
 
@@ -75,6 +77,8 @@ class DiskCachesStoreFactory(
                     executorSupplier.forLocalStorageWrite(),
                     imageCacheStatsTracker,
                     false,
+                    false,
+                    null,
                 )
               }
 
@@ -97,6 +101,8 @@ class DiskCachesStoreFactory(
                           executorSupplier.forLocalStorageWrite(),
                           imageCacheStatsTracker,
                           false,
+                          false,
+                          null,
                       )
                     }
                 )

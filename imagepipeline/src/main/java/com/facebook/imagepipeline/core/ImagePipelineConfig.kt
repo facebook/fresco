@@ -118,6 +118,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
   override val bitmapMemoryCacheFactory: BitmapMemoryCacheFactory
   override val dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>?
   override val decodedOriginalImageAnalyzers: Set<DecodeProducer.DecodedOriginalImageAnalyzer>
+  override val isAppStarting: (() -> Boolean)? = null
 
   init {
     if (isTracing()) {
