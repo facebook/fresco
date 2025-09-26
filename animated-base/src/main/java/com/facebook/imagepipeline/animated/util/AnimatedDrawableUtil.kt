@@ -7,9 +7,7 @@
 
 package com.facebook.imagepipeline.animated.util
 
-import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.os.Build
 import java.util.Arrays
 
 /** Utility methods for AnimatedDrawable. */
@@ -81,13 +79,7 @@ class AnimatedDrawableUtil {
     }
   }
 
-  @SuppressLint("NewApi")
-  fun getSizeOfBitmap(bitmap: Bitmap): Int =
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-        bitmap.allocationByteCount
-      } else {
-        bitmap.byteCount
-      }
+  fun getSizeOfBitmap(bitmap: Bitmap): Int = bitmap.allocationByteCount
 
   companion object {
     // See comment in fixFrameDurations below.
