@@ -60,7 +60,7 @@ public class SettableCacheEvent implements CacheEvent {
     return mCacheKey;
   }
 
-  public SettableCacheEvent setCacheKey(CacheKey cacheKey) {
+  public SettableCacheEvent setCacheKey(@Nullable CacheKey cacheKey) {
     mCacheKey = cacheKey;
     return this;
   }
@@ -71,7 +71,7 @@ public class SettableCacheEvent implements CacheEvent {
     return mResourceId;
   }
 
-  public SettableCacheEvent setResourceId(String resourceId) {
+  public SettableCacheEvent setResourceId(@Nullable String resourceId) {
     mResourceId = resourceId;
     return this;
   }
@@ -112,7 +112,7 @@ public class SettableCacheEvent implements CacheEvent {
     return mException;
   }
 
-  public SettableCacheEvent setException(IOException exception) {
+  public SettableCacheEvent setException(@Nullable IOException exception) {
     mException = exception;
     return this;
   }
@@ -123,7 +123,8 @@ public class SettableCacheEvent implements CacheEvent {
     return mEvictionReason;
   }
 
-  public SettableCacheEvent setEvictionReason(CacheEventListener.EvictionReason evictionReason) {
+  public SettableCacheEvent setEvictionReason(
+      @Nullable CacheEventListener.EvictionReason evictionReason) {
     mEvictionReason = evictionReason;
     return this;
   }
