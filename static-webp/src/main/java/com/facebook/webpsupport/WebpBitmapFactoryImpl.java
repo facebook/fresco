@@ -7,12 +7,10 @@
 
 package com.facebook.webpsupport;
 
-import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import com.facebook.common.internal.DoNotStrip;
@@ -384,9 +382,8 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   }
 
   @DoNotStrip
-  @SuppressLint("NewApi")
   private static boolean shouldPremultiply(@Nullable BitmapFactory.Options options) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && options != null) {
+    if (options != null) {
       return options.inPremultiplied;
     }
     return true;
