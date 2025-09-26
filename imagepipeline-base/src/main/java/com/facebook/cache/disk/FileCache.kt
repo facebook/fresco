@@ -12,11 +12,9 @@ import com.facebook.cache.common.CacheKey
 import com.facebook.cache.common.WriterCallback
 import com.facebook.cache.disk.DiskStorage.DiskDumpInfo
 import com.facebook.common.disk.DiskTrimmable
-import com.facebook.infer.annotation.Nullsafe
 import java.io.IOException
 
 /** Interface that caches based on disk should implement. */
-@Nullsafe(Nullsafe.Mode.LOCAL)
 interface FileCache : DiskTrimmable {
   /**
    * Tells if this cache is enabled. It's important for some caches that can be disabled without
