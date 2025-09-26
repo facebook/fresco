@@ -78,7 +78,7 @@ class WebPImageDecoderTest {
     val byteBuffer: TrivialPooledByteBuffer = createByteBuffer()
     whenever(
             WebPImage.createFromNativeMemory(
-                ArgumentMatchers.eq(byteBuffer.getNativePtr()),
+                ArgumentMatchers.eq(byteBuffer.nativePtr),
                 ArgumentMatchers.eq(byteBuffer.size()),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
             )
@@ -115,7 +115,7 @@ class WebPImageDecoderTest {
     val byteBuffer: TrivialPooledByteBuffer = createByteBuffer()
     whenever(
             WebPImage.createFromNativeMemory(
-                ArgumentMatchers.eq(byteBuffer.getNativePtr()),
+                ArgumentMatchers.eq(byteBuffer.nativePtr),
                 ArgumentMatchers.eq(byteBuffer.size()),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
             )
@@ -164,7 +164,7 @@ class WebPImageDecoderTest {
     val byteBuffer: TrivialPooledByteBuffer = createByteBuffer()
     whenever(
             WebPImage.createFromNativeMemory(
-                ArgumentMatchers.eq(byteBuffer.getNativePtr()),
+                ArgumentMatchers.eq(byteBuffer.nativePtr),
                 ArgumentMatchers.eq(byteBuffer.size()),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
             )
@@ -324,7 +324,7 @@ class WebPImageDecoderTest {
     val byteBuffer: TrivialPooledByteBuffer = createByteBuffer()
     whenever(
             WebPImage.createFromNativeMemory(
-                ArgumentMatchers.eq(byteBuffer.getNativePtr()),
+                ArgumentMatchers.eq(byteBuffer.nativePtr),
                 ArgumentMatchers.eq(byteBuffer.size()),
                 Matchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
             )
