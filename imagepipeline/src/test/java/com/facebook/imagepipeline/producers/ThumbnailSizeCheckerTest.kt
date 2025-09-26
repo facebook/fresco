@@ -118,7 +118,7 @@ class ThumbnailSizeCheckerTest {
 
   @Test
   fun testImageWithInsufficientWidthWhenNoResizeOptions() {
-    var rotation = 0
+    val rotation = 0
     for (rotation in 0 until 360 step 90) {
       val mockImage: EncodedImage =
           mockImage(
