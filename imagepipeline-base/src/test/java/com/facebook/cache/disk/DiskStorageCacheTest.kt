@@ -832,38 +832,38 @@ class DiskStorageCacheTest {
    * work-around the recycling of the original event and forwards the copy so that assertions can be
    * made afterwards.
    */
-  private class DuplicatingCacheEventListener(private val mRecipientListener: CacheEventListener) :
+  private class DuplicatingCacheEventListener(private val recipientListener: CacheEventListener) :
       CacheEventListener {
     override fun onHit(cacheEvent: CacheEvent) {
-      mRecipientListener.onHit(Companion.duplicateEvent(cacheEvent!!))
+      recipientListener.onHit(Companion.duplicateEvent(cacheEvent!!))
     }
 
     override fun onMiss(cacheEvent: CacheEvent) {
-      mRecipientListener.onMiss(Companion.duplicateEvent(cacheEvent!!))
+      recipientListener.onMiss(Companion.duplicateEvent(cacheEvent!!))
     }
 
     override fun onWriteAttempt(cacheEvent: CacheEvent) {
-      mRecipientListener.onWriteAttempt(Companion.duplicateEvent(cacheEvent!!))
+      recipientListener.onWriteAttempt(Companion.duplicateEvent(cacheEvent!!))
     }
 
     override fun onWriteSuccess(cacheEvent: CacheEvent) {
-      mRecipientListener.onWriteSuccess(Companion.duplicateEvent(cacheEvent!!))
+      recipientListener.onWriteSuccess(Companion.duplicateEvent(cacheEvent!!))
     }
 
     override fun onReadException(cacheEvent: CacheEvent) {
-      mRecipientListener.onReadException(Companion.duplicateEvent(cacheEvent!!))
+      recipientListener.onReadException(Companion.duplicateEvent(cacheEvent!!))
     }
 
     override fun onWriteException(cacheEvent: CacheEvent) {
-      mRecipientListener.onWriteException(Companion.duplicateEvent(cacheEvent!!))
+      recipientListener.onWriteException(Companion.duplicateEvent(cacheEvent!!))
     }
 
     override fun onEviction(cacheEvent: CacheEvent) {
-      mRecipientListener.onEviction(Companion.duplicateEvent(cacheEvent!!))
+      recipientListener.onEviction(Companion.duplicateEvent(cacheEvent!!))
     }
 
     override fun onCleared() {
-      mRecipientListener.onCleared()
+      recipientListener.onCleared()
     }
 
     companion object {
