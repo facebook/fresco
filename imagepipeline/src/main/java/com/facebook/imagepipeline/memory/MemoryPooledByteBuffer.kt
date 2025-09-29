@@ -62,7 +62,7 @@ class MemoryPooledByteBuffer(bufRef: CloseableReference<MemoryChunk>, size: Int)
     // Al the other bounds checks will be performed by NativeMemoryChunk.read method.
     Preconditions.checkArgument(offset + length <= mSize)
     Preconditions.checkNotNull<CloseableReference<MemoryChunk?>?>(this.closeableReference)
-    return closeableReference!!.get().read(offset, buffer!!, bufferOffset, length)
+    return closeableReference!!.get().read(offset, buffer, bufferOffset, length)
   }
 
   @get:Throws(UnsupportedOperationException::class)
