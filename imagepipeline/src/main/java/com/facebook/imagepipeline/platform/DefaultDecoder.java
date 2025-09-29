@@ -253,10 +253,7 @@ public abstract class DefaultDecoder implements PlatformDecoder {
     }
     try {
       options.inTempStorage = byteBuffer.array();
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
-          && regionToDecode != null
-          && bitmapToReuse != null
-          && options.inPreferredConfig != null) {
+      if (regionToDecode != null && bitmapToReuse != null && options.inPreferredConfig != null) {
         BitmapRegionDecoder bitmapRegionDecoder = null;
         try {
           bitmapToReuse.reconfigure(targetWidth, targetHeight, options.inPreferredConfig);
