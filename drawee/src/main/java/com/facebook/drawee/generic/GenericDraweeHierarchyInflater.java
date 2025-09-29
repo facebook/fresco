@@ -211,9 +211,8 @@ public class GenericDraweeHierarchyInflater {
       } finally {
         gdhAttrs.recycle();
 
-        if (android.os.Build.VERSION.SDK_INT >= 17
-            && context.getResources().getConfiguration().getLayoutDirection()
-                == View.LAYOUT_DIRECTION_RTL) {
+        if (context.getResources().getConfiguration().getLayoutDirection()
+            == View.LAYOUT_DIRECTION_RTL) {
           roundTopLeft = roundTopLeft && roundTopEnd;
           roundTopRight = roundTopRight && roundTopStart;
           roundBottomRight = roundBottomRight && roundBottomStart;
