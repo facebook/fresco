@@ -20,7 +20,7 @@ import javax.annotation.concurrent.ThreadSafe
 @ThreadSafe
 class MemoryPooledByteBuffer(bufRef: CloseableReference<MemoryChunk>, size: Int) :
     PooledByteBuffer {
-  private val mSize: Int
+  private val size: Int
 
   @get:VisibleForTesting
   @get:GuardedBy("this")
@@ -31,7 +31,7 @@ class MemoryPooledByteBuffer(bufRef: CloseableReference<MemoryChunk>, size: Int)
   init {
     Preconditions.checkArgument(size >= 0 && size <= bufRef.get().size)
     this.closeableReference = bufRef.clone()
-    mSize = size
+    this.size = size
   }
 
   /**
@@ -43,14 +43,14 @@ class MemoryPooledByteBuffer(bufRef: CloseableReference<MemoryChunk>, size: Int)
   @Synchronized
   override fun size(): Int {
     ensureValid()
-    return mSize
+    return this.size
   }
 
   @Synchronized
   override fun read(offset: Int): Byte {
     ensureValid()
     Preconditions.checkArgument(offset >= 0)
-    Preconditions.checkArgument(offset < mSize)
+    Preconditions.checkArgument(offset < this.size)
     Preconditions.checkNotNull<CloseableReference<MemoryChunk?>?>(this.closeableReference)
     return closeableReference!!.get().read(offset)
   }
@@ -60,7 +60,7 @@ class MemoryPooledByteBuffer(bufRef: CloseableReference<MemoryChunk>, size: Int)
     ensureValid()
     // We need to make sure that PooledByteBuffer's length is preserved.
     // Al the other bounds checks will be performed by NativeMemoryChunk.read method.
-    Preconditions.checkArgument(offset + length <= mSize)
+    Preconditions.checkArgument(offset + length <= this.size)
     Preconditions.checkNotNull<CloseableReference<MemoryChunk?>?>(this.closeableReference)
     return closeableReference!!.get().read(offset, buffer, bufferOffset, length)
   }
