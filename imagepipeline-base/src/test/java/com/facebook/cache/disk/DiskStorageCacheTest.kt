@@ -800,15 +800,15 @@ class DiskStorageCacheTest {
           baseDirectoryName,
           cacheErrorLogger,
       ) {
-    private var mPoisonResourceId: String? = null
+    private var poisonResourceId: String? = null
 
     fun setPoisonResourceId(poisonResourceId: String?) {
-      mPoisonResourceId = poisonResourceId
+      this.poisonResourceId = poisonResourceId
     }
 
     @Throws(IOException::class)
     override fun getResource(resourceId: String, debugInfo: Any): BinaryResource? {
-      if (resourceId == mPoisonResourceId) {
+      if (resourceId == this.poisonResourceId) {
         throw POISON_EXCEPTION
       }
       return get().getResource(resourceId, debugInfo!!)
@@ -816,7 +816,7 @@ class DiskStorageCacheTest {
 
     @Throws(IOException::class)
     override fun touch(resourceId: String, debugInfo: Any): Boolean {
-      if (resourceId == mPoisonResourceId) {
+      if (resourceId == this.poisonResourceId) {
         throw POISON_EXCEPTION
       }
       return super.touch(resourceId, debugInfo!!)
