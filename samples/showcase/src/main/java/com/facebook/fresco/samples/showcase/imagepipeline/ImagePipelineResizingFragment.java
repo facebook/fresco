@@ -8,7 +8,6 @@
 package com.facebook.fresco.samples.showcase.imagepipeline;
 
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -123,11 +122,7 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
                     (ResizableFrameLayout) view.findViewById(R.id.frame_main);
                 mainImageFrameLayout.init(view.findViewById(R.id.btn_resize));
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                  view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                } else {
-                  view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                }
+                view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
               }
             });
   }
