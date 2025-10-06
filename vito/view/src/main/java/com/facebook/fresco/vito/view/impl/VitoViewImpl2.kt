@@ -9,7 +9,6 @@ package com.facebook.fresco.vito.view.impl
 
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.view.View
 import android.view.View.OnAttachStateChangeListener
 import android.widget.ImageView
@@ -120,16 +119,9 @@ object VitoViewImpl2 {
       frescoDrawable.imagePerfListener.onImageMount(frescoDrawable)
       maybeFetchImage(frescoDrawable)
     } else {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-        // If the view is already attached to the window, immediately fetch the image.
-        // Otherwise, the fetch will be submitted later when then View is attached.
-        if (target.isAttachedToWindow) {
-          frescoDrawable.imagePerfListener.onImageMount(frescoDrawable)
-          maybeFetchImage(frescoDrawable)
-        }
-      } else {
-        // Before Kitkat we don't have a good way to know.
-        // Normally we expect the view to be already attached, thus we always fetch the image.
+      // If the view is already attached to the window, immediately fetch the image.
+      // Otherwise, the fetch will be submitted later when then View is attached.
+      if (target.isAttachedToWindow) {
         frescoDrawable.imagePerfListener.onImageMount(frescoDrawable)
         maybeFetchImage(frescoDrawable)
       }
