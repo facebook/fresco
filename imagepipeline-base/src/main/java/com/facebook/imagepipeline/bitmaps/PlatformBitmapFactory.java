@@ -13,7 +13,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Build;
 import android.util.DisplayMetrics;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
@@ -444,9 +443,7 @@ public abstract class PlatformBitmapFactory {
       bitmap.setDensity(display.densityDpi);
     }
 
-    if (Build.VERSION.SDK_INT >= 12) {
-      bitmap.setHasAlpha(hasAlpha);
-    }
+    bitmap.setHasAlpha(hasAlpha);
 
     if (config == Bitmap.Config.ARGB_8888 && !hasAlpha) {
       bitmap.eraseColor(0xff000000);
@@ -675,13 +672,8 @@ public abstract class PlatformBitmapFactory {
     // The new bitmap was created from a known bitmap source so assume that
     // they use the same density
     destination.setDensity(source.getDensity());
-    if (Build.VERSION.SDK_INT >= 12) {
-      destination.setHasAlpha(source.hasAlpha());
-    }
-
-    if (Build.VERSION.SDK_INT >= 19) {
-      destination.setPremultiplied(source.isPremultiplied());
-    }
+    destination.setHasAlpha(source.hasAlpha());
+    destination.setPremultiplied(source.isPremultiplied());
   }
 
   /**
