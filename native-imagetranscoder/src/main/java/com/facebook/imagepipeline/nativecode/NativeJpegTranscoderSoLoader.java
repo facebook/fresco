@@ -7,9 +7,6 @@
 
 package com.facebook.imagepipeline.nativecode;
 
-import static com.facebook.soloader.nativeloader.NativeLoaderDelegate.SKIP_MERGED_JNI_ONLOAD;
-
-import android.os.Build;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.soloader.nativeloader.NativeLoader;
 
@@ -20,16 +17,6 @@ public class NativeJpegTranscoderSoLoader {
 
   public static synchronized void ensure() {
     if (!sInitialized) {
-      // On Android 4.1.2 the loading of the native-imagetranscoder native library can fail because
-      // of the dependency with fb_jpegturbo. In this case we have to explicitely load that
-      // library
-      if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
-        try {
-          NativeLoader.loadLibrary("fb_jpegturbo", SKIP_MERGED_JNI_ONLOAD);
-        } catch (UnsatisfiedLinkError error) {
-          // Head in the sand
-        }
-      }
       NativeLoader.loadLibrary("native-imagetranscoder");
       sInitialized = true;
     }
