@@ -7,8 +7,6 @@
 
 package com.facebook.common.statfs;
 
-import android.annotation.SuppressLint;
-import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.os.SystemClock;
@@ -138,7 +136,6 @@ public class StatFsHelper {
    * @param storageType Internal or external storage type
    * @return available space in bytes, -1 if no information is available
    */
-  @SuppressLint("DeprecatedMethod")
   public long getFreeStorageSpace(StorageType storageType) {
     ensureInitialized();
 
@@ -146,14 +143,8 @@ public class StatFsHelper {
 
     StatFs statFS = storageType == StorageType.INTERNAL ? mInternalStatFs : mExternalStatFs;
     if (statFS != null) {
-      long blockSize, availableBlocks;
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-        blockSize = statFS.getBlockSizeLong();
-        availableBlocks = statFS.getFreeBlocksLong();
-      } else {
-        blockSize = statFS.getBlockSize();
-        availableBlocks = statFS.getFreeBlocks();
-      }
+      long blockSize = statFS.getBlockSizeLong();
+      long availableBlocks = statFS.getFreeBlocksLong();
       return blockSize * availableBlocks;
     }
     return -1;
@@ -166,7 +157,6 @@ public class StatFsHelper {
    * @param storageType Internal or external storage type
    * @return available space in bytes, -1 if no information is available
    */
-  @SuppressLint("DeprecatedMethod")
   public long getTotalStorageSpace(StorageType storageType) {
     ensureInitialized();
 
@@ -174,14 +164,8 @@ public class StatFsHelper {
 
     StatFs statFS = storageType == StorageType.INTERNAL ? mInternalStatFs : mExternalStatFs;
     if (statFS != null) {
-      long blockSize, totalBlocks;
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-        blockSize = statFS.getBlockSizeLong();
-        totalBlocks = statFS.getBlockCountLong();
-      } else {
-        blockSize = statFS.getBlockSize();
-        totalBlocks = statFS.getBlockCount();
-      }
+      long blockSize = statFS.getBlockSizeLong();
+      long totalBlocks = statFS.getBlockCountLong();
       return blockSize * totalBlocks;
     }
     return -1;
@@ -194,7 +178,6 @@ public class StatFsHelper {
    * @param storageType Internal or external storage type
    * @return available space in bytes, 0 if no information is available
    */
-  @SuppressLint("DeprecatedMethod")
   public long getAvailableStorageSpace(StorageType storageType) {
     ensureInitialized();
 
@@ -202,14 +185,8 @@ public class StatFsHelper {
 
     StatFs statFS = storageType == StorageType.INTERNAL ? mInternalStatFs : mExternalStatFs;
     if (statFS != null) {
-      long blockSize, availableBlocks;
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-        blockSize = statFS.getBlockSizeLong();
-        availableBlocks = statFS.getAvailableBlocksLong();
-      } else {
-        blockSize = statFS.getBlockSize();
-        availableBlocks = statFS.getAvailableBlocks();
-      }
+      long blockSize = statFS.getBlockSizeLong();
+      long availableBlocks = statFS.getAvailableBlocksLong();
       return blockSize * availableBlocks;
     }
     return 0;
