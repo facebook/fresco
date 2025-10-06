@@ -7,7 +7,6 @@
 
 package com.facebook.imagepipeline.bitmaps
 
-import android.os.Build
 import com.facebook.imagepipeline.core.CloseableReferenceFactory
 import com.facebook.imagepipeline.memory.PoolFactory
 import com.facebook.imagepipeline.platform.PlatformDecoder
@@ -26,14 +25,5 @@ object PlatformBitmapFactoryProvider {
       poolFactory: PoolFactory,
       platformDecoder: PlatformDecoder,
       closeableReferenceFactory: CloseableReferenceFactory,
-  ): PlatformBitmapFactory =
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        ArtBitmapFactory(poolFactory.bitmapPool, closeableReferenceFactory)
-      } else {
-        HoneycombBitmapFactory(
-            EmptyJpegGenerator(poolFactory.pooledByteBufferFactory),
-            platformDecoder,
-            closeableReferenceFactory,
-        )
-      }
+  ): PlatformBitmapFactory = ArtBitmapFactory(poolFactory.bitmapPool, closeableReferenceFactory)
 }
