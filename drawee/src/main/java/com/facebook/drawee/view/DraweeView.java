@@ -7,13 +7,11 @@
 
 package com.facebook.drawee.view;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -74,7 +72,6 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
     init(context);
   }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public DraweeView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     init(context);
@@ -91,13 +88,11 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
       }
       mInitialised = true;
       mDraweeHolder = DraweeHolder.create(null, context);
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        ColorStateList imageTintList = getImageTintList();
-        if (imageTintList == null) {
-          return;
-        }
-        setColorFilter(imageTintList.getDefaultColor());
+      ColorStateList imageTintList = getImageTintList();
+      if (imageTintList == null) {
+        return;
       }
+      setColorFilter(imageTintList.getDefaultColor());
       // In Android N and above, visibility handling for Drawables has been changed, which breaks
       // activity transitions with DraweeViews.
       mLegacyVisibilityHandlingEnabled =
