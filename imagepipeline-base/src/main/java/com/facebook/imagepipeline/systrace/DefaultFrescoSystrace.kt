@@ -7,7 +7,6 @@
 
 package com.facebook.imagepipeline.systrace
 
-import android.os.Build
 import android.os.Trace
 import com.facebook.imagepipeline.systrace.FrescoSystrace.ArgsBuilder
 import com.facebook.imagepipeline.systrace.FrescoSystrace.Systrace
@@ -34,8 +33,7 @@ class DefaultFrescoSystrace : Systrace {
     }
   }
 
-  override fun isTracing(): Boolean =
-      BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2
+  override fun isTracing(): Boolean = BuildConfig.DEBUG
 
   /**
    * Handles adding args to a systrace section by naively appending them to the section name. This
@@ -53,9 +51,7 @@ class DefaultFrescoSystrace : Systrace {
         stringBuilder.setLength(127)
       }
 
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-        Trace.beginSection(stringBuilder.toString())
-      }
+      Trace.beginSection(stringBuilder.toString())
     }
 
     override fun arg(key: String, value: Any) = apply { appendArgument(key, value) }
