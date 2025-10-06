@@ -156,10 +156,7 @@ class SimpleImageTranscoder(private val resizingEnabled: Boolean, private val ma
       } else if (format === DefaultImageFormats.PNG) {
         CompressFormat.PNG
       } else {
-        if (
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH &&
-                DefaultImageFormats.isStaticWebpFormat(format)
-        ) {
+        if (DefaultImageFormats.isStaticWebpFormat(format)) {
           CompressFormat.WEBP
         } else {
           CompressFormat.JPEG
