@@ -10,7 +10,6 @@ package com.facebook.fresco.vito.draweesupport
 import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import com.facebook.drawee.R
@@ -94,10 +93,7 @@ object VitoViewInflater {
                 val roundBottomEnd =
                     attrs.getBoolean(R.styleable.GenericDraweeHierarchy_roundBottomEnd, true)
 
-                if (
-                    Build.VERSION.SDK_INT >= 17 &&
-                        context.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
-                ) {
+                if (context.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
                   roundTopLeft = roundTopLeft && roundTopEnd
                   roundTopRight = roundTopRight && roundTopStart
                   roundBottomRight = roundBottomRight && roundBottomStart
