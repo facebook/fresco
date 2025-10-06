@@ -13,7 +13,6 @@ import android.content.ContentResolver;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.ContactsContract;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
@@ -211,8 +210,7 @@ public class UriUtil {
       boolean isVideo = mimeTypeString != null && mimeTypeString.startsWith("video/");
       String selection = null;
       String[] selectionArgs = null;
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
-          && "com.android.providers.media.documents".equals(uri.getAuthority())) {
+      if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
         String documentId = DocumentsContract.getDocumentId(uri);
         Preconditions.checkNotNull(documentId);
         uri = Preconditions.checkNotNull(getExternalContentUri(isVideo));
