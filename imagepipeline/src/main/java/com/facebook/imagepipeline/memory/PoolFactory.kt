@@ -7,7 +7,6 @@
 
 package com.facebook.imagepipeline.memory
 
-import android.os.Build
 import com.facebook.common.memory.ByteArrayPool
 import com.facebook.common.memory.MemoryTrimmableRegistry
 import com.facebook.common.memory.PooledByteBufferFactory
@@ -44,26 +43,18 @@ open class PoolFactory(private val config: PoolConfig) {
           )
 
       BitmapPoolType.LEGACY ->
-          if (Build.VERSION.SDK_INT >= 21) {
-            BucketsBitmapPool(
-                config.memoryTrimmableRegistry,
-                config.bitmapPoolParams,
-                config.bitmapPoolStatsTracker,
-            )
-          } else {
-            DummyBitmapPool()
-          }
+          BucketsBitmapPool(
+              config.memoryTrimmableRegistry,
+              config.bitmapPoolParams,
+              config.bitmapPoolStatsTracker,
+          )
 
       else ->
-          if (Build.VERSION.SDK_INT >= 21) {
-            BucketsBitmapPool(
-                config.memoryTrimmableRegistry,
-                config.bitmapPoolParams,
-                config.bitmapPoolStatsTracker,
-            )
-          } else {
-            DummyBitmapPool()
-          }
+          BucketsBitmapPool(
+              config.memoryTrimmableRegistry,
+              config.bitmapPoolParams,
+              config.bitmapPoolStatsTracker,
+          )
     }
   }
 
