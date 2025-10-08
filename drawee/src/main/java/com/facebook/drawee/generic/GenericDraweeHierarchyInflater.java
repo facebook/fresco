@@ -259,11 +259,7 @@ public class GenericDraweeHierarchyInflater {
     if (resourceId == 0) {
       return null;
     }
-    if (android.os.Build.VERSION.SDK_INT >= 21) {
-      return context.getDrawable(resourceId);
-    } else {
-      return context.getResources().getDrawable(resourceId);
-    }
+    return context.getDrawable(resourceId);
   }
 
   /**
