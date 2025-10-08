@@ -118,21 +118,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
     final Preference preferenceCpuArchitecture = findPreference(KEY_DETAILS_CPU_ARCHITECTURE);
     final String cpuArch = System.getProperty("os.arch");
 
-    final String cpuDetails;
-    if (Build.VERSION.SDK_INT < 21) {
-      cpuDetails =
-          getString(
-              R.string.preference_details_cpu_architecture_summary_before_21,
-              cpuArch,
-              Build.CPU_ABI,
-              Build.CPU_ABI2);
-    } else {
-      cpuDetails =
-          getString(
-              R.string.preference_details_cpu_architecture_summary_after_21,
-              cpuArch,
-              Arrays.toString(Build.SUPPORTED_ABIS));
-    }
+    final String cpuDetails =
+        getString(
+            R.string.preference_details_cpu_architecture_summary_after_21,
+            cpuArch,
+            Arrays.toString(Build.SUPPORTED_ABIS));
     preferenceCpuArchitecture.setSummary(cpuDetails);
 
     final Preference preferenceDeviceName = findPreference(KEY_DETAILS_DEVICE_NAME);
