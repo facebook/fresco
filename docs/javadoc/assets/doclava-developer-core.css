@@ -429,7 +429,7 @@ div.indent {
   text-align:left;
 }
 
-#mainBodyFixed .seperator {
+#mainBodyFixed .separator {
   background-image:url(images/hr_gray_side.jpg);
   background-repeat:no-repeat;
   width: 100%;
@@ -444,7 +444,7 @@ div.indent {
   color: #333;
 }
 
-#mainBodyBottom .seperator {
+#mainBodyBottom .separator {
   background-image:url(images/hr_gray_main.jpg);
   background-repeat:no-repeat;
   width: 100%;
