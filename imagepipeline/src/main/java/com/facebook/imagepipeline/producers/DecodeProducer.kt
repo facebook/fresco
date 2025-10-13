@@ -17,6 +17,7 @@ import com.facebook.common.util.ExceptionWithNoStacktrace
 import com.facebook.common.util.UriUtil
 import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.imageformat.DefaultImageFormats
+import com.facebook.imagepipeline.cache.CacheMissException
 import com.facebook.imagepipeline.common.ImageDecodeOptions
 import com.facebook.imagepipeline.core.CloseableReferenceFactory
 import com.facebook.imagepipeline.core.DownsampleMode
@@ -135,13 +136,26 @@ class DecodeProducer(
               val cacheHit =
                   producerContext.getExtra<Boolean>(ProducerConstants.EXTRA_CACHED_VALUE_FOUND) ==
                       true
+              val fullFetch =
+                  producerContext.lowestPermittedRequestLevel ==
+                      ImageRequest.RequestLevel.FULL_FETCH
+
+              val exception =
+                  if (
+                      !fullFetch &&
+                          !cacheHit &&
+                          producerContext.imagePipelineConfig.experiments
+                              .throwCacheMissExceptionOnCacheMiss
+                  )
+                      CacheMissException("Image not found in cache")
+                  else ExceptionWithNoStacktrace("Encoded image is null.")
+
               if (
                   !producerContext.imagePipelineConfig.experiments.cancelDecodeOnCacheMiss ||
-                      producerContext.lowestPermittedRequestLevel ==
-                          ImageRequest.RequestLevel.FULL_FETCH ||
+                      fullFetch ||
                       cacheHit
               ) {
-                handleError(ExceptionWithNoStacktrace("Encoded image is null."))
+                handleError(exception)
                 return
               }
             } else if (!newResult.isValid) {

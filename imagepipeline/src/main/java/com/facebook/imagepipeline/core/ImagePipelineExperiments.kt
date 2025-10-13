@@ -80,6 +80,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val preserveMetadataOnDiskDuringStartup: Boolean
   val intermediateProgressUpdatesDisabled: Boolean
   val intermediateProgressUpdatesForPrefetchDisabled: Boolean
+  val throwCacheMissExceptionOnCacheMiss: Boolean
 
   class Builder(private val configBuilder: ImagePipelineConfig.Builder) {
     @JvmField var shouldUseDecodingBufferHelper = false
@@ -142,6 +143,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
 
     @JvmField var intermediateProgressUpdatesDisabled = false
     @JvmField var intermediateProgressUpdatesForPrefetchDisabled = false
+
+    @JvmField var throwCacheMissExceptionOnCacheMiss = false
 
     private fun asBuilder(block: () -> Unit): Builder {
       block()
@@ -370,6 +373,10 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
       this.intermediateProgressUpdatesForPrefetchDisabled = updatesDisabled
     }
 
+    fun setThrowCacheMissExceptionOnCacheMiss(throwException: Boolean) = asBuilder {
+      this.throwCacheMissExceptionOnCacheMiss = throwException
+    }
+
     fun build(): ImagePipelineExperiments = ImagePipelineExperiments(this)
   }
 
@@ -500,6 +507,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     intermediateProgressUpdatesDisabled = builder.intermediateProgressUpdatesDisabled
     intermediateProgressUpdatesForPrefetchDisabled =
         builder.intermediateProgressUpdatesForPrefetchDisabled
+    throwCacheMissExceptionOnCacheMiss = builder.throwCacheMissExceptionOnCacheMiss
   }
 
   companion object {
