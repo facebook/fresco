@@ -169,7 +169,7 @@ function rank_autocomplete_results(query) {
     if (!gMatches || !gMatches.length)
       return;
 
-    // helper function that gets the last occurence index of the given regex
+    // helper function that gets the last occurrence index of the given regex
     // in the given string, or -1 if not found
     var _lastSearch = function(s, re) {
       if (s == '')

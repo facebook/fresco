@@ -208,7 +208,7 @@ class ImagePipeline(
    *
    * @param imageRequest the request to submit
    * @param callerContext the caller context for image request
-   * @param lowestPermittedRequestLevelOnSubmit the lowest request level permitted for image reques
+   * @param lowestPermittedRequestLevelOnSubmit the lowest request level permitted for image request
    * @param requestListener additional image request listener independent of ImageRequest listeners
    * @param uiComponentId optional UI component ID that is requesting the image
    * @return a DataSource representing the pending decoded image(s)
@@ -287,7 +287,7 @@ class ImagePipeline(
    *
    * @param imageRequest the request to submit
    * @param callerContext the caller context for image request
-   * @param lowestPermittedRequestLevelOnSubmit the lowest request level permitted for image reques
+   * @param lowestPermittedRequestLevelOnSubmit the lowest request level permitted for image request
    * @return a DataSource representing the pending decoded image(s)
    */
   fun fetchDecodedImage(

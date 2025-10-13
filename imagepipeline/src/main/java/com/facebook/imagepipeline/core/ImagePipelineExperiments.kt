@@ -263,7 +263,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
       this.producerFactoryMethod = producerFactoryMethod
     }
 
-    /** Stores an alternative lazy method to instantiate the data souce. */
+    /** Stores an alternative lazy method to instantiate the data source. */
     fun setLazyDataSource(lazyDataSource: Supplier<Boolean>?) = asBuilder {
       this.lazyDataSource = lazyDataSource
     }

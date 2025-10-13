@@ -26,7 +26,7 @@ namespace jpeg {
 struct JpegMemorySource {
   /**
    * jpeg_source_mgr is a struct used by libjpeg to encapsulate bytes source.
-   * It consists of callbacks (fucntion pointers) and memory pointer to read
+   * It consists of callbacks (function pointers) and memory pointer to read
    * buffer. Our implementations point public_fields correctly at buffer.
    */
   struct jpeg_source_mgr public_fields;
@@ -71,7 +71,7 @@ struct JpegMemoryDestination {
   struct jpeg_destination_mgr public_fields;
 
   /**
-   * Buffer accumulates bytes writen by libjpeg. We don't allow the library
+   * Buffer accumulates bytes written by libjpeg. We don't allow the library
    * to write directly to the buffer. Instead we maintain extra write_memory
    * pointer which is set to a piece of memory allocated via libjpeg memory
    * manager. We instruct libjpeg to write directly to that memory and we

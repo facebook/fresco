@@ -71,7 +71,7 @@ function exec(source, options) {
 }
 
 /**
- * This method returns a nicely formated line of code pointing to the exact
+ * This method returns a nicely formatted line of code pointing to the exact
  * location of the error `e`. The line is limited in size so big lines of code
  * are also shown in a readable way.
  *
@@ -2274,7 +2274,7 @@ parseYieldExpression: true, parseAwaitExpression: true
         MissingFromClause: 'Missing from clause',
         NoAsAfterImportNamespace: 'Missing as after import *',
         InvalidModuleSpecifier: 'Invalid module specifier',
-        NoUnintializedConst: 'Const must be initialized',
+        NoUninitializedConst: 'Const must be initialized',
         ComprehensionRequiresBlock: 'Comprehension must have at least one block',
         ComprehensionError:  'Comprehension Error',
         EachNotAllowed:  'Each is not supported',

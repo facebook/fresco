@@ -42,9 +42,9 @@ struct JpegErrorHandler {
   jpeg_compress_struct* cinfoPtr;
 
   /**
-   * Constructs JpegErrorHanlder with given jni environment.
+   * Constructs JpegErrorHandler with given jni environment.
    *
-   * <p> To use it with given compress struct or decompress strunct call
+   * <p> To use it with given compress struct or decompress struct call
    * one of setDecompressStruct/setCompressStruct methods.
    */
   JpegErrorHandler(JNIEnv* env);
@@ -81,13 +81,13 @@ void jpegThrow(j_common_ptr cinfo);
 
 /**
  * If there is no exception pending, throws RuntimeException initialized
- * with passed message. In any case, returns control to the place poitned
+ * with passed message. In any case, returns control to the place pointed
  * by setjmp buffer of associated JpegErrorHandler structure.
  */
 void jpegSafeThrow(j_common_ptr cinfo, const char* msg);
 
 /**
- * Checks for pending java exception and if one occured
+ * Checks for pending java exception and if one occurred
  * frees jpeg-turbo resources and jumps to the place pointed by
  * setjmp buffer of associated JpegErrorHandler structure
  */
