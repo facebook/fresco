@@ -13,7 +13,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.anyObject;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -494,8 +494,7 @@ public class ImagePipelineTest {
     List<CacheKey> list = new ArrayList<>();
     list.add(dummyCacheKey);
     MultiCacheKey multiKey = new MultiCacheKey(list);
-    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), anyObject()))
-        .thenReturn(multiKey);
+    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), any())).thenReturn(multiKey);
     mImagePipeline.evictFromDiskCache(uri);
     verify(mMainDiskStorageCache).remove(multiKey);
     verify(mSmallImageDiskStorageCache).remove(multiKey);
@@ -538,8 +537,7 @@ public class ImagePipelineTest {
     when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.DEFAULT);
     CacheKey cacheKey = mock(DebuggingCacheKey.class);
     when(mMainDiskStorageCache.diskCheckSync(cacheKey)).thenReturn(true);
-    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), anyObject()))
-        .thenReturn(cacheKey);
+    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), any())).thenReturn(cacheKey);
     assertTrue(mImagePipeline.isInDiskCacheSync(mImageRequest));
   }
 
@@ -548,8 +546,7 @@ public class ImagePipelineTest {
     when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.SMALL);
     CacheKey cacheKey = mock(DebuggingCacheKey.class);
     when(mSmallImageDiskStorageCache.diskCheckSync(cacheKey)).thenReturn(true);
-    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), anyObject()))
-        .thenReturn(cacheKey);
+    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), any())).thenReturn(cacheKey);
     assertTrue(mImagePipeline.isInDiskCacheSync(mImageRequest));
   }
 
@@ -559,8 +556,7 @@ public class ImagePipelineTest {
     when(mImageRequest.getDiskCacheId()).thenReturn("dynamicId1");
     CacheKey cacheKey = mock(DebuggingCacheKey.class);
     when(mDynamicBufferedDiskCache.diskCheckSync(cacheKey)).thenReturn(true);
-    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), anyObject()))
-        .thenReturn(cacheKey);
+    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), any())).thenReturn(cacheKey);
     assertTrue(mImagePipeline.isInDiskCacheSync(mImageRequest));
   }
 
@@ -570,8 +566,7 @@ public class ImagePipelineTest {
     when(mImageRequest.getDiskCacheId()).thenReturn("invalidDynamicId");
     CacheKey cacheKey = mock(DebuggingCacheKey.class);
     when(mDynamicBufferedDiskCache.diskCheckSync(cacheKey)).thenReturn(true);
-    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), anyObject()))
-        .thenReturn(cacheKey);
+    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), any())).thenReturn(cacheKey);
     assertFalse(mImagePipeline.isInDiskCacheSync(mImageRequest));
   }
 
@@ -581,8 +576,7 @@ public class ImagePipelineTest {
     CacheKey cacheKey = mock(DebuggingCacheKey.class);
     when(mMainDiskStorageCache.contains(cacheKey)).thenReturn(Task.forResult(true));
 
-    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), anyObject()))
-        .thenReturn(cacheKey);
+    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), any())).thenReturn(cacheKey);
     assertTrue(mImagePipeline.isInDiskCache(mImageRequest).getResult());
   }
 
@@ -594,8 +588,7 @@ public class ImagePipelineTest {
     when(mMainDiskStorageCache.contains(cacheKey)).thenReturn(Task.forResult(false));
     when(mSmallImageDiskStorageCache.contains(cacheKey)).thenReturn(Task.forResult(true));
 
-    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), anyObject()))
-        .thenReturn(cacheKey);
+    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), any())).thenReturn(cacheKey);
     assertTrue(mImagePipeline.isInDiskCache(mImageRequest).getResult());
   }
 
@@ -610,8 +603,7 @@ public class ImagePipelineTest {
     when(mDynamicBufferedDiskCache2.contains(cacheKey)).thenReturn(Task.forResult(true));
     when(mDynamicBufferedDiskCache3.contains(cacheKey)).thenReturn(Task.forResult(false));
 
-    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), anyObject()))
-        .thenReturn(cacheKey);
+    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), any())).thenReturn(cacheKey);
     assertTrue(mImagePipeline.isInDiskCache(mImageRequest).getResult());
   }
 
@@ -627,8 +619,7 @@ public class ImagePipelineTest {
     when(mDynamicBufferedDiskCache3.contains(cacheKey)).thenReturn(Task.forResult(true));
     when(mImageRequest.getDiskCacheId()).thenReturn("dynamicId3");
 
-    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), anyObject()))
-        .thenReturn(cacheKey);
+    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), any())).thenReturn(cacheKey);
     assertTrue(mImagePipeline.isInDiskCache(mImageRequest).getResult());
   }
 
