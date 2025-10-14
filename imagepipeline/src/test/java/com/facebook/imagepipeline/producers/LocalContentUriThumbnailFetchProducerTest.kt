@@ -35,7 +35,7 @@ import org.mockito.Mock
 import org.mockito.MockedConstruction
 import org.mockito.MockedStatic
 import org.mockito.Mockito
-import org.mockito.Mockito.verifyZeroInteractions
+import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -169,7 +169,7 @@ class LocalContentUriThumbnailFetchProducerTest {
         .onProducerFinishWithCancellation(producerContext, PRODUCER_NAME, null)
     Mockito.verify(consumer).onCancellation()
     executor.runUntilIdle()
-    verifyZeroInteractions(pooledByteBufferFactory)
+    verifyNoMoreInteractions(pooledByteBufferFactory)
   }
 
   @Test
@@ -243,7 +243,7 @@ class LocalContentUriThumbnailFetchProducerTest {
     Mockito.verify(consumer).onNewResult(null, Consumer.IS_LAST)
     Mockito.verifyNoMoreInteractions(consumer)
 
-    verifyZeroInteractions(pooledByteBufferFactory)
+    verifyNoMoreInteractions(pooledByteBufferFactory)
   }
 
   private fun assertConsumerReceivesImage() {

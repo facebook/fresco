@@ -17,7 +17,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import com.facebook.cache.common.CacheKey;
@@ -249,7 +248,7 @@ public class DiskCacheWriteProducerTest {
         .onNewResult(
             mFinalEncodedImageFormatUnknown, Consumer.IS_LAST | Consumer.IS_PARTIAL_RESULT);
 
-    verifyZeroInteractions(mDefaultBufferedDiskCache, mSmallImageBufferedDiskCache);
+    verifyNoMoreInteractions(mDefaultBufferedDiskCache, mSmallImageBufferedDiskCache);
   }
 
   @Test
@@ -259,7 +258,7 @@ public class DiskCacheWriteProducerTest {
     verify(mConsumer).onNewResult(null, Consumer.IS_LAST);
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
     verify(mProducerListener).onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
-    verifyZeroInteractions(mDefaultBufferedDiskCache, mSmallImageBufferedDiskCache);
+    verifyNoMoreInteractions(mDefaultBufferedDiskCache, mSmallImageBufferedDiskCache);
   }
 
   @Test
@@ -267,7 +266,7 @@ public class DiskCacheWriteProducerTest {
     setupInputProducerFailure();
     mDiskCacheWriteProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onFailure(mException);
-    verifyZeroInteractions(
+    verifyNoMoreInteractions(
         mProducerListener, mDefaultBufferedDiskCache, mSmallImageBufferedDiskCache);
   }
 
@@ -306,7 +305,7 @@ public class DiskCacheWriteProducerTest {
     when(mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)).thenReturn(false);
     mDiskCacheWriteProducer.produceResults(mConsumer, mLowestLevelProducerContext);
     verify(mConsumer).onNewResult(null, Consumer.IS_LAST);
-    verifyZeroInteractions(
+    verifyNoMoreInteractions(
         mInputProducer, mDefaultBufferedDiskCache, mSmallImageBufferedDiskCache, mProducerListener);
   }
 

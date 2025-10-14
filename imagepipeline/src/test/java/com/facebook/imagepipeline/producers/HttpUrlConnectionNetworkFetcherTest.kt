@@ -27,7 +27,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.MockedStatic
 import org.mockito.Mockito
-import org.mockito.Mockito.verifyZeroInteractions
+import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.MockitoAnnotations
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
@@ -203,7 +203,7 @@ class HttpUrlConnectionNetworkFetcherTest {
 
     Mockito.verify(callback).onFailure(ArgumentMatchers.any(IOException::class.java))
     Mockito.verify(redirect).disconnect()
-    verifyZeroInteractions(success)
+    verifyNoMoreInteractions(success)
 
     Mockito.verifyNoMoreInteractions(callback)
   }
@@ -222,7 +222,7 @@ class HttpUrlConnectionNetworkFetcherTest {
     runFetch()
 
     Mockito.verify(callback).onFailure(ArgumentMatchers.any(IOException::class.java))
-    verifyZeroInteractions(responseAfterSixRedirects)
+    verifyNoMoreInteractions(responseAfterSixRedirects)
 
     Mockito.verifyNoMoreInteractions(callback)
   }

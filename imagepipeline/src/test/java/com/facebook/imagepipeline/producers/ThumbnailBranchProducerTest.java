@@ -12,7 +12,6 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import com.facebook.imagepipeline.common.ResizeOptions;
@@ -68,7 +67,7 @@ public class ThumbnailBranchProducerTest {
     mProducer.produceResults(mImageConsumer, mProducerContext);
 
     verify(mImageConsumer).onNewResult(null, Consumer.IS_LAST);
-    verifyZeroInteractions((Object[]) mThumbnailProducers);
+    verifyNoMoreInteractions((Object[]) mThumbnailProducers);
   }
 
   @Test
@@ -81,7 +80,7 @@ public class ThumbnailBranchProducerTest {
     mProducer.produceResults(mImageConsumer, mProducerContext);
 
     verify(mImageConsumer).onNewResult(firstImage, Consumer.IS_LAST);
-    verifyZeroInteractions(mThumbnailProducers[1], mThumbnailProducers[2]);
+    verifyNoMoreInteractions(mThumbnailProducers[1], mThumbnailProducers[2]);
   }
 
   @Test
@@ -95,7 +94,7 @@ public class ThumbnailBranchProducerTest {
     mProducer.produceResults(mImageConsumer, mProducerContext);
 
     verify(mImageConsumer).onNewResult(secondImage, Consumer.IS_LAST);
-    verifyZeroInteractions(mThumbnailProducers[2]);
+    verifyNoMoreInteractions(mThumbnailProducers[2]);
   }
 
   @Test
@@ -185,7 +184,7 @@ public class ThumbnailBranchProducerTest {
     mProducer.produceResults(mImageConsumer, mProducerContext);
 
     verify(mImageConsumer).onNewResult(secondImage, Consumer.IS_LAST);
-    verifyZeroInteractions(mThumbnailProducers[2]);
+    verifyNoMoreInteractions(mThumbnailProducers[2]);
   }
 
   @Test

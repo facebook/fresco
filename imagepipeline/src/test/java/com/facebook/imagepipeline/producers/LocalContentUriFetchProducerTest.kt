@@ -26,7 +26,7 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.Mockito.verifyZeroInteractions
+import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.MockitoAnnotations
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
@@ -96,7 +96,7 @@ class LocalContentUriFetchProducerTest {
         .onProducerFinishWithCancellation(producerContext, PRODUCER_NAME, null)
     Mockito.verify(consumer).onCancellation()
     executor.runUntilIdle()
-    verifyZeroInteractions(pooledByteBufferFactory)
+    verifyNoMoreInteractions(pooledByteBufferFactory)
   }
 
   @Test

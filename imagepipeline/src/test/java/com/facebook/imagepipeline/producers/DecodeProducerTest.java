@@ -181,7 +181,7 @@ public class DecodeProducerTest {
 
     verify(mJobScheduler).updateJob(mEncodedImage, Consumer.IS_LAST);
     verify(mJobScheduler).scheduleJob();
-    verifyZeroInteractions(mProgressiveJpegParser);
+    verifyNoMoreInteractions(mProgressiveJpegParser);
   }
 
   @Test
@@ -194,7 +194,7 @@ public class DecodeProducerTest {
 
     verify(mJobScheduler).updateJob(mEncodedImage, Consumer.IS_LAST);
     verify(mJobScheduler).scheduleJob();
-    verifyZeroInteractions(mProgressiveJpegParser);
+    verifyNoMoreInteractions(mProgressiveJpegParser);
   }
 
   @Test
@@ -209,7 +209,7 @@ public class DecodeProducerTest {
     InOrder inOrder = inOrder(mJobScheduler);
     inOrder.verify(mJobScheduler).updateJob(mEncodedImage, Consumer.NO_FLAGS);
     inOrder.verify(mJobScheduler).scheduleJob();
-    verifyZeroInteractions(mProgressiveJpegParser);
+    verifyNoMoreInteractions(mProgressiveJpegParser);
   }
 
   @Test
