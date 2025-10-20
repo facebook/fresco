@@ -8,10 +8,10 @@
 package com.facebook.drawee.drawable;
 
 import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import android.graphics.Matrix;
 import android.graphics.Rect;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -211,8 +211,8 @@ public class ScalingUtilsTest {
 
     mExpectedMatrix.reset();
     if (scaleType == ScaleType.CENTER) {
-      Assert.assertEquals(1.0f, scaleX, 0);
-      Assert.assertEquals(1.0f, scaleY, 0);
+      assertThat(scaleX).isEqualTo(1.0f);
+      assertThat(scaleY).isEqualTo(1.0f);
       mExpectedMatrix.setTranslate(translateX, translateY);
     } else {
       createTransform(mExpectedMatrix, scaleX, scaleY, translateX, translateY);
