@@ -7,7 +7,7 @@
 
 package com.facebook.drawee.drawable;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import android.graphics.Color;
@@ -34,10 +34,11 @@ public class RoundedCornersDrawableTest {
 
   @Test
   public void testInitialSetup() {
-    assertEquals(RoundedCornersDrawable.Type.OVERLAY_COLOR, mRoundedCornersDrawable.mType);
-    assertFalse(mRoundedCornersDrawable.isCircle());
-    assertArrayEquals(new float[] {0, 0, 0, 0, 0, 0, 0, 0}, mRoundedCornersDrawable.getRadii(), 0);
-    assertEquals(0, mRoundedCornersDrawable.mPaint.getColor());
+    assertThat(mRoundedCornersDrawable.mType).isEqualTo(RoundedCornersDrawable.Type.OVERLAY_COLOR);
+    assertThat(mRoundedCornersDrawable.isCircle()).isFalse();
+    assertThat(mRoundedCornersDrawable.getRadii())
+        .containsExactly(new float[] {0, 0, 0, 0, 0, 0, 0, 0});
+    assertThat(mRoundedCornersDrawable.mPaint.getColor()).isEqualTo(0);
   }
 
   @Test
@@ -45,28 +46,30 @@ public class RoundedCornersDrawableTest {
     RoundedCornersDrawable.Type type = RoundedCornersDrawable.Type.CLIPPING;
     mRoundedCornersDrawable.setType(type);
     verify(mCallback).invalidateDrawable(mRoundedCornersDrawable);
-    assertEquals(type, mRoundedCornersDrawable.mType);
+    assertThat(mRoundedCornersDrawable.mType).isEqualTo(type);
   }
 
   @Test
   public void testSetCircle() {
     mRoundedCornersDrawable.setCircle(true);
     verify(mCallback).invalidateDrawable(mRoundedCornersDrawable);
-    assertTrue(mRoundedCornersDrawable.isCircle());
+    assertThat(mRoundedCornersDrawable.isCircle()).isTrue();
   }
 
   @Test
   public void testSetRadii() {
     mRoundedCornersDrawable.setRadii(new float[] {1, 2, 3, 4, 5, 6, 7, 8});
     verify(mCallback).invalidateDrawable(mRoundedCornersDrawable);
-    assertArrayEquals(new float[] {1, 2, 3, 4, 5, 6, 7, 8}, mRoundedCornersDrawable.getRadii(), 0);
+    assertThat(mRoundedCornersDrawable.getRadii())
+        .containsExactly(new float[] {1, 2, 3, 4, 5, 6, 7, 8});
   }
 
   @Test
   public void testSetRadius() {
     mRoundedCornersDrawable.setRadius(9);
     verify(mCallback).invalidateDrawable(mRoundedCornersDrawable);
-    assertArrayEquals(new float[] {9, 9, 9, 9, 9, 9, 9, 9}, mRoundedCornersDrawable.getRadii(), 0);
+    assertThat(mRoundedCornersDrawable.getRadii())
+        .containsExactly(new float[] {9, 9, 9, 9, 9, 9, 9, 9});
   }
 
   @Test
@@ -74,7 +77,7 @@ public class RoundedCornersDrawableTest {
     int overlayColor = 0xC0123456;
     mRoundedCornersDrawable.setOverlayColor(overlayColor);
     verify(mCallback).invalidateDrawable(mRoundedCornersDrawable);
-    assertEquals(overlayColor, mRoundedCornersDrawable.getOverlayColor());
+    assertThat(mRoundedCornersDrawable.getOverlayColor()).isEqualTo(overlayColor);
   }
 
   @Test
@@ -83,8 +86,8 @@ public class RoundedCornersDrawableTest {
     int borderColor = Color.CYAN;
     mRoundedCornersDrawable.setBorder(borderColor, borderWidth);
     verify(mCallback).invalidateDrawable(mRoundedCornersDrawable);
-    assertEquals(borderColor, mRoundedCornersDrawable.getBorderColor());
-    assertEquals(borderWidth, mRoundedCornersDrawable.getBorderWidth(), 0);
+    assertThat(mRoundedCornersDrawable.getBorderColor()).isEqualTo(borderColor);
+    assertThat(mRoundedCornersDrawable.getBorderWidth()).isEqualTo(borderWidth);
   }
 
   @Test
@@ -92,20 +95,20 @@ public class RoundedCornersDrawableTest {
     float padding = 10;
     mRoundedCornersDrawable.setPadding(padding);
     verify(mCallback).invalidateDrawable(mRoundedCornersDrawable);
-    assertEquals(padding, mRoundedCornersDrawable.getPadding(), 0);
+    assertThat(mRoundedCornersDrawable.getPadding()).isEqualTo(padding);
   }
 
   @Test
   public void testSetScaleDownInsideBorders() {
     mRoundedCornersDrawable.setScaleDownInsideBorders(true);
     verify(mCallback).invalidateDrawable(mRoundedCornersDrawable);
-    assertTrue(mRoundedCornersDrawable.getScaleDownInsideBorders());
+    assertThat(mRoundedCornersDrawable.getScaleDownInsideBorders()).isTrue();
   }
 
   @Test
   public void testSetPaintFilterBitmap() {
     mRoundedCornersDrawable.setPaintFilterBitmap(true);
     verify(mCallback).invalidateDrawable(mRoundedCornersDrawable);
-    assertTrue(mRoundedCornersDrawable.getPaintFilterBitmap());
+    assertThat(mRoundedCornersDrawable.getPaintFilterBitmap()).isTrue();
   }
 }
