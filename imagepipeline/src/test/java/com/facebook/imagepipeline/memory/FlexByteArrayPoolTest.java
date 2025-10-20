@@ -38,7 +38,7 @@ public class FlexByteArrayPoolTest {
         new FlexByteArrayPool(
             mock(MemoryTrimmableRegistry.class),
             new PoolParams(buckets, MIN_BUFFER_SIZE, MAX_BUFFER_SIZE, 1));
-    mDelegatePool = mPool.getMDelegatePool();
+    mDelegatePool = mPool.getDelegatePool();
   }
 
   @Test

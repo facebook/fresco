@@ -23,29 +23,29 @@ import javax.annotation.concurrent.ThreadSafe
  */
 @ThreadSafe
 class FlexByteArrayPool(memoryTrimmableRegistry: MemoryTrimmableRegistry?, params: PoolParams) {
-  private val mResourceReleaser: ResourceReleaser<ByteArray>
-  @VisibleForTesting val mDelegatePool: SoftRefByteArrayPool
+  private val resourceReleaser: ResourceReleaser<ByteArray>
+  @VisibleForTesting val delegatePool: SoftRefByteArrayPool
 
   init {
     Preconditions.checkArgument(params.maxNumThreads > 0)
-    mDelegatePool =
+    delegatePool =
         SoftRefByteArrayPool(memoryTrimmableRegistry, params, NoOpPoolStatsTracker.getInstance())
-    mResourceReleaser = ResourceReleaser { unused -> this@FlexByteArrayPool.release(unused) }
+    resourceReleaser = ResourceReleaser { unused -> this@FlexByteArrayPool.release(unused) }
   }
 
   operator fun get(size: Int): CloseableReference<ByteArray> {
-    return CloseableReference.of(mDelegatePool[size], mResourceReleaser)
+    return CloseableReference.of(delegatePool[size], resourceReleaser)
   }
 
   fun release(value: ByteArray) {
-    mDelegatePool.release(value)
+    delegatePool.release(value)
   }
 
   val stats: Map<String, Int>
-    get() = mDelegatePool.stats
+    get() = delegatePool.stats
 
   val minBufferSize: Int
-    get() = mDelegatePool.minBufferSize
+    get() = delegatePool.minBufferSize
 
   @VisibleForTesting
   class SoftRefByteArrayPool(
