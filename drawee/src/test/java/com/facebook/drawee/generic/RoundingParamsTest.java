@@ -7,7 +7,7 @@
 
 package com.facebook.drawee.generic;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import android.graphics.Color;
 import org.junit.Before;
@@ -27,47 +27,54 @@ public class RoundingParamsTest {
 
   @Test
   public void testDefaults() {
-    assertEquals(RoundingParams.RoundingMethod.BITMAP_ONLY, mRoundingParams.getRoundingMethod());
-    assertFalse(mRoundingParams.getRoundAsCircle());
-    assertNull(mRoundingParams.getCornersRadii());
-    assertEquals(0, mRoundingParams.getOverlayColor());
-    assertFalse(mRoundingParams.getScaleDownInsideBorders());
-    assertFalse(mRoundingParams.getPaintFilterBitmap());
+    assertThat(mRoundingParams.getRoundingMethod())
+        .isEqualTo(RoundingParams.RoundingMethod.BITMAP_ONLY);
+    assertThat(mRoundingParams.getRoundAsCircle()).isFalse();
+    assertThat(mRoundingParams.getCornersRadii()).isNull();
+    assertThat(mRoundingParams.getOverlayColor()).isEqualTo(0);
+    assertThat(mRoundingParams.getScaleDownInsideBorders()).isFalse();
+    assertThat(mRoundingParams.getPaintFilterBitmap()).isFalse();
   }
 
   @Test
   public void testSetCircle() {
-    assertSame(mRoundingParams, mRoundingParams.setRoundAsCircle(true));
-    assertTrue(mRoundingParams.getRoundAsCircle());
-    assertSame(mRoundingParams, mRoundingParams.setRoundAsCircle(false));
-    assertFalse(mRoundingParams.getRoundAsCircle());
+    assertThat(mRoundingParams.setRoundAsCircle(true)).isSameAs(mRoundingParams);
+    assertThat(mRoundingParams.getRoundAsCircle()).isTrue();
+    assertThat(mRoundingParams.setRoundAsCircle(false)).isSameAs(mRoundingParams);
+    assertThat(mRoundingParams.getRoundAsCircle()).isFalse();
   }
 
   @Test
   public void testSetRadii() {
     mRoundingParams.setCornersRadius(9);
-    assertArrayEquals(new float[] {9, 9, 9, 9, 9, 9, 9, 9}, mRoundingParams.getCornersRadii(), 0f);
+    assertThat(mRoundingParams.getCornersRadii())
+        .containsExactly(new float[] {9, 9, 9, 9, 9, 9, 9, 9});
 
     mRoundingParams.setCornersRadii(8, 7, 2, 1);
-    assertArrayEquals(new float[] {8, 8, 7, 7, 2, 2, 1, 1}, mRoundingParams.getCornersRadii(), 0f);
+    assertThat(mRoundingParams.getCornersRadii())
+        .containsExactly(new float[] {8, 8, 7, 7, 2, 2, 1, 1});
 
     mRoundingParams.setCornersRadii(new float[] {1, 2, 3, 4, 5, 6, 7, 8});
-    assertArrayEquals(new float[] {1, 2, 3, 4, 5, 6, 7, 8}, mRoundingParams.getCornersRadii(), 0f);
+    assertThat(mRoundingParams.getCornersRadii())
+        .containsExactly(new float[] {1, 2, 3, 4, 5, 6, 7, 8});
   }
 
   @Test
   public void testSetRoundingMethod() {
     mRoundingParams.setRoundingMethod(RoundingParams.RoundingMethod.OVERLAY_COLOR);
-    assertEquals(RoundingParams.RoundingMethod.OVERLAY_COLOR, mRoundingParams.getRoundingMethod());
+    assertThat(mRoundingParams.getRoundingMethod())
+        .isEqualTo(RoundingParams.RoundingMethod.OVERLAY_COLOR);
     mRoundingParams.setRoundingMethod(RoundingParams.RoundingMethod.BITMAP_ONLY);
-    assertEquals(RoundingParams.RoundingMethod.BITMAP_ONLY, mRoundingParams.getRoundingMethod());
+    assertThat(mRoundingParams.getRoundingMethod())
+        .isEqualTo(RoundingParams.RoundingMethod.BITMAP_ONLY);
   }
 
   @Test
   public void testSetOverlayColor() {
     mRoundingParams.setOverlayColor(0xC0123456);
-    assertEquals(0xC0123456, mRoundingParams.getOverlayColor());
-    assertEquals(RoundingParams.RoundingMethod.OVERLAY_COLOR, mRoundingParams.getRoundingMethod());
+    assertThat(mRoundingParams.getOverlayColor()).isEqualTo(0xC0123456);
+    assertThat(mRoundingParams.getRoundingMethod())
+        .isEqualTo(RoundingParams.RoundingMethod.OVERLAY_COLOR);
   }
 
   @Test
@@ -76,41 +83,41 @@ public class RoundingParamsTest {
     float borderWidth = 0.8f;
 
     mRoundingParams.setBorder(borderColor, borderWidth);
-    assertEquals(borderColor, mRoundingParams.getBorderColor());
-    assertEquals(borderWidth, mRoundingParams.getBorderWidth(), 0);
+    assertThat(mRoundingParams.getBorderColor()).isEqualTo(borderColor);
+    assertThat(mRoundingParams.getBorderWidth()).isEqualTo(borderWidth);
   }
 
   @Test
   public void testSetScaleDownInsideBorders() {
-    assertSame(mRoundingParams, mRoundingParams.setScaleDownInsideBorders(true));
-    assertTrue(mRoundingParams.getScaleDownInsideBorders());
-    assertSame(mRoundingParams, mRoundingParams.setScaleDownInsideBorders(false));
-    assertFalse(mRoundingParams.getScaleDownInsideBorders());
+    assertThat(mRoundingParams.setScaleDownInsideBorders(true)).isSameAs(mRoundingParams);
+    assertThat(mRoundingParams.getScaleDownInsideBorders()).isTrue();
+    assertThat(mRoundingParams.setScaleDownInsideBorders(false)).isSameAs(mRoundingParams);
+    assertThat(mRoundingParams.getScaleDownInsideBorders()).isFalse();
   }
 
   @Test
   public void testSetPaintFilterBitmap() {
-    assertSame(mRoundingParams, mRoundingParams.setPaintFilterBitmap(true));
-    assertTrue(mRoundingParams.getPaintFilterBitmap());
-    assertSame(mRoundingParams, mRoundingParams.setPaintFilterBitmap(false));
-    assertFalse(mRoundingParams.getPaintFilterBitmap());
+    assertThat(mRoundingParams.setPaintFilterBitmap(true)).isSameAs(mRoundingParams);
+    assertThat(mRoundingParams.getPaintFilterBitmap()).isTrue();
+    assertThat(mRoundingParams.setPaintFilterBitmap(false)).isSameAs(mRoundingParams);
+    assertThat(mRoundingParams.getPaintFilterBitmap()).isFalse();
   }
 
   @Test
   public void testFactoryMethods() {
     RoundingParams params1 = RoundingParams.asCircle();
-    assertTrue(params1.getRoundAsCircle());
+    assertThat(params1.getRoundAsCircle()).isTrue();
 
     RoundingParams params2 = RoundingParams.fromCornersRadius(9);
-    assertFalse(params2.getRoundAsCircle());
-    assertArrayEquals(new float[] {9, 9, 9, 9, 9, 9, 9, 9}, params2.getCornersRadii(), 0f);
+    assertThat(params2.getRoundAsCircle()).isFalse();
+    assertThat(params2.getCornersRadii()).containsExactly(new float[] {9, 9, 9, 9, 9, 9, 9, 9});
 
     RoundingParams params3 = RoundingParams.fromCornersRadii(8, 7, 2, 1);
-    assertFalse(params3.getRoundAsCircle());
-    assertArrayEquals(new float[] {8, 8, 7, 7, 2, 2, 1, 1}, params3.getCornersRadii(), 0f);
+    assertThat(params3.getRoundAsCircle()).isFalse();
+    assertThat(params3.getCornersRadii()).containsExactly(new float[] {8, 8, 7, 7, 2, 2, 1, 1});
 
     RoundingParams params4 = RoundingParams.fromCornersRadii(new float[] {1, 2, 3, 4, 5, 6, 7, 8});
-    assertFalse(params4.getRoundAsCircle());
-    assertArrayEquals(new float[] {1, 2, 3, 4, 5, 6, 7, 8}, params4.getCornersRadii(), 0f);
+    assertThat(params4.getRoundAsCircle()).isFalse();
+    assertThat(params4.getCornersRadii()).containsExactly(new float[] {1, 2, 3, 4, 5, 6, 7, 8});
   }
 }
