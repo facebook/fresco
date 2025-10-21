@@ -7,7 +7,7 @@
 
 package com.facebook.datasource;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import com.facebook.common.executors.CallerThreadExecutor;
@@ -67,12 +67,12 @@ public class DataSourceTestUtils {
       T result,
       boolean hasFailed,
       Throwable failureCause) {
-    assertEquals("isClosed", isClosed, dataSource.isClosed());
-    assertEquals("isFinished", isFinished, dataSource.isFinished());
-    assertEquals("hasResult", hasResult, dataSource.hasResult());
-    assertSame("getResult", result, dataSource.getResult());
-    assertEquals("hasFailed", hasFailed, dataSource.hasFailed());
-    assertSame("failureCause", failureCause, dataSource.getFailureCause());
+    assertThat(dataSource.isClosed()).as("isClosed").isEqualTo(isClosed);
+    assertThat(dataSource.isFinished()).as("isFinished").isEqualTo(isFinished);
+    assertThat(dataSource.hasResult()).as("hasResult").isEqualTo(hasResult);
+    assertThat(dataSource.getResult()).as("getResult").isSameAs(result);
+    assertThat(dataSource.hasFailed()).as("hasFailed").isEqualTo(hasFailed);
+    assertThat(dataSource.getFailureCause()).as("failureCause").isSameAs(failureCause);
   }
 
   public static class AbstractDataSourceSupplier {
