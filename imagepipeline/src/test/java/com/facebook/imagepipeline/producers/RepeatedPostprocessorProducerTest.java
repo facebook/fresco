@@ -7,7 +7,7 @@
 
 package com.facebook.imagepipeline.producers;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -119,7 +119,7 @@ public class RepeatedPostprocessorProducerTest {
     mTestExecutorService.runUntilIdle();
 
     mInOrder.verifyNoMoreInteractions();
-    assertEquals(0, mResults.size());
+    assertThat(mResults.size()).isEqualTo(0);
     verify(mSourceCloseableStaticBitmap).close();
 
     // final result should be post-processed
@@ -346,10 +346,10 @@ public class RepeatedPostprocessorProducerTest {
     mInOrder.verify(mConsumer).onNewResult(any(CloseableReference.class), eq(Consumer.NO_FLAGS));
     mInOrder.verifyNoMoreInteractions();
 
-    assertEquals(index + 1, mResults.size());
+    assertThat(mResults.size()).isEqualTo(index + 1);
     CloseableReference<CloseableImage> res0 = mResults.get(index);
-    assertTrue(CloseableReference.isValid(res0));
-    assertSame(destBitmap, ((CloseableStaticBitmap) res0.get()).getUnderlyingBitmap());
+    assertThat(CloseableReference.isValid(res0)).isTrue();
+    assertThat(((CloseableStaticBitmap) res0.get()).getUnderlyingBitmap()).isSameAs(destBitmap);
     res0.close();
     verify(mBitmapResourceReleaser).release(destBitmap);
   }
