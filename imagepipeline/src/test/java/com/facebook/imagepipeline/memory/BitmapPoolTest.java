@@ -7,9 +7,7 @@
 
 package com.facebook.imagepipeline.memory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
@@ -76,8 +74,8 @@ public class BitmapPoolTest {
   // tests out the getBucketedSize method
   @Test
   public void testGetBucketedSize() throws Exception {
-    assertEquals(12, (int) mPool.getBucketedSize(12));
-    assertEquals(56, (int) mPool.getBucketedSize(56));
+    assertThat((int) mPool.getBucketedSize(12)).isEqualTo(12);
+    assertThat((int) mPool.getBucketedSize(56)).isEqualTo(56);
   }
 
   // tests out the getBucketedSizeForValue method
@@ -87,32 +85,32 @@ public class BitmapPoolTest {
     Bitmap bitmap2 = mPool.alloc(56);
     Bitmap bitmap3 = MockBitmapFactory.create(7, 8, Config.RGB_565);
     Bitmap bitmap4 = MockBitmapFactory.create(7, 8, Config.ARGB_8888);
-    assertEquals(12, (int) mPool.getBucketedSizeForValue(bitmap1));
-    assertEquals(56, (int) mPool.getBucketedSizeForValue(bitmap2));
-    assertEquals(112, (int) mPool.getBucketedSizeForValue(bitmap3));
-    assertEquals(224, (int) mPool.getBucketedSizeForValue(bitmap4));
+    assertThat((int) mPool.getBucketedSizeForValue(bitmap1)).isEqualTo(12);
+    assertThat((int) mPool.getBucketedSizeForValue(bitmap2)).isEqualTo(56);
+    assertThat((int) mPool.getBucketedSizeForValue(bitmap3)).isEqualTo(112);
+    assertThat((int) mPool.getBucketedSizeForValue(bitmap4)).isEqualTo(224);
   }
 
   @Test
   public void testGetSizeInBytes() throws Exception {
-    assertEquals(48, mPool.getSizeInBytes(48));
-    assertEquals(224, mPool.getSizeInBytes(224));
+    assertThat(mPool.getSizeInBytes(48)).isEqualTo(48);
+    assertThat(mPool.getSizeInBytes(224)).isEqualTo(224);
   }
 
   // Test out bitmap reusability
   @Test
   public void testIsReusable() throws Exception {
     Bitmap b1 = mPool.alloc(12);
-    assertTrue(mPool.isReusable(b1));
+    assertThat(mPool.isReusable(b1)).isTrue();
     Bitmap b2 = MockBitmapFactory.create(3, 4, Bitmap.Config.ARGB_8888);
-    assertTrue(mPool.isReusable(b2));
+    assertThat(mPool.isReusable(b2)).isTrue();
     Bitmap b3 = MockBitmapFactory.create(3, 4, Config.ARGB_4444);
-    assertTrue(mPool.isReusable(b3));
+    assertThat(mPool.isReusable(b3)).isTrue();
     Bitmap b4 = MockBitmapFactory.create(3, 4, Bitmap.Config.ARGB_8888);
     doReturn(true).when(b4).isRecycled();
-    assertFalse(mPool.isReusable(b4));
+    assertThat(mPool.isReusable(b4)).isFalse();
     Bitmap b5 = MockBitmapFactory.create(3, 4, Bitmap.Config.ARGB_8888);
     doReturn(false).when(b5).isMutable();
-    assertFalse(mPool.isReusable(b5));
+    assertThat(mPool.isReusable(b5)).isFalse();
   }
 }
