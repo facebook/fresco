@@ -7,7 +7,7 @@
 
 package com.facebook.imagepipeline.producers;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import com.facebook.common.executors.CallerThreadExecutor;
@@ -69,26 +69,26 @@ public class ThrottlingProducerTest {
   public void testThrottling() {
     // First two requests are passed on immediately
     mThrottlingProducer.produceResults(mConsumers[0], mProducerContexts[0]);
-    assertNotNull(mThrottlerConsumers[0]);
+    assertThat(mThrottlerConsumers[0]).isNotNull();
     verify(mProducerListeners[0]).onProducerStart(mProducerContexts[0], PRODUCER_NAME);
     verify(mProducerListeners[0])
         .onProducerFinishWithSuccess(mProducerContexts[0], PRODUCER_NAME, null);
 
     mThrottlingProducer.produceResults(mConsumers[1], mProducerContexts[1]);
-    assertNotNull(mThrottlerConsumers[1]);
+    assertThat(mThrottlerConsumers[1]).isNotNull();
     verify(mProducerListeners[1]).onProducerStart(mProducerContexts[1], PRODUCER_NAME);
     verify(mProducerListeners[1])
         .onProducerFinishWithSuccess(mProducerContexts[1], PRODUCER_NAME, null);
 
     // Third and fourth requests are queued up
     mThrottlingProducer.produceResults(mConsumers[2], mProducerContexts[2]);
-    assertNull(mThrottlerConsumers[2]);
+    assertThat(mThrottlerConsumers[2]).isNull();
     verify(mProducerListeners[2]).onProducerStart(mProducerContexts[2], PRODUCER_NAME);
     verify(mProducerListeners[2], never())
         .onProducerFinishWithSuccess(mProducerContexts[2], PRODUCER_NAME, null);
 
     mThrottlingProducer.produceResults(mConsumers[3], mProducerContexts[3]);
-    assertNull(mThrottlerConsumers[3]);
+    assertThat(mThrottlerConsumers[3]).isNull();
     verify(mProducerListeners[3]).onProducerStart(mProducerContexts[3], PRODUCER_NAME);
     verify(mProducerListeners[3], never())
         .onProducerFinishWithSuccess(mProducerContexts[3], PRODUCER_NAME, null);
@@ -96,16 +96,16 @@ public class ThrottlingProducerTest {
     // First request fails, third request is kicked off, fourth request remains in queue
     mThrottlerConsumers[0].onFailure(mException);
     verify(mConsumers[0]).onFailure(mException);
-    assertNotNull(mThrottlerConsumers[2]);
+    assertThat(mThrottlerConsumers[2]).isNotNull();
     verify(mProducerListeners[2])
         .onProducerFinishWithSuccess(mProducerContexts[2], PRODUCER_NAME, null);
-    assertNull(mThrottlerConsumers[3]);
+    assertThat(mThrottlerConsumers[3]).isNull();
     verify(mProducerListeners[3], never())
         .onProducerFinishWithSuccess(mProducerContexts[3], PRODUCER_NAME, null);
 
     // Fifth request is queued up
     mThrottlingProducer.produceResults(mConsumers[4], mProducerContexts[4]);
-    assertNull(mThrottlerConsumers[4]);
+    assertThat(mThrottlerConsumers[4]).isNull();
     verify(mProducerListeners[4]).onProducerStart(mProducerContexts[4], PRODUCER_NAME);
     verify(mProducerListeners[4], never())
         .onProducerFinishWithSuccess(mProducerContexts[4], PRODUCER_NAME, null);
@@ -114,21 +114,21 @@ public class ThrottlingProducerTest {
     Object intermediateResult = mock(Object.class);
     mThrottlerConsumers[1].onNewResult(intermediateResult, Consumer.NO_FLAGS);
     verify(mConsumers[1]).onNewResult(intermediateResult, Consumer.NO_FLAGS);
-    assertNull(mThrottlerConsumers[3]);
-    assertNull(mThrottlerConsumers[4]);
+    assertThat(mThrottlerConsumers[3]).isNull();
+    assertThat(mThrottlerConsumers[4]).isNull();
 
     // Third request finishes, fourth request is kicked off
     mThrottlerConsumers[2].onNewResult(mResults[2], Consumer.IS_LAST);
     verify(mConsumers[2]).onNewResult(mResults[2], Consumer.IS_LAST);
-    assertNotNull(mThrottlerConsumers[3]);
+    assertThat(mThrottlerConsumers[3]).isNotNull();
     verify(mProducerListeners[3])
         .onProducerFinishWithSuccess(mProducerContexts[3], PRODUCER_NAME, null);
-    assertNull(mThrottlerConsumers[4]);
+    assertThat(mThrottlerConsumers[4]).isNull();
 
     // Second request is cancelled, fifth request is kicked off
     mThrottlerConsumers[1].onCancellation();
     verify(mConsumers[1]).onCancellation();
-    assertNotNull(mThrottlerConsumers[4]);
+    assertThat(mThrottlerConsumers[4]).isNotNull();
     verify(mProducerListeners[4])
         .onProducerFinishWithSuccess(mProducerContexts[4], PRODUCER_NAME, null);
 
@@ -141,13 +141,13 @@ public class ThrottlingProducerTest {
   public void testNoThrottlingAfterRequestsFinish() {
     // First two requests are passed on immediately
     mThrottlingProducer.produceResults(mConsumers[0], mProducerContexts[0]);
-    assertNotNull(mThrottlerConsumers[0]);
+    assertThat(mThrottlerConsumers[0]).isNotNull();
     verify(mProducerListeners[0]).onProducerStart(mProducerContexts[0], PRODUCER_NAME);
     verify(mProducerListeners[0])
         .onProducerFinishWithSuccess(mProducerContexts[0], PRODUCER_NAME, null);
 
     mThrottlingProducer.produceResults(mConsumers[1], mProducerContexts[1]);
-    assertNotNull(mThrottlerConsumers[1]);
+    assertThat(mThrottlerConsumers[1]).isNotNull();
     verify(mProducerListeners[1]).onProducerStart(mProducerContexts[1], PRODUCER_NAME);
     verify(mProducerListeners[1])
         .onProducerFinishWithSuccess(mProducerContexts[1], PRODUCER_NAME, null);
@@ -158,13 +158,13 @@ public class ThrottlingProducerTest {
 
     // Next two requests are passed on immediately
     mThrottlingProducer.produceResults(mConsumers[2], mProducerContexts[2]);
-    assertNotNull(mThrottlerConsumers[2]);
+    assertThat(mThrottlerConsumers[2]).isNotNull();
     verify(mProducerListeners[2]).onProducerStart(mProducerContexts[2], PRODUCER_NAME);
     verify(mProducerListeners[2])
         .onProducerFinishWithSuccess(mProducerContexts[2], PRODUCER_NAME, null);
 
     mThrottlingProducer.produceResults(mConsumers[3], mProducerContexts[3]);
-    assertNotNull(mThrottlerConsumers[3]);
+    assertThat(mThrottlerConsumers[3]).isNotNull();
     verify(mProducerListeners[3]).onProducerStart(mProducerContexts[3], PRODUCER_NAME);
     verify(mProducerListeners[3])
         .onProducerFinishWithSuccess(mProducerContexts[3], PRODUCER_NAME, null);
