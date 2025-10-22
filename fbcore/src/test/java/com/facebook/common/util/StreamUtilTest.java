@@ -7,7 +7,7 @@
 
 package com.facebook.common.util;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import com.facebook.common.internal.Closeables;
@@ -18,7 +18,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -35,7 +34,7 @@ public class StreamUtilTest {
     InputStream input = new ByteArrayInputStream(bytes);
     try {
       byte[] bytesRead = StreamUtil.getBytesFromStream(input);
-      assertTrue(Arrays.equals(bytes, bytesRead));
+      assertThat(bytesRead).isEqualTo(bytes);
     } finally {
       Closeables.close(input, true);
     }
@@ -49,7 +48,7 @@ public class StreamUtilTest {
     try {
       byte[] bytesRead = StreamUtil.getBytesFromStream(input);
       byte[] expectedBytes = new byte[] {1, 2, 3, 4};
-      assertTrue(Arrays.equals(expectedBytes, bytesRead));
+      assertThat(bytesRead).isEqualTo(expectedBytes);
     } finally {
       Closeables.close(input, true);
     }
@@ -66,7 +65,7 @@ public class StreamUtilTest {
   public void testSuccessfulSkip() throws Exception {
     InputStream inputStream = mock(InputStream.class);
     when(inputStream.skip(anyLong())).thenReturn(2L);
-    assertEquals(10, StreamUtil.skip(inputStream, 10));
+    assertThat(StreamUtil.skip(inputStream, 10)).isEqualTo(10);
     InOrder order = inOrder(inputStream);
     order.verify(inputStream).skip(10);
     order.verify(inputStream).skip(8);
@@ -81,7 +80,7 @@ public class StreamUtilTest {
     InputStream inputStream = mock(InputStream.class);
     when(inputStream.skip(anyLong())).thenReturn(3L, 5L, 0L, 6L, 0L);
     when(inputStream.read()).thenReturn(3, -1);
-    assertEquals(15, StreamUtil.skip(inputStream, 20));
+    assertThat(StreamUtil.skip(inputStream, 20)).isEqualTo(15);
     InOrder order = inOrder(inputStream);
     order.verify(inputStream).skip(20);
     order.verify(inputStream).skip(17);
@@ -109,11 +108,11 @@ public class StreamUtilTest {
 
       input = new FileInputStream(tmpFile);
       byte[] bytesRead = StreamUtil.getBytesFromStream(input);
-      assertTrue(Arrays.equals(bytesToWrite, bytesRead));
+      assertThat(bytesRead).isEqualTo(bytesToWrite);
     } finally {
       Closeables.close(input, true);
       Closeables.close(output, false);
-      assertTrue(tmpFile.delete());
+      assertThat(tmpFile.delete()).isTrue();
     }
   }
 }
