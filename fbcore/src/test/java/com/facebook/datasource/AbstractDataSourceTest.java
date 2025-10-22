@@ -8,7 +8,7 @@
 package com.facebook.datasource;
 
 import static com.facebook.datasource.DataSourceTestUtils.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -68,7 +68,7 @@ public class AbstractDataSourceTest {
     ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
     verify(executor).execute(captor.capture());
     Runnable runnable = captor.getValue();
-    assertNotNull(runnable);
+    assertThat(runnable).isNotNull();
     runnable.run();
   }
 
