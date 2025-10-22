@@ -7,7 +7,6 @@
 package com.facebook.imagepipeline.memory
 
 import android.graphics.Bitmap
-import android.os.Build
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -91,9 +90,7 @@ class BitmapCounterTest {
       Mockito.doReturn(1).`when`(bitmap).getHeight()
       Mockito.doReturn(size).`when`(bitmap).getRowBytes()
       Mockito.doReturn(size).`when`(bitmap).getByteCount()
-      if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-        Mockito.doReturn(size).`when`(bitmap).getAllocationByteCount()
-      }
+      Mockito.doReturn(size).`when`(bitmap).getAllocationByteCount()
       return bitmap
     }
   }
