@@ -8,6 +8,7 @@
 package com.facebook.drawee.drawable;
 
 import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -20,7 +21,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import javax.annotation.Nullable;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,22 +44,22 @@ public class ScaleTypeDrawableTest {
   public void testIntrinsicDimensions() {
     when(mUnderlyingDrawable.getIntrinsicWidth()).thenReturn(100);
     when(mUnderlyingDrawable.getIntrinsicHeight()).thenReturn(200);
-    Assert.assertEquals(100, mScaleTypeDrawable.getIntrinsicWidth());
-    Assert.assertEquals(200, mScaleTypeDrawable.getIntrinsicHeight());
+    assertThat(mScaleTypeDrawable.getIntrinsicWidth()).isEqualTo(100);
+    assertThat(mScaleTypeDrawable.getIntrinsicHeight()).isEqualTo(200);
   }
 
   @Test
   public void testBasics() {
     // initial state
-    Assert.assertEquals(mUnderlyingDrawable, mScaleTypeDrawable.getCurrent());
-    Assert.assertEquals(ScaleType.CENTER, mScaleTypeDrawable.getScaleType());
-    Assert.assertEquals(null, mScaleTypeDrawable.getFocusPoint());
+    assertThat(mScaleTypeDrawable.getCurrent()).isEqualTo(mUnderlyingDrawable);
+    assertThat(mScaleTypeDrawable.getScaleType()).isEqualTo(ScaleType.CENTER);
+    assertThat(mScaleTypeDrawable.getFocusPoint()).isNull();
 
     mScaleTypeDrawable.setScaleType(ScaleType.FIT_XY);
-    Assert.assertEquals(ScaleType.FIT_XY, mScaleTypeDrawable.getScaleType());
+    assertThat(mScaleTypeDrawable.getScaleType()).isEqualTo(ScaleType.FIT_XY);
 
     mScaleTypeDrawable.setScaleType(ScaleType.FOCUS_CROP);
-    Assert.assertEquals(ScaleType.FOCUS_CROP, mScaleTypeDrawable.getScaleType());
+    assertThat(mScaleTypeDrawable.getScaleType()).isEqualTo(ScaleType.FOCUS_CROP);
 
     mScaleTypeDrawable.setFocusPoint(mFocusPoint);
     AndroidGraphicsTestUtils.assertEquals(mFocusPoint, mScaleTypeDrawable.getFocusPoint(), 0f);
@@ -87,7 +87,7 @@ public class ScaleTypeDrawableTest {
     verify(mUnderlyingDrawable).getIntrinsicWidth();
     verify(mUnderlyingDrawable).getIntrinsicHeight();
     verify(mUnderlyingDrawable).setBounds(viewBounds);
-    Assert.assertEquals(null, mScaleTypeDrawable.mDrawMatrix);
+    assertThat(mScaleTypeDrawable.mDrawMatrix).isNull();
     verifyNoMoreInteractions(mUnderlyingDrawable);
   }
 
@@ -113,7 +113,7 @@ public class ScaleTypeDrawableTest {
     verify(mUnderlyingDrawable).getIntrinsicWidth();
     verify(mUnderlyingDrawable).getIntrinsicHeight();
     verify(mUnderlyingDrawable).setBounds(viewBounds);
-    Assert.assertEquals(null, mScaleTypeDrawable.mDrawMatrix);
+    assertThat(mScaleTypeDrawable.mDrawMatrix).isNull();
     verifyNoMoreInteractions(mUnderlyingDrawable);
   }
 
@@ -128,7 +128,7 @@ public class ScaleTypeDrawableTest {
     verify(mUnderlyingDrawable).getIntrinsicWidth();
     verify(mUnderlyingDrawable).getIntrinsicHeight();
     verify(mUnderlyingDrawable).setBounds(mViewBounds);
-    Assert.assertEquals(null, mScaleTypeDrawable.mDrawMatrix);
+    assertThat(mScaleTypeDrawable.mDrawMatrix).isNull();
     verifyNoMoreInteractions(mUnderlyingDrawable);
   }
 
