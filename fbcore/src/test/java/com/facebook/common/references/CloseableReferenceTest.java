@@ -7,9 +7,10 @@
 
 package com.facebook.common.references;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.Closeable;
 import java.io.IOException;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,35 +32,34 @@ public class CloseableReferenceTest {
 
   @Test
   public void testCreation() {
-    Assert.assertEquals(
-        1, mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertThat(mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly())
+        .isEqualTo(1);
   }
 
   @Test
   public void testClone() {
     CloseableReference<Closeable> copy = mCloseableReference.clone();
-    Assert.assertEquals(
-        2, mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
-    Assert.assertSame(
-        mCloseableReference.getUnderlyingReferenceTestOnly(),
-        copy.getUnderlyingReferenceTestOnly());
+    assertThat(mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly())
+        .isEqualTo(2);
+    assertThat(copy.getUnderlyingReferenceTestOnly())
+        .isSameAs(mCloseableReference.getUnderlyingReferenceTestOnly());
   }
 
   @Test
   public void testCloseReference() {
     CloseableReference<Closeable> copy = mCloseableReference.clone();
-    Assert.assertEquals(
-        2, mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertThat(mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly())
+        .isEqualTo(2);
     copy.close();
-    Assert.assertEquals(
-        1, mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertThat(mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly())
+        .isEqualTo(1);
   }
 
   @Test
   public void testCloseWhenRefcount0() throws IOException {
     mCloseableReference.close();
-    Assert.assertEquals(
-        0, mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertThat(mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly())
+        .isEqualTo(0);
     Mockito.verify(mMockCloseable).close();
   }
 }
