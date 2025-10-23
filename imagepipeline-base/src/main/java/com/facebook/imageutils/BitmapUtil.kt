@@ -48,14 +48,11 @@ object BitmapUtil {
     }
 
     // There's a known issue in KitKat where getAllocationByteCount() can throw an NPE. This was
-    // apparently fixed in MR1: http://bit.ly/1IvdRpd. So we do a version check here, and
-    // catch any potential NPEs just to be safe.
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-      try {
-        return bitmap.allocationByteCount
-      } catch (npe: NullPointerException) {
-        // Swallow exception and try fallbacks.
-      }
+    // apparently fixed in MR1: http://bit.ly/1IvdRpd. We catch any potential NPEs just to be safe.
+    try {
+      return bitmap.allocationByteCount
+    } catch (npe: NullPointerException) {
+      // Swallow exception and try fallbacks.
     }
     return bitmap.byteCount
   }
