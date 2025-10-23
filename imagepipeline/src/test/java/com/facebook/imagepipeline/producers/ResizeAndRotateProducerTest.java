@@ -8,8 +8,8 @@
 package com.facebook.imagepipeline.producers;
 
 import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.DEFAULT_JPEG_QUALITY;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.Offset.offset;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyInt;
@@ -270,8 +270,8 @@ public class ResizeAndRotateProducerTest {
         DefaultImageFormats.JPEG, sourceWidth, sourceHeight, rotationAngle, exifOrientation);
     verifyAFinalResultPassedThroughNotResized();
 
-    assertEquals(2, mFinalResult.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
-    assertTrue(mPooledByteBuffer.isClosed());
+    assertThat(mFinalResult.getUnderlyingReferenceTestOnly().getRefCountTestOnly()).isEqualTo(2);
+    assertThat(mPooledByteBuffer.isClosed()).isTrue();
 
     verifyJpegTranscoderInteractions(8, rotationAngle);
   }
@@ -312,7 +312,7 @@ public class ResizeAndRotateProducerTest {
   private void assertAngleOnNewResult(int expectedRotationAngle) {
     ArgumentCaptor<EncodedImage> captor = ArgumentCaptor.forClass(EncodedImage.class);
     verify(mConsumer).onNewResult(captor.capture(), eq(Consumer.IS_LAST));
-    assertEquals(expectedRotationAngle, captor.getValue().getRotationAngle());
+    assertThat(captor.getValue().getRotationAngle()).isEqualTo(expectedRotationAngle);
   }
 
   @Test
@@ -402,8 +402,8 @@ public class ResizeAndRotateProducerTest {
         ExifInterface.ORIENTATION_NORMAL);
     verifyAFinalResultPassedThroughResized();
 
-    assertEquals(2, mFinalResult.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
-    assertTrue(mPooledByteBuffer.isClosed());
+    assertThat(mFinalResult.getUnderlyingReferenceTestOnly().getRefCountTestOnly()).isEqualTo(2);
+    assertThat(mPooledByteBuffer.isClosed()).isTrue();
 
     verifyJpegTranscoderInteractions(4, 0);
   }
@@ -565,38 +565,43 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testRoundNumerator() {
-    assertEquals(
-        1, JpegTranscoderUtils.roundNumerator(1.0f / 8, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
-    assertEquals(
-        1, JpegTranscoderUtils.roundNumerator(5.0f / 32, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
-    assertEquals(
-        1,
-        JpegTranscoderUtils.roundNumerator(
-            1.0f / 6 - 0.01f, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
-    assertEquals(
-        2, JpegTranscoderUtils.roundNumerator(1.0f / 6, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
-    assertEquals(
-        2, JpegTranscoderUtils.roundNumerator(3.0f / 16, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
-    assertEquals(
-        2, JpegTranscoderUtils.roundNumerator(2.0f / 8, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
+    assertThat(JpegTranscoderUtils.roundNumerator(1.0f / 8, ResizeOptions.DEFAULT_ROUNDUP_FRACTION))
+        .isEqualTo(1);
+    assertThat(
+            JpegTranscoderUtils.roundNumerator(5.0f / 32, ResizeOptions.DEFAULT_ROUNDUP_FRACTION))
+        .isEqualTo(1);
+    assertThat(
+            JpegTranscoderUtils.roundNumerator(
+                1.0f / 6 - 0.01f, ResizeOptions.DEFAULT_ROUNDUP_FRACTION))
+        .isEqualTo(1);
+    assertThat(JpegTranscoderUtils.roundNumerator(1.0f / 6, ResizeOptions.DEFAULT_ROUNDUP_FRACTION))
+        .isEqualTo(2);
+    assertThat(
+            JpegTranscoderUtils.roundNumerator(3.0f / 16, ResizeOptions.DEFAULT_ROUNDUP_FRACTION))
+        .isEqualTo(2);
+    assertThat(JpegTranscoderUtils.roundNumerator(2.0f / 8, ResizeOptions.DEFAULT_ROUNDUP_FRACTION))
+        .isEqualTo(2);
   }
 
   @Test
   public void testDownsamplingRatioUsage() {
-    assertEquals(8, JpegTranscoderUtils.calculateDownsampleNumerator(1));
-    assertEquals(4, JpegTranscoderUtils.calculateDownsampleNumerator(2));
-    assertEquals(2, JpegTranscoderUtils.calculateDownsampleNumerator(4));
-    assertEquals(1, JpegTranscoderUtils.calculateDownsampleNumerator(8));
-    assertEquals(1, JpegTranscoderUtils.calculateDownsampleNumerator(16));
-    assertEquals(1, JpegTranscoderUtils.calculateDownsampleNumerator(32));
+    assertThat(JpegTranscoderUtils.calculateDownsampleNumerator(1)).isEqualTo(8);
+    assertThat(JpegTranscoderUtils.calculateDownsampleNumerator(2)).isEqualTo(4);
+    assertThat(JpegTranscoderUtils.calculateDownsampleNumerator(4)).isEqualTo(2);
+    assertThat(JpegTranscoderUtils.calculateDownsampleNumerator(8)).isEqualTo(1);
+    assertThat(JpegTranscoderUtils.calculateDownsampleNumerator(16)).isEqualTo(1);
+    assertThat(JpegTranscoderUtils.calculateDownsampleNumerator(32)).isEqualTo(1);
   }
 
   @Test
   public void testResizeRatio() {
     ResizeOptions resizeOptions = new ResizeOptions(512, 512);
-    assertEquals(0.5f, JpegTranscoderUtils.determineResizeRatio(resizeOptions, 1024, 1024), 0.01);
-    assertEquals(0.25f, JpegTranscoderUtils.determineResizeRatio(resizeOptions, 2048, 4096), 0.01);
-    assertEquals(0.5f, JpegTranscoderUtils.determineResizeRatio(resizeOptions, 4096, 512), 0.01);
+    assertThat(JpegTranscoderUtils.determineResizeRatio(resizeOptions, 1024, 1024))
+        .isCloseTo(0.5f, offset(0.01f));
+    assertThat(JpegTranscoderUtils.determineResizeRatio(resizeOptions, 2048, 4096))
+        .isCloseTo(0.25f, offset(0.01f));
+    assertThat(JpegTranscoderUtils.determineResizeRatio(resizeOptions, 4096, 512))
+        .isCloseTo(0.5f, offset(0.01f));
   }
 
   private void verifyIntermediateResultPassedThroughUnchanged() {
