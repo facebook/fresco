@@ -7,7 +7,7 @@
 
 package com.facebook.drawee.view;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import android.app.Activity;
@@ -52,27 +52,27 @@ public class DraweeViewTest {
     mController.setContentDescription(CONTENT_DESCRIPTION);
     mDraweeView.setController(mController);
     mDraweeView.setContentDescription(mController.getContentDescription());
-    assertSame(mDraweeView.getContentDescription(), CONTENT_DESCRIPTION);
+    assertThat(mDraweeView.getContentDescription()).isSameAs(CONTENT_DESCRIPTION);
   }
 
   @Test
   public void testSetHierarchy() {
     mDraweeView.setHierarchy(mDraweeHierarchy);
-    assertSame(mDraweeHierarchy, mDraweeView.getHierarchy());
-    assertSame(mTopLevelDrawable, mDraweeView.getDrawable());
+    assertThat(mDraweeView.getHierarchy()).isSameAs(mDraweeHierarchy);
+    assertThat(mDraweeView.getDrawable()).isSameAs(mTopLevelDrawable);
 
     DraweeHierarchy hierarchy2 = DraweeMocks.mockDraweeHierarchy();
     mDraweeView.setHierarchy(hierarchy2);
-    assertSame(hierarchy2, mDraweeView.getHierarchy());
-    assertSame(hierarchy2.getTopLevelDrawable(), mDraweeView.getDrawable());
+    assertThat(mDraweeView.getHierarchy()).isSameAs(hierarchy2);
+    assertThat(mDraweeView.getDrawable()).isSameAs(hierarchy2.getTopLevelDrawable());
   }
 
   @Test
   public void testSetController() {
     mDraweeView.setHierarchy(mDraweeHierarchy);
     mDraweeView.setController(mController);
-    assertSame(mController, mDraweeView.getController());
-    assertSame(mTopLevelDrawable, mDraweeView.getDrawable());
+    assertThat(mDraweeView.getController()).isSameAs(mController);
+    assertThat(mDraweeView.getDrawable()).isSameAs(mTopLevelDrawable);
     verify(mController).setHierarchy(mDraweeHierarchy);
   }
 
@@ -81,8 +81,8 @@ public class DraweeViewTest {
     mDraweeView.setHierarchy(mDraweeHierarchy);
     mDraweeView.setController(mController);
     mDraweeView.resetActualImage();
-    assertNull(mDraweeView.getController());
-    assertSame(mTopLevelDrawable, mDraweeView.getDrawable());
+    assertThat(mDraweeView.getController()).isNull();
+    assertThat(mDraweeView.getDrawable()).isSameAs(mTopLevelDrawable);
     verify(mController).setHierarchy(null);
   }
 
@@ -92,8 +92,8 @@ public class DraweeViewTest {
     mDraweeView.setController(mController);
     DraweeController controller2 = DraweeMocks.mockController();
     mDraweeView.setController(controller2);
-    assertSame(controller2, mDraweeView.getController());
-    assertSame(mTopLevelDrawable, mDraweeView.getDrawable());
+    assertThat(mDraweeView.getController()).isSameAs(controller2);
+    assertThat(mDraweeView.getDrawable()).isSameAs(mTopLevelDrawable);
     verify(mController).setHierarchy(null);
     verify(controller2).setHierarchy(mDraweeHierarchy);
   }
@@ -101,8 +101,8 @@ public class DraweeViewTest {
   @Test
   public void testSetDrawable() {
     mDraweeView.setImageDrawable(mDrawable);
-    assertSame(mDrawable, mDraweeView.getDrawable());
-    assertNull(mDraweeView.getController());
+    assertThat(mDraweeView.getDrawable()).isSameAs(mDrawable);
+    assertThat(mDraweeView.getController()).isNull();
   }
 
   @Test
@@ -111,8 +111,8 @@ public class DraweeViewTest {
     mDraweeView.onAttachedToWindow();
     mDraweeView.setController(mController);
     mDraweeView.setImageDrawable(mDrawable);
-    assertNull(mDraweeView.getController());
-    assertSame(mDrawable, mDraweeView.getDrawable());
+    assertThat(mDraweeView.getController()).isNull();
+    assertThat(mDraweeView.getDrawable()).isSameAs(mDrawable);
   }
 
   @Test
@@ -121,8 +121,8 @@ public class DraweeViewTest {
     mDraweeView.onAttachedToWindow();
     mDraweeView.setImageDrawable(mDrawable);
     mDraweeView.setController(mController);
-    assertSame(mController, mDraweeView.getController());
-    assertSame(mTopLevelDrawable, mDraweeView.getDrawable());
+    assertThat(mDraweeView.getController()).isSameAs(mController);
+    assertThat(mDraweeView.getDrawable()).isSameAs(mTopLevelDrawable);
   }
 
   @Test
