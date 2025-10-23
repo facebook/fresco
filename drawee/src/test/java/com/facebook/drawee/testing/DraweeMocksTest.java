@@ -7,8 +7,7 @@
 
 package com.facebook.drawee.testing;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import android.graphics.drawable.Drawable;
@@ -34,49 +33,49 @@ public class DraweeMocksTest {
   public void testMockProviderOf() {
     Object obj = mock(Object.class);
     Supplier<Object> provider = DraweeMocks.supplierOf(obj);
-    assertEquals(obj, provider.get());
-    assertEquals(obj, provider.get());
-    assertEquals(obj, provider.get());
-    assertEquals(obj, provider.get());
-    assertEquals(obj, provider.get());
+    assertThat(provider.get()).isEqualTo(obj);
+    assertThat(provider.get()).isEqualTo(obj);
+    assertThat(provider.get()).isEqualTo(obj);
+    assertThat(provider.get()).isEqualTo(obj);
+    assertThat(provider.get()).isEqualTo(obj);
 
     Object obj1 = mock(Object.class);
     Object obj2 = mock(Object.class);
     Object obj3 = mock(Object.class);
     Supplier<Object> multiProvider = DraweeMocks.supplierOf(obj1, obj2, obj3);
-    assertEquals(obj1, multiProvider.get());
-    assertEquals(obj2, multiProvider.get());
-    assertEquals(obj3, multiProvider.get());
-    assertEquals(obj3, multiProvider.get());
-    assertEquals(obj3, multiProvider.get());
+    assertThat(multiProvider.get()).isEqualTo(obj1);
+    assertThat(multiProvider.get()).isEqualTo(obj2);
+    assertThat(multiProvider.get()).isEqualTo(obj3);
+    assertThat(multiProvider.get()).isEqualTo(obj3);
+    assertThat(multiProvider.get()).isEqualTo(obj3);
   }
 
   @Test
   public void testMockBuilderOfDrawableHierarchies() {
     GenericDraweeHierarchy gdh = DraweeMocks.mockDraweeHierarchy();
     GenericDraweeHierarchyBuilder builder = DraweeMocks.mockBuilderOf(gdh);
-    assertEquals(gdh, builder.build());
-    assertEquals(gdh, builder.build());
-    assertEquals(gdh, builder.build());
-    assertEquals(gdh, builder.build());
-    assertEquals(gdh, builder.build());
+    assertThat(builder.build()).isEqualTo(gdh);
+    assertThat(builder.build()).isEqualTo(gdh);
+    assertThat(builder.build()).isEqualTo(gdh);
+    assertThat(builder.build()).isEqualTo(gdh);
+    assertThat(builder.build()).isEqualTo(gdh);
 
     GenericDraweeHierarchy gdh1 = DraweeMocks.mockDraweeHierarchy();
     GenericDraweeHierarchy gdh2 = DraweeMocks.mockDraweeHierarchy();
     GenericDraweeHierarchy gdh3 = DraweeMocks.mockDraweeHierarchy();
     GenericDraweeHierarchyBuilder multiBuilder = DraweeMocks.mockBuilderOf(gdh1, gdh2, gdh3);
-    assertEquals(gdh1, multiBuilder.build());
-    assertEquals(gdh2, multiBuilder.build());
-    assertEquals(gdh3, multiBuilder.build());
-    assertEquals(gdh3, multiBuilder.build());
-    assertEquals(gdh3, multiBuilder.build());
+    assertThat(multiBuilder.build()).isEqualTo(gdh1);
+    assertThat(multiBuilder.build()).isEqualTo(gdh2);
+    assertThat(multiBuilder.build()).isEqualTo(gdh3);
+    assertThat(multiBuilder.build()).isEqualTo(gdh3);
+    assertThat(multiBuilder.build()).isEqualTo(gdh3);
   }
 
   @Test
   public void testMockDrawable_VisibilityCallback() {
     boolean reset = true;
     Drawable drawable = DrawableTestUtils.mockDrawable();
-    assertTrue(drawable instanceof VisibilityAwareDrawable);
+    assertThat(drawable instanceof VisibilityAwareDrawable).isTrue();
 
     VisibilityAwareDrawable visibilityAwareDrawable = (VisibilityAwareDrawable) drawable;
     VisibilityCallback visibilityCallback = mock(VisibilityCallback.class);
