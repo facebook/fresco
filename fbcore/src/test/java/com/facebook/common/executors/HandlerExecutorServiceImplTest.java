@@ -7,11 +7,12 @@
 
 package com.facebook.common.executors;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import android.os.Handler;
 import android.os.Looper;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,16 +49,16 @@ public class HandlerExecutorServiceImplTest {
   public void testSimpleExecute() {
     ShadowLooper.pauseMainLooper();
     mExecutorService.execute(mIncrementCounterRunnable);
-    Assert.assertEquals(0, mCounter.get());
+    assertThat(mCounter.get()).isEqualTo(0);
     ShadowLooper.unPauseMainLooper();
-    Assert.assertEquals(1, mCounter.get());
+    assertThat(mCounter.get()).isEqualTo(1);
   }
 
   @Test
   public void testDelay() {
     mExecutorService.schedule(mIncrementCounterRunnable, 30, TimeUnit.SECONDS);
-    Assert.assertEquals(0, mCounter.get());
+    assertThat(mCounter.get()).isEqualTo(0);
     Shadows.shadowOf(Looper.getMainLooper()).getScheduler().advanceBy(30 * 1000);
-    Assert.assertEquals(1, mCounter.get());
+    assertThat(mCounter.get()).isEqualTo(1);
   }
 }
