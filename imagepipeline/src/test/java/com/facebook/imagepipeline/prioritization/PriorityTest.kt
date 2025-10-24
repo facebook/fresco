@@ -12,21 +12,21 @@ import com.facebook.imagepipeline.common.Priority.Companion.getHigherPriority
 import com.facebook.imagepipeline.common.Priority.HIGH
 import com.facebook.imagepipeline.common.Priority.LOW
 import com.facebook.imagepipeline.common.Priority.MEDIUM
-import org.junit.Assert.assertEquals
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 /** Tests for Priority enum */
 class PriorityTest {
   @Test
   fun testGetHigherPriority() {
-    assertEquals(Priority.HIGH, getHigherPriority(Priority.LOW, Priority.HIGH))
-    assertEquals(Priority.HIGH, getHigherPriority(Priority.MEDIUM, Priority.HIGH))
-    assertEquals(Priority.HIGH, getHigherPriority(Priority.HIGH, Priority.HIGH))
-    assertEquals(Priority.HIGH, getHigherPriority(Priority.HIGH, Priority.MEDIUM))
-    assertEquals(Priority.HIGH, getHigherPriority(Priority.HIGH, Priority.LOW))
-    assertEquals(Priority.MEDIUM, getHigherPriority(Priority.LOW, Priority.MEDIUM))
-    assertEquals(Priority.MEDIUM, getHigherPriority(Priority.MEDIUM, Priority.MEDIUM))
-    assertEquals(Priority.MEDIUM, getHigherPriority(Priority.MEDIUM, Priority.LOW))
-    assertEquals(Priority.LOW, getHigherPriority(Priority.LOW, Priority.LOW))
+    assertThat(getHigherPriority(Priority.LOW, Priority.HIGH)).isEqualTo(Priority.HIGH)
+    assertThat(getHigherPriority(Priority.MEDIUM, Priority.HIGH)).isEqualTo(Priority.HIGH)
+    assertThat(getHigherPriority(Priority.HIGH, Priority.HIGH)).isEqualTo(Priority.HIGH)
+    assertThat(getHigherPriority(Priority.HIGH, Priority.MEDIUM)).isEqualTo(Priority.HIGH)
+    assertThat(getHigherPriority(Priority.HIGH, Priority.LOW)).isEqualTo(Priority.HIGH)
+    assertThat(getHigherPriority(Priority.LOW, Priority.MEDIUM)).isEqualTo(Priority.MEDIUM)
+    assertThat(getHigherPriority(Priority.MEDIUM, Priority.MEDIUM)).isEqualTo(Priority.MEDIUM)
+    assertThat(getHigherPriority(Priority.MEDIUM, Priority.LOW)).isEqualTo(Priority.MEDIUM)
+    assertThat(getHigherPriority(Priority.LOW, Priority.LOW)).isEqualTo(Priority.LOW)
   }
 }
