@@ -7,7 +7,7 @@
 
 package com.facebook.drawee.drawable;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import android.graphics.ColorFilter;
@@ -134,22 +134,22 @@ public class DrawableUtilsTest {
 
   @Test
   public void testMultiplyColorAlpha() {
-    assertEquals(0x00123456, DrawableUtils.multiplyColorAlpha(0xC0123456, 0));
-    assertEquals(0x07123456, DrawableUtils.multiplyColorAlpha(0xC0123456, 10));
-    assertEquals(0x96123456, DrawableUtils.multiplyColorAlpha(0xC0123456, 200));
-    assertEquals(0xC0123456, DrawableUtils.multiplyColorAlpha(0xC0123456, 255));
+    assertThat(DrawableUtils.multiplyColorAlpha(0xC0123456, 0)).isEqualTo(0x00123456);
+    assertThat(DrawableUtils.multiplyColorAlpha(0xC0123456, 10)).isEqualTo(0x07123456);
+    assertThat(DrawableUtils.multiplyColorAlpha(0xC0123456, 200)).isEqualTo(0x96123456);
+    assertThat(DrawableUtils.multiplyColorAlpha(0xC0123456, 255)).isEqualTo(0xC0123456);
   }
 
   @Test
   public void testGetOpacityFromColor() {
-    assertEquals(PixelFormat.TRANSPARENT, DrawableUtils.getOpacityFromColor(0x00000000));
-    assertEquals(PixelFormat.TRANSPARENT, DrawableUtils.getOpacityFromColor(0x00123456));
-    assertEquals(PixelFormat.TRANSPARENT, DrawableUtils.getOpacityFromColor(0x00FFFFFF));
-    assertEquals(PixelFormat.TRANSLUCENT, DrawableUtils.getOpacityFromColor(0xC0000000));
-    assertEquals(PixelFormat.TRANSLUCENT, DrawableUtils.getOpacityFromColor(0xC0123456));
-    assertEquals(PixelFormat.TRANSLUCENT, DrawableUtils.getOpacityFromColor(0xC0FFFFFF));
-    assertEquals(PixelFormat.OPAQUE, DrawableUtils.getOpacityFromColor(0xFF000000));
-    assertEquals(PixelFormat.OPAQUE, DrawableUtils.getOpacityFromColor(0xFF123456));
-    assertEquals(PixelFormat.OPAQUE, DrawableUtils.getOpacityFromColor(0xFFFFFFFF));
+    assertThat(DrawableUtils.getOpacityFromColor(0x00000000)).isEqualTo(PixelFormat.TRANSPARENT);
+    assertThat(DrawableUtils.getOpacityFromColor(0x00123456)).isEqualTo(PixelFormat.TRANSPARENT);
+    assertThat(DrawableUtils.getOpacityFromColor(0x00FFFFFF)).isEqualTo(PixelFormat.TRANSPARENT);
+    assertThat(DrawableUtils.getOpacityFromColor(0xC0000000)).isEqualTo(PixelFormat.TRANSLUCENT);
+    assertThat(DrawableUtils.getOpacityFromColor(0xC0123456)).isEqualTo(PixelFormat.TRANSLUCENT);
+    assertThat(DrawableUtils.getOpacityFromColor(0xC0FFFFFF)).isEqualTo(PixelFormat.TRANSLUCENT);
+    assertThat(DrawableUtils.getOpacityFromColor(0xFF000000)).isEqualTo(PixelFormat.OPAQUE);
+    assertThat(DrawableUtils.getOpacityFromColor(0xFF123456)).isEqualTo(PixelFormat.OPAQUE);
+    assertThat(DrawableUtils.getOpacityFromColor(0xFFFFFFFF)).isEqualTo(PixelFormat.OPAQUE);
   }
 }
