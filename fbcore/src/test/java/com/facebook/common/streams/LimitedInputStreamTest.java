@@ -7,7 +7,8 @@
 
 package com.facebook.common.streams;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -47,14 +48,14 @@ public class LimitedInputStreamTest {
 
   @Test
   public void testBasic() throws Exception {
-    assertEquals(LIMITED_LENGTH, mLimitedStream.available());
-    assertTrue(mLimitedStream.markSupported());
+    assertThat(mLimitedStream.available()).isEqualTo(LIMITED_LENGTH);
+    assertThat(mLimitedStream.markSupported()).isTrue();
   }
 
   @Test
   public void testDoesReadSingleBytes() throws Exception {
     for (int i = 0; i < LIMITED_LENGTH; ++i) {
-      assertEquals(((int) mData[i]) & 0xFF, mLimitedStream.read());
+      assertThat(mLimitedStream.read()).isEqualTo(((int) mData[i]) & 0xFF);
     }
   }
 
@@ -62,43 +63,42 @@ public class LimitedInputStreamTest {
   public void testDoesNotReadTooMuch_singleBytes() throws Exception {
     for (int i = 0; i < BYTES_LENGTH; ++i) {
       final int lastByte = mLimitedStream.read();
-      assertEquals(i >= LIMITED_LENGTH, lastByte == -1);
+      assertThat(lastByte == -1).isEqualTo(i >= LIMITED_LENGTH);
     }
-    assertEquals(BYTES_LENGTH - LIMITED_LENGTH, mOriginalStream.available());
+    assertThat(mOriginalStream.available()).isEqualTo(BYTES_LENGTH - LIMITED_LENGTH);
   }
 
   @Test
   public void testDoesReadMultipleBytes() throws Exception {
-    assertEquals(LIMITED_LENGTH, mLimitedStream.read(mReadBuffer, 0, LIMITED_LENGTH));
-    assertArrayEquals(
-        Arrays.copyOfRange(mData, 0, LIMITED_LENGTH),
-        Arrays.copyOfRange(mReadBuffer, 0, LIMITED_LENGTH));
-    assertArrayEquals(mZeroTail, Arrays.copyOfRange(mReadBuffer, LIMITED_LENGTH, BYTES_LENGTH));
+    assertThat(mLimitedStream.read(mReadBuffer, 0, LIMITED_LENGTH)).isEqualTo(LIMITED_LENGTH);
+    assertThat(Arrays.copyOfRange(mReadBuffer, 0, LIMITED_LENGTH))
+        .containsExactly(Arrays.copyOfRange(mData, 0, LIMITED_LENGTH));
+    assertThat(Arrays.copyOfRange(mReadBuffer, LIMITED_LENGTH, BYTES_LENGTH))
+        .containsExactly(mZeroTail);
   }
 
   @Test
   public void testDoesNotReadTooMuch_multipleBytes() throws Exception {
-    assertEquals(LIMITED_LENGTH, mLimitedStream.read(mReadBuffer, 0, BYTES_LENGTH));
+    assertThat(mLimitedStream.read(mReadBuffer, 0, BYTES_LENGTH)).isEqualTo(LIMITED_LENGTH);
     final byte[] readBufferCopy = Arrays.copyOf(mReadBuffer, mReadBuffer.length);
-    assertEquals(-1, mLimitedStream.read(mReadBuffer, 0, BYTES_LENGTH));
-    assertArrayEquals(readBufferCopy, mReadBuffer);
-    assertEquals(BYTES_LENGTH - LIMITED_LENGTH, mOriginalStream.available());
+    assertThat(mLimitedStream.read(mReadBuffer, 0, BYTES_LENGTH)).isEqualTo(-1);
+    assertThat(mReadBuffer).containsExactly(readBufferCopy);
+    assertThat(mOriginalStream.available()).isEqualTo(BYTES_LENGTH - LIMITED_LENGTH);
   }
 
   @Test
   public void testSkip() throws Exception {
-    assertEquals(LIMITED_LENGTH / 2, mLimitedStream.skip(LIMITED_LENGTH / 2));
-    assertEquals(LIMITED_LENGTH / 2, mLimitedStream.read(mReadBuffer));
-    assertArrayEquals(
-        Arrays.copyOfRange(mData, LIMITED_LENGTH / 2, LIMITED_LENGTH),
-        Arrays.copyOfRange(mReadBuffer, 0, LIMITED_LENGTH / 2));
+    assertThat(mLimitedStream.skip(LIMITED_LENGTH / 2)).isEqualTo(LIMITED_LENGTH / 2);
+    assertThat(mLimitedStream.read(mReadBuffer)).isEqualTo(LIMITED_LENGTH / 2);
+    assertThat(Arrays.copyOfRange(mReadBuffer, 0, LIMITED_LENGTH / 2))
+        .containsExactly(Arrays.copyOfRange(mData, LIMITED_LENGTH / 2, LIMITED_LENGTH));
   }
 
   @Test
   public void testDoesNotReadTooMuch_skip() throws Exception {
-    assertEquals(LIMITED_LENGTH, mLimitedStream.skip(BYTES_LENGTH));
-    assertEquals(0, mLimitedStream.skip(BYTES_LENGTH));
-    assertEquals(BYTES_LENGTH - LIMITED_LENGTH, mOriginalStream.available());
+    assertThat(mLimitedStream.skip(BYTES_LENGTH)).isEqualTo(LIMITED_LENGTH);
+    assertThat(mLimitedStream.skip(BYTES_LENGTH)).isEqualTo(0);
+    assertThat(mOriginalStream.available()).isEqualTo(BYTES_LENGTH - LIMITED_LENGTH);
   }
 
   @Test
@@ -108,8 +108,8 @@ public class LimitedInputStreamTest {
     final byte[] readBufferCopy = Arrays.copyOf(mReadBuffer, mReadBuffer.length);
     Arrays.fill(mReadBuffer, (byte) 0);
     mLimitedStream.reset();
-    assertEquals(LIMITED_LENGTH, mLimitedStream.read(mReadBuffer));
-    assertArrayEquals(readBufferCopy, mReadBuffer);
+    assertThat(mLimitedStream.read(mReadBuffer)).isEqualTo(LIMITED_LENGTH);
+    assertThat(mReadBuffer).containsExactly(readBufferCopy);
   }
 
   @Test
@@ -120,14 +120,14 @@ public class LimitedInputStreamTest {
 
     // first reset
     mLimitedStream.reset();
-    assertEquals(LIMITED_LENGTH, mLimitedStream.read(mReadBuffer));
+    assertThat(mLimitedStream.read(mReadBuffer)).isEqualTo(LIMITED_LENGTH);
 
     // second reset
     Arrays.fill(mReadBuffer, (byte) 0);
     mLimitedStream.reset();
-    assertEquals(LIMITED_LENGTH, mLimitedStream.read(mReadBuffer));
+    assertThat(mLimitedStream.read(mReadBuffer)).isEqualTo(LIMITED_LENGTH);
 
-    assertArrayEquals(readBufferCopy, mReadBuffer);
+    assertThat(mReadBuffer).containsExactly(readBufferCopy);
   }
 
   @Test
@@ -136,27 +136,30 @@ public class LimitedInputStreamTest {
     mLimitedStream.read(mReadBuffer);
     mLimitedStream.reset();
     mLimitedStream.read(mReadBuffer);
-    assertEquals(BYTES_LENGTH - LIMITED_LENGTH, mOriginalStream.available());
+    assertThat(mOriginalStream.available()).isEqualTo(BYTES_LENGTH - LIMITED_LENGTH);
   }
 
-  @Test(expected = IOException.class)
+  @Test
   public void testDoesNotRestIfNotMarked() throws Exception {
-    mLimitedStream.read(mReadBuffer);
-    mLimitedStream.reset();
+    assertThatThrownBy(
+            () -> {
+              mLimitedStream.read(mReadBuffer);
+              mLimitedStream.reset();
+            })
+        .isInstanceOf(IOException.class);
   }
 
   @Test
   public void testMultipleMarks() throws IOException {
     mLimitedStream.mark(BYTES_LENGTH);
-    assertEquals(LIMITED_LENGTH / 2, mLimitedStream.read(mReadBuffer, 0, LIMITED_LENGTH / 2));
+    assertThat(mLimitedStream.read(mReadBuffer, 0, LIMITED_LENGTH / 2))
+        .isEqualTo(LIMITED_LENGTH / 2);
     mLimitedStream.mark(BYTES_LENGTH);
-    assertEquals(
-        LIMITED_LENGTH / 2,
-        mLimitedStream.read(mReadBuffer, LIMITED_LENGTH / 2, LIMITED_LENGTH / 2));
+    assertThat(mLimitedStream.read(mReadBuffer, LIMITED_LENGTH / 2, LIMITED_LENGTH / 2))
+        .isEqualTo(LIMITED_LENGTH / 2);
     mLimitedStream.reset();
-    assertEquals(LIMITED_LENGTH / 2, mLimitedStream.read(mReadBuffer));
-    assertArrayEquals(
-        Arrays.copyOfRange(mReadBuffer, 0, LIMITED_LENGTH / 2),
-        Arrays.copyOfRange(mReadBuffer, LIMITED_LENGTH / 2, LIMITED_LENGTH));
+    assertThat(mLimitedStream.read(mReadBuffer)).isEqualTo(LIMITED_LENGTH / 2);
+    assertThat(Arrays.copyOfRange(mReadBuffer, LIMITED_LENGTH / 2, LIMITED_LENGTH))
+        .containsExactly(Arrays.copyOfRange(mReadBuffer, 0, LIMITED_LENGTH / 2));
   }
 }
