@@ -7,8 +7,7 @@
 
 package com.facebook.common.file;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -19,28 +18,20 @@ import org.junit.Test;
 public class FileUtilsTest {
 
   @Test
-  public void testMkDirsNoWorkRequired() {
+  public void testMkDirsNoWorkRequired() throws Exception {
     File directory = mock(File.class);
     when(directory.exists()).thenReturn(true);
     when(directory.isDirectory()).thenReturn(true);
-    try {
-      FileUtils.mkdirs(directory);
-    } catch (FileUtils.CreateDirectoryException cde) {
-      fail();
-    }
+    FileUtils.mkdirs(directory);
   }
 
   @Test
-  public void testMkDirsSuccessfulCreate() {
+  public void testMkDirsSuccessfulCreate() throws Exception {
     File directory = mock(File.class);
     when(directory.exists()).thenReturn(false);
     when(directory.mkdirs()).thenReturn(true);
     when(directory.isDirectory()).thenReturn(true);
-    try {
-      FileUtils.mkdirs(directory);
-    } catch (FileUtils.CreateDirectoryException cde) {
-      fail();
-    }
+    FileUtils.mkdirs(directory);
   }
 
   @Test
@@ -49,26 +40,19 @@ public class FileUtilsTest {
     when(directory.exists()).thenReturn(true);
     when(directory.isDirectory()).thenReturn(false);
     when(directory.delete()).thenReturn(false);
-    try {
-      FileUtils.mkdirs(directory);
-      fail();
-    } catch (FileUtils.CreateDirectoryException cde) {
-      assertTrue(cde.getCause() instanceof FileUtils.FileDeleteException);
-    }
+    assertThatThrownBy(() -> FileUtils.mkdirs(directory))
+        .isInstanceOf(FileUtils.CreateDirectoryException.class)
+        .hasCauseInstanceOf(FileUtils.FileDeleteException.class);
   }
 
   @Test
-  public void testRenameSuccessful() {
+  public void testRenameSuccessful() throws Exception {
     File sourceFile = mock(File.class);
     File targetFile = mock(File.class);
 
     when(sourceFile.renameTo(targetFile)).thenReturn(true);
 
-    try {
-      FileUtils.rename(sourceFile, targetFile);
-    } catch (FileUtils.RenameException re) {
-      fail();
-    }
+    FileUtils.rename(sourceFile, targetFile);
   }
 
   @Test
@@ -81,11 +65,8 @@ public class FileUtilsTest {
     when(sourceFile.getAbsolutePath()).thenReturn("<source>");
     when(targetFile.getAbsolutePath()).thenReturn("<destination>");
 
-    try {
-      FileUtils.rename(sourceFile, targetFile);
-      fail();
-    } catch (FileUtils.RenameException re) {
-      assertTrue(re.getCause() instanceof FileUtils.ParentDirNotFoundException);
-    }
+    assertThatThrownBy(() -> FileUtils.rename(sourceFile, targetFile))
+        .isInstanceOf(FileUtils.RenameException.class)
+        .hasCauseInstanceOf(FileUtils.ParentDirNotFoundException.class);
   }
 }
