@@ -59,6 +59,18 @@ object HashCodeUtil {
       )
 
   @JvmStatic
+  fun hashCode(o1: Any?, o2: Any?, o3: Any?, o4: Any?, o5: Any?, o6: Any?, o7: Any?): Int =
+      hashCode(
+          o1?.hashCode() ?: 0,
+          o2?.hashCode() ?: 0,
+          o3?.hashCode() ?: 0,
+          o4?.hashCode() ?: 0,
+          o5?.hashCode() ?: 0,
+          o6?.hashCode() ?: 0,
+          o7?.hashCode() ?: 0,
+      )
+
+  @JvmStatic
   fun hashCode(i1: Int): Int {
     val acc = X + i1
     return acc
@@ -106,6 +118,18 @@ object HashCodeUtil {
     acc = X * acc + i4
     acc = X * acc + i5
     acc = X * acc + i6
+    return acc
+  }
+
+  @JvmStatic
+  fun hashCode(i1: Int, i2: Int, i3: Int, i4: Int, i5: Int, i6: Int, i7: Int): Int {
+    var acc = X + i1
+    acc = X * acc + i2
+    acc = X * acc + i3
+    acc = X * acc + i4
+    acc = X * acc + i5
+    acc = X * acc + i6
+    acc = X * acc + i7
     return acc
   }
 }
