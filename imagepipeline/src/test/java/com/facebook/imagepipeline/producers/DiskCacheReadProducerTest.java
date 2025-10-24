@@ -29,7 +29,6 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -173,7 +172,7 @@ public class DiskCacheReadProducerTest {
     mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
-    ArgumentCaptor<HashMap> captor = ArgumentCaptor.forClass(HashMap.class);
+    ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
     verify(mProducerListener)
         .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
     Map<String, String> resultMap = captor.getValue();
@@ -191,7 +190,7 @@ public class DiskCacheReadProducerTest {
     mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
-    ArgumentCaptor<HashMap> captor = ArgumentCaptor.forClass(HashMap.class);
+    ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
     verify(mProducerListener)
         .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
     Map<String, String> resultMap = captor.getValue();
@@ -209,7 +208,7 @@ public class DiskCacheReadProducerTest {
     mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
-    ArgumentCaptor<HashMap> captor = ArgumentCaptor.forClass(HashMap.class);
+    ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
     verify(mProducerListener)
         .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
     Map<String, String> resultMap = captor.getValue();
@@ -228,7 +227,7 @@ public class DiskCacheReadProducerTest {
     mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
-    ArgumentCaptor<HashMap> captor = ArgumentCaptor.forClass(HashMap.class);
+    ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
     verify(mProducerListener)
         .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
     Map<String, String> resultMap = captor.getValue();
@@ -247,7 +246,7 @@ public class DiskCacheReadProducerTest {
     mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
     verify(mInputProducer).produceResults(mConsumer, mProducerContext);
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
-    ArgumentCaptor<HashMap> captor = ArgumentCaptor.forClass(HashMap.class);
+    ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
     verify(mProducerListener, times(0))
         .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
     verify(mProducerListener, times(1))
@@ -344,7 +343,7 @@ public class DiskCacheReadProducerTest {
     verify(mInputProducer).produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
-    ArgumentCaptor<HashMap> captor = ArgumentCaptor.forClass(HashMap.class);
+    ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
     verify(mProducerListener)
         .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
     Map<String, String> resultMap = captor.getValue();
@@ -366,7 +365,7 @@ public class DiskCacheReadProducerTest {
     verify(mInputProducer).produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
-    ArgumentCaptor<HashMap> captor = ArgumentCaptor.forClass(HashMap.class);
+    ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
     verify(mProducerListener)
         .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
     Map<String, String> resultMap = captor.getValue();
@@ -385,7 +384,7 @@ public class DiskCacheReadProducerTest {
     mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
-    ArgumentCaptor<HashMap> captor = ArgumentCaptor.forClass(HashMap.class);
+    ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
     verify(mProducerListener)
         .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
     Map<String, String> resultMap = captor.getValue();
@@ -427,7 +426,7 @@ public class DiskCacheReadProducerTest {
     mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onFailure(mException);
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
-    ArgumentCaptor<HashMap> captor = ArgumentCaptor.forClass(HashMap.class);
+    ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
     verify(mProducerListener)
         .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
     Map<String, String> resultMap = captor.getValue();
