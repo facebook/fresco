@@ -7,13 +7,14 @@
 
 package com.facebook.imagepipeline.memory;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 
 import android.util.SparseIntArray;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,9 +35,9 @@ public class BasePoolTest {
   // Test out the alloc method
   @Test
   public void testAlloc() throws Exception {
-    Assert.assertEquals(1, mPool.alloc(1).length);
-    Assert.assertEquals(3, mPool.alloc(3).length);
-    Assert.assertEquals(2, mPool.alloc(2).length);
+    assertThat(mPool.alloc(1).length).isEqualTo(1);
+    assertThat(mPool.alloc(3).length).isEqualTo(3);
+    assertThat(mPool.alloc(2).length).isEqualTo(2);
   }
 
   @Test
@@ -45,11 +46,11 @@ public class BasePoolTest {
   // tests out the getBucketedSize method
   @Test
   public void testGetBucketedSize() throws Exception {
-    Assert.assertEquals(2, mPool.getBucketedSize(1));
-    Assert.assertEquals(2, mPool.getBucketedSize(2));
-    Assert.assertEquals(4, mPool.getBucketedSize(3));
-    Assert.assertEquals(6, mPool.getBucketedSize(6));
-    Assert.assertEquals(8, mPool.getBucketedSize(7));
+    assertThat(mPool.getBucketedSize(1)).isEqualTo(2);
+    assertThat(mPool.getBucketedSize(2)).isEqualTo(2);
+    assertThat(mPool.getBucketedSize(3)).isEqualTo(4);
+    assertThat(mPool.getBucketedSize(6)).isEqualTo(6);
+    assertThat(mPool.getBucketedSize(7)).isEqualTo(8);
   }
 
   // tests out the getBucketedSize method for invalid inputs
@@ -57,30 +58,27 @@ public class BasePoolTest {
   public void testGetBucketedSize_Invalid() throws Exception {
     int[] sizes = new int[] {-1, 0};
     for (int s : sizes) {
-      try {
-        mPool.getBucketedSize(s);
-        Assert.fail("Failed size: " + s);
-      } catch (BasePool.InvalidSizeException e) {
-        // do nothing
-      }
+      final int size = s;
+      assertThatThrownBy(() -> mPool.getBucketedSize(size))
+          .isInstanceOf(BasePool.InvalidSizeException.class);
     }
   }
 
   // tests out the getBucketedSizeForValue method
   @Test
   public void testGetBucketedSizeForValue() throws Exception {
-    Assert.assertEquals(2, mPool.getBucketedSizeForValue(new byte[2]));
-    Assert.assertEquals(3, mPool.getBucketedSizeForValue(new byte[3]));
-    Assert.assertEquals(6, mPool.getBucketedSizeForValue(new byte[6]));
+    assertThat(mPool.getBucketedSizeForValue(new byte[2])).isEqualTo(2);
+    assertThat(mPool.getBucketedSizeForValue(new byte[3])).isEqualTo(3);
+    assertThat(mPool.getBucketedSizeForValue(new byte[6])).isEqualTo(6);
   }
 
   @Test
   public void testGetSizeInBytes() throws Exception {
-    Assert.assertEquals(1, mPool.getSizeInBytes(1));
-    Assert.assertEquals(2, mPool.getSizeInBytes(2));
-    Assert.assertEquals(3, mPool.getSizeInBytes(3));
-    Assert.assertEquals(5, mPool.getSizeInBytes(5));
-    Assert.assertEquals(4, mPool.getSizeInBytes(4));
+    assertThat(mPool.getSizeInBytes(1)).isEqualTo(1);
+    assertThat(mPool.getSizeInBytes(2)).isEqualTo(2);
+    assertThat(mPool.getSizeInBytes(3)).isEqualTo(3);
+    assertThat(mPool.getSizeInBytes(5)).isEqualTo(5);
+    assertThat(mPool.getSizeInBytes(4)).isEqualTo(4);
   }
 
   // Get via alloc
@@ -88,35 +86,35 @@ public class BasePoolTest {
   public void testGet_Alloc() throws Exception {
     // get a buffer - causes an alloc
     byte[] b1 = mPool.get(1);
-    Assert.assertNotNull(b1);
-    Assert.assertEquals(2, b1.length);
-    Assert.assertTrue(mPool.inUseValues.contains(b1));
+    assertThat(b1).isNotNull();
+    assertThat(b1.length).isEqualTo(2);
+    assertThat(mPool.inUseValues.contains(b1)).isTrue();
     mStats.refresh();
-    Assert.assertEquals(ImmutableMap.of(2, new IntPair(1, 0)), mStats.mBucketStats);
-    Assert.assertEquals(0, mStats.mFreeBytes);
-    Assert.assertEquals(2, mStats.mUsedBytes);
-    Assert.assertEquals(0, mStats.mFreeCount);
-    Assert.assertEquals(1, mStats.mUsedCount);
+    assertThat(mStats.mBucketStats).isEqualTo(ImmutableMap.of(2, new IntPair(1, 0)));
+    assertThat(mStats.mFreeBytes).isEqualTo(0);
+    assertThat(mStats.mUsedBytes).isEqualTo(2);
+    assertThat(mStats.mFreeCount).isEqualTo(0);
+    assertThat(mStats.mUsedCount).isEqualTo(1);
 
     // release this buffer
     mPool.release(b1);
-    Assert.assertFalse(mPool.inUseValues.contains(b1));
+    assertThat(mPool.inUseValues.contains(b1)).isFalse();
 
     // get another buffer, but of a different size. No reuse possible
     byte[] b2 = mPool.get(3);
-    Assert.assertNotNull(b2);
-    Assert.assertEquals(4, b2.length);
-    Assert.assertTrue(mPool.inUseValues.contains(b2));
+    assertThat(b2).isNotNull();
+    assertThat(b2.length).isEqualTo(4);
+    assertThat(mPool.inUseValues.contains(b2)).isTrue();
     mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(
-            2, new IntPair(0, 1),
-            4, new IntPair(1, 0)),
-        mStats.mBucketStats);
-    Assert.assertEquals(2, mStats.mFreeBytes);
-    Assert.assertEquals(4, mStats.mUsedBytes);
-    Assert.assertEquals(1, mStats.mFreeCount);
-    Assert.assertEquals(1, mStats.mUsedCount);
+    assertThat(mStats.mBucketStats)
+        .isEqualTo(
+            ImmutableMap.of(
+                2, new IntPair(0, 1),
+                4, new IntPair(1, 0)));
+    assertThat(mStats.mFreeBytes).isEqualTo(2);
+    assertThat(mStats.mUsedBytes).isEqualTo(4);
+    assertThat(mStats.mFreeCount).isEqualTo(1);
+    assertThat(mStats.mUsedCount).isEqualTo(1);
   }
 
   // Tests that we can reuse a free buffer in the pool
@@ -125,26 +123,26 @@ public class BasePoolTest {
     // get a buffer, and immediately release it
     byte[] b1 = mPool.get(1);
     mPool.release(b1);
-    Assert.assertNotNull(b1);
-    Assert.assertEquals(2, b1.length);
+    assertThat(b1).isNotNull();
+    assertThat(b1.length).isEqualTo(2);
     mStats.refresh();
-    Assert.assertEquals(ImmutableMap.of(2, new IntPair(0, 1)), mStats.mBucketStats);
-    Assert.assertEquals(2, mStats.mFreeBytes);
-    Assert.assertEquals(0, mStats.mUsedBytes);
-    Assert.assertEquals(1, mStats.mFreeCount);
-    Assert.assertEquals(0, mStats.mUsedCount);
+    assertThat(mStats.mBucketStats).isEqualTo(ImmutableMap.of(2, new IntPair(0, 1)));
+    assertThat(mStats.mFreeBytes).isEqualTo(2);
+    assertThat(mStats.mUsedBytes).isEqualTo(0);
+    assertThat(mStats.mFreeCount).isEqualTo(1);
+    assertThat(mStats.mUsedCount).isEqualTo(0);
 
     // get another buffer of the same size as above. We should be able to reuse it
     byte[] b2 = mPool.get(1);
-    Assert.assertNotNull(b2);
-    Assert.assertEquals(2, b2.length);
-    Assert.assertTrue(mPool.inUseValues.contains(b2));
+    assertThat(b2).isNotNull();
+    assertThat(b2.length).isEqualTo(2);
+    assertThat(mPool.inUseValues.contains(b2)).isTrue();
     mStats.refresh();
-    Assert.assertEquals(ImmutableMap.of(2, new IntPair(1, 0)), mStats.mBucketStats);
-    Assert.assertEquals(0, mStats.mFreeBytes);
-    Assert.assertEquals(2, mStats.mUsedBytes);
-    Assert.assertEquals(0, mStats.mFreeCount);
-    Assert.assertEquals(1, mStats.mUsedCount);
+    assertThat(mStats.mBucketStats).isEqualTo(ImmutableMap.of(2, new IntPair(1, 0)));
+    assertThat(mStats.mFreeBytes).isEqualTo(0);
+    assertThat(mStats.mUsedBytes).isEqualTo(2);
+    assertThat(mStats.mFreeCount).isEqualTo(0);
+    assertThat(mStats.mUsedCount).isEqualTo(1);
   }
 
   // test a simple release
@@ -157,11 +155,11 @@ public class BasePoolTest {
 
     // verify stats
     mStats.refresh();
-    Assert.assertEquals(ImmutableMap.of(2, new IntPair(0, 1)), mStats.mBucketStats);
-    Assert.assertEquals(2, mStats.mFreeBytes);
-    Assert.assertEquals(0, mStats.mUsedBytes);
-    Assert.assertEquals(1, mStats.mFreeCount);
-    Assert.assertEquals(0, mStats.mUsedCount);
+    assertThat(mStats.mBucketStats).isEqualTo(ImmutableMap.of(2, new IntPair(0, 1)));
+    assertThat(mStats.mFreeBytes).isEqualTo(2);
+    assertThat(mStats.mUsedBytes).isEqualTo(0);
+    assertThat(mStats.mFreeCount).isEqualTo(1);
+    assertThat(mStats.mUsedCount).isEqualTo(0);
   }
 
   // Test release with bucket length constraints
@@ -174,21 +172,21 @@ public class BasePoolTest {
     mPool.get(2);
     mPool.get(2);
     mStats.refresh();
-    Assert.assertEquals(ImmutableMap.of(2, new IntPair(3, 0)), mStats.mBucketStats);
-    Assert.assertEquals(6, mStats.mUsedBytes);
-    Assert.assertEquals(3, mStats.mUsedCount);
-    Assert.assertEquals(0, mStats.mFreeBytes);
-    Assert.assertEquals(0, mStats.mFreeCount);
+    assertThat(mStats.mBucketStats).isEqualTo(ImmutableMap.of(2, new IntPair(3, 0)));
+    assertThat(mStats.mUsedBytes).isEqualTo(6);
+    assertThat(mStats.mUsedCount).isEqualTo(3);
+    assertThat(mStats.mFreeBytes).isEqualTo(0);
+    assertThat(mStats.mFreeCount).isEqualTo(0);
 
     // now release one of the buffers
     mPool.release(b0);
 
     mStats.refresh();
-    Assert.assertEquals(ImmutableMap.of(2, new IntPair(2, 0)), mStats.mBucketStats);
-    Assert.assertEquals(4, mStats.mUsedBytes);
-    Assert.assertEquals(2, mStats.mUsedCount);
-    Assert.assertEquals(0, mStats.mFreeBytes);
-    Assert.assertEquals(0, mStats.mFreeCount);
+    assertThat(mStats.mBucketStats).isEqualTo(ImmutableMap.of(2, new IntPair(2, 0)));
+    assertThat(mStats.mUsedBytes).isEqualTo(4);
+    assertThat(mStats.mUsedCount).isEqualTo(2);
+    assertThat(mStats.mFreeBytes).isEqualTo(0);
+    assertThat(mStats.mFreeCount).isEqualTo(0);
   }
 
   // Test releasing an 'unknown' value
@@ -204,11 +202,11 @@ public class BasePoolTest {
 
     // verify stats
     mStats.refresh();
-    Assert.assertEquals(ImmutableMap.of(2, new IntPair(1, 0)), mStats.mBucketStats);
-    Assert.assertEquals(0, mStats.mFreeBytes);
-    Assert.assertEquals(2, mStats.mUsedBytes);
-    Assert.assertEquals(0, mStats.mFreeCount);
-    Assert.assertEquals(1, mStats.mUsedCount);
+    assertThat(mStats.mBucketStats).isEqualTo(ImmutableMap.of(2, new IntPair(1, 0)));
+    assertThat(mStats.mFreeBytes).isEqualTo(0);
+    assertThat(mStats.mUsedBytes).isEqualTo(2);
+    assertThat(mStats.mFreeCount).isEqualTo(0);
+    assertThat(mStats.mUsedCount).isEqualTo(1);
   }
 
   // test out release with non reusable values
@@ -224,11 +222,11 @@ public class BasePoolTest {
 
     // verify stats
     mStats.refresh();
-    Assert.assertEquals(ImmutableMap.of(2, new IntPair(0, 0)), mStats.mBucketStats);
-    Assert.assertEquals(0, mStats.mFreeBytes);
-    Assert.assertEquals(0, mStats.mUsedBytes);
-    Assert.assertEquals(0, mStats.mFreeCount);
-    Assert.assertEquals(0, mStats.mUsedCount);
+    assertThat(mStats.mBucketStats).isEqualTo(ImmutableMap.of(2, new IntPair(0, 0)));
+    assertThat(mStats.mFreeBytes).isEqualTo(0);
+    assertThat(mStats.mUsedBytes).isEqualTo(0);
+    assertThat(mStats.mFreeCount).isEqualTo(0);
+    assertThat(mStats.mUsedCount).isEqualTo(0);
   }
 
   // test buffers outside the 'normal' bucket sizes
@@ -240,22 +238,22 @@ public class BasePoolTest {
     mPool.get(2);
     byte[] b1 = mPool.get(7);
     mStats.refresh();
-    Assert.assertEquals(10, mStats.mUsedBytes);
-    Assert.assertEquals(2, mStats.mUsedCount);
+    assertThat(mStats.mUsedBytes).isEqualTo(10);
+    assertThat(mStats.mUsedCount).isEqualTo(2);
     mPool.release(b1);
     mStats.refresh();
-    Assert.assertEquals(2, mStats.mUsedBytes);
-    Assert.assertEquals(1, mStats.mUsedCount);
-    Assert.assertEquals(0, mStats.mFreeBytes);
-    Assert.assertEquals(0, mStats.mFreeCount);
+    assertThat(mStats.mUsedBytes).isEqualTo(2);
+    assertThat(mStats.mUsedCount).isEqualTo(1);
+    assertThat(mStats.mFreeBytes).isEqualTo(0);
+    assertThat(mStats.mFreeCount).isEqualTo(0);
 
     byte[] b2 = new byte[3];
     mPool.release(b2);
     mStats.refresh();
-    Assert.assertEquals(2, mStats.mUsedBytes);
-    Assert.assertEquals(1, mStats.mUsedCount);
-    Assert.assertEquals(0, mStats.mFreeBytes);
-    Assert.assertEquals(0, mStats.mFreeCount);
+    assertThat(mStats.mUsedBytes).isEqualTo(2);
+    assertThat(mStats.mUsedCount).isEqualTo(1);
+    assertThat(mStats.mFreeBytes).isEqualTo(0);
+    assertThat(mStats.mFreeCount).isEqualTo(0);
   }
 
   // test illegal arguments to get
@@ -263,12 +261,8 @@ public class BasePoolTest {
   public void testGetWithErrors() throws Exception {
     int[] sizes = new int[] {-1, 0};
     for (int s : sizes) {
-      try {
-        mPool.get(s);
-        Assert.fail("Failed size: " + s);
-      } catch (BasePool.InvalidSizeException e) {
-        // do nothing
-      }
+      final int size = s;
+      assertThatThrownBy(() -> mPool.get(size)).isInstanceOf(BasePool.InvalidSizeException.class);
     }
   }
 
@@ -280,14 +274,14 @@ public class BasePoolTest {
     mPool.release(b1);
     mPool.get(3);
     mStats.refresh();
-    Assert.assertEquals(2, mStats.mFreeBytes);
-    Assert.assertEquals(4, mStats.mUsedBytes);
+    assertThat(mStats.mFreeBytes).isEqualTo(2);
+    assertThat(mStats.mUsedBytes).isEqualTo(4);
 
     // trim the pool and check
     mPool.trimToNothing();
     mStats.refresh();
-    Assert.assertEquals(0, mStats.mFreeBytes);
-    Assert.assertEquals(4, mStats.mUsedBytes);
+    assertThat(mStats.mFreeBytes).isEqualTo(0);
+    assertThat(mStats.mUsedBytes).isEqualTo(4);
   }
 
   // test out trimToSize functionality
@@ -307,38 +301,38 @@ public class BasePoolTest {
     mPool.release(b1);
 
     mStats.refresh();
-    Assert.assertEquals(12, mStats.mFreeBytes);
-    Assert.assertEquals(2, mStats.mUsedBytes);
+    assertThat(mStats.mFreeBytes).isEqualTo(12);
+    assertThat(mStats.mUsedBytes).isEqualTo(2);
 
     // perform a dummy trim - nothing should happen
     mPool.trimToSize(100);
     mStats.refresh();
-    Assert.assertEquals(12, mStats.mFreeBytes);
-    Assert.assertEquals(2, mStats.mUsedBytes);
+    assertThat(mStats.mFreeBytes).isEqualTo(12);
+    assertThat(mStats.mUsedBytes).isEqualTo(2);
 
     // now perform the real trim
     mPool.trimToSize(8);
     mStats.refresh();
-    Assert.assertEquals(6, mStats.mFreeBytes);
-    Assert.assertEquals(2, mStats.mUsedBytes);
-    Assert.assertEquals(
-        ImmutableMap.of(
-            2, new IntPair(1, 0),
-            4, new IntPair(0, 0),
-            6, new IntPair(0, 1)),
-        mStats.mBucketStats);
+    assertThat(mStats.mFreeBytes).isEqualTo(6);
+    assertThat(mStats.mUsedBytes).isEqualTo(2);
+    assertThat(mStats.mBucketStats)
+        .isEqualTo(
+            ImmutableMap.of(
+                2, new IntPair(1, 0),
+                4, new IntPair(0, 0),
+                6, new IntPair(0, 1)));
 
     // perform another trim
     mPool.trimToSize(1);
     mStats.refresh();
-    Assert.assertEquals(0, mStats.mFreeBytes);
-    Assert.assertEquals(2, mStats.mUsedBytes);
-    Assert.assertEquals(
-        ImmutableMap.of(
-            2, new IntPair(1, 0),
-            4, new IntPair(0, 0),
-            6, new IntPair(0, 0)),
-        mStats.mBucketStats);
+    assertThat(mStats.mFreeBytes).isEqualTo(0);
+    assertThat(mStats.mUsedBytes).isEqualTo(2);
+    assertThat(mStats.mBucketStats)
+        .isEqualTo(
+            ImmutableMap.of(
+                2, new IntPair(1, 0),
+                4, new IntPair(0, 0),
+                6, new IntPair(0, 0)));
   }
 
   /**
