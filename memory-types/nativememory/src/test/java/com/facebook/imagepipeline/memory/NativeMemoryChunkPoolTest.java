@@ -7,10 +7,12 @@
 
 package com.facebook.imagepipeline.memory;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import android.util.SparseIntArray;
 import com.facebook.imagepipeline.testing.FakeNativeMemoryChunk;
 import com.facebook.imagepipeline.testing.FakeNativeMemoryChunkPool;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,73 +38,69 @@ public class NativeMemoryChunkPoolTest extends TestUsingNativeMemoryChunk {
   @Test
   public void testAlloc() {
     NativeMemoryChunk c = mPool.alloc(1);
-    Assert.assertNotNull(c);
-    Assert.assertEquals(1, c.getSize());
-    Assert.assertEquals(1, mPool.alloc(1).getSize());
-    Assert.assertEquals(33, mPool.alloc(33).getSize());
-    Assert.assertEquals(32, mPool.alloc(32).getSize());
+    assertThat(c).isNotNull();
+    assertThat(c.getSize()).isEqualTo(1);
+    assertThat(mPool.alloc(1).getSize()).isEqualTo(1);
+    assertThat(mPool.alloc(33).getSize()).isEqualTo(33);
+    assertThat(mPool.alloc(32).getSize()).isEqualTo(32);
   }
 
   @Test
   public void testFree() {
     NativeMemoryChunk c = mPool.alloc(1);
-    Assert.assertFalse(c.isClosed());
+    assertThat(c.isClosed()).isFalse();
     mPool.free(c);
-    Assert.assertTrue(c.isClosed());
+    assertThat(c.isClosed()).isTrue();
     mPool.free(c);
-    Assert.assertTrue(c.isClosed());
+    assertThat(c.isClosed()).isTrue();
   }
 
   // tests out the getBucketedSize method
   @Test
   public void testGetBucketedSize() {
-    Assert.assertEquals(32, mPool.getBucketedSize(1));
-    Assert.assertEquals(32, mPool.getBucketedSize(32));
-    Assert.assertEquals(64, mPool.getBucketedSize(33));
-    Assert.assertEquals(64, mPool.getBucketedSize(64));
-    Assert.assertEquals(128, mPool.getBucketedSize(69));
+    assertThat(mPool.getBucketedSize(1)).isEqualTo(32);
+    assertThat(mPool.getBucketedSize(32)).isEqualTo(32);
+    assertThat(mPool.getBucketedSize(33)).isEqualTo(64);
+    assertThat(mPool.getBucketedSize(64)).isEqualTo(64);
+    assertThat(mPool.getBucketedSize(69)).isEqualTo(128);
 
     // value larger than max bucket
-    Assert.assertEquals(129, mPool.getBucketedSize(129));
+    assertThat(mPool.getBucketedSize(129)).isEqualTo(129);
 
     int[] invalidSizes = new int[] {-1, 0};
     for (int size : invalidSizes) {
-      try {
-        mPool.getBucketedSize(size);
-        Assert.fail();
-      } catch (BasePool.InvalidSizeException e) {
-        // do nothing
-      }
+      assertThatThrownBy(() -> mPool.getBucketedSize(size))
+          .isInstanceOf(BasePool.InvalidSizeException.class);
     }
   }
 
   // tests out the getBucketedSizeForValue method
   @Test
   public void testGetBucketedSizeForValue() {
-    Assert.assertEquals(32, mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(32)));
-    Assert.assertEquals(64, mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(64)));
-    Assert.assertEquals(128, mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(128)));
+    assertThat(mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(32))).isEqualTo(32);
+    assertThat(mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(64))).isEqualTo(64);
+    assertThat(mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(128))).isEqualTo(128);
 
     // test with non-bucket values
-    Assert.assertEquals(1, mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(1)));
-    Assert.assertEquals(129, mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(129)));
-    Assert.assertEquals(31, mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(31)));
+    assertThat(mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(1))).isEqualTo(1);
+    assertThat(mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(129))).isEqualTo(129);
+    assertThat(mPool.getBucketedSizeForValue(new FakeNativeMemoryChunk(31))).isEqualTo(31);
   }
 
   @Test
   public void testGetSizeInBytes() {
-    Assert.assertEquals(1, mPool.getSizeInBytes(1));
-    Assert.assertEquals(32, mPool.getSizeInBytes(32));
-    Assert.assertEquals(33, mPool.getSizeInBytes(33));
-    Assert.assertEquals(64, mPool.getSizeInBytes(64));
-    Assert.assertEquals(69, mPool.getSizeInBytes(69));
+    assertThat(mPool.getSizeInBytes(1)).isEqualTo(1);
+    assertThat(mPool.getSizeInBytes(32)).isEqualTo(32);
+    assertThat(mPool.getSizeInBytes(33)).isEqualTo(33);
+    assertThat(mPool.getSizeInBytes(64)).isEqualTo(64);
+    assertThat(mPool.getSizeInBytes(69)).isEqualTo(69);
   }
 
   @Test
   public void testIsReusable() {
     MemoryChunk chunk = mPool.get(1);
-    Assert.assertTrue(mPool.isReusable(chunk));
+    assertThat(mPool.isReusable(chunk)).isTrue();
     chunk.close();
-    Assert.assertFalse(mPool.isReusable(chunk));
+    assertThat(mPool.isReusable(chunk)).isFalse();
   }
 }
