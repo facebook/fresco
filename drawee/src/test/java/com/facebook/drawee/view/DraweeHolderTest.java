@@ -7,11 +7,7 @@
 
 package com.facebook.drawee.view;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -55,19 +51,19 @@ public class DraweeHolderTest {
   public void testOverrideControllerHierarchy() {
     DraweeHierarchy otherHierarchy = mock(DraweeHierarchy.class);
     mController.setHierarchy(otherHierarchy);
-    assertSame(otherHierarchy, mController.getHierarchy());
+    assertThat(mController.getHierarchy()).isSameAs(otherHierarchy);
     mDraweeHolder.setController(mController);
-    assertSame(mController, mDraweeHolder.getController());
-    assertSame(mDraweeHierarchy, mDraweeHolder.getHierarchy());
-    assertSame(mDraweeHierarchy, mController.getHierarchy());
+    assertThat(mDraweeHolder.getController()).isSameAs(mController);
+    assertThat(mDraweeHolder.getHierarchy()).isSameAs(mDraweeHierarchy);
+    assertThat(mController.getHierarchy()).isSameAs(mDraweeHierarchy);
   }
 
   @Test
   public void testSetControllerWithoutHierarchy() {
     mDraweeHolder.setController(mController);
-    assertSame(mController, mDraweeHolder.getController());
-    assertSame(mDraweeHierarchy, mDraweeHolder.getHierarchy());
-    assertSame(mDraweeHierarchy, mController.getHierarchy());
+    assertThat(mDraweeHolder.getController()).isSameAs(mController);
+    assertThat(mDraweeHolder.getHierarchy()).isSameAs(mDraweeHierarchy);
+    assertThat(mController.getHierarchy()).isSameAs(mDraweeHierarchy);
   }
 
   @Test
@@ -75,40 +71,40 @@ public class DraweeHolderTest {
     mDraweeHolder = new DraweeHolder(null);
     mDraweeHolder.setController(mController);
     mDraweeHolder.setHierarchy(mDraweeHierarchy);
-    assertSame(mController, mDraweeHolder.getController());
-    assertSame(mDraweeHierarchy, mDraweeHolder.getHierarchy());
-    assertSame(mDraweeHierarchy, mController.getHierarchy());
+    assertThat(mDraweeHolder.getController()).isSameAs(mController);
+    assertThat(mDraweeHolder.getHierarchy()).isSameAs(mDraweeHierarchy);
+    assertThat(mController.getHierarchy()).isSameAs(mDraweeHierarchy);
   }
 
   @Test
   public void testClearControllerKeepsHierarchy() {
     mDraweeHolder.setController(mController);
     mDraweeHolder.resetActualImage();
-    assertSame(mDraweeHierarchy, mDraweeHolder.getHierarchy());
-    assertNull(mDraweeHolder.getController());
-    assertNull(mController.getHierarchy());
+    assertThat(mDraweeHolder.getHierarchy()).isSameAs(mDraweeHierarchy);
+    assertThat(mDraweeHolder.getController()).isNull();
+    assertThat(mController.getHierarchy()).isNull();
   }
 
   @Test
   public void testNewControllerKeepsHierarchy() {
     mDraweeHolder.setController(mController);
-    assertSame(mDraweeHierarchy, mDraweeHolder.getHierarchy());
+    assertThat(mDraweeHolder.getHierarchy()).isSameAs(mDraweeHierarchy);
     DraweeController another = DraweeMocks.mockController();
     mDraweeHolder.setController(another);
-    assertSame(mDraweeHierarchy, mDraweeHolder.getHierarchy());
-    assertSame(another, mDraweeHolder.getController());
-    assertNull(mController.getHierarchy());
-    assertSame(mDraweeHierarchy, another.getHierarchy());
+    assertThat(mDraweeHolder.getHierarchy()).isSameAs(mDraweeHierarchy);
+    assertThat(mDraweeHolder.getController()).isSameAs(another);
+    assertThat(mController.getHierarchy()).isNull();
+    assertThat(another.getHierarchy()).isSameAs(mDraweeHierarchy);
   }
 
   @Test
   public void testLifecycle() {
     mDraweeHolder.setController(mController);
-    assertFalse(mDraweeHolder.isAttached());
+    assertThat(mDraweeHolder.isAttached()).isFalse();
     mDraweeHolder.onAttach();
-    assertTrue(mDraweeHolder.isAttached());
+    assertThat(mDraweeHolder.isAttached()).isTrue();
     mDraweeHolder.onDetach();
-    assertFalse(mDraweeHolder.isAttached());
+    assertThat(mDraweeHolder.isAttached()).isFalse();
 
     verify(mController).onAttach();
     verify(mController).onDetach();
@@ -142,7 +138,7 @@ public class DraweeHolderTest {
 
     mDraweeHolder.resetActualImage();
     verify(mController, never()).onDetach();
-    assertEquals(draweeHierarchy2, mController.getHierarchy());
+    assertThat(mController.getHierarchy()).isEqualTo(draweeHierarchy2);
   }
 
   @Test
@@ -155,7 +151,7 @@ public class DraweeHolderTest {
 
     final DraweeHierarchy draweeHierarchy3 = DraweeMocks.mockDraweeHierarchyOf(mTopLevelDrawable);
     mDraweeHolder.setHierarchy(draweeHierarchy3);
-    assertEquals(draweeHierarchy2, mController.getHierarchy());
+    assertThat(mController.getHierarchy()).isEqualTo(draweeHierarchy2);
   }
 
   @Test
