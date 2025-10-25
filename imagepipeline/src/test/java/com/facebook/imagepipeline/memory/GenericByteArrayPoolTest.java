@@ -7,11 +7,12 @@
 
 package com.facebook.imagepipeline.memory;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 
 import android.util.SparseIntArray;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,9 +39,9 @@ public class GenericByteArrayPoolTest {
   // Test out the alloc method
   @Test
   public void testAlloc() throws Exception {
-    Assert.assertEquals(1, mPool.alloc(1).length);
-    Assert.assertEquals(33, mPool.alloc(33).length);
-    Assert.assertEquals(32, mPool.alloc(32).length);
+    assertThat(mPool.alloc(1).length).isEqualTo(1);
+    assertThat(mPool.alloc(33).length).isEqualTo(33);
+    assertThat(mPool.alloc(32).length).isEqualTo(32);
   }
 
   @Test
@@ -49,45 +50,41 @@ public class GenericByteArrayPoolTest {
   // tests out the getBucketedSize method
   @Test
   public void testGetBucketedSize() throws Exception {
-    Assert.assertEquals(32, mPool.getBucketedSize(1));
-    Assert.assertEquals(32, mPool.getBucketedSize(32));
-    Assert.assertEquals(64, mPool.getBucketedSize(33));
-    Assert.assertEquals(64, mPool.getBucketedSize(64));
-    Assert.assertEquals(128, mPool.getBucketedSize(69));
+    assertThat(mPool.getBucketedSize(1)).isEqualTo(32);
+    assertThat(mPool.getBucketedSize(32)).isEqualTo(32);
+    assertThat(mPool.getBucketedSize(33)).isEqualTo(64);
+    assertThat(mPool.getBucketedSize(64)).isEqualTo(64);
+    assertThat(mPool.getBucketedSize(69)).isEqualTo(128);
 
     // value larger than max bucket
-    Assert.assertEquals(129, mPool.getBucketedSize(129));
+    assertThat(mPool.getBucketedSize(129)).isEqualTo(129);
 
     int[] invalidSizes = new int[] {-1, 0};
     for (int size : invalidSizes) {
-      try {
-        mPool.getBucketedSize(size);
-        Assert.fail();
-      } catch (BasePool.InvalidSizeException e) {
-        // do nothing
-      }
+      assertThatThrownBy(() -> mPool.getBucketedSize(size))
+          .isInstanceOf(BasePool.InvalidSizeException.class);
     }
   }
 
   // tests out the getBucketedSizeForValue method
   @Test
   public void testGetBucketedSizeForValue() throws Exception {
-    Assert.assertEquals(32, mPool.getBucketedSizeForValue(new byte[32]));
-    Assert.assertEquals(64, mPool.getBucketedSizeForValue(new byte[64]));
-    Assert.assertEquals(128, mPool.getBucketedSizeForValue(new byte[128]));
+    assertThat(mPool.getBucketedSizeForValue(new byte[32])).isEqualTo(32);
+    assertThat(mPool.getBucketedSizeForValue(new byte[64])).isEqualTo(64);
+    assertThat(mPool.getBucketedSizeForValue(new byte[128])).isEqualTo(128);
 
     // test with non-bucket values
-    Assert.assertEquals(1, mPool.getBucketedSizeForValue(new byte[1]));
-    Assert.assertEquals(129, mPool.getBucketedSizeForValue(new byte[129]));
-    Assert.assertEquals(31, mPool.getBucketedSizeForValue(new byte[31]));
+    assertThat(mPool.getBucketedSizeForValue(new byte[1])).isEqualTo(1);
+    assertThat(mPool.getBucketedSizeForValue(new byte[129])).isEqualTo(129);
+    assertThat(mPool.getBucketedSizeForValue(new byte[31])).isEqualTo(31);
   }
 
   @Test
   public void testGetSizeInBytes() throws Exception {
-    Assert.assertEquals(1, mPool.getSizeInBytes(1));
-    Assert.assertEquals(32, mPool.getSizeInBytes(32));
-    Assert.assertEquals(33, mPool.getSizeInBytes(33));
-    Assert.assertEquals(64, mPool.getSizeInBytes(64));
-    Assert.assertEquals(69, mPool.getSizeInBytes(69));
+    assertThat(mPool.getSizeInBytes(1)).isEqualTo(1);
+    assertThat(mPool.getSizeInBytes(32)).isEqualTo(32);
+    assertThat(mPool.getSizeInBytes(33)).isEqualTo(33);
+    assertThat(mPool.getSizeInBytes(64)).isEqualTo(64);
+    assertThat(mPool.getSizeInBytes(69)).isEqualTo(69);
   }
 }
