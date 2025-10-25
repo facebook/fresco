@@ -7,7 +7,7 @@
 
 package com.facebook.imagepipeline.memory;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import android.util.SparseIntArray;
@@ -43,27 +43,27 @@ public class FlexByteArrayPoolTest {
 
   @Test
   public void testBasic() throws Exception {
-    assertEquals(MIN_BUFFER_SIZE, mPool.getMinBufferSize());
-    assertEquals(MAX_BUFFER_SIZE, mDelegatePool.poolParams.maxBucketSize);
-    assertEquals(0, mDelegatePool.free.numBytes);
+    assertThat(mPool.getMinBufferSize()).isEqualTo(MIN_BUFFER_SIZE);
+    assertThat(mDelegatePool.poolParams.maxBucketSize).isEqualTo(MAX_BUFFER_SIZE);
+    assertThat(mDelegatePool.free.numBytes).isEqualTo(0);
   }
 
   @Test
   public void testGet() throws Exception {
     CloseableReference<byte[]> arrayRef = mPool.get(1);
-    assertEquals(0, mDelegatePool.free.numBytes);
-    assertEquals(MIN_BUFFER_SIZE, arrayRef.get().length);
+    assertThat(mDelegatePool.free.numBytes).isEqualTo(0);
+    assertThat(arrayRef.get().length).isEqualTo(MIN_BUFFER_SIZE);
   }
 
   @Test
   public void testGetTooBigArray() {
-    assertEquals(2 * MAX_BUFFER_SIZE, mPool.get(2 * MAX_BUFFER_SIZE).get().length);
+    assertThat(mPool.get(2 * MAX_BUFFER_SIZE).get().length).isEqualTo(2 * MAX_BUFFER_SIZE);
   }
 
   @Test
   public void testRelease() throws Exception {
     mPool.get(MIN_BUFFER_SIZE).close();
-    assertEquals(MIN_BUFFER_SIZE, mDelegatePool.free.numBytes);
+    assertThat(mDelegatePool.free.numBytes).isEqualTo(MIN_BUFFER_SIZE);
   }
 
   @Test
@@ -73,37 +73,37 @@ public class FlexByteArrayPoolTest {
     arrayRef.close();
 
     arrayRef = mPool.get(7);
-    assertEquals(8, arrayRef.get().length);
-    assertNotSame(smallArray, arrayRef.get());
+    assertThat(arrayRef.get().length).isEqualTo(8);
+    assertThat(arrayRef.get()).isNotSameAs(smallArray);
   }
 
   @Test
   public void testTrim() {
     mPool.get(7).close();
-    assertEquals(1, mDelegatePool.getBucket(8).getFreeListSize());
+    assertThat(mDelegatePool.getBucket(8).getFreeListSize()).isEqualTo(1);
 
     // now trim, and verify again
     mDelegatePool.trim(MemoryTrimType.OnCloseToDalvikHeapLimit);
-    assertEquals(0, mDelegatePool.getBucket(8).getFreeListSize());
+    assertThat(mDelegatePool.getBucket(8).getFreeListSize()).isEqualTo(0);
   }
 
   @Test
   public void testTrimUnsuccessful() {
     CloseableReference<byte[]> arrayRef = mPool.get(7);
     mDelegatePool.trim(MemoryTrimType.OnCloseToDalvikHeapLimit);
-    assertNotNull(arrayRef.get());
+    assertThat(arrayRef.get()).isNotNull();
   }
 
   @Test
   public void testGetBucketedSize() throws Exception {
-    assertEquals(MIN_BUFFER_SIZE, mDelegatePool.getBucketedSize(1));
-    assertEquals(MIN_BUFFER_SIZE, mDelegatePool.getBucketedSize(2));
-    assertEquals(MIN_BUFFER_SIZE, mDelegatePool.getBucketedSize(3));
-    assertEquals(MIN_BUFFER_SIZE, mDelegatePool.getBucketedSize(4));
-    assertEquals(8, mDelegatePool.getBucketedSize(5));
-    assertEquals(8, mDelegatePool.getBucketedSize(6));
-    assertEquals(8, mDelegatePool.getBucketedSize(7));
-    assertEquals(8, mDelegatePool.getBucketedSize(8));
-    assertEquals(16, mDelegatePool.getBucketedSize(9));
+    assertThat(mDelegatePool.getBucketedSize(1)).isEqualTo(MIN_BUFFER_SIZE);
+    assertThat(mDelegatePool.getBucketedSize(2)).isEqualTo(MIN_BUFFER_SIZE);
+    assertThat(mDelegatePool.getBucketedSize(3)).isEqualTo(MIN_BUFFER_SIZE);
+    assertThat(mDelegatePool.getBucketedSize(4)).isEqualTo(MIN_BUFFER_SIZE);
+    assertThat(mDelegatePool.getBucketedSize(5)).isEqualTo(8);
+    assertThat(mDelegatePool.getBucketedSize(6)).isEqualTo(8);
+    assertThat(mDelegatePool.getBucketedSize(7)).isEqualTo(8);
+    assertThat(mDelegatePool.getBucketedSize(8)).isEqualTo(8);
+    assertThat(mDelegatePool.getBucketedSize(9)).isEqualTo(16);
   }
 }
