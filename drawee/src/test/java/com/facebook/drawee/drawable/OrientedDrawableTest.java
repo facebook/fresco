@@ -51,7 +51,7 @@ public class OrientedDrawableTest {
         new OrientedDrawable(mDrawable, 0, ExifInterface.ORIENTATION_NORMAL);
     drawable.setBounds(mBounds);
     drawable.draw(mCanvas);
-    assertTrue(drawable.mRotationMatrix.isIdentity());
+    assertTrue(drawable.rotationMatrix.isIdentity());
     verify(mDrawable).setBounds(new Rect(mBounds));
   }
 
@@ -64,8 +64,8 @@ public class OrientedDrawableTest {
 
     Matrix expectedMatrix = new Matrix();
     expectedMatrix.setRotate(90, drawable.getBounds().centerX(), drawable.getBounds().centerY());
-    assertFalse(drawable.mRotationMatrix.isIdentity());
-    AndroidGraphicsTestUtils.assertEquals(expectedMatrix, drawable.mRotationMatrix);
+    assertFalse(drawable.rotationMatrix.isIdentity());
+    AndroidGraphicsTestUtils.assertEquals(expectedMatrix, drawable.rotationMatrix);
     verifySetBounds(expectedMatrix);
   }
 
@@ -78,8 +78,8 @@ public class OrientedDrawableTest {
 
     Matrix expectedMatrix = new Matrix();
     expectedMatrix.setRotate(180, drawable.getBounds().centerX(), drawable.getBounds().centerY());
-    assertFalse(drawable.mRotationMatrix.isIdentity());
-    AndroidGraphicsTestUtils.assertEquals(expectedMatrix, drawable.mRotationMatrix);
+    assertFalse(drawable.rotationMatrix.isIdentity());
+    AndroidGraphicsTestUtils.assertEquals(expectedMatrix, drawable.rotationMatrix);
     verifySetBounds(expectedMatrix);
   }
 
@@ -92,8 +92,8 @@ public class OrientedDrawableTest {
 
     Matrix expectedMatrix = new Matrix();
     expectedMatrix.setRotate(270, drawable.getBounds().centerX(), drawable.getBounds().centerY());
-    assertFalse(drawable.mRotationMatrix.isIdentity());
-    AndroidGraphicsTestUtils.assertEquals(expectedMatrix, drawable.mRotationMatrix);
+    assertFalse(drawable.rotationMatrix.isIdentity());
+    AndroidGraphicsTestUtils.assertEquals(expectedMatrix, drawable.rotationMatrix);
     verifySetBounds(expectedMatrix);
   }
 
@@ -106,8 +106,8 @@ public class OrientedDrawableTest {
 
     Matrix expectedMatrix = new Matrix();
     expectedMatrix.setScale(-1, 1);
-    assertFalse(drawable.mRotationMatrix.isIdentity());
-    AndroidGraphicsTestUtils.assertEquals(expectedMatrix, drawable.mRotationMatrix);
+    assertFalse(drawable.rotationMatrix.isIdentity());
+    AndroidGraphicsTestUtils.assertEquals(expectedMatrix, drawable.rotationMatrix);
     verifySetBounds(expectedMatrix);
   }
 
@@ -120,8 +120,8 @@ public class OrientedDrawableTest {
 
     Matrix expectedMatrix = new Matrix();
     expectedMatrix.setScale(1, -1);
-    assertFalse(drawable.mRotationMatrix.isIdentity());
-    AndroidGraphicsTestUtils.assertEquals(expectedMatrix, drawable.mRotationMatrix);
+    assertFalse(drawable.rotationMatrix.isIdentity());
+    AndroidGraphicsTestUtils.assertEquals(expectedMatrix, drawable.rotationMatrix);
     verifySetBounds(expectedMatrix);
   }
 
@@ -135,8 +135,8 @@ public class OrientedDrawableTest {
     Matrix expectedMatrix = new Matrix();
     expectedMatrix.setRotate(270, drawable.getBounds().centerX(), drawable.getBounds().centerY());
     expectedMatrix.postScale(1, -1);
-    assertFalse(drawable.mRotationMatrix.isIdentity());
-    AndroidGraphicsTestUtils.assertEquals(expectedMatrix, drawable.mRotationMatrix);
+    assertFalse(drawable.rotationMatrix.isIdentity());
+    AndroidGraphicsTestUtils.assertEquals(expectedMatrix, drawable.rotationMatrix);
     verifySetBounds(expectedMatrix);
   }
 
@@ -150,8 +150,8 @@ public class OrientedDrawableTest {
     Matrix expectedMatrix = new Matrix();
     expectedMatrix.setRotate(270, drawable.getBounds().centerX(), drawable.getBounds().centerY());
     expectedMatrix.postScale(-1, 1);
-    assertFalse(drawable.mRotationMatrix.isIdentity());
-    AndroidGraphicsTestUtils.assertEquals(expectedMatrix, drawable.mRotationMatrix);
+    assertFalse(drawable.rotationMatrix.isIdentity());
+    AndroidGraphicsTestUtils.assertEquals(expectedMatrix, drawable.rotationMatrix);
     verifySetBounds(expectedMatrix);
   }
 
