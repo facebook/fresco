@@ -101,7 +101,7 @@ class LiveEditorOnScreenButtonController(
           }
         }
 
-        private inline fun ifEnabled(body: () -> Unit) {
+        private fun ifEnabled(body: () -> Unit) {
           if (isEnabled.get()) {
             body()
             isTracking = true
