@@ -7,7 +7,7 @@
 
 package com.facebook.imagepipeline.producers;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import android.graphics.Bitmap;
@@ -111,7 +111,7 @@ public class SingleUsePostprocessorProducerTest {
     mTestExecutorService.runUntilIdle();
 
     mInOrder.verifyNoMoreInteractions();
-    assertEquals(0, mResults.size());
+    assertThat(mResults.size()).isEqualTo(0);
 
     verify(mSourceCloseableStaticBitmap).close();
   }
@@ -139,10 +139,11 @@ public class SingleUsePostprocessorProducerTest {
     mInOrder.verify(mConsumer).onNewResult(any(CloseableReference.class), eq(Consumer.IS_LAST));
     mInOrder.verifyNoMoreInteractions();
 
-    assertEquals(1, mResults.size());
+    assertThat(mResults.size()).isEqualTo(1);
     CloseableReference<CloseableImage> res0 = mResults.get(0);
-    assertTrue(CloseableReference.isValid(res0));
-    assertSame(mDestinationBitmap, ((CloseableStaticBitmap) res0.get()).getUnderlyingBitmap());
+    assertThat(CloseableReference.isValid(res0)).isTrue();
+    assertThat(((CloseableStaticBitmap) res0.get()).getUnderlyingBitmap())
+        .isSameAs(mDestinationBitmap);
     res0.close();
 
     verify(mBitmapResourceReleaser).release(mDestinationBitmap);
@@ -175,7 +176,7 @@ public class SingleUsePostprocessorProducerTest {
             eq(mExtraMap));
     mInOrder.verify(mConsumer).onFailure(nullable(Throwable.class));
     mInOrder.verifyNoMoreInteractions();
-    assertEquals(0, mResults.size());
+    assertThat(mResults.size()).isEqualTo(0);
 
     verify(mSourceCloseableStaticBitmap).close();
   }
