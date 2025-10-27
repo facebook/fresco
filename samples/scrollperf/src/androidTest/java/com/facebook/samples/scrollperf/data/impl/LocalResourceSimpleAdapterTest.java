@@ -7,13 +7,14 @@
 
 package com.facebook.samples.scrollperf.data.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.test.AndroidTestCase;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
-import org.junit.Assert;
 
 /** This is the Unit Test class for the LocalResourceSimpleAdapterTest */
 public class LocalResourceSimpleAdapterTest extends AndroidTestCase {
@@ -22,33 +23,33 @@ public class LocalResourceSimpleAdapterTest extends AndroidTestCase {
     final Context context = getContext();
     final Resources res = context.getResources();
     final String[] uris = res.getStringArray(R.array.local_uri_test);
-    Assert.assertNotNull(uris);
+    assertThat(uris).isNotNull();
     SimpleAdapter<Uri> simpleAdapter =
         LocalResourceSimpleAdapter.getEagerAdapter(context, R.array.local_uri_test);
     checkSimpleAdapterData(simpleAdapter, uris.length);
-    Assert.assertFalse(simpleAdapter.isLazy());
+    assertThat(simpleAdapter.isLazy()).isFalse();
   }
 
   public void testLazyAdapter() {
     final Context context = getContext();
     final Resources res = context.getResources();
     final String[] uris = res.getStringArray(R.array.local_uri_test);
-    Assert.assertNotNull(uris);
+    assertThat(uris).isNotNull();
     SimpleAdapter<Uri> simpleAdapter =
         LocalResourceSimpleAdapter.getEagerAdapter(context, R.array.local_uri_test);
     checkSimpleAdapterData(simpleAdapter, uris.length);
-    Assert.assertTrue(simpleAdapter.isLazy());
+    assertThat(simpleAdapter.isLazy()).isTrue();
   }
 
   private void checkSimpleAdapterData(SimpleAdapter<Uri> simpleAdapter, int requestedSize) {
-    Assert.assertNotNull(simpleAdapter);
-    Assert.assertEquals(10, requestedSize);
-    Assert.assertEquals(simpleAdapter.getSize(), requestedSize);
+    assertThat(simpleAdapter).isNotNull();
+    assertThat(requestedSize).isEqualTo(10);
+    assertThat(simpleAdapter.getSize()).isEqualTo(requestedSize);
     Uri firstUri = simpleAdapter.get(0);
-    assertNotNull(firstUri);
-    assertEquals(Uri.parse("http://myserver.com/file1"), firstUri);
+    assertThat(firstUri).isNotNull();
+    assertThat(firstUri).isEqualTo(Uri.parse("http://myserver.com/file1"));
     Uri lastUri = simpleAdapter.get(simpleAdapter.getSize() - 1);
-    assertNotNull(lastUri);
-    assertEquals(Uri.parse("http://myserver.com/file10"), lastUri);
+    assertThat(lastUri).isNotNull();
+    assertThat(lastUri).isEqualTo(Uri.parse("http://myserver.com/file10"));
   }
 }
