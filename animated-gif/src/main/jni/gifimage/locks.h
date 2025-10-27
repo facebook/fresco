@@ -13,7 +13,7 @@
 
 class RWLock {
  public:
-  RWLock() : mutex_(PTHREAD_RWLOCK_INITIALIZER){};
+  RWLock() : mutex_(PTHREAD_RWLOCK_INITIALIZER) {};
   // No copying allowed
   RWLock(const RWLock&) = delete;
   void operator=(const RWLock&) = delete;
