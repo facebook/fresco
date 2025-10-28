@@ -7,10 +7,7 @@
 
 package com.facebook.cache.disk;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
@@ -36,7 +33,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,7 +55,7 @@ public class DefaultDiskStorageTest {
     mockedSystemClock.when(() -> SystemClock.get()).thenReturn(mClock);
     mDirectory =
         new File(RuntimeEnvironment.application.getCacheDir(), "sharded-disk-storage-test");
-    Assert.assertTrue(mDirectory.mkdirs());
+    assertThat(mDirectory.mkdirs()).isTrue();
     FileTree.deleteContents(mDirectory);
   }
 
@@ -81,26 +77,26 @@ public class DefaultDiskStorageTest {
   public void testStartup() throws Exception {
     // create a bogus file
     File bogusFile = new File(mDirectory, "bogus");
-    Assert.assertTrue(bogusFile.createNewFile());
+    assertThat(bogusFile.createNewFile()).isTrue();
 
     // create the storage now. Bogus files should be gone now
     DefaultDiskStorage storage = getStorageSupplier(1).get();
-    Assert.assertFalse(bogusFile.exists());
+    assertThat(bogusFile.exists()).isFalse();
     String version1Dir = DefaultDiskStorage.getVersionSubdirectoryName(1);
-    Assert.assertTrue(new File(mDirectory, version1Dir).exists());
+    assertThat(new File(mDirectory, version1Dir).exists()).isTrue();
 
     // create a new version
     storage = getStorageSupplier(2).get();
-    Assert.assertNotNull(storage);
-    Assert.assertFalse(new File(mDirectory, version1Dir).exists());
+    assertThat(storage).isNotNull();
+    assertThat(new File(mDirectory, version1Dir).exists()).isFalse();
     String version2Dir = DefaultDiskStorage.getVersionSubdirectoryName(2);
-    Assert.assertTrue(new File(mDirectory, version2Dir).exists());
+    assertThat(new File(mDirectory, version2Dir).exists()).isTrue();
   }
 
   @Test
   public void testIsEnabled() {
     DefaultDiskStorage storage = getStorageSupplier(1).get();
-    Assert.assertTrue(storage.isEnabled());
+    assertThat(storage.isEnabled()).isTrue();
   }
 
   @Test
@@ -111,23 +107,23 @@ public class DefaultDiskStorageTest {
 
     // no file - get should fail
     BinaryResource resource1 = storage.getResource(resourceId1, null);
-    Assert.assertNull(resource1);
+    assertThat(resource1).isNull();
 
     // write out the file now
     byte[] key1Contents = new byte[] {0, 1, 2};
     writeToStorage(storage, resourceId1, key1Contents);
     // get should succeed now
     resource1 = storage.getResource(resourceId1, null);
-    Assert.assertNotNull(resource1);
+    assertThat(resource1).isNotNull();
     File underlyingFile = ((FileBinaryResource) resource1).getFile();
-    Assert.assertArrayEquals(key1Contents, Files.toByteArray(underlyingFile));
+    assertThat(Files.toByteArray(underlyingFile)).containsExactly(key1Contents);
     // remove the file now - get should fail again
-    Assert.assertTrue(underlyingFile.delete());
+    assertThat(underlyingFile.delete()).isTrue();
     resource1 = storage.getResource(resourceId1, null);
-    Assert.assertNull(resource1);
+    assertThat(resource1).isNull();
     // no file
     BinaryResource resource2 = storage.getResource(resourceId2, null);
-    Assert.assertNull(resource2);
+    assertThat(resource2).isNull();
   }
 
   /**
@@ -144,13 +140,13 @@ public class DefaultDiskStorageTest {
     File file1 = writeFileToStorage(storage, resourceId1, value1);
 
     Set<File> files = new HashSet<>();
-    Assert.assertTrue(mDirectory.exists());
+    assertThat(mDirectory.exists()).isTrue();
     List<File> founds1 = findNewFiles(mDirectory, files, /*recurse*/ true);
-    Assert.assertNotNull(file1);
-    Assert.assertTrue(founds1.contains(file1));
-    Assert.assertTrue(file1.exists());
-    assertEquals(100, file1.length());
-    Assert.assertArrayEquals(value1, Files.toByteArray(file1));
+    assertThat(file1).isNotNull();
+    assertThat(founds1.contains(file1)).isTrue();
+    assertThat(file1.exists()).isTrue();
+    assertThat(file1.length()).isEqualTo(100);
+    assertThat(Files.toByteArray(file1)).containsExactly(value1);
   }
 
   /**
@@ -185,7 +181,7 @@ public class DefaultDiskStorageTest {
     List<File> files = findNewFiles(mDirectory, Collections.<File>emptySet(), /*recurse*/ true);
 
     // there should be 1 file per entry
-    assertEquals(3, files.size());
+    assertThat(files.size()).isEqualTo(3);
 
     // now delete entry2
     Collection<DiskStorage.Entry> entries = storage.getEntries();
@@ -195,21 +191,21 @@ public class DefaultDiskStorageTest {
       }
     }
 
-    assertFalse(storage.contains(resourceId2, null));
+    assertThat(storage.contains(resourceId2, null)).isFalse();
     List<File> remaining = findNewFiles(mDirectory, Collections.<File>emptySet(), /*recurse*/ true);
 
     // 2 entries remain
-    assertEquals(2, remaining.size());
+    assertThat(remaining.size()).isEqualTo(2);
 
     // none of them with timestamp close to time2
     List<DiskStorage.Entry> entries1 = new ArrayList<>(storage.getEntries());
-    assertEquals(2, entries1.size());
+    assertThat(entries1.size()).isEqualTo(2);
     // first
     DiskStorage.Entry entry = entries1.get(0);
-    assertFalse(Math.abs(entry.getTimestamp() - time2) < 500);
+    assertThat(Math.abs(entry.getTimestamp() - time2) < 500).isFalse();
     // second
     entry = entries1.get(1);
-    assertFalse(Math.abs(entry.getTimestamp() - time2) < 500);
+    assertThat(Math.abs(entry.getTimestamp() - time2) < 500).isFalse();
   }
 
   @Test
@@ -220,21 +216,21 @@ public class DefaultDiskStorageTest {
     final String resourceId1 = "resource1";
     final byte[] value1 = new byte[100];
     final File file1 = writeFileToStorage(storage, resourceId1, value1);
-    assertTrue(Math.abs(file1.lastModified() - startTime) <= 500);
+    assertThat(Math.abs(file1.lastModified() - startTime) <= 500).isTrue();
 
     final long time2 = startTime + 10000;
     when(mClock.now()).thenReturn(time2);
     final String resourceId2 = "resource2";
     final byte[] value2 = new byte[100];
     final File file2 = writeFileToStorage(storage, resourceId2, value2);
-    assertTrue(Math.abs(file1.lastModified() - startTime) <= 500);
-    assertTrue(Math.abs(file2.lastModified() - time2) <= 500);
+    assertThat(Math.abs(file1.lastModified() - startTime) <= 500).isTrue();
+    assertThat(Math.abs(file2.lastModified() - time2) <= 500).isTrue();
 
     final long time3 = time2 + 10000;
     when(mClock.now()).thenReturn(time3);
     storage.touch(resourceId1, null);
-    assertTrue(Math.abs(file1.lastModified() - time3) <= 500);
-    assertTrue(Math.abs(file2.lastModified() - time2) <= 500);
+    assertThat(Math.abs(file1.lastModified() - time3) <= 500).isTrue();
+    assertThat(Math.abs(file2.lastModified() - time2) <= 500).isTrue();
   }
 
   @Test
@@ -251,24 +247,24 @@ public class DefaultDiskStorageTest {
     final byte[] value3 = new byte[100];
     writeFileToStorage(storage, resourceId3, value3);
 
-    assertTrue(storage.contains(resourceId1, null));
-    assertTrue(storage.contains(resourceId2, null));
-    assertTrue(storage.contains(resourceId3, null));
+    assertThat(storage.contains(resourceId1, null)).isTrue();
+    assertThat(storage.contains(resourceId2, null)).isTrue();
+    assertThat(storage.contains(resourceId3, null)).isTrue();
 
     storage.remove(resourceId2);
-    assertTrue(storage.contains(resourceId1, null));
-    assertFalse(storage.contains(resourceId2, null));
-    assertTrue(storage.contains(resourceId3, null));
+    assertThat(storage.contains(resourceId1, null)).isTrue();
+    assertThat(storage.contains(resourceId2, null)).isFalse();
+    assertThat(storage.contains(resourceId3, null)).isTrue();
 
     storage.remove(resourceId1);
-    assertFalse(storage.contains(resourceId1, null));
-    assertFalse(storage.contains(resourceId2, null));
-    assertTrue(storage.contains(resourceId3, null));
+    assertThat(storage.contains(resourceId1, null)).isFalse();
+    assertThat(storage.contains(resourceId2, null)).isFalse();
+    assertThat(storage.contains(resourceId3, null)).isTrue();
 
     storage.remove(resourceId3);
-    assertFalse(storage.contains(resourceId1, null));
-    assertFalse(storage.contains(resourceId2, null));
-    assertFalse(storage.contains(resourceId3, null));
+    assertThat(storage.contains(resourceId1, null)).isFalse();
+    assertThat(storage.contains(resourceId2, null)).isFalse();
+    assertThat(storage.contains(resourceId3, null)).isFalse();
   }
 
   @Test
@@ -289,9 +285,9 @@ public class DefaultDiskStorageTest {
     BinaryResource res1 = storage.getResource("resourceId1", null);
     BinaryResource res2 = storage.getResource("resourceId2", null);
     BinaryResource res3 = storage.getResource("resourceId3", null);
-    assertArrayEquals(value1, res1.read());
-    assertArrayEquals(value2, res2.read());
-    assertArrayEquals(value3, res3.read());
+    assertThat(res1.read()).containsExactly(value1);
+    assertThat(res2.read()).containsExactly(value2);
+    assertThat(res3.read()).containsExactly(value3);
 
     // obtain entries and sort by name
     List<DiskStorage.Entry> entries = new ArrayList<>(storage.getEntries());
@@ -304,13 +300,13 @@ public class DefaultDiskStorageTest {
           }
         });
 
-    assertEquals(3, entries.size());
-    assertEquals("resourceId1", entries.get(0).getId());
-    assertEquals("resourceId2", entries.get(1).getId());
-    assertEquals("resourceId3", entries.get(2).getId());
-    assertArrayEquals(value1, entries.get(0).getResource().read());
-    assertArrayEquals(value2, entries.get(1).getResource().read());
-    assertArrayEquals(value3, entries.get(2).getResource().read());
+    assertThat(entries.size()).isEqualTo(3);
+    assertThat(entries.get(0).getId()).isEqualTo("resourceId1");
+    assertThat(entries.get(1).getId()).isEqualTo("resourceId2");
+    assertThat(entries.get(2).getId()).isEqualTo("resourceId3");
+    assertThat(entries.get(0).getResource().read()).containsExactly(value1);
+    assertThat(entries.get(1).getResource().read()).containsExactly(value2);
+    assertThat(entries.get(2).getResource().read()).containsExactly(value3);
   }
 
   @Test
@@ -322,7 +318,7 @@ public class DefaultDiskStorageTest {
     value1[80] = 123;
     final File file1 = writeFileToStorage(storage, resourceId1, value1);
 
-    assertEquals(100, file1.length());
+    assertThat(file1.length()).isEqualTo(100);
     List<DiskStorage.Entry> entries = storage.getEntries();
     DiskStorage.Entry entry = entries.get(0);
     long timestamp = entry.getTimestamp();
@@ -332,8 +328,8 @@ public class DefaultDiskStorageTest {
     // now the new timestamp show be higher, but the entry should have the same value
     List<DiskStorage.Entry> newEntries = storage.getEntries();
     DiskStorage.Entry newEntry = newEntries.get(0);
-    assertTrue(timestamp < newEntry.getTimestamp());
-    assertEquals(timestamp, entry.getTimestamp());
+    assertThat(timestamp < newEntry.getTimestamp()).isTrue();
+    assertThat(entry.getTimestamp()).isEqualTo(timestamp);
   }
 
   @Test
@@ -347,14 +343,14 @@ public class DefaultDiskStorageTest {
 
     // Make sure that we don't evict a recent temp file
     purgeUnexpectedFiles(storage);
-    assertTrue(tempFile.exists());
+    assertThat(tempFile.exists()).isTrue();
 
     // Mark it old, then try eviction again. It should be gone.
     if (!tempFile.setLastModified(mClock.now() - DefaultDiskStorage.TEMP_FILE_LIFETIME_MS - 1000)) {
       throw new IOException("Unable to update timestamp of file: " + tempFile);
     }
     purgeUnexpectedFiles(storage);
-    assertFalse(tempFile.exists());
+    assertThat(tempFile.exists()).isFalse();
   }
 
   /**
@@ -373,43 +369,43 @@ public class DefaultDiskStorageTest {
     File file = writeFileToStorage(storage, resourceId, CONTENT);
 
     // check file exists
-    Assert.assertTrue(file.exists());
-    Assert.assertArrayEquals(CONTENT, Files.toByteArray(file));
+    assertThat(file.exists()).isTrue();
+    assertThat(Files.toByteArray(file)).containsExactly(CONTENT);
 
     final File unexpectedFile1 = new File(mDirectory, "unexpected-file-1");
     final File unexpectedFile2 = new File(mDirectory, "unexpected-file-2");
 
-    Assert.assertTrue(unexpectedFile1.createNewFile());
-    Assert.assertTrue(unexpectedFile2.createNewFile());
+    assertThat(unexpectedFile1.createNewFile()).isTrue();
+    assertThat(unexpectedFile2.createNewFile()).isTrue();
 
     final File unexpectedDir1 = new File(mDirectory, "unexpected-dir-1");
-    Assert.assertTrue(unexpectedDir1.mkdirs());
+    assertThat(unexpectedDir1.mkdirs()).isTrue();
 
     final File unexpectedDir2 = new File(mDirectory, "unexpected-dir-2");
-    Assert.assertTrue(unexpectedDir2.mkdirs());
+    assertThat(unexpectedDir2.mkdirs()).isTrue();
     final File unexpectedSubfile1 = new File(unexpectedDir2, "unexpected-sub-file-1");
-    Assert.assertTrue(unexpectedSubfile1.createNewFile());
+    assertThat(unexpectedSubfile1.createNewFile()).isTrue();
 
-    Assert.assertEquals(5, mDirectory.listFiles().length); // 4 unexpected (files+dirs) + ver. dir
-    Assert.assertEquals(1, unexpectedDir2.listFiles().length);
-    Assert.assertEquals(0, unexpectedDir1.listFiles().length);
+    assertThat(mDirectory.listFiles().length).isEqualTo(5); // 4 unexpected (files+dirs) + ver. dir
+    assertThat(unexpectedDir2.listFiles().length).isEqualTo(1);
+    assertThat(unexpectedDir1.listFiles().length).isEqualTo(0);
 
     File unexpectedFileInShard = new File(file.getParentFile(), "unexpected-in-shard");
-    Assert.assertTrue(unexpectedFileInShard.createNewFile());
+    assertThat(unexpectedFileInShard.createNewFile()).isTrue();
 
     storage.purgeUnexpectedResources();
-    Assert.assertFalse(unexpectedFile1.exists());
-    Assert.assertFalse(unexpectedFile2.exists());
-    Assert.assertFalse(unexpectedSubfile1.exists());
-    Assert.assertFalse(unexpectedDir1.exists());
-    Assert.assertFalse(unexpectedDir2.exists());
+    assertThat(unexpectedFile1.exists()).isFalse();
+    assertThat(unexpectedFile2.exists()).isFalse();
+    assertThat(unexpectedSubfile1.exists()).isFalse();
+    assertThat(unexpectedDir1.exists()).isFalse();
+    assertThat(unexpectedDir2.exists()).isFalse();
 
     // check file still exists
-    Assert.assertTrue(file.exists());
+    assertThat(file.exists()).isTrue();
     // check unexpected sibling is gone
-    Assert.assertFalse(unexpectedFileInShard.exists());
+    assertThat(unexpectedFileInShard.exists()).isFalse();
     // check the only thing in root is the version directory
-    Assert.assertEquals(1, mDirectory.listFiles().length); // just the version directory
+    assertThat(mDirectory.listFiles().length).isEqualTo(1); // just the version directory
   }
 
   /**
@@ -420,23 +416,23 @@ public class DefaultDiskStorageTest {
    */
   @Test
   public void testDirectoryIsNuked() throws Exception {
-    Assert.assertEquals(0, mDirectory.listFiles().length);
+    assertThat(mDirectory.listFiles().length).isEqualTo(0);
 
     // create file before setting final test date
-    Assert.assertTrue(new File(mDirectory, "something-arbitrary").createNewFile());
+    assertThat(new File(mDirectory, "something-arbitrary").createNewFile()).isTrue();
 
     long lastModified = mDirectory.lastModified() - 1000;
     // some previous date to the "now" used for file creation
-    Assert.assertTrue(mDirectory.setLastModified(lastModified));
+    assertThat(mDirectory.setLastModified(lastModified)).isTrue();
     // check it was changed
-    Assert.assertEquals(lastModified, mDirectory.lastModified());
+    assertThat(mDirectory.lastModified()).isEqualTo(lastModified);
 
     getStorageSupplier(1).get();
 
     // mDirectory exists...
-    Assert.assertTrue(mDirectory.exists());
+    assertThat(mDirectory.exists()).isTrue();
     // but it was created now
-    Assert.assertTrue(lastModified < mDirectory.lastModified());
+    assertThat(lastModified < mDirectory.lastModified()).isTrue();
   }
 
   /**
@@ -447,7 +443,7 @@ public class DefaultDiskStorageTest {
    */
   @Test
   public void testDirectoryIsNotNuked() throws Exception {
-    Assert.assertEquals(0, mDirectory.listFiles().length);
+    assertThat(mDirectory.listFiles().length).isEqualTo(0);
 
     final DefaultDiskStorage storage = getStorageSupplier(1).get();
     final String resourceId = "file1";
@@ -461,17 +457,17 @@ public class DefaultDiskStorageTest {
 
     // assign some previous date to the "now" used for file creation
     long lastModified = mDirectory.lastModified() - 1000;
-    Assert.assertTrue(mDirectory.setLastModified(lastModified));
+    assertThat(mDirectory.setLastModified(lastModified)).isTrue();
     // check it was changed
-    Assert.assertEquals(lastModified, mDirectory.lastModified());
+    assertThat(mDirectory.lastModified()).isEqualTo(lastModified);
 
     // create again, it shouldn't delete the directory
     getStorageSupplier(1).get();
 
     // mDirectory exists...
-    Assert.assertTrue(mDirectory.exists());
+    assertThat(mDirectory.exists()).isTrue();
     // and it's the same as before
-    Assert.assertEquals(lastModified, mDirectory.lastModified());
+    assertThat(mDirectory.lastModified()).isEqualTo(lastModified);
   }
 
   /**
@@ -503,11 +499,11 @@ public class DefaultDiskStorageTest {
     files.add(write(storage, resourceId3, CONTENT3));
 
     List<DefaultDiskStorage.EntryImpl> entries = retrieveEntries(storage);
-    Assert.assertEquals(4, entries.size());
-    Assert.assertEquals(files.get(0), entries.get(0).getResource().getFile());
-    Assert.assertEquals(files.get(1), entries.get(1).getResource().getFile());
-    Assert.assertEquals(files.get(2), entries.get(2).getResource().getFile());
-    Assert.assertEquals(files.get(3), entries.get(3).getResource().getFile());
+    assertThat(entries.size()).isEqualTo(4);
+    assertThat(entries.get(0).getResource().getFile()).isEqualTo(files.get(0));
+    assertThat(entries.get(1).getResource().getFile()).isEqualTo(files.get(1));
+    assertThat(entries.get(2).getResource().getFile()).isEqualTo(files.get(2));
+    assertThat(entries.get(3).getResource().getFile()).isEqualTo(files.get(3));
 
     // try the same after removing 2 entries
     for (DiskStorage.Entry entry : storage.getEntries()) {
@@ -518,9 +514,9 @@ public class DefaultDiskStorageTest {
     }
 
     List<DefaultDiskStorage.EntryImpl> entriesAfterRemoval = retrieveEntries(storage);
-    Assert.assertEquals(2, entriesAfterRemoval.size());
-    Assert.assertEquals(files.get(0), entriesAfterRemoval.get(0).getResource().getFile());
-    Assert.assertEquals(files.get(2), entriesAfterRemoval.get(1).getResource().getFile());
+    assertThat(entriesAfterRemoval.size()).isEqualTo(2);
+    assertThat(entriesAfterRemoval.get(0).getResource().getFile()).isEqualTo(files.get(0));
+    assertThat(entriesAfterRemoval.get(1).getResource().getFile()).isEqualTo(files.get(2));
   }
 
   private static FileBinaryResource writeToStorage(
