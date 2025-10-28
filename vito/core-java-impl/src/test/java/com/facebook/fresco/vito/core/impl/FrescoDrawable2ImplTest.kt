@@ -14,7 +14,7 @@ import com.facebook.imagepipeline.image.BaseCloseableImage
 import com.facebook.imagepipeline.image.CloseableImage
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
-import org.junit.Assert
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,11 +45,11 @@ class FrescoDrawable2ImplTest {
   fun testFrescoDrawable_whenDrawableClosed_thenReleaseActualImageReference() {
     frescoDrawable.setImage(NopDrawable, closeableReference)
     closeableReference.close()
-    Assert.assertFalse(closeableImage.isClosed)
+    assertThat(closeableImage.isClosed).isFalse()
     frescoDrawable.close()
-    Assert.assertNull(frescoDrawable.imageReference)
-    Assert.assertTrue(closeableImage.isClosed)
-    Assert.assertTrue(latch.await(3, TimeUnit.SECONDS))
+    assertThat(frescoDrawable.imageReference).isNull()
+    assertThat(closeableImage.isClosed).isTrue()
+    assertThat(latch.await(3, TimeUnit.SECONDS)).isTrue()
   }
 
   @Test
@@ -58,8 +58,8 @@ class FrescoDrawable2ImplTest {
     closeableReference.close()
     val dummyCloseableImage = DummyCloseableImage()
     frescoDrawable.setImage(NopDrawable, CloseableReference.of(dummyCloseableImage))
-    Assert.assertTrue(closeableImage.isClosed)
-    Assert.assertTrue(latch.await(3, TimeUnit.SECONDS))
+    assertThat(closeableImage.isClosed).isTrue()
+    assertThat(latch.await(3, TimeUnit.SECONDS)).isTrue()
   }
 
   @Test
@@ -67,8 +67,8 @@ class FrescoDrawable2ImplTest {
     frescoDrawable.setImage(NopDrawable, closeableReference)
     closeableReference.close()
     frescoDrawable.setImage(null, null)
-    Assert.assertTrue(closeableImage.isClosed)
-    Assert.assertTrue(latch.await(3, TimeUnit.SECONDS))
+    assertThat(closeableImage.isClosed).isTrue()
+    assertThat(latch.await(3, TimeUnit.SECONDS)).isTrue()
   }
 
   @Test
@@ -77,9 +77,9 @@ class FrescoDrawable2ImplTest {
     closeableReference.close()
     val drawable = mock<Drawable>()
     frescoDrawable.setImageDrawable(drawable)
-    Assert.assertNull(frescoDrawable.imageReference)
-    Assert.assertTrue(closeableImage.isClosed)
-    Assert.assertTrue(latch.await(3, TimeUnit.SECONDS))
+    assertThat(frescoDrawable.imageReference).isNull()
+    assertThat(closeableImage.isClosed).isTrue()
+    assertThat(latch.await(3, TimeUnit.SECONDS)).isTrue()
   }
 
   @Test
@@ -87,9 +87,9 @@ class FrescoDrawable2ImplTest {
     frescoDrawable.setImage(NopDrawable, closeableReference)
     closeableReference.close()
     frescoDrawable.setImageDrawable(null)
-    Assert.assertNull(frescoDrawable.imageReference)
-    Assert.assertTrue(closeableImage.isClosed)
-    Assert.assertTrue(latch.await(3, TimeUnit.SECONDS))
+    assertThat(frescoDrawable.imageReference).isNull()
+    assertThat(closeableImage.isClosed).isTrue()
+    assertThat(latch.await(3, TimeUnit.SECONDS)).isTrue()
   }
 
   internal class DummyCloseableImage : BaseCloseableImage() {
