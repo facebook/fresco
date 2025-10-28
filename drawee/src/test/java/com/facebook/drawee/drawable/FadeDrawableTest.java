@@ -7,11 +7,11 @@
 
 package com.facebook.drawee.drawable;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,20 +57,20 @@ public class FadeDrawableTest {
     when(mLayers[0].getIntrinsicHeight()).thenReturn(400);
     when(mLayers[1].getIntrinsicHeight()).thenReturn(350);
     when(mLayers[2].getIntrinsicHeight()).thenReturn(300);
-    Assert.assertEquals(200, mFadeDrawable.getIntrinsicWidth());
-    Assert.assertEquals(400, mFadeDrawable.getIntrinsicHeight());
+    assertThat(mFadeDrawable.getIntrinsicWidth()).isEqualTo(200);
+    assertThat(mFadeDrawable.getIntrinsicHeight()).isEqualTo(400);
   }
 
   @Test
   public void testInitialState() {
     // initially only the fist layer is displayed and there is no transition
-    Assert.assertEquals(FadeDrawable.TRANSITION_NONE, mFadeDrawable.mTransitionState);
-    Assert.assertEquals(255, mFadeDrawable.mAlphas[0]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[1]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[2]);
-    Assert.assertEquals(true, mFadeDrawable.mIsLayerOn[0]);
-    Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[1]);
-    Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[2]);
+    assertThat(mFadeDrawable.mTransitionState).isEqualTo(FadeDrawable.TRANSITION_NONE);
+    assertThat(mFadeDrawable.mAlphas[0]).isEqualTo(255);
+    assertThat(mFadeDrawable.mAlphas[1]).isEqualTo(0);
+    assertThat(mFadeDrawable.mAlphas[2]).isEqualTo(0);
+    assertThat(mFadeDrawable.mIsLayerOn[0]).isTrue();
+    assertThat(mFadeDrawable.mIsLayerOn[1]).isFalse();
+    assertThat(mFadeDrawable.mIsLayerOn[2]).isFalse();
   }
 
   @Test
@@ -78,16 +78,16 @@ public class FadeDrawableTest {
     // start fade
     mFadeDrawable.setTransitionDuration(100);
     mFadeDrawable.fadeToLayer(1);
-    Assert.assertEquals(100, mFadeDrawable.mDurationMs);
-    Assert.assertEquals(FadeDrawable.TRANSITION_STARTING, mFadeDrawable.mTransitionState);
+    assertThat(mFadeDrawable.mDurationMs).isEqualTo(100);
+    assertThat(mFadeDrawable.mTransitionState).isEqualTo(FadeDrawable.TRANSITION_STARTING);
     verify(mCallback).invalidateDrawable(mFadeDrawable);
-    Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[0]);
-    Assert.assertEquals(true, mFadeDrawable.mIsLayerOn[1]);
-    Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[2]);
+    assertThat(mFadeDrawable.mIsLayerOn[0]).isFalse();
+    assertThat(mFadeDrawable.mIsLayerOn[1]).isTrue();
+    assertThat(mFadeDrawable.mIsLayerOn[2]).isFalse();
     // alphas will change only when the next draw happens
-    Assert.assertEquals(255, mFadeDrawable.mAlphas[0]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[1]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[2]);
+    assertThat(mFadeDrawable.mAlphas[0]).isEqualTo(255);
+    assertThat(mFadeDrawable.mAlphas[1]).isEqualTo(0);
+    assertThat(mFadeDrawable.mAlphas[2]).isEqualTo(0);
   }
 
   @Test
@@ -95,16 +95,16 @@ public class FadeDrawableTest {
     // start fade
     mFadeDrawable.setTransitionDuration(100);
     mFadeDrawable.fadeUpToLayer(1);
-    Assert.assertEquals(true, mFadeDrawable.mIsLayerOn[0]);
-    Assert.assertEquals(true, mFadeDrawable.mIsLayerOn[1]);
-    Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[2]);
-    Assert.assertEquals(100, mFadeDrawable.mDurationMs);
-    Assert.assertEquals(FadeDrawable.TRANSITION_STARTING, mFadeDrawable.mTransitionState);
+    assertThat(mFadeDrawable.mIsLayerOn[0]).isTrue();
+    assertThat(mFadeDrawable.mIsLayerOn[1]).isTrue();
+    assertThat(mFadeDrawable.mIsLayerOn[2]).isFalse();
+    assertThat(mFadeDrawable.mDurationMs).isEqualTo(100);
+    assertThat(mFadeDrawable.mTransitionState).isEqualTo(FadeDrawable.TRANSITION_STARTING);
     verify(mCallback).invalidateDrawable(mFadeDrawable);
     // alphas will change only when the next draw happens
-    Assert.assertEquals(255, mFadeDrawable.mAlphas[0]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[1]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[2]);
+    assertThat(mFadeDrawable.mAlphas[0]).isEqualTo(255);
+    assertThat(mFadeDrawable.mAlphas[1]).isEqualTo(0);
+    assertThat(mFadeDrawable.mAlphas[2]).isEqualTo(0);
   }
 
   @Test
@@ -112,16 +112,16 @@ public class FadeDrawableTest {
     // start fade in
     mFadeDrawable.setTransitionDuration(100);
     mFadeDrawable.fadeInLayer(2);
-    Assert.assertEquals(true, mFadeDrawable.mIsLayerOn[0]);
-    Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[1]);
-    Assert.assertEquals(true, mFadeDrawable.mIsLayerOn[2]);
-    Assert.assertEquals(100, mFadeDrawable.mDurationMs);
-    Assert.assertEquals(FadeDrawable.TRANSITION_STARTING, mFadeDrawable.mTransitionState);
+    assertThat(mFadeDrawable.mIsLayerOn[0]).isTrue();
+    assertThat(mFadeDrawable.mIsLayerOn[1]).isFalse();
+    assertThat(mFadeDrawable.mIsLayerOn[2]).isTrue();
+    assertThat(mFadeDrawable.mDurationMs).isEqualTo(100);
+    assertThat(mFadeDrawable.mTransitionState).isEqualTo(FadeDrawable.TRANSITION_STARTING);
     verify(mCallback).invalidateDrawable(mFadeDrawable);
     // alphas will change only when the next draw happens
-    Assert.assertEquals(255, mFadeDrawable.mAlphas[0]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[1]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[2]);
+    assertThat(mFadeDrawable.mAlphas[0]).isEqualTo(255);
+    assertThat(mFadeDrawable.mAlphas[1]).isEqualTo(0);
+    assertThat(mFadeDrawable.mAlphas[2]).isEqualTo(0);
   }
 
   @Test
@@ -129,16 +129,16 @@ public class FadeDrawableTest {
     // start fade out
     mFadeDrawable.setTransitionDuration(100);
     mFadeDrawable.fadeOutLayer(0);
-    Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[0]);
-    Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[1]);
-    Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[2]);
-    Assert.assertEquals(100, mFadeDrawable.mDurationMs);
-    Assert.assertEquals(FadeDrawable.TRANSITION_STARTING, mFadeDrawable.mTransitionState);
+    assertThat(mFadeDrawable.mIsLayerOn[0]).isFalse();
+    assertThat(mFadeDrawable.mIsLayerOn[1]).isFalse();
+    assertThat(mFadeDrawable.mIsLayerOn[2]).isFalse();
+    assertThat(mFadeDrawable.mDurationMs).isEqualTo(100);
+    assertThat(mFadeDrawable.mTransitionState).isEqualTo(FadeDrawable.TRANSITION_STARTING);
     verify(mCallback).invalidateDrawable(mFadeDrawable);
     // alphas will change only when the next draw happens
-    Assert.assertEquals(255, mFadeDrawable.mAlphas[0]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[1]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[2]);
+    assertThat(mFadeDrawable.mAlphas[0]).isEqualTo(255);
+    assertThat(mFadeDrawable.mAlphas[1]).isEqualTo(0);
+    assertThat(mFadeDrawable.mAlphas[2]).isEqualTo(0);
   }
 
   @Test
@@ -148,16 +148,16 @@ public class FadeDrawableTest {
     mFadeDrawable.mIsLayerOn[1] = true;
     mFadeDrawable.mIsLayerOn[2] = true;
     mFadeDrawable.fadeOutAllLayers();
-    Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[0]);
-    Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[1]);
-    Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[2]);
-    Assert.assertEquals(100, mFadeDrawable.mDurationMs);
-    Assert.assertEquals(FadeDrawable.TRANSITION_STARTING, mFadeDrawable.mTransitionState);
+    assertThat(mFadeDrawable.mIsLayerOn[0]).isFalse();
+    assertThat(mFadeDrawable.mIsLayerOn[1]).isFalse();
+    assertThat(mFadeDrawable.mIsLayerOn[2]).isFalse();
+    assertThat(mFadeDrawable.mDurationMs).isEqualTo(100);
+    assertThat(mFadeDrawable.mTransitionState).isEqualTo(FadeDrawable.TRANSITION_STARTING);
     verify(mCallback).invalidateDrawable(mFadeDrawable);
     // alphas will change only when the next draw happens
-    Assert.assertEquals(255, mFadeDrawable.mAlphas[0]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[1]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[2]);
+    assertThat(mFadeDrawable.mAlphas[0]).isEqualTo(255);
+    assertThat(mFadeDrawable.mAlphas[1]).isEqualTo(0);
+    assertThat(mFadeDrawable.mAlphas[2]).isEqualTo(0);
   }
 
   @Test
@@ -173,17 +173,17 @@ public class FadeDrawableTest {
     } else {
       mFadeDrawable.fadeToLayer(1);
     }
-    Assert.assertEquals(fadeUpToLayer, mFadeDrawable.mIsLayerOn[0]);
-    Assert.assertEquals(true, mFadeDrawable.mIsLayerOn[1]);
-    Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[2]);
+    assertThat(mFadeDrawable.mIsLayerOn[0]).isEqualTo(fadeUpToLayer);
+    assertThat(mFadeDrawable.mIsLayerOn[1]).isTrue();
+    assertThat(mFadeDrawable.mIsLayerOn[2]).isFalse();
     verify(mCallback).invalidateDrawable(mFadeDrawable);
 
     mFadeDrawable.finishTransitionImmediately();
     verify(mCallback, times(2)).invalidateDrawable(mFadeDrawable);
-    Assert.assertEquals(fadeUpToLayer ? 255 : 0, mFadeDrawable.mAlphas[0]);
-    Assert.assertEquals(255, mFadeDrawable.mAlphas[1]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[2]);
-    Assert.assertEquals(FadeDrawable.TRANSITION_NONE, mFadeDrawable.mTransitionState);
+    assertThat(mFadeDrawable.mAlphas[0]).isEqualTo(fadeUpToLayer ? 255 : 0);
+    assertThat(mFadeDrawable.mAlphas[1]).isEqualTo(255);
+    assertThat(mFadeDrawable.mAlphas[2]).isEqualTo(0);
+    assertThat(mFadeDrawable.mTransitionState).isEqualTo(FadeDrawable.TRANSITION_NONE);
   }
 
   @Test
@@ -200,16 +200,16 @@ public class FadeDrawableTest {
     } else {
       mFadeDrawable.fadeToLayer(1);
     }
-    Assert.assertEquals(fadeUpToLayer, mFadeDrawable.mIsLayerOn[0]);
-    Assert.assertEquals(true, mFadeDrawable.mIsLayerOn[1]);
-    Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[2]);
+    assertThat(mFadeDrawable.mIsLayerOn[0]).isEqualTo(fadeUpToLayer);
+    assertThat(mFadeDrawable.mIsLayerOn[1]).isTrue();
+    assertThat(mFadeDrawable.mIsLayerOn[2]).isFalse();
     verify(mCallback).invalidateDrawable(mFadeDrawable);
 
     mFadeDrawable.draw(mCanvas);
-    Assert.assertEquals(fadeUpToLayer ? 255 : 0, mFadeDrawable.mAlphas[0]);
-    Assert.assertEquals(255, mFadeDrawable.mAlphas[1]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[2]);
-    Assert.assertEquals(FadeDrawable.TRANSITION_NONE, mFadeDrawable.mTransitionState);
+    assertThat(mFadeDrawable.mAlphas[0]).isEqualTo(fadeUpToLayer ? 255 : 0);
+    assertThat(mFadeDrawable.mAlphas[1]).isEqualTo(255);
+    assertThat(mFadeDrawable.mAlphas[2]).isEqualTo(0);
+    assertThat(mFadeDrawable.mTransitionState).isEqualTo(FadeDrawable.TRANSITION_NONE);
     if (fadeUpToLayer) {
       verify(mLayers[0]).draw(mCanvas);
     }
@@ -238,19 +238,19 @@ public class FadeDrawableTest {
     } else {
       mFadeDrawable.fadeToLayer(1);
     }
-    Assert.assertEquals(fadeUpToLayer, mFadeDrawable.mIsLayerOn[0]);
-    Assert.assertEquals(true, mFadeDrawable.mIsLayerOn[1]);
-    Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[2]);
+    assertThat(mFadeDrawable.mIsLayerOn[0]).isEqualTo(fadeUpToLayer);
+    assertThat(mFadeDrawable.mIsLayerOn[1]).isTrue();
+    assertThat(mFadeDrawable.mIsLayerOn[2]).isFalse();
     verify(mCallback).invalidateDrawable(mFadeDrawable);
     verifyNoMoreInteractions(mCallback, mLayers[0], mLayers[1], mLayers[2]);
 
     // first frame
     resetInteractions();
     mFadeDrawable.draw(mCanvas);
-    Assert.assertEquals(255, mFadeDrawable.mAlphas[0]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[1]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[2]);
-    Assert.assertEquals(FadeDrawable.TRANSITION_RUNNING, mFadeDrawable.mTransitionState);
+    assertThat(mFadeDrawable.mAlphas[0]).isEqualTo(255);
+    assertThat(mFadeDrawable.mAlphas[1]).isEqualTo(0);
+    assertThat(mFadeDrawable.mAlphas[2]).isEqualTo(0);
+    assertThat(mFadeDrawable.mTransitionState).isEqualTo(FadeDrawable.TRANSITION_RUNNING);
     verify(mLayers[0]).mutate();
     verify(mLayers[0]).setAlpha(255);
     verify(mLayers[0]).draw(mCanvas);
@@ -262,10 +262,10 @@ public class FadeDrawableTest {
       resetInteractions();
       mFadeDrawable.incrementCurrentTimeMs(17);
       mFadeDrawable.draw(mCanvas);
-      Assert.assertEquals(fadeUpToLayer ? 255 : 255 - 51 * i, mFadeDrawable.mAlphas[0]);
-      Assert.assertEquals(51 * i, mFadeDrawable.mAlphas[1]);
-      Assert.assertEquals(0, mFadeDrawable.mAlphas[2]);
-      Assert.assertEquals(FadeDrawable.TRANSITION_RUNNING, mFadeDrawable.mTransitionState);
+      assertThat(mFadeDrawable.mAlphas[0]).isEqualTo(fadeUpToLayer ? 255 : 255 - 51 * i);
+      assertThat(mFadeDrawable.mAlphas[1]).isEqualTo(51 * i);
+      assertThat(mFadeDrawable.mAlphas[2]).isEqualTo(0);
+      assertThat(mFadeDrawable.mTransitionState).isEqualTo(FadeDrawable.TRANSITION_RUNNING);
       if (fadeUpToLayer) {
         verify(mLayers[0]).mutate();
         verify(mLayers[0]).setAlpha(255);
@@ -286,10 +286,10 @@ public class FadeDrawableTest {
     resetInteractions();
     mFadeDrawable.incrementCurrentTimeMs(17);
     mFadeDrawable.draw(mCanvas);
-    Assert.assertEquals(fadeUpToLayer ? 255 : 0, mFadeDrawable.mAlphas[0]);
-    Assert.assertEquals(255, mFadeDrawable.mAlphas[1]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[2]);
-    Assert.assertEquals(FadeDrawable.TRANSITION_NONE, mFadeDrawable.mTransitionState);
+    assertThat(mFadeDrawable.mAlphas[0]).isEqualTo(fadeUpToLayer ? 255 : 0);
+    assertThat(mFadeDrawable.mAlphas[1]).isEqualTo(255);
+    assertThat(mFadeDrawable.mAlphas[2]).isEqualTo(0);
+    assertThat(mFadeDrawable.mTransitionState).isEqualTo(FadeDrawable.TRANSITION_NONE);
     if (fadeUpToLayer) {
       verify(mLayers[0]).mutate();
       verify(mLayers[0]).setAlpha(255);
@@ -316,16 +316,16 @@ public class FadeDrawableTest {
     inOrder.verify(mCallback, atLeastOnce()).invalidateDrawable(mFadeDrawable);
     // setAlpha
     mFadeDrawable.setAlpha(128);
-    Assert.assertEquals(128, mFadeDrawable.getAlpha());
+    assertThat(mFadeDrawable.getAlpha()).isEqualTo(128);
     inOrder.verify(mCallback).invalidateDrawable(mFadeDrawable);
     // next frame
     mFadeDrawable.incrementCurrentTimeMs(17);
     mFadeDrawable.draw(mCanvas);
-    Assert.assertEquals(128, mFadeDrawable.getAlpha());
-    Assert.assertEquals(255, mFadeDrawable.mAlphas[0]);
-    Assert.assertEquals(51, mFadeDrawable.mAlphas[1]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[2]);
-    Assert.assertEquals(FadeDrawable.TRANSITION_RUNNING, mFadeDrawable.mTransitionState);
+    assertThat(mFadeDrawable.getAlpha()).isEqualTo(128);
+    assertThat(mFadeDrawable.mAlphas[0]).isEqualTo(255);
+    assertThat(mFadeDrawable.mAlphas[1]).isEqualTo(51);
+    assertThat(mFadeDrawable.mAlphas[2]).isEqualTo(0);
+    assertThat(mFadeDrawable.mTransitionState).isEqualTo(FadeDrawable.TRANSITION_RUNNING);
     inOrder.verify(mLayers[0]).mutate();
     inOrder.verify(mLayers[0]).setAlpha(128);
     inOrder.verify(mLayers[0]).draw(mCanvas);
@@ -349,13 +349,13 @@ public class FadeDrawableTest {
     resetInteractions();
 
     mFadeDrawable.reset();
-    Assert.assertEquals(FadeDrawable.TRANSITION_NONE, mFadeDrawable.mTransitionState);
-    Assert.assertEquals(255, mFadeDrawable.mAlphas[0]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[1]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[2]);
-    Assert.assertEquals(true, mFadeDrawable.mIsLayerOn[0]);
-    Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[1]);
-    Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[2]);
+    assertThat(mFadeDrawable.mTransitionState).isEqualTo(FadeDrawable.TRANSITION_NONE);
+    assertThat(mFadeDrawable.mAlphas[0]).isEqualTo(255);
+    assertThat(mFadeDrawable.mAlphas[1]).isEqualTo(0);
+    assertThat(mFadeDrawable.mAlphas[2]).isEqualTo(0);
+    assertThat(mFadeDrawable.mIsLayerOn[0]).isTrue();
+    assertThat(mFadeDrawable.mIsLayerOn[1]).isFalse();
+    assertThat(mFadeDrawable.mIsLayerOn[2]).isFalse();
     verify(mCallback).invalidateDrawable(mFadeDrawable);
   }
 
@@ -371,12 +371,12 @@ public class FadeDrawableTest {
     mFadeDrawable.finishTransitionImmediately();
     mFadeDrawable.endBatchMode();
     verify(mCallback, times(1)).invalidateDrawable(mFadeDrawable);
-    Assert.assertEquals(255, mFadeDrawable.mAlphas[0]);
-    Assert.assertEquals(255, mFadeDrawable.mAlphas[1]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[2]);
-    Assert.assertEquals(true, mFadeDrawable.mIsLayerOn[0]);
-    Assert.assertEquals(true, mFadeDrawable.mIsLayerOn[1]);
-    Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[2]);
+    assertThat(mFadeDrawable.mAlphas[0]).isEqualTo(255);
+    assertThat(mFadeDrawable.mAlphas[1]).isEqualTo(255);
+    assertThat(mFadeDrawable.mAlphas[2]).isEqualTo(0);
+    assertThat(mFadeDrawable.mIsLayerOn[0]).isTrue();
+    assertThat(mFadeDrawable.mIsLayerOn[1]).isTrue();
+    assertThat(mFadeDrawable.mIsLayerOn[2]).isFalse();
   }
 
   @Test
@@ -389,12 +389,12 @@ public class FadeDrawableTest {
     mFadeDrawable.fadeUpToLayer(1);
     mFadeDrawable.finishTransitionImmediately();
     verify(mCallback, times(7)).invalidateDrawable(mFadeDrawable);
-    Assert.assertEquals(255, mFadeDrawable.mAlphas[0]);
-    Assert.assertEquals(255, mFadeDrawable.mAlphas[1]);
-    Assert.assertEquals(0, mFadeDrawable.mAlphas[2]);
-    Assert.assertEquals(true, mFadeDrawable.mIsLayerOn[0]);
-    Assert.assertEquals(true, mFadeDrawable.mIsLayerOn[1]);
-    Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[2]);
+    assertThat(mFadeDrawable.mAlphas[0]).isEqualTo(255);
+    assertThat(mFadeDrawable.mAlphas[1]).isEqualTo(255);
+    assertThat(mFadeDrawable.mAlphas[2]).isEqualTo(0);
+    assertThat(mFadeDrawable.mIsLayerOn[0]).isTrue();
+    assertThat(mFadeDrawable.mIsLayerOn[1]).isTrue();
+    assertThat(mFadeDrawable.mIsLayerOn[2]).isFalse();
   }
 
   private static class FakeFadeDrawable extends FadeDrawable {
