@@ -7,7 +7,8 @@
 
 package com.facebook.imagepipeline.memory;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 
 import com.facebook.common.memory.MemoryTrimType;
@@ -32,29 +33,29 @@ public class SharedByteArrayTest {
 
   @Test
   public void testBasic() throws Exception {
-    assertEquals(4, mArray.mMinByteArraySize);
-    assertEquals(16, mArray.mMaxByteArraySize);
-    assertNull(mArray.mByteArraySoftRef.get());
-    assertEquals(1, mArray.mSemaphore.availablePermits());
+    assertThat(mArray.mMinByteArraySize).isEqualTo(4);
+    assertThat(mArray.mMaxByteArraySize).isEqualTo(16);
+    assertThat(mArray.mByteArraySoftRef.get()).isNull();
+    assertThat(mArray.mSemaphore.availablePermits()).isEqualTo(1);
   }
 
   @Test
   public void testGet() throws Exception {
     CloseableReference<byte[]> arrayRef = mArray.get(1);
-    assertSame(mArray.mByteArraySoftRef.get(), arrayRef.get());
-    assertEquals(4, arrayRef.get().length);
-    assertEquals(0, mArray.mSemaphore.availablePermits());
+    assertThat(arrayRef.get()).isSameAs(mArray.mByteArraySoftRef.get());
+    assertThat(arrayRef.get().length).isEqualTo(4);
+    assertThat(mArray.mSemaphore.availablePermits()).isEqualTo(0);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testGetTooBigArray() {
-    mArray.get(32);
+    assertThatThrownBy(() -> mArray.get(32)).isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   public void testRelease() throws Exception {
     mArray.get(4).close();
-    assertEquals(1, mArray.mSemaphore.availablePermits());
+    assertThat(mArray.mSemaphore.availablePermits()).isEqualTo(1);
   }
 
   @Test
@@ -64,40 +65,40 @@ public class SharedByteArrayTest {
     arrayRef.close();
 
     arrayRef = mArray.get(7);
-    assertEquals(8, arrayRef.get().length);
-    assertSame(mArray.mByteArraySoftRef.get(), arrayRef.get());
-    assertNotSame(smallArray, arrayRef.get());
+    assertThat(arrayRef.get().length).isEqualTo(8);
+    assertThat(arrayRef.get()).isSameAs(mArray.mByteArraySoftRef.get());
+    assertThat(arrayRef.get()).isNotSameAs(smallArray);
   }
 
   @Test
   public void testTrim() {
     mArray.get(7).close();
-    assertEquals(8, mArray.mByteArraySoftRef.get().length);
+    assertThat(mArray.mByteArraySoftRef.get().length).isEqualTo(8);
 
     // now trim, and verify again
     mArray.trim(MemoryTrimType.OnCloseToDalvikHeapLimit);
-    assertNull(mArray.mByteArraySoftRef.get());
-    assertEquals(1, mArray.mSemaphore.availablePermits());
+    assertThat(mArray.mByteArraySoftRef.get()).isNull();
+    assertThat(mArray.mSemaphore.availablePermits()).isEqualTo(1);
   }
 
   @Test
   public void testTrimUnsuccessful() {
     CloseableReference<byte[]> arrayRef = mArray.get(7);
     mArray.trim(MemoryTrimType.OnCloseToDalvikHeapLimit);
-    assertSame(arrayRef.get(), mArray.mByteArraySoftRef.get());
-    assertEquals(0, mArray.mSemaphore.availablePermits());
+    assertThat(mArray.mByteArraySoftRef.get()).isSameAs(arrayRef.get());
+    assertThat(mArray.mSemaphore.availablePermits()).isEqualTo(0);
   }
 
   @Test
   public void testGetBucketedSize() throws Exception {
-    assertEquals(4, mArray.getBucketedSize(1));
-    assertEquals(4, mArray.getBucketedSize(2));
-    assertEquals(4, mArray.getBucketedSize(3));
-    assertEquals(4, mArray.getBucketedSize(4));
-    assertEquals(8, mArray.getBucketedSize(5));
-    assertEquals(8, mArray.getBucketedSize(6));
-    assertEquals(8, mArray.getBucketedSize(7));
-    assertEquals(8, mArray.getBucketedSize(8));
-    assertEquals(16, mArray.getBucketedSize(9));
+    assertThat(mArray.getBucketedSize(1)).isEqualTo(4);
+    assertThat(mArray.getBucketedSize(2)).isEqualTo(4);
+    assertThat(mArray.getBucketedSize(3)).isEqualTo(4);
+    assertThat(mArray.getBucketedSize(4)).isEqualTo(4);
+    assertThat(mArray.getBucketedSize(5)).isEqualTo(8);
+    assertThat(mArray.getBucketedSize(6)).isEqualTo(8);
+    assertThat(mArray.getBucketedSize(7)).isEqualTo(8);
+    assertThat(mArray.getBucketedSize(8)).isEqualTo(8);
+    assertThat(mArray.getBucketedSize(9)).isEqualTo(16);
   }
 }
