@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
-import com.facebook.fresco.samples.showcase.CustomImageFormatConfigurator;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
 import com.facebook.fresco.vito.options.ImageOptions;
@@ -38,9 +37,7 @@ public class ImageFormatKeyframesFragment extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    if (CustomImageFormatConfigurator.isKeyframesEnabled()) {
-      initAnimation(view);
-    }
+    initAnimation(view);
   }
 
   private void initAnimation(View view) {

@@ -8,7 +8,6 @@
 package com.facebook.fresco.samples.showcase;
 
 import android.content.Context;
-import android.os.Build;
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.fresco.samples.showcase.imageformat.color.ColorImageExample;
 import com.facebook.fresco.samples.showcase.imageformat.keyframes.KeyframesDecoderExample;
@@ -36,12 +35,11 @@ public class CustomImageFormatConfigurator {
           new SvgDecoderExample.SvgFormatChecker(),
           new SvgDecoderExample.SvgDecoder());
     }
-    if (isKeyframesEnabled()) {
-      config.addDecodingCapability(
-          KeyframesDecoderExample.IMAGE_FORMAT_KEYFRAMES,
-          KeyframesDecoderExample.createFormatChecker(),
-          KeyframesDecoderExample.createDecoder());
-    }
+    config.addDecodingCapability(
+        KeyframesDecoderExample.IMAGE_FORMAT_KEYFRAMES,
+        KeyframesDecoderExample.createFormatChecker(),
+        KeyframesDecoderExample.createDecoder());
+
     return config.build();
   }
 
@@ -53,9 +51,7 @@ public class CustomImageFormatConfigurator {
     if (isSvgEnabled(context)) {
       draweeConfigBuilder.addCustomDrawableFactory(new SvgDecoderExample.SvgDrawableFactory());
     }
-    if (isKeyframesEnabled()) {
-      draweeConfigBuilder.addCustomDrawableFactory(KeyframesDecoderExample.createDrawableFactory());
-    }
+    draweeConfigBuilder.addCustomDrawableFactory(KeyframesDecoderExample.createDrawableFactory());
   }
 
   public static boolean isGlobalColorDecoderEnabled(Context context) {
@@ -72,10 +68,6 @@ public class CustomImageFormatConfigurator {
 
   public static void setSvgEnabled(Context context, boolean svgEnabled) {
     setBoolean(context, IMAGE_FORMAT_SVG_KEY, svgEnabled);
-  }
-
-  public static boolean isKeyframesEnabled() {
-    return Build.VERSION.SDK_INT >= 15;
   }
 
   private static boolean getBoolean(Context context, String key, boolean defaultValue) {
