@@ -44,22 +44,12 @@ constructor(val blurRadius: Int, val context: Context, val iterations: Int = DEF
   }
 
   private val cacheKey: CacheKey =
-      SimpleCacheKey(
-          if (canUseRenderScript) {
-            String.format(null as Locale?, "IntrinsicBlur;%d", blurRadius)
-          } else {
-            String.format(null as Locale?, "IterativeBoxBlur;%d;%d", iterations, blurRadius)
-          }
-      )
+      SimpleCacheKey(String.format(null as Locale?, "IntrinsicBlur;%d", blurRadius))
 
   override fun getPostprocessorCacheKey(): CacheKey = cacheKey
 
   override fun process(destBitmap: Bitmap, sourceBitmap: Bitmap) {
-    if (canUseRenderScript) {
-      RenderScriptBlurFilter.blurBitmap(destBitmap, sourceBitmap, context, blurRadius)
-    } else {
-      super.process(destBitmap, sourceBitmap)
-    }
+    RenderScriptBlurFilter.blurBitmap(destBitmap, sourceBitmap, context, blurRadius)
   }
 
   override fun process(bitmap: Bitmap) {
@@ -67,7 +57,6 @@ constructor(val blurRadius: Int, val context: Context, val iterations: Int = DEF
   }
 
   companion object {
-    private val canUseRenderScript = RenderScriptBlurFilter.canUseRenderScript()
     private const val DEFAULT_ITERATIONS = 3
   }
 }

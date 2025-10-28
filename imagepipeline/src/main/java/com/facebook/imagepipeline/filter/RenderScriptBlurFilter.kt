@@ -9,12 +9,10 @@ package com.facebook.imagepipeline.filter
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.os.Build
 import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
-import androidx.annotation.RequiresApi
 import com.facebook.common.internal.Preconditions
 
 object RenderScriptBlurFilter {
@@ -22,8 +20,8 @@ object RenderScriptBlurFilter {
   const val BLUR_MAX_RADIUS = 25
 
   /**
-   * Not-in-place intrinsic Gaussian blur filter using [ScriptIntrinsicBlur] and [ ]. This require
-   * an Android versions >= 4.2.
+   * Not-in-place intrinsic Gaussian blur filter using [ScriptIntrinsicBlur] and [ ]. This requires
+   * Android 5.0+ (API 21+).
    *
    * @param dest The [Bitmap] where the blurred image is written to.
    * @param src The [Bitmap] containing the original image.
@@ -31,7 +29,6 @@ object RenderScriptBlurFilter {
    * @param radius The radius of the blur with a supported range 0 < radius <= [ ][.BLUR_MAX_RADIUS]
    */
   @JvmStatic
-  @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
   fun blurBitmap(dest: Bitmap, src: Bitmap, context: Context, radius: Int) {
     checkNotNull(dest)
     checkNotNull(src)
@@ -60,7 +57,4 @@ object RenderScriptBlurFilter {
       rs?.destroy()
     }
   }
-
-  @JvmStatic
-  fun canUseRenderScript(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1
 }
