@@ -8,7 +8,6 @@
 package com.facebook.animated.gif
 
 import com.facebook.common.logging.FLog
-import com.facebook.imagepipeline.animated.base.AnimatedImageGifValidator
 import com.facebook.imagepipeline.animated.factory.AnimatedImageDecoderBase
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
 import com.facebook.imagepipeline.common.ImageDecodeOptions

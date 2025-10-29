@@ -5,9 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.imagepipeline.animated.base
+package com.facebook.animated.gif
 
 import com.facebook.animated.giflite.decoder.GifMetadataDecoder
+import com.facebook.imagepipeline.animated.base.AnimatedImageValidator
+import com.facebook.imagepipeline.animated.base.ValidationResult
 import com.facebook.imagepipeline.image.EncodedImage
 
 private const val MAX_GIF_TOTAL_PIXELS = 100_000_000
