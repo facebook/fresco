@@ -7,7 +7,8 @@
 
 package com.facebook.common.util;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.Test;
 
@@ -16,40 +17,40 @@ public class TriStateTest {
 
   @Test
   public void testIsSet() {
-    assertTrue(TriState.YES.isSet());
-    assertTrue(TriState.NO.isSet());
-    assertFalse(TriState.UNSET.isSet());
+    assertThat(TriState.YES.isSet()).isTrue();
+    assertThat(TriState.NO.isSet()).isTrue();
+    assertThat(TriState.UNSET.isSet()).isFalse();
   }
 
   @Test
   public void testValueOf() {
-    assertEquals(TriState.YES, TriState.valueOf(true));
-    assertEquals(TriState.NO, TriState.valueOf(false));
+    assertThat(TriState.valueOf(true)).isEqualTo(TriState.YES);
+    assertThat(TriState.valueOf(false)).isEqualTo(TriState.NO);
   }
 
   @Test
   public void testAsBooleanValidValues() {
-    assertTrue(TriState.YES.asBoolean());
-    assertFalse(TriState.NO.asBoolean());
+    assertThat(TriState.YES.asBoolean()).isTrue();
+    assertThat(TriState.NO.asBoolean()).isFalse();
   }
 
-  @Test(expected = IllegalStateException.class)
+  @Test
   public void testAsBooleanInvalidValues() {
-    TriState.UNSET.asBoolean();
+    assertThatThrownBy(() -> TriState.UNSET.asBoolean()).isInstanceOf(IllegalStateException.class);
   }
 
   @Test
   public void testAsBooleanDefault() {
-    assertTrue(TriState.YES.asBoolean(false));
-    assertFalse(TriState.NO.asBoolean(true));
-    assertTrue(TriState.UNSET.asBoolean(true));
-    assertFalse(TriState.UNSET.asBoolean(false));
+    assertThat(TriState.YES.asBoolean(false)).isTrue();
+    assertThat(TriState.NO.asBoolean(true)).isFalse();
+    assertThat(TriState.UNSET.asBoolean(true)).isTrue();
+    assertThat(TriState.UNSET.asBoolean(false)).isFalse();
   }
 
   @Test
   public void testAsBooleanObject() {
-    assertSame(Boolean.TRUE, TriState.YES.asBooleanObject());
-    assertSame(Boolean.FALSE, TriState.NO.asBooleanObject());
-    assertNull(TriState.UNSET.asBooleanObject());
+    assertThat(TriState.YES.asBooleanObject()).isSameAs(Boolean.TRUE);
+    assertThat(TriState.NO.asBooleanObject()).isSameAs(Boolean.FALSE);
+    assertThat(TriState.UNSET.asBooleanObject()).isNull();
   }
 }
