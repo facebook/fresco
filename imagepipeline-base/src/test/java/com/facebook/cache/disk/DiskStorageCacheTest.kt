@@ -33,9 +33,9 @@ import java.io.RandomAccessFile
 import java.util.Locale
 import java.util.concurrent.CyclicBarrier
 import java.util.concurrent.TimeUnit
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.fail
 import org.junit.After
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -130,16 +130,16 @@ class DiskStorageCacheTest {
     val resourceId1 = verifyListenerOnWriteSuccessAndGetResourceId(key1, value1Size.toLong())
 
     val resource1Again = this@DiskStorageCacheTest.cache!!.getResource(key1)
-    Assert.assertEquals(resource1, resource1Again)
+    assertThat(resource1Again).isEqualTo(resource1)
     verifyListenerOnHit(key1, resourceId1)
 
     val resource1Again2 = this@DiskStorageCacheTest.cache!!.getResource(key1)
-    Assert.assertEquals(resource1, resource1Again2)
+    assertThat(resource1Again2).isEqualTo(resource1)
     verifyListenerOnHit(key1, resourceId1)
 
     val missingKey = SimpleCacheKey("nonexistent_key")
     val res2 = this@DiskStorageCacheTest.cache!!.getResource(missingKey)
-    Assert.assertNull(res2)
+    assertThat(res2).isNull()
     verifyListenerOnMiss(missingKey)
 
     this@DiskStorageCacheTest.cache!!.clearAll()
@@ -182,7 +182,7 @@ class DiskStorageCacheTest {
     rf1.setLength(110)
     // Touch the non-cache, non-lru file, and assert that it succeeds.
     Mockito.`when`<Long?>(clock!!.now()).thenReturn(TimeUnit.HOURS.toMillis(1))
-    Assert.assertTrue(unexpected1.setLastModified(clock!!.now()))
+    assertThat(unexpected1.setLastModified(clock!!.now())).isTrue()
 
     // 1. Add first cache file
     val key1: CacheKey = SimpleCacheKey("foo")
@@ -191,15 +191,15 @@ class DiskStorageCacheTest {
     this@DiskStorageCacheTest.cache!!.insert(key1, WriterCallbacks.from(value1))
 
     // verify resource
-    Assert.assertArrayEquals(value1, getContents(getResource(key1)!!))
+    assertThat(getContents(getResource(key1)!!)).containsExactly(*value1)
 
     // 1. Touch the LRU file, and assert that it succeeds.
     Mockito.`when`<Long?>(clock!!.now()).thenReturn(TimeUnit.HOURS.toMillis(2))
-    Assert.assertTrue(this@DiskStorageCacheTest.cache!!.probe(key1))
+    assertThat(this@DiskStorageCacheTest.cache!!.probe(key1)).isTrue()
 
     // The cache size should be the size of the first file only
     // The unexpected files should not count towards size
-    Assert.assertTrue(this@DiskStorageCacheTest.cache!!.getSize() == 101L)
+    assertThat(this@DiskStorageCacheTest.cache!!.getSize() == 101L).isTrue()
 
     // Write another non-cache, non-lru file in the cache directory
     val unexpected2 = File(cacheDirectory, "unexpected2")
@@ -207,7 +207,7 @@ class DiskStorageCacheTest {
     rf2.setLength(120)
     // Touch the non-cache, non-lru file, and assert that it succeeds.
     Mockito.`when`<Long?>(clock!!.now()).thenReturn(TimeUnit.HOURS.toMillis(3))
-    Assert.assertTrue(unexpected2.setLastModified(clock!!.now()))
+    assertThat(unexpected2.setLastModified(clock!!.now())).isTrue()
 
     // 2. Add second cache file
     val key2: CacheKey = SimpleCacheKey("bar")
@@ -216,11 +216,11 @@ class DiskStorageCacheTest {
     this@DiskStorageCacheTest.cache!!.insert(key2, WriterCallbacks.from(value2))
     // 2. Touch the LRU file, and assert that it succeeds.
     Mockito.`when`<Long?>(clock!!.now()).thenReturn(TimeUnit.HOURS.toMillis(4))
-    Assert.assertTrue(this@DiskStorageCacheTest.cache!!.probe(key2))
+    assertThat(this@DiskStorageCacheTest.cache!!.probe(key2)).isTrue()
 
     // The cache size should be the size of the first + second cache files
     // The unexpected files should not count towards size
-    Assert.assertTrue(this@DiskStorageCacheTest.cache!!.getSize() == 203L)
+    assertThat(this@DiskStorageCacheTest.cache!!.getSize() == 203L).isTrue()
 
     // At this point, the filecache size has exceeded
     // FILE_CACHE_MAX_SIZE_HIGH_LIMIT. However, eviction will be triggered
@@ -237,41 +237,36 @@ class DiskStorageCacheTest {
     // files associated with the second and third entries should be in cache.
 
     // 1. Verify that the first cache, lru files are deleted
-    Assert.assertNull(getResource(key1))
+    assertThat(getResource(key1)).isNull()
 
     // Verify the first unexpected file is deleted, but that eviction stops
     // before the second unexpected file
-    Assert.assertFalse(unexpected1.exists())
-    Assert.assertFalse(unexpected2.exists())
+    assertThat(unexpected1.exists()).isFalse()
+    assertThat(unexpected2.exists()).isFalse()
 
     // 2. Verify the second cache, lru files exist
-    Assert.assertArrayEquals(value2, getContents(getResource(key2)!!))
+    assertThat(getContents(getResource(key2)!!)).containsExactly(*value2)
 
     // 3. Verify that cache, lru files for third entry still exists
-    Assert.assertArrayEquals(value3, getContents(getResource(key3)!!))
+    assertThat(getContents(getResource(key3)!!)).containsExactly(*value3)
 
     // The cache size should be the size of the second + third files
-    Assert.assertTrue(
-        String.format(
-            Locale.US,
-            "Expected cache size of %d but is %d",
-            205,
-            this@DiskStorageCacheTest.cache!!.getSize(),
-        ),
-        this@DiskStorageCacheTest.cache!!.getSize() == 205L,
-    )
+    val cacheSize = this@DiskStorageCacheTest.cache!!.getSize()
+    assertThat(cacheSize)
+        .`as`(String.format(Locale.US, "Expected cache size of %d but is %d", 205, cacheSize))
+        .isEqualTo(205L)
 
     // Write another non-cache, non-lru file in the cache directory
     val unexpected3 = File(cacheDirectory, "unexpected3")
     val rf3 = RandomAccessFile(unexpected3, "rw")
     rf3.setLength(120)
-    Assert.assertTrue(unexpected3.exists())
+    assertThat(unexpected3.exists()).isTrue()
     // After a clear, cache file size should be uninitialized (-1)
     this@DiskStorageCacheTest.cache!!.clearAll()
-    Assert.assertEquals(-1, this@DiskStorageCacheTest.cache!!.getSize())
-    Assert.assertFalse(unexpected3.exists())
-    Assert.assertNull(getResource(key2))
-    Assert.assertNull(getResource(key3))
+    assertThat(this@DiskStorageCacheTest.cache!!.getSize()).isEqualTo(-1)
+    assertThat(unexpected3.exists()).isFalse()
+    assertThat(getResource(key2)).isNull()
+    assertThat(getResource(key3)).isNull()
   }
 
   @Test
@@ -286,10 +281,8 @@ class DiskStorageCacheTest {
     keys1.add(SimpleCacheKey("bar"))
     keys1.add(SimpleCacheKey("foo"))
     val matchingMultiKey = MultiCacheKey(keys1)
-    Assert.assertArrayEquals(
-        value1,
-        getContents(this@DiskStorageCacheTest.cache!!.getResource(matchingMultiKey)!!),
-    )
+    assertThat(getContents(this@DiskStorageCacheTest.cache!!.getResource(matchingMultiKey)!!))
+        .containsExactly(*value1)
 
     val keys2: MutableList<CacheKey?> = ArrayList<CacheKey?>(2)
     keys2.add(SimpleCacheKey("one"))
@@ -300,10 +293,8 @@ class DiskStorageCacheTest {
     this@DiskStorageCacheTest.cache!!.insert(insertKey2, WriterCallbacks.from(value2))
 
     val matchingSimpleKey: CacheKey = SimpleCacheKey("one")
-    Assert.assertArrayEquals(
-        value2,
-        getContents(this@DiskStorageCacheTest.cache!!.getResource(matchingSimpleKey)!!),
-    )
+    assertThat(getContents(this@DiskStorageCacheTest.cache!!.getResource(matchingSimpleKey)!!))
+        .containsExactly(*value2)
   }
 
   @Test
@@ -313,7 +304,7 @@ class DiskStorageCacheTest {
 
     // Before inserting, make sure files not exist.
     val resource1 = getResource(key1)
-    Assert.assertNull(resource1)
+    assertThat(resource1).isNull()
 
     // 1. Should not create cache files if IOException happens in the middle.
     val writeException = IOException()
@@ -327,9 +318,9 @@ class DiskStorageCacheTest {
             }
           },
       )
-      Assert.fail()
+      fail("Expected IOException to be thrown")
     } catch (e: IOException) {
-      Assert.assertNull(getResource(key1))
+      assertThat(getResource(key1)).isNull()
     }
 
     verifyListenerOnWriteAttempt(key1)
@@ -349,10 +340,10 @@ class DiskStorageCacheTest {
         resourceId2
     )
 
-    Assert.assertNull(this@DiskStorageCacheTest.cache!!.getResource(key2))
+    assertThat(this@DiskStorageCacheTest.cache!!.getResource(key2)).isNull()
     verifyListenerOnReadException(key2, DiskStorageWithReadFailures.Companion.POISON_EXCEPTION)
 
-    Assert.assertFalse(this@DiskStorageCacheTest.cache!!.probe(key2))
+    assertThat(this@DiskStorageCacheTest.cache!!.probe(key2)).isFalse()
     verifyListenerOnReadException(key2, DiskStorageWithReadFailures.Companion.POISON_EXCEPTION)
 
     Mockito.verifyNoMoreInteractions(cacheEventListener)
@@ -391,11 +382,11 @@ class DiskStorageCacheTest {
         .thenReturn(cacheExpirationMs + TimeUnit.DAYS.toMillis(1) + valueAge3)
 
     val oldestEntry = this@DiskStorageCacheTest.cache!!.clearOldEntries(cacheExpirationMs)
-    Assert.assertEquals(valueAge3, oldestEntry)
+    assertThat(oldestEntry).isEqualTo(valueAge3)
 
-    Assert.assertArrayEquals(value3, getContents(getResource(key3)!!))
-    Assert.assertNull(getResource(key1))
-    Assert.assertNull(getResource(key2))
+    assertThat(getContents(getResource(key3)!!)).containsExactly(*value3)
+    assertThat(getResource(key1)).isNull()
+    assertThat(getResource(key2)).isNull()
 
     val resourceIds = arrayOf<String?>(resourceId1, resourceId2)
     val itemSizes = longArrayOf(value1Size.toLong(), value2Size.toLong())
@@ -424,7 +415,7 @@ class DiskStorageCacheTest {
     Mockito.`when`<Long?>(clock!!.now()).thenReturn(cacheExpirationMs + TimeUnit.DAYS.toMillis(1))
 
     val oldestEntry = this@DiskStorageCacheTest.cache!!.clearOldEntries(cacheExpirationMs)
-    Assert.assertEquals(0L, oldestEntry)
+    assertThat(oldestEntry).isEqualTo(0L)
   }
 
   /**
@@ -451,7 +442,7 @@ class DiskStorageCacheTest {
 
     // Get cached file
     val resource1 = getResource(storage1, key)
-    Assert.assertNotNull(resource1)
+    assertThat(resource1).isNotNull()
 
     // Set up cache with version == 2
     val storageSupplier2: DiskStorage = createDiskStorage(TESTCACHE_NEXT_VERSION)
@@ -462,10 +453,10 @@ class DiskStorageCacheTest {
 
     // Get cached file
     val resource2 = getResource(storageSupplier2, key)
-    Assert.assertNotNull(resource2)
+    assertThat(resource2).isNotNull()
 
     // Make sure filenames of the two file are different
-    Assert.assertFalse(resource2 == resource1)
+    assertThat(resource2 == resource1).isFalse()
   }
 
   /** Verify that multiple threads can write to the cache at the same time. */
@@ -503,8 +494,8 @@ class DiskStorageCacheTest {
     Mockito.`when`<Boolean?>(storageMock.isEnabled()).thenReturn(true).thenReturn(false)
 
     val cache = createDiskCache(storageMock, false)
-    Assert.assertTrue(cache.isEnabled())
-    Assert.assertFalse(cache.isEnabled())
+    assertThat(cache.isEnabled()).isTrue()
+    assertThat(cache.isEnabled()).isFalse()
   }
 
   private fun runInsertionInSeparateThread(key: CacheKey, callback: WriterCallback): Thread {
@@ -514,7 +505,7 @@ class DiskStorageCacheTest {
             try {
               this@DiskStorageCacheTest.cache!!.insert(key, callback)
             } catch (e: IOException) {
-              Assert.fail()
+              fail("IOException should not be thrown")
             }
           }
         }
@@ -528,15 +519,15 @@ class DiskStorageCacheTest {
   @Throws(Exception::class)
   fun testInsertionInIndex() {
     val key = putOneThingInCache()
-    Assert.assertTrue(this@DiskStorageCacheTest.cache!!.hasKeySync(key))
-    Assert.assertTrue(this@DiskStorageCacheTest.cache!!.hasKey(key))
+    assertThat(this@DiskStorageCacheTest.cache!!.hasKeySync(key)).isTrue()
+    assertThat(this@DiskStorageCacheTest.cache!!.hasKey(key)).isTrue()
   }
 
   @Test
   fun testDoesntHaveKey() {
     val key: CacheKey = SimpleCacheKey("foo")
-    Assert.assertFalse(this@DiskStorageCacheTest.cache!!.hasKeySync(key))
-    Assert.assertFalse(this@DiskStorageCacheTest.cache!!.hasKey(key))
+    assertThat(this@DiskStorageCacheTest.cache!!.hasKeySync(key)).isFalse()
+    assertThat(this@DiskStorageCacheTest.cache!!.hasKey(key)).isFalse()
   }
 
   @Test
@@ -546,11 +537,11 @@ class DiskStorageCacheTest {
     // A new cache object in the same directory. Equivalent to a process restart.
     // Index may not yet updated.
     val cache2 = createDiskCache(this@DiskStorageCacheTest.storage!!, false)
-    Assert.assertTrue(cache2.isIndexReady)
-    Assert.assertFalse(cache2.hasKeySync(key))
-    Assert.assertTrue(cache2.hasKey(key))
+    assertThat(cache2.isIndexReady).isTrue()
+    assertThat(cache2.hasKeySync(key)).isFalse()
+    assertThat(cache2.hasKey(key)).isTrue()
     // hasKey() adds item to the index
-    Assert.assertTrue(cache2.hasKeySync(key))
+    assertThat(cache2.hasKeySync(key)).isTrue()
   }
 
   @Test
@@ -562,9 +553,9 @@ class DiskStorageCacheTest {
     val key = putOneThingInCache()
     // Wait for index populated in cache before use of cache
     cache2.awaitIndex()
-    Assert.assertTrue(cache2.isIndexReady)
-    Assert.assertTrue(cache2.hasKey(key))
-    Assert.assertTrue(cache2.hasKeySync(key))
+    assertThat(cache2.isIndexReady).isTrue()
+    assertThat(cache2.hasKey(key)).isTrue()
+    assertThat(cache2.hasKeySync(key)).isTrue()
   }
 
   @Test
@@ -576,9 +567,9 @@ class DiskStorageCacheTest {
     val key = putOneThingInCache(cache2)
     // Wait for index populated in cache before use of cache
     cache2.awaitIndex()
-    Assert.assertTrue(cache2.isIndexReady)
-    Assert.assertTrue(cache2.hasKeySync(key))
-    Assert.assertTrue(cache2.hasKey(key))
+    assertThat(cache2.isIndexReady).isTrue()
+    assertThat(cache2.hasKeySync(key)).isTrue()
+    assertThat(cache2.hasKey(key)).isTrue()
   }
 
   @Test
@@ -588,9 +579,9 @@ class DiskStorageCacheTest {
     val key = putOneThingInCache(cache2)
     // A new cache object in the same directory. Equivalent to a process restart.
     // Index may not yet updated.
-    Assert.assertFalse(cache2.isIndexReady)
-    Assert.assertTrue(cache2.hasKey(key))
-    Assert.assertTrue(cache2.hasKeySync(key))
+    assertThat(cache2.isIndexReady).isFalse()
+    assertThat(cache2.hasKey(key)).isTrue()
+    assertThat(cache2.hasKeySync(key)).isTrue()
   }
 
   @Test
@@ -600,21 +591,21 @@ class DiskStorageCacheTest {
     // A new cache object in the same directory. Equivalent to a process restart.
     // Index may not yet updated.
     val cache2 = createDiskCache(this@DiskStorageCacheTest.storage!!, false)
-    Assert.assertNotNull(cache2.getResource(key))
+    assertThat(cache2.getResource(key)).isNotNull()
   }
 
   @Test
   fun testIndexIsImmediatelyReadyIfIndexAtStartupIsOff() {
     val cache = createDiskCache(this@DiskStorageCacheTest.storage!!, false)
 
-    Assertions.assertThat(cache.isIndexReady).isTrue()
+    assertThat(cache.isIndexReady).isTrue()
   }
 
   @Test
   fun testIndexIsNotImmediatelyReadyIfIndexAtStartupIsOff() {
     val cache = createDiskCache(this@DiskStorageCacheTest.storage!!, true)
 
-    Assertions.assertThat(cache.isIndexReady).isFalse()
+    assertThat(cache.isIndexReady).isFalse()
   }
 
   @Test
@@ -623,7 +614,7 @@ class DiskStorageCacheTest {
 
     backgroundExecutor!!.runUntilIdle()
 
-    Assertions.assertThat(cache.isIndexReady).isTrue()
+    assertThat(cache.isIndexReady).isTrue()
   }
 
   @Test
@@ -631,8 +622,8 @@ class DiskStorageCacheTest {
   fun testClearIndex() {
     val key = putOneThingInCache()
     this@DiskStorageCacheTest.cache!!.clearAll()
-    Assert.assertFalse(this@DiskStorageCacheTest.cache!!.hasKeySync(key))
-    Assert.assertFalse(this@DiskStorageCacheTest.cache!!.hasKey(key))
+    assertThat(this@DiskStorageCacheTest.cache!!.hasKeySync(key)).isFalse()
+    assertThat(this@DiskStorageCacheTest.cache!!.hasKey(key)).isFalse()
   }
 
   @Test
@@ -640,8 +631,8 @@ class DiskStorageCacheTest {
   fun testRemoveFileClearsIndex() {
     val key = putOneThingInCache()
     this@DiskStorageCacheTest.storage!!.clearAll()
-    Assert.assertNull(this@DiskStorageCacheTest.cache!!.getResource(key))
-    Assert.assertFalse(this@DiskStorageCacheTest.cache!!.hasKeySync(key))
+    assertThat(this@DiskStorageCacheTest.cache!!.getResource(key)).isNull()
+    assertThat(this@DiskStorageCacheTest.cache!!.hasKeySync(key)).isFalse()
   }
 
   @Test
@@ -659,10 +650,10 @@ class DiskStorageCacheTest {
     // now over limit. Next write will evict key1
     Mockito.`when`<Long?>(clock!!.now()).thenReturn(TimeUnit.MILLISECONDS.convert(3, TimeUnit.DAYS))
     this@DiskStorageCacheTest.cache!!.insert(key3, callback)
-    Assert.assertFalse(this@DiskStorageCacheTest.cache!!.hasKeySync(key1))
-    Assert.assertFalse(this@DiskStorageCacheTest.cache!!.hasKey(key1))
-    Assert.assertTrue(this@DiskStorageCacheTest.cache!!.hasKeySync(key3))
-    Assert.assertTrue(this@DiskStorageCacheTest.cache!!.hasKey(key3))
+    assertThat(this@DiskStorageCacheTest.cache!!.hasKeySync(key1)).isFalse()
+    assertThat(this@DiskStorageCacheTest.cache!!.hasKey(key1)).isFalse()
+    assertThat(this@DiskStorageCacheTest.cache!!.hasKeySync(key3)).isTrue()
+    assertThat(this@DiskStorageCacheTest.cache!!.hasKey(key3)).isTrue()
   }
 
   @Test
@@ -672,8 +663,8 @@ class DiskStorageCacheTest {
     val key = putOneThingInCache()
     Mockito.`when`<Long?>(clock!!.now()).thenReturn(10L)
     this@DiskStorageCacheTest.cache!!.clearOldEntries(4)
-    Assert.assertFalse(this@DiskStorageCacheTest.cache!!.hasKeySync(key))
-    Assert.assertFalse(this@DiskStorageCacheTest.cache!!.hasKey(key))
+    assertThat(this@DiskStorageCacheTest.cache!!.hasKeySync(key)).isFalse()
+    assertThat(this@DiskStorageCacheTest.cache!!.hasKey(key)).isFalse()
   }
 
   @Throws(IOException::class)
@@ -793,10 +784,9 @@ class DiskStorageCacheTest {
 
     // Ensure all resources were found
     for (i in 0..<numberItems) {
-      Assert.assertTrue(
-          String.format("Expected eviction of resource %s but wasn't evicted", resourceIds[i]),
-          found[i],
-      )
+      val message =
+          String.format("Expected eviction of resource %s but wasn't evicted", resourceIds[i])
+      assertThat(found[i]).`as`(message).isTrue()
     }
   }
 
