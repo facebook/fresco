@@ -7,7 +7,7 @@
 
 package com.facebook.drawee.drawable;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -41,16 +41,17 @@ public class RoundedColorDrawableTest {
 
   @Test
   public void testInitialSetup() {
-    assertEquals(Color.GREEN, mRoundedColorDrawable.getColor());
-    assertFalse(mRoundedColorDrawable.isCircle());
-    assertArrayEquals(new float[] {0, 0, 0, 0, 0, 0, 0, 0}, mRoundedColorDrawable.getRadii(), 0f);
+    assertThat(mRoundedColorDrawable.getColor()).isEqualTo(Color.GREEN);
+    assertThat(mRoundedColorDrawable.isCircle()).isFalse();
+    assertThat(mRoundedColorDrawable.getRadii())
+        .containsExactly(new float[] {0, 0, 0, 0, 0, 0, 0, 0});
   }
 
   @Test
   public void testSetCircle() {
     mRoundedColorDrawable.setCircle(true);
     verify(mCallback).invalidateDrawable(mRoundedColorDrawable);
-    assertTrue(mRoundedColorDrawable.isCircle());
+    assertThat(mRoundedColorDrawable.isCircle()).isTrue();
   }
 
   @Test
@@ -59,7 +60,7 @@ public class RoundedColorDrawableTest {
     float[] expectedRadii = {8f, 8f, 8f, 8f, 8f, 8f, 8f, 8f};
     mRoundedColorDrawable.setRadii(radii);
     verify(mCallback).invalidateDrawable(mRoundedColorDrawable);
-    assertArrayEquals(expectedRadii, mRoundedColorDrawable.getRadii(), 0f);
+    assertThat(mRoundedColorDrawable.getRadii()).containsExactly(expectedRadii);
   }
 
   @Test
@@ -68,7 +69,7 @@ public class RoundedColorDrawableTest {
     float[] expectedRadii = {8f, 8f, 8f, 8f, 8f, 8f, 8f, 8f};
     mRoundedColorDrawable.setRadius(radius);
     verify(mCallback).invalidateDrawable(mRoundedColorDrawable);
-    assertArrayEquals(expectedRadii, mRoundedColorDrawable.getRadii(), 0f);
+    assertThat(mRoundedColorDrawable.getRadii()).containsExactly(expectedRadii);
   }
 
   @Test
@@ -76,7 +77,7 @@ public class RoundedColorDrawableTest {
     int color = 0xC0223456;
     mRoundedColorDrawable.setColor(color);
     verify(mCallback).invalidateDrawable(mRoundedColorDrawable);
-    assertEquals(color, mRoundedColorDrawable.getColor());
+    assertThat(mRoundedColorDrawable.getColor()).isEqualTo(color);
   }
 
   @Test
@@ -84,7 +85,7 @@ public class RoundedColorDrawableTest {
     int alpha = 10;
     mRoundedColorDrawable.setAlpha(alpha);
     verify(mCallback).invalidateDrawable(mRoundedColorDrawable);
-    assertEquals(alpha, mRoundedColorDrawable.getAlpha());
+    assertThat(mRoundedColorDrawable.getAlpha()).isEqualTo(alpha);
   }
 
   @Test
@@ -93,8 +94,8 @@ public class RoundedColorDrawableTest {
     float width = 5;
     mRoundedColorDrawable.setBorder(color, width);
     verify(mCallback, times(2)).invalidateDrawable(mRoundedColorDrawable);
-    assertEquals(color, mRoundedColorDrawable.getBorderColor());
-    assertEquals(width, mRoundedColorDrawable.getBorderWidth(), 0);
+    assertThat(mRoundedColorDrawable.getBorderColor()).isEqualTo(color);
+    assertThat(mRoundedColorDrawable.getBorderWidth()).isEqualTo(width);
   }
 
   @Test
@@ -102,21 +103,21 @@ public class RoundedColorDrawableTest {
     float padding = 10;
     mRoundedColorDrawable.setPadding(padding);
     verify(mCallback).invalidateDrawable(mRoundedColorDrawable);
-    assertEquals(padding, mRoundedColorDrawable.getPadding(), 0);
+    assertThat(mRoundedColorDrawable.getPadding()).isEqualTo(padding);
   }
 
   @Test
   public void testSetScaleDownInsideBorders() {
     mRoundedColorDrawable.setScaleDownInsideBorders(true);
     verify(mCallback).invalidateDrawable(mRoundedColorDrawable);
-    assertTrue(mRoundedColorDrawable.getScaleDownInsideBorders());
+    assertThat(mRoundedColorDrawable.getScaleDownInsideBorders()).isTrue();
   }
 
   @Test
   public void testSetPaintFilterBitmap() {
     mRoundedColorDrawable.setPaintFilterBitmap(true);
     verify(mCallback).invalidateDrawable(mRoundedColorDrawable);
-    assertTrue(mRoundedColorDrawable.getPaintFilterBitmap());
+    assertThat(mRoundedColorDrawable.getPaintFilterBitmap()).isTrue();
   }
 
   @Test
@@ -133,8 +134,8 @@ public class RoundedColorDrawableTest {
     verify(mCanvas).drawPath(any(Path.class), argumentCaptor.capture());
 
     Paint internalPaint = argumentCaptor.getValue();
-    assertEquals(expectedInternalPaintColor, internalPaint.getColor());
-    assertEquals(Paint.Style.FILL, internalPaint.getStyle());
+    assertThat(internalPaint.getColor()).isEqualTo(expectedInternalPaintColor);
+    assertThat(internalPaint.getStyle()).isEqualTo(Paint.Style.FILL);
   }
 
   @Test
@@ -152,32 +153,32 @@ public class RoundedColorDrawableTest {
 
     ArgumentCaptor<Paint> argumentCaptor = ArgumentCaptor.forClass(Paint.class);
     verify(mCanvas, times(2)).drawPath(any(Path.class), argumentCaptor.capture());
-    assertEquals(2, argumentCaptor.getAllValues().size());
+    assertThat(argumentCaptor.getAllValues().size()).isEqualTo(2);
 
     Paint borderPaint = argumentCaptor.getAllValues().get(1);
-    assertEquals(expectedBorderPaintColor, borderPaint.getColor());
-    assertEquals(Paint.Style.STROKE, borderPaint.getStyle());
-    assertEquals(borderWidth, borderPaint.getStrokeWidth(), 0);
+    assertThat(borderPaint.getColor()).isEqualTo(expectedBorderPaintColor);
+    assertThat(borderPaint.getStyle()).isEqualTo(Paint.Style.STROKE);
+    assertThat(borderPaint.getStrokeWidth()).isEqualTo(borderWidth);
   }
 
   @Test
   public void testGetOpacity() {
     mRoundedColorDrawable.setColor(0x8FFFFFFF);
     mRoundedColorDrawable.setAlpha(255);
-    assertEquals(PixelFormat.TRANSLUCENT, mRoundedColorDrawable.getOpacity());
+    assertThat(mRoundedColorDrawable.getOpacity()).isEqualTo(PixelFormat.TRANSLUCENT);
 
     mRoundedColorDrawable.setColor(0x00000000);
     mRoundedColorDrawable.setAlpha(255);
-    assertEquals(PixelFormat.TRANSPARENT, mRoundedColorDrawable.getOpacity());
+    assertThat(mRoundedColorDrawable.getOpacity()).isEqualTo(PixelFormat.TRANSPARENT);
 
     mRoundedColorDrawable.setColor(0xFFFFFFFF);
     mRoundedColorDrawable.setAlpha(255);
-    assertEquals(PixelFormat.OPAQUE, mRoundedColorDrawable.getOpacity());
+    assertThat(mRoundedColorDrawable.getOpacity()).isEqualTo(PixelFormat.OPAQUE);
 
     mRoundedColorDrawable.setAlpha(100);
-    assertEquals(PixelFormat.TRANSLUCENT, mRoundedColorDrawable.getOpacity());
+    assertThat(mRoundedColorDrawable.getOpacity()).isEqualTo(PixelFormat.TRANSLUCENT);
 
     mRoundedColorDrawable.setAlpha(0);
-    assertEquals(PixelFormat.TRANSPARENT, mRoundedColorDrawable.getOpacity());
+    assertThat(mRoundedColorDrawable.getOpacity()).isEqualTo(PixelFormat.TRANSPARENT);
   }
 }
