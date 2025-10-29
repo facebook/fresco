@@ -39,7 +39,6 @@ import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.fresco.vito.source.ImageSourceProvider
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
 import com.facebook.imagepipeline.image.ImageInfo
-import com.facebook.secure.uriparser.SecureUriParser
 
 /**
  * Bitmap animation backend that renders bitmap frames.
@@ -502,15 +501,13 @@ constructor(
     val drawable = thumbnailDrawable ?: return
 
     try {
-      val uri = SecureUriParser.parseEncodedRFC2396(thumbnailUrl)
-
       val imageOptions = ImageOptions.defaults().extend().round(roundingOptions).build()
 
       val imageRequest =
           FrescoVitoProvider.getImagePipeline()
               .createImageRequest(
                   Resources.getSystem(),
-                  ImageSourceProvider.forUri(uri),
+                  ImageSourceProvider.forUri(thumbnailUrl),
                   imageOptions,
                   callerContext = CALLER_CONTEXT,
               )
