@@ -7,12 +7,12 @@
 
 package com.facebook.drawee.drawable;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,18 +38,18 @@ public class MatrixDrawableTest {
   public void testIntrinsicDimensions() {
     when(mUnderlyingDrawable.getIntrinsicWidth()).thenReturn(100);
     when(mUnderlyingDrawable.getIntrinsicHeight()).thenReturn(200);
-    Assert.assertEquals(100, mMatrixDrawable.getIntrinsicWidth());
-    Assert.assertEquals(200, mMatrixDrawable.getIntrinsicHeight());
+    assertThat(mMatrixDrawable.getIntrinsicWidth()).isEqualTo(100);
+    assertThat(mMatrixDrawable.getIntrinsicHeight()).isEqualTo(200);
   }
 
   @Test
   public void testSetMatrix() throws Exception {
     // initial state
-    Assert.assertEquals(mUnderlyingDrawable, mMatrixDrawable.getCurrent());
-    Assert.assertEquals(mMatrixDrawable.getMatrix(), mMatrix1);
+    assertThat(mMatrixDrawable.getCurrent()).isEqualTo(mUnderlyingDrawable);
+    assertThat(mMatrixDrawable.getMatrix()).isEqualTo(mMatrix1);
 
     mMatrixDrawable.setMatrix(mMatrix2);
-    Assert.assertEquals(mUnderlyingDrawable, mMatrixDrawable.getCurrent());
-    Assert.assertEquals(mMatrixDrawable.getMatrix(), mMatrix2);
+    assertThat(mMatrixDrawable.getCurrent()).isEqualTo(mUnderlyingDrawable);
+    assertThat(mMatrixDrawable.getMatrix()).isEqualTo(mMatrix2);
   }
 }
