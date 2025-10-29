@@ -35,6 +35,7 @@ constructor(
     val targetHeight: Int,
     val iterations: Int = DEFAULT_ITERATIONS,
     val scaleFactor: Float = DEFAULT_SCALE_FACTOR,
+    val ntscDampeningFactor: Float = 0f,
 ) : BasePostprocessor() {
 
   init {
@@ -64,7 +65,12 @@ constructor(
 
     try {
       // Apply blur to the downscaled bitmap
-      IterativeBoxBlurFilter.boxBlurBitmapInPlace(downscaled, iterations, blurRadius)
+      IterativeBoxBlurFilter.boxBlurBitmapInPlace(
+          downscaled,
+          iterations,
+          blurRadius,
+          ntscDampeningFactor,
+      )
 
       // Draw the blurred downscaled bitmap onto the destination bitmap (upscaling it)
       val canvas = android.graphics.Canvas(destBitmap)
