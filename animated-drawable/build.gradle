@@ -67,8 +67,12 @@ dependencies {
     implementation project(':imagepipeline-base')
     implementation project(':drawee')
     implementation project(':fbcore')
-    implementation project(':vito:renderer')
+    implementation project(':urimod')
+    implementation project(':vito:core')
     implementation project(':vito:options')
+    implementation project(':vito:provider')
+    implementation project(':vito:renderer')
+    implementation project(':vito:source')
 }
 
 apply plugin: "com.vanniktech.maven.publish"

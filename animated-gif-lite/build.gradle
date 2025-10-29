@@ -21,6 +21,7 @@ dependencies {
     
     implementation project(':animated-base')
     implementation project(':fbcore')
+    implementation project(':middleware')
 }
 
 android {

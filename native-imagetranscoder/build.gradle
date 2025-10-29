@@ -19,6 +19,7 @@ dependencies {
     compileOnly Deps.javaxAnnotation
 
     implementation project(':imagepipeline-base')
+    implementation project(':middleware')
     implementation Deps.SoLoader.nativeloader
 
     implementation Deps.Bolts.tasks
