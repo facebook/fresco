@@ -81,6 +81,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val intermediateProgressUpdatesDisabled: Boolean
   val intermediateProgressUpdatesForPrefetchDisabled: Boolean
   val throwCacheMissExceptionOnCacheMiss: Boolean
+  val usePostProcessedCacheKey: Boolean
 
   class Builder(private val configBuilder: ImagePipelineConfig.Builder) {
     @JvmField var shouldUseDecodingBufferHelper = false
@@ -145,6 +146,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var intermediateProgressUpdatesForPrefetchDisabled = false
 
     @JvmField var throwCacheMissExceptionOnCacheMiss = false
+
+    @JvmField var usePostProcessedCacheKey = false
 
     private fun asBuilder(block: () -> Unit): Builder {
       block()
@@ -377,6 +380,10 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
       this.throwCacheMissExceptionOnCacheMiss = throwException
     }
 
+    fun setUsePostProcessedCacheKey(usePostProcessedCacheKey: Boolean) = asBuilder {
+      this.usePostProcessedCacheKey = usePostProcessedCacheKey
+    }
+
     fun build(): ImagePipelineExperiments = ImagePipelineExperiments(this)
   }
 
@@ -508,6 +515,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     intermediateProgressUpdatesForPrefetchDisabled =
         builder.intermediateProgressUpdatesForPrefetchDisabled
     throwCacheMissExceptionOnCacheMiss = builder.throwCacheMissExceptionOnCacheMiss
+    usePostProcessedCacheKey = builder.usePostProcessedCacheKey
   }
 
   companion object {

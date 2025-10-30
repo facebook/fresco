@@ -24,6 +24,7 @@ import com.facebook.imagepipeline.cache.BitmapMemoryCacheKey;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.core.ImagePipelineExperiments;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import javax.annotation.Nullable;
@@ -88,6 +89,9 @@ public class MultiplexProducerTest {
         new BitmapMemoryCacheKeyMultiplexProducer(mCacheKeyFactory, mInputProducer, mConfig);
     mImageRequest1 = mock(ImageRequest.class);
     mImageRequest2 = mock(ImageRequest.class);
+    ImagePipelineExperiments experiments = mock(ImagePipelineExperiments.class);
+    when(mConfig.getExperiments()).thenReturn(experiments);
+    when(experiments.getUsePostProcessedCacheKey()).thenReturn(false);
     mProducerContext1 =
         new SettableProducerContext(
             mImageRequest1,

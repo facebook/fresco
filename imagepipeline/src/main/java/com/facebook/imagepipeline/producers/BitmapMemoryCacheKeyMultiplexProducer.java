@@ -39,6 +39,12 @@ public class BitmapMemoryCacheKeyMultiplexProducer
   }
 
   protected Pair<CacheKey, ImageRequest.RequestLevel> getKey(ProducerContext producerContext) {
+    if (producerContext.getImagePipelineConfig().getExperiments().getUsePostProcessedCacheKey()) {
+      return Pair.create(
+          mCacheKeyFactory.getPostprocessedBitmapCacheKey(
+              producerContext.getImageRequest(), producerContext.getCallerContext()),
+          producerContext.getLowestPermittedRequestLevel());
+    }
     return Pair.create(
         mCacheKeyFactory.getBitmapCacheKey(
             producerContext.getImageRequest(), producerContext.getCallerContext()),
