@@ -56,8 +56,6 @@ interface FrescoVitoConfig {
 
   fun fallbackToDefaultImageOptions(): Boolean
 
-  fun experimentalPoolSizeVito2(): Long
-
   fun experimentalDynamicSizeVito2(): Boolean
 
   fun experimentalDynamicSizeBloksDisableDiskCacheCheck(): Boolean

@@ -54,7 +54,6 @@ import com.facebook.litho.annotations.OnBoundsDefined
 import com.facebook.litho.annotations.OnCalculateCachedValue
 import com.facebook.litho.annotations.OnCreateInitialState
 import com.facebook.litho.annotations.OnCreateMountContent
-import com.facebook.litho.annotations.OnCreateMountContentPool
 import com.facebook.litho.annotations.OnDetached
 import com.facebook.litho.annotations.OnMeasure
 import com.facebook.litho.annotations.OnMount
@@ -71,11 +70,10 @@ import com.facebook.litho.annotations.ShouldUpdate
 import com.facebook.litho.annotations.State
 import com.facebook.litho.annotations.TreeProp
 import com.facebook.litho.utils.MeasureUtils
-import com.facebook.rendercore.MountContentPools
 
 /** Fresco Vito component for Litho */
 @ExcuseMySpec(reason = Reason.SECTION_USED_WITH_OTHER_SECTIONS)
-@MountSpec(isPureRender = true, canPreallocate = true)
+@MountSpec(isPureRender = true, canPreallocate = true, poolSize = 15)
 object FrescoVitoImage2Spec {
 
   private const val DEFAULT_IMAGE_ASPECT_RATIO = 1f
@@ -85,14 +83,6 @@ object FrescoVitoImage2Spec {
   @PropDefault val prefetch: Prefetch = Prefetch.AUTO
 
   @PropDefault const val mutateDrawables: Boolean = true
-
-  @JvmStatic
-  @OnCreateMountContentPool
-  fun onCreateMountContentPool(poolsize: Int): MountContentPools.ContentPool =
-      MountContentPools.DefaultContentPool(
-          FrescoVitoImage2Spec::class.java,
-          FrescoVitoProvider.getConfig().experimentalPoolSizeVito2().toInt(),
-      )
 
   @JvmStatic
   @OnCreateMountContent(mountingType = MountingType.DRAWABLE)
