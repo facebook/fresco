@@ -21,6 +21,7 @@ dependencies {
 
     testImplementation Deps.inferAnnotation
     testImplementation TestDeps.junit
+    testImplementation TestDeps.assertjCore
     testImplementation TestDeps.mockitoCore
     testImplementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'

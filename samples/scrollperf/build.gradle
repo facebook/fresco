@@ -97,6 +97,7 @@ dependencies {
     soLoaderImplementation project(':drawee-backends:drawee-pipeline')
 
     testImplementation TestDeps.junit
+    testImplementation TestDeps.assertjCore
 
     androidTestImplementation TestDeps.junit
     androidTestImplementation TestDeps.mockitoCore

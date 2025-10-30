@@ -10,11 +10,10 @@ import com.facebook.fresco.buildsrc.GradleDeps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(11))
-    }
+kotlin {
+    jvmToolchain(11)
 }
 
 dependencies {
@@ -25,13 +24,17 @@ dependencies {
     implementation Deps.Bolts.tasks
     implementation project(':static-webp')
     implementation project(':animated-base')
+    implementation project(':middleware')
 
     testCompileOnly Deps.inferAnnotation
     testImplementation project(':imagepipeline-base-test')
     testImplementation project(':imagepipeline-test')
     testImplementation project(':middleware')
     testImplementation TestDeps.junit
-    testImplementation TestDeps.mockitoCore
+    testImplementation TestDeps.assertjCore
+    testImplementation TestDeps.mockitoCore3
+    testImplementation TestDeps.mockitoInline3
+    testImplementation TestDeps.mockitoKotlin3
     testImplementation(TestDeps.Powermock.apiMockito) {
         exclude group: 'org.mockito', module: 'mockito-all'
     }

@@ -36,6 +36,7 @@ dependencies {
     testCompileOnly Deps.inferAnnotation
     testImplementation Deps.jsr305
     testImplementation TestDeps.junit
+    testImplementation TestDeps.assertjCore
     testImplementation TestDeps.mockitoCore
     testImplementation(TestDeps.Powermock.apiMockito) {
         exclude group: 'org.mockito', module: 'mockito-all'

@@ -10,6 +10,11 @@ import com.facebook.fresco.buildsrc.GradleDeps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+kotlin {
+    jvmToolchain(11)
+}
 
 dependencies {
     compileOnly Deps.inferAnnotation
@@ -23,7 +28,9 @@ dependencies {
 
     testImplementation TestDeps.junit
     testImplementation TestDeps.assertjCore
-    testImplementation TestDeps.mockitoCore
+    testImplementation TestDeps.mockitoCore3
+    testImplementation TestDeps.mockitoInline3
+    testImplementation TestDeps.mockitoKotlin3
     testImplementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'

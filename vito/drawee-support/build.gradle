@@ -29,8 +29,9 @@ dependencies {
 
     testImplementation TestDeps.junit
     testImplementation TestDeps.assertjCore
-    testImplementation TestDeps.mockitoCore
-    testImplementation TestDeps.mockitoKotlin
+    testImplementation TestDeps.mockitoCore3
+    testImplementation TestDeps.mockitoInline3
+    testImplementation TestDeps.mockitoKotlin3
 }
 
 android {

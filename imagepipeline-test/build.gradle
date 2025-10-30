@@ -9,6 +9,11 @@ import com.facebook.fresco.buildsrc.Deps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+kotlin {
+    jvmToolchain(11)
+}
 
 dependencies {
 
@@ -16,7 +21,8 @@ dependencies {
     implementation project(':imagepipeline')
     implementation project(':imagepipeline-base')
     implementation Deps.inferAnnotation
-    implementation TestDeps.mockitoCore
+    implementation TestDeps.mockitoCore3
+    implementation TestDeps.mockitoKotlin3
 }
 android {
 

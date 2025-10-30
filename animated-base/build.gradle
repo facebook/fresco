@@ -43,6 +43,7 @@ dependencies {
     testImplementation TestDeps.festAssertCore
     testImplementation TestDeps.mockitoCore3
     testImplementation TestDeps.mockitoInline3
+    testImplementation TestDeps.mockitoKotlin3
     testImplementation TestDeps.Powermock.moduleJunit4
     testImplementation TestDeps.Powermock.moduleJunit4Rule
     testImplementation TestDeps.Powermock.classloadingXstream
