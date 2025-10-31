@@ -7,13 +7,13 @@
 
 package com.facebook.drawee.drawable;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,13 +38,13 @@ public class ForwardingDrawableTest {
     when(mInnerDrawable.getIntrinsicWidth()).thenReturn(100);
     when(mInnerDrawable.getIntrinsicHeight()).thenReturn(200);
     Drawable drawable1 = new ForwardingDrawable(mInnerDrawable);
-    Assert.assertEquals(100, drawable1.getIntrinsicWidth());
-    Assert.assertEquals(200, drawable1.getIntrinsicHeight());
+    assertThat(drawable1.getIntrinsicWidth()).isEqualTo(100);
+    assertThat(drawable1.getIntrinsicHeight()).isEqualTo(200);
   }
 
   @Test
   public void testGetCurrent() {
-    Assert.assertEquals(mInnerDrawable, mDrawable.getCurrent());
+    assertThat(mDrawable.getCurrent()).isEqualTo(mInnerDrawable);
   }
 
   @Test
@@ -59,7 +59,7 @@ public class ForwardingDrawableTest {
 
     // when(mInnerDrawable.setVisible(visible, restart)).thenReturn(true);
     when(mInnerDrawable.getOpacity()).thenReturn(11);
-    Assert.assertEquals(11, mDrawable.getOpacity());
+    assertThat(mDrawable.getOpacity()).isEqualTo(11);
 
     mDrawable.getPadding(rectMock);
     mDrawable.setAlpha(alpha);
