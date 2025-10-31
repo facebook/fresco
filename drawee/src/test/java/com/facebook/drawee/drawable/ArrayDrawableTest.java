@@ -7,7 +7,7 @@
 
 package com.facebook.drawee.drawable;
 
-import static org.junit.Assert.assertSame;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.mock;
@@ -21,7 +21,6 @@ import android.graphics.ColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,17 +56,17 @@ public class ArrayDrawableTest {
     when(mUnderlyingDrawable0.getIntrinsicHeight()).thenReturn(500);
     when(mUnderlyingDrawable1.getIntrinsicHeight()).thenReturn(300);
     when(mUnderlyingDrawable2.getIntrinsicHeight()).thenReturn(400);
-    Assert.assertEquals(200, mArrayDrawable.getIntrinsicWidth());
-    Assert.assertEquals(500, mArrayDrawable.getIntrinsicHeight());
+    assertThat(mArrayDrawable.getIntrinsicWidth()).isEqualTo(200);
+    assertThat(mArrayDrawable.getIntrinsicHeight()).isEqualTo(500);
   }
 
   @Test
   public void testGetDrawable() {
-    Assert.assertEquals(mUnderlyingDrawable0, mArrayDrawable.getDrawable(0));
-    Assert.assertEquals(null, mArrayDrawable.getDrawable(1));
-    Assert.assertEquals(mUnderlyingDrawable1, mArrayDrawable.getDrawable(2));
-    Assert.assertEquals(null, mArrayDrawable.getDrawable(3));
-    Assert.assertEquals(mUnderlyingDrawable2, mArrayDrawable.getDrawable(4));
+    assertThat(mArrayDrawable.getDrawable(0)).isEqualTo(mUnderlyingDrawable0);
+    assertThat(mArrayDrawable.getDrawable(1)).isNull();
+    assertThat(mArrayDrawable.getDrawable(2)).isEqualTo(mUnderlyingDrawable1);
+    assertThat(mArrayDrawable.getDrawable(3)).isNull();
+    assertThat(mArrayDrawable.getDrawable(4)).isEqualTo(mUnderlyingDrawable2);
   }
 
   @Test
@@ -151,7 +150,7 @@ public class ArrayDrawableTest {
   public void testSetDrawableNonMutated() {
     Drawable newDrawable = mock(Drawable.class);
     mArrayDrawable.setDrawable(2, newDrawable);
-    assertSame(newDrawable, mArrayDrawable.getDrawable(2));
+    assertThat(mArrayDrawable.getDrawable(2)).isSameAs(newDrawable);
     verify(mUnderlyingDrawable1).setCallback(isNull(Drawable.Callback.class));
     verify(newDrawable).setCallback(eq(mArrayDrawable));
     verify(newDrawable, never()).mutate();
