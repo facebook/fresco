@@ -7,7 +7,7 @@
 
 package com.facebook.imagepipeline.producers;
 
-import static org.junit.Assert.assertSame;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
@@ -160,9 +160,8 @@ public class DiskCacheWriteProducerTest {
     ArgumentCaptor<EncodedImage> argumentCaptor = ArgumentCaptor.forClass(EncodedImage.class);
     verify(mDefaultBufferedDiskCache).put(eq(mCacheKey), argumentCaptor.capture());
     EncodedImage encodedImage = argumentCaptor.getValue();
-    assertSame(
-        encodedImage.getByteBufferRef().getUnderlyingReferenceTestOnly(),
-        mFinalImageReference.getUnderlyingReferenceTestOnly());
+    assertThat(encodedImage.getByteBufferRef().getUnderlyingReferenceTestOnly())
+        .isSameAs(mFinalImageReference.getUnderlyingReferenceTestOnly());
     verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
     verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
     verify(mProducerListener, times(2)).onProducerStart(mProducerContext, PRODUCER_NAME);
