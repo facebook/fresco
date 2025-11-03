@@ -7,10 +7,10 @@
 
 package com.facebook.drawee.drawable;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import android.graphics.drawable.Drawable;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,23 +39,23 @@ public class SettableDrawableTest {
     when(mUnderlyingDrawable0.getIntrinsicHeight()).thenReturn(200);
     when(mUnderlyingDrawable1.getIntrinsicWidth()).thenReturn(300);
     when(mUnderlyingDrawable1.getIntrinsicHeight()).thenReturn(400);
-    Assert.assertEquals(100, mSettableDrawable.getIntrinsicWidth());
-    Assert.assertEquals(200, mSettableDrawable.getIntrinsicHeight());
+    assertThat(mSettableDrawable.getIntrinsicWidth()).isEqualTo(100);
+    assertThat(mSettableDrawable.getIntrinsicHeight()).isEqualTo(200);
     mSettableDrawable.setDrawable(mUnderlyingDrawable1);
-    Assert.assertEquals(300, mSettableDrawable.getIntrinsicWidth());
-    Assert.assertEquals(400, mSettableDrawable.getIntrinsicHeight());
+    assertThat(mSettableDrawable.getIntrinsicWidth()).isEqualTo(300);
+    assertThat(mSettableDrawable.getIntrinsicHeight()).isEqualTo(400);
   }
 
   @Test
   public void testGetCurrent() {
     // initial drawable is mUnderlyingDrawable0
-    Assert.assertEquals(mUnderlyingDrawable0, mSettableDrawable.getCurrent());
+    assertThat(mSettableDrawable.getCurrent()).isEqualTo(mUnderlyingDrawable0);
     mSettableDrawable.setDrawable(mUnderlyingDrawable1);
-    Assert.assertEquals(mUnderlyingDrawable1, mSettableDrawable.getCurrent());
+    assertThat(mSettableDrawable.getCurrent()).isEqualTo(mUnderlyingDrawable1);
     mSettableDrawable.setDrawable(mUnderlyingDrawable2);
-    Assert.assertEquals(mUnderlyingDrawable2, mSettableDrawable.getCurrent());
+    assertThat(mSettableDrawable.getCurrent()).isEqualTo(mUnderlyingDrawable2);
     mSettableDrawable.setDrawable(mUnderlyingDrawable3);
-    Assert.assertEquals(mUnderlyingDrawable3, mSettableDrawable.getCurrent());
+    assertThat(mSettableDrawable.getCurrent()).isEqualTo(mUnderlyingDrawable3);
   }
 
   @Test
