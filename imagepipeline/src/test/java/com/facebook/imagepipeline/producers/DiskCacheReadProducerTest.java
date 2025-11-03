@@ -7,7 +7,7 @@
 
 package com.facebook.imagepipeline.producers;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -176,10 +176,10 @@ public class DiskCacheReadProducerTest {
     verify(mProducerListener)
         .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
     Map<String, String> resultMap = captor.getValue();
-    assertEquals("true", resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND));
-    assertEquals("0", resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE));
+    assertThat(resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND)).isEqualTo("true");
+    assertThat(resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE)).isEqualTo("0");
     verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, true);
-    Assert.assertFalse(EncodedImage.isValid(mFinalEncodedImage));
+    assertThat(EncodedImage.isValid(mFinalEncodedImage)).isFalse();
   }
 
   @Test
@@ -194,10 +194,10 @@ public class DiskCacheReadProducerTest {
     verify(mProducerListener)
         .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
     Map<String, String> resultMap = captor.getValue();
-    assertEquals("true", resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND));
-    assertEquals("1000", resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE));
+    assertThat(resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND)).isEqualTo("true");
+    assertThat(resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE)).isEqualTo("1000");
     verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, true);
-    Assert.assertFalse(EncodedImage.isValid(mFinalEncodedImage));
+    assertThat(EncodedImage.isValid(mFinalEncodedImage)).isFalse();
   }
 
   @Test
@@ -212,10 +212,10 @@ public class DiskCacheReadProducerTest {
     verify(mProducerListener)
         .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
     Map<String, String> resultMap = captor.getValue();
-    assertEquals("true", resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND));
-    assertEquals("0", resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE));
+    assertThat(resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND)).isEqualTo("true");
+    assertThat(resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE)).isEqualTo("0");
     verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, true);
-    Assert.assertFalse(EncodedImage.isValid(mFinalEncodedImage));
+    assertThat(EncodedImage.isValid(mFinalEncodedImage)).isFalse();
   }
 
   @Test
@@ -231,10 +231,10 @@ public class DiskCacheReadProducerTest {
     verify(mProducerListener)
         .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
     Map<String, String> resultMap = captor.getValue();
-    assertEquals("true", resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND));
-    assertEquals("0", resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE));
+    assertThat(resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND)).isEqualTo("true");
+    assertThat(resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE)).isEqualTo("0");
     verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, true);
-    Assert.assertFalse(EncodedImage.isValid(mFinalEncodedImage));
+    assertThat(EncodedImage.isValid(mFinalEncodedImage)).isFalse();
   }
 
   @Test
@@ -267,7 +267,7 @@ public class DiskCacheReadProducerTest {
     verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
     verify(mProducerListener).onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
     verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, true);
-    Assert.assertFalse(EncodedImage.isValid(mFinalEncodedImage));
+    assertThat(EncodedImage.isValid(mFinalEncodedImage)).isFalse();
   }
 
   @Test
@@ -281,7 +281,7 @@ public class DiskCacheReadProducerTest {
         .onProducerFinishWithSuccess(mLowestLevelProducerContext, PRODUCER_NAME, null);
     verify(mProducerListener)
         .onUltimateProducerReached(mLowestLevelProducerContext, PRODUCER_NAME, true);
-    Assert.assertFalse(EncodedImage.isValid(mFinalEncodedImage));
+    assertThat(EncodedImage.isValid(mFinalEncodedImage)).isFalse();
   }
 
   @Test
@@ -347,10 +347,10 @@ public class DiskCacheReadProducerTest {
     verify(mProducerListener)
         .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
     Map<String, String> resultMap = captor.getValue();
-    assertEquals("false", resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND));
+    assertThat(resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND)).isEqualTo("false");
     verify(mProducerListener, never())
         .onUltimateProducerReached(eq(mProducerContext), anyString(), anyBoolean());
-    assertNull(resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE));
+    assertThat(resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE)).isNull();
   }
 
   @Test
@@ -369,10 +369,10 @@ public class DiskCacheReadProducerTest {
     verify(mProducerListener)
         .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
     Map<String, String> resultMap = captor.getValue();
-    assertEquals("false", resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND));
+    assertThat(resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND)).isEqualTo("false");
     verify(mProducerListener, never())
         .onUltimateProducerReached(eq(mProducerContext), anyString(), anyBoolean());
-    assertNull(resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE));
+    assertThat(resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE)).isNull();
   }
 
   @Test
@@ -388,8 +388,8 @@ public class DiskCacheReadProducerTest {
     verify(mProducerListener)
         .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
     Map<String, String> resultMap = captor.getValue();
-    assertEquals("false", resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND));
-    assertNull(resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE));
+    assertThat(resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND)).isEqualTo("false");
+    assertThat(resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE)).isNull();
     verify(mProducerListener, never())
         .onUltimateProducerReached(eq(mProducerContext), anyString(), anyBoolean());
   }
@@ -430,8 +430,8 @@ public class DiskCacheReadProducerTest {
     verify(mProducerListener)
         .onProducerFinishWithSuccess(eq(mProducerContext), eq(PRODUCER_NAME), captor.capture());
     Map<String, String> resultMap = captor.getValue();
-    assertEquals("false", resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND));
-    assertNull(resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE));
+    assertThat(resultMap.get(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND)).isEqualTo("false");
+    assertThat(resultMap.get(DiskCacheReadProducer.ENCODED_IMAGE_SIZE)).isNull();
     verify(mProducerListener, never())
         .onUltimateProducerReached(eq(mProducerContext), anyString(), anyBoolean());
   }
@@ -460,14 +460,12 @@ public class DiskCacheReadProducerTest {
             "true",
             DiskCacheReadProducer.ENCODED_IMAGE_SIZE,
             "123");
-    assertEquals(
-        trueValue,
-        DiskCacheReadProducer.getExtraMap(mProducerListener, mProducerContext, true, 123));
+    assertThat(DiskCacheReadProducer.getExtraMap(mProducerListener, mProducerContext, true, 123))
+        .isEqualTo(trueValue);
     final Map<String, String> falseValue =
         ImmutableMap.of(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND, "false");
-    assertEquals(
-        falseValue,
-        DiskCacheReadProducer.getExtraMap(mProducerListener, mProducerContext, false, 0));
+    assertThat(DiskCacheReadProducer.getExtraMap(mProducerListener, mProducerContext, false, 0))
+        .isEqualTo(falseValue);
   }
 
   @Test
@@ -476,9 +474,9 @@ public class DiskCacheReadProducerTest {
     setupDiskCacheGetWait(mDefaultBufferedDiskCache);
     mDiskCacheReadProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer, never()).onCancellation();
-    assertFalse(mIsCancelled.getValue().get());
+    assertThat(mIsCancelled.getValue().get()).isFalse();
     mProducerContext.cancel();
-    assertTrue(mIsCancelled.getValue().get());
+    assertThat(mIsCancelled.getValue().get()).isTrue();
     mTaskCompletionSource.trySetCancelled();
     verify(mConsumer).onCancellation();
     verify(mInputProducer, never()).produceResults(any(Consumer.class), eq(mProducerContext));
