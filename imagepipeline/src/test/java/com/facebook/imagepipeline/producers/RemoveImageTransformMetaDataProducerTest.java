@@ -7,7 +7,7 @@
 
 package com.facebook.imagepipeline.producers;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.any;
@@ -75,17 +75,15 @@ public class RemoveImageTransformMetaDataProducerTest {
         ArgumentCaptor.forClass(CloseableReference.class);
     verify(mConsumer).onNewResult(argumentCaptor.capture(), eq(Consumer.NO_FLAGS));
     CloseableReference intermediateResult = argumentCaptor.getValue();
-    assertEquals(
-        mIntermediateResult.getUnderlyingReferenceTestOnly().getRefCountTestOnly(),
-        intermediateResult.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertThat(intermediateResult.getUnderlyingReferenceTestOnly().getRefCountTestOnly())
+        .isEqualTo(mIntermediateResult.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
 
     when(mEncodedImage.getByteBufferRef()).thenReturn(mFinalResult);
     mRemoveMetaDataConsumer.onNewResult(mEncodedImage, Consumer.IS_LAST);
     verify(mConsumer).onNewResult(argumentCaptor.capture(), eq(Consumer.NO_FLAGS));
     CloseableReference finalResult = argumentCaptor.getValue();
-    assertEquals(
-        mFinalResult.getUnderlyingReferenceTestOnly().getRefCountTestOnly(),
-        finalResult.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertThat(finalResult.getUnderlyingReferenceTestOnly().getRefCountTestOnly())
+        .isEqualTo(mFinalResult.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
   }
 
   @Test
