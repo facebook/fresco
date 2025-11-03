@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.memory;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -15,7 +16,6 @@ import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteStreams;
 import com.facebook.imagepipeline.testing.FakeNativeMemoryChunkPool;
 import java.io.ByteArrayInputStream;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,94 +73,94 @@ public class MemoryPooledByteBufferFactoryTest extends TestUsingNativeMemoryChun
   private void testNewByteBuf_1(
       final MemoryPooledByteBufferFactory mFactory, final PoolStats mStats) throws Exception {
     MemoryPooledByteBuffer sb1 = mFactory.newByteBuffer(new ByteArrayInputStream(mData));
-    Assert.assertEquals(16, sb1.getCloseableReference().get().getSize());
+    assertThat(sb1.getCloseableReference().get().getSize()).isEqualTo(16);
     assertArrayEquals(mData, getBytes(sb1), mData.length);
     mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(
-            32, new IntPair(0, 0),
-            16, new IntPair(1, 0),
-            8, new IntPair(0, 1),
-            4, new IntPair(0, 1)),
-        mStats.getBucketStats());
+    assertThat(mStats.getBucketStats())
+        .isEqualTo(
+            ImmutableMap.of(
+                32, new IntPair(0, 0),
+                16, new IntPair(1, 0),
+                8, new IntPair(0, 1),
+                4, new IntPair(0, 1)));
   }
 
   private void testNewByteBuf_2(
       final MemoryPooledByteBufferFactory mFactory, final PoolStats mStats) throws Exception {
     MemoryPooledByteBuffer sb2 = mFactory.newByteBuffer(new ByteArrayInputStream(mData), 8);
-    Assert.assertEquals(16, sb2.getCloseableReference().get().getSize());
+    assertThat(sb2.getCloseableReference().get().getSize()).isEqualTo(16);
     assertArrayEquals(mData, getBytes(sb2), mData.length);
     mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(
-            32, new IntPair(0, 0),
-            16, new IntPair(1, 0),
-            8, new IntPair(0, 1),
-            4, new IntPair(0, 0)),
-        mStats.getBucketStats());
+    assertThat(mStats.getBucketStats())
+        .isEqualTo(
+            ImmutableMap.of(
+                32, new IntPair(0, 0),
+                16, new IntPair(1, 0),
+                8, new IntPair(0, 1),
+                4, new IntPair(0, 0)));
   }
 
   private void testNewByteBuf_3(
       final MemoryPooledByteBufferFactory mFactory, final PoolStats mStats) throws Exception {
     MemoryPooledByteBuffer sb3 = mFactory.newByteBuffer(new ByteArrayInputStream(mData), 16);
-    Assert.assertEquals(16, sb3.getCloseableReference().get().getSize());
+    assertThat(sb3.getCloseableReference().get().getSize()).isEqualTo(16);
     assertArrayEquals(mData, getBytes(sb3), mData.length);
     mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(
-            32, new IntPair(0, 0),
-            16, new IntPair(1, 0),
-            8, new IntPair(0, 0),
-            4, new IntPair(0, 0)),
-        mStats.getBucketStats());
+    assertThat(mStats.getBucketStats())
+        .isEqualTo(
+            ImmutableMap.of(
+                32, new IntPair(0, 0),
+                16, new IntPair(1, 0),
+                8, new IntPair(0, 0),
+                4, new IntPair(0, 0)));
   }
 
   private void testNewByteBuf_4(
       final MemoryPooledByteBufferFactory mFactory, final PoolStats mStats) throws Exception {
     MemoryPooledByteBuffer sb4 = mFactory.newByteBuffer(new ByteArrayInputStream(mData), 32);
-    Assert.assertEquals(32, sb4.getCloseableReference().get().getSize());
+    assertThat(sb4.getCloseableReference().get().getSize()).isEqualTo(32);
     assertArrayEquals(mData, getBytes(sb4), mData.length);
     mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(
-            32, new IntPair(1, 0),
-            16, new IntPair(0, 0),
-            8, new IntPair(0, 0),
-            4, new IntPair(0, 0)),
-        mStats.getBucketStats());
+    assertThat(mStats.getBucketStats())
+        .isEqualTo(
+            ImmutableMap.of(
+                32, new IntPair(1, 0),
+                16, new IntPair(0, 0),
+                8, new IntPair(0, 0),
+                4, new IntPair(0, 0)));
   }
 
   private static void testNewByteBuf_5(
       final MemoryPooledByteBufferFactory mFactory, final PoolStats mStats) {
     MemoryPooledByteBuffer sb5 = mFactory.newByteBuffer(5);
-    Assert.assertEquals(8, sb5.getCloseableReference().get().getSize());
-    Assert.assertEquals(
-        1, sb5.getCloseableReference().getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertThat(sb5.getCloseableReference().get().getSize()).isEqualTo(8);
+    assertThat(sb5.getCloseableReference().getUnderlyingReferenceTestOnly().getRefCountTestOnly())
+        .isEqualTo(1);
     mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(
-            32, new IntPair(0, 0),
-            16, new IntPair(0, 0),
-            8, new IntPair(1, 0),
-            4, new IntPair(0, 0)),
-        mStats.getBucketStats());
+    assertThat(mStats.getBucketStats())
+        .isEqualTo(
+            ImmutableMap.of(
+                32, new IntPair(0, 0),
+                16, new IntPair(0, 0),
+                8, new IntPair(1, 0),
+                4, new IntPair(0, 0)));
     sb5.close();
     mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(
-            32, new IntPair(0, 0),
-            16, new IntPair(0, 0),
-            8, new IntPair(0, 1),
-            4, new IntPair(0, 0)),
-        mStats.getBucketStats());
+    assertThat(mStats.getBucketStats())
+        .isEqualTo(
+            ImmutableMap.of(
+                32, new IntPair(0, 0),
+                16, new IntPair(0, 0),
+                8, new IntPair(0, 1),
+                4, new IntPair(0, 0)));
   }
 
   // Assert that the first 'length' bytes of expected are the same as those in 'actual'
   private static void assertArrayEquals(byte[] expected, byte[] actual, int length) {
-    Assert.assertTrue(expected.length >= length);
-    Assert.assertTrue(actual.length >= length);
+    assertThat(expected.length >= length).isTrue();
+    assertThat(actual.length >= length).isTrue();
     for (int i = 0; i < length; i++) {
-      Assert.assertEquals(expected[i], actual[i], i);
+      assertThat(actual[i]).as(String.valueOf(i)).isEqualTo(expected[i]);
     }
   }
 
