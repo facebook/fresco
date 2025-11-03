@@ -7,7 +7,7 @@
 
 package com.facebook.imagepipeline.producers;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 import android.net.Uri;
@@ -233,7 +233,7 @@ public class NetworkFetchProducerTest {
     when(mNetworkFetcher.shouldPropagate(any(FetchState.class))).thenReturn(false);
     try {
       callback.onResponse(inputStream, 100);
-      fail();
+      fail("Expected exception to be thrown");
     } catch (Exception e) {
       verify(mPooledByteBufferFactory).newOutputStream(100);
       verify(mPooledByteBufferOutputStream).close();
@@ -281,7 +281,7 @@ public class NetworkFetchProducerTest {
 
     @Override
     public int read() throws IOException {
-      fail();
+      fail("This method should not be called");
       return 0;
     }
 
