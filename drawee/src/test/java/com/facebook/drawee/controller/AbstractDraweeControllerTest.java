@@ -7,10 +7,8 @@
 
 package com.facebook.drawee.controller;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.anyFloat;
@@ -43,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -214,13 +211,8 @@ public class AbstractDraweeControllerTest {
 
   @Test
   public void testOnAttach_ThrowsWithoutHierarchy() {
-    try {
-      mController.setHierarchy(null);
-      mController.onAttach();
-      fail("onAttach should fail if no drawee hierarchy is set!");
-    } catch (NullPointerException npe) {
-      // expected
-    }
+    mController.setHierarchy(null);
+    assertThatThrownBy(() -> mController.onAttach()).isInstanceOf(NullPointerException.class);
   }
 
   @Test
@@ -228,7 +220,7 @@ public class AbstractDraweeControllerTest {
     mController.setHierarchy(mDraweeHierarchy);
     mController.onAttach();
     mController.onDetach();
-    assertSame(mDraweeHierarchy, mController.getHierarchy());
+    assertThat(mController.getHierarchy()).isSameAs(mDraweeHierarchy);
     verify(mDeferredReleaser).scheduleDeferredRelease(mController);
   }
 
@@ -241,20 +233,20 @@ public class AbstractDraweeControllerTest {
     InOrder inOrder = inOrder(draweeHierarchy1, draweeHierarchy2);
 
     // initial state
-    assertNull(mController.getHierarchy());
+    assertThat(mController.getHierarchy()).isNull();
 
     // set controller overlay before hierarchy
     mController.setControllerOverlay(controllerOverlay1);
 
     // set drawee hierarchy
     mController.setHierarchy(draweeHierarchy1);
-    assertSame(draweeHierarchy1, mController.getHierarchy());
+    assertThat(mController.getHierarchy()).isSameAs(draweeHierarchy1);
     inOrder.verify(draweeHierarchy1, times(1)).setControllerOverlay(controllerOverlay1);
     inOrder.verify(draweeHierarchy1, times(0)).reset();
 
     // change drawee hierarchy
     mController.setHierarchy(draweeHierarchy2);
-    assertSame(draweeHierarchy2, mController.getHierarchy());
+    assertThat(mController.getHierarchy()).isSameAs(draweeHierarchy2);
     inOrder.verify(draweeHierarchy1, times(1)).setControllerOverlay(null);
     inOrder.verify(draweeHierarchy1, times(0)).reset();
     inOrder.verify(draweeHierarchy2, times(1)).setControllerOverlay(controllerOverlay1);
@@ -262,7 +254,7 @@ public class AbstractDraweeControllerTest {
 
     // clear drawee hierarchy
     mController.setHierarchy(null);
-    assertSame(null, mController.getHierarchy());
+    assertThat(mController.getHierarchy()).isNull();
     inOrder.verify(draweeHierarchy1, times(0)).setControllerOverlay(any(Drawable.class));
     inOrder.verify(draweeHierarchy1, times(0)).reset();
     inOrder.verify(draweeHierarchy2, times(1)).setControllerOverlay(null);
@@ -270,7 +262,7 @@ public class AbstractDraweeControllerTest {
 
     // set drawee hierarchy
     mController.setHierarchy(draweeHierarchy1);
-    assertSame(draweeHierarchy1, mController.getHierarchy());
+    assertThat(mController.getHierarchy()).isSameAs(draweeHierarchy1);
     inOrder.verify(draweeHierarchy1, times(1)).setControllerOverlay(controllerOverlay1);
     inOrder.verify(draweeHierarchy1, times(0)).reset();
     inOrder.verify(draweeHierarchy2, times(0)).setControllerOverlay(any(Drawable.class));
@@ -380,19 +372,19 @@ public class AbstractDraweeControllerTest {
     switch (outcome) {
       case INTERMEDIATE_GOOD:
         verifyDhInteraction(SET_IMAGE_P50, image0.getDrawable(), true);
-        Assert.assertEquals("id_AfterIntermediateSet", mController.getId());
+        assertThat(mController.getId()).isEqualTo("id_AfterIntermediateSet");
         break;
       case INTERMEDIATE_FAILURE:
         verifyDhInteraction(IGNORE, image0.getDrawable(), true);
-        Assert.assertEquals("id_AfterIntermediateFailed", mController.getId());
+        assertThat(mController.getId()).isEqualTo("id_AfterIntermediateFailed");
         break;
       case SUCCESS:
         verifyDhInteraction(SET_IMAGE_P100, image0.getDrawable(), true);
-        Assert.assertEquals("id_AfterFinalSet", mController.getId());
+        assertThat(mController.getId()).isEqualTo("id_AfterFinalSet");
         break;
       case FAILURE:
         verifyDhInteraction(SET_FAILURE, image0.getDrawable(), true);
-        Assert.assertEquals("id_AfterFailure", mController.getId());
+        assertThat(mController.getId()).isEqualTo("id_AfterFailure");
         break;
     }
     verify(mDraweeHierarchy).reset();
@@ -570,13 +562,13 @@ public class AbstractDraweeControllerTest {
     // verify
     verify(mDataSourceSupplier).get();
     verifyDhInteraction(dhInteraction, image.getDrawable(), isImmediate);
-    assertTrue(dataSource.isClosed());
+    assertThat(dataSource.isClosed()).isTrue();
 
     // detach
     controller.onDetach();
 
     // verify that all open images has been closed
-    assertTrue(image.isOpened() == image.isClosed());
+    assertThat(image.isOpened() == image.isClosed()).isTrue();
 
     verifyNoMoreInteractions(mDataSourceSupplier);
   }
@@ -641,14 +633,14 @@ public class AbstractDraweeControllerTest {
     for (int i = 0; i < n; i++) {
       verifyDhInteraction(dhInteraction[i], images.get(i).getDrawable(), 0 < numImmediate);
     }
-    assertTrue(dataSource.isClosed());
+    assertThat(dataSource.isClosed()).isTrue();
 
     // detach
     controller.onDetach();
 
     // verify that all open images has been closed
     for (int i = 0; i < n; i++) {
-      assertTrue(images.get(i).isOpened() == images.get(i).isClosed());
+      assertThat(images.get(i).isOpened() == images.get(i).isClosed()).isTrue();
     }
 
     verifyNoMoreInteractions(mDataSourceSupplier);
@@ -702,8 +694,7 @@ public class AbstractDraweeControllerTest {
         verify(mDraweeHierarchy).setRetry(any(Throwable.class));
         break;
       default:
-        fail();
-        break;
+        throw new AssertionError("Unexpected dhInteraction value");
     }
   }
 
