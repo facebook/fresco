@@ -7,7 +7,8 @@
 
 package com.facebook.datasource;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mockConstruction;
 
@@ -60,11 +61,11 @@ public class DataSourcesTest {
   @Test
   public void testImmediateFailedDataSource() {
     DataSource<?> dataSource = DataSources.immediateFailedDataSource(mException);
-    assertTrue(dataSource.isFinished());
-    assertTrue(dataSource.hasFailed());
-    assertEquals(mException, dataSource.getFailureCause());
-    assertFalse(dataSource.hasResult());
-    assertFalse(dataSource.isClosed());
+    assertThat(dataSource.isFinished()).isTrue();
+    assertThat(dataSource.hasFailed()).isTrue();
+    assertThat(dataSource.getFailureCause()).isEqualTo(mException);
+    assertThat(dataSource.hasResult()).isFalse();
+    assertThat(dataSource.isClosed()).isFalse();
   }
 
   @Test
@@ -86,7 +87,7 @@ public class DataSourcesTest {
         .subscribe(any(DataSubscriber.class), any(Executor.class));
 
     final Object actual = DataSources.waitForFinalResult(mDataSource);
-    assertEquals(mFinalResult, actual);
+    assertThat(actual).isEqualTo(mFinalResult);
 
     verify(mCountDownLatch, times(1)).await();
     verify(mCountDownLatch, times(1)).countDown();
@@ -105,8 +106,8 @@ public class DataSourcesTest {
     } catch (Throwable t) {
       throwable = t;
     }
-    assertEquals(initial, actual);
-    assertTrue(throwable instanceof TimeoutException);
+    assertThat(actual).isEqualTo(initial);
+    assertThat(throwable instanceof TimeoutException).isTrue();
 
     verify(mCountDownLatch, times(1)).await(1, TimeUnit.MILLISECONDS);
     verify(mCountDownLatch, times(0)).countDown();
@@ -132,7 +133,7 @@ public class DataSourcesTest {
 
     // the mocked one falls through, but the real one waits with the countdown latch for isFinished
     final Object actual = DataSources.waitForFinalResult(mDataSource);
-    assertEquals(null, actual);
+    assertThat(actual).isNull();
 
     verify(mCountDownLatch, times(1)).await();
     verify(mCountDownLatch, never()).countDown();
@@ -154,7 +155,7 @@ public class DataSourcesTest {
         .subscribe(any(DataSubscriber.class), any(Executor.class));
 
     final Object actual = DataSources.waitForFinalResult(mDataSource);
-    assertEquals(null, actual);
+    assertThat(actual).isNull();
 
     verify(mCountDownLatch, times(1)).await();
     verify(mCountDownLatch, times(1)).countDown();
@@ -182,7 +183,7 @@ public class DataSourcesTest {
       DataSources.waitForFinalResult(mDataSource);
       fail("expected exception");
     } catch (Exception exception) {
-      assertEquals(expectedException, exception);
+      assertThat(exception).isEqualTo(expectedException);
     }
 
     verify(mCountDownLatch, times(1)).await();
