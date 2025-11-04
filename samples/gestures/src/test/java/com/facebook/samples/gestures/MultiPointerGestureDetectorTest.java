@@ -8,9 +8,7 @@
 package com.facebook.samples.gestures;
 
 import static com.facebook.samples.gestures.MotionEventTestUtils.obtainMotionEvent;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
@@ -37,7 +35,7 @@ public class MultiPointerGestureDetectorTest {
 
   @Test
   public void testInitialstate() {
-    assertEquals(false, mGestureDetector.isGestureInProgress());
+    assertThat(mGestureDetector.isGestureInProgress()).isEqualTo(false);
   }
 
   @Test
@@ -51,27 +49,27 @@ public class MultiPointerGestureDetectorTest {
 
     mGestureDetector.onTouchEvent(event1);
     mGestureDetector.onTouchEvent(event2);
-    assertTrue(mGestureDetector.isGestureInProgress());
-    assertEquals(1, mGestureDetector.getPointerCount());
-    assertEquals(100f, mGestureDetector.getStartX()[0], 0);
-    assertEquals(300f, mGestureDetector.getStartY()[0], 0);
-    assertEquals(150f, mGestureDetector.getCurrentX()[0], 0);
-    assertEquals(350f, mGestureDetector.getCurrentY()[0], 0);
+    assertThat(mGestureDetector.isGestureInProgress()).isTrue();
+    assertThat(mGestureDetector.getPointerCount()).isEqualTo(1);
+    assertThat(mGestureDetector.getStartX()[0]).isEqualTo(100f);
+    assertThat(mGestureDetector.getStartY()[0]).isEqualTo(300f);
+    assertThat(mGestureDetector.getCurrentX()[0]).isEqualTo(150f);
+    assertThat(mGestureDetector.getCurrentY()[0]).isEqualTo(350f);
     inOrder.verify(mListener).onGestureBegin(mGestureDetector);
     inOrder.verify(mListener).onGestureUpdate(mGestureDetector);
 
     mGestureDetector.onTouchEvent(event3);
-    assertTrue(mGestureDetector.isGestureInProgress());
-    assertEquals(1, mGestureDetector.getPointerCount());
-    assertEquals(100f, mGestureDetector.getStartX()[0], 0);
-    assertEquals(300f, mGestureDetector.getStartY()[0], 0);
-    assertEquals(200f, mGestureDetector.getCurrentX()[0], 0);
-    assertEquals(400f, mGestureDetector.getCurrentY()[0], 0);
+    assertThat(mGestureDetector.isGestureInProgress()).isTrue();
+    assertThat(mGestureDetector.getPointerCount()).isEqualTo(1);
+    assertThat(mGestureDetector.getStartX()[0]).isEqualTo(100f);
+    assertThat(mGestureDetector.getStartY()[0]).isEqualTo(300f);
+    assertThat(mGestureDetector.getCurrentX()[0]).isEqualTo(200f);
+    assertThat(mGestureDetector.getCurrentY()[0]).isEqualTo(400f);
     inOrder.verify(mListener).onGestureUpdate(mGestureDetector);
 
     mGestureDetector.onTouchEvent(event4);
-    assertFalse(mGestureDetector.isGestureInProgress());
-    assertEquals(0, mGestureDetector.getPointerCount());
+    assertThat(mGestureDetector.isGestureInProgress()).isFalse();
+    assertThat(mGestureDetector.getPointerCount()).isEqualTo(0);
     inOrder.verify(mListener).onGestureEnd(mGestureDetector);
     inOrder.verifyNoMoreInteractions();
 
@@ -98,64 +96,64 @@ public class MultiPointerGestureDetectorTest {
 
     mGestureDetector.onTouchEvent(event1);
     mGestureDetector.onTouchEvent(event2);
-    assertTrue(mGestureDetector.isGestureInProgress());
-    assertEquals(1, mGestureDetector.getPointerCount());
-    assertEquals(100f, mGestureDetector.getStartX()[0], 0);
-    assertEquals(300f, mGestureDetector.getStartY()[0], 0);
-    assertEquals(150f, mGestureDetector.getCurrentX()[0], 0);
-    assertEquals(350f, mGestureDetector.getCurrentY()[0], 0);
+    assertThat(mGestureDetector.isGestureInProgress()).isTrue();
+    assertThat(mGestureDetector.getPointerCount()).isEqualTo(1);
+    assertThat(mGestureDetector.getStartX()[0]).isEqualTo(100f);
+    assertThat(mGestureDetector.getStartY()[0]).isEqualTo(300f);
+    assertThat(mGestureDetector.getCurrentX()[0]).isEqualTo(150f);
+    assertThat(mGestureDetector.getCurrentY()[0]).isEqualTo(350f);
     inOrder.verify(mListener).onGestureBegin(mGestureDetector);
     inOrder.verify(mListener).onGestureUpdate(mGestureDetector);
 
     mGestureDetector.onTouchEvent(event3);
-    assertTrue(mGestureDetector.isGestureInProgress());
-    assertEquals(2, mGestureDetector.getPointerCount());
-    assertEquals(150f, mGestureDetector.getStartX()[0], 0);
-    assertEquals(350f, mGestureDetector.getStartY()[0], 0);
-    assertEquals(150f, mGestureDetector.getCurrentX()[0], 0);
-    assertEquals(350f, mGestureDetector.getCurrentY()[0], 0);
-    assertEquals(500f, mGestureDetector.getStartX()[1], 0);
-    assertEquals(600f, mGestureDetector.getStartY()[1], 0);
-    assertEquals(500f, mGestureDetector.getCurrentX()[1], 0);
-    assertEquals(600f, mGestureDetector.getCurrentY()[1], 0);
+    assertThat(mGestureDetector.isGestureInProgress()).isTrue();
+    assertThat(mGestureDetector.getPointerCount()).isEqualTo(2);
+    assertThat(mGestureDetector.getStartX()[0]).isEqualTo(150f);
+    assertThat(mGestureDetector.getStartY()[0]).isEqualTo(350f);
+    assertThat(mGestureDetector.getCurrentX()[0]).isEqualTo(150f);
+    assertThat(mGestureDetector.getCurrentY()[0]).isEqualTo(350f);
+    assertThat(mGestureDetector.getStartX()[1]).isEqualTo(500f);
+    assertThat(mGestureDetector.getStartY()[1]).isEqualTo(600f);
+    assertThat(mGestureDetector.getCurrentX()[1]).isEqualTo(500f);
+    assertThat(mGestureDetector.getCurrentY()[1]).isEqualTo(600f);
     inOrder.verify(mListener).onGestureEnd(mGestureDetector);
     inOrder.verify(mListener).onGestureBegin(mGestureDetector);
 
     mGestureDetector.onTouchEvent(event4);
-    assertTrue(mGestureDetector.isGestureInProgress());
-    assertEquals(2, mGestureDetector.getPointerCount());
-    assertEquals(150f, mGestureDetector.getStartX()[0], 0);
-    assertEquals(350f, mGestureDetector.getStartY()[0], 0);
-    assertEquals(200f, mGestureDetector.getCurrentX()[0], 0);
-    assertEquals(400f, mGestureDetector.getCurrentY()[0], 0);
-    assertEquals(500f, mGestureDetector.getStartX()[1], 0);
-    assertEquals(600f, mGestureDetector.getStartY()[1], 0);
-    assertEquals(550f, mGestureDetector.getCurrentX()[1], 0);
-    assertEquals(650f, mGestureDetector.getCurrentY()[1], 0);
+    assertThat(mGestureDetector.isGestureInProgress()).isTrue();
+    assertThat(mGestureDetector.getPointerCount()).isEqualTo(2);
+    assertThat(mGestureDetector.getStartX()[0]).isEqualTo(150f);
+    assertThat(mGestureDetector.getStartY()[0]).isEqualTo(350f);
+    assertThat(mGestureDetector.getCurrentX()[0]).isEqualTo(200f);
+    assertThat(mGestureDetector.getCurrentY()[0]).isEqualTo(400f);
+    assertThat(mGestureDetector.getStartX()[1]).isEqualTo(500f);
+    assertThat(mGestureDetector.getStartY()[1]).isEqualTo(600f);
+    assertThat(mGestureDetector.getCurrentX()[1]).isEqualTo(550f);
+    assertThat(mGestureDetector.getCurrentY()[1]).isEqualTo(650f);
     inOrder.verify(mListener).onGestureUpdate(mGestureDetector);
 
     mGestureDetector.onTouchEvent(event5);
-    assertTrue(mGestureDetector.isGestureInProgress());
-    assertEquals(1, mGestureDetector.getPointerCount());
-    assertEquals(550f, mGestureDetector.getStartX()[0], 0);
-    assertEquals(650f, mGestureDetector.getStartY()[0], 0);
-    assertEquals(550f, mGestureDetector.getCurrentX()[0], 0);
-    assertEquals(650f, mGestureDetector.getCurrentY()[0], 0);
+    assertThat(mGestureDetector.isGestureInProgress()).isTrue();
+    assertThat(mGestureDetector.getPointerCount()).isEqualTo(1);
+    assertThat(mGestureDetector.getStartX()[0]).isEqualTo(550f);
+    assertThat(mGestureDetector.getStartY()[0]).isEqualTo(650f);
+    assertThat(mGestureDetector.getCurrentX()[0]).isEqualTo(550f);
+    assertThat(mGestureDetector.getCurrentY()[0]).isEqualTo(650f);
     inOrder.verify(mListener).onGestureEnd(mGestureDetector);
     inOrder.verify(mListener).onGestureBegin(mGestureDetector);
 
     mGestureDetector.onTouchEvent(event6);
-    assertTrue(mGestureDetector.isGestureInProgress());
-    assertEquals(1, mGestureDetector.getPointerCount());
-    assertEquals(550f, mGestureDetector.getStartX()[0], 0);
-    assertEquals(650f, mGestureDetector.getStartY()[0], 0);
-    assertEquals(600f, mGestureDetector.getCurrentX()[0], 0);
-    assertEquals(700f, mGestureDetector.getCurrentY()[0], 0);
+    assertThat(mGestureDetector.isGestureInProgress()).isTrue();
+    assertThat(mGestureDetector.getPointerCount()).isEqualTo(1);
+    assertThat(mGestureDetector.getStartX()[0]).isEqualTo(550f);
+    assertThat(mGestureDetector.getStartY()[0]).isEqualTo(650f);
+    assertThat(mGestureDetector.getCurrentX()[0]).isEqualTo(600f);
+    assertThat(mGestureDetector.getCurrentY()[0]).isEqualTo(700f);
     inOrder.verify(mListener).onGestureUpdate(mGestureDetector);
 
     mGestureDetector.onTouchEvent(event7);
-    assertFalse(mGestureDetector.isGestureInProgress());
-    assertEquals(0, mGestureDetector.getPointerCount());
+    assertThat(mGestureDetector.isGestureInProgress()).isFalse();
+    assertThat(mGestureDetector.getPointerCount()).isEqualTo(0);
     inOrder.verify(mListener).onGestureEnd(mGestureDetector);
     inOrder.verifyNoMoreInteractions();
 
