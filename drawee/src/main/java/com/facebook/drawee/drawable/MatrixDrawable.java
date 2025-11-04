@@ -38,7 +38,7 @@ public class MatrixDrawable extends ForwardingDrawable {
    * @param matrix matrix to be applied to the drawable
    */
   public MatrixDrawable(Drawable drawable, Matrix matrix) {
-    super(Preconditions.checkNotNull(drawable));
+    super(Preconditions.checkNotNull(drawable, "Drawable cannot be null"));
     mMatrix = matrix;
   }
 

@@ -122,7 +122,7 @@ public class RoundingParams {
    * @return modified instance
    */
   public RoundingParams setCornersRadii(float[] radii) {
-    Preconditions.checkNotNull(radii);
+    Preconditions.checkNotNull(radii, "Radii array cannot be null");
     Preconditions.checkArgument(radii.length == 8, "radii should have exactly 8 values");
     System.arraycopy(radii, 0, getOrCreateRoundedCornersRadii(), 0, 8);
     return this;

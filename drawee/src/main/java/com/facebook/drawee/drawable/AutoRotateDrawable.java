@@ -52,7 +52,7 @@ public class AutoRotateDrawable extends ForwardingDrawable implements Runnable, 
    * @param clockwise defines whether the rotation is clockwise or not
    */
   public AutoRotateDrawable(Drawable drawable, int interval, boolean clockwise) {
-    super(Preconditions.checkNotNull(drawable));
+    super(Preconditions.checkNotNull(drawable, "Drawable cannot be null"));
     mInterval = interval;
     mClockwise = clockwise;
   }

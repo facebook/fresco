@@ -124,7 +124,7 @@ public class WrappingUtils {
     Drawable child = parent.setDrawable(sEmptyDrawable);
     child = maybeWrapWithScaleType(child, scaleType);
     parent.setDrawable(child);
-    Preconditions.checkNotNull(child, "Parent has no child drawable!");
+    Preconditions.checkNotNull(child, "Child drawable cannot be null after wrapping");
     return (ScaleTypeDrawable) child;
   }
 

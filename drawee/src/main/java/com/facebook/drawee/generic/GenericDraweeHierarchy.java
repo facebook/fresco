@@ -395,13 +395,13 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   /** Sets the actual image focus point. */
   public void setActualImageFocusPoint(PointF focusPoint) {
-    Preconditions.checkNotNull(focusPoint);
+    Preconditions.checkNotNull(focusPoint, "Focus point cannot be null");
     getScaleTypeDrawableAtIndex(ACTUAL_IMAGE_INDEX).setFocusPoint(focusPoint);
   }
 
   /** Sets the actual image scale type. */
   public void setActualImageScaleType(ScalingUtils.ScaleType scaleType) {
-    Preconditions.checkNotNull(scaleType);
+    Preconditions.checkNotNull(scaleType, "Scale type cannot be null");
     getScaleTypeDrawableAtIndex(ACTUAL_IMAGE_INDEX).setScaleType(scaleType);
   }
 
@@ -449,7 +449,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   /** Sets the placeholder image focus point. */
   public void setPlaceholderImageFocusPoint(PointF focusPoint) {
-    Preconditions.checkNotNull(focusPoint);
+    Preconditions.checkNotNull(focusPoint, "Focus point cannot be null");
     getScaleTypeDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX).setFocusPoint(focusPoint);
   }
 

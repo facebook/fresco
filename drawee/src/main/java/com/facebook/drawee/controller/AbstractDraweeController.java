@@ -302,7 +302,7 @@ public abstract class AbstractDraweeController<T, INFO>
 
   /** Adds controller listener. */
   public void addControllerListener(ControllerListener<? super INFO> controllerListener) {
-    Preconditions.checkNotNull(controllerListener);
+    Preconditions.checkNotNull(controllerListener, "Controller listener cannot be null");
     if (mControllerListener instanceof InternalForwardingListener) {
       ((InternalForwardingListener<INFO>) mControllerListener).addListener(controllerListener);
       return;
@@ -335,7 +335,7 @@ public abstract class AbstractDraweeController<T, INFO>
 
   /** Removes controller listener. */
   public void removeControllerListener(ControllerListener<? super INFO> controllerListener) {
-    Preconditions.checkNotNull(controllerListener);
+    Preconditions.checkNotNull(controllerListener, "Controller listener cannot be null");
     if (mControllerListener instanceof InternalForwardingListener) {
       ((InternalForwardingListener<INFO>) mControllerListener).removeListener(controllerListener);
       return;
@@ -462,7 +462,7 @@ public abstract class AbstractDraweeController<T, INFO>
           mIsRequestSubmitted ? "request already submitted" : "request needs submit");
     }
     mEventTracker.recordEvent(Event.ON_ATTACH_CONTROLLER);
-    Preconditions.checkNotNull(mSettableDraweeHierarchy);
+    Preconditions.checkNotNull(mSettableDraweeHierarchy, "Hierarchy cannot be null on attach");
     mDeferredReleaser.cancelDeferredRelease(this);
     mIsAttached = true;
     if (!mIsRequestSubmitted) {

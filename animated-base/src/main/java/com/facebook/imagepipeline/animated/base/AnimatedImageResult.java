@@ -30,7 +30,7 @@ public class AnimatedImageResult {
   private @Nullable BitmapTransformation mBitmapTransformation;
 
   AnimatedImageResult(AnimatedImageResultBuilder builder) {
-    mImage = Preconditions.checkNotNull(builder.getImage());
+    mImage = Preconditions.checkNotNull(builder.getImage(), "AnimatedImage cannot be null");
     mFrameForPreview = builder.getFrameForPreview();
     mPreviewBitmap = builder.getPreviewBitmap();
     mDecodedFrames = builder.getDecodedFrames();
@@ -39,7 +39,7 @@ public class AnimatedImageResult {
   }
 
   private AnimatedImageResult(AnimatedImage image) {
-    mImage = Preconditions.checkNotNull(image);
+    mImage = Preconditions.checkNotNull(image, "AnimatedImage cannot be null");
     mFrameForPreview = 0;
   }
 

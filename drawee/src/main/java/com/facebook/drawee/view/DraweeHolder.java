@@ -209,7 +209,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     final boolean isControllerValid = isControllerValid();
 
     setVisibilityCallback(null);
-    mHierarchy = Preconditions.checkNotNull(hierarchy);
+    mHierarchy = Preconditions.checkNotNull(hierarchy, "Hierarchy cannot be null");
     Drawable drawable = mHierarchy.getTopLevelDrawable();
     onVisibilityChange(drawable == null || drawable.isVisible());
     setVisibilityCallback(this);
@@ -222,7 +222,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
 
   /** Gets the drawee hierarchy if set, throws NPE otherwise. */
   public DH getHierarchy() {
-    return Preconditions.checkNotNull(mHierarchy);
+    return Preconditions.checkNotNull(mHierarchy, "Hierarchy has not been set");
   }
 
   /** Returns whether the hierarchy is set or not. */

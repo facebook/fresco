@@ -92,7 +92,7 @@ public class MultiDraweeHolder<DH extends DraweeHierarchy> {
   }
 
   public void add(int index, DraweeHolder<DH> holder) {
-    Preconditions.checkNotNull(holder);
+    Preconditions.checkNotNull(holder, "Holder cannot be null");
     Preconditions.checkElementIndex(index, mHolders.size() + 1);
     mHolders.add(index, holder);
     if (mIsAttached) {

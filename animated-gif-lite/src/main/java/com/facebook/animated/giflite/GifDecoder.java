@@ -45,11 +45,11 @@ public class GifDecoder implements ImageDecoder {
       GifMetadataDecoder decoder = GifMetadataDecoder.create(is, out);
 
       if (out.size() > 0) { // let's use the fixed gif version if exists
-        Preconditions.checkNotNull(is).close();
+        Preconditions.checkNotNull(is, "InputStream cannot be null").close();
         is = new ByteArrayInputStream(out.toByteArray());
       }
 
-      Preconditions.checkNotNull(is).reset();
+      Preconditions.checkNotNull(is, "InputStream cannot be null").reset();
 
       Movie movie = Movie.decodeStream(is);
 
@@ -82,7 +82,7 @@ public class GifDecoder implements ImageDecoder {
       throw new RuntimeException("Error while decoding gif", e);
     } finally {
       try {
-        Preconditions.checkNotNull(is).close();
+        Preconditions.checkNotNull(is, "InputStream cannot be null").close();
       } catch (IOException ignored) {
       }
     }

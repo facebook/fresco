@@ -54,7 +54,7 @@ public class ArrayDrawable extends Drawable
    * @param layers the layers that this drawable displays
    */
   public ArrayDrawable(Drawable[] layers) {
-    Preconditions.checkNotNull(layers);
+    Preconditions.checkNotNull(layers, "Layers cannot be null");
     mLayers = layers;
     for (int i = 0; i < mLayers.length; i++) {
       DrawableUtils.setCallbacks(mLayers[i], this, this);

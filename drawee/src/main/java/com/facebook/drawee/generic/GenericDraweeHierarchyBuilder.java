@@ -608,7 +608,7 @@ public class GenericDraweeHierarchyBuilder {
   private void validate() {
     if (mOverlays != null) {
       for (Drawable overlay : mOverlays) {
-        Preconditions.checkNotNull(overlay);
+        Preconditions.checkNotNull(overlay, "Overlay drawable cannot be null");
       }
     }
   }

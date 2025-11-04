@@ -61,7 +61,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
    * @param drawable underlying drawable
    */
   public RoundedCornersDrawable(Drawable drawable) {
-    super(Preconditions.checkNotNull(drawable));
+    super(Preconditions.checkNotNull(drawable, "Drawable cannot be null"));
   }
 
   /**

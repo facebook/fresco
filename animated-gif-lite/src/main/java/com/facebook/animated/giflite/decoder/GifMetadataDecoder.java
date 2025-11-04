@@ -292,7 +292,8 @@ public class GifMetadataDecoder {
 
   private void writeNextByte(int b) throws IOException {
     if (shouldFixStream) {
-      Preconditions.checkNotNull(mOutputStream).write(b);
+      Preconditions.checkNotNull(mOutputStream, "OutputStream cannot be null when fixing stream")
+          .write(b);
     }
   }
 
