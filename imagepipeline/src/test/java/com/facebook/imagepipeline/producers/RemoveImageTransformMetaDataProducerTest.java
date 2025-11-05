@@ -9,20 +9,26 @@ package com.facebook.imagepipeline.producers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
 import javax.annotation.Nullable;
-import org.junit.*;
-import org.junit.runner.*;
-import org.mockito.*;
-import org.mockito.invocation.*;
-import org.mockito.stubbing.*;
-import org.robolectric.*;
-import org.robolectric.annotation.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
