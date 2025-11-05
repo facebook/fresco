@@ -45,6 +45,7 @@ class FrameLoaderStrategy(
 
   private val maxAnimationFps = animationInformation.fps()
   private var currentFps = maxAnimationFps
+  private var isRunning = true
 
   private val dynamicFpsRender =
       object : DynamicRenderingFps {
@@ -54,7 +55,7 @@ class FrameLoaderStrategy(
           get() = currentFps
 
         override fun setRenderingFps(renderingFps: Int) {
-          if (renderingFps != currentFps) {
+          if (renderingFps != currentFps && isRunning) {
             currentFps = renderingFps.coerceIn(1, maxAnimationFps)
             frameLoader?.compressToFps(currentFps)
           }
@@ -71,6 +72,7 @@ class FrameLoaderStrategy(
     if (canvasWidth <= 0 || canvasHeight <= 0 || animationWidth <= 0 || animationHeight <= 0) {
       return
     }
+    isRunning = true
 
     val frameSize = calculateFrameSize(canvasWidth, canvasHeight)
     frameLoader?.prepareFrames(frameSize.width, frameSize.height, onAnimationLoaded ?: {})
@@ -85,6 +87,7 @@ class FrameLoaderStrategy(
     val frameSize = calculateFrameSize(canvasWidth, canvasHeight)
     val frame = frameLoader?.getFrame(frameNumber, frameSize.width, frameSize.height)
     frame?.let { AnimationCoordinator.onRenderFrame(dynamicFpsRender, it) }
+    isRunning = true
     return frame?.bitmapRef
   }
 
@@ -96,6 +99,7 @@ class FrameLoaderStrategy(
   override fun clearFrames() {
     frameLoader?.let { FrameLoaderFactory.saveUnusedFrame(cacheKey, it) }
     frameLoader = null
+    isRunning = false
   }
 
   private fun calculateFrameSize(canvasWidth: Int, canvasHeight: Int): FrameSize {

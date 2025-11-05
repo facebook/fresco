@@ -136,6 +136,7 @@ constructor(private var _animationBackend: AnimationBackend? = null) :
     expectedRenderTimeMs = startTimeMs
     lastFrameAnimationTimeMs = -1
     lastDrawnFrameNumber = -1
+    _animationBackend?.clear()
     unscheduleSelf(invalidateRunnable)
     animationListener.onAnimationStop(this)
   }
