@@ -18,7 +18,7 @@ import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.FrameL
 import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.FrameLoaderFactory
 import java.util.concurrent.TimeUnit
 
-/** Use a [FrameLoader] strategy to render the animaion */
+/** Use a [FrameLoader] strategy to render the animation */
 class FrameLoaderStrategy(
     source: String?,
     private val animationInformation: AnimationInformation,
