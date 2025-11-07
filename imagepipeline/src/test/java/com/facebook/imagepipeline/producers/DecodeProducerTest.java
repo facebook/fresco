@@ -104,10 +104,12 @@ public class DecodeProducerTest {
     mProgressiveJpegConfig =
         new SimpleProgressiveJpegConfig(
             new SimpleProgressiveJpegConfig.DynamicValueConfig() {
+              @Override
               public List<Integer> getScansToDecode() {
                 return Arrays.asList(PREVIEW_SCAN, GOOD_ENOUGH_SCAN);
               }
 
+              @Override
               public int getGoodEnoughScanNumber() {
                 return GOOD_ENOUGH_SCAN;
               }
