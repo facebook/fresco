@@ -44,6 +44,8 @@ object VitoViewImpl2 {
         override fun onViewDetachedFromWindow(view: View) {
           getDrawable(view)?.apply {
             imagePerfListener.onImageUnmount(this)
+            // Clear refetchRunnable immediately to prevent memory leaks
+            refetchRunnable = null
             if (useReleaseInViewDetached.get()) {
               FrescoVitoProvider.getController().releaseNextFrame(this)
             }
