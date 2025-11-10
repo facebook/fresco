@@ -105,7 +105,36 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     if (otherObject == null || javaClass != otherObject.javaClass) return false
 
     val other = otherObject as ImageOptions
-    if (isPerfMediaRemountInstrumentationFix) {
+    if (includeAllFieldsInEquals) {
+      if (
+          placeholderColor != other.placeholderColor ||
+              placeholderRes != other.placeholderRes ||
+              !Objects.equal(placeholderDrawable, other.placeholderDrawable) ||
+              !Objects.equal(placeholderScaleType, other.placeholderScaleType) ||
+              !Objects.equal(placeholderFocusPoint, other.placeholderFocusPoint) ||
+              placeholderApplyRoundingOptions != other.placeholderApplyRoundingOptions ||
+              errorColor != other.errorColor ||
+              errorRes != other.errorRes ||
+              !Objects.equal(errorScaleType, other.errorScaleType) ||
+              !Objects.equal(errorFocusPoint, other.errorFocusPoint) ||
+              errorApplyRoundingOptions != other.errorApplyRoundingOptions ||
+              overlayRes != other.overlayRes ||
+              !Objects.equal(overlayDrawable, other.overlayDrawable) ||
+              !Objects.equal(backgroundDrawable, other.backgroundDrawable) ||
+              !Objects.equal(errorDrawable, other.errorDrawable) ||
+              progressRes != other.progressRes ||
+              !Objects.equal(progressDrawable, other.progressDrawable) ||
+              !Objects.equal(progressScaleType, other.progressScaleType) ||
+              !Objects.equal(actualImageColorFilter, other.actualImageColorFilter) ||
+              _resizeToViewport != other._resizeToViewport ||
+              fadeDurationMs != other.fadeDurationMs ||
+              _autoPlay != other._autoPlay ||
+              _autoStop != other._autoStop ||
+              !Objects.equal(customDrawableFactory, other.customDrawableFactory)
+      ) {
+        return false
+      }
+    } else if (isPerfMediaRemountInstrumentationFix) {
       if (
           placeholderColor != other.placeholderColor ||
               placeholderRes != other.placeholderRes ||
@@ -487,5 +516,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     @JvmStatic fun extend(imageOptions: ImageOptions): Builder = Builder(imageOptions)
 
     @JvmStatic fun create(): Builder = extend(defaults())
+
+    @Volatile @JvmStatic var includeAllFieldsInEquals: Boolean = false
   }
 }
