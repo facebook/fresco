@@ -29,10 +29,12 @@ public class SimpleProgressiveJpegConfig implements ProgressiveJpegConfig {
   }
 
   private static class DefaultDynamicValueConfig implements DynamicValueConfig {
+    @Override
     public List<Integer> getScansToDecode() {
       return Collections.EMPTY_LIST;
     }
 
+    @Override
     public int getGoodEnoughScanNumber() {
       return 0;
     }
