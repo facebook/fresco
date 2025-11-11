@@ -77,7 +77,7 @@ public class NetworkFetchProducerTest {
             Priority.MEDIUM,
             mConfig);
     when(mConfig.getProgressiveJpegConfig()).thenReturn(mProgressiveJpegConfig);
-    when(mProgressiveJpegConfig.decodeProgressively()).thenReturn(true);
+    when(mProgressiveJpegConfig.decodeProgressively(mImageRequest)).thenReturn(true);
     mFetchState = new FetchState(mConsumer, mProducerContext);
     when(mImageRequest.getSourceUri()).thenReturn(Uri.parse("http://www.facebook.com"));
     mCommonByteArray = new byte[10];

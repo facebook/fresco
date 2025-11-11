@@ -519,7 +519,7 @@ class DecodeProducer(
 
   private inner class NetworkImagesProgressiveDecoder(
       consumer: Consumer<CloseableReference<CloseableImage>>,
-      producerContext: ProducerContext,
+      val producerContext: ProducerContext,
       val progressiveJpegParser: ProgressiveJpegParser,
       val progressiveJpegConfig: ProgressiveJpegConfig,
       decodeCancellationEnabled: Boolean,
@@ -549,8 +549,11 @@ class DecodeProducer(
           return false
         }
         if (
-            scanNum < progressiveJpegConfig.getNextScanNumberToDecode(lastScheduledScanNumber) &&
-                !this.progressiveJpegParser.isEndMarkerRead
+            scanNum <
+                progressiveJpegConfig.getNextScanNumberToDecode(
+                    producerContext.imageRequest,
+                    lastScheduledScanNumber,
+                ) && !this.progressiveJpegParser.isEndMarkerRead
         ) {
           // We have not reached the minimum scan set by the configuration and there
           // are still more scans to be read (the end marker is not reached)
@@ -566,7 +569,10 @@ class DecodeProducer(
 
     override val qualityInfo: QualityInfo
       protected get() =
-          progressiveJpegConfig.getQualityInfo(this.progressiveJpegParser.bestScanNumber)
+          progressiveJpegConfig.getQualityInfo(
+              producerContext.imageRequest,
+              this.progressiveJpegParser.bestScanNumber,
+          )
 
     init {
       lastScheduledScanNumber = 0

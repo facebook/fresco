@@ -222,7 +222,7 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
   private boolean shouldPropagateIntermediateResults(
       FetchState fetchState, ProducerContext context) {
     ProgressiveJpegConfig pjpegConfig = context.getImagePipelineConfig().getProgressiveJpegConfig();
-    if (pjpegConfig == null || !pjpegConfig.decodeProgressively()) {
+    if (pjpegConfig == null || !pjpegConfig.decodeProgressively(context.getImageRequest())) {
       return false;
     }
     if (!fetchState.getContext().isIntermediateResultExpected()) {
