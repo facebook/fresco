@@ -64,9 +64,14 @@ class KFrescoController(
         traceSection("KFrescoController#imageToDataModelMapper") {
           b.customDrawableFactory?.createDrawable(r, a, b)?.let { createDrawableModel(it, b) }
               ?: when (a) {
-                is CloseableBitmap ->
-                    BitmapImageDataModel(a.underlyingBitmap, true == a.getExtras()["is_rounded"])
-                // TODO(T105148151): handle rotation for closeable static bitmap, handle other types
+                is CloseableBitmap -> {
+                  if (config.enablePrepareToDrawOnFetch()) {
+                    a.underlyingBitmap?.prepareToDraw()
+                  }
+                  BitmapImageDataModel(a.underlyingBitmap, true == a.getExtras()["is_rounded"])
+                  // TODO(T105148151): handle rotation for closeable static bitmap, handle other
+                  // types
+                }
                 else -> {
                   drawableFactory?.createDrawable(r, a, b)?.let { createDrawableModel(it, b) }
                 }

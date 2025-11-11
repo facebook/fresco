@@ -95,4 +95,6 @@ interface FrescoVitoConfig {
   fun experimentalResetControllerListener2(): Boolean
 
   fun experimentalDynamicSizeIsUriEligible(uri: Uri?): Boolean
+
+  fun enablePrepareToDrawOnFetch(): Boolean
 }
