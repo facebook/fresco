@@ -9,13 +9,14 @@ package com.facebook.common.media
 
 import androidx.annotation.NonNull
 import java.util.Locale
+import kotlin.collections.Map
 
 /** Utility class. */
 object MediaUtils {
 
   @JvmField // Additional mime types that we know to be a particular media type but which may not be
   // supported natively on the device.
-  val ADDITIONAL_ALLOWED_MIME_TYPES =
+  val ADDITIONAL_ALLOWED_MIME_TYPES: Map<String, String> =
       mapOf(
           "mkv" to "video/x-matroska",
           "glb" to "model/gltf-binary",
