@@ -19,7 +19,7 @@ import javax.annotation.concurrent.ThreadSafe
 /** Bitmap factory for ART VM (Lollipop and up). */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 @ThreadSafe
-class ArtBitmapFactory(
+open class ArtBitmapFactory(
     private val bitmapPool: BitmapPool,
     private val closeableReferenceFactory: CloseableReferenceFactory,
 ) : PlatformBitmapFactory() {
@@ -37,6 +37,14 @@ class ArtBitmapFactory(
       height: Int,
       bitmapConfig: Bitmap.Config,
   ): CloseableReference<Bitmap> {
+
+    return closeableReferenceFactory.create(
+        createBackingBitmap(width, height, bitmapConfig),
+        bitmapPool,
+    )
+  }
+
+  open fun createBackingBitmap(width: Int, height: Int, bitmapConfig: Bitmap.Config): Bitmap {
     val sizeInBytes = BitmapUtil.getSizeInByteForBitmap(width, height, bitmapConfig)
     val bitmap = bitmapPool[sizeInBytes]
     check(
@@ -44,6 +52,6 @@ class ArtBitmapFactory(
             width * height * BitmapUtil.getPixelSizeForBitmapConfig(bitmapConfig)
     )
     bitmap.reconfigure(width, height, bitmapConfig)
-    return closeableReferenceFactory.create(bitmap, bitmapPool)
+    return bitmap
   }
 }

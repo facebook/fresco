@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.bitmaps
 
+import android.os.Build
 import com.facebook.imagepipeline.core.CloseableReferenceFactory
 import com.facebook.imagepipeline.memory.PoolFactory
 import com.facebook.imagepipeline.platform.PlatformDecoder
@@ -21,9 +22,17 @@ object PlatformBitmapFactoryProvider {
    * @return The PlatformBitmapFactory implementation
    */
   @JvmStatic
+  @JvmOverloads
   fun buildPlatformBitmapFactory(
       poolFactory: PoolFactory,
       platformDecoder: PlatformDecoder,
       closeableReferenceFactory: CloseableReferenceFactory,
-  ): PlatformBitmapFactory = ArtBitmapFactory(poolFactory.bitmapPool, closeableReferenceFactory)
+      useAshmem: Boolean = false,
+  ): PlatformBitmapFactory {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      Api31BitmapFactory(poolFactory.bitmapPool, closeableReferenceFactory, useAshmem)
+    } else {
+      ArtBitmapFactory(poolFactory.bitmapPool, closeableReferenceFactory)
+    }
+  }
 }
