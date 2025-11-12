@@ -66,7 +66,7 @@ class KFrescoController(
               ?: when (a) {
                 is CloseableBitmap -> {
                   if (config.enablePrepareToDrawOnFetch()) {
-                    a.underlyingBitmap?.prepareToDraw()
+                    a.underlyingBitmap.prepareToDraw()
                   }
                   BitmapImageDataModel(a.underlyingBitmap, true == a.getExtras()["is_rounded"])
                   // TODO(T105148151): handle rotation for closeable static bitmap, handle other
