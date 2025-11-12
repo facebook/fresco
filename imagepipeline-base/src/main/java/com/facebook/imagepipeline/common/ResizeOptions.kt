@@ -49,7 +49,7 @@ constructor(
 
   companion object {
 
-    const val DEFAULT_ROUNDUP_FRACTION = 2.0f / 3
+    const val DEFAULT_ROUNDUP_FRACTION: Float = 2.0f / 3
 
     /** @return new ResizeOptions, if the width and height values are valid, and null otherwise */
     @JvmStatic
