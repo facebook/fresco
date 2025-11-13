@@ -17,6 +17,7 @@ import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import com.facebook.fresco.vito.options.BorderOptions
 import com.facebook.fresco.vito.options.RoundingOptions
+import com.facebook.fresco.vito.renderer.BitmapImageDataModel
 import com.facebook.fresco.vito.renderer.CanvasTransformation
 import com.facebook.fresco.vito.renderer.CanvasTransformationHandler
 import com.facebook.fresco.vito.renderer.ImageDataModel
@@ -177,4 +178,7 @@ class ImageLayerDataModel(
   }
 
   fun getAlpha(): Int = paint.alpha
+
+  fun hasBitmapWithGainmap(): Boolean =
+      dataModel.let { it is BitmapImageDataModel && it.hasGainmap() }
 }

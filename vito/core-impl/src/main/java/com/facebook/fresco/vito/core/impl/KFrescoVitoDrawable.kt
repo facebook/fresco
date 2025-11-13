@@ -241,6 +241,8 @@ class KFrescoVitoDrawable(
     throw UnsupportedOperationException("Not implemented for KVito")
   }
 
+  override fun hasBitmapWithGainmap(): Boolean = actualImageLayer?.hasBitmapWithGainmap() == true
+
   override fun reportVisible(visible: Boolean) {
     getImagePerfLoggingListener()?.reportVisible(visible)
   }

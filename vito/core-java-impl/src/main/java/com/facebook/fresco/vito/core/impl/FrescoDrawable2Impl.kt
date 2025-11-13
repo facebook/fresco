@@ -7,7 +7,10 @@
 
 package com.facebook.fresco.vito.core.impl
 
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import androidx.annotation.VisibleForTesting
@@ -320,8 +323,24 @@ class FrescoDrawable2Impl(
    */
   override fun configureWhenUnderlyingChanged(): Unit = Unit
 
+  override fun hasBitmapWithGainmap(): Boolean =
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        maybeGetActualImageBitmap()?.hasGainmap() == true
+      } else {
+        false
+      }
+
   override fun reportVisible(visible: Boolean) {
     getImagePerfLoggingListener()?.reportVisible(visible)
+  }
+
+  private fun maybeGetActualImageBitmap(): Bitmap? {
+    val drawable = actualImageDrawable
+    return if (drawable is BitmapDrawable) {
+      drawable.bitmap
+    } else {
+      null
+    }
   }
 
   companion object {
