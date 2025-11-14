@@ -36,6 +36,7 @@ import java.util.TimerTask
 object FrescoVitoSlideshowComponentSpec {
 
   @PropDefault const val isPlaying = true
+  @PropDefault const val isAlternativeTimerLogicEnable = false
 
   @JvmStatic
   @OnCreateInitialState
@@ -73,6 +74,7 @@ object FrescoVitoSlideshowComponentSpec {
       @Prop(optional = true) callerContext: Any?,
       @Prop(optional = true) imageListener: ImageListener?,
       @TreeProp contextChain: ContextChain?,
+      @Prop(optional = true) isAlternativeTimerLogicEnable: Boolean?,
       @State(canUpdateLazily = true) slideshowIndex: Int,
       @State(canUpdateLazily = true) timer: Timer,
       @State(canUpdateLazily = true) currentlyPlaying: Boolean,
@@ -157,11 +159,19 @@ object FrescoVitoSlideshowComponentSpec {
             }
           }
       slideshowDrawable.timerTask = timerTask
-      timer.scheduleAtFixedRate(
-          timerTask,
-          photoTransitionMs.toLong(),
-          (photoTransitionMs + fadeTransitionMs).toLong(),
-      )
+      if (isAlternativeTimerLogicEnable == true && heroMediaTransitionMs != null) {
+        timer.scheduleAtFixedRate(
+            timerTask,
+            heroMediaTransitionMs.toLong(),
+            (photoTransitionMs + fadeTransitionMs).toLong(),
+        )
+      } else {
+        timer.scheduleAtFixedRate(
+            timerTask,
+            photoTransitionMs.toLong(),
+            (photoTransitionMs + fadeTransitionMs).toLong(),
+        )
+      }
     } else if (!isPlaying && currentlyPlaying) {
       val animateTask = slideshowDrawable.timerTask
       animateTask?.cancel()
