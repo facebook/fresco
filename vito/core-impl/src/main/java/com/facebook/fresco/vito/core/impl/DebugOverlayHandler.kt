@@ -20,6 +20,7 @@ class DebugOverlayHandler(
             imageDimensionsProvider,
             imageOriginProvider,
             imageOriginSubcategoryProvider,
+            hdrGainmapProvider,
         ),
 ) {
 

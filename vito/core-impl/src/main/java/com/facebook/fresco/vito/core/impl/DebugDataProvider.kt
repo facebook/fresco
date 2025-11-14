@@ -100,3 +100,12 @@ val imageOriginSubcategoryProvider =
         "" to Color.WHITE
       }
     }
+
+val hdrGainmapProvider =
+    StringDebugDataProvider(
+        shortName = "hdr",
+        longName = "hdrGainmap",
+        description = "Has Bitmap with HDR Gainmap",
+    ) { drawable ->
+      drawable.hasBitmapWithGainmap().toString()
+    }
