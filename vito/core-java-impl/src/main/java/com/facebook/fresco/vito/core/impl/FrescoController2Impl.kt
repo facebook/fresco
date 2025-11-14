@@ -351,14 +351,18 @@ open class FrescoController2Impl(
         drawable.callerContext,
     )
     val actualDrawable =
-        image?.let {
+        image?.let { closeableImageRef ->
           if (config.enablePrepareToDrawOnFetch()) {
-            val img = it.get()
+            val img = closeableImageRef.get()
             if (img is CloseableBitmap) {
               img.underlyingBitmap.prepareToDraw()
             }
           }
-          hierarcher.buildActualImageDrawable(imageRequest.resources, imageRequest.imageOptions, it)
+          hierarcher.buildActualImageDrawable(
+              imageRequest.resources,
+              imageRequest.imageOptions,
+              closeableImageRef,
+          )
         }
 
     actualImageWrapperDrawable.setCurrent(actualDrawable ?: NopDrawable)
