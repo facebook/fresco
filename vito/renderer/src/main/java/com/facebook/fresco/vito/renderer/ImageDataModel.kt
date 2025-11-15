@@ -36,7 +36,7 @@ class BitmapImageDataModel(val bitmap: Bitmap, val isBitmapCircular: Boolean = f
 
   fun hasGainmap() =
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-        bitmap?.hasGainmap() == true
+        bitmap.hasGainmap() == true
       } else {
         false
       }
