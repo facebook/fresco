@@ -139,7 +139,7 @@ public class ImagePipelinePostProcessorFragment extends BaseShowcaseFragment
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView, ViewGroup parent) {
       final LayoutInflater layoutInflater = getLayoutInflater(null);
 
       final View view =
