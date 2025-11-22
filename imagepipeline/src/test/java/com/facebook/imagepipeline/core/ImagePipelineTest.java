@@ -7,10 +7,7 @@
 
 package com.facebook.imagepipeline.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
@@ -154,7 +151,7 @@ public class ImagePipelineTest {
   public void testPrefetchToDiskCacheWithPrefetchDisabled() {
     when(mPrefetchEnabledSupplier.get()).thenReturn(false);
     DataSource<Void> dataSource = mImagePipeline.prefetchToDiskCache(mImageRequest, mCallerContext);
-    assertTrue(dataSource.hasFailed());
+    assertThat(dataSource.hasFailed()).isTrue();
     verifyNoMoreInteractions(mProducerSequenceFactory, mRequestListener1, mRequestListener2);
   }
 
@@ -163,7 +160,7 @@ public class ImagePipelineTest {
     when(mPrefetchEnabledSupplier.get()).thenReturn(false);
     DataSource<Void> dataSource =
         mImagePipeline.prefetchToEncodedCache(mImageRequest, mCallerContext);
-    assertTrue(dataSource.hasFailed());
+    assertThat(dataSource.hasFailed()).isTrue();
     verifyNoMoreInteractions(mProducerSequenceFactory, mRequestListener1, mRequestListener2);
   }
 
@@ -172,7 +169,7 @@ public class ImagePipelineTest {
     when(mPrefetchEnabledSupplier.get()).thenReturn(false);
     DataSource<Void> dataSource =
         mImagePipeline.prefetchToBitmapCache(mImageRequest, mCallerContext);
-    assertTrue(dataSource.hasFailed());
+    assertThat(dataSource.hasFailed()).isTrue();
     verifyNoMoreInteractions(mProducerSequenceFactory, mRequestListener1, mRequestListener2);
   }
 
@@ -208,15 +205,15 @@ public class ImagePipelineTest {
 
   private void verifyPrefetchToDiskCache(
       DataSource<Void> dataSource, Producer<Void> prefetchProducerSequence, Priority priority) {
-    assertFalse(dataSource.isFinished());
+    assertThat(dataSource.isFinished()).isFalse();
     verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", true);
     verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", true);
     ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
         ArgumentCaptor.forClass(ProducerContext.class);
     verify(prefetchProducerSequence)
         .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
-    assertFalse(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
-    assertEquals(priority, producerContextArgumentCaptor.getValue().getPriority());
+    assertThat(producerContextArgumentCaptor.getValue().isIntermediateResultExpected()).isFalse();
+    assertThat(producerContextArgumentCaptor.getValue().getPriority()).isEqualTo(priority);
   }
 
   @Test
@@ -226,15 +223,15 @@ public class ImagePipelineTest {
         .thenReturn(prefetchProducerSequence);
     DataSource<Void> dataSource =
         mImagePipeline.prefetchToEncodedCache(mImageRequest, mCallerContext);
-    assertFalse(dataSource.isFinished());
+    assertThat(dataSource.isFinished()).isFalse();
     verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", true);
     verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", true);
     ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
         ArgumentCaptor.forClass(ProducerContext.class);
     verify(prefetchProducerSequence)
         .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
-    assertFalse(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
-    assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.MEDIUM);
+    assertThat(producerContextArgumentCaptor.getValue().isIntermediateResultExpected()).isFalse();
+    assertThat(producerContextArgumentCaptor.getValue().getPriority()).isEqualTo(Priority.MEDIUM);
   }
 
   @Test
@@ -244,15 +241,15 @@ public class ImagePipelineTest {
         .thenReturn(prefetchProducerSequence);
     DataSource<Void> dataSource =
         mImagePipeline.prefetchToEncodedCache(mImageRequest, mCallerContext, Priority.MEDIUM);
-    assertFalse(dataSource.isFinished());
+    assertThat(dataSource.isFinished()).isFalse();
     verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", true);
     verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", true);
     ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
         ArgumentCaptor.forClass(ProducerContext.class);
     verify(prefetchProducerSequence)
         .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
-    assertFalse(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
-    assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.MEDIUM);
+    assertThat(producerContextArgumentCaptor.getValue().isIntermediateResultExpected()).isFalse();
+    assertThat(producerContextArgumentCaptor.getValue().getPriority()).isEqualTo(Priority.MEDIUM);
   }
 
   @Test
@@ -262,15 +259,15 @@ public class ImagePipelineTest {
         .thenReturn(prefetchProducerSequence);
     DataSource<Void> dataSource =
         mImagePipeline.prefetchToBitmapCache(mImageRequest, mCallerContext);
-    assertFalse(dataSource.isFinished());
+    assertThat(dataSource.isFinished()).isFalse();
     verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", true);
     verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", true);
     ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
         ArgumentCaptor.forClass(ProducerContext.class);
     verify(prefetchProducerSequence)
         .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
-    assertFalse(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
-    assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.MEDIUM);
+    assertThat(producerContextArgumentCaptor.getValue().isIntermediateResultExpected()).isFalse();
+    assertThat(producerContextArgumentCaptor.getValue().getPriority()).isEqualTo(Priority.MEDIUM);
   }
 
   @Test
@@ -281,22 +278,22 @@ public class ImagePipelineTest {
     when(mImageRequest.getSourceUri()).thenReturn(Uri.parse("file:///local/file"));
     DataSource<CloseableReference<PooledByteBuffer>> dataSource =
         mImagePipeline.fetchEncodedImage(mImageRequest, mCallerContext);
-    assertFalse(dataSource.isFinished());
+    assertThat(dataSource.isFinished()).isFalse();
     ArgumentCaptor<ImageRequest> argumentCaptor = ArgumentCaptor.forClass(ImageRequest.class);
     verify(mRequestListener1)
         .onRequestStart(argumentCaptor.capture(), eq(mCallerContext), eq("0"), eq(false));
     ImageRequest capturedImageRequest = argumentCaptor.getValue();
-    assertSame(mImageRequest.getSourceUri(), capturedImageRequest.getSourceUri());
+    assertThat(capturedImageRequest.getSourceUri()).isSameAs(mImageRequest.getSourceUri());
     verify(mRequestListener2)
         .onRequestStart(argumentCaptor.capture(), eq(mCallerContext), eq("0"), eq(false));
     capturedImageRequest = argumentCaptor.getValue();
-    assertSame(mImageRequest.getSourceUri(), capturedImageRequest.getSourceUri());
+    assertThat(capturedImageRequest.getSourceUri()).isSameAs(mImageRequest.getSourceUri());
     ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
         ArgumentCaptor.forClass(ProducerContext.class);
     verify(encodedSequence)
         .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
-    assertTrue(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
-    assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.HIGH);
+    assertThat(producerContextArgumentCaptor.getValue().isIntermediateResultExpected()).isTrue();
+    assertThat(producerContextArgumentCaptor.getValue().getPriority()).isEqualTo(Priority.HIGH);
   }
 
   @Test
@@ -307,22 +304,22 @@ public class ImagePipelineTest {
     when(mImageRequest.getSourceUri()).thenReturn(Uri.parse("http://test"));
     DataSource<CloseableReference<PooledByteBuffer>> dataSource =
         mImagePipeline.fetchEncodedImage(mImageRequest, mCallerContext);
-    assertFalse(dataSource.isFinished());
+    assertThat(dataSource.isFinished()).isFalse();
     ArgumentCaptor<ImageRequest> argumentCaptor = ArgumentCaptor.forClass(ImageRequest.class);
     verify(mRequestListener1)
         .onRequestStart(argumentCaptor.capture(), eq(mCallerContext), eq("0"), eq(false));
     ImageRequest capturedImageRequest = argumentCaptor.getValue();
-    assertSame(mImageRequest.getSourceUri(), capturedImageRequest.getSourceUri());
+    assertThat(capturedImageRequest.getSourceUri()).isSameAs(mImageRequest.getSourceUri());
     verify(mRequestListener2)
         .onRequestStart(argumentCaptor.capture(), eq(mCallerContext), eq("0"), eq(false));
     capturedImageRequest = argumentCaptor.getValue();
-    assertSame(mImageRequest.getSourceUri(), capturedImageRequest.getSourceUri());
+    assertThat(capturedImageRequest.getSourceUri()).isSameAs(mImageRequest.getSourceUri());
     ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
         ArgumentCaptor.forClass(ProducerContext.class);
     verify(encodedSequence)
         .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
-    assertTrue(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
-    assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.HIGH);
+    assertThat(producerContextArgumentCaptor.getValue().isIntermediateResultExpected()).isTrue();
+    assertThat(producerContextArgumentCaptor.getValue().getPriority()).isEqualTo(Priority.HIGH);
   }
 
   @Test
@@ -332,15 +329,15 @@ public class ImagePipelineTest {
         .thenReturn(decodedSequence);
     DataSource<CloseableReference<CloseableImage>> dataSource =
         mImagePipeline.fetchDecodedImage(mImageRequest, mCallerContext);
-    assertFalse(dataSource.isFinished());
+    assertThat(dataSource.isFinished()).isFalse();
     verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", false);
     verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", false);
     ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
         ArgumentCaptor.forClass(ProducerContext.class);
     verify(decodedSequence)
         .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
-    assertTrue(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
-    assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.HIGH);
+    assertThat(producerContextArgumentCaptor.getValue().isIntermediateResultExpected()).isTrue();
+    assertThat(producerContextArgumentCaptor.getValue().getPriority()).isEqualTo(Priority.HIGH);
   }
 
   @Test
@@ -351,18 +348,17 @@ public class ImagePipelineTest {
     DataSource<CloseableReference<CloseableImage>> dataSource =
         mImagePipeline.fetchDecodedImage(
             mImageRequest, mCallerContext, ImageRequest.RequestLevel.DISK_CACHE);
-    assertFalse(dataSource.isFinished());
+    assertThat(dataSource.isFinished()).isFalse();
     verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", false);
     verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", false);
     ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
         ArgumentCaptor.forClass(ProducerContext.class);
     verify(decodedSequence)
         .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
-    assertTrue(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
-    assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.HIGH);
-    assertEquals(
-        producerContextArgumentCaptor.getValue().getLowestPermittedRequestLevel(),
-        ImageRequest.RequestLevel.DISK_CACHE);
+    assertThat(producerContextArgumentCaptor.getValue().isIntermediateResultExpected()).isTrue();
+    assertThat(producerContextArgumentCaptor.getValue().getPriority()).isEqualTo(Priority.HIGH);
+    assertThat(producerContextArgumentCaptor.getValue().getLowestPermittedRequestLevel())
+        .isEqualTo(ImageRequest.RequestLevel.DISK_CACHE);
   }
 
   @Test
@@ -377,11 +373,10 @@ public class ImagePipelineTest {
         ArgumentCaptor.forClass(ProducerContext.class);
     verify(bitmapCacheSequence)
         .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
-    assertTrue(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
-    assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.HIGH);
-    assertEquals(
-        producerContextArgumentCaptor.getValue().getLowestPermittedRequestLevel(),
-        ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE);
+    assertThat(producerContextArgumentCaptor.getValue().isIntermediateResultExpected()).isTrue();
+    assertThat(producerContextArgumentCaptor.getValue().getPriority()).isEqualTo(Priority.HIGH);
+    assertThat(producerContextArgumentCaptor.getValue().getLowestPermittedRequestLevel())
+        .isEqualTo(ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE);
   }
 
   @Test
@@ -398,11 +393,10 @@ public class ImagePipelineTest {
         ArgumentCaptor.forClass(ProducerContext.class);
     verify(bitmapCacheSequence)
         .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
-    assertTrue(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
-    assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.HIGH);
-    assertEquals(
-        producerContextArgumentCaptor.getValue().getLowestPermittedRequestLevel(),
-        ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE);
+    assertThat(producerContextArgumentCaptor.getValue().isIntermediateResultExpected()).isTrue();
+    assertThat(producerContextArgumentCaptor.getValue().getPriority()).isEqualTo(Priority.HIGH);
+    assertThat(producerContextArgumentCaptor.getValue().getLowestPermittedRequestLevel())
+        .isEqualTo(ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE);
   }
 
   @Test
@@ -420,8 +414,8 @@ public class ImagePipelineTest {
         ArgumentCaptor.forClass(ProducerContext.class);
     verify(bitmapCacheSequence)
         .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
-    assertTrue(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
-    assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.HIGH);
+    assertThat(producerContextArgumentCaptor.getValue().isIntermediateResultExpected()).isTrue();
+    assertThat(producerContextArgumentCaptor.getValue().getPriority()).isEqualTo(Priority.HIGH);
   }
 
   @Test
@@ -433,15 +427,15 @@ public class ImagePipelineTest {
     when(mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest))
         .thenReturn(decodedSequence);
     DataSource<CloseableReference<CloseableImage>> dataSource = dataSourceSupplier.get();
-    assertFalse(dataSource.isFinished());
+    assertThat(dataSource.isFinished()).isFalse();
     verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", false);
     verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", false);
     ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
         ArgumentCaptor.forClass(ProducerContext.class);
     verify(decodedSequence)
         .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
-    assertTrue(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
-    assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.HIGH);
+    assertThat(producerContextArgumentCaptor.getValue().isIntermediateResultExpected()).isTrue();
+    assertThat(producerContextArgumentCaptor.getValue().getPriority()).isEqualTo(Priority.HIGH);
   }
 
   @Test
@@ -470,9 +464,9 @@ public class ImagePipelineTest {
     BitmapMemoryCacheKey bitmapMemoryCacheKey2 = mock(BitmapMemoryCacheKey.class);
     when(bitmapMemoryCacheKey1.containsUri(uri)).thenReturn(true);
     when(bitmapMemoryCacheKey2.containsUri(uri)).thenReturn(false);
-    assertTrue(bitmapMemoryCacheKeyPredicate.apply(bitmapMemoryCacheKey1));
-    assertFalse(bitmapMemoryCacheKeyPredicate.apply(bitmapMemoryCacheKey2));
-    assertFalse(bitmapMemoryCacheKeyPredicate.apply(dummyCacheKey));
+    assertThat(bitmapMemoryCacheKeyPredicate.apply(bitmapMemoryCacheKey1)).isTrue();
+    assertThat(bitmapMemoryCacheKeyPredicate.apply(bitmapMemoryCacheKey2)).isFalse();
+    assertThat(bitmapMemoryCacheKeyPredicate.apply(dummyCacheKey)).isFalse();
 
     ArgumentCaptor<Predicate> encodedMemoryCachePredicateCaptor =
         ArgumentCaptor.forClass(Predicate.class);
@@ -481,9 +475,9 @@ public class ImagePipelineTest {
         encodedMemoryCachePredicateCaptor.getValue();
     SimpleCacheKey simpleCacheKey1 = new SimpleCacheKey(uriString);
     SimpleCacheKey simpleCacheKey2 = new SimpleCacheKey("rubbish");
-    assertTrue(encodedMemoryCacheKeyPredicate.apply(simpleCacheKey1));
-    assertFalse(encodedMemoryCacheKeyPredicate.apply(simpleCacheKey2));
-    assertFalse(encodedMemoryCacheKeyPredicate.apply(dummyCacheKey));
+    assertThat(encodedMemoryCacheKeyPredicate.apply(simpleCacheKey1)).isTrue();
+    assertThat(encodedMemoryCacheKeyPredicate.apply(simpleCacheKey2)).isFalse();
+    assertThat(encodedMemoryCacheKeyPredicate.apply(dummyCacheKey)).isFalse();
   }
 
   @Test
@@ -516,9 +510,9 @@ public class ImagePipelineTest {
     BitmapMemoryCacheKey bitmapMemoryCacheKey2 = mock(BitmapMemoryCacheKey.class);
     when(bitmapMemoryCacheKey1.containsUri(uri)).thenReturn(true);
     when(bitmapMemoryCacheKey2.containsUri(uri)).thenReturn(false);
-    assertTrue(bitmapMemoryCacheKeyPredicate.apply(bitmapMemoryCacheKey1));
-    assertTrue(bitmapMemoryCacheKeyPredicate.apply(bitmapMemoryCacheKey2));
-    assertTrue(bitmapMemoryCacheKeyPredicate.apply(dummyCacheKey));
+    assertThat(bitmapMemoryCacheKeyPredicate.apply(bitmapMemoryCacheKey1)).isTrue();
+    assertThat(bitmapMemoryCacheKeyPredicate.apply(bitmapMemoryCacheKey2)).isTrue();
+    assertThat(bitmapMemoryCacheKeyPredicate.apply(dummyCacheKey)).isTrue();
 
     ArgumentCaptor<Predicate> encodedMemoryCachePredicateCaptor =
         ArgumentCaptor.forClass(Predicate.class);
@@ -527,9 +521,9 @@ public class ImagePipelineTest {
         encodedMemoryCachePredicateCaptor.getValue();
     SimpleCacheKey simpleCacheKey1 = new SimpleCacheKey(uriString);
     SimpleCacheKey simpleCacheKey2 = new SimpleCacheKey("rubbish");
-    assertTrue(encodedMemoryCacheKeyPredicate.apply(simpleCacheKey1));
-    assertTrue(encodedMemoryCacheKeyPredicate.apply(simpleCacheKey2));
-    assertTrue(encodedMemoryCacheKeyPredicate.apply(dummyCacheKey));
+    assertThat(encodedMemoryCacheKeyPredicate.apply(simpleCacheKey1)).isTrue();
+    assertThat(encodedMemoryCacheKeyPredicate.apply(simpleCacheKey2)).isTrue();
+    assertThat(encodedMemoryCacheKeyPredicate.apply(dummyCacheKey)).isTrue();
   }
 
   @Test
@@ -538,7 +532,7 @@ public class ImagePipelineTest {
     CacheKey cacheKey = mock(DebuggingCacheKey.class);
     when(mMainDiskStorageCache.diskCheckSync(cacheKey)).thenReturn(true);
     when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), any())).thenReturn(cacheKey);
-    assertTrue(mImagePipeline.isInDiskCacheSync(mImageRequest));
+    assertThat(mImagePipeline.isInDiskCacheSync(mImageRequest)).isTrue();
   }
 
   @Test
@@ -547,7 +541,7 @@ public class ImagePipelineTest {
     CacheKey cacheKey = mock(DebuggingCacheKey.class);
     when(mSmallImageDiskStorageCache.diskCheckSync(cacheKey)).thenReturn(true);
     when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), any())).thenReturn(cacheKey);
-    assertTrue(mImagePipeline.isInDiskCacheSync(mImageRequest));
+    assertThat(mImagePipeline.isInDiskCacheSync(mImageRequest)).isTrue();
   }
 
   @Test
@@ -557,7 +551,7 @@ public class ImagePipelineTest {
     CacheKey cacheKey = mock(DebuggingCacheKey.class);
     when(mDynamicBufferedDiskCache.diskCheckSync(cacheKey)).thenReturn(true);
     when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), any())).thenReturn(cacheKey);
-    assertTrue(mImagePipeline.isInDiskCacheSync(mImageRequest));
+    assertThat(mImagePipeline.isInDiskCacheSync(mImageRequest)).isTrue();
   }
 
   @Test
@@ -567,7 +561,7 @@ public class ImagePipelineTest {
     CacheKey cacheKey = mock(DebuggingCacheKey.class);
     when(mDynamicBufferedDiskCache.diskCheckSync(cacheKey)).thenReturn(true);
     when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), any())).thenReturn(cacheKey);
-    assertFalse(mImagePipeline.isInDiskCacheSync(mImageRequest));
+    assertThat(mImagePipeline.isInDiskCacheSync(mImageRequest)).isFalse();
   }
 
   @Test
@@ -577,7 +571,7 @@ public class ImagePipelineTest {
     when(mMainDiskStorageCache.contains(cacheKey)).thenReturn(Task.forResult(true));
 
     when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), any())).thenReturn(cacheKey);
-    assertTrue(mImagePipeline.isInDiskCache(mImageRequest).getResult());
+    assertThat(mImagePipeline.isInDiskCache(mImageRequest).getResult()).isTrue();
   }
 
   @Test
@@ -589,7 +583,7 @@ public class ImagePipelineTest {
     when(mSmallImageDiskStorageCache.contains(cacheKey)).thenReturn(Task.forResult(true));
 
     when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), any())).thenReturn(cacheKey);
-    assertTrue(mImagePipeline.isInDiskCache(mImageRequest).getResult());
+    assertThat(mImagePipeline.isInDiskCache(mImageRequest).getResult()).isTrue();
   }
 
   @Test
@@ -604,7 +598,7 @@ public class ImagePipelineTest {
     when(mDynamicBufferedDiskCache3.contains(cacheKey)).thenReturn(Task.forResult(false));
 
     when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), any())).thenReturn(cacheKey);
-    assertTrue(mImagePipeline.isInDiskCache(mImageRequest).getResult());
+    assertThat(mImagePipeline.isInDiskCache(mImageRequest).getResult()).isTrue();
   }
 
   @Test
@@ -620,7 +614,7 @@ public class ImagePipelineTest {
     when(mImageRequest.getDiskCacheId()).thenReturn("dynamicId3");
 
     when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), any())).thenReturn(cacheKey);
-    assertTrue(mImagePipeline.isInDiskCache(mImageRequest).getResult());
+    assertThat(mImagePipeline.isInDiskCache(mImageRequest).getResult()).isTrue();
   }
 
   @Test
