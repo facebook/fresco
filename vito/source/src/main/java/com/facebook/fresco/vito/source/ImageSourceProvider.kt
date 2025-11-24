@@ -10,6 +10,7 @@ package com.facebook.fresco.vito.source
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.util.LruCache
 import com.facebook.fresco.middleware.HasExtraData
 
 /**
@@ -28,6 +29,18 @@ object ImageSourceProvider {
   }
 
   var shortcutResUris: Boolean = false
+
+  var uriCacheSize: Int = 0
+
+  val uriCache: LruCache<String, Uri>? by
+      lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+        val size = uriCacheSize
+        if (size > 0) {
+          LruCache(uriCacheSize.toInt())
+        } else {
+          null
+        }
+      }
 
   private val emptyImageSource = EmptyImageSource("emptySource()")
   private val nullUriImageSource = EmptyImageSource("forUri(null)")
@@ -70,7 +83,18 @@ object ImageSourceProvider {
   @JvmOverloads
   @JvmStatic
   fun forUri(uriString: String?, extras: Map<String, Any>? = null): ImageSource {
+    if (uriString != null) {
+      val cached: Uri? = uriCache?.get(uriString)
+      if (cached != null) {
+        return forUri(cached, extras)
+      }
+    }
+
     val uri: Uri? = uriString?.let { uriParser(it) }
+    if (uri != null) {
+      uriCache?.put(uriString, uri)
+    }
+
     return forUri(uri, extras)
   }
 
