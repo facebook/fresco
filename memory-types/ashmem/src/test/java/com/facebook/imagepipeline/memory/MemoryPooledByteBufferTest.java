@@ -7,11 +7,7 @@
 
 package com.facebook.imagepipeline.memory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -92,25 +88,25 @@ public class MemoryPooledByteBufferTest {
 
   private static void testBasic(
       final MemoryPooledByteBuffer mPooledByteBuffer, final MemoryChunk mChunk) {
-    assertFalse(mPooledByteBuffer.isClosed());
-    assertSame(mChunk, mPooledByteBuffer.getCloseableReference().get());
-    assertEquals(BUFFER_LENGTH, mPooledByteBuffer.size());
+    assertThat(mPooledByteBuffer.isClosed()).isFalse();
+    assertThat(mPooledByteBuffer.getCloseableReference().get()).isSameAs(mChunk);
+    assertThat(mPooledByteBuffer.size()).isEqualTo(BUFFER_LENGTH);
   }
 
   private static void testSimpleRead(final MemoryPooledByteBuffer mPooledByteBuffer) {
     for (int i = 0; i < 100; ++i) {
       final int offset = i % BUFFER_LENGTH;
-      assertEquals(BYTES[offset], mPooledByteBuffer.read(offset));
+      assertThat(mPooledByteBuffer.read(offset)).isEqualTo(BYTES[offset]);
     }
   }
 
   private static void testRangeRead(final MemoryPooledByteBuffer mPooledByteBuffer) {
     byte[] readBuf = new byte[BUFFER_LENGTH];
     mPooledByteBuffer.read(1, readBuf, 1, BUFFER_LENGTH - 2);
-    assertEquals(0, readBuf[0]);
-    assertEquals(0, readBuf[BUFFER_LENGTH - 1]);
+    assertThat(readBuf[0]).isEqualTo((byte) 0);
+    assertThat(readBuf[BUFFER_LENGTH - 1]).isEqualTo((byte) 0);
     for (int i = 1; i < BUFFER_LENGTH - 1; ++i) {
-      assertEquals(BYTES[i], readBuf[i]);
+      assertThat(readBuf[i]).isEqualTo(BYTES[i]);
     }
   }
 
@@ -124,11 +120,11 @@ public class MemoryPooledByteBufferTest {
     InputStream is = new PooledByteBufferInputStream(mPooledByteBuffer);
     byte[] tmp = new byte[BUFFER_LENGTH + 1];
     int bytesRead = is.read(tmp, 0, tmp.length);
-    assertEquals(BUFFER_LENGTH, bytesRead);
+    assertThat(bytesRead).isEqualTo(BUFFER_LENGTH);
     for (int i = 0; i < BUFFER_LENGTH; i++) {
-      assertEquals(BYTES[i], tmp[i]);
+      assertThat(tmp[i]).isEqualTo(BYTES[i]);
     }
-    assertEquals(-1, is.read());
+    assertThat(is.read()).isEqualTo(-1);
   }
 
   private static void testClose(
@@ -136,8 +132,8 @@ public class MemoryPooledByteBufferTest {
       final MemoryChunk mChunk,
       final MemoryChunkPool mPool) {
     mPooledByteBuffer.close();
-    assertTrue(mPooledByteBuffer.isClosed());
-    assertNull(mPooledByteBuffer.getCloseableReference());
+    assertThat(mPooledByteBuffer.isClosed()).isTrue();
+    assertThat(mPooledByteBuffer.getCloseableReference()).isNull();
     verify(mPool).release(mChunk);
   }
 }
