@@ -7,7 +7,7 @@
 
 package com.facebook.common.executors;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 import java.lang.reflect.Field;
@@ -52,7 +52,7 @@ public class StatefulRunnableTest {
     doThrow(mException).when(mStatefulRunnable).onSuccess(mResult);
     try {
       runSuccess();
-      fail();
+      fail("Expected ConcurrentModificationException to be thrown");
     } catch (ConcurrentModificationException cme) {
       // expected
     }
