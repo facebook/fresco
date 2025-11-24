@@ -29,21 +29,24 @@ public class TrivialPooledByteBuffer implements PooledByteBuffer {
 
   @Override
   public int size() {
-    // NULLSAFE_FIXME[Nullable Dereference]
-    return isClosed() ? -1 : mBuf.length;
+    return (mBuf == null || isClosed()) ? -1 : mBuf.length;
   }
 
   @Override
   public byte read(int offset) {
-    // NULLSAFE_FIXME[Nullable Dereference]
-    return mBuf[offset];
+    if (mBuf != null) {
+      return mBuf[offset];
+    }
+    return 0;
   }
 
   @Override
   public int read(int offset, byte[] buffer, int bufferOffset, int length) {
-    // NULLSAFE_FIXME[Parameter Not Nullable]
-    System.arraycopy(mBuf, offset, buffer, bufferOffset, length);
-    return length;
+    if (mBuf != null) {
+      System.arraycopy(mBuf, offset, buffer, bufferOffset, length);
+      return length;
+    }
+    return 0;
   }
 
   @Override
