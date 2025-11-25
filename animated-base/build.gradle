@@ -44,9 +44,6 @@ dependencies {
     testImplementation TestDeps.mockitoCore3
     testImplementation TestDeps.mockitoInline3
     testImplementation TestDeps.mockitoKotlin3
-    testImplementation TestDeps.Powermock.moduleJunit4
-    testImplementation TestDeps.Powermock.moduleJunit4Rule
-    testImplementation TestDeps.Powermock.classloadingXstream
     testImplementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'

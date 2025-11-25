@@ -31,13 +31,4 @@ object TestDeps {
     const val testRules = "androidx.test:rules:1.1.1"
     const val testRunner = "androidx.test:runner:1.1.1"
   }
-
-  object Powermock {
-    private const val version = "2.0.9"
-
-    const val apiMockito = "org.powermock:powermock-api-mockito2:$version"
-    const val moduleJunit4 = "org.powermock:powermock-module-junit4:$version"
-    const val moduleJunit4Rule = "org.powermock:powermock-module-junit4-rule:$version"
-    const val classloadingXstream = "org.powermock:powermock-classloading-xstream:$version"
-  }
 }

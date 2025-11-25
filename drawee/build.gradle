@@ -38,9 +38,6 @@ dependencies {
     testImplementation TestDeps.junit
     testImplementation TestDeps.assertjCore
     testImplementation TestDeps.mockitoCore
-    testImplementation(TestDeps.Powermock.apiMockito) {
-        exclude group: 'org.mockito', module: 'mockito-all'
-    }
     testImplementation(TestDeps.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
