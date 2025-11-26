@@ -23,6 +23,7 @@ class DebugOverlayHandler(
             hdrGainmapProvider,
         ),
 ) {
+  constructor(isEnabled: Boolean) : this(Supplier { isEnabled }) {}
 
   fun update(drawable: KFrescoVitoDrawable) {
     if (!isEnabled.get()) {
