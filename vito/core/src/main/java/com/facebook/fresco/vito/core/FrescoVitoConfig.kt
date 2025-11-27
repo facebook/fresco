@@ -97,4 +97,6 @@ interface FrescoVitoConfig {
   fun experimentalDynamicSizeIsUriEligible(uri: Uri?): Boolean
 
   fun enablePrepareToDrawOnFetch(): Boolean
+
+  fun experimentalOptimizeAlphaHandling(): Boolean
 }

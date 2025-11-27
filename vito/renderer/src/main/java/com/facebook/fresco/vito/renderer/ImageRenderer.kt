@@ -19,6 +19,8 @@ typealias RenderCommand = (Canvas) -> Unit
 
 object ImageRenderer {
 
+  var optimizeAlphaHandling: Boolean = false
+
   /**
    * Creates an image data model render command.
    *
@@ -89,7 +91,10 @@ object ImageRenderer {
             if (drawable.colorFilter != paint.colorFilter) {
               drawable.colorFilter = paint.colorFilter
             }
-            drawable.alpha = paint.alpha
+            val paintAlpha = paint.alpha
+            if (!optimizeAlphaHandling || drawable.alpha != paintAlpha) {
+              drawable.alpha = paintAlpha
+            }
             drawable.draw(canvas)
           }
       else -> {

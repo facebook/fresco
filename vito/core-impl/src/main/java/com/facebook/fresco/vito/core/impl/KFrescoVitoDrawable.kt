@@ -32,6 +32,7 @@ class KFrescoVitoDrawable(
     private val resetLocalVitoImageRequestListener: Boolean = false,
     private val resetLocalImagePerfStateListener: Boolean = false,
     private val resetControllerListener2: Boolean = false,
+    private val optimizeAlphaHandling: Boolean = false,
 ) : Drawable(), FrescoDrawableInterface, Drawable.Callback {
 
   var _imageId: Long = 0
@@ -213,7 +214,8 @@ class KFrescoVitoDrawable(
   // TODO(T105148151) Calculate opacity based on layers
   override fun getOpacity(): Int = PixelFormat.TRANSPARENT
 
-  internal fun createLayer() = ImageLayerDataModel(callbackProvider, invalidateLayerCallback)
+  internal fun createLayer() =
+      ImageLayerDataModel(callbackProvider, invalidateLayerCallback, optimizeAlphaHandling)
 
   override fun invalidateDrawable(who: Drawable) {
     invalidateSelf()

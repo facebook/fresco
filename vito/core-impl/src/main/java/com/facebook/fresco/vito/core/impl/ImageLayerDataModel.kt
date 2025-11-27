@@ -26,6 +26,7 @@ import com.facebook.fresco.vito.renderer.RenderCommand
 class ImageLayerDataModel(
     var drawableCallbackProvider: (() -> Drawable.Callback?)? = null,
     var invalidateLayerCallback: (() -> Unit)? = null,
+    val optimizeAlphaHandling: Boolean = false,
 ) {
   private var dataModel: ImageDataModel? = null
   private var roundingOptions: RoundingOptions? = null
@@ -173,8 +174,10 @@ class ImageLayerDataModel(
   }
 
   fun setAlpha(alpha: Int) {
-    paint.alpha = alpha
-    invalidateLayerCallback?.invoke()
+    if (!optimizeAlphaHandling || paint.alpha != alpha) {
+      paint.alpha = alpha
+      invalidateLayerCallback?.invoke()
+    }
   }
 
   fun getAlpha(): Int = paint.alpha

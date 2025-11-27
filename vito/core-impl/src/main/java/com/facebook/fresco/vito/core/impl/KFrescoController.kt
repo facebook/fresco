@@ -96,6 +96,7 @@ class KFrescoController(
               config.experimentalResetLocalVitoImageRequestListener(),
               config.experimentalResetLocalImagePerfStateListener(),
               config.experimentalResetControllerListener2(),
+              config.experimentalOptimizeAlphaHandling(),
           )
       drawable.uiFramework = uiFramework
       imagePerfLoggingListenerSupplier
