@@ -27,17 +27,20 @@ import com.facebook.fresco.vito.source.ImageSource
 /** Vito View implementation */
 object VitoViewImpl2 {
   @JvmField var useVisibilityCallbacks: Supplier<Boolean> = Suppliers.BOOLEAN_TRUE
-  @JvmField var useVisibilityAggregatedCallbacks: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE
   @JvmField var useSimpleFetchLogic: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE
   @JvmField var useReleaseInViewDetached: Supplier<Boolean> = Suppliers.BOOLEAN_TRUE
   @JvmField var useReleaseDelayedInViewDetached: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE
+  @JvmField var useOnLayoutChange: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE
+  @JvmField var doNotFetchImmediately: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE
 
   private val onAttachStateChangeListenerCallback: OnAttachStateChangeListener =
       object : OnAttachStateChangeListener {
         override fun onViewAttachedToWindow(view: View) {
-          getDrawable(view)?.apply {
-            imagePerfListener.onImageMount(this)
-            maybeFetchImage(this)
+          if (!useOnLayoutChange.get()) {
+            getDrawable(view)?.apply {
+              imagePerfListener.onImageMount(this)
+              maybeFetchImage(this)
+            }
           }
         }
 
@@ -50,6 +53,26 @@ object VitoViewImpl2 {
             if (useReleaseDelayedInViewDetached.get()) {
               FrescoVitoProvider.getController().releaseDelayed(this)
             }
+          }
+        }
+      }
+
+  private val onLayoutChangeListener: View.OnLayoutChangeListener =
+      View.OnLayoutChangeListener {
+          view,
+          left,
+          top,
+          right,
+          bottom,
+          oldLeft,
+          oldTop,
+          oldRight,
+          oldBottom,
+        ->
+        if (useOnLayoutChange.get()) {
+          getDrawable(view)?.apply {
+            imagePerfListener.onImageMount(this)
+            maybeFetchImage(this)
           }
         }
       }
@@ -123,13 +146,19 @@ object VitoViewImpl2 {
       // Otherwise, the fetch will be submitted later when then View is attached.
       if (target.isAttachedToWindow) {
         frescoDrawable.imagePerfListener.onImageMount(frescoDrawable)
-        maybeFetchImage(frescoDrawable)
+        if (!useOnLayoutChange.get() && !doNotFetchImmediately.get()) {
+          maybeFetchImage(frescoDrawable)
+        }
       }
     }
 
     // `addOnAttachStateChangeListener` is not idempotent
     target.removeOnAttachStateChangeListener(onAttachStateChangeListenerCallback)
     target.addOnAttachStateChangeListener(onAttachStateChangeListenerCallback)
+    if (useOnLayoutChange.get()) {
+      target.removeOnLayoutChangeListener(onLayoutChangeListener)
+      target.addOnLayoutChangeListener(onLayoutChangeListener)
+    }
   }
 
   @JvmStatic
