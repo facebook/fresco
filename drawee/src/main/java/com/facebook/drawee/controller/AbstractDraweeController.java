@@ -647,7 +647,9 @@ public abstract class AbstractDraweeController<T, INFO>
           isFinished ? Event.ON_DATASOURCE_RESULT : Event.ON_DATASOURCE_RESULT_INT);
       // create drawable
       Drawable drawable;
+      INFO info;
       try {
+        info = getImageInfo(image);
         drawable = createDrawable(image);
       } catch (Exception exception) {
         logMessageAndImage("drawable_failed @ onNewResult", image);
@@ -665,11 +667,11 @@ public abstract class AbstractDraweeController<T, INFO>
           logMessageAndImage("set_final_result @ onNewResult", image);
           mDataSource = null;
           getSettableDraweeHierarchy().setImage(drawable, 1f, wasImmediate);
-          reportSuccess(id, image, dataSource);
+          reportSuccess(id, info, dataSource);
         } else if (deliverTempResult) {
           logMessageAndImage("set_temporary_result @ onNewResult", image);
           getSettableDraweeHierarchy().setImage(drawable, 1f, wasImmediate);
-          reportSuccess(id, image, dataSource);
+          reportSuccess(id, info, dataSource);
           // IMPORTANT: do not execute any instance-specific code after this point
         } else {
           logMessageAndImage("set_intermediate_result @ onNewResult", image);
@@ -846,8 +848,7 @@ public abstract class AbstractDraweeController<T, INFO>
     getControllerListener2().onIntermediateImageFailed(mId);
   }
 
-  private void reportSuccess(String id, @Nullable T image, @Nullable DataSource<T> dataSource) {
-    INFO info = getImageInfo(image);
+  private void reportSuccess(String id, @Nullable INFO info, @Nullable DataSource<T> dataSource) {
     getControllerListener().onFinalImageSet(id, info, getAnimatable());
     getControllerListener2().onFinalImageSet(id, info, obtainExtras(dataSource, info, null));
   }
