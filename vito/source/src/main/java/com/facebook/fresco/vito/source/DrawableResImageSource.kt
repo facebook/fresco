@@ -11,7 +11,7 @@ import android.content.res.Resources
 import android.graphics.drawable.Drawable
 
 @Suppress("KtDataClass")
-data class DrawableResImageSource(private val resId: Int) : ImageSource {
+data class DrawableResImageSource(val resId: Int) : ImageSource {
 
   private var prefetchedDrawable: Drawable? = null
 
