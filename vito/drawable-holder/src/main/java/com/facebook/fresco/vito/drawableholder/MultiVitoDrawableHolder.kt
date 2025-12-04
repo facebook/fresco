@@ -25,6 +25,8 @@ class MultiVitoDrawableHolder {
       val resources: Resources,
       var callerContext: Any?,
       var imageListener: ImageListener? = null,
+      var loggingExtras: Map<String, Any> = emptyMap(),
+      var logWithHighSampleRate: Boolean = false,
   )
 
   private val holders: ArrayList<VitoDrawableHolder> = ArrayList()
@@ -127,7 +129,9 @@ class MultiVitoDrawableHolder {
                   holder.resources,
                   holder.imageSource,
                   holder.imageOptionsBuilder.build(),
+                  logWithHighSamplingRate = holder.logWithHighSampleRate,
               )
+      vitoImageRequest.putExtras(holder.loggingExtras)
       FrescoVitoProvider.getController()
           .fetch(
               drawable = holder.drawable,
