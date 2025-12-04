@@ -44,10 +44,21 @@ subprojects {
         mavenCentral()
     }
 
-    // FIXME: This picks up non-Java files by default, failing to parse them.
-    // Need to configure this more carefully.
+    // Configure Javadoc to only process Java and Kotlin source files
     tasks.withType(Javadoc).all {
-        enabled = false
+        source = sourceSets.main.allJava
+        exclude '**/*.kt'
+        exclude '**/*.cpp'
+        exclude '**/*.h'
+        exclude '**/*.mk'
+        exclude '**/*.xml'
+        exclude '**/*.properties'
+        exclude '**/*.pro'
+        exclude '**/*.jpg'
+        exclude '**/*.png'
+        exclude '**/*.webp'
+        exclude '**/*.gif'
+        classpath = configurations.compileClasspath
     }
 
     tasks.withType(com.android.build.gradle.tasks.JavaDocGenerationTask).all {
