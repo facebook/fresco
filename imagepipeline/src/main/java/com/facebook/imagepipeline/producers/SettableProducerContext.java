@@ -20,10 +20,11 @@ import javax.annotation.concurrent.ThreadSafe;
 public class SettableProducerContext extends BaseProducerContext {
 
   public SettableProducerContext(ProducerContext context) {
-    this(
+    super(
         context.getImageRequest(),
         context.getId(),
         context.getUiComponentId(),
+        context.getExtras(),
         context.getProducerListener(),
         context.getCallerContext(),
         context.getLowestPermittedRequestLevel(),
@@ -34,10 +35,11 @@ public class SettableProducerContext extends BaseProducerContext {
   }
 
   public SettableProducerContext(ImageRequest overrideRequest, ProducerContext context) {
-    this(
+    super(
         overrideRequest,
         context.getId(),
         context.getUiComponentId(),
+        context.getExtras(),
         context.getProducerListener(),
         context.getCallerContext(),
         context.getLowestPermittedRequestLevel(),
