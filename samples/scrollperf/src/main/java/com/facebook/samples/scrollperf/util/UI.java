@@ -9,6 +9,7 @@ package com.facebook.samples.scrollperf.util;
 
 import android.app.Activity;
 import android.view.View;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.infer.annotation.Nullsafe;
 
 /** Utility class to get View references using type inference */
@@ -24,8 +25,7 @@ public final class UI {
    * @return The View with the given id and type
    */
   public static <T extends View> T findViewById(Activity act, int viewId) {
-    // NULLSAFE_FIXME[Nullable Dereference]
-    View containerView = act.getWindow().getDecorView();
+    View containerView = Preconditions.checkNotNull(act.getWindow()).getDecorView();
     return findViewById(containerView, viewId);
   }
 
