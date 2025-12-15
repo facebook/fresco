@@ -10,6 +10,7 @@ package com.facebook.fresco.vito.core.impl
 import android.graphics.Bitmap
 import android.graphics.Rect
 import android.graphics.drawable.Animatable
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import com.facebook.common.callercontext.ContextChain
@@ -40,6 +41,7 @@ import com.facebook.fresco.vito.core.VitoImageRequestListener
 import com.facebook.fresco.vito.core.impl.debug.DebugOverlayFactory2
 import com.facebook.fresco.vito.listener.ImageListener
 import com.facebook.fresco.vito.source.BitmapImageSource
+import com.facebook.fresco.vito.source.ColorImageSource
 import com.facebook.fresco.vito.source.DrawableImageSource
 import com.facebook.fresco.vito.source.DrawableResImageSource
 import com.facebook.fresco.vito.source.EmptyImageSource
@@ -204,6 +206,13 @@ open class FrescoController2Impl(
       } finally {
         CloseableReference.closeSafely(bitmapRef)
       }
+    } else if (imageRequest.imageSource is ColorImageSource) {
+      return setActualDrawable(
+          drawable,
+          imageRequest,
+          extras,
+          ColorDrawable((imageRequest.imageSource as ColorImageSource).color),
+      )
     } else if (imageRequest.imageSource is DrawableImageSource) {
       return setActualDrawable(
           drawable,

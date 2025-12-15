@@ -10,6 +10,7 @@ package com.facebook.fresco.vito.core.impl
 import android.content.res.Resources
 import android.graphics.Rect
 import android.graphics.drawable.Animatable
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import com.facebook.common.callercontext.ContextChain
 import com.facebook.common.internal.Supplier
@@ -38,6 +39,7 @@ import com.facebook.fresco.vito.renderer.BitmapImageDataModel
 import com.facebook.fresco.vito.renderer.DrawableImageDataModel
 import com.facebook.fresco.vito.renderer.ImageDataModel
 import com.facebook.fresco.vito.source.BitmapImageSource
+import com.facebook.fresco.vito.source.ColorImageSource
 import com.facebook.fresco.vito.source.DrawableImageSource
 import com.facebook.fresco.vito.source.DrawableResImageSource
 import com.facebook.imagepipeline.image.CloseableBitmap
@@ -184,6 +186,11 @@ class KFrescoController(
               CloseableStaticBitmap.of(source.bitmap, {}, ImmutableQualityInfo.FULL_QUALITY, 0)
           val bitmapRef = CloseableReference.of<CloseableImage>(closeableBitmap)
           return drawable.setActualImage(imageRequest, bitmapRef)
+        }
+        // Direct color available
+        is ColorImageSource -> {
+          setDrawableAsActualImage(drawable, ColorDrawable(source.color), imageRequest, imageId)
+          return true
         }
         // Direct Drawable available
         is DrawableImageSource -> {
