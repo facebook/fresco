@@ -7,7 +7,7 @@
 
 package com.facebook.drawee.debug;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.infer.annotation.Nullsafe;
@@ -28,9 +28,8 @@ public class DebugControllerOverlayDrawableTestHelper {
       int drawableHeight,
       ScalingUtils.ScaleType scaleType) {
     mOverlayDrawable.setBounds(0, 0, drawableWidth, drawableHeight);
-    assertEquals(
-        DebugControllerOverlayDrawable.TEXT_COLOR_IMAGE_OK,
-        mOverlayDrawable.determineSizeHintColor(imageWidth, imageHeight, scaleType));
+    assertThat(mOverlayDrawable.determineSizeHintColor(imageWidth, imageHeight, scaleType))
+        .isEqualTo(DebugControllerOverlayDrawable.TEXT_COLOR_IMAGE_OK);
   }
 
   public void assertOverlayColorAlmostOk(
@@ -40,9 +39,8 @@ public class DebugControllerOverlayDrawableTestHelper {
       int drawableHeight,
       ScalingUtils.ScaleType scaleType) {
     mOverlayDrawable.setBounds(0, 0, drawableWidth, drawableHeight);
-    assertEquals(
-        DebugControllerOverlayDrawable.TEXT_COLOR_IMAGE_ALMOST_OK,
-        mOverlayDrawable.determineSizeHintColor(imageWidth, imageHeight, scaleType));
+    assertThat(mOverlayDrawable.determineSizeHintColor(imageWidth, imageHeight, scaleType))
+        .isEqualTo(DebugControllerOverlayDrawable.TEXT_COLOR_IMAGE_ALMOST_OK);
   }
 
   public void assertOverlayColorNotOk(
@@ -52,8 +50,7 @@ public class DebugControllerOverlayDrawableTestHelper {
       int drawableHeight,
       ScalingUtils.ScaleType scaleType) {
     mOverlayDrawable.setBounds(0, 0, drawableWidth, drawableHeight);
-    assertEquals(
-        DebugControllerOverlayDrawable.TEXT_COLOR_IMAGE_NOT_OK,
-        mOverlayDrawable.determineSizeHintColor(imageWidth, imageHeight, scaleType));
+    assertThat(mOverlayDrawable.determineSizeHintColor(imageWidth, imageHeight, scaleType))
+        .isEqualTo(DebugControllerOverlayDrawable.TEXT_COLOR_IMAGE_NOT_OK);
   }
 }
