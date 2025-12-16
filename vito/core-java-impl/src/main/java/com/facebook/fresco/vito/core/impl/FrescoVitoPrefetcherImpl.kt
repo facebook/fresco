@@ -21,6 +21,7 @@ import com.facebook.fresco.vito.options.EncodedImageOptions
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.ImageOptions.Companion.defaults
 import com.facebook.fresco.vito.source.DrawableResImageSource
+import com.facebook.imagepipeline.common.Priority
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.listener.RequestListener
 import com.facebook.imagepipeline.request.ImageRequest
@@ -60,10 +61,29 @@ class FrescoVitoPrefetcherImpl(
   ): DataSource<Void?> {
     return when (prefetchTarget) {
       PrefetchTarget.MEMORY_DECODED ->
-          prefetch(PrefetchTarget.MEMORY_DECODED, imageRequest, callerContext, null)
+          prefetch(
+              prefetchTarget = PrefetchTarget.MEMORY_DECODED,
+              imageRequest = imageRequest,
+              extras = null,
+              callerContext = callerContext,
+              requestListener = null,
+          )
       PrefetchTarget.MEMORY_ENCODED ->
-          prefetch(PrefetchTarget.MEMORY_ENCODED, imageRequest, callerContext, null)
-      PrefetchTarget.DISK -> prefetch(PrefetchTarget.DISK, imageRequest, callerContext, null)
+          prefetch(
+              prefetchTarget = PrefetchTarget.MEMORY_ENCODED,
+              imageRequest = imageRequest,
+              extras = null,
+              callerContext = callerContext,
+              requestListener = null,
+          )
+      PrefetchTarget.DISK ->
+          prefetch(
+              prefetchTarget = PrefetchTarget.DISK,
+              imageRequest = imageRequest,
+              extras = null,
+              callerContext = callerContext,
+              requestListener = null,
+          )
       else ->
           DataSources.immediateFailedDataSource(CancellationException("Prefetching is not enabled"))
     }
@@ -85,7 +105,13 @@ class FrescoVitoPrefetcherImpl(
       callsite: String,
   ): DataSource<Void?> {
     val imageRequest = imagePipelineUtils.buildImageRequest(uri, imageOptions ?: defaults())
-    return prefetch(PrefetchTarget.MEMORY_DECODED, imageRequest, callerContext, null)
+    return prefetch(
+        prefetchTarget = PrefetchTarget.MEMORY_DECODED,
+        imageRequest = imageRequest,
+        extras = null,
+        callerContext = callerContext,
+        requestListener = null,
+    )
   }
 
   override fun prefetchToBitmapCache(
@@ -105,7 +131,13 @@ class FrescoVitoPrefetcherImpl(
       callsite: String,
   ): DataSource<Void?> {
     val imageRequest = imagePipelineUtils.buildEncodedImageRequest(uri, imageOptions ?: defaults())
-    return prefetch(PrefetchTarget.MEMORY_ENCODED, imageRequest, callerContext, null)
+    return prefetch(
+        prefetchTarget = PrefetchTarget.MEMORY_ENCODED,
+        imageRequest = imageRequest,
+        extras = null,
+        callerContext = callerContext,
+        requestListener = null,
+    )
   }
 
   override fun prefetchToEncodedCache(
@@ -123,7 +155,13 @@ class FrescoVitoPrefetcherImpl(
       callsite: String,
   ): DataSource<Void?> {
     val imageRequest = imagePipelineUtils.buildEncodedImageRequest(uri, imageOptions ?: defaults())
-    return prefetch(PrefetchTarget.DISK, imageRequest, callerContext, null)
+    return prefetch(
+        prefetchTarget = PrefetchTarget.DISK,
+        imageRequest = imageRequest,
+        extras = null,
+        callerContext = callerContext,
+        requestListener = null,
+    )
   }
 
   override fun prefetchToDiskCache(
@@ -145,7 +183,13 @@ class FrescoVitoPrefetcherImpl(
       (imageRequest.imageSource as DrawableResImageSource).prefetch(imageRequest.resources)
       DataSources.immediateSuccessfulDataSource()
     } else {
-      prefetch(prefetchTarget, imageRequest.finalImageRequest, callerContext, requestListener)
+      prefetch(
+          prefetchTarget = prefetchTarget,
+          imageRequest = imageRequest.finalImageRequest,
+          extras = imageRequest.extras,
+          callerContext = callerContext,
+          requestListener = requestListener,
+      )
     }
   }
 
@@ -162,6 +206,7 @@ class FrescoVitoPrefetcherImpl(
   private fun prefetch(
       prefetchTarget: PrefetchTarget,
       imageRequest: ImageRequest?,
+      extras: Map<String, Any>?,
       callerContext: Any?,
       requestListener: RequestListener?,
   ): DataSource<Void?> {
@@ -172,21 +217,25 @@ class FrescoVitoPrefetcherImpl(
       when (prefetchTarget) {
         PrefetchTarget.MEMORY_DECODED ->
             imagePipeline.prefetchToBitmapCache(
-                imageRequest,
-                callerContext,
+                imageRequest = imageRequest,
+                callerContext = callerContext,
                 requestListener = requestListener,
+                extras = extras,
             )
         PrefetchTarget.MEMORY_ENCODED ->
             imagePipeline.prefetchToEncodedCache(
-                imageRequest,
-                callerContext,
+                imageRequest = imageRequest,
+                callerContext = callerContext,
                 requestListener = requestListener,
+                extras = extras,
             )
         PrefetchTarget.DISK ->
             imagePipeline.prefetchToDiskCache(
-                imageRequest,
-                callerContext,
+                imageRequest = imageRequest,
+                callerContext = callerContext,
+                priority = Priority.MEDIUM,
                 requestListener = requestListener,
+                extras = extras,
             )
       }
     }
