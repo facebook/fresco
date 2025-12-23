@@ -30,6 +30,7 @@ import com.facebook.fresco.vito.core.VitoImagePipeline
 import com.facebook.fresco.vito.core.VitoImageRequest
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.ImageOptions.Companion.defaults
+import com.facebook.fresco.vito.source.FirstAvailableImageSource
 import com.facebook.fresco.vito.source.ImageSource
 import com.facebook.fresco.vito.source.ImageSourceProvider
 import com.facebook.fresco.vito.source.IncreasingQualityImageSource
@@ -109,6 +110,11 @@ class VitoImagePipelineImpl(
       imageSource.extras?.let { extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = it }
     } else if (imageSource is UriImageSource) {
       imageSource.extras?.let { extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = it }
+    } else if (imageSource is FirstAvailableImageSource) {
+      val firstImageSource = imageSource.imageSources.firstOrNull()
+      if (firstImageSource is UriImageSource) {
+        firstImageSource.extras?.let { extras[HasExtraData.KEY_IMAGE_SOURCE_EXTRAS] = it }
+      }
     }
 
     val finalImageRequest =
