@@ -12,22 +12,22 @@ import java.util.Map;
 
 /** Helper class to get pool stats */
 public class PoolStats<V> {
-  public BasePool<V> mPool;
+  public BasePool<V> pool;
 
-  public int mUsedBytes;
-  public int mUsedCount;
-  public int mFreeBytes;
-  public int mFreeCount;
+  public int usedBytes;
+  public int usedCount;
+  public int freeBytes;
+  public int freeCount;
 
-  Map<Integer, IntPair> mBucketStats;
+  Map<Integer, IntPair> bucketStats;
 
   public PoolStats(BasePool<V> pool) {
-    mPool = pool;
-    mBucketStats = new HashMap<>();
+    this.pool = pool;
+    bucketStats = new HashMap<>();
   }
 
   public void setPool(BasePool<V> pool) {
-    mPool = pool;
+    this.pool = pool;
   }
 
   /** Refresh all pool stats */
@@ -37,22 +37,22 @@ public class PoolStats<V> {
   }
 
   public void refreshBasic() {
-    mUsedBytes = mPool.used.numBytes;
-    mUsedCount = mPool.used.count;
-    mFreeBytes = mPool.free.numBytes;
-    mFreeCount = mPool.free.count;
+    usedBytes = pool.used.numBytes;
+    usedCount = pool.used.count;
+    freeBytes = pool.free.numBytes;
+    freeCount = pool.free.count;
   }
 
   public void refreshBucketStats() {
-    mBucketStats.clear();
-    for (int i = 0; i < mPool.buckets.size(); ++i) {
-      final int bucketedSize = mPool.buckets.keyAt(i);
-      final Bucket<V> bucket = mPool.buckets.valueAt(i);
-      mBucketStats.put(bucketedSize, new IntPair(bucket.getInUseCount(), bucket.getFreeListSize()));
+    bucketStats.clear();
+    for (int i = 0; i < pool.buckets.size(); ++i) {
+      final int bucketedSize = pool.buckets.keyAt(i);
+      final Bucket<V> bucket = pool.buckets.valueAt(i);
+      bucketStats.put(bucketedSize, new IntPair(bucket.getInUseCount(), bucket.getFreeListSize()));
     }
   }
 
   Map<Integer, IntPair> getBucketStats() {
-    return mBucketStats;
+    return bucketStats;
   }
 }
