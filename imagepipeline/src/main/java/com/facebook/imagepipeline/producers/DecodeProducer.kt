@@ -55,7 +55,7 @@ class DecodeProducer(
     val downsampleMode: DownsampleMode,
     val downsampleEnabledForNetwork: Boolean,
     val decodeCancellationEnabled: Boolean,
-    val inputProducer: Producer<EncodedImage?>,
+    val inputProducer: Producer<EncodedImage>,
     val maxBitmapDimension: Int,
     val closeableReferenceFactory: CloseableReferenceFactory,
     val reclaimMemoryRunnable: Runnable?,
@@ -107,7 +107,7 @@ class DecodeProducer(
       private val producerContext: ProducerContext,
       decodeCancellationEnabled: Boolean,
       maxBitmapDimension: Int,
-  ) : DelegatingConsumer<EncodedImage?, CloseableReference<CloseableImage>>(consumer) {
+  ) : DelegatingConsumer<EncodedImage, CloseableReference<CloseableImage>>(consumer) {
     private val TAG = "ProgressiveDecoder"
     private val producerListener: ProducerListener2 = producerContext.producerListener
     private val imageDecodeOptions: ImageDecodeOptions =

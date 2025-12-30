@@ -276,7 +276,7 @@ class ProducerSequenceFactory(
    * background-thread hand-off -> multiplex -> encoded cache -> disk cache -> (webp transcode) ->
    * network fetch.
    */
-  val backgroundNetworkFetchToEncodedMemorySequence: Producer<EncodedImage?> by lazy {
+  val backgroundNetworkFetchToEncodedMemorySequence: Producer<EncodedImage> by lazy {
     traceSection("ProducerSequenceFactory#getBackgroundNetworkFetchToEncodedMemorySequence:init") {
       // Use hand-off producer to ensure that we don't do any unnecessary work on the UI thread.
       producerFactory.newBackgroundThreadHandoffProducer(
@@ -315,7 +315,7 @@ class ProducerSequenceFactory(
             newEncodedCacheMultiplexToTranscodeSequence(
                 producerFactory.newNetworkFetchProducer(networkFetcher),
             )
-        var networkFetchToEncodedMemorySequence: Producer<EncodedImage?> =
+        var networkFetchToEncodedMemorySequence: Producer<EncodedImage> =
             ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer)
         networkFetchToEncodedMemorySequence =
             producerFactory.newResizeAndRotateProducer(
@@ -340,7 +340,7 @@ class ProducerSequenceFactory(
    * background-thread hand-off -> multiplex -> encoded cache -> disk cache -> (webp transcode) ->
    * local file fetch
    */
-  val backgroundLocalFileFetchToEncodeMemorySequence: Producer<EncodedImage?> by lazy {
+  val backgroundLocalFileFetchToEncodeMemorySequence: Producer<EncodedImage> by lazy {
     traceSection("ProducerSequenceFactory#getBackgroundLocalFileFetchToEncodeMemorySequence") {
       val localFileFetchProducer = producerFactory.newLocalFileFetchProducer()
       val toEncodedMultiplexProducer =
@@ -356,7 +356,7 @@ class ProducerSequenceFactory(
    * background-thread hand-off -> multiplex -> encoded cache -> disk cache -> (webp transcode) ->
    * local content resolver fetch
    */
-  val backgroundLocalContentUriFetchToEncodeMemorySequence: Producer<EncodedImage?> by lazy {
+  val backgroundLocalContentUriFetchToEncodeMemorySequence: Producer<EncodedImage> by lazy {
     traceSection(
         "ProducerSequenceFactory#getBackgroundLocalContentUriFetchToEncodeMemorySequence:init"
     ) {
@@ -459,7 +459,7 @@ class ProducerSequenceFactory(
    * -> (webp transcode) -> data fetch.
    */
   val dataFetchSequence: Producer<CloseableReference<CloseableImage>> by lazy {
-    var inputProducer: Producer<EncodedImage?> = producerFactory.newDataFetchProducer()
+    var inputProducer: Producer<EncodedImage> = producerFactory.newDataFetchProducer()
     inputProducer = ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer)
     inputProducer =
         producerFactory.newResizeAndRotateProducer(inputProducer, true, imageTranscoderFactory)

@@ -4,6 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.imagepipeline.producers
 
 import androidx.annotation.VisibleForTesting
@@ -32,14 +33,14 @@ import com.facebook.imagepipeline.request.ImageRequest
 class DiskCacheWriteProducer(
     private val diskCachesStoreSupplier: Supplier<DiskCachesStore>,
     private val cacheKeyFactory: CacheKeyFactory,
-    private val inputProducer: Producer<EncodedImage?>,
-) : Producer<EncodedImage?> {
-  override fun produceResults(consumer: Consumer<EncodedImage?>, producerContext: ProducerContext) {
+    private val inputProducer: Producer<EncodedImage>,
+) : Producer<EncodedImage> {
+  override fun produceResults(consumer: Consumer<EncodedImage>, producerContext: ProducerContext) {
     maybeStartInputProducer(consumer, producerContext)
   }
 
   private fun maybeStartInputProducer(
-      consumerOfDiskCacheWriteProducer: Consumer<EncodedImage?>,
+      consumerOfDiskCacheWriteProducer: Consumer<EncodedImage>,
       producerContext: ProducerContext,
   ) {
     if (
@@ -49,7 +50,7 @@ class DiskCacheWriteProducer(
       producerContext.putOriginExtra("disk", "nil-result_write")
       consumerOfDiskCacheWriteProducer.onNewResult(null, Consumer.IS_LAST)
     } else {
-      val consumer: Consumer<EncodedImage?>?
+      val consumer: Consumer<EncodedImage>?
       val isDiskCacheEnabledForWrite =
           producerContext.imageRequest.isCacheEnabled(ImageRequest.CachesLocationsMasks.DISK_WRITE)
       if (isDiskCacheEnabledForWrite) {
@@ -75,11 +76,11 @@ class DiskCacheWriteProducer(
    * failure) down to the next consumer.
    */
   private class DiskCacheWriteConsumer(
-      consumer: Consumer<EncodedImage?>,
+      consumer: Consumer<EncodedImage>,
       private val producerContext: ProducerContext,
       private val diskCachesStoreSupplier: Supplier<DiskCachesStore>,
       private val cacheKeyFactory: CacheKeyFactory,
-  ) : DelegatingConsumer<EncodedImage?, EncodedImage?>(consumer) {
+  ) : DelegatingConsumer<EncodedImage, EncodedImage>(consumer) {
     override fun onNewResultImpl(newResult: EncodedImage?, @Consumer.Status status: Int) {
       producerContext.producerListener.onProducerStart(producerContext, PRODUCER_NAME)
       // intermediate, null or uncacheable results are not cached, so we just forward them
