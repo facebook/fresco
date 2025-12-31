@@ -4,6 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.common.logging
 
 import android.util.Log
@@ -85,21 +86,21 @@ object FLog {
   @JvmStatic
   fun v(cls: Class<*>?, msg: String?) {
     if (handler.isLoggable(VERBOSE)) {
-      handler.v(FLog.getTag(cls!!)!!, msg!!)
+      handler.v(FLog.getTag(cls!!), msg!!)
     }
   }
 
   @JvmStatic
   fun v(cls: Class<*>?, msg: String?, arg1: Any?) {
     if (handler.isLoggable(VERBOSE)) {
-      handler.v(FLog.getTag(cls!!)!!, formatString(msg, arg1)!!)
+      handler.v(FLog.getTag(cls!!), formatString(msg, arg1)!!)
     }
   }
 
   @JvmStatic
   fun v(cls: Class<*>?, msg: String?, arg1: Any?, arg2: Any?) {
     if (handler.isLoggable(VERBOSE)) {
-      handler.v(FLog.getTag(cls!!)!!, formatString(msg, arg1, arg2)!!)
+      handler.v(FLog.getTag(cls!!), formatString(msg, arg1, arg2)!!)
     }
   }
 
@@ -113,7 +114,7 @@ object FLog {
   @JvmStatic
   fun v(cls: Class<*>?, msg: String?, arg1: Any?, arg2: Any?, arg3: Any?, arg4: Any?) {
     if (handler.isLoggable(VERBOSE)) {
-      handler.v(FLog.getTag(cls!!)!!, formatString(msg, arg1, arg2, arg3, arg4)!!)
+      handler.v(FLog.getTag(cls!!), formatString(msg, arg1, arg2, arg3, arg4)!!)
     }
   }
 
@@ -134,14 +135,14 @@ object FLog {
   @JvmStatic
   fun v(cls: Class<*>?, msg: String?, vararg args: Any?) {
     if (handler.isLoggable(VERBOSE)) {
-      handler.v(FLog.getTag(cls!!)!!, formatString(msg, *args)!!)
+      handler.v(FLog.getTag(cls!!), formatString(msg, *args)!!)
     }
   }
 
   @JvmStatic
   fun v(cls: Class<*>?, tr: Throwable?, msg: String?, vararg args: Any?) {
     if (handler.isLoggable(VERBOSE)) {
-      handler.v(FLog.getTag(cls!!)!!, formatString(msg, *args)!!, tr!!)
+      handler.v(FLog.getTag(cls!!), formatString(msg, *args)!!, tr!!)
     }
   }
 
@@ -155,7 +156,7 @@ object FLog {
   @JvmStatic
   fun v(cls: Class<*>?, msg: String?, tr: Throwable?) {
     if (handler.isLoggable(VERBOSE)) {
-      handler.v(FLog.getTag(cls!!)!!, msg!!, tr!!)
+      handler.v(FLog.getTag(cls!!), msg!!, tr!!)
     }
   }
 
@@ -197,35 +198,35 @@ object FLog {
   @JvmStatic
   fun d(cls: Class<*>?, msg: String?) {
     if (handler.isLoggable(DEBUG)) {
-      handler.d(FLog.getTag(cls!!)!!, msg!!)
+      handler.d(FLog.getTag(cls!!), msg!!)
     }
   }
 
   @JvmStatic
   fun d(cls: Class<*>?, msg: String?, arg1: Any?) {
     if (handler.isLoggable(DEBUG)) {
-      handler.d(FLog.getTag(cls!!)!!, formatString(msg, arg1)!!)
+      handler.d(FLog.getTag(cls!!), formatString(msg, arg1)!!)
     }
   }
 
   @JvmStatic
   fun d(cls: Class<*>?, msg: String?, arg1: Any?, arg2: Any?) {
     if (handler.isLoggable(DEBUG)) {
-      handler.d(FLog.getTag(cls!!)!!, formatString(msg, arg1, arg2)!!)
+      handler.d(FLog.getTag(cls!!), formatString(msg, arg1, arg2)!!)
     }
   }
 
   @JvmStatic
   fun d(cls: Class<*>?, msg: String?, arg1: Any?, arg2: Any?, arg3: Any?) {
     if (handler.isLoggable(DEBUG)) {
-      handler.d(FLog.getTag(cls!!)!!, formatString(msg, arg1, arg2, arg3)!!)
+      handler.d(FLog.getTag(cls!!), formatString(msg, arg1, arg2, arg3)!!)
     }
   }
 
   @JvmStatic
   fun d(cls: Class<*>?, msg: String?, arg1: Any?, arg2: Any?, arg3: Any?, arg4: Any?) {
     if (handler.isLoggable(DEBUG)) {
-      handler.d(FLog.getTag(cls!!)!!, formatString(msg, arg1, arg2, arg3, arg4)!!)
+      handler.d(FLog.getTag(cls!!), formatString(msg, arg1, arg2, arg3, arg4)!!)
     }
   }
 
@@ -246,14 +247,14 @@ object FLog {
   @JvmStatic
   fun d(cls: Class<*>?, msg: String?, vararg args: Any?) {
     if (handler.isLoggable(DEBUG)) {
-      handler.d(FLog.getTag(cls!!)!!, formatString(msg, *args)!!)
+      handler.d(FLog.getTag(cls!!), formatString(msg, *args)!!)
     }
   }
 
   @JvmStatic
   fun d(cls: Class<*>?, tr: Throwable?, msg: String?, vararg args: Any?) {
     if (handler.isLoggable(DEBUG)) {
-      handler.d(FLog.getTag(cls!!)!!, formatString(msg, *args)!!, tr!!)
+      handler.d(FLog.getTag(cls!!), formatString(msg, *args)!!, tr!!)
     }
   }
 
@@ -267,7 +268,7 @@ object FLog {
   @JvmStatic
   fun d(cls: Class<*>?, msg: String?, tr: Throwable?) {
     if (handler.isLoggable(DEBUG)) {
-      handler.d(FLog.getTag(cls!!)!!, msg!!, tr!!)
+      handler.d(FLog.getTag(cls!!), msg!!, tr!!)
     }
   }
 
@@ -309,35 +310,35 @@ object FLog {
   @JvmStatic
   fun i(cls: Class<*>?, msg: String?) {
     if (handler.isLoggable(INFO)) {
-      handler.i(FLog.getTag(cls!!)!!, msg!!)
+      handler.i(FLog.getTag(cls!!), msg!!)
     }
   }
 
   @JvmStatic
   fun i(cls: Class<*>?, msg: String?, arg1: Any?) {
     if (handler.isLoggable(INFO)) {
-      handler.i(FLog.getTag(cls!!)!!, formatString(msg, arg1)!!)
+      handler.i(FLog.getTag(cls!!), formatString(msg, arg1)!!)
     }
   }
 
   @JvmStatic
   fun i(cls: Class<*>?, msg: String?, arg1: Any?, arg2: Any?) {
     if (handler.isLoggable(INFO)) {
-      handler.i(FLog.getTag(cls!!)!!, formatString(msg, arg1, arg2)!!)
+      handler.i(FLog.getTag(cls!!), formatString(msg, arg1, arg2)!!)
     }
   }
 
   @JvmStatic
   fun i(cls: Class<*>?, msg: String?, arg1: Any?, arg2: Any?, arg3: Any?) {
     if (handler.isLoggable(INFO)) {
-      handler.i(FLog.getTag(cls!!)!!, formatString(msg, arg1, arg2, arg3)!!)
+      handler.i(FLog.getTag(cls!!), formatString(msg, arg1, arg2, arg3)!!)
     }
   }
 
   @JvmStatic
   fun i(cls: Class<*>?, msg: String?, arg1: Any?, arg2: Any?, arg3: Any?, arg4: Any?) {
     if (handler.isLoggable(INFO)) {
-      handler.i(FLog.getTag(cls!!)!!, formatString(msg, arg1, arg2, arg3, arg4)!!)
+      handler.i(FLog.getTag(cls!!), formatString(msg, arg1, arg2, arg3, arg4)!!)
     }
   }
 
@@ -358,14 +359,14 @@ object FLog {
   @JvmStatic
   fun i(cls: Class<*>?, msg: String?, vararg args: Any?) {
     if (handler.isLoggable(INFO)) {
-      handler.i(FLog.getTag(cls!!)!!, formatString(msg, *args)!!)
+      handler.i(FLog.getTag(cls!!), formatString(msg, *args)!!)
     }
   }
 
   @JvmStatic
   fun i(cls: Class<*>?, tr: Throwable?, msg: String?, vararg args: Any?) {
     if (isLoggable(INFO)) {
-      handler.i(FLog.getTag(cls!!)!!, formatString(msg, *args)!!, tr!!)
+      handler.i(FLog.getTag(cls!!), formatString(msg, *args)!!, tr!!)
     }
   }
 
@@ -379,7 +380,7 @@ object FLog {
   @JvmStatic
   fun i(cls: Class<*>?, msg: String?, tr: Throwable?) {
     if (handler.isLoggable(INFO)) {
-      handler.i(FLog.getTag(cls!!)!!, msg!!, tr!!)
+      handler.i(FLog.getTag(cls!!), msg!!, tr!!)
     }
   }
 
@@ -393,7 +394,7 @@ object FLog {
   @JvmStatic
   fun w(cls: Class<*>?, msg: String?) {
     if (handler.isLoggable(WARN)) {
-      handler.w(FLog.getTag(cls!!)!!, msg!!)
+      handler.w(FLog.getTag(cls!!), msg!!)
     }
   }
 
@@ -414,7 +415,7 @@ object FLog {
   @JvmStatic
   fun w(cls: Class<*>?, msg: String?, vararg args: Any?) {
     if (handler.isLoggable(WARN)) {
-      handler.w(FLog.getTag(cls!!)!!, formatString(msg, *args)!!)
+      handler.w(FLog.getTag(cls!!), formatString(msg, *args)!!)
     }
   }
 
@@ -435,7 +436,7 @@ object FLog {
   @JvmStatic
   fun w(cls: Class<*>?, msg: String?, tr: Throwable?) {
     if (handler.isLoggable(WARN)) {
-      handler.w(FLog.getTag(cls!!)!!, msg!!, tr!!)
+      handler.w(FLog.getTag(cls!!), msg!!, tr!!)
     }
   }
 
@@ -449,7 +450,7 @@ object FLog {
   @JvmStatic
   fun e(cls: Class<*>?, msg: String?) {
     if (handler.isLoggable(ERROR)) {
-      handler.e(FLog.getTag(cls!!)!!, msg!!)
+      handler.e(FLog.getTag(cls!!), msg!!)
     }
   }
 
@@ -470,14 +471,14 @@ object FLog {
   @JvmStatic
   fun e(cls: Class<*>?, msg: String?, vararg args: Any?) {
     if (handler.isLoggable(ERROR)) {
-      handler.e(FLog.getTag(cls!!)!!, formatString(msg, *args)!!)
+      handler.e(FLog.getTag(cls!!), formatString(msg, *args)!!)
     }
   }
 
   @JvmStatic
   fun e(cls: Class<*>?, tr: Throwable?, msg: String?, vararg args: Any?) {
     if (handler.isLoggable(ERROR)) {
-      handler.e(FLog.getTag(cls!!)!!, formatString(msg, *args)!!, tr!!)
+      handler.e(FLog.getTag(cls!!), formatString(msg, *args)!!, tr!!)
     }
   }
 
@@ -491,7 +492,7 @@ object FLog {
   @JvmStatic
   fun e(cls: Class<*>?, msg: String?, tr: Throwable?) {
     if (handler.isLoggable(ERROR)) {
-      handler.e(FLog.getTag(cls!!)!!, msg!!, tr!!)
+      handler.e(FLog.getTag(cls!!), msg!!, tr!!)
     }
   }
 
@@ -505,7 +506,7 @@ object FLog {
   @JvmStatic
   fun wtf(cls: Class<*>?, msg: String?) {
     if (handler.isLoggable(ERROR)) {
-      handler.wtf(FLog.getTag(cls!!)!!, msg!!)
+      handler.wtf(FLog.getTag(cls!!), msg!!)
     }
   }
 
@@ -526,14 +527,14 @@ object FLog {
   @JvmStatic
   fun wtf(cls: Class<*>?, msg: String?, vararg args: Any?) {
     if (handler.isLoggable(ERROR)) {
-      handler.wtf(FLog.getTag(cls!!)!!, formatString(msg, *args)!!)
+      handler.wtf(FLog.getTag(cls!!), formatString(msg, *args)!!)
     }
   }
 
   @JvmStatic
   fun wtf(cls: Class<*>?, tr: Throwable?, msg: String?, vararg args: Any?) {
     if (handler.isLoggable(ERROR)) {
-      handler.wtf(FLog.getTag(cls!!)!!, formatString(msg, *args)!!, tr!!)
+      handler.wtf(FLog.getTag(cls!!), formatString(msg, *args)!!, tr!!)
     }
   }
 
@@ -547,7 +548,7 @@ object FLog {
   @JvmStatic
   fun wtf(cls: Class<*>?, msg: String?, tr: Throwable?) {
     if (handler.isLoggable(ERROR)) {
-      handler.wtf(FLog.getTag(cls!!)!!, msg!!, tr!!)
+      handler.wtf(FLog.getTag(cls!!), msg!!, tr!!)
     }
   }
 
@@ -555,7 +556,7 @@ object FLog {
     return String.format(null, str!!, *args)
   }
 
-  private fun getTag(clazz: Class<*>): String? {
+  private fun getTag(clazz: Class<*>): String {
     return clazz.getSimpleName()
   }
 }
