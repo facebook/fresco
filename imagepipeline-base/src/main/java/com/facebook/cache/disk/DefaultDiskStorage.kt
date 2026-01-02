@@ -268,7 +268,7 @@ class DefaultDiskStorage(rootDirectory: File, version: Int, cacheErrorLogger: Ca
   @Throws(IOException::class)
   override fun insert(resourceId: String, debugInfo: Any): DiskStorage.Inserter {
     // ensure that the parent directory exists
-    val info = DefaultDiskStorage.FileInfo(FileType.Companion.TEMP, resourceId!!)
+    val info = DefaultDiskStorage.FileInfo(FileType.Companion.TEMP, resourceId)
     val parent = getSubdirectory(info.resourceId)
     if (!parent.exists()) {
       mkdirs(parent, "insert")
@@ -555,7 +555,7 @@ class DefaultDiskStorage(rootDirectory: File, version: Int, cacheErrorLogger: Ca
       var length: Long
       try {
         val countingStream = CountingOutputStream(fileStream)
-        callback!!.write(countingStream)
+        callback.write(countingStream)
         // just in case underlying stream's close method doesn't flush:
         // we flush it manually and inside the try/catch
         countingStream.flush()
