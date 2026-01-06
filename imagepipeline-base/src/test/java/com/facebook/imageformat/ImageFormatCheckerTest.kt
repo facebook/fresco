@@ -9,8 +9,7 @@ package com.facebook.imageformat
 
 import java.io.InputStream
 import java.util.ArrayList
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertSame
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -105,11 +104,9 @@ class ImageFormatCheckerTest constructor() {
     for (name: String in resourceNames) {
       val resourceStream = getResourceStream(name)
       try {
-        assertSame(
-            "failed with resource: ${name}",
-            expectedImageType,
-            ImageFormatChecker.getImageFormat(resourceStream),
-        )
+        assertThat(ImageFormatChecker.getImageFormat(resourceStream))
+            .`as`("failed with resource: ${name}")
+            .isSameAs(expectedImageType)
       } finally {
         resourceStream.close()
       }
@@ -118,7 +115,7 @@ class ImageFormatCheckerTest constructor() {
 
   private fun getResourceStream(name: String): InputStream {
     val `is` = ImageFormatCheckerTest::class.java.getResourceAsStream(name)
-    assertNotNull("failed to read resource: ${name}", `is`)
+    assertThat(`is`).`as`("failed to read resource: ${name}").isNotNull()
     return `is`
   }
 
