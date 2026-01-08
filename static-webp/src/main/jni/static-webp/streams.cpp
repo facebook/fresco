@@ -43,7 +43,7 @@ std::vector<uint8_t> readStreamFully(JNIEnv* env, jobject is) {
       return read_buffer;
     }
 
-    if (chunk_size > 0) {
+    if (chunk_size > 0 && chunk_size < env->GetArrayLength(java_buffer)) {
       jbyte* data = env->GetByteArrayElements(java_buffer, NULL);
       THROW_AND_RETURNVAL_IF(
           data == nullptr, "Could not get byte array region", {});
