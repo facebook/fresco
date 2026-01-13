@@ -85,11 +85,7 @@ class BytesDataWrapper : public DataWrapper {
     size_t endPosition = rangeAdd(m_position, size, m_length);
     size_t readSize = endPosition - m_position;
     if (try_checked_memcpy(
-            dest,
-            m_length - m_position, // total buffer len - current position =
-                                   // # of remaining bytes in dest
-            m_pBuffer.data() + m_position,
-            readSize) != 0) {
+            dest, size, m_pBuffer.data() + m_position, readSize) != 0) {
       return 0; // memcpy error
     } else {
       m_position = endPosition;
