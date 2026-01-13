@@ -925,6 +925,12 @@ jobject GifImage_nativeCreateFromNativeMemory(
     jint maxDimension,
     jboolean forceStatic) {
   jbyte* const pointer = (jbyte*)nativePtr;
+
+  if (sizeInBytes < 0) {
+    throwIllegalArgumentException(pEnv, "Size must be non-negative");
+    return 0;
+  }
+
   std::vector<uint8_t> vBuffer(pointer, pointer + sizeInBytes);
   return GifImage_nativeCreateFromByteVector(
       pEnv, vBuffer, maxDimension, forceStatic);
