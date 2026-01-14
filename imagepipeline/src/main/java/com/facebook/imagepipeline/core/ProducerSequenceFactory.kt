@@ -47,6 +47,7 @@ class ProducerSequenceFactory(
     private val localImageThrottlingMaxSimultaneousRequests: Long,
     private val loadThumbnailFromContentResolverFirst: Boolean,
     private val loadThumbnailFromContentResolverForContentUriOnly: Boolean,
+    private val usePostprocessorDuringDecodedPrefetch: Boolean,
 ) {
 
   @VisibleForTesting
@@ -197,6 +198,9 @@ class ProducerSequenceFactory(
    */
   fun getDecodedImagePrefetchProducerSequence(imageRequest: ImageRequest): Producer<Void?> {
     var inputProducer = getBasicDecodedImageSequence(imageRequest)
+    if (imageRequest.postprocessor != null && usePostprocessorDuringDecodedPrefetch) {
+      inputProducer = getPostprocessorSequence(inputProducer)
+    }
     if (useBitmapPrepareToDraw) {
       inputProducer = getBitmapPrepareSequence(inputProducer)
     }

@@ -98,6 +98,7 @@ public class ProducerSequenceFactoryTest {
             null,
             5,
             false,
+            false,
             false);
 
     when(mImageRequest.getLowestPermittedRequestLevel())
@@ -393,6 +394,7 @@ public class ProducerSequenceFactoryTest {
             null,
             5,
             false,
+            false,
             false);
   }
 
@@ -418,6 +420,7 @@ public class ProducerSequenceFactoryTest {
             false,
             Collections.singleton(customProducerSequenceFactory),
             5,
+            false,
             false,
             false);
   }
