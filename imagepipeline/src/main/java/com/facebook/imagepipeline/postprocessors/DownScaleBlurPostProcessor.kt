@@ -8,10 +8,13 @@
 package com.facebook.imagepipeline.postprocessors
 
 import android.graphics.Bitmap
+import com.facebook.cache.common.CacheKey
+import com.facebook.cache.common.SimpleCacheKey
 import com.facebook.common.internal.Preconditions
 import com.facebook.imagepipeline.filter.IterativeBoxBlurFilter
 import com.facebook.imagepipeline.filter.RenderScriptBlurFilter
 import com.facebook.imagepipeline.request.BasePostprocessor
+import java.util.Locale
 
 /**
  * Custom postprocessor that downscales the image, applies blur, then upscales back to original
@@ -37,6 +40,23 @@ constructor(
     val scaleFactor: Float = DEFAULT_SCALE_FACTOR,
     val ntscDampeningFactor: Float = 0f,
 ) : BasePostprocessor() {
+
+  // Precompute a stable cache key so identical postprocess requests can reuse cached results.
+  private val cacheKey: CacheKey =
+      SimpleCacheKey(
+          // Build a unique string incorporating all parameters that affect output.
+          // Using Locale null ensures default formatting without locale-specific variations.
+          String.format(
+              null as Locale?,
+              "DownScaleBlur;r%d;w%d;h%d;i%d;s%.2f;n%.2f",
+              blurRadius, // blur radius
+              targetWidth, // final upscaled width
+              targetHeight, // final upscaled height
+              iterations, // number of blur iterations
+              scaleFactor, // downscale factor before blur
+              ntscDampeningFactor, // optional NTSC dampening factor for luminance adjustment
+          )
+      )
 
   init {
     Preconditions.checkArgument(
@@ -91,6 +111,9 @@ constructor(
       downscaled.recycle()
     }
   }
+
+  // Return the precomputed cache key to the pipeline.
+  override fun getPostprocessorCacheKey(): CacheKey = cacheKey
 
   companion object {
     private const val DEFAULT_ITERATIONS = 3
