@@ -211,7 +211,6 @@ class KFrescoVitoDrawable(
     drawableColorFilter = colorFilter
   }
 
-  // TODO(T105148151) Calculate opacity based on layers
   override fun getOpacity(): Int = PixelFormat.TRANSPARENT
 
   internal fun createLayer() =
