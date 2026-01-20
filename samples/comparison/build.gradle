@@ -11,6 +11,11 @@ import com.facebook.fresco.buildsrc.SampleDeps
 import com.facebook.fresco.buildsrc.SampleDeps.Comparison
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+kotlin {
+    jvmToolchain(11)
+}
 
 dependencies {
     compileOnly Deps.jsr305

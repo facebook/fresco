@@ -63,7 +63,7 @@ class ShowcaseApplication : Application() {
   override fun onCreate() {
     super.onCreate()
     imageUriProvider = ImageUriProvider(applicationContext)
-    FLog.setMinimumLoggingLevel(FLog.VERBOSE)
+    FLog.minimumLoggingLevel = FLog.VERBOSE
     val forwardingRequestListener = ForwardingRequestListener()
     val requestListeners =
         HashSet<RequestListener>().apply {
