@@ -7,17 +7,13 @@
 
 package com.facebook.common.webp;
 
-import android.graphics.BitmapFactory;
-import android.os.Build;
-import android.util.Base64;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.UnsupportedEncodingException;
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class WebpSupportStatus {
-  public static final boolean sIsSimpleWebpSupported =
-      Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+  public static final boolean sIsSimpleWebpSupported = true;
 
   public static final boolean sIsExtendedWebpSupported = isExtendedWebpSupported();
 
@@ -40,11 +36,6 @@ public class WebpSupportStatus {
     sWebpLibraryChecked = true;
     return loadedWebpBitmapFactory;
   }
-
-  /** BASE64 encoded extended WebP image. */
-  private static final String VP8X_WEBP_BASE64 =
-      "UklGRkoAAABXRUJQVlA4WAoAAAAQAAAAAAAAAAAAQUxQSAw"
-          + "AAAARBxAR/Q9ERP8DAABWUDggGAAAABQBAJ0BKgEAAQAAAP4AAA3AAP7mtQAAAA==";
 
   /**
    * Helper method that transforms provided string into its byte representation using ASCII encoding
@@ -83,30 +74,6 @@ public class WebpSupportStatus {
 
   /** Checks whether underlying platform supports extended WebPs */
   private static boolean isExtendedWebpSupported() {
-    // Lossless and extended formats are supported on Android 4.2.1+
-    // Unfortunately SDK_INT is not enough to distinguish 4.2 and 4.2.1
-    // (both are API level 17 (JELLY_BEAN_MR1))
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      return false;
-    }
-
-    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      // Let's test if extended webp is supported
-      // To this end we will try to decode bounds of vp8x webp with alpha channel
-      byte[] decodedBytes = Base64.decode(VP8X_WEBP_BASE64, Base64.DEFAULT);
-      BitmapFactory.Options opts = new BitmapFactory.Options();
-      opts.inJustDecodeBounds = true;
-      BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length, opts);
-
-      // If Android managed to find appropriate decoder then opts.outHeight and opts.outWidth
-      // should be set. We can not assume that outMimeType is set.
-      // Android guys forgot to update logic for mime types when they introduced support for webp.
-      // For example, on 4.2.2 this field is not set for webp images.
-      if (opts.outHeight != 1 || opts.outWidth != 1) {
-        return false;
-      }
-    }
-
     return true;
   }
 
