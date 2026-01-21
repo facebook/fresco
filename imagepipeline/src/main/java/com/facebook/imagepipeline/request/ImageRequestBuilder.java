@@ -53,6 +53,7 @@ public class ImageRequestBuilder {
   private @Nullable DownsampleMode mDownsampleOverride = null;
   private int mDelayMs;
   private @Nullable String mDiskCacheId = null;
+  private @Nullable String mCustomCacheKey = null;
   private Boolean mIsFirstFrameThumbnailEnabled = false;
 
   /**
@@ -110,6 +111,7 @@ public class ImageRequestBuilder {
         .setShouldDecodePrefetches(imageRequest.shouldDecodePrefetches())
         .setDelayMs(imageRequest.getDelayMs())
         .setDiskCacheId(imageRequest.getDiskCacheId())
+        .setCustomCacheKey(imageRequest.getCustomCacheKey())
         .setDownsampleOverride(imageRequest.getDownsampleOverride())
         .setResizingAllowedOverride(imageRequest.getResizingAllowedOverride())
         .setIsFirstFrameThumbnailEnabled(imageRequest.isFirstFrameThumbnailEnabled())
@@ -452,6 +454,25 @@ public class ImageRequestBuilder {
    */
   public @Nullable String getDiskCacheId() {
     return mDiskCacheId;
+  }
+
+  /**
+   * Sets a custom cache key for this request. When set, this key will be used instead of deriving
+   * the cache key from the source URI.
+   *
+   * @param customCacheKey a custom cache key to use for caching this image.
+   * @return the modified builder instance
+   */
+  public ImageRequestBuilder setCustomCacheKey(@Nullable String customCacheKey) {
+    this.mCustomCacheKey = customCacheKey;
+    return this;
+  }
+
+  /**
+   * @return the custom cache key to use for caching this image.
+   */
+  public @Nullable String getCustomCacheKey() {
+    return mCustomCacheKey;
   }
 
   /**

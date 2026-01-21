@@ -32,9 +32,13 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
 
   @Override
   public CacheKey getBitmapCacheKey(ImageRequest request, @Nullable Object callerContext) {
+    String sourceString = request.getCustomCacheKey();
+    if (sourceString == null) {
+      sourceString = getCacheKeySourceUri(request.getSourceUri()).toString();
+    }
     BitmapMemoryCacheKey cacheKey =
         new BitmapMemoryCacheKey(
-            getCacheKeySourceUri(request.getSourceUri()).toString(),
+            sourceString,
             request.getResizeOptions(),
             request.getRotationOptions(),
             request.getImageDecodeOptions(),
@@ -56,9 +60,13 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
       postprocessorCacheKey = null;
       postprocessorName = null;
     }
+    String sourceString = request.getCustomCacheKey();
+    if (sourceString == null) {
+      sourceString = getCacheKeySourceUri(request.getSourceUri()).toString();
+    }
     BitmapMemoryCacheKey cacheKey =
         new BitmapMemoryCacheKey(
-            getCacheKeySourceUri(request.getSourceUri()).toString(),
+            sourceString,
             request.getResizeOptions(),
             request.getRotationOptions(),
             request.getImageDecodeOptions(),
@@ -75,6 +83,10 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
   @Override
   public CacheKey getEncodedCacheKey(
       ImageRequest request, Uri sourceUri, @Nullable Object callerContext) {
+    String customCacheKey = request.getCustomCacheKey();
+    if (customCacheKey != null) {
+      return new SimpleCacheKey(customCacheKey);
+    }
     return new SimpleCacheKey(getCacheKeySourceUri(sourceUri).toString());
   }
 
