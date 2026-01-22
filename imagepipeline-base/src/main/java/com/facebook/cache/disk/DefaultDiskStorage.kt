@@ -75,7 +75,7 @@ class DefaultDiskStorage(rootDirectory: File, version: Int, cacheErrorLogger: Ca
    * @param cacheErrorLogger logger for various events
    */
   init {
-    Preconditions.checkNotNull<File?>(rootDirectory)
+    checkNotNull(rootDirectory)
 
     mRootDirectory = rootDirectory
     mIsExternal = isExternal(rootDirectory, cacheErrorLogger)
@@ -425,8 +425,8 @@ class DefaultDiskStorage(rootDirectory: File, version: Int, cacheErrorLogger: Ca
     private var timestamp: Long
 
     init {
-      Preconditions.checkNotNull<File?>(cachedFile)
-      this.id = Preconditions.checkNotNull<String>(id)
+      checkNotNull(cachedFile)
+      this.id = checkNotNull(id)
       this.resource = FileBinaryResource.create(cachedFile!!)
       this.size = -1
       this.timestamp = -1
