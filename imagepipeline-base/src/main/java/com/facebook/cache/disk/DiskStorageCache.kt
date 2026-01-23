@@ -695,7 +695,7 @@ class DiskStorageCache(
               max((entry.getTimestamp() - now).toDouble(), maxTimeDelta.toDouble()).toLong()
         } else if (indexPopulateAtStartupEnabled) {
           checkNotNull(tempResourceIndex)
-          tempResourceIndex!!.add(entry.getId())
+          tempResourceIndex.add(entry.getId())
         }
       }
       if (foundFutureTimestamp) {
@@ -716,7 +716,7 @@ class DiskStorageCache(
         if (indexPopulateAtStartupEnabled && resourceIndex !== tempResourceIndex) {
           checkNotNull(tempResourceIndex)
           resourceIndex.clear()
-          resourceIndex.addAll(tempResourceIndex!!)
+          resourceIndex.addAll(tempResourceIndex)
         }
         cacheStats.set(size, count.toLong())
       }

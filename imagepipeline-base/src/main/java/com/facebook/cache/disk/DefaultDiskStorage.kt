@@ -427,7 +427,7 @@ class DefaultDiskStorage(rootDirectory: File, version: Int, cacheErrorLogger: Ca
     init {
       checkNotNull(cachedFile)
       this.id = checkNotNull(id)
-      this.resource = FileBinaryResource.create(cachedFile!!)
+      this.resource = FileBinaryResource.create(cachedFile)
       this.size = -1
       this.timestamp = -1
     }
