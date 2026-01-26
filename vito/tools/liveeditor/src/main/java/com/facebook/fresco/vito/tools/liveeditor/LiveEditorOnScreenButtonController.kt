@@ -158,23 +158,28 @@ class LiveEditorOnScreenButtonController(
 
   private fun showImageInfo(context: Context) {
     val windowContext = getWindowContext(context)
-    addWindow(
-        windowContext,
+    val infoView =
         LiveEditorUiUtils(imageSelector?.currentEditor, debugDataProviders)
             .createImageInfoView(windowContext) { showImageToggleButtons(windowContext) }
-            .apply { background = ColorDrawable(editorBackgroundColor) },
-    )
+            .apply { background = ColorDrawable(editorBackgroundColor) }
+
+    // Wrap in OverlayHandlerView so Flipper UI Debugger excludes it from inspection
+    addWindow(windowContext, OverlayHandlerView(windowContext).apply { addView(infoView) })
   }
 
   private fun showLiveEditor(context: Context) {
     val windowContext = getWindowContext(context)
-    addWindow(
-        windowContext,
+    val editorView =
         LiveEditorUiUtils(imageSelector?.currentEditor, debugDataProviders)
             .createView(windowContext, customOptions.entries) {
               showImageToggleButtons(windowContext)
             }
-            .apply { background = ColorDrawable(editorBackgroundColor) },
+            .apply { background = ColorDrawable(editorBackgroundColor) }
+
+    // Wrap in OverlayHandlerView so Flipper UI Debugger excludes it from inspection
+    addWindow(
+        windowContext,
+        OverlayHandlerView(windowContext).apply { addView(editorView) },
         DisplayMetrics()
             .apply { getWindowManager(context).defaultDisplay.getMetrics(this) }
             .heightPixels / 2,
@@ -234,8 +239,15 @@ class LiveEditorOnScreenButtonController(
     currentView = view
   }
 
+  /**
+   * Custom ViewGroup class to wrap the live editor overlay buttons. Uses the "OverlayHandlerView"
+   * naming pattern that Flipper's UI Debugger already recognizes and excludes from inspection,
+   * preventing this overlay from blocking the main UI view hierarchy during debugging.
+   */
+  private class OverlayHandlerView(context: Context) : LinearLayout(context)
+
   private fun createOnScreenButtons(context: Context): View {
-    return LinearLayout(context).apply {
+    return OverlayHandlerView(context).apply {
       orientation = LinearLayout.VERTICAL
       val cornerRadius = 16.dpToPxF(context)
       val buttonLayoutParams: LinearLayout.LayoutParams =
